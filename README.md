@@ -16,6 +16,32 @@ Aurelia-Slickgrid was mostly possible due to another great fork namely [SlickGri
 ## How to use Aurelia-Slickgrid?
 Still working on that, however you can see some print screen at the bottom. I will most probably create a project with samples and/or `GistRun` which I haven't tried yet. The main focus for now is to make the `Aurelia-Slickgrid` plugin available under `NPM` and get it working. This is my first Aurelia plugin, so we'll see how it goes.
 
+### Aurelia-CLI
+```bash
+npm install --save aurelia-slickgrid
+```
+Then add the plugin to your `aurelia.json` file
+```javascript
+{
+  "name": "aurelia-slickgrid",
+  "path": "../node_modules/aurelia-slickgrid/dist/amd",
+  "main": "index"
+},
+```
+Finally use it in your Aurelia app by modifying your `main.js` file
+```javascript
+export function configure(aurelia) {
+  aurelia.use
+    .standardConfiguration()
+    .developmentLogging()
+    .plugin('aurelia-slickgrid')
+    .feature('resources');
+
+  aurelia.start().then(() => aurelia.setRoot());
+}
+```
+
+
 ## Styling is done with SASS
 I am starting the development of `Aurelia-Slickgrid` with `Aurelia-CLI` and prefer to use `SASS`. Also coded a `Bootstrap` theme (not available anywhere else), also focusing on the upcoming `Bootstrap 4` which is now in Beta, however should work just fine with `Bootstrap 3` as well.
 
