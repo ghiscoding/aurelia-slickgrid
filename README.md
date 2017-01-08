@@ -35,5 +35,5 @@ Screenshots from the demo app with the `Bootstrap` theme.
 **Default Slickgrid example**
 ![Default Slickgrid Example](/screenshots/example1.png)
 
-**Slickgrid Example with Server Side**
+**Slickgrid Example with Server Side (sorting/pagination)**
 ![Slickgrid Server Side](/screenshots/exampleServerSide.png)
