@@ -1,5 +1,5 @@
 import {bindable} from 'aurelia-framework';
-import $ from 'bootstrap';
+import $ from 'jquery';
 
 export class SlickPager {
   @bindable gridoptions;
