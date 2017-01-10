@@ -4,7 +4,7 @@ define(['exports', 'slickgrid-es6', 'aurelia-framework', './slick-window-resizer
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.AureliaSlickgrid = undefined;
+  exports.SlickService = undefined;
 
   var _jquery2 = _interopRequireDefault(_jquery);
 
@@ -40,9 +40,9 @@ define(['exports', 'slickgrid-es6', 'aurelia-framework', './slick-window-resizer
 
   var _dec, _class;
 
-  var AureliaSlickgrid = exports.AureliaSlickgrid = (_dec = (0, _aureliaFramework.inject)(_slickWindowResizer.SlickResizer), _dec(_class = function () {
-    function AureliaSlickgrid(slickResizer) {
-      _classCallCheck(this, AureliaSlickgrid);
+  var SlickService = exports.SlickService = (_dec = (0, _aureliaFramework.inject)(_slickWindowResizer.SlickResizer), _dec(_class = function () {
+    function SlickService(slickResizer) {
+      _classCallCheck(this, SlickService);
 
       this.columnDefinition = {};
       this.data = {};
@@ -55,7 +55,7 @@ define(['exports', 'slickgrid-es6', 'aurelia-framework', './slick-window-resizer
       this.slickResizer = slickResizer;
     }
 
-    AureliaSlickgrid.prototype.createDatagrid = function createDatagrid(gridId, columnDefinition, gridOptions, data) {
+    SlickService.prototype.createDatagrid = function createDatagrid(gridId, columnDefinition, gridOptions, data) {
       this.columnDefinition = columnDefinition || {};
       this.data = data || {};
       this.gridId = gridId || "myGrid";
@@ -73,7 +73,7 @@ define(['exports', 'slickgrid-es6', 'aurelia-framework', './slick-window-resizer
       }
     };
 
-    AureliaSlickgrid.prototype.refreshDataset = function refreshDataset(dataset) {
+    SlickService.prototype.refreshDataset = function refreshDataset(dataset) {
       if (dataset) {
         this.grid.setData(dataset);
         this.grid.invalidate();
@@ -81,13 +81,13 @@ define(['exports', 'slickgrid-es6', 'aurelia-framework', './slick-window-resizer
       }
     };
 
-    _createClass(AureliaSlickgrid, [{
+    _createClass(SlickService, [{
       key: 'gridObject',
       get: function get() {
         return this.grid;
       }
     }]);
 
-    return AureliaSlickgrid;
+    return SlickService;
   }()) || _class);
 });

@@ -5,7 +5,7 @@ import $ from 'jquery';
 
 
 @inject(SlickResizer)
-export class AureliaSlickgrid {
+export class SlickService {
   columnDefinition = {};
   data = {};
   grid = {};

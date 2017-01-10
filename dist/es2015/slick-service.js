@@ -5,7 +5,7 @@ import { inject } from 'aurelia-framework';
 import { SlickResizer } from './slick-window-resizer';
 import $ from 'jquery';
 
-export let AureliaSlickgrid = (_dec = inject(SlickResizer), _dec(_class = class AureliaSlickgrid {
+export let SlickService = (_dec = inject(SlickResizer), _dec(_class = class SlickService {
 
   constructor(slickResizer) {
     this.columnDefinition = {};
