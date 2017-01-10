@@ -1,9 +1,9 @@
 import { Grid } from 'slickgrid-es6';
 import {inject} from 'aurelia-framework';
-import {SlickResizer} from './slick-window-resizer';
+import {slickWindowResizer} from './slick-window-resizer';
 import $ from 'jquery';
 
-@inject(SlickResizer)
+@inject(SlickWindowResizer)
 export class SlickService {
   columnDefinition = {};
   data = {};
@@ -13,8 +13,8 @@ export class SlickService {
   isCreated = false;
   paginationCallback = null;
 
-  constructor(slickResizer) {
-    this.slickResizer = slickResizer;
+  constructor(slickWindowResizer) {
+    this.slickResizer = slickWindowResizer;
   }
 
   createDatagrid(gridId, columnDefinition, gridOptions, data) {

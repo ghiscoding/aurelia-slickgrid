@@ -40,8 +40,8 @@ define(['exports', 'slickgrid-es6', 'aurelia-framework', './slick-window-resizer
 
   var _dec, _class;
 
-  var SlickService = exports.SlickService = (_dec = (0, _aureliaFramework.inject)(_slickWindowResizer.SlickResizer), _dec(_class = function () {
-    function SlickService(slickResizer) {
+  var SlickService = exports.SlickService = (_dec = (0, _aureliaFramework.inject)(SlickWindowResizer), _dec(_class = function () {
+    function SlickService(slickWindowResizer) {
       _classCallCheck(this, SlickService);
 
       this.columnDefinition = {};
@@ -52,7 +52,7 @@ define(['exports', 'slickgrid-es6', 'aurelia-framework', './slick-window-resizer
       this.isCreated = false;
       this.paginationCallback = null;
 
-      this.slickResizer = slickResizer;
+      this.slickResizer = slickWindowResizer;
     }
 
     SlickService.prototype.createDatagrid = function createDatagrid(gridId, columnDefinition, gridOptions, data) {

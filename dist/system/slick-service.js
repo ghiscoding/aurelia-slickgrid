@@ -3,7 +3,7 @@
 System.register(['slickgrid-es6', 'aurelia-framework', './slick-window-resizer', 'jquery'], function (_export, _context) {
   "use strict";
 
-  var Grid, inject, SlickResizer, $, _createClass, _dec, _class, SlickService;
+  var Grid, inject, slickWindowResizer, $, _createClass, _dec, _class, SlickService;
 
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -17,7 +17,7 @@ System.register(['slickgrid-es6', 'aurelia-framework', './slick-window-resizer',
     }, function (_aureliaFramework) {
       inject = _aureliaFramework.inject;
     }, function (_slickWindowResizer) {
-      SlickResizer = _slickWindowResizer.SlickResizer;
+      slickWindowResizer = _slickWindowResizer.slickWindowResizer;
     }, function (_jquery) {
       $ = _jquery.default;
     }],
@@ -40,8 +40,8 @@ System.register(['slickgrid-es6', 'aurelia-framework', './slick-window-resizer',
         };
       }();
 
-      _export('SlickService', SlickService = (_dec = inject(SlickResizer), _dec(_class = function () {
-        function SlickService(slickResizer) {
+      _export('SlickService', SlickService = (_dec = inject(SlickWindowResizer), _dec(_class = function () {
+        function SlickService(slickWindowResizer) {
           _classCallCheck(this, SlickService);
 
           this.columnDefinition = {};
@@ -52,7 +52,7 @@ System.register(['slickgrid-es6', 'aurelia-framework', './slick-window-resizer',
           this.isCreated = false;
           this.paginationCallback = null;
 
-          this.slickResizer = slickResizer;
+          this.slickResizer = slickWindowResizer;
         }
 
         SlickService.prototype.createDatagrid = function createDatagrid(gridId, columnDefinition, gridOptions, data) {

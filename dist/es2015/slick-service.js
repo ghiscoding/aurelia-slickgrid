@@ -2,12 +2,12 @@ var _dec, _class;
 
 import { Grid } from 'slickgrid-es6';
 import { inject } from 'aurelia-framework';
-import { SlickResizer } from './slick-window-resizer';
+import { slickWindowResizer } from './slick-window-resizer';
 import $ from 'jquery';
 
-export let SlickService = (_dec = inject(SlickResizer), _dec(_class = class SlickService {
+export let SlickService = (_dec = inject(SlickWindowResizer), _dec(_class = class SlickService {
 
-  constructor(slickResizer) {
+  constructor(slickWindowResizer) {
     this.columnDefinition = {};
     this.data = {};
     this.grid = {};
@@ -16,7 +16,7 @@ export let SlickService = (_dec = inject(SlickResizer), _dec(_class = class Slic
     this.isCreated = false;
     this.paginationCallback = null;
 
-    this.slickResizer = slickResizer;
+    this.slickResizer = slickWindowResizer;
   }
 
   createDatagrid(gridId, columnDefinition, gridOptions, data) {
