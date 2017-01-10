@@ -23,8 +23,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var SlickService = exports.SlickService = (_dec = (0, _aureliaFramework.inject)(_slickgridEs.Grid, _slickWindowResizer.SlickResizer), _dec(_class = function () {
-  function SlickService(grid, slickResizer) {
+var SlickService = exports.SlickService = (_dec = (0, _aureliaFramework.inject)(_slickWindowResizer.SlickResizer), _dec(_class = function () {
+  function SlickService(slickResizer) {
     _classCallCheck(this, SlickService);
 
     this.columnDefinition = {};
@@ -35,7 +35,6 @@ var SlickService = exports.SlickService = (_dec = (0, _aureliaFramework.inject)(
     this.isCreated = false;
     this.paginationCallback = null;
 
-    this.gridEs6 = grid;
     this.slickResizer = slickResizer;
   }
 
@@ -46,7 +45,7 @@ var SlickService = exports.SlickService = (_dec = (0, _aureliaFramework.inject)(
     this.gridOptions = gridOptions || {};
     this.gridOptions.gridId = this.gridId;
 
-    this.grid = this.gridEs6('#' + this.gridId, this.data, this.columnDefinition, this.gridOptions);
+    this.grid = new _slickgridEs.Grid('#' + this.gridId, this.data, this.columnDefinition, this.gridOptions);
     this.isCreated = true;
     if (typeof this.gridOptions.onSortingChanged === "function") {
       this.grid.onSort.subscribe(this.gridOptions.onSortingChanged);

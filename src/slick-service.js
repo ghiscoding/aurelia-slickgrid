@@ -3,7 +3,7 @@ import {inject} from 'aurelia-framework';
 import {SlickResizer} from './slick-window-resizer';
 import $ from 'jquery';
 
-@inject(Grid, SlickResizer)
+@inject(SlickResizer)
 export class SlickService {
   columnDefinition = {};
   data = {};
@@ -13,8 +13,7 @@ export class SlickService {
   isCreated = false;
   paginationCallback = null;
 
-  constructor(grid, slickResizer) {
-    this.gridEs6 = grid;
+  constructor(slickResizer) {
     this.slickResizer = slickResizer;
   }
 
@@ -26,7 +25,7 @@ export class SlickService {
     this.gridOptions.gridId = this.gridId;
 
     // create the slickgrid object
-    this.grid = this.gridEs6(`#${this.gridId}`, this.data, this.columnDefinition, this.gridOptions);
+    this.grid = new Grid(`#${this.gridId}`, this.data, this.columnDefinition, this.gridOptions);
     this.isCreated = true;
     if(typeof this.gridOptions.onSortingChanged === "function") {
       this.grid.onSort.subscribe(this.gridOptions.onSortingChanged);
