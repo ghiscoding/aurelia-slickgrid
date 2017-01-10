@@ -40,7 +40,7 @@ define(['exports', 'slickgrid-es6', 'aurelia-framework', './slick-window-resizer
 
   var _dec, _class;
 
-  var SlickService = exports.SlickService = (_dec = (0, _aureliaFramework.inject)(SlickWindowResizer), _dec(_class = function () {
+  var SlickService = exports.SlickService = (_dec = (0, _aureliaFramework.inject)(_slickWindowResizer.SlickWindowResizer), _dec(_class = function () {
     function SlickService(slickWindowResizer) {
       _classCallCheck(this, SlickService);
 

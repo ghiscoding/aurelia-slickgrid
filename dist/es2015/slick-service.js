@@ -2,7 +2,7 @@ var _dec, _class;
 
 import { Grid } from 'slickgrid-es6';
 import { inject } from 'aurelia-framework';
-import { slickWindowResizer } from './slick-window-resizer';
+import { SlickWindowResizer } from './slick-window-resizer';
 import $ from 'jquery';
 
 export let SlickService = (_dec = inject(SlickWindowResizer), _dec(_class = class SlickService {

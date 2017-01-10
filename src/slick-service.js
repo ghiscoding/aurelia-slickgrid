@@ -1,6 +1,6 @@
 import { Grid } from 'slickgrid-es6';
 import {inject} from 'aurelia-framework';
-import {slickWindowResizer} from './slick-window-resizer';
+import {SlickWindowResizer} from './slick-window-resizer';
 import $ from 'jquery';
 
 @inject(SlickWindowResizer)
