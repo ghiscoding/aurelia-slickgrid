@@ -9,9 +9,9 @@ var _desc, _value, _class, _descriptor;
 
 var _aureliaFramework = require('aurelia-framework');
 
-var _bootstrap = require('bootstrap');
+var _jquery = require('jquery');
 
-var _bootstrap2 = _interopRequireDefault(_bootstrap);
+var _jquery2 = _interopRequireDefault(_jquery);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 

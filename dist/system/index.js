@@ -5,9 +5,7 @@ System.register(['./aurelia-slickgrid', './slick-pager', './slick-window-resizer
 
   var AureliaSlickgrid, SlickPager, SlickWindowResizer;
   function configure(config) {
-    config.globalResources('./aurelia-slickgrid');
     config.globalResources('./slick-pager');
-    config.globalResources('./slick-window-resizer');
   }
 
   _export('configure', configure);

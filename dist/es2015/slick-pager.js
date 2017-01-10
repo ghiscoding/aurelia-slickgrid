@@ -44,7 +44,7 @@ function _initializerWarningHelper(descriptor, context) {
 }
 
 import { bindable } from 'aurelia-framework';
-import $ from 'bootstrap';
+import $ from 'jquery';
 
 export let SlickPager = (_class = class SlickPager {
 

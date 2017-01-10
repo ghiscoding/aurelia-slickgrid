@@ -7,9 +7,7 @@ define(['exports', './aurelia-slickgrid', './slick-pager', './slick-window-resiz
   exports.SlickWindowResizer = exports.SlickPager = exports.AureliaSlickgrid = undefined;
   exports.configure = configure;
   function configure(config) {
-    config.globalResources('./aurelia-slickgrid');
     config.globalResources('./slick-pager');
-    config.globalResources('./slick-window-resizer');
   }
 
   exports.AureliaSlickgrid = _aureliaSlickgrid.AureliaSlickgrid;

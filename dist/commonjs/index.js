@@ -13,9 +13,7 @@ var _slickPager = require('./slick-pager');
 var _slickWindowResizer = require('./slick-window-resizer');
 
 function configure(config) {
-  config.globalResources('./aurelia-slickgrid');
   config.globalResources('./slick-pager');
-  config.globalResources('./slick-window-resizer');
 }
 
 exports.AureliaSlickgrid = _aureliaSlickgrid.AureliaSlickgrid;

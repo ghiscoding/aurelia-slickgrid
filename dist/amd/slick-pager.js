@@ -1,4 +1,4 @@
-define(['exports', 'aurelia-framework', 'bootstrap'], function (exports, _aureliaFramework, _bootstrap) {
+define(['exports', 'aurelia-framework', 'jquery'], function (exports, _aureliaFramework, _jquery) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -6,7 +6,7 @@ define(['exports', 'aurelia-framework', 'bootstrap'], function (exports, _aureli
   });
   exports.SlickPager = undefined;
 
-  var _bootstrap2 = _interopRequireDefault(_bootstrap);
+  var _jquery2 = _interopRequireDefault(_jquery);
 
   function _interopRequireDefault(obj) {
     return obj && obj.__esModule ? obj : {

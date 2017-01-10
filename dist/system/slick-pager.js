@@ -1,6 +1,6 @@
 'use strict';
 
-System.register(['aurelia-framework', 'bootstrap'], function (_export, _context) {
+System.register(['aurelia-framework', 'jquery'], function (_export, _context) {
   "use strict";
 
   var bindable, $, _desc, _value, _class, _descriptor, SlickPager;
@@ -57,8 +57,8 @@ System.register(['aurelia-framework', 'bootstrap'], function (_export, _context)
   return {
     setters: [function (_aureliaFramework) {
       bindable = _aureliaFramework.bindable;
-    }, function (_bootstrap) {
-      $ = _bootstrap.default;
+    }, function (_jquery) {
+      $ = _jquery.default;
     }],
     execute: function () {
       _export('SlickPager', SlickPager = (_class = function () {
