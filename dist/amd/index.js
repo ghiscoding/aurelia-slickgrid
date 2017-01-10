@@ -6,14 +6,8 @@ define(['exports', './slick-service', './slick-pager', './slick-window-resizer']
   });
   exports.SlickWindowResizer = exports.SlickPager = exports.SlickService = undefined;
   exports.configure = configure;
-  function configure(aurelia, callback) {
+  function configure(aurelia) {
     aurelia.globalResources('./slick-pager');
-
-    var config = new BootstrapConfig();
-
-    if (typeof callback === 'function') {
-      callback(config);
-    }
   }
 
   exports.SlickService = _slickService.SlickService;

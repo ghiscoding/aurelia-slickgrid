@@ -12,14 +12,8 @@ var _slickPager = require('./slick-pager');
 
 var _slickWindowResizer = require('./slick-window-resizer');
 
-function configure(aurelia, callback) {
+function configure(aurelia) {
   aurelia.globalResources('./slick-pager');
-
-  var config = new BootstrapConfig();
-
-  if (typeof callback === 'function') {
-    callback(config);
-  }
 }
 
 exports.SlickService = _slickService.SlickService;

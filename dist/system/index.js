@@ -4,14 +4,8 @@ System.register(['./slick-service', './slick-pager', './slick-window-resizer'], 
   "use strict";
 
   var SlickService, SlickPager, SlickWindowResizer;
-  function configure(aurelia, callback) {
+  function configure(aurelia) {
     aurelia.globalResources('./slick-pager');
-
-    var config = new BootstrapConfig();
-
-    if (typeof callback === 'function') {
-      callback(config);
-    }
   }
 
   _export('configure', configure);
