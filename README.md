@@ -25,10 +25,11 @@ Then add the plugin to your `aurelia.json` file
 {
   "name": "aurelia-slickgrid",
   "path": "../node_modules/aurelia-slickgrid/dist/amd",
-  "main": "index"
+  "main": "index",
+  "resources": ["**/*.{css,html}"]
 },
 ```
-Finally use it in your Aurelia app by modifying your `main.js` file
+Make the plugin available globally your `main.js` file.
 ```javascript
 export function configure(aurelia) {
   aurelia.use
@@ -40,7 +41,26 @@ export function configure(aurelia) {
   aurelia.start().then(() => aurelia.setRoot());
 }
 ```
+And finally use it your code
+```javascript
+import {inject} from 'aurelia-framework';
+import {SlickService} from 'aurelia-slickgrid';
 
+@inject(SlickService)
+export class List {
+  gridOptions = {}; // define your grid Options
+  gridColumns = {}; // define your grid columns
+
+  constructor(slickService) {
+    this.slickgrid = slickService;
+  }
+
+  attached() {
+    this.slickgrid.createDatagrid('myGrid', this.gridColumns, this.gridOptions, data);
+  }
+}
+
+```
 
 ## Styling is done with SASS
 I am starting the development of `Aurelia-Slickgrid` with `Aurelia-CLI` and prefer to use `SASS`. Also coded a `Bootstrap` theme (not available anywhere else), also focusing on the upcoming `Bootstrap 4` which is now in Beta, however should work just fine with `Bootstrap 3` as well.
