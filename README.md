@@ -16,11 +16,12 @@ Aurelia-Slickgrid was mostly possible due to another great fork namely [SlickGri
 ## How to use Aurelia-Slickgrid?
 Still working on that, however you can see some print screen at the bottom. I will most probably create a project with samples and/or `GistRun` which I haven't tried yet. The main focus for now is to make the `Aurelia-Slickgrid` plugin available under `NPM` and get it working. This is my first Aurelia plugin, so we'll see how it goes.
 
-### Aurelia-CLI
+### Aurelia-CLI / Webpack
 ```bash
 npm install --save aurelia-slickgrid
 ```
-Then add the plugin to your `aurelia.json` file
+#### Aurelia-CLI
+For `CLI` you will need to add the plugin to your `aurelia.json` file
 ```javascript
 {
   "name": "aurelia-slickgrid",
@@ -29,6 +30,7 @@ Then add the plugin to your `aurelia.json` file
   "resources": ["**/*.{css,html}"]
 },
 ```
+#### Aurelia (main)
 Make the plugin available globally your `main.js` file.
 ```javascript
 export function configure(aurelia) {
