@@ -62,10 +62,15 @@ export class List {
 
 ```
 
-## Styling is done with SASS
-I am starting the development of `Aurelia-Slickgrid` with `Aurelia-CLI` and prefer to use `SASS`. Also coded a `Bootstrap` theme (not available anywhere else), also focusing on the upcoming `Bootstrap 4` which is now in Beta, however should work just fine with `Bootstrap 3` as well.
-
-_You could also use `LESS` if you want since this is what is currently used under the `Slickgrid-ES6` fork. However the Bootstrap theme is not available anywhere but here._
+## Styling
+Load the default Bootstrap theme style
+### css
+Default compiled `css`
+```html
+<link rel="stylesheet" type="text/css" href="../node_modules/aurelia-slickgrid/dist/styles/css/slickgrid.css">
+```
+### scss (SASS)
+You could also compile the SASS file with your customization, for that simply load the `_slick-grid-variables.scss` variable file then the main `slickgrid.scss` which should call the variables.
 
 ## Main features
 You will be able to see examples soon (see print screen below). What I got working so far are the following:
@@ -73,6 +78,14 @@ You will be able to see examples soon (see print screen below). What I got worki
 - Auto-resize viewport with available space (basically take space available by the given div container)
 - Server side sorting
 - Server side pagination (pager is an Aurelia custom element)
+
+## Notes
+If you are not intending to use any features (described in `Main Features`), then you could instead use `Slickgrid-ES6` directly. For example
+```javascript
+import {Grid} from 'slickgrid-es6';
+...
+this.grid = new Grid(`#myGrid`, this.data, this.columnDefinition, this.gridOptions);
+```
 
 ## Screenshots
 
