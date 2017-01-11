@@ -30,7 +30,7 @@ System.register(['aurelia-framework', 'aurelia-event-aggregator', 'jquery'], fun
           _classCallCheck(this, SlickWindowResizer);
 
           this.grid = {};
-          this.gridId = "";
+          this.gridId = '';
           this.gridOptions = {};
 
           this.ea = eventAggregator;
@@ -44,7 +44,7 @@ System.register(['aurelia-framework', 'aurelia-event-aggregator', 'jquery'], fun
 
           this.resizeToFitBrowserWindow();
 
-          $(window).on("resize", function () {
+          $(window).on('resize', function () {
             self.resizeToFitBrowserWindow();
           });
 
@@ -55,18 +55,18 @@ System.register(['aurelia-framework', 'aurelia-event-aggregator', 'jquery'], fun
 
         SlickWindowResizer.prototype.calculateGridNewDimensions = function calculateGridNewDimensions(gridOptions) {
           if (!$('#' + gridOptions.gridId)) {
-            $(window).off("resize");
+            $(window).off('resize');
             return null;
           }
 
-          var bottomPadding = typeof gridOptions.autoResizeBottomPadding === "undefined" ? DATAGRID_BOTTOM_PADDING : parseInt(gridOptions.autoResizeBottomPadding);
+          var bottomPadding = typeof gridOptions.autoResizeBottomPadding === 'undefined' ? DATAGRID_BOTTOM_PADDING : parseInt(gridOptions.autoResizeBottomPadding, 10);
           if (!!gridOptions.useExternalPagination) {
             bottomPadding += DATAGRID_PAGER_HEIGHT;
           }
-          var availableHeight = $(window).height() - $('#' + gridOptions.gridId).offset().top - parseInt(bottomPadding);
+          var availableHeight = $(window).height() - $('#' + gridOptions.gridId).offset().top - parseInt(bottomPadding, 10);
           var availableWidth = $('#' + gridOptions.gridContainerId).width();
-          var minHeight = typeof gridOptions.autoResizeMinHeight === "undefined" ? DATAGRID_MIN_HEIGHT : parseInt(gridOptions.autoResizeMinHeight);
-          var minWidth = typeof gridOptions.autoResizeMinWidth === "undefined" ? DATAGRID_MIN_WIDTH : parseInt(gridOptions.autoResizeMinWidth);
+          var minHeight = typeof gridOptions.autoResizeMinHeight === 'undefined' ? DATAGRID_MIN_HEIGHT : parseInt(gridOptions.autoResizeMinHeight, 10);
+          var minWidth = typeof gridOptions.autoResizeMinWidth === 'undefined' ? DATAGRID_MIN_WIDTH : parseInt(gridOptions.autoResizeMinWidth, 10);
 
           var newHeight = availableHeight;
           var newWidth = availableWidth;
@@ -77,22 +77,22 @@ System.register(['aurelia-framework', 'aurelia-event-aggregator', 'jquery'], fun
             newWidth = minWidth;
           }
 
-          if (typeof gridOptions.autoResizeHeight !== "undefined") {
-            if (gridOptions.autoResizeHeight.indexOf("px") !== -1) {
+          if (typeof gridOptions.autoResizeHeight !== 'undefined') {
+            if (gridOptions.autoResizeHeight.indexOf('px') !== -1) {
               newHeight = gridOptions.autoResizeHeight;
             } else {
-              newHeight = availableHeight * parseInt(gridOptions.autoResizeHeight) / 100;
+              newHeight = availableHeight * parseInt(gridOptions.autoResizeHeight, 10) / 100;
 
               if (newHeight < minHeight) {
                 newHeight = minHeight;
               }
             }
           }
-          if (typeof gridOptions.autoResizeWidth !== "undefined") {
-            if (gridOptions.autoResizeWidth.indexOf("px") !== -1) {
+          if (typeof gridOptions.autoResizeWidth !== 'undefined') {
+            if (gridOptions.autoResizeWidth.indexOf('px') !== -1) {
               newWidth = gridOptions.autoResizeWidth;
             } else {
-              newWidth = availableWidth * parseInt(gridOptions.autoResizeWidth) / 100;
+              newWidth = availableWidth * parseInt(gridOptions.autoResizeWidth, 10) / 100;
 
               if (newWidth < minWidth) {
                 newWidth = minWidth;
@@ -107,15 +107,13 @@ System.register(['aurelia-framework', 'aurelia-event-aggregator', 'jquery'], fun
         };
 
         SlickWindowResizer.prototype.resizeToFitBrowserWindow = function resizeToFitBrowserWindow() {
-          console.log('resize');
-
           var newSizes = this.calculateGridNewDimensions(this.gridOptions);
 
           if (newSizes) {
             $('#' + this.gridId).height(newSizes.height);
             $('#' + this.gridId).width(newSizes.width);
 
-            if (new RegExp("MSIE [6-8]").exec(navigator.userAgent) == null && this.grid) {
+            if (new RegExp('MSIE [6-8]').exec(navigator.userAgent) === null && this.grid) {
               this.grid.resizeCanvas();
             }
           }

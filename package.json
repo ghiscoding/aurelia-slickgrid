@@ -1,6 +1,6 @@
 {
   "name": "aurelia-slickgrid",
-  "version": "0.1.13",
+  "version": "0.2.0",
   "description": "Slickgrid components made available in Aurelia",
   "keywords": [
     "aurelia",
@@ -50,6 +50,7 @@
     "gulp-babel": "^6.1.2",
     "gulp-bump": "^2.2.0",
     "gulp-eslint": "^3.0.1",
+    "gulp-sass": "^3.1.0",
     "gulp-yuidoc": "^0.1.2",
     "isparta": "^4.0.0",
     "istanbul": "^1.0.0-alpha.2",

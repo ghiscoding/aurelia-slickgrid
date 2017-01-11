@@ -13,7 +13,7 @@ export let SlickWindowResizer = (_dec = inject(EventAggregator), _dec(_class = c
 
   constructor(eventAggregator) {
     this.grid = {};
-    this.gridId = "";
+    this.gridId = '';
     this.gridOptions = {};
 
     this.ea = eventAggregator;
@@ -27,7 +27,7 @@ export let SlickWindowResizer = (_dec = inject(EventAggregator), _dec(_class = c
 
     this.resizeToFitBrowserWindow();
 
-    $(window).on("resize", function () {
+    $(window).on('resize', function () {
       self.resizeToFitBrowserWindow();
     });
 
@@ -38,18 +38,18 @@ export let SlickWindowResizer = (_dec = inject(EventAggregator), _dec(_class = c
 
   calculateGridNewDimensions(gridOptions) {
     if (!$(`#${ gridOptions.gridId }`)) {
-      $(window).off("resize");
+      $(window).off('resize');
       return null;
     }
 
-    let bottomPadding = typeof gridOptions.autoResizeBottomPadding === "undefined" ? DATAGRID_BOTTOM_PADDING : parseInt(gridOptions.autoResizeBottomPadding);
+    let bottomPadding = typeof gridOptions.autoResizeBottomPadding === 'undefined' ? DATAGRID_BOTTOM_PADDING : parseInt(gridOptions.autoResizeBottomPadding, 10);
     if (!!gridOptions.useExternalPagination) {
       bottomPadding += DATAGRID_PAGER_HEIGHT;
     }
-    let availableHeight = $(window).height() - $(`#${ gridOptions.gridId }`).offset().top - parseInt(bottomPadding);
+    let availableHeight = $(window).height() - $(`#${ gridOptions.gridId }`).offset().top - parseInt(bottomPadding, 10);
     let availableWidth = $('#' + gridOptions.gridContainerId).width();
-    let minHeight = typeof gridOptions.autoResizeMinHeight === "undefined" ? DATAGRID_MIN_HEIGHT : parseInt(gridOptions.autoResizeMinHeight);
-    let minWidth = typeof gridOptions.autoResizeMinWidth === "undefined" ? DATAGRID_MIN_WIDTH : parseInt(gridOptions.autoResizeMinWidth);
+    let minHeight = typeof gridOptions.autoResizeMinHeight === 'undefined' ? DATAGRID_MIN_HEIGHT : parseInt(gridOptions.autoResizeMinHeight, 10);
+    let minWidth = typeof gridOptions.autoResizeMinWidth === 'undefined' ? DATAGRID_MIN_WIDTH : parseInt(gridOptions.autoResizeMinWidth, 10);
 
     let newHeight = availableHeight;
     let newWidth = availableWidth;
@@ -60,22 +60,22 @@ export let SlickWindowResizer = (_dec = inject(EventAggregator), _dec(_class = c
       newWidth = minWidth;
     }
 
-    if (typeof gridOptions.autoResizeHeight !== "undefined") {
-      if (gridOptions.autoResizeHeight.indexOf("px") !== -1) {
+    if (typeof gridOptions.autoResizeHeight !== 'undefined') {
+      if (gridOptions.autoResizeHeight.indexOf('px') !== -1) {
         newHeight = gridOptions.autoResizeHeight;
       } else {
-        newHeight = availableHeight * parseInt(gridOptions.autoResizeHeight) / 100;
+        newHeight = availableHeight * parseInt(gridOptions.autoResizeHeight, 10) / 100;
 
         if (newHeight < minHeight) {
           newHeight = minHeight;
         }
       }
     }
-    if (typeof gridOptions.autoResizeWidth !== "undefined") {
-      if (gridOptions.autoResizeWidth.indexOf("px") !== -1) {
+    if (typeof gridOptions.autoResizeWidth !== 'undefined') {
+      if (gridOptions.autoResizeWidth.indexOf('px') !== -1) {
         newWidth = gridOptions.autoResizeWidth;
       } else {
-        newWidth = availableWidth * parseInt(gridOptions.autoResizeWidth) / 100;
+        newWidth = availableWidth * parseInt(gridOptions.autoResizeWidth, 10) / 100;
 
         if (newWidth < minWidth) {
           newWidth = minWidth;
@@ -90,15 +90,13 @@ export let SlickWindowResizer = (_dec = inject(EventAggregator), _dec(_class = c
   }
 
   resizeToFitBrowserWindow() {
-    console.log('resize');
-
     let newSizes = this.calculateGridNewDimensions(this.gridOptions);
 
     if (newSizes) {
       $(`#${ this.gridId }`).height(newSizes.height);
       $(`#${ this.gridId }`).width(newSizes.width);
 
-      if (new RegExp("MSIE [6-8]").exec(navigator.userAgent) == null && this.grid) {
+      if (new RegExp('MSIE [6-8]').exec(navigator.userAgent) === null && this.grid) {
         this.grid.resizeCanvas();
       }
     }

@@ -1,18 +1,10 @@
-define(['exports', 'aurelia-framework', 'jquery'], function (exports, _aureliaFramework, _jquery) {
+define(['exports', 'aurelia-framework'], function (exports, _aureliaFramework) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
   exports.SlickPager = undefined;
-
-  var _jquery2 = _interopRequireDefault(_jquery);
-
-  function _interopRequireDefault(obj) {
-    return obj && obj.__esModule ? obj : {
-      default: obj
-    };
-  }
 
   function _initDefineProp(target, property, descriptor, context) {
     if (!descriptor) return;
@@ -148,7 +140,7 @@ define(['exports', 'aurelia-framework', 'jquery'], function (exports, _aureliaFr
       if (this.dataTo > this.totalItems) {
         this.dataTo = this.totalItems;
       }
-      if (typeof this.paginationCallback === "function") {
+      if (typeof this.paginationCallback === 'function') {
         this.paginationCallback(pageNumber, this.itemsPerPage);
       }
     };

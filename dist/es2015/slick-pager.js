@@ -44,7 +44,6 @@ function _initializerWarningHelper(descriptor, context) {
 }
 
 import { bindable } from 'aurelia-framework';
-import $ from 'jquery';
 
 export let SlickPager = (_class = class SlickPager {
 
@@ -124,7 +123,7 @@ export let SlickPager = (_class = class SlickPager {
     if (this.dataTo > this.totalItems) {
       this.dataTo = this.totalItems;
     }
-    if (typeof this.paginationCallback === "function") {
+    if (typeof this.paginationCallback === 'function') {
       this.paginationCallback(pageNumber, this.itemsPerPage);
     }
   }

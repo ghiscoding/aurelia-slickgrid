@@ -15,12 +15,6 @@ var _aureliaFramework = require('aurelia-framework');
 
 var _slickWindowResizer = require('./slick-window-resizer');
 
-var _jquery = require('jquery');
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var SlickService = exports.SlickService = (_dec = (0, _aureliaFramework.inject)(_slickWindowResizer.SlickWindowResizer), _dec(_class = function () {
@@ -30,7 +24,7 @@ var SlickService = exports.SlickService = (_dec = (0, _aureliaFramework.inject)(
     this.columnDefinition = {};
     this.data = {};
     this.grid = {};
-    this.gridId = "myGrid";
+    this.gridId = 'myGrid';
     this.gridOptions = {};
     this.isCreated = false;
     this.paginationCallback = null;
@@ -41,13 +35,13 @@ var SlickService = exports.SlickService = (_dec = (0, _aureliaFramework.inject)(
   SlickService.prototype.createDatagrid = function createDatagrid(gridId, columnDefinition, gridOptions, data) {
     this.columnDefinition = columnDefinition || {};
     this.data = data || {};
-    this.gridId = gridId || "myGrid";
+    this.gridId = gridId || 'myGrid';
     this.gridOptions = gridOptions || {};
     this.gridOptions.gridId = this.gridId;
 
     this.grid = new _slickgridEs.Grid('#' + this.gridId, this.data, this.columnDefinition, this.gridOptions);
     this.isCreated = true;
-    if (typeof this.gridOptions.onSortingChanged === "function") {
+    if (typeof this.gridOptions.onSortingChanged === 'function') {
       this.grid.onSort.subscribe(this.gridOptions.onSortingChanged);
     }
 

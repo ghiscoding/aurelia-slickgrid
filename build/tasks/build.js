@@ -2,6 +2,7 @@ let gulp = require('gulp');
 let runSequence = require('run-sequence');
 let to5 = require('gulp-babel');
 let paths = require('../paths');
+let sass = require('gulp-sass');
 let compilerOptions = require('../babel-options');
 let assign = Object.assign || require('object.assign');
 
@@ -19,6 +20,13 @@ gulp.task('build-css', function() {
     .pipe(gulp.dest(paths.output + 'commonjs'))
     .pipe(gulp.dest(paths.output + 'amd'))
     .pipe(gulp.dest(paths.output + 'system'));
+});
+
+gulp.task('build-scss', function() {
+  return gulp.src(paths.scss)
+    .pipe(gulp.dest(paths.output + 'styles/sass'))
+    .pipe(sass().on('error', sass.logError))
+    .pipe(gulp.dest(paths.output + 'styles/css'));
 });
 
 gulp.task('build-es2015', function() {
@@ -48,7 +56,7 @@ gulp.task('build-system', function() {
 gulp.task('build', function(callback) {
   return runSequence(
     'clean',
-    ['build-html', 'build-css', 'build-es2015', 'build-commonjs', 'build-amd', 'build-system'],
+    ['build-html', 'build-scss', 'build-css', 'build-es2015', 'build-commonjs', 'build-amd', 'build-system'],
     callback
   );
 });

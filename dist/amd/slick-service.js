@@ -1,18 +1,10 @@
-define(['exports', 'slickgrid-es6', 'aurelia-framework', './slick-window-resizer', 'jquery'], function (exports, _slickgridEs, _aureliaFramework, _slickWindowResizer, _jquery) {
+define(['exports', 'slickgrid-es6', 'aurelia-framework', './slick-window-resizer'], function (exports, _slickgridEs, _aureliaFramework, _slickWindowResizer) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
   exports.SlickService = undefined;
-
-  var _jquery2 = _interopRequireDefault(_jquery);
-
-  function _interopRequireDefault(obj) {
-    return obj && obj.__esModule ? obj : {
-      default: obj
-    };
-  }
 
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -47,7 +39,7 @@ define(['exports', 'slickgrid-es6', 'aurelia-framework', './slick-window-resizer
       this.columnDefinition = {};
       this.data = {};
       this.grid = {};
-      this.gridId = "myGrid";
+      this.gridId = 'myGrid';
       this.gridOptions = {};
       this.isCreated = false;
       this.paginationCallback = null;
@@ -58,13 +50,13 @@ define(['exports', 'slickgrid-es6', 'aurelia-framework', './slick-window-resizer
     SlickService.prototype.createDatagrid = function createDatagrid(gridId, columnDefinition, gridOptions, data) {
       this.columnDefinition = columnDefinition || {};
       this.data = data || {};
-      this.gridId = gridId || "myGrid";
+      this.gridId = gridId || 'myGrid';
       this.gridOptions = gridOptions || {};
       this.gridOptions.gridId = this.gridId;
 
       this.grid = new _slickgridEs.Grid('#' + this.gridId, this.data, this.columnDefinition, this.gridOptions);
       this.isCreated = true;
-      if (typeof this.gridOptions.onSortingChanged === "function") {
+      if (typeof this.gridOptions.onSortingChanged === 'function') {
         this.grid.onSort.subscribe(this.gridOptions.onSortingChanged);
       }
 

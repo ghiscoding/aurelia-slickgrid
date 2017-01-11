@@ -1,9 +1,9 @@
 'use strict';
 
-System.register(['slickgrid-es6', 'aurelia-framework', './slick-window-resizer', 'jquery'], function (_export, _context) {
+System.register(['slickgrid-es6', 'aurelia-framework', './slick-window-resizer'], function (_export, _context) {
   "use strict";
 
-  var Grid, inject, SlickWindowResizer, $, _createClass, _dec, _class, SlickService;
+  var Grid, inject, SlickWindowResizer, _createClass, _dec, _class, SlickService;
 
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -18,8 +18,6 @@ System.register(['slickgrid-es6', 'aurelia-framework', './slick-window-resizer',
       inject = _aureliaFramework.inject;
     }, function (_slickWindowResizer) {
       SlickWindowResizer = _slickWindowResizer.SlickWindowResizer;
-    }, function (_jquery) {
-      $ = _jquery.default;
     }],
     execute: function () {
       _createClass = function () {
@@ -47,7 +45,7 @@ System.register(['slickgrid-es6', 'aurelia-framework', './slick-window-resizer',
           this.columnDefinition = {};
           this.data = {};
           this.grid = {};
-          this.gridId = "myGrid";
+          this.gridId = 'myGrid';
           this.gridOptions = {};
           this.isCreated = false;
           this.paginationCallback = null;
@@ -58,13 +56,13 @@ System.register(['slickgrid-es6', 'aurelia-framework', './slick-window-resizer',
         SlickService.prototype.createDatagrid = function createDatagrid(gridId, columnDefinition, gridOptions, data) {
           this.columnDefinition = columnDefinition || {};
           this.data = data || {};
-          this.gridId = gridId || "myGrid";
+          this.gridId = gridId || 'myGrid';
           this.gridOptions = gridOptions || {};
           this.gridOptions.gridId = this.gridId;
 
           this.grid = new Grid('#' + this.gridId, this.data, this.columnDefinition, this.gridOptions);
           this.isCreated = true;
-          if (typeof this.gridOptions.onSortingChanged === "function") {
+          if (typeof this.gridOptions.onSortingChanged === 'function') {
             this.grid.onSort.subscribe(this.gridOptions.onSortingChanged);
           }
 

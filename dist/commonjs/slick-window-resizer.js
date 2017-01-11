@@ -29,7 +29,7 @@ var SlickWindowResizer = exports.SlickWindowResizer = (_dec = (0, _aureliaFramew
     _classCallCheck(this, SlickWindowResizer);
 
     this.grid = {};
-    this.gridId = "";
+    this.gridId = '';
     this.gridOptions = {};
 
     this.ea = eventAggregator;
@@ -43,7 +43,7 @@ var SlickWindowResizer = exports.SlickWindowResizer = (_dec = (0, _aureliaFramew
 
     this.resizeToFitBrowserWindow();
 
-    (0, _jquery2.default)(window).on("resize", function () {
+    (0, _jquery2.default)(window).on('resize', function () {
       self.resizeToFitBrowserWindow();
     });
 
@@ -54,18 +54,18 @@ var SlickWindowResizer = exports.SlickWindowResizer = (_dec = (0, _aureliaFramew
 
   SlickWindowResizer.prototype.calculateGridNewDimensions = function calculateGridNewDimensions(gridOptions) {
     if (!(0, _jquery2.default)('#' + gridOptions.gridId)) {
-      (0, _jquery2.default)(window).off("resize");
+      (0, _jquery2.default)(window).off('resize');
       return null;
     }
 
-    var bottomPadding = typeof gridOptions.autoResizeBottomPadding === "undefined" ? DATAGRID_BOTTOM_PADDING : parseInt(gridOptions.autoResizeBottomPadding);
+    var bottomPadding = typeof gridOptions.autoResizeBottomPadding === 'undefined' ? DATAGRID_BOTTOM_PADDING : parseInt(gridOptions.autoResizeBottomPadding, 10);
     if (!!gridOptions.useExternalPagination) {
       bottomPadding += DATAGRID_PAGER_HEIGHT;
     }
-    var availableHeight = (0, _jquery2.default)(window).height() - (0, _jquery2.default)('#' + gridOptions.gridId).offset().top - parseInt(bottomPadding);
+    var availableHeight = (0, _jquery2.default)(window).height() - (0, _jquery2.default)('#' + gridOptions.gridId).offset().top - parseInt(bottomPadding, 10);
     var availableWidth = (0, _jquery2.default)('#' + gridOptions.gridContainerId).width();
-    var minHeight = typeof gridOptions.autoResizeMinHeight === "undefined" ? DATAGRID_MIN_HEIGHT : parseInt(gridOptions.autoResizeMinHeight);
-    var minWidth = typeof gridOptions.autoResizeMinWidth === "undefined" ? DATAGRID_MIN_WIDTH : parseInt(gridOptions.autoResizeMinWidth);
+    var minHeight = typeof gridOptions.autoResizeMinHeight === 'undefined' ? DATAGRID_MIN_HEIGHT : parseInt(gridOptions.autoResizeMinHeight, 10);
+    var minWidth = typeof gridOptions.autoResizeMinWidth === 'undefined' ? DATAGRID_MIN_WIDTH : parseInt(gridOptions.autoResizeMinWidth, 10);
 
     var newHeight = availableHeight;
     var newWidth = availableWidth;
@@ -76,22 +76,22 @@ var SlickWindowResizer = exports.SlickWindowResizer = (_dec = (0, _aureliaFramew
       newWidth = minWidth;
     }
 
-    if (typeof gridOptions.autoResizeHeight !== "undefined") {
-      if (gridOptions.autoResizeHeight.indexOf("px") !== -1) {
+    if (typeof gridOptions.autoResizeHeight !== 'undefined') {
+      if (gridOptions.autoResizeHeight.indexOf('px') !== -1) {
         newHeight = gridOptions.autoResizeHeight;
       } else {
-        newHeight = availableHeight * parseInt(gridOptions.autoResizeHeight) / 100;
+        newHeight = availableHeight * parseInt(gridOptions.autoResizeHeight, 10) / 100;
 
         if (newHeight < minHeight) {
           newHeight = minHeight;
         }
       }
     }
-    if (typeof gridOptions.autoResizeWidth !== "undefined") {
-      if (gridOptions.autoResizeWidth.indexOf("px") !== -1) {
+    if (typeof gridOptions.autoResizeWidth !== 'undefined') {
+      if (gridOptions.autoResizeWidth.indexOf('px') !== -1) {
         newWidth = gridOptions.autoResizeWidth;
       } else {
-        newWidth = availableWidth * parseInt(gridOptions.autoResizeWidth) / 100;
+        newWidth = availableWidth * parseInt(gridOptions.autoResizeWidth, 10) / 100;
 
         if (newWidth < minWidth) {
           newWidth = minWidth;
@@ -106,15 +106,13 @@ var SlickWindowResizer = exports.SlickWindowResizer = (_dec = (0, _aureliaFramew
   };
 
   SlickWindowResizer.prototype.resizeToFitBrowserWindow = function resizeToFitBrowserWindow() {
-    console.log('resize');
-
     var newSizes = this.calculateGridNewDimensions(this.gridOptions);
 
     if (newSizes) {
       (0, _jquery2.default)('#' + this.gridId).height(newSizes.height);
       (0, _jquery2.default)('#' + this.gridId).width(newSizes.width);
 
-      if (new RegExp("MSIE [6-8]").exec(navigator.userAgent) == null && this.grid) {
+      if (new RegExp('MSIE [6-8]').exec(navigator.userAgent) === null && this.grid) {
         this.grid.resizeCanvas();
       }
     }

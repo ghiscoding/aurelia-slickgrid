@@ -1,9 +1,9 @@
 'use strict';
 
-System.register(['aurelia-framework', 'jquery'], function (_export, _context) {
+System.register(['aurelia-framework'], function (_export, _context) {
   "use strict";
 
-  var bindable, $, _desc, _value, _class, _descriptor, SlickPager;
+  var bindable, _desc, _value, _class, _descriptor, SlickPager;
 
   function _initDefineProp(target, property, descriptor, context) {
     if (!descriptor) return;
@@ -57,8 +57,6 @@ System.register(['aurelia-framework', 'jquery'], function (_export, _context) {
   return {
     setters: [function (_aureliaFramework) {
       bindable = _aureliaFramework.bindable;
-    }, function (_jquery) {
-      $ = _jquery.default;
     }],
     execute: function () {
       _export('SlickPager', SlickPager = (_class = function () {
@@ -144,7 +142,7 @@ System.register(['aurelia-framework', 'jquery'], function (_export, _context) {
           if (this.dataTo > this.totalItems) {
             this.dataTo = this.totalItems;
           }
-          if (typeof this.paginationCallback === "function") {
+          if (typeof this.paginationCallback === 'function') {
             this.paginationCallback(pageNumber, this.itemsPerPage);
           }
         };

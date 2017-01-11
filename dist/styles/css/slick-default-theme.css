@@ -1,0 +1,205 @@
+/*
+ * IMPORTANT:
+ * In order to preserve the uniform grid appearance, all cell styles need to have padding, margin and border sizes.
+ * No built-in (selected, editable, highlight, flashing, invalid, loading, :focus) or user-specified CSS
+ * classes should alter those!
+ */
+.slickgrid-container .slick-header-columns,
+.slickgrid-container .slick-header-column {
+  background: rgba(255, 255, 255, 0.6); }
+
+.slickgrid-container .slick-header-columns {
+  border-bottom: 1px solid fade(black, 3%);
+  background: linear-gradient(transparent 60%, rgba(0, 0, 0, 0.1)); }
+
+.slickgrid-container .slick-header-column {
+  border-right: 1px solid fade(black, 3%);
+  border-bottom: 1px solid fade(black, 3%); }
+
+.slickgrid-container .slick-header-column:hover {
+  background: rgba(250, 250, 250, 0.6); }
+
+.slickgrid-container .slick-header-column-active {
+  background: rgba(242, 242, 242, 0.6) !important; }
+
+.slickgrid-container .slick-headerrow {
+  background: rgba(255, 255, 255, 0.6); }
+
+.slickgrid-container .slick-headerrow-column {
+  background: #fafafa;
+  border-bottom: 0; }
+
+.slickgrid-container .grid-canvas {
+  background: white; }
+
+.slickgrid-container .slick-row {
+  background: white;
+  border: 0;
+  line-height: 20px; }
+  .slickgrid-container .slick-row .slick-cell {
+    background: white;
+    padding-top: 3px;
+    padding-bottom: 4px;
+    padding-left: 4px;
+    padding-right: 4px;
+    box-sizing: border-box; }
+    .slickgrid-container .slick-row .slick-cell.invalid {
+      border-color: red;
+      -moz-animation-duration: 0.2s;
+      -webkit-animation-duration: 0.2s;
+      -moz-animation-name: slickgrid-invalid-hilite;
+      -webkit-animation-name: slickgrid-invalid-hilite; }
+    .slickgrid-container .slick-row .slick-cell.selected {
+      background-color: #e7e7c3; }
+    .slickgrid-container .slick-row .slick-cell.active {
+      border-color: black;
+      border-style: solid;
+      border-width: 1px;
+      padding-top: 2px;
+      padding-left: 3px; }
+      .slickgrid-container .slick-row .slick-cell.active input.editor-text {
+        width: 100%;
+        height: 100%;
+        border: 0;
+        margin: 0;
+        outline: 0;
+        background: transparent;
+        padding: 0;
+        transform: translate(0, -2px); }
+  .slickgrid-container .slick-row.odd .slick-cell {
+    background: #f7f7f7; }
+    .slickgrid-container .slick-row.odd .slick-cell.selected {
+      background-color: #d6d6b2; }
+  .slickgrid-container .slick-row.active-row .slick-cell {
+    background-color: #e2fffd; }
+    .slickgrid-container .slick-row.active-row .slick-cell.selected {
+      background-color: red; }
+  .slickgrid-container .slick-row.active-row.odd .slick-cell {
+    background-color: #e2fffd; }
+    .slickgrid-container .slick-row.active-row.odd .slick-cell.selected {
+      background-color: green; }
+  .slickgrid-container .slick-row.loading {
+    opacity: 0.5; }
+
+.slickgrid-container .slick-group {
+  border-bottom: 2px solid silver; }
+
+.slickgrid-container .slick-group-toggle {
+  width: 9px;
+  height: 9px;
+  margin-right: 5px; }
+  .slickgrid-container .slick-group-toggle.expanded {
+    background: url("../images/collapse.gif") no-repeat center center; }
+  .slickgrid-container .slick-group-toggle.collapsed {
+    background: url("../images/expand.gif") no-repeat center center; }
+
+.slickgrid-container .slick-group-totals {
+  color: gray;
+  background: white; }
+
+.slickgrid-container .slick-sortable-placeholder {
+  background: silver !important; }
+
+@-moz-keyframes slickgrid-invalid-hilite {
+  from {
+    box-shadow: 0 0 6px red; }
+  to {
+    box-shadow: none; } }
+
+@-webkit-keyframes slickgrid-invalid-hilite {
+  from {
+    box-shadow: 0 0 6px red; }
+  to {
+    box-shadow: none; } }
+
+.slickgrid-container .slick-header-menubutton {
+  background-position: center center;
+  background-repeat: no-repeat;
+  border-left: thin ridge silver;
+  cursor: pointer;
+  display: inline-block;
+  position: absolute; }
+
+.slickgrid-container .slick-header-menu {
+  background: none repeat scroll 0 0 white;
+  border: 1px solid #BFBDBD;
+  min-width: 175px;
+  padding: 4px;
+  z-index: 100000;
+  cursor: default;
+  display: inline-block;
+  margin: 0;
+  position: absolute; }
+  .slickgrid-container .slick-header-menu button {
+    border: 1px solid #BFBDBD;
+    background-color: white;
+    width: 45px;
+    padding: 4px;
+    margin: 4px 4px 4px 0; }
+  .slickgrid-container .slick-header-menu .filter {
+    border: 1px solid #BFBDBD;
+    font-size: 8pt;
+    height: 400px;
+    margin-top: 6px;
+    overflow: scroll;
+    padding: 4px;
+    white-space: nowrap;
+    width: 200px; }
+  .slickgrid-container .slick-header-menu .textfilter > label {
+    display: inline-block;
+    margin-left: 5px;
+    margin-right: 10px; }
+  .slickgrid-container .slick-header-menu .textfilter > input[type=text] {
+    width: 70%; }
+
+.slickgrid-container label {
+  display: block;
+  margin-bottom: 5px; }
+
+.slickgrid-container .slick-header-menuitem {
+  border: 1px solid transparent;
+  padding: 2px 4px;
+  cursor: pointer;
+  list-style: none outside none;
+  margin: 0; }
+
+.slickgrid-container .slick-header-menuicon {
+  background-position: center center;
+  background-repeat: no-repeat;
+  display: inline-block;
+  height: 16px;
+  margin-right: 4px;
+  vertical-align: middle;
+  width: 16px; }
+
+.slickgrid-container .slick-header-menucontent {
+  display: inline-block;
+  vertical-align: middle; }
+
+.slickgrid-container .slick-header-menuitem:hover {
+  border-color: #BFBDBD; }
+
+.slickgrid-container .header-overlay,
+.slickgrid-container .cell-overlay,
+.slickgrid-container .selection-cell-overlay {
+  display: block;
+  position: absolute;
+  z-index: 999; }
+
+.slickgrid-container .slick-cell > .editor-select {
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: auto;
+  top: 0;
+  bottom: 0;
+  max-width: 100%;
+  min-width: 0;
+  margin: 0; }
+
+.slickgrid-container .slick-range-decorator {
+  z-index: 100;
+  pointer-events: none;
+  background: transparent;
+  border: none;
+  outline: black; }

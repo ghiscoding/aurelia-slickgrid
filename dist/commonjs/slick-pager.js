@@ -9,12 +9,6 @@ var _desc, _value, _class, _descriptor;
 
 var _aureliaFramework = require('aurelia-framework');
 
-var _jquery = require('jquery');
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 function _initDefineProp(target, property, descriptor, context) {
   if (!descriptor) return;
   Object.defineProperty(target, property, {
@@ -143,7 +137,7 @@ var SlickPager = exports.SlickPager = (_class = function () {
     if (this.dataTo > this.totalItems) {
       this.dataTo = this.totalItems;
     }
-    if (typeof this.paginationCallback === "function") {
+    if (typeof this.paginationCallback === 'function') {
       this.paginationCallback(pageNumber, this.itemsPerPage);
     }
   };

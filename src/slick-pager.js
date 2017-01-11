@@ -1,5 +1,4 @@
 import {bindable} from 'aurelia-framework';
-import $ from 'jquery';
 
 export class SlickPager {
   @bindable gridoptions;
@@ -18,14 +17,14 @@ export class SlickPager {
 
   attached() {
     this.gridOptions = this.gridoptions;
-    if(!this.gridOptions || (this.gridOptions.totalItems !== this.totalItems)) {
+    if (!this.gridOptions || (this.gridOptions.totalItems !== this.totalItems)) {
       this.refreshPager();
     }
   }
 
   gridoptionsChanged(newValue, oldValue) {
     this.gridOptions = newValue;
-    if(!this.gridOptions || (this.gridOptions.totalItems !== this.totalItems)) {
+    if (!this.gridOptions || (this.gridOptions.totalItems !== this.totalItems)) {
       this.refreshPager();
     }
   }
@@ -48,20 +47,20 @@ export class SlickPager {
     this.onPageChanged(this.pageNumber);
   }
   changeToNextPage() {
-    if(this.pageNumber < this.pageCount) {
+    if (this.pageNumber < this.pageCount) {
       this.pageNumber++;
       this.onPageChanged(this.pageNumber);
     }
   }
   changeToPreviousPage() {
-    if(this.pageNumber > 0) {
+    if (this.pageNumber > 0) {
       this.pageNumber--;
       this.onPageChanged(this.pageNumber);
     }
   }
 
   refreshPager() {
-    if(this.gridOptions) {
+    if (this.gridOptions) {
       this.paginationPageSizes = this.gridOptions.paginationPageSizes;
       this.itemsPerPage = this.gridOptions.paginationPageSize;
       this.paginationCallback = this.gridOptions.onPaginationChanged;
@@ -75,10 +74,10 @@ export class SlickPager {
     this.dataFrom = (this.pageNumber * this.itemsPerPage) - this.itemsPerPage + 1;
     this.dataTo = (this.pageNumber * this.itemsPerPage);
 
-    if(this.dataTo > this.totalItems) {
+    if (this.dataTo > this.totalItems) {
       this.dataTo = this.totalItems;
     }
-    if(typeof this.paginationCallback === "function") {
+    if (typeof this.paginationCallback === 'function') {
       this.paginationCallback(pageNumber, this.itemsPerPage);
     }
   }
