@@ -47,6 +47,11 @@ gulp.task('build-amd', function() {
     .pipe(gulp.dest(paths.output + 'amd'));
 });
 
+gulp.task('build-images', function() {
+  return gulp.src(paths.image)
+    .pipe(gulp.dest(paths.output + 'images'));
+});
+
 gulp.task('build-system', function() {
   return gulp.src(paths.source)
     .pipe(to5(assign({}, compilerOptions.system())))
@@ -56,7 +61,7 @@ gulp.task('build-system', function() {
 gulp.task('build', function(callback) {
   return runSequence(
     'clean',
-    ['build-html', 'build-scss', 'build-css', 'build-es2015', 'build-commonjs', 'build-amd', 'build-system'],
+    ['build-html', 'build-scss', 'build-css', 'build-es2015', 'build-commonjs', 'build-amd', 'build-images', 'build-system'],
     callback
   );
 });

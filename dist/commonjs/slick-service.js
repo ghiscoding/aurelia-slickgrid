@@ -32,14 +32,19 @@ var SlickService = exports.SlickService = (_dec = (0, _aureliaFramework.inject)(
     this.slickResizer = slickWindowResizer;
   }
 
-  SlickService.prototype.createDatagrid = function createDatagrid(gridId, columnDefinition, gridOptions, data) {
+  SlickService.prototype.createGrid = function createGrid(gridId, columnDefinition, gridOptions, data) {
     this.columnDefinition = columnDefinition || {};
     this.data = data || {};
     this.gridId = gridId || 'myGrid';
     this.gridOptions = gridOptions || {};
     this.gridOptions.gridId = this.gridId;
 
-    this.grid = new _slickgridEs.Grid('#' + this.gridId, this.data, this.columnDefinition, this.gridOptions);
+    if (!!gridOptions.gridType && gridOptions.gridType.toLowerCase() === 'frozengrid') {
+      this.grid = new _slickgridEs.FrozenGrid('#' + this.gridId, this.data, this.columnDefinition, this.gridOptions);
+    } else {
+      this.grid = new _slickgridEs.Grid('#' + this.gridId, this.data, this.columnDefinition, this.gridOptions);
+    }
+
     this.isCreated = true;
     if (typeof this.gridOptions.onSortingChanged === 'function') {
       this.grid.onSort.subscribe(this.gridOptions.onSortingChanged);
@@ -48,6 +53,8 @@ var SlickService = exports.SlickService = (_dec = (0, _aureliaFramework.inject)(
     if (!!this.gridOptions.autoResize) {
       this.slickResizer.attachAutoResizeDataGrid(this.grid, this.gridOptions);
     }
+
+    return this.grid;
   };
 
   SlickService.prototype.refreshDataset = function refreshDataset(dataset) {

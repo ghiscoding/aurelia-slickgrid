@@ -14,7 +14,14 @@ Aurelia-Slickgrid was mostly possible due to another great fork namely [SlickGri
 > - Make it easy to consume in Webpack/Babel/ES6 codebases
 
 ## How to use Aurelia-Slickgrid?
-Still working on that, however you can see some print screen at the bottom. I will most probably create a project with samples and/or `GistRun` which I haven't tried yet. The main focus for now is to make the `Aurelia-Slickgrid` plugin available under `NPM` and get it working. This is my first Aurelia plugin, so we'll see how it goes.
+Examples are coming, I now have a working set of 10 Examples (however 4 & 6 are broken because of Plugins that is not bundled correctly in `Slickgrid-ES6`). `Aurelia-Slickgrid` is a wrapper of `Slickgrid-ES6` with extra features (like grid autoResize, backend sorting/pagination). These extra features (specifically coded for Aurelia) are under `SlickgridService`, however all the classes of `Slickgrid-ES6` are also available. The full list of classes that are available from `aurelia-slickgrid` are:
+
+```javascript
+import {Slick, Editors, Formatters, Data, Grid, FrozenGrid, Plugins, SlickPager, SlickWindowResizer, SlickService} from 'aurelia-slickgrid';
+```
+
+## Installation
+You can run the examples or build your own by doing the following.
 
 ### Aurelia-CLI / Webpack
 ```bash
@@ -30,6 +37,7 @@ For `CLI` you will need to add the plugin to your `aurelia.json` file
   "resources": ["**/*.{css,html}"]
 },
 ```
+
 #### Aurelia (main)
 Make the plugin available globally your `main.js` file.
 ```javascript
@@ -58,10 +66,20 @@ export class List {
   }
 
   attached() {
-    this.slickgrid.createDatagrid('myGrid', this.gridColumns, this.gridOptions, data);
+    this.slickgrid.createGrid('myGrid', this.gridColumns, this.gridOptions, data);
   }
 }
+```
 
+## Examples
+For now, only the `Aurelia-Webpack` version is avaiable. The `Aurelia-CLI` version will be available in the coming weekend.
+
+### Aurelia-Webpack
+```bash
+git clone https://github.com/ghiscoding/aurelia-slickgrid
+cd aurelia-slickgrid/client-wp
+npm install
+npm start
 ```
 
 ## Styling
@@ -69,6 +87,10 @@ Load the default Bootstrap theme style
 ### css
 Default compiled `css`
 ```html
+<!-- Bootstrap theme -->
+<link rel="stylesheet" type="text/css" href="../node_modules/aurelia-slickgrid/dist/styles/css/slickgrid-theme-bootstrap.css">
+
+<!-- OR the default old slickgrid theme -->
 <link rel="stylesheet" type="text/css" href="../node_modules/aurelia-slickgrid/dist/styles/css/slickgrid.css">
 ```
 ### scss (SASS)

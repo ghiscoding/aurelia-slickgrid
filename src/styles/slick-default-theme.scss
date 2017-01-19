@@ -133,12 +133,12 @@
     height: 9px;
     margin-right: 5px;
 
-    &.expanded {
-      background: url('../images/collapse.gif') no-repeat center center;
+    &.expanded:before {
+      content: "\f196";
     }
 
-    &.collapsed {
-      background: url('../images/expand.gif') no-repeat center center;
+    &.collapsed:before {
+      content: "\f147";
     }
   }
 

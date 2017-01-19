@@ -2,3 +2,5 @@ jspm_packages
 bower_components
 .idea
 screenshots
+client-cli
+client-wp

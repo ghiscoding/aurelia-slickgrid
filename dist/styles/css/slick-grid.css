@@ -140,10 +140,10 @@
     margin-top: 6px;
     position: absolute;
     left: 0; }
-  .slickgrid-container .slick-sort-indicator-desc {
-    background: url("../src/images/sort-desc.png"); }
-  .slickgrid-container .slick-sort-indicator-asc {
-    background: url("../src/images/sort-asc.png"); }
+  .slickgrid-container .slick-sort-indicator-desc:before {
+    content: "\f0d7"; }
+  .slickgrid-container .slick-sort-indicator-asc:before {
+    content: "\f0d8"; }
   .slickgrid-container .slick-header-sortable .slick-column-name {
     margin-left: 10px; }
   .slickgrid-container .slick-header.ui-state-default {
