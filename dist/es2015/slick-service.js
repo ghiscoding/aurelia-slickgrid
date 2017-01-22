@@ -13,7 +13,6 @@ export let SlickService = (_dec = inject(SlickWindowResizer), _dec(_class = clas
     this.gridId = 'myGrid';
     this.gridOptions = {};
     this.isCreated = false;
-    this.paginationCallback = null;
 
     this.slickResizer = slickWindowResizer;
   }

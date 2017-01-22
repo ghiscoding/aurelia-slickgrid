@@ -10,8 +10,6 @@ var _jquery2 = _interopRequireDefault(_jquery);
 
 var _slickgridEs = require('slickgrid-es6');
 
-require('./slick.headerbuttons.css');
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 _slickgridEs.Slick.HeaderButtons = HeaderButtons;

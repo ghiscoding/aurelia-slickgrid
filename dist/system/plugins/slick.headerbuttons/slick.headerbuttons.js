@@ -1,6 +1,6 @@
 'use strict';
 
-System.register(['jquery', 'slickgrid-es6', './slick.headerbuttons.css'], function (_export, _context) {
+System.register(['jquery', 'slickgrid-es6'], function (_export, _context) {
   "use strict";
 
   var $, Slick;
@@ -104,7 +104,7 @@ System.register(['jquery', 'slickgrid-es6', './slick.headerbuttons.css'], functi
       $ = _jquery.default;
     }, function (_slickgridEs) {
       Slick = _slickgridEs.Slick;
-    }, function (_slickHeaderbuttonsCss) {}],
+    }],
     execute: function () {
 
       Slick.HeaderButtons = HeaderButtons;

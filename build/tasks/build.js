@@ -29,6 +29,15 @@ gulp.task('build-scss', function() {
     .pipe(gulp.dest(paths.output + 'styles/css'));
 });
 
+gulp.task('build-scss-root', function() {
+  return gulp.src(paths.scssRoot)
+    .pipe(sass().on('error', sass.logError))
+    .pipe(gulp.dest(paths.output + 'es2015'))
+    .pipe(gulp.dest(paths.output + 'commonjs'))
+    .pipe(gulp.dest(paths.output + 'amd'))
+    .pipe(gulp.dest(paths.output + 'system'));
+});
+
 gulp.task('build-es2015', function() {
   return gulp.src(paths.source)
     .pipe(to5(assign({}, compilerOptions.es2015())))
@@ -47,11 +56,6 @@ gulp.task('build-amd', function() {
     .pipe(gulp.dest(paths.output + 'amd'));
 });
 
-gulp.task('build-images', function() {
-  return gulp.src(paths.image)
-    .pipe(gulp.dest(paths.output + 'images'));
-});
-
 gulp.task('build-system', function() {
   return gulp.src(paths.source)
     .pipe(to5(assign({}, compilerOptions.system())))
@@ -61,7 +65,7 @@ gulp.task('build-system', function() {
 gulp.task('build', function(callback) {
   return runSequence(
     'clean',
-    ['build-html', 'build-scss', 'build-css', 'build-es2015', 'build-commonjs', 'build-amd', 'build-images', 'build-system'],
+    ['build-html', 'build-scss', 'build-scss-root', 'build-css', 'build-es2015', 'build-commonjs', 'build-amd', 'build-system'],
     callback
   );
 });

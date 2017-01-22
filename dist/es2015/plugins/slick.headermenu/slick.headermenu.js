@@ -1,8 +1,6 @@
 import $ from 'jquery';
 import { Slick } from 'slickgrid-es6';
 
-import './slick.headermenu.css';
-
 Slick.HeaderMenu = HeaderMenu;
 export default HeaderMenu;
 

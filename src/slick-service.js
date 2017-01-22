@@ -10,7 +10,6 @@ export class SlickService {
   gridId = 'myGrid';
   gridOptions = {};
   isCreated = false;
-  paginationCallback = null;
 
   constructor(slickWindowResizer) {
     this.slickResizer = slickWindowResizer;

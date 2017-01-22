@@ -42,7 +42,6 @@ define(['exports', 'slickgrid-es6', 'aurelia-framework', './slick-window-resizer
       this.gridId = 'myGrid';
       this.gridOptions = {};
       this.isCreated = false;
-      this.paginationCallback = null;
 
       this.slickResizer = slickWindowResizer;
     }

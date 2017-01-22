@@ -1,6 +1,6 @@
 'use strict';
 
-System.register(['jquery', 'slickgrid-es6', './slick.headermenu.css'], function (_export, _context) {
+System.register(['jquery', 'slickgrid-es6'], function (_export, _context) {
   "use strict";
 
   var $, Slick;
@@ -167,7 +167,7 @@ System.register(['jquery', 'slickgrid-es6', './slick.headermenu.css'], function 
       $ = _jquery.default;
     }, function (_slickgridEs) {
       Slick = _slickgridEs.Slick;
-    }, function (_slickHeadermenuCss) {}],
+    }],
     execute: function () {
 
       Slick.HeaderMenu = HeaderMenu;

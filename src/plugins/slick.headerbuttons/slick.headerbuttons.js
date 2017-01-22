@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import {Slick} from 'slickgrid-es6';
 
-import './slick.headerbuttons.css';
+//import './slick.headerbuttons.css';
 
 Slick.HeaderButtons = HeaderButtons;
 export default HeaderButtons;

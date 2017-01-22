@@ -1,11 +1,13 @@
-/* CSS compiled from SASS */
+@charset "UTF-8";
+/* pager/pagination variables */
 /* SlickGrid Bootstrap variables */
 /* Used by slick-bootstrap.scss */
 /* Slickgrid container, including headers but excluding pagination */
 /* cell */
 /* header */
 /* icon font is using Font-Awesome by default but could be changed to any other icon package like Glyphicons, ... */
-/* pager/pagination */
+/* pager/pagination variables */
+/* Pager styling */
 .slick-pager {
   border-top: 0 none;
   border-right: 0 none;
@@ -18,70 +20,54 @@
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   font-size: 13px;
   font-weight: 400;
-  color: #808080;
-}
-.slick-pager .slick-pager-status {
-  display: inline-block;
-  padding: 6px;
-}
-.slick-pager .ui-icon-container {
-  display: inline-block;
-  border-color: #ddd;
-}
-.slick-pager .slick-pager-nav {
-  display: inline-block;
-  float: left;
-  padding: 2px;
-  height: 34px;
-}
-.slick-pager .slick-pager-nav nav {
-  display: inline-block;
-}
-.slick-pager .slick-pager-nav .slick-page-number {
-  vertical-align: top;
-  margin-top: 6px;
-  display: inline-block;
-  padding: 0 5px;
-}
-.slick-pager .slick-pager-nav .pagination {
-  margin: 0;
-}
-.slick-pager .slick-pager-nav .pagination .page-link {
-  font-size: 13px;
-  border: 1px solid #ccc;
-}
-.slick-pager .slick-pager-nav .pagination .page-item a[class*="icon-seek-"] {
-  text-decoration: none;
-  font-family: "FontAwesome";
-  font-size: 14px;
-}
-.slick-pager .slick-pager-nav .pagination .page-item .icon-seek-first:before {
-  content: "";
-}
-.slick-pager .slick-pager-nav .pagination .page-item .icon-seek-prev:before {
-  content: "";
-}
-.slick-pager .slick-pager-nav .pagination .page-item .icon-seek-next:before {
-  content: "";
-}
-.slick-pager .slick-pager-nav .pagination .page-item .icon-seek-end:before {
-  content: "";
-}
-.slick-pager .slick-pager-settings {
-  display: block;
-  float: right;
-  padding: 2px;
-  vertical-align: middle;
-}
-.slick-pager .slick-pager-settings select {
-  font-size: 12px;
-  line-height: 1.5;
-  height: 32px;
-  width: 62px;
-  padding: 5px;
-  border: 1px solid #ccc;
-  border-radius: 3px;
-}
-.slick-pager .slick-pager-settings .slick-pager-count {
-  padding-left: 10px;
-}
+  color: #808080; }
+  .slick-pager .slick-pager-status {
+    display: inline-block;
+    padding: 6px; }
+  .slick-pager .ui-icon-container {
+    display: inline-block;
+    border-color: #ddd; }
+  .slick-pager .slick-pager-nav {
+    display: inline-block;
+    float: left;
+    padding: 2px;
+    height: 34px; }
+    .slick-pager .slick-pager-nav nav {
+      display: inline-block; }
+    .slick-pager .slick-pager-nav .slick-page-number {
+      vertical-align: top;
+      margin-top: 6px;
+      display: inline-block;
+      padding: 0 5px; }
+    .slick-pager .slick-pager-nav .pagination {
+      margin: 0; }
+      .slick-pager .slick-pager-nav .pagination .page-link {
+        font-size: 13px;
+        border: 1px solid #ccc; }
+      .slick-pager .slick-pager-nav .pagination .page-item a[class*="icon-seek-"] {
+        text-decoration: none;
+        font-family: "FontAwesome";
+        font-size: 14px; }
+      .slick-pager .slick-pager-nav .pagination .page-item .icon-seek-first:before {
+        content: ""; }
+      .slick-pager .slick-pager-nav .pagination .page-item .icon-seek-prev:before {
+        content: ""; }
+      .slick-pager .slick-pager-nav .pagination .page-item .icon-seek-next:before {
+        content: ""; }
+      .slick-pager .slick-pager-nav .pagination .page-item .icon-seek-end:before {
+        content: ""; }
+  .slick-pager .slick-pager-settings {
+    display: block;
+    float: right;
+    padding: 2px;
+    vertical-align: middle; }
+    .slick-pager .slick-pager-settings select {
+      font-size: 12px;
+      line-height: 1.5;
+      height: 32px;
+      width: 62px;
+      padding: 5px;
+      border: 1px solid #ccc;
+      border-radius: 3px; }
+    .slick-pager .slick-pager-settings .slick-pager-count {
+      padding-left: 10px; }

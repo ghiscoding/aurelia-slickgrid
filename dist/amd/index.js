@@ -1,10 +1,10 @@
-define(['exports', 'slickgrid-es6', './slick-pager', './slick-window-resizer', './slick-service', './plugins/index'], function (exports, _slickgridEs, _slickPager, _slickWindowResizer, _slickService, _index) {
+define(['exports', 'slickgrid-es6', './slick-service', './plugins/index'], function (exports, _slickgridEs, _slickService, _index) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.SlickService = exports.SlickWindowResizer = exports.SlickPager = exports.Plugins = exports.FrozenGrid = exports.Grid = exports.Data = exports.Formatters = exports.Editors = exports.Slick = undefined;
+  exports.SlickService = exports.Plugins = exports.FrozenGrid = exports.Grid = exports.Data = exports.Formatters = exports.Editors = exports.Slick = undefined;
   exports.configure = configure;
 
   var Plugins = _interopRequireWildcard(_index);
@@ -37,7 +37,5 @@ define(['exports', 'slickgrid-es6', './slick-pager', './slick-window-resizer', '
   exports.Grid = _slickgridEs.Grid;
   exports.FrozenGrid = _slickgridEs.FrozenGrid;
   exports.Plugins = Plugins;
-  exports.SlickPager = _slickPager.SlickPager;
-  exports.SlickWindowResizer = _slickWindowResizer.SlickWindowResizer;
   exports.SlickService = _slickService.SlickService;
 });

@@ -4,8 +4,9 @@ import $ from 'bootstrap';
 import data from './sample-data/example-data';
 import {SlickService, Grid, Plugins} from 'aurelia-slickgrid';
 
-import sortASC from '../../../node_modules/slickgrid-es6/images/sort-asc.gif';
-import sortDSC from '../../../node_modules/slickgrid-es6/images/sort-desc.gif';
+// load necessary icons
+let sortASC = '../../../node_modules/slickgrid-es6/images/sort-asc.gif';
+let sortDSC = '../../../node_modules/slickgrid-es6/images/sort-desc.gif';
 
 @inject(Router, SlickService, Plugins)
 export class List {

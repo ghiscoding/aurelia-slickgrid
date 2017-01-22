@@ -1,4 +1,4 @@
-define(['exports', 'jquery', 'slickgrid-es6', './slick.headermenu.css'], function (exports, _jquery, _slickgridEs) {
+define(['exports', 'jquery', 'slickgrid-es6'], function (exports, _jquery, _slickgridEs) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
