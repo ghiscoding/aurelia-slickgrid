@@ -1,17 +1,23 @@
 {
-  "name": "app-contacts",
-  "description": "An simple Aurelia contact manager sample application.",
-  "version": "1.0.0",
+  "name": "aurelia-slickgrid",
+  "version": "0.3.1",
+  "description": "Slickgrid components made available in Aurelia",
+  "keywords": [
+    "aurelia",
+    "plugin",
+    "slickgrid"
+  ],
+  "homepage": "https://github.com/ghiscoding/aurelia-slickgrid",
+  "bugs": {
+    "url": "https://github.com/ghiscoding/aurelia-slickgrid/issues"
+  },
+  "license": "MIT",
+  "author": "Ghislain B.",
+  "main": "dist/commonjs/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/aurelia/app-contacts"
+    "url": "http://github.com/ghiscoding/aurelia-slickgrid"
   },
-  "homepage": "http://aurelia.io",
-  "bugs": {
-    "url": "https://github.com/aurelia/binding/issues"
-  },
-  "license": "CC0-1.0",
-  "author": "Rob Eisenberg <rob@bluespire.com> (http://robeisenberg.com/)",
   "dependencies": {
     "aurelia-bootstrapper": "^1.0.0",
     "aurelia-http-client": "^1.0.4",

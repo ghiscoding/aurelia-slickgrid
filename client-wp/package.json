@@ -1,8 +1,8 @@
 {
-  "name": "aurelia-skeleton-navigation-webpack",
-  "version": "1.1.2",
-  "description": "A starter kit for building a standard navigation-style app with Aurelia and webpack.",
-  "main": "dist/main.js",
+  "name": "aurelia-slickgrid",
+  "version": "0.3.1",
+  "description": "Slickgrid components made available in Aurelia",
+  "main": "dist/commonjs/index.js",
   "scripts": {
     "pretest": "del-cli \"test/coverage\"",
     "test": "cross-env BABEL_ENV=node NODE_ENV=test ./node_modules/karma/bin/karma start test/karma.conf.js",
@@ -38,30 +38,22 @@
     "webpack": "cross-env BABEL_ENV=node ./node_modules/.bin/webpack",
     "webpack-dev-server": "cross-env BABEL_ENV=node ./node_modules/.bin/webpack-dev-server"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com/aurelia/skeleton-navigation.git"
-  },
   "keywords": [
     "aurelia",
-    "skeleton",
-    "navigation",
-    "webpack"
+    "plugin",
+    "slickgrid"
   ],
-  "license": "CC0-1.0",
-  "author": "Rob Eisenberg <rob@bluespire.com> (http://robeisenberg.com/)",
-  "contributors": [
-    {
-      "name": "Arjen de Blok"
-    },
-    {
-      "name": "Bazyli Brzóska <bazyli.brzoska@gmail.com> (https://invent.life)"
-    }
-  ],
+  "homepage": "https://github.com/ghiscoding/aurelia-slickgrid",
   "bugs": {
-    "url": "https://github.com/aurelia/skeleton-navigation/issues"
+    "url": "https://github.com/ghiscoding/aurelia-slickgrid/issues"
   },
-  "homepage": "https://github.com/aurelia/skeleton-navigation#readme",
+  "license": "MIT",
+  "author": "Ghislain B.",
+  "main": "dist/commonjs/index.js",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/ghiscoding/aurelia-slickgrid"
+  },
   "aurelia": {
     "build": {
       "resources": []
