@@ -13,8 +13,7 @@ Promise.config({
 export function configure(aurelia) {
   aurelia.use
     .standardConfiguration()
-    .plugin('aurelia-slickgrid')
-    .feature('resources');
+    .plugin('aurelia-slickgrid');
 
   if (environment.debug) {
     aurelia.use.developmentLogging();
