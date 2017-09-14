@@ -1,6 +1,6 @@
 {
   "name": "aurelia-slickgrid",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Slickgrid components made available in Aurelia",
   "keywords": [
     "aurelia",
@@ -28,7 +28,7 @@
     "url": "http://github.com/ghiscoding/aurelia-slickgrid"
   },
   "dependencies": {
-    "slickgrid-es6": "^0.4.2"
+    "slickgrid-es6": "^2.0.5"
   },
   "devDependencies": {
     "aurelia-tools": "^0.2.4",

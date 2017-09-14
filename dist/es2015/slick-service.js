@@ -25,9 +25,9 @@ export let SlickService = (_dec = inject(SlickWindowResizer), _dec(_class = clas
     this.gridOptions.gridId = this.gridId;
 
     if (!!gridOptions.gridType && gridOptions.gridType.toLowerCase() === 'frozengrid') {
-      this.grid = new FrozenGrid(`#${ this.gridId }`, this.data, this.columnDefinition, this.gridOptions);
+      this.grid = new FrozenGrid(`#${this.gridId}`, this.data, this.columnDefinition, this.gridOptions);
     } else {
-      this.grid = new Grid(`#${ this.gridId }`, this.data, this.columnDefinition, this.gridOptions);
+      this.grid = new Grid(`#${this.gridId}`, this.data, this.columnDefinition, this.gridOptions);
     }
 
     this.isCreated = true;

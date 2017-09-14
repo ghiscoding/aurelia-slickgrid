@@ -1,5 +1,5 @@
-import {inject} from 'aurelia-framework';
-import {EventAggregator} from 'aurelia-event-aggregator';
+import { inject } from 'aurelia-framework';
+import { EventAggregator } from 'aurelia-event-aggregator';
 import $ from 'jquery';
 
 // global constants, height/width are in pixels
@@ -25,15 +25,21 @@ export class SlickWindowResizer {
     this.grid = grid;
     this.gridId = gridOptions.gridId;
     this.gridOptions = gridOptions;
-    let self = this;
 
-    //-- 1st resize the datagrid size at first load (we need this because the .on event is not triggered on first load)
+    // if we can't find the grid to resize, return without attaching anything
+    const gridDomElm = $(`#${gridOptions.gridId}`);
+    if (!gridDomElm || typeof gridDomElm.offset() === 'undefined') {
+      return null;
+    }
+
+    //-- 1st resize the datagrid size on first load (because the onResize is not triggered on first page load)
     this.resizeToFitBrowserWindow();
 
     //-- 2nd attach a trigger on the Window DOM element, so that it happens also when resizing after first load
-    //-- attach auto-resize to Window object only if it exist
-    $(window).on('resize', function() {
-      self.resizeToFitBrowserWindow();
+    $(window).on('resize', () => {
+      // for some yet unknown reason, calling the resize twice removes any stuttering/flickering when changing the height and makes it much smoother
+      this.resizeToFitBrowserWindow();
+      this.resizeToFitBrowserWindow();
     });
 
     // destroy the resizer on route change
@@ -43,7 +49,7 @@ export class SlickWindowResizer {
   }
 
   /**
-   * Private function, calculate the datagrid new height/width from the available space, also consider that a % factor might be applied to calculation
+   * Calculate the datagrid new height/width from the available space, also consider that a % factor might be applied to calculation
    * object gridOptions
    */
   calculateGridNewDimensions(gridOptions) {
@@ -103,7 +109,7 @@ export class SlickWindowResizer {
     };
   }
 
-  /** Private function, resize the datagrid to fit the browser height & width */
+  /** Resize the datagrid to fit the browser height & width */
   resizeToFitBrowserWindow() {
     // calculate new available sizes but with minimum height of 220px
     let newSizes = this.calculateGridNewDimensions(this.gridOptions);

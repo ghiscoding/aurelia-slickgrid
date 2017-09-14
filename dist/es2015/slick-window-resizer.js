@@ -23,12 +23,17 @@ export let SlickWindowResizer = (_dec = inject(EventAggregator), _dec(_class = c
     this.grid = grid;
     this.gridId = gridOptions.gridId;
     this.gridOptions = gridOptions;
-    let self = this;
+
+    const gridDomElm = $(`#${gridOptions.gridId}`);
+    if (!gridDomElm || typeof gridDomElm.offset() === 'undefined') {
+      return null;
+    }
 
     this.resizeToFitBrowserWindow();
 
-    $(window).on('resize', function () {
-      self.resizeToFitBrowserWindow();
+    $(window).on('resize', () => {
+      this.resizeToFitBrowserWindow();
+      this.resizeToFitBrowserWindow();
     });
 
     this.ea.subscribe('router:navigation:processing', event => {
@@ -37,7 +42,7 @@ export let SlickWindowResizer = (_dec = inject(EventAggregator), _dec(_class = c
   }
 
   calculateGridNewDimensions(gridOptions) {
-    if (!$(`#${ gridOptions.gridId }`)) {
+    if (!$(`#${gridOptions.gridId}`)) {
       $(window).off('resize');
       return null;
     }
@@ -46,7 +51,7 @@ export let SlickWindowResizer = (_dec = inject(EventAggregator), _dec(_class = c
     if (!!gridOptions.useExternalPagination) {
       bottomPadding += DATAGRID_PAGER_HEIGHT;
     }
-    let availableHeight = $(window).height() - $(`#${ gridOptions.gridId }`).offset().top - parseInt(bottomPadding, 10);
+    let availableHeight = $(window).height() - $(`#${gridOptions.gridId}`).offset().top - parseInt(bottomPadding, 10);
     let availableWidth = $('#' + gridOptions.gridContainerId).width();
     let minHeight = typeof gridOptions.autoResizeMinHeight === 'undefined' ? DATAGRID_MIN_HEIGHT : parseInt(gridOptions.autoResizeMinHeight, 10);
     let minWidth = typeof gridOptions.autoResizeMinWidth === 'undefined' ? DATAGRID_MIN_WIDTH : parseInt(gridOptions.autoResizeMinWidth, 10);
@@ -93,8 +98,8 @@ export let SlickWindowResizer = (_dec = inject(EventAggregator), _dec(_class = c
     let newSizes = this.calculateGridNewDimensions(this.gridOptions);
 
     if (newSizes) {
-      $(`#${ this.gridId }`).height(newSizes.height);
-      $(`#${ this.gridId }`).width(newSizes.width);
+      $(`#${this.gridId}`).height(newSizes.height);
+      $(`#${this.gridId}`).width(newSizes.width);
 
       if (new RegExp('MSIE [6-8]').exec(navigator.userAgent) === null && this.grid) {
         this.grid.resizeCanvas();

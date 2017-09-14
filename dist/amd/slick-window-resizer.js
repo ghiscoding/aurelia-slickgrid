@@ -39,15 +39,22 @@ define(['exports', 'aurelia-framework', 'aurelia-event-aggregator', 'jquery'], f
     }
 
     SlickWindowResizer.prototype.attachAutoResizeDataGrid = function attachAutoResizeDataGrid(grid, gridOptions) {
+      var _this = this;
+
       this.grid = grid;
       this.gridId = gridOptions.gridId;
       this.gridOptions = gridOptions;
-      var self = this;
+
+      var gridDomElm = (0, _jquery2.default)('#' + gridOptions.gridId);
+      if (!gridDomElm || typeof gridDomElm.offset() === 'undefined') {
+        return null;
+      }
 
       this.resizeToFitBrowserWindow();
 
       (0, _jquery2.default)(window).on('resize', function () {
-        self.resizeToFitBrowserWindow();
+        _this.resizeToFitBrowserWindow();
+        _this.resizeToFitBrowserWindow();
       });
 
       this.ea.subscribe('router:navigation:processing', function (event) {
