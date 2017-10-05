@@ -4,7 +4,7 @@
  * No built-in (selected, editable, highlight, flashing, invalid, loading, :focus) or user-specified CSS
  * classes should alter those!
  */
- @import './slick-grid-variables';
+ @import './variables';
 
 .slickgrid-container {
   overflow: hidden;
@@ -36,7 +36,7 @@
     margin: 0;
     padding: 4px;
     border: 1px solid $grid-border-color;
-    order-left: 0px;
+    border-left: 0px;
     border-top: 0px;
     border-bottom: 0px;
     float: left;

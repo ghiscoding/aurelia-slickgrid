@@ -1,12 +1,12 @@
 /* pager/pagination variables */
-@import './styles/slick-bootstrap-variables';
+@import './styles/variables';
 
 /* Pager styling */
 .slick-pager {
-  border-top: $pager-border-top;
-  border-right: $pager-border-right;
-  border-bottom: $pager-border-bottom;
-  border-left: $pager-border-left;
+  border-top: $pagination-border-top;
+  border-right: $pagination-border-right;
+  border-bottom: $pagination-border-bottom;
+  border-left: $pagination-border-left;
   width: 100%;
   height: 34px;
   padding-top: 4px;
@@ -14,7 +14,7 @@
   font-family: $font-family;
   font-size: ($font-size-base - 1px);
   font-weight: 400;
-  color: $pager-text-color;
+  color: $pagination-text-color;
 
   .slick-pager-status {
     display: inline-block;
@@ -23,7 +23,7 @@
 
   .ui-icon-container {
     display: inline-block;
-    border-color: $pager-border-color;
+    border-color: $pagination-border-color;
   }
 
   .slick-pager-nav {
@@ -48,7 +48,7 @@
 
       .page-link {
         font-size: ($font-size-base - 1px);
-        border: $pager-button-border;
+        border: $pagination-button-border;
       }
 
       .page-item {
@@ -60,22 +60,22 @@
 
         .icon-seek-first {
           &:before {
-            content: $pager-icon-seek-first;
+            content: $pagination-icon-seek-first;
           }
         }
         .icon-seek-prev {
           &:before {
-            content: $pager-icon-seek-prev;
+            content: $pagination-icon-seek-prev;
           }
         }
         .icon-seek-next {
           &:before {
-            content: $pager-icon-seek-next;
+            content: $pagination-icon-seek-next;
           }
         }
         .icon-seek-end {
           &:before {
-            content: $pager-icon-seek-end;
+            content: $pagination-icon-seek-end;
           }
         }
       }
@@ -94,7 +94,7 @@
       height: 32px;
       width: 62px;
       padding: 5px;
-      border: $pager-button-border;
+      border: $pagination-button-border;
       border-radius: 3px;
     }
 

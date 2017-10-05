@@ -1,30 +1,14 @@
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.SlickService = exports.Plugins = exports.FrozenGrid = exports.Grid = exports.Data = exports.Formatters = exports.Editors = exports.Slick = undefined;
-exports.configure = configure;
-
-var _slickgridEs = require('slickgrid-es6');
-
-var _slickService = require('./slick-service');
-
-var _index = require('./plugins/index');
-
-var Plugins = _interopRequireWildcard(_index);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-function configure(aurelia) {
-  aurelia.globalResources('./slick-pager');
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var au_slickgrid_1 = require("./au-slickgrid");
+exports.AuSlickgridCustomElement = au_slickgrid_1.AuSlickgridCustomElement;
+var slickgrid_config_1 = require("./slickgrid-config");
+exports.SlickgridConfig = slickgrid_config_1.SlickgridConfig;
+function configure(aurelia, callback) {
+    aurelia.globalResources('./au-slickgrid');
+    var config = new slickgrid_config_1.SlickgridConfig();
+    if (typeof callback === 'function') {
+        callback(config);
+    }
 }
-
-exports.Slick = _slickgridEs.Slick;
-exports.Editors = _slickgridEs.Editors;
-exports.Formatters = _slickgridEs.Formatters;
-exports.Data = _slickgridEs.Data;
-exports.Grid = _slickgridEs.Grid;
-exports.FrozenGrid = _slickgridEs.FrozenGrid;
-exports.Plugins = Plugins;
-exports.SlickService = _slickService.SlickService;
+exports.configure = configure;

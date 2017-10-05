@@ -1,17 +1,17 @@
 import {inject} from 'aurelia-framework';
 import {Router} from 'aurelia-router';
-import $ from 'bootstrap';
-import data from './sample-data/example-data';
 import {SlickService} from 'aurelia-slickgrid';
 
 var sampleDataRoot = 'src/modules/slickgrid/sample-data';
 
 @inject(Router, SlickService)
 export class List {
-  heading = 'Example 1 - Frozen Grid, Simple Example';
-  description = 'Resize browser window smaller until you see horizontal scrolling bar (you will see 1st column is Frozen Column)';
+  title = 'Basic Grid';
+  subTitle = 'basic grid with fixed sizes (800 x 400) set by `gridHeight` &amp; `gridWidth`';
+
+  columnDefinitions = [];
   gridOptions = {};
-  gridColumns = {};
+  dataset = [];
 
   constructor(router, slickService) {
     this.router = router;
@@ -21,32 +21,42 @@ export class List {
   attached() {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
-    this.slick.createGrid('myGrid', this.gridColumns, this.gridOptions, data);
+    this.getData();
   }
 
   /* Define grid Options and Columns */
   defineGrid() {
-    let self = this;
-    this.gridColumns = [
-      {id: 'title', name: 'Title', field: 'title', maxWidth: 100, minWidth: 80},
-      {id: 'duration', name: 'Duration', field: 'duration', resizable: false},
-      {id: '%', name: '% Complete', field: 'percentComplete', width: 100},
-      {id: 'start', name: 'Start', field: 'start', width: 120},
-      {id: 'finish', name: 'Finish', field: 'finish', width: 120},
-      {id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', width: 120}
+    this.columnDefinitions = [
+      { id: 'title', name: 'Title', field: 'title', sortable: true },
+      { id: 'duration', name: 'Duration (days)', field: 'duration', sortable: true },
+      { id: '%', name: '% Complete', field: 'percentComplete', sortable: true },
+      { id: 'start', name: 'Start', field: 'start' },
+      { id: 'finish', name: 'Finish', field: 'finish' },
+      { id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', sortable: true }
     ];
-
     this.gridOptions = {
-      autoResize: true,
-      columns: this.gridColumns,
-      forceFitColumns: false,
-      rowHeight: 35,
-      gridContainerId: "slickGridContainer",
-      gridType: "FrozenGrid",
-      enableCellNavigation: true,
-      enableColumnReorder: false,
-      frozenColumn: 0,
-      frozenRow: 1
+      enableAutoResize: false
     };
+  }
+
+  getData() {
+    // fake a dataset
+    this.dataset = [];
+    for (let i = 0; i < 1000; i++) {
+      const randomYear = 2000 + Math.floor(Math.random() * 10);
+      const randomMonth = Math.floor(Math.random() * 11);
+      const randomDay = Math.floor((Math.random() * 29));
+      const randomPercent = Math.round(Math.random() * 100);
+
+      this.dataset[i] = {
+        id: i,
+        title: 'Task ' + i,
+        duration: Math.round(Math.random() * 100) + '',
+        percentComplete: randomPercent,
+        start: `${randomMonth}/${randomDay}/${randomYear}`,
+        finish: `${randomMonth}/${randomDay}/${randomYear}`,
+        effortDriven: (i % 5 === 0)
+      };
+    }
   }
 }
