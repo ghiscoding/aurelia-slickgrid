@@ -5,8 +5,8 @@ import { dateTimeIsoAmPmFormatter } from './dateTimeIsoAmPmFormatter';
 import { dateTimeUsAmPmFormatter } from './dateTimeUsAmPmFormatter';
 import { dateTimeUsFormatter } from './dateTimeUsFormatter';
 import { dateUsFormatter } from './dateUsFormatter';
-import { percentCompleteBarFormatter } from './percentCompleteBarFormatter';
 import { percentCompleteFormatter } from './percentCompleteFormatter';
+import { percentCompleteBarFormatter } from './percentCompleteBarFormatter';
 import { progressBarFormatter } from './progressBarFormatter';
 import { yesNoFormatter } from './yesNoFormatter';
 // import { Group, GroupTotals } from '../core'

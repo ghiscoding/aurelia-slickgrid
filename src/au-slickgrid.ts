@@ -23,7 +23,7 @@ import { SortService } from './services/sort.service';
 declare var Slick: any;
 declare var $: any;
 
-@inject(Element)
+@inject(ResizerService, MouseService, FilterService, SortService)
 export class AuSlickgridCustomElement {
   private _domElm: HTMLElement;
   private _dataset: any[];
@@ -45,26 +45,22 @@ export class AuSlickgridCustomElement {
   @bindable() gridHeight = 100;
   @bindable() gridWidth = 600;
   @bindable() pickerOptions: any;
-  @bindable()
-  set dataset(dataset: any[]) {
-    this._dataset = dataset;
-    this.refreshGridData(dataset);
-  }
-  get dataset(): any[] {
-    return this._dataView.getItems();
-  }
+  @bindable({ defaultBindingMode: bindingMode.twoWay }) dataset: any[];
 
   constructor(
-    private elm: Element,
     private resizer: ResizerService,
     private mouseService: MouseService,
     private filterService: FilterService,
     private sortService: SortService) {
+    this.resizer = resizer;
+    this.mouseService = mouseService;
+    this.filterService = filterService;
+    this.sortService = sortService;
   }
 
   attached() {
     // reference to the DOM element
-    this._domElm = $(this.elm);
+    // this._domElm = $(this.elm);
 
     // finally create the bootstrap-select with all options
     // let pickerOptions = Object.assign({}, GlobalGridOptions, this.pickerOptions || {});
@@ -77,7 +73,10 @@ export class AuSlickgridCustomElement {
 
     this.grid = new Slick.Grid(`#${this.gridId}`, this._dataView, this.columnDefinitions, this._gridOptions);
     this.grid.setSelectionModel(new Slick.RowSelectionModel());
-    // const columnpicker = new Slick.Controls.ColumnPicker(this.columnDefinitions, this.grid, this._gridOptions);
+
+    if (this._gridOptions.enableColumnPicker) {
+      const columnpicker = new Slick.Controls.ColumnPicker(this.columnDefinitions, this.grid, this._gridOptions);
+    }
 
     this.grid.init();
     this._dataView.beginUpdate();
@@ -105,6 +104,11 @@ export class AuSlickgridCustomElement {
   unbind(binding, scope) {
   }
   */
+
+  datasetChanged(newValue: any[], oldValue: any[]) {
+    this._dataset = newValue;
+    this.refreshGridData(newValue);
+  }
 
   attachDifferentHooks(grid: any, options: GridOption, dataView: any) {
     // attach external sorting (backend) when available or default onSort (dataView)

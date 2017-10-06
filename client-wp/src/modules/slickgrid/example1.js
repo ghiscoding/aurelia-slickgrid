@@ -1,10 +1,9 @@
-import {inject} from 'aurelia-framework';
-import {Router} from 'aurelia-router';
-import {SlickService} from 'aurelia-slickgrid';
+import { inject } from 'aurelia-framework';
+import { Router } from 'aurelia-router';
 
 var sampleDataRoot = 'src/modules/slickgrid/sample-data';
 
-@inject(Router, SlickService)
+@inject(Router)
 export class List {
   title = 'Basic Grid';
   subTitle = 'basic grid with fixed sizes (800 x 400) set by `gridHeight` &amp; `gridWidth`';
@@ -13,14 +12,15 @@ export class List {
   gridOptions = {};
   dataset = [];
 
-  constructor(router, slickService) {
+  constructor(router) {
     this.router = router;
-    this.slick = slickService;
+
+    // define the grid options & columns and then create the grid itself
+    this.defineGrid();
   }
 
   attached() {
-    // define the grid options & columns and then create the grid itself
-    this.defineGrid();
+    // populate the dataset once the grid is ready
     this.getData();
   }
 

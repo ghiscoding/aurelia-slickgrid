@@ -1,4 +1,3 @@
-
 import { Column } from './../models/column.interface';
 import { checkboxFormatter } from './checkboxFormatter';
 import { checkmarkFormatter } from './checkmarkFormatter';
@@ -7,13 +6,13 @@ import { dateTimeIsoAmPmFormatter } from './dateTimeIsoAmPmFormatter';
 import { dateTimeUsAmPmFormatter } from './dateTimeUsAmPmFormatter';
 import { dateTimeUsFormatter } from './dateTimeUsFormatter';
 import { dateUsFormatter } from './dateUsFormatter';
-import { percentCompleteBarFormatter } from './percentCompleteBarFormatter';
 import { percentCompleteFormatter } from './percentCompleteFormatter';
+import { percentCompleteBarFormatter } from './percentCompleteBarFormatter';
 import { progressBarFormatter } from './progressBarFormatter';
 import { yesNoFormatter } from './yesNoFormatter';
-
 // import { Group, GroupTotals } from '../core'
 // import { Item } from '../dataview'
+
 
 /*
 export interface GroupFormatter {

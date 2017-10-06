@@ -15,6 +15,7 @@ export const GlobalGridOptions = {
     cellHighlightCssClass: 'slick-cell-modified',
     editable: false,
     enableCellNavigation: false,
+    enableColumnPicker: true,
     enableColumnReorder: true,
     enableMouseOverRow: true,
     enablePagination: false,

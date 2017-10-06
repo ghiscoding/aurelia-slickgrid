@@ -15,9 +15,12 @@ import 'slickgrid/slick.dataview';
 import 'slickgrid/slick.grid';
 import { bindable, bindingMode, inject } from 'aurelia-framework';
 import { GlobalGridOptions } from './global-grid-options';
+import { FilterService } from './services/filter.service';
+import { MouseService } from './services/mouse.service';
+import { ResizerService } from './services/resizer.service';
+import { SortService } from './services/sort.service';
 let AuSlickgridCustomElement = class AuSlickgridCustomElement {
-    constructor(elm, resizer, mouseService, filterService, sortService) {
-        this.elm = elm;
+    constructor(resizer, mouseService, filterService, sortService) {
         this.resizer = resizer;
         this.mouseService = mouseService;
         this.filterService = filterService;
@@ -27,17 +30,14 @@ let AuSlickgridCustomElement = class AuSlickgridCustomElement {
         this.onFilter = new Slick.Event();
         this.gridHeight = 100;
         this.gridWidth = 600;
-    }
-    set dataset(dataset) {
-        this._dataset = dataset;
-        this.refreshGridData(dataset);
-    }
-    get dataset() {
-        return this._dataView.getItems();
+        this.resizer = resizer;
+        this.mouseService = mouseService;
+        this.filterService = filterService;
+        this.sortService = sortService;
     }
     attached() {
         // reference to the DOM element
-        this._domElm = $(this.elm);
+        // this._domElm = $(this.elm);
         // finally create the bootstrap-select with all options
         // let pickerOptions = Object.assign({}, GlobalGridOptions, this.pickerOptions || {});
         // make sure the dataset is initialized (if not it will throw an error that it cannot getLength of null)
@@ -46,7 +46,9 @@ let AuSlickgridCustomElement = class AuSlickgridCustomElement {
         this._dataView = new Slick.Data.DataView();
         this.grid = new Slick.Grid(`#${this.gridId}`, this._dataView, this.columnDefinitions, this._gridOptions);
         this.grid.setSelectionModel(new Slick.RowSelectionModel());
-        // const columnpicker = new Slick.Controls.ColumnPicker(this.columnDefinitions, this.grid, this._gridOptions);
+        if (this._gridOptions.enableColumnPicker) {
+            const columnpicker = new Slick.Controls.ColumnPicker(this.columnDefinitions, this.grid, this._gridOptions);
+        }
         this.grid.init();
         this._dataView.beginUpdate();
         this.attachDifferentHooks(this.grid, this._gridOptions, this._dataView);
@@ -69,6 +71,10 @@ let AuSlickgridCustomElement = class AuSlickgridCustomElement {
     unbind(binding, scope) {
     }
     */
+    datasetChanged(newValue, oldValue) {
+        this._dataset = newValue;
+        this.refreshGridData(newValue);
+    }
     attachDifferentHooks(grid, options, dataView) {
         // attach external sorting (backend) when available or default onSort (dataView)
         if (options.enableSorting) {
@@ -170,9 +176,9 @@ __decorate([
     bindable()
 ], AuSlickgridCustomElement.prototype, "pickerOptions", void 0);
 __decorate([
-    bindable()
-], AuSlickgridCustomElement.prototype, "dataset", null);
+    bindable({ defaultBindingMode: bindingMode.twoWay })
+], AuSlickgridCustomElement.prototype, "dataset", void 0);
 AuSlickgridCustomElement = __decorate([
-    inject(Element)
+    inject(ResizerService, MouseService, FilterService, SortService)
 ], AuSlickgridCustomElement);
 export { AuSlickgridCustomElement };

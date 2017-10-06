@@ -13,7 +13,6 @@ import { MouseService } from './services/mouse.service';
 import { ResizerService } from './services/resizer.service';
 import { SortService } from './services/sort.service';
 export declare class AuSlickgridCustomElement {
-    private elm;
     private resizer;
     private mouseService;
     private filterService;
@@ -38,13 +37,14 @@ export declare class AuSlickgridCustomElement {
     gridWidth: number;
     pickerOptions: any;
     dataset: any[];
-    constructor(elm: Element, resizer: ResizerService, mouseService: MouseService, filterService: FilterService, sortService: SortService);
+    constructor(resizer: ResizerService, mouseService: MouseService, filterService: FilterService, sortService: SortService);
     attached(): void;
     /**
      * Keep original value(s) that could be passed by the user ViewModel.
      * If nothing was passed, it will default to first option of select
      */
     bind(): void;
+    datasetChanged(newValue: any[], oldValue: any[]): void;
     attachDifferentHooks(grid: any, options: GridOption, dataView: any): void;
     attachResizeHook(grid: any, options: GridOption): void;
     mergeGridOptions(): GridOption;

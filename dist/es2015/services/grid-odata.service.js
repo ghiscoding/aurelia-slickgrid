@@ -59,7 +59,7 @@ let GridOdataService = class GridOdataService {
                 fieldSearchValue = '' + fieldSearchValue; // make sure it's a string
                 const matches = fieldSearchValue.match(/^([<>!=\*]{0,2})(.*[^<>!=\*])([\*]?)$/); // group 1: Operator, 2: searchValue, 3: last char is '*' (meaning starts with, ex.: abc*)
                 const operator = columnFilter.operator || ((matches) ? matches[1] : '');
-                let searchValue = (!!matches) ? matches[2] : '';
+                let searchValue = (!!matches) ? matches[2] : fieldSearchValue;
                 const lastValueChar = (!!matches) ? matches[3] : '';
                 const bypassOdataQuery = columnFilter.bypassBackendQuery || false;
                 // no need to query if search value is empty

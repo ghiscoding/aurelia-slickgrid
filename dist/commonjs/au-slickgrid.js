@@ -25,9 +25,12 @@ require("slickgrid/slick.dataview");
 require("slickgrid/slick.grid");
 var aurelia_framework_1 = require("aurelia-framework");
 var global_grid_options_1 = require("./global-grid-options");
+var filter_service_1 = require("./services/filter.service");
+var mouse_service_1 = require("./services/mouse.service");
+var resizer_service_1 = require("./services/resizer.service");
+var sort_service_1 = require("./services/sort.service");
 var AuSlickgridCustomElement = /** @class */ (function () {
-    function AuSlickgridCustomElement(elm, resizer, mouseService, filterService, sortService) {
-        this.elm = elm;
+    function AuSlickgridCustomElement(resizer, mouseService, filterService, sortService) {
         this.resizer = resizer;
         this.mouseService = mouseService;
         this.filterService = filterService;
@@ -37,21 +40,14 @@ var AuSlickgridCustomElement = /** @class */ (function () {
         this.onFilter = new Slick.Event();
         this.gridHeight = 100;
         this.gridWidth = 600;
+        this.resizer = resizer;
+        this.mouseService = mouseService;
+        this.filterService = filterService;
+        this.sortService = sortService;
     }
-    Object.defineProperty(AuSlickgridCustomElement.prototype, "dataset", {
-        get: function () {
-            return this._dataView.getItems();
-        },
-        set: function (dataset) {
-            this._dataset = dataset;
-            this.refreshGridData(dataset);
-        },
-        enumerable: true,
-        configurable: true
-    });
     AuSlickgridCustomElement.prototype.attached = function () {
         // reference to the DOM element
-        this._domElm = $(this.elm);
+        // this._domElm = $(this.elm);
         // finally create the bootstrap-select with all options
         // let pickerOptions = Object.assign({}, GlobalGridOptions, this.pickerOptions || {});
         // make sure the dataset is initialized (if not it will throw an error that it cannot getLength of null)
@@ -60,7 +56,9 @@ var AuSlickgridCustomElement = /** @class */ (function () {
         this._dataView = new Slick.Data.DataView();
         this.grid = new Slick.Grid("#" + this.gridId, this._dataView, this.columnDefinitions, this._gridOptions);
         this.grid.setSelectionModel(new Slick.RowSelectionModel());
-        // const columnpicker = new Slick.Controls.ColumnPicker(this.columnDefinitions, this.grid, this._gridOptions);
+        if (this._gridOptions.enableColumnPicker) {
+            var columnpicker = new Slick.Controls.ColumnPicker(this.columnDefinitions, this.grid, this._gridOptions);
+        }
         this.grid.init();
         this._dataView.beginUpdate();
         this.attachDifferentHooks(this.grid, this._gridOptions, this._dataView);
@@ -83,6 +81,10 @@ var AuSlickgridCustomElement = /** @class */ (function () {
     unbind(binding, scope) {
     }
     */
+    AuSlickgridCustomElement.prototype.datasetChanged = function (newValue, oldValue) {
+        this._dataset = newValue;
+        this.refreshGridData(newValue);
+    };
     AuSlickgridCustomElement.prototype.attachDifferentHooks = function (grid, options, dataView) {
         // attach external sorting (backend) when available or default onSort (dataView)
         if (options.enableSorting) {
@@ -184,10 +186,10 @@ var AuSlickgridCustomElement = /** @class */ (function () {
         aurelia_framework_1.bindable()
     ], AuSlickgridCustomElement.prototype, "pickerOptions", void 0);
     __decorate([
-        aurelia_framework_1.bindable()
-    ], AuSlickgridCustomElement.prototype, "dataset", null);
+        aurelia_framework_1.bindable({ defaultBindingMode: aurelia_framework_1.bindingMode.twoWay })
+    ], AuSlickgridCustomElement.prototype, "dataset", void 0);
     AuSlickgridCustomElement = __decorate([
-        aurelia_framework_1.inject(Element)
+        aurelia_framework_1.inject(resizer_service_1.ResizerService, mouse_service_1.MouseService, filter_service_1.FilterService, sort_service_1.SortService)
     ], AuSlickgridCustomElement);
     return AuSlickgridCustomElement;
 }());

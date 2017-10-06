@@ -1,4 +1,4 @@
-import {GlobalGridOptions} from './global-grid-options';
+import { GlobalGridOptions } from './global-grid-options';
 
 export class SlickgridConfig {
   options: any;

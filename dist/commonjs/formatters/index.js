@@ -7,8 +7,8 @@ var dateTimeIsoAmPmFormatter_1 = require("./dateTimeIsoAmPmFormatter");
 var dateTimeUsAmPmFormatter_1 = require("./dateTimeUsAmPmFormatter");
 var dateTimeUsFormatter_1 = require("./dateTimeUsFormatter");
 var dateUsFormatter_1 = require("./dateUsFormatter");
-var percentCompleteBarFormatter_1 = require("./percentCompleteBarFormatter");
 var percentCompleteFormatter_1 = require("./percentCompleteFormatter");
+var percentCompleteBarFormatter_1 = require("./percentCompleteBarFormatter");
 var progressBarFormatter_1 = require("./progressBarFormatter");
 var yesNoFormatter_1 = require("./yesNoFormatter");
 // import { Group, GroupTotals } from '../core'

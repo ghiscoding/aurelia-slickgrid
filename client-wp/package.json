@@ -1,8 +1,15 @@
 {
   "name": "aurelia-slickgrid",
+  "author": "Ghislain B.",
   "version": "0.3.1",
   "description": "Slickgrid components made available in Aurelia",
   "main": "dist/commonjs/index.js",
+  "license": "MIT",
+  "keywords": [
+    "aurelia",
+    "plugin",
+    "slickgrid"
+  ],
   "scripts": {
     "pretest": "del-cli \"test/coverage\"",
     "test": "cross-env BABEL_ENV=node NODE_ENV=test ./node_modules/karma/bin/karma start test/karma.conf.js",
@@ -38,18 +45,10 @@
     "webpack": "cross-env BABEL_ENV=node ./node_modules/.bin/webpack",
     "webpack-dev-server": "cross-env BABEL_ENV=node ./node_modules/.bin/webpack-dev-server"
   },
-  "keywords": [
-    "aurelia",
-    "plugin",
-    "slickgrid"
-  ],
   "homepage": "https://github.com/ghiscoding/aurelia-slickgrid",
   "bugs": {
     "url": "https://github.com/ghiscoding/aurelia-slickgrid/issues"
   },
-  "license": "MIT",
-  "author": "Ghislain B.",
-  "main": "dist/commonjs/index.js",
   "repository": {
     "type": "git",
     "url": "http://github.com/ghiscoding/aurelia-slickgrid"
