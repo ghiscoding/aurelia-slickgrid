@@ -25,7 +25,7 @@ process.env.BABEL_ENV = 'webpack'
 const ENV = process.env.NODE_ENV && process.env.NODE_ENV.toLowerCase() || (process.env.NODE_ENV = 'development')
 
 // basic configuration:
-const title = 'Aurelia Navigation Skeleton'
+const title = 'Aurelia Slickgrid'
 const baseUrl = '/'
 const rootDir = path.resolve()
 const srcDir = path.resolve('src')
@@ -92,10 +92,10 @@ let config = generateConfig(
    */
 
   ENV === 'test' || ENV === 'development' ?
-    envDev(ENV !== 'test' ? {} : {devtool: 'inline-source-map'}) :
+    envDev(ENV !== 'test' ? {} : { devtool: 'inline-source-map' }) :
     envProd({ /* devtool: '...' */ }),
 
-  aurelia({root: rootDir, src: srcDir, title: title, baseUrl: baseUrl}),
+  aurelia({ root: rootDir, src: srcDir, title: title, baseUrl: baseUrl }),
 
   babel({ options: { /* uses settings from .babelrc */ } }),
   html(),
@@ -104,18 +104,18 @@ let config = generateConfig(
   globalBluebird(),
   globalJquery(),
   globalRegenerator(),
-  generateIndexHtml({minify: ENV === 'production'}),
+  generateIndexHtml({ minify: ENV === 'production' }),
 
   ...(ENV === 'production' || ENV === 'development' ? [
-    commonChunksOptimize({appChunkName: 'app', firstChunk: 'aurelia-bootstrap'}),
-    copyFiles({patterns: [{ from: 'favicon.ico', to: 'favicon.ico' }]})
+    commonChunksOptimize({ appChunkName: 'app', firstChunk: 'aurelia-bootstrap' }),
+    copyFiles({ patterns: [{ from: 'favicon.ico', to: 'favicon.ico' }] })
   ] : [
-    /* ENV === 'test' */
-    generateCoverage({ options: { 'force-sourcemap': true, esModules: true }})
-  ]),
+      /* ENV === 'test' */
+      generateCoverage({ options: { 'force-sourcemap': true, esModules: true } })
+    ]),
 
   ENV === 'production' ?
-    uglify({debug: false, mangle: { except: ['cb', '__webpack_require__'] }}) : {}
+    uglify({ debug: false, mangle: { except: ['cb', '__webpack_require__'] } }) : {}
 )
 
 module.exports = stripMetadata(config)

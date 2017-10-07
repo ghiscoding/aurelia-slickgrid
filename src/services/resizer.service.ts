@@ -22,33 +22,35 @@ export class ResizerService {
   /** Attach an auto resize trigger on the datagrid, if that is enable then it will resize itself to the available space
    * Options: we could also provide a % factor to resize on each height/width independently
    */
-  attachAutoResizeDataGrid(grid: any, gridOptions: GridOption) {
+  attachAutoResizeDataGrid(grid: any, gridOptions: GridOption): any | void {
     // if we can't find the grid to resize, return without attaching anything
     const gridDomElm = $(`#${gridOptions.gridId}`);
-    if (gridDomElm && typeof gridDomElm.offset() === 'function') {
-      // -- 1st resize the datagrid size at first load (we need this because the .on event is not triggered on first load)
-      this.resizeGrid(grid, gridOptions);
-
-      // -- 2nd attach a trigger on the Window DOM element, so that it happens also when resizing after first load
-      // -- attach auto-resize to Window object only if it exist
-      $(window).on('resize', () => {
-        this.resizeGrid(grid, gridOptions);
-      });
-
-      // destroy the resizer on route change
-      this.ea.subscribe('router:navigation:processing', () => {
-        $(window).trigger('resize').off('resize');
-      });
+    if (!gridDomElm || typeof gridDomElm.offset() === 'undefined') {
+      return null;
     }
+
+    // -- 1st resize the datagrid size at first load (we need this because the .on event is not triggered on first load)
+    this.resizeGrid(grid, gridOptions);
+
+    // -- 2nd attach a trigger on the Window DOM element, so that it happens also when resizing after first load
+    // -- attach auto-resize to Window object only if it exist
+    $(window).on('resize.grid', () => {
+      this.resizeGrid(grid, gridOptions);
+    });
+
+    // destroy the resizer on route change
+    this.ea.subscribe('router:navigation:processing', () => {
+      this.destroy();
+    });
   }
 
   /**
    * Calculate the datagrid new height/width from the available space, also consider that a % factor might be applied to calculation
    * object gridOptions
    */
-  calculateGridNewDimensions(gridOptions: GridOption) {
+  calculateGridNewDimensions(gridOptions: GridOption): any {
     let bottomPadding = (gridOptions.autoResize && gridOptions.autoResize.bottomPadding) ? gridOptions.autoResize.bottomPadding : DATAGRID_BOTTOM_PADDING;
-    if (gridOptions.enablePagination) {
+    if (bottomPadding && gridOptions.enablePagination) {
       bottomPadding += DATAGRID_PAGINATION_HEIGHT; // add pagination height to bottom padding
     }
     if (typeof $(`#${gridOptions.gridId}`).offset !== 'function') {
@@ -56,8 +58,8 @@ export class ResizerService {
     }
     const availableHeight = $(window).height() - $(`#${gridOptions.gridId}`).offset().top - bottomPadding;
     const availableWidth = (gridOptions.autoResize && gridOptions.autoResize.containerId) ? $(`#${gridOptions.autoResize.containerId}`).width() : $(`#${gridOptions.gridContainerId}`).width();
-    const minHeight = (gridOptions.autoResize && gridOptions.autoResize.minHeight > 0) ? gridOptions.autoResize.minHeight : DATAGRID_MIN_HEIGHT;
-    const minWidth = (gridOptions.autoResize && gridOptions.autoResize.minWidth > 0) ? gridOptions.autoResize.minWidth : DATAGRID_MIN_WIDTH;
+    const minHeight = (gridOptions.autoResize && gridOptions.autoResize.minHeight < 0) ? gridOptions.autoResize.minHeight : DATAGRID_MIN_HEIGHT;
+    const minWidth = (gridOptions.autoResize && gridOptions.autoResize.minWidth < 0) ? gridOptions.autoResize.minWidth : DATAGRID_MIN_WIDTH;
 
     let newHeight = availableHeight;
     let newWidth = (gridOptions.autoResize && gridOptions.autoResize.sidePadding) ? availableWidth - gridOptions.autoResize.sidePadding : availableWidth;
@@ -74,8 +76,15 @@ export class ResizerService {
     };
   }
 
+  /**
+   * Destroy function when element is destroyed
+   */
+  destroy() {
+    $(window).trigger('resize.grid').off('resize');
+  }
+
   /** Resize the datagrid to fit the browser height & width */
-  resizeGrid(grid: any, gridOptions: GridOption, newSizes?: { height: number, width: number }) {
+  resizeGrid(grid: any, gridOptions: GridOption, newSizes?: { height: number, width: number }): void {
     // calculate new available sizes but with minimum height of 220px
     newSizes = newSizes || this.calculateGridNewDimensions(gridOptions);
 

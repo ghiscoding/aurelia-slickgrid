@@ -12,11 +12,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-define(["require", "exports", "aurelia-framework", "./global-grid-options", "./services/filter.service", "./services/mouse.service", "./services/resizer.service", "./services/sort.service", "slickgrid/controls/slick.columnpicker", "slickgrid/controls/slick.pager", "slickgrid/lib/jquery-ui-1.11.3", "slickgrid/lib/jquery.event.drag-2.3.0", "slickgrid/plugins/slick.rowselectionmodel", "slickgrid/slick.core", "slickgrid/slick.dataview", "slickgrid/slick.grid"], function (require, exports, aurelia_framework_1, global_grid_options_1, filter_service_1, mouse_service_1, resizer_service_1, sort_service_1) {
+define(["require", "exports", "aurelia-framework", "./global-grid-options", "./services/filter.service", "./services/mouse.service", "./services/resizer.service", "./services/sort.service", "slickgrid/lib/jquery-ui-1.11.3", "slickgrid/lib/jquery.event.drag-2.3.0", "slickgrid/slick.core", "slickgrid/slick.dataview", "slickgrid/slick.grid", "slickgrid/controls/slick.columnpicker", "slickgrid/controls/slick.pager", "slickgrid/plugins/slick.autotooltips", "slickgrid/plugins/slick.cellcopymanager", "slickgrid/plugins/slick.cellexternalcopymanager", "slickgrid/plugins/slick.cellrangedecorator", "slickgrid/plugins/slick.cellrangeselector", "slickgrid/plugins/slick.cellselectionmodel", "slickgrid/plugins/slick.checkboxselectcolumn", "slickgrid/plugins/slick.headerbuttons", "slickgrid/plugins/slick.headermenu", "slickgrid/plugins/slick.rowmovemanager", "slickgrid/plugins/slick.rowselectionmodel"], function (require, exports, aurelia_framework_1, global_grid_options_1, filter_service_1, mouse_service_1, resizer_service_1, sort_service_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var AuSlickgridCustomElement = /** @class */ (function () {
-        function AuSlickgridCustomElement(resizer, mouseService, filterService, sortService) {
+        function AuSlickgridCustomElement(elm, resizer, mouseService, filterService, sortService) {
+            this.elm = elm;
             this.resizer = resizer;
             this.mouseService = mouseService;
             this.filterService = filterService;
@@ -26,6 +27,7 @@ define(["require", "exports", "aurelia-framework", "./global-grid-options", "./s
             this.onFilter = new Slick.Event();
             this.gridHeight = 100;
             this.gridWidth = 600;
+            this.elm = elm;
             this.resizer = resizer;
             this.mouseService = mouseService;
             this.filterService = filterService;
@@ -33,7 +35,7 @@ define(["require", "exports", "aurelia-framework", "./global-grid-options", "./s
         }
         AuSlickgridCustomElement.prototype.attached = function () {
             // reference to the DOM element
-            // this._domElm = $(this.elm);
+            this._domElm = $(this.elm);
             // finally create the bootstrap-select with all options
             // let pickerOptions = Object.assign({}, GlobalGridOptions, this.pickerOptions || {});
             // make sure the dataset is initialized (if not it will throw an error that it cannot getLength of null)
@@ -57,19 +59,27 @@ define(["require", "exports", "aurelia-framework", "./global-grid-options", "./s
          * Keep original value(s) that could be passed by the user ViewModel.
          * If nothing was passed, it will default to first option of select
          */
-        AuSlickgridCustomElement.prototype.bind = function () {
+        AuSlickgridCustomElement.prototype.bind = function (binding, contexts) {
+            // get the grid options (priority is Global Options first, then user option which could overwrite the Global options)
+            this.gridOptions = __assign({}, global_grid_options_1.GlobalGridOptions, binding.gridOptions);
             this.style = {
-                height: this.gridHeight + "px",
-                width: this.gridWidth + "px"
+                height: binding.gridHeight + "px",
+                width: binding.gridWidth + "px"
             };
         };
-        /*
-        unbind(binding, scope) {
-        }
-        */
+        AuSlickgridCustomElement.prototype.unbind = function (binding, scope) {
+            this.resizer.destroy();
+        };
         AuSlickgridCustomElement.prototype.datasetChanged = function (newValue, oldValue) {
             this._dataset = newValue;
             this.refreshGridData(newValue);
+            // expand/autofit columns on first page load
+            // we can assume that if the oldValue was empty then we are on first load
+            if (!oldValue || oldValue.length < 1) {
+                if (this._gridOptions.autoFitColumnsOnFirstLoad) {
+                    this.grid.autosizeColumns();
+                }
+            }
         };
         AuSlickgridCustomElement.prototype.attachDifferentHooks = function (grid, options, dataView) {
             // attach external sorting (backend) when available or default onSort (dataView)
@@ -175,7 +185,7 @@ define(["require", "exports", "aurelia-framework", "./global-grid-options", "./s
             aurelia_framework_1.bindable({ defaultBindingMode: aurelia_framework_1.bindingMode.twoWay })
         ], AuSlickgridCustomElement.prototype, "dataset", void 0);
         AuSlickgridCustomElement = __decorate([
-            aurelia_framework_1.inject(resizer_service_1.ResizerService, mouse_service_1.MouseService, filter_service_1.FilterService, sort_service_1.SortService)
+            aurelia_framework_1.inject(Element, resizer_service_1.ResizerService, mouse_service_1.MouseService, filter_service_1.FilterService, sort_service_1.SortService)
         ], AuSlickgridCustomElement);
         return AuSlickgridCustomElement;
     }());

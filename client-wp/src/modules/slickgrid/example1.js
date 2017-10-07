@@ -7,7 +7,7 @@ var sampleDataRoot = 'src/modules/slickgrid/sample-data';
 @inject(Router)
 export class List {
   title = 'Basic Grid';
-  subTitle = 'basic grid with fixed sizes (800 x 400) set by `gridHeight` &amp; `gridWidth`';
+  subTitle = 'basic grid with fixed sizes (800 x 400) set by `grid-height` &amp; `grid-width`';
 
   columnDefinitions = [];
   gridOptions = {};

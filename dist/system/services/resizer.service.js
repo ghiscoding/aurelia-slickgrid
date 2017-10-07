@@ -34,19 +34,20 @@ System.register(["aurelia-event-aggregator", "aurelia-framework"], function (exp
                     var _this = this;
                     // if we can't find the grid to resize, return without attaching anything
                     var gridDomElm = $("#" + gridOptions.gridId);
-                    if (gridDomElm && typeof gridDomElm.offset() === 'function') {
-                        // -- 1st resize the datagrid size at first load (we need this because the .on event is not triggered on first load)
-                        this.resizeGrid(grid, gridOptions);
-                        // -- 2nd attach a trigger on the Window DOM element, so that it happens also when resizing after first load
-                        // -- attach auto-resize to Window object only if it exist
-                        $(window).on('resize', function () {
-                            _this.resizeGrid(grid, gridOptions);
-                        });
-                        // destroy the resizer on route change
-                        this.ea.subscribe('router:navigation:processing', function () {
-                            $(window).trigger('resize').off('resize');
-                        });
+                    if (!gridDomElm || typeof gridDomElm.offset() === 'undefined') {
+                        return null;
                     }
+                    // -- 1st resize the datagrid size at first load (we need this because the .on event is not triggered on first load)
+                    this.resizeGrid(grid, gridOptions);
+                    // -- 2nd attach a trigger on the Window DOM element, so that it happens also when resizing after first load
+                    // -- attach auto-resize to Window object only if it exist
+                    $(window).on('resize.grid', function () {
+                        _this.resizeGrid(grid, gridOptions);
+                    });
+                    // destroy the resizer on route change
+                    this.ea.subscribe('router:navigation:processing', function () {
+                        _this.destroy();
+                    });
                 };
                 /**
                  * Calculate the datagrid new height/width from the available space, also consider that a % factor might be applied to calculation
@@ -54,7 +55,7 @@ System.register(["aurelia-event-aggregator", "aurelia-framework"], function (exp
                  */
                 ResizerService.prototype.calculateGridNewDimensions = function (gridOptions) {
                     var bottomPadding = (gridOptions.autoResize && gridOptions.autoResize.bottomPadding) ? gridOptions.autoResize.bottomPadding : DATAGRID_BOTTOM_PADDING;
-                    if (gridOptions.enablePagination) {
+                    if (bottomPadding && gridOptions.enablePagination) {
                         bottomPadding += DATAGRID_PAGINATION_HEIGHT; // add pagination height to bottom padding
                     }
                     if (typeof $("#" + gridOptions.gridId).offset !== 'function') {
@@ -62,8 +63,8 @@ System.register(["aurelia-event-aggregator", "aurelia-framework"], function (exp
                     }
                     var availableHeight = $(window).height() - $("#" + gridOptions.gridId).offset().top - bottomPadding;
                     var availableWidth = (gridOptions.autoResize && gridOptions.autoResize.containerId) ? $("#" + gridOptions.autoResize.containerId).width() : $("#" + gridOptions.gridContainerId).width();
-                    var minHeight = (gridOptions.autoResize && gridOptions.autoResize.minHeight > 0) ? gridOptions.autoResize.minHeight : DATAGRID_MIN_HEIGHT;
-                    var minWidth = (gridOptions.autoResize && gridOptions.autoResize.minWidth > 0) ? gridOptions.autoResize.minWidth : DATAGRID_MIN_WIDTH;
+                    var minHeight = (gridOptions.autoResize && gridOptions.autoResize.minHeight < 0) ? gridOptions.autoResize.minHeight : DATAGRID_MIN_HEIGHT;
+                    var minWidth = (gridOptions.autoResize && gridOptions.autoResize.minWidth < 0) ? gridOptions.autoResize.minWidth : DATAGRID_MIN_WIDTH;
                     var newHeight = availableHeight;
                     var newWidth = (gridOptions.autoResize && gridOptions.autoResize.sidePadding) ? availableWidth - gridOptions.autoResize.sidePadding : availableWidth;
                     if (newHeight < minHeight) {
@@ -76,6 +77,12 @@ System.register(["aurelia-event-aggregator", "aurelia-framework"], function (exp
                         height: newHeight,
                         width: newWidth
                     };
+                };
+                /**
+                 * Destroy function when element is destroyed
+                 */
+                ResizerService.prototype.destroy = function () {
+                    $(window).trigger('resize.grid').off('resize');
                 };
                 /** Resize the datagrid to fit the browser height & width */
                 ResizerService.prototype.resizeGrid = function (grid, gridOptions, newSizes) {

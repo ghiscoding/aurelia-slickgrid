@@ -5,14 +5,25 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 // import 3rd party vendor libs
-import 'slickgrid/controls/slick.columnpicker';
-import 'slickgrid/controls/slick.pager';
 import 'slickgrid/lib/jquery-ui-1.11.3';
 import 'slickgrid/lib/jquery.event.drag-2.3.0';
-import 'slickgrid/plugins/slick.rowselectionmodel';
 import 'slickgrid/slick.core';
 import 'slickgrid/slick.dataview';
 import 'slickgrid/slick.grid';
+import 'slickgrid/controls/slick.columnpicker';
+import 'slickgrid/controls/slick.pager';
+import 'slickgrid/plugins/slick.autotooltips';
+import 'slickgrid/plugins/slick.cellcopymanager';
+import 'slickgrid/plugins/slick.cellexternalcopymanager';
+import 'slickgrid/plugins/slick.cellrangedecorator';
+import 'slickgrid/plugins/slick.cellrangeselector';
+import 'slickgrid/plugins/slick.cellselectionmodel';
+import 'slickgrid/plugins/slick.checkboxselectcolumn';
+// import 'slickgrid/plugins/slick.draggablegrouping';
+import 'slickgrid/plugins/slick.headerbuttons';
+import 'slickgrid/plugins/slick.headermenu';
+import 'slickgrid/plugins/slick.rowmovemanager';
+import 'slickgrid/plugins/slick.rowselectionmodel';
 import { bindable, bindingMode, inject } from 'aurelia-framework';
 import { GlobalGridOptions } from './global-grid-options';
 import { FilterService } from './services/filter.service';
@@ -20,7 +31,8 @@ import { MouseService } from './services/mouse.service';
 import { ResizerService } from './services/resizer.service';
 import { SortService } from './services/sort.service';
 let AuSlickgridCustomElement = class AuSlickgridCustomElement {
-    constructor(resizer, mouseService, filterService, sortService) {
+    constructor(elm, resizer, mouseService, filterService, sortService) {
+        this.elm = elm;
         this.resizer = resizer;
         this.mouseService = mouseService;
         this.filterService = filterService;
@@ -30,6 +42,7 @@ let AuSlickgridCustomElement = class AuSlickgridCustomElement {
         this.onFilter = new Slick.Event();
         this.gridHeight = 100;
         this.gridWidth = 600;
+        this.elm = elm;
         this.resizer = resizer;
         this.mouseService = mouseService;
         this.filterService = filterService;
@@ -37,7 +50,7 @@ let AuSlickgridCustomElement = class AuSlickgridCustomElement {
     }
     attached() {
         // reference to the DOM element
-        // this._domElm = $(this.elm);
+        this._domElm = $(this.elm);
         // finally create the bootstrap-select with all options
         // let pickerOptions = Object.assign({}, GlobalGridOptions, this.pickerOptions || {});
         // make sure the dataset is initialized (if not it will throw an error that it cannot getLength of null)
@@ -61,19 +74,27 @@ let AuSlickgridCustomElement = class AuSlickgridCustomElement {
      * Keep original value(s) that could be passed by the user ViewModel.
      * If nothing was passed, it will default to first option of select
      */
-    bind() {
+    bind(binding, contexts) {
+        // get the grid options (priority is Global Options first, then user option which could overwrite the Global options)
+        this.gridOptions = Object.assign({}, GlobalGridOptions, binding.gridOptions);
         this.style = {
-            height: `${this.gridHeight}px`,
-            width: `${this.gridWidth}px`
+            height: `${binding.gridHeight}px`,
+            width: `${binding.gridWidth}px`
         };
     }
-    /*
     unbind(binding, scope) {
+        this.resizer.destroy();
     }
-    */
     datasetChanged(newValue, oldValue) {
         this._dataset = newValue;
         this.refreshGridData(newValue);
+        // expand/autofit columns on first page load
+        // we can assume that if the oldValue was empty then we are on first load
+        if (!oldValue || oldValue.length < 1) {
+            if (this._gridOptions.autoFitColumnsOnFirstLoad) {
+                this.grid.autosizeColumns();
+            }
+        }
     }
     attachDifferentHooks(grid, options, dataView) {
         // attach external sorting (backend) when available or default onSort (dataView)
@@ -179,6 +200,6 @@ __decorate([
     bindable({ defaultBindingMode: bindingMode.twoWay })
 ], AuSlickgridCustomElement.prototype, "dataset", void 0);
 AuSlickgridCustomElement = __decorate([
-    inject(ResizerService, MouseService, FilterService, SortService)
+    inject(Element, ResizerService, MouseService, FilterService, SortService)
 ], AuSlickgridCustomElement);
 export { AuSlickgridCustomElement };

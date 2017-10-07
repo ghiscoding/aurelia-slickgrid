@@ -2,6 +2,16 @@ body {
   margin: 0;
 }
 
+.italic {
+  font-style: italic;
+}
+.subtitle {
+  font-size: 19px;
+  font-style: italic;
+  color: grey;
+  margin-bottom: 10px;
+}
+
 .splash {
   text-align: center;
   margin: 10% 0 0 0;

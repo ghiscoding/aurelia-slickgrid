@@ -1,12 +1,12 @@
 <template>
-	<section class="au-animate">
-		<div class="col-sm-3 col-md-2">
-			<ul class="nav nav-pills nav-stacked">
-				<li repeat.for="row of router.navigation" class="${row.isActive ? 'active' : ''}">
+  <section class="au-animate">
+    <div class="col-sm-3 col-md-2">
+      <ul class="nav nav-pills nav-stacked">
+        <li repeat.for="row of router.navigation" class="${row.isActive ? 'active' : ''}">
           <a data-toggle="collapse" data-target="#skeleton-navigation-navbar-collapse.in" href.bind="row.href">${row.title}</a>
         </li>
-			</ul>
-		</div>
-		<router-view class="col-sm-9 col-md-10"></router-view>
-	</section>
+      </ul>
+    </div>
+    <router-view id="demo-container" class="col-sm-9 col-md-10"></router-view>
+  </section>
 </template>
