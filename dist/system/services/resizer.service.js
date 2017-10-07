@@ -43,7 +43,7 @@ System.register(["aurelia-event-aggregator", "aurelia-framework"], function (exp
                             _this.resizeGrid(grid, gridOptions);
                         });
                         // destroy the resizer on route change
-                        this.ea.subscribe('router:navigation:processing', function (event) {
+                        this.ea.subscribe('router:navigation:processing', function () {
                             $(window).trigger('resize').off('resize');
                         });
                     }

@@ -1,5 +1,6 @@
 import { inject } from 'aurelia-framework';
 import { Router } from 'aurelia-router';
+import { FieldType } from 'aurelia-slickgrid';
 
 var sampleDataRoot = 'src/modules/slickgrid/sample-data';
 
@@ -27,7 +28,7 @@ export class List {
   /* Define grid Options and Columns */
   defineGrid() {
     this.columnDefinitions = [
-      { id: 'title', name: 'Title', field: 'title', sortable: true },
+      { id: 'title', name: 'Title', field: 'title', sortable: true, type: FieldType.string },
       { id: 'duration', name: 'Duration (days)', field: 'duration', sortable: true },
       { id: '%', name: '% Complete', field: 'percentComplete', sortable: true },
       { id: 'start', name: 'Start', field: 'start' },
@@ -40,7 +41,7 @@ export class List {
   }
 
   getData() {
-    // fake a dataset
+    // mock a dataset
     this.dataset = [];
     for (let i = 0; i < 1000; i++) {
       const randomYear = 2000 + Math.floor(Math.random() * 10);

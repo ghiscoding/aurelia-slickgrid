@@ -30,7 +30,7 @@ let ResizerService = class ResizerService {
                 this.resizeGrid(grid, gridOptions);
             });
             // destroy the resizer on route change
-            this.ea.subscribe('router:navigation:processing', (event) => {
+            this.ea.subscribe('router:navigation:processing', () => {
                 $(window).trigger('resize').off('resize');
             });
         }

@@ -13,7 +13,10 @@ const DATAGRID_PAGINATION_HEIGHT = 35;
 
 @inject(EventAggregator)
 export class ResizerService {
-  constructor(private ea: EventAggregator) {
+  ea: EventAggregator;
+
+  constructor(ea: EventAggregator) {
+    this.ea = ea;
   }
 
   /** Attach an auto resize trigger on the datagrid, if that is enable then it will resize itself to the available space
@@ -33,7 +36,7 @@ export class ResizerService {
       });
 
       // destroy the resizer on route change
-      this.ea.subscribe('router:navigation:processing', (event: any) => {
+      this.ea.subscribe('router:navigation:processing', () => {
         $(window).trigger('resize').off('resize');
       });
     }

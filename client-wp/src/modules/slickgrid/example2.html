@@ -1,6 +1,7 @@
 <template>
-  <h2>${heading}</h2>
-  <div id="slickGridContainer" class="gridPane">
-      <div id="myGrid" class="slickgrid-container"></div>
-  </div>
+  <h2>${title}</h2>
+  <div class="subtitle" innerhtml.bind="subTitle"></div>
+
+  <au-slickgrid gridId="grid1" column-definitions.bind="columnDefinitions" grid-options.bind="gridOptions" dataset.bind="dataset">
+  </au-slickgrid>
 </template>
