@@ -2,13 +2,21 @@
 One of the best javascript datagrid [SlickGrid](https://github.com/mleibman/SlickGrid) which was originally developed by @mleibman is now available to Aurelia. I have used a few datagrids and slickgrid beats most of them in terms of functionalities and performance (it can easily deal with even a million row).
 
 ### SlickGrid Source
-We will be using [6pac SlickGrid fork](https://github.com/6pac/SlickGrid/) (the most active fork since the original @mleibman fork was closed some time ago by his author personal reasons).
+We will be using [6pac SlickGrid fork](https://github.com/6pac/SlickGrid/) (the most active fork since the original fork @mleibman was closed some time ago for personal reasons).
 
 ### Goal
 The goal is of course to be able to run SlickGrid within Aurelia but also to incorporate as much as possible the entire list of functionalities (and more) that SlickGrid offers (you can see a vast list of samples on the [6pac SlickGrid examples](https://github.com/6pac/SlickGrid/wiki/Examples) website).
 
 ### NPM Package
 [Aurelia-Slickgrid on NPM](https://www.npmjs.com/package/aurelia-slickgrid)
+
+## Migration (from 0.x to 1.x)
+### Breaking Changes
+Since the version `1.x` is a complete rewrite and drops the dependecies of [Slickgrid-ES6](https://github.com/DimitarChristoff/slickgrid-es6), there will be a few breaking changes. The modules you can import are different and the `Frozen` grid is gone.
+
+### Why the rewrite?
+Mostly because the [Slickgrid-ES6](https://github.com/DimitarChristoff/slickgrid-es6) repo (which is maintained by 1 person who mainly does `React` stuff) is not as maintained neither stable as is the official [6pac fork](https://github.com/6pac/SlickGrid). Also, I now have another repo for `Angular 4+` as well ([Angular-Slickgrid](https://github.com/ghiscoding/Angular-Slickgrid)) which I also maintain (that one is for work though) and is based on the [6pac fork](https://github.com/6pac/SlickGrid) fork which I prefer for it's stability and amount of functionalities and samples (I even made a few PRs on that fork as well). The goal is to make both `Angular-Slickgrid` and `Aurelia-Slickgrid` on par and because this is used at work too, it will grow much faster.
+
 
 ## Wiki / Documentation
 The Wiki is where all the documentation and instructions will go, so please consult the [Aurelia-Validation - Wiki](https://github.com/ghiscoding/aurelia-slickgrid/wiki) before opening any issues. The [Wiki - HOWTO](https://github.com/ghiscoding/aurelia-slickgrid/wiki/HOWTO---Step-by-Step) is a great place to start with.
