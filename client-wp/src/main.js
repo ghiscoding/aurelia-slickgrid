@@ -14,6 +14,7 @@ export async function configure(aurelia) {
   aurelia.use
     .standardConfiguration()
     .plugin('aurelia-slickgrid')
+    //.feature('./../../src')
     .developmentLogging();
 
   // Uncomment the line below to enable animation.

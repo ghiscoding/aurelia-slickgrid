@@ -24,6 +24,9 @@
     "dist",
     "doc",
     "node_modules",
+    "client-cli",
+    "client-wp",
+    "client-ts-wp",
     "test"
   ]
 }

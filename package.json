@@ -95,7 +95,7 @@
   "aurelia": {
     "build": {
       "resources": [
-        "aurelia-slickgrid/au-slickgrid",
+        "aurelia-slickgrid/aurelia-slickgrid",
         "aurelia-slickgrid/slick-pagination/slick-pagination"
       ]
     }

@@ -1,4 +1,4 @@
-define(["require", "exports", "./../models/fieldType", "./../sorters"], function (require, exports, fieldType_1, sorters_1) {
+define(["require", "exports", "./../models/fieldType", "./../sorters/index"], function (require, exports, fieldType_1, index_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var SortService = /** @class */ (function () {
@@ -35,22 +35,22 @@ define(["require", "exports", "./../models/fieldType", "./../sorters"], function
                         var result = 0;
                         switch (fieldType) {
                             case fieldType_1.FieldType.number:
-                                result = sorters_1.Sorters.numeric(value1, value2, sortDirection);
+                                result = index_1.Sorters.numeric(value1, value2, sortDirection);
                                 break;
                             case fieldType_1.FieldType.date:
-                                result = sorters_1.Sorters.date(value1, value2, sortDirection);
+                                result = index_1.Sorters.date(value1, value2, sortDirection);
                                 break;
                             case fieldType_1.FieldType.dateIso:
-                                result = sorters_1.Sorters.dateIso(value1, value2, sortDirection);
+                                result = index_1.Sorters.dateIso(value1, value2, sortDirection);
                                 break;
                             case fieldType_1.FieldType.dateUs:
-                                result = sorters_1.Sorters.dateUs(value1, value2, sortDirection);
+                                result = index_1.Sorters.dateUs(value1, value2, sortDirection);
                                 break;
                             case fieldType_1.FieldType.dateUsShort:
-                                result = sorters_1.Sorters.dateUsShort(value1, value2, sortDirection);
+                                result = index_1.Sorters.dateUsShort(value1, value2, sortDirection);
                                 break;
                             default:
-                                result = sorters_1.Sorters.string(value1, value2, sortDirection);
+                                result = index_1.Sorters.string(value1, value2, sortDirection);
                                 break;
                         }
                         if (result !== 0) {

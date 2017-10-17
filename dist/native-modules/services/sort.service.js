@@ -1,5 +1,5 @@
 import { FieldType } from './../models/fieldType';
-import { Sorters } from './../sorters';
+import { Sorters } from './../sorters/index';
 var SortService = /** @class */ (function () {
     function SortService() {
     }

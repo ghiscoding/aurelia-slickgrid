@@ -1,51 +1,73 @@
-import {inject} from 'aurelia-framework';
-import {Router} from 'aurelia-router';
+import { inject } from 'aurelia-framework';
+import { Router } from 'aurelia-router';
 import $ from 'bootstrap';
 import data from './sample-data/example-data';
-import {SlickService, Formatters} from 'aurelia-slickgrid';
+import { FieldType, Formatters } from 'aurelia-slickgrid';
 
-function checkmarkFormatter(row, cell, value, columnDef, dataContext){
-  return value ? `<i class="fa fa-check" aria-hidden="true"></i>` : '';
-}
+// create my custom Formatter with the Formatter type
+const myCustomCheckboxFormatter = (row, cell, value, columnDef, dataContext) =>
+  value ? `<i class="fa fa-fire" aria-hidden="true"></i>` : '<i class="fa fa-snowflake-o" aria-hidden="true"></i>';
 
-@inject(Router, SlickService)
+@inject(Router)
 export class List {
-  heading = 'Example 2: Formatters';
+  title = 'Example 2: Formatters';
+  subTitle = 'grid auto-resize, multi-column sort and custom/SlickGrid Formatters';
   gridOptions = {};
   gridColumns = {};
 
-  constructor(router, slickService) {
+  constructor(router) {
     this.router = router;
-    this.slick = slickService;
+
+    // define the grid options & columns and then create the grid itself
+    this.defineGrid();
   }
 
   attached() {
-    // define the grid options & columns and then create the grid itself
-    this.defineGrid();
-    this.slick.createGrid('myGrid', this.gridColumns, this.gridOptions, data);
+    // populate the dataset once the grid is ready
+    this.getData();
   }
 
   /* Define grid Options and Columns */
   defineGrid() {
-    this.gridColumns = [
-      {id: 'title', name: 'Title', field: 'title', width: 120, cssClass: 'cell-title'},
-      {id: 'duration', name: 'Duration', field: 'duration'},
-      {id: '%', name: '% Complete', field: 'percentComplete', width: 100, resizable: false, formatter: Formatters.PercentCompleteBar},
-      {id: 'start', name: 'Start', field: 'start', minWidth: 60},
-      {id: 'finish', name: 'Finish', field: 'finish', minWidth: 60},
-      {id: 'effort-driven', name: 'Effort Driven', sortable: false, width: 80, minWidth: 20, maxWidth: 80, cssClass: 'cell-effort-driven', field: 'effortDriven', formatter: checkmarkFormatter}
+    this.columnDefinitions = [
+      { id: 'title', name: 'Title', field: 'title', sortable: true, type: FieldType.string },
+      { id: 'duration', name: 'Duration (days)', field: 'duration', sortable: true, type: FieldType.number },
+      { id: 'complete', name: '% Complete', field: 'percentComplete', formatter: Formatters.percentCompleteBar, type: FieldType.number, sortable: true },
+      { id: 'percent2', name: '% Complete', field: 'percentComplete2', formatter: Formatters.progressBar, type: FieldType.number, sortable: true },
+      { id: 'start', name: 'Start', field: 'start', formatter: Formatters.dateIso, sortable: true, type: FieldType.dateIso },
+      { id: 'finish', name: 'Finish', field: 'finish', formatter: Formatters.dateIso, sortable: true, type: FieldType.date },
+      { id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', formatter: myCustomCheckboxFormatter, type: FieldType.number, sortable: true }
     ];
 
     this.gridOptions = {
-      autoResize: true,
-      columns: this.gridColumns,
-      forceFitColumns: true,
-      rowHeight: 35,
-      gridContainerId: "slickGridContainer",
-      editable: false,
-      enableAddRow: false,
-      enableCellNavigation: true,
-      enableColumnReorder: false
+      autoResize: {
+        containerId: 'demo-container',
+        sidePadding: 15
+      },
+      enableCellNavigation: true
     };
+  }
+
+  getData() {
+    // mock a dataset
+    this.dataset = [];
+    for (let i = 0; i < 1000; i++) {
+      const randomYear = 2000 + Math.floor(Math.random() * 10);
+      const randomMonth = Math.floor(Math.random() * 11);
+      const randomDay = Math.floor((Math.random() * 29));
+      const randomPercent = Math.round(Math.random() * 100);
+
+      this.dataset[i] = {
+        id: i,
+        title: 'Task ' + i,
+        duration: Math.round(Math.random() * 100) + '',
+        percentComplete: randomPercent,
+        percentComplete2: randomPercent,
+        percentCompleteNumber: randomPercent,
+        start: new Date(randomYear, randomMonth, randomDay),
+        finish: new Date(randomYear, (randomMonth + 1), randomDay),
+        effortDriven: (i % 5 === 0)
+      };
+    }
   }
 }

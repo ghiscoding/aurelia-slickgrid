@@ -1,6 +1,6 @@
 import { FieldType } from './../models/fieldType';
 import { GridOption } from './../models/gridOption.interface';
-import { Sorters } from './../sorters';
+import { Sorters } from './../sorters/index';
 
 export class SortService {
   private subscriber: any;

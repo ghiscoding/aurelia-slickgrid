@@ -2,8 +2,8 @@
   <require from='./../styles/slick-pagination.css'></require>
 
   <div id="pager" style="width:100%;">
-    <div class="slick-pager">
-      <div class="slick-pager-nav">
+    <div class="slick-pagination">
+      <div class="slick-pagination-nav">
         <nav aria-label="Page navigation">
           <ul class="pagination">
             <li class="page-item" class.bind="pageNumber === 1 ? 'disabled' : ''">
@@ -34,12 +34,12 @@
           </ul>
         </nav>
       </div>
-      <span class="slick-pager-settings">
+      <span class="slick-pagination-settings">
         <select id="items-per-page-label" value.bind="itemsPerPage" change.delegate="changePageCount(itemsPerPage)">
           <option value="${pageSize}" repeat.for="pageSize of paginationPageSizes" model.bind="pageSize">${pageSize}</option>
         </select>
         items per page,
-        <span class="slick-pager-count">
+        <span class="slick-pagination-count">
           ${dataFrom}-${dataTo} of ${totalItems} items
         </span>
       </span>

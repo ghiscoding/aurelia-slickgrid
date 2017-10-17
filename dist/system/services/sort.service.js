@@ -1,14 +1,14 @@
-System.register(["./../models/fieldType", "./../sorters"], function (exports_1, context_1) {
+System.register(["./../models/fieldType", "./../sorters/index"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var fieldType_1, sorters_1, SortService;
+    var fieldType_1, index_1, SortService;
     return {
         setters: [
             function (fieldType_1_1) {
                 fieldType_1 = fieldType_1_1;
             },
-            function (sorters_1_1) {
-                sorters_1 = sorters_1_1;
+            function (index_1_1) {
+                index_1 = index_1_1;
             }
         ],
         execute: function () {
@@ -46,22 +46,22 @@ System.register(["./../models/fieldType", "./../sorters"], function (exports_1, 
                                 var result = 0;
                                 switch (fieldType) {
                                     case fieldType_1.FieldType.number:
-                                        result = sorters_1.Sorters.numeric(value1, value2, sortDirection);
+                                        result = index_1.Sorters.numeric(value1, value2, sortDirection);
                                         break;
                                     case fieldType_1.FieldType.date:
-                                        result = sorters_1.Sorters.date(value1, value2, sortDirection);
+                                        result = index_1.Sorters.date(value1, value2, sortDirection);
                                         break;
                                     case fieldType_1.FieldType.dateIso:
-                                        result = sorters_1.Sorters.dateIso(value1, value2, sortDirection);
+                                        result = index_1.Sorters.dateIso(value1, value2, sortDirection);
                                         break;
                                     case fieldType_1.FieldType.dateUs:
-                                        result = sorters_1.Sorters.dateUs(value1, value2, sortDirection);
+                                        result = index_1.Sorters.dateUs(value1, value2, sortDirection);
                                         break;
                                     case fieldType_1.FieldType.dateUsShort:
-                                        result = sorters_1.Sorters.dateUsShort(value1, value2, sortDirection);
+                                        result = index_1.Sorters.dateUsShort(value1, value2, sortDirection);
                                         break;
                                     default:
-                                        result = sorters_1.Sorters.string(value1, value2, sortDirection);
+                                        result = index_1.Sorters.string(value1, value2, sortDirection);
                                         break;
                                 }
                                 if (result !== 0) {

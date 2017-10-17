@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var fieldType_1 = require("./../models/fieldType");
-var sorters_1 = require("./../sorters");
+var index_1 = require("./../sorters/index");
 var SortService = /** @class */ (function () {
     function SortService() {
     }
@@ -36,22 +36,22 @@ var SortService = /** @class */ (function () {
                     var result = 0;
                     switch (fieldType) {
                         case fieldType_1.FieldType.number:
-                            result = sorters_1.Sorters.numeric(value1, value2, sortDirection);
+                            result = index_1.Sorters.numeric(value1, value2, sortDirection);
                             break;
                         case fieldType_1.FieldType.date:
-                            result = sorters_1.Sorters.date(value1, value2, sortDirection);
+                            result = index_1.Sorters.date(value1, value2, sortDirection);
                             break;
                         case fieldType_1.FieldType.dateIso:
-                            result = sorters_1.Sorters.dateIso(value1, value2, sortDirection);
+                            result = index_1.Sorters.dateIso(value1, value2, sortDirection);
                             break;
                         case fieldType_1.FieldType.dateUs:
-                            result = sorters_1.Sorters.dateUs(value1, value2, sortDirection);
+                            result = index_1.Sorters.dateUs(value1, value2, sortDirection);
                             break;
                         case fieldType_1.FieldType.dateUsShort:
-                            result = sorters_1.Sorters.dateUsShort(value1, value2, sortDirection);
+                            result = index_1.Sorters.dateUsShort(value1, value2, sortDirection);
                             break;
                         default:
-                            result = sorters_1.Sorters.string(value1, value2, sortDirection);
+                            result = index_1.Sorters.string(value1, value2, sortDirection);
                             break;
                     }
                     if (result !== 0) {

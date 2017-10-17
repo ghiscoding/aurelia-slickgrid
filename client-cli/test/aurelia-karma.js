@@ -2,6 +2,12 @@
   var karma = global.__karma__;
   var requirejs = global.requirejs
   var locationPathname = global.location.pathname;
+  var root = 'src';
+  karma.config.args.forEach(function(value, index) {
+    if (value === 'aurelia-root') {
+      root = karma.config.args[index + 1];
+    }
+  });
 
   if (!karma || !requirejs) {
     return;
@@ -26,6 +32,12 @@
       normalized.push(parts[i])
     }
 
+    // Use case of testing source code. RequireJS doesn't add .js extension to files asked via sibling selector
+    // If normalized path doesn't include some type of extension, add the .js to it
+    if (normalized.length > 0 && normalized[normalized.length - 1].indexOf('.') < 0) {
+      normalized[normalized.length - 1] = normalized[normalized.length - 1] + '.js'
+    }
+
     return normalized.join('/')
   }
 
@@ -46,10 +58,10 @@
       return originalLoadFn.call(this, context, moduleName, url)
     }
 
-    let originalDefine = global.define;
+    var originalDefine = global.define;
     global.define = function(name, deps, m) {
       if (typeof name === 'string') {
-        originalDefine('/base/src/' + name, [name], function (result) { return result; });
+        originalDefine('/base/' + root + '/' + name, [name], function (result) { return result; });
       }
 
       return originalDefine(name, deps, m);

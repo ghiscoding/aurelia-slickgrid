@@ -1,5 +1,5 @@
 import { FieldType } from './../models/fieldType';
-import { Sorters } from './../sorters';
+import { Sorters } from './../sorters/index';
 export class SortService {
     /**
      * Attach a backend sort (single/multi) hook to the grid
