@@ -11,11 +11,12 @@ var aurelia_framework_1 = require("aurelia-framework");
 var moment = require("moment");
 var caseType_1 = require("./../models/caseType");
 var fieldType_1 = require("./../models/fieldType");
+var odata_service_1 = require("./odata.service");
 var GridOdataService = /** @class */ (function () {
     function GridOdataService(odataService) {
-        this.odataService = odataService;
         this.defaultSortBy = '';
         this.minUserInactivityOnFilter = 700;
+        this.odataService = odataService;
     }
     GridOdataService.prototype.buildQuery = function () {
         return this.odataService.buildQuery();
@@ -233,7 +234,7 @@ var GridOdataService = /** @class */ (function () {
         return date;
     };
     GridOdataService = __decorate([
-        aurelia_framework_1.inject()
+        aurelia_framework_1.inject(odata_service_1.OdataService)
     ], GridOdataService);
     return GridOdataService;
 }());

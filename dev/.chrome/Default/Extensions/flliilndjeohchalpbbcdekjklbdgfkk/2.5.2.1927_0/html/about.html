@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+  <head>
+    <title>About</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="/css/abs-page.css" />
+    <script src="/js/content/jquery.js"></script>
+    <script src="/js/content/about.js"></script>
+  </head>
+  <body>
+    <header class="header">
+      <img class="header__img" src="/img/avira_logo.png" alt="Avira" width="38" />
+    </header>
+
+    <div id="message" class="abs-page">
+      <p>ABS Version: <span id="abs-version"></span></p>
+      <p>
+        <div>
+          Set the locale that should be used, leave empty for default behavior.
+          Open tabs need to be reloaded to take effect. Examples: en-US, de-DE, base-sim
+        </div>
+        Locale: <select name="locale" id="locale"></select>
+      </p>
+      <div>
+        <div>AB params:</div>
+        <div>
+          <textarea id="ab-params" style="width: 100%; height: 100px;"></textarea>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

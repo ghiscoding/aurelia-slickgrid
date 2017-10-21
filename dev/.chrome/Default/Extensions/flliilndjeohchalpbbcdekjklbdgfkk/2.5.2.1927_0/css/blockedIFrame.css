@@ -1,0 +1,54 @@
+@font-face {
+  font-family: Kievit;
+  src: url("fonts/KievitWebPro-Light.woff") format("woff");
+  font-weight: 100; }
+
+@font-face {
+  font-family: Kievit;
+  src: url("fonts/KievitWebPro.woff") format("woff"); }
+
+@font-face {
+  font-family: Kievit;
+  src: url("fonts/KievitWebPro-Bold.woff") format("woff");
+  font-weight: bold; }
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: KievitWebPro, sans-serif;
+  font-size: 13px;
+  line-height: 1.5em; }
+
+#content {
+  top: 50%;
+  position: absolute;
+  width: 100%;
+  transform: translateY(-50%); }
+
+#icon {
+  width: 40px;
+  height: 40px;
+  background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA3MCA3MCI+PHBhdGggZmlsbD0iI2NjYyIgZD0iTTQgMGg2MmMyLjIgMCA0IDEuOCA0IDR2NjJjMCAyLjItMS44IDQtNCA0SDRjLTIuMiAwLTQtMS44LTQtNFY0YzAtMi4yIDEuOC00IDQtNHoiLz48cGF0aCBmaWxsPSIjRkZGIiBkPSJNNTUuNSA0MC4xbC0uMS0uMS0zLjkgMy43YzEgMS4xIDEgMi44LS4xIDMuOHMtMi44IDEtMy44LS4xYy0uMS0uMS0uMi0uMi0uMy0uNCAwIDAtNi4zLTYuNy0xMC40LTExTDUxIDIyLjVjLTguOC04LjQtMjIuNy04LjgtMzEuNC0uM0MxMSAzMC42IDEwIDQ0LjMgMTguMSA1NEwzMyAzOS44bDEwLjkgMTEuNmMxLjUgMS41IDMuNiAyLjIgNS44IDIuMiAyLS4xIDMuOC0uOSA1LjItMi4yIDEuNi0xLjUgMi42LTMuNyAyLjYtNS45LS4xLTIuNC0uOS00LjItMi01LjR6TTQyLjIgMjMuOEwxOS45IDQ1LjFjLTcuNS0xMy4zIDguMi0yOS40IDIyLjMtMjEuM3oiLz48L3N2Zz4=);
+  background-size: 100% auto;
+  margin: 15px auto 0;
+  border-radius: 4px;
+  display: none; }
+
+p {
+  display: none;
+  color: #888;
+  text-align: center;
+  margin: 15px 20px 20px 20px; }
+
+@media (min-width: 115px) and (min-height: 150px), (min-width: 240px) and (min-height: 120px), (min-width: 320px) and (min-height: 100px), (min-width: 600px) and (min-height: 90px) {
+  #icon {
+    display: block; } }
+
+@media (min-width: 140px) and (min-height: 80px), (min-width: 120px) and (min-height: 128px) {
+  p {
+    display: block; } }
+
+@media (min-width: 420px) {
+  p {
+    font-size: 15px; } }

@@ -1,0 +1,10 @@
+{
+   "extDescription": {
+      "description": "Extension description.",
+      "message": "Защита и конфиденциальность в Интернете"
+   },
+   "extName": {
+      "description": "Extension name.",
+      "message": "Веб-фильтр Avira"
+   }
+}

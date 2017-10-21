@@ -1,0 +1,176 @@
+#midblock {
+  overflow: visible; }
+
+.__avira__search_block {
+  left: 0px;
+  top: -1px; }
+
+.PartialSearchResults-container .PartialSearchResults-item-title, .PartialSearchResults-container .PartialSearchResults-item {
+  overflow: visible !important; }
+
+.results-wrapper #links .__avira__search_block {
+  position: relative;
+  left: 0;
+  top: 2px;
+  margin-right: 5px; }
+
+.result__title {
+  overflow: visible !important; }
+
+#res h3.r {
+  overflow: visible !important; }
+
+.compTitle .__avira__search_block {
+  left: 0px;
+  top: -2px; }
+
+.compTitle {
+  overflow: visible !important; }
+
+.compTitle h3 a {
+  margin-left: 19px; }
+
+.results-wrapper #searchResults .__avira__search_block {
+  position: relative;
+  left: 0;
+  margin-right: 5px;
+  margin-bottom: 2px; }
+
+#searchResults .__avira__search_block {
+  top: -2px;
+  left: 0;
+  background-size: 25% 75%; }
+  #searchResults .__avira__search_block + a {
+    margin-left: 20px; }
+
+.search-find .searchResults li, .search-web .searchResults li {
+  overflow: visible !important; }
+
+*:hover > .__avira__search_block_icon {
+  opacity: 1.0; }
+
+.__avira__search_block {
+  position: absolute;
+  left: -25px;
+  display: inline-block !important;
+  width: 15px;
+  height: 20px; }
+
+.__avira__search_block_icon {
+  height: 20px;
+  width: 15px;
+  opacity: .5;
+  background-repeat: no-repeat;
+  background-position: 80% 50%;
+  background-size: cover;
+  background-size: 100% 75%;
+  cursor: default;
+  transition: opacity .4s;
+  vertical-align: middle; }
+
+div#results {
+  z-index: 4; }
+
+div#web {
+  overflow: visible; }
+
+.__avira__safetip {
+  line-height: 1.5;
+  position: absolute;
+  top: -10px;
+  left: 30px;
+  display: none !important;
+  min-width: 130px;
+  max-width: 260px; }
+
+.__avira__safetip::before,
+.__avira__safetip::after {
+  position: absolute;
+  top: 20px;
+  left: -5px;
+  width: 10px;
+  height: 10px;
+  margin-top: -5px;
+  content: '';
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background: #fff; }
+
+.__avira__safetip::before {
+  z-index: 11; }
+
+.__avira__safetip::after {
+  z-index: 9;
+  box-shadow: -1px 2px 4px rgba(0, 0, 0, 0.3); }
+
+.__avira__safetip-content {
+  position: relative;
+  z-index: 10;
+  height: 100%;
+  padding: 10px 15px 13px;
+  border-radius: 4px;
+  background: #fff;
+  box-shadow: -1px 2px 4px rgba(0, 0, 0, 0.3);
+  width: -moz-max-content;
+  width: -webkit-max-content;
+  width: max-content; }
+
+.__avira__safetip-close {
+  font-size: 18px !important;
+  font-weight: 700;
+  position: absolute;
+  top: 7px;
+  right: 15px;
+  cursor: pointer;
+  text-decoration: none;
+  color: #9d9d9d; }
+
+.__avira__safetip-close:hover {
+  text-decoration: none !important; }
+
+.__avira__safetip-title {
+  font-size: 14px !important;
+  font-weight: 700;
+  padding-bottom: 8px;
+  color: #333; }
+
+.__avira__safetip-description {
+  font-size: 12px !important;
+  color: #9d9d9d;
+  min-width: 120px;
+  max-width: 230px;
+  width: -moz-max-content;
+  width: -webkit-max-content;
+  width: max-content;
+  white-space: normal; }
+
+.__avira__safetip-copy {
+  font-size: 11px !important;
+  padding-top: 11px;
+  text-align: right;
+  color: #c8c8c8; }
+  .__avira__safetip-copy span {
+    font-size: inherit !important; }
+    .__avira__safetip-copy span:before {
+      display: inline-block;
+      content: '';
+      width: 16px;
+      height: 16px;
+      margin: 0px 6px -3px 3px;
+      background-size: 100%; }
+
+.__avira__show_tooltip > .__avira__safetip {
+  display: block !important; }
+  .__avira__show_tooltip > .__avira__safetip div {
+    display: block !important; }
+
+.__avira__search_block_icon {
+  background-image: url("chrome-extension://__MSG_@@extension_id__/img/serp_info_safe.svg"); }
+  .__avira__info-danger .__avira__search_block_icon {
+    background-image: url("chrome-extension://__MSG_@@extension_id__/img/serp_info_unsafe.svg"); }
+  .__avira__info-warning .__avira__search_block_icon {
+    background-image: url("chrome-extension://__MSG_@@extension_id__/img/serp_info_warning.svg"); }
+
+.__avira__safetip-copy span:before {
+  background-image: url("chrome-extension://__MSG_@@extension_id__/img/logo-avira-antivirus.png"); }

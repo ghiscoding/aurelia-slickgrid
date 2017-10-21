@@ -1,4 +1,5 @@
 import { AureliaSlickgridCustomElement } from './aurelia-slickgrid';
+import { SlickPaginationCustomElement } from './slick-pagination';
 import { SlickgridConfig } from './slickgrid-config';
 import { CaseType } from './models/caseType';
 import { Column } from './models/column.interface';
@@ -16,4 +17,4 @@ import { ResizerService } from './services/resizer.service';
 import { SortService } from './services/sort.service';
 import { GridOdataService } from './services/grid-odata.service';
 export declare function configure(aurelia: any, callback: any): void;
-export { AureliaSlickgridCustomElement, CaseType, Column, Formatter, GridOption, FormElementType, FieldType, FilterConditions, FilterTemplates, Formatters, Sorters, FilterService, MouseService, ResizerService, SortService, GridOdataService, SlickgridConfig };
+export { AureliaSlickgridCustomElement, SlickPaginationCustomElement, CaseType, Column, Formatter, GridOption, FormElementType, FieldType, FilterConditions, FilterTemplates, Formatters, Sorters, FilterService, MouseService, ResizerService, SortService, GridOdataService, SlickgridConfig };

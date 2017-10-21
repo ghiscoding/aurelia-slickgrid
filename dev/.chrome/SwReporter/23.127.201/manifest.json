@@ -1,0 +1,21 @@
+{
+  "launch_params": [
+    {
+      "allow-reporter-logs": true,
+      "arguments": [],
+      "prompt": false,
+      "suffix": "Original"
+    },
+    {
+      "allow-reporter-logs": true,
+      "arguments": [
+        "--engine=2"
+      ],
+      "prompt": true,
+      "suffix": "Experimental"
+    }
+  ],
+  "manifest_version": 2,
+  "name": "Software Reporter Tool",
+  "version": "23.127.201"
+}

@@ -1,15 +1,16 @@
-System.register(["aurelia-pal", "./aurelia-slickgrid", "./slickgrid-config", "./models/caseType", "./models/formElementType", "./models/fieldType", "./filter-conditions/index", "./filter-templates/index", "./formatters/index", "./sorters/index", "./services/filter.service", "./services/mouse.service", "./services/resizer.service", "./services/sort.service", "./services/grid-odata.service"], function (exports_1, context_1) {
+System.register(["aurelia-pal", "./aurelia-slickgrid", "./slick-pagination", "./slickgrid-config", "./models/caseType", "./models/formElementType", "./models/fieldType", "./filter-conditions/index", "./filter-templates/index", "./formatters/index", "./sorters/index", "./services/filter.service", "./services/mouse.service", "./services/resizer.service", "./services/sort.service", "./services/grid-odata.service"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     function configure(aurelia, callback) {
         aurelia.globalResources(aurelia_pal_1.PLATFORM.moduleName('./aurelia-slickgrid'));
+        aurelia.globalResources(aurelia_pal_1.PLATFORM.moduleName('./slick-pagination'));
         var config = new slickgrid_config_1.SlickgridConfig();
         if (typeof callback === 'function') {
             callback(config);
         }
     }
     exports_1("configure", configure);
-    var aurelia_pal_1, aurelia_slickgrid_1, slickgrid_config_1, caseType_1, formElementType_1, fieldType_1, index_1, index_2, index_3, index_4, filter_service_1, mouse_service_1, resizer_service_1, sort_service_1, grid_odata_service_1;
+    var aurelia_pal_1, aurelia_slickgrid_1, slick_pagination_1, slickgrid_config_1, caseType_1, formElementType_1, fieldType_1, index_1, index_2, index_3, index_4, filter_service_1, mouse_service_1, resizer_service_1, sort_service_1, grid_odata_service_1;
     return {
         setters: [
             function (aurelia_pal_1_1) {
@@ -17,6 +18,9 @@ System.register(["aurelia-pal", "./aurelia-slickgrid", "./slickgrid-config", "./
             },
             function (aurelia_slickgrid_1_1) {
                 aurelia_slickgrid_1 = aurelia_slickgrid_1_1;
+            },
+            function (slick_pagination_1_1) {
+                slick_pagination_1 = slick_pagination_1_1;
             },
             function (slickgrid_config_1_1) {
                 slickgrid_config_1 = slickgrid_config_1_1;
@@ -60,6 +64,7 @@ System.register(["aurelia-pal", "./aurelia-slickgrid", "./slickgrid-config", "./
         ],
         execute: function () {
             exports_1("AureliaSlickgridCustomElement", aurelia_slickgrid_1.AureliaSlickgridCustomElement);
+            exports_1("SlickPaginationCustomElement", slick_pagination_1.SlickPaginationCustomElement);
             exports_1("SlickgridConfig", slickgrid_config_1.SlickgridConfig);
             exports_1("CaseType", caseType_1.CaseType);
             exports_1("FormElementType", formElementType_1.FormElementType);

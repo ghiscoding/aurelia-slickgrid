@@ -1,0 +1,127 @@
+{
+  "name": "aurelia-slickgrid",
+  "author": "Ghislain B.",
+  "version": "0.3.1",
+  "description": "Slickgrid components made available in Aurelia",
+  "main": "dist/app.bundle.js",
+  "license": "MIT",
+  "keywords": [
+    "aurelia",
+    "plugin",
+    "slickgrid"
+  ],
+  "homepage": "https://github.com/ghiscoding/aurelia-slickgrid",
+  "bugs": {
+    "url": "https://github.com/ghiscoding/aurelia-slickgrid/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/ghiscoding/aurelia-slickgrid"
+  },
+  "dependencies": {
+    "aurelia-animator-css": "^1.0.2",
+    "aurelia-bootstrapper": "^2.1.1",
+    "aurelia-event-aggregator": "^1.0.1",
+    "aurelia-fetch-client": "^1.1.3",
+    "aurelia-http-client": "^1.2.1",
+    "aurelia-polyfills": "latest",
+    "aurelia-slickgrid": "^0.3.1",
+    "bluebird": "^3.4.1",
+    "bootstrap": "^3.3.7",
+    "font-awesome": "^4.7.0",
+    "jquery": "^3.2.1",
+    "nps": "^5.7.1",
+    "slickgrid": "^2.3.3"
+  },
+  "peerDependencies": {},
+  "devDependencies": {
+    "@types/jest": "19.2.4",
+    "@types/lodash": "^4.14.69",
+    "@types/node": "^6.0.45",
+    "@types/webpack": "^3.0.4",
+    "aurelia-cli": "^0.31.3",
+    "aurelia-loader-nodejs": "^1.0.1",
+    "aurelia-pal-nodejs": "1.0.0-beta.2.0.0",
+    "aurelia-protractor-plugin": "^1.0.5",
+    "aurelia-testing": "^1.0.0-beta.3.0.1",
+    "aurelia-tools": "^1.0.0",
+    "aurelia-webpack-plugin": "^2.0.0-rc.4",
+    "awesome-typescript-loader": "^3.2.1",
+    "copy-webpack-plugin": "4.0.1",
+    "css-loader": "0.28.4",
+    "del": "^3.0.0",
+    "expose-loader": "0.7.3",
+    "extract-text-webpack-plugin": "3.0.0",
+    "file-loader": "0.11.2",
+    "gulp": "github:gulpjs/gulp#4.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-util": "^3.0.8",
+    "html-loader": "0.4.5",
+    "html-webpack-plugin": "2.30.1",
+    "istanbul-instrumenter-loader": "^2.0.0",
+    "jest": "20.0.4",
+    "jest-cli": "20.0.4",
+    "json-loader": "0.5.7",
+    "minimatch": "^3.0.2",
+    "node-sass": "4.5.3",
+    "nps-utils": "1.2.0",
+    "opn": "^5.1.0",
+    "protractor": "^5.1.2",
+    "sass-loader": "^6.0.6",
+    "style-loader": "0.18.2",
+    "through2": "^2.0.1",
+    "ts-jest": "20.0.6",
+    "ts-node": "^3.2.0",
+    "typescript": ">=1.9.0-dev || ^2.0.0",
+    "uglify-js": "^3.0.19",
+    "url-loader": "0.5.8",
+    "vinyl-fs": "^2.4.3",
+    "wait-on": "2.0.2",
+    "webpack": "3.5.5",
+    "webpack-dev-server": "2.7.1"
+  },
+  "jest": {
+    "modulePaths": [
+      "<rootDir>/src",
+      "<rootDir>/node_modules"
+    ],
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "transform": {
+      "^.+\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": "\\.spec\\.(ts|js)x?$",
+    "setupFiles": [
+      "<rootDir>/test/jest-pretest.ts"
+    ],
+    "testEnvironment": "node",
+    "moduleNameMapper": {
+      "aurelia-(.*)": "<rootDir>/node_modules/$1"
+    },
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "src/**/*.{js,ts}",
+      "!**/*.spec.{js,ts}",
+      "!**/node_modules/**",
+      "!**/test/**"
+    ],
+    "coverageDirectory": "<rootDir>/test/coverage-jest",
+    "coverageReporters": [
+      "json",
+      "lcov",
+      "text",
+      "html"
+    ],
+    "mapCoverage": true
+  },
+  "engines": {
+    "node": ">= 6.0.0"
+  },
+  "scripts": {
+    "start": "nps",
+    "test": "nps test"
+  }
+}

@@ -18,10 +18,11 @@
     "type": "git",
     "url": "http://github.com/ghiscoding/aurelia-slickgrid"
   },
-
   "dependencies": {
     "aurelia-animator-css": "^1.0.2",
     "aurelia-bootstrapper": "^2.1.1",
+    "aurelia-event-aggregator": "^1.0.1",
+    "aurelia-http-client": "^1.2.1",
     "aurelia-polyfills": "latest",
     "aurelia-slickgrid": "^0.3.1",
     "bluebird": "^3.4.1",

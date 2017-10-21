@@ -3,6 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var aurelia_pal_1 = require("aurelia-pal");
 var aurelia_slickgrid_1 = require("./aurelia-slickgrid");
 exports.AureliaSlickgridCustomElement = aurelia_slickgrid_1.AureliaSlickgridCustomElement;
+var slick_pagination_1 = require("./slick-pagination");
+exports.SlickPaginationCustomElement = slick_pagination_1.SlickPaginationCustomElement;
 var slickgrid_config_1 = require("./slickgrid-config");
 exports.SlickgridConfig = slickgrid_config_1.SlickgridConfig;
 var caseType_1 = require("./models/caseType");
@@ -31,6 +33,7 @@ var grid_odata_service_1 = require("./services/grid-odata.service");
 exports.GridOdataService = grid_odata_service_1.GridOdataService;
 function configure(aurelia, callback) {
     aurelia.globalResources(aurelia_pal_1.PLATFORM.moduleName('./aurelia-slickgrid'));
+    aurelia.globalResources(aurelia_pal_1.PLATFORM.moduleName('./slick-pagination'));
     var config = new slickgrid_config_1.SlickgridConfig();
     if (typeof callback === 'function') {
         callback(config);

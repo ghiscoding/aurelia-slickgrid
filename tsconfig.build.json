@@ -17,7 +17,11 @@
     "forceConsistentCasingInFileNames": true,
     "experimentalDecorators": true,
     "noEmitHelpers": false,
-    "stripInternal": true
+    "rootDir": "./dev/src/aurelia-slickgrid/",
+    "baseUrl": "./dev/",
+    "sourceRoot": "./dev/src/aurelia-slickgrid/",
+    "stripInternal": true,
+    "sourceMap": true
   },
   "exclude": [
     ".vscode",
@@ -27,6 +31,7 @@
     "client-cli",
     "client-wp",
     "client-ts-wp",
-    "test"
+    "src",
+    "dev/src/examples"
   ]
 }

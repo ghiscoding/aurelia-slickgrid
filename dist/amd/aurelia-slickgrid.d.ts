@@ -34,20 +34,21 @@ export declare class AureliaSlickgridCustomElement {
     private _gridOptions;
     private _columnFilters;
     grid: any;
-    gridPaginationOptions: GridOption;
     gridHeightString: string;
     gridWidthString: string;
     showPagination: boolean;
     onFilter: any;
     style: any;
     element: Element;
+    dataset: any[];
+    paginationOptions: GridOption;
+    gridPaginationOptions: GridOption;
     gridId: string;
     columnDefinitions: Column[];
     gridOptions: GridOption;
     gridHeight: number;
     gridWidth: number;
     pickerOptions: any;
-    dataset: any[];
     constructor(elm: HTMLElement, resizer: ResizerService, mouseService: MouseService, filterService: FilterService, sortService: SortService);
     attached(): void;
     /**

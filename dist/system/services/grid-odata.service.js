@@ -1,4 +1,4 @@
-System.register(["./global-utilities", "aurelia-framework", "moment", "./../models/caseType", "./../models/fieldType"], function (exports_1, context_1) {
+System.register(["./global-utilities", "aurelia-framework", "moment", "./../models/caseType", "./../models/fieldType", "./odata.service"], function (exports_1, context_1) {
     "use strict";
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -7,7 +7,7 @@ System.register(["./global-utilities", "aurelia-framework", "moment", "./../mode
         return c > 3 && r && Object.defineProperty(target, key, r), r;
     };
     var __moduleName = context_1 && context_1.id;
-    var aurelia_framework_1, moment, caseType_1, fieldType_1, GridOdataService;
+    var aurelia_framework_1, moment, caseType_1, fieldType_1, odata_service_1, GridOdataService;
     return {
         setters: [
             function (_1) {
@@ -23,14 +23,17 @@ System.register(["./global-utilities", "aurelia-framework", "moment", "./../mode
             },
             function (fieldType_1_1) {
                 fieldType_1 = fieldType_1_1;
+            },
+            function (odata_service_1_1) {
+                odata_service_1 = odata_service_1_1;
             }
         ],
         execute: function () {
             GridOdataService = /** @class */ (function () {
                 function GridOdataService(odataService) {
-                    this.odataService = odataService;
                     this.defaultSortBy = '';
                     this.minUserInactivityOnFilter = 700;
+                    this.odataService = odataService;
                 }
                 GridOdataService.prototype.buildQuery = function () {
                     return this.odataService.buildQuery();
@@ -248,7 +251,7 @@ System.register(["./global-utilities", "aurelia-framework", "moment", "./../mode
                     return date;
                 };
                 GridOdataService = __decorate([
-                    aurelia_framework_1.inject()
+                    aurelia_framework_1.inject(odata_service_1.OdataService)
                 ], GridOdataService);
                 return GridOdataService;
             }());

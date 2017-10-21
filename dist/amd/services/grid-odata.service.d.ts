@@ -5,9 +5,9 @@ import { PaginationChangedArgs } from './../models/paginationChangedArgs.interfa
 import { SortChangedArgs } from './../models/sortChangedArgs.interface';
 import { OdataService } from './odata.service';
 export declare class GridOdataService {
-    private odataService;
     defaultSortBy: string;
     minUserInactivityOnFilter: number;
+    odataService: OdataService;
     constructor(odataService: OdataService);
     buildQuery(): string;
     initOptions(options: OdataOption): void;

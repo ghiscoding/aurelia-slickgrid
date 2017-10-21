@@ -28,6 +28,7 @@ export interface GridOption {
     rowHeight?: number;
     showHeaderRow?: boolean;
     topPanelHeight?: number;
+    onFilterChange?: any;
     onFilterChanged?: (event: Event, args: any) => void;
     onPaginationChanged?: (event: Event, args: PaginationChangedArgs) => void;
     onSortChanged?: (event: Event, args: SortChangedArgs) => void;

@@ -1,0 +1,10 @@
+{
+   "extDescription": {
+      "description": "Extension description.",
+      "message": "La navigazione diventa privata e sicura"
+   },
+   "extName": {
+      "description": "Extension name.",
+      "message": "Sicurezza browser Avira"
+   }
+}

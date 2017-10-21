@@ -1,5 +1,6 @@
 import { PLATFORM } from 'aurelia-pal';
 import { AureliaSlickgridCustomElement } from './aurelia-slickgrid';
+import { SlickPaginationCustomElement } from './slick-pagination';
 import { SlickgridConfig } from './slickgrid-config';
 import { CaseType } from './models/caseType';
 import { FormElementType } from './models/formElementType';
@@ -15,9 +16,10 @@ import { SortService } from './services/sort.service';
 import { GridOdataService } from './services/grid-odata.service';
 export function configure(aurelia, callback) {
     aurelia.globalResources(PLATFORM.moduleName('./aurelia-slickgrid'));
+    aurelia.globalResources(PLATFORM.moduleName('./slick-pagination'));
     var config = new SlickgridConfig();
     if (typeof callback === 'function') {
         callback(config);
     }
 }
-export { AureliaSlickgridCustomElement, CaseType, FormElementType, FieldType, FilterConditions, FilterTemplates, Formatters, Sorters, FilterService, MouseService, ResizerService, SortService, GridOdataService, SlickgridConfig };
+export { AureliaSlickgridCustomElement, SlickPaginationCustomElement, CaseType, FormElementType, FieldType, FilterConditions, FilterTemplates, Formatters, Sorters, FilterService, MouseService, ResizerService, SortService, GridOdataService, SlickgridConfig };

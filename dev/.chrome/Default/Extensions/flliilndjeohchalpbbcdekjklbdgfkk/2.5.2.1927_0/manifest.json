@@ -1,0 +1,44 @@
+{
+   "author": "Avira Operations GmbH & Co. KG",
+   "background": {
+      "scripts": [ "js/webRequestListenerWrapper.js", "adguard/adguard-api.js", "js/background/background.js" ]
+   },
+   "browser_action": {
+      "default_icon": {
+         "16": "img/avira_icon16.png",
+         "19": "img/avira_icon19.png",
+         "24": "img/avira_icon24.png",
+         "32": "img/avira_icon32.png",
+         "38": "img/avira_icon38.png"
+      },
+      "default_popup": "html/popup.html",
+      "default_title": "__MSG_extName__"
+   },
+   "content_scripts": [ {
+      "css": [ "css/content/content.css", "css/content/search.css" ],
+      "js": [ "js/content/common.js", "js/content/content.js" ],
+      "matches": [ "*://*/*" ]
+   }, {
+      "all_frames": true,
+      "js": [ "adguard/adguard-content.js" ],
+      "match_about_blank": true,
+      "matches": [ "http://*/*", "https://*/*" ],
+      "run_at": "document_start"
+   } ],
+   "content_security_policy": "script-src 'self' http://localhost:4000 https://www.avira.com https://www.tt.avira.com; object-src 'self'",
+   "default_locale": "en",
+   "description": "__MSG_extDescription__",
+   "icons": {
+      "128": "img/avira_icon128.png",
+      "16": "img/avira_icon16.png",
+      "48": "img/avira_icon48.png"
+   },
+   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnl3UicGZTgzDr3crrsAxjwue3gjDfxGKIxaipQBP8smbkQ2GuKVO9nojCLRzdn7TkB+Xo60aTqHC2hQhby0MMyjAvgqjXR2cE+99PtB4Hpvf7k/EOO7VMT2ndm/lVM9cJUtNq3A7GUxTqmL78akNAxgjZK0n2onNqpmiVHxufCmq8tlU+5NtJkk6ioRATpjdsjAxqeuRyglwzx0cPVMpXg8fUXp2EhwFYsDevN6f+7Sm0QujCmjOy11yjlz8XfnX3ODVCwByureqJLuTJpw5SMOykz4LHmUwiIvPdOZXJ9eiduedncVqDMuPTMWwWpkD3uV95pnmFNKE/6GxIx2dhwIDAQAB",
+   "manifest_version": 2,
+   "name": "__MSG_extName__",
+   "optional_permissions": [ "management" ],
+   "permissions": [ "tabs", "storage", "webNavigation", "webRequest", "webRequestBlocking", "cookies", "unlimitedStorage", "http://*/*", "https://*/*" ],
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "2.5.2.1927",
+   "web_accessible_resources": [ "html/top.html", "html/external.html", "html/blocked.html", "html/blockedIFrame.html", "html/trackerNotification.html", "html/ExtPermNotification.html", "img/serp_info_safe.svg", "img/serp_info_unsafe.svg", "img/serp_info_warning.svg", "img/logo-avira-antivirus.png", "img/absb-checks.png", "img/absb-attention.png", "img/absb-close.png" ]
+}

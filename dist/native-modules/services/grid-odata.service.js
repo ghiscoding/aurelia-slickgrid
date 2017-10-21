@@ -9,11 +9,12 @@ import { inject } from 'aurelia-framework';
 import * as moment from 'moment';
 import { CaseType } from './../models/caseType';
 import { FieldType } from './../models/fieldType';
+import { OdataService } from './odata.service';
 var GridOdataService = /** @class */ (function () {
     function GridOdataService(odataService) {
-        this.odataService = odataService;
         this.defaultSortBy = '';
         this.minUserInactivityOnFilter = 700;
+        this.odataService = odataService;
     }
     GridOdataService.prototype.buildQuery = function () {
         return this.odataService.buildQuery();
@@ -231,7 +232,7 @@ var GridOdataService = /** @class */ (function () {
         return date;
     };
     GridOdataService = __decorate([
-        inject()
+        inject(OdataService)
     ], GridOdataService);
     return GridOdataService;
 }());

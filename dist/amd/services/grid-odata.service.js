@@ -4,14 +4,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-define(["require", "exports", "aurelia-framework", "moment", "./../models/caseType", "./../models/fieldType", "./global-utilities"], function (require, exports, aurelia_framework_1, moment, caseType_1, fieldType_1) {
+define(["require", "exports", "aurelia-framework", "moment", "./../models/caseType", "./../models/fieldType", "./odata.service", "./global-utilities"], function (require, exports, aurelia_framework_1, moment, caseType_1, fieldType_1, odata_service_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var GridOdataService = /** @class */ (function () {
         function GridOdataService(odataService) {
-            this.odataService = odataService;
             this.defaultSortBy = '';
             this.minUserInactivityOnFilter = 700;
+            this.odataService = odataService;
         }
         GridOdataService.prototype.buildQuery = function () {
             return this.odataService.buildQuery();
@@ -229,7 +229,7 @@ define(["require", "exports", "aurelia-framework", "moment", "./../models/caseTy
             return date;
         };
         GridOdataService = __decorate([
-            aurelia_framework_1.inject()
+            aurelia_framework_1.inject(odata_service_1.OdataService)
         ], GridOdataService);
         return GridOdataService;
     }());

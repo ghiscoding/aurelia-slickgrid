@@ -36,8 +36,6 @@ define(["require", "exports", "aurelia-framework", "./global-grid-options", "./s
         AureliaSlickgridCustomElement.prototype.attached = function () {
             // reference to the DOM element
             this._domElm = $(this.elm);
-            // finally create the bootstrap-select with all options
-            // let pickerOptions = Object.assign({}, GlobalGridOptions, this.pickerOptions || {});
             // make sure the dataset is initialized (if not it will throw an error that it cannot getLength of null)
             this._dataset = this._dataset || [];
             this._gridOptions = this.mergeGridOptions();
@@ -164,6 +162,15 @@ define(["require", "exports", "aurelia-framework", "./global-grid-options", "./s
             aurelia_framework_1.bindable({ defaultBindingMode: aurelia_framework_1.bindingMode.twoWay })
         ], AureliaSlickgridCustomElement.prototype, "element", void 0);
         __decorate([
+            aurelia_framework_1.bindable({ defaultBindingMode: aurelia_framework_1.bindingMode.twoWay })
+        ], AureliaSlickgridCustomElement.prototype, "dataset", void 0);
+        __decorate([
+            aurelia_framework_1.bindable({ defaultBindingMode: aurelia_framework_1.bindingMode.twoWay })
+        ], AureliaSlickgridCustomElement.prototype, "paginationOptions", void 0);
+        __decorate([
+            aurelia_framework_1.bindable({ defaultBindingMode: aurelia_framework_1.bindingMode.twoWay })
+        ], AureliaSlickgridCustomElement.prototype, "gridPaginationOptions", void 0);
+        __decorate([
             aurelia_framework_1.bindable()
         ], AureliaSlickgridCustomElement.prototype, "gridId", void 0);
         __decorate([
@@ -181,9 +188,6 @@ define(["require", "exports", "aurelia-framework", "./global-grid-options", "./s
         __decorate([
             aurelia_framework_1.bindable()
         ], AureliaSlickgridCustomElement.prototype, "pickerOptions", void 0);
-        __decorate([
-            aurelia_framework_1.bindable({ defaultBindingMode: aurelia_framework_1.bindingMode.twoWay })
-        ], AureliaSlickgridCustomElement.prototype, "dataset", void 0);
         AureliaSlickgridCustomElement = __decorate([
             aurelia_framework_1.inject(Element, resizer_service_1.ResizerService, mouse_service_1.MouseService, filter_service_1.FilterService, sort_service_1.SortService)
         ], AureliaSlickgridCustomElement);

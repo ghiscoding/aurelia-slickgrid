@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="23px" height="23px" viewBox="0 0 23 23" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <title>Production-Assets_SearchBar-Search-Icon</title>
+    <description>Created with Sketch (http://www.bohemiancoding.com/sketch)</description>
+    <defs></defs>
+    <g id="Page 1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M21.943,18.507 L18.662,15.226 C19.627,13.707 20.194,11.911 20.194,9.978 C20.193,4.559 15.803,0.168 10.384,0.168 C4.965,0.168 0.575,4.559 0.574,9.978 C0.575,15.397 4.965,19.787 10.384,19.788 C12.317,19.788 14.113,19.221 15.632,18.256 L18.913,21.537 C19.75,22.374 21.106,22.374 21.943,21.537 C22.78,20.7 22.78,19.343 21.943,18.507 L21.943,18.507 Z M5.764,14.598 C4.579,13.41 3.851,11.787 3.85,9.978 C3.851,8.169 4.579,6.546 5.764,5.358 C6.952,4.174 8.575,3.445 10.384,3.444 C12.193,3.445 13.816,4.173 15.004,5.358 C16.188,6.546 16.917,8.169 16.918,9.978 C16.917,11.787 16.189,13.41 15.004,14.598 C13.816,15.782 12.193,16.511 10.384,16.512 C8.575,16.51 6.952,15.782 5.764,14.598 L5.764,14.598 Z M5.764,14.598" id="Shape" fill="#535453"></path>
+    </g>
+</svg>

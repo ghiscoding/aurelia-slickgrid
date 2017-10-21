@@ -507,7 +507,7 @@ aurelia-dependency-injection@^1.0.0, aurelia-dependency-injection@^1.2.0:
     aurelia-metadata "^1.0.0"
     aurelia-pal "^1.0.0"
 
-aurelia-event-aggregator@^1.0.0:
+aurelia-event-aggregator@^1.0.0, aurelia-event-aggregator@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/aurelia-event-aggregator/-/aurelia-event-aggregator-1.0.1.tgz#9d7c7c1e1efe1ef3a78785e76abe80601e2d34c8"
   dependencies:
@@ -547,6 +547,13 @@ aurelia-hot-module-reload@^0.1.0:
     aurelia-metadata "^1.0.2"
     aurelia-pal "^1.0.0"
     aurelia-templating "^1.1.2"
+
+aurelia-http-client@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/aurelia-http-client/-/aurelia-http-client-1.2.1.tgz#f4e0d9daab8c39e383b1866120f787bd6eb8d94f"
+  dependencies:
+    aurelia-pal "^1.0.0"
+    aurelia-path "^1.1.1"
 
 aurelia-loader-default@^1.0.0:
   version "1.0.3"
