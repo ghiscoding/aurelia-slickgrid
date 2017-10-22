@@ -1,11 +1,10 @@
 // we want font-awesome to load as soon as possible to show the fa-spinner
 import '../styles/styles.css';
-import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'font-awesome/css/font-awesome.css';
 import 'aurelia-slickgrid/dist/styles/css/slickgrid-theme-bootstrap.css';
-
 import * as Bluebird from 'bluebird';
+import 'bootstrap';
 
 // comment out if you don't want a Promise polyfill (remove also from webpack.config.babel.js)
 Bluebird.config({ warnings: false });
