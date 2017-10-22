@@ -17,6 +17,7 @@ Thumbs.db
 # Ref: https://github.com/github/gitignore/blob/master/Global
 # Ref: https://github.com/github/gitignore/blob/master/Global/JetBrains.gitignore
 # Ref: https://github.com/github/gitignore/blob/master/Global/VisualStudioCode.gitignore
+.chrome
 .idea
 .vscode
 
