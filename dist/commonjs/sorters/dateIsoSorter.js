@@ -11,3 +11,4 @@ exports.dateIsoSorter = function (value1, value2, sortDirection) {
     var diff = parseInt(date1.format('X'), 10) - parseInt(date2.format('X'), 10);
     return sortDirection * (diff === 0 ? 0 : (diff > 0 ? 1 : -1));
 };
+//# sourceMappingURL=dateIsoSorter.js.map

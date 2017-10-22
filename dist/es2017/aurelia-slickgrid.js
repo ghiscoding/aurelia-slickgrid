@@ -206,3 +206,4 @@ AureliaSlickgridCustomElement = __decorate([
     inject(Element, ResizerService, MouseService, FilterService, SortService)
 ], AureliaSlickgridCustomElement);
 export { AureliaSlickgridCustomElement };
+//# sourceMappingURL=aurelia-slickgrid.js.map

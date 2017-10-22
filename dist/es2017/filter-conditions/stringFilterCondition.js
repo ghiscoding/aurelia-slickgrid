@@ -15,3 +15,4 @@ export const stringFilterCondition = (options) => {
     }
     return testFilterCondition(options.operator || '==', cellValue, searchTerm);
 };
+//# sourceMappingURL=stringFilterCondition.js.map

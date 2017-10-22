@@ -15,3 +15,4 @@ export var stringFilterCondition = function (options) {
     }
     return testFilterCondition(options.operator || '==', cellValue, searchTerm);
 };
+//# sourceMappingURL=stringFilterCondition.js.map

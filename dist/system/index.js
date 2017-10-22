@@ -81,3 +81,4 @@ System.register(["aurelia-pal", "./aurelia-slickgrid", "./slick-pagination", "./
         }
     };
 });
+//# sourceMappingURL=index.js.map

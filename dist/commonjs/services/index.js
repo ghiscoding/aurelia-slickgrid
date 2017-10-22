@@ -12,3 +12,4 @@ var resizer_service_1 = require("./resizer.service");
 exports.ResizerService = resizer_service_1.ResizerService;
 var sort_service_1 = require("./sort.service");
 exports.SortService = sort_service_1.SortService;
+//# sourceMappingURL=index.js.map

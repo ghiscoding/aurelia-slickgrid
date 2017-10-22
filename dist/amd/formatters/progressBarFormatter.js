@@ -18,3 +18,4 @@ define(["require", "exports"], function (require, exports) {
         return "<div class=\"progress\">\n    <div class=\"progress-bar progress-bar-" + color + "\" role=\"progressbar\" aria-valuenow=\"" + value + "\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"min-width: 2em; width: " + value + "%;\">\n    " + value + "%\n    </div>\n  </div>";
     };
 });
+//# sourceMappingURL=progressBarFormatter.js.map

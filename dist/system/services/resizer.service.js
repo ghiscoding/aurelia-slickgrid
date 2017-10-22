@@ -113,3 +113,4 @@ System.register(["aurelia-event-aggregator", "aurelia-framework"], function (exp
         }
     };
 });
+//# sourceMappingURL=resizer.service.js.map

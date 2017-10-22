@@ -20,3 +20,4 @@ export var FilterConditions = {
     stringFilter: stringFilterCondition,
     testFilter: testFilterCondition
 };
+//# sourceMappingURL=index.js.map

@@ -5,3 +5,4 @@ define(["require", "exports", "./caseType", "./fieldType", "./formElementType"],
     exports.FieldType = fieldType_1.FieldType;
     exports.FormElementType = formElementType_1.FormElementType;
 });
+//# sourceMappingURL=index.js.map

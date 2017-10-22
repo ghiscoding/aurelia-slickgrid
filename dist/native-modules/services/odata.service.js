@@ -187,3 +187,4 @@ var OdataService = /** @class */ (function () {
     return OdataService;
 }());
 export { OdataService };
+//# sourceMappingURL=odata.service.js.map

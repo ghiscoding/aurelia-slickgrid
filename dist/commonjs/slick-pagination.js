@@ -100,3 +100,4 @@ var SlickPaginationCustomElement = /** @class */ (function () {
     return SlickPaginationCustomElement;
 }());
 exports.SlickPaginationCustomElement = SlickPaginationCustomElement;
+//# sourceMappingURL=slick-pagination.js.map

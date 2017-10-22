@@ -7,3 +7,4 @@ define(["require", "exports"], function (require, exports) {
         return sortDirection * (x === y ? 0 : (x > y ? 1 : -1));
     };
 });
+//# sourceMappingURL=numericSorter.js.map

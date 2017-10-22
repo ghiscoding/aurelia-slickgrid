@@ -256,3 +256,4 @@ System.register(["slickgrid/lib/jquery-ui-1.11.3", "slickgrid/lib/jquery.event.d
         }
     };
 });
+//# sourceMappingURL=aurelia-slickgrid.js.map

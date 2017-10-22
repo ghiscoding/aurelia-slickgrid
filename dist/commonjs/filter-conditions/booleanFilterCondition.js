@@ -6,3 +6,4 @@ function parseBoolean(str) {
 exports.booleanFilterCondition = function (options) {
     return parseBoolean(options.cellValue) === parseBoolean(options.searchTerm);
 };
+//# sourceMappingURL=booleanFilterCondition.js.map

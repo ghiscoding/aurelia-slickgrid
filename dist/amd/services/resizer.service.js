@@ -100,3 +100,4 @@ define(["require", "exports", "aurelia-event-aggregator", "aurelia-framework"], 
     }());
     exports.ResizerService = ResizerService;
 });
+//# sourceMappingURL=resizer.service.js.map

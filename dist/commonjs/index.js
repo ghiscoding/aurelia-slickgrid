@@ -40,3 +40,4 @@ function configure(aurelia, callback) {
     }
 }
 exports.configure = configure;
+//# sourceMappingURL=index.js.map

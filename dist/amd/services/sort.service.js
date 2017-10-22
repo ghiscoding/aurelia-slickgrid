@@ -70,3 +70,4 @@ define(["require", "exports", "./../models/fieldType", "./../sorters/index"], fu
     }());
     exports.SortService = SortService;
 });
+//# sourceMappingURL=sort.service.js.map

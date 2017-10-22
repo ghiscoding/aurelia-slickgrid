@@ -8,3 +8,4 @@ var SlickgridConfig = /** @class */ (function () {
     return SlickgridConfig;
 }());
 exports.SlickgridConfig = SlickgridConfig;
+//# sourceMappingURL=slickgrid-config.js.map

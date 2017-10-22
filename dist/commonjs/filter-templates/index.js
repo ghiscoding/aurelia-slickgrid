@@ -6,3 +6,4 @@ exports.FilterTemplates = {
     input: inputFilterTemplate_1.inputFilterTemplate,
     select: selectFilterTemplate_1.selectFilterTemplate
 };
+//# sourceMappingURL=index.js.map

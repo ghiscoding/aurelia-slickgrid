@@ -9,3 +9,4 @@ export var percentCompleteFormatter = function (row, cell, value, columnDef, dat
         return "<span style='color:green'>" + value + "%</span>";
     }
 };
+//# sourceMappingURL=percentCompleteFormatter.js.map

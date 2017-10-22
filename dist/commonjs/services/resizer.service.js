@@ -100,3 +100,4 @@ var ResizerService = /** @class */ (function () {
     return ResizerService;
 }());
 exports.ResizerService = ResizerService;
+//# sourceMappingURL=resizer.service.js.map

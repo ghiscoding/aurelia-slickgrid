@@ -14,3 +14,4 @@ export var percentCompleteBarFormatter = function (row, cell, value, columnDef, 
     }
     return "<span class=\"percent-complete-bar\" style=\"background:" + color + "; width:" + value + "%\"></span>";
 };
+//# sourceMappingURL=percentCompleteBarFormatter.js.map

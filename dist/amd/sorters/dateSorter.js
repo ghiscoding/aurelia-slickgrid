@@ -11,3 +11,4 @@ define(["require", "exports", "moment"], function (require, exports, moment) {
         return sortDirection * (diff === 0 ? 0 : (diff > 0 ? 1 : -1));
     };
 });
+//# sourceMappingURL=dateSorter.js.map

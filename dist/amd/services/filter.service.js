@@ -193,3 +193,4 @@ define(["require", "exports", "aurelia-framework", "./../filter-conditions/execu
     }());
     exports.FilterService = FilterService;
 });
+//# sourceMappingURL=filter.service.js.map

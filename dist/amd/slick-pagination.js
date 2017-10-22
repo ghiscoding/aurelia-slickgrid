@@ -101,3 +101,4 @@ define(["require", "exports", "aurelia-framework"], function (require, exports, 
     }());
     exports.SlickPaginationCustomElement = SlickPaginationCustomElement;
 });
+//# sourceMappingURL=slick-pagination.js.map

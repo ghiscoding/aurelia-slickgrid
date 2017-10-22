@@ -13,3 +13,4 @@ define(["require", "exports"], function (require, exports) {
         }
     };
 });
+//# sourceMappingURL=percentCompleteFormatter.js.map

@@ -6,3 +6,4 @@ define(["require", "exports", "./inputFilterTemplate", "./selectFilterTemplate"]
         select: selectFilterTemplate_1.selectFilterTemplate
     };
 });
+//# sourceMappingURL=index.js.map

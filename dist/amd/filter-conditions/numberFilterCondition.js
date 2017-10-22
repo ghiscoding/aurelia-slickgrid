@@ -5,3 +5,4 @@ define(["require", "exports", "./filterUtilities"], function (require, exports, 
         return filterUtilities_1.testFilterCondition(options.operator || '==', parseFloat(options.cellValue), parseFloat(options.searchTerm));
     };
 });
+//# sourceMappingURL=numberFilterCondition.js.map

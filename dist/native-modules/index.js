@@ -23,3 +23,4 @@ export function configure(aurelia, callback) {
     }
 }
 export { AureliaSlickgridCustomElement, SlickPaginationCustomElement, CaseType, FormElementType, FieldType, FilterConditions, FilterTemplates, Formatters, Sorters, FilterService, MouseService, ResizerService, SortService, GridOdataService, SlickgridConfig };
+//# sourceMappingURL=index.js.map

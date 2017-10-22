@@ -5,3 +5,4 @@ define(["require", "exports"], function (require, exports) {
         return value ? "<i class=\"fa fa-check\" aria-hidden=\"true\"></i>" : '';
     };
 });
+//# sourceMappingURL=checkmarkFormatter.js.map

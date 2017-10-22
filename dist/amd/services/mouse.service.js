@@ -21,3 +21,4 @@ define(["require", "exports"], function (require, exports) {
     }());
     exports.MouseService = MouseService;
 });
+//# sourceMappingURL=mouse.service.js.map

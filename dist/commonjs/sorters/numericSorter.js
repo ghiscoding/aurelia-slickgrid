@@ -5,3 +5,4 @@ exports.numericSorter = function (value1, value2, sortDirection) {
     var y = (isNaN(value2) || value2 === '' || value2 === null) ? -99e+10 : parseFloat(value2);
     return sortDirection * (x === y ? 0 : (x > y ? 1 : -1));
 };
+//# sourceMappingURL=numericSorter.js.map

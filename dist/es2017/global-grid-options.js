@@ -34,3 +34,4 @@ export const GlobalGridOptions = {
     showHeaderRow: false,
     topPanelHeight: 25
 };
+//# sourceMappingURL=global-grid-options.js.map

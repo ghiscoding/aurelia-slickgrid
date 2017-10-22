@@ -96,3 +96,4 @@ __decorate([
 __decorate([
     bindable()
 ], SlickPaginationCustomElement.prototype, "gridPaginationOptions", void 0);
+//# sourceMappingURL=slick-pagination.js.map

@@ -13,3 +13,4 @@ export class MouseService {
         });
     }
 }
+//# sourceMappingURL=mouse.service.js.map

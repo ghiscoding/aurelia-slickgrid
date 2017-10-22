@@ -4,3 +4,4 @@ export class SlickgridConfig {
         this.options = GlobalGridOptions;
     }
 }
+//# sourceMappingURL=slickgrid-config.js.map

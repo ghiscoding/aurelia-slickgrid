@@ -38,3 +38,4 @@ define(["require", "exports"], function (require, exports) {
         topPanelHeight: 25
     };
 });
+//# sourceMappingURL=global-grid-options.js.map

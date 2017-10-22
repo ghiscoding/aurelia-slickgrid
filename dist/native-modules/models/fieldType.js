@@ -14,3 +14,4 @@ export var FieldType;
     FieldType[FieldType["dateTimeUs"] = 11] = "dateTimeUs";
     FieldType[FieldType["dateTimeUsShort"] = 12] = "dateTimeUsShort"; // 2/2/14 11:00:00
 })(FieldType || (FieldType = {}));
+//# sourceMappingURL=fieldType.js.map

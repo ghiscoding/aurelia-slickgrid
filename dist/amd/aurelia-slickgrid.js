@@ -195,3 +195,4 @@ define(["require", "exports", "aurelia-framework", "./global-grid-options", "./s
     }());
     exports.AureliaSlickgridCustomElement = AureliaSlickgridCustomElement;
 });
+//# sourceMappingURL=aurelia-slickgrid.js.map

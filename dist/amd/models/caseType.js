@@ -8,3 +8,4 @@ define(["require", "exports"], function (require, exports) {
         CaseType[CaseType["snakeCase"] = 2] = "snakeCase";
     })(CaseType = exports.CaseType || (exports.CaseType = {}));
 });
+//# sourceMappingURL=caseType.js.map

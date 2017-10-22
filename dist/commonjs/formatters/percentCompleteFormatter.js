@@ -11,3 +11,4 @@ exports.percentCompleteFormatter = function (row, cell, value, columnDef, dataCo
         return "<span style='color:green'>" + value + "%</span>";
     }
 };
+//# sourceMappingURL=percentCompleteFormatter.js.map

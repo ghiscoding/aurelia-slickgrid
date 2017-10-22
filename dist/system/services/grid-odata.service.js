@@ -259,3 +259,4 @@ System.register(["./global-utilities", "aurelia-framework", "moment", "./../mode
         }
     };
 });
+//# sourceMappingURL=grid-odata.service.js.map

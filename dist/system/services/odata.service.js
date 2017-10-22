@@ -203,3 +203,4 @@ System.register(["./global-utilities", "aurelia-framework", "../models/caseType"
         }
     };
 });
+//# sourceMappingURL=odata.service.js.map

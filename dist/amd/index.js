@@ -26,3 +26,4 @@ define(["require", "exports", "aurelia-pal", "./aurelia-slickgrid", "./slick-pag
     }
     exports.configure = configure;
 });
+//# sourceMappingURL=index.js.map

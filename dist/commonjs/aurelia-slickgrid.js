@@ -218,3 +218,4 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
     return AureliaSlickgridCustomElement;
 }());
 exports.AureliaSlickgridCustomElement = AureliaSlickgridCustomElement;
+//# sourceMappingURL=aurelia-slickgrid.js.map

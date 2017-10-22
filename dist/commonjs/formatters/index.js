@@ -36,3 +36,4 @@ exports.Formatters = {
     progressBar: progressBarFormatter_1.progressBarFormatter,
     yesNo: yesNoFormatter_1.yesNoFormatter
 };
+//# sourceMappingURL=index.js.map

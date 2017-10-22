@@ -12,3 +12,4 @@ define(["require", "exports"], function (require, exports) {
         return "<select id=\"search-" + columnDef.id + "\" class=\"form-control\">" + options + "</select>";
     };
 });
+//# sourceMappingURL=selectFilterTemplate.js.map

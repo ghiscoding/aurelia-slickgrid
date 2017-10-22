@@ -22,3 +22,4 @@ exports.FilterConditions = {
     stringFilter: stringFilterCondition_1.stringFilterCondition,
     testFilter: filterUtilities_1.testFilterCondition
 };
+//# sourceMappingURL=index.js.map

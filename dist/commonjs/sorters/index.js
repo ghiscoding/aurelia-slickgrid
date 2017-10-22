@@ -14,3 +14,4 @@ exports.Sorters = {
     numeric: numericSorter_1.numericSorter,
     string: stringSorter_1.stringSorter
 };
+//# sourceMappingURL=index.js.map

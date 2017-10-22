@@ -188,3 +188,4 @@ define(["require", "exports", "aurelia-framework", "../models/caseType", "./glob
     }());
     exports.OdataService = OdataService;
 });
+//# sourceMappingURL=odata.service.js.map

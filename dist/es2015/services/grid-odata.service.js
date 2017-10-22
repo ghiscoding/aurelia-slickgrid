@@ -235,3 +235,4 @@ GridOdataService = __decorate([
     inject(OdataService)
 ], GridOdataService);
 export { GridOdataService };
+//# sourceMappingURL=grid-odata.service.js.map

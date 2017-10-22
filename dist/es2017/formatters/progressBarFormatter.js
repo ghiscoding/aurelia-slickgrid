@@ -18,3 +18,4 @@ export const progressBarFormatter = (row, cell, value, columnDef, dataContext) =
     </div>
   </div>`;
 };
+//# sourceMappingURL=progressBarFormatter.js.map

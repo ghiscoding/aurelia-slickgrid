@@ -34,3 +34,4 @@ export var Formatters = {
     progressBar: progressBarFormatter,
     yesNo: yesNoFormatter
 };
+//# sourceMappingURL=index.js.map

@@ -18,3 +18,4 @@ define(["require", "exports"], function (require, exports) {
         FieldType[FieldType["dateTimeUsShort"] = 12] = "dateTimeUsShort"; // 2/2/14 11:00:00
     })(FieldType = exports.FieldType || (exports.FieldType = {}));
 });
+//# sourceMappingURL=fieldType.js.map

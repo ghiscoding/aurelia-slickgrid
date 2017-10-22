@@ -30,3 +30,4 @@ String.allTitleCase = (inputStr) => {
 String.titleCase = (inputStr) => {
     return inputStr.charAt(0).toUpperCase() + inputStr.slice(1);
 };
+//# sourceMappingURL=global-utilities.js.map

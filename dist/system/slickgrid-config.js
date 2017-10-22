@@ -19,3 +19,4 @@ System.register(["./global-grid-options"], function (exports_1, context_1) {
         }
     };
 });
+//# sourceMappingURL=slickgrid-config.js.map

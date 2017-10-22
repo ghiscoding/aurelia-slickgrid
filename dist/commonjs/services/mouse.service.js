@@ -19,3 +19,4 @@ var MouseService = /** @class */ (function () {
     return MouseService;
 }());
 exports.MouseService = MouseService;
+//# sourceMappingURL=mouse.service.js.map

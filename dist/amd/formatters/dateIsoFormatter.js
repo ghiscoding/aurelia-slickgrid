@@ -5,3 +5,4 @@ define(["require", "exports", "moment"], function (require, exports, moment) {
         return value ? moment(value).format('YYYY-MM-DD') : '';
     };
 });
+//# sourceMappingURL=dateIsoFormatter.js.map

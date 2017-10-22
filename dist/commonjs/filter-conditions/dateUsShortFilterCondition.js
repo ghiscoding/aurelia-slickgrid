@@ -12,3 +12,4 @@ exports.dateUsShortFilterCondition = function (options) {
     // run the filter condition with date in Unix Timestamp format
     return filterUtilities_1.testFilterCondition(options.operator || '==', parseInt(dateCell.format('X'), 10), parseInt(dateSearch.format('X'), 10));
 };
+//# sourceMappingURL=dateUsShortFilterCondition.js.map

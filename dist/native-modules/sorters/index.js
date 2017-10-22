@@ -12,3 +12,4 @@ export var Sorters = {
     numeric: numericSorter,
     string: stringSorter
 };
+//# sourceMappingURL=index.js.map

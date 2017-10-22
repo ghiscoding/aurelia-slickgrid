@@ -4,3 +4,4 @@ export var FilterTemplates = {
     input: inputFilterTemplate,
     select: selectFilterTemplate
 };
+//# sourceMappingURL=index.js.map

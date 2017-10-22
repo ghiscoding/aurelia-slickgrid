@@ -235,3 +235,4 @@ define(["require", "exports", "aurelia-framework", "moment", "./../models/caseTy
     }());
     exports.GridOdataService = GridOdataService;
 });
+//# sourceMappingURL=grid-odata.service.js.map

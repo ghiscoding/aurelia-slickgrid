@@ -83,3 +83,4 @@ System.register(["./../models/fieldType", "./../sorters/index"], function (expor
         }
     };
 });
+//# sourceMappingURL=sort.service.js.map

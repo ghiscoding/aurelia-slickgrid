@@ -4,3 +4,4 @@ export var CaseType;
     CaseType[CaseType["pascalCase"] = 1] = "pascalCase";
     CaseType[CaseType["snakeCase"] = 2] = "snakeCase";
 })(CaseType || (CaseType = {}));
+//# sourceMappingURL=caseType.js.map

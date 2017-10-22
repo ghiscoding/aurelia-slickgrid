@@ -9,3 +9,4 @@ define(["require", "exports", "./global-grid-options"], function (require, expor
     }());
     exports.SlickgridConfig = SlickgridConfig;
 });
+//# sourceMappingURL=slickgrid-config.js.map

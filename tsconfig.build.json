@@ -17,9 +17,6 @@
     "forceConsistentCasingInFileNames": true,
     "experimentalDecorators": true,
     "noEmitHelpers": false,
-    "rootDir": "./dev/src/aurelia-slickgrid/",
-    "baseUrl": "./dev/",
-    "sourceRoot": "./dev/src/aurelia-slickgrid/",
     "stripInternal": true,
     "sourceMap": true
   },

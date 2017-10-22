@@ -17,11 +17,12 @@
     "forceConsistentCasingInFileNames": true,
     "experimentalDecorators": true,
     "noEmitHelpers": false,
-    "stripInternal": true
+    "stripInternal": true,
+    "sourceMap": true
   },
   "exclude": [
-    ".vscode", 
-    "src/aurelia_project",   
+    ".vscode",
+    "src/aurelia_project",
     "src/examples",
     "src/resources",
     "src/test"

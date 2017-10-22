@@ -5,3 +5,4 @@ export var FormElementType;
     FormElementType[FormElementType["select"] = 2] = "select";
     FormElementType[FormElementType["textarea"] = 3] = "textarea";
 })(FormElementType || (FormElementType = {}));
+//# sourceMappingURL=formElementType.js.map

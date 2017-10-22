@@ -8,3 +8,4 @@ define(["require", "exports", "./filter.service", "./grid-odata.service", "./mou
     exports.ResizerService = resizer_service_1.ResizerService;
     exports.SortService = sort_service_1.SortService;
 });
+//# sourceMappingURL=index.js.map

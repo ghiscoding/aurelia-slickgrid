@@ -8,3 +8,4 @@ export const selectFilterTemplate = (searchTerm, columnDef) => {
     });
     return `<select id="search-${columnDef.id}" class="form-control">${options}</select>`;
 };
+//# sourceMappingURL=selectFilterTemplate.js.map

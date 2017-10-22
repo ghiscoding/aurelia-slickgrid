@@ -8,3 +8,4 @@ export var selectFilterTemplate = function (searchTerm, columnDef) {
     });
     return "<select id=\"search-" + columnDef.id + "\" class=\"form-control\">" + options + "</select>";
 };
+//# sourceMappingURL=selectFilterTemplate.js.map

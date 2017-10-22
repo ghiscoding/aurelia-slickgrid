@@ -5,3 +5,4 @@ define(["require", "exports"], function (require, exports) {
         return value ? '&#x2611;' : '';
     };
 });
+//# sourceMappingURL=checkboxFormatter.js.map

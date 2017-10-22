@@ -96,3 +96,4 @@ ResizerService = __decorate([
     inject(EventAggregator)
 ], ResizerService);
 export { ResizerService };
+//# sourceMappingURL=resizer.service.js.map

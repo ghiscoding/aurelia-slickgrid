@@ -8,3 +8,4 @@ define(["require", "exports"], function (require, exports) {
         return parseBoolean(options.cellValue) === parseBoolean(options.searchTerm);
     };
 });
+//# sourceMappingURL=booleanFilterCondition.js.map

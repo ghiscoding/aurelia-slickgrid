@@ -9,3 +9,4 @@ export const percentCompleteFormatter = (row, cell, value, columnDef, dataContex
         return `<span style='color:green'>${value}%</span>`;
     }
 };
+//# sourceMappingURL=percentCompleteFormatter.js.map
