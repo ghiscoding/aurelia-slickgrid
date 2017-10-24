@@ -1,4 +1,4 @@
-System.register(["aurelia-event-aggregator", "aurelia-framework"], function (exports_1, context_1) {
+System.register(["aurelia-event-aggregator", "aurelia-framework", "jquery"], function (exports_1, context_1) {
     "use strict";
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -7,7 +7,7 @@ System.register(["aurelia-event-aggregator", "aurelia-framework"], function (exp
         return c > 3 && r && Object.defineProperty(target, key, r), r;
     };
     var __moduleName = context_1 && context_1.id;
-    var aurelia_event_aggregator_1, aurelia_framework_1, DATAGRID_MIN_HEIGHT, DATAGRID_MIN_WIDTH, DATAGRID_BOTTOM_PADDING, DATAGRID_PAGINATION_HEIGHT, ResizerService;
+    var aurelia_event_aggregator_1, aurelia_framework_1, $, DATAGRID_MIN_HEIGHT, DATAGRID_MIN_WIDTH, DATAGRID_BOTTOM_PADDING, DATAGRID_PAGINATION_HEIGHT, ResizerService;
     return {
         setters: [
             function (aurelia_event_aggregator_1_1) {
@@ -15,6 +15,9 @@ System.register(["aurelia-event-aggregator", "aurelia-framework"], function (exp
             },
             function (aurelia_framework_1_1) {
                 aurelia_framework_1 = aurelia_framework_1_1;
+            },
+            function ($_1) {
+                $ = $_1;
             }
         ],
         execute: function () {
@@ -42,6 +45,8 @@ System.register(["aurelia-event-aggregator", "aurelia-framework"], function (exp
                     // -- 2nd attach a trigger on the Window DOM element, so that it happens also when resizing after first load
                     // -- attach auto-resize to Window object only if it exist
                     $(window).on('resize.grid', function () {
+                        // for some yet unknown reason, calling the resize twice removes any stuttering/flickering when changing the height and makes it much smoother
+                        _this.resizeGrid(grid, gridOptions);
                         _this.resizeGrid(grid, gridOptions);
                     });
                     // destroy the resizer on route change
@@ -54,15 +59,23 @@ System.register(["aurelia-event-aggregator", "aurelia-framework"], function (exp
                  * object gridOptions
                  */
                 ResizerService.prototype.calculateGridNewDimensions = function (gridOptions) {
+                    var gridDomElm = $("#" + gridOptions.gridId);
+                    var containerElm = (gridOptions.autoResize && gridOptions.autoResize.containerId) ? $("#" + gridOptions.autoResize.containerId) : $("#" + gridOptions.gridContainerId);
+                    var windowElm = $(window);
+                    if (windowElm === undefined || containerElm === undefined || gridDomElm === undefined) {
+                        return null;
+                    }
+                    // calculate bottom padding
+                    // if using pagination, we need to add the pagination height to this bottom padding
                     var bottomPadding = (gridOptions.autoResize && gridOptions.autoResize.bottomPadding) ? gridOptions.autoResize.bottomPadding : DATAGRID_BOTTOM_PADDING;
                     if (bottomPadding && gridOptions.enablePagination) {
-                        bottomPadding += DATAGRID_PAGINATION_HEIGHT; // add pagination height to bottom padding
+                        bottomPadding += DATAGRID_PAGINATION_HEIGHT;
                     }
-                    if (typeof $("#" + gridOptions.gridId).offset !== 'function') {
-                        return;
-                    }
-                    var availableHeight = $(window).height() - $("#" + gridOptions.gridId).offset().top - bottomPadding;
-                    var availableWidth = (gridOptions.autoResize && gridOptions.autoResize.containerId) ? $("#" + gridOptions.autoResize.containerId).width() : $("#" + gridOptions.gridContainerId).width();
+                    var gridHeight = windowElm.height() || 0;
+                    var coordOffsetTop = gridDomElm.offset();
+                    var gridOffsetTop = (coordOffsetTop !== undefined) ? coordOffsetTop.top : 0;
+                    var availableHeight = gridHeight - gridOffsetTop - bottomPadding;
+                    var availableWidth = containerElm.width() || 0;
                     var minHeight = (gridOptions.autoResize && gridOptions.autoResize.minHeight < 0) ? gridOptions.autoResize.minHeight : DATAGRID_MIN_HEIGHT;
                     var minWidth = (gridOptions.autoResize && gridOptions.autoResize.minWidth < 0) ? gridOptions.autoResize.minWidth : DATAGRID_MIN_WIDTH;
                     var newHeight = availableHeight;

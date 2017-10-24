@@ -1,4 +1,4 @@
-System.register(["aurelia-framework", "./../filter-conditions/executeMappedCondition", "./../filter-templates/inputFilterTemplate", "./../filter-templates/selectFilterTemplate", "./../models/fieldType", "./../models/formElementType"], function (exports_1, context_1) {
+System.register(["aurelia-framework", "./../filter-conditions/executeMappedCondition", "./../filter-templates/inputFilterTemplate", "./../filter-templates/selectFilterTemplate", "./../models/fieldType", "./../models/formElementType", "jquery"], function (exports_1, context_1) {
     "use strict";
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -7,7 +7,7 @@ System.register(["aurelia-framework", "./../filter-conditions/executeMappedCondi
         return c > 3 && r && Object.defineProperty(target, key, r), r;
     };
     var __moduleName = context_1 && context_1.id;
-    var aurelia_framework_1, executeMappedCondition_1, inputFilterTemplate_1, selectFilterTemplate_1, fieldType_1, formElementType_1, FilterService;
+    var aurelia_framework_1, executeMappedCondition_1, inputFilterTemplate_1, selectFilterTemplate_1, fieldType_1, formElementType_1, $, FilterService;
     return {
         setters: [
             function (aurelia_framework_1_1) {
@@ -27,6 +27,9 @@ System.register(["aurelia-framework", "./../filter-conditions/executeMappedCondi
             },
             function (formElementType_1_1) {
                 formElementType_1 = formElementType_1_1;
+            },
+            function ($_1) {
+                $ = $_1;
             }
         ],
         execute: function () {

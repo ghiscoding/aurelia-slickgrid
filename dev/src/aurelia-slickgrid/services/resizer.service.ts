@@ -1,9 +1,7 @@
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { inject } from 'aurelia-framework';
-
 import { GridOption } from './../models/gridOption.interface';
-
-declare var $: any;
+import * as $ from 'jquery';
 
 // global constants, height/width are in pixels
 const DATAGRID_MIN_HEIGHT = 180;
@@ -34,6 +32,8 @@ export class ResizerService {
     // -- 2nd attach a trigger on the Window DOM element, so that it happens also when resizing after first load
     // -- attach auto-resize to Window object only if it exist
     $(window).on('resize.grid', () => {
+      // for some yet unknown reason, calling the resize twice removes any stuttering/flickering when changing the height and makes it much smoother
+      this.resizeGrid(grid, gridOptions);
       this.resizeGrid(grid, gridOptions);
     });
 
@@ -48,15 +48,25 @@ export class ResizerService {
    * object gridOptions
    */
   calculateGridNewDimensions(gridOptions: GridOption): any {
+    const gridDomElm = $(`#${gridOptions.gridId}`);
+    const containerElm = (gridOptions.autoResize && gridOptions.autoResize.containerId) ? $(`#${gridOptions.autoResize.containerId}`) : $(`#${gridOptions.gridContainerId}`);
+    const windowElm = $(window);
+    if (windowElm === undefined || containerElm === undefined || gridDomElm === undefined) {
+      return null;
+    }
+
+    // calculate bottom padding
+    // if using pagination, we need to add the pagination height to this bottom padding
     let bottomPadding = (gridOptions.autoResize && gridOptions.autoResize.bottomPadding) ? gridOptions.autoResize.bottomPadding : DATAGRID_BOTTOM_PADDING;
     if (bottomPadding && gridOptions.enablePagination) {
-      bottomPadding += DATAGRID_PAGINATION_HEIGHT; // add pagination height to bottom padding
+      bottomPadding += DATAGRID_PAGINATION_HEIGHT;
     }
-    if (typeof $(`#${gridOptions.gridId}`).offset !== 'function') {
-      return;
-    }
-    const availableHeight = $(window).height() - $(`#${gridOptions.gridId}`).offset().top - bottomPadding;
-    const availableWidth = (gridOptions.autoResize && gridOptions.autoResize.containerId) ? $(`#${gridOptions.autoResize.containerId}`).width() : $(`#${gridOptions.gridContainerId}`).width();
+
+    const gridHeight = windowElm.height() || 0;
+    const coordOffsetTop = gridDomElm.offset();
+    const gridOffsetTop = (coordOffsetTop !== undefined) ? coordOffsetTop.top : 0;
+    const availableHeight = gridHeight - gridOffsetTop - bottomPadding;
+    const availableWidth = containerElm.width() || 0;
     const minHeight = (gridOptions.autoResize && gridOptions.autoResize.minHeight < 0) ? gridOptions.autoResize.minHeight : DATAGRID_MIN_HEIGHT;
     const minWidth = (gridOptions.autoResize && gridOptions.autoResize.minWidth < 0) ? gridOptions.autoResize.minWidth : DATAGRID_MIN_WIDTH;
 

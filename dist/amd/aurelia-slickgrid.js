@@ -34,8 +34,6 @@ define(["require", "exports", "aurelia-framework", "./global-grid-options", "./s
             this.sortService = sortService;
         }
         AureliaSlickgridCustomElement.prototype.attached = function () {
-            // reference to the DOM element
-            this._domElm = $(this.elm);
             // make sure the dataset is initialized (if not it will throw an error that it cannot getLength of null)
             this._dataset = this._dataset || [];
             this._gridOptions = this.mergeGridOptions();

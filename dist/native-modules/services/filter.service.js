@@ -10,6 +10,7 @@ import { inputFilterTemplate } from './../filter-templates/inputFilterTemplate';
 import { selectFilterTemplate } from './../filter-templates/selectFilterTemplate';
 import { FieldType } from './../models/fieldType';
 import { FormElementType } from './../models/formElementType';
+import * as $ from 'jquery';
 var FilterService = /** @class */ (function () {
     function FilterService() {
     }

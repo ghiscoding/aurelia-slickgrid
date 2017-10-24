@@ -12,6 +12,7 @@ var inputFilterTemplate_1 = require("./../filter-templates/inputFilterTemplate")
 var selectFilterTemplate_1 = require("./../filter-templates/selectFilterTemplate");
 var fieldType_1 = require("./../models/fieldType");
 var formElementType_1 = require("./../models/formElementType");
+var $ = require("jquery");
 var FilterService = /** @class */ (function () {
     function FilterService() {
     }

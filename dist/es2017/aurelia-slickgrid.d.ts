@@ -28,7 +28,6 @@ export declare class AureliaSlickgridCustomElement {
     private mouseService;
     private filterService;
     private sortService;
-    private _domElm;
     private _dataset;
     private _dataView;
     private _gridOptions;

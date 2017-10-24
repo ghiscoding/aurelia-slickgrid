@@ -10,6 +10,7 @@ import { inputFilterTemplate } from './../filter-templates/inputFilterTemplate';
 import { selectFilterTemplate } from './../filter-templates/selectFilterTemplate';
 import { FieldType } from './../models/fieldType';
 import { FormElementType } from './../models/formElementType';
+import * as $ from 'jquery';
 let FilterService = class FilterService {
     init(grid, gridOptions, columnDefinitions, columnFilters) {
         this._columnDefinitions = columnDefinitions;

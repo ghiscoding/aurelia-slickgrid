@@ -29,14 +29,13 @@ import { FilterService } from './services/filter.service';
 import { MouseService } from './services/mouse.service';
 import { ResizerService } from './services/resizer.service';
 import { SortService } from './services/sort.service';
+import * as $ from 'jquery';
 
 // using external js modules in Aurelia
 declare var Slick: any;
-declare var $: any;
 
 @inject(Element, ResizerService, MouseService, FilterService, SortService)
 export class AureliaSlickgridCustomElement {
-  private _domElm: HTMLElement;
   private _dataset: any[];
   private _dataView: any;
   private _gridOptions: GridOption;
@@ -73,9 +72,6 @@ export class AureliaSlickgridCustomElement {
   }
 
   attached() {
-    // reference to the DOM element
-    this._domElm = $(this.elm);
-
     // make sure the dataset is initialized (if not it will throw an error that it cannot getLength of null)
     this._dataset = this._dataset || [];
     this._gridOptions = this.mergeGridOptions();

@@ -8,10 +8,10 @@ import { ColumnFilters } from './../models/columnFilters.interface';
 import { FieldType } from './../models/fieldType';
 import { FormElementType } from './../models/formElementType';
 import { GridOption } from './../models/gridOption.interface';
+import * as $ from 'jquery';
 
 // using external js modules in Angular
 declare var Slick: any;
-declare var $: any;
 
 @inject()
 export class FilterService {
