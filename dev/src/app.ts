@@ -7,9 +7,9 @@ export class App {
   router: Router;
 
   configureRouter(config: RouterConfiguration, router: Router) {
-    config.title = 'Aurelia';
+    config.title = 'Aurelia-Slickgrid';
     config.map([
-      { route: 'slickgrid', name: 'slickgrid', title: 'Slickgrid Examples', moduleId: PLATFORM.moduleName('./examples/slickgrid/index'), nav: true },
+      { route: 'slickgrid', name: 'slickgrid', title: 'Examples', moduleId: PLATFORM.moduleName('./examples/slickgrid/index'), nav: true },
       { route: '', redirect: 'slickgrid' }
     ]);
 
