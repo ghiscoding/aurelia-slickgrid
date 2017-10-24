@@ -1,7 +1,7 @@
 {
   "name": "aurelia-slickgrid",
   "author": "Ghislain B.",
-  "version": "0.3.1",
+  "version": "1.0.0",
   "description": "Slickgrid components made available in Aurelia",
   "main": "dist/app.bundle.js",
   "license": "MIT",

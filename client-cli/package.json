@@ -1,15 +1,25 @@
 {
   "name": "slickgrid-test-cli",
-  "description": "An Aurelia client application.",
-  "version": "0.1.0",
-  "repository": {
-    "type": "???",
-    "url": "???"
-  },
+  "version": "1.0.0",
+  "description": "Slickgrid components made available in Aurelia",
   "license": "MIT",
+  "keywords": [
+    "aurelia",
+    "plugin",
+    "slickgrid"
+  ],
+  "homepage": "https://github.com/ghiscoding/aurelia-slickgrid",
+  "bugs": {
+    "url": "https://github.com/ghiscoding/aurelia-slickgrid/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/ghiscoding/aurelia-slickgrid"
+  },
   "dependencies": {
     "aurelia-animator-css": "^1.0.2",
     "aurelia-bootstrapper": "^2.1.1",
+    "aurelia-http-client": "^1.2.1",
     "aurelia-slickgrid": "^0.3.1",
     "bluebird": "^3.4.1",
     "bootstrap": "^3.3.7",

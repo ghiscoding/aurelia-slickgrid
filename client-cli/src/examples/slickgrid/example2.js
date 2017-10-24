@@ -12,8 +12,9 @@ const myCustomCheckboxFormatter = (row, cell, value, columnDef, dataContext) =>
 export class List {
   title = 'Example 2: Formatters';
   subTitle = 'grid auto-resize, multi-column sort and custom/SlickGrid Formatters';
+  columnDefinitions = [];
   gridOptions = {};
-  gridColumns = {};
+  dataset = [];
 
   constructor(router) {
     this.router = router;
