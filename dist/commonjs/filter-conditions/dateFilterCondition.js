@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var moment = require("moment");
 var fieldType_1 = require("../models/fieldType");
 var filterUtilities_1 = require("./filterUtilities");
+var moment = require("moment");
 exports.dateFilterCondition = function (options) {
     var filterSearchType = options.filterSearchType || fieldType_1.FieldType.dateIso;
     var searchDateFormat = filterUtilities_1.mapDateFormatByFieldType(filterSearchType);

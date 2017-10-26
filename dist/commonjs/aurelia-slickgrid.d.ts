@@ -16,12 +16,8 @@ import 'slickgrid/plugins/slick.headerbuttons';
 import 'slickgrid/plugins/slick.headermenu';
 import 'slickgrid/plugins/slick.rowmovemanager';
 import 'slickgrid/plugins/slick.rowselectionmodel';
-import { Column } from './models/column.interface';
-import { GridOption } from './models/gridOption.interface';
-import { FilterService } from './services/filter.service';
-import { MouseService } from './services/mouse.service';
-import { ResizerService } from './services/resizer.service';
-import { SortService } from './services/sort.service';
+import { Column, GridOption } from './models';
+import { FilterService, MouseService, SortService, ResizerService } from './services';
 export declare class AureliaSlickgridCustomElement {
     private elm;
     private resizer;

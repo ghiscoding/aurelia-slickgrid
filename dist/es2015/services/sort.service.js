@@ -1,5 +1,14 @@
-import { FieldType } from './../models/fieldType';
-import { Sorters } from './../sorters/index';
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+import { castToPromise } from './utilities';
+import { FieldType } from './../models';
+import { Sorters } from './../sorters';
 export class SortService {
     /**
      * Attach a backend sort (single/multi) hook to the grid
@@ -8,7 +17,30 @@ export class SortService {
      */
     attachBackendOnSort(grid, gridOptions) {
         this.subscriber = grid.onSort;
-        this.subscriber.subscribe(gridOptions.onSortChanged);
+        this.subscriber.subscribe(this.attachBackendOnSortSubscribe);
+    }
+    attachBackendOnSortSubscribe(event, args) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!args || !args.grid) {
+                throw new Error('Something went wrong when trying to attach the "attachBackendOnSortSubscribe(event, args)" function, it seems that "args" is not populated correctly');
+            }
+            const serviceOptions = args.grid.getOptions();
+            if (serviceOptions === undefined || serviceOptions.onBackendEventApi === undefined || serviceOptions.onBackendEventApi.process === undefined || !serviceOptions.onBackendEventApi.service === undefined) {
+                throw new Error(`onBackendEventApi requires at least a "process" function and a "service" defined`);
+            }
+            if (serviceOptions.onBackendEventApi !== undefined && serviceOptions.onBackendEventApi.preProcess) {
+                serviceOptions.onBackendEventApi.preProcess();
+            }
+            const query = serviceOptions.onBackendEventApi.service.onSortChanged(event, args);
+            // the process could be an Observable (like HttpClient) or a Promise
+            // in any case, we need to have a Promise so that we can await on it (if an Observable, convert it to Promise)
+            const observableOrPromise = serviceOptions.onBackendEventApi.process(query);
+            const responseProcess = yield castToPromise(observableOrPromise);
+            // send the response process to the postProcess callback
+            if (serviceOptions.onBackendEventApi.postProcess) {
+                serviceOptions.onBackendEventApi.postProcess(responseProcess);
+            }
+        });
     }
     /**
      * Attach a local sort (single/multi) hook to the grid
@@ -16,13 +48,13 @@ export class SortService {
      * @param gridOptions Grid Options object
      * @param dataView
      */
-    attachLocalOnSort(grid, dataView) {
+    attachLocalOnSort(grid, gridOptions, dataView) {
         this.subscriber = grid.onSort;
         this.subscriber.subscribe((e, args) => {
             // multiSort and singleSort are not exactly the same, but we want to structure it the same for the (for loop) after
             // also to avoid having to rewrite the for loop in the sort, we will make the singleSort an array of 1 object
             const sortColumns = (args.multiColumnSort) ? args.sortCols : new Array({ sortAsc: args.sortAsc, sortCol: args.sortCol });
-            dataView.sort(function (dataRow1, dataRow2) {
+            dataView.sort((dataRow1, dataRow2) => {
                 for (let i = 0, l = sortColumns.length; i < l; i++) {
                     const sortDirection = sortColumns[i].sortAsc ? 1 : -1;
                     const sortField = sortColumns[i].sortCol.field;

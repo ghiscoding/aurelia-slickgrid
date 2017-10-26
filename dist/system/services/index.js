@@ -1,4 +1,4 @@
-System.register(["./filter.service", "./grid-odata.service", "./mouse.service", "./odata.service", "./resizer.service", "./sort.service"], function (exports_1, context_1) {
+System.register(["./filter.service", "./grid-odata.service", "./graphql.service", "./mouse.service", "./odata.service", "./resizer.service", "./sort.service"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     return {
@@ -11,6 +11,11 @@ System.register(["./filter.service", "./grid-odata.service", "./mouse.service", 
             function (grid_odata_service_1_1) {
                 exports_1({
                     "GridOdataService": grid_odata_service_1_1["GridOdataService"]
+                });
+            },
+            function (graphql_service_1_1) {
+                exports_1({
+                    "GraphqlService": graphql_service_1_1["GraphqlService"]
                 });
             },
             function (mouse_service_1_1) {

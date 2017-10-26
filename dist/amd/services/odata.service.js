@@ -1,10 +1,4 @@
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-define(["require", "exports", "aurelia-framework", "../models/caseType", "./global-utilities"], function (require, exports, aurelia_framework_1, caseType_1) {
+define(["require", "exports", "./../models", "./global-utilities"], function (require, exports, models_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var OdataService = /** @class */ (function () {
@@ -166,7 +160,7 @@ define(["require", "exports", "aurelia-framework", "../models/caseType", "./glob
                 if (property === 'orderBy' || property === 'sortBy') {
                     var sortBy = options[property];
                     // make sure first char of each orderBy field is capitalize
-                    if (this._odataOptions.caseType === caseType_1.CaseType.pascalCase) {
+                    if (this._odataOptions.caseType === models_1.CaseType.pascalCase) {
                         if (Array.isArray(sortBy)) {
                             sortBy.forEach(function (field, index, inputArray) {
                                 inputArray[index] = String.titleCase(field);
@@ -181,9 +175,6 @@ define(["require", "exports", "aurelia-framework", "../models/caseType", "./glob
                 }
             }
         };
-        OdataService = __decorate([
-            aurelia_framework_1.inject()
-        ], OdataService);
         return OdataService;
     }());
     exports.OdataService = OdataService;

@@ -6,7 +6,7 @@ import { dateUsFilterCondition } from './dateUsFilterCondition';
 import { dateFilterCondition } from './dateFilterCondition';
 import { numberFilterCondition } from './numberFilterCondition';
 import { stringFilterCondition } from './stringFilterCondition';
-import { FieldType } from '../models/fieldType';
+import { FieldType } from '../models';
 export var executeMappedCondition = function (options) {
     // execute the mapped type, or default to String condition check
     switch (options.fieldType) {

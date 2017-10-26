@@ -1,5 +1,4 @@
-import { Column } from './../models/column.interface';
-import { Filter } from './../models/filter.interface';
+import { Column, Filter } from './../models';
 import { inputFilterTemplate } from './inputFilterTemplate';
 import { selectFilterTemplate } from './selectFilterTemplate';
 

@@ -1,8 +1,6 @@
 define(["require", "exports", "./checkboxFormatter", "./checkmarkFormatter", "./dateIsoFormatter", "./dateTimeIsoAmPmFormatter", "./dateTimeUsAmPmFormatter", "./dateTimeUsFormatter", "./dateUsFormatter", "./percentCompleteFormatter", "./percentCompleteBarFormatter", "./progressBarFormatter", "./yesNoFormatter"], function (require, exports, checkboxFormatter_1, checkmarkFormatter_1, dateIsoFormatter_1, dateTimeIsoAmPmFormatter_1, dateTimeUsAmPmFormatter_1, dateTimeUsFormatter_1, dateUsFormatter_1, percentCompleteFormatter_1, percentCompleteBarFormatter_1, progressBarFormatter_1, yesNoFormatter_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    // import { Group, GroupTotals } from '../core'
-    // import { Item } from '../dataview'
     /*
     export interface GroupFormatter {
       (row: number, cell: number, value: any, columnDef: Column, dataContext: Group): string

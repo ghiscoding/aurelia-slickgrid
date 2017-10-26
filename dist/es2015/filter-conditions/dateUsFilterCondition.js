@@ -1,5 +1,5 @@
-import * as moment from 'moment';
 import { testFilterCondition } from './filterUtilities';
+import * as moment from 'moment';
 const DATE_FORMAT = 'M/D/YYYY';
 export const dateUsFilterCondition = (options) => {
     if (!moment(options.cellValue, DATE_FORMAT, true).isValid() || !moment(options.searchTerm, DATE_FORMAT, true).isValid()) {

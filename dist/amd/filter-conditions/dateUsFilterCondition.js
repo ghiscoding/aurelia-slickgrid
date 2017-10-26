@@ -1,4 +1,4 @@
-define(["require", "exports", "moment", "./filterUtilities"], function (require, exports, moment, filterUtilities_1) {
+define(["require", "exports", "./filterUtilities", "moment"], function (require, exports, filterUtilities_1, moment) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var DATE_FORMAT = 'M/D/YYYY';

@@ -1,14 +1,52 @@
-System.register(["./../models/fieldType", "./../sorters/index"], function (exports_1, context_1) {
+System.register(["./utilities", "./../models", "./../sorters"], function (exports_1, context_1) {
     "use strict";
+    var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+        return new (P || (P = Promise))(function (resolve, reject) {
+            function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+            function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+            function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+            step((generator = generator.apply(thisArg, _arguments || [])).next());
+        });
+    };
+    var __generator = (this && this.__generator) || function (thisArg, body) {
+        var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+        return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+        function verb(n) { return function (v) { return step([n, v]); }; }
+        function step(op) {
+            if (f) throw new TypeError("Generator is already executing.");
+            while (_) try {
+                if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
+                if (y = 0, t) op = [0, t.value];
+                switch (op[0]) {
+                    case 0: case 1: t = op; break;
+                    case 4: _.label++; return { value: op[1], done: false };
+                    case 5: _.label++; y = op[1]; op = [0]; continue;
+                    case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                    default:
+                        if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                        if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                        if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                        if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                        if (t[2]) _.ops.pop();
+                        _.trys.pop(); continue;
+                }
+                op = body.call(thisArg, _);
+            } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+            if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+        }
+    };
     var __moduleName = context_1 && context_1.id;
-    var fieldType_1, index_1, SortService;
+    var utilities_1, models_1, sorters_1, SortService;
     return {
         setters: [
-            function (fieldType_1_1) {
-                fieldType_1 = fieldType_1_1;
+            function (utilities_1_1) {
+                utilities_1 = utilities_1_1;
             },
-            function (index_1_1) {
-                index_1 = index_1_1;
+            function (models_1_1) {
+                models_1 = models_1_1;
+            },
+            function (sorters_1_1) {
+                sorters_1 = sorters_1_1;
             }
         ],
         execute: function () {
@@ -22,7 +60,37 @@ System.register(["./../models/fieldType", "./../sorters/index"], function (expor
                  */
                 SortService.prototype.attachBackendOnSort = function (grid, gridOptions) {
                     this.subscriber = grid.onSort;
-                    this.subscriber.subscribe(gridOptions.onSortChanged);
+                    this.subscriber.subscribe(this.attachBackendOnSortSubscribe);
+                };
+                SortService.prototype.attachBackendOnSortSubscribe = function (event, args) {
+                    return __awaiter(this, void 0, void 0, function () {
+                        var serviceOptions, query, observableOrPromise, responseProcess;
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0:
+                                    if (!args || !args.grid) {
+                                        throw new Error('Something went wrong when trying to attach the "attachBackendOnSortSubscribe(event, args)" function, it seems that "args" is not populated correctly');
+                                    }
+                                    serviceOptions = args.grid.getOptions();
+                                    if (serviceOptions === undefined || serviceOptions.onBackendEventApi === undefined || serviceOptions.onBackendEventApi.process === undefined || !serviceOptions.onBackendEventApi.service === undefined) {
+                                        throw new Error("onBackendEventApi requires at least a \"process\" function and a \"service\" defined");
+                                    }
+                                    if (serviceOptions.onBackendEventApi !== undefined && serviceOptions.onBackendEventApi.preProcess) {
+                                        serviceOptions.onBackendEventApi.preProcess();
+                                    }
+                                    query = serviceOptions.onBackendEventApi.service.onSortChanged(event, args);
+                                    observableOrPromise = serviceOptions.onBackendEventApi.process(query);
+                                    return [4 /*yield*/, utilities_1.castToPromise(observableOrPromise)];
+                                case 1:
+                                    responseProcess = _a.sent();
+                                    // send the response process to the postProcess callback
+                                    if (serviceOptions.onBackendEventApi.postProcess) {
+                                        serviceOptions.onBackendEventApi.postProcess(responseProcess);
+                                    }
+                                    return [2 /*return*/];
+                            }
+                        });
+                    });
                 };
                 /**
                  * Attach a local sort (single/multi) hook to the grid
@@ -30,7 +98,7 @@ System.register(["./../models/fieldType", "./../sorters/index"], function (expor
                  * @param gridOptions Grid Options object
                  * @param dataView
                  */
-                SortService.prototype.attachLocalOnSort = function (grid, dataView) {
+                SortService.prototype.attachLocalOnSort = function (grid, gridOptions, dataView) {
                     this.subscriber = grid.onSort;
                     this.subscriber.subscribe(function (e, args) {
                         // multiSort and singleSort are not exactly the same, but we want to structure it the same for the (for loop) after
@@ -45,23 +113,23 @@ System.register(["./../models/fieldType", "./../sorters/index"], function (expor
                                 var value2 = dataRow2[sortField];
                                 var result = 0;
                                 switch (fieldType) {
-                                    case fieldType_1.FieldType.number:
-                                        result = index_1.Sorters.numeric(value1, value2, sortDirection);
+                                    case models_1.FieldType.number:
+                                        result = sorters_1.Sorters.numeric(value1, value2, sortDirection);
                                         break;
-                                    case fieldType_1.FieldType.date:
-                                        result = index_1.Sorters.date(value1, value2, sortDirection);
+                                    case models_1.FieldType.date:
+                                        result = sorters_1.Sorters.date(value1, value2, sortDirection);
                                         break;
-                                    case fieldType_1.FieldType.dateIso:
-                                        result = index_1.Sorters.dateIso(value1, value2, sortDirection);
+                                    case models_1.FieldType.dateIso:
+                                        result = sorters_1.Sorters.dateIso(value1, value2, sortDirection);
                                         break;
-                                    case fieldType_1.FieldType.dateUs:
-                                        result = index_1.Sorters.dateUs(value1, value2, sortDirection);
+                                    case models_1.FieldType.dateUs:
+                                        result = sorters_1.Sorters.dateUs(value1, value2, sortDirection);
                                         break;
-                                    case fieldType_1.FieldType.dateUsShort:
-                                        result = index_1.Sorters.dateUsShort(value1, value2, sortDirection);
+                                    case models_1.FieldType.dateUsShort:
+                                        result = sorters_1.Sorters.dateUsShort(value1, value2, sortDirection);
                                         break;
                                     default:
-                                        result = index_1.Sorters.string(value1, value2, sortDirection);
+                                        result = sorters_1.Sorters.string(value1, value2, sortDirection);
                                         break;
                                 }
                                 if (result !== 0) {

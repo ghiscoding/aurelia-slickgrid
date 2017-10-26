@@ -1,26 +1,19 @@
-import { inject } from 'aurelia-framework';
-
-import { executeMappedCondition } from './../filter-conditions/executeMappedCondition';
-import { inputFilterTemplate } from './../filter-templates/inputFilterTemplate';
-import { selectFilterTemplate } from './../filter-templates/selectFilterTemplate';
-import { Column } from './../models/column.interface';
-import { ColumnFilters } from './../models/columnFilters.interface';
-import { FieldType } from './../models/fieldType';
-import { FormElementType } from './../models/formElementType';
-import { GridOption } from './../models/gridOption.interface';
+import { castToPromise } from './utilities';
+import { FilterConditions } from '../filter-conditions';
+import { BackendServiceOption, Column, ColumnFilters, FieldType, FilterChangedArgs, FormElementType, GridOption } from '../models';
+import { FilterTemplates } from './../filter-templates';
 import * as $ from 'jquery';
 
 // using external js modules in Angular
 declare var Slick: any;
-
-@inject()
 export class FilterService {
-  private _columnDefinitions: Column[];
-  private _columnFilters: ColumnFilters;
-  private _dataView: any;
-  private _grid: any;
-  private _gridOptions: GridOption;
-  private subscriber: any;
+  _columnDefinitions: Column[];
+  _columnFilters: ColumnFilters;
+  _dataView: any;
+  _grid: any;
+  _gridOptions: GridOption;
+  _onFilterChangedOptions: any;
+  subscriber: any;
 
   init(grid: any, gridOptions: GridOption, columnDefinitions: Column[], columnFilters: any): void {
     this._columnDefinitions = columnDefinitions;
@@ -34,13 +27,43 @@ export class FilterService {
    * @param grid SlickGrid Grid object
    * @param gridOptions Grid Options object
    */
-  attachBackendOnFilter() {
+  attachBackendOnFilter(grid: any, options: GridOption) {
     this.subscriber = new Slick.Event();
-    this.subscriber.subscribe(this._gridOptions.onFilterChanged);
+    this.subscriber.subscribe(this.attachBackendOnFilterSubscribe);
     this.addFilterTemplateToHeaderRow();
   }
 
-  testFilterCondition(operator: string, value1: any, value2: any) {
+  async attachBackendOnFilterSubscribe(event: Event, args: any) {
+    if (!args || !args.grid) {
+      throw new Error('Something went wrong when trying to attach the "attachBackendOnFilterSubscribe(event, args)" function, it seems that "args" is not populated correctly');
+    }
+    const serviceOptions: BackendServiceOption = args.grid.getOptions();
+
+    if (serviceOptions === undefined || serviceOptions.onBackendEventApi === undefined || serviceOptions.onBackendEventApi.process === undefined || serviceOptions.onBackendEventApi.service === undefined) {
+      throw new Error(`onBackendEventApi requires at least a "process" function and a "service" defined`);
+    }
+    const backendApi = serviceOptions.onBackendEventApi;
+
+    // run a preProcess callback if defined
+    if (backendApi.preProcess !== undefined) {
+      backendApi.preProcess();
+    }
+
+    // call the service to get a query back
+    const query = await backendApi.service.onFilterChanged(event, args);
+
+    // the process could be an Observable (like HttpClient) or a Promise
+    // in any case, we need to have a Promise so that we can await on it (if an Observable, convert it to Promise)
+    const observableOrPromise = backendApi.process(query);
+    const responseProcess = await castToPromise(observableOrPromise);
+
+    // send the response process to the postProcess callback
+    if (backendApi.postProcess !== undefined) {
+      backendApi.postProcess(responseProcess);
+    }
+  }
+
+  testFilterCondition(operator: string, value1: any, value2: any): boolean {
     switch (operator) {
       case '<': return (value1 < value2) ? true : false;
       case '<=': return (value1 <= value2) ? true : false;
@@ -80,7 +103,6 @@ export class FilterService {
       const columnFilter = args.columnFilters[columnId];
       const columnIndex = args.grid.getColumnIndex(columnId);
       const columnDef = args.grid.getColumns()[columnIndex];
-      // const fieldName = columnDef.field || columnDef.name;
       const fieldType = columnDef.type || FieldType.string;
       const conditionalFilterFn = (columnDef.filter && columnDef.filter.conditionalFilter) ? columnDef.filter.conditionalFilter : null;
       const filterSearchType = (columnDef.filterSearchType) ? columnDef.filterSearchType : null;
@@ -117,7 +139,7 @@ export class FilterService {
       if (conditionalFilterFn && typeof conditionalFilterFn === 'function') {
         conditionalFilterFn(conditionOptions);
       }
-      if (!executeMappedCondition(conditionOptions)) {
+      if (!FilterConditions.executeMappedCondition(conditionOptions)) {
         return false;
       }
     }
@@ -140,6 +162,7 @@ export class FilterService {
       columnDef: args.columnDef,
       columnFilters: this._columnFilters,
       searchTerm: e.target.value,
+      serviceOptions: this._onFilterChangedOptions,
       grid: this._grid
     }, e);
   }
@@ -151,20 +174,20 @@ export class FilterService {
         let elm = null;
         let header;
         const columnDef = this._columnDefinitions[i];
-        // const columnId = columnDef.id;
+        const columnId = columnDef.id;
         const listTerm = (columnDef.filter && columnDef.filter.listTerm) ? columnDef.filter.listTerm : null;
-        let searchTerm = (columnDef.filter && columnDef.filter.searchTerm) ? columnDef.filter.searchTerm : null;
+        let searchTerm = (columnDef.filter && columnDef.filter.searchTerm) ? columnDef.filter.searchTerm : '';
 
         // keep the filter in a columnFilters for later reference
         this.keepColumnFilters(searchTerm, listTerm, columnDef);
 
         if (!columnDef.filter) {
           searchTerm = (columnDef.filter && columnDef.filter.searchTerm) ? columnDef.filter.searchTerm : null;
-          filterTemplate = inputFilterTemplate(searchTerm, columnDef);
+          filterTemplate = FilterTemplates.input(searchTerm, columnDef);
         } else {
           // custom Select template
           if (columnDef.filter.type === FormElementType.select) {
-            filterTemplate = selectFilterTemplate(searchTerm, columnDef);
+            filterTemplate = FilterTemplates.select(searchTerm, columnDef);
           }
         }
 
@@ -178,7 +201,7 @@ export class FilterService {
           elm.appendTo(header);
         }
 
-        // depending on the DOM Element type, we will watch the corrent event
+        // depending on the DOM Element type, we will watch the correct event
         const filterType = (columnDef.filter && columnDef.filter.type) ? columnDef.filter.type : FormElementType.input;
         switch (filterType) {
           case FormElementType.select:
@@ -194,7 +217,7 @@ export class FilterService {
     }
   }
 
-  private keepColumnFilters(searchTerm: any, listTerm: any, columnDef: any) {
+  private keepColumnFilters(searchTerm: string, listTerm: any, columnDef: any) {
     if (searchTerm) {
       this._columnFilters[columnDef.id] = {
         columnId: columnDef.id,

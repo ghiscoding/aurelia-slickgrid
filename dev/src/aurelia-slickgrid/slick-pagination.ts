@@ -1,5 +1,6 @@
+import { castToPromise } from './services/utilities';
 import { bindable } from 'aurelia-framework';
-import { GridOption } from './models/gridOption.interface';
+import { GridOption } from './models';
 
 export class SlickPaginationCustomElement {
   @bindable() grid: any;
@@ -57,40 +58,54 @@ export class SlickPaginationCustomElement {
 
   gotoFirstPage() {
     this.pageNumber = 1;
-    this.onPageChanged(undefined, this.pageNumber);
+    this.onPageChanged(new CustomEvent('build', { detail: 3 }), this.pageNumber);
   }
 
   refreshPagination() {
-    if (this._gridPaginationOptions) {
+    if (this._gridPaginationOptions && this._gridPaginationOptions.pagination) {
       // if totalItems changed, we should always go back to the first page and recalculation the From-To indexes
-      if (!this._gridPaginationOptions.pagination || this.totalItems !== this._gridPaginationOptions.pagination.totalItems) {
+      if (this.totalItems !== this._gridPaginationOptions.pagination.totalItems) {
         this.pageNumber = 1;
         this.recalculateFromToIndexes();
       }
 
       // calculate and refresh the multiple properties of the pagination UI
-      if (this._gridPaginationOptions.pagination) {
-        this.paginationPageSizes = this._gridPaginationOptions.pagination.pageSizes;
-        this.itemsPerPage = this._gridPaginationOptions.pagination.pageSize;
-        if (this._gridPaginationOptions.onPaginationChanged) {
-          this.paginationCallback = this._gridPaginationOptions.onPaginationChanged;
-        }
-        this.totalItems = this._gridPaginationOptions.pagination.totalItems;
-        this.dataTo = this.itemsPerPage;
-      }
+      this.paginationPageSizes = this._gridPaginationOptions.pagination.pageSizes;
+      this.itemsPerPage = this._gridPaginationOptions.pagination.pageSize;
+      this.totalItems = this._gridPaginationOptions.pagination.totalItems;
+      this.dataTo = this.itemsPerPage;
     }
     this.pageCount = Math.ceil(this.totalItems / this.itemsPerPage);
   }
 
-  onPageChanged(event?: Event, pageNumber?: number) {
+  async onPageChanged(event: Event, pageNumber: number) {
     this.recalculateFromToIndexes();
 
     if (this.dataTo > this.totalItems) {
       this.dataTo = this.totalItems;
     }
-    if (typeof this.paginationCallback === 'function') {
+    if (this._gridPaginationOptions.onBackendEventApi) {
       const itemsPerPage = this.itemsPerPage;
-      this.paginationCallback(event, { newPage: pageNumber, pageSize: itemsPerPage });
+
+      if (!this._gridPaginationOptions.onBackendEventApi.process || !this._gridPaginationOptions.onBackendEventApi.service) {
+        throw new Error(`onBackendEventApi requires at least a "process" function and a "service" defined`);
+      }
+      if (this._gridPaginationOptions.onBackendEventApi.preProcess) {
+        this._gridPaginationOptions.onBackendEventApi.preProcess();
+      }
+      const query = this._gridPaginationOptions.onBackendEventApi.service.onPaginationChanged(event, { newPage: pageNumber, pageSize: itemsPerPage });
+
+      // the process could be an Observable (like HttpClient) or a Promise
+      // in any case, we need to have a Promise so that we can await on it (if an Observable, convert it to Promise)
+      const observableOrPromise = this._gridPaginationOptions.onBackendEventApi.process(query);
+      const responseProcess = await castToPromise(observableOrPromise);
+
+      // send the response process to the postProcess callback
+      if (this._gridPaginationOptions.onBackendEventApi.postProcess) {
+        this._gridPaginationOptions.onBackendEventApi.postProcess(responseProcess);
+      }
+    } else {
+      throw new Error('Pagination with a backend service requires "onBackendEventApi" to be defined in your grid options');
     }
   }
 

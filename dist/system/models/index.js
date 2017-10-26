@@ -1,4 +1,4 @@
-System.register(["./caseType", "./fieldType", "./formElementType"], function (exports_1, context_1) {
+System.register(["./caseType", "./fieldType", "./formElementType", "./operatorType", "./sortDirection"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     return {
@@ -16,6 +16,16 @@ System.register(["./caseType", "./fieldType", "./formElementType"], function (ex
             function (formElementType_1_1) {
                 exports_1({
                     "FormElementType": formElementType_1_1["FormElementType"]
+                });
+            },
+            function (operatorType_1_1) {
+                exports_1({
+                    "OperatorType": operatorType_1_1["OperatorType"]
+                });
+            },
+            function (sortDirection_1_1) {
+                exports_1({
+                    "SortDirection": sortDirection_1_1["SortDirection"]
                 });
             }
         ],

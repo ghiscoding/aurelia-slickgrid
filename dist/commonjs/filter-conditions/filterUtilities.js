@@ -1,19 +1,19 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var fieldType_1 = require("../models/fieldType");
+var models_1 = require("../models");
 exports.mapDateFormatByFieldType = function (fieldType) {
     switch (fieldType) {
-        case fieldType_1.FieldType.dateUs:
+        case models_1.FieldType.dateUs:
             return 'M/D/YYYY';
-        case fieldType_1.FieldType.dateTimeUs:
+        case models_1.FieldType.dateTimeUs:
             return 'M/D/YYYY h:m:s';
-        case fieldType_1.FieldType.dateUsShort:
+        case models_1.FieldType.dateUsShort:
             return 'M/D/YY';
-        case fieldType_1.FieldType.dateTimeUsShort:
+        case models_1.FieldType.dateTimeUsShort:
             return 'M/D/YY h:m:s';
-        case fieldType_1.FieldType.dateTimeIso:
+        case models_1.FieldType.dateTimeIso:
             return 'YYYY-MM-DD h:m:s';
-        case fieldType_1.FieldType.dateIso:
+        case models_1.FieldType.dateIso:
         default:
             return 'YYYY-MM-DD';
     }

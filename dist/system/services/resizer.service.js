@@ -37,7 +37,7 @@ System.register(["aurelia-event-aggregator", "aurelia-framework", "jquery"], fun
                     var _this = this;
                     // if we can't find the grid to resize, return without attaching anything
                     var gridDomElm = $("#" + gridOptions.gridId);
-                    if (!gridDomElm || typeof gridDomElm.offset() === 'undefined') {
+                    if (gridDomElm === undefined || gridDomElm.offset() === undefined) {
                         return null;
                     }
                     // -- 1st resize the datagrid size at first load (we need this because the .on event is not triggered on first load)

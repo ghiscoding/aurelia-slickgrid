@@ -1,4 +1,4 @@
-import { GridOption } from './models/gridOption.interface';
+import { GridOption } from './models';
 export declare class SlickPaginationCustomElement {
     grid: any;
     gridPaginationOptions: GridOption;
@@ -20,6 +20,6 @@ export declare class SlickPaginationCustomElement {
     changeToPreviousPage(event: any): void;
     gotoFirstPage(): void;
     refreshPagination(): void;
-    onPageChanged(event?: Event, pageNumber?: number): void;
+    onPageChanged(event: Event, pageNumber: number): Promise<void>;
     recalculateFromToIndexes(): void;
 }

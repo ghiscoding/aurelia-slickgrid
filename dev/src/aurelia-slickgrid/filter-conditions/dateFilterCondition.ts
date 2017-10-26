@@ -1,9 +1,7 @@
-import * as moment from 'moment';
-
 import { FieldType } from '../models/fieldType';
-import { FilterCondition } from './../models/filterCondition.interface';
-import { FilterConditionOption } from './../models/filterConditionOption.interface';
-import { mapDateFormatByFieldType, testFilterCondition } from './filterUtilities';
+import { FilterCondition, FilterConditionOption } from '../models';
+import { testFilterCondition, mapDateFormatByFieldType } from './filterUtilities';
+import * as moment from 'moment';
 
 export const dateFilterCondition: FilterCondition = (options: FilterConditionOption) => {
   const filterSearchType = options.filterSearchType || FieldType.dateIso;

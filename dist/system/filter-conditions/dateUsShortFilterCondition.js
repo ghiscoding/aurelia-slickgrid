@@ -1,14 +1,14 @@
-System.register(["moment", "./filterUtilities"], function (exports_1, context_1) {
+System.register(["./filterUtilities", "moment"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var moment, filterUtilities_1, DATE_FORMAT, dateUsShortFilterCondition;
+    var filterUtilities_1, moment, DATE_FORMAT, dateUsShortFilterCondition;
     return {
         setters: [
-            function (moment_1) {
-                moment = moment_1;
-            },
             function (filterUtilities_1_1) {
                 filterUtilities_1 = filterUtilities_1_1;
+            },
+            function (moment_1) {
+                moment = moment_1;
             }
         ],
         execute: function () {

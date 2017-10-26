@@ -1,9 +1,9 @@
 import './global-utilities';
-import { OdataOption } from './../models/odataOption.interface';
+import { OdataOption } from './../models';
 export declare class OdataService {
-    private _columnFilters;
-    private _defaultSortBy;
-    private _odataOptions;
+    _columnFilters: any;
+    _defaultSortBy: string;
+    _odataOptions: OdataOption;
     constructor();
     buildQuery(): string;
     getFilterByColumn(columnName: string): string;

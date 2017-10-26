@@ -39,8 +39,6 @@ System.register(["./checkboxFormatter", "./checkmarkFormatter", "./dateIsoFormat
             }
         ],
         execute: function () {
-            // import { Group, GroupTotals } from '../core'
-            // import { Item } from '../dataview'
             /*
             export interface GroupFormatter {
               (row: number, cell: number, value: any, columnDef: Column, dataContext: Group): string

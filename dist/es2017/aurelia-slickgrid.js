@@ -24,11 +24,9 @@ import 'slickgrid/plugins/slick.headermenu';
 import 'slickgrid/plugins/slick.rowmovemanager';
 import 'slickgrid/plugins/slick.rowselectionmodel';
 import { bindable, bindingMode, inject } from 'aurelia-framework';
+import { castToPromise } from './services/utilities';
 import { GlobalGridOptions } from './global-grid-options';
-import { FilterService } from './services/filter.service';
-import { MouseService } from './services/mouse.service';
-import { ResizerService } from './services/resizer.service';
-import { SortService } from './services/sort.service';
+import { FilterService, MouseService, SortService, ResizerService } from './services';
 let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
     constructor(elm, resizer, mouseService, filterService, sortService) {
         this.elm = elm;
@@ -94,12 +92,29 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
     attachDifferentHooks(grid, options, dataView) {
         // attach external sorting (backend) when available or default onSort (dataView)
         if (options.enableSorting) {
-            (typeof options.onSortChanged === 'function') ? this.sortService.attachBackendOnSort(grid, options) : this.sortService.attachLocalOnSort(grid, this._dataView);
+            (options.onBackendEventApi) ? this.sortService.attachBackendOnSort(grid, options) : this.sortService.attachLocalOnSort(grid, options, this._dataView);
         }
-        // attach external filter (backend) when available or default onSort (dataView)
+        // attach external filter (backend) when available or default onFilter (dataView)
         if (options.enableFiltering) {
             this.filterService.init(grid, options, this.columnDefinitions, this._columnFilters);
-            (typeof options.onFilterChanged === 'function') ? this.filterService.attachBackendOnFilter() : this.filterService.attachLocalOnFilter(this._dataView);
+            (options.onBackendEventApi) ? this.filterService.attachBackendOnFilter(grid, options) : this.filterService.attachLocalOnFilter(this._dataView);
+        }
+        if (options.onBackendEventApi && options.onBackendEventApi.onInit) {
+            const backendApi = options.onBackendEventApi;
+            const query = backendApi.service.buildQuery();
+            // wrap this inside a setTimeout to avoid timing issue since the gridOptions needs to be ready before running this onInit
+            setTimeout(async () => {
+                // the process could be an Observable (like HttpClient) or a Promise
+                // in any case, we need to have a Promise so that we can await on it (if an Observable, convert it to Promise)
+                if (options && options.onBackendEventApi && options.onBackendEventApi.onInit) {
+                    const observableOrPromise = options.onBackendEventApi.onInit(query);
+                    const responseProcess = await castToPromise(observableOrPromise);
+                    // send the response process to the postProcess callback
+                    if (backendApi.postProcess) {
+                        backendApi.postProcess(responseProcess);
+                    }
+                }
+            });
         }
         // if enable, change background color on mouse over
         if (options.enableMouseOverRow) {
@@ -164,7 +179,7 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
                 // resize the grid inside a slight timeout, in case other DOM element changed prior to the resize (like a filter/pagination changed)
                 setTimeout(() => {
                     this.resizer.resizeGrid(this.grid, this._gridOptions);
-                    this.grid.autosizeColumns();
+                    // this.grid.autosizeColumns();
                 });
             }
         }

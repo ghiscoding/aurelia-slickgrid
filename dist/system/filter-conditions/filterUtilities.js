@@ -1,27 +1,27 @@
-System.register(["../models/fieldType"], function (exports_1, context_1) {
+System.register(["../models"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var fieldType_1, mapDateFormatByFieldType, testFilterCondition;
+    var models_1, mapDateFormatByFieldType, testFilterCondition;
     return {
         setters: [
-            function (fieldType_1_1) {
-                fieldType_1 = fieldType_1_1;
+            function (models_1_1) {
+                models_1 = models_1_1;
             }
         ],
         execute: function () {
             exports_1("mapDateFormatByFieldType", mapDateFormatByFieldType = function (fieldType) {
                 switch (fieldType) {
-                    case fieldType_1.FieldType.dateUs:
+                    case models_1.FieldType.dateUs:
                         return 'M/D/YYYY';
-                    case fieldType_1.FieldType.dateTimeUs:
+                    case models_1.FieldType.dateTimeUs:
                         return 'M/D/YYYY h:m:s';
-                    case fieldType_1.FieldType.dateUsShort:
+                    case models_1.FieldType.dateUsShort:
                         return 'M/D/YY';
-                    case fieldType_1.FieldType.dateTimeUsShort:
+                    case models_1.FieldType.dateTimeUsShort:
                         return 'M/D/YY h:m:s';
-                    case fieldType_1.FieldType.dateTimeIso:
+                    case models_1.FieldType.dateTimeIso:
                         return 'YYYY-MM-DD h:m:s';
-                    case fieldType_1.FieldType.dateIso:
+                    case models_1.FieldType.dateIso:
                     default:
                         return 'YYYY-MM-DD';
                 }

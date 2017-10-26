@@ -2,20 +2,18 @@ define(["require", "exports", "./filterUtilities"], function (require, exports, 
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.stringFilterCondition = function (options) {
-        // make sure the both search & cell value are string
-        // and make them lower case for case insensitive filtering
-        var cellValue = options.cellValue.toString().toLowerCase();
-        var searchTerm = options.searchTerm.toString().toLowerCase();
+        // make sure the cell value is a string by casting it
+        options.cellValue = options.cellValue.toString();
         if (options.operator === '*') {
-            return cellValue.endsWith(searchTerm);
+            return options.cellValue.startsWith(options.searchTerm);
         }
         else if (options.operator === '' && options.cellValueLastChar === '*') {
-            return cellValue.startsWith(searchTerm);
+            return options.cellValue.endsWith(options.searchTerm);
         }
         else if (options.operator === '') {
-            return cellValue.includes(searchTerm);
+            return options.cellValue.includes(options.searchTerm);
         }
-        return filterUtilities_1.testFilterCondition(options.operator || '==', cellValue, searchTerm);
+        return filterUtilities_1.testFilterCondition(options.operator || '==', options.cellValue.toLowerCase(), options.searchTerm.toLowerCase());
     };
 });
 //# sourceMappingURL=stringFilterCondition.js.map

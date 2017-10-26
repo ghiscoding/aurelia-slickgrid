@@ -13,6 +13,41 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [0, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 // import 3rd party vendor libs
 require("slickgrid/lib/jquery-ui-1.11.3");
@@ -34,11 +69,9 @@ require("slickgrid/plugins/slick.headermenu");
 require("slickgrid/plugins/slick.rowmovemanager");
 require("slickgrid/plugins/slick.rowselectionmodel");
 var aurelia_framework_1 = require("aurelia-framework");
+var utilities_1 = require("./services/utilities");
 var global_grid_options_1 = require("./global-grid-options");
-var filter_service_1 = require("./services/filter.service");
-var mouse_service_1 = require("./services/mouse.service");
-var resizer_service_1 = require("./services/resizer.service");
-var sort_service_1 = require("./services/sort.service");
+var services_1 = require("./services");
 var AureliaSlickgridCustomElement = /** @class */ (function () {
     function AureliaSlickgridCustomElement(elm, resizer, mouseService, filterService, sortService) {
         this.elm = elm;
@@ -102,14 +135,39 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
         }
     };
     AureliaSlickgridCustomElement.prototype.attachDifferentHooks = function (grid, options, dataView) {
+        var _this = this;
         // attach external sorting (backend) when available or default onSort (dataView)
         if (options.enableSorting) {
-            (typeof options.onSortChanged === 'function') ? this.sortService.attachBackendOnSort(grid, options) : this.sortService.attachLocalOnSort(grid, this._dataView);
+            (options.onBackendEventApi) ? this.sortService.attachBackendOnSort(grid, options) : this.sortService.attachLocalOnSort(grid, options, this._dataView);
         }
-        // attach external filter (backend) when available or default onSort (dataView)
+        // attach external filter (backend) when available or default onFilter (dataView)
         if (options.enableFiltering) {
             this.filterService.init(grid, options, this.columnDefinitions, this._columnFilters);
-            (typeof options.onFilterChanged === 'function') ? this.filterService.attachBackendOnFilter() : this.filterService.attachLocalOnFilter(this._dataView);
+            (options.onBackendEventApi) ? this.filterService.attachBackendOnFilter(grid, options) : this.filterService.attachLocalOnFilter(this._dataView);
+        }
+        if (options.onBackendEventApi && options.onBackendEventApi.onInit) {
+            var backendApi_1 = options.onBackendEventApi;
+            var query_1 = backendApi_1.service.buildQuery();
+            // wrap this inside a setTimeout to avoid timing issue since the gridOptions needs to be ready before running this onInit
+            setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
+                var observableOrPromise, responseProcess;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            if (!(options && options.onBackendEventApi && options.onBackendEventApi.onInit)) return [3 /*break*/, 2];
+                            observableOrPromise = options.onBackendEventApi.onInit(query_1);
+                            return [4 /*yield*/, utilities_1.castToPromise(observableOrPromise)];
+                        case 1:
+                            responseProcess = _a.sent();
+                            // send the response process to the postProcess callback
+                            if (backendApi_1.postProcess) {
+                                backendApi_1.postProcess(responseProcess);
+                            }
+                            _a.label = 2;
+                        case 2: return [2 /*return*/];
+                    }
+                });
+            }); });
         }
         // if enable, change background color on mouse over
         if (options.enableMouseOverRow) {
@@ -175,7 +233,7 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
                 // resize the grid inside a slight timeout, in case other DOM element changed prior to the resize (like a filter/pagination changed)
                 setTimeout(function () {
                     _this.resizer.resizeGrid(_this.grid, _this._gridOptions);
-                    _this.grid.autosizeColumns();
+                    // this.grid.autosizeColumns();
                 });
             }
         }
@@ -211,7 +269,7 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
         aurelia_framework_1.bindable()
     ], AureliaSlickgridCustomElement.prototype, "pickerOptions", void 0);
     AureliaSlickgridCustomElement = __decorate([
-        aurelia_framework_1.inject(Element, resizer_service_1.ResizerService, mouse_service_1.MouseService, filter_service_1.FilterService, sort_service_1.SortService)
+        aurelia_framework_1.inject(Element, services_1.ResizerService, services_1.MouseService, services_1.FilterService, services_1.SortService)
     ], AureliaSlickgridCustomElement);
     return AureliaSlickgridCustomElement;
 }());

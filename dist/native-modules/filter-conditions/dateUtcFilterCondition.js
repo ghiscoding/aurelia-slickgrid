@@ -1,5 +1,5 @@
-import * as moment from 'moment';
 import { mapDateFormatByFieldType, testFilterCondition } from './filterUtilities';
+import * as moment from 'moment';
 export var dateUtcFilterCondition = function (options) {
     if (!options.filterSearchType) {
         throw new Error('Date UTC filter is a special case and requires a filterSearchType to be provided in the column option, for example: { filterable: true, type: FieldType.dateUtc, filterSearchType: FieldType.dateIso }');

@@ -1,5 +1,4 @@
-import { FilterCondition } from './../models/filterCondition.interface';
-import { FilterConditionOption } from './../models/filterConditionOption.interface';
+import { FilterCondition, FilterConditionOption } from '../models';
 import { testFilterCondition } from './filterUtilities';
 
 export const numberFilterCondition: FilterCondition = (options: FilterConditionOption) => {

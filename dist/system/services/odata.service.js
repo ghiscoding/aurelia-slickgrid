@@ -1,22 +1,13 @@
-System.register(["./global-utilities", "aurelia-framework", "../models/caseType"], function (exports_1, context_1) {
+System.register(["./global-utilities", "./../models"], function (exports_1, context_1) {
     "use strict";
-    var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-        var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-        if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-        else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-        return c > 3 && r && Object.defineProperty(target, key, r), r;
-    };
     var __moduleName = context_1 && context_1.id;
-    var aurelia_framework_1, caseType_1, OdataService;
+    var models_1, OdataService;
     return {
         setters: [
             function (_1) {
             },
-            function (aurelia_framework_1_1) {
-                aurelia_framework_1 = aurelia_framework_1_1;
-            },
-            function (caseType_1_1) {
-                caseType_1 = caseType_1_1;
+            function (models_1_1) {
+                models_1 = models_1_1;
             }
         ],
         execute: function () {
@@ -179,7 +170,7 @@ System.register(["./global-utilities", "aurelia-framework", "../models/caseType"
                         if (property === 'orderBy' || property === 'sortBy') {
                             var sortBy = options[property];
                             // make sure first char of each orderBy field is capitalize
-                            if (this._odataOptions.caseType === caseType_1.CaseType.pascalCase) {
+                            if (this._odataOptions.caseType === models_1.CaseType.pascalCase) {
                                 if (Array.isArray(sortBy)) {
                                     sortBy.forEach(function (field, index, inputArray) {
                                         inputArray[index] = String.titleCase(field);
@@ -194,9 +185,6 @@ System.register(["./global-utilities", "aurelia-framework", "../models/caseType"
                         }
                     }
                 };
-                OdataService = __decorate([
-                    aurelia_framework_1.inject()
-                ], OdataService);
                 return OdataService;
             }());
             exports_1("OdataService", OdataService);

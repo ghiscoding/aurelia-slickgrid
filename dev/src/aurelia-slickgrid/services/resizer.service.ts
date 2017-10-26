@@ -1,6 +1,6 @@
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { inject } from 'aurelia-framework';
-import { GridOption } from './../models/gridOption.interface';
+import { GridOption } from './../models';
 import * as $ from 'jquery';
 
 // global constants, height/width are in pixels
@@ -22,7 +22,7 @@ export class ResizerService {
   attachAutoResizeDataGrid(grid: any, gridOptions: GridOption): any | void {
     // if we can't find the grid to resize, return without attaching anything
     const gridDomElm = $(`#${gridOptions.gridId}`);
-    if (!gridDomElm || typeof gridDomElm.offset() === 'undefined') {
+    if (gridDomElm === undefined || gridDomElm.offset() === undefined) {
       return null;
     }
 

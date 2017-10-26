@@ -1,4 +1,4 @@
-import { FieldType } from '../models/fieldType';
+import { FieldType } from '../models';
 export const mapDateFormatByFieldType = (fieldType) => {
     switch (fieldType) {
         case FieldType.dateUs:

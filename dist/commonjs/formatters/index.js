@@ -1,5 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+// import { Group, GroupTotals } from '../core'
+// import { Item } from '../dataview'
 var checkboxFormatter_1 = require("./checkboxFormatter");
 var checkmarkFormatter_1 = require("./checkmarkFormatter");
 var dateIsoFormatter_1 = require("./dateIsoFormatter");
@@ -11,8 +13,6 @@ var percentCompleteFormatter_1 = require("./percentCompleteFormatter");
 var percentCompleteBarFormatter_1 = require("./percentCompleteBarFormatter");
 var progressBarFormatter_1 = require("./progressBarFormatter");
 var yesNoFormatter_1 = require("./yesNoFormatter");
-// import { Group, GroupTotals } from '../core'
-// import { Item } from '../dataview'
 /*
 export interface GroupFormatter {
   (row: number, cell: number, value: any, columnDef: Column, dataContext: Group): string

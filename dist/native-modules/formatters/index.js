@@ -1,3 +1,5 @@
+// import { Group, GroupTotals } from '../core'
+// import { Item } from '../dataview'
 import { checkboxFormatter } from './checkboxFormatter';
 import { checkmarkFormatter } from './checkmarkFormatter';
 import { dateIsoFormatter } from './dateIsoFormatter';
@@ -9,8 +11,6 @@ import { percentCompleteFormatter } from './percentCompleteFormatter';
 import { percentCompleteBarFormatter } from './percentCompleteBarFormatter';
 import { progressBarFormatter } from './progressBarFormatter';
 import { yesNoFormatter } from './yesNoFormatter';
-// import { Group, GroupTotals } from '../core'
-// import { Item } from '../dataview'
 /*
 export interface GroupFormatter {
   (row: number, cell: number, value: any, columnDef: Column, dataContext: Group): string

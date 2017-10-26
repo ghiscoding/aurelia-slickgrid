@@ -1,15 +1,10 @@
 import './global-utilities';
+import { CaseType, OdataOption } from './../models';
 
-import { inject } from 'aurelia-framework';
-
-import { CaseType } from '../models/caseType';
-import { OdataOption } from './../models/odataOption.interface';
-
-@inject()
 export class OdataService {
-  private _columnFilters: any;
-  private _defaultSortBy: string;
-  private _odataOptions: OdataOption;
+  _columnFilters: any;
+  _defaultSortBy: string;
+  _odataOptions: OdataOption;
 
   constructor() {
     this._odataOptions = {

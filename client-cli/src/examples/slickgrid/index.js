@@ -5,7 +5,7 @@ export class Index {
     ];
 
     // create mapping for x number of Examples (skip Example1 since it was created earlier, so start at 2)
-    let totalExamples = 4;
+    let totalExamples = 3;
     for (let i = 2; i <= totalExamples; i++) {
       mapping.push({ route: `example${i}`, moduleId: `./example${i}`, nav: true, name: `example${i}`, title: `Example ${i}` });
     }

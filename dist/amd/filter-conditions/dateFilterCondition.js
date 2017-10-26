@@ -1,4 +1,4 @@
-define(["require", "exports", "moment", "../models/fieldType", "./filterUtilities"], function (require, exports, moment, fieldType_1, filterUtilities_1) {
+define(["require", "exports", "../models/fieldType", "./filterUtilities", "moment"], function (require, exports, fieldType_1, filterUtilities_1, moment) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.dateFilterCondition = function (options) {

@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var moment = require("moment");
 var filterUtilities_1 = require("./filterUtilities");
+var moment = require("moment");
 exports.dateUtcFilterCondition = function (options) {
     if (!options.filterSearchType) {
         throw new Error('Date UTC filter is a special case and requires a filterSearchType to be provided in the column option, for example: { filterable: true, type: FieldType.dateUtc, filterSearchType: FieldType.dateIso }');

@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var moment = require("moment");
 var filterUtilities_1 = require("./filterUtilities");
+var moment = require("moment");
 var DATE_FORMAT = 'M/D/YY';
 exports.dateUsShortFilterCondition = function (options) {
     if (!moment(options.cellValue, DATE_FORMAT, true).isValid() || !moment(options.searchTerm, DATE_FORMAT, true).isValid()) {

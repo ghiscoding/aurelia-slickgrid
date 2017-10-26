@@ -1,17 +1,17 @@
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
 };
-import { inject } from 'aurelia-framework';
-import { executeMappedCondition } from './../filter-conditions/executeMappedCondition';
-import { inputFilterTemplate } from './../filter-templates/inputFilterTemplate';
-import { selectFilterTemplate } from './../filter-templates/selectFilterTemplate';
-import { FieldType } from './../models/fieldType';
-import { FormElementType } from './../models/formElementType';
+import { castToPromise } from './utilities';
+import { FilterConditions } from '../filter-conditions';
+import { FieldType, FormElementType } from '../models';
+import { FilterTemplates } from './../filter-templates';
 import * as $ from 'jquery';
-let FilterService = class FilterService {
+export class FilterService {
     init(grid, gridOptions, columnDefinitions, columnFilters) {
         this._columnDefinitions = columnDefinitions;
         this._columnFilters = columnFilters;
@@ -23,10 +23,36 @@ let FilterService = class FilterService {
      * @param grid SlickGrid Grid object
      * @param gridOptions Grid Options object
      */
-    attachBackendOnFilter() {
+    attachBackendOnFilter(grid, options) {
         this.subscriber = new Slick.Event();
-        this.subscriber.subscribe(this._gridOptions.onFilterChanged);
+        this.subscriber.subscribe(this.attachBackendOnFilterSubscribe);
         this.addFilterTemplateToHeaderRow();
+    }
+    attachBackendOnFilterSubscribe(event, args) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!args || !args.grid) {
+                throw new Error('Something went wrong when trying to attach the "attachBackendOnFilterSubscribe(event, args)" function, it seems that "args" is not populated correctly');
+            }
+            const serviceOptions = args.grid.getOptions();
+            if (serviceOptions === undefined || serviceOptions.onBackendEventApi === undefined || serviceOptions.onBackendEventApi.process === undefined || serviceOptions.onBackendEventApi.service === undefined) {
+                throw new Error(`onBackendEventApi requires at least a "process" function and a "service" defined`);
+            }
+            const backendApi = serviceOptions.onBackendEventApi;
+            // run a preProcess callback if defined
+            if (backendApi.preProcess !== undefined) {
+                backendApi.preProcess();
+            }
+            // call the service to get a query back
+            const query = yield backendApi.service.onFilterChanged(event, args);
+            // the process could be an Observable (like HttpClient) or a Promise
+            // in any case, we need to have a Promise so that we can await on it (if an Observable, convert it to Promise)
+            const observableOrPromise = backendApi.process(query);
+            const responseProcess = yield castToPromise(observableOrPromise);
+            // send the response process to the postProcess callback
+            if (backendApi.postProcess !== undefined) {
+                backendApi.postProcess(responseProcess);
+            }
+        });
     }
     testFilterCondition(operator, value1, value2) {
         switch (operator) {
@@ -65,7 +91,6 @@ let FilterService = class FilterService {
             const columnFilter = args.columnFilters[columnId];
             const columnIndex = args.grid.getColumnIndex(columnId);
             const columnDef = args.grid.getColumns()[columnIndex];
-            // const fieldName = columnDef.field || columnDef.name;
             const fieldType = columnDef.type || FieldType.string;
             const conditionalFilterFn = (columnDef.filter && columnDef.filter.conditionalFilter) ? columnDef.filter.conditionalFilter : null;
             const filterSearchType = (columnDef.filterSearchType) ? columnDef.filterSearchType : null;
@@ -97,7 +122,7 @@ let FilterService = class FilterService {
             if (conditionalFilterFn && typeof conditionalFilterFn === 'function') {
                 conditionalFilterFn(conditionOptions);
             }
-            if (!executeMappedCondition(conditionOptions)) {
+            if (!FilterConditions.executeMappedCondition(conditionOptions)) {
                 return false;
             }
         }
@@ -117,6 +142,7 @@ let FilterService = class FilterService {
             columnDef: args.columnDef,
             columnFilters: this._columnFilters,
             searchTerm: e.target.value,
+            serviceOptions: this._onFilterChangedOptions,
             grid: this._grid
         }, e);
     }
@@ -127,19 +153,19 @@ let FilterService = class FilterService {
                 let elm = null;
                 let header;
                 const columnDef = this._columnDefinitions[i];
-                // const columnId = columnDef.id;
+                const columnId = columnDef.id;
                 const listTerm = (columnDef.filter && columnDef.filter.listTerm) ? columnDef.filter.listTerm : null;
-                let searchTerm = (columnDef.filter && columnDef.filter.searchTerm) ? columnDef.filter.searchTerm : null;
+                let searchTerm = (columnDef.filter && columnDef.filter.searchTerm) ? columnDef.filter.searchTerm : '';
                 // keep the filter in a columnFilters for later reference
                 this.keepColumnFilters(searchTerm, listTerm, columnDef);
                 if (!columnDef.filter) {
                     searchTerm = (columnDef.filter && columnDef.filter.searchTerm) ? columnDef.filter.searchTerm : null;
-                    filterTemplate = inputFilterTemplate(searchTerm, columnDef);
+                    filterTemplate = FilterTemplates.input(searchTerm, columnDef);
                 }
                 else {
                     // custom Select template
                     if (columnDef.filter.type === FormElementType.select) {
-                        filterTemplate = selectFilterTemplate(searchTerm, columnDef);
+                        filterTemplate = FilterTemplates.select(searchTerm, columnDef);
                     }
                 }
                 // create the DOM Element
@@ -151,7 +177,7 @@ let FilterService = class FilterService {
                 if (elm && typeof elm.appendTo === 'function') {
                     elm.appendTo(header);
                 }
-                // depending on the DOM Element type, we will watch the corrent event
+                // depending on the DOM Element type, we will watch the correct event
                 const filterType = (columnDef.filter && columnDef.filter.type) ? columnDef.filter.type : FormElementType.input;
                 switch (filterType) {
                     case FormElementType.select:
@@ -182,9 +208,5 @@ let FilterService = class FilterService {
         e = e || new Slick.EventData();
         return evt.notify(args, e, args.grid);
     }
-};
-FilterService = __decorate([
-    inject()
-], FilterService);
-export { FilterService };
+}
 //# sourceMappingURL=filter.service.js.map

@@ -5,9 +5,9 @@ import { dateUsFilterCondition } from './dateUsFilterCondition';
 import { dateUsShortFilterCondition } from './dateUsShortFilterCondition';
 import { dateUtcFilterCondition } from './dateUtcFilterCondition';
 import { executeMappedCondition } from './executeMappedCondition';
-import { testFilterCondition } from './filterUtilities';
 import { numberFilterCondition } from './numberFilterCondition';
 import { stringFilterCondition } from './stringFilterCondition';
+import { testFilterCondition } from './filterUtilities';
 export var FilterConditions = {
     executeMappedCondition: executeMappedCondition,
     booleanFilter: booleanFilterCondition,

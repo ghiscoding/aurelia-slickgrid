@@ -1,5 +1,5 @@
 import { EventAggregator } from 'aurelia-event-aggregator';
-import { GridOption } from './../models/gridOption.interface';
+import { GridOption } from './../models';
 export declare class ResizerService {
     ea: EventAggregator;
     constructor(ea: EventAggregator);

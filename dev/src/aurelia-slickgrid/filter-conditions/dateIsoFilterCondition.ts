@@ -1,9 +1,6 @@
-import * as moment from 'moment';
-
-import { FilterCondition } from './../models/filterCondition.interface';
-import { FilterConditionOption } from './../models/filterConditionOption.interface';
+import { FilterCondition, FilterConditionOption } from '../models';
 import { testFilterCondition } from './filterUtilities';
-
+import * as moment from 'moment';
 const DATE_FORMAT = 'YYYY-MM-DD';
 
 export const dateIsoFilterCondition: FilterCondition = (options: FilterConditionOption) => {

@@ -1,6 +1,6 @@
-import * as moment from 'moment';
 import { FieldType } from '../models/fieldType';
-import { mapDateFormatByFieldType, testFilterCondition } from './filterUtilities';
+import { testFilterCondition, mapDateFormatByFieldType } from './filterUtilities';
+import * as moment from 'moment';
 export const dateFilterCondition = (options) => {
     const filterSearchType = options.filterSearchType || FieldType.dateIso;
     const searchDateFormat = mapDateFormatByFieldType(filterSearchType);

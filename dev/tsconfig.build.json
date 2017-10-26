@@ -7,6 +7,10 @@
       "es2017",
       "dom"
     ],
+    "typeRoots": ["node_modules/@types", "typings"],
+    "types": [
+      "typings/graphql-query-builder/index.d.ts"
+    ],
     "outDir": "dist/amd",
     "noImplicitAny": true,
     "noUnusedLocals": false,
@@ -22,8 +26,8 @@
     "rootDir": "./src/aurelia-slickgrid/"
   },
   "exclude": [
-    ".vscode", 
-    "src/aurelia_project",   
+    ".vscode",
+    "src/aurelia_project",
     "src/examples",
     "src/resources",
     "src/test"

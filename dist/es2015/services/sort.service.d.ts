@@ -1,18 +1,19 @@
-import { GridOption } from './../models/gridOption.interface';
+import { GridOption } from './../models';
 export declare class SortService {
-    private subscriber;
+    subscriber: any;
     /**
      * Attach a backend sort (single/multi) hook to the grid
      * @param grid SlickGrid Grid object
      * @param gridOptions Grid Options object
      */
     attachBackendOnSort(grid: any, gridOptions: GridOption): void;
+    attachBackendOnSortSubscribe(event: Event, args: any): Promise<void>;
     /**
      * Attach a local sort (single/multi) hook to the grid
      * @param grid SlickGrid Grid object
      * @param gridOptions Grid Options object
      * @param dataView
      */
-    attachLocalOnSort(grid: any, dataView: any): void;
+    attachLocalOnSort(grid: any, gridOptions: GridOption, dataView: any): void;
     destroy(): void;
 }

@@ -1,9 +1,6 @@
-import * as moment from 'moment';
-
-import { FilterCondition } from './../models/filterCondition.interface';
-import { FilterConditionOption } from './../models/filterConditionOption.interface';
+import { FilterCondition, FilterConditionOption } from '../models';
 import { mapDateFormatByFieldType, testFilterCondition } from './filterUtilities';
-
+import * as moment from 'moment';
 
 export const dateUtcFilterCondition: FilterCondition = (options: FilterConditionOption) => {
   if (!options.filterSearchType) {

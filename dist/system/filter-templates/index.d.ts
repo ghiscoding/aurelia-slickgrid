@@ -1,4 +1,4 @@
-import { Filter } from './../models/filter.interface';
+import { Filter } from './../models';
 export declare const FilterTemplates: {
     input: Filter;
     select: Filter;
