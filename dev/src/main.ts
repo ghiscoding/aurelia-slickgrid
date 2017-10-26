@@ -3,8 +3,8 @@
 // we want font-awesome to load as soon as possible to show the fa-spinner
 import 'bootstrap/dist/css/bootstrap.css';
 import 'font-awesome/css/font-awesome.css';
-import './styles/styles.css';
-import './styles/slickgrid.scss';
+import './styles.css';
+import './slickgrid.scss';
 import { Aurelia, PLATFORM } from 'aurelia-framework';
 import environment from './environment';
 import * as Bluebird from 'bluebird';
@@ -14,9 +14,7 @@ import 'bootstrap';
 Bluebird.config({ warnings: { wForgottenReturn: false } });
 
 export function configure(aurelia: Aurelia) {
-  aurelia.use
-    .standardConfiguration()
-    .feature(PLATFORM.moduleName('resources/index'));
+  aurelia.use.standardConfiguration();
 
   // local aurelia-slickgrid
   aurelia.use.feature(PLATFORM.moduleName('aurelia-slickgrid/index'));

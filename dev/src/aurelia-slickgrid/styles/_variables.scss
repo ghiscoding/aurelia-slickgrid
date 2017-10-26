@@ -57,12 +57,13 @@ $icon-font-family:                      "FontAwesome" !default;               //
 $icon-font-size:                        14px !default;
 $icon-sort-asc:                         "\f0d8" !default;
 $icon-sort-desc:                        "\f0d7" !default;
+$icon-sort-color:                       rgb(76, 128, 190) !default;
 $table-background:                      transparent !default;
 $container-border:                      0px solid $border-color !default;
-$link-color:        				            #08c !default;
+$link-color:        				          #08c !default;
 $link-color-hover:                      darker($link-color, 15%) !default;
-$table-bg-accent: 					            #f9f9f9 !default; // for striping every second row
-$gray-dark:              			          #333 !default;
+$table-bg-accent: 					          #f9f9f9 !default; // for striping every second row
+$gray-dark:              			        #333 !default;
 $text-color:             			          $gray-dark !default;
 $navbar-default-link-hover-color:	      $gray-dark !default;
 
@@ -75,8 +76,9 @@ $column-picker-close-border:            1px solid #9c9c9c !default;
 $column-picker-close-opacity:           0.9 !default;
 
 /* pagination variables */
-$pagination-text-color:                 #808080 !default;
-$pagination-border-color:               #bbb !default;
+$pagination-button-hover-color:         #E6E6E6 !default;
+$pagination-border-color:               #ddd !default;
+$pagination-icon-color:                 #337ab7 !default;
 $pagination-icon-seek-first:            "\f100" !default;
 $pagination-icon-seek-end:              "\f101" !default;
 $pagination-icon-seek-next:             "\f105" !default;
@@ -87,3 +89,4 @@ $pagination-border-top:                 0 none !default;
 $pagination-border-right:               0 none !default;
 $pagination-border-bottom:              0 none !default;
 $pagination-border-left:                0 none !default;
+$pagination-text-color:                 #808080 !default;
