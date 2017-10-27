@@ -9,6 +9,7 @@
     ],
     "typeRoots": ["node_modules/@types", "typings"],
     "outDir": "dist/test",
+    "noEmitHelpers": false,
     "noImplicitAny": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
@@ -17,7 +18,6 @@
     "declaration": true,
     "forceConsistentCasingInFileNames": true,
     "experimentalDecorators": true,
-    "noEmitHelpers": false,
     "stripInternal": true
   },
   "exclude": [

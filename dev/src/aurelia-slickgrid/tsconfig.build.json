@@ -26,5 +26,9 @@
     "src/examples",
     "src/resources",
     "src/test"
+  ],
+  "include": [
+    "../typings",
+    "**/*"
   ]
 }

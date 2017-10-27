@@ -69,6 +69,7 @@
   },
   "dependencies": {
     "@types/jquery": "^3.2.15",
+    "@types/moment": "^2.13.0",
     "aurelia-event-aggregator": "^1.0.1",
     "aurelia-framework": "^1.1.5",
     "aurelia-pal": "^1.4.0",

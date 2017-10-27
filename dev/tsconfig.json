@@ -13,9 +13,6 @@
     "lib": [
       "es2017", "dom"
     ],
-    "paths": {
-      "*": [ "./typings/*" ]
-    },
     "typeRoots": ["node_modules/@types", "typings"]
   },
   "exclude": [

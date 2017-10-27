@@ -43,6 +43,12 @@
   version "2.0.29"
   resolved "https://registry.yarnpkg.com/@types/minimatch/-/minimatch-2.0.29.tgz#5002e14f75e2d71e564281df0431c8c1b4a2a36a"
 
+"@types/moment@^2.13.0":
+  version "2.13.0"
+  resolved "https://registry.yarnpkg.com/@types/moment/-/moment-2.13.0.tgz#604ebd189bc3bc34a1548689404e61a2a4aac896"
+  dependencies:
+    moment "*"
+
 "@types/node@*", "@types/node@^8.0.20":
   version "8.0.31"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-8.0.31.tgz#d9af61093cf4bfc9f066ca34de0175012cfb0ce9"
@@ -2372,6 +2378,10 @@ modify-values@^1.0.0:
 moment-mini@^2.18.1:
   version "2.18.1"
   resolved "https://registry.yarnpkg.com/moment-mini/-/moment-mini-2.18.1.tgz#2734cc2cd7bfd40d598c2071cc9c96cb399789d7"
+
+moment@*:
+  version "2.19.1"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.19.1.tgz#56da1a2d1cbf01d38b7e1afc31c10bcfa1929167"
 
 moment@^2.18.1:
   version "2.18.1"
