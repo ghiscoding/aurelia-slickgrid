@@ -23,13 +23,13 @@ import { bindable, bindingMode, inject } from 'aurelia-framework';
 import { castToPromise } from './services/utilities';
 import { GlobalGridOptions } from './global-grid-options';
 import { Column, ColumnFilters, FormElementType, GridOption } from './models';
-import { FilterService, MouseService, SortService, ResizerService } from './services';
+import { FilterService, GridEventService, SortService, ResizerService } from './services';
 import * as $ from 'jquery';
 
 // using external js modules in Aurelia
 declare var Slick: any;
 
-@inject(Element, ResizerService, MouseService, FilterService, SortService)
+@inject(Element, ResizerService, GridEventService, FilterService, SortService)
 export class AureliaSlickgridCustomElement {
   private _dataset: any[];
   private _dataView: any;
@@ -56,12 +56,12 @@ export class AureliaSlickgridCustomElement {
   constructor(
     private elm: HTMLElement,
     private resizer: ResizerService,
-    private mouseService: MouseService,
+    private gridEventService: GridEventService,
     private filterService: FilterService,
     private sortService: SortService) {
     this.elm = elm;
     this.resizer = resizer;
-    this.mouseService = mouseService;
+    this.gridEventService = gridEventService;
     this.filterService = filterService;
     this.sortService = sortService;
   }
@@ -154,9 +154,12 @@ export class AureliaSlickgridCustomElement {
       });
     }
 
+    // on cell click, mainly used with the columnDef.action callback
+    this.gridEventService.attachOnClick(grid, this._gridOptions, dataView);
+
     // if enable, change background color on mouse over
-    if (options.enableMouseOverRow) {
-      this.mouseService.attachOnMouseHover(grid);
+    if (options.enableMouseHoverHighlightRow) {
+      this.gridEventService.attachOnMouseHover(grid);
     }
 
     dataView.onRowCountChanged.subscribe((e: any, args: any) => {

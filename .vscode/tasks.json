@@ -17,7 +17,8 @@
       "type": "shell",
       "args": [
         "start:dev"
-      ]
+      ],
+      "problemMatcher": []
     },
     {
       "taskName": "Start Client-CLI",
