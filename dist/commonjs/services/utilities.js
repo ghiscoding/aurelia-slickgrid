@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var operatorType_1 = require("../models/operatorType");
+var models_1 = require("../models");
 var Observable_1 = require("rxjs/Observable");
 require("rxjs/add/operator/first");
 require("rxjs/add/operator/take");
@@ -31,6 +31,136 @@ function castToPromise(input, fromServiceName) {
 }
 exports.castToPromise = castToPromise;
 /**
+ * From a Date FieldType, return it's equivalent moment.js format
+ * refer to moment.js for the format standard used: https://momentjs.com/docs/#/parsing/string-format/
+ * @param {FieldType} fieldType
+ */
+function mapMomentDateFormatWithFieldType(fieldType) {
+    var map;
+    switch (fieldType) {
+        case models_1.FieldType.dateTime:
+        case models_1.FieldType.dateTimeIso:
+            map = 'YYYY-MM-DD HH:mm:ss';
+            break;
+        case models_1.FieldType.dateTimeIsoAmPm:
+            map = 'YYYY-MM-DD hh:mm:ss a';
+            break;
+        case models_1.FieldType.dateTimeIsoAM_PM:
+            map = 'YYYY-MM-DD hh:mm:ss A';
+            break;
+        case models_1.FieldType.dateUs:
+            map = 'MM/DD/YYYY';
+            break;
+        case models_1.FieldType.dateUsShort:
+            map = 'M/D/YY';
+            break;
+        case models_1.FieldType.dateTimeUs:
+            map = 'MM/DD/YYYY HH:mm:ss';
+            break;
+        case models_1.FieldType.dateTimeUsAmPm:
+            map = 'MM/DD/YYYY hh:mm:ss a';
+            break;
+        case models_1.FieldType.dateTimeUsAM_PM:
+            map = 'MM/DD/YYYY hh:mm:ss A';
+            break;
+        case models_1.FieldType.dateTimeUsShort:
+            map = 'M/D/YY H:m:s';
+            break;
+        case models_1.FieldType.dateTimeUsShortAmPm:
+            map = 'M/D/YY h:m:s a';
+            break;
+        case models_1.FieldType.dateTimeUsAM_PM:
+            map = 'M/D/YY h:m:s A';
+            break;
+        case models_1.FieldType.dateUtc:
+            map = 'YYYY-MM-DDTHH:mm:ss.SSSZ';
+            break;
+        case models_1.FieldType.date:
+        case models_1.FieldType.dateIso:
+        default:
+            map = 'YYYY-MM-DD';
+            break;
+    }
+    return map;
+}
+exports.mapMomentDateFormatWithFieldType = mapMomentDateFormatWithFieldType;
+/**
+ * From a Date FieldType, return it's equivalent Flatpickr format
+ * refer to Flatpickr for the format standard used: https://chmln.github.io/flatpickr/formatting/#date-formatting-tokens
+ * also note that they seem very similar to PHP format (except for am/pm): http://php.net/manual/en/function.date.php
+ * @param {FieldType} fieldType
+ */
+function mapFlatpickrDateFormatWithFieldType(fieldType) {
+    /*
+      d: Day of the month, 2 digits with leading zeros	01 to 31
+      D: A textual representation of a day	Mon through Sun
+      l: (lowercase 'L')	A full textual representation of the day of the week	Sunday through Saturday
+      j: Day of the month without leading zeros	1 to 31
+      J: Day of the month without leading zeros and ordinal suffix	1st, 2nd, to 31st
+      w: Numeric representation of the day of the week	0 (for Sunday) through 6 (for Saturday)
+      F: A full textual representation of a month	January through December
+      m: Numeric representation of a month, with leading zero	01 through 12
+      n: Numeric representation of a month, without leading zeros	1 through 12
+      M: A short textual representation of a month	Jan through Dec
+      U: The number of seconds since the Unix Epoch	1413704993
+      y: A two digit representation of a year	99 or 03
+      Y: A full numeric representation of a year, 4 digits	1999 or 2003
+      H: Hours (24 hours)	00 to 23
+      h: Hours	1 to 12
+      i: Minutes	00 to 59
+      S: Seconds, 2 digits	00 to 59
+      s: Seconds	0, 1 to 59
+      K: AM/PM	AM or PM
+    */
+    var map;
+    switch (fieldType) {
+        case models_1.FieldType.dateTime:
+        case models_1.FieldType.dateTimeIso:
+            map = 'Y-m-d H:i:S';
+            break;
+        case models_1.FieldType.dateTimeIsoAmPm:
+            map = 'Y-m-d h:i:S K'; // there is no lowercase in Flatpickr :(
+            break;
+        case models_1.FieldType.dateTimeIsoAM_PM:
+            map = 'Y-m-d h:i:S K';
+            break;
+        case models_1.FieldType.dateUs:
+            map = 'm/d/Y';
+            break;
+        case models_1.FieldType.dateUsShort:
+            map = 'M/D/YY';
+            break;
+        case models_1.FieldType.dateTimeUs:
+            map = 'm/d/Y H:i:S';
+            break;
+        case models_1.FieldType.dateTimeUsAmPm:
+            map = 'm/d/Y h:i:S K'; // there is no lowercase in Flatpickr :(
+            break;
+        case models_1.FieldType.dateTimeUsAM_PM:
+            map = 'm/d/Y h:i:S K';
+            break;
+        case models_1.FieldType.dateTimeUsShort:
+            map = 'M/D/YY H:i:s';
+            break;
+        case models_1.FieldType.dateTimeUsShortAmPm:
+            map = 'M/D/YY h:i:s K'; // there is no lowercase in Flatpickr :(
+            break;
+        case models_1.FieldType.dateTimeUsAM_PM:
+            map = 'M/D/YY h:i:s K';
+            break;
+        case models_1.FieldType.dateUtc:
+            map = 'Z';
+            break;
+        case models_1.FieldType.date:
+        case models_1.FieldType.dateIso:
+        default:
+            map = 'Y-m-d';
+            break;
+    }
+    return map;
+}
+exports.mapFlatpickrDateFormatWithFieldType = mapFlatpickrDateFormatWithFieldType;
+/**
  * Mapper for mathematical operators (ex.: <= is "le", > is "gt")
  * @param string operator
  * @returns string map
@@ -39,36 +169,36 @@ function mapOperatorType(operator) {
     var map;
     switch (operator) {
         case '<':
-            map = operatorType_1.OperatorType.lessThan;
+            map = models_1.OperatorType.lessThan;
             break;
         case '<=':
-            map = operatorType_1.OperatorType.lessThanOrEqual;
+            map = models_1.OperatorType.lessThanOrEqual;
             break;
         case '>':
-            map = operatorType_1.OperatorType.greaterThan;
+            map = models_1.OperatorType.greaterThan;
             break;
         case '>=':
-            map = operatorType_1.OperatorType.greaterThanOrEqual;
+            map = models_1.OperatorType.greaterThanOrEqual;
             break;
         case '<>':
         case '!=':
-            map = operatorType_1.OperatorType.notEqual;
+            map = models_1.OperatorType.notEqual;
             break;
         case '*':
         case '.*':
         case 'startsWith':
-            map = operatorType_1.OperatorType.startsWith;
+            map = models_1.OperatorType.startsWith;
             break;
         case '*.':
         case 'endsWith':
-            map = operatorType_1.OperatorType.endsWith;
+            map = models_1.OperatorType.endsWith;
             break;
         case '=':
         case '==':
-            map = operatorType_1.OperatorType.equal;
+            map = models_1.OperatorType.equal;
             break;
         default:
-            map = operatorType_1.OperatorType.contains;
+            map = models_1.OperatorType.contains;
             break;
     }
     return map;

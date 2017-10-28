@@ -1,12 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var utilities_1 = require("./../services/utilities");
 var filterUtilities_1 = require("./filterUtilities");
 var moment = require("moment");
 exports.dateUtcFilterCondition = function (options) {
     if (!options.filterSearchType) {
         throw new Error('Date UTC filter is a special case and requires a filterSearchType to be provided in the column option, for example: { filterable: true, type: FieldType.dateUtc, filterSearchType: FieldType.dateIso }');
     }
-    var searchDateFormat = filterUtilities_1.mapDateFormatByFieldType(options.filterSearchType);
+    var searchDateFormat = utilities_1.mapMomentDateFormatWithFieldType(options.filterSearchType);
     if (!moment(options.cellValue, moment.ISO_8601).isValid() || !moment(options.searchTerm, searchDateFormat, true).isValid()) {
         return true;
     }

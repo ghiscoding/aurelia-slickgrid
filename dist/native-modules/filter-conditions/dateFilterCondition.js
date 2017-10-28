@@ -1,9 +1,10 @@
-import { FieldType } from '../models/fieldType';
-import { testFilterCondition, mapDateFormatByFieldType } from './filterUtilities';
+import { FieldType } from '../models';
+import { mapMomentDateFormatWithFieldType } from './../services/utilities';
+import { testFilterCondition } from './filterUtilities';
 import * as moment from 'moment';
 export var dateFilterCondition = function (options) {
     var filterSearchType = options.filterSearchType || FieldType.dateIso;
-    var searchDateFormat = mapDateFormatByFieldType(filterSearchType);
+    var searchDateFormat = mapMomentDateFormatWithFieldType(filterSearchType);
     if (!moment(options.cellValue, moment.ISO_8601).isValid() || !moment(options.searchTerm, searchDateFormat, true).isValid()) {
         return true;
     }

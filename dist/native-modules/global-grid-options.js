@@ -17,7 +17,7 @@ export var GlobalGridOptions = {
     enableCellNavigation: false,
     enableColumnPicker: true,
     enableColumnReorder: true,
-    enableMouseOverRow: true,
+    enableMouseHoverHighlightRow: true,
     enablePagination: false,
     enableSorting: true,
     enableTextSelectionOnCells: true,

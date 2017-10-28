@@ -69,12 +69,12 @@ import 'slickgrid/plugins/slick.rowselectionmodel';
 import { bindable, bindingMode, inject } from 'aurelia-framework';
 import { castToPromise } from './services/utilities';
 import { GlobalGridOptions } from './global-grid-options';
-import { FilterService, MouseService, SortService, ResizerService } from './services';
+import { FilterService, GridEventService, SortService, ResizerService } from './services';
 var AureliaSlickgridCustomElement = /** @class */ (function () {
-    function AureliaSlickgridCustomElement(elm, resizer, mouseService, filterService, sortService) {
+    function AureliaSlickgridCustomElement(elm, resizer, gridEventService, filterService, sortService) {
         this.elm = elm;
         this.resizer = resizer;
-        this.mouseService = mouseService;
+        this.gridEventService = gridEventService;
         this.filterService = filterService;
         this.sortService = sortService;
         this._columnFilters = {};
@@ -84,7 +84,7 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
         this.gridWidth = 600;
         this.elm = elm;
         this.resizer = resizer;
-        this.mouseService = mouseService;
+        this.gridEventService = gridEventService;
         this.filterService = filterService;
         this.sortService = sortService;
     }
@@ -167,9 +167,11 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
                 });
             }); });
         }
+        // on cell click, mainly used with the columnDef.action callback
+        this.gridEventService.attachOnClick(grid, this._gridOptions, dataView);
         // if enable, change background color on mouse over
-        if (options.enableMouseOverRow) {
-            this.mouseService.attachOnMouseHover(grid);
+        if (options.enableMouseHoverHighlightRow) {
+            this.gridEventService.attachOnMouseHover(grid);
         }
         dataView.onRowCountChanged.subscribe(function (e, args) {
             grid.updateRowCount();
@@ -267,7 +269,7 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
         bindable()
     ], AureliaSlickgridCustomElement.prototype, "pickerOptions", void 0);
     AureliaSlickgridCustomElement = __decorate([
-        inject(Element, ResizerService, MouseService, FilterService, SortService)
+        inject(Element, ResizerService, GridEventService, FilterService, SortService)
     ], AureliaSlickgridCustomElement);
     return AureliaSlickgridCustomElement;
 }());

@@ -1,41 +1,40 @@
-// import flatpickr from 'flatpickr';
-// import 'flatpickr/dist/flatpickr.min.css';
 import * as $ from 'jquery';
-import { KeyCode } from './../models/keyCode.enum';
+import { Editor, HtmlElementPosition, KeyCode } from './../models';
 
 /*
  * An example of a 'detached' editor.
  * The UI is added onto document BODY and .position(), .show() and .hide() are implemented.
  * KeyDown events are also handled to provide handling for Tab, Shift-Tab, Esc and Ctrl-Enter.
  */
-export class LongTextEditor {
-  args;
-  $input;
-  $wrapper;
-  defaultValue;
+export class LongTextEditor implements Editor {
+  $input: any;
+  $wrapper: any;
+  defaultValue: any;
 
-  constructor(args) {
-    this.args = args;
+  constructor(private args: any) {
     this.init();
   }
 
-  init() {
+  init(): void {
     const $container = $('body');
 
-    this.$wrapper = $(`<div style="z-index:10000;position:absolute;background:white;padding:5px;border:3px solid gray; -moz-border-radius:10px; border-radius:10px;"/>`).appendTo($container);
-    this.$input = $(`<textarea hidefocus rows="5" style="background:white;width:250px;height:80px;border:0;outline:0">`).appendTo(this.$wrapper);
+    this.$wrapper = $(`<div class="slick-large-editor-text" />`).appendTo($container);
+    this.$input = $(`<textarea hidefocus rows="5">`).appendTo(this.$wrapper);
 
-    $(`<div style="text-align:right"><button>Save</button><button>Cancel</button></div>`).appendTo(this.$wrapper);
+    $(`<div class="editor-footer">
+        <button class="btn btn-primary btn-xs">Save</button>
+        <button class="btn btn-default btn-xs">Cancel</button>
+      </div>`).appendTo(this.$wrapper);
 
-    this.$wrapper.find('button:first').on('click', (event) => this.save());
-    this.$wrapper.find('button:last').on('click', (event) => this.cancel());
-    this.$input.bind('keydown', this.handleKeyDown);
+    this.$wrapper.find('button:first').on('click', (event: Event) => this.save());
+    this.$wrapper.find('button:last').on('click', (event: Event) => this.cancel());
+    this.$input.on('keydown', this.handleKeyDown);
 
     this.position(this.args.position);
     this.$input.focus().select();
   }
 
-  handleKeyDown(e) {
+  handleKeyDown(e: JQueryEventConstructor) {
     if (e.which === KeyCode.ENTER && e.ctrlKey) {
       this.save();
     } else if (e.which === KeyCode.ESCAPE) {
@@ -67,10 +66,10 @@ export class LongTextEditor {
     this.$wrapper.show();
   }
 
-  position(position) {
+  position(position: HtmlElementPosition) {
     this.$wrapper
-      .css('top', position.top - 5)
-      .css('left', position.left - 5);
+      .css('top', (position.top || 0) - 5)
+      .css('left', (position.left || 0) - 5);
   }
 
   destroy() {
@@ -81,7 +80,7 @@ export class LongTextEditor {
     this.$input.focus();
   }
 
-  loadValue = (item) {
+  loadValue(item: any) {
     this.$input.val(this.defaultValue = item[this.args.column.field]);
     this.$input.select();
   }
@@ -90,7 +89,7 @@ export class LongTextEditor {
     return this.$input.val();
   }
 
-  applyValue(item, state) {
+  applyValue(item: any, state: any) {
     item[this.args.column.field] = state;
   }
 

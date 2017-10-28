@@ -1,13 +1,13 @@
-define(["require", "exports", "./filterUtilities", "moment"], function (require, exports, filterUtilities_1, moment) {
+define(["require", "exports", "../models", "./filterUtilities", "./../services/utilities", "moment"], function (require, exports, models_1, filterUtilities_1, utilities_1, moment) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var DATE_FORMAT = 'M/D/YYYY';
+    var FORMAT = utilities_1.mapMomentDateFormatWithFieldType(models_1.FieldType.dateUs);
     exports.dateUsFilterCondition = function (options) {
-        if (!moment(options.cellValue, DATE_FORMAT, true).isValid() || !moment(options.searchTerm, DATE_FORMAT, true).isValid()) {
+        if (!moment(options.cellValue, FORMAT, true).isValid() || !moment(options.searchTerm, FORMAT, true).isValid()) {
             return true;
         }
-        var dateCell = moment(options.cellValue, DATE_FORMAT, true);
-        var dateSearch = moment(options.searchTerm, DATE_FORMAT, true);
+        var dateCell = moment(options.cellValue, FORMAT, true);
+        var dateSearch = moment(options.searchTerm, FORMAT, true);
         // run the filter condition with date in Unix Timestamp format
         return filterUtilities_1.testFilterCondition(options.operator || '==', parseInt(dateCell.format('X'), 10), parseInt(dateSearch.format('X'), 10));
     };

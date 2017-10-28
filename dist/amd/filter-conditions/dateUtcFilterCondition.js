@@ -1,11 +1,11 @@
-define(["require", "exports", "./filterUtilities", "moment"], function (require, exports, filterUtilities_1, moment) {
+define(["require", "exports", "./../services/utilities", "./filterUtilities", "moment"], function (require, exports, utilities_1, filterUtilities_1, moment) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.dateUtcFilterCondition = function (options) {
         if (!options.filterSearchType) {
             throw new Error('Date UTC filter is a special case and requires a filterSearchType to be provided in the column option, for example: { filterable: true, type: FieldType.dateUtc, filterSearchType: FieldType.dateIso }');
         }
-        var searchDateFormat = filterUtilities_1.mapDateFormatByFieldType(options.filterSearchType);
+        var searchDateFormat = utilities_1.mapMomentDateFormatWithFieldType(options.filterSearchType);
         if (!moment(options.cellValue, moment.ISO_8601).isValid() || !moment(options.searchTerm, searchDateFormat, true).isValid()) {
             return true;
         }

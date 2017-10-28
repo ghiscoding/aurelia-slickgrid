@@ -1,3 +1,6 @@
+import { FieldType } from './../models';
+import { mapMomentDateFormatWithFieldType } from './../services/utilities';
 import * as moment from 'moment';
-export const dateTimeIsoFormatter = (row, cell, value, columnDef, dataContext) => value ? moment(value).format('YYYY-MM-DD hh:mm:ss') : '';
+const FORMAT = mapMomentDateFormatWithFieldType(FieldType.dateTimeIso);
+export const dateTimeIsoFormatter = (row, cell, value, columnDef, dataContext) => value ? moment(value).format(FORMAT) : '';
 //# sourceMappingURL=dateTimeIsoFormatter.js.map

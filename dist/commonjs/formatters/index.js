@@ -9,6 +9,7 @@ var dateTimeIsoAmPmFormatter_1 = require("./dateTimeIsoAmPmFormatter");
 var dateTimeUsAmPmFormatter_1 = require("./dateTimeUsAmPmFormatter");
 var dateTimeUsFormatter_1 = require("./dateTimeUsFormatter");
 var dateUsFormatter_1 = require("./dateUsFormatter");
+var editPencilFormatter_1 = require("./editPencilFormatter");
 var percentCompleteFormatter_1 = require("./percentCompleteFormatter");
 var percentCompleteBarFormatter_1 = require("./percentCompleteBarFormatter");
 var progressBarFormatter_1 = require("./progressBarFormatter");
@@ -31,6 +32,7 @@ exports.Formatters = {
     dateUs: dateUsFormatter_1.dateUsFormatter,
     dateTimeUs: dateTimeUsFormatter_1.dateTimeUsFormatter,
     dateTimeUsAmPm: dateTimeUsAmPmFormatter_1.dateTimeUsAmPmFormatter,
+    editPencil: editPencilFormatter_1.editPencilFormatter,
     percentComplete: percentCompleteFormatter_1.percentCompleteFormatter,
     percentCompleteBar: percentCompleteBarFormatter_1.percentCompleteBarFormatter,
     progressBar: progressBarFormatter_1.progressBarFormatter,

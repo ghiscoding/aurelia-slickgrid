@@ -20,7 +20,7 @@ define(["require", "exports"], function (require, exports) {
         enableCellNavigation: false,
         enableColumnPicker: true,
         enableColumnReorder: true,
-        enableMouseOverRow: true,
+        enableMouseHoverHighlightRow: true,
         enablePagination: false,
         enableSorting: true,
         enableTextSelectionOnCells: true,

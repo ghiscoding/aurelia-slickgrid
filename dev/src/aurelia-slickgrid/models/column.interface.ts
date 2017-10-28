@@ -1,6 +1,7 @@
-import { OnCellClickArgs } from './OnCellClickArgs.interface';
+import { Editor } from './editor.interface';
 import { FieldType } from './fieldType';
 import { Formatter } from './formatter.interface';
+import { OnCellClickArgs } from './onCellClickArgs.interface';
 import { Sorter } from './sorter.interface';
 
 export interface Column {
@@ -9,7 +10,6 @@ export interface Column {
   cssClass?: string;
   colspan?: number | '*';
   defaultSortAsc?: boolean;
-  // editor?: typeof Editor;
   editor?: any;
   field: string;
   filter?: any;

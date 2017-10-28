@@ -1,0 +1,40 @@
+/*!
+ * SlickGrid custom styling for Bootstrap (https://github.com/ghiscoding/aurelia-slickgrid)
+ * Licensed under MIT (https://github.com/ghiscoding/aurelia-slickgrid/blob/master/LICENSE)
+ * @author: Ghislain B. (ghiscoding)
+ */
+/*!
+
+/* SlickGrid Bootstrap variables */
+/* Used by slick-bootstrap.scss */
+/* Slickgrid container, including headers but excluding pagination */
+/* grid */
+/* cell */
+/* cell default slickgrid values */
+/* header */
+/* icon font is using Font-Awesome by default but could be changed to any other icon package like Glyphicons, ... */
+/* Column picker */
+/* Editors */
+/* pagination variables */
+/* Long Text Editor */
+.slick-large-editor-text {
+  z-index: 10000;
+  position: absolute;
+  background: #ffffff;
+  padding: 5px;
+  border: 2px solid gray;
+  border-radius: 8px; }
+
+.slick-large-editor-text textarea {
+  background: #ffffff;
+  height: 80px;
+  width: 250px;
+  border: 0;
+  outline: 0; }
+
+.slick-large-editor-text .editor-footer {
+  text-align: right; }
+
+.slick-large-editor-text .editor-footer > button {
+  margin-left: 2px; }
+/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uL2Rldi9zcmMvYXVyZWxpYS1zbGlja2dyaWQvc3R5bGVzL192YXJpYWJsZXMuc2NzcyIsIi4uLy4uLy4uL2Rldi9zcmMvYXVyZWxpYS1zbGlja2dyaWQvc3R5bGVzL3NsaWNrLWVkaXRvcnMuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTs7OztHQUlHO0FBQUE7O21DQUVnQztBQUNuQyxrQ0FBa0M7QUFLbEMscUVBQXFFO0FBTXJFLFVBQVU7QUFNVixVQUFVO0FBVVYsbUNBQW1DO0FBTW5DLFlBQVk7QUFjWixvSEFBb0g7QUFlcEgsbUJBQW1CO0FBUW5CLGFBQWE7QUFVYiwwQkFBMEI7QUNyRjFCLHNCQUFzQjtBQUN0QjtFQUNFLGVBQWM7RUFDZCxtQkFBa0I7RUFDbEIsb0JEd0U2QztFQ3ZFN0MsYUR5RXlDO0VDeEV6Qyx1QkR1RW9EO0VDdEVwRCxtQkR3RXlDLEVDdkUxQzs7QUFDRDtFQUNFLG9CRGtFNkM7RUNqRTdDLGFEcUUwQztFQ3BFMUMsYURxRTJDO0VDcEUzQyxVQUFTO0VBQ1QsV0FBVSxFQUNYOztBQUNEO0VBQ0Usa0JEaUUyQyxFQ2hFNUM7O0FBQ0Q7RUFDRSxpQkQrRHlDLEVDOUQxQyIsImZpbGUiOiJzbGljay1lZGl0b3JzLmNzcyJ9 */

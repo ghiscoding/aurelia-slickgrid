@@ -1406,6 +1406,10 @@ find-up@^2.0.0:
   dependencies:
     locate-path "^2.0.0"
 
+flatpickr@^4.0.6:
+  version "4.0.6"
+  resolved "https://registry.yarnpkg.com/flatpickr/-/flatpickr-4.0.6.tgz#d898778636984b9b46b590f3b60513fc260db709"
+
 for-each@~0.3.2:
   version "0.3.2"
   resolved "https://registry.yarnpkg.com/for-each/-/for-each-0.3.2.tgz#2c40450b9348e97f281322593ba96704b9abd4d4"

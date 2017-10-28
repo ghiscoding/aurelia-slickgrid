@@ -1,7 +1,7 @@
-System.register(["./checkboxFormatter", "./checkmarkFormatter", "./dateIsoFormatter", "./dateTimeIsoAmPmFormatter", "./dateTimeUsAmPmFormatter", "./dateTimeUsFormatter", "./dateUsFormatter", "./percentCompleteFormatter", "./percentCompleteBarFormatter", "./progressBarFormatter", "./yesNoFormatter"], function (exports_1, context_1) {
+System.register(["./checkboxFormatter", "./checkmarkFormatter", "./dateIsoFormatter", "./dateTimeIsoAmPmFormatter", "./dateTimeUsAmPmFormatter", "./dateTimeUsFormatter", "./dateUsFormatter", "./editPencilFormatter", "./percentCompleteFormatter", "./percentCompleteBarFormatter", "./progressBarFormatter", "./yesNoFormatter"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var checkboxFormatter_1, checkmarkFormatter_1, dateIsoFormatter_1, dateTimeIsoAmPmFormatter_1, dateTimeUsAmPmFormatter_1, dateTimeUsFormatter_1, dateUsFormatter_1, percentCompleteFormatter_1, percentCompleteBarFormatter_1, progressBarFormatter_1, yesNoFormatter_1, Formatters;
+    var checkboxFormatter_1, checkmarkFormatter_1, dateIsoFormatter_1, dateTimeIsoAmPmFormatter_1, dateTimeUsAmPmFormatter_1, dateTimeUsFormatter_1, dateUsFormatter_1, editPencilFormatter_1, percentCompleteFormatter_1, percentCompleteBarFormatter_1, progressBarFormatter_1, yesNoFormatter_1, Formatters;
     return {
         setters: [
             function (checkboxFormatter_1_1) {
@@ -24,6 +24,9 @@ System.register(["./checkboxFormatter", "./checkmarkFormatter", "./dateIsoFormat
             },
             function (dateUsFormatter_1_1) {
                 dateUsFormatter_1 = dateUsFormatter_1_1;
+            },
+            function (editPencilFormatter_1_1) {
+                editPencilFormatter_1 = editPencilFormatter_1_1;
             },
             function (percentCompleteFormatter_1_1) {
                 percentCompleteFormatter_1 = percentCompleteFormatter_1_1;
@@ -57,6 +60,7 @@ System.register(["./checkboxFormatter", "./checkmarkFormatter", "./dateIsoFormat
                 dateUs: dateUsFormatter_1.dateUsFormatter,
                 dateTimeUs: dateTimeUsFormatter_1.dateTimeUsFormatter,
                 dateTimeUsAmPm: dateTimeUsAmPmFormatter_1.dateTimeUsAmPmFormatter,
+                editPencil: editPencilFormatter_1.editPencilFormatter,
                 percentComplete: percentCompleteFormatter_1.percentCompleteFormatter,
                 percentCompleteBar: percentCompleteBarFormatter_1.percentCompleteBarFormatter,
                 progressBar: progressBarFormatter_1.progressBarFormatter,

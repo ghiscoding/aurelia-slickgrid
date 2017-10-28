@@ -7,7 +7,7 @@
 /* SlickGrid Bootstrap variables */
 /* Used by slick-bootstrap.scss */
 $border-color:                          #dddddd !default;
-$font-size-base:          			        14px !default;
+$font-size-base:          			    14px !default;
 $font-family:                           -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !default;
 
 /* Slickgrid container, including headers but excluding pagination */
@@ -60,12 +60,12 @@ $icon-sort-desc:                        "\f0d7" !default;
 $icon-sort-color:                       rgb(76, 128, 190) !default;
 $table-background:                      transparent !default;
 $container-border:                      0px solid $border-color !default;
-$link-color:        				          #08c !default;
+$link-color:        				    #08c !default;
 $link-color-hover:                      darker($link-color, 15%) !default;
-$table-bg-accent: 					          #f9f9f9 !default; // for striping every second row
-$gray-dark:              			        #333 !default;
-$text-color:             			          $gray-dark !default;
-$navbar-default-link-hover-color:	      $gray-dark !default;
+$table-bg-accent: 					    #f9f9f9 !default; // for striping every second row
+$gray-dark:              			    #333 !default;
+$text-color:             			    $gray-dark !default;
+$navbar-default-link-hover-color:	    $gray-dark !default;
 
 /* Column picker */
 $column-picker-background-color:        #f8f8f8 !default;
@@ -74,6 +74,16 @@ $column-picker-border-radius:           3px !default;
 $column-picker-close-background-color:  1px solid #9c9c9c !default;
 $column-picker-close-border:            1px solid #9c9c9c !default;
 $column-picker-close-opacity:           0.9 !default;
+
+/* Editors */
+$large-editor-background-color:         #ffffff !default;
+$large-editor-border:                   2px solid gray !default;
+$large-editor-text-padding:             5px !default;
+$large-editor-border-radius:            8px !default;
+$large-editor-textarea-height:          80px !default;
+$large-editor-textarea-width:           250px !default;
+$large-editor-button-text-align:        right !default;
+$large-editor-footer-spacing:           2px !default;
 
 /* pagination variables */
 $pagination-button-hover-color:         #E6E6E6 !default;

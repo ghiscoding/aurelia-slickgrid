@@ -24,7 +24,7 @@ System.register([], function (exports_1, context_1) {
                 enableCellNavigation: false,
                 enableColumnPicker: true,
                 enableColumnReorder: true,
-                enableMouseOverRow: true,
+                enableMouseHoverHighlightRow: true,
                 enablePagination: false,
                 enableSorting: true,
                 enableTextSelectionOnCells: true,

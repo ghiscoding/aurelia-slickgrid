@@ -1,11 +1,14 @@
-System.register(["../models/fieldType", "./filterUtilities", "moment"], function (exports_1, context_1) {
+System.register(["../models", "./../services/utilities", "./filterUtilities", "moment"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var fieldType_1, filterUtilities_1, moment, dateFilterCondition;
+    var models_1, utilities_1, filterUtilities_1, moment, dateFilterCondition;
     return {
         setters: [
-            function (fieldType_1_1) {
-                fieldType_1 = fieldType_1_1;
+            function (models_1_1) {
+                models_1 = models_1_1;
+            },
+            function (utilities_1_1) {
+                utilities_1 = utilities_1_1;
             },
             function (filterUtilities_1_1) {
                 filterUtilities_1 = filterUtilities_1_1;
@@ -16,8 +19,8 @@ System.register(["../models/fieldType", "./filterUtilities", "moment"], function
         ],
         execute: function () {
             exports_1("dateFilterCondition", dateFilterCondition = function (options) {
-                var filterSearchType = options.filterSearchType || fieldType_1.FieldType.dateIso;
-                var searchDateFormat = filterUtilities_1.mapDateFormatByFieldType(filterSearchType);
+                var filterSearchType = options.filterSearchType || models_1.FieldType.dateIso;
+                var searchDateFormat = utilities_1.mapMomentDateFormatWithFieldType(filterSearchType);
                 if (!moment(options.cellValue, moment.ISO_8601).isValid() || !moment(options.searchTerm, searchDateFormat, true).isValid()) {
                     return true;
                 }

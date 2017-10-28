@@ -104,10 +104,10 @@ System.register(["slickgrid/lib/jquery-ui-1.11.3", "slickgrid/lib/jquery.event.d
         ],
         execute: function () {
             AureliaSlickgridCustomElement = /** @class */ (function () {
-                function AureliaSlickgridCustomElement(elm, resizer, mouseService, filterService, sortService) {
+                function AureliaSlickgridCustomElement(elm, resizer, gridEventService, filterService, sortService) {
                     this.elm = elm;
                     this.resizer = resizer;
-                    this.mouseService = mouseService;
+                    this.gridEventService = gridEventService;
                     this.filterService = filterService;
                     this.sortService = sortService;
                     this._columnFilters = {};
@@ -117,7 +117,7 @@ System.register(["slickgrid/lib/jquery-ui-1.11.3", "slickgrid/lib/jquery.event.d
                     this.gridWidth = 600;
                     this.elm = elm;
                     this.resizer = resizer;
-                    this.mouseService = mouseService;
+                    this.gridEventService = gridEventService;
                     this.filterService = filterService;
                     this.sortService = sortService;
                 }
@@ -200,9 +200,11 @@ System.register(["slickgrid/lib/jquery-ui-1.11.3", "slickgrid/lib/jquery.event.d
                             });
                         }); });
                     }
+                    // on cell click, mainly used with the columnDef.action callback
+                    this.gridEventService.attachOnClick(grid, this._gridOptions, dataView);
                     // if enable, change background color on mouse over
-                    if (options.enableMouseOverRow) {
-                        this.mouseService.attachOnMouseHover(grid);
+                    if (options.enableMouseHoverHighlightRow) {
+                        this.gridEventService.attachOnMouseHover(grid);
                     }
                     dataView.onRowCountChanged.subscribe(function (e, args) {
                         grid.updateRowCount();
@@ -300,7 +302,7 @@ System.register(["slickgrid/lib/jquery-ui-1.11.3", "slickgrid/lib/jquery.event.d
                     aurelia_framework_1.bindable()
                 ], AureliaSlickgridCustomElement.prototype, "pickerOptions", void 0);
                 AureliaSlickgridCustomElement = __decorate([
-                    aurelia_framework_1.inject(Element, services_1.ResizerService, services_1.MouseService, services_1.FilterService, services_1.SortService)
+                    aurelia_framework_1.inject(Element, services_1.ResizerService, services_1.GridEventService, services_1.FilterService, services_1.SortService)
                 ], AureliaSlickgridCustomElement);
                 return AureliaSlickgridCustomElement;
             }());

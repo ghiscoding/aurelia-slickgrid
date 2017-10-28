@@ -1,4 +1,4 @@
-System.register(["./caseType", "./fieldType", "./formElementType", "./operatorType", "./sortDirection"], function (exports_1, context_1) {
+System.register(["./caseType", "./fieldType", "./formElementType", "./keyCode.enum", "./operatorType", "./sortDirection"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     return {
@@ -16,6 +16,11 @@ System.register(["./caseType", "./fieldType", "./formElementType", "./operatorTy
             function (formElementType_1_1) {
                 exports_1({
                     "FormElementType": formElementType_1_1["FormElementType"]
+                });
+            },
+            function (keyCode_enum_1_1) {
+                exports_1({
+                    "KeyCode": keyCode_enum_1_1["KeyCode"]
                 });
             },
             function (operatorType_1_1) {
