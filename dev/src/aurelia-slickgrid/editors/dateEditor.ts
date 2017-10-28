@@ -27,6 +27,7 @@ export class DateEditor implements Editor {
     this.$input.appendTo(this.args.container);
     this.$input.focus().val(this.defaultDate).select();
     this.flatInstance = flatpickr(this.$input[0], pickerOptions);
+    this.flatInstance.open();
   }
 
   destroy() {

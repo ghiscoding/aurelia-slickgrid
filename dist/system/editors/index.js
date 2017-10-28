@@ -1,9 +1,12 @@
-System.register(["./dateEditor", "./floatEditor", "./integerEditor", "./longTextEditor", "./textEditor"], function (exports_1, context_1) {
+System.register(["./checkboxEditor", "./dateEditor", "./floatEditor", "./integerEditor", "./longTextEditor", "./textEditor"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var dateEditor_1, floatEditor_1, integerEditor_1, longTextEditor_1, textEditor_1, Editors;
+    var checkboxEditor_1, dateEditor_1, floatEditor_1, integerEditor_1, longTextEditor_1, textEditor_1, Editors;
     return {
         setters: [
+            function (checkboxEditor_1_1) {
+                checkboxEditor_1 = checkboxEditor_1_1;
+            },
             function (dateEditor_1_1) {
                 dateEditor_1 = dateEditor_1_1;
             },
@@ -22,6 +25,7 @@ System.register(["./dateEditor", "./floatEditor", "./integerEditor", "./longText
         ],
         execute: function () {
             exports_1("Editors", Editors = {
+                checkbox: checkboxEditor_1.CheckboxEditor,
                 date: dateEditor_1.DateEditor,
                 float: floatEditor_1.FloatEditor,
                 integer: integerEditor_1.IntegerEditor,

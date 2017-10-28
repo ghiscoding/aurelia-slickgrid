@@ -39,6 +39,7 @@ System.register(["./../services/utilities", "flatpickr", "flatpickr/dist/flatpic
                     this.$input.appendTo(this.args.container);
                     this.$input.focus().val(this.defaultDate).select();
                     this.flatInstance = flatpickr_1.default(this.$input[0], pickerOptions);
+                    this.flatInstance.open();
                 };
                 DateEditor.prototype.destroy = function () {
                     this.flatInstance.destroy();
