@@ -12,6 +12,7 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noImplicitReturns": true,
+    "skipLibCheck": true,
     "strictNullChecks": true,
     "declaration": true,
     "forceConsistentCasingInFileNames": true,
