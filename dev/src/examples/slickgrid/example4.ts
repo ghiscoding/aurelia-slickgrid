@@ -39,7 +39,7 @@ export class List {
     this.columnDefinitions = [
       {
         id: 'edit', field: 'id',
-        formatter: Formatters.editPencil,
+        formatter: Formatters.editIcon,
         maxWidth: 30,
         onCellClick: (args: OnCellClickArgs) => {
           console.log(args);
