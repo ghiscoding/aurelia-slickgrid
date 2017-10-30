@@ -1,0 +1,13 @@
+<template>
+  <h2>${title}</h2>
+  <div class="subtitle" innerhtml.bind="subTitle"></div>
+
+  <div class="col-sm-8">
+    <div class="alert alert-info" show.bind="updatedObject">
+      <strong>Update Object:</strong> ${updatedObject | stringify}
+    </div>
+  </div>
+  <aurelia-slickgrid grid-id="grid1" dataview.bind="dataview" grid.bind="gridObj" column-definitions.bind="columnDefinitions"
+    grid-options.bind="gridOptions" dataset.bind="dataset">
+  </aurelia-slickgrid>
+</template>

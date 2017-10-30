@@ -3,6 +3,7 @@ import { AureliaSlickgridCustomElement } from './aurelia-slickgrid';
 import { SlickPaginationCustomElement } from './slick-pagination';
 import { SlickgridConfig } from './slickgrid-config';
 
+// models
 import { CaseType } from './models/caseType';
 import { Column } from './models/column.interface';
 import { Formatter } from './models/formatter.interface';
@@ -11,12 +12,15 @@ import { FormElementType } from './models/formElementType';
 import { FieldType } from './models/fieldType';
 import { OnCellClickArgs } from './models/onCellClickArgs.interface';
 
+// editors, formatters, ...
 import { Editors } from './editors/index';
 import { FilterConditions } from './filter-conditions/index';
 import { FilterTemplates } from './filter-templates/index';
 import { Formatters } from './formatters/index';
 import { Sorters } from './sorters/index';
 
+// services and utilities
+import { GridExtraUtils } from './services/gridExtraUtils';
 import { FilterService } from './services/filter.service';
 import { GridEventService } from './services/gridEvent.service';
 import { ResizerService } from './services/resizer.service';
@@ -51,6 +55,7 @@ export {
   Formatters,
   Sorters,
 
+  GridExtraUtils,
   FilterService,
   GridEventService,
   ResizerService,

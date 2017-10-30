@@ -5,7 +5,8 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'font-awesome/css/font-awesome.css';
 import './styles.css';
 import './slickgrid.scss';
-import { Aurelia, PLATFORM } from 'aurelia-framework';
+import { PLATFORM } from 'aurelia-pal';
+import { Aurelia } from 'aurelia-framework';
 import environment from './environment';
 import * as Bluebird from 'bluebird';
 import 'bootstrap';
@@ -15,6 +16,8 @@ Bluebird.config({ warnings: { wForgottenReturn: false } });
 
 export function configure(aurelia: Aurelia) {
   aurelia.use.standardConfiguration();
+
+  aurelia.use.feature(PLATFORM.moduleName('examples/resources/index'));
 
   // local aurelia-slickgrid
   aurelia.use.feature(PLATFORM.moduleName('aurelia-slickgrid/index'));

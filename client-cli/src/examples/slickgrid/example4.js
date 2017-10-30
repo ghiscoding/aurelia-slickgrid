@@ -1,7 +1,7 @@
 import { bindable, inject } from 'aurelia-framework';
 import $ from 'bootstrap';
 import data from './sample-data/example-data';
-import { Column, Editors, FieldType, Formatters, GridExtraUtils, GridOption, OnCellClickArgs } from '../../aurelia-slickgrid';
+import { Column, Editors, FieldType, Formatters, GridOption, OnCellClickArgs } from '../../aurelia-slickgrid';
 
 // create my custom Formatter with the Formatter type
 const myCustomCheckboxFormatter = (row, cell, value, columnDef, dataContext) =>
@@ -16,17 +16,10 @@ export class List {
   columnDefinitions: Column[];
   dataset: any[];
   updatedObject: any;
-  isAutoEdit: boolean = true;
-  autoEditOptions: any[];
-  selectedAutoEditOption = { id: 1, text: 'True', value: true };
 
   constructor() {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
-    this.autoEditOptions = [
-      { id: 1, text: 'True', value: true },
-      { id: 2, text: 'False', value: false }
-    ];
   }
 
   attached() {
@@ -38,17 +31,8 @@ export class List {
   defineGrid() {
     this.columnDefinitions = [
       {
-        id: 'edit', field: 'id',
+        id: 'id', field: 'id',
         formatter: Formatters.editPencil,
-        maxWidth: 30,
-        onCellClick: (args: OnCellClickArgs) => {
-          console.log(args);
-          console.log(this);
-        }
-      },
-      {
-        id: 'delete', field: 'id',
-        formatter: Formatters.deleteIcon,
         maxWidth: 30,
         onCellClick: (args: OnCellClickArgs) => {
           console.log(args);
@@ -71,7 +55,7 @@ export class List {
       editable: true,
       enableCellNavigation: true,
       asyncEditorLoading: false,
-      autoEdit: this.isAutoEdit
+      autoEdit: true
     };
   }
 
@@ -81,18 +65,8 @@ export class List {
 
   gridObjChanged(grid) {
     grid.onCellChange.subscribe((e, args) => {
-      console.log('onCellChange', args);
+      console.log(args);
       this.updatedObject = args.item;
-    });
-    grid.onClick.subscribe((e, args) => {
-      const column = GridExtraUtils.getColumnDefinitionAndData(args);
-      console.log('onClick', args, column);
-      if (column.columnDef.id === 'delete') {
-        if (confirm('Are you sure?')) {
-          this.dataview.deleteItem(column.dataContext.id);
-          this.dataview.refresh();
-        }
-      }
     });
   }
 
@@ -117,11 +91,5 @@ export class List {
       };
     }
     this.dataset = mockedDataset;
-  }
-
-  setAutoEdit(isAutoEdit) {
-    this.isAutoEdit = isAutoEdit;
-    this.gridObj.setOptions({ autoEdit: isAutoEdit });
-    return true;
   }
 }

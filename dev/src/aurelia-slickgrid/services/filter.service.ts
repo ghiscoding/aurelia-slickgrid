@@ -1,6 +1,15 @@
 import { castToPromise } from './utilities';
 import { FilterConditions } from '../filter-conditions';
-import { BackendServiceOption, Column, ColumnFilters, FieldType, FilterChangedArgs, FormElementType, GridOption } from '../models';
+import {
+  BackendServiceOption,
+  Column,
+  ColumnFilters,
+  FieldType,
+  FilterChangedArgs,
+  FormElementType,
+  GridOption,
+  SlickEvent
+} from '../models';
 import { FilterTemplates } from './../filter-templates';
 import * as $ from 'jquery';
 
@@ -13,7 +22,7 @@ export class FilterService {
   _grid: any;
   _gridOptions: GridOption;
   _onFilterChangedOptions: any;
-  subscriber: any;
+  subscriber: SlickEvent;
 
   init(grid: any, gridOptions: GridOption, columnDefinitions: Column[], columnFilters: any): void {
     this._columnDefinitions = columnDefinitions;

@@ -21,7 +21,10 @@ export class DateEditor implements Editor {
     const pickerOptions = {
       defaultDate: this.args.item[this.args.column.field] || null,
       altInput: true,
-      altFormat: mapFlatpickrDateFormatWithFieldType(this.args.type || FieldType.dateIso)
+      altFormat: mapFlatpickrDateFormatWithFieldType(this.args.type || FieldType.dateIso),
+      onChange: (selectedDates, dateStr, instance) => {
+        this.save();
+      },
     };
     this.$input = $(`<input type="text" value="${this.defaultDate}" class="editor-text" />`);
     this.$input.appendTo(this.args.container);
@@ -31,7 +34,7 @@ export class DateEditor implements Editor {
   }
 
   destroy() {
-    this.flatInstance.destroy();
+    //this.flatInstance.destroy();
     this.$input.remove();
   }
 
@@ -46,6 +49,10 @@ export class DateEditor implements Editor {
   focus() {
     this.$input.focus();
   }
+
+  save() {
+    this.args.commitChanges();
+  };
 
   loadValue(item: any) {
     this.defaultDate = item[this.args.column.field];

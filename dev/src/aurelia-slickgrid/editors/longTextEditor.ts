@@ -34,7 +34,7 @@ export class LongTextEditor implements Editor {
     this.$input.focus().select();
   }
 
-  handleKeyDown(e: JQueryEventConstructor) {
+  handleKeyDown(e: any) {
     if (e.which === KeyCode.ENTER && e.ctrlKey) {
       this.save();
     } else if (e.which === KeyCode.ESCAPE) {

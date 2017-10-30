@@ -8,6 +8,7 @@ import { dateTimeIsoAmPmFormatter } from './dateTimeIsoAmPmFormatter';
 import { dateTimeUsAmPmFormatter } from './dateTimeUsAmPmFormatter';
 import { dateTimeUsFormatter } from './dateTimeUsFormatter';
 import { dateUsFormatter } from './dateUsFormatter';
+import { deleteIconFormatter } from './deleteIconFormatter';
 import { editPencilFormatter } from './editPencilFormatter';
 import { percentCompleteFormatter } from './percentCompleteFormatter';
 import { percentCompleteBarFormatter } from './percentCompleteBarFormatter';
@@ -32,6 +33,7 @@ export const Formatters = {
   dateUs: dateUsFormatter,
   dateTimeUs: dateTimeUsFormatter,
   dateTimeUsAmPm: dateTimeUsAmPmFormatter,
+  deleteIcon: deleteIconFormatter,
   editPencil: editPencilFormatter,
   percentComplete: percentCompleteFormatter,
   percentCompleteBar: percentCompleteBarFormatter,

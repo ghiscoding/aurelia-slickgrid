@@ -32,7 +32,7 @@ export class GridEventService {
           dataView,
           gridDefinition: gridOptions,
           grid,
-          columnDef: args.grid.getColumns()[args.cell],
+          columnDef: column,
           dataContext: args.grid.getDataItem(args.row)
         };
 
