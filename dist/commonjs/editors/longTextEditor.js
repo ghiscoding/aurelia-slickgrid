@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var $ = require("jquery");
-var models_1 = require("./../models");
+var index_1 = require("./../models/index");
 /*
  * An example of a 'detached' editor.
  * The UI is added onto document BODY and .position(), .show() and .hide() are implemented.
@@ -25,18 +25,18 @@ var LongTextEditor = /** @class */ (function () {
         this.$input.focus().select();
     };
     LongTextEditor.prototype.handleKeyDown = function (e) {
-        if (e.which === models_1.KeyCode.ENTER && e.ctrlKey) {
+        if (e.which === index_1.KeyCode.ENTER && e.ctrlKey) {
             this.save();
         }
-        else if (e.which === models_1.KeyCode.ESCAPE) {
+        else if (e.which === index_1.KeyCode.ESCAPE) {
             e.preventDefault();
             this.cancel();
         }
-        else if (e.which === models_1.KeyCode.TAB && e.shiftKey) {
+        else if (e.which === index_1.KeyCode.TAB && e.shiftKey) {
             e.preventDefault();
             this.args.grid.navigatePrev();
         }
-        else if (e.which === models_1.KeyCode.TAB) {
+        else if (e.which === index_1.KeyCode.TAB) {
             e.preventDefault();
             this.args.grid.navigateNext();
         }

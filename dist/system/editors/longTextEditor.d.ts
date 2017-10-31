@@ -1,5 +1,4 @@
-/// <reference types="jquery" />
-import { Editor, HtmlElementPosition } from './../models';
+import { Editor, HtmlElementPosition } from './../models/index';
 export declare class LongTextEditor implements Editor {
     private args;
     $input: any;
@@ -7,7 +6,7 @@ export declare class LongTextEditor implements Editor {
     defaultValue: any;
     constructor(args: any);
     init(): void;
-    handleKeyDown(e: JQueryEventConstructor): void;
+    handleKeyDown(e: any): void;
     save(): void;
     cancel(): void;
     hide(): void;

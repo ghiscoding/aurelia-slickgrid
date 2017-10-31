@@ -1,4 +1,4 @@
-define(["require", "exports", "./../models", "./global-utilities"], function (require, exports, models_1) {
+define(["require", "exports", "./../models/index", "./global-utilities"], function (require, exports, index_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var OdataService = /** @class */ (function () {
@@ -160,7 +160,7 @@ define(["require", "exports", "./../models", "./global-utilities"], function (re
                 if (property === 'orderBy' || property === 'sortBy') {
                     var sortBy = options[property];
                     // make sure first char of each orderBy field is capitalize
-                    if (this._odataOptions.caseType === models_1.CaseType.pascalCase) {
+                    if (this._odataOptions.caseType === index_1.CaseType.pascalCase) {
                         if (Array.isArray(sortBy)) {
                             sortBy.forEach(function (field, index, inputArray) {
                                 inputArray[index] = String.titleCase(field);

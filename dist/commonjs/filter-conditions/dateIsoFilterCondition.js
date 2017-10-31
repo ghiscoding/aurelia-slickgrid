@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var models_1 = require("../models");
+var index_1 = require("../models/index");
 var filterUtilities_1 = require("./filterUtilities");
 var utilities_1 = require("./../services/utilities");
 var moment = require("moment");
-var FORMAT = utilities_1.mapMomentDateFormatWithFieldType(models_1.FieldType.dateIso);
+var FORMAT = utilities_1.mapMomentDateFormatWithFieldType(index_1.FieldType.dateIso);
 exports.dateIsoFilterCondition = function (options) {
     if (!moment(options.cellValue, FORMAT, true).isValid() || !moment(options.searchTerm, FORMAT, true).isValid()) {
         return true;

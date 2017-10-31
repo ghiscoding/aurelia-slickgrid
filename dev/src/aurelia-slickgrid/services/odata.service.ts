@@ -1,5 +1,5 @@
 import './global-utilities';
-import { CaseType, OdataOption } from './../models';
+import { CaseType, OdataOption } from './../models/index';
 
 export class OdataService {
   _columnFilters: any;
@@ -184,5 +184,4 @@ export class OdataService {
       }
     }
   }
-
 }

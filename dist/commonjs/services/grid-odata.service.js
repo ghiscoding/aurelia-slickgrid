@@ -17,7 +17,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 require("./global-utilities");
 var aurelia_framework_1 = require("aurelia-framework");
 var utilities_1 = require("./utilities");
-var models_1 = require("./../models");
+var index_1 = require("./../models/index");
 var odata_service_1 = require("./odata.service");
 var timer;
 var GridOdataService = /** @class */ (function () {
@@ -58,7 +58,7 @@ var GridOdataService = /** @class */ (function () {
         var searchBy = '';
         var searchByArray = [];
         var serviceOptions = args.grid.getOptions();
-        if (serviceOptions.onBackendEventApi === undefined || serviceOptions.onBackendEventApi.filterTypingDebounce) {
+        if (serviceOptions.onBackendEventApi === undefined || !serviceOptions.onBackendEventApi.filterTypingDebounce) {
             throw new Error('Something went wrong in the GridOdataService, "onBackendEventApi" is not initialized');
         }
         var debounceTypingDelay = 0;
@@ -132,20 +132,20 @@ var GridOdataService = /** @class */ (function () {
                                 ? "endswith(" + fieldNameTitleCase + ", '" + searchValue + "')"
                                 : "startswith(" + fieldNameTitleCase + ", '" + searchValue + "')";
                         }
-                        else if (fieldType === models_1.FieldType.date) {
+                        else if (fieldType === index_1.FieldType.date) {
                             // date field needs to be UTC and within DateTime function
                             var dateFormatted = utilities_1.parseUtcDate(searchValue, true);
                             if (dateFormatted) {
                                 searchBy_1 = fieldNameTitleCase + " " + _this.mapOdataOperator(operator) + " DateTime'" + dateFormatted + "'";
                             }
                         }
-                        else if (fieldType === models_1.FieldType.string) {
+                        else if (fieldType === index_1.FieldType.string) {
                             // string field needs to be in single quotes
                             searchBy_1 = "substringof('" + searchValue + "', " + fieldNameTitleCase + ")";
                         }
                         else {
                             // any other field type (or undefined type)
-                            searchValue = fieldType === models_1.FieldType.number ? searchValue : "'" + searchValue + "'";
+                            searchValue = fieldType === index_1.FieldType.number ? searchValue : "'" + searchValue + "'";
                             searchBy_1 = fieldNameTitleCase + " " + _this.mapOdataOperator(operator) + " " + searchValue;
                         }
                         // push to our temp array and also trim white spaces
@@ -197,7 +197,7 @@ var GridOdataService = /** @class */ (function () {
                 for (var _i = 0, sortColumns_1 = sortColumns; _i < sortColumns_1.length; _i++) {
                     var column = sortColumns_1[_i];
                     var fieldName = column.sortCol.field || column.sortCol.id;
-                    if (this.odataService.options.caseType === models_1.CaseType.pascalCase) {
+                    if (this.odataService.options.caseType === index_1.CaseType.pascalCase) {
                         fieldName = String.titleCase(fieldName);
                     }
                     var direction = column.sortAsc ? 'asc' : 'desc';
@@ -209,7 +209,7 @@ var GridOdataService = /** @class */ (function () {
         // transform the sortby array into a CSV string
         var csvArray = sortByArray.join(',');
         this.odataService.updateOptions({
-            orderBy: (this.odataService.options.caseType === models_1.CaseType.pascalCase) ? String.titleCase(csvArray) : csvArray
+            orderBy: (this.odataService.options.caseType === index_1.CaseType.pascalCase) ? String.titleCase(csvArray) : csvArray
         });
         // build the OData query which we will use in the WebAPI callback
         return this.odataService.buildQuery();

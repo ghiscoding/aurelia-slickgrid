@@ -2,6 +2,12 @@
 # yarn lockfile v1
 
 
+"@types/flatpickr@^3.1.2":
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/@types/flatpickr/-/flatpickr-3.1.2.tgz#767e04fea776ddb399007028bed1a885e26d6d52"
+  dependencies:
+    flatpickr "*"
+
 "@types/fs-extra@^4.0.0":
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/@types/fs-extra/-/fs-extra-4.0.2.tgz#7b9b1bbf85962cbe029b5a83c9b530d7c75af3ba"
@@ -1406,7 +1412,7 @@ find-up@^2.0.0:
   dependencies:
     locate-path "^2.0.0"
 
-flatpickr@^4.0.6:
+flatpickr@*, flatpickr@^4.0.6:
   version "4.0.6"
   resolved "https://registry.yarnpkg.com/flatpickr/-/flatpickr-4.0.6.tgz#d898778636984b9b46b590f3b60513fc260db709"
 

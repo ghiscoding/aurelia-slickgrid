@@ -1,4 +1,4 @@
-System.register(["slickgrid/lib/jquery-ui-1.11.3", "slickgrid/lib/jquery.event.drag-2.3.0", "slickgrid/slick.core", "slickgrid/slick.dataview", "slickgrid/slick.grid", "slickgrid/controls/slick.columnpicker", "slickgrid/controls/slick.pager", "slickgrid/plugins/slick.autotooltips", "slickgrid/plugins/slick.cellcopymanager", "slickgrid/plugins/slick.cellexternalcopymanager", "slickgrid/plugins/slick.cellrangedecorator", "slickgrid/plugins/slick.cellrangeselector", "slickgrid/plugins/slick.cellselectionmodel", "slickgrid/plugins/slick.checkboxselectcolumn", "slickgrid/plugins/slick.headerbuttons", "slickgrid/plugins/slick.headermenu", "slickgrid/plugins/slick.rowmovemanager", "slickgrid/plugins/slick.rowselectionmodel", "aurelia-framework", "./services/utilities", "./global-grid-options", "./services"], function (exports_1, context_1) {
+System.register(["slickgrid/lib/jquery-ui-1.11.3", "slickgrid/lib/jquery.event.drag-2.3.0", "slickgrid/slick.core", "slickgrid/slick.dataview", "slickgrid/slick.grid", "slickgrid/controls/slick.columnpicker", "slickgrid/controls/slick.pager", "slickgrid/plugins/slick.autotooltips", "slickgrid/plugins/slick.cellcopymanager", "slickgrid/plugins/slick.cellexternalcopymanager", "slickgrid/plugins/slick.cellrangedecorator", "slickgrid/plugins/slick.cellrangeselector", "slickgrid/plugins/slick.cellselectionmodel", "slickgrid/plugins/slick.checkboxselectcolumn", "slickgrid/plugins/slick.headerbuttons", "slickgrid/plugins/slick.headermenu", "slickgrid/plugins/slick.rowmovemanager", "slickgrid/plugins/slick.rowselectionmodel", "aurelia-framework", "./services/utilities", "./global-grid-options", "./services/index"], function (exports_1, context_1) {
     "use strict";
     var __assign = (this && this.__assign) || Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -50,7 +50,7 @@ System.register(["slickgrid/lib/jquery-ui-1.11.3", "slickgrid/lib/jquery.event.d
         }
     };
     var __moduleName = context_1 && context_1.id;
-    var aurelia_framework_1, utilities_1, global_grid_options_1, services_1, AureliaSlickgridCustomElement;
+    var aurelia_framework_1, utilities_1, global_grid_options_1, index_1, AureliaSlickgridCustomElement;
     return {
         setters: [
             function (_1) {
@@ -98,8 +98,8 @@ System.register(["slickgrid/lib/jquery-ui-1.11.3", "slickgrid/lib/jquery.event.d
             function (global_grid_options_1_1) {
                 global_grid_options_1 = global_grid_options_1_1;
             },
-            function (services_1_1) {
-                services_1 = services_1_1;
+            function (index_1_1) {
+                index_1 = index_1_1;
             }
         ],
         execute: function () {
@@ -112,7 +112,6 @@ System.register(["slickgrid/lib/jquery-ui-1.11.3", "slickgrid/lib/jquery.event.d
                     this.sortService = sortService;
                     this._columnFilters = {};
                     this.showPagination = false;
-                    this.onFilter = new Slick.Event();
                     this.gridHeight = 100;
                     this.gridWidth = 600;
                     this.elm = elm;
@@ -125,17 +124,17 @@ System.register(["slickgrid/lib/jquery-ui-1.11.3", "slickgrid/lib/jquery.event.d
                     // make sure the dataset is initialized (if not it will throw an error that it cannot getLength of null)
                     this._dataset = this._dataset || [];
                     this._gridOptions = this.mergeGridOptions();
-                    this._dataView = new Slick.Data.DataView();
-                    this.grid = new Slick.Grid("#" + this.gridId, this._dataView, this.columnDefinitions, this._gridOptions);
+                    this.dataview = new Slick.Data.DataView();
+                    this.grid = new Slick.Grid("#" + this.gridId, this.dataview, this.columnDefinitions, this._gridOptions);
                     this.grid.setSelectionModel(new Slick.RowSelectionModel());
                     if (this._gridOptions.enableColumnPicker) {
                         var columnpicker = new Slick.Controls.ColumnPicker(this.columnDefinitions, this.grid, this._gridOptions);
                     }
                     this.grid.init();
-                    this._dataView.beginUpdate();
-                    this.attachDifferentHooks(this.grid, this._gridOptions, this._dataView);
-                    this._dataView.setItems(this._dataset);
-                    this._dataView.endUpdate();
+                    this.dataview.beginUpdate();
+                    this.attachDifferentHooks(this.grid, this._gridOptions, this.dataview);
+                    this.dataview.setItems(this._dataset);
+                    this.dataview.endUpdate();
                     // attach resize ONLY after the dataView is ready
                     this.attachResizeHook(this.grid, this._gridOptions);
                 };
@@ -169,12 +168,12 @@ System.register(["slickgrid/lib/jquery-ui-1.11.3", "slickgrid/lib/jquery.event.d
                     var _this = this;
                     // attach external sorting (backend) when available or default onSort (dataView)
                     if (options.enableSorting) {
-                        (options.onBackendEventApi) ? this.sortService.attachBackendOnSort(grid, options) : this.sortService.attachLocalOnSort(grid, options, this._dataView);
+                        (options.onBackendEventApi) ? this.sortService.attachBackendOnSort(grid, options) : this.sortService.attachLocalOnSort(grid, options, this.dataview);
                     }
                     // attach external filter (backend) when available or default onFilter (dataView)
                     if (options.enableFiltering) {
                         this.filterService.init(grid, options, this.columnDefinitions, this._columnFilters);
-                        (options.onBackendEventApi) ? this.filterService.attachBackendOnFilter(grid, options) : this.filterService.attachLocalOnFilter(this._dataView);
+                        (options.onBackendEventApi) ? this.filterService.attachBackendOnFilter(grid, options) : this.filterService.attachLocalOnFilter(this.dataview);
                     }
                     if (options.onBackendEventApi && options.onBackendEventApi.onInit) {
                         var backendApi_1 = options.onBackendEventApi;
@@ -201,7 +200,7 @@ System.register(["slickgrid/lib/jquery-ui-1.11.3", "slickgrid/lib/jquery.event.d
                         }); });
                     }
                     // on cell click, mainly used with the columnDef.action callback
-                    this.gridEventService.attachOnClick(grid, this._gridOptions, dataView);
+                    // this.gridEventService.attachOnClick(grid, this._gridOptions, dataView);
                     // if enable, change background color on mouse over
                     if (options.enableMouseHoverHighlightRow) {
                         this.gridEventService.attachOnMouseHover(grid);
@@ -228,7 +227,7 @@ System.register(["slickgrid/lib/jquery-ui-1.11.3", "slickgrid/lib/jquery.event.d
                         }
                     }
                     else {
-                        this.resizer.resizeGrid(grid, options, { height: this.gridHeight, width: this.gridWidth });
+                        this.resizer.resizeGrid(grid, options, 0, { height: this.gridHeight, width: this.gridWidth });
                     }
                 };
                 AureliaSlickgridCustomElement.prototype.mergeGridOptions = function () {
@@ -252,9 +251,8 @@ System.register(["slickgrid/lib/jquery-ui-1.11.3", "slickgrid/lib/jquery.event.d
                     return isShowing;
                 };
                 AureliaSlickgridCustomElement.prototype.refreshGridData = function (dataset) {
-                    var _this = this;
                     if (dataset && this.grid) {
-                        this._dataView.setItems(dataset);
+                        this.dataview.setItems(dataset);
                         // this.grid.setData(dataset);
                         this.grid.invalidate();
                         this.grid.render();
@@ -264,10 +262,8 @@ System.register(["slickgrid/lib/jquery-ui-1.11.3", "slickgrid/lib/jquery.event.d
                         }
                         if (this._gridOptions.enableAutoResize) {
                             // resize the grid inside a slight timeout, in case other DOM element changed prior to the resize (like a filter/pagination changed)
-                            setTimeout(function () {
-                                _this.resizer.resizeGrid(_this.grid, _this._gridOptions);
-                                // this.grid.autosizeColumns();
-                            });
+                            this.resizer.resizeGrid(this.grid, this._gridOptions, 10);
+                            // this.grid.autosizeColumns();
                         }
                     }
                 };
@@ -283,6 +279,12 @@ System.register(["slickgrid/lib/jquery-ui-1.11.3", "slickgrid/lib/jquery.event.d
                 __decorate([
                     aurelia_framework_1.bindable({ defaultBindingMode: aurelia_framework_1.bindingMode.twoWay })
                 ], AureliaSlickgridCustomElement.prototype, "gridPaginationOptions", void 0);
+                __decorate([
+                    aurelia_framework_1.bindable({ defaultBindingMode: aurelia_framework_1.bindingMode.twoWay })
+                ], AureliaSlickgridCustomElement.prototype, "dataview", void 0);
+                __decorate([
+                    aurelia_framework_1.bindable({ defaultBindingMode: aurelia_framework_1.bindingMode.twoWay })
+                ], AureliaSlickgridCustomElement.prototype, "grid", void 0);
                 __decorate([
                     aurelia_framework_1.bindable()
                 ], AureliaSlickgridCustomElement.prototype, "gridId", void 0);
@@ -302,7 +304,7 @@ System.register(["slickgrid/lib/jquery-ui-1.11.3", "slickgrid/lib/jquery.event.d
                     aurelia_framework_1.bindable()
                 ], AureliaSlickgridCustomElement.prototype, "pickerOptions", void 0);
                 AureliaSlickgridCustomElement = __decorate([
-                    aurelia_framework_1.inject(Element, services_1.ResizerService, services_1.GridEventService, services_1.FilterService, services_1.SortService)
+                    aurelia_framework_1.inject(Element, index_1.ResizerService, index_1.GridEventService, index_1.FilterService, index_1.SortService)
                 ], AureliaSlickgridCustomElement);
                 return AureliaSlickgridCustomElement;
             }());

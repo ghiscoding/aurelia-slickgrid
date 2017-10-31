@@ -1,4 +1,4 @@
-define(["require", "exports", "jquery", "./../models"], function (require, exports, $, models_1) {
+define(["require", "exports", "jquery", "./../models/index"], function (require, exports, $, index_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var defaultDecimalPlaces = 0;
@@ -16,7 +16,7 @@ define(["require", "exports", "jquery", "./../models"], function (require, expor
             this.$input = $("<input type=\"text\" class='editor-text' />")
                 .appendTo(this.args.container)
                 .on('keydown.nav', function (e) {
-                if (e.keyCode === models_1.KeyCode.LEFT || e.keyCode === models_1.KeyCode.RIGHT) {
+                if (e.keyCode === index_1.KeyCode.LEFT || e.keyCode === index_1.KeyCode.RIGHT) {
                     e.stopImmediatePropagation();
                 }
             })

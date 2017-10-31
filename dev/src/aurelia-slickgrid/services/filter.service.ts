@@ -1,5 +1,6 @@
 import { castToPromise } from './utilities';
-import { FilterConditions } from '../filter-conditions';
+import { FilterConditions } from '../filter-conditions/index';
+import { FilterTemplates } from './../filter-templates/index';
 import {
   BackendServiceOption,
   Column,
@@ -9,8 +10,7 @@ import {
   FormElementType,
   GridOption,
   SlickEvent
-} from '../models';
-import { FilterTemplates } from './../filter-templates';
+} from '../models/index';
 import * as $ from 'jquery';
 
 // using external js modules in Angular
@@ -48,7 +48,7 @@ export class FilterService {
     }
     const serviceOptions: BackendServiceOption = args.grid.getOptions();
 
-    if (serviceOptions === undefined || serviceOptions.onBackendEventApi === undefined || serviceOptions.onBackendEventApi.process === undefined || serviceOptions.onBackendEventApi.service === undefined) {
+    if (!serviceOptions || !serviceOptions.onBackendEventApi || !serviceOptions.onBackendEventApi.process || !serviceOptions.onBackendEventApi.service) {
       throw new Error(`onBackendEventApi requires at least a "process" function and a "service" defined`);
     }
     const backendApi = serviceOptions.onBackendEventApi;

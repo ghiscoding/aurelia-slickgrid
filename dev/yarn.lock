@@ -45,6 +45,12 @@
   version "0.0.29"
   resolved "https://registry.yarnpkg.com/@types/debug/-/debug-0.0.29.tgz#a1e514adfbd92f03a224ba54d693111dbf1f3754"
 
+"@types/flatpickr@^3.1.2":
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/@types/flatpickr/-/flatpickr-3.1.2.tgz#767e04fea776ddb399007028bed1a885e26d6d52"
+  dependencies:
+    flatpickr "*"
+
 "@types/jest@19.2.4":
   version "19.2.4"
   resolved "https://registry.yarnpkg.com/@types/jest/-/jest-19.2.4.tgz#543651712535962b7dc615e18e4a381fc2687442"
@@ -2655,13 +2661,13 @@ flagged-respawn@^0.3.2:
   version "0.3.2"
   resolved "https://registry.yarnpkg.com/flagged-respawn/-/flagged-respawn-0.3.2.tgz#ff191eddcd7088a675b2610fffc976be9b8074b5"
 
+flatpickr@*, flatpickr@^4.0.6:
+  version "4.0.6"
+  resolved "https://registry.yarnpkg.com/flatpickr/-/flatpickr-4.0.6.tgz#d898778636984b9b46b590f3b60513fc260db709"
+
 flatpickr@^1.9.1:
   version "1.9.1"
   resolved "https://registry.yarnpkg.com/flatpickr/-/flatpickr-1.9.1.tgz#6a6f8dea4a75d4ef9e4b92a8b50de7533ae27dab"
-
-flatpickr@^4.0.6:
-  version "4.0.6"
-  resolved "https://registry.yarnpkg.com/flatpickr/-/flatpickr-4.0.6.tgz#d898778636984b9b46b590f3b60513fc260db709"
 
 flatten@^1.0.2:
   version "1.0.2"

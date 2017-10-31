@@ -68,6 +68,7 @@
     "start:client-ts-wp": "cd client-ts-wp && yarn start"
   },
   "dependencies": {
+    "@types/flatpickr": "^3.1.2",
     "@types/jquery": "^3.2.15",
     "@types/moment": "^2.13.0",
     "aurelia-event-aggregator": "^1.0.1",

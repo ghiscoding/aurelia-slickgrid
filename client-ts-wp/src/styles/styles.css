@@ -1,9 +1,11 @@
 body {
   margin: 0;
 }
-
 .italic {
   font-style: italic;
+}
+.red {
+  color: red;
 }
 .subtitle {
   font-size: 19px;

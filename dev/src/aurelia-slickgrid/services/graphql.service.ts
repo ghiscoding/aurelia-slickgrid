@@ -14,7 +14,7 @@ import {
   PaginationChangedArgs,
   SortChangedArgs,
   SortDirection
-} from './../models';
+} from './../models/index';
 import QueryBuilder from 'graphql-query-builder';
 let timer: any;
 
@@ -100,10 +100,9 @@ export class GraphqlService implements BackendService {
   onFilterChanged(event: Event, args: FilterChangedArgs): Promise<string> {
     const searchByArray: GraphqlFilteringOption[] = [];
     const serviceOptions: BackendServiceOption = args.grid.getOptions();
-    if (serviceOptions.onBackendEventApi === undefined || serviceOptions.onBackendEventApi.filterTypingDebounce) {
+    if (serviceOptions.onBackendEventApi === undefined || !serviceOptions.onBackendEventApi.filterTypingDebounce) {
       throw new Error('Something went wrong in the GraphqlService, "onBackendEventApi" is not initialized');
     }
-
     let debounceTypingDelay = 0;
     if (event.type === 'keyup' || event.type === 'keydown') {
       debounceTypingDelay = serviceOptions.onBackendEventApi.filterTypingDebounce || 700;
@@ -214,7 +213,7 @@ export class GraphqlService implements BackendService {
       };
     }
 
-    this.updateOptions({ paginationOptions: paginationOptions });
+    this.updateOptions({ paginationOptions });
 
     // build the GraphQL query which we will use in the WebAPI callback
     return this.buildQuery();
@@ -240,7 +239,7 @@ export class GraphqlService implements BackendService {
           const direction = column.sortAsc ? SortDirection.ASC : SortDirection.DESC;
           sortByArray.push({
             field: fieldName,
-            direction: direction
+            direction
           });
         }
       }
@@ -273,7 +272,7 @@ export class GraphqlService implements BackendService {
     // example with (sort: & direction:):  /sort:s?(".*?")|direction:s?(".*?")/
     const reg = new RegExp(patternRegex, 'g');
 
-    return inputStr.replace(reg, function (group1, group2, group3) {
+    return inputStr.replace(reg, (group1, group2, group3) => {
       const rep = group1.replace(/"/g, '');
       return rep;
     });

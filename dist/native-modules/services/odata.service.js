@@ -1,5 +1,5 @@
 import './global-utilities';
-import { CaseType } from './../models';
+import { CaseType } from './../models/index';
 var OdataService = /** @class */ (function () {
     function OdataService() {
         this._odataOptions = {

@@ -1,5 +1,5 @@
 import './global-utilities';
-import { CaseType } from './../models';
+import { CaseType } from './../models/index';
 export class OdataService {
     constructor() {
         this._odataOptions = {

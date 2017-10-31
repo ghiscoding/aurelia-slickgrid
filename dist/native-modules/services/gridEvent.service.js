@@ -29,7 +29,7 @@ var GridEventService = /** @class */ (function () {
                     dataView: dataView,
                     gridDefinition: gridOptions,
                     grid: grid,
-                    columnDef: args.grid.getColumns()[args.cell],
+                    columnDef: column,
                     dataContext: args.grid.getDataItem(args.row)
                 };
                 // finally execute the onCellClick callback

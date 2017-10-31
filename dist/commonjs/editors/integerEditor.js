@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var $ = require("jquery");
-var models_1 = require("./../models");
+var index_1 = require("./../models/index");
 /*
  * An example of a 'detached' editor.
  * KeyDown events are also handled to provide handling for Tab, Shift-Tab, Esc and Ctrl-Enter.
@@ -15,7 +15,7 @@ var IntegerEditor = /** @class */ (function () {
         this.$input = $("<input type=\"text\" class='editor-text' />")
             .appendTo(this.args.container)
             .on('keydown.nav', function (e) {
-            if (e.keyCode === models_1.KeyCode.LEFT || e.keyCode === models_1.KeyCode.RIGHT) {
+            if (e.keyCode === index_1.KeyCode.LEFT || e.keyCode === index_1.KeyCode.RIGHT) {
                 e.stopImmediatePropagation();
             }
         })

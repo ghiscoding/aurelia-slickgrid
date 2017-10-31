@@ -1,4 +1,4 @@
-define(["require", "exports", "../models", "rxjs/Observable", "moment", "rxjs/add/operator/first", "rxjs/add/operator/take", "rxjs/add/operator/toPromise"], function (require, exports, models_1, Observable_1, moment) {
+define(["require", "exports", "../models/index", "rxjs/Observable", "moment", "rxjs/add/operator/first", "rxjs/add/operator/take", "rxjs/add/operator/toPromise"], function (require, exports, index_1, Observable_1, moment) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -33,45 +33,45 @@ define(["require", "exports", "../models", "rxjs/Observable", "moment", "rxjs/ad
     function mapMomentDateFormatWithFieldType(fieldType) {
         var map;
         switch (fieldType) {
-            case models_1.FieldType.dateTime:
-            case models_1.FieldType.dateTimeIso:
+            case index_1.FieldType.dateTime:
+            case index_1.FieldType.dateTimeIso:
                 map = 'YYYY-MM-DD HH:mm:ss';
                 break;
-            case models_1.FieldType.dateTimeIsoAmPm:
+            case index_1.FieldType.dateTimeIsoAmPm:
                 map = 'YYYY-MM-DD hh:mm:ss a';
                 break;
-            case models_1.FieldType.dateTimeIsoAM_PM:
+            case index_1.FieldType.dateTimeIsoAM_PM:
                 map = 'YYYY-MM-DD hh:mm:ss A';
                 break;
-            case models_1.FieldType.dateUs:
+            case index_1.FieldType.dateUs:
                 map = 'MM/DD/YYYY';
                 break;
-            case models_1.FieldType.dateUsShort:
+            case index_1.FieldType.dateUsShort:
                 map = 'M/D/YY';
                 break;
-            case models_1.FieldType.dateTimeUs:
+            case index_1.FieldType.dateTimeUs:
                 map = 'MM/DD/YYYY HH:mm:ss';
                 break;
-            case models_1.FieldType.dateTimeUsAmPm:
+            case index_1.FieldType.dateTimeUsAmPm:
                 map = 'MM/DD/YYYY hh:mm:ss a';
                 break;
-            case models_1.FieldType.dateTimeUsAM_PM:
+            case index_1.FieldType.dateTimeUsAM_PM:
                 map = 'MM/DD/YYYY hh:mm:ss A';
                 break;
-            case models_1.FieldType.dateTimeUsShort:
+            case index_1.FieldType.dateTimeUsShort:
                 map = 'M/D/YY H:m:s';
                 break;
-            case models_1.FieldType.dateTimeUsShortAmPm:
+            case index_1.FieldType.dateTimeUsShortAmPm:
                 map = 'M/D/YY h:m:s a';
                 break;
-            case models_1.FieldType.dateTimeUsAM_PM:
+            case index_1.FieldType.dateTimeUsAM_PM:
                 map = 'M/D/YY h:m:s A';
                 break;
-            case models_1.FieldType.dateUtc:
+            case index_1.FieldType.dateUtc:
                 map = 'YYYY-MM-DDTHH:mm:ss.SSSZ';
                 break;
-            case models_1.FieldType.date:
-            case models_1.FieldType.dateIso:
+            case index_1.FieldType.date:
+            case index_1.FieldType.dateIso:
             default:
                 map = 'YYYY-MM-DD';
                 break;
@@ -109,45 +109,45 @@ define(["require", "exports", "../models", "rxjs/Observable", "moment", "rxjs/ad
         */
         var map;
         switch (fieldType) {
-            case models_1.FieldType.dateTime:
-            case models_1.FieldType.dateTimeIso:
+            case index_1.FieldType.dateTime:
+            case index_1.FieldType.dateTimeIso:
                 map = 'Y-m-d H:i:S';
                 break;
-            case models_1.FieldType.dateTimeIsoAmPm:
+            case index_1.FieldType.dateTimeIsoAmPm:
                 map = 'Y-m-d h:i:S K'; // there is no lowercase in Flatpickr :(
                 break;
-            case models_1.FieldType.dateTimeIsoAM_PM:
+            case index_1.FieldType.dateTimeIsoAM_PM:
                 map = 'Y-m-d h:i:S K';
                 break;
-            case models_1.FieldType.dateUs:
+            case index_1.FieldType.dateUs:
                 map = 'm/d/Y';
                 break;
-            case models_1.FieldType.dateUsShort:
+            case index_1.FieldType.dateUsShort:
                 map = 'M/D/YY';
                 break;
-            case models_1.FieldType.dateTimeUs:
+            case index_1.FieldType.dateTimeUs:
                 map = 'm/d/Y H:i:S';
                 break;
-            case models_1.FieldType.dateTimeUsAmPm:
+            case index_1.FieldType.dateTimeUsAmPm:
                 map = 'm/d/Y h:i:S K'; // there is no lowercase in Flatpickr :(
                 break;
-            case models_1.FieldType.dateTimeUsAM_PM:
+            case index_1.FieldType.dateTimeUsAM_PM:
                 map = 'm/d/Y h:i:S K';
                 break;
-            case models_1.FieldType.dateTimeUsShort:
+            case index_1.FieldType.dateTimeUsShort:
                 map = 'M/D/YY H:i:s';
                 break;
-            case models_1.FieldType.dateTimeUsShortAmPm:
+            case index_1.FieldType.dateTimeUsShortAmPm:
                 map = 'M/D/YY h:i:s K'; // there is no lowercase in Flatpickr :(
                 break;
-            case models_1.FieldType.dateTimeUsAM_PM:
+            case index_1.FieldType.dateTimeUsAM_PM:
                 map = 'M/D/YY h:i:s K';
                 break;
-            case models_1.FieldType.dateUtc:
+            case index_1.FieldType.dateUtc:
                 map = 'Z';
                 break;
-            case models_1.FieldType.date:
-            case models_1.FieldType.dateIso:
+            case index_1.FieldType.date:
+            case index_1.FieldType.dateIso:
             default:
                 map = 'Y-m-d';
                 break;
@@ -164,36 +164,36 @@ define(["require", "exports", "../models", "rxjs/Observable", "moment", "rxjs/ad
         var map;
         switch (operator) {
             case '<':
-                map = models_1.OperatorType.lessThan;
+                map = index_1.OperatorType.lessThan;
                 break;
             case '<=':
-                map = models_1.OperatorType.lessThanOrEqual;
+                map = index_1.OperatorType.lessThanOrEqual;
                 break;
             case '>':
-                map = models_1.OperatorType.greaterThan;
+                map = index_1.OperatorType.greaterThan;
                 break;
             case '>=':
-                map = models_1.OperatorType.greaterThanOrEqual;
+                map = index_1.OperatorType.greaterThanOrEqual;
                 break;
             case '<>':
             case '!=':
-                map = models_1.OperatorType.notEqual;
+                map = index_1.OperatorType.notEqual;
                 break;
             case '*':
             case '.*':
             case 'startsWith':
-                map = models_1.OperatorType.startsWith;
+                map = index_1.OperatorType.startsWith;
                 break;
             case '*.':
             case 'endsWith':
-                map = models_1.OperatorType.endsWith;
+                map = index_1.OperatorType.endsWith;
                 break;
             case '=':
             case '==':
-                map = models_1.OperatorType.equal;
+                map = index_1.OperatorType.equal;
                 break;
             default:
-                map = models_1.OperatorType.contains;
+                map = index_1.OperatorType.contains;
                 break;
         }
         return map;

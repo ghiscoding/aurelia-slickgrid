@@ -1,11 +1,11 @@
-System.register(["./../models", "./../services/utilities", "moment"], function (exports_1, context_1) {
+System.register(["./../models/index", "./../services/utilities", "moment"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var models_1, utilities_1, moment, FORMAT, dateTimeIsoFormatter;
+    var index_1, utilities_1, moment, FORMAT, dateTimeIsoFormatter;
     return {
         setters: [
-            function (models_1_1) {
-                models_1 = models_1_1;
+            function (index_1_1) {
+                index_1 = index_1_1;
             },
             function (utilities_1_1) {
                 utilities_1 = utilities_1_1;
@@ -15,7 +15,7 @@ System.register(["./../models", "./../services/utilities", "moment"], function (
             }
         ],
         execute: function () {
-            FORMAT = utilities_1.mapMomentDateFormatWithFieldType(models_1.FieldType.dateTimeIso);
+            FORMAT = utilities_1.mapMomentDateFormatWithFieldType(index_1.FieldType.dateTimeIso);
             exports_1("dateTimeIsoFormatter", dateTimeIsoFormatter = function (row, cell, value, columnDef, dataContext) {
                 return value ? moment(value).format(FORMAT) : '';
             });

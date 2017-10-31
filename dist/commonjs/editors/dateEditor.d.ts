@@ -1,5 +1,4 @@
-import 'flatpickr/dist/flatpickr.min.css';
-import { Editor } from './../models';
+import { Editor } from './../models/index';
 export declare class DateEditor implements Editor {
     private args;
     $input: any;
@@ -11,6 +10,7 @@ export declare class DateEditor implements Editor {
     show(): void;
     hide(): void;
     focus(): void;
+    save(): void;
     loadValue(item: any): void;
     serializeValue(): any;
     applyValue(item: any, state: any): void;

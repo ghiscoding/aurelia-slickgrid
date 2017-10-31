@@ -1,4 +1,4 @@
-define(["require", "exports", "./../services/utilities", "flatpickr", "jquery", "./../models", "flatpickr/dist/flatpickr.min.css"], function (require, exports, utilities_1, flatpickr_1, $, models_1) {
+define(["require", "exports", "./../services/utilities", "flatpickr", "jquery", "./../models/index"], function (require, exports, utilities_1, flatpickr_1, $, index_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /*
@@ -11,10 +11,14 @@ define(["require", "exports", "./../services/utilities", "flatpickr", "jquery", 
             this.init();
         }
         DateEditor.prototype.init = function () {
+            var _this = this;
             var pickerOptions = {
                 defaultDate: this.args.item[this.args.column.field] || null,
                 altInput: true,
-                altFormat: utilities_1.mapFlatpickrDateFormatWithFieldType(this.args.type || models_1.FieldType.dateIso)
+                altFormat: utilities_1.mapFlatpickrDateFormatWithFieldType(this.args.type || index_1.FieldType.dateIso),
+                onChange: function (selectedDates, dateStr, instance) {
+                    _this.save();
+                },
             };
             this.$input = $("<input type=\"text\" value=\"" + this.defaultDate + "\" class=\"editor-text\" />");
             this.$input.appendTo(this.args.container);
@@ -23,7 +27,7 @@ define(["require", "exports", "./../services/utilities", "flatpickr", "jquery", 
             this.flatInstance.open();
         };
         DateEditor.prototype.destroy = function () {
-            this.flatInstance.destroy();
+            //this.flatInstance.destroy();
             this.$input.remove();
         };
         DateEditor.prototype.show = function () {
@@ -34,6 +38,9 @@ define(["require", "exports", "./../services/utilities", "flatpickr", "jquery", 
         };
         DateEditor.prototype.focus = function () {
             this.$input.focus();
+        };
+        DateEditor.prototype.save = function () {
+            this.args.commitChanges();
         };
         DateEditor.prototype.loadValue = function (item) {
             this.defaultDate = item[this.args.column.field];

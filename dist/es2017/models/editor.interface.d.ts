@@ -1,8 +1,7 @@
-/// <reference types="jquery" />
 export interface Editor {
     init: () => void;
     applyValue: (item: any, state: any) => void;
-    handleKeyDown?: (e: JQueryEventConstructor) => void;
+    handleKeyDown?: (e: any) => void;
     save?: () => void;
     cancel?: () => void;
     hide?: () => void;

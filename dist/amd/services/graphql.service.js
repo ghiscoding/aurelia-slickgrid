@@ -6,14 +6,14 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
     }
     return t;
 };
-define(["require", "exports", "./utilities", "./../models", "graphql-query-builder"], function (require, exports, utilities_1, models_1, graphql_query_builder_1) {
+define(["require", "exports", "./utilities", "./../models/index", "graphql-query-builder"], function (require, exports, utilities_1, index_1, graphql_query_builder_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var timer;
     var GraphqlService = /** @class */ (function () {
         function GraphqlService() {
             this.serviceOptions = {};
-            this.defaultOrderBy = { field: 'id', direction: models_1.SortDirection.ASC };
+            this.defaultOrderBy = { field: 'id', direction: index_1.SortDirection.ASC };
         }
         /**
          * Build the GraphQL query, since the service include/exclude cursor, the output query will be different.
@@ -87,7 +87,7 @@ define(["require", "exports", "./utilities", "./../models", "graphql-query-build
             var _this = this;
             var searchByArray = [];
             var serviceOptions = args.grid.getOptions();
-            if (serviceOptions.onBackendEventApi === undefined || serviceOptions.onBackendEventApi.filterTypingDebounce) {
+            if (serviceOptions.onBackendEventApi === undefined || !serviceOptions.onBackendEventApi.filterTypingDebounce) {
                 throw new Error('Something went wrong in the GraphqlService, "onBackendEventApi" is not initialized');
             }
             var debounceTypingDelay = 0;
@@ -211,7 +211,7 @@ define(["require", "exports", "./utilities", "./../models", "graphql-query-build
                     for (var _i = 0, sortColumns_1 = sortColumns; _i < sortColumns_1.length; _i++) {
                         var column = sortColumns_1[_i];
                         var fieldName = column.sortCol.field || column.sortCol.id;
-                        var direction = column.sortAsc ? models_1.SortDirection.ASC : models_1.SortDirection.DESC;
+                        var direction = column.sortAsc ? index_1.SortDirection.ASC : index_1.SortDirection.DESC;
                         sortByArray.push({
                             field: fieldName,
                             direction: direction

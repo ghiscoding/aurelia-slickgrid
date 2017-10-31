@@ -1,4 +1,4 @@
-import { FieldType, FilterCondition, FilterConditionOption } from '../models';
+import { FieldType, FilterCondition, FilterConditionOption } from '../models/index';
 import { testFilterCondition } from './filterUtilities';
 import * as moment from 'moment';
 import { mapMomentDateFormatWithFieldType } from './../services/utilities';

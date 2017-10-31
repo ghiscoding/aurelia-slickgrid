@@ -7,8 +7,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { castToPromise } from './utilities';
-import { FieldType } from './../models';
-import { Sorters } from './../sorters';
+import { FieldType } from './../models/index';
+import { Sorters } from './../sorters/index';
 export class SortService {
     /**
      * Attach a backend sort (single/multi) hook to the grid

@@ -12,7 +12,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-define(["require", "exports", "aurelia-framework", "./utilities", "./../models", "./odata.service", "./global-utilities"], function (require, exports, aurelia_framework_1, utilities_1, models_1, odata_service_1) {
+define(["require", "exports", "aurelia-framework", "./utilities", "./../models/index", "./odata.service", "./global-utilities"], function (require, exports, aurelia_framework_1, utilities_1, index_1, odata_service_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var timer;
@@ -54,7 +54,7 @@ define(["require", "exports", "aurelia-framework", "./utilities", "./../models",
             var searchBy = '';
             var searchByArray = [];
             var serviceOptions = args.grid.getOptions();
-            if (serviceOptions.onBackendEventApi === undefined || serviceOptions.onBackendEventApi.filterTypingDebounce) {
+            if (serviceOptions.onBackendEventApi === undefined || !serviceOptions.onBackendEventApi.filterTypingDebounce) {
                 throw new Error('Something went wrong in the GridOdataService, "onBackendEventApi" is not initialized');
             }
             var debounceTypingDelay = 0;
@@ -128,20 +128,20 @@ define(["require", "exports", "aurelia-framework", "./utilities", "./../models",
                                     ? "endswith(" + fieldNameTitleCase + ", '" + searchValue + "')"
                                     : "startswith(" + fieldNameTitleCase + ", '" + searchValue + "')";
                             }
-                            else if (fieldType === models_1.FieldType.date) {
+                            else if (fieldType === index_1.FieldType.date) {
                                 // date field needs to be UTC and within DateTime function
                                 var dateFormatted = utilities_1.parseUtcDate(searchValue, true);
                                 if (dateFormatted) {
                                     searchBy_1 = fieldNameTitleCase + " " + _this.mapOdataOperator(operator) + " DateTime'" + dateFormatted + "'";
                                 }
                             }
-                            else if (fieldType === models_1.FieldType.string) {
+                            else if (fieldType === index_1.FieldType.string) {
                                 // string field needs to be in single quotes
                                 searchBy_1 = "substringof('" + searchValue + "', " + fieldNameTitleCase + ")";
                             }
                             else {
                                 // any other field type (or undefined type)
-                                searchValue = fieldType === models_1.FieldType.number ? searchValue : "'" + searchValue + "'";
+                                searchValue = fieldType === index_1.FieldType.number ? searchValue : "'" + searchValue + "'";
                                 searchBy_1 = fieldNameTitleCase + " " + _this.mapOdataOperator(operator) + " " + searchValue;
                             }
                             // push to our temp array and also trim white spaces
@@ -193,7 +193,7 @@ define(["require", "exports", "aurelia-framework", "./utilities", "./../models",
                     for (var _i = 0, sortColumns_1 = sortColumns; _i < sortColumns_1.length; _i++) {
                         var column = sortColumns_1[_i];
                         var fieldName = column.sortCol.field || column.sortCol.id;
-                        if (this.odataService.options.caseType === models_1.CaseType.pascalCase) {
+                        if (this.odataService.options.caseType === index_1.CaseType.pascalCase) {
                             fieldName = String.titleCase(fieldName);
                         }
                         var direction = column.sortAsc ? 'asc' : 'desc';
@@ -205,7 +205,7 @@ define(["require", "exports", "aurelia-framework", "./utilities", "./../models",
             // transform the sortby array into a CSV string
             var csvArray = sortByArray.join(',');
             this.odataService.updateOptions({
-                orderBy: (this.odataService.options.caseType === models_1.CaseType.pascalCase) ? String.titleCase(csvArray) : csvArray
+                orderBy: (this.odataService.options.caseType === index_1.CaseType.pascalCase) ? String.titleCase(csvArray) : csvArray
             });
             // build the OData query which we will use in the WebAPI callback
             return this.odataService.buildQuery();

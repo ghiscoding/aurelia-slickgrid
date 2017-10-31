@@ -1,13 +1,13 @@
-System.register(["./global-utilities", "./../models"], function (exports_1, context_1) {
+System.register(["./global-utilities", "./../models/index"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var models_1, OdataService;
+    var index_1, OdataService;
     return {
         setters: [
             function (_1) {
             },
-            function (models_1_1) {
-                models_1 = models_1_1;
+            function (index_1_1) {
+                index_1 = index_1_1;
             }
         ],
         execute: function () {
@@ -170,7 +170,7 @@ System.register(["./global-utilities", "./../models"], function (exports_1, cont
                         if (property === 'orderBy' || property === 'sortBy') {
                             var sortBy = options[property];
                             // make sure first char of each orderBy field is capitalize
-                            if (this._odataOptions.caseType === models_1.CaseType.pascalCase) {
+                            if (this._odataOptions.caseType === index_1.CaseType.pascalCase) {
                                 if (Array.isArray(sortBy)) {
                                     sortBy.forEach(function (field, index, inputArray) {
                                         inputArray[index] = String.titleCase(field);

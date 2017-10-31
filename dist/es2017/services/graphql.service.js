@@ -1,5 +1,5 @@
 import { mapOperatorType } from './utilities';
-import { SortDirection } from './../models';
+import { SortDirection } from './../models/index';
 import QueryBuilder from 'graphql-query-builder';
 let timer;
 export class GraphqlService {
@@ -78,7 +78,7 @@ export class GraphqlService {
     onFilterChanged(event, args) {
         const searchByArray = [];
         const serviceOptions = args.grid.getOptions();
-        if (serviceOptions.onBackendEventApi === undefined || serviceOptions.onBackendEventApi.filterTypingDebounce) {
+        if (serviceOptions.onBackendEventApi === undefined || !serviceOptions.onBackendEventApi.filterTypingDebounce) {
             throw new Error('Something went wrong in the GraphqlService, "onBackendEventApi" is not initialized');
         }
         let debounceTypingDelay = 0;
@@ -180,7 +180,7 @@ export class GraphqlService {
                 offset: (args.newPage - 1) * args.pageSize
             };
         }
-        this.updateOptions({ paginationOptions: paginationOptions });
+        this.updateOptions({ paginationOptions });
         // build the GraphQL query which we will use in the WebAPI callback
         return this.buildQuery();
     }
@@ -204,7 +204,7 @@ export class GraphqlService {
                     const direction = column.sortAsc ? SortDirection.ASC : SortDirection.DESC;
                     sortByArray.push({
                         field: fieldName,
-                        direction: direction
+                        direction
                     });
                 }
             }
@@ -232,7 +232,7 @@ export class GraphqlService {
         patternRegex += patternWordInQuotes; // the last one should also have the pattern but without the pipe "|"
         // example with (sort: & direction:):  /sort:s?(".*?")|direction:s?(".*?")/
         const reg = new RegExp(patternRegex, 'g');
-        return inputStr.replace(reg, function (group1, group2, group3) {
+        return inputStr.replace(reg, (group1, group2, group3) => {
             const rep = group1.replace(/"/g, '');
             return rep;
         });

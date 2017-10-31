@@ -1,4 +1,4 @@
-System.register(["./utilities", "./../models", "graphql-query-builder"], function (exports_1, context_1) {
+System.register(["./utilities", "./../models/index", "graphql-query-builder"], function (exports_1, context_1) {
     "use strict";
     var __assign = (this && this.__assign) || Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -9,14 +9,14 @@ System.register(["./utilities", "./../models", "graphql-query-builder"], functio
         return t;
     };
     var __moduleName = context_1 && context_1.id;
-    var utilities_1, models_1, graphql_query_builder_1, timer, GraphqlService;
+    var utilities_1, index_1, graphql_query_builder_1, timer, GraphqlService;
     return {
         setters: [
             function (utilities_1_1) {
                 utilities_1 = utilities_1_1;
             },
-            function (models_1_1) {
-                models_1 = models_1_1;
+            function (index_1_1) {
+                index_1 = index_1_1;
             },
             function (graphql_query_builder_1_1) {
                 graphql_query_builder_1 = graphql_query_builder_1_1;
@@ -26,7 +26,7 @@ System.register(["./utilities", "./../models", "graphql-query-builder"], functio
             GraphqlService = /** @class */ (function () {
                 function GraphqlService() {
                     this.serviceOptions = {};
-                    this.defaultOrderBy = { field: 'id', direction: models_1.SortDirection.ASC };
+                    this.defaultOrderBy = { field: 'id', direction: index_1.SortDirection.ASC };
                 }
                 /**
                  * Build the GraphQL query, since the service include/exclude cursor, the output query will be different.
@@ -100,7 +100,7 @@ System.register(["./utilities", "./../models", "graphql-query-builder"], functio
                     var _this = this;
                     var searchByArray = [];
                     var serviceOptions = args.grid.getOptions();
-                    if (serviceOptions.onBackendEventApi === undefined || serviceOptions.onBackendEventApi.filterTypingDebounce) {
+                    if (serviceOptions.onBackendEventApi === undefined || !serviceOptions.onBackendEventApi.filterTypingDebounce) {
                         throw new Error('Something went wrong in the GraphqlService, "onBackendEventApi" is not initialized');
                     }
                     var debounceTypingDelay = 0;
@@ -224,7 +224,7 @@ System.register(["./utilities", "./../models", "graphql-query-builder"], functio
                             for (var _i = 0, sortColumns_1 = sortColumns; _i < sortColumns_1.length; _i++) {
                                 var column = sortColumns_1[_i];
                                 var fieldName = column.sortCol.field || column.sortCol.id;
-                                var direction = column.sortAsc ? models_1.SortDirection.ASC : models_1.SortDirection.DESC;
+                                var direction = column.sortAsc ? index_1.SortDirection.ASC : index_1.SortDirection.DESC;
                                 sortByArray.push({
                                     field: fieldName,
                                     direction: direction

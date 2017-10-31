@@ -1,226 +1,126 @@
-import { autoinject } from 'aurelia-framework';
+import { autoinject, bindable, inject } from 'aurelia-framework';
+import $ from 'bootstrap';
 import data from './sample-data/example-data';
-import { HttpClient } from 'aurelia-http-client';
-import { CaseType, Column, GridOption, FieldType, Formatters, FormElementType, GridOdataService } from '../../aurelia-slickgrid';
+import { Column, Editors, FieldType, Formatters, GridExtraUtils, GridOption, OnCellClickArgs, ResizerService } from '../../aurelia-slickgrid';
 
-const defaultPageSize = 20;
-const sampleDataRoot = 'src/examples/slickgrid/sample-data';
+// create my custom Formatter with the Formatter type
+const myCustomCheckboxFormatter = (row, cell, value, columnDef, dataContext) =>
+  value ? `<i class="fa fa-pencil" aria-hidden="true"></i>` : '<i class="fa fa-snowflake-o" aria-hidden="true"></i>';
 
 @autoinject()
 export class List {
-  title = 'Example 3: Backend';
-  subTitle = `
-    Sorting/Paging connected to a Backend OData Service.
-    <br/>
-    <ul class="small">
-      <li>Only "Name" field is sortable for the demo (because we use JSON files), however "multiColumnSort: true" is also supported</li>
-      <li>String column also support operator (>, >=, <, <=, <>, !=, =, ==, *)
-      <ul>
-        <li>The (*) can be used as startsWith (ex.: "abc*" => startsWith "abc") / endsWith (ex.: "*xyz" => endsWith "xyz")</li>
-        <li>The other operators can be used on column type number for example: ">=100" (bigger or equal than 100)</li>
-      </ul>
-      <li>OData Service could be replaced by other Service type in the future (GraphQL or whichever you provide)</li>
-    </ul>
-  `;
-  columnDefinitions: Column[];
+  @bindable() gridObj: any;
+  @bindable() dataview: any;
+  title = 'Example 3: Editors';
+  subTitle = 'inline editors (not yet implement) and onCellClick editor (execute an action, e.g: open a modal window)';
   gridOptions: GridOption;
-  dataset = [];
+  columnDefinitions: Column[];
+  dataset: any[];
+  updatedObject: any;
+  isAutoEdit: boolean = true;
 
-  odataQuery = '';
-  processing = false;
-  status = { text: '', class: '' };
-
-  constructor(private http: HttpClient, private odataService: GridOdataService) {
-    odataService.initOptions({
-      caseType: CaseType.pascalCase,
-      top: defaultPageSize
-    });
-
+  constructor(private resizer: ResizerService) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
   }
 
   attached() {
     // populate the dataset once the grid is ready
-    // this.getData();
+    this.getData();
   }
 
+  /* Define grid Options and Columns */
   defineGrid() {
     this.columnDefinitions = [
-      { id: 'name', name: 'Name', field: 'name', filterable: true, sortable: true, type: FieldType.string },
       {
-        id: 'gender', name: 'Gender', field: 'gender', filterable: true, sortable: true,
-        filter: {
-          searchTerm: '', // default selection
-          type: FormElementType.select,
-          selectOptions: [{ value: '', label: '' }, { value: 'male', label: 'male' }, { value: 'female', label: 'female' }]
+        id: 'edit', field: 'id',
+        formatter: Formatters.editIcon,
+        maxWidth: 30,
+        onCellClick: (args: OnCellClickArgs) => {
+          console.log(args);
+          console.log(this);
         }
       },
-      { id: 'company', name: 'Company', field: 'company' }
+      {
+        id: 'delete', field: 'id',
+        formatter: Formatters.deleteIcon,
+        maxWidth: 30,
+        onCellClick: (args: OnCellClickArgs) => {
+          console.log(args);
+          console.log(this);
+        }
+      },
+      { id: 'title', name: 'Title', field: 'title', sortable: true, type: FieldType.string, editor: Editors.longText },
+      { id: 'duration', name: 'Duration (days)', field: 'duration', sortable: true, type: FieldType.number, editor: Editors.text },
+      { id: 'complete', name: '% Complete', field: 'percentComplete', formatter: Formatters.percentCompleteBar, type: FieldType.number, editor: Editors.integer },
+      { id: 'start', name: 'Start', field: 'start', formatter: Formatters.dateIso, sortable: true, type: FieldType.date, editor: Editors.date },
+      { id: 'finish', name: 'Finish', field: 'finish', formatter: Formatters.dateIso, sortable: true, type: FieldType.date },
+      { id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', formatter: Formatters.checkmark, type: FieldType.number, editor: Editors.checkbox }
     ];
 
     this.gridOptions = {
-      enableAutoResize: true,
       autoResize: {
         containerId: 'demo-container',
         sidePadding: 15
       },
-      enableFiltering: true,
+      editable: true,
       enableCellNavigation: true,
-      enablePagination: true,
-      pagination: {
-        pageSizes: [10, 15, 20, 25, 30, 40, 50, 75, 100],
-        pageSize: defaultPageSize,
-        totalItems: 0
-      },
-      onBackendEventApi: {
-        onInit: (query) => this.getCustomerApiCall(query),
-        preProcess: () => this.displaySpinner(true),
-        process: (query) => this.getCustomerApiCall(query),
-        postProcess: (response) => {
-          this.displaySpinner(false);
-          this.getCustomerCallback(response);
-        },
-        filterTypingDebounce: 700,
-        service: this.odataService
-      }
+      asyncEditorLoading: false,
+      autoEdit: this.isAutoEdit
     };
   }
 
-  displaySpinner(isProcessing) {
-    this.processing = isProcessing;
-    this.status = (isProcessing)
-      ? { text: 'processing...', class: 'alert alert-danger' }
-      : { text: 'done', class: 'alert alert-success' };
+  dataviewChanged(newValue, oldValue) {
+    console.log(newValue);
   }
 
-  getCustomerCallback(data) {
-    this.displaySpinner(false);
+  getData() {
+    // mock a dataset
+    let mockedDataset = [];
+    for (let i = 0; i < 1000; i++) {
+      const randomYear = 2000 + Math.floor(Math.random() * 10);
+      const randomMonth = Math.floor(Math.random() * 11);
+      const randomDay = Math.floor((Math.random() * 29));
+      const randomPercent = Math.round(Math.random() * 100);
 
-    this.dataset = data['items'];
-    this.odataQuery = data['query'];
-
-    // totalItems property needs to be filled for pagination to work correctly
-    this.gridOptions.pagination.totalItems = data['totalRecordCount'];
+      mockedDataset[i] = {
+        id: i,
+        title: 'Task ' + i,
+        duration: Math.round(Math.random() * 100) + '',
+        percentComplete: randomPercent,
+        percentCompleteNumber: randomPercent,
+        start: new Date(randomYear, randomMonth, randomDay),
+        finish: new Date(randomYear, (randomMonth + 1), randomDay),
+        effortDriven: (i % 5 === 0)
+      };
+    }
+    this.dataset = mockedDataset;
   }
 
-  getCustomerApiCall(query) {
-    // in your case, you will call your WebAPI function (wich needs to return a Promise)
-    // for the demo purpose, we will call a mock WebAPI function
-    return this.getCustomerDataApiMock(query);
-  }
-
-  /** This function is only here to mock a WebAPI call (since we are using a JSON file for the demo)
-   *  in your case the getCustomer() should be a WebAPI function returning a Promise
-   */
-  getCustomerDataApiMock(query) {
-    // the mock is returning a Promise, just like a WebAPI typically does
-    return new Promise((resolve, reject) => {
-      const queryParams = query.toLowerCase().split('&');
-      let top: number;
-      let skip = 0;
-      let orderBy = '';
-      let countTotalItems = 100;
-      let columnFilters = {};
-
-      for (const param of queryParams) {
-        if (param.includes('$top=')) {
-          top = +(param.substring('$top='.length));
-        }
-        if (param.includes('$skip=')) {
-          skip = +(param.substring('$skip='.length));
-        }
-        if (param.includes('$orderby=')) {
-          orderBy = param.substring('$orderby='.length);
-        }
-        if (param.includes('$filter=')) {
-          const filterBy = param.substring('$filter='.length);
-          if (filterBy.includes('substringof')) {
-            const filterMatch = filterBy.match(/substringof\('(.*?)',([a-zA-Z ]*)/);
-            const fieldName = filterMatch[2].trim();
-            columnFilters[fieldName] = {
-              type: 'substring',
-              term: filterMatch[1].trim()
-            };
-          }
-          if (filterBy.includes('eq')) {
-            const filterMatch = filterBy.match(/([a-zA-Z ]*) eq '(.*?)'/);
-            const fieldName = filterMatch[1].trim();
-            columnFilters[fieldName] = {
-              type: 'equal',
-              term: filterMatch[2].trim()
-            };
-          }
-          if (filterBy.includes('startswith')) {
-            const filterMatch = filterBy.match(/startswith\(([a-zA-Z ]*),\s?'(.*?)'/);
-            const fieldName = filterMatch[1].trim();
-            columnFilters[fieldName] = {
-              type: 'starts',
-              term: filterMatch[2].trim()
-            };
-          }
-          if (filterBy.includes('endswith')) {
-            const filterMatch = filterBy.match(/endswith\(([a-zA-Z ]*),\s?'(.*?)'/);
-            const fieldName = filterMatch[1].trim();
-            columnFilters[fieldName] = {
-              type: 'ends',
-              term: filterMatch[2].trim()
-            };
-          }
-        }
-      }
-
-      const sort = orderBy.includes('asc')
-        ? 'ASC'
-        : orderBy.includes('desc')
-          ? 'DESC'
-          : '';
-
-      let url;
-      switch (sort) {
-        case 'ASC':
-          url = `${sampleDataRoot}/customers_100_ASC.json`;
-          break;
-        case 'DESC':
-          url = `${sampleDataRoot}/customers_100_DESC.json`;
-          break;
-        default:
-          url = `${sampleDataRoot}/customers_100.json`;
-          break;
-      }
-
-      this.http.createRequest(url)
-        .asGet()
-        .send()
-        .then(response => {
-          const dataArray = response.content as any[];
-
-          // Read the result field from the JSON response.
-          const firstRow = skip;
-          let filteredData = dataArray;
-          if (columnFilters) {
-            for (const columnId in columnFilters) {
-              if (columnFilters.hasOwnProperty(columnId)) {
-                filteredData = filteredData.filter(column => {
-                  const filterType = columnFilters[columnId].type;
-                  const searchTerm = columnFilters[columnId].term;
-                  switch (filterType) {
-                    case 'equal': return column[columnId] === searchTerm;
-                    case 'ends': return column[columnId].toLowerCase().endsWith(searchTerm);
-                    case 'starts': return column[columnId].toLowerCase().startsWith(searchTerm);
-                    case 'substring': return column[columnId].toLowerCase().includes(searchTerm);
-                  }
-                });
-              }
-            }
-            countTotalItems = filteredData.length;
-          }
-          const updatedData = filteredData.slice(firstRow, firstRow + top);
-
-          setTimeout(() => {
-            resolve({ items: updatedData, totalRecordCount: countTotalItems, query });
-          }, 500);
-        });
+  gridObjChanged(grid) {
+    grid.onCellChange.subscribe((e, args) => {
+      console.log('onCellChange', args);
+      this.updatedObject = args.item;
+      this.resizer.resizeGrid(this.gridObj, this.gridOptions, 100);
     });
+    grid.onClick.subscribe((e, args) => {
+      const column = GridExtraUtils.getColumnDefinitionAndData(args);
+      console.log('onClick', args, column);
+      if (column.columnDef.id === 'edit') {
+        alert('Call a modal window');
+      }
+      if (column.columnDef.id === 'delete') {
+        if (confirm('Are you sure?')) {
+          this.dataview.deleteItem(column.dataContext.id);
+          this.dataview.refresh();
+        }
+      }
+    });
+  }
+
+  setAutoEdit(isAutoEdit) {
+    this.isAutoEdit = isAutoEdit;
+    this.gridObj.setOptions({ autoEdit: isAutoEdit });
+    return true;
   }
 }

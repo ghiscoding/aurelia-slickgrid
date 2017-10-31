@@ -1,5 +1,5 @@
 import './global-utilities';
-import { BackendService, FilterChangedArgs, OdataOption, PaginationChangedArgs, SortChangedArgs } from './../models';
+import { BackendService, FilterChangedArgs, OdataOption, PaginationChangedArgs, SortChangedArgs } from './../models/index';
 import { OdataService } from './odata.service';
 export declare class GridOdataService implements BackendService {
     serviceOptions: OdataOption;

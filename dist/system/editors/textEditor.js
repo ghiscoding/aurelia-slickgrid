@@ -1,14 +1,14 @@
-System.register(["jquery", "./../models"], function (exports_1, context_1) {
+System.register(["jquery", "./../models/index"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var $, models_1, TextEditor;
+    var $, index_1, TextEditor;
     return {
         setters: [
             function ($_1) {
                 $ = $_1;
             },
-            function (models_1_1) {
-                models_1 = models_1_1;
+            function (index_1_1) {
+                index_1 = index_1_1;
             }
         ],
         execute: function () {
@@ -25,7 +25,7 @@ System.register(["jquery", "./../models"], function (exports_1, context_1) {
                     this.$input = $("<input type=\"text\" class='editor-text' />")
                         .appendTo(this.args.container)
                         .on('keydown.nav', function (e) {
-                        if (e.keyCode === models_1.KeyCode.LEFT || e.keyCode === models_1.KeyCode.RIGHT) {
+                        if (e.keyCode === index_1.KeyCode.LEFT || e.keyCode === index_1.KeyCode.RIGHT) {
                             e.stopImmediatePropagation();
                         }
                     })

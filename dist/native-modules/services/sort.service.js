@@ -34,8 +34,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 import { castToPromise } from './utilities';
-import { FieldType } from './../models';
-import { Sorters } from './../sorters';
+import { FieldType } from './../models/index';
+import { Sorters } from './../sorters/index';
 var SortService = /** @class */ (function () {
     function SortService() {
     }

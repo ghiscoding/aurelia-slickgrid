@@ -36,9 +36,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var utilities_1 = require("./utilities");
-var filter_conditions_1 = require("../filter-conditions");
-var models_1 = require("../models");
-var filter_templates_1 = require("./../filter-templates");
+var index_1 = require("../filter-conditions/index");
+var index_2 = require("./../filter-templates/index");
+var index_3 = require("../models/index");
 var $ = require("jquery");
 var FilterService = /** @class */ (function () {
     function FilterService() {
@@ -69,7 +69,7 @@ var FilterService = /** @class */ (function () {
                             throw new Error('Something went wrong when trying to attach the "attachBackendOnFilterSubscribe(event, args)" function, it seems that "args" is not populated correctly');
                         }
                         serviceOptions = args.grid.getOptions();
-                        if (serviceOptions === undefined || serviceOptions.onBackendEventApi === undefined || serviceOptions.onBackendEventApi.process === undefined || serviceOptions.onBackendEventApi.service === undefined) {
+                        if (!serviceOptions || !serviceOptions.onBackendEventApi || !serviceOptions.onBackendEventApi.process || !serviceOptions.onBackendEventApi.service) {
                             throw new Error("onBackendEventApi requires at least a \"process\" function and a \"service\" defined");
                         }
                         backendApi = serviceOptions.onBackendEventApi;
@@ -131,7 +131,7 @@ var FilterService = /** @class */ (function () {
             var columnFilter = args.columnFilters[columnId];
             var columnIndex = args.grid.getColumnIndex(columnId);
             var columnDef = args.grid.getColumns()[columnIndex];
-            var fieldType = columnDef.type || models_1.FieldType.string;
+            var fieldType = columnDef.type || index_3.FieldType.string;
             var conditionalFilterFn = (columnDef.filter && columnDef.filter.conditionalFilter) ? columnDef.filter.conditionalFilter : null;
             var filterSearchType = (columnDef.filterSearchType) ? columnDef.filterSearchType : null;
             var cellValue = item[columnDef.field];
@@ -162,7 +162,7 @@ var FilterService = /** @class */ (function () {
             if (conditionalFilterFn && typeof conditionalFilterFn === 'function') {
                 conditionalFilterFn(conditionOptions);
             }
-            if (!filter_conditions_1.FilterConditions.executeMappedCondition(conditionOptions)) {
+            if (!index_1.FilterConditions.executeMappedCondition(conditionOptions)) {
                 return false;
             }
         }
@@ -201,12 +201,12 @@ var FilterService = /** @class */ (function () {
                 this_1.keepColumnFilters(searchTerm, listTerm, columnDef_1);
                 if (!columnDef_1.filter) {
                     searchTerm = (columnDef_1.filter && columnDef_1.filter.searchTerm) ? columnDef_1.filter.searchTerm : null;
-                    filterTemplate = filter_templates_1.FilterTemplates.input(searchTerm, columnDef_1);
+                    filterTemplate = index_2.FilterTemplates.input(searchTerm, columnDef_1);
                 }
                 else {
                     // custom Select template
-                    if (columnDef_1.filter.type === models_1.FormElementType.select) {
-                        filterTemplate = filter_templates_1.FilterTemplates.select(searchTerm, columnDef_1);
+                    if (columnDef_1.filter.type === index_3.FormElementType.select) {
+                        filterTemplate = index_2.FilterTemplates.select(searchTerm, columnDef_1);
                     }
                 }
                 // create the DOM Element
@@ -219,13 +219,13 @@ var FilterService = /** @class */ (function () {
                     elm.appendTo(header);
                 }
                 // depending on the DOM Element type, we will watch the correct event
-                var filterType = (columnDef_1.filter && columnDef_1.filter.type) ? columnDef_1.filter.type : models_1.FormElementType.input;
+                var filterType = (columnDef_1.filter && columnDef_1.filter.type) ? columnDef_1.filter.type : index_3.FormElementType.input;
                 switch (filterType) {
-                    case models_1.FormElementType.select:
-                    case models_1.FormElementType.multiSelect:
+                    case index_3.FormElementType.select:
+                    case index_3.FormElementType.multiSelect:
                         elm.change(function (e) { return _this.callbackSearchEvent(e, { columnDef: columnDef_1 }); });
                         break;
-                    case models_1.FormElementType.input:
+                    case index_3.FormElementType.input:
                     default:
                         elm.keyup(function (e) { return _this.callbackSearchEvent(e, { columnDef: columnDef_1 }); });
                         break;

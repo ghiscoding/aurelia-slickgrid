@@ -1,4 +1,4 @@
-System.register(["./global-utilities", "aurelia-framework", "./utilities", "./../models", "./odata.service"], function (exports_1, context_1) {
+System.register(["./global-utilities", "aurelia-framework", "./utilities", "./../models/index", "./odata.service"], function (exports_1, context_1) {
     "use strict";
     var __assign = (this && this.__assign) || Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -15,7 +15,7 @@ System.register(["./global-utilities", "aurelia-framework", "./utilities", "./..
         return c > 3 && r && Object.defineProperty(target, key, r), r;
     };
     var __moduleName = context_1 && context_1.id;
-    var aurelia_framework_1, utilities_1, models_1, odata_service_1, timer, GridOdataService;
+    var aurelia_framework_1, utilities_1, index_1, odata_service_1, timer, GridOdataService;
     return {
         setters: [
             function (_1) {
@@ -26,8 +26,8 @@ System.register(["./global-utilities", "aurelia-framework", "./utilities", "./..
             function (utilities_1_1) {
                 utilities_1 = utilities_1_1;
             },
-            function (models_1_1) {
-                models_1 = models_1_1;
+            function (index_1_1) {
+                index_1 = index_1_1;
             },
             function (odata_service_1_1) {
                 odata_service_1 = odata_service_1_1;
@@ -72,7 +72,7 @@ System.register(["./global-utilities", "aurelia-framework", "./utilities", "./..
                     var searchBy = '';
                     var searchByArray = [];
                     var serviceOptions = args.grid.getOptions();
-                    if (serviceOptions.onBackendEventApi === undefined || serviceOptions.onBackendEventApi.filterTypingDebounce) {
+                    if (serviceOptions.onBackendEventApi === undefined || !serviceOptions.onBackendEventApi.filterTypingDebounce) {
                         throw new Error('Something went wrong in the GridOdataService, "onBackendEventApi" is not initialized');
                     }
                     var debounceTypingDelay = 0;
@@ -146,20 +146,20 @@ System.register(["./global-utilities", "aurelia-framework", "./utilities", "./..
                                             ? "endswith(" + fieldNameTitleCase + ", '" + searchValue + "')"
                                             : "startswith(" + fieldNameTitleCase + ", '" + searchValue + "')";
                                     }
-                                    else if (fieldType === models_1.FieldType.date) {
+                                    else if (fieldType === index_1.FieldType.date) {
                                         // date field needs to be UTC and within DateTime function
                                         var dateFormatted = utilities_1.parseUtcDate(searchValue, true);
                                         if (dateFormatted) {
                                             searchBy_1 = fieldNameTitleCase + " " + _this.mapOdataOperator(operator) + " DateTime'" + dateFormatted + "'";
                                         }
                                     }
-                                    else if (fieldType === models_1.FieldType.string) {
+                                    else if (fieldType === index_1.FieldType.string) {
                                         // string field needs to be in single quotes
                                         searchBy_1 = "substringof('" + searchValue + "', " + fieldNameTitleCase + ")";
                                     }
                                     else {
                                         // any other field type (or undefined type)
-                                        searchValue = fieldType === models_1.FieldType.number ? searchValue : "'" + searchValue + "'";
+                                        searchValue = fieldType === index_1.FieldType.number ? searchValue : "'" + searchValue + "'";
                                         searchBy_1 = fieldNameTitleCase + " " + _this.mapOdataOperator(operator) + " " + searchValue;
                                     }
                                     // push to our temp array and also trim white spaces
@@ -211,7 +211,7 @@ System.register(["./global-utilities", "aurelia-framework", "./utilities", "./..
                             for (var _i = 0, sortColumns_1 = sortColumns; _i < sortColumns_1.length; _i++) {
                                 var column = sortColumns_1[_i];
                                 var fieldName = column.sortCol.field || column.sortCol.id;
-                                if (this.odataService.options.caseType === models_1.CaseType.pascalCase) {
+                                if (this.odataService.options.caseType === index_1.CaseType.pascalCase) {
                                     fieldName = String.titleCase(fieldName);
                                 }
                                 var direction = column.sortAsc ? 'asc' : 'desc';
@@ -223,7 +223,7 @@ System.register(["./global-utilities", "aurelia-framework", "./utilities", "./..
                     // transform the sortby array into a CSV string
                     var csvArray = sortByArray.join(',');
                     this.odataService.updateOptions({
-                        orderBy: (this.odataService.options.caseType === models_1.CaseType.pascalCase) ? String.titleCase(csvArray) : csvArray
+                        orderBy: (this.odataService.options.caseType === index_1.CaseType.pascalCase) ? String.titleCase(csvArray) : csvArray
                     });
                     // build the OData query which we will use in the WebAPI callback
                     return this.odataService.buildQuery();

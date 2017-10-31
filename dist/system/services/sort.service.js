@@ -1,4 +1,4 @@
-System.register(["./utilities", "./../models", "./../sorters"], function (exports_1, context_1) {
+System.register(["./utilities", "./../models/index", "./../sorters/index"], function (exports_1, context_1) {
     "use strict";
     var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
         return new (P || (P = Promise))(function (resolve, reject) {
@@ -36,17 +36,17 @@ System.register(["./utilities", "./../models", "./../sorters"], function (export
         }
     };
     var __moduleName = context_1 && context_1.id;
-    var utilities_1, models_1, sorters_1, SortService;
+    var utilities_1, index_1, index_2, SortService;
     return {
         setters: [
             function (utilities_1_1) {
                 utilities_1 = utilities_1_1;
             },
-            function (models_1_1) {
-                models_1 = models_1_1;
+            function (index_1_1) {
+                index_1 = index_1_1;
             },
-            function (sorters_1_1) {
-                sorters_1 = sorters_1_1;
+            function (index_2_1) {
+                index_2 = index_2_1;
             }
         ],
         execute: function () {
@@ -113,23 +113,23 @@ System.register(["./utilities", "./../models", "./../sorters"], function (export
                                 var value2 = dataRow2[sortField];
                                 var result = 0;
                                 switch (fieldType) {
-                                    case models_1.FieldType.number:
-                                        result = sorters_1.Sorters.numeric(value1, value2, sortDirection);
+                                    case index_1.FieldType.number:
+                                        result = index_2.Sorters.numeric(value1, value2, sortDirection);
                                         break;
-                                    case models_1.FieldType.date:
-                                        result = sorters_1.Sorters.date(value1, value2, sortDirection);
+                                    case index_1.FieldType.date:
+                                        result = index_2.Sorters.date(value1, value2, sortDirection);
                                         break;
-                                    case models_1.FieldType.dateIso:
-                                        result = sorters_1.Sorters.dateIso(value1, value2, sortDirection);
+                                    case index_1.FieldType.dateIso:
+                                        result = index_2.Sorters.dateIso(value1, value2, sortDirection);
                                         break;
-                                    case models_1.FieldType.dateUs:
-                                        result = sorters_1.Sorters.dateUs(value1, value2, sortDirection);
+                                    case index_1.FieldType.dateUs:
+                                        result = index_2.Sorters.dateUs(value1, value2, sortDirection);
                                         break;
-                                    case models_1.FieldType.dateUsShort:
-                                        result = sorters_1.Sorters.dateUsShort(value1, value2, sortDirection);
+                                    case index_1.FieldType.dateUsShort:
+                                        result = index_2.Sorters.dateUsShort(value1, value2, sortDirection);
                                         break;
                                     default:
-                                        result = sorters_1.Sorters.string(value1, value2, sortDirection);
+                                        result = index_2.Sorters.string(value1, value2, sortDirection);
                                         break;
                                 }
                                 if (result !== 0) {

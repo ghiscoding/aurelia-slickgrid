@@ -1,7 +1,7 @@
 import './global-utilities';
 import { inject } from 'aurelia-framework';
 import { parseUtcDate } from './utilities';
-import { BackendService, BackendServiceOption, CaseType, FilterChangedArgs, FieldType, OdataOption, PaginationChangedArgs, SortChangedArgs } from './../models';
+import { BackendService, BackendServiceOption, CaseType, FilterChangedArgs, FieldType, OdataOption, PaginationChangedArgs, SortChangedArgs } from './../models/index';
 import { OdataService } from './odata.service';
 import * as moment from 'moment';
 let timer: any;
@@ -53,10 +53,9 @@ export class GridOdataService implements BackendService {
     const searchBy: string = '';
     const searchByArray: string[] = [];
     const serviceOptions: BackendServiceOption = args.grid.getOptions();
-    if (serviceOptions.onBackendEventApi === undefined || serviceOptions.onBackendEventApi.filterTypingDebounce) {
+    if (serviceOptions.onBackendEventApi === undefined || !serviceOptions.onBackendEventApi.filterTypingDebounce) {
       throw new Error('Something went wrong in the GridOdataService, "onBackendEventApi" is not initialized');
     }
-
     let debounceTypingDelay = 0;
     if (event.type === 'keyup' || event.type === 'keydown') {
       debounceTypingDelay = serviceOptions.onBackendEventApi.filterTypingDebounce || 700;
@@ -110,7 +109,7 @@ export class GridOdataService implements BackendService {
 
             // when having more than 1 search term (then check if we have a "IN" or "NOT IN" filter search)
             if (searchTerms && searchTerms.length > 0) {
-              let tmpSearchTerms = [];
+              const tmpSearchTerms = [];
 
               if (operator === 'IN') {
                 // example:: (Stage eq "Expired" or Stage eq "Renewal")

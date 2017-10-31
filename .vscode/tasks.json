@@ -26,7 +26,8 @@
       "type": "shell",
       "args": [
         "start:client-cli"
-      ]
+      ],
+      "problemMatcher": []
     },
     {
       "taskName": "Start Client TypeScript WebPack",

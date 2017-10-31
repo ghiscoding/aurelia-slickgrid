@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 require("./global-utilities");
-var models_1 = require("./../models");
+var index_1 = require("./../models/index");
 var OdataService = /** @class */ (function () {
     function OdataService() {
         this._odataOptions = {
@@ -161,7 +161,7 @@ var OdataService = /** @class */ (function () {
             if (property === 'orderBy' || property === 'sortBy') {
                 var sortBy = options[property];
                 // make sure first char of each orderBy field is capitalize
-                if (this._odataOptions.caseType === models_1.CaseType.pascalCase) {
+                if (this._odataOptions.caseType === index_1.CaseType.pascalCase) {
                     if (Array.isArray(sortBy)) {
                         sortBy.forEach(function (field, index, inputArray) {
                             inputArray[index] = String.titleCase(field);

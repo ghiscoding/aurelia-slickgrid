@@ -29,6 +29,7 @@ export { OnCellClickArgs } from './onCellClickArgs.interface';
 export { OperatorType } from './operatorType';
 export { Pagination } from './pagination.interface';
 export { PaginationChangedArgs } from './paginationChangedArgs.interface';
+export { SlickEvent } from './slickEvent.interface';
 export { SortChangedArgs } from './sortChangedArgs.interface';
 export { SortDirection } from './sortDirection';
 export { Sorter } from './sorter.interface';

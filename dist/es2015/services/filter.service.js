@@ -7,9 +7,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { castToPromise } from './utilities';
-import { FilterConditions } from '../filter-conditions';
-import { FieldType, FormElementType } from '../models';
-import { FilterTemplates } from './../filter-templates';
+import { FilterConditions } from '../filter-conditions/index';
+import { FilterTemplates } from './../filter-templates/index';
+import { FieldType, FormElementType } from '../models/index';
 import * as $ from 'jquery';
 export class FilterService {
     init(grid, gridOptions, columnDefinitions, columnFilters) {
@@ -34,7 +34,7 @@ export class FilterService {
                 throw new Error('Something went wrong when trying to attach the "attachBackendOnFilterSubscribe(event, args)" function, it seems that "args" is not populated correctly');
             }
             const serviceOptions = args.grid.getOptions();
-            if (serviceOptions === undefined || serviceOptions.onBackendEventApi === undefined || serviceOptions.onBackendEventApi.process === undefined || serviceOptions.onBackendEventApi.service === undefined) {
+            if (!serviceOptions || !serviceOptions.onBackendEventApi || !serviceOptions.onBackendEventApi.process || !serviceOptions.onBackendEventApi.service) {
                 throw new Error(`onBackendEventApi requires at least a "process" function and a "service" defined`);
             }
             const backendApi = serviceOptions.onBackendEventApi;

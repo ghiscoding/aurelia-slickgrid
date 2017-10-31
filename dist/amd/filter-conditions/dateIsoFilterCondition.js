@@ -1,7 +1,7 @@
-define(["require", "exports", "../models", "./filterUtilities", "./../services/utilities", "moment"], function (require, exports, models_1, filterUtilities_1, utilities_1, moment) {
+define(["require", "exports", "../models/index", "./filterUtilities", "./../services/utilities", "moment"], function (require, exports, index_1, filterUtilities_1, utilities_1, moment) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var FORMAT = utilities_1.mapMomentDateFormatWithFieldType(models_1.FieldType.dateIso);
+    var FORMAT = utilities_1.mapMomentDateFormatWithFieldType(index_1.FieldType.dateIso);
     exports.dateIsoFilterCondition = function (options) {
         if (!moment(options.cellValue, FORMAT, true).isValid() || !moment(options.searchTerm, FORMAT, true).isValid()) {
             return true;

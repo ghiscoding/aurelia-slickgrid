@@ -15,7 +15,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import './global-utilities';
 import { inject } from 'aurelia-framework';
 import { parseUtcDate } from './utilities';
-import { CaseType, FieldType } from './../models';
+import { CaseType, FieldType } from './../models/index';
 import { OdataService } from './odata.service';
 var timer;
 var GridOdataService = /** @class */ (function () {
@@ -56,7 +56,7 @@ var GridOdataService = /** @class */ (function () {
         var searchBy = '';
         var searchByArray = [];
         var serviceOptions = args.grid.getOptions();
-        if (serviceOptions.onBackendEventApi === undefined || serviceOptions.onBackendEventApi.filterTypingDebounce) {
+        if (serviceOptions.onBackendEventApi === undefined || !serviceOptions.onBackendEventApi.filterTypingDebounce) {
             throw new Error('Something went wrong in the GridOdataService, "onBackendEventApi" is not initialized');
         }
         var debounceTypingDelay = 0;

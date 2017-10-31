@@ -1,4 +1,4 @@
-import { FieldType } from './../models';
+import { FieldType } from './../models/index';
 import { mapMomentDateFormatWithFieldType } from './../services/utilities';
 import * as moment from 'moment';
 var FORMAT = mapMomentDateFormatWithFieldType(FieldType.dateIso);

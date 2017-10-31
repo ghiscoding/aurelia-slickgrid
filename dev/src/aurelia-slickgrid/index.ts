@@ -20,12 +20,13 @@ import { Formatters } from './formatters/index';
 import { Sorters } from './sorters/index';
 
 // services and utilities
-import { GridExtraUtils } from './services/gridExtraUtils';
 import { FilterService } from './services/filter.service';
+import { GraphqlService } from './services/graphql.service';
+import { GridExtraUtils } from './services/gridExtraUtils';
 import { GridEventService } from './services/gridEvent.service';
+import { GridOdataService } from './services/grid-odata.service';
 import { ResizerService } from './services/resizer.service';
 import { SortService } from './services/sort.service';
-import { GridOdataService } from './services/grid-odata.service';
 
 export function configure(aurelia: any, callback: any) {
   aurelia.globalResources(PLATFORM.moduleName('./aurelia-slickgrid'));
@@ -55,12 +56,14 @@ export {
   Formatters,
   Sorters,
 
-  GridExtraUtils,
+  // services
   FilterService,
+  GraphqlService,
+  GridExtraUtils,
   GridEventService,
+  GridOdataService,
   ResizerService,
   SortService,
-  GridOdataService,
 
   SlickgridConfig
 };

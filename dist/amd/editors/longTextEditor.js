@@ -1,4 +1,4 @@
-define(["require", "exports", "jquery", "./../models"], function (require, exports, $, models_1) {
+define(["require", "exports", "jquery", "./../models/index"], function (require, exports, $, index_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /*
@@ -24,18 +24,18 @@ define(["require", "exports", "jquery", "./../models"], function (require, expor
             this.$input.focus().select();
         };
         LongTextEditor.prototype.handleKeyDown = function (e) {
-            if (e.which === models_1.KeyCode.ENTER && e.ctrlKey) {
+            if (e.which === index_1.KeyCode.ENTER && e.ctrlKey) {
                 this.save();
             }
-            else if (e.which === models_1.KeyCode.ESCAPE) {
+            else if (e.which === index_1.KeyCode.ESCAPE) {
                 e.preventDefault();
                 this.cancel();
             }
-            else if (e.which === models_1.KeyCode.TAB && e.shiftKey) {
+            else if (e.which === index_1.KeyCode.TAB && e.shiftKey) {
                 e.preventDefault();
                 this.args.grid.navigatePrev();
             }
-            else if (e.which === models_1.KeyCode.TAB) {
+            else if (e.which === index_1.KeyCode.TAB) {
                 e.preventDefault();
                 this.args.grid.navigateNext();
             }

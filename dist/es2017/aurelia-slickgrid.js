@@ -26,7 +26,7 @@ import 'slickgrid/plugins/slick.rowselectionmodel';
 import { bindable, bindingMode, inject } from 'aurelia-framework';
 import { castToPromise } from './services/utilities';
 import { GlobalGridOptions } from './global-grid-options';
-import { FilterService, GridEventService, SortService, ResizerService } from './services';
+import { FilterService, GridEventService, SortService, ResizerService } from './services/index';
 let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
     constructor(elm, resizer, gridEventService, filterService, sortService) {
         this.elm = elm;
@@ -36,7 +36,6 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
         this.sortService = sortService;
         this._columnFilters = {};
         this.showPagination = false;
-        this.onFilter = new Slick.Event();
         this.gridHeight = 100;
         this.gridWidth = 600;
         this.elm = elm;
@@ -49,17 +48,17 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
         // make sure the dataset is initialized (if not it will throw an error that it cannot getLength of null)
         this._dataset = this._dataset || [];
         this._gridOptions = this.mergeGridOptions();
-        this._dataView = new Slick.Data.DataView();
-        this.grid = new Slick.Grid(`#${this.gridId}`, this._dataView, this.columnDefinitions, this._gridOptions);
+        this.dataview = new Slick.Data.DataView();
+        this.grid = new Slick.Grid(`#${this.gridId}`, this.dataview, this.columnDefinitions, this._gridOptions);
         this.grid.setSelectionModel(new Slick.RowSelectionModel());
         if (this._gridOptions.enableColumnPicker) {
             const columnpicker = new Slick.Controls.ColumnPicker(this.columnDefinitions, this.grid, this._gridOptions);
         }
         this.grid.init();
-        this._dataView.beginUpdate();
-        this.attachDifferentHooks(this.grid, this._gridOptions, this._dataView);
-        this._dataView.setItems(this._dataset);
-        this._dataView.endUpdate();
+        this.dataview.beginUpdate();
+        this.attachDifferentHooks(this.grid, this._gridOptions, this.dataview);
+        this.dataview.setItems(this._dataset);
+        this.dataview.endUpdate();
         // attach resize ONLY after the dataView is ready
         this.attachResizeHook(this.grid, this._gridOptions);
     }
@@ -92,12 +91,12 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
     attachDifferentHooks(grid, options, dataView) {
         // attach external sorting (backend) when available or default onSort (dataView)
         if (options.enableSorting) {
-            (options.onBackendEventApi) ? this.sortService.attachBackendOnSort(grid, options) : this.sortService.attachLocalOnSort(grid, options, this._dataView);
+            (options.onBackendEventApi) ? this.sortService.attachBackendOnSort(grid, options) : this.sortService.attachLocalOnSort(grid, options, this.dataview);
         }
         // attach external filter (backend) when available or default onFilter (dataView)
         if (options.enableFiltering) {
             this.filterService.init(grid, options, this.columnDefinitions, this._columnFilters);
-            (options.onBackendEventApi) ? this.filterService.attachBackendOnFilter(grid, options) : this.filterService.attachLocalOnFilter(this._dataView);
+            (options.onBackendEventApi) ? this.filterService.attachBackendOnFilter(grid, options) : this.filterService.attachLocalOnFilter(this.dataview);
         }
         if (options.onBackendEventApi && options.onBackendEventApi.onInit) {
             const backendApi = options.onBackendEventApi;
@@ -117,7 +116,7 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
             });
         }
         // on cell click, mainly used with the columnDef.action callback
-        this.gridEventService.attachOnClick(grid, this._gridOptions, dataView);
+        // this.gridEventService.attachOnClick(grid, this._gridOptions, dataView);
         // if enable, change background color on mouse over
         if (options.enableMouseHoverHighlightRow) {
             this.gridEventService.attachOnMouseHover(grid);
@@ -144,7 +143,7 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
             }
         }
         else {
-            this.resizer.resizeGrid(grid, options, { height: this.gridHeight, width: this.gridWidth });
+            this.resizer.resizeGrid(grid, options, 0, { height: this.gridHeight, width: this.gridWidth });
         }
     }
     mergeGridOptions() {
@@ -169,7 +168,7 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
     }
     refreshGridData(dataset) {
         if (dataset && this.grid) {
-            this._dataView.setItems(dataset);
+            this.dataview.setItems(dataset);
             // this.grid.setData(dataset);
             this.grid.invalidate();
             this.grid.render();
@@ -179,10 +178,8 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
             }
             if (this._gridOptions.enableAutoResize) {
                 // resize the grid inside a slight timeout, in case other DOM element changed prior to the resize (like a filter/pagination changed)
-                setTimeout(() => {
-                    this.resizer.resizeGrid(this.grid, this._gridOptions);
-                    // this.grid.autosizeColumns();
-                });
+                this.resizer.resizeGrid(this.grid, this._gridOptions, 10);
+                // this.grid.autosizeColumns();
             }
         }
     }
@@ -199,6 +196,12 @@ __decorate([
 __decorate([
     bindable({ defaultBindingMode: bindingMode.twoWay })
 ], AureliaSlickgridCustomElement.prototype, "gridPaginationOptions", void 0);
+__decorate([
+    bindable({ defaultBindingMode: bindingMode.twoWay })
+], AureliaSlickgridCustomElement.prototype, "dataview", void 0);
+__decorate([
+    bindable({ defaultBindingMode: bindingMode.twoWay })
+], AureliaSlickgridCustomElement.prototype, "grid", void 0);
 __decorate([
     bindable()
 ], AureliaSlickgridCustomElement.prototype, "gridId", void 0);

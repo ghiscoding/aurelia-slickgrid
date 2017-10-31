@@ -66,6 +66,11 @@
             "main": "aurelia-templating-resources"
           },
           {
+            "name": "graphql-query-builder",
+            "path": "../node_modules/graphql-query-builder",
+            "main": "index"
+          },
+          {
             "name": "aurelia-templating-router",
             "path": "../node_modules/aurelia-templating-router/dist/amd",
             "main": "aurelia-templating-router"
@@ -109,6 +114,19 @@
               "jquery",
               "jquery-event"
             ]
+          },
+          {
+            "name": "flatpickr",
+            "main": "flatpickr",
+            "path": "../node_modules/flatpickr/dist",
+            "resources": [
+              "flatpickr.min.css"
+            ]
+          },
+          {
+            "name": "rxjs",
+            "path": "../node_modules/rxjs",
+            "main": "Rx"
           }
         ]
       }

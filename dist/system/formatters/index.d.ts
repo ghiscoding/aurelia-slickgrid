@@ -1,4 +1,4 @@
-import { Column } from './../models';
+import { Column } from './../models/index';
 export declare const Formatters: {
     checkbox: (row: number, cell: number, value: any, columnDef: Column, dataContext: any) => string;
     checkmark: (row: number, cell: number, value: any, columnDef: Column, dataContext: any) => string;
@@ -8,7 +8,8 @@ export declare const Formatters: {
     dateUs: (row: number, cell: number, value: any, columnDef: Column, dataContext: any) => string;
     dateTimeUs: (row: number, cell: number, value: any, columnDef: Column, dataContext: any) => string;
     dateTimeUsAmPm: (row: number, cell: number, value: any, columnDef: Column, dataContext: any) => string;
-    editPencil: (row: number, cell: number, value: any, columnDef: Column, dataContext: any) => string;
+    deleteIcon: (row: number, cell: number, value: any, columnDef: Column, dataContext: any) => string;
+    editIcon: (row: number, cell: number, value: any, columnDef: Column, dataContext: any) => string;
     percentComplete: (row: number, cell: number, value: any, columnDef: Column, dataContext: any) => string;
     percentCompleteBar: (row: number, cell: number, value: any, columnDef: Column, dataContext: any) => string;
     progressBar: (row: number, cell: number, value: any, columnDef: Column, dataContext: any) => string;

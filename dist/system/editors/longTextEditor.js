@@ -1,14 +1,14 @@
-System.register(["jquery", "./../models"], function (exports_1, context_1) {
+System.register(["jquery", "./../models/index"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var $, models_1, LongTextEditor;
+    var $, index_1, LongTextEditor;
     return {
         setters: [
             function ($_1) {
                 $ = $_1;
             },
-            function (models_1_1) {
-                models_1 = models_1_1;
+            function (index_1_1) {
+                index_1 = index_1_1;
             }
         ],
         execute: function () {
@@ -35,18 +35,18 @@ System.register(["jquery", "./../models"], function (exports_1, context_1) {
                     this.$input.focus().select();
                 };
                 LongTextEditor.prototype.handleKeyDown = function (e) {
-                    if (e.which === models_1.KeyCode.ENTER && e.ctrlKey) {
+                    if (e.which === index_1.KeyCode.ENTER && e.ctrlKey) {
                         this.save();
                     }
-                    else if (e.which === models_1.KeyCode.ESCAPE) {
+                    else if (e.which === index_1.KeyCode.ESCAPE) {
                         e.preventDefault();
                         this.cancel();
                     }
-                    else if (e.which === models_1.KeyCode.TAB && e.shiftKey) {
+                    else if (e.which === index_1.KeyCode.TAB && e.shiftKey) {
                         e.preventDefault();
                         this.args.grid.navigatePrev();
                     }
-                    else if (e.which === models_1.KeyCode.TAB) {
+                    else if (e.which === index_1.KeyCode.TAB) {
                         e.preventDefault();
                         this.args.grid.navigateNext();
                     }

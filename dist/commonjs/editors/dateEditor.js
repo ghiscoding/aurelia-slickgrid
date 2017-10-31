@@ -2,9 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var utilities_1 = require("./../services/utilities");
 var flatpickr_1 = require("flatpickr");
-require("flatpickr/dist/flatpickr.min.css");
 var $ = require("jquery");
-var models_1 = require("./../models");
+var index_1 = require("./../models/index");
 /*
  * An example of a date picker editor using Flatpickr
  * https://chmln.github.io/flatpickr
@@ -15,10 +14,14 @@ var DateEditor = /** @class */ (function () {
         this.init();
     }
     DateEditor.prototype.init = function () {
+        var _this = this;
         var pickerOptions = {
             defaultDate: this.args.item[this.args.column.field] || null,
             altInput: true,
-            altFormat: utilities_1.mapFlatpickrDateFormatWithFieldType(this.args.type || models_1.FieldType.dateIso)
+            altFormat: utilities_1.mapFlatpickrDateFormatWithFieldType(this.args.type || index_1.FieldType.dateIso),
+            onChange: function (selectedDates, dateStr, instance) {
+                _this.save();
+            },
         };
         this.$input = $("<input type=\"text\" value=\"" + this.defaultDate + "\" class=\"editor-text\" />");
         this.$input.appendTo(this.args.container);
@@ -27,7 +30,7 @@ var DateEditor = /** @class */ (function () {
         this.flatInstance.open();
     };
     DateEditor.prototype.destroy = function () {
-        this.flatInstance.destroy();
+        //this.flatInstance.destroy();
         this.$input.remove();
     };
     DateEditor.prototype.show = function () {
@@ -38,6 +41,9 @@ var DateEditor = /** @class */ (function () {
     };
     DateEditor.prototype.focus = function () {
         this.$input.focus();
+    };
+    DateEditor.prototype.save = function () {
+        this.args.commitChanges();
     };
     DateEditor.prototype.loadValue = function (item) {
         this.defaultDate = item[this.args.column.field];

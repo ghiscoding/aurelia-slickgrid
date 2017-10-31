@@ -2,7 +2,7 @@ import { inject } from 'aurelia-framework';
 import { Column, FieldType, GridOption } from 'aurelia-slickgrid';
 
 export class List {
-  title = 'Basic Grid';
+  title = 'Example 1: Basic Grid';
   subTitle = 'basic grid with fixed sizes (800 x 400) set by `grid-height` &amp; `grid-width`';
 
   gridOptions: GridOption;

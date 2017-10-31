@@ -1,5 +1,5 @@
 import * as $ from 'jquery';
-import { KeyCode } from './../models';
+import { KeyCode } from './../models/index';
 /*
  * An example of a 'detached' editor.
  * The UI is added onto document BODY and .position(), .show() and .hide() are implemented.

@@ -1,4 +1,4 @@
-define(["require", "exports", "./checkboxFormatter", "./checkmarkFormatter", "./dateIsoFormatter", "./dateTimeIsoAmPmFormatter", "./dateTimeUsAmPmFormatter", "./dateTimeUsFormatter", "./dateUsFormatter", "./editPencilFormatter", "./percentCompleteFormatter", "./percentCompleteBarFormatter", "./progressBarFormatter", "./yesNoFormatter"], function (require, exports, checkboxFormatter_1, checkmarkFormatter_1, dateIsoFormatter_1, dateTimeIsoAmPmFormatter_1, dateTimeUsAmPmFormatter_1, dateTimeUsFormatter_1, dateUsFormatter_1, editPencilFormatter_1, percentCompleteFormatter_1, percentCompleteBarFormatter_1, progressBarFormatter_1, yesNoFormatter_1) {
+define(["require", "exports", "./checkboxFormatter", "./checkmarkFormatter", "./dateIsoFormatter", "./dateTimeIsoAmPmFormatter", "./dateTimeUsAmPmFormatter", "./dateTimeUsFormatter", "./dateUsFormatter", "./deleteIconFormatter", "./editIconFormatter", "./percentCompleteFormatter", "./percentCompleteBarFormatter", "./progressBarFormatter", "./yesNoFormatter"], function (require, exports, checkboxFormatter_1, checkmarkFormatter_1, dateIsoFormatter_1, dateTimeIsoAmPmFormatter_1, dateTimeUsAmPmFormatter_1, dateTimeUsFormatter_1, dateUsFormatter_1, deleteIconFormatter_1, editIconFormatter_1, percentCompleteFormatter_1, percentCompleteBarFormatter_1, progressBarFormatter_1, yesNoFormatter_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /*
@@ -19,7 +19,8 @@ define(["require", "exports", "./checkboxFormatter", "./checkmarkFormatter", "./
         dateUs: dateUsFormatter_1.dateUsFormatter,
         dateTimeUs: dateTimeUsFormatter_1.dateTimeUsFormatter,
         dateTimeUsAmPm: dateTimeUsAmPmFormatter_1.dateTimeUsAmPmFormatter,
-        editPencil: editPencilFormatter_1.editPencilFormatter,
+        deleteIcon: deleteIconFormatter_1.deleteIconFormatter,
+        editIcon: editIconFormatter_1.editIconFormatter,
         percentComplete: percentCompleteFormatter_1.percentCompleteFormatter,
         percentCompleteBar: percentCompleteBarFormatter_1.percentCompleteBarFormatter,
         progressBar: progressBarFormatter_1.progressBarFormatter,

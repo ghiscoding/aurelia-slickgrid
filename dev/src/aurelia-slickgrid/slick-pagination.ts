@@ -1,6 +1,6 @@
 import { castToPromise } from './services/utilities';
 import { bindable } from 'aurelia-framework';
-import { GridOption } from './models';
+import { GridOption } from './models/index';
 
 export class SlickPaginationCustomElement {
   @bindable() grid: any;

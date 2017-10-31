@@ -22,8 +22,8 @@ import 'slickgrid/plugins/slick.rowselectionmodel';
 import { bindable, bindingMode, inject } from 'aurelia-framework';
 import { castToPromise } from './services/utilities';
 import { GlobalGridOptions } from './global-grid-options';
-import { Column, ColumnFilters, FormElementType, GridOption } from './models';
-import { FilterService, GridEventService, SortService, ResizerService } from './services';
+import { Column, ColumnFilters, FormElementType, GridOption } from './models/index';
+import { FilterService, GridEventService, SortService, ResizerService } from './services/index';
 import * as $ from 'jquery';
 
 // using external js modules in Aurelia
@@ -185,7 +185,7 @@ export class AureliaSlickgridCustomElement {
         grid.autosizeColumns();
       }
     } else {
-      this.resizer.resizeGrid(grid, options, { height: this.gridHeight, width: this.gridWidth });
+      this.resizer.resizeGrid(grid, options, 0, { height: this.gridHeight, width: this.gridWidth });
     }
   }
 
@@ -226,10 +226,8 @@ export class AureliaSlickgridCustomElement {
       }
       if (this._gridOptions.enableAutoResize) {
         // resize the grid inside a slight timeout, in case other DOM element changed prior to the resize (like a filter/pagination changed)
-        setTimeout(() => {
-          this.resizer.resizeGrid(this.grid, this._gridOptions);
-          // this.grid.autosizeColumns();
-        });
+        this.resizer.resizeGrid(this.grid, this._gridOptions, 10);
+        // this.grid.autosizeColumns();
       }
     }
   }

@@ -1,7 +1,7 @@
-System.register(["./../services/utilities", "flatpickr", "flatpickr/dist/flatpickr.min.css", "jquery", "./../models"], function (exports_1, context_1) {
+System.register(["./../services/utilities", "flatpickr", "jquery", "./../models/index"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var utilities_1, flatpickr_1, $, models_1, DateEditor;
+    var utilities_1, flatpickr_1, $, index_1, DateEditor;
     return {
         setters: [
             function (utilities_1_1) {
@@ -10,13 +10,11 @@ System.register(["./../services/utilities", "flatpickr", "flatpickr/dist/flatpic
             function (flatpickr_1_1) {
                 flatpickr_1 = flatpickr_1_1;
             },
-            function (_1) {
-            },
             function ($_1) {
                 $ = $_1;
             },
-            function (models_1_1) {
-                models_1 = models_1_1;
+            function (index_1_1) {
+                index_1 = index_1_1;
             }
         ],
         execute: function () {
@@ -30,10 +28,14 @@ System.register(["./../services/utilities", "flatpickr", "flatpickr/dist/flatpic
                     this.init();
                 }
                 DateEditor.prototype.init = function () {
+                    var _this = this;
                     var pickerOptions = {
                         defaultDate: this.args.item[this.args.column.field] || null,
                         altInput: true,
-                        altFormat: utilities_1.mapFlatpickrDateFormatWithFieldType(this.args.type || models_1.FieldType.dateIso)
+                        altFormat: utilities_1.mapFlatpickrDateFormatWithFieldType(this.args.type || index_1.FieldType.dateIso),
+                        onChange: function (selectedDates, dateStr, instance) {
+                            _this.save();
+                        },
                     };
                     this.$input = $("<input type=\"text\" value=\"" + this.defaultDate + "\" class=\"editor-text\" />");
                     this.$input.appendTo(this.args.container);
@@ -42,7 +44,7 @@ System.register(["./../services/utilities", "flatpickr", "flatpickr/dist/flatpic
                     this.flatInstance.open();
                 };
                 DateEditor.prototype.destroy = function () {
-                    this.flatInstance.destroy();
+                    //this.flatInstance.destroy();
                     this.$input.remove();
                 };
                 DateEditor.prototype.show = function () {
@@ -53,6 +55,9 @@ System.register(["./../services/utilities", "flatpickr", "flatpickr/dist/flatpic
                 };
                 DateEditor.prototype.focus = function () {
                     this.$input.focus();
+                };
+                DateEditor.prototype.save = function () {
+                    this.args.commitChanges();
                 };
                 DateEditor.prototype.loadValue = function (item) {
                     this.defaultDate = item[this.args.column.field];

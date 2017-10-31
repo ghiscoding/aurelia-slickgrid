@@ -33,7 +33,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "./utilities", "./../models", "./../sorters"], function (require, exports, utilities_1, models_1, sorters_1) {
+define(["require", "exports", "./utilities", "./../models/index", "./../sorters/index"], function (require, exports, utilities_1, index_1, index_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var SortService = /** @class */ (function () {
@@ -99,23 +99,23 @@ define(["require", "exports", "./utilities", "./../models", "./../sorters"], fun
                         var value2 = dataRow2[sortField];
                         var result = 0;
                         switch (fieldType) {
-                            case models_1.FieldType.number:
-                                result = sorters_1.Sorters.numeric(value1, value2, sortDirection);
+                            case index_1.FieldType.number:
+                                result = index_2.Sorters.numeric(value1, value2, sortDirection);
                                 break;
-                            case models_1.FieldType.date:
-                                result = sorters_1.Sorters.date(value1, value2, sortDirection);
+                            case index_1.FieldType.date:
+                                result = index_2.Sorters.date(value1, value2, sortDirection);
                                 break;
-                            case models_1.FieldType.dateIso:
-                                result = sorters_1.Sorters.dateIso(value1, value2, sortDirection);
+                            case index_1.FieldType.dateIso:
+                                result = index_2.Sorters.dateIso(value1, value2, sortDirection);
                                 break;
-                            case models_1.FieldType.dateUs:
-                                result = sorters_1.Sorters.dateUs(value1, value2, sortDirection);
+                            case index_1.FieldType.dateUs:
+                                result = index_2.Sorters.dateUs(value1, value2, sortDirection);
                                 break;
-                            case models_1.FieldType.dateUsShort:
-                                result = sorters_1.Sorters.dateUsShort(value1, value2, sortDirection);
+                            case index_1.FieldType.dateUsShort:
+                                result = index_2.Sorters.dateUsShort(value1, value2, sortDirection);
                                 break;
                             default:
-                                result = sorters_1.Sorters.string(value1, value2, sortDirection);
+                                result = index_2.Sorters.string(value1, value2, sortDirection);
                                 break;
                         }
                         if (result !== 0) {

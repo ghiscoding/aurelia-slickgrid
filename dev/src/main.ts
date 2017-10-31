@@ -3,6 +3,7 @@
 // we want font-awesome to load as soon as possible to show the fa-spinner
 import 'bootstrap/dist/css/bootstrap.css';
 import 'font-awesome/css/font-awesome.css';
+import 'flatpickr/dist/flatpickr.min.css';
 import './styles.css';
 import './slickgrid.scss';
 import { PLATFORM } from 'aurelia-pal';

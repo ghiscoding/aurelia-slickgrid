@@ -7,7 +7,7 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
     return t;
 };
 import { mapOperatorType } from './utilities';
-import { SortDirection } from './../models';
+import { SortDirection } from './../models/index';
 import QueryBuilder from 'graphql-query-builder';
 var timer;
 var GraphqlService = /** @class */ (function () {
@@ -87,7 +87,7 @@ var GraphqlService = /** @class */ (function () {
         var _this = this;
         var searchByArray = [];
         var serviceOptions = args.grid.getOptions();
-        if (serviceOptions.onBackendEventApi === undefined || serviceOptions.onBackendEventApi.filterTypingDebounce) {
+        if (serviceOptions.onBackendEventApi === undefined || !serviceOptions.onBackendEventApi.filterTypingDebounce) {
             throw new Error('Something went wrong in the GraphqlService, "onBackendEventApi" is not initialized');
         }
         var debounceTypingDelay = 0;

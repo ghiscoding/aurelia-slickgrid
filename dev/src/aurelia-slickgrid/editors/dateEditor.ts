@@ -1,8 +1,7 @@
 import { mapFlatpickrDateFormatWithFieldType } from './../services/utilities';
 import flatpickr from 'flatpickr';
-import 'flatpickr/dist/flatpickr.min.css';
 import * as $ from 'jquery';
-import { Editor, FieldType, KeyCode } from './../models';
+import { Editor, FieldType, KeyCode } from './../models/index';
 
 /*
  * An example of a date picker editor using Flatpickr
@@ -22,7 +21,7 @@ export class DateEditor implements Editor {
       defaultDate: this.args.item[this.args.column.field] || null,
       altInput: true,
       altFormat: mapFlatpickrDateFormatWithFieldType(this.args.type || FieldType.dateIso),
-      onChange: (selectedDates, dateStr, instance) => {
+      onChange: (selectedDates: any[] | any, dateStr: string, instance: any) => {
         this.save();
       },
     };
@@ -52,7 +51,7 @@ export class DateEditor implements Editor {
 
   save() {
     this.args.commitChanges();
-  };
+  }
 
   loadValue(item: any) {
     this.defaultDate = item[this.args.column.field];

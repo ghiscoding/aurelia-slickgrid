@@ -1,24 +1,17 @@
-import { inject } from 'aurelia-framework';
-import { Router } from 'aurelia-router';
-import $ from 'bootstrap';
-import data from './sample-data/example-data';
 import { FieldType, Formatters } from 'aurelia-slickgrid';
 
 // create my custom Formatter with the Formatter type
 const myCustomCheckboxFormatter = (row, cell, value, columnDef, dataContext) =>
   value ? `<i class="fa fa-fire" aria-hidden="true"></i>` : '<i class="fa fa-snowflake-o" aria-hidden="true"></i>';
 
-@inject(Router)
 export class List {
   title = 'Example 2: Formatters';
   subTitle = 'grid auto-resize, multi-column sort and custom/SlickGrid Formatters';
-  columnDefinitions = [];
-  gridOptions = {};
+  gridOptions;
+  columnDefinitions;
   dataset = [];
 
-  constructor(router) {
-    this.router = router;
-
+  constructor() {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
   }
@@ -35,7 +28,7 @@ export class List {
       { id: 'duration', name: 'Duration (days)', field: 'duration', sortable: true, type: FieldType.number },
       { id: 'complete', name: '% Complete', field: 'percentComplete', formatter: Formatters.percentCompleteBar, type: FieldType.number, sortable: true },
       { id: 'percent2', name: '% Complete', field: 'percentComplete2', formatter: Formatters.progressBar, type: FieldType.number, sortable: true },
-      { id: 'start', name: 'Start', field: 'start', formatter: Formatters.dateIso, sortable: true, type: FieldType.dateIso },
+      { id: 'start', name: 'Start', field: 'start', formatter: Formatters.dateIso, sortable: true, type: FieldType.date },
       { id: 'finish', name: 'Finish', field: 'finish', formatter: Formatters.dateIso, sortable: true, type: FieldType.date },
       { id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', formatter: myCustomCheckboxFormatter, type: FieldType.number, sortable: true }
     ];
