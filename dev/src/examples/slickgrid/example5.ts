@@ -1,39 +1,48 @@
 import { autoinject } from 'aurelia-framework';
 import data from './sample-data/example-data';
 import { HttpClient } from 'aurelia-http-client';
-import { CaseType, Column, GridOption, FieldType, Formatters, FormElementType, GraphqlService } from '../../aurelia-slickgrid';
+import { CaseType, Column, GridOption, FieldType, Formatters, FormElementType, GridOdataService } from '../../aurelia-slickgrid';
 
 const defaultPageSize = 20;
 const sampleDataRoot = 'src/examples/slickgrid/sample-data';
 
 @autoinject()
-export class List {
-  title = 'Example 5: Grid with Backend GraphQL Service';
+export class Example5 {
+  title = 'Example 5: Grid with Backend OData Service';
   subTitle = `
-    Sorting/Paging connected to a Backend GraphQL Service.
+    Sorting/Paging connected to a Backend OData Service.
     <br/>
     <ul class="small">
-      <li><span class="red">(*) NO DATA SHOWING</span> - change filter &amp; page and look at the "GraphQL Query" changing</li>
       <li>Only "Name" field is sortable for the demo (because we use JSON files), however "multiColumnSort: true" is also supported</li>
       <li>String column also support operator (>, >=, <, <=, <>, !=, =, ==, *)
       <ul>
         <li>The (*) can be used as startsWith (ex.: "abc*" => startsWith "abc") / endsWith (ex.: "*xyz" => endsWith "xyz")</li>
         <li>The other operators can be used on column type number for example: ">=100" (bigger or equal than 100)</li>
       </ul>
+      <li>OData Service could be replaced by other Service type in the future (GraphQL or whichever you provide)</li>
     </ul>
   `;
   columnDefinitions: Column[];
   gridOptions: GridOption;
   dataset = [];
 
-  isWithCursor = false;
-  graphqlQuery = '';
+  odataQuery = '';
   processing = false;
   status = { text: '', class: '' };
 
-  constructor(private http: HttpClient, private graphqlService: GraphqlService) {
+  constructor(private http: HttpClient, private odataService: GridOdataService) {
+    odataService.initOptions({
+      caseType: CaseType.pascalCase,
+      top: defaultPageSize
+    });
+
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
+  }
+
+  attached() {
+    // populate the dataset once the grid is ready
+    // this.getData();
   }
 
   defineGrid() {
@@ -69,17 +78,14 @@ export class List {
         preProcess: () => this.displaySpinner(true),
         process: (query) => this.getCustomerApiCall(query),
         postProcess: (response) => {
+          console.log(response);
           this.displaySpinner(false);
           this.getCustomerCallback(response);
         },
         filterTypingDebounce: 700,
-        service: this.graphqlService
+        service: this.odataService
       }
     };
-
-    const paginationOption = this.getPaginationOption(this.isWithCursor);
-    this.graphqlService.initOptions(paginationOption);
-
   }
 
   displaySpinner(isProcessing) {
@@ -89,43 +95,11 @@ export class List {
       : { text: 'done', class: 'alert alert-success' };
   }
 
-  getPaginationOption(isWithCursor: boolean) {
-    let paginationOption;
-    const columnIds = Array.isArray(this.columnDefinitions) ? this.columnDefinitions.map((column) => column.field) : [];
-
-    // Slickgrid also requires the "id" field
-    columnIds.push('id');
-
-    if (isWithCursor) {
-      // with cursor, paginationOptions can be: { first, last, after, before }
-      paginationOption = {
-        datasetName: 'users',
-        dataFilters: columnIds,
-        isWithCursor: true,
-        paginationOptions: {
-          first: defaultPageSize
-        }
-      };
-    } else {
-      // without cursor, paginationOptions can be: { first, last, offset }
-      paginationOption = {
-        datasetName: 'users',
-        dataFilters: columnIds,
-        isWithCursor: false,
-        paginationOptions: {
-          first: defaultPageSize,
-          offset: 0
-        }
-      };
-    }
-    return paginationOption;
-  }
-
   getCustomerCallback(data) {
     this.displaySpinner(false);
 
     this.dataset = data['items'];
-    this.graphqlQuery = data['query'];
+    this.odataQuery = data['query'];
 
     // totalItems property needs to be filled for pagination to work correctly
     this.gridOptions.pagination.totalItems = data['totalRecordCount'];
@@ -134,13 +108,7 @@ export class List {
   getCustomerApiCall(query) {
     // in your case, you will call your WebAPI function (wich needs to return a Promise)
     // for the demo purpose, we will call a mock WebAPI function
-    return new Promise((resolve, reject) => {
-      this.graphqlQuery = this.graphqlService.buildQuery();
-      setTimeout(() => {
-        resolve({ items: [], totalRecordCount: 100, query });
-      }, 500);
-    });
-    // return this.getCustomerDataApiMock(query);
+    return this.getCustomerDataApiMock(query);
   }
 
   /** This function is only here to mock a WebAPI call (since we are using a JSON file for the demo)
@@ -256,12 +224,4 @@ export class List {
         });
     });
   }
-
-  onWithCursorChange(isWithCursor) {
-    this.isWithCursor = isWithCursor;
-    const paginationOption = this.getPaginationOption(isWithCursor);
-    this.graphqlService.initOptions(paginationOption);
-    this.graphqlQuery = this.graphqlService.buildQuery();
-  }
-
 }

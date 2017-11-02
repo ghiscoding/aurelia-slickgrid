@@ -1,55 +1,46 @@
-import { autoinject } from 'aurelia-framework';
-import data from './sample-data/example-data';
+import { inject } from 'aurelia-framework';
 import { HttpClient } from 'aurelia-http-client';
-import { CaseType, Column, GridOption, FieldType, Formatters, FormElementType, GridOdataService } from 'aurelia-slickgrid';
+import { FieldType, FormElementType, GraphqlService } from 'aurelia-slickgrid';
 
 const defaultPageSize = 20;
 const sampleDataRoot = 'src/examples/slickgrid/sample-data';
 
-@autoinject()
-export class Example5 {
-  title = 'Example 5: Grid with Backend OData Service';
+@inject(HttpClient, GraphqlService)
+export class Example6 {
+  title = 'Example 6: Grid with Backend GraphQL Service';
   subTitle = `
-    Sorting/Paging connected to a Backend OData Service.
+    Sorting/Paging connected to a Backend GraphQL Service.
     <br/>
     <ul class="small">
-      <li>Only "Name" field is sortable for the demo (because we use JSON files), however "multiColumnSort: true" is also supported</li>
+      <li><span class="red">(*) NO DATA SHOWING</span> - change filter &amp; page and look at the "GraphQL Query" changing</li>
       <li>String column also support operator (>, >=, <, <=, <>, !=, =, ==, *)
       <ul>
         <li>The (*) can be used as startsWith (ex.: "abc*" => startsWith "abc") / endsWith (ex.: "*xyz" => endsWith "xyz")</li>
         <li>The other operators can be used on column type number for example: ">=100" (bigger or equal than 100)</li>
       </ul>
-      <li>OData Service could be replaced by other Service type in the future (GraphQL or whichever you provide)</li>
     </ul>
   `;
-  columnDefinitions: Column[];
-  gridOptions: GridOption;
+  columnDefinitions;
+  gridOptions;
   dataset = [];
 
-  odataQuery = '';
+  isWithCursor = false;
+  graphqlQuery = '';
   processing = false;
   status = { text: '', class: '' };
 
-  constructor(private http: HttpClient, private odataService: GridOdataService) {
-    odataService.initOptions({
-      caseType: CaseType.pascalCase,
-      top: defaultPageSize
-    });
-
+  constructor(http, graphqlService) {
+    this.http = http;
+    this.graphqlService = graphqlService;
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
-  }
-
-  attached() {
-    // populate the dataset once the grid is ready
-    // this.getData();
   }
 
   defineGrid() {
     this.columnDefinitions = [
       { id: 'name', name: 'Name', field: 'name', filterable: true, sortable: true, type: FieldType.string },
       {
-        id: 'gender', name: 'Gender', field: 'gender', filterable: true, sortable: false,
+        id: 'gender', name: 'Gender', field: 'gender', filterable: true, sortable: true,
         filter: {
           searchTerm: '', // default selection
           type: FormElementType.select,
@@ -60,11 +51,7 @@ export class Example5 {
     ];
 
     this.gridOptions = {
-      enableAutoResize: true,
-      autoResize: {
-        containerId: 'demo-container',
-        sidePadding: 15
-      },
+      enableAutoResize: false,
       enableFiltering: true,
       enableCellNavigation: true,
       enablePagination: true,
@@ -82,9 +69,12 @@ export class Example5 {
           this.getCustomerCallback(response);
         },
         filterTypingDebounce: 700,
-        service: this.odataService
+        service: this.graphqlService
       }
     };
+
+    const paginationOption = this.getPaginationOption(this.isWithCursor);
+    this.graphqlService.initOptions(paginationOption);
   }
 
   displaySpinner(isProcessing) {
@@ -94,20 +84,58 @@ export class Example5 {
       : { text: 'done', class: 'alert alert-success' };
   }
 
+  getPaginationOption(isWithCursor) {
+    let paginationOption;
+    const columnIds = Array.isArray(this.columnDefinitions) ? this.columnDefinitions.map((column) => column.field) : [];
+
+    // Slickgrid also requires the "id" field
+    columnIds.push('id');
+
+    if (isWithCursor) {
+      // with cursor, paginationOptions can be: { first, last, after, before }
+      paginationOption = {
+        datasetName: 'users',
+        dataFilters: columnIds,
+        isWithCursor: true,
+        paginationOptions: {
+          first: defaultPageSize
+        }
+      };
+    } else {
+      // without cursor, paginationOptions can be: { first, last, offset }
+      paginationOption = {
+        datasetName: 'users',
+        dataFilters: columnIds,
+        isWithCursor: false,
+        paginationOptions: {
+          first: defaultPageSize,
+          offset: 0
+        }
+      };
+    }
+    return paginationOption;
+  }
+
   getCustomerCallback(data) {
     this.displaySpinner(false);
 
-    this.dataset = data['items'];
-    this.odataQuery = data['query'];
+    this.dataset = data.items;
+    this.graphqlQuery = data.query;
 
     // totalItems property needs to be filled for pagination to work correctly
-    this.gridOptions.pagination.totalItems = data['totalRecordCount'];
+    this.gridOptions.pagination.totalItems = data.totalRecordCount;
   }
 
   getCustomerApiCall(query) {
     // in your case, you will call your WebAPI function (wich needs to return a Promise)
     // for the demo purpose, we will call a mock WebAPI function
-    return this.getCustomerDataApiMock(query);
+    return new Promise((resolve, reject) => {
+      this.graphqlQuery = this.graphqlService.buildQuery();
+      setTimeout(() => {
+        resolve({ items: [], totalRecordCount: 100, query });
+      }, 500);
+    });
+    // return this.getCustomerDataApiMock(query);
   }
 
   /** This function is only here to mock a WebAPI call (since we are using a JSON file for the demo)
@@ -117,7 +145,7 @@ export class Example5 {
     // the mock is returning a Promise, just like a WebAPI typically does
     return new Promise((resolve, reject) => {
       const queryParams = query.toLowerCase().split('&');
-      let top: number;
+      let top;
       let skip = 0;
       let orderBy = '';
       let countTotalItems = 100;
@@ -193,7 +221,7 @@ export class Example5 {
         .asGet()
         .send()
         .then(response => {
-          const dataArray = response.content as any[];
+          const dataArray = response.content;
 
           // Read the result field from the JSON response.
           const firstRow = skip;
@@ -223,4 +251,12 @@ export class Example5 {
         });
     });
   }
+
+  onWithCursorChange(isWithCursor) {
+    this.isWithCursor = isWithCursor;
+    const paginationOption = this.getPaginationOption(isWithCursor);
+    this.graphqlService.initOptions(paginationOption);
+    this.graphqlQuery = this.graphqlService.buildQuery();
+  }
+
 }

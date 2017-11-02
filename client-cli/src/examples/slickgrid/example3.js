@@ -3,7 +3,7 @@ import { Editors, FieldType, Formatters, GridExtraUtils, ResizerService } from '
 import flatpickr from 'flatpickr';
 
 @inject(ResizerService)
-export class List {
+export class Example3 {
   @bindable() gridObj;
   @bindable() dataview;
   title = 'Example 3: Editors';

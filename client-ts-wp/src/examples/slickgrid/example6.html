@@ -13,11 +13,11 @@
     </div>
     <div class="col-sm-8">
       <div class="alert alert-info">
-        <strong>OData Query:</strong> ${odataQuery}
+        <strong>GraphQL Query:</strong> ${graphqlQuery}
       </div>
     </div>
   </div>
 
-  <aurelia-slickgrid grid-id="grid1" column-definitions.bind="columnDefinitions" grid-options.bind="gridOptions" dataset.bind="dataset">
-  </aurelia-slickgrid>
+  <aurelia-slickgrid grid-id="grid1" column-definitions.bind="columnDefinitions" grid-options.bind="gridOptions" dataset.bind="dataset"
+    grid-height="250" grid-width="800">
 </template>

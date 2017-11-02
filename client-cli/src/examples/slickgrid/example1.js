@@ -1,4 +1,4 @@
-export class List {
+export class Example1 {
   title = 'Example 1: Basic Grid';
   subTitle = 'basic grid with fixed sizes (800 x 400) set by `grid-height` &amp; `grid-width`';
 

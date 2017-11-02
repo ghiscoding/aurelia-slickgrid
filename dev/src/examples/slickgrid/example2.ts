@@ -1,5 +1,3 @@
-import { inject } from 'aurelia-framework';
-import $ from 'bootstrap';
 import data from './sample-data/example-data';
 import { Column, FieldType, Formatters, GridOption } from '../../aurelia-slickgrid';
 
@@ -7,7 +5,7 @@ import { Column, FieldType, Formatters, GridOption } from '../../aurelia-slickgr
 const myCustomCheckboxFormatter = (row, cell, value, columnDef, dataContext) =>
   value ? `<i class="fa fa-fire" aria-hidden="true"></i>` : '<i class="fa fa-snowflake-o" aria-hidden="true"></i>';
 
-export class List {
+export class Example2 {
   title = 'Example 2: Formatters';
   subTitle = 'grid auto-resize, multi-column sort and custom/SlickGrid Formatters';
   gridOptions: GridOption;
