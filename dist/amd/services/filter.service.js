@@ -33,7 +33,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "./utilities", "../filter-conditions/index", "./../filter-templates/index", "../models/index", "jquery"], function (require, exports, utilities_1, index_1, index_2, index_3, $) {
+define(["require", "exports", "../filter-conditions/index", "./../filter-templates/index", "../models/index", "jquery"], function (require, exports, index_1, index_2, index_3, $) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var FilterService = /** @class */ (function () {
@@ -57,7 +57,7 @@ define(["require", "exports", "./utilities", "../filter-conditions/index", "./..
         };
         FilterService.prototype.attachBackendOnFilterSubscribe = function (event, args) {
             return __awaiter(this, void 0, void 0, function () {
-                var serviceOptions, backendApi, query, observableOrPromise, responseProcess;
+                var serviceOptions, backendApi, query, responseProcess;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
@@ -76,8 +76,7 @@ define(["require", "exports", "./utilities", "../filter-conditions/index", "./..
                             return [4 /*yield*/, backendApi.service.onFilterChanged(event, args)];
                         case 1:
                             query = _a.sent();
-                            observableOrPromise = backendApi.process(query);
-                            return [4 /*yield*/, utilities_1.castToPromise(observableOrPromise)];
+                            return [4 /*yield*/, backendApi.process(query)];
                         case 2:
                             responseProcess = _a.sent();
                             // send the response process to the postProcess callback

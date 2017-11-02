@@ -1,11 +1,9 @@
 import { BackendService } from './index';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/toPromise';
 
 export interface BackendEventChanged {
-  onInit?: (query: string) => Promise<any> | Observable<any>;
+  onInit?: (query: string) => Promise<any>;
   preProcess?: () => void;
-  process: (query: string) => Promise<any> | Observable<any>;
+  process: (query: string) => Promise<any>;
   postProcess: (response: any) => void;
   service: BackendService;
   filterTypingDebounce?: number;

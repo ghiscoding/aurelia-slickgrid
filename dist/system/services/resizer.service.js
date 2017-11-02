@@ -7,7 +7,7 @@ System.register(["aurelia-event-aggregator", "aurelia-framework", "jquery"], fun
         return c > 3 && r && Object.defineProperty(target, key, r), r;
     };
     var __moduleName = context_1 && context_1.id;
-    var aurelia_event_aggregator_1, aurelia_framework_1, $, DATAGRID_MIN_HEIGHT, DATAGRID_MIN_WIDTH, DATAGRID_BOTTOM_PADDING, DATAGRID_PAGINATION_HEIGHT, timer, firstPass, ResizerService;
+    var aurelia_event_aggregator_1, aurelia_framework_1, $, DATAGRID_MIN_HEIGHT, DATAGRID_MIN_WIDTH, DATAGRID_BOTTOM_PADDING, DATAGRID_PAGINATION_HEIGHT, timer, ResizerService;
     return {
         setters: [
             function (aurelia_event_aggregator_1_1) {
@@ -26,7 +26,6 @@ System.register(["aurelia-event-aggregator", "aurelia-framework", "jquery"], fun
             DATAGRID_MIN_WIDTH = 300;
             DATAGRID_BOTTOM_PADDING = 20;
             DATAGRID_PAGINATION_HEIGHT = 35;
-            firstPass = true;
             ResizerService = /** @class */ (function () {
                 function ResizerService(ea) {
                     this.ea = ea;
@@ -43,7 +42,6 @@ System.register(["aurelia-event-aggregator", "aurelia-framework", "jquery"], fun
                     }
                     // -- 1st resize the datagrid size at first load (we need this because the .on event is not triggered on first load)
                     this.resizeGrid(grid, gridOptions);
-                    firstPass = false;
                     // -- 2nd attach a trigger on the Window DOM element, so that it happens also when resizing after first load
                     // -- attach auto-resize to Window object only if it exist
                     $(window).on('resize.grid', function () {
@@ -120,9 +118,7 @@ System.register(["aurelia-event-aggregator", "aurelia-framework", "jquery"], fun
                                 grid.resizeCanvas();
                             }
                             // also call the grid auto-size columns so that it takes available when going bigger
-                            if (firstPass) {
-                                grid.autosizeColumns();
-                            }
+                            grid.autosizeColumns();
                         }
                     }, delay);
                 };

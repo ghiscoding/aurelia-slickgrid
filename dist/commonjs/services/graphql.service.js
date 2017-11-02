@@ -10,7 +10,7 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var utilities_1 = require("./utilities");
 var index_1 = require("./../models/index");
-var graphql_query_builder_1 = require("graphql-query-builder");
+var graphqlQueryBuilder_1 = require("./graphqlQueryBuilder");
 var timer;
 var GraphqlService = /** @class */ (function () {
     function GraphqlService() {
@@ -25,10 +25,10 @@ var GraphqlService = /** @class */ (function () {
         if (!this.serviceOptions.datasetName || !this.serviceOptions.dataFilters) {
             throw new Error('GraphQL Service requires "datasetName" & "dataFilters" properties for it to work');
         }
-        var queryQb = new graphql_query_builder_1.default('query');
-        var datasetQb = new graphql_query_builder_1.default(this.serviceOptions.datasetName);
-        var pageInfoQb = new graphql_query_builder_1.default('pageInfo');
-        var dataQb = (this.serviceOptions.isWithCursor) ? new graphql_query_builder_1.default('edges') : new graphql_query_builder_1.default('nodes');
+        var queryQb = new graphqlQueryBuilder_1.default('query');
+        var datasetQb = new graphqlQueryBuilder_1.default(this.serviceOptions.datasetName);
+        var pageInfoQb = new graphqlQueryBuilder_1.default('pageInfo');
+        var dataQb = (this.serviceOptions.isWithCursor) ? new graphqlQueryBuilder_1.default('edges') : new graphqlQueryBuilder_1.default('nodes');
         if (this.serviceOptions.isWithCursor) {
             // ...pageInfo { hasNextPage, endCursor }, edges { cursor, node { _filters_ } }
             pageInfoQb.find('hasNextPage', 'endCursor');

@@ -1,4 +1,4 @@
-System.register(["./services/utilities", "aurelia-framework"], function (exports_1, context_1) {
+System.register(["aurelia-framework"], function (exports_1, context_1) {
     "use strict";
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -42,12 +42,9 @@ System.register(["./services/utilities", "aurelia-framework"], function (exports
         }
     };
     var __moduleName = context_1 && context_1.id;
-    var utilities_1, aurelia_framework_1, SlickPaginationCustomElement;
+    var aurelia_framework_1, SlickPaginationCustomElement;
     return {
         setters: [
-            function (utilities_1_1) {
-                utilities_1 = utilities_1_1;
-            },
             function (aurelia_framework_1_1) {
                 aurelia_framework_1 = aurelia_framework_1_1;
             }
@@ -120,7 +117,7 @@ System.register(["./services/utilities", "aurelia-framework"], function (exports
                 };
                 SlickPaginationCustomElement.prototype.onPageChanged = function (event, pageNumber) {
                     return __awaiter(this, void 0, void 0, function () {
-                        var itemsPerPage, query, observableOrPromise, responseProcess;
+                        var itemsPerPage, query, responseProcess;
                         return __generator(this, function (_a) {
                             switch (_a.label) {
                                 case 0:
@@ -137,8 +134,7 @@ System.register(["./services/utilities", "aurelia-framework"], function (exports
                                         this._gridPaginationOptions.onBackendEventApi.preProcess();
                                     }
                                     query = this._gridPaginationOptions.onBackendEventApi.service.onPaginationChanged(event, { newPage: pageNumber, pageSize: itemsPerPage });
-                                    observableOrPromise = this._gridPaginationOptions.onBackendEventApi.process(query);
-                                    return [4 /*yield*/, utilities_1.castToPromise(observableOrPromise)];
+                                    return [4 /*yield*/, this._gridPaginationOptions.onBackendEventApi.process(query)];
                                 case 1:
                                     responseProcess = _a.sent();
                                     // send the response process to the postProcess callback

@@ -1,4 +1,5 @@
 import { mapOperatorType, parseUtcDate } from './utilities';
+import QueryBuilder from './graphqlQueryBuilder';
 import {
   BackendService,
   BackendServiceOption,
@@ -15,7 +16,7 @@ import {
   SortChangedArgs,
   SortDirection
 } from './../models/index';
-import QueryBuilder from 'graphql-query-builder';
+
 let timer: any;
 
 export class GraphqlService implements BackendService {

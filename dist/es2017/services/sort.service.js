@@ -1,4 +1,3 @@
-import { castToPromise } from './utilities';
 import { FieldType } from './../models/index';
 import { Sorters } from './../sorters/index';
 export class SortService {
@@ -23,10 +22,8 @@ export class SortService {
             serviceOptions.onBackendEventApi.preProcess();
         }
         const query = serviceOptions.onBackendEventApi.service.onSortChanged(event, args);
-        // the process could be an Observable (like HttpClient) or a Promise
-        // in any case, we need to have a Promise so that we can await on it (if an Observable, convert it to Promise)
-        const observableOrPromise = serviceOptions.onBackendEventApi.process(query);
-        const responseProcess = await castToPromise(observableOrPromise);
+        // await for the Promise to resolve the data
+        const responseProcess = await serviceOptions.onBackendEventApi.process(query);
         // send the response process to the postProcess callback
         if (serviceOptions.onBackendEventApi.postProcess) {
             serviceOptions.onBackendEventApi.postProcess(responseProcess);

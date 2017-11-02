@@ -11,7 +11,7 @@ export class List {
   @bindable() gridObj: any;
   @bindable() dataview: any;
   title = 'Example 3: Editors';
-  subTitle = 'inline editors (not yet implement) and onCellClick editor (execute an action, e.g: open a modal window)';
+  subTitle = 'Grid with Inline Editors and onCellClick actions (for example, open a modal window on edit)';
   gridOptions: GridOption;
   columnDefinitions: Column[];
   dataset: any[];
@@ -106,7 +106,7 @@ export class List {
       const column = GridExtraUtils.getColumnDefinitionAndData(args);
       console.log('onClick', args, column);
       if (column.columnDef.id === 'edit') {
-        alert('Call a modal window');
+        alert(`Call a modal window to edit: ${column.dataContext.title}`);
       }
       if (column.columnDef.id === 'delete') {
         if (confirm('Are you sure?')) {

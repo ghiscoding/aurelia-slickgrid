@@ -1,4 +1,4 @@
-System.register(["./utilities", "../filter-conditions/index", "./../filter-templates/index", "../models/index", "jquery"], function (exports_1, context_1) {
+System.register(["../filter-conditions/index", "./../filter-templates/index", "../models/index", "jquery"], function (exports_1, context_1) {
     "use strict";
     var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
         return new (P || (P = Promise))(function (resolve, reject) {
@@ -36,12 +36,9 @@ System.register(["./utilities", "../filter-conditions/index", "./../filter-templ
         }
     };
     var __moduleName = context_1 && context_1.id;
-    var utilities_1, index_1, index_2, index_3, $, FilterService;
+    var index_1, index_2, index_3, $, FilterService;
     return {
         setters: [
-            function (utilities_1_1) {
-                utilities_1 = utilities_1_1;
-            },
             function (index_1_1) {
                 index_1 = index_1_1;
             },
@@ -77,7 +74,7 @@ System.register(["./utilities", "../filter-conditions/index", "./../filter-templ
                 };
                 FilterService.prototype.attachBackendOnFilterSubscribe = function (event, args) {
                     return __awaiter(this, void 0, void 0, function () {
-                        var serviceOptions, backendApi, query, observableOrPromise, responseProcess;
+                        var serviceOptions, backendApi, query, responseProcess;
                         return __generator(this, function (_a) {
                             switch (_a.label) {
                                 case 0:
@@ -96,8 +93,7 @@ System.register(["./utilities", "../filter-conditions/index", "./../filter-templ
                                     return [4 /*yield*/, backendApi.service.onFilterChanged(event, args)];
                                 case 1:
                                     query = _a.sent();
-                                    observableOrPromise = backendApi.process(query);
-                                    return [4 /*yield*/, utilities_1.castToPromise(observableOrPromise)];
+                                    return [4 /*yield*/, backendApi.process(query)];
                                 case 2:
                                     responseProcess = _a.sent();
                                     // send the response process to the postProcess callback

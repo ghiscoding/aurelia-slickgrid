@@ -8,7 +8,7 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
 };
 import { mapOperatorType } from './utilities';
 import { SortDirection } from './../models/index';
-import QueryBuilder from 'graphql-query-builder';
+import QueryBuilder from './graphqlQueryBuilder';
 var timer;
 var GraphqlService = /** @class */ (function () {
     function GraphqlService() {

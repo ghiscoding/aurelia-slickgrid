@@ -67,7 +67,6 @@ import 'slickgrid/plugins/slick.headermenu';
 import 'slickgrid/plugins/slick.rowmovemanager';
 import 'slickgrid/plugins/slick.rowselectionmodel';
 import { bindable, bindingMode, inject } from 'aurelia-framework';
-import { castToPromise } from './services/utilities';
 import { GlobalGridOptions } from './global-grid-options';
 import { FilterService, GridEventService, SortService, ResizerService } from './services/index';
 var AureliaSlickgridCustomElement = /** @class */ (function () {
@@ -147,13 +146,12 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
             var query_1 = backendApi_1.service.buildQuery();
             // wrap this inside a setTimeout to avoid timing issue since the gridOptions needs to be ready before running this onInit
             setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
-                var observableOrPromise, responseProcess;
+                var responseProcess;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
                             if (!(options && options.onBackendEventApi && options.onBackendEventApi.onInit)) return [3 /*break*/, 2];
-                            observableOrPromise = options.onBackendEventApi.onInit(query_1);
-                            return [4 /*yield*/, castToPromise(observableOrPromise)];
+                            return [4 /*yield*/, options.onBackendEventApi.onInit(query_1)];
                         case 1:
                             responseProcess = _a.sent();
                             // send the response process to the postProcess callback

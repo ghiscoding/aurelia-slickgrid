@@ -1,14 +1,4 @@
 import { FieldType, OperatorType } from '../models/index';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/first';
-import 'rxjs/add/operator/take';
-import 'rxjs/add/operator/toPromise';
-/**
- * Try casting an input of type Promise | Observable into a Promise type.
- * @param input object which could be of type Promise or Observable
- * @param fromServiceName string representing the caller service name and will be used if we throw a casting problem error
- */
-export declare function castToPromise(input: Promise<any> | Observable<any>, fromServiceName?: string): Promise<any> | Observable<any>;
 /**
  * From a Date FieldType, return it's equivalent moment.js format
  * refer to moment.js for the format standard used: https://momentjs.com/docs/#/parsing/string-format/

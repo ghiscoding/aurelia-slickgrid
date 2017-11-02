@@ -69,7 +69,6 @@ require("slickgrid/plugins/slick.headermenu");
 require("slickgrid/plugins/slick.rowmovemanager");
 require("slickgrid/plugins/slick.rowselectionmodel");
 var aurelia_framework_1 = require("aurelia-framework");
-var utilities_1 = require("./services/utilities");
 var global_grid_options_1 = require("./global-grid-options");
 var index_1 = require("./services/index");
 var AureliaSlickgridCustomElement = /** @class */ (function () {
@@ -149,13 +148,12 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
             var query_1 = backendApi_1.service.buildQuery();
             // wrap this inside a setTimeout to avoid timing issue since the gridOptions needs to be ready before running this onInit
             setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
-                var observableOrPromise, responseProcess;
+                var responseProcess;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
                             if (!(options && options.onBackendEventApi && options.onBackendEventApi.onInit)) return [3 /*break*/, 2];
-                            observableOrPromise = options.onBackendEventApi.onInit(query_1);
-                            return [4 /*yield*/, utilities_1.castToPromise(observableOrPromise)];
+                            return [4 /*yield*/, options.onBackendEventApi.onInit(query_1)];
                         case 1:
                             responseProcess = _a.sent();
                             // send the response process to the postProcess callback

@@ -39,7 +39,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "./services/utilities", "aurelia-framework"], function (require, exports, utilities_1, aurelia_framework_1) {
+define(["require", "exports", "aurelia-framework"], function (require, exports, aurelia_framework_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var SlickPaginationCustomElement = /** @class */ (function () {
@@ -109,7 +109,7 @@ define(["require", "exports", "./services/utilities", "aurelia-framework"], func
         };
         SlickPaginationCustomElement.prototype.onPageChanged = function (event, pageNumber) {
             return __awaiter(this, void 0, void 0, function () {
-                var itemsPerPage, query, observableOrPromise, responseProcess;
+                var itemsPerPage, query, responseProcess;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
@@ -126,8 +126,7 @@ define(["require", "exports", "./services/utilities", "aurelia-framework"], func
                                 this._gridPaginationOptions.onBackendEventApi.preProcess();
                             }
                             query = this._gridPaginationOptions.onBackendEventApi.service.onPaginationChanged(event, { newPage: pageNumber, pageSize: itemsPerPage });
-                            observableOrPromise = this._gridPaginationOptions.onBackendEventApi.process(query);
-                            return [4 /*yield*/, utilities_1.castToPromise(observableOrPromise)];
+                            return [4 /*yield*/, this._gridPaginationOptions.onBackendEventApi.process(query)];
                         case 1:
                             responseProcess = _a.sent();
                             // send the response process to the postProcess callback

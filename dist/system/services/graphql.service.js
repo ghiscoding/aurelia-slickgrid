@@ -1,4 +1,4 @@
-System.register(["./utilities", "./../models/index", "graphql-query-builder"], function (exports_1, context_1) {
+System.register(["./utilities", "./../models/index", "./graphqlQueryBuilder"], function (exports_1, context_1) {
     "use strict";
     var __assign = (this && this.__assign) || Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -9,7 +9,7 @@ System.register(["./utilities", "./../models/index", "graphql-query-builder"], f
         return t;
     };
     var __moduleName = context_1 && context_1.id;
-    var utilities_1, index_1, graphql_query_builder_1, timer, GraphqlService;
+    var utilities_1, index_1, graphqlQueryBuilder_1, timer, GraphqlService;
     return {
         setters: [
             function (utilities_1_1) {
@@ -18,8 +18,8 @@ System.register(["./utilities", "./../models/index", "graphql-query-builder"], f
             function (index_1_1) {
                 index_1 = index_1_1;
             },
-            function (graphql_query_builder_1_1) {
-                graphql_query_builder_1 = graphql_query_builder_1_1;
+            function (graphqlQueryBuilder_1_1) {
+                graphqlQueryBuilder_1 = graphqlQueryBuilder_1_1;
             }
         ],
         execute: function () {
@@ -36,10 +36,10 @@ System.register(["./utilities", "./../models/index", "graphql-query-builder"], f
                     if (!this.serviceOptions.datasetName || !this.serviceOptions.dataFilters) {
                         throw new Error('GraphQL Service requires "datasetName" & "dataFilters" properties for it to work');
                     }
-                    var queryQb = new graphql_query_builder_1.default('query');
-                    var datasetQb = new graphql_query_builder_1.default(this.serviceOptions.datasetName);
-                    var pageInfoQb = new graphql_query_builder_1.default('pageInfo');
-                    var dataQb = (this.serviceOptions.isWithCursor) ? new graphql_query_builder_1.default('edges') : new graphql_query_builder_1.default('nodes');
+                    var queryQb = new graphqlQueryBuilder_1.default('query');
+                    var datasetQb = new graphqlQueryBuilder_1.default(this.serviceOptions.datasetName);
+                    var pageInfoQb = new graphqlQueryBuilder_1.default('pageInfo');
+                    var dataQb = (this.serviceOptions.isWithCursor) ? new graphqlQueryBuilder_1.default('edges') : new graphqlQueryBuilder_1.default('nodes');
                     if (this.serviceOptions.isWithCursor) {
                         // ...pageInfo { hasNextPage, endCursor }, edges { cursor, node { _filters_ } }
                         pageInfoQb.find('hasNextPage', 'endCursor');

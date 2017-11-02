@@ -1,4 +1,4 @@
-System.register(["./utilities", "./../models/index", "./../sorters/index"], function (exports_1, context_1) {
+System.register(["./../models/index", "./../sorters/index"], function (exports_1, context_1) {
     "use strict";
     var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
         return new (P || (P = Promise))(function (resolve, reject) {
@@ -36,12 +36,9 @@ System.register(["./utilities", "./../models/index", "./../sorters/index"], func
         }
     };
     var __moduleName = context_1 && context_1.id;
-    var utilities_1, index_1, index_2, SortService;
+    var index_1, index_2, SortService;
     return {
         setters: [
-            function (utilities_1_1) {
-                utilities_1 = utilities_1_1;
-            },
             function (index_1_1) {
                 index_1 = index_1_1;
             },
@@ -64,7 +61,7 @@ System.register(["./utilities", "./../models/index", "./../sorters/index"], func
                 };
                 SortService.prototype.attachBackendOnSortSubscribe = function (event, args) {
                     return __awaiter(this, void 0, void 0, function () {
-                        var serviceOptions, query, observableOrPromise, responseProcess;
+                        var serviceOptions, query, responseProcess;
                         return __generator(this, function (_a) {
                             switch (_a.label) {
                                 case 0:
@@ -79,8 +76,7 @@ System.register(["./utilities", "./../models/index", "./../sorters/index"], func
                                         serviceOptions.onBackendEventApi.preProcess();
                                     }
                                     query = serviceOptions.onBackendEventApi.service.onSortChanged(event, args);
-                                    observableOrPromise = serviceOptions.onBackendEventApi.process(query);
-                                    return [4 /*yield*/, utilities_1.castToPromise(observableOrPromise)];
+                                    return [4 /*yield*/, serviceOptions.onBackendEventApi.process(query)];
                                 case 1:
                                     responseProcess = _a.sent();
                                     // send the response process to the postProcess callback

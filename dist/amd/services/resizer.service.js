@@ -13,7 +13,6 @@ define(["require", "exports", "aurelia-event-aggregator", "aurelia-framework", "
     var DATAGRID_BOTTOM_PADDING = 20;
     var DATAGRID_PAGINATION_HEIGHT = 35;
     var timer;
-    var firstPass = true;
     var ResizerService = /** @class */ (function () {
         function ResizerService(ea) {
             this.ea = ea;
@@ -30,7 +29,6 @@ define(["require", "exports", "aurelia-event-aggregator", "aurelia-framework", "
             }
             // -- 1st resize the datagrid size at first load (we need this because the .on event is not triggered on first load)
             this.resizeGrid(grid, gridOptions);
-            firstPass = false;
             // -- 2nd attach a trigger on the Window DOM element, so that it happens also when resizing after first load
             // -- attach auto-resize to Window object only if it exist
             $(window).on('resize.grid', function () {
@@ -107,9 +105,7 @@ define(["require", "exports", "aurelia-event-aggregator", "aurelia-framework", "
                         grid.resizeCanvas();
                     }
                     // also call the grid auto-size columns so that it takes available when going bigger
-                    if (firstPass) {
-                        grid.autosizeColumns();
-                    }
+                    grid.autosizeColumns();
                 }
             }, delay);
         };

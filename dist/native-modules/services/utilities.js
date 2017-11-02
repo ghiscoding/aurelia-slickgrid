@@ -1,32 +1,5 @@
 import { FieldType, OperatorType } from '../models/index';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/first';
-import 'rxjs/add/operator/take';
-import 'rxjs/add/operator/toPromise';
 import * as moment from 'moment';
-/**
- * Try casting an input of type Promise | Observable into a Promise type.
- * @param input object which could be of type Promise or Observable
- * @param fromServiceName string representing the caller service name and will be used if we throw a casting problem error
- */
-export function castToPromise(input, fromServiceName) {
-    if (fromServiceName === void 0) { fromServiceName = ''; }
-    var promise = input;
-    if (input instanceof Promise) {
-        // if it's already a Promise then return it
-        return input;
-    }
-    else if (input instanceof Observable) {
-        promise = input.first().toPromise();
-        if (!(promise instanceof Promise)) {
-            promise = input.take(1).toPromise();
-        }
-        if (!(promise instanceof Promise)) {
-            throw new Error("Something went wrong, Angular-Slickgrid " + fromServiceName + " is not able to convert the Observable into a Promise.\n        If you are using Angular HttpClient, you could try converting your http call to a Promise with \".toPromise()\"\n        for example::  this.http.post('graphql', { query: graphqlQuery }).toPromise()\n        ");
-        }
-    }
-    return promise;
-}
 /**
  * From a Date FieldType, return it's equivalent moment.js format
  * refer to moment.js for the format standard used: https://momentjs.com/docs/#/parsing/string-format/

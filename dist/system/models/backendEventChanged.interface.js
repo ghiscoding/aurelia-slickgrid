@@ -1,11 +1,8 @@
-System.register(["rxjs/add/operator/toPromise"], function (exports_1, context_1) {
+System.register([], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     return {
-        setters: [
-            function (_1) {
-            }
-        ],
+        setters: [],
         execute: function () {
         }
     };

@@ -1,4 +1,3 @@
-import { castToPromise } from './utilities';
 import { FilterConditions } from '../filter-conditions/index';
 import { FilterTemplates } from './../filter-templates/index';
 import {
@@ -61,10 +60,8 @@ export class FilterService {
     // call the service to get a query back
     const query = await backendApi.service.onFilterChanged(event, args);
 
-    // the process could be an Observable (like HttpClient) or a Promise
-    // in any case, we need to have a Promise so that we can await on it (if an Observable, convert it to Promise)
-    const observableOrPromise = backendApi.process(query);
-    const responseProcess = await castToPromise(observableOrPromise);
+    // await for the Promise to resolve the data
+    const responseProcess = await backendApi.process(query);
 
     // send the response process to the postProcess callback
     if (backendApi.postProcess !== undefined) {

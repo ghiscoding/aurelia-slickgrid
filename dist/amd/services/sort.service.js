@@ -33,7 +33,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "./utilities", "./../models/index", "./../sorters/index"], function (require, exports, utilities_1, index_1, index_2) {
+define(["require", "exports", "./../models/index", "./../sorters/index"], function (require, exports, index_1, index_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var SortService = /** @class */ (function () {
@@ -50,7 +50,7 @@ define(["require", "exports", "./utilities", "./../models/index", "./../sorters/
         };
         SortService.prototype.attachBackendOnSortSubscribe = function (event, args) {
             return __awaiter(this, void 0, void 0, function () {
-                var serviceOptions, query, observableOrPromise, responseProcess;
+                var serviceOptions, query, responseProcess;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
@@ -65,8 +65,7 @@ define(["require", "exports", "./utilities", "./../models/index", "./../sorters/
                                 serviceOptions.onBackendEventApi.preProcess();
                             }
                             query = serviceOptions.onBackendEventApi.service.onSortChanged(event, args);
-                            observableOrPromise = serviceOptions.onBackendEventApi.process(query);
-                            return [4 /*yield*/, utilities_1.castToPromise(observableOrPromise)];
+                            return [4 /*yield*/, serviceOptions.onBackendEventApi.process(query)];
                         case 1:
                             responseProcess = _a.sent();
                             // send the response process to the postProcess callback

@@ -1,30 +1,6 @@
-System.register(["../models/index", "rxjs/Observable", "rxjs/add/operator/first", "rxjs/add/operator/take", "rxjs/add/operator/toPromise", "moment"], function (exports_1, context_1) {
+System.register(["../models/index", "moment"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    /**
-     * Try casting an input of type Promise | Observable into a Promise type.
-     * @param input object which could be of type Promise or Observable
-     * @param fromServiceName string representing the caller service name and will be used if we throw a casting problem error
-     */
-    function castToPromise(input, fromServiceName) {
-        if (fromServiceName === void 0) { fromServiceName = ''; }
-        var promise = input;
-        if (input instanceof Promise) {
-            // if it's already a Promise then return it
-            return input;
-        }
-        else if (input instanceof Observable_1.Observable) {
-            promise = input.first().toPromise();
-            if (!(promise instanceof Promise)) {
-                promise = input.take(1).toPromise();
-            }
-            if (!(promise instanceof Promise)) {
-                throw new Error("Something went wrong, Angular-Slickgrid " + fromServiceName + " is not able to convert the Observable into a Promise.\n        If you are using Angular HttpClient, you could try converting your http call to a Promise with \".toPromise()\"\n        for example::  this.http.post('graphql', { query: graphqlQuery }).toPromise()\n        ");
-            }
-        }
-        return promise;
-    }
-    exports_1("castToPromise", castToPromise);
     /**
      * From a Date FieldType, return it's equivalent moment.js format
      * refer to moment.js for the format standard used: https://momentjs.com/docs/#/parsing/string-format/
@@ -217,20 +193,11 @@ System.register(["../models/index", "rxjs/Observable", "rxjs/add/operator/first"
         return date;
     }
     exports_1("parseUtcDate", parseUtcDate);
-    var index_1, Observable_1, moment;
+    var index_1, moment;
     return {
         setters: [
             function (index_1_1) {
                 index_1 = index_1_1;
-            },
-            function (Observable_1_1) {
-                Observable_1 = Observable_1_1;
-            },
-            function (_1) {
-            },
-            function (_2) {
-            },
-            function (_3) {
             },
             function (moment_1) {
                 moment = moment_1;

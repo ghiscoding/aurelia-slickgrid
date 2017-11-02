@@ -1,5 +1,15 @@
 body { padding-top: 70px; }
 
+.italic {
+  font-style: italic;
+}
+.subtitle {
+  font-size: 20px;
+  font-style: italic;
+  color: grey;
+  margin-bottom: 10px;
+}
+
 section {
   margin: 0 20px;
 }

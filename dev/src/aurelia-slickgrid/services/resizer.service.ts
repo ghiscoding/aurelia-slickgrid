@@ -9,7 +9,6 @@ const DATAGRID_MIN_WIDTH = 300;
 const DATAGRID_BOTTOM_PADDING = 20;
 const DATAGRID_PAGINATION_HEIGHT = 35;
 let timer: any;
-let firstPass: boolean = true;
 
 @inject(EventAggregator)
 export class ResizerService {
@@ -30,7 +29,6 @@ export class ResizerService {
 
     // -- 1st resize the datagrid size at first load (we need this because the .on event is not triggered on first load)
     this.resizeGrid(grid, gridOptions);
-    firstPass = false;
 
     // -- 2nd attach a trigger on the Window DOM element, so that it happens also when resizing after first load
     // -- attach auto-resize to Window object only if it exist
@@ -119,9 +117,7 @@ export class ResizerService {
         }
 
         // also call the grid auto-size columns so that it takes available when going bigger
-        if (firstPass) {
-          grid.autosizeColumns();
-        }
+        grid.autosizeColumns();
       }
     }, delay);
   }

@@ -1,2 +1,2 @@
-import { Sorter } from './../models/sorter.interface';
+import { Sorter } from './../models/index';
 export declare const dateUsSorter: Sorter;

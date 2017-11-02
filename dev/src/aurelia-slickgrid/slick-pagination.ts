@@ -1,4 +1,3 @@
-import { castToPromise } from './services/utilities';
 import { bindable } from 'aurelia-framework';
 import { GridOption } from './models/index';
 
@@ -95,10 +94,8 @@ export class SlickPaginationCustomElement {
       }
       const query = this._gridPaginationOptions.onBackendEventApi.service.onPaginationChanged(event, { newPage: pageNumber, pageSize: itemsPerPage });
 
-      // the process could be an Observable (like HttpClient) or a Promise
-      // in any case, we need to have a Promise so that we can await on it (if an Observable, convert it to Promise)
-      const observableOrPromise = this._gridPaginationOptions.onBackendEventApi.process(query);
-      const responseProcess = await castToPromise(observableOrPromise);
+      // await for the Promise to resolve the data
+      const responseProcess = await this._gridPaginationOptions.onBackendEventApi.process(query);
 
       // send the response process to the postProcess callback
       if (this._gridPaginationOptions.onBackendEventApi.postProcess) {

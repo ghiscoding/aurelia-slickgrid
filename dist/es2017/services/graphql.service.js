@@ -1,6 +1,6 @@
 import { mapOperatorType } from './utilities';
 import { SortDirection } from './../models/index';
-import QueryBuilder from 'graphql-query-builder';
+import QueryBuilder from './graphqlQueryBuilder';
 let timer;
 export class GraphqlService {
     constructor() {

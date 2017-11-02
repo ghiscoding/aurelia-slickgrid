@@ -1,5 +1,4 @@
 import * as moment from 'moment';
-
 import { Sorter } from './../models/sorter.interface';
 
 export const dateSorter: Sorter = (value1, value2, sortDirection) => {
