@@ -66,24 +66,18 @@ Screenshots from the demo app with the `Bootstrap` theme (that is the only avail
 
 ![Slickgrid Server Side](/screenshots/filter_and_sort.png)
 
+### Editors and/or onCellClick
+
+![Editors](/screenshots/editors.png)
+
 ### Slickgrid Example with Server Side (Filter/Sort/Pagination)
 
 ![Slickgrid Server Side](/screenshots/pagination.png)
 
-<a name="main-features"></a>
-## `Aurelia-Slickgrid` - Main features
-This is a work in progress, but so far here is some of the features that `aurelia-slickgrid` brings (on top of Slickgrid itself):
-- Easier use of `plugin()` within `Aurelia`
-- Auto-resize datagrid viewport with available space (basically take space available by the given div container)
-- Server side sorting
-- Server side pagination (pager is an Aurelia custom element)
-- ... more to come
-
 ## How to use Aurelia-Slickgrid?
-`Aurelia-Slickgrid` is a wrapper of `Slickgrid-ES6` with extra features (like grid autoResize, backend sorting/pagination). These extra features (specifically coded for Aurelia) are under `SlickgridService`, however all the classes of `Slickgrid-ES6` are also available. The full list of classes that are available from `aurelia-slickgrid` are:
-
+Import the pieces that you want from `aurelia-slickgrid`.
 ```javascript
-import {Formatters} from 'aurelia-slickgrid';
+import { FieldType, Formatters} from 'aurelia-slickgrid';
 ```
 
 ## Installation
@@ -92,6 +86,7 @@ You can run the examples or build your own by doing the following.
 ### Aurelia-CLI / Webpack
 ```bash
 npm install --save aurelia-slickgrid
+# or yarn add aurelia-slickgrid
 ```
 #### Aurelia-CLI
 For `CLI` you will need to add both plugins (`aurelia-slickgrid` and `slickgrid-es6`) to your `aurelia.json` file
@@ -102,9 +97,21 @@ For `CLI` you will need to add both plugins (`aurelia-slickgrid` and `slickgrid-
   "name": "aurelia-slickgrid",
   "path": "../node_modules/aurelia-slickgrid/dist/amd",
   "main": "index",
-  "resources": [
-    "**/*.{css,html}"
-  ]
+  "resources": ["**/*.{css,html}"]
+},
+{
+  "name": "bootstrap",
+  "path": "../node_modules/bootstrap/dist",
+  "main": "js/bootstrap.min",
+  "deps": ["jquery"],
+  "exports": "$",
+  "resources": ["css/bootstrap.css"]
+},
+{
+  "name": "flatpickr",
+  "path": "../node_modules/flatpickr/dist",
+  "main": "flatpickr.min",
+  "resources": ["flatpickr.min.css"]
 },
 {
   "name": "jquery-event",
@@ -161,43 +168,29 @@ export class List {
 }
 ```
 
-## Examples
-I now have a working set of 10 Examples (however 4 & 6 are broken because of Plugins that is not bundled correctly in `Slickgrid-ES6`).
+## Examples (client samples)
 
-### Aurelia-CLI
+### Aurelia-CLI (client-cli)
 ```bash
 git clone https://github.com/ghiscoding/aurelia-slickgrid
 cd aurelia-slickgrid/client-cli
-npm install
+npm install # or yarn install
 au run --watch
 ```
 
-### Aurelia-Webpack
+### Aurelia-Webpack (client-ts-wp)
 ```bash
 git clone https://github.com/ghiscoding/aurelia-slickgrid
-cd aurelia-slickgrid/client-wp
-npm install
-npm start
+cd aurelia-slickgrid/client-ts-wp
+npm install # or yarn install
+npm start # or yarn start
 ```
 
-## Styling
-Load the default Bootstrap theme style
-### css
-Default compiled `css`
-```html
-<!-- Bootstrap theme -->
-<link rel="stylesheet" type="text/css" href="../node_modules/aurelia-slickgrid/dist/styles/css/slickgrid-theme-bootstrap.css">
+### License
+[MIT License](https://github.com/ghiscoding/aurelia-slickgrid/blob/master/LICENSE)
 
-<!-- OR the default old slickgrid theme -->
-<link rel="stylesheet" type="text/css" href="../node_modules/aurelia-slickgrid/dist/styles/css/slickgrid.css">
-```
-### scss (SASS)
-You could also compile the SASS file with your customization, for that simply load the `_slick-grid-variables.scss` variable file then the main `slickgrid.scss` which should call the variables.
+## Contributions/Comments
+Contributions are welcome, this is what the community is for. If you wish to suggest something and/or want to make a PR (Pull Request), please feel free to do so.
 
-## Notes
-If you are not intending to use any features (described in [Main Features](#main-features)), then you could simply your code by calling `Slickgrid-ES6` functionalities directly. For example
-```javascript
-import {Grid} from 'slickgrid-es6';
-...
-this.grid = new Grid(`#myGrid`, this.data, this.columnDefinition, this.gridOptions);
-```
+## Use it, like it?
+You like and use this great library `Aurelia-Slickgrid`? You can always upvote :star: and/or contribute :)
