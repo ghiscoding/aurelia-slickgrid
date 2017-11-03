@@ -2,7 +2,7 @@ import { Column, FieldType, GridOption } from '../../aurelia-slickgrid';
 
 export class Example1 {
   title = 'Example 1: Basic Grid';
-  subTitle = 'basic grid with fixed sizes (800 x 400) set by `grid-height` &amp; `grid-width`';
+  subTitle = 'basic grid with fixed sizes (800 x 400) set by "grid-height" &amp; "grid-width"';
 
   gridOptions: GridOption;
   columnDefinitions: Column[];
@@ -21,12 +21,12 @@ export class Example1 {
   /* Define grid Options and Columns */
   defineGrid() {
     this.columnDefinitions = [
-      { id: 'title', name: 'Title', field: 'title', sortable: true, type: FieldType.string },
-      { id: 'duration', name: 'Duration (days)', field: 'duration', sortable: true },
-      { id: '%', name: '% Complete', field: 'percentComplete', sortable: true },
-      { id: 'start', name: 'Start', field: 'start' },
-      { id: 'finish', name: 'Finish', field: 'finish' },
-      { id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', sortable: true }
+      { id: 'title', name: 'Title', field: 'title', sortable: true, minWidth: 100 },
+      { id: 'duration', name: 'Duration (days)', field: 'duration', sortable: true, minWidth: 100 },
+      { id: '%', name: '% Complete', field: 'percentComplete', sortable: true, minWidth: 100 },
+      { id: 'start', name: 'Start', field: 'start', minWidth: 100 },
+      { id: 'finish', name: 'Finish', field: 'finish', minWidth: 100 },
+      { id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', sortable: true, minWidth: 100 }
     ];
     this.gridOptions = {
       enableAutoResize: false

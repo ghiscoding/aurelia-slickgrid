@@ -13,11 +13,11 @@ export class Example6 {
     Sorting/Paging connected to a Backend GraphQL Service.
     <br/>
     <ul class="small">
-      <li><span class="red">(*) NO DATA SHOWING</span> - change filter &amp; page and look at the "GraphQL Query" changing</li>
+      <li><span class="red">(*) NO DATA SHOWING</span> - just change filters &amp; page and look at the "GraphQL Query" changing</li>
       <li>String column also support operator (>, >=, <, <=, <>, !=, =, ==, *)
       <ul>
         <li>The (*) can be used as startsWith (ex.: "abc*" => startsWith "abc") / endsWith (ex.: "*xyz" => endsWith "xyz")</li>
-        <li>The other operators can be used on column type number for example: ">=100" (bigger or equal than 100)</li>
+        <li>The other operators can be used on column type number for example: ">=100" (greater or equal than 100)</li>
       </ul>
     </ul>
   `;
@@ -37,16 +37,16 @@ export class Example6 {
 
   defineGrid() {
     this.columnDefinitions = [
-      { id: 'name', name: 'Name', field: 'name', filterable: true, sortable: true, type: FieldType.string },
+      { id: 'name', name: 'Name', field: 'name', filterable: true, sortable: true, type: FieldType.string, minWidth: 80 },
       {
-        id: 'gender', name: 'Gender', field: 'gender', filterable: true, sortable: true,
+        id: 'gender', name: 'Gender', field: 'gender', filterable: true, sortable: true, minWidth: 80,
         filter: {
           searchTerm: '', // default selection
           type: FormElementType.select,
           selectOptions: [{ value: '', label: '' }, { value: 'male', label: 'male' }, { value: 'female', label: 'female' }]
         }
       },
-      { id: 'company', name: 'Company', field: 'company' }
+      { id: 'company', name: 'Company', field: 'company', minWidth: 80 }
     ];
 
     this.gridOptions = {
