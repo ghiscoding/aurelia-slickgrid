@@ -1,5 +1,5 @@
 # Aurelia-Slickgrid
-One of the best javascript datagrid [SlickGrid](https://github.com/mleibman/SlickGrid) which was originally developed by @mleibman is now available to Aurelia. I have used a few datagrids and slickgrid beats most of them in terms of functionalities and performance (it can easily deal with even a million row).
+One of the best javascript datagrid [SlickGrid](https://github.com/mleibman/SlickGrid) which was originally developed by @mleibman is now available to Aurelia. I have tried and used a few datagrids and SlickGrid beats most of them in terms of functionalities and performance (it can easily deal with even a million row).
 
 ### SlickGrid Source
 We will be using [6pac SlickGrid fork](https://github.com/6pac/SlickGrid/) (the most active fork since the original @mleibman fork was closed some time ago by his author personal reasons).
@@ -15,10 +15,10 @@ The goal is of course to be able to run SlickGrid within Aurelia but also to inc
 
 ## Migration (from 0.x to 1.x)
 ### Breaking Changes
-Since the version `1.x` is a complete rewrite, there are some drawbacks (Frozen grid is dropped and some lib imports are little funky since we now point to legacy libs). So we dropped the dependecies of [Slickgrid-ES6](https://github.com/DimitarChristoff/slickgrid-es6), that means that there are some breaking changes. The modules you can import are different and the `Frozen` grid is gone.
+Since the version `1.x` is a complete rewrite, there are some drawbacks which we will discuss. By dropping [Slickgrid-ES6](https://github.com/DimitarChristoff/slickgrid-es6) dependency, it means introducing couple of breaking changes (that is, if you were using previous version). Also, the modules that you can import are different and the `Frozen` grid is gone.
 
-### Why the rewrite?
-Mostly because the [Slickgrid-ES6](https://github.com/DimitarChristoff/slickgrid-es6) repo (which is maintained by 1 person, which mainly does `React` stuff) is not as maintained, neither stable, as the official [6pac fork](https://github.com/6pac/SlickGrid). Also, I now have another repo for `Angular 4+` as well ([Angular-Slickgrid](https://github.com/ghiscoding/Angular-Slickgrid)) which I also maintain (that one is for work though) and is based on the [6pac fork](https://github.com/6pac/SlickGrid) fork, in which I prefer for it's stability, list of functionalities and samples (I even made a few PRs on that fork as well), which the `ES6` fork lacks. The goal is to make both `Angular-Slickgrid` and `Aurelia-Slickgrid` on par (feature wise) and because it is used and developed at my work, it will grow much faster.
+### So, why the rewrite?
+Mostly because the [Slickgrid-ES6](https://github.com/DimitarChristoff/slickgrid-es6) repo (which is maintained by 1 person, which mainly does `React` stuff) is not as maintained, neither stable, as the most active [6pac fork](https://github.com/6pac/SlickGrid). Also, I now have another repo for `Angular 4+` as well ([Angular-Slickgrid](https://github.com/ghiscoding/Angular-Slickgrid)) which I also maintain (that one is for work though) and is based on the [6pac fork](https://github.com/6pac/SlickGrid) fork as well. I prefer the 6pac fork for it's stability, list of available functionalities and samples (I even made a few PRs on that fork as well), which the `ES6` fork lacks. The goal is to make both `Angular-Slickgrid` and `Aurelia-Slickgrid` on par (feature wise) and in synch, also since it is used and developed at my work, it will grow much faster.
 
 ## Wiki / Documentation
 The Wiki is where all the documentation and instructions will go, so please consult the [Aurelia-Validation - Wiki](https://github.com/ghiscoding/aurelia-slickgrid/wiki) before opening any issues. The [Wiki - HOWTO](https://github.com/ghiscoding/aurelia-slickgrid/wiki/HOWTO---Step-by-Step) is a great place to start with.
@@ -30,9 +30,7 @@ This is a work in progress, but so far here are some of the features that `aurel
 - Easier use of SlickGrid within `Aurelia` as it is just a component (simply pass a column definitions and a dataset and you're good to go)
 - Bootstrap Theme with SASS variables for extra customization (if you create a theme, then please make a PR)
 - Auto-resize (boolean flag), will resize the datagrid viewport with available space, that includes when browser resize (basically takes available space from it's parent container)
-- Integrated Plugins.
-    - Column Picker (show/hide any columns from a `right+click` in the header, [see a print screen here](/screenshots/columnPicker.png)).
-    - ... more to come
+- Support all SlickGrid Plugins.
 - Server side (backend) Services (filtering, sorting, pagination)
     - [GraphQL](https://github.com/ghiscoding/aurelia-slickgrid/wiki/GraphQL)
     - [OData](https://github.com/ghiscoding/aurelia-slickgrid/wiki/OData)
@@ -43,16 +41,11 @@ This is a work in progress, but so far here are some of the features that `aurel
   - Formatters (this as well includes some defaults and they are customizable)
   - Optimized DataView which brings a lot of functionalities (sort, grouping, and more)
     - even server side data is saved back into a SlickGrid DataView to use these functionalities (e.g grouping)
-- ... more to come
-
-<a name="missing-features"></a>
+  - All the [SlickGrid Events](https://github.com/6pac/SlickGrid/wiki/Grid-Events) are supported, see the [Wiki](https://github.com/ghiscoding/Angular-Slickgrid/wiki/Grid-&-DataView-Events)
 
 ## Missing features (planned items, not necessarily in order of execution)
 The following are SlickGrid features which are not yet included in this library but will be in the upcoming future.
 - Filters to support multi-select dropdown and eventually custom filters
-- Plugins (Header Menu, Grid Menu, Column Header Buttons)
-- Row selection, will probably provide a `onRowsChanged()` in the `gridOptions` object
-- Cell click, will probably provide a `onCellClicked()` in the `gridOptions` object
 
 ## Screenshots
 
@@ -178,7 +171,7 @@ npm install # or yarn install
 au run --watch
 ```
 
-### Aurelia-Webpack (client-ts-wp)
+### Aurelia TypeScript Webpack (client-ts-wp)
 ```bash
 git clone https://github.com/ghiscoding/aurelia-slickgrid
 cd aurelia-slickgrid/client-ts-wp
@@ -187,7 +180,7 @@ npm start # or yarn start
 ```
 
 ### License
-[MIT License](https://github.com/ghiscoding/aurelia-slickgrid/blob/master/LICENSE)
+[MIT License](LICENSE)
 
 ## Contributions/Comments
 Contributions are welcome, this is what the community is for. If you wish to suggest something and/or want to make a PR (Pull Request), please feel free to do so.

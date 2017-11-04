@@ -71,13 +71,9 @@ export class AureliaSlickgridCustomElement {
     this._gridOptions = this.mergeGridOptions();
 
     this.dataview = new Slick.Data.DataView();
-
     this.grid = new Slick.Grid(`#${this.gridId}`, this.dataview, this.columnDefinitions, this._gridOptions);
-    this.grid.setSelectionModel(new Slick.RowSelectionModel());
 
-    if (this._gridOptions.enableColumnPicker) {
-      const columnpicker = new Slick.Controls.ColumnPicker(this.columnDefinitions, this.grid, this._gridOptions);
-    }
+    this.attachDifferentControlOrPlugins(this.grid, this._gridOptions, this._dataView);
 
     this.grid.init();
     this.dataview.beginUpdate();
@@ -117,6 +113,33 @@ export class AureliaSlickgridCustomElement {
     if (!oldValue || oldValue.length < 1) {
       if (this._gridOptions.autoFitColumnsOnFirstLoad) {
         this.grid.autosizeColumns();
+      }
+    }
+  }
+
+  attachDifferentControlOrPlugins(grid: any, options: GridOption, dataView: any) {
+    if (options.enableColumnPicker) {
+      const columnpicker = new Slick.Controls.ColumnPicker(this.columnDefinitions, this.grid, options);
+    }
+    if (options.enableAutoTooltip) {
+      const columnpicker = new Slick.Controls.AutoTooltips(options.autoTooltipOptions || {});
+    }
+    if (options.enableRowSelection) {
+      const columnpicker = new Slick.RowSelectionModel(options.rowSelectionOptions || {});
+    }
+    if (options.enableHeaderButton) {
+      const columnpicker = new Slick.RowSelectionModel(options.headerMenuOptions || {});
+    }
+    if (options.enableHeaderMenu) {
+      const columnpicker = new Slick.RowSelectionModel(options.headerMenuOptions || {});
+    }
+    if (options.registerPlugins !== undefined) {
+      if (Array.isArray(options.registerPlugins)) {
+        options.registerPlugins.forEach((plugin) => {
+          this.grid.registerPlugin(plugin);
+        });
+      } else {
+        this.grid.registerPlugin(options.registerPlugins);
       }
     }
   }
