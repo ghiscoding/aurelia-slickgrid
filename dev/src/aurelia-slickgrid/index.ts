@@ -10,7 +10,7 @@ import { Formatter } from './models/formatter.interface';
 import { GridOption } from './models/gridOption.interface';
 import { FormElementType } from './models/formElementType';
 import { FieldType } from './models/fieldType';
-import { OnCellClickArgs } from './models/onCellClickArgs.interface';
+import { OnEventArgs } from './models/OnEventArgs.interface';
 
 // editors, formatters, ...
 import { Editors } from './editors/index';
@@ -48,7 +48,7 @@ export {
   GridOption,
   FormElementType,
   FieldType,
-  OnCellClickArgs,
+  OnEventArgs,
 
   Editors,
   FilterConditions,

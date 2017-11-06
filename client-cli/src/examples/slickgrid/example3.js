@@ -19,6 +19,10 @@ export class Example3 {
     this.resizer = resizer;
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
+
+    const flatInstance = flatpickr('#testdate', {});
+    console.log(flatInstance);
+    // flatInstance.open();
   }
 
   attached() {

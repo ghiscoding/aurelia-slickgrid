@@ -1,4 +1,4 @@
-import { OnCellClickArgs, CellArgs, GridOption } from './../models/index';
+import { OnEventArgs, CellArgs, GridOption } from './../models/index';
 
 export class GridEventService {
   /* OnMouseHover (Enter/Leave) Events */
@@ -16,6 +16,32 @@ export class GridEventService {
     });
   }
 
+  /* OnCellChange Event */
+  attachOnCellChange(grid: any, gridOptions: GridOption, dataView: any) {
+    // subscribe to this Slickgrid event of onCellChange
+    grid.onCellChange.subscribe((e: Event, args: CellArgs) => {
+      if (!e || !args || !args.grid || args.cell === undefined || !args.grid.getColumns || !args.grid.getDataItem) {
+        return;
+      }
+      const column = args.grid.getColumns()[args.cell];
+
+      // if the column definition has a onCellChange property (a callback function), then run it
+      if (typeof column.onCellChange === 'function') {
+        // add to the output gridOptions & dataView since we'll need them inside the AJAX column.onCellChange
+        const returnedArgs: OnEventArgs = {
+          dataView,
+          gridDefinition: gridOptions,
+          grid,
+          columnDef: column,
+          dataContext: args.grid.getDataItem(args.row)
+        };
+
+        // finally call up the Slick.column.onCellChanges.... function
+        column.onCellChange(returnedArgs);
+        // e.stopImmediatePropagation();
+      }
+    });
+  }
   /* OnClick Event */
   attachOnClick(grid: any, gridOptions: GridOption, dataView: any) {
 
@@ -25,10 +51,10 @@ export class GridEventService {
       }
       const column = args.grid.getColumns()[args.cell];
 
-      // so if the columns definition does have an column.onCellClick property (a callback function attached), then run it
+      // if the column definition has a onCellClick property (a callback function), then run it
       if (typeof column.onCellClick === 'function') {
-        // add more useful properties to the return of the onCellClick callback
-        const onCellClickArgs: OnCellClickArgs = {
+        // add to the output gridOptions & dataView since we'll need them inside the AJAX column.onClick
+        const returnedArgs: OnEventArgs = {
           dataView,
           gridDefinition: gridOptions,
           grid,
@@ -36,14 +62,14 @@ export class GridEventService {
           dataContext: args.grid.getDataItem(args.row)
         };
 
-        // finally execute the onCellClick callback
-        column.onCellClick(onCellClickArgs);
+        // finally call up the Slick.column.onCellClick.... function
+        column.onCellClick(returnedArgs);
         e.stopImmediatePropagation();
       }
 
       // stop the click event bubbling
       // NOTE: We don't want to stop bubbling when doing an input edit, if we do the autoEdit which has intent of doing singleClick edit will become doubleClick edit
-      if (!grid.getOptions || !grid.getOptions().autoEdit) {
+      if (grid.getOptions && !grid.getOptions().autoEdit) {
         // e.stopImmediatePropagation();
       }
     });

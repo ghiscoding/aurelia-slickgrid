@@ -1,6 +1,6 @@
 import { autoinject, bindable } from 'aurelia-framework';
 import data from './sample-data/example-data';
-import { Column, Editors, FieldType, Formatters, GridExtraUtils, GridOption, OnCellClickArgs, ResizerService } from '../../aurelia-slickgrid';
+import { Column, Editors, FieldType, Formatters, GridExtraUtils, GridOption, OnEventArgs, ResizerService } from '../../aurelia-slickgrid';
 
 // create my custom Formatter with the Formatter type
 const myCustomCheckboxFormatter = (row, cell, value, columnDef, dataContext) =>
@@ -36,7 +36,7 @@ export class Example3 {
         formatter: Formatters.editIcon,
         minWidth: 30,
         maxWidth: 30,
-        onCellClick: (args: OnCellClickArgs) => {
+        onCellClick: (args: OnEventArgs) => {
           console.log(args);
           console.log(this);
         }
@@ -46,7 +46,7 @@ export class Example3 {
         formatter: Formatters.deleteIcon,
         minWidth: 30,
         maxWidth: 30,
-        onCellClick: (args: OnCellClickArgs) => {
+        onCellClick: (args: OnEventArgs) => {
           console.log(args);
           console.log(this);
         }

@@ -6,6 +6,7 @@ import 'slickgrid/slick.core';
 import 'slickgrid/slick.dataview';
 import 'slickgrid/slick.grid';
 import 'slickgrid/controls/slick.columnpicker';
+import 'slickgrid/controls/slick.gridmenu';
 import 'slickgrid/controls/slick.pager';
 import 'slickgrid/plugins/slick.autotooltips';
 import 'slickgrid/plugins/slick.cellcopymanager';
@@ -21,7 +22,7 @@ import 'slickgrid/plugins/slick.rowselectionmodel';
 
 import { bindable, bindingMode, inject } from 'aurelia-framework';
 import { GlobalGridOptions } from './global-grid-options';
-import { Column, ColumnFilters, FormElementType, GridOption } from './models/index';
+import { CellArgs, Column, ColumnFilters, FormElementType, GridOption } from './models/index';
 import { FilterService, GridEventService, SortService, ResizerService } from './services/index';
 import * as $ from 'jquery';
 
@@ -72,7 +73,6 @@ export class AureliaSlickgridCustomElement {
 
     this.dataview = new Slick.Data.DataView();
     this.grid = new Slick.Grid(`#${this.gridId}`, this.dataview, this.columnDefinitions, this._gridOptions);
-
     this.attachDifferentControlOrPlugins(this.grid, this._gridOptions, this._dataView);
 
     this.grid.init();
@@ -119,19 +119,45 @@ export class AureliaSlickgridCustomElement {
 
   attachDifferentControlOrPlugins(grid: any, options: GridOption, dataView: any) {
     if (options.enableColumnPicker) {
-      const columnpicker = new Slick.Controls.ColumnPicker(this.columnDefinitions, this.grid, options);
+      const columnPickerControl = new Slick.Controls.ColumnPicker(this.columnDefinitions, this.grid, options);
+    }
+    if (options.enableGridMenu) {
+      options.gridMenu = options.gridMenu || {};
+      options.gridMenu.columnTitle = (options.gridMenu) ? options.gridMenu.columnTitle : 'Columns';
+      options.gridMenu.iconCssClass = (options.gridMenu) ? options.gridMenu.iconCssClass : 'fa fa-bars';
+      options.gridMenu.menuWidth = (options.gridMenu) ? options.gridMenu.menuWidth : 18;
+      options.gridMenu.resizeOnShowHeaderRow = options.showHeaderRow;
+
+      const gridMenuControl = new Slick.Controls.GridMenu(this.columnDefinitions, this.grid, options);
+      gridMenuControl.onCommand.subscribe((e: Event, args: CellArgs) => {
+        if (typeof options.onGridMenuCommand === 'function') {
+          options.onGridMenuCommand(e, args);
+        }
+      });
     }
     if (options.enableAutoTooltip) {
-      const columnpicker = new Slick.Controls.AutoTooltips(options.autoTooltipOptions || {});
+      grid.registerPlugin(new Slick.AutoTooltips(options.autoTooltipOptions || {}));
     }
     if (options.enableRowSelection) {
-      const columnpicker = new Slick.RowSelectionModel(options.rowSelectionOptions || {});
+      grid.setSelectionModel(new Slick.RowSelectionModel(options.rowSelectionOptions || {}));
     }
     if (options.enableHeaderButton) {
-      const columnpicker = new Slick.RowSelectionModel(options.headerMenuOptions || {});
+      const headerButtonsPlugin = new Slick.Plugins.HeaderButtons(options.headerButtonOptions || {});
+      grid.registerPlugin(headerButtonsPlugin);
+      headerButtonsPlugin.onCommand.subscribe((e: Event, args: CellArgs) => {
+        if (typeof options.onHeaderButtonCommand === 'function') {
+          options.onHeaderButtonCommand(e, args);
+        }
+      });
     }
     if (options.enableHeaderMenu) {
-      const columnpicker = new Slick.RowSelectionModel(options.headerMenuOptions || {});
+      const headerMenuPlugin = new Slick.Plugins.HeaderMenu(options.headerMenuOptions || {});
+      grid.registerPlugin(headerMenuPlugin);
+      headerMenuPlugin.onCommand.subscribe((e: Event, args: CellArgs) => {
+        if (typeof options.onHeaderMenuCommand === 'function') {
+          options.onHeaderMenuCommand(e, args);
+        }
+      });
     }
     if (options.registerPlugins !== undefined) {
       if (Array.isArray(options.registerPlugins)) {
@@ -175,7 +201,8 @@ export class AureliaSlickgridCustomElement {
     }
 
     // on cell click, mainly used with the columnDef.action callback
-    // this.gridEventService.attachOnClick(grid, this._gridOptions, dataView);
+    this.gridEventService.attachOnCellChange(grid, this._gridOptions, dataView);
+    this.gridEventService.attachOnClick(grid, this._gridOptions, dataView);
 
     // if enable, change background color on mouse over
     if (options.enableMouseHoverHighlightRow) {
