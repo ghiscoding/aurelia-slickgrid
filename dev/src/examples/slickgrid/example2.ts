@@ -1,4 +1,3 @@
-import data from './sample-data/example-data';
 import { Column, FieldType, Formatters, GridOption } from '../../aurelia-slickgrid';
 
 // create my custom Formatter with the Formatter type

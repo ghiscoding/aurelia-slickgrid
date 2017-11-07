@@ -1,10 +1,5 @@
 import { autoinject, bindable } from 'aurelia-framework';
-import data from './sample-data/example-data';
 import { Column, Editors, FieldType, Formatters, GridExtraUtils, GridOption, OnEventArgs, ResizerService } from '../../aurelia-slickgrid';
-
-// create my custom Formatter with the Formatter type
-const myCustomCheckboxFormatter = (row, cell, value, columnDef, dataContext) =>
-  value ? `<i class="fa fa-pencil" aria-hidden="true"></i>` : '<i class="fa fa-snowflake-o" aria-hidden="true"></i>';
 
 @autoinject()
 export class Example3 {

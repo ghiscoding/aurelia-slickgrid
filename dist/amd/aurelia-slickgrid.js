@@ -47,12 +47,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "aurelia-framework", "./global-grid-options", "./services/index", "slickgrid/lib/jquery-ui-1.11.3", "slickgrid/lib/jquery.event.drag-2.3.0", "slickgrid/slick.core", "slickgrid/slick.dataview", "slickgrid/slick.grid", "slickgrid/controls/slick.columnpicker", "slickgrid/controls/slick.pager", "slickgrid/plugins/slick.autotooltips", "slickgrid/plugins/slick.cellcopymanager", "slickgrid/plugins/slick.cellexternalcopymanager", "slickgrid/plugins/slick.cellrangedecorator", "slickgrid/plugins/slick.cellrangeselector", "slickgrid/plugins/slick.cellselectionmodel", "slickgrid/plugins/slick.checkboxselectcolumn", "slickgrid/plugins/slick.headerbuttons", "slickgrid/plugins/slick.headermenu", "slickgrid/plugins/slick.rowmovemanager", "slickgrid/plugins/slick.rowselectionmodel"], function (require, exports, aurelia_framework_1, global_grid_options_1, index_1) {
+define(["require", "exports", "aurelia-framework", "./global-grid-options", "./services/index", "slickgrid/lib/jquery-ui-1.11.3", "slickgrid/lib/jquery.event.drag-2.3.0", "slickgrid/slick.core", "slickgrid/slick.dataview", "slickgrid/slick.grid", "slickgrid/controls/slick.columnpicker", "slickgrid/controls/slick.gridmenu", "slickgrid/controls/slick.pager", "slickgrid/plugins/slick.autotooltips", "slickgrid/plugins/slick.cellcopymanager", "slickgrid/plugins/slick.cellexternalcopymanager", "slickgrid/plugins/slick.cellrangedecorator", "slickgrid/plugins/slick.cellrangeselector", "slickgrid/plugins/slick.cellselectionmodel", "slickgrid/plugins/slick.checkboxselectcolumn", "slickgrid/plugins/slick.headerbuttons", "slickgrid/plugins/slick.headermenu", "slickgrid/plugins/slick.rowmovemanager", "slickgrid/plugins/slick.rowselectionmodel"], function (require, exports, aurelia_framework_1, global_grid_options_1, index_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var AureliaSlickgridCustomElement = /** @class */ (function () {
-        function AureliaSlickgridCustomElement(elm, resizer, gridEventService, filterService, sortService) {
+        function AureliaSlickgridCustomElement(elm, controlPluginService, resizer, gridEventService, filterService, sortService) {
             this.elm = elm;
+            this.controlPluginService = controlPluginService;
             this.resizer = resizer;
             this.gridEventService = gridEventService;
             this.filterService = filterService;
@@ -63,6 +64,7 @@ define(["require", "exports", "aurelia-framework", "./global-grid-options", "./s
             this.gridWidth = 600;
             this.elm = elm;
             this.resizer = resizer;
+            this.controlPluginService = controlPluginService;
             this.gridEventService = gridEventService;
             this.filterService = filterService;
             this.sortService = sortService;
@@ -73,10 +75,7 @@ define(["require", "exports", "aurelia-framework", "./global-grid-options", "./s
             this._gridOptions = this.mergeGridOptions();
             this.dataview = new Slick.Data.DataView();
             this.grid = new Slick.Grid("#" + this.gridId, this.dataview, this.columnDefinitions, this._gridOptions);
-            this.grid.setSelectionModel(new Slick.RowSelectionModel());
-            if (this._gridOptions.enableColumnPicker) {
-                var columnpicker = new Slick.Controls.ColumnPicker(this.columnDefinitions, this.grid, this._gridOptions);
-            }
+            this.controlPluginService.attachDifferentControlOrPlugins(this.grid, this.columnDefinitions, this._gridOptions, this._dataView);
             this.grid.init();
             this.dataview.beginUpdate();
             this.attachDifferentHooks(this.grid, this._gridOptions, this.dataview);
@@ -146,7 +145,8 @@ define(["require", "exports", "aurelia-framework", "./global-grid-options", "./s
                 }); });
             }
             // on cell click, mainly used with the columnDef.action callback
-            // this.gridEventService.attachOnClick(grid, this._gridOptions, dataView);
+            this.gridEventService.attachOnCellChange(grid, this._gridOptions, dataView);
+            this.gridEventService.attachOnClick(grid, this._gridOptions, dataView);
             // if enable, change background color on mouse over
             if (options.enableMouseHoverHighlightRow) {
                 this.gridEventService.attachOnMouseHover(grid);
@@ -250,7 +250,7 @@ define(["require", "exports", "aurelia-framework", "./global-grid-options", "./s
             aurelia_framework_1.bindable()
         ], AureliaSlickgridCustomElement.prototype, "pickerOptions", void 0);
         AureliaSlickgridCustomElement = __decorate([
-            aurelia_framework_1.inject(Element, index_1.ResizerService, index_1.GridEventService, index_1.FilterService, index_1.SortService)
+            aurelia_framework_1.inject(Element, index_1.ControlPluginService, index_1.ResizerService, index_1.GridEventService, index_1.FilterService, index_1.SortService)
         ], AureliaSlickgridCustomElement);
         return AureliaSlickgridCustomElement;
     }());

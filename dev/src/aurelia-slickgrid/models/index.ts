@@ -1,4 +1,3 @@
-import { OnEventArgs } from './onEventArgs.interface';
 export { AutoResizeOption } from './autoResizeOption.interface';
 export { BackendService } from './backendService.interface';
 export { BackendEventChanged } from './backendEventChanged.interface';

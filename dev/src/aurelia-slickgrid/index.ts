@@ -10,7 +10,7 @@ import { Formatter } from './models/formatter.interface';
 import { GridOption } from './models/gridOption.interface';
 import { FormElementType } from './models/formElementType';
 import { FieldType } from './models/fieldType';
-import { OnEventArgs } from './models/OnEventArgs.interface';
+import { OnEventArgs } from './models/onEventArgs.interface';
 
 // editors, formatters, ...
 import { Editors } from './editors/index';

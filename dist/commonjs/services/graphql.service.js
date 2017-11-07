@@ -9,8 +9,8 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var utilities_1 = require("./utilities");
-var index_1 = require("./../models/index");
 var graphqlQueryBuilder_1 = require("./graphqlQueryBuilder");
+var index_1 = require("./../models/index");
 var timer;
 var GraphqlService = /** @class */ (function () {
     function GraphqlService() {

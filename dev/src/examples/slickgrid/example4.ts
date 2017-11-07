@@ -1,4 +1,4 @@
-import { Column, FieldType, Formatters, FormElementType, GridOption } from 'aurelia-slickgrid';
+import { Column, FieldType, Formatters, FormElementType, GridOption } from '../../aurelia-slickgrid';
 
 function randomBetween(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);

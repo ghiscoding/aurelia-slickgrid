@@ -1,6 +1,7 @@
 import { inject } from 'aurelia-framework';
+import data from './sample-data/example-data';
 import { HttpClient } from 'aurelia-http-client';
-import { FieldType, FormElementType, GraphqlService } from 'aurelia-slickgrid';
+import { CaseType, FieldType, Formatters, FormElementType, GraphqlService } from 'aurelia-slickgrid';
 
 const defaultPageSize = 20;
 const sampleDataRoot = 'src/examples/slickgrid/sample-data';

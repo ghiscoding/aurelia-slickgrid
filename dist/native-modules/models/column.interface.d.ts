@@ -1,6 +1,8 @@
 import { FieldType } from './fieldType';
 import { Formatter } from './formatter.interface';
-import { OnCellClickArgs } from './onCellClickArgs.interface';
+import { HeaderButton } from './headerButton.interface';
+import { HeaderMenu } from './headerMenu.interface';
+import { OnEventArgs } from './onEventArgs.interface';
 import { Sorter } from './sorter.interface';
 export interface Column {
     asyncPostRender?: any;
@@ -16,6 +18,12 @@ export interface Column {
     filterTemplate?: any;
     focusable?: boolean;
     formatter?: Formatter;
+    header?: {
+        buttons?: HeaderButton[];
+        menu?: {
+            items: HeaderMenu[];
+        };
+    };
     headerCssClass?: string;
     id: number | string;
     isEditable?: boolean;
@@ -26,7 +34,8 @@ export interface Column {
     maxWidth?: number;
     minWidth?: number;
     name?: string;
-    onCellClick?: (args: OnCellClickArgs) => void;
+    onCellChange?: (args: OnEventArgs) => void;
+    onCellClick?: (args: OnEventArgs) => void;
     previousWidth?: number;
     resizable?: boolean;
     rerenderOnResize?: boolean;

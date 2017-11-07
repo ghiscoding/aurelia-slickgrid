@@ -1,5 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var controlPlugin_service_1 = require("./controlPlugin.service");
+exports.ControlPluginService = controlPlugin_service_1.ControlPluginService;
 var filter_service_1 = require("./filter.service");
 exports.FilterService = filter_service_1.FilterService;
 var graphql_service_1 = require("./graphql.service");

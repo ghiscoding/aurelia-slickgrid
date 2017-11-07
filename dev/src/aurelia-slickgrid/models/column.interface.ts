@@ -1,9 +1,9 @@
-import { HeaderMenu } from './headerMenu.interface';
 import { Editor } from './editor.interface';
 import { FieldType } from './fieldType';
 import { Formatter } from './formatter.interface';
 import { HeaderButton } from './headerButton.interface';
-import { OnEventArgs } from './OnEventArgs.interface';
+import { HeaderMenu } from './headerMenu.interface';
+import { OnEventArgs } from './onEventArgs.interface';
 import { Sorter } from './sorter.interface';
 
 export interface Column {

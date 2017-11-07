@@ -1,6 +1,5 @@
 import { autoinject } from 'aurelia-framework';
-import { HttpClient } from 'aurelia-http-client';
-import { CaseType, Column, GridOption, FieldType, Formatters, FormElementType, GraphqlService } from '../../aurelia-slickgrid';
+import { Column, GridOption, FieldType, Formatters, FormElementType } from '../../aurelia-slickgrid';
 
 let columnsWithHighlightingById = {};
 
@@ -30,7 +29,7 @@ export class Example7 {
   dataset = [];
   gridObj: any;
 
-  constructor(private http: HttpClient, private graphqlService: GraphqlService) {
+  constructor() {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
     columnsWithHighlightingById = {};

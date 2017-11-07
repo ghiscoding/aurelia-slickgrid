@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var filterUtilities_1 = require("./filterUtilities");
 exports.stringFilterCondition = function (options) {
-    // make sure the cell value is a string by casting it
-    options.cellValue = options.cellValue.toString();
+    // make sure the cell value is a string by casting it when possible
+    options.cellValue = (options.cellValue === undefined || options.cellValue === null) ? '' : options.cellValue.toString();
     if (options.operator === '*') {
         return options.cellValue.startsWith(options.searchTerm);
     }

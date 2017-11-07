@@ -4,6 +4,12 @@ body {
 .italic {
   font-style: italic;
 }
+.faded {
+  opacity: 0.2;
+}
+.faded:hover {
+  opacity: 0.5;
+}
 .red {
   color: red;
 }

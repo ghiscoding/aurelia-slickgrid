@@ -1,4 +1,4 @@
-System.register(["./utilities", "./../models/index", "./graphqlQueryBuilder"], function (exports_1, context_1) {
+System.register(["./utilities", "./graphqlQueryBuilder", "./../models/index"], function (exports_1, context_1) {
     "use strict";
     var __assign = (this && this.__assign) || Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -9,17 +9,17 @@ System.register(["./utilities", "./../models/index", "./graphqlQueryBuilder"], f
         return t;
     };
     var __moduleName = context_1 && context_1.id;
-    var utilities_1, index_1, graphqlQueryBuilder_1, timer, GraphqlService;
+    var utilities_1, graphqlQueryBuilder_1, index_1, timer, GraphqlService;
     return {
         setters: [
             function (utilities_1_1) {
                 utilities_1 = utilities_1_1;
             },
-            function (index_1_1) {
-                index_1 = index_1_1;
-            },
             function (graphqlQueryBuilder_1_1) {
                 graphqlQueryBuilder_1 = graphqlQueryBuilder_1_1;
+            },
+            function (index_1_1) {
+                index_1 = index_1_1;
             }
         ],
         execute: function () {

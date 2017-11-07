@@ -23,13 +23,13 @@ import 'slickgrid/plugins/slick.rowselectionmodel';
 import { bindable, bindingMode, inject } from 'aurelia-framework';
 import { GlobalGridOptions } from './global-grid-options';
 import { CellArgs, Column, ColumnFilters, FormElementType, GridOption } from './models/index';
-import { FilterService, GridEventService, SortService, ResizerService } from './services/index';
+import { ControlPluginService, FilterService, GridEventService, SortService, ResizerService } from './services/index';
 import * as $ from 'jquery';
 
 // using external js modules in Aurelia
 declare var Slick: any;
 
-@inject(Element, ResizerService, GridEventService, FilterService, SortService)
+@inject(Element, ControlPluginService, ResizerService, GridEventService, FilterService, SortService)
 export class AureliaSlickgridCustomElement {
   private _dataset: any[];
   private _dataView: any;
@@ -55,12 +55,14 @@ export class AureliaSlickgridCustomElement {
 
   constructor(
     private elm: HTMLElement,
+    private controlPluginService: ControlPluginService,
     private resizer: ResizerService,
     private gridEventService: GridEventService,
     private filterService: FilterService,
     private sortService: SortService) {
     this.elm = elm;
     this.resizer = resizer;
+    this.controlPluginService = controlPluginService;
     this.gridEventService = gridEventService;
     this.filterService = filterService;
     this.sortService = sortService;
@@ -73,7 +75,7 @@ export class AureliaSlickgridCustomElement {
 
     this.dataview = new Slick.Data.DataView();
     this.grid = new Slick.Grid(`#${this.gridId}`, this.dataview, this.columnDefinitions, this._gridOptions);
-    this.attachDifferentControlOrPlugins(this.grid, this._gridOptions, this._dataView);
+    this.controlPluginService.attachDifferentControlOrPlugins(this.grid, this.columnDefinitions, this._gridOptions, this._dataView);
 
     this.grid.init();
     this.dataview.beginUpdate();
@@ -113,59 +115,6 @@ export class AureliaSlickgridCustomElement {
     if (!oldValue || oldValue.length < 1) {
       if (this._gridOptions.autoFitColumnsOnFirstLoad) {
         this.grid.autosizeColumns();
-      }
-    }
-  }
-
-  attachDifferentControlOrPlugins(grid: any, options: GridOption, dataView: any) {
-    if (options.enableColumnPicker) {
-      const columnPickerControl = new Slick.Controls.ColumnPicker(this.columnDefinitions, this.grid, options);
-    }
-    if (options.enableGridMenu) {
-      options.gridMenu = options.gridMenu || {};
-      options.gridMenu.columnTitle = (options.gridMenu) ? options.gridMenu.columnTitle : 'Columns';
-      options.gridMenu.iconCssClass = (options.gridMenu) ? options.gridMenu.iconCssClass : 'fa fa-bars';
-      options.gridMenu.menuWidth = (options.gridMenu) ? options.gridMenu.menuWidth : 18;
-      options.gridMenu.resizeOnShowHeaderRow = options.showHeaderRow;
-
-      const gridMenuControl = new Slick.Controls.GridMenu(this.columnDefinitions, this.grid, options);
-      gridMenuControl.onCommand.subscribe((e: Event, args: CellArgs) => {
-        if (typeof options.onGridMenuCommand === 'function') {
-          options.onGridMenuCommand(e, args);
-        }
-      });
-    }
-    if (options.enableAutoTooltip) {
-      grid.registerPlugin(new Slick.AutoTooltips(options.autoTooltipOptions || {}));
-    }
-    if (options.enableRowSelection) {
-      grid.setSelectionModel(new Slick.RowSelectionModel(options.rowSelectionOptions || {}));
-    }
-    if (options.enableHeaderButton) {
-      const headerButtonsPlugin = new Slick.Plugins.HeaderButtons(options.headerButtonOptions || {});
-      grid.registerPlugin(headerButtonsPlugin);
-      headerButtonsPlugin.onCommand.subscribe((e: Event, args: CellArgs) => {
-        if (typeof options.onHeaderButtonCommand === 'function') {
-          options.onHeaderButtonCommand(e, args);
-        }
-      });
-    }
-    if (options.enableHeaderMenu) {
-      const headerMenuPlugin = new Slick.Plugins.HeaderMenu(options.headerMenuOptions || {});
-      grid.registerPlugin(headerMenuPlugin);
-      headerMenuPlugin.onCommand.subscribe((e: Event, args: CellArgs) => {
-        if (typeof options.onHeaderMenuCommand === 'function') {
-          options.onHeaderMenuCommand(e, args);
-        }
-      });
-    }
-    if (options.registerPlugins !== undefined) {
-      if (Array.isArray(options.registerPlugins)) {
-        options.registerPlugins.forEach((plugin) => {
-          this.grid.registerPlugin(plugin);
-        });
-      } else {
-        this.grid.registerPlugin(options.registerPlugins);
       }
     }
   }

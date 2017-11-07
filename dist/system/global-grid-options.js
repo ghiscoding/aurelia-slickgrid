@@ -19,11 +19,13 @@ System.register([], function (exports_1, context_1) {
                     sidePadding: 0
                 },
                 enableAutoResize: true,
+                enableRowSelection: true,
                 cellHighlightCssClass: 'slick-cell-modified',
                 editable: false,
                 enableCellNavigation: false,
                 enableColumnPicker: true,
                 enableColumnReorder: true,
+                enableGridMenu: true,
                 enableMouseHoverHighlightRow: true,
                 enablePagination: false,
                 enableSorting: true,

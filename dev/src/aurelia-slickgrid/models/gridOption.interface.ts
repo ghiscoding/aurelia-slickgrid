@@ -1,8 +1,6 @@
 import { AutoResizeOption } from './autoResizeOption.interface';
 import { BackendEventChanged } from './backendEventChanged.interface';
-import { CustomGridMenu } from './customGridMenu.interface';
 import { GridMenu } from './gridMenu.interface';
-import { OnEventArgs } from './OnEventArgs.interface';
 import { Pagination } from './pagination.interface';
 import { PaginationChangedArgs } from './paginationChangedArgs.interface';
 import { SortChangedArgs } from './sortChangedArgs.interface';

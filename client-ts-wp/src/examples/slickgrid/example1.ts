@@ -1,4 +1,4 @@
-import { Column, GridOption } from 'aurelia-slickgrid';
+import { Column, FieldType, GridOption } from 'aurelia-slickgrid';
 
 export class Example1 {
   title = 'Example 1: Basic Grid';
@@ -9,7 +9,6 @@ export class Example1 {
   dataset: any[];
 
   constructor() {
-
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
   }

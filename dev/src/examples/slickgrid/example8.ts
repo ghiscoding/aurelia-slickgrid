@@ -1,6 +1,5 @@
 import { autoinject, bindable } from 'aurelia-framework';
-import { HttpClient } from 'aurelia-http-client';
-import { CaseType, Column, GridOption, FieldType, Formatters, FormElementType, GraphqlService } from '../../aurelia-slickgrid';
+import { Column, GridOption, FieldType, Formatters, FormElementType } from '../../aurelia-slickgrid';
 
 let columnsWithHighlightingById = {};
 
@@ -32,7 +31,7 @@ export class Example8 {
   dataset = [];
   visibleColumns;
 
-  constructor(private http: HttpClient, private graphqlService: GraphqlService) {
+  constructor() {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
     columnsWithHighlightingById = {};
@@ -50,7 +49,7 @@ export class Example8 {
       { id: '%', name: '% Complete', field: 'percentComplete', sortable: true },
       { id: 'start', name: 'Start', field: 'start' },
       { id: 'finish', name: 'Finish', field: 'finish' },
-      { id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven' }
+      { id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', formatter: Formatters.checkmark }
     ];
     for (let i = 0; i < this.columnDefinitions.length; i++) {
       this.columnDefinitions[i].header = {

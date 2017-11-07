@@ -6,7 +6,7 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
     }
     return t;
 };
-define(["require", "exports", "./utilities", "./../models/index", "./graphqlQueryBuilder"], function (require, exports, utilities_1, index_1, graphqlQueryBuilder_1) {
+define(["require", "exports", "./utilities", "./graphqlQueryBuilder", "./../models/index"], function (require, exports, utilities_1, graphqlQueryBuilder_1, index_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var timer;

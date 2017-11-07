@@ -1,6 +1,7 @@
-define(["require", "exports", "./filter.service", "./graphql.service", "./gridEvent.service", "./grid-odata.service", "./odata.service", "./resizer.service", "./sort.service"], function (require, exports, filter_service_1, graphql_service_1, gridEvent_service_1, grid_odata_service_1, odata_service_1, resizer_service_1, sort_service_1) {
+define(["require", "exports", "./controlPlugin.service", "./filter.service", "./graphql.service", "./gridEvent.service", "./grid-odata.service", "./odata.service", "./resizer.service", "./sort.service"], function (require, exports, controlPlugin_service_1, filter_service_1, graphql_service_1, gridEvent_service_1, grid_odata_service_1, odata_service_1, resizer_service_1, sort_service_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.ControlPluginService = controlPlugin_service_1.ControlPluginService;
     exports.FilterService = filter_service_1.FilterService;
     exports.GraphqlService = graphql_service_1.GraphqlService;
     exports.GridEventService = gridEvent_service_1.GridEventService;

@@ -1,4 +1,20 @@
 export var stringSorter = function (value1, value2, sortDirection) {
-    return sortDirection * (value1 === value2 ? 0 : (value1 > value2 ? 1 : -1));
+    var position = 0;
+    if (value1 === null) {
+        position = -1;
+    }
+    else if (value2 === null) {
+        position = 1;
+    }
+    else if (value1 === value2) {
+        position = 0;
+    }
+    else if (sortDirection) {
+        position = value1 < value2 ? -1 : 1;
+    }
+    else if (!sortDirection) {
+        position = value1 < value2 ? 1 : -1;
+    }
+    return sortDirection * position;
 };
 //# sourceMappingURL=stringSorter.js.map

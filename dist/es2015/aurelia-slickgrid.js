@@ -19,6 +19,7 @@ import 'slickgrid/slick.core';
 import 'slickgrid/slick.dataview';
 import 'slickgrid/slick.grid';
 import 'slickgrid/controls/slick.columnpicker';
+import 'slickgrid/controls/slick.gridmenu';
 import 'slickgrid/controls/slick.pager';
 import 'slickgrid/plugins/slick.autotooltips';
 import 'slickgrid/plugins/slick.cellcopymanager';
@@ -33,10 +34,11 @@ import 'slickgrid/plugins/slick.rowmovemanager';
 import 'slickgrid/plugins/slick.rowselectionmodel';
 import { bindable, bindingMode, inject } from 'aurelia-framework';
 import { GlobalGridOptions } from './global-grid-options';
-import { FilterService, GridEventService, SortService, ResizerService } from './services/index';
+import { ControlPluginService, FilterService, GridEventService, SortService, ResizerService } from './services/index';
 let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
-    constructor(elm, resizer, gridEventService, filterService, sortService) {
+    constructor(elm, controlPluginService, resizer, gridEventService, filterService, sortService) {
         this.elm = elm;
+        this.controlPluginService = controlPluginService;
         this.resizer = resizer;
         this.gridEventService = gridEventService;
         this.filterService = filterService;
@@ -47,6 +49,7 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
         this.gridWidth = 600;
         this.elm = elm;
         this.resizer = resizer;
+        this.controlPluginService = controlPluginService;
         this.gridEventService = gridEventService;
         this.filterService = filterService;
         this.sortService = sortService;
@@ -57,10 +60,7 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
         this._gridOptions = this.mergeGridOptions();
         this.dataview = new Slick.Data.DataView();
         this.grid = new Slick.Grid(`#${this.gridId}`, this.dataview, this.columnDefinitions, this._gridOptions);
-        this.grid.setSelectionModel(new Slick.RowSelectionModel());
-        if (this._gridOptions.enableColumnPicker) {
-            const columnpicker = new Slick.Controls.ColumnPicker(this.columnDefinitions, this.grid, this._gridOptions);
-        }
+        this.controlPluginService.attachDifferentControlOrPlugins(this.grid, this.columnDefinitions, this._gridOptions, this._dataView);
         this.grid.init();
         this.dataview.beginUpdate();
         this.attachDifferentHooks(this.grid, this._gridOptions, this.dataview);
@@ -121,7 +121,8 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
             }));
         }
         // on cell click, mainly used with the columnDef.action callback
-        // this.gridEventService.attachOnClick(grid, this._gridOptions, dataView);
+        this.gridEventService.attachOnCellChange(grid, this._gridOptions, dataView);
+        this.gridEventService.attachOnClick(grid, this._gridOptions, dataView);
         // if enable, change background color on mouse over
         if (options.enableMouseHoverHighlightRow) {
             this.gridEventService.attachOnMouseHover(grid);
@@ -226,7 +227,7 @@ __decorate([
     bindable()
 ], AureliaSlickgridCustomElement.prototype, "pickerOptions", void 0);
 AureliaSlickgridCustomElement = __decorate([
-    inject(Element, ResizerService, GridEventService, FilterService, SortService)
+    inject(Element, ControlPluginService, ResizerService, GridEventService, FilterService, SortService)
 ], AureliaSlickgridCustomElement);
 export { AureliaSlickgridCustomElement };
 //# sourceMappingURL=aurelia-slickgrid.js.map

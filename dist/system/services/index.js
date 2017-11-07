@@ -1,8 +1,13 @@
-System.register(["./filter.service", "./graphql.service", "./gridEvent.service", "./grid-odata.service", "./odata.service", "./resizer.service", "./sort.service"], function (exports_1, context_1) {
+System.register(["./controlPlugin.service", "./filter.service", "./graphql.service", "./gridEvent.service", "./grid-odata.service", "./odata.service", "./resizer.service", "./sort.service"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     return {
         setters: [
+            function (controlPlugin_service_1_1) {
+                exports_1({
+                    "ControlPluginService": controlPlugin_service_1_1["ControlPluginService"]
+                });
+            },
             function (filter_service_1_1) {
                 exports_1({
                     "FilterService": filter_service_1_1["FilterService"]

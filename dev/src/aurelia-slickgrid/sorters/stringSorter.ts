@@ -1,7 +1,7 @@
 import { Sorter } from './../models/sorter.interface';
 
 export const stringSorter: Sorter = (value1, value2, sortDirection) => {
-  let position;
+  let position = 0;
   if (value1 === null) {
     position = -1;
   } else if (value2 === null) {
