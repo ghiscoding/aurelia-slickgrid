@@ -18,9 +18,9 @@ System.register([], function (exports_1, context_1) {
                     minWidth: 300,
                     sidePadding: 0
                 },
+                cellHighlightCssClass: 'slick-cell-modified',
                 enableAutoResize: true,
                 enableRowSelection: true,
-                cellHighlightCssClass: 'slick-cell-modified',
                 editable: false,
                 enableCellNavigation: false,
                 enableColumnPicker: true,
@@ -30,7 +30,7 @@ System.register([], function (exports_1, context_1) {
                 enablePagination: false,
                 enableSorting: true,
                 enableTextSelectionOnCells: true,
-                explicitInitialization: false,
+                explicitInitialization: true,
                 forceFitColumns: false,
                 headerRowHeight: 35,
                 multiColumnSort: true,
@@ -41,7 +41,7 @@ System.register([], function (exports_1, context_1) {
                 },
                 rowHeight: 35,
                 showHeaderRow: false,
-                topPanelHeight: 25
+                topPanelHeight: 35
             });
         }
     };

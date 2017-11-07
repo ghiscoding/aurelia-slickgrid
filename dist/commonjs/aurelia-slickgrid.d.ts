@@ -29,7 +29,6 @@ export declare class AureliaSlickgridCustomElement {
     private _dataset;
     private _dataView;
     private _gridOptions;
-    private _columnFilters;
     gridHeightString: string;
     gridWidthString: string;
     showPagination: boolean;

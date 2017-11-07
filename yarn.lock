@@ -3229,9 +3229,9 @@ signal-exit@^3.0.0, signal-exit@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
 
-slickgrid@2.3.9:
-  version "2.3.9"
-  resolved "https://registry.yarnpkg.com/slickgrid/-/slickgrid-2.3.9.tgz#4031847ff0308f5c3b993859dbe9ede49293a73e"
+slickgrid@^2.3.10:
+  version "2.3.10"
+  resolved "https://registry.yarnpkg.com/slickgrid/-/slickgrid-2.3.10.tgz#d85a52b7f23078b71c37f4c1232b11885d1e1815"
   dependencies:
     jquery ">=1.8.0"
     jquery-ui ">=1.8.0"

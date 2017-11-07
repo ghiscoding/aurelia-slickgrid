@@ -39,7 +39,7 @@ export class FilterService {
     this.subscriber = new Slick.Event();
     this.subscriber.subscribe(this.attachBackendOnFilterSubscribe);
 
-    grid.onHeaderRowCellRendered.subscribe((e, args) => {
+    grid.onHeaderRowCellRendered.subscribe((e: Event, args: any) => {
       this.addFilterTemplateToHeaderRow();
     });
   }
@@ -105,7 +105,7 @@ export class FilterService {
       }
     });
 
-    grid.onHeaderRowCellRendered.subscribe((e, args) => {
+    grid.onHeaderRowCellRendered.subscribe((e: Event, args: any) => {
       this.addFilterTemplateToHeaderRow();
     });
   }

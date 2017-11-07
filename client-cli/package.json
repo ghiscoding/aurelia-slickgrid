@@ -28,7 +28,7 @@
     "jquery": "^3.2.1",
     "moment": "^2.18.1",
     "requirejs": "^2.3.2",
-    "slickgrid": "^2.3.9",
+    "slickgrid": "^2.3.10",
     "text": "github:requirejs/text#latest"
   },
   "peerDependencies": {},

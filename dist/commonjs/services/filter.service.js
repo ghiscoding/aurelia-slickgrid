@@ -41,10 +41,10 @@ var index_3 = require("../models/index");
 var $ = require("jquery");
 var FilterService = /** @class */ (function () {
     function FilterService() {
+        this._columnFilters = {};
     }
-    FilterService.prototype.init = function (grid, gridOptions, columnDefinitions, columnFilters) {
+    FilterService.prototype.init = function (grid, gridOptions, columnDefinitions) {
         this._columnDefinitions = columnDefinitions;
-        this._columnFilters = columnFilters;
         this._gridOptions = gridOptions;
         this._grid = grid;
     };
@@ -54,9 +54,12 @@ var FilterService = /** @class */ (function () {
      * @param gridOptions Grid Options object
      */
     FilterService.prototype.attachBackendOnFilter = function (grid, options) {
+        var _this = this;
         this.subscriber = new Slick.Event();
         this.subscriber.subscribe(this.attachBackendOnFilterSubscribe);
-        this.addFilterTemplateToHeaderRow();
+        grid.onHeaderRowCellRendered.subscribe(function (e, args) {
+            _this.addFilterTemplateToHeaderRow();
+        });
     };
     FilterService.prototype.attachBackendOnFilterSubscribe = function (event, args) {
         return __awaiter(this, void 0, void 0, function () {
@@ -110,7 +113,8 @@ var FilterService = /** @class */ (function () {
      * @param gridOptions Grid Options object
      * @param dataView
      */
-    FilterService.prototype.attachLocalOnFilter = function (dataView) {
+    FilterService.prototype.attachLocalOnFilter = function (grid, options, dataView) {
+        var _this = this;
         this._dataView = dataView;
         this.subscriber = new Slick.Event();
         dataView.setFilterArgs({ columnFilters: this._columnFilters, grid: this._grid });
@@ -121,7 +125,9 @@ var FilterService = /** @class */ (function () {
                 dataView.refresh();
             }
         });
-        this.addFilterTemplateToHeaderRow();
+        grid.onHeaderRowCellRendered.subscribe(function (e, args) {
+            _this.addFilterTemplateToHeaderRow();
+        });
     };
     FilterService.prototype.customFilter = function (item, args) {
         for (var _i = 0, _a = Object.keys(args.columnFilters); _i < _a.length; _i++) {
@@ -170,11 +176,18 @@ var FilterService = /** @class */ (function () {
         this.subscriber.unsubscribe();
     };
     FilterService.prototype.callbackSearchEvent = function (e, args) {
-        this._columnFilters[args.columnDef.id] = {
-            columnId: args.columnDef.id,
-            columnDef: args.columnDef,
-            searchTerm: e.target.value
-        };
+        if (e.target.value === '' || e.target.value === null) {
+            // delete the property from the columnFilters when it becomes empty
+            // without doing this, it would leave an incorrect state of the previous column filters when filtering on another column
+            delete this._columnFilters[args.columnDef.id];
+        }
+        else {
+            this._columnFilters[args.columnDef.id] = {
+                columnId: args.columnDef.id,
+                columnDef: args.columnDef,
+                searchTerm: e.target.value
+            };
+        }
         this.triggerEvent(this.subscriber, {
             columnId: args.columnDef.id,
             columnDef: args.columnDef,

@@ -53,6 +53,7 @@ export interface GridOption {
         selectActiveRow: boolean;
     };
     showHeaderRow?: boolean;
+    showTopPanel?: boolean;
     topPanelHeight?: number;
     onBackendEventApi?: BackendEventChanged;
 }

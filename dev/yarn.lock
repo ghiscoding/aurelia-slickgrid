@@ -6823,9 +6823,9 @@ slickgrid-es6@^0.4.2:
     flatpickr "^1.9.1"
     jquery "^3.1.0"
 
-slickgrid@2.3.3:
-  version "2.3.3"
-  resolved "https://registry.yarnpkg.com/slickgrid/-/slickgrid-2.3.3.tgz#6cf82c3109220cfb389a0094285883cc2a28e0d7"
+slickgrid@^2.3.10:
+  version "2.3.10"
+  resolved "https://registry.yarnpkg.com/slickgrid/-/slickgrid-2.3.10.tgz#d85a52b7f23078b71c37f4c1232b11885d1e1815"
   dependencies:
     jquery ">=1.8.0"
     jquery-ui ">=1.8.0"

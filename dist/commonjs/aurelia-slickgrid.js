@@ -80,7 +80,6 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
         this.gridEventService = gridEventService;
         this.filterService = filterService;
         this.sortService = sortService;
-        this._columnFilters = {};
         this.showPagination = false;
         this.gridHeight = 100;
         this.gridWidth = 600;
@@ -98,9 +97,9 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
         this.dataview = new Slick.Data.DataView();
         this.grid = new Slick.Grid("#" + this.gridId, this.dataview, this.columnDefinitions, this._gridOptions);
         this.controlPluginService.attachDifferentControlOrPlugins(this.grid, this.columnDefinitions, this._gridOptions, this._dataView);
+        this.attachDifferentHooks(this.grid, this._gridOptions, this.dataview);
         this.grid.init();
         this.dataview.beginUpdate();
-        this.attachDifferentHooks(this.grid, this._gridOptions, this.dataview);
         this.dataview.setItems(this._dataset);
         this.dataview.endUpdate();
         // attach resize ONLY after the dataView is ready
@@ -140,8 +139,8 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
         }
         // attach external filter (backend) when available or default onFilter (dataView)
         if (options.enableFiltering) {
-            this.filterService.init(grid, options, this.columnDefinitions, this._columnFilters);
-            (options.onBackendEventApi) ? this.filterService.attachBackendOnFilter(grid, options) : this.filterService.attachLocalOnFilter(this.dataview);
+            this.filterService.init(grid, options, this.columnDefinitions);
+            (options.onBackendEventApi) ? this.filterService.attachBackendOnFilter(grid, options) : this.filterService.attachLocalOnFilter(grid, options, this.dataview);
         }
         if (options.onBackendEventApi && options.onBackendEventApi.onInit) {
             var backendApi_1 = options.onBackendEventApi;
