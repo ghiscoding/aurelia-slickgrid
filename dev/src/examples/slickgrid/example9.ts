@@ -94,6 +94,12 @@ export class Example9 {
             command: 'toggle-filter'
           },
           {
+            iconCssClass: 'fa fa-random',
+            title: 'Toggle Top Panel',
+            disabled: false,
+            command: 'toggle-toppanel'
+          },
+          {
             iconCssClass: 'fa fa-question-circle',
             title: 'Help',
             disabled: false,
@@ -109,6 +115,8 @@ export class Example9 {
       onGridMenuCommand: (e, args) => {
         if (args.command === 'toggle-filter') {
           this.gridObj.setHeaderRowVisibility(!this.gridObj.getOptions().showHeaderRow);
+        } else if (args.command === 'toggle-toppanel') {
+          this.gridObj.setTopPanelVisibility(!this.gridObj.getOptions().showTopPanel);
         } else if (args.command === 'clear-filter') {
           $('.slick-headerrow-column').children().val('');
           // TODO aurelia-slickgrid should have a clearAllFilters function

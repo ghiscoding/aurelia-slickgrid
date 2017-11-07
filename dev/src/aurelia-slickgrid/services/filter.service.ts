@@ -14,18 +14,18 @@ import * as $ from 'jquery';
 
 // using external js modules in Angular
 declare var Slick: any;
+
 export class FilterService {
+  _columnFilters: ColumnFilters = {};
   _columnDefinitions: Column[];
-  _columnFilters: ColumnFilters;
   _dataView: any;
   _grid: any;
   _gridOptions: GridOption;
   _onFilterChangedOptions: any;
   subscriber: SlickEvent;
 
-  init(grid: any, gridOptions: GridOption, columnDefinitions: Column[], columnFilters: any): void {
+  init(grid: any, gridOptions: GridOption, columnDefinitions: Column[]): void {
     this._columnDefinitions = columnDefinitions;
-    this._columnFilters = columnFilters;
     this._gridOptions = gridOptions;
     this._grid = grid;
   }
@@ -38,7 +38,10 @@ export class FilterService {
   attachBackendOnFilter(grid: any, options: GridOption) {
     this.subscriber = new Slick.Event();
     this.subscriber.subscribe(this.attachBackendOnFilterSubscribe);
-    this.addFilterTemplateToHeaderRow();
+
+    grid.onHeaderRowCellRendered.subscribe((e, args) => {
+      this.addFilterTemplateToHeaderRow();
+    });
   }
 
   async attachBackendOnFilterSubscribe(event: Event, args: any) {
@@ -88,7 +91,7 @@ export class FilterService {
    * @param gridOptions Grid Options object
    * @param dataView
    */
-  attachLocalOnFilter(dataView: any) {
+  attachLocalOnFilter(grid: any, options: GridOption, dataView: any) {
     this._dataView = dataView;
     this.subscriber = new Slick.Event();
 
@@ -101,7 +104,10 @@ export class FilterService {
         dataView.refresh();
       }
     });
-    this.addFilterTemplateToHeaderRow();
+
+    grid.onHeaderRowCellRendered.subscribe((e, args) => {
+      this.addFilterTemplateToHeaderRow();
+    });
   }
 
   customFilter(item: any, args: any) {
@@ -157,11 +163,17 @@ export class FilterService {
   }
 
   callbackSearchEvent(e: any, args: any) {
-    this._columnFilters[args.columnDef.id] = {
-      columnId: args.columnDef.id,
-      columnDef: args.columnDef,
-      searchTerm: e.target.value
-    };
+    if (e.target.value === '' || e.target.value === null) {
+      // delete the property from the columnFilters when it becomes empty
+      // without doing this, it would leave an incorrect state of the previous column filters when filtering on another column
+      delete this._columnFilters[args.columnDef.id];
+    } else {
+      this._columnFilters[args.columnDef.id] = {
+        columnId: args.columnDef.id,
+        columnDef: args.columnDef,
+        searchTerm: e.target.value
+      };
+    }
 
     this.triggerEvent(this.subscriber, {
       columnId: args.columnDef.id,
