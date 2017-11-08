@@ -12,7 +12,7 @@ export class ControlPluginService {
       options.gridMenu = options.gridMenu || {};
       options.gridMenu.columnTitle = options.gridMenu.columnTitle || 'Columns';
       options.gridMenu.iconCssClass = options.gridMenu.iconCssClass || 'fa fa-bars';
-      options.gridMenu.menuWidth = options.gridMenu.menuWidth || 18;
+      options.gridMenu.menuWidth = options.gridMenu.menuWidth || 16;
       options.gridMenu.resizeOnShowHeaderRow = options.showHeaderRow;
 
       const gridMenuControl = new Slick.Controls.GridMenu(columnDefinitions, grid, options);
