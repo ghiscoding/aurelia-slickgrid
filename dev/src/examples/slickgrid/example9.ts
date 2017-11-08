@@ -1,5 +1,5 @@
 import { autoinject, bindable } from 'aurelia-framework';
-import { Column, GridOption, FieldType, Formatters, FormElementType } from '../../aurelia-slickgrid';
+import { Column, GridOption, FieldType, Formatters, FormElementType, FilterService } from '../../aurelia-slickgrid';
 
 let columnsWithHighlightingById = {};
 
@@ -32,7 +32,7 @@ export class Example9 {
   dataset = [];
   visibleColumns;
 
-  constructor() {
+  constructor(private filterService: FilterService) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
     columnsWithHighlightingById = {};
@@ -118,10 +118,7 @@ export class Example9 {
         } else if (args.command === 'toggle-toppanel') {
           this.gridObj.setTopPanelVisibility(!this.gridObj.getOptions().showTopPanel);
         } else if (args.command === 'clear-filter') {
-          $('.slick-headerrow-column').children().val('');
-          // TODO aurelia-slickgrid should have a clearAllFilters function
-          alert('Command: ' + args.command);
-          this.dataview.refresh();
+          this.filterService.clearFilters(this.dataview);
         } else {
           alert('Command: ' + args.command);
         }

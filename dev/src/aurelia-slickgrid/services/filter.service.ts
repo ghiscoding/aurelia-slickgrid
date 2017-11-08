@@ -242,6 +242,27 @@ export class FilterService {
     }
   }
 
+  /** Clear the search filters (below the column titles) */
+  public clearFilters(dataview?: any) {
+    // remove the text inside each search input fields
+    $('.slick-headerrow-column .search-filter').val('');
+
+    // we need to loop through all columnFilters and delete them 1 by 1
+    // only trying to make columnFilter an empty (without looping) would not trigger a dataset change
+    for (const columnId in this._columnFilters) {
+      if (columnId && this._columnFilters[columnId]) {
+        delete this._columnFilters[columnId];
+      }
+    }
+
+    // we also need to refresh the dataView and optionally the grid (it's optional since we use DataView)
+    if (this._dataView) {
+      this._dataView.refresh();
+      this._grid.invalidate();
+      this._grid.render();
+    }
+  }
+
   private keepColumnFilters(searchTerm: string, listTerm: any, columnDef: any) {
     if (searchTerm) {
       this._columnFilters[columnDef.id] = {
