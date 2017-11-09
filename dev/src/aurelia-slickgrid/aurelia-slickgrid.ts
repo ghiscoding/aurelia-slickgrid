@@ -22,14 +22,15 @@ import 'slickgrid/plugins/slick.rowselectionmodel';
 
 import { bindable, bindingMode, inject } from 'aurelia-framework';
 import { GlobalGridOptions } from './global-grid-options';
+import { immutableMerge } from './services/utilities';
 import { CellArgs, Column, FormElementType, GridOption } from './models/index';
-import { ControlPluginService, FilterService, GridEventService, SortService, ResizerService } from './services/index';
+import { ControlAndPluginService, FilterService, GridEventService, SortService, ResizerService } from './services/index';
 import * as $ from 'jquery';
 
 // using external js modules in Aurelia
 declare var Slick: any;
 
-@inject(Element, ControlPluginService, ResizerService, GridEventService, FilterService, SortService)
+@inject(Element, ControlAndPluginService, ResizerService, GridEventService, FilterService, SortService)
 export class AureliaSlickgridCustomElement {
   private _dataset: any[];
   private _dataView: any;
@@ -54,7 +55,7 @@ export class AureliaSlickgridCustomElement {
 
   constructor(
     private elm: HTMLElement,
-    private controlPluginService: ControlPluginService,
+    private controlPluginService: ControlAndPluginService,
     private resizer: ResizerService,
     private gridEventService: GridEventService,
     private filterService: FilterService,
@@ -190,8 +191,9 @@ export class AureliaSlickgridCustomElement {
     if (this.gridOptions.enableFiltering) {
       this.gridOptions.showHeaderRow = true;
     }
-    const options = { ...GlobalGridOptions, ...this.gridOptions };
-    return options;
+
+    // use an immutable merge to avoid changing properties in GlobalGridOptions when changing route
+    return immutableMerge(GlobalGridOptions, this.gridOptions);
   }
 
   /** Toggle the filter row displayed on first row */

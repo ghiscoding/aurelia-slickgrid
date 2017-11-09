@@ -20,6 +20,7 @@ import { Formatters } from './formatters/index';
 import { Sorters } from './sorters/index';
 
 // services and utilities
+import { ControlAndPluginService } from './services/controlAndPlugin.service';
 import { FilterService } from './services/filter.service';
 import { GraphqlService } from './services/graphql.service';
 import { GridExtraUtils } from './services/gridExtraUtils';
@@ -57,6 +58,7 @@ export {
   Sorters,
 
   // services
+  ControlAndPluginService,
   FilterService,
   GraphqlService,
   GridExtraUtils,

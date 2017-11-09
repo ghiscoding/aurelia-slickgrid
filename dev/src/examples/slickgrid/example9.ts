@@ -1,5 +1,5 @@
 import { autoinject, bindable } from 'aurelia-framework';
-import { Column, GridOption, FieldType, Formatters, FormElementType, FilterService } from '../../aurelia-slickgrid';
+import { Column, FieldType, FilterService, Formatter, Formatters, FormElementType, GridOption } from '../../aurelia-slickgrid';
 
 let columnsWithHighlightingById = {};
 
@@ -15,7 +15,7 @@ const highlightingFormatter = (row, cell, value, columnDef, dataContext) => {
 @autoinject()
 export class Example9 {
   @bindable() gridObj: any;
-  @bindable() dataview: any;
+  @bindable() dataviewObj: any;
   title = 'Example 9: Grid Menu Control';
   subTitle = `
     This example demonstrates using the <b>Slick.Controls.GridMenu</b> plugin to easily add a Grid Menu (aka hamburger menu) on the top right corner of the grid.<br/>
@@ -118,7 +118,8 @@ export class Example9 {
         } else if (args.command === 'toggle-toppanel') {
           this.gridObj.setTopPanelVisibility(!this.gridObj.getOptions().showTopPanel);
         } else if (args.command === 'clear-filter') {
-          this.filterService.clearFilters(this.dataview);
+          this.filterService.clearFilters();
+          this.dataviewObj.refresh();
         } else {
           alert('Command: ' + args.command);
         }
@@ -148,6 +149,6 @@ export class Example9 {
   }
 
   dataviewChanged(dataview) {
-    this.dataview = dataview;
+    this.dataviewObj = dataview;
   }
 }
