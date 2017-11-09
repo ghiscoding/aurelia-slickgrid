@@ -1,16 +1,5 @@
 import { autoinject, bindable } from 'aurelia-framework';
-import { Column, GridOption, FieldType, Formatters, FormElementType } from 'aurelia-slickgrid';
-
-let columnsWithHighlightingById = {};
-
-// create a custom Formatter to highlight negative values in red
-const highlightingFormatter = (row, cell, value, columnDef, dataContext) => {
-  if (columnsWithHighlightingById[columnDef.id] && value < 0) {
-    return `<div style='color:red; font-weight:bold;'>${value}</div>`;
-  } else {
-    return value;
-  }
-};
+import { Column, ControlAndPluginService, FieldType, Formatter, Formatters, GridOption } from 'aurelia-slickgrid';
 
 @autoinject()
 export class Example8 {
@@ -31,10 +20,9 @@ export class Example8 {
   dataset = [];
   visibleColumns;
 
-  constructor() {
+  constructor(private controlService: ControlAndPluginService) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
-    columnsWithHighlightingById = {};
   }
 
   attached() {
@@ -94,9 +82,8 @@ export class Example8 {
       enableCellNavigation: true,
       onHeaderMenuCommand: (e, args) => {
         if (args.command === 'hide') {
-          const columnIndex = this.gridObj.getColumnIndex(args.column.id);
-          this.visibleColumns = this.removeColumnByIndex(this.visibleColumns, columnIndex);
-          this.gridObj.setColumns(this.visibleColumns);
+          this.controlService.hideColumn(args.column);
+          this.controlService.autoResizeColumns();
         } else if (args.command === 'sort-asc' || args.command === 'sort-desc') {
           // get previously sorted columns
           // getSortColumns() only returns sortAsc & columnId, we want the entire column definition
@@ -167,11 +154,5 @@ export class Example8 {
     });
     this.gridObj.invalidate();
     this.gridObj.render();
-  }
-
-  removeColumnByIndex(array, index) {
-    return array.filter((el, i) => {
-      return index !== i;
-    });
   }
 }

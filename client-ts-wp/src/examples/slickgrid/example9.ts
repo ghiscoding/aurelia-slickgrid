@@ -1,21 +1,10 @@
 import { autoinject, bindable } from 'aurelia-framework';
-import { Column, GridOption, FieldType, Formatters, FormElementType } from 'aurelia-slickgrid';
-
-let columnsWithHighlightingById = {};
-
-// create a custom Formatter to highlight negative values in red
-const highlightingFormatter = (row, cell, value, columnDef, dataContext) => {
-  if (columnsWithHighlightingById[columnDef.id] && value < 0) {
-    return `<div style='color:red; font-weight:bold;'>${value}</div>`;
-  } else {
-    return value;
-  }
-};
+import { Column, FieldType, FilterService, Formatter, Formatters, FormElementType, GridOption } from 'aurelia-slickgrid';
 
 @autoinject()
 export class Example9 {
   @bindable() gridObj: any;
-  @bindable() dataview: any;
+  @bindable() dataviewObj: any;
   title = 'Example 9: Grid Menu Control';
   subTitle = `
     This example demonstrates using the <b>Slick.Controls.GridMenu</b> plugin to easily add a Grid Menu (aka hamburger menu) on the top right corner of the grid.<br/>
@@ -32,10 +21,9 @@ export class Example9 {
   dataset = [];
   visibleColumns;
 
-  constructor() {
+  constructor(private filterService: FilterService) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
-    columnsWithHighlightingById = {};
   }
 
   attached() {
@@ -94,6 +82,12 @@ export class Example9 {
             command: 'toggle-filter'
           },
           {
+            iconCssClass: 'fa fa-random',
+            title: 'Toggle Top Panel',
+            disabled: false,
+            command: 'toggle-toppanel'
+          },
+          {
             iconCssClass: 'fa fa-question-circle',
             title: 'Help',
             disabled: false,
@@ -109,11 +103,11 @@ export class Example9 {
       onGridMenuCommand: (e, args) => {
         if (args.command === 'toggle-filter') {
           this.gridObj.setHeaderRowVisibility(!this.gridObj.getOptions().showHeaderRow);
+        } else if (args.command === 'toggle-toppanel') {
+          this.gridObj.setTopPanelVisibility(!this.gridObj.getOptions().showTopPanel);
         } else if (args.command === 'clear-filter') {
-          $('.slick-headerrow-column').children().val('');
-          // TODO aurelia-slickgrid should have a clearAllFilters function
-          alert('Command: ' + args.command);
-          this.dataview.refresh();
+          this.filterService.clearFilters();
+          this.dataviewObj.refresh();
         } else {
           alert('Command: ' + args.command);
         }
@@ -143,6 +137,6 @@ export class Example9 {
   }
 
   dataviewChanged(dataview) {
-    this.dataview = dataview;
+    this.dataviewObj = dataview;
   }
 }

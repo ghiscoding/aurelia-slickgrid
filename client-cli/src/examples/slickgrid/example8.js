@@ -1,18 +1,7 @@
-import { autoinject, bindable } from 'aurelia-framework';
-import { Column, GridOption, Formatters } from 'aurelia-slickgrid';
+import { inject, bindable } from 'aurelia-framework';
+import { ControlAndPluginService, Formatters } from 'aurelia-slickgrid';
 
-let columnsWithHighlightingById = {};
-
-// create a custom Formatter to highlight negative values in red
-const highlightingFormatter = (row, cell, value, columnDef, dataContext) => {
-  if (columnsWithHighlightingById[columnDef.id] && value < 0) {
-    return `<div style='color:red; font-weight:bold;'>${value}</div>`;
-  } else {
-    return value;
-  }
-};
-
-@autoinject()
+@inject(ControlAndPluginService)
 export class Example8 {
   @bindable() gridObj;
   @bindable() dataview;
@@ -30,11 +19,12 @@ export class Example8 {
   gridOptions;
   dataset = [];
   visibleColumns;
+  controlService;
 
-  constructor() {
+  constructor(controlService) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
-    columnsWithHighlightingById = {};
+    this.controlService = controlService;
   }
 
   attached() {
@@ -94,9 +84,8 @@ export class Example8 {
       enableCellNavigation: true,
       onHeaderMenuCommand: (e, args) => {
         if (args.command === 'hide') {
-          const columnIndex = this.gridObj.getColumnIndex(args.column.id);
-          this.visibleColumns = this.removeColumnByIndex(this.visibleColumns, columnIndex);
-          this.gridObj.setColumns(this.visibleColumns);
+          this.controlService.hideColumn(args.column);
+          this.controlService.autoResizeColumns();
         } else if (args.command === 'sort-asc' || args.command === 'sort-desc') {
           // get previously sorted columns
           // getSortColumns() only returns sortAsc & columnId, we want the entire column definition
@@ -167,11 +156,5 @@ export class Example8 {
     });
     this.gridObj.invalidate();
     this.gridObj.render();
-  }
-
-  removeColumnByIndex(array, index) {
-    return array.filter((el, i) => {
-      return index !== i;
-    });
   }
 }

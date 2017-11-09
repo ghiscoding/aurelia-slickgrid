@@ -1,17 +1,6 @@
 import { autoinject, bindable } from 'aurelia-framework';
 import { Column, ControlAndPluginService, FieldType, Formatter, Formatters, GridOption } from '../../aurelia-slickgrid';
 
-let columnsWithHighlightingById = {};
-
-// create a custom Formatter to highlight negative values in red
-const highlightingFormatter = (row, cell, value, columnDef, dataContext) => {
-  if (columnsWithHighlightingById[columnDef.id] && value < 0) {
-    return `<div style='color:red; font-weight:bold;'>${value}</div>`;
-  } else {
-    return value;
-  }
-};
-
 @autoinject()
 export class Example8 {
   @bindable() gridObj: any;
@@ -34,7 +23,6 @@ export class Example8 {
   constructor(private controlService: ControlAndPluginService) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
-    columnsWithHighlightingById = {};
   }
 
   attached() {
