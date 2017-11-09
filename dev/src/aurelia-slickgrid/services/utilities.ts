@@ -1,6 +1,5 @@
 import { FieldType, OperatorType } from '../models/index';
 import * as moment from 'moment';
-import * as _ from 'lodash';
 
 /**
  * From a Date FieldType, return it's equivalent moment.js format
@@ -195,19 +194,4 @@ export function parseUtcDate(inputDateString: string, useUtc: boolean): string |
   }
 
   return date;
-}
-
-/** Deep clone merge function that leaves the objects immutable */
-export function immutableMerge(...args: any[]) {
-  if (args.length === 0) {
-    return {};
-  }
-  if (args.length === 1) {
-    return args[0];
-  }
-  if (args.length === 2) {
-    return _.merge(_.cloneDeep(args[0]), args[1]);
-  } else {
-    return immutableMerge(_.first(args), immutableMerge(args));
-  }
 }

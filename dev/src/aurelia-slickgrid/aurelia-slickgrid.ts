@@ -22,7 +22,6 @@ import 'slickgrid/plugins/slick.rowselectionmodel';
 
 import { bindable, bindingMode, inject } from 'aurelia-framework';
 import { GlobalGridOptions } from './global-grid-options';
-import { immutableMerge } from './services/utilities';
 import { CellArgs, Column, FormElementType, GridOption } from './models/index';
 import { ControlAndPluginService, FilterService, GridEventService, SortService, ResizerService } from './services/index';
 import * as $ from 'jquery';
@@ -33,7 +32,6 @@ declare var Slick: any;
 @inject(Element, ControlAndPluginService, ResizerService, GridEventService, FilterService, SortService)
 export class AureliaSlickgridCustomElement {
   private _dataset: any[];
-  private _dataView: any;
   private _gridOptions: GridOption;
   gridHeightString: string;
   gridWidthString: string;
@@ -75,7 +73,7 @@ export class AureliaSlickgridCustomElement {
 
     this.dataview = new Slick.Data.DataView();
     this.grid = new Slick.Grid(`#${this.gridId}`, this.dataview, this.columnDefinitions, this._gridOptions);
-    this.controlPluginService.attachDifferentControlOrPlugins(this.grid, this.columnDefinitions, this._gridOptions, this._dataView);
+    this.controlPluginService.attachDifferentControlOrPlugins(this.grid, this.columnDefinitions, this._gridOptions, this.dataview);
 
     this.attachDifferentHooks(this.grid, this._gridOptions, this.dataview);
 
@@ -192,8 +190,8 @@ export class AureliaSlickgridCustomElement {
       this.gridOptions.showHeaderRow = true;
     }
 
-    // use an immutable merge to avoid changing properties in GlobalGridOptions when changing route
-    return immutableMerge(GlobalGridOptions, this.gridOptions);
+    // use jquery extend to deep merge and avoid immutable properties changed in GlobalGridOptions after route change
+    return $.extend(true, {}, GlobalGridOptions, this.gridOptions);
   }
 
   /** Toggle the filter row displayed on first row */
