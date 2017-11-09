@@ -26,6 +26,8 @@ exports.Formatters = index_4.Formatters;
 var index_5 = require("./sorters/index");
 exports.Sorters = index_5.Sorters;
 // services and utilities
+var controlAndPlugin_service_1 = require("./services/controlAndPlugin.service");
+exports.ControlAndPluginService = controlAndPlugin_service_1.ControlAndPluginService;
 var filter_service_1 = require("./services/filter.service");
 exports.FilterService = filter_service_1.FilterService;
 var graphql_service_1 = require("./services/graphql.service");

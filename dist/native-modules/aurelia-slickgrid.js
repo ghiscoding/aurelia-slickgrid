@@ -69,7 +69,8 @@ import 'slickgrid/plugins/slick.rowmovemanager';
 import 'slickgrid/plugins/slick.rowselectionmodel';
 import { bindable, bindingMode, inject } from 'aurelia-framework';
 import { GlobalGridOptions } from './global-grid-options';
-import { ControlPluginService, FilterService, GridEventService, SortService, ResizerService } from './services/index';
+import { ControlAndPluginService, FilterService, GridEventService, SortService, ResizerService } from './services/index';
+import * as $ from 'jquery';
 var AureliaSlickgridCustomElement = /** @class */ (function () {
     function AureliaSlickgridCustomElement(elm, controlPluginService, resizer, gridEventService, filterService, sortService) {
         this.elm = elm;
@@ -94,7 +95,7 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
         this._gridOptions = this.mergeGridOptions();
         this.dataview = new Slick.Data.DataView();
         this.grid = new Slick.Grid("#" + this.gridId, this.dataview, this.columnDefinitions, this._gridOptions);
-        this.controlPluginService.attachDifferentControlOrPlugins(this.grid, this.columnDefinitions, this._gridOptions, this._dataView);
+        this.controlPluginService.attachDifferentControlOrPlugins(this.grid, this.columnDefinitions, this._gridOptions, this.dataview);
         this.attachDifferentHooks(this.grid, this._gridOptions, this.dataview);
         this.grid.init();
         this.dataview.beginUpdate();
@@ -201,8 +202,8 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
         if (this.gridOptions.enableFiltering) {
             this.gridOptions.showHeaderRow = true;
         }
-        var options = __assign({}, GlobalGridOptions, this.gridOptions);
-        return options;
+        // use an immutable merge to avoid changing properties in GlobalGridOptions when changing route
+        return $.extend(true, {}, GlobalGridOptions, this.gridOptions);
     };
     /** Toggle the filter row displayed on first row */
     AureliaSlickgridCustomElement.prototype.showHeaderRow = function (isShowing) {
@@ -269,7 +270,7 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
         bindable()
     ], AureliaSlickgridCustomElement.prototype, "pickerOptions", void 0);
     AureliaSlickgridCustomElement = __decorate([
-        inject(Element, ControlPluginService, ResizerService, GridEventService, FilterService, SortService)
+        inject(Element, ControlAndPluginService, ResizerService, GridEventService, FilterService, SortService)
     ], AureliaSlickgridCustomElement);
     return AureliaSlickgridCustomElement;
 }());

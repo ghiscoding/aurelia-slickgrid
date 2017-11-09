@@ -13,6 +13,7 @@ import { FilterTemplates } from './filter-templates/index';
 import { Formatters } from './formatters/index';
 import { Sorters } from './sorters/index';
 // services and utilities
+import { ControlAndPluginService } from './services/controlAndPlugin.service';
 import { FilterService } from './services/filter.service';
 import { GraphqlService } from './services/graphql.service';
 import { GridExtraUtils } from './services/gridExtraUtils';
@@ -30,5 +31,5 @@ export function configure(aurelia, callback) {
 }
 export { AureliaSlickgridCustomElement, SlickPaginationCustomElement, CaseType, FormElementType, FieldType, Editors, FilterConditions, FilterTemplates, Formatters, Sorters, 
 // services
-FilterService, GraphqlService, GridExtraUtils, GridEventService, GridOdataService, ResizerService, SortService, SlickgridConfig };
+ControlAndPluginService, FilterService, GraphqlService, GridExtraUtils, GridEventService, GridOdataService, ResizerService, SortService, SlickgridConfig };
 //# sourceMappingURL=index.js.map

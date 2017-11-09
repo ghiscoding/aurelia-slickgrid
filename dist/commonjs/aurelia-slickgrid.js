@@ -72,6 +72,7 @@ require("slickgrid/plugins/slick.rowselectionmodel");
 var aurelia_framework_1 = require("aurelia-framework");
 var global_grid_options_1 = require("./global-grid-options");
 var index_1 = require("./services/index");
+var $ = require("jquery");
 var AureliaSlickgridCustomElement = /** @class */ (function () {
     function AureliaSlickgridCustomElement(elm, controlPluginService, resizer, gridEventService, filterService, sortService) {
         this.elm = elm;
@@ -96,7 +97,7 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
         this._gridOptions = this.mergeGridOptions();
         this.dataview = new Slick.Data.DataView();
         this.grid = new Slick.Grid("#" + this.gridId, this.dataview, this.columnDefinitions, this._gridOptions);
-        this.controlPluginService.attachDifferentControlOrPlugins(this.grid, this.columnDefinitions, this._gridOptions, this._dataView);
+        this.controlPluginService.attachDifferentControlOrPlugins(this.grid, this.columnDefinitions, this._gridOptions, this.dataview);
         this.attachDifferentHooks(this.grid, this._gridOptions, this.dataview);
         this.grid.init();
         this.dataview.beginUpdate();
@@ -203,8 +204,8 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
         if (this.gridOptions.enableFiltering) {
             this.gridOptions.showHeaderRow = true;
         }
-        var options = __assign({}, global_grid_options_1.GlobalGridOptions, this.gridOptions);
-        return options;
+        // use an immutable merge to avoid changing properties in GlobalGridOptions when changing route
+        return $.extend(true, {}, global_grid_options_1.GlobalGridOptions, this.gridOptions);
     };
     /** Toggle the filter row displayed on first row */
     AureliaSlickgridCustomElement.prototype.showHeaderRow = function (isShowing) {
@@ -271,7 +272,7 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
         aurelia_framework_1.bindable()
     ], AureliaSlickgridCustomElement.prototype, "pickerOptions", void 0);
     AureliaSlickgridCustomElement = __decorate([
-        aurelia_framework_1.inject(Element, index_1.ControlPluginService, index_1.ResizerService, index_1.GridEventService, index_1.FilterService, index_1.SortService)
+        aurelia_framework_1.inject(Element, index_1.ControlAndPluginService, index_1.ResizerService, index_1.GridEventService, index_1.FilterService, index_1.SortService)
     ], AureliaSlickgridCustomElement);
     return AureliaSlickgridCustomElement;
 }());

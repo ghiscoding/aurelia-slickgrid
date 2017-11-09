@@ -43,6 +43,7 @@ export interface GridOption {
         buttonImage?: string;
     };
     multiColumnSort?: boolean;
+    onBackendEventApi?: BackendEventChanged;
     onGridMenuCommand?: (e: Event, args: any) => void;
     onHeaderButtonCommand?: (e: Event, args: any) => void;
     onHeaderMenuCommand?: (e: Event, args: any) => void;
@@ -55,5 +56,4 @@ export interface GridOption {
     showHeaderRow?: boolean;
     showTopPanel?: boolean;
     topPanelHeight?: number;
-    onBackendEventApi?: BackendEventChanged;
 }

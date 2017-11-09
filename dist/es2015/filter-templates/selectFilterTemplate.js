@@ -6,6 +6,6 @@ export const selectFilterTemplate = (searchTerm, columnDef) => {
     columnDef.filter.selectOptions.forEach((option) => {
         options += `<option value="${option.value}">${option.label}</option>`;
     });
-    return `<select id="search-${columnDef.id}" class="form-control">${options}</select>`;
+    return `<select class="form-control search-filter">${options}</select>`;
 };
 //# sourceMappingURL=selectFilterTemplate.js.map

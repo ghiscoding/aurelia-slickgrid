@@ -26,7 +26,9 @@ export declare class FilterService {
     customFilter(item: any, args: any): boolean;
     destroy(): void;
     callbackSearchEvent(e: any, args: any): void;
-    addFilterTemplateToHeaderRow(): void;
+    addFilterTemplateToHeaderRow(args: any): void;
+    /** Clear the search filters (below the column titles) */
+    clearFilters(dataview?: any): void;
     private keepColumnFilters(searchTerm, listTerm, columnDef);
     private triggerEvent(evt, args, e);
 }

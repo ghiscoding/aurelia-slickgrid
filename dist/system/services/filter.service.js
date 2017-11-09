@@ -72,7 +72,7 @@ System.register(["../filter-conditions/index", "./../filter-templates/index", ".
                     this.subscriber = new Slick.Event();
                     this.subscriber.subscribe(this.attachBackendOnFilterSubscribe);
                     grid.onHeaderRowCellRendered.subscribe(function (e, args) {
-                        _this.addFilterTemplateToHeaderRow();
+                        _this.addFilterTemplateToHeaderRow(args);
                     });
                 };
                 FilterService.prototype.attachBackendOnFilterSubscribe = function (event, args) {
@@ -140,7 +140,7 @@ System.register(["../filter-conditions/index", "./../filter-templates/index", ".
                         }
                     });
                     grid.onHeaderRowCellRendered.subscribe(function (e, args) {
-                        _this.addFilterTemplateToHeaderRow();
+                        _this.addFilterTemplateToHeaderRow(args);
                     });
                 };
                 FilterService.prototype.customFilter = function (item, args) {
@@ -211,7 +211,7 @@ System.register(["../filter-conditions/index", "./../filter-templates/index", ".
                         grid: this._grid
                     }, e);
                 };
-                FilterService.prototype.addFilterTemplateToHeaderRow = function () {
+                FilterService.prototype.addFilterTemplateToHeaderRow = function (args) {
                     var _this = this;
                     var _loop_1 = function (i) {
                         if (this_1._columnDefinitions[i].id !== 'selector' && this_1._columnDefinitions[i].filterable) {
@@ -234,12 +234,17 @@ System.register(["../filter-conditions/index", "./../filter-templates/index", ".
                                     filterTemplate = index_2.FilterTemplates.select(searchTerm, columnDef_1);
                                 }
                             }
+                            // when hiding/showing (Column Picker or Grid Menu), it will come re-create yet again the filters
+                            // because of that we need to first get searchTerm from the columnFilters (that is what the user input last)
+                            // if nothing is found, we can then use the optional searchTerm passed to the Grid Option (that is couple lines before)
+                            var inputSearchTerm = (this_1._columnFilters[columnDef_1.id]) ? this_1._columnFilters[columnDef_1.id].searchTerm : searchTerm || null;
                             // create the DOM Element
                             header = this_1._grid.getHeaderRowColumn(columnDef_1.id);
                             $(header).empty();
                             elm = $(filterTemplate);
-                            elm.val(searchTerm);
+                            elm.attr('id', "filter-" + columnDef_1.id);
                             elm.data('columnId', columnDef_1.id);
+                            elm.val(inputSearchTerm);
                             if (elm && typeof elm.appendTo === 'function') {
                                 elm.appendTo(header);
                             }
@@ -260,6 +265,24 @@ System.register(["../filter-conditions/index", "./../filter-templates/index", ".
                     var this_1 = this;
                     for (var i = 0; i < this._columnDefinitions.length; i++) {
                         _loop_1(i);
+                    }
+                };
+                /** Clear the search filters (below the column titles) */
+                FilterService.prototype.clearFilters = function (dataview) {
+                    // remove the text inside each search input fields
+                    $('.slick-headerrow-column .search-filter').val('');
+                    // we need to loop through all columnFilters and delete them 1 by 1
+                    // only trying to make columnFilter an empty (without looping) would not trigger a dataset change
+                    for (var columnId in this._columnFilters) {
+                        if (columnId && this._columnFilters[columnId]) {
+                            delete this._columnFilters[columnId];
+                        }
+                    }
+                    // we also need to refresh the dataView and optionally the grid (it's optional since we use DataView)
+                    if (this._dataView) {
+                        this._dataView.refresh();
+                        this._grid.invalidate();
+                        this._grid.render();
                     }
                 };
                 FilterService.prototype.keepColumnFilters = function (searchTerm, listTerm, columnDef) {

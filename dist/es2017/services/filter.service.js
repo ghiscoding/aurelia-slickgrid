@@ -20,7 +20,7 @@ export class FilterService {
         this.subscriber = new Slick.Event();
         this.subscriber.subscribe(this.attachBackendOnFilterSubscribe);
         grid.onHeaderRowCellRendered.subscribe((e, args) => {
-            this.addFilterTemplateToHeaderRow();
+            this.addFilterTemplateToHeaderRow(args);
         });
     }
     async attachBackendOnFilterSubscribe(event, args) {
@@ -76,7 +76,7 @@ export class FilterService {
             }
         });
         grid.onHeaderRowCellRendered.subscribe((e, args) => {
-            this.addFilterTemplateToHeaderRow();
+            this.addFilterTemplateToHeaderRow(args);
         });
     }
     customFilter(item, args) {
@@ -146,7 +146,7 @@ export class FilterService {
             grid: this._grid
         }, e);
     }
-    addFilterTemplateToHeaderRow() {
+    addFilterTemplateToHeaderRow(args) {
         for (let i = 0; i < this._columnDefinitions.length; i++) {
             if (this._columnDefinitions[i].id !== 'selector' && this._columnDefinitions[i].filterable) {
                 let filterTemplate = '';
@@ -168,12 +168,17 @@ export class FilterService {
                         filterTemplate = FilterTemplates.select(searchTerm, columnDef);
                     }
                 }
+                // when hiding/showing (Column Picker or Grid Menu), it will come re-create yet again the filters
+                // because of that we need to first get searchTerm from the columnFilters (that is what the user input last)
+                // if nothing is found, we can then use the optional searchTerm passed to the Grid Option (that is couple lines before)
+                const inputSearchTerm = (this._columnFilters[columnDef.id]) ? this._columnFilters[columnDef.id].searchTerm : searchTerm || null;
                 // create the DOM Element
                 header = this._grid.getHeaderRowColumn(columnDef.id);
                 $(header).empty();
                 elm = $(filterTemplate);
-                elm.val(searchTerm);
+                elm.attr('id', `filter-${columnDef.id}`);
                 elm.data('columnId', columnDef.id);
+                elm.val(inputSearchTerm);
                 if (elm && typeof elm.appendTo === 'function') {
                     elm.appendTo(header);
                 }
@@ -190,6 +195,24 @@ export class FilterService {
                         break;
                 }
             }
+        }
+    }
+    /** Clear the search filters (below the column titles) */
+    clearFilters(dataview) {
+        // remove the text inside each search input fields
+        $('.slick-headerrow-column .search-filter').val('');
+        // we need to loop through all columnFilters and delete them 1 by 1
+        // only trying to make columnFilter an empty (without looping) would not trigger a dataset change
+        for (const columnId in this._columnFilters) {
+            if (columnId && this._columnFilters[columnId]) {
+                delete this._columnFilters[columnId];
+            }
+        }
+        // we also need to refresh the dataView and optionally the grid (it's optional since we use DataView)
+        if (this._dataView) {
+            this._dataView.refresh();
+            this._grid.invalidate();
+            this._grid.render();
         }
     }
     keepColumnFilters(searchTerm, listTerm, columnDef) {

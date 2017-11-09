@@ -25,6 +25,11 @@ export var GlobalGridOptions = {
     enableTextSelectionOnCells: true,
     explicitInitialization: true,
     forceFitColumns: false,
+    gridMenu: {
+        columnTitle: 'Columns',
+        iconCssClass: 'fa fa-bars',
+        menuWidth: 16
+    },
     headerRowHeight: 35,
     multiColumnSort: true,
     pagination: {

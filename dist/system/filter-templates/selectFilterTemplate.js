@@ -13,7 +13,7 @@ System.register([], function (exports_1, context_1) {
                 columnDef.filter.selectOptions.forEach(function (option) {
                     options += "<option value=\"" + option.value + "\">" + option.label + "</option>";
                 });
-                return "<select id=\"search-" + columnDef.id + "\" class=\"form-control\">" + options + "</select>";
+                return "<select class=\"form-control search-filter\">" + options + "</select>";
             });
         }
     };

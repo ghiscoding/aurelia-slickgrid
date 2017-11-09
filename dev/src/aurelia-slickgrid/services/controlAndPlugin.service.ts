@@ -1,6 +1,6 @@
 import { inject } from 'aurelia-framework';
 import { EventAggregator } from 'aurelia-event-aggregator';
-import { CellArgs, Column, GridOption } from './../models/index';
+import { CustomGridMenu, CellArgs, Column, GridOption } from './../models/index';
 import { FilterService } from './filter.service';
 
 // using external js modules in Angular
@@ -15,12 +15,12 @@ export class ControlAndPluginService {
   filterService: FilterService;
 
   // controls & plugins
-  autoTooltipPlugin;
-  columnPickerControl;
-  headerButtonsPlugin;
-  headerMenuPlugin;
-  gridMenuControl;
-  rowSelectionPlugin;
+  autoTooltipPlugin: any;
+  columnPickerControl: any;
+  headerButtonsPlugin: any;
+  headerMenuPlugin: any;
+  gridMenuControl: any;
+  rowSelectionPlugin: any;
 
   constructor(ea: EventAggregator, filterService: FilterService) {
     this.ea = ea;
@@ -100,8 +100,8 @@ export class ControlAndPluginService {
     this._grid.setColumns(this._visibleColumns);
   }
 
-  removeColumnByIndex(array, index) {
-    return array.filter((el, i) => {
+  removeColumnByIndex(array: any[], index: number) {
+    return array.filter((el: any, i: number) => {
       return index !== i;
     });
   }
@@ -111,8 +111,8 @@ export class ControlAndPluginService {
   }
 
   private addGridMenuCustomCommands(options: GridOption) {
-    if (options.enableFiltering) {
-      if (options.gridMenu.customItems.filter((item) => item.command === 'clear-filter').length === 0) {
+    if (options && options.enableFiltering && options.gridMenu && options.gridMenu.customItems) {
+      if (options.gridMenu.customItems.filter((item: CustomGridMenu) => item.command === 'clear-filter').length === 0) {
         options.gridMenu.customItems.push(
           {
             iconCssClass: 'fa fa-filter text-danger',
@@ -122,7 +122,7 @@ export class ControlAndPluginService {
           }
         );
       }
-      if (options.gridMenu.customItems.filter((item) => item.command === 'toggle-filter').length === 0) {
+      if (options.gridMenu.customItems.filter((item: CustomGridMenu) => item.command === 'toggle-filter').length === 0) {
         options.gridMenu.customItems.push(
           {
             iconCssClass: 'fa fa-random',
@@ -132,7 +132,7 @@ export class ControlAndPluginService {
           }
         );
       }
-      options.onGridMenuCommand = (e, args) => {
+      options.onGridMenuCommand = (e: Event, args: any) => {
         if (args.command === 'toggle-filter') {
           this._grid.setHeaderRowVisibility(!this._grid.getOptions().showHeaderRow);
         } else if (args.command === 'toggle-toppanel') {
@@ -147,17 +147,17 @@ export class ControlAndPluginService {
     }
 
     // remove the custom command title if there's no command
-    if (options.gridMenu.customItems && options.gridMenu.customItems.length > 0) {
+    if (options && options.gridMenu && options.gridMenu.customItems && options.gridMenu.customItems.length > 0) {
       options.gridMenu.customTitle = options.gridMenu.customTitle || 'Commands';
     }
   }
 
-  private prepareGridMenu(options) {
+  private prepareGridMenu(options: GridOption) {
     options.gridMenu = options.gridMenu || {};
     options.gridMenu.columnTitle = options.gridMenu.columnTitle || 'Columns';
     options.gridMenu.iconCssClass = options.gridMenu.iconCssClass || 'fa fa-bars';
     options.gridMenu.menuWidth = options.gridMenu.menuWidth || 18;
-    options.gridMenu.customTitle = options.gridMenu.customTitle || null;
+    options.gridMenu.customTitle = options.gridMenu.customTitle || undefined;
     options.gridMenu.customItems = options.gridMenu.customItems || [];
     this.addGridMenuCustomCommands(options);
 

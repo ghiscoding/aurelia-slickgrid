@@ -1,4 +1,4 @@
-System.register(["aurelia-pal", "./aurelia-slickgrid", "./slick-pagination", "./slickgrid-config", "./models/caseType", "./models/formElementType", "./models/fieldType", "./editors/index", "./filter-conditions/index", "./filter-templates/index", "./formatters/index", "./sorters/index", "./services/filter.service", "./services/graphql.service", "./services/gridExtraUtils", "./services/gridEvent.service", "./services/grid-odata.service", "./services/resizer.service", "./services/sort.service"], function (exports_1, context_1) {
+System.register(["aurelia-pal", "./aurelia-slickgrid", "./slick-pagination", "./slickgrid-config", "./models/caseType", "./models/formElementType", "./models/fieldType", "./editors/index", "./filter-conditions/index", "./filter-templates/index", "./formatters/index", "./sorters/index", "./services/controlAndPlugin.service", "./services/filter.service", "./services/graphql.service", "./services/gridExtraUtils", "./services/gridEvent.service", "./services/grid-odata.service", "./services/resizer.service", "./services/sort.service"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     function configure(aurelia, callback) {
@@ -10,7 +10,7 @@ System.register(["aurelia-pal", "./aurelia-slickgrid", "./slick-pagination", "./
         }
     }
     exports_1("configure", configure);
-    var aurelia_pal_1, aurelia_slickgrid_1, slick_pagination_1, slickgrid_config_1, caseType_1, formElementType_1, fieldType_1, index_1, index_2, index_3, index_4, index_5, filter_service_1, graphql_service_1, gridExtraUtils_1, gridEvent_service_1, grid_odata_service_1, resizer_service_1, sort_service_1;
+    var aurelia_pal_1, aurelia_slickgrid_1, slick_pagination_1, slickgrid_config_1, caseType_1, formElementType_1, fieldType_1, index_1, index_2, index_3, index_4, index_5, controlAndPlugin_service_1, filter_service_1, graphql_service_1, gridExtraUtils_1, gridEvent_service_1, grid_odata_service_1, resizer_service_1, sort_service_1;
     return {
         setters: [
             function (aurelia_pal_1_1) {
@@ -49,6 +49,9 @@ System.register(["aurelia-pal", "./aurelia-slickgrid", "./slick-pagination", "./
             function (index_5_1) {
                 index_5 = index_5_1;
             },
+            function (controlAndPlugin_service_1_1) {
+                controlAndPlugin_service_1 = controlAndPlugin_service_1_1;
+            },
             function (filter_service_1_1) {
                 filter_service_1 = filter_service_1_1;
             },
@@ -83,6 +86,7 @@ System.register(["aurelia-pal", "./aurelia-slickgrid", "./slick-pagination", "./
             exports_1("FilterTemplates", index_3.FilterTemplates);
             exports_1("Formatters", index_4.Formatters);
             exports_1("Sorters", index_5.Sorters);
+            exports_1("ControlAndPluginService", controlAndPlugin_service_1.ControlAndPluginService);
             exports_1("FilterService", filter_service_1.FilterService);
             exports_1("GraphqlService", graphql_service_1.GraphqlService);
             exports_1("GridExtraUtils", gridExtraUtils_1.GridExtraUtils);

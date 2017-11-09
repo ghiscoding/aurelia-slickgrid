@@ -1,4 +1,4 @@
-System.register(["slickgrid/lib/jquery-ui-1.11.3", "slickgrid/lib/jquery.event.drag-2.3.0", "slickgrid/slick.core", "slickgrid/slick.dataview", "slickgrid/slick.grid", "slickgrid/controls/slick.columnpicker", "slickgrid/controls/slick.gridmenu", "slickgrid/controls/slick.pager", "slickgrid/plugins/slick.autotooltips", "slickgrid/plugins/slick.cellcopymanager", "slickgrid/plugins/slick.cellexternalcopymanager", "slickgrid/plugins/slick.cellrangedecorator", "slickgrid/plugins/slick.cellrangeselector", "slickgrid/plugins/slick.cellselectionmodel", "slickgrid/plugins/slick.checkboxselectcolumn", "slickgrid/plugins/slick.headerbuttons", "slickgrid/plugins/slick.headermenu", "slickgrid/plugins/slick.rowmovemanager", "slickgrid/plugins/slick.rowselectionmodel", "aurelia-framework", "./global-grid-options", "./services/index"], function (exports_1, context_1) {
+System.register(["slickgrid/lib/jquery-ui-1.11.3", "slickgrid/lib/jquery.event.drag-2.3.0", "slickgrid/slick.core", "slickgrid/slick.dataview", "slickgrid/slick.grid", "slickgrid/controls/slick.columnpicker", "slickgrid/controls/slick.gridmenu", "slickgrid/controls/slick.pager", "slickgrid/plugins/slick.autotooltips", "slickgrid/plugins/slick.cellcopymanager", "slickgrid/plugins/slick.cellexternalcopymanager", "slickgrid/plugins/slick.cellrangedecorator", "slickgrid/plugins/slick.cellrangeselector", "slickgrid/plugins/slick.cellselectionmodel", "slickgrid/plugins/slick.checkboxselectcolumn", "slickgrid/plugins/slick.headerbuttons", "slickgrid/plugins/slick.headermenu", "slickgrid/plugins/slick.rowmovemanager", "slickgrid/plugins/slick.rowselectionmodel", "aurelia-framework", "./global-grid-options", "./services/index", "jquery"], function (exports_1, context_1) {
     "use strict";
     var __assign = (this && this.__assign) || Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -50,7 +50,7 @@ System.register(["slickgrid/lib/jquery-ui-1.11.3", "slickgrid/lib/jquery.event.d
         }
     };
     var __moduleName = context_1 && context_1.id;
-    var aurelia_framework_1, global_grid_options_1, index_1, AureliaSlickgridCustomElement;
+    var aurelia_framework_1, global_grid_options_1, index_1, $, AureliaSlickgridCustomElement;
     return {
         setters: [
             function (_1) {
@@ -99,6 +99,9 @@ System.register(["slickgrid/lib/jquery-ui-1.11.3", "slickgrid/lib/jquery.event.d
             },
             function (index_1_1) {
                 index_1 = index_1_1;
+            },
+            function ($_1) {
+                $ = $_1;
             }
         ],
         execute: function () {
@@ -126,7 +129,7 @@ System.register(["slickgrid/lib/jquery-ui-1.11.3", "slickgrid/lib/jquery.event.d
                     this._gridOptions = this.mergeGridOptions();
                     this.dataview = new Slick.Data.DataView();
                     this.grid = new Slick.Grid("#" + this.gridId, this.dataview, this.columnDefinitions, this._gridOptions);
-                    this.controlPluginService.attachDifferentControlOrPlugins(this.grid, this.columnDefinitions, this._gridOptions, this._dataView);
+                    this.controlPluginService.attachDifferentControlOrPlugins(this.grid, this.columnDefinitions, this._gridOptions, this.dataview);
                     this.attachDifferentHooks(this.grid, this._gridOptions, this.dataview);
                     this.grid.init();
                     this.dataview.beginUpdate();
@@ -233,8 +236,8 @@ System.register(["slickgrid/lib/jquery-ui-1.11.3", "slickgrid/lib/jquery.event.d
                     if (this.gridOptions.enableFiltering) {
                         this.gridOptions.showHeaderRow = true;
                     }
-                    var options = __assign({}, global_grid_options_1.GlobalGridOptions, this.gridOptions);
-                    return options;
+                    // use an immutable merge to avoid changing properties in GlobalGridOptions when changing route
+                    return $.extend(true, {}, global_grid_options_1.GlobalGridOptions, this.gridOptions);
                 };
                 /** Toggle the filter row displayed on first row */
                 AureliaSlickgridCustomElement.prototype.showHeaderRow = function (isShowing) {
@@ -301,7 +304,7 @@ System.register(["slickgrid/lib/jquery-ui-1.11.3", "slickgrid/lib/jquery.event.d
                     aurelia_framework_1.bindable()
                 ], AureliaSlickgridCustomElement.prototype, "pickerOptions", void 0);
                 AureliaSlickgridCustomElement = __decorate([
-                    aurelia_framework_1.inject(Element, index_1.ControlPluginService, index_1.ResizerService, index_1.GridEventService, index_1.FilterService, index_1.SortService)
+                    aurelia_framework_1.inject(Element, index_1.ControlAndPluginService, index_1.ResizerService, index_1.GridEventService, index_1.FilterService, index_1.SortService)
                 ], AureliaSlickgridCustomElement);
                 return AureliaSlickgridCustomElement;
             }());
