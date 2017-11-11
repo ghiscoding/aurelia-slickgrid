@@ -80,7 +80,7 @@ export class Example8 {
       },
       enableFiltering: false,
       enableCellNavigation: true,
-      headerMenuOptions: {
+      headerMenu: {
         onCommand: (e, args) => {
           if (args.command === 'hide') {
             this.controlService.hideColumn(args.column);

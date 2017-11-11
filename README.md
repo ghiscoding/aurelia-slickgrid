@@ -128,6 +128,13 @@ For `CLI` you will need to add both plugins (`aurelia-slickgrid` and `slickgrid-
 }
 ```
 You also have to modify your `index.html` to include all necessary `CSS` files (unless someone knows a better way, if so please create an [issue](https://github.com/ghiscoding/aurelia-slickgrid/issues))
+```html
+  <link rel="stylesheet" type="text/css" href="scripts/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="../node_modules/flatpickr/dist/flatpickr.min.css">
+
+  <!-- Slickgrid Bootstrap theme, unless you use SASS import -->
+  <link rel="stylesheet" type="text/css" href="../node_modules/aurelia-slickgrid/dist/styles/css/slickgrid-theme-bootstrap.css">
+  ```
 
 #### Aurelia (main)
 Make the plugin available globally in your `main.js` file.
