@@ -21,7 +21,7 @@ Since the version `1.x` is a complete rewrite, there are some drawbacks which we
 Mostly because the [Slickgrid-ES6](https://github.com/DimitarChristoff/slickgrid-es6) repo (which is maintained by 1 person, which mainly does `React` stuff) is not as maintained, neither stable, as the most active [6pac fork](https://github.com/6pac/SlickGrid). Also, I now have another repo for `Angular 4+` as well ([Angular-Slickgrid](https://github.com/ghiscoding/Angular-Slickgrid)) which I also maintain (that one is for work though) and is based on the [6pac fork](https://github.com/6pac/SlickGrid) fork as well. I prefer the 6pac fork for it's stability, list of available functionalities and samples (I even made a few PRs on that fork as well), which the `ES6` fork lacks. The goal is to make both `Angular-Slickgrid` and `Aurelia-Slickgrid` on par (feature wise) and in synch, also since it is used and developed at my work, it will grow much faster.
 
 ## Wiki / Documentation
-The Wiki is where all the documentation and instructions will go, so please consult the [Aurelia-Validation - Wiki](https://github.com/ghiscoding/aurelia-slickgrid/wiki) before opening any issues. The [Wiki - HOWTO](https://github.com/ghiscoding/aurelia-slickgrid/wiki/HOWTO---Step-by-Step) is a great place to start with.
+The Wiki is where all the documentation and instructions will go, so please consult the [Aurelia-Slickgrid - Wiki](https://github.com/ghiscoding/aurelia-slickgrid/wiki) before opening any issues. The [Wiki - HOWTO](https://github.com/ghiscoding/aurelia-slickgrid/wiki/HOWTO---Step-by-Step) is a great place to start with.
 
 ## Main features
 You can see some screenshots below and the instructions down below.
@@ -41,7 +41,7 @@ This is a work in progress, but so far here are some of the features that `aurel
   - Formatters (this as well includes some defaults and they are customizable)
   - Optimized DataView which brings a lot of functionalities (sort, grouping, and more)
     - even server side data is saved back into a SlickGrid DataView to use these functionalities (e.g grouping)
-  - All the [SlickGrid Events](https://github.com/6pac/SlickGrid/wiki/Grid-Events) are supported, see the [Wiki](https://github.com/ghiscoding/Angular-Slickgrid/wiki/Grid-&-DataView-Events)
+  - All the [SlickGrid Events](https://github.com/6pac/SlickGrid/wiki/Grid-Events) are supported, see the [Wiki](https://github.com/ghiscoding/aurelia-slickgrid/wiki/Grid-&-DataView-Events)
 
 ## Missing features (planned items, not necessarily in order of execution)
 The following are SlickGrid features which are not yet included in this library but will be in the upcoming future.
@@ -136,6 +136,16 @@ You also have to modify your `index.html` to include all necessary `CSS` files (
   <link rel="stylesheet" type="text/css" href="../node_modules/aurelia-slickgrid/dist/styles/css/slickgrid-theme-bootstrap.css">
   ```
 
+#### Aurelia with WebPack
+With WebPack, you need to import the CSS in the `main.js` file.
+```javascript
+import 'bootstrap/dist/css/bootstrap.css';
+import 'font-awesome/css/font-awesome.css';
+import 'flatpickr/dist/flatpickr.min.css';
+
+// if you use CSS instead of SASS
+import 'aurelia-slickgrid/dist/styles/css/slickgrid-theme-bootstrap.css';
+```
 #### Aurelia (main)
 Make the plugin available globally in your `main.js` file.
 ```javascript
