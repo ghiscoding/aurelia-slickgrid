@@ -127,6 +127,7 @@ For `CLI` you will need to add both plugins (`aurelia-slickgrid` and `slickgrid-
   ]
 }
 ```
+You also have to modify your `index.html` to include all necessary `CSS` files (unless someone knows a better way, if so please create an [issue](https://github.com/ghiscoding/aurelia-slickgrid/issues))
 
 #### Aurelia (main)
 Make the plugin available globally in your `main.js` file.

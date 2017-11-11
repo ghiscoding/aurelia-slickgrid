@@ -89,14 +89,6 @@
             ]
           },
           {
-            "name": "flatpickr",
-            "path": "../node_modules/flatpickr/dist",
-            "main": "flatpickr.min",
-            "resources": [
-              "flatpickr.min.css"
-            ]
-          },
-          {
             "name": "aurelia-slickgrid",
             "path": "../node_modules/aurelia-slickgrid/dist/amd",
             "main": "index",
@@ -117,6 +109,12 @@
               "jquery",
               "jquery-event"
             ]
+          },
+          {
+            "name": "flatpickr",
+            "path": "../node_modules/flatpickr/dist",
+            "main": "flatpickr.min",
+            "resources": ["flatpickr.min.css"]
           }
         ]
       }

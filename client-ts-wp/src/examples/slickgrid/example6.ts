@@ -14,6 +14,7 @@ export class Example6 {
     <br/>
     <ul class="small">
       <li><span class="red">(*) NO DATA SHOWING</span> - just change filters &amp; page and look at the "GraphQL Query" changing</li>
+      <li>Only "Name" field is sortable for the demo (because we use JSON files), however "multiColumnSort: true" is also supported</li>
       <li>String column also support operator (>, >=, <, <=, <>, !=, =, ==, *)
       <ul>
         <li>The (*) can be used as startsWith (ex.: "abc*" => startsWith "abc") / endsWith (ex.: "*xyz" => endsWith "xyz")</li>
@@ -46,7 +47,7 @@ export class Example6 {
           selectOptions: [{ value: '', label: '' }, { value: 'male', label: 'male' }, { value: 'female', label: 'female' }]
         }
       },
-      { id: 'company', name: 'Company', field: 'company', minWidth: 80 }
+      { id: 'company', name: 'Company', field: 'company', filterable: true }
     ];
 
     this.gridOptions = {
