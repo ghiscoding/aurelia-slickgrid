@@ -1,41 +1,34 @@
-define(['exports', 'slickgrid-es6', './slick-service', './plugins/index'], function (exports, _slickgridEs, _slickService, _index) {
-  'use strict';
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  exports.SlickService = exports.Plugins = exports.FrozenGrid = exports.Grid = exports.Data = exports.Formatters = exports.Editors = exports.Slick = undefined;
-  exports.configure = configure;
-
-  var Plugins = _interopRequireWildcard(_index);
-
-  function _interopRequireWildcard(obj) {
-    if (obj && obj.__esModule) {
-      return obj;
-    } else {
-      var newObj = {};
-
-      if (obj != null) {
-        for (var key in obj) {
-          if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key];
+define(["require", "exports", "aurelia-pal", "./aurelia-slickgrid", "./slick-pagination", "./slickgrid-config", "./models/caseType", "./models/formElementType", "./models/fieldType", "./editors/index", "./filter-conditions/index", "./filter-templates/index", "./formatters/index", "./sorters/index", "./services/controlAndPlugin.service", "./services/filter.service", "./services/graphql.service", "./services/gridExtraUtils", "./services/gridExtra.service", "./services/gridEvent.service", "./services/grid-odata.service", "./services/resizer.service", "./services/sort.service"], function (require, exports, aurelia_pal_1, aurelia_slickgrid_1, slick_pagination_1, slickgrid_config_1, caseType_1, formElementType_1, fieldType_1, index_1, index_2, index_3, index_4, index_5, controlAndPlugin_service_1, filter_service_1, graphql_service_1, gridExtraUtils_1, gridExtra_service_1, gridEvent_service_1, grid_odata_service_1, resizer_service_1, sort_service_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.AureliaSlickgridCustomElement = aurelia_slickgrid_1.AureliaSlickgridCustomElement;
+    exports.SlickPaginationCustomElement = slick_pagination_1.SlickPaginationCustomElement;
+    exports.SlickgridConfig = slickgrid_config_1.SlickgridConfig;
+    exports.CaseType = caseType_1.CaseType;
+    exports.FormElementType = formElementType_1.FormElementType;
+    exports.FieldType = fieldType_1.FieldType;
+    exports.Editors = index_1.Editors;
+    exports.FilterConditions = index_2.FilterConditions;
+    exports.FilterTemplates = index_3.FilterTemplates;
+    exports.Formatters = index_4.Formatters;
+    exports.Sorters = index_5.Sorters;
+    exports.ControlAndPluginService = controlAndPlugin_service_1.ControlAndPluginService;
+    exports.FilterService = filter_service_1.FilterService;
+    exports.GraphqlService = graphql_service_1.GraphqlService;
+    exports.GridExtraUtils = gridExtraUtils_1.GridExtraUtils;
+    exports.GridExtraService = gridExtra_service_1.GridExtraService;
+    exports.GridEventService = gridEvent_service_1.GridEventService;
+    exports.GridOdataService = grid_odata_service_1.GridOdataService;
+    exports.ResizerService = resizer_service_1.ResizerService;
+    exports.SortService = sort_service_1.SortService;
+    function configure(aurelia, callback) {
+        aurelia.globalResources(aurelia_pal_1.PLATFORM.moduleName('./aurelia-slickgrid'));
+        aurelia.globalResources(aurelia_pal_1.PLATFORM.moduleName('./slick-pagination'));
+        var config = new slickgrid_config_1.SlickgridConfig();
+        if (typeof callback === 'function') {
+            callback(config);
         }
-      }
-
-      newObj.default = obj;
-      return newObj;
     }
-  }
-
-  function configure(aurelia) {
-    aurelia.globalResources('./slick-pager');
-  }
-
-  exports.Slick = _slickgridEs.Slick;
-  exports.Editors = _slickgridEs.Editors;
-  exports.Formatters = _slickgridEs.Formatters;
-  exports.Data = _slickgridEs.Data;
-  exports.Grid = _slickgridEs.Grid;
-  exports.FrozenGrid = _slickgridEs.FrozenGrid;
-  exports.Plugins = Plugins;
-  exports.SlickService = _slickService.SlickService;
+    exports.configure = configure;
 });
+//# sourceMappingURL=index.js.map

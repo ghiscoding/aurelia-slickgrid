@@ -1,78 +1,20 @@
 {
-  "name": "app-contacts",
+  "name": "slickgrid-test-cli",
   "type": "project:application",
-  "platform": {
-    "id": "web",
-    "displayName": "Web",
-    "output": "scripts"
-  },
-  "transpiler": {
-    "id": "babel",
-    "displayName": "Babel",
-    "fileExtension": ".js",
-    "options": {
-      "plugins": [
-        "transform-es2015-modules-amd"
-      ]
-    },
-    "source": "src/**/*.js"
-  },
-  "markupProcessor": {
-    "id": "none",
-    "displayName": "None",
-    "fileExtension": ".html",
-    "source": "src/**/*.html"
-  },
-  "cssProcessor": {
-    "id": "none",
-    "displayName": "None",
-    "fileExtension": ".css",
-    "source": "src/**/*.css"
-  },
-  "editor": {
-    "id": "vscode",
-    "displayName": "Visual Studio Code"
-  },
-  "unitTestRunner": {
-    "id": "karma",
-    "displayName": "Karma",
-    "source": "test/unit/**/*.js"
-  },
-  "paths": {
-    "root": "src",
-    "resources": "src/resources",
-    "elements": "src/resources/elements",
-    "attributes": "src/resources/attributes",
-    "valueConverters": "src/resources/value-converters",
-    "bindingBehaviors": "src/resources/binding-behaviors"
-  },
-  "testFramework": {
-    "id": "jasmine",
-    "displayName": "Jasmine"
+  "bundler": {
+    "id": "cli",
+    "displayName": "Aurelia-CLI"
   },
   "build": {
     "targets": [
       {
         "id": "web",
         "displayName": "Web",
+        "index": "index.html",
+        "baseDir": ".",
         "output": "scripts"
       }
     ],
-    "loader": {
-      "type": "require",
-      "configTarget": "vendor-bundle.js",
-      "includeBundleMetadataInConfig": "auto",
-      "plugins": [
-        {
-          "name": "text",
-          "extensions": [
-            ".html",
-            ".css"
-          ],
-          "stub": true
-        }
-      ]
-    },
     "options": {
       "minify": "stage & prod",
       "sourcemaps": "dev & stage"
@@ -89,7 +31,8 @@
         "name": "vendor-bundle.js",
         "prepend": [
           "node_modules/bluebird/js/browser/bluebird.core.js",
-          "scripts/require.js"
+          "node_modules/aurelia-cli/lib/resources/scripts/configure-bluebird.js",
+          "node_modules/requirejs/require.js"
         ],
         "dependencies": [
           "aurelia-binding",
@@ -114,27 +57,9 @@
           "aurelia-task-queue",
           "aurelia-templating",
           "aurelia-templating-binding",
+          "text",
           "jquery",
-          {
-            "name": "bootstrap",
-            "path": "../node_modules/bootstrap/dist",
-            "main": "js/bootstrap.min",
-            "deps": ["jquery"],
-            "exports": "$",
-            "resources": [
-              "css/bootstrap.css"
-            ]
-          },
-          {
-            "name": "aurelia-slickgrid",
-            "path": "../node_modules/aurelia-slickgrid/dist/amd",
-            "main": "index",
-            "resources": ["**/*.{css,html}"]
-          },
-          {
-            "name": "text",
-            "path": "../scripts/text"
-          },
+          "moment",
           {
             "name": "aurelia-templating-resources",
             "path": "../node_modules/aurelia-templating-resources/dist/amd",
@@ -152,13 +77,113 @@
             "env": "dev"
           },
           {
-              "name": "slickgrid-es6",
-              "path": "../node_modules/slickgrid-es6/dist",
-              "main": "slick.es6.min",
-              "resources": ["**/*.{css,html}"]
+            "name": "bootstrap",
+            "path": "../node_modules/bootstrap/dist",
+            "main": "js/bootstrap.min",
+            "deps": [
+              "jquery"
+            ],
+            "exports": "$",
+            "resources": [
+              "css/bootstrap.css"
+            ]
+          },
+          {
+            "name": "aurelia-slickgrid",
+            "path": "../node_modules/aurelia-slickgrid/dist/amd",
+            "main": "index",
+            "resources": [
+              "**/*.{css,html}"
+            ]
+          },
+          {
+            "name": "jquery-event",
+            "path": "../node_modules/slickgrid/lib",
+            "main": "jquery.event.drag-2.3.0"
+          },
+          {
+            "name": "slickgrid",
+            "main": "slick.grid",
+            "path": "../node_modules/slickgrid",
+            "deps": [
+              "jquery",
+              "jquery-event"
+            ]
+          },
+          {
+            "name": "flatpickr",
+            "path": "../node_modules/flatpickr/dist",
+            "main": "flatpickr.min",
+            "resources": ["flatpickr.min.css"]
           }
         ]
       }
-    ]
+    ],
+    "loader": {
+      "type": "require",
+      "configTarget": "vendor-bundle.js",
+      "includeBundleMetadataInConfig": "auto",
+      "plugins": [
+        {
+          "name": "text",
+          "extensions": [
+            ".html",
+            ".css"
+          ],
+          "stub": true
+        }
+      ]
+    }
+  },
+  "platform": {
+    "id": "web",
+    "displayName": "Web",
+    "index": "index.html",
+    "baseDir": ".",
+    "output": "scripts"
+  },
+  "transpiler": {
+    "id": "babel",
+    "displayName": "Babel",
+    "fileExtension": ".js",
+    "options": {
+      "plugins": [
+        "transform-es2015-modules-amd"
+      ]
+    },
+    "source": "src/**/*.js"
+  },
+  "markupProcessor": {
+    "id": "minimum",
+    "displayName": "Minimal Minification",
+    "fileExtension": ".html",
+    "source": "src/**/*.html"
+  },
+  "cssProcessor": {
+    "id": "none",
+    "displayName": "None",
+    "fileExtension": ".css",
+    "source": "src/**/*.css"
+  },
+  "editor": {
+    "id": "vscode",
+    "displayName": "Visual Studio Code"
+  },
+  "unitTestRunner": {
+    "id": "karma",
+    "displayName": "Karma",
+    "source": "test/unit/**/*.js"
+  },
+  "paths": {
+    "root": "src",
+    "resources": "resources",
+    "elements": "resources/elements",
+    "attributes": "resources/attributes",
+    "valueConverters": "resources/value-converters",
+    "bindingBehaviors": "resources/binding-behaviors"
+  },
+  "testFramework": {
+    "id": "jasmine",
+    "displayName": "Jasmine"
   }
 }

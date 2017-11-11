@@ -1,13 +1,9 @@
 export class App {
-  constructor(api) {
-    this.api = api;
-  }
-
-  configureRouter(config, router){
-    config.title = 'Aurelia';
+  configureRouter(config, router) {
+    config.title = 'Aurelia-Slickgrid';
     config.map([
-      { route: 'slickgrid', name: 'slickgrid', moduleId: './modules/slickgrid/index', nav: true, title: 'Slickgrid' },
-      { route: '',          redirect: 'slickgrid' }
+      { route: 'slickgrid', name: 'slickgrid', title: 'Examples', moduleId: './examples/slickgrid/index', nav: true },
+      { route: '', redirect: 'slickgrid' }
     ]);
 
     this.router = router;

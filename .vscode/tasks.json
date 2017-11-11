@@ -1,0 +1,42 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "taskName": "Build Library",
+      "command": "yarn",
+      "type": "shell",
+      "args": [
+        "run",
+        "build"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "taskName": "Start Library Development",
+      "command": "yarn",
+      "type": "shell",
+      "args": [
+        "start:dev"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "taskName": "Start Client-CLI",
+      "command": "yarn",
+      "type": "shell",
+      "args": [
+        "start:client-cli"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "taskName": "Start Client TypeScript WebPack",
+      "command": "yarn",
+      "type": "shell",
+      "args": [
+        "start:client-ts-wp"
+      ],
+      "problemMatcher": []
+    }
+  ]
+}

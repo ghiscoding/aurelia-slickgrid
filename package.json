@@ -1,21 +1,12 @@
 {
   "name": "aurelia-slickgrid",
-  "version": "0.3.2",
+  "version": "1.0.0",
   "description": "Slickgrid components made available in Aurelia",
   "keywords": [
     "aurelia",
     "plugin",
     "slickgrid"
   ],
-  "aurelia": {
-    "build": {
-      "resources": [
-        "aurelia-slickgrid/aurelia-slickgrid",
-        "aurelia-slickgrid/slick-pager",
-        "aurelia-slickgrid/slick-window-resizer"
-      ]
-    }
-  },
   "homepage": "https://github.com/ghiscoding/aurelia-slickgrid",
   "bugs": {
     "url": "https://github.com/ghiscoding/aurelia-slickgrid/issues"
@@ -23,59 +14,106 @@
   "license": "MIT",
   "author": "Ghislain B.",
   "main": "dist/commonjs/index.js",
+  "typings": "dist/aurelia-slickgrid.d.ts",
   "repository": {
     "type": "git",
     "url": "http://github.com/ghiscoding/aurelia-slickgrid"
   },
+  "scripts": {
+    "lint": "cross-env tslint --project tsconfig.json",
+    "pretest": "cross-env npm run lint",
+    "test": "cross-env rimraf dist && tsc && karma start --single-run",
+    "develop": "concurrently \"./node_modules/.bin/tsc --watch\" \"./node_modules/.bin/karma start\"",
+    "prebuild:amd": "cross-env rimraf dist/amd",
+    "build:amd": "cross-env tsc --project dev/src/aurelia-slickgrid/tsconfig.build.json --outDir dist/amd --module amd",
+    "postbuild:amd": "cross-env copyfiles --up 3 dev/src/aurelia-slickgrid/**/*.html dist/amd",
+    "prebuild:commonjs": "cross-env rimraf dist/commonjs",
+    "build:commonjs": "cross-env tsc --project dev/src/aurelia-slickgrid/tsconfig.build.json --outDir dist/commonjs --module commonjs",
+    "postbuild:commonjs": "cross-env copyfiles --up 3 dev/src/aurelia-slickgrid/**/*.html dist/commonjs",
+    "prebuild:es2017": "cross-env rimraf dist/es2017",
+    "build:es2017": "cross-env tsc --project dev/src/aurelia-slickgrid/tsconfig.build.json --outDir dist/es2017 --module es2015 --target es2017",
+    "postbuild:es2017": "cross-env copyfiles --up 3 dev/src/aurelia-slickgrid/**/*.html dist/es2017",
+    "prebuild:es2015": "cross-env rimraf dist/es2015",
+    "build:es2015": "cross-env tsc --project dev/src/aurelia-slickgrid/tsconfig.build.json --outDir dist/es2015 --module es2015 --target es2015",
+    "postbuild:es2015": "cross-env copyfiles --up 3 dev/src/aurelia-slickgrid/**/*.html dist/es2015",
+    "prebuild:native-modules": "cross-env rimraf dist/native-modules",
+    "build:native-modules": "cross-env tsc --project dev/src/aurelia-slickgrid/tsconfig.build.json --outDir dist/native-modules --module es2015",
+    "postbuild:native-modules": "cross-env copyfiles --up 3 dev/src/aurelia-slickgrid/**/*.html dist/native-modules",
+    "prebuild:system": "cross-env rimraf dist/system",
+    "build:system": "cross-env tsc --project dev/src/aurelia-slickgrid/tsconfig.build.json --outDir dist/system --module system",
+    "postbuild:system": "cross-env copyfiles --up 3 dev/src/aurelia-slickgrid/**/*.html dist/system",
+    "prebuild": "cross-env rimraf dist",
+    "build": "npm-run-all build:amd build:commonjs build:es2015 build:es2017 build:native-modules build:system sass:build sass:copy",
+    "postbuild": "npm-run-all del-lib:client-cli del-lib:client-ts-wp copy-lib:client-cli copy-lib:client-ts-wp",
+    "del-copy:client-ts-wp": "npm-run-all del-lib:client-ts-wp",
+    "copy-lib:client-cli": "cross-env copyfiles package.json dist/**/*.* client-cli/node_modules/aurelia-slickgrid",
+    "copy-lib:client-ts-wp": "cross-env copyfiles package.json dist/**/*.* client-ts-wp/node_modules/aurelia-slickgrid",
+    "del-lib:client-cli": "cross-env rimraf client-cli/node_modules/aurelia-slickgrid",
+    "del-lib:client-ts-wp": "cross-env rimraf client-ts-wp/node_modules/aurelia-slickgrid",
+    "predoc": "cross-env rimraf doc/api.json && rimraf dist/doc-temp && tsc --project dev/src/aurelia-slickgrid/tsconfig.build.json --outFile dist/doc-temp/aurelia-validation.js && node doc/shape-defs && copyfiles tsconfig.json dist/doc-temp",
+    "doc": "cross-env typedoc --json doc/api.json --excludeExternals --includeDeclarations --mode modules --target ES6 --name aurelia-validation-docs dist/doc-temp/",
+    "postdoc": "cross-env node doc/shape-doc && rimraf dist/doc-temp",
+    "changelog": "cross-env conventional-changelog -p angular -i doc/CHANGELOG.md -s",
+    "bump-version": "npm --no-git-tag-version version",
+    "preprepare-release": "cross-env npm run test",
+    "prepare-release": "cross-env npm run changelog && npm run build && npm run doc",
+    "sass-build-task:scss-compile": "node-sass --source-map true dev/src/aurelia-slickgrid/styles/ -o dist/styles/css",
+    "sass-build-task:autoprefixer": "postcss dist/styles/css/*.css --use autoprefixer -d dist/styles/css",
+    "sass:build": "npm-run-all -p sass-build-task:*",
+    "sass:copy": "cross-env copyfiles -f dev/src/aurelia-slickgrid/styles/*.scss dist/styles/sass",
+    "sass:watch": "node-sass 'dev/src/aurelia-slickgrid/styles/**/*.scss' -c 'npm run sass:build'",
+    "sass:dev": "npm-run-all -p sass:*",
+    "start:dev": "cd dev && yarn start",
+    "start:client-cli": "cd client-cli && au run --watch",
+    "start:client-ts-wp": "cd client-ts-wp && yarn start"
+  },
   "dependencies": {
-    "slickgrid-es6": "^2.0.5"
+    "@types/flatpickr": "^3.1.2",
+    "@types/jquery": "^3.2.15",
+    "@types/moment": "^2.13.0",
+    "aurelia-event-aggregator": "^1.0.1",
+    "aurelia-framework": "^1.1.5",
+    "aurelia-pal": "^1.4.0",
+    "flatpickr": "^4.1.0",
+    "jquery": "^3.2.1",
+    "moment": "^2.18.1",
+    "moment-mini": "^2.18.1",
+    "slickgrid": "^2.3.10"
   },
   "devDependencies": {
-    "aurelia-tools": "^0.2.4",
-    "babel": "^6.5.2",
-    "babel-eslint": "^6.1.2",
-    "babel-plugin-syntax-flow": "^6.8.0",
-    "babel-plugin-transform-decorators-legacy": "^1.3.4",
-    "babel-plugin-transform-es2015-modules-amd": "^6.8.0",
-    "babel-plugin-transform-es2015-modules-commonjs": "^6.11.5",
-    "babel-plugin-transform-es2015-modules-systemjs": "^6.11.6",
-    "babel-plugin-transform-flow-strip-types": "^6.8.0",
-    "babel-preset-es2015": "^6.9.0",
-    "babel-preset-es2015-loose": "^7.0.0",
-    "babel-preset-stage-1": "^6.5.0",
-    "conventional-changelog": "1.1.0",
-    "del": "^2.2.1",
-    "gulp": "^3.9.1",
-    "gulp-babel": "^6.1.2",
-    "gulp-bump": "^2.2.0",
-    "gulp-eslint": "^3.0.1",
-    "gulp-sass": "^3.1.0",
-    "gulp-yuidoc": "^0.1.2",
-    "isparta": "^4.0.0",
-    "istanbul": "^1.0.0-alpha.2",
-    "jasmine-core": "^2.4.1",
-    "karma": "^1.1.2",
-    "karma-babel-preprocessor": "^6.0.1",
-    "karma-chrome-launcher": "^1.0.1",
-    "karma-coverage": "^1.1.1",
-    "karma-jasmine": "^1.0.2",
-    "karma-jspm": "2.2.0",
-    "object.assign": "^4.0.4",
-    "require-dir": "^0.3.0",
-    "run-sequence": "^1.2.2",
-    "vinyl-paths": "^2.1.0",
-    "yargs": "^4.8.1"
+    "@types/node": "^8.0.20",
+    "aurelia-bootstrapper": "^2.1.1",
+    "aurelia-pal-browser": "^1.2.1",
+    "aurelia-pal-nodejs": "^1.0.0-beta.1.0.0",
+    "aurelia-polyfills": "^1.2.2",
+    "aurelia-testing": "^1.0.0-beta.3.0.1",
+    "autoprefixer": "^7.1.4",
+    "concurrently": "^3.5.0",
+    "conventional-changelog-cli": "^1.3.2",
+    "copyfiles": "^1.2.0",
+    "cross-env": "^5.0.5",
+    "jasmine-core": "^2.7.0",
+    "karma": "^1.7.0",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-ie-launcher": "^1.0.0",
+    "karma-jasmine": "^1.1.0",
+    "karma-requirejs": "^1.1.0",
+    "node-sass": "^4.5.3",
+    "npm-run-all": "^4.1.1",
+    "postcss-cli": "^4.1.1",
+    "requirejs": "^2.3.4",
+    "requirejs-text": "^2.0.15",
+    "rimraf": "^2.6.1",
+    "tslint": "^5.6.0",
+    "typedoc": "^0.8.0",
+    "typescript": "^2.5.3"
   },
-  "jspm": {
-    "registry": "npm",
-    "main": "index",
-    "format": "amd",
-    "directories": {
-      "dist": "dist/amd"
-    },
-    "peerDependencies": {},
-    "devDependencies": {
-      "aurelia-polyfills": "^1.1.1"
+  "aurelia": {
+    "build": {
+      "resources": [
+        "aurelia-slickgrid/aurelia-slickgrid",
+        "aurelia-slickgrid/slick-pagination/slick-pagination"
+      ]
     }
   }
 }

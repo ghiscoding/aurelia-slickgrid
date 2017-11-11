@@ -1,0 +1,162 @@
+/* control variables */
+/*!
+ * SlickGrid custom styling for Bootstrap (https://github.com/ghiscoding/aurelia-slickgrid)
+ * Licensed under MIT (https://github.com/ghiscoding/aurelia-slickgrid/blob/master/LICENSE)
+ * @author: Ghislain B. (ghiscoding)
+ */
+/*!
+
+/* SlickGrid Bootstrap variables */
+/* Used by slick-bootstrap.scss */
+/* Slickgrid container, including headers but excluding pagination */
+/* grid */
+/* cell */
+/* cell default slickgrid values */
+/* row */
+/* header */
+/* icon font is using Font-Awesome by default but could be changed to any other icon package like Glyphicons, ... */
+/* Column picker */
+/* Grid Menu - hamburger menu */
+/* Editors */
+/* pagination variables */
+.slick-columnpicker {
+  background-color: #f8f8f8;
+  border: 1px solid #b8b8b8;
+  border-radius: 3px;
+  padding: 6px;
+  -webkit-box-shadow: 2px 2px 2px silver;
+  box-shadow: 2px 2px 2px silver;
+  min-width: 150px;
+  cursor: default;
+  position: absolute;
+  z-index: 20;
+  overflow: auto;
+  resize: both; }
+  .slick-columnpicker > .close {
+    float: right;
+    width: 20px;
+    height: 25px;
+    padding: 2px;
+    background-color: 1px solid #9c9c9c;
+    border: 0px solid #9c9c9c; }
+    .slick-columnpicker > .close > span {
+      opacity: 0.9; }
+  .slick-columnpicker li {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    background: none; }
+    .slick-columnpicker li a {
+      display: block;
+      padding: 4px;
+      font-weight: bold; }
+      .slick-columnpicker li a:hover {
+        background-color: #ffffff; }
+    .slick-columnpicker li label {
+      font-weight: normal; }
+      .slick-columnpicker li label input {
+        margin: 4px; }
+  .slick-columnpicker .title {
+    font-size: 16px;
+    width: 60%;
+    border-bottom: solid 1px #d6d6d6;
+    margin-bottom: 10px; }
+
+.slick-columnpicker-list > hr {
+  margin: 6px 0;
+  border: 0;
+  border-top: 1px solid #d5d5d5; }
+
+.slick-gridmenu {
+  background-color: #f8f8f8;
+  border: 1px solid #b8b8b8;
+  border-radius: 3px;
+  padding: 6px;
+  -webkit-box-shadow: 2px 2px 2px silver;
+          box-shadow: 2px 2px 2px silver;
+  min-width: 200px;
+  cursor: default;
+  position: absolute;
+  z-index: 20;
+  overflow: auto;
+  resize: both; }
+  .slick-gridmenu > .close {
+    float: right;
+    opacity: 0.5; }
+  .slick-gridmenu .title {
+    font-size: 16px;
+    width: calc(100% - 30px);
+    border-bottom: solid 1px #d6d6d6;
+    margin-bottom: 5px; }
+  .slick-gridmenu li {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    background: none; }
+    .slick-gridmenu li a {
+      display: block;
+      padding: 4px;
+      font-weight: bold; }
+      .slick-gridmenu li a:hover {
+        background-color: #ffffff; }
+    .slick-gridmenu li label {
+      font-weight: normal; }
+      .slick-gridmenu li label input {
+        margin: 4px; }
+  .slick-gridmenu input {
+    margin: 4px; }
+
+.slick-gridmenu-button {
+  position: absolute;
+  cursor: pointer;
+  right: 0;
+  padding: 0 2px;
+  top: 0;
+  background-color: transparent;
+  cursor: pointer;
+  border: 0;
+  margin-top: 5px;
+  width: 22px;
+  font-size: 14px; }
+
+.slick-gridmenu-custom {
+  margin-bottom: 10px; }
+
+/* Menu items */
+.slick-gridmenu-item {
+  list-style: none;
+  margin: 0;
+  cursor: pointer;
+  padding: 2px 4px;
+  border: 1px solid transparent;
+  border-radius: 3px; }
+  .slick-gridmenu-item:hover {
+    border-color: silver;
+    background: white; }
+
+.slick-gridmenu-item-disabled {
+  border-color: transparent !important;
+  background: inherit !important; }
+
+.slick-gridmenu-icon {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  vertical-align: middle;
+  margin-right: 4px;
+  background-repeat: no-repeat;
+  background-position: center center; }
+
+.slick-gridmenu-content {
+  display: inline-block;
+  vertical-align: middle; }
+
+.slick-gridmenu-list > hr {
+  margin: 6px 0;
+  border: 0;
+  border-top: 1px solid #dddddd; }
+
+/* Disabled */
+.slick-gridmenu-item-disabled {
+  color: silver; }
+/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uL2Rldi9zcmMvYXVyZWxpYS1zbGlja2dyaWQvc3R5bGVzL3NsaWNrLWNvbnRyb2xzLnNjc3MiLCIuLi8uLi8uLi9kZXYvc3JjL2F1cmVsaWEtc2xpY2tncmlkL3N0eWxlcy9fdmFyaWFibGVzLnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUEsdUJBQXVCO0FDQXZCOzs7O0dBSUc7QUFBQTs7bUNBRWdDO0FBQ25DLGtDQUFrQztBQUtsQyxxRUFBcUU7QUFNckUsVUFBVTtBQU1WLFVBQVU7QUFVVixtQ0FBbUM7QUFNbkMsU0FBUztBQU1ULFlBQVk7QUFlWixvSEFBb0g7QUFnQnBILG1CQUFtQjtBQVluQixnQ0FBZ0M7QUFVaEMsYUFBYTtBQVViLDBCQUEwQjtBRHRHMUI7RUFDRSwwQkNzRTZDO0VEckU3QywwQkNzRXVEO0VEckV2RCxtQkNzRXlDO0VEckV6QyxhQUFZO0VBRVosdUNBQXNDO0VBQ3RDLCtCQ21Fd0Q7RURsRXhELGlCQUFnQjtFQUNoQixnQkFBZTtFQUNmLG1CQUFrQjtFQUNsQixZQUFXO0VBQ1osZUFBYztFQUNiLGFBQVksRUEwQ2I7RUF2REQ7SUFnQkksYUFBWTtJQUNaLFlBQVc7SUFDWCxhQUFZO0lBQ1osYUFBWTtJQUNaLG9DQ3VEcUQ7SUR0RHJELDBCQ3VEcUQsRURsRHREO0lBMUJIO01Bd0JNLGFDcURxQyxFRHBEdEM7RUF6Qkw7SUE2QkksaUJBQWdCO0lBQ2hCLFVBQVM7SUFDVCxXQUFVO0lBQ1YsaUJBQWdCLEVBZ0JqQjtJQWhESDtNQW1DTSxlQUFjO01BQ2QsYUFBWTtNQUNaLGtCQUFpQixFQUlsQjtNQXpDTDtRQXVDUSwwQkN5Q3VDLEVEeEN4QztJQXhDUDtNQTJDTSxvQkNvQ3dDLEVEaEN6QztNQS9DTDtRQTZDUSxZQ2lDbUMsRURoQ3BDO0VBOUNQO0lBa0RJLGdCQUFlO0lBQ2YsV0FBVTtJQUNWLGlDQUFnQztJQUNoQyxvQkFBbUIsRUFDcEI7O0FBR0g7RUFDRSxjQUFhO0VBQ2IsVUFBUztFQUNULDhCQUE2QixFQUM5Qjs7QUFPRDtFQUNFLDBCQ2M2QztFRGI3QywwQkNjdUQ7RURidkQsbUJDY3lDO0VEYnpDLGFBQVk7RUFDWix1Q0NnQndEO1VEaEJ4RCwrQkNnQndEO0VEZnhELGlCQUFnQjtFQUNoQixnQkFBZTtFQUNmLG1CQUFpQjtFQUNqQixZQUFVO0VBQ1gsZUFBYztFQUNiLGFBQVksRUFtQ2I7RUE5Q0Q7SUFjSSxhQUFZO0lBQ1osYUFBWSxFQUNiO0VBaEJIO0lBa0JJLGdCQUFlO0lBQ2YseUJBQXdCO0lBQ3hCLGlDQUFnQztJQUNoQyxtQkFBa0IsRUFDbkI7RUF0Qkg7SUF3QkksaUJBQWdCO0lBQ2hCLFVBQVM7SUFDVCxXQUFVO0lBQ1YsaUJBQWdCLEVBZWpCO0lBMUNIO01BNkJNLGVBQWM7TUFDZCxhQUFZO01BQ1osa0JBQWlCLEVBSWxCO01BbkNMO1FBaUNRLDBCQ2J1QyxFRGN4QztJQWxDUDtNQXFDTSxvQkNsQndDLEVEc0J6QztNQXpDTDtRQXVDUSxZQ3JCbUMsRURzQnBDO0VBeENQO0lBNENJLFlBQVcsRUFDWjs7QUFHSDtFQUNFLG1CQUFrQjtFQUNsQixnQkFBZTtFQUNmLFNBQVE7RUFDUixlQUFjO0VBQ2QsT0FBTTtFQUNOLDhCQUE2QjtFQUM3QixnQkFBZTtFQUNmLFVBQVM7RUFDVCxnQkFBZTtFQUNmLFlBQVc7RUFDWCxnQkNyQzBDLEVEc0MzQzs7QUFFRDtFQUNFLG9CQUFtQixFQUNwQjs7QUFFRCxnQkFBZ0I7QUFDaEI7RUFDRSxpQkFBZ0I7RUFDaEIsVUFBUztFQUNULGdCQUFlO0VBQ2YsaUJBQWdCO0VBQ2hCLDhCQUE2QjtFQUM3QixtQkFBa0IsRUFLbkI7RUFYRDtJQVFJLHFCQUFvQjtJQUNwQixrQkFBaUIsRUFDbEI7O0FBR0g7RUFDRSxxQ0FBb0M7RUFDcEMsK0JBQThCLEVBQy9COztBQUVEO0VBQ0Usc0JBQXFCO0VBQ3JCLFlBQVc7RUFDWCxhQUFZO0VBQ1osdUJBQXNCO0VBQ3RCLGtCQUFpQjtFQUNqQiw2QkFBNEI7RUFDNUIsbUNBQWtDLEVBQ25DOztBQUVEO0VBQ0Usc0JBQXFCO0VBQ3JCLHVCQUFzQixFQUN2Qjs7QUFDRDtFQUNFLGNBQWE7RUFDYixVQUFTO0VBQ1QsOEJBQTZCLEVBQzlCOztBQUVELGNBQWM7QUFDZDtFQUNFLGNBQWEsRUFDZCIsImZpbGUiOiJzbGljay1jb250cm9scy5jc3MifQ== */

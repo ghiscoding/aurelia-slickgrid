@@ -1,0 +1,124 @@
+/*!
+ * SlickGrid custom styling for Bootstrap (https://github.com/ghiscoding/aurelia-slickgrid)
+ * Licensed under MIT (https://github.com/ghiscoding/aurelia-slickgrid/blob/master/LICENSE)
+ * @author: Ghislain B. (ghiscoding)
+ *//*!
+
+/* SlickGrid Bootstrap variables */
+/* Used by slick-bootstrap.scss */
+$border-color:                          #dddddd !default;
+$font-size-base:          			        14px !default;
+$font-family:                           -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !default;
+
+/* Slickgrid container, including headers but excluding pagination */
+$container-border-top:                  0 none !default;
+$container-border-right:                0 none !default;
+$container-border-bottom:               1px solid $border-color !default;
+$container-border-left:                 0 none !default;
+
+/* grid */
+$grid-border-color:                     fade(black, 3%) !default;
+$grid-border-style:                     solid !default;
+$grid-header-background:                rgba(255, 255, 255, .6) !default;
+$grid-cell-color:                       rgb(255, 255, 255) !default;
+
+/* cell */
+$cell-border-top:                       1px solid $border-color !default;
+$cell-border-right:                     0 none !default;
+$cell-border-bottom:                    0 none !default;
+$cell-border-left:                      0 none !default;
+$cell-even-background-color: 			      #ffffff !default;
+$cell-odd-background-color:             darken($grid-cell-color, 3%) !default; // for striping every second row
+$cell-odd-active-background-color:      darken($grid-cell-color, 5%) !default;
+$cell-padding:                          5px 7.5834px !default;
+
+/* cell default slickgrid values */
+$cell-padding-top:                      4px !default;
+$cell-padding-right:                    4px !default;
+$cell-padding-bottom:                   4px !default;
+$cell-padding-left:                     4px !default;
+
+/* row */
+$row-highlight-background-color:        rgba(212, 203, 156, 0.774) !default;
+$row-highlight-fade-animation:          2s ease-in 1 !default;
+$row-mouse-hover-color:                 rgb(245, 245, 204) !default;
+$row-selected-color:                    #e2e2c5 !default;
+
+/* header */
+$header-input-height:                   27px !default;                        // height of the filter form element (input, textarea, select)
+$header-input-width:                    100% !default;                        // width of the filter form element (input, textarea, select)
+$header-input-padding:                  0 6px !default;                       // padding of the filter form element (input, textarea, select)
+$header-row-background-color:           #ffffff !default;
+$header-row-count:                      2 !default;                           // how many rows to display on the header
+$header-row-filter-padding:             4px !default;
+$header-column-height:                  (16px * $header-row-count) !default;  // header is calculated by rows to show
+$header-border-top:                     0 none !default;
+$header-border-right:                   0 none !default;
+$header-border-bottom:                  0 none !default;
+$header-border-left:                    0 none !default;
+$header-resizable-hover:                1px solid #d0d0d0 !default;
+$header-scroll-width-to-remove:         16px !default;                        // without this, the header (which doesn't have scrolling) will be wider than the data viewport
+
+/* icon font is using Font-Awesome by default but could be changed to any other icon package like Glyphicons, ... */
+$icon-font-family:                      "FontAwesome" !default;               // or Glyphicons Halflings */
+$icon-font-size:                        14px !default;
+$icon-sort-asc:                         "\f0d8" !default;
+$icon-sort-desc:                        "\f0d7" !default;
+$icon-sort-color:                       rgb(76, 128, 190) !default;
+$icon-sort-position-right:              10px;
+$icon-sort-position-top:                ((15px * $header-row-count) - 15px);
+$table-background:                      transparent !default;
+$container-border:                      0px solid $border-color !default;
+$link-color:        				            #08c !default;
+$link-color-hover:                      darker($link-color, 15%) !default;
+$gray-dark:              			          #333 !default;
+$text-color:             			          $gray-dark !default;
+$navbar-default-link-hover-color:	      $gray-dark !default;
+
+/* Column picker */
+$column-picker-background-color:        #f8f8f8 !default;
+$column-picker-border:                  1px solid #b8b8b8 !default;
+$column-picker-border-radius:           3px !default;
+$column-picker-box-shadow:              2px 2px 2px silver !default;
+$column-picker-close-background-color:  1px solid #9c9c9c !default;
+$column-picker-close-border:            0px solid #9c9c9c !default;
+$column-picker-close-opacity:           0.9 !default;
+$column-picker-label-margin:            4px !default;
+$column-picker-label-font-weight:       normal !default;
+$column-picker-link-background-color:   #ffffff !default;
+
+/* Grid Menu - hamburger menu */
+$grid-menu-background-color:            #f8f8f8 !default;
+$grid-menu-border:                      1px solid #b8b8b8 !default;
+$grid-menu-border-radius:               3px !default;
+$grid-menu-label-margin:                4px !default;
+$grid-menu-label-font-weight:           normal !default;
+$grid-menu-link-background-color:       #ffffff !default;
+$grid-menu-box-shadow:                  2px 2px 2px silver !default;
+$grid-menu-icon-font-size:              14px;
+
+/* Editors */
+$large-editor-background-color:         #ffffff !default;
+$large-editor-border:                   2px solid gray !default;
+$large-editor-text-padding:             5px !default;
+$large-editor-border-radius:            8px !default;
+$large-editor-textarea-height:          80px !default;
+$large-editor-textarea-width:           250px !default;
+$large-editor-button-text-align:        right !default;
+$large-editor-footer-spacing:           2px !default;
+
+/* pagination variables */
+$pagination-button-hover-color:         #E6E6E6 !default;
+$pagination-border-color:               #ddd !default;
+$pagination-icon-color:                 #337ab7 !default;
+$pagination-icon-seek-first:            "\f100" !default;
+$pagination-icon-seek-end:              "\f101" !default;
+$pagination-icon-seek-next:             "\f105" !default;
+$pagination-icon-seek-prev:             "\f104" !default;
+$pagination-icon-seek-text-stroke:      0.4px !default;
+$pagination-button-border:              1px solid #b6b6b6 !default;
+$pagination-border-top:                 0 none !default;
+$pagination-border-right:               0 none !default;
+$pagination-border-bottom:              0 none !default;
+$pagination-border-left:                0 none !default;
+$pagination-text-color:                 #808080 !default;
