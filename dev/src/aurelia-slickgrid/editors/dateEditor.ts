@@ -1,5 +1,5 @@
 import { mapFlatpickrDateFormatWithFieldType } from './../services/utilities';
-import flatpickr from 'flatpickr';
+import * as flatpickr from 'flatpickr';
 import * as $ from 'jquery';
 import { Editor, FieldType, KeyCode } from './../models/index';
 

@@ -74,7 +74,7 @@
     "aurelia-event-aggregator": "^1.0.1",
     "aurelia-framework": "^1.1.5",
     "aurelia-pal": "^1.4.0",
-    "flatpickr": "^4.0.7",
+    "flatpickr": "^4.1.0",
     "jquery": "^3.2.1",
     "moment": "^2.18.1",
     "moment-mini": "^2.18.1",

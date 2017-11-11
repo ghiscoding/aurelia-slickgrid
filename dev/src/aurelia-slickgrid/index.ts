@@ -24,6 +24,7 @@ import { ControlAndPluginService } from './services/controlAndPlugin.service';
 import { FilterService } from './services/filter.service';
 import { GraphqlService } from './services/graphql.service';
 import { GridExtraUtils } from './services/gridExtraUtils';
+import { GridExtraService } from './services/gridExtra.service';
 import { GridEventService } from './services/gridEvent.service';
 import { GridOdataService } from './services/grid-odata.service';
 import { ResizerService } from './services/resizer.service';
@@ -61,8 +62,9 @@ export {
   ControlAndPluginService,
   FilterService,
   GraphqlService,
-  GridExtraUtils,
   GridEventService,
+  GridExtraUtils,
+  GridExtraService,
   GridOdataService,
   ResizerService,
   SortService,

@@ -23,13 +23,13 @@ import 'slickgrid/plugins/slick.rowselectionmodel';
 import { bindable, bindingMode, inject } from 'aurelia-framework';
 import { GlobalGridOptions } from './global-grid-options';
 import { CellArgs, Column, FormElementType, GridOption } from './models/index';
-import { ControlAndPluginService, FilterService, GridEventService, SortService, ResizerService } from './services/index';
+import { ControlAndPluginService, FilterService, GridEventService, GridExtraService, SortService, ResizerService } from './services/index';
 import * as $ from 'jquery';
 
 // using external js modules in Aurelia
 declare var Slick: any;
 
-@inject(Element, ControlAndPluginService, ResizerService, GridEventService, FilterService, SortService)
+@inject(Element, ControlAndPluginService, ResizerService, GridEventService, GridExtraService, FilterService, SortService)
 export class AureliaSlickgridCustomElement {
   private _dataset: any[];
   private _gridOptions: GridOption;
@@ -56,12 +56,14 @@ export class AureliaSlickgridCustomElement {
     private controlPluginService: ControlAndPluginService,
     private resizer: ResizerService,
     private gridEventService: GridEventService,
+    private gridExtraService: GridExtraService,
     private filterService: FilterService,
     private sortService: SortService) {
     this.elm = elm;
     this.resizer = resizer;
     this.controlPluginService = controlPluginService;
     this.gridEventService = gridEventService;
+    this.gridExtraService = gridExtraService;
     this.filterService = filterService;
     this.sortService = sortService;
   }
@@ -84,6 +86,9 @@ export class AureliaSlickgridCustomElement {
 
     // attach resize ONLY after the dataView is ready
     this.attachResizeHook(this.grid, this._gridOptions);
+
+    // attach grid extra service 
+    const gridExtraService = this.gridExtraService.init(this.grid, this.dataview);
   }
 
   /**
@@ -150,11 +155,6 @@ export class AureliaSlickgridCustomElement {
     // on cell click, mainly used with the columnDef.action callback
     this.gridEventService.attachOnCellChange(grid, this._gridOptions, dataView);
     this.gridEventService.attachOnClick(grid, this._gridOptions, dataView);
-
-    // if enable, change background color on mouse over
-    if (options.enableMouseHoverHighlightRow) {
-      this.gridEventService.attachOnMouseHover(grid);
-    }
 
     dataView.onRowCountChanged.subscribe((e: any, args: any) => {
       grid.updateRowCount();
