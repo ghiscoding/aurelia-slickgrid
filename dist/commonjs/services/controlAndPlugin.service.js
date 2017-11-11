@@ -52,20 +52,25 @@ var ControlAndPluginService = /** @class */ (function () {
             grid.setSelectionModel(this.rowSelectionPlugin);
         }
         if (options.enableHeaderButton) {
-            this.headerButtonsPlugin = new Slick.Plugins.HeaderButtons(options.headerButtonOptions || {});
+            this.headerButtonsPlugin = new Slick.Plugins.HeaderButtons(options.headerButton || {});
             grid.registerPlugin(this.headerButtonsPlugin);
             this.headerButtonsPlugin.onCommand.subscribe(function (e, args) {
-                if (options.headerButtonOptions && typeof options.headerButtonOptions.onCommand === 'function') {
-                    options.headerButtonOptions.onCommand(e, args);
+                if (options.headerButton && typeof options.headerButton.onCommand === 'function') {
+                    options.headerButton.onCommand(e, args);
                 }
             });
         }
         if (options.enableHeaderMenu) {
-            this.headerMenuPlugin = new Slick.Plugins.HeaderMenu(options.headerMenuOptions || {});
+            this.headerMenuPlugin = new Slick.Plugins.HeaderMenu(options.headerMenu || {});
             grid.registerPlugin(this.headerMenuPlugin);
             this.headerMenuPlugin.onCommand.subscribe(function (e, args) {
-                if (options.headerMenuOptions && typeof options.headerMenuOptions.onCommand === 'function') {
-                    options.headerMenuOptions.onCommand(e, args);
+                if (options.headerMenu && typeof options.headerMenu.onCommand === 'function') {
+                    options.headerMenu.onCommand(e, args);
+                }
+            });
+            this.headerMenuPlugin.onCommand.subscribe(function (e, args) {
+                if (options.headerMenu && typeof options.headerMenu.onBeforeMenuShow === 'function') {
+                    options.headerMenu.onBeforeMenuShow(e, args);
                 }
             });
         }

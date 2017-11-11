@@ -1,6 +1,6 @@
 import { EventAggregator } from 'aurelia-event-aggregator';
-import { Column, GridOption } from './../models/index';
 import { FilterService } from './filter.service';
+import { Column, GridOption } from './../models/index';
 export declare class ControlAndPluginService {
     _dataView: any;
     _grid: any;

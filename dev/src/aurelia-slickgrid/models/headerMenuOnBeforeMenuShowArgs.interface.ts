@@ -1,6 +1,6 @@
 import { Column } from './column.interface';
 
-interface MenuOption {
+export interface MenuOption {
   tooltip: string;
 }
 export interface HeaderMenuOnBeforeMenuShowArgs {
