@@ -14,6 +14,8 @@ import { percentCompleteFormatter } from './percentCompleteFormatter';
 import { percentCompleteBarFormatter } from './percentCompleteBarFormatter';
 import { progressBarFormatter } from './progressBarFormatter';
 import { yesNoFormatter } from './yesNoFormatter';
+import { hyperlinkFormatter } from 'aurelia-slickgrid/formatters/hyperlinkFormatter';
+import { arrayToCsvFormatter } from 'aurelia-slickgrid/formatters/arrayToCsvFormatter';
 
 /*
 export interface GroupFormatter {
@@ -25,6 +27,7 @@ export interface GroupTotalsFormatter {
 }
 */
 export const Formatters = {
+  arrayToCsv: arrayToCsvFormatter,
   checkbox: checkboxFormatter,
   checkmark: checkmarkFormatter,
   dateIso: dateIsoFormatter,
@@ -35,6 +38,7 @@ export const Formatters = {
   dateTimeUsAmPm: dateTimeUsAmPmFormatter,
   deleteIcon: deleteIconFormatter,
   editIcon: editIconFormatter,
+  hyperlink: hyperlinkFormatter,
   percentComplete: percentCompleteFormatter,
   percentCompleteBar: percentCompleteBarFormatter,
   progressBar: progressBarFormatter,
