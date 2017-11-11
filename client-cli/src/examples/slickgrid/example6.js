@@ -48,7 +48,7 @@ export class Example6 {
           selectOptions: [{ value: '', label: '' }, { value: 'male', label: 'male' }, { value: 'female', label: 'female' }]
         }
       },
-      { id: 'company', name: 'Company', field: 'company', minWidth: 80 }
+      { id: 'company', name: 'Company', field: 'company', filterable: true }
     ];
 
     this.gridOptions = {

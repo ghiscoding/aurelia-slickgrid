@@ -41,7 +41,7 @@ export class Example4 {
   defineGrid() {
     this.columnDefinitions = [
       { id: 'title', name: 'Title', field: 'title', filterable: true, sortable: true, type: FieldType.string, minWidth: 100 },
-      { id: 'description', name: 'Description', field: 'description', filterable: true, sortable: true, type: FieldType.string },
+      { id: 'description', name: 'Description', field: 'description', filterable: true, sortable: true, minWidth: 100, type: FieldType.string },
       { id: 'duration', name: 'Duration (days)', field: 'duration', filterable: true, sortable: true, type: FieldType.number, minWidth: 100 },
       { id: 'complete', name: '% Complete', field: 'percentComplete', formatter: Formatters.percentCompleteBar, type: FieldType.number, filterable: true, sortable: true, minWidth: 100 },
       { id: 'start', name: 'Start', field: 'start', formatter: Formatters.dateIso, filterable: true, sortable: true, type: FieldType.date, minWidth: 100 },

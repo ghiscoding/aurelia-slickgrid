@@ -170,7 +170,5 @@ export class ControlAndPluginService {
     options.gridMenu.customTitle = options.gridMenu.customTitle || undefined;
     options.gridMenu.customItems = options.gridMenu.customItems || [];
     this.addGridMenuCustomCommands(options);
-
-    options.gridMenu.resizeOnShowHeaderRow = options.showHeaderRow;
   }
 }
