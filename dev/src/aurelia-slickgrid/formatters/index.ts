@@ -1,6 +1,7 @@
 import { Column } from './../models/index';
 // import { Group, GroupTotals } from '../core'
 // import { Item } from '../dataview'
+import { arrayToCsvFormatter } from './arrayToCsvFormatter';
 import { checkboxFormatter } from './checkboxFormatter';
 import { checkmarkFormatter } from './checkmarkFormatter';
 import { dateIsoFormatter } from './dateIsoFormatter';
@@ -10,12 +11,11 @@ import { dateTimeUsFormatter } from './dateTimeUsFormatter';
 import { dateUsFormatter } from './dateUsFormatter';
 import { deleteIconFormatter } from './deleteIconFormatter';
 import { editIconFormatter } from './editIconFormatter';
+import { hyperlinkFormatter } from './hyperlinkFormatter';
 import { percentCompleteFormatter } from './percentCompleteFormatter';
 import { percentCompleteBarFormatter } from './percentCompleteBarFormatter';
 import { progressBarFormatter } from './progressBarFormatter';
 import { yesNoFormatter } from './yesNoFormatter';
-import { hyperlinkFormatter } from 'aurelia-slickgrid/formatters/hyperlinkFormatter';
-import { arrayToCsvFormatter } from 'aurelia-slickgrid/formatters/arrayToCsvFormatter';
 
 /*
 export interface GroupFormatter {

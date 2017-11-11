@@ -1,14 +1,14 @@
 System.register(["./../services/utilities", "flatpickr", "jquery", "./../models/index"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var utilities_1, flatpickr_1, $, index_1, DateEditor;
+    var utilities_1, flatpickr, $, index_1, DateEditor;
     return {
         setters: [
             function (utilities_1_1) {
                 utilities_1 = utilities_1_1;
             },
-            function (flatpickr_1_1) {
-                flatpickr_1 = flatpickr_1_1;
+            function (flatpickr_1) {
+                flatpickr = flatpickr_1;
             },
             function ($_1) {
                 $ = $_1;
@@ -40,7 +40,7 @@ System.register(["./../services/utilities", "flatpickr", "jquery", "./../models/
                     this.$input = $("<input type=\"text\" value=\"" + this.defaultDate + "\" class=\"editor-text\" />");
                     this.$input.appendTo(this.args.container);
                     this.$input.focus().val(this.defaultDate).select();
-                    this.flatInstance = flatpickr_1.default(this.$input[0], pickerOptions);
+                    this.flatInstance = flatpickr(this.$input[0], pickerOptions);
                     this.flatInstance.open();
                 };
                 DateEditor.prototype.destroy = function () {

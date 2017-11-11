@@ -1,4 +1,4 @@
-define(["require", "exports", "./../services/utilities", "flatpickr", "jquery", "./../models/index"], function (require, exports, utilities_1, flatpickr_1, $, index_1) {
+define(["require", "exports", "./../services/utilities", "flatpickr", "jquery", "./../models/index"], function (require, exports, utilities_1, flatpickr, $, index_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /*
@@ -23,7 +23,7 @@ define(["require", "exports", "./../services/utilities", "flatpickr", "jquery", 
             this.$input = $("<input type=\"text\" value=\"" + this.defaultDate + "\" class=\"editor-text\" />");
             this.$input.appendTo(this.args.container);
             this.$input.focus().val(this.defaultDate).select();
-            this.flatInstance = flatpickr_1.default(this.$input[0], pickerOptions);
+            this.flatInstance = flatpickr(this.$input[0], pickerOptions);
             this.flatInstance.open();
         };
         DateEditor.prototype.destroy = function () {

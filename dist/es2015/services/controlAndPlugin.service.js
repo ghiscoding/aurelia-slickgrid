@@ -22,11 +22,23 @@ let ControlAndPluginService = class ControlAndPluginService {
         if (options.enableGridMenu) {
             this.prepareGridMenu(options);
             this.gridMenuControl = new Slick.Controls.GridMenu(columnDefinitions, grid, options);
-            this.gridMenuControl.onCommand.subscribe((e, args) => {
-                if (typeof options.onGridMenuCommand === 'function') {
-                    options.onGridMenuCommand(e, args);
-                }
-            });
+            if (options.gridMenu) {
+                this.gridMenuControl.onBeforeMenuShow.subscribe((e, args) => {
+                    if (options.gridMenu && typeof options.gridMenu.onBeforeMenuShow === 'function') {
+                        options.gridMenu.onBeforeMenuShow(e, args);
+                    }
+                });
+                this.gridMenuControl.onCommand.subscribe((e, args) => {
+                    if (options.gridMenu && typeof options.gridMenu.onCommand === 'function') {
+                        options.gridMenu.onCommand(e, args);
+                    }
+                });
+                this.gridMenuControl.onMenuClose.subscribe((e, args) => {
+                    if (options.gridMenu && typeof options.gridMenu.onMenuClose === 'function') {
+                        options.gridMenu.onMenuClose(e, args);
+                    }
+                });
+            }
         }
         if (options.enableAutoTooltip) {
             this.autoTooltipPlugin = new Slick.AutoTooltips(options.autoTooltipOptions || {});
@@ -40,8 +52,8 @@ let ControlAndPluginService = class ControlAndPluginService {
             this.headerButtonsPlugin = new Slick.Plugins.HeaderButtons(options.headerButtonOptions || {});
             grid.registerPlugin(this.headerButtonsPlugin);
             this.headerButtonsPlugin.onCommand.subscribe((e, args) => {
-                if (typeof options.onHeaderButtonCommand === 'function') {
-                    options.onHeaderButtonCommand(e, args);
+                if (options.headerButtonOptions && typeof options.headerButtonOptions.onCommand === 'function') {
+                    options.headerButtonOptions.onCommand(e, args);
                 }
             });
         }
@@ -49,8 +61,8 @@ let ControlAndPluginService = class ControlAndPluginService {
             this.headerMenuPlugin = new Slick.Plugins.HeaderMenu(options.headerMenuOptions || {});
             grid.registerPlugin(this.headerMenuPlugin);
             this.headerMenuPlugin.onCommand.subscribe((e, args) => {
-                if (typeof options.onHeaderMenuCommand === 'function') {
-                    options.onHeaderMenuCommand(e, args);
+                if (options.headerMenuOptions && typeof options.headerMenuOptions.onCommand === 'function') {
+                    options.headerMenuOptions.onCommand(e, args);
                 }
             });
         }
@@ -106,7 +118,7 @@ let ControlAndPluginService = class ControlAndPluginService {
                     command: 'toggle-filter'
                 });
             }
-            options.onGridMenuCommand = (e, args) => {
+            options.gridMenu.onCommand = (e, args) => {
                 if (args.command === 'toggle-filter') {
                     this._grid.setHeaderRowVisibility(!this._grid.getOptions().showHeaderRow);
                 }
@@ -116,9 +128,6 @@ let ControlAndPluginService = class ControlAndPluginService {
                 else if (args.command === 'clear-filter') {
                     this.filterService.clearFilters();
                     this._dataView.refresh();
-                }
-                else {
-                    alert('Command: ' + args.command);
                 }
             };
         }
@@ -135,7 +144,6 @@ let ControlAndPluginService = class ControlAndPluginService {
         options.gridMenu.customTitle = options.gridMenu.customTitle || undefined;
         options.gridMenu.customItems = options.gridMenu.customItems || [];
         this.addGridMenuCustomCommands(options);
-        options.gridMenu.resizeOnShowHeaderRow = options.showHeaderRow;
     }
 };
 ControlAndPluginService = __decorate([

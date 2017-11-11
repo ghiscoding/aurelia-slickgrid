@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var utilities_1 = require("./../services/utilities");
-var flatpickr_1 = require("flatpickr");
+var flatpickr = require("flatpickr");
 var $ = require("jquery");
 var index_1 = require("./../models/index");
 /*
@@ -26,7 +26,7 @@ var DateEditor = /** @class */ (function () {
         this.$input = $("<input type=\"text\" value=\"" + this.defaultDate + "\" class=\"editor-text\" />");
         this.$input.appendTo(this.args.container);
         this.$input.focus().val(this.defaultDate).select();
-        this.flatInstance = flatpickr_1.default(this.$input[0], pickerOptions);
+        this.flatInstance = flatpickr(this.$input[0], pickerOptions);
         this.flatInstance.open();
     };
     DateEditor.prototype.destroy = function () {

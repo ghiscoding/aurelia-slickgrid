@@ -1,18 +1,4 @@
 export class GridEventService {
-    /* OnMouseHover (Enter/Leave) Events */
-    attachOnMouseHover(grid) {
-        grid.onMouseEnter.subscribe((e) => {
-            const cell = grid.getCellFromEvent(e);
-            if (cell && cell.row >= 0) {
-                grid.setSelectedRows([cell.row]);
-                e.preventDefault();
-            }
-        });
-        grid.onMouseLeave.subscribe((e) => {
-            grid.setSelectedRows([]);
-            e.preventDefault();
-        });
-    }
     /* OnCellChange Event */
     attachOnCellChange(grid, gridOptions, dataView) {
         // subscribe to this Slickgrid event of onCellChange
@@ -25,6 +11,8 @@ export class GridEventService {
             if (typeof column.onCellChange === 'function') {
                 // add to the output gridOptions & dataView since we'll need them inside the AJAX column.onCellChange
                 const returnedArgs = {
+                    row: args.row,
+                    cell: args.cell,
                     dataView,
                     gridDefinition: gridOptions,
                     grid,
@@ -48,6 +36,8 @@ export class GridEventService {
             if (typeof column.onCellClick === 'function') {
                 // add to the output gridOptions & dataView since we'll need them inside the AJAX column.onClick
                 const returnedArgs = {
+                    row: args.row,
+                    cell: args.cell,
                     dataView,
                     gridDefinition: gridOptions,
                     grid,

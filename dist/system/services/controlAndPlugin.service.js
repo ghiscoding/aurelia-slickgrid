@@ -37,11 +37,23 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./filter.serv
                     if (options.enableGridMenu) {
                         this.prepareGridMenu(options);
                         this.gridMenuControl = new Slick.Controls.GridMenu(columnDefinitions, grid, options);
-                        this.gridMenuControl.onCommand.subscribe(function (e, args) {
-                            if (typeof options.onGridMenuCommand === 'function') {
-                                options.onGridMenuCommand(e, args);
-                            }
-                        });
+                        if (options.gridMenu) {
+                            this.gridMenuControl.onBeforeMenuShow.subscribe(function (e, args) {
+                                if (options.gridMenu && typeof options.gridMenu.onBeforeMenuShow === 'function') {
+                                    options.gridMenu.onBeforeMenuShow(e, args);
+                                }
+                            });
+                            this.gridMenuControl.onCommand.subscribe(function (e, args) {
+                                if (options.gridMenu && typeof options.gridMenu.onCommand === 'function') {
+                                    options.gridMenu.onCommand(e, args);
+                                }
+                            });
+                            this.gridMenuControl.onMenuClose.subscribe(function (e, args) {
+                                if (options.gridMenu && typeof options.gridMenu.onMenuClose === 'function') {
+                                    options.gridMenu.onMenuClose(e, args);
+                                }
+                            });
+                        }
                     }
                     if (options.enableAutoTooltip) {
                         this.autoTooltipPlugin = new Slick.AutoTooltips(options.autoTooltipOptions || {});
@@ -55,8 +67,8 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./filter.serv
                         this.headerButtonsPlugin = new Slick.Plugins.HeaderButtons(options.headerButtonOptions || {});
                         grid.registerPlugin(this.headerButtonsPlugin);
                         this.headerButtonsPlugin.onCommand.subscribe(function (e, args) {
-                            if (typeof options.onHeaderButtonCommand === 'function') {
-                                options.onHeaderButtonCommand(e, args);
+                            if (options.headerButtonOptions && typeof options.headerButtonOptions.onCommand === 'function') {
+                                options.headerButtonOptions.onCommand(e, args);
                             }
                         });
                     }
@@ -64,8 +76,8 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./filter.serv
                         this.headerMenuPlugin = new Slick.Plugins.HeaderMenu(options.headerMenuOptions || {});
                         grid.registerPlugin(this.headerMenuPlugin);
                         this.headerMenuPlugin.onCommand.subscribe(function (e, args) {
-                            if (typeof options.onHeaderMenuCommand === 'function') {
-                                options.onHeaderMenuCommand(e, args);
+                            if (options.headerMenuOptions && typeof options.headerMenuOptions.onCommand === 'function') {
+                                options.headerMenuOptions.onCommand(e, args);
                             }
                         });
                     }
@@ -122,7 +134,7 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./filter.serv
                                 command: 'toggle-filter'
                             });
                         }
-                        options.onGridMenuCommand = function (e, args) {
+                        options.gridMenu.onCommand = function (e, args) {
                             if (args.command === 'toggle-filter') {
                                 _this._grid.setHeaderRowVisibility(!_this._grid.getOptions().showHeaderRow);
                             }
@@ -132,9 +144,6 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./filter.serv
                             else if (args.command === 'clear-filter') {
                                 _this.filterService.clearFilters();
                                 _this._dataView.refresh();
-                            }
-                            else {
-                                alert('Command: ' + args.command);
                             }
                         };
                     }
@@ -151,7 +160,6 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./filter.serv
                     options.gridMenu.customTitle = options.gridMenu.customTitle || undefined;
                     options.gridMenu.customItems = options.gridMenu.customItems || [];
                     this.addGridMenuCustomCommands(options);
-                    options.gridMenu.resizeOnShowHeaderRow = options.showHeaderRow;
                 };
                 ControlAndPluginService = __decorate([
                     aurelia_framework_1.inject(aurelia_event_aggregator_1.EventAggregator, filter_service_1.FilterService)

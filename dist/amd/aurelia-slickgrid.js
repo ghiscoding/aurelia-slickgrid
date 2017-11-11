@@ -51,11 +51,12 @@ define(["require", "exports", "aurelia-framework", "./global-grid-options", "./s
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var AureliaSlickgridCustomElement = /** @class */ (function () {
-        function AureliaSlickgridCustomElement(elm, controlPluginService, resizer, gridEventService, filterService, sortService) {
+        function AureliaSlickgridCustomElement(elm, controlPluginService, resizer, gridEventService, gridExtraService, filterService, sortService) {
             this.elm = elm;
             this.controlPluginService = controlPluginService;
             this.resizer = resizer;
             this.gridEventService = gridEventService;
+            this.gridExtraService = gridExtraService;
             this.filterService = filterService;
             this.sortService = sortService;
             this.showPagination = false;
@@ -65,6 +66,7 @@ define(["require", "exports", "aurelia-framework", "./global-grid-options", "./s
             this.resizer = resizer;
             this.controlPluginService = controlPluginService;
             this.gridEventService = gridEventService;
+            this.gridExtraService = gridExtraService;
             this.filterService = filterService;
             this.sortService = sortService;
         }
@@ -82,6 +84,8 @@ define(["require", "exports", "aurelia-framework", "./global-grid-options", "./s
             this.dataview.endUpdate();
             // attach resize ONLY after the dataView is ready
             this.attachResizeHook(this.grid, this._gridOptions);
+            // attach grid extra service 
+            var gridExtraService = this.gridExtraService.init(this.grid, this.dataview);
         };
         /**
          * Keep original value(s) that could be passed by the user ViewModel.
@@ -146,10 +150,6 @@ define(["require", "exports", "aurelia-framework", "./global-grid-options", "./s
             // on cell click, mainly used with the columnDef.action callback
             this.gridEventService.attachOnCellChange(grid, this._gridOptions, dataView);
             this.gridEventService.attachOnClick(grid, this._gridOptions, dataView);
-            // if enable, change background color on mouse over
-            if (options.enableMouseHoverHighlightRow) {
-                this.gridEventService.attachOnMouseHover(grid);
-            }
             dataView.onRowCountChanged.subscribe(function (e, args) {
                 grid.updateRowCount();
                 grid.render();
@@ -181,7 +181,7 @@ define(["require", "exports", "aurelia-framework", "./global-grid-options", "./s
             if (this.gridOptions.enableFiltering) {
                 this.gridOptions.showHeaderRow = true;
             }
-            // use an immutable merge to avoid changing properties in GlobalGridOptions when changing route
+            // use jquery extend to deep merge and avoid immutable properties changed in GlobalGridOptions after route change
             return $.extend(true, {}, global_grid_options_1.GlobalGridOptions, this.gridOptions);
         };
         /** Toggle the filter row displayed on first row */
@@ -249,7 +249,7 @@ define(["require", "exports", "aurelia-framework", "./global-grid-options", "./s
             aurelia_framework_1.bindable()
         ], AureliaSlickgridCustomElement.prototype, "pickerOptions", void 0);
         AureliaSlickgridCustomElement = __decorate([
-            aurelia_framework_1.inject(Element, index_1.ControlAndPluginService, index_1.ResizerService, index_1.GridEventService, index_1.FilterService, index_1.SortService)
+            aurelia_framework_1.inject(Element, index_1.ControlAndPluginService, index_1.ResizerService, index_1.GridEventService, index_1.GridExtraService, index_1.FilterService, index_1.SortService)
         ], AureliaSlickgridCustomElement);
         return AureliaSlickgridCustomElement;
     }());

@@ -5,13 +5,13 @@ export class GridExtraService {
   private _grid: any;
   private _dataView: any;
 
-  init(grid, dataView) {
+  init(grid: any, dataView: any): void {
     this._grid = grid;
     this._dataView = dataView;
   }
 
   /** Chain the item Metadata with our implementation of Metadata at given row index */
-  getItemRowMetadata(previousItemMetadata: any) {
+  getItemRowMetadata(previousItemMetadata: any): any {
     return (rowNumber: number) => {
       const item = this._dataView.getItem(rowNumber);
       let meta = {

@@ -26,7 +26,6 @@ System.register([], function (exports_1, context_1) {
                 enableColumnPicker: true,
                 enableColumnReorder: true,
                 enableGridMenu: true,
-                enableMouseHoverHighlightRow: true,
                 enablePagination: false,
                 enableSorting: true,
                 enableTextSelectionOnCells: true,
@@ -35,7 +34,8 @@ System.register([], function (exports_1, context_1) {
                 gridMenu: {
                     columnTitle: 'Columns',
                     iconCssClass: 'fa fa-bars',
-                    menuWidth: 16
+                    menuWidth: 16,
+                    resizeOnShowHeaderRow: false
                 },
                 headerRowHeight: 35,
                 multiColumnSort: true,

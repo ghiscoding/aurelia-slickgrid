@@ -19,7 +19,6 @@ export var GlobalGridOptions = {
     enableColumnPicker: true,
     enableColumnReorder: true,
     enableGridMenu: true,
-    enableMouseHoverHighlightRow: true,
     enablePagination: false,
     enableSorting: true,
     enableTextSelectionOnCells: true,
@@ -28,7 +27,8 @@ export var GlobalGridOptions = {
     gridMenu: {
         columnTitle: 'Columns',
         iconCssClass: 'fa fa-bars',
-        menuWidth: 16
+        menuWidth: 16,
+        resizeOnShowHeaderRow: false
     },
     headerRowHeight: 35,
     multiColumnSort: true,

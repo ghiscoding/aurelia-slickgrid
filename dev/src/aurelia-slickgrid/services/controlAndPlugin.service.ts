@@ -41,17 +41,17 @@ export class ControlAndPluginService {
       this.gridMenuControl = new Slick.Controls.GridMenu(columnDefinitions, grid, options);
       if (options.gridMenu) {
         this.gridMenuControl.onBeforeMenuShow.subscribe((e: Event, args: CellArgs) => {
-          if (typeof options.gridMenu.onBeforeMenuShow === 'function') {
+          if (options.gridMenu && typeof options.gridMenu.onBeforeMenuShow === 'function') {
             options.gridMenu.onBeforeMenuShow(e, args);
           }
         });
         this.gridMenuControl.onCommand.subscribe((e: Event, args: CellArgs) => {
-          if (typeof options.gridMenu.onCommand === 'function') {
+          if (options.gridMenu && typeof options.gridMenu.onCommand === 'function') {
             options.gridMenu.onCommand(e, args);
           }
         });
         this.gridMenuControl.onMenuClose.subscribe((e: Event, args: CellArgs) => {
-          if (typeof options.gridMenu.onMenuClose === 'function') {
+          if (options.gridMenu && typeof options.gridMenu.onMenuClose === 'function') {
             options.gridMenu.onMenuClose(e, args);
           }
         });
@@ -69,7 +69,7 @@ export class ControlAndPluginService {
       this.headerButtonsPlugin = new Slick.Plugins.HeaderButtons(options.headerButtonOptions || {});
       grid.registerPlugin(this.headerButtonsPlugin);
       this.headerButtonsPlugin.onCommand.subscribe((e: Event, args: CellArgs) => {
-        if (typeof options.headerButtonOptions.onCommand === 'function') {
+        if (options.headerButtonOptions && typeof options.headerButtonOptions.onCommand === 'function') {
           options.headerButtonOptions.onCommand(e, args);
         }
       });
@@ -78,7 +78,7 @@ export class ControlAndPluginService {
       this.headerMenuPlugin = new Slick.Plugins.HeaderMenu(options.headerMenuOptions || {});
       grid.registerPlugin(this.headerMenuPlugin);
       this.headerMenuPlugin.onCommand.subscribe((e: Event, args: CellArgs) => {
-        if (typeof options.headerMenuOptions.onCommand === 'function') {
+        if (options.headerMenuOptions && typeof options.headerMenuOptions.onCommand === 'function') {
           options.headerMenuOptions.onCommand(e, args);
         }
       });

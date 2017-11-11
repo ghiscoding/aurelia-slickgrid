@@ -18,12 +18,13 @@ import 'slickgrid/plugins/slick.headermenu';
 import 'slickgrid/plugins/slick.rowmovemanager';
 import 'slickgrid/plugins/slick.rowselectionmodel';
 import { Column, GridOption } from './models/index';
-import { ControlAndPluginService, FilterService, GridEventService, SortService, ResizerService } from './services/index';
+import { ControlAndPluginService, FilterService, GridEventService, GridExtraService, SortService, ResizerService } from './services/index';
 export declare class AureliaSlickgridCustomElement {
     private elm;
     private controlPluginService;
     private resizer;
     private gridEventService;
+    private gridExtraService;
     private filterService;
     private sortService;
     private _dataset;
@@ -44,7 +45,7 @@ export declare class AureliaSlickgridCustomElement {
     gridHeight: number;
     gridWidth: number;
     pickerOptions: any;
-    constructor(elm: HTMLElement, controlPluginService: ControlAndPluginService, resizer: ResizerService, gridEventService: GridEventService, filterService: FilterService, sortService: SortService);
+    constructor(elm: HTMLElement, controlPluginService: ControlAndPluginService, resizer: ResizerService, gridEventService: GridEventService, gridExtraService: GridExtraService, filterService: FilterService, sortService: SortService);
     attached(): void;
     /**
      * Keep original value(s) that could be passed by the user ViewModel.
