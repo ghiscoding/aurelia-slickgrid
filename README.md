@@ -8,7 +8,7 @@ We will be using [6pac SlickGrid fork](https://github.com/6pac/SlickGrid/) (the 
 The goal is of course to be able to run SlickGrid within Aurelia but also to incorporate as much as possible the entire list of functionalities (and more) that SlickGrid offers (you can see a vast list of samples on the [6pac SlickGrid examples](https://github.com/6pac/SlickGrid/wiki/Examples) website).
 
 ### Demo page
-...soon
+[https://ghiscoding.github.io/aurelia-slickgrid](https://ghiscoding.github.io/aurelia-slickgrid)
 
 ### NPM Package
 [Aurelia-Slickgrid on NPM](https://www.npmjs.com/package/aurelia-slickgrid)
