@@ -1,11 +1,11 @@
-import { inject, bindable } from 'aurelia-framework';
-import { ControlAndPluginService, Formatters } from 'aurelia-slickgrid';
+import { autoinject, bindable } from 'aurelia-framework';
+import { Column, ControlAndPluginService, FieldType, Formatter, Formatters, GridOption } from 'aurelia-slickgrid';
 import * as $ from 'jquery';
 
-@inject(ControlAndPluginService)
+@autoinject()
 export class Example8 {
-  @bindable() gridObj;
-  @bindable() dataview;
+  @bindable() gridObj: any;
+  @bindable() dataview: any;
   title = 'Example 8: Header Menu Plugin';
   subTitle = `
     This example demonstrates using the <b>Slick.Plugins.HeaderMenu</b> plugin to easily add menus to colum headers.<br/>
@@ -16,16 +16,14 @@ export class Example8 {
       <li>Try hiding any columns (you use the "Column Picker" plugin by doing a right+click on the header to show the column back)</li>
     </ul>
   `;
-  columnDefinitions;
-  gridOptions;
+  columnDefinitions: Column[];
+  gridOptions: GridOption;
   dataset = [];
   visibleColumns;
-  controlService;
 
-  constructor(controlService) {
+  constructor(private controlService: ControlAndPluginService) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
-    this.controlService = controlService;
   }
 
   attached() {

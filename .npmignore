@@ -1,7 +1,10 @@
 jspm_packages
 bower_components
+.chrome
 .idea
 screenshots
 client-cli
 client-wp
+client-ts-wp
+doc
 npm-debug.log

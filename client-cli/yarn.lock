@@ -19,6 +19,22 @@
     normalize-path "^2.0.1"
     through2 "^2.0.3"
 
+"@types/flatpickr@^3.1.2":
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/@types/flatpickr/-/flatpickr-3.1.2.tgz#767e04fea776ddb399007028bed1a885e26d6d52"
+  dependencies:
+    flatpickr "*"
+
+"@types/jquery@^3.2.15":
+  version "3.2.16"
+  resolved "https://registry.yarnpkg.com/@types/jquery/-/jquery-3.2.16.tgz#04419c404a3194350e7d3f339a90e72c88db3111"
+
+"@types/moment@^2.13.0":
+  version "2.13.0"
+  resolved "https://registry.yarnpkg.com/@types/moment/-/moment-2.13.0.tgz#604ebd189bc3bc34a1548689404e61a2a4aac896"
+  dependencies:
+    moment "*"
+
 abbrev@1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.1.1.tgz#f8f2c887ad10bf67f634f005b6987fed3179aac8"
@@ -339,13 +355,13 @@ aurelia-dependency-injection@^1.0.0:
     aurelia-metadata "^1.0.0"
     aurelia-pal "^1.0.0"
 
-aurelia-event-aggregator@^1.0.0:
+aurelia-event-aggregator@^1.0.0, aurelia-event-aggregator@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/aurelia-event-aggregator/-/aurelia-event-aggregator-1.0.1.tgz#9d7c7c1e1efe1ef3a78785e76abe80601e2d34c8"
   dependencies:
     aurelia-logging "^1.0.0"
 
-aurelia-framework@^1.0.0:
+aurelia-framework@^1.0.0, aurelia-framework@^1.1.5:
   version "1.1.5"
   resolved "https://registry.yarnpkg.com/aurelia-framework/-/aurelia-framework-1.1.5.tgz#fd97d281c02d35bb98032830b0731ec3d2a6c1d7"
   dependencies:
@@ -445,11 +461,20 @@ aurelia-router@^1.0.1:
     aurelia-path "^1.0.0"
     aurelia-route-recognizer "^1.0.0"
 
-aurelia-slickgrid@^0.3.1:
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/aurelia-slickgrid/-/aurelia-slickgrid-0.3.1.tgz#d76f0a43b24ddcae4c2df262e97bbd04066e82dd"
+aurelia-slickgrid@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/aurelia-slickgrid/-/aurelia-slickgrid-1.0.0.tgz#34aa251e72d72909f89c5d1b19d29be8f1ba4be8"
   dependencies:
-    slickgrid-es6 "^0.4.2"
+    "@types/flatpickr" "^3.1.2"
+    "@types/jquery" "^3.2.15"
+    "@types/moment" "^2.13.0"
+    aurelia-event-aggregator "^1.0.1"
+    aurelia-framework "^1.1.5"
+    aurelia-pal "^1.4.0"
+    flatpickr "^4.0.6"
+    jquery "^3.2.1"
+    moment "^2.18.1"
+    moment-mini "^2.18.1"
 
 aurelia-task-queue@^1.0.0, aurelia-task-queue@^1.1.0:
   version "1.2.1"
@@ -2334,11 +2359,7 @@ flat-cache@^1.2.1:
     graceful-fs "^4.1.2"
     write "^0.2.1"
 
-flatpickr@^1.9.1:
-  version "1.9.1"
-  resolved "https://registry.yarnpkg.com/flatpickr/-/flatpickr-1.9.1.tgz#6a6f8dea4a75d4ef9e4b92a8b50de7533ae27dab"
-
-flatpickr@^4.1.0:
+flatpickr@*, flatpickr@^4.0.6, flatpickr@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/flatpickr/-/flatpickr-4.1.0.tgz#529ade4b0dcba1ff6bb33709fce745a77ad8628c"
 
@@ -3284,7 +3305,7 @@ jquery-ui@>=1.8.0:
   version "1.12.1"
   resolved "https://registry.yarnpkg.com/jquery-ui/-/jquery-ui-1.12.1.tgz#bcb4045c8dd0539c134bc1488cdd3e768a7a9e51"
 
-jquery@>=1.8.0, jquery@^3.1.0, jquery@^3.2.1:
+jquery@>=1.8.0, jquery@^3.2.1:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.2.1.tgz#5c4d9de652af6cd0a770154a631bba12b015c787"
 
@@ -3851,6 +3872,14 @@ mkdirp@0.3.0:
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-0.5.1.tgz#30057438eac6cf7f8c4767f38648d6697d75c903"
   dependencies:
     minimist "0.0.8"
+
+moment-mini@^2.18.1:
+  version "2.18.1"
+  resolved "https://registry.yarnpkg.com/moment-mini/-/moment-mini-2.18.1.tgz#2734cc2cd7bfd40d598c2071cc9c96cb399789d7"
+
+moment@*:
+  version "2.19.2"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.19.2.tgz#8a7f774c95a64550b4c7ebd496683908f9419dbe"
 
 moment@^2.18.1:
   version "2.18.1"
@@ -5061,13 +5090,6 @@ slash@^1.0.0:
 slice-ansi@0.0.4:
   version "0.0.4"
   resolved "https://registry.yarnpkg.com/slice-ansi/-/slice-ansi-0.0.4.tgz#edbf8903f66f7ce2f8eafd6ceed65e264c831b35"
-
-slickgrid-es6@^0.4.2:
-  version "0.4.2"
-  resolved "https://registry.yarnpkg.com/slickgrid-es6/-/slickgrid-es6-0.4.2.tgz#0d20dc8ce64a4ae0f4b61103584c87a9b4001d56"
-  dependencies:
-    flatpickr "^1.9.1"
-    jquery "^3.1.0"
 
 slickgrid@^2.3.10:
   version "2.3.10"

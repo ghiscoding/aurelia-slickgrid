@@ -112,7 +112,7 @@
     "build": {
       "resources": [
         "aurelia-slickgrid/aurelia-slickgrid",
-        "aurelia-slickgrid/slick-pagination/slick-pagination"
+        "aurelia-slickgrid/slick-pagination"
       ]
     }
   }

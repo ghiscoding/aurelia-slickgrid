@@ -1,6 +1,6 @@
 import { autoinject, bindable } from 'aurelia-framework';
 import { Column, ControlAndPluginService, FieldType, Formatter, Formatters, GridOption } from 'aurelia-slickgrid';
-
+import * as $ from 'jquery';
 @autoinject()
 export class Example8 {
   @bindable() gridObj: any;
