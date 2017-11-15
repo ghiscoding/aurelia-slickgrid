@@ -52,10 +52,12 @@ export class Example3 {
         minWidth: 30,
         maxWidth: 30,
         // use onCellClick OR grid.onClick.subscribe which you can see down below
+        /*
         onCellClick: (args: OnEventArgs) => {
           console.log(args);
           alert(`Deleting: ${args.dataContext.title}`);
         }
+        */
       },
       { id: 'title', name: 'Title', field: 'title', sortable: true, type: FieldType.string, editor: Editors.longText, minWidth: 100 },
       { id: 'duration', name: 'Duration (days)', field: 'duration', sortable: true, type: FieldType.number, editor: Editors.text, minWidth: 100 },
@@ -119,10 +121,10 @@ export class Example3 {
       if (column.columnDef.id === 'edit') {
         alert(`Call a modal window to edit: ${column.dataContext.title}`);
 
-        // highlight the row, to customize the color, you can change the SASS variable $row-highlight-background-color 
+        // highlight the row, to customize the color, you can change the SASS variable $row-highlight-background-color
         this.gridExtraService.highlightRow(args.row, 1500);
 
-        // you could also select the row, when using "enableCellNavigation: true", it automatically selects the row 
+        // you could also select the row, when using "enableCellNavigation: true", it automatically selects the row
         // this.gridExtraService.setSelectedRow(args.row);
       }
       if (column.columnDef.id === 'delete') {

@@ -24,6 +24,7 @@ export class ControlAndPluginService {
 
   // controls & plugins
   autoTooltipPlugin: any;
+  checkboxSelectorPlugin: any;
   columnPickerControl: any;
   headerButtonsPlugin: any;
   headerMenuPlugin: any;
@@ -68,6 +69,11 @@ export class ControlAndPluginService {
     if (options.enableAutoTooltip) {
       this.autoTooltipPlugin = new Slick.AutoTooltips(options.autoTooltipOptions || {});
       grid.registerPlugin(this.autoTooltipPlugin);
+    }
+    if (options.enableCheckboxSelector) {
+      this.checkboxSelectorPlugin = new Slick.CheckboxSelectColumn(options.checkboxSelector || {});
+      columnDefinitions.unshift(this.checkboxSelectorPlugin.getColumnDefinition());
+      grid.registerPlugin(this.checkboxSelectorPlugin);
     }
     if (options.enableRowSelection) {
       this.rowSelectionPlugin = new Slick.RowSelectionModel(options.rowSelectionOptions || {});
