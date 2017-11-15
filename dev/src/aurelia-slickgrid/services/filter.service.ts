@@ -53,38 +53,24 @@ export class FilterService {
     if (!serviceOptions || !serviceOptions.onBackendEventApi || !serviceOptions.onBackendEventApi.process || !serviceOptions.onBackendEventApi.service) {
       throw new Error(`onBackendEventApi requires at least a "process" function and a "service" defined`);
     }
-    const backendApi = serviceOptions.onBackendEventApi;
 
     // run a preProcess callback if defined
-    if (backendApi.preProcess !== undefined) {
-      backendApi.preProcess();
+    if (serviceOptions.onBackendEventApi.preProcess !== undefined) {
+      serviceOptions.onBackendEventApi.preProcess();
     }
 
     // call the service to get a query back
-    const query = await backendApi.service.onFilterChanged(event, args);
+    const query = await serviceOptions.onBackendEventApi.service.onFilterChanged(event, args);
 
     // await for the Promise to resolve the data
-    const responseProcess = await backendApi.process(query);
+    const responseProcess = await serviceOptions.onBackendEventApi.process(query);
 
     // send the response process to the postProcess callback
-    if (backendApi.postProcess !== undefined) {
-      backendApi.postProcess(responseProcess);
+    if (serviceOptions.onBackendEventApi.postProcess !== undefined) {
+      serviceOptions.onBackendEventApi.postProcess(responseProcess);
     }
   }
 
-  testFilterCondition(operator: string, value1: any, value2: any): boolean {
-    switch (operator) {
-      case '<': return (value1 < value2) ? true : false;
-      case '<=': return (value1 <= value2) ? true : false;
-      case '>': return (value1 > value2) ? true : false;
-      case '>=': return (value1 >= value2) ? true : false;
-      case '!=':
-      case '<>': return (value1 !== value2) ? true : false;
-      case '=':
-      case '==': return (value1 === value2) ? true : false;
-    }
-    return true;
-  }
   /**
    * Attach a local filter hook to the grid
    * @param grid SlickGrid Grid object
@@ -171,7 +157,8 @@ export class FilterService {
       this._columnFilters[args.columnDef.id] = {
         columnId: args.columnDef.id,
         columnDef: args.columnDef,
-        searchTerm: e.target.value
+        searchTerm: e.target.value,
+        operator: args.operator || null
       };
     }
 
@@ -230,8 +217,10 @@ export class FilterService {
         const filterType = (columnDef.filter && columnDef.filter.type) ? columnDef.filter.type : FormElementType.input;
         switch (filterType) {
           case FormElementType.select:
+            elm.change((e: any) => this.callbackSearchEvent(e, { columnDef, operator: 'EQ' }));
+            break;
           case FormElementType.multiSelect:
-            elm.change((e: any) => this.callbackSearchEvent(e, { columnDef }));
+            elm.change((e: any) => this.callbackSearchEvent(e, { columnDef, operator: 'IN' }));
             break;
           case FormElementType.input:
           default:
