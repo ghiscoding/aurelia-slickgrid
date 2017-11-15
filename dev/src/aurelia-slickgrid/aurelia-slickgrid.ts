@@ -21,6 +21,7 @@ import 'slickgrid/plugins/slick.rowmovemanager';
 import 'slickgrid/plugins/slick.rowselectionmodel';
 
 import { bindable, bindingMode, inject } from 'aurelia-framework';
+import { EventAggregator } from 'aurelia-event-aggregator';
 import { GlobalGridOptions } from './global-grid-options';
 import { CellArgs, Column, FormElementType, GridOption } from './models/index';
 import { ControlAndPluginService, FilterService, GridEventService, GridExtraService, SortService, ResizerService } from './services/index';
@@ -29,7 +30,7 @@ import * as $ from 'jquery';
 // using external js modules in Aurelia
 declare var Slick: any;
 
-@inject(Element, ControlAndPluginService, ResizerService, GridEventService, GridExtraService, FilterService, SortService)
+@inject(Element, EventAggregator, ControlAndPluginService, ResizerService, GridEventService, GridExtraService, FilterService, SortService)
 export class AureliaSlickgridCustomElement {
   private _dataset: any[];
   private _gridOptions: GridOption;
@@ -53,6 +54,7 @@ export class AureliaSlickgridCustomElement {
 
   constructor(
     private elm: HTMLElement,
+    private ea: EventAggregator,
     private controlPluginService: ControlAndPluginService,
     private resizer: ResizerService,
     private gridEventService: GridEventService,
@@ -87,8 +89,15 @@ export class AureliaSlickgridCustomElement {
     // attach resize ONLY after the dataView is ready
     this.attachResizeHook(this.grid, this._gridOptions);
 
-    // attach grid extra service 
+    // attach grid extra service
     const gridExtraService = this.gridExtraService.init(this.grid, this.dataview);
+
+    // on route change, we should destroy the grid & cleanup some of the objects
+    this.ea.subscribe('router:navigation:processing', () => {
+      this.grid.destroy();
+      this.dataview = [];
+      this.filterService.clearFilters();
+    });
   }
 
   /**
