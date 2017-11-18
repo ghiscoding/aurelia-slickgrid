@@ -20,6 +20,7 @@
     "url": "http://github.com/ghiscoding/aurelia-slickgrid"
   },
   "scripts": {
+    "build:doc": "cd doc && yarn start build",
     "lint": "cross-env tslint --project tsconfig.json",
     "pretest": "cross-env npm run lint",
     "test": "cross-env rimraf dist && tsc && karma start --single-run",
@@ -63,7 +64,7 @@
     "sass:copy": "cross-env copyfiles -f dev/src/aurelia-slickgrid/styles/*.scss dist/styles/sass",
     "sass:watch": "node-sass 'dev/src/aurelia-slickgrid/styles/**/*.scss' -c 'npm run sass:build'",
     "sass:dev": "npm-run-all -p sass:*",
-    "start:dev": "cd dev && yarn start",
+    "start:dev": "cd dev && yarn start",    
     "start:client-cli": "cd client-cli && au run --watch",
     "start:client-ts-wp": "cd client-ts-wp && yarn start"
   },

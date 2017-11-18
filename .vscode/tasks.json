@@ -12,6 +12,15 @@
       "problemMatcher": []
     },
     {
+      "taskName": "Build Demo (doc folder)",
+      "command": "yarn",
+      "type": "shell",
+      "args": [
+        "build:doc"
+      ],
+      "problemMatcher": []
+    },
+    {
       "taskName": "Start Library Development",
       "command": "yarn",
       "type": "shell",
