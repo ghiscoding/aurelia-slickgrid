@@ -56,6 +56,9 @@ var GridExtraService = /** @class */ (function () {
             _this._dataView.updateItem(item.id, item);
         }, fadeDelay + 10);
     };
+    GridExtraService.prototype.getSelectedRows = function () {
+        return this._grid.getSelectedRows();
+    };
     GridExtraService.prototype.setSelectedRow = function (rowIndex) {
         this._grid.setSelectedRows([rowIndex]);
     };

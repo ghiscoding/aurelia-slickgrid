@@ -68,12 +68,14 @@ import 'slickgrid/plugins/slick.headermenu';
 import 'slickgrid/plugins/slick.rowmovemanager';
 import 'slickgrid/plugins/slick.rowselectionmodel';
 import { bindable, bindingMode, inject } from 'aurelia-framework';
+import { EventAggregator } from 'aurelia-event-aggregator';
 import { GlobalGridOptions } from './global-grid-options';
 import { ControlAndPluginService, FilterService, GridEventService, GridExtraService, SortService, ResizerService } from './services/index';
 import * as $ from 'jquery';
 var AureliaSlickgridCustomElement = /** @class */ (function () {
-    function AureliaSlickgridCustomElement(elm, controlPluginService, resizer, gridEventService, gridExtraService, filterService, sortService) {
+    function AureliaSlickgridCustomElement(elm, ea, controlPluginService, resizer, gridEventService, gridExtraService, filterService, sortService) {
         this.elm = elm;
+        this.ea = ea;
         this.controlPluginService = controlPluginService;
         this.resizer = resizer;
         this.gridEventService = gridEventService;
@@ -96,6 +98,7 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
         this._dataset = this._dataset || [];
         this._gridOptions = this.mergeGridOptions();
         this.dataview = new Slick.Data.DataView();
+        this.controlPluginService.createPluginBeforeGridCreation(this.columnDefinitions, this._gridOptions);
         this.grid = new Slick.Grid("#" + this.gridId, this.dataview, this.columnDefinitions, this._gridOptions);
         this.controlPluginService.attachDifferentControlOrPlugins(this.grid, this.columnDefinitions, this._gridOptions, this.dataview);
         this.attachDifferentHooks(this.grid, this._gridOptions, this.dataview);
@@ -105,8 +108,15 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
         this.dataview.endUpdate();
         // attach resize ONLY after the dataView is ready
         this.attachResizeHook(this.grid, this._gridOptions);
-        // attach grid extra service 
+        // attach grid extra service
         var gridExtraService = this.gridExtraService.init(this.grid, this.dataview);
+    };
+    AureliaSlickgridCustomElement.prototype.detached = function () {
+        this.dataview = [];
+        this.controlPluginService.destroy();
+        this.filterService.clearFilters();
+        this.resizer.destroy();
+        this.grid.destroy();
     };
     /**
      * Keep original value(s) that could be passed by the user ViewModel.
@@ -270,7 +280,7 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
         bindable()
     ], AureliaSlickgridCustomElement.prototype, "pickerOptions", void 0);
     AureliaSlickgridCustomElement = __decorate([
-        inject(Element, ControlAndPluginService, ResizerService, GridEventService, GridExtraService, FilterService, SortService)
+        inject(Element, EventAggregator, ControlAndPluginService, ResizerService, GridEventService, GridExtraService, FilterService, SortService)
     ], AureliaSlickgridCustomElement);
     return AureliaSlickgridCustomElement;
 }());

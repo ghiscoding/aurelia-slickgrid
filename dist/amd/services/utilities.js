@@ -153,6 +153,8 @@ define(["require", "exports", "../models/index", "moment"], function (require, e
                 break;
             case '<>':
             case '!=':
+            case 'neq':
+            case 'NEQ':
                 map = index_1.OperatorType.notEqual;
                 break;
             case '*':
@@ -166,7 +168,18 @@ define(["require", "exports", "../models/index", "moment"], function (require, e
                 break;
             case '=':
             case '==':
+            case 'eq':
+            case 'EQ':
                 map = index_1.OperatorType.equal;
+                break;
+            case 'in':
+            case 'IN':
+                map = index_1.OperatorType.in;
+                break;
+            case 'notIn':
+            case 'NIN':
+            case 'NOT_IN':
+                map = index_1.OperatorType.notIn;
                 break;
             default:
                 map = index_1.OperatorType.contains;

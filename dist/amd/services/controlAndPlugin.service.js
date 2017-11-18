@@ -8,20 +8,27 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var ControlAndPluginService = /** @class */ (function () {
-        function ControlAndPluginService(ea, filterService) {
+        function ControlAndPluginService(ea, filterService, gridExtraService) {
             this.ea = ea;
             this.filterService = filterService;
+            this.gridExtraService = gridExtraService;
         }
+        /**
+         * Attach/Create different Controls or Plugins after the Grid is created
+         * @param {any} grid
+         * @param {Column[]} columnDefinitions
+         * @param {GridOptions} options
+         * @param {any} dataView
+         */
         ControlAndPluginService.prototype.attachDifferentControlOrPlugins = function (grid, columnDefinitions, options, dataView) {
-            var _this = this;
-            this._visibleColumns = columnDefinitions;
-            this._dataView = dataView;
             this._grid = grid;
+            this._dataView = dataView;
+            this._visibleColumns = columnDefinitions;
             if (options.enableColumnPicker) {
                 this.columnPickerControl = new Slick.Controls.ColumnPicker(columnDefinitions, grid, options);
             }
             if (options.enableGridMenu) {
-                this.prepareGridMenu(options);
+                this.prepareGridMenu(grid, options);
                 this.gridMenuControl = new Slick.Controls.GridMenu(columnDefinitions, grid, options);
                 if (options.gridMenu) {
                     this.gridMenuControl.onBeforeMenuShow.subscribe(function (e, args) {
@@ -44,6 +51,16 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
             if (options.enableAutoTooltip) {
                 this.autoTooltipPlugin = new Slick.AutoTooltips(options.autoTooltipOptions || {});
                 grid.registerPlugin(this.autoTooltipPlugin);
+            }
+            if (options.enableCheckboxSelector) {
+                // when enabling the Checkbox Selector Plugin, we need to also watch onClick events to perform certain actions
+                // the selector column has to be create BEFORE the grid (else it behaves oddly), but we can only watch grid events AFTER the grid is created
+                grid.registerPlugin(this.checkboxSelectorPlugin);
+                // this also requires the Row Selection Model to be registered as well
+                if (!this.rowSelectionPlugin) {
+                    this.rowSelectionPlugin = new Slick.RowSelectionModel(options.rowSelectionOptions || {});
+                    grid.setSelectionModel(this.rowSelectionPlugin);
+                }
             }
             if (options.enableRowSelection) {
                 this.rowSelectionPlugin = new Slick.RowSelectionModel(options.rowSelectionOptions || {});
@@ -82,21 +99,13 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
                     grid.registerPlugin(options.registerPlugins);
                 }
             }
-            // destroy all the Controls & Plugins when changing Route
-            this.ea.subscribe('router:navigation:processing', function () {
-                _this.columnPickerControl.destroy();
-                _this.gridMenuControl.destroy();
-                /* The following plugins destroy are causing a page reload, not sure why, will leave commented out until I find why */
-                // this.autoTooltipPlugin.destroy();
-                // this.headerButtonsPlugin.destroy();
-                // this.headerMenuPlugin.destroy();
-                // this.rowSelectionPlugin.destroy();
-            });
         };
         ControlAndPluginService.prototype.hideColumn = function (column) {
-            var columnIndex = this._grid.getColumnIndex(column.id);
-            this._visibleColumns = this.removeColumnByIndex(this._visibleColumns, columnIndex);
-            this._grid.setColumns(this._visibleColumns);
+            if (this._grid && this._visibleColumns) {
+                var columnIndex = this._grid.getColumnIndex(column.id);
+                this._visibleColumns = this.removeColumnByIndex(this._visibleColumns, columnIndex);
+                this._grid.setColumns(this._visibleColumns);
+            }
         };
         ControlAndPluginService.prototype.removeColumnByIndex = function (array, index) {
             return array.filter(function (el, i) {
@@ -106,10 +115,43 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
         ControlAndPluginService.prototype.autoResizeColumns = function () {
             this._grid.autosizeColumns();
         };
-        ControlAndPluginService.prototype.addGridMenuCustomCommands = function (options) {
+        ControlAndPluginService.prototype.destroy = function () {
+            this._grid = null;
+            this._dataView = null;
+            this._visibleColumns = [];
+            if (this.columnPickerControl) {
+                this.columnPickerControl.destroy();
+                this.columnPickerControl = null;
+            }
+            if (this.gridMenuControl) {
+                this.gridMenuControl.destroy();
+                this.gridMenuControl = null;
+            }
+            if (this.rowSelectionPlugin) {
+                this.rowSelectionPlugin.destroy();
+                this.rowSelectionPlugin = null;
+            }
+            if (this.checkboxSelectorPlugin) {
+                this.checkboxSelectorPlugin.destroy();
+                this.checkboxSelectorPlugin = null;
+            }
+            if (this.autoTooltipPlugin) {
+                this.autoTooltipPlugin.destroy();
+                this.autoTooltipPlugin = null;
+            }
+            if (this.headerButtonsPlugin) {
+                this.headerButtonsPlugin.destroy();
+                this.headerButtonsPlugin = null;
+            }
+            if (this.headerMenuPlugin) {
+                this.headerMenuPlugin.destroy();
+                this.headerMenuPlugin = null;
+            }
+        };
+        ControlAndPluginService.prototype.addGridMenuCustomCommands = function (grid, options) {
             var _this = this;
-            if (options && options.enableFiltering && options.gridMenu && options.gridMenu.customItems) {
-                if (options.gridMenu.customItems.filter(function (item) { return item.command === 'clear-filter'; }).length === 0) {
+            if (options.enableFiltering) {
+                if (options && options.gridMenu && options.gridMenu.customItems && options.gridMenu.customItems.filter(function (item) { return item.command === 'clear-filter'; }).length === 0) {
                     options.gridMenu.customItems.push({
                         iconCssClass: 'fa fa-filter text-danger',
                         title: 'Clear All Filters',
@@ -117,7 +159,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
                         command: 'clear-filter'
                     });
                 }
-                if (options.gridMenu.customItems.filter(function (item) { return item.command === 'toggle-filter'; }).length === 0) {
+                if (options && options.gridMenu && options.gridMenu.customItems && options.gridMenu.customItems.filter(function (item) { return item.command === 'toggle-filter'; }).length === 0) {
                     options.gridMenu.customItems.push({
                         iconCssClass: 'fa fa-random',
                         title: 'Toggle Filter Row',
@@ -125,32 +167,50 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
                         command: 'toggle-filter'
                     });
                 }
-                options.gridMenu.onCommand = function (e, args) {
-                    if (args.command === 'toggle-filter') {
-                        _this._grid.setHeaderRowVisibility(!_this._grid.getOptions().showHeaderRow);
-                    }
-                    else if (args.command === 'toggle-toppanel') {
-                        _this._grid.setTopPanelVisibility(!_this._grid.getOptions().showTopPanel);
-                    }
-                    else if (args.command === 'clear-filter') {
-                        _this.filterService.clearFilters();
-                        _this._dataView.refresh();
-                    }
-                };
+                if (options.gridMenu) {
+                    options.gridMenu.onCommand = function (e, args) {
+                        if (args.command === 'toggle-filter') {
+                            grid.setHeaderRowVisibility(!grid.getOptions().showHeaderRow);
+                        }
+                        else if (args.command === 'toggle-toppanel') {
+                            grid.setTopPanelVisibility(!grid.getOptions().showTopPanel);
+                        }
+                        else if (args.command === 'clear-filter') {
+                            _this.filterService.clearFilters();
+                            _this._dataView.refresh();
+                        }
+                        else {
+                            alert('Command: ' + args.command);
+                        }
+                    };
+                }
             }
             // remove the custom command title if there's no command
             if (options && options.gridMenu && options.gridMenu.customItems && options.gridMenu.customItems.length > 0) {
                 options.gridMenu.customTitle = options.gridMenu.customTitle || 'Commands';
             }
         };
-        ControlAndPluginService.prototype.prepareGridMenu = function (options) {
+        ControlAndPluginService.prototype.prepareGridMenu = function (grid, options) {
             options.gridMenu = options.gridMenu || {};
             options.gridMenu.columnTitle = options.gridMenu.columnTitle || 'Columns';
             options.gridMenu.iconCssClass = options.gridMenu.iconCssClass || 'fa fa-bars';
             options.gridMenu.menuWidth = options.gridMenu.menuWidth || 18;
             options.gridMenu.customTitle = options.gridMenu.customTitle || undefined;
             options.gridMenu.customItems = options.gridMenu.customItems || [];
-            this.addGridMenuCustomCommands(options);
+            this.addGridMenuCustomCommands(grid, options);
+            // options.gridMenu.resizeOnShowHeaderRow = options.showHeaderRow;
+        };
+        /**
+         * Attach/Create different plugins before the Grid creation.
+         * For example the multi-select have to be added to the column definition before the grid is created to work properly
+         * @param {Column[]} columnDefinitions
+         * @param {GridOptions} options
+         */
+        ControlAndPluginService.prototype.createPluginBeforeGridCreation = function (columnDefinitions, options) {
+            if (options.enableCheckboxSelector) {
+                this.checkboxSelectorPlugin = new Slick.CheckboxSelectColumn(options.checkboxSelector || {});
+                columnDefinitions.unshift(this.checkboxSelectorPlugin.getColumnDefinition());
+            }
         };
         ControlAndPluginService = __decorate([
             aurelia_framework_1.inject(aurelia_event_aggregator_1.EventAggregator, filter_service_1.FilterService)

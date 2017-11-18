@@ -49,10 +49,6 @@ System.register(["aurelia-event-aggregator", "aurelia-framework", "jquery"], fun
                         _this.resizeGrid(grid, gridOptions);
                         _this.resizeGrid(grid, gridOptions);
                     });
-                    // destroy the resizer on route change
-                    this.ea.subscribe('router:navigation:processing', function () {
-                        _this.destroy();
-                    });
                 };
                 /**
                  * Calculate the datagrid new height/width from the available space, also consider that a % factor might be applied to calculation
@@ -118,7 +114,9 @@ System.register(["aurelia-event-aggregator", "aurelia-framework", "jquery"], fun
                                 grid.resizeCanvas();
                             }
                             // also call the grid auto-size columns so that it takes available when going bigger
-                            grid.autosizeColumns();
+                            if (grid && typeof grid.autosizeColumns === 'function') {
+                                grid.autosizeColumns();
+                            }
                         }
                     }, delay);
                 };

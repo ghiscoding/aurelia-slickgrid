@@ -15,10 +15,14 @@ define(["require", "exports"], function (require, exports) {
             sidePadding: 0
         },
         cellHighlightCssClass: 'slick-cell-modified',
+        checkboxSelector: {
+            cssClass: 'slick-cell-checkboxsel'
+        },
         enableAutoResize: true,
         enableRowSelection: true,
         editable: false,
         enableCellNavigation: false,
+        enableCheckboxSelector: false,
         enableColumnPicker: true,
         enableColumnReorder: true,
         enableGridMenu: true,

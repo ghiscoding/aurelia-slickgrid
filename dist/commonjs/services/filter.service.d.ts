@@ -15,7 +15,6 @@ export declare class FilterService {
      */
     attachBackendOnFilter(grid: any, options: GridOption): void;
     attachBackendOnFilterSubscribe(event: Event, args: any): Promise<void>;
-    testFilterCondition(operator: string, value1: any, value2: any): boolean;
     /**
      * Attach a local filter hook to the grid
      * @param grid SlickGrid Grid object

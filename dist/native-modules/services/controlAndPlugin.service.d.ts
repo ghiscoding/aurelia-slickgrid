@@ -1,5 +1,6 @@
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { FilterService } from './filter.service';
+import { GridExtraService } from './gridExtra.service';
 import { Column, GridOption } from './../models/index';
 export declare class ControlAndPluginService {
     _dataView: any;
@@ -7,17 +8,34 @@ export declare class ControlAndPluginService {
     _visibleColumns: Column[];
     ea: EventAggregator;
     filterService: FilterService;
+    gridExtraService: GridExtraService;
     autoTooltipPlugin: any;
+    checkboxSelectorPlugin: any;
     columnPickerControl: any;
     headerButtonsPlugin: any;
     headerMenuPlugin: any;
     gridMenuControl: any;
     rowSelectionPlugin: any;
-    constructor(ea: EventAggregator, filterService: FilterService);
+    constructor(ea: EventAggregator, filterService: FilterService, gridExtraService: GridExtraService);
+    /**
+     * Attach/Create different Controls or Plugins after the Grid is created
+     * @param {any} grid
+     * @param {Column[]} columnDefinitions
+     * @param {GridOptions} options
+     * @param {any} dataView
+     */
     attachDifferentControlOrPlugins(grid: any, columnDefinitions: Column[], options: GridOption, dataView: any): void;
     hideColumn(column: Column): void;
     removeColumnByIndex(array: any[], index: number): any[];
     autoResizeColumns(): void;
-    private addGridMenuCustomCommands(options);
-    private prepareGridMenu(options);
+    destroy(): void;
+    private addGridMenuCustomCommands(grid, options);
+    private prepareGridMenu(grid, options);
+    /**
+     * Attach/Create different plugins before the Grid creation.
+     * For example the multi-select have to be added to the column definition before the grid is created to work properly
+     * @param {Column[]} columnDefinitions
+     * @param {GridOptions} options
+     */
+    createPluginBeforeGridCreation(columnDefinitions: Column[], options: GridOption): void;
 }

@@ -77,7 +77,7 @@ System.register(["../filter-conditions/index", "./../filter-templates/index", ".
                 };
                 FilterService.prototype.attachBackendOnFilterSubscribe = function (event, args) {
                     return __awaiter(this, void 0, void 0, function () {
-                        var serviceOptions, backendApi, query, responseProcess;
+                        var serviceOptions, query, responseProcess;
                         return __generator(this, function (_a) {
                             switch (_a.label) {
                                 case 0:
@@ -88,38 +88,24 @@ System.register(["../filter-conditions/index", "./../filter-templates/index", ".
                                     if (!serviceOptions || !serviceOptions.onBackendEventApi || !serviceOptions.onBackendEventApi.process || !serviceOptions.onBackendEventApi.service) {
                                         throw new Error("onBackendEventApi requires at least a \"process\" function and a \"service\" defined");
                                     }
-                                    backendApi = serviceOptions.onBackendEventApi;
                                     // run a preProcess callback if defined
-                                    if (backendApi.preProcess !== undefined) {
-                                        backendApi.preProcess();
+                                    if (serviceOptions.onBackendEventApi.preProcess !== undefined) {
+                                        serviceOptions.onBackendEventApi.preProcess();
                                     }
-                                    return [4 /*yield*/, backendApi.service.onFilterChanged(event, args)];
+                                    return [4 /*yield*/, serviceOptions.onBackendEventApi.service.onFilterChanged(event, args)];
                                 case 1:
                                     query = _a.sent();
-                                    return [4 /*yield*/, backendApi.process(query)];
+                                    return [4 /*yield*/, serviceOptions.onBackendEventApi.process(query)];
                                 case 2:
                                     responseProcess = _a.sent();
                                     // send the response process to the postProcess callback
-                                    if (backendApi.postProcess !== undefined) {
-                                        backendApi.postProcess(responseProcess);
+                                    if (serviceOptions.onBackendEventApi.postProcess !== undefined) {
+                                        serviceOptions.onBackendEventApi.postProcess(responseProcess);
                                     }
                                     return [2 /*return*/];
                             }
                         });
                     });
-                };
-                FilterService.prototype.testFilterCondition = function (operator, value1, value2) {
-                    switch (operator) {
-                        case '<': return (value1 < value2) ? true : false;
-                        case '<=': return (value1 <= value2) ? true : false;
-                        case '>': return (value1 > value2) ? true : false;
-                        case '>=': return (value1 >= value2) ? true : false;
-                        case '!=':
-                        case '<>': return (value1 !== value2) ? true : false;
-                        case '=':
-                        case '==': return (value1 === value2) ? true : false;
-                    }
-                    return true;
                 };
                 /**
                  * Attach a local filter hook to the grid
@@ -199,7 +185,8 @@ System.register(["../filter-conditions/index", "./../filter-templates/index", ".
                         this._columnFilters[args.columnDef.id] = {
                             columnId: args.columnDef.id,
                             columnDef: args.columnDef,
-                            searchTerm: e.target.value
+                            searchTerm: e.target.value,
+                            operator: args.operator || null
                         };
                     }
                     this.triggerEvent(this.subscriber, {
@@ -252,8 +239,10 @@ System.register(["../filter-conditions/index", "./../filter-templates/index", ".
                             var filterType = (columnDef_1.filter && columnDef_1.filter.type) ? columnDef_1.filter.type : index_3.FormElementType.input;
                             switch (filterType) {
                                 case index_3.FormElementType.select:
+                                    elm.change(function (e) { return _this.callbackSearchEvent(e, { columnDef: columnDef_1, operator: 'EQ' }); });
+                                    break;
                                 case index_3.FormElementType.multiSelect:
-                                    elm.change(function (e) { return _this.callbackSearchEvent(e, { columnDef: columnDef_1 }); });
+                                    elm.change(function (e) { return _this.callbackSearchEvent(e, { columnDef: columnDef_1, operator: 'IN' }); });
                                     break;
                                 case index_3.FormElementType.input:
                                 default:

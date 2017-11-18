@@ -35,10 +35,6 @@ let ResizerService = class ResizerService {
             this.resizeGrid(grid, gridOptions);
             this.resizeGrid(grid, gridOptions);
         });
-        // destroy the resizer on route change
-        this.ea.subscribe('router:navigation:processing', () => {
-            this.destroy();
-        });
     }
     /**
      * Calculate the datagrid new height/width from the available space, also consider that a % factor might be applied to calculation
@@ -103,7 +99,9 @@ let ResizerService = class ResizerService {
                     grid.resizeCanvas();
                 }
                 // also call the grid auto-size columns so that it takes available when going bigger
-                grid.autosizeColumns();
+                if (grid && typeof grid.autosizeColumns === 'function') {
+                    grid.autosizeColumns();
+                }
             }
         }, delay);
     }

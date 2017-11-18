@@ -150,6 +150,8 @@ export function mapOperatorType(operator) {
             break;
         case '<>':
         case '!=':
+        case 'neq':
+        case 'NEQ':
             map = OperatorType.notEqual;
             break;
         case '*':
@@ -163,7 +165,18 @@ export function mapOperatorType(operator) {
             break;
         case '=':
         case '==':
+        case 'eq':
+        case 'EQ':
             map = OperatorType.equal;
+            break;
+        case 'in':
+        case 'IN':
+            map = OperatorType.in;
+            break;
+        case 'notIn':
+        case 'NIN':
+        case 'NOT_IN':
+            map = OperatorType.notIn;
             break;
         default:
             map = OperatorType.contains;

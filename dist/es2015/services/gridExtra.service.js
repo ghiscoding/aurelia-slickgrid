@@ -49,6 +49,9 @@ export class GridExtraService {
             this._dataView.updateItem(item.id, item);
         }, fadeDelay + 10);
     }
+    getSelectedRows() {
+        return this._grid.getSelectedRows();
+    }
     setSelectedRow(rowIndex) {
         this._grid.setSelectedRows([rowIndex]);
     }
