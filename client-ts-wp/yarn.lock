@@ -672,9 +672,9 @@ aurelia-router@^1.0.1:
     aurelia-path "^1.0.0"
     aurelia-route-recognizer "^1.0.0"
 
-aurelia-slickgrid@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/aurelia-slickgrid/-/aurelia-slickgrid-1.0.0.tgz#34aa251e72d72909f89c5d1b19d29be8f1ba4be8"
+aurelia-slickgrid@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/aurelia-slickgrid/-/aurelia-slickgrid-1.0.1.tgz#3cc30b27f089a3c63af16a3bf38efa774cfe0017"
   dependencies:
     "@types/flatpickr" "^3.1.2"
     "@types/jquery" "^3.2.15"
@@ -682,10 +682,11 @@ aurelia-slickgrid@^1.0.0:
     aurelia-event-aggregator "^1.0.1"
     aurelia-framework "^1.1.5"
     aurelia-pal "^1.4.0"
-    flatpickr "^4.0.6"
+    flatpickr "^4.1.0"
     jquery "^3.2.1"
     moment "^2.18.1"
     moment-mini "^2.18.1"
+    slickgrid "^2.3.10"
 
 aurelia-task-queue@^1.0.0, aurelia-task-queue@^1.1.0:
   version "1.2.1"
@@ -2676,7 +2677,7 @@ flagged-respawn@^0.3.2:
   version "0.3.2"
   resolved "https://registry.yarnpkg.com/flagged-respawn/-/flagged-respawn-0.3.2.tgz#ff191eddcd7088a675b2610fffc976be9b8074b5"
 
-flatpickr@*, flatpickr@^4.0.6, flatpickr@^4.1.0:
+flatpickr@*, flatpickr@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/flatpickr/-/flatpickr-4.1.0.tgz#529ade4b0dcba1ff6bb33709fce745a77ad8628c"
 

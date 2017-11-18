@@ -76,6 +76,7 @@ export class AureliaSlickgridCustomElement {
     this._gridOptions = this.mergeGridOptions();
 
     this.dataview = new Slick.Data.DataView();
+    this.controlPluginService.createPluginBeforeGridCreation(this.columnDefinitions, this._gridOptions);
     this.grid = new Slick.Grid(`#${this.gridId}`, this.dataview, this.columnDefinitions, this._gridOptions);
     this.controlPluginService.attachDifferentControlOrPlugins(this.grid, this.columnDefinitions, this._gridOptions, this.dataview);
 
@@ -91,13 +92,14 @@ export class AureliaSlickgridCustomElement {
 
     // attach grid extra service
     const gridExtraService = this.gridExtraService.init(this.grid, this.dataview);
+  }
 
-    // on route change, we should destroy the grid & cleanup some of the objects
-    this.ea.subscribe('router:navigation:processing', () => {
-      this.grid.destroy();
-      this.dataview = [];
-      this.filterService.clearFilters();
-    });
+  detached() {
+    this.dataview = [];
+    this.controlPluginService.destroy();
+    this.filterService.clearFilters();
+    this.resizer.destroy();
+    this.grid.destroy();
   }
 
   /**

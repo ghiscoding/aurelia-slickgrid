@@ -37,11 +37,6 @@ export class ResizerService {
       this.resizeGrid(grid, gridOptions);
       this.resizeGrid(grid, gridOptions);
     });
-
-    // destroy the resizer on route change
-    this.ea.subscribe('router:navigation:processing', () => {
-      this.destroy();
-    });
   }
 
   /**
@@ -117,7 +112,9 @@ export class ResizerService {
         }
 
         // also call the grid auto-size columns so that it takes available when going bigger
-        grid.autosizeColumns();
+        if (grid && typeof grid.autosizeColumns === 'function') {
+          grid.autosizeColumns();
+        }
       }
     }, delay);
   }

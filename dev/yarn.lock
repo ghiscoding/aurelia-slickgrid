@@ -666,12 +666,6 @@ aurelia-router@^1.0.1:
     aurelia-path "^1.0.0"
     aurelia-route-recognizer "^1.0.0"
 
-aurelia-slickgrid@^0.3.1:
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/aurelia-slickgrid/-/aurelia-slickgrid-0.3.1.tgz#d76f0a43b24ddcae4c2df262e97bbd04066e82dd"
-  dependencies:
-    slickgrid-es6 "^0.4.2"
-
 aurelia-task-queue@^1.0.0, aurelia-task-queue@^1.1.0:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/aurelia-task-queue/-/aurelia-task-queue-1.2.1.tgz#2e25c7cd663b7e3074f1d99744eb2d14ec5ce594"
@@ -2665,10 +2659,6 @@ flatpickr@*:
   version "4.0.6"
   resolved "https://registry.yarnpkg.com/flatpickr/-/flatpickr-4.0.6.tgz#d898778636984b9b46b590f3b60513fc260db709"
 
-flatpickr@^1.9.1:
-  version "1.9.1"
-  resolved "https://registry.yarnpkg.com/flatpickr/-/flatpickr-1.9.1.tgz#6a6f8dea4a75d4ef9e4b92a8b50de7533ae27dab"
-
 flatpickr@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/flatpickr/-/flatpickr-4.1.0.tgz#529ade4b0dcba1ff6bb33709fce745a77ad8628c"
@@ -4123,7 +4113,7 @@ jquery-ui@>=1.8.0:
   version "1.12.1"
   resolved "https://registry.yarnpkg.com/jquery-ui/-/jquery-ui-1.12.1.tgz#bcb4045c8dd0539c134bc1488cdd3e768a7a9e51"
 
-jquery@>=1.8.0, jquery@^3.1.0, jquery@^3.2.1:
+jquery@>=1.8.0, jquery@^3.2.1:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.2.1.tgz#5c4d9de652af6cd0a770154a631bba12b015c787"
 
@@ -6819,13 +6809,6 @@ signal-exit@^3.0.0:
 slash@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/slash/-/slash-1.0.0.tgz#c41f2f6c39fc16d1cd17ad4b5d896114ae470d55"
-
-slickgrid-es6@^0.4.2:
-  version "0.4.2"
-  resolved "https://registry.yarnpkg.com/slickgrid-es6/-/slickgrid-es6-0.4.2.tgz#0d20dc8ce64a4ae0f4b61103584c87a9b4001d56"
-  dependencies:
-    flatpickr "^1.9.1"
-    jquery "^3.1.0"
 
 slickgrid@^2.3.10:
   version "2.3.10"

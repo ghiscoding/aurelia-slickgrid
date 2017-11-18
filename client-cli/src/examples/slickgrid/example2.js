@@ -1,7 +1,7 @@
 import { FieldType, Formatters } from 'aurelia-slickgrid';
 
 // create my custom Formatter with the Formatter type
-const myCustomCheckboxFormatter = (row, cell, value, columnDef, dataContext) =>
+const myCustomCheckmarkFormatter = (row, cell, value, columnDef, dataContext) =>
   value ? `<i class="fa fa-fire" aria-hidden="true"></i>` : '<i class="fa fa-snowflake-o" aria-hidden="true"></i>';
 
 export class Example2 {
@@ -30,7 +30,7 @@ export class Example2 {
       { id: 'percent2', name: '% Complete', field: 'percentComplete2', formatter: Formatters.progressBar, type: FieldType.number, sortable: true, minWidth: 100 },
       { id: 'start', name: 'Start', field: 'start', formatter: Formatters.dateIso, sortable: true, type: FieldType.date, minWidth: 100 },
       { id: 'finish', name: 'Finish', field: 'finish', formatter: Formatters.dateIso, sortable: true, type: FieldType.date, minWidth: 100 },
-      { id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', formatter: myCustomCheckboxFormatter, type: FieldType.number, sortable: true, minWidth: 100 }
+      { id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', formatter: myCustomCheckmarkFormatter, type: FieldType.number, sortable: true, minWidth: 100 }
     ];
 
     this.gridOptions = {

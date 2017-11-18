@@ -334,9 +334,9 @@ aurelia-bootstrapper@^2.1.1:
     aurelia-templating-resources "^1.0.0"
     aurelia-templating-router "^1.0.0"
 
-aurelia-cli@^0.31.3:
-  version "0.31.3"
-  resolved "https://registry.yarnpkg.com/aurelia-cli/-/aurelia-cli-0.31.3.tgz#a8992c47c1c2cc3877599eb218f6edfb1c96ccaf"
+aurelia-cli@^0.32.0:
+  version "0.32.0"
+  resolved "https://registry.yarnpkg.com/aurelia-cli/-/aurelia-cli-0.32.0.tgz#f9453166e7e7568744296a973520ea3896fc9d11"
   dependencies:
     aurelia-dependency-injection "^1.0.0"
     aurelia-logging "^1.2.0"
@@ -344,6 +344,7 @@ aurelia-cli@^0.31.3:
     esprima "^4.0.0"
     glob "^7.1.1"
     npm "^3.10.8"
+    npm-which "^3.0.1"
     preprocess "^3.1.0"
     rfc6902 "^1.2.2"
     semver "^5.3.0"
@@ -461,9 +462,9 @@ aurelia-router@^1.0.1:
     aurelia-path "^1.0.0"
     aurelia-route-recognizer "^1.0.0"
 
-aurelia-slickgrid@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/aurelia-slickgrid/-/aurelia-slickgrid-1.0.0.tgz#34aa251e72d72909f89c5d1b19d29be8f1ba4be8"
+aurelia-slickgrid@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/aurelia-slickgrid/-/aurelia-slickgrid-1.0.1.tgz#3cc30b27f089a3c63af16a3bf38efa774cfe0017"
   dependencies:
     "@types/flatpickr" "^3.1.2"
     "@types/jquery" "^3.2.15"
@@ -471,10 +472,11 @@ aurelia-slickgrid@^1.0.0:
     aurelia-event-aggregator "^1.0.1"
     aurelia-framework "^1.1.5"
     aurelia-pal "^1.4.0"
-    flatpickr "^4.0.6"
+    flatpickr "^4.1.0"
     jquery "^3.2.1"
     moment "^2.18.1"
     moment-mini "^2.18.1"
+    slickgrid "^2.3.10"
 
 aurelia-task-queue@^1.0.0, aurelia-task-queue@^1.1.0:
   version "1.2.1"
@@ -1865,6 +1867,10 @@ dom-serialize@^2.2.0:
     extend "^3.0.0"
     void-elements "^2.0.0"
 
+dom-walk@^0.1.0:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/dom-walk/-/dom-walk-0.1.1.tgz#672226dc74c8f799ad35307df936aba11acd6018"
+
 duplexer2@0.0.2:
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/duplexer2/-/duplexer2-0.0.2.tgz#c614dcf67e2fb14995a91711e5a617e8a60a31db"
@@ -2359,7 +2365,7 @@ flat-cache@^1.2.1:
     graceful-fs "^4.1.2"
     write "^0.2.1"
 
-flatpickr@*, flatpickr@^4.0.6, flatpickr@^4.1.0:
+flatpickr@*, flatpickr@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/flatpickr/-/flatpickr-4.1.0.tgz#529ade4b0dcba1ff6bb33709fce745a77ad8628c"
 
@@ -2622,6 +2628,13 @@ global-prefix@^0.1.4:
     ini "^1.3.4"
     is-windows "^0.2.0"
     which "^1.2.12"
+
+global@^4.3.2:
+  version "4.3.2"
+  resolved "https://registry.yarnpkg.com/global/-/global-4.3.2.tgz#e76989268a6c74c38908b1305b10fc0e394e9d0f"
+  dependencies:
+    min-document "^2.19.0"
+    process "~0.5.1"
 
 globals@^9.18.0, globals@^9.2.0:
   version "9.18.0"
@@ -3845,6 +3858,12 @@ mime@^1.3.4:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/mime/-/mime-1.4.1.tgz#121f9ebc49e3766f311a76e1fa1c8003c4b03aa6"
 
+min-document@^2.19.0:
+  version "2.19.0"
+  resolved "https://registry.yarnpkg.com/min-document/-/min-document-2.19.0.tgz#7bd282e3f5842ed295bb748cdd9f1ffa2c824685"
+  dependencies:
+    dom-walk "^0.1.0"
+
 "minimatch@2 || 3", minimatch@^3.0.0, minimatch@^3.0.2, minimatch@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-3.0.4.tgz#5166e286457f03306064be5497e8dbb0c3d32083"
@@ -4082,6 +4101,12 @@ npm-install-checks@~3.0.0:
     semver "^5.1.0"
     validate-npm-package-name "^3.0.0"
 
+npm-path@^2.0.2:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/npm-path/-/npm-path-2.0.3.tgz#15cff4e1c89a38da77f56f6055b24f975dfb2bbe"
+  dependencies:
+    which "^1.2.10"
+
 npm-registry-client@~7.2.1:
   version "7.2.1"
   resolved "https://registry.yarnpkg.com/npm-registry-client/-/npm-registry-client-7.2.1.tgz#c792266b088cc313f8525e7e35248626c723db75"
@@ -4101,6 +4126,14 @@ npm-registry-client@~7.2.1:
 npm-user-validate@~0.1.5:
   version "0.1.5"
   resolved "https://registry.yarnpkg.com/npm-user-validate/-/npm-user-validate-0.1.5.tgz#52465d50c2d20294a57125b996baedbf56c5004b"
+
+npm-which@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/npm-which/-/npm-which-3.0.1.tgz#9225f26ec3a285c209cae67c3b11a6b4ab7140aa"
+  dependencies:
+    commander "^2.9.0"
+    npm-path "^2.0.2"
+    which "^1.2.10"
 
 npm@^3.10.8:
   version "3.10.10"
@@ -4506,6 +4539,10 @@ private@^0.1.6, private@^0.1.7:
 process-nextick-args@^1.0.7, process-nextick-args@~1.0.6:
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/process-nextick-args/-/process-nextick-args-1.0.7.tgz#150e20b756590ad3f91093f25a4f2ad8bff30ba3"
+
+process@~0.5.1:
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/process/-/process-0.5.2.tgz#1638d8a8e34c2f440a91db95ab9aeb677fc185cf"
 
 progress@^1.1.8:
   version "1.1.8"
@@ -5755,7 +5792,7 @@ which-module@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/which-module/-/which-module-1.0.0.tgz#bba63ca861948994ff307736089e3b96026c2a4f"
 
-which@1, which@^1.0.5, which@^1.2.1, which@^1.2.12:
+which@1, which@^1.0.5, which@^1.2.1, which@^1.2.10, which@^1.2.12:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/which/-/which-1.3.0.tgz#ff04bdfc010ee547d780bec38e1ac1c2777d253a"
   dependencies:
