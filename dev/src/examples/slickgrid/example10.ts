@@ -14,8 +14,7 @@ export class Example2 {
   dataset: any[];
   dataviewObj: any;
   isMultiSelect = true;
-  selectedObjects: any[];
-  selectedObject: any;
+  selectedObjects: any[] = [];
 
   constructor(private gridExtraService: GridExtraService) {
     // define the grid options & columns and then create the grid itself

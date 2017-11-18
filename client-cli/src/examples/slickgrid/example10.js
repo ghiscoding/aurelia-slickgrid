@@ -17,7 +17,6 @@ export class Example2 {
   gridExtraService;
   isMultiSelect = true;
   selectedObjects = [];
-  selectedObject;
 
   constructor(gridExtraService) {
     // define the grid options & columns and then create the grid itself
