@@ -2,7 +2,12 @@ import { Column, FieldType, GridOption } from 'aurelia-slickgrid';
 
 export class Example1 {
   title = 'Example 1: Basic Grid';
-  subTitle = `Simple Grid with Fixed Sizes (800 x 400) using "grid-height" &amp; "grid-width"`;
+  subTitle = `
+    Basic Grid with Fixed Sizes (800 x 400) using "grid-height" &amp; "grid-width"
+    <ul>
+      <li><a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/HOWTO--Step-by-Step" target="_blank">Wiki HOWTO link</a></li>
+    </ul>
+  `;
 
   gridOptions: GridOption;
   columnDefinitions: Column[];

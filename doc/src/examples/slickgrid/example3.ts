@@ -7,13 +7,14 @@ export class Example3 {
   @bindable() dataview: any;
   title = 'Example 3: Editors';
   subTitle = `
-    Grid with Inline Editors and onCellClick actions (<a href="https://github.com/ghiscoding/Angular-Slickgrid/wiki/Editors">Wiki link</a>).
+    Grid with Inline Editors and onCellClick actions (<a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Editors" target="_blank">Wiki link</a>).
     <ul>
       <li>When using "enableCellNavigation: true", clicking on a cell will automatically make it active &amp; selected.
       <ul><li>If you don't want this behavior, then you should disable "enableCellNavigation"</li></ul>
       <li>Inline Editors requires "enableCellNavigation: true" (not sure why though)</li>
     </ul>
   `;
+
   gridOptions: GridOption;
   columnDefinitions: Column[];
   dataset: any[];

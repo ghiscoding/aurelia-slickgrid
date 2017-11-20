@@ -9,15 +9,15 @@ const sampleDataRoot = 'assets/data';
 export class Example6 {
   title = 'Example 6: Grid with Backend GraphQL Service';
   subTitle = `
-    Sorting/Paging connected to a Backend GraphQL Service.
+    Sorting/Paging connected to a Backend GraphQL Service (<a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/GraphQL" target="_blank">Wiki link</a>).
     <br/>
     <ul class="small">
-      <li><span class="red">(*) NO DATA SHOWING</span> - just change filters &amp; page and look at the "GraphQL Query" changing</li>
+      <li><span class="red">(*) NO DATA SHOWING</span> - just change Filters &amp; Pages and look at the "GraphQL Query" changing :)</li>
       <li>Only "Name" field is sortable for the demo (because we use JSON files), however "multiColumnSort: true" is also supported</li>
       <li>String column also support operator (>, >=, <, <=, <>, !=, =, ==, *)
       <ul>
         <li>The (*) can be used as startsWith (ex.: "abc*" => startsWith "abc") / endsWith (ex.: "*xyz" => endsWith "xyz")</li>
-        <li>The other operators can be used on column type number for example: ">=100" (greater or equal than 100)</li>
+        <li>The other operators can be used on column type number for example: ">=100" (greater than or equal to 100)</li>
       </ul>
     </ul>
   `;
