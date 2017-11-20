@@ -1,5 +1,4 @@
 import { inject } from 'aurelia-framework';
-import { EventAggregator } from 'aurelia-event-aggregator';
 import { FilterService } from './filter.service';
 import { GridExtraUtils } from './gridExtraUtils';
 import { GridExtraService } from './gridExtra.service';
@@ -18,12 +17,11 @@ import {
 // using external js modules in Angular
 declare var Slick: any;
 
-@inject(EventAggregator, FilterService)
+@inject(FilterService, GridExtraService)
 export class ControlAndPluginService {
   _dataView: any;
   _grid: any;
   _visibleColumns: Column[];
-  ea: EventAggregator;
   filterService: FilterService;
   gridExtraService: GridExtraService;
 
@@ -36,8 +34,7 @@ export class ControlAndPluginService {
   gridMenuControl: any;
   rowSelectionPlugin: any;
 
-  constructor(ea: EventAggregator, filterService: FilterService, gridExtraService: GridExtraService) {
-    this.ea = ea;
+  constructor(filterService: FilterService, gridExtraService: GridExtraService) {
     this.filterService = filterService;
     this.gridExtraService = gridExtraService;
   }
