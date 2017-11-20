@@ -1,4 +1,3 @@
-import { EventAggregator } from 'aurelia-event-aggregator';
 import { inject } from 'aurelia-framework';
 import { GridOption } from './../models/index';
 import * as $ from 'jquery';
@@ -10,13 +9,7 @@ const DATAGRID_BOTTOM_PADDING = 20;
 const DATAGRID_PAGINATION_HEIGHT = 35;
 let timer: any;
 
-@inject(EventAggregator)
 export class ResizerService {
-  ea: EventAggregator;
-  constructor(ea: EventAggregator) {
-    this.ea = ea;
-  }
-
   /** Attach an auto resize trigger on the datagrid, if that is enable then it will resize itself to the available space
    * Options: we could also provide a % factor to resize on each height/width independently
    */

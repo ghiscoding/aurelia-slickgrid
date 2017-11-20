@@ -21,7 +21,6 @@ import 'slickgrid/plugins/slick.rowmovemanager';
 import 'slickgrid/plugins/slick.rowselectionmodel';
 
 import { bindable, bindingMode, inject } from 'aurelia-framework';
-import { EventAggregator } from 'aurelia-event-aggregator';
 import { GlobalGridOptions } from './global-grid-options';
 import { CellArgs, Column, FormElementType, GridOption } from './models/index';
 import { ControlAndPluginService, FilterService, GridEventService, GridExtraService, SortService, ResizerService } from './services/index';
