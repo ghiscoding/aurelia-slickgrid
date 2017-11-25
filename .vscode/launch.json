@@ -9,7 +9,7 @@
       "type": "chrome",
       "request": "launch",
       "url": "http://localhost:9000",
-      "webRoot": "${workspaceRoot}/dev/src",
+      "webRoot": "${workspaceRoot}/aurelia-slickgrid/src",
       "userDataDir": "${workspaceRoot}/.chrome",
       "sourceMapPathOverrides": {
         "webpack:///./src/*": "${webRoot}/*"
