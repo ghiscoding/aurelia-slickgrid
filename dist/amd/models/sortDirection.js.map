@@ -1,1 +1,1 @@
-{"version":3,"file":"sortDirection.js","sourceRoot":"","sources":["../../../dev/src/aurelia-slickgrid/models/sortDirection.ts"],"names":[],"mappings":";;;IAAA,IAAY,aAGX;IAHD,WAAY,aAAa;QACvB,4BAAW,CAAA;QACX,8BAAa,CAAA;IACf,CAAC,EAHW,aAAa,GAAb,qBAAa,KAAb,qBAAa,QAGxB"}
+{"version":3,"file":"sortDirection.js","sourceRoot":"","sources":["../../../aurelia-slickgrid/src/aurelia-slickgrid/models/sortDirection.ts"],"names":[],"mappings":";;;IAAA,IAAY,aAGX;IAHD,WAAY,aAAa;QACvB,4BAAW,CAAA;QACX,8BAAa,CAAA;IACf,CAAC,EAHW,aAAa,GAAb,qBAAa,KAAb,qBAAa,QAGxB"}

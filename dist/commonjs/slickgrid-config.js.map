@@ -1,1 +1,1 @@
-{"version":3,"file":"slickgrid-config.js","sourceRoot":"","sources":["../../dev/src/aurelia-slickgrid/slickgrid-config.ts"],"names":[],"mappings":";;AAAA,6DAA0D;AAE1D;IAGE;QACE,IAAI,CAAC,OAAO,GAAG,uCAAiB,CAAC;IACnC,CAAC;IACH,sBAAC;AAAD,CAAC,AAND,IAMC;AANY,0CAAe"}
+{"version":3,"file":"slickgrid-config.js","sourceRoot":"","sources":["../../aurelia-slickgrid/src/aurelia-slickgrid/slickgrid-config.ts"],"names":[],"mappings":";;AAAA,6DAA0D;AAE1D;IAGE;QACE,IAAI,CAAC,OAAO,GAAG,uCAAiB,CAAC;IACnC,CAAC;IACH,sBAAC;AAAD,CAAC,AAND,IAMC;AANY,0CAAe"}

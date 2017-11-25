@@ -2,9 +2,17 @@ import * as $ from 'jquery';
 var GridExtraService = /** @class */ (function () {
     function GridExtraService() {
     }
-    GridExtraService.prototype.init = function (grid, dataView) {
+    GridExtraService.prototype.init = function (grid, columnDefinition, gridOptions, dataView) {
         this._grid = grid;
+        this._columnDefinition = columnDefinition;
+        this._gridOptions = gridOptions;
         this._dataView = dataView;
+    };
+    GridExtraService.prototype.getDataItemByRowNumber = function (rowNumber) {
+        if (!this._grid || typeof this._grid.getDataItem !== 'function') {
+            throw new Error('We could not find SlickGrid Grid object');
+        }
+        return this._grid.getDataItem(rowNumber);
     };
     /** Chain the item Metadata with our implementation of Metadata at given row index */
     GridExtraService.prototype.getItemRowMetadata = function (previousItemMetadata) {
@@ -62,6 +70,42 @@ var GridExtraService = /** @class */ (function () {
     };
     GridExtraService.prototype.setSelectedRows = function (rowIndexes) {
         this._grid.setSelectedRows(rowIndexes);
+    };
+    /** Add an item (data item) to the datagrid
+     * @param object dataItem: item object holding all properties of that row
+     */
+    GridExtraService.prototype.addItemToDatagrid = function (item) {
+        if (!this._grid || !this._gridOptions || !this._dataView) {
+            throw new Error('We could not find SlickGrid Grid, DataView objects');
+        }
+        if (!this._gridOptions || (!this._gridOptions.enableCheckboxSelector && !this._gridOptions.enableRowSelection)) {
+            throw new Error('addItemToDatagrid() requires to have a valid Slickgrid Selection Model. You can overcome this issue by enabling enableCheckboxSelector or enableRowSelection to True');
+        }
+        var row = 0;
+        this._dataView.insertItem(row, item);
+        this.highlightRow(0, 1500);
+        // refresh dataview & grid
+        this._dataView.refresh();
+        // get new dataset length
+        var datasetLength = this._dataView.getLength();
+    };
+    /** Update an existing item with new properties inside the datagrid
+     * @param object item: item object holding all properties of that row
+     */
+    GridExtraService.prototype.updateDataGridItem = function (item) {
+        var row = this._dataView.getRowById(item.id);
+        var itemId = (!item || !item.hasOwnProperty('id')) ? -1 : item.id;
+        if (itemId === -1) {
+            throw new Error("Could not find the item in the item in the grid or it's associated \"id\"");
+        }
+        // Update the item itself inside the dataView
+        this._dataView.updateItem(itemId, item);
+        // highlight the row we just updated
+        this.highlightRow(row, 1500);
+        // refresh dataview & grid
+        this._dataView.refresh();
+        // get new dataset length
+        var datasetLength = this._dataView.getLength();
     };
     return GridExtraService;
 }());

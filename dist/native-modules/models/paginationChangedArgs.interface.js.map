@@ -1,1 +1,1 @@
-{"version":3,"file":"paginationChangedArgs.interface.js","sourceRoot":"","sources":["../../../dev/src/aurelia-slickgrid/models/paginationChangedArgs.interface.ts"],"names":[],"mappings":""}
+{"version":3,"file":"paginationChangedArgs.interface.js","sourceRoot":"","sources":["../../../aurelia-slickgrid/src/aurelia-slickgrid/models/paginationChangedArgs.interface.ts"],"names":[],"mappings":""}

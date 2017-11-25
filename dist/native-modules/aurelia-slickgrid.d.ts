@@ -17,17 +17,15 @@ import 'slickgrid/plugins/slick.headerbuttons';
 import 'slickgrid/plugins/slick.headermenu';
 import 'slickgrid/plugins/slick.rowmovemanager';
 import 'slickgrid/plugins/slick.rowselectionmodel';
-import { EventAggregator } from 'aurelia-event-aggregator';
 import { Column, GridOption } from './models/index';
-import { ControlAndPluginService, FilterService, GridEventService, GridExtraService, SortService, ResizerService } from './services/index';
+import { ControlAndPluginService, FilterService, GridEventService, GridExtraService, ResizerService, SortService } from './services/index';
 export declare class AureliaSlickgridCustomElement {
-    private elm;
-    private ea;
     private controlPluginService;
-    private resizer;
+    private elm;
+    private filterService;
     private gridEventService;
     private gridExtraService;
-    private filterService;
+    private resizer;
     private sortService;
     private _dataset;
     private _gridOptions;
@@ -47,7 +45,7 @@ export declare class AureliaSlickgridCustomElement {
     gridHeight: number;
     gridWidth: number;
     pickerOptions: any;
-    constructor(elm: HTMLElement, ea: EventAggregator, controlPluginService: ControlAndPluginService, resizer: ResizerService, gridEventService: GridEventService, gridExtraService: GridExtraService, filterService: FilterService, sortService: SortService);
+    constructor(controlPluginService: ControlAndPluginService, elm: Element, filterService: FilterService, gridEventService: GridEventService, gridExtraService: GridExtraService, resizer: ResizerService, sortService: SortService);
     attached(): void;
     detached(): void;
     /**
@@ -60,9 +58,13 @@ export declare class AureliaSlickgridCustomElement {
     attachDifferentHooks(grid: any, options: GridOption, dataView: any): void;
     attachResizeHook(grid: any, options: GridOption): void;
     mergeGridOptions(): GridOption;
+    /**
+     * When dataset changes, we need to refresh the entire grid UI & possibly resize it as well
+     * @param {object} dataset
+     */
+    refreshGridData(dataset: any[]): void;
     /** Toggle the filter row displayed on first row */
     showHeaderRow(isShowing: boolean): boolean;
     /** Toggle the filter row displayed on first row */
     toggleHeaderRow(): boolean;
-    refreshGridData(dataset: any[]): void;
 }

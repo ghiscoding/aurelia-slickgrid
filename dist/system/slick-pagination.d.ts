@@ -1,5 +1,9 @@
 import { GridOption } from './models/index';
+import { FilterService } from './services/filter.service';
+import { SortService } from './services/sort.service';
 export declare class SlickPaginationCustomElement {
+    private filterService;
+    private sortService;
     grid: any;
     gridPaginationOptions: GridOption;
     private _gridPaginationOptions;
@@ -9,17 +13,18 @@ export declare class SlickPaginationCustomElement {
     pageCount: number;
     pageNumber: number;
     totalItems: number;
-    paginationCallback: Function;
+    paginationCallback: () => void;
     paginationPageSizes: number[];
+    constructor(filterService: FilterService, sortService: SortService);
     bind(binding: any, contexts: any): void;
     ceil(number: number): number;
-    onChangeItemPerPage(event: any): void;
     changeToFirstPage(event: any): void;
     changeToLastPage(event: any): void;
     changeToNextPage(event: any): void;
     changeToPreviousPage(event: any): void;
     gotoFirstPage(): void;
-    refreshPagination(): void;
+    onChangeItemPerPage(event: any): void;
+    refreshPagination(isPageNumberReset?: boolean): void;
     onPageChanged(event: Event, pageNumber: number): Promise<void>;
     recalculateFromToIndexes(): void;
 }

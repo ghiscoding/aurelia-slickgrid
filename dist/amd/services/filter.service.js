@@ -33,12 +33,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "../filter-conditions/index", "./../filter-templates/index", "../models/index", "jquery"], function (require, exports, index_1, index_2, index_3, $) {
+define(["require", "exports", "aurelia-event-aggregator", "../filter-conditions/index", "./../filter-templates/index", "../models/index", "jquery"], function (require, exports, aurelia_event_aggregator_1, index_1, index_2, index_3, $) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var FilterService = /** @class */ (function () {
         function FilterService() {
             this._columnFilters = {};
+            this.onFilterChanged = new aurelia_event_aggregator_1.EventAggregator();
         }
         FilterService.prototype.init = function (grid, gridOptions, columnDefinitions) {
             this._columnDefinitions = columnDefinitions;
@@ -53,6 +54,7 @@ define(["require", "exports", "../filter-conditions/index", "./../filter-templat
         FilterService.prototype.attachBackendOnFilter = function (grid, options) {
             var _this = this;
             this.subscriber = new Slick.Event();
+            this.emitFilterChangedBy('remote');
             this.subscriber.subscribe(this.attachBackendOnFilterSubscribe);
             grid.onHeaderRowCellRendered.subscribe(function (e, args) {
                 _this.addFilterTemplateToHeaderRow(args);
@@ -100,6 +102,7 @@ define(["require", "exports", "../filter-conditions/index", "./../filter-templat
             var _this = this;
             this._dataView = dataView;
             this.subscriber = new Slick.Event();
+            this.emitFilterChangedBy('local');
             dataView.setFilterArgs({ columnFilters: this._columnFilters, grid: this._grid });
             dataView.setFilter(this.customFilter);
             this.subscriber.subscribe(function (e, args) {
@@ -256,6 +259,15 @@ define(["require", "exports", "../filter-conditions/index", "./../filter-templat
                 this._grid.invalidate();
                 this._grid.render();
             }
+        };
+        /**
+         * A simple function that is attached to the subscriber and emit a change when the sort is called.
+         * Other services, like Pagination, can then subscribe to it.
+         * @param {string} sender
+         */
+        FilterService.prototype.emitFilterChangedBy = function (sender) {
+            var _this = this;
+            this.subscriber.subscribe(function () { return _this.onFilterChanged.publish('filterService:changed', "onFilterChanged by " + sender); });
         };
         FilterService.prototype.keepColumnFilters = function (searchTerm, listTerm, columnDef) {
             if (searchTerm) {

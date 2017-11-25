@@ -86,7 +86,7 @@ export class GridExtraService {
   /** Add an item (data item) to the datagrid
    * @param object dataItem: item object holding all properties of that row
    */
-  addItemToDatagrid(item) {
+  addItemToDatagrid(item: any) {
     if (!this._grid || !this._gridOptions || !this._dataView) {
       throw new Error('We could not find SlickGrid Grid, DataView objects');
     }

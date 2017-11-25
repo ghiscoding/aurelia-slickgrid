@@ -1,1 +1,1 @@
-{"version":3,"file":"sortChangedArgs.interface.js","sourceRoot":"","sources":["../../../dev/src/aurelia-slickgrid/models/sortChangedArgs.interface.ts"],"names":[],"mappings":";;;;;;QAMA,CAAC"}
+{"version":3,"file":"sortChangedArgs.interface.js","sourceRoot":"","sources":["../../../aurelia-slickgrid/src/aurelia-slickgrid/models/sortChangedArgs.interface.ts"],"names":[],"mappings":";;;;;;QAMA,CAAC"}

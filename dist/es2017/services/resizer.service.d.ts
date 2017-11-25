@@ -1,12 +1,12 @@
-import { EventAggregator } from 'aurelia-event-aggregator';
 import { GridOption } from './../models/index';
 export declare class ResizerService {
-    ea: EventAggregator;
-    constructor(ea: EventAggregator);
+    private _grid;
+    private _gridOptions;
+    init(grid: any, gridOptions: GridOption): void;
     /** Attach an auto resize trigger on the datagrid, if that is enable then it will resize itself to the available space
      * Options: we could also provide a % factor to resize on each height/width independently
      */
-    attachAutoResizeDataGrid(grid: any, gridOptions: GridOption): any | void;
+    attachAutoResizeDataGrid(): any | void;
     /**
      * Calculate the datagrid new height/width from the available space, also consider that a % factor might be applied to calculation
      * object gridOptions
@@ -17,7 +17,7 @@ export declare class ResizerService {
      */
     destroy(): void;
     /** Resize the datagrid to fit the browser height & width */
-    resizeGrid(grid: any, gridOptions: GridOption, delay?: number, newSizes?: {
+    resizeGrid(delay?: number, newSizes?: {
         height: number;
         width: number;
     }): void;

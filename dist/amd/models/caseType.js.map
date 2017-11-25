@@ -1,1 +1,1 @@
-{"version":3,"file":"caseType.js","sourceRoot":"","sources":["../../../dev/src/aurelia-slickgrid/models/caseType.ts"],"names":[],"mappings":";;;IAAA,IAAY,QAIX;IAJD,WAAY,QAAQ;QAClB,iDAAS,CAAA;QACT,mDAAU,CAAA;QACV,iDAAS,CAAA;IACX,CAAC,EAJW,QAAQ,GAAR,gBAAQ,KAAR,gBAAQ,QAInB"}
+{"version":3,"file":"caseType.js","sourceRoot":"","sources":["../../../aurelia-slickgrid/src/aurelia-slickgrid/models/caseType.ts"],"names":[],"mappings":";;;IAAA,IAAY,QAIX;IAJD,WAAY,QAAQ;QAClB,iDAAS,CAAA;QACT,mDAAU,CAAA;QACV,iDAAS,CAAA;IACX,CAAC,EAJW,QAAQ,GAAR,gBAAQ,KAAR,gBAAQ,QAInB"}

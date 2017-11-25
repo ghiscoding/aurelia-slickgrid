@@ -1,1 +1,1 @@
-{"version":3,"file":"graphqlSortingOption.interface.js","sourceRoot":"","sources":["../../../dev/src/aurelia-slickgrid/models/graphqlSortingOption.interface.ts"],"names":[],"mappings":""}
+{"version":3,"file":"graphqlSortingOption.interface.js","sourceRoot":"","sources":["../../../aurelia-slickgrid/src/aurelia-slickgrid/models/graphqlSortingOption.interface.ts"],"names":[],"mappings":""}

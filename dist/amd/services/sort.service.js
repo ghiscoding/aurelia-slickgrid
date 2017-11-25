@@ -33,11 +33,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "./../models/index", "./../sorters/index"], function (require, exports, index_1, index_2) {
+define(["require", "exports", "aurelia-event-aggregator", "./../models/index", "./../sorters/index"], function (require, exports, aurelia_event_aggregator_1, index_1, index_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var SortService = /** @class */ (function () {
         function SortService() {
+            this.onSortChanged = new aurelia_event_aggregator_1.EventAggregator();
         }
         /**
          * Attach a backend sort (single/multi) hook to the grid
@@ -46,6 +47,7 @@ define(["require", "exports", "./../models/index", "./../sorters/index"], functi
          */
         SortService.prototype.attachBackendOnSort = function (grid, gridOptions) {
             this.subscriber = grid.onSort;
+            this.emitSortChangedBy('remote');
             this.subscriber.subscribe(this.attachBackendOnSortSubscribe);
         };
         SortService.prototype.attachBackendOnSortSubscribe = function (event, args) {
@@ -85,6 +87,7 @@ define(["require", "exports", "./../models/index", "./../sorters/index"], functi
          */
         SortService.prototype.attachLocalOnSort = function (grid, gridOptions, dataView) {
             this.subscriber = grid.onSort;
+            this.emitSortChangedBy('local');
             this.subscriber.subscribe(function (e, args) {
                 // multiSort and singleSort are not exactly the same, but we want to structure it the same for the (for loop) after
                 // also to avoid having to rewrite the for loop in the sort, we will make the singleSort an array of 1 object
@@ -129,6 +132,15 @@ define(["require", "exports", "./../models/index", "./../sorters/index"], functi
         };
         SortService.prototype.destroy = function () {
             this.subscriber.unsubscribe();
+        };
+        /**
+         * A simple function that is attached to the subscriber and emit a change when the sort is called.
+         * Other services, like Pagination, can then subscribe to it.
+         * @param {string} sender
+         */
+        SortService.prototype.emitSortChangedBy = function (sender) {
+            var _this = this;
+            this.subscriber.subscribe(function () { return _this.onSortChanged.publish('sortService:changed', "onSortChanged by " + sender); });
         };
         return SortService;
     }());

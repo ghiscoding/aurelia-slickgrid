@@ -4,12 +4,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "./filter.service"], function (require, exports, aurelia_framework_1, aurelia_event_aggregator_1, filter_service_1) {
+define(["require", "exports", "aurelia-framework", "./filter.service", "./gridExtra.service"], function (require, exports, aurelia_framework_1, filter_service_1, gridExtra_service_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var ControlAndPluginService = /** @class */ (function () {
-        function ControlAndPluginService(ea, filterService, gridExtraService) {
-            this.ea = ea;
+        function ControlAndPluginService(filterService, gridExtraService) {
             this.filterService = filterService;
             this.gridExtraService = gridExtraService;
         }
@@ -21,6 +20,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
          * @param {any} dataView
          */
         ControlAndPluginService.prototype.attachDifferentControlOrPlugins = function (grid, columnDefinitions, options, dataView) {
+            var _this = this;
             this._grid = grid;
             this._dataView = dataView;
             this._visibleColumns = columnDefinitions;
@@ -45,6 +45,8 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
                         if (options.gridMenu && typeof options.gridMenu.onMenuClose === 'function') {
                             options.gridMenu.onMenuClose(e, args);
                         }
+                        // we also want to resize the columns if the user decided to hide certain column(s)
+                        _this._grid.autosizeColumns();
                     });
                 }
             }
@@ -213,7 +215,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
             }
         };
         ControlAndPluginService = __decorate([
-            aurelia_framework_1.inject(aurelia_event_aggregator_1.EventAggregator, filter_service_1.FilterService)
+            aurelia_framework_1.inject(filter_service_1.FilterService, gridExtra_service_1.GridExtraService)
         ], ControlAndPluginService);
         return ControlAndPluginService;
     }());

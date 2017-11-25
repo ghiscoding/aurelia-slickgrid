@@ -5,11 +5,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { inject } from 'aurelia-framework';
-import { EventAggregator } from 'aurelia-event-aggregator';
 import { FilterService } from './filter.service';
+import { GridExtraService } from './gridExtra.service';
 var ControlAndPluginService = /** @class */ (function () {
-    function ControlAndPluginService(ea, filterService, gridExtraService) {
-        this.ea = ea;
+    function ControlAndPluginService(filterService, gridExtraService) {
         this.filterService = filterService;
         this.gridExtraService = gridExtraService;
     }
@@ -21,6 +20,7 @@ var ControlAndPluginService = /** @class */ (function () {
      * @param {any} dataView
      */
     ControlAndPluginService.prototype.attachDifferentControlOrPlugins = function (grid, columnDefinitions, options, dataView) {
+        var _this = this;
         this._grid = grid;
         this._dataView = dataView;
         this._visibleColumns = columnDefinitions;
@@ -45,6 +45,8 @@ var ControlAndPluginService = /** @class */ (function () {
                     if (options.gridMenu && typeof options.gridMenu.onMenuClose === 'function') {
                         options.gridMenu.onMenuClose(e, args);
                     }
+                    // we also want to resize the columns if the user decided to hide certain column(s)
+                    _this._grid.autosizeColumns();
                 });
             }
         }
@@ -213,7 +215,7 @@ var ControlAndPluginService = /** @class */ (function () {
         }
     };
     ControlAndPluginService = __decorate([
-        inject(EventAggregator, FilterService)
+        inject(FilterService, GridExtraService)
     ], ControlAndPluginService);
     return ControlAndPluginService;
 }());

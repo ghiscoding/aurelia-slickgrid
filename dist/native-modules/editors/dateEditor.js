@@ -1,7 +1,7 @@
 import { mapFlatpickrDateFormatWithFieldType } from './../services/utilities';
-import * as flatpickr from 'flatpickr';
-import * as $ from 'jquery';
 import { FieldType } from './../models/index';
+import * as $ from 'jquery';
+import * as flatpickr from 'flatpickr';
 /*
  * An example of a date picker editor using Flatpickr
  * https://chmln.github.io/flatpickr
@@ -13,22 +13,34 @@ var DateEditor = /** @class */ (function () {
     }
     DateEditor.prototype.init = function () {
         var _this = this;
+        var gridOptions = this.args.grid.getOptions();
+        this.defaultDate = this.args.item[this.args.column.field] || null;
+        var inputFormat = mapFlatpickrDateFormatWithFieldType(this.args.column.type || FieldType.dateIso);
+        var outputFormat = mapFlatpickrDateFormatWithFieldType(this.args.column.outputType || FieldType.dateUtc);
+        var locale = (gridOptions && gridOptions.locale) ? gridOptions.locale : 'en';
         var pickerOptions = {
-            defaultDate: this.args.item[this.args.column.field] || null,
+            defaultDate: this.defaultDate,
             altInput: true,
-            altFormat: mapFlatpickrDateFormatWithFieldType(this.args.type || FieldType.dateIso),
+            altFormat: inputFormat,
+            dateFormat: outputFormat,
+            closeOnSelect: false,
             onChange: function (selectedDates, dateStr, instance) {
                 _this.save();
             },
         };
-        this.$input = $("<input type=\"text\" value=\"" + this.defaultDate + "\" class=\"editor-text\" />");
+        // change locale if needed, Flatpickr reference: https://chmln.github.io/flatpickr/localization/
+        if (locale !== 'en') {
+            var localeDefault = require("flatpickr/dist/l10n/" + locale + ".js").default;
+            pickerOptions['locale'] = (localeDefault && localeDefault[locale]) ? localeDefault[locale] : 'en';
+        }
+        this.$input = $("<input type=\"text\" data-defaultDate=\"" + this.defaultDate + "\" class=\"editor-text flatpickr\" />");
         this.$input.appendTo(this.args.container);
-        this.$input.focus().val(this.defaultDate).select();
         this.flatInstance = flatpickr(this.$input[0], pickerOptions);
         this.flatInstance.open();
     };
     DateEditor.prototype.destroy = function () {
-        //this.flatInstance.destroy();
+        // this.flatInstance.destroy();
+        this.flatInstance.close();
         this.$input.remove();
     };
     DateEditor.prototype.show = function () {
@@ -45,8 +57,6 @@ var DateEditor = /** @class */ (function () {
     };
     DateEditor.prototype.loadValue = function (item) {
         this.defaultDate = item[this.args.column.field];
-        this.$input.val(this.defaultDate);
-        this.$input.select();
     };
     DateEditor.prototype.serializeValue = function () {
         return this.$input.val();

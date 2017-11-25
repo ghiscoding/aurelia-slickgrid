@@ -30,10 +30,10 @@ export class SlickPaginationCustomElement {
     }
 
     // Subscribe to Event Emitter of Filter & Sort changed, go back to page 1 when that happen
-    this.filterService.onFilterChanged.subscribe('filterService:changed', (data) => {
+    this.filterService.onFilterChanged.subscribe('filterService:changed', (data: string) => {
       this.refreshPagination(true);
     });
-    this.sortService.onSortChanged.subscribe('sortService:changed', (data) => {
+    this.sortService.onSortChanged.subscribe('sortService:changed', (data: string) => {
       this.refreshPagination(true);
     });
   }

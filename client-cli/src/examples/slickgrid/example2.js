@@ -37,8 +37,7 @@ export class Example2 {
       autoResize: {
         containerId: 'demo-container',
         sidePadding: 15
-      },
-      enableCellNavigation: true
+      }
     };
   }
 

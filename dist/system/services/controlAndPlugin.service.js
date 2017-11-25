@@ -1,4 +1,4 @@
-System.register(["aurelia-framework", "aurelia-event-aggregator", "./filter.service"], function (exports_1, context_1) {
+System.register(["aurelia-framework", "./filter.service", "./gridExtra.service"], function (exports_1, context_1) {
     "use strict";
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -7,23 +7,22 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./filter.serv
         return c > 3 && r && Object.defineProperty(target, key, r), r;
     };
     var __moduleName = context_1 && context_1.id;
-    var aurelia_framework_1, aurelia_event_aggregator_1, filter_service_1, ControlAndPluginService;
+    var aurelia_framework_1, filter_service_1, gridExtra_service_1, ControlAndPluginService;
     return {
         setters: [
             function (aurelia_framework_1_1) {
                 aurelia_framework_1 = aurelia_framework_1_1;
             },
-            function (aurelia_event_aggregator_1_1) {
-                aurelia_event_aggregator_1 = aurelia_event_aggregator_1_1;
-            },
             function (filter_service_1_1) {
                 filter_service_1 = filter_service_1_1;
+            },
+            function (gridExtra_service_1_1) {
+                gridExtra_service_1 = gridExtra_service_1_1;
             }
         ],
         execute: function () {
             ControlAndPluginService = /** @class */ (function () {
-                function ControlAndPluginService(ea, filterService, gridExtraService) {
-                    this.ea = ea;
+                function ControlAndPluginService(filterService, gridExtraService) {
                     this.filterService = filterService;
                     this.gridExtraService = gridExtraService;
                 }
@@ -35,6 +34,7 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./filter.serv
                  * @param {any} dataView
                  */
                 ControlAndPluginService.prototype.attachDifferentControlOrPlugins = function (grid, columnDefinitions, options, dataView) {
+                    var _this = this;
                     this._grid = grid;
                     this._dataView = dataView;
                     this._visibleColumns = columnDefinitions;
@@ -59,6 +59,8 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./filter.serv
                                 if (options.gridMenu && typeof options.gridMenu.onMenuClose === 'function') {
                                     options.gridMenu.onMenuClose(e, args);
                                 }
+                                // we also want to resize the columns if the user decided to hide certain column(s)
+                                _this._grid.autosizeColumns();
                             });
                         }
                     }
@@ -227,7 +229,7 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./filter.serv
                     }
                 };
                 ControlAndPluginService = __decorate([
-                    aurelia_framework_1.inject(aurelia_event_aggregator_1.EventAggregator, filter_service_1.FilterService)
+                    aurelia_framework_1.inject(filter_service_1.FilterService, gridExtra_service_1.GridExtraService)
                 ], ControlAndPluginService);
                 return ControlAndPluginService;
             }());

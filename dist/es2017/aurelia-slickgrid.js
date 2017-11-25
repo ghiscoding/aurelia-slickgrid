@@ -25,29 +25,28 @@ import 'slickgrid/plugins/slick.headermenu';
 import 'slickgrid/plugins/slick.rowmovemanager';
 import 'slickgrid/plugins/slick.rowselectionmodel';
 import { bindable, bindingMode, inject } from 'aurelia-framework';
-import { EventAggregator } from 'aurelia-event-aggregator';
 import { GlobalGridOptions } from './global-grid-options';
-import { ControlAndPluginService, FilterService, GridEventService, GridExtraService, SortService, ResizerService } from './services/index';
+import { ControlAndPluginService, FilterService, GridEventService, GridExtraService, ResizerService, SortService } from './services/index';
 import * as $ from 'jquery';
 let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
-    constructor(elm, ea, controlPluginService, resizer, gridEventService, gridExtraService, filterService, sortService) {
-        this.elm = elm;
-        this.ea = ea;
+    constructor(controlPluginService, elm, filterService, gridEventService, gridExtraService, resizer, sortService) {
         this.controlPluginService = controlPluginService;
-        this.resizer = resizer;
+        this.elm = elm;
+        this.filterService = filterService;
         this.gridEventService = gridEventService;
         this.gridExtraService = gridExtraService;
-        this.filterService = filterService;
+        this.resizer = resizer;
         this.sortService = sortService;
         this.showPagination = false;
         this.gridHeight = 100;
         this.gridWidth = 600;
-        this.elm = elm;
-        this.resizer = resizer;
+        // Aurelia doesn't support well TypeScript @autoinject so we'll do it the old fashion way
         this.controlPluginService = controlPluginService;
+        this.elm = elm;
+        this.filterService = filterService;
         this.gridEventService = gridEventService;
         this.gridExtraService = gridExtraService;
-        this.filterService = filterService;
+        this.resizer = resizer;
         this.sortService = sortService;
     }
     attached() {
@@ -66,7 +65,7 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
         // attach resize ONLY after the dataView is ready
         this.attachResizeHook(this.grid, this._gridOptions);
         // attach grid extra service
-        const gridExtraService = this.gridExtraService.init(this.grid, this.dataview);
+        const gridExtraService = this.gridExtraService.init(this.grid, this.columnDefinitions, this._gridOptions, this.dataview);
     }
     detached() {
         this.dataview = [];
@@ -144,14 +143,15 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
             this.grid.autosizeColumns();
         }
         // auto-resize grid on browser resize
+        this.resizer.init(grid, options);
         if (options.enableAutoResize) {
-            this.resizer.attachAutoResizeDataGrid(grid, options);
+            this.resizer.attachAutoResizeDataGrid();
             if (options.autoFitColumnsOnFirstLoad) {
                 grid.autosizeColumns();
             }
         }
         else {
-            this.resizer.resizeGrid(grid, options, 0, { height: this.gridHeight, width: this.gridWidth });
+            this.resizer.resizeGrid(0, { height: this.gridHeight, width: this.gridWidth });
         }
     }
     mergeGridOptions() {
@@ -163,17 +163,10 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
         // use jquery extend to deep merge and avoid immutable properties changed in GlobalGridOptions after route change
         return $.extend(true, {}, GlobalGridOptions, this.gridOptions);
     }
-    /** Toggle the filter row displayed on first row */
-    showHeaderRow(isShowing) {
-        this.grid.setHeaderRowVisibility(isShowing);
-        return isShowing;
-    }
-    /** Toggle the filter row displayed on first row */
-    toggleHeaderRow() {
-        const isShowing = !this.grid.getOptions().showHeaderRow;
-        this.grid.setHeaderRowVisibility(isShowing);
-        return isShowing;
-    }
+    /**
+     * When dataset changes, we need to refresh the entire grid UI & possibly resize it as well
+     * @param {object} dataset
+     */
     refreshGridData(dataset) {
         if (dataset && this.grid) {
             this.dataview.setItems(dataset);
@@ -186,10 +179,21 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
             }
             if (this._gridOptions.enableAutoResize) {
                 // resize the grid inside a slight timeout, in case other DOM element changed prior to the resize (like a filter/pagination changed)
-                this.resizer.resizeGrid(this.grid, this._gridOptions, 10);
+                this.resizer.resizeGrid(10);
                 // this.grid.autosizeColumns();
             }
         }
+    }
+    /** Toggle the filter row displayed on first row */
+    showHeaderRow(isShowing) {
+        this.grid.setHeaderRowVisibility(isShowing);
+        return isShowing;
+    }
+    /** Toggle the filter row displayed on first row */
+    toggleHeaderRow() {
+        const isShowing = !this.grid.getOptions().showHeaderRow;
+        this.grid.setHeaderRowVisibility(isShowing);
+        return isShowing;
     }
 };
 __decorate([
@@ -229,7 +233,7 @@ __decorate([
     bindable()
 ], AureliaSlickgridCustomElement.prototype, "pickerOptions", void 0);
 AureliaSlickgridCustomElement = __decorate([
-    inject(Element, EventAggregator, ControlAndPluginService, ResizerService, GridEventService, GridExtraService, FilterService, SortService)
+    inject(ControlAndPluginService, Element, FilterService, GridEventService, GridExtraService, ResizerService, SortService)
 ], AureliaSlickgridCustomElement);
 export { AureliaSlickgridCustomElement };
 //# sourceMappingURL=aurelia-slickgrid.js.map

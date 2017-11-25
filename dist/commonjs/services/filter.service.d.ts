@@ -1,3 +1,4 @@
+import { EventAggregator } from 'aurelia-event-aggregator';
 import { Column, ColumnFilters, GridOption, SlickEvent } from '../models/index';
 export declare class FilterService {
     _columnFilters: ColumnFilters;
@@ -7,6 +8,7 @@ export declare class FilterService {
     _gridOptions: GridOption;
     _onFilterChangedOptions: any;
     subscriber: SlickEvent;
+    onFilterChanged: EventAggregator;
     init(grid: any, gridOptions: GridOption, columnDefinitions: Column[]): void;
     /**
      * Attach a backend filter hook to the grid
@@ -28,6 +30,12 @@ export declare class FilterService {
     addFilterTemplateToHeaderRow(args: any): void;
     /** Clear the search filters (below the column titles) */
     clearFilters(dataview?: any): void;
+    /**
+     * A simple function that is attached to the subscriber and emit a change when the sort is called.
+     * Other services, like Pagination, can then subscribe to it.
+     * @param {string} sender
+     */
+    emitFilterChangedBy(sender: string): void;
     private keepColumnFilters(searchTerm, listTerm, columnDef);
     private triggerEvent(evt, args, e);
 }

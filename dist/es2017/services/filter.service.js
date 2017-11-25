@@ -1,3 +1,4 @@
+import { EventAggregator } from 'aurelia-event-aggregator';
 import { FilterConditions } from '../filter-conditions/index';
 import { FilterTemplates } from './../filter-templates/index';
 import { FieldType, FormElementType } from '../models/index';
@@ -5,6 +6,7 @@ import * as $ from 'jquery';
 export class FilterService {
     constructor() {
         this._columnFilters = {};
+        this.onFilterChanged = new EventAggregator();
     }
     init(grid, gridOptions, columnDefinitions) {
         this._columnDefinitions = columnDefinitions;
@@ -18,6 +20,7 @@ export class FilterService {
      */
     attachBackendOnFilter(grid, options) {
         this.subscriber = new Slick.Event();
+        this.emitFilterChangedBy('remote');
         this.subscriber.subscribe(this.attachBackendOnFilterSubscribe);
         grid.onHeaderRowCellRendered.subscribe((e, args) => {
             this.addFilterTemplateToHeaderRow(args);
@@ -53,6 +56,7 @@ export class FilterService {
     attachLocalOnFilter(grid, options, dataView) {
         this._dataView = dataView;
         this.subscriber = new Slick.Event();
+        this.emitFilterChangedBy('local');
         dataView.setFilterArgs({ columnFilters: this._columnFilters, grid: this._grid });
         dataView.setFilter(this.customFilter);
         this.subscriber.subscribe((e, args) => {
@@ -203,6 +207,14 @@ export class FilterService {
             this._grid.invalidate();
             this._grid.render();
         }
+    }
+    /**
+     * A simple function that is attached to the subscriber and emit a change when the sort is called.
+     * Other services, like Pagination, can then subscribe to it.
+     * @param {string} sender
+     */
+    emitFilterChangedBy(sender) {
+        this.subscriber.subscribe(() => this.onFilterChanged.publish('filterService:changed', `onFilterChanged by ${sender}`));
     }
     keepColumnFilters(searchTerm, listTerm, columnDef) {
         if (searchTerm) {

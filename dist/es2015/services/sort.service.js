@@ -6,9 +6,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+import { EventAggregator } from 'aurelia-event-aggregator';
 import { FieldType } from './../models/index';
 import { Sorters } from './../sorters/index';
 export class SortService {
+    constructor() {
+        this.onSortChanged = new EventAggregator();
+    }
     /**
      * Attach a backend sort (single/multi) hook to the grid
      * @param grid SlickGrid Grid object
@@ -16,6 +20,7 @@ export class SortService {
      */
     attachBackendOnSort(grid, gridOptions) {
         this.subscriber = grid.onSort;
+        this.emitSortChangedBy('remote');
         this.subscriber.subscribe(this.attachBackendOnSortSubscribe);
     }
     attachBackendOnSortSubscribe(event, args) {
@@ -47,6 +52,7 @@ export class SortService {
      */
     attachLocalOnSort(grid, gridOptions, dataView) {
         this.subscriber = grid.onSort;
+        this.emitSortChangedBy('local');
         this.subscriber.subscribe((e, args) => {
             // multiSort and singleSort are not exactly the same, but we want to structure it the same for the (for loop) after
             // also to avoid having to rewrite the for loop in the sort, we will make the singleSort an array of 1 object
@@ -91,6 +97,14 @@ export class SortService {
     }
     destroy() {
         this.subscriber.unsubscribe();
+    }
+    /**
+     * A simple function that is attached to the subscriber and emit a change when the sort is called.
+     * Other services, like Pagination, can then subscribe to it.
+     * @param {string} sender
+     */
+    emitSortChangedBy(sender) {
+        this.subscriber.subscribe(() => this.onSortChanged.publish('sortService:changed', `onSortChanged by ${sender}`));
     }
 }
 //# sourceMappingURL=sort.service.js.map

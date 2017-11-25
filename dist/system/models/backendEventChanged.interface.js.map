@@ -1,1 +1,1 @@
-{"version":3,"file":"backendEventChanged.interface.js","sourceRoot":"","sources":["../../../dev/src/aurelia-slickgrid/models/backendEventChanged.interface.ts"],"names":[],"mappings":";;;;;;QAUA,CAAC"}
+{"version":3,"file":"backendEventChanged.interface.js","sourceRoot":"","sources":["../../../aurelia-slickgrid/src/aurelia-slickgrid/models/backendEventChanged.interface.ts"],"names":[],"mappings":";;;;;;QAUA,CAAC"}

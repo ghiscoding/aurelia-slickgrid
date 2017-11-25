@@ -35,10 +35,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var aurelia_event_aggregator_1 = require("aurelia-event-aggregator");
 var index_1 = require("./../models/index");
 var index_2 = require("./../sorters/index");
 var SortService = /** @class */ (function () {
     function SortService() {
+        this.onSortChanged = new aurelia_event_aggregator_1.EventAggregator();
     }
     /**
      * Attach a backend sort (single/multi) hook to the grid
@@ -47,6 +49,7 @@ var SortService = /** @class */ (function () {
      */
     SortService.prototype.attachBackendOnSort = function (grid, gridOptions) {
         this.subscriber = grid.onSort;
+        this.emitSortChangedBy('remote');
         this.subscriber.subscribe(this.attachBackendOnSortSubscribe);
     };
     SortService.prototype.attachBackendOnSortSubscribe = function (event, args) {
@@ -86,6 +89,7 @@ var SortService = /** @class */ (function () {
      */
     SortService.prototype.attachLocalOnSort = function (grid, gridOptions, dataView) {
         this.subscriber = grid.onSort;
+        this.emitSortChangedBy('local');
         this.subscriber.subscribe(function (e, args) {
             // multiSort and singleSort are not exactly the same, but we want to structure it the same for the (for loop) after
             // also to avoid having to rewrite the for loop in the sort, we will make the singleSort an array of 1 object
@@ -130,6 +134,15 @@ var SortService = /** @class */ (function () {
     };
     SortService.prototype.destroy = function () {
         this.subscriber.unsubscribe();
+    };
+    /**
+     * A simple function that is attached to the subscriber and emit a change when the sort is called.
+     * Other services, like Pagination, can then subscribe to it.
+     * @param {string} sender
+     */
+    SortService.prototype.emitSortChangedBy = function (sender) {
+        var _this = this;
+        this.subscriber.subscribe(function () { return _this.onSortChanged.publish('sortService:changed', "onSortChanged by " + sender); });
     };
     return SortService;
 }());
