@@ -16,7 +16,10 @@
     <div class="collapse navbar-collapse" id="skeleton-navigation-navbar-collapse">
       <ul class="nav navbar-nav">
         <li repeat.for="row of router.navigation" class="${row.isActive ? 'active' : ''}">
-          <a data-toggle="collapse" data-target="#skeleton-navigation-navbar-collapse.in" href.bind="row.href">${row.title}</a>
+          <a data-toggle="collapse" data-target="#skeleton-navigation-navbar-collapse.in" href.bind="row.href">
+            <i if.bind="row.settings.icon" class.bind="row.settings.icon"></i>
+            <span>${row.title}</span>
+          </a>
         </li>
       </ul>
 
