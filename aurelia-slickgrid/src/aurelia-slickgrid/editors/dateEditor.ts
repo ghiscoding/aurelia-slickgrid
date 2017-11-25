@@ -1,7 +1,7 @@
 import { mapFlatpickrDateFormatWithFieldType } from './../services/utilities';
-import * as flatpickr from 'flatpickr';
-import * as $ from 'jquery';
 import { Editor, FieldType, KeyCode } from './../models/index';
+import * as $ from 'jquery';
+import * as flatpickr from 'flatpickr';
 
 /*
  * An example of a date picker editor using Flatpickr
@@ -20,10 +20,10 @@ export class DateEditor implements Editor {
     const gridOptions = this.args.grid.getOptions();
     this.defaultDate = this.args.item[this.args.column.field] || null;
     const inputFormat = mapFlatpickrDateFormatWithFieldType(this.args.column.type || FieldType.dateIso);
-    const outputFormat = mapFlatpickrDateFormatWithFieldType(this.args.column.outputType || 'Z');
+    const outputFormat = mapFlatpickrDateFormatWithFieldType(this.args.column.outputType || FieldType.dateUtc);
     const locale = (gridOptions && gridOptions.locale) ? gridOptions.locale : 'en';
 
-    const pickerOptions = {
+    const pickerOptions: any = {
       defaultDate: this.defaultDate,
       altInput: true,
       altFormat: inputFormat,
@@ -36,7 +36,7 @@ export class DateEditor implements Editor {
 
     // change locale if needed, Flatpickr reference: https://chmln.github.io/flatpickr/localization/
     if (locale !== 'en') {
-      const localeDefault = require(`flatpickr/dist/l10n/${locale}.js`).default;
+      const localeDefault: any = require(`flatpickr/dist/l10n/${locale}.js`).default;
       pickerOptions['locale'] = (localeDefault && localeDefault[locale]) ? localeDefault[locale] : 'en';
     }
 
