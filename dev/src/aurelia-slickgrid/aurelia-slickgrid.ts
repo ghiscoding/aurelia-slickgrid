@@ -91,7 +91,7 @@ export class AureliaSlickgridCustomElement {
     this.attachResizeHook(this.grid, this._gridOptions);
 
     // attach grid extra service
-    const gridExtraService = this.gridExtraService.init(this.grid, this.dataview);
+    const gridExtraService = this.gridExtraService.init(this.grid, this.columnDefinitions, this._gridOptions, this.dataview);
   }
 
   detached() {
