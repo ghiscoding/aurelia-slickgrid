@@ -1,10 +1,12 @@
-import { bindable } from 'aurelia-framework';
+import { bindable, inject } from 'aurelia-framework';
 import { GridOption } from './models/index';
+import { FilterService } from './services/filter.service';
+import { SortService } from './services/sort.service';
 
+@inject(FilterService, SortService)
 export class SlickPaginationCustomElement {
   @bindable() grid: any;
   @bindable() gridPaginationOptions: GridOption;
-
   private _gridPaginationOptions: GridOption;
 
   dataFrom = 1;
@@ -13,25 +15,31 @@ export class SlickPaginationCustomElement {
   pageCount = 0;
   pageNumber = 1;
   totalItems = 0;
-  paginationCallback: Function;
+  paginationCallback: () => void;
   paginationPageSizes = [25, 75, 100];
+
+  constructor(private filterService: FilterService, private sortService: SortService) {
+    this.filterService = filterService;
+    this.sortService = sortService;
+  }
 
   bind(binding: any, contexts: any) {
     this._gridPaginationOptions = binding.gridPaginationOptions;
     if (!binding.gridPaginationOptions || (binding.gridPaginationOptions.pagination && binding.gridPaginationOptions.pagination.totalItems !== this.totalItems)) {
       this.refreshPagination();
     }
+
+    // Subscribe to Event Emitter of Filter & Sort changed, go back to page 1 when that happen
+    this.filterService.onFilterChanged.subscribe('filterService:changed', (data) => {
+      this.refreshPagination(true);
+    });
+    this.sortService.onSortChanged.subscribe('sortService:changed', (data) => {
+      this.refreshPagination(true);
+    });
   }
 
   ceil(number: number) {
     return Math.ceil(number);
-  }
-  onChangeItemPerPage(event: any) {
-    const itemsPerPage = event.target.value as number;
-    this.pageCount = Math.ceil(this.totalItems / itemsPerPage);
-    this.pageNumber = 1;
-    this.itemsPerPage = itemsPerPage;
-    this.onPageChanged(event, this.pageNumber);
   }
 
   changeToFirstPage(event: any) {
@@ -42,12 +50,14 @@ export class SlickPaginationCustomElement {
     this.pageNumber = this.pageCount;
     this.onPageChanged(event, this.pageNumber);
   }
+
   changeToNextPage(event: any) {
     if (this.pageNumber < this.pageCount) {
       this.pageNumber++;
       this.onPageChanged(event, this.pageNumber);
     }
   }
+
   changeToPreviousPage(event: any) {
     if (this.pageNumber > 0) {
       this.pageNumber--;
@@ -60,10 +70,18 @@ export class SlickPaginationCustomElement {
     this.onPageChanged(new CustomEvent('build', { detail: 3 }), this.pageNumber);
   }
 
-  refreshPagination() {
+  onChangeItemPerPage(event: any) {
+    const itemsPerPage = event.target.value as number;
+    this.pageCount = Math.ceil(this.totalItems / itemsPerPage);
+    this.pageNumber = 1;
+    this.itemsPerPage = itemsPerPage;
+    this.onPageChanged(event, this.pageNumber);
+  }
+
+  refreshPagination(isPageNumberReset?: boolean) {
     if (this._gridPaginationOptions && this._gridPaginationOptions.pagination) {
       // if totalItems changed, we should always go back to the first page and recalculation the From-To indexes
-      if (this.totalItems !== this._gridPaginationOptions.pagination.totalItems) {
+      if (isPageNumberReset || this.totalItems !== this._gridPaginationOptions.pagination.totalItems) {
         this.pageNumber = 1;
         this.recalculateFromToIndexes();
       }

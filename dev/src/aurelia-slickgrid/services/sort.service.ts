@@ -1,8 +1,10 @@
+import { EventAggregator } from 'aurelia-event-aggregator';
 import { BackendServiceOption, FieldType, GridOption, Sorter } from './../models/index';
 import { Sorters } from './../sorters/index';
 
 export class SortService {
   subscriber: any;
+  onSortChanged = new EventAggregator();
 
   /**
    * Attach a backend sort (single/multi) hook to the grid
@@ -11,6 +13,7 @@ export class SortService {
    */
   attachBackendOnSort(grid: any, gridOptions: GridOption) {
     this.subscriber = grid.onSort;
+    this.emitSortChangedBy('remote');
     this.subscriber.subscribe(this.attachBackendOnSortSubscribe);
   }
 
@@ -45,6 +48,7 @@ export class SortService {
    */
   attachLocalOnSort(grid: any, gridOptions: GridOption, dataView: any) {
     this.subscriber = grid.onSort;
+    this.emitSortChangedBy('local');
     this.subscriber.subscribe((e: any, args: any) => {
       // multiSort and singleSort are not exactly the same, but we want to structure it the same for the (for loop) after
       // also to avoid having to rewrite the for loop in the sort, we will make the singleSort an array of 1 object
@@ -93,5 +97,14 @@ export class SortService {
 
   destroy() {
     this.subscriber.unsubscribe();
+  }
+
+  /**
+   * A simple function that is attached to the subscriber and emit a change when the sort is called.
+   * Other services, like Pagination, can then subscribe to it.
+   * @param {string} sender
+   */
+  emitSortChangedBy(sender: string) {
+    this.subscriber.subscribe(() => this.onSortChanged.publish('sortService:changed', `onSortChanged by ${sender}`));
   }
 }

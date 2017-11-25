@@ -23,13 +23,13 @@ import 'slickgrid/plugins/slick.rowselectionmodel';
 import { bindable, bindingMode, inject } from 'aurelia-framework';
 import { GlobalGridOptions } from './global-grid-options';
 import { CellArgs, Column, FormElementType, GridOption } from './models/index';
-import { ControlAndPluginService, FilterService, GridEventService, GridExtraService, SortService, ResizerService } from './services/index';
+import { ControlAndPluginService, FilterService, GridEventService, GridExtraService, ResizerService, SortService } from './services/index';
 import * as $ from 'jquery';
 
 // using external js modules in Aurelia
 declare var Slick: any;
 
-@inject(Element, EventAggregator, ControlAndPluginService, ResizerService, GridEventService, GridExtraService, FilterService, SortService)
+@inject(ControlAndPluginService, Element, FilterService, GridEventService, GridExtraService, ResizerService, SortService)
 export class AureliaSlickgridCustomElement {
   private _dataset: any[];
   private _gridOptions: GridOption;
@@ -52,20 +52,21 @@ export class AureliaSlickgridCustomElement {
   @bindable() pickerOptions: any;
 
   constructor(
-    private elm: HTMLElement,
-    private ea: EventAggregator,
     private controlPluginService: ControlAndPluginService,
-    private resizer: ResizerService,
+    private elm: Element,
+    private filterService: FilterService,
     private gridEventService: GridEventService,
     private gridExtraService: GridExtraService,
-    private filterService: FilterService,
+    private resizer: ResizerService,
     private sortService: SortService) {
-    this.elm = elm;
-    this.resizer = resizer;
+
+    // Aurelia doesn't support well TypeScript @autoinject so we'll do it the old fashion way
     this.controlPluginService = controlPluginService;
+    this.elm = elm;
+    this.filterService = filterService;
     this.gridEventService = gridEventService;
     this.gridExtraService = gridExtraService;
-    this.filterService = filterService;
+    this.resizer = resizer;
     this.sortService = sortService;
   }
 
