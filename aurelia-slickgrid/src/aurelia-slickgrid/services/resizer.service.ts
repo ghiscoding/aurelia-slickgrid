@@ -93,7 +93,7 @@ export class ResizerService {
   resizeGrid(delay?: number, newSizes?: { height: number, width: number }): void {
     if (!this._grid || !this._gridOptions) {
       throw new Error(`
-      Angular-Slickgrid resizer requires a valid Grid object and Grid Options defined.
+      Aurelia-Slickgrid resizer requires a valid Grid object and Grid Options defined.
       You can fix this by setting your gridOption to use "enableAutoResize" or create an instance of the ResizerService by calling attachAutoResizeDataGrid()`);
     }
 

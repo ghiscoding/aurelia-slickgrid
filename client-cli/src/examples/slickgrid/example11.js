@@ -5,7 +5,7 @@ import { Editors, FieldType, Formatters, GridExtraService, ResizerService } from
 export class Example11 {
   title = 'Example 11: Add / Update / Highlight a Datagrid Item';
   subTitle = `
-    Add / Update / Hightlight an Item from the Datagrid (<a href="https://github.com/ghiscoding/Angular-Slickgrid/wiki/Add,-Update-or-Highlight-a-Datagrid-Item" target="_blank">Wiki link</a>).
+    Add / Update / Hightlight an Item from the Datagrid (<a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Add,-Update-or-Highlight-a-Datagrid-Item" target="_blank">Wiki link</a>).
     <ul>
       <li><b>Note:</b> this demo is <b>only</b> on the datagrid (client) side, you still need to deal with the backend yourself</li>
       <li>Adding an item, will always be showing as the 1st item in the grid because that is the best visual place to add it</li>
@@ -15,7 +15,7 @@ export class Example11 {
       <li>You can change the highlighted color &amp; animation by changing the SASS variables:</li>
       <ul>
         <li>"$row-highlight-background-color" or "$row-highlight-fade-animation"</li>
-        <li>Take a look at the available <a href="https://github.com/ghiscoding/Angular-Slickgrid/blob/master/src/app/modules/angular-slickgrid/styles/_variables.scss" target="_blank">SASS Variables</a></li>
+        <li>Take a look at the available <a href="https://github.com/ghiscoding/aurelia-slickgrid/blob/master/aurelia-slickgrid/src/aurelia-slickgrid/styles/_variables.scss" target="_blank">SASS Variables</a></li>
       </ul>
     </ul>
   `;

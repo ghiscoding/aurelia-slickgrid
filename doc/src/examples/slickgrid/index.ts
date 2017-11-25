@@ -16,7 +16,8 @@ export class Index {
       { route: 'example7', moduleId: PLATFORM.moduleName('./example7'), name: 'example7', nav: true, title: '7- Header Button Plugin' },
       { route: 'example8', moduleId: PLATFORM.moduleName('./example8'), name: 'example8', nav: true, title: '8- Header Menu Plugin' },
       { route: 'example9', moduleId: PLATFORM.moduleName('./example9'), name: 'example9', nav: true, title: '9- Grid Menu Control' },
-      { route: 'example10', moduleId: PLATFORM.moduleName('./example10'), name: 'example10', nav: true, title: '10- Row Selection' }
+      { route: 'example10', moduleId: PLATFORM.moduleName('./example10'), name: 'example10', nav: true, title: '10- Row Selection' },
+      { route: 'example11', moduleId: PLATFORM.moduleName('./example11'), name: 'example11', nav: true, title: '11- Add/Update Grid Item' }
     ];
 
     config.map(mapping);

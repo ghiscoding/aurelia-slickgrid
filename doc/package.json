@@ -17,7 +17,7 @@
     "aurelia-http-client": "^1.2.1",
     "aurelia-polyfills": "latest",
     "aurelia-router": "^1.4.0",
-    "aurelia-slickgrid": "^1.0.2",
+    "aurelia-slickgrid": "^1.0.3",
     "aurelia-validation": "^1.1.2",
     "bluebird": "^3.4.1",
     "bootstrap": "^3.3.7",
