@@ -8,7 +8,7 @@ We will be using [6pac SlickGrid fork](https://github.com/6pac/SlickGrid/) (the 
 The goal is of course to be able to run SlickGrid within Aurelia but also to incorporate as much as possible the entire list of functionalities (and more) that SlickGrid offers (you can see a vast list of samples on the [6pac SlickGrid examples](https://github.com/6pac/SlickGrid/wiki/Examples) website).
 
 ### Demo page
-[https://ghiscoding.github.io/aurelia-slickgrid](https://ghiscoding.github.io/aurelia-slickgrid)
+[https://ghiscoding.github.io/aurelia-slickgrid](https://ghiscoding.github.io/aurelia-slickgrid/#/slickgrid)
 
 ### NPM Package
 [Aurelia-Slickgrid on NPM](https://www.npmjs.com/package/aurelia-slickgrid)
@@ -30,7 +30,8 @@ This is a work in progress, but so far here are some of the features that `aurel
 - Easier use of SlickGrid within `Aurelia` as it is just a component (simply pass a column definitions and a dataset and you're good to go)
 - Bootstrap Theme with SASS variables for extra customization (if you create a theme, then please make a PR)
 - Auto-resize (boolean flag), will resize the datagrid viewport with available space, that includes when browser resize (basically takes available space from it's parent container)
-- Support all SlickGrid Plugins.
+- Support all SlickGrid [Controls](https://github.com/6pac/SlickGrid/tree/master/controls) and [Plugins](https://github.com/6pac/SlickGrid/tree/master/plugins).
+- Row(s) Selection
 - Server side (backend) Services (filtering, sorting, pagination)
     - [GraphQL](https://github.com/ghiscoding/aurelia-slickgrid/wiki/GraphQL)
     - [OData](https://github.com/ghiscoding/aurelia-slickgrid/wiki/OData)
