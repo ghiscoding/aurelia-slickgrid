@@ -184,13 +184,14 @@ export class AureliaSlickgridCustomElement {
     }
 
     // auto-resize grid on browser resize
+    this.resizer.init(grid, options);
     if (options.enableAutoResize) {
-      this.resizer.attachAutoResizeDataGrid(grid, options);
+      this.resizer.attachAutoResizeDataGrid();
       if (options.autoFitColumnsOnFirstLoad) {
         grid.autosizeColumns();
       }
     } else {
-      this.resizer.resizeGrid(grid, options, 0, { height: this.gridHeight, width: this.gridWidth });
+      this.resizer.resizeGrid(0, { height: this.gridHeight, width: this.gridWidth });
     }
   }
 
@@ -205,19 +206,10 @@ export class AureliaSlickgridCustomElement {
     return $.extend(true, {}, GlobalGridOptions, this.gridOptions);
   }
 
-  /** Toggle the filter row displayed on first row */
-  showHeaderRow(isShowing: boolean) {
-    this.grid.setHeaderRowVisibility(isShowing);
-    return isShowing;
-  }
-
-  /** Toggle the filter row displayed on first row */
-  toggleHeaderRow() {
-    const isShowing = !this.grid.getOptions().showHeaderRow;
-    this.grid.setHeaderRowVisibility(isShowing);
-    return isShowing;
-  }
-
+  /**
+   * When dataset changes, we need to refresh the entire grid UI & possibly resize it as well
+   * @param {object} dataset
+   */
   refreshGridData(dataset: any[]) {
     if (dataset && this.grid) {
       this.dataview.setItems(dataset);
@@ -232,9 +224,22 @@ export class AureliaSlickgridCustomElement {
       }
       if (this._gridOptions.enableAutoResize) {
         // resize the grid inside a slight timeout, in case other DOM element changed prior to the resize (like a filter/pagination changed)
-        this.resizer.resizeGrid(this.grid, this._gridOptions, 10);
+        this.resizer.resizeGrid(10);
         // this.grid.autosizeColumns();
       }
     }
+  }
+
+  /** Toggle the filter row displayed on first row */
+  showHeaderRow(isShowing: boolean) {
+    this.grid.setHeaderRowVisibility(isShowing);
+    return isShowing;
+  }
+
+  /** Toggle the filter row displayed on first row */
+  toggleHeaderRow() {
+    const isShowing = !this.grid.getOptions().showHeaderRow;
+    this.grid.setHeaderRowVisibility(isShowing);
+    return isShowing;
   }
 }

@@ -109,7 +109,7 @@ export class Example3 {
     grid.onCellChange.subscribe((e, args) => {
       console.log('onCellChange', args);
       this.updatedObject = args.item;
-      this.resizer.resizeGrid(this.gridObj, this.gridOptions, 100);
+      this.resizer.resizeGrid(100);
     });
 
     // You could also subscribe to grid.onClick
