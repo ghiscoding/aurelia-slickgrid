@@ -23,6 +23,9 @@ Mostly because the [Slickgrid-ES6](https://github.com/DimitarChristoff/slickgrid
 ## Wiki / Documentation
 The Wiki is where all the documentation and instructions will go, so please consult the [Aurelia-Slickgrid - Wiki](https://github.com/ghiscoding/aurelia-slickgrid/wiki) before opening any issues. The [Wiki - HOWTO](https://github.com/ghiscoding/aurelia-slickgrid/wiki/HOWTO--Step-by-Step) is a great place to start with.
 
+## Installation
+Refer to the [Wiki - HOWTO Step by Step](https://github.com/ghiscoding/aurelia-slickgrid/wiki/HOWTO--Step-by-Step)
+
 ## Main features
 You can see some screenshots below and the instructions down below.
 
