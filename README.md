@@ -13,6 +13,9 @@ The goal is of course to be able to run SlickGrid within Aurelia but also to inc
 ### NPM Package
 [Aurelia-Slickgrid on NPM](https://www.npmjs.com/package/aurelia-slickgrid)
 
+## Installation
+Refer to the [Wiki - HOWTO Step by Step](https://github.com/ghiscoding/aurelia-slickgrid/wiki/HOWTO--Step-by-Step)
+
 ## Migration (from 0.x to 1.x)
 ### Breaking Changes
 Since the version `1.x` is a complete rewrite, there are some drawbacks which we will discuss. By dropping [Slickgrid-ES6](https://github.com/DimitarChristoff/slickgrid-es6) dependency, it means introducing couple of breaking changes (that is, if you were using previous version). Also, the modules that you can import are different and the `Frozen` grid is gone.
@@ -22,9 +25,6 @@ Mostly because the [Slickgrid-ES6](https://github.com/DimitarChristoff/slickgrid
 
 ## Wiki / Documentation
 The Wiki is where all the documentation and instructions will go, so please consult the [Aurelia-Slickgrid - Wiki](https://github.com/ghiscoding/aurelia-slickgrid/wiki) before opening any issues. The [Wiki - HOWTO](https://github.com/ghiscoding/aurelia-slickgrid/wiki/HOWTO--Step-by-Step) is a great place to start with.
-
-## Installation
-Refer to the [Wiki - HOWTO Step by Step](https://github.com/ghiscoding/aurelia-slickgrid/wiki/HOWTO--Step-by-Step)
 
 ## Main features
 You can see some screenshots below and the instructions down below.
