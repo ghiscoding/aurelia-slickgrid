@@ -4,6 +4,7 @@ import { Column } from './../models/index';
 import { arrayToCsvFormatter } from './arrayToCsvFormatter';
 import { checkboxFormatter } from './checkboxFormatter';
 import { checkmarkFormatter } from './checkmarkFormatter';
+import { complexObjectFormatter } from './complexObjectFormatter';
 import { dateIsoFormatter } from './dateIsoFormatter';
 import { dateTimeIsoAmPmFormatter } from './dateTimeIsoAmPmFormatter';
 import { dateTimeUsAmPmFormatter } from './dateTimeUsAmPmFormatter';
@@ -30,6 +31,7 @@ export const Formatters = {
   arrayToCsv: arrayToCsvFormatter,
   checkbox: checkboxFormatter,
   checkmark: checkmarkFormatter,
+  complexObject: complexObjectFormatter,
   dateIso: dateIsoFormatter,
   dateTimeIso: dateIsoFormatter,
   dateTimeIsoAmPm: dateTimeIsoAmPmFormatter,
