@@ -1,4 +1,4 @@
-import { Formatter } from './../models/formatter.interface';
+import { Column, Formatter } from './../models/index';
 
-export const yesNoFormatter: Formatter = (row: number, cell: number, value: any, columnDef: any, dataContext: any): string =>
+export const yesNoFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any): string =>
   value ? 'Yes' : 'No';

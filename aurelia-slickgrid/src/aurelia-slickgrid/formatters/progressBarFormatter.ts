@@ -1,6 +1,6 @@
-import { Formatter } from './../models/formatter.interface';
+import { Column, Formatter } from './../models/index';
 
-export const progressBarFormatter: Formatter = (row: number, cell: number, value: any, columnDef: any, dataContext: any): string => {
+export const progressBarFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any): string => {
   if (value === null || value === '') {
     return '';
   }

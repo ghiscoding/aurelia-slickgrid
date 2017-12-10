@@ -1,4 +1,4 @@
-import { Formatter } from './../models/formatter.interface';
+import { Column, Formatter } from './../models/index';
 
-export const deleteIconFormatter: Formatter = (row: number, cell: number, value: any, columnDef: any, dataContext: any) =>
-  `<i class="fa fa-times pointer" aria-hidden="true"></i>`;
+export const deleteIconFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any) =>
+  `<i class="fa fa-trash pointer delete-icon" aria-hidden="true"></i>`;
