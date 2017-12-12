@@ -1,11 +1,18 @@
+import { I18N } from 'aurelia-i18n';
 import { Column, GridOption } from './../models';
 import * as $ from 'jquery';
+import { inject } from 'aurelia-framework';
 
+@inject(I18N)
 export class GridExtraService {
   private _grid: any;
   private _dataView: any;
   private _columnDefinition: Column[];
   private _gridOptions: GridOption;
+
+  constructor(private i18n: I18N) {
+    this.i18n = i18n;
+  }
 
   init(grid: any, columnDefinition: Column[], gridOptions: GridOption, dataView: any): void {
     this._grid = grid;
@@ -83,7 +90,8 @@ export class GridExtraService {
     this._grid.setSelectedRows(rowIndexes);
   }
 
-  /** Add an item (data item) to the datagrid
+  /**
+   * Add an item (data item) to the datagrid
    * @param object dataItem: item object holding all properties of that row
    */
   addItemToDatagrid(item: any) {
@@ -108,7 +116,28 @@ export class GridExtraService {
     const datasetLength = this._dataView.getLength();
   }
 
-  /** Update an existing item with new properties inside the datagrid
+  /**
+   * Translate manually the header titles.
+   * We could optionally pass a locale (that will change currently loaded locale), else it will use current locale
+   * @param {string} locale locale to use
+   */
+  translateHeaders(locale?: string) {
+    if (locale) {
+      this.i18n.setLocale(locale);
+    }
+
+    for (const column of this._columnDefinition) {
+      if (column.headerKey) {
+        column.name = this.i18n.tr(column.headerKey);
+      }
+    }
+
+    // calling setColumns() will trigger a grid re-render
+    this._grid.setColumns(this._columnDefinition);
+  }
+
+  /**
+   * Update an existing item with new properties inside the datagrid
    * @param object item: item object holding all properties of that row
    */
   updateDataGridItem(item: any) {

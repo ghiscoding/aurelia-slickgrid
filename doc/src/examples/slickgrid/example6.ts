@@ -9,7 +9,8 @@ const sampleDataRoot = 'assets/data';
 export class Example6 {
   title = 'Example 6: Grid with Backend GraphQL Service';
   subTitle = `
-    Sorting/Paging connected to a Backend GraphQL Service (<a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/GraphQL" target="_blank">Wiki link</a>).
+    Use it when you need to support Pagination with a OData endpoint (for simple JSON, use a regular grid)<br/>
+    Take a look at the (<a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/GraphQL" target="_blank">Wiki documentation</a>)
     <br/>
     <ul class="small">
       <li><span class="red">(*) NO DATA SHOWING</span> - just change Filters &amp; Pages and look at the "GraphQL Query" changing :)</li>

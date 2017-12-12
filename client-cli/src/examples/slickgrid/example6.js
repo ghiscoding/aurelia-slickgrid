@@ -10,7 +10,7 @@ const sampleDataRoot = 'src/examples/slickgrid/sample-data';
 export class Example6 {
   title = 'Example 6: Grid with Backend GraphQL Service';
   subTitle = `
-    Sorting/Paging connected to a Backend GraphQL Service.
+    Use it when you need to support Pagination with a GraphQL endpoint (for simple JSON, use a regular grid)
     <br/>
     <ul class="small">
       <li><span class="red">(*) NO DATA SHOWING</span> - just change filters &amp; page and look at the "GraphQL Query" changing</li>
