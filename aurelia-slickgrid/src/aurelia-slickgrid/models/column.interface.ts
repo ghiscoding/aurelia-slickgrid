@@ -12,7 +12,6 @@ export interface Column {
   cssClass?: string;
   colspan?: number | '*';
   defaultSortAsc?: boolean;
-  displayName?: string;
   editor?: any;
   field: string;
   filter?: any;

@@ -101,7 +101,7 @@ export class AureliaSlickgridCustomElement {
 
     // when user enables translation, we need to translate Headers on first pass & subsequently in the attachDifferentHooks
     if (this._gridOptions.enableTranslate) {
-      this.gridExtraService.translateHeaders();
+      this.controlPluginService.translateHeaders();
     }
   }
 
@@ -148,7 +148,7 @@ export class AureliaSlickgridCustomElement {
     // on locale change, we have to manually translate the Headers, GridMenu
     this.ea.subscribe('i18n:locale:changed', payload => {
       if (options.enableTranslate) {
-        this.gridExtraService.translateHeaders();
+        this.controlPluginService.translateHeaders();
         this.controlPluginService.translateGridMenu();
       }
     });

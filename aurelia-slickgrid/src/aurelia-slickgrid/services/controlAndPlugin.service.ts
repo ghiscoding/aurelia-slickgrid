@@ -24,6 +24,7 @@ export class ControlAndPluginService {
   private _dataView: any;
   private _grid: any;
   private _gridOptions: GridOption;
+  private _columnDefinitions: Column[];
   visibleColumns: Column[];
 
   // controls & plugins
@@ -48,6 +49,7 @@ export class ControlAndPluginService {
     this._grid = grid;
     this._gridOptions = options;
     this._dataView = dataView;
+    this._columnDefinitions = columnDefinitions;
     this.visibleColumns = columnDefinitions;
 
     if (options.enableColumnPicker) {
@@ -274,6 +276,26 @@ export class ControlAndPluginService {
     this.gridMenuControl.destroy();
     this._gridOptions.gridMenu = undefined;
     this.createGridMenu(this._grid, this.visibleColumns, this._gridOptions);
+  }
+
+  /**
+   * Translate manually the header titles.
+   * We could optionally pass a locale (that will change currently loaded locale), else it will use current locale
+   * @param {string} locale locale to use
+   */
+  translateHeaders(locale?: string) {
+    if (locale) {
+      this.i18n.setLocale(locale);
+    }
+
+    for (const column of this._columnDefinitions) {
+      if (column.headerKey) {
+        column.name = this.i18n.tr(column.headerKey);
+      }
+    }
+
+    // calling setColumns() will trigger a grid re-render
+    this._grid.setColumns(this._columnDefinitions);
   }
 
   /**
