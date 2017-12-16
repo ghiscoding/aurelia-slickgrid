@@ -29,7 +29,7 @@ export class GraphqlService implements BackendService {
    * @param serviceOptions GraphqlServiceOption
    */
   buildQuery(serviceOptions?: GraphqlServiceOption) {
-    if (!this.serviceOptions.datasetName || (!this.serviceOptions.columnIds && !this.serviceOptions.dataFilters && !this.serviceOptions.columnDefinitions)) {
+    if (!serviceOptions || !this.serviceOptions.datasetName || (!this.serviceOptions.columnIds && !this.serviceOptions.dataFilters && !this.serviceOptions.columnDefinitions)) {
       throw new Error('GraphQL Service requires "datasetName" & ("dataFilters" or "columnDefinitions") properties for it to work');
     }
     const queryQb = new QueryBuilder('query');
@@ -42,7 +42,7 @@ export class GraphqlService implements BackendService {
     if (this.serviceOptions.columnDefinitions) {
       columnIds = Array.isArray(this.serviceOptions.columnDefinitions) ? this.serviceOptions.columnDefinitions.map((column) => column.field) : [];
     } else {
-      columnIds = this.serviceOptions.columnIds || this.serviceOptions.dataFilters;
+      columnIds = this.serviceOptions.columnIds || this.serviceOptions.dataFilters || [];
     }
 
     // Slickgrid also requires the "id" field to be part of DataView
@@ -66,7 +66,7 @@ export class GraphqlService implements BackendService {
     datasetQb.find(['totalCount', pageInfoQb, dataQb]);
 
     // add dataset filters, could be Pagination and SortingFilters and/or FieldFilters
-    const datasetFilters: GraphqlDatasetFilter = this.serviceOptions.paginationOptions;
+    const datasetFilters: GraphqlDatasetFilter = this.serviceOptions.paginationOptions as GraphqlDatasetFilter;
     if (this.serviceOptions.sortingOptions) {
       // orderBy: [{ field:x, direction: 'ASC' }]
       datasetFilters.orderBy = this.serviceOptions.sortingOptions;
@@ -81,7 +81,7 @@ export class GraphqlService implements BackendService {
     queryQb.find(datasetQb);
 
     const enumSearchProperties = ['direction:', 'field:', 'operator:'];
-    return this.trimDoubleQuotesOnEnumField(queryQb.toString(), enumSearchProperties, this.serviceOptions.keepArgumentFieldDoubleQuotes);
+    return this.trimDoubleQuotesOnEnumField(queryQb.toString(), enumSearchProperties, this.serviceOptions.keepArgumentFieldDoubleQuotes || false);
   }
 
   /**
@@ -95,15 +95,15 @@ export class GraphqlService implements BackendService {
    * firstName, lastName, shipping{address{street, zip}}
    * @param inputArray
    */
-  buildFilterQuery(inputArray) {
+  buildFilterQuery(inputArray: string[]) {
 
-    const set = (o = {}, a) => {
+    const set = (o: any = {}, a: any) => {
       const k = a.shift();
       o[k] = a.length ? set(o[k], a) : null;
       return o;
     };
 
-    const output = inputArray.reduce((o, a) => set(o, a.split('.')), {});
+    const output = inputArray.reduce((o: any, a: string) => set(o, a.split('.')), {});
 
     return JSON.stringify(output)
       .replace(/\"|\:|null/g, '')
@@ -313,7 +313,7 @@ export class GraphqlService implements BackendService {
    * @param enumSearchWords array of enum words to filter
    * @returns outputStr output string
    */
-  trimDoubleQuotesOnEnumField(inputStr: string, enumSearchWords: string[], keepArgumentFieldDoubleQuotes) {
+  trimDoubleQuotesOnEnumField(inputStr: string, enumSearchWords: string[], keepArgumentFieldDoubleQuotes: boolean) {
     const patternWordInQuotes = `\s?((field:\s*)?".*?")`;
     let patternRegex = enumSearchWords.join(patternWordInQuotes + '|');
     patternRegex += patternWordInQuotes; // the last one should also have the pattern but without the pipe "|"

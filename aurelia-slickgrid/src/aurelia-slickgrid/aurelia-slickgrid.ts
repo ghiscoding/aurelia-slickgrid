@@ -146,7 +146,7 @@ export class AureliaSlickgridCustomElement {
 
   attachDifferentHooks(grid: any, options: GridOption, dataView: any) {
     // on locale change, we have to manually translate the Headers, GridMenu
-    this.ea.subscribe('i18n:locale:changed', payload => {
+    this.ea.subscribe('i18n:locale:changed', (payload: any) => {
       if (options.enableTranslate) {
         this.controlPluginService.translateHeaders();
         this.controlPluginService.translateGridMenu();

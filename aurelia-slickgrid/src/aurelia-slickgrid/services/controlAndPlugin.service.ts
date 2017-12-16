@@ -129,10 +129,10 @@ export class ControlAndPluginService {
             setTimeout(() => {
               const forceFitElm = $(`label:contains('Force fit columns')`);
               const syncResizeElm = $(`label:contains('Synchronous resize')`);
-              if (forceFitElm && forceFitElm[0] && forceFitElm[0].lastChild && forceFitElm[0].lastChild.textContent) {
+              if (Array.isArray(forceFitElm) && forceFitElm[0] && forceFitElm[0].hasOwnProperty('lastChild') && forceFitElm[0].lastChild.hasOwnProperty('textContent')) {
                 forceFitElm[0].lastChild.textContent = this.i18n.tr('FORCE_FIT_COLUMNS');
               }
-              if (syncResizeElm && syncResizeElm[0] && syncResizeElm[0].lastChild && syncResizeElm[0].lastChild.textContent) {
+              if (Array.isArray(syncResizeElm) && syncResizeElm[0] && syncResizeElm[0].hasOwnProperty('lastChild') && syncResizeElm[0].lastChild.hasOwnProperty('textContent')) {
                 syncResizeElm[0].lastChild.textContent = this.i18n.tr('SYNCHRONOUS_RESIZE');
               }
             }, 0);
