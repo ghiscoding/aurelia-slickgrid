@@ -34,6 +34,7 @@ export interface GridOption {
     enableRowSelection?: boolean;
     enableSorting?: boolean;
     enableTextSelectionOnCells?: boolean;
+    enableTranslate?: boolean;
     explicitInitialization?: boolean;
     forceFitColumns?: boolean;
     gridContainerId?: string;
@@ -46,6 +47,7 @@ export interface GridOption {
     multiColumnSort?: boolean;
     onBackendEventApi?: BackendEventChanged;
     pagination?: Pagination;
+    params?: any;
     registerPlugins?: any | any[];
     rowHeight?: number;
     rowSelectionOptions?: {

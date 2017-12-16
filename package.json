@@ -1,6 +1,6 @@
 {
   "name": "aurelia-slickgrid",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "Slickgrid components made available in Aurelia",
   "keywords": [
     "aurelia",
@@ -44,9 +44,10 @@
     "build:system": "cross-env tsc --project aurelia-slickgrid/src/aurelia-slickgrid/tsconfig.build.json --outDir dist/system --module system",
     "postbuild:system": "cross-env copyfiles --up 3 aurelia-slickgrid/src/aurelia-slickgrid/**/*.html dist/system",
     "prebuild": "cross-env rimraf dist",
-    "build": "npm-run-all build:amd build:commonjs build:es2015 build:es2017 build:native-modules build:system sass:build sass:copy",
+    "build": "npm-run-all build:amd build:commonjs build:es2015 build:es2017 build:native-modules build:system sass:build sass:copy copy:i18n",
     "postbuild": "npm-run-all del-lib:client-cli del-lib:client-ts-wp copy-lib:client-cli copy-lib:client-ts-wp",
     "del-copy:client-ts-wp": "npm-run-all del-lib:client-ts-wp",
+    "copy:i18n": "cross-env copyfiles --up 3 aurelia-slickgrid/static/i18n/**/*.* dist/i18n",
     "copy-lib:client-cli": "cross-env copyfiles package.json dist/**/*.* client-cli/node_modules/aurelia-slickgrid",
     "copy-lib:client-ts-wp": "cross-env copyfiles package.json dist/**/*.* client-ts-wp/node_modules/aurelia-slickgrid",
     "del-lib:client-cli": "cross-env rimraf client-cli/node_modules/aurelia-slickgrid",

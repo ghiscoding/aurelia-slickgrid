@@ -5,12 +5,15 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { inject } from 'aurelia-framework';
+import { I18N } from 'aurelia-i18n';
 import { FilterService } from './filter.service';
 import { GridExtraService } from './gridExtra.service';
+import * as $ from 'jquery';
 let ControlAndPluginService = class ControlAndPluginService {
-    constructor(filterService, gridExtraService) {
+    constructor(filterService, gridExtraService, i18n) {
         this.filterService = filterService;
         this.gridExtraService = gridExtraService;
+        this.i18n = i18n;
     }
     /**
      * Attach/Create different Controls or Plugins after the Grid is created
@@ -21,33 +24,15 @@ let ControlAndPluginService = class ControlAndPluginService {
      */
     attachDifferentControlOrPlugins(grid, columnDefinitions, options, dataView) {
         this._grid = grid;
+        this._gridOptions = options;
         this._dataView = dataView;
-        this._visibleColumns = columnDefinitions;
+        this._columnDefinitions = columnDefinitions;
+        this.visibleColumns = columnDefinitions;
         if (options.enableColumnPicker) {
             this.columnPickerControl = new Slick.Controls.ColumnPicker(columnDefinitions, grid, options);
         }
         if (options.enableGridMenu) {
-            this.prepareGridMenu(grid, options);
-            this.gridMenuControl = new Slick.Controls.GridMenu(columnDefinitions, grid, options);
-            if (options.gridMenu) {
-                this.gridMenuControl.onBeforeMenuShow.subscribe((e, args) => {
-                    if (options.gridMenu && typeof options.gridMenu.onBeforeMenuShow === 'function') {
-                        options.gridMenu.onBeforeMenuShow(e, args);
-                    }
-                });
-                this.gridMenuControl.onCommand.subscribe((e, args) => {
-                    if (options.gridMenu && typeof options.gridMenu.onCommand === 'function') {
-                        options.gridMenu.onCommand(e, args);
-                    }
-                });
-                this.gridMenuControl.onMenuClose.subscribe((e, args) => {
-                    if (options.gridMenu && typeof options.gridMenu.onMenuClose === 'function') {
-                        options.gridMenu.onMenuClose(e, args);
-                    }
-                    // we also want to resize the columns if the user decided to hide certain column(s)
-                    this._grid.autosizeColumns();
-                });
-            }
+            this.gridMenuControl = this.createGridMenu(grid, columnDefinitions, options);
         }
         if (options.enableAutoTooltip) {
             this.autoTooltipPlugin = new Slick.AutoTooltips(options.autoTooltipOptions || {});
@@ -101,11 +86,53 @@ let ControlAndPluginService = class ControlAndPluginService {
             }
         }
     }
+    createGridMenu(grid, columnDefinitions, options) {
+        this.prepareGridMenu(grid, options);
+        const gridMenuControl = new Slick.Controls.GridMenu(columnDefinitions, grid, options);
+        if (options.gridMenu) {
+            gridMenuControl.onBeforeMenuShow.subscribe((e, args) => {
+                if (options.gridMenu && typeof options.gridMenu.onBeforeMenuShow === 'function') {
+                    options.gridMenu.onBeforeMenuShow(e, args);
+                }
+                else {
+                    // when using i18n with Grid Menu, we have a problem with the last 2 checkbox
+                    // they are written in plain English within the SlickGrid Controls
+                    // and so we don't have access directly to their text, however with a jQuery hack,
+                    // we can somehow change the text with jQuery but it's very patchy
+                    if (options.enableTranslate) {
+                        setTimeout(() => {
+                            const forceFitElm = $(`label:contains('Force fit columns')`);
+                            const syncResizeElm = $(`label:contains('Synchronous resize')`);
+                            if (Array.isArray(forceFitElm) && forceFitElm[0] && forceFitElm[0].hasOwnProperty('lastChild') && forceFitElm[0].lastChild.hasOwnProperty('textContent')) {
+                                forceFitElm[0].lastChild.textContent = this.i18n.tr('FORCE_FIT_COLUMNS');
+                            }
+                            if (Array.isArray(syncResizeElm) && syncResizeElm[0] && syncResizeElm[0].hasOwnProperty('lastChild') && syncResizeElm[0].lastChild.hasOwnProperty('textContent')) {
+                                syncResizeElm[0].lastChild.textContent = this.i18n.tr('SYNCHRONOUS_RESIZE');
+                            }
+                        }, 0);
+                    }
+                }
+            });
+            gridMenuControl.onCommand.subscribe((e, args) => {
+                if (options.gridMenu && typeof options.gridMenu.onCommand === 'function') {
+                    options.gridMenu.onCommand(e, args);
+                }
+            });
+            gridMenuControl.onMenuClose.subscribe((e, args) => {
+                if (options.gridMenu && typeof options.gridMenu.onMenuClose === 'function') {
+                    options.gridMenu.onMenuClose(e, args);
+                }
+                // we also want to resize the columns if the user decided to hide certain column(s)
+                this._grid.autosizeColumns();
+            });
+        }
+        return gridMenuControl;
+    }
     hideColumn(column) {
-        if (this._grid && this._visibleColumns) {
+        if (this._grid && this.visibleColumns) {
             const columnIndex = this._grid.getColumnIndex(column.id);
-            this._visibleColumns = this.removeColumnByIndex(this._visibleColumns, columnIndex);
-            this._grid.setColumns(this._visibleColumns);
+            this.visibleColumns = this.removeColumnByIndex(this.visibleColumns, columnIndex);
+            this._grid.setColumns(this.visibleColumns);
         }
     }
     removeColumnByIndex(array, index) {
@@ -119,7 +146,7 @@ let ControlAndPluginService = class ControlAndPluginService {
     destroy() {
         this._grid = null;
         this._dataView = null;
-        this._visibleColumns = [];
+        this.visibleColumns = [];
         if (this.columnPickerControl) {
             this.columnPickerControl.destroy();
             this.columnPickerControl = null;
@@ -154,7 +181,7 @@ let ControlAndPluginService = class ControlAndPluginService {
             if (options && options.gridMenu && options.gridMenu.customItems && options.gridMenu.customItems.filter((item) => item.command === 'clear-filter').length === 0) {
                 options.gridMenu.customItems.push({
                     iconCssClass: 'fa fa-filter text-danger',
-                    title: 'Clear All Filters',
+                    title: options.enableTranslate ? this.i18n.tr('CLEAR_ALL_FILTERS') : 'Clear All Filters',
                     disabled: false,
                     command: 'clear-filter'
                 });
@@ -162,7 +189,7 @@ let ControlAndPluginService = class ControlAndPluginService {
             if (options && options.gridMenu && options.gridMenu.customItems && options.gridMenu.customItems.filter((item) => item.command === 'toggle-filter').length === 0) {
                 options.gridMenu.customItems.push({
                     iconCssClass: 'fa fa-random',
-                    title: 'Toggle Filter Row',
+                    title: options.enableTranslate ? this.i18n.tr('TOGGLE_FILTER_ROW') : 'Toggle Filter Row',
                     disabled: false,
                     command: 'toggle-filter'
                 });
@@ -185,20 +212,50 @@ let ControlAndPluginService = class ControlAndPluginService {
                 };
             }
         }
-        // remove the custom command title if there's no command
+        // add the custom command title if there's no command
         if (options && options.gridMenu && options.gridMenu.customItems && options.gridMenu.customItems.length > 0) {
-            options.gridMenu.customTitle = options.gridMenu.customTitle || 'Commands';
+            const customTitle = options.enableTranslate ? this.i18n.tr('COMMANDS') : 'Commands';
+            options.gridMenu.customTitle = options.gridMenu.customTitle || customTitle;
         }
     }
     prepareGridMenu(grid, options) {
+        const columnTitle = options.enableTranslate ? this.i18n.tr('COLUMNS') : 'Columns';
         options.gridMenu = options.gridMenu || {};
-        options.gridMenu.columnTitle = options.gridMenu.columnTitle || 'Columns';
+        options.gridMenu.columnTitle = options.gridMenu.columnTitle || columnTitle;
         options.gridMenu.iconCssClass = options.gridMenu.iconCssClass || 'fa fa-bars';
         options.gridMenu.menuWidth = options.gridMenu.menuWidth || 18;
         options.gridMenu.customTitle = options.gridMenu.customTitle || undefined;
         options.gridMenu.customItems = options.gridMenu.customItems || [];
         this.addGridMenuCustomCommands(grid, options);
         // options.gridMenu.resizeOnShowHeaderRow = options.showHeaderRow;
+    }
+    /**
+     * Translate the Grid Menu ColumnTitle and CustomTitle.
+     * Note that the only way that seems to work is to destroy and re-create the Grid Menu
+     * Changing only the gridMenu.columnTitle with i18n translate was not enough.
+     */
+    translateGridMenu() {
+        // destroy and re-create the Grid Menu which seems to be the only way to translate properly
+        this.gridMenuControl.destroy();
+        this._gridOptions.gridMenu = undefined;
+        this.createGridMenu(this._grid, this.visibleColumns, this._gridOptions);
+    }
+    /**
+     * Translate manually the header titles.
+     * We could optionally pass a locale (that will change currently loaded locale), else it will use current locale
+     * @param {string} locale locale to use
+     */
+    translateHeaders(locale) {
+        if (locale) {
+            this.i18n.setLocale(locale);
+        }
+        for (const column of this._columnDefinitions) {
+            if (column.headerKey) {
+                column.name = this.i18n.tr(column.headerKey);
+            }
+        }
+        // calling setColumns() will trigger a grid re-render
+        this._grid.setColumns(this._columnDefinitions);
     }
     /**
      * Attach/Create different plugins before the Grid creation.
@@ -214,7 +271,7 @@ let ControlAndPluginService = class ControlAndPluginService {
     }
 };
 ControlAndPluginService = __decorate([
-    inject(FilterService, GridExtraService)
+    inject(FilterService, GridExtraService, I18N)
 ], ControlAndPluginService);
 export { ControlAndPluginService };
 //# sourceMappingURL=controlAndPlugin.service.js.map

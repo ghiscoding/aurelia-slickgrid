@@ -70,16 +70,20 @@ require("slickgrid/plugins/slick.headermenu");
 require("slickgrid/plugins/slick.rowmovemanager");
 require("slickgrid/plugins/slick.rowselectionmodel");
 var aurelia_framework_1 = require("aurelia-framework");
+var aurelia_event_aggregator_1 = require("aurelia-event-aggregator");
+var aurelia_i18n_1 = require("aurelia-i18n");
 var global_grid_options_1 = require("./global-grid-options");
 var index_1 = require("./services/index");
 var $ = require("jquery");
 var AureliaSlickgridCustomElement = /** @class */ (function () {
-    function AureliaSlickgridCustomElement(controlPluginService, elm, filterService, gridEventService, gridExtraService, resizer, sortService) {
+    function AureliaSlickgridCustomElement(controlPluginService, elm, ea, filterService, gridEventService, gridExtraService, i18n, resizer, sortService) {
         this.controlPluginService = controlPluginService;
         this.elm = elm;
+        this.ea = ea;
         this.filterService = filterService;
         this.gridEventService = gridEventService;
         this.gridExtraService = gridExtraService;
+        this.i18n = i18n;
         this.resizer = resizer;
         this.sortService = sortService;
         this.showPagination = false;
@@ -88,9 +92,11 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
         // Aurelia doesn't support well TypeScript @autoinject so we'll do it the old fashion way
         this.controlPluginService = controlPluginService;
         this.elm = elm;
+        this.ea = ea;
         this.filterService = filterService;
         this.gridEventService = gridEventService;
         this.gridExtraService = gridExtraService;
+        this.i18n = i18n;
         this.resizer = resizer;
         this.sortService = sortService;
     }
@@ -111,6 +117,10 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
         this.attachResizeHook(this.grid, this._gridOptions);
         // attach grid extra service
         var gridExtraService = this.gridExtraService.init(this.grid, this.columnDefinitions, this._gridOptions, this.dataview);
+        // when user enables translation, we need to translate Headers on first pass & subsequently in the attachDifferentHooks
+        if (this._gridOptions.enableTranslate) {
+            this.controlPluginService.translateHeaders();
+        }
     };
     AureliaSlickgridCustomElement.prototype.detached = function () {
         this.dataview = [];
@@ -147,6 +157,13 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
     };
     AureliaSlickgridCustomElement.prototype.attachDifferentHooks = function (grid, options, dataView) {
         var _this = this;
+        // on locale change, we have to manually translate the Headers, GridMenu
+        this.ea.subscribe('i18n:locale:changed', function (payload) {
+            if (options.enableTranslate) {
+                _this.controlPluginService.translateHeaders();
+                _this.controlPluginService.translateGridMenu();
+            }
+        });
         // attach external sorting (backend) when available or default onSort (dataView)
         if (options.enableSorting) {
             (options.onBackendEventApi) ? this.sortService.attachBackendOnSort(grid, options) : this.sortService.attachLocalOnSort(grid, options, this.dataview);
@@ -286,7 +303,7 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
         aurelia_framework_1.bindable()
     ], AureliaSlickgridCustomElement.prototype, "pickerOptions", void 0);
     AureliaSlickgridCustomElement = __decorate([
-        aurelia_framework_1.inject(index_1.ControlAndPluginService, Element, index_1.FilterService, index_1.GridEventService, index_1.GridExtraService, index_1.ResizerService, index_1.SortService)
+        aurelia_framework_1.inject(index_1.ControlAndPluginService, Element, aurelia_event_aggregator_1.EventAggregator, index_1.FilterService, index_1.GridEventService, index_1.GridExtraService, aurelia_i18n_1.I18N, index_1.ResizerService, index_1.SortService)
     ], AureliaSlickgridCustomElement);
     return AureliaSlickgridCustomElement;
 }());

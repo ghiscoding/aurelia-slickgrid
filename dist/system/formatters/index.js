@@ -1,7 +1,7 @@
-System.register(["./arrayToCsvFormatter", "./checkboxFormatter", "./checkmarkFormatter", "./dateIsoFormatter", "./dateTimeIsoAmPmFormatter", "./dateTimeUsAmPmFormatter", "./dateTimeUsFormatter", "./dateUsFormatter", "./deleteIconFormatter", "./editIconFormatter", "./hyperlinkFormatter", "./percentCompleteFormatter", "./percentCompleteBarFormatter", "./progressBarFormatter", "./yesNoFormatter"], function (exports_1, context_1) {
+System.register(["./arrayToCsvFormatter", "./checkboxFormatter", "./checkmarkFormatter", "./complexObjectFormatter", "./dateIsoFormatter", "./dateTimeIsoAmPmFormatter", "./dateTimeUsAmPmFormatter", "./dateTimeUsFormatter", "./dateUsFormatter", "./deleteIconFormatter", "./editIconFormatter", "./hyperlinkFormatter", "./lowercaseFormatter", "./multipleFormatter", "./percentCompleteFormatter", "./percentCompleteBarFormatter", "./progressBarFormatter", "./translateFormatter", "./uppercaseFormatter", "./yesNoFormatter"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var arrayToCsvFormatter_1, checkboxFormatter_1, checkmarkFormatter_1, dateIsoFormatter_1, dateTimeIsoAmPmFormatter_1, dateTimeUsAmPmFormatter_1, dateTimeUsFormatter_1, dateUsFormatter_1, deleteIconFormatter_1, editIconFormatter_1, hyperlinkFormatter_1, percentCompleteFormatter_1, percentCompleteBarFormatter_1, progressBarFormatter_1, yesNoFormatter_1, Formatters;
+    var arrayToCsvFormatter_1, checkboxFormatter_1, checkmarkFormatter_1, complexObjectFormatter_1, dateIsoFormatter_1, dateTimeIsoAmPmFormatter_1, dateTimeUsAmPmFormatter_1, dateTimeUsFormatter_1, dateUsFormatter_1, deleteIconFormatter_1, editIconFormatter_1, hyperlinkFormatter_1, lowercaseFormatter_1, multipleFormatter_1, percentCompleteFormatter_1, percentCompleteBarFormatter_1, progressBarFormatter_1, translateFormatter_1, uppercaseFormatter_1, yesNoFormatter_1, Formatters;
     return {
         setters: [
             function (arrayToCsvFormatter_1_1) {
@@ -12,6 +12,9 @@ System.register(["./arrayToCsvFormatter", "./checkboxFormatter", "./checkmarkFor
             },
             function (checkmarkFormatter_1_1) {
                 checkmarkFormatter_1 = checkmarkFormatter_1_1;
+            },
+            function (complexObjectFormatter_1_1) {
+                complexObjectFormatter_1 = complexObjectFormatter_1_1;
             },
             function (dateIsoFormatter_1_1) {
                 dateIsoFormatter_1 = dateIsoFormatter_1_1;
@@ -37,6 +40,12 @@ System.register(["./arrayToCsvFormatter", "./checkboxFormatter", "./checkmarkFor
             function (hyperlinkFormatter_1_1) {
                 hyperlinkFormatter_1 = hyperlinkFormatter_1_1;
             },
+            function (lowercaseFormatter_1_1) {
+                lowercaseFormatter_1 = lowercaseFormatter_1_1;
+            },
+            function (multipleFormatter_1_1) {
+                multipleFormatter_1 = multipleFormatter_1_1;
+            },
             function (percentCompleteFormatter_1_1) {
                 percentCompleteFormatter_1 = percentCompleteFormatter_1_1;
             },
@@ -45,6 +54,12 @@ System.register(["./arrayToCsvFormatter", "./checkboxFormatter", "./checkmarkFor
             },
             function (progressBarFormatter_1_1) {
                 progressBarFormatter_1 = progressBarFormatter_1_1;
+            },
+            function (translateFormatter_1_1) {
+                translateFormatter_1 = translateFormatter_1_1;
+            },
+            function (uppercaseFormatter_1_1) {
+                uppercaseFormatter_1 = uppercaseFormatter_1_1;
             },
             function (yesNoFormatter_1_1) {
                 yesNoFormatter_1 = yesNoFormatter_1_1;
@@ -64,6 +79,7 @@ System.register(["./arrayToCsvFormatter", "./checkboxFormatter", "./checkmarkFor
                 arrayToCsv: arrayToCsvFormatter_1.arrayToCsvFormatter,
                 checkbox: checkboxFormatter_1.checkboxFormatter,
                 checkmark: checkmarkFormatter_1.checkmarkFormatter,
+                complexObject: complexObjectFormatter_1.complexObjectFormatter,
                 dateIso: dateIsoFormatter_1.dateIsoFormatter,
                 dateTimeIso: dateIsoFormatter_1.dateIsoFormatter,
                 dateTimeIsoAmPm: dateTimeIsoAmPmFormatter_1.dateTimeIsoAmPmFormatter,
@@ -73,9 +89,13 @@ System.register(["./arrayToCsvFormatter", "./checkboxFormatter", "./checkmarkFor
                 deleteIcon: deleteIconFormatter_1.deleteIconFormatter,
                 editIcon: editIconFormatter_1.editIconFormatter,
                 hyperlink: hyperlinkFormatter_1.hyperlinkFormatter,
+                lowercase: lowercaseFormatter_1.lowercaseFormatter,
+                multiple: multipleFormatter_1.multipleFormatter,
                 percentComplete: percentCompleteFormatter_1.percentCompleteFormatter,
                 percentCompleteBar: percentCompleteBarFormatter_1.percentCompleteBarFormatter,
                 progressBar: progressBarFormatter_1.progressBarFormatter,
+                translate: translateFormatter_1.translateFormatter,
+                uppercase: uppercaseFormatter_1.uppercaseFormatter,
                 yesNo: yesNoFormatter_1.yesNoFormatter
             });
         }

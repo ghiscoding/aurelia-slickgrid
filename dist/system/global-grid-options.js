@@ -36,7 +36,6 @@ System.register([], function (exports_1, context_1) {
                 explicitInitialization: true,
                 forceFitColumns: false,
                 gridMenu: {
-                    columnTitle: 'Columns',
                     iconCssClass: 'fa fa-bars',
                     menuWidth: 16,
                     resizeOnShowHeaderRow: false
