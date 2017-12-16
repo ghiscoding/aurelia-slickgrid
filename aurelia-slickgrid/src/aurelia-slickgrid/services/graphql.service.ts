@@ -29,14 +29,29 @@ export class GraphqlService implements BackendService {
    * @param serviceOptions GraphqlServiceOption
    */
   buildQuery(serviceOptions?: GraphqlServiceOption) {
-    if (!this.serviceOptions.datasetName || !this.serviceOptions.dataFilters) {
-      throw new Error('GraphQL Service requires "datasetName" & "dataFilters" properties for it to work');
+    if (!this.serviceOptions.datasetName || (!this.serviceOptions.columnIds && !this.serviceOptions.dataFilters && !this.serviceOptions.columnDefinitions)) {
+      throw new Error('GraphQL Service requires "datasetName" & ("dataFilters" or "columnDefinitions") properties for it to work');
     }
     const queryQb = new QueryBuilder('query');
     const datasetQb = new QueryBuilder(this.serviceOptions.datasetName);
     const pageInfoQb = new QueryBuilder('pageInfo');
     const dataQb = (this.serviceOptions.isWithCursor) ? new QueryBuilder('edges') : new QueryBuilder('nodes');
-    const filters = this.buildFilterQuery(this.serviceOptions.dataFilters);
+
+    // get all the columnds Ids for the filters to work
+    let columnIds: string[];
+    if (this.serviceOptions.columnDefinitions) {
+      columnIds = Array.isArray(this.serviceOptions.columnDefinitions) ? this.serviceOptions.columnDefinitions.map((column) => column.field) : [];
+    } else {
+      columnIds = this.serviceOptions.columnIds || this.serviceOptions.dataFilters;
+    }
+
+    // Slickgrid also requires the "id" field to be part of DataView
+    // push it to the GraphQL query if it wasn't already part of the list
+    if (!columnIds.includes('id')) {
+      columnIds.push('id');
+    }
+
+    const filters = this.buildFilterQuery(columnIds);
 
     if (this.serviceOptions.isWithCursor) {
       // ...pageInfo { hasNextPage, endCursor }, edges { cursor, node { _filters_ } }
