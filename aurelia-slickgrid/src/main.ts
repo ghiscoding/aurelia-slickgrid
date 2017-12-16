@@ -32,9 +32,11 @@ export function configure(aurelia: Aurelia) {
 
     return instance.setup({
       backend: {
-        loadPath: './locales/{{lng}}.json',
+        loadPath: './static/i18n/{{lng}}/{{ns}}.json',
       },
       lng: 'en',
+      ns: ['aurelia-slickgrid'],
+      defaultNS: 'aurelia-slickgrid',
       attributes: ['t', 'i18n'],
       fallbackLng: 'en',
       debug: false
