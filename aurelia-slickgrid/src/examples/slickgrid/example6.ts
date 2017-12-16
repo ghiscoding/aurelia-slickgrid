@@ -76,7 +76,7 @@ export class Example6 {
       }
     };
 
-    const paginationOption = this.getPaginationOption(this.isWithCursor);
+    const paginationOption = this.getGraphqlInitOption(this.isWithCursor);
     this.graphqlService.initOptions(paginationOption);
 
   }
@@ -88,8 +88,8 @@ export class Example6 {
       : { text: 'done', class: 'alert alert-success' };
   }
 
-  getPaginationOption(isWithCursor: boolean) {
-    let paginationOption;
+  getGraphqlInitOption(isWithCursor: boolean) {
+    let initOptions;
     const columnIds = Array.isArray(this.columnDefinitions) ? this.columnDefinitions.map((column) => column.field) : [];
 
     // Slickgrid also requires the "id" field
@@ -97,7 +97,7 @@ export class Example6 {
 
     if (isWithCursor) {
       // with cursor, paginationOptions can be: { first, last, after, before }
-      paginationOption = {
+      initOptions = {
         datasetName: 'users',
         dataFilters: columnIds,
         isWithCursor: true,
@@ -107,7 +107,7 @@ export class Example6 {
       };
     } else {
       // without cursor, paginationOptions can be: { first, last, offset }
-      paginationOption = {
+      initOptions = {
         datasetName: 'users',
         dataFilters: columnIds,
         isWithCursor: false,
@@ -117,7 +117,7 @@ export class Example6 {
         }
       };
     }
-    return paginationOption;
+    return initOptions;
   }
 
   getCustomerCallback(data) {
@@ -143,7 +143,7 @@ export class Example6 {
 
   onWithCursorChange(isWithCursor) {
     this.isWithCursor = isWithCursor;
-    const paginationOption = this.getPaginationOption(isWithCursor);
+    const paginationOption = this.getGraphqlInitOption(isWithCursor);
     this.graphqlService.initOptions(paginationOption);
     this.graphqlQuery = this.graphqlService.buildQuery();
   }
