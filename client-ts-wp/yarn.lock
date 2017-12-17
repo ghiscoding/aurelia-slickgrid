@@ -571,6 +571,22 @@ aurelia-http-client@^1.2.1:
     aurelia-pal "^1.0.0"
     aurelia-path "^1.1.1"
 
+aurelia-i18n@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/aurelia-i18n/-/aurelia-i18n-2.1.0.tgz#9cf751a6255629ac2e4033a287d9dfcd73ffb336"
+  dependencies:
+    aurelia-binding "^1.0.0"
+    aurelia-dependency-injection "^1.0.0"
+    aurelia-event-aggregator "^1.0.0"
+    aurelia-loader "^1.0.0"
+    aurelia-logging "^1.0.0"
+    aurelia-metadata "^1.0.3"
+    aurelia-pal "^1.3.0"
+    aurelia-templating "^1.4.0"
+    aurelia-templating-resources "^1.0.0"
+    i18next "^9.0.0"
+    intl "^1.2.4"
+
 aurelia-loader-default@^1.0.0:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/aurelia-loader-default/-/aurelia-loader-default-1.0.3.tgz#ed9b66041da9b370f6feca26b239b1aa8bb4599d"
@@ -616,7 +632,7 @@ aurelia-logging@^1.0.0, aurelia-logging@^1.2.0:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/aurelia-logging/-/aurelia-logging-1.3.1.tgz#b34ae759372ba08740ab12233a89bad15487fe98"
 
-aurelia-metadata@^1.0.0, aurelia-metadata@^1.0.2:
+aurelia-metadata@^1.0.0, aurelia-metadata@^1.0.2, aurelia-metadata@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/aurelia-metadata/-/aurelia-metadata-1.0.3.tgz#1e8d59da188e2871a8ad749ba42ca85084a3f30e"
   dependencies:
@@ -732,6 +748,19 @@ aurelia-templating-router@^1.0.0:
 aurelia-templating@^1.0.0, aurelia-templating@^1.1.2, aurelia-templating@^1.3.0, aurelia-templating@^1.5.0:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/aurelia-templating/-/aurelia-templating-1.5.0.tgz#33c4bc5310177242a5230f5d180126d394f20e49"
+  dependencies:
+    aurelia-binding "^1.0.0"
+    aurelia-dependency-injection "^1.0.0"
+    aurelia-loader "^1.0.0"
+    aurelia-logging "^1.0.0"
+    aurelia-metadata "^1.0.0"
+    aurelia-pal "^1.0.0"
+    aurelia-path "^1.0.0"
+    aurelia-task-queue "^1.1.0"
+
+aurelia-templating@^1.4.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/aurelia-templating/-/aurelia-templating-1.6.0.tgz#f2e47c694a02ce7eea2bcd631e795653c29be5b3"
   dependencies:
     aurelia-binding "^1.0.0"
     aurelia-dependency-injection "^1.0.0"
@@ -3446,6 +3475,14 @@ https-proxy-agent@^1.0.0:
     debug "2"
     extend "3"
 
+i18next-xhr-backend@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/i18next-xhr-backend/-/i18next-xhr-backend-1.5.0.tgz#fee4ae803879b824bef865a77d6eb6164a8d61f1"
+
+i18next@^9.0.0:
+  version "9.1.0"
+  resolved "https://registry.yarnpkg.com/i18next/-/i18next-9.1.0.tgz#408005fe262a990c8d93946a6de0c77bba11667b"
+
 iconv-lite@0.4.13:
   version "0.4.13"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.13.tgz#1f88aba4ab0b1508e8312acc39345f36e992e2f2"
@@ -3535,6 +3572,10 @@ internal-ip@^1.2.0:
 interpret@^1.0.0:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/interpret/-/interpret-1.0.4.tgz#820cdd588b868ffb191a809506d6c9c8f212b1b0"
+
+intl@^1.2.4:
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/intl/-/intl-1.2.5.tgz#82244a2190c4e419f8371f5aa34daa3420e2abde"
 
 invariant@^2.2.2:
   version "2.2.2"

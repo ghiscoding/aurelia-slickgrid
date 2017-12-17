@@ -12,8 +12,8 @@ export class GraphqlService {
      * Build the GraphQL query, since the service include/exclude cursor, the output query will be different.
      * @param serviceOptions GraphqlServiceOption
      */
-    buildQuery(serviceOptions) {
-        if (!serviceOptions || !this.serviceOptions.datasetName || (!this.serviceOptions.columnIds && !this.serviceOptions.dataFilters && !this.serviceOptions.columnDefinitions)) {
+    buildQuery() {
+        if (!this.serviceOptions || !this.serviceOptions.datasetName || (!this.serviceOptions.columnIds && !this.serviceOptions.dataFilters && !this.serviceOptions.columnDefinitions)) {
             throw new Error('GraphQL Service requires "datasetName" & ("dataFilters" or "columnDefinitions") properties for it to work');
         }
         const queryQb = new QueryBuilder('query');

@@ -6,7 +6,7 @@ export declare class GraphqlService implements BackendService {
      * Build the GraphQL query, since the service include/exclude cursor, the output query will be different.
      * @param serviceOptions GraphqlServiceOption
      */
-    buildQuery(serviceOptions?: GraphqlServiceOption): string;
+    buildQuery(): string;
     /**
      * From an input array of strings, we want to build a GraphQL query string.
      * The process has to take the dot notation and parse it into a valid GraphQL query

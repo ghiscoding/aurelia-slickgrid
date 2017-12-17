@@ -1,7 +1,6 @@
 /// <reference types="aurelia-loader-webpack/src/webpack-hot-interface"/>
 
 // we want font-awesome to load as soon as possible to show the fa-spinner
-import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'font-awesome/css/font-awesome.css';
 import 'flatpickr/dist/flatpickr.min.css';
@@ -9,7 +8,10 @@ import './styles/styles.css';
 import 'aurelia-slickgrid/dist/styles/css/slickgrid-theme-bootstrap.css';
 import { Aurelia, PLATFORM } from 'aurelia-framework';
 import environment from './environment';
+import { I18N, TCustomAttribute } from 'aurelia-i18n';
+import * as Backend from 'i18next-xhr-backend';
 import * as Bluebird from 'bluebird';
+import 'bootstrap';
 
 // remove out if you don't want a Promise polyfill (remove also from webpack.config.js)
 Bluebird.config({ warnings: { wForgottenReturn: false } });
@@ -21,12 +23,23 @@ export function configure(aurelia: Aurelia) {
 
   aurelia.use.plugin(PLATFORM.moduleName('aurelia-slickgrid'));
 
-  // Uncomment the line below to enable animation.
-  // aurelia.use.plugin(PLATFORM.moduleName('aurelia-animator-css'));
-  // if the css animator is enabled, add swap-order="after" to all router-view elements
+  // aurelia i18n to handle multiple locales
+  aurelia.use.plugin(PLATFORM.moduleName('aurelia-i18n'), (instance) => {
+    // register backend plugin
+    instance.i18next.use(Backend);
 
-  // Anyone wanting to use HTMLImports to load views, will need to install the following plugin.
-  // aurelia.use.plugin(PLATFORM.moduleName('aurelia-html-import-template-loader'));
+    return instance.setup({
+      backend: {
+        loadPath: './static/i18n/{{lng}}/{{ns}}.json',
+      },
+      lng: 'en',
+      ns: ['aurelia-slickgrid'],
+      defaultNS: 'aurelia-slickgrid',
+      attributes: ['t', 'i18n'],
+      fallbackLng: 'en',
+      debug: false
+    });
+  });
 
   if (environment.debug) {
     aurelia.use.developmentLogging();
