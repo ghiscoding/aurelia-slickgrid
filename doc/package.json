@@ -14,17 +14,21 @@
   "dependencies": {
     "aurelia-animator-css": "^1.0.2",
     "aurelia-bootstrapper": "^2.1.1",
+    "aurelia-framework": "^1.1.5",
     "aurelia-http-client": "^1.2.1",
+    "aurelia-i18n": "^2.1.0",
     "aurelia-polyfills": "latest",
     "aurelia-router": "^1.4.0",
     "aurelia-slickgrid": "^1.0.3",
     "aurelia-validation": "^1.1.2",
     "bluebird": "^3.4.1",
     "bootstrap": "^3.3.7",
+    "flatpickr": "^4.1.4",
     "font-awesome": "^4.7.0",
+    "i18next-xhr-backend": "^1.5.0",
     "jquery": "^3.2.1",
     "moment": "^2.19.2",
-    "slickgrid": "^2.3.10"
+    "slickgrid": "^2.3.12"
   },
   "peerDependencies": {},
   "devDependencies": {

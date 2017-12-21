@@ -1,8 +1,8 @@
-import { autoinject } from 'aurelia-framework';
+import { inject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
-import { Column, FieldType, GridOption, Formatter, Formatters } from 'aurelia-slickgrid';
+import { Formatters } from 'aurelia-slickgrid';
 
-@autoinject()
+@inject(I18N)
 export class Example12 {
   title = 'Example 12: Localization (i18n)';
   subTitle = `Support multiple locales with the i18next plugin, following these steps
@@ -24,15 +24,17 @@ export class Example12 {
     </ol>
   `;
 
-  gridOptions: GridOption;
-  columnDefinitions: Column[];
-  dataset: any[];
-  selectedLanguage: string;
+  i18n;
+  gridOptions;
+  columnDefinitions;
+  dataset = [];
+  selectedLanguage;
 
-  constructor(private i18n: I18N) {
+  constructor(i18n) {
     // define the grid options & columns and then create the grid itself
-    this.defineGrid();
+    this.i18n = i18n;
     this.selectedLanguage = this.i18n.getLocale();
+    this.defineGrid();
   }
 
   attached() {
@@ -63,14 +65,13 @@ export class Example12 {
 
   getData() {
     // mock a dataset
-    this.dataset = [];
+    let mockDataset = [];
     for (let i = 0; i < 1000; i++) {
       const randomYear = 2000 + Math.floor(Math.random() * 10);
       const randomMonth = Math.floor(Math.random() * 11);
       const randomDay = Math.floor((Math.random() * 29));
-      const randomPercent = Math.round(Math.random() * 100);
 
-      this.dataset[i] = {
+      mockDataset[i] = {
         id: i,
         title: i,
         duration: Math.round(Math.random() * 100) + '',
@@ -79,6 +80,7 @@ export class Example12 {
         completed: (i % 5 === 0) ? 'TRUE' : 'FALSE'
       };
     }
+    this.dataset = mockDataset;
   }
 
   switchLanguage() {
@@ -87,7 +89,7 @@ export class Example12 {
   }
 
   // create a custom translate Formatter
-  taskTranslateFormatter: Formatter = (row, cell, value, columnDef, dataContext) => {
+  taskTranslateFormatter = (row, cell, value, columnDef, dataContext) => {
     return this.i18n.tr('TASK_X', { x: value });
   }
 

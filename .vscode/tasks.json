@@ -46,6 +46,15 @@
         "start:client-ts-wp"
       ],
       "problemMatcher": []
+    },
+    {
+      "taskName": "Start Demo/Doc",
+      "command": "yarn",
+      "type": "shell",
+      "args": [
+        "start:doc"
+      ],
+      "problemMatcher": []
     }
   ]
 }

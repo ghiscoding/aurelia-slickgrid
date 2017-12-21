@@ -1,7 +1,6 @@
 import { autoinject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import { Column, FieldType, GridOption, Formatter, Formatters } from 'aurelia-slickgrid';
-import { setTimeout } from 'timers';
 
 @autoinject()
 export class Example12 {
