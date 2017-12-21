@@ -1,6 +1,7 @@
 import { AutoResizeOption } from './autoResizeOption.interface';
 import { BackendEventChanged } from './backendEventChanged.interface';
 import { CheckboxSelector } from './checkboxSelector.interface';
+import { ColumnPicker } from './columnPicker.interface';
 import { GridMenu } from './gridMenu.interface';
 import { HeaderButton } from './headerButton.interface';
 import { HeaderMenu } from './headerMenu.interface';
@@ -17,6 +18,7 @@ export interface GridOption {
     };
     cellHighlightCssClass?: string | null;
     checkboxSelector?: CheckboxSelector;
+    columnPicker?: ColumnPicker;
     editable?: boolean;
     enableAsyncPostRender?: boolean;
     enableAutoResize?: boolean;

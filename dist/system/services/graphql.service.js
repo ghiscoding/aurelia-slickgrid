@@ -50,7 +50,7 @@ System.register(["./utilities", "./graphqlQueryBuilder", "./../models/index"], f
                     }
                     // Slickgrid also requires the "id" field to be part of DataView
                     // push it to the GraphQL query if it wasn't already part of the list
-                    if (!columnIds.includes('id')) {
+                    if (columnIds.indexOf('id') === -1) {
                         columnIds.push('id');
                     }
                     var filters = this.buildFilterQuery(columnIds);

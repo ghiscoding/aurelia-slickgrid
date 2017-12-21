@@ -6876,6 +6876,13 @@ slickgrid@^2.3.10:
     jquery ">=1.8.0"
     jquery-ui ">=1.8.0"
 
+slickgrid@^2.3.12:
+  version "2.3.12"
+  resolved "https://registry.yarnpkg.com/slickgrid/-/slickgrid-2.3.12.tgz#f509cd3e6f024371cd3d1fa7e991826466826f87"
+  dependencies:
+    jquery ">=1.8.0"
+    jquery-ui ">=1.8.0"
+
 slide@^1.1.3, slide@^1.1.5, slide@~1.1.3, slide@~1.1.6:
   version "1.1.6"
   resolved "https://registry.yarnpkg.com/slide/-/slide-1.1.6.tgz#56eb027d65b4d2dce6cb2e2d32c4d4afc9e1d707"

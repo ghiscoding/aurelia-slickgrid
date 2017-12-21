@@ -159,6 +159,7 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
         this.ea.subscribe('i18n:locale:changed', function (payload) {
             if (options.enableTranslate) {
                 _this.controlPluginService.translateHeaders();
+                _this.controlPluginService.translateColumnPicker();
                 _this.controlPluginService.translateGridMenu();
             }
         });

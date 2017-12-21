@@ -197,6 +197,7 @@ System.register(["slickgrid/lib/jquery-ui-1.11.3", "slickgrid/lib/jquery.event.d
                     this.ea.subscribe('i18n:locale:changed', function (payload) {
                         if (options.enableTranslate) {
                             _this.controlPluginService.translateHeaders();
+                            _this.controlPluginService.translateColumnPicker();
                             _this.controlPluginService.translateGridMenu();
                         }
                     });

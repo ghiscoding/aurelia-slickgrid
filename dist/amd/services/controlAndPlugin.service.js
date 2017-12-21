@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-define(["require", "exports", "aurelia-framework", "aurelia-i18n", "./filter.service", "./gridExtra.service", "jquery"], function (require, exports, aurelia_framework_1, aurelia_i18n_1, filter_service_1, gridExtra_service_1, $) {
+define(["require", "exports", "aurelia-framework", "aurelia-i18n", "./filter.service", "./gridExtra.service"], function (require, exports, aurelia_framework_1, aurelia_i18n_1, filter_service_1, gridExtra_service_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var ControlAndPluginService = /** @class */ (function () {
@@ -27,7 +27,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "./filter.ser
             this._columnDefinitions = columnDefinitions;
             this.visibleColumns = columnDefinitions;
             if (options.enableColumnPicker) {
-                this.columnPickerControl = new Slick.Controls.ColumnPicker(columnDefinitions, grid, options);
+                this.columnPickerControl = this.createColumnPicker(grid, columnDefinitions, options);
             }
             if (options.enableGridMenu) {
                 this.gridMenuControl = this.createGridMenu(grid, columnDefinitions, options);
@@ -84,6 +84,15 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "./filter.ser
                 }
             }
         };
+        ControlAndPluginService.prototype.createColumnPicker = function (grid, columnDefinitions, options) {
+            // localization support for the picker
+            var forceFitTitle = options.enableTranslate ? this.i18n.tr('FORCE_FIT_COLUMNS') : 'Force fit columns';
+            var syncResizeTitle = options.enableTranslate ? this.i18n.tr('SYNCHRONOUS_RESIZE') : 'Synchronous resize';
+            options.columnPicker = options.columnPicker || {};
+            options.columnPicker.forceFitTitle = options.columnPicker.forceFitTitle || forceFitTitle;
+            options.columnPicker.syncResizeTitle = options.columnPicker.syncResizeTitle || syncResizeTitle;
+            this.columnPickerControl = new Slick.Controls.ColumnPicker(columnDefinitions, grid, options);
+        };
         ControlAndPluginService.prototype.createGridMenu = function (grid, columnDefinitions, options) {
             var _this = this;
             this.prepareGridMenu(grid, options);
@@ -92,24 +101,6 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "./filter.ser
                 gridMenuControl.onBeforeMenuShow.subscribe(function (e, args) {
                     if (options.gridMenu && typeof options.gridMenu.onBeforeMenuShow === 'function') {
                         options.gridMenu.onBeforeMenuShow(e, args);
-                    }
-                    else {
-                        // when using i18n with Grid Menu, we have a problem with the last 2 checkbox
-                        // they are written in plain English within the SlickGrid Controls
-                        // and so we don't have access directly to their text, however with a jQuery hack,
-                        // we can somehow change the text with jQuery but it's very patchy
-                        if (options.enableTranslate) {
-                            setTimeout(function () {
-                                var forceFitElm = $("label:contains('Force fit columns')");
-                                var syncResizeElm = $("label:contains('Synchronous resize')");
-                                if (Array.isArray(forceFitElm) && forceFitElm[0] && forceFitElm[0].hasOwnProperty('lastChild') && forceFitElm[0].lastChild.hasOwnProperty('textContent')) {
-                                    forceFitElm[0].lastChild.textContent = _this.i18n.tr('FORCE_FIT_COLUMNS');
-                                }
-                                if (Array.isArray(syncResizeElm) && syncResizeElm[0] && syncResizeElm[0].hasOwnProperty('lastChild') && syncResizeElm[0].lastChild.hasOwnProperty('textContent')) {
-                                    syncResizeElm[0].lastChild.textContent = _this.i18n.tr('SYNCHRONOUS_RESIZE');
-                                }
-                            }, 0);
-                        }
                     }
                 });
                 gridMenuControl.onCommand.subscribe(function (e, args) {
@@ -212,7 +203,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "./filter.ser
                     };
                 }
             }
-            // add the custom command title if there's no command
+            // add the custom command title if there are commands
             if (options && options.gridMenu && options.gridMenu.customItems && options.gridMenu.customItems.length > 0) {
                 var customTitle = options.enableTranslate ? this.i18n.tr('COMMANDS') : 'Commands';
                 options.gridMenu.customTitle = options.gridMenu.customTitle || customTitle;
@@ -220,14 +211,32 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "./filter.ser
         };
         ControlAndPluginService.prototype.prepareGridMenu = function (grid, options) {
             var columnTitle = options.enableTranslate ? this.i18n.tr('COLUMNS') : 'Columns';
+            var forceFitTitle = options.enableTranslate ? this.i18n.tr('FORCE_FIT_COLUMNS') : 'Force fit columns';
+            var syncResizeTitle = options.enableTranslate ? this.i18n.tr('SYNCHRONOUS_RESIZE') : 'Synchronous resize';
             options.gridMenu = options.gridMenu || {};
             options.gridMenu.columnTitle = options.gridMenu.columnTitle || columnTitle;
+            options.gridMenu.forceFitTitle = options.gridMenu.forceFitTitle || forceFitTitle;
+            options.gridMenu.syncResizeTitle = options.gridMenu.syncResizeTitle || syncResizeTitle;
             options.gridMenu.iconCssClass = options.gridMenu.iconCssClass || 'fa fa-bars';
             options.gridMenu.menuWidth = options.gridMenu.menuWidth || 18;
             options.gridMenu.customTitle = options.gridMenu.customTitle || undefined;
             options.gridMenu.customItems = options.gridMenu.customItems || [];
             this.addGridMenuCustomCommands(grid, options);
             // options.gridMenu.resizeOnShowHeaderRow = options.showHeaderRow;
+        };
+        /**
+         * Translate the Column Picker and it's last 2 checkboxes
+         * Note that the only way that seems to work is to destroy and re-create the Column Picker
+         * Changing only the columnPicker.columnTitle with i18n translate was not enough.
+         */
+        ControlAndPluginService.prototype.translateColumnPicker = function () {
+            // destroy and re-create the Column Picker which seems to be the only way to translate properly
+            if (this.columnPickerControl) {
+                this.columnPickerControl.destroy();
+                this.columnPickerControl = null;
+            }
+            this._gridOptions.columnPicker = undefined;
+            this.createColumnPicker(this._grid, this.visibleColumns, this._gridOptions);
         };
         /**
          * Translate the Grid Menu ColumnTitle and CustomTitle.

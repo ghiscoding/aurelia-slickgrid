@@ -33,7 +33,7 @@
     "i18next-xhr-backend": "^1.5.0",
     "jquery": "^3.2.1",
     "nps": "^5.7.1",
-    "slickgrid": "^2.3.10"
+    "slickgrid": "^2.3.12"
   },
   "peerDependencies": {},
   "devDependencies": {
