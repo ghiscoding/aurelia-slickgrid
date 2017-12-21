@@ -1,16 +1,15 @@
 import { inject } from 'aurelia-framework';
-import data from './sample-data/example-data';
+import { I18N } from 'aurelia-i18n';
 import { HttpClient } from 'aurelia-http-client';
-import { CaseType, FieldType, Formatters, FormElementType, GraphqlService } from 'aurelia-slickgrid';
+import { FieldType, FormElementType, GraphqlService } from 'aurelia-slickgrid';
 
 const defaultPageSize = 20;
-const sampleDataRoot = 'src/examples/slickgrid/sample-data';
 
-@inject(HttpClient, GraphqlService)
+@inject(GraphqlService, HttpClient, I18N)
 export class Example6 {
   title = 'Example 6: Grid with Backend GraphQL Service';
   subTitle = `
-    Sorting/Paging connected to a Backend GraphQL Service.
+    Use it when you need to support Pagination with a GraphQL endpoint (for simple JSON, use a regular grid)
     <br/>
     <ul class="small">
       <li><span class="red">(*) NO DATA SHOWING</span> - just change filters &amp; page and look at the "GraphQL Query" changing</li>
@@ -25,38 +24,44 @@ export class Example6 {
   columnDefinitions;
   gridOptions;
   dataset = [];
+  graphqlService;
+  http;
+  i18n;
 
   isWithCursor = false;
   graphqlQuery = '';
   processing = false;
+  selectedLanguage;
   status = { text: '', class: '' };
 
-  constructor(http, graphqlService) {
-    this.http = http;
+  constructor(graphqlService, http, i18n) {
     this.graphqlService = graphqlService;
+    this.http = http;
+    this.i18n = i18n;
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
+    this.selectedLanguage = this.i18n.getLocale();
   }
 
   defineGrid() {
     this.columnDefinitions = [
-      { id: 'name', name: 'Name', field: 'name', filterable: true, sortable: true, type: FieldType.string, minWidth: 80 },
+      { id: 'name', name: 'Name', field: 'name', headerKey: 'NAME', filterable: true, sortable: true, type: FieldType.string, minWidth: 80 },
       {
-        id: 'gender', name: 'Gender', field: 'gender', filterable: true, sortable: true, minWidth: 80,
+        id: 'gender', name: 'Gender', field: 'gender', headerKey: 'GENDER', filterable: true, sortable: true, minWidth: 80,
         filter: {
           searchTerm: '', // default selection
           type: FormElementType.select,
           selectOptions: [{ value: '', label: '' }, { value: 'male', label: 'male' }, { value: 'female', label: 'female' }]
         }
       },
-      { id: 'company', name: 'Company', field: 'company', filterable: true }
+      { id: 'company', name: 'Company', headerKey: 'COMPANY', field: 'company', filterable: true }
     ];
 
     this.gridOptions = {
       enableAutoResize: false,
       enableFiltering: true,
-      enableCellNavigation: true,
       enablePagination: true,
+      enableTranslate: true,
       pagination: {
         pageSizes: [10, 15, 20, 25, 30, 40, 50, 75, 100],
         pageSize: defaultPageSize,
@@ -75,8 +80,9 @@ export class Example6 {
       }
     };
 
-    const paginationOption = this.getPaginationOption(this.isWithCursor);
+    const paginationOption = this.getGraphqlInitOption(this.isWithCursor);
     this.graphqlService.initOptions(paginationOption);
+
   }
 
   displaySpinner(isProcessing) {
@@ -86,18 +92,14 @@ export class Example6 {
       : { text: 'done', class: 'alert alert-success' };
   }
 
-  getPaginationOption(isWithCursor) {
-    let paginationOption;
-    const columnIds = Array.isArray(this.columnDefinitions) ? this.columnDefinitions.map((column) => column.field) : [];
-
-    // Slickgrid also requires the "id" field
-    columnIds.push('id');
+  getGraphqlInitOption(isWithCursor) {
+    let initOptions;
 
     if (isWithCursor) {
       // with cursor, paginationOptions can be: { first, last, after, before }
-      paginationOption = {
+      initOptions = {
         datasetName: 'users',
-        dataFilters: columnIds,
+        columnDefinitions: this.columnDefinitions,
         isWithCursor: true,
         paginationOptions: {
           first: defaultPageSize
@@ -105,9 +107,9 @@ export class Example6 {
       };
     } else {
       // without cursor, paginationOptions can be: { first, last, offset }
-      paginationOption = {
+      initOptions = {
         datasetName: 'users',
-        dataFilters: columnIds,
+        columnDefinitions: this.columnDefinitions,
         isWithCursor: false,
         paginationOptions: {
           first: defaultPageSize,
@@ -115,17 +117,17 @@ export class Example6 {
         }
       };
     }
-    return paginationOption;
+    return initOptions;
   }
 
   getCustomerCallback(data) {
     this.displaySpinner(false);
 
-    this.dataset = data.items;
-    this.graphqlQuery = data.query;
+    this.dataset = data['items'];
+    this.graphqlQuery = data['query'];
 
     // totalItems property needs to be filled for pagination to work correctly
-    this.gridOptions.pagination.totalItems = data.totalRecordCount;
+    this.gridOptions.pagination.totalItems = data['totalRecordCount'];
   }
 
   getCustomerApiCall(query) {
@@ -137,128 +139,17 @@ export class Example6 {
         resolve({ items: [], totalRecordCount: 100, query });
       }, 500);
     });
-    // return this.getCustomerDataApiMock(query);
-  }
-
-  /** This function is only here to mock a WebAPI call (since we are using a JSON file for the demo)
-   *  in your case the getCustomer() should be a WebAPI function returning a Promise
-   */
-  getCustomerDataApiMock(query) {
-    // the mock is returning a Promise, just like a WebAPI typically does
-    return new Promise((resolve, reject) => {
-      const queryParams = query.toLowerCase().split('&');
-      let top;
-      let skip = 0;
-      let orderBy = '';
-      let countTotalItems = 100;
-      let columnFilters = {};
-
-      for (const param of queryParams) {
-        if (param.includes('$top=')) {
-          top = +(param.substring('$top='.length));
-        }
-        if (param.includes('$skip=')) {
-          skip = +(param.substring('$skip='.length));
-        }
-        if (param.includes('$orderby=')) {
-          orderBy = param.substring('$orderby='.length);
-        }
-        if (param.includes('$filter=')) {
-          const filterBy = param.substring('$filter='.length);
-          if (filterBy.includes('substringof')) {
-            const filterMatch = filterBy.match(/substringof\('(.*?)',([a-zA-Z ]*)/);
-            const fieldName = filterMatch[2].trim();
-            columnFilters[fieldName] = {
-              type: 'substring',
-              term: filterMatch[1].trim()
-            };
-          }
-          if (filterBy.includes('eq')) {
-            const filterMatch = filterBy.match(/([a-zA-Z ]*) eq '(.*?)'/);
-            const fieldName = filterMatch[1].trim();
-            columnFilters[fieldName] = {
-              type: 'equal',
-              term: filterMatch[2].trim()
-            };
-          }
-          if (filterBy.includes('startswith')) {
-            const filterMatch = filterBy.match(/startswith\(([a-zA-Z ]*),\s?'(.*?)'/);
-            const fieldName = filterMatch[1].trim();
-            columnFilters[fieldName] = {
-              type: 'starts',
-              term: filterMatch[2].trim()
-            };
-          }
-          if (filterBy.includes('endswith')) {
-            const filterMatch = filterBy.match(/endswith\(([a-zA-Z ]*),\s?'(.*?)'/);
-            const fieldName = filterMatch[1].trim();
-            columnFilters[fieldName] = {
-              type: 'ends',
-              term: filterMatch[2].trim()
-            };
-          }
-        }
-      }
-
-      const sort = orderBy.includes('asc')
-        ? 'ASC'
-        : orderBy.includes('desc')
-          ? 'DESC'
-          : '';
-
-      let url;
-      switch (sort) {
-        case 'ASC':
-          url = `${sampleDataRoot}/customers_100_ASC.json`;
-          break;
-        case 'DESC':
-          url = `${sampleDataRoot}/customers_100_DESC.json`;
-          break;
-        default:
-          url = `${sampleDataRoot}/customers_100.json`;
-          break;
-      }
-
-      this.http.createRequest(url)
-        .asGet()
-        .send()
-        .then(response => {
-          const dataArray = response.content;
-
-          // Read the result field from the JSON response.
-          const firstRow = skip;
-          let filteredData = dataArray;
-          if (columnFilters) {
-            for (const columnId in columnFilters) {
-              if (columnFilters.hasOwnProperty(columnId)) {
-                filteredData = filteredData.filter(column => {
-                  const filterType = columnFilters[columnId].type;
-                  const searchTerm = columnFilters[columnId].term;
-                  switch (filterType) {
-                    case 'equal': return column[columnId] === searchTerm;
-                    case 'ends': return column[columnId].toLowerCase().endsWith(searchTerm);
-                    case 'starts': return column[columnId].toLowerCase().startsWith(searchTerm);
-                    case 'substring': return column[columnId].toLowerCase().includes(searchTerm);
-                  }
-                });
-              }
-            }
-            countTotalItems = filteredData.length;
-          }
-          const updatedData = filteredData.slice(firstRow, firstRow + top);
-
-          setTimeout(() => {
-            resolve({ items: updatedData, totalRecordCount: countTotalItems, query });
-          }, 500);
-        });
-    });
   }
 
   onWithCursorChange(isWithCursor) {
     this.isWithCursor = isWithCursor;
-    const paginationOption = this.getPaginationOption(isWithCursor);
+    const paginationOption = this.getGraphqlInitOption(isWithCursor);
     this.graphqlService.initOptions(paginationOption);
     this.graphqlQuery = this.graphqlService.buildQuery();
   }
 
+  switchLanguage() {
+    this.selectedLanguage = (this.selectedLanguage === 'en') ? 'fr' : 'en';
+    this.i18n.setLocale(this.selectedLanguage);
+  }
 }

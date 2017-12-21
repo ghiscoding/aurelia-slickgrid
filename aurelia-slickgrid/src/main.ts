@@ -10,6 +10,8 @@ import { PLATFORM } from 'aurelia-pal';
 import { Aurelia } from 'aurelia-framework';
 import environment from './environment';
 import * as Bluebird from 'bluebird';
+import { I18N, TCustomAttribute } from 'aurelia-i18n';
+import * as Backend from 'i18next-xhr-backend';
 import 'bootstrap';
 
 // remove out if you don't want a Promise polyfill (remove also from webpack.config.js)
@@ -23,14 +25,23 @@ export function configure(aurelia: Aurelia) {
   // local aurelia-slickgrid
   aurelia.use.feature(PLATFORM.moduleName('aurelia-slickgrid/index'));
 
-  // aurelia.use.plugin(PLATFORM.moduleName('aurelia-slickgrid'));
+  // aurelia i18n to handle multiple locales
+  aurelia.use.plugin(PLATFORM.moduleName('aurelia-i18n'), (instance) => {
+    // register backend plugin
+    instance.i18next.use(Backend);
 
-  // Uncomment the line below to enable animation.
-  // aurelia.use.plugin(PLATFORM.moduleName('aurelia-animator-css'));
-  // if the css animator is enabled, add swap-order="after" to all router-view elements
-
-  // Anyone wanting to use HTMLImports to load views, will need to install the following plugin.
-  // aurelia.use.plugin(PLATFORM.moduleName('aurelia-html-import-template-loader'));
+    return instance.setup({
+      backend: {
+        loadPath: './static/i18n/{{lng}}/{{ns}}.json',
+      },
+      lng: 'en',
+      ns: ['aurelia-slickgrid'],
+      defaultNS: 'aurelia-slickgrid',
+      attributes: ['t', 'i18n'],
+      fallbackLng: 'en',
+      debug: false
+    });
+  });
 
   if (environment.debug) {
     aurelia.use.developmentLogging();

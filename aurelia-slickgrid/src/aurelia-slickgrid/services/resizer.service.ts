@@ -18,7 +18,8 @@ export class ResizerService {
     this._gridOptions = gridOptions;
   }
 
-  /** Attach an auto resize trigger on the datagrid, if that is enable then it will resize itself to the available space
+  /**
+   * Attach an auto resize trigger on the datagrid, if that is enable then it will resize itself to the available space
    * Options: we could also provide a % factor to resize on each height/width independently
    */
   attachAutoResizeDataGrid(): any | void {

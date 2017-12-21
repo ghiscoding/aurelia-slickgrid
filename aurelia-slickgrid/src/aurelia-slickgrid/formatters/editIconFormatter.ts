@@ -1,4 +1,4 @@
-import { Formatter } from './../models/formatter.interface';
+import { Column, Formatter } from './../models/index';
 
-export const editIconFormatter: Formatter = (row: number, cell: number, value: any, columnDef: any, dataContext: any) =>
-  `<i class="fa fa-pencil pointer" aria-hidden="true"></i>`;
+export const editIconFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any) =>
+  `<i class="fa fa-pencil pointer edit-icon" aria-hidden="true"></i>`;

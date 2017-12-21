@@ -81,7 +81,14 @@ System.register(["jquery"], function (exports_1, context_1) {
                 GridExtraService.prototype.setSelectedRows = function (rowIndexes) {
                     this._grid.setSelectedRows(rowIndexes);
                 };
-                /** Add an item (data item) to the datagrid
+                GridExtraService.prototype.renderGrid = function () {
+                    if (this._grid && typeof this._grid.invalidate === 'function') {
+                        this._grid.invalidate();
+                        this._grid.render();
+                    }
+                };
+                /**
+                 * Add an item (data item) to the datagrid
                  * @param object dataItem: item object holding all properties of that row
                  */
                 GridExtraService.prototype.addItemToDatagrid = function (item) {
@@ -93,13 +100,16 @@ System.register(["jquery"], function (exports_1, context_1) {
                     }
                     var row = 0;
                     this._dataView.insertItem(row, item);
+                    // scroll to first row and highlight it
+                    this._grid.scrollRowIntoView(0);
                     this.highlightRow(0, 1500);
                     // refresh dataview & grid
                     this._dataView.refresh();
                     // get new dataset length
                     var datasetLength = this._dataView.getLength();
                 };
-                /** Update an existing item with new properties inside the datagrid
+                /**
+                 * Update an existing item with new properties inside the datagrid
                  * @param object item: item object holding all properties of that row
                  */
                 GridExtraService.prototype.updateDataGridItem = function (item) {

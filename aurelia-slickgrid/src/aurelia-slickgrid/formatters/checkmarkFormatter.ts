@@ -1,4 +1,4 @@
-import { Formatter } from './../models/formatter.interface';
+import { Column, Formatter } from './../models/index';
 
-export const checkmarkFormatter: Formatter = (row: number, cell: number, value: any, columnDef: any, dataContext: any) =>
-  value ? `<i class="fa fa-check" aria-hidden="true"></i>` : '';
+export const checkmarkFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any) =>
+  value ? `<i class="fa fa-check checkmark-icon" aria-hidden="true"></i>` : '';

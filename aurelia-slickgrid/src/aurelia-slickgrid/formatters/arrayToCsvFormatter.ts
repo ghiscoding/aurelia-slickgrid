@@ -1,6 +1,6 @@
-import { Formatter } from './../models/formatter.interface';
+import { Column, Formatter } from './../models/index';
 
-export const arrayToCsvFormatter: Formatter = (row, cell, value, columnDef, dataContext) => {
+export const arrayToCsvFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any) => {
   if (value && Array.isArray(value)) {
     return value.join(', ');
   }

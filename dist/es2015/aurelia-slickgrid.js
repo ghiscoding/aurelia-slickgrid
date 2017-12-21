@@ -33,16 +33,20 @@ import 'slickgrid/plugins/slick.headermenu';
 import 'slickgrid/plugins/slick.rowmovemanager';
 import 'slickgrid/plugins/slick.rowselectionmodel';
 import { bindable, bindingMode, inject } from 'aurelia-framework';
+import { EventAggregator } from 'aurelia-event-aggregator';
+import { I18N } from 'aurelia-i18n';
 import { GlobalGridOptions } from './global-grid-options';
 import { ControlAndPluginService, FilterService, GridEventService, GridExtraService, ResizerService, SortService } from './services/index';
 import * as $ from 'jquery';
 let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
-    constructor(controlPluginService, elm, filterService, gridEventService, gridExtraService, resizer, sortService) {
+    constructor(controlPluginService, elm, ea, filterService, gridEventService, gridExtraService, i18n, resizer, sortService) {
         this.controlPluginService = controlPluginService;
         this.elm = elm;
+        this.ea = ea;
         this.filterService = filterService;
         this.gridEventService = gridEventService;
         this.gridExtraService = gridExtraService;
+        this.i18n = i18n;
         this.resizer = resizer;
         this.sortService = sortService;
         this.showPagination = false;
@@ -51,9 +55,11 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
         // Aurelia doesn't support well TypeScript @autoinject so we'll do it the old fashion way
         this.controlPluginService = controlPluginService;
         this.elm = elm;
+        this.ea = ea;
         this.filterService = filterService;
         this.gridEventService = gridEventService;
         this.gridExtraService = gridExtraService;
+        this.i18n = i18n;
         this.resizer = resizer;
         this.sortService = sortService;
     }
@@ -74,6 +80,10 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
         this.attachResizeHook(this.grid, this._gridOptions);
         // attach grid extra service
         const gridExtraService = this.gridExtraService.init(this.grid, this.columnDefinitions, this._gridOptions, this.dataview);
+        // when user enables translation, we need to translate Headers on first pass & subsequently in the attachDifferentHooks
+        if (this._gridOptions.enableTranslate) {
+            this.controlPluginService.translateHeaders();
+        }
     }
     detached() {
         this.dataview = [];
@@ -109,6 +119,14 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
         }
     }
     attachDifferentHooks(grid, options, dataView) {
+        // on locale change, we have to manually translate the Headers, GridMenu
+        this.ea.subscribe('i18n:locale:changed', (payload) => {
+            if (options.enableTranslate) {
+                this.controlPluginService.translateHeaders();
+                this.controlPluginService.translateColumnPicker();
+                this.controlPluginService.translateGridMenu();
+            }
+        });
         // attach external sorting (backend) when available or default onSort (dataView)
         if (options.enableSorting) {
             (options.onBackendEventApi) ? this.sortService.attachBackendOnSort(grid, options) : this.sortService.attachLocalOnSort(grid, options, this.dataview);
@@ -241,7 +259,7 @@ __decorate([
     bindable()
 ], AureliaSlickgridCustomElement.prototype, "pickerOptions", void 0);
 AureliaSlickgridCustomElement = __decorate([
-    inject(ControlAndPluginService, Element, FilterService, GridEventService, GridExtraService, ResizerService, SortService)
+    inject(ControlAndPluginService, Element, EventAggregator, FilterService, GridEventService, GridExtraService, I18N, ResizerService, SortService)
 ], AureliaSlickgridCustomElement);
 export { AureliaSlickgridCustomElement };
 //# sourceMappingURL=aurelia-slickgrid.js.map

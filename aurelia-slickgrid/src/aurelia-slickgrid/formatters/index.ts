@@ -13,9 +13,13 @@ import { dateUsFormatter } from './dateUsFormatter';
 import { deleteIconFormatter } from './deleteIconFormatter';
 import { editIconFormatter } from './editIconFormatter';
 import { hyperlinkFormatter } from './hyperlinkFormatter';
+import { lowercaseFormatter } from './lowercaseFormatter';
+import { multipleFormatter } from './multipleFormatter';
 import { percentCompleteFormatter } from './percentCompleteFormatter';
 import { percentCompleteBarFormatter } from './percentCompleteBarFormatter';
 import { progressBarFormatter } from './progressBarFormatter';
+import { translateFormatter } from './translateFormatter';
+import { uppercaseFormatter } from './uppercaseFormatter';
 import { yesNoFormatter } from './yesNoFormatter';
 
 /*
@@ -41,8 +45,12 @@ export const Formatters = {
   deleteIcon: deleteIconFormatter,
   editIcon: editIconFormatter,
   hyperlink: hyperlinkFormatter,
+  lowercase: lowercaseFormatter,
+  multiple: multipleFormatter,
   percentComplete: percentCompleteFormatter,
   percentCompleteBar: percentCompleteBarFormatter,
   progressBar: progressBarFormatter,
+  translate: translateFormatter,
+  uppercase: uppercaseFormatter,
   yesNo: yesNoFormatter
 };

@@ -1,2 +1,2 @@
-export const checkmarkFormatter = (row, cell, value, columnDef, dataContext) => value ? `<i class="fa fa-check" aria-hidden="true"></i>` : '';
+export const checkmarkFormatter = (row, cell, value, columnDef, dataContext) => value ? `<i class="fa fa-check checkmark-icon" aria-hidden="true"></i>` : '';
 //# sourceMappingURL=checkmarkFormatter.js.map

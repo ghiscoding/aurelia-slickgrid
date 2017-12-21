@@ -24,7 +24,7 @@ const cssRules = [
   { loader: 'css-loader' },
 ];
 
-module.exports = ({production, server, extractCss, coverage} = {}) => ({
+module.exports = ({ production, server, extractCss, coverage } = {}) => ({
   resolve: {
     extensions: ['.ts', '.js'],
     modules: [srcDir, 'node_modules'],
@@ -105,7 +105,7 @@ module.exports = ({production, server, extractCss, coverage} = {}) => ({
       'window.$': 'jquery'
     }),
     new ModuleDependenciesPlugin({
-      'aurelia-testing': [ './compile-spy', './view-spy' ]
+      'aurelia-testing': ['./compile-spy', './view-spy']
     }),
     new TsConfigPathsPlugin(),
     new CheckerPlugin(),
@@ -124,7 +124,8 @@ module.exports = ({production, server, extractCss, coverage} = {}) => ({
       name: ['common']
     })),
     ...when(production, new CopyWebpackPlugin([
-      { from: 'static/favicon.ico', to: 'favicon.ico' }
+      { from: 'static/favicon.ico', to: 'favicon.ico' },
+      { from: 'static/i18n', to: 'i18n' }
     ]))
   ]
 });

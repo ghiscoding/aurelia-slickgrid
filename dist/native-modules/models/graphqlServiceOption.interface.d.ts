@@ -1,13 +1,17 @@
 import { BackendServiceOption } from './backendServiceOption.interface';
+import { Column } from './column.interface';
 import { GraphqlFilteringOption } from './graphqlFilteringOption.interface';
 import { GraphqlSortingOption } from './graphqlSortingOption.interface';
 import { GraphqlCursorPaginationOption } from './graphqlCursorPaginationOption.interface';
 import { GraphqlPaginationOption } from './graphqlPaginationOption.interface';
 export interface GraphqlServiceOption extends BackendServiceOption {
+    columnIds?: string[];
+    dataFilters?: string[];
     datasetName?: string;
+    columnDefinitions?: Column[];
     isWithCursor?: boolean;
     paginationOptions?: GraphqlPaginationOption | GraphqlCursorPaginationOption;
     filteringOptions?: GraphqlFilteringOption[];
     sortingOptions?: GraphqlSortingOption[];
-    dataFilters?: string[];
+    keepArgumentFieldDoubleQuotes?: boolean;
 }

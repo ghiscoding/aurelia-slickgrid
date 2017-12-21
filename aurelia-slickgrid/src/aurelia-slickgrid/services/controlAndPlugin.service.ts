@@ -1,4 +1,5 @@
 import { inject } from 'aurelia-framework';
+import { I18N } from 'aurelia-i18n';
 import { FilterService } from './filter.service';
 import { GridExtraUtils } from './gridExtraUtils';
 import { GridExtraService } from './gridExtra.service';
@@ -13,17 +14,18 @@ import {
   HeaderMenuOnCommandArgs,
   HeaderMenuOnBeforeMenuShowArgs
 } from './../models/index';
+import * as $ from 'jquery';
 
 // using external js modules in Angular
 declare var Slick: any;
 
-@inject(FilterService, GridExtraService)
+@inject(FilterService, GridExtraService, I18N)
 export class ControlAndPluginService {
-  _dataView: any;
-  _grid: any;
-  _visibleColumns: Column[];
-  filterService: FilterService;
-  gridExtraService: GridExtraService;
+  private _dataView: any;
+  private _grid: any;
+  private _gridOptions: GridOption;
+  private _columnDefinitions: Column[];
+  visibleColumns: Column[];
 
   // controls & plugins
   autoTooltipPlugin: any;
@@ -34,10 +36,7 @@ export class ControlAndPluginService {
   gridMenuControl: any;
   rowSelectionPlugin: any;
 
-  constructor(filterService: FilterService, gridExtraService: GridExtraService) {
-    this.filterService = filterService;
-    this.gridExtraService = gridExtraService;
-  }
+  constructor(private filterService: FilterService, private gridExtraService: GridExtraService, private i18n: I18N) { }
 
   /**
    * Attach/Create different Controls or Plugins after the Grid is created
@@ -48,35 +47,16 @@ export class ControlAndPluginService {
    */
   attachDifferentControlOrPlugins(grid: any, columnDefinitions: Column[], options: GridOption, dataView: any) {
     this._grid = grid;
+    this._gridOptions = options;
     this._dataView = dataView;
-    this._visibleColumns = columnDefinitions;
+    this._columnDefinitions = columnDefinitions;
+    this.visibleColumns = columnDefinitions;
 
     if (options.enableColumnPicker) {
-      this.columnPickerControl = new Slick.Controls.ColumnPicker(columnDefinitions, grid, options);
+      this.columnPickerControl = this.createColumnPicker(grid, columnDefinitions, options);
     }
     if (options.enableGridMenu) {
-      this.prepareGridMenu(grid, options);
-
-      this.gridMenuControl = new Slick.Controls.GridMenu(columnDefinitions, grid, options);
-      if (options.gridMenu) {
-        this.gridMenuControl.onBeforeMenuShow.subscribe((e: Event, args: CellArgs) => {
-          if (options.gridMenu && typeof options.gridMenu.onBeforeMenuShow === 'function') {
-            options.gridMenu.onBeforeMenuShow(e, args);
-          }
-        });
-        this.gridMenuControl.onCommand.subscribe((e: Event, args: CellArgs) => {
-          if (options.gridMenu && typeof options.gridMenu.onCommand === 'function') {
-            options.gridMenu.onCommand(e, args);
-          }
-        });
-        this.gridMenuControl.onMenuClose.subscribe((e: Event, args: CellArgs) => {
-          if (options.gridMenu && typeof options.gridMenu.onMenuClose === 'function') {
-            options.gridMenu.onMenuClose(e, args);
-          }
-          // we also want to resize the columns if the user decided to hide certain column(s)
-          this._grid.autosizeColumns();
-        });
-      }
+      this.gridMenuControl = this.createGridMenu(grid, columnDefinitions, options);
     }
     if (options.enableAutoTooltip) {
       this.autoTooltipPlugin = new Slick.AutoTooltips(options.autoTooltipOptions || {});
@@ -132,11 +112,49 @@ export class ControlAndPluginService {
     }
   }
 
+  createColumnPicker(grid: any, columnDefinitions: Column[], options: GridOption) {
+    // localization support for the picker
+    const forceFitTitle = options.enableTranslate ? this.i18n.tr('FORCE_FIT_COLUMNS') : 'Force fit columns';
+    const syncResizeTitle = options.enableTranslate ? this.i18n.tr('SYNCHRONOUS_RESIZE') : 'Synchronous resize';
+
+    options.columnPicker = options.columnPicker || {};
+    options.columnPicker.forceFitTitle = options.columnPicker.forceFitTitle || forceFitTitle;
+    options.columnPicker.syncResizeTitle = options.columnPicker.syncResizeTitle || syncResizeTitle;
+
+    this.columnPickerControl = new Slick.Controls.ColumnPicker(columnDefinitions, grid, options);
+  }
+
+  createGridMenu(grid: any, columnDefinitions: Column[], options: GridOption) {
+    this.prepareGridMenu(grid, options);
+
+    const gridMenuControl = new Slick.Controls.GridMenu(columnDefinitions, grid, options);
+    if (options.gridMenu) {
+      gridMenuControl.onBeforeMenuShow.subscribe((e: Event, args: CellArgs) => {
+        if (options.gridMenu && typeof options.gridMenu.onBeforeMenuShow === 'function') {
+          options.gridMenu.onBeforeMenuShow(e, args);
+        }
+      });
+      gridMenuControl.onCommand.subscribe((e: Event, args: CellArgs) => {
+        if (options.gridMenu && typeof options.gridMenu.onCommand === 'function') {
+          options.gridMenu.onCommand(e, args);
+        }
+      });
+      gridMenuControl.onMenuClose.subscribe((e: Event, args: CellArgs) => {
+        if (options.gridMenu && typeof options.gridMenu.onMenuClose === 'function') {
+          options.gridMenu.onMenuClose(e, args);
+        }
+        // we also want to resize the columns if the user decided to hide certain column(s)
+        this._grid.autosizeColumns();
+      });
+    }
+    return gridMenuControl;
+  }
+
   hideColumn(column: Column) {
-    if (this._grid && this._visibleColumns) {
+    if (this._grid && this.visibleColumns) {
       const columnIndex = this._grid.getColumnIndex(column.id);
-      this._visibleColumns = this.removeColumnByIndex(this._visibleColumns, columnIndex);
-      this._grid.setColumns(this._visibleColumns);
+      this.visibleColumns = this.removeColumnByIndex(this.visibleColumns, columnIndex);
+      this._grid.setColumns(this.visibleColumns);
     }
   }
 
@@ -153,7 +171,7 @@ export class ControlAndPluginService {
   destroy() {
     this._grid = null;
     this._dataView = null;
-    this._visibleColumns = [];
+    this.visibleColumns = [];
 
     if (this.columnPickerControl) {
       this.columnPickerControl.destroy();
@@ -191,7 +209,7 @@ export class ControlAndPluginService {
         options.gridMenu.customItems.push(
           {
             iconCssClass: 'fa fa-filter text-danger',
-            title: 'Clear All Filters',
+            title: options.enableTranslate ? this.i18n.tr('CLEAR_ALL_FILTERS') : 'Clear All Filters',
             disabled: false,
             command: 'clear-filter'
           }
@@ -201,7 +219,7 @@ export class ControlAndPluginService {
         options.gridMenu.customItems.push(
           {
             iconCssClass: 'fa fa-random',
-            title: 'Toggle Filter Row',
+            title: options.enableTranslate ? this.i18n.tr('TOGGLE_FILTER_ROW') : 'Toggle Filter Row',
             disabled: false,
             command: 'toggle-filter'
           }
@@ -223,21 +241,74 @@ export class ControlAndPluginService {
       }
     }
 
-    // remove the custom command title if there's no command
+    // add the custom command title if there are commands
     if (options && options.gridMenu && options.gridMenu.customItems && options.gridMenu.customItems.length > 0) {
-      options.gridMenu.customTitle = options.gridMenu.customTitle || 'Commands';
+      const customTitle = options.enableTranslate ? this.i18n.tr('COMMANDS') : 'Commands';
+      options.gridMenu.customTitle = options.gridMenu.customTitle || customTitle;
     }
   }
 
   private prepareGridMenu(grid: any, options: GridOption) {
+    const columnTitle = options.enableTranslate ? this.i18n.tr('COLUMNS') : 'Columns';
+    const forceFitTitle = options.enableTranslate ? this.i18n.tr('FORCE_FIT_COLUMNS') : 'Force fit columns';
+    const syncResizeTitle = options.enableTranslate ? this.i18n.tr('SYNCHRONOUS_RESIZE') : 'Synchronous resize';
+
     options.gridMenu = options.gridMenu || {};
-    options.gridMenu.columnTitle = options.gridMenu.columnTitle || 'Columns';
+    options.gridMenu.columnTitle = options.gridMenu.columnTitle || columnTitle;
+    options.gridMenu.forceFitTitle = options.gridMenu.forceFitTitle || forceFitTitle;
+    options.gridMenu.syncResizeTitle = options.gridMenu.syncResizeTitle || syncResizeTitle;
     options.gridMenu.iconCssClass = options.gridMenu.iconCssClass || 'fa fa-bars';
     options.gridMenu.menuWidth = options.gridMenu.menuWidth || 18;
     options.gridMenu.customTitle = options.gridMenu.customTitle || undefined;
     options.gridMenu.customItems = options.gridMenu.customItems || [];
     this.addGridMenuCustomCommands(grid, options);
     // options.gridMenu.resizeOnShowHeaderRow = options.showHeaderRow;
+  }
+
+  /**
+   * Translate the Column Picker and it's last 2 checkboxes
+   * Note that the only way that seems to work is to destroy and re-create the Column Picker
+   * Changing only the columnPicker.columnTitle with i18n translate was not enough.
+   */
+  translateColumnPicker() {
+    // destroy and re-create the Column Picker which seems to be the only way to translate properly
+    if (this.columnPickerControl) {
+      this.columnPickerControl.destroy();
+      this.columnPickerControl = null;
+    }
+    this._gridOptions.columnPicker = undefined;
+    this.createColumnPicker(this._grid, this.visibleColumns, this._gridOptions);
+  }
+  /**
+   * Translate the Grid Menu ColumnTitle and CustomTitle.
+   * Note that the only way that seems to work is to destroy and re-create the Grid Menu
+   * Changing only the gridMenu.columnTitle with i18n translate was not enough.
+   */
+  translateGridMenu() {
+    // destroy and re-create the Grid Menu which seems to be the only way to translate properly
+    this.gridMenuControl.destroy();
+    this._gridOptions.gridMenu = undefined;
+    this.createGridMenu(this._grid, this.visibleColumns, this._gridOptions);
+  }
+
+  /**
+   * Translate manually the header titles.
+   * We could optionally pass a locale (that will change currently loaded locale), else it will use current locale
+   * @param {string} locale locale to use
+   */
+  translateHeaders(locale?: string) {
+    if (locale) {
+      this.i18n.setLocale(locale);
+    }
+
+    for (const column of this._columnDefinitions) {
+      if (column.headerKey) {
+        column.name = this.i18n.tr(column.headerKey);
+      }
+    }
+
+    // calling setColumns() will trigger a grid re-render
+    this._grid.setColumns(this._columnDefinitions);
   }
 
   /**
