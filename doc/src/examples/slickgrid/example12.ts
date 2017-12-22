@@ -5,7 +5,8 @@ import { Column, FieldType, GridOption, Formatter, Formatters } from 'aurelia-sl
 @autoinject()
 export class Example12 {
   title = 'Example 12: Localization (i18n)';
-  subTitle = `Support multiple locales with the i18next plugin, following these steps
+  subTitle = `Support multiple locales with the i18next plugin, following these steps.
+  Take a look at the (<a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Localization" target="_blank">Wiki documentation</a>)
     <ol class="small">
       <li>You first need to "enableTranslate" in the Grid Options</li>
       <li>In the Column Definitions, you have following options</li>

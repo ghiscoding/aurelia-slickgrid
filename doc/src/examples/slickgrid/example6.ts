@@ -9,7 +9,8 @@ const defaultPageSize = 20;
 export class Example6 {
   title = 'Example 6: Grid with Backend GraphQL Service';
   subTitle = `
-    Use it when you need to support Pagination with a GraphQL endpoint (for simple JSON, use a regular grid)
+    Use it when you need to support Pagination with a GraphQL endpoint (for simple JSON, use a regular grid)<br/>
+    Take a look at the (<a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/GraphQL" target="_blank">Wiki documentation</a>)
     <br/>
     <ul class="small">
       <li><span class="red">(*) NO DATA SHOWING</span> - just change filters &amp; page and look at the "GraphQL Query" changing</li>
