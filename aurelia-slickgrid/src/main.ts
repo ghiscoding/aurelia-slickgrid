@@ -32,7 +32,7 @@ export function configure(aurelia: Aurelia) {
 
     return instance.setup({
       backend: {
-        loadPath: './static/i18n/{{lng}}/{{ns}}.json',
+        loadPath: './assets/i18n/{{lng}}/{{ns}}.json',
       },
       lng: 'en',
       ns: ['aurelia-slickgrid'],
