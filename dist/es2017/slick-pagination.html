@@ -16,7 +16,7 @@
         </nav>
 
         <div class="slick-page-number">
-          page ${pageNumber} of ${pageCount}
+          <span t="PAGE_X_OF_Y" t-params.bind="{ x: pageNumber, y: pageCount }">page ${pageNumber} of ${pageCount}</span>
         </div>
 
         <nav aria-label="Page navigation">
@@ -36,9 +36,9 @@
         <select id="items-per-page-label" value.bind="itemsPerPage" change.delegate="onChangeItemPerPage($event)">
           <option value="${pageSize}" repeat.for="pageSize of paginationPageSizes" model.bind="pageSize">${pageSize}</option>
         </select>
-        items per page,
+        <span t="ITEMS_PER_PAGE">items per page</span>,
         <span class="slick-pagination-count">
-          ${dataFrom}-${dataTo} of ${totalItems} items
+          <span t="FROM_TO_OF_TOTAL_ITEMS" t-params.bind="{ from: dataFrom, to: dataTo, totalItems: totalItems }">${dataFrom}-${dataTo} of ${totalItems} items</span>
         </span>
       </span>
     </div>

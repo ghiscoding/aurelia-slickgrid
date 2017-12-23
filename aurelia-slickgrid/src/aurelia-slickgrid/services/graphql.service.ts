@@ -17,6 +17,7 @@ import {
   SortDirection
 } from './../models/index';
 
+// timer for keeping track of user typing waits
 let timer: any;
 
 export class GraphqlService implements BackendService {
@@ -27,35 +28,51 @@ export class GraphqlService implements BackendService {
    * Build the GraphQL query, since the service include/exclude cursor, the output query will be different.
    * @param serviceOptions GraphqlServiceOption
    */
-  buildQuery(serviceOptions?: GraphqlServiceOption) {
-    if (!this.serviceOptions.datasetName || !this.serviceOptions.dataFilters) {
-      throw new Error('GraphQL Service requires "datasetName" & "dataFilters" properties for it to work');
+  buildQuery() {
+    if (!this.serviceOptions || !this.serviceOptions.datasetName || (!this.serviceOptions.columnIds && !this.serviceOptions.dataFilters && !this.serviceOptions.columnDefinitions)) {
+      throw new Error('GraphQL Service requires "datasetName" & ("dataFilters" or "columnDefinitions") properties for it to work');
     }
     const queryQb = new QueryBuilder('query');
     const datasetQb = new QueryBuilder(this.serviceOptions.datasetName);
     const pageInfoQb = new QueryBuilder('pageInfo');
     const dataQb = (this.serviceOptions.isWithCursor) ? new QueryBuilder('edges') : new QueryBuilder('nodes');
 
+    // get all the columnds Ids for the filters to work
+    let columnIds: string[];
+    if (this.serviceOptions.columnDefinitions) {
+      columnIds = Array.isArray(this.serviceOptions.columnDefinitions) ? this.serviceOptions.columnDefinitions.map((column) => column.field) : [];
+    } else {
+      columnIds = this.serviceOptions.columnIds || this.serviceOptions.dataFilters || [];
+    }
+
+    // Slickgrid also requires the "id" field to be part of DataView
+    // push it to the GraphQL query if it wasn't already part of the list
+    if (columnIds.indexOf('id') === -1) {
+      columnIds.push('id');
+    }
+
+    const filters = this.buildFilterQuery(columnIds);
+
     if (this.serviceOptions.isWithCursor) {
       // ...pageInfo { hasNextPage, endCursor }, edges { cursor, node { _filters_ } }
       pageInfoQb.find('hasNextPage', 'endCursor');
-      dataQb.find(['cursor', { node: this.serviceOptions.dataFilters }]);
+      dataQb.find(['cursor', { node: filters }]);
     } else {
       // ...pageInfo { hasNextPage }, nodes { _filters_ }
       pageInfoQb.find('hasNextPage');
-      dataQb.find(this.serviceOptions.dataFilters);
+      dataQb.find(filters);
     }
 
     datasetQb.find(['totalCount', pageInfoQb, dataQb]);
 
     // add dataset filters, could be Pagination and SortingFilters and/or FieldFilters
-    const datasetFilters = this.serviceOptions.paginationOptions as GraphqlDatasetFilter;
+    const datasetFilters: GraphqlDatasetFilter = this.serviceOptions.paginationOptions as GraphqlDatasetFilter;
     if (this.serviceOptions.sortingOptions) {
       // orderBy: [{ field:x, direction: 'ASC' }]
       datasetFilters.orderBy = this.serviceOptions.sortingOptions;
     }
     if (this.serviceOptions.filteringOptions) {
-      // filterBy: [{ fieldName: date, fieldOperator: '>', fieldValue: '2000-10-10' }]
+      // filterBy: [{ field: date, operator: '>', value: '2000-10-10' }]
       datasetFilters.filterBy = this.serviceOptions.filteringOptions;
     }
 
@@ -64,7 +81,34 @@ export class GraphqlService implements BackendService {
     queryQb.find(datasetQb);
 
     const enumSearchProperties = ['direction:', 'field:', 'operator:'];
-    return this.trimDoubleQuotesOnEnumField(queryQb.toString(), enumSearchProperties);
+    return this.trimDoubleQuotesOnEnumField(queryQb.toString(), enumSearchProperties, this.serviceOptions.keepArgumentFieldDoubleQuotes || false);
+  }
+
+  /**
+   * From an input array of strings, we want to build a GraphQL query string.
+   * The process has to take the dot notation and parse it into a valid GraphQL query
+   * Following this SO answer https://stackoverflow.com/a/47705476/1212166
+   *
+   * INPUT
+   *  ['firstName', 'lastName', 'billing.address.street', 'billing.address.zip']
+   * OUTPUT
+   * firstName, lastName, shipping{address{street, zip}}
+   * @param inputArray
+   */
+  buildFilterQuery(inputArray: string[]) {
+
+    const set = (o: any = {}, a: any) => {
+      const k = a.shift();
+      o[k] = a.length ? set(o[k], a) : null;
+      return o;
+    };
+
+    const output = inputArray.reduce((o: any, a: string) => set(o, a.split('.')), {});
+
+    return JSON.stringify(output)
+      .replace(/\"|\:|null/g, '')
+      .replace(/^\{/, '')
+      .replace(/\}$/, '');
   }
 
   initOptions(serviceOptions?: GraphqlServiceOption): void {
@@ -104,6 +148,7 @@ export class GraphqlService implements BackendService {
     if (serviceOptions.onBackendEventApi === undefined || !serviceOptions.onBackendEventApi.filterTypingDebounce) {
       throw new Error('Something went wrong in the GraphqlService, "onBackendEventApi" is not initialized');
     }
+
     let debounceTypingDelay = 0;
     if (event.type === 'keyup' || event.type === 'keydown') {
       debounceTypingDelay = serviceOptions.onBackendEventApi.filterTypingDebounce || 700;
@@ -138,14 +183,11 @@ export class GraphqlService implements BackendService {
 
           // no need to query if search value is empty
           if (fieldName && searchValue === '') {
-            // this.removeColumnFilter(fieldName);
             continue;
           }
 
           // escaping the search value
           searchValue = searchValue.replace(`'`, `''`); // escape single quotes by doubling them
-          searchValue = encodeURIComponent(searchValue); // encode URI of the final search value
-
           if (operator === '*' || lastValueChar === '*') {
             operator = (operator === '*') ? 'endsWith' : 'startsWith';
           }
@@ -230,7 +272,7 @@ export class GraphqlService implements BackendService {
     const sortColumns = (args.multiColumnSort) ? args.sortCols : new Array({ sortCol: args.sortCol, sortAsc: args.sortAsc });
 
     // build the orderBy array, it could be multisort, example
-    // orderBy:[{sort: lastName, direction: ASC}, {sort: firstName, direction: DESC}]
+    // orderBy:[{field: lastName, direction: ASC}, {field: firstName, direction: DESC}]
     if (sortColumns && sortColumns.length === 0) {
       sortByArray = new Array(this.defaultOrderBy); // when empty, use the default sort
     } else {
@@ -254,27 +296,37 @@ export class GraphqlService implements BackendService {
 
   /**
    * A function which takes an input string and removes double quotes only
-   * on certain fields are identified as GraphQL enums
+   * on certain fields are identified as GraphQL enums (except fields with dot notation)
    * For example let say we identified ("direction:", "sort") as word which are GraphQL enum fields
    * then the result will be:
    * FROM
-   * query { users (orderBy:[{sort:"firstName", direction:"ASC"} }
+   * query { users (orderBy:[{field:"firstName", direction:"ASC"} }]) }
    * TO
-   * query { users (orderBy:[{sort: firstName, direction: ASC}}
+   * query { users (orderBy:[{field: firstName, direction: ASC}})}
+   *
+   * EXCEPTIONS (fields with dot notation "." which are inside a "field:")
+   * these fields will keep double quotes while everything else will be stripped of double quotes
+   * query { users (orderBy:[{field:"billing.street.name", direction: "ASC"} }
+   * TO
+   * query { users (orderBy:[{field:"billing.street.name", direction: ASC}}
    * @param inputStr input string
    * @param enumSearchWords array of enum words to filter
    * @returns outputStr output string
    */
-  trimDoubleQuotesOnEnumField(inputStr: string, enumSearchWords: string[]) {
-    const patternWordInQuotes = `\s?(".*?")`;
+  trimDoubleQuotesOnEnumField(inputStr: string, enumSearchWords: string[], keepArgumentFieldDoubleQuotes: boolean) {
+    const patternWordInQuotes = `\s?((field:\s*)?".*?")`;
     let patternRegex = enumSearchWords.join(patternWordInQuotes + '|');
     patternRegex += patternWordInQuotes; // the last one should also have the pattern but without the pipe "|"
-
-    // example with (sort: & direction:):  /sort:s?(".*?")|direction:s?(".*?")/
+    // example with (field: & direction:):  /field:s?(".*?")|direction:s?(".*?")/
     const reg = new RegExp(patternRegex, 'g');
 
     return inputStr.replace(reg, (group1, group2, group3) => {
-      const rep = group1.replace(/"/g, '');
+      // remove double quotes except when the string starts with a "field:"
+      let removeDoubleQuotes = true;
+      if (group1.startsWith('field:') && keepArgumentFieldDoubleQuotes) {
+        removeDoubleQuotes = false;
+      }
+      const rep = removeDoubleQuotes ? group1.replace(/"/g, '') : group1;
       return rep;
     });
   }

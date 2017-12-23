@@ -27,6 +27,7 @@ export interface Column {
     };
   };
   headerCssClass?: string;
+  headerKey?: string;
   id: number | string;
   isEditable?: boolean;
   isHidden?: boolean;
@@ -39,6 +40,7 @@ export interface Column {
   onCellChange?: (args: OnEventArgs) => void;
   onCellClick?: (args: OnEventArgs) => void;
   outputType?: FieldType;
+  params?: any;
   previousWidth?: number;
   resizable?: boolean;
   rerenderOnResize?: boolean;

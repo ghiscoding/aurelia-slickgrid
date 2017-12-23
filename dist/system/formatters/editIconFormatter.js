@@ -6,7 +6,7 @@ System.register([], function (exports_1, context_1) {
         setters: [],
         execute: function () {
             exports_1("editIconFormatter", editIconFormatter = function (row, cell, value, columnDef, dataContext) {
-                return "<i class=\"fa fa-pencil pointer\" aria-hidden=\"true\"></i>";
+                return "<i class=\"fa fa-pencil pointer edit-icon\" aria-hidden=\"true\"></i>";
             });
         }
     };

@@ -3,6 +3,7 @@ export declare const Formatters: {
     arrayToCsv: (row: number, cell: number, value: any, columnDef: Column, dataContext: any) => string;
     checkbox: (row: number, cell: number, value: any, columnDef: Column, dataContext: any) => string;
     checkmark: (row: number, cell: number, value: any, columnDef: Column, dataContext: any) => string;
+    complexObject: (row: number, cell: number, value: any, columnDef: Column, dataContext: any) => string;
     dateIso: (row: number, cell: number, value: any, columnDef: Column, dataContext: any) => string;
     dateTimeIso: (row: number, cell: number, value: any, columnDef: Column, dataContext: any) => string;
     dateTimeIsoAmPm: (row: number, cell: number, value: any, columnDef: Column, dataContext: any) => string;
@@ -12,8 +13,12 @@ export declare const Formatters: {
     deleteIcon: (row: number, cell: number, value: any, columnDef: Column, dataContext: any) => string;
     editIcon: (row: number, cell: number, value: any, columnDef: Column, dataContext: any) => string;
     hyperlink: (row: number, cell: number, value: any, columnDef: Column, dataContext: any) => string;
+    lowercase: (row: number, cell: number, value: any, columnDef: Column, dataContext: any) => string;
+    multiple: (row: number, cell: number, value: any, columnDef: Column, dataContext: any) => string;
     percentComplete: (row: number, cell: number, value: any, columnDef: Column, dataContext: any) => string;
     percentCompleteBar: (row: number, cell: number, value: any, columnDef: Column, dataContext: any) => string;
     progressBar: (row: number, cell: number, value: any, columnDef: Column, dataContext: any) => string;
+    translate: (row: number, cell: number, value: any, columnDef: Column, dataContext: any) => string;
+    uppercase: (row: number, cell: number, value: any, columnDef: Column, dataContext: any) => string;
     yesNo: (row: number, cell: number, value: any, columnDef: Column, dataContext: any) => string;
 };

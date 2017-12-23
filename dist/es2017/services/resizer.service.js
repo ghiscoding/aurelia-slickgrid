@@ -10,7 +10,8 @@ export class ResizerService {
         this._grid = grid;
         this._gridOptions = gridOptions;
     }
-    /** Attach an auto resize trigger on the datagrid, if that is enable then it will resize itself to the available space
+    /**
+     * Attach an auto resize trigger on the datagrid, if that is enable then it will resize itself to the available space
      * Options: we could also provide a % factor to resize on each height/width independently
      */
     attachAutoResizeDataGrid() {
@@ -76,7 +77,7 @@ export class ResizerService {
     resizeGrid(delay, newSizes) {
         if (!this._grid || !this._gridOptions) {
             throw new Error(`
-      Angular-Slickgrid resizer requires a valid Grid object and Grid Options defined.
+      Aurelia-Slickgrid resizer requires a valid Grid object and Grid Options defined.
       You can fix this by setting your gridOption to use "enableAutoResize" or create an instance of the ResizerService by calling attachAutoResizeDataGrid()`);
         }
         // because of the javascript async nature, we might want to delay the resize a little bit

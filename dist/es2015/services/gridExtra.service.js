@@ -66,7 +66,14 @@ export class GridExtraService {
     setSelectedRows(rowIndexes) {
         this._grid.setSelectedRows(rowIndexes);
     }
-    /** Add an item (data item) to the datagrid
+    renderGrid() {
+        if (this._grid && typeof this._grid.invalidate === 'function') {
+            this._grid.invalidate();
+            this._grid.render();
+        }
+    }
+    /**
+     * Add an item (data item) to the datagrid
      * @param object dataItem: item object holding all properties of that row
      */
     addItemToDatagrid(item) {
@@ -78,13 +85,16 @@ export class GridExtraService {
         }
         const row = 0;
         this._dataView.insertItem(row, item);
+        // scroll to first row and highlight it
+        this._grid.scrollRowIntoView(0);
         this.highlightRow(0, 1500);
         // refresh dataview & grid
         this._dataView.refresh();
         // get new dataset length
         const datasetLength = this._dataView.getLength();
     }
-    /** Update an existing item with new properties inside the datagrid
+    /**
+     * Update an existing item with new properties inside the datagrid
      * @param object item: item object holding all properties of that row
      */
     updateDataGridItem(item) {

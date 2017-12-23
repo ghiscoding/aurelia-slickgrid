@@ -1,2 +1,2 @@
-export class Example11 {
+export class Home {
 }

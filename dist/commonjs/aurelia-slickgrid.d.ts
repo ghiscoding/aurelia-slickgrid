@@ -17,14 +17,18 @@ import 'slickgrid/plugins/slick.headerbuttons';
 import 'slickgrid/plugins/slick.headermenu';
 import 'slickgrid/plugins/slick.rowmovemanager';
 import 'slickgrid/plugins/slick.rowselectionmodel';
+import { EventAggregator } from 'aurelia-event-aggregator';
+import { I18N } from 'aurelia-i18n';
 import { Column, GridOption } from './models/index';
 import { ControlAndPluginService, FilterService, GridEventService, GridExtraService, ResizerService, SortService } from './services/index';
 export declare class AureliaSlickgridCustomElement {
     private controlPluginService;
     private elm;
+    private ea;
     private filterService;
     private gridEventService;
     private gridExtraService;
+    private i18n;
     private resizer;
     private sortService;
     private _dataset;
@@ -45,7 +49,7 @@ export declare class AureliaSlickgridCustomElement {
     gridHeight: number;
     gridWidth: number;
     pickerOptions: any;
-    constructor(controlPluginService: ControlAndPluginService, elm: Element, filterService: FilterService, gridEventService: GridEventService, gridExtraService: GridExtraService, resizer: ResizerService, sortService: SortService);
+    constructor(controlPluginService: ControlAndPluginService, elm: Element, ea: EventAggregator, filterService: FilterService, gridEventService: GridEventService, gridExtraService: GridExtraService, i18n: I18N, resizer: ResizerService, sortService: SortService);
     attached(): void;
     detached(): void;
     /**

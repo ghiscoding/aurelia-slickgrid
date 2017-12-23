@@ -1,5 +1,5 @@
 import { inject } from 'aurelia-framework';
-import { Editors, FieldType, Formatters, GridExtraService, ResizerService } from '../../aurelia-slickgrid';
+import { Editors, FieldType, Formatters, GridExtraService, ResizerService } from 'aurelia-slickgrid';
 
 @inject(GridExtraService, ResizerService)
 export class Example11 {
