@@ -108,7 +108,8 @@ export class GridExtraService {
     const datasetLength = this._dataView.getLength();
   }
 
-  /** Update an existing item with new properties inside the datagrid
+  /**
+   * Update an existing item with new properties inside the datagrid
    * @param object item: item object holding all properties of that row
    */
   updateDataGridItem(item: any) {
