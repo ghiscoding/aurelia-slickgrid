@@ -96,7 +96,9 @@ export class SortService {
   }
 
   destroy() {
-    this.subscriber.unsubscribe();
+    if (this.subscriber && typeof this.subscriber.unsubscribe === 'function') {
+      this.subscriber.unsubscribe();
+    }
   }
 
   /**

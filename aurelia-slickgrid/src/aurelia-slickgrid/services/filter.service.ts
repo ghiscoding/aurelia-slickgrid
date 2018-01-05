@@ -150,7 +150,9 @@ export class FilterService {
 
   destroy() {
     this.destroyFilters();
-    this.subscriber.unsubscribe();
+    if (this.subscriber && typeof this.subscriber.unsubscribe === 'function') {
+      this.subscriber.unsubscribe();
+    }
   }
 
   /**
