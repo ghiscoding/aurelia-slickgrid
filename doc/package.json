@@ -19,7 +19,7 @@
     "aurelia-i18n": "^2.1.0",
     "aurelia-polyfills": "latest",
     "aurelia-router": "^1.4.0",
-    "aurelia-slickgrid": "^1.1.1",
+    "aurelia-slickgrid": "^1.1.2",
     "aurelia-validation": "^1.1.2",
     "bluebird": "^3.4.1",
     "bootstrap": "^3.3.7",

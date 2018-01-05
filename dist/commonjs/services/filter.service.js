@@ -164,7 +164,9 @@ var FilterService = /** @class */ (function () {
     };
     FilterService.prototype.destroy = function () {
         this.destroyFilters();
-        this.subscriber.unsubscribe();
+        if (this.subscriber && typeof this.subscriber.unsubscribe === 'function') {
+            this.subscriber.unsubscribe();
+        }
     };
     /**
      * Destroy the filters, since it's a singleton, we don't want to affect other grids with same columns

@@ -86,7 +86,9 @@ export class SortService {
         });
     }
     destroy() {
-        this.subscriber.unsubscribe();
+        if (this.subscriber && typeof this.subscriber.unsubscribe === 'function') {
+            this.subscriber.unsubscribe();
+        }
     }
     /**
      * A simple function that is attached to the subscriber and emit a change when the sort is called.
