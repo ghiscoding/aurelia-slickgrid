@@ -88,7 +88,7 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
     detached() {
         this.dataview = [];
         this.controlPluginService.destroy();
-        this.filterService.clearFilters();
+        this.filterService.destroy();
         this.resizer.destroy();
         this.grid.destroy();
     }

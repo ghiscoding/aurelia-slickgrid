@@ -26,6 +26,10 @@ export declare class FilterService {
     attachLocalOnFilter(grid: any, options: GridOption, dataView: any): void;
     customFilter(item: any, args: any): boolean;
     destroy(): void;
+    /**
+     * Destroy the filters, since it's a singleton, we don't want to affect other grids with same columns
+     */
+    destroyFilters(): void;
     callbackSearchEvent(e: any, args: any): void;
     addFilterTemplateToHeaderRow(args: any): void;
     /** Clear the search filters (below the column titles) */

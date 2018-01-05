@@ -122,7 +122,20 @@ export class FilterService {
         return true;
     }
     destroy() {
+        this.destroyFilters();
         this.subscriber.unsubscribe();
+    }
+    /**
+     * Destroy the filters, since it's a singleton, we don't want to affect other grids with same columns
+     */
+    destroyFilters() {
+        // we need to loop through all columnFilters and delete them 1 by 1
+        // only trying to make columnFilter an empty (without looping) would not trigger a dataset change
+        for (const columnId in this._columnFilters) {
+            if (columnId && this._columnFilters[columnId]) {
+                delete this._columnFilters[columnId];
+            }
+        }
     }
     callbackSearchEvent(e, args) {
         if (e.target.value === '' || e.target.value === null) {
@@ -202,8 +215,20 @@ export class FilterService {
     }
     /** Clear the search filters (below the column titles) */
     clearFilters(dataview) {
-        // remove the text inside each search input fields
-        $('.slick-headerrow-column .search-filter').val('');
+        // remove the text inside each search filter fields
+        $('.slick-headerrow-column .search-filter').each((index, elm) => {
+            // clear the value and trigger an event
+            // the event is for GraphQL & OData Services to detect the changes and call a new query
+            switch (elm.tagName) {
+                case 'SELECT':
+                    $(elm).val('').trigger('change');
+                    break;
+                case 'INPUT':
+                default:
+                    $(elm).val('').trigger('keyup');
+                    break;
+            }
+        });
         // we need to loop through all columnFilters and delete them 1 by 1
         // only trying to make columnFilter an empty (without looping) would not trigger a dataset change
         for (const columnId in this._columnFilters) {

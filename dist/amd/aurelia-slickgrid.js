@@ -100,7 +100,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
         AureliaSlickgridCustomElement.prototype.detached = function () {
             this.dataview = [];
             this.controlPluginService.destroy();
-            this.filterService.clearFilters();
+            this.filterService.destroy();
             this.resizer.destroy();
             this.grid.destroy();
         };

@@ -161,7 +161,7 @@ System.register(["slickgrid/lib/jquery-ui-1.11.3", "slickgrid/lib/jquery.event.d
                 AureliaSlickgridCustomElement.prototype.detached = function () {
                     this.dataview = [];
                     this.controlPluginService.destroy();
-                    this.filterService.clearFilters();
+                    this.filterService.destroy();
                     this.resizer.destroy();
                     this.grid.destroy();
                 };
