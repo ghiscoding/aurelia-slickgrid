@@ -47,7 +47,7 @@ export class Example6 {
         filter: {
           searchTerm: '', // default selection
           type: FormElementType.select,
-          selectOptions: [{ value: '', label: '' }, { value: 'male', label: 'male' }, { value: 'female', label: 'female' }]
+          selectOptions: [{ value: '', label: '' }, { value: 'male', labelKey: 'MALE' }, { value: 'female', labelKey: 'FEMALE' }]
         }
       },
       { id: 'company', name: 'Company', headerKey: 'COMPANY', field: 'company', filterable: true }

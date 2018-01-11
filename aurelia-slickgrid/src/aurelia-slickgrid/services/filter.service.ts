@@ -1,3 +1,4 @@
+import { inject } from 'aurelia-framework';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { FilterConditions } from '../filter-conditions/index';
 import { FilterTemplates } from './../filter-templates/index';
@@ -11,11 +12,13 @@ import {
   GridOption,
   SlickEvent
 } from '../models/index';
+import { I18N } from 'aurelia-i18n';
 import * as $ from 'jquery';
 
 // using external js modules in Angular
 declare var Slick: any;
 
+@inject(I18N)
 export class FilterService {
   _columnFilters: ColumnFilters = {};
   _columnDefinitions: Column[];
@@ -25,6 +28,8 @@ export class FilterService {
   _onFilterChangedOptions: any;
   subscriber: SlickEvent;
   onFilterChanged = new EventAggregator();
+
+  constructor(private i18n: I18N) { }
 
   init(grid: any, gridOptions: GridOption, columnDefinitions: Column[]): void {
     this._columnDefinitions = columnDefinitions;
@@ -104,7 +109,7 @@ export class FilterService {
     for (const columnId of Object.keys(args.columnFilters)) {
       const columnFilter = args.columnFilters[columnId];
       const columnIndex = args.grid.getColumnIndex(columnId);
-      const columnDef = args.grid.getColumns()[columnIndex];
+      const columnDef = args.grid.getColumns() [columnIndex];
       const fieldType = columnDef.type || FieldType.string;
       const conditionalFilterFn = (columnDef.filter && columnDef.filter.conditionalFilter) ? columnDef.filter.conditionalFilter : null;
       const filterSearchType = (columnDef.filterSearchType) ? columnDef.filterSearchType : null;
@@ -212,7 +217,7 @@ export class FilterService {
         } else {
           // custom Select template
           if (columnDef.filter.type === FormElementType.select) {
-            filterTemplate = FilterTemplates.select(searchTerm, columnDef);
+            filterTemplate = FilterTemplates.select(searchTerm, columnDef, this.i18n);
           }
         }
 
