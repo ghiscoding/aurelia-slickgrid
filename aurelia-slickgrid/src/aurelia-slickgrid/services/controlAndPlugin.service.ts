@@ -144,7 +144,9 @@ export class ControlAndPluginService {
           options.gridMenu.onMenuClose(e, args);
         }
         // we also want to resize the columns if the user decided to hide certain column(s)
-        this._grid.autosizeColumns();
+        if (this._grid && typeof this._grid.autosizeColumns === 'function') {
+          this._grid.autosizeColumns();
+        }
       });
     }
     return gridMenuControl;
