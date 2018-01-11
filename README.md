@@ -49,6 +49,10 @@ Contributions are welcome, this is what the community is for. If you wish to sug
 ## Use it, like it?
 You like and use this great library `Aurelia-Slickgrid`? You can always upvote :star: and/or contribute :)
 
+## Like my work?
+You can support me with caffeine :)
+[Buy Me a Coffee](https://ko-fi.com/N4N679OT)
+
 ## Screenshots
 
 Screenshots from the demo app with the `Bootstrap` theme (that is the only available theme, but there is a lot of SASS variables to make it look like Material, or other theme if you wish to. If you create a new theme, please submit a PR).
