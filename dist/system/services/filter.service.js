@@ -1,5 +1,11 @@
-System.register(["aurelia-event-aggregator", "../filter-conditions/index", "./../filter-templates/index", "../models/index", "jquery"], function (exports_1, context_1) {
+System.register(["aurelia-framework", "aurelia-event-aggregator", "../filter-conditions/index", "./../filter-templates/index", "../models/index", "aurelia-i18n", "jquery"], function (exports_1, context_1) {
     "use strict";
+    var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+        var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+        if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+        else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+        return c > 3 && r && Object.defineProperty(target, key, r), r;
+    };
     var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
         return new (P || (P = Promise))(function (resolve, reject) {
             function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -36,9 +42,12 @@ System.register(["aurelia-event-aggregator", "../filter-conditions/index", "./..
         }
     };
     var __moduleName = context_1 && context_1.id;
-    var aurelia_event_aggregator_1, index_1, index_2, index_3, $, FilterService;
+    var aurelia_framework_1, aurelia_event_aggregator_1, index_1, index_2, index_3, aurelia_i18n_1, $, FilterService;
     return {
         setters: [
+            function (aurelia_framework_1_1) {
+                aurelia_framework_1 = aurelia_framework_1_1;
+            },
             function (aurelia_event_aggregator_1_1) {
                 aurelia_event_aggregator_1 = aurelia_event_aggregator_1_1;
             },
@@ -51,15 +60,20 @@ System.register(["aurelia-event-aggregator", "../filter-conditions/index", "./..
             function (index_3_1) {
                 index_3 = index_3_1;
             },
+            function (aurelia_i18n_1_1) {
+                aurelia_i18n_1 = aurelia_i18n_1_1;
+            },
             function ($_1) {
                 $ = $_1;
             }
         ],
         execute: function () {
             FilterService = /** @class */ (function () {
-                function FilterService() {
+                function FilterService(i18n) {
+                    this.i18n = i18n;
                     this._columnFilters = {};
                     this.onFilterChanged = new aurelia_event_aggregator_1.EventAggregator();
+                    this.i18n = i18n;
                 }
                 FilterService.prototype.init = function (grid, gridOptions, columnDefinitions) {
                     this._columnDefinitions = columnDefinitions;
@@ -239,7 +253,7 @@ System.register(["aurelia-event-aggregator", "../filter-conditions/index", "./..
                             else {
                                 // custom Select template
                                 if (columnDef_1.filter.type === index_3.FormElementType.select) {
-                                    filterTemplate = index_2.FilterTemplates.select(searchTerm, columnDef_1);
+                                    filterTemplate = index_2.FilterTemplates.select(searchTerm, columnDef_1, this_1.i18n);
                                 }
                             }
                             // when hiding/showing (Column Picker or Grid Menu), it will come re-create yet again the filters
@@ -332,6 +346,9 @@ System.register(["aurelia-event-aggregator", "../filter-conditions/index", "./..
                     e = e || new Slick.EventData();
                     return evt.notify(args, e, args.grid);
                 };
+                FilterService = __decorate([
+                    aurelia_framework_1.inject(aurelia_i18n_1.I18N)
+                ], FilterService);
                 return FilterService;
             }());
             exports_1("FilterService", FilterService);

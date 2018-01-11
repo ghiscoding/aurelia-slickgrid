@@ -49,18 +49,25 @@ var GridExtraService = /** @class */ (function () {
         this._grid.setSelectedRows([rowNumber]);
         this._dataView.getItemMetadata = this.getItemRowMetadata(this._dataView.getItemMetadata);
         var item = this._dataView.getItem(rowNumber);
-        item.rowClass = 'highlight';
-        this._dataView.updateItem(item.id, item);
-        var gridOptions = this._grid.getOptions();
-        // highlight the row for a user defined timeout
-        var rowElm = $("#" + gridOptions.gridId)
-            .find(".highlight.row" + rowNumber)
-            .first();
-        // delete the row's CSS that was attached for highlighting
-        setTimeout(function () {
-            delete item.rowClass;
-            _this._dataView.updateItem(item.id, item);
-        }, fadeDelay + 10);
+        if (item && item.id) {
+            item.rowClass = 'highlight';
+            this._dataView.updateItem(item.id, item);
+            var gridOptions = this._grid.getOptions();
+            // highlight the row for a user defined timeout
+            var rowElm = $("#" + gridOptions.gridId)
+                .find(".highlight.row" + rowNumber)
+                .first();
+            // delete the row's CSS that was attached for highlighting
+            setTimeout(function () {
+                if (item && item.id) {
+                    delete item.rowClass;
+                    var gridIdx = _this._dataView.getIdxById(item.id);
+                    if (gridIdx !== undefined) {
+                        _this._dataView.updateItem(item.id, item);
+                    }
+                }
+            }, fadeDelay + 10);
+        }
     };
     GridExtraService.prototype.getSelectedRows = function () {
         return this._grid.getSelectedRows();
@@ -108,14 +115,17 @@ var GridExtraService = /** @class */ (function () {
         if (itemId === -1) {
             throw new Error("Could not find the item in the item in the grid or it's associated \"id\"");
         }
-        // Update the item itself inside the dataView
-        this._dataView.updateItem(itemId, item);
-        // highlight the row we just updated
-        this.highlightRow(row, 1500);
-        // refresh dataview & grid
-        this._dataView.refresh();
-        // get new dataset length
-        var datasetLength = this._dataView.getLength();
+        var gridIdx = this._dataView.getIdxById(itemId);
+        if (gridIdx !== undefined) {
+            // Update the item itself inside the dataView
+            this._dataView.updateItem(itemId, item);
+            // highlight the row we just updated
+            this.highlightRow(row, 1500);
+            // refresh dataview & grid
+            this._dataView.refresh();
+            // get new dataset length
+            var datasetLength = this._dataView.getLength();
+        }
     };
     return GridExtraService;
 }());

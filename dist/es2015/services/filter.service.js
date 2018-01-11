@@ -1,3 +1,9 @@
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -6,15 +12,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+import { inject } from 'aurelia-framework';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { FilterConditions } from '../filter-conditions/index';
 import { FilterTemplates } from './../filter-templates/index';
 import { FieldType, FormElementType } from '../models/index';
+import { I18N } from 'aurelia-i18n';
 import * as $ from 'jquery';
-export class FilterService {
-    constructor() {
+let FilterService = class FilterService {
+    constructor(i18n) {
+        this.i18n = i18n;
         this._columnFilters = {};
         this.onFilterChanged = new EventAggregator();
+        this.i18n = i18n;
     }
     init(grid, gridOptions, columnDefinitions) {
         this._columnDefinitions = columnDefinitions;
@@ -181,7 +191,7 @@ export class FilterService {
                 else {
                     // custom Select template
                     if (columnDef.filter.type === FormElementType.select) {
-                        filterTemplate = FilterTemplates.select(searchTerm, columnDef);
+                        filterTemplate = FilterTemplates.select(searchTerm, columnDef, this.i18n);
                     }
                 }
                 // when hiding/showing (Column Picker or Grid Menu), it will come re-create yet again the filters
@@ -269,5 +279,9 @@ export class FilterService {
         e = e || new Slick.EventData();
         return evt.notify(args, e, args.grid);
     }
-}
+};
+FilterService = __decorate([
+    inject(I18N)
+], FilterService);
+export { FilterService };
 //# sourceMappingURL=filter.service.js.map

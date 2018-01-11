@@ -1,6 +1,8 @@
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { Column, ColumnFilters, GridOption, SlickEvent } from '../models/index';
+import { I18N } from 'aurelia-i18n';
 export declare class FilterService {
+    private i18n;
     _columnFilters: ColumnFilters;
     _columnDefinitions: Column[];
     _dataView: any;
@@ -9,6 +11,7 @@ export declare class FilterService {
     _onFilterChangedOptions: any;
     subscriber: SlickEvent;
     onFilterChanged: EventAggregator;
+    constructor(i18n: I18N);
     init(grid: any, gridOptions: GridOption, columnDefinitions: Column[]): void;
     /**
      * Attach a backend filter hook to the grid

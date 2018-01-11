@@ -29,7 +29,9 @@ export class FilterService {
   subscriber: SlickEvent;
   onFilterChanged = new EventAggregator();
 
-  constructor(private i18n: I18N) { }
+  constructor(private i18n: I18N) {
+    this.i18n = i18n;
+  }
 
   init(grid: any, gridOptions: GridOption, columnDefinitions: Column[]): void {
     this._columnDefinitions = columnDefinitions;

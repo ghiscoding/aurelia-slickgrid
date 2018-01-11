@@ -102,6 +102,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
             this.controlPluginService.destroy();
             this.filterService.destroy();
             this.resizer.destroy();
+            this.sortService.destroy();
             this.grid.destroy();
         };
         /**

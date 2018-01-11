@@ -127,6 +127,7 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
         this.controlPluginService.destroy();
         this.filterService.destroy();
         this.resizer.destroy();
+        this.sortService.destroy();
         this.grid.destroy();
     };
     /**

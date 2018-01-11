@@ -4,13 +4,13 @@ import { HttpClient } from 'aurelia-http-client';
 import { CaseType, Column, GridOption, FieldType, Formatters, FormElementType, GraphqlService } from 'aurelia-slickgrid';
 
 const defaultPageSize = 20;
+const sampleDataRoot = 'src/examples/slickgrid/sample-data';
 
 @autoinject()
 export class Example6 {
   title = 'Example 6: Grid with Backend GraphQL Service';
   subTitle = `
-    Use it when you need to support Pagination with a GraphQL endpoint (for simple JSON, use a regular grid)<br/>
-    Take a look at the (<a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/GraphQL" target="_blank">Wiki documentation</a>)
+    Use it when you need to support Pagination with a GraphQL endpoint (for simple JSON, use a regular grid)
     <br/>
     <ul class="small">
       <li><span class="red">(*) NO DATA SHOWING</span> - just change filters &amp; page and look at the "GraphQL Query" changing</li>
@@ -46,7 +46,7 @@ export class Example6 {
         filter: {
           searchTerm: '', // default selection
           type: FormElementType.select,
-          selectOptions: [{ value: '', label: '' }, { value: 'male', label: 'male' }, { value: 'female', label: 'female' }]
+          selectOptions: [{ value: '', label: '' }, { value: 'MALE', labelKey: 'MALE' }, { value: 'FEMALE', labelKey: 'FEMALE' }]
         }
       },
       { id: 'company', name: 'Company', headerKey: 'COMPANY', field: 'company', filterable: true }

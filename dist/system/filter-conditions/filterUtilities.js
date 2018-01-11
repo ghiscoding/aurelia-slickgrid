@@ -7,14 +7,20 @@ System.register([], function (exports_1, context_1) {
         execute: function () {
             exports_1("testFilterCondition", testFilterCondition = function (operator, value1, value2) {
                 switch (operator) {
-                    case '<': return (value1 < value2);
-                    case '<=': return (value1 <= value2);
-                    case '>': return (value1 > value2);
-                    case '>=': return (value1 >= value2);
+                    case '<':
+                    case 'LT': return (value1 < value2);
+                    case '<=':
+                    case 'LE': return (value1 <= value2);
+                    case '>':
+                    case 'GT': return (value1 > value2);
+                    case '>=':
+                    case 'GE': return (value1 >= value2);
                     case '!=':
-                    case '<>': return (value1 !== value2);
+                    case '<>':
+                    case 'NE': return (value1 !== value2);
                     case '=':
-                    case '==': return (value1 === value2);
+                    case '==':
+                    case 'EQ': return (value1 === value2);
                 }
                 return true;
             });

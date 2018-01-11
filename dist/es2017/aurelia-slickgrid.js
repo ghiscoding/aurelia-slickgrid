@@ -82,6 +82,7 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
         this.controlPluginService.destroy();
         this.filterService.destroy();
         this.resizer.destroy();
+        this.sortService.destroy();
         this.grid.destroy();
     }
     /**

@@ -1,6 +1,6 @@
 import { inject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
-import { Formatters } from 'aurelia-slickgrid';
+import { FormElementType, Formatters } from 'aurelia-slickgrid';
 
 @inject(I18N)
 export class Example12 {

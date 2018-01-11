@@ -163,6 +163,7 @@ System.register(["slickgrid/lib/jquery-ui-1.11.3", "slickgrid/lib/jquery.event.d
                     this.controlPluginService.destroy();
                     this.filterService.destroy();
                     this.resizer.destroy();
+                    this.sortService.destroy();
                     this.grid.destroy();
                 };
                 /**
