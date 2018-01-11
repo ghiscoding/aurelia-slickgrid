@@ -50,7 +50,7 @@ Contributions are welcome, this is what the community is for. If you wish to sug
 You like and use this great library `Aurelia-Slickgrid`? You can always upvote :star: and/or contribute :)
 
 ## Like my work?
-You can support me with caffeine :smile:
+If you like my work, you can also support me with caffeine :smile:
 [Buy Me a Coffee](https://ko-fi.com/N4N679OT)
 
 ## Screenshots
