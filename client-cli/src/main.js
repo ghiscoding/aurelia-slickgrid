@@ -5,10 +5,12 @@ import 'bootstrap';
 
 
 export function configure(aurelia) {
-  aurelia.use
-    .standardConfiguration()
-    .plugin('aurelia-slickgrid')
-    .feature('resources');
+  aurelia.use.standardConfiguration().feature('resources');
+
+  aurelia.use.plugin('aurelia-slickgrid', config => {
+    // change any of the default global options
+    config.options.gridMenu.iconCssClass = 'fa fa-bars';
+  });
 
   // aurelia i18n to handle multiple locales
   aurelia.use.plugin('aurelia-i18n', (instance) => {

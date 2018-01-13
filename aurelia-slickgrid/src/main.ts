@@ -23,7 +23,10 @@ export function configure(aurelia: Aurelia) {
   aurelia.use.feature(PLATFORM.moduleName('examples/resources/index'));
 
   // local aurelia-slickgrid
-  aurelia.use.feature(PLATFORM.moduleName('aurelia-slickgrid/index'));
+  aurelia.use.feature(PLATFORM.moduleName('aurelia-slickgrid/index'), config => {
+    // change any of the default global options
+    config.options.gridMenu.iconCssClass = 'fa fa-bars';
+  });
 
   // aurelia i18n to handle multiple locales
   aurelia.use.plugin(PLATFORM.moduleName('aurelia-i18n'), (instance) => {

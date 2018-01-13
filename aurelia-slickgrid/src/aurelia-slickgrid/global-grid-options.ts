@@ -1,7 +1,7 @@
 import { GridOption } from './models/gridOption.interface';
 
 /**
- * Options that can be passed to the Aurelia-Slickgrid
+ * Default Options that can be passed to the Aurelia-Slickgrid
  */
 export const GlobalGridOptions: GridOption = {
   autoEdit: false,
@@ -36,7 +36,6 @@ export const GlobalGridOptions: GridOption = {
     resizeOnShowHeaderRow: false
   },
   headerRowHeight: 35,
-  locale: 'en',
   multiColumnSort: true,
   pagination: {
     pageSizes: [10, 15, 20, 25, 30, 40, 50, 75, 100],
