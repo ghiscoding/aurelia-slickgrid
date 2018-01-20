@@ -88,12 +88,14 @@ var ResizerService = /** @class */ (function () {
         timer = setTimeout(function () {
             // calculate new available sizes but with minimum height of 220px
             newSizes = newSizes || _this.calculateGridNewDimensions(_this._gridOptions);
-            if (newSizes) {
+            var gridElm = $("#" + _this._gridOptions.gridId);
+            var gridContainerElm = $("#" + _this._gridOptions.gridContainerId);
+            if (newSizes && gridElm.length > 0) {
                 // apply these new height/width to the datagrid
-                $("#" + _this._gridOptions.gridId).height(newSizes.height);
-                $("#" + _this._gridOptions.gridId).width(newSizes.width);
-                $("#" + _this._gridOptions.gridContainerId).height(newSizes.height);
-                $("#" + _this._gridOptions.gridContainerId).width(newSizes.width);
+                gridElm.height(newSizes.height);
+                gridElm.width(newSizes.width);
+                gridContainerElm.height(newSizes.height);
+                gridContainerElm.width(newSizes.width);
                 // resize the slickgrid canvas on all browser except some IE versions
                 // exclude all IE below IE11
                 // IE11 wants to be a better standard (W3C) follower (finally) they even changed their appName output to also have 'Netscape'

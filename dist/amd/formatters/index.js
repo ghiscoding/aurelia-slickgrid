@@ -1,4 +1,4 @@
-define(["require", "exports", "./arrayToCsvFormatter", "./checkboxFormatter", "./checkmarkFormatter", "./complexObjectFormatter", "./dateIsoFormatter", "./dateTimeIsoAmPmFormatter", "./dateTimeUsAmPmFormatter", "./dateTimeUsFormatter", "./dateUsFormatter", "./deleteIconFormatter", "./editIconFormatter", "./hyperlinkFormatter", "./lowercaseFormatter", "./multipleFormatter", "./percentCompleteFormatter", "./percentCompleteBarFormatter", "./progressBarFormatter", "./translateFormatter", "./uppercaseFormatter", "./yesNoFormatter"], function (require, exports, arrayToCsvFormatter_1, checkboxFormatter_1, checkmarkFormatter_1, complexObjectFormatter_1, dateIsoFormatter_1, dateTimeIsoAmPmFormatter_1, dateTimeUsAmPmFormatter_1, dateTimeUsFormatter_1, dateUsFormatter_1, deleteIconFormatter_1, editIconFormatter_1, hyperlinkFormatter_1, lowercaseFormatter_1, multipleFormatter_1, percentCompleteFormatter_1, percentCompleteBarFormatter_1, progressBarFormatter_1, translateFormatter_1, uppercaseFormatter_1, yesNoFormatter_1) {
+define(["require", "exports", "./arrayToCsvFormatter", "./checkboxFormatter", "./checkmarkFormatter", "./complexObjectFormatter", "./dateIsoFormatter", "./dateTimeIsoAmPmFormatter", "./dateTimeUsAmPmFormatter", "./dateTimeUsFormatter", "./dateUsFormatter", "./deleteIconFormatter", "./editIconFormatter", "./hyperlinkFormatter", "./infoIconFormatter", "./lowercaseFormatter", "./multipleFormatter", "./percentCompleteFormatter", "./percentCompleteBarFormatter", "./progressBarFormatter", "./translateFormatter", "./uppercaseFormatter", "./yesNoFormatter"], function (require, exports, arrayToCsvFormatter_1, checkboxFormatter_1, checkmarkFormatter_1, complexObjectFormatter_1, dateIsoFormatter_1, dateTimeIsoAmPmFormatter_1, dateTimeUsAmPmFormatter_1, dateTimeUsFormatter_1, dateUsFormatter_1, deleteIconFormatter_1, editIconFormatter_1, hyperlinkFormatter_1, infoIconFormatter_1, lowercaseFormatter_1, multipleFormatter_1, percentCompleteFormatter_1, percentCompleteBarFormatter_1, progressBarFormatter_1, translateFormatter_1, uppercaseFormatter_1, yesNoFormatter_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /*
@@ -24,6 +24,7 @@ define(["require", "exports", "./arrayToCsvFormatter", "./checkboxFormatter", ".
         deleteIcon: deleteIconFormatter_1.deleteIconFormatter,
         editIcon: editIconFormatter_1.editIconFormatter,
         hyperlink: hyperlinkFormatter_1.hyperlinkFormatter,
+        infoIcon: infoIconFormatter_1.infoIconFormatter,
         lowercase: lowercaseFormatter_1.lowercaseFormatter,
         multiple: multipleFormatter_1.multipleFormatter,
         percentComplete: percentCompleteFormatter_1.percentCompleteFormatter,

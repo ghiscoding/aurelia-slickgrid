@@ -56,6 +56,11 @@ System.register(["jquery"], function (exports_1, context_1) {
                     if (fadeDelay === void 0) { fadeDelay = 1500; }
                     // chain current item Metadata with our own Metadata for implementing highligh CSS styling
                     var previousMetadata = this._dataView.getItemMetadata;
+                    // create a SelectionModel if there's not one yet
+                    if (!this._grid.getSelectionModel()) {
+                        var rowSelectionPlugin = new Slick.RowSelectionModel(this._gridOptions.rowSelectionOptions || {});
+                        this._grid.setSelectionModel(rowSelectionPlugin);
+                    }
                     this._grid.setSelectedRows([rowNumber]);
                     this._dataView.getItemMetadata = this.getItemRowMetadata(this._dataView.getItemMetadata);
                     var item = this._dataView.getItem(rowNumber);

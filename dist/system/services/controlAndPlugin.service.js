@@ -1,5 +1,13 @@
 System.register(["aurelia-framework", "aurelia-i18n", "./filter.service", "./gridExtra.service"], function (exports_1, context_1) {
     "use strict";
+    var __assign = (this && this.__assign) || Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
         if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -110,11 +118,17 @@ System.register(["aurelia-framework", "aurelia-i18n", "./filter.service", "./gri
                     options.columnPicker.syncResizeTitle = options.columnPicker.syncResizeTitle || syncResizeTitle;
                     this.columnPickerControl = new Slick.Controls.ColumnPicker(columnDefinitions, grid, options);
                 };
+                /**
+                 * Create (or re-create) Grid Menu and expose all the available hooks that user can subscribe (onCommand, onMenuClose, ...)
+                 * @param grid
+                 * @param columnDefinitions
+                 * @param options
+                 */
                 ControlAndPluginService.prototype.createGridMenu = function (grid, columnDefinitions, options) {
-                    var _this = this;
-                    this.prepareGridMenu(grid, options);
+                    options.gridMenu = __assign({}, this.getDefaultGridMenuOptions(), options.gridMenu);
+                    this.addGridMenuCustomCommands(grid, options);
                     var gridMenuControl = new Slick.Controls.GridMenu(columnDefinitions, grid, options);
-                    if (options.gridMenu) {
+                    if (grid && options.gridMenu) {
                         gridMenuControl.onBeforeMenuShow.subscribe(function (e, args) {
                             if (options.gridMenu && typeof options.gridMenu.onBeforeMenuShow === 'function') {
                                 options.gridMenu.onBeforeMenuShow(e, args);
@@ -130,8 +144,8 @@ System.register(["aurelia-framework", "aurelia-i18n", "./filter.service", "./gri
                                 options.gridMenu.onMenuClose(e, args);
                             }
                             // we also want to resize the columns if the user decided to hide certain column(s)
-                            if (_this._grid && typeof _this._grid.autosizeColumns === 'function') {
-                                _this._grid.autosizeColumns();
+                            if (grid && typeof grid.autosizeColumns === 'function') {
+                                grid.autosizeColumns();
                             }
                         });
                     }
@@ -185,10 +199,15 @@ System.register(["aurelia-framework", "aurelia-i18n", "./filter.service", "./gri
                         this.headerMenuPlugin = null;
                     }
                 };
+                /**
+                 * Create Grid Menu with Custom Commands if user has enabled Filters and/or uses a Backend Service (OData, GraphQL)
+                 * @param grid
+                 * @param options
+                 */
                 ControlAndPluginService.prototype.addGridMenuCustomCommands = function (grid, options) {
                     var _this = this;
                     if (options.enableFiltering) {
-                        if (options && options.gridMenu && options.gridMenu.customItems && options.gridMenu.customItems.filter(function (item) { return item.command === 'clear-filter'; }).length === 0) {
+                        if (options && options.gridMenu && options.gridMenu.showClearAllFiltersCommand && options.gridMenu.customItems && options.gridMenu.customItems.filter(function (item) { return item.command === 'clear-filter'; }).length === 0) {
                             options.gridMenu.customItems.push({
                                 iconCssClass: 'fa fa-filter text-danger',
                                 title: options.enableTranslate ? this.i18n.tr('CLEAR_ALL_FILTERS') : 'Clear All Filters',
@@ -196,7 +215,7 @@ System.register(["aurelia-framework", "aurelia-i18n", "./filter.service", "./gri
                                 command: 'clear-filter'
                             });
                         }
-                        if (options && options.gridMenu && options.gridMenu.customItems && options.gridMenu.customItems.filter(function (item) { return item.command === 'toggle-filter'; }).length === 0) {
+                        if (options && options.gridMenu && options.gridMenu.showToggleFilterCommand && options.gridMenu.customItems && options.gridMenu.customItems.filter(function (item) { return item.command === 'toggle-filter'; }).length === 0) {
                             options.gridMenu.customItems.push({
                                 iconCssClass: 'fa fa-random',
                                 title: options.enableTranslate ? this.i18n.tr('TOGGLE_FILTER_ROW') : 'Toggle Filter Row',
@@ -204,44 +223,96 @@ System.register(["aurelia-framework", "aurelia-i18n", "./filter.service", "./gri
                                 command: 'toggle-filter'
                             });
                         }
+                        if (options && options.gridMenu && options.gridMenu.showRefreshDatasetCommand && options.onBackendEventApi && options.gridMenu.customItems && options.gridMenu.customItems.filter(function (item) { return item.command === 'refresh-dataset'; }).length === 0) {
+                            options.gridMenu.customItems.push({
+                                iconCssClass: 'fa fa-refresh',
+                                title: options.enableTranslate ? this.i18n.tr('REFRESH_DATASET') : 'Refresh Dataset',
+                                disabled: false,
+                                command: 'refresh-dataset'
+                            });
+                        }
+                        // Command callback, what will be executed after command is clicked
                         if (options.gridMenu) {
                             options.gridMenu.onCommand = function (e, args) {
-                                if (args.command === 'toggle-filter') {
-                                    grid.setHeaderRowVisibility(!grid.getOptions().showHeaderRow);
-                                }
-                                else if (args.command === 'toggle-toppanel') {
-                                    grid.setTopPanelVisibility(!grid.getOptions().showTopPanel);
-                                }
-                                else if (args.command === 'clear-filter') {
-                                    _this.filterService.clearFilters();
-                                    _this._dataView.refresh();
-                                }
-                                else {
-                                    alert('Command: ' + args.command);
+                                if (args && args.command) {
+                                    switch (args.command) {
+                                        case 'toggle-filter':
+                                            grid.setHeaderRowVisibility(!grid.getOptions().showHeaderRow);
+                                            break;
+                                        case 'toggle-toppanel':
+                                            grid.setTopPanelVisibility(!grid.getOptions().showTopPanel);
+                                            break;
+                                        case 'clear-filter':
+                                            _this.filterService.clearFilters();
+                                            _this._dataView.refresh();
+                                            break;
+                                        case 'refresh-dataset':
+                                            _this.refreshBackendDataset(options);
+                                            break;
+                                        default:
+                                            alert('Command: ' + args.command);
+                                            break;
+                                    }
                                 }
                             };
                         }
                     }
-                    // add the custom command title if there are commands
+                    // add the custom "Commands" title if there are any commands
                     if (options && options.gridMenu && options.gridMenu.customItems && options.gridMenu.customItems.length > 0) {
                         var customTitle = options.enableTranslate ? this.i18n.tr('COMMANDS') : 'Commands';
                         options.gridMenu.customTitle = options.gridMenu.customTitle || customTitle;
                     }
                 };
-                ControlAndPluginService.prototype.prepareGridMenu = function (grid, options) {
-                    var columnTitle = options.enableTranslate ? this.i18n.tr('COLUMNS') : 'Columns';
-                    var forceFitTitle = options.enableTranslate ? this.i18n.tr('FORCE_FIT_COLUMNS') : 'Force fit columns';
-                    var syncResizeTitle = options.enableTranslate ? this.i18n.tr('SYNCHRONOUS_RESIZE') : 'Synchronous resize';
-                    options.gridMenu = options.gridMenu || {};
-                    options.gridMenu.columnTitle = options.gridMenu.columnTitle || columnTitle;
-                    options.gridMenu.forceFitTitle = options.gridMenu.forceFitTitle || forceFitTitle;
-                    options.gridMenu.syncResizeTitle = options.gridMenu.syncResizeTitle || syncResizeTitle;
-                    options.gridMenu.iconCssClass = options.gridMenu.iconCssClass || 'fa fa-bars';
-                    options.gridMenu.menuWidth = options.gridMenu.menuWidth || 18;
-                    options.gridMenu.customTitle = options.gridMenu.customTitle || undefined;
-                    options.gridMenu.customItems = options.gridMenu.customItems || [];
-                    this.addGridMenuCustomCommands(grid, options);
-                    // options.gridMenu.resizeOnShowHeaderRow = options.showHeaderRow;
+                /**
+                 * @return default Grid Menu options
+                 */
+                ControlAndPluginService.prototype.getDefaultGridMenuOptions = function () {
+                    return {
+                        columnTitle: this.i18n.tr('COLUMNS') || 'Columns',
+                        forceFitTitle: this.i18n.tr('FORCE_FIT_COLUMNS') || 'Force fit columns',
+                        syncResizeTitle: this.i18n.tr('SYNCHRONOUS_RESIZE') || 'Synchronous resize',
+                        iconCssClass: 'fa fa-bars',
+                        menuWidth: 18,
+                        customTitle: undefined,
+                        customItems: [],
+                        showClearAllFiltersCommand: true,
+                        showRefreshDatasetCommand: true,
+                        showToggleFilterCommand: true
+                    };
+                };
+                ControlAndPluginService.prototype.refreshBackendDataset = function (options) {
+                    var query;
+                    if (options && options.onBackendEventApi && options.onBackendEventApi.service) {
+                        if (options.onBackendEventApi.service) {
+                            query = options.onBackendEventApi.service.buildQuery();
+                        }
+                        if (query && query !== '') {
+                            if (options.onBackendEventApi.preProcess) {
+                                options.onBackendEventApi.preProcess();
+                            }
+                            // run the process() and then postProcess()
+                            var processPromise = options.onBackendEventApi.process(query);
+                            processPromise.then(function (responseProcess) {
+                                // send the response process to the postProcess callback
+                                if (options.onBackendEventApi && options.onBackendEventApi.postProcess) {
+                                    options.onBackendEventApi.postProcess(responseProcess);
+                                }
+                            });
+                        }
+                    }
+                };
+                /**
+                 * Reset all the Grid Menu options which have text to translate
+                 * @param grid menu object
+                 */
+                ControlAndPluginService.prototype.resetGridMenuTranslations = function (gridMenu) {
+                    // we will reset the custom items array since the commands title have to be translated too (no worries, we will re-create it later)
+                    gridMenu.customItems = [];
+                    delete gridMenu.customTitle;
+                    gridMenu.columnTitle = this.i18n.tr('COLUMNS') || 'Columns';
+                    gridMenu.forceFitTitle = this.i18n.tr('FORCE_FIT_COLUMNS') || 'Force fit columns';
+                    gridMenu.syncResizeTitle = this.i18n.tr('SYNCHRONOUS_RESIZE') || 'Synchronous resize';
+                    return gridMenu;
                 };
                 /**
                  * Translate the Column Picker and it's last 2 checkboxes
@@ -265,7 +336,8 @@ System.register(["aurelia-framework", "aurelia-i18n", "./filter.service", "./gri
                 ControlAndPluginService.prototype.translateGridMenu = function () {
                     // destroy and re-create the Grid Menu which seems to be the only way to translate properly
                     this.gridMenuControl.destroy();
-                    this._gridOptions.gridMenu = undefined;
+                    // reset all Grid Menu options that have translation text & then re-create the Grid Menu and also the custom items array
+                    this._gridOptions.gridMenu = this.resetGridMenuTranslations(this._gridOptions.gridMenu || {});
                     this.createGridMenu(this._grid, this.visibleColumns, this._gridOptions);
                 };
                 /**

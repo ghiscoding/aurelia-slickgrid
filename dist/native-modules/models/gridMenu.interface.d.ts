@@ -7,9 +7,12 @@ export interface GridMenu {
     iconImage?: string;
     iconCssClass?: string;
     leaveOpen?: boolean;
-    syncResizeTitle?: string;
     menuWidth?: number;
     resizeOnShowHeaderRow?: boolean;
+    showClearAllFiltersCommand?: boolean;
+    showRefreshDatasetCommand?: boolean;
+    showToggleFilterCommand?: boolean;
+    syncResizeTitle?: string;
     onBeforeMenuShow?: (e: Event, args: any) => void;
     onMenuClose?: (e: Event, args: any) => void;
     onCommand?: (e: Event, args: any) => void;

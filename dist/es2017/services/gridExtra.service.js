@@ -41,6 +41,11 @@ export class GridExtraService {
     highlightRow(rowNumber, fadeDelay = 1500) {
         // chain current item Metadata with our own Metadata for implementing highligh CSS styling
         const previousMetadata = this._dataView.getItemMetadata;
+        // create a SelectionModel if there's not one yet
+        if (!this._grid.getSelectionModel()) {
+            const rowSelectionPlugin = new Slick.RowSelectionModel(this._gridOptions.rowSelectionOptions || {});
+            this._grid.setSelectionModel(rowSelectionPlugin);
+        }
         this._grid.setSelectedRows([rowNumber]);
         this._dataView.getItemMetadata = this.getItemRowMetadata(this._dataView.getItemMetadata);
         const item = this._dataView.getItem(rowNumber);

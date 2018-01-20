@@ -41,9 +41,6 @@ function mapMomentDateFormatWithFieldType(fieldType) {
         case index_1.FieldType.dateTimeUsShortAmPm:
             map = 'M/D/YY h:m:s a';
             break;
-        case index_1.FieldType.dateTimeUsAM_PM:
-            map = 'M/D/YY h:m:s A';
-            break;
         case index_1.FieldType.dateUtc:
             map = 'YYYY-MM-DDTHH:mm:ss.SSSZ';
             break;
@@ -109,16 +106,13 @@ function mapFlatpickrDateFormatWithFieldType(fieldType) {
             map = 'm/d/Y h:i:S K'; // there is no lowercase in Flatpickr :(
             break;
         case index_1.FieldType.dateTimeUsAM_PM:
-            map = 'm/d/Y h:i:S K';
+            map = 'M/D/YY h:i:s K';
             break;
         case index_1.FieldType.dateTimeUsShort:
             map = 'M/D/YY H:i:s';
             break;
         case index_1.FieldType.dateTimeUsShortAmPm:
             map = 'M/D/YY h:i:s K'; // there is no lowercase in Flatpickr :(
-            break;
-        case index_1.FieldType.dateTimeUsAM_PM:
-            map = 'M/D/YY h:i:s K';
             break;
         case index_1.FieldType.dateUtc:
             map = 'Z';

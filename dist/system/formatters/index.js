@@ -1,7 +1,7 @@
-System.register(["./arrayToCsvFormatter", "./checkboxFormatter", "./checkmarkFormatter", "./complexObjectFormatter", "./dateIsoFormatter", "./dateTimeIsoAmPmFormatter", "./dateTimeUsAmPmFormatter", "./dateTimeUsFormatter", "./dateUsFormatter", "./deleteIconFormatter", "./editIconFormatter", "./hyperlinkFormatter", "./lowercaseFormatter", "./multipleFormatter", "./percentCompleteFormatter", "./percentCompleteBarFormatter", "./progressBarFormatter", "./translateFormatter", "./uppercaseFormatter", "./yesNoFormatter"], function (exports_1, context_1) {
+System.register(["./arrayToCsvFormatter", "./checkboxFormatter", "./checkmarkFormatter", "./complexObjectFormatter", "./dateIsoFormatter", "./dateTimeIsoAmPmFormatter", "./dateTimeUsAmPmFormatter", "./dateTimeUsFormatter", "./dateUsFormatter", "./deleteIconFormatter", "./editIconFormatter", "./hyperlinkFormatter", "./infoIconFormatter", "./lowercaseFormatter", "./multipleFormatter", "./percentCompleteFormatter", "./percentCompleteBarFormatter", "./progressBarFormatter", "./translateFormatter", "./uppercaseFormatter", "./yesNoFormatter"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var arrayToCsvFormatter_1, checkboxFormatter_1, checkmarkFormatter_1, complexObjectFormatter_1, dateIsoFormatter_1, dateTimeIsoAmPmFormatter_1, dateTimeUsAmPmFormatter_1, dateTimeUsFormatter_1, dateUsFormatter_1, deleteIconFormatter_1, editIconFormatter_1, hyperlinkFormatter_1, lowercaseFormatter_1, multipleFormatter_1, percentCompleteFormatter_1, percentCompleteBarFormatter_1, progressBarFormatter_1, translateFormatter_1, uppercaseFormatter_1, yesNoFormatter_1, Formatters;
+    var arrayToCsvFormatter_1, checkboxFormatter_1, checkmarkFormatter_1, complexObjectFormatter_1, dateIsoFormatter_1, dateTimeIsoAmPmFormatter_1, dateTimeUsAmPmFormatter_1, dateTimeUsFormatter_1, dateUsFormatter_1, deleteIconFormatter_1, editIconFormatter_1, hyperlinkFormatter_1, infoIconFormatter_1, lowercaseFormatter_1, multipleFormatter_1, percentCompleteFormatter_1, percentCompleteBarFormatter_1, progressBarFormatter_1, translateFormatter_1, uppercaseFormatter_1, yesNoFormatter_1, Formatters;
     return {
         setters: [
             function (arrayToCsvFormatter_1_1) {
@@ -39,6 +39,9 @@ System.register(["./arrayToCsvFormatter", "./checkboxFormatter", "./checkmarkFor
             },
             function (hyperlinkFormatter_1_1) {
                 hyperlinkFormatter_1 = hyperlinkFormatter_1_1;
+            },
+            function (infoIconFormatter_1_1) {
+                infoIconFormatter_1 = infoIconFormatter_1_1;
             },
             function (lowercaseFormatter_1_1) {
                 lowercaseFormatter_1 = lowercaseFormatter_1_1;
@@ -89,6 +92,7 @@ System.register(["./arrayToCsvFormatter", "./checkboxFormatter", "./checkmarkFor
                 deleteIcon: deleteIconFormatter_1.deleteIconFormatter,
                 editIcon: editIconFormatter_1.editIconFormatter,
                 hyperlink: hyperlinkFormatter_1.hyperlinkFormatter,
+                infoIcon: infoIconFormatter_1.infoIconFormatter,
                 lowercase: lowercaseFormatter_1.lowercaseFormatter,
                 multiple: multipleFormatter_1.multipleFormatter,
                 percentComplete: percentCompleteFormatter_1.percentCompleteFormatter,

@@ -14,6 +14,7 @@ var dateUsFormatter_1 = require("./dateUsFormatter");
 var deleteIconFormatter_1 = require("./deleteIconFormatter");
 var editIconFormatter_1 = require("./editIconFormatter");
 var hyperlinkFormatter_1 = require("./hyperlinkFormatter");
+var infoIconFormatter_1 = require("./infoIconFormatter");
 var lowercaseFormatter_1 = require("./lowercaseFormatter");
 var multipleFormatter_1 = require("./multipleFormatter");
 var percentCompleteFormatter_1 = require("./percentCompleteFormatter");
@@ -45,6 +46,7 @@ exports.Formatters = {
     deleteIcon: deleteIconFormatter_1.deleteIconFormatter,
     editIcon: editIconFormatter_1.editIconFormatter,
     hyperlink: hyperlinkFormatter_1.hyperlinkFormatter,
+    infoIcon: infoIconFormatter_1.infoIconFormatter,
     lowercase: lowercaseFormatter_1.lowercaseFormatter,
     multiple: multipleFormatter_1.multipleFormatter,
     percentComplete: percentCompleteFormatter_1.percentCompleteFormatter,

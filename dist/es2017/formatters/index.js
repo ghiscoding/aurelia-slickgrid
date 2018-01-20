@@ -12,6 +12,7 @@ import { dateUsFormatter } from './dateUsFormatter';
 import { deleteIconFormatter } from './deleteIconFormatter';
 import { editIconFormatter } from './editIconFormatter';
 import { hyperlinkFormatter } from './hyperlinkFormatter';
+import { infoIconFormatter } from './infoIconFormatter';
 import { lowercaseFormatter } from './lowercaseFormatter';
 import { multipleFormatter } from './multipleFormatter';
 import { percentCompleteFormatter } from './percentCompleteFormatter';
@@ -43,6 +44,7 @@ export const Formatters = {
     deleteIcon: deleteIconFormatter,
     editIcon: editIconFormatter,
     hyperlink: hyperlinkFormatter,
+    infoIcon: infoIconFormatter,
     lowercase: lowercaseFormatter,
     multiple: multipleFormatter,
     percentComplete: percentCompleteFormatter,

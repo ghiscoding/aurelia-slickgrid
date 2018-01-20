@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 /**
- * Options that can be passed to the Aurelia-Slickgrid
+ * Default Options that can be passed to the Aurelia-Slickgrid
  */
 exports.GlobalGridOptions = {
     autoEdit: false,
@@ -33,10 +33,12 @@ exports.GlobalGridOptions = {
     gridMenu: {
         iconCssClass: 'fa fa-bars',
         menuWidth: 16,
-        resizeOnShowHeaderRow: false
+        resizeOnShowHeaderRow: false,
+        showClearAllFiltersCommand: true,
+        showRefreshDatasetCommand: true,
+        showToggleFilterCommand: true
     },
     headerRowHeight: 35,
-    locale: 'en',
     multiColumnSort: true,
     pagination: {
         pageSizes: [10, 15, 20, 25, 30, 40, 50, 75, 100],

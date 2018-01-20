@@ -6,7 +6,7 @@ System.register([], function (exports_1, context_1) {
         setters: [],
         execute: function () {
             /**
-             * Options that can be passed to the Aurelia-Slickgrid
+             * Default Options that can be passed to the Aurelia-Slickgrid
              */
             exports_1("GlobalGridOptions", GlobalGridOptions = {
                 autoEdit: false,
@@ -38,10 +38,12 @@ System.register([], function (exports_1, context_1) {
                 gridMenu: {
                     iconCssClass: 'fa fa-bars',
                     menuWidth: 16,
-                    resizeOnShowHeaderRow: false
+                    resizeOnShowHeaderRow: false,
+                    showClearAllFiltersCommand: true,
+                    showRefreshDatasetCommand: true,
+                    showToggleFilterCommand: true
                 },
                 headerRowHeight: 35,
-                locale: 'en',
                 multiColumnSort: true,
                 pagination: {
                     pageSizes: [10, 15, 20, 25, 30, 40, 50, 75, 100],
