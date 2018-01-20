@@ -77,6 +77,8 @@ export class AureliaSlickgridCustomElement {
   }
 
   attached() {
+    this.ea.publish('onBeforeGridCreate', true);
+
     // make sure the dataset is initialized (if not it will throw an error that it cannot getLength of null)
     this._dataset = this._dataset || [];
     this._gridOptions = this.mergeGridOptions();
@@ -93,6 +95,10 @@ export class AureliaSlickgridCustomElement {
     this.dataview.setItems(this._dataset);
     this.dataview.endUpdate();
 
+    // publish certain events
+    this.ea.publish('onGridCreated', this.grid);
+    this.ea.publish('onDataviewCreated', this.dataview);
+
     // attach resize ONLY after the dataView is ready
     this.attachResizeHook(this.grid, this._gridOptions);
 
@@ -106,12 +112,14 @@ export class AureliaSlickgridCustomElement {
   }
 
   detached() {
+    this.ea.publish('onBeforeGridDestroy', this.grid);
     this.dataview = [];
     this.controlPluginService.destroy();
     this.filterService.destroy();
     this.resizer.destroy();
     this.sortService.destroy();
     this.grid.destroy();
+    this.ea.publish('onAfterGridDestroyed', true);
   }
 
   /**
