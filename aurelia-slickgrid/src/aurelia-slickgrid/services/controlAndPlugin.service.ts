@@ -303,27 +303,29 @@ export class ControlAndPluginService {
     };
   }
 
-  private refreshBackendDataset(options) {
+  private refreshBackendDataset(options: GridOption) {
     let query;
 
-    if (options.onBackendEventApi.service) {
-      query = options.onBackendEventApi.service.buildQuery();
-    }
-
-    if (query && query !== '') {
-      if (options.onBackendEventApi.preProcess) {
-        options.onBackendEventApi.preProcess();
+    if (options && options.onBackendEventApi && options.onBackendEventApi.service) {
+      if (options.onBackendEventApi.service) {
+        query = options.onBackendEventApi.service.buildQuery();
       }
 
-      // run the process() and then postProcess()
-      const processPromise = options.onBackendEventApi.process(query);
-
-      processPromise.then((responseProcess: any) => {
-        // send the response process to the postProcess callback
-        if (options.onBackendEventApi.postProcess) {
-          options.onBackendEventApi.postProcess(responseProcess);
+      if (query && query !== '') {
+        if (options.onBackendEventApi.preProcess) {
+          options.onBackendEventApi.preProcess();
         }
-      });
+
+        // run the process() and then postProcess()
+        const processPromise = options.onBackendEventApi.process(query);
+
+        processPromise.then((responseProcess: any) => {
+          // send the response process to the postProcess callback
+          if (options.onBackendEventApi && options.onBackendEventApi.postProcess) {
+            options.onBackendEventApi.postProcess(responseProcess);
+          }
+        });
+      }
     }
   }
 
@@ -369,7 +371,7 @@ export class ControlAndPluginService {
     this.gridMenuControl.destroy();
 
     // reset all Grid Menu options that have translation text & then re-create the Grid Menu and also the custom items array
-    this._gridOptions.gridMenu = this.resetGridMenuTranslations(this._gridOptions.gridMenu);
+    this._gridOptions.gridMenu = this.resetGridMenuTranslations(this._gridOptions.gridMenu || {});
     this.createGridMenu(this._grid, this.visibleColumns, this._gridOptions);
   }
 
