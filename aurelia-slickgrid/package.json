@@ -28,6 +28,7 @@
     "aurelia-i18n": "^2.1.0",
     "aurelia-pal": "^1.4.0",
     "aurelia-polyfills": "latest",
+    "aurelia-router": "^1.5.0",
     "bluebird": "^3.4.1",
     "bootstrap": "^3.3.7",
     "flatpickr": "^4.1.0",

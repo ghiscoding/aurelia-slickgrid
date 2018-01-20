@@ -128,7 +128,7 @@ export class ControlAndPluginService {
     this.prepareGridMenu(grid, options);
 
     const gridMenuControl = new Slick.Controls.GridMenu(columnDefinitions, grid, options);
-    if (options.gridMenu) {
+    if (grid && options.gridMenu) {
       gridMenuControl.onBeforeMenuShow.subscribe((e: Event, args: CellArgs) => {
         if (options.gridMenu && typeof options.gridMenu.onBeforeMenuShow === 'function') {
           options.gridMenu.onBeforeMenuShow(e, args);
@@ -144,8 +144,8 @@ export class ControlAndPluginService {
           options.gridMenu.onMenuClose(e, args);
         }
         // we also want to resize the columns if the user decided to hide certain column(s)
-        if (this._grid && typeof this._grid.autosizeColumns === 'function') {
-          this._grid.autosizeColumns();
+        if (grid && typeof grid.autosizeColumns === 'function') {
+          grid.autosizeColumns();
         }
       });
     }

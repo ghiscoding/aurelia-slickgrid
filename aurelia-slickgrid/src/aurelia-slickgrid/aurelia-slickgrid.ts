@@ -200,15 +200,15 @@ export class AureliaSlickgridCustomElement {
 
   attachResizeHook(grid: any, options: GridOption) {
     // expand/autofit columns on first page load
-    if (this._gridOptions.autoFitColumnsOnFirstLoad) {
+    if (grid && options.autoFitColumnsOnFirstLoad && typeof grid.autosizeColumns === 'function') {
       this.grid.autosizeColumns();
     }
 
     // auto-resize grid on browser resize
     this.resizer.init(grid, options);
-    if (options.enableAutoResize) {
+    if (grid && options.enableAutoResize) {
       this.resizer.attachAutoResizeDataGrid();
-      if (options.autoFitColumnsOnFirstLoad) {
+      if (options.autoFitColumnsOnFirstLoad && typeof grid.autosizeColumns === 'function') {
         grid.autosizeColumns();
       }
     } else {
@@ -243,7 +243,7 @@ export class AureliaSlickgridCustomElement {
         this.showPagination = true;
         this.gridPaginationOptions = this.mergeGridOptions();
       }
-      if (this._gridOptions.enableAutoResize) {
+      if (this.grid && this._gridOptions.enableAutoResize) {
         // resize the grid inside a slight timeout, in case other DOM element changed prior to the resize (like a filter/pagination changed)
         this.resizer.resizeGrid(10);
         // this.grid.autosizeColumns();
