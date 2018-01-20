@@ -183,7 +183,6 @@ export function mapOperatorType(operator: string): OperatorType {
   return map;
 }
 
-
 /**
  * Parse a date passed as a string and return a Date object (if valid)
  * @param string inputDateString

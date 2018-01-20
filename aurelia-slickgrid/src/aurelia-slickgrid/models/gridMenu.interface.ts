@@ -11,6 +11,7 @@ export interface GridMenu {
   menuWidth?: number;
   resizeOnShowHeaderRow?: boolean;
   showClearAllFiltersCommand?: boolean;
+  showRefreshDatasetCommand?: boolean;
   showToggleFilterCommand?: boolean;
   syncResizeTitle?: string;
 
