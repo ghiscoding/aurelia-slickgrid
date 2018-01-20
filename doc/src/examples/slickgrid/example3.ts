@@ -21,7 +21,7 @@ export class Example3 {
   updatedObject: any;
   isAutoEdit: boolean = true;
 
-  constructor(private gridExtraService, private resizer: ResizerService) {
+  constructor(private gridExtraService: GridExtraService, private resizer: ResizerService) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
   }
@@ -120,10 +120,10 @@ export class Example3 {
       if (column.columnDef.id === 'edit') {
         alert(`Call a modal window to edit: ${column.dataContext.title}`);
 
-        // highlight the row, to customize the color, you can change the SASS variable $row-highlight-background-color 
+        // highlight the row, to customize the color, you can change the SASS variable $row-highlight-background-color
         this.gridExtraService.highlightRow(args.row, 1500);
 
-        // you could also select the row, when using "enableCellNavigation: true", it automatically selects the row 
+        // you could also select the row, when using "enableCellNavigation: true", it automatically selects the row
         // this.gridExtraService.setSelectedRow(args.row);
       }
       if (column.columnDef.id === 'delete') {

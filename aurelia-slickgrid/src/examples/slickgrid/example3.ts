@@ -20,7 +20,7 @@ export class Example3 {
   updatedObject: any;
   isAutoEdit: boolean = true;
 
-  constructor(private gridExtraService, private resizer: ResizerService) {
+  constructor(private gridExtraService: GridExtraService, private resizer: ResizerService) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
   }

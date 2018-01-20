@@ -529,7 +529,7 @@ aurelia-event-aggregator@^1.0.0, aurelia-event-aggregator@^1.0.1:
   dependencies:
     aurelia-logging "^1.0.0"
 
-aurelia-framework@^1.0.0, aurelia-framework@^1.1.0:
+aurelia-framework@^1.0.0, aurelia-framework@^1.1.0, aurelia-framework@^1.1.5:
   version "1.1.5"
   resolved "https://registry.yarnpkg.com/aurelia-framework/-/aurelia-framework-1.1.5.tgz#fd97d281c02d35bb98032830b0731ec3d2a6c1d7"
   dependencies:
@@ -688,9 +688,9 @@ aurelia-router@^1.0.1:
     aurelia-path "^1.0.0"
     aurelia-route-recognizer "^1.0.0"
 
-aurelia-slickgrid@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/aurelia-slickgrid/-/aurelia-slickgrid-1.1.0.tgz#240ff2f99dfbfaa2bd3de8c2a36a9bb82c3f7bda"
+aurelia-slickgrid@^1.1.2:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/aurelia-slickgrid/-/aurelia-slickgrid-1.2.0.tgz#3819885c9db3f8aa6ae3e5a7df97b44e54636dcd"
   dependencies:
     "@types/flatpickr" "^3.1.2"
     "@types/jquery" "^3.2.15"
