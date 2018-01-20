@@ -207,7 +207,7 @@ export class ControlAndPluginService {
 
   private addGridMenuCustomCommands(grid: any, options: GridOption) {
     if (options.enableFiltering) {
-      if (options && options.gridMenu && options.gridMenu.customItems && options.gridMenu.customItems.filter((item: CustomGridMenu) => item.command === 'clear-filter').length === 0) {
+      if (options && options.gridMenu && options.gridMenu.showClearAllFiltersCommand && options.gridMenu.customItems && options.gridMenu.customItems.filter((item: CustomGridMenu) => item.command === 'clear-filter').length === 0) {
         options.gridMenu.customItems.push(
           {
             iconCssClass: 'fa fa-filter text-danger',
@@ -217,7 +217,7 @@ export class ControlAndPluginService {
           }
         );
       }
-      if (options && options.gridMenu && options.gridMenu.customItems && options.gridMenu.customItems.filter((item: CustomGridMenu) => item.command === 'toggle-filter').length === 0) {
+      if (options && options.gridMenu && options.gridMenu.showToggleFilterCommand && options.gridMenu.customItems && options.gridMenu.customItems.filter((item: CustomGridMenu) => item.command === 'toggle-filter').length === 0) {
         options.gridMenu.customItems.push(
           {
             iconCssClass: 'fa fa-random',

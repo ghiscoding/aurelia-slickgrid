@@ -33,7 +33,9 @@ export const GlobalGridOptions: GridOption = {
   gridMenu: {
     iconCssClass: 'fa fa-bars',
     menuWidth: 16,
-    resizeOnShowHeaderRow: false
+    resizeOnShowHeaderRow: false,
+    showClearAllFiltersCommand: true,
+    showToggleFilterCommand: true
   },
   headerRowHeight: 35,
   multiColumnSort: true,
