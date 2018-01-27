@@ -71,7 +71,7 @@ export class SlickPaginationCustomElement {
   }
 
   onChangeItemPerPage(event: any) {
-    const itemsPerPage = event.target.value as number;
+    const itemsPerPage = +event.target.value;
     this.pageCount = Math.ceil(this.totalItems / itemsPerPage);
     this.pageNumber = 1;
     this.itemsPerPage = itemsPerPage;
@@ -88,9 +88,9 @@ export class SlickPaginationCustomElement {
 
       // calculate and refresh the multiple properties of the pagination UI
       this.paginationPageSizes = this._gridPaginationOptions.pagination.pageSizes;
-      this.itemsPerPage = this._gridPaginationOptions.pagination.pageSize;
+      this.itemsPerPage = +this._gridPaginationOptions.pagination.pageSize;
       this.totalItems = this._gridPaginationOptions.pagination.totalItems;
-      this.dataTo = this.itemsPerPage;
+      this.dataTo = +this.itemsPerPage;
     }
     this.pageCount = Math.ceil(this.totalItems / this.itemsPerPage);
   }

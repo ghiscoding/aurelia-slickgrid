@@ -52,7 +52,10 @@ export interface GridOption {
   multiColumnSort?: boolean;
   onBackendEventApi?: BackendEventChanged;
   pagination?: Pagination;
-  params?: any;
+
+  /** ideal to pass custom paramaters to your Formatter/Editor or anything else */
+  params?: any | any[];
+
   registerPlugins?: any | any[]; // e.g.: Slick.CheckboxSelectColumn
   rowHeight?: number;
   rowSelectionOptions?: {
