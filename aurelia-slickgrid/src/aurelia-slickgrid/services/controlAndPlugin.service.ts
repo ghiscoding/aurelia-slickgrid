@@ -188,6 +188,9 @@ export class ControlAndPluginService {
       this.columnPickerControl = null;
     }
     if (this.gridMenuControl) {
+      this.gridMenuControl.onBeforeMenuShow.unsubscribe();
+      this.gridMenuControl.onCommand.unsubscribe();
+      this.gridMenuControl.onMenuClose.unsubscribe();
       this.gridMenuControl.destroy();
       this.gridMenuControl = null;
     }
