@@ -1,3 +1,5 @@
+import { inject } from 'aurelia-framework';
+import { I18N } from 'aurelia-i18n';
 import { mapOperatorType, parseUtcDate } from './utilities';
 import QueryBuilder from './graphqlQueryBuilder';
 import {
@@ -21,9 +23,12 @@ import {
 let timer: any;
 const DEFAULT_FILTER_TYPING_DEBOUNCE = 750;
 
+@inject(I18N)
 export class GraphqlService implements BackendService {
   serviceOptions: GraphqlServiceOption = {};
   defaultOrderBy: GraphqlSortingOption = { field: 'id', direction: SortDirection.ASC };
+
+  constructor(private i18n: I18N) { }
 
   /**
    * Build the GraphQL query, since the service include/exclude cursor, the output query will be different.
@@ -75,6 +80,10 @@ export class GraphqlService implements BackendService {
     if (this.serviceOptions.filteringOptions) {
       // filterBy: [{ field: date, operator: '>', value: '2000-10-10' }]
       datasetFilters.filterBy = this.serviceOptions.filteringOptions;
+    }
+    if (this.serviceOptions.addLocaleIntoQuery) {
+      // first: 20, ... locale: "en-CA"
+      datasetFilters.locale = this.i18n.getLocale() || 'en';
     }
 
     // query { users(first: 20, orderBy: [], filterBy: [])}
