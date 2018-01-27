@@ -81,7 +81,6 @@ export class Example5 {
           this.displaySpinner(false);
           this.getCustomerCallback(response);
         },
-        filterTypingDebounce: 700,
         service: this.odataService
       }
     };
@@ -110,8 +109,9 @@ export class Example5 {
     return this.getCustomerDataApiMock(query);
   }
 
-  /** This function is only here to mock a WebAPI call (since we are using a JSON file for the demo)
-   *  in your case the getCustomer() should be a WebAPI function returning a Promise
+  /**
+   * This function is only here to mock a WebAPI call (since we are using a JSON file for the demo)
+   * in your case the getCustomer() should be a WebAPI function returning a Promise
    */
   getCustomerDataApiMock(query) {
     // the mock is returning a Promise, just like a WebAPI typically does
@@ -121,7 +121,7 @@ export class Example5 {
       let skip = 0;
       let orderBy = '';
       let countTotalItems = 100;
-      let columnFilters = {};
+      const columnFilters = {};
 
       for (const param of queryParams) {
         if (param.includes('$top=')) {

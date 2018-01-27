@@ -19,6 +19,7 @@ import {
 
 // timer for keeping track of user typing waits
 let timer: any;
+const DEFAULT_FILTER_TYPING_DEBOUNCE = 750;
 
 export class GraphqlService implements BackendService {
   serviceOptions: GraphqlServiceOption = {};
@@ -92,7 +93,7 @@ export class GraphqlService implements BackendService {
    * INPUT
    *  ['firstName', 'lastName', 'billing.address.street', 'billing.address.zip']
    * OUTPUT
-   * firstName, lastName, shipping{address{street, zip}}
+   * firstName, lastName, billing{address{street, zip}}
    * @param inputArray
    */
   buildFilterQuery(inputArray: string[]) {
@@ -145,13 +146,13 @@ export class GraphqlService implements BackendService {
   onFilterChanged(event: Event, args: FilterChangedArgs): Promise<string> {
     const searchByArray: GraphqlFilteringOption[] = [];
     const serviceOptions: BackendServiceOption = args.grid.getOptions();
-    if (serviceOptions.onBackendEventApi === undefined || !serviceOptions.onBackendEventApi.filterTypingDebounce) {
+    if (serviceOptions.onBackendEventApi === undefined) {
       throw new Error('Something went wrong in the GraphqlService, "onBackendEventApi" is not initialized');
     }
 
     let debounceTypingDelay = 0;
     if (event.type === 'keyup' || event.type === 'keydown') {
-      debounceTypingDelay = serviceOptions.onBackendEventApi.filterTypingDebounce || 700;
+      debounceTypingDelay = serviceOptions.onBackendEventApi.filterTypingDebounce || DEFAULT_FILTER_TYPING_DEBOUNCE;
     }
 
     const promise = new Promise<string>((resolve, reject) => {

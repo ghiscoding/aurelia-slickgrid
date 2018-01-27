@@ -5,12 +5,12 @@ import { BackendService, BackendServiceOption, CaseType, FilterChangedArgs, Fiel
 import { OdataService } from './odata.service';
 import * as moment from 'moment';
 let timer: any;
+const DEFAULT_FILTER_TYPING_DEBOUNCE = 750;
 
 @inject(OdataService)
 export class GridOdataService implements BackendService {
   serviceOptions: OdataOption = {};
   defaultSortBy = '';
-  minUserInactivityOnFilter = 700;
   odataService: OdataService;
 
   constructor(odataService: OdataService) {
@@ -50,15 +50,15 @@ export class GridOdataService implements BackendService {
    * FILTERING
    */
   onFilterChanged(event: Event, args: FilterChangedArgs): Promise<string> {
-    const searchBy: string = '';
+    let searchBy = '';
     const searchByArray: string[] = [];
     const serviceOptions: BackendServiceOption = args.grid.getOptions();
-    if (serviceOptions.onBackendEventApi === undefined || !serviceOptions.onBackendEventApi.filterTypingDebounce) {
+    if (serviceOptions.onBackendEventApi === undefined) {
       throw new Error('Something went wrong in the GridOdataService, "onBackendEventApi" is not initialized');
     }
     let debounceTypingDelay = 0;
     if (event.type === 'keyup' || event.type === 'keydown') {
-      debounceTypingDelay = serviceOptions.onBackendEventApi.filterTypingDebounce || 700;
+      debounceTypingDelay = serviceOptions.onBackendEventApi.filterTypingDebounce || DEFAULT_FILTER_TYPING_DEBOUNCE;
     }
 
     const promise = new Promise<string>((resolve, reject) => {
@@ -102,7 +102,7 @@ export class GridOdataService implements BackendService {
               this.saveColumnFilter(fieldName, fieldSearchValue, searchTerms);
             }
           } else {
-            let searchBy = '';
+            searchBy = '';
 
             // titleCase the fieldName so that it matches the WebApi names
             const fieldNameTitleCase = String.titleCase(fieldName || '');
@@ -198,7 +198,7 @@ export class GridOdataService implements BackendService {
       sortByArray = new Array(this.defaultSortBy); // when empty, use the default sort
     } else {
       if (sortColumns) {
-        for (let column of sortColumns) {
+        for (const column of sortColumns) {
           let fieldName = column.sortCol.field || column.sortCol.id;
           if (this.odataService.options.caseType === CaseType.pascalCase) {
             fieldName = String.titleCase(fieldName);

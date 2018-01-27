@@ -80,7 +80,6 @@ export class Example5 {
           this.displaySpinner(false);
           this.getCustomerCallback(response);
         },
-        filterTypingDebounce: 700,
         service: this.odataService
       }
     };
