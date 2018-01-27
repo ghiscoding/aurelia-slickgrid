@@ -1,7 +1,10 @@
 import { mapFlatpickrDateFormatWithFieldType } from './../services/utilities';
-import { Editor, FieldType, KeyCode } from './../models/index';
+import { Column, Editor, FieldType, GridOption, KeyCode } from './../models/index';
+import { I18N } from 'aurelia-i18n';
 import * as $ from 'jquery';
-import * as flatpickr from 'flatpickr';
+
+declare function require(name: string);
+const flatpickr = require('flatpickr');
 
 /*
  * An example of a date picker editor using Flatpickr
@@ -17,11 +20,11 @@ export class DateEditor implements Editor {
   }
 
   init(): void {
-    const gridOptions = this.args.grid.getOptions();
+    const gridOptions = this.args.grid.getOptions() as GridOption;
     this.defaultDate = this.args.item[this.args.column.field] || null;
     const inputFormat = mapFlatpickrDateFormatWithFieldType(this.args.column.type || FieldType.dateIso);
     const outputFormat = mapFlatpickrDateFormatWithFieldType(this.args.column.outputType || FieldType.dateUtc);
-    const locale = (gridOptions && gridOptions.locale) ? gridOptions.locale : 'en';
+    const currentLocale = this.getCurrentLocale(this.args.column, gridOptions);
 
     const pickerOptions: any = {
       defaultDate: this.defaultDate,
@@ -29,35 +32,52 @@ export class DateEditor implements Editor {
       altFormat: inputFormat,
       dateFormat: outputFormat,
       closeOnSelect: false,
+      locale: (currentLocale !== 'en') ? this.loadFlatpickrLocale(currentLocale) : 'en',
       onChange: (selectedDates: any[] | any, dateStr: string, instance: any) => {
         this.save();
       },
     };
 
+    this.$input = $(`<input type="text" data-defaultDate="${this.defaultDate}" class="editor-text flatpickr" />`);
+    this.$input.appendTo(this.args.container);
+    this.flatInstance = (this.$input[0] && typeof this.$input[0].flatpickr === 'function') ? this.$input[0].flatpickr(pickerOptions) : null;
+    this.show();
+  }
+
+  getCurrentLocale(columnDef: Column, gridOptions: GridOption) {
+    const params = columnDef.params || {};
+    if (params.i18n && params.i18n instanceof I18N) {
+      return params.i18n.getLocale();
+    }
+
+    return (gridOptions && gridOptions.locale) ? gridOptions.locale : 'en';
+  }
+
+  loadFlatpickrLocale(locale: string) {
     // change locale if needed, Flatpickr reference: https://chmln.github.io/flatpickr/localization/
     if (locale !== 'en') {
       const localeDefault: any = require(`flatpickr/dist/l10n/${locale}.js`).default;
-      pickerOptions['locale'] = (localeDefault && localeDefault[locale]) ? localeDefault[locale] : 'en';
+      return (localeDefault && localeDefault[locale]) ? localeDefault[locale] : 'en';
     }
-
-    this.$input = $(`<input type="text" data-defaultDate="${this.defaultDate}" class="editor-text flatpickr" />`);
-    this.$input.appendTo(this.args.container);
-    this.flatInstance = flatpickr(this.$input[0], pickerOptions);
-    this.flatInstance.open();
+    return 'en';
   }
 
   destroy() {
-    // this.flatInstance.destroy();
-    this.flatInstance.close();
+    this.hide();
     this.$input.remove();
+    // this.flatInstance.destroy();
   }
 
   show() {
-    this.flatInstance.open();
+    if (this.flatInstance && typeof this.flatInstance.open === 'function') {
+      this.flatInstance.open();
+    }
   }
 
   hide() {
-    this.flatInstance.close();
+    if (this.flatInstance && typeof this.flatInstance.close === 'function') {
+      this.flatInstance.close();
+    }
   }
 
   focus() {

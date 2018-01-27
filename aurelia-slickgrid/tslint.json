@@ -18,6 +18,7 @@
     "array-type": ["array-simple"],
     "arrow-parens": false,
     "max-classes-per-file": [false],
+    "no-var-requires": false,
     "no-object-literal-type-assertion": false,
     "prefer-for-of": false,
     "prefer-conditional-expression": false

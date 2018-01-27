@@ -1,3 +1,4 @@
+import { I18N } from 'aurelia-i18n';
 import { autoinject, bindable } from 'aurelia-framework';
 import { Column, Editors, FieldType, Formatters, GridExtraService, GridExtraUtils, GridOption, OnEventArgs, ResizerService } from '../../aurelia-slickgrid';
 
@@ -19,10 +20,12 @@ export class Example3 {
   dataset: any[];
   updatedObject: any;
   isAutoEdit: boolean = true;
+  selectedLanguage: string;
 
-  constructor(private gridExtraService: GridExtraService, private resizer: ResizerService) {
+  constructor(private gridExtraService: GridExtraService, private i18n: I18N, private resizer: ResizerService) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
+    this.selectedLanguage = this.i18n.getLocale();
   }
 
   attached() {
@@ -62,7 +65,7 @@ export class Example3 {
       { id: 'title', name: 'Title', field: 'title', sortable: true, type: FieldType.string, editor: Editors.longText, minWidth: 100 },
       { id: 'duration', name: 'Duration (days)', field: 'duration', sortable: true, type: FieldType.number, editor: Editors.text, minWidth: 100 },
       { id: 'complete', name: '% Complete', field: 'percentComplete', formatter: Formatters.percentCompleteBar, type: FieldType.number, editor: Editors.integer, minWidth: 100 },
-      { id: 'start', name: 'Start', field: 'start', formatter: Formatters.dateIso, sortable: true, minWidth: 100, type: FieldType.date, editor: Editors.date },
+      { id: 'start', name: 'Start', field: 'start', formatter: Formatters.dateIso, sortable: true, minWidth: 100, type: FieldType.date, editor: Editors.date, params: { i18n: this.i18n } },
       { id: 'finish', name: 'Finish', field: 'finish', formatter: Formatters.dateIso, sortable: true, minWidth: 100, type: FieldType.date, editor: Editors.date },
       { id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', formatter: Formatters.checkmark, type: FieldType.number, editor: Editors.checkbox, minWidth: 100 }
     ];
@@ -107,6 +110,15 @@ export class Example3 {
   }
 
   gridObjChanged(grid) {
+    grid.onBeforeEditCell.subscribe((e, args) => {
+      console.log('before edit', e)
+      e.stopImmediatePropagation();
+    });
+    grid.onBeforeCellEditorDestroy.subscribe((e, args) => {
+      console.log('before destroy')
+      e.stopPropagation();
+    });
+
     grid.onCellChange.subscribe((e, args) => {
       console.log('onCellChange', args);
       this.updatedObject = args.item;
@@ -140,5 +152,10 @@ export class Example3 {
     this.isAutoEdit = isAutoEdit;
     this.gridObj.setOptions({ autoEdit: isAutoEdit });
     return true;
+  }
+
+  switchLanguage() {
+    this.selectedLanguage = (this.selectedLanguage === 'en') ? 'fr' : 'en';
+    this.i18n.setLocale(this.selectedLanguage);
   }
 }

@@ -85,7 +85,7 @@
     "aurelia-framework": "^1.1.0",
     "aurelia-i18n": "^2.1.0",
     "aurelia-pal": "^1.4.0",
-    "flatpickr": "^4.1.0",
+    "flatpickr": "^4.2.4",
     "i18next-xhr-backend": "^1.5.0",
     "jquery": "^3.2.1",
     "moment": "^2.18.1",
