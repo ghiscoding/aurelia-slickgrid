@@ -14,6 +14,7 @@ import {
   GraphqlPaginationOption,
   GraphqlServiceOption,
   GraphqlSortingOption,
+  GridOption,
   PaginationChangedArgs,
   SortChangedArgs,
   SortDirection
@@ -125,6 +126,10 @@ export class GraphqlService implements BackendService {
     this.serviceOptions = serviceOptions || {};
   }
 
+  getDatasetName() {
+    return this.serviceOptions.datasetName;
+  }
+
   /*
    * Reset the pagination options
    */
@@ -154,14 +159,17 @@ export class GraphqlService implements BackendService {
    */
   onFilterChanged(event: Event, args: FilterChangedArgs): Promise<string> {
     const searchByArray: GraphqlFilteringOption[] = [];
-    const serviceOptions: BackendServiceOption = args.grid.getOptions();
-    if (serviceOptions.onBackendEventApi === undefined) {
-      throw new Error('Something went wrong in the GraphqlService, "onBackendEventApi" is not initialized');
+    const serviceOptions: GridOption = args.grid.getOptions();
+    const backendApi = serviceOptions.backendServiceApi || serviceOptions.onBackendEventApi;
+
+    if (backendApi === undefined) {
+      throw new Error('Something went wrong in the GraphqlService, "backendServiceApi" is not initialized');
     }
 
+    // only add a delay when user is typing, on select dropdown filter it will execute right away
     let debounceTypingDelay = 0;
     if (event.type === 'keyup' || event.type === 'keydown') {
-      debounceTypingDelay = serviceOptions.onBackendEventApi.filterTypingDebounce || DEFAULT_FILTER_TYPING_DEBOUNCE;
+      debounceTypingDelay = backendApi.filterTypingDebounce || DEFAULT_FILTER_TYPING_DEBOUNCE;
     }
 
     const promise = new Promise<string>((resolve, reject) => {

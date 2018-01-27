@@ -7,6 +7,7 @@ import { SlickgridConfig } from './slickgrid-config';
 import { CaseType } from './models/caseType';
 import { Column } from './models/column.interface';
 import { Formatter } from './models/formatter.interface';
+import { GraphqlResult } from './models/graphqlResult.interface';
 import { GridOption } from './models/gridOption.interface';
 import { FormElementType } from './models/formElementType';
 import { FieldType } from './models/fieldType';
@@ -44,9 +45,12 @@ export function configure(aurelia: any, callback: any) {
 export {
   AureliaSlickgridCustomElement,
   SlickPaginationCustomElement,
+
+  // models
   CaseType,
   Column,
   Formatter,
+  GraphqlResult,
   GridOption,
   FormElementType,
   FieldType,

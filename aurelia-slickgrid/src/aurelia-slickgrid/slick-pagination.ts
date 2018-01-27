@@ -79,6 +79,11 @@ export class SlickPaginationCustomElement {
   }
 
   refreshPagination(isPageNumberReset?: boolean) {
+    const backendApi = this._gridPaginationOptions.backendServiceApi || this._gridPaginationOptions.onBackendEventApi;
+    if (!backendApi || !backendApi.service || !backendApi.process) {
+      throw new Error(`BackendServiceApi requires at least a "process" function and a "service" defined`);
+    }
+
     if (this._gridPaginationOptions && this._gridPaginationOptions.pagination) {
       // if totalItems changed, we should always go back to the first page and recalculation the From-To indexes
       if (isPageNumberReset || this.totalItems !== this._gridPaginationOptions.pagination.totalItems) {
@@ -86,41 +91,49 @@ export class SlickPaginationCustomElement {
         this.recalculateFromToIndexes();
 
         // also reset the "offset" of backend service
-        this._gridPaginationOptions.onBackendEventApi.service.resetPaginationOptions();
+        backendApi.service.resetPaginationOptions();
       }
 
       // calculate and refresh the multiple properties of the pagination UI
       this.paginationPageSizes = this._gridPaginationOptions.pagination.pageSizes;
       this.itemsPerPage = +this._gridPaginationOptions.pagination.pageSize;
       this.totalItems = this._gridPaginationOptions.pagination.totalItems;
-      this.dataTo = +this.itemsPerPage;
+      this.dataTo = this.itemsPerPage;
     }
     this.pageCount = Math.ceil(this.totalItems / this.itemsPerPage);
   }
 
-  async onPageChanged(event: Event, pageNumber: number) {
+  async onPageChanged(event?: Event, pageNumber?: number) {
     this.recalculateFromToIndexes();
+
+    const backendApi = this._gridPaginationOptions.backendServiceApi || this._gridPaginationOptions.onBackendEventApi;
+    if (!backendApi || !backendApi.service || !backendApi.process) {
+      throw new Error(`BackendServiceApi requires at least a "process" function and a "service" defined`);
+    }
 
     if (this.dataTo > this.totalItems) {
       this.dataTo = this.totalItems;
     }
-    if (this._gridPaginationOptions.onBackendEventApi) {
-      const itemsPerPage = this.itemsPerPage;
+    if (backendApi) {
+      const itemsPerPage = +this.itemsPerPage;
 
-      if (!this._gridPaginationOptions.onBackendEventApi.process || !this._gridPaginationOptions.onBackendEventApi.service) {
-        throw new Error(`onBackendEventApi requires at least a "process" function and a "service" defined`);
+      if (backendApi.preProcess) {
+        backendApi.preProcess();
       }
-      if (this._gridPaginationOptions.onBackendEventApi.preProcess) {
-        this._gridPaginationOptions.onBackendEventApi.preProcess();
-      }
-      const query = this._gridPaginationOptions.onBackendEventApi.service.onPaginationChanged(event, { newPage: pageNumber, pageSize: itemsPerPage });
+
+      const query = backendApi.service.onPaginationChanged(event, { newPage: pageNumber, pageSize: itemsPerPage });
 
       // await for the Promise to resolve the data
-      const responseProcess = await this._gridPaginationOptions.onBackendEventApi.process(query);
+      const processResult = await backendApi.process(query);
+
+      // from the result, call our internal post process to update the Dataset and Pagination info
+      if (processResult && backendApi.internalPostProcess) {
+        backendApi.internalPostProcess(processResult);
+      }
 
       // send the response process to the postProcess callback
-      if (this._gridPaginationOptions.onBackendEventApi.postProcess) {
-        this._gridPaginationOptions.onBackendEventApi.postProcess(responseProcess);
+      if (backendApi.postProcess) {
+        backendApi.postProcess(processResult);
       }
     } else {
       throw new Error('Pagination with a backend service requires "onBackendEventApi" to be defined in your grid options');

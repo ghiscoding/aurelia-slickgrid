@@ -30,11 +30,6 @@ export class Example5 {
   status = { text: '', class: '' };
 
   constructor(private http: HttpClient, private odataService: GridOdataService) {
-    odataService.initOptions({
-      caseType: CaseType.pascalCase,
-      top: defaultPageSize
-    });
-
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
   }
@@ -72,16 +67,20 @@ export class Example5 {
         pageSize: defaultPageSize,
         totalItems: 0
       },
-      onBackendEventApi: {
-        onInit: (query) => this.getCustomerApiCall(query),
+      backendServiceApi: {
+        service: this.odataService,
+        options: {
+          executeProcessCommandOnInit: true,
+          caseType: CaseType.pascalCase,
+          top: defaultPageSize
+        },
         preProcess: () => this.displaySpinner(true),
         process: (query) => this.getCustomerApiCall(query),
         postProcess: (response) => {
           console.log(response);
           this.displaySpinner(false);
           this.getCustomerCallback(response);
-        },
-        service: this.odataService
+        }
       }
     };
   }

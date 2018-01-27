@@ -58,26 +58,32 @@ export class FilterService {
     if (!args || !args.grid) {
       throw new Error('Something went wrong when trying to attach the "attachBackendOnFilterSubscribe(event, args)" function, it seems that "args" is not populated correctly');
     }
-    const serviceOptions: BackendServiceOption = args.grid.getOptions();
+    const gridOptions: GridOption = args.grid.getOptions() || {};
 
-    if (!serviceOptions || !serviceOptions.onBackendEventApi || !serviceOptions.onBackendEventApi.process || !serviceOptions.onBackendEventApi.service) {
-      throw new Error(`onBackendEventApi requires at least a "process" function and a "service" defined`);
+    const backendApi = gridOptions.backendServiceApi || gridOptions.onBackendEventApi;
+    if (!backendApi || !backendApi.process || !backendApi.service) {
+      throw new Error(`BackendServiceApi requires at least a "process" function and a "service" defined`);
     }
 
     // run a preProcess callback if defined
-    if (serviceOptions.onBackendEventApi.preProcess !== undefined) {
-      serviceOptions.onBackendEventApi.preProcess();
+    if (backendApi.preProcess) {
+      backendApi.preProcess();
     }
 
     // call the service to get a query back
-    const query = await serviceOptions.onBackendEventApi.service.onFilterChanged(event, args);
+    const query = await backendApi.service.onFilterChanged(event, args);
 
     // await for the Promise to resolve the data
-    const responseProcess = await serviceOptions.onBackendEventApi.process(query);
+    const processResult = await backendApi.process(query);
+
+    // from the result, call our internal post process to update the Dataset and Pagination info
+    if (processResult && backendApi.internalPostProcess) {
+      backendApi.internalPostProcess(processResult);
+    }
 
     // send the response process to the postProcess callback
-    if (serviceOptions.onBackendEventApi.postProcess !== undefined) {
-      serviceOptions.onBackendEventApi.postProcess(responseProcess);
+    if (backendApi.postProcess !== undefined) {
+      backendApi.postProcess(processResult);
     }
   }
 
@@ -122,7 +128,6 @@ export class FilterService {
         fieldSearchValue = '';
       }
       fieldSearchValue = '' + fieldSearchValue; // make sure it's a string
-
       const matches = fieldSearchValue.match(/^([<>!=\*]{0,2})(.*[^<>!=\*])([\*]?)$/); // group 1: Operator, 2: searchValue, 3: last char is '*' (meaning starts with, ex.: abc*)
       const operator = columnFilter.operator || ((matches) ? matches[1] : '');
       const searchTerm = (!!matches) ? matches[2] : '';

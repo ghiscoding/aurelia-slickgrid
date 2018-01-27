@@ -306,29 +306,36 @@ export class ControlAndPluginService {
     };
   }
 
-  private refreshBackendDataset(options: GridOption) {
+  private refreshBackendDataset(gridOptions: GridOption) {
     let query;
+    const backendApi = gridOptions.backendServiceApi || gridOptions.onBackendEventApi;
+    if (!backendApi || !backendApi.service || !backendApi.process) {
+      throw new Error(`BackendServiceApi requires at least a "process" function and a "service" defined`);
+    }
 
-    if (options && options.onBackendEventApi && options.onBackendEventApi.service) {
-      if (options.onBackendEventApi.service) {
-        query = options.onBackendEventApi.service.buildQuery();
+    if (backendApi.service) {
+      query = backendApi.service.buildQuery();
+    }
+
+    if (query && query !== '') {
+      if (backendApi.preProcess) {
+        backendApi.preProcess();
       }
 
-      if (query && query !== '') {
-        if (options.onBackendEventApi.preProcess) {
-          options.onBackendEventApi.preProcess();
+      // run the process() and then postProcess()
+      const processPromise = backendApi.process(query);
+
+      processPromise.then((processResult: any) => {
+        // from the result, call our internal post process to update the Dataset and Pagination info
+        if (processResult && backendApi && backendApi.internalPostProcess) {
+          backendApi.internalPostProcess(processResult);
         }
 
-        // run the process() and then postProcess()
-        const processPromise = options.onBackendEventApi.process(query);
-
-        processPromise.then((responseProcess: any) => {
-          // send the response process to the postProcess callback
-          if (options.onBackendEventApi && options.onBackendEventApi.postProcess) {
-            options.onBackendEventApi.postProcess(responseProcess);
-          }
-        });
-      }
+        // send the response process to the postProcess callback
+        if (backendApi && backendApi.postProcess) {
+          backendApi.postProcess(processResult);
+        }
+      });
     }
   }
 

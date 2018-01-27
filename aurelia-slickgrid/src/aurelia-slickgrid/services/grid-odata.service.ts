@@ -1,7 +1,7 @@
 import './global-utilities';
 import { inject } from 'aurelia-framework';
 import { parseUtcDate } from './utilities';
-import { BackendService, BackendServiceOption, CaseType, FilterChangedArgs, FieldType, OdataOption, PaginationChangedArgs, SortChangedArgs } from './../models/index';
+import { BackendService, BackendServiceOption, CaseType, FilterChangedArgs, FieldType, GridOption, OdataOption, PaginationChangedArgs, SortChangedArgs } from './../models/index';
 import { OdataService } from './odata.service';
 import * as moment from 'moment';
 let timer: any;
@@ -9,7 +9,7 @@ const DEFAULT_FILTER_TYPING_DEBOUNCE = 750;
 
 @inject(OdataService)
 export class GridOdataService implements BackendService {
-  serviceOptions: OdataOption = {};
+  options: OdataOption = {};
   defaultSortBy = '';
   odataService: OdataService;
 
@@ -23,10 +23,11 @@ export class GridOdataService implements BackendService {
 
   initOptions(options: OdataOption): void {
     this.odataService.options = options;
+    this.options = options;
   }
 
   updateOptions(options?: OdataOption) {
-    this.serviceOptions = { ...this.serviceOptions, ...options };
+    this.options = { ...this.options, ...options };
   }
 
   removeColumnFilter(fieldName: string): void {
@@ -51,14 +52,18 @@ export class GridOdataService implements BackendService {
    */
   onFilterChanged(event: Event, args: FilterChangedArgs): Promise<string> {
     let searchBy = '';
-    const searchByArray: string[] = [];
-    const serviceOptions: BackendServiceOption = args.grid.getOptions();
-    if (serviceOptions.onBackendEventApi === undefined) {
-      throw new Error('Something went wrong in the GridOdataService, "onBackendEventApi" is not initialized');
+    const searchByArray = [];
+    const serviceOptions: GridOption = args.grid.getOptions();
+    const backendApi = serviceOptions.backendServiceApi || serviceOptions.onBackendEventApi;
+
+    if (backendApi === undefined) {
+      throw new Error('Something went wrong in the GridOdataService, "backendServiceApi" is not initialized');
     }
+
+    // only add a delay when user is typing, on select dropdown filter it will execute right away
     let debounceTypingDelay = 0;
     if (event.type === 'keyup' || event.type === 'keydown') {
-      debounceTypingDelay = serviceOptions.onBackendEventApi.filterTypingDebounce || DEFAULT_FILTER_TYPING_DEBOUNCE;
+      debounceTypingDelay = backendApi.filterTypingDebounce || DEFAULT_FILTER_TYPING_DEBOUNCE;
     }
 
     const promise = new Promise<string>((resolve, reject) => {
