@@ -111,12 +111,12 @@ export class FilterService {
     for (const columnId of Object.keys(args.columnFilters)) {
       const columnFilter = args.columnFilters[columnId];
       const columnIndex = args.grid.getColumnIndex(columnId);
-      const columnDef = args.grid.getColumns() [columnIndex];
+      const columnDef = args.grid.getColumns()[columnIndex];
       const fieldType = columnDef.type || FieldType.string;
       const conditionalFilterFn = (columnDef.filter && columnDef.filter.conditionalFilter) ? columnDef.filter.conditionalFilter : null;
       const filterSearchType = (columnDef.filterSearchType) ? columnDef.filterSearchType : null;
 
-      let cellValue = item[columnDef.field];
+      let cellValue = item[columnDef.queryField || columnDef.field];
       let fieldSearchValue = columnFilter.searchTerm;
       if (typeof fieldSearchValue === 'undefined') {
         fieldSearchValue = '';

@@ -165,7 +165,7 @@ export class GraphqlService implements BackendService {
         if (args.columnFilters.hasOwnProperty(columnId)) {
           const columnFilter = args.columnFilters[columnId];
           const columnDef = columnFilter.columnDef;
-          const fieldName = columnDef.field || columnDef.name || '';
+          const fieldName = columnDef.queryField || columnDef.field || columnDef.name || '';
           const fieldType = columnDef.type || 'string';
           let fieldSearchValue = columnFilter.searchTerm;
           if (typeof fieldSearchValue === 'undefined') {
@@ -281,7 +281,7 @@ export class GraphqlService implements BackendService {
     } else {
       if (sortColumns) {
         for (const column of sortColumns) {
-          const fieldName = column.sortCol.field || column.sortCol.id;
+          const fieldName = column.sortCol.queryField || column.sortCol.field || column.sortCol.id;
           const direction = column.sortAsc ? SortDirection.ASC : SortDirection.DESC;
           sortByArray.push({
             field: fieldName,
