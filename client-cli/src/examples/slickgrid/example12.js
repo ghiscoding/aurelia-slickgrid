@@ -5,7 +5,8 @@ import { FormElementType, Formatters } from 'aurelia-slickgrid';
 @inject(I18N)
 export class Example12 {
   title = 'Example 12: Localization (i18n)';
-  subTitle = `Support multiple locales with the i18next plugin, following these steps
+  subTitle = `Support multiple locales with the i18next plugin, following these steps.
+    Take a look at the (<a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Localization" target="_blank">Wiki documentation</a>)
     <ol class="small">
       <li>You first need to "enableTranslate" in the Grid Options</li>
       <li>In the Column Definitions, you have following options</li>
@@ -21,9 +22,14 @@ export class Example12 {
       <ul>
         <li>You can easily implement logic to switch between Formatters "dateIso" or "dateUs", depending on current locale.</li>
       </ul>
-      <li>For the Select (dropdown) filter, you need to fill in the "labelKey" property, if found it will use it, else it will use "label"</li>
-    </ol>
-  `;
+      <li>For the Select (dropdown) filter, you can fill in the "labelKey" property, if found it will use it, else it will use "label"</li>
+        <ul>
+          <li>What if your select options have totally different value/label pair? In this case, you can use the <b>customStructure: { label: 'customLabel', value: 'customValue'}</b> to change the property name(s) to use.'</li>
+          <li>What if you want to use "customStructure" and translation? Simply pass this flag <b>enableTranslateLabel: true</b></li>
+          <li>More info on the Select Filter <a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Select-Filter" target="_blank">Wiki page</a>
+        </ul>
+      </ol>
+    `;
 
   i18n;
   gridOptions;
