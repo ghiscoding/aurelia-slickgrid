@@ -48,7 +48,7 @@ export class DateEditor implements Editor {
       return params.i18n.getLocale();
     }
 
-    return (gridOptions && gridOptions.locale) ? gridOptions.locale : 'en';
+    return 'en';
   }
 
   loadFlatpickrLocale(locale: string) {
