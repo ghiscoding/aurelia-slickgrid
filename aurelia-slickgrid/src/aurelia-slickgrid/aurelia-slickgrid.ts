@@ -83,8 +83,8 @@ export class AureliaSlickgridCustomElement {
 
     // make sure the dataset is initialized (if not it will throw an error that it cannot getLength of null)
     this._dataset = this._dataset || [];
-    this.createBackendApiInternalPostProcessCallback();
     this._gridOptions = this.mergeGridOptions();
+    this.createBackendApiInternalPostProcessCallback(this._gridOptions);
 
     this.dataview = new Slick.Data.DataView();
     this.controlAndPluginService.createPluginBeforeGridCreation(this.columnDefinitions, this._gridOptions);
@@ -160,9 +160,9 @@ export class AureliaSlickgridCustomElement {
    * Define what our internal Post Process callback, it will execute internally after we get back result from the Process backend call
    * For now, this is GraphQL Service only feautre and it will basically refresh the Dataset & Pagination without having the user to create his own PostProcess every time
    */
-  createBackendApiInternalPostProcessCallback() {
-    if (this.gridOptions && (this.gridOptions.backendServiceApi || this.gridOptions.onBackendEventApi)) {
-      const backendApi = this.gridOptions.backendServiceApi || this.gridOptions.onBackendEventApi;
+  createBackendApiInternalPostProcessCallback(gridOptions: GridOption) {
+    if (gridOptions && (gridOptions.backendServiceApi || gridOptions.onBackendEventApi)) {
+      const backendApi = gridOptions.backendServiceApi || gridOptions.onBackendEventApi;
 
       // internalPostProcess only works with a GraphQL Service, so make sure it is that type
       if (backendApi.service instanceof GraphqlService) {
@@ -172,8 +172,7 @@ export class AureliaSlickgridCustomElement {
             throw new Error(`Your GraphQL result is invalid and/or does not follow the required result structure. Please check the result and/or review structure to use in Angular-Slickgrid Wiki in the GraphQL section.`);
           }
           this._dataset = processResult.data[datasetName].nodes;
-          this.gridOptions.pagination.totalItems = processResult.data[datasetName].totalCount;
-          this.refreshGridData(this._dataset);
+          this.refreshGridData(this._dataset, processResult.data[datasetName].totalCount);
         };
       }
     }
@@ -287,7 +286,7 @@ export class AureliaSlickgridCustomElement {
    * When dataset changes, we need to refresh the entire grid UI & possibly resize it as well
    * @param {object} dataset
    */
-  refreshGridData(dataset: any[]) {
+  refreshGridData(dataset: any[], totalCount?: number) {
     if (dataset && this.grid) {
       this.dataview.setItems(dataset);
 
@@ -297,6 +296,15 @@ export class AureliaSlickgridCustomElement {
 
       if (this._gridOptions.enablePagination || this._gridOptions.backendServiceApi) {
         this.showPagination = true;
+
+        // before merging the grid options, make sure that it has the totalItems count
+        // once we have that, we can merge and pass all these options to the pagination component
+        if (!this.gridOptions.pagination) {
+          this.gridOptions.pagination = (this._gridOptions.pagination) ? this._gridOptions.pagination : null;
+        }
+        if (this.gridOptions.pagination && totalCount) {
+          this.gridOptions.pagination.totalItems = totalCount;
+        }
         this.gridPaginationOptions = this.mergeGridOptions();
       }
       if (this.grid && this._gridOptions.enableAutoResize) {
