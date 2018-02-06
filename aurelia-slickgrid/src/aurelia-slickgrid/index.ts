@@ -8,6 +8,7 @@ import { CaseType } from './models/caseType';
 import { Column } from './models/column.interface';
 import { Formatter } from './models/formatter.interface';
 import { GraphqlResult } from './models/graphqlResult.interface';
+import { GraphqlServiceOption } from './models/graphqlServiceOption.interface';
 import { GridOption } from './models/gridOption.interface';
 import { FormElementType } from './models/formElementType';
 import { FieldType } from './models/fieldType';
@@ -51,6 +52,7 @@ export {
   Column,
   Formatter,
   GraphqlResult,
+  GraphqlServiceOption,
   GridOption,
   FormElementType,
   FieldType,

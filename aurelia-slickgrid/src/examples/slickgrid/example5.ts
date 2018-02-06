@@ -61,7 +61,6 @@ export class Example5 {
       },
       enableFiltering: true,
       enableCellNavigation: true,
-      enablePagination: true,
       pagination: {
         pageSizes: [10, 15, 20, 25, 30, 40, 50, 75, 100],
         pageSize: defaultPageSize,
@@ -69,11 +68,6 @@ export class Example5 {
       },
       backendServiceApi: {
         service: this.odataService,
-        options: {
-          executeProcessCommandOnInit: true,
-          caseType: CaseType.pascalCase,
-          top: defaultPageSize
-        },
         preProcess: () => this.displaySpinner(true),
         process: (query) => this.getCustomerApiCall(query),
         postProcess: (response) => {

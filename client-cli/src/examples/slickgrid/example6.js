@@ -67,21 +67,16 @@ export class Example6 {
         pageSize: defaultPageSize,
         totalItems: 0
       },
-      onBackendEventApi: {
-        onInit: (query) => this.getCustomerApiCall(query),
+      backendServiceApi: {
+        service: this.graphqlService,
+        options: this.getBackendOptions(this.isWithCursor),
+        // you can define the onInit callback OR enable the "executeProcessCommandOnInit" flag in the service init
+        // onInit: (query) => this.getCustomerApiCall(query)
         preProcess: () => this.displaySpinner(true),
         process: (query) => this.getCustomerApiCall(query),
-        postProcess: (response) => {
-          this.displaySpinner(false);
-          this.getCustomerCallback(response);
-        },
-        service: this.graphqlService
+        postProcess: (result) => this.displaySpinner(false)
       }
     };
-
-    const paginationOption = this.getGraphqlInitOption(this.isWithCursor);
-    this.graphqlService.initOptions(paginationOption);
-
   }
 
   displaySpinner(isProcessing) {
@@ -91,32 +86,19 @@ export class Example6 {
       : { text: 'done', class: 'alert alert-success' };
   }
 
-  getGraphqlInitOption(isWithCursor) {
-    let initOptions;
+  getBackendOptions(withCursor) {
+    // with cursor, paginationOptions can be: { first, last, after, before }
+    // without cursor, paginationOptions can be: { first, last, offset }
+    return {
+      columnDefinitions: this.columnDefinitions,
+      datasetName: GRAPHQL_QUERY_DATASET_NAME,
+      isWithCursor: withCursor,
+      addLocaleIntoQuery: true,
 
-    if (isWithCursor) {
-      // with cursor, paginationOptions can be: { first, last, after, before }
-      initOptions = {
-        datasetName: 'users',
-        columnDefinitions: this.columnDefinitions,
-        isWithCursor: true,
-        paginationOptions: {
-          first: defaultPageSize
-        }
-      };
-    } else {
-      // without cursor, paginationOptions can be: { first, last, offset }
-      initOptions = {
-        datasetName: 'users',
-        columnDefinitions: this.columnDefinitions,
-        isWithCursor: false,
-        paginationOptions: {
-          first: defaultPageSize,
-          offset: 0
-        }
-      };
-    }
-    return initOptions;
+      // when dealing with complex objects, we want to keep our field name with double quotes
+      // example with gender: query { users (orderBy:[{field:"gender",direction:ASC}]) {}
+      keepArgumentFieldDoubleQuotes: true
+    };
   }
 
   getCustomerCallback(data) {

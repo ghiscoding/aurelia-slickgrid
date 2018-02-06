@@ -3,31 +3,34 @@ import { inject } from 'aurelia-framework';
 import { parseUtcDate } from './utilities';
 import { BackendService, BackendServiceOption, CaseType, FilterChangedArgs, FieldType, GridOption, OdataOption, PaginationChangedArgs, SortChangedArgs } from './../models/index';
 import { OdataService } from './odata.service';
+import { Pagination } from './../models/pagination.interface';
 import * as moment from 'moment';
 let timer: any;
 const DEFAULT_FILTER_TYPING_DEBOUNCE = 750;
 
 @inject(OdataService)
 export class GridOdataService implements BackendService {
-  options: OdataOption = {};
-  defaultSortBy = '';
-  odataService: OdataService;
+  options: OdataOption;
+  pagination: Pagination;
+  defaultOptions: OdataOption = {
+    top: 25,
+    orderBy: ''
+  };
 
-  constructor(odataService: OdataService) {
-    this.odataService = odataService;
-  }
+  constructor(private odataService: OdataService) { }
 
   buildQuery(): string {
     return this.odataService.buildQuery();
   }
 
-  initOptions(options: OdataOption): void {
-    this.odataService.options = options;
+  initOptions(options: OdataOption, pagination?: Pagination): void {
+    this.odataService.options = { ...this.defaultOptions, ...options, top: options.top || pagination.pageSize || this.defaultOptions.top };
     this.options = options;
+    this.pagination = pagination;
   }
 
-  updateOptions(options?: OdataOption) {
-    this.options = { ...this.options, ...options };
+  updateOptions(serviceOptions?: OdataOption) {
+    this.options = { ...this.options, ...serviceOptions };
   }
 
   removeColumnFilter(fieldName: string): void {
@@ -202,7 +205,7 @@ export class GridOdataService implements BackendService {
 
     // build the SortBy string, it could be multisort, example: customerNo asc, purchaserName desc
     if (sortColumns && sortColumns.length === 0) {
-      sortByArray = new Array(this.defaultSortBy); // when empty, use the default sort
+      sortByArray = new Array(this.defaultOptions.orderBy); // when empty, use the default sort
     } else {
       if (sortColumns) {
         for (const column of sortColumns) {

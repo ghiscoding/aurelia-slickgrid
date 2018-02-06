@@ -1,6 +1,7 @@
 import { inject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import { FilterService } from './filter.service';
+import { GraphqlResult } from './../models/graphqlResult.interface';
 import { GridExtraUtils } from './gridExtraUtils';
 import { GridExtraService } from './gridExtra.service';
 import {
@@ -151,6 +152,7 @@ export class ControlAndPluginService {
         if (options.gridMenu && typeof options.gridMenu.onMenuClose === 'function') {
           options.gridMenu.onMenuClose(e, args);
         }
+
         // we also want to resize the columns if the user decided to hide certain column(s)
         if (grid && typeof grid.autosizeColumns === 'function') {
           grid.autosizeColumns();
@@ -222,6 +224,8 @@ export class ControlAndPluginService {
    * @param options
    */
   private addGridMenuCustomCommands(grid: any, options: GridOption) {
+    const backendApi = options.backendServiceApi || options.onBackendEventApi || null;
+
     if (options.enableFiltering) {
       if (options && options.gridMenu && options.gridMenu.showClearAllFiltersCommand && options.gridMenu.customItems && options.gridMenu.customItems.filter((item: CustomGridMenu) => item.command === 'clear-filter').length === 0) {
         options.gridMenu.customItems.push(
@@ -243,7 +247,7 @@ export class ControlAndPluginService {
           }
         );
       }
-      if (options && options.gridMenu && options.gridMenu.showRefreshDatasetCommand && options.onBackendEventApi && options.gridMenu.customItems && options.gridMenu.customItems.filter((item: CustomGridMenu) => item.command === 'refresh-dataset').length === 0) {
+      if (options && options.gridMenu && options.gridMenu.showRefreshDatasetCommand && backendApi && options.gridMenu.customItems && options.gridMenu.customItems.filter((item: CustomGridMenu) => item.command === 'refresh-dataset').length === 0) {
         options.gridMenu.customItems.push(
           {
             iconCssClass: 'fa fa-refresh',
@@ -322,10 +326,11 @@ export class ControlAndPluginService {
         backendApi.preProcess();
       }
 
-      // run the process() and then postProcess()
+      // the process could be an Observable (like HttpClient) or a Promise
+      // in any case, we need to have a Promise so that we can await on it (if an Observable, convert it to Promise)
       const processPromise = backendApi.process(query);
 
-      processPromise.then((processResult: any) => {
+      processPromise.then((processResult: GraphqlResult | any) => {
         // from the result, call our internal post process to update the Dataset and Pagination info
         if (processResult && backendApi && backendApi.internalPostProcess) {
           backendApi.internalPostProcess(processResult);
@@ -381,7 +386,7 @@ export class ControlAndPluginService {
     this.gridMenuControl.destroy();
 
     // reset all Grid Menu options that have translation text & then re-create the Grid Menu and also the custom items array
-    this._gridOptions.gridMenu = this.resetGridMenuTranslations(this._gridOptions.gridMenu || {});
+    this._gridOptions.gridMenu = this.resetGridMenuTranslations(this._gridOptions.gridMenu);
     this.createGridMenu(this._grid, this.visibleColumns, this._gridOptions);
   }
 

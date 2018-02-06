@@ -11,7 +11,7 @@ export class SlickPaginationCustomElement {
 
   dataFrom = 1;
   dataTo = 1;
-  itemsPerPage = 25;
+  itemsPerPage;
   pageCount = 0;
   pageNumber = 1;
   totalItems = 0;
@@ -96,7 +96,7 @@ export class SlickPaginationCustomElement {
 
       // set the number of items per page if not already set
       if (!this.itemsPerPage) {
-        this.itemsPerPage = +this._gridPaginationOptions.pagination.pageSize;
+        this.itemsPerPage = +(backendApi['options'] && backendApi['options'].paginationOptions && backendApi['options'].paginationOptions.first) ? backendApi['options'].paginationOptions.first : this._gridPaginationOptions.pagination.pageSize;
       }
 
       // calculate and refresh the multiple properties of the pagination UI

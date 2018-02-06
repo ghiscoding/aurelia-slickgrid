@@ -1,6 +1,6 @@
 import { inject } from 'aurelia-framework';
 import { HttpClient } from 'aurelia-http-client';
-import { CaseType, FieldType, FormElementType, GridOdataService } from 'aurelia-slickgrid';
+import { FieldType, FormElementType, GridOdataService } from 'aurelia-slickgrid';
 
 const defaultPageSize = 20;
 const sampleDataRoot = 'src/examples/slickgrid/sample-data';
@@ -34,10 +34,6 @@ export class Example5 {
   constructor(http, odataService) {
     this.http = http;
     this.odataService = odataService;
-    this.odataService.initOptions({
-      caseType: CaseType.pascalCase,
-      top: defaultPageSize
-    });
 
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
@@ -65,22 +61,20 @@ export class Example5 {
       },
       enableFiltering: true,
       enableCellNavigation: true,
-      enablePagination: true,
       pagination: {
         pageSizes: [10, 15, 20, 25, 30, 40, 50, 75, 100],
         pageSize: defaultPageSize,
         totalItems: 0
       },
-      onBackendEventApi: {
-        onInit: (query) => this.getCustomerApiCall(query),
+      backendServiceApi: {
+        service: this.odataService,
         preProcess: () => this.displaySpinner(true),
         process: (query) => this.getCustomerApiCall(query),
         postProcess: (response) => {
           console.log(response);
           this.displaySpinner(false);
           this.getCustomerCallback(response);
-        },
-        service: this.odataService
+        }
       }
     };
   }
