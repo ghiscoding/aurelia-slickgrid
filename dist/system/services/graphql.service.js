@@ -1,4 +1,4 @@
-System.register(["./utilities", "./graphqlQueryBuilder", "./../models/index"], function (exports_1, context_1) {
+System.register(["aurelia-framework", "aurelia-i18n", "./utilities", "./graphqlQueryBuilder", "./../models/index"], function (exports_1, context_1) {
     "use strict";
     var __assign = (this && this.__assign) || Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -8,10 +8,22 @@ System.register(["./utilities", "./graphqlQueryBuilder", "./../models/index"], f
         }
         return t;
     };
+    var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+        var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+        if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+        else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+        return c > 3 && r && Object.defineProperty(target, key, r), r;
+    };
     var __moduleName = context_1 && context_1.id;
-    var utilities_1, graphqlQueryBuilder_1, index_1, timer, GraphqlService;
+    var aurelia_framework_1, aurelia_i18n_1, utilities_1, graphqlQueryBuilder_1, index_1, timer, DEFAULT_FILTER_TYPING_DEBOUNCE, GraphqlService;
     return {
         setters: [
+            function (aurelia_framework_1_1) {
+                aurelia_framework_1 = aurelia_framework_1_1;
+            },
+            function (aurelia_i18n_1_1) {
+                aurelia_i18n_1 = aurelia_i18n_1_1;
+            },
             function (utilities_1_1) {
                 utilities_1 = utilities_1_1;
             },
@@ -23,30 +35,35 @@ System.register(["./utilities", "./graphqlQueryBuilder", "./../models/index"], f
             }
         ],
         execute: function () {
+            DEFAULT_FILTER_TYPING_DEBOUNCE = 750;
             GraphqlService = /** @class */ (function () {
-                function GraphqlService() {
-                    this.serviceOptions = {};
+                function GraphqlService(i18n) {
+                    this.i18n = i18n;
                     this.defaultOrderBy = { field: 'id', direction: index_1.SortDirection.ASC };
+                    this.defaultPaginationOptions = {
+                        first: 25,
+                        offset: 0
+                    };
                 }
                 /**
                  * Build the GraphQL query, since the service include/exclude cursor, the output query will be different.
                  * @param serviceOptions GraphqlServiceOption
                  */
                 GraphqlService.prototype.buildQuery = function () {
-                    if (!this.serviceOptions || !this.serviceOptions.datasetName || (!this.serviceOptions.columnIds && !this.serviceOptions.dataFilters && !this.serviceOptions.columnDefinitions)) {
+                    if (!this.options || !this.options.datasetName || (!this.options.columnIds && !this.options.dataFilters && !this.options.columnDefinitions)) {
                         throw new Error('GraphQL Service requires "datasetName" & ("dataFilters" or "columnDefinitions") properties for it to work');
                     }
                     var queryQb = new graphqlQueryBuilder_1.default('query');
-                    var datasetQb = new graphqlQueryBuilder_1.default(this.serviceOptions.datasetName);
+                    var datasetQb = new graphqlQueryBuilder_1.default(this.options.datasetName);
                     var pageInfoQb = new graphqlQueryBuilder_1.default('pageInfo');
-                    var dataQb = (this.serviceOptions.isWithCursor) ? new graphqlQueryBuilder_1.default('edges') : new graphqlQueryBuilder_1.default('nodes');
+                    var dataQb = (this.options.isWithCursor) ? new graphqlQueryBuilder_1.default('edges') : new graphqlQueryBuilder_1.default('nodes');
                     // get all the columnds Ids for the filters to work
                     var columnIds;
-                    if (this.serviceOptions.columnDefinitions) {
-                        columnIds = Array.isArray(this.serviceOptions.columnDefinitions) ? this.serviceOptions.columnDefinitions.map(function (column) { return column.field; }) : [];
+                    if (this.options.columnDefinitions) {
+                        columnIds = Array.isArray(this.options.columnDefinitions) ? this.options.columnDefinitions.map(function (column) { return column.field; }) : [];
                     }
                     else {
-                        columnIds = this.serviceOptions.columnIds || this.serviceOptions.dataFilters || [];
+                        columnIds = this.options.columnIds || this.options.dataFilters || [];
                     }
                     // Slickgrid also requires the "id" field to be part of DataView
                     // push it to the GraphQL query if it wasn't already part of the list
@@ -54,7 +71,7 @@ System.register(["./utilities", "./graphqlQueryBuilder", "./../models/index"], f
                         columnIds.push('id');
                     }
                     var filters = this.buildFilterQuery(columnIds);
-                    if (this.serviceOptions.isWithCursor) {
+                    if (this.options.isWithCursor) {
                         // ...pageInfo { hasNextPage, endCursor }, edges { cursor, node { _filters_ } }
                         pageInfoQb.find('hasNextPage', 'endCursor');
                         dataQb.find(['cursor', { node: filters }]);
@@ -66,20 +83,27 @@ System.register(["./utilities", "./graphqlQueryBuilder", "./../models/index"], f
                     }
                     datasetQb.find(['totalCount', pageInfoQb, dataQb]);
                     // add dataset filters, could be Pagination and SortingFilters and/or FieldFilters
-                    var datasetFilters = this.serviceOptions.paginationOptions;
-                    if (this.serviceOptions.sortingOptions) {
-                        // orderBy: [{ field:x, direction: 'ASC' }]
-                        datasetFilters.orderBy = this.serviceOptions.sortingOptions;
+                    var datasetFilters = __assign({}, this.options.paginationOptions, { first: (this.options.paginationOptions && this.options.paginationOptions.first) ? this.options.paginationOptions.first : (this.pagination && this.pagination.pageSize) ? this.pagination.pageSize : null || this.defaultPaginationOptions.first });
+                    if (!this.options.isWithCursor) {
+                        datasetFilters.offset = ((this.options.paginationOptions && this.options.paginationOptions.hasOwnProperty('offset')) ? +this.options.paginationOptions['offset'] : 0);
                     }
-                    if (this.serviceOptions.filteringOptions) {
+                    if (this.options.sortingOptions) {
+                        // orderBy: [{ field:x, direction: 'ASC' }]
+                        datasetFilters.orderBy = this.options.sortingOptions;
+                    }
+                    if (this.options.filteringOptions) {
                         // filterBy: [{ field: date, operator: '>', value: '2000-10-10' }]
-                        datasetFilters.filterBy = this.serviceOptions.filteringOptions;
+                        datasetFilters.filterBy = this.options.filteringOptions;
+                    }
+                    if (this.options.addLocaleIntoQuery) {
+                        // first: 20, ... locale: "en-CA"
+                        datasetFilters.locale = this.i18n.getLocale() || 'en';
                     }
                     // query { users(first: 20, orderBy: [], filterBy: [])}
                     datasetQb.filter(datasetFilters);
                     queryQb.find(datasetQb);
                     var enumSearchProperties = ['direction:', 'field:', 'operator:'];
-                    return this.trimDoubleQuotesOnEnumField(queryQb.toString(), enumSearchProperties, this.serviceOptions.keepArgumentFieldDoubleQuotes || false);
+                    return this.trimDoubleQuotesOnEnumField(queryQb.toString(), enumSearchProperties, this.options.keepArgumentFieldDoubleQuotes || false);
                 };
                 /**
                  * From an input array of strings, we want to build a GraphQL query string.
@@ -89,7 +113,7 @@ System.register(["./utilities", "./graphqlQueryBuilder", "./../models/index"], f
                  * INPUT
                  *  ['firstName', 'lastName', 'billing.address.street', 'billing.address.zip']
                  * OUTPUT
-                 * firstName, lastName, shipping{address{street, zip}}
+                 * firstName, lastName, billing{address{street, zip}}
                  * @param inputArray
                  */
                 GraphqlService.prototype.buildFilterQuery = function (inputArray) {
@@ -105,15 +129,26 @@ System.register(["./utilities", "./graphqlQueryBuilder", "./../models/index"], f
                         .replace(/^\{/, '')
                         .replace(/\}$/, '');
                 };
-                GraphqlService.prototype.initOptions = function (serviceOptions) {
-                    this.serviceOptions = serviceOptions || {};
+                GraphqlService.prototype.initOptions = function (serviceOptions, pagination) {
+                    this.options = serviceOptions || {};
+                    this.pagination = pagination;
+                };
+                /**
+                 * Get an initialization of Pagination options
+                 * @return Pagination Options
+                 */
+                GraphqlService.prototype.getInitPaginationOptions = function () {
+                    return (this.options.isWithCursor) ? { first: (this.pagination ? this.pagination.pageSize : 25) } : { first: (this.pagination ? this.pagination.pageSize : 25), offset: 0 };
+                };
+                GraphqlService.prototype.getDatasetName = function () {
+                    return this.options.datasetName || '';
                 };
                 /*
                  * Reset the pagination options
                  */
                 GraphqlService.prototype.resetPaginationOptions = function () {
                     var paginationOptions;
-                    if (this.serviceOptions.isWithCursor) {
+                    if (this.options.isWithCursor) {
                         // first, last, after, before
                         paginationOptions = {
                             after: '',
@@ -123,13 +158,13 @@ System.register(["./utilities", "./graphqlQueryBuilder", "./../models/index"], f
                     }
                     else {
                         // first, last, offset
-                        paginationOptions = this.serviceOptions.paginationOptions;
+                        paginationOptions = (this.options.paginationOptions || this.getInitPaginationOptions());
                         paginationOptions.offset = 0;
                     }
                     this.updateOptions({ paginationOptions: paginationOptions });
                 };
                 GraphqlService.prototype.updateOptions = function (serviceOptions) {
-                    this.serviceOptions = __assign({}, this.serviceOptions, serviceOptions);
+                    this.options = __assign({}, this.options, serviceOptions);
                 };
                 /*
                  * FILTERING
@@ -138,12 +173,14 @@ System.register(["./utilities", "./graphqlQueryBuilder", "./../models/index"], f
                     var _this = this;
                     var searchByArray = [];
                     var serviceOptions = args.grid.getOptions();
-                    if (serviceOptions.onBackendEventApi === undefined || !serviceOptions.onBackendEventApi.filterTypingDebounce) {
-                        throw new Error('Something went wrong in the GraphqlService, "onBackendEventApi" is not initialized');
+                    var backendApi = serviceOptions.backendServiceApi || serviceOptions.onBackendEventApi;
+                    if (backendApi === undefined) {
+                        throw new Error('Something went wrong in the GraphqlService, "backendServiceApi" is not initialized');
                     }
+                    // only add a delay when user is typing, on select dropdown filter it will execute right away
                     var debounceTypingDelay = 0;
                     if (event.type === 'keyup' || event.type === 'keydown') {
-                        debounceTypingDelay = serviceOptions.onBackendEventApi.filterTypingDebounce || 700;
+                        debounceTypingDelay = backendApi.filterTypingDebounce || DEFAULT_FILTER_TYPING_DEBOUNCE;
                     }
                     var promise = new Promise(function (resolve, reject) {
                         if (!args || !args.grid) {
@@ -154,7 +191,7 @@ System.register(["./utilities", "./graphqlQueryBuilder", "./../models/index"], f
                             if (args.columnFilters.hasOwnProperty(columnId)) {
                                 var columnFilter = args.columnFilters[columnId];
                                 var columnDef = columnFilter.columnDef;
-                                var fieldName = columnDef.field || columnDef.name || '';
+                                var fieldName = columnDef.queryField || columnDef.field || columnDef.name || '';
                                 var fieldType = columnDef.type || 'string';
                                 var fieldSearchValue = columnFilter.searchTerm;
                                 if (typeof fieldSearchValue === 'undefined') {
@@ -163,7 +200,7 @@ System.register(["./utilities", "./graphqlQueryBuilder", "./../models/index"], f
                                 if (typeof fieldSearchValue !== 'string') {
                                     throw new Error("GraphQL filter term property must be provided type \"string\", if you use filter with options then make sure your ids are also string. For example: filter: {type: FormElementType.select, selectOptions: [{ id: \"0\", value: \"0\" }, { id: \"1\", value: \"1\" }]");
                                 }
-                                var searchTerms = columnFilter.listTerm || [];
+                                var searchTerms = columnFilter ? columnFilter.listTerm : null || [];
                                 fieldSearchValue = '' + fieldSearchValue; // make sure it's a string
                                 var matches = fieldSearchValue.match(/^([<>!=\*]{0,2})(.*[^<>!=\*])([\*]?)$/); // group 1: Operator, 2: searchValue, 3: last char is '*' (meaning starts with, ex.: abc*)
                                 var operator = columnFilter.operator || ((matches) ? matches[1] : '');
@@ -227,15 +264,16 @@ System.register(["./utilities", "./graphqlQueryBuilder", "./../models/index"], f
                  */
                 GraphqlService.prototype.onPaginationChanged = function (event, args) {
                     var paginationOptions;
-                    if (this.serviceOptions.isWithCursor) {
+                    var pageSize = +args.pageSize || 20;
+                    if (this.options.isWithCursor) {
                         paginationOptions = {
-                            first: args.pageSize
+                            first: pageSize
                         };
                     }
                     else {
                         paginationOptions = {
-                            first: args.pageSize,
-                            offset: (args.newPage - 1) * args.pageSize
+                            first: pageSize,
+                            offset: (args.newPage - 1) * pageSize
                         };
                     }
                     this.updateOptions({ paginationOptions: paginationOptions });
@@ -259,7 +297,7 @@ System.register(["./utilities", "./graphqlQueryBuilder", "./../models/index"], f
                         if (sortColumns) {
                             for (var _i = 0, sortColumns_1 = sortColumns; _i < sortColumns_1.length; _i++) {
                                 var column = sortColumns_1[_i];
-                                var fieldName = column.sortCol.field || column.sortCol.id;
+                                var fieldName = column.sortCol.queryField || column.sortCol.field || column.sortCol.id;
                                 var direction = column.sortAsc ? index_1.SortDirection.ASC : index_1.SortDirection.DESC;
                                 sortByArray.push({
                                     field: fieldName,
@@ -307,6 +345,9 @@ System.register(["./utilities", "./graphqlQueryBuilder", "./../models/index"], f
                         return rep;
                     });
                 };
+                GraphqlService = __decorate([
+                    aurelia_framework_1.inject(aurelia_i18n_1.I18N)
+                ], GraphqlService);
                 return GraphqlService;
             }());
             exports_1("GraphqlService", GraphqlService);

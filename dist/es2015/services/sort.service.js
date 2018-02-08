@@ -28,19 +28,24 @@ export class SortService {
             if (!args || !args.grid) {
                 throw new Error('Something went wrong when trying to attach the "attachBackendOnSortSubscribe(event, args)" function, it seems that "args" is not populated correctly');
             }
-            const serviceOptions = args.grid.getOptions();
-            if (serviceOptions === undefined || serviceOptions.onBackendEventApi === undefined || serviceOptions.onBackendEventApi.process === undefined || !serviceOptions.onBackendEventApi.service === undefined) {
-                throw new Error(`onBackendEventApi requires at least a "process" function and a "service" defined`);
+            const gridOptions = args.grid.getOptions() || {};
+            const backendApi = gridOptions.backendServiceApi || gridOptions.onBackendEventApi;
+            if (!backendApi || !backendApi.process || !backendApi.service) {
+                throw new Error(`BackendServiceApi requires at least a "process" function and a "service" defined`);
             }
-            if (serviceOptions.onBackendEventApi !== undefined && serviceOptions.onBackendEventApi.preProcess) {
-                serviceOptions.onBackendEventApi.preProcess();
+            if (backendApi.preProcess) {
+                backendApi.preProcess();
             }
-            const query = serviceOptions.onBackendEventApi.service.onSortChanged(event, args);
+            const query = backendApi.service.onSortChanged(event, args);
             // await for the Promise to resolve the data
-            const responseProcess = yield serviceOptions.onBackendEventApi.process(query);
+            const processResult = yield backendApi.process(query);
+            // from the result, call our internal post process to update the Dataset and Pagination info
+            if (processResult && backendApi.internalPostProcess) {
+                backendApi.internalPostProcess(processResult);
+            }
             // send the response process to the postProcess callback
-            if (serviceOptions.onBackendEventApi.postProcess) {
-                serviceOptions.onBackendEventApi.postProcess(responseProcess);
+            if (backendApi.postProcess) {
+                backendApi.postProcess(processResult);
             }
         });
     }
@@ -59,9 +64,10 @@ export class SortService {
             const sortColumns = (args.multiColumnSort) ? args.sortCols : new Array({ sortAsc: args.sortAsc, sortCol: args.sortCol });
             dataView.sort((dataRow1, dataRow2) => {
                 for (let i = 0, l = sortColumns.length; i < l; i++) {
-                    const sortDirection = sortColumns[i].sortAsc ? 1 : -1;
-                    const sortField = sortColumns[i].sortCol.field;
-                    const fieldType = sortColumns[i].sortCol.type || 'string';
+                    const columnSortObj = sortColumns[i];
+                    const sortDirection = columnSortObj.sortAsc ? 1 : -1;
+                    const sortField = columnSortObj.sortCol.queryField || columnSortObj.sortCol.field;
+                    const fieldType = columnSortObj.sortCol.type || 'string';
                     const value1 = dataRow1[sortField];
                     const value2 = dataRow2[sortField];
                     let result = 0;

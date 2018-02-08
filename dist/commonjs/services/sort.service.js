@@ -54,27 +54,32 @@ var SortService = /** @class */ (function () {
     };
     SortService.prototype.attachBackendOnSortSubscribe = function (event, args) {
         return __awaiter(this, void 0, void 0, function () {
-            var serviceOptions, query, responseProcess;
+            var gridOptions, backendApi, query, processResult;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         if (!args || !args.grid) {
                             throw new Error('Something went wrong when trying to attach the "attachBackendOnSortSubscribe(event, args)" function, it seems that "args" is not populated correctly');
                         }
-                        serviceOptions = args.grid.getOptions();
-                        if (serviceOptions === undefined || serviceOptions.onBackendEventApi === undefined || serviceOptions.onBackendEventApi.process === undefined || !serviceOptions.onBackendEventApi.service === undefined) {
-                            throw new Error("onBackendEventApi requires at least a \"process\" function and a \"service\" defined");
+                        gridOptions = args.grid.getOptions() || {};
+                        backendApi = gridOptions.backendServiceApi || gridOptions.onBackendEventApi;
+                        if (!backendApi || !backendApi.process || !backendApi.service) {
+                            throw new Error("BackendServiceApi requires at least a \"process\" function and a \"service\" defined");
                         }
-                        if (serviceOptions.onBackendEventApi !== undefined && serviceOptions.onBackendEventApi.preProcess) {
-                            serviceOptions.onBackendEventApi.preProcess();
+                        if (backendApi.preProcess) {
+                            backendApi.preProcess();
                         }
-                        query = serviceOptions.onBackendEventApi.service.onSortChanged(event, args);
-                        return [4 /*yield*/, serviceOptions.onBackendEventApi.process(query)];
+                        query = backendApi.service.onSortChanged(event, args);
+                        return [4 /*yield*/, backendApi.process(query)];
                     case 1:
-                        responseProcess = _a.sent();
+                        processResult = _a.sent();
+                        // from the result, call our internal post process to update the Dataset and Pagination info
+                        if (processResult && backendApi.internalPostProcess) {
+                            backendApi.internalPostProcess(processResult);
+                        }
                         // send the response process to the postProcess callback
-                        if (serviceOptions.onBackendEventApi.postProcess) {
-                            serviceOptions.onBackendEventApi.postProcess(responseProcess);
+                        if (backendApi.postProcess) {
+                            backendApi.postProcess(processResult);
                         }
                         return [2 /*return*/];
                 }
@@ -96,9 +101,10 @@ var SortService = /** @class */ (function () {
             var sortColumns = (args.multiColumnSort) ? args.sortCols : new Array({ sortAsc: args.sortAsc, sortCol: args.sortCol });
             dataView.sort(function (dataRow1, dataRow2) {
                 for (var i = 0, l = sortColumns.length; i < l; i++) {
-                    var sortDirection = sortColumns[i].sortAsc ? 1 : -1;
-                    var sortField = sortColumns[i].sortCol.field;
-                    var fieldType = sortColumns[i].sortCol.type || 'string';
+                    var columnSortObj = sortColumns[i];
+                    var sortDirection = columnSortObj.sortAsc ? 1 : -1;
+                    var sortField = columnSortObj.sortCol.queryField || columnSortObj.sortCol.field;
+                    var fieldType = columnSortObj.sortCol.type || 'string';
                     var value1 = dataRow1[sortField];
                     var value2 = dataRow2[sortField];
                     var result = 0;

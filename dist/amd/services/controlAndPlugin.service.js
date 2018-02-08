@@ -12,7 +12,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-define(["require", "exports", "aurelia-framework", "aurelia-i18n", "./filter.service", "./gridExtra.service"], function (require, exports, aurelia_framework_1, aurelia_i18n_1, filter_service_1, gridExtra_service_1) {
+define(["require", "exports", "aurelia-framework", "aurelia-i18n", "./filter.service", "./gridExtra.service", "jquery"], function (require, exports, aurelia_framework_1, aurelia_i18n_1, filter_service_1, gridExtra_service_1, $) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var ControlAndPluginService = /** @class */ (function () {
@@ -128,7 +128,11 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "./filter.ser
                     }
                     // we also want to resize the columns if the user decided to hide certain column(s)
                     if (grid && typeof grid.autosizeColumns === 'function') {
-                        grid.autosizeColumns();
+                        // make sure that the grid still exist (by looking if the Grid UID is found in the DOM tree)
+                        var gridUid = grid.getUID();
+                        if (gridUid && $("." + gridUid).length > 0) {
+                            grid.autosizeColumns();
+                        }
                     }
                 });
             }
@@ -158,6 +162,9 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "./filter.ser
                 this.columnPickerControl = null;
             }
             if (this.gridMenuControl) {
+                this.gridMenuControl.onBeforeMenuShow.unsubscribe();
+                this.gridMenuControl.onCommand.unsubscribe();
+                this.gridMenuControl.onMenuClose.unsubscribe();
                 this.gridMenuControl.destroy();
                 this.gridMenuControl = null;
             }
@@ -189,6 +196,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "./filter.ser
          */
         ControlAndPluginService.prototype.addGridMenuCustomCommands = function (grid, options) {
             var _this = this;
+            var backendApi = options.backendServiceApi || options.onBackendEventApi || null;
             if (options.enableFiltering) {
                 if (options && options.gridMenu && options.gridMenu.showClearAllFiltersCommand && options.gridMenu.customItems && options.gridMenu.customItems.filter(function (item) { return item.command === 'clear-filter'; }).length === 0) {
                     options.gridMenu.customItems.push({
@@ -206,7 +214,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "./filter.ser
                         command: 'toggle-filter'
                     });
                 }
-                if (options && options.gridMenu && options.gridMenu.showRefreshDatasetCommand && options.onBackendEventApi && options.gridMenu.customItems && options.gridMenu.customItems.filter(function (item) { return item.command === 'refresh-dataset'; }).length === 0) {
+                if (options && options.gridMenu && options.gridMenu.showRefreshDatasetCommand && backendApi && options.gridMenu.customItems && options.gridMenu.customItems.filter(function (item) { return item.command === 'refresh-dataset'; }).length === 0) {
                     options.gridMenu.customItems.push({
                         iconCssClass: 'fa fa-refresh',
                         title: options.enableTranslate ? this.i18n.tr('REFRESH_DATASET') : 'Refresh Dataset',
@@ -263,25 +271,31 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "./filter.ser
                 showToggleFilterCommand: true
             };
         };
-        ControlAndPluginService.prototype.refreshBackendDataset = function (options) {
+        ControlAndPluginService.prototype.refreshBackendDataset = function (gridOptions) {
             var query;
-            if (options && options.onBackendEventApi && options.onBackendEventApi.service) {
-                if (options.onBackendEventApi.service) {
-                    query = options.onBackendEventApi.service.buildQuery();
+            var backendApi = gridOptions.backendServiceApi || gridOptions.onBackendEventApi;
+            if (!backendApi || !backendApi.service || !backendApi.process) {
+                throw new Error("BackendServiceApi requires at least a \"process\" function and a \"service\" defined");
+            }
+            if (backendApi.service) {
+                query = backendApi.service.buildQuery();
+            }
+            if (query && query !== '') {
+                if (backendApi.preProcess) {
+                    backendApi.preProcess();
                 }
-                if (query && query !== '') {
-                    if (options.onBackendEventApi.preProcess) {
-                        options.onBackendEventApi.preProcess();
+                // execute the process promise
+                var processPromise = backendApi.process(query);
+                processPromise.then(function (processResult) {
+                    // from the result, call our internal post process to update the Dataset and Pagination info
+                    if (processResult && backendApi && backendApi.internalPostProcess) {
+                        backendApi.internalPostProcess(processResult);
                     }
-                    // run the process() and then postProcess()
-                    var processPromise = options.onBackendEventApi.process(query);
-                    processPromise.then(function (responseProcess) {
-                        // send the response process to the postProcess callback
-                        if (options.onBackendEventApi && options.onBackendEventApi.postProcess) {
-                            options.onBackendEventApi.postProcess(responseProcess);
-                        }
-                    });
-                }
+                    // send the response process to the postProcess callback
+                    if (backendApi && backendApi.postProcess) {
+                        backendApi.postProcess(processResult);
+                    }
+                });
             }
         };
         /**
@@ -320,7 +334,9 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "./filter.ser
             // destroy and re-create the Grid Menu which seems to be the only way to translate properly
             this.gridMenuControl.destroy();
             // reset all Grid Menu options that have translation text & then re-create the Grid Menu and also the custom items array
-            this._gridOptions.gridMenu = this.resetGridMenuTranslations(this._gridOptions.gridMenu || {});
+            if (this._gridOptions && this._gridOptions.gridMenu) {
+                this._gridOptions.gridMenu = this.resetGridMenuTranslations(this._gridOptions.gridMenu);
+            }
             this.createGridMenu(this._grid, this.visibleColumns, this._gridOptions);
         };
         /**

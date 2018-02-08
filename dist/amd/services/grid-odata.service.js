@@ -16,21 +16,25 @@ define(["require", "exports", "aurelia-framework", "./utilities", "./../models/i
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var timer;
+    var DEFAULT_FILTER_TYPING_DEBOUNCE = 750;
     var GridOdataService = /** @class */ (function () {
         function GridOdataService(odataService) {
-            this.serviceOptions = {};
-            this.defaultSortBy = '';
-            this.minUserInactivityOnFilter = 700;
             this.odataService = odataService;
+            this.defaultOptions = {
+                top: 25,
+                orderBy: ''
+            };
         }
         GridOdataService.prototype.buildQuery = function () {
             return this.odataService.buildQuery();
         };
-        GridOdataService.prototype.initOptions = function (options) {
-            this.odataService.options = options;
+        GridOdataService.prototype.initOptions = function (options, pagination) {
+            this.odataService.options = __assign({}, this.defaultOptions, options, { top: options.top || (pagination ? pagination.pageSize : null) || this.defaultOptions.top });
+            this.options = options;
+            this.pagination = pagination;
         };
-        GridOdataService.prototype.updateOptions = function (options) {
-            this.serviceOptions = __assign({}, this.serviceOptions, options);
+        GridOdataService.prototype.updateOptions = function (serviceOptions) {
+            this.options = __assign({}, this.options, serviceOptions);
         };
         GridOdataService.prototype.removeColumnFilter = function (fieldName) {
             this.odataService.removeColumnFilter(fieldName);
@@ -54,12 +58,14 @@ define(["require", "exports", "aurelia-framework", "./utilities", "./../models/i
             var searchBy = '';
             var searchByArray = [];
             var serviceOptions = args.grid.getOptions();
-            if (serviceOptions.onBackendEventApi === undefined || !serviceOptions.onBackendEventApi.filterTypingDebounce) {
-                throw new Error('Something went wrong in the GridOdataService, "onBackendEventApi" is not initialized');
+            var backendApi = serviceOptions.backendServiceApi || serviceOptions.onBackendEventApi;
+            if (backendApi === undefined) {
+                throw new Error('Something went wrong in the GridOdataService, "backendServiceApi" is not initialized');
             }
+            // only add a delay when user is typing, on select dropdown filter it will execute right away
             var debounceTypingDelay = 0;
             if (event.type === 'keyup' || event.type === 'keydown') {
-                debounceTypingDelay = serviceOptions.onBackendEventApi.filterTypingDebounce || 700;
+                debounceTypingDelay = backendApi.filterTypingDebounce || DEFAULT_FILTER_TYPING_DEBOUNCE;
             }
             var promise = new Promise(function (resolve, reject) {
                 // loop through all columns to inspect filters
@@ -67,7 +73,7 @@ define(["require", "exports", "aurelia-framework", "./utilities", "./../models/i
                     if (args.columnFilters.hasOwnProperty(columnId)) {
                         var columnFilter = args.columnFilters[columnId];
                         var columnDef = columnFilter.columnDef;
-                        var fieldName = columnDef.field || columnDef.name;
+                        var fieldName = columnDef.queryField || columnDef.field || columnDef.name;
                         var fieldType = columnDef.type || 'string';
                         var fieldSearchValue = columnFilter.searchTerm;
                         if (typeof fieldSearchValue === 'undefined') {
@@ -99,7 +105,7 @@ define(["require", "exports", "aurelia-framework", "./utilities", "./../models/i
                             }
                         }
                         else {
-                            var searchBy_1 = '';
+                            searchBy = '';
                             // titleCase the fieldName so that it matches the WebApi names
                             var fieldNameTitleCase = String.titleCase(fieldName || '');
                             // when having more than 1 search term (then check if we have a "IN" or "NOT IN" filter search)
@@ -110,21 +116,21 @@ define(["require", "exports", "aurelia-framework", "./utilities", "./../models/i
                                     for (var j = 0, lnj = searchTerms.length; j < lnj; j++) {
                                         tmpSearchTerms.push(fieldNameTitleCase + " eq '" + searchTerms[j] + "'");
                                     }
-                                    searchBy_1 = tmpSearchTerms.join(' or ');
-                                    searchBy_1 = "(" + searchBy_1 + ")";
+                                    searchBy = tmpSearchTerms.join(' or ');
+                                    searchBy = "(" + searchBy + ")";
                                 }
                                 else if (operator === 'NIN' || operator === 'NOTIN' || operator === 'NOT IN') {
                                     // example:: (Stage ne "Expired" and Stage ne "Renewal")
                                     for (var k = 0, lnk = searchTerms.length; k < lnk; k++) {
                                         tmpSearchTerms.push(fieldNameTitleCase + " ne '" + searchTerms[k] + "'");
                                     }
-                                    searchBy_1 = tmpSearchTerms.join(' and ');
-                                    searchBy_1 = "(" + searchBy_1 + ")";
+                                    searchBy = tmpSearchTerms.join(' and ');
+                                    searchBy = "(" + searchBy + ")";
                                 }
                             }
                             else if (operator === '*' || lastValueChar !== '') {
                                 // first/last character is a '*' will be a startsWith or endsWith
-                                searchBy_1 = operator === '*'
+                                searchBy = operator === '*'
                                     ? "endswith(" + fieldNameTitleCase + ", '" + searchValue + "')"
                                     : "startswith(" + fieldNameTitleCase + ", '" + searchValue + "')";
                             }
@@ -132,21 +138,21 @@ define(["require", "exports", "aurelia-framework", "./utilities", "./../models/i
                                 // date field needs to be UTC and within DateTime function
                                 var dateFormatted = utilities_1.parseUtcDate(searchValue, true);
                                 if (dateFormatted) {
-                                    searchBy_1 = fieldNameTitleCase + " " + _this.mapOdataOperator(operator) + " DateTime'" + dateFormatted + "'";
+                                    searchBy = fieldNameTitleCase + " " + _this.mapOdataOperator(operator) + " DateTime'" + dateFormatted + "'";
                                 }
                             }
                             else if (fieldType === index_1.FieldType.string) {
                                 // string field needs to be in single quotes
-                                searchBy_1 = "substringof('" + searchValue + "', " + fieldNameTitleCase + ")";
+                                searchBy = "substringof('" + searchValue + "', " + fieldNameTitleCase + ")";
                             }
                             else {
                                 // any other field type (or undefined type)
                                 searchValue = fieldType === index_1.FieldType.number ? searchValue : "'" + searchValue + "'";
-                                searchBy_1 = fieldNameTitleCase + " " + _this.mapOdataOperator(operator) + " " + searchValue;
+                                searchBy = fieldNameTitleCase + " " + _this.mapOdataOperator(operator) + " " + searchValue;
                             }
                             // push to our temp array and also trim white spaces
-                            if (searchBy_1 !== '') {
-                                searchByArray.push(String.trim(searchBy_1));
+                            if (searchBy !== '') {
+                                searchByArray.push(String.trim(searchBy));
                                 _this.saveColumnFilter(fieldName || '', fieldSearchValue, searchTerms);
                             }
                         }
@@ -171,9 +177,10 @@ define(["require", "exports", "aurelia-framework", "./utilities", "./../models/i
          * PAGINATION
          */
         GridOdataService.prototype.onPaginationChanged = function (event, args) {
+            var pageSize = +args.pageSize || 20;
             this.odataService.updateOptions({
-                top: args.pageSize,
-                skip: (args.newPage - 1) * args.pageSize
+                top: pageSize,
+                skip: (args.newPage - 1) * pageSize
             });
             // build the OData query which we will use in the WebAPI callback
             return this.odataService.buildQuery();
@@ -186,13 +193,13 @@ define(["require", "exports", "aurelia-framework", "./utilities", "./../models/i
             var sortColumns = (args.multiColumnSort) ? args.sortCols : new Array({ sortCol: args.sortCol, sortAsc: args.sortAsc });
             // build the SortBy string, it could be multisort, example: customerNo asc, purchaserName desc
             if (sortColumns && sortColumns.length === 0) {
-                sortByArray = new Array(this.defaultSortBy); // when empty, use the default sort
+                sortByArray = new Array(this.defaultOptions.orderBy); // when empty, use the default sort
             }
             else {
                 if (sortColumns) {
                     for (var _i = 0, sortColumns_1 = sortColumns; _i < sortColumns_1.length; _i++) {
                         var column = sortColumns_1[_i];
-                        var fieldName = column.sortCol.field || column.sortCol.id;
+                        var fieldName = column.sortCol.queryField || column.sortCol.field || column.sortCol.id;
                         if (this.odataService.options.caseType === index_1.CaseType.pascalCase) {
                             fieldName = String.titleCase(fieldName);
                         }

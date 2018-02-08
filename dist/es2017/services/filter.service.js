@@ -40,21 +40,26 @@ let FilterService = class FilterService {
         if (!args || !args.grid) {
             throw new Error('Something went wrong when trying to attach the "attachBackendOnFilterSubscribe(event, args)" function, it seems that "args" is not populated correctly');
         }
-        const serviceOptions = args.grid.getOptions();
-        if (!serviceOptions || !serviceOptions.onBackendEventApi || !serviceOptions.onBackendEventApi.process || !serviceOptions.onBackendEventApi.service) {
-            throw new Error(`onBackendEventApi requires at least a "process" function and a "service" defined`);
+        const gridOptions = args.grid.getOptions() || {};
+        const backendApi = gridOptions.backendServiceApi || gridOptions.onBackendEventApi;
+        if (!backendApi || !backendApi.process || !backendApi.service) {
+            throw new Error(`BackendServiceApi requires at least a "process" function and a "service" defined`);
         }
         // run a preProcess callback if defined
-        if (serviceOptions.onBackendEventApi.preProcess !== undefined) {
-            serviceOptions.onBackendEventApi.preProcess();
+        if (backendApi.preProcess) {
+            backendApi.preProcess();
         }
         // call the service to get a query back
-        const query = await serviceOptions.onBackendEventApi.service.onFilterChanged(event, args);
+        const query = await backendApi.service.onFilterChanged(event, args);
         // await for the Promise to resolve the data
-        const responseProcess = await serviceOptions.onBackendEventApi.process(query);
+        const processResult = await backendApi.process(query);
+        // from the result, call our internal post process to update the Dataset and Pagination info
+        if (processResult && backendApi.internalPostProcess) {
+            backendApi.internalPostProcess(processResult);
+        }
         // send the response process to the postProcess callback
-        if (serviceOptions.onBackendEventApi.postProcess !== undefined) {
-            serviceOptions.onBackendEventApi.postProcess(responseProcess);
+        if (backendApi.postProcess !== undefined) {
+            backendApi.postProcess(processResult);
         }
     }
     /**
@@ -68,7 +73,7 @@ let FilterService = class FilterService {
         this.subscriber = new Slick.Event();
         this.emitFilterChangedBy('local');
         dataView.setFilterArgs({ columnFilters: this._columnFilters, grid: this._grid });
-        dataView.setFilter(this.customFilter);
+        dataView.setFilter(this.customFilter.bind(this, dataView));
         this.subscriber.subscribe((e, args) => {
             const columnId = args.columnId;
             if (columnId != null) {
@@ -79,7 +84,7 @@ let FilterService = class FilterService {
             this.addFilterTemplateToHeaderRow(args);
         });
     }
-    customFilter(item, args) {
+    customFilter(dataView, item, args) {
         for (const columnId of Object.keys(args.columnFilters)) {
             const columnFilter = args.columnFilters[columnId];
             const columnIndex = args.grid.getColumnIndex(columnId);
@@ -87,7 +92,7 @@ let FilterService = class FilterService {
             const fieldType = columnDef.type || FieldType.string;
             const conditionalFilterFn = (columnDef.filter && columnDef.filter.conditionalFilter) ? columnDef.filter.conditionalFilter : null;
             const filterSearchType = (columnDef.filterSearchType) ? columnDef.filterSearchType : null;
-            let cellValue = item[columnDef.field];
+            let cellValue = item[columnDef.queryField || columnDef.field];
             let fieldSearchValue = columnFilter.searchTerm;
             if (typeof fieldSearchValue === 'undefined') {
                 fieldSearchValue = '';
@@ -101,6 +106,12 @@ let FilterService = class FilterService {
             if (searchTerm === '') {
                 return true;
             }
+            // when using localization (i18n), we should use the formatter output to search as the new cell value
+            if (columnDef.params && columnDef.params.useFormatterOuputToFilter) {
+                const rowIndex = (dataView && typeof dataView.getIdxById === 'function') ? dataView.getIdxById(item.id) : 0;
+                cellValue = columnDef.formatter(rowIndex, columnIndex, cellValue, columnDef, item);
+            }
+            // make sure cell value is always a string
             if (typeof cellValue === 'number') {
                 cellValue = cellValue.toString();
             }

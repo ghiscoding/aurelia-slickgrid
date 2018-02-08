@@ -112,11 +112,12 @@ System.register(["slickgrid/lib/jquery-ui-1.11.3", "slickgrid/lib/jquery.event.d
         ],
         execute: function () {
             AureliaSlickgridCustomElement = /** @class */ (function () {
-                function AureliaSlickgridCustomElement(controlPluginService, elm, ea, filterService, gridEventService, gridExtraService, i18n, resizer, sortService) {
-                    this.controlPluginService = controlPluginService;
+                function AureliaSlickgridCustomElement(controlAndPluginService, elm, ea, filterService, graphqlService, gridEventService, gridExtraService, i18n, resizer, sortService) {
+                    this.controlAndPluginService = controlAndPluginService;
                     this.elm = elm;
                     this.ea = ea;
                     this.filterService = filterService;
+                    this.graphqlService = graphqlService;
                     this.gridEventService = gridEventService;
                     this.gridExtraService = gridExtraService;
                     this.i18n = i18n;
@@ -126,10 +127,11 @@ System.register(["slickgrid/lib/jquery-ui-1.11.3", "slickgrid/lib/jquery.event.d
                     this.gridHeight = 100;
                     this.gridWidth = 600;
                     // Aurelia doesn't support well TypeScript @autoinject so we'll do it the old fashion way
-                    this.controlPluginService = controlPluginService;
+                    this.controlAndPluginService = controlAndPluginService;
                     this.elm = elm;
                     this.ea = ea;
                     this.filterService = filterService;
+                    this.graphqlService = graphqlService;
                     this.gridEventService = gridEventService;
                     this.gridExtraService = gridExtraService;
                     this.i18n = i18n;
@@ -141,10 +143,11 @@ System.register(["slickgrid/lib/jquery-ui-1.11.3", "slickgrid/lib/jquery.event.d
                     // make sure the dataset is initialized (if not it will throw an error that it cannot getLength of null)
                     this._dataset = this._dataset || [];
                     this._gridOptions = this.mergeGridOptions();
+                    this.createBackendApiInternalPostProcessCallback(this._gridOptions);
                     this.dataview = new Slick.Data.DataView();
-                    this.controlPluginService.createPluginBeforeGridCreation(this.columnDefinitions, this._gridOptions);
+                    this.controlAndPluginService.createPluginBeforeGridCreation(this.columnDefinitions, this._gridOptions);
                     this.grid = new Slick.Grid("#" + this.gridId, this.dataview, this.columnDefinitions, this._gridOptions);
-                    this.controlPluginService.attachDifferentControlOrPlugins(this.grid, this.columnDefinitions, this._gridOptions, this.dataview);
+                    this.controlAndPluginService.attachDifferentControlOrPlugins(this.grid, this.columnDefinitions, this._gridOptions, this.dataview);
                     this.attachDifferentHooks(this.grid, this._gridOptions, this.dataview);
                     this.grid.init();
                     this.dataview.beginUpdate();
@@ -159,13 +162,13 @@ System.register(["slickgrid/lib/jquery-ui-1.11.3", "slickgrid/lib/jquery.event.d
                     var gridExtraService = this.gridExtraService.init(this.grid, this.columnDefinitions, this._gridOptions, this.dataview);
                     // when user enables translation, we need to translate Headers on first pass & subsequently in the attachDifferentHooks
                     if (this._gridOptions.enableTranslate) {
-                        this.controlPluginService.translateHeaders();
+                        this.controlAndPluginService.translateHeaders();
                     }
                 };
                 AureliaSlickgridCustomElement.prototype.detached = function () {
                     this.ea.publish('onBeforeGridDestroy', this.grid);
                     this.dataview = [];
-                    this.controlPluginService.destroy();
+                    this.controlAndPluginService.destroy();
                     this.filterService.destroy();
                     this.resizer.destroy();
                     this.sortService.destroy();
@@ -198,47 +201,86 @@ System.register(["slickgrid/lib/jquery-ui-1.11.3", "slickgrid/lib/jquery.event.d
                         }
                     }
                 };
-                AureliaSlickgridCustomElement.prototype.attachDifferentHooks = function (grid, options, dataView) {
+                /**
+                 * Define what our internal Post Process callback, it will execute internally after we get back result from the Process backend call
+                 * For now, this is GraphQL Service only feautre and it will basically refresh the Dataset & Pagination without having the user to create his own PostProcess every time
+                 */
+                AureliaSlickgridCustomElement.prototype.createBackendApiInternalPostProcessCallback = function (gridOptions) {
+                    var _this = this;
+                    if (gridOptions && (gridOptions.backendServiceApi || gridOptions.onBackendEventApi)) {
+                        var backendApi_1 = gridOptions.backendServiceApi || gridOptions.onBackendEventApi;
+                        // internalPostProcess only works with a GraphQL Service, so make sure it is that type
+                        if (backendApi_1 && backendApi_1.service && backendApi_1.service instanceof index_1.GraphqlService) {
+                            backendApi_1.internalPostProcess = function (processResult) {
+                                var datasetName = (backendApi_1 && backendApi_1.service && typeof backendApi_1.service.getDatasetName === 'function') ? backendApi_1.service.getDatasetName() : '';
+                                if (!processResult || !processResult.data || !processResult.data[datasetName]) {
+                                    throw new Error("Your GraphQL result is invalid and/or does not follow the required result structure. Please check the result and/or review structure to use in Angular-Slickgrid Wiki in the GraphQL section.");
+                                }
+                                _this._dataset = processResult.data[datasetName].nodes;
+                                _this.refreshGridData(_this._dataset, processResult.data[datasetName].totalCount);
+                            };
+                        }
+                    }
+                };
+                AureliaSlickgridCustomElement.prototype.attachDifferentHooks = function (grid, gridOptions, dataView) {
                     var _this = this;
                     // on locale change, we have to manually translate the Headers, GridMenu
                     this.ea.subscribe('i18n:locale:changed', function (payload) {
-                        if (options.enableTranslate) {
-                            _this.controlPluginService.translateHeaders();
-                            _this.controlPluginService.translateColumnPicker();
-                            _this.controlPluginService.translateGridMenu();
+                        if (gridOptions.enableTranslate) {
+                            _this.controlAndPluginService.translateHeaders();
+                            _this.controlAndPluginService.translateColumnPicker();
+                            _this.controlAndPluginService.translateGridMenu();
                         }
                     });
                     // attach external sorting (backend) when available or default onSort (dataView)
-                    if (options.enableSorting) {
-                        (options.onBackendEventApi) ? this.sortService.attachBackendOnSort(grid, options) : this.sortService.attachLocalOnSort(grid, options, this.dataview);
+                    if (gridOptions.enableSorting) {
+                        (gridOptions.backendServiceApi || gridOptions.onBackendEventApi) ? this.sortService.attachBackendOnSort(grid, gridOptions) : this.sortService.attachLocalOnSort(grid, gridOptions, this.dataview);
                     }
                     // attach external filter (backend) when available or default onFilter (dataView)
-                    if (options.enableFiltering) {
-                        this.filterService.init(grid, options, this.columnDefinitions);
-                        (options.onBackendEventApi) ? this.filterService.attachBackendOnFilter(grid, options) : this.filterService.attachLocalOnFilter(grid, options, this.dataview);
+                    if (gridOptions.enableFiltering) {
+                        this.filterService.init(grid, gridOptions, this.columnDefinitions);
+                        (gridOptions.backendServiceApi || gridOptions.onBackendEventApi) ? this.filterService.attachBackendOnFilter(grid, gridOptions) : this.filterService.attachLocalOnFilter(grid, gridOptions, this.dataview);
                     }
-                    if (options.onBackendEventApi && options.onBackendEventApi.onInit) {
-                        var backendApi_1 = options.onBackendEventApi;
-                        var query_1 = backendApi_1.service.buildQuery();
-                        // wrap this inside a setTimeout to avoid timing issue since the gridOptions needs to be ready before running this onInit
-                        setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
-                            var responseProcess;
-                            return __generator(this, function (_a) {
-                                switch (_a.label) {
-                                    case 0:
-                                        if (!(options && options.onBackendEventApi && options.onBackendEventApi.onInit)) return [3 /*break*/, 2];
-                                        return [4 /*yield*/, options.onBackendEventApi.onInit(query_1)];
-                                    case 1:
-                                        responseProcess = _a.sent();
-                                        // send the response process to the postProcess callback
-                                        if (backendApi_1.postProcess) {
-                                            backendApi_1.postProcess(responseProcess);
-                                        }
-                                        _a.label = 2;
-                                    case 2: return [2 /*return*/];
-                                }
-                            });
-                        }); });
+                    // if user set an onInit Backend, we'll run it right away (and if so, we also need to run preProcess, internalPostProcess & postProcess)
+                    if (gridOptions.backendServiceApi || gridOptions.onBackendEventApi) {
+                        if (gridOptions.onBackendEventApi) {
+                            console.warn("\"onBackendEventApi\" has been DEPRECATED, please consider using \"backendServiceApi\" in the short term since \"onBackendEventApi\" will be removed in future versions. You can take look at the Angular-Slickgrid Wikis for OData/GraphQL Services implementation");
+                        }
+                        if (gridOptions.backendServiceApi && gridOptions.backendServiceApi.service) {
+                            gridOptions.backendServiceApi.service.initOptions(gridOptions.backendServiceApi.options || {}, gridOptions.pagination);
+                        }
+                        var backendApi_2 = gridOptions.backendServiceApi || gridOptions.onBackendEventApi;
+                        var serviceOptions = (backendApi_2 && backendApi_2.service && backendApi_2.service.options) ? backendApi_2.service.options : {};
+                        var isExecuteCommandOnInit = (!serviceOptions) ? false : ((serviceOptions && serviceOptions.hasOwnProperty('executeProcessCommandOnInit')) ? serviceOptions['executeProcessCommandOnInit'] : true);
+                        if (backendApi_2 && backendApi_2.service && (backendApi_2.onInit || isExecuteCommandOnInit)) {
+                            var query = (typeof backendApi_2.service.buildQuery === 'function') ? backendApi_2.service.buildQuery() : '';
+                            var onInitPromise_1 = (isExecuteCommandOnInit) ? (backendApi_2 && backendApi_2.process) ? backendApi_2.process(query) : undefined : (backendApi_2 && backendApi_2.onInit) ? backendApi_2.onInit(query) : null;
+                            // wrap this inside a setTimeout to avoid timing issue since the gridOptions needs to be ready before running this onInit
+                            setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
+                                var processResult;
+                                return __generator(this, function (_a) {
+                                    switch (_a.label) {
+                                        case 0:
+                                            if (backendApi_2.preProcess) {
+                                                backendApi_2.preProcess();
+                                            }
+                                            return [4 /*yield*/, onInitPromise_1];
+                                        case 1:
+                                            processResult = _a.sent();
+                                            // define what our internal Post Process callback, only available for GraphQL Service for now
+                                            // it will basically refresh the Dataset & Pagination without having the user to create his own PostProcess every time
+                                            if (processResult && backendApi_2 && backendApi_2.service instanceof index_1.GraphqlService && backendApi_2.internalPostProcess) {
+                                                backendApi_2.internalPostProcess(processResult);
+                                            }
+                                            // send the response process to the postProcess callback
+                                            if (backendApi_2.postProcess) {
+                                                backendApi_2.postProcess(processResult);
+                                            }
+                                            return [2 /*return*/];
+                                    }
+                                });
+                            }); });
+                        }
                     }
                     // on cell click, mainly used with the columnDef.action callback
                     this.gridEventService.attachOnCellChange(grid, this._gridOptions, dataView);
@@ -282,14 +324,22 @@ System.register(["slickgrid/lib/jquery-ui-1.11.3", "slickgrid/lib/jquery.event.d
                  * When dataset changes, we need to refresh the entire grid UI & possibly resize it as well
                  * @param {object} dataset
                  */
-                AureliaSlickgridCustomElement.prototype.refreshGridData = function (dataset) {
+                AureliaSlickgridCustomElement.prototype.refreshGridData = function (dataset, totalCount) {
                     if (dataset && this.grid) {
                         this.dataview.setItems(dataset);
                         // this.grid.setData(dataset);
                         this.grid.invalidate();
                         this.grid.render();
-                        if (this._gridOptions.enablePagination) {
+                        if (this._gridOptions.enablePagination || this._gridOptions.backendServiceApi) {
                             this.showPagination = true;
+                            // before merging the grid options, make sure that it has the totalItems count
+                            // once we have that, we can merge and pass all these options to the pagination component
+                            if (!this.gridOptions.pagination) {
+                                this.gridOptions.pagination = (this._gridOptions.pagination) ? this._gridOptions.pagination : undefined;
+                            }
+                            if (this.gridOptions.pagination && totalCount) {
+                                this.gridOptions.pagination.totalItems = totalCount;
+                            }
                             this.gridPaginationOptions = this.mergeGridOptions();
                         }
                         if (this.grid && this._gridOptions.enableAutoResize) {
@@ -347,7 +397,7 @@ System.register(["slickgrid/lib/jquery-ui-1.11.3", "slickgrid/lib/jquery.event.d
                     aurelia_framework_1.bindable()
                 ], AureliaSlickgridCustomElement.prototype, "pickerOptions", void 0);
                 AureliaSlickgridCustomElement = __decorate([
-                    aurelia_framework_1.inject(index_1.ControlAndPluginService, Element, aurelia_event_aggregator_1.EventAggregator, index_1.FilterService, index_1.GridEventService, index_1.GridExtraService, aurelia_i18n_1.I18N, index_1.ResizerService, index_1.SortService)
+                    aurelia_framework_1.inject(index_1.ControlAndPluginService, Element, aurelia_event_aggregator_1.EventAggregator, index_1.FilterService, index_1.GraphqlService, index_1.GridEventService, index_1.GridExtraService, aurelia_i18n_1.I18N, index_1.ResizerService, index_1.SortService)
                 ], AureliaSlickgridCustomElement);
                 return AureliaSlickgridCustomElement;
             }());

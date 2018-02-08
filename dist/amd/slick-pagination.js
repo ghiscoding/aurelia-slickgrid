@@ -46,9 +46,9 @@ define(["require", "exports", "aurelia-framework", "./services/filter.service", 
         function SlickPaginationCustomElement(filterService, sortService) {
             this.filterService = filterService;
             this.sortService = sortService;
+            this._isFirstRender = true;
             this.dataFrom = 1;
             this.dataTo = 1;
-            this.itemsPerPage = 25;
             this.pageCount = 0;
             this.pageNumber = 1;
             this.totalItems = 0;
@@ -93,27 +93,32 @@ define(["require", "exports", "aurelia-framework", "./services/filter.service", 
                 this.onPageChanged(event, this.pageNumber);
             }
         };
-        SlickPaginationCustomElement.prototype.gotoFirstPage = function () {
-            this.pageNumber = 1;
-            this.onPageChanged(new CustomEvent('build', { detail: 3 }), this.pageNumber);
-        };
         SlickPaginationCustomElement.prototype.onChangeItemPerPage = function (event) {
-            var itemsPerPage = event.target.value;
+            var itemsPerPage = +event.target.value;
             this.pageCount = Math.ceil(this.totalItems / itemsPerPage);
             this.pageNumber = 1;
             this.itemsPerPage = itemsPerPage;
             this.onPageChanged(event, this.pageNumber);
         };
         SlickPaginationCustomElement.prototype.refreshPagination = function (isPageNumberReset) {
+            var backendApi = this._gridPaginationOptions.backendServiceApi || this._gridPaginationOptions.onBackendEventApi;
+            if (!backendApi || !backendApi.service || !backendApi.process) {
+                throw new Error("BackendServiceApi requires at least a \"process\" function and a \"service\" defined");
+            }
             if (this._gridPaginationOptions && this._gridPaginationOptions.pagination) {
+                // set the number of items per page if not already set
+                if (!this.itemsPerPage) {
+                    this.itemsPerPage = +((backendApi && backendApi.options && backendApi.options.paginationOptions && backendApi.options.paginationOptions.first) ? backendApi.options.paginationOptions.first : this._gridPaginationOptions.pagination.pageSize);
+                }
                 // if totalItems changed, we should always go back to the first page and recalculation the From-To indexes
                 if (isPageNumberReset || this.totalItems !== this._gridPaginationOptions.pagination.totalItems) {
                     this.pageNumber = 1;
                     this.recalculateFromToIndexes();
+                    // also reset the "offset" of backend service
+                    backendApi.service.resetPaginationOptions();
                 }
                 // calculate and refresh the multiple properties of the pagination UI
                 this.paginationPageSizes = this._gridPaginationOptions.pagination.pageSizes;
-                this.itemsPerPage = this._gridPaginationOptions.pagination.pageSize;
                 this.totalItems = this._gridPaginationOptions.pagination.totalItems;
                 this.dataTo = this.itemsPerPage;
             }
@@ -121,29 +126,34 @@ define(["require", "exports", "aurelia-framework", "./services/filter.service", 
         };
         SlickPaginationCustomElement.prototype.onPageChanged = function (event, pageNumber) {
             return __awaiter(this, void 0, void 0, function () {
-                var itemsPerPage, query, responseProcess;
+                var backendApi, itemsPerPage, query, processResult;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
                             this.recalculateFromToIndexes();
+                            backendApi = this._gridPaginationOptions.backendServiceApi || this._gridPaginationOptions.onBackendEventApi;
+                            if (!backendApi || !backendApi.service || !backendApi.process) {
+                                throw new Error("BackendServiceApi requires at least a \"process\" function and a \"service\" defined");
+                            }
                             if (this.dataTo > this.totalItems) {
                                 this.dataTo = this.totalItems;
                             }
-                            if (!this._gridPaginationOptions.onBackendEventApi) return [3 /*break*/, 2];
-                            itemsPerPage = this.itemsPerPage;
-                            if (!this._gridPaginationOptions.onBackendEventApi.process || !this._gridPaginationOptions.onBackendEventApi.service) {
-                                throw new Error("onBackendEventApi requires at least a \"process\" function and a \"service\" defined");
+                            if (!backendApi) return [3 /*break*/, 2];
+                            itemsPerPage = +this.itemsPerPage;
+                            if (backendApi.preProcess) {
+                                backendApi.preProcess();
                             }
-                            if (this._gridPaginationOptions.onBackendEventApi.preProcess) {
-                                this._gridPaginationOptions.onBackendEventApi.preProcess();
-                            }
-                            query = this._gridPaginationOptions.onBackendEventApi.service.onPaginationChanged(event, { newPage: pageNumber, pageSize: itemsPerPage });
-                            return [4 /*yield*/, this._gridPaginationOptions.onBackendEventApi.process(query)];
+                            query = backendApi.service.onPaginationChanged(event, { newPage: pageNumber, pageSize: itemsPerPage });
+                            return [4 /*yield*/, backendApi.process(query)];
                         case 1:
-                            responseProcess = _a.sent();
+                            processResult = _a.sent();
+                            // from the result, call our internal post process to update the Dataset and Pagination info
+                            if (processResult && backendApi.internalPostProcess) {
+                                backendApi.internalPostProcess(processResult);
+                            }
                             // send the response process to the postProcess callback
-                            if (this._gridPaginationOptions.onBackendEventApi.postProcess) {
-                                this._gridPaginationOptions.onBackendEventApi.postProcess(responseProcess);
+                            if (backendApi.postProcess) {
+                                backendApi.postProcess(processResult);
                             }
                             return [3 /*break*/, 3];
                         case 2: throw new Error('Pagination with a backend service requires "onBackendEventApi" to be defined in your grid options');

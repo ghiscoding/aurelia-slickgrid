@@ -7,6 +7,7 @@ export declare class SlickPaginationCustomElement {
     grid: any;
     gridPaginationOptions: GridOption;
     private _gridPaginationOptions;
+    private _isFirstRender;
     dataFrom: number;
     dataTo: number;
     itemsPerPage: number;
@@ -22,9 +23,8 @@ export declare class SlickPaginationCustomElement {
     changeToLastPage(event: any): void;
     changeToNextPage(event: any): void;
     changeToPreviousPage(event: any): void;
-    gotoFirstPage(): void;
     onChangeItemPerPage(event: any): void;
     refreshPagination(isPageNumberReset?: boolean): void;
-    onPageChanged(event: Event, pageNumber: number): Promise<void>;
+    onPageChanged(event: Event | undefined, pageNumber: number): Promise<void>;
     recalculateFromToIndexes(): void;
 }

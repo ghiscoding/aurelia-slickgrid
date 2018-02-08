@@ -74,30 +74,35 @@ var FilterService = /** @class */ (function () {
     };
     FilterService.prototype.attachBackendOnFilterSubscribe = function (event, args) {
         return __awaiter(this, void 0, void 0, function () {
-            var serviceOptions, query, responseProcess;
+            var gridOptions, backendApi, query, processResult;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         if (!args || !args.grid) {
                             throw new Error('Something went wrong when trying to attach the "attachBackendOnFilterSubscribe(event, args)" function, it seems that "args" is not populated correctly');
                         }
-                        serviceOptions = args.grid.getOptions();
-                        if (!serviceOptions || !serviceOptions.onBackendEventApi || !serviceOptions.onBackendEventApi.process || !serviceOptions.onBackendEventApi.service) {
-                            throw new Error("onBackendEventApi requires at least a \"process\" function and a \"service\" defined");
+                        gridOptions = args.grid.getOptions() || {};
+                        backendApi = gridOptions.backendServiceApi || gridOptions.onBackendEventApi;
+                        if (!backendApi || !backendApi.process || !backendApi.service) {
+                            throw new Error("BackendServiceApi requires at least a \"process\" function and a \"service\" defined");
                         }
                         // run a preProcess callback if defined
-                        if (serviceOptions.onBackendEventApi.preProcess !== undefined) {
-                            serviceOptions.onBackendEventApi.preProcess();
+                        if (backendApi.preProcess) {
+                            backendApi.preProcess();
                         }
-                        return [4 /*yield*/, serviceOptions.onBackendEventApi.service.onFilterChanged(event, args)];
+                        return [4 /*yield*/, backendApi.service.onFilterChanged(event, args)];
                     case 1:
                         query = _a.sent();
-                        return [4 /*yield*/, serviceOptions.onBackendEventApi.process(query)];
+                        return [4 /*yield*/, backendApi.process(query)];
                     case 2:
-                        responseProcess = _a.sent();
+                        processResult = _a.sent();
+                        // from the result, call our internal post process to update the Dataset and Pagination info
+                        if (processResult && backendApi.internalPostProcess) {
+                            backendApi.internalPostProcess(processResult);
+                        }
                         // send the response process to the postProcess callback
-                        if (serviceOptions.onBackendEventApi.postProcess !== undefined) {
-                            serviceOptions.onBackendEventApi.postProcess(responseProcess);
+                        if (backendApi.postProcess !== undefined) {
+                            backendApi.postProcess(processResult);
                         }
                         return [2 /*return*/];
                 }
@@ -116,7 +121,7 @@ var FilterService = /** @class */ (function () {
         this.subscriber = new Slick.Event();
         this.emitFilterChangedBy('local');
         dataView.setFilterArgs({ columnFilters: this._columnFilters, grid: this._grid });
-        dataView.setFilter(this.customFilter);
+        dataView.setFilter(this.customFilter.bind(this, dataView));
         this.subscriber.subscribe(function (e, args) {
             var columnId = args.columnId;
             if (columnId != null) {
@@ -127,7 +132,7 @@ var FilterService = /** @class */ (function () {
             _this.addFilterTemplateToHeaderRow(args);
         });
     };
-    FilterService.prototype.customFilter = function (item, args) {
+    FilterService.prototype.customFilter = function (dataView, item, args) {
         for (var _i = 0, _a = Object.keys(args.columnFilters); _i < _a.length; _i++) {
             var columnId = _a[_i];
             var columnFilter = args.columnFilters[columnId];
@@ -136,7 +141,7 @@ var FilterService = /** @class */ (function () {
             var fieldType = columnDef.type || FieldType.string;
             var conditionalFilterFn = (columnDef.filter && columnDef.filter.conditionalFilter) ? columnDef.filter.conditionalFilter : null;
             var filterSearchType = (columnDef.filterSearchType) ? columnDef.filterSearchType : null;
-            var cellValue = item[columnDef.field];
+            var cellValue = item[columnDef.queryField || columnDef.field];
             var fieldSearchValue = columnFilter.searchTerm;
             if (typeof fieldSearchValue === 'undefined') {
                 fieldSearchValue = '';
@@ -150,6 +155,12 @@ var FilterService = /** @class */ (function () {
             if (searchTerm === '') {
                 return true;
             }
+            // when using localization (i18n), we should use the formatter output to search as the new cell value
+            if (columnDef.params && columnDef.params.useFormatterOuputToFilter) {
+                var rowIndex = (dataView && typeof dataView.getIdxById === 'function') ? dataView.getIdxById(item.id) : 0;
+                cellValue = columnDef.formatter(rowIndex, columnIndex, cellValue, columnDef, item);
+            }
+            // make sure cell value is always a string
             if (typeof cellValue === 'number') {
                 cellValue = cellValue.toString();
             }

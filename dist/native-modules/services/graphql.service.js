@@ -6,35 +6,48 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
     }
     return t;
 };
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+import { inject } from 'aurelia-framework';
+import { I18N } from 'aurelia-i18n';
 import { mapOperatorType } from './utilities';
 import QueryBuilder from './graphqlQueryBuilder';
 import { SortDirection } from './../models/index';
 // timer for keeping track of user typing waits
 var timer;
+var DEFAULT_FILTER_TYPING_DEBOUNCE = 750;
 var GraphqlService = /** @class */ (function () {
-    function GraphqlService() {
-        this.serviceOptions = {};
+    function GraphqlService(i18n) {
+        this.i18n = i18n;
         this.defaultOrderBy = { field: 'id', direction: SortDirection.ASC };
+        this.defaultPaginationOptions = {
+            first: 25,
+            offset: 0
+        };
     }
     /**
      * Build the GraphQL query, since the service include/exclude cursor, the output query will be different.
      * @param serviceOptions GraphqlServiceOption
      */
     GraphqlService.prototype.buildQuery = function () {
-        if (!this.serviceOptions || !this.serviceOptions.datasetName || (!this.serviceOptions.columnIds && !this.serviceOptions.dataFilters && !this.serviceOptions.columnDefinitions)) {
+        if (!this.options || !this.options.datasetName || (!this.options.columnIds && !this.options.dataFilters && !this.options.columnDefinitions)) {
             throw new Error('GraphQL Service requires "datasetName" & ("dataFilters" or "columnDefinitions") properties for it to work');
         }
         var queryQb = new QueryBuilder('query');
-        var datasetQb = new QueryBuilder(this.serviceOptions.datasetName);
+        var datasetQb = new QueryBuilder(this.options.datasetName);
         var pageInfoQb = new QueryBuilder('pageInfo');
-        var dataQb = (this.serviceOptions.isWithCursor) ? new QueryBuilder('edges') : new QueryBuilder('nodes');
+        var dataQb = (this.options.isWithCursor) ? new QueryBuilder('edges') : new QueryBuilder('nodes');
         // get all the columnds Ids for the filters to work
         var columnIds;
-        if (this.serviceOptions.columnDefinitions) {
-            columnIds = Array.isArray(this.serviceOptions.columnDefinitions) ? this.serviceOptions.columnDefinitions.map(function (column) { return column.field; }) : [];
+        if (this.options.columnDefinitions) {
+            columnIds = Array.isArray(this.options.columnDefinitions) ? this.options.columnDefinitions.map(function (column) { return column.field; }) : [];
         }
         else {
-            columnIds = this.serviceOptions.columnIds || this.serviceOptions.dataFilters || [];
+            columnIds = this.options.columnIds || this.options.dataFilters || [];
         }
         // Slickgrid also requires the "id" field to be part of DataView
         // push it to the GraphQL query if it wasn't already part of the list
@@ -42,7 +55,7 @@ var GraphqlService = /** @class */ (function () {
             columnIds.push('id');
         }
         var filters = this.buildFilterQuery(columnIds);
-        if (this.serviceOptions.isWithCursor) {
+        if (this.options.isWithCursor) {
             // ...pageInfo { hasNextPage, endCursor }, edges { cursor, node { _filters_ } }
             pageInfoQb.find('hasNextPage', 'endCursor');
             dataQb.find(['cursor', { node: filters }]);
@@ -54,20 +67,27 @@ var GraphqlService = /** @class */ (function () {
         }
         datasetQb.find(['totalCount', pageInfoQb, dataQb]);
         // add dataset filters, could be Pagination and SortingFilters and/or FieldFilters
-        var datasetFilters = this.serviceOptions.paginationOptions;
-        if (this.serviceOptions.sortingOptions) {
-            // orderBy: [{ field:x, direction: 'ASC' }]
-            datasetFilters.orderBy = this.serviceOptions.sortingOptions;
+        var datasetFilters = __assign({}, this.options.paginationOptions, { first: (this.options.paginationOptions && this.options.paginationOptions.first) ? this.options.paginationOptions.first : (this.pagination && this.pagination.pageSize) ? this.pagination.pageSize : null || this.defaultPaginationOptions.first });
+        if (!this.options.isWithCursor) {
+            datasetFilters.offset = ((this.options.paginationOptions && this.options.paginationOptions.hasOwnProperty('offset')) ? +this.options.paginationOptions['offset'] : 0);
         }
-        if (this.serviceOptions.filteringOptions) {
+        if (this.options.sortingOptions) {
+            // orderBy: [{ field:x, direction: 'ASC' }]
+            datasetFilters.orderBy = this.options.sortingOptions;
+        }
+        if (this.options.filteringOptions) {
             // filterBy: [{ field: date, operator: '>', value: '2000-10-10' }]
-            datasetFilters.filterBy = this.serviceOptions.filteringOptions;
+            datasetFilters.filterBy = this.options.filteringOptions;
+        }
+        if (this.options.addLocaleIntoQuery) {
+            // first: 20, ... locale: "en-CA"
+            datasetFilters.locale = this.i18n.getLocale() || 'en';
         }
         // query { users(first: 20, orderBy: [], filterBy: [])}
         datasetQb.filter(datasetFilters);
         queryQb.find(datasetQb);
         var enumSearchProperties = ['direction:', 'field:', 'operator:'];
-        return this.trimDoubleQuotesOnEnumField(queryQb.toString(), enumSearchProperties, this.serviceOptions.keepArgumentFieldDoubleQuotes || false);
+        return this.trimDoubleQuotesOnEnumField(queryQb.toString(), enumSearchProperties, this.options.keepArgumentFieldDoubleQuotes || false);
     };
     /**
      * From an input array of strings, we want to build a GraphQL query string.
@@ -77,7 +97,7 @@ var GraphqlService = /** @class */ (function () {
      * INPUT
      *  ['firstName', 'lastName', 'billing.address.street', 'billing.address.zip']
      * OUTPUT
-     * firstName, lastName, shipping{address{street, zip}}
+     * firstName, lastName, billing{address{street, zip}}
      * @param inputArray
      */
     GraphqlService.prototype.buildFilterQuery = function (inputArray) {
@@ -93,15 +113,26 @@ var GraphqlService = /** @class */ (function () {
             .replace(/^\{/, '')
             .replace(/\}$/, '');
     };
-    GraphqlService.prototype.initOptions = function (serviceOptions) {
-        this.serviceOptions = serviceOptions || {};
+    GraphqlService.prototype.initOptions = function (serviceOptions, pagination) {
+        this.options = serviceOptions || {};
+        this.pagination = pagination;
+    };
+    /**
+     * Get an initialization of Pagination options
+     * @return Pagination Options
+     */
+    GraphqlService.prototype.getInitPaginationOptions = function () {
+        return (this.options.isWithCursor) ? { first: (this.pagination ? this.pagination.pageSize : 25) } : { first: (this.pagination ? this.pagination.pageSize : 25), offset: 0 };
+    };
+    GraphqlService.prototype.getDatasetName = function () {
+        return this.options.datasetName || '';
     };
     /*
      * Reset the pagination options
      */
     GraphqlService.prototype.resetPaginationOptions = function () {
         var paginationOptions;
-        if (this.serviceOptions.isWithCursor) {
+        if (this.options.isWithCursor) {
             // first, last, after, before
             paginationOptions = {
                 after: '',
@@ -111,13 +142,13 @@ var GraphqlService = /** @class */ (function () {
         }
         else {
             // first, last, offset
-            paginationOptions = this.serviceOptions.paginationOptions;
+            paginationOptions = (this.options.paginationOptions || this.getInitPaginationOptions());
             paginationOptions.offset = 0;
         }
         this.updateOptions({ paginationOptions: paginationOptions });
     };
     GraphqlService.prototype.updateOptions = function (serviceOptions) {
-        this.serviceOptions = __assign({}, this.serviceOptions, serviceOptions);
+        this.options = __assign({}, this.options, serviceOptions);
     };
     /*
      * FILTERING
@@ -126,12 +157,14 @@ var GraphqlService = /** @class */ (function () {
         var _this = this;
         var searchByArray = [];
         var serviceOptions = args.grid.getOptions();
-        if (serviceOptions.onBackendEventApi === undefined || !serviceOptions.onBackendEventApi.filterTypingDebounce) {
-            throw new Error('Something went wrong in the GraphqlService, "onBackendEventApi" is not initialized');
+        var backendApi = serviceOptions.backendServiceApi || serviceOptions.onBackendEventApi;
+        if (backendApi === undefined) {
+            throw new Error('Something went wrong in the GraphqlService, "backendServiceApi" is not initialized');
         }
+        // only add a delay when user is typing, on select dropdown filter it will execute right away
         var debounceTypingDelay = 0;
         if (event.type === 'keyup' || event.type === 'keydown') {
-            debounceTypingDelay = serviceOptions.onBackendEventApi.filterTypingDebounce || 700;
+            debounceTypingDelay = backendApi.filterTypingDebounce || DEFAULT_FILTER_TYPING_DEBOUNCE;
         }
         var promise = new Promise(function (resolve, reject) {
             if (!args || !args.grid) {
@@ -142,7 +175,7 @@ var GraphqlService = /** @class */ (function () {
                 if (args.columnFilters.hasOwnProperty(columnId)) {
                     var columnFilter = args.columnFilters[columnId];
                     var columnDef = columnFilter.columnDef;
-                    var fieldName = columnDef.field || columnDef.name || '';
+                    var fieldName = columnDef.queryField || columnDef.field || columnDef.name || '';
                     var fieldType = columnDef.type || 'string';
                     var fieldSearchValue = columnFilter.searchTerm;
                     if (typeof fieldSearchValue === 'undefined') {
@@ -151,7 +184,7 @@ var GraphqlService = /** @class */ (function () {
                     if (typeof fieldSearchValue !== 'string') {
                         throw new Error("GraphQL filter term property must be provided type \"string\", if you use filter with options then make sure your ids are also string. For example: filter: {type: FormElementType.select, selectOptions: [{ id: \"0\", value: \"0\" }, { id: \"1\", value: \"1\" }]");
                     }
-                    var searchTerms = columnFilter.listTerm || [];
+                    var searchTerms = columnFilter ? columnFilter.listTerm : null || [];
                     fieldSearchValue = '' + fieldSearchValue; // make sure it's a string
                     var matches = fieldSearchValue.match(/^([<>!=\*]{0,2})(.*[^<>!=\*])([\*]?)$/); // group 1: Operator, 2: searchValue, 3: last char is '*' (meaning starts with, ex.: abc*)
                     var operator = columnFilter.operator || ((matches) ? matches[1] : '');
@@ -215,15 +248,16 @@ var GraphqlService = /** @class */ (function () {
      */
     GraphqlService.prototype.onPaginationChanged = function (event, args) {
         var paginationOptions;
-        if (this.serviceOptions.isWithCursor) {
+        var pageSize = +args.pageSize || 20;
+        if (this.options.isWithCursor) {
             paginationOptions = {
-                first: args.pageSize
+                first: pageSize
             };
         }
         else {
             paginationOptions = {
-                first: args.pageSize,
-                offset: (args.newPage - 1) * args.pageSize
+                first: pageSize,
+                offset: (args.newPage - 1) * pageSize
             };
         }
         this.updateOptions({ paginationOptions: paginationOptions });
@@ -247,7 +281,7 @@ var GraphqlService = /** @class */ (function () {
             if (sortColumns) {
                 for (var _i = 0, sortColumns_1 = sortColumns; _i < sortColumns_1.length; _i++) {
                     var column = sortColumns_1[_i];
-                    var fieldName = column.sortCol.field || column.sortCol.id;
+                    var fieldName = column.sortCol.queryField || column.sortCol.field || column.sortCol.id;
                     var direction = column.sortAsc ? SortDirection.ASC : SortDirection.DESC;
                     sortByArray.push({
                         field: fieldName,
@@ -295,6 +329,9 @@ var GraphqlService = /** @class */ (function () {
             return rep;
         });
     };
+    GraphqlService = __decorate([
+        inject(I18N)
+    ], GraphqlService);
     return GraphqlService;
 }());
 export { GraphqlService };

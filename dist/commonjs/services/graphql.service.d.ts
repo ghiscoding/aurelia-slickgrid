@@ -1,7 +1,13 @@
-import { BackendService, FilterChangedArgs, GraphqlServiceOption, GraphqlSortingOption, PaginationChangedArgs, SortChangedArgs } from './../models/index';
+import { I18N } from 'aurelia-i18n';
+import { Pagination } from './../models/pagination.interface';
+import { BackendService, FilterChangedArgs, GraphqlCursorPaginationOption, GraphqlDatasetFilter, GraphqlPaginationOption, GraphqlServiceOption, GraphqlSortingOption, PaginationChangedArgs, SortChangedArgs } from './../models/index';
 export declare class GraphqlService implements BackendService {
-    serviceOptions: GraphqlServiceOption;
+    private i18n;
+    options: GraphqlServiceOption;
+    pagination: Pagination | undefined;
     defaultOrderBy: GraphqlSortingOption;
+    defaultPaginationOptions: GraphqlPaginationOption | GraphqlCursorPaginationOption;
+    constructor(i18n: I18N);
     /**
      * Build the GraphQL query, since the service include/exclude cursor, the output query will be different.
      * @param serviceOptions GraphqlServiceOption
@@ -15,11 +21,17 @@ export declare class GraphqlService implements BackendService {
      * INPUT
      *  ['firstName', 'lastName', 'billing.address.street', 'billing.address.zip']
      * OUTPUT
-     * firstName, lastName, shipping{address{street, zip}}
+     * firstName, lastName, billing{address{street, zip}}
      * @param inputArray
      */
     buildFilterQuery(inputArray: string[]): string;
-    initOptions(serviceOptions?: GraphqlServiceOption): void;
+    initOptions(serviceOptions?: GraphqlServiceOption, pagination?: Pagination): void;
+    /**
+     * Get an initialization of Pagination options
+     * @return Pagination Options
+     */
+    getInitPaginationOptions(): GraphqlDatasetFilter;
+    getDatasetName(): string;
     resetPaginationOptions(): void;
     updateOptions(serviceOptions?: GraphqlServiceOption): void;
     onFilterChanged(event: Event, args: FilterChangedArgs): Promise<string>;

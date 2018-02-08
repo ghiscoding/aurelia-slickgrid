@@ -47,7 +47,7 @@ var ResizerService = /** @class */ (function () {
         // calculate bottom padding
         // if using pagination, we need to add the pagination height to this bottom padding
         var bottomPadding = (gridOptions.autoResize && gridOptions.autoResize.bottomPadding) ? gridOptions.autoResize.bottomPadding : DATAGRID_BOTTOM_PADDING;
-        if (bottomPadding && gridOptions.enablePagination) {
+        if (bottomPadding && (gridOptions.enablePagination || this._gridOptions.backendServiceApi)) {
             bottomPadding += DATAGRID_PAGINATION_HEIGHT;
         }
         var gridHeight = windowElm.height() || 0;

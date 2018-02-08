@@ -5,6 +5,6 @@ export const translateFormatter = (row, cell, value, columnDef, dataContext) => 
         throw new Error(`The translate formatter requires the "i18n" to be provided as a column params.
     For example: this.columnDefinitions = [{ id: title, field: title, formatter: Formatters.translate, params: { i18n: this.i18n }`);
     }
-    return params.i18n.tr(value);
+    return value ? params.i18n.tr(value) : '';
 };
 //# sourceMappingURL=translateFormatter.js.map
