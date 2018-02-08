@@ -1,32 +1,36 @@
 import './global-utilities';
 import { inject } from 'aurelia-framework';
 import { parseUtcDate } from './utilities';
-import { BackendService, BackendServiceOption, CaseType, FilterChangedArgs, FieldType, OdataOption, PaginationChangedArgs, SortChangedArgs } from './../models/index';
+import { BackendService, BackendServiceOption, CaseType, FilterChangedArgs, FieldType, GridOption, OdataOption, PaginationChangedArgs, SortChangedArgs } from './../models/index';
 import { OdataService } from './odata.service';
+import { Pagination } from './../models/pagination.interface';
 import * as moment from 'moment';
 let timer: any;
+const DEFAULT_FILTER_TYPING_DEBOUNCE = 750;
 
 @inject(OdataService)
 export class GridOdataService implements BackendService {
-  serviceOptions: OdataOption = {};
-  defaultSortBy = '';
-  minUserInactivityOnFilter = 700;
-  odataService: OdataService;
+  options: OdataOption;
+  pagination: Pagination;
+  defaultOptions: OdataOption = {
+    top: 25,
+    orderBy: ''
+  };
 
-  constructor(odataService: OdataService) {
-    this.odataService = odataService;
-  }
+  constructor(private odataService: OdataService) { }
 
   buildQuery(): string {
     return this.odataService.buildQuery();
   }
 
-  initOptions(options: OdataOption): void {
-    this.odataService.options = options;
+  initOptions(options: OdataOption, pagination?: Pagination): void {
+    this.odataService.options = { ...this.defaultOptions, ...options, top: options.top || pagination.pageSize || this.defaultOptions.top };
+    this.options = options;
+    this.pagination = pagination;
   }
 
-  updateOptions(options?: OdataOption) {
-    this.serviceOptions = { ...this.serviceOptions, ...options };
+  updateOptions(serviceOptions?: OdataOption) {
+    this.options = { ...this.options, ...serviceOptions };
   }
 
   removeColumnFilter(fieldName: string): void {
@@ -50,15 +54,19 @@ export class GridOdataService implements BackendService {
    * FILTERING
    */
   onFilterChanged(event: Event, args: FilterChangedArgs): Promise<string> {
-    const searchBy: string = '';
-    const searchByArray: string[] = [];
-    const serviceOptions: BackendServiceOption = args.grid.getOptions();
-    if (serviceOptions.onBackendEventApi === undefined || !serviceOptions.onBackendEventApi.filterTypingDebounce) {
-      throw new Error('Something went wrong in the GridOdataService, "onBackendEventApi" is not initialized');
+    let searchBy = '';
+    const searchByArray = [];
+    const serviceOptions: GridOption = args.grid.getOptions();
+    const backendApi = serviceOptions.backendServiceApi || serviceOptions.onBackendEventApi;
+
+    if (backendApi === undefined) {
+      throw new Error('Something went wrong in the GridOdataService, "backendServiceApi" is not initialized');
     }
+
+    // only add a delay when user is typing, on select dropdown filter it will execute right away
     let debounceTypingDelay = 0;
     if (event.type === 'keyup' || event.type === 'keydown') {
-      debounceTypingDelay = serviceOptions.onBackendEventApi.filterTypingDebounce || 700;
+      debounceTypingDelay = backendApi.filterTypingDebounce || DEFAULT_FILTER_TYPING_DEBOUNCE;
     }
 
     const promise = new Promise<string>((resolve, reject) => {
@@ -67,7 +75,7 @@ export class GridOdataService implements BackendService {
         if (args.columnFilters.hasOwnProperty(columnId)) {
           const columnFilter = args.columnFilters[columnId];
           const columnDef = columnFilter.columnDef;
-          const fieldName = columnDef.field || columnDef.name;
+          const fieldName = columnDef.queryField || columnDef.field || columnDef.name;
           const fieldType = columnDef.type || 'string';
           let fieldSearchValue = columnFilter.searchTerm;
           if (typeof fieldSearchValue === 'undefined') {
@@ -102,7 +110,7 @@ export class GridOdataService implements BackendService {
               this.saveColumnFilter(fieldName, fieldSearchValue, searchTerms);
             }
           } else {
-            let searchBy = '';
+            searchBy = '';
 
             // titleCase the fieldName so that it matches the WebApi names
             const fieldNameTitleCase = String.titleCase(fieldName || '');
@@ -177,9 +185,11 @@ export class GridOdataService implements BackendService {
    * PAGINATION
    */
   onPaginationChanged(event: Event, args: PaginationChangedArgs) {
+    const pageSize = +args.pageSize || 20;
+
     this.odataService.updateOptions({
-      top: args.pageSize,
-      skip: (args.newPage - 1) * args.pageSize
+      top: pageSize,
+      skip: (args.newPage - 1) * pageSize
     });
 
     // build the OData query which we will use in the WebAPI callback
@@ -195,11 +205,11 @@ export class GridOdataService implements BackendService {
 
     // build the SortBy string, it could be multisort, example: customerNo asc, purchaserName desc
     if (sortColumns && sortColumns.length === 0) {
-      sortByArray = new Array(this.defaultSortBy); // when empty, use the default sort
+      sortByArray = new Array(this.defaultOptions.orderBy); // when empty, use the default sort
     } else {
       if (sortColumns) {
-        for (let column of sortColumns) {
-          let fieldName = column.sortCol.field || column.sortCol.id;
+        for (const column of sortColumns) {
+          let fieldName = column.sortCol.queryField || column.sortCol.field || column.sortCol.id;
           if (this.odataService.options.caseType === CaseType.pascalCase) {
             fieldName = String.titleCase(fieldName);
           }

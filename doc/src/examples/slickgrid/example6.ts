@@ -1,10 +1,11 @@
 import { autoinject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import { HttpClient } from 'aurelia-http-client';
-import { CaseType, Column, GridOption, FieldType, Formatters, FormElementType, GraphqlService } from 'aurelia-slickgrid';
+import { CaseType, Column, GraphqlResult, GraphqlServiceOption, GridOption, FieldType, Formatters, FormElementType, GraphqlService } from 'aurelia-slickgrid';
 
 const defaultPageSize = 20;
 const sampleDataRoot = 'src/examples/slickgrid/sample-data';
+const GRAPHQL_QUERY_DATASET_NAME = 'users';
 
 @autoinject()
 export class Example6 {
@@ -62,22 +63,16 @@ export class Example6 {
         pageSize: defaultPageSize,
         totalItems: 0
       },
-      onBackendEventApi: {
-        onInit: (query) => this.getCustomerApiCall(query),
+      backendServiceApi: {
+        service: this.graphqlService,
+        options: this.getBackendOptions(this.isWithCursor),
+        // you can define the onInit callback OR enable the "executeProcessCommandOnInit" flag in the service init
+        // onInit: (query) => this.getCustomerApiCall(query)
         preProcess: () => this.displaySpinner(true),
         process: (query) => this.getCustomerApiCall(query),
-        postProcess: (response) => {
-          this.displaySpinner(false);
-          this.getCustomerCallback(response);
-        },
-        filterTypingDebounce: 700,
-        service: this.graphqlService
+        postProcess: (result: GraphqlResult) => this.displaySpinner(false)
       }
     };
-
-    const paginationOption = this.getGraphqlInitOption(this.isWithCursor);
-    this.graphqlService.initOptions(paginationOption);
-
   }
 
   displaySpinner(isProcessing) {
@@ -87,60 +82,50 @@ export class Example6 {
       : { text: 'done', class: 'alert alert-success' };
   }
 
-  getGraphqlInitOption(isWithCursor: boolean) {
-    let initOptions;
+  getBackendOptions(withCursor: boolean): GraphqlServiceOption {
+    // with cursor, paginationOptions can be: { first, last, after, before }
+    // without cursor, paginationOptions can be: { first, last, offset }
+    return {
+      columnDefinitions: this.columnDefinitions,
+      datasetName: GRAPHQL_QUERY_DATASET_NAME,
+      isWithCursor: withCursor,
+      addLocaleIntoQuery: true,
 
-    if (isWithCursor) {
-      // with cursor, paginationOptions can be: { first, last, after, before }
-      initOptions = {
-        datasetName: 'users',
-        columnDefinitions: this.columnDefinitions,
-        isWithCursor: true,
-        paginationOptions: {
-          first: defaultPageSize
-        }
-      };
-    } else {
-      // without cursor, paginationOptions can be: { first, last, offset }
-      initOptions = {
-        datasetName: 'users',
-        columnDefinitions: this.columnDefinitions,
-        isWithCursor: false,
-        paginationOptions: {
-          first: defaultPageSize,
-          offset: 0
-        }
-      };
-    }
-    return initOptions;
+      // when dealing with complex objects, we want to keep our field name with double quotes
+      // example with gender: query { users (orderBy:[{field:"gender",direction:ASC}]) {}
+      keepArgumentFieldDoubleQuotes: true
+    };
   }
 
-  getCustomerCallback(data) {
-    this.displaySpinner(false);
-
-    this.dataset = data['items'];
-    this.graphqlQuery = data['query'];
-
-    // totalItems property needs to be filled for pagination to work correctly
-    this.gridOptions.pagination.totalItems = data['totalRecordCount'];
-  }
-
-  getCustomerApiCall(query) {
+  /**
+   * Calling your GraphQL backend server should always return a Promise or Observable of type GraphqlResult
+   *
+   * @param query
+   * @return Promise<GraphqlResult> | Observable<GraphqlResult>
+   */
+  getCustomerApiCall(query: string): Promise<GraphqlResult> {
     // in your case, you will call your WebAPI function (wich needs to return a Promise)
     // for the demo purpose, we will call a mock WebAPI function
+    const mockedResult = {
+      // the dataset name is the only unknown property
+      // will be the same defined in your GraphQL Service init, in our case GRAPHQL_QUERY_DATASET_NAME
+      data: {
+        [GRAPHQL_QUERY_DATASET_NAME]: {
+          nodes: [],
+          pageInfo: {
+            hasNextPage: true
+          },
+          totalCount: 100
+        }
+      }
+    };
+
     return new Promise((resolve, reject) => {
-      this.graphqlQuery = this.graphqlService.buildQuery();
       setTimeout(() => {
-        resolve({ items: [], totalRecordCount: 100, query });
+        this.graphqlQuery = this.graphqlService.buildQuery();
+        resolve(mockedResult);
       }, 500);
     });
-  }
-
-  onWithCursorChange(isWithCursor) {
-    this.isWithCursor = isWithCursor;
-    const paginationOption = this.getGraphqlInitOption(isWithCursor);
-    this.graphqlService.initOptions(paginationOption);
-    this.graphqlQuery = this.graphqlService.buildQuery();
   }
 
   switchLanguage() {

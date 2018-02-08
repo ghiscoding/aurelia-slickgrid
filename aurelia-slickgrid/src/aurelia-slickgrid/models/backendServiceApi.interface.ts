@@ -1,7 +1,17 @@
+import { OdataOption } from './odataOption.interface';
 import { GraphqlResult } from './graphqlResult.interface';
-import { BackendService } from './index';
+import { BackendService } from './backendService.interface';
+import { GraphqlServiceOption } from './graphqlServiceOption.interface';
+import { BackendServiceOption } from './backendServiceOption.interface';
+import { BackendEventChanged } from './backendEventChanged.interface';
 
-export interface BackendEventChanged {
+export interface BackendServiceApi {
+  /** Backend Service Options */
+  options?: OdataOption | GraphqlServiceOption;
+
+  /** Backend Service instance (could be OData or GraphQL Service) */
+  service: BackendService;
+
   /** On init (or on page load), what action to perform? */
   onInit?: (query: string) => Promise<GraphqlResult | any>;
 
@@ -12,10 +22,7 @@ export interface BackendEventChanged {
   process: (query: string) => Promise<GraphqlResult | any>;
 
   /** After executing the query, what action to perform? For example, stop the spinner */
-  postProcess?: (response: any) => void;
-
-  /** Backend Service instance (could be OData or GraphQL Service) */
-  service?: BackendService;
+  postProcess?: (response: GraphqlResult | any) => void;
 
   /** How long to wait until we start querying backend to avoid sending too many requests to backend server. Default to 750ms */
   filterTypingDebounce?: number;

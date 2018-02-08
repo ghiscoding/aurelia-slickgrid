@@ -111,11 +111,11 @@ export class Example3 {
 
   gridObjChanged(grid) {
     grid.onBeforeEditCell.subscribe((e, args) => {
-      console.log('before edit', e)
+      console.log('before edit', e);
       e.stopImmediatePropagation();
     });
     grid.onBeforeCellEditorDestroy.subscribe((e, args) => {
-      console.log('before destroy')
+      console.log('before destroy');
       e.stopPropagation();
     });
 

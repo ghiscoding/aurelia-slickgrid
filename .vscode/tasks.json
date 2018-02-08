@@ -2,7 +2,7 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "taskName": "Build Library",
+      "label": "Build Library",
       "command": "yarn",
       "type": "shell",
       "args": [
@@ -12,7 +12,7 @@
       "problemMatcher": []
     },
     {
-      "taskName": "Build Demo (doc folder)",
+      "label": "Build Demo (doc folder)",
       "command": "yarn",
       "type": "shell",
       "args": [
@@ -21,7 +21,7 @@
       "problemMatcher": []
     },
     {
-      "taskName": "Start Library Development",
+      "label": "Start Library Development",
       "command": "yarn",
       "type": "shell",
       "args": [
@@ -30,7 +30,7 @@
       "problemMatcher": []
     },
     {
-      "taskName": "Start Client-CLI",
+      "label": "Start Client-CLI",
       "command": "yarn",
       "type": "shell",
       "args": [
@@ -39,7 +39,7 @@
       "problemMatcher": []
     },
     {
-      "taskName": "Start Client TypeScript WebPack",
+      "label": "Start Client TypeScript WebPack",
       "command": "yarn",
       "type": "shell",
       "args": [
@@ -48,7 +48,7 @@
       "problemMatcher": []
     },
     {
-      "taskName": "Start Demo/Doc",
+      "label": "Start Demo/Doc",
       "command": "yarn",
       "type": "shell",
       "args": [

@@ -1,10 +1,8 @@
 import { mapFlatpickrDateFormatWithFieldType } from './../services/utilities';
 import { Column, Editor, FieldType, GridOption, KeyCode } from './../models/index';
 import { I18N } from 'aurelia-i18n';
+import * as flatpickr from 'flatpickr';
 import * as $ from 'jquery';
-
-declare function require(name: string);
-const flatpickr = require('flatpickr');
 
 /*
  * An example of a date picker editor using Flatpickr
@@ -40,7 +38,7 @@ export class DateEditor implements Editor {
 
     this.$input = $(`<input type="text" data-defaultDate="${this.defaultDate}" class="editor-text flatpickr" />`);
     this.$input.appendTo(this.args.container);
-    this.flatInstance = (this.$input[0] && typeof this.$input[0].flatpickr === 'function') ? this.$input[0].flatpickr(pickerOptions) : null;
+    this.flatInstance = (flatpickr && this.$input[0] && typeof this.$input[0].flatpickr === 'function') ? this.$input[0].flatpickr(pickerOptions) : null;
     this.show();
   }
 
@@ -50,7 +48,7 @@ export class DateEditor implements Editor {
       return params.i18n.getLocale();
     }
 
-    return (gridOptions && gridOptions.locale) ? gridOptions.locale : 'en';
+    return 'en';
   }
 
   loadFlatpickrLocale(locale: string) {

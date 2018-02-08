@@ -42,6 +42,10 @@ export interface Column {
   outputType?: FieldType;
   params?: any;
   previousWidth?: number;
+
+  /** A query field which, when specified, will be used to query filterBy/orderBy and has precedence over field property to query. */
+  queryField?: string;
+
   resizable?: boolean;
   rerenderOnResize?: boolean;
   showHidden?: boolean;

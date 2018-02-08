@@ -58,26 +58,32 @@ export class FilterService {
     if (!args || !args.grid) {
       throw new Error('Something went wrong when trying to attach the "attachBackendOnFilterSubscribe(event, args)" function, it seems that "args" is not populated correctly');
     }
-    const serviceOptions: BackendServiceOption = args.grid.getOptions();
+    const gridOptions: GridOption = args.grid.getOptions() || {};
 
-    if (!serviceOptions || !serviceOptions.onBackendEventApi || !serviceOptions.onBackendEventApi.process || !serviceOptions.onBackendEventApi.service) {
-      throw new Error(`onBackendEventApi requires at least a "process" function and a "service" defined`);
+    const backendApi = gridOptions.backendServiceApi || gridOptions.onBackendEventApi;
+    if (!backendApi || !backendApi.process || !backendApi.service) {
+      throw new Error(`BackendServiceApi requires at least a "process" function and a "service" defined`);
     }
 
     // run a preProcess callback if defined
-    if (serviceOptions.onBackendEventApi.preProcess !== undefined) {
-      serviceOptions.onBackendEventApi.preProcess();
+    if (backendApi.preProcess) {
+      backendApi.preProcess();
     }
 
     // call the service to get a query back
-    const query = await serviceOptions.onBackendEventApi.service.onFilterChanged(event, args);
+    const query = await backendApi.service.onFilterChanged(event, args);
 
     // await for the Promise to resolve the data
-    const responseProcess = await serviceOptions.onBackendEventApi.process(query);
+    const processResult = await backendApi.process(query);
+
+    // from the result, call our internal post process to update the Dataset and Pagination info
+    if (processResult && backendApi.internalPostProcess) {
+      backendApi.internalPostProcess(processResult);
+    }
 
     // send the response process to the postProcess callback
-    if (serviceOptions.onBackendEventApi.postProcess !== undefined) {
-      serviceOptions.onBackendEventApi.postProcess(responseProcess);
+    if (backendApi.postProcess !== undefined) {
+      backendApi.postProcess(processResult);
     }
   }
 
@@ -93,7 +99,7 @@ export class FilterService {
     this.emitFilterChangedBy('local');
 
     dataView.setFilterArgs({ columnFilters: this._columnFilters, grid: this._grid });
-    dataView.setFilter(this.customFilter);
+    dataView.setFilter(this.customFilter.bind(this, dataView));
 
     this.subscriber.subscribe((e: any, args: any) => {
       const columnId = args.columnId;
@@ -107,22 +113,21 @@ export class FilterService {
     });
   }
 
-  customFilter(item: any, args: any) {
+  customFilter(dataView: any, item: any, args: any) {
     for (const columnId of Object.keys(args.columnFilters)) {
       const columnFilter = args.columnFilters[columnId];
       const columnIndex = args.grid.getColumnIndex(columnId);
-      const columnDef = args.grid.getColumns() [columnIndex];
+      const columnDef = args.grid.getColumns()[columnIndex];
       const fieldType = columnDef.type || FieldType.string;
       const conditionalFilterFn = (columnDef.filter && columnDef.filter.conditionalFilter) ? columnDef.filter.conditionalFilter : null;
       const filterSearchType = (columnDef.filterSearchType) ? columnDef.filterSearchType : null;
 
-      let cellValue = item[columnDef.field];
+      let cellValue = item[columnDef.queryField || columnDef.field];
       let fieldSearchValue = columnFilter.searchTerm;
       if (typeof fieldSearchValue === 'undefined') {
         fieldSearchValue = '';
       }
       fieldSearchValue = '' + fieldSearchValue; // make sure it's a string
-
       const matches = fieldSearchValue.match(/^([<>!=\*]{0,2})(.*[^<>!=\*])([\*]?)$/); // group 1: Operator, 2: searchValue, 3: last char is '*' (meaning starts with, ex.: abc*)
       const operator = columnFilter.operator || ((matches) ? matches[1] : '');
       const searchTerm = (!!matches) ? matches[2] : '';
@@ -133,6 +138,13 @@ export class FilterService {
         return true;
       }
 
+      // when using localization (i18n), we should use the formatter output to search as the new cell value
+      if (columnDef.params && columnDef.params.useFormatterOuputToFilter) {
+        const rowIndex = (dataView && typeof dataView.getIdxById === 'function') ? dataView.getIdxById(item.id) : 0;
+        cellValue = columnDef.formatter(rowIndex, columnIndex, cellValue, columnDef, item);
+      }
+
+      // make sure cell value is always a string
       if (typeof cellValue === 'number') {
         cellValue = cellValue.toString();
       }
