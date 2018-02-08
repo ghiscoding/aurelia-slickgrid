@@ -99,7 +99,7 @@ export class FilterService {
     this.emitFilterChangedBy('local');
 
     dataView.setFilterArgs({ columnFilters: this._columnFilters, grid: this._grid });
-    dataView.setFilter(this.customFilter);
+    dataView.setFilter(this.customFilter.bind(this, dataView));
 
     this.subscriber.subscribe((e: any, args: any) => {
       const columnId = args.columnId;
@@ -113,7 +113,7 @@ export class FilterService {
     });
   }
 
-  customFilter(item: any, args: any) {
+  customFilter(dataView: any, item: any, args: any) {
     for (const columnId of Object.keys(args.columnFilters)) {
       const columnFilter = args.columnFilters[columnId];
       const columnIndex = args.grid.getColumnIndex(columnId);
@@ -138,6 +138,13 @@ export class FilterService {
         return true;
       }
 
+      // when using localization (i18n), we should use the formatter output to search as the new cell value
+      if (columnDef.params && columnDef.params.useFormatterOuputToFilter) {
+        const rowIndex = (dataView && typeof dataView.getIdxById === 'function') ? dataView.getIdxById(item.id) : 0;
+        cellValue = columnDef.formatter(rowIndex, columnIndex, cellValue, columnDef, item);
+      }
+
+      // make sure cell value is always a string
       if (typeof cellValue === 'number') {
         cellValue = cellValue.toString();
       }
