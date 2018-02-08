@@ -215,7 +215,7 @@ export class AureliaSlickgridCustomElement {
 
       if (backendApi.onInit || isExecuteCommandOnInit) {
         const query = backendApi.service.buildQuery();
-        const observableOrPromise = (isExecuteCommandOnInit) ? backendApi.process(query) : backendApi.onInit(query);
+        const onInitPromise = (isExecuteCommandOnInit) ? backendApi.process(query) : backendApi.onInit(query);
 
         // wrap this inside a setTimeout to avoid timing issue since the gridOptions needs to be ready before running this onInit
         setTimeout(async () => {
@@ -224,7 +224,7 @@ export class AureliaSlickgridCustomElement {
           }
 
           // await for the Promise to resolve the data
-          const processResult = await observableOrPromise;
+          const processResult = await onInitPromise;
 
           // define what our internal Post Process callback, only available for GraphQL Service for now
           // it will basically refresh the Dataset & Pagination without having the user to create his own PostProcess every time

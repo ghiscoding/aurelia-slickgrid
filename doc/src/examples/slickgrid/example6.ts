@@ -98,10 +98,10 @@ export class Example6 {
   }
 
   /**
-   * Calling your GraphQL backend server should always return a Promise or Observable of type GraphqlResult
+   * Calling your GraphQL backend server should always return a Promise of type GraphqlResult
    *
    * @param query
-   * @return Promise<GraphqlResult> | Observable<GraphqlResult>
+   * @return Promise<GraphqlResult>
    */
   getCustomerApiCall(query: string): Promise<GraphqlResult> {
     // in your case, you will call your WebAPI function (wich needs to return a Promise)

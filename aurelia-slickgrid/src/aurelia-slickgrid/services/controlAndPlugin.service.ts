@@ -330,8 +330,7 @@ export class ControlAndPluginService {
         backendApi.preProcess();
       }
 
-      // the process could be an Observable (like HttpClient) or a Promise
-      // in any case, we need to have a Promise so that we can await on it (if an Observable, convert it to Promise)
+      // execute the process promise
       const processPromise = backendApi.process(query);
 
       processPromise.then((processResult: GraphqlResult | any) => {

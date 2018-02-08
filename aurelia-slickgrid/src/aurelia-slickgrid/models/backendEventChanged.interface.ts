@@ -8,7 +8,7 @@ export interface BackendEventChanged {
   /** Before executing the query, what action to perform? For example, start a spinner */
   preProcess?: () => void;
 
-  /** On Processing, we get the query back from the service, and we need to provide a Promise/Observable. For example: this.http.get(myGraphqlUrl) */
+  /** On Processing, we get the query back from the service, and we need to provide a Promise. For example: this.http.get(myGraphqlUrl) */
   process: (query: string) => Promise<GraphqlResult | any>;
 
   /** After executing the query, what action to perform? For example, stop the spinner */
