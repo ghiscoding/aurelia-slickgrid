@@ -4,6 +4,7 @@ import { HttpClient } from 'aurelia-http-client';
 import { FieldType, FormElementType, GraphqlService } from 'aurelia-slickgrid';
 
 const defaultPageSize = 20;
+const GRAPHQL_QUERY_DATASET_NAME = 'users';
 
 @inject(GraphqlService, HttpClient, I18N)
 export class Example6 {
@@ -101,32 +102,35 @@ export class Example6 {
     };
   }
 
-  getCustomerCallback(data) {
-    this.displaySpinner(false);
-
-    this.dataset = data['items'];
-    this.graphqlQuery = data['query'];
-
-    // totalItems property needs to be filled for pagination to work correctly
-    this.gridOptions.pagination.totalItems = data['totalRecordCount'];
-  }
-
+  /**
+   * Calling your GraphQL backend server should always return a Promise of type GraphqlResult
+   *
+   * @param query
+   * @return Promise<GraphqlResult>
+   */
   getCustomerApiCall(query) {
     // in your case, you will call your WebAPI function (wich needs to return a Promise)
     // for the demo purpose, we will call a mock WebAPI function
+    const mockedResult = {
+      // the dataset name is the only unknown property
+      // will be the same defined in your GraphQL Service init, in our case GRAPHQL_QUERY_DATASET_NAME
+      data: {
+        [GRAPHQL_QUERY_DATASET_NAME]: {
+          nodes: [],
+          pageInfo: {
+            hasNextPage: true
+          },
+          totalCount: 100
+        }
+      }
+    };
+
     return new Promise((resolve, reject) => {
-      this.graphqlQuery = this.graphqlService.buildQuery();
       setTimeout(() => {
-        resolve({ items: [], totalRecordCount: 100, query });
+        this.graphqlQuery = this.graphqlService.buildQuery();
+        resolve(mockedResult);
       }, 500);
     });
-  }
-
-  onWithCursorChange(isWithCursor) {
-    this.isWithCursor = isWithCursor;
-    const paginationOption = this.getGraphqlInitOption(isWithCursor);
-    this.graphqlService.initOptions(paginationOption);
-    this.graphqlQuery = this.graphqlService.buildQuery();
   }
 
   switchLanguage() {

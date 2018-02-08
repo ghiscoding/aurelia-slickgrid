@@ -24,7 +24,7 @@ import { bindable, bindingMode, inject } from 'aurelia-framework';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { I18N } from 'aurelia-i18n';
 import { GlobalGridOptions } from './global-grid-options';
-import { CellArgs, Column, FormElementType, GraphqlResult, GridOption } from './models/index';
+import { BackendServiceOption, CellArgs, Column, FormElementType, GraphqlResult, GridOption } from './models/index';
 import { ControlAndPluginService, FilterService, GraphqlService, GridEventService, GridExtraService, ResizerService, SortService } from './services/index';
 import * as $ from 'jquery';
 
@@ -165,9 +165,9 @@ export class AureliaSlickgridCustomElement {
       const backendApi = gridOptions.backendServiceApi || gridOptions.onBackendEventApi;
 
       // internalPostProcess only works with a GraphQL Service, so make sure it is that type
-      if (backendApi.service instanceof GraphqlService) {
+      if (backendApi && backendApi.service && backendApi.service instanceof GraphqlService) {
         backendApi.internalPostProcess = (processResult: any) => {
-          const datasetName = backendApi.service.getDatasetName();
+          const datasetName = (backendApi && backendApi.service && typeof backendApi.service.getDatasetName === 'function') ? backendApi.service.getDatasetName() : '';
           if (!processResult || !processResult.data || !processResult.data[datasetName]) {
             throw new Error(`Your GraphQL result is invalid and/or does not follow the required result structure. Please check the result and/or review structure to use in Angular-Slickgrid Wiki in the GraphQL section.`);
           }
@@ -210,12 +210,12 @@ export class AureliaSlickgridCustomElement {
       }
 
       const backendApi = gridOptions.backendServiceApi || gridOptions.onBackendEventApi;
-      const serviceOptions = (backendApi && backendApi.service && backendApi.service.options) ? backendApi.service.options : null;
-      const isExecuteCommandOnInit = (!serviceOptions) ? false : (serviceOptions['executeProcessCommandOnInit'] || true);
+      const serviceOptions: BackendServiceOption = (backendApi && backendApi.service && backendApi.service.options) ? backendApi.service.options : {};
+      const isExecuteCommandOnInit = (!serviceOptions) ? false : ((serviceOptions && serviceOptions.hasOwnProperty('executeProcessCommandOnInit')) ? serviceOptions['executeProcessCommandOnInit'] : true);
 
-      if (backendApi.onInit || isExecuteCommandOnInit) {
-        const query = backendApi.service.buildQuery();
-        const onInitPromise = (isExecuteCommandOnInit) ? backendApi.process(query) : backendApi.onInit(query);
+      if (backendApi && backendApi.service && (backendApi.onInit || isExecuteCommandOnInit)) {
+        const query = (typeof backendApi.service.buildQuery === 'function') ? backendApi.service.buildQuery() : '';
+        const onInitPromise = (isExecuteCommandOnInit) ? (backendApi && backendApi.process) ? backendApi.process(query) : undefined : (backendApi && backendApi.onInit) ? backendApi.onInit(query) : null;
 
         // wrap this inside a setTimeout to avoid timing issue since the gridOptions needs to be ready before running this onInit
         setTimeout(async () => {
@@ -228,7 +228,7 @@ export class AureliaSlickgridCustomElement {
 
           // define what our internal Post Process callback, only available for GraphQL Service for now
           // it will basically refresh the Dataset & Pagination without having the user to create his own PostProcess every time
-          if (backendApi.service instanceof GraphqlService && processResult) {
+          if (processResult && backendApi && backendApi.service instanceof GraphqlService && backendApi.internalPostProcess) {
             backendApi.internalPostProcess(processResult);
           }
 
@@ -300,7 +300,7 @@ export class AureliaSlickgridCustomElement {
         // before merging the grid options, make sure that it has the totalItems count
         // once we have that, we can merge and pass all these options to the pagination component
         if (!this.gridOptions.pagination) {
-          this.gridOptions.pagination = (this._gridOptions.pagination) ? this._gridOptions.pagination : null;
+          this.gridOptions.pagination = (this._gridOptions.pagination) ? this._gridOptions.pagination : undefined;
         }
         if (this.gridOptions.pagination && totalCount) {
           this.gridOptions.pagination.totalItems = totalCount;

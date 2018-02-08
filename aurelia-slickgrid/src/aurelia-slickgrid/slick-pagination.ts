@@ -12,7 +12,7 @@ export class SlickPaginationCustomElement {
 
   dataFrom = 1;
   dataTo = 1;
-  itemsPerPage;
+  itemsPerPage: number;
   pageCount = 0;
   pageNumber = 1;
   totalItems = 0;
@@ -84,7 +84,7 @@ export class SlickPaginationCustomElement {
     if (this._gridPaginationOptions && this._gridPaginationOptions.pagination) {
       // set the number of items per page if not already set
       if (!this.itemsPerPage) {
-        this.itemsPerPage = +(backendApi['options'] && backendApi['options'].paginationOptions && backendApi['options'].paginationOptions.first) ? backendApi['options'].paginationOptions.first : this._gridPaginationOptions.pagination.pageSize;
+        this.itemsPerPage = +((backendApi && backendApi.options && backendApi.options.paginationOptions && backendApi.options.paginationOptions.first) ? backendApi.options.paginationOptions.first : this._gridPaginationOptions.pagination.pageSize);
       }
 
       // if totalItems changed, we should always go back to the first page and recalculation the From-To indexes
@@ -104,7 +104,7 @@ export class SlickPaginationCustomElement {
     this.pageCount = Math.ceil(this.totalItems / this.itemsPerPage);
   }
 
-  async onPageChanged(event?: Event, pageNumber?: number) {
+  async onPageChanged(event: Event | undefined, pageNumber: number) {
     this.recalculateFromToIndexes();
 
     const backendApi = this._gridPaginationOptions.backendServiceApi || this._gridPaginationOptions.onBackendEventApi;

@@ -5,7 +5,6 @@ import { HttpClient } from 'aurelia-http-client';
 import { CaseType, Column, GraphqlResult, GraphqlServiceOption, GridOption, FieldType, Formatters, FormElementType, GraphqlService } from 'aurelia-slickgrid';
 
 const defaultPageSize = 20;
-const sampleDataRoot = 'src/examples/slickgrid/sample-data';
 const GRAPHQL_QUERY_DATASET_NAME = 'users';
 
 @autoinject()
