@@ -1,4 +1,4 @@
-System.register(["./controlAndPlugin.service", "./filter.service", "./graphql.service", "./gridEvent.service", "./gridExtra.service", "./grid-odata.service", "./odata.service", "./resizer.service", "./sort.service"], function (exports_1, context_1) {
+System.register(["./controlAndPlugin.service", "./filter.service", "./graphql.service", "./gridEvent.service", "./gridExtra.service", "./grid-odata.service", "./odata.service", "./resizer.service", "./sort.service", "./utilities"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     return {
@@ -46,6 +46,11 @@ System.register(["./controlAndPlugin.service", "./filter.service", "./graphql.se
             function (sort_service_1_1) {
                 exports_1({
                     "SortService": sort_service_1_1["SortService"]
+                });
+            },
+            function (utilities_1_1) {
+                exports_1({
+                    "toKababCase": utilities_1_1["toKababCase"]
                 });
             }
         ],

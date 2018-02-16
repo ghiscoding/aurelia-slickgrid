@@ -202,3 +202,28 @@ export function parseUtcDate(inputDateString: string, useUtc: boolean): string |
 
   return date;
 }
+
+/**
+ * Converts a string to camel case
+ * @param {string} str the string to convert
+ * @return {string} the string in camel case
+ */
+export function toCamelCase(str: string): string {
+  return str.replace(/(?:^\w|[A-Z]|\b\w|[\s+\-_\/])/g, (match: string, offset: number) => {
+    // remove white space or hypens or underscores
+    if (/[\s+\-_\/]/.test(match)) {
+      return '';
+    }
+
+    return offset === 0 ? match.toLowerCase() : match.toUpperCase();
+  });
+}
+
+/**
+ * Converts a string to kabab (hypen) case
+ * @param {string} str the string to convert
+ * @return {string} the string in kabab case
+ */
+export function toKababCase(str: string): string {
+  return toCamelCase(str).replace(/([A-Z])/g, '-$1').toLowerCase();
+}

@@ -50,6 +50,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "aurelia-i18n", "./global-grid-options", "./services/index", "jquery", "slickgrid/lib/jquery-ui-1.11.3", "slickgrid/lib/jquery.event.drag-2.3.0", "slickgrid/slick.core", "slickgrid/slick.dataview", "slickgrid/slick.grid", "slickgrid/controls/slick.columnpicker", "slickgrid/controls/slick.gridmenu", "slickgrid/controls/slick.pager", "slickgrid/plugins/slick.autotooltips", "slickgrid/plugins/slick.cellcopymanager", "slickgrid/plugins/slick.cellexternalcopymanager", "slickgrid/plugins/slick.cellrangedecorator", "slickgrid/plugins/slick.cellrangeselector", "slickgrid/plugins/slick.cellselectionmodel", "slickgrid/plugins/slick.checkboxselectcolumn", "slickgrid/plugins/slick.headerbuttons", "slickgrid/plugins/slick.headermenu", "slickgrid/plugins/slick.rowmovemanager", "slickgrid/plugins/slick.rowselectionmodel"], function (require, exports, aurelia_framework_1, aurelia_event_aggregator_1, aurelia_i18n_1, global_grid_options_1, index_1, $) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    var eventPrefix = 'sg';
     var AureliaSlickgridCustomElement = /** @class */ (function () {
         function AureliaSlickgridCustomElement(controlAndPluginService, elm, ea, filterService, graphqlService, gridEventService, gridExtraService, i18n, resizer, sortService) {
             this.controlAndPluginService = controlAndPluginService;
@@ -78,6 +79,9 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
             this.sortService = sortService;
         }
         AureliaSlickgridCustomElement.prototype.attached = function () {
+            this.elm.dispatchEvent(new CustomEvent(eventPrefix + "-on-before-grid-create", {
+                bubbles: true,
+            }));
             this.ea.publish('onBeforeGridCreate', true);
             // make sure the dataset is initialized (if not it will throw an error that it cannot getLength of null)
             this._dataset = this._dataset || [];
@@ -93,7 +97,15 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
             this.dataview.setItems(this._dataset);
             this.dataview.endUpdate();
             // publish certain events
+            this.elm.dispatchEvent(new CustomEvent(eventPrefix + "-on-grid-created", {
+                bubbles: true,
+                detail: this.grid
+            }));
             this.ea.publish('onGridCreated', this.grid);
+            this.elm.dispatchEvent(new CustomEvent(eventPrefix + "-on-dataview-created", {
+                bubbles: true,
+                detail: this.dataview
+            }));
             this.ea.publish('onDataviewCreated', this.dataview);
             // attach resize ONLY after the dataView is ready
             this.attachResizeHook(this.grid, this._gridOptions);
@@ -106,6 +118,10 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
         };
         AureliaSlickgridCustomElement.prototype.detached = function () {
             this.ea.publish('onBeforeGridDestroy', this.grid);
+            this.elm.dispatchEvent(new CustomEvent(eventPrefix + "-on-before-grid-destroy", {
+                bubbles: true,
+                detail: this.grid
+            }));
             this.dataview = [];
             this.controlAndPluginService.destroy();
             this.filterService.destroy();
@@ -113,6 +129,10 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
             this.sortService.destroy();
             this.grid.destroy();
             this.ea.publish('onAfterGridDestroyed', true);
+            this.elm.dispatchEvent(new CustomEvent(eventPrefix + "-on-after-grid-destroyed", {
+                bubbles: true,
+                detail: this.grid
+            }));
         };
         /**
          * Keep original value(s) that could be passed by the user ViewModel.
@@ -220,6 +240,38 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
                         });
                     }); });
                 }
+            }
+            var _loop_1 = function (prop) {
+                if (prop.startsWith('on')) {
+                    grid[prop].subscribe(function (e, args) {
+                        _this.elm.dispatchEvent(new CustomEvent(eventPrefix + "-" + index_1.toKababCase(prop), {
+                            bubbles: true,
+                            detail: {
+                                eventData: e,
+                                args: args
+                            }
+                        }));
+                    });
+                }
+            };
+            for (var prop in grid) {
+                _loop_1(prop);
+            }
+            var _loop_2 = function (prop) {
+                if (prop.startsWith('on')) {
+                    dataView[prop].subscribe(function (e, args) {
+                        _this.elm.dispatchEvent(new CustomEvent(eventPrefix + "-" + index_1.toKababCase(prop), {
+                            bubbles: true,
+                            detail: {
+                                eventData: e,
+                                args: args
+                            }
+                        }));
+                    });
+                }
+            };
+            for (var prop in dataView) {
+                _loop_2(prop);
             }
             // on cell click, mainly used with the columnDef.action callback
             this.gridEventService.attachOnCellChange(grid, this._gridOptions, dataView);

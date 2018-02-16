@@ -201,4 +201,28 @@ function parseUtcDate(inputDateString, useUtc) {
     return date;
 }
 exports.parseUtcDate = parseUtcDate;
+/**
+ * Converts a string to camel case
+ * @param {string} str the string to convert
+ * @return {string} the string in camel case
+ */
+function toCamelCase(str) {
+    return str.replace(/(?:^\w|[A-Z]|\b\w|[\s+\-_\/])/g, function (match, offset) {
+        // remove white space or hypens or underscores
+        if (/[\s+\-_\/]/.test(match)) {
+            return '';
+        }
+        return offset === 0 ? match.toLowerCase() : match.toUpperCase();
+    });
+}
+exports.toCamelCase = toCamelCase;
+/**
+ * Converts a string to kabab (hypen) case
+ * @param {string} str the string to convert
+ * @return {string} the string in kabab case
+ */
+function toKababCase(str) {
+    return toCamelCase(str).replace(/([A-Z])/g, '-$1').toLowerCase();
+}
+exports.toKababCase = toKababCase;
 //# sourceMappingURL=utilities.js.map
