@@ -36,7 +36,7 @@ import { bindable, bindingMode, inject } from 'aurelia-framework';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { I18N } from 'aurelia-i18n';
 import { GlobalGridOptions } from './global-grid-options';
-import { ControlAndPluginService, FilterService, GraphqlService, GridEventService, GridExtraService, ResizerService, SortService, toKababCase } from './services/index';
+import { ControlAndPluginService, FilterService, GraphqlService, GridEventService, GridExtraService, ResizerService, SortService, toKebabCase } from './services/index';
 import * as $ from 'jquery';
 const eventPrefix = 'sg';
 let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
@@ -222,7 +222,7 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
         for (const prop in grid) {
             if (prop.startsWith('on')) {
                 grid[prop].subscribe((e, args) => {
-                    this.elm.dispatchEvent(new CustomEvent(`${eventPrefix}-${toKababCase(prop)}`, {
+                    this.elm.dispatchEvent(new CustomEvent(`${eventPrefix}-${toKebabCase(prop)}`, {
                         bubbles: true,
                         detail: {
                             eventData: e,
@@ -235,7 +235,7 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
         for (const prop in dataView) {
             if (prop.startsWith('on')) {
                 dataView[prop].subscribe((e, args) => {
-                    this.elm.dispatchEvent(new CustomEvent(`${eventPrefix}-${toKababCase(prop)}`, {
+                    this.elm.dispatchEvent(new CustomEvent(`${eventPrefix}-${toKebabCase(prop)}`, {
                         bubbles: true,
                         detail: {
                             eventData: e,

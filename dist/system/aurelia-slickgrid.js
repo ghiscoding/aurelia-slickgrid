@@ -305,7 +305,7 @@ System.register(["slickgrid/lib/jquery-ui-1.11.3", "slickgrid/lib/jquery.event.d
                     var _loop_1 = function (prop) {
                         if (prop.startsWith('on')) {
                             grid[prop].subscribe(function (e, args) {
-                                _this.elm.dispatchEvent(new CustomEvent(eventPrefix + "-" + index_1.toKababCase(prop), {
+                                _this.elm.dispatchEvent(new CustomEvent(eventPrefix + "-" + index_1.toKebabCase(prop), {
                                     bubbles: true,
                                     detail: {
                                         eventData: e,
@@ -321,7 +321,7 @@ System.register(["slickgrid/lib/jquery-ui-1.11.3", "slickgrid/lib/jquery.event.d
                     var _loop_2 = function (prop) {
                         if (prop.startsWith('on')) {
                             dataView[prop].subscribe(function (e, args) {
-                                _this.elm.dispatchEvent(new CustomEvent(eventPrefix + "-" + index_1.toKababCase(prop), {
+                                _this.elm.dispatchEvent(new CustomEvent(eventPrefix + "-" + index_1.toKebabCase(prop), {
                                     bubbles: true,
                                     detail: {
                                         eventData: e,

@@ -50,7 +50,7 @@ System.register(["./controlAndPlugin.service", "./filter.service", "./graphql.se
             },
             function (utilities_1_1) {
                 exports_1({
-                    "toKababCase": utilities_1_1["toKababCase"]
+                    "toKebabCase": utilities_1_1["toKebabCase"]
                 });
             }
         ],

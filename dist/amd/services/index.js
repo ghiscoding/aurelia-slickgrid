@@ -10,6 +10,6 @@ define(["require", "exports", "./controlAndPlugin.service", "./filter.service", 
     exports.OdataService = odata_service_1.OdataService;
     exports.ResizerService = resizer_service_1.ResizerService;
     exports.SortService = sort_service_1.SortService;
-    exports.toKababCase = utilities_1.toKababCase;
+    exports.toKebabCase = utilities_1.toKebabCase;
 });
 //# sourceMappingURL=index.js.map

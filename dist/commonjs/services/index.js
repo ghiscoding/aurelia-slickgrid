@@ -19,5 +19,5 @@ exports.ResizerService = resizer_service_1.ResizerService;
 var sort_service_1 = require("./sort.service");
 exports.SortService = sort_service_1.SortService;
 var utilities_1 = require("./utilities");
-exports.toKababCase = utilities_1.toKababCase;
+exports.toKebabCase = utilities_1.toKebabCase;
 //# sourceMappingURL=index.js.map

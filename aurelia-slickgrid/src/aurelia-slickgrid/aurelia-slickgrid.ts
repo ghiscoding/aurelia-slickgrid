@@ -25,7 +25,7 @@ import { EventAggregator } from 'aurelia-event-aggregator';
 import { I18N } from 'aurelia-i18n';
 import { GlobalGridOptions } from './global-grid-options';
 import { BackendServiceOption, CellArgs, Column, FormElementType, GraphqlResult, GridOption } from './models/index';
-import { ControlAndPluginService, FilterService, GraphqlService, GridEventService, GridExtraService, ResizerService, SortService, toKababCase } from './services/index';
+import { ControlAndPluginService, FilterService, GraphqlService, GridEventService, GridExtraService, ResizerService, SortService, toKebabCase } from './services/index';
 import * as $ from 'jquery';
 
 // using external js modules in Aurelia
@@ -264,7 +264,7 @@ export class AureliaSlickgridCustomElement {
     for (const prop in grid) {
       if (prop.startsWith('on')) {
         grid[prop].subscribe((e: any, args: any) => {
-          this.elm.dispatchEvent(new CustomEvent(`${eventPrefix}-${toKababCase(prop)}`, {
+          this.elm.dispatchEvent(new CustomEvent(`${eventPrefix}-${toKebabCase(prop)}`, {
             bubbles: true,
             detail: {
               eventData: e,
@@ -278,7 +278,7 @@ export class AureliaSlickgridCustomElement {
     for (const prop in dataView) {
       if (prop.startsWith('on')) {
         dataView[prop].subscribe((e: any, args: any) => {
-          this.elm.dispatchEvent(new CustomEvent(`${eventPrefix}-${toKababCase(prop)}`, {
+          this.elm.dispatchEvent(new CustomEvent(`${eventPrefix}-${toKebabCase(prop)}`, {
             bubbles: true,
             detail: {
               eventData: e,

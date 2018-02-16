@@ -216,13 +216,13 @@ define(["require", "exports", "../models/index", "moment"], function (require, e
     }
     exports.toCamelCase = toCamelCase;
     /**
-     * Converts a string to kabab (hypen) case
+     * Converts a string to kebab (hypen) case
      * @param {string} str the string to convert
-     * @return {string} the string in kabab case
+     * @return {string} the string in kebab case
      */
-    function toKababCase(str) {
+    function toKebabCase(str) {
         return toCamelCase(str).replace(/([A-Z])/g, '-$1').toLowerCase();
     }
-    exports.toKababCase = toKababCase;
+    exports.toKebabCase = toKebabCase;
 });
 //# sourceMappingURL=utilities.js.map

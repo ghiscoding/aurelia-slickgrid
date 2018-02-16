@@ -220,10 +220,10 @@ export function toCamelCase(str: string): string {
 }
 
 /**
- * Converts a string to kabab (hypen) case
+ * Converts a string to kebab (hypen) case
  * @param {string} str the string to convert
- * @return {string} the string in kabab case
+ * @return {string} the string in kebab case
  */
-export function toKababCase(str: string): string {
+export function toKebabCase(str: string): string {
   return toCamelCase(str).replace(/([A-Z])/g, '-$1').toLowerCase();
 }

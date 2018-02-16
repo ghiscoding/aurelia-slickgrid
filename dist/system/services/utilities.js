@@ -216,14 +216,14 @@ System.register(["../models/index", "moment"], function (exports_1, context_1) {
     }
     exports_1("toCamelCase", toCamelCase);
     /**
-     * Converts a string to kabab (hypen) case
+     * Converts a string to kebab (hypen) case
      * @param {string} str the string to convert
-     * @return {string} the string in kabab case
+     * @return {string} the string in kebab case
      */
-    function toKababCase(str) {
+    function toKebabCase(str) {
         return toCamelCase(str).replace(/([A-Z])/g, '-$1').toLowerCase();
     }
-    exports_1("toKababCase", toKababCase);
+    exports_1("toKebabCase", toKebabCase);
     var index_1, moment;
     return {
         setters: [
