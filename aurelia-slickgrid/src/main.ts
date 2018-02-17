@@ -4,6 +4,8 @@
 import 'bootstrap/dist/css/bootstrap.css';
 import 'font-awesome/css/font-awesome.css';
 import 'flatpickr/dist/flatpickr.min.css';
+import '../assets/lib/multiple-select/multiple-select.css';
+import '../assets/lib/multiple-select/multiple-select.js';
 import './styles.css';
 import './slickgrid.scss';
 import { PLATFORM } from 'aurelia-pal';

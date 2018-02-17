@@ -1,4 +1,4 @@
-import { FilterCondition, FilterConditionOption } from '../models/index';
+import { FilterCondition, FilterConditionOption } from '../models';
 import { testFilterCondition } from './filterUtilities';
 
 export const stringFilterCondition: FilterCondition = (options: FilterConditionOption) => {
@@ -7,7 +7,7 @@ export const stringFilterCondition: FilterCondition = (options: FilterConditionO
 
   // make both the cell value and search value lower for case insensitive comparison
   const cellValue = options.cellValue.toLowerCase();
-  const searchTerm = options.searchTerm.toLowerCase();
+  const searchTerm = (typeof options.searchTerm === 'string') ? options.searchTerm.toLowerCase() : options.searchTerm;
 
   if (options.operator === '*') {
     return cellValue.endsWith(searchTerm);

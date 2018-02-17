@@ -1,5 +1,5 @@
 import { autoinject, bindable } from 'aurelia-framework';
-import { Column, FieldType, FilterService, Formatter, Formatters, FormElementType, GridOption } from '../../aurelia-slickgrid';
+import { Column, FieldType, FilterType, FilterService, Formatter, Formatters, GridOption } from '../../aurelia-slickgrid';
 
 @autoinject()
 export class Example9 {
@@ -45,9 +45,13 @@ export class Example9 {
         sortable: true,
         filterable: true,
         filter: {
-          searchTerm: '', // default selection
-          type: FormElementType.select,
-          selectOptions: [{ value: '', label: '' }, { value: true, label: 'true' }, { value: false, label: 'false' }]
+          collection: [{ value: '', label: '' }, { value: true, label: 'true' }, { value: false, label: 'false' }],
+          type: FilterType.singleSelect,
+          filterOptions: {
+            // you can add "multiple-select" plugin options like styling the first row
+            offsetLeft: 14,
+            width: 100
+          }
         }
       }
     ];

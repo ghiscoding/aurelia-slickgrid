@@ -1,5 +1,6 @@
+import { ColumnFilter } from './columnFilter.interface';
 import { Editor } from './editor.interface';
-import { FieldType } from './fieldType';
+import { FieldType } from './fieldType.enum';
 import { Formatter } from './formatter.interface';
 import { HeaderButtonItem } from './headerButtonItem.interface';
 import { HeaderMenuItem } from './headerMenuItem.interface';
@@ -14,7 +15,7 @@ export interface Column {
   defaultSortAsc?: boolean;
   editor?: any;
   field: string;
-  filter?: any;
+  filter?: ColumnFilter;
   filterable?: boolean;
   filterSearchType?: FieldType;
   filterTemplate?: any;
