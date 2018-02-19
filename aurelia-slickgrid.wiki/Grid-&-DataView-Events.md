@@ -1,8 +1,22 @@
-SlickGrid has a nice amount of [Grid Events](https://github.com/6pac/SlickGrid/wiki/Grid-Events) or [DataView Events](https://github.com/6pac/SlickGrid/wiki/Dataview-Events) which you can use by simply hook a `subscribe` to them (the `subscribe` are a custom `SlickGrid Event` and are **NOT** an `RxJS Observable` type but they very similar). To get access to all these events, you will have to get access to the `Grid` and the `DataView` objects which are exposed in `Aurelia-Slickgrid` through 2 ways:
-1- with `bindable` values, so you can just call `gridChanged` and/or `dataviewChanged`
-2- with `EventAggregator` has multiple event aggregators available (`Aurelia-Slickgrid` uses `publish` when the `Grid` and `DataView` becomes ready). 
+SlickGrid has a nice amount of [Grid Events](https://github.com/6pac/SlickGrid/wiki/Grid-Events) or [DataView Events](https://github.com/6pac/SlickGrid/wiki/Dataview-Events) which you can use by simply hook a `subscribe` to them (the `subscribe` are a custom `SlickGrid Event` and are **NOT** an `RxJS Observable` type but they very similar). There are 3 options to get access to all these events (For the first 2 you will have to get access to the `Grid` and the `DataView` objects which are exposed in `Aurelia-Slickgrid`):
+1. with `bindable` values, so you can just call `gridChanged` and/or `dataviewChanged`
+2. with `EventAggregator` has multiple event aggregators available (`Aurelia-Slickgrid` uses `publish` when the `Grid` and `DataView` becomes ready). Once you can the `grid` and/or `dataview` objects, you can then hook to any of the [SlickGrid Grid Events](https://github.com/6pac/SlickGrid/wiki/Grid-Events) and/or [SlickGrid DataView Events](https://github.com/6pac/SlickGrid/wiki/Dataview-Events).  
+3. with `delegate` binding so you can add event handlers in your view. This library bubbles all events for the Grid and DataView by converting the camelcase methods to kebab case (ie. onMouseEnter will be sg-on-mouse-enter. "sg" (SlickGrid) is just an identifier to indicate the event is dispatched from slickgrid). Also, we expose events emitted from the `AureliaSlickgridCustomElement` (see [Example with Event Aggregators](#example-with-event-aggregators)). Slickgrid's EventData and Args parameters will be passed via $event.detail.eventData and $event.detail.args. For example:
 
-Once you can the `grid` and/or `dataview` objects, you can then hook to any of the [SlickGrid Grid Events](https://github.com/6pac/SlickGrid/wiki/Grid-Events) and/or [SlickGrid DataView Events](https://github.com/6pac/SlickGrid/wiki/Dataview-Events). 
+```html
+<template>
+  <aurelia-slickgrid 
+    grid-id="gridId" 
+    column-definitions.bind="columnDefs" 
+    grid-options.bind="gridOptions" 
+    dataset.bind="myDataset"
+    grid-height="400" 
+    grid-width="800"
+    sg-on-click.delegate="handleClick($event.detail.eventData, $event.detail.args)"
+    sg-on-mouse-enter.delegate="handleMouse($event.detail.eventData, $event.detail.args)">
+  </aurelia-slickgrid>
+</template>
+```
 
 ### Example with Event Aggregators
 Aurelia-Slickgrid (starting with version `1.3.x`) have the following Events that you can subscribe to with an Event Aggregator:
