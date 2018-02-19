@@ -86,6 +86,7 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
         this.resizer = resizer;
         this.sortService = sortService;
         this.showPagination = false;
+        this.datasetId = 'id';
         this.gridHeight = 100;
         this.gridWidth = 600;
         // Aurelia doesn't support well TypeScript @autoinject so we'll do it the old fashion way
@@ -113,7 +114,7 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
         this.attachDifferentHooks(this.grid, this._gridOptions, this.dataview);
         this.grid.init();
         this.dataview.beginUpdate();
-        this.dataview.setItems(this._dataset);
+        this.dataview.setItems(this._dataset, this.datasetId);
         this.dataview.endUpdate();
         // publish certain events
         this.ea.publish('onGridCreated', this.grid);
@@ -343,6 +344,9 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
     __decorate([
         bindable()
     ], AureliaSlickgridCustomElement.prototype, "gridId", void 0);
+    __decorate([
+        bindable()
+    ], AureliaSlickgridCustomElement.prototype, "datasetId", void 0);
     __decorate([
         bindable()
     ], AureliaSlickgridCustomElement.prototype, "columnDefinitions", void 0);
