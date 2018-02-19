@@ -273,9 +273,9 @@ export class FilterService {
       this._columnFilters[colId] = {
         columnId: colId,
         columnDef: args.columnDef || null,
-        searchTerms: args.searchTerms || undefined,
-        searchTerm: ((e && e.target) ? (e.target as HTMLInputElement).value : null),
-        operator: args.operator || null
+        searchTerms: args.searchTerms || [],
+        searchTerm: ((e && e.target) ? (e.target as HTMLInputElement).value : ''),
+        operator: args.operator || ''
       };
     }
 
@@ -295,17 +295,17 @@ export class FilterService {
     const columnId = columnDef.id || '';
 
     if (columnDef && columnId !== 'selector' && columnDef.filterable) {
-      let searchTerms: string[] | number[] | boolean[] = (columnDef.filter && columnDef.filter.searchTerms) ? columnDef.filter.searchTerms : null;
+      let searchTerms: string[] | number[] | boolean[] = (columnDef.filter && columnDef.filter.searchTerms) ? columnDef.filter.searchTerms : [];
       let searchTerm = (columnDef.filter && (columnDef.filter.searchTerm !== undefined || columnDef.filter.searchTerm !== null)) ? columnDef.filter.searchTerm : '';
 
       // keep the filter in a columnFilters for later reference
-      this.keepColumnFilters(searchTerm, searchTerms, columnDef);
+      this.keepColumnFilters(searchTerm || '', searchTerms, columnDef);
 
       // when hiding/showing (with Column Picker or Grid Menu), it will try to re-create yet again the filters (since SlickGrid does a re-render)
       // because of that we need to first get searchTerm(s) from the columnFilters (that is what the user last entered)
       // if nothing is found, we can then use the optional searchTerm(s) passed to the Grid Option (that is couple of lines earlier)
-      searchTerm = (this._columnFilters[columnDef.id]) ? this._columnFilters[columnDef.id].searchTerm : searchTerm || null;
-      searchTerms = (this._columnFilters[columnDef.id]) ? this._columnFilters[columnDef.id].searchTerms : searchTerms || null;
+      searchTerm = ((this._columnFilters[columnDef.id]) ? this._columnFilters[columnDef.id].searchTerm : searchTerm) || '';
+      searchTerms = ((this._columnFilters[columnDef.id]) ? this._columnFilters[columnDef.id].searchTerms : searchTerms) || [];
 
       const filterArguments: FilterArguments = {
         grid: this._grid,
@@ -323,6 +323,8 @@ export class FilterService {
         case FilterType.custom:
           if (columnDef && columnDef.filter && columnDef.filter.customFilter) {
             filter = columnDef.filter.customFilter;
+          } else {
+            throw new Error('[Aurelia-Slickgrid] A Filter type of "custom" must include a Filter class that is defined and instantiated.');
           }
           break;
         case FilterType.select:

@@ -76,6 +76,9 @@ export class GridOdataService implements BackendService {
         if (args.columnFilters.hasOwnProperty(columnId)) {
           const columnFilter = args.columnFilters[columnId];
           const columnDef = columnFilter.columnDef;
+          if (!columnDef) {
+            return;
+          }
           const fieldName = columnDef.queryField || columnDef.field || columnDef.name;
           const fieldType = columnDef.type || 'string';
           const searchTerms = (columnFilter ? columnFilter.searchTerms : null) || [];

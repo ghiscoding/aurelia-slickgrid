@@ -14,10 +14,13 @@ export class InputFilter implements Filter {
    * Initialize the Filter
    */
   init(args: FilterArguments) {
+    if (!args) {
+      throw new Error('[Aurelia-SlickGrid] A filter must always have an "init()" with valid arguments.');
+    }
     this.grid = args.grid;
     this.callback = args.callback;
     this.columnDef = args.columnDef;
-    this.searchTerm = args.searchTerm;
+    this.searchTerm = args.searchTerm || '';
 
     // step 1, create HTML string template
     const filterTemplate = this.buildTemplateHtmlString();

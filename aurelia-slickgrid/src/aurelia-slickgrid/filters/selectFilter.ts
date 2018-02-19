@@ -19,10 +19,13 @@ export class SelectFilter implements Filter {
    * Initialize the Filter
    */
   init(args: FilterArguments) {
+    if (!args) {
+      throw new Error('[Aurelia-SlickGrid] A filter must always have an "init()" with valid arguments.');
+    }
     this.grid = args.grid;
     this.callback = args.callback;
     this.columnDef = args.columnDef;
-    this.searchTerm = args.searchTerm;
+    this.searchTerm = args.searchTerm || '';
 
     // step 1, create HTML string template
     const filterTemplate = this.buildTemplateHtmlString();
@@ -65,15 +68,16 @@ export class SelectFilter implements Filter {
 
   private buildTemplateHtmlString() {
     if (!this.columnDef || !this.columnDef.filter || (!this.columnDef.filter.collection && !this.columnDef.filter.selectOptions)) {
-      throw new Error(`[Angular-SlickGrid] You need to pass a "collection" for the Select Filter to work correctly. Also each option should include a value/label pair (or value/labelKey when using Locale). For example:: { filter: type: FilterType.select, collection: [{ value: true, label: 'True' }, { value: false, label: 'False'}] }`);
+      throw new Error(`[Aurelia-SlickGrid] You need to pass a "collection" for the Select Filter to work correctly. Also each option should include a value/label pair (or value/labelKey when using Locale). For example:: { filter: type: FilterType.select, collection: [{ value: true, label: 'True' }, { value: false, label: 'False'}] }`);
     }
     if (!this.columnDef.filter.collection && this.columnDef.filter.selectOptions) {
-      console.warn(`[Angular-SlickGrid] The Select Filter "selectOptions" property will de deprecated in future version. Please use the new "collection" property which is more generic and can be used with other Filters (not just Select).`);
+      console.warn(`[Aurelia-SlickGrid] The Select Filter "selectOptions" property will de deprecated in future version. Please use the new "collection" property which is more generic and can be used with other Filters (not just Select).`);
     }
 
     const optionCollection = this.columnDef.filter.collection || this.columnDef.filter.selectOptions || [];
     const labelName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.label : 'label';
     const valueName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.value : 'value';
+    const isEnabledTranslate = (this.columnDef.filter.enableTranslateLabel) ? this.columnDef.filter.enableTranslateLabel : false;
 
     let options = '';
     optionCollection.forEach((option: any) => {
@@ -81,7 +85,7 @@ export class SelectFilter implements Filter {
         throw new Error(`A collection with value/label (or value/labelKey when using Locale) is required to populate the Select list, for example:: { filter: type: FilterType.select, collection: [ { value: '1', label: 'One' } ]')`);
       }
       const labelKey = option.labelKey || option[labelName];
-      const textLabel = ((option.labelKey || this.columnDef.filter.enableTranslateLabel) && this.i18n && typeof this.i18n.tr === 'function') ? this.i18n.tr(labelKey || ' ') : labelKey;
+      const textLabel = ((option.labelKey || isEnabledTranslate) && this.i18n && typeof this.i18n.tr === 'function') ? this.i18n.tr(labelKey || ' ') : labelKey;
       options += `<option value="${option[valueName]}">${textLabel}</option>`;
     });
     return `<select class="form-control search-filter">${options}</select>`;
@@ -98,7 +102,7 @@ export class SelectFilter implements Filter {
     // create the DOM element & add an ID and filter class
     const $filterElm = $(filterTemplate);
     const searchTerm = (typeof this.searchTerm === 'boolean') ? `${this.searchTerm}` : this.searchTerm;
-    $filterElm.val(searchTerm);
+    $filterElm.val(searchTerm || '');
     $filterElm.attr('id', `filter-${this.columnDef.id}`);
     $filterElm.data('columnId', this.columnDef.id);
 

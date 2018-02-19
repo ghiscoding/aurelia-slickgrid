@@ -53,6 +53,9 @@ export class MultipleSelectFilter implements Filter {
    * Initialize the filter template
    */
   init(args: FilterArguments) {
+    if (!args) {
+      throw new Error('[Aurelia-SlickGrid] A filter must always have an "init()" with valid arguments.');
+    }
     this.grid = args.grid;
     this.callback = args.callback;
     this.columnDef = args.columnDef;
@@ -100,11 +103,12 @@ export class MultipleSelectFilter implements Filter {
    */
   private buildTemplateHtmlString() {
     if (!this.columnDef || !this.columnDef.filter || !this.columnDef.filter.collection) {
-      throw new Error(`[Angular-SlickGrid] You need to pass a "collection" for the MultipleSelect Filter to work correctly. Also each option should include a value/label pair (or value/labelKey when using Locale). For example:: { filter: type: FilterType.multipleSelect, collection: [{ value: true, label: 'True' }, { value: false, label: 'False'}] }`);
+      throw new Error(`[Aurelia-SlickGrid] You need to pass a "collection" for the MultipleSelect Filter to work correctly. Also each option should include a value/label pair (or value/labelKey when using Locale). For example:: { filter: type: FilterType.multipleSelect, collection: [{ value: true, label: 'True' }, { value: false, label: 'False'}] }`);
     }
     const optionCollection = this.columnDef.filter.collection || [];
     const labelName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.label : 'label';
     const valueName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.value : 'value';
+    const isEnabledTranslate = (this.columnDef.filter.enableTranslateLabel) ? this.columnDef.filter.enableTranslateLabel : false;
 
     let options = '';
     optionCollection.forEach((option: SelectOption) => {
@@ -113,7 +117,7 @@ export class MultipleSelectFilter implements Filter {
       }
       const labelKey = (option.labelKey || option[labelName]) as string;
       const selected = (this.findValueInSearchTerms(option[valueName]) >= 0) ? 'selected' : '';
-      const textLabel = ((option.labelKey || this.columnDef.filter.enableTranslateLabel) && this.i18n && typeof this.i18n.tr === 'function') ? this.i18n.tr(labelKey || ' ') : labelKey;
+      const textLabel = ((option.labelKey || isEnabledTranslate) && this.i18n && typeof this.i18n.tr === 'function') ? this.i18n.tr(labelKey || ' ') : labelKey;
 
       // html text of each select option
       options += `<option value="${option[valueName]}" ${selected}>${textLabel}</option>`;
@@ -155,7 +159,8 @@ export class MultipleSelectFilter implements Filter {
     }
 
     // merge options & attach multiSelect
-    const options = { ...this.defaultOptions, ...this.columnDef.filter.filterOptions };
+    const filterOptions = (this.columnDef.filter) ? this.columnDef.filter.filterOptions : {};
+    const options = { ...this.defaultOptions, ...filterOptions };
     this.$filterElm = this.$filterElm.multipleSelect(options);
   }
 
