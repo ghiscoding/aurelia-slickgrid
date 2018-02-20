@@ -63,7 +63,6 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
             this.resizer = resizer;
             this.sortService = sortService;
             this.showPagination = false;
-            this.datasetId = 'id';
             this.gridHeight = 100;
             this.gridWidth = 600;
             // Aurelia doesn't support well TypeScript @autoinject so we'll do it the old fashion way
@@ -91,7 +90,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
             this.attachDifferentHooks(this.grid, this._gridOptions, this.dataview);
             this.grid.init();
             this.dataview.beginUpdate();
-            this.dataview.setItems(this._dataset, this.datasetId);
+            this.dataview.setItems(this._dataset);
             this.dataview.endUpdate();
             // publish certain events
             this.ea.publish('onGridCreated', this.grid);
@@ -321,9 +320,6 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
         __decorate([
             aurelia_framework_1.bindable()
         ], AureliaSlickgridCustomElement.prototype, "gridId", void 0);
-        __decorate([
-            aurelia_framework_1.bindable()
-        ], AureliaSlickgridCustomElement.prototype, "datasetId", void 0);
         __decorate([
             aurelia_framework_1.bindable()
         ], AureliaSlickgridCustomElement.prototype, "columnDefinitions", void 0);

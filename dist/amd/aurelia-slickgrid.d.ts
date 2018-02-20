@@ -45,7 +45,6 @@ export declare class AureliaSlickgridCustomElement {
     dataview: any;
     grid: any;
     gridId: string;
-    datasetId: string;
     columnDefinitions: Column[];
     gridOptions: GridOption;
     gridHeight: number;

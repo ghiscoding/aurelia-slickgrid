@@ -124,7 +124,6 @@ System.register(["slickgrid/lib/jquery-ui-1.11.3", "slickgrid/lib/jquery.event.d
                     this.resizer = resizer;
                     this.sortService = sortService;
                     this.showPagination = false;
-                    this.datasetId = 'id';
                     this.gridHeight = 100;
                     this.gridWidth = 600;
                     // Aurelia doesn't support well TypeScript @autoinject so we'll do it the old fashion way
@@ -152,7 +151,7 @@ System.register(["slickgrid/lib/jquery-ui-1.11.3", "slickgrid/lib/jquery.event.d
                     this.attachDifferentHooks(this.grid, this._gridOptions, this.dataview);
                     this.grid.init();
                     this.dataview.beginUpdate();
-                    this.dataview.setItems(this._dataset, this.datasetId);
+                    this.dataview.setItems(this._dataset);
                     this.dataview.endUpdate();
                     // publish certain events
                     this.ea.publish('onGridCreated', this.grid);
@@ -382,9 +381,6 @@ System.register(["slickgrid/lib/jquery-ui-1.11.3", "slickgrid/lib/jquery.event.d
                 __decorate([
                     aurelia_framework_1.bindable()
                 ], AureliaSlickgridCustomElement.prototype, "gridId", void 0);
-                __decorate([
-                    aurelia_framework_1.bindable()
-                ], AureliaSlickgridCustomElement.prototype, "datasetId", void 0);
                 __decorate([
                     aurelia_framework_1.bindable()
                 ], AureliaSlickgridCustomElement.prototype, "columnDefinitions", void 0);
