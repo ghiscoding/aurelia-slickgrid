@@ -114,7 +114,7 @@ let SingleSelectFilter = class SingleSelectFilter {
         }
         // merge options & attach multiSelect
         const filterOptions = (this.columnDef.filter) ? this.columnDef.filter.filterOptions : {};
-        const options = Object.assign({}, this.defaultOptions, { filterOptions });
+        const options = Object.assign({}, this.defaultOptions, filterOptions);
         this.$filterElm = this.$filterElm.multipleSelect(options);
     }
     subscribeOnClose() {

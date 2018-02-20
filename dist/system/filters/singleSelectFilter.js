@@ -139,7 +139,7 @@ System.register(["aurelia-i18n", "aurelia-framework", "jquery"], function (expor
                     }
                     // merge options & attach multiSelect
                     var filterOptions = (this.columnDef.filter) ? this.columnDef.filter.filterOptions : {};
-                    var options = __assign({}, this.defaultOptions, { filterOptions: filterOptions });
+                    var options = __assign({}, this.defaultOptions, filterOptions);
                     this.$filterElm = this.$filterElm.multipleSelect(options);
                 };
                 SingleSelectFilter.prototype.subscribeOnClose = function () {
