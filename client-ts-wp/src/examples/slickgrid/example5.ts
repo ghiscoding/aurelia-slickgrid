@@ -45,9 +45,8 @@ export class Example5 {
       {
         id: 'gender', name: 'Gender', field: 'gender', filterable: true, sortable: true, minWidth: 100,
         filter: {
-          searchTerm: '', // default selection
-          type: FormElementType.select,
-          selectOptions: [{ value: '', label: '' }, { value: 'male', label: 'male' }, { value: 'female', label: 'female' }]
+          collection: [{ value: '', label: '' }, { value: 'male', label: 'male' }, { value: 'female', label: 'female' }],
+          type: FormElementType.singleSelect
         }
       },
       { id: 'company', name: 'Company', field: 'company', minWidth: 100 }

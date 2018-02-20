@@ -9,8 +9,8 @@ const sampleDataRoot = 'assets/data';
 export class Example5 {
   title = 'Example 5: Grid with Backend OData Service';
   subTitle = `
-    Use it when you need to support Pagination with a OData endpoint (for simple JSON, use a regular grid)<br/>
-    Take a look at the (<a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/OData" target="_blank">Wiki documentation</a>)
+  Use it when you need to support Pagination with a OData endpoint (for simple JSON, use a regular grid)<br/>
+  Take a look at the (<a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/OData" target="_blank">Wiki documentation</a>)
     <br/>
     <ul class="small">
       <li>Only "Name" field is sortable for the demo (because we use JSON files), however "multiColumnSort: true" is also supported</li>
@@ -45,9 +45,8 @@ export class Example5 {
       {
         id: 'gender', name: 'Gender', field: 'gender', filterable: true, sortable: true, minWidth: 100,
         filter: {
-          searchTerm: '', // default selection
-          type: FormElementType.select,
-          selectOptions: [{ value: '', label: '' }, { value: 'male', label: 'male' }, { value: 'female', label: 'female' }]
+          collection: [{ value: '', label: '' }, { value: 'male', label: 'male' }, { value: 'female', label: 'female' }],
+          type: FormElementType.singleSelect
         }
       },
       { id: 'company', name: 'Company', field: 'company', minWidth: 100 }
@@ -71,7 +70,6 @@ export class Example5 {
         preProcess: () => this.displaySpinner(true),
         process: (query) => this.getCustomerApiCall(query),
         postProcess: (response) => {
-          console.log(response);
           this.displaySpinner(false);
           this.getCustomerCallback(response);
         }

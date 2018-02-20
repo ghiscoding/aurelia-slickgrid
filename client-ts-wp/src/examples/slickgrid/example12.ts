@@ -1,6 +1,6 @@
 import { autoinject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
-import { Column, FieldType, GridOption, Formatter, FormElementType, Formatters } from 'aurelia-slickgrid';
+import { Column, FieldType, FilterType, Formatter, Formatters, GridOption } from 'aurelia-slickgrid';
 
 @autoinject()
 export class Example12 {
@@ -59,9 +59,11 @@ export class Example12 {
         minWidth: 100,
         filterable: true,
         filter: {
-          searchTerm: '', // default selection
-          type: FormElementType.select,
-          selectOptions: [{ value: '', label: '' }, { value: 'TRUE', labelKey: 'TRUE' }, { value: 'FALSE', labelKey: 'FALSE' }]
+          collection: [{ value: '', label: '' }, { value: 'TRUE', labelKey: 'TRUE' }, { value: 'FALSE', labelKey: 'FALSE' }],
+          type: FilterType.singleSelect,
+          filterOptions: {
+            width: 150
+          }
         }
       }
       // OR via your own custom translate formatter

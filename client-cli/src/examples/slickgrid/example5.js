@@ -9,7 +9,7 @@ const sampleDataRoot = 'src/examples/slickgrid/sample-data';
 export class Example5 {
   title = 'Example 5: Grid with Backend OData Service';
   subTitle = `
-    Use it when you need to support Pagination with a OData endpoint (for simple JSON, use a regular grid)<br/>
+    Use it when you need to support Pagination with a OData endpoint (for simple JSON, use a regular grid)
     Take a look at the (<a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/OData" target="_blank">Wiki documentation</a>)
     <br/>
     <ul class="small">
@@ -17,7 +17,7 @@ export class Example5 {
       <li>String column also support operator (>, >=, <, <=, <>, !=, =, ==, *)
       <ul>
         <li>The (*) can be used as startsWith (ex.: "abc*" => startsWith "abc") / endsWith (ex.: "*xyz" => endsWith "xyz")</li>
-        <li>The other operators can be used on column type number for example: ">=100" (greater than or equal to 100)</li>
+        <li>The other operators can be used on column type number for example: ">=100" (greater or equal than 100)</li>
       </ul>
     </ul>
   `;
@@ -45,9 +45,8 @@ export class Example5 {
       {
         id: 'gender', name: 'Gender', field: 'gender', filterable: true, sortable: true, minWidth: 100,
         filter: {
-          searchTerm: '', // default selection
-          type: FormElementType.select,
-          selectOptions: [{ value: '', label: '' }, { value: 'male', label: 'male' }, { value: 'female', label: 'female' }]
+          collection: [{ value: '', label: '' }, { value: 'male', label: 'male' }, { value: 'female', label: 'female' }],
+          type: FormElementType.singleSelect
         }
       },
       { id: 'company', name: 'Company', field: 'company', minWidth: 100 }
@@ -104,7 +103,7 @@ export class Example5 {
 
   /**
    * This function is only here to mock a WebAPI call (since we are using a JSON file for the demo)
-   *  in your case the getCustomer() should be a WebAPI function returning a Promise
+   * in your case the getCustomer() should be a WebAPI function returning a Promise
    */
   getCustomerDataApiMock(query) {
     // the mock is returning a Promise, just like a WebAPI typically does

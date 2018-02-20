@@ -5,6 +5,8 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'font-awesome/css/font-awesome.css';
 import 'flatpickr/dist/flatpickr.min.css';
 import './styles/styles.css';
+import 'aurelia-slickgrid/dist/lib/multiple-select/multiple-select.css';
+import 'aurelia-slickgrid/dist/lib/multiple-select/multiple-select.js';
 import 'aurelia-slickgrid/dist/styles/css/slickgrid-theme-bootstrap.css';
 import { Aurelia, PLATFORM } from 'aurelia-framework';
 import environment from './environment';

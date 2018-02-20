@@ -1,5 +1,5 @@
 import { inject, bindable } from 'aurelia-framework';
-import { FieldType, FilterService, Formatters, FormElementType } from 'aurelia-slickgrid';
+import { FieldType, FilterType, FilterService, Formatters } from 'aurelia-slickgrid';
 
 @inject(FilterService)
 export class Example9 {
@@ -47,9 +47,13 @@ export class Example9 {
         sortable: true,
         filterable: true,
         filter: {
-          searchTerm: '', // default selection
-          type: FormElementType.select,
-          selectOptions: [{ value: '', label: '' }, { value: true, label: 'true' }, { value: false, label: 'false' }]
+          collection: [{ value: '', label: '' }, { value: true, label: 'true' }, { value: false, label: 'false' }],
+          type: FilterType.singleSelect,
+          filterOptions: {
+            // you can add "multiple-select" plugin options like styling the first row
+            offsetLeft: 14,
+            width: 100
+          }
         }
       }
     ];
@@ -100,18 +104,18 @@ export class Example9 {
             disabled: true,
             command: 'disabled-command'
           }
-        ]
-      },
-      onGridMenuCommand: (e, args) => {
-        if (args.command === 'toggle-filter') {
-          this.gridObj.setHeaderRowVisibility(!this.gridObj.getOptions().showHeaderRow);
-        } else if (args.command === 'toggle-toppanel') {
-          this.gridObj.setTopPanelVisibility(!this.gridObj.getOptions().showTopPanel);
-        } else if (args.command === 'clear-filter') {
-          this.filterService.clearFilters();
-          this.dataviewObj.refresh();
-        } else {
-          alert('Command: ' + args.command);
+        ],
+        onCommand: (e, args) => {
+          if (args.command === 'toggle-filter') {
+            this.gridObj.setHeaderRowVisibility(!this.gridObj.getOptions().showHeaderRow);
+          } else if (args.command === 'toggle-toppanel') {
+            this.gridObj.setTopPanelVisibility(!this.gridObj.getOptions().showTopPanel);
+          } else if (args.command === 'clear-filter') {
+            this.filterService.clearFilters();
+            this.dataviewObj.refresh();
+          } else {
+            alert('Command: ' + args.command);
+          }
         }
       }
     };

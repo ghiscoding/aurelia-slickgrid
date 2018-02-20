@@ -10,14 +10,15 @@ const sampleDataRoot = 'src/examples/slickgrid/sample-data';
 export class Example5 {
   title = 'Example 5: Grid with Backend OData Service';
   subTitle = `
-    Use it when you need to support Pagination with a OData endpoint (for simple JSON, use a regular grid)
+    Use it when you need to support Pagination with a OData endpoint (for simple JSON, use a regular grid)<br/>
+    Take a look at the (<a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/OData" target="_blank">Wiki documentation</a>)
     <br/>
     <ul class="small">
       <li>Only "Name" field is sortable for the demo (because we use JSON files), however "multiColumnSort: true" is also supported</li>
       <li>String column also support operator (>, >=, <, <=, <>, !=, =, ==, *)
       <ul>
         <li>The (*) can be used as startsWith (ex.: "abc*" => startsWith "abc") / endsWith (ex.: "*xyz" => endsWith "xyz")</li>
-        <li>The other operators can be used on column type number for example: ">=100" (greater or equal than 100)</li>
+        <li>The other operators can be used on column type number for example: ">=100" (greater than or equal to 100)</li>
       </ul>
     </ul>
   `;

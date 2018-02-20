@@ -2,7 +2,7 @@ import { autoinject } from 'aurelia-framework';
 import data from './sample-data/example-data';
 import { I18N } from 'aurelia-i18n';
 import { HttpClient } from 'aurelia-http-client';
-import { CaseType, Column, GraphqlResult, GraphqlServiceOption, GridOption, FieldType, Formatters, FormElementType, GraphqlService } from 'aurelia-slickgrid';
+import { Column, FieldType, FilterType, GraphqlResult, GraphqlService, GraphqlServiceOption, GridOption } from 'aurelia-slickgrid';
 
 const defaultPageSize = 20;
 const GRAPHQL_QUERY_DATASET_NAME = 'users';
@@ -41,22 +41,34 @@ export class Example6 {
 
   defineGrid() {
     this.columnDefinitions = [
-      { id: 'name', name: 'Name', field: 'name', headerKey: 'NAME', filterable: true, sortable: true, type: FieldType.string, minWidth: 80 },
+      { id: 'name', name: 'Name', field: 'name', headerKey: 'NAME', filterable: true, sortable: true, type: FieldType.string },
       {
-        id: 'gender', name: 'Gender', field: 'gender', headerKey: 'GENDER', filterable: true, sortable: true, minWidth: 80,
+        id: 'gender', name: 'Gender', field: 'gender', headerKey: 'GENDER', filterable: true, sortable: true,
         filter: {
-          searchTerm: '', // default selection
-          type: FormElementType.select,
-          selectOptions: [{ value: '', label: '' }, { value: 'MALE', labelKey: 'MALE' }, { value: 'FEMALE', labelKey: 'FEMALE' }]
+          type: FilterType.singleSelect,
+          collection: [{ value: '', label: '' }, { value: 'male', label: 'male', labelKey: 'MALE' }, { value: 'female', label: 'female', labelKey: 'FEMALE' }]
         }
       },
-      { id: 'company', name: 'Company', headerKey: 'COMPANY', field: 'company', filterable: true }
+      {
+        id: 'company', name: 'Company', field: 'company', headerKey: 'COMPANY',
+        filterable: true,
+        filter: {
+          type: FilterType.multipleSelect,
+          collection: [{ value: 'ABC', label: 'Company ABC' }, { value: 'XYZ', label: 'Company XYZ' }]
+        }
+      },
+      { id: 'billing.address.street', name: 'Billing Address Street', field: 'billing.address.street', headerKey: 'BILLING.ADDRESS.STREET', filterable: true, sortable: true },
+      { id: 'billing.address.zip', name: 'Billing Address Zip', field: 'billing.address.zip', headerKey: 'BILLING.ADDRESS.ZIP', filterable: true, sortable: true },
     ];
 
     this.gridOptions = {
-      enableAutoResize: false,
+      enableAutoResize: true,
+      autoResize: {
+        containerId: 'demo-container',
+        sidePadding: 15
+      },
       enableFiltering: true,
-      enablePagination: true,
+      enableCellNavigation: true,
       enableTranslate: true,
       pagination: {
         pageSizes: [10, 15, 20, 25, 30, 40, 50, 75, 100],

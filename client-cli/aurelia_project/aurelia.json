@@ -104,6 +104,18 @@
             ]
           },
           {
+            "name": "flatpickr",
+            "path": "../node_modules/flatpickr/dist",
+            "main": "flatpickr.min",
+            "resources": ["flatpickr.min.css"]
+          },
+          {
+            "name": "multiple-select",
+            "path": "../node_modules/aurelia-slickgrid/dist/lib/multiple-select",
+            "main": "multiple-select",
+            "resources": ["multiple-select.css"]
+          },
+          {
             "name": "aurelia-slickgrid",
             "path": "../node_modules/aurelia-slickgrid/dist/amd",
             "main": "index",
@@ -124,12 +136,6 @@
               "jquery",
               "jquery-event"
             ]
-          },
-          {
-            "name": "flatpickr",
-            "path": "../node_modules/flatpickr/dist",
-            "main": "flatpickr.min",
-            "resources": ["flatpickr.min.css"]
           }
         ]
       }

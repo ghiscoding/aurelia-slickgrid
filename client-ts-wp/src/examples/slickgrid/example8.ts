@@ -1,6 +1,7 @@
 import { autoinject, bindable } from 'aurelia-framework';
 import { Column, ControlAndPluginService, FieldType, Formatter, Formatters, GridOption } from 'aurelia-slickgrid';
 import * as $ from 'jquery';
+
 @autoinject()
 export class Example8 {
   @bindable() gridObj: any;
@@ -94,6 +95,7 @@ export class Example8 {
               if (col.columnId !== args.column.id) {
                 return { sortCol: this.columnDefinitions[this.gridObj.getColumnIndex(col.columnId)], sortAsc: col.sortAsc };
               }
+              return col;
             });
             // add to the column array, the column sorted by the header menu
             const isSortedAsc = (args.command === 'sort-asc');

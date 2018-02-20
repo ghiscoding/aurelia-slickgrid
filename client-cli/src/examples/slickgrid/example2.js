@@ -2,11 +2,11 @@ import { FieldType, Formatters } from 'aurelia-slickgrid';
 
 // create my custom Formatter with the Formatter type
 const myCustomCheckmarkFormatter = (row, cell, value, columnDef, dataContext) =>
-  value ? `<i class="fa fa-fire" aria-hidden="true"></i>` : '<i class="fa fa-snowflake-o" aria-hidden="true"></i>';
+  value ? '<i class="fa fa-fire" aria-hidden="true"></i>' : '<i class="fa fa-snowflake-o" aria-hidden="true"></i>';
 
 export class Example2 {
   title = 'Example 2: Formatters';
-  subTitle = `Grid with Custom and/or included Slickgrid Formatters  (last column is a custom formatter)`;
+  subTitle = 'Grid with Custom and/or included Slickgrid Formatters  (last column is a custom formatter)';
   gridOptions;
   columnDefinitions;
   dataset = [];
