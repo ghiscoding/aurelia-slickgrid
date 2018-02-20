@@ -17,7 +17,7 @@ import {
   PaginationChangedArgs,
   SortChangedArgs,
   SortDirection
-} from './../models';
+} from './../models/index';
 import QueryBuilder from './graphqlQueryBuilder';
 import { GridOption } from '../models/gridOption.interface';
 

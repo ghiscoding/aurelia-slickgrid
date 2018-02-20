@@ -1,8 +1,8 @@
 import { inject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import { EventAggregator } from 'aurelia-event-aggregator';
-import { FilterConditions } from './../filter-conditions';
-import { Filters } from './../filters';
+import { FilterConditions } from './../filter-conditions/index';
+import { Filters } from './../filters/index';
 import {
   BackendServiceOption,
   Column,
@@ -374,7 +374,7 @@ export class FilterService {
         type: (columnDef && columnDef.filter && columnDef.filter.type) ? columnDef.filter.type : FilterType.input
       };
     }
-    if (searchTerms) {
+    if (searchTerms && Array.isArray(searchTerms) && searchTerms.length > 0) {
       // this._columnFilters.searchTerms = searchTerms;
       this._columnFilters[columnDef.id] = {
         columnId: columnDef.id,

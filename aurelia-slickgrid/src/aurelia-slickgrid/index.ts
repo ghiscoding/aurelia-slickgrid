@@ -9,6 +9,7 @@ import { Column } from './models/column.interface';
 import { Filter } from './models/filter.interface';
 import { FilterArguments } from './models/filterArguments.interface';
 import { FilterCallback } from './models/filterCallback.interface';
+import { FilterCondition } from './models/filterCondition.interface';
 import { FilterType } from './models/filterType.enum';
 import { Formatter } from './models/formatter.interface';
 import { FormElementType } from './models/formElementType';
@@ -58,17 +59,18 @@ export {
   GraphqlResult,
   GraphqlServiceOption,
   GridOption,
+  Filter,
+  FilterArguments,
+  FilterCallback,
+  FilterCondition,
+  FilterType,
   FormElementType,
   FieldType,
   OnEventArgs,
 
   Editors,
-  Filter,
-  FilterArguments,
-  FilterCallback,
-  FilterConditions,
-  FilterType,
   Filters,
+  FilterConditions,
   Formatters,
   Sorters,
 
