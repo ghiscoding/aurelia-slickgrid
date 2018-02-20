@@ -1,13 +1,15 @@
-import { Column, FieldType, Formatters, FormElementType, GridOption } from '../../aurelia-slickgrid';
+import { CustomInputFilter } from './custom-inputFilter';
+import { Column, FieldType, FilterType, Formatter, Formatters, GridOption } from '../../aurelia-slickgrid';
 
 function randomBetween(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
+const NB_ITEMS = 500;
 
 export class Example4 {
   title = 'Example 4: Client Side Sort/Filter';
   subTitle = `
-  Sort/Filter on client side only using SlickGrid DataView
+  Sort/Filter on client side only using SlickGrid DataView (<a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Sorting" target="_blank">Wiki link</a>)
   <br/>
   <ul class="small">
     <li>Support multi-sort (by default), hold "Shift" key and click on the next column to sort.
@@ -21,6 +23,7 @@ export class Example4 {
       <li>FieldType of dateUtc/date (from dataset) can use an extra option of "filterSearchType" to let user filter more easily. For example, in the "UTC Date" field below, you can type "&gt;02/28/2017", also when dealing with UTC you have to take the time difference in consideration.</li>
     </ul>
     <li>On String filters, (*) can be used as startsWith (Hello* => matches "Hello Word") ... endsWith (*Doe => matches: "John Doe")</li>
+    <li>Custom Filter are now possible, "Description" column below, is a customized InputFilter with different placeholder. See <a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Custom-Filter" target="_blank">Wiki - Custom Filter</a>
   </ul>
 `;
 
@@ -39,25 +42,56 @@ export class Example4 {
 
   /* Define grid Options and Columns */
   defineGrid() {
+    // prepare a multiple-select array to filter with
+    const multiSelectFilterArray = [];
+    for (let i = 0; i < NB_ITEMS; i++) {
+      multiSelectFilterArray.push({ value: i, label: i });
+    }
+
     this.columnDefinitions = [
-      { id: 'title', name: 'Title', field: 'title', filterable: true, sortable: true, type: FieldType.string, minWidth: 100 },
-      { id: 'description', name: 'Description', field: 'description', filterable: true, sortable: true, minWidth: 100, type: FieldType.string },
-      { id: 'duration', name: 'Duration (days)', field: 'duration', filterable: true, sortable: true, type: FieldType.number, minWidth: 100 },
-      { id: 'complete', name: '% Complete', field: 'percentComplete', formatter: Formatters.percentCompleteBar, type: FieldType.number, filterable: true, sortable: true, minWidth: 100 },
-      { id: 'start', name: 'Start', field: 'start', formatter: Formatters.dateIso, filterable: true, sortable: true, type: FieldType.date, minWidth: 100 },
-      { id: 'usDateShort', name: 'US Date Short', field: 'usDateShort', filterable: true, sortable: true, type: FieldType.dateUsShort, minWidth: 100 },
-      { id: 'utcDate', name: 'UTC Date', field: 'utcDate', formatter: Formatters.dateTimeIsoAmPm, filterable: true, sortable: true, type: FieldType.dateUtc, filterSearchType: FieldType.dateTimeIso, minWidth: 115 },
-      { id: 'utcDate2', name: 'UTC Date (filterSearchType: dateUS)', field: 'utcDate', filterable: true, sortable: true, type: FieldType.dateUtc, filterSearchType: FieldType.dateUs, minWidth: 115 },
+      { id: 'title', name: 'Title', field: 'title', filterable: true, sortable: true, type: FieldType.string, minWidth: 45 },
       {
-        id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', maxWidth: 80, formatter: Formatters.checkmark,
+        id: 'description', name: 'Description', field: 'description', filterable: true, sortable: true, minWidth: 50,
+        type: FieldType.string,
+        filter: {
+          type: FilterType.custom,
+          customFilter: new CustomInputFilter() // create a new instance to make each Filter independent from each other
+        }
+      },
+      {
+        id: 'duration', name: 'Duration (days)', field: 'duration', sortable: true, type: FieldType.number,
+        minWidth: 55,
+        filterable: true,
+        filter: {
+          collection: multiSelectFilterArray,
+          type: FilterType.multipleSelect,
+          searchTerms: [1, 10, 20], // default selection
+
+          // we could add certain option(s) to the "multiple-select" plugin
+          filterOptions: {
+            maxHeight: 250,
+            width: 175
+          }
+        }
+      },
+      { id: 'complete', name: '% Complete', field: 'percentComplete', formatter: Formatters.percentCompleteBar, minWidth: 55, type: FieldType.number, filterable: true, sortable: true },
+      { id: 'start', name: 'Start', field: 'start', formatter: Formatters.dateIso, filterable: true, sortable: true, type: FieldType.date, minWidth: 60 },
+      { id: 'usDateShort', name: 'US Date Short', field: 'usDateShort', filterable: true, sortable: true, type: FieldType.dateUsShort, minWidth: 55 },
+      { id: 'utcDate', name: 'UTC Date', field: 'utcDate', formatter: Formatters.dateTimeIsoAmPm, filterable: true, sortable: true, minWidth: 115, type: FieldType.dateUtc, filterSearchType: FieldType.dateTimeIso },
+      { id: 'utcDate2', name: 'UTC Date (filterSearchType: dateUS)', field: 'utcDate', filterable: true, sortable: true, minWidth: 115, type: FieldType.dateUtc, filterSearchType: FieldType.dateUs },
+      {
+        id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', minWidth: 85, maxWidth: 85, formatter: Formatters.checkmark,
         type: FieldType.boolean,
-        minWidth: 100,
         sortable: true,
         filterable: true,
         filter: {
-          searchTerm: '', // default selection
-          type: FormElementType.select,
-          selectOptions: [{ value: '', label: '' }, { value: true, label: 'true' }, { value: false, label: 'false' }]
+          collection: [{ value: '', label: '' }, { value: true, label: 'True' }, { value: false, label: 'False' }],
+          type: FilterType.singleSelect,
+
+          // we could add certain option(s) to the "multiple-select" plugin
+          filterOptions: {
+            autoDropWidth: true
+          },
         }
       }
     ];
@@ -66,15 +100,14 @@ export class Example4 {
         containerId: 'demo-container',
         sidePadding: 15
       },
-      enableFiltering: true,
-      enableCellNavigation: true
+      enableFiltering: true
     };
   }
 
   getData() {
     // mock a dataset
-    let mockedDataset = [];
-    for (let i = 0; i < 1000; i++) {
+    this.dataset = [];
+    for (let i = 0; i < NB_ITEMS; i++) {
       const randomDuration = Math.round(Math.random() * 100);
       const randomYear = randomBetween(2000, 2025);
       const randomYearShort = randomBetween(10, 25);
@@ -85,7 +118,7 @@ export class Example4 {
       const randomHour = randomBetween(10, 23);
       const randomTime = randomBetween(10, 59);
 
-      mockedDataset[i] = {
+      this.dataset[i] = {
         id: i,
         title: 'Task ' + i,
         description: (i % 28 === 1) ? null : 'desc ' + i, // also add some random to test NULL field
@@ -97,7 +130,6 @@ export class Example4 {
         utcDate: `${randomYear}-${randomMonthStr}-${randomDay}T${randomHour}:${randomTime}:${randomTime}Z`,
         effortDriven: (i % 3 === 0)
       };
-      this.dataset = mockedDataset;
     }
   }
 }

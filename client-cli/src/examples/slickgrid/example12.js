@@ -1,6 +1,6 @@
 import { inject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
-import { FormElementType, Formatters } from 'aurelia-slickgrid';
+import { FilterType, Formatters } from 'aurelia-slickgrid';
 
 @inject(I18N)
 export class Example12 {
@@ -61,9 +61,11 @@ export class Example12 {
         minWidth: 100,
         filterable: true,
         filter: {
-          searchTerm: '', // default selection
-          type: FormElementType.select,
-          selectOptions: [{ value: '', label: '' }, { value: 'TRUE', labelKey: 'TRUE' }, { value: 'FALSE', labelKey: 'FALSE' }]
+          collection: [{ value: '', label: '' }, { value: 'TRUE', labelKey: 'TRUE' }, { value: 'FALSE', labelKey: 'FALSE' }],
+          type: FilterType.singleSelect,
+          filterOptions: {
+            width: 150
+          }
         }
       }
       // OR via your own custom translate formatter
@@ -82,13 +84,13 @@ export class Example12 {
 
   getData() {
     // mock a dataset
-    let mockDataset = [];
+    this.dataset = [];
     for (let i = 0; i < 1000; i++) {
       const randomYear = 2000 + Math.floor(Math.random() * 10);
       const randomMonth = Math.floor(Math.random() * 11);
       const randomDay = Math.floor((Math.random() * 29));
 
-      mockDataset[i] = {
+      this.dataset[i] = {
         id: i,
         duration: Math.round(Math.random() * 100) + '',
         start: new Date(randomYear, randomMonth, randomDay),
@@ -96,7 +98,6 @@ export class Example12 {
         completed: (i % 5 === 0) ? 'TRUE' : 'FALSE'
       };
     }
-    this.dataset = mockDataset;
   }
 
   switchLanguage() {

@@ -1,10 +1,10 @@
-import { FilterCondition, FilterConditionOption } from './../models/index';
+import { FilterCondition, FilterConditionOption } from './../models';
 import { testFilterCondition } from './filterUtilities';
 
-function parseBoolean(str: string) {
-  return /(true|1)/i.test(str);
+function parseBoolean(input: boolean | number | string) {
+  return /(true|1)/i.test(input + '');
 }
 
 export const booleanFilterCondition: FilterCondition = (options: FilterConditionOption) => {
-  return parseBoolean(options.cellValue) === parseBoolean(options.searchTerm);
+  return parseBoolean(options.cellValue) === parseBoolean(options.searchTerm || false);
 };

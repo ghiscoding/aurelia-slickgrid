@@ -1,4 +1,4 @@
-import { FieldType } from '../models';
+import { FieldType } from '../models/fieldType.enum';
 
 export const testFilterCondition = (operator: string, value1: any, value2: any): boolean => {
   switch (operator) {
@@ -16,6 +16,7 @@ export const testFilterCondition = (operator: string, value1: any, value2: any):
     case '=':
     case '==':
     case 'EQ': return (value1 === value2);
+    case 'IN': return ((value2 && value2.includes) ? (value2.includes(value1)) : false);
   }
   return true;
 };

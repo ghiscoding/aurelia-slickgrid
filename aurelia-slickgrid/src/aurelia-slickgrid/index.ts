@@ -6,18 +6,23 @@ import { SlickgridConfig } from './slickgrid-config';
 // models
 import { CaseType } from './models/caseType';
 import { Column } from './models/column.interface';
+import { Filter } from './models/filter.interface';
+import { FilterArguments } from './models/filterArguments.interface';
+import { FilterCallback } from './models/filterCallback.interface';
+import { FilterCondition } from './models/filterCondition.interface';
+import { FilterType } from './models/filterType.enum';
 import { Formatter } from './models/formatter.interface';
+import { FormElementType } from './models/formElementType';
+import { FieldType } from './models/fieldType.enum';
 import { GraphqlResult } from './models/graphqlResult.interface';
 import { GraphqlServiceOption } from './models/graphqlServiceOption.interface';
 import { GridOption } from './models/gridOption.interface';
-import { FormElementType } from './models/formElementType';
-import { FieldType } from './models/fieldType';
 import { OnEventArgs } from './models/onEventArgs.interface';
 
 // editors, formatters, ...
 import { Editors } from './editors/index';
 import { FilterConditions } from './filter-conditions/index';
-import { FilterTemplates } from './filter-templates/index';
+import { Filters } from './filters/index';
 import { Formatters } from './formatters/index';
 import { Sorters } from './sorters/index';
 
@@ -54,13 +59,18 @@ export {
   GraphqlResult,
   GraphqlServiceOption,
   GridOption,
+  Filter,
+  FilterArguments,
+  FilterCallback,
+  FilterCondition,
+  FilterType,
   FormElementType,
   FieldType,
   OnEventArgs,
 
   Editors,
+  Filters,
   FilterConditions,
-  FilterTemplates,
   Formatters,
   Sorters,
 
