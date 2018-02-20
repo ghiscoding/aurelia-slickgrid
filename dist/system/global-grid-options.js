@@ -30,7 +30,6 @@ System.register([], function (exports_1, context_1) {
                 enableColumnPicker: true,
                 enableColumnReorder: true,
                 enableGridMenu: true,
-                enablePagination: false,
                 enableSorting: true,
                 enableTextSelectionOnCells: true,
                 explicitInitialization: true,

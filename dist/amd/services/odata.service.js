@@ -47,7 +47,7 @@ define(["require", "exports", "./../models/index", "./global-utilities"], functi
                 // filterBy are passed manually by the user, however we will only add it if the column wasn't yet filtered
                 if (!!this._odataOptions.filterBy && !!this._odataOptions.filterBy.fieldName && !this._columnFilters[this._odataOptions.filterBy.fieldName.toLowerCase()]) {
                     if (this._odataOptions.filterBy.searchTerm !== '') {
-                        this.saveColumnFilter(this._odataOptions.filterBy.fieldName.toLowerCase(), this._odataOptions.filterBy.searchTerm, this._odataOptions.filterBy.listTerm);
+                        this.saveColumnFilter(this._odataOptions.filterBy.fieldName.toLowerCase(), this._odataOptions.filterBy.searchTerm, this._odataOptions.filterBy.searchTerms);
                         this.updateFilterFromListTerms(this._odataOptions.filterBy);
                     }
                 }
@@ -115,7 +115,7 @@ define(["require", "exports", "./../models/index", "./global-utilities"], functi
             var searchBy = '';
             var tmpSearchByArray = [];
             var fieldName = filterOptions.fieldName;
-            var fieldSearchTerms = filterOptions.listTerm;
+            var fieldSearchTerms = filterOptions.searchTerms;
             var operator = filterOptions.operator;
             // when having more than 1 search term (then check if we have a "IN" or "NOT IN" filter search)
             if (!!fieldSearchTerms && fieldSearchTerms.length > 0) {

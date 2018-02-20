@@ -15,7 +15,7 @@ System.register(["./global-utilities", "aurelia-framework", "./utilities", "./..
         return c > 3 && r && Object.defineProperty(target, key, r), r;
     };
     var __moduleName = context_1 && context_1.id;
-    var aurelia_framework_1, utilities_1, index_1, odata_service_1, timer, DEFAULT_FILTER_TYPING_DEBOUNCE, GridOdataService;
+    var aurelia_framework_1, utilities_1, index_1, odata_service_1, timer, DEFAULT_FILTER_TYPING_DEBOUNCE, DEFAULT_ITEMS_PER_PAGE, GridOdataService;
     return {
         setters: [
             function (_1) {
@@ -35,11 +35,12 @@ System.register(["./global-utilities", "aurelia-framework", "./utilities", "./..
         ],
         execute: function () {
             DEFAULT_FILTER_TYPING_DEBOUNCE = 750;
+            DEFAULT_ITEMS_PER_PAGE = 25;
             GridOdataService = /** @class */ (function () {
                 function GridOdataService(odataService) {
                     this.odataService = odataService;
                     this.defaultOptions = {
-                        top: 25,
+                        top: DEFAULT_ITEMS_PER_PAGE,
                         orderBy: ''
                     };
                 }
@@ -91,16 +92,19 @@ System.register(["./global-utilities", "aurelia-framework", "./utilities", "./..
                             if (args.columnFilters.hasOwnProperty(columnId)) {
                                 var columnFilter = args.columnFilters[columnId];
                                 var columnDef = columnFilter.columnDef;
+                                if (!columnDef) {
+                                    return;
+                                }
                                 var fieldName = columnDef.queryField || columnDef.field || columnDef.name;
                                 var fieldType = columnDef.type || 'string';
+                                var searchTerms = (columnFilter ? columnFilter.searchTerms : null) || [];
                                 var fieldSearchValue = columnFilter.searchTerm;
                                 if (typeof fieldSearchValue === 'undefined') {
                                     fieldSearchValue = '';
                                 }
-                                if (typeof fieldSearchValue !== 'string') {
-                                    throw new Error("OData filter term property must be provided type \"string\", if you use filter with options then make sure your ids are also string. For example: filter: {type: FormElementType.select, selectOptions: [{ id: \"0\", value: \"0\" }, { id: \"1\", value: \"1\" }]");
+                                if (typeof fieldSearchValue !== 'string' && !searchTerms) {
+                                    throw new Error("ODdata filter searchTerm property must be provided as type \"string\", if you use filter with options then make sure your IDs are also string. For example: filter: {type: FilterType.select, collection: [{ id: \"0\", value: \"0\" }, { id: \"1\", value: \"1\" }]");
                                 }
-                                var searchTerms = columnFilter.listTerm || [];
                                 fieldSearchValue = '' + fieldSearchValue; // make sure it's a string
                                 var matches = fieldSearchValue.match(/^([<>!=\*]{0,2})(.*[^<>!=\*])([\*]?)$/); // group 1: Operator, 2: searchValue, 3: last char is '*' (meaning starts with, ex.: abc*)
                                 var operator = columnFilter.operator || ((matches) ? matches[1] : '');

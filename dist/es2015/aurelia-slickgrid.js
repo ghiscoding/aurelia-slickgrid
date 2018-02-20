@@ -294,7 +294,9 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
             this.grid.invalidate();
             this.grid.render();
             if (this._gridOptions.enablePagination || this._gridOptions.backendServiceApi) {
-                this.showPagination = true;
+                // do we want to show pagination?
+                // if we have a backendServiceApi and the enablePagination is undefined, we'll assume that we do want to see it, else get that defined value
+                this.showPagination = ((this._gridOptions.backendServiceApi && this._gridOptions.enablePagination === undefined) ? true : this._gridOptions.enablePagination) || false;
                 // before merging the grid options, make sure that it has the totalItems count
                 // once we have that, we can merge and pass all these options to the pagination component
                 if (!this.gridOptions.pagination) {

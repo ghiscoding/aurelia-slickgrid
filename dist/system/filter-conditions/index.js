@@ -1,7 +1,7 @@
-System.register(["./booleanFilterCondition", "./dateFilterCondition", "./dateIsoFilterCondition", "./dateUsFilterCondition", "./dateUsShortFilterCondition", "./dateUtcFilterCondition", "./executeMappedCondition", "./numberFilterCondition", "./stringFilterCondition", "./filterUtilities"], function (exports_1, context_1) {
+System.register(["./booleanFilterCondition", "./dateFilterCondition", "./dateIsoFilterCondition", "./dateUsFilterCondition", "./dateUsShortFilterCondition", "./dateUtcFilterCondition", "./executeMappedCondition", "./collectionSearchFilterCondition", "./numberFilterCondition", "./stringFilterCondition", "./filterUtilities"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var booleanFilterCondition_1, dateFilterCondition_1, dateIsoFilterCondition_1, dateUsFilterCondition_1, dateUsShortFilterCondition_1, dateUtcFilterCondition_1, executeMappedCondition_1, numberFilterCondition_1, stringFilterCondition_1, filterUtilities_1, FilterConditions;
+    var booleanFilterCondition_1, dateFilterCondition_1, dateIsoFilterCondition_1, dateUsFilterCondition_1, dateUsShortFilterCondition_1, dateUtcFilterCondition_1, executeMappedCondition_1, collectionSearchFilterCondition_1, numberFilterCondition_1, stringFilterCondition_1, filterUtilities_1, FilterConditions;
     return {
         setters: [
             function (booleanFilterCondition_1_1) {
@@ -25,6 +25,9 @@ System.register(["./booleanFilterCondition", "./dateFilterCondition", "./dateIso
             function (executeMappedCondition_1_1) {
                 executeMappedCondition_1 = executeMappedCondition_1_1;
             },
+            function (collectionSearchFilterCondition_1_1) {
+                collectionSearchFilterCondition_1 = collectionSearchFilterCondition_1_1;
+            },
             function (numberFilterCondition_1_1) {
                 numberFilterCondition_1 = numberFilterCondition_1_1;
             },
@@ -39,6 +42,7 @@ System.register(["./booleanFilterCondition", "./dateFilterCondition", "./dateIso
             exports_1("FilterConditions", FilterConditions = {
                 executeMappedCondition: executeMappedCondition_1.executeMappedCondition,
                 booleanFilter: booleanFilterCondition_1.booleanFilterCondition,
+                collectionSearchFilter: collectionSearchFilterCondition_1.collectionSearchFilterCondition,
                 dateFilter: dateFilterCondition_1.dateFilterCondition,
                 dateIsoFilter: dateIsoFilterCondition_1.dateIsoFilterCondition,
                 dateUtcFilter: dateUtcFilterCondition_1.dateUtcFilterCondition,

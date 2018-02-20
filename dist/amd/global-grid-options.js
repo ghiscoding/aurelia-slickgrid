@@ -26,7 +26,6 @@ define(["require", "exports"], function (require, exports) {
         enableColumnPicker: true,
         enableColumnReorder: true,
         enableGridMenu: true,
-        enablePagination: false,
         enableSorting: true,
         enableTextSelectionOnCells: true,
         explicitInitialization: true,

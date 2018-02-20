@@ -1,11 +1,11 @@
 define(["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    function parseBoolean(str) {
-        return /(true|1)/i.test(str);
+    function parseBoolean(input) {
+        return /(true|1)/i.test(input + '');
     }
     exports.booleanFilterCondition = function (options) {
-        return parseBoolean(options.cellValue) === parseBoolean(options.searchTerm);
+        return parseBoolean(options.cellValue) === parseBoolean(options.searchTerm || false);
     };
 });
 //# sourceMappingURL=booleanFilterCondition.js.map

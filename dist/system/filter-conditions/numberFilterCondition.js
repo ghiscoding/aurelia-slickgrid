@@ -10,7 +10,9 @@ System.register(["./filterUtilities"], function (exports_1, context_1) {
         ],
         execute: function () {
             exports_1("numberFilterCondition", numberFilterCondition = function (options) {
-                return filterUtilities_1.testFilterCondition(options.operator || '==', parseFloat(options.cellValue), parseFloat(options.searchTerm));
+                var cellValue = parseFloat(options.cellValue);
+                var searchTerm = (typeof options.searchTerm === 'string') ? parseFloat(options.searchTerm) : options.searchTerm;
+                return filterUtilities_1.testFilterCondition(options.operator || '==', cellValue, searchTerm);
             });
         }
     };

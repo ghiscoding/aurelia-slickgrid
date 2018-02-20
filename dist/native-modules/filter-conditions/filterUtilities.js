@@ -14,6 +14,7 @@ export var testFilterCondition = function (operator, value1, value2) {
         case '=':
         case '==':
         case 'EQ': return (value1 === value2);
+        case 'IN': return ((value2 && value2.includes) ? (value2.includes(value1)) : false);
     }
     return true;
 };

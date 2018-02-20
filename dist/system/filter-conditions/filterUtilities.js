@@ -21,6 +21,7 @@ System.register([], function (exports_1, context_1) {
                     case '=':
                     case '==':
                     case 'EQ': return (value1 === value2);
+                    case 'IN': return ((value2 && value2.includes) ? (value2.includes(value1)) : false);
                 }
                 return true;
             });

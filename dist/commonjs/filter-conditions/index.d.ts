@@ -2,6 +2,7 @@ import { FilterConditionOption } from './../models/filterConditionOption.interfa
 export declare const FilterConditions: {
     executeMappedCondition: (options: FilterConditionOption) => boolean;
     booleanFilter: (options: FilterConditionOption) => boolean;
+    collectionSearchFilter: (options: FilterConditionOption) => boolean;
     dateFilter: (options: FilterConditionOption) => boolean;
     dateIsoFilter: (options: FilterConditionOption) => boolean;
     dateUtcFilter: (options: FilterConditionOption) => boolean;

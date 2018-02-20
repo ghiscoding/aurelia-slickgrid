@@ -23,7 +23,6 @@ export const GlobalGridOptions = {
     enableColumnPicker: true,
     enableColumnReorder: true,
     enableGridMenu: true,
-    enablePagination: false,
     enableSorting: true,
     enableTextSelectionOnCells: true,
     explicitInitialization: true,

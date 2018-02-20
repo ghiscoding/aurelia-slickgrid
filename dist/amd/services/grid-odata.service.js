@@ -17,11 +17,12 @@ define(["require", "exports", "aurelia-framework", "./utilities", "./../models/i
     Object.defineProperty(exports, "__esModule", { value: true });
     var timer;
     var DEFAULT_FILTER_TYPING_DEBOUNCE = 750;
+    var DEFAULT_ITEMS_PER_PAGE = 25;
     var GridOdataService = /** @class */ (function () {
         function GridOdataService(odataService) {
             this.odataService = odataService;
             this.defaultOptions = {
-                top: 25,
+                top: DEFAULT_ITEMS_PER_PAGE,
                 orderBy: ''
             };
         }
@@ -73,16 +74,19 @@ define(["require", "exports", "aurelia-framework", "./utilities", "./../models/i
                     if (args.columnFilters.hasOwnProperty(columnId)) {
                         var columnFilter = args.columnFilters[columnId];
                         var columnDef = columnFilter.columnDef;
+                        if (!columnDef) {
+                            return;
+                        }
                         var fieldName = columnDef.queryField || columnDef.field || columnDef.name;
                         var fieldType = columnDef.type || 'string';
+                        var searchTerms = (columnFilter ? columnFilter.searchTerms : null) || [];
                         var fieldSearchValue = columnFilter.searchTerm;
                         if (typeof fieldSearchValue === 'undefined') {
                             fieldSearchValue = '';
                         }
-                        if (typeof fieldSearchValue !== 'string') {
-                            throw new Error("OData filter term property must be provided type \"string\", if you use filter with options then make sure your ids are also string. For example: filter: {type: FormElementType.select, selectOptions: [{ id: \"0\", value: \"0\" }, { id: \"1\", value: \"1\" }]");
+                        if (typeof fieldSearchValue !== 'string' && !searchTerms) {
+                            throw new Error("ODdata filter searchTerm property must be provided as type \"string\", if you use filter with options then make sure your IDs are also string. For example: filter: {type: FilterType.select, collection: [{ id: \"0\", value: \"0\" }, { id: \"1\", value: \"1\" }]");
                         }
-                        var searchTerms = columnFilter.listTerm || [];
                         fieldSearchValue = '' + fieldSearchValue; // make sure it's a string
                         var matches = fieldSearchValue.match(/^([<>!=\*]{0,2})(.*[^<>!=\*])([\*]?)$/); // group 1: Operator, 2: searchValue, 3: last char is '*' (meaning starts with, ex.: abc*)
                         var operator = columnFilter.operator || ((matches) ? matches[1] : '');

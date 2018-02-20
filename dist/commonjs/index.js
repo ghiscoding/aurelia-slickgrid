@@ -10,17 +10,19 @@ exports.SlickgridConfig = slickgrid_config_1.SlickgridConfig;
 // models
 var caseType_1 = require("./models/caseType");
 exports.CaseType = caseType_1.CaseType;
+var filterType_enum_1 = require("./models/filterType.enum");
+exports.FilterType = filterType_enum_1.FilterType;
 var formElementType_1 = require("./models/formElementType");
 exports.FormElementType = formElementType_1.FormElementType;
-var fieldType_1 = require("./models/fieldType");
-exports.FieldType = fieldType_1.FieldType;
+var fieldType_enum_1 = require("./models/fieldType.enum");
+exports.FieldType = fieldType_enum_1.FieldType;
 // editors, formatters, ...
 var index_1 = require("./editors/index");
 exports.Editors = index_1.Editors;
 var index_2 = require("./filter-conditions/index");
 exports.FilterConditions = index_2.FilterConditions;
-var index_3 = require("./filter-templates/index");
-exports.FilterTemplates = index_3.FilterTemplates;
+var index_3 = require("./filters/index");
+exports.Filters = index_3.Filters;
 var index_4 = require("./formatters/index");
 exports.Formatters = index_4.Formatters;
 var index_5 = require("./sorters/index");

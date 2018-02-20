@@ -1,13 +1,18 @@
-import { dateUtcFilterCondition } from './dateUtcFilterCondition';
 import { booleanFilterCondition } from './booleanFilterCondition';
+import { dateFilterCondition } from './dateFilterCondition';
 import { dateIsoFilterCondition } from './dateIsoFilterCondition';
 import { dateUsShortFilterCondition } from './dateUsShortFilterCondition';
 import { dateUsFilterCondition } from './dateUsFilterCondition';
-import { dateFilterCondition } from './dateFilterCondition';
+import { dateUtcFilterCondition } from './dateUtcFilterCondition';
+import { collectionSearchFilterCondition } from './collectionSearchFilterCondition';
 import { numberFilterCondition } from './numberFilterCondition';
 import { stringFilterCondition } from './stringFilterCondition';
-import { FieldType } from '../models/index';
+import { FieldType } from '../models/fieldType.enum';
 export var executeMappedCondition = function (options) {
+    // when using a multi-select ('IN' operator) we will not use the field type but instead go directly with a collection search
+    if (options && options.operator && options.operator.toUpperCase() === 'IN') {
+        return collectionSearchFilterCondition(options);
+    }
     // execute the mapped type, or default to String condition check
     switch (options.fieldType) {
         case FieldType.boolean:

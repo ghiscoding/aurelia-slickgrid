@@ -46,7 +46,7 @@ var GraphqlQueryBuilder = /** @class */ (function () {
     };
     /**
      * Outlines the properties you wish to be returned from the query.
-     * @param {string|object} properties representing each attribute you want Returned
+     * @param properties representing each attribute you want Returned
      */
     GraphqlQueryBuilder.prototype.find = function () {
         var searches = [];
@@ -64,14 +64,14 @@ var GraphqlQueryBuilder = /** @class */ (function () {
     };
     /**
      * set an alias for this result.
-     * @param {string} alias
+     * @param alias
      */
     GraphqlQueryBuilder.prototype.setAlias = function (alias) {
         this.alias = alias;
     };
     /**
      * Return to the formatted query string
-     * @return {string}
+     * @return
      */
     GraphqlQueryBuilder.prototype.toString = function () {
         if (this.body === undefined) {
@@ -89,11 +89,11 @@ var GraphqlQueryBuilder = /** @class */ (function () {
                 return itemX.toString();
             }
             else if (!Array.isArray(itemX) && typeof itemX === 'object') {
-                var propsA_1 = Object.keys(itemX);
-                if (1 !== propsA_1.length) {
+                var propsAA = Object.keys(itemX);
+                if (1 !== propsAA.length) {
                     throw new RangeError("Alias objects should only have one value. was passed: " + JSON.stringify(itemX));
                 }
-                var propS = propsA_1[0];
+                var propS = propsAA[0];
                 var item = itemX[propS];
                 if (Array.isArray(item)) {
                     return new GraphqlQueryBuilder(propS).find(item);

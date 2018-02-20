@@ -1,4 +1,4 @@
-System.register(["aurelia-framework", "aurelia-i18n", "./utilities", "./graphqlQueryBuilder", "./../models/index"], function (exports_1, context_1) {
+System.register(["aurelia-framework", "aurelia-i18n", "./utilities", "./../models/index", "./graphqlQueryBuilder"], function (exports_1, context_1) {
     "use strict";
     var __assign = (this && this.__assign) || Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -15,7 +15,7 @@ System.register(["aurelia-framework", "aurelia-i18n", "./utilities", "./graphqlQ
         return c > 3 && r && Object.defineProperty(target, key, r), r;
     };
     var __moduleName = context_1 && context_1.id;
-    var aurelia_framework_1, aurelia_i18n_1, utilities_1, graphqlQueryBuilder_1, index_1, timer, DEFAULT_FILTER_TYPING_DEBOUNCE, GraphqlService;
+    var aurelia_framework_1, aurelia_i18n_1, utilities_1, index_1, graphqlQueryBuilder_1, timer, DEFAULT_FILTER_TYPING_DEBOUNCE, DEFAULT_ITEMS_PER_PAGE, GraphqlService;
     return {
         setters: [
             function (aurelia_framework_1_1) {
@@ -27,21 +27,22 @@ System.register(["aurelia-framework", "aurelia-i18n", "./utilities", "./graphqlQ
             function (utilities_1_1) {
                 utilities_1 = utilities_1_1;
             },
-            function (graphqlQueryBuilder_1_1) {
-                graphqlQueryBuilder_1 = graphqlQueryBuilder_1_1;
-            },
             function (index_1_1) {
                 index_1 = index_1_1;
+            },
+            function (graphqlQueryBuilder_1_1) {
+                graphqlQueryBuilder_1 = graphqlQueryBuilder_1_1;
             }
         ],
         execute: function () {
             DEFAULT_FILTER_TYPING_DEBOUNCE = 750;
+            DEFAULT_ITEMS_PER_PAGE = 25;
             GraphqlService = /** @class */ (function () {
                 function GraphqlService(i18n) {
                     this.i18n = i18n;
                     this.defaultOrderBy = { field: 'id', direction: index_1.SortDirection.ASC };
                     this.defaultPaginationOptions = {
-                        first: 25,
+                        first: DEFAULT_ITEMS_PER_PAGE,
                         offset: 0
                     };
                 }
@@ -83,15 +84,15 @@ System.register(["aurelia-framework", "aurelia-i18n", "./utilities", "./graphqlQ
                     }
                     datasetQb.find(['totalCount', pageInfoQb, dataQb]);
                     // add dataset filters, could be Pagination and SortingFilters and/or FieldFilters
-                    var datasetFilters = __assign({}, this.options.paginationOptions, { first: (this.options.paginationOptions && this.options.paginationOptions.first) ? this.options.paginationOptions.first : (this.pagination && this.pagination.pageSize) ? this.pagination.pageSize : null || this.defaultPaginationOptions.first });
+                    var datasetFilters = __assign({}, this.options.paginationOptions, { first: ((this.options.paginationOptions && this.options.paginationOptions.first) ? this.options.paginationOptions.first : ((this.pagination && this.pagination.pageSize) ? this.pagination.pageSize : null)) || this.defaultPaginationOptions.first });
                     if (!this.options.isWithCursor) {
                         datasetFilters.offset = ((this.options.paginationOptions && this.options.paginationOptions.hasOwnProperty('offset')) ? +this.options.paginationOptions['offset'] : 0);
                     }
-                    if (this.options.sortingOptions) {
+                    if (this.options.sortingOptions && Array.isArray(this.options.sortingOptions) && this.options.sortingOptions.length > 0) {
                         // orderBy: [{ field:x, direction: 'ASC' }]
                         datasetFilters.orderBy = this.options.sortingOptions;
                     }
-                    if (this.options.filteringOptions) {
+                    if (this.options.filteringOptions && Array.isArray(this.options.filteringOptions) && this.options.filteringOptions.length > 0) {
                         // filterBy: [{ field: date, operator: '>', value: '2000-10-10' }]
                         datasetFilters.filterBy = this.options.filteringOptions;
                     }
@@ -138,7 +139,7 @@ System.register(["aurelia-framework", "aurelia-i18n", "./utilities", "./graphqlQ
                  * @return Pagination Options
                  */
                 GraphqlService.prototype.getInitPaginationOptions = function () {
-                    return (this.options.isWithCursor) ? { first: (this.pagination ? this.pagination.pageSize : 25) } : { first: (this.pagination ? this.pagination.pageSize : 25), offset: 0 };
+                    return (this.options.isWithCursor) ? { first: (this.pagination ? this.pagination.pageSize : DEFAULT_ITEMS_PER_PAGE) } : { first: (this.pagination ? this.pagination.pageSize : DEFAULT_ITEMS_PER_PAGE), offset: 0 };
                 };
                 GraphqlService.prototype.getDatasetName = function () {
                     return this.options.datasetName || '';
@@ -183,37 +184,47 @@ System.register(["aurelia-framework", "aurelia-i18n", "./utilities", "./graphqlQ
                         debounceTypingDelay = backendApi.filterTypingDebounce || DEFAULT_FILTER_TYPING_DEBOUNCE;
                     }
                     var promise = new Promise(function (resolve, reject) {
+                        var searchValue;
                         if (!args || !args.grid) {
-                            throw new Error('Something went wrong when trying to attach the "attachBackendOnFilterSubscribe(event, args)" function, it seems that "args" is not populated correctly');
+                            throw new Error('Something went wrong when trying create the GraphQL Backend Service, it seems that "args" is not populated correctly');
                         }
                         // loop through all columns to inspect filters
                         for (var columnId in args.columnFilters) {
                             if (args.columnFilters.hasOwnProperty(columnId)) {
                                 var columnFilter = args.columnFilters[columnId];
                                 var columnDef = columnFilter.columnDef;
+                                if (!columnDef) {
+                                    return;
+                                }
                                 var fieldName = columnDef.queryField || columnDef.field || columnDef.name || '';
                                 var fieldType = columnDef.type || 'string';
+                                var searchTerms = (columnFilter ? columnFilter.searchTerms : null) || [];
                                 var fieldSearchValue = columnFilter.searchTerm;
                                 if (typeof fieldSearchValue === 'undefined') {
                                     fieldSearchValue = '';
                                 }
-                                if (typeof fieldSearchValue !== 'string') {
-                                    throw new Error("GraphQL filter term property must be provided type \"string\", if you use filter with options then make sure your ids are also string. For example: filter: {type: FormElementType.select, selectOptions: [{ id: \"0\", value: \"0\" }, { id: \"1\", value: \"1\" }]");
+                                if (typeof fieldSearchValue !== 'string' && !searchTerms) {
+                                    throw new Error("GraphQL filter searchTerm property must be provided as type \"string\", if you use filter with options then make sure your IDs are also string. For example: filter: {type: FilterType.select, collection: [{ id: \"0\", value: \"0\" }, { id: \"1\", value: \"1\" }]");
                                 }
-                                var searchTerms = columnFilter ? columnFilter.listTerm : null || [];
                                 fieldSearchValue = '' + fieldSearchValue; // make sure it's a string
                                 var matches = fieldSearchValue.match(/^([<>!=\*]{0,2})(.*[^<>!=\*])([\*]?)$/); // group 1: Operator, 2: searchValue, 3: last char is '*' (meaning starts with, ex.: abc*)
                                 var operator = columnFilter.operator || ((matches) ? matches[1] : '');
-                                var searchValue = (!!matches) ? matches[2] : '';
+                                searchValue = (!!matches) ? matches[2] : '';
                                 var lastValueChar = (!!matches) ? matches[3] : '';
                                 // no need to query if search value is empty
-                                if (fieldName && searchValue === '') {
+                                if (fieldName && searchValue === '' && searchTerms.length === 0) {
                                     continue;
                                 }
-                                // escaping the search value
-                                searchValue = searchValue.replace("'", "''"); // escape single quotes by doubling them
-                                if (operator === '*' || lastValueChar === '*') {
-                                    operator = (operator === '*') ? 'endsWith' : 'startsWith';
+                                // when having more than 1 search term (we need to create a CSV string for GraphQL "IN" or "NOT IN" filter search)
+                                if (searchTerms && searchTerms.length > 0) {
+                                    searchValue = searchTerms.join(',');
+                                }
+                                else {
+                                    // escaping the search value
+                                    searchValue = searchValue.replace("'", "''"); // escape single quotes by doubling them
+                                    if (operator === '*' || lastValueChar === '*') {
+                                        operator = (operator === '*') ? 'endsWith' : 'startsWith';
+                                    }
                                 }
                                 searchByArray.push({
                                     field: fieldName,

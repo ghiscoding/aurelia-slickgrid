@@ -4,12 +4,13 @@ import { SlickPaginationCustomElement } from './slick-pagination';
 import { SlickgridConfig } from './slickgrid-config';
 // models
 import { CaseType } from './models/caseType';
+import { FilterType } from './models/filterType.enum';
 import { FormElementType } from './models/formElementType';
-import { FieldType } from './models/fieldType';
+import { FieldType } from './models/fieldType.enum';
 // editors, formatters, ...
 import { Editors } from './editors/index';
 import { FilterConditions } from './filter-conditions/index';
-import { FilterTemplates } from './filter-templates/index';
+import { Filters } from './filters/index';
 import { Formatters } from './formatters/index';
 import { Sorters } from './sorters/index';
 // services and utilities
@@ -32,7 +33,7 @@ export function configure(aurelia, callback) {
 }
 export { AureliaSlickgridCustomElement, SlickPaginationCustomElement, 
 // models
-CaseType, FormElementType, FieldType, Editors, FilterConditions, FilterTemplates, Formatters, Sorters, 
+CaseType, FilterType, FormElementType, FieldType, Editors, Filters, FilterConditions, Formatters, Sorters, 
 // services
 ControlAndPluginService, FilterService, GraphqlService, GridEventService, GridExtraUtils, GridExtraService, GridOdataService, ResizerService, SortService, SlickgridConfig };
 //# sourceMappingURL=index.js.map

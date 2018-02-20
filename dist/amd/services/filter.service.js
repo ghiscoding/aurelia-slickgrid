@@ -39,15 +39,15 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "../filter-conditions/index", "./../filter-templates/index", "../models/index", "aurelia-i18n", "jquery"], function (require, exports, aurelia_framework_1, aurelia_event_aggregator_1, index_1, index_2, index_3, aurelia_i18n_1, $) {
+define(["require", "exports", "aurelia-framework", "aurelia-i18n", "aurelia-event-aggregator", "./../filter-conditions/index", "./../filters/index", "./../models/index"], function (require, exports, aurelia_framework_1, aurelia_i18n_1, aurelia_event_aggregator_1, index_1, index_2, index_3) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var FilterService = /** @class */ (function () {
         function FilterService(i18n) {
             this.i18n = i18n;
+            this._filters = [];
             this._columnFilters = {};
             this.onFilterChanged = new aurelia_event_aggregator_1.EventAggregator();
-            this.i18n = i18n;
         }
         FilterService.prototype.init = function (grid, gridOptions, columnDefinitions) {
             this._columnDefinitions = columnDefinitions;
@@ -64,6 +64,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
             this.subscriber = new Slick.Event();
             this.emitFilterChangedBy('remote');
             this.subscriber.subscribe(this.attachBackendOnFilterSubscribe);
+            this._filters = [];
             grid.onHeaderRowCellRendered.subscribe(function (e, args) {
                 _this.addFilterTemplateToHeaderRow(args);
             });
@@ -105,6 +106,33 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
                 });
             });
         };
+        /** Clear the search filters (below the column titles) */
+        FilterService.prototype.clearFilters = function () {
+            var _this = this;
+            var hasBackendServiceApi = (this._gridOptions && this._gridOptions.backendServiceApi) ? this._gridOptions.backendServiceApi : false;
+            var triggerFilterChange = !hasBackendServiceApi;
+            this._filters.forEach(function (filter, index) {
+                if (filter && filter.clear) {
+                    // clear element but don't trigger a change
+                    // until we reach the last index to avoid multiple request to the Backend Server
+                    var callTrigger = (index === 0 || index === _this._filters.length - 1) ? true : false;
+                    filter.clear(true);
+                }
+            });
+            // we need to loop through all columnFilters and delete them 1 by 1
+            // only trying to clear columnFilter (without looping through) would not trigger a dataset change
+            for (var columnId in this._columnFilters) {
+                if (columnId && this._columnFilters[columnId]) {
+                    delete this._columnFilters[columnId];
+                }
+            }
+            // we also need to refresh the dataView and optionally the grid (it's optional since we use DataView)
+            if (this._dataView) {
+                this._dataView.refresh();
+                this._grid.invalidate();
+                this._grid.render();
+            }
+        };
         /**
          * Attach a local filter hook to the grid
          * @param grid SlickGrid Grid object
@@ -117,18 +145,19 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
             this.subscriber = new Slick.Event();
             this.emitFilterChangedBy('local');
             dataView.setFilterArgs({ columnFilters: this._columnFilters, grid: this._grid });
-            dataView.setFilter(this.customFilter.bind(this, dataView));
+            dataView.setFilter(this.customLocalFilter.bind(this, dataView));
             this.subscriber.subscribe(function (e, args) {
                 var columnId = args.columnId;
                 if (columnId != null) {
                     dataView.refresh();
                 }
             });
+            this._filters = [];
             grid.onHeaderRowCellRendered.subscribe(function (e, args) {
                 _this.addFilterTemplateToHeaderRow(args);
             });
         };
-        FilterService.prototype.customFilter = function (dataView, item, args) {
+        FilterService.prototype.customLocalFilter = function (dataView, item, args) {
             for (var _i = 0, _a = Object.keys(args.columnFilters); _i < _a.length; _i++) {
                 var columnId = _a[_i];
                 var columnFilter = args.columnFilters[columnId];
@@ -138,7 +167,8 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
                 var conditionalFilterFn = (columnDef.filter && columnDef.filter.conditionalFilter) ? columnDef.filter.conditionalFilter : null;
                 var filterSearchType = (columnDef.filterSearchType) ? columnDef.filterSearchType : null;
                 var cellValue = item[columnDef.queryField || columnDef.field];
-                var fieldSearchValue = columnFilter.searchTerm;
+                var searchTerms = (columnFilter && columnFilter.searchTerms) ? columnFilter.searchTerms : null;
+                var fieldSearchValue = (columnFilter && (columnFilter.searchTerm !== undefined || columnFilter.searchTerm !== null)) ? columnFilter.searchTerm : undefined;
                 if (typeof fieldSearchValue === 'undefined') {
                     fieldSearchValue = '';
                 }
@@ -147,12 +177,38 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
                 var operator = columnFilter.operator || ((matches) ? matches[1] : '');
                 var searchTerm = (!!matches) ? matches[2] : '';
                 var lastValueChar = (!!matches) ? matches[3] : '';
+                // when using a Filter that is not a custom type, we want to make sure that we have a default operator type
+                // for example a multiple-select should always be using IN, while a single select will use an EQ
+                var filterType = (columnDef.filter && columnDef.filter.type) ? columnDef.filter.type : index_3.FilterType.input;
+                if (!operator && filterType !== index_3.FilterType.custom) {
+                    switch (filterType) {
+                        case index_3.FilterType.select:
+                        case index_3.FilterType.multipleSelect:
+                            operator = 'IN';
+                            break;
+                        case index_3.FilterType.singleSelect:
+                            operator = 'EQ';
+                            break;
+                        default:
+                            operator = operator;
+                            break;
+                    }
+                }
                 // no need to query if search value is empty
-                if (searchTerm === '') {
+                if (searchTerm === '' && !searchTerms) {
                     return true;
                 }
+                // filter search terms should always be string (even though we permit the end user to input numbers)
+                // so make sure each term are strings
+                // run a query if user has some default search terms
+                if (searchTerms && Array.isArray(searchTerms)) {
+                    for (var k = 0, ln = searchTerms.length; k < ln; k++) {
+                        // make sure all search terms are strings
+                        searchTerms[k] = ((searchTerms[k] === undefined || searchTerms[k] === null) ? '' : searchTerms[k]) + '';
+                    }
+                }
                 // when using localization (i18n), we should use the formatter output to search as the new cell value
-                if (columnDef.params && columnDef.params.useFormatterOuputToFilter) {
+                if (columnDef && columnDef.params && columnDef.params.useFormatterOuputToFilter) {
                     var rowIndex = (dataView && typeof dataView.getIdxById === 'function') ? dataView.getIdxById(item.id) : 0;
                     cellValue = columnDef.formatter(rowIndex, columnIndex, cellValue, columnDef, item);
                 }
@@ -162,6 +218,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
                 }
                 var conditionOptions = {
                     fieldType: fieldType,
+                    searchTerms: searchTerms,
                     searchTerm: searchTerm,
                     cellValue: cellValue,
                     operator: operator,
@@ -194,116 +251,99 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
                     delete this._columnFilters[columnId];
                 }
             }
+            // also destroy each Filter instances
+            this._filters.forEach(function (filter, index) {
+                if (filter && filter.destroy) {
+                    filter.destroy(true);
+                }
+            });
         };
         FilterService.prototype.callbackSearchEvent = function (e, args) {
-            if (e.target.value === '' || e.target.value === null) {
+            var targetValue = (e && e.target) ? e.target.value : undefined;
+            var searchTerms = (args && args.searchTerms && Array.isArray(args.searchTerms)) ? args.searchTerms : [];
+            var columnId = (args && args.columnDef) ? args.columnDef.id || '' : '';
+            if (!targetValue && searchTerms.length === 0) {
                 // delete the property from the columnFilters when it becomes empty
                 // without doing this, it would leave an incorrect state of the previous column filters when filtering on another column
-                delete this._columnFilters[args.columnDef.id];
+                delete this._columnFilters[columnId];
             }
             else {
-                this._columnFilters[args.columnDef.id] = {
-                    columnId: args.columnDef.id,
-                    columnDef: args.columnDef,
-                    searchTerm: e.target.value,
-                    operator: args.operator || null
+                var colId = '' + columnId;
+                this._columnFilters[colId] = {
+                    columnId: colId,
+                    columnDef: args.columnDef || null,
+                    searchTerms: args.searchTerms || [],
+                    searchTerm: ((e && e.target) ? e.target.value : ''),
+                    operator: args.operator || ''
                 };
             }
             this.triggerEvent(this.subscriber, {
-                columnId: args.columnDef.id,
-                columnDef: args.columnDef,
+                columnId: columnId,
+                columnDef: args.columnDef || null,
                 columnFilters: this._columnFilters,
-                searchTerm: e.target.value,
+                searchTerms: args.searchTerms || undefined,
+                searchTerm: ((e && e.target) ? e.target.value : null),
                 serviceOptions: this._onFilterChangedOptions,
                 grid: this._grid
             }, e);
         };
         FilterService.prototype.addFilterTemplateToHeaderRow = function (args) {
-            var _this = this;
-            var _loop_1 = function (i) {
-                if (this_1._columnDefinitions[i].id !== 'selector' && this_1._columnDefinitions[i].filterable) {
-                    var filterTemplate = '';
-                    var elm = null;
-                    var header = void 0;
-                    var columnDef_1 = this_1._columnDefinitions[i];
-                    var columnId = columnDef_1.id;
-                    var listTerm = (columnDef_1.filter && columnDef_1.filter.listTerm) ? columnDef_1.filter.listTerm : null;
-                    var searchTerm = (columnDef_1.filter && columnDef_1.filter.searchTerm) ? columnDef_1.filter.searchTerm : '';
-                    // keep the filter in a columnFilters for later reference
-                    this_1.keepColumnFilters(searchTerm, listTerm, columnDef_1);
-                    if (!columnDef_1.filter) {
-                        searchTerm = (columnDef_1.filter && columnDef_1.filter.searchTerm) ? columnDef_1.filter.searchTerm : null;
-                        filterTemplate = index_2.FilterTemplates.input(searchTerm, columnDef_1);
+            var columnDef = args.column;
+            var columnId = columnDef.id || '';
+            if (columnDef && columnId !== 'selector' && columnDef.filterable) {
+                var searchTerms = (columnDef.filter && columnDef.filter.searchTerms) ? columnDef.filter.searchTerms : [];
+                var searchTerm = (columnDef.filter && (columnDef.filter.searchTerm !== undefined || columnDef.filter.searchTerm !== null)) ? columnDef.filter.searchTerm : '';
+                // keep the filter in a columnFilters for later reference
+                this.keepColumnFilters(searchTerm || '', searchTerms, columnDef);
+                // when hiding/showing (with Column Picker or Grid Menu), it will try to re-create yet again the filters (since SlickGrid does a re-render)
+                // because of that we need to first get searchTerm(s) from the columnFilters (that is what the user last entered)
+                // if nothing is found, we can then use the optional searchTerm(s) passed to the Grid Option (that is couple of lines earlier)
+                searchTerm = ((this._columnFilters[columnDef.id]) ? this._columnFilters[columnDef.id].searchTerm : searchTerm) || '';
+                searchTerms = ((this._columnFilters[columnDef.id]) ? this._columnFilters[columnDef.id].searchTerms : searchTerms) || [];
+                var filterArguments = {
+                    grid: this._grid,
+                    searchTerm: searchTerm,
+                    searchTerms: searchTerms,
+                    columnDef: columnDef,
+                    callback: this.callbackSearchEvent.bind(this)
+                };
+                // depending on the Filter type, we will watch the correct event
+                var filterType = (columnDef.filter && columnDef.filter.type) ? columnDef.filter.type : index_3.FilterType.input;
+                var filter_1;
+                switch (filterType) {
+                    case index_3.FilterType.custom:
+                        if (columnDef && columnDef.filter && columnDef.filter.customFilter) {
+                            filter_1 = columnDef.filter.customFilter;
+                        }
+                        else {
+                            throw new Error('[Aurelia-Slickgrid] A Filter type of "custom" must include a Filter class that is defined and instantiated.');
+                        }
+                        break;
+                    case index_3.FilterType.select:
+                        filter_1 = new index_2.Filters.select(this.i18n);
+                        break;
+                    case index_3.FilterType.multipleSelect:
+                        filter_1 = new index_2.Filters.multipleSelect(this.i18n);
+                        break;
+                    case index_3.FilterType.singleSelect:
+                        filter_1 = new index_2.Filters.singleSelect(this.i18n);
+                        break;
+                    case index_3.FilterType.input:
+                    default:
+                        filter_1 = new index_2.Filters.input();
+                        break;
+                }
+                if (filter_1) {
+                    filter_1.init(filterArguments);
+                    var filterExistIndex = this._filters.findIndex(function (filt) { return filter_1.columnDef.name === filt.columnDef.name; });
+                    // add to the filters arrays or replace it when found
+                    if (filterExistIndex === -1) {
+                        this._filters.push(filter_1);
                     }
                     else {
-                        // custom Select template
-                        if (columnDef_1.filter.type === index_3.FormElementType.select) {
-                            filterTemplate = index_2.FilterTemplates.select(searchTerm, columnDef_1, this_1.i18n);
-                        }
-                    }
-                    // when hiding/showing (Column Picker or Grid Menu), it will come re-create yet again the filters
-                    // because of that we need to first get searchTerm from the columnFilters (that is what the user input last)
-                    // if nothing is found, we can then use the optional searchTerm passed to the Grid Option (that is couple lines before)
-                    var inputSearchTerm = (this_1._columnFilters[columnDef_1.id]) ? this_1._columnFilters[columnDef_1.id].searchTerm : searchTerm || null;
-                    // create the DOM Element
-                    header = this_1._grid.getHeaderRowColumn(columnDef_1.id);
-                    $(header).empty();
-                    elm = $(filterTemplate);
-                    elm.attr('id', "filter-" + columnDef_1.id);
-                    elm.data('columnId', columnDef_1.id);
-                    elm.val(inputSearchTerm);
-                    if (elm && typeof elm.appendTo === 'function') {
-                        elm.appendTo(header);
-                    }
-                    // depending on the DOM Element type, we will watch the correct event
-                    var filterType = (columnDef_1.filter && columnDef_1.filter.type) ? columnDef_1.filter.type : index_3.FormElementType.input;
-                    switch (filterType) {
-                        case index_3.FormElementType.select:
-                            elm.change(function (e) { return _this.callbackSearchEvent(e, { columnDef: columnDef_1, operator: 'EQ' }); });
-                            break;
-                        case index_3.FormElementType.multiSelect:
-                            elm.change(function (e) { return _this.callbackSearchEvent(e, { columnDef: columnDef_1, operator: 'IN' }); });
-                            break;
-                        case index_3.FormElementType.input:
-                        default:
-                            elm.keyup(function (e) { return _this.callbackSearchEvent(e, { columnDef: columnDef_1 }); });
-                            break;
+                        this._filters[filterExistIndex] = filter_1;
                     }
                 }
-            };
-            var this_1 = this;
-            for (var i = 0; i < this._columnDefinitions.length; i++) {
-                _loop_1(i);
-            }
-        };
-        /** Clear the search filters (below the column titles) */
-        FilterService.prototype.clearFilters = function (dataview) {
-            // remove the text inside each search filter fields
-            $('.slick-headerrow-column .search-filter').each(function (index, elm) {
-                // clear the value and trigger an event
-                // the event is for GraphQL & OData Services to detect the changes and call a new query
-                switch (elm.tagName) {
-                    case 'SELECT':
-                        $(elm).val('').trigger('change');
-                        break;
-                    case 'INPUT':
-                    default:
-                        $(elm).val('').trigger('keyup');
-                        break;
-                }
-            });
-            // we need to loop through all columnFilters and delete them 1 by 1
-            // only trying to make columnFilter an empty (without looping) would not trigger a dataset change
-            for (var columnId in this._columnFilters) {
-                if (columnId && this._columnFilters[columnId]) {
-                    delete this._columnFilters[columnId];
-                }
-            }
-            // we also need to refresh the dataView and optionally the grid (it's optional since we use DataView)
-            if (this._dataView) {
-                this._dataView.refresh();
-                this._grid.invalidate();
-                this._grid.render();
             }
         };
         /**
@@ -315,16 +355,23 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
             var _this = this;
             this.subscriber.subscribe(function () { return _this.onFilterChanged.publish('filterService:changed', "onFilterChanged by " + sender); });
         };
-        FilterService.prototype.keepColumnFilters = function (searchTerm, listTerm, columnDef) {
-            if (searchTerm) {
+        FilterService.prototype.keepColumnFilters = function (searchTerm, searchTerms, columnDef) {
+            if (searchTerm !== undefined && searchTerm !== null && searchTerm !== '') {
                 this._columnFilters[columnDef.id] = {
                     columnId: columnDef.id,
                     columnDef: columnDef,
-                    searchTerm: searchTerm
+                    searchTerm: searchTerm,
+                    type: (columnDef && columnDef.filter && columnDef.filter.type) ? columnDef.filter.type : index_3.FilterType.input
                 };
-                if (listTerm) {
-                    this._columnFilters.listTerm = listTerm;
-                }
+            }
+            if (searchTerms && Array.isArray(searchTerms) && searchTerms.length > 0) {
+                // this._columnFilters.searchTerms = searchTerms;
+                this._columnFilters[columnDef.id] = {
+                    columnId: columnDef.id,
+                    columnDef: columnDef,
+                    searchTerms: searchTerms,
+                    type: (columnDef && columnDef.filter && columnDef.filter.type) ? columnDef.filter.type : index_3.FilterType.input
+                };
             }
         };
         FilterService.prototype.triggerEvent = function (evt, args, e) {

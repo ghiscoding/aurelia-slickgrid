@@ -6,7 +6,7 @@ exports.stringFilterCondition = function (options) {
     options.cellValue = (options.cellValue === undefined || options.cellValue === null) ? '' : options.cellValue.toString();
     // make both the cell value and search value lower for case insensitive comparison
     var cellValue = options.cellValue.toLowerCase();
-    var searchTerm = options.searchTerm.toLowerCase();
+    var searchTerm = (typeof options.searchTerm === 'string') ? options.searchTerm.toLowerCase() : options.searchTerm;
     if (options.operator === '*') {
         return cellValue.endsWith(searchTerm);
     }

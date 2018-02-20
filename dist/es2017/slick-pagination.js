@@ -84,7 +84,7 @@ let SlickPaginationCustomElement = class SlickPaginationCustomElement {
             // calculate and refresh the multiple properties of the pagination UI
             this.paginationPageSizes = this._gridPaginationOptions.pagination.pageSizes;
             this.totalItems = this._gridPaginationOptions.pagination.totalItems;
-            this.dataTo = this.itemsPerPage;
+            this.dataTo = (this.totalItems < this.itemsPerPage) ? this.totalItems : this.itemsPerPage;
         }
         this.pageCount = Math.ceil(this.totalItems / this.itemsPerPage);
     }
@@ -95,6 +95,9 @@ let SlickPaginationCustomElement = class SlickPaginationCustomElement {
             throw new Error(`BackendServiceApi requires at least a "process" function and a "service" defined`);
         }
         if (this.dataTo > this.totalItems) {
+            this.dataTo = this.totalItems;
+        }
+        else if (this.totalItems < this.itemsPerPage) {
             this.dataTo = this.totalItems;
         }
         if (backendApi) {
