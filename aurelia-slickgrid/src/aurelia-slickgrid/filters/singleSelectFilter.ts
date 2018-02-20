@@ -137,7 +137,7 @@ export class SingleSelectFilter implements Filter {
 
     // merge options & attach multiSelect
     const filterOptions = (this.columnDef.filter) ? this.columnDef.filter.filterOptions : {};
-    const options = { ...this.defaultOptions, filterOptions };
+    const options = { ...this.defaultOptions, ...filterOptions };
     this.$filterElm = this.$filterElm.multipleSelect(options);
   }
 
