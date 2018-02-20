@@ -71,8 +71,9 @@ import { bindable, bindingMode, inject } from 'aurelia-framework';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { I18N } from 'aurelia-i18n';
 import { GlobalGridOptions } from './global-grid-options';
-import { ControlAndPluginService, FilterService, GraphqlService, GridEventService, GridExtraService, ResizerService, SortService } from './services/index';
+import { ControlAndPluginService, FilterService, GraphqlService, GridEventService, GridExtraService, ResizerService, SortService, toKebabCase } from './services/index';
 import * as $ from 'jquery';
+var eventPrefix = 'sg';
 var AureliaSlickgridCustomElement = /** @class */ (function () {
     function AureliaSlickgridCustomElement(controlAndPluginService, elm, ea, filterService, graphqlService, gridEventService, gridExtraService, i18n, resizer, sortService) {
         this.controlAndPluginService = controlAndPluginService;
@@ -101,6 +102,9 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
         this.sortService = sortService;
     }
     AureliaSlickgridCustomElement.prototype.attached = function () {
+        this.elm.dispatchEvent(new CustomEvent(eventPrefix + "-on-before-grid-create", {
+            bubbles: true,
+        }));
         this.ea.publish('onBeforeGridCreate', true);
         // make sure the dataset is initialized (if not it will throw an error that it cannot getLength of null)
         this._dataset = this._dataset || [];
@@ -116,7 +120,15 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
         this.dataview.setItems(this._dataset);
         this.dataview.endUpdate();
         // publish certain events
+        this.elm.dispatchEvent(new CustomEvent(eventPrefix + "-on-grid-created", {
+            bubbles: true,
+            detail: this.grid
+        }));
         this.ea.publish('onGridCreated', this.grid);
+        this.elm.dispatchEvent(new CustomEvent(eventPrefix + "-on-dataview-created", {
+            bubbles: true,
+            detail: this.dataview
+        }));
         this.ea.publish('onDataviewCreated', this.dataview);
         // attach resize ONLY after the dataView is ready
         this.attachResizeHook(this.grid, this._gridOptions);
@@ -129,6 +141,10 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
     };
     AureliaSlickgridCustomElement.prototype.detached = function () {
         this.ea.publish('onBeforeGridDestroy', this.grid);
+        this.elm.dispatchEvent(new CustomEvent(eventPrefix + "-on-before-grid-destroy", {
+            bubbles: true,
+            detail: this.grid
+        }));
         this.dataview = [];
         this.controlAndPluginService.destroy();
         this.filterService.destroy();
@@ -136,6 +152,10 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
         this.sortService.destroy();
         this.grid.destroy();
         this.ea.publish('onAfterGridDestroyed', true);
+        this.elm.dispatchEvent(new CustomEvent(eventPrefix + "-on-after-grid-destroyed", {
+            bubbles: true,
+            detail: this.grid
+        }));
     };
     /**
      * Keep original value(s) that could be passed by the user ViewModel.
@@ -243,6 +263,38 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
                     });
                 }); });
             }
+        }
+        var _loop_1 = function (prop) {
+            if (prop.startsWith('on')) {
+                grid[prop].subscribe(function (e, args) {
+                    _this.elm.dispatchEvent(new CustomEvent(eventPrefix + "-" + toKebabCase(prop), {
+                        bubbles: true,
+                        detail: {
+                            eventData: e,
+                            args: args
+                        }
+                    }));
+                });
+            }
+        };
+        for (var prop in grid) {
+            _loop_1(prop);
+        }
+        var _loop_2 = function (prop) {
+            if (prop.startsWith('on')) {
+                dataView[prop].subscribe(function (e, args) {
+                    _this.elm.dispatchEvent(new CustomEvent(eventPrefix + "-" + toKebabCase(prop), {
+                        bubbles: true,
+                        detail: {
+                            eventData: e,
+                            args: args
+                        }
+                    }));
+                });
+            }
+        };
+        for (var prop in dataView) {
+            _loop_2(prop);
         }
         // on cell click, mainly used with the columnDef.action callback
         this.gridEventService.attachOnCellChange(grid, this._gridOptions, dataView);

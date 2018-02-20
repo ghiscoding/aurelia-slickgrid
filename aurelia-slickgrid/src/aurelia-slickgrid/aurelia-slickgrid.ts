@@ -25,11 +25,13 @@ import { EventAggregator } from 'aurelia-event-aggregator';
 import { I18N } from 'aurelia-i18n';
 import { GlobalGridOptions } from './global-grid-options';
 import { BackendServiceOption, CellArgs, Column, FormElementType, GraphqlResult, GridOption } from './models/index';
-import { ControlAndPluginService, FilterService, GraphqlService, GridEventService, GridExtraService, ResizerService, SortService } from './services/index';
+import { ControlAndPluginService, FilterService, GraphqlService, GridEventService, GridExtraService, ResizerService, SortService, toKebabCase } from './services/index';
 import * as $ from 'jquery';
 
 // using external js modules in Aurelia
 declare var Slick: any;
+
+const eventPrefix = 'sg';
 
 @inject(ControlAndPluginService, Element, EventAggregator, FilterService, GraphqlService, GridEventService, GridExtraService, I18N, ResizerService, SortService)
 export class AureliaSlickgridCustomElement {
@@ -79,6 +81,9 @@ export class AureliaSlickgridCustomElement {
   }
 
   attached() {
+    this.elm.dispatchEvent(new CustomEvent(`${eventPrefix}-on-before-grid-create`, {
+      bubbles: true,
+    }));
     this.ea.publish('onBeforeGridCreate', true);
 
     // make sure the dataset is initialized (if not it will throw an error that it cannot getLength of null)
@@ -99,7 +104,15 @@ export class AureliaSlickgridCustomElement {
     this.dataview.endUpdate();
 
     // publish certain events
+    this.elm.dispatchEvent(new CustomEvent(`${eventPrefix}-on-grid-created`, {
+      bubbles: true,
+      detail: this.grid
+    }));
     this.ea.publish('onGridCreated', this.grid);
+    this.elm.dispatchEvent(new CustomEvent(`${eventPrefix}-on-dataview-created`, {
+      bubbles: true,
+      detail: this.dataview
+    }));
     this.ea.publish('onDataviewCreated', this.dataview);
 
     // attach resize ONLY after the dataView is ready
@@ -116,6 +129,10 @@ export class AureliaSlickgridCustomElement {
 
   detached() {
     this.ea.publish('onBeforeGridDestroy', this.grid);
+    this.elm.dispatchEvent(new CustomEvent(`${eventPrefix}-on-before-grid-destroy`, {
+      bubbles: true,
+      detail: this.grid
+    }));
     this.dataview = [];
     this.controlAndPluginService.destroy();
     this.filterService.destroy();
@@ -123,6 +140,10 @@ export class AureliaSlickgridCustomElement {
     this.sortService.destroy();
     this.grid.destroy();
     this.ea.publish('onAfterGridDestroyed', true);
+    this.elm.dispatchEvent(new CustomEvent(`${eventPrefix}-on-after-grid-destroyed`, {
+      bubbles: true,
+      detail: this.grid
+    }));
   }
 
   /**
@@ -236,6 +257,34 @@ export class AureliaSlickgridCustomElement {
           if (backendApi.postProcess) {
             backendApi.postProcess(processResult);
           }
+        });
+      }
+    }
+
+    for (const prop in grid) {
+      if (prop.startsWith('on')) {
+        grid[prop].subscribe((e: any, args: any) => {
+          this.elm.dispatchEvent(new CustomEvent(`${eventPrefix}-${toKebabCase(prop)}`, {
+            bubbles: true,
+            detail: {
+              eventData: e,
+              args
+            }
+          }));
+        });
+      }
+    }
+
+    for (const prop in dataView) {
+      if (prop.startsWith('on')) {
+        dataView[prop].subscribe((e: any, args: any) => {
+          this.elm.dispatchEvent(new CustomEvent(`${eventPrefix}-${toKebabCase(prop)}`, {
+            bubbles: true,
+            detail: {
+              eventData: e,
+              args
+            }
+          }));
         });
       }
     }

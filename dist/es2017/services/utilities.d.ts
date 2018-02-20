@@ -24,3 +24,15 @@ export declare function mapOperatorType(operator: string): OperatorType;
  * @returns string date formatted
  */
 export declare function parseUtcDate(inputDateString: string, useUtc: boolean): string | null;
+/**
+ * Converts a string to camel case
+ * @param {string} str the string to convert
+ * @return {string} the string in camel case
+ */
+export declare function toCamelCase(str: string): string;
+/**
+ * Converts a string to kebab (hypen) case
+ * @param {string} str the string to convert
+ * @return {string} the string in kebab case
+ */
+export declare function toKebabCase(str: string): string;

@@ -200,6 +200,30 @@ System.register(["../models/index", "moment"], function (exports_1, context_1) {
         return date;
     }
     exports_1("parseUtcDate", parseUtcDate);
+    /**
+     * Converts a string to camel case
+     * @param {string} str the string to convert
+     * @return {string} the string in camel case
+     */
+    function toCamelCase(str) {
+        return str.replace(/(?:^\w|[A-Z]|\b\w|[\s+\-_\/])/g, function (match, offset) {
+            // remove white space or hypens or underscores
+            if (/[\s+\-_\/]/.test(match)) {
+                return '';
+            }
+            return offset === 0 ? match.toLowerCase() : match.toUpperCase();
+        });
+    }
+    exports_1("toCamelCase", toCamelCase);
+    /**
+     * Converts a string to kebab (hypen) case
+     * @param {string} str the string to convert
+     * @return {string} the string in kebab case
+     */
+    function toKebabCase(str) {
+        return toCamelCase(str).replace(/([A-Z])/g, '-$1').toLowerCase();
+    }
+    exports_1("toKebabCase", toKebabCase);
     var index_1, moment;
     return {
         setters: [

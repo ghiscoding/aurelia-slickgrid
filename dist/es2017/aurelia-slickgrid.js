@@ -28,8 +28,9 @@ import { bindable, bindingMode, inject } from 'aurelia-framework';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { I18N } from 'aurelia-i18n';
 import { GlobalGridOptions } from './global-grid-options';
-import { ControlAndPluginService, FilterService, GraphqlService, GridEventService, GridExtraService, ResizerService, SortService } from './services/index';
+import { ControlAndPluginService, FilterService, GraphqlService, GridEventService, GridExtraService, ResizerService, SortService, toKebabCase } from './services/index';
 import * as $ from 'jquery';
+const eventPrefix = 'sg';
 let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
     constructor(controlAndPluginService, elm, ea, filterService, graphqlService, gridEventService, gridExtraService, i18n, resizer, sortService) {
         this.controlAndPluginService = controlAndPluginService;
@@ -58,6 +59,9 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
         this.sortService = sortService;
     }
     attached() {
+        this.elm.dispatchEvent(new CustomEvent(`${eventPrefix}-on-before-grid-create`, {
+            bubbles: true,
+        }));
         this.ea.publish('onBeforeGridCreate', true);
         // make sure the dataset is initialized (if not it will throw an error that it cannot getLength of null)
         this._dataset = this._dataset || [];
@@ -73,7 +77,15 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
         this.dataview.setItems(this._dataset);
         this.dataview.endUpdate();
         // publish certain events
+        this.elm.dispatchEvent(new CustomEvent(`${eventPrefix}-on-grid-created`, {
+            bubbles: true,
+            detail: this.grid
+        }));
         this.ea.publish('onGridCreated', this.grid);
+        this.elm.dispatchEvent(new CustomEvent(`${eventPrefix}-on-dataview-created`, {
+            bubbles: true,
+            detail: this.dataview
+        }));
         this.ea.publish('onDataviewCreated', this.dataview);
         // attach resize ONLY after the dataView is ready
         this.attachResizeHook(this.grid, this._gridOptions);
@@ -86,6 +98,10 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
     }
     detached() {
         this.ea.publish('onBeforeGridDestroy', this.grid);
+        this.elm.dispatchEvent(new CustomEvent(`${eventPrefix}-on-before-grid-destroy`, {
+            bubbles: true,
+            detail: this.grid
+        }));
         this.dataview = [];
         this.controlAndPluginService.destroy();
         this.filterService.destroy();
@@ -93,6 +109,10 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
         this.sortService.destroy();
         this.grid.destroy();
         this.ea.publish('onAfterGridDestroyed', true);
+        this.elm.dispatchEvent(new CustomEvent(`${eventPrefix}-on-after-grid-destroyed`, {
+            bubbles: true,
+            detail: this.grid
+        }));
     }
     /**
      * Keep original value(s) that could be passed by the user ViewModel.
@@ -188,6 +208,32 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
                     if (backendApi.postProcess) {
                         backendApi.postProcess(processResult);
                     }
+                });
+            }
+        }
+        for (const prop in grid) {
+            if (prop.startsWith('on')) {
+                grid[prop].subscribe((e, args) => {
+                    this.elm.dispatchEvent(new CustomEvent(`${eventPrefix}-${toKebabCase(prop)}`, {
+                        bubbles: true,
+                        detail: {
+                            eventData: e,
+                            args
+                        }
+                    }));
+                });
+            }
+        }
+        for (const prop in dataView) {
+            if (prop.startsWith('on')) {
+                dataView[prop].subscribe((e, args) => {
+                    this.elm.dispatchEvent(new CustomEvent(`${eventPrefix}-${toKebabCase(prop)}`, {
+                        bubbles: true,
+                        detail: {
+                            eventData: e,
+                            args
+                        }
+                    }));
                 });
             }
         }
