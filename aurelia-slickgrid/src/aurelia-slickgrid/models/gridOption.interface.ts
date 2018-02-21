@@ -27,6 +27,7 @@ export interface GridOption {
   cellHighlightCssClass?: string | null;
   checkboxSelector?: CheckboxSelector;
   columnPicker?: ColumnPicker;
+  /** Unique property name on the dataset used by Slick.Data.DataView */
   datasetIdPropertyName: string;
   editable?: boolean;
   enableAsyncPostRender?: boolean;
