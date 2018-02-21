@@ -27,6 +27,7 @@ export interface GridOption {
   cellHighlightCssClass?: string | null;
   checkboxSelector?: CheckboxSelector;
   columnPicker?: ColumnPicker;
+  datasetIdPropertyName: string;
   editable?: boolean;
   enableAsyncPostRender?: boolean;
   enableAutoResize?: boolean;

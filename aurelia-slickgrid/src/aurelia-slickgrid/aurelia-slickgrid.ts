@@ -47,7 +47,6 @@ export class AureliaSlickgridCustomElement {
   @bindable({ defaultBindingMode: bindingMode.twoWay }) dataview: any;
   @bindable({ defaultBindingMode: bindingMode.twoWay }) grid: any;
   @bindable() gridId: string;
-  @bindable() datasetId: string = 'id';
   @bindable() columnDefinitions: Column[];
   @bindable() gridOptions: GridOption;
   @bindable() gridHeight = 100;
@@ -96,7 +95,7 @@ export class AureliaSlickgridCustomElement {
 
     this.grid.init();
     this.dataview.beginUpdate();
-    this.dataview.setItems(this._dataset, this.datasetId);
+    this.dataview.setItems(this._dataset, this._gridOptions.datasetIdPropertyName);
     this.dataview.endUpdate();
 
     // publish certain events
@@ -289,7 +288,7 @@ export class AureliaSlickgridCustomElement {
    */
   refreshGridData(dataset: any[], totalCount?: number) {
     if (dataset && this.grid) {
-      this.dataview.setItems(dataset, this.datasetId);
+      this.dataview.setItems(dataset, this._gridOptions.datasetIdPropertyName);
 
       // this.grid.setData(dataset);
       this.grid.invalidate();
