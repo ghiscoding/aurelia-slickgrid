@@ -87,7 +87,7 @@ export class AureliaSlickgridCustomElement {
     this.ea.publish('onBeforeGridCreate', true);
 
     // make sure the dataset is initialized (if not it will throw an error that it cannot getLength of null)
-    this._dataset = this._dataset || [];
+    this._dataset = this._dataset || this.dataset || [];
     this._gridOptions = this.mergeGridOptions();
     this.createBackendApiInternalPostProcessCallback(this._gridOptions);
 
