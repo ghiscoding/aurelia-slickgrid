@@ -1,16 +1,6 @@
 <!--
 BUGS: Please use this template.
 
-SUPPORT REQUESTS/QUESTIONS: If you have a support request or question please
-submit them to StackOverflow using the tags aurelia and aurelia-framework
-http://stackoverflow.com/questions/tagged/aurelia
-or the Aurelia Gitter https://gitter.im/aurelia/discuss
-
-Blue Spire offers paid support agreements. Further information regarding paid support
-may be obtained by emailing support@bluespire.com
-
-Future support requests submitted here will be closed.
-
 The HTML comments below are for your reference, and are not displayed
 when your issue is submitted, feel free to leave them.
 
