@@ -21,7 +21,7 @@ import 'slickgrid/plugins/slick.rowmovemanager';
 import 'slickgrid/plugins/slick.rowselectionmodel';
 
 import { bindable, bindingMode, inject } from 'aurelia-framework';
-import { EventAggregator } from 'aurelia-event-aggregator';
+import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
 import { I18N } from 'aurelia-i18n';
 import { GlobalGridOptions } from './global-grid-options';
 import { BackendServiceOption, CellArgs, Column, FormElementType, GraphqlResult, GridOption } from './models/index';
@@ -39,6 +39,7 @@ export class AureliaSlickgridCustomElement {
   private _gridOptions: GridOption;
   gridHeightString: string;
   gridWidthString: string;
+  localeChangedSubscriber: Subscription;
   showPagination = false;
   style: any;
 
@@ -139,6 +140,7 @@ export class AureliaSlickgridCustomElement {
     this.resizer.destroy();
     this.sortService.destroy();
     this.grid.destroy();
+    this.localeChangedSubscriber.dispose();
     this.ea.publish('onAfterGridDestroyed', true);
     this.elm.dispatchEvent(new CustomEvent(`${eventPrefix}-on-after-grid-destroyed`, {
       bubbles: true,
@@ -201,7 +203,7 @@ export class AureliaSlickgridCustomElement {
 
   attachDifferentHooks(grid: any, gridOptions: GridOption, dataView: any) {
     // on locale change, we have to manually translate the Headers, GridMenu
-    this.ea.subscribe('i18n:locale:changed', (payload: any) => {
+    this.localeChangedSubscriber = this.ea.subscribe('i18n:locale:changed', (payload: any) => {
       if (gridOptions.enableTranslate) {
         this.controlAndPluginService.translateHeaders();
         this.controlAndPluginService.translateColumnPicker();
