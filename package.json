@@ -20,7 +20,6 @@
     "url": "http://github.com/ghiscoding/aurelia-slickgrid"
   },
   "scripts": {
-    "build:doc": "cd doc && yarn start build",
     "lint": "cross-env tslint --project tsconfig.json",
     "pretest": "cross-env npm run lint",
     "test": "cross-env rimraf dist && tsc && karma start --single-run",
@@ -45,18 +44,18 @@
     "postbuild:system": "cross-env copyfiles --up 3 aurelia-slickgrid/src/aurelia-slickgrid/**/*.html dist/system",
     "prebuild": "cross-env rimraf dist",
     "build": "npm-run-all build:amd build:commonjs build:es2015 build:es2017 build:native-modules build:system sass:build sass:copy copy-i18n:dist copy-asset-lib",
-    "postbuild": "npm-run-all del-lib:client-cli del-lib:client-ts-wp del-lib:doc copy-lib:client-cli copy-lib:client-ts-wp copy-lib:doc",
+    "postbuild": "npm-run-all del-lib:client-cli del-lib:client-ts-wp del-lib:github-demo copy-lib:client-cli copy-lib:client-ts-wp copy-lib:github-demo",
     "copy-asset-lib": "cross-env copyfiles --up 2 aurelia-slickgrid/assets/lib/** dist",
     "copy-i18n:dist": "cross-env copyfiles --up 3 aurelia-slickgrid/assets/i18n/**/*.* dist/i18n",
     "copy-i18n:client-cli": "cross-env copyfiles --up 2 dist/i18n/**/*.* client-cli/assets/i18n",
     "copy-i18n:client-ts-wp": "cross-env copyfiles --up 2 dist/i18n/**/*.* client-ts-wp/assets/i18n",
-    "copy-i18n:doc": "cross-env copyfiles --up 2 dist/i18n/**/*.* doc/assets/i18n",
+    "copy-i18n:github-demo": "cross-env copyfiles --up 2 dist/i18n/**/*.* doc/github-demo/assets/i18n",
     "copy-lib:client-cli": "cross-env copyfiles package.json dist/**/*.* client-cli/node_modules/aurelia-slickgrid",
     "copy-lib:client-ts-wp": "cross-env copyfiles package.json dist/**/*.* client-ts-wp/node_modules/aurelia-slickgrid",
-    "copy-lib:doc": "cross-env copyfiles package.json dist/**/*.* doc/node_modules/aurelia-slickgrid",
+    "copy-lib:github-demo": "cross-env copyfiles package.json dist/**/*.* doc/github-demo/node_modules/aurelia-slickgrid",
     "del-lib:client-cli": "cross-env rimraf client-cli/node_modules/aurelia-slickgrid",
     "del-lib:client-ts-wp": "cross-env rimraf client-ts-wp/node_modules/aurelia-slickgrid",
-    "del-lib:doc": "cross-env rimraf doc/node_modules/aurelia-slickgrid",
+    "del-lib:github-demo": "cross-env rimraf doc/github-demo/node_modules/aurelia-slickgrid",
     "predoc": "cross-env rimraf doc/api.json && rimraf dist/doc-temp && tsc --project aurelia-slickgrid/src/aurelia-slickgrid/tsconfig.build.json --outFile dist/doc-temp/aurelia-validation.js && node doc/shape-defs && copyfiles tsconfig.json dist/doc-temp",
     "doc": "cross-env typedoc --json doc/api.json --excludeExternals --includeDeclarations --mode modules --target ES6 --name aurelia-validation-docs dist/doc-temp/",
     "postdoc": "cross-env node doc/shape-doc && rimraf dist/doc-temp",
@@ -75,8 +74,9 @@
     "start:client-cli": "cd client-cli && au run --watch",
     "prestart:client-ts-wp": "cross-env npm run copy-i18n:client-ts-wp",
     "start:client-ts-wp": "cd client-ts-wp && yarn start",
-    "prestart:doc": "cross-env npm run copy-i18n:doc",
-    "start:doc": "cd doc && yarn start"
+    "build:github-demo": "cd doc/github-demo && yarn start build",
+    "prestart:github-demo": "cross-env npm run copy-i18n:github-demo",
+    "start:github-demo": "cd doc/github-demo && yarn start"
   },
   "dependencies": {
     "@types/flatpickr": "^3.1.2",

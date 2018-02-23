@@ -12,11 +12,11 @@
       "problemMatcher": []
     },
     {
-      "label": "Build Demo (doc folder)",
+      "label": "Build Github Demo Page",
       "command": "yarn",
       "type": "shell",
       "args": [
-        "build:doc"
+        "build:github-demo"
       ],
       "problemMatcher": []
     },
@@ -48,11 +48,11 @@
       "problemMatcher": []
     },
     {
-      "label": "Start Demo/Doc",
+      "label": "Start Github Demo Page",
       "command": "yarn",
       "type": "shell",
       "args": [
-        "start:doc"
+        "start:github-demo"
       ],
       "problemMatcher": []
     }
