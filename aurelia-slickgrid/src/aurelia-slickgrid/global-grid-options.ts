@@ -17,6 +17,7 @@ export const GlobalGridOptions: GridOption = {
   checkboxSelector: {
     cssClass: 'slick-cell-checkboxsel'
   },
+  datasetIdPropertyName: 'id',
   enableAutoResize: true,
   enableRowSelection: true,
   editable: false,
