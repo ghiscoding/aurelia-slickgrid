@@ -14,6 +14,10 @@ import environment from './environment';
 import * as Bluebird from 'bluebird';
 import { I18N, TCustomAttribute } from 'aurelia-i18n';
 import * as Backend from 'i18next-xhr-backend';
+import {
+  Filters,
+  PLUGIN_NAME as FILTER_PLUGIN_NAME 
+} from './aurelia-slickgrid/filters';
 import 'bootstrap';
 
 // remove out if you don't want a Promise polyfill (remove also from webpack.config.js)
@@ -55,6 +59,11 @@ export function configure(aurelia: Aurelia) {
   if (environment.testing) {
     aurelia.use.plugin(PLATFORM.moduleName('aurelia-testing'));
   }
+
+  aurelia.container.registerSingleton(FILTER_PLUGIN_NAME, Filters.input);
+  aurelia.container.registerSingleton(FILTER_PLUGIN_NAME, Filters.multipleSelect);
+  aurelia.container.registerSingleton(FILTER_PLUGIN_NAME, Filters.singleSelect);
+  aurelia.container.registerSingleton(FILTER_PLUGIN_NAME, Filters.select);
 
   aurelia.start().then(() => aurelia.setRoot(PLATFORM.moduleName('app')));
 }

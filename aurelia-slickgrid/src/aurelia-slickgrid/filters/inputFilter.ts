@@ -1,6 +1,10 @@
-import { FilterArguments } from './../models/filterArguments.interface';
-import { FilterCallback } from './../models/filterCallback.interface';
-import { Column, Filter } from './../models';
+import {
+  Column,
+  Filter,
+  FilterType,
+  FilterArguments,
+  FilterCallback
+} from './../models';
 import * as $ from 'jquery';
 
 export class InputFilter implements Filter {
@@ -9,6 +13,7 @@ export class InputFilter implements Filter {
   searchTerm: string | number | boolean;
   columnDef: Column;
   callback: FilterCallback;
+  filterType = FilterType.input;
 
   /**
    * Initialize the Filter
