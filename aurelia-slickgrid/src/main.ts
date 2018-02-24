@@ -14,10 +14,6 @@ import environment from './environment';
 import * as Bluebird from 'bluebird';
 import { I18N, TCustomAttribute } from 'aurelia-i18n';
 import * as Backend from 'i18next-xhr-backend';
-import {
-  Filters,
-  PLUGIN_NAME as FILTER_PLUGIN_NAME 
-} from './aurelia-slickgrid/filters';
 import 'bootstrap';
 
 // remove out if you don't want a Promise polyfill (remove also from webpack.config.js)
