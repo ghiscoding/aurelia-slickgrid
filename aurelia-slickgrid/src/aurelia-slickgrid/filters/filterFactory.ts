@@ -24,10 +24,11 @@ export class FilterFactory {
 
   /**
    * Creates a new Filter from the provided filterType
-   * @param {FilterType | FormElementType} filterType the type of filter to create
+   * @param {FilterType | FormElementType | string} filterType the type of filter to create
+   * as an enum or custom string
    * @return {Filter} the new Filter
    */
-  public createFilter(filterType: FilterType | FormElementType): Filter {
+  public createFilter(filterType: FilterType | FormElementType | string): Filter {
     const filter: Filter | undefined = this.filters.find((f: Filter) =>
       f.filterType === filterType);
 

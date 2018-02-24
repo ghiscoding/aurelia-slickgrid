@@ -15,7 +15,7 @@ export interface Filter {
   callback: FilterCallback;
 
   /** the type of filter used */
-  filterType: FilterType;
+  filterType?: FilterType | string;
 
   /** SlickGrid grid object */
   grid: any;

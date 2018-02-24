@@ -13,25 +13,84 @@ You can also create your own Custom Filter with any html/css you want and/or jQu
 ### How to use Custom Filter?
 1. You first need to create a `class` using the [Filter interface](https://github.com/ghiscoding/aurelia-slickgrid/blob/master/aurelia-slickgrid/src/aurelia-slickgrid/models/filter.interface.ts). Make sure to create all necessary public properties and functions. 
  - You can see a demo with a [custom-inputFilter.ts](https://github.com/ghiscoding/aurelia-slickgrid/blob/master/aurelia-slickgrid/src/examples/slickgrid/custom-inputFilter.ts) that is used in the [demo - example 4](https://ghiscoding.github.io/aurelia-slickgrid/#/slickgrid/example4)
-2. There are two Simply set the filter type to `FilterType.custom` and instantiate your class with `new` (can also pass DI in the constructor if you wish). Here is an example with a custom input filter: 
-```javascript 
-// define you columns, in this demo Effort Driven will use a Select Filter
-this.columnDefinitions = [      
-  { id: 'title', name: 'Title', field: 'title' },
-  { id: 'description', name: 'Description', field: 'description', type: FieldType.string,
-    filterable: true, 
-    filter: {
-       type: FilterType.custom,
-       customFilter: new CustomInputFilter() // create a new instance to make each Filter independent from each other
-    }
-  }
-];
+2. There are two methods to use your custom filters on the grid.
+   1.  Simply set the `columnDefinition.filter.type` to `FilterType.custom` and instantiate your class with `new` (can also use dependency injection in the constructor if you wish). Here is an example with a custom input filter: 
+   ```javascript 
+   // define you columns, in this demo Effort Driven will use a Select Filter
+   this.columnDefinitions = [      
+     { id: 'title', name: 'Title', field: 'title' },
+     { id: 'description', name: 'Description', field: 'description', type: FieldType.string,
+       filterable: true, 
+       filter: {
+          type: FilterType.custom,
+          customFilter: new CustomInputFilter() // create a new instance to make each Filter independent from each other
+       }
+     }
+   ];
+   
+   // you also need to enable the filters in the Grid Options
+   this.gridOptions = {
+      enableFiltering: true
+   };
+   ```
+   2. Register your filter with the aurelia container in the startup file using the `FILTER_PLUGIN_NAME` the library exposes to register all of its filters. This registration is usually in `main.ts` or `main.js`. Then in your view model pass your custom filter's `filterType` property value to `columnDefinition.filter.type` property as a string. Here is that example:
 
-// you also need to enable the filters in the Grid Options
-this.gridOptions = {
-   enableFiltering: true
-};
-```
+   **myCustomFilter.ts**
+   ```typescript
+   export class MyCustomFilter implements Filter {
+     private $filterElm: any;
+     grid: any;
+     searchTerm: string | number | boolean;
+     columnDef: Column;
+     callback: FilterCallback;
+     filterType: 'my-custom-filter'
+   
+     init(args: FilterArguments) {
+       // ...logic
+     }
+   
+     clear(triggerFilterKeyup = true) {
+       // ...logic
+     }
+   
+     destroy() {
+       // ...logic
+     }
+   ```
+   **main.ts**
+   ```javascript
+   // import your custom filter from its location
+   import { MyCustomFilter } from './cutomFilters/myCustomFilter';
+   
+   // main.ts or main.js
+   export function configure(aurelia) {
+     aurelia.use.standardConfiguration().plugin(PLATFORM.moduleName('aurelia-slickgrid'))
+   
+   
+     // this can be registered before or after the plugin
+     aurelia.container.registerSingleton(FILTER_PLUGIN_NAME, MyCustomFilter);
+     aurelia.start().then(() => aurelia.setRoot(PLATFORM.moduleName('app')));
+   }
+   ```
+   
+   **my-view-model.ts**
+   ```javascript 
+   // define you columns, in this demo Effort Driven will use a Select Filter
+   this.columnDefinitions = [      
+     { id: 'title', name: 'Title', field: 'title' },
+     { id: 'description', name: 'Description', field: 'description', type: FieldType.string,
+       filterable: true, 
+       filter: {
+          type: 'my-custom-filter'
+       }
+     }
+   ];
+   
+   // you also need to enable the filters in the Grid Options
+   this.gridOptions = {
+      enableFiltering: true
+   };
+   ```
 
 ### Default Search Term(s)
 If you want to load the grid with certain default filter(s), you can use the following optional properties:
@@ -66,6 +125,9 @@ this.columnDef.filter.collection.forEach((option: SelectOption) => {
   options += `<option value="${option[valueName]}">${option[labelName]}</option>`;
 });
 ```
+
+#### Overriding our default filters
+You are able to override our default supported filters if using `aurelia.container.registerSingleton(FILTER_PLUGIN_NAME, MyCustomFilter)`. Since our `Filter` interface has an optional `filterType` property, you can set it to whatever you wish, and that means you can set it to one of our predefined `FilterType` enums.
 
 ### How to add Translation?
 
