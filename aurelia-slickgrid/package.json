@@ -38,7 +38,8 @@
     "moment": "^2.19.1",
     "moment-mini": "^2.18.1",
     "nps": "^5.7.1",
-    "slickgrid": "^2.3.12"
+    "slickgrid": "^2.3.13",
+    "text-encoding": "^0.6.4"
   },
   "peerDependencies": {},
   "devDependencies": {
@@ -83,7 +84,7 @@
     "through2": "^2.0.1",
     "ts-jest": "20.0.6",
     "ts-node": "^3.2.0",
-    "typescript": ">=1.9.0-dev || ^2.0.0",
+    "typescript": "^2.7.2",
     "uglify-js": "^3.0.19",
     "url-loader": "0.5.8",
     "vinyl-fs": "^2.4.3",

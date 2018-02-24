@@ -91,7 +91,8 @@
     "jquery": "^3.2.1",
     "moment": "^2.18.1",
     "moment-mini": "^2.18.1",
-    "slickgrid": "^2.3.12"
+    "slickgrid": "^2.3.13",
+    "text-encoding": "^0.6.4"
   },
   "devDependencies": {
     "@types/node": "^8.0.20",
@@ -119,7 +120,7 @@
     "rimraf": "^2.6.1",
     "tslint": "^5.6.0",
     "typedoc": "^0.8.0",
-    "typescript": "^2.5.3"
+    "typescript": "^2.7.2"
   },
   "aurelia": {
     "build": {
