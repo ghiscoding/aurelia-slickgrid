@@ -1,10 +1,4 @@
-import {
-  Column,
-  Filter,
-  FilterType,
-  FilterArguments,
-  FilterCallback
-} from '../../aurelia-slickgrid';
+import { Column, Filter, FilterArguments, FilterCallback } from '../../aurelia-slickgrid';
 import * as $ from 'jquery';
 
 export class CustomInputFilter implements Filter {
@@ -13,7 +7,6 @@ export class CustomInputFilter implements Filter {
   searchTerm: string | number | boolean;
   columnDef: Column;
   callback: FilterCallback;
-  filterType: FilterType.custom;
 
   /**
    * Initialize the Filter
