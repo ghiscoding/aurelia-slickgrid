@@ -6,7 +6,7 @@ import {
   FilterType,
   FilterArguments,
   FilterCallback
-} from './../models';
+} from './../models/index';
 import * as $ from 'jquery';
 
 @inject(I18N)

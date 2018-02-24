@@ -1,7 +1,7 @@
 import { inject } from 'aurelia-framework';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { FilterConditions } from './../filter-conditions/index';
-import { Filters, FilterFactory } from './../filters';
+import { Filters, FilterFactory } from './../filters/index';
 import {
   BackendServiceOption,
   Column,

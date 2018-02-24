@@ -4,7 +4,7 @@ import {
   FilterType,
   FilterArguments,
   FilterCallback
-} from './../models';
+} from './../models/index';
 import * as $ from 'jquery';
 
 export class InputFilter implements Filter {

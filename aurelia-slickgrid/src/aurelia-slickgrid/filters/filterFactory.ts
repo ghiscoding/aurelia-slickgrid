@@ -1,5 +1,5 @@
 import { inject, All } from 'aurelia-framework';
-import { Filter, FilterType, FormElementType } from '../models';
+import { Filter, FilterType, FormElementType } from '../models/index';
 
 /** The name of the plugins the factory will initialize via Aurelia's All.Of */
 export const PLUGIN_NAME = 'GRID_FILTERS';

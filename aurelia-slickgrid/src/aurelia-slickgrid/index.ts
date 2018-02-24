@@ -4,20 +4,22 @@ import { SlickPaginationCustomElement } from './slick-pagination';
 import { SlickgridConfig } from './slickgrid-config';
 
 // models
-import { CaseType } from './models/caseType';
-import { Column } from './models/column.interface';
-import { Filter } from './models/filter.interface';
-import { FilterArguments } from './models/filterArguments.interface';
-import { FilterCallback } from './models/filterCallback.interface';
-import { FilterCondition } from './models/filterCondition.interface';
-import { FilterType } from './models/filterType.enum';
-import { Formatter } from './models/formatter.interface';
-import { FormElementType } from './models/formElementType';
-import { FieldType } from './models/fieldType.enum';
-import { GraphqlResult } from './models/graphqlResult.interface';
-import { GraphqlServiceOption } from './models/graphqlServiceOption.interface';
-import { GridOption } from './models/gridOption.interface';
-import { OnEventArgs } from './models/onEventArgs.interface';
+import {
+  CaseType,
+  Column,
+  Filter,
+  FilterArguments,
+  FilterCallback,
+  FilterCondition,
+  FilterType,
+  Formatter,
+  FormElementType,
+  FieldType,
+  GraphqlResult,
+  GraphqlServiceOption,
+  GridOption,
+  OnEventArgs
+} from './models/index';
 
 // editors, formatters, ...
 import { Editors } from './editors/index';
@@ -30,15 +32,17 @@ import { Formatters } from './formatters/index';
 import { Sorters } from './sorters/index';
 
 // services and utilities
-import { ControlAndPluginService } from './services/controlAndPlugin.service';
-import { FilterService } from './services/filter.service';
-import { GraphqlService } from './services/graphql.service';
-import { GridExtraUtils } from './services/gridExtraUtils';
-import { GridExtraService } from './services/gridExtra.service';
-import { GridEventService } from './services/gridEvent.service';
-import { GridOdataService } from './services/grid-odata.service';
-import { ResizerService } from './services/resizer.service';
-import { SortService } from './services/sort.service';
+import {
+  ControlAndPluginService,
+  FilterService,
+  GraphqlService,
+  GridExtraUtils,
+  GridExtraService,
+  GridEventService,
+  GridOdataService,
+  ResizerService,
+  SortService
+} from './services/index';
 
 export function configure(aurelia: any, callback: any) {
   aurelia.globalResources(PLATFORM.moduleName('./aurelia-slickgrid'));

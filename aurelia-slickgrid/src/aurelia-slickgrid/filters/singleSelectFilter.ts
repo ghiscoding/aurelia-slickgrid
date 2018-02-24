@@ -7,8 +7,8 @@ import {
   FilterArguments,
   FilterCallback,
   HtmlElementPosition,
-  SelectOption 
-} from './../models';
+  SelectOption
+} from './../models/index';
 import * as $ from 'jquery';
 
 @inject(I18N)

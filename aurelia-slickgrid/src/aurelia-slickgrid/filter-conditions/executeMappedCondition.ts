@@ -4,12 +4,10 @@ import { dateIsoFilterCondition } from './dateIsoFilterCondition';
 import { dateUsShortFilterCondition } from './dateUsShortFilterCondition';
 import { dateUsFilterCondition } from './dateUsFilterCondition';
 import { dateUtcFilterCondition } from './dateUtcFilterCondition';
-import { FilterConditionOption } from './../models/filterConditionOption.interface';
-import { FilterCondition } from '../models/filterCondition.interface';
 import { collectionSearchFilterCondition } from './collectionSearchFilterCondition';
 import { numberFilterCondition } from './numberFilterCondition';
 import { stringFilterCondition } from './stringFilterCondition';
-import { FieldType } from '../models/fieldType.enum';
+import { FieldType, FilterCondition, FilterConditionOption } from '../models/index';
 
 export const executeMappedCondition: FilterCondition = (options: FilterConditionOption) => {
   // when using a multi-select ('IN' operator) we will not use the field type but instead go directly with a collection search

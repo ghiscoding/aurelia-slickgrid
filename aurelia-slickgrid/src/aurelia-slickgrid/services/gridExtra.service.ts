@@ -1,4 +1,4 @@
-import { Column, GridOption } from './../models';
+import { Column, GridOption } from './../models/index';
 import * as $ from 'jquery';
 
 // using external js modules in Angular
