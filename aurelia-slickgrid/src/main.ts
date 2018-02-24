@@ -60,10 +60,5 @@ export function configure(aurelia: Aurelia) {
     aurelia.use.plugin(PLATFORM.moduleName('aurelia-testing'));
   }
 
-  aurelia.container.registerSingleton(FILTER_PLUGIN_NAME, Filters.input);
-  aurelia.container.registerSingleton(FILTER_PLUGIN_NAME, Filters.multipleSelect);
-  aurelia.container.registerSingleton(FILTER_PLUGIN_NAME, Filters.singleSelect);
-  aurelia.container.registerSingleton(FILTER_PLUGIN_NAME, Filters.select);
-
   aurelia.start().then(() => aurelia.setRoot(PLATFORM.moduleName('app')));
 }
