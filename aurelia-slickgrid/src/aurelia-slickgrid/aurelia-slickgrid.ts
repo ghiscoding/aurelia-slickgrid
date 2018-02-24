@@ -37,6 +37,7 @@ const eventPrefix = 'sg';
 export class AureliaSlickgridCustomElement {
   private _dataset: any[];
   private _gridOptions: GridOption;
+  private _eventHandler: any = new Slick.EventHandler();
   gridHeightString: string;
   gridWidthString: string;
   localeChangedSubscriber: Subscription;
@@ -139,6 +140,7 @@ export class AureliaSlickgridCustomElement {
     this.filterService.destroy();
     this.resizer.destroy();
     this.sortService.destroy();
+    this._eventHandler.unsubscribeAll();
     this.grid.destroy();
     this.localeChangedSubscriber.dispose();
     this.ea.publish('onAfterGridDestroyed', true);
@@ -264,8 +266,8 @@ export class AureliaSlickgridCustomElement {
     }
 
     for (const prop in grid) {
-      if (prop.startsWith('on')) {
-        grid[prop].subscribe((e: any, args: any) => {
+      if (grid.hasOwnProperty(prop) && prop.startsWith('on')) {
+        this._eventHandler.subscribe(grid[prop], (e: any, args: any) => {
           this.elm.dispatchEvent(new CustomEvent(`${eventPrefix}-${toKebabCase(prop)}`, {
             bubbles: true,
             detail: {
@@ -278,8 +280,8 @@ export class AureliaSlickgridCustomElement {
     }
 
     for (const prop in dataView) {
-      if (prop.startsWith('on')) {
-        dataView[prop].subscribe((e: any, args: any) => {
+      if (dataView.hasOwnProperty(prop) && prop.startsWith('on')) {
+        this._eventHandler.subscribe(dataView[prop], (e: any, args: any) => {
           this.elm.dispatchEvent(new CustomEvent(`${eventPrefix}-${toKebabCase(prop)}`, {
             bubbles: true,
             detail: {
