@@ -1,10 +1,14 @@
 import { I18N } from 'aurelia-i18n';
 import { inject } from 'aurelia-framework';
-import { Column, Filter } from './../models';
-import { FilterArguments } from '../models/filterArguments.interface';
-import { FilterCallback } from './../models/filterCallback.interface';
-import { HtmlElementPosition } from './../models/htmlElementPosition.interface';
-import { SelectOption } from './../models/selectOption.interface';
+import {
+  Column,
+  Filter,
+  FilterArguments,
+  FilterCallback,
+  FilterType,
+  HtmlElementPosition,
+  SelectOption
+} from './../models';
 import * as $ from 'jquery';
 
 @inject(I18N)
@@ -16,6 +20,7 @@ export class MultipleSelectFilter implements Filter {
   callback: FilterCallback;
   defaultOptions: any;
   isFilled = false;
+  filterType = FilterType.multipleSelect;
 
   /**
    * Initialize the Filter

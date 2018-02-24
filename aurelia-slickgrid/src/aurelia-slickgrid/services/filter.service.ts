@@ -1,8 +1,7 @@
 import { inject } from 'aurelia-framework';
-import { I18N } from 'aurelia-i18n';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { FilterConditions } from './../filter-conditions/index';
-import { Filters } from './../filters/index';
+import { Filters, FilterFactory } from './../filters';
 import {
   BackendServiceOption,
   Column,
@@ -20,7 +19,7 @@ import * as $ from 'jquery';
 // using external js modules in Angular
 declare var Slick: any;
 
-@inject(I18N)
+@inject(FilterFactory)
 export class FilterService {
   private _filters: any[] = [];
   private _columnFilters: ColumnFilters = {};
@@ -32,7 +31,7 @@ export class FilterService {
   private subscriber: SlickEvent;
   onFilterChanged = new EventAggregator();
 
-  constructor(private i18n: I18N) { }
+  constructor(private filterFactory: FilterFactory) { }
 
   init(grid: any, gridOptions: GridOption, columnDefinitions: Column[]): void {
     this._columnDefinitions = columnDefinitions;
@@ -327,18 +326,8 @@ export class FilterService {
             throw new Error('[Aurelia-Slickgrid] A Filter type of "custom" must include a Filter class that is defined and instantiated.');
           }
           break;
-        case FilterType.select:
-          filter = new Filters.select(this.i18n);
-          break;
-        case FilterType.multipleSelect:
-          filter = new Filters.multipleSelect(this.i18n);
-          break;
-        case FilterType.singleSelect:
-          filter = new Filters.singleSelect(this.i18n);
-          break;
-        case FilterType.input:
         default:
-          filter = new Filters.input();
+          filter = this.filterFactory.createFilter(filterType);
           break;
       }
 

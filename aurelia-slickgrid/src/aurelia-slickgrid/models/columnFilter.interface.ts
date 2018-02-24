@@ -26,7 +26,7 @@ export interface ColumnFilter {
   operator?: string;
 
   /** Filter Type to use (input, multipleSelect, singleSelect, select, custom) */
-  type?: FilterType | FormElementType;
+  type?: FilterType | FormElementType | string
 
   /** A collection of items/options (commonly used with a Select/Multi-Select Filter) */
   collection?: any[];

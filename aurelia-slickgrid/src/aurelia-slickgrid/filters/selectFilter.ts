@@ -1,8 +1,12 @@
 import { I18N } from 'aurelia-i18n';
 import { inject } from 'aurelia-framework';
-import { FilterArguments } from './../models/filterArguments.interface';
-import { FilterCallback } from './../models/filterCallback.interface';
-import { Column, Filter } from './../models';
+import {
+  Column,
+  Filter,
+  FilterType,
+  FilterArguments,
+  FilterCallback
+} from './../models';
 import * as $ from 'jquery';
 
 @inject(I18N)
@@ -12,6 +16,7 @@ export class SelectFilter implements Filter {
   searchTerm: string | number | boolean;
   columnDef: Column;
   callback: FilterCallback;
+  filterType: FilterType.select;
 
   constructor(private i18n: I18N) { }
 

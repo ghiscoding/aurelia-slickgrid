@@ -22,7 +22,10 @@ import { OnEventArgs } from './models/onEventArgs.interface';
 // editors, formatters, ...
 import { Editors } from './editors/index';
 import { FilterConditions } from './filter-conditions/index';
-import { Filters } from './filters/index';
+import {
+  Filters,
+  PLUGIN_NAME as FILTER_PLUGIN_NAME
+} from './filters/index';
 import { Formatters } from './formatters/index';
 import { Sorters } from './sorters/index';
 
@@ -40,6 +43,11 @@ import { SortService } from './services/sort.service';
 export function configure(aurelia: any, callback: any) {
   aurelia.globalResources(PLATFORM.moduleName('./aurelia-slickgrid'));
   aurelia.globalResources(PLATFORM.moduleName('./slick-pagination'));
+
+  aurelia.container.registerSingleton(FILTER_PLUGIN_NAME, Filters.input);
+  aurelia.container.registerSingleton(FILTER_PLUGIN_NAME, Filters.multipleSelect);
+  aurelia.container.registerSingleton(FILTER_PLUGIN_NAME, Filters.singleSelect);
+  aurelia.container.registerSingleton(FILTER_PLUGIN_NAME, Filters.select);
 
   const config = new SlickgridConfig();
 
@@ -64,6 +72,7 @@ export {
   FilterCallback,
   FilterCondition,
   FilterType,
+  FILTER_PLUGIN_NAME,
   FormElementType,
   FieldType,
   OnEventArgs,

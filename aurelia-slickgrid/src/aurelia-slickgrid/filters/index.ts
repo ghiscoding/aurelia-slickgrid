@@ -10,3 +10,5 @@ export const Filters = {
   singleSelect: SingleSelectFilter,
   select: SelectFilter
 };
+
+export { PLUGIN_NAME, FilterFactory } from './filterFactory';
