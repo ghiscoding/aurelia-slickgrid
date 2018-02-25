@@ -25,6 +25,12 @@ export interface GridMenu {
   /** Defaults to "Force fit columns" which is 1 of the last 2 checkbox title shown at the end of the picker list */
   forceFitTitle?: string;
 
+  /** Defaults to True, show/hide 1 of the last 2 checkbox at the end of the picker list */
+  hideForceFitButton?: boolean;
+
+  /** Defaults to True, show/hide 1 of the last 2 checkbox at the end of the picker list */
+  hideSyncResizeButton?: boolean;
+
   /** Defaults to False, which will resize the Header Row and remove the width of the Grid Menu icon from it's total width. */
   resizeOnShowHeaderRow?: boolean;
 

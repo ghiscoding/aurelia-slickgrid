@@ -58,8 +58,14 @@ export class Example9 {
     ];
 
     this.gridOptions = {
+      columnPicker: {
+        hideForceFitButton: true,
+        hideSyncResizeButton: true,
+        onColumnsChanged: (e, args) => {
+          console.log('Column selection changed from Column Picker, visible columns: ', args.columns);
+        }
+      },
       enableAutoResize: true,
-      enableHeaderMenu: true,
       enableGridMenu: true,
       autoResize: {
         containerId: 'demo-container',
@@ -68,9 +74,11 @@ export class Example9 {
       enableFiltering: true,
       enableCellNavigation: true,
       gridMenu: {
-        customTitle: 'Commands',
+        customTitle: 'Custom Commands',
         columnTitle: 'Columns',
         iconCssClass: 'fa fa-ellipsis-v',
+        hideForceFitButton: true,
+        hideSyncResizeButton: true,
         menuWidth: 17,
         resizeOnShowHeaderRow: true,
         customItems: [
@@ -120,8 +128,11 @@ export class Example9 {
           } else {
             alert('Command: ' + args.command);
           }
+        },
+        onColumnsChanged: (e, args) => {
+          console.log('Column selection changed from Grid Menu, visible columns: ', args.columns);
         }
-      }
+      },
     };
   }
 
