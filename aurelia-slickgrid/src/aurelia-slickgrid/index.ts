@@ -5,8 +5,13 @@ import { SlickgridConfig } from './slickgrid-config';
 
 // models
 import {
+  BackendService,
+  BackendServiceApi,
   CaseType,
   Column,
+  DelimiterType,
+  ExportOption,
+  FileType,
   Filter,
   FilterArguments,
   FilterCallback,
@@ -34,6 +39,7 @@ import { Sorters } from './sorters/index';
 // services and utilities
 import {
   ControlAndPluginService,
+  ExportService,
   FilterService,
   GraphqlService,
   GridExtraUtils,
@@ -65,8 +71,13 @@ export {
   SlickPaginationCustomElement,
 
   // models
+  BackendService,
+  BackendServiceApi,
   CaseType,
   Column,
+  DelimiterType,
+  ExportOption,
+  FileType,
   Formatter,
   GraphqlResult,
   GraphqlServiceOption,
@@ -89,6 +100,7 @@ export {
 
   // services
   ControlAndPluginService,
+  ExportService,
   FilterService,
   GraphqlService,
   GridEventService,

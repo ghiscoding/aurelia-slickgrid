@@ -1,4 +1,4 @@
-import { GridOption } from './models/gridOption.interface';
+import { DelimiterType, FileType, GridOption } from './models/index';
 
 /**
  * Default Options that can be passed to the Aurelia-Slickgrid
@@ -25,16 +25,19 @@ export const GlobalGridOptions: GridOption = {
   enableCheckboxSelector: false,
   enableColumnPicker: true,
   enableColumnReorder: true,
+  enableExport: true,
   enableGridMenu: true,
   enableSorting: true,
   enableTextSelectionOnCells: true,
   explicitInitialization: true,
+  exportWithFormatter: false,
   forceFitColumns: false,
   gridMenu: {
     iconCssClass: 'fa fa-bars',
     menuWidth: 16,
     resizeOnShowHeaderRow: false,
     showClearAllFiltersCommand: true,
+    showExportCsvCommand: true,
     showRefreshDatasetCommand: true,
     showToggleFilterCommand: true
   },
