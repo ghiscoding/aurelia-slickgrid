@@ -106,9 +106,6 @@ export class LongTextEditor implements Editor {
       msg = validationResults.msg;
     }
 
-    return {
-      valid: true,
-      msg: null
-    };
+    return { valid, msg };
   }
 }

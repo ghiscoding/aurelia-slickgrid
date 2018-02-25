@@ -1,4 +1,4 @@
-import { FieldType, FilterCondition, FilterConditionOption } from '../models/index';
+import { FilterCondition, FilterConditionOption } from '../models/index';
 import { testFilterCondition } from './filterUtilities';
 
 export const collectionSearchFilterCondition: FilterCondition = (options: FilterConditionOption) => {

@@ -1,5 +1,5 @@
+import { Editor } from './../models/index';
 import * as $ from 'jquery';
-import { Editor, KeyCode } from './../models/index';
 
 /*
  * An example of a 'detached' editor.
@@ -14,7 +14,7 @@ export class CheckboxEditor implements Editor {
   }
 
   init(): void {
-    this.$input = $(`<input type="checkbox" value="true" class="editor-checkbox" hideFocus />`);
+    this.$input = $(`<input type="checkbox" value="true" class="editor-checkbox" />`);
     this.$input.appendTo(this.args.container);
     this.$input.focus();
   }
@@ -25,6 +25,14 @@ export class CheckboxEditor implements Editor {
 
   focus(): void {
     this.$input.focus();
+  }
+
+  hide() {
+    this.$input.hide();
+  }
+
+  show() {
+    this.$input.show();
   }
 
   loadValue(item: any) {

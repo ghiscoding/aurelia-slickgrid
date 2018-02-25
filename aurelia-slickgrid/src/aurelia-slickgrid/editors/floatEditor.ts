@@ -2,7 +2,6 @@ import * as $ from 'jquery';
 import { Editor, KeyCode } from './../models/index';
 
 const defaultDecimalPlaces = 0;
-const allowEmptyValue = false;
 
 /*
  * An example of a 'detached' editor.
