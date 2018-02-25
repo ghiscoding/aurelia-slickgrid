@@ -161,6 +161,7 @@ export class AureliaSlickgridCustomElement {
     }));
     this.dataview = [];
     this.controlAndPluginService.destroy();
+    this.gridEventService.dispose();
     this.filterService.destroy();
     this.resizer.destroy();
     this.sortService.destroy();
