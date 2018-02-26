@@ -50,6 +50,7 @@ declare var Slick: any;
 
 const eventPrefix = 'sg';
 
+// Aurelia doesn't support well TypeScript @autoinject in a Plugin so we'll do it the old fashion way
 @inject(ControlAndPluginService, ExportService, Element, EventAggregator, FilterService, GraphqlService, GridEventService, GridExtraService, I18N, ResizerService, SortService)
 export class AureliaSlickgridCustomElement {
   private _dataset: any[];
@@ -85,20 +86,7 @@ export class AureliaSlickgridCustomElement {
     private gridExtraService: GridExtraService,
     private i18n: I18N,
     private resizer: ResizerService,
-    private sortService: SortService) {
-
-    this.controlAndPluginService = controlAndPluginService;
-    this.elm = elm;
-    this.exportService = exportService;
-    this.ea = ea;
-    this.filterService = filterService;
-    this.graphqlService = graphqlService;
-    this.gridEventService = gridEventService;
-    this.gridExtraService = gridExtraService;
-    this.i18n = i18n;
-    this.resizer = resizer;
-    this.sortService = sortService;
-  }
+    private sortService: SortService) { }
 
   attached() {
     this.elm.dispatchEvent(new CustomEvent(`${eventPrefix}-on-before-grid-create`, {
