@@ -1,6 +1,6 @@
 {
   "name": "aurelia-slickgrid",
-  "version": "1.5.1",
+  "version": "1.6.0",
   "description": "Slickgrid components made available in Aurelia",
   "keywords": [
     "aurelia",
@@ -79,9 +79,6 @@
     "start:github-demo": "cd doc/github-demo && yarn start"
   },
   "dependencies": {
-    "@types/flatpickr": "^3.1.2",
-    "@types/jquery": "^3.2.15",
-    "@types/moment": "^2.13.0",
     "aurelia-event-aggregator": "^1.0.1",
     "aurelia-framework": "^1.1.0",
     "aurelia-i18n": "^2.1.0",
@@ -91,10 +88,15 @@
     "jquery": "^3.2.1",
     "moment": "^2.18.1",
     "moment-mini": "^2.18.1",
-    "slickgrid": "^2.3.12"
+    "slickgrid": "^2.3.13",
+    "text-encoding-utf-8": "^1.0.2"
   },
   "devDependencies": {
+    "@types/flatpickr": "^3.1.2",
+    "@types/jquery": "^3.3.0",
+    "@types/moment": "^2.13.0",
     "@types/node": "^8.0.20",
+    "@types/text-encoding-utf-8": "^1.0.1",
     "aurelia-bootstrapper": "^2.1.1",
     "aurelia-pal-browser": "^1.2.1",
     "aurelia-pal-nodejs": "^1.0.0-beta.1.0.0",
@@ -119,7 +121,7 @@
     "rimraf": "^2.6.1",
     "tslint": "^5.6.0",
     "typedoc": "^0.8.0",
-    "typescript": "^2.5.3"
+    "typescript": "^2.7.2"
   },
   "aurelia": {
     "build": {

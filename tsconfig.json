@@ -9,7 +9,7 @@
     ],
     "outDir": "dist/test",
     "noEmitHelpers": false,
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
@@ -23,6 +23,7 @@
     ".vscode",
     "dist",
     "doc",
-    "node_modules"
+    "node_modules",
+    "aurelia-slickgrid/node_modules"
   ]
 }

@@ -7,6 +7,17 @@
   <div class="row">
     <button class="btn btn-default btn-sm" click.delegate="switchLanguage()">Switch Language</button>
     <label>Locale</label>: ${selectedLanguage + '.json'}
+
+    <span style="margin-left: 20px">
+      <button class="btn btn-default btn-sm" click.delegate="exportToFile('csv')">
+        <i class="fa fa-download"></i>
+        Download to CSV
+      </button>
+      <button class="btn btn-default btn-sm" click.delegate="exportToFile('txt')">
+        <i class="fa fa-download"></i>
+        Download to Text
+      </button>
+    </span>
   </div>
   <aurelia-slickgrid grid-id="grid1" column-definitions.bind="columnDefinitions" grid-options.bind="gridOptions" dataset.bind="dataset">
   </aurelia-slickgrid>

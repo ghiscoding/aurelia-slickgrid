@@ -1,4 +1,5 @@
 export * from './controlAndPlugin.service';
+export * from './export.service';
 export * from './filter.service';
 export * from './graphql.service';
 export * from './gridEvent.service';

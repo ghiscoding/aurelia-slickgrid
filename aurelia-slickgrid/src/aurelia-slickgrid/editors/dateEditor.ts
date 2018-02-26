@@ -1,5 +1,5 @@
 import { mapFlatpickrDateFormatWithFieldType } from './../services/utilities';
-import { Column, Editor, FieldType, GridOption, KeyCode } from './../models/index';
+import { Column, Editor, FieldType, GridOption } from './../models/index';
 import { I18N } from 'aurelia-i18n';
 import * as flatpickr from 'flatpickr';
 import * as $ from 'jquery';

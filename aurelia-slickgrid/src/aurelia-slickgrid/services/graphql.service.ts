@@ -1,13 +1,10 @@
 import { inject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
-import { mapOperatorType, parseUtcDate } from './utilities';
+import { mapOperatorType } from './utilities';
 import { Pagination } from './../models/pagination.interface';
 import {
   BackendService,
-  BackendServiceOption,
-  CaseType,
   FilterChangedArgs,
-  FieldType,
   GraphqlCursorPaginationOption,
   GraphqlDatasetFilter,
   GraphqlFilteringOption,
@@ -212,7 +209,6 @@ export class GraphqlService implements BackendService {
             return;
           }
           const fieldName = columnDef.queryField || columnDef.field || columnDef.name || '';
-          const fieldType = columnDef.type || 'string';
           const searchTerms = (columnFilter ? columnFilter.searchTerms : null) || [];
           let fieldSearchValue = columnFilter.searchTerm;
           if (typeof fieldSearchValue === 'undefined') {

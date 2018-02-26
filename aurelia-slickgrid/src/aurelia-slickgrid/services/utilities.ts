@@ -2,9 +2,47 @@ import { FieldType, OperatorType } from '../models/index';
 import * as moment from 'moment';
 
 /**
+ * Simple function to which will loop and create as demanded the number of white spaces,
+ * this will be used in the Excel export
+ * @param int nbSpaces: number of white spaces to create
+ */
+export function addWhiteSpaces(nbSpaces: number): string {
+  let result = '';
+
+  for (let i = 0; i < nbSpaces; i++) {
+    result += ' ';
+  }
+  return result;
+}
+
+/**
+ * decode text into html entity
+ * @param string text: input text
+ * @param string text: output text
+ */
+export function htmlEntityDecode(input: string): string {
+  return input.replace(/&#(\d+);/g, (match, dec) => {
+    return String.fromCharCode(dec);
+  });
+}
+
+/**
+ * decode text into html entity
+ * @param string text: input text
+ * @param string text: output text
+ */
+export function htmlEntityEncode(input: any): string {
+  const buf = [];
+  for (let i = input.length - 1; i >= 0; i--) {
+    buf.unshift(['&#', input[i].charCodeAt(), ';'].join(''));
+  }
+  return buf.join('');
+}
+
+/**
  * From a Date FieldType, return it's equivalent moment.js format
  * refer to moment.js for the format standard used: https://momentjs.com/docs/#/parsing/string-format/
- * @param {FieldType} fieldType
+ * @param fieldType
  */
 export function mapMomentDateFormatWithFieldType(fieldType: FieldType): string {
   let map: string;
@@ -56,7 +94,7 @@ export function mapMomentDateFormatWithFieldType(fieldType: FieldType): string {
  * From a Date FieldType, return it's equivalent Flatpickr format
  * refer to Flatpickr for the format standard used: https://chmln.github.io/flatpickr/formatting/#date-formatting-tokens
  * also note that they seem very similar to PHP format (except for am/pm): http://php.net/manual/en/function.date.php
- * @param {FieldType} fieldType
+ * @param fieldType
  */
 export function mapFlatpickrDateFormatWithFieldType(fieldType: FieldType): string {
   /*
@@ -205,8 +243,8 @@ export function parseUtcDate(inputDateString: string, useUtc: boolean): string |
 
 /**
  * Converts a string to camel case
- * @param {string} str the string to convert
- * @return {string} the string in camel case
+ * @param str the string to convert
+ * @return the string in camel case
  */
 export function toCamelCase(str: string): string {
   return str.replace(/(?:^\w|[A-Z]|\b\w|[\s+\-_\/])/g, (match: string, offset: number) => {
@@ -221,8 +259,8 @@ export function toCamelCase(str: string): string {
 
 /**
  * Converts a string to kebab (hypen) case
- * @param {string} str the string to convert
- * @return {string} the string in kebab case
+ * @param str the string to convert
+ * @return the string in kebab case
  */
 export function toKebabCase(str: string): string {
   return toCamelCase(str).replace(/([A-Z])/g, '-$1').toLowerCase();

@@ -1,7 +1,7 @@
 import './global-utilities';
 import { inject } from 'aurelia-framework';
 import { parseUtcDate } from './utilities';
-import { BackendService, BackendServiceOption, CaseType, FilterChangedArgs, FieldType, GridOption, OdataOption, PaginationChangedArgs, SortChangedArgs } from './../models/index';
+import { BackendService, CaseType, FilterChangedArgs, FieldType, GridOption, OdataOption, PaginationChangedArgs, SortChangedArgs } from './../models/index';
 import { OdataService } from './odata.service';
 import { Pagination } from './../models/pagination.interface';
 import * as moment from 'moment';
