@@ -1,8 +1,8 @@
 import { inject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
-import { FilterType, Formatters } from 'aurelia-slickgrid';
+import { DelimiterType, ExportService, FileType, FilterType, Formatters } from '../../aurelia-slickgrid';
 
-@inject(I18N)
+@inject(ExportService, I18N)
 export class Example12 {
   title = 'Example 12: Localization (i18n)';
   subTitle = `Support multiple locales with the i18next plugin, following these steps.
@@ -28,20 +28,24 @@ export class Example12 {
           <li>What if you want to use "customStructure" and translation? Simply pass this flag <b>enableTranslateLabel: true</b></li>
           <li>More info on the Select Filter <a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Select-Filter" target="_blank">Wiki page</a>
         </ul>
+        <li>For more info about "Download to File", read the <a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Export-to-File" target="_blank">Wiki page</a></li>
       </ol>
     `;
 
+  exportService;
   i18n;
   gridOptions;
   columnDefinitions;
   dataset = [];
   selectedLanguage;
 
-  constructor(i18n) {
+  constructor(exportService, i18n) {
     // define the grid options & columns and then create the grid itself
+    this.exportService = exportService;
     this.i18n = i18n;
     this.selectedLanguage = this.i18n.getLocale();
     this.defineGrid();
+    this.selectedLanguage = this.i18n.getLocale();
   }
 
   attached() {
@@ -53,24 +57,41 @@ export class Example12 {
   defineGrid() {
     this.columnDefinitions = [
       { id: 'title', name: 'Title', field: 'id', headerKey: 'TITLE', formatter: this.taskTranslateFormatter, sortable: true, minWidth: 100, filterable: true, params: { useFormatterOuputToFilter: true } },
+      { id: 'description', name: 'Description', field: 'description', filterable: true, sortable: true, minWidth: 80 },
       { id: 'duration', name: 'Duration (days)', field: 'duration', headerKey: 'DURATION', sortable: true, minWidth: 100, filterable: true },
       { id: 'start', name: 'Start', field: 'start', headerKey: 'START', formatter: Formatters.dateIso, minWidth: 100, filterable: true },
       { id: 'finish', name: 'Finish', field: 'finish', headerKey: 'FINISH', formatter: Formatters.dateIso, minWidth: 100, filterable: true },
       {
-        id: 'completed', name: 'Completed', field: 'completed', headerKey: 'COMPLETED', formatter: Formatters.translate, params: { i18n: this.i18n }, sortable: true,
+        id: 'completedBool', name: 'Completed', field: 'completedBool', headerKey: 'COMPLETED', minWidth: 100,
+        sortable: true,
+        formatter: Formatters.checkmark,
+        exportCustomFormatter: Formatters.translateBoolean,
+        filterable: true,
+        filter: {
+          collection: [{ value: '', label: '' }, { value: true, labelKey: 'TRUE' }, { value: false, labelKey: 'FALSE' }],
+          type: FilterType.singleSelect,
+          filterOptions: {
+            autoDropWidth: true
+          }
+        }
+      },
+      {
+        id: 'completed', name: 'Completed', field: 'completed', headerKey: 'COMPLETED', formatter: Formatters.translate, sortable: true,
         minWidth: 100,
+        exportWithFormatter: true, // you can set this property in the column definition OR in the grid options, column def has priority over grid options
         filterable: true,
         filter: {
           collection: [{ value: '', label: '' }, { value: 'TRUE', labelKey: 'TRUE' }, { value: 'FALSE', labelKey: 'FALSE' }],
           type: FilterType.singleSelect,
           filterOptions: {
-            width: 150
+            autoDropWidth: true
           }
         }
       }
       // OR via your own custom translate formatter
       // { id: 'completed', name: 'Completed', field: 'completed', headerKey: 'COMPLETED', formatter: translateFormatter, sortable: true, minWidth: 100 }
     ];
+
     this.gridOptions = {
       autoResize: {
         containerId: 'demo-container',
@@ -78,7 +99,17 @@ export class Example12 {
       },
       enableAutoResize: true,
       enableFiltering: true,
-      enableTranslate: true
+      enableTranslate: true,
+
+      // set at the grid option level, meaning all column will evaluate the Formatter (when it has a Formatter defined)
+      exportWithFormatter: true,
+      gridMenu: {
+        showExportCsvCommand: true,           // true by default, so it's optional
+        showExportTextDelimitedCommand: true  // false by default, so if you want it, you will need to enable it
+      },
+      params: {
+        i18n: this.i18n
+      }
     };
   }
 
@@ -92,12 +123,22 @@ export class Example12 {
 
       this.dataset[i] = {
         id: i,
+        description: (i % 5) ? 'desc ' + i : '🚀🦄 español', // also add some random to test NULL field
         duration: Math.round(Math.random() * 100) + '',
         start: new Date(randomYear, randomMonth, randomDay),
         finish: new Date(randomYear, (randomMonth + 1), randomDay),
+        completedBool: (i % 5 === 0) ? true : false,
         completed: (i % 5 === 0) ? 'TRUE' : 'FALSE'
       };
     }
+  }
+
+  exportToFile(type = 'csv') {
+    this.exportService.exportToFile({
+      delimiter: (type === 'csv') ? DelimiterType.comma : DelimiterType.tab,
+      filename: 'myExport',
+      format: (type === 'csv') ? FileType.csv : FileType.txt
+    });
   }
 
   switchLanguage() {

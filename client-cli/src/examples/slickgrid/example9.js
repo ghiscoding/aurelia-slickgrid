@@ -59,8 +59,14 @@ export class Example9 {
     ];
 
     this.gridOptions = {
+      columnPicker: {
+        hideForceFitButton: true,
+        hideSyncResizeButton: true,
+        onColumnsChanged: (e, args) => {
+          console.log('Column selection changed from Column Picker, visible columns: ', args.columns);
+        }
+      },
       enableAutoResize: true,
-      enableHeaderMenu: true,
       enableGridMenu: true,
       autoResize: {
         containerId: 'demo-container',
@@ -69,9 +75,11 @@ export class Example9 {
       enableFiltering: true,
       enableCellNavigation: true,
       gridMenu: {
-        customTitle: 'Commands',
+        customTitle: 'Custom Commands',
         columnTitle: 'Columns',
         iconCssClass: 'fa fa-ellipsis-v',
+        hideForceFitButton: true,
+        hideSyncResizeButton: true,
         menuWidth: 17,
         resizeOnShowHeaderRow: true,
         customItems: [
@@ -79,30 +87,35 @@ export class Example9 {
             iconCssClass: 'fa fa-filter text-danger',
             title: 'Clear All Filters',
             disabled: false,
-            command: 'clear-filter'
+            command: 'clear-filter',
+            positionOrder: 0
           },
           {
             iconCssClass: 'fa fa-random',
             title: 'Toggle Filter Row',
             disabled: false,
-            command: 'toggle-filter'
+            command: 'toggle-filter',
+            positionOrder: 1
           },
           {
             iconCssClass: 'fa fa-random',
             title: 'Toggle Top Panel',
             disabled: false,
-            command: 'toggle-toppanel'
+            command: 'toggle-toppanel',
+            positionOrder: 2
           },
           {
             iconCssClass: 'fa fa-question-circle',
             title: 'Help',
             disabled: false,
-            command: 'help'
+            command: 'help',
+            positionOrder: 99
           },
           {
             title: 'Disabled command',
             disabled: true,
-            command: 'disabled-command'
+            command: 'disabled-command',
+            positionOrder: 98
           }
         ],
         onCommand: (e, args) => {
@@ -116,6 +129,9 @@ export class Example9 {
           } else {
             alert('Command: ' + args.command);
           }
+        },
+        onColumnsChanged: (e, args) => {
+          console.log('Column selection changed from Grid Menu, visible columns: ', args.columns);
         }
       }
     };

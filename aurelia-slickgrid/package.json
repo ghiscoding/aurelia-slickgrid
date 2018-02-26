@@ -38,7 +38,8 @@
     "moment": "^2.19.1",
     "moment-mini": "^2.18.1",
     "nps": "^5.7.1",
-    "slickgrid": "^2.3.12"
+    "slickgrid": "^2.3.13",
+    "text-encoding-utf-8": "^1.0.2"
   },
   "peerDependencies": {},
   "devDependencies": {
@@ -46,9 +47,10 @@
     "@types/i18next": "^8.4.2",
     "@types/i18next-xhr-backend": "^1.4.1",
     "@types/jest": "19.2.4",
-    "@types/lodash": "^4.14.69",
+    "@types/lodash": "^4.14.104",
     "@types/moment": "^2.13.0",
     "@types/node": "^6.0.45",
+    "@types/text-encoding-utf-8": "^1.0.1",
     "@types/webpack": "^3.0.4",
     "aurelia-cli": "^0.31.3",
     "aurelia-loader-nodejs": "^1.0.1",
@@ -83,7 +85,7 @@
     "through2": "^2.0.1",
     "ts-jest": "20.0.6",
     "ts-node": "^3.2.0",
-    "typescript": ">=1.9.0-dev || ^2.0.0",
+    "typescript": "^2.7.2",
     "uglify-js": "^3.0.19",
     "url-loader": "0.5.8",
     "vinyl-fs": "^2.4.3",

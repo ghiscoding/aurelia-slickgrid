@@ -1,5 +1,5 @@
 import { EventAggregator } from 'aurelia-event-aggregator';
-import { BackendServiceOption, FieldType, GridOption, Sorter } from './../models/index';
+import { FieldType, GridOption } from './../models/index';
 import { Sorters } from './../sorters/index';
 
 export class SortService {
@@ -111,7 +111,7 @@ export class SortService {
   /**
    * A simple function that is attached to the subscriber and emit a change when the sort is called.
    * Other services, like Pagination, can then subscribe to it.
-   * @param {string} sender
+   * @param sender
    */
   emitSortChangedBy(sender: string) {
     this.subscriber.subscribe(() => this.onSortChanged.publish('sortService:changed', `onSortChanged by ${sender}`));

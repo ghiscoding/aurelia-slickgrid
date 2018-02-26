@@ -1,27 +1,26 @@
 import { inject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
+import { ExportService } from './export.service';
 import { FilterService } from './filter.service';
-import { GraphqlResult } from './../models/graphqlResult.interface';
-import { GridExtraUtils } from './gridExtraUtils';
-import { GridExtraService } from './gridExtra.service';
 import {
   CellArgs,
-  CheckboxSelector,
   CustomGridMenu,
   Column,
-  Formatter,
+  DelimiterType,
+  GraphqlResult,
   GridMenu,
   GridOption,
   HeaderButtonOnCommandArgs,
   HeaderMenuOnCommandArgs,
-  HeaderMenuOnBeforeMenuShowArgs
+  HeaderMenuOnBeforeMenuShowArgs,
+  FileType
 } from './../models/index';
 import * as $ from 'jquery';
 
 // using external js modules in Angular
 declare var Slick: any;
 
-@inject(FilterService, GridExtraService, I18N)
+@inject(ExportService, FilterService, I18N)
 export class ControlAndPluginService {
   private _dataView: any;
   private _grid: any;
@@ -38,14 +37,14 @@ export class ControlAndPluginService {
   gridMenuControl: any;
   rowSelectionPlugin: any;
 
-  constructor(private filterService: FilterService, private gridExtraService: GridExtraService, private i18n: I18N) { }
+  constructor(private exportService: ExportService, private filterService: FilterService, private i18n: I18N) { }
 
   /**
    * Attach/Create different Controls or Plugins after the Grid is created
-   * @param {any} grid
-   * @param {Column[]} columnDefinitions
-   * @param {GridOptions} options
-   * @param {any} dataView
+   * @param grid
+   * @param columnDefinitions
+   * @param options
+   * @param dataView
    */
   attachDifferentControlOrPlugins(grid: any, columnDefinitions: Column[], options: GridOption, dataView: any) {
     this._grid = grid;
@@ -124,6 +123,13 @@ export class ControlAndPluginService {
     options.columnPicker.syncResizeTitle = options.columnPicker.syncResizeTitle || syncResizeTitle;
 
     this.columnPickerControl = new Slick.Controls.ColumnPicker(columnDefinitions, grid, options);
+    if (grid && options.enableColumnPicker) {
+      this.columnPickerControl.onColumnsChanged.subscribe((e: Event, args: CellArgs) => {
+        if (options.columnPicker && typeof options.columnPicker.onColumnsChanged === 'function') {
+          options.columnPicker.onColumnsChanged(e, args);
+        }
+      });
+    }
   }
 
   /**
@@ -141,6 +147,11 @@ export class ControlAndPluginService {
       gridMenuControl.onBeforeMenuShow.subscribe((e: Event, args: CellArgs) => {
         if (options.gridMenu && typeof options.gridMenu.onBeforeMenuShow === 'function') {
           options.gridMenu.onBeforeMenuShow(e, args);
+        }
+      });
+      gridMenuControl.onColumnsChanged.subscribe((e: Event, args: CellArgs) => {
+        if (options.gridMenu && typeof options.gridMenu.onColumnsChanged === 'function') {
+          options.gridMenu.onColumnsChanged(e, args);
         }
       });
       gridMenuControl.onCommand.subscribe((e: Event, args: CellArgs) => {
@@ -194,9 +205,6 @@ export class ControlAndPluginService {
       this.columnPickerControl = null;
     }
     if (this.gridMenuControl) {
-      this.gridMenuControl.onBeforeMenuShow.unsubscribe();
-      this.gridMenuControl.onCommand.unsubscribe();
-      this.gridMenuControl.onMenuClose.unsubscribe();
       this.gridMenuControl.destroy();
       this.gridMenuControl = null;
     }
@@ -230,69 +238,126 @@ export class ControlAndPluginService {
   private addGridMenuCustomCommands(grid: any, options: GridOption) {
     const backendApi = options.backendServiceApi || options.onBackendEventApi || null;
 
-    if (options.enableFiltering) {
+    if (options && options.enableFiltering) {
+      // show grid menu: clear all filters
       if (options && options.gridMenu && options.gridMenu.showClearAllFiltersCommand && options.gridMenu.customItems && options.gridMenu.customItems.filter((item: CustomGridMenu) => item.command === 'clear-filter').length === 0) {
         options.gridMenu.customItems.push(
           {
             iconCssClass: 'fa fa-filter text-danger',
             title: options.enableTranslate ? this.i18n.tr('CLEAR_ALL_FILTERS') : 'Clear All Filters',
             disabled: false,
-            command: 'clear-filter'
+            command: 'clear-filter',
+            positionOrder: 50
           }
         );
       }
+      // show grid menu: toggle filter row
       if (options && options.gridMenu && options.gridMenu.showToggleFilterCommand && options.gridMenu.customItems && options.gridMenu.customItems.filter((item: CustomGridMenu) => item.command === 'toggle-filter').length === 0) {
         options.gridMenu.customItems.push(
           {
             iconCssClass: 'fa fa-random',
             title: options.enableTranslate ? this.i18n.tr('TOGGLE_FILTER_ROW') : 'Toggle Filter Row',
             disabled: false,
-            command: 'toggle-filter'
+            command: 'toggle-filter',
+            positionOrder: 51
           }
         );
       }
+
+      // show grid menu: refresh dataset
       if (options && options.gridMenu && options.gridMenu.showRefreshDatasetCommand && backendApi && options.gridMenu.customItems && options.gridMenu.customItems.filter((item: CustomGridMenu) => item.command === 'refresh-dataset').length === 0) {
         options.gridMenu.customItems.push(
           {
             iconCssClass: 'fa fa-refresh',
             title: options.enableTranslate ? this.i18n.tr('REFRESH_DATASET') : 'Refresh Dataset',
             disabled: false,
-            command: 'refresh-dataset'
+            command: 'refresh-dataset',
+            positionOrder: 54
           }
         );
       }
 
-      // Command callback, what will be executed after command is clicked
-      if (options.gridMenu) {
-        options.gridMenu.onCommand = (e, args) => {
-          if (args && args.command) {
-            switch (args.command) {
-              case 'toggle-filter':
-                grid.setHeaderRowVisibility(!grid.getOptions().showHeaderRow);
-                break;
-              case 'toggle-toppanel':
-                grid.setTopPanelVisibility(!grid.getOptions().showTopPanel);
-                break;
-              case 'clear-filter':
-                this.filterService.clearFilters();
-                this._dataView.refresh();
-                break;
-              case 'refresh-dataset':
-                this.refreshBackendDataset(options);
-                break;
-              default:
-                alert('Command: ' + args.command);
-                break;
-            }
+    }
+
+    // show grid menu: export to file
+    if (options && options.enableExport && options.gridMenu && options.gridMenu.showExportCsvCommand && options.gridMenu.customItems && options.gridMenu.customItems.filter((item: CustomGridMenu) => item.command === 'export-csv').length === 0) {
+      options.gridMenu.customItems.push(
+        {
+          iconCssClass: 'fa fa-download',
+          title: options.enableTranslate ? this.i18n.tr('EXPORT_TO_CSV') : 'Export in CSV format',
+          disabled: false,
+          command: 'export-csv',
+          positionOrder: 52
+        }
+      );
+    }
+    // show grid menu: export to text file as tab delimited
+    if (options && options.enableExport && options.gridMenu && options.gridMenu.showExportTextDelimitedCommand && options.gridMenu.customItems && options.gridMenu.customItems.filter((item: CustomGridMenu) => item.command === 'export-text-delimited').length === 0) {
+      options.gridMenu.customItems.push(
+        {
+          iconCssClass: 'fa fa-download',
+          title: options.enableTranslate ? this.i18n.tr('EXPORT_TO_TAB_DELIMITED') : 'Export in Text format (Tab delimited)',
+          disabled: false,
+          command: 'export-text-delimited',
+          positionOrder: 53
+        }
+      );
+    }
+
+    // Command callback, what will be executed after command is clicked
+    if (options && options.gridMenu && Array.isArray(options.gridMenu.customItems) && options.gridMenu.customItems.length > 0) {
+      options.gridMenu.onCommand = (e, args) => {
+        if (args && args.command) {
+          switch (args.command) {
+            case 'clear-filter':
+              this.filterService.clearFilters();
+              this._dataView.refresh();
+              break;
+            case 'export-csv':
+              this.exportService.exportToFile({
+                delimiter: DelimiterType.comma,
+                filename: 'export',
+                format: FileType.csv,
+                useUtf8WithBom: true
+              });
+              break;
+            case 'export-text-delimited':
+              this.exportService.exportToFile({
+                delimiter: DelimiterType.tab,
+                filename: 'export',
+                format: FileType.txt,
+                useUtf8WithBom: true
+              });
+              break;
+            case 'toggle-filter':
+              grid.setHeaderRowVisibility(!grid.getOptions().showHeaderRow);
+              break;
+            case 'toggle-toppanel':
+              grid.setTopPanelVisibility(!grid.getOptions().showTopPanel);
+              break;
+            case 'refresh-dataset':
+              this.refreshBackendDataset(options);
+              break;
+            default:
+              alert('Command: ' + args.command);
+              break;
           }
-        };
-      }
+        }
+      };
     }
 
     // add the custom "Commands" title if there are any commands
     if (options && options.gridMenu && options.gridMenu.customItems && options.gridMenu.customItems.length > 0) {
       const customTitle = options.enableTranslate ? this.i18n.tr('COMMANDS') : 'Commands';
       options.gridMenu.customTitle = options.gridMenu.customTitle || customTitle;
+
+      // sort the custom items by their position in the list
+      options.gridMenu.customItems.sort((itemA, itemB) => {
+        if (itemA && itemB && itemA.hasOwnProperty('positionOrder') && itemB.hasOwnProperty('positionOrder')) {
+          return (itemA.positionOrder || 0) - (itemB.positionOrder || 0);
+        }
+        return 0;
+      });
     }
   }
 
@@ -398,7 +463,7 @@ export class ControlAndPluginService {
   /**
    * Translate manually the header titles.
    * We could optionally pass a locale (that will change currently loaded locale), else it will use current locale
-   * @param {string} locale locale to use
+   * @param locale to use
    */
   translateHeaders(locale?: string) {
     if (locale) {
@@ -418,13 +483,15 @@ export class ControlAndPluginService {
   /**
    * Attach/Create different plugins before the Grid creation.
    * For example the multi-select have to be added to the column definition before the grid is created to work properly
-   * @param {Column[]} columnDefinitions
-   * @param {GridOptions} options
+   * @param columnDefinitions
+   * @param options
    */
   createPluginBeforeGridCreation(columnDefinitions: Column[], options: GridOption) {
     if (options.enableCheckboxSelector) {
       this.checkboxSelectorPlugin = new Slick.CheckboxSelectColumn(options.checkboxSelector || {});
-      columnDefinitions.unshift(this.checkboxSelectorPlugin.getColumnDefinition());
+      const selectionColumn: Column = this.checkboxSelectorPlugin.getColumnDefinition();
+      selectionColumn.excludeFromExport = true;
+      columnDefinitions.unshift(selectionColumn);
     }
   }
 }

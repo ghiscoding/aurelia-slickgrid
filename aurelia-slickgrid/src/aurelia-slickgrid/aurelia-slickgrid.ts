@@ -24,8 +24,25 @@ import { bindable, bindingMode, inject } from 'aurelia-framework';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
 import { I18N } from 'aurelia-i18n';
 import { GlobalGridOptions } from './global-grid-options';
-import { BackendServiceOption, CellArgs, Column, FormElementType, GraphqlResult, GridOption } from './models/index';
-import { ControlAndPluginService, FilterService, GraphqlService, GridEventService, GridExtraService, ResizerService, SortService, toKebabCase } from './services/index';
+import {
+  BackendServiceOption,
+  CellArgs,
+  Column,
+  FormElementType,
+  GraphqlResult,
+  GridOption
+} from './models/index';
+import {
+  ControlAndPluginService,
+  ExportService,
+  FilterService,
+  GraphqlService,
+  GridEventService,
+  GridExtraService,
+  ResizerService,
+  SortService,
+  toKebabCase
+} from './services/index';
 import * as $ from 'jquery';
 
 // using external js modules in Aurelia
@@ -33,7 +50,8 @@ declare var Slick: any;
 
 const eventPrefix = 'sg';
 
-@inject(ControlAndPluginService, Element, EventAggregator, FilterService, GraphqlService, GridEventService, GridExtraService, I18N, ResizerService, SortService)
+// Aurelia doesn't support well TypeScript @autoinject in a Plugin so we'll do it the old fashion way
+@inject(ControlAndPluginService, ExportService, Element, EventAggregator, FilterService, GraphqlService, GridEventService, GridExtraService, I18N, ResizerService, SortService)
 export class AureliaSlickgridCustomElement {
   private _dataset: any[];
   private _gridOptions: GridOption;
@@ -59,6 +77,7 @@ export class AureliaSlickgridCustomElement {
 
   constructor(
     private controlAndPluginService: ControlAndPluginService,
+    private exportService: ExportService,
     private elm: Element,
     private ea: EventAggregator,
     private filterService: FilterService,
@@ -67,20 +86,7 @@ export class AureliaSlickgridCustomElement {
     private gridExtraService: GridExtraService,
     private i18n: I18N,
     private resizer: ResizerService,
-    private sortService: SortService) {
-
-    // Aurelia doesn't support well TypeScript @autoinject so we'll do it the old fashion way
-    this.controlAndPluginService = controlAndPluginService;
-    this.elm = elm;
-    this.ea = ea;
-    this.filterService = filterService;
-    this.graphqlService = graphqlService;
-    this.gridEventService = gridEventService;
-    this.gridExtraService = gridExtraService;
-    this.i18n = i18n;
-    this.resizer = resizer;
-    this.sortService = sortService;
-  }
+    private sortService: SortService) { }
 
   attached() {
     this.elm.dispatchEvent(new CustomEvent(`${eventPrefix}-on-before-grid-create`, {
@@ -121,11 +127,16 @@ export class AureliaSlickgridCustomElement {
     this.attachResizeHook(this.grid, this._gridOptions);
 
     // attach grid extra service
-    const gridExtraService = this.gridExtraService.init(this.grid, this.columnDefinitions, this._gridOptions, this.dataview);
+    this.gridExtraService.init(this.grid, this.columnDefinitions, this._gridOptions, this.dataview);
 
     // when user enables translation, we need to translate Headers on first pass & subsequently in the attachDifferentHooks
     if (this._gridOptions.enableTranslate) {
       this.controlAndPluginService.translateHeaders();
+    }
+
+    // if Export is enabled, initialize the service with the necessary grid and other objects
+    if (this._gridOptions.enableExport) {
+      this.exportService.init(this.grid, this._gridOptions, this.dataview);
     }
   }
 
@@ -137,6 +148,7 @@ export class AureliaSlickgridCustomElement {
     }));
     this.dataview = [];
     this.controlAndPluginService.destroy();
+    this.gridEventService.dispose();
     this.filterService.destroy();
     this.resizer.destroy();
     this.sortService.destroy();
@@ -337,7 +349,7 @@ export class AureliaSlickgridCustomElement {
 
   /**
    * When dataset changes, we need to refresh the entire grid UI & possibly resize it as well
-   * @param {object} dataset
+   * @param dataset
    */
   refreshGridData(dataset: any[], totalCount?: number) {
     if (dataset && this.grid) {
@@ -370,7 +382,10 @@ export class AureliaSlickgridCustomElement {
     }
   }
 
-  /** Toggle the filter row displayed on first row */
+  /**
+   * Toggle the filter row displayed on first row
+   * @param isShowing
+   */
   showHeaderRow(isShowing: boolean) {
     this.grid.setHeaderRowVisibility(isShowing);
     return isShowing;

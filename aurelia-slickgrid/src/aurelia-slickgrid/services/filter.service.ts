@@ -3,13 +3,11 @@ import { EventAggregator } from 'aurelia-event-aggregator';
 import { FilterConditions } from './../filter-conditions/index';
 import { Filters, FilterFactory } from './../filters/index';
 import {
-  BackendServiceOption,
   Column,
   ColumnFilters,
   Filter,
   FilterArguments,
   FieldType,
-  FilterChangedArgs,
   FilterType,
   GridOption,
   SlickEvent
@@ -23,7 +21,6 @@ declare var Slick: any;
 export class FilterService {
   private _filters: any[] = [];
   private _columnFilters: ColumnFilters = {};
-  private _columnDefinitions: Column[];
   private _dataView: any;
   private _grid: any;
   private _gridOptions: GridOption;
@@ -34,7 +31,6 @@ export class FilterService {
   constructor(private filterFactory: FilterFactory) { }
 
   init(grid: any, gridOptions: GridOption, columnDefinitions: Column[]): void {
-    this._columnDefinitions = columnDefinitions;
     this._gridOptions = gridOptions;
     this._grid = grid;
   }
@@ -90,14 +86,9 @@ export class FilterService {
 
   /** Clear the search filters (below the column titles) */
   clearFilters() {
-    const hasBackendServiceApi = (this._gridOptions && this._gridOptions.backendServiceApi) ? this._gridOptions.backendServiceApi : false;
-    const triggerFilterChange = !hasBackendServiceApi;
-
     this._filters.forEach((filter, index) => {
       if (filter && filter.clear) {
-        // clear element but don't trigger a change
-        // until we reach the last index to avoid multiple request to the Backend Server
-        const callTrigger = (index === 0 || index === this._filters.length - 1) ? true : false;
+        // clear element and trigger a change
         filter.clear(true);
       }
     });
@@ -204,7 +195,7 @@ export class FilterService {
       // when using localization (i18n), we should use the formatter output to search as the new cell value
       if (columnDef && columnDef.params && columnDef.params.useFormatterOuputToFilter) {
         const rowIndex = (dataView && typeof dataView.getIdxById === 'function') ? dataView.getIdxById(item.id) : 0;
-        cellValue = columnDef.formatter(rowIndex, columnIndex, cellValue, columnDef, item);
+        cellValue = columnDef.formatter(rowIndex, columnIndex, cellValue, columnDef, item, this._grid);
       }
 
       // make sure cell value is always a string

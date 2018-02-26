@@ -1,8 +1,8 @@
 import { Column, Formatter } from './../models/index';
 import { I18N } from 'aurelia-i18n';
 
-/** Takes a cell value and translates it (i18n). Requires an instance of the I18N Service:: `params: { i18n: this.i18n } */
-export const translateFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid: any) => {
+/** Takes a boolean value, cast it to upperCase string and finally translates (i18n) it */
+export const translateBooleanFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid: any) => {
   const gridOptions = (grid && typeof grid.getOptions === 'function') ? grid.getOptions() : {};
   const columnParams = columnDef.params || {};
   const gridParams = gridOptions.params || {};
@@ -18,6 +18,5 @@ export const translateFormatter: Formatter = (row: number, cell: number, value: 
   if (value !== undefined && typeof value !== 'string') {
     value = value + '';
   }
-
-  return value ? translate.tr(value) : '';
+  return value ? translate.tr(value.toUpperCase() as string) : '';
 };
