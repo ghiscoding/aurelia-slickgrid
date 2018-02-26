@@ -9,7 +9,7 @@ var dateUtcFilterCondition_1 = require("./dateUtcFilterCondition");
 var collectionSearchFilterCondition_1 = require("./collectionSearchFilterCondition");
 var numberFilterCondition_1 = require("./numberFilterCondition");
 var stringFilterCondition_1 = require("./stringFilterCondition");
-var fieldType_enum_1 = require("../models/fieldType.enum");
+var index_1 = require("../models/index");
 exports.executeMappedCondition = function (options) {
     // when using a multi-select ('IN' operator) we will not use the field type but instead go directly with a collection search
     if (options && options.operator && options.operator.toUpperCase() === 'IN') {
@@ -17,23 +17,23 @@ exports.executeMappedCondition = function (options) {
     }
     // execute the mapped type, or default to String condition check
     switch (options.fieldType) {
-        case fieldType_enum_1.FieldType.boolean:
+        case index_1.FieldType.boolean:
             return booleanFilterCondition_1.booleanFilterCondition(options);
-        case fieldType_enum_1.FieldType.date:
+        case index_1.FieldType.date:
             return dateFilterCondition_1.dateFilterCondition(options);
-        case fieldType_enum_1.FieldType.dateUtc:
+        case index_1.FieldType.dateUtc:
             return dateUtcFilterCondition_1.dateUtcFilterCondition(options);
-        case fieldType_enum_1.FieldType.dateIso:
+        case index_1.FieldType.dateIso:
             return dateIsoFilterCondition_1.dateIsoFilterCondition(options);
-        case fieldType_enum_1.FieldType.dateUs:
-        case fieldType_enum_1.FieldType.dateTimeUs:
+        case index_1.FieldType.dateUs:
+        case index_1.FieldType.dateTimeUs:
             return dateUsFilterCondition_1.dateUsFilterCondition(options);
-        case fieldType_enum_1.FieldType.dateUsShort:
-        case fieldType_enum_1.FieldType.dateTimeUsShort:
+        case index_1.FieldType.dateUsShort:
+        case index_1.FieldType.dateTimeUsShort:
             return dateUsShortFilterCondition_1.dateUsShortFilterCondition(options);
-        case fieldType_enum_1.FieldType.number:
+        case index_1.FieldType.number:
             return numberFilterCondition_1.numberFilterCondition(options);
-        case fieldType_enum_1.FieldType.string:
+        case index_1.FieldType.string:
         default:
             return stringFilterCondition_1.stringFilterCondition(options);
     }

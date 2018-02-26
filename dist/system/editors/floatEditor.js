@@ -1,7 +1,7 @@
 System.register(["jquery", "./../models/index"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var $, index_1, defaultDecimalPlaces, allowEmptyValue, FloatEditor;
+    var $, index_1, defaultDecimalPlaces, FloatEditor;
     return {
         setters: [
             function ($_1) {
@@ -13,7 +13,6 @@ System.register(["jquery", "./../models/index"], function (exports_1, context_1)
         ],
         execute: function () {
             defaultDecimalPlaces = 0;
-            allowEmptyValue = false;
             /*
              * An example of a 'detached' editor.
              * KeyDown events are also handled to provide handling for Tab, Shift-Tab, Esc and Ctrl-Enter.

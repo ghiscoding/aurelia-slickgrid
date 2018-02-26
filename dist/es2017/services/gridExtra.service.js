@@ -35,12 +35,10 @@ export class GridExtraService {
     /**
      * Highlight then fade a row for x seconds.
      * The implementation follows this SO answer: https://stackoverflow.com/a/19985148/1212166
-     * @param {number} rowNumber
-     * @param {number} fadeDelay
+     * @param rowNumber
+     * @param fadeDelay
      */
     highlightRow(rowNumber, fadeDelay = 1500) {
-        // chain current item Metadata with our own Metadata for implementing highligh CSS styling
-        const previousMetadata = this._dataView.getItemMetadata;
         // create a SelectionModel if there's not one yet
         if (!this._grid.getSelectionModel()) {
             const rowSelectionPlugin = new Slick.RowSelectionModel(this._gridOptions.rowSelectionOptions || {});
@@ -54,7 +52,7 @@ export class GridExtraService {
             this._dataView.updateItem(item.id, item);
             const gridOptions = this._grid.getOptions();
             // highlight the row for a user defined timeout
-            const rowElm = $(`#${gridOptions.gridId}`)
+            $(`#${gridOptions.gridId}`)
                 .find(`.highlight.row${rowNumber}`)
                 .first();
             // delete the row's CSS that was attached for highlighting
@@ -102,8 +100,6 @@ export class GridExtraService {
         this.highlightRow(0, 1500);
         // refresh dataview & grid
         this._dataView.refresh();
-        // get new dataset length
-        const datasetLength = this._dataView.getLength();
     }
     /**
      * Update an existing item with new properties inside the datagrid
@@ -123,8 +119,6 @@ export class GridExtraService {
             this.highlightRow(row, 1500);
             // refresh dataview & grid
             this._dataView.refresh();
-            // get new dataset length
-            const datasetLength = this._dataView.getLength();
         }
     }
 }

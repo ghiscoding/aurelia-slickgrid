@@ -1,57 +1,50 @@
-System.register(["./controlAndPlugin.service", "./filter.service", "./graphql.service", "./gridEvent.service", "./gridExtra.service", "./grid-odata.service", "./odata.service", "./resizer.service", "./sort.service", "./utilities"], function (exports_1, context_1) {
+System.register(["./controlAndPlugin.service", "./export.service", "./filter.service", "./graphql.service", "./gridEvent.service", "./gridExtra.service", "./gridExtraUtils", "./grid-odata.service", "./odata.service", "./resizer.service", "./sort.service", "./utilities"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
+    function exportStar_1(m) {
+        var exports = {};
+        for (var n in m) {
+            if (n !== "default") exports[n] = m[n];
+        }
+        exports_1(exports);
+    }
     return {
         setters: [
             function (controlAndPlugin_service_1_1) {
-                exports_1({
-                    "ControlAndPluginService": controlAndPlugin_service_1_1["ControlAndPluginService"]
-                });
+                exportStar_1(controlAndPlugin_service_1_1);
+            },
+            function (export_service_1_1) {
+                exportStar_1(export_service_1_1);
             },
             function (filter_service_1_1) {
-                exports_1({
-                    "FilterService": filter_service_1_1["FilterService"]
-                });
+                exportStar_1(filter_service_1_1);
             },
             function (graphql_service_1_1) {
-                exports_1({
-                    "GraphqlService": graphql_service_1_1["GraphqlService"]
-                });
+                exportStar_1(graphql_service_1_1);
             },
             function (gridEvent_service_1_1) {
-                exports_1({
-                    "GridEventService": gridEvent_service_1_1["GridEventService"]
-                });
+                exportStar_1(gridEvent_service_1_1);
             },
             function (gridExtra_service_1_1) {
-                exports_1({
-                    "GridExtraService": gridExtra_service_1_1["GridExtraService"]
-                });
+                exportStar_1(gridExtra_service_1_1);
+            },
+            function (gridExtraUtils_1_1) {
+                exportStar_1(gridExtraUtils_1_1);
             },
             function (grid_odata_service_1_1) {
-                exports_1({
-                    "GridOdataService": grid_odata_service_1_1["GridOdataService"]
-                });
+                exportStar_1(grid_odata_service_1_1);
             },
             function (odata_service_1_1) {
-                exports_1({
-                    "OdataService": odata_service_1_1["OdataService"]
-                });
+                exportStar_1(odata_service_1_1);
             },
             function (resizer_service_1_1) {
-                exports_1({
-                    "ResizerService": resizer_service_1_1["ResizerService"]
-                });
+                exportStar_1(resizer_service_1_1);
             },
             function (sort_service_1_1) {
-                exports_1({
-                    "SortService": sort_service_1_1["SortService"]
-                });
+                exportStar_1(sort_service_1_1);
             },
             function (utilities_1_1) {
-                exports_1({
-                    "toKebabCase": utilities_1_1["toKebabCase"]
-                });
+                exportStar_1(utilities_1_1);
             }
         ],
         execute: function () {

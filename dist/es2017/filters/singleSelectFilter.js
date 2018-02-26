@@ -6,10 +6,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 import { I18N } from 'aurelia-i18n';
 import { inject } from 'aurelia-framework';
+import { FilterType } from './../models/index';
 import * as $ from 'jquery';
 let SingleSelectFilter = class SingleSelectFilter {
     constructor(i18n) {
         this.i18n = i18n;
+        this.filterType = FilterType.singleSelect;
         // default options used by this Filter, user can overwrite any of these by passing "otions"
         this.defaultOptions = {
             container: 'body',

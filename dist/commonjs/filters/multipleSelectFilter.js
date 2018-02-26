@@ -16,6 +16,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 var aurelia_i18n_1 = require("aurelia-i18n");
 var aurelia_framework_1 = require("aurelia-framework");
+var index_1 = require("./../models/index");
 var $ = require("jquery");
 var MultipleSelectFilter = /** @class */ (function () {
     /**
@@ -25,6 +26,7 @@ var MultipleSelectFilter = /** @class */ (function () {
         var _this = this;
         this.i18n = i18n;
         this.isFilled = false;
+        this.filterType = index_1.FilterType.multipleSelect;
         // default options used by this Filter, user can overwrite any of these by passing "otions"
         this.defaultOptions = {
             container: 'body',

@@ -48,9 +48,7 @@ System.register(["./global-utilities", "./../models/index"], function (exports_1
                             this._odataOptions.filterQueue = [];
                             var filterStr = this._odataOptions.filter;
                             if (Array.isArray(this._odataOptions.filter)) {
-                                var filterBySeparator = this._odataOptions.filterBySeparator || 'and';
-                                var separatorSpacedOut = " " + filterBySeparator + " ";
-                                filterStr = this._odataOptions.filter.join(separatorSpacedOut);
+                                filterStr = this._odataOptions.filter.join(" " + (this._odataOptions.filterBySeparator || 'and') + " ");
                             }
                             this._odataOptions.filterQueue.push("(" + filterStr + ")");
                         }
@@ -63,9 +61,7 @@ System.register(["./global-utilities", "./../models/index"], function (exports_1
                         }
                     }
                     if (this._odataOptions.filterQueue.length > 0) {
-                        var filterBySeparator = this._odataOptions.filterBySeparator || 'and';
-                        var separatorSpacedOut = " " + filterBySeparator + " ";
-                        var query = this._odataOptions.filterQueue.join(separatorSpacedOut);
+                        var query = this._odataOptions.filterQueue.join(" " + (this._odataOptions.filterBySeparator || 'and') + " ");
                         this._odataOptions.filter = query; // overwrite with
                         queryTmpArray.push("$filter=" + query);
                     }
@@ -106,8 +102,8 @@ System.register(["./global-utilities", "./../models/index"], function (exports_1
                 };
                 /**
                  * Update the filter by a list of terms usually passed manually by the user as default filters
-                 * @param {} filterOptions
-                 * @returns {}
+                 * @param filterOptions
+                 * @returns
                  */
                 OdataService.prototype.updateFilterFromListTerms = function (filterOptions) {
                     var _this = this;

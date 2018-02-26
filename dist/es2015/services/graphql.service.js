@@ -171,7 +171,6 @@ let GraphqlService = class GraphqlService {
                         return;
                     }
                     const fieldName = columnDef.queryField || columnDef.field || columnDef.name || '';
-                    const fieldType = columnDef.type || 'string';
                     const searchTerms = (columnFilter ? columnFilter.searchTerms : null) || [];
                     let fieldSearchValue = columnFilter.searchTerm;
                     if (typeof fieldSearchValue === 'undefined') {

@@ -1,3 +1,4 @@
+import { FilterType } from './filterType.enum';
 import { FilterCallback } from './filterCallback.interface';
 import { Column } from './column.interface';
 import { FilterArguments } from './filterArguments.interface';
@@ -6,6 +7,8 @@ export interface Filter {
     columnDef: Column;
     /** Callback that will be run after the filter triggers */
     callback: FilterCallback;
+    /** the type of filter used */
+    filterType?: FilterType | string;
     /** SlickGrid grid object */
     grid: any;
     /** Defined search term to pre-load */

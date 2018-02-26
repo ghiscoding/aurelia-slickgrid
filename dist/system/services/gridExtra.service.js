@@ -48,14 +48,12 @@ System.register(["jquery"], function (exports_1, context_1) {
                 /**
                  * Highlight then fade a row for x seconds.
                  * The implementation follows this SO answer: https://stackoverflow.com/a/19985148/1212166
-                 * @param {number} rowNumber
-                 * @param {number} fadeDelay
+                 * @param rowNumber
+                 * @param fadeDelay
                  */
                 GridExtraService.prototype.highlightRow = function (rowNumber, fadeDelay) {
                     var _this = this;
                     if (fadeDelay === void 0) { fadeDelay = 1500; }
-                    // chain current item Metadata with our own Metadata for implementing highligh CSS styling
-                    var previousMetadata = this._dataView.getItemMetadata;
                     // create a SelectionModel if there's not one yet
                     if (!this._grid.getSelectionModel()) {
                         var rowSelectionPlugin = new Slick.RowSelectionModel(this._gridOptions.rowSelectionOptions || {});
@@ -69,7 +67,7 @@ System.register(["jquery"], function (exports_1, context_1) {
                         this._dataView.updateItem(item.id, item);
                         var gridOptions = this._grid.getOptions();
                         // highlight the row for a user defined timeout
-                        var rowElm = $("#" + gridOptions.gridId)
+                        $("#" + gridOptions.gridId)
                             .find(".highlight.row" + rowNumber)
                             .first();
                         // delete the row's CSS that was attached for highlighting
@@ -117,8 +115,6 @@ System.register(["jquery"], function (exports_1, context_1) {
                     this.highlightRow(0, 1500);
                     // refresh dataview & grid
                     this._dataView.refresh();
-                    // get new dataset length
-                    var datasetLength = this._dataView.getLength();
                 };
                 /**
                  * Update an existing item with new properties inside the datagrid
@@ -138,8 +134,6 @@ System.register(["jquery"], function (exports_1, context_1) {
                         this.highlightRow(row, 1500);
                         // refresh dataview & grid
                         this._dataView.refresh();
-                        // get new dataset length
-                        var datasetLength = this._dataView.getLength();
                     }
                 };
                 return GridExtraService;

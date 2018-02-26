@@ -1,7 +1,5 @@
 import { I18N } from 'aurelia-i18n';
-import { FilterArguments } from './../models/filterArguments.interface';
-import { FilterCallback } from './../models/filterCallback.interface';
-import { Column, Filter } from './../models';
+import { Column, Filter, FilterType, FilterArguments, FilterCallback } from './../models/index';
 export declare class SelectFilter implements Filter {
     private i18n;
     $filterElm: any;
@@ -9,6 +7,7 @@ export declare class SelectFilter implements Filter {
     searchTerm: string | number | boolean;
     columnDef: Column;
     callback: FilterCallback;
+    filterType: FilterType.select;
     constructor(i18n: I18N);
     /**
      * Initialize the Filter

@@ -9,7 +9,7 @@ export class CheckboxEditor {
         this.init();
     }
     init() {
-        this.$input = $(`<input type="checkbox" value="true" class="editor-checkbox" hideFocus />`);
+        this.$input = $(`<input type="checkbox" value="true" class="editor-checkbox" />`);
         this.$input.appendTo(this.args.container);
         this.$input.focus();
     }
@@ -18,6 +18,12 @@ export class CheckboxEditor {
     }
     focus() {
         this.$input.focus();
+    }
+    hide() {
+        this.$input.hide();
+    }
+    show() {
+        this.$input.show();
     }
     loadValue(item) {
         this.defaultValue = !!item[this.args.column.field];

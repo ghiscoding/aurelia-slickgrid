@@ -36,12 +36,14 @@ import { bindable, bindingMode, inject } from 'aurelia-framework';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { I18N } from 'aurelia-i18n';
 import { GlobalGridOptions } from './global-grid-options';
-import { ControlAndPluginService, FilterService, GraphqlService, GridEventService, GridExtraService, ResizerService, SortService, toKebabCase } from './services/index';
+import { ControlAndPluginService, ExportService, FilterService, GraphqlService, GridEventService, GridExtraService, ResizerService, SortService, toKebabCase } from './services/index';
 import * as $ from 'jquery';
 const eventPrefix = 'sg';
+// Aurelia doesn't support well TypeScript @autoinject in a Plugin so we'll do it the old fashion way
 let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
-    constructor(controlAndPluginService, elm, ea, filterService, graphqlService, gridEventService, gridExtraService, i18n, resizer, sortService) {
+    constructor(controlAndPluginService, exportService, elm, ea, filterService, graphqlService, gridEventService, gridExtraService, i18n, resizer, sortService) {
         this.controlAndPluginService = controlAndPluginService;
+        this.exportService = exportService;
         this.elm = elm;
         this.ea = ea;
         this.filterService = filterService;
@@ -51,20 +53,10 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
         this.i18n = i18n;
         this.resizer = resizer;
         this.sortService = sortService;
+        this._eventHandler = new Slick.EventHandler();
         this.showPagination = false;
         this.gridHeight = 100;
         this.gridWidth = 600;
-        // Aurelia doesn't support well TypeScript @autoinject so we'll do it the old fashion way
-        this.controlAndPluginService = controlAndPluginService;
-        this.elm = elm;
-        this.ea = ea;
-        this.filterService = filterService;
-        this.graphqlService = graphqlService;
-        this.gridEventService = gridEventService;
-        this.gridExtraService = gridExtraService;
-        this.i18n = i18n;
-        this.resizer = resizer;
-        this.sortService = sortService;
     }
     attached() {
         this.elm.dispatchEvent(new CustomEvent(`${eventPrefix}-on-before-grid-create`, {
@@ -72,7 +64,7 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
         }));
         this.ea.publish('onBeforeGridCreate', true);
         // make sure the dataset is initialized (if not it will throw an error that it cannot getLength of null)
-        this._dataset = this._dataset || [];
+        this._dataset = this._dataset || this.dataset || [];
         this._gridOptions = this.mergeGridOptions();
         this.createBackendApiInternalPostProcessCallback(this._gridOptions);
         this.dataview = new Slick.Data.DataView();
@@ -82,7 +74,7 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
         this.attachDifferentHooks(this.grid, this._gridOptions, this.dataview);
         this.grid.init();
         this.dataview.beginUpdate();
-        this.dataview.setItems(this._dataset);
+        this.dataview.setItems(this._dataset, this._gridOptions.datasetIdPropertyName);
         this.dataview.endUpdate();
         // publish certain events
         this.elm.dispatchEvent(new CustomEvent(`${eventPrefix}-on-grid-created`, {
@@ -98,10 +90,14 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
         // attach resize ONLY after the dataView is ready
         this.attachResizeHook(this.grid, this._gridOptions);
         // attach grid extra service
-        const gridExtraService = this.gridExtraService.init(this.grid, this.columnDefinitions, this._gridOptions, this.dataview);
+        this.gridExtraService.init(this.grid, this.columnDefinitions, this._gridOptions, this.dataview);
         // when user enables translation, we need to translate Headers on first pass & subsequently in the attachDifferentHooks
         if (this._gridOptions.enableTranslate) {
             this.controlAndPluginService.translateHeaders();
+        }
+        // if Export is enabled, initialize the service with the necessary grid and other objects
+        if (this._gridOptions.enableExport) {
+            this.exportService.init(this.grid, this._gridOptions, this.dataview);
         }
     }
     detached() {
@@ -112,10 +108,13 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
         }));
         this.dataview = [];
         this.controlAndPluginService.destroy();
+        this.gridEventService.dispose();
         this.filterService.destroy();
         this.resizer.destroy();
         this.sortService.destroy();
+        this._eventHandler.unsubscribeAll();
         this.grid.destroy();
+        this.localeChangedSubscriber.dispose();
         this.ea.publish('onAfterGridDestroyed', true);
         this.elm.dispatchEvent(new CustomEvent(`${eventPrefix}-on-after-grid-destroyed`, {
             bubbles: true,
@@ -170,7 +169,7 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
     }
     attachDifferentHooks(grid, gridOptions, dataView) {
         // on locale change, we have to manually translate the Headers, GridMenu
-        this.ea.subscribe('i18n:locale:changed', (payload) => {
+        this.localeChangedSubscriber = this.ea.subscribe('i18n:locale:changed', (payload) => {
             if (gridOptions.enableTranslate) {
                 this.controlAndPluginService.translateHeaders();
                 this.controlAndPluginService.translateColumnPicker();
@@ -220,8 +219,8 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
             }
         }
         for (const prop in grid) {
-            if (prop.startsWith('on')) {
-                grid[prop].subscribe((e, args) => {
+            if (grid.hasOwnProperty(prop) && prop.startsWith('on')) {
+                this._eventHandler.subscribe(grid[prop], (e, args) => {
                     this.elm.dispatchEvent(new CustomEvent(`${eventPrefix}-${toKebabCase(prop)}`, {
                         bubbles: true,
                         detail: {
@@ -233,8 +232,8 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
             }
         }
         for (const prop in dataView) {
-            if (prop.startsWith('on')) {
-                dataView[prop].subscribe((e, args) => {
+            if (dataView.hasOwnProperty(prop) && prop.startsWith('on')) {
+                this._eventHandler.subscribe(dataView[prop], (e, args) => {
                     this.elm.dispatchEvent(new CustomEvent(`${eventPrefix}-${toKebabCase(prop)}`, {
                         bubbles: true,
                         detail: {
@@ -285,11 +284,11 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
     }
     /**
      * When dataset changes, we need to refresh the entire grid UI & possibly resize it as well
-     * @param {object} dataset
+     * @param dataset
      */
     refreshGridData(dataset, totalCount) {
         if (dataset && this.grid) {
-            this.dataview.setItems(dataset);
+            this.dataview.setItems(dataset, this._gridOptions.datasetIdPropertyName);
             // this.grid.setData(dataset);
             this.grid.invalidate();
             this.grid.render();
@@ -314,7 +313,10 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
             }
         }
     }
-    /** Toggle the filter row displayed on first row */
+    /**
+     * Toggle the filter row displayed on first row
+     * @param isShowing
+     */
     showHeaderRow(isShowing) {
         this.grid.setHeaderRowVisibility(isShowing);
         return isShowing;
@@ -363,7 +365,7 @@ __decorate([
     bindable()
 ], AureliaSlickgridCustomElement.prototype, "pickerOptions", void 0);
 AureliaSlickgridCustomElement = __decorate([
-    inject(ControlAndPluginService, Element, EventAggregator, FilterService, GraphqlService, GridEventService, GridExtraService, I18N, ResizerService, SortService)
+    inject(ControlAndPluginService, ExportService, Element, EventAggregator, FilterService, GraphqlService, GridEventService, GridExtraService, I18N, ResizerService, SortService)
 ], AureliaSlickgridCustomElement);
 export { AureliaSlickgridCustomElement };
 //# sourceMappingURL=aurelia-slickgrid.js.map

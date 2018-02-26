@@ -42,20 +42,18 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var aurelia_framework_1 = require("aurelia-framework");
-var aurelia_i18n_1 = require("aurelia-i18n");
 var aurelia_event_aggregator_1 = require("aurelia-event-aggregator");
 var index_1 = require("./../filter-conditions/index");
 var index_2 = require("./../filters/index");
 var index_3 = require("./../models/index");
 var FilterService = /** @class */ (function () {
-    function FilterService(i18n) {
-        this.i18n = i18n;
+    function FilterService(filterFactory) {
+        this.filterFactory = filterFactory;
         this._filters = [];
         this._columnFilters = {};
         this.onFilterChanged = new aurelia_event_aggregator_1.EventAggregator();
     }
     FilterService.prototype.init = function (grid, gridOptions, columnDefinitions) {
-        this._columnDefinitions = columnDefinitions;
         this._gridOptions = gridOptions;
         this._grid = grid;
     };
@@ -113,14 +111,9 @@ var FilterService = /** @class */ (function () {
     };
     /** Clear the search filters (below the column titles) */
     FilterService.prototype.clearFilters = function () {
-        var _this = this;
-        var hasBackendServiceApi = (this._gridOptions && this._gridOptions.backendServiceApi) ? this._gridOptions.backendServiceApi : false;
-        var triggerFilterChange = !hasBackendServiceApi;
         this._filters.forEach(function (filter, index) {
             if (filter && filter.clear) {
-                // clear element but don't trigger a change
-                // until we reach the last index to avoid multiple request to the Backend Server
-                var callTrigger = (index === 0 || index === _this._filters.length - 1) ? true : false;
+                // clear element and trigger a change
                 filter.clear(true);
             }
         });
@@ -215,7 +208,7 @@ var FilterService = /** @class */ (function () {
             // when using localization (i18n), we should use the formatter output to search as the new cell value
             if (columnDef && columnDef.params && columnDef.params.useFormatterOuputToFilter) {
                 var rowIndex = (dataView && typeof dataView.getIdxById === 'function') ? dataView.getIdxById(item.id) : 0;
-                cellValue = columnDef.formatter(rowIndex, columnIndex, cellValue, columnDef, item);
+                cellValue = columnDef.formatter(rowIndex, columnIndex, cellValue, columnDef, item, this._grid);
             }
             // make sure cell value is always a string
             if (typeof cellValue === 'number') {
@@ -324,18 +317,8 @@ var FilterService = /** @class */ (function () {
                         throw new Error('[Aurelia-Slickgrid] A Filter type of "custom" must include a Filter class that is defined and instantiated.');
                     }
                     break;
-                case index_3.FilterType.select:
-                    filter_1 = new index_2.Filters.select(this.i18n);
-                    break;
-                case index_3.FilterType.multipleSelect:
-                    filter_1 = new index_2.Filters.multipleSelect(this.i18n);
-                    break;
-                case index_3.FilterType.singleSelect:
-                    filter_1 = new index_2.Filters.singleSelect(this.i18n);
-                    break;
-                case index_3.FilterType.input:
                 default:
-                    filter_1 = new index_2.Filters.input();
+                    filter_1 = this.filterFactory.createFilter(filterType);
                     break;
             }
             if (filter_1) {
@@ -384,7 +367,7 @@ var FilterService = /** @class */ (function () {
         return evt.notify(args, e, args.grid);
     };
     FilterService = __decorate([
-        aurelia_framework_1.inject(aurelia_i18n_1.I18N)
+        aurelia_framework_1.inject(index_2.FilterFactory)
     ], FilterService);
     return FilterService;
 }());

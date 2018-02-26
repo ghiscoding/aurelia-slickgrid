@@ -7,7 +7,7 @@ import { dateUtcFilterCondition } from './dateUtcFilterCondition';
 import { collectionSearchFilterCondition } from './collectionSearchFilterCondition';
 import { numberFilterCondition } from './numberFilterCondition';
 import { stringFilterCondition } from './stringFilterCondition';
-import { FieldType } from '../models/fieldType.enum';
+import { FieldType } from '../models/index';
 export var executeMappedCondition = function (options) {
     // when using a multi-select ('IN' operator) we will not use the field type but instead go directly with a collection search
     if (options && options.operator && options.operator.toUpperCase() === 'IN') {

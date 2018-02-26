@@ -1,2 +1,2 @@
-import { FilterCondition } from '../models/filterCondition.interface';
+import { FilterCondition } from '../models/index';
 export declare const executeMappedCondition: FilterCondition;

@@ -1,4 +1,4 @@
-import { GridOption } from './models/gridOption.interface';
+import { GridOption } from './models/index';
 /**
  * Default Options that can be passed to the Aurelia-Slickgrid
  */

@@ -1,4 +1,4 @@
-import { Column, GridOption } from './../models';
+import { Column, GridOption } from './../models/index';
 export declare class GridExtraService {
     private _grid;
     private _dataView;
@@ -11,8 +11,8 @@ export declare class GridExtraService {
     /**
      * Highlight then fade a row for x seconds.
      * The implementation follows this SO answer: https://stackoverflow.com/a/19985148/1212166
-     * @param {number} rowNumber
-     * @param {number} fadeDelay
+     * @param rowNumber
+     * @param fadeDelay
      */
     highlightRow(rowNumber: number, fadeDelay?: number): void;
     getSelectedRows(): any;

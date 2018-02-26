@@ -1,4 +1,4 @@
-System.register(["./inputFilter", "./multipleSelectFilter", "./selectFilter", "./singleSelectFilter"], function (exports_1, context_1) {
+System.register(["./inputFilter", "./multipleSelectFilter", "./selectFilter", "./singleSelectFilter", "./filterFactory"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var inputFilter_1, multipleSelectFilter_1, selectFilter_1, singleSelectFilter_1, Filters;
@@ -15,6 +15,12 @@ System.register(["./inputFilter", "./multipleSelectFilter", "./selectFilter", ".
             },
             function (singleSelectFilter_1_1) {
                 singleSelectFilter_1 = singleSelectFilter_1_1;
+            },
+            function (filterFactory_1_1) {
+                exports_1({
+                    "PLUGIN_NAME": filterFactory_1_1["PLUGIN_NAME"],
+                    "FilterFactory": filterFactory_1_1["FilterFactory"]
+                });
             }
         ],
         execute: function () {

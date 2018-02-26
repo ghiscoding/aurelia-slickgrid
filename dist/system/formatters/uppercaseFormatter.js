@@ -6,7 +6,11 @@ System.register([], function (exports_1, context_1) {
         setters: [],
         execute: function () {
             exports_1("uppercaseFormatter", uppercaseFormatter = function (row, cell, value, columnDef, dataContext) {
-                return (value && typeof value === 'string') ? value.toUpperCase() : value;
+                // make sure the value is a string
+                if (value !== undefined && typeof value !== 'string') {
+                    value = value + '';
+                }
+                return value ? value.toUpperCase() : '';
             });
         }
     };

@@ -96,10 +96,7 @@ System.register(["jquery", "./../models/index"], function (exports_1, context_1)
                         valid = validationResults.valid;
                         msg = validationResults.msg;
                     }
-                    return {
-                        valid: true,
-                        msg: null
-                    };
+                    return { valid: valid, msg: msg };
                 };
                 return LongTextEditor;
             }());

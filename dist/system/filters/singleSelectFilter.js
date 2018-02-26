@@ -1,4 +1,4 @@
-System.register(["aurelia-i18n", "aurelia-framework", "jquery"], function (exports_1, context_1) {
+System.register(["aurelia-i18n", "aurelia-framework", "./../models/index", "jquery"], function (exports_1, context_1) {
     "use strict";
     var __assign = (this && this.__assign) || Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -15,7 +15,7 @@ System.register(["aurelia-i18n", "aurelia-framework", "jquery"], function (expor
         return c > 3 && r && Object.defineProperty(target, key, r), r;
     };
     var __moduleName = context_1 && context_1.id;
-    var aurelia_i18n_1, aurelia_framework_1, $, SingleSelectFilter;
+    var aurelia_i18n_1, aurelia_framework_1, index_1, $, SingleSelectFilter;
     return {
         setters: [
             function (aurelia_i18n_1_1) {
@@ -23,6 +23,9 @@ System.register(["aurelia-i18n", "aurelia-framework", "jquery"], function (expor
             },
             function (aurelia_framework_1_1) {
                 aurelia_framework_1 = aurelia_framework_1_1;
+            },
+            function (index_1_1) {
+                index_1 = index_1_1;
             },
             function ($_1) {
                 $ = $_1;
@@ -32,6 +35,7 @@ System.register(["aurelia-i18n", "aurelia-framework", "jquery"], function (expor
             SingleSelectFilter = /** @class */ (function () {
                 function SingleSelectFilter(i18n) {
                     this.i18n = i18n;
+                    this.filterType = index_1.FilterType.singleSelect;
                     // default options used by this Filter, user can overwrite any of these by passing "otions"
                     this.defaultOptions = {
                         container: 'body',

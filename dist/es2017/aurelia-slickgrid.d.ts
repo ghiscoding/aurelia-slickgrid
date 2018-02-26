@@ -17,12 +17,13 @@ import 'slickgrid/plugins/slick.headerbuttons';
 import 'slickgrid/plugins/slick.headermenu';
 import 'slickgrid/plugins/slick.rowmovemanager';
 import 'slickgrid/plugins/slick.rowselectionmodel';
-import { EventAggregator } from 'aurelia-event-aggregator';
+import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
 import { I18N } from 'aurelia-i18n';
 import { Column, GridOption } from './models/index';
-import { ControlAndPluginService, FilterService, GraphqlService, GridEventService, GridExtraService, ResizerService, SortService } from './services/index';
+import { ControlAndPluginService, ExportService, FilterService, GraphqlService, GridEventService, GridExtraService, ResizerService, SortService } from './services/index';
 export declare class AureliaSlickgridCustomElement {
     private controlAndPluginService;
+    private exportService;
     private elm;
     private ea;
     private filterService;
@@ -34,8 +35,10 @@ export declare class AureliaSlickgridCustomElement {
     private sortService;
     private _dataset;
     private _gridOptions;
+    private _eventHandler;
     gridHeightString: string;
     gridWidthString: string;
+    localeChangedSubscriber: Subscription;
     showPagination: boolean;
     style: any;
     element: Element;
@@ -50,7 +53,7 @@ export declare class AureliaSlickgridCustomElement {
     gridHeight: number;
     gridWidth: number;
     pickerOptions: any;
-    constructor(controlAndPluginService: ControlAndPluginService, elm: Element, ea: EventAggregator, filterService: FilterService, graphqlService: GraphqlService, gridEventService: GridEventService, gridExtraService: GridExtraService, i18n: I18N, resizer: ResizerService, sortService: SortService);
+    constructor(controlAndPluginService: ControlAndPluginService, exportService: ExportService, elm: Element, ea: EventAggregator, filterService: FilterService, graphqlService: GraphqlService, gridEventService: GridEventService, gridExtraService: GridExtraService, i18n: I18N, resizer: ResizerService, sortService: SortService);
     attached(): void;
     detached(): void;
     /**
@@ -70,10 +73,13 @@ export declare class AureliaSlickgridCustomElement {
     mergeGridOptions(): GridOption;
     /**
      * When dataset changes, we need to refresh the entire grid UI & possibly resize it as well
-     * @param {object} dataset
+     * @param dataset
      */
     refreshGridData(dataset: any[], totalCount?: number): void;
-    /** Toggle the filter row displayed on first row */
+    /**
+     * Toggle the filter row displayed on first row
+     * @param isShowing
+     */
     showHeaderRow(isShowing: boolean): boolean;
     /** Toggle the filter row displayed on first row */
     toggleHeaderRow(): boolean;

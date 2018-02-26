@@ -20,6 +20,6 @@ export declare class LongTextEditor implements Editor {
     isValueChanged(): boolean;
     validate(): {
         valid: boolean;
-        msg: null;
+        msg: any;
     };
 }

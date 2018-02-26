@@ -1,8 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var index_1 = require("./../models/index");
 var $ = require("jquery");
 var InputFilter = /** @class */ (function () {
     function InputFilter() {
+        this.filterType = index_1.FilterType.input;
     }
     /**
      * Initialize the Filter

@@ -158,7 +158,7 @@ System.register(["aurelia-event-aggregator", "./../models/index", "./../sorters/
                 /**
                  * A simple function that is attached to the subscriber and emit a change when the sort is called.
                  * Other services, like Pagination, can then subscribe to it.
-                 * @param {string} sender
+                 * @param sender
                  */
                 SortService.prototype.emitSortChangedBy = function (sender) {
                     var _this = this;

@@ -181,7 +181,6 @@ var GraphqlService = /** @class */ (function () {
                         return;
                     }
                     var fieldName = columnDef.queryField || columnDef.field || columnDef.name || '';
-                    var fieldType = columnDef.type || 'string';
                     var searchTerms = (columnFilter ? columnFilter.searchTerms : null) || [];
                     var fieldSearchValue = columnFilter.searchTerm;
                     if (typeof fieldSearchValue === 'undefined') {

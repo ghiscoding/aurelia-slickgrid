@@ -9,7 +9,7 @@ var CheckboxEditor = /** @class */ (function () {
         this.init();
     }
     CheckboxEditor.prototype.init = function () {
-        this.$input = $("<input type=\"checkbox\" value=\"true\" class=\"editor-checkbox\" hideFocus />");
+        this.$input = $("<input type=\"checkbox\" value=\"true\" class=\"editor-checkbox\" />");
         this.$input.appendTo(this.args.container);
         this.$input.focus();
     };
@@ -18,6 +18,12 @@ var CheckboxEditor = /** @class */ (function () {
     };
     CheckboxEditor.prototype.focus = function () {
         this.$input.focus();
+    };
+    CheckboxEditor.prototype.hide = function () {
+        this.$input.hide();
+    };
+    CheckboxEditor.prototype.show = function () {
+        this.$input.show();
     };
     CheckboxEditor.prototype.loadValue = function (item) {
         this.defaultValue = !!item[this.args.column.field];

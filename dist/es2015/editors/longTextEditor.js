@@ -86,10 +86,7 @@ export class LongTextEditor {
             valid = validationResults.valid;
             msg = validationResults.msg;
         }
-        return {
-            valid: true,
-            msg: null
-        };
+        return { valid, msg };
     }
 }
 //# sourceMappingURL=longTextEditor.js.map

@@ -1,9 +1,12 @@
-System.register(["jquery"], function (exports_1, context_1) {
+System.register(["./../models/index", "jquery"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var $, InputFilter;
+    var index_1, $, InputFilter;
     return {
         setters: [
+            function (index_1_1) {
+                index_1 = index_1_1;
+            },
             function ($_1) {
                 $ = $_1;
             }
@@ -11,6 +14,7 @@ System.register(["jquery"], function (exports_1, context_1) {
         execute: function () {
             InputFilter = /** @class */ (function () {
                 function InputFilter() {
+                    this.filterType = index_1.FilterType.input;
                 }
                 /**
                  * Initialize the Filter

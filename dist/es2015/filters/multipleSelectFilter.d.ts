@@ -1,7 +1,5 @@
 import { I18N } from 'aurelia-i18n';
-import { Column, Filter } from './../models';
-import { FilterArguments } from '../models/filterArguments.interface';
-import { FilterCallback } from './../models/filterCallback.interface';
+import { Column, Filter, FilterArguments, FilterCallback, FilterType } from './../models/index';
 export declare class MultipleSelectFilter implements Filter {
     private i18n;
     $filterElm: any;
@@ -11,6 +9,7 @@ export declare class MultipleSelectFilter implements Filter {
     callback: FilterCallback;
     defaultOptions: any;
     isFilled: boolean;
+    filterType: FilterType;
     /**
      * Initialize the Filter
      */

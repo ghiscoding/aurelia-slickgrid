@@ -2,9 +2,46 @@ define(["require", "exports", "../models/index", "moment"], function (require, e
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
+     * Simple function to which will loop and create as demanded the number of white spaces,
+     * this will be used in the Excel export
+     * @param int nbSpaces: number of white spaces to create
+     */
+    function addWhiteSpaces(nbSpaces) {
+        var result = '';
+        for (var i = 0; i < nbSpaces; i++) {
+            result += ' ';
+        }
+        return result;
+    }
+    exports.addWhiteSpaces = addWhiteSpaces;
+    /**
+     * decode text into html entity
+     * @param string text: input text
+     * @param string text: output text
+     */
+    function htmlEntityDecode(input) {
+        return input.replace(/&#(\d+);/g, function (match, dec) {
+            return String.fromCharCode(dec);
+        });
+    }
+    exports.htmlEntityDecode = htmlEntityDecode;
+    /**
+     * decode text into html entity
+     * @param string text: input text
+     * @param string text: output text
+     */
+    function htmlEntityEncode(input) {
+        var buf = [];
+        for (var i = input.length - 1; i >= 0; i--) {
+            buf.unshift(['&#', input[i].charCodeAt(), ';'].join(''));
+        }
+        return buf.join('');
+    }
+    exports.htmlEntityEncode = htmlEntityEncode;
+    /**
      * From a Date FieldType, return it's equivalent moment.js format
      * refer to moment.js for the format standard used: https://momentjs.com/docs/#/parsing/string-format/
-     * @param {FieldType} fieldType
+     * @param fieldType
      */
     function mapMomentDateFormatWithFieldType(fieldType) {
         var map;
@@ -56,7 +93,7 @@ define(["require", "exports", "../models/index", "moment"], function (require, e
      * From a Date FieldType, return it's equivalent Flatpickr format
      * refer to Flatpickr for the format standard used: https://chmln.github.io/flatpickr/formatting/#date-formatting-tokens
      * also note that they seem very similar to PHP format (except for am/pm): http://php.net/manual/en/function.date.php
-     * @param {FieldType} fieldType
+     * @param fieldType
      */
     function mapFlatpickrDateFormatWithFieldType(fieldType) {
         /*
@@ -202,8 +239,8 @@ define(["require", "exports", "../models/index", "moment"], function (require, e
     exports.parseUtcDate = parseUtcDate;
     /**
      * Converts a string to camel case
-     * @param {string} str the string to convert
-     * @return {string} the string in camel case
+     * @param str the string to convert
+     * @return the string in camel case
      */
     function toCamelCase(str) {
         return str.replace(/(?:^\w|[A-Z]|\b\w|[\s+\-_\/])/g, function (match, offset) {
@@ -217,8 +254,8 @@ define(["require", "exports", "../models/index", "moment"], function (require, e
     exports.toCamelCase = toCamelCase;
     /**
      * Converts a string to kebab (hypen) case
-     * @param {string} str the string to convert
-     * @return {string} the string in kebab case
+     * @param str the string to convert
+     * @return the string in kebab case
      */
     function toKebabCase(str) {
         return toCamelCase(str).replace(/([A-Z])/g, '-$1').toLowerCase();

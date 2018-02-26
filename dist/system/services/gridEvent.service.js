@@ -7,11 +7,12 @@ System.register([], function (exports_1, context_1) {
         execute: function () {
             GridEventService = /** @class */ (function () {
                 function GridEventService() {
+                    this._eventHandler = new Slick.EventHandler();
                 }
                 /* OnCellChange Event */
                 GridEventService.prototype.attachOnCellChange = function (grid, gridOptions, dataView) {
                     // subscribe to this Slickgrid event of onCellChange
-                    grid.onCellChange.subscribe(function (e, args) {
+                    this._eventHandler.subscribe(grid.onCellChange, function (e, args) {
                         if (!e || !args || !args.grid || args.cell === undefined || !args.grid.getColumns || !args.grid.getDataItem) {
                             return;
                         }
@@ -36,7 +37,7 @@ System.register([], function (exports_1, context_1) {
                 };
                 /* OnClick Event */
                 GridEventService.prototype.attachOnClick = function (grid, gridOptions, dataView) {
-                    grid.onClick.subscribe(function (e, args) {
+                    this._eventHandler.subscribe(grid.onClick, function (e, args) {
                         if (!e || !args || !args.grid || args.cell === undefined || !args.grid.getColumns || !args.grid.getDataItem) {
                             return;
                         }
@@ -63,6 +64,9 @@ System.register([], function (exports_1, context_1) {
                             // e.stopImmediatePropagation();
                         }
                     });
+                };
+                GridEventService.prototype.dispose = function () {
+                    this._eventHandler.unsubscribeAll();
                 };
                 return GridEventService;
             }());

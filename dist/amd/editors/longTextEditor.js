@@ -85,10 +85,7 @@ define(["require", "exports", "jquery", "./../models/index"], function (require,
                 valid = validationResults.valid;
                 msg = validationResults.msg;
             }
-            return {
-                valid: true,
-                msg: null
-            };
+            return { valid: valid, msg: msg };
         };
         return LongTextEditor;
     }());

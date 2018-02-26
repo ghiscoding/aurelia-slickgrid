@@ -1,8 +1,9 @@
-define(["require", "exports", "jquery"], function (require, exports, $) {
+define(["require", "exports", "./../models/index", "jquery"], function (require, exports, index_1, $) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var InputFilter = /** @class */ (function () {
         function InputFilter() {
+            this.filterType = index_1.FilterType.input;
         }
         /**
          * Initialize the Filter

@@ -1,6 +1,8 @@
+import { FilterType } from './../models/index';
 import * as $ from 'jquery';
 var InputFilter = /** @class */ (function () {
     function InputFilter() {
+        this.filterType = FilterType.input;
     }
     /**
      * Initialize the Filter

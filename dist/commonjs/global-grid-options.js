@@ -17,6 +17,11 @@ exports.GlobalGridOptions = {
     checkboxSelector: {
         cssClass: 'slick-cell-checkboxsel'
     },
+    columnPicker: {
+        hideForceFitButton: false,
+        hideSyncResizeButton: true
+    },
+    datasetIdPropertyName: 'id',
     enableAutoResize: true,
     enableRowSelection: true,
     editable: false,
@@ -24,16 +29,21 @@ exports.GlobalGridOptions = {
     enableCheckboxSelector: false,
     enableColumnPicker: true,
     enableColumnReorder: true,
+    enableExport: true,
     enableGridMenu: true,
     enableSorting: true,
     enableTextSelectionOnCells: true,
     explicitInitialization: true,
+    exportWithFormatter: false,
     forceFitColumns: false,
     gridMenu: {
+        hideForceFitButton: false,
+        hideSyncResizeButton: true,
         iconCssClass: 'fa fa-bars',
         menuWidth: 16,
         resizeOnShowHeaderRow: false,
         showClearAllFiltersCommand: true,
+        showExportCsvCommand: true,
         showRefreshDatasetCommand: true,
         showToggleFilterCommand: true
     },

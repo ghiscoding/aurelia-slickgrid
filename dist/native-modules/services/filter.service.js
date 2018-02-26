@@ -40,20 +40,18 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 import { inject } from 'aurelia-framework';
-import { I18N } from 'aurelia-i18n';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { FilterConditions } from './../filter-conditions/index';
-import { Filters } from './../filters/index';
+import { FilterFactory } from './../filters/index';
 import { FieldType, FilterType } from './../models/index';
 var FilterService = /** @class */ (function () {
-    function FilterService(i18n) {
-        this.i18n = i18n;
+    function FilterService(filterFactory) {
+        this.filterFactory = filterFactory;
         this._filters = [];
         this._columnFilters = {};
         this.onFilterChanged = new EventAggregator();
     }
     FilterService.prototype.init = function (grid, gridOptions, columnDefinitions) {
-        this._columnDefinitions = columnDefinitions;
         this._gridOptions = gridOptions;
         this._grid = grid;
     };
@@ -111,14 +109,9 @@ var FilterService = /** @class */ (function () {
     };
     /** Clear the search filters (below the column titles) */
     FilterService.prototype.clearFilters = function () {
-        var _this = this;
-        var hasBackendServiceApi = (this._gridOptions && this._gridOptions.backendServiceApi) ? this._gridOptions.backendServiceApi : false;
-        var triggerFilterChange = !hasBackendServiceApi;
         this._filters.forEach(function (filter, index) {
             if (filter && filter.clear) {
-                // clear element but don't trigger a change
-                // until we reach the last index to avoid multiple request to the Backend Server
-                var callTrigger = (index === 0 || index === _this._filters.length - 1) ? true : false;
+                // clear element and trigger a change
                 filter.clear(true);
             }
         });
@@ -213,7 +206,7 @@ var FilterService = /** @class */ (function () {
             // when using localization (i18n), we should use the formatter output to search as the new cell value
             if (columnDef && columnDef.params && columnDef.params.useFormatterOuputToFilter) {
                 var rowIndex = (dataView && typeof dataView.getIdxById === 'function') ? dataView.getIdxById(item.id) : 0;
-                cellValue = columnDef.formatter(rowIndex, columnIndex, cellValue, columnDef, item);
+                cellValue = columnDef.formatter(rowIndex, columnIndex, cellValue, columnDef, item, this._grid);
             }
             // make sure cell value is always a string
             if (typeof cellValue === 'number') {
@@ -322,18 +315,8 @@ var FilterService = /** @class */ (function () {
                         throw new Error('[Aurelia-Slickgrid] A Filter type of "custom" must include a Filter class that is defined and instantiated.');
                     }
                     break;
-                case FilterType.select:
-                    filter_1 = new Filters.select(this.i18n);
-                    break;
-                case FilterType.multipleSelect:
-                    filter_1 = new Filters.multipleSelect(this.i18n);
-                    break;
-                case FilterType.singleSelect:
-                    filter_1 = new Filters.singleSelect(this.i18n);
-                    break;
-                case FilterType.input:
                 default:
-                    filter_1 = new Filters.input();
+                    filter_1 = this.filterFactory.createFilter(filterType);
                     break;
             }
             if (filter_1) {
@@ -382,7 +365,7 @@ var FilterService = /** @class */ (function () {
         return evt.notify(args, e, args.grid);
     };
     FilterService = __decorate([
-        inject(I18N)
+        inject(FilterFactory)
     ], FilterService);
     return FilterService;
 }());

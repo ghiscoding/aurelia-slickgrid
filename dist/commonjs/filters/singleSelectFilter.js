@@ -16,10 +16,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 var aurelia_i18n_1 = require("aurelia-i18n");
 var aurelia_framework_1 = require("aurelia-framework");
+var index_1 = require("./../models/index");
 var $ = require("jquery");
 var SingleSelectFilter = /** @class */ (function () {
     function SingleSelectFilter(i18n) {
         this.i18n = i18n;
+        this.filterType = index_1.FilterType.singleSelect;
         // default options used by this Filter, user can overwrite any of these by passing "otions"
         this.defaultOptions = {
             container: 'body',
