@@ -29,9 +29,11 @@
     "i18next-xhr-backend": "^1.5.0",
     "jquery": "^3.2.1",
     "moment": "^2.18.1",
+    "packages": "0.0.8",
     "requirejs": "^2.3.2",
     "slickgrid": "^2.3.12",
-    "text": "github:requirejs/text#latest"
+    "text": "github:requirejs/text#latest",
+    "utf8-encoding": "^0.1.2"
   },
   "peerDependencies": {},
   "devDependencies": {

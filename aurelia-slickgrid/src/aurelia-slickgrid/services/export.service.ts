@@ -14,8 +14,9 @@ import {
   HeaderButtonOnCommandArgs,
   HeaderMenuOnCommandArgs,
   HeaderMenuOnBeforeMenuShowArgs
-} from './../models';
-import { TextEncoder } from 'text-encoding';
+} from './../models/index';
+import { TextEncoder } from 'text-encoding-utf-8';
+// import { TextEncoder } from 'utf8-encoding';
 import { addWhiteSpaces, htmlEntityDecode } from './../services/utilities';
 import * as $ from 'jquery';
 
@@ -23,7 +24,7 @@ import * as $ from 'jquery';
 declare let Slick: any;
 
 export interface ExportColumnHeader {
-  key: string;
+  key: string | number;
   title: string;
 }
 
@@ -80,8 +81,8 @@ export class ExportService {
     this.startDownloadFile({
       filename: `${this._exportOptions.filename}.${this._exportOptions.format}`,
       csvContent: dataOutput,
-      format: this._exportOptions.format,
-      useUtf8WithBom: this._exportOptions.useUtf8WithBom
+      format: this._exportOptions.format || FileType.csv,
+      useUtf8WithBom: this._exportOptions.useUtf8WithBom || true
     });
   }
 
@@ -180,9 +181,9 @@ export class ExportService {
    */
   getColumnHeaders(columns: Column[]): ExportColumnHeader[] {
     if (!columns || !Array.isArray(columns) || columns.length === 0) {
-      return null;
+      return [];
     }
-    const columnHeaders = [];
+    const columnHeaders: ExportColumnHeader[] = [];
 
     // Populate the Column Header, pull the name defined
     columns.forEach((columnDef) => {
@@ -193,7 +194,7 @@ export class ExportService {
       if ((columnDef.width === undefined || columnDef.width > 0) && !skippedField) {
         columnHeaders.push({
           key: columnDef.field || columnDef.id,
-          title: fieldName
+          title: fieldName || ''
         });
       }
     });
@@ -230,13 +231,11 @@ export class ExportService {
       // does the user want to evaluate current column Formatter?
       const isEvaluatingFormatter = (columnDef.exportWithFormatter !== undefined) ? columnDef.exportWithFormatter : this._gridOptions.exportWithFormatter;
 
-      // did the user provide a Custom Formatter for the export
-      const exportCustomFormatter: Formatter = (columnDef.exportCustomFormatter !== undefined) ? columnDef.exportCustomFormatter : undefined;
-
       let itemData = '';
 
-      if (exportCustomFormatter) {
-        itemData = exportCustomFormatter(row, col, itemObj[fieldId], columnDef, itemObj, this._grid);
+      // did the user provide a Custom Formatter for the export
+      if (columnDef.exportCustomFormatter) {
+        itemData = columnDef.exportCustomFormatter(row, col, itemObj[fieldId], columnDef, itemObj, this._grid);
       } else if (isEvaluatingFormatter && !!columnDef.formatter) {
         itemData = columnDef.formatter(row, col, itemObj[fieldId], columnDef, itemObj, this._grid);
       } else {
@@ -337,11 +336,11 @@ export class ExportService {
    */
   getGroupedColumnTitles(columns: Column[]): ExportColumnHeader[] {
     if (!columns || !Array.isArray(columns) || columns.length === 0) {
-      return null;
+      return [];
     }
 
     let groupItemId = '';
-    const groupedHeaders = [];
+    const groupedHeaders: ExportColumnHeader[] = [];
 
     let hasGroupedItems = false;
     if ($.isEmptyObject(this._groupingDefinition)) {
@@ -359,11 +358,11 @@ export class ExportService {
         groupItemId = groupItemId.split('.')[0];
       }
 
-      if (hasGroupedItems && columnDef.id === groupItemId) {
+      if (hasGroupedItems && columnDef && columnDef.id === groupItemId) {
         const fieldName = (columnDef.headerKey) ? this.i18n.tr(columnDef.headerKey) : columnDef.name;
         groupedHeaders.push({
           key: columnDef.field || columnDef.id,
-          title: fieldName
+          title: fieldName || ''
         });
       }
     });
@@ -393,9 +392,9 @@ export class ExportService {
     // Option #1: we need to make Excel knowing that it's dealing with an UTF-8, A correctly formatted UTF8 file can have a Byte Order Mark as its first three octets
     // reference: http://stackoverflow.com/questions/155097/microsoft-excel-mangles-diacritics-in-csv-files
     // Option#2: use a 3rd party extension to javascript encode into UTF-16
-    let outputData = '';
+    let outputData: Uint8Array | string;
     if (options.format === FileType.csv) {
-      outputData = new TextEncoder('utf-16be').encode(csvContent);
+      outputData = new TextEncoder('utf-8').encode(csvContent);
     } else {
       outputData = csvContent;
     }

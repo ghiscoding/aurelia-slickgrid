@@ -60,6 +60,7 @@
           "text",
           "jquery",
           "moment",
+          "text-encoding-utf-8",
           {
             "name": "i18next",
             "path": "../node_modules/i18next/dist/umd",
@@ -107,13 +108,17 @@
             "name": "flatpickr",
             "path": "../node_modules/flatpickr/dist",
             "main": "flatpickr.min",
-            "resources": ["flatpickr.min.css"]
+            "resources": [
+              "flatpickr.min.css"
+            ]
           },
           {
             "name": "multiple-select",
             "path": "../node_modules/aurelia-slickgrid/dist/lib/multiple-select",
             "main": "multiple-select",
-            "resources": ["multiple-select.css"]
+            "resources": [
+              "multiple-select.css"
+            ]
           },
           {
             "name": "aurelia-slickgrid",

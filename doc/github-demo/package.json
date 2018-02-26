@@ -28,7 +28,8 @@
     "i18next-xhr-backend": "^1.5.0",
     "jquery": "^3.2.1",
     "moment": "^2.19.2",
-    "slickgrid": "^2.3.12"
+    "slickgrid": "^2.3.12",
+    "text-encoding": "^0.6.4"
   },
   "peerDependencies": {},
   "devDependencies": {

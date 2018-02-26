@@ -19,6 +19,8 @@
     "url": "http://github.com/ghiscoding/aurelia-slickgrid"
   },
   "dependencies": {
+    "@types/text-encoding": "^0.0.32",
+    "@types/text-encoding-utf-8": "^1.0.1",
     "aurelia-animator-css": "^1.0.2",
     "aurelia-bootstrapper": "^2.1.1",
     "aurelia-event-aggregator": "^1.0.1",
@@ -29,8 +31,10 @@
     "aurelia-pal": "^1.4.0",
     "aurelia-polyfills": "latest",
     "aurelia-router": "^1.5.0",
+    "base64-js": "^1.2.3",
     "bluebird": "^3.4.1",
     "bootstrap": "^3.3.7",
+    "encoding": "^0.1.12",
     "flatpickr": "^4.2.4",
     "font-awesome": "^4.7.0",
     "i18next-xhr-backend": "^1.5.0",
@@ -39,7 +43,9 @@
     "moment-mini": "^2.18.1",
     "nps": "^5.7.1",
     "slickgrid": "^2.3.13",
-    "text-encoding": "^0.6.4"
+    "text-encoding": "^0.6.4",
+    "text-encoding-utf-8": "^1.0.2",
+    "utf8-encoding": "^0.1.2"
   },
   "peerDependencies": {},
   "devDependencies": {
@@ -47,7 +53,7 @@
     "@types/i18next": "^8.4.2",
     "@types/i18next-xhr-backend": "^1.4.1",
     "@types/jest": "19.2.4",
-    "@types/lodash": "^4.14.69",
+    "@types/lodash": "^4.14.104",
     "@types/moment": "^2.13.0",
     "@types/node": "^6.0.45",
     "@types/webpack": "^3.0.4",

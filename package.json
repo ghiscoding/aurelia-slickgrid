@@ -79,9 +79,8 @@
     "start:github-demo": "cd doc/github-demo && yarn start"
   },
   "dependencies": {
-    "@types/flatpickr": "^3.1.2",
-    "@types/jquery": "^3.2.15",
-    "@types/moment": "^2.13.0",
+    "@types/text-encoding": "^0.0.32",
+    "@types/text-encoding-utf-8": "^1.0.1",
     "aurelia-event-aggregator": "^1.0.1",
     "aurelia-framework": "^1.1.0",
     "aurelia-i18n": "^2.1.0",
@@ -95,6 +94,9 @@
     "text-encoding": "^0.6.4"
   },
   "devDependencies": {
+    "@types/flatpickr": "^3.1.2",
+    "@types/jquery": "^3.3.0",
+    "@types/moment": "^2.13.0",
     "@types/node": "^8.0.20",
     "aurelia-bootstrapper": "^2.1.1",
     "aurelia-pal-browser": "^1.2.1",

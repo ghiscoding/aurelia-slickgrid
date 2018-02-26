@@ -6,7 +6,7 @@ import * as moment from 'moment';
  * this will be used in the Excel export
  * @param int nbSpaces: number of white spaces to create
  */
-export function addWhiteSpaces(nbSpaces): string {
+export function addWhiteSpaces(nbSpaces: number): string {
   let result = '';
 
   for (let i = 0; i < nbSpaces; i++) {

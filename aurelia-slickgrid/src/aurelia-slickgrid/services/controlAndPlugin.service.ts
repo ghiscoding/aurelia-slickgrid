@@ -238,7 +238,7 @@ export class ControlAndPluginService {
   private addGridMenuCustomCommands(grid: any, options: GridOption) {
     const backendApi = options.backendServiceApi || options.onBackendEventApi || null;
 
-    if (options.enableFiltering) {
+    if (options && options.enableFiltering) {
       // show grid menu: clear all filters
       if (options && options.gridMenu && options.gridMenu.showClearAllFiltersCommand && options.gridMenu.customItems && options.gridMenu.customItems.filter((item: CustomGridMenu) => item.command === 'clear-filter').length === 0) {
         options.gridMenu.customItems.push(
@@ -305,7 +305,7 @@ export class ControlAndPluginService {
     }
 
     // Command callback, what will be executed after command is clicked
-    if (options.gridMenu && options.gridMenu.customItems.length > 0) {
+    if (options && options.gridMenu && Array.isArray(options.gridMenu.customItems) && options.gridMenu.customItems.length > 0) {
       options.gridMenu.onCommand = (e, args) => {
         if (args && args.command) {
           switch (args.command) {
@@ -354,7 +354,7 @@ export class ControlAndPluginService {
       // sort the custom items by their position in the list
       options.gridMenu.customItems.sort((itemA, itemB) => {
         if (itemA && itemB && itemA.hasOwnProperty('positionOrder') && itemB.hasOwnProperty('positionOrder')) {
-          return itemA.positionOrder - itemB.positionOrder;
+          return (itemA.positionOrder || 0) - (itemB.positionOrder || 0);
         }
         return 0;
       });
