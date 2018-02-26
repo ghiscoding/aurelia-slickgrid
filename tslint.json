@@ -18,6 +18,7 @@
     "arrow-parens": false,
     "max-classes-per-file": [false],
     "no-object-literal-type-assertion": false,
+    "no-console": false,
     "prefer-for-of": false,
     "prefer-conditional-expression": false
   }

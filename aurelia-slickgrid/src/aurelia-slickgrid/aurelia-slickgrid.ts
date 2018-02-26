@@ -87,7 +87,6 @@ export class AureliaSlickgridCustomElement {
     private resizer: ResizerService,
     private sortService: SortService) {
 
-    // Aurelia doesn't support well TypeScript @autoinject in a Plugin so we'll do it the old fashion way
     this.controlAndPluginService = controlAndPluginService;
     this.elm = elm;
     this.exportService = exportService;
