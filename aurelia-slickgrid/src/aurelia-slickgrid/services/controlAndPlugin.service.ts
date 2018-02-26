@@ -17,7 +17,7 @@ import {
 } from './../models/index';
 import * as $ from 'jquery';
 
-// using external js modules in Angular
+// using external js modules
 declare var Slick: any;
 
 @inject(ExportService, FilterService, I18N)

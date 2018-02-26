@@ -206,7 +206,7 @@ export class AureliaSlickgridCustomElement {
         backendApi.internalPostProcess = (processResult: any) => {
           const datasetName = (backendApi && backendApi.service && typeof backendApi.service.getDatasetName === 'function') ? backendApi.service.getDatasetName() : '';
           if (!processResult || !processResult.data || !processResult.data[datasetName]) {
-            throw new Error(`Your GraphQL result is invalid and/or does not follow the required result structure. Please check the result and/or review structure to use in Angular-Slickgrid Wiki in the GraphQL section.`);
+            throw new Error(`Your GraphQL result is invalid and/or does not follow the required result structure. Please check the result and/or review structure to use in Aurelia-Slickgrid Wiki in the GraphQL section.`);
           }
           this._dataset = processResult.data[datasetName].nodes;
           this.refreshGridData(this._dataset, processResult.data[datasetName].totalCount);
@@ -239,7 +239,7 @@ export class AureliaSlickgridCustomElement {
     // if user set an onInit Backend, we'll run it right away (and if so, we also need to run preProcess, internalPostProcess & postProcess)
     if (gridOptions.backendServiceApi || gridOptions.onBackendEventApi) {
       if (gridOptions.onBackendEventApi) {
-        console.warn(`"onBackendEventApi" has been DEPRECATED, please consider using "backendServiceApi" in the short term since "onBackendEventApi" will be removed in future versions. You can take look at the Angular-Slickgrid Wikis for OData/GraphQL Services implementation`);
+        console.warn(`"onBackendEventApi" has been DEPRECATED, please consider using "backendServiceApi" in the short term since "onBackendEventApi" will be removed in future versions. You can take look at the Aurelia-Slickgrid Wikis for OData/GraphQL Services implementation`);
       }
 
       if (gridOptions.backendServiceApi && gridOptions.backendServiceApi.service) {

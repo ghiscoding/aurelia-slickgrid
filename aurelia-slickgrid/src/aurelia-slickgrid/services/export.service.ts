@@ -20,7 +20,7 @@ import { TextEncoder } from 'text-encoding-utf-8';
 import { addWhiteSpaces, htmlEntityDecode } from './../services/utilities';
 import * as $ from 'jquery';
 
-// using external js modules in Angular
+// using external js modules
 declare let Slick: any;
 
 export interface ExportColumnHeader {

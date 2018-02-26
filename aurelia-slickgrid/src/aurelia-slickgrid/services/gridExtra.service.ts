@@ -1,7 +1,7 @@
 import { Column, GridOption } from './../models/index';
 import * as $ from 'jquery';
 
-// using external js modules in Angular
+// using external js modules
 declare var Slick: any;
 
 export class GridExtraService {

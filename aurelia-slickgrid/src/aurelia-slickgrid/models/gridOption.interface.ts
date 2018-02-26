@@ -115,7 +115,7 @@ export interface GridOption {
   /** Do we want to force fit columns in the grid at all time? */
   forceFitColumns?: boolean;
 
-  /** Grid DOM element container ID (used Angular-Slickgrid auto-resizer) */
+  /** Grid DOM element container ID (used Aurelia-Slickgrid auto-resizer) */
   gridContainerId?: string;
 
   /** Grid Menu options (aka hamburger menu) */

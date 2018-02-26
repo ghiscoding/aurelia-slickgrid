@@ -26,7 +26,7 @@ export interface BackendServiceApi {
   filterTypingDebounce?: number;
 
   /**
-   * INTERNAL USAGE ONLY by Angular-Validation
+   * INTERNAL USAGE ONLY by Aurelia-Slickgrid
    * This internal process will be run just before postProcess and is meant to refresh the Dataset & Pagination after a GraphQL call
    */
   internalPostProcess?: (result: GraphqlResult) => void;
