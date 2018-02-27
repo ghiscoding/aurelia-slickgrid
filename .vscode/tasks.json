@@ -55,6 +55,24 @@
         "start:github-demo"
       ],
       "problemMatcher": []
+    },
+    {
+      "label": "Prepare Release as Minor (0.x.0)",
+      "command": "yarn",
+      "type": "shell",
+      "args": [
+        "run release -- --release-as minor --infile ./doc/CHANGELOG.md"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Prepare Release as Patch (0.0.x)",
+      "command": "yarn",
+      "type": "shell",
+      "args": [
+        "run release -- --release-as patch --infile ./doc/CHANGELOG.md"
+      ],
+      "problemMatcher": []
     }
   ]
 }
