@@ -195,7 +195,7 @@ export class ControlAndPluginService {
     this._grid.autosizeColumns();
   }
 
-  destroy() {
+  dispose() {
     this._grid = null;
     this._dataView = null;
     this.visibleColumns = [];

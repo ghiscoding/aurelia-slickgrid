@@ -1,10 +1,13 @@
 import { bindable, inject } from 'aurelia-framework';
+import { Subscription } from 'aurelia-event-aggregator';
 import { GridOption } from './models/index';
 import { FilterService } from './services/filter.service';
 import { SortService } from './services/sort.service';
 
 @inject(FilterService, SortService)
 export class SlickPaginationCustomElement {
+  private _filterSubcription: Subscription;
+  private _sorterSubcription: Subscription;
   @bindable() grid: any;
   @bindable() gridPaginationOptions: GridOption;
   private _gridPaginationOptions: GridOption;
@@ -31,12 +34,16 @@ export class SlickPaginationCustomElement {
     }
 
     // Subscribe to Event Emitter of Filter & Sort changed, go back to page 1 when that happen
-    this.filterService.onFilterChanged.subscribe('filterService:changed', (data: string) => {
+    this._filterSubcription = this.filterService.onFilterChanged.subscribe('filterService:changed', (data: string) => {
       this.refreshPagination(true);
     });
-    this.sortService.onSortChanged.subscribe('sortService:changed', (data: string) => {
+    this._sorterSubcription = this.sortService.onSortChanged.subscribe('sortService:changed', (data: string) => {
       this.refreshPagination(true);
     });
+  }
+
+  detached() {
+    this.dispose();
   }
 
   ceil(number: number) {
@@ -64,6 +71,15 @@ export class SlickPaginationCustomElement {
     if (this.pageNumber > 0) {
       this.pageNumber--;
       this.onPageChanged(event, this.pageNumber);
+    }
+  }
+
+  dispose() {
+    if (this._filterSubcription) {
+      this._filterSubcription.dispose();
+    }
+    if (this._sorterSubcription) {
+      this._sorterSubcription.dispose();
     }
   }
 
