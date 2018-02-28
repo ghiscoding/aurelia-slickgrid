@@ -29,6 +29,12 @@ export class Example2 {
     this.getData();
   }
 
+  detached() {
+    // unsubscrible any Slick.Event you might have used
+    // a reminder again, these are SlickGrid Event, not Event Aggregator events
+    this.gridObj.onSelectedRowsChanged.unsubscribe();
+  }
+
   /* Define grid Options and Columns */
   defineGrid() {
     this.columnDefinitions = [

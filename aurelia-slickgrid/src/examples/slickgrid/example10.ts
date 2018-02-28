@@ -1,5 +1,5 @@
 import { autoinject, bindable } from 'aurelia-framework';
-import { Column, FieldType, Formatter, Formatters, GridExtraService, GridExtraUtils, GridOption } from 'aurelia-slickgrid';
+import { Column, FieldType, Formatter, Formatters, GridExtraService, GridExtraUtils, GridOption } from '../../aurelia-slickgrid';
 
 @autoinject()
 export class Example2 {
