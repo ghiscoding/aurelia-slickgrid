@@ -7,6 +7,7 @@ import {
   FilterCallback,
   FilterType,
   HtmlElementPosition,
+  MultipleSelectOption,
   SelectOption
 } from './../models/index';
 import * as $ from 'jquery';
@@ -18,7 +19,7 @@ export class MultipleSelectFilter implements Filter {
   searchTerms: string[] | number[] | boolean[];
   columnDef: Column;
   callback: FilterCallback;
-  defaultOptions: any;
+  defaultOptions: MultipleSelectOption;
   isFilled = false;
   filterType = FilterType.multipleSelect;
 
@@ -165,7 +166,7 @@ export class MultipleSelectFilter implements Filter {
 
     // merge options & attach multiSelect
     const filterOptions = (this.columnDef.filter) ? this.columnDef.filter.filterOptions : {};
-    const options = { ...this.defaultOptions, ...filterOptions };
+    const options: MultipleSelectOption = { ...this.defaultOptions, ...filterOptions };
     this.$filterElm = this.$filterElm.multipleSelect(options);
   }
 
