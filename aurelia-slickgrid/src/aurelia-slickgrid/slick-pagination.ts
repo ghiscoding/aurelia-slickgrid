@@ -74,6 +74,16 @@ export class SlickPaginationCustomElement {
     }
   }
 
+  changeToCurrentPage(event: any) {
+    this.pageNumber = (event && event.target && event.target.value) ? event.target.value : 1;
+    if (this.pageNumber < 1) {
+      this.pageNumber = 1;
+    } else if (this.pageNumber > this.pageCount) {
+      this.pageNumber = this.pageCount;
+    }
+    this.onPageChanged(event, this.pageNumber);
+  }
+
   dispose() {
     if (this._filterSubcription) {
       this._filterSubcription.dispose();
