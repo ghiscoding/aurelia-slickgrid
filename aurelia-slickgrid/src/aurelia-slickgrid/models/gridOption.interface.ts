@@ -8,6 +8,7 @@ import { GridMenu } from './gridMenu.interface';
 import { HeaderButton } from './headerButton.interface';
 import { HeaderMenu } from './headerMenu.interface';
 import { Pagination } from './pagination.interface';
+import { FilterType } from './filterType.enum';
 
 export interface GridOption {
   /** Defaults to false, which leads to load editor asynchronously (delayed) */
@@ -48,6 +49,9 @@ export interface GridOption {
 
   /** Unique property name on the dataset used by Slick.Data.DataView */
   datasetIdPropertyName?: string;
+
+  /** The default filter type to use when none is specified */
+  defaultFilterType?: FilterType | string;
 
   /** Defaults to false, when enabled will give the possibility to edit cell values with inline editors. */
   editable?: boolean;
