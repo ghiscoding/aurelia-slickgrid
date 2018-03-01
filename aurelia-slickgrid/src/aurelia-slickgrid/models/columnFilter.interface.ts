@@ -3,7 +3,8 @@ import {
   Filter,
   FilterType,
   FormElementType,
-  MultipleSelectOption
+  MultipleSelectOption,
+  SearchTerm
 } from './../models/index';
 
 export interface ColumnFilter {
@@ -20,10 +21,10 @@ export interface ColumnFilter {
   customFilter?: Filter;
 
   /** Search term (singular) */
-  searchTerm?: string | number | boolean;
+  searchTerm?: SearchTerm;
 
   /** Search terms (collection) */
-  searchTerms?: string[] | number[] | boolean[];
+  searchTerms?: SearchTerm[];
 
   /** Operator to use when filtering (>, >=, EQ, IN, ...) */
   operator?: string;

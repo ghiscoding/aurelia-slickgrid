@@ -51,6 +51,7 @@ export * from './operatorString';
 export * from './operatorType';
 export * from './pagination.interface';
 export * from './paginationChangedArgs.interface';
+export * from './searchTerm.type';
 export * from './selectOption.interface';
 export * from './slickEvent.interface';
 export * from './sortChangedArgs.interface';

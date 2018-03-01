@@ -8,6 +8,7 @@ import {
   FilterCallback,
   HtmlElementPosition,
   MultipleSelectOption,
+  SearchTerm,
   SelectOption
 } from './../models/index';
 import * as $ from 'jquery';
@@ -16,7 +17,7 @@ import * as $ from 'jquery';
 export class SingleSelectFilter implements Filter {
   $filterElm: any;
   grid: any;
-  searchTerm: number | string | boolean;
+  searchTerm: SearchTerm;
   columnDef: Column;
   callback: FilterCallback;
   defaultOptions: MultipleSelectOption;

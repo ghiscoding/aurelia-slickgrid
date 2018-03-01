@@ -10,6 +10,7 @@ import {
   FieldType,
   FilterType,
   GridOption,
+  SearchTerm,
   SlickEvent
 } from './../models/index';
 import * as $ from 'jquery';
@@ -291,7 +292,7 @@ export class FilterService {
     const columnId = columnDef.id || '';
 
     if (columnDef && columnId !== 'selector' && columnDef.filterable) {
-      let searchTerms: string[] | number[] | boolean[] = (columnDef.filter && columnDef.filter.searchTerms) ? columnDef.filter.searchTerms : [];
+      let searchTerms: SearchTerm[] = (columnDef.filter && columnDef.filter.searchTerms) ? columnDef.filter.searchTerms : [];
       let searchTerm = (columnDef.filter && (columnDef.filter.searchTerm !== undefined || columnDef.filter.searchTerm !== null)) ? columnDef.filter.searchTerm : '';
 
       // keep the filter in a columnFilters for later reference
@@ -351,7 +352,7 @@ export class FilterService {
     this._subscriber.subscribe(() => this.onFilterChanged.publish('filterService:changed', `onFilterChanged by ${sender}`));
   }
 
-  private keepColumnFilters(searchTerm: string | number | boolean, searchTerms: any, columnDef: any) {
+  private keepColumnFilters(searchTerm: SearchTerm, searchTerms: SearchTerm[], columnDef: any) {
     if (searchTerm !== undefined && searchTerm !== null && searchTerm !== '') {
       this._columnFilters[columnDef.id] = {
         columnId: columnDef.id,

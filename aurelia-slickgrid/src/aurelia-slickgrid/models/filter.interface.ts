@@ -1,8 +1,10 @@
-import { I18N } from 'aurelia-i18n';
-import { FilterType } from './filterType.enum';
-import { FilterCallback } from './filterCallback.interface';
-import { Column } from './column.interface';
-import { FilterArguments } from './filterArguments.interface';
+import {
+  FilterType,
+  FilterCallback,
+  Column,
+  FilterArguments,
+  SearchTerm
+} from './../models/index';
 
 // export type Filter = (searchTerms: string | number | string[] | number[], columnDef: Column, params?: any) => string;
 export interface Filter {
@@ -21,10 +23,10 @@ export interface Filter {
   grid: any;
 
   /** Defined search term to pre-load */
-  searchTerm?: string | number | boolean;
+  searchTerm?: SearchTerm;
 
   /** Array of defined search terms to pre-load */
-  searchTerms?: string[] | number[] | boolean[];
+  searchTerms?: SearchTerm[];
 
   /** You can use "params" to pass any types of arguments to your Filter */
   params?: any | any[];

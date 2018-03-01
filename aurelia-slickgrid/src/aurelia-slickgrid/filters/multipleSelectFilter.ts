@@ -8,6 +8,7 @@ import {
   FilterType,
   HtmlElementPosition,
   MultipleSelectOption,
+  SearchTerm,
   SelectOption
 } from './../models/index';
 import * as $ from 'jquery';
@@ -16,7 +17,7 @@ import * as $ from 'jquery';
 export class MultipleSelectFilter implements Filter {
   $filterElm: any;
   grid: any;
-  searchTerms: string[] | number[] | boolean[];
+  searchTerms: SearchTerm[];
   columnDef: Column;
   callback: FilterCallback;
   defaultOptions: MultipleSelectOption;
