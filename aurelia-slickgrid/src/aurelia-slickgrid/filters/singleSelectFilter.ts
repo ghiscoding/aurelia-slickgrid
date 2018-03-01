@@ -7,6 +7,8 @@ import {
   FilterArguments,
   FilterCallback,
   HtmlElementPosition,
+  MultipleSelectOption,
+  SearchTerm,
   SelectOption
 } from './../models/index';
 import * as $ from 'jquery';
@@ -15,10 +17,10 @@ import * as $ from 'jquery';
 export class SingleSelectFilter implements Filter {
   $filterElm: any;
   grid: any;
-  searchTerm: number | string | boolean;
+  searchTerm: SearchTerm;
   columnDef: Column;
   callback: FilterCallback;
-  defaultOptions: any;
+  defaultOptions: MultipleSelectOption;
   filterType = FilterType.singleSelect;
 
   constructor(private i18n: I18N) {
@@ -142,7 +144,7 @@ export class SingleSelectFilter implements Filter {
 
     // merge options & attach multiSelect
     const filterOptions = (this.columnDef.filter) ? this.columnDef.filter.filterOptions : {};
-    const options = { ...this.defaultOptions, ...filterOptions };
+    const options: MultipleSelectOption = { ...this.defaultOptions, ...filterOptions };
     this.$filterElm = this.$filterElm.multipleSelect(options);
   }
 

@@ -1,9 +1,9 @@
 import { EventAggregator } from 'aurelia-event-aggregator';
-import { FieldType, GridOption } from './../models/index';
+import { FieldType, GridOption, SlickEvent } from './../models/index';
 import { Sorters } from './../sorters/index';
 
 export class SortService {
-  subscriber: any;
+  private _subscriber: SlickEvent;
   onSortChanged = new EventAggregator();
 
   /**
@@ -12,9 +12,9 @@ export class SortService {
    * @param gridOptions Grid Options object
    */
   attachBackendOnSort(grid: any, gridOptions: GridOption) {
-    this.subscriber = grid.onSort;
+    this._subscriber = grid.onSort;
     this.emitSortChangedBy('remote');
-    this.subscriber.subscribe(this.attachBackendOnSortSubscribe);
+    this._subscriber.subscribe(this.attachBackendOnSortSubscribe);
   }
 
   async attachBackendOnSortSubscribe(event: Event, args: any) {
@@ -53,9 +53,9 @@ export class SortService {
    * @param dataView
    */
   attachLocalOnSort(grid: any, gridOptions: GridOption, dataView: any) {
-    this.subscriber = grid.onSort;
+    this._subscriber = grid.onSort;
     this.emitSortChangedBy('local');
-    this.subscriber.subscribe((e: any, args: any) => {
+    this._subscriber.subscribe((e: any, args: any) => {
       // multiSort and singleSort are not exactly the same, but we want to structure it the same for the (for loop) after
       // also to avoid having to rewrite the for loop in the sort, we will make the singleSort an array of 1 object
       const sortColumns = (args.multiColumnSort) ? args.sortCols : new Array({ sortAsc: args.sortAsc, sortCol: args.sortCol });
@@ -102,9 +102,10 @@ export class SortService {
     });
   }
 
-  destroy() {
-    if (this.subscriber && typeof this.subscriber.unsubscribe === 'function') {
-      this.subscriber.unsubscribe();
+  dispose() {
+    // unsubscribe local event
+    if (this._subscriber && typeof this._subscriber.unsubscribe === 'function') {
+      this._subscriber.unsubscribe();
     }
   }
 
@@ -114,6 +115,6 @@ export class SortService {
    * @param sender
    */
   emitSortChangedBy(sender: string) {
-    this.subscriber.subscribe(() => this.onSortChanged.publish('sortService:changed', `onSortChanged by ${sender}`));
+    this._subscriber.subscribe(() => this.onSortChanged.publish('sortService:changed', `onSortChanged by ${sender}`));
   }
 }

@@ -5,7 +5,8 @@ import {
   Filter,
   FilterType,
   FilterArguments,
-  FilterCallback
+  FilterCallback,
+  SearchTerm
 } from './../models/index';
 import * as $ from 'jquery';
 
@@ -13,7 +14,7 @@ import * as $ from 'jquery';
 export class SelectFilter implements Filter {
   $filterElm: any;
   grid: any;
-  searchTerm: string | number | boolean;
+  searchTerm: SearchTerm;
   columnDef: Column;
   callback: FilterCallback;
   filterType: FilterType.select;

@@ -1,5 +1,5 @@
 import { autoinject, bindable } from 'aurelia-framework';
-import { Column, FieldType, Formatter, Formatters, GridExtraService, GridExtraUtils, GridOption } from 'aurelia-slickgrid';
+import { Column, FieldType, Formatter, Formatters, GridExtraService, GridExtraUtils, GridOption } from '../../aurelia-slickgrid';
 
 @autoinject()
 export class Example2 {
@@ -24,6 +24,12 @@ export class Example2 {
   attached() {
     // populate the dataset once the grid is ready
     this.getData();
+  }
+
+  detached() {
+    // unsubscrible any Slick.Event you might have used
+    // a reminder again, these are SlickGrid Event, not Event Aggregator events
+    this.gridObj.onSelectedRowsChanged.unsubscribe();
   }
 
   /* Define grid Options and Columns */

@@ -32,6 +32,12 @@ export class Example8 {
     this.getData();
   }
 
+  detached() {
+    // unsubscrible any Slick.Event you might have used
+    // a reminder again, these are SlickGrid Event, not Event Aggregator events
+    this.gridObj.onSort.unsubscribe();
+  }
+
   defineGrid() {
     this.columnDefinitions = [
       { id: 'title', name: 'Title', field: 'title' },

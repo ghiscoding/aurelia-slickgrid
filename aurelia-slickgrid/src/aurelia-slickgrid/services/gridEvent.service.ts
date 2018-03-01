@@ -1,6 +1,6 @@
 import { OnEventArgs, CellArgs, GridOption } from './../models/index';
 
-// using external js modules in Aurelia
+// using external non-typed js libraries
 declare var Slick: any;
 
 export class GridEventService {

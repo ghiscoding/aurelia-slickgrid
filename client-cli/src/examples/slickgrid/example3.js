@@ -7,18 +7,20 @@ export class Example3 {
   @bindable() dataview;
   title = 'Example 3: Editors';
   subTitle = `
-    Grid with Inline Editors and onCellClick actions (<a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Editors" target="_blank">Wiki link</a>).
-    <ul>
-      <li>When using "enableCellNavigation: true", clicking on a cell will automatically make it active &amp; selected.
-      <ul><li>If you don't want this behavior, then you should disable "enableCellNavigation"</li></ul>
-      <li>Inline Editors requires "enableCellNavigation: true" (not sure why though)</li>
-    </ul>
+  Grid with Inline Editors and onCellClick actions (<a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Editors" target="_blank">Wiki link</a>).
+  <ul>
+  <li>When using "enableCellNavigation: true", clicking on a cell will automatically make it active &amp; selected.
+  <ul><li>If you don't want this behavior, then you should disable "enableCellNavigation"</li></ul>
+  <li>Inline Editors requires "enableCellNavigation: true" (not sure why though)</li>
+  </ul>
   `;
   gridOptions;
   columnDefinitions;
+  commandQueue = [];
   dataset = [];
   updatedObject;
   isAutoEdit = true;
+  alertWarning;
   gridExtraService;
   resizer;
 
@@ -34,6 +36,13 @@ export class Example3 {
     this.getData();
   }
 
+  detached() {
+    // unsubscrible any Slick.Event you might have used
+    // a reminder again, these are SlickGrid Event, not Event Aggregator events
+    this.gridObj.onCellChange.unsubscribe();
+    this.gridObj.onClick.unsubscribe();
+  }
+
   /* Define grid Options and Columns */
   defineGrid() {
     this.columnDefinitions = [
@@ -45,7 +54,7 @@ export class Example3 {
         // use onCellClick OR grid.onClick.subscribe which you can see down below
         onCellClick: (args) => {
           console.log(args);
-          alert(`Editing: ${args.dataContext.title}`);
+          this.alertWarning = `Editing: ${args.dataContext.title}`;
           this.gridExtraService.highlightRow(args.row, 1500);
           this.gridExtraService.setSelectedRow(args.row);
         }
@@ -54,12 +63,14 @@ export class Example3 {
         id: 'delete', field: 'id',
         formatter: Formatters.deleteIcon,
         minWidth: 30,
-        maxWidth: 30,
+        maxWidth: 30
         // use onCellClick OR grid.onClick.subscribe which you can see down below
-        onCellClick: (args) => {
+        /*
+        onCellClick: (args: OnEventArgs) => {
           console.log(args);
-          alert(`Deleting: ${args.dataContext.title}`);
+          this.alertWarning = `Deleting: ${args.dataContext.title}`;
         }
+        */
       },
       { id: 'title', name: 'Title', field: 'title', sortable: true, type: FieldType.string, editor: Editors.longText, minWidth: 100 },
       { id: 'duration', name: 'Duration (days)', field: 'duration', sortable: true, type: FieldType.number, editor: Editors.text, minWidth: 100 },
@@ -77,7 +88,11 @@ export class Example3 {
         sidePadding: 15
       },
       editable: true,
-      enableCellNavigation: true
+      enableCellNavigation: true,
+      editCommandHandler: (item, column, editCommand) => {
+        this._commandQueue.push(editCommand);
+        editCommand.execute();
+      }
     };
   }
 
@@ -121,7 +136,7 @@ export class Example3 {
       const column = GridExtraUtils.getColumnDefinitionAndData(args);
       console.log('onClick', args, column);
       if (column.columnDef.id === 'edit') {
-        alert(`Call a modal window to edit: ${column.dataContext.title}`);
+        this.alertWarning = `open a modal window to edit: ${column.dataContext.title}`;
 
         // highlight the row, to customize the color, you can change the SASS variable $row-highlight-background-color
         this.gridExtraService.highlightRow(args.row, 1500);

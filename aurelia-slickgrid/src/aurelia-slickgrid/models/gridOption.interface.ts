@@ -1,14 +1,18 @@
-import { AutoResizeOption } from './autoResizeOption.interface';
-import { BackendEventChanged } from './backendEventChanged.interface';
-import { BackendServiceApi } from './backendServiceApi.interface';
-import { ColumnPicker } from './columnPicker.interface';
-import { CheckboxSelector } from './checkboxSelector.interface';
-import { ExportOption } from './exportOption.interface';
-import { GridMenu } from './gridMenu.interface';
-import { HeaderButton } from './headerButton.interface';
-import { HeaderMenu } from './headerMenu.interface';
-import { Pagination } from './pagination.interface';
-import { FilterType } from './filterType.enum';
+import {
+  AutoResizeOption,
+  BackendEventChanged,
+  BackendServiceApi,
+  Column,
+  ColumnPicker,
+  CheckboxSelector,
+  EditCommand,
+  ExportOption,
+  FilterType,
+  GridMenu,
+  HeaderButton,
+  HeaderMenu,
+  Pagination
+} from './../models/index';
 
 export interface GridOption {
   /** Defaults to false, which leads to load editor asynchronously (delayed) */
@@ -55,6 +59,9 @@ export interface GridOption {
 
   /** Defaults to false, when enabled will give the possibility to edit cell values with inline editors. */
   editable?: boolean;
+
+  /** option to intercept edit commands and implement undo support. */
+  editCommandHandler?: (item: any, column: Column, command: EditCommand) => void;
 
   /** Do we want to enable asynchronous (delayed) post rendering */
   enableAsyncPostRender?: boolean;

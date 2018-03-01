@@ -2,24 +2,29 @@ import { I18N } from 'aurelia-i18n';
 import { autoinject, bindable } from 'aurelia-framework';
 import { Column, Editors, FieldType, Formatters, GridExtraService, GridExtraUtils, GridOption, OnEventArgs, ResizerService } from '../../aurelia-slickgrid';
 
+// using external non-typed js libraries
+declare var Slick: any;
+
 @autoinject()
 export class Example3 {
   @bindable() gridObj: any;
   @bindable() dataview: any;
   title = 'Example 3: Editors';
   subTitle = `
-    Grid with Inline Editors and onCellClick actions (<a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Editors" target="_blank">Wiki link</a>).
-    <ul>
-      <li>When using "enableCellNavigation: true", clicking on a cell will automatically make it active &amp; selected.</li>
-      <ul><li>If you don't want this behavior, then you should disable "enableCellNavigation"</li></ul>
-      <li>Inline Editors requires "enableCellNavigation: true" (not sure why though)</li>
-    </ul>
+  Grid with Inline Editors and onCellClick actions (<a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Editors" target="_blank">Wiki link</a>).
+  <ul>
+  <li>When using "enableCellNavigation: true", clicking on a cell will automatically make it active &amp; selected.</li>
+  <ul><li>If you don't want this behavior, then you should disable "enableCellNavigation"</li></ul>
+  <li>Inline Editors requires "enableCellNavigation: true" (not sure why though)</li>
+  </ul>
   `;
+  private _commandQueue = [];
   gridOptions: GridOption;
   columnDefinitions: Column[];
   dataset: any[];
   updatedObject: any;
   isAutoEdit: boolean = true;
+  alertWarning: any;
   selectedLanguage: string;
 
   constructor(private gridExtraService: GridExtraService, private i18n: I18N, private resizer: ResizerService) {
@@ -33,6 +38,13 @@ export class Example3 {
     this.getData();
   }
 
+  detached() {
+    // unsubscrible any Slick.Event you might have used
+    // a reminder again, these are SlickGrid Event, not Event Aggregator events
+    this.gridObj.onCellChange.unsubscribe();
+    this.gridObj.onClick.unsubscribe();
+  }
+
   /* Define grid Options and Columns */
   defineGrid() {
     this.columnDefinitions = [
@@ -44,7 +56,7 @@ export class Example3 {
         // use onCellClick OR grid.onClick.subscribe which you can see down below
         onCellClick: (args: OnEventArgs) => {
           console.log(args);
-          alert(`Editing: ${args.dataContext.title}`);
+          this.alertWarning = `Editing: ${args.dataContext.title}`;
           this.gridExtraService.highlightRow(args.row, 1500);
           this.gridExtraService.setSelectedRow(args.row);
         }
@@ -58,7 +70,7 @@ export class Example3 {
         /*
         onCellClick: (args: OnEventArgs) => {
           console.log(args);
-          alert(`Deleting: ${args.dataContext.title}`);
+          this.alertWarning = `Deleting: ${args.dataContext.title}`;
         }
         */
       },
@@ -78,7 +90,11 @@ export class Example3 {
         sidePadding: 15
       },
       editable: true,
-      enableCellNavigation: true
+      enableCellNavigation: true,
+      editCommandHandler: (item, column, editCommand) => {
+        this._commandQueue.push(editCommand);
+        editCommand.execute();
+      }
     };
   }
 
@@ -131,7 +147,7 @@ export class Example3 {
       const column = GridExtraUtils.getColumnDefinitionAndData(args);
       console.log('onClick', args, column);
       if (column.columnDef.id === 'edit') {
-        alert(`Call a modal window to edit: ${column.dataContext.title}`);
+        this.alertWarning = `open a modal window to edit: ${column.dataContext.title}`;
 
         // highlight the row, to customize the color, you can change the SASS variable $row-highlight-background-color
         this.gridExtraService.highlightRow(args.row, 1500);
@@ -157,5 +173,13 @@ export class Example3 {
   switchLanguage() {
     this.selectedLanguage = (this.selectedLanguage === 'en') ? 'fr' : 'en';
     this.i18n.setLocale(this.selectedLanguage);
+  }
+
+  undo() {
+    const command = this._commandQueue.pop();
+    if (command && Slick.GlobalEditorLock.cancelCurrentEdit()) {
+      command.undo();
+      this.gridObj.gotoCell(command.row, command.cell, false);
+    }
   }
 }

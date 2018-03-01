@@ -24,7 +24,8 @@ import {
   GraphqlResult,
   GraphqlServiceOption,
   GridOption,
-  OnEventArgs
+  OnEventArgs,
+  SearchTerm
 } from './models/index';
 
 // editors, formatters, ...
@@ -93,6 +94,7 @@ export {
   FormElementType,
   FieldType,
   OnEventArgs,
+  SearchTerm,
 
   Editors,
   Filters,

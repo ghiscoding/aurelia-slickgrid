@@ -45,7 +45,7 @@ import {
 } from './services/index';
 import * as $ from 'jquery';
 
-// using external js modules in Aurelia
+// using external non-typed js libraries
 declare var Slick: any;
 
 const eventPrefix = 'sg';
@@ -147,12 +147,12 @@ export class AureliaSlickgridCustomElement {
       detail: this.grid
     }));
     this.dataview = [];
-    this.controlAndPluginService.destroy();
-    this.gridEventService.dispose();
-    this.filterService.destroy();
-    this.resizer.destroy();
-    this.sortService.destroy();
     this._eventHandler.unsubscribeAll();
+    this.controlAndPluginService.dispose();
+    this.gridEventService.dispose();
+    this.filterService.dispose();
+    this.resizer.dispose();
+    this.sortService.dispose();
     this.grid.destroy();
     this.localeChangedSubscriber.dispose();
     this.ea.publish('onAfterGridDestroyed', true);
@@ -174,10 +174,6 @@ export class AureliaSlickgridCustomElement {
       height: `${binding.gridHeight}px`,
       width: `${binding.gridWidth}px`
     };
-  }
-
-  unbind(binding: any, scope: any) {
-    this.resizer.destroy();
   }
 
   datasetChanged(newValue: any[], oldValue: any[]) {
@@ -309,11 +305,11 @@ export class AureliaSlickgridCustomElement {
     this.gridEventService.attachOnCellChange(grid, this._gridOptions, dataView);
     this.gridEventService.attachOnClick(grid, this._gridOptions, dataView);
 
-    dataView.onRowCountChanged.subscribe((e: any, args: any) => {
+    this._eventHandler.subscribe(dataView.onRowCountChanged, (e: any, args: any) => {
       grid.updateRowCount();
       grid.render();
     });
-    dataView.onRowsChanged.subscribe((e: any, args: any) => {
+    this._eventHandler.subscribe(dataView.onRowsChanged, (e: any, args: any) => {
       grid.invalidateRows(args.rows);
       grid.render();
     });

@@ -10,6 +10,7 @@ import {
   FieldType,
   FilterType,
   GridOption,
+  SearchTerm,
   SlickEvent
 } from './../models/index';
 import * as $ from 'jquery';
@@ -19,13 +20,14 @@ declare var Slick: any;
 
 @inject(FilterFactory)
 export class FilterService {
+  private _eventHandler = new Slick.EventHandler();
+  private _subscriber: SlickEvent = new Slick.Event();
   private _filters: any[] = [];
   private _columnFilters: ColumnFilters = {};
   private _dataView: any;
   private _grid: any;
   private _gridOptions: GridOption;
   private _onFilterChangedOptions: any;
-  private subscriber: SlickEvent;
   onFilterChanged = new EventAggregator();
 
   constructor(private filterFactory: FilterFactory) { }
@@ -41,12 +43,12 @@ export class FilterService {
    * @param gridOptions Grid Options object
    */
   attachBackendOnFilter(grid: any, options: GridOption) {
-    this.subscriber = new Slick.Event();
-    this.emitFilterChangedBy('remote');
-    this.subscriber.subscribe(this.attachBackendOnFilterSubscribe);
-
     this._filters = [];
-    grid.onHeaderRowCellRendered.subscribe((e: Event, args: any) => {
+    this.emitFilterChangedBy('remote');
+    this._subscriber.subscribe(this.attachBackendOnFilterSubscribe);
+
+    // subscribe to SlickGrid onHeaderRowCellRendered event to create filter template
+    this._eventHandler.subscribe(grid.onHeaderRowCellRendered, (e: Event, args: any) => {
       this.addFilterTemplateToHeaderRow(args);
     });
   }
@@ -117,21 +119,21 @@ export class FilterService {
    */
   attachLocalOnFilter(grid: any, options: GridOption, dataView: any) {
     this._dataView = dataView;
-    this.subscriber = new Slick.Event();
+    this._filters = [];
     this.emitFilterChangedBy('local');
 
     dataView.setFilterArgs({ columnFilters: this._columnFilters, grid: this._grid });
     dataView.setFilter(this.customLocalFilter.bind(this, dataView));
 
-    this.subscriber.subscribe((e: any, args: any) => {
+    this._subscriber.subscribe((e: any, args: any) => {
       const columnId = args.columnId;
       if (columnId != null) {
         dataView.refresh();
       }
     });
 
-    this._filters = [];
-    grid.onHeaderRowCellRendered.subscribe((e: Event, args: any) => {
+    // subscribe to SlickGrid onHeaderRowCellRendered event to create filter template
+    this._eventHandler.subscribe(grid.onHeaderRowCellRendered, (e: Event, args: any) => {
       this.addFilterTemplateToHeaderRow(args);
     });
   }
@@ -141,8 +143,10 @@ export class FilterService {
       const columnFilter = args.columnFilters[columnId];
       const columnIndex = args.grid.getColumnIndex(columnId);
       const columnDef = args.grid.getColumns()[columnIndex];
+      if (!columnDef) {
+        return false;
+      }
       const fieldType = columnDef.type || FieldType.string;
-      const conditionalFilterFn = (columnDef.filter && columnDef.filter.conditionalFilter) ? columnDef.filter.conditionalFilter : null;
       const filterSearchType = (columnDef.filterSearchType) ? columnDef.filterSearchType : null;
 
       let cellValue = item[columnDef.queryField || columnDef.field];
@@ -212,9 +216,7 @@ export class FilterService {
         cellValueLastChar: lastValueChar,
         filterSearchType
       };
-      if (conditionalFilterFn && typeof conditionalFilterFn === 'function') {
-        conditionalFilterFn(conditionOptions);
-      }
+
       if (!FilterConditions.executeMappedCondition(conditionOptions)) {
         return false;
       }
@@ -222,17 +224,22 @@ export class FilterService {
     return true;
   }
 
-  destroy() {
-    this.destroyFilters();
-    if (this.subscriber && typeof this.subscriber.unsubscribe === 'function') {
-      this.subscriber.unsubscribe();
+  dispose() {
+    this.disposeColumnFilters();
+
+    // unsubscribe all SlickGrid events
+    this._eventHandler.unsubscribeAll();
+
+    // unsubscribe local event
+    if (this._subscriber && typeof this._subscriber.unsubscribe === 'function') {
+      this._subscriber.unsubscribe();
     }
   }
 
   /**
-   * Destroy the filters, since it's a singleton, we don't want to affect other grids with same columns
+   * Dispose the filters, since it's a singleton, we don't want to affect other grids with same columns
    */
-  destroyFilters() {
+  disposeColumnFilters() {
     // we need to loop through all columnFilters and delete them 1 by 1
     // only trying to make columnFilter an empty (without looping) would not trigger a dataset change
     for (const columnId in this._columnFilters) {
@@ -269,7 +276,7 @@ export class FilterService {
       };
     }
 
-    this.triggerEvent(this.subscriber, {
+    this.triggerEvent(this._subscriber, {
       columnId,
       columnDef: args.columnDef || null,
       columnFilters: this._columnFilters,
@@ -285,7 +292,7 @@ export class FilterService {
     const columnId = columnDef.id || '';
 
     if (columnDef && columnId !== 'selector' && columnDef.filterable) {
-      let searchTerms: string[] | number[] | boolean[] = (columnDef.filter && columnDef.filter.searchTerms) ? columnDef.filter.searchTerms : [];
+      let searchTerms: SearchTerm[] = (columnDef.filter && columnDef.filter.searchTerms) ? columnDef.filter.searchTerms : [];
       let searchTerm = (columnDef.filter && (columnDef.filter.searchTerm !== undefined || columnDef.filter.searchTerm !== null)) ? columnDef.filter.searchTerm : '';
 
       // keep the filter in a columnFilters for later reference
@@ -342,10 +349,10 @@ export class FilterService {
    * @param {string} sender
    */
   emitFilterChangedBy(sender: string) {
-    this.subscriber.subscribe(() => this.onFilterChanged.publish('filterService:changed', `onFilterChanged by ${sender}`));
+    this._subscriber.subscribe(() => this.onFilterChanged.publish('filterService:changed', `onFilterChanged by ${sender}`));
   }
 
-  private keepColumnFilters(searchTerm: string | number | boolean, searchTerms: any, columnDef: any) {
+  private keepColumnFilters(searchTerm: SearchTerm, searchTerms: SearchTerm[], columnDef: any) {
     if (searchTerm !== undefined && searchTerm !== null && searchTerm !== '') {
       this._columnFilters[columnDef.id] = {
         columnId: columnDef.id,
