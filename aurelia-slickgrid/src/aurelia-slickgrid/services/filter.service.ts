@@ -313,7 +313,7 @@ export class FilterService {
       };
 
       // depending on the Filter type, we will watch the correct event
-      const filterType = (columnDef.filter && columnDef.filter.type) ? columnDef.filter.type : FilterType.input;
+      const filterType = (columnDef.filter && columnDef.filter.type) ? columnDef.filter.type : this._gridOptions.defaultFilterType;
 
       let filter: Filter;
       switch (filterType) {

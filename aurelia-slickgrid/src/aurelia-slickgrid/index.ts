@@ -64,6 +64,8 @@ export function configure(aurelia: any, callback: any) {
 
   const config = new SlickgridConfig();
 
+  aurelia.container.registerInstance(SlickgridConfig, config);
+
   if (typeof callback === 'function') {
     callback(config);
   }
