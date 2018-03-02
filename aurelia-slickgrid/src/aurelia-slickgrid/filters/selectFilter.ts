@@ -17,7 +17,7 @@ export class SelectFilter implements Filter {
   searchTerm: SearchTerm;
   columnDef: Column;
   callback: FilterCallback;
-  filterType: FilterType.select;
+  filterType = FilterType.select;
 
   constructor(private i18n: I18N) { }
 

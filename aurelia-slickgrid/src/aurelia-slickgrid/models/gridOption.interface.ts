@@ -7,6 +7,7 @@ import {
   CheckboxSelector,
   EditCommand,
   ExportOption,
+  FilterType,
   GridMenu,
   HeaderButton,
   HeaderMenu,
@@ -52,6 +53,9 @@ export interface GridOption {
 
   /** Unique property name on the dataset used by Slick.Data.DataView */
   datasetIdPropertyName?: string;
+
+  /** The default filter type to use when none is specified */
+  defaultFilterType?: FilterType | string;
 
   /** Defaults to false, when enabled will give the possibility to edit cell values with inline editors. */
   editable?: boolean;

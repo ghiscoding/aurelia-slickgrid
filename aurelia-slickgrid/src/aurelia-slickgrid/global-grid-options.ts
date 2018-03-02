@@ -1,4 +1,4 @@
-import { DelimiterType, FileType, GridOption } from './models/index';
+import { FilterType, DelimiterType, FileType, GridOption } from './models/index';
 
 /**
  * Default Options that can be passed to the Aurelia-Slickgrid
@@ -22,6 +22,7 @@ export const GlobalGridOptions: GridOption = {
     hideSyncResizeButton: true
   },
   datasetIdPropertyName: 'id',
+  defaultFilterType: FilterType.input,
   enableAutoResize: true,
   enableRowSelection: true,
   editable: false,
