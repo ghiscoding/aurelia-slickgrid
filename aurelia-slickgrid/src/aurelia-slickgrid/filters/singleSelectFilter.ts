@@ -87,6 +87,16 @@ export class SingleSelectFilter implements Filter {
     }
   }
 
+  /**
+   * Set value(s) on the DOM element
+   */
+  setValues(values) {
+    if (values) {
+      values = Array.isArray(values) ? values : [values];
+      this.$filterElm.multipleSelect('setSelects', values);
+    }
+  }
+
   //
   // private functions
   // ------------------

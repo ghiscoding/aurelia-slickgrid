@@ -101,7 +101,7 @@ export class SlickPaginationCustomElement {
     this.onPageChanged(event, this.pageNumber);
   }
 
-  refreshPagination(isPageNumberReset?: boolean) {
+  refreshPagination(isPageNumberReset: boolean = false) {
     const backendApi = this._gridPaginationOptions.backendServiceApi || this._gridPaginationOptions.onBackendEventApi;
     if (!backendApi || !backendApi.service || !backendApi.process) {
       throw new Error(`BackendServiceApi requires at least a "process" function and a "service" defined`);
@@ -115,8 +115,11 @@ export class SlickPaginationCustomElement {
 
       // if totalItems changed, we should always go back to the first page and recalculation the From-To indexes
       if (isPageNumberReset || this.totalItems !== this._gridPaginationOptions.pagination.totalItems) {
-        this.pageNumber = 1;
-        this.recalculateFromToIndexes();
+        if (this._isFirstRender && this._gridPaginationOptions.pagination.pageNumber > 1) {
+          this.pageNumber = this._gridPaginationOptions.pagination.pageNumber || 1;
+        } else {
+          this.pageNumber = 1;
+        }
 
         // also reset the "offset" of backend service
         backendApi.service.resetPaginationOptions();
@@ -125,7 +128,7 @@ export class SlickPaginationCustomElement {
       // calculate and refresh the multiple properties of the pagination UI
       this.paginationPageSizes = this._gridPaginationOptions.pagination.pageSizes;
       this.totalItems = this._gridPaginationOptions.pagination.totalItems;
-      this.dataTo = (this.totalItems < this.itemsPerPage) ? this.totalItems : this.itemsPerPage;
+      this.recalculateFromToIndexes();
     }
     this.pageCount = Math.ceil(this.totalItems / this.itemsPerPage);
   }
@@ -165,12 +168,12 @@ export class SlickPaginationCustomElement {
         backendApi.postProcess(processResult);
       }
     } else {
-      throw new Error('Pagination with a backend service requires "onBackendEventApi" to be defined in your grid options');
+      throw new Error('Pagination with a backend service requires "BackendServiceApi" to be defined in your grid options');
     }
   }
 
   recalculateFromToIndexes() {
     this.dataFrom = (this.pageNumber * this.itemsPerPage) - this.itemsPerPage + 1;
-    this.dataTo = (this.pageNumber * this.itemsPerPage);
+    this.dataTo = (this.totalItems < this.itemsPerPage) ? this.totalItems : (this.pageNumber * this.itemsPerPage);
   }
 }

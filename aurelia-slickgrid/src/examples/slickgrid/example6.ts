@@ -1,8 +1,7 @@
 import { autoinject } from 'aurelia-framework';
-import data from './sample-data/example-data';
 import { I18N } from 'aurelia-i18n';
 import { HttpClient } from 'aurelia-http-client';
-import { Column, FieldType, FilterType, GraphqlResult, GraphqlService, GraphqlServiceOption, GridOption } from '../../aurelia-slickgrid';
+import { Column, FieldType, FilterType, GraphqlResult, GraphqlService, GraphqlServiceOption, GridOption, GridStateService, OperatorType, SortDirection } from '../../aurelia-slickgrid';
 
 const defaultPageSize = 20;
 const GRAPHQL_QUERY_DATASET_NAME = 'users';
@@ -21,6 +20,7 @@ export class Example6 {
         <li>The (*) can be used as startsWith (ex.: "abc*" => startsWith "abc") / endsWith (ex.: "*xyz" => endsWith "xyz")</li>
         <li>The other operators can be used on column type number for example: ">=100" (greater or equal than 100)</li>
       </ul>
+      <li>You can also preload a grid with certain "presets" like Filters / Sorters / Pagination <a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Grid-State-&-Preset" target="_blank">Wiki - Grid Preset</a>
     </ul>
   `;
   columnDefinitions: Column[];
@@ -33,10 +33,14 @@ export class Example6 {
   selectedLanguage: string;
   status = { text: '', class: '' };
 
-  constructor(private http: HttpClient, private graphqlService: GraphqlService, private i18n: I18N) {
+  constructor(private gridStateService: GridStateService, private http: HttpClient, private graphqlService: GraphqlService, private i18n: I18N) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
     this.selectedLanguage = this.i18n.getLocale();
+  }
+
+  detached() {
+    this.saveCurrentGridState();
   }
 
   defineGrid() {
@@ -46,15 +50,18 @@ export class Example6 {
         id: 'gender', name: 'Gender', field: 'gender', headerKey: 'GENDER', filterable: true, sortable: true,
         filter: {
           type: FilterType.singleSelect,
-          collection: [{ value: '', label: '' }, { value: 'male', label: 'male', labelKey: 'MALE' }, { value: 'female', label: 'female', labelKey: 'FEMALE' }]
+          collection: [{ value: '', label: '' }, { value: 'male', label: 'male', labelKey: 'MALE' }, { value: 'female', label: 'female', labelKey: 'FEMALE' }],
+          searchTerm: 'female'
         }
       },
       {
         id: 'company', name: 'Company', field: 'company', headerKey: 'COMPANY',
+        sortable: true,
         filterable: true,
         filter: {
           type: FilterType.multipleSelect,
-          collection: [{ value: 'ABC', label: 'Company ABC' }, { value: 'XYZ', label: 'Company XYZ' }]
+          collection: [{ value: 'acme', label: 'Acme' }, { value: 'abc', label: 'Company ABC' }, { value: 'xyz', label: 'Company XYZ' }],
+          searchTerms: ['abc']
         }
       },
       { id: 'billing.address.street', name: 'Billing Address Street', field: 'billing.address.street', headerKey: 'BILLING.ADDRESS.STREET', filterable: true, sortable: true },
@@ -62,11 +69,7 @@ export class Example6 {
     ];
 
     this.gridOptions = {
-      enableAutoResize: true,
-      autoResize: {
-        containerId: 'demo-container',
-        sidePadding: 15
-      },
+      enableAutoResize: false,
       enableFiltering: true,
       enableCellNavigation: true,
       enableTranslate: true,
@@ -74,6 +77,20 @@ export class Example6 {
         pageSizes: [10, 15, 20, 25, 30, 40, 50, 75, 100],
         pageSize: defaultPageSize,
         totalItems: 0
+      },
+      presets: {
+        // you can also type operator as string, e.g.: operator: 'EQ'
+        filters: [
+          { columnId: 'gender', searchTerm: 'male', operator: OperatorType.equal },
+          { columnId: 'name', searchTerm: 'John Doe', operator: OperatorType.contains },
+          { columnId: 'company', searchTerms: ['xyz'], operator: 'IN' }
+        ],
+        sorters: [
+          // direction can typed as 'asc' (uppercase or lowercase) and/or use the SortDirection type
+          { columnId: 'name', direction: 'asc' },
+          { columnId: 'company', direction: SortDirection.DESC }
+        ],
+        pagination: { pageNumber: 2, pageSize: 20 }
       },
       backendServiceApi: {
         service: this.graphqlService,
@@ -138,6 +155,10 @@ export class Example6 {
         resolve(mockedResult);
       }, 500);
     });
+  }
+
+  saveCurrentGridState() {
+    console.log('GraphQL current grid state', this.gridStateService.getCurrentGridState());
   }
 
   switchLanguage() {

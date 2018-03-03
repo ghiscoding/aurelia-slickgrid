@@ -1,9 +1,14 @@
+import { EventAggregator } from 'aurelia-event-aggregator';
 import { inject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
-import { mapOperatorType } from './utilities';
-import { Pagination } from './../models/pagination.interface';
+import { mapOperatorType, mapOperatorByFilterType } from './utilities';
 import {
   BackendService,
+  Column,
+  ColumnFilters,
+  CurrentFilter,
+  CurrentPagination,
+  CurrentSorter,
   FilterChangedArgs,
   GraphqlCursorPaginationOption,
   GraphqlDatasetFilter,
@@ -11,12 +16,15 @@ import {
   GraphqlPaginationOption,
   GraphqlServiceOption,
   GraphqlSortingOption,
+  GridOption,
+  Pagination,
   PaginationChangedArgs,
+  SortChanged,
   SortChangedArgs,
-  SortDirection
+  SortDirection,
+  SortDirectionString
 } from './../models/index';
 import QueryBuilder from './graphqlQueryBuilder';
-import { GridOption } from '../models/gridOption.interface';
 
 // timer for keeping track of user typing waits
 let timer: any;
@@ -25,6 +33,13 @@ const DEFAULT_ITEMS_PER_PAGE = 25;
 
 @inject(I18N)
 export class GraphqlService implements BackendService {
+  private _currentFilters: ColumnFilters | CurrentFilter[];
+  private _currentPagination: CurrentPagination;
+  private _currentSorters: CurrentSorter[];
+  private _columnDefinitions: Column[];
+  private _gridOptions: GridOption;
+  private _grid: any;
+  onPaginationRefreshed = new EventAggregator();
   options: GraphqlServiceOption;
   pagination: Pagination | undefined;
   defaultOrderBy: GraphqlSortingOption = { field: 'id', direction: SortDirection.ASC };
@@ -40,9 +55,10 @@ export class GraphqlService implements BackendService {
    * @param serviceOptions GraphqlServiceOption
    */
   buildQuery() {
-    if (!this.options || !this.options.datasetName || (!this.options.columnIds && !this.options.dataFilters && !this.options.columnDefinitions)) {
-      throw new Error('GraphQL Service requires "datasetName" & ("dataFilters" or "columnDefinitions") properties for it to work');
+    if (!this.options || !this.options.datasetName || (!this._columnDefinitions && !this.options.columnDefinitions)) {
+      throw new Error('GraphQL Service requires "datasetName" & "columnDefinitions" properties for it to work');
     }
+    const columnDefinitions = this._columnDefinitions || this.options.columnDefinitions;
     const queryQb = new QueryBuilder('query');
     const datasetQb = new QueryBuilder(this.options.datasetName);
     const pageInfoQb = new QueryBuilder('pageInfo');
@@ -50,10 +66,10 @@ export class GraphqlService implements BackendService {
 
     // get all the columnds Ids for the filters to work
     let columnIds: string[];
-    if (this.options.columnDefinitions) {
-      columnIds = Array.isArray(this.options.columnDefinitions) ? this.options.columnDefinitions.map((column) => column.field) : [];
+    if (columnDefinitions) {
+      columnIds = Array.isArray(columnDefinitions) ? columnDefinitions.map((column) => column.field) : [];
     } else {
-      columnIds = this.options.columnIds || this.options.dataFilters || [];
+      columnIds = this.options.columnIds || [];
     }
 
     // Slickgrid also requires the "id" field to be part of DataView
@@ -134,9 +150,14 @@ export class GraphqlService implements BackendService {
       .replace(/\}$/, '');
   }
 
-  initOptions(serviceOptions?: GraphqlServiceOption, pagination?: Pagination): void {
+  init(serviceOptions?: GraphqlServiceOption, pagination?: Pagination, grid?: any): void {
+    this._grid = grid;
     this.options = serviceOptions || {};
     this.pagination = pagination;
+    if (grid && grid.getColumns && grid.getOptions) {
+      this._columnDefinitions = grid.getColumns() || serviceOptions.columnDefinitions;
+      this._gridOptions = grid.getOptions();
+    }
   }
 
   /**
@@ -147,8 +168,24 @@ export class GraphqlService implements BackendService {
     return (this.options.isWithCursor) ? { first: (this.pagination ? this.pagination.pageSize : DEFAULT_ITEMS_PER_PAGE) } : { first: (this.pagination ? this.pagination.pageSize : DEFAULT_ITEMS_PER_PAGE), offset: 0 };
   }
 
+  /** Get the GraphQL dataset name */
   getDatasetName(): string {
     return this.options.datasetName || '';
+  }
+
+  /** Get the Filters that are currently used by the grid */
+  getCurrentFilters(): ColumnFilters | CurrentFilter[] {
+    return this._currentFilters;
+  }
+
+  /** Get the Pagination that is currently used by the grid */
+  getCurrentPagination(): CurrentPagination {
+    return this._currentPagination;
+  }
+
+  /** Get the Sorters that are currently used by the grid */
+  getCurrentSorters(): CurrentSorter[] {
+    return this._currentSorters;
   }
 
   /*
@@ -179,9 +216,8 @@ export class GraphqlService implements BackendService {
    * FILTERING
    */
   onFilterChanged(event: Event, args: FilterChangedArgs): Promise<string> {
-    const searchByArray: GraphqlFilteringOption[] = [];
-    const serviceOptions: GridOption = args.grid.getOptions();
-    const backendApi = serviceOptions.backendServiceApi || serviceOptions.onBackendEventApi;
+    const gridOptions: GridOption = this._gridOptions || args.grid.getOptions();
+    const backendApi = gridOptions.backendServiceApi || gridOptions.onBackendEventApi;
 
     if (backendApi === undefined) {
       throw new Error('Something went wrong in the GraphqlService, "backendServiceApi" is not initialized');
@@ -189,67 +225,17 @@ export class GraphqlService implements BackendService {
 
     // only add a delay when user is typing, on select dropdown filter it will execute right away
     let debounceTypingDelay = 0;
-    if (event.type === 'keyup' || event.type === 'keydown') {
+    if (event && (event.type === 'keyup' || event.type === 'keydown')) {
       debounceTypingDelay = backendApi.filterTypingDebounce || DEFAULT_FILTER_TYPING_DEBOUNCE;
     }
 
     const promise = new Promise<string>((resolve, reject) => {
-      let searchValue: string | string[] | number[];
-
       if (!args || !args.grid) {
         throw new Error('Something went wrong when trying create the GraphQL Backend Service, it seems that "args" is not populated correctly');
       }
 
-      // loop through all columns to inspect filters
-      for (const columnId in args.columnFilters) {
-        if (args.columnFilters.hasOwnProperty(columnId)) {
-          const columnFilter = args.columnFilters[columnId];
-          const columnDef = columnFilter.columnDef;
-          if (!columnDef) {
-            return;
-          }
-          const fieldName = columnDef.queryField || columnDef.field || columnDef.name || '';
-          const searchTerms = (columnFilter ? columnFilter.searchTerms : null) || [];
-          let fieldSearchValue = columnFilter.searchTerm;
-          if (typeof fieldSearchValue === 'undefined') {
-            fieldSearchValue = '';
-          }
-
-          if (typeof fieldSearchValue !== 'string' && !searchTerms) {
-            throw new Error(`GraphQL filter searchTerm property must be provided as type "string", if you use filter with options then make sure your IDs are also string. For example: filter: {type: FilterType.select, collection: [{ id: "0", value: "0" }, { id: "1", value: "1" }]`);
-          }
-
-          fieldSearchValue = '' + fieldSearchValue; // make sure it's a string
-          const matches = fieldSearchValue.match(/^([<>!=\*]{0,2})(.*[^<>!=\*])([\*]?)$/); // group 1: Operator, 2: searchValue, 3: last char is '*' (meaning starts with, ex.: abc*)
-          let operator = columnFilter.operator || ((matches) ? matches[1] : '');
-          searchValue = (!!matches) ? matches[2] : '';
-          const lastValueChar = (!!matches) ? matches[3] : '';
-
-          // no need to query if search value is empty
-          if (fieldName && searchValue === '' && searchTerms.length === 0) {
-            continue;
-          }
-
-          // when having more than 1 search term (we need to create a CSV string for GraphQL "IN" or "NOT IN" filter search)
-          if (searchTerms && searchTerms.length > 0) {
-            searchValue = searchTerms.join(',');
-          } else {
-            // escaping the search value
-            searchValue = searchValue.replace(`'`, `''`); // escape single quotes by doubling them
-            if (operator === '*' || lastValueChar === '*') {
-              operator = (operator === '*') ? 'endsWith' : 'startsWith';
-            }
-          }
-
-          searchByArray.push({
-            field: fieldName,
-            operator: mapOperatorType(operator),
-            value: searchValue
-          });
-        }
-      }
-
-      this.updateOptions({ filteringOptions: searchByArray });
+      // loop through all columns to inspect filters & set the query
+      this.updateFilters(args.columnFilters, false);
 
       // reset Pagination, then build the GraphQL query which we will use in the WebAPI callback
       // wait a minimum user typing inactivity before processing any query
@@ -293,21 +279,8 @@ export class GraphqlService implements BackendService {
    *   }
    */
   onPaginationChanged(event: Event, args: PaginationChangedArgs) {
-    let paginationOptions;
-    const pageSize = +args.pageSize || 20;
-
-    if (this.options.isWithCursor) {
-      paginationOptions = {
-        first: pageSize
-      };
-    } else {
-      paginationOptions = {
-        first: pageSize,
-        offset: (args.newPage - 1) * pageSize
-      };
-    }
-
-    this.updateOptions({ paginationOptions });
+    const pageSize = +args.pageSize || this.pagination.pageSize;
+    this.updatePagination(args.newPage, pageSize);
 
     // build the GraphQL query which we will use in the WebAPI callback
     return this.buildQuery();
@@ -319,30 +292,162 @@ export class GraphqlService implements BackendService {
    * https://github.com/graphql/graphql-relay-js/issues/20#issuecomment-220494222
    */
   onSortChanged(event: Event, args: SortChangedArgs) {
-    let sortByArray: GraphqlSortingOption[] = [];
     const sortColumns = (args.multiColumnSort) ? args.sortCols : new Array({ sortCol: args.sortCol, sortAsc: args.sortAsc });
 
-    // build the orderBy array, it could be multisort, example
-    // orderBy:[{field: lastName, direction: ASC}, {field: firstName, direction: DESC}]
-    if (sortColumns && sortColumns.length === 0) {
-      sortByArray = new Array(this.defaultOrderBy); // when empty, use the default sort
-    } else {
-      if (sortColumns) {
-        for (const column of sortColumns) {
-          const fieldName = column.sortCol.queryField || column.sortCol.field || column.sortCol.id;
-          const direction = column.sortAsc ? SortDirection.ASC : SortDirection.DESC;
-          sortByArray.push({
-            field: fieldName,
-            direction
+    // loop through all columns to inspect sorters & set the query
+    this.updateSorters(sortColumns);
+
+    // build the GraphQL query which we will use in the WebAPI callback
+    return this.buildQuery();
+  }
+
+  /**
+   * loop through all columns to inspect filters & update backend service filteringOptions
+   * @param columnFilters
+   */
+  updateFilters(columnFilters: ColumnFilters | CurrentFilter[], isUpdatedByPreset: boolean) {
+    // keep current filters & always save it as an array (columnFilters can be an object when it is dealt by SlickGrid Filter)
+    this._currentFilters = (!!isUpdatedByPreset) ? columnFilters : Object.keys(columnFilters).map(key => columnFilters[key]);
+
+    const searchByArray: GraphqlFilteringOption[] = [];
+    let searchValue: string | string[];
+
+    for (const columnId in columnFilters) {
+      if (columnFilters.hasOwnProperty(columnId)) {
+        const columnFilter = columnFilters[columnId];
+
+        // if user defined some "presets", then we need to find the filters from the column definitions instead
+        let columnDef: Column;
+        if (isUpdatedByPreset && Array.isArray(this._columnDefinitions)) {
+          columnDef = this._columnDefinitions.find((column: Column) => {
+            return column.id === columnFilter.columnId;
           });
+        } else {
+          columnDef = columnFilter.columnDef;
+        }
+        if (!columnDef) {
+          throw new Error('[Backend Service API]: Something went wrong in trying to get the column definition of the specified filter (or preset filters). Did you make a typo on the filter columnId?');
+        }
+
+        const fieldName = columnDef.queryField || columnDef.field || columnDef.name || '';
+        const searchTerms = (columnFilter ? columnFilter.searchTerms : null) || [];
+        let fieldSearchValue = columnFilter.searchTerm;
+        if (typeof fieldSearchValue === 'undefined') {
+          fieldSearchValue = '';
+        }
+
+        if (typeof fieldSearchValue !== 'string' && !searchTerms) {
+          throw new Error(`GraphQL filter searchTerm property must be provided as type "string", if you use filter with options then make sure your IDs are also string. For example: filter: {type: FilterType.select, collection: [{ id: "0", value: "0" }, { id: "1", value: "1" }]`);
+        }
+
+        fieldSearchValue = '' + fieldSearchValue; // make sure it's a string
+        const matches = fieldSearchValue.match(/^([<>!=\*]{0,2})(.*[^<>!=\*])([\*]?)$/); // group 1: Operator, 2: searchValue, 3: last char is '*' (meaning starts with, ex.: abc*)
+        let operator = columnFilter.operator || ((matches) ? matches[1] : '');
+        searchValue = (!!matches) ? matches[2] : '';
+        const lastValueChar = (!!matches) ? matches[3] : '';
+
+        // no need to query if search value is empty
+        if (fieldName && searchValue === '' && searchTerms.length === 0) {
+          continue;
+        }
+
+        // when having more than 1 search term (we need to create a CSV string for GraphQL "IN" or "NOT IN" filter search)
+        if (searchTerms && searchTerms.length > 0) {
+          searchValue = searchTerms.join(',');
+        } else if (typeof searchValue === 'string') {
+          // escaping the search value
+          searchValue = searchValue.replace(`'`, `''`); // escape single quotes by doubling them
+          if (operator === '*' || lastValueChar === '*') {
+            operator = (operator === '*') ? 'endsWith' : 'startsWith';
+          }
+        }
+
+        // if we didn't find an Operator but we have a Filter Type, we should use default Operator
+        if (!operator && columnDef.filter) {
+          operator = mapOperatorByFilterType(columnDef.filter.type);
+        }
+
+        searchByArray.push({
+          field: fieldName,
+          operator: mapOperatorType(operator),
+          value: searchValue
+        });
+      }
+    }
+
+    // update the service options with filters for the buildQuery() to work later
+    this.updateOptions({ filteringOptions: searchByArray });
+  }
+
+  /**
+   * Update the pagination component with it's new page number and size
+   * @param newPage
+   * @param pageSize
+   */
+  updatePagination(newPage: number, pageSize: number) {
+    this._currentPagination = {
+      pageNumber: newPage,
+      pageSize
+    };
+
+    let paginationOptions;
+    if (this.options.isWithCursor) {
+      paginationOptions = {
+        first: pageSize
+      };
+    } else {
+      paginationOptions = {
+        first: pageSize,
+        offset: (newPage - 1) * pageSize
+      };
+    }
+
+    this.updateOptions({ paginationOptions });
+  }
+
+  /**
+   * loop through all columns to inspect sorters & update backend service sortingOptions
+   * @param columnFilters
+   */
+  updateSorters(sortColumns?: SortChanged[], presetSorters?: CurrentSorter[]) {
+    let currentSorters: CurrentSorter[] = [];
+    let graphqlSorters: GraphqlSortingOption[] = [];
+
+    if (!sortColumns && presetSorters) {
+      currentSorters = presetSorters;
+
+      // display the correct sorting icons on the UI, for that it requires (columnId, sortAsc) properties
+      currentSorters.forEach((sorter) => {
+        sorter.direction = sorter.direction.toUpperCase() as SortDirectionString;
+        sorter.sortAsc = (sorter.direction.toUpperCase() === SortDirection.ASC);
+      });
+      this._grid.setSortColumns(currentSorters);
+    } else if (sortColumns && !presetSorters) {
+      // build the orderBy array, it could be multisort, example
+      // orderBy:[{field: lastName, direction: ASC}, {field: firstName, direction: DESC}]
+      if (sortColumns && sortColumns.length === 0) {
+        graphqlSorters = new Array(this.defaultOrderBy); // when empty, use the default sort
+        currentSorters = new Array({ columnId: this.defaultOrderBy.direction, direction: this.defaultOrderBy.direction });
+      } else {
+        if (sortColumns) {
+          for (const column of sortColumns) {
+            currentSorters.push({
+              columnId: (column.sortCol.queryField || column.sortCol.field || column.sortCol.id) + '',
+              direction: column.sortAsc ? SortDirection.ASC : SortDirection.DESC
+            });
+
+            graphqlSorters.push({
+              field: (column.sortCol.queryField || column.sortCol.field || column.sortCol.id) + '',
+              direction: column.sortAsc ? SortDirection.ASC : SortDirection.DESC
+            });
+          }
         }
       }
     }
 
-    this.updateOptions({ sortingOptions: sortByArray });
-
-    // build the GraphQL query which we will use in the WebAPI callback
-    return this.buildQuery();
+    // keep current Sorters and update the service options with the new sorting
+    this._currentSorters = currentSorters;
+    this.updateOptions({ sortingOptions: graphqlSorters });
   }
 
   /**

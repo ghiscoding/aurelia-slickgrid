@@ -17,7 +17,7 @@ import {
 } from './../models/index';
 import * as $ from 'jquery';
 
-// using external js modules
+// using external non-typed js libraries
 declare var Slick: any;
 
 @inject(ExportService, FilterService, I18N)

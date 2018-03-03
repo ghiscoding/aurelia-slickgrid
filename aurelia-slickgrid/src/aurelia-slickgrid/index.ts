@@ -25,7 +25,10 @@ import {
   GraphqlServiceOption,
   GridOption,
   OnEventArgs,
-  SearchTerm
+  OperatorType,
+  SearchTerm,
+  SortDirection,
+  SortDirectionString
 } from './models/index';
 
 // editors, formatters, ...
@@ -48,6 +51,7 @@ import {
   GridExtraService,
   GridEventService,
   GridOdataService,
+  GridStateService,
   ResizerService,
   SortService
 } from './services/index';
@@ -96,7 +100,10 @@ export {
   FormElementType,
   FieldType,
   OnEventArgs,
+  OperatorType,
   SearchTerm,
+  SortDirection,
+  SortDirectionString,
 
   Editors,
   Filters,
@@ -113,6 +120,7 @@ export {
   GridExtraUtils,
   GridExtraService,
   GridOdataService,
+  GridStateService,
   ResizerService,
   SortService,
 

@@ -9,6 +9,7 @@ import {
   ExportOption,
   FilterType,
   GridMenu,
+  GridState,
   HeaderButton,
   HeaderMenu,
   Pagination
@@ -155,6 +156,9 @@ export interface GridOption {
 
   /** "params" is a generic property and can be used to pass custom paramaters to your Formatter/Editor or anything else */
   params?: any | any[];
+
+  /** Query presets before grid load (filters, sorters, pagination) */
+  presets?: GridState;
 
   /** Register 1 or more Slick Plugins */
   registerPlugins?: any | any[];
