@@ -5,6 +5,7 @@ import {
   BackendService,
   CaseType,
   Column,
+  ColumnFilter,
   ColumnFilters,
   CurrentFilter,
   CurrentPagination,
@@ -15,6 +16,7 @@ import {
   OdataOption,
   Pagination,
   PaginationChangedArgs,
+  SearchTerm,
   SortChanged,
   SortChangedArgs,
   SortDirection,
@@ -29,7 +31,7 @@ const DEFAULT_ITEMS_PER_PAGE = 25;
 
 @inject(OdataService)
 export class GridOdataService implements BackendService {
-  private _currentFilters: ColumnFilters | CurrentFilter[];
+  private _currentFilters: CurrentFilter[];
   private _currentPagination: CurrentPagination;
   private _currentSorters: CurrentSorter[];
   private _columnDefinitions: Column[];
@@ -71,7 +73,7 @@ export class GridOdataService implements BackendService {
   }
 
   /** Get the Filters that are currently used by the grid */
-  getCurrentFilters(): ColumnFilters | CurrentFilter[] {
+  getCurrentFilters(): CurrentFilter[] {
     return this._currentFilters;
   }
 
@@ -160,8 +162,7 @@ export class GridOdataService implements BackendService {
    * @param columnFilters
    */
   updateFilters(columnFilters: ColumnFilters | CurrentFilter[], isUpdatedByPreset?: boolean) {
-    // keep current filters & always save it as an array (columnFilters can be an object when it is dealt by SlickGrid Filter)
-    this._currentFilters = (!!isUpdatedByPreset) ? columnFilters : Object.keys(columnFilters).map(key => columnFilters[key]);
+    this._currentFilters = this.castFilterToColumnFilter(columnFilters);
     let searchBy = '';
     const searchByArray: string[] = [];
 
@@ -311,13 +312,18 @@ export class GridOdataService implements BackendService {
     const sorterArray: CurrentSorter[] = [];
 
     if (!sortColumns && presetSorters) {
+      // make the presets the current sorters, also make sure that all direction are in lowercase for OData
       sortByArray = presetSorters;
+      sortByArray.forEach((sorter) => sorter.direction = sorter.direction.toLowerCase() as SortDirectionString);
 
       // display the correct sorting icons on the UI, for that it requires (columnId, sortAsc) properties
-      sortByArray.forEach((sorter) => {
-        sorter.sortAsc = (sorter.direction.toUpperCase() === SortDirection.ASC);
+      const tmpSorterArray = sortByArray.map((sorter) => {
+        return {
+          columnId: sorter.columnId,
+          sortAsc: sorter.direction.toUpperCase() === SortDirection.ASC
+        };
       });
-      this._grid.setSortColumns(sortByArray);
+      this._grid.setSortColumns(tmpSorterArray);
     } else if (sortColumns && !presetSorters) {
       // build the SortBy string, it could be multisort, example: customerNo asc, purchaserName desc
       if (sortColumns && sortColumns.length === 0) {
@@ -351,6 +357,32 @@ export class GridOdataService implements BackendService {
 
     // build the OData query which we will use in the WebAPI callback
     return this.odataService.buildQuery();
+  }
+
+  //
+  // private functions
+  // -------------------
+
+  /**
+   * Cast provided filters (could be in multiple format) into an array of ColumnFilter
+   * @param columnFilters
+   */
+  private castFilterToColumnFilter(columnFilters: ColumnFilters | CurrentFilter[]): CurrentFilter[] {
+    // keep current filters & always save it as an array (columnFilters can be an object when it is dealt by SlickGrid Filter)
+    const filtersArray: ColumnFilter[] = (typeof columnFilters === 'object') ? Object.keys(columnFilters).map(key => columnFilters[key]) : columnFilters;
+
+    return filtersArray.map((filter) => {
+      const tmpFilter: CurrentFilter = { columnId: filter.columnId };
+      if (filter.operator) {
+        tmpFilter.operator = filter.operator;
+      }
+      if (Array.isArray(filter.searchTerms)) {
+        tmpFilter.searchTerms = filter.searchTerms;
+      } else {
+        tmpFilter.searchTerm = filter.searchTerm;
+      }
+      return tmpFilter;
+    });
   }
 
   /**

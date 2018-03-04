@@ -5,6 +5,7 @@ import { mapOperatorType, mapOperatorByFilterType } from './utilities';
 import {
   BackendService,
   Column,
+  ColumnFilter,
   ColumnFilters,
   CurrentFilter,
   CurrentPagination,
@@ -307,7 +308,7 @@ export class GraphqlService implements BackendService {
    */
   updateFilters(columnFilters: ColumnFilters | CurrentFilter[], isUpdatedByPreset: boolean) {
     // keep current filters & always save it as an array (columnFilters can be an object when it is dealt by SlickGrid Filter)
-    this._currentFilters = (!!isUpdatedByPreset) ? columnFilters : Object.keys(columnFilters).map(key => columnFilters[key]);
+    this._currentFilters = this.castFilterToColumnFilter(columnFilters);
 
     const searchByArray: GraphqlFilteringOption[] = [];
     let searchValue: string | string[];
@@ -414,14 +415,18 @@ export class GraphqlService implements BackendService {
     let graphqlSorters: GraphqlSortingOption[] = [];
 
     if (!sortColumns && presetSorters) {
+      // make the presets the current sorters, also make sure that all direction are in uppercase for GraphQL
       currentSorters = presetSorters;
+      currentSorters.forEach((sorter) => sorter.direction = sorter.direction.toUpperCase() as SortDirectionString);
 
       // display the correct sorting icons on the UI, for that it requires (columnId, sortAsc) properties
-      currentSorters.forEach((sorter) => {
-        sorter.direction = sorter.direction.toUpperCase() as SortDirectionString;
-        sorter.sortAsc = (sorter.direction.toUpperCase() === SortDirection.ASC);
+      const tmpSorterArray = currentSorters.map((sorter) => {
+        return {
+          columnId: sorter.columnId,
+          sortAsc: sorter.direction.toUpperCase() === SortDirection.ASC
+        };
       });
-      this._grid.setSortColumns(currentSorters);
+      this._grid.setSortColumns(tmpSorterArray);
     } else if (sortColumns && !presetSorters) {
       // build the orderBy array, it could be multisort, example
       // orderBy:[{field: lastName, direction: ASC}, {field: firstName, direction: DESC}]
@@ -484,6 +489,32 @@ export class GraphqlService implements BackendService {
       }
       const rep = removeDoubleQuotes ? group1.replace(/"/g, '') : group1;
       return rep;
+    });
+  }
+
+  //
+  // private functions
+  // -------------------
+
+  /**
+   * Cast provided filters (could be in multiple format) into an array of ColumnFilter
+   * @param columnFilters
+   */
+  private castFilterToColumnFilter(columnFilters: ColumnFilters | CurrentFilter[]): CurrentFilter[] {
+    // keep current filters & always save it as an array (columnFilters can be an object when it is dealt by SlickGrid Filter)
+    const filtersArray: ColumnFilter[] = (typeof columnFilters === 'object') ? Object.keys(columnFilters).map(key => columnFilters[key]) : columnFilters;
+
+    return filtersArray.map((filter) => {
+      const tmpFilter: CurrentFilter = { columnId: filter.columnId };
+      if (filter.operator) {
+        tmpFilter.operator = filter.operator;
+      }
+      if (Array.isArray(filter.searchTerms)) {
+        tmpFilter.searchTerms = filter.searchTerms;
+      } else {
+        tmpFilter.searchTerm = filter.searchTerm;
+      }
+      return tmpFilter;
     });
   }
 }
