@@ -383,7 +383,7 @@ export class AureliaSlickgridCustomElement {
    * @param dataset
    */
   refreshGridData(dataset: any[], totalCount?: number) {
-    if (dataset && this.grid) {
+    if (dataset && this.grid && this.dataview && typeof this.dataview.setItems === 'function') {
       this.dataview.setItems(dataset, this._gridOptions.datasetIdPropertyName);
 
       // this.grid.setData(dataset);
