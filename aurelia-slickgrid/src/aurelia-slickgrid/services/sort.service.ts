@@ -19,6 +19,8 @@ export class SortService {
   attachBackendOnSort(grid: any, gridOptions: GridOption) {
     this._subscriber = grid.onSort;
     this.emitSortChangedBy('remote');
+
+    this._subscriber = new Slick.Event();
     this._subscriber.subscribe(this.attachBackendOnSortSubscribe);
   }
 
@@ -60,6 +62,8 @@ export class SortService {
   attachLocalOnSort(grid: any, gridOptions: GridOption, dataView: any, columnDefinitions: Column[]) {
     this._subscriber = grid.onSort;
     this.emitSortChangedBy('local');
+
+    this._subscriber = new Slick.Event();
     this._subscriber.subscribe((e: any, args: any) => {
       // multiSort and singleSort are not exactly the same, but we want to structure it the same for the (for loop) after
       // also to avoid having to rewrite the for loop in the sort, we will make the singleSort an array of 1 object

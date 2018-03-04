@@ -48,6 +48,8 @@ export class FilterService {
   attachBackendOnFilter(grid: any, options: GridOption) {
     this._filters = [];
     this.emitFilterChangedBy('remote');
+
+    this._subscriber = new Slick.Event();
     this._subscriber.subscribe(this.attachBackendOnFilterSubscribe);
 
     // subscribe to SlickGrid onHeaderRowCellRendered event to create filter template
@@ -128,6 +130,7 @@ export class FilterService {
     dataView.setFilterArgs({ columnFilters: this._columnFilters, grid: this._grid });
     dataView.setFilter(this.customLocalFilter.bind(this, dataView));
 
+    this._subscriber = new Slick.Event();
     this._subscriber.subscribe((e: any, args: any) => {
       const columnId = args.columnId;
       if (columnId != null) {
