@@ -1,7 +1,7 @@
 import { autoinject } from 'aurelia-framework';
 import data from './sample-data/example-data';
 import { HttpClient } from 'aurelia-http-client';
-import { CaseType, Column, GridOption, FieldType, Formatters, FormElementType, GridOdataService } from '../../aurelia-slickgrid';
+import { CaseType, Column, GridOption, FieldType, FilterType, Formatters, FormElementType, GridOdataService, GridStateService, OperatorType } from '../../aurelia-slickgrid';
 
 const defaultPageSize = 20;
 const sampleDataRoot = 'src/examples/slickgrid/sample-data';
@@ -20,6 +20,8 @@ export class Example5 {
         <li>The (*) can be used as startsWith (ex.: "abc*" => startsWith "abc") / endsWith (ex.: "*xyz" => endsWith "xyz")</li>
         <li>The other operators can be used on column type number for example: ">=100" (greater than or equal to 100)</li>
       </ul>
+      <li>OData Service could be replaced by other Service type in the future (GraphQL or whichever you provide)</li>
+      <li>You can also preload a grid with certain "presets" like Filters / Sorters / Pagination <a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Grid-State-&-Preset" target="_blank">Wiki - Grid Preset</a>
     </ul>
   `;
   columnDefinitions: Column[];
@@ -30,27 +32,27 @@ export class Example5 {
   processing = false;
   status = { text: '', class: '' };
 
-  constructor(private http: HttpClient, private odataService: GridOdataService) {
+  constructor(private gridStateService: GridStateService, private http: HttpClient, private odataService: GridOdataService) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
   }
 
-  attached() {
-    // populate the dataset once the grid is ready
-    // this.getData();
+  detached() {
+    this.saveCurrentGridState();
   }
 
   defineGrid() {
     this.columnDefinitions = [
-      { id: 'name', name: 'Name', field: 'name', filterable: true, sortable: true, type: FieldType.string, minWidth: 100 },
+      { id: 'name', name: 'Name', field: 'name', filterable: true, sortable: true, type: FieldType.string },
       {
-        id: 'gender', name: 'Gender', field: 'gender', filterable: true, sortable: true, minWidth: 100,
+        id: 'gender', name: 'Gender', field: 'gender', filterable: true, sortable: true,
         filter: {
+          type: FilterType.singleSelect,
           collection: [{ value: '', label: '' }, { value: 'male', label: 'male' }, { value: 'female', label: 'female' }],
-          type: FormElementType.singleSelect
+          searchTerm: 'female'
         }
       },
-      { id: 'company', name: 'Company', field: 'company', minWidth: 100 }
+      { id: 'company', name: 'Company', field: 'company' }
     ];
 
     this.gridOptions = {
@@ -66,12 +68,17 @@ export class Example5 {
         pageSize: defaultPageSize,
         totalItems: 0
       },
+      presets: {
+        // you can also type operator as string, e.g.: operator: 'EQ'
+        filters: [{ columnId: 'gender', searchTerm: 'male', operator: OperatorType.equal }],
+        sorters: [{ columnId: 'name', direction: 'desc' }],
+        pagination: { pageNumber: 2, pageSize: 20 }
+      },
       backendServiceApi: {
         service: this.odataService,
         preProcess: () => this.displaySpinner(true),
         process: (query) => this.getCustomerApiCall(query),
         postProcess: (response) => {
-          console.log(response);
           this.displaySpinner(false);
           this.getCustomerCallback(response);
         }
@@ -100,6 +107,10 @@ export class Example5 {
     // in your case, you will call your WebAPI function (wich needs to return a Promise)
     // for the demo purpose, we will call a mock WebAPI function
     return this.getCustomerDataApiMock(query);
+  }
+
+  saveCurrentGridState() {
+    console.log('OData current grid state', this.gridStateService.getCurrentGridState());
   }
 
   /**

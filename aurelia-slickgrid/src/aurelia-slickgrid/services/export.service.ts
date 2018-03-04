@@ -20,7 +20,7 @@ import { TextEncoder } from 'text-encoding-utf-8';
 import { addWhiteSpaces, htmlEntityDecode } from './../services/utilities';
 import * as $ from 'jquery';
 
-// using external js modules
+// using external non-typed js libraries
 declare let Slick: any;
 
 export interface ExportColumnHeader {

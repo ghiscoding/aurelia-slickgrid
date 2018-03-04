@@ -39,6 +39,7 @@ import {
   GraphqlService,
   GridEventService,
   GridExtraService,
+  GridStateService,
   ResizerService,
   SortService,
   toKebabCase
@@ -51,7 +52,7 @@ declare var Slick: any;
 const eventPrefix = 'sg';
 
 // Aurelia doesn't support well TypeScript @autoinject in a Plugin so we'll do it the old fashion way
-@inject(ControlAndPluginService, ExportService, Element, EventAggregator, FilterService, GraphqlService, GridEventService, GridExtraService, I18N, ResizerService, SortService)
+@inject(ControlAndPluginService, ExportService, Element, EventAggregator, FilterService, GraphqlService, GridEventService, GridExtraService, GridStateService, I18N, ResizerService, SortService)
 export class AureliaSlickgridCustomElement {
   private _dataset: any[];
   private _gridOptions: GridOption;
@@ -84,6 +85,7 @@ export class AureliaSlickgridCustomElement {
     private graphqlService: GraphqlService,
     private gridEventService: GridEventService,
     private gridExtraService: GridExtraService,
+    private gridStateService: GridStateService,
     private i18n: I18N,
     private resizer: ResizerService,
     private sortService: SortService) { }
@@ -138,6 +140,14 @@ export class AureliaSlickgridCustomElement {
     if (this._gridOptions.enableExport) {
       this.exportService.init(this.grid, this._gridOptions, this.dataview);
     }
+
+    // attach the Backend Service API callback functions only after the grid is initialized
+    // because the preProcess() and onInit() might get triggered
+    if (this._gridOptions && (this._gridOptions.backendServiceApi || this._gridOptions.onBackendEventApi)) {
+      this.attachBackendCallbackFunctions(this._gridOptions);
+    }
+
+    this.gridStateService.init(this.grid, this.filterService, this.sortService);
   }
 
   detached() {
@@ -223,12 +233,17 @@ export class AureliaSlickgridCustomElement {
 
     // attach external sorting (backend) when available or default onSort (dataView)
     if (gridOptions.enableSorting) {
-      (gridOptions.backendServiceApi || gridOptions.onBackendEventApi) ? this.sortService.attachBackendOnSort(grid, gridOptions) : this.sortService.attachLocalOnSort(grid, gridOptions, this.dataview);
+      (gridOptions.backendServiceApi || gridOptions.onBackendEventApi) ? this.sortService.attachBackendOnSort(grid, gridOptions) : this.sortService.attachLocalOnSort(grid, gridOptions, this.dataview, this.columnDefinitions);
     }
 
     // attach external filter (backend) when available or default onFilter (dataView)
     if (gridOptions.enableFiltering) {
       this.filterService.init(grid, gridOptions, this.columnDefinitions);
+
+      // if user entered some "presets", we need to reflect them all in the DOM
+      if (gridOptions.presets && gridOptions.presets.filters) {
+        this.filterService.populateColumnFilterSearchTerms(gridOptions, this.columnDefinitions);
+      }
       (gridOptions.backendServiceApi || gridOptions.onBackendEventApi) ? this.filterService.attachBackendOnFilter(grid, gridOptions) : this.filterService.attachLocalOnFilter(grid, gridOptions, this.dataview);
     }
 
@@ -239,37 +254,7 @@ export class AureliaSlickgridCustomElement {
       }
 
       if (gridOptions.backendServiceApi && gridOptions.backendServiceApi.service) {
-        gridOptions.backendServiceApi.service.initOptions(gridOptions.backendServiceApi.options || {}, gridOptions.pagination);
-      }
-
-      const backendApi = gridOptions.backendServiceApi || gridOptions.onBackendEventApi;
-      const serviceOptions: BackendServiceOption = (backendApi && backendApi.service && backendApi.service.options) ? backendApi.service.options : {};
-      const isExecuteCommandOnInit = (!serviceOptions) ? false : ((serviceOptions && serviceOptions.hasOwnProperty('executeProcessCommandOnInit')) ? serviceOptions['executeProcessCommandOnInit'] : true);
-
-      if (backendApi && backendApi.service && (backendApi.onInit || isExecuteCommandOnInit)) {
-        const query = (typeof backendApi.service.buildQuery === 'function') ? backendApi.service.buildQuery() : '';
-        const onInitPromise = (isExecuteCommandOnInit) ? (backendApi && backendApi.process) ? backendApi.process(query) : undefined : (backendApi && backendApi.onInit) ? backendApi.onInit(query) : null;
-
-        // wrap this inside a setTimeout to avoid timing issue since the gridOptions needs to be ready before running this onInit
-        setTimeout(async () => {
-          if (backendApi.preProcess) {
-            backendApi.preProcess();
-          }
-
-          // await for the Promise to resolve the data
-          const processResult = await onInitPromise;
-
-          // define what our internal Post Process callback, only available for GraphQL Service for now
-          // it will basically refresh the Dataset & Pagination without having the user to create his own PostProcess every time
-          if (processResult && backendApi && backendApi.service instanceof GraphqlService && backendApi.internalPostProcess) {
-            backendApi.internalPostProcess(processResult);
-          }
-
-          // send the response process to the postProcess callback
-          if (backendApi.postProcess) {
-            backendApi.postProcess(processResult);
-          }
-        });
+        gridOptions.backendServiceApi.service.init(gridOptions.backendServiceApi.options || {}, gridOptions.pagination, this.grid);
       }
     }
 
@@ -315,6 +300,56 @@ export class AureliaSlickgridCustomElement {
     });
   }
 
+  attachBackendCallbackFunctions(gridOptions: GridOption) {
+    const backendApi = gridOptions.backendServiceApi || gridOptions.onBackendEventApi;
+    const serviceOptions: BackendServiceOption = (backendApi && backendApi.service && backendApi.service.options) ? backendApi.service.options : {};
+    const isExecuteCommandOnInit = (!serviceOptions) ? false : ((serviceOptions && serviceOptions.hasOwnProperty('executeProcessCommandOnInit')) ? serviceOptions['executeProcessCommandOnInit'] : true);
+
+    // update backend filters (if need be) before the query runs
+    if (gridOptions && gridOptions.presets) {
+      if (gridOptions.presets.filters) {
+        backendApi.service.updateFilters(gridOptions.presets.filters, true);
+      }
+      if (gridOptions.presets.sorters) {
+        backendApi.service.updateSorters(null, gridOptions.presets.sorters);
+      }
+      if (gridOptions.presets.pagination) {
+        backendApi.service.updatePagination(gridOptions.presets.pagination.pageNumber, gridOptions.presets.pagination.pageSize);
+      }
+    } else {
+      const columnFilters = this.filterService.getColumnFilters();
+      if (columnFilters) {
+        backendApi.service.updateFilters(columnFilters, false);
+      }
+    }
+
+    if (backendApi && backendApi.service && (backendApi.onInit || isExecuteCommandOnInit)) {
+      const query = (typeof backendApi.service.buildQuery === 'function') ? backendApi.service.buildQuery() : '';
+      const onInitPromise = (isExecuteCommandOnInit) ? (backendApi && backendApi.process) ? backendApi.process(query) : undefined : (backendApi && backendApi.onInit) ? backendApi.onInit(query) : null;
+
+      // wrap this inside a setTimeout to avoid timing issue since the gridOptions needs to be ready before running this onInit
+      setTimeout(async () => {
+        if (backendApi.preProcess) {
+          backendApi.preProcess();
+        }
+
+        // await for the Promise to resolve the data
+        const processResult = await onInitPromise;
+
+        // define what our internal Post Process callback, only available for GraphQL Service for now
+        // it will basically refresh the Dataset & Pagination without having the user to create his own PostProcess every time
+        if (processResult && backendApi && backendApi.service instanceof GraphqlService && backendApi.internalPostProcess) {
+          backendApi.internalPostProcess(processResult);
+        }
+
+        // send the response process to the postProcess callback
+        if (backendApi.postProcess) {
+          backendApi.postProcess(processResult);
+        }
+      });
+    }
+  }
+
   attachResizeHook(grid: any, options: GridOption) {
     // expand/autofit columns on first page load
     if (grid && options.autoFitColumnsOnFirstLoad && typeof grid.autosizeColumns === 'function') {
@@ -348,7 +383,7 @@ export class AureliaSlickgridCustomElement {
    * @param dataset
    */
   refreshGridData(dataset: any[], totalCount?: number) {
-    if (dataset && this.grid) {
+    if (dataset && this.grid && this.dataview && typeof this.dataview.setItems === 'function') {
       this.dataview.setItems(dataset, this._gridOptions.datasetIdPropertyName);
 
       // this.grid.setData(dataset);
@@ -367,6 +402,10 @@ export class AureliaSlickgridCustomElement {
         }
         if (this.gridOptions.pagination && totalCount) {
           this.gridOptions.pagination.totalItems = totalCount;
+        }
+        if (this.gridOptions.presets && this.gridOptions.presets.pagination && this.gridOptions.pagination) {
+          this.gridOptions.pagination.pageSize = this.gridOptions.presets.pagination.pageSize;
+          this.gridOptions.pagination.pageNumber = this.gridOptions.presets.pagination.pageNumber;
         }
         this.gridPaginationOptions = this.mergeGridOptions();
       }
