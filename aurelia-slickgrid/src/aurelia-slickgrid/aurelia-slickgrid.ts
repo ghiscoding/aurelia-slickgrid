@@ -249,12 +249,13 @@ export class AureliaSlickgridCustomElement {
 
     // if user set an onInit Backend, we'll run it right away (and if so, we also need to run preProcess, internalPostProcess & postProcess)
     if (gridOptions.backendServiceApi || gridOptions.onBackendEventApi) {
+      const backendApi = gridOptions.backendServiceApi || gridOptions.onBackendEventApi;
       if (gridOptions.onBackendEventApi) {
         console.warn(`"onBackendEventApi" has been DEPRECATED, please consider using "backendServiceApi" in the short term since "onBackendEventApi" will be removed in future versions. You can take look at the Aurelia-Slickgrid Wikis for OData/GraphQL Services implementation`);
       }
 
-      if (gridOptions.backendServiceApi && gridOptions.backendServiceApi.service) {
-        gridOptions.backendServiceApi.service.init(gridOptions.backendServiceApi.options || {}, gridOptions.pagination, this.grid);
+      if (backendApi && backendApi.service && backendApi.service.init) {
+        backendApi.service.init(backendApi.options, gridOptions.pagination, this.grid);
       }
     }
 
@@ -306,20 +307,23 @@ export class AureliaSlickgridCustomElement {
     const isExecuteCommandOnInit = (!serviceOptions) ? false : ((serviceOptions && serviceOptions.hasOwnProperty('executeProcessCommandOnInit')) ? serviceOptions['executeProcessCommandOnInit'] : true);
 
     // update backend filters (if need be) before the query runs
-    if (gridOptions && gridOptions.presets) {
-      if (gridOptions.presets.filters) {
-        backendApi.service.updateFilters(gridOptions.presets.filters, true);
-      }
-      if (gridOptions.presets.sorters) {
-        backendApi.service.updateSorters(null, gridOptions.presets.sorters);
-      }
-      if (gridOptions.presets.pagination) {
-        backendApi.service.updatePagination(gridOptions.presets.pagination.pageNumber, gridOptions.presets.pagination.pageSize);
-      }
-    } else {
-      const columnFilters = this.filterService.getColumnFilters();
-      if (columnFilters) {
-        backendApi.service.updateFilters(columnFilters, false);
+    if (backendApi) {
+      const backendService = backendApi.service;
+      if (gridOptions && gridOptions.presets) {
+        if (backendService && backendService.updateFilters && gridOptions.presets.filters) {
+          backendService.updateFilters(gridOptions.presets.filters, true);
+        }
+        if (backendService && backendService.updateSorters && gridOptions.presets.sorters) {
+          backendService.updateSorters(undefined, gridOptions.presets.sorters);
+        }
+        if (backendService && backendService.updatePagination && gridOptions.presets.pagination) {
+          backendService.updatePagination(gridOptions.presets.pagination.pageNumber, gridOptions.presets.pagination.pageSize);
+        }
+      } else {
+        const columnFilters = this.filterService.getColumnFilters();
+        if (columnFilters && backendService && backendService.updateFilters) {
+          backendService.updateFilters(columnFilters, false);
+        }
       }
     }
 

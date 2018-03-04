@@ -270,11 +270,13 @@ export class FilterService {
     if (this._columnFilters) {
       for (const colId of Object.keys(this._columnFilters)) {
         const columnFilter = this._columnFilters[colId];
-        currentFilters.push({
-          columnId: colId,
-          searchTerm: (columnFilter && (columnFilter.searchTerm !== undefined || columnFilter.searchTerm !== null)) ? columnFilter.searchTerm : undefined,
-          searchTerms: (columnFilter && columnFilter.searchTerms) ? columnFilter.searchTerms : null
-        });
+        const filter = { columnId: colId || '' } as CurrentFilter;
+        if (columnFilter && columnFilter.searchTerms) {
+          filter.searchTerms = columnFilter.searchTerms;
+        } else {
+          filter.searchTerm = (columnFilter && (columnFilter.searchTerm !== undefined || columnFilter.searchTerm !== null)) ? columnFilter.searchTerm : undefined;
+        }
+        currentFilters.push(filter);
       }
     }
     return currentFilters;
@@ -296,7 +298,7 @@ export class FilterService {
         columnDef: args.columnDef || null,
         operator: args.operator || undefined,
         searchTerms: args.searchTerms || undefined,
-        searchTerm: ((e && e.target) ? (e.target as HTMLInputElement).value : null),
+        searchTerm: ((e && e.target) ? (e.target as HTMLInputElement).value : undefined),
       };
     }
 
@@ -316,8 +318,8 @@ export class FilterService {
     const columnId = columnDef.id || '';
 
     if (columnDef && columnId !== 'selector' && columnDef.filterable) {
-      let searchTerms: SearchTerm[];
-      let searchTerm: SearchTerm;
+      let searchTerms: SearchTerm[] | undefined;
+      let searchTerm: SearchTerm | undefined;
 
       if (this._columnFilters[columnDef.id]) {
         searchTerm = this._columnFilters[columnDef.id].searchTerm || undefined;
@@ -413,7 +415,7 @@ export class FilterService {
     return columnDefinitions;
   }
 
-  private updateColumnFilters(searchTerm: SearchTerm, searchTerms: any, columnDef: any) {
+  private updateColumnFilters(searchTerm: SearchTerm | undefined, searchTerms: SearchTerm[] | undefined, columnDef: any) {
     if (searchTerm !== undefined && searchTerm !== null && searchTerm !== '') {
       this._columnFilters[columnDef.id] = {
         columnId: columnDef.id,

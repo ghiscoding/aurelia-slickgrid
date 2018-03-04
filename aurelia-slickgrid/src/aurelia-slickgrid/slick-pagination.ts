@@ -108,15 +108,16 @@ export class SlickPaginationCustomElement {
     }
 
     if (this._gridPaginationOptions && this._gridPaginationOptions.pagination) {
+      const pagination = this._gridPaginationOptions.pagination;
       // set the number of items per page if not already set
       if (!this.itemsPerPage) {
         this.itemsPerPage = +((backendApi && backendApi.options && backendApi.options.paginationOptions && backendApi.options.paginationOptions.first) ? backendApi.options.paginationOptions.first : this._gridPaginationOptions.pagination.pageSize);
       }
 
       // if totalItems changed, we should always go back to the first page and recalculation the From-To indexes
-      if (isPageNumberReset || this.totalItems !== this._gridPaginationOptions.pagination.totalItems) {
-        if (this._isFirstRender && this._gridPaginationOptions.pagination.pageNumber > 1) {
-          this.pageNumber = this._gridPaginationOptions.pagination.pageNumber || 1;
+      if (isPageNumberReset || this.totalItems !== pagination.totalItems) {
+        if (this._isFirstRender && pagination.pageNumber && pagination.pageNumber > 1) {
+          this.pageNumber = pagination.pageNumber || 1;
         } else {
           this.pageNumber = 1;
         }

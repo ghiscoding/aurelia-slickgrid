@@ -56,7 +56,9 @@ export class GridOdataService implements BackendService {
     const mergedOptions = { ...this.defaultOptions, ...options };
     this.odataService.options = { ...mergedOptions, top: mergedOptions.top || (pagination ? pagination.pageSize : null) || this.defaultOptions.top };
     this.options = this.odataService.options;
-    this.pagination = pagination;
+    if (pagination) {
+      this.pagination = pagination;
+    }
 
     if (grid && grid.getColumns && grid.getOptions) {
       this._columnDefinitions = grid.getColumns() || options.columnDefinitions;
@@ -172,7 +174,7 @@ export class GridOdataService implements BackendService {
         const columnFilter = columnFilters[columnId];
 
         // if user defined some "presets", then we need to find the filters from the column definitions instead
-        let columnDef: Column;
+        let columnDef: Column | undefined;
         if (isUpdatedByPreset && Array.isArray(this._columnDefinitions)) {
           columnDef = this._columnDefinitions.find((column: Column) => {
             return column.id === columnFilter.columnId;
@@ -308,7 +310,7 @@ export class GridOdataService implements BackendService {
    * @param columnFilters
    */
   updateSorters(sortColumns?: SortChanged[], presetSorters?: CurrentSorter[]) {
-    let sortByArray = [];
+    let sortByArray: any[] = [];
     const sorterArray: CurrentSorter[] = [];
 
     if (!sortColumns && presetSorters) {
@@ -331,15 +333,17 @@ export class GridOdataService implements BackendService {
       } else {
         if (sortColumns) {
           for (const column of sortColumns) {
-            let fieldName = (column.sortCol.queryField || column.sortCol.field || column.sortCol.id) + '';
-            if (this.odataService.options.caseType === CaseType.pascalCase) {
-              fieldName = String.titleCase(fieldName);
-            }
+            if (column.sortCol) {
+              let fieldName = (column.sortCol.queryField || column.sortCol.field || column.sortCol.id) + '';
+              if (this.odataService.options.caseType === CaseType.pascalCase) {
+                fieldName = String.titleCase(fieldName);
+              }
 
-            sorterArray.push({
-              columnId: fieldName,
-              direction: column.sortAsc ? 'asc' : 'desc'
-            });
+              sorterArray.push({
+                columnId: fieldName,
+                direction: column.sortAsc ? 'asc' : 'desc'
+              });
+            }
           }
           sortByArray = sorterArray;
         }
@@ -347,13 +351,14 @@ export class GridOdataService implements BackendService {
     }
 
     // transform the sortby array into a CSV string for OData
+    sortByArray = sortByArray as CurrentSorter[];
     const csvString = sortByArray.map((sorter) => `${sorter.columnId} ${sorter.direction.toLowerCase()}`).join(',');
     this.odataService.updateOptions({
       orderBy: (this.odataService.options.caseType === CaseType.pascalCase) ? String.titleCase(csvString) : csvString
     });
 
     // keep current Sorters and update the service options with the new sorting
-    this._currentSorters = sortByArray;
+    this._currentSorters = sortByArray as CurrentSorter[];
 
     // build the OData query which we will use in the WebAPI callback
     return this.odataService.buildQuery();
@@ -369,10 +374,10 @@ export class GridOdataService implements BackendService {
    */
   private castFilterToColumnFilter(columnFilters: ColumnFilters | CurrentFilter[]): CurrentFilter[] {
     // keep current filters & always save it as an array (columnFilters can be an object when it is dealt by SlickGrid Filter)
-    const filtersArray: ColumnFilter[] = (typeof columnFilters === 'object') ? Object.keys(columnFilters).map(key => columnFilters[key]) : columnFilters;
+    const filtersArray: ColumnFilter[] = ((typeof columnFilters === 'object') ? Object.keys(columnFilters).map(key => columnFilters[key]) : columnFilters) as CurrentFilter[];
 
     return filtersArray.map((filter) => {
-      const tmpFilter: CurrentFilter = { columnId: filter.columnId };
+      const tmpFilter: CurrentFilter = { columnId: filter.columnId || '' };
       if (filter.operator) {
         tmpFilter.operator = filter.operator;
       }

@@ -71,7 +71,7 @@ export class SelectFilter implements Filter {
   /**
    * Set value(s) on the DOM element
    */
-  setValues(values) {
+  setValues(values: SearchTerm | SearchTerm[]) {
     if (values) {
       this.$filterElm.val(values);
     }

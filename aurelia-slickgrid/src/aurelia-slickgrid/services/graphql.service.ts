@@ -31,6 +31,7 @@ import QueryBuilder from './graphqlQueryBuilder';
 let timer: any;
 const DEFAULT_FILTER_TYPING_DEBOUNCE = 750;
 const DEFAULT_ITEMS_PER_PAGE = 25;
+const DEFAULT_PAGE_SIZE = 20;
 
 @inject(I18N)
 export class GraphqlService implements BackendService {
@@ -42,7 +43,7 @@ export class GraphqlService implements BackendService {
   private _grid: any;
   onPaginationRefreshed = new EventAggregator();
   options: GraphqlServiceOption;
-  pagination: Pagination | undefined;
+  pagination: Pagination;
   defaultOrderBy: GraphqlSortingOption = { field: 'id', direction: SortDirection.ASC };
   defaultPaginationOptions: GraphqlPaginationOption | GraphqlCursorPaginationOption = {
     first: DEFAULT_ITEMS_PER_PAGE,
@@ -154,9 +155,11 @@ export class GraphqlService implements BackendService {
   init(serviceOptions?: GraphqlServiceOption, pagination?: Pagination, grid?: any): void {
     this._grid = grid;
     this.options = serviceOptions || {};
-    this.pagination = pagination;
+    if (pagination) {
+      this.pagination = pagination;
+    }
     if (grid && grid.getColumns && grid.getOptions) {
-      this._columnDefinitions = grid.getColumns() || serviceOptions.columnDefinitions;
+      this._columnDefinitions = grid.getColumns();
       this._gridOptions = grid.getOptions();
     }
   }
@@ -280,7 +283,7 @@ export class GraphqlService implements BackendService {
    *   }
    */
   onPaginationChanged(event: Event, args: PaginationChangedArgs) {
-    const pageSize = +args.pageSize || this.pagination.pageSize;
+    const pageSize = +args.pageSize || ((this.pagination) ? this.pagination.pageSize : DEFAULT_PAGE_SIZE);
     this.updatePagination(args.newPage, pageSize);
 
     // build the GraphQL query which we will use in the WebAPI callback
@@ -318,7 +321,7 @@ export class GraphqlService implements BackendService {
         const columnFilter = columnFilters[columnId];
 
         // if user defined some "presets", then we need to find the filters from the column definitions instead
-        let columnDef: Column;
+        let columnDef: Column | undefined;
         if (isUpdatedByPreset && Array.isArray(this._columnDefinitions)) {
           columnDef = this._columnDefinitions.find((column: Column) => {
             return column.id === columnFilter.columnId;
@@ -365,7 +368,7 @@ export class GraphqlService implements BackendService {
 
         // if we didn't find an Operator but we have a Filter Type, we should use default Operator
         if (!operator && columnDef.filter) {
-          operator = mapOperatorByFilterType(columnDef.filter.type);
+          operator = mapOperatorByFilterType(columnDef.filter.type || '');
         }
 
         searchByArray.push({
@@ -436,15 +439,17 @@ export class GraphqlService implements BackendService {
       } else {
         if (sortColumns) {
           for (const column of sortColumns) {
-            currentSorters.push({
-              columnId: (column.sortCol.queryField || column.sortCol.field || column.sortCol.id) + '',
-              direction: column.sortAsc ? SortDirection.ASC : SortDirection.DESC
-            });
+            if (column && column.sortCol) {
+              currentSorters.push({
+                columnId: (column.sortCol.queryField || column.sortCol.field || column.sortCol.id) + '',
+                direction: column.sortAsc ? SortDirection.ASC : SortDirection.DESC
+              });
 
-            graphqlSorters.push({
-              field: (column.sortCol.queryField || column.sortCol.field || column.sortCol.id) + '',
-              direction: column.sortAsc ? SortDirection.ASC : SortDirection.DESC
-            });
+              graphqlSorters.push({
+                field: (column.sortCol.queryField || column.sortCol.field || column.sortCol.id) + '',
+                direction: column.sortAsc ? SortDirection.ASC : SortDirection.DESC
+              });
+            }
           }
         }
       }
@@ -505,7 +510,7 @@ export class GraphqlService implements BackendService {
     const filtersArray: ColumnFilter[] = (typeof columnFilters === 'object') ? Object.keys(columnFilters).map(key => columnFilters[key]) : columnFilters;
 
     return filtersArray.map((filter) => {
-      const tmpFilter: CurrentFilter = { columnId: filter.columnId };
+      const tmpFilter: CurrentFilter = { columnId: filter.columnId || '' };
       if (filter.operator) {
         tmpFilter.operator = filter.operator;
       }
