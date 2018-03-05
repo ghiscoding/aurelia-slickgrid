@@ -114,8 +114,6 @@ export class Example3 {
       minWidth: 100,
       params: {
         formatters: [ Formatters.collection, Formatters.percentCompleteBar ],
-      },
-      filter: {
         collection: Array.from(Array(101).keys()).map(k => ({ value: k, label: `${k}%` }))
       }
     }, {
@@ -154,7 +152,7 @@ export class Example3 {
       sortable: true,
       type: FieldType.string,
       editor: Editors.multipleSelect,
-      filter: {
+      params: {
         collection: Array.from(Array(1001).keys()).map(k => ({ value: `Task ${k}`, label: `Task ${k}` }))
       }
     }];

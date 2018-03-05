@@ -14,7 +14,7 @@ export class MultipleSelectEditor implements Editor {
   /**
    * The JQuery DOM element
    */
-  $filterElm: any;
+  $editorElm: any;
   /**
    * The slick grid column being edited
    */
@@ -30,13 +30,13 @@ export class MultipleSelectEditor implements Editor {
   /**
    * The options label/value object to use in the select list
    */
-  optionCollection: SelectOption[] = [];
+  collection: SelectOption[] = [];
   /**
-   * The property name for values in the optionCollection
+   * The property name for values in the collection
    */
   valueName: string;
   /**
-   * The property name for labels in the optionCollection
+   * The property name for labels in the collection
    */
   labelName: string;
 
@@ -55,25 +55,24 @@ export class MultipleSelectEditor implements Editor {
   }
 
   /**
-   * The current selected values from the optionCollection
+   * The current selected values from the collection
    */
   get currentValues() {
-    return this.optionCollection
-      .filter(c => this.$filterElm.val().indexOf(c[this.valueName].toString()) !== -1)
+    return this.collection
+      .filter(c => this.$editorElm.val().indexOf(c[this.valueName].toString()) !== -1)
       .map(c => c[this.valueName]);
   }
 
   init() {
     if (!this.args) {
-      throw new Error('[Aurelia-SlickGrid] A filter must always have an "init()" ' +
-        'with valid arguments.');
+      throw new Error('[Aurelia-SlickGrid] An editor must always have an "init()" with valid arguments.');
     }
 
     this.columnDef = this.args.column;
 
-    const filterTemplate = this.buildTemplateHtmlString();
+    const editorTemplate = this.buildTemplateHtmlString();
 
-    this.createDomElement(filterTemplate);
+    this.createDomElement(editorTemplate);
   }
 
   applyValue(item: any, state: any): void {
@@ -81,14 +80,14 @@ export class MultipleSelectEditor implements Editor {
   }
 
   destroy() {
-    this.$filterElm.remove();
+    this.$editorElm.remove();
   }
 
   loadValue(item: any): void {
     // convert to string because that is how the DOM will return these values
     this.defaultValue = item[this.columnDef.field].map((i: any) => i.toString());
 
-    this.$filterElm.find('option').each((i: number, $e: any) => {
+    this.$editorElm.find('option').each((i: number, $e: any) => {
       if (this.defaultValue.indexOf($e.value) !== -1) {
         $e.selected = true;
       } else {
@@ -104,11 +103,11 @@ export class MultipleSelectEditor implements Editor {
   }
 
   focus() {
-    this.$filterElm.focus();
+    this.$editorElm.focus();
   }
 
   isValueChanged(): boolean {
-    return !arraysEqual(this.$filterElm.val(), this.defaultValue);
+    return !arraysEqual(this.$editorElm.val(), this.defaultValue);
   }
 
   validate() {
@@ -126,23 +125,22 @@ export class MultipleSelectEditor implements Editor {
   }
 
   private buildTemplateHtmlString() {
-    if (!this.columnDef || !this.columnDef.filter || !this.columnDef.filter.collection) {
-      throw new Error('[Aurelia-SlickGrid] You need to pass a "collection" for ' +
-        'the MultipleSelect Filter to work correctly. Also each option should include ' +
-        'a value/label pair (or value/labelKey when using Locale). For example:: ' +
-        '{ filter: type: FilterType.multipleSelect, collection: [{ value: true, label: \'True\' }, ' +
-        '{ value: false, label: \'False\'}] }');
+    if (!this.columnDef || !this.columnDef.params || !this.columnDef.params.collection) {
+      throw new Error('[Aurelia-SlickGrid] You need to pass a "collection" on the params property in the column definition for ' +
+        'the MultipleSelect Editor to work correctly. Also each option should include ' +
+        'a value/label pair (or value/labelKey when using Locale). For example: { params: { ' +
+        '{ collection: [{ value: true, label: \'True\' },{ value: false, label: \'False\'}] } } }');
     }
-    this.optionCollection = this.columnDef.filter.collection || [];
-    this.labelName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.label : 'label';
-    this.valueName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.value : 'value';
+    this.collection = this.columnDef.params.collection || [];
+    this.labelName = (this.columnDef.params.customStructure) ? this.columnDef.params.customStructure.label : 'label';
+    this.valueName = (this.columnDef.params.customStructure) ? this.columnDef.params.customStructure.value : 'value';
 
     let options = '';
-    this.optionCollection.forEach((option: SelectOption) => {
+    this.collection.forEach((option: SelectOption) => {
       if (!option || (option[this.labelName] === undefined && option.labelKey === undefined)) {
         throw new Error('A collection with value/label (or value/labelKey when using ' +
-          'Locale) is required to populate the Select list, for example:: { filter: ' +
-          'type: FilterType.multipleSelect, collection: [ { value: \'1\', label: \'One\' } ])');
+          'Locale) is required to populate the Select list, for example: ' +
+          '{ collection: [ { value: \'1\', label: \'One\' } ])');
       }
       const labelKey = (option.labelKey || option[this.labelName]) as string;
       const textLabel = labelKey;
@@ -153,28 +151,28 @@ export class MultipleSelectEditor implements Editor {
     return `<select class="ms-filter search-filter" multiple="multiple">${options}</select>`;
   }
 
-  private createDomElement(filterTemplate: string) {
-    this.$filterElm = $(filterTemplate);
+  private createDomElement(editorTemplate: string) {
+    this.$editorElm = $(editorTemplate);
 
-    if (this.$filterElm && typeof this.$filterElm.appendTo === 'function') {
-      this.$filterElm.appendTo(this.args.container);
+    if (this.$editorElm && typeof this.$editorElm.appendTo === 'function') {
+      this.$editorElm.appendTo(this.args.container);
     }
 
-    if (typeof this.$filterElm.multipleSelect !== 'function') {
+    if (typeof this.$editorElm.multipleSelect !== 'function') {
       // fallback to bootstrap
-      this.$filterElm.addClass('form-control');
+      this.$editorElm.addClass('form-control');
     } else {
-      const filterOptions = (this.columnDef.filter) ? this.columnDef.filter.filterOptions : {};
-      const options: MultipleSelectOption = { ...this.defaultOptions, ...filterOptions };
-      this.$filterElm = this.$filterElm.multipleSelect(options);
+      const elementOptions = (this.columnDef.params) ? this.columnDef.params.elementOptions : {};
+      const options: MultipleSelectOption = { ...this.defaultOptions, ...elementOptions };
+      this.$editorElm = this.$editorElm.multipleSelect(options);
     }
   }
 
   // refresh the jquery object because the selected checkboxes were already set
   // prior to this method being called
   private refresh() {
-    if (typeof this.$filterElm.multipleSelect === 'function') {
-      this.$filterElm.data('multipleSelect').refresh();
+    if (typeof this.$editorElm.multipleSelect === 'function') {
+      this.$editorElm.data('multipleSelect').refresh();
     }
   }
 }
