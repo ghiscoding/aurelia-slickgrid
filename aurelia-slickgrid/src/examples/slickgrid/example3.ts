@@ -153,7 +153,8 @@ export class Example3 {
       type: FieldType.string,
       editor: Editors.multipleSelect,
       params: {
-        collection: Array.from(Array(1001).keys()).map(k => ({ value: `Task ${k}`, label: `Task ${k}` }))
+        collection: Array.from(Array(10).keys()).map(k => ({ value: `Task ${k}`, label: `Task ${k}` })),
+        i18n: this.i18n
       }
     }];
 

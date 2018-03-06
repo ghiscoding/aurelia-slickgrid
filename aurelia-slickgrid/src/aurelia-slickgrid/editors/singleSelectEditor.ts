@@ -1,3 +1,4 @@
+import { I18N } from 'aurelia-i18n';
 import {
   Editor,
   Column,
@@ -38,13 +39,20 @@ export class SingleSelectEditor implements Editor {
    * The property name for labels in the collection
    */
   labelName: string;
+  /**
+   * The i18n aurelia library
+   */
+  private _i18n: I18N;
 
   constructor(private args: any) {
+    this._i18n = this.args.column.params.i18n;
+
     this.defaultOptions = {
       container: 'body',
       filter: false,
       maxHeight: 200,
-      width: '100%',
+      width: 150,
+      offsetLeft: 20,
       single: true
     };
 
@@ -130,16 +138,17 @@ export class SingleSelectEditor implements Editor {
     this.collection = this.columnDef.params.collection || [];
     this.labelName = (this.columnDef.params.customStructure) ? this.columnDef.params.customStructure.label : 'label';
     this.valueName = (this.columnDef.params.customStructure) ? this.columnDef.params.customStructure.value : 'value';
+    const isEnabledTranslate = (this.columnDef.params.enableTranslateLabel) ? this.columnDef.params.enableTranslateLabel : false;
 
     let options = '';
     this.collection.forEach((option: SelectOption) => {
       if (!option || (option[this.labelName] === undefined && option.labelKey === undefined)) {
         throw new Error('A collection with value/label (or value/labelKey when using ' +
-          'Locale) is required to populate the Select list, for example: ' +
-          '{ collection: [ { value: \'1\', label: \'One\' } ])');
+          'Locale) is required to populate the Select list, for example: { params: { ' +
+          '{ collection: [ { value: \'1\', label: \'One\' } ] } } }');
       }
       const labelKey = (option.labelKey || option[this.labelName]) as string;
-      const textLabel = labelKey;
+      const textLabel = ((option.labelKey || isEnabledTranslate) && this._i18n && typeof this._i18n.tr === 'function') ? this._i18n.tr(labelKey || ' ') : labelKey;
 
       options += `<option value="${option[this.valueName]}">${textLabel}</option>`;
     });
@@ -161,6 +170,7 @@ export class SingleSelectEditor implements Editor {
       const elementOptions = (this.columnDef.params) ? this.columnDef.params.elementOptions : {};
       const options: MultipleSelectOption = { ...this.defaultOptions, ...elementOptions };
       this.$editorElm = this.$editorElm.multipleSelect(options);
+      setTimeout(() => this.$editorElm.multipleSelect('open'));
     }
   }
 
@@ -168,7 +178,7 @@ export class SingleSelectEditor implements Editor {
   // prior to this method being called
   private refresh() {
     if (typeof this.$editorElm.multipleSelect === 'function') {
-      this.$editorElm.data('multipleSelect').refresh();
+      this.$editorElm.multipleSelect('refresh');
     }
   }
 }
