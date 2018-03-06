@@ -41,7 +41,7 @@ export class GraphqlService implements BackendService {
   private _columnDefinitions: Column[];
   private _gridOptions: GridOption;
   private _grid: any;
-  onPaginationRefreshed = new EventAggregator();
+
   options: GraphqlServiceOption;
   pagination: Pagination;
   defaultOrderBy: GraphqlSortingOption = { field: 'id', direction: SortDirection.ASC };

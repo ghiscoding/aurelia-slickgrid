@@ -58,9 +58,6 @@ export interface BackendService {
   // Events / Methods
   // -----------------
 
-  /** Fired when the pagination needs to be forced refreshed (by a Preset call) */
-  onPaginationRefreshed?: EventAggregator; // EventEmitter<PaginationChangedArgs>;
-
   /** Execute when any of the filters changed */
   onFilterChanged: (event: Event, args: FilterChangedArgs) => Promise<string>;
 
