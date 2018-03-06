@@ -283,7 +283,7 @@ export class GraphqlService implements BackendService {
    *   }
    */
   onPaginationChanged(event: Event, args: PaginationChangedArgs) {
-    const pageSize = +args.pageSize || ((this.pagination) ? this.pagination.pageSize : DEFAULT_PAGE_SIZE);
+    const pageSize = +(args.pageSize || ((this.pagination) ? this.pagination.pageSize : DEFAULT_PAGE_SIZE));
     this.updatePagination(args.newPage, pageSize);
 
     // build the GraphQL query which we will use in the WebAPI callback
