@@ -55,7 +55,6 @@ const eventPrefix = 'sg';
 @inject(ControlAndPluginService, ExportService, Element, EventAggregator, FilterService, GraphqlService, GridEventService, GridExtraService, GridStateService, I18N, ResizerService, SortService)
 export class AureliaSlickgridCustomElement {
   private _dataset: any[];
-  private _gridOptions: GridOption;
   private _eventHandler: any = new Slick.EventHandler();
   gridHeightString: string;
   gridWidthString: string;
@@ -98,19 +97,19 @@ export class AureliaSlickgridCustomElement {
 
     // make sure the dataset is initialized (if not it will throw an error that it cannot getLength of null)
     this._dataset = this._dataset || this.dataset || [];
-    this._gridOptions = this.mergeGridOptions();
-    this.createBackendApiInternalPostProcessCallback(this._gridOptions);
+    this.gridOptions = this.mergeGridOptions();
+    this.createBackendApiInternalPostProcessCallback(this.gridOptions);
 
     this.dataview = new Slick.Data.DataView();
-    this.controlAndPluginService.createPluginBeforeGridCreation(this.columnDefinitions, this._gridOptions);
-    this.grid = new Slick.Grid(`#${this.gridId}`, this.dataview, this.columnDefinitions, this._gridOptions);
-    this.controlAndPluginService.attachDifferentControlOrPlugins(this.grid, this.columnDefinitions, this._gridOptions, this.dataview);
+    this.controlAndPluginService.createPluginBeforeGridCreation(this.columnDefinitions, this.gridOptions);
+    this.grid = new Slick.Grid(`#${this.gridId}`, this.dataview, this.columnDefinitions, this.gridOptions);
+    this.controlAndPluginService.attachDifferentControlOrPlugins(this.grid, this.columnDefinitions, this.gridOptions, this.dataview);
 
-    this.attachDifferentHooks(this.grid, this._gridOptions, this.dataview);
+    this.attachDifferentHooks(this.grid, this.gridOptions, this.dataview);
 
     this.grid.init();
     this.dataview.beginUpdate();
-    this.dataview.setItems(this._dataset, this._gridOptions.datasetIdPropertyName);
+    this.dataview.setItems(this._dataset, this.gridOptions.datasetIdPropertyName);
     this.dataview.endUpdate();
 
     // publish certain events
@@ -126,25 +125,25 @@ export class AureliaSlickgridCustomElement {
     this.ea.publish('onDataviewCreated', this.dataview);
 
     // attach resize ONLY after the dataView is ready
-    this.attachResizeHook(this.grid, this._gridOptions);
+    this.attachResizeHook(this.grid, this.gridOptions);
 
     // attach grid extra service
-    this.gridExtraService.init(this.grid, this.columnDefinitions, this._gridOptions, this.dataview);
+    this.gridExtraService.init(this.grid, this.columnDefinitions, this.gridOptions, this.dataview);
 
     // when user enables translation, we need to translate Headers on first pass & subsequently in the attachDifferentHooks
-    if (this._gridOptions.enableTranslate) {
+    if (this.gridOptions.enableTranslate) {
       this.controlAndPluginService.translateHeaders();
     }
 
     // if Export is enabled, initialize the service with the necessary grid and other objects
-    if (this._gridOptions.enableExport) {
-      this.exportService.init(this.grid, this._gridOptions, this.dataview);
+    if (this.gridOptions.enableExport) {
+      this.exportService.init(this.grid, this.gridOptions, this.dataview);
     }
 
     // attach the Backend Service API callback functions only after the grid is initialized
     // because the preProcess() and onInit() might get triggered
-    if (this._gridOptions && (this._gridOptions.backendServiceApi || this._gridOptions.onBackendEventApi)) {
-      this.attachBackendCallbackFunctions(this._gridOptions);
+    if (this.gridOptions && (this.gridOptions.backendServiceApi || this.gridOptions.onBackendEventApi)) {
+      this.attachBackendCallbackFunctions(this.gridOptions);
     }
 
     this.gridStateService.init(this.grid, this.filterService, this.sortService);
@@ -193,7 +192,7 @@ export class AureliaSlickgridCustomElement {
     // expand/autofit columns on first page load
     // we can assume that if the oldValue was empty then we are on first load
     if (!oldValue || oldValue.length < 1) {
-      if (this._gridOptions.autoFitColumnsOnFirstLoad) {
+      if (this.gridOptions.autoFitColumnsOnFirstLoad) {
         this.grid.autosizeColumns();
       }
     }
@@ -288,8 +287,8 @@ export class AureliaSlickgridCustomElement {
     }
 
     // on cell click, mainly used with the columnDef.action callback
-    this.gridEventService.attachOnCellChange(grid, this._gridOptions, dataView);
-    this.gridEventService.attachOnClick(grid, this._gridOptions, dataView);
+    this.gridEventService.attachOnCellChange(grid, this.gridOptions, dataView);
+    this.gridEventService.attachOnClick(grid, this.gridOptions, dataView);
 
     this._eventHandler.subscribe(dataView.onRowCountChanged, (e: any, args: any) => {
       grid.updateRowCount();
@@ -388,21 +387,21 @@ export class AureliaSlickgridCustomElement {
    */
   refreshGridData(dataset: any[], totalCount?: number) {
     if (dataset && this.grid && this.dataview && typeof this.dataview.setItems === 'function') {
-      this.dataview.setItems(dataset, this._gridOptions.datasetIdPropertyName);
+      this.dataview.setItems(dataset, this.gridOptions.datasetIdPropertyName);
 
       // this.grid.setData(dataset);
       this.grid.invalidate();
       this.grid.render();
 
-      if (this._gridOptions.enablePagination || this._gridOptions.backendServiceApi) {
+      if (this.gridOptions.enablePagination || this.gridOptions.backendServiceApi) {
         // do we want to show pagination?
         // if we have a backendServiceApi and the enablePagination is undefined, we'll assume that we do want to see it, else get that defined value
-        this.showPagination = ((this._gridOptions.backendServiceApi && this._gridOptions.enablePagination === undefined) ? true : this._gridOptions.enablePagination) || false;
+        this.showPagination = ((this.gridOptions.backendServiceApi && this.gridOptions.enablePagination === undefined) ? true : this.gridOptions.enablePagination) || false;
 
         // before merging the grid options, make sure that it has the totalItems count
         // once we have that, we can merge and pass all these options to the pagination component
         if (!this.gridOptions.pagination) {
-          this.gridOptions.pagination = (this._gridOptions.pagination) ? this._gridOptions.pagination : undefined;
+          this.gridOptions.pagination = (this.gridOptions.pagination) ? this.gridOptions.pagination : undefined;
         }
         if (this.gridOptions.pagination && totalCount) {
           this.gridOptions.pagination.totalItems = totalCount;
@@ -413,7 +412,7 @@ export class AureliaSlickgridCustomElement {
         }
         this.gridPaginationOptions = this.mergeGridOptions();
       }
-      if (this.grid && this._gridOptions.enableAutoResize) {
+      if (this.grid && this.gridOptions.enableAutoResize) {
         // resize the grid inside a slight timeout, in case other DOM element changed prior to the resize (like a filter/pagination changed)
         this.resizer.resizeGrid(10);
         // this.grid.autosizeColumns();
