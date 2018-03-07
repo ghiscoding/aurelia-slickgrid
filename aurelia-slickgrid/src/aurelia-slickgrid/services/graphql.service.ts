@@ -1,7 +1,7 @@
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { inject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
-import { mapOperatorType, mapOperatorByFilterType } from './utilities';
+import { mapOperatorType, mapOperatorByFilterType, mapOperatorByFieldType } from './utilities';
 import {
   BackendService,
   Column,
@@ -10,6 +10,7 @@ import {
   CurrentFilter,
   CurrentPagination,
   CurrentSorter,
+  FieldType,
   FilterChangedArgs,
   GraphqlCursorPaginationOption,
   GraphqlDatasetFilter,
@@ -372,6 +373,11 @@ export class GraphqlService implements BackendService {
         // if we didn't find an Operator but we have a Filter Type, we should use default Operator
         if (!operator && columnDef.filter) {
           operator = mapOperatorByFilterType(columnDef.filter.type || '');
+        }
+
+        // if we still don't have an operator then go with the mapping
+        if (!operator) {
+          operator = mapOperatorByFieldType(columnDef.type || FieldType.string);
         }
 
         searchByArray.push({
