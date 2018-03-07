@@ -19,22 +19,6 @@
     normalize-path "^2.0.1"
     through2 "^2.0.3"
 
-"@types/flatpickr@^3.1.2":
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/@types/flatpickr/-/flatpickr-3.1.2.tgz#767e04fea776ddb399007028bed1a885e26d6d52"
-  dependencies:
-    flatpickr "*"
-
-"@types/jquery@^3.2.15":
-  version "3.2.16"
-  resolved "https://registry.yarnpkg.com/@types/jquery/-/jquery-3.2.16.tgz#04419c404a3194350e7d3f339a90e72c88db3111"
-
-"@types/moment@^2.13.0":
-  version "2.13.0"
-  resolved "https://registry.yarnpkg.com/@types/moment/-/moment-2.13.0.tgz#604ebd189bc3bc34a1548689404e61a2a4aac896"
-  dependencies:
-    moment "*"
-
 abbrev@1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.1.1.tgz#f8f2c887ad10bf67f634f005b6987fed3179aac8"
@@ -478,23 +462,21 @@ aurelia-router@^1.0.1:
     aurelia-path "^1.0.0"
     aurelia-route-recognizer "^1.0.0"
 
-aurelia-slickgrid@^1.1.2:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/aurelia-slickgrid/-/aurelia-slickgrid-1.3.0.tgz#1838507d90c8aa104f0e4b25d168b0fdc4d42a1b"
+aurelia-slickgrid@^1.7.1:
+  version "1.7.1"
+  resolved "https://registry.yarnpkg.com/aurelia-slickgrid/-/aurelia-slickgrid-1.7.1.tgz#ce90850df59eb6d0d056481e3444c85af8be7849"
   dependencies:
-    "@types/flatpickr" "^3.1.2"
-    "@types/jquery" "^3.2.15"
-    "@types/moment" "^2.13.0"
     aurelia-event-aggregator "^1.0.1"
     aurelia-framework "^1.1.0"
     aurelia-i18n "^2.1.0"
     aurelia-pal "^1.4.0"
-    flatpickr "^4.1.0"
+    flatpickr "^4.2.4"
     i18next-xhr-backend "^1.5.0"
     jquery "^3.2.1"
     moment "^2.18.1"
     moment-mini "^2.18.1"
-    slickgrid "^2.3.12"
+    slickgrid "^2.3.15"
+    text-encoding-utf-8 "^1.0.2"
 
 aurelia-task-queue@^1.0.0, aurelia-task-queue@^1.1.0:
   version "1.2.1"
@@ -2478,10 +2460,6 @@ flat-cache@^1.2.1:
     graceful-fs "^4.1.2"
     write "^0.2.1"
 
-flatpickr@*, flatpickr@^4.1.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/flatpickr/-/flatpickr-4.1.0.tgz#529ade4b0dcba1ff6bb33709fce745a77ad8628c"
-
 flatpickr@^4.2.4:
   version "4.2.4"
   resolved "https://registry.yarnpkg.com/flatpickr/-/flatpickr-4.2.4.tgz#abd6dedd0fa41e2118acb96a22f49819ba2d0157"
@@ -4036,10 +4014,6 @@ moment-mini@^2.18.1:
   version "2.18.1"
   resolved "https://registry.yarnpkg.com/moment-mini/-/moment-mini-2.18.1.tgz#2734cc2cd7bfd40d598c2071cc9c96cb399789d7"
 
-moment@*:
-  version "2.19.2"
-  resolved "https://registry.yarnpkg.com/moment/-/moment-2.19.2.tgz#8a7f774c95a64550b4c7ebd496683908f9419dbe"
-
 moment@^2.18.1:
   version "2.18.1"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.18.1.tgz#c36193dd3ce1c2eed2adb7c802dbbc77a81b1c0f"
@@ -4449,10 +4423,6 @@ object.reduce@^1.0.0:
   dependencies:
     for-own "^1.0.0"
     make-iterator "^1.0.0"
-
-obtain-unicode@~0.0.5:
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/obtain-unicode/-/obtain-unicode-0.0.5.tgz#655f337a8f135280495d77a60efc601f9af5d5dc"
 
 on-finished@~2.3.0:
   version "2.3.0"
@@ -5327,13 +5297,6 @@ slice-ansi@0.0.4:
   version "0.0.4"
   resolved "https://registry.yarnpkg.com/slice-ansi/-/slice-ansi-0.0.4.tgz#edbf8903f66f7ce2f8eafd6ceed65e264c831b35"
 
-slickgrid@^2.3.12:
-  version "2.3.12"
-  resolved "https://registry.yarnpkg.com/slickgrid/-/slickgrid-2.3.12.tgz#f509cd3e6f024371cd3d1fa7e991826466826f87"
-  dependencies:
-    jquery ">=1.8.0"
-    jquery-ui ">=1.8.0"
-
 slickgrid@^2.3.15:
   version "2.3.15"
   resolved "https://registry.yarnpkg.com/slickgrid/-/slickgrid-2.3.15.tgz#ceeae99e5733a19849df19508661c55b1b6da64d"
@@ -5647,6 +5610,10 @@ tar@^2.0.0, tar@^2.2.1, tar@~2.2.1:
     fstream "^1.0.2"
     inherits "2"
 
+text-encoding-utf-8@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/text-encoding-utf-8/-/text-encoding-utf-8-1.0.2.tgz#585b62197b0ae437e3c7b5d0af27ac1021e10d13"
+
 text-table@~0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
@@ -5881,12 +5848,6 @@ useragent@^2.1.6:
   dependencies:
     lru-cache "2.2.x"
     tmp "0.0.x"
-
-utf8-encoding@^0.1.2:
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/utf8-encoding/-/utf8-encoding-0.1.2.tgz#8717015cb8b923bc0303bf4af520af96f06ae9a2"
-  dependencies:
-    obtain-unicode "~0.0.5"
 
 util-deprecate@~1.0.1:
   version "1.0.2"

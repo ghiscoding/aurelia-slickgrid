@@ -21,7 +21,7 @@
     "aurelia-bootstrapper": "^2.1.1",
     "aurelia-http-client": "^1.2.1",
     "aurelia-i18n": "^2.1.0",
-    "aurelia-slickgrid": "^1.1.2",
+    "aurelia-slickgrid": "^1.7.1",
     "bluebird": "^3.4.1",
     "bootstrap": "^3.3.7",
     "flatpickr": "^4.2.4",
@@ -33,7 +33,7 @@
     "requirejs": "^2.3.2",
     "slickgrid": "^2.3.15",
     "text": "github:requirejs/text#latest",
-    "utf8-encoding": "^0.1.2"
+    "text-encoding-utf-8": "^1.0.2"
   },
   "peerDependencies": {},
   "devDependencies": {
