@@ -1,11 +1,13 @@
+import { autoinject } from 'aurelia-framework';
 import { CustomInputFilter } from './custom-inputFilter';
-import { Column, FieldType, FilterType, Formatter, Formatters, GridOption } from 'aurelia-slickgrid';
+import { Column, FieldType, FilterType, Formatter, Formatters, GridOption, GridStateService } from 'aurelia-slickgrid';
 
 function randomBetween(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 const NB_ITEMS = 500;
 
+@autoinject()
 export class Example4 {
   title = 'Example 4: Client Side Sort/Filter';
   subTitle = `
@@ -31,13 +33,17 @@ export class Example4 {
   gridOptions: GridOption;
   dataset: any[];
 
-  constructor() {
+  constructor(private gridStateService: GridStateService) {
     this.defineGrid();
   }
 
   attached() {
     // populate the dataset once the grid is ready
     this.getData();
+  }
+
+  detached() {
+    this.saveCurrentGridState();
   }
 
   /* Define grid Options and Columns */
@@ -51,7 +57,7 @@ export class Example4 {
     this.columnDefinitions = [
       { id: 'title', name: 'Title', field: 'title', filterable: true, sortable: true, type: FieldType.string, minWidth: 45 },
       {
-        id: 'description', name: 'Description', field: 'description', filterable: true, sortable: true, minWidth: 50,
+        id: 'description', name: 'Description', field: 'description', filterable: true, sortable: true, minWidth: 80,
         type: FieldType.string,
         filter: {
           type: FilterType.custom,
@@ -59,14 +65,13 @@ export class Example4 {
         }
       },
       {
-        id: 'duration', name: 'Duration (days)', field: 'duration', sortable: true, type: FieldType.number,
+        id: 'duration', name: 'Duration (days)', field: 'duration', sortable: true, type: FieldType.number, exportCsvForceToKeepAsString: true,
         minWidth: 55,
         filterable: true,
         filter: {
           collection: multiSelectFilterArray,
           type: FilterType.multipleSelect,
-          searchTerms: [1, 10, 20], // default selection
-
+          searchTerms: [1, 33, 50], // default selection
           // we could add certain option(s) to the "multiple-select" plugin
           filterOptions: {
             maxHeight: 250,
@@ -74,8 +79,8 @@ export class Example4 {
           }
         }
       },
-      { id: 'complete', name: '% Complete', field: 'percentComplete', formatter: Formatters.percentCompleteBar, minWidth: 55, type: FieldType.number, filterable: true, sortable: true },
-      { id: 'start', name: 'Start', field: 'start', formatter: Formatters.dateIso, filterable: true, sortable: true, type: FieldType.date, minWidth: 60 },
+      { id: 'complete', name: '% Complete', field: 'percentComplete', formatter: Formatters.percentCompleteBar, minWidth: 70, type: FieldType.number, filterable: true, sortable: true },
+      { id: 'start', name: 'Start', field: 'start', formatter: Formatters.dateIso, filterable: true, sortable: true, type: FieldType.date, minWidth: 60, exportWithFormatter: true },
       { id: 'usDateShort', name: 'US Date Short', field: 'usDateShort', filterable: true, sortable: true, type: FieldType.dateUsShort, minWidth: 55 },
       { id: 'utcDate', name: 'UTC Date', field: 'utcDate', formatter: Formatters.dateTimeIsoAmPm, filterable: true, sortable: true, minWidth: 115, type: FieldType.dateUtc, filterSearchType: FieldType.dateTimeIso },
       { id: 'utcDate2', name: 'UTC Date (filterSearchType: dateUS)', field: 'utcDate', filterable: true, sortable: true, minWidth: 115, type: FieldType.dateUtc, filterSearchType: FieldType.dateUs },
@@ -95,12 +100,26 @@ export class Example4 {
         }
       }
     ];
+
     this.gridOptions = {
       autoResize: {
         containerId: 'demo-container',
         sidePadding: 15
       },
-      enableFiltering: true
+      enableFiltering: true,
+
+      // use columnDef searchTerms OR use presets as shown below
+      presets: {
+        filters: [
+          { columnId: 'duration', searchTerms: [2, 22, 44] },
+          { columnId: 'complete', searchTerm: '>5' },
+          { columnId: 'effort-driven', searchTerm: true }
+        ],
+        sorters: [
+          { columnId: 'duration', direction: 'DESC' },
+          { columnId: 'complete', direction: 'ASC' }
+        ],
+      }
     };
   }
 
@@ -121,7 +140,7 @@ export class Example4 {
       this.dataset[i] = {
         id: i,
         title: 'Task ' + i,
-        description: (i % 28 === 1) ? null : 'desc ' + i, // also add some random to test NULL field
+        description: (i % 5) ? 'desc ' + i : null, // also add some random to test NULL field
         duration: randomDuration,
         percentComplete: randomPercent,
         percentCompleteNumber: randomPercent,
@@ -131,5 +150,10 @@ export class Example4 {
         effortDriven: (i % 3 === 0)
       };
     }
+  }
+
+  /** Save current Filters, Sorters in LocaleStorage or DB */
+  saveCurrentGridState() {
+    console.log('Client current grid state', this.gridStateService.getCurrentGridState());
   }
 }

@@ -1,6 +1,21 @@
-import { I18N } from 'aurelia-i18n';
-import { autoinject, bindable } from 'aurelia-framework';
-import { Column, Editors, FieldType, Formatters, GridExtraService, GridExtraUtils, GridOption, OnEventArgs, ResizerService } from 'aurelia-slickgrid';
+import {
+  I18N
+} from 'aurelia-i18n';
+import {
+  autoinject,
+  bindable
+} from 'aurelia-framework';
+import {
+  Column,
+  Editors,
+  FieldType,
+  Formatters,
+  GridExtraService,
+  GridExtraUtils,
+  GridOption,
+  OnEventArgs,
+  ResizerService
+} from 'aurelia-slickgrid';
 
 // using external non-typed js libraries
 declare var Slick: any;
@@ -47,40 +62,101 @@ export class Example3 {
 
   /* Define grid Options and Columns */
   defineGrid() {
-    this.columnDefinitions = [
-      {
-        id: 'edit', field: 'id',
-        formatter: Formatters.editIcon,
-        minWidth: 30,
-        maxWidth: 30,
-        // use onCellClick OR grid.onClick.subscribe which you can see down below
-        onCellClick: (args: OnEventArgs) => {
-          console.log(args);
-          this.alertWarning = `Editing: ${args.dataContext.title}`;
-          this.gridExtraService.highlightRow(args.row, 1500);
-          this.gridExtraService.setSelectedRow(args.row);
-        }
-      },
-      {
-        id: 'delete', field: 'id',
-        formatter: Formatters.deleteIcon,
-        minWidth: 30,
-        maxWidth: 30,
-        // use onCellClick OR grid.onClick.subscribe which you can see down below
-        /*
-        onCellClick: (args: OnEventArgs) => {
-          console.log(args);
-          this.alertWarning = `Deleting: ${args.dataContext.title}`;
-        }
-        */
-      },
-      { id: 'title', name: 'Title', field: 'title', sortable: true, type: FieldType.string, editor: Editors.longText, minWidth: 100 },
-      { id: 'duration', name: 'Duration (days)', field: 'duration', sortable: true, type: FieldType.number, editor: Editors.text, minWidth: 100 },
-      { id: 'complete', name: '% Complete', field: 'percentComplete', formatter: Formatters.percentCompleteBar, type: FieldType.number, editor: Editors.integer, minWidth: 100 },
-      { id: 'start', name: 'Start', field: 'start', formatter: Formatters.dateIso, sortable: true, minWidth: 100, type: FieldType.date, editor: Editors.date, params: { i18n: this.i18n } },
-      { id: 'finish', name: 'Finish', field: 'finish', formatter: Formatters.dateIso, sortable: true, minWidth: 100, type: FieldType.date, editor: Editors.date },
-      { id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', formatter: Formatters.checkmark, type: FieldType.number, editor: Editors.checkbox, minWidth: 100 }
-    ];
+    this.columnDefinitions = [{
+      id: 'edit',
+      field: 'id',
+      formatter: Formatters.editIcon,
+      minWidth: 30,
+      maxWidth: 30,
+      // use onCellClick OR grid.onClick.subscribe which you can see down below
+      onCellClick: (args: OnEventArgs) => {
+        console.log(args);
+        this.alertWarning = `Editing: ${args.dataContext.title}`;
+        this.gridExtraService.highlightRow(args.row, 1500);
+        this.gridExtraService.setSelectedRow(args.row);
+      }
+    }, {
+      id: 'delete',
+      field: 'id',
+      formatter: Formatters.deleteIcon,
+      minWidth: 30,
+      maxWidth: 30,
+      // use onCellClick OR grid.onClick.subscribe which you can see down below
+      /*
+      onCellClick: (args: OnEventArgs) => {
+        console.log(args);
+        this.alertWarning = `Deleting: ${args.dataContext.title}`;
+      }
+      */
+    }, {
+      id: 'title',
+      name: 'Title',
+      field: 'title',
+      sortable: true,
+      type: FieldType.string,
+      editor: Editors.longText,
+      minWidth: 100
+    }, {
+      id: 'duration',
+      name: 'Duration (days)',
+      field: 'duration',
+      sortable: true,
+      type: FieldType.number,
+      editor: Editors.text,
+      minWidth: 100
+    }, {
+      id: 'complete',
+      name: '% Complete',
+      field: 'percentComplete',
+      formatter: Formatters.multiple,
+      type: FieldType.number,
+      editor: Editors.singleSelect,
+      minWidth: 100,
+      params: {
+        formatters: [Formatters.collection, Formatters.percentCompleteBar],
+        collection: Array.from(Array(101).keys()).map(k => ({ value: k, label: `${k}%` }))
+      }
+    }, {
+      id: 'start',
+      name: 'Start',
+      field: 'start',
+      formatter: Formatters.dateIso,
+      sortable: true,
+      minWidth: 100,
+      type: FieldType.date,
+      editor: Editors.date,
+      params: {
+        i18n: this.i18n
+      }
+    }, {
+      id: 'finish',
+      name: 'Finish',
+      field: 'finish',
+      formatter: Formatters.dateIso,
+      sortable: true,
+      minWidth: 100,
+      type: FieldType.date,
+      editor: Editors.date
+    }, {
+      id: 'effort-driven',
+      name: 'Effort Driven',
+      field: 'effortDriven',
+      formatter: Formatters.checkmark,
+      type: FieldType.number,
+      editor: Editors.checkbox,
+      minWidth: 100
+    }, {
+      id: 'prerequisites',
+      name: 'Prerequisites',
+      field: 'prerequisites',
+      sortable: true,
+      type: FieldType.string,
+      editor: Editors.multipleSelect,
+      params: {
+        collection: Array.from(Array(10).keys()).map(k => ({ value: `Task ${k}`, label: `Task ${k}` })),
+        i18n: this.i18n
+      }
+    }];
 
     this.gridOptions = {
       asyncEditorLoading: false,
@@ -119,7 +195,8 @@ export class Example3 {
         percentCompleteNumber: randomPercent,
         start: new Date(randomYear, randomMonth, randomDay),
         finish: new Date(randomYear, (randomMonth + 1), randomDay),
-        effortDriven: (i % 5 === 0)
+        effortDriven: (i % 5 === 0),
+        prerequisites: (i % 5 === 0) && i > 0 ? [`Task ${i}`, `Task ${i - 1}`] : []
       };
     }
     this.dataset = mockedDataset;
@@ -166,7 +243,9 @@ export class Example3 {
 
   setAutoEdit(isAutoEdit) {
     this.isAutoEdit = isAutoEdit;
-    this.gridObj.setOptions({ autoEdit: isAutoEdit });
+    this.gridObj.setOptions({
+      autoEdit: isAutoEdit
+    });
     return true;
   }
 
