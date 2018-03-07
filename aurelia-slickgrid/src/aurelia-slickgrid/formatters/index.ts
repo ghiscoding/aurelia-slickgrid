@@ -23,6 +23,7 @@ import { translateFormatter } from './translateFormatter';
 import { translateBooleanFormatter } from './translateBooleanFormatter';
 import { uppercaseFormatter } from './uppercaseFormatter';
 import { yesNoFormatter } from './yesNoFormatter';
+import { collectionFormatter } from './collectionFormatter';
 
 /*
 export interface GroupFormatter {
@@ -46,6 +47,9 @@ export const Formatters = {
 
   /** Takes a complex data object and return the data under that property (for example: "user.firstName" will return the first name "John") */
   complexObject: complexObjectFormatter,
+
+  /** Looks up values from the filter.collection property and convert it to a CSV or string */
+  collection: collectionFormatter,
 
   /** Takes a Date object and displays it as an ISO Date format */
   dateIso: dateIsoFormatter,
