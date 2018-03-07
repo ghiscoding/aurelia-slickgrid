@@ -133,6 +133,12 @@ export interface Column {
   /** A query field which, when specified, will be used to query filterBy/orderBy and has precedence over field property to query. */
   queryField?: string;
 
+  /** Similar to "queryField" but only used with Filtering. Useful when you want to display a certain field to the UI, but you want to use another field to query for Filtering. */
+  queryFieldFilter?: string;
+
+  /** Similar to "queryField" but only used with Sorting. Useful when you want to display a certain field to the UI, but you want to use another field to query for Sorting. */
+  queryFieldSorter?: string;
+
   /** Is the column resizable, can we make it wider/thinner? A resize cursor will show on the right side of the column when enabled. */
   resizable?: boolean;
 
