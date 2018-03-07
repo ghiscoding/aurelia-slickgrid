@@ -48,6 +48,14 @@ define(["require", "exports", "./../models/index", "jquery"], function (require,
                 this.$filterElm.off('keyup').remove();
             }
         };
+        /**
+         * Set value(s) on the DOM element
+         */
+        InputFilter.prototype.setValues = function (values) {
+            if (values) {
+                this.$filterElm.val(values);
+            }
+        };
         //
         // private functions
         // ------------------

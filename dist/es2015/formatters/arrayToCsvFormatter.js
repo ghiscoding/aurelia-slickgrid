@@ -1,6 +1,7 @@
 export const arrayToCsvFormatter = (row, cell, value, columnDef, dataContext) => {
     if (value && Array.isArray(value)) {
-        return value.join(', ');
+        const values = value.join(', ');
+        return `<span title="${values}">${values}</span>`;
     }
     return '';
 };

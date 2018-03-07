@@ -8,10 +8,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 var aurelia_i18n_1 = require("aurelia-i18n");
 var aurelia_framework_1 = require("aurelia-framework");
+var index_1 = require("./../models/index");
 var $ = require("jquery");
 var SelectFilter = /** @class */ (function () {
     function SelectFilter(i18n) {
         this.i18n = i18n;
+        this.filterType = index_1.FilterType.select;
     }
     /**
      * Initialize the Filter
@@ -54,6 +56,14 @@ var SelectFilter = /** @class */ (function () {
     SelectFilter.prototype.destroy = function () {
         if (this.$filterElm) {
             this.$filterElm.off('change').remove();
+        }
+    };
+    /**
+     * Set value(s) on the DOM element
+     */
+    SelectFilter.prototype.setValues = function (values) {
+        if (values) {
+            this.$filterElm.val(values);
         }
     };
     //

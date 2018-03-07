@@ -5,6 +5,7 @@ export declare const Formatters: {
     checkbox: (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) => string;
     checkmark: (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) => string;
     complexObject: (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) => string;
+    collection: (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) => string;
     dateIso: (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) => string;
     dateTimeIso: (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) => string;
     dateTimeIsoAmPm: (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) => string;
@@ -14,6 +15,7 @@ export declare const Formatters: {
     deleteIcon: (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) => string;
     editIcon: (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) => string;
     hyperlink: (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) => string;
+    hyperlinkUriPrefix: (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) => string;
     infoIcon: (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) => string;
     lowercase: (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) => string;
     multiple: (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) => string;

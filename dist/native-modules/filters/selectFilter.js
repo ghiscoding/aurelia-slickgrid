@@ -6,10 +6,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 import { I18N } from 'aurelia-i18n';
 import { inject } from 'aurelia-framework';
+import { FilterType } from './../models/index';
 import * as $ from 'jquery';
 var SelectFilter = /** @class */ (function () {
     function SelectFilter(i18n) {
         this.i18n = i18n;
+        this.filterType = FilterType.select;
     }
     /**
      * Initialize the Filter
@@ -52,6 +54,14 @@ var SelectFilter = /** @class */ (function () {
     SelectFilter.prototype.destroy = function () {
         if (this.$filterElm) {
             this.$filterElm.off('change').remove();
+        }
+    };
+    /**
+     * Set value(s) on the DOM element
+     */
+    SelectFilter.prototype.setValues = function (values) {
+        if (values) {
+            this.$filterElm.val(values);
         }
     };
     //

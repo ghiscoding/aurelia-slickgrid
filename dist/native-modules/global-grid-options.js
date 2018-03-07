@@ -1,3 +1,4 @@
+import { FilterType } from './models/index';
 /**
  * Default Options that can be passed to the Aurelia-Slickgrid
  */
@@ -20,6 +21,7 @@ export var GlobalGridOptions = {
         hideSyncResizeButton: true
     },
     datasetIdPropertyName: 'id',
+    defaultFilterType: FilterType.input,
     enableAutoResize: true,
     enableRowSelection: true,
     editable: false,

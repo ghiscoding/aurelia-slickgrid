@@ -1,13 +1,13 @@
 import { I18N } from 'aurelia-i18n';
-import { Column, Filter, FilterArguments, FilterCallback, FilterType } from './../models/index';
+import { Column, Filter, FilterArguments, FilterCallback, FilterType, MultipleSelectOption, SearchTerm } from './../models/index';
 export declare class MultipleSelectFilter implements Filter {
     private i18n;
     $filterElm: any;
     grid: any;
-    searchTerms: string[] | number[] | boolean[];
+    searchTerms: SearchTerm[];
     columnDef: Column;
     callback: FilterCallback;
-    defaultOptions: any;
+    defaultOptions: MultipleSelectOption;
     isFilled: boolean;
     filterType: FilterType;
     /**
@@ -26,6 +26,10 @@ export declare class MultipleSelectFilter implements Filter {
      * destroy the filter
      */
     destroy(): void;
+    /**
+     * Set value(s) on the DOM element
+     */
+    setValues(values: SearchTerm[]): void;
     /**
      * Create the HTML template as a string
      */

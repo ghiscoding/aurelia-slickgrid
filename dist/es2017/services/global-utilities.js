@@ -30,4 +30,14 @@ String.allTitleCase = (inputStr) => {
 String.titleCase = (inputStr) => {
     return inputStr.charAt(0).toUpperCase() + inputStr.slice(1);
 };
+/**
+ * Uses the logic function to find an item in an array or returns the default
+ * value provided (empty object by default)
+ * @param function logic the logic to find the item
+ * @param any [defaultVal={}] the default value to return
+ * @return object the found object or deafult value
+ */
+Array.prototype.findOrDefault = function (logic, defaultVal = {}) {
+    return this.find(logic) || defaultVal;
+};
 //# sourceMappingURL=global-utilities.js.map

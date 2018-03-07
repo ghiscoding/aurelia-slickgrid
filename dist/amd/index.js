@@ -10,6 +10,8 @@ define(["require", "exports", "aurelia-pal", "./aurelia-slickgrid", "./slick-pag
     exports.FilterType = index_1.FilterType;
     exports.FormElementType = index_1.FormElementType;
     exports.FieldType = index_1.FieldType;
+    exports.OperatorType = index_1.OperatorType;
+    exports.SortDirection = index_1.SortDirection;
     exports.Editors = index_2.Editors;
     exports.FilterConditions = index_3.FilterConditions;
     exports.Filters = index_4.Filters;
@@ -24,16 +26,19 @@ define(["require", "exports", "aurelia-pal", "./aurelia-slickgrid", "./slick-pag
     exports.GridExtraService = index_7.GridExtraService;
     exports.GridEventService = index_7.GridEventService;
     exports.GridOdataService = index_7.GridOdataService;
+    exports.GridStateService = index_7.GridStateService;
     exports.ResizerService = index_7.ResizerService;
     exports.SortService = index_7.SortService;
     function configure(aurelia, callback) {
         aurelia.globalResources(aurelia_pal_1.PLATFORM.moduleName('./aurelia-slickgrid'));
         aurelia.globalResources(aurelia_pal_1.PLATFORM.moduleName('./slick-pagination'));
-        aurelia.container.registerSingleton(index_4.PLUGIN_NAME, index_4.Filters.input);
-        aurelia.container.registerSingleton(index_4.PLUGIN_NAME, index_4.Filters.multipleSelect);
-        aurelia.container.registerSingleton(index_4.PLUGIN_NAME, index_4.Filters.singleSelect);
-        aurelia.container.registerSingleton(index_4.PLUGIN_NAME, index_4.Filters.select);
+        // must register a transient so the container will get a new instance everytime
+        aurelia.container.registerTransient(index_4.PLUGIN_NAME, index_4.Filters.input);
+        aurelia.container.registerTransient(index_4.PLUGIN_NAME, index_4.Filters.multipleSelect);
+        aurelia.container.registerTransient(index_4.PLUGIN_NAME, index_4.Filters.singleSelect);
+        aurelia.container.registerTransient(index_4.PLUGIN_NAME, index_4.Filters.select);
         var config = new slickgrid_config_1.SlickgridConfig();
+        aurelia.container.registerInstance(slickgrid_config_1.SlickgridConfig, config);
         if (typeof callback === 'function') {
             callback(config);
         }

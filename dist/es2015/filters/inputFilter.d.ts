@@ -1,8 +1,8 @@
-import { Column, Filter, FilterType, FilterArguments, FilterCallback } from './../models/index';
+import { Column, Filter, FilterType, FilterArguments, FilterCallback, SearchTerm } from './../models/index';
 export declare class InputFilter implements Filter {
     private $filterElm;
     grid: any;
-    searchTerm: string | number | boolean;
+    searchTerm: SearchTerm;
     columnDef: Column;
     callback: FilterCallback;
     filterType: FilterType;
@@ -18,6 +18,10 @@ export declare class InputFilter implements Filter {
      * destroy the filter
      */
     destroy(): void;
+    /**
+     * Set value(s) on the DOM element
+     */
+    setValues(values: SearchTerm): void;
     /**
      * Create the HTML template as a string
      */

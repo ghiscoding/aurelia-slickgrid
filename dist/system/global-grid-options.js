@@ -1,9 +1,13 @@
-System.register([], function (exports_1, context_1) {
+System.register(["./models/index"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var GlobalGridOptions;
+    var index_1, GlobalGridOptions;
     return {
-        setters: [],
+        setters: [
+            function (index_1_1) {
+                index_1 = index_1_1;
+            }
+        ],
         execute: function () {
             /**
              * Default Options that can be passed to the Aurelia-Slickgrid
@@ -27,6 +31,7 @@ System.register([], function (exports_1, context_1) {
                     hideSyncResizeButton: true
                 },
                 datasetIdPropertyName: 'id',
+                defaultFilterType: index_1.FilterType.input,
                 enableAutoResize: true,
                 enableRowSelection: true,
                 editable: false,

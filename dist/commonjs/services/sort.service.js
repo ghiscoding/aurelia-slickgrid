@@ -40,6 +40,9 @@ var index_1 = require("./../models/index");
 var index_2 = require("./../sorters/index");
 var SortService = /** @class */ (function () {
     function SortService() {
+        this._currentLocalSorters = [];
+        this._eventHandler = new Slick.EventHandler();
+        this._subscriber = new Slick.Event();
         this.onSortChanged = new aurelia_event_aggregator_1.EventAggregator();
     }
     /**
@@ -48,9 +51,10 @@ var SortService = /** @class */ (function () {
      * @param gridOptions Grid Options object
      */
     SortService.prototype.attachBackendOnSort = function (grid, gridOptions) {
-        this.subscriber = grid.onSort;
+        this._subscriber = grid.onSort;
         this.emitSortChangedBy('remote');
-        this.subscriber.subscribe(this.attachBackendOnSortSubscribe);
+        this._subscriber = new Slick.Event();
+        this._subscriber.subscribe(this.attachBackendOnSortSubscribe);
     };
     SortService.prototype.attachBackendOnSortSubscribe = function (event, args) {
         return __awaiter(this, void 0, void 0, function () {
@@ -92,18 +96,82 @@ var SortService = /** @class */ (function () {
      * @param gridOptions Grid Options object
      * @param dataView
      */
-    SortService.prototype.attachLocalOnSort = function (grid, gridOptions, dataView) {
-        this.subscriber = grid.onSort;
+    SortService.prototype.attachLocalOnSort = function (grid, gridOptions, dataView, columnDefinitions) {
+        var _this = this;
+        this._subscriber = grid.onSort;
         this.emitSortChangedBy('local');
-        this.subscriber.subscribe(function (e, args) {
+        this._subscriber = new Slick.Event();
+        this._subscriber.subscribe(function (e, args) {
             // multiSort and singleSort are not exactly the same, but we want to structure it the same for the (for loop) after
             // also to avoid having to rewrite the for loop in the sort, we will make the singleSort an array of 1 object
             var sortColumns = (args.multiColumnSort) ? args.sortCols : new Array({ sortAsc: args.sortAsc, sortCol: args.sortCol });
-            dataView.sort(function (dataRow1, dataRow2) {
-                for (var i = 0, l = sortColumns.length; i < l; i++) {
-                    var columnSortObj = sortColumns[i];
+            // keep current sorters
+            _this._currentLocalSorters = []; // reset current local sorters
+            if (Array.isArray(sortColumns)) {
+                sortColumns.forEach(function (sortColumn) {
+                    if (sortColumn.sortCol) {
+                        _this._currentLocalSorters.push({
+                            columnId: sortColumn.sortCol.id,
+                            direction: sortColumn.sortAsc ? index_1.SortDirection.ASC : index_1.SortDirection.DESC
+                        });
+                    }
+                });
+            }
+            _this.onLocalSortChanged(grid, gridOptions, dataView, sortColumns);
+        });
+        this._eventHandler.subscribe(dataView.onRowCountChanged, function (e, args) {
+            // load any presets if there are any
+            if (args.current > 0) {
+                _this.loadLocalPresets(grid, gridOptions, dataView, columnDefinitions);
+            }
+        });
+    };
+    SortService.prototype.getCurrentLocalSorters = function () {
+        return this._currentLocalSorters;
+    };
+    /**
+     * load any presets if there are any
+     * @param grid
+     * @param gridOptions
+     * @param dataView
+     * @param columnDefinitions
+     */
+    SortService.prototype.loadLocalPresets = function (grid, gridOptions, dataView, columnDefinitions) {
+        var _this = this;
+        var sortCols = [];
+        this._currentLocalSorters = []; // reset current local sorters
+        if (gridOptions && gridOptions.presets && gridOptions.presets.sorters) {
+            var sorters_1 = gridOptions.presets.sorters;
+            columnDefinitions.forEach(function (columnDef) {
+                var columnPreset = sorters_1.find(function (currentSorter) {
+                    return currentSorter.columnId === columnDef.id;
+                });
+                if (columnPreset) {
+                    sortCols.push({
+                        columnId: columnDef.id,
+                        sortAsc: ((columnPreset.direction.toUpperCase() === index_1.SortDirection.ASC) ? true : false),
+                        sortCol: columnDef
+                    });
+                    // keep current sorters
+                    _this._currentLocalSorters.push({
+                        columnId: columnDef.id + '',
+                        direction: columnPreset.direction.toUpperCase()
+                    });
+                }
+            });
+            if (sortCols.length > 0) {
+                this.onLocalSortChanged(grid, gridOptions, dataView, sortCols);
+                grid.setSortColumns(sortCols);
+            }
+        }
+    };
+    SortService.prototype.onLocalSortChanged = function (grid, gridOptions, dataView, sortColumns) {
+        dataView.sort(function (dataRow1, dataRow2) {
+            for (var i = 0, l = sortColumns.length; i < l; i++) {
+                var columnSortObj = sortColumns[i];
+                if (columnSortObj && columnSortObj.sortCol) {
                     var sortDirection = columnSortObj.sortAsc ? 1 : -1;
-                    var sortField = columnSortObj.sortCol.queryField || columnSortObj.sortCol.field;
+                    var sortField = columnSortObj.sortCol.queryField || columnSortObj.sortCol.queryFieldSorter || columnSortObj.sortCol.field;
                     var fieldType = columnSortObj.sortCol.type || 'string';
                     var value1 = dataRow1[sortField];
                     var value2 = dataRow2[sortField];
@@ -132,16 +200,19 @@ var SortService = /** @class */ (function () {
                         return result;
                     }
                 }
-                return 0;
-            });
-            grid.invalidate();
-            grid.render();
+            }
+            return 0;
         });
+        grid.invalidate();
+        grid.render();
     };
-    SortService.prototype.destroy = function () {
-        if (this.subscriber && typeof this.subscriber.unsubscribe === 'function') {
-            this.subscriber.unsubscribe();
+    SortService.prototype.dispose = function () {
+        // unsubscribe local event
+        if (this._subscriber && typeof this._subscriber.unsubscribe === 'function') {
+            this._subscriber.unsubscribe();
         }
+        // unsubscribe all SlickGrid events
+        this._eventHandler.unsubscribeAll();
     };
     /**
      * A simple function that is attached to the subscriber and emit a change when the sort is called.
@@ -150,7 +221,7 @@ var SortService = /** @class */ (function () {
      */
     SortService.prototype.emitSortChangedBy = function (sender) {
         var _this = this;
-        this.subscriber.subscribe(function () { return _this.onSortChanged.publish('sortService:changed', "onSortChanged by " + sender); });
+        this._subscriber.subscribe(function () { return _this.onSortChanged.publish('sortService:changed', "onSortChanged by " + sender); });
     };
     return SortService;
 }());

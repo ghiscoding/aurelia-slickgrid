@@ -10,6 +10,7 @@ __export(require("./graphql.service"));
 __export(require("./gridEvent.service"));
 __export(require("./gridExtra.service"));
 __export(require("./gridExtraUtils"));
+__export(require("./gridState.service"));
 __export(require("./grid-odata.service"));
 __export(require("./odata.service"));
 __export(require("./resizer.service"));

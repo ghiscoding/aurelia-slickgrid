@@ -1,4 +1,4 @@
-define(["require", "exports"], function (require, exports) {
+define(["require", "exports", "./models/index"], function (require, exports, index_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -23,6 +23,7 @@ define(["require", "exports"], function (require, exports) {
             hideSyncResizeButton: true
         },
         datasetIdPropertyName: 'id',
+        defaultFilterType: index_1.FilterType.input,
         enableAutoResize: true,
         enableRowSelection: true,
         editable: false,

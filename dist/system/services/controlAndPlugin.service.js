@@ -91,7 +91,10 @@ System.register(["aurelia-framework", "aurelia-i18n", "./export.service", "./fil
                         });
                     }
                     if (options.enableHeaderMenu) {
-                        this.headerMenuPlugin = new Slick.Plugins.HeaderMenu(options.headerMenu || {});
+                        var headerMenuOptions = options.headerMenu || {};
+                        headerMenuOptions.minWidth = headerMenuOptions.minWidth || 140;
+                        headerMenuOptions.autoAlignOffset = headerMenuOptions.autoAlignOffset || 12;
+                        this.headerMenuPlugin = new Slick.Plugins.HeaderMenu(headerMenuOptions);
                         grid.registerPlugin(this.headerMenuPlugin);
                         this.headerMenuPlugin.onCommand.subscribe(function (e, args) {
                             if (options.headerMenu && typeof options.headerMenu.onCommand === 'function') {
@@ -188,7 +191,7 @@ System.register(["aurelia-framework", "aurelia-i18n", "./export.service", "./fil
                 ControlAndPluginService.prototype.autoResizeColumns = function () {
                     this._grid.autosizeColumns();
                 };
-                ControlAndPluginService.prototype.destroy = function () {
+                ControlAndPluginService.prototype.dispose = function () {
                     this._grid = null;
                     this._dataView = null;
                     this.visibleColumns = [];
@@ -449,6 +452,7 @@ System.register(["aurelia-framework", "aurelia-i18n", "./export.service", "./fil
                         this.checkboxSelectorPlugin = new Slick.CheckboxSelectColumn(options.checkboxSelector || {});
                         var selectionColumn = this.checkboxSelectorPlugin.getColumnDefinition();
                         selectionColumn.excludeFromExport = true;
+                        selectionColumn.excludeFromQuery = true;
                         columnDefinitions.unshift(selectionColumn);
                     }
                 };

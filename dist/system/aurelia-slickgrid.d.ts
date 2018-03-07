@@ -20,7 +20,7 @@ import 'slickgrid/plugins/slick.rowselectionmodel';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
 import { I18N } from 'aurelia-i18n';
 import { Column, GridOption } from './models/index';
-import { ControlAndPluginService, ExportService, FilterService, GraphqlService, GridEventService, GridExtraService, ResizerService, SortService } from './services/index';
+import { ControlAndPluginService, ExportService, FilterService, GraphqlService, GridEventService, GridExtraService, GridStateService, ResizerService, SortService } from './services/index';
 export declare class AureliaSlickgridCustomElement {
     private controlAndPluginService;
     private exportService;
@@ -30,11 +30,11 @@ export declare class AureliaSlickgridCustomElement {
     private graphqlService;
     private gridEventService;
     private gridExtraService;
+    private gridStateService;
     private i18n;
     private resizer;
     private sortService;
     private _dataset;
-    private _gridOptions;
     private _eventHandler;
     gridHeightString: string;
     gridWidthString: string;
@@ -53,7 +53,7 @@ export declare class AureliaSlickgridCustomElement {
     gridHeight: number;
     gridWidth: number;
     pickerOptions: any;
-    constructor(controlAndPluginService: ControlAndPluginService, exportService: ExportService, elm: Element, ea: EventAggregator, filterService: FilterService, graphqlService: GraphqlService, gridEventService: GridEventService, gridExtraService: GridExtraService, i18n: I18N, resizer: ResizerService, sortService: SortService);
+    constructor(controlAndPluginService: ControlAndPluginService, exportService: ExportService, elm: Element, ea: EventAggregator, filterService: FilterService, graphqlService: GraphqlService, gridEventService: GridEventService, gridExtraService: GridExtraService, gridStateService: GridStateService, i18n: I18N, resizer: ResizerService, sortService: SortService);
     attached(): void;
     detached(): void;
     /**
@@ -61,7 +61,6 @@ export declare class AureliaSlickgridCustomElement {
      * If nothing was passed, it will default to first option of select
      */
     bind(binding: any, contexts: any): void;
-    unbind(binding: any, scope: any): void;
     datasetChanged(newValue: any[], oldValue: any[]): void;
     /**
      * Define what our internal Post Process callback, it will execute internally after we get back result from the Process backend call
@@ -69,6 +68,7 @@ export declare class AureliaSlickgridCustomElement {
      */
     createBackendApiInternalPostProcessCallback(gridOptions: GridOption): void;
     attachDifferentHooks(grid: any, gridOptions: GridOption, dataView: any): void;
+    attachBackendCallbackFunctions(gridOptions: GridOption): void;
     attachResizeHook(grid: any, options: GridOption): void;
     mergeGridOptions(): GridOption;
     /**

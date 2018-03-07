@@ -6,7 +6,7 @@ System.register([], function (exports_1, context_1) {
         setters: [],
         execute: function () {
             (function (FilterType) {
-                /** Input Filter type */
+                /** Input Filter type, with a magnifying glass as placeholder */
                 FilterType[FilterType["input"] = 0] = "input";
                 /** Select Filter type, just a regular select dropdown. You might want to try "singleSelect" which has a nicer look and feel. */
                 FilterType[FilterType["select"] = 1] = "select";
@@ -16,6 +16,8 @@ System.register([], function (exports_1, context_1) {
                 FilterType[FilterType["singleSelect"] = 3] = "singleSelect";
                 /** Custom Filter type */
                 FilterType[FilterType["custom"] = 4] = "custom";
+                /** Input Filter type, but without a magnifying glass as placeholder */
+                FilterType[FilterType["inputNoPlaceholder"] = 5] = "inputNoPlaceholder";
             })(FilterType || (FilterType = {}));
             exports_1("FilterType", FilterType);
         }

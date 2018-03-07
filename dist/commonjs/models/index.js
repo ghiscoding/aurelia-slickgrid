@@ -10,6 +10,6 @@ __export(require("./fileType.enum"));
 __export(require("./filterType.enum"));
 __export(require("./formElementType"));
 __export(require("./keyCode.enum"));
-__export(require("./operatorType"));
-__export(require("./sortDirection"));
+__export(require("./operatorType.enum"));
+__export(require("./sortDirection.enum"));
 //# sourceMappingURL=index.js.map

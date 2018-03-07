@@ -164,7 +164,7 @@ function mapFlatpickrDateFormatWithFieldType(fieldType) {
 }
 exports.mapFlatpickrDateFormatWithFieldType = mapFlatpickrDateFormatWithFieldType;
 /**
- * Mapper for mathematical operators (ex.: <= is "le", > is "gt")
+ * Mapper for query operators (ex.: <= is "le", > is "gt")
  * @param string operator
  * @returns string map
  */
@@ -221,6 +221,65 @@ function mapOperatorType(operator) {
 }
 exports.mapOperatorType = mapOperatorType;
 /**
+ * Mapper for query operator by a Field Type
+ * For example a String should use "Contains" but a number should use "EQ" operator
+ * @param operator
+ * @returns string map
+ */
+function mapOperatorByFieldType(fieldType) {
+    var map;
+    switch (fieldType) {
+        case index_1.FieldType.string:
+        case index_1.FieldType.unknown:
+            map = index_1.OperatorType.contains;
+            break;
+        case index_1.FieldType.float:
+        case index_1.FieldType.number:
+        case index_1.FieldType.dateIso:
+        case index_1.FieldType.date:
+        case index_1.FieldType.dateUtc:
+        case index_1.FieldType.dateTime:
+        case index_1.FieldType.dateTimeIso:
+        case index_1.FieldType.dateTimeIsoAmPm:
+        case index_1.FieldType.dateTimeIsoAM_PM:
+        case index_1.FieldType.dateUs:
+        case index_1.FieldType.dateUsShort:
+        case index_1.FieldType.dateTimeUs:
+        case index_1.FieldType.dateTimeUsAmPm:
+        case index_1.FieldType.dateTimeUsAM_PM:
+        case index_1.FieldType.dateTimeUsShort:
+        case index_1.FieldType.dateTimeUsShortAmPm:
+        case index_1.FieldType.dateTimeUsShortAM_PM:
+        default:
+            map = index_1.OperatorType.equal;
+            break;
+    }
+    return map;
+}
+exports.mapOperatorByFieldType = mapOperatorByFieldType;
+/**
+ * Mapper for query operator by a Filter Type
+ * For example a multiple-select typically uses 'IN' operator
+ * @param operator
+ * @returns string map
+ */
+function mapOperatorByFilterType(filterType) {
+    var map;
+    switch (filterType) {
+        case index_1.FilterType.multipleSelect:
+            map = index_1.OperatorType.in;
+            break;
+        case index_1.FilterType.singleSelect:
+            map = index_1.OperatorType.equal;
+            break;
+        default:
+            map = index_1.OperatorType.contains;
+            break;
+    }
+    return map;
+}
+exports.mapOperatorByFilterType = mapOperatorByFilterType;
+/**
  * Parse a date passed as a string and return a Date object (if valid)
  * @param string inputDateString
  * @returns string date formatted
@@ -262,4 +321,34 @@ function toKebabCase(str) {
     return toCamelCase(str).replace(/([A-Z])/g, '-$1').toLowerCase();
 }
 exports.toKebabCase = toKebabCase;
+/**
+ * Compares two arrays to determine if all the items are equal
+ * @param a first array
+ * @param b second array to compare with a
+ * @param [orderMatters=false] flag if the order matters, if not arrays will be sorted
+ * @return boolean true if equal, else false
+ */
+function arraysEqual(a, b, orderMatters) {
+    if (orderMatters === void 0) { orderMatters = false; }
+    if (a === b) {
+        return true;
+    }
+    if (a === null || b === null) {
+        return false;
+    }
+    if (a.length !== b.length) {
+        return false;
+    }
+    if (!orderMatters) {
+        a.sort();
+        b.sort();
+    }
+    for (var i = 0; i < a.length; ++i) {
+        if (a[i] !== b[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+exports.arraysEqual = arraysEqual;
 //# sourceMappingURL=utilities.js.map

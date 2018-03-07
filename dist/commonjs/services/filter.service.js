@@ -49,13 +49,15 @@ var index_3 = require("./../models/index");
 var FilterService = /** @class */ (function () {
     function FilterService(filterFactory) {
         this.filterFactory = filterFactory;
+        this._eventHandler = new Slick.EventHandler();
+        this._subscriber = new Slick.Event();
         this._filters = [];
         this._columnFilters = {};
         this.onFilterChanged = new aurelia_event_aggregator_1.EventAggregator();
     }
     FilterService.prototype.init = function (grid, gridOptions, columnDefinitions) {
-        this._gridOptions = gridOptions;
         this._grid = grid;
+        this._gridOptions = gridOptions;
     };
     /**
      * Attach a backend filter hook to the grid
@@ -64,11 +66,12 @@ var FilterService = /** @class */ (function () {
      */
     FilterService.prototype.attachBackendOnFilter = function (grid, options) {
         var _this = this;
-        this.subscriber = new Slick.Event();
-        this.emitFilterChangedBy('remote');
-        this.subscriber.subscribe(this.attachBackendOnFilterSubscribe);
         this._filters = [];
-        grid.onHeaderRowCellRendered.subscribe(function (e, args) {
+        this.emitFilterChangedBy('remote');
+        this._subscriber = new Slick.Event();
+        this._subscriber.subscribe(this.attachBackendOnFilterSubscribe);
+        // subscribe to SlickGrid onHeaderRowCellRendered event to create filter template
+        this._eventHandler.subscribe(grid.onHeaderRowCellRendered, function (e, args) {
             _this.addFilterTemplateToHeaderRow(args);
         });
     };
@@ -140,18 +143,19 @@ var FilterService = /** @class */ (function () {
     FilterService.prototype.attachLocalOnFilter = function (grid, options, dataView) {
         var _this = this;
         this._dataView = dataView;
-        this.subscriber = new Slick.Event();
+        this._filters = [];
         this.emitFilterChangedBy('local');
         dataView.setFilterArgs({ columnFilters: this._columnFilters, grid: this._grid });
         dataView.setFilter(this.customLocalFilter.bind(this, dataView));
-        this.subscriber.subscribe(function (e, args) {
+        this._subscriber = new Slick.Event();
+        this._subscriber.subscribe(function (e, args) {
             var columnId = args.columnId;
             if (columnId != null) {
                 dataView.refresh();
             }
         });
-        this._filters = [];
-        grid.onHeaderRowCellRendered.subscribe(function (e, args) {
+        // subscribe to SlickGrid onHeaderRowCellRendered event to create filter template
+        this._eventHandler.subscribe(grid.onHeaderRowCellRendered, function (e, args) {
             _this.addFilterTemplateToHeaderRow(args);
         });
     };
@@ -161,10 +165,12 @@ var FilterService = /** @class */ (function () {
             var columnFilter = args.columnFilters[columnId];
             var columnIndex = args.grid.getColumnIndex(columnId);
             var columnDef = args.grid.getColumns()[columnIndex];
+            if (!columnDef) {
+                return false;
+            }
             var fieldType = columnDef.type || index_3.FieldType.string;
-            var conditionalFilterFn = (columnDef.filter && columnDef.filter.conditionalFilter) ? columnDef.filter.conditionalFilter : null;
             var filterSearchType = (columnDef.filterSearchType) ? columnDef.filterSearchType : null;
-            var cellValue = item[columnDef.queryField || columnDef.field];
+            var cellValue = item[columnDef.queryField || columnDef.queryFieldFilter || columnDef.field];
             var searchTerms = (columnFilter && columnFilter.searchTerms) ? columnFilter.searchTerms : null;
             var fieldSearchValue = (columnFilter && (columnFilter.searchTerm !== undefined || columnFilter.searchTerm !== null)) ? columnFilter.searchTerm : undefined;
             if (typeof fieldSearchValue === 'undefined') {
@@ -196,9 +202,8 @@ var FilterService = /** @class */ (function () {
             if (searchTerm === '' && !searchTerms) {
                 return true;
             }
-            // filter search terms should always be string (even though we permit the end user to input numbers)
-            // so make sure each term are strings
-            // run a query if user has some default search terms
+            // filter search terms should always be string type (even though we permit the end user to input numbers)
+            // so make sure each term are strings, if user has some default search terms, we will cast them to string
             if (searchTerms && Array.isArray(searchTerms)) {
                 for (var k = 0, ln = searchTerms.length; k < ln; k++) {
                     // make sure all search terms are strings
@@ -223,25 +228,25 @@ var FilterService = /** @class */ (function () {
                 cellValueLastChar: lastValueChar,
                 filterSearchType: filterSearchType
             };
-            if (conditionalFilterFn && typeof conditionalFilterFn === 'function') {
-                conditionalFilterFn(conditionOptions);
-            }
             if (!index_1.FilterConditions.executeMappedCondition(conditionOptions)) {
                 return false;
             }
         }
         return true;
     };
-    FilterService.prototype.destroy = function () {
-        this.destroyFilters();
-        if (this.subscriber && typeof this.subscriber.unsubscribe === 'function') {
-            this.subscriber.unsubscribe();
+    FilterService.prototype.dispose = function () {
+        this.disposeColumnFilters();
+        // unsubscribe all SlickGrid events
+        this._eventHandler.unsubscribeAll();
+        // unsubscribe local event
+        if (this._subscriber && typeof this._subscriber.unsubscribe === 'function') {
+            this._subscriber.unsubscribe();
         }
     };
     /**
-     * Destroy the filters, since it's a singleton, we don't want to affect other grids with same columns
+     * Dispose of the filters, since it's a singleton, we don't want to affect other grids with same columns
      */
-    FilterService.prototype.destroyFilters = function () {
+    FilterService.prototype.disposeColumnFilters = function () {
         // we need to loop through all columnFilters and delete them 1 by 1
         // only trying to make columnFilter an empty (without looping) would not trigger a dataset change
         for (var columnId in this._columnFilters) {
@@ -255,6 +260,27 @@ var FilterService = /** @class */ (function () {
                 filter.destroy(true);
             }
         });
+    };
+    FilterService.prototype.getColumnFilters = function () {
+        return this._columnFilters;
+    };
+    FilterService.prototype.getCurrentLocalFilters = function () {
+        var currentFilters = [];
+        if (this._columnFilters) {
+            for (var _i = 0, _a = Object.keys(this._columnFilters); _i < _a.length; _i++) {
+                var colId = _a[_i];
+                var columnFilter = this._columnFilters[colId];
+                var filter = { columnId: colId || '' };
+                if (columnFilter && columnFilter.searchTerms) {
+                    filter.searchTerms = columnFilter.searchTerms;
+                }
+                else {
+                    filter.searchTerm = (columnFilter && (columnFilter.searchTerm !== undefined || columnFilter.searchTerm !== null)) ? columnFilter.searchTerm : undefined;
+                }
+                currentFilters.push(filter);
+            }
+        }
+        return currentFilters;
     };
     FilterService.prototype.callbackSearchEvent = function (e, args) {
         var targetValue = (e && e.target) ? e.target.value : undefined;
@@ -270,12 +296,12 @@ var FilterService = /** @class */ (function () {
             this._columnFilters[colId] = {
                 columnId: colId,
                 columnDef: args.columnDef || null,
-                searchTerms: args.searchTerms || [],
-                searchTerm: ((e && e.target) ? e.target.value : ''),
-                operator: args.operator || ''
+                operator: args.operator || undefined,
+                searchTerms: args.searchTerms || undefined,
+                searchTerm: ((e && e.target) ? e.target.value : undefined),
             };
         }
-        this.triggerEvent(this.subscriber, {
+        this.triggerEvent(this._subscriber, {
             columnId: columnId,
             columnDef: args.columnDef || null,
             columnFilters: this._columnFilters,
@@ -289,15 +315,19 @@ var FilterService = /** @class */ (function () {
         var columnDef = args.column;
         var columnId = columnDef.id || '';
         if (columnDef && columnId !== 'selector' && columnDef.filterable) {
-            var searchTerms = (columnDef.filter && columnDef.filter.searchTerms) ? columnDef.filter.searchTerms : [];
-            var searchTerm = (columnDef.filter && (columnDef.filter.searchTerm !== undefined || columnDef.filter.searchTerm !== null)) ? columnDef.filter.searchTerm : '';
-            // keep the filter in a columnFilters for later reference
-            this.keepColumnFilters(searchTerm || '', searchTerms, columnDef);
-            // when hiding/showing (with Column Picker or Grid Menu), it will try to re-create yet again the filters (since SlickGrid does a re-render)
-            // because of that we need to first get searchTerm(s) from the columnFilters (that is what the user last entered)
-            // if nothing is found, we can then use the optional searchTerm(s) passed to the Grid Option (that is couple of lines earlier)
-            searchTerm = ((this._columnFilters[columnDef.id]) ? this._columnFilters[columnDef.id].searchTerm : searchTerm) || '';
-            searchTerms = ((this._columnFilters[columnDef.id]) ? this._columnFilters[columnDef.id].searchTerms : searchTerms) || [];
+            var searchTerms = void 0;
+            var searchTerm = void 0;
+            if (this._columnFilters[columnDef.id]) {
+                searchTerm = this._columnFilters[columnDef.id].searchTerm || undefined;
+                searchTerms = this._columnFilters[columnDef.id].searchTerms || undefined;
+            }
+            else if (columnDef.filter) {
+                // when hiding/showing (with Column Picker or Grid Menu), it will try to re-create yet again the filters (since SlickGrid does a re-render)
+                // because of that we need to first get searchTerm(s) from the columnFilters (that is what the user last entered)
+                searchTerms = columnDef.filter.searchTerms || undefined;
+                searchTerm = columnDef.filter.searchTerm || undefined;
+                this.updateColumnFilters(searchTerm, searchTerms, columnDef);
+            }
             var filterArguments = {
                 grid: this._grid,
                 searchTerm: searchTerm,
@@ -306,7 +336,7 @@ var FilterService = /** @class */ (function () {
                 callback: this.callbackSearchEvent.bind(this)
             };
             // depending on the Filter type, we will watch the correct event
-            var filterType = (columnDef.filter && columnDef.filter.type) ? columnDef.filter.type : index_3.FilterType.input;
+            var filterType = (columnDef.filter && columnDef.filter.type) ? columnDef.filter.type : this._gridOptions.defaultFilterType;
             var filter_1;
             switch (filterType) {
                 case index_3.FilterType.custom:
@@ -331,6 +361,11 @@ var FilterService = /** @class */ (function () {
                 else {
                     this._filters[filterExistIndex] = filter_1;
                 }
+                // when hiding/showing (with Column Picker or Grid Menu), it will try to re-create yet again the filters (since SlickGrid does a re-render)
+                // we need to also set again the values in the DOM elements if the values were set by a searchTerm(s)
+                if ((searchTerm || searchTerms) && filter_1.setValues) {
+                    filter_1.setValues(searchTerm || searchTerms);
+                }
             }
         }
     };
@@ -341,23 +376,53 @@ var FilterService = /** @class */ (function () {
      */
     FilterService.prototype.emitFilterChangedBy = function (sender) {
         var _this = this;
-        this.subscriber.subscribe(function () { return _this.onFilterChanged.publish('filterService:changed', "onFilterChanged by " + sender); });
+        this._subscriber.subscribe(function () { return _this.onFilterChanged.publish('filterService:changed', "onFilterChanged by " + sender); });
     };
-    FilterService.prototype.keepColumnFilters = function (searchTerm, searchTerms, columnDef) {
+    /**
+     * When user passes an array of preset filters, we need to pre-polulate each column filter searchTerm(s)
+     * The process is to loop through the preset filters array, find the associated column from columnDefinitions and fill in the filter object searchTerm(s)
+     * This is basically the same as if we would manually add searchTerm(s) to a column filter object in the column definition, but we do it programmatically.
+     * At the end of the day, when creating the Filter (DOM Element), it will use these searchTerm(s) so we can take advantage of that without recoding each Filter type (DOM element)
+     * @param gridOptions
+     * @param columnDefinitions
+     */
+    FilterService.prototype.populateColumnFilterSearchTerms = function (gridOptions, columnDefinitions) {
+        if (gridOptions.presets && gridOptions.presets.filters) {
+            var filters_1 = gridOptions.presets.filters;
+            columnDefinitions.forEach(function (columnDef) {
+                var columnPreset = filters_1.find(function (presetFilter) {
+                    return presetFilter.columnId === columnDef.id;
+                });
+                if (columnPreset && columnPreset.searchTerm) {
+                    columnDef.filter = columnDef.filter || {};
+                    columnDef.filter.searchTerm = columnPreset.searchTerm;
+                }
+                if (columnPreset && columnPreset.searchTerms) {
+                    columnDef.filter = columnDef.filter || {};
+                    columnDef.filter.operator = columnDef.filter.operator || index_3.OperatorType.in;
+                    columnDef.filter.searchTerms = columnPreset.searchTerms;
+                }
+            });
+        }
+        return columnDefinitions;
+    };
+    FilterService.prototype.updateColumnFilters = function (searchTerm, searchTerms, columnDef) {
         if (searchTerm !== undefined && searchTerm !== null && searchTerm !== '') {
             this._columnFilters[columnDef.id] = {
                 columnId: columnDef.id,
                 columnDef: columnDef,
                 searchTerm: searchTerm,
+                operator: (columnDef && columnDef.filter && columnDef.filter.operator) ? columnDef.filter.operator : null,
                 type: (columnDef && columnDef.filter && columnDef.filter.type) ? columnDef.filter.type : index_3.FilterType.input
             };
         }
-        if (searchTerms && Array.isArray(searchTerms) && searchTerms.length > 0) {
+        if (searchTerms) {
             // this._columnFilters.searchTerms = searchTerms;
             this._columnFilters[columnDef.id] = {
                 columnId: columnDef.id,
                 columnDef: columnDef,
                 searchTerms: searchTerms,
+                operator: (columnDef && columnDef.filter && columnDef.filter.operator) ? columnDef.filter.operator : null,
                 type: (columnDef && columnDef.filter && columnDef.filter.type) ? columnDef.filter.type : index_3.FilterType.input
             };
         }

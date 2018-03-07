@@ -3,6 +3,8 @@ import { DateEditor } from './dateEditor';
 import { FloatEditor } from './floatEditor';
 import { IntegerEditor } from './integerEditor';
 import { LongTextEditor } from './longTextEditor';
+import { MultipleSelectEditor } from './multipleSelectEditor';
+import { SingleSelectEditor } from './singleSelectEditor';
 import { TextEditor } from './textEditor';
 export var Editors = {
     checkbox: CheckboxEditor,
@@ -10,6 +12,8 @@ export var Editors = {
     float: FloatEditor,
     integer: IntegerEditor,
     longText: LongTextEditor,
+    multipleSelect: MultipleSelectEditor,
+    singleSelect: SingleSelectEditor,
     text: TextEditor
 };
 //# sourceMappingURL=index.js.map

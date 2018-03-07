@@ -14,6 +14,7 @@ var dateUsFormatter_1 = require("./dateUsFormatter");
 var deleteIconFormatter_1 = require("./deleteIconFormatter");
 var editIconFormatter_1 = require("./editIconFormatter");
 var hyperlinkFormatter_1 = require("./hyperlinkFormatter");
+var hyperlinkUriPrefixFormatter_1 = require("./hyperlinkUriPrefixFormatter");
 var infoIconFormatter_1 = require("./infoIconFormatter");
 var lowercaseFormatter_1 = require("./lowercaseFormatter");
 var multipleFormatter_1 = require("./multipleFormatter");
@@ -24,6 +25,7 @@ var translateFormatter_1 = require("./translateFormatter");
 var translateBooleanFormatter_1 = require("./translateBooleanFormatter");
 var uppercaseFormatter_1 = require("./uppercaseFormatter");
 var yesNoFormatter_1 = require("./yesNoFormatter");
+var collectionFormatter_1 = require("./collectionFormatter");
 /*
 export interface GroupFormatter {
   (row: number, cell: number, value: any, columnDef: Column, dataContext: Group): string
@@ -42,6 +44,8 @@ exports.Formatters = {
     checkmark: checkmarkFormatter_1.checkmarkFormatter,
     /** Takes a complex data object and return the data under that property (for example: "user.firstName" will return the first name "John") */
     complexObject: complexObjectFormatter_1.complexObjectFormatter,
+    /** Looks up values from the filter.collection property and convert it to a CSV or string */
+    collection: collectionFormatter_1.collectionFormatter,
     /** Takes a Date object and displays it as an ISO Date format */
     dateIso: dateIsoFormatter_1.dateIsoFormatter,
     /** Takes a Date object and displays it as an ISO Date+Time format */
@@ -58,8 +62,10 @@ exports.Formatters = {
     deleteIcon: deleteIconFormatter_1.deleteIconFormatter,
     /** Displays a Font-Awesome edit icon (fa-pencil) */
     editIcon: editIconFormatter_1.editIconFormatter,
-    /** Takes a cell value and transforms it into an hyperlink, given that the value starts with 1 of these (http|ftp|https) */
+    /** Takes an hyperlink cell value and transforms it into a real hyperlink, given that the value starts with 1 of these (http|ftp|https). The structure will be "<a href="hyperlink">hyperlink</a>" */
     hyperlink: hyperlinkFormatter_1.hyperlinkFormatter,
+    /** Takes an hyperlink URI prefix (passed in column definition "params.uriPrefix") and adds the cell value. The structure will be "<a href="uriPrefix">value</a>" */
+    hyperlinkUriPrefix: hyperlinkUriPrefixFormatter_1.hyperlinkUriPrefixFormatter,
     /** Displays a Font-Awesome edit icon (fa-info-circle) */
     infoIcon: infoIconFormatter_1.infoIconFormatter,
     /** Takes a value and displays it all lowercase */

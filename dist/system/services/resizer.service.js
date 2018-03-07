@@ -80,9 +80,9 @@ System.register(["jquery"], function (exports_1, context_1) {
                     };
                 };
                 /**
-                 * Destroy function when element is destroyed
+                 * Dispose function when element is destroyed
                  */
-                ResizerService.prototype.destroy = function () {
+                ResizerService.prototype.dispose = function () {
                     $(window).off('resize.grid');
                 };
                 /** Resize the datagrid to fit the browser height & width */

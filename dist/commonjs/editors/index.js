@@ -5,6 +5,8 @@ var dateEditor_1 = require("./dateEditor");
 var floatEditor_1 = require("./floatEditor");
 var integerEditor_1 = require("./integerEditor");
 var longTextEditor_1 = require("./longTextEditor");
+var multipleSelectEditor_1 = require("./multipleSelectEditor");
+var singleSelectEditor_1 = require("./singleSelectEditor");
 var textEditor_1 = require("./textEditor");
 exports.Editors = {
     checkbox: checkboxEditor_1.CheckboxEditor,
@@ -12,6 +14,8 @@ exports.Editors = {
     float: floatEditor_1.FloatEditor,
     integer: integerEditor_1.IntegerEditor,
     longText: longTextEditor_1.LongTextEditor,
+    multipleSelect: multipleSelectEditor_1.MultipleSelectEditor,
+    singleSelect: singleSelectEditor_1.SingleSelectEditor,
     text: textEditor_1.TextEditor
 };
 //# sourceMappingURL=index.js.map

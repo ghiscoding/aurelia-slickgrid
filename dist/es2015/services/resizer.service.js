@@ -68,9 +68,9 @@ export class ResizerService {
         };
     }
     /**
-     * Destroy function when element is destroyed
+     * Dispose function when element is destroyed
      */
-    destroy() {
+    dispose() {
         $(window).off('resize.grid');
     }
     /** Resize the datagrid to fit the browser height & width */

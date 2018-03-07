@@ -1,7 +1,7 @@
-System.register(["./arrayToCsvFormatter", "./checkboxFormatter", "./checkmarkFormatter", "./complexObjectFormatter", "./dateIsoFormatter", "./dateTimeIsoAmPmFormatter", "./dateTimeUsAmPmFormatter", "./dateTimeUsFormatter", "./dateUsFormatter", "./deleteIconFormatter", "./editIconFormatter", "./hyperlinkFormatter", "./infoIconFormatter", "./lowercaseFormatter", "./multipleFormatter", "./percentCompleteFormatter", "./percentCompleteBarFormatter", "./progressBarFormatter", "./translateFormatter", "./translateBooleanFormatter", "./uppercaseFormatter", "./yesNoFormatter"], function (exports_1, context_1) {
+System.register(["./arrayToCsvFormatter", "./checkboxFormatter", "./checkmarkFormatter", "./complexObjectFormatter", "./dateIsoFormatter", "./dateTimeIsoAmPmFormatter", "./dateTimeUsAmPmFormatter", "./dateTimeUsFormatter", "./dateUsFormatter", "./deleteIconFormatter", "./editIconFormatter", "./hyperlinkFormatter", "./hyperlinkUriPrefixFormatter", "./infoIconFormatter", "./lowercaseFormatter", "./multipleFormatter", "./percentCompleteFormatter", "./percentCompleteBarFormatter", "./progressBarFormatter", "./translateFormatter", "./translateBooleanFormatter", "./uppercaseFormatter", "./yesNoFormatter", "./collectionFormatter"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var arrayToCsvFormatter_1, checkboxFormatter_1, checkmarkFormatter_1, complexObjectFormatter_1, dateIsoFormatter_1, dateTimeIsoAmPmFormatter_1, dateTimeUsAmPmFormatter_1, dateTimeUsFormatter_1, dateUsFormatter_1, deleteIconFormatter_1, editIconFormatter_1, hyperlinkFormatter_1, infoIconFormatter_1, lowercaseFormatter_1, multipleFormatter_1, percentCompleteFormatter_1, percentCompleteBarFormatter_1, progressBarFormatter_1, translateFormatter_1, translateBooleanFormatter_1, uppercaseFormatter_1, yesNoFormatter_1, Formatters;
+    var arrayToCsvFormatter_1, checkboxFormatter_1, checkmarkFormatter_1, complexObjectFormatter_1, dateIsoFormatter_1, dateTimeIsoAmPmFormatter_1, dateTimeUsAmPmFormatter_1, dateTimeUsFormatter_1, dateUsFormatter_1, deleteIconFormatter_1, editIconFormatter_1, hyperlinkFormatter_1, hyperlinkUriPrefixFormatter_1, infoIconFormatter_1, lowercaseFormatter_1, multipleFormatter_1, percentCompleteFormatter_1, percentCompleteBarFormatter_1, progressBarFormatter_1, translateFormatter_1, translateBooleanFormatter_1, uppercaseFormatter_1, yesNoFormatter_1, collectionFormatter_1, Formatters;
     return {
         setters: [
             function (arrayToCsvFormatter_1_1) {
@@ -40,6 +40,9 @@ System.register(["./arrayToCsvFormatter", "./checkboxFormatter", "./checkmarkFor
             function (hyperlinkFormatter_1_1) {
                 hyperlinkFormatter_1 = hyperlinkFormatter_1_1;
             },
+            function (hyperlinkUriPrefixFormatter_1_1) {
+                hyperlinkUriPrefixFormatter_1 = hyperlinkUriPrefixFormatter_1_1;
+            },
             function (infoIconFormatter_1_1) {
                 infoIconFormatter_1 = infoIconFormatter_1_1;
             },
@@ -69,6 +72,9 @@ System.register(["./arrayToCsvFormatter", "./checkboxFormatter", "./checkmarkFor
             },
             function (yesNoFormatter_1_1) {
                 yesNoFormatter_1 = yesNoFormatter_1_1;
+            },
+            function (collectionFormatter_1_1) {
+                collectionFormatter_1 = collectionFormatter_1_1;
             }
         ],
         execute: function () {
@@ -90,6 +96,8 @@ System.register(["./arrayToCsvFormatter", "./checkboxFormatter", "./checkmarkFor
                 checkmark: checkmarkFormatter_1.checkmarkFormatter,
                 /** Takes a complex data object and return the data under that property (for example: "user.firstName" will return the first name "John") */
                 complexObject: complexObjectFormatter_1.complexObjectFormatter,
+                /** Looks up values from the filter.collection property and convert it to a CSV or string */
+                collection: collectionFormatter_1.collectionFormatter,
                 /** Takes a Date object and displays it as an ISO Date format */
                 dateIso: dateIsoFormatter_1.dateIsoFormatter,
                 /** Takes a Date object and displays it as an ISO Date+Time format */
@@ -106,8 +114,10 @@ System.register(["./arrayToCsvFormatter", "./checkboxFormatter", "./checkmarkFor
                 deleteIcon: deleteIconFormatter_1.deleteIconFormatter,
                 /** Displays a Font-Awesome edit icon (fa-pencil) */
                 editIcon: editIconFormatter_1.editIconFormatter,
-                /** Takes a cell value and transforms it into an hyperlink, given that the value starts with 1 of these (http|ftp|https) */
+                /** Takes an hyperlink cell value and transforms it into a real hyperlink, given that the value starts with 1 of these (http|ftp|https). The structure will be "<a href="hyperlink">hyperlink</a>" */
                 hyperlink: hyperlinkFormatter_1.hyperlinkFormatter,
+                /** Takes an hyperlink URI prefix (passed in column definition "params.uriPrefix") and adds the cell value. The structure will be "<a href="uriPrefix">value</a>" */
+                hyperlinkUriPrefix: hyperlinkUriPrefixFormatter_1.hyperlinkUriPrefixFormatter,
                 /** Displays a Font-Awesome edit icon (fa-info-circle) */
                 infoIcon: infoIconFormatter_1.infoIconFormatter,
                 /** Takes a value and displays it all lowercase */

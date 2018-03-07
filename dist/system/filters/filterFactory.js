@@ -1,4 +1,4 @@
-System.register(["aurelia-framework", "../models/index"], function (exports_1, context_1) {
+System.register(["aurelia-framework", "../models/index", "../slickgrid-config"], function (exports_1, context_1) {
     "use strict";
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -7,7 +7,7 @@ System.register(["aurelia-framework", "../models/index"], function (exports_1, c
         return c > 3 && r && Object.defineProperty(target, key, r), r;
     };
     var __moduleName = context_1 && context_1.id;
-    var aurelia_framework_1, index_1, PLUGIN_NAME, FilterFactory;
+    var aurelia_framework_1, index_1, slickgrid_config_1, PLUGIN_NAME, FilterFactory;
     return {
         setters: [
             function (aurelia_framework_1_1) {
@@ -15,49 +15,49 @@ System.register(["aurelia-framework", "../models/index"], function (exports_1, c
             },
             function (index_1_1) {
                 index_1 = index_1_1;
+            },
+            function (slickgrid_config_1_1) {
+                slickgrid_config_1 = slickgrid_config_1_1;
             }
         ],
         execute: function () {
-            /** The name of the plugins the factory will initialize via Aurelia's All.Of */
+            /** The name of the plugins the factory will initialize */
             exports_1("PLUGIN_NAME", PLUGIN_NAME = 'GRID_FILTERS');
             FilterFactory = /** @class */ (function () {
                 /**
                  * Creates an instance of the FilterFactory class
-                 * @param {Filter[]} filters the array of supported Filter interfaces
-                 * @param {FilterType} [defaultFilterType=FilterType.input] an optional default filter type to use
-                 * when no filter type is found. Supply a different default value using Aurelia's Factory.Of
-                 * resolver
+                 * @param {Container} container the Aurelia container
+                 * @param {SlickgridConfig} config the slickgrid configuration settings
                  */
-                function FilterFactory(filters, defaultFilterType) {
-                    if (defaultFilterType === void 0) { defaultFilterType = index_1.FilterType.input; }
-                    this.filters = filters;
-                    this.defaultFilterType = defaultFilterType;
+                function FilterFactory(container, config) {
+                    this.container = container;
+                    this.config = config;
+                    this._options = config.options;
                 }
                 /**
                  * Creates a new Filter from the provided filterType
-                 * @param {FilterType | FormElementType | string} filterType the type of filter to create
-                 * as an enum or custom string
+                 * @param {FilterType | FormElementType | string} [filterType] the type of filter to create
+                 * as an enum or custom string. The default filter type will be used if no value is passed
                  * @return {Filter} the new Filter
                  */
                 FilterFactory.prototype.createFilter = function (filterType) {
                     var _this = this;
-                    var filter = this.filters.find(function (f) {
+                    var filters = this.container.getAll(PLUGIN_NAME);
+                    var filter = filters.find(function (f) {
                         return f.filterType === filterType;
                     });
                     // default to the input filter type when none is found
                     if (!filter) {
-                        var inputIndex = this.filters.findIndex(function (f) {
-                            return f.filterType === _this.defaultFilterType;
-                        });
-                        if (inputIndex === -1) {
-                            throw new Error("Default filter of type " + (index_1.FilterType[this.defaultFilterType] || this.defaultFilterType) + " was not found");
+                        filter = filters.find(function (f) { return f.filterType === _this._options.defaultFilterType; });
+                        if (!filter) {
+                            var enumOrCustom = index_1.FilterType[this._options.defaultFilterType] ? 'FilterType.enum' : 'custom';
+                            throw new Error("Default filter of type " + enumOrCustom + "=" + this._options.defaultFilterType + " was not found");
                         }
-                        return this.filters[inputIndex];
                     }
                     return filter;
                 };
                 FilterFactory = __decorate([
-                    aurelia_framework_1.inject(aurelia_framework_1.All.of(PLUGIN_NAME))
+                    aurelia_framework_1.inject(aurelia_framework_1.Container, slickgrid_config_1.SlickgridConfig)
                 ], FilterFactory);
                 return FilterFactory;
             }());

@@ -16,7 +16,10 @@
         </nav>
 
         <div class="slick-page-number">
-          <span t="PAGE_X_OF_Y" t-params.bind="{ x: pageNumber, y: pageCount }">page ${pageNumber} of ${pageCount}</span>
+          <span t="PAGE"></span>
+          <input type="text" class="form-control" value.bind="pageNumber" size="1" change.delegate="changeToCurrentPage($event)">
+          <span t="OF"></span>
+          <span> ${pageCount}</span>
         </div>
 
         <nav aria-label="Page navigation">

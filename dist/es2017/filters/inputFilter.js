@@ -45,6 +45,14 @@ export class InputFilter {
             this.$filterElm.off('keyup').remove();
         }
     }
+    /**
+     * Set value(s) on the DOM element
+     */
+    setValues(values) {
+        if (values) {
+            this.$filterElm.val(values);
+        }
+    }
     //
     // private functions
     // ------------------

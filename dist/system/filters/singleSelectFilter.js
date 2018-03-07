@@ -94,6 +94,15 @@ System.register(["aurelia-i18n", "aurelia-framework", "./../models/index", "jque
                         this.$filterElm.off().remove();
                     }
                 };
+                /**
+                 * Set value(s) on the DOM element
+                 */
+                SingleSelectFilter.prototype.setValues = function (values) {
+                    if (values) {
+                        values = Array.isArray(values) ? values : [values];
+                        this.$filterElm.multipleSelect('setSelects', values);
+                    }
+                };
                 //
                 // private functions
                 // ------------------
@@ -133,7 +142,7 @@ System.register(["aurelia-i18n", "aurelia-framework", "./../models/index", "jque
                     // create the DOM element & add an ID and filter class
                     this.$filterElm = $(filterTemplate);
                     if (typeof this.$filterElm.multipleSelect !== 'function') {
-                        throw new Error("multiple-select.js was not found, make sure to modify your \"angular-cli.json\" file and include \"../node_modules/angular-slickgrid/lib/multiple-select/multiple-select.js\" and it's css or SASS file");
+                        throw new Error("multiple-select.js was not found, make sure to read the HOWTO Wiki on how to install it");
                     }
                     this.$filterElm.attr('id', "filter-" + this.columnDef.id);
                     this.$filterElm.data('columnId', this.columnDef.id);

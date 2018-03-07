@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var index_1 = require("./models/index");
 /**
  * Default Options that can be passed to the Aurelia-Slickgrid
  */
@@ -22,6 +23,7 @@ exports.GlobalGridOptions = {
         hideSyncResizeButton: true
     },
     datasetIdPropertyName: 'id',
+    defaultFilterType: index_1.FilterType.input,
     enableAutoResize: true,
     enableRowSelection: true,
     editable: false,

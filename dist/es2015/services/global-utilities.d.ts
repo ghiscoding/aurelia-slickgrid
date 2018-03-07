@@ -4,3 +4,6 @@ interface StringConstructor {
     trim(inputStr: string): string;
     titleCase(inputStr: string): string;
 }
+interface Array<T> {
+    findOrDefault(logic: (item: any) => boolean): {};
+}

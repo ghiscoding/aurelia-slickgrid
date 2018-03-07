@@ -4,11 +4,13 @@ System.register(["aurelia-pal", "./aurelia-slickgrid", "./slick-pagination", "./
     function configure(aurelia, callback) {
         aurelia.globalResources(aurelia_pal_1.PLATFORM.moduleName('./aurelia-slickgrid'));
         aurelia.globalResources(aurelia_pal_1.PLATFORM.moduleName('./slick-pagination'));
-        aurelia.container.registerSingleton(index_1.PLUGIN_NAME, index_1.Filters.input);
-        aurelia.container.registerSingleton(index_1.PLUGIN_NAME, index_1.Filters.multipleSelect);
-        aurelia.container.registerSingleton(index_1.PLUGIN_NAME, index_1.Filters.singleSelect);
-        aurelia.container.registerSingleton(index_1.PLUGIN_NAME, index_1.Filters.select);
+        // must register a transient so the container will get a new instance everytime
+        aurelia.container.registerTransient(index_1.PLUGIN_NAME, index_1.Filters.input);
+        aurelia.container.registerTransient(index_1.PLUGIN_NAME, index_1.Filters.multipleSelect);
+        aurelia.container.registerTransient(index_1.PLUGIN_NAME, index_1.Filters.singleSelect);
+        aurelia.container.registerTransient(index_1.PLUGIN_NAME, index_1.Filters.select);
         var config = new slickgrid_config_1.SlickgridConfig();
+        aurelia.container.registerInstance(slickgrid_config_1.SlickgridConfig, config);
         if (typeof callback === 'function') {
             callback(config);
         }
@@ -61,6 +63,8 @@ System.register(["aurelia-pal", "./aurelia-slickgrid", "./slick-pagination", "./
             exports_1("FilterType", index_2.FilterType);
             exports_1("FormElementType", index_2.FormElementType);
             exports_1("FieldType", index_2.FieldType);
+            exports_1("OperatorType", index_2.OperatorType);
+            exports_1("SortDirection", index_2.SortDirection);
             exports_1("Editors", index_3.Editors);
             exports_1("FilterConditions", index_4.FilterConditions);
             exports_1("Filters", index_1.Filters);
@@ -75,6 +79,7 @@ System.register(["aurelia-pal", "./aurelia-slickgrid", "./slick-pagination", "./
             exports_1("GridExtraService", index_7.GridExtraService);
             exports_1("GridEventService", index_7.GridEventService);
             exports_1("GridOdataService", index_7.GridOdataService);
+            exports_1("GridStateService", index_7.GridStateService);
             exports_1("ResizerService", index_7.ResizerService);
             exports_1("SortService", index_7.SortService);
         }

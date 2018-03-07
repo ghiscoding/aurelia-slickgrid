@@ -59,6 +59,14 @@ System.register(["./../models/index", "jquery"], function (exports_1, context_1)
                         this.$filterElm.off('keyup').remove();
                     }
                 };
+                /**
+                 * Set value(s) on the DOM element
+                 */
+                InputFilter.prototype.setValues = function (values) {
+                    if (values) {
+                        this.$filterElm.val(values);
+                    }
+                };
                 //
                 // private functions
                 // ------------------

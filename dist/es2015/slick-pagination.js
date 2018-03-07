@@ -35,12 +35,15 @@ let SlickPaginationCustomElement = class SlickPaginationCustomElement {
             this.refreshPagination();
         }
         // Subscribe to Event Emitter of Filter & Sort changed, go back to page 1 when that happen
-        this.filterService.onFilterChanged.subscribe('filterService:changed', (data) => {
+        this._filterSubcription = this.filterService.onFilterChanged.subscribe('filterService:changed', (data) => {
             this.refreshPagination(true);
         });
-        this.sortService.onSortChanged.subscribe('sortService:changed', (data) => {
+        this._sorterSubcription = this.sortService.onSortChanged.subscribe('sortService:changed', (data) => {
             this.refreshPagination(true);
         });
+    }
+    detached() {
+        this.dispose();
     }
     ceil(number) {
         return Math.ceil(number);
@@ -65,6 +68,24 @@ let SlickPaginationCustomElement = class SlickPaginationCustomElement {
             this.onPageChanged(event, this.pageNumber);
         }
     }
+    changeToCurrentPage(event) {
+        this.pageNumber = (event && event.target && event.target.value) ? event.target.value : 1;
+        if (this.pageNumber < 1) {
+            this.pageNumber = 1;
+        }
+        else if (this.pageNumber > this.pageCount) {
+            this.pageNumber = this.pageCount;
+        }
+        this.onPageChanged(event, this.pageNumber);
+    }
+    dispose() {
+        if (this._filterSubcription) {
+            this._filterSubcription.dispose();
+        }
+        if (this._sorterSubcription) {
+            this._sorterSubcription.dispose();
+        }
+    }
     onChangeItemPerPage(event) {
         const itemsPerPage = +event.target.value;
         this.pageCount = Math.ceil(this.totalItems / itemsPerPage);
@@ -72,27 +93,32 @@ let SlickPaginationCustomElement = class SlickPaginationCustomElement {
         this.itemsPerPage = itemsPerPage;
         this.onPageChanged(event, this.pageNumber);
     }
-    refreshPagination(isPageNumberReset) {
+    refreshPagination(isPageNumberReset = false) {
         const backendApi = this._gridPaginationOptions.backendServiceApi || this._gridPaginationOptions.onBackendEventApi;
         if (!backendApi || !backendApi.service || !backendApi.process) {
             throw new Error(`BackendServiceApi requires at least a "process" function and a "service" defined`);
         }
         if (this._gridPaginationOptions && this._gridPaginationOptions.pagination) {
+            const pagination = this._gridPaginationOptions.pagination;
             // set the number of items per page if not already set
             if (!this.itemsPerPage) {
                 this.itemsPerPage = +((backendApi && backendApi.options && backendApi.options.paginationOptions && backendApi.options.paginationOptions.first) ? backendApi.options.paginationOptions.first : this._gridPaginationOptions.pagination.pageSize);
             }
             // if totalItems changed, we should always go back to the first page and recalculation the From-To indexes
-            if (isPageNumberReset || this.totalItems !== this._gridPaginationOptions.pagination.totalItems) {
-                this.pageNumber = 1;
-                this.recalculateFromToIndexes();
+            if (isPageNumberReset || this.totalItems !== pagination.totalItems) {
+                if (this._isFirstRender && pagination.pageNumber && pagination.pageNumber > 1) {
+                    this.pageNumber = pagination.pageNumber || 1;
+                }
+                else {
+                    this.pageNumber = 1;
+                }
                 // also reset the "offset" of backend service
                 backendApi.service.resetPaginationOptions();
             }
             // calculate and refresh the multiple properties of the pagination UI
             this.paginationPageSizes = this._gridPaginationOptions.pagination.pageSizes;
             this.totalItems = this._gridPaginationOptions.pagination.totalItems;
-            this.dataTo = (this.totalItems < this.itemsPerPage) ? this.totalItems : this.itemsPerPage;
+            this.recalculateFromToIndexes();
         }
         this.pageCount = Math.ceil(this.totalItems / this.itemsPerPage);
     }
@@ -127,13 +153,13 @@ let SlickPaginationCustomElement = class SlickPaginationCustomElement {
                 }
             }
             else {
-                throw new Error('Pagination with a backend service requires "onBackendEventApi" to be defined in your grid options');
+                throw new Error('Pagination with a backend service requires "BackendServiceApi" to be defined in your grid options');
             }
         });
     }
     recalculateFromToIndexes() {
         this.dataFrom = (this.pageNumber * this.itemsPerPage) - this.itemsPerPage + 1;
-        this.dataTo = (this.pageNumber * this.itemsPerPage);
+        this.dataTo = (this.totalItems < this.itemsPerPage) ? this.totalItems : (this.pageNumber * this.itemsPerPage);
     }
 };
 __decorate([

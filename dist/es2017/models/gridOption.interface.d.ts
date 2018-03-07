@@ -1,12 +1,4 @@
-import { AutoResizeOption } from './autoResizeOption.interface';
-import { BackendEventChanged } from './backendEventChanged.interface';
-import { BackendServiceApi } from './backendServiceApi.interface';
-import { ColumnPicker } from './columnPicker.interface';
-import { CheckboxSelector } from './checkboxSelector.interface';
-import { GridMenu } from './gridMenu.interface';
-import { HeaderButton } from './headerButton.interface';
-import { HeaderMenu } from './headerMenu.interface';
-import { Pagination } from './pagination.interface';
+import { AutoResizeOption, BackendEventChanged, BackendServiceApi, Column, ColumnPicker, CheckboxSelector, EditCommand, FilterType, GridMenu, GridState, HeaderButton, HeaderMenu, Pagination } from './../models/index';
 export interface GridOption {
     /** Defaults to false, which leads to load editor asynchronously (delayed) */
     asyncEditorLoading?: boolean;
@@ -35,8 +27,12 @@ export interface GridOption {
     columnPicker?: ColumnPicker;
     /** Unique property name on the dataset used by Slick.Data.DataView */
     datasetIdPropertyName?: string;
+    /** The default filter type to use when none is specified */
+    defaultFilterType?: FilterType | string;
     /** Defaults to false, when enabled will give the possibility to edit cell values with inline editors. */
     editable?: boolean;
+    /** option to intercept edit commands and implement undo support. */
+    editCommandHandler?: (item: any, column: Column, command: EditCommand) => void;
     /** Do we want to enable asynchronous (delayed) post rendering */
     enableAsyncPostRender?: boolean;
     /** Defaults to true, which will automatically resize the grid whenever the browser size changes  */
@@ -79,7 +75,7 @@ export interface GridOption {
     explicitInitialization?: boolean;
     /** Do we want to force fit columns in the grid at all time? */
     forceFitColumns?: boolean;
-    /** Grid DOM element container ID (used Angular-Slickgrid auto-resizer) */
+    /** Grid DOM element container ID (used Aurelia-Slickgrid auto-resizer) */
     gridContainerId?: string;
     /** Grid Menu options (aka hamburger menu) */
     gridMenu?: GridMenu;
@@ -99,6 +95,8 @@ export interface GridOption {
     pagination?: Pagination;
     /** "params" is a generic property and can be used to pass custom paramaters to your Formatter/Editor or anything else */
     params?: any | any[];
+    /** Query presets before grid load (filters, sorters, pagination) */
+    presets?: GridState;
     /** Register 1 or more Slick Plugins */
     registerPlugins?: any | any[];
     /** Grid row height in pixels (only type the number). Row of cell values. */

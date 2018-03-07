@@ -1,7 +1,4 @@
-import { FilterType } from './filterType.enum';
-import { FilterCallback } from './filterCallback.interface';
-import { Column } from './column.interface';
-import { FilterArguments } from './filterArguments.interface';
+import { FilterType, FilterCallback, Column, FilterArguments, SearchTerm } from './../models/index';
 export interface Filter {
     /** Column definition */
     columnDef: Column;
@@ -12,9 +9,9 @@ export interface Filter {
     /** SlickGrid grid object */
     grid: any;
     /** Defined search term to pre-load */
-    searchTerm?: string | number | boolean;
+    searchTerm?: SearchTerm;
     /** Array of defined search terms to pre-load */
-    searchTerms?: string[] | number[] | boolean[];
+    searchTerms?: SearchTerm[];
     /** You can use "params" to pass any types of arguments to your Filter */
     params?: any | any[];
     /** Funtion to initialize the Filter class */
@@ -23,4 +20,6 @@ export interface Filter {
     clear: () => void;
     /** Destroy filter function */
     destroy: () => void;
+    /** Set value(s) on the DOM element */
+    setValues: (values: SearchTerm | SearchTerm[] | undefined) => void;
 }

@@ -1,4 +1,4 @@
-System.register(["./caseType", "./delimiterType.enum", "./fieldType.enum", "./fileType.enum", "./filterType.enum", "./formElementType", "./keyCode.enum", "./operatorType", "./sortDirection"], function (exports_1, context_1) {
+System.register(["./caseType", "./delimiterType.enum", "./fieldType.enum", "./fileType.enum", "./filterType.enum", "./formElementType", "./keyCode.enum", "./operatorType.enum", "./sortDirection.enum"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     function exportStar_1(m) {
@@ -31,11 +31,11 @@ System.register(["./caseType", "./delimiterType.enum", "./fieldType.enum", "./fi
             function (keyCode_enum_1_1) {
                 exportStar_1(keyCode_enum_1_1);
             },
-            function (operatorType_1_1) {
-                exportStar_1(operatorType_1_1);
+            function (operatorType_enum_1_1) {
+                exportStar_1(operatorType_enum_1_1);
             },
-            function (sortDirection_1_1) {
-                exportStar_1(sortDirection_1_1);
+            function (sortDirection_enum_1_1) {
+                exportStar_1(sortDirection_enum_1_1);
             }
         ],
         execute: function () {

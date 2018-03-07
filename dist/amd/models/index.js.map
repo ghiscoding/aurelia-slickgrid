@@ -1,1 +1,1 @@
-{"version":3,"file":"index.js","sourceRoot":"","sources":["../../../aurelia-slickgrid/src/aurelia-slickgrid/models/index.ts"],"names":[],"mappings":";;;;;;IAKA,qBAA2B;IAO3B,+BAAqC;IAGrC,2BAAiC;IACjC,0BAAgC;IAOhC,4BAAkC;IAElC,4BAAkC;IAkBlC,yBAA+B;IAI/B,yBAA+B;IAM/B,0BAAgC"}
+{"version":3,"file":"index.js","sourceRoot":"","sources":["../../../aurelia-slickgrid/src/aurelia-slickgrid/models/index.ts"],"names":[],"mappings":";;;;;;IAKA,qBAA2B;IAW3B,+BAAqC;IAIrC,2BAAiC;IACjC,0BAAgC;IAOhC,4BAAkC;IAElC,4BAAkC;IAmBlC,yBAA+B;IAK/B,8BAAoC;IAQpC,+BAAqC"}

@@ -1,4 +1,4 @@
-import { FieldType, OperatorType } from '../models/index';
+import { FieldType, OperatorType, FilterType, FormElementType } from '../models/index';
 /**
  * Simple function to which will loop and create as demanded the number of white spaces,
  * this will be used in the Excel export
@@ -31,11 +31,25 @@ export declare function mapMomentDateFormatWithFieldType(fieldType: FieldType): 
  */
 export declare function mapFlatpickrDateFormatWithFieldType(fieldType: FieldType): string;
 /**
- * Mapper for mathematical operators (ex.: <= is "le", > is "gt")
+ * Mapper for query operators (ex.: <= is "le", > is "gt")
  * @param string operator
  * @returns string map
  */
 export declare function mapOperatorType(operator: string): OperatorType;
+/**
+ * Mapper for query operator by a Field Type
+ * For example a String should use "Contains" but a number should use "EQ" operator
+ * @param operator
+ * @returns string map
+ */
+export declare function mapOperatorByFieldType(fieldType: FieldType | string): OperatorType;
+/**
+ * Mapper for query operator by a Filter Type
+ * For example a multiple-select typically uses 'IN' operator
+ * @param operator
+ * @returns string map
+ */
+export declare function mapOperatorByFilterType(filterType: FilterType | FormElementType | string): OperatorType;
 /**
  * Parse a date passed as a string and return a Date object (if valid)
  * @param string inputDateString
@@ -54,3 +68,11 @@ export declare function toCamelCase(str: string): string;
  * @return the string in kebab case
  */
 export declare function toKebabCase(str: string): string;
+/**
+ * Compares two arrays to determine if all the items are equal
+ * @param a first array
+ * @param b second array to compare with a
+ * @param [orderMatters=false] flag if the order matters, if not arrays will be sorted
+ * @return boolean true if equal, else false
+ */
+export declare function arraysEqual(a: any[], b: any[], orderMatters?: boolean): boolean;

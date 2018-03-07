@@ -4,6 +4,8 @@ import { SortService } from './services/sort.service';
 export declare class SlickPaginationCustomElement {
     private filterService;
     private sortService;
+    private _filterSubcription;
+    private _sorterSubcription;
     grid: any;
     gridPaginationOptions: GridOption;
     private _gridPaginationOptions;
@@ -18,11 +20,14 @@ export declare class SlickPaginationCustomElement {
     paginationPageSizes: number[];
     constructor(filterService: FilterService, sortService: SortService);
     bind(binding: any, contexts: any): void;
+    detached(): void;
     ceil(number: number): number;
     changeToFirstPage(event: any): void;
     changeToLastPage(event: any): void;
     changeToNextPage(event: any): void;
     changeToPreviousPage(event: any): void;
+    changeToCurrentPage(event: any): void;
+    dispose(): void;
     onChangeItemPerPage(event: any): void;
     refreshPagination(isPageNumberReset?: boolean): void;
     onPageChanged(event: Event | undefined, pageNumber: number): Promise<void>;

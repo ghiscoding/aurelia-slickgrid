@@ -38,7 +38,7 @@ export declare class ControlAndPluginService {
     hideColumn(column: Column): void;
     removeColumnByIndex(array: any[], index: number): any[];
     autoResizeColumns(): void;
-    destroy(): void;
+    dispose(): void;
     /**
      * Create Grid Menu with Custom Commands if user has enabled Filters and/or uses a Backend Service (OData, GraphQL)
      * @param grid

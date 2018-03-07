@@ -1,4 +1,4 @@
-System.register(["aurelia-i18n", "aurelia-framework", "jquery"], function (exports_1, context_1) {
+System.register(["aurelia-i18n", "aurelia-framework", "./../models/index", "jquery"], function (exports_1, context_1) {
     "use strict";
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -7,7 +7,7 @@ System.register(["aurelia-i18n", "aurelia-framework", "jquery"], function (expor
         return c > 3 && r && Object.defineProperty(target, key, r), r;
     };
     var __moduleName = context_1 && context_1.id;
-    var aurelia_i18n_1, aurelia_framework_1, $, SelectFilter;
+    var aurelia_i18n_1, aurelia_framework_1, index_1, $, SelectFilter;
     return {
         setters: [
             function (aurelia_i18n_1_1) {
@@ -15,6 +15,9 @@ System.register(["aurelia-i18n", "aurelia-framework", "jquery"], function (expor
             },
             function (aurelia_framework_1_1) {
                 aurelia_framework_1 = aurelia_framework_1_1;
+            },
+            function (index_1_1) {
+                index_1 = index_1_1;
             },
             function ($_1) {
                 $ = $_1;
@@ -24,6 +27,7 @@ System.register(["aurelia-i18n", "aurelia-framework", "jquery"], function (expor
             SelectFilter = /** @class */ (function () {
                 function SelectFilter(i18n) {
                     this.i18n = i18n;
+                    this.filterType = index_1.FilterType.select;
                 }
                 /**
                  * Initialize the Filter
@@ -66,6 +70,14 @@ System.register(["aurelia-i18n", "aurelia-framework", "jquery"], function (expor
                 SelectFilter.prototype.destroy = function () {
                     if (this.$filterElm) {
                         this.$filterElm.off('change').remove();
+                    }
+                };
+                /**
+                 * Set value(s) on the DOM element
+                 */
+                SelectFilter.prototype.setValues = function (values) {
+                    if (values) {
+                        this.$filterElm.val(values);
                     }
                 };
                 //
