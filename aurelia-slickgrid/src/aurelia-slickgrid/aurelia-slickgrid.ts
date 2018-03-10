@@ -1,3 +1,4 @@
+import { GridStateChange } from './models/gridStateChange.interface';
 // import 3rd party vendor libs
 import 'slickgrid/lib/jquery-ui-1.11.3';
 import 'slickgrid/lib/jquery.event.drag-2.3.0';
@@ -30,7 +31,9 @@ import {
   Column,
   FormElementType,
   GraphqlResult,
-  GridOption
+  GridOption,
+  GridStateType,
+  Pagination,
 } from './models/index';
 import {
   ControlAndPluginService,
@@ -56,6 +59,7 @@ const eventPrefix = 'sg';
 export class AureliaSlickgridCustomElement {
   private _dataset: any[];
   private _eventHandler: any = new Slick.EventHandler();
+  gridStateSubscriber: Subscription;
   gridHeightString: string;
   gridWidthString: string;
   localeChangedSubscriber: Subscription;
@@ -158,11 +162,13 @@ export class AureliaSlickgridCustomElement {
     this.dataview = [];
     this._eventHandler.unsubscribeAll();
     this.controlAndPluginService.dispose();
-    this.gridEventService.dispose();
     this.filterService.dispose();
+    this.gridEventService.dispose();
+    this.gridStateService.dispose();
     this.resizer.dispose();
     this.sortService.dispose();
     this.grid.destroy();
+    this.gridStateSubscriber.dispose();
     this.localeChangedSubscriber.dispose();
     this.ea.publish('onAfterGridDestroyed', true);
     this.elm.dispatchEvent(new CustomEvent(`${eventPrefix}-on-after-grid-destroyed`, {
@@ -258,6 +264,7 @@ export class AureliaSlickgridCustomElement {
       }
     }
 
+    // expose all Slick Grid Events through dispatch
     for (const prop in grid) {
       if (grid.hasOwnProperty(prop) && prop.startsWith('on')) {
         this._eventHandler.subscribe(grid[prop], (e: any, args: any) => {
@@ -272,6 +279,7 @@ export class AureliaSlickgridCustomElement {
       }
     }
 
+    // expose all Slick DataView Events through dispatch
     for (const prop in dataView) {
       if (dataView.hasOwnProperty(prop) && prop.startsWith('on')) {
         this._eventHandler.subscribe(dataView[prop], (e: any, args: any) => {
@@ -285,6 +293,14 @@ export class AureliaSlickgridCustomElement {
         });
       }
     }
+
+    // expose GridState Service changes event through dispatch
+    this.gridStateSubscriber = this.ea.subscribe('gridStateService:changed', (gridStateChange: GridStateChange) => {
+      this.elm.dispatchEvent(new CustomEvent(`on-grid-state-service-changed`, {
+        bubbles: true,
+        detail: gridStateChange
+      }));
+    });
 
     // on cell click, mainly used with the columnDef.action callback
     this.gridEventService.attachOnCellChange(grid, this.gridOptions, dataView);
@@ -379,6 +395,13 @@ export class AureliaSlickgridCustomElement {
     }
     // use jquery extend to deep merge and avoid immutable properties changed in GlobalGridOptions after route change
     return $.extend(true, {}, GlobalGridOptions, this.gridOptions);
+  }
+
+  paginationChanged(pagination: Pagination) {
+    this.ea.publish('gridStateService:changed', {
+      change: { newValues: pagination, type: GridStateType.pagination },
+      gridState: this.gridStateService.getCurrentGridState()
+    });
   }
 
   /**

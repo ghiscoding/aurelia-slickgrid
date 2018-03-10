@@ -152,6 +152,10 @@ export class Example4 {
     }
   }
 
+  gridStateChanged(gridState) {
+    console.log(gridState);
+  }
+
   /** Save current Filters, Sorters in LocaleStorage or DB */
   saveCurrentGridState() {
     console.log('Client current grid state', this.gridStateService.getCurrentGridState());

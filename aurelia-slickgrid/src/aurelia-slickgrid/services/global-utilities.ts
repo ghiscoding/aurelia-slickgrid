@@ -53,6 +53,6 @@ String.titleCase = (inputStr: string): string => {
  * @param any [defaultVal={}] the default value to return
  * @return object the found object or deafult value
  */
-Array.prototype.findOrDefault = function(logic: (item: any) => boolean, defaultVal = {}): any {
+Array.prototype.findOrDefault = function (logic: (item: any) => boolean, defaultVal = {}): any {
   return this.find(logic) || defaultVal;
 };

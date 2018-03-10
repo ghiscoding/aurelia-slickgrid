@@ -1,7 +1,8 @@
+import { Subscription, EventAggregator } from 'aurelia-event-aggregator';
 import { autoinject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import { HttpClient } from 'aurelia-http-client';
-import { Column, FieldType, FilterType, GraphqlResult, GraphqlService, GraphqlServiceOption, GridOption, GridStateService, OperatorType, SortDirection } from '../../aurelia-slickgrid';
+import { Column, FieldType, FilterType, Formatters, GraphqlResult, GraphqlService, GraphqlServiceOption, GridOption, GridStateService, OperatorType, SortDirection } from '../../aurelia-slickgrid';
 
 const defaultPageSize = 20;
 const GRAPHQL_QUERY_DATASET_NAME = 'users';
@@ -32,22 +33,26 @@ export class Example6 {
   processing = false;
   selectedLanguage: string;
   status = { text: '', class: '' };
+  Subscription: Subscription;
 
-  constructor(private gridStateService: GridStateService, private http: HttpClient, private graphqlService: GraphqlService, private i18n: I18N) {
+  constructor(private ea: EventAggregator, private gridStateService: GridStateService, private http: HttpClient, private graphqlService: GraphqlService, private i18n: I18N) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
     this.selectedLanguage = this.i18n.getLocale();
+    this.Subscription = this.ea.subscribe('gridStateService:changed', (data) => console.log(data));
   }
 
   detached() {
     this.saveCurrentGridState();
+    this.Subscription.dispose();
   }
 
   defineGrid() {
     this.columnDefinitions = [
-      { id: 'name', name: 'Name', field: 'name', headerKey: 'NAME', filterable: true, sortable: true, type: FieldType.string },
+      { id: 'users', field: 'user.firstName', fields: ['user.middleName', 'user.lastName'], headerKey: 'NAME', filterable: true, sortable: true, type: FieldType.string },
+      { id: 'name', field: 'name', headerKey: 'NAME', filterable: true, sortable: true, type: FieldType.string },
       {
-        id: 'gender', name: 'Gender', field: 'gender', headerKey: 'GENDER', filterable: true, sortable: true,
+        id: 'gender', field: 'gender', headerKey: 'GENDER', filterable: true, sortable: true,
         filter: {
           type: FilterType.singleSelect,
           collection: [{ value: '', label: '' }, { value: 'male', label: 'male', labelKey: 'MALE' }, { value: 'female', label: 'female', labelKey: 'FEMALE' }],
@@ -55,7 +60,7 @@ export class Example6 {
         }
       },
       {
-        id: 'company', name: 'Company', field: 'company', headerKey: 'COMPANY',
+        id: 'company', field: 'company', headerKey: 'COMPANY',
         sortable: true,
         filterable: true,
         filter: {
@@ -64,8 +69,8 @@ export class Example6 {
           searchTerms: ['abc']
         }
       },
-      { id: 'billing.address.street', name: 'Billing Address Street', field: 'billing.address.street', headerKey: 'BILLING.ADDRESS.STREET', filterable: true, sortable: true },
-      { id: 'billing.address.zip', name: 'Billing Address Zip', field: 'billing.address.zip', headerKey: 'BILLING.ADDRESS.ZIP', filterable: true, sortable: true, type: FieldType.number },
+      { id: 'billing.address.street', field: 'billing.address.street', headerKey: 'BILLING.ADDRESS.STREET', filterable: true, sortable: true },
+      { id: 'billing.address.zip', field: 'billing.address.zip', headerKey: 'BILLING.ADDRESS.ZIP', filterable: true, sortable: true, type: FieldType.number, formatter: Formatters.multiple, params: { formatters: [Formatters.complexObject, Formatters.translate] } },
     ];
 
     this.gridOptions = {
@@ -80,11 +85,12 @@ export class Example6 {
         pageSize: defaultPageSize,
         totalItems: 0
       },
+
       presets: {
         // you can also type operator as string, e.g.: operator: 'EQ'
         filters: [
           { columnId: 'gender', searchTerm: 'male', operator: OperatorType.equal },
-          { columnId: 'name', searchTerm: 'John Doe', operator: OperatorType.contains },
+          { columnId: 'users', searchTerm: 'John Doe', operator: OperatorType.contains },
           { columnId: 'company', searchTerms: ['xyz'], operator: 'IN' }
         ],
         sorters: [
@@ -94,6 +100,7 @@ export class Example6 {
         ],
         pagination: { pageNumber: 2, pageSize: 20 }
       },
+
       backendServiceApi: {
         service: this.graphqlService,
         options: this.getBackendOptions(this.isWithCursor),
