@@ -203,7 +203,7 @@ export class SortService {
    * @param sender
    */
   emitSortChanged(sender: 'local' | 'remote') {
-    if (sender === 'remote') {
+    if (sender === 'remote' && this._gridOptions && this._gridOptions.backendServiceApi) {
       let currentSorters: CurrentSorter[] = [];
       const backendService = this._gridOptions.backendServiceApi.service;
       if (backendService && backendService.getCurrentSorters) {

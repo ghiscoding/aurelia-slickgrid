@@ -385,7 +385,7 @@ export class FilterService {
    * @param sender
    */
   emitFilterChanged(sender: 'local' | 'remote') {
-    if (sender === 'remote') {
+    if (sender === 'remote' && this._gridOptions && this._gridOptions.backendServiceApi) {
       let currentFilters: CurrentFilter[] = [];
       const backendService = this._gridOptions.backendServiceApi.service;
       if (backendService && backendService.getCurrentFilters) {
