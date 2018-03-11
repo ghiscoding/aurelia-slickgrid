@@ -5,10 +5,6 @@ declare interface StringConstructor {
   titleCase(inputStr: string): string;
 }
 
-declare interface Array<T> {
-  findOrDefault(logic: (item: any) => boolean): {};
-}
-
 String.format = (format: string, ...args): string => {
   // const args = (Array.isArray(arguments[1])) ? arguments[1] : Array.prototype.slice.call(arguments, 1);
 
@@ -44,15 +40,4 @@ String.allTitleCase = (inputStr: string): string => {
  */
 String.titleCase = (inputStr: string): string => {
   return inputStr.charAt(0).toUpperCase() + inputStr.slice(1);
-};
-
-/**
- * Uses the logic function to find an item in an array or returns the default
- * value provided (empty object by default)
- * @param function logic the logic to find the item
- * @param any [defaultVal={}] the default value to return
- * @return object the found object or deafult value
- */
-Array.prototype.findOrDefault = function (logic: (item: any) => boolean, defaultVal = {}): any {
-  return this.find(logic) || defaultVal;
 };

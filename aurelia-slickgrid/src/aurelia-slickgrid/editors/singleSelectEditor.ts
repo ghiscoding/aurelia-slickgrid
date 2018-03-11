@@ -4,7 +4,8 @@ import {
   Column,
   MultipleSelectOption,
   SelectOption
-} from './../models/index';
+} from '../models/index';
+import { findOrDefault } from '../services';
 import * as $ from 'jquery';
 
 /**
@@ -63,7 +64,7 @@ export class SingleSelectEditor implements Editor {
    * The current selected value from the collection
    */
   get currentValue() {
-    return this.collection.findOrDefault(c =>
+    return findOrDefault(this.collection, (c: any) =>
       c[this.valueName].toString() === this.$editorElm.val())[this.valueName];
   }
 
