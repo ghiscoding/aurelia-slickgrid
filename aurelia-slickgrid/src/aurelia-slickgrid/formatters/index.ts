@@ -49,7 +49,7 @@ export const Formatters = {
   /** Takes a complex data object and return the data under that property (for example: "user.firstName" will return the first name "John") */
   complexObject: complexObjectFormatter,
 
-  /** Looks up values from the filter.collection property and convert it to a CSV or string */
+  /** Looks up values from the params.collection property and convert it to a CSV or string */
   collection: collectionFormatter,
 
   /** Takes a Date object and displays it as an ISO Date format */
