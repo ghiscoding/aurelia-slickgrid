@@ -114,7 +114,7 @@ export class Example3 {
       minWidth: 100,
       params: {
         formatters: [ Formatters.collection, Formatters.percentCompleteBar ],
-        collection: Array.from(Array(101).keys()).map(k => ({ value: k, label: `${k}%` }))
+        collection: Array.from(Array(101).keys()).map(k => ({ value: k, label: k }))
       }
     }, {
       id: 'start',
