@@ -85,7 +85,6 @@ export class Example6 {
         pageSize: defaultPageSize,
         totalItems: 0
       },
-
       presets: {
         // you can also type operator as string, e.g.: operator: 'EQ'
         filters: [

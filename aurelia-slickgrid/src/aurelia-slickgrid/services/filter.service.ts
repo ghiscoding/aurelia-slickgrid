@@ -49,10 +49,7 @@ export class FilterService {
     this._slickSubscriber = new Slick.Event();
 
     // subscribe to the SlickGrid event and call the backend execution
-    // we also need to add our filter service (with .bind) to the callback function (which is outside of this service)
-    // the callback doesn't have access to this service, so we need to bind it
-    const self = this;
-    this._slickSubscriber.subscribe(this.attachBackendOnFilterSubscribe.bind(this, self));
+    this._slickSubscriber.subscribe(this.attachBackendOnFilterSubscribe.bind(this));
 
     // subscribe to SlickGrid onHeaderRowCellRendered event to create filter template
     this._eventHandler.subscribe(grid.onHeaderRowCellRendered, (e: Event, args: any) => {
@@ -60,7 +57,7 @@ export class FilterService {
     });
   }
 
-  async attachBackendOnFilterSubscribe(self: FilterService, event: Event, args: any) {
+  async attachBackendOnFilterSubscribe(event: Event, args: any) {
     if (!args || !args.grid) {
       throw new Error('Something went wrong when trying to attach the "attachBackendOnFilterSubscribe(event, args)" function, it seems that "args" is not populated correctly');
     }
@@ -80,7 +77,7 @@ export class FilterService {
     const query = await backendApi.service.onFilterChanged(event, args);
 
     // emit an onFilterChanged event
-    self.emitFilterChanged('remote');
+    this.emitFilterChanged('remote');
 
     // await for the Promise to resolve the data
     const processResult = await backendApi.process(query);

@@ -4,7 +4,6 @@
     "max-line-length": false,
     "member-access":false,
     "no-console": false,
-    "no-this-assignment": false,
     "variable-name":false,
     "quotemark": [true, "single"],
     "object-literal-sort-keys": false,
