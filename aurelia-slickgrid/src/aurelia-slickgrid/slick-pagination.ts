@@ -4,6 +4,8 @@ import { GridOption } from './models/index';
 import { FilterService } from './services/filter.service';
 import { SortService } from './services/sort.service';
 
+const aureliaEventPrefix = 'asg';
+
 @inject(Element, EventAggregator, FilterService, SortService)
 export class SlickPaginationCustomElement {
   private _filterSubscriber: Subscription;
@@ -173,7 +175,7 @@ export class SlickPaginationCustomElement {
     }
 
     // dispatch the changes to the parent component
-    this.elm.dispatchEvent(new CustomEvent(`on-pagination-changed`, {
+    this.elm.dispatchEvent(new CustomEvent(`${aureliaEventPrefix}-on-pagination-changed`, {
       bubbles: true,
       detail: {
         pageNumber: this.pageNumber,

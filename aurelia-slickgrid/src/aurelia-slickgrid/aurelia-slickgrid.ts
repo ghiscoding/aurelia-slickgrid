@@ -52,6 +52,7 @@ import * as $ from 'jquery';
 // using external non-typed js libraries
 declare var Slick: any;
 
+const aureliaEventPrefix = 'asg';
 const eventPrefix = 'sg';
 
 // Aurelia doesn't support well TypeScript @autoinject in a Plugin so we'll do it the old fashion way
@@ -296,7 +297,7 @@ export class AureliaSlickgridCustomElement {
 
     // expose GridState Service changes event through dispatch
     this.gridStateSubscriber = this.ea.subscribe('gridStateService:changed', (gridStateChange: GridStateChange) => {
-      this.elm.dispatchEvent(new CustomEvent(`on-grid-state-service-changed`, {
+      this.elm.dispatchEvent(new CustomEvent(`${aureliaEventPrefix}-on-grid-state-service-changed`, {
         bubbles: true,
         detail: gridStateChange
       }));

@@ -152,12 +152,13 @@ export class Example4 {
     }
   }
 
+  /** Dispatched event of a Grid State Changed event */
   gridStateChanged(gridState) {
-    console.log(gridState);
+    console.log('Client sample, Grid State changed:: ', gridState);
   }
 
   /** Save current Filters, Sorters in LocaleStorage or DB */
   saveCurrentGridState() {
-    console.log('Client current grid state', this.gridStateService.getCurrentGridState());
+    console.log('Client sample, current Grid State:: ', this.gridStateService.getCurrentGridState());
   }
 }
