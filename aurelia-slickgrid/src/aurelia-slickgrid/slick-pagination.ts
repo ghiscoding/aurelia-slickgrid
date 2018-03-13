@@ -1,8 +1,7 @@
 import { bindable, inject } from 'aurelia-framework';
 import { Subscription, EventAggregator } from 'aurelia-event-aggregator';
 import { GridOption } from './models/index';
-import { FilterService } from './services/filter.service';
-import { SortService } from './services/sort.service';
+import { FilterService, SortService } from './services/index';
 
 const aureliaEventPrefix = 'asg';
 
@@ -44,7 +43,7 @@ export class SlickPaginationCustomElement {
     });
   }
 
-  gridPaginationOptionsChanged(newGridOptions) {
+  gridPaginationOptionsChanged(newGridOptions: GridOption) {
     this._gridPaginationOptions = newGridOptions;
     if (newGridOptions) {
       this.refreshPagination(true);
