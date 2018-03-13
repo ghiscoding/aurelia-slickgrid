@@ -21,7 +21,7 @@ export const collectionFormatter: Formatter = (row: number, cell: number, value:
       value.map((v: any) => findOrDefault(collection, (c: any) => c[valueName] === v)[labelName]),
       columnDef,
       dataContext);
-    }
+  }
 
   return findOrDefault(collection, (c: any) => c[valueName] === value)[labelName] || '';
 };

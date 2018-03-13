@@ -1,3 +1,4 @@
+import { inject } from 'aurelia-framework';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { Column, FieldType, GridOption, SlickEvent, SortChanged, SortDirection, CurrentSorter, CellArgs, SortDirectionString } from './../models/index';
 import { Sorters } from './../sorters/index';
@@ -5,11 +6,15 @@ import { Sorters } from './../sorters/index';
 // using external non-typed js libraries
 declare var Slick: any;
 
+@inject(EventAggregator)
 export class SortService {
   private _currentLocalSorters: CurrentSorter[] = [];
   private _eventHandler: any = new Slick.EventHandler();
-  private _subscriber: SlickEvent = new Slick.Event();
-  onSortChanged = new EventAggregator();
+  private _grid: any;
+  private _gridOptions: GridOption;
+  private _slickSubscriber: SlickEvent = new Slick.Event();
+
+  constructor(private ea: EventAggregator) { }
 
   /**
    * Attach a backend sort (single/multi) hook to the grid
@@ -17,11 +22,12 @@ export class SortService {
    * @param gridOptions Grid Options object
    */
   attachBackendOnSort(grid: any, gridOptions: GridOption) {
-    this._subscriber = grid.onSort;
-    this.emitSortChangedBy('remote');
+    this._grid = grid;
+    this._gridOptions = gridOptions;
+    this._slickSubscriber = grid.onSort;
 
-    this._subscriber = new Slick.Event();
-    this._subscriber.subscribe(this.attachBackendOnSortSubscribe);
+    // subscribe to the SlickGrid event and call the backend execution
+    this._slickSubscriber.subscribe(this.attachBackendOnSortSubscribe.bind(this));
   }
 
   async attachBackendOnSortSubscribe(event: Event, args: any) {
@@ -38,6 +44,7 @@ export class SortService {
       backendApi.preProcess();
     }
     const query = backendApi.service.onSortChanged(event, args);
+    this.emitSortChanged('remote');
 
     // await for the Promise to resolve the data
     const processResult = await backendApi.process(query);
@@ -60,11 +67,11 @@ export class SortService {
    * @param dataView
    */
   attachLocalOnSort(grid: any, gridOptions: GridOption, dataView: any, columnDefinitions: Column[]) {
-    this._subscriber = grid.onSort;
-    this.emitSortChangedBy('local');
+    this._grid = grid;
+    this._gridOptions = gridOptions;
+    this._slickSubscriber = grid.onSort;
 
-    this._subscriber = new Slick.Event();
-    this._subscriber.subscribe((e: any, args: any) => {
+    this._slickSubscriber.subscribe((e: any, args: any) => {
       // multiSort and singleSort are not exactly the same, but we want to structure it the same for the (for loop) after
       // also to avoid having to rewrite the for loop in the sort, we will make the singleSort an array of 1 object
       const sortColumns = (args.multiColumnSort) ? args.sortCols : new Array({ sortAsc: args.sortAsc, sortCol: args.sortCol });
@@ -83,6 +90,7 @@ export class SortService {
       }
 
       this.onLocalSortChanged(grid, gridOptions, dataView, sortColumns);
+      this.emitSortChanged('local');
     });
 
     this._eventHandler.subscribe(dataView.onRowCountChanged, (e: Event, args: any) => {
@@ -181,8 +189,8 @@ export class SortService {
 
   dispose() {
     // unsubscribe local event
-    if (this._subscriber && typeof this._subscriber.unsubscribe === 'function') {
-      this._subscriber.unsubscribe();
+    if (this._slickSubscriber && typeof this._slickSubscriber.unsubscribe === 'function') {
+      this._slickSubscriber.unsubscribe();
     }
 
     // unsubscribe all SlickGrid events
@@ -190,11 +198,20 @@ export class SortService {
   }
 
   /**
-   * A simple function that is attached to the subscriber and emit a change when the sort is called.
+   * A simple function that will be called to emit a change when a sort changes.
    * Other services, like Pagination, can then subscribe to it.
    * @param sender
    */
-  emitSortChangedBy(sender: string) {
-    this._subscriber.subscribe(() => this.onSortChanged.publish('sortService:changed', `onSortChanged by ${sender}`));
+  emitSortChanged(sender: 'local' | 'remote') {
+    if (sender === 'remote' && this._gridOptions && this._gridOptions.backendServiceApi) {
+      let currentSorters: CurrentSorter[] = [];
+      const backendService = this._gridOptions.backendServiceApi.service;
+      if (backendService && backendService.getCurrentSorters) {
+        currentSorters = backendService.getCurrentSorters() as CurrentSorter[];
+      }
+      this.ea.publish('sortService:sortChanged', currentSorters);
+    } else if (sender === 'local') {
+      this.ea.publish('sortService:sortChanged', this.getCurrentLocalSorters());
+    }
   }
 }

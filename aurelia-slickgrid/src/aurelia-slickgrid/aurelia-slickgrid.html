@@ -3,6 +3,7 @@
     <div id.bind="gridId" class="slickgrid-container" style.bind="style">
     </div>
 
-    <slick-pagination id="slickPagingContainer-${gridId}" if.bind="showPagination" pagination-options.bind="gridPaginationOptions"></slick-pagination>
+    <slick-pagination id="slickPagingContainer-${gridId}" if.bind="showPagination" asg-on-pagination-changed.delegate="paginationChanged($event.detail)"
+      pagination-options.bind="gridPaginationOptions"></slick-pagination>
   </div>
 </template>

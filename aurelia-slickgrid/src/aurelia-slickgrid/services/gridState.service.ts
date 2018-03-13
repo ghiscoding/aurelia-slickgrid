@@ -1,19 +1,27 @@
+import { inject } from 'aurelia-framework';
 import {
   CurrentFilter,
   CurrentPagination,
   CurrentSorter,
   GridOption,
-  GridState
+  GridState,
+  GridStateType,
 } from './../models/index';
 import { FilterService, SortService } from './../services/index';
+import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
 import * as $ from 'jquery';
 
+@inject(EventAggregator)
 export class GridStateService {
   private _grid: any;
   private _gridOptions: GridOption;
   private _preset: GridState;
   private filterService: FilterService;
+  private _filterSubcription: Subscription;
+  private _sorterSubcription: Subscription;
   private sortService: SortService;
+
+  constructor(private ea: EventAggregator) { }
 
   /**
    * Initialize the Export Service
@@ -26,6 +34,19 @@ export class GridStateService {
     this.filterService = filterService;
     this.sortService = sortService;
     this._gridOptions = (grid && grid.getOptions) ? grid.getOptions() : {};
+
+    // Subscribe to Event Emitter of Filter & Sort changed, go back to page 1 when that happen
+    this._filterSubcription = this.ea.subscribe('filterService:filterChanged', (currentFilters: CurrentFilter[]) => {
+      this.ea.publish('gridStateService:changed', { change: { newValues: currentFilters, type: GridStateType.filter }, gridState: this.getCurrentGridState() });
+    });
+    this._sorterSubcription = this.ea.subscribe('sortService:sortChanged', (currentSorters: CurrentSorter[]) => {
+      this.ea.publish('gridStateService:changed', { change: { newValues: currentSorters, type: GridStateType.sorter }, gridState: this.getCurrentGridState() });
+    });
+  }
+
+  dispose() {
+    this._filterSubcription.dispose();
+    this._sorterSubcription.dispose();
   }
 
   /**

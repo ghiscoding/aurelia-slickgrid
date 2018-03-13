@@ -1,13 +1,15 @@
 import { bindable, inject } from 'aurelia-framework';
-import { Subscription } from 'aurelia-event-aggregator';
+import { Subscription, EventAggregator } from 'aurelia-event-aggregator';
 import { GridOption } from './models/index';
 import { FilterService } from './services/filter.service';
 import { SortService } from './services/sort.service';
 
-@inject(FilterService, SortService)
+const aureliaEventPrefix = 'asg';
+
+@inject(Element, EventAggregator, FilterService, SortService)
 export class SlickPaginationCustomElement {
-  private _filterSubcription: Subscription;
-  private _sorterSubcription: Subscription;
+  private _filterSubscriber: Subscription;
+  private _sorterSubscriber: Subscription;
   @bindable() grid: any;
   @bindable() gridPaginationOptions: GridOption;
   private _gridPaginationOptions: GridOption;
@@ -22,7 +24,7 @@ export class SlickPaginationCustomElement {
   paginationCallback: () => void;
   paginationPageSizes = [25, 75, 100];
 
-  constructor(private filterService: FilterService, private sortService: SortService) {
+  constructor(private elm: Element, private ea: EventAggregator, private filterService: FilterService, private sortService: SortService) {
     this.filterService = filterService;
     this.sortService = sortService;
   }
@@ -34,10 +36,10 @@ export class SlickPaginationCustomElement {
     }
 
     // Subscribe to Event Emitter of Filter & Sort changed, go back to page 1 when that happen
-    this._filterSubcription = this.filterService.onFilterChanged.subscribe('filterService:changed', (data: string) => {
+    this._filterSubscriber = this.ea.subscribe('filterService:filterChanged', (data: string) => {
       this.refreshPagination(true);
     });
-    this._sorterSubcription = this.sortService.onSortChanged.subscribe('sortService:changed', (data: string) => {
+    this._sorterSubscriber = this.ea.subscribe('sortService:sortChanged', (data: string) => {
       this.refreshPagination(true);
     });
   }
@@ -85,11 +87,11 @@ export class SlickPaginationCustomElement {
   }
 
   dispose() {
-    if (this._filterSubcription) {
-      this._filterSubcription.dispose();
+    if (this._filterSubscriber) {
+      this._filterSubscriber.dispose();
     }
-    if (this._sorterSubcription) {
-      this._sorterSubcription.dispose();
+    if (this._sorterSubscriber) {
+      this._sorterSubscriber.dispose();
     }
   }
 
@@ -171,6 +173,17 @@ export class SlickPaginationCustomElement {
     } else {
       throw new Error('Pagination with a backend service requires "BackendServiceApi" to be defined in your grid options');
     }
+
+    // dispatch the changes to the parent component
+    this.elm.dispatchEvent(new CustomEvent(`${aureliaEventPrefix}-on-pagination-changed`, {
+      bubbles: true,
+      detail: {
+        pageNumber: this.pageNumber,
+        pageSizes: this.paginationPageSizes,
+        pageSize: this.itemsPerPage,
+        totalItems: this.totalItems
+      }
+    }));
   }
 
   recalculateFromToIndexes() {

@@ -21,19 +21,18 @@ import * as $ from 'jquery';
 // using external non-typed js libraries
 declare var Slick: any;
 
-@inject(FilterFactory)
+@inject(EventAggregator, FilterFactory)
 export class FilterService {
   private _eventHandler = new Slick.EventHandler();
-  private _subscriber: SlickEvent = new Slick.Event();
+  private _slickSubscriber: SlickEvent;
   private _filters: any[] = [];
   private _columnFilters: ColumnFilters = {};
   private _dataView: any;
   private _grid: any;
   private _gridOptions: GridOption;
   private _onFilterChangedOptions: any;
-  onFilterChanged = new EventAggregator();
 
-  constructor(private filterFactory: FilterFactory) { }
+  constructor(private ea: EventAggregator, private filterFactory: FilterFactory) { }
 
   init(grid: any, gridOptions: GridOption, columnDefinitions: Column[]): void {
     this._grid = grid;
@@ -47,10 +46,10 @@ export class FilterService {
    */
   attachBackendOnFilter(grid: any, options: GridOption) {
     this._filters = [];
-    this.emitFilterChangedBy('remote');
+    this._slickSubscriber = new Slick.Event();
 
-    this._subscriber = new Slick.Event();
-    this._subscriber.subscribe(this.attachBackendOnFilterSubscribe);
+    // subscribe to the SlickGrid event and call the backend execution
+    this._slickSubscriber.subscribe(this.attachBackendOnFilterSubscribe.bind(this));
 
     // subscribe to SlickGrid onHeaderRowCellRendered event to create filter template
     this._eventHandler.subscribe(grid.onHeaderRowCellRendered, (e: Event, args: any) => {
@@ -77,6 +76,9 @@ export class FilterService {
     // call the service to get a query back
     const query = await backendApi.service.onFilterChanged(event, args);
 
+    // emit an onFilterChanged event
+    this.emitFilterChanged('remote');
+
     // await for the Promise to resolve the data
     const processResult = await backendApi.process(query);
 
@@ -89,6 +91,34 @@ export class FilterService {
     if (backendApi.postProcess !== undefined) {
       backendApi.postProcess(processResult);
     }
+  }
+
+  /**
+   * Attach a local filter hook to the grid
+   * @param grid SlickGrid Grid object
+   * @param gridOptions Grid Options object
+   * @param dataView
+   */
+  attachLocalOnFilter(grid: any, options: GridOption, dataView: any) {
+    this._filters = [];
+    this._dataView = dataView;
+    this._slickSubscriber = new Slick.Event();
+
+    dataView.setFilterArgs({ columnFilters: this._columnFilters, grid: this._grid });
+    dataView.setFilter(this.customLocalFilter.bind(this, dataView));
+
+    this._slickSubscriber.subscribe((e: any, args: any) => {
+      const columnId = args.columnId;
+      if (columnId != null) {
+        dataView.refresh();
+      }
+      this.emitFilterChanged('local');
+    });
+
+    // subscribe to SlickGrid onHeaderRowCellRendered event to create filter template
+    this._eventHandler.subscribe(grid.onHeaderRowCellRendered, (e: Event, args: any) => {
+      this.addFilterTemplateToHeaderRow(args);
+    });
   }
 
   /** Clear the search filters (below the column titles) */
@@ -114,34 +144,6 @@ export class FilterService {
       this._grid.invalidate();
       this._grid.render();
     }
-  }
-
-  /**
-   * Attach a local filter hook to the grid
-   * @param grid SlickGrid Grid object
-   * @param gridOptions Grid Options object
-   * @param dataView
-   */
-  attachLocalOnFilter(grid: any, options: GridOption, dataView: any) {
-    this._dataView = dataView;
-    this._filters = [];
-    this.emitFilterChangedBy('local');
-
-    dataView.setFilterArgs({ columnFilters: this._columnFilters, grid: this._grid });
-    dataView.setFilter(this.customLocalFilter.bind(this, dataView));
-
-    this._subscriber = new Slick.Event();
-    this._subscriber.subscribe((e: any, args: any) => {
-      const columnId = args.columnId;
-      if (columnId != null) {
-        dataView.refresh();
-      }
-    });
-
-    // subscribe to SlickGrid onHeaderRowCellRendered event to create filter template
-    this._eventHandler.subscribe(grid.onHeaderRowCellRendered, (e: Event, args: any) => {
-      this.addFilterTemplateToHeaderRow(args);
-    });
   }
 
   customLocalFilter(dataView: any, item: any, args: any) {
@@ -236,8 +238,8 @@ export class FilterService {
     this._eventHandler.unsubscribeAll();
 
     // unsubscribe local event
-    if (this._subscriber && typeof this._subscriber.unsubscribe === 'function') {
-      this._subscriber.unsubscribe();
+    if (this._slickSubscriber && typeof this._slickSubscriber.unsubscribe === 'function') {
+      this._slickSubscriber.unsubscribe();
     }
   }
 
@@ -302,7 +304,7 @@ export class FilterService {
       };
     }
 
-    this.triggerEvent(this._subscriber, {
+    this.triggerEvent(this._slickSubscriber, {
       columnId,
       columnDef: args.columnDef || null,
       columnFilters: this._columnFilters,
@@ -378,12 +380,21 @@ export class FilterService {
   }
 
   /**
-   * A simple function that is attached to the subscriber and emit a change when the sort is called.
+   * A simple function that will be called to emit a change when a filter changes.
    * Other services, like Pagination, can then subscribe to it.
-   * @param {string} sender
+   * @param sender
    */
-  emitFilterChangedBy(sender: string) {
-    this._subscriber.subscribe(() => this.onFilterChanged.publish('filterService:changed', `onFilterChanged by ${sender}`));
+  emitFilterChanged(sender: 'local' | 'remote') {
+    if (sender === 'remote' && this._gridOptions && this._gridOptions.backendServiceApi) {
+      let currentFilters: CurrentFilter[] = [];
+      const backendService = this._gridOptions.backendServiceApi.service;
+      if (backendService && backendService.getCurrentFilters) {
+        currentFilters = backendService.getCurrentFilters() as CurrentFilter[];
+      }
+      this.ea.publish('filterService:filterChanged', currentFilters);
+    } else if (sender === 'local') {
+      this.ea.publish('filterService:filterChanged', this.getCurrentLocalFilters());
+    }
   }
 
   /**
