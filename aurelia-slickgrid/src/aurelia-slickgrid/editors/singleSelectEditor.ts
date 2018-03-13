@@ -5,7 +5,7 @@ import {
   MultipleSelectOption,
   SelectOption
 } from '../models/index';
-import { findOrDefault } from '../services';
+import { findOrDefault } from '../services/index';
 import * as $ from 'jquery';
 
 /**

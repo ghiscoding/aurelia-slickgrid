@@ -1,6 +1,6 @@
 import { arrayToCsvFormatter } from './arrayToCsvFormatter';
 import { Column, Formatter } from './../models/index';
-import { findOrDefault } from '../services';
+import { findOrDefault } from '../services/index';
 
 /**
  * A formatter to show the label property value of a params collection
