@@ -63,13 +63,12 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./../filter-c
         ],
         execute: function () {
             FilterService = /** @class */ (function () {
-                function FilterService(filterFactory) {
+                function FilterService(ea, filterFactory) {
+                    this.ea = ea;
                     this.filterFactory = filterFactory;
                     this._eventHandler = new Slick.EventHandler();
-                    this._subscriber = new Slick.Event();
                     this._filters = [];
                     this._columnFilters = {};
-                    this.onFilterChanged = new aurelia_event_aggregator_1.EventAggregator();
                 }
                 FilterService.prototype.init = function (grid, gridOptions, columnDefinitions) {
                     this._grid = grid;
@@ -83,9 +82,9 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./../filter-c
                 FilterService.prototype.attachBackendOnFilter = function (grid, options) {
                     var _this = this;
                     this._filters = [];
-                    this.emitFilterChangedBy('remote');
-                    this._subscriber = new Slick.Event();
-                    this._subscriber.subscribe(this.attachBackendOnFilterSubscribe);
+                    this._slickSubscriber = new Slick.Event();
+                    // subscribe to the SlickGrid event and call the backend execution
+                    this._slickSubscriber.subscribe(this.attachBackendOnFilterSubscribe.bind(this));
                     // subscribe to SlickGrid onHeaderRowCellRendered event to create filter template
                     this._eventHandler.subscribe(grid.onHeaderRowCellRendered, function (e, args) {
                         _this.addFilterTemplateToHeaderRow(args);
@@ -112,6 +111,8 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./../filter-c
                                     return [4 /*yield*/, backendApi.service.onFilterChanged(event, args)];
                                 case 1:
                                     query = _a.sent();
+                                    // emit an onFilterChanged event
+                                    this.emitFilterChanged('remote');
                                     return [4 /*yield*/, backendApi.process(query)];
                                 case 2:
                                     processResult = _a.sent();
@@ -126,6 +127,31 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./../filter-c
                                     return [2 /*return*/];
                             }
                         });
+                    });
+                };
+                /**
+                 * Attach a local filter hook to the grid
+                 * @param grid SlickGrid Grid object
+                 * @param gridOptions Grid Options object
+                 * @param dataView
+                 */
+                FilterService.prototype.attachLocalOnFilter = function (grid, options, dataView) {
+                    var _this = this;
+                    this._filters = [];
+                    this._dataView = dataView;
+                    this._slickSubscriber = new Slick.Event();
+                    dataView.setFilterArgs({ columnFilters: this._columnFilters, grid: this._grid });
+                    dataView.setFilter(this.customLocalFilter.bind(this, dataView));
+                    this._slickSubscriber.subscribe(function (e, args) {
+                        var columnId = args.columnId;
+                        if (columnId != null) {
+                            dataView.refresh();
+                        }
+                        _this.emitFilterChanged('local');
+                    });
+                    // subscribe to SlickGrid onHeaderRowCellRendered event to create filter template
+                    this._eventHandler.subscribe(grid.onHeaderRowCellRendered, function (e, args) {
+                        _this.addFilterTemplateToHeaderRow(args);
                     });
                 };
                 /** Clear the search filters (below the column titles) */
@@ -149,31 +175,6 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./../filter-c
                         this._grid.invalidate();
                         this._grid.render();
                     }
-                };
-                /**
-                 * Attach a local filter hook to the grid
-                 * @param grid SlickGrid Grid object
-                 * @param gridOptions Grid Options object
-                 * @param dataView
-                 */
-                FilterService.prototype.attachLocalOnFilter = function (grid, options, dataView) {
-                    var _this = this;
-                    this._dataView = dataView;
-                    this._filters = [];
-                    this.emitFilterChangedBy('local');
-                    dataView.setFilterArgs({ columnFilters: this._columnFilters, grid: this._grid });
-                    dataView.setFilter(this.customLocalFilter.bind(this, dataView));
-                    this._subscriber = new Slick.Event();
-                    this._subscriber.subscribe(function (e, args) {
-                        var columnId = args.columnId;
-                        if (columnId != null) {
-                            dataView.refresh();
-                        }
-                    });
-                    // subscribe to SlickGrid onHeaderRowCellRendered event to create filter template
-                    this._eventHandler.subscribe(grid.onHeaderRowCellRendered, function (e, args) {
-                        _this.addFilterTemplateToHeaderRow(args);
-                    });
                 };
                 FilterService.prototype.customLocalFilter = function (dataView, item, args) {
                     for (var _i = 0, _a = Object.keys(args.columnFilters); _i < _a.length; _i++) {
@@ -255,8 +256,8 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./../filter-c
                     // unsubscribe all SlickGrid events
                     this._eventHandler.unsubscribeAll();
                     // unsubscribe local event
-                    if (this._subscriber && typeof this._subscriber.unsubscribe === 'function') {
-                        this._subscriber.unsubscribe();
+                    if (this._slickSubscriber && typeof this._slickSubscriber.unsubscribe === 'function') {
+                        this._slickSubscriber.unsubscribe();
                     }
                 };
                 /**
@@ -317,7 +318,7 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./../filter-c
                             searchTerm: ((e && e.target) ? e.target.value : undefined),
                         };
                     }
-                    this.triggerEvent(this._subscriber, {
+                    this.triggerEvent(this._slickSubscriber, {
                         columnId: columnId,
                         columnDef: args.columnDef || null,
                         columnFilters: this._columnFilters,
@@ -386,13 +387,22 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./../filter-c
                     }
                 };
                 /**
-                 * A simple function that is attached to the subscriber and emit a change when the sort is called.
+                 * A simple function that will be called to emit a change when a filter changes.
                  * Other services, like Pagination, can then subscribe to it.
-                 * @param {string} sender
+                 * @param sender
                  */
-                FilterService.prototype.emitFilterChangedBy = function (sender) {
-                    var _this = this;
-                    this._subscriber.subscribe(function () { return _this.onFilterChanged.publish('filterService:changed', "onFilterChanged by " + sender); });
+                FilterService.prototype.emitFilterChanged = function (sender) {
+                    if (sender === 'remote' && this._gridOptions && this._gridOptions.backendServiceApi) {
+                        var currentFilters = [];
+                        var backendService = this._gridOptions.backendServiceApi.service;
+                        if (backendService && backendService.getCurrentFilters) {
+                            currentFilters = backendService.getCurrentFilters();
+                        }
+                        this.ea.publish('filterService:filterChanged', currentFilters);
+                    }
+                    else if (sender === 'local') {
+                        this.ea.publish('filterService:filterChanged', this.getCurrentLocalFilters());
+                    }
                 };
                 /**
                  * When user passes an array of preset filters, we need to pre-polulate each column filter searchTerm(s)
@@ -448,7 +458,7 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./../filter-c
                     return evt.notify(args, e, args.grid);
                 };
                 FilterService = __decorate([
-                    aurelia_framework_1.inject(index_2.FilterFactory)
+                    aurelia_framework_1.inject(aurelia_event_aggregator_1.EventAggregator, index_2.FilterFactory)
                 ], FilterService);
                 return FilterService;
             }());

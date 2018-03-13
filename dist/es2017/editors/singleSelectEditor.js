@@ -1,3 +1,4 @@
+import { findOrDefault } from '../services/index';
 import * as $ from 'jquery';
 /**
  * Slickgrid editor class for single select lists
@@ -24,7 +25,7 @@ export class SingleSelectEditor {
      * The current selected value from the collection
      */
     get currentValue() {
-        return this.collection.findOrDefault(c => c[this.valueName].toString() === this.$editorElm.val())[this.valueName];
+        return findOrDefault(this.collection, (c) => c[this.valueName].toString() === this.$editorElm.val())[this.valueName];
     }
     init() {
         if (!this.args) {

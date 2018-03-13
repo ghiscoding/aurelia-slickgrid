@@ -1,4 +1,4 @@
-import { Editor, Column, SelectOption } from './../models/index';
+import { Editor, Column, SelectOption } from '../models/index';
 /**
  * Slickgrid editor class for single select lists
  */

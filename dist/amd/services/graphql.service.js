@@ -45,17 +45,25 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "./utilities"
             var pageInfoQb = new graphqlQueryBuilder_1.default('pageInfo');
             var dataQb = (this.options.isWithCursor) ? new graphqlQueryBuilder_1.default('edges') : new graphqlQueryBuilder_1.default('nodes');
             // get all the columnds Ids for the filters to work
-            var columnIds;
-            if (columnDefinitions) {
-                columnIds = Array.isArray(columnDefinitions) ? columnDefinitions.map(function (column) { return column.field; }) : [];
+            var columnIds = [];
+            if (columnDefinitions && Array.isArray(columnDefinitions)) {
+                for (var _i = 0, columnDefinitions_1 = columnDefinitions; _i < columnDefinitions_1.length; _i++) {
+                    var column = columnDefinitions_1[_i];
+                    columnIds.push(column.field);
+                    // if extra "fields" are passed, also push them to columnIds
+                    if (column.fields) {
+                        columnIds.push.apply(columnIds, column.fields);
+                    }
+                }
+                // columnIds = columnDefinitions.map((column) => column.field);
             }
             else {
                 columnIds = this.options.columnIds || [];
             }
             // Slickgrid also requires the "id" field to be part of DataView
-            // push it to the GraphQL query if it wasn't already part of the list
+            // add it to the GraphQL query if it wasn't already part of the list
             if (columnIds.indexOf('id') === -1) {
-                columnIds.push('id');
+                columnIds.unshift('id');
             }
             var filters = this.buildFilterQuery(columnIds);
             if (this.options.isWithCursor) {

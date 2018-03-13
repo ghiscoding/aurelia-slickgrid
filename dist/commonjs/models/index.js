@@ -9,6 +9,7 @@ __export(require("./fieldType.enum"));
 __export(require("./fileType.enum"));
 __export(require("./filterType.enum"));
 __export(require("./formElementType"));
+__export(require("./gridStateType.enum"));
 __export(require("./keyCode.enum"));
 __export(require("./operatorType.enum"));
 __export(require("./sortDirection.enum"));

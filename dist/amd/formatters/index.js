@@ -19,7 +19,17 @@ define(["require", "exports", "./arrayToCsvFormatter", "./checkboxFormatter", ".
         checkmark: checkmarkFormatter_1.checkmarkFormatter,
         /** Takes a complex data object and return the data under that property (for example: "user.firstName" will return the first name "John") */
         complexObject: complexObjectFormatter_1.complexObjectFormatter,
-        /** Looks up values from the filter.collection property and convert it to a CSV or string */
+        /**
+         * Looks up values from the columnDefinition.params.collection property and displays the label in CSV or string format
+         * @example
+         * // the grid will display 'foo' and 'bar' and not 1 and 2 from your dataset
+         * {
+         *   params: {
+         *     collection: [{ value: 1, label: 'foo'}, {value: 2, label: 'bar' }]
+         *   }
+         * }
+         * const dataset = [{ value: 1 },{ value: 2 }];
+         */
         collection: collectionFormatter_1.collectionFormatter,
         /** Takes a Date object and displays it as an ISO Date format */
         dateIso: dateIsoFormatter_1.dateIsoFormatter,

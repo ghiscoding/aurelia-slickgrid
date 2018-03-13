@@ -332,6 +332,10 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "./export.ser
                 showToggleFilterCommand: true
             };
         };
+        /**
+         * Call a refresh dataset with a BackendServiceApi
+         * @param gridOptions
+         */
         ControlAndPluginService.prototype.refreshBackendDataset = function (gridOptions) {
             var query;
             var backendApi = gridOptions.backendServiceApi || gridOptions.onBackendEventApi;

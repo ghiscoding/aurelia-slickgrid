@@ -6,6 +6,7 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
     }
     return t;
 };
+import { findOrDefault } from '../services/index';
 import * as $ from 'jquery';
 /**
  * Slickgrid editor class for single select lists
@@ -34,7 +35,7 @@ var SingleSelectEditor = /** @class */ (function () {
          */
         get: function () {
             var _this = this;
-            return this.collection.findOrDefault(function (c) {
+            return findOrDefault(this.collection, function (c) {
                 return c[_this.valueName].toString() === _this.$editorElm.val();
             })[this.valueName];
         },

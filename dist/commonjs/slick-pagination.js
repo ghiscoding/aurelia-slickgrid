@@ -42,10 +42,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var aurelia_framework_1 = require("aurelia-framework");
-var filter_service_1 = require("./services/filter.service");
-var sort_service_1 = require("./services/sort.service");
+var aurelia_event_aggregator_1 = require("aurelia-event-aggregator");
+var index_1 = require("./services/index");
+var aureliaEventPrefix = 'asg';
 var SlickPaginationCustomElement = /** @class */ (function () {
-    function SlickPaginationCustomElement(filterService, sortService) {
+    function SlickPaginationCustomElement(elm, ea, filterService, sortService) {
+        this.elm = elm;
+        this.ea = ea;
         this.filterService = filterService;
         this.sortService = sortService;
         this._isFirstRender = true;
@@ -65,12 +68,19 @@ var SlickPaginationCustomElement = /** @class */ (function () {
             this.refreshPagination();
         }
         // Subscribe to Event Emitter of Filter & Sort changed, go back to page 1 when that happen
-        this._filterSubcription = this.filterService.onFilterChanged.subscribe('filterService:changed', function (data) {
+        this._filterSubscriber = this.ea.subscribe('filterService:filterChanged', function (data) {
             _this.refreshPagination(true);
         });
-        this._sorterSubcription = this.sortService.onSortChanged.subscribe('sortService:changed', function (data) {
+        this._sorterSubscriber = this.ea.subscribe('sortService:sortChanged', function (data) {
             _this.refreshPagination(true);
         });
+    };
+    SlickPaginationCustomElement.prototype.gridPaginationOptionsChanged = function (newGridOptions) {
+        this._gridPaginationOptions = newGridOptions;
+        if (newGridOptions) {
+            this.refreshPagination(true);
+            this._isFirstRender = false;
+        }
     };
     SlickPaginationCustomElement.prototype.detached = function () {
         this.dispose();
@@ -109,11 +119,11 @@ var SlickPaginationCustomElement = /** @class */ (function () {
         this.onPageChanged(event, this.pageNumber);
     };
     SlickPaginationCustomElement.prototype.dispose = function () {
-        if (this._filterSubcription) {
-            this._filterSubcription.dispose();
+        if (this._filterSubscriber) {
+            this._filterSubscriber.dispose();
         }
-        if (this._sorterSubcription) {
-            this._sorterSubcription.dispose();
+        if (this._sorterSubscriber) {
+            this._sorterSubscriber.dispose();
         }
     };
     SlickPaginationCustomElement.prototype.onChangeItemPerPage = function (event) {
@@ -189,7 +199,18 @@ var SlickPaginationCustomElement = /** @class */ (function () {
                         }
                         return [3 /*break*/, 3];
                     case 2: throw new Error('Pagination with a backend service requires "BackendServiceApi" to be defined in your grid options');
-                    case 3: return [2 /*return*/];
+                    case 3:
+                        // dispatch the changes to the parent component
+                        this.elm.dispatchEvent(new CustomEvent(aureliaEventPrefix + "-on-pagination-changed", {
+                            bubbles: true,
+                            detail: {
+                                pageNumber: this.pageNumber,
+                                pageSizes: this.paginationPageSizes,
+                                pageSize: this.itemsPerPage,
+                                totalItems: this.totalItems
+                            }
+                        }));
+                        return [2 /*return*/];
                 }
             });
         });
@@ -205,7 +226,7 @@ var SlickPaginationCustomElement = /** @class */ (function () {
         aurelia_framework_1.bindable()
     ], SlickPaginationCustomElement.prototype, "gridPaginationOptions", void 0);
     SlickPaginationCustomElement = __decorate([
-        aurelia_framework_1.inject(filter_service_1.FilterService, sort_service_1.SortService)
+        aurelia_framework_1.inject(Element, aurelia_event_aggregator_1.EventAggregator, index_1.FilterService, index_1.SortService)
     ], SlickPaginationCustomElement);
     return SlickPaginationCustomElement;
 }());

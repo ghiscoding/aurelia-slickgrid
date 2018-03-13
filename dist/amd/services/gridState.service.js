@@ -1,8 +1,15 @@
-define(["require", "exports"], function (require, exports) {
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+define(["require", "exports", "aurelia-framework", "./../models/index", "aurelia-event-aggregator"], function (require, exports, aurelia_framework_1, index_1, aurelia_event_aggregator_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var GridStateService = /** @class */ (function () {
-        function GridStateService() {
+        function GridStateService(ea) {
+            this.ea = ea;
         }
         /**
          * Initialize the Export Service
@@ -11,10 +18,22 @@ define(["require", "exports"], function (require, exports) {
          * @param dataView
          */
         GridStateService.prototype.init = function (grid, filterService, sortService) {
+            var _this = this;
             this._grid = grid;
             this.filterService = filterService;
             this.sortService = sortService;
             this._gridOptions = (grid && grid.getOptions) ? grid.getOptions() : {};
+            // Subscribe to Event Emitter of Filter & Sort changed, go back to page 1 when that happen
+            this._filterSubcription = this.ea.subscribe('filterService:filterChanged', function (currentFilters) {
+                _this.ea.publish('gridStateService:changed', { change: { newValues: currentFilters, type: index_1.GridStateType.filter }, gridState: _this.getCurrentGridState() });
+            });
+            this._sorterSubcription = this.ea.subscribe('sortService:sortChanged', function (currentSorters) {
+                _this.ea.publish('gridStateService:changed', { change: { newValues: currentSorters, type: index_1.GridStateType.sorter }, gridState: _this.getCurrentGridState() });
+            });
+        };
+        GridStateService.prototype.dispose = function () {
+            this._filterSubcription.dispose();
+            this._sorterSubcription.dispose();
         };
         /**
          * Get the current grid state (filters/sorters/pagination)
@@ -79,6 +98,9 @@ define(["require", "exports"], function (require, exports) {
             }
             return null;
         };
+        GridStateService = __decorate([
+            aurelia_framework_1.inject(aurelia_event_aggregator_1.EventAggregator)
+        ], GridStateService);
         return GridStateService;
     }());
     exports.GridStateService = GridStateService;

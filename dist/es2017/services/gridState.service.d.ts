@@ -1,11 +1,16 @@
 import { CurrentFilter, CurrentPagination, CurrentSorter, GridState } from './../models/index';
 import { FilterService, SortService } from './../services/index';
+import { EventAggregator } from 'aurelia-event-aggregator';
 export declare class GridStateService {
+    private ea;
     private _grid;
     private _gridOptions;
     private _preset;
     private filterService;
+    private _filterSubcription;
+    private _sorterSubcription;
     private sortService;
+    constructor(ea: EventAggregator);
     /**
      * Initialize the Export Service
      * @param grid
@@ -13,6 +18,7 @@ export declare class GridStateService {
      * @param dataView
      */
     init(grid: any, filterService: FilterService, sortService: SortService): void;
+    dispose(): void;
     /**
      * Get the current grid state (filters/sorters/pagination)
      * @return grid state

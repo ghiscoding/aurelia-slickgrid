@@ -1,7 +1,18 @@
-import { inject, bindable } from 'aurelia-framework';
-import { Editors, FieldType, Formatters, GridExtraService, GridExtraUtils, ResizerService } from 'aurelia-slickgrid';
+import { I18N } from 'aurelia-i18n';
+import {
+  inject,
+  bindable
+} from 'aurelia-framework';
+import {
+  Editors,
+  FieldType,
+  Formatters,
+  GridExtraService,
+  GridExtraUtils,
+  ResizerService
+} from 'aurelia-slickgrid';
 
-@inject(GridExtraService, ResizerService)
+@inject(GridExtraService, I18N, ResizerService)
 export class Example3 {
   @bindable() gridObj;
   @bindable() dataview;
@@ -9,26 +20,28 @@ export class Example3 {
   subTitle = `
   Grid with Inline Editors and onCellClick actions (<a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Editors" target="_blank">Wiki link</a>).
   <ul>
-  <li>When using "enableCellNavigation: true", clicking on a cell will automatically make it active &amp; selected.
+  <li>When using "enableCellNavigation: true", clicking on a cell will automatically make it active &amp; selected.</li>
   <ul><li>If you don't want this behavior, then you should disable "enableCellNavigation"</li></ul>
   <li>Inline Editors requires "enableCellNavigation: true" (not sure why though)</li>
   </ul>
   `;
+  _commandQueue = [];
   gridOptions;
   columnDefinitions;
-  commandQueue = [];
   dataset = [];
   updatedObject;
   isAutoEdit = true;
   alertWarning;
-  gridExtraService;
-  resizer;
+  selectedLanguage;
 
-  constructor(gridExtraService, resizer) {
+  constructor(gridExtraService, i18n, resizer) {
     this.gridExtraService = gridExtraService;
+    this.i18n = i18n;
     this.resizer = resizer;
+
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
+    this.selectedLanguage = this.i18n.getLocale();
   }
 
   attached() {
@@ -45,40 +58,101 @@ export class Example3 {
 
   /* Define grid Options and Columns */
   defineGrid() {
-    this.columnDefinitions = [
-      {
-        id: 'edit', field: 'id',
-        formatter: Formatters.editIcon,
-        minWidth: 30,
-        maxWidth: 30,
-        // use onCellClick OR grid.onClick.subscribe which you can see down below
-        onCellClick: (args) => {
-          console.log(args);
-          this.alertWarning = `Editing: ${args.dataContext.title}`;
-          this.gridExtraService.highlightRow(args.row, 1500);
-          this.gridExtraService.setSelectedRow(args.row);
-        }
-      },
-      {
-        id: 'delete', field: 'id',
-        formatter: Formatters.deleteIcon,
-        minWidth: 30,
-        maxWidth: 30
-        // use onCellClick OR grid.onClick.subscribe which you can see down below
-        /*
-        onCellClick: (args: OnEventArgs) => {
-          console.log(args);
-          this.alertWarning = `Deleting: ${args.dataContext.title}`;
-        }
-        */
-      },
-      { id: 'title', name: 'Title', field: 'title', sortable: true, type: FieldType.string, editor: Editors.longText, minWidth: 100 },
-      { id: 'duration', name: 'Duration (days)', field: 'duration', sortable: true, type: FieldType.number, editor: Editors.text, minWidth: 100 },
-      { id: 'complete', name: '% Complete', field: 'percentComplete', formatter: Formatters.percentCompleteBar, type: FieldType.number, editor: Editors.integer, minWidth: 100 },
-      { id: 'start', name: 'Start', field: 'start', formatter: Formatters.dateIso, sortable: true, minWidth: 100, type: FieldType.date, editor: Editors.date },
-      { id: 'finish', name: 'Finish', field: 'finish', formatter: Formatters.dateIso, sortable: true, minWidth: 100, type: FieldType.date, editor: Editors.date },
-      { id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', formatter: Formatters.checkmark, type: FieldType.number, editor: Editors.checkbox, minWidth: 100 }
-    ];
+    this.columnDefinitions = [{
+      id: 'edit',
+      field: 'id',
+      formatter: Formatters.editIcon,
+      minWidth: 30,
+      maxWidth: 30,
+      // use onCellClick OR grid.onClick.subscribe which you can see down below
+      onCellClick: (args) => {
+        console.log(args);
+        this.alertWarning = `Editing: ${args.dataContext.title}`;
+        this.gridExtraService.highlightRow(args.row, 1500);
+        this.gridExtraService.setSelectedRow(args.row);
+      }
+    }, {
+      id: 'delete',
+      field: 'id',
+      formatter: Formatters.deleteIcon,
+      minWidth: 30,
+      maxWidth: 30
+      // use onCellClick OR grid.onClick.subscribe which you can see down below
+      /*
+      onCellClick: (args: OnEventArgs) => {
+        console.log(args);
+        this.alertWarning = `Deleting: ${args.dataContext.title}`;
+      }
+      */
+    }, {
+      id: 'title',
+      name: 'Title',
+      field: 'title',
+      sortable: true,
+      type: FieldType.string,
+      editor: Editors.longText,
+      minWidth: 100
+    }, {
+      id: 'duration',
+      name: 'Duration (days)',
+      field: 'duration',
+      sortable: true,
+      type: FieldType.number,
+      editor: Editors.text,
+      minWidth: 100
+    }, {
+      id: 'complete',
+      name: '% Complete',
+      field: 'percentComplete',
+      formatter: Formatters.multiple,
+      type: FieldType.number,
+      editor: Editors.singleSelect,
+      minWidth: 100,
+      params: {
+        formatters: [Formatters.collection, Formatters.percentCompleteBar],
+        collection: Array.from(Array(101).keys()).map(k => ({ value: k, label: k }))
+      }
+    }, {
+      id: 'start',
+      name: 'Start',
+      field: 'start',
+      formatter: Formatters.dateIso,
+      sortable: true,
+      minWidth: 100,
+      type: FieldType.date,
+      editor: Editors.date,
+      params: {
+        i18n: this.i18n
+      }
+    }, {
+      id: 'finish',
+      name: 'Finish',
+      field: 'finish',
+      formatter: Formatters.dateIso,
+      sortable: true,
+      minWidth: 100,
+      type: FieldType.date,
+      editor: Editors.date
+    }, {
+      id: 'effort-driven',
+      name: 'Effort Driven',
+      field: 'effortDriven',
+      formatter: Formatters.checkmark,
+      type: FieldType.number,
+      editor: Editors.checkbox,
+      minWidth: 100
+    }, {
+      id: 'prerequisites',
+      name: 'Prerequisites',
+      field: 'prerequisites',
+      sortable: true,
+      type: FieldType.string,
+      editor: Editors.multipleSelect,
+      params: {
+        collection: Array.from(Array(10).keys()).map(k => ({ value: `Task ${k}`, label: `Task ${k}` })),
+        i18n: this.i18n
+      }
+    }];
 
     this.gridOptions = {
       asyncEditorLoading: false,
@@ -102,7 +176,7 @@ export class Example3 {
 
   getData() {
     // mock a dataset
-    let mockedDataset = [];
+    const mockedDataset = [];
     for (let i = 0; i < 1000; i++) {
       const randomYear = 2000 + Math.floor(Math.random() * 10);
       const randomMonth = Math.floor(Math.random() * 11);
@@ -117,13 +191,23 @@ export class Example3 {
         percentCompleteNumber: randomPercent,
         start: new Date(randomYear, randomMonth, randomDay),
         finish: new Date(randomYear, (randomMonth + 1), randomDay),
-        effortDriven: (i % 5 === 0)
+        effortDriven: (i % 5 === 0),
+        prerequisites: (i % 5 === 0) && i > 0 ? [`Task ${i}`, `Task ${i - 1}`] : []
       };
     }
     this.dataset = mockedDataset;
   }
 
   gridObjChanged(grid) {
+    grid.onBeforeEditCell.subscribe((e, args) => {
+      console.log('before edit', e);
+      e.stopImmediatePropagation();
+    });
+    grid.onBeforeCellEditorDestroy.subscribe((e, args) => {
+      console.log('before destroy');
+      e.stopPropagation();
+    });
+
     grid.onCellChange.subscribe((e, args) => {
       console.log('onCellChange', args);
       this.updatedObject = args.item;
@@ -155,7 +239,22 @@ export class Example3 {
 
   setAutoEdit(isAutoEdit) {
     this.isAutoEdit = isAutoEdit;
-    this.gridObj.setOptions({ autoEdit: isAutoEdit });
+    this.gridObj.setOptions({
+      autoEdit: isAutoEdit
+    });
     return true;
+  }
+
+  switchLanguage() {
+    this.selectedLanguage = (this.selectedLanguage === 'en') ? 'fr' : 'en';
+    this.i18n.setLocale(this.selectedLanguage);
+  }
+
+  undo() {
+    const command = this._commandQueue.pop();
+    if (command && Slick.GlobalEditorLock.cancelCurrentEdit()) {
+      command.undo();
+      this.gridObj.gotoCell(command.row, command.cell, false);
+    }
   }
 }

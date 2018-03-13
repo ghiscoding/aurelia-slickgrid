@@ -8,6 +8,7 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
     return t;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var index_1 = require("../services/index");
 var $ = require("jquery");
 /**
  * Slickgrid editor class for single select lists
@@ -36,7 +37,7 @@ var SingleSelectEditor = /** @class */ (function () {
          */
         get: function () {
             var _this = this;
-            return this.collection.findOrDefault(function (c) {
+            return index_1.findOrDefault(this.collection, function (c) {
                 return c[_this.valueName].toString() === _this.$editorElm.val();
             })[this.valueName];
         },

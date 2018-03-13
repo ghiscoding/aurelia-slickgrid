@@ -49,7 +49,11 @@ export declare class ControlAndPluginService {
      * @return default Grid Menu options
      */
     private getDefaultGridMenuOptions();
-    private refreshBackendDataset(gridOptions);
+    /**
+     * Call a refresh dataset with a BackendServiceApi
+     * @param gridOptions
+     */
+    refreshBackendDataset(gridOptions: GridOption): void;
     /**
      * Reset all the Grid Menu options which have text to translate
      * @param grid menu object

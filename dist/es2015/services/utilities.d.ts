@@ -76,3 +76,12 @@ export declare function toKebabCase(str: string): string;
  * @return boolean true if equal, else false
  */
 export declare function arraysEqual(a: any[], b: any[], orderMatters?: boolean): boolean;
+/**
+ * Uses the logic function to find an item in an array or returns the default
+ * value provided (empty object by default)
+ * @param any[] array the array to filter
+ * @param function logic the logic to find the item
+ * @param any [defaultVal={}] the default value to return
+ * @return object the found object or deafult value
+ */
+export declare function findOrDefault(array: any[], logic: (item: any) => boolean, defaultVal?: {}): any;

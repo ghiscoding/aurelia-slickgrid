@@ -36,8 +36,10 @@ import { bindable, bindingMode, inject } from 'aurelia-framework';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { I18N } from 'aurelia-i18n';
 import { GlobalGridOptions } from './global-grid-options';
+import { GridStateType, } from './models/index';
 import { ControlAndPluginService, ExportService, FilterService, GraphqlService, GridEventService, GridExtraService, GridStateService, ResizerService, SortService, toKebabCase } from './services/index';
 import * as $ from 'jquery';
+const aureliaEventPrefix = 'asg';
 const eventPrefix = 'sg';
 // Aurelia doesn't support well TypeScript @autoinject in a Plugin so we'll do it the old fashion way
 let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
@@ -66,7 +68,7 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
         this.ea.publish('onBeforeGridCreate', true);
         // make sure the dataset is initialized (if not it will throw an error that it cannot getLength of null)
         this._dataset = this._dataset || this.dataset || [];
-        this.gridOptions = this.mergeGridOptions();
+        this.gridOptions = this.mergeGridOptions(this.gridOptions);
         this.createBackendApiInternalPostProcessCallback(this.gridOptions);
         this.dataview = new Slick.Data.DataView();
         this.controlAndPluginService.createPluginBeforeGridCreation(this.columnDefinitions, this.gridOptions);
@@ -116,11 +118,13 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
         this.dataview = [];
         this._eventHandler.unsubscribeAll();
         this.controlAndPluginService.dispose();
-        this.gridEventService.dispose();
         this.filterService.dispose();
+        this.gridEventService.dispose();
+        this.gridStateService.dispose();
         this.resizer.dispose();
         this.sortService.dispose();
         this.grid.destroy();
+        this.gridStateSubscriber.dispose();
         this.localeChangedSubscriber.dispose();
         this.ea.publish('onAfterGridDestroyed', true);
         this.elm.dispatchEvent(new CustomEvent(`${eventPrefix}-on-after-grid-destroyed`, {
@@ -203,6 +207,7 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
                 backendApi.service.init(backendApi.options, gridOptions.pagination, this.grid);
             }
         }
+        // expose all Slick Grid Events through dispatch
         for (const prop in grid) {
             if (grid.hasOwnProperty(prop) && prop.startsWith('on')) {
                 this._eventHandler.subscribe(grid[prop], (e, args) => {
@@ -216,6 +221,7 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
                 });
             }
         }
+        // expose all Slick DataView Events through dispatch
         for (const prop in dataView) {
             if (dataView.hasOwnProperty(prop) && prop.startsWith('on')) {
                 this._eventHandler.subscribe(dataView[prop], (e, args) => {
@@ -229,6 +235,13 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
                 });
             }
         }
+        // expose GridState Service changes event through dispatch
+        this.gridStateSubscriber = this.ea.subscribe('gridStateService:changed', (gridStateChange) => {
+            this.elm.dispatchEvent(new CustomEvent(`${aureliaEventPrefix}-on-grid-state-service-changed`, {
+                bubbles: true,
+                detail: gridStateChange
+            }));
+        });
         // on cell click, mainly used with the columnDef.action callback
         this.gridEventService.attachOnCellChange(grid, this.gridOptions, dataView);
         this.gridEventService.attachOnClick(grid, this.gridOptions, dataView);
@@ -305,14 +318,20 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
             this.resizer.resizeGrid(0, { height: this.gridHeight, width: this.gridWidth });
         }
     }
-    mergeGridOptions() {
-        this.gridOptions.gridId = this.gridId;
-        this.gridOptions.gridContainerId = `slickGridContainer-${this.gridId}`;
-        if (this.gridOptions.enableFiltering) {
-            this.gridOptions.showHeaderRow = true;
+    mergeGridOptions(gridOptions) {
+        gridOptions.gridId = this.gridId;
+        gridOptions.gridContainerId = `slickGridContainer-${this.gridId}`;
+        if (gridOptions.enableFiltering) {
+            gridOptions.showHeaderRow = true;
         }
         // use jquery extend to deep merge and avoid immutable properties changed in GlobalGridOptions after route change
-        return $.extend(true, {}, GlobalGridOptions, this.gridOptions);
+        return $.extend(true, {}, GlobalGridOptions, gridOptions);
+    }
+    paginationChanged(pagination) {
+        this.ea.publish('gridStateService:changed', {
+            change: { newValues: pagination, type: GridStateType.pagination },
+            gridState: this.gridStateService.getCurrentGridState()
+        });
     }
     /**
      * When dataset changes, we need to refresh the entire grid UI & possibly resize it as well
@@ -340,7 +359,7 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
                     this.gridOptions.pagination.pageSize = this.gridOptions.presets.pagination.pageSize;
                     this.gridOptions.pagination.pageNumber = this.gridOptions.presets.pagination.pageNumber;
                 }
-                this.gridPaginationOptions = this.mergeGridOptions();
+                this.gridPaginationOptions = this.mergeGridOptions(this.gridOptions);
             }
             if (this.grid && this.gridOptions.enableAutoResize) {
                 // resize the grid inside a slight timeout, in case other DOM element changed prior to the resize (like a filter/pagination changed)
@@ -370,9 +389,6 @@ __decorate([
 __decorate([
     bindable({ defaultBindingMode: bindingMode.twoWay })
 ], AureliaSlickgridCustomElement.prototype, "dataset", void 0);
-__decorate([
-    bindable({ defaultBindingMode: bindingMode.twoWay })
-], AureliaSlickgridCustomElement.prototype, "paginationOptions", void 0);
 __decorate([
     bindable({ defaultBindingMode: bindingMode.twoWay })
 ], AureliaSlickgridCustomElement.prototype, "gridPaginationOptions", void 0);

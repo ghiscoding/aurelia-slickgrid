@@ -1,10 +1,13 @@
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { Column, GridOption, SortChanged, CurrentSorter } from './../models/index';
 export declare class SortService {
+    private ea;
     private _currentLocalSorters;
     private _eventHandler;
-    private _subscriber;
-    onSortChanged: EventAggregator;
+    private _grid;
+    private _gridOptions;
+    private _slickSubscriber;
+    constructor(ea: EventAggregator);
     /**
      * Attach a backend sort (single/multi) hook to the grid
      * @param grid SlickGrid Grid object
@@ -31,9 +34,9 @@ export declare class SortService {
     onLocalSortChanged(grid: any, gridOptions: GridOption, dataView: any, sortColumns: SortChanged[]): void;
     dispose(): void;
     /**
-     * A simple function that is attached to the subscriber and emit a change when the sort is called.
+     * A simple function that will be called to emit a change when a sort changes.
      * Other services, like Pagination, can then subscribe to it.
      * @param sender
      */
-    emitSortChangedBy(sender: string): void;
+    emitSortChanged(sender: 'local' | 'remote'): void;
 }

@@ -1,5 +1,11 @@
-System.register(["aurelia-event-aggregator", "./../models/index", "./../sorters/index"], function (exports_1, context_1) {
+System.register(["aurelia-framework", "aurelia-event-aggregator", "./../models/index", "./../sorters/index"], function (exports_1, context_1) {
     "use strict";
+    var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+        var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+        if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+        else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+        return c > 3 && r && Object.defineProperty(target, key, r), r;
+    };
     var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
         return new (P || (P = Promise))(function (resolve, reject) {
             function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -36,9 +42,12 @@ System.register(["aurelia-event-aggregator", "./../models/index", "./../sorters/
         }
     };
     var __moduleName = context_1 && context_1.id;
-    var aurelia_event_aggregator_1, index_1, index_2, SortService;
+    var aurelia_framework_1, aurelia_event_aggregator_1, index_1, index_2, SortService;
     return {
         setters: [
+            function (aurelia_framework_1_1) {
+                aurelia_framework_1 = aurelia_framework_1_1;
+            },
             function (aurelia_event_aggregator_1_1) {
                 aurelia_event_aggregator_1 = aurelia_event_aggregator_1_1;
             },
@@ -51,11 +60,11 @@ System.register(["aurelia-event-aggregator", "./../models/index", "./../sorters/
         ],
         execute: function () {
             SortService = /** @class */ (function () {
-                function SortService() {
+                function SortService(ea) {
+                    this.ea = ea;
                     this._currentLocalSorters = [];
                     this._eventHandler = new Slick.EventHandler();
-                    this._subscriber = new Slick.Event();
-                    this.onSortChanged = new aurelia_event_aggregator_1.EventAggregator();
+                    this._slickSubscriber = new Slick.Event();
                 }
                 /**
                  * Attach a backend sort (single/multi) hook to the grid
@@ -63,10 +72,11 @@ System.register(["aurelia-event-aggregator", "./../models/index", "./../sorters/
                  * @param gridOptions Grid Options object
                  */
                 SortService.prototype.attachBackendOnSort = function (grid, gridOptions) {
-                    this._subscriber = grid.onSort;
-                    this.emitSortChangedBy('remote');
-                    this._subscriber = new Slick.Event();
-                    this._subscriber.subscribe(this.attachBackendOnSortSubscribe);
+                    this._grid = grid;
+                    this._gridOptions = gridOptions;
+                    this._slickSubscriber = grid.onSort;
+                    // subscribe to the SlickGrid event and call the backend execution
+                    this._slickSubscriber.subscribe(this.attachBackendOnSortSubscribe.bind(this));
                 };
                 SortService.prototype.attachBackendOnSortSubscribe = function (event, args) {
                     return __awaiter(this, void 0, void 0, function () {
@@ -86,6 +96,7 @@ System.register(["aurelia-event-aggregator", "./../models/index", "./../sorters/
                                         backendApi.preProcess();
                                     }
                                     query = backendApi.service.onSortChanged(event, args);
+                                    this.emitSortChanged('remote');
                                     return [4 /*yield*/, backendApi.process(query)];
                                 case 1:
                                     processResult = _a.sent();
@@ -110,10 +121,10 @@ System.register(["aurelia-event-aggregator", "./../models/index", "./../sorters/
                  */
                 SortService.prototype.attachLocalOnSort = function (grid, gridOptions, dataView, columnDefinitions) {
                     var _this = this;
-                    this._subscriber = grid.onSort;
-                    this.emitSortChangedBy('local');
-                    this._subscriber = new Slick.Event();
-                    this._subscriber.subscribe(function (e, args) {
+                    this._grid = grid;
+                    this._gridOptions = gridOptions;
+                    this._slickSubscriber = grid.onSort;
+                    this._slickSubscriber.subscribe(function (e, args) {
                         // multiSort and singleSort are not exactly the same, but we want to structure it the same for the (for loop) after
                         // also to avoid having to rewrite the for loop in the sort, we will make the singleSort an array of 1 object
                         var sortColumns = (args.multiColumnSort) ? args.sortCols : new Array({ sortAsc: args.sortAsc, sortCol: args.sortCol });
@@ -130,6 +141,7 @@ System.register(["aurelia-event-aggregator", "./../models/index", "./../sorters/
                             });
                         }
                         _this.onLocalSortChanged(grid, gridOptions, dataView, sortColumns);
+                        _this.emitSortChanged('local');
                     });
                     this._eventHandler.subscribe(dataView.onRowCountChanged, function (e, args) {
                         // load any presets if there are any
@@ -220,21 +232,33 @@ System.register(["aurelia-event-aggregator", "./../models/index", "./../sorters/
                 };
                 SortService.prototype.dispose = function () {
                     // unsubscribe local event
-                    if (this._subscriber && typeof this._subscriber.unsubscribe === 'function') {
-                        this._subscriber.unsubscribe();
+                    if (this._slickSubscriber && typeof this._slickSubscriber.unsubscribe === 'function') {
+                        this._slickSubscriber.unsubscribe();
                     }
                     // unsubscribe all SlickGrid events
                     this._eventHandler.unsubscribeAll();
                 };
                 /**
-                 * A simple function that is attached to the subscriber and emit a change when the sort is called.
+                 * A simple function that will be called to emit a change when a sort changes.
                  * Other services, like Pagination, can then subscribe to it.
                  * @param sender
                  */
-                SortService.prototype.emitSortChangedBy = function (sender) {
-                    var _this = this;
-                    this._subscriber.subscribe(function () { return _this.onSortChanged.publish('sortService:changed', "onSortChanged by " + sender); });
+                SortService.prototype.emitSortChanged = function (sender) {
+                    if (sender === 'remote' && this._gridOptions && this._gridOptions.backendServiceApi) {
+                        var currentSorters = [];
+                        var backendService = this._gridOptions.backendServiceApi.service;
+                        if (backendService && backendService.getCurrentSorters) {
+                            currentSorters = backendService.getCurrentSorters();
+                        }
+                        this.ea.publish('sortService:sortChanged', currentSorters);
+                    }
+                    else if (sender === 'local') {
+                        this.ea.publish('sortService:sortChanged', this.getCurrentLocalSorters());
+                    }
                 };
+                SortService = __decorate([
+                    aurelia_framework_1.inject(aurelia_event_aggregator_1.EventAggregator)
+                ], SortService);
                 return SortService;
             }());
             exports_1("SortService", SortService);

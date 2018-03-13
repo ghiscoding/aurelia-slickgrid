@@ -326,6 +326,10 @@ let ControlAndPluginService = class ControlAndPluginService {
             showToggleFilterCommand: true
         };
     }
+    /**
+     * Call a refresh dataset with a BackendServiceApi
+     * @param gridOptions
+     */
     refreshBackendDataset(gridOptions) {
         let query;
         const backendApi = gridOptions.backendServiceApi || gridOptions.onBackendEventApi;

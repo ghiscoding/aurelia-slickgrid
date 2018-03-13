@@ -19,7 +19,7 @@ import 'slickgrid/plugins/slick.rowmovemanager';
 import 'slickgrid/plugins/slick.rowselectionmodel';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
 import { I18N } from 'aurelia-i18n';
-import { Column, GridOption } from './models/index';
+import { Column, GridOption, Pagination } from './models/index';
 import { ControlAndPluginService, ExportService, FilterService, GraphqlService, GridEventService, GridExtraService, GridStateService, ResizerService, SortService } from './services/index';
 export declare class AureliaSlickgridCustomElement {
     private controlAndPluginService;
@@ -36,6 +36,7 @@ export declare class AureliaSlickgridCustomElement {
     private sortService;
     private _dataset;
     private _eventHandler;
+    gridStateSubscriber: Subscription;
     gridHeightString: string;
     gridWidthString: string;
     localeChangedSubscriber: Subscription;
@@ -43,7 +44,6 @@ export declare class AureliaSlickgridCustomElement {
     style: any;
     element: Element;
     dataset: any[];
-    paginationOptions: GridOption;
     gridPaginationOptions: GridOption;
     dataview: any;
     grid: any;
@@ -70,7 +70,8 @@ export declare class AureliaSlickgridCustomElement {
     attachDifferentHooks(grid: any, gridOptions: GridOption, dataView: any): void;
     attachBackendCallbackFunctions(gridOptions: GridOption): void;
     attachResizeHook(grid: any, options: GridOption): void;
-    mergeGridOptions(): GridOption;
+    mergeGridOptions(gridOptions: GridOption): GridOption;
+    paginationChanged(pagination: Pagination): void;
     /**
      * When dataset changes, we need to refresh the entire grid UI & possibly resize it as well
      * @param dataset

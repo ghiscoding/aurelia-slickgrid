@@ -350,6 +350,19 @@ System.register(["../models/index", "moment"], function (exports_1, context_1) {
         return true;
     }
     exports_1("arraysEqual", arraysEqual);
+    /**
+     * Uses the logic function to find an item in an array or returns the default
+     * value provided (empty object by default)
+     * @param any[] array the array to filter
+     * @param function logic the logic to find the item
+     * @param any [defaultVal={}] the default value to return
+     * @return object the found object or deafult value
+     */
+    function findOrDefault(array, logic, defaultVal) {
+        if (defaultVal === void 0) { defaultVal = {}; }
+        return array.find(logic) || defaultVal;
+    }
+    exports_1("findOrDefault", findOrDefault);
     var index_1, moment;
     return {
         setters: [

@@ -1,4 +1,4 @@
-System.register(["jquery"], function (exports_1, context_1) {
+System.register(["../services/index", "jquery"], function (exports_1, context_1) {
     "use strict";
     var __assign = (this && this.__assign) || Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -9,9 +9,12 @@ System.register(["jquery"], function (exports_1, context_1) {
         return t;
     };
     var __moduleName = context_1 && context_1.id;
-    var $, SingleSelectEditor;
+    var index_1, $, SingleSelectEditor;
     return {
         setters: [
+            function (index_1_1) {
+                index_1 = index_1_1;
+            },
             function ($_1) {
                 $ = $_1;
             }
@@ -44,7 +47,7 @@ System.register(["jquery"], function (exports_1, context_1) {
                      */
                     get: function () {
                         var _this = this;
-                        return this.collection.findOrDefault(function (c) {
+                        return index_1.findOrDefault(this.collection, function (c) {
                             return c[_this.valueName].toString() === _this.$editorElm.val();
                         })[this.valueName];
                     },

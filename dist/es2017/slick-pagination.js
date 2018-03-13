@@ -5,10 +5,13 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { bindable, inject } from 'aurelia-framework';
-import { FilterService } from './services/filter.service';
-import { SortService } from './services/sort.service';
+import { EventAggregator } from 'aurelia-event-aggregator';
+import { FilterService, SortService } from './services/index';
+const aureliaEventPrefix = 'asg';
 let SlickPaginationCustomElement = class SlickPaginationCustomElement {
-    constructor(filterService, sortService) {
+    constructor(elm, ea, filterService, sortService) {
+        this.elm = elm;
+        this.ea = ea;
         this.filterService = filterService;
         this.sortService = sortService;
         this._isFirstRender = true;
@@ -27,12 +30,19 @@ let SlickPaginationCustomElement = class SlickPaginationCustomElement {
             this.refreshPagination();
         }
         // Subscribe to Event Emitter of Filter & Sort changed, go back to page 1 when that happen
-        this._filterSubcription = this.filterService.onFilterChanged.subscribe('filterService:changed', (data) => {
+        this._filterSubscriber = this.ea.subscribe('filterService:filterChanged', (data) => {
             this.refreshPagination(true);
         });
-        this._sorterSubcription = this.sortService.onSortChanged.subscribe('sortService:changed', (data) => {
+        this._sorterSubscriber = this.ea.subscribe('sortService:sortChanged', (data) => {
             this.refreshPagination(true);
         });
+    }
+    gridPaginationOptionsChanged(newGridOptions) {
+        this._gridPaginationOptions = newGridOptions;
+        if (newGridOptions) {
+            this.refreshPagination(true);
+            this._isFirstRender = false;
+        }
     }
     detached() {
         this.dispose();
@@ -71,11 +81,11 @@ let SlickPaginationCustomElement = class SlickPaginationCustomElement {
         this.onPageChanged(event, this.pageNumber);
     }
     dispose() {
-        if (this._filterSubcription) {
-            this._filterSubcription.dispose();
+        if (this._filterSubscriber) {
+            this._filterSubscriber.dispose();
         }
-        if (this._sorterSubcription) {
-            this._sorterSubcription.dispose();
+        if (this._sorterSubscriber) {
+            this._sorterSubscriber.dispose();
         }
     }
     onChangeItemPerPage(event) {
@@ -146,6 +156,16 @@ let SlickPaginationCustomElement = class SlickPaginationCustomElement {
         else {
             throw new Error('Pagination with a backend service requires "BackendServiceApi" to be defined in your grid options');
         }
+        // dispatch the changes to the parent component
+        this.elm.dispatchEvent(new CustomEvent(`${aureliaEventPrefix}-on-pagination-changed`, {
+            bubbles: true,
+            detail: {
+                pageNumber: this.pageNumber,
+                pageSizes: this.paginationPageSizes,
+                pageSize: this.itemsPerPage,
+                totalItems: this.totalItems
+            }
+        }));
     }
     recalculateFromToIndexes() {
         this.dataFrom = (this.pageNumber * this.itemsPerPage) - this.itemsPerPage + 1;
@@ -159,7 +179,7 @@ __decorate([
     bindable()
 ], SlickPaginationCustomElement.prototype, "gridPaginationOptions", void 0);
 SlickPaginationCustomElement = __decorate([
-    inject(FilterService, SortService)
+    inject(Element, EventAggregator, FilterService, SortService)
 ], SlickPaginationCustomElement);
 export { SlickPaginationCustomElement };
 //# sourceMappingURL=slick-pagination.js.map
