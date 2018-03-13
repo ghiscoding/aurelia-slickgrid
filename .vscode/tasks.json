@@ -39,15 +39,6 @@
       "problemMatcher": []
     },
     {
-      "label": "Start Client TypeScript WebPack",
-      "command": "yarn",
-      "type": "shell",
-      "args": [
-        "start:client-ts-wp"
-      ],
-      "problemMatcher": []
-    },
-    {
       "label": "Start Github Demo Page",
       "command": "yarn",
       "type": "shell",
