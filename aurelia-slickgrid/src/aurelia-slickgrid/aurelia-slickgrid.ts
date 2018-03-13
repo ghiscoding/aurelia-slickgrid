@@ -69,7 +69,6 @@ export class AureliaSlickgridCustomElement {
 
   @bindable({ defaultBindingMode: bindingMode.twoWay }) element: Element;
   @bindable({ defaultBindingMode: bindingMode.twoWay }) dataset: any[];
-  @bindable({ defaultBindingMode: bindingMode.twoWay }) paginationOptions: GridOption;
   @bindable({ defaultBindingMode: bindingMode.twoWay }) gridPaginationOptions: GridOption;
   @bindable({ defaultBindingMode: bindingMode.twoWay }) dataview: any;
   @bindable({ defaultBindingMode: bindingMode.twoWay }) grid: any;
@@ -102,7 +101,7 @@ export class AureliaSlickgridCustomElement {
 
     // make sure the dataset is initialized (if not it will throw an error that it cannot getLength of null)
     this._dataset = this._dataset || this.dataset || [];
-    this.gridOptions = this.mergeGridOptions();
+    this.gridOptions = this.mergeGridOptions(this.gridOptions);
     this.createBackendApiInternalPostProcessCallback(this.gridOptions);
 
     this.dataview = new Slick.Data.DataView();
@@ -388,14 +387,14 @@ export class AureliaSlickgridCustomElement {
     }
   }
 
-  mergeGridOptions(): GridOption {
-    this.gridOptions.gridId = this.gridId;
-    this.gridOptions.gridContainerId = `slickGridContainer-${this.gridId}`;
-    if (this.gridOptions.enableFiltering) {
-      this.gridOptions.showHeaderRow = true;
+  mergeGridOptions(gridOptions: GridOption): GridOption {
+    gridOptions.gridId = this.gridId;
+    gridOptions.gridContainerId = `slickGridContainer-${this.gridId}`;
+    if (gridOptions.enableFiltering) {
+      gridOptions.showHeaderRow = true;
     }
     // use jquery extend to deep merge and avoid immutable properties changed in GlobalGridOptions after route change
-    return $.extend(true, {}, GlobalGridOptions, this.gridOptions);
+    return $.extend(true, {}, GlobalGridOptions, gridOptions);
   }
 
   paginationChanged(pagination: Pagination) {
@@ -434,7 +433,7 @@ export class AureliaSlickgridCustomElement {
           this.gridOptions.pagination.pageSize = this.gridOptions.presets.pagination.pageSize;
           this.gridOptions.pagination.pageNumber = this.gridOptions.presets.pagination.pageNumber;
         }
-        this.gridPaginationOptions = this.mergeGridOptions();
+        this.gridPaginationOptions = this.mergeGridOptions(this.gridOptions);
       }
       if (this.grid && this.gridOptions.enableAutoResize) {
         // resize the grid inside a slight timeout, in case other DOM element changed prior to the resize (like a filter/pagination changed)

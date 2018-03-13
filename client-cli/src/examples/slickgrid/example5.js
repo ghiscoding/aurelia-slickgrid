@@ -86,13 +86,14 @@ export class Example5 {
   }
 
   getCustomerCallback(data) {
-    this.displaySpinner(false);
-
-    this.dataset = data['items'];
-    this.odataQuery = data['query'];
-
     // totalItems property needs to be filled for pagination to work correctly
-    this.gridOptions.pagination.totalItems = data['totalRecordCount'];
+    // however we need to force Angular to do a dirty check, doing a clone object will do just that
+    this.gridOptions.pagination.totalItems = data.totalRecordCount;
+    this.gridOptions = { ...{}, ...this.gridOptions };
+
+    // once pagination totalItems is filled, we can update the dataset
+    this.dataset = data.items;
+    this.odataQuery = data.query;
   }
 
   getCustomerApiCall(query) {

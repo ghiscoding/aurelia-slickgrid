@@ -44,6 +44,14 @@ export class SlickPaginationCustomElement {
     });
   }
 
+  gridPaginationOptionsChanged(newGridOptions) {
+    this._gridPaginationOptions = newGridOptions;
+    if (newGridOptions) {
+      this.refreshPagination(true);
+      this._isFirstRender = false;
+    }
+  }
+
   detached() {
     this.dispose();
   }
