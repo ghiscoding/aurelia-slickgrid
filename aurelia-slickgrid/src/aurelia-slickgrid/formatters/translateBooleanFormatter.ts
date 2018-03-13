@@ -6,17 +6,16 @@ export const translateBooleanFormatter: Formatter = (row: number, cell: number, 
   const gridOptions = (grid && typeof grid.getOptions === 'function') ? grid.getOptions() : {};
   const columnParams = columnDef.params || {};
   const gridParams = gridOptions.params || {};
+  const i18n = gridParams.i18n || columnParams.i18n;
 
-  if ((!columnParams.i18n || !(columnParams.i18n instanceof I18N)) && (!gridParams.i18n || !(gridParams.i18n instanceof I18N))) {
-    throw new Error(`The translate formatter requires the "I18N" Service to be provided as a Column Definition params or a Grid Option params.
+  if (!i18n || typeof i18n.tr !== 'function') {
+    throw new Error(`The translate formatter requires the "I18N" Service to be provided as a Grid Options or Column Definition "params".
     For example: this.gridOptions = { enableTranslate: true, params: { i18n: this.i18n }}`);
   }
-
-  const translate = gridParams.i18n || columnParams.i18n;
 
   // make sure the value is a string (for example a boolean value would throw an error)
   if (value !== undefined && typeof value !== 'string') {
     value = value + '';
   }
-  return value ? translate.tr(value.toUpperCase() as string) : '';
+  return value ? i18n.tr(value.toUpperCase() as string) : '';
 };
