@@ -382,7 +382,11 @@ export class ControlAndPluginService {
     };
   }
 
-  private refreshBackendDataset(gridOptions: GridOption) {
+  /**
+   * Call a refresh dataset with a BackendServiceApi
+   * @param gridOptions
+   */
+  refreshBackendDataset(gridOptions: GridOption) {
     let query;
     const backendApi = gridOptions.backendServiceApi || gridOptions.onBackendEventApi;
     if (!backendApi || !backendApi.service || !backendApi.process) {
