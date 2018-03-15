@@ -55,8 +55,7 @@ export class Example6 {
         id: 'gender', field: 'gender', headerKey: 'GENDER', filterable: true, sortable: true,
         filter: {
           type: FilterType.singleSelect,
-          collection: [{ value: '', label: '' }, { value: 'male', label: 'male', labelKey: 'MALE' }, { value: 'female', label: 'female', labelKey: 'FEMALE' }],
-          searchTerm: 'female'
+          collection: [{ value: '', label: '' }, { value: 'male', label: 'male', labelKey: 'MALE' }, { value: 'female', label: 'female', labelKey: 'FEMALE' }]
         }
       },
       {
@@ -65,8 +64,7 @@ export class Example6 {
         filterable: true,
         filter: {
           type: FilterType.multipleSelect,
-          collection: [{ value: 'acme', label: 'Acme' }, { value: 'abc', label: 'Company ABC' }, { value: 'xyz', label: 'Company XYZ' }],
-          searchTerms: ['abc']
+          collection: [{ value: 'acme', label: 'Acme' }, { value: 'abc', label: 'Company ABC' }, { value: 'xyz', label: 'Company XYZ' }]
         }
       },
       { id: 'billing.address.street', field: 'billing.address.street', headerKey: 'BILLING.ADDRESS.STREET', filterable: true, sortable: true },

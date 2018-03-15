@@ -22,6 +22,7 @@ export class SingleSelectFilter implements Filter {
   callback: FilterCallback;
   defaultOptions: MultipleSelectOption;
   filterType = FilterType.singleSelect;
+  isFilled = false;
 
   constructor(private i18n: I18N) {
     // default options used by this Filter, user can overwrite any of these by passing "otions"
@@ -29,7 +30,21 @@ export class SingleSelectFilter implements Filter {
       container: 'body',
       filter: false,  // input search term on top of the select option list
       maxHeight: 200,
-      single: true
+      single: true,
+      onClose: () => {
+        const selectedItems = this.$filterElm.multipleSelect('getSelects');
+        let selectedItem = '';
+
+        if (Array.isArray(selectedItems) && selectedItems.length > 0) {
+          selectedItem = selectedItems[0];
+          this.isFilled = true;
+          this.$filterElm.addClass('filled').siblings('div .search-filter').addClass('filled');
+        } else {
+          this.isFilled = false;
+          this.$filterElm.removeClass('filled').siblings('div .search-filter').removeClass('filled');
+        }
+        this.callback(undefined, { columnDef: this.columnDef, operator: 'EQ', searchTerm: selectedItem });
+      }
     };
   }
 
@@ -50,17 +65,6 @@ export class SingleSelectFilter implements Filter {
 
     // step 2, create the DOM Element of the filter & pre-load search term
     this.createDomElement(filterTemplate);
-
-    // step 3, subscribe to the change event and run the callback when that happens
-    // also add/remove "filled" class for styling purposes
-    this.$filterElm.change((e: any) => {
-      if (e && e.target && e.target.value) {
-        this.$filterElm.addClass('filled').siblings('div .search-filter').addClass('filled');
-      } else {
-        this.$filterElm.removeClass('filled').siblings('div .search-filter').removeClass('filled');
-      }
-      this.callback(e, { columnDef: this.columnDef, operator: 'EQ' });
-    });
   }
 
   /**
@@ -125,6 +129,11 @@ export class SingleSelectFilter implements Filter {
 
       // html text of each select option
       options += `<option value="${option[valueName]}" ${selected}>${textLabel}</option>`;
+
+      // if there's a search term, we will add the "filled" class for styling purposes
+      if (selected) {
+        this.isFilled = true;
+      }
     });
 
     return `<select class="ms-filter search-filter">${options}</select>`;
@@ -156,14 +165,5 @@ export class SingleSelectFilter implements Filter {
     const filterOptions = (this.columnDef.filter) ? this.columnDef.filter.filterOptions : {};
     const options: MultipleSelectOption = { ...this.defaultOptions, ...filterOptions };
     this.$filterElm = this.$filterElm.multipleSelect(options);
-  }
-
-  private subscribeOnClose() {
-    this.$filterElm.multipleSelect({
-      onClose: () => {
-        const selectedItems = this.$filterElm.multipleSelect('getSelects');
-        this.callback(undefined, { columnDef: this.columnDef, operator: 'IN', searchTerms: selectedItems });
-      }
-    });
   }
 }
