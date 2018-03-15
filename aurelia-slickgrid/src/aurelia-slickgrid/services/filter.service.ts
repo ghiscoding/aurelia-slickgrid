@@ -4,10 +4,12 @@ import { FilterConditions } from './../filter-conditions/index';
 import { Filters, FilterFactory } from './../filters/index';
 import {
   Column,
+  ColumnFilter,
   ColumnFilters,
   CurrentFilter,
   Filter,
   FilterArguments,
+  FilterCallbackArg,
   FieldType,
   FilterType,
   GridOption,
@@ -284,35 +286,43 @@ export class FilterService {
     return currentFilters;
   }
 
-  callbackSearchEvent(e: Event | undefined, args: { columnDef: Column, operator?: OperatorType | OperatorString, searchTerms?: string[] | number[] }) {
-    const targetValue = (e && e.target) ? (e.target as HTMLInputElement).value : undefined;
-    const searchTerms = (args && args.searchTerms && Array.isArray(args.searchTerms)) ? args.searchTerms : [];
-    const columnId = (args && args.columnDef) ? args.columnDef.id || '' : '';
+  callbackSearchEvent(e: Event | undefined, args: FilterCallbackArg) {
+    if (args) {
+      const searchTerm = args.searchTerm ? args.searchTerm : ((e && e.target) ? (e.target as HTMLInputElement).value : undefined);
+      const searchTerms = (args.searchTerms && Array.isArray(args.searchTerms)) ? args.searchTerms : undefined;
+      const columnDef = args.columnDef || null;
+      const columnId = columnDef ? (columnDef.id || '') : '';
+      const operator = args.operator || undefined;
 
-    if (!targetValue && searchTerms.length === 0) {
-      // delete the property from the columnFilters when it becomes empty
-      // without doing this, it would leave an incorrect state of the previous column filters when filtering on another column
-      delete this._columnFilters[columnId];
-    } else {
-      const colId = '' + columnId as string;
-      this._columnFilters[colId] = {
-        columnId: colId,
+      if (!searchTerm && (!searchTerms || (Array.isArray(searchTerms) && searchTerms.length === 0))) {
+        // delete the property from the columnFilters when it becomes empty
+        // without doing this, it would leave an incorrect state of the previous column filters when filtering on another column
+        delete this._columnFilters[columnId];
+      } else {
+        const colId = '' + columnId as string;
+        const colFilter: ColumnFilter = {
+          columnId: colId,
+          columnDef,
+          searchTerm,
+          searchTerms,
+        };
+        if (operator) {
+          colFilter.operator = operator;
+        }
+        this._columnFilters[colId] = colFilter;
+      }
+
+      this.triggerEvent(this._slickSubscriber, {
+        columnId,
         columnDef: args.columnDef || null,
-        operator: args.operator || undefined,
-        searchTerms: args.searchTerms || undefined,
-        searchTerm: ((e && e.target) ? (e.target as HTMLInputElement).value : undefined),
-      };
+        columnFilters: this._columnFilters,
+        operator,
+        searchTerm,
+        searchTerms,
+        serviceOptions: this._onFilterChangedOptions,
+        grid: this._grid
+      }, e);
     }
-
-    this.triggerEvent(this._slickSubscriber, {
-      columnId,
-      columnDef: args.columnDef || null,
-      columnFilters: this._columnFilters,
-      searchTerms: args.searchTerms || undefined,
-      searchTerm: ((e && e.target) ? (e.target as HTMLInputElement).value : null),
-      serviceOptions: this._onFilterChangedOptions,
-      grid: this._grid
-    }, e);
   }
 
   addFilterTemplateToHeaderRow(args: { column: Column; grid: any; node: any }) {
