@@ -3,6 +3,7 @@ import { arraysEqual } from '../services/index';
 import {
   Editor,
   Column,
+  GridOption,
   MultipleSelectOption,
   SelectOption
 } from './../models/index';
@@ -46,7 +47,9 @@ export class MultipleSelectEditor implements Editor {
   private _i18n: I18N;
 
   constructor(private args: any) {
-    this._i18n = this.args.column.params.i18n;
+    const gridOptions = this.args.grid.getOptions() as GridOption;
+    const params = gridOptions.params || this.args.column.params || {};
+    this._i18n = params.i18n;
 
     this.defaultOptions = {
       container: 'body',

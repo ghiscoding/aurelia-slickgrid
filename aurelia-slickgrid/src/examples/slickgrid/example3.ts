@@ -113,7 +113,7 @@ export class Example3 {
       editor: Editors.singleSelect,
       minWidth: 100,
       params: {
-        formatters: [ Formatters.collection, Formatters.percentCompleteBar ],
+        formatters: [Formatters.collection, Formatters.percentCompleteBar],
         collection: Array.from(Array(101).keys()).map(k => ({ value: k, label: k }))
       }
     }, {
@@ -124,10 +124,7 @@ export class Example3 {
       sortable: true,
       minWidth: 100,
       type: FieldType.date,
-      editor: Editors.date,
-      params: {
-        i18n: this.i18n
-      }
+      editor: Editors.date
     }, {
       id: 'finish',
       name: 'Finish',
@@ -153,8 +150,7 @@ export class Example3 {
       type: FieldType.string,
       editor: Editors.multipleSelect,
       params: {
-        collection: Array.from(Array(10).keys()).map(k => ({ value: `Task ${k}`, label: `Task ${k}` })),
-        i18n: this.i18n
+        collection: Array.from(Array(10).keys()).map(k => ({ value: `Task ${k}`, label: `Task ${k}` }))
       }
     }];
 
@@ -170,6 +166,9 @@ export class Example3 {
       editCommandHandler: (item, column, editCommand) => {
         this._commandQueue.push(editCommand);
         editCommand.execute();
+      },
+      params: {
+        i18n: this.i18n
       }
     };
   }
@@ -196,7 +195,7 @@ export class Example3 {
         start: new Date(randomYear, randomMonth, randomDay),
         finish: new Date(randomYear, (randomMonth + 1), randomDay),
         effortDriven: (i % 5 === 0),
-        prerequisites: (i % 5 === 0) && i > 0 ? [ `Task ${i}`, `Task ${i - 1}` ] : []
+        prerequisites: (i % 5 === 0) && i > 0 ? [`Task ${i}`, `Task ${i - 1}`] : []
       };
     }
     this.dataset = mockedDataset;
