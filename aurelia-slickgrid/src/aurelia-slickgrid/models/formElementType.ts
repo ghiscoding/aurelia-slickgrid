@@ -14,9 +14,6 @@ export enum FormElementType {
   /** Custom Filter type */
   custom,
 
-  /** Input Filter type */
-  inputNoPlaceholder,
-
   /** TextArea element type */
   textarea
 }

@@ -39,7 +39,7 @@ export class GridOdataService implements BackendService {
   private _gridOptions: GridOption;
   private _grid: any;
   options: OdataOption;
-  pagination: Pagination;
+  pagination: Pagination | undefined;
   defaultOptions: OdataOption = {
     top: DEFAULT_ITEMS_PER_PAGE,
     orderBy: '',
@@ -55,11 +55,18 @@ export class GridOdataService implements BackendService {
   init(options: OdataOption, pagination?: Pagination, grid?: any): void {
     this._grid = grid;
     const mergedOptions = { ...this.defaultOptions, ...options };
-    this.odataService.options = { ...mergedOptions, top: mergedOptions.top || (pagination ? pagination.pageSize : null) || this.defaultOptions.top };
-    this.options = this.odataService.options;
-    if (pagination) {
-      this.pagination = pagination;
+    if (pagination && pagination.pageSize) {
+      mergedOptions.top = pagination.pageSize;
     }
+    this.odataService.options = { ...mergedOptions, top: mergedOptions.top || this.defaultOptions.top };
+    this.options = this.odataService.options;
+    this.pagination = pagination;
+
+    // save current pagination as Page 1 and page size as "top"
+    this._currentPagination = {
+      pageNumber: 1,
+      pageSize: this.odataService.options.top || this.defaultOptions.top
+    };
 
     if (grid && grid.getColumns && grid.getOptions) {
       this._columnDefinitions = grid.getColumns() || options.columnDefinitions;
@@ -129,6 +136,7 @@ export class GridOdataService implements BackendService {
       timer = setTimeout(() => {
         // loop through all columns to inspect filters & set the query
         this.updateFilters(args.columnFilters);
+
         this.resetPaginationOptions();
         resolve(this.odataService.buildQuery());
       }, debounceTypingDelay);
@@ -204,7 +212,7 @@ export class GridOdataService implements BackendService {
         const matches = fieldSearchValue.match(/^([<>!=\*]{0,2})(.*[^<>!=\*])([\*]?)$/); // group 1: Operator, 2: searchValue, 3: last char is '*' (meaning starts with, ex.: abc*)
         const operator = columnFilter.operator || ((matches) ? matches[1] : '');
         let searchValue = (!!matches) ? matches[2] : '';
-        const lastValueChar = (!!matches) ? matches[3] : '';
+        const lastValueChar = (!!matches) ? matches[3] : (operator === '*z' ? '*' : '');
         const bypassOdataQuery = columnFilter.bypassBackendQuery || false;
 
         // no need to query if search value is empty
@@ -249,9 +257,9 @@ export class GridOdataService implements BackendService {
               searchBy = tmpSearchTerms.join(' and ');
               searchBy = `(${searchBy})`;
             }
-          } else if (operator === '*' || lastValueChar !== '') {
+          } else if (operator === '*' || operator === 'a*' || operator === '*z' || lastValueChar !== '') {
             // first/last character is a '*' will be a startsWith or endsWith
-            searchBy = operator === '*'
+            searchBy = (operator === '*' || operator === '*z')
               ? `endswith(${fieldName}, '${searchValue}')`
               : `startswith(${fieldName}, '${searchValue}')`;
           } else if (fieldType === FieldType.date) {
@@ -383,6 +391,8 @@ export class GridOdataService implements BackendService {
     const filtersArray: ColumnFilter[] = ((typeof columnFilters === 'object') ? Object.keys(columnFilters).map(key => columnFilters[key]) : columnFilters) as CurrentFilter[];
 
     return filtersArray.map((filter) => {
+      const columnDef = filter.columnDef;
+      const header = (columnDef) ? (columnDef.headerKey || columnDef.name || '') : '';
       const tmpFilter: CurrentFilter = { columnId: filter.columnId || '' };
       if (filter.operator) {
         tmpFilter.operator = filter.operator;

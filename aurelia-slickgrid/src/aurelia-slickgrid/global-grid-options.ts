@@ -22,6 +22,7 @@ export const GlobalGridOptions: GridOption = {
     hideSyncResizeButton: true
   },
   datasetIdPropertyName: 'id',
+  defaultFilterPlaceholder: '&#128269;', // magnifying glass icon
   defaultFilterType: FilterType.input,
   enableAutoResize: true,
   enableRowSelection: true,

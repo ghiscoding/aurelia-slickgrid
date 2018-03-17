@@ -168,9 +168,8 @@ export class GraphqlService implements BackendService {
   init(serviceOptions?: GraphqlServiceOption, pagination?: Pagination, grid?: any): void {
     this._grid = grid;
     this.options = serviceOptions || {};
-    if (pagination) {
-      this.pagination = pagination;
-    }
+    this.pagination = pagination;
+
     if (grid && grid.getColumns && grid.getOptions) {
       this._columnDefinitions = grid.getColumns();
       this._gridOptions = grid.getOptions();
@@ -222,6 +221,13 @@ export class GraphqlService implements BackendService {
       paginationOptions = (this.options.paginationOptions || this.getInitPaginationOptions()) as GraphqlPaginationOption;
       paginationOptions.offset = 0;
     }
+
+    // save current pagination as Page 1 and page size as "first" set size
+    this._currentPagination = {
+      pageNumber: 1,
+      pageSize: paginationOptions.first
+    };
+
     this.updateOptions({ paginationOptions });
   }
 
@@ -257,6 +263,7 @@ export class GraphqlService implements BackendService {
       timer = setTimeout(() => {
         // loop through all columns to inspect filters & set the query
         this.updateFilters(args.columnFilters, false);
+
         this.resetPaginationOptions();
         resolve(this.buildQuery());
       }, debounceTypingDelay);
@@ -360,7 +367,7 @@ export class GraphqlService implements BackendService {
         const matches = fieldSearchValue.match(/^([<>!=\*]{0,2})(.*[^<>!=\*])([\*]?)$/); // group 1: Operator, 2: searchValue, 3: last char is '*' (meaning starts with, ex.: abc*)
         let operator = columnFilter.operator || ((matches) ? matches[1] : '');
         searchValue = (!!matches) ? matches[2] : '';
-        const lastValueChar = (!!matches) ? matches[3] : '';
+        const lastValueChar = (!!matches) ? matches[3] : (operator === '*z' ? '*' : '');
 
         // no need to query if search value is empty
         if (fieldName && searchValue === '' && searchTerms.length === 0) {
@@ -373,17 +380,18 @@ export class GraphqlService implements BackendService {
         } else if (typeof searchValue === 'string') {
           // escaping the search value
           searchValue = searchValue.replace(`'`, `''`); // escape single quotes by doubling them
-          if (operator === '*' || lastValueChar === '*') {
-            operator = (operator === '*') ? 'endsWith' : 'startsWith';
+          if (operator === '*' || operator === 'a*' || operator === '*z' || lastValueChar === '*') {
+            operator = (operator === '*' || operator === '*z') ? 'endsWith' : 'startsWith';
           }
         }
 
         // if we didn't find an Operator but we have a Filter Type, we should use default Operator
+        // multipleSelect is "IN", while singleSelect is "EQ", else don't map any operator
         if (!operator && columnDef.filter) {
           operator = mapOperatorByFilterType(columnDef.filter.type || '');
         }
 
-        // if we still don't have an operator then go with the mapping
+        // if we still don't have an operator find the proper Operator to use by it's field type
         if (!operator) {
           operator = mapOperatorByFieldType(columnDef.type || FieldType.string);
         }
@@ -521,7 +529,6 @@ export class GraphqlService implements BackendService {
   //
   // private functions
   // -------------------
-
   /**
    * Cast provided filters (could be in multiple format) into an array of ColumnFilter
    * @param columnFilters
@@ -531,6 +538,8 @@ export class GraphqlService implements BackendService {
     const filtersArray: ColumnFilter[] = (typeof columnFilters === 'object') ? Object.keys(columnFilters).map(key => columnFilters[key]) : columnFilters;
 
     return filtersArray.map((filter) => {
+      const columnDef = filter.columnDef;
+      const header = (columnDef) ? (columnDef.headerKey || columnDef.name || '') : '';
       const tmpFilter: CurrentFilter = { columnId: filter.columnId || '' };
       if (filter.operator) {
         tmpFilter.operator = filter.operator;

@@ -4,11 +4,7 @@ import { testFilterCondition } from './filterUtilities';
 import * as moment from 'moment';
 
 export const dateUtcFilterCondition: FilterCondition = (options: FilterConditionOption) => {
-  if (!options.filterSearchType) {
-    throw new Error('Date UTC filter is a special case and requires a filterSearchType to be provided in the column option, for example: { filterable: true, type: FieldType.dateUtc, filterSearchType: FieldType.dateIso }');
-  }
-
-  const searchDateFormat = mapMomentDateFormatWithFieldType(options.filterSearchType);
+  const searchDateFormat = mapMomentDateFormatWithFieldType(options.filterSearchType || options.fieldType);
   if (!moment(options.cellValue, moment.ISO_8601).isValid() || !moment(options.searchTerm, searchDateFormat, true).isValid()) {
     return true;
   }

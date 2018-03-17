@@ -49,7 +49,6 @@ export class Example6 {
 
   defineGrid() {
     this.columnDefinitions = [
-      { id: 'users', field: 'user.firstName', fields: ['user.middleName', 'user.lastName'], headerKey: 'NAME', filterable: true, sortable: true, type: FieldType.string },
       { id: 'name', field: 'name', headerKey: 'NAME', filterable: true, sortable: true, type: FieldType.string },
       {
         id: 'gender', field: 'gender', headerKey: 'GENDER', filterable: true, sortable: true,
@@ -68,7 +67,15 @@ export class Example6 {
         }
       },
       { id: 'billing.address.street', field: 'billing.address.street', headerKey: 'BILLING.ADDRESS.STREET', filterable: true, sortable: true },
-      { id: 'billing.address.zip', field: 'billing.address.zip', headerKey: 'BILLING.ADDRESS.ZIP', filterable: true, sortable: true, type: FieldType.number, formatter: Formatters.multiple, params: { formatters: [Formatters.complexObject, Formatters.translate] } },
+      {
+        id: 'billing.address.zip', field: 'billing.address.zip', headerKey: 'BILLING.ADDRESS.ZIP',
+        type: FieldType.number,
+        filterable: true, sortable: true,
+        filter: {
+          type: FilterType.compoundInput
+        },
+        formatter: Formatters.multiple, params: { formatters: [Formatters.complexObject, Formatters.translate] }
+      },
     ];
 
     this.gridOptions = {
@@ -83,11 +90,12 @@ export class Example6 {
         pageSize: defaultPageSize,
         totalItems: 0
       },
+
       presets: {
         // you can also type operator as string, e.g.: operator: 'EQ'
         filters: [
           { columnId: 'gender', searchTerm: 'male', operator: OperatorType.equal },
-          { columnId: 'users', searchTerm: 'John Doe', operator: OperatorType.contains },
+          { columnId: 'name', searchTerm: 'John Doe', operator: OperatorType.contains },
           { columnId: 'company', searchTerms: ['xyz'], operator: 'IN' }
         ],
         sorters: [

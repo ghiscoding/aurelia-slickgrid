@@ -79,11 +79,22 @@ export class Example4 {
           }
         }
       },
-      { id: 'complete', name: '% Complete', field: 'percentComplete', formatter: Formatters.percentCompleteBar, minWidth: 70, type: FieldType.number, filterable: true, sortable: true },
-      { id: 'start', name: 'Start', field: 'start', formatter: Formatters.dateIso, filterable: true, sortable: true, type: FieldType.date, minWidth: 60, exportWithFormatter: true },
-      { id: 'usDateShort', name: 'US Date Short', field: 'usDateShort', filterable: true, sortable: true, type: FieldType.dateUsShort, minWidth: 55 },
-      { id: 'utcDate', name: 'UTC Date', field: 'utcDate', formatter: Formatters.dateTimeIsoAmPm, filterable: true, sortable: true, minWidth: 115, type: FieldType.dateUtc, filterSearchType: FieldType.dateTimeIso },
-      { id: 'utcDate2', name: 'UTC Date (filterSearchType: dateUS)', field: 'utcDate', filterable: true, sortable: true, minWidth: 115, type: FieldType.dateUtc, filterSearchType: FieldType.dateUs },
+      {
+        id: 'complete', name: '% Complete', field: 'percentComplete', formatter: Formatters.percentCompleteBar, minWidth: 70, type: FieldType.number, sortable: true,
+        filterable: true, filter: { type: FilterType.compoundInput }
+      },
+      {
+        id: 'start', name: 'Start', field: 'start', formatter: Formatters.dateIso, sortable: true, minWidth: 75, exportWithFormatter: true,
+        type: FieldType.date, filterable: true, filter: { type: FilterType.compoundDate }
+      },
+      {
+        id: 'usDateShort', name: 'US Date Short', field: 'usDateShort', sortable: true, minWidth: 70, width: 70,
+        type: FieldType.dateUsShort, filterable: true, filter: { type: FilterType.compoundDate }
+      },
+      {
+        id: 'utcDate', name: 'UTC Date', field: 'utcDate', formatter: Formatters.dateTimeIsoAmPm, sortable: true, minWidth: 115,
+        type: FieldType.dateUtc, outputType: FieldType.dateTimeIsoAmPm, filterable: true, filter: { type: FilterType.compoundDate }
+      },
       {
         id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', minWidth: 85, maxWidth: 85, formatter: Formatters.checkmark,
         type: FieldType.boolean,
@@ -112,8 +123,9 @@ export class Example4 {
       presets: {
         filters: [
           { columnId: 'duration', searchTerms: [2, 22, 44] },
-          { columnId: 'complete', searchTerm: '>5' },
-          { columnId: 'effort-driven', searchTerm: true }
+          // { columnId: 'complete', searchTerm: '5', operator: '>' },
+          { columnId: 'usDateShort', operator: '<', searchTerm: '4/20/25' },
+          // { columnId: 'effort-driven', searchTerm: true }
         ],
         sorters: [
           { columnId: 'duration', direction: 'DESC' },
