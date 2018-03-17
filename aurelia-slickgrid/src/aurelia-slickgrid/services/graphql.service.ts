@@ -396,6 +396,7 @@ export class GraphqlService implements BackendService {
           operator = mapOperatorByFieldType(columnDef.type || FieldType.string);
         }
 
+        // build the search array
         searchByArray.push({
           field: fieldName,
           operator: mapOperatorType(operator),
