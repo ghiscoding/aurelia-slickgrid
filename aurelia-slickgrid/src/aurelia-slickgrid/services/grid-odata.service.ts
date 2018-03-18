@@ -65,7 +65,7 @@ export class GridOdataService implements BackendService {
     // save current pagination as Page 1 and page size as "top"
     this._currentPagination = {
       pageNumber: 1,
-      pageSize: this.odataService.options.top || this.defaultOptions.top
+      pageSize: this.odataService.options.top || this.defaultOptions.top || DEFAULT_PAGE_SIZE
     };
 
     if (grid && grid.getColumns && grid.getOptions) {

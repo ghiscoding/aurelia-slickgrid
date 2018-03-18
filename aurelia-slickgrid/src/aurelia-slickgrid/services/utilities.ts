@@ -268,7 +268,7 @@ export function mapOperatorByFieldType(fieldType: FieldType | string): OperatorT
  * @returns string map
  */
 export function mapOperatorByFilterType(filterType: FilterType | FormElementType | string): OperatorType {
-  let map: OperatorType;
+  let map = OperatorType.empty;
 
   switch (filterType) {
     case FilterType.multipleSelect:

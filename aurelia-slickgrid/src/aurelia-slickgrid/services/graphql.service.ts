@@ -168,7 +168,9 @@ export class GraphqlService implements BackendService {
   init(serviceOptions?: GraphqlServiceOption, pagination?: Pagination, grid?: any): void {
     this._grid = grid;
     this.options = serviceOptions || {};
-    this.pagination = pagination;
+    if (pagination) {
+      this.pagination = pagination;
+    }
 
     if (grid && grid.getColumns && grid.getOptions) {
       this._columnDefinitions = grid.getColumns();
@@ -208,7 +210,7 @@ export class GraphqlService implements BackendService {
    * Reset the pagination options
    */
   resetPaginationOptions() {
-    let paginationOptions;
+    let paginationOptions: GraphqlPaginationOption;
     if (this.options.isWithCursor) {
       // first, last, after, before
       paginationOptions = {
@@ -225,7 +227,7 @@ export class GraphqlService implements BackendService {
     // save current pagination as Page 1 and page size as "first" set size
     this._currentPagination = {
       pageNumber: 1,
-      pageSize: paginationOptions.first
+      pageSize: paginationOptions.first || DEFAULT_PAGE_SIZE
     };
 
     this.updateOptions({ paginationOptions });

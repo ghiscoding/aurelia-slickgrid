@@ -337,7 +337,7 @@ export class FilterService {
     if (columnDef && columnId !== 'selector' && columnDef.filterable) {
       let searchTerms: SearchTerm[] | undefined;
       let searchTerm: SearchTerm | undefined;
-      let operator: OperatorString | OperatorType;
+      let operator: OperatorString | OperatorType | undefined;
 
       if (this._columnFilters[columnDef.id]) {
         searchTerm = this._columnFilters[columnDef.id].searchTerm || undefined;

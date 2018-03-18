@@ -24,8 +24,8 @@ export class CompoundInputFilter implements Filter {
   private $selectOperatorElm: any;
   grid: any;
   gridOptions: GridOption;
-  operator: OperatorType | OperatorString;
-  searchTerm: SearchTerm;
+  operator: OperatorType | OperatorString | undefined;
+  searchTerm: SearchTerm | undefined;
   columnDef: Column;
   callback: FilterCallback;
   filterType = FilterType.compoundInput;
@@ -36,27 +36,29 @@ export class CompoundInputFilter implements Filter {
    * Initialize the Filter
    */
   init(args: FilterArguments) {
-    this.grid = args.grid;
-    this.callback = args.callback;
-    this.columnDef = args.columnDef;
-    this.operator = args.operator;
-    this.searchTerm = args.searchTerm;
-    if (this.grid && typeof this.grid.getOptions === 'function') {
-      this.gridOptions = this.grid.getOptions();
+    if (args) {
+      this.grid = args.grid;
+      this.callback = args.callback;
+      this.columnDef = args.columnDef;
+      this.operator = args.operator || '';
+      this.searchTerm = args.searchTerm;
+      if (this.grid && typeof this.grid.getOptions === 'function') {
+        this.gridOptions = this.grid.getOptions();
+      }
+
+      // step 1, create the DOM Element of the filter which contain the compound Operator+Input
+      // and initialize it if searchTerm is filled
+      this.$filterElm = this.createDomElement();
+
+      // step 3, subscribe to the keyup event and run the callback when that happens
+      // also add/remove "filled" class for styling purposes
+      this.$filterInputElm.keyup((e: any) => {
+        this.onTriggerEvent(e);
+      });
+      this.$selectOperatorElm.change((e: any) => {
+        this.onTriggerEvent(e);
+      });
     }
-
-    // step 1, create the DOM Element of the filter which contain the compound Operator+Input
-    // and initialize it if searchTerm is filled
-    this.$filterElm = this.createDomElement();
-
-    // step 3, subscribe to the keyup event and run the callback when that happens
-    // also add/remove "filled" class for styling purposes
-    this.$filterInputElm.keyup((e: any) => {
-      this.onTriggerEvent(e);
-    });
-    this.$selectOperatorElm.change((e: any) => {
-      this.onTriggerEvent(e);
-    });
   }
 
   /**
@@ -116,25 +118,25 @@ export class CompoundInputFilter implements Filter {
     switch (type) {
       case FieldType.string:
         optionValues = [
-          { operator: '', description: this.i18n.tr('CONTAINS') },
-          { operator: '=', description: this.i18n.tr('EQUALS') },
-          { operator: 'a*', description: this.i18n.tr('STARTS_WITH') },
-          { operator: '*z', description: this.i18n.tr('ENDS_WITH') },
+          { operator: '' as OperatorString, description: this.i18n.tr('CONTAINS') },
+          { operator: '=' as OperatorString, description: this.i18n.tr('EQUALS') },
+          { operator: 'a*' as OperatorString, description: this.i18n.tr('STARTS_WITH') },
+          { operator: '*z' as OperatorString, description: this.i18n.tr('ENDS_WITH') },
           /*
-          { operator: 'IN', description: this.i18n.tr('IN_COLLECTION_SEPERATED_BY_COMMA') },
-          { operator: 'NIN', description: this.i18n.tr('NOT_IN_COLLECTION_SEPERATED_BY_COMMA') },
+          { operator:  as OperatorString'IN', description: this.i18n.tr('IN_COLLECTION_SEPERATED_BY_COMMA') },
+          { operator:  as OperatorString'NIN', description: this.i18n.tr('NOT_IN_COLLECTION_SEPERATED_BY_COMMA') },
           */
         ];
         break;
       default:
         optionValues = [
-          { operator: '', description: this.i18n.tr('CONTAINS') },
-          { operator: '=', description: '' },
-          { operator: '<', description: '' },
-          { operator: '<=', description: '' },
-          { operator: '>', description: '' },
-          { operator: '>=', description: '' },
-          { operator: '<>', description: '' }];
+          { operator: '' as OperatorString, description: this.i18n.tr('CONTAINS') },
+          { operator: '=' as OperatorString, description: '' },
+          { operator: '<' as OperatorString, description: '' },
+          { operator: '<=' as OperatorString, description: '' },
+          { operator: '>' as OperatorString, description: '' },
+          { operator: '>=' as OperatorString, description: '' },
+          { operator: '<>' as OperatorString, description: '' }];
         break;
     }
 

@@ -13,13 +13,8 @@ import {
   OperatorType,
   SearchTerm
 } from './../models/index';
-
-// importing Flatpickr works better with a 'require'
-declare function require(name: string);
-require('flatpickr');
-
-// using external non-typed js libraries
-declare var $: any;
+import * as flatpickr from 'flatpickr';
+import * as $ from 'jquery';
 
 @inject(I18N)
 export class CompoundDateFilter implements Filter {
@@ -30,8 +25,8 @@ export class CompoundDateFilter implements Filter {
   flatInstance: any;
   grid: any;
   gridOptions: GridOption;
-  operator: OperatorType | OperatorString;
-  searchTerm: SearchTerm;
+  operator: OperatorType | OperatorString | undefined;
+  searchTerm: SearchTerm | undefined;
   columnDef: Column;
   callback: FilterCallback;
   filterType = FilterType.compoundDate;
@@ -42,27 +37,29 @@ export class CompoundDateFilter implements Filter {
    * Initialize the Filter
    */
   init(args: FilterArguments) {
-    this.grid = args.grid;
-    this.callback = args.callback;
-    this.columnDef = args.columnDef;
-    this.operator = args.operator;
-    this.searchTerm = args.searchTerm;
-    if (this.grid && typeof this.grid.getOptions === 'function') {
-      this.gridOptions = this.grid.getOptions();
+    if (args) {
+      this.grid = args.grid;
+      this.callback = args.callback;
+      this.columnDef = args.columnDef;
+      this.operator = args.operator || '';
+      this.searchTerm = args.searchTerm;
+      if (this.grid && typeof this.grid.getOptions === 'function') {
+        this.gridOptions = this.grid.getOptions();
+      }
+
+      // step 1, create the DOM Element of the filter which contain the compound Operator+Input
+      // and initialize it if searchTerm is filled
+      this.$filterElm = this.createDomElement();
+
+      // step 3, subscribe to the keyup event and run the callback when that happens
+      // also add/remove "filled" class for styling purposes
+      this.$filterInputElm.keyup((e: any) => {
+        this.onTriggerEvent(e);
+      });
+      this.$selectOperatorElm.change((e: any) => {
+        this.onTriggerEvent(e);
+      });
     }
-
-    // step 1, create the DOM Element of the filter which contain the compound Operator+Input
-    // and initialize it if searchTerm is filled
-    this.$filterElm = this.createDomElement();
-
-    // step 3, subscribe to the keyup event and run the callback when that happens
-    // also add/remove "filled" class for styling purposes
-    this.$filterInputElm.keyup((e: any) => {
-      this.onTriggerEvent(e);
-    });
-    this.$selectOperatorElm.change((e: any) => {
-      this.onTriggerEvent(e);
-    });
   }
 
   /**
@@ -113,7 +110,7 @@ export class CompoundDateFilter implements Filter {
       wrap: true,
       closeOnSelect: true,
       locale: (currentLocale !== 'en') ? this.loadFlatpickrLocale(currentLocale) : 'en',
-      onChange: (selectedDates, dateStr, instance) => {
+      onChange: (selectedDates: any[] | any, dateStr: string, instance: any) => {
         this._currentValue = dateStr;
         this.onTriggerEvent(undefined);
       },
@@ -125,8 +122,8 @@ export class CompoundDateFilter implements Filter {
     }
 
     const placeholder = (this.gridOptions) ? (this.gridOptions.defaultFilterPlaceholder || '') : '';
-    const $filterInputElm = $(`<div class=flatpickr><input type="text" class="form-control" data-input placeholder="${placeholder}"></div>`);
-    this.flatInstance = ($filterInputElm[0] && typeof $filterInputElm[0].flatpickr === 'function') ? $filterInputElm[0].flatpickr(pickerOptions) : null;
+    const $filterInputElm: any = $(`<div class=flatpickr><input type="text" class="form-control" data-input placeholder="${placeholder}"></div>`);
+    this.flatInstance = (flatpickr && $filterInputElm[0] && typeof $filterInputElm[0].flatpickr === 'function') ? $filterInputElm[0].flatpickr(pickerOptions) : null;
     return $filterInputElm;
   }
 
