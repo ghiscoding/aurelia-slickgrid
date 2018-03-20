@@ -49,9 +49,20 @@ export class Example4 {
     }
 
     this.columnDefinitions = [
-      { id: 'title', name: 'Title', field: 'title', filterable: true, sortable: true, type: FieldType.string, minWidth: 45 },
       {
-        id: 'description', name: 'Description', field: 'description', filterable: true, sortable: true, minWidth: 50,
+        id: 'title',
+        name: 'Title',
+        field: 'title',
+        filterable: true,
+        sortable: true,
+        type: FieldType.string,
+        minWidth: 45,
+        filter: {
+          type: FilterType.compoundInput
+        }
+      },
+      {
+        id: 'description', name: 'Description', field: 'description', filterable: true, sortable: true, minWidth: 80,
         type: FieldType.string,
         filter: {
           type: FilterType.custom,
@@ -59,14 +70,13 @@ export class Example4 {
         }
       },
       {
-        id: 'duration', name: 'Duration (days)', field: 'duration', sortable: true, type: FieldType.number,
+        id: 'duration', name: 'Duration (days)', field: 'duration', sortable: true, type: FieldType.number, exportCsvForceToKeepAsString: true,
         minWidth: 55,
         filterable: true,
         filter: {
           collection: multiSelectFilterArray,
           type: FilterType.multipleSelect,
-          searchTerms: [1, 10, 20], // default selection
-
+          searchTerms: [1, 33, 50], // default selection
           // we could add certain option(s) to the "multiple-select" plugin
           filterOptions: {
             maxHeight: 250,
@@ -74,11 +84,22 @@ export class Example4 {
           }
         }
       },
-      { id: 'complete', name: '% Complete', field: 'percentComplete', formatter: Formatters.percentCompleteBar, minWidth: 55, type: FieldType.number, filterable: true, sortable: true },
-      { id: 'start', name: 'Start', field: 'start', formatter: Formatters.dateIso, filterable: true, sortable: true, type: FieldType.date, minWidth: 60 },
-      { id: 'usDateShort', name: 'US Date Short', field: 'usDateShort', filterable: true, sortable: true, type: FieldType.dateUsShort, minWidth: 55 },
-      { id: 'utcDate', name: 'UTC Date', field: 'utcDate', formatter: Formatters.dateTimeIsoAmPm, filterable: true, sortable: true, minWidth: 115, type: FieldType.dateUtc, filterSearchType: FieldType.dateTimeIso },
-      { id: 'utcDate2', name: 'UTC Date (filterSearchType: dateUS)', field: 'utcDate', filterable: true, sortable: true, minWidth: 115, type: FieldType.dateUtc, filterSearchType: FieldType.dateUs },
+      {
+        id: 'complete', name: '% Complete', field: 'percentComplete', formatter: Formatters.percentCompleteBar, minWidth: 70, type: FieldType.number, sortable: true,
+        filterable: true, filter: { type: FilterType.compoundInput }
+      },
+      {
+        id: 'start', name: 'Start', field: 'start', formatter: Formatters.dateIso, sortable: true, minWidth: 75, exportWithFormatter: true,
+        type: FieldType.date, filterable: true, filter: { type: FilterType.compoundDate }
+      },
+      {
+        id: 'usDateShort', name: 'US Date Short', field: 'usDateShort', sortable: true, minWidth: 70, width: 70,
+        type: FieldType.dateUsShort, filterable: true, filter: { type: FilterType.compoundDate }
+      },
+      {
+        id: 'utcDate', name: 'UTC Date', field: 'utcDate', formatter: Formatters.dateTimeIsoAmPm, sortable: true, minWidth: 115,
+        type: FieldType.dateUtc, outputType: FieldType.dateTimeIsoAmPm, filterable: true, filter: { type: FilterType.compoundDate }
+      },
       {
         id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', minWidth: 85, maxWidth: 85, formatter: Formatters.checkmark,
         type: FieldType.boolean,
@@ -95,6 +116,7 @@ export class Example4 {
         }
       }
     ];
+
     this.gridOptions = {
       autoResize: {
         containerId: 'demo-container',

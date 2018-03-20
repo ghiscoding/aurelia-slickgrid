@@ -134,12 +134,18 @@
             "main": "jquery.event.drag-2.3.0"
           },
           {
+            "name": "jquery-ui-dist",
+            "path": "../node_modules/jquery-ui-dist",
+            "main": "jquery-ui"
+          },
+          {
             "name": "slickgrid",
             "main": "slick.grid",
             "path": "../node_modules/slickgrid",
             "deps": [
               "jquery",
-              "jquery-event"
+              "jquery-event",
+              "jquery-ui-dist"
             ]
           }
         ]

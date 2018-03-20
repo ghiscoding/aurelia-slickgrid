@@ -1,6 +1,6 @@
 import { inject } from 'aurelia-framework';
 import { HttpClient } from 'aurelia-http-client';
-import { FieldType, FormElementType, GridOdataService } from 'aurelia-slickgrid';
+import { FieldType, FilterType, FormElementType, GridOdataService } from 'aurelia-slickgrid';
 
 const defaultPageSize = 20;
 const sampleDataRoot = 'src/examples/slickgrid/sample-data';
@@ -41,7 +41,13 @@ export class Example5 {
 
   defineGrid() {
     this.columnDefinitions = [
-      { id: 'name', name: 'Name', field: 'name', filterable: true, sortable: true, type: FieldType.string, minWidth: 100 },
+      {
+        id: 'name', name: 'Name', field: 'name', sortable: true, type: FieldType.string,
+        filterable: true,
+        filter: {
+          type: FilterType.compoundInput
+        }
+      },
       {
         id: 'gender', name: 'Gender', field: 'gender', filterable: true, sortable: true, minWidth: 100,
         filter: {
