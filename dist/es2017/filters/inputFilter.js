@@ -15,6 +15,9 @@ export class InputFilter {
         this.callback = args.callback;
         this.columnDef = args.columnDef;
         this.searchTerm = args.searchTerm || '';
+        if (this.grid && typeof this.grid.getOptions === 'function') {
+            this.gridOptions = this.grid.getOptions();
+        }
         // step 1, create HTML string template
         const filterTemplate = this.buildTemplateHtmlString();
         // step 2, create the DOM Element of the filter & initialize it if searchTerm is filled
@@ -60,7 +63,8 @@ export class InputFilter {
      * Create the HTML template as a string
      */
     buildTemplateHtmlString() {
-        return `<input type="text" class="form-control search-filter" style="font-family: Segoe UI Symbol;" placeholder="&#128269;">`;
+        const placeholder = (this.gridOptions) ? (this.gridOptions.defaultFilterPlaceholder || '') : '';
+        return `<input type="text" class="form-control search-filter" placeholder="${placeholder}">`;
     }
     /**
      * From the html template string, create a DOM element

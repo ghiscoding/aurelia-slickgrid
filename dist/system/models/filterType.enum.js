@@ -16,8 +16,10 @@ System.register([], function (exports_1, context_1) {
                 FilterType[FilterType["singleSelect"] = 3] = "singleSelect";
                 /** Custom Filter type */
                 FilterType[FilterType["custom"] = 4] = "custom";
-                /** Input Filter type, but without a magnifying glass as placeholder */
-                FilterType[FilterType["inputNoPlaceholder"] = 5] = "inputNoPlaceholder";
+                /** Compound Date Filter (compound of Operator + Date picker) */
+                FilterType[FilterType["compoundDate"] = 5] = "compoundDate";
+                /** Compound Input Filter (compound of Operator + Input) */
+                FilterType[FilterType["compoundInput"] = 6] = "compoundInput";
             })(FilterType || (FilterType = {}));
             exports_1("FilterType", FilterType);
         }

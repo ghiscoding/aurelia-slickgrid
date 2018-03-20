@@ -1,4 +1,4 @@
-System.register(["aurelia-framework", "aurelia-event-aggregator", "./../filter-conditions/index", "./../filters/index", "./../models/index"], function (exports_1, context_1) {
+System.register(["aurelia-framework", "aurelia-event-aggregator", "./../filter-conditions/index", "./../filters/index", "./../models/index", "jquery"], function (exports_1, context_1) {
     "use strict";
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -42,7 +42,7 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./../filter-c
         }
     };
     var __moduleName = context_1 && context_1.id;
-    var aurelia_framework_1, aurelia_event_aggregator_1, index_1, index_2, index_3, FilterService;
+    var aurelia_framework_1, aurelia_event_aggregator_1, index_1, index_2, index_3, $, FilterService;
     return {
         setters: [
             function (aurelia_framework_1_1) {
@@ -59,6 +59,9 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./../filter-c
             },
             function (index_3_1) {
                 index_3 = index_3_1;
+            },
+            function ($_1) {
+                $ = $_1;
             }
         ],
         execute: function () {
@@ -197,7 +200,17 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./../filter-c
                         var matches = fieldSearchValue.match(/^([<>!=\*]{0,2})(.*[^<>!=\*])([\*]?)$/); // group 1: Operator, 2: searchValue, 3: last char is '*' (meaning starts with, ex.: abc*)
                         var operator = columnFilter.operator || ((matches) ? matches[1] : '');
                         var searchTerm = (!!matches) ? matches[2] : '';
-                        var lastValueChar = (!!matches) ? matches[3] : '';
+                        var lastValueChar = (!!matches) ? matches[3] : (operator === '*z' ? '*' : '');
+                        if (searchTerms && searchTerms.length > 0) {
+                            fieldSearchValue = searchTerms.join(',');
+                        }
+                        else if (typeof fieldSearchValue === 'string') {
+                            // escaping the search value
+                            fieldSearchValue = fieldSearchValue.replace("'", "''"); // escape single quotes by doubling them
+                            if (operator === '*' || operator === 'a*' || operator === '*z' || lastValueChar === '*') {
+                                operator = (operator === '*' || operator === '*z') ? index_3.OperatorType.endsWith : index_3.OperatorType.startsWith;
+                            }
+                        }
                         // when using a Filter that is not a custom type, we want to make sure that we have a default operator type
                         // for example a multiple-select should always be using IN, while a single select will use an EQ
                         var filterType = (columnDef.filter && columnDef.filter.type) ? columnDef.filter.type : index_3.FilterType.input;
@@ -287,6 +300,7 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./../filter-c
                         for (var _i = 0, _a = Object.keys(this._columnFilters); _i < _a.length; _i++) {
                             var colId = _a[_i];
                             var columnFilter = this._columnFilters[colId];
+                            var columnDef = columnFilter.columnDef;
                             var filter = { columnId: colId || '' };
                             if (columnFilter && columnFilter.searchTerms) {
                                 filter.searchTerms = columnFilter.searchTerms;
@@ -294,39 +308,50 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./../filter-c
                             else {
                                 filter.searchTerm = (columnFilter && (columnFilter.searchTerm !== undefined || columnFilter.searchTerm !== null)) ? columnFilter.searchTerm : undefined;
                             }
+                            if (columnFilter.operator) {
+                                filter.operator = columnFilter.operator;
+                            }
                             currentFilters.push(filter);
                         }
                     }
                     return currentFilters;
                 };
                 FilterService.prototype.callbackSearchEvent = function (e, args) {
-                    var targetValue = (e && e.target) ? e.target.value : undefined;
-                    var searchTerms = (args && args.searchTerms && Array.isArray(args.searchTerms)) ? args.searchTerms : [];
-                    var columnId = (args && args.columnDef) ? args.columnDef.id || '' : '';
-                    if (!targetValue && searchTerms.length === 0) {
-                        // delete the property from the columnFilters when it becomes empty
-                        // without doing this, it would leave an incorrect state of the previous column filters when filtering on another column
-                        delete this._columnFilters[columnId];
-                    }
-                    else {
-                        var colId = '' + columnId;
-                        this._columnFilters[colId] = {
-                            columnId: colId,
+                    if (args) {
+                        var searchTerm = args.searchTerm ? args.searchTerm : ((e && e.target) ? e.target.value : undefined);
+                        var searchTerms = (args.searchTerms && Array.isArray(args.searchTerms)) ? args.searchTerms : undefined;
+                        var columnDef = args.columnDef || null;
+                        var columnId = columnDef ? (columnDef.id || '') : '';
+                        var operator = args.operator || undefined;
+                        if (!searchTerm && (!searchTerms || (Array.isArray(searchTerms) && searchTerms.length === 0))) {
+                            // delete the property from the columnFilters when it becomes empty
+                            // without doing this, it would leave an incorrect state of the previous column filters when filtering on another column
+                            delete this._columnFilters[columnId];
+                        }
+                        else {
+                            var colId = '' + columnId;
+                            var colFilter = {
+                                columnId: colId,
+                                columnDef: columnDef,
+                                searchTerm: searchTerm,
+                                searchTerms: searchTerms,
+                            };
+                            if (operator) {
+                                colFilter.operator = operator;
+                            }
+                            this._columnFilters[colId] = colFilter;
+                        }
+                        this.triggerEvent(this._slickSubscriber, {
+                            columnId: columnId,
                             columnDef: args.columnDef || null,
-                            operator: args.operator || undefined,
-                            searchTerms: args.searchTerms || undefined,
-                            searchTerm: ((e && e.target) ? e.target.value : undefined),
-                        };
+                            columnFilters: this._columnFilters,
+                            operator: operator,
+                            searchTerm: searchTerm,
+                            searchTerms: searchTerms,
+                            serviceOptions: this._onFilterChangedOptions,
+                            grid: this._grid
+                        }, e);
                     }
-                    this.triggerEvent(this._slickSubscriber, {
-                        columnId: columnId,
-                        columnDef: args.columnDef || null,
-                        columnFilters: this._columnFilters,
-                        searchTerms: args.searchTerms || undefined,
-                        searchTerm: ((e && e.target) ? e.target.value : null),
-                        serviceOptions: this._onFilterChangedOptions,
-                        grid: this._grid
-                    }, e);
                 };
                 FilterService.prototype.addFilterTemplateToHeaderRow = function (args) {
                     var columnDef = args.column;
@@ -334,19 +359,23 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./../filter-c
                     if (columnDef && columnId !== 'selector' && columnDef.filterable) {
                         var searchTerms = void 0;
                         var searchTerm = void 0;
+                        var operator = void 0;
                         if (this._columnFilters[columnDef.id]) {
                             searchTerm = this._columnFilters[columnDef.id].searchTerm || undefined;
                             searchTerms = this._columnFilters[columnDef.id].searchTerms || undefined;
+                            operator = this._columnFilters[columnDef.id].operator || undefined;
                         }
                         else if (columnDef.filter) {
                             // when hiding/showing (with Column Picker or Grid Menu), it will try to re-create yet again the filters (since SlickGrid does a re-render)
                             // because of that we need to first get searchTerm(s) from the columnFilters (that is what the user last entered)
                             searchTerms = columnDef.filter.searchTerms || undefined;
                             searchTerm = columnDef.filter.searchTerm || undefined;
+                            operator = columnDef.filter.operator || undefined;
                             this.updateColumnFilters(searchTerm, searchTerms, columnDef);
                         }
                         var filterArguments = {
                             grid: this._grid,
+                            operator: operator,
                             searchTerm: searchTerm,
                             searchTerms: searchTerms,
                             columnDef: columnDef,
@@ -421,11 +450,12 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./../filter-c
                             });
                             if (columnPreset && columnPreset.searchTerm) {
                                 columnDef.filter = columnDef.filter || {};
+                                columnDef.filter.operator = columnPreset.operator;
                                 columnDef.filter.searchTerm = columnPreset.searchTerm;
                             }
                             if (columnPreset && columnPreset.searchTerms) {
                                 columnDef.filter = columnDef.filter || {};
-                                columnDef.filter.operator = columnDef.filter.operator || index_3.OperatorType.in;
+                                columnDef.filter.operator = columnPreset.operator || columnDef.filter.operator || index_3.OperatorType.in;
                                 columnDef.filter.searchTerms = columnPreset.searchTerms;
                             }
                         });
@@ -453,9 +483,15 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./../filter-c
                         };
                     }
                 };
-                FilterService.prototype.triggerEvent = function (evt, args, e) {
-                    e = e || new Slick.EventData();
-                    return evt.notify(args, e, args.grid);
+                FilterService.prototype.triggerEvent = function (slickEvent, args, e) {
+                    slickEvent = slickEvent || new Slick.Event();
+                    // event might have been created as a CustomEvent (e.g. CompoundDateFilter), without being a valid Slick.EventData.
+                    // if so we will create a new Slick.EventData and merge it with that CustomEvent to avoid having SlickGrid errors
+                    var event = e;
+                    if (e && typeof e.isPropagationStopped !== 'function') {
+                        event = $.extend({}, new Slick.EventData(), e);
+                    }
+                    slickEvent.notify(args, event, args.grid);
                 };
                 FilterService = __decorate([
                     aurelia_framework_1.inject(aurelia_event_aggregator_1.EventAggregator, index_2.FilterFactory)

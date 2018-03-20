@@ -17,7 +17,10 @@ export class DateEditor {
         this.defaultDate = this.args.item[this.args.column.field] || null;
         const inputFormat = mapFlatpickrDateFormatWithFieldType(this.args.column.type || FieldType.dateIso);
         const outputFormat = mapFlatpickrDateFormatWithFieldType(this.args.column.outputType || FieldType.dateUtc);
-        const currentLocale = this.getCurrentLocale(this.args.column, gridOptions);
+        let currentLocale = this.getCurrentLocale(this.args.column, gridOptions);
+        if (currentLocale.length > 2) {
+            currentLocale = currentLocale.substring(0, 2);
+        }
         const pickerOptions = {
             defaultDate: this.defaultDate,
             altInput: true,
@@ -35,7 +38,7 @@ export class DateEditor {
         this.show();
     }
     getCurrentLocale(columnDef, gridOptions) {
-        const params = columnDef.params || {};
+        const params = gridOptions.params || columnDef.params || {};
         if (params.i18n && params.i18n instanceof I18N) {
             return params.i18n.getLocale();
         }

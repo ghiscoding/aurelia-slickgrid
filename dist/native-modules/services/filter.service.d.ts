@@ -1,6 +1,6 @@
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { FilterFactory } from './../filters/index';
-import { Column, ColumnFilters, CurrentFilter, GridOption, OperatorType, OperatorString } from './../models/index';
+import { Column, ColumnFilters, CurrentFilter, FilterCallbackArg, GridOption } from './../models/index';
 export declare class FilterService {
     private ea;
     private filterFactory;
@@ -38,11 +38,7 @@ export declare class FilterService {
     disposeColumnFilters(): void;
     getColumnFilters(): ColumnFilters;
     getCurrentLocalFilters(): CurrentFilter[];
-    callbackSearchEvent(e: Event | undefined, args: {
-        columnDef: Column;
-        operator?: OperatorType | OperatorString;
-        searchTerms?: string[] | number[];
-    }): void;
+    callbackSearchEvent(e: Event | undefined, args: FilterCallbackArg): void;
     addFilterTemplateToHeaderRow(args: {
         column: Column;
         grid: any;
@@ -64,5 +60,5 @@ export declare class FilterService {
      */
     populateColumnFilterSearchTerms(gridOptions: GridOption, columnDefinitions: Column[]): Column[];
     private updateColumnFilters(searchTerm, searchTerms, columnDef);
-    private triggerEvent(evt, args, e);
+    private triggerEvent(slickEvent, args, e);
 }

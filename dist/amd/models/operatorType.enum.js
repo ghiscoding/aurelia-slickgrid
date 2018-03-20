@@ -3,6 +3,7 @@ define(["require", "exports"], function (require, exports) {
     Object.defineProperty(exports, "__esModule", { value: true });
     var OperatorType;
     (function (OperatorType) {
+        OperatorType["empty"] = "";
         OperatorType["contains"] = "Contains";
         OperatorType["lessThan"] = "LT";
         OperatorType["lessThanOrEqual"] = "LE";

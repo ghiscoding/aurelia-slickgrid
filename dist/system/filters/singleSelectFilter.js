@@ -34,21 +34,36 @@ System.register(["aurelia-i18n", "aurelia-framework", "./../models/index", "jque
         execute: function () {
             SingleSelectFilter = /** @class */ (function () {
                 function SingleSelectFilter(i18n) {
+                    var _this = this;
                     this.i18n = i18n;
                     this.filterType = index_1.FilterType.singleSelect;
+                    this.isFilled = false;
                     // default options used by this Filter, user can overwrite any of these by passing "otions"
                     this.defaultOptions = {
                         container: 'body',
                         filter: false,
                         maxHeight: 200,
-                        single: true
+                        single: true,
+                        onClose: function () {
+                            var selectedItems = _this.$filterElm.multipleSelect('getSelects');
+                            var selectedItem = '';
+                            if (Array.isArray(selectedItems) && selectedItems.length > 0) {
+                                selectedItem = selectedItems[0];
+                                _this.isFilled = true;
+                                _this.$filterElm.addClass('filled').siblings('div .search-filter').addClass('filled');
+                            }
+                            else {
+                                _this.isFilled = false;
+                                _this.$filterElm.removeClass('filled').siblings('div .search-filter').removeClass('filled');
+                            }
+                            _this.callback(undefined, { columnDef: _this.columnDef, operator: 'EQ', searchTerm: selectedItem });
+                        }
                     };
                 }
                 /**
                  * Initialize the Filter
                  */
                 SingleSelectFilter.prototype.init = function (args) {
-                    var _this = this;
                     if (!args) {
                         throw new Error('[Aurelia-SlickGrid] A filter must always have an "init()" with valid arguments.');
                     }
@@ -60,17 +75,6 @@ System.register(["aurelia-i18n", "aurelia-framework", "./../models/index", "jque
                     var filterTemplate = this.buildTemplateHtmlString();
                     // step 2, create the DOM Element of the filter & pre-load search term
                     this.createDomElement(filterTemplate);
-                    // step 3, subscribe to the change event and run the callback when that happens
-                    // also add/remove "filled" class for styling purposes
-                    this.$filterElm.change(function (e) {
-                        if (e && e.target && e.target.value) {
-                            _this.$filterElm.addClass('filled').siblings('div .search-filter').addClass('filled');
-                        }
-                        else {
-                            _this.$filterElm.removeClass('filled').siblings('div .search-filter').removeClass('filled');
-                        }
-                        _this.callback(e, { columnDef: _this.columnDef, operator: 'EQ' });
-                    });
                 };
                 /**
                  * Clear the filter values
@@ -128,6 +132,10 @@ System.register(["aurelia-i18n", "aurelia-framework", "./../models/index", "jque
                         var textLabel = ((option.labelKey || isEnabledTranslate) && _this.i18n && typeof _this.i18n.tr === 'function') ? _this.i18n.tr(labelKey || ' ') : labelKey;
                         // html text of each select option
                         options += "<option value=\"" + option[valueName] + "\" " + selected + ">" + textLabel + "</option>";
+                        // if there's a search term, we will add the "filled" class for styling purposes
+                        if (selected) {
+                            _this.isFilled = true;
+                        }
                     });
                     return "<select class=\"ms-filter search-filter\">" + options + "</select>";
                 };
@@ -154,15 +162,6 @@ System.register(["aurelia-i18n", "aurelia-framework", "./../models/index", "jque
                     var filterOptions = (this.columnDef.filter) ? this.columnDef.filter.filterOptions : {};
                     var options = __assign({}, this.defaultOptions, filterOptions);
                     this.$filterElm = this.$filterElm.multipleSelect(options);
-                };
-                SingleSelectFilter.prototype.subscribeOnClose = function () {
-                    var _this = this;
-                    this.$filterElm.multipleSelect({
-                        onClose: function () {
-                            var selectedItems = _this.$filterElm.multipleSelect('getSelects');
-                            _this.callback(undefined, { columnDef: _this.columnDef, operator: 'IN', searchTerms: selectedItems });
-                        }
-                    });
                 };
                 SingleSelectFilter = __decorate([
                     aurelia_framework_1.inject(aurelia_i18n_1.I18N)

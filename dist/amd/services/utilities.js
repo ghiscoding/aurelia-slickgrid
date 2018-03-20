@@ -133,7 +133,7 @@ define(["require", "exports", "../models/index", "moment"], function (require, e
                 map = 'm/d/Y';
                 break;
             case index_1.FieldType.dateUsShort:
-                map = 'M/D/YY';
+                map = 'm/d/y';
                 break;
             case index_1.FieldType.dateTimeUs:
                 map = 'm/d/Y H:i:S';
@@ -142,13 +142,13 @@ define(["require", "exports", "../models/index", "moment"], function (require, e
                 map = 'm/d/Y h:i:S K'; // there is no lowercase in Flatpickr :(
                 break;
             case index_1.FieldType.dateTimeUsAM_PM:
-                map = 'M/D/YY h:i:s K';
+                map = 'm/d/Y h:i:s K';
                 break;
             case index_1.FieldType.dateTimeUsShort:
-                map = 'M/D/YY H:i:s';
+                map = 'm/d/y H:i:s';
                 break;
             case index_1.FieldType.dateTimeUsShortAmPm:
-                map = 'M/D/YY h:i:s K'; // there is no lowercase in Flatpickr :(
+                map = 'm/d/y h:i:s K'; // there is no lowercase in Flatpickr :(
                 break;
             case index_1.FieldType.dateUtc:
                 map = 'Z';
@@ -234,8 +234,8 @@ define(["require", "exports", "../models/index", "moment"], function (require, e
                 break;
             case index_1.FieldType.float:
             case index_1.FieldType.number:
-            case index_1.FieldType.dateIso:
             case index_1.FieldType.date:
+            case index_1.FieldType.dateIso:
             case index_1.FieldType.dateUtc:
             case index_1.FieldType.dateTime:
             case index_1.FieldType.dateTimeIso:
@@ -263,7 +263,7 @@ define(["require", "exports", "../models/index", "moment"], function (require, e
      * @returns string map
      */
     function mapOperatorByFilterType(filterType) {
-        var map;
+        var map = index_1.OperatorType.empty;
         switch (filterType) {
             case index_1.FilterType.multipleSelect:
                 map = index_1.OperatorType.in;
@@ -272,7 +272,6 @@ define(["require", "exports", "../models/index", "moment"], function (require, e
                 map = index_1.OperatorType.equal;
                 break;
             default:
-                map = index_1.OperatorType.contains;
                 break;
         }
         return map;

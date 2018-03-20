@@ -1,6 +1,4 @@
-import { SearchTerm } from './searchTerm.type';
-import { Column } from './column.interface';
-import { OperatorString } from './operatorString';
+import { Column, OperatorString, SearchTerm } from './../models/index';
 export interface FilterCallbackArg {
     columnDef: Column;
     operator?: OperatorString;

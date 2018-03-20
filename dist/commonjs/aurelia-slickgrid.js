@@ -50,7 +50,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 // import 3rd party vendor libs
-require("slickgrid/lib/jquery-ui-1.11.3");
+require("jquery-ui-dist/jquery-ui");
 require("slickgrid/lib/jquery.event.drag-2.3.0");
 require("slickgrid/slick.core");
 require("slickgrid/slick.dataview");

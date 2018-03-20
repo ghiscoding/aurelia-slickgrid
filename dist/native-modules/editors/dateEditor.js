@@ -19,6 +19,9 @@ var DateEditor = /** @class */ (function () {
         var inputFormat = mapFlatpickrDateFormatWithFieldType(this.args.column.type || FieldType.dateIso);
         var outputFormat = mapFlatpickrDateFormatWithFieldType(this.args.column.outputType || FieldType.dateUtc);
         var currentLocale = this.getCurrentLocale(this.args.column, gridOptions);
+        if (currentLocale.length > 2) {
+            currentLocale = currentLocale.substring(0, 2);
+        }
         var pickerOptions = {
             defaultDate: this.defaultDate,
             altInput: true,
@@ -36,7 +39,7 @@ var DateEditor = /** @class */ (function () {
         this.show();
     };
     DateEditor.prototype.getCurrentLocale = function (columnDef, gridOptions) {
-        var params = columnDef.params || {};
+        var params = gridOptions.params || columnDef.params || {};
         if (params.i18n && params.i18n instanceof I18N) {
             return params.i18n.getLocale();
         }

@@ -10,7 +10,7 @@ export declare class GridOdataService implements BackendService {
     private _gridOptions;
     private _grid;
     options: OdataOption;
-    pagination: Pagination;
+    pagination: Pagination | undefined;
     defaultOptions: OdataOption;
     constructor(odataService: OdataService);
     buildQuery(): string;

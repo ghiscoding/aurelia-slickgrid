@@ -6,6 +6,7 @@ System.register([], function (exports_1, context_1) {
         setters: [],
         execute: function () {
             (function (OperatorType) {
+                OperatorType["empty"] = "";
                 OperatorType["contains"] = "Contains";
                 OperatorType["lessThan"] = "LT";
                 OperatorType["lessThanOrEqual"] = "LE";

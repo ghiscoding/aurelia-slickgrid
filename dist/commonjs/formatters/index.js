@@ -8,6 +8,7 @@ var checkmarkFormatter_1 = require("./checkmarkFormatter");
 var complexObjectFormatter_1 = require("./complexObjectFormatter");
 var dateIsoFormatter_1 = require("./dateIsoFormatter");
 var dateTimeIsoAmPmFormatter_1 = require("./dateTimeIsoAmPmFormatter");
+var dateTimeIsoFormatter_1 = require("./dateTimeIsoFormatter");
 var dateTimeUsAmPmFormatter_1 = require("./dateTimeUsAmPmFormatter");
 var dateTimeUsFormatter_1 = require("./dateTimeUsFormatter");
 var dateUsFormatter_1 = require("./dateUsFormatter");
@@ -59,7 +60,7 @@ exports.Formatters = {
     /** Takes a Date object and displays it as an ISO Date format */
     dateIso: dateIsoFormatter_1.dateIsoFormatter,
     /** Takes a Date object and displays it as an ISO Date+Time format */
-    dateTimeIso: dateIsoFormatter_1.dateIsoFormatter,
+    dateTimeIso: dateTimeIsoFormatter_1.dateTimeIsoFormatter,
     /** Takes a Date object and displays it as an ISO Date+Time+(am/pm) format */
     dateTimeIsoAmPm: dateTimeIsoAmPmFormatter_1.dateTimeIsoAmPmFormatter,
     /** Takes a Date object and displays it as an US Date format */

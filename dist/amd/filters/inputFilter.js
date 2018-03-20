@@ -17,6 +17,9 @@ define(["require", "exports", "./../models/index", "jquery"], function (require,
             this.callback = args.callback;
             this.columnDef = args.columnDef;
             this.searchTerm = args.searchTerm || '';
+            if (this.grid && typeof this.grid.getOptions === 'function') {
+                this.gridOptions = this.grid.getOptions();
+            }
             // step 1, create HTML string template
             var filterTemplate = this.buildTemplateHtmlString();
             // step 2, create the DOM Element of the filter & initialize it if searchTerm is filled
@@ -63,7 +66,8 @@ define(["require", "exports", "./../models/index", "jquery"], function (require,
          * Create the HTML template as a string
          */
         InputFilter.prototype.buildTemplateHtmlString = function () {
-            return "<input type=\"text\" class=\"form-control search-filter\" style=\"font-family: Segoe UI Symbol;\" placeholder=\"&#128269;\">";
+            var placeholder = (this.gridOptions) ? (this.gridOptions.defaultFilterPlaceholder || '') : '';
+            return "<input type=\"text\" class=\"form-control search-filter\" placeholder=\"" + placeholder + "\">";
         };
         /**
          * From the html template string, create a DOM element

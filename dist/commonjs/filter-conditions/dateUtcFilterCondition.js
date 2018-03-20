@@ -4,10 +4,7 @@ var utilities_1 = require("./../services/utilities");
 var filterUtilities_1 = require("./filterUtilities");
 var moment = require("moment");
 exports.dateUtcFilterCondition = function (options) {
-    if (!options.filterSearchType) {
-        throw new Error('Date UTC filter is a special case and requires a filterSearchType to be provided in the column option, for example: { filterable: true, type: FieldType.dateUtc, filterSearchType: FieldType.dateIso }');
-    }
-    var searchDateFormat = utilities_1.mapMomentDateFormatWithFieldType(options.filterSearchType);
+    var searchDateFormat = utilities_1.mapMomentDateFormatWithFieldType(options.filterSearchType || options.fieldType);
     if (!moment(options.cellValue, moment.ISO_8601).isValid() || !moment(options.searchTerm, searchDateFormat, true).isValid()) {
         return true;
     }

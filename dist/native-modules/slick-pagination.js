@@ -65,18 +65,15 @@ var SlickPaginationCustomElement = /** @class */ (function () {
         if (!binding.gridPaginationOptions || (binding.gridPaginationOptions.pagination && binding.gridPaginationOptions.pagination.totalItems !== this.totalItems)) {
             this.refreshPagination();
         }
-        // Subscribe to Event Emitter of Filter & Sort changed, go back to page 1 when that happen
+        // Subscribe to Filter changed and go back to page 1 when that happen
         this._filterSubscriber = this.ea.subscribe('filterService:filterChanged', function (data) {
-            _this.refreshPagination(true);
-        });
-        this._sorterSubscriber = this.ea.subscribe('sortService:sortChanged', function (data) {
             _this.refreshPagination(true);
         });
     };
     SlickPaginationCustomElement.prototype.gridPaginationOptionsChanged = function (newGridOptions) {
         this._gridPaginationOptions = newGridOptions;
         if (newGridOptions) {
-            this.refreshPagination(true);
+            this.refreshPagination();
             this._isFirstRender = false;
         }
     };
@@ -120,9 +117,6 @@ var SlickPaginationCustomElement = /** @class */ (function () {
         if (this._filterSubscriber) {
             this._filterSubscriber.dispose();
         }
-        if (this._sorterSubscriber) {
-            this._sorterSubscriber.dispose();
-        }
     };
     SlickPaginationCustomElement.prototype.onChangeItemPerPage = function (event) {
         var itemsPerPage = +event.target.value;
@@ -145,14 +139,17 @@ var SlickPaginationCustomElement = /** @class */ (function () {
             }
             // if totalItems changed, we should always go back to the first page and recalculation the From-To indexes
             if (isPageNumberReset || this.totalItems !== pagination.totalItems) {
-                if (this._isFirstRender && pagination.pageNumber && pagination.pageNumber > 1) {
+                if (!isPageNumberReset && this._isFirstRender && pagination.pageNumber && pagination.pageNumber > 1) {
                     this.pageNumber = pagination.pageNumber || 1;
+                    this._isFirstRender = false;
                 }
                 else {
                     this.pageNumber = 1;
                 }
-                // also reset the "offset" of backend service
-                backendApi.service.resetPaginationOptions();
+                // when page number is set to 1 then also reset the "offset" of backend service
+                if (this.pageNumber === 1) {
+                    backendApi.service.resetPaginationOptions();
+                }
             }
             // calculate and refresh the multiple properties of the pagination UI
             this.paginationPageSizes = this._gridPaginationOptions.pagination.pageSizes;

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var index_1 = require("../models/index");
 var filterUtilities_1 = require("./filterUtilities");
 exports.stringFilterCondition = function (options) {
     // make sure the cell value is a string by casting it when possible
@@ -7,10 +8,10 @@ exports.stringFilterCondition = function (options) {
     // make both the cell value and search value lower for case insensitive comparison
     var cellValue = options.cellValue.toLowerCase();
     var searchTerm = (typeof options.searchTerm === 'string') ? options.searchTerm.toLowerCase() : options.searchTerm;
-    if (options.operator === '*') {
+    if (options.operator === '*' || options.operator === index_1.OperatorType.endsWith) {
         return cellValue.endsWith(searchTerm);
     }
-    else if (options.operator === '' && options.cellValueLastChar === '*') {
+    else if ((options.operator === '' && options.cellValueLastChar === '*') || options.operator === index_1.OperatorType.startsWith) {
         return cellValue.startsWith(searchTerm);
     }
     else if (options.operator === '') {

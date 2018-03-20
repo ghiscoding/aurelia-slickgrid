@@ -9,6 +9,7 @@ export declare class SingleSelectFilter implements Filter {
     callback: FilterCallback;
     defaultOptions: MultipleSelectOption;
     filterType: FilterType;
+    isFilled: boolean;
     constructor(i18n: I18N);
     /**
      * Initialize the Filter
@@ -36,5 +37,4 @@ export declare class SingleSelectFilter implements Filter {
      * @param filterTemplate
      */
     private createDomElement(filterTemplate);
-    private subscribeOnClose();
 }

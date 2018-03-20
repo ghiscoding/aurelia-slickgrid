@@ -16,10 +16,8 @@ System.register([], function (exports_1, context_1) {
                 FormElementType[FormElementType["singleSelect"] = 3] = "singleSelect";
                 /** Custom Filter type */
                 FormElementType[FormElementType["custom"] = 4] = "custom";
-                /** Input Filter type */
-                FormElementType[FormElementType["inputNoPlaceholder"] = 5] = "inputNoPlaceholder";
                 /** TextArea element type */
-                FormElementType[FormElementType["textarea"] = 6] = "textarea";
+                FormElementType[FormElementType["textarea"] = 5] = "textarea";
             })(FormElementType || (FormElementType = {}));
             exports_1("FormElementType", FormElementType);
         }

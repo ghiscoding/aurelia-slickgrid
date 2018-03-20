@@ -1,7 +1,7 @@
-System.register(["./arrayToCsvFormatter", "./checkboxFormatter", "./checkmarkFormatter", "./complexObjectFormatter", "./dateIsoFormatter", "./dateTimeIsoAmPmFormatter", "./dateTimeUsAmPmFormatter", "./dateTimeUsFormatter", "./dateUsFormatter", "./deleteIconFormatter", "./editIconFormatter", "./hyperlinkFormatter", "./hyperlinkUriPrefixFormatter", "./infoIconFormatter", "./lowercaseFormatter", "./multipleFormatter", "./percentCompleteFormatter", "./percentCompleteBarFormatter", "./progressBarFormatter", "./translateFormatter", "./translateBooleanFormatter", "./uppercaseFormatter", "./yesNoFormatter", "./collectionFormatter"], function (exports_1, context_1) {
+System.register(["./arrayToCsvFormatter", "./checkboxFormatter", "./checkmarkFormatter", "./complexObjectFormatter", "./dateIsoFormatter", "./dateTimeIsoAmPmFormatter", "./dateTimeIsoFormatter", "./dateTimeUsAmPmFormatter", "./dateTimeUsFormatter", "./dateUsFormatter", "./deleteIconFormatter", "./editIconFormatter", "./hyperlinkFormatter", "./hyperlinkUriPrefixFormatter", "./infoIconFormatter", "./lowercaseFormatter", "./multipleFormatter", "./percentCompleteFormatter", "./percentCompleteBarFormatter", "./progressBarFormatter", "./translateFormatter", "./translateBooleanFormatter", "./uppercaseFormatter", "./yesNoFormatter", "./collectionFormatter"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var arrayToCsvFormatter_1, checkboxFormatter_1, checkmarkFormatter_1, complexObjectFormatter_1, dateIsoFormatter_1, dateTimeIsoAmPmFormatter_1, dateTimeUsAmPmFormatter_1, dateTimeUsFormatter_1, dateUsFormatter_1, deleteIconFormatter_1, editIconFormatter_1, hyperlinkFormatter_1, hyperlinkUriPrefixFormatter_1, infoIconFormatter_1, lowercaseFormatter_1, multipleFormatter_1, percentCompleteFormatter_1, percentCompleteBarFormatter_1, progressBarFormatter_1, translateFormatter_1, translateBooleanFormatter_1, uppercaseFormatter_1, yesNoFormatter_1, collectionFormatter_1, Formatters;
+    var arrayToCsvFormatter_1, checkboxFormatter_1, checkmarkFormatter_1, complexObjectFormatter_1, dateIsoFormatter_1, dateTimeIsoAmPmFormatter_1, dateTimeIsoFormatter_1, dateTimeUsAmPmFormatter_1, dateTimeUsFormatter_1, dateUsFormatter_1, deleteIconFormatter_1, editIconFormatter_1, hyperlinkFormatter_1, hyperlinkUriPrefixFormatter_1, infoIconFormatter_1, lowercaseFormatter_1, multipleFormatter_1, percentCompleteFormatter_1, percentCompleteBarFormatter_1, progressBarFormatter_1, translateFormatter_1, translateBooleanFormatter_1, uppercaseFormatter_1, yesNoFormatter_1, collectionFormatter_1, Formatters;
     return {
         setters: [
             function (arrayToCsvFormatter_1_1) {
@@ -21,6 +21,9 @@ System.register(["./arrayToCsvFormatter", "./checkboxFormatter", "./checkmarkFor
             },
             function (dateTimeIsoAmPmFormatter_1_1) {
                 dateTimeIsoAmPmFormatter_1 = dateTimeIsoAmPmFormatter_1_1;
+            },
+            function (dateTimeIsoFormatter_1_1) {
+                dateTimeIsoFormatter_1 = dateTimeIsoFormatter_1_1;
             },
             function (dateTimeUsAmPmFormatter_1_1) {
                 dateTimeUsAmPmFormatter_1 = dateTimeUsAmPmFormatter_1_1;
@@ -111,7 +114,7 @@ System.register(["./arrayToCsvFormatter", "./checkboxFormatter", "./checkmarkFor
                 /** Takes a Date object and displays it as an ISO Date format */
                 dateIso: dateIsoFormatter_1.dateIsoFormatter,
                 /** Takes a Date object and displays it as an ISO Date+Time format */
-                dateTimeIso: dateIsoFormatter_1.dateIsoFormatter,
+                dateTimeIso: dateTimeIsoFormatter_1.dateTimeIsoFormatter,
                 /** Takes a Date object and displays it as an ISO Date+Time+(am/pm) format */
                 dateTimeIsoAmPm: dateTimeIsoAmPmFormatter_1.dateTimeIsoAmPmFormatter,
                 /** Takes a Date object and displays it as an US Date format */

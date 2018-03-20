@@ -1,9 +1,12 @@
-System.register(["./filterUtilities"], function (exports_1, context_1) {
+System.register(["../models/index", "./filterUtilities"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var filterUtilities_1, stringFilterCondition;
+    var index_1, filterUtilities_1, stringFilterCondition;
     return {
         setters: [
+            function (index_1_1) {
+                index_1 = index_1_1;
+            },
             function (filterUtilities_1_1) {
                 filterUtilities_1 = filterUtilities_1_1;
             }
@@ -15,10 +18,10 @@ System.register(["./filterUtilities"], function (exports_1, context_1) {
                 // make both the cell value and search value lower for case insensitive comparison
                 var cellValue = options.cellValue.toLowerCase();
                 var searchTerm = (typeof options.searchTerm === 'string') ? options.searchTerm.toLowerCase() : options.searchTerm;
-                if (options.operator === '*') {
+                if (options.operator === '*' || options.operator === index_1.OperatorType.endsWith) {
                     return cellValue.endsWith(searchTerm);
                 }
-                else if (options.operator === '' && options.cellValueLastChar === '*') {
+                else if ((options.operator === '' && options.cellValueLastChar === '*') || options.operator === index_1.OperatorType.startsWith) {
                     return cellValue.startsWith(searchTerm);
                 }
                 else if (options.operator === '') {

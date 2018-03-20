@@ -37,6 +37,9 @@ System.register(["./../services/utilities", "./../models/index", "aurelia-i18n",
                     var inputFormat = utilities_1.mapFlatpickrDateFormatWithFieldType(this.args.column.type || index_1.FieldType.dateIso);
                     var outputFormat = utilities_1.mapFlatpickrDateFormatWithFieldType(this.args.column.outputType || index_1.FieldType.dateUtc);
                     var currentLocale = this.getCurrentLocale(this.args.column, gridOptions);
+                    if (currentLocale.length > 2) {
+                        currentLocale = currentLocale.substring(0, 2);
+                    }
                     var pickerOptions = {
                         defaultDate: this.defaultDate,
                         altInput: true,
@@ -54,7 +57,7 @@ System.register(["./../services/utilities", "./../models/index", "aurelia-i18n",
                     this.show();
                 };
                 DateEditor.prototype.getCurrentLocale = function (columnDef, gridOptions) {
-                    var params = columnDef.params || {};
+                    var params = gridOptions.params || columnDef.params || {};
                     if (params.i18n && params.i18n instanceof aurelia_i18n_1.I18N) {
                         return params.i18n.getLocale();
                     }

@@ -13,8 +13,10 @@ define(["require", "exports"], function (require, exports) {
         FilterType[FilterType["singleSelect"] = 3] = "singleSelect";
         /** Custom Filter type */
         FilterType[FilterType["custom"] = 4] = "custom";
-        /** Input Filter type, but without a magnifying glass as placeholder */
-        FilterType[FilterType["inputNoPlaceholder"] = 5] = "inputNoPlaceholder";
+        /** Compound Date Filter (compound of Operator + Date picker) */
+        FilterType[FilterType["compoundDate"] = 5] = "compoundDate";
+        /** Compound Input Filter (compound of Operator + Input) */
+        FilterType[FilterType["compoundInput"] = 6] = "compoundInput";
     })(FilterType = exports.FilterType || (exports.FilterType = {}));
 });
 //# sourceMappingURL=filterType.enum.js.map

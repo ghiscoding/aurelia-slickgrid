@@ -10,7 +10,9 @@ export class SingleSelectEditor {
          * The options label/value object to use in the select list
          */
         this.collection = [];
-        this._i18n = this.args.column.params.i18n;
+        const gridOptions = this.args.grid.getOptions();
+        const params = gridOptions.params || this.args.column.params || {};
+        this._i18n = params.i18n;
         this.defaultOptions = {
             container: 'body',
             filter: false,

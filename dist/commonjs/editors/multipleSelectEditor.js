@@ -20,7 +20,9 @@ var MultipleSelectEditor = /** @class */ (function () {
          * The options label/value object to use in the select list
          */
         this.collection = [];
-        this._i18n = this.args.column.params.i18n;
+        var gridOptions = this.args.grid.getOptions();
+        var params = gridOptions.params || this.args.column.params || {};
+        this._i18n = params.i18n;
         this.defaultOptions = {
             container: 'body',
             filter: false,

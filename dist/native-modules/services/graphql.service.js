@@ -178,6 +178,11 @@ var GraphqlService = /** @class */ (function () {
             paginationOptions = (this.options.paginationOptions || this.getInitPaginationOptions());
             paginationOptions.offset = 0;
         }
+        // save current pagination as Page 1 and page size as "first" set size
+        this._currentPagination = {
+            pageNumber: 1,
+            pageSize: paginationOptions.first || DEFAULT_PAGE_SIZE
+        };
         this.updateOptions({ paginationOptions: paginationOptions });
     };
     GraphqlService.prototype.updateOptions = function (serviceOptions) {
@@ -299,7 +304,7 @@ var GraphqlService = /** @class */ (function () {
                 var matches = fieldSearchValue.match(/^([<>!=\*]{0,2})(.*[^<>!=\*])([\*]?)$/); // group 1: Operator, 2: searchValue, 3: last char is '*' (meaning starts with, ex.: abc*)
                 var operator = columnFilter_1.operator || ((matches) ? matches[1] : '');
                 searchValue = (!!matches) ? matches[2] : '';
-                var lastValueChar = (!!matches) ? matches[3] : '';
+                var lastValueChar = (!!matches) ? matches[3] : (operator === '*z' ? '*' : '');
                 // no need to query if search value is empty
                 if (fieldName && searchValue === '' && searchTerms.length === 0) {
                     return "continue";
@@ -311,18 +316,20 @@ var GraphqlService = /** @class */ (function () {
                 else if (typeof searchValue === 'string') {
                     // escaping the search value
                     searchValue = searchValue.replace("'", "''"); // escape single quotes by doubling them
-                    if (operator === '*' || lastValueChar === '*') {
-                        operator = (operator === '*') ? 'endsWith' : 'startsWith';
+                    if (operator === '*' || operator === 'a*' || operator === '*z' || lastValueChar === '*') {
+                        operator = (operator === '*' || operator === '*z') ? 'endsWith' : 'startsWith';
                     }
                 }
                 // if we didn't find an Operator but we have a Filter Type, we should use default Operator
+                // multipleSelect is "IN", while singleSelect is "EQ", else don't map any operator
                 if (!operator && columnDef.filter) {
                     operator = mapOperatorByFilterType(columnDef.filter.type || '');
                 }
-                // if we still don't have an operator then go with the mapping
+                // if we still don't have an operator find the proper Operator to use by it's field type
                 if (!operator) {
                     operator = mapOperatorByFieldType(columnDef.type || FieldType.string);
                 }
+                // build the search array
                 searchByArray.push({
                     field: fieldName,
                     operator: mapOperatorType(operator),
@@ -374,6 +381,10 @@ var GraphqlService = /** @class */ (function () {
             currentSorters.forEach(function (sorter) { return sorter.direction = sorter.direction.toUpperCase(); });
             // display the correct sorting icons on the UI, for that it requires (columnId, sortAsc) properties
             var tmpSorterArray = currentSorters.map(function (sorter) {
+                graphqlSorters.push({
+                    field: sorter.columnId + '',
+                    direction: sorter.direction
+                });
                 return {
                     columnId: sorter.columnId,
                     sortAsc: sorter.direction.toUpperCase() === SortDirection.ASC
@@ -456,6 +467,8 @@ var GraphqlService = /** @class */ (function () {
         // keep current filters & always save it as an array (columnFilters can be an object when it is dealt by SlickGrid Filter)
         var filtersArray = (typeof columnFilters === 'object') ? Object.keys(columnFilters).map(function (key) { return columnFilters[key]; }) : columnFilters;
         return filtersArray.map(function (filter) {
+            var columnDef = filter.columnDef;
+            var header = (columnDef) ? (columnDef.headerKey || columnDef.name || '') : '';
             var tmpFilter = { columnId: filter.columnId || '' };
             if (filter.operator) {
                 tmpFilter.operator = filter.operator;

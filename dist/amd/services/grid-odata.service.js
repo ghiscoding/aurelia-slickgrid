@@ -34,11 +34,17 @@ define(["require", "exports", "aurelia-framework", "./utilities", "./../models/i
         GridOdataService.prototype.init = function (options, pagination, grid) {
             this._grid = grid;
             var mergedOptions = __assign({}, this.defaultOptions, options);
-            this.odataService.options = __assign({}, mergedOptions, { top: mergedOptions.top || (pagination ? pagination.pageSize : null) || this.defaultOptions.top });
-            this.options = this.odataService.options;
-            if (pagination) {
-                this.pagination = pagination;
+            if (pagination && pagination.pageSize) {
+                mergedOptions.top = pagination.pageSize;
             }
+            this.odataService.options = __assign({}, mergedOptions, { top: mergedOptions.top || this.defaultOptions.top });
+            this.options = this.odataService.options;
+            this.pagination = pagination;
+            // save current pagination as Page 1 and page size as "top"
+            this._currentPagination = {
+                pageNumber: 1,
+                pageSize: this.odataService.options.top || this.defaultOptions.top || DEFAULT_PAGE_SIZE
+            };
             if (grid && grid.getColumns && grid.getOptions) {
                 this._columnDefinitions = grid.getColumns() || options.columnDefinitions;
                 this._columnDefinitions = this._columnDefinitions.filter(function (column) { return !column.excludeFromQuery; });
@@ -159,7 +165,7 @@ define(["require", "exports", "aurelia-framework", "./utilities", "./../models/i
                     var matches = fieldSearchValue.match(/^([<>!=\*]{0,2})(.*[^<>!=\*])([\*]?)$/); // group 1: Operator, 2: searchValue, 3: last char is '*' (meaning starts with, ex.: abc*)
                     var operator = columnFilter_1.operator || ((matches) ? matches[1] : '');
                     var searchValue = (!!matches) ? matches[2] : '';
-                    var lastValueChar = (!!matches) ? matches[3] : '';
+                    var lastValueChar = (!!matches) ? matches[3] : (operator === '*z' ? '*' : '');
                     var bypassOdataQuery = columnFilter_1.bypassBackendQuery || false;
                     // no need to query if search value is empty
                     if (fieldName && searchValue === '') {
@@ -202,9 +208,9 @@ define(["require", "exports", "aurelia-framework", "./utilities", "./../models/i
                                 searchBy = "(" + searchBy + ")";
                             }
                         }
-                        else if (operator === '*' || lastValueChar !== '') {
+                        else if (operator === '*' || operator === 'a*' || operator === '*z' || lastValueChar !== '') {
                             // first/last character is a '*' will be a startsWith or endsWith
-                            searchBy = operator === '*'
+                            searchBy = (operator === '*' || operator === '*z')
                                 ? "endswith(" + fieldName + ", '" + searchValue + "')"
                                 : "startswith(" + fieldName + ", '" + searchValue + "')";
                         }
@@ -277,6 +283,10 @@ define(["require", "exports", "aurelia-framework", "./utilities", "./../models/i
                 sortByArray.forEach(function (sorter) { return sorter.direction = sorter.direction.toLowerCase(); });
                 // display the correct sorting icons on the UI, for that it requires (columnId, sortAsc) properties
                 var tmpSorterArray = sortByArray.map(function (sorter) {
+                    sorterArray.push({
+                        columnId: sorter.columnId + '',
+                        direction: sorter.direction
+                    });
                     return {
                         columnId: sorter.columnId,
                         sortAsc: sorter.direction.toUpperCase() === index_1.SortDirection.ASC
@@ -330,6 +340,8 @@ define(["require", "exports", "aurelia-framework", "./utilities", "./../models/i
             // keep current filters & always save it as an array (columnFilters can be an object when it is dealt by SlickGrid Filter)
             var filtersArray = ((typeof columnFilters === 'object') ? Object.keys(columnFilters).map(function (key) { return columnFilters[key]; }) : columnFilters);
             return filtersArray.map(function (filter) {
+                var columnDef = filter.columnDef;
+                var header = (columnDef) ? (columnDef.headerKey || columnDef.name || '') : '';
                 var tmpFilter = { columnId: filter.columnId || '' };
                 if (filter.operator) {
                     tmpFilter.operator = filter.operator;

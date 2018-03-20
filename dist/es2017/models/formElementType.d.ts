@@ -9,8 +9,6 @@ export declare enum FormElementType {
     singleSelect = 3,
     /** Custom Filter type */
     custom = 4,
-    /** Input Filter type */
-    inputNoPlaceholder = 5,
     /** TextArea element type */
-    textarea = 6,
+    textarea = 5,
 }

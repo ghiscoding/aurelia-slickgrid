@@ -9,6 +9,8 @@ export declare enum FilterType {
     singleSelect = 3,
     /** Custom Filter type */
     custom = 4,
-    /** Input Filter type, but without a magnifying glass as placeholder */
-    inputNoPlaceholder = 5,
+    /** Compound Date Filter (compound of Operator + Date picker) */
+    compoundDate = 5,
+    /** Compound Input Filter (compound of Operator + Input) */
+    compoundInput = 6,
 }

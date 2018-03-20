@@ -21,6 +21,7 @@ export var GlobalGridOptions = {
         hideSyncResizeButton: true
     },
     datasetIdPropertyName: 'id',
+    defaultFilterPlaceholder: '&#128269;',
     defaultFilterType: FilterType.input,
     enableAutoResize: true,
     enableRowSelection: true,

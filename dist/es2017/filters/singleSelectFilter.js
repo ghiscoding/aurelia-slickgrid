@@ -12,12 +12,27 @@ let SingleSelectFilter = class SingleSelectFilter {
     constructor(i18n) {
         this.i18n = i18n;
         this.filterType = FilterType.singleSelect;
+        this.isFilled = false;
         // default options used by this Filter, user can overwrite any of these by passing "otions"
         this.defaultOptions = {
             container: 'body',
             filter: false,
             maxHeight: 200,
-            single: true
+            single: true,
+            onClose: () => {
+                const selectedItems = this.$filterElm.multipleSelect('getSelects');
+                let selectedItem = '';
+                if (Array.isArray(selectedItems) && selectedItems.length > 0) {
+                    selectedItem = selectedItems[0];
+                    this.isFilled = true;
+                    this.$filterElm.addClass('filled').siblings('div .search-filter').addClass('filled');
+                }
+                else {
+                    this.isFilled = false;
+                    this.$filterElm.removeClass('filled').siblings('div .search-filter').removeClass('filled');
+                }
+                this.callback(undefined, { columnDef: this.columnDef, operator: 'EQ', searchTerm: selectedItem });
+            }
         };
     }
     /**
@@ -35,17 +50,6 @@ let SingleSelectFilter = class SingleSelectFilter {
         const filterTemplate = this.buildTemplateHtmlString();
         // step 2, create the DOM Element of the filter & pre-load search term
         this.createDomElement(filterTemplate);
-        // step 3, subscribe to the change event and run the callback when that happens
-        // also add/remove "filled" class for styling purposes
-        this.$filterElm.change((e) => {
-            if (e && e.target && e.target.value) {
-                this.$filterElm.addClass('filled').siblings('div .search-filter').addClass('filled');
-            }
-            else {
-                this.$filterElm.removeClass('filled').siblings('div .search-filter').removeClass('filled');
-            }
-            this.callback(e, { columnDef: this.columnDef, operator: 'EQ' });
-        });
     }
     /**
      * Clear the filter values
@@ -101,6 +105,10 @@ let SingleSelectFilter = class SingleSelectFilter {
             const textLabel = ((option.labelKey || isEnabledTranslate) && this.i18n && typeof this.i18n.tr === 'function') ? this.i18n.tr(labelKey || ' ') : labelKey;
             // html text of each select option
             options += `<option value="${option[valueName]}" ${selected}>${textLabel}</option>`;
+            // if there's a search term, we will add the "filled" class for styling purposes
+            if (selected) {
+                this.isFilled = true;
+            }
         });
         return `<select class="ms-filter search-filter">${options}</select>`;
     }
@@ -127,14 +135,6 @@ let SingleSelectFilter = class SingleSelectFilter {
         const filterOptions = (this.columnDef.filter) ? this.columnDef.filter.filterOptions : {};
         const options = Object.assign({}, this.defaultOptions, filterOptions);
         this.$filterElm = this.$filterElm.multipleSelect(options);
-    }
-    subscribeOnClose() {
-        this.$filterElm.multipleSelect({
-            onClose: () => {
-                const selectedItems = this.$filterElm.multipleSelect('getSelects');
-                this.callback(undefined, { columnDef: this.columnDef, operator: 'IN', searchTerms: selectedItems });
-            }
-        });
     }
 };
 SingleSelectFilter = __decorate([

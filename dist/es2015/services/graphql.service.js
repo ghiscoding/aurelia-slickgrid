@@ -168,6 +168,11 @@ let GraphqlService = class GraphqlService {
             paginationOptions = (this.options.paginationOptions || this.getInitPaginationOptions());
             paginationOptions.offset = 0;
         }
+        // save current pagination as Page 1 and page size as "first" set size
+        this._currentPagination = {
+            pageNumber: 1,
+            pageSize: paginationOptions.first || DEFAULT_PAGE_SIZE
+        };
         this.updateOptions({ paginationOptions });
     }
     updateOptions(serviceOptions) {
@@ -288,7 +293,7 @@ let GraphqlService = class GraphqlService {
                 const matches = fieldSearchValue.match(/^([<>!=\*]{0,2})(.*[^<>!=\*])([\*]?)$/); // group 1: Operator, 2: searchValue, 3: last char is '*' (meaning starts with, ex.: abc*)
                 let operator = columnFilter.operator || ((matches) ? matches[1] : '');
                 searchValue = (!!matches) ? matches[2] : '';
-                const lastValueChar = (!!matches) ? matches[3] : '';
+                const lastValueChar = (!!matches) ? matches[3] : (operator === '*z' ? '*' : '');
                 // no need to query if search value is empty
                 if (fieldName && searchValue === '' && searchTerms.length === 0) {
                     continue;
@@ -300,18 +305,20 @@ let GraphqlService = class GraphqlService {
                 else if (typeof searchValue === 'string') {
                     // escaping the search value
                     searchValue = searchValue.replace(`'`, `''`); // escape single quotes by doubling them
-                    if (operator === '*' || lastValueChar === '*') {
-                        operator = (operator === '*') ? 'endsWith' : 'startsWith';
+                    if (operator === '*' || operator === 'a*' || operator === '*z' || lastValueChar === '*') {
+                        operator = (operator === '*' || operator === '*z') ? 'endsWith' : 'startsWith';
                     }
                 }
                 // if we didn't find an Operator but we have a Filter Type, we should use default Operator
+                // multipleSelect is "IN", while singleSelect is "EQ", else don't map any operator
                 if (!operator && columnDef.filter) {
                     operator = mapOperatorByFilterType(columnDef.filter.type || '');
                 }
-                // if we still don't have an operator then go with the mapping
+                // if we still don't have an operator find the proper Operator to use by it's field type
                 if (!operator) {
                     operator = mapOperatorByFieldType(columnDef.type || FieldType.string);
                 }
+                // build the search array
                 searchByArray.push({
                     field: fieldName,
                     operator: mapOperatorType(operator),
@@ -359,6 +366,10 @@ let GraphqlService = class GraphqlService {
             currentSorters.forEach((sorter) => sorter.direction = sorter.direction.toUpperCase());
             // display the correct sorting icons on the UI, for that it requires (columnId, sortAsc) properties
             const tmpSorterArray = currentSorters.map((sorter) => {
+                graphqlSorters.push({
+                    field: sorter.columnId + '',
+                    direction: sorter.direction
+                });
                 return {
                     columnId: sorter.columnId,
                     sortAsc: sorter.direction.toUpperCase() === SortDirection.ASC
@@ -440,6 +451,8 @@ let GraphqlService = class GraphqlService {
         // keep current filters & always save it as an array (columnFilters can be an object when it is dealt by SlickGrid Filter)
         const filtersArray = (typeof columnFilters === 'object') ? Object.keys(columnFilters).map(key => columnFilters[key]) : columnFilters;
         return filtersArray.map((filter) => {
+            const columnDef = filter.columnDef;
+            const header = (columnDef) ? (columnDef.headerKey || columnDef.name || '') : '';
             const tmpFilter = { columnId: filter.columnId || '' };
             if (filter.operator) {
                 tmpFilter.operator = filter.operator;

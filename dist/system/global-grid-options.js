@@ -31,6 +31,7 @@ System.register(["./models/index"], function (exports_1, context_1) {
                     hideSyncResizeButton: true
                 },
                 datasetIdPropertyName: 'id',
+                defaultFilterPlaceholder: '&#128269;',
                 defaultFilterType: index_1.FilterType.input,
                 enableAutoResize: true,
                 enableRowSelection: true,
