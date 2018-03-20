@@ -110,10 +110,17 @@ export class CompoundDateFilter implements Filter {
       wrap: true,
       closeOnSelect: true,
       locale: (currentLocale !== 'en') ? this.loadFlatpickrLocale(currentLocale) : 'en',
-      onChange: (selectedDates: any[] | any, dateStr: string, instance: any) => {
+      onChange: (selectedDates, dateStr, instance) => {
         this._currentValue = dateStr;
-        this.onTriggerEvent(undefined);
-      },
+
+        // when using the time picker, we can simulate a keyup event to avoid multiple backend request
+        // since backend request are only executed after user start typing, changing the time should be treated the same way
+        if (pickerOptions.enableTime) {
+          this.onTriggerEvent(new CustomEvent('keyup'));
+        } else {
+          this.onTriggerEvent(undefined);
+        }
+      }
     };
 
     // add the time picker when format is UTC (Z) or has the 'h' (meaning hours)
