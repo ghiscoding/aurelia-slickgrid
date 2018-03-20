@@ -122,7 +122,21 @@ export class Example4 {
         containerId: 'demo-container',
         sidePadding: 15
       },
-      enableFiltering: true
+      enableFiltering: true,
+
+      // use columnDef searchTerms OR use presets as shown below
+      presets: {
+        filters: [
+          { columnId: 'duration', searchTerms: [2, 22, 44] },
+          { columnId: 'complete', searchTerm: '2', operator: '>=' },
+          { columnId: 'usDateShort', operator: '<', searchTerm: '4/20/25' },
+          // { columnId: 'effort-driven', searchTerm: true }
+        ],
+        sorters: [
+          { columnId: 'duration', direction: 'DESC' },
+          { columnId: 'complete', direction: 'ASC' }
+        ]
+      }
     };
   }
 
