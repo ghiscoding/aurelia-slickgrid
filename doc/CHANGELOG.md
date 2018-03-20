@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.10.0"></a>
+# [1.10.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v1.9.2...v1.10.0) (2018-03-20)
+
+
+### Bug Fixes
+
+* **backend:** Grid Presets sort order not correct with backend services ([22f687b](https://github.com/ghiscoding/aurelia-slickgrid/commit/22f687b))
+* **editor:** i18n service can also be passed as params in gridOptions ([c11eff4](https://github.com/ghiscoding/aurelia-slickgrid/commit/c11eff4))
+* **filter:** single select filter incorrect onFilterChanged on Presets ([c7e186a](https://github.com/ghiscoding/aurelia-slickgrid/commit/c7e186a))
+* **formatter:** dateTimeIso Formatter was using dateIso ([6756de8](https://github.com/ghiscoding/aurelia-slickgrid/commit/6756de8))
+* **gridState:** Filter were not always returning searchTerm in GridState ([67f167a](https://github.com/ghiscoding/aurelia-slickgrid/commit/67f167a))
+* **jquery-ui:** use latest version of jQuery-UI to avoid jQuery 3 errors ([c546865](https://github.com/ghiscoding/aurelia-slickgrid/commit/c546865))
+
+
+
 <a name="1.9.2"></a>
 ## [1.9.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v1.9.1...v1.9.2) (2018-03-13)
 
