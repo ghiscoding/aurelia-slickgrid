@@ -4,7 +4,9 @@ All notable changes to this project will be documented in this file. See [standa
 
 <a name="1.10.0"></a>
 # [1.10.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v1.9.2...v1.10.0) (2018-03-20)
+### Features
 
+* **filter:** Compound Filters (input & date) (PR #32) ([763e766](https://github.com/ghiscoding/aurelia-slickgrid/commit/763e766))
 
 ### Bug Fixes
 
