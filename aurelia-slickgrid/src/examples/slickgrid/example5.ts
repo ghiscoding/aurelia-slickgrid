@@ -1,7 +1,7 @@
 import { autoinject } from 'aurelia-framework';
 import data from './sample-data/example-data';
 import { HttpClient } from 'aurelia-http-client';
-import { CaseType, Column, GridOption, FieldType, FilterType, Formatters, FormElementType, GridOdataService, GridStateService, OperatorType } from '../../aurelia-slickgrid';
+import { Column, FieldType, FilterType, GridOdataService, GridOption, OperatorType } from '../../aurelia-slickgrid';
 
 const defaultPageSize = 20;
 const sampleDataRoot = 'src/examples/slickgrid/sample-data';
@@ -32,24 +32,25 @@ export class Example5 {
   processing = false;
   status = { text: '', class: '' };
 
-  constructor(private gridStateService: GridStateService, private http: HttpClient, private odataService: GridOdataService) {
+  constructor(private http: HttpClient, private odataService: GridOdataService) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
   }
 
-  detached() {
-    this.saveCurrentGridState();
-  }
-
   defineGrid() {
     this.columnDefinitions = [
-      { id: 'name', name: 'Name', field: 'name', filterable: true, sortable: true, type: FieldType.string },
+      {
+        id: 'name', name: 'Name', field: 'name', sortable: true, type: FieldType.string,
+        filterable: true,
+        filter: {
+          type: FilterType.compoundInput
+        }
+      },
       {
         id: 'gender', name: 'Gender', field: 'gender', filterable: true, sortable: true,
         filter: {
           type: FilterType.singleSelect,
-          collection: [{ value: '', label: '' }, { value: 'male', label: 'male' }, { value: 'female', label: 'female' }],
-          searchTerm: 'female'
+          collection: [{ value: '', label: '' }, { value: 'male', label: 'male' }, { value: 'female', label: 'female' }]
         }
       },
       { id: 'company', name: 'Company', field: 'company' }
@@ -61,20 +62,14 @@ export class Example5 {
         containerId: 'demo-container',
         sidePadding: 15
       },
-      enableFiltering: true,
       enableCellNavigation: true,
+      enableFiltering: true,
       enableCheckboxSelector: true,
       enableRowSelection: true,
       pagination: {
         pageSizes: [10, 15, 20, 25, 30, 40, 50, 75, 100],
         pageSize: defaultPageSize,
         totalItems: 0
-      },
-      presets: {
-        // you can also type operator as string, e.g.: operator: 'EQ'
-        filters: [{ columnId: 'gender', searchTerm: 'male', operator: OperatorType.equal }],
-        sorters: [{ columnId: 'name', direction: 'desc' }],
-        pagination: { pageNumber: 2, pageSize: 20 }
       },
       backendServiceApi: {
         service: this.odataService,
@@ -112,13 +107,9 @@ export class Example5 {
     return this.getCustomerDataApiMock(query);
   }
 
-  saveCurrentGridState() {
-    console.log('OData current grid state', this.gridStateService.getCurrentGridState());
-  }
-
   /**
    * This function is only here to mock a WebAPI call (since we are using a JSON file for the demo)
-   * in your case the getCustomer() should be a WebAPI function returning a Promise
+   *  in your case the getCustomer() should be a WebAPI function returning a Promise
    */
   getCustomerDataApiMock(query) {
     // the mock is returning a Promise, just like a WebAPI typically does
@@ -141,7 +132,7 @@ export class Example5 {
           orderBy = param.substring('$orderby='.length);
         }
         if (param.includes('$filter=')) {
-          const filterBy = param.substring('$filter='.length);
+          const filterBy = param.substring('$filter='.length).replace('%20', ' ');
           if (filterBy.includes('substringof')) {
             const filterMatch = filterBy.match(/substringof\('(.*?)',([a-zA-Z ]*)/);
             const fieldName = filterMatch[2].trim();
@@ -212,7 +203,7 @@ export class Example5 {
                   const filterType = columnFilters[columnId].type;
                   const searchTerm = columnFilters[columnId].term;
                   switch (filterType) {
-                    case 'equal': return column[columnId] === searchTerm;
+                    case 'equal': return column[columnId].toLowerCase() === searchTerm;
                     case 'ends': return column[columnId].toLowerCase().endsWith(searchTerm);
                     case 'starts': return column[columnId].toLowerCase().startsWith(searchTerm);
                     case 'substring': return column[columnId].toLowerCase().includes(searchTerm);

@@ -4,6 +4,7 @@ import {
   FilterType,
   FilterArguments,
   FilterCallback,
+  GridOption,
   SearchTerm
 } from './../models/index';
 import * as $ from 'jquery';
@@ -11,6 +12,7 @@ import * as $ from 'jquery';
 export class InputFilter implements Filter {
   private $filterElm: any;
   grid: any;
+  gridOptions: GridOption;
   searchTerm: SearchTerm;
   columnDef: Column;
   callback: FilterCallback;
@@ -27,6 +29,9 @@ export class InputFilter implements Filter {
     this.callback = args.callback;
     this.columnDef = args.columnDef;
     this.searchTerm = args.searchTerm || '';
+    if (this.grid && typeof this.grid.getOptions === 'function') {
+      this.gridOptions = this.grid.getOptions();
+    }
 
     // step 1, create HTML string template
     const filterTemplate = this.buildTemplateHtmlString();
@@ -80,7 +85,8 @@ export class InputFilter implements Filter {
    * Create the HTML template as a string
    */
   private buildTemplateHtmlString() {
-    return `<input type="text" class="form-control search-filter" style="font-family: Segoe UI Symbol;" placeholder="&#128269;">`;
+    const placeholder = (this.gridOptions) ? (this.gridOptions.defaultFilterPlaceholder || '') : '';
+    return `<input type="text" class="form-control search-filter" placeholder="${placeholder}">`;
   }
 
   /**

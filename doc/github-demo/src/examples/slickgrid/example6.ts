@@ -1,7 +1,7 @@
 import { autoinject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import { HttpClient } from 'aurelia-http-client';
-import { Column, FieldType, FilterType, GraphqlResult, GraphqlService, GraphqlServiceOption, GridOption, GridStateService, OperatorType, SortDirection } from 'aurelia-slickgrid';
+import { Column, FieldType, FilterType, Formatters, GraphqlResult, GraphqlService, GraphqlServiceOption, GridOption, GridStateService, OperatorType, SortDirection } from 'aurelia-slickgrid';
 
 const defaultPageSize = 20;
 const GRAPHQL_QUERY_DATASET_NAME = 'users';
@@ -65,7 +65,15 @@ export class Example6 {
         }
       },
       { id: 'billing.address.street', name: 'Billing Address Street', field: 'billing.address.street', headerKey: 'BILLING.ADDRESS.STREET', filterable: true, sortable: true },
-      { id: 'billing.address.zip', name: 'Billing Address Zip', field: 'billing.address.zip', headerKey: 'BILLING.ADDRESS.ZIP', filterable: true, sortable: true, type: FieldType.number },
+      {
+        id: 'billing.address.zip', field: 'billing.address.zip', headerKey: 'BILLING.ADDRESS.ZIP',
+        type: FieldType.number,
+        filterable: true, sortable: true,
+        filter: {
+          type: FilterType.compoundInput
+        },
+        formatter: Formatters.multiple, params: { formatters: [Formatters.complexObject, Formatters.translate] }
+      }
     ];
 
     this.gridOptions = {

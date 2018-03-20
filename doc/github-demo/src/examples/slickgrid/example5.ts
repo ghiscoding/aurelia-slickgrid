@@ -1,6 +1,6 @@
 import { autoinject } from 'aurelia-framework';
 import { HttpClient } from 'aurelia-http-client';
-import { CaseType, Column, GridOption, FieldType, FilterType, Formatters, FormElementType, GridOdataService, GridStateService, OperatorType } from 'aurelia-slickgrid';
+import { CaseType, Column, GridOption, FieldType, FilterType, Formatters, FormElementType, GridOdataService, OperatorType } from 'aurelia-slickgrid';
 
 const defaultPageSize = 20;
 const sampleDataRoot = 'assets/data';
@@ -31,24 +31,25 @@ export class Example5 {
   processing = false;
   status = { text: '', class: '' };
 
-  constructor(private gridStateService: GridStateService, private http: HttpClient, private odataService: GridOdataService) {
+  constructor(private http: HttpClient, private odataService: GridOdataService) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
   }
 
-  detached() {
-    this.saveCurrentGridState();
-  }
-
   defineGrid() {
     this.columnDefinitions = [
-      { id: 'name', name: 'Name', field: 'name', filterable: true, sortable: true, type: FieldType.string },
+      {
+        id: 'name', name: 'Name', field: 'name', sortable: true, type: FieldType.string,
+        filterable: true,
+        filter: {
+          type: FilterType.compoundInput
+        }
+      },
       {
         id: 'gender', name: 'Gender', field: 'gender', filterable: true, sortable: true,
         filter: {
           type: FilterType.singleSelect,
-          collection: [{ value: '', label: '' }, { value: 'male', label: 'male' }, { value: 'female', label: 'female' }],
-          searchTerm: 'female'
+          collection: [{ value: '', label: '' }, { value: 'male', label: 'male' }, { value: 'female', label: 'female' }]
         }
       },
       { id: 'company', name: 'Company', field: 'company' }
@@ -68,12 +69,6 @@ export class Example5 {
         pageSizes: [10, 15, 20, 25, 30, 40, 50, 75, 100],
         pageSize: defaultPageSize,
         totalItems: 0
-      },
-      presets: {
-        // you can also type operator as string, e.g.: operator: 'EQ'
-        filters: [{ columnId: 'gender', searchTerm: 'male', operator: OperatorType.equal }],
-        sorters: [{ columnId: 'name', direction: 'desc' }],
-        pagination: { pageNumber: 2, pageSize: 20 }
       },
       backendServiceApi: {
         service: this.odataService,
@@ -109,10 +104,6 @@ export class Example5 {
     // in your case, you will call your WebAPI function (wich needs to return a Promise)
     // for the demo purpose, we will call a mock WebAPI function
     return this.getCustomerDataApiMock(query);
-  }
-
-  saveCurrentGridState() {
-    console.log('OData current grid state', this.gridStateService.getCurrentGridState());
   }
 
   /**

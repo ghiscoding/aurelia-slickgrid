@@ -34,11 +34,8 @@ export class SlickPaginationCustomElement {
       this.refreshPagination();
     }
 
-    // Subscribe to Event Emitter of Filter & Sort changed, go back to page 1 when that happen
+    // Subscribe to Filter changed and go back to page 1 when that happen
     this._filterSubscriber = this.ea.subscribe('filterService:filterChanged', (data: string) => {
-      this.refreshPagination(true);
-    });
-    this._sorterSubscriber = this.ea.subscribe('sortService:sortChanged', (data: string) => {
       this.refreshPagination(true);
     });
   }
@@ -46,7 +43,7 @@ export class SlickPaginationCustomElement {
   gridPaginationOptionsChanged(newGridOptions: GridOption) {
     this._gridPaginationOptions = newGridOptions;
     if (newGridOptions) {
-      this.refreshPagination(true);
+      this.refreshPagination();
       this._isFirstRender = false;
     }
   }
@@ -97,9 +94,6 @@ export class SlickPaginationCustomElement {
     if (this._filterSubscriber) {
       this._filterSubscriber.dispose();
     }
-    if (this._sorterSubscriber) {
-      this._sorterSubscriber.dispose();
-    }
   }
 
   onChangeItemPerPage(event: any) {
@@ -125,14 +119,17 @@ export class SlickPaginationCustomElement {
 
       // if totalItems changed, we should always go back to the first page and recalculation the From-To indexes
       if (isPageNumberReset || this.totalItems !== pagination.totalItems) {
-        if (this._isFirstRender && pagination.pageNumber && pagination.pageNumber > 1) {
+        if (!isPageNumberReset && this._isFirstRender && pagination.pageNumber && pagination.pageNumber > 1) {
           this.pageNumber = pagination.pageNumber || 1;
+          this._isFirstRender = false;
         } else {
           this.pageNumber = 1;
         }
 
-        // also reset the "offset" of backend service
-        backendApi.service.resetPaginationOptions();
+        // when page number is set to 1 then also reset the "offset" of backend service
+        if (this.pageNumber === 1) {
+          backendApi.service.resetPaginationOptions();
+        }
       }
 
       // calculate and refresh the multiple properties of the pagination UI

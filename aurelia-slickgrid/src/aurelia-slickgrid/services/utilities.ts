@@ -134,7 +134,7 @@ export function mapFlatpickrDateFormatWithFieldType(fieldType: FieldType): strin
       map = 'm/d/Y';
       break;
     case FieldType.dateUsShort:
-      map = 'M/D/YY';
+      map = 'm/d/y';
       break;
     case FieldType.dateTimeUs:
       map = 'm/d/Y H:i:S';
@@ -143,13 +143,13 @@ export function mapFlatpickrDateFormatWithFieldType(fieldType: FieldType): strin
       map = 'm/d/Y h:i:S K'; // there is no lowercase in Flatpickr :(
       break;
     case FieldType.dateTimeUsAM_PM:
-      map = 'M/D/YY h:i:s K';
+      map = 'm/d/Y h:i:s K';
       break;
     case FieldType.dateTimeUsShort:
-      map = 'M/D/YY H:i:s';
+      map = 'm/d/y H:i:s';
       break;
     case FieldType.dateTimeUsShortAmPm:
-      map = 'M/D/YY h:i:s K'; // there is no lowercase in Flatpickr :(
+      map = 'm/d/y h:i:s K'; // there is no lowercase in Flatpickr :(
       break;
     case FieldType.dateUtc:
       map = 'Z';
@@ -238,8 +238,8 @@ export function mapOperatorByFieldType(fieldType: FieldType | string): OperatorT
       break;
     case FieldType.float:
     case FieldType.number:
-    case FieldType.dateIso:
     case FieldType.date:
+    case FieldType.dateIso:
     case FieldType.dateUtc:
     case FieldType.dateTime:
     case FieldType.dateTimeIso:
@@ -268,7 +268,7 @@ export function mapOperatorByFieldType(fieldType: FieldType | string): OperatorT
  * @returns string map
  */
 export function mapOperatorByFilterType(filterType: FilterType | FormElementType | string): OperatorType {
-  let map: OperatorType;
+  let map = OperatorType.empty;
 
   switch (filterType) {
     case FilterType.multipleSelect:
@@ -278,7 +278,6 @@ export function mapOperatorByFilterType(filterType: FilterType | FormElementType
       map = OperatorType.equal;
       break;
     default:
-      map = OperatorType.contains;
       break;
   }
 

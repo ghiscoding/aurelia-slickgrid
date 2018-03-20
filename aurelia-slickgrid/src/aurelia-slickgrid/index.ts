@@ -61,6 +61,8 @@ export function configure(aurelia: any, callback: any) {
   aurelia.globalResources(PLATFORM.moduleName('./slick-pagination'));
 
   // must register a transient so the container will get a new instance everytime
+  aurelia.container.registerTransient(FILTER_PLUGIN_NAME, Filters.compoundDate);
+  aurelia.container.registerTransient(FILTER_PLUGIN_NAME, Filters.compoundInput);
   aurelia.container.registerTransient(FILTER_PLUGIN_NAME, Filters.input);
   aurelia.container.registerTransient(FILTER_PLUGIN_NAME, Filters.multipleSelect);
   aurelia.container.registerTransient(FILTER_PLUGIN_NAME, Filters.singleSelect);
