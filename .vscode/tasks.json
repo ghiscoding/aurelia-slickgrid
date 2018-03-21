@@ -3,66 +3,44 @@
   "tasks": [
     {
       "label": "Build Library",
-      "command": "yarn",
+      "command": "yarn run build",
       "type": "shell",
-      "args": [
-        "run",
-        "build"
-      ],
       "problemMatcher": []
     },
     {
       "label": "Build Github Demo Page",
-      "command": "yarn",
+      "command": "yarn build:github-demo",
       "type": "shell",
-      "args": [
-        "build:github-demo"
-      ],
       "problemMatcher": []
     },
     {
       "label": "Start Library Development",
-      "command": "yarn",
+      "command": "yarn start:dev",
       "type": "shell",
-      "args": [
-        "start:dev"
-      ],
       "problemMatcher": []
     },
     {
       "label": "Start Client-CLI",
-      "command": "yarn",
+      "command": "yarn start:client-cli",
       "type": "shell",
-      "args": [
-        "start:client-cli"
-      ],
       "problemMatcher": []
     },
     {
       "label": "Start Github Demo Page",
-      "command": "yarn",
+      "command": "yarn start:github-demo",
       "type": "shell",
-      "args": [
-        "start:github-demo"
-      ],
       "problemMatcher": []
     },
     {
       "label": "Prepare Release as Minor (0.x.0)",
-      "command": "yarn",
+      "command": "yarn run release -- --release-as minor --infile ./doc/CHANGELOG.md",
       "type": "shell",
-      "args": [
-        "run release -- --release-as minor --infile ./doc/CHANGELOG.md"
-      ],
       "problemMatcher": []
     },
     {
       "label": "Prepare Release as Patch (0.0.x)",
-      "command": "yarn",
+      "command": "yarn run release -- --release-as patch --infile ./doc/CHANGELOG.md",
       "type": "shell",
-      "args": [
-        "run release -- --release-as patch --infile ./doc/CHANGELOG.md"
-      ],
       "problemMatcher": []
     }
   ]
