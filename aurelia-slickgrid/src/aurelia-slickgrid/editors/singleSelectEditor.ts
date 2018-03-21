@@ -1,3 +1,4 @@
+import { inject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import {
   Editor,
@@ -12,6 +13,7 @@ import * as $ from 'jquery';
 /**
  * Slickgrid editor class for single select lists
  */
+@inject(I18N)
 export class SingleSelectEditor implements Editor {
   /**
    * The JQuery DOM element
@@ -41,15 +43,10 @@ export class SingleSelectEditor implements Editor {
    * The property name for labels in the collection
    */
   labelName: string;
-  /**
-   * The i18n aurelia library
-   */
-  private _i18n: I18N;
 
-  constructor(private args: any) {
+  constructor(private i18n: I18N, private args: any) {
     const gridOptions = this.args.grid.getOptions() as GridOption;
     const params = gridOptions.params || this.args.column.params || {};
-    this._i18n = params.i18n;
 
     this.defaultOptions = {
       container: 'body',
@@ -152,7 +149,7 @@ export class SingleSelectEditor implements Editor {
           '{ collection: [ { value: \'1\', label: \'One\' } ] } } }');
       }
       const labelKey = (option.labelKey || option[this.labelName]) as string;
-      const textLabel = ((option.labelKey || isEnabledTranslate) && this._i18n && typeof this._i18n.tr === 'function') ? this._i18n.tr(labelKey || ' ') : labelKey;
+      const textLabel = (option.labelKey || isEnabledTranslate) ? this.i18n.tr(labelKey || ' ') : labelKey;
 
       options += `<option value="${option[this.valueName]}">${textLabel}</option>`;
     });
