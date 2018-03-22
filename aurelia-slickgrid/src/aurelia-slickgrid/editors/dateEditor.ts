@@ -24,7 +24,7 @@ export class DateEditor implements Editor {
     this.defaultDate = this.args.item[this.args.column.field] || null;
     const inputFormat = mapFlatpickrDateFormatWithFieldType(this.args.column.type || FieldType.dateIso);
     const outputFormat = mapFlatpickrDateFormatWithFieldType(this.args.column.outputType || FieldType.dateUtc);
-    let currentLocale = this.i18n.getLocale();
+    let currentLocale = this.i18n.getLocale() || 'en';
     if (currentLocale.length > 2) {
       currentLocale = currentLocale.substring(0, 2);
     }

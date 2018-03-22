@@ -97,7 +97,7 @@ export class CompoundDateFilter implements Filter {
   private buildDatePickerInput(searchTerm: SearchTerm) {
     const inputFormat = mapFlatpickrDateFormatWithFieldType(this.columnDef.type || FieldType.dateIso);
     const outputFormat = mapFlatpickrDateFormatWithFieldType(this.columnDef.outputType || this.columnDef.type || FieldType.dateUtc);
-    let currentLocale = this.i18n.getLocale();
+    let currentLocale = this.i18n.getLocale() || 'en';
     if (currentLocale.length > 2) {
       currentLocale = currentLocale.substring(0, 2);
     }

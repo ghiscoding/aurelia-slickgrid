@@ -191,6 +191,11 @@ export class AureliaSlickgridCustomElement {
       width: `${binding.gridWidth}px`
     };
 
+    // Wrap each editor class in the Factory resolver so consumers of this library can use
+    // dependency injection. Aurelia will resolve all dependencies when we pass the container
+    // and allow slickgrid to pass its arguments to the editors constructor last 
+    // when slickgrid creates the editor
+    // https://github.com/aurelia/dependency-injection/blob/master/src/resolvers.js
     for (const c of this.columnDefinitions) {
       if (c.editor) {
         c.editor = Factory.of(c.editor).get(this.container);
