@@ -97,7 +97,7 @@ export class CompoundDateFilter implements Filter {
   private buildDatePickerInput(searchTerm: SearchTerm) {
     const inputFormat = mapFlatpickrDateFormatWithFieldType(this.columnDef.type || FieldType.dateIso);
     const outputFormat = mapFlatpickrDateFormatWithFieldType(this.columnDef.outputType || this.columnDef.type || FieldType.dateUtc);
-    let currentLocale = this.getCurrentLocale(this.columnDef, this.gridOptions) || '';
+    let currentLocale = this.i18n.getLocale() || 'en';
     if (currentLocale.length > 2) {
       currentLocale = currentLocale.substring(0, 2);
     }
@@ -209,15 +209,6 @@ export class CompoundDateFilter implements Filter {
     }
 
     return $filterContainerElm;
-  }
-
-  private getCurrentLocale(columnDef: Column, gridOptions: GridOption) {
-    const params = gridOptions.params || columnDef.params || {};
-    if (params.i18n && params.i18n instanceof I18N) {
-      return params.i18n.getLocale();
-    }
-
-    return 'en';
   }
 
   private loadFlatpickrLocale(locale: string) {
