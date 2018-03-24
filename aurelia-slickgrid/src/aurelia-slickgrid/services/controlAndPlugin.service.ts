@@ -46,7 +46,7 @@ export class ControlAndPluginService {
    * @param options
    * @param dataView
    */
-  attachDifferentControlOrPlugins(grid: any, columnDefinitions: Column[], options: GridOption, dataView: any) {
+  attachDifferentControlOrPlugins(grid: any, columnDefinitions: Column[], options: GridOption, dataView: any, groupItemMetadataProvider: any) {
     this._grid = grid;
     this._gridOptions = options;
     this._dataView = dataView;
@@ -62,6 +62,11 @@ export class ControlAndPluginService {
     if (options.enableAutoTooltip) {
       this.autoTooltipPlugin = new Slick.AutoTooltips(options.autoTooltipOptions || {});
       grid.registerPlugin(this.autoTooltipPlugin);
+    }
+
+    // register the group item metadata provider to add expand/collapse group handlers
+    if (options.enableGrouping) {
+      grid.registerPlugin(groupItemMetadataProvider);
     }
 
     if (options.enableCheckboxSelector) {

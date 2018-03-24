@@ -6,6 +6,7 @@ import 'slickgrid/lib/jquery.event.drag-2.3.0';
 import 'slickgrid/slick.core';
 import 'slickgrid/slick.dataview';
 import 'slickgrid/slick.grid';
+import 'slickgrid/slick.groupitemmetadataprovider';
 import 'slickgrid/controls/slick.columnpicker';
 import 'slickgrid/controls/slick.gridmenu';
 import 'slickgrid/controls/slick.pager';
@@ -63,6 +64,7 @@ export class AureliaSlickgridCustomElement {
   gridStateSubscriber: Subscription;
   gridHeightString: string;
   gridWidthString: string;
+  groupItemMetadataProvider: any;
   localeChangedSubscriber: Subscription;
   showPagination = false;
   style: any;
@@ -104,10 +106,18 @@ export class AureliaSlickgridCustomElement {
     this.gridOptions = this.mergeGridOptions(this.gridOptions);
     this.createBackendApiInternalPostProcessCallback(this.gridOptions);
 
-    this.dataview = new Slick.Data.DataView();
+    if (this.gridOptions.enableGrouping) {
+      this.groupItemMetadataProvider = new Slick.Data.GroupItemMetadataProvider();
+      this.dataview = new Slick.Data.DataView({
+        groupItemMetadataProvider: this.groupItemMetadataProvider,
+        inlineFilters: true
+      });
+    } else {
+      this.dataview = new Slick.Data.DataView();
+    }
     this.controlAndPluginService.createPluginBeforeGridCreation(this.columnDefinitions, this.gridOptions);
     this.grid = new Slick.Grid(`#${this.gridId}`, this.dataview, this.columnDefinitions, this.gridOptions);
-    this.controlAndPluginService.attachDifferentControlOrPlugins(this.grid, this.columnDefinitions, this.gridOptions, this.dataview);
+    this.controlAndPluginService.attachDifferentControlOrPlugins(this.grid, this.columnDefinitions, this.gridOptions, this.dataview, this.groupItemMetadataProvider);
 
     this.attachDifferentHooks(this.grid, this.gridOptions, this.dataview);
 

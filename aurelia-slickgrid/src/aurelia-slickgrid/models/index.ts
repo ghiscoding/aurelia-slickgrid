@@ -41,6 +41,7 @@ export * from './gridOption.interface';
 export * from './gridState.interface';
 export * from './gridStateChange.interface';
 export * from './gridStateType.enum';
+export * from './groupFormatter.interface';
 export * from './headerButton.interface';
 export * from './headerButtonItem.interface';
 export * from './headerButtonOnCommandArgs.interface';

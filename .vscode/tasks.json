@@ -3,44 +3,44 @@
   "tasks": [
     {
       "label": "Build Library",
-      "command": "yarn run build",
       "type": "shell",
+      "command": "yarn run build",
       "problemMatcher": []
     },
     {
       "label": "Build Github Demo Page",
-      "command": "yarn build:github-demo",
       "type": "shell",
+      "command": "yarn build:github-demo",
       "problemMatcher": []
     },
     {
       "label": "Start Library Development",
-      "command": "yarn start:dev",
       "type": "shell",
+      "command": "yarn start:dev",
       "problemMatcher": []
     },
     {
       "label": "Start Client-CLI",
-      "command": "yarn start:client-cli",
       "type": "shell",
+      "command": "yarn start:client-cli",
       "problemMatcher": []
     },
     {
       "label": "Start Github Demo Page",
-      "command": "yarn start:github-demo",
       "type": "shell",
+      "command": "yarn start:github-demo",
       "problemMatcher": []
     },
     {
       "label": "Prepare Release as Minor (0.x.0)",
-      "command": "yarn run release -- --release-as minor --infile ./doc/CHANGELOG.md",
       "type": "shell",
+      "command": "yarn run release -- --release-as minor --infile ./doc/CHANGELOG.md",
       "problemMatcher": []
     },
     {
       "label": "Prepare Release as Patch (0.0.x)",
-      "command": "yarn run release -- --release-as patch --infile ./doc/CHANGELOG.md",
       "type": "shell",
+      "command": "yarn run release -- --release-as patch --infile ./doc/CHANGELOG.md",
       "problemMatcher": []
     }
   ]
