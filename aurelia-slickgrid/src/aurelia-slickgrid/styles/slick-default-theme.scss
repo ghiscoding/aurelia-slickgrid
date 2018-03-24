@@ -161,16 +161,7 @@
      background: silver !important;
    }
 
-   @-moz-keyframes slickgrid-invalid-hilite {
-     from {
-       box-shadow: 0 0 6px red;
-     }
-     to {
-       box-shadow: none;
-     }
-   }
-
-   @-webkit-keyframes slickgrid-invalid-hilite {
+   @keyframes slickgrid-invalid-hilite {
      from {
        box-shadow: 0 0 6px red;
      }

@@ -24,6 +24,8 @@ import {
   GraphqlResult,
   GraphqlServiceOption,
   GridOption,
+  GroupFormatter,
+  GroupTotalsFormatter,
   OnEventArgs,
   OperatorType,
   SearchTerm,
@@ -31,7 +33,8 @@ import {
   SortDirectionString
 } from './models/index';
 
-// editors, formatters, ...
+// aggregators, editors, formatters, ...
+import { Aggregators } from './aggregators/index';
 import { Editors } from './editors/index';
 import { FilterConditions } from './filter-conditions/index';
 import {
@@ -89,24 +92,27 @@ export {
   DelimiterType,
   ExportOption,
   FileType,
-  Formatter,
-  GraphqlResult,
-  GraphqlServiceOption,
-  GridOption,
   Filter,
   FilterArguments,
   FilterCallback,
   FilterCondition,
   FilterType,
+  Formatter,
   FILTER_PLUGIN_NAME,
   FormElementType,
   FieldType,
+  GraphqlResult,
+  GraphqlServiceOption,
+  GridOption,
+  GroupFormatter,
+  GroupTotalsFormatter,
   OnEventArgs,
   OperatorType,
   SearchTerm,
   SortDirection,
   SortDirectionString,
 
+  Aggregators,
   Editors,
   Filters,
   FilterConditions,

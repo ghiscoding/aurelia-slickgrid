@@ -1,3 +1,4 @@
+export * from './aggregator.interface';
 export * from './autoResizeOption.interface';
 export * from './backendService.interface';
 export * from './backendEventChanged.interface';
@@ -42,6 +43,7 @@ export * from './gridState.interface';
 export * from './gridStateChange.interface';
 export * from './gridStateType.enum';
 export * from './groupFormatter.interface';
+export * from './groupTotalsFormatter.interface';
 export * from './headerButton.interface';
 export * from './headerButtonItem.interface';
 export * from './headerButtonOnCommandArgs.interface';

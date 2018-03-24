@@ -1,7 +1,4 @@
-import { Column, Editors, FieldType, Formatter, Formatters, GridOption } from '../../aurelia-slickgrid';
-
-// using external non-typed js libraries
-declare var Slick: any;
+import { Aggregators, Column, Editors, FieldType, Formatter, Formatters, GridOption } from '../../aurelia-slickgrid';
 
 export class Example13 {
   title = 'Example 13: Grouping & Aggregators';
@@ -127,8 +124,8 @@ export class Example13 {
         return `Duration:  ${g.value} <span style="color:green">(${g.count} items)</span>`;
       },
       aggregators: [
-        new Slick.Data.Aggregators.Avg('percentComplete'),
-        new Slick.Data.Aggregators.Sum('cost')
+        new Aggregators.avg('percentComplete'),
+        new Aggregators.sum('cost')
       ],
       aggregateCollapsed: false,
       lazyTotalsCalculation: true
@@ -145,8 +142,8 @@ export class Example13 {
         return a.count - b.count;
       },
       aggregators: [
-        new Slick.Data.Aggregators.Avg('percentComplete'),
-        new Slick.Data.Aggregators.Sum('cost')
+        new Aggregators.avg('percentComplete'),
+        new Aggregators.sum('cost')
       ],
       aggregateCollapsed,
       lazyTotalsCalculation: true
@@ -161,8 +158,8 @@ export class Example13 {
           return `Duration:  ${g.value}  <span style="color:green">(${g.count} items)</span>`;
         },
         aggregators: [
-          new Slick.Data.Aggregators.Sum('duration'),
-          new Slick.Data.Aggregators.Sum('cost')
+          new Aggregators.sum('duration'),
+          new Aggregators.sum('cost')
         ],
         aggregateCollapsed: true,
         lazyTotalsCalculation: true
@@ -173,8 +170,8 @@ export class Example13 {
           return `Effort-Driven:  ${(g.value ? 'True' : 'False')} <span style="color:green">(${g.count} items)</span>`;
         },
         aggregators: [
-          new Slick.Data.Aggregators.Avg('percentComplete'),
-          new Slick.Data.Aggregators.Sum('cost')
+          new Aggregators.avg('percentComplete'),
+          new Aggregators.sum('cost')
         ],
         collapsed: true,
         lazyTotalsCalculation: true
@@ -190,8 +187,8 @@ export class Example13 {
           return `Duration:  ${g.value}  <span style="color:green">(${g.count} items)</span>`;
         },
         aggregators: [
-          new Slick.Data.Aggregators.Sum('duration'),
-          new Slick.Data.Aggregators.Sum('cost')
+          new Aggregators.sum('duration'),
+          new Aggregators.sum('cost')
         ],
         aggregateCollapsed: true,
         lazyTotalsCalculation: true
@@ -202,8 +199,8 @@ export class Example13 {
           return `Effort-Driven:  ${(g.value ? 'True' : 'False')}  <span style="color:green">(${g.count} items)</span>`;
         },
         aggregators: [
-          new Slick.Data.Aggregators.Sum('duration'),
-          new Slick.Data.Aggregators.Sum('cost')
+          new Aggregators.sum('duration'),
+          new Aggregators.sum('cost')
         ],
         lazyTotalsCalculation: true
       },
@@ -213,7 +210,7 @@ export class Example13 {
           return `% Complete:  ${g.value}  <span style="color:green">(${g.count} items)</span>`;
         },
         aggregators: [
-          new Slick.Data.Aggregators.Avg('percentComplete')
+          new Aggregators.avg('percentComplete')
         ],
         aggregateCollapsed: true,
         collapsed: true,
