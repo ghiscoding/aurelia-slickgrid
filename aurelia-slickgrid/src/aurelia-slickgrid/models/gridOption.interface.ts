@@ -130,6 +130,9 @@ export interface GridOption {
   /** Some default options to set for the export service */
   exportOptions?: ExportOption;
 
+  /** @deprecated Defaults to false, which leads to all Formatters of the grid being evaluated on export. You can also override a column by changing the propery on the column itself */
+  exportWithFormatter?: boolean;
+
   /** Do we want to force fit columns in the grid at all time? */
   forceFitColumns?: boolean;
 

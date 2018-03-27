@@ -1,4 +1,4 @@
-import { Aggregators, Column, Editors, FieldType, Formatter, Formatters, GridOption, Sorters } from '../../aurelia-slickgrid';
+import { Aggregators, Column, FieldType, Formatter, Formatters, GridOption, Sorters } from '../../aurelia-slickgrid';
 
 export class Example13 {
   title = 'Example 13: Grouping & Aggregators';
@@ -29,7 +29,7 @@ export class Example13 {
   defineGrid() {
     this.columnDefinitions = [
       { id: 'sel', name: '#', field: 'num', width: 40, maxWidth: 70, resizable: true, selectable: false, focusable: false },
-      { id: 'title', name: 'Title', field: 'title', width: 70, minWidth: 50, cssClass: 'cell-title', sortable: true, editor: Editors.text },
+      { id: 'title', name: 'Title', field: 'title', width: 70, minWidth: 50, cssClass: 'cell-title', sortable: true },
       { id: 'duration', name: 'Duration', field: 'duration', width: 70, sortable: true, type: FieldType.number, groupTotalsFormatter: this.sumTotalsFormatter },
       { id: '%', name: '% Complete', field: 'percentComplete', width: 80, formatter: Formatters.percentCompleteBar, sortable: true, groupTotalsFormatter: this.avgTotalsFormatter },
       { id: 'start', name: 'Start', field: 'start', minWidth: 60, sortable: true, formatter: Formatters.dateIso, exportWithFormatter: true },
