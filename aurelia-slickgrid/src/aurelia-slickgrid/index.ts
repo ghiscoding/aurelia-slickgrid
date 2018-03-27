@@ -1,63 +1,20 @@
-import { Factory } from 'aurelia-framework';
 import { PLATFORM } from 'aurelia-pal';
 import { AureliaSlickgridCustomElement } from './aurelia-slickgrid';
 import { SlickPaginationCustomElement } from './slick-pagination';
 import { SlickgridConfig } from './slickgrid-config';
+import { Filters, PLUGIN_NAME as FILTER_PLUGIN_NAME } from './filters/index';
 
-// models
-import {
-  BackendService,
-  BackendServiceApi,
-  CaseType,
-  Column,
-  DelimiterType,
-  ExportOption,
-  FileType,
-  Filter,
-  FilterArguments,
-  FilterCallback,
-  FilterCondition,
-  FilterType,
-  Formatter,
-  FormElementType,
-  FieldType,
-  GraphqlResult,
-  GraphqlServiceOption,
-  GridOption,
-  GroupFormatter,
-  GroupTotalsFormatter,
-  OnEventArgs,
-  OperatorType,
-  SearchTerm,
-  SortDirection,
-  SortDirectionString
-} from './models/index';
+// expose all public classes
+// aggregators, editors, formatters, services...
+export * from './models/index';
+export * from './services/index';
+export * from './formatters/index';
+export * from './sorters/index';
 
-// aggregators, editors, formatters, ...
-import { Aggregators } from './aggregators/index';
-import { Editors } from './editors/index';
-import { FilterConditions } from './filter-conditions/index';
-import {
-  Filters,
-  PLUGIN_NAME as FILTER_PLUGIN_NAME
-} from './filters/index';
-import { Formatters } from './formatters/index';
-import { Sorters } from './sorters/index';
-
-// services and utilities
-import {
-  ControlAndPluginService,
-  ExportService,
-  FilterService,
-  GraphqlService,
-  GridExtraUtils,
-  GridExtraService,
-  GridEventService,
-  GridOdataService,
-  GridStateService,
-  ResizerService,
-  SortService
-} from './services/index';
+export * from './aggregators/index';
+export * from './editors/index';
+export * from './filter-conditions/index';
+export * from './filters/index';
 
 export function configure(aurelia: any, callback: any) {
   aurelia.globalResources(PLATFORM.moduleName('./aurelia-slickgrid'));
@@ -83,54 +40,5 @@ export function configure(aurelia: any, callback: any) {
 export {
   AureliaSlickgridCustomElement,
   SlickPaginationCustomElement,
-
-  // models
-  BackendService,
-  BackendServiceApi,
-  CaseType,
-  Column,
-  DelimiterType,
-  ExportOption,
-  FileType,
-  Filter,
-  FilterArguments,
-  FilterCallback,
-  FilterCondition,
-  FilterType,
-  Formatter,
-  FILTER_PLUGIN_NAME,
-  FormElementType,
-  FieldType,
-  GraphqlResult,
-  GraphqlServiceOption,
-  GridOption,
-  GroupFormatter,
-  GroupTotalsFormatter,
-  OnEventArgs,
-  OperatorType,
-  SearchTerm,
-  SortDirection,
-  SortDirectionString,
-
-  Aggregators,
-  Editors,
-  Filters,
-  FilterConditions,
-  Formatters,
-  Sorters,
-
-  // services
-  ControlAndPluginService,
-  ExportService,
-  FilterService,
-  GraphqlService,
-  GridEventService,
-  GridExtraUtils,
-  GridExtraService,
-  GridOdataService,
-  GridStateService,
-  ResizerService,
-  SortService,
-
   SlickgridConfig
 };
