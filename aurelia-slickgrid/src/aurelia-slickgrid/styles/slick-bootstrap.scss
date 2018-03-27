@@ -150,6 +150,26 @@
         height: 100%;
         padding: 0;
       }
+      .slick-group-toggle {
+        width: 9px;
+        height: 9px;
+        margin-right: $icon-group-margin-right;
+        color: $icon-group-color;
+        cursor: pointer;
+        font-weight: $icon-group-font-weight;
+
+        &.expanded:before {
+          content: $icon-group-expanded;
+          font-family: $icon-font-family;
+          font-size: $icon-group-font-size;
+        }
+
+        &.collapsed:before {
+          content: $icon-group-collapsed;
+          font-family: $icon-font-family;
+          font-size: $icon-group-font-size;
+        }
+      }
     }
   }
 
