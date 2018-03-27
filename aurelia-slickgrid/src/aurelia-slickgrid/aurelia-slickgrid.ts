@@ -1,4 +1,3 @@
-import { GridStateChange } from './models/gridStateChange.interface';
 // import 3rd party vendor libs
 import 'jquery-ui-dist/jquery-ui';
 import 'slickgrid/lib/jquery.event.drag-2.3.0';
@@ -33,6 +32,7 @@ import {
   FormElementType,
   GraphqlResult,
   GridOption,
+  GridStateChange,
   GridStateType,
   Pagination,
 } from './models/index';

@@ -55,6 +55,12 @@ export interface GridOption {
   /** Unique property name on the dataset used by Slick.Data.DataView */
   datasetIdPropertyName?: string;
 
+  /** Default prefix for Aurelia Event names */
+  defaultAureliaEventPrefix?: string;
+
+  /** Default prefix for SlickGrid Event names */
+  defaultSlickgridEventPrefix?: string;
+
   /** Default placeholder to use in Filters that support placeholder (input, flatpickr) */
   defaultFilterPlaceholder?: string;
 

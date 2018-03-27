@@ -1,5 +1,8 @@
-import { Aggregators, Column, FieldType, Formatter, Formatters, GridOption, Sorters } from '../../aurelia-slickgrid';
+import { autoinject } from 'aurelia-framework';
+import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
+import { Aggregators, Column, FieldType, Formatter, Formatters, GridOption, SortDirectionNumber, Sorters } from '../../aurelia-slickgrid';
 
+@autoinject()
 export class Example13 {
   title = 'Example 13: Grouping & Aggregators';
   subTitle = `
@@ -14,8 +17,11 @@ export class Example13 {
   dataset: any[];
   gridObj: any;
   dataviewObj: any;
+  processing = false;
+  subOnBeforeExport: Subscription;
+  subOnAfterExport: Subscription;
 
-  constructor() {
+  constructor(private ea: EventAggregator) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
   }
@@ -23,6 +29,14 @@ export class Example13 {
   attached() {
     // populate the dataset once the grid is ready
     this.loadData(500);
+
+    this.subOnBeforeExport = this.ea.subscribe('asg:onBeforeExportToFile', () => {
+      this.processing = true;
+    });
+    this.subOnAfterExport = this.ea.subscribe('asg:onAfterExportToFile', () => {
+      this.processing = false;
+    });
+
   }
 
   /* Define grid Options and Columns */
@@ -115,7 +129,7 @@ export class Example13 {
         return `Duration:  ${g.value} <span style="color:green">(${g.count} items)</span>`;
       },
       comparer: (a, b) => {
-        return Sorters.numeric(a.value, b.value, 1);
+        return Sorters.numeric(a.value, b.value, SortDirectionNumber.asc);
       },
       aggregators: [
         new Aggregators.avg('percentComplete'),

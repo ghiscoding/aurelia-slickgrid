@@ -1,3 +1,4 @@
+import { EventAggregator } from 'aurelia-event-aggregator';
 import { inject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import {
@@ -28,7 +29,7 @@ export interface ExportColumnHeader {
   title: string;
 }
 
-@inject(I18N)
+@inject(I18N, EventAggregator)
 export class ExportService {
   private _lineCarriageReturn = '\n';
   private _dataView: any;
@@ -39,8 +40,9 @@ export class ExportService {
   private _gridOptions: GridOption;
   private _hasGroupedItems = false;
   private _exportOptions: ExportOption;
+  aureliaEventPrefix: string;
 
-  constructor(private i18n: I18N) { }
+  constructor(private i18n: I18N, private ea: EventAggregator) { }
 
   /**
    * Initialize the Export Service
@@ -52,6 +54,7 @@ export class ExportService {
     this._grid = grid;
     this._gridOptions = gridOptions;
     this._dataView = dataView;
+    this.aureliaEventPrefix = (this._gridOptions && this._gridOptions.defaultAureliaEventPrefix) ? this._gridOptions.defaultAureliaEventPrefix : 'asg';
   }
 
   /**
@@ -64,18 +67,24 @@ export class ExportService {
    * Example: exportToFile({ format: FileType.csv, delimiter: DelimiterType.comma })
    */
   exportToFile(options: ExportOption) {
+    this.ea.publish(`${this.aureliaEventPrefix}:onBeforeExportToFile`, true);
     this._exportOptions = $.extend(true, {}, this._gridOptions.exportOptions, options);
 
     // get the CSV output from the grid data
     const dataOutput = this.getDataOutput();
 
     // trigger a download file
-    this.startDownloadFile({
-      filename: `${this._exportOptions.filename}.${this._exportOptions.format}`,
-      csvContent: dataOutput,
-      format: this._exportOptions.format || FileType.csv,
-      useUtf8WithBom: this._exportOptions.useUtf8WithBom || true
-    });
+    // wrap it into a setTimeout so that the EventAggregator has enough time to start a pre-process like showing a spinner
+    setTimeout(() => {
+      const downloadOptions = {
+        filename: `${this._exportOptions.filename}.${this._exportOptions.format}`,
+        csvContent: dataOutput,
+        format: this._exportOptions.format || FileType.csv,
+        useUtf8WithBom: this._exportOptions.useUtf8WithBom || true
+      };
+      this.startDownloadFile(downloadOptions);
+      this.ea.publish(`${this.aureliaEventPrefix}:onAfterExportToFile`, downloadOptions);
+    }, 0);
   }
 
   // -----------------------

@@ -22,6 +22,8 @@ export const GlobalGridOptions: GridOption = {
     hideSyncResizeButton: true
   },
   datasetIdPropertyName: 'id',
+  defaultAureliaEventPrefix: 'asg',
+  defaultSlickgridEventPrefix: 'sg',
   defaultFilterPlaceholder: '&#128269;', // magnifying glass icon
   defaultFilterType: FilterType.input,
   enableAutoResize: true,
