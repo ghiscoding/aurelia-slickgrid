@@ -93,7 +93,7 @@ export class Example5 {
 
   getCustomerCallback(data) {
     // totalItems property needs to be filled for pagination to work correctly
-    // however we need to force Angular to do a dirty check, doing a clone object will do just that
+    // however we need to force Aurelia to do a dirty check, doing a clone object will do just that
     this.gridOptions.pagination.totalItems = data.totalRecordCount;
     this.gridOptions = { ...{}, ...this.gridOptions };
 

@@ -81,7 +81,7 @@ export class SingleSelectEditor implements Editor {
     this.columnDef = this.args.column;
 
     if (!this.columnDef || !this.columnDef.params || !this.columnDef.params.collection) {
-      throw new Error(`[Angular-SlickGrid] You need to pass a "collection" on the params property in the column definition for the MultipleSelect Editor to work correctly.
+      throw new Error(`[Aurelia-SlickGrid] You need to pass a "collection" on the params property in the column definition for the MultipleSelect Editor to work correctly.
       Also each option should include a value/label pair (or value/labelKey when using Locale).
       For example: { params: { { collection: [{ value: true, label: 'True' },{ value: false, label: 'False'}] } } }`);
     }
