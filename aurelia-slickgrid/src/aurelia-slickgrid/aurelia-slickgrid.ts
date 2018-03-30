@@ -193,7 +193,7 @@ export class AureliaSlickgridCustomElement {
 
     // Wrap each editor class in the Factory resolver so consumers of this library can use
     // dependency injection. Aurelia will resolve all dependencies when we pass the container
-    // and allow slickgrid to pass its arguments to the editors constructor last 
+    // and allow slickgrid to pass its arguments to the editors constructor last
     // when slickgrid creates the editor
     // https://github.com/aurelia/dependency-injection/blob/master/src/resolvers.js
     for (const c of this.columnDefinitions) {
@@ -228,11 +228,12 @@ export class AureliaSlickgridCustomElement {
       if (backendApi && backendApi.service && backendApi.service instanceof GraphqlService) {
         backendApi.internalPostProcess = (processResult: any) => {
           const datasetName = (backendApi && backendApi.service && typeof backendApi.service.getDatasetName === 'function') ? backendApi.service.getDatasetName() : '';
-          if (!processResult || !processResult.data || !processResult.data[datasetName]) {
-            throw new Error(`Your GraphQL result is invalid and/or does not follow the required result structure. Please check the result and/or review structure to use in Aurelia-Slickgrid Wiki in the GraphQL section.`);
+          if (processResult && processResult.data && processResult.data[datasetName]) {
+            this._dataset = processResult.data[datasetName].nodes;
+            this.refreshGridData(this._dataset, processResult.data[datasetName].totalCount);
+          } else {
+            this._dataset = [];
           }
-          this._dataset = processResult.data[datasetName].nodes;
-          this.refreshGridData(this._dataset, processResult.data[datasetName].totalCount);
         };
       }
     }
