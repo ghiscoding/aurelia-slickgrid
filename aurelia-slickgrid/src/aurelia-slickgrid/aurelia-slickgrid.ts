@@ -21,7 +21,7 @@ import 'slickgrid/plugins/slick.headermenu';
 import 'slickgrid/plugins/slick.rowmovemanager';
 import 'slickgrid/plugins/slick.rowselectionmodel';
 
-import { bindable, bindingMode, inject } from 'aurelia-framework';
+import { Container, Factory, bindable, bindingMode, inject } from 'aurelia-framework';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
 import { I18N } from 'aurelia-i18n';
 import { GlobalGridOptions } from './global-grid-options';
@@ -56,7 +56,7 @@ const aureliaEventPrefix = 'asg';
 const eventPrefix = 'sg';
 
 // Aurelia doesn't support well TypeScript @autoinject in a Plugin so we'll do it the old fashion way
-@inject(ControlAndPluginService, ExportService, Element, EventAggregator, FilterService, GraphqlService, GridEventService, GridExtraService, GridStateService, I18N, ResizerService, SortService)
+@inject(ControlAndPluginService, ExportService, Element, EventAggregator, FilterService, GraphqlService, GridEventService, GridExtraService, GridStateService, I18N, ResizerService, SortService, Container)
 export class AureliaSlickgridCustomElement {
   private _dataset: any[];
   private _eventHandler: any = new Slick.EventHandler();
@@ -91,7 +91,8 @@ export class AureliaSlickgridCustomElement {
     private gridStateService: GridStateService,
     private i18n: I18N,
     private resizer: ResizerService,
-    private sortService: SortService) { }
+    private sortService: SortService,
+    private container: Container) { }
 
   attached() {
     this.elm.dispatchEvent(new CustomEvent(`${eventPrefix}-on-before-grid-create`, {
@@ -189,6 +190,17 @@ export class AureliaSlickgridCustomElement {
       height: `${binding.gridHeight}px`,
       width: `${binding.gridWidth}px`
     };
+
+    // Wrap each editor class in the Factory resolver so consumers of this library can use
+    // dependency injection. Aurelia will resolve all dependencies when we pass the container
+    // and allow slickgrid to pass its arguments to the editors constructor last 
+    // when slickgrid creates the editor
+    // https://github.com/aurelia/dependency-injection/blob/master/src/resolvers.js
+    for (const c of this.columnDefinitions) {
+      if (c.editor) {
+        c.editor = Factory.of(c.editor).get(this.container);
+      }
+    }
   }
 
   datasetChanged(newValue: any[], oldValue: any[]) {
