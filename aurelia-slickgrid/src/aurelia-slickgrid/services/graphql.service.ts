@@ -344,9 +344,7 @@ export class GraphqlService implements BackendService {
         // if user defined some "presets", then we need to find the filters from the column definitions instead
         let columnDef: Column | undefined;
         if (isUpdatedByPreset && Array.isArray(this._columnDefinitions)) {
-          columnDef = this._columnDefinitions.find((column: Column) => {
-            return column.id === columnFilter.columnId;
-          });
+          columnDef = this._columnDefinitions.find((column: Column) => column.id === columnFilter.columnId);
         } else {
           columnDef = columnFilter.columnDef;
         }
@@ -452,8 +450,9 @@ export class GraphqlService implements BackendService {
 
       // display the correct sorting icons on the UI, for that it requires (columnId, sortAsc) properties
       const tmpSorterArray = currentSorters.map((sorter) => {
+        const columnDef = this._columnDefinitions.find((column: Column) => column.id === sorter.columnId);
         graphqlSorters.push({
-          field: sorter.columnId + '',
+          field: (columnDef.queryField || columnDef.queryFieldSorter || columnDef.field || columnDef.id) + '',
           direction: sorter.direction
         });
         return {
@@ -467,13 +466,13 @@ export class GraphqlService implements BackendService {
       // orderBy:[{field: lastName, direction: ASC}, {field: firstName, direction: DESC}]
       if (sortColumns && sortColumns.length === 0) {
         graphqlSorters = new Array(this.defaultOrderBy); // when empty, use the default sort
-        currentSorters = new Array({ columnId: this.defaultOrderBy.direction, direction: this.defaultOrderBy.direction });
+        currentSorters = new Array({ columnId: this.defaultOrderBy.field, direction: this.defaultOrderBy.direction });
       } else {
         if (sortColumns) {
           for (const column of sortColumns) {
             if (column && column.sortCol) {
               currentSorters.push({
-                columnId: (column.sortCol.queryField || column.sortCol.queryFieldSorter || column.sortCol.field || column.sortCol.id) + '',
+                columnId: column.sortCol.id + '',
                 direction: column.sortAsc ? SortDirection.ASC : SortDirection.DESC
               });
 
