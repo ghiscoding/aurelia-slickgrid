@@ -251,7 +251,7 @@ export class AureliaSlickgridCustomElement {
 
     // attach external sorting (backend) when available or default onSort (dataView)
     if (gridOptions.enableSorting) {
-      (gridOptions.backendServiceApi || gridOptions.onBackendEventApi) ? this.sortService.attachBackendOnSort(grid, gridOptions) : this.sortService.attachLocalOnSort(grid, gridOptions, this.dataview, this.columnDefinitions);
+      (gridOptions.backendServiceApi || gridOptions.onBackendEventApi) ? this.sortService.attachBackendOnSort(grid, dataView) : this.sortService.attachLocalOnSort(grid, dataView);
     }
 
     // attach external filter (backend) when available or default onFilter (dataView)
