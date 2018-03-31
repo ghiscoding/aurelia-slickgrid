@@ -61,11 +61,10 @@ export class AureliaSlickgridCustomElement {
   private _dataset: any[];
   private _eventHandler: any = new Slick.EventHandler();
   gridStateSubscriber: Subscription;
-  gridHeightString: string;
-  gridWidthString: string;
+  gridStyleHeight: { height: string; };
+  gridStyleWidth: { width: string; };
   localeChangedSubscriber: Subscription;
   showPagination = false;
-  style: any;
 
   @bindable({ defaultBindingMode: bindingMode.twoWay }) element: Element;
   @bindable({ defaultBindingMode: bindingMode.twoWay }) dataset: any[];
@@ -75,7 +74,7 @@ export class AureliaSlickgridCustomElement {
   @bindable() gridId: string;
   @bindable() columnDefinitions: Column[];
   @bindable() gridOptions: GridOption;
-  @bindable() gridHeight = 100;
+  @bindable() gridHeight = 200;
   @bindable() gridWidth = 600;
   @bindable() pickerOptions: any;
 
@@ -186,10 +185,14 @@ export class AureliaSlickgridCustomElement {
     // get the grid options (priority is Global Options first, then user option which could overwrite the Global options)
     this.gridOptions = { ...GlobalGridOptions, ...binding.gridOptions };
 
-    this.style = {
-      height: `${binding.gridHeight}px`,
-      width: `${binding.gridWidth}px`
-    };
+    if (!this.gridOptions.enableAutoResize) {
+      this.gridStyleWidth = {
+        width: `${this.gridWidth}px`
+      };
+      this.gridStyleHeight = {
+        height: `${this.gridHeight}px`
+      };
+    }
 
     // Wrap each editor class in the Factory resolver so consumers of this library can use
     // dependency injection. Aurelia will resolve all dependencies when we pass the container
@@ -395,8 +398,6 @@ export class AureliaSlickgridCustomElement {
       if (options.autoFitColumnsOnFirstLoad && typeof grid.autosizeColumns === 'function') {
         grid.autosizeColumns();
       }
-    } else {
-      this.resizer.resizeGrid(0, { height: this.gridHeight, width: this.gridWidth });
     }
   }
 
