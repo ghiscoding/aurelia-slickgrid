@@ -156,11 +156,14 @@ export interface Column {
   /** Do we want to re-render the grid on a grid resize */
   rerenderOnResize?: boolean;
 
-  /** do we want to show hidden column? */
-  showHidden?: boolean;
+  /** Defaults to false, which leads to Sanitizing all data (striping out any HTML tags) when being evaluated on export. */
+  sanitizeDataExport?: boolean;
 
   /** Is the column selectable? Goes with grid option "enableCellNavigation: true". */
   selectable?: boolean;
+
+  /** do we want to show hidden column? */
+  showHidden?: boolean;
 
   /** Is the column sortable? Goes with grid option "enableSorting: true". */
   sortable?: boolean;
@@ -179,6 +182,4 @@ export interface Column {
 
   /** Width of the column in pixels (number only). */
   width?: number;
-
-  // groupTotalsFormatter?(item: GroupTotals, columnDef: Column): string;
 }

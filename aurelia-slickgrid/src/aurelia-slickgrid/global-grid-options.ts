@@ -44,6 +44,7 @@ export const GlobalGridOptions: GridOption = {
     filename: 'export',
     format: FileType.csv,
     groupingAggregatorRowText: '',
+    sanitizeDataExport: false,
     useUtf8WithBom: true
   },
   forceFitColumns: false,
