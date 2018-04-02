@@ -15,7 +15,7 @@ export class Example12 {
         <li>For the cell values, you need to use a Formatter, there's 2 ways of doing it</li>
         <ul>
           <li>formatter: myCustomTranslateFormatter <b>&lt;= "Title" column uses it</b></li>
-          <li>formatter: Formatters.translate, params: { i18n: this.i18n } <b>&lt;= "Completed" column uses it</b></li>
+          <li>formatter: Formatters.translate <b>&lt;= "Completed" column uses it</b></li>
         </ul>
       </ul>
       <li>For date localization, you need to create your own custom formatter. </li>
@@ -65,6 +65,7 @@ export class Example12 {
         filter: {
           collection: [{ value: '', label: '' }, { value: true, labelKey: 'TRUE' }, { value: false, labelKey: 'FALSE' }],
           type: FilterType.singleSelect,
+          enableTranslateLabel: true,
           filterOptions: {
             autoDropWidth: true
           }
@@ -77,7 +78,11 @@ export class Example12 {
         filterable: true,
         filter: {
           collection: [{ value: '', label: '' }, { value: 'TRUE', labelKey: 'TRUE' }, { value: 'FALSE', labelKey: 'FALSE' }],
+          collectionSortBy: {
+            property: 'labelKey' // will sort by translated value since "enableTranslateLabel" is true
+          },
           type: FilterType.singleSelect,
+          enableTranslateLabel: true,
           filterOptions: {
             autoDropWidth: true
           }
