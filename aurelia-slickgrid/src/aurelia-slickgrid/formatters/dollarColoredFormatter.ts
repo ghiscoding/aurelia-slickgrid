@@ -5,8 +5,8 @@ export const dollarColoredFormatter: Formatter = (row: number, cell: number, val
   if (isNaN(+value)) {
     return '';
   } else if (value >= 0) {
-    return `<span style="color:green;">${decimalFormatted(value, 2, 2)}$</span>`;
+    return `<span style="color:green;">$${decimalFormatted(value, 2, 2)}</span>`;
   } else {
-    return `<span style="color:red;">${decimalFormatted(value, 2, 2)}$</span>`;
+    return `<span style="color:red;">$${decimalFormatted(value, 2, 2)}</span>`;
   }
 };

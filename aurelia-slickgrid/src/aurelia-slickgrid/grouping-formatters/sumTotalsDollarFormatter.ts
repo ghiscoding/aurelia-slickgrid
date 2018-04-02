@@ -8,7 +8,7 @@ export const sumTotalsDollarFormatter: GroupTotalsFormatter = (totals: any, colu
   const suffix = (columnDef.params && columnDef.params.groupFormatterSuffix) ? columnDef.params.groupFormatterSuffix : '';
 
   if (val != null) {
-    return prefix + decimalFormatted(val, 2, 2) + '$' + suffix;
+    return prefix + '$' + decimalFormatted(val, 2, 2) + suffix;
   }
   return '';
 };

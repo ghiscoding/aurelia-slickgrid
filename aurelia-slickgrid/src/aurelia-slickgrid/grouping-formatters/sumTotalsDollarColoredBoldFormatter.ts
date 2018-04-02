@@ -10,8 +10,8 @@ export const sumTotalsDollarColoredBoldFormatter: GroupTotalsFormatter = (totals
   if (isNaN(+val)) {
     return '';
   } else if (val >= 0) {
-    return `<span style="color:green; font-weight: bold;">${prefix + decimalFormatted(val, 2, 2) + '$' + suffix}</span>`;
+    return `<span style="color:green; font-weight: bold;">${prefix + '$' + decimalFormatted(val, 2, 2) + suffix}</span>`;
   } else {
-    return `<span style="color:red; font-weight: bold;">${prefix + decimalFormatted(val, 2, 2) + '$' + suffix}</span>`;
+    return `<span style="color:red; font-weight: bold;">${prefix + '$' + decimalFormatted(val, 2, 2) + suffix}</span>`;
   }
 };
