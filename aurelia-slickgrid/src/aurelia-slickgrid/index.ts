@@ -9,6 +9,7 @@ import { Filters, PLUGIN_NAME as FILTER_PLUGIN_NAME } from './filters/index';
 export * from './models/index';
 export * from './services/index';
 export * from './formatters/index';
+export * from './grouping-formatters/index';
 export * from './sorters/index';
 
 export * from './aggregators/index';
