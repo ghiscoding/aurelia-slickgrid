@@ -1,8 +1,8 @@
-import { autoinject } from 'aurelia-framework';
-import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
-import { Aggregators, Column, FieldType, Formatter, Formatters, GridOption, GroupTotalFormatters, SortDirectionNumber, Sorters } from '../../aurelia-slickgrid';
+import { inject } from 'aurelia-framework';
+import { EventAggregator } from 'aurelia-event-aggregator';
+import { Aggregators, FieldType, Formatters, GroupTotalFormatters, SortDirectionNumber, Sorters } from 'aurelia-slickgrid';
 
-@autoinject()
+@inject(EventAggregator)
 export class Example13 {
   title = 'Example 13: Grouping & Aggregators';
   subTitle = `
@@ -12,16 +12,19 @@ export class Example13 {
     </ul>
   `;
 
-  columnDefinitions: Column[];
-  gridOptions: GridOption;
-  dataset: any[];
-  gridObj: any;
-  dataviewObj: any;
+  columnDefinitions;
+  gridOptions;
+  dataset = [];
+  gridObj;
+  dataviewObj;
   processing = false;
-  subOnBeforeExport: Subscription;
-  subOnAfterExport: Subscription;
+  subOnBeforeExport;
+  subOnAfterExport;
+  ea;
 
-  constructor(private ea: EventAggregator) {
+  constructor(eventAggregator) {
+    this.ea = eventAggregator;
+
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
   }
@@ -36,7 +39,6 @@ export class Example13 {
     this.subOnAfterExport = this.ea.subscribe('asg:onAfterExportToFile', () => {
       this.processing = false;
     });
-
   }
 
   /* Define grid Options and Columns */
@@ -117,7 +119,7 @@ export class Example13 {
     };
   }
 
-  loadData(rowCount: number) {
+  loadData(rowCount) {
     // mock a dataset
     this.dataset = [];
     for (let i = 0; i < rowCount; i++) {
@@ -143,7 +145,6 @@ export class Example13 {
 
   onGridCreated(grid) {
     this.gridObj = grid;
-
   }
 
   onDataviewCreated(dataview) {

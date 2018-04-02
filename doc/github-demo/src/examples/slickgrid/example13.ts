@@ -1,6 +1,6 @@
 import { autoinject } from 'aurelia-framework';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
-import { Aggregators, Column, FieldType, Formatter, Formatters, GridOption, GroupTotalFormatters, SortDirectionNumber, Sorters } from '../../aurelia-slickgrid';
+import { Aggregators, Column, FieldType, Formatter, Formatters, GridOption, GroupTotalFormatters, SortDirectionNumber, Sorters } from 'aurelia-slickgrid';
 
 @autoinject()
 export class Example13 {
