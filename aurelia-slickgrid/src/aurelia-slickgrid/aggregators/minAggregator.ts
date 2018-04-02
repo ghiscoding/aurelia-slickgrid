@@ -2,7 +2,7 @@
 import { Aggregator } from './../models/aggregator.interface';
 
 export class MinAggregator implements Aggregator {
-  private _min: number;
+  private _min: number | null;
   private _field: number | string;
 
   constructor(field: number | string) {
@@ -13,8 +13,8 @@ export class MinAggregator implements Aggregator {
     this._min = null;
   }
 
-  accumulate(item) {
-    const val = item[this._field];
+  accumulate(item: any) {
+    const val = (item && item.hasOwnProperty(this._field)) ? item[this._field] : null;
     if (val != null && val !== '' && !isNaN(val)) {
       if (this._min == null || val < this._min) {
         this._min = val;
@@ -22,7 +22,7 @@ export class MinAggregator implements Aggregator {
     }
   }
 
-  storeResult(groupTotals) {
+  storeResult(groupTotals: any) {
     if (!groupTotals.min) {
       groupTotals.min = {};
     }
