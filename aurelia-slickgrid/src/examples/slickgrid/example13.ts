@@ -16,7 +16,6 @@ export class Example13 {
   columnDefinitions: Column[];
   gridOptions: GridOption;
   dataset: any[];
-  gridObj: any;
   dataviewObj: any;
   processing = false;
   subOnBeforeExport: Subscription;
@@ -140,11 +139,6 @@ export class Example13 {
         effortDriven: (i % 5 === 0)
       };
     }
-  }
-
-  onGridCreated(grid) {
-    this.gridObj = grid;
-
   }
 
   onDataviewCreated(dataview) {

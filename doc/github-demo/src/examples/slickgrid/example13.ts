@@ -16,7 +16,6 @@ export class Example13 {
   columnDefinitions: Column[];
   gridOptions: GridOption;
   dataset: any[];
-  gridObj: any;
   dataviewObj: any;
   processing = false;
   subOnBeforeExport: Subscription;
@@ -142,11 +141,6 @@ export class Example13 {
     }
   }
 
-  onGridCreated(grid) {
-    this.gridObj = grid;
-
-  }
-
   onDataviewCreated(dataview) {
     this.dataviewObj = dataview;
   }
@@ -194,7 +188,7 @@ export class Example13 {
         new Aggregators.Avg('percentComplete'),
         new Aggregators.Sum('cost')
       ],
-      aggregateCollapsed,
+      aggregateCollapsed: false,
       lazyTotalsCalculation: true
     });
   }
