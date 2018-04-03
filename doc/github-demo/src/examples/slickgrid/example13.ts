@@ -9,6 +9,7 @@ export class Example13 {
     <ul>
       <li>Fully dynamic and interactive multi-level grouping with filtering and aggregates over 50'000 items</li>
       <li>Each grouping level can have its own aggregates (over child rows, child groups, or all descendant rows)..</li>
+      <li>Use "Aggregators" and "GroupTotalFormatters" directly from Angular-Slickgrid</li>
     </ul>
   `;
 
@@ -30,13 +31,13 @@ export class Example13 {
     // populate the dataset once the grid is ready
     this.loadData(500);
 
-    this.subOnBeforeExport = this.ea.subscribe('asg:onBeforeExportToFile', () => {
-      this.processing = true;
-    });
-    this.subOnAfterExport = this.ea.subscribe('asg:onAfterExportToFile', () => {
-      this.processing = false;
-    });
+    this.subOnBeforeExport = this.ea.subscribe('asg:onBeforeExportToFile', () => this.processing = true);
+    this.subOnAfterExport = this.ea.subscribe('asg:onAfterExportToFile', () => this.processing = false);
+  }
 
+  detached() {
+    this.subOnAfterExport.dispose();
+    this.subOnBeforeExport.dispose();
   }
 
   /* Define grid Options and Columns */
@@ -172,8 +173,8 @@ export class Example13 {
         return Sorters.numeric(a.value, b.value, SortDirectionNumber.asc);
       },
       aggregators: [
-        new Aggregators.avg('percentComplete'),
-        new Aggregators.sum('cost')
+        new Aggregators.Avg('percentComplete'),
+        new Aggregators.Sum('cost')
       ],
       aggregateCollapsed: false,
       lazyTotalsCalculation: true
@@ -190,8 +191,8 @@ export class Example13 {
         return a.count - b.count;
       },
       aggregators: [
-        new Aggregators.avg('percentComplete'),
-        new Aggregators.sum('cost')
+        new Aggregators.Avg('percentComplete'),
+        new Aggregators.Sum('cost')
       ],
       aggregateCollapsed,
       lazyTotalsCalculation: true
@@ -206,8 +207,8 @@ export class Example13 {
           return `Duration:  ${g.value}  <span style="color:green">(${g.count} items)</span>`;
         },
         aggregators: [
-          new Aggregators.sum('duration'),
-          new Aggregators.sum('cost')
+          new Aggregators.Sum('duration'),
+          new Aggregators.Sum('cost')
         ],
         aggregateCollapsed: true,
         lazyTotalsCalculation: true
@@ -218,8 +219,8 @@ export class Example13 {
           return `Effort-Driven:  ${(g.value ? 'True' : 'False')} <span style="color:green">(${g.count} items)</span>`;
         },
         aggregators: [
-          new Aggregators.avg('percentComplete'),
-          new Aggregators.sum('cost')
+          new Aggregators.Avg('percentComplete'),
+          new Aggregators.Sum('cost')
         ],
         collapsed: true,
         lazyTotalsCalculation: true
@@ -235,8 +236,8 @@ export class Example13 {
           return `Duration:  ${g.value}  <span style="color:green">(${g.count} items)</span>`;
         },
         aggregators: [
-          new Aggregators.sum('duration'),
-          new Aggregators.sum('cost')
+          new Aggregators.Sum('duration'),
+          new Aggregators.Sum('cost')
         ],
         aggregateCollapsed: true,
         lazyTotalsCalculation: true
@@ -247,8 +248,8 @@ export class Example13 {
           return `Effort-Driven:  ${(g.value ? 'True' : 'False')}  <span style="color:green">(${g.count} items)</span>`;
         },
         aggregators: [
-          new Aggregators.sum('duration'),
-          new Aggregators.sum('cost')
+          new Aggregators.Sum('duration'),
+          new Aggregators.Sum('cost')
         ],
         lazyTotalsCalculation: true
       },
@@ -258,7 +259,7 @@ export class Example13 {
           return `% Complete:  ${g.value}  <span style="color:green">(${g.count} items)</span>`;
         },
         aggregators: [
-          new Aggregators.avg('percentComplete')
+          new Aggregators.Avg('percentComplete')
         ],
         aggregateCollapsed: true,
         collapsed: true,
