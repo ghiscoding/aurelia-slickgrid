@@ -62,8 +62,8 @@ export class AureliaSlickgridCustomElement {
   private _dataset: any[];
   private _eventHandler: any = new Slick.EventHandler();
   gridStateSubscriber: Subscription;
-  gridHeightString: string;
-  gridWidthString: string;
+  gridStyleHeight: { height: string; };
+  gridStyleWidth: { width: string; };
   groupItemMetadataProvider: any;
   localeChangedSubscriber: Subscription;
   showPagination = false;
