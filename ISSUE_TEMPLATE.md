@@ -16,20 +16,6 @@ major.minor.patch
 * **Operating System:**
 OSX 10.x|Linux (distro)|Windows [7|8|8.1|10]
 
-* **Node Version:**
-8.x.x
-<!--
-Minimum supported Node version is latest Node 4.x LTS
-run `node -v`
--->
-
-* **NPM Version:**
-3.8.9
-<!--
-Minimum supported NPM version is 3.x
-run `npm -v`
--->
-
 * **Bundler used (WebPack/RequireJS/SystemJS**
 JSPM 0.16.32 | webpack 2.1.0-beta.17
 <!--

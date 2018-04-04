@@ -1,3 +1,4 @@
+import { inject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import {
   Editor,
@@ -6,50 +7,50 @@ import {
   MultipleSelectOption,
   SelectOption
 } from '../models/index';
-import { findOrDefault } from '../services/index';
+import { findOrDefault, CollectionService } from '../services/index';
 import * as $ from 'jquery';
+
+// height in pixel of the multiple-select DOM element
+const SELECT_ELEMENT_HEIGHT = 26;
 
 /**
  * Slickgrid editor class for single select lists
  */
+@inject(CollectionService, I18N)
 export class SingleSelectEditor implements Editor {
-  /**
-   * The JQuery DOM element
-   */
+  /** The JQuery DOM element */
   $editorElm: any;
-  /**
-   * The slick grid column being edited
-   */
-  columnDef: Column;
-  /**
-   * The multiple-select options for a single select
-   */
-  defaultOptions: any;
-  /**
-   * The default item value that is set
-   */
-  defaultValue: any;
-  /**
-   * The options label/value object to use in the select list
-   */
-  collection: SelectOption[] = [];
-  /**
-   * The property name for values in the collection
-   */
-  valueName: string;
-  /**
-   * The property name for labels in the collection
-   */
-  labelName: string;
-  /**
-   * The i18n aurelia library
-   */
-  private _i18n: I18N;
 
-  constructor(private args: any) {
-    const gridOptions = this.args.grid.getOptions() as GridOption;
-    const params = gridOptions.params || this.args.column.params || {};
-    this._i18n = params.i18n;
+  /** Editor Multiple-Select options */
+  editorElmOptions: MultipleSelectOption;
+
+  /** The slick grid column being edited */
+  columnDef: Column;
+
+  /** The multiple-select options for a single select */
+  defaultOptions: any;
+
+  /** The default item value that is set */
+  defaultValue: any;
+
+  /** The options label/value object to use in the select list */
+  collection: SelectOption[] = [];
+
+  /** The property name for labels in the collection */
+  labelName: string;
+
+  /** The property name for values in the collection */
+  valueName: string;
+
+  /** Grid options */
+  gridOptions: GridOption;
+
+  /** Do we translate the label? */
+  enableTranslateLabel: boolean;
+
+  constructor(private collectionService: CollectionService, private i18n: I18N, private args: any) {
+    this.gridOptions = this.args.grid.getOptions() as GridOption;
+    const params = this.gridOptions.params || this.args.column.params || {};
 
     this.defaultOptions = {
       container: 'body',
@@ -57,7 +58,8 @@ export class SingleSelectEditor implements Editor {
       maxHeight: 200,
       width: 150,
       offsetLeft: 20,
-      single: true
+      single: true,
+      onOpen: () => this.autoAdjustDropPosition(this.$editorElm, this.editorElmOptions),
     };
 
     this.init();
@@ -78,7 +80,31 @@ export class SingleSelectEditor implements Editor {
 
     this.columnDef = this.args.column;
 
-    const editorTemplate = this.buildTemplateHtmlString();
+    if (!this.columnDef || !this.columnDef.params || !this.columnDef.params.collection) {
+      throw new Error(`[Aurelia-SlickGrid] You need to pass a "collection" on the params property in the column definition for the MultipleSelect Editor to work correctly.
+      Also each option should include a value/label pair (or value/labelKey when using Locale).
+      For example: { params: { { collection: [{ value: true, label: 'True' },{ value: false, label: 'False'}] } } }`);
+    }
+
+    this.enableTranslateLabel = (this.columnDef.params.enableTranslateLabel) ? this.columnDef.params.enableTranslateLabel : false;
+    let newCollection = this.columnDef.params.collection || [];
+    this.labelName = (this.columnDef.params.customStructure) ? this.columnDef.params.customStructure.label : 'label';
+    this.valueName = (this.columnDef.params.customStructure) ? this.columnDef.params.customStructure.value : 'value';
+
+    // user might want to filter certain items of the collection
+    if (this.gridOptions.params && this.columnDef.params.collectionFilterBy) {
+      const filterBy = this.columnDef.params.collectionFilterBy;
+      newCollection = this.collectionService.filterCollection(newCollection, filterBy);
+    }
+
+    // user might want to sort the collection
+    if (this.gridOptions.params && this.columnDef.params.collectionSortBy) {
+      const sortBy = this.columnDef.params.collectionSortBy;
+      newCollection = this.collectionService.sortCollection(newCollection, sortBy, this.enableTranslateLabel);
+    }
+
+    this.collection = newCollection;
+    const editorTemplate = this.buildTemplateHtmlString(newCollection);
 
     this.createDomElement(editorTemplate);
   }
@@ -132,27 +158,51 @@ export class SingleSelectEditor implements Editor {
     };
   }
 
-  private buildTemplateHtmlString() {
-    if (!this.columnDef || !this.columnDef.params || !this.columnDef.params.collection) {
-      throw new Error('[Aurelia-SlickGrid] You need to pass a "collection" on the params property in the column definition for ' +
-        'the SingleSelect Editor to work correctly. Also each option should include ' +
-        'a value/label pair (or value/labelKey when using Locale). For example: { params: { ' +
-        '{ collection: [{ value: true, label: \'True\' }, { value: false, label: \'False\'}] } } }');
-    }
-    this.collection = this.columnDef.params.collection || [];
-    this.labelName = (this.columnDef.params.customStructure) ? this.columnDef.params.customStructure.label : 'label';
-    this.valueName = (this.columnDef.params.customStructure) ? this.columnDef.params.customStructure.value : 'value';
-    const isEnabledTranslate = (this.columnDef.params.enableTranslateLabel) ? this.columnDef.params.enableTranslateLabel : false;
+  /**
+   * Automatically adjust the multiple-select dropup or dropdown by available space
+   */
+  private autoAdjustDropPosition(multipleSelectDomElement: any, multipleSelectOptions: MultipleSelectOption) {
+    // height in pixel of the multiple-select element
+    const selectElmHeight = SELECT_ELEMENT_HEIGHT;
 
+    const windowHeight = $(window).innerHeight() || 300;
+    const pageScroll = $('body').scrollTop() || 0;
+    const $msDropContainer = multipleSelectOptions.container ? $(multipleSelectOptions.container) : multipleSelectDomElement;
+    const $msDrop = $msDropContainer.find('.ms-drop');
+    const msDropHeight = $msDrop.height() || 0;
+    const msDropOffsetTop = $msDrop.offset().top;
+    const space = windowHeight - (msDropOffsetTop - pageScroll);
+
+    if (space < msDropHeight) {
+      if (multipleSelectOptions.container) {
+        // when using a container, we need to offset the drop ourself
+        // and also make sure there's space available on top before doing so
+        const newOffsetTop = (msDropOffsetTop - msDropHeight - selectElmHeight);
+        if (newOffsetTop > 0) {
+          $msDrop.offset({ top: newOffsetTop < 0 ? 0 : newOffsetTop });
+        }
+      } else {
+        // without container, we simply need to add the "top" class to the drop
+        $msDrop.addClass('top');
+      }
+      $msDrop.removeClass('bottom');
+    } else {
+      $msDrop.addClass('bottom');
+      $msDrop.removeClass('top');
+    }
+  }
+
+  /** Build the template HTML string */
+  private buildTemplateHtmlString(collection: any[]) {
     let options = '';
-    this.collection.forEach((option: SelectOption) => {
+    collection.forEach((option: SelectOption) => {
       if (!option || (option[this.labelName] === undefined && option.labelKey === undefined)) {
         throw new Error('A collection with value/label (or value/labelKey when using ' +
           'Locale) is required to populate the Select list, for example: { params: { ' +
           '{ collection: [ { value: \'1\', label: \'One\' } ] } } }');
       }
       const labelKey = (option.labelKey || option[this.labelName]) as string;
-      const textLabel = ((option.labelKey || isEnabledTranslate) && this._i18n && typeof this._i18n.tr === 'function') ? this._i18n.tr(labelKey || ' ') : labelKey;
+      const textLabel = (option.labelKey || this.enableTranslateLabel) ? this.i18n.tr(labelKey || ' ') : labelKey;
 
       options += `<option value="${option[this.valueName]}">${textLabel}</option>`;
     });
@@ -172,8 +222,8 @@ export class SingleSelectEditor implements Editor {
       this.$editorElm.addClass('form-control');
     } else {
       const elementOptions = (this.columnDef.params) ? this.columnDef.params.elementOptions : {};
-      const options: MultipleSelectOption = { ...this.defaultOptions, ...elementOptions };
-      this.$editorElm = this.$editorElm.multipleSelect(options);
+      this.editorElmOptions = { ...this.defaultOptions, ...elementOptions };
+      this.$editorElm = this.$editorElm.multipleSelect(this.editorElmOptions);
       setTimeout(() => this.$editorElm.multipleSelect('open'));
     }
   }

@@ -114,7 +114,11 @@ export class Example3 {
       minWidth: 100,
       params: {
         formatters: [Formatters.collection, Formatters.percentCompleteBar],
-        collection: Array.from(Array(101).keys()).map(k => ({ value: k, label: k }))
+        collection: Array.from(Array(101).keys()).map(k => ({ value: k, label: k })),
+        collectionSortBy: {
+          property: 'label',
+          sortDesc: true
+        },
       }
     }, {
       id: 'start',
@@ -124,10 +128,7 @@ export class Example3 {
       sortable: true,
       minWidth: 100,
       type: FieldType.date,
-      editor: Editors.date,
-      params: {
-        i18n: this.i18n
-      }
+      editor: Editors.date
     }, {
       id: 'finish',
       name: 'Finish',
@@ -154,7 +155,14 @@ export class Example3 {
       editor: Editors.multipleSelect,
       params: {
         collection: Array.from(Array(10).keys()).map(k => ({ value: `Task ${k}`, label: `Task ${k}` })),
-        i18n: this.i18n
+        collectionSortBy: {
+          property: 'label',
+          sortDesc: true
+        },
+        collectionFilterBy: {
+          property: 'label',
+          value: 'Task 2'
+        }
       }
     }];
 
@@ -170,6 +178,9 @@ export class Example3 {
       editCommandHandler: (item, column, editCommand) => {
         this._commandQueue.push(editCommand);
         editCommand.execute();
+      },
+      params: {
+        i18n: this.i18n
       }
     };
   }

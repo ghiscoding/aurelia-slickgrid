@@ -21,7 +21,7 @@ import 'slickgrid/plugins/slick.headermenu';
 import 'slickgrid/plugins/slick.rowmovemanager';
 import 'slickgrid/plugins/slick.rowselectionmodel';
 
-import { bindable, bindingMode, inject } from 'aurelia-framework';
+import { Container, Factory, bindable, bindingMode, inject } from 'aurelia-framework';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
 import { I18N } from 'aurelia-i18n';
 import { GlobalGridOptions } from './global-grid-options';
@@ -57,7 +57,7 @@ const aureliaEventPrefix = 'asg';
 const eventPrefix = 'sg';
 
 // Aurelia doesn't support well TypeScript @autoinject in a Plugin so we'll do it the old fashion way
-@inject(ControlAndPluginService, ExportService, Element, EventAggregator, FilterService, GraphqlService, GridEventService, GridExtraService, GridStateService, I18N, ResizerService, SortService)
+@inject(ControlAndPluginService, ExportService, Element, EventAggregator, FilterService, GraphqlService, GridEventService, GridExtraService, GridStateService, I18N, ResizerService, SortService, Container)
 export class AureliaSlickgridCustomElement {
   private _dataset: any[];
   private _eventHandler: any = new Slick.EventHandler();
@@ -67,7 +67,6 @@ export class AureliaSlickgridCustomElement {
   groupItemMetadataProvider: any;
   localeChangedSubscriber: Subscription;
   showPagination = false;
-  style: any;
 
   @bindable({ defaultBindingMode: bindingMode.twoWay }) element: Element;
   @bindable({ defaultBindingMode: bindingMode.twoWay }) dataset: any[];
@@ -77,7 +76,7 @@ export class AureliaSlickgridCustomElement {
   @bindable() gridId: string;
   @bindable() columnDefinitions: Column[];
   @bindable() gridOptions: GridOption;
-  @bindable() gridHeight = 100;
+  @bindable() gridHeight = 200;
   @bindable() gridWidth = 600;
   @bindable() pickerOptions: any;
 
@@ -93,7 +92,8 @@ export class AureliaSlickgridCustomElement {
     private gridStateService: GridStateService,
     private i18n: I18N,
     private resizer: ResizerService,
-    private sortService: SortService) { }
+    private sortService: SortService,
+    private container: Container) { }
 
   attached() {
     this.elm.dispatchEvent(new CustomEvent(`${eventPrefix}-on-before-grid-create`, {
@@ -195,10 +195,25 @@ export class AureliaSlickgridCustomElement {
     // get the grid options (priority is Global Options first, then user option which could overwrite the Global options)
     this.gridOptions = { ...GlobalGridOptions, ...binding.gridOptions };
 
-    this.style = {
-      height: `${binding.gridHeight}px`,
-      width: `${binding.gridWidth}px`
-    };
+    if (!this.gridOptions.enableAutoResize) {
+      this.gridStyleWidth = {
+        width: `${this.gridWidth}px`
+      };
+      this.gridStyleHeight = {
+        height: `${this.gridHeight}px`
+      };
+    }
+
+    // Wrap each editor class in the Factory resolver so consumers of this library can use
+    // dependency injection. Aurelia will resolve all dependencies when we pass the container
+    // and allow slickgrid to pass its arguments to the editors constructor last
+    // when slickgrid creates the editor
+    // https://github.com/aurelia/dependency-injection/blob/master/src/resolvers.js
+    for (const c of this.columnDefinitions) {
+      if (c.editor) {
+        c.editor = Factory.of(c.editor).get(this.container);
+      }
+    }
   }
 
   datasetChanged(newValue: any[], oldValue: any[]) {
@@ -226,11 +241,12 @@ export class AureliaSlickgridCustomElement {
       if (backendApi && backendApi.service && backendApi.service instanceof GraphqlService) {
         backendApi.internalPostProcess = (processResult: any) => {
           const datasetName = (backendApi && backendApi.service && typeof backendApi.service.getDatasetName === 'function') ? backendApi.service.getDatasetName() : '';
-          if (!processResult || !processResult.data || !processResult.data[datasetName]) {
-            throw new Error(`Your GraphQL result is invalid and/or does not follow the required result structure. Please check the result and/or review structure to use in Aurelia-Slickgrid Wiki in the GraphQL section.`);
+          if (processResult && processResult.data && processResult.data[datasetName]) {
+            this._dataset = processResult.data[datasetName].nodes;
+            this.refreshGridData(this._dataset, processResult.data[datasetName].totalCount);
+          } else {
+            this._dataset = [];
           }
-          this._dataset = processResult.data[datasetName].nodes;
-          this.refreshGridData(this._dataset, processResult.data[datasetName].totalCount);
         };
       }
     }
@@ -248,7 +264,7 @@ export class AureliaSlickgridCustomElement {
 
     // attach external sorting (backend) when available or default onSort (dataView)
     if (gridOptions.enableSorting) {
-      (gridOptions.backendServiceApi || gridOptions.onBackendEventApi) ? this.sortService.attachBackendOnSort(grid, gridOptions) : this.sortService.attachLocalOnSort(grid, gridOptions, this.dataview, this.columnDefinitions);
+      (gridOptions.backendServiceApi || gridOptions.onBackendEventApi) ? this.sortService.attachBackendOnSort(grid, dataView) : this.sortService.attachLocalOnSort(grid, dataView);
     }
 
     // attach external filter (backend) when available or default onFilter (dataView)
@@ -392,8 +408,6 @@ export class AureliaSlickgridCustomElement {
       if (options.autoFitColumnsOnFirstLoad && typeof grid.autosizeColumns === 'function') {
         grid.autosizeColumns();
       }
-    } else {
-      this.resizer.resizeGrid(0, { height: this.gridHeight, width: this.gridWidth });
     }
   }
 

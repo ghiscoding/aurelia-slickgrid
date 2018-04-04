@@ -68,7 +68,6 @@ export class GraphqlService implements BackendService {
 
     const queryQb = new QueryBuilder('query');
     const datasetQb = new QueryBuilder(this.options.datasetName);
-    const pageInfoQb = new QueryBuilder('pageInfo');
     const dataQb = (this.options.isWithCursor) ? new QueryBuilder('edges') : new QueryBuilder('nodes');
 
     // get all the columnds Ids for the filters to work
@@ -97,15 +96,15 @@ export class GraphqlService implements BackendService {
 
     if (this.options.isWithCursor) {
       // ...pageInfo { hasNextPage, endCursor }, edges { cursor, node { _filters_ } }
+      const pageInfoQb = new QueryBuilder('pageInfo');
       pageInfoQb.find('hasNextPage', 'endCursor');
       dataQb.find(['cursor', { node: filters }]);
+      datasetQb.find(['totalCount', pageInfoQb, dataQb]);
     } else {
-      // ...pageInfo { hasNextPage }, nodes { _filters_ }
-      pageInfoQb.find('hasNextPage');
+      // ...nodes { _filters_ }
       dataQb.find(filters);
+      datasetQb.find(['totalCount', dataQb]);
     }
-
-    datasetQb.find(['totalCount', pageInfoQb, dataQb]);
 
     // add dataset filters, could be Pagination and SortingFilters and/or FieldFilters
     const datasetFilters: GraphqlDatasetFilter = {
@@ -294,9 +293,6 @@ export class GraphqlService implements BackendService {
    * Without cursor, the query can have 3 arguments (first, last, offset), for example:
    *   users (first:20, offset: 10) {
    *     totalCount
-   *     pageInfo {
-   *       hasNextPage
-   *     }
    *     nodes {
    *       name
    *       gender
@@ -344,9 +340,7 @@ export class GraphqlService implements BackendService {
         // if user defined some "presets", then we need to find the filters from the column definitions instead
         let columnDef: Column | undefined;
         if (isUpdatedByPreset && Array.isArray(this._columnDefinitions)) {
-          columnDef = this._columnDefinitions.find((column: Column) => {
-            return column.id === columnFilter.columnId;
-          });
+          columnDef = this._columnDefinitions.find((column: Column) => column.id === columnFilter.columnId);
         } else {
           columnDef = columnFilter.columnDef;
         }
@@ -452,10 +446,13 @@ export class GraphqlService implements BackendService {
 
       // display the correct sorting icons on the UI, for that it requires (columnId, sortAsc) properties
       const tmpSorterArray = currentSorters.map((sorter) => {
-        graphqlSorters.push({
-          field: sorter.columnId + '',
-          direction: sorter.direction
-        });
+        const columnDef = this._columnDefinitions.find((column: Column) => column.id === sorter.columnId);
+        if (columnDef) {
+          graphqlSorters.push({
+            field: (columnDef.queryField || columnDef.queryFieldSorter || columnDef.field || columnDef.id) + '',
+            direction: sorter.direction
+          });
+        }
         return {
           columnId: sorter.columnId,
           sortAsc: sorter.direction.toUpperCase() === SortDirection.ASC
@@ -467,13 +464,13 @@ export class GraphqlService implements BackendService {
       // orderBy:[{field: lastName, direction: ASC}, {field: firstName, direction: DESC}]
       if (sortColumns && sortColumns.length === 0) {
         graphqlSorters = new Array(this.defaultOrderBy); // when empty, use the default sort
-        currentSorters = new Array({ columnId: this.defaultOrderBy.direction, direction: this.defaultOrderBy.direction });
+        currentSorters = new Array({ columnId: this.defaultOrderBy.field, direction: this.defaultOrderBy.direction });
       } else {
         if (sortColumns) {
           for (const column of sortColumns) {
             if (column && column.sortCol) {
               currentSorters.push({
-                columnId: (column.sortCol.queryField || column.sortCol.queryFieldSorter || column.sortCol.field || column.sortCol.id) + '',
+                columnId: column.sortCol.id + '',
                 direction: column.sortAsc ? SortDirection.ASC : SortDirection.DESC
               });
 
