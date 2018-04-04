@@ -1,11 +1,14 @@
-System.register(["./arrayToCsvFormatter", "./checkboxFormatter", "./checkmarkFormatter", "./complexObjectFormatter", "./dateIsoFormatter", "./dateTimeIsoAmPmFormatter", "./dateTimeIsoFormatter", "./dateTimeUsAmPmFormatter", "./dateTimeUsFormatter", "./dateUsFormatter", "./deleteIconFormatter", "./editIconFormatter", "./hyperlinkFormatter", "./hyperlinkUriPrefixFormatter", "./infoIconFormatter", "./lowercaseFormatter", "./multipleFormatter", "./percentCompleteFormatter", "./percentCompleteBarFormatter", "./progressBarFormatter", "./translateFormatter", "./translateBooleanFormatter", "./uppercaseFormatter", "./yesNoFormatter", "./collectionFormatter"], function (exports_1, context_1) {
+System.register(["./arrayToCsvFormatter", "./boldFormatter", "./checkboxFormatter", "./checkmarkFormatter", "./complexObjectFormatter", "./dateIsoFormatter", "./dateTimeIsoAmPmFormatter", "./dateTimeIsoFormatter", "./dateTimeUsAmPmFormatter", "./dateTimeUsFormatter", "./dateUsFormatter", "./deleteIconFormatter", "./dollarColoredBoldFormatter", "./dollarColoredFormatter", "./dollarFormatter", "./editIconFormatter", "./hyperlinkFormatter", "./hyperlinkUriPrefixFormatter", "./infoIconFormatter", "./lowercaseFormatter", "./multipleFormatter", "./percentCompleteFormatter", "./percentCompleteBarFormatter", "./progressBarFormatter", "./translateFormatter", "./translateBooleanFormatter", "./uppercaseFormatter", "./yesNoFormatter", "./collectionFormatter"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var arrayToCsvFormatter_1, checkboxFormatter_1, checkmarkFormatter_1, complexObjectFormatter_1, dateIsoFormatter_1, dateTimeIsoAmPmFormatter_1, dateTimeIsoFormatter_1, dateTimeUsAmPmFormatter_1, dateTimeUsFormatter_1, dateUsFormatter_1, deleteIconFormatter_1, editIconFormatter_1, hyperlinkFormatter_1, hyperlinkUriPrefixFormatter_1, infoIconFormatter_1, lowercaseFormatter_1, multipleFormatter_1, percentCompleteFormatter_1, percentCompleteBarFormatter_1, progressBarFormatter_1, translateFormatter_1, translateBooleanFormatter_1, uppercaseFormatter_1, yesNoFormatter_1, collectionFormatter_1, Formatters;
+    var arrayToCsvFormatter_1, boldFormatter_1, checkboxFormatter_1, checkmarkFormatter_1, complexObjectFormatter_1, dateIsoFormatter_1, dateTimeIsoAmPmFormatter_1, dateTimeIsoFormatter_1, dateTimeUsAmPmFormatter_1, dateTimeUsFormatter_1, dateUsFormatter_1, deleteIconFormatter_1, dollarColoredBoldFormatter_1, dollarColoredFormatter_1, dollarFormatter_1, editIconFormatter_1, hyperlinkFormatter_1, hyperlinkUriPrefixFormatter_1, infoIconFormatter_1, lowercaseFormatter_1, multipleFormatter_1, percentCompleteFormatter_1, percentCompleteBarFormatter_1, progressBarFormatter_1, translateFormatter_1, translateBooleanFormatter_1, uppercaseFormatter_1, yesNoFormatter_1, collectionFormatter_1, Formatters;
     return {
         setters: [
             function (arrayToCsvFormatter_1_1) {
                 arrayToCsvFormatter_1 = arrayToCsvFormatter_1_1;
+            },
+            function (boldFormatter_1_1) {
+                boldFormatter_1 = boldFormatter_1_1;
             },
             function (checkboxFormatter_1_1) {
                 checkboxFormatter_1 = checkboxFormatter_1_1;
@@ -36,6 +39,15 @@ System.register(["./arrayToCsvFormatter", "./checkboxFormatter", "./checkmarkFor
             },
             function (deleteIconFormatter_1_1) {
                 deleteIconFormatter_1 = deleteIconFormatter_1_1;
+            },
+            function (dollarColoredBoldFormatter_1_1) {
+                dollarColoredBoldFormatter_1 = dollarColoredBoldFormatter_1_1;
+            },
+            function (dollarColoredFormatter_1_1) {
+                dollarColoredFormatter_1 = dollarColoredFormatter_1_1;
+            },
+            function (dollarFormatter_1_1) {
+                dollarFormatter_1 = dollarFormatter_1_1;
             },
             function (editIconFormatter_1_1) {
                 editIconFormatter_1 = editIconFormatter_1_1;
@@ -81,18 +93,12 @@ System.register(["./arrayToCsvFormatter", "./checkboxFormatter", "./checkmarkFor
             }
         ],
         execute: function () {
-            /*
-            export interface GroupFormatter {
-              (row: number, cell: number, value: any, columnDef: Column, dataContext: Group): string
-            }
-            export interface GroupTotalsFormatter {
-              (row: number, cell: number, value: any, columnDef: Column, dataContext: GroupTotals): string
-            }
-            */
             /** Provides a list of different Formatters that will change the cell value displayed in the UI */
             exports_1("Formatters", Formatters = {
                 /** Takes an array of string and converts it to a comma delimited string */
                 arrayToCsv: arrayToCsvFormatter_1.arrayToCsvFormatter,
+                /** show value in bold font weight as well */
+                bold: boldFormatter_1.boldFormatter,
                 /** When value is filled (true), it will display a checkbox Unicode icon */
                 checkbox: checkboxFormatter_1.checkboxFormatter,
                 /** When value is filled (true), it will display a Font-Awesome icon (fa-check) */
@@ -125,6 +131,12 @@ System.register(["./arrayToCsvFormatter", "./checkboxFormatter", "./checkmarkFor
                 dateTimeUsAmPm: dateTimeUsAmPmFormatter_1.dateTimeUsAmPmFormatter,
                 /** Displays a Font-Awesome delete icon (fa-trash) */
                 deleteIcon: deleteIconFormatter_1.deleteIconFormatter,
+                /** Display the value as 2 decimals formatted with dollar sign '$' at the end of of the value */
+                dollar: dollarFormatter_1.dollarFormatter,
+                /** Display the value as 2 decimals formatted with dollar sign '$' at the end of of the value, change color of text to red/green on negative/positive value */
+                dollarColored: dollarColoredFormatter_1.dollarColoredFormatter,
+                /** Display the value as 2 decimals formatted with dollar sign '$' at the end of of the value, change color of text to red/green on negative/positive value, show it in bold font weight as well */
+                dollarColoredBold: dollarColoredBoldFormatter_1.dollarColoredBoldFormatter,
                 /** Displays a Font-Awesome edit icon (fa-pencil) */
                 editIcon: editIconFormatter_1.editIconFormatter,
                 /** Takes an hyperlink cell value and transforms it into a real hyperlink, given that the value starts with 1 of these (http|ftp|https). The structure will be "<a href="hyperlink">hyperlink</a>" */

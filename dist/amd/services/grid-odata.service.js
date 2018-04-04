@@ -305,11 +305,13 @@ define(["require", "exports", "aurelia-framework", "./utilities", "./../models/i
                             var column = sortColumns_1[_i];
                             if (column.sortCol) {
                                 var fieldName = (column.sortCol.queryField || column.sortCol.queryFieldSorter || column.sortCol.field || column.sortCol.id) + '';
+                                var columnFieldName = (column.sortCol.field || column.sortCol.id) + '';
                                 if (this.odataService.options.caseType === index_1.CaseType.pascalCase) {
                                     fieldName = String.titleCase(fieldName);
+                                    columnFieldName = String.titleCase(columnFieldName);
                                 }
                                 sorterArray.push({
-                                    columnId: fieldName,
+                                    columnId: columnFieldName,
                                     direction: column.sortAsc ? 'asc' : 'desc'
                                 });
                             }

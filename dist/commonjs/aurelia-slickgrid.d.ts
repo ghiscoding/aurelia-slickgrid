@@ -3,6 +3,7 @@ import 'slickgrid/lib/jquery.event.drag-2.3.0';
 import 'slickgrid/slick.core';
 import 'slickgrid/slick.dataview';
 import 'slickgrid/slick.grid';
+import 'slickgrid/slick.groupitemmetadataprovider';
 import 'slickgrid/controls/slick.columnpicker';
 import 'slickgrid/controls/slick.gridmenu';
 import 'slickgrid/controls/slick.pager';
@@ -17,6 +18,7 @@ import 'slickgrid/plugins/slick.headerbuttons';
 import 'slickgrid/plugins/slick.headermenu';
 import 'slickgrid/plugins/slick.rowmovemanager';
 import 'slickgrid/plugins/slick.rowselectionmodel';
+import { Container } from 'aurelia-framework';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
 import { I18N } from 'aurelia-i18n';
 import { Column, GridOption, Pagination } from './models/index';
@@ -34,14 +36,19 @@ export declare class AureliaSlickgridCustomElement {
     private i18n;
     private resizer;
     private sortService;
+    private container;
     private _dataset;
     private _eventHandler;
     gridStateSubscriber: Subscription;
-    gridHeightString: string;
-    gridWidthString: string;
+    gridStyleHeight: {
+        height: string;
+    };
+    gridStyleWidth: {
+        width: string;
+    };
+    groupItemMetadataProvider: any;
     localeChangedSubscriber: Subscription;
     showPagination: boolean;
-    style: any;
     element: Element;
     dataset: any[];
     gridPaginationOptions: GridOption;
@@ -53,7 +60,7 @@ export declare class AureliaSlickgridCustomElement {
     gridHeight: number;
     gridWidth: number;
     pickerOptions: any;
-    constructor(controlAndPluginService: ControlAndPluginService, exportService: ExportService, elm: Element, ea: EventAggregator, filterService: FilterService, graphqlService: GraphqlService, gridEventService: GridEventService, gridExtraService: GridExtraService, gridStateService: GridStateService, i18n: I18N, resizer: ResizerService, sortService: SortService);
+    constructor(controlAndPluginService: ControlAndPluginService, exportService: ExportService, elm: Element, ea: EventAggregator, filterService: FilterService, graphqlService: GraphqlService, gridEventService: GridEventService, gridExtraService: GridExtraService, gridStateService: GridStateService, i18n: I18N, resizer: ResizerService, sortService: SortService, container: Container);
     attached(): void;
     detached(): void;
     /**

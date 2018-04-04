@@ -72,7 +72,7 @@ let CompoundDateFilter = class CompoundDateFilter {
     buildDatePickerInput(searchTerm) {
         const inputFormat = mapFlatpickrDateFormatWithFieldType(this.columnDef.type || FieldType.dateIso);
         const outputFormat = mapFlatpickrDateFormatWithFieldType(this.columnDef.outputType || this.columnDef.type || FieldType.dateUtc);
-        let currentLocale = this.getCurrentLocale(this.columnDef, this.gridOptions) || '';
+        let currentLocale = this.i18n.getLocale() || 'en';
         if (currentLocale.length > 2) {
             currentLocale = currentLocale.substring(0, 2);
         }
@@ -169,13 +169,6 @@ let CompoundDateFilter = class CompoundDateFilter {
             $filterContainerElm.appendTo($headerElm);
         }
         return $filterContainerElm;
-    }
-    getCurrentLocale(columnDef, gridOptions) {
-        const params = gridOptions.params || columnDef.params || {};
-        if (params.i18n && params.i18n instanceof I18N) {
-            return params.i18n.getLocale();
-        }
-        return 'en';
     }
     loadFlatpickrLocale(locale) {
         // change locale if needed, Flatpickr reference: https://chmln.github.io/flatpickr/localization/

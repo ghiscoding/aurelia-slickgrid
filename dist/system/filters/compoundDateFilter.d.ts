@@ -38,7 +38,6 @@ export declare class CompoundDateFilter implements Filter {
      * Create the DOM element
      */
     private createDomElement();
-    private getCurrentLocale(columnDef, gridOptions);
     private loadFlatpickrLocale(locale);
     private onTriggerEvent(e);
     private hide();

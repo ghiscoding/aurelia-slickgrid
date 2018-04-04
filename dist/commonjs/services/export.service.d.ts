@@ -1,3 +1,4 @@
+import { EventAggregator } from 'aurelia-event-aggregator';
 import { I18N } from 'aurelia-i18n';
 import { Column, ExportOption, FileType, GridOption } from './../models/index';
 export interface ExportColumnHeader {
@@ -6,19 +7,18 @@ export interface ExportColumnHeader {
 }
 export declare class ExportService {
     private i18n;
+    private ea;
     private _lineCarriageReturn;
     private _dataView;
     private _grid;
     private _exportQuoteWrapper;
-    private _existingSlickAggregators;
     private _columnHeaders;
     private _groupedHeaders;
     private _gridOptions;
-    private _groupingDefinition;
     private _hasGroupedItems;
     private _exportOptions;
-    defaultExportOptions: ExportOption;
-    constructor(i18n: I18N);
+    aureliaEventPrefix: string;
+    constructor(i18n: I18N, ea: EventAggregator);
     /**
      * Initialize the Export Service
      * @param grid
@@ -42,10 +42,6 @@ export declare class ExportService {
      */
     getAllGridRowData(columns: Column[], lineCarriageReturn: string): string;
     /**
-     * Get all the Slick Aggregators that are defined in SlickGrid
-     */
-    getAllSlickGridAggregators(): string[];
-    /**
      * Get all header titles and their keys, translate the title when required.
      * @param columns of the grid
      */
@@ -66,13 +62,13 @@ export declare class ExportService {
      * For example if we grouped by "salesRep" and we have a Sum Aggregator on "sales", then the returned output would be:: ["Sum 123$"]
      * @param itemObj
      */
-    readGroupedTotalRow(itemObj: any): string;
+    readGroupedTotalRow(columns: Column[], itemObj: any): string;
     /**
-     * Get all grouped column titles, translate them when required.
-     * For example if the grid is grouped by salesRep and then customerName, we will return their title, something like:: ['Sales Rep', 'Customer Name']
-     * @param columns of the grid
+     * Sanitize, return only the text without HTML tags
+     * @input htmlString
+     * @return text
      */
-    getGroupedColumnTitles(columns: Column[]): ExportColumnHeader[];
+    sanitizeHtmlToText(htmlString: string): string;
     /**
      * Triggers download file with file format.
      * IE(6-10) are not supported

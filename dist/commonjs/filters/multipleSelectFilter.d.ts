@@ -1,19 +1,25 @@
 import { I18N } from 'aurelia-i18n';
-import { Column, Filter, FilterArguments, FilterCallback, FilterType, MultipleSelectOption, SearchTerm } from './../models/index';
+import { Column, Filter, FilterArguments, FilterCallback, FilterType, GridOption, MultipleSelectOption, SearchTerm } from './../models/index';
+import { CollectionService } from '../services/collection.service';
 export declare class MultipleSelectFilter implements Filter {
+    private collectionService;
     private i18n;
     $filterElm: any;
     grid: any;
+    gridOptions: GridOption;
     searchTerms: SearchTerm[];
     columnDef: Column;
     callback: FilterCallback;
     defaultOptions: MultipleSelectOption;
     isFilled: boolean;
     filterType: FilterType;
+    labelName: string;
+    valueName: string;
+    enableTranslateLabel: boolean;
     /**
      * Initialize the Filter
      */
-    constructor(i18n: I18N);
+    constructor(collectionService: CollectionService, i18n: I18N);
     /**
      * Initialize the filter template
      */
@@ -33,7 +39,7 @@ export declare class MultipleSelectFilter implements Filter {
     /**
      * Create the HTML template as a string
      */
-    private buildTemplateHtmlString();
+    private buildTemplateHtmlString(optionCollection);
     /**
      * From the html template string, create a DOM element
      * Subscribe to the onClose event and run the callback when that happens

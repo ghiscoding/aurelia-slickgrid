@@ -78,6 +78,9 @@ define(["require", "exports", "jquery"], function (require, exports, $) {
         ResizerService.prototype.dispose = function () {
             $(window).off('resize.grid');
         };
+        ResizerService.prototype.getLastResizeDimensions = function () {
+            return this._lastDimensions;
+        };
         /** Resize the datagrid to fit the browser height & width */
         ResizerService.prototype.resizeGrid = function (delay, newSizes) {
             var _this = this;
@@ -98,6 +101,12 @@ define(["require", "exports", "jquery"], function (require, exports, $) {
                     gridElm.width(newSizes.width);
                     gridContainerElm.height(newSizes.height);
                     gridContainerElm.width(newSizes.width);
+                    // keep last resized dimensions
+                    _this._lastDimensions = newSizes;
+                    _this._lastDimensions.heightWithPagination = newSizes.height;
+                    if ((_this._gridOptions.enablePagination || _this._gridOptions.backendServiceApi)) {
+                        _this._lastDimensions.heightWithPagination += DATAGRID_PAGINATION_HEIGHT;
+                    }
                     // resize the slickgrid canvas on all browser except some IE versions
                     // exclude all IE below IE11
                     // IE11 wants to be a better standard (W3C) follower (finally) they even changed their appName output to also have 'Netscape'

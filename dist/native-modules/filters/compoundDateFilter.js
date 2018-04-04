@@ -75,7 +75,7 @@ var CompoundDateFilter = /** @class */ (function () {
         var _this = this;
         var inputFormat = mapFlatpickrDateFormatWithFieldType(this.columnDef.type || FieldType.dateIso);
         var outputFormat = mapFlatpickrDateFormatWithFieldType(this.columnDef.outputType || this.columnDef.type || FieldType.dateUtc);
-        var currentLocale = this.getCurrentLocale(this.columnDef, this.gridOptions) || '';
+        var currentLocale = this.i18n.getLocale() || 'en';
         if (currentLocale.length > 2) {
             currentLocale = currentLocale.substring(0, 2);
         }
@@ -172,13 +172,6 @@ var CompoundDateFilter = /** @class */ (function () {
             $filterContainerElm.appendTo($headerElm);
         }
         return $filterContainerElm;
-    };
-    CompoundDateFilter.prototype.getCurrentLocale = function (columnDef, gridOptions) {
-        var params = gridOptions.params || columnDef.params || {};
-        if (params.i18n && params.i18n instanceof I18N) {
-            return params.i18n.getLocale();
-        }
-        return 'en';
     };
     CompoundDateFilter.prototype.loadFlatpickrLocale = function (locale) {
         // change locale if needed, Flatpickr reference: https://chmln.github.io/flatpickr/localization/

@@ -44,7 +44,6 @@ var GraphqlService = /** @class */ (function () {
         columnDefinitions = columnDefinitions.filter(function (column) { return !column.excludeFromQuery; });
         var queryQb = new QueryBuilder('query');
         var datasetQb = new QueryBuilder(this.options.datasetName);
-        var pageInfoQb = new QueryBuilder('pageInfo');
         var dataQb = (this.options.isWithCursor) ? new QueryBuilder('edges') : new QueryBuilder('nodes');
         // get all the columnds Ids for the filters to work
         var columnIds = [];
@@ -70,15 +69,16 @@ var GraphqlService = /** @class */ (function () {
         var filters = this.buildFilterQuery(columnIds);
         if (this.options.isWithCursor) {
             // ...pageInfo { hasNextPage, endCursor }, edges { cursor, node { _filters_ } }
+            var pageInfoQb = new QueryBuilder('pageInfo');
             pageInfoQb.find('hasNextPage', 'endCursor');
             dataQb.find(['cursor', { node: filters }]);
+            datasetQb.find(['totalCount', pageInfoQb, dataQb]);
         }
         else {
-            // ...pageInfo { hasNextPage }, nodes { _filters_ }
-            pageInfoQb.find('hasNextPage');
+            // ...nodes { _filters_ }
             dataQb.find(filters);
+            datasetQb.find(['totalCount', dataQb]);
         }
-        datasetQb.find(['totalCount', pageInfoQb, dataQb]);
         // add dataset filters, could be Pagination and SortingFilters and/or FieldFilters
         var datasetFilters = __assign({}, this.options.paginationOptions, { first: ((this.options.paginationOptions && this.options.paginationOptions.first) ? this.options.paginationOptions.first : ((this.pagination && this.pagination.pageSize) ? this.pagination.pageSize : null)) || this.defaultPaginationOptions.first });
         if (!this.options.isWithCursor) {
@@ -239,9 +239,6 @@ var GraphqlService = /** @class */ (function () {
      * Without cursor, the query can have 3 arguments (first, last, offset), for example:
      *   users (first:20, offset: 10) {
      *     totalCount
-     *     pageInfo {
-     *       hasNextPage
-     *     }
      *     nodes {
      *       name
      *       gender
@@ -281,9 +278,7 @@ var GraphqlService = /** @class */ (function () {
                 // if user defined some "presets", then we need to find the filters from the column definitions instead
                 var columnDef = void 0;
                 if (isUpdatedByPreset && Array.isArray(this_1._columnDefinitions)) {
-                    columnDef = this_1._columnDefinitions.find(function (column) {
-                        return column.id === columnFilter_1.columnId;
-                    });
+                    columnDef = this_1._columnDefinitions.find(function (column) { return column.id === columnFilter_1.columnId; });
                 }
                 else {
                     columnDef = columnFilter_1.columnDef;
@@ -373,6 +368,7 @@ var GraphqlService = /** @class */ (function () {
      * @param columnFilters
      */
     GraphqlService.prototype.updateSorters = function (sortColumns, presetSorters) {
+        var _this = this;
         var currentSorters = [];
         var graphqlSorters = [];
         if (!sortColumns && presetSorters) {
@@ -381,10 +377,13 @@ var GraphqlService = /** @class */ (function () {
             currentSorters.forEach(function (sorter) { return sorter.direction = sorter.direction.toUpperCase(); });
             // display the correct sorting icons on the UI, for that it requires (columnId, sortAsc) properties
             var tmpSorterArray = currentSorters.map(function (sorter) {
-                graphqlSorters.push({
-                    field: sorter.columnId + '',
-                    direction: sorter.direction
-                });
+                var columnDef = _this._columnDefinitions.find(function (column) { return column.id === sorter.columnId; });
+                if (columnDef) {
+                    graphqlSorters.push({
+                        field: (columnDef.queryField || columnDef.queryFieldSorter || columnDef.field || columnDef.id) + '',
+                        direction: sorter.direction
+                    });
+                }
                 return {
                     columnId: sorter.columnId,
                     sortAsc: sorter.direction.toUpperCase() === SortDirection.ASC
@@ -397,7 +396,7 @@ var GraphqlService = /** @class */ (function () {
             // orderBy:[{field: lastName, direction: ASC}, {field: firstName, direction: DESC}]
             if (sortColumns && sortColumns.length === 0) {
                 graphqlSorters = new Array(this.defaultOrderBy); // when empty, use the default sort
-                currentSorters = new Array({ columnId: this.defaultOrderBy.direction, direction: this.defaultOrderBy.direction });
+                currentSorters = new Array({ columnId: this.defaultOrderBy.field, direction: this.defaultOrderBy.direction });
             }
             else {
                 if (sortColumns) {
@@ -405,7 +404,7 @@ var GraphqlService = /** @class */ (function () {
                         var column = sortColumns_1[_i];
                         if (column && column.sortCol) {
                             currentSorters.push({
-                                columnId: (column.sortCol.queryField || column.sortCol.queryFieldSorter || column.sortCol.field || column.sortCol.id) + '',
+                                columnId: column.sortCol.id + '',
                                 direction: column.sortAsc ? SortDirection.ASC : SortDirection.DESC
                             });
                             graphqlSorters.push({

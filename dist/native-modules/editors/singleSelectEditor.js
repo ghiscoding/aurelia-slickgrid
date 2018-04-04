@@ -6,28 +6,39 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
     }
     return t;
 };
-import { findOrDefault } from '../services/index';
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+import { inject } from 'aurelia-framework';
+import { I18N } from 'aurelia-i18n';
+import { findOrDefault, CollectionService } from '../services/index';
 import * as $ from 'jquery';
+// height in pixel of the multiple-select DOM element
+var SELECT_ELEMENT_HEIGHT = 26;
 /**
  * Slickgrid editor class for single select lists
  */
 var SingleSelectEditor = /** @class */ (function () {
-    function SingleSelectEditor(args) {
+    function SingleSelectEditor(collectionService, i18n, args) {
+        var _this = this;
+        this.collectionService = collectionService;
+        this.i18n = i18n;
         this.args = args;
-        /**
-         * The options label/value object to use in the select list
-         */
+        /** The options label/value object to use in the select list */
         this.collection = [];
-        var gridOptions = this.args.grid.getOptions();
-        var params = gridOptions.params || this.args.column.params || {};
-        this._i18n = params.i18n;
+        this.gridOptions = this.args.grid.getOptions();
+        var params = this.gridOptions.params || this.args.column.params || {};
         this.defaultOptions = {
             container: 'body',
             filter: false,
             maxHeight: 200,
             width: 150,
             offsetLeft: 20,
-            single: true
+            single: true,
+            onOpen: function () { return _this.autoAdjustDropPosition(_this.$editorElm, _this.editorElmOptions); },
         };
         this.init();
     }
@@ -49,7 +60,25 @@ var SingleSelectEditor = /** @class */ (function () {
             throw new Error('[Aurelia-SlickGrid] An editor must always have an "init()" with valid arguments.');
         }
         this.columnDef = this.args.column;
-        var editorTemplate = this.buildTemplateHtmlString();
+        if (!this.columnDef || !this.columnDef.params || !this.columnDef.params.collection) {
+            throw new Error("[Aurelia-SlickGrid] You need to pass a \"collection\" on the params property in the column definition for the MultipleSelect Editor to work correctly.\n      Also each option should include a value/label pair (or value/labelKey when using Locale).\n      For example: { params: { { collection: [{ value: true, label: 'True' },{ value: false, label: 'False'}] } } }");
+        }
+        this.enableTranslateLabel = (this.columnDef.params.enableTranslateLabel) ? this.columnDef.params.enableTranslateLabel : false;
+        var newCollection = this.columnDef.params.collection || [];
+        this.labelName = (this.columnDef.params.customStructure) ? this.columnDef.params.customStructure.label : 'label';
+        this.valueName = (this.columnDef.params.customStructure) ? this.columnDef.params.customStructure.value : 'value';
+        // user might want to filter certain items of the collection
+        if (this.gridOptions.params && this.columnDef.params.collectionFilterBy) {
+            var filterBy = this.columnDef.params.collectionFilterBy;
+            newCollection = this.collectionService.filterCollection(newCollection, filterBy);
+        }
+        // user might want to sort the collection
+        if (this.gridOptions.params && this.columnDef.params.collectionSortBy) {
+            var sortBy = this.columnDef.params.collectionSortBy;
+            newCollection = this.collectionService.sortCollection(newCollection, sortBy, this.enableTranslateLabel);
+        }
+        this.collection = newCollection;
+        var editorTemplate = this.buildTemplateHtmlString(newCollection);
         this.createDomElement(editorTemplate);
     };
     SingleSelectEditor.prototype.applyValue = function (item, state) {
@@ -93,27 +122,51 @@ var SingleSelectEditor = /** @class */ (function () {
             msg: null
         };
     };
-    SingleSelectEditor.prototype.buildTemplateHtmlString = function () {
-        var _this = this;
-        if (!this.columnDef || !this.columnDef.params || !this.columnDef.params.collection) {
-            throw new Error('[Aurelia-SlickGrid] You need to pass a "collection" on the params property in the column definition for ' +
-                'the SingleSelect Editor to work correctly. Also each option should include ' +
-                'a value/label pair (or value/labelKey when using Locale). For example: { params: { ' +
-                '{ collection: [{ value: true, label: \'True\' }, { value: false, label: \'False\'}] } } }');
+    /**
+     * Automatically adjust the multiple-select dropup or dropdown by available space
+     */
+    SingleSelectEditor.prototype.autoAdjustDropPosition = function (multipleSelectDomElement, multipleSelectOptions) {
+        // height in pixel of the multiple-select element
+        var selectElmHeight = SELECT_ELEMENT_HEIGHT;
+        var windowHeight = $(window).innerHeight() || 300;
+        var pageScroll = $('body').scrollTop() || 0;
+        var $msDropContainer = multipleSelectOptions.container ? $(multipleSelectOptions.container) : multipleSelectDomElement;
+        var $msDrop = $msDropContainer.find('.ms-drop');
+        var msDropHeight = $msDrop.height() || 0;
+        var msDropOffsetTop = $msDrop.offset().top;
+        var space = windowHeight - (msDropOffsetTop - pageScroll);
+        if (space < msDropHeight) {
+            if (multipleSelectOptions.container) {
+                // when using a container, we need to offset the drop ourself
+                // and also make sure there's space available on top before doing so
+                var newOffsetTop = (msDropOffsetTop - msDropHeight - selectElmHeight);
+                if (newOffsetTop > 0) {
+                    $msDrop.offset({ top: newOffsetTop < 0 ? 0 : newOffsetTop });
+                }
+            }
+            else {
+                // without container, we simply need to add the "top" class to the drop
+                $msDrop.addClass('top');
+            }
+            $msDrop.removeClass('bottom');
         }
-        this.collection = this.columnDef.params.collection || [];
-        this.labelName = (this.columnDef.params.customStructure) ? this.columnDef.params.customStructure.label : 'label';
-        this.valueName = (this.columnDef.params.customStructure) ? this.columnDef.params.customStructure.value : 'value';
-        var isEnabledTranslate = (this.columnDef.params.enableTranslateLabel) ? this.columnDef.params.enableTranslateLabel : false;
+        else {
+            $msDrop.addClass('bottom');
+            $msDrop.removeClass('top');
+        }
+    };
+    /** Build the template HTML string */
+    SingleSelectEditor.prototype.buildTemplateHtmlString = function (collection) {
+        var _this = this;
         var options = '';
-        this.collection.forEach(function (option) {
+        collection.forEach(function (option) {
             if (!option || (option[_this.labelName] === undefined && option.labelKey === undefined)) {
                 throw new Error('A collection with value/label (or value/labelKey when using ' +
                     'Locale) is required to populate the Select list, for example: { params: { ' +
                     '{ collection: [ { value: \'1\', label: \'One\' } ] } } }');
             }
             var labelKey = (option.labelKey || option[_this.labelName]);
-            var textLabel = ((option.labelKey || isEnabledTranslate) && _this._i18n && typeof _this._i18n.tr === 'function') ? _this._i18n.tr(labelKey || ' ') : labelKey;
+            var textLabel = (option.labelKey || _this.enableTranslateLabel) ? _this.i18n.tr(labelKey || ' ') : labelKey;
             options += "<option value=\"" + option[_this.valueName] + "\">" + textLabel + "</option>";
         });
         return "<select class=\"ms-filter search-filter\">" + options + "</select>";
@@ -130,8 +183,8 @@ var SingleSelectEditor = /** @class */ (function () {
         }
         else {
             var elementOptions = (this.columnDef.params) ? this.columnDef.params.elementOptions : {};
-            var options = __assign({}, this.defaultOptions, elementOptions);
-            this.$editorElm = this.$editorElm.multipleSelect(options);
+            this.editorElmOptions = __assign({}, this.defaultOptions, elementOptions);
+            this.$editorElm = this.$editorElm.multipleSelect(this.editorElmOptions);
             setTimeout(function () { return _this.$editorElm.multipleSelect('open'); });
         }
     };
@@ -142,6 +195,9 @@ var SingleSelectEditor = /** @class */ (function () {
             this.$editorElm.multipleSelect('refresh');
         }
     };
+    SingleSelectEditor = __decorate([
+        inject(CollectionService, I18N)
+    ], SingleSelectEditor);
     return SingleSelectEditor;
 }());
 export { SingleSelectEditor };

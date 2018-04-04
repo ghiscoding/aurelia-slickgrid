@@ -2,16 +2,18 @@ import { PLATFORM } from 'aurelia-pal';
 import { AureliaSlickgridCustomElement } from './aurelia-slickgrid';
 import { SlickPaginationCustomElement } from './slick-pagination';
 import { SlickgridConfig } from './slickgrid-config';
-// models
-import { CaseType, DelimiterType, FileType, FilterType, FormElementType, FieldType, OperatorType, SortDirection } from './models/index';
-// editors, formatters, ...
-import { Editors } from './editors/index';
-import { FilterConditions } from './filter-conditions/index';
 import { Filters, PLUGIN_NAME as FILTER_PLUGIN_NAME } from './filters/index';
-import { Formatters } from './formatters/index';
-import { Sorters } from './sorters/index';
-// services and utilities
-import { ControlAndPluginService, ExportService, FilterService, GraphqlService, GridExtraUtils, GridExtraService, GridEventService, GridOdataService, GridStateService, ResizerService, SortService } from './services/index';
+// expose all public classes
+// aggregators, editors, formatters, services...
+export * from './models/index';
+export * from './services/index';
+export * from './formatters/index';
+export * from './grouping-formatters/index';
+export * from './sorters/index';
+export * from './aggregators/index';
+export * from './editors/index';
+export * from './filter-conditions/index';
+export * from './filters/index';
 export function configure(aurelia, callback) {
     aurelia.globalResources(PLATFORM.moduleName('./aurelia-slickgrid'));
     aurelia.globalResources(PLATFORM.moduleName('./slick-pagination'));
@@ -28,7 +30,5 @@ export function configure(aurelia, callback) {
         callback(config);
     }
 }
-export { AureliaSlickgridCustomElement, SlickPaginationCustomElement, CaseType, DelimiterType, FileType, FilterType, FILTER_PLUGIN_NAME, FormElementType, FieldType, OperatorType, SortDirection, Editors, Filters, FilterConditions, Formatters, Sorters, 
-// services
-ControlAndPluginService, ExportService, FilterService, GraphqlService, GridEventService, GridExtraUtils, GridExtraService, GridOdataService, GridStateService, ResizerService, SortService, SlickgridConfig };
+export { AureliaSlickgridCustomElement, SlickPaginationCustomElement, SlickgridConfig };
 //# sourceMappingURL=index.js.map

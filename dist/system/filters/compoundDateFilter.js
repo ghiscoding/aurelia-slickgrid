@@ -95,7 +95,7 @@ System.register(["aurelia-framework", "aurelia-i18n", "../services/utilities", "
                     var _this = this;
                     var inputFormat = utilities_1.mapFlatpickrDateFormatWithFieldType(this.columnDef.type || index_1.FieldType.dateIso);
                     var outputFormat = utilities_1.mapFlatpickrDateFormatWithFieldType(this.columnDef.outputType || this.columnDef.type || index_1.FieldType.dateUtc);
-                    var currentLocale = this.getCurrentLocale(this.columnDef, this.gridOptions) || '';
+                    var currentLocale = this.i18n.getLocale() || 'en';
                     if (currentLocale.length > 2) {
                         currentLocale = currentLocale.substring(0, 2);
                     }
@@ -192,13 +192,6 @@ System.register(["aurelia-framework", "aurelia-i18n", "../services/utilities", "
                         $filterContainerElm.appendTo($headerElm);
                     }
                     return $filterContainerElm;
-                };
-                CompoundDateFilter.prototype.getCurrentLocale = function (columnDef, gridOptions) {
-                    var params = gridOptions.params || columnDef.params || {};
-                    if (params.i18n && params.i18n instanceof aurelia_i18n_1.I18N) {
-                        return params.i18n.getLocale();
-                    }
-                    return 'en';
                 };
                 CompoundDateFilter.prototype.loadFlatpickrLocale = function (locale) {
                     // change locale if needed, Flatpickr reference: https://chmln.github.io/flatpickr/localization/

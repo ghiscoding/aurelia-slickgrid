@@ -1,4 +1,4 @@
-System.register(["aurelia-framework", "aurelia-i18n", "./../models/index", "text-encoding-utf-8", "./../services/utilities", "jquery"], function (exports_1, context_1) {
+System.register(["aurelia-event-aggregator", "aurelia-framework", "aurelia-i18n", "./../models/index", "text-encoding-utf-8", "./../services/utilities", "jquery"], function (exports_1, context_1) {
     "use strict";
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -7,9 +7,12 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../models/index", "text
         return c > 3 && r && Object.defineProperty(target, key, r), r;
     };
     var __moduleName = context_1 && context_1.id;
-    var aurelia_framework_1, aurelia_i18n_1, index_1, text_encoding_utf_8_1, utilities_1, $, ExportService;
+    var aurelia_event_aggregator_1, aurelia_framework_1, aurelia_i18n_1, index_1, text_encoding_utf_8_1, utilities_1, $, ExportService;
     return {
         setters: [
+            function (aurelia_event_aggregator_1_1) {
+                aurelia_event_aggregator_1 = aurelia_event_aggregator_1_1;
+            },
             function (aurelia_framework_1_1) {
                 aurelia_framework_1 = aurelia_framework_1_1;
             },
@@ -31,17 +34,11 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../models/index", "text
         ],
         execute: function () {
             ExportService = /** @class */ (function () {
-                function ExportService(i18n) {
+                function ExportService(i18n, ea) {
                     this.i18n = i18n;
+                    this.ea = ea;
                     this._lineCarriageReturn = '\n';
-                    this._existingSlickAggregators = [];
                     this._hasGroupedItems = false;
-                    this.defaultExportOptions = {
-                        delimiter: index_1.DelimiterType.comma,
-                        filename: 'export',
-                        format: index_1.FileType.csv,
-                        useUtf8WithBom: true
-                    };
                 }
                 /**
                  * Initialize the Export Service
@@ -53,6 +50,7 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../models/index", "text
                     this._grid = grid;
                     this._gridOptions = gridOptions;
                     this._dataView = dataView;
+                    this.aureliaEventPrefix = (this._gridOptions && this._gridOptions.defaultAureliaEventPrefix) ? this._gridOptions.defaultAureliaEventPrefix : 'asg';
                 };
                 /**
                  * Function to export the Grid result to an Excel CSV format using javascript for it to produce the CSV file.
@@ -64,16 +62,23 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../models/index", "text
                  * Example: exportToFile({ format: FileType.csv, delimiter: DelimiterType.comma })
                  */
                 ExportService.prototype.exportToFile = function (options) {
-                    this._exportOptions = $.extend(true, {}, this.defaultExportOptions, options);
+                    var _this = this;
+                    this.ea.publish(this.aureliaEventPrefix + ":onBeforeExportToFile", true);
+                    this._exportOptions = $.extend(true, {}, this._gridOptions.exportOptions, options);
                     // get the CSV output from the grid data
                     var dataOutput = this.getDataOutput();
                     // trigger a download file
-                    this.startDownloadFile({
-                        filename: this._exportOptions.filename + "." + this._exportOptions.format,
-                        csvContent: dataOutput,
-                        format: this._exportOptions.format || index_1.FileType.csv,
-                        useUtf8WithBom: this._exportOptions.useUtf8WithBom || true
-                    });
+                    // wrap it into a setTimeout so that the EventAggregator has enough time to start a pre-process like showing a spinner
+                    setTimeout(function () {
+                        var downloadOptions = {
+                            filename: _this._exportOptions.filename + "." + _this._exportOptions.format,
+                            csvContent: dataOutput,
+                            format: _this._exportOptions.format || index_1.FileType.csv,
+                            useUtf8WithBom: _this._exportOptions.useUtf8WithBom || true
+                        };
+                        _this.startDownloadFile(downloadOptions);
+                        _this.ea.publish(_this.aureliaEventPrefix + ":onAfterExportToFile", downloadOptions);
+                    }, 0);
                 };
                 // -----------------------
                 // Private functions
@@ -83,26 +88,26 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../models/index", "text
                     var columns = this._grid.getColumns() || [];
                     var delimiter = this._exportOptions.delimiter || '';
                     var format = this._exportOptions.format || '';
-                    // find all the Aggregators that exist inside SlickGrid
-                    this._existingSlickAggregators = this.getAllSlickGridAggregators() || [];
                     // a CSV needs double quotes wrapper, the other types do not need any wrapper
                     this._exportQuoteWrapper = (format === index_1.FileType.csv) ? '"' : '';
                     // data variable which will hold all the fields data of a row
                     var outputDataString = '';
                     // get grouped column titles and if found, we will add a "Group by" column at the first column index
-                    this._groupedHeaders = this.getGroupedColumnTitles(columns) || [];
-                    if (this._groupedHeaders && Array.isArray(this._groupedHeaders)) {
-                        this._hasGroupedItems = (this._groupedHeaders.length > 0);
-                        outputDataString += this._groupedHeaders
-                            .map(function (header) { return _this.i18n.tr('GROUP_BY') + " [" + header.title + "]"; })
-                            .join(delimiter);
+                    var grouping = this._dataView.getGrouping();
+                    if (grouping && Array.isArray(grouping) && grouping.length > 0) {
+                        this._hasGroupedItems = true;
+                        outputDataString += "" + this.i18n.tr('GROUP_BY') + delimiter;
+                    }
+                    else {
+                        this._hasGroupedItems = false;
                     }
                     // get all column headers
                     this._columnHeaders = this.getColumnHeaders(columns) || [];
-                    if (this._columnHeaders && Array.isArray(this._columnHeaders)) {
+                    if (this._columnHeaders && Array.isArray(this._columnHeaders) && this._columnHeaders.length > 0) {
                         // add the header row + add a new line at the end of the row
-                        var outputHeaderTitles = this._columnHeaders
-                            .map(function (header) { return _this._exportQuoteWrapper + header.title + _this._exportQuoteWrapper; });
+                        var outputHeaderTitles = this._columnHeaders.map(function (header) {
+                            return _this._exportQuoteWrapper + header.title + _this._exportQuoteWrapper;
+                        });
                         outputDataString += (outputHeaderTitles.join(delimiter) + this._lineCarriageReturn);
                     }
                     // Populate the rest of the Grid Data
@@ -126,30 +131,16 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../models/index", "text
                             }
                             else if (this._hasGroupedItems && itemObj.__groupTotals === undefined) {
                                 // get the group row
-                                outputDataString += this.readGroupedTitleRow(itemObj);
+                                outputDataString += this.readGroupedTitleRow(itemObj) + this._exportOptions.delimiter;
                             }
                             else if (itemObj.__groupTotals) {
                                 // else if the row is a Group By and we have agreggators, then a property of '__groupTotals' would exist under that object
-                                outputDataString += this.readGroupedTotalRow(itemObj);
+                                outputDataString += this.readGroupedTotalRow(columns, itemObj) + this._exportOptions.delimiter;
                             }
                             outputDataString += lineCarriageReturn;
                         }
                     }
                     return outputDataString;
-                };
-                /**
-                 * Get all the Slick Aggregators that are defined in SlickGrid
-                 */
-                ExportService.prototype.getAllSlickGridAggregators = function () {
-                    var slickAggregatorCount = 0;
-                    var existingSlickAggregators = [];
-                    for (var key in Slick.Data.Aggregators) {
-                        if (Slick.Data.Aggregators.hasOwnProperty(key)) {
-                            slickAggregatorCount++;
-                            existingSlickAggregators.push(key.toLowerCase());
-                        }
-                    }
-                    return existingSlickAggregators;
                 };
                 /**
                  * Get all header titles and their keys, translate the title when required.
@@ -198,7 +189,7 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../models/index", "text
                             rowOutputString += "\"\"" + delimiter;
                         }
                         // does the user want to evaluate current column Formatter?
-                        var isEvaluatingFormatter = (columnDef.exportWithFormatter !== undefined) ? columnDef.exportWithFormatter : this._gridOptions.exportWithFormatter;
+                        var isEvaluatingFormatter = (columnDef.exportWithFormatter !== undefined) ? columnDef.exportWithFormatter : (this._exportOptions.exportWithFormatter || this._gridOptions.exportWithFormatter);
                         var itemData = '';
                         // did the user provide a Custom Formatter for the export
                         if (columnDef.exportCustomFormatter) {
@@ -209,6 +200,10 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../models/index", "text
                         }
                         else {
                             itemData = (itemObj[fieldId] === null || itemObj[fieldId] === undefined) ? '' : itemObj[fieldId];
+                        }
+                        // does the user want to sanitize the output data (remove HTML tags)?
+                        if (columnDef.sanitizeDataExport || this._exportOptions.sanitizeDataExport) {
+                            itemData = this.sanitizeHtmlToText(itemData);
                         }
                         // when CSV we also need to escape double quotes twice, so " becomes ""
                         if (format === index_1.FileType.csv) {
@@ -227,7 +222,7 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../models/index", "text
                  * @param itemObj
                  */
                 ExportService.prototype.readGroupedTitleRow = function (itemObj) {
-                    var groupName = itemObj.value;
+                    var groupName = this.sanitizeHtmlToText(itemObj.title);
                     var exportQuoteWrapper = this._exportQuoteWrapper || '';
                     var delimiter = this._exportOptions.delimiter;
                     var format = this._exportOptions.format;
@@ -246,34 +241,23 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../models/index", "text
                  * For example if we grouped by "salesRep" and we have a Sum Aggregator on "sales", then the returned output would be:: ["Sum 123$"]
                  * @param itemObj
                  */
-                ExportService.prototype.readGroupedTotalRow = function (itemObj) {
+                ExportService.prototype.readGroupedTotalRow = function (columns, itemObj) {
+                    var _this = this;
                     var exportExponentialWrapper = '';
                     var delimiter = this._exportOptions.delimiter;
                     var format = this._exportOptions.format;
+                    var groupingAggregatorRowText = this._exportOptions.groupingAggregatorRowText || '';
                     var exportQuoteWrapper = this._exportQuoteWrapper || '';
-                    var existingSlickAggregators = this._existingSlickAggregators || [];
-                    var columnCount = this._grid.getColumns().length;
-                    var output = exportQuoteWrapper + ".." + exportQuoteWrapper + delimiter;
-                    for (var j = 0; j < columnCount; j++) {
-                        var fieldId = this._grid.getColumns()[j].id;
+                    var output = "" + exportQuoteWrapper + groupingAggregatorRowText + exportQuoteWrapper + delimiter;
+                    columns.forEach(function (columnDef) {
                         var itemData = '';
-                        // cycle through all possible SlickGrid Aggregators and get their values
-                        for (var k = 0; k < existingSlickAggregators.length; k++) {
-                            if (itemObj[existingSlickAggregators[k]] !== undefined) {
-                                if (fieldId in itemObj[existingSlickAggregators[k]]) {
-                                    var aggregatorName = existingSlickAggregators[k];
-                                    var val = itemObj[existingSlickAggregators[k]][fieldId];
-                                    if (aggregatorName.toLowerCase() === 'avg') {
-                                        itemData = aggregatorName + ': ' + Math.round(val);
-                                    }
-                                    else if (aggregatorName.toLowerCase() === 'min' || aggregatorName.toLowerCase() === 'max' || aggregatorName.toLowerCase() === 'sum') {
-                                        itemData = aggregatorName + ': ' + Math.round(parseFloat(val) * 1000000) / 1000000;
-                                    }
-                                    else {
-                                        itemData = val;
-                                    }
-                                }
-                            }
+                        // if there's a groupTotalsFormatter, we will re-run it to get the exact same output as what is shown in UI
+                        if (columnDef.groupTotalsFormatter) {
+                            itemData = columnDef.groupTotalsFormatter(itemObj, columnDef);
+                        }
+                        // does the user want to sanitize the output data (remove HTML tags)?
+                        if (columnDef.sanitizeDataExport || _this._exportOptions.sanitizeDataExport) {
+                            itemData = _this.sanitizeHtmlToText(itemData);
                         }
                         if (format === index_1.FileType.csv) {
                             // when CSV we also need to escape double quotes twice, so a double quote " becomes 2x double quotes ""
@@ -283,45 +267,18 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../models/index", "text
                             exportExponentialWrapper = (itemData.match(/^\s*\d+E\d+\s*$/i)) ? '=' : '';
                         }
                         output += exportQuoteWrapper + itemData + exportQuoteWrapper + delimiter;
-                    }
+                    });
                     return output;
                 };
                 /**
-                 * Get all grouped column titles, translate them when required.
-                 * For example if the grid is grouped by salesRep and then customerName, we will return their title, something like:: ['Sales Rep', 'Customer Name']
-                 * @param columns of the grid
+                 * Sanitize, return only the text without HTML tags
+                 * @input htmlString
+                 * @return text
                  */
-                ExportService.prototype.getGroupedColumnTitles = function (columns) {
-                    var _this = this;
-                    if (!columns || !Array.isArray(columns) || columns.length === 0) {
-                        return [];
-                    }
-                    var groupItemId = '';
-                    var groupedHeaders = [];
-                    var hasGroupedItems = false;
-                    if ($.isEmptyObject(this._groupingDefinition)) {
-                        hasGroupedItems = false;
-                    }
-                    else {
-                        hasGroupedItems = true;
-                        groupItemId = $("#" + this._groupingDefinition.dropdownOptionsIds[0]).val();
-                    }
-                    // If we are Grouping, then pull the name of the grouped item and display it as 1st column
-                    columns.forEach(function (columnDef) {
-                        // the column might be a complex object and have a '.' (ex.: person.name)
-                        // if so we want just the object (ex.: person.name => we want 'person')
-                        if (groupItemId.indexOf('.') >= 0) {
-                            groupItemId = groupItemId.split('.')[0];
-                        }
-                        if (hasGroupedItems && columnDef && columnDef.id === groupItemId) {
-                            var fieldName = (columnDef.headerKey) ? _this.i18n.tr(columnDef.headerKey) : columnDef.name;
-                            groupedHeaders.push({
-                                key: columnDef.field || columnDef.id,
-                                title: fieldName || ''
-                            });
-                        }
-                    });
-                    return groupedHeaders;
+                ExportService.prototype.sanitizeHtmlToText = function (htmlString) {
+                    var temp = document.createElement('div');
+                    temp.innerHTML = htmlString;
+                    return temp.textContent || temp.innerText;
                 };
                 /**
                  * Triggers download file with file format.
@@ -374,7 +331,7 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../models/index", "text
                     }
                 };
                 ExportService = __decorate([
-                    aurelia_framework_1.inject(aurelia_i18n_1.I18N)
+                    aurelia_framework_1.inject(aurelia_i18n_1.I18N, aurelia_event_aggregator_1.EventAggregator)
                 ], ExportService);
                 return ExportService;
             }());

@@ -42,7 +42,6 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "./utilities"
             columnDefinitions = columnDefinitions.filter(function (column) { return !column.excludeFromQuery; });
             var queryQb = new graphqlQueryBuilder_1.default('query');
             var datasetQb = new graphqlQueryBuilder_1.default(this.options.datasetName);
-            var pageInfoQb = new graphqlQueryBuilder_1.default('pageInfo');
             var dataQb = (this.options.isWithCursor) ? new graphqlQueryBuilder_1.default('edges') : new graphqlQueryBuilder_1.default('nodes');
             // get all the columnds Ids for the filters to work
             var columnIds = [];
@@ -68,15 +67,16 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "./utilities"
             var filters = this.buildFilterQuery(columnIds);
             if (this.options.isWithCursor) {
                 // ...pageInfo { hasNextPage, endCursor }, edges { cursor, node { _filters_ } }
+                var pageInfoQb = new graphqlQueryBuilder_1.default('pageInfo');
                 pageInfoQb.find('hasNextPage', 'endCursor');
                 dataQb.find(['cursor', { node: filters }]);
+                datasetQb.find(['totalCount', pageInfoQb, dataQb]);
             }
             else {
-                // ...pageInfo { hasNextPage }, nodes { _filters_ }
-                pageInfoQb.find('hasNextPage');
+                // ...nodes { _filters_ }
                 dataQb.find(filters);
+                datasetQb.find(['totalCount', dataQb]);
             }
-            datasetQb.find(['totalCount', pageInfoQb, dataQb]);
             // add dataset filters, could be Pagination and SortingFilters and/or FieldFilters
             var datasetFilters = __assign({}, this.options.paginationOptions, { first: ((this.options.paginationOptions && this.options.paginationOptions.first) ? this.options.paginationOptions.first : ((this.pagination && this.pagination.pageSize) ? this.pagination.pageSize : null)) || this.defaultPaginationOptions.first });
             if (!this.options.isWithCursor) {
@@ -237,9 +237,6 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "./utilities"
          * Without cursor, the query can have 3 arguments (first, last, offset), for example:
          *   users (first:20, offset: 10) {
          *     totalCount
-         *     pageInfo {
-         *       hasNextPage
-         *     }
          *     nodes {
          *       name
          *       gender
@@ -279,9 +276,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "./utilities"
                     // if user defined some "presets", then we need to find the filters from the column definitions instead
                     var columnDef = void 0;
                     if (isUpdatedByPreset && Array.isArray(this_1._columnDefinitions)) {
-                        columnDef = this_1._columnDefinitions.find(function (column) {
-                            return column.id === columnFilter_1.columnId;
-                        });
+                        columnDef = this_1._columnDefinitions.find(function (column) { return column.id === columnFilter_1.columnId; });
                     }
                     else {
                         columnDef = columnFilter_1.columnDef;
@@ -371,6 +366,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "./utilities"
          * @param columnFilters
          */
         GraphqlService.prototype.updateSorters = function (sortColumns, presetSorters) {
+            var _this = this;
             var currentSorters = [];
             var graphqlSorters = [];
             if (!sortColumns && presetSorters) {
@@ -379,10 +375,13 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "./utilities"
                 currentSorters.forEach(function (sorter) { return sorter.direction = sorter.direction.toUpperCase(); });
                 // display the correct sorting icons on the UI, for that it requires (columnId, sortAsc) properties
                 var tmpSorterArray = currentSorters.map(function (sorter) {
-                    graphqlSorters.push({
-                        field: sorter.columnId + '',
-                        direction: sorter.direction
-                    });
+                    var columnDef = _this._columnDefinitions.find(function (column) { return column.id === sorter.columnId; });
+                    if (columnDef) {
+                        graphqlSorters.push({
+                            field: (columnDef.queryField || columnDef.queryFieldSorter || columnDef.field || columnDef.id) + '',
+                            direction: sorter.direction
+                        });
+                    }
                     return {
                         columnId: sorter.columnId,
                         sortAsc: sorter.direction.toUpperCase() === index_1.SortDirection.ASC
@@ -395,7 +394,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "./utilities"
                 // orderBy:[{field: lastName, direction: ASC}, {field: firstName, direction: DESC}]
                 if (sortColumns && sortColumns.length === 0) {
                     graphqlSorters = new Array(this.defaultOrderBy); // when empty, use the default sort
-                    currentSorters = new Array({ columnId: this.defaultOrderBy.direction, direction: this.defaultOrderBy.direction });
+                    currentSorters = new Array({ columnId: this.defaultOrderBy.field, direction: this.defaultOrderBy.direction });
                 }
                 else {
                     if (sortColumns) {
@@ -403,7 +402,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "./utilities"
                             var column = sortColumns_1[_i];
                             if (column && column.sortCol) {
                                 currentSorters.push({
-                                    columnId: (column.sortCol.queryField || column.sortCol.queryFieldSorter || column.sortCol.field || column.sortCol.id) + '',
+                                    columnId: column.sortCol.id + '',
                                     direction: column.sortAsc ? index_1.SortDirection.ASC : index_1.SortDirection.DESC
                                 });
                                 graphqlSorters.push({

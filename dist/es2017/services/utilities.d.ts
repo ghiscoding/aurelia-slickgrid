@@ -18,6 +18,13 @@ export declare function htmlEntityDecode(input: string): string;
  */
 export declare function htmlEntityEncode(input: any): string;
 /**
+ * Take a number (or a string) and display it as a formatted decimal string with defined minimum and maximum decimals
+ * @param input
+ * @param minDecimal
+ * @param maxDecimal
+ */
+export declare function decimalFormatted(input: number | string, minDecimal?: number, maxDecimal?: number): string | number;
+/**
  * From a Date FieldType, return it's equivalent moment.js format
  * refer to moment.js for the format standard used: https://momentjs.com/docs/#/parsing/string-format/
  * @param fieldType

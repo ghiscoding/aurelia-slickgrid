@@ -1,14 +1,22 @@
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
 import { mapFlatpickrDateFormatWithFieldType } from './../services/utilities';
 import { FieldType } from './../models/index';
 import { I18N } from 'aurelia-i18n';
+import { inject } from 'aurelia-framework';
 import * as flatpickr from 'flatpickr';
 import * as $ from 'jquery';
 /*
  * An example of a date picker editor using Flatpickr
  * https://chmln.github.io/flatpickr
  */
-export class DateEditor {
-    constructor(args) {
+let DateEditor = class DateEditor {
+    constructor(i18n, args) {
+        this.i18n = i18n;
         this.args = args;
         this.init();
     }
@@ -17,7 +25,7 @@ export class DateEditor {
         this.defaultDate = this.args.item[this.args.column.field] || null;
         const inputFormat = mapFlatpickrDateFormatWithFieldType(this.args.column.type || FieldType.dateIso);
         const outputFormat = mapFlatpickrDateFormatWithFieldType(this.args.column.outputType || FieldType.dateUtc);
-        let currentLocale = this.getCurrentLocale(this.args.column, gridOptions);
+        let currentLocale = this.i18n.getLocale() || 'en';
         if (currentLocale.length > 2) {
             currentLocale = currentLocale.substring(0, 2);
         }
@@ -36,13 +44,6 @@ export class DateEditor {
         this.$input.appendTo(this.args.container);
         this.flatInstance = (flatpickr && this.$input[0] && typeof this.$input[0].flatpickr === 'function') ? this.$input[0].flatpickr(pickerOptions) : null;
         this.show();
-    }
-    getCurrentLocale(columnDef, gridOptions) {
-        const params = gridOptions.params || columnDef.params || {};
-        if (params.i18n && params.i18n instanceof I18N) {
-            return params.i18n.getLocale();
-        }
-        return 'en';
     }
     loadFlatpickrLocale(locale) {
         // change locale if needed, Flatpickr reference: https://chmln.github.io/flatpickr/localization/
@@ -97,5 +98,9 @@ export class DateEditor {
             msg: null
         };
     }
-}
+};
+DateEditor = __decorate([
+    inject(I18N)
+], DateEditor);
+export { DateEditor };
 //# sourceMappingURL=dateEditor.js.map

@@ -6,13 +6,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 import { inject } from 'aurelia-framework';
 import { EventAggregator } from 'aurelia-event-aggregator';
-import { FieldType, SortDirection } from './../models/index';
-import { Sorters } from './../sorters/index';
+import { FieldType, SortDirection, SortDirectionNumber } from './../models/index';
+import { sortByFieldType } from '../sorters/sorterUtilities';
 let SortService = class SortService {
     constructor(ea) {
         this.ea = ea;
         this._currentLocalSorters = [];
         this._eventHandler = new Slick.EventHandler();
+        this._isBackendGrid = false;
         this._slickSubscriber = new Slick.Event();
     }
     /**
@@ -20,16 +21,20 @@ let SortService = class SortService {
      * @param grid SlickGrid Grid object
      * @param gridOptions Grid Options object
      */
-    attachBackendOnSort(grid, gridOptions) {
+    attachBackendOnSort(grid, dataView) {
+        this._isBackendGrid = true;
         this._grid = grid;
-        this._gridOptions = gridOptions;
+        this._dataView = dataView;
+        if (grid) {
+            this._gridOptions = grid.getOptions();
+        }
         this._slickSubscriber = grid.onSort;
         // subscribe to the SlickGrid event and call the backend execution
-        this._slickSubscriber.subscribe(this.attachBackendOnSortSubscribe.bind(this));
+        this._slickSubscriber.subscribe(this.onBackendSortChanged.bind(this));
     }
-    async attachBackendOnSortSubscribe(event, args) {
+    async onBackendSortChanged(event, args) {
         if (!args || !args.grid) {
-            throw new Error('Something went wrong when trying to attach the "attachBackendOnSortSubscribe(event, args)" function, it seems that "args" is not populated correctly');
+            throw new Error('Something went wrong when trying to attach the "onBackendSortChanged(event, args)" function, it seems that "args" is not populated correctly');
         }
         const gridOptions = args.grid.getOptions() || {};
         const backendApi = gridOptions.backendServiceApi || gridOptions.onBackendEventApi;
@@ -58,9 +63,15 @@ let SortService = class SortService {
      * @param gridOptions Grid Options object
      * @param dataView
      */
-    attachLocalOnSort(grid, gridOptions, dataView, columnDefinitions) {
+    attachLocalOnSort(grid, dataView) {
+        this._isBackendGrid = false;
         this._grid = grid;
-        this._gridOptions = gridOptions;
+        this._dataView = dataView;
+        let columnDefinitions = [];
+        if (grid) {
+            this._gridOptions = grid.getOptions();
+            columnDefinitions = grid.getColumns();
+        }
         this._slickSubscriber = grid.onSort;
         this._slickSubscriber.subscribe((e, args) => {
             // multiSort and singleSort are not exactly the same, but we want to structure it the same for the (for loop) after
@@ -78,15 +89,42 @@ let SortService = class SortService {
                     }
                 });
             }
-            this.onLocalSortChanged(grid, gridOptions, dataView, sortColumns);
+            this.onLocalSortChanged(grid, this._gridOptions, dataView, sortColumns);
             this.emitSortChanged('local');
         });
-        this._eventHandler.subscribe(dataView.onRowCountChanged, (e, args) => {
-            // load any presets if there are any
-            if (args.current > 0) {
-                this.loadLocalPresets(grid, gridOptions, dataView, columnDefinitions);
+        if (dataView && dataView.onRowCountChanged) {
+            this._eventHandler.subscribe(dataView.onRowCountChanged, (e, args) => {
+                // load any presets if there are any
+                if (args.current > 0) {
+                    this.loadLocalPresets(grid, this._gridOptions, dataView, columnDefinitions);
+                }
+            });
+        }
+    }
+    /**
+     * Clear Sorting
+     * - 1st, remove the SlickGrid sort icons (this setSortColumns function call really does only that)
+     * - 2nd, we also need to trigger a sort change
+     *   - for a backend grid, we will trigger a backend sort changed with an empty sort columns array
+     *   - however for a local grid, we need to pass a sort column and so we will sort by the 1st column
+     */
+    clearSorting() {
+        if (this._grid && this._gridOptions && this._dataView) {
+            // remove any sort icons (this setSortColumns function call really does only that)
+            this._grid.setSortColumns([]);
+            // we also need to trigger a sort change
+            // for a backend grid, we will trigger a backend sort changed with an empty sort columns array
+            // however for a local grid, we need to pass a sort column and so we will sort by the 1st column
+            if (this._isBackendGrid) {
+                this.onBackendSortChanged(null, { grid: this._grid, sortCols: [] });
             }
-        });
+            else {
+                const columnDefinitions = this._grid.getColumns();
+                if (columnDefinitions && Array.isArray(columnDefinitions)) {
+                    this.onLocalSortChanged(this._grid, this._gridOptions, this._dataView, new Array({ sortAsc: true, sortCol: columnDefinitions[0] }));
+                }
+            }
+        }
     }
     getCurrentLocalSorters() {
         return this._currentLocalSorters;
@@ -131,34 +169,14 @@ let SortService = class SortService {
             for (let i = 0, l = sortColumns.length; i < l; i++) {
                 const columnSortObj = sortColumns[i];
                 if (columnSortObj && columnSortObj.sortCol) {
-                    const sortDirection = columnSortObj.sortAsc ? 1 : -1;
-                    const sortField = columnSortObj.sortCol.queryField || columnSortObj.sortCol.queryFieldSorter || columnSortObj.sortCol.field;
-                    const fieldType = columnSortObj.sortCol.type || 'string';
+                    const sortDirection = columnSortObj.sortAsc ? SortDirectionNumber.asc : SortDirectionNumber.desc;
+                    const sortField = columnSortObj.sortCol.queryField || columnSortObj.sortCol.queryFieldFilter || columnSortObj.sortCol.field;
+                    const fieldType = columnSortObj.sortCol.type || FieldType.string;
                     const value1 = dataRow1[sortField];
                     const value2 = dataRow2[sortField];
-                    let result = 0;
-                    switch (fieldType) {
-                        case FieldType.number:
-                            result = Sorters.numeric(value1, value2, sortDirection);
-                            break;
-                        case FieldType.date:
-                            result = Sorters.date(value1, value2, sortDirection);
-                            break;
-                        case FieldType.dateIso:
-                            result = Sorters.dateIso(value1, value2, sortDirection);
-                            break;
-                        case FieldType.dateUs:
-                            result = Sorters.dateUs(value1, value2, sortDirection);
-                            break;
-                        case FieldType.dateUsShort:
-                            result = Sorters.dateUsShort(value1, value2, sortDirection);
-                            break;
-                        default:
-                            result = Sorters.string(value1, value2, sortDirection);
-                            break;
-                    }
-                    if (result !== 0) {
-                        return result;
+                    const sortResult = sortByFieldType(value1, value2, fieldType, sortDirection);
+                    if (sortResult !== SortDirectionNumber.neutral) {
+                        return sortResult;
                     }
                 }
             }

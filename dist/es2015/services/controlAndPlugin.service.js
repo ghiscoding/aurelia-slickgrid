@@ -6,15 +6,17 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 import { inject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
+import { DelimiterType, FileType } from './../models/index';
 import { ExportService } from './export.service';
 import { FilterService } from './filter.service';
-import { DelimiterType, FileType } from './../models/index';
+import { SortService } from './sort.service';
 import * as $ from 'jquery';
 let ControlAndPluginService = class ControlAndPluginService {
-    constructor(exportService, filterService, i18n) {
+    constructor(exportService, filterService, i18n, sortService) {
         this.exportService = exportService;
         this.filterService = filterService;
         this.i18n = i18n;
+        this.sortService = sortService;
     }
     /**
      * Attach/Create different Controls or Plugins after the Grid is created
@@ -23,7 +25,7 @@ let ControlAndPluginService = class ControlAndPluginService {
      * @param options
      * @param dataView
      */
-    attachDifferentControlOrPlugins(grid, columnDefinitions, options, dataView) {
+    attachDifferentControlOrPlugins(grid, columnDefinitions, options, dataView, groupItemMetadataProvider) {
         this._grid = grid;
         this._gridOptions = options;
         this._dataView = dataView;
@@ -38,6 +40,10 @@ let ControlAndPluginService = class ControlAndPluginService {
         if (options.enableAutoTooltip) {
             this.autoTooltipPlugin = new Slick.AutoTooltips(options.autoTooltipOptions || {});
             grid.registerPlugin(this.autoTooltipPlugin);
+        }
+        // register the group item metadata provider to add expand/collapse group handlers
+        if (options.enableGrouping) {
+            grid.registerPlugin(groupItemMetadataProvider);
         }
         if (options.enableCheckboxSelector) {
             // when enabling the Checkbox Selector Plugin, we need to also watch onClick events to perform certain actions
@@ -207,7 +213,7 @@ let ControlAndPluginService = class ControlAndPluginService {
             // show grid menu: clear all filters
             if (options && options.gridMenu && options.gridMenu.showClearAllFiltersCommand && options.gridMenu.customItems && options.gridMenu.customItems.filter((item) => item.command === 'clear-filter').length === 0) {
                 options.gridMenu.customItems.push({
-                    iconCssClass: 'fa fa-filter text-danger',
+                    iconCssClass: options.gridMenu.iconClearAllFiltersCommand || 'fa fa-filter text-danger',
                     title: options.enableTranslate ? this.i18n.tr('CLEAR_ALL_FILTERS') : 'Clear All Filters',
                     disabled: false,
                     command: 'clear-filter',
@@ -217,17 +223,17 @@ let ControlAndPluginService = class ControlAndPluginService {
             // show grid menu: toggle filter row
             if (options && options.gridMenu && options.gridMenu.showToggleFilterCommand && options.gridMenu.customItems && options.gridMenu.customItems.filter((item) => item.command === 'toggle-filter').length === 0) {
                 options.gridMenu.customItems.push({
-                    iconCssClass: 'fa fa-random',
+                    iconCssClass: options.gridMenu.iconToggleFilterCommand || 'fa fa-random',
                     title: options.enableTranslate ? this.i18n.tr('TOGGLE_FILTER_ROW') : 'Toggle Filter Row',
                     disabled: false,
                     command: 'toggle-filter',
-                    positionOrder: 51
+                    positionOrder: 52
                 });
             }
             // show grid menu: refresh dataset
             if (options && options.gridMenu && options.gridMenu.showRefreshDatasetCommand && backendApi && options.gridMenu.customItems && options.gridMenu.customItems.filter((item) => item.command === 'refresh-dataset').length === 0) {
                 options.gridMenu.customItems.push({
-                    iconCssClass: 'fa fa-refresh',
+                    iconCssClass: options.gridMenu.iconRefreshDatasetCommand || 'fa fa-refresh',
                     title: options.enableTranslate ? this.i18n.tr('REFRESH_DATASET') : 'Refresh Dataset',
                     disabled: false,
                     command: 'refresh-dataset',
@@ -235,24 +241,36 @@ let ControlAndPluginService = class ControlAndPluginService {
                 });
             }
         }
+        if (options.enableSorting) {
+            // show grid menu: clear all sorting
+            if (options && options.gridMenu && options.gridMenu.showClearAllSortingCommand && options.gridMenu.customItems && options.gridMenu.customItems.filter((item) => item.command === 'clear-sorting').length === 0) {
+                options.gridMenu.customItems.push({
+                    iconCssClass: options.gridMenu.iconClearAllSortingCommand || 'fa fa-unsorted text-danger',
+                    title: options.enableTranslate ? this.i18n.tr('CLEAR_ALL_SORTING') : 'Clear All Sorting',
+                    disabled: false,
+                    command: 'clear-sorting',
+                    positionOrder: 51
+                });
+            }
+        }
         // show grid menu: export to file
         if (options && options.enableExport && options.gridMenu && options.gridMenu.showExportCsvCommand && options.gridMenu.customItems && options.gridMenu.customItems.filter((item) => item.command === 'export-csv').length === 0) {
             options.gridMenu.customItems.push({
-                iconCssClass: 'fa fa-download',
+                iconCssClass: options.gridMenu.iconExportCsvCommand || 'fa fa-download',
                 title: options.enableTranslate ? this.i18n.tr('EXPORT_TO_CSV') : 'Export in CSV format',
                 disabled: false,
                 command: 'export-csv',
-                positionOrder: 52
+                positionOrder: 53
             });
         }
         // show grid menu: export to text file as tab delimited
         if (options && options.enableExport && options.gridMenu && options.gridMenu.showExportTextDelimitedCommand && options.gridMenu.customItems && options.gridMenu.customItems.filter((item) => item.command === 'export-text-delimited').length === 0) {
             options.gridMenu.customItems.push({
-                iconCssClass: 'fa fa-download',
+                iconCssClass: options.gridMenu.iconExportTextDelimitedCommand || 'fa fa-download',
                 title: options.enableTranslate ? this.i18n.tr('EXPORT_TO_TAB_DELIMITED') : 'Export in Text format (Tab delimited)',
                 disabled: false,
                 command: 'export-text-delimited',
-                positionOrder: 53
+                positionOrder: 54
             });
         }
         // Command callback, what will be executed after command is clicked
@@ -262,6 +280,10 @@ let ControlAndPluginService = class ControlAndPluginService {
                     switch (args.command) {
                         case 'clear-filter':
                             this.filterService.clearFilters();
+                            this._dataView.refresh();
+                            break;
+                        case 'clear-sorting':
+                            this.sortService.clearSorting();
                             this._dataView.refresh();
                             break;
                         case 'export-csv':
@@ -432,7 +454,7 @@ let ControlAndPluginService = class ControlAndPluginService {
     }
 };
 ControlAndPluginService = __decorate([
-    inject(ExportService, FilterService, I18N)
+    inject(ExportService, FilterService, I18N, SortService)
 ], ControlAndPluginService);
 export { ControlAndPluginService };
 //# sourceMappingURL=controlAndPlugin.service.js.map

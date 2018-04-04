@@ -35,6 +35,27 @@ export function htmlEntityEncode(input) {
     return buf.join('');
 }
 /**
+ * Take a number (or a string) and display it as a formatted decimal string with defined minimum and maximum decimals
+ * @param input
+ * @param minDecimal
+ * @param maxDecimal
+ */
+export function decimalFormatted(input, minDecimal, maxDecimal) {
+    if (isNaN(+input)) {
+        return input;
+    }
+    var minDec = (minDecimal === undefined) ? 2 : minDecimal;
+    var maxDec = (maxDecimal === undefined) ? 2 : maxDecimal;
+    var amount = String(Math.round(+input * Math.pow(10, maxDec)) / Math.pow(10, maxDec));
+    if (amount.indexOf('.') < 0) {
+        amount += '.';
+    }
+    while ((amount.length - amount.indexOf('.')) <= minDec) {
+        amount += '0';
+    }
+    return amount;
+}
+/**
  * From a Date FieldType, return it's equivalent moment.js format
  * refer to moment.js for the format standard used: https://momentjs.com/docs/#/parsing/string-format/
  * @param fieldType

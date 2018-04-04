@@ -73,6 +73,9 @@ export class ResizerService {
     dispose() {
         $(window).off('resize.grid');
     }
+    getLastResizeDimensions() {
+        return this._lastDimensions;
+    }
     /** Resize the datagrid to fit the browser height & width */
     resizeGrid(delay, newSizes) {
         if (!this._grid || !this._gridOptions) {
@@ -94,6 +97,12 @@ export class ResizerService {
                 gridElm.width(newSizes.width);
                 gridContainerElm.height(newSizes.height);
                 gridContainerElm.width(newSizes.width);
+                // keep last resized dimensions
+                this._lastDimensions = newSizes;
+                this._lastDimensions.heightWithPagination = newSizes.height;
+                if ((this._gridOptions.enablePagination || this._gridOptions.backendServiceApi)) {
+                    this._lastDimensions.heightWithPagination += DATAGRID_PAGINATION_HEIGHT;
+                }
                 // resize the slickgrid canvas on all browser except some IE versions
                 // exclude all IE below IE11
                 // IE11 wants to be a better standard (W3C) follower (finally) they even changed their appName output to also have 'Netscape'

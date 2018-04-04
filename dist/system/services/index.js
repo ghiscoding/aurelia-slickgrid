@@ -1,4 +1,4 @@
-System.register(["./controlAndPlugin.service", "./export.service", "./filter.service", "./graphql.service", "./gridEvent.service", "./gridExtra.service", "./gridExtraUtils", "./gridState.service", "./grid-odata.service", "./odata.service", "./resizer.service", "./sort.service", "./utilities"], function (exports_1, context_1) {
+System.register(["./collection.service", "./controlAndPlugin.service", "./export.service", "./filter.service", "./graphql.service", "./gridEvent.service", "./gridExtra.service", "./gridExtraUtils", "./gridState.service", "./grid-odata.service", "./odata.service", "./resizer.service", "./sort.service", "./utilities"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     function exportStar_1(m) {
@@ -10,6 +10,9 @@ System.register(["./controlAndPlugin.service", "./export.service", "./filter.ser
     }
     return {
         setters: [
+            function (collection_service_1_1) {
+                exportStar_1(collection_service_1_1);
+            },
             function (controlAndPlugin_service_1_1) {
                 exportStar_1(controlAndPlugin_service_1_1);
             },

@@ -10,6 +10,7 @@ import 'slickgrid/lib/jquery.event.drag-2.3.0';
 import 'slickgrid/slick.core';
 import 'slickgrid/slick.dataview';
 import 'slickgrid/slick.grid';
+import 'slickgrid/slick.groupitemmetadataprovider';
 import 'slickgrid/controls/slick.columnpicker';
 import 'slickgrid/controls/slick.gridmenu';
 import 'slickgrid/controls/slick.pager';
@@ -24,7 +25,7 @@ import 'slickgrid/plugins/slick.headerbuttons';
 import 'slickgrid/plugins/slick.headermenu';
 import 'slickgrid/plugins/slick.rowmovemanager';
 import 'slickgrid/plugins/slick.rowselectionmodel';
-import { bindable, bindingMode, inject } from 'aurelia-framework';
+import { Container, Factory, bindable, bindingMode, inject } from 'aurelia-framework';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { I18N } from 'aurelia-i18n';
 import { GlobalGridOptions } from './global-grid-options';
@@ -35,7 +36,7 @@ const aureliaEventPrefix = 'asg';
 const eventPrefix = 'sg';
 // Aurelia doesn't support well TypeScript @autoinject in a Plugin so we'll do it the old fashion way
 let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
-    constructor(controlAndPluginService, exportService, elm, ea, filterService, graphqlService, gridEventService, gridExtraService, gridStateService, i18n, resizer, sortService) {
+    constructor(controlAndPluginService, exportService, elm, ea, filterService, graphqlService, gridEventService, gridExtraService, gridStateService, i18n, resizer, sortService, container) {
         this.controlAndPluginService = controlAndPluginService;
         this.exportService = exportService;
         this.elm = elm;
@@ -48,9 +49,10 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
         this.i18n = i18n;
         this.resizer = resizer;
         this.sortService = sortService;
+        this.container = container;
         this._eventHandler = new Slick.EventHandler();
         this.showPagination = false;
-        this.gridHeight = 100;
+        this.gridHeight = 200;
         this.gridWidth = 600;
     }
     attached() {
@@ -62,10 +64,19 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
         this._dataset = this._dataset || this.dataset || [];
         this.gridOptions = this.mergeGridOptions(this.gridOptions);
         this.createBackendApiInternalPostProcessCallback(this.gridOptions);
-        this.dataview = new Slick.Data.DataView();
+        if (this.gridOptions.enableGrouping) {
+            this.groupItemMetadataProvider = new Slick.Data.GroupItemMetadataProvider();
+            this.dataview = new Slick.Data.DataView({
+                groupItemMetadataProvider: this.groupItemMetadataProvider,
+                inlineFilters: true
+            });
+        }
+        else {
+            this.dataview = new Slick.Data.DataView();
+        }
         this.controlAndPluginService.createPluginBeforeGridCreation(this.columnDefinitions, this.gridOptions);
         this.grid = new Slick.Grid(`#${this.gridId}`, this.dataview, this.columnDefinitions, this.gridOptions);
-        this.controlAndPluginService.attachDifferentControlOrPlugins(this.grid, this.columnDefinitions, this.gridOptions, this.dataview);
+        this.controlAndPluginService.attachDifferentControlOrPlugins(this.grid, this.columnDefinitions, this.gridOptions, this.dataview, this.groupItemMetadataProvider);
         this.attachDifferentHooks(this.grid, this.gridOptions, this.dataview);
         this.grid.init();
         this.dataview.beginUpdate();
@@ -131,10 +142,24 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
     bind(binding, contexts) {
         // get the grid options (priority is Global Options first, then user option which could overwrite the Global options)
         this.gridOptions = Object.assign({}, GlobalGridOptions, binding.gridOptions);
-        this.style = {
-            height: `${binding.gridHeight}px`,
-            width: `${binding.gridWidth}px`
-        };
+        if (!this.gridOptions.enableAutoResize) {
+            this.gridStyleWidth = {
+                width: `${this.gridWidth}px`
+            };
+            this.gridStyleHeight = {
+                height: `${this.gridHeight}px`
+            };
+        }
+        // Wrap each editor class in the Factory resolver so consumers of this library can use
+        // dependency injection. Aurelia will resolve all dependencies when we pass the container
+        // and allow slickgrid to pass its arguments to the editors constructor last
+        // when slickgrid creates the editor
+        // https://github.com/aurelia/dependency-injection/blob/master/src/resolvers.js
+        for (const c of this.columnDefinitions) {
+            if (c.editor) {
+                c.editor = Factory.of(c.editor).get(this.container);
+            }
+        }
     }
     datasetChanged(newValue, oldValue) {
         this._dataset = newValue;
@@ -158,11 +183,13 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
             if (backendApi && backendApi.service && backendApi.service instanceof GraphqlService) {
                 backendApi.internalPostProcess = (processResult) => {
                     const datasetName = (backendApi && backendApi.service && typeof backendApi.service.getDatasetName === 'function') ? backendApi.service.getDatasetName() : '';
-                    if (!processResult || !processResult.data || !processResult.data[datasetName]) {
-                        throw new Error(`Your GraphQL result is invalid and/or does not follow the required result structure. Please check the result and/or review structure to use in Aurelia-Slickgrid Wiki in the GraphQL section.`);
+                    if (processResult && processResult.data && processResult.data[datasetName]) {
+                        this._dataset = processResult.data[datasetName].nodes;
+                        this.refreshGridData(this._dataset, processResult.data[datasetName].totalCount);
                     }
-                    this._dataset = processResult.data[datasetName].nodes;
-                    this.refreshGridData(this._dataset, processResult.data[datasetName].totalCount);
+                    else {
+                        this._dataset = [];
+                    }
                 };
             }
         }
@@ -178,7 +205,7 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
         });
         // attach external sorting (backend) when available or default onSort (dataView)
         if (gridOptions.enableSorting) {
-            (gridOptions.backendServiceApi || gridOptions.onBackendEventApi) ? this.sortService.attachBackendOnSort(grid, gridOptions) : this.sortService.attachLocalOnSort(grid, gridOptions, this.dataview, this.columnDefinitions);
+            (gridOptions.backendServiceApi || gridOptions.onBackendEventApi) ? this.sortService.attachBackendOnSort(grid, dataView) : this.sortService.attachLocalOnSort(grid, dataView);
         }
         // attach external filter (backend) when available or default onFilter (dataView)
         if (gridOptions.enableFiltering) {
@@ -306,9 +333,6 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
                 grid.autosizeColumns();
             }
         }
-        else {
-            this.resizer.resizeGrid(0, { height: this.gridHeight, width: this.gridWidth });
-        }
     }
     mergeGridOptions(gridOptions) {
         gridOptions.gridId = this.gridId;
@@ -409,7 +433,7 @@ __decorate([
     bindable()
 ], AureliaSlickgridCustomElement.prototype, "pickerOptions", void 0);
 AureliaSlickgridCustomElement = __decorate([
-    inject(ControlAndPluginService, ExportService, Element, EventAggregator, FilterService, GraphqlService, GridEventService, GridExtraService, GridStateService, I18N, ResizerService, SortService)
+    inject(ControlAndPluginService, ExportService, Element, EventAggregator, FilterService, GraphqlService, GridEventService, GridExtraService, GridStateService, I18N, ResizerService, SortService, Container)
 ], AureliaSlickgridCustomElement);
 export { AureliaSlickgridCustomElement };
 //# sourceMappingURL=aurelia-slickgrid.js.map

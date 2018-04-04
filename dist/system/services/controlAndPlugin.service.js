@@ -1,4 +1,4 @@
-System.register(["aurelia-framework", "aurelia-i18n", "./export.service", "./filter.service", "./../models/index", "jquery"], function (exports_1, context_1) {
+System.register(["aurelia-framework", "aurelia-i18n", "./../models/index", "./export.service", "./filter.service", "./sort.service", "jquery"], function (exports_1, context_1) {
     "use strict";
     var __assign = (this && this.__assign) || Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -15,7 +15,7 @@ System.register(["aurelia-framework", "aurelia-i18n", "./export.service", "./fil
         return c > 3 && r && Object.defineProperty(target, key, r), r;
     };
     var __moduleName = context_1 && context_1.id;
-    var aurelia_framework_1, aurelia_i18n_1, export_service_1, filter_service_1, index_1, $, ControlAndPluginService;
+    var aurelia_framework_1, aurelia_i18n_1, index_1, export_service_1, filter_service_1, sort_service_1, $, ControlAndPluginService;
     return {
         setters: [
             function (aurelia_framework_1_1) {
@@ -24,14 +24,17 @@ System.register(["aurelia-framework", "aurelia-i18n", "./export.service", "./fil
             function (aurelia_i18n_1_1) {
                 aurelia_i18n_1 = aurelia_i18n_1_1;
             },
+            function (index_1_1) {
+                index_1 = index_1_1;
+            },
             function (export_service_1_1) {
                 export_service_1 = export_service_1_1;
             },
             function (filter_service_1_1) {
                 filter_service_1 = filter_service_1_1;
             },
-            function (index_1_1) {
-                index_1 = index_1_1;
+            function (sort_service_1_1) {
+                sort_service_1 = sort_service_1_1;
             },
             function ($_1) {
                 $ = $_1;
@@ -39,10 +42,11 @@ System.register(["aurelia-framework", "aurelia-i18n", "./export.service", "./fil
         ],
         execute: function () {
             ControlAndPluginService = /** @class */ (function () {
-                function ControlAndPluginService(exportService, filterService, i18n) {
+                function ControlAndPluginService(exportService, filterService, i18n, sortService) {
                     this.exportService = exportService;
                     this.filterService = filterService;
                     this.i18n = i18n;
+                    this.sortService = sortService;
                 }
                 /**
                  * Attach/Create different Controls or Plugins after the Grid is created
@@ -51,7 +55,7 @@ System.register(["aurelia-framework", "aurelia-i18n", "./export.service", "./fil
                  * @param options
                  * @param dataView
                  */
-                ControlAndPluginService.prototype.attachDifferentControlOrPlugins = function (grid, columnDefinitions, options, dataView) {
+                ControlAndPluginService.prototype.attachDifferentControlOrPlugins = function (grid, columnDefinitions, options, dataView, groupItemMetadataProvider) {
                     this._grid = grid;
                     this._gridOptions = options;
                     this._dataView = dataView;
@@ -66,6 +70,10 @@ System.register(["aurelia-framework", "aurelia-i18n", "./export.service", "./fil
                     if (options.enableAutoTooltip) {
                         this.autoTooltipPlugin = new Slick.AutoTooltips(options.autoTooltipOptions || {});
                         grid.registerPlugin(this.autoTooltipPlugin);
+                    }
+                    // register the group item metadata provider to add expand/collapse group handlers
+                    if (options.enableGrouping) {
+                        grid.registerPlugin(groupItemMetadataProvider);
                     }
                     if (options.enableCheckboxSelector) {
                         // when enabling the Checkbox Selector Plugin, we need to also watch onClick events to perform certain actions
@@ -236,7 +244,7 @@ System.register(["aurelia-framework", "aurelia-i18n", "./export.service", "./fil
                         // show grid menu: clear all filters
                         if (options && options.gridMenu && options.gridMenu.showClearAllFiltersCommand && options.gridMenu.customItems && options.gridMenu.customItems.filter(function (item) { return item.command === 'clear-filter'; }).length === 0) {
                             options.gridMenu.customItems.push({
-                                iconCssClass: 'fa fa-filter text-danger',
+                                iconCssClass: options.gridMenu.iconClearAllFiltersCommand || 'fa fa-filter text-danger',
                                 title: options.enableTranslate ? this.i18n.tr('CLEAR_ALL_FILTERS') : 'Clear All Filters',
                                 disabled: false,
                                 command: 'clear-filter',
@@ -246,17 +254,17 @@ System.register(["aurelia-framework", "aurelia-i18n", "./export.service", "./fil
                         // show grid menu: toggle filter row
                         if (options && options.gridMenu && options.gridMenu.showToggleFilterCommand && options.gridMenu.customItems && options.gridMenu.customItems.filter(function (item) { return item.command === 'toggle-filter'; }).length === 0) {
                             options.gridMenu.customItems.push({
-                                iconCssClass: 'fa fa-random',
+                                iconCssClass: options.gridMenu.iconToggleFilterCommand || 'fa fa-random',
                                 title: options.enableTranslate ? this.i18n.tr('TOGGLE_FILTER_ROW') : 'Toggle Filter Row',
                                 disabled: false,
                                 command: 'toggle-filter',
-                                positionOrder: 51
+                                positionOrder: 52
                             });
                         }
                         // show grid menu: refresh dataset
                         if (options && options.gridMenu && options.gridMenu.showRefreshDatasetCommand && backendApi && options.gridMenu.customItems && options.gridMenu.customItems.filter(function (item) { return item.command === 'refresh-dataset'; }).length === 0) {
                             options.gridMenu.customItems.push({
-                                iconCssClass: 'fa fa-refresh',
+                                iconCssClass: options.gridMenu.iconRefreshDatasetCommand || 'fa fa-refresh',
                                 title: options.enableTranslate ? this.i18n.tr('REFRESH_DATASET') : 'Refresh Dataset',
                                 disabled: false,
                                 command: 'refresh-dataset',
@@ -264,24 +272,36 @@ System.register(["aurelia-framework", "aurelia-i18n", "./export.service", "./fil
                             });
                         }
                     }
+                    if (options.enableSorting) {
+                        // show grid menu: clear all sorting
+                        if (options && options.gridMenu && options.gridMenu.showClearAllSortingCommand && options.gridMenu.customItems && options.gridMenu.customItems.filter(function (item) { return item.command === 'clear-sorting'; }).length === 0) {
+                            options.gridMenu.customItems.push({
+                                iconCssClass: options.gridMenu.iconClearAllSortingCommand || 'fa fa-unsorted text-danger',
+                                title: options.enableTranslate ? this.i18n.tr('CLEAR_ALL_SORTING') : 'Clear All Sorting',
+                                disabled: false,
+                                command: 'clear-sorting',
+                                positionOrder: 51
+                            });
+                        }
+                    }
                     // show grid menu: export to file
                     if (options && options.enableExport && options.gridMenu && options.gridMenu.showExportCsvCommand && options.gridMenu.customItems && options.gridMenu.customItems.filter(function (item) { return item.command === 'export-csv'; }).length === 0) {
                         options.gridMenu.customItems.push({
-                            iconCssClass: 'fa fa-download',
+                            iconCssClass: options.gridMenu.iconExportCsvCommand || 'fa fa-download',
                             title: options.enableTranslate ? this.i18n.tr('EXPORT_TO_CSV') : 'Export in CSV format',
                             disabled: false,
                             command: 'export-csv',
-                            positionOrder: 52
+                            positionOrder: 53
                         });
                     }
                     // show grid menu: export to text file as tab delimited
                     if (options && options.enableExport && options.gridMenu && options.gridMenu.showExportTextDelimitedCommand && options.gridMenu.customItems && options.gridMenu.customItems.filter(function (item) { return item.command === 'export-text-delimited'; }).length === 0) {
                         options.gridMenu.customItems.push({
-                            iconCssClass: 'fa fa-download',
+                            iconCssClass: options.gridMenu.iconExportTextDelimitedCommand || 'fa fa-download',
                             title: options.enableTranslate ? this.i18n.tr('EXPORT_TO_TAB_DELIMITED') : 'Export in Text format (Tab delimited)',
                             disabled: false,
                             command: 'export-text-delimited',
-                            positionOrder: 53
+                            positionOrder: 54
                         });
                     }
                     // Command callback, what will be executed after command is clicked
@@ -291,6 +311,10 @@ System.register(["aurelia-framework", "aurelia-i18n", "./export.service", "./fil
                                 switch (args.command) {
                                     case 'clear-filter':
                                         _this.filterService.clearFilters();
+                                        _this._dataView.refresh();
+                                        break;
+                                    case 'clear-sorting':
+                                        _this.sortService.clearSorting();
                                         _this._dataView.refresh();
                                         break;
                                     case 'export-csv':
@@ -461,7 +485,7 @@ System.register(["aurelia-framework", "aurelia-i18n", "./export.service", "./fil
                     }
                 };
                 ControlAndPluginService = __decorate([
-                    aurelia_framework_1.inject(export_service_1.ExportService, filter_service_1.FilterService, aurelia_i18n_1.I18N)
+                    aurelia_framework_1.inject(export_service_1.ExportService, filter_service_1.FilterService, aurelia_i18n_1.I18N, sort_service_1.SortService)
                 ], ControlAndPluginService);
                 return ControlAndPluginService;
             }());

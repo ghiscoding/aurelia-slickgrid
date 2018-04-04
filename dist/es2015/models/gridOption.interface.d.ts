@@ -1,4 +1,4 @@
-import { AutoResizeOption, BackendEventChanged, BackendServiceApi, Column, ColumnPicker, CheckboxSelector, EditCommand, FilterType, GridMenu, GridState, HeaderButton, HeaderMenu, Pagination } from './../models/index';
+import { AutoResizeOption, BackendEventChanged, BackendServiceApi, Column, ColumnPicker, CheckboxSelector, EditCommand, ExportOption, FilterType, GridMenu, GridState, HeaderButton, HeaderMenu, Pagination } from './../models/index';
 export interface GridOption {
     /** Defaults to false, which leads to load editor asynchronously (delayed) */
     asyncEditorLoading?: boolean;
@@ -27,6 +27,10 @@ export interface GridOption {
     columnPicker?: ColumnPicker;
     /** Unique property name on the dataset used by Slick.Data.DataView */
     datasetIdPropertyName?: string;
+    /** Default prefix for Aurelia Event names */
+    defaultAureliaEventPrefix?: string;
+    /** Default prefix for SlickGrid Event names */
+    defaultSlickgridEventPrefix?: string;
     /** Default placeholder to use in Filters that support placeholder (input, flatpickr) */
     defaultFilterPlaceholder?: string;
     /** The default filter type to use when none is specified */
@@ -51,8 +55,8 @@ export interface GridOption {
     enableColumnReorder?: boolean;
     /** Do we want to enable the Export to File? (if Yes, it will show up in the Grid Menu) */
     enableExport?: boolean;
-    /** Defaults to false, which leads to all Formatters of the grid being evaluated on export. You can also override a column by changing the propery on the column itself */
-    exportWithFormatter?: boolean;
+    /** Defaults to false, do we want to enable the Grouping & Aggregator? */
+    enableGrouping?: boolean;
     /** Do we want to enable Filters? */
     enableFiltering?: boolean;
     /** Do we want to enable Grid Menu (aka hamburger menu) */
@@ -75,6 +79,10 @@ export interface GridOption {
     enableTranslate?: boolean;
     /** Do we want explicit grid initialization? */
     explicitInitialization?: boolean;
+    /** Some default options to set for the export service */
+    exportOptions?: ExportOption;
+    /** @deprecated Defaults to false, which leads to all Formatters of the grid being evaluated on export. You can also override a column by changing the propery on the column itself */
+    exportWithFormatter?: boolean;
     /** Do we want to force fit columns in the grid at all time? */
     forceFitColumns?: boolean;
     /** Grid DOM element container ID (used Aurelia-Slickgrid auto-resizer) */

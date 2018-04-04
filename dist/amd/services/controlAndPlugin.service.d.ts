@@ -1,11 +1,13 @@
 import { I18N } from 'aurelia-i18n';
+import { Column, GridOption } from './../models/index';
 import { ExportService } from './export.service';
 import { FilterService } from './filter.service';
-import { Column, GridOption } from './../models/index';
+import { SortService } from './sort.service';
 export declare class ControlAndPluginService {
     private exportService;
     private filterService;
     private i18n;
+    private sortService;
     private _dataView;
     private _grid;
     private _gridOptions;
@@ -18,7 +20,7 @@ export declare class ControlAndPluginService {
     headerMenuPlugin: any;
     gridMenuControl: any;
     rowSelectionPlugin: any;
-    constructor(exportService: ExportService, filterService: FilterService, i18n: I18N);
+    constructor(exportService: ExportService, filterService: FilterService, i18n: I18N, sortService: SortService);
     /**
      * Attach/Create different Controls or Plugins after the Grid is created
      * @param grid
@@ -26,7 +28,7 @@ export declare class ControlAndPluginService {
      * @param options
      * @param dataView
      */
-    attachDifferentControlOrPlugins(grid: any, columnDefinitions: Column[], options: GridOption, dataView: any): void;
+    attachDifferentControlOrPlugins(grid: any, columnDefinitions: Column[], options: GridOption, dataView: any, groupItemMetadataProvider: any): void;
     createColumnPicker(grid: any, columnDefinitions: Column[], options: GridOption): void;
     /**
      * Create (or re-create) Grid Menu and expose all the available hooks that user can subscribe (onCommand, onMenuClose, ...)

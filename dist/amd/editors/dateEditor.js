@@ -1,4 +1,10 @@
-define(["require", "exports", "./../services/utilities", "./../models/index", "aurelia-i18n", "flatpickr", "jquery"], function (require, exports, utilities_1, index_1, aurelia_i18n_1, flatpickr, $) {
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+define(["require", "exports", "./../services/utilities", "./../models/index", "aurelia-i18n", "aurelia-framework", "flatpickr", "jquery"], function (require, exports, utilities_1, index_1, aurelia_i18n_1, aurelia_framework_1, flatpickr, $) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /*
@@ -6,7 +12,8 @@ define(["require", "exports", "./../services/utilities", "./../models/index", "a
      * https://chmln.github.io/flatpickr
      */
     var DateEditor = /** @class */ (function () {
-        function DateEditor(args) {
+        function DateEditor(i18n, args) {
+            this.i18n = i18n;
             this.args = args;
             this.init();
         }
@@ -16,7 +23,7 @@ define(["require", "exports", "./../services/utilities", "./../models/index", "a
             this.defaultDate = this.args.item[this.args.column.field] || null;
             var inputFormat = utilities_1.mapFlatpickrDateFormatWithFieldType(this.args.column.type || index_1.FieldType.dateIso);
             var outputFormat = utilities_1.mapFlatpickrDateFormatWithFieldType(this.args.column.outputType || index_1.FieldType.dateUtc);
-            var currentLocale = this.getCurrentLocale(this.args.column, gridOptions);
+            var currentLocale = this.i18n.getLocale() || 'en';
             if (currentLocale.length > 2) {
                 currentLocale = currentLocale.substring(0, 2);
             }
@@ -35,13 +42,6 @@ define(["require", "exports", "./../services/utilities", "./../models/index", "a
             this.$input.appendTo(this.args.container);
             this.flatInstance = (flatpickr && this.$input[0] && typeof this.$input[0].flatpickr === 'function') ? this.$input[0].flatpickr(pickerOptions) : null;
             this.show();
-        };
-        DateEditor.prototype.getCurrentLocale = function (columnDef, gridOptions) {
-            var params = gridOptions.params || columnDef.params || {};
-            if (params.i18n && params.i18n instanceof aurelia_i18n_1.I18N) {
-                return params.i18n.getLocale();
-            }
-            return 'en';
         };
         DateEditor.prototype.loadFlatpickrLocale = function (locale) {
             // change locale if needed, Flatpickr reference: https://chmln.github.io/flatpickr/localization/
@@ -96,6 +96,9 @@ define(["require", "exports", "./../services/utilities", "./../models/index", "a
                 msg: null
             };
         };
+        DateEditor = __decorate([
+            aurelia_framework_1.inject(aurelia_i18n_1.I18N)
+        ], DateEditor);
         return DateEditor;
     }());
     exports.DateEditor = DateEditor;

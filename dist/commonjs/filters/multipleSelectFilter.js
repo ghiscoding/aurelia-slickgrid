@@ -17,16 +17,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var aurelia_i18n_1 = require("aurelia-i18n");
 var aurelia_framework_1 = require("aurelia-framework");
 var index_1 = require("./../models/index");
+var collection_service_1 = require("../services/collection.service");
 var $ = require("jquery");
 var MultipleSelectFilter = /** @class */ (function () {
     /**
      * Initialize the Filter
      */
-    function MultipleSelectFilter(i18n) {
+    function MultipleSelectFilter(collectionService, i18n) {
         var _this = this;
+        this.collectionService = collectionService;
         this.i18n = i18n;
         this.isFilled = false;
         this.filterType = index_1.FilterType.multipleSelect;
+        this.enableTranslateLabel = false;
         // default options used by this Filter, user can overwrite any of these by passing "otions"
         this.defaultOptions = {
             container: 'body',
@@ -65,8 +68,26 @@ var MultipleSelectFilter = /** @class */ (function () {
         this.callback = args.callback;
         this.columnDef = args.columnDef;
         this.searchTerms = args.searchTerms || [];
+        if (!this.grid || !this.columnDef || !this.columnDef.filter || !this.columnDef.filter.collection) {
+            throw new Error("[Aurelia-SlickGrid] You need to pass a \"collection\" for the MultipleSelect Filter to work correctly. Also each option should include a value/label pair (or value/labelKey when using Locale). For example:: { filter: type: FilterType.multipleSelect, collection: [{ value: true, label: 'True' }, { value: false, label: 'False'}] }");
+        }
+        this.enableTranslateLabel = this.columnDef.filter.enableTranslateLabel || false;
+        this.labelName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.label : 'label';
+        this.valueName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.value : 'value';
+        var newCollection = this.columnDef.filter.collection || [];
+        this.gridOptions = this.grid.getOptions();
+        // user might want to filter certain items of the collection
+        if (this.gridOptions.params && this.columnDef.filter.collectionFilterBy) {
+            var filterBy = this.columnDef.filter.collectionFilterBy;
+            newCollection = this.collectionService.filterCollection(newCollection, filterBy);
+        }
+        // user might want to sort the collection
+        if (this.gridOptions.params && this.columnDef.filter.collectionSortBy) {
+            var sortBy = this.columnDef.filter.collectionSortBy;
+            newCollection = this.collectionService.sortCollection(newCollection, sortBy, this.enableTranslateLabel);
+        }
         // step 1, create HTML string template
-        var filterTemplate = this.buildTemplateHtmlString();
+        var filterTemplate = this.buildTemplateHtmlString(newCollection);
         // step 2, create the DOM Element of the filter & pre-load search terms
         // also subscribe to the onClose event
         this.createDomElement(filterTemplate);
@@ -108,25 +129,18 @@ var MultipleSelectFilter = /** @class */ (function () {
     /**
      * Create the HTML template as a string
      */
-    MultipleSelectFilter.prototype.buildTemplateHtmlString = function () {
+    MultipleSelectFilter.prototype.buildTemplateHtmlString = function (optionCollection) {
         var _this = this;
-        if (!this.columnDef || !this.columnDef.filter || !this.columnDef.filter.collection) {
-            throw new Error("[Aurelia-SlickGrid] You need to pass a \"collection\" for the MultipleSelect Filter to work correctly. Also each option should include a value/label pair (or value/labelKey when using Locale). For example:: { filter: type: FilterType.multipleSelect, collection: [{ value: true, label: 'True' }, { value: false, label: 'False'}] }");
-        }
-        var optionCollection = this.columnDef.filter.collection || [];
-        var labelName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.label : 'label';
-        var valueName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.value : 'value';
-        var isEnabledTranslate = (this.columnDef.filter.enableTranslateLabel) ? this.columnDef.filter.enableTranslateLabel : false;
         var options = '';
         optionCollection.forEach(function (option) {
-            if (!option || (option[labelName] === undefined && option.labelKey === undefined)) {
+            if (!option || (option[_this.labelName] === undefined && option.labelKey === undefined)) {
                 throw new Error("A collection with value/label (or value/labelKey when using Locale) is required to populate the Select list, for example:: { filter: type: FilterType.multipleSelect, collection: [ { value: '1', label: 'One' } ]')");
             }
-            var labelKey = (option.labelKey || option[labelName]);
-            var selected = (_this.findValueInSearchTerms(option[valueName]) >= 0) ? 'selected' : '';
-            var textLabel = ((option.labelKey || isEnabledTranslate) && _this.i18n && typeof _this.i18n.tr === 'function') ? _this.i18n.tr(labelKey || ' ') : labelKey;
+            var labelKey = (option.labelKey || option[_this.labelName]);
+            var selected = (_this.findValueInSearchTerms(option[_this.valueName]) >= 0) ? 'selected' : '';
+            var textLabel = ((option.labelKey || _this.enableTranslateLabel) && _this.i18n && typeof _this.i18n.tr === 'function') ? _this.i18n.tr(labelKey || ' ') : labelKey;
             // html text of each select option
-            options += "<option value=\"" + option[valueName] + "\" " + selected + ">" + textLabel + "</option>";
+            options += "<option value=\"" + option[_this.valueName] + "\" " + selected + ">" + textLabel + "</option>";
             // if there's a search term, we will add the "filled" class for styling purposes
             if (selected) {
                 _this.isFilled = true;
@@ -182,7 +196,7 @@ var MultipleSelectFilter = /** @class */ (function () {
         });
     };
     MultipleSelectFilter = __decorate([
-        aurelia_framework_1.inject(aurelia_i18n_1.I18N)
+        aurelia_framework_1.inject(collection_service_1.CollectionService, aurelia_i18n_1.I18N)
     ], MultipleSelectFilter);
     return MultipleSelectFilter;
 }());

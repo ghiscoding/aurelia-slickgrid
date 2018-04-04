@@ -1,4 +1,4 @@
-import { FilterType } from './models/index';
+import { FilterType, DelimiterType, FileType } from './models/index';
 /**
  * Default Options that can be passed to the Aurelia-Slickgrid
  */
@@ -21,6 +21,8 @@ export var GlobalGridOptions = {
         hideSyncResizeButton: true
     },
     datasetIdPropertyName: 'id',
+    defaultAureliaEventPrefix: 'asg',
+    defaultSlickgridEventPrefix: 'sg',
     defaultFilterPlaceholder: '&#128269;',
     defaultFilterType: FilterType.input,
     enableAutoResize: true,
@@ -35,15 +37,30 @@ export var GlobalGridOptions = {
     enableSorting: true,
     enableTextSelectionOnCells: true,
     explicitInitialization: true,
-    exportWithFormatter: false,
+    exportOptions: {
+        delimiter: DelimiterType.comma,
+        exportWithFormatter: false,
+        filename: 'export',
+        format: FileType.csv,
+        groupingAggregatorRowText: '',
+        sanitizeDataExport: false,
+        useUtf8WithBom: true
+    },
     forceFitColumns: false,
     gridMenu: {
         hideForceFitButton: false,
         hideSyncResizeButton: true,
         iconCssClass: 'fa fa-bars',
+        iconClearAllFiltersCommand: 'fa fa-filter text-danger',
+        iconClearAllSortingCommand: 'fa fa-unsorted text-danger',
+        iconExportCsvCommand: 'fa fa-download',
+        iconExportTextDelimitedCommand: 'fa fa-download',
+        iconRefreshDatasetCommand: 'fa fa-refresh',
+        iconToggleFilterCommand: 'fa fa-random',
         menuWidth: 16,
         resizeOnShowHeaderRow: false,
         showClearAllFiltersCommand: true,
+        showClearAllSortingCommand: true,
         showExportCsvCommand: true,
         showRefreshDatasetCommand: true,
         showToggleFilterCommand: true

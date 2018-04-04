@@ -2,6 +2,7 @@ import { ColumnFilter } from './columnFilter.interface';
 import { Editor } from './editor.interface';
 import { FieldType } from './fieldType.enum';
 import { Formatter } from './formatter.interface';
+import { GroupTotalsFormatter } from './groupTotalsFormatter.interface';
 import { HeaderButtonItem } from './headerButtonItem.interface';
 import { HeaderMenuItem } from './headerMenuItem.interface';
 import { OnEventArgs } from './onEventArgs.interface';
@@ -58,8 +59,10 @@ export interface Column {
     filterTemplate?: any;
     /** are we allowed to focus on the column? */
     focusable?: boolean;
-    /** Custom Sorter function that can be provided to the column */
+    /** Formatter function that can be used to change and format certain column(s) in the grid */
     formatter?: Formatter;
+    /** Group Totals Formatter function that can be used to add grouping totals in the grid */
+    groupTotalsFormatter?: GroupTotalsFormatter;
     /** Options that can be provide to the Header Menu Plugin */
     header?: {
         /** list of Buttons to show in the header */
@@ -110,10 +113,12 @@ export interface Column {
     resizable?: boolean;
     /** Do we want to re-render the grid on a grid resize */
     rerenderOnResize?: boolean;
-    /** do we want to show hidden column? */
-    showHidden?: boolean;
+    /** Defaults to false, which leads to Sanitizing all data (striping out any HTML tags) when being evaluated on export. */
+    sanitizeDataExport?: boolean;
     /** Is the column selectable? Goes with grid option "enableCellNavigation: true". */
     selectable?: boolean;
+    /** do we want to show hidden column? */
+    showHidden?: boolean;
     /** Is the column sortable? Goes with grid option "enableSorting: true". */
     sortable?: boolean;
     /** Custom Sorter function that can be provided to the column */

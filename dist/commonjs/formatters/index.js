@@ -1,8 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-// import { Group, GroupTotals } from '../core'
-// import { Item } from '../dataview'
 var arrayToCsvFormatter_1 = require("./arrayToCsvFormatter");
+var boldFormatter_1 = require("./boldFormatter");
 var checkboxFormatter_1 = require("./checkboxFormatter");
 var checkmarkFormatter_1 = require("./checkmarkFormatter");
 var complexObjectFormatter_1 = require("./complexObjectFormatter");
@@ -13,6 +12,9 @@ var dateTimeUsAmPmFormatter_1 = require("./dateTimeUsAmPmFormatter");
 var dateTimeUsFormatter_1 = require("./dateTimeUsFormatter");
 var dateUsFormatter_1 = require("./dateUsFormatter");
 var deleteIconFormatter_1 = require("./deleteIconFormatter");
+var dollarColoredBoldFormatter_1 = require("./dollarColoredBoldFormatter");
+var dollarColoredFormatter_1 = require("./dollarColoredFormatter");
+var dollarFormatter_1 = require("./dollarFormatter");
 var editIconFormatter_1 = require("./editIconFormatter");
 var hyperlinkFormatter_1 = require("./hyperlinkFormatter");
 var hyperlinkUriPrefixFormatter_1 = require("./hyperlinkUriPrefixFormatter");
@@ -27,18 +29,12 @@ var translateBooleanFormatter_1 = require("./translateBooleanFormatter");
 var uppercaseFormatter_1 = require("./uppercaseFormatter");
 var yesNoFormatter_1 = require("./yesNoFormatter");
 var collectionFormatter_1 = require("./collectionFormatter");
-/*
-export interface GroupFormatter {
-  (row: number, cell: number, value: any, columnDef: Column, dataContext: Group): string
-}
-export interface GroupTotalsFormatter {
-  (row: number, cell: number, value: any, columnDef: Column, dataContext: GroupTotals): string
-}
-*/
 /** Provides a list of different Formatters that will change the cell value displayed in the UI */
 exports.Formatters = {
     /** Takes an array of string and converts it to a comma delimited string */
     arrayToCsv: arrayToCsvFormatter_1.arrayToCsvFormatter,
+    /** show value in bold font weight as well */
+    bold: boldFormatter_1.boldFormatter,
     /** When value is filled (true), it will display a checkbox Unicode icon */
     checkbox: checkboxFormatter_1.checkboxFormatter,
     /** When value is filled (true), it will display a Font-Awesome icon (fa-check) */
@@ -71,6 +67,12 @@ exports.Formatters = {
     dateTimeUsAmPm: dateTimeUsAmPmFormatter_1.dateTimeUsAmPmFormatter,
     /** Displays a Font-Awesome delete icon (fa-trash) */
     deleteIcon: deleteIconFormatter_1.deleteIconFormatter,
+    /** Display the value as 2 decimals formatted with dollar sign '$' at the end of of the value */
+    dollar: dollarFormatter_1.dollarFormatter,
+    /** Display the value as 2 decimals formatted with dollar sign '$' at the end of of the value, change color of text to red/green on negative/positive value */
+    dollarColored: dollarColoredFormatter_1.dollarColoredFormatter,
+    /** Display the value as 2 decimals formatted with dollar sign '$' at the end of of the value, change color of text to red/green on negative/positive value, show it in bold font weight as well */
+    dollarColoredBold: dollarColoredBoldFormatter_1.dollarColoredBoldFormatter,
     /** Displays a Font-Awesome edit icon (fa-pencil) */
     editIcon: editIconFormatter_1.editIconFormatter,
     /** Takes an hyperlink cell value and transforms it into a real hyperlink, given that the value starts with 1 of these (http|ftp|https). The structure will be "<a href="hyperlink">hyperlink</a>" */

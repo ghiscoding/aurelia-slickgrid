@@ -13,4 +13,5 @@ __export(require("./gridStateType.enum"));
 __export(require("./keyCode.enum"));
 __export(require("./operatorType.enum"));
 __export(require("./sortDirection.enum"));
+__export(require("./sortDirectionNumber.enum"));
 //# sourceMappingURL=index.js.map

@@ -1,12 +1,13 @@
-import { Column, Editor, GridOption } from './../models/index';
+import { Editor } from './../models/index';
+import { I18N } from 'aurelia-i18n';
 export declare class DateEditor implements Editor {
+    private i18n;
     private args;
     $input: any;
     flatInstance: any;
     defaultDate: string;
-    constructor(args: any);
+    constructor(i18n: I18N, args: any);
     init(): void;
-    getCurrentLocale(columnDef: Column, gridOptions: GridOption): any;
     loadFlatpickrLocale(locale: string): any;
     destroy(): void;
     show(): void;
