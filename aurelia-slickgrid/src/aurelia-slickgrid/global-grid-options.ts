@@ -22,6 +22,8 @@ export const GlobalGridOptions: GridOption = {
     hideSyncResizeButton: true
   },
   datasetIdPropertyName: 'id',
+  defaultAureliaEventPrefix: 'asg',
+  defaultSlickgridEventPrefix: 'sg',
   defaultFilterPlaceholder: '&#128269;', // magnifying glass icon
   defaultFilterType: FilterType.input,
   enableAutoResize: true,
@@ -36,7 +38,15 @@ export const GlobalGridOptions: GridOption = {
   enableSorting: true,
   enableTextSelectionOnCells: true,
   explicitInitialization: true,
-  exportWithFormatter: false,
+  exportOptions: {
+    delimiter: DelimiterType.comma,
+    exportWithFormatter: false,
+    filename: 'export',
+    format: FileType.csv,
+    groupingAggregatorRowText: '',
+    sanitizeDataExport: false,
+    useUtf8WithBom: true
+  },
   forceFitColumns: false,
   gridMenu: {
     hideForceFitButton: false,

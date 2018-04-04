@@ -14,6 +14,7 @@
   "dependencies": {
     "aurelia-animator-css": "^1.0.4",
     "aurelia-bootstrapper": "^2.1.1",
+    "aurelia-event-aggregator": "^1.0.1",
     "aurelia-framework": "^1.1.5",
     "aurelia-http-client": "^1.2.1",
     "aurelia-i18n": "^2.1.2",

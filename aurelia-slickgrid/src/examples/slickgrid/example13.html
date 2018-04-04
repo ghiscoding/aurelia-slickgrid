@@ -1,0 +1,51 @@
+<template>
+  <h2>${title}</h2>
+  <div class="subtitle" innerhtml.bind="subTitle"></div>
+
+  <div class="row col-sm-12">
+    <button class="btn btn-default btn-xs" click.delegate="loadData(500)">
+      500 rows
+    </button>
+    <button class="btn btn-default btn-xs" click.delegate="loadData(50000)">
+      50k rows
+    </button>
+    <button class="btn btn-default btn-xs" click.delegate="clearGrouping()">
+      Clear grouping
+    </button>
+    <button class="btn btn-default btn-xs" click.delegate="collapseAllGroups()">
+      Collapse all groups
+    </button>
+    <button class="btn btn-default btn-xs" click.delegate="expandAllGroups()">
+      Expand all groups
+    </button>
+  </div>
+
+  <hr/>
+
+  <div class="row col-sm-12">
+    <button class="btn btn-default btn-xs" click.delegate="groupByDuration()">
+      Group by duration &amp; sort groups by value
+    </button>
+    <button class="btn btn-default btn-xs" click.delegate="groupByDurationOrderByCount(false)">
+      Group by duration &amp; sort groups by count
+    </button>
+  </div>
+  <div class="row col-sm-12">
+    <button class="btn btn-default btn-xs" click.delegate="groupByDurationOrderByCount(true)">
+      Group by duration &amp; sort groups by count, aggregate collapsed
+    </button>
+    <button class="btn btn-default btn-xs" click.delegate="groupByDurationEffortDriven()">
+      Group by duration then effort-driven
+    </button>
+    <button class="btn btn-default btn-xs" click.delegate="groupByDurationEffortDrivenPercent()">
+      Group by duration then effort-driven then percent.
+    </button>
+    <span hidden.bind="!processing">
+      <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
+    </span>
+  </div>
+
+  <aurelia-slickgrid grid-id="grid1" column-definitions.bind="columnDefinitions" grid-options.bind="gridOptions" dataset.bind="dataset"
+    sg-on-dataview-created.delegate="onDataviewCreated($event.detail)">
+  </aurelia-slickgrid>
+</template>

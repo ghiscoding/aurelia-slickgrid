@@ -1,7 +1,6 @@
 import { Column } from './../models/index';
-// import { Group, GroupTotals } from '../core'
-// import { Item } from '../dataview'
 import { arrayToCsvFormatter } from './arrayToCsvFormatter';
+import { boldFormatter } from './boldFormatter';
 import { checkboxFormatter } from './checkboxFormatter';
 import { checkmarkFormatter } from './checkmarkFormatter';
 import { complexObjectFormatter } from './complexObjectFormatter';
@@ -12,6 +11,9 @@ import { dateTimeUsAmPmFormatter } from './dateTimeUsAmPmFormatter';
 import { dateTimeUsFormatter } from './dateTimeUsFormatter';
 import { dateUsFormatter } from './dateUsFormatter';
 import { deleteIconFormatter } from './deleteIconFormatter';
+import { dollarColoredBoldFormatter } from './dollarColoredBoldFormatter';
+import { dollarColoredFormatter } from './dollarColoredFormatter';
+import { dollarFormatter } from './dollarFormatter';
 import { editIconFormatter } from './editIconFormatter';
 import { hyperlinkFormatter } from './hyperlinkFormatter';
 import { hyperlinkUriPrefixFormatter } from './hyperlinkUriPrefixFormatter';
@@ -27,19 +29,13 @@ import { uppercaseFormatter } from './uppercaseFormatter';
 import { yesNoFormatter } from './yesNoFormatter';
 import { collectionFormatter } from './collectionFormatter';
 
-/*
-export interface GroupFormatter {
-  (row: number, cell: number, value: any, columnDef: Column, dataContext: Group): string
-}
-export interface GroupTotalsFormatter {
-  (row: number, cell: number, value: any, columnDef: Column, dataContext: GroupTotals): string
-}
-*/
-
 /** Provides a list of different Formatters that will change the cell value displayed in the UI */
 export const Formatters = {
   /** Takes an array of string and converts it to a comma delimited string */
   arrayToCsv: arrayToCsvFormatter,
+
+  /** show value in bold font weight as well */
+  bold: boldFormatter,
 
   /** When value is filled (true), it will display a checkbox Unicode icon */
   checkbox: checkboxFormatter,
@@ -83,6 +79,15 @@ export const Formatters = {
 
   /** Displays a Font-Awesome delete icon (fa-trash) */
   deleteIcon: deleteIconFormatter,
+
+  /** Display the value as 2 decimals formatted with dollar sign '$' at the end of of the value */
+  dollar: dollarFormatter,
+
+  /** Display the value as 2 decimals formatted with dollar sign '$' at the end of of the value, change color of text to red/green on negative/positive value */
+  dollarColored: dollarColoredFormatter,
+
+  /** Display the value as 2 decimals formatted with dollar sign '$' at the end of of the value, change color of text to red/green on negative/positive value, show it in bold font weight as well */
+  dollarColoredBold: dollarColoredBoldFormatter,
 
   /** Displays a Font-Awesome edit icon (fa-pencil) */
   editIcon: editIconFormatter,

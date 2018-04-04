@@ -55,6 +55,12 @@ export interface GridOption {
   /** Unique property name on the dataset used by Slick.Data.DataView */
   datasetIdPropertyName?: string;
 
+  /** Default prefix for Aurelia Event names */
+  defaultAureliaEventPrefix?: string;
+
+  /** Default prefix for SlickGrid Event names */
+  defaultSlickgridEventPrefix?: string;
+
   /** Default placeholder to use in Filters that support placeholder (input, flatpickr) */
   defaultFilterPlaceholder?: string;
 
@@ -91,8 +97,8 @@ export interface GridOption {
   /** Do we want to enable the Export to File? (if Yes, it will show up in the Grid Menu) */
   enableExport?: boolean;
 
-  /** Defaults to false, which leads to all Formatters of the grid being evaluated on export. You can also override a column by changing the propery on the column itself */
-  exportWithFormatter?: boolean;
+  /** Defaults to false, do we want to enable the Grouping & Aggregator? */
+  enableGrouping?: boolean;
 
   /** Do we want to enable Filters? */
   enableFiltering?: boolean;
@@ -126,6 +132,12 @@ export interface GridOption {
 
   /** Do we want explicit grid initialization? */
   explicitInitialization?: boolean;
+
+  /** Some default options to set for the export service */
+  exportOptions?: ExportOption;
+
+  /** @deprecated Defaults to false, which leads to all Formatters of the grid being evaluated on export. You can also override a column by changing the propery on the column itself */
+  exportWithFormatter?: boolean;
 
   /** Do we want to force fit columns in the grid at all time? */
   forceFitColumns?: boolean;

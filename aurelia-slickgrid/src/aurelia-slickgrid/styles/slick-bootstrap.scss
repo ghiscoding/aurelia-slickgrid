@@ -105,7 +105,13 @@
         }
         background: inherit;
       }
-
+      &.slick-group-totals {
+        color: $group-totals-formatter-color;
+        background: $group-totals-formatter-bgcolor;
+        .slick-cell {
+          font-size: $group-totals-formatter-font-size;
+        }
+      }
     }
     .slick-cell, .slick-headerrow-column {
       border-top: $cell-border-top;
@@ -149,6 +155,26 @@
       select:not([multiple]).form-control {
         height: 100%;
         padding: 0;
+      }
+      .slick-group-toggle {
+        color: $icon-group-color;
+        font-weight: $icon-group-font-weight;
+        width: $icon-group-width;
+        height: $icon-group-height;
+        margin-right: $icon-group-margin-right;
+        cursor: pointer;
+
+        &.expanded:before {
+          content: $icon-group-expanded;
+          font-family: $icon-font-family;
+          font-size: $icon-group-font-size;
+        }
+
+        &.collapsed:before {
+          content: $icon-group-collapsed;
+          font-family: $icon-font-family;
+          font-size: $icon-group-font-size;
+        }
       }
     }
   }
