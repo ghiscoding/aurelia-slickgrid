@@ -1,7 +1,19 @@
 import { inject } from 'aurelia-framework';
 import { EventAggregator } from 'aurelia-event-aggregator';
-import { Column, FieldType, GridOption, SlickEvent, SortChanged, SortDirection, CurrentSorter, CellArgs, SortDirectionString } from './../models/index';
+import {
+  Column,
+  FieldType,
+  GridOption,
+  SlickEvent,
+  SortChanged,
+  SortDirection,
+  CurrentSorter,
+  CellArgs,
+  SortDirectionNumber,
+  SortDirectionString
+} from './../models/index';
 import { Sorters } from './../sorters/index';
+import { sortByFieldType } from '../sorters/sorterUtilities';
 
 // using external non-typed js libraries
 declare var Slick: any;
@@ -148,36 +160,14 @@ export class SortService {
       for (let i = 0, l = sortColumns.length; i < l; i++) {
         const columnSortObj = sortColumns[i];
         if (columnSortObj && columnSortObj.sortCol) {
-          const sortDirection = columnSortObj.sortAsc ? 1 : -1;
-          const sortField = columnSortObj.sortCol.queryField || columnSortObj.sortCol.queryFieldSorter || columnSortObj.sortCol.field;
-          const fieldType = columnSortObj.sortCol.type || 'string';
+          const sortDirection = columnSortObj.sortAsc ? SortDirectionNumber.asc : SortDirectionNumber.desc;
+          const sortField = columnSortObj.sortCol.queryField || columnSortObj.sortCol.queryFieldFilter || columnSortObj.sortCol.field;
+          const fieldType = columnSortObj.sortCol.type || FieldType.string;
           const value1 = dataRow1[sortField];
           const value2 = dataRow2[sortField];
-          let result = 0;
-
-          switch (fieldType) {
-            case FieldType.number:
-              result = Sorters.numeric(value1, value2, sortDirection);
-              break;
-            case FieldType.date:
-              result = Sorters.date(value1, value2, sortDirection);
-              break;
-            case FieldType.dateIso:
-              result = Sorters.dateIso(value1, value2, sortDirection);
-              break;
-            case FieldType.dateUs:
-              result = Sorters.dateUs(value1, value2, sortDirection);
-              break;
-            case FieldType.dateUsShort:
-              result = Sorters.dateUsShort(value1, value2, sortDirection);
-              break;
-            default:
-              result = Sorters.string(value1, value2, sortDirection);
-              break;
-          }
-
-          if (result !== 0) {
-            return result;
+          const sortResult = sortByFieldType(value1, value2, fieldType, sortDirection);
+          if (sortResult !== SortDirectionNumber.neutral) {
+            return sortResult;
           }
         }
       }

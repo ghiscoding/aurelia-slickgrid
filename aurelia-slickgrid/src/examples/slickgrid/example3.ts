@@ -114,7 +114,11 @@ export class Example3 {
       minWidth: 100,
       params: {
         formatters: [Formatters.collection, Formatters.percentCompleteBar],
-        collection: Array.from(Array(101).keys()).map(k => ({ value: k, label: k }))
+        collection: Array.from(Array(101).keys()).map(k => ({ value: k, label: k })),
+        collectionSortBy: {
+          property: 'label',
+          sortDesc: true
+        },
       }
     }, {
       id: 'start',
@@ -150,7 +154,15 @@ export class Example3 {
       type: FieldType.string,
       editor: Editors.multipleSelect,
       params: {
-        collection: Array.from(Array(10).keys()).map(k => ({ value: `Task ${k}`, label: `Task ${k}` }))
+        collection: Array.from(Array(10).keys()).map(k => ({ value: `Task ${k}`, label: `Task ${k}` })),
+        collectionSortBy: {
+          property: 'label',
+          sortDesc: true
+        },
+        collectionFilterBy: {
+          property: 'label',
+          value: 'Task 2'
+        }
       }
     }];
 
