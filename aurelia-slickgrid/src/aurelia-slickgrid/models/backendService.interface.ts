@@ -65,5 +65,5 @@ export interface BackendService {
   onPaginationChanged: (event: Event | undefined, args: PaginationChangedArgs) => string;
 
   /** Execute when any of the sorters changed */
-  onSortChanged: (event: Event, args: SortChangedArgs) => string;
+  onSortChanged: (event: Event | null, args: SortChangedArgs) => string;
 }
