@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.11.0"></a>
+# [1.11.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v1.10.0...v1.11.0) (2018-04-04)
+
+
+### Bug Fixes
+
+* **graphql:** make sure column exist before trying to get properties ([7122d6a](https://github.com/ghiscoding/aurelia-slickgrid/commit/7122d6a))
+* **graphql:** remove throw error when dataset is empty or bad structure ([36ea506](https://github.com/ghiscoding/aurelia-slickgrid/commit/36ea506))
+* **grid:** gridHeight & gridWidth not set, closes [#35](https://github.com/ghiscoding/aurelia-slickgrid/issues/35) ([#40](https://github.com/ghiscoding/aurelia-slickgrid/issues/40)) ([0bd2c53](https://github.com/ghiscoding/aurelia-slickgrid/commit/0bd2c53))
+* **merge:** fix last merge had conflicts ([15e80e8](https://github.com/ghiscoding/aurelia-slickgrid/commit/15e80e8))
+* **merge:** fix some merge conflicts ([d2172df](https://github.com/ghiscoding/aurelia-slickgrid/commit/d2172df))
+* **preset:** Preset with backend were not working when using queryField ([7ce538a](https://github.com/ghiscoding/aurelia-slickgrid/commit/7ce538a))
+* **tasks:** VSCode Taks command were broken in new VSCode insiders ([653ecb8](https://github.com/ghiscoding/aurelia-slickgrid/commit/653ecb8))
+
+
+### Features
+
+* **editor:** add dependency injection support in editors ([#33](https://github.com/ghiscoding/aurelia-slickgrid/issues/33)) ([61a1a31](https://github.com/ghiscoding/aurelia-slickgrid/commit/61a1a31)), closes [#18](https://github.com/ghiscoding/aurelia-slickgrid/issues/18)
+* **editor:** auto-adjust ms-select drop up/down by space, closes [#34](https://github.com/ghiscoding/aurelia-slickgrid/issues/34) ([c86911c](https://github.com/ghiscoding/aurelia-slickgrid/commit/c86911c))
+* **filter/editor:** add functionality to filter/sort collection ([#38](https://github.com/ghiscoding/aurelia-slickgrid/issues/38)) ([2a276a6](https://github.com/ghiscoding/aurelia-slickgrid/commit/2a276a6))
+* **grouping:** Grouping & Aggregators  ([#41](https://github.com/ghiscoding/aurelia-slickgrid/issues/41)) ([333182f](https://github.com/ghiscoding/aurelia-slickgrid/commit/333182f))
+* **resizer:** add last resized Grid Dimension getter ([cd6013e](https://github.com/ghiscoding/aurelia-slickgrid/commit/cd6013e))
+* **sort:** add a Clear Sorting function and grid menu command ([#39](https://github.com/ghiscoding/aurelia-slickgrid/issues/39)) ([f709dc7](https://github.com/ghiscoding/aurelia-slickgrid/commit/f709dc7))
+* **styling:** make the multiple-select.js "Select All" text 100% wide ([0b2909c](https://github.com/ghiscoding/aurelia-slickgrid/commit/0b2909c))
+
+
+
 <a name="1.10.0"></a>
 # [1.10.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v1.9.2...v1.10.0) (2018-03-20)
 ### Features
