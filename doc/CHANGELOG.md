@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.11.1"></a>
+## [1.11.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v1.11.0...v1.11.1) (2018-04-05)
+
+
+### Bug Fixes
+
+* **grid:** grid fixed sizes wasn't working in Edge/Firefox, closes [#35](https://github.com/ghiscoding/aurelia-slickgrid/issues/35) ([a7669df](https://github.com/ghiscoding/aurelia-slickgrid/commit/a7669df))
+
+
+
 <a name="1.11.0"></a>
 # [1.11.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v1.10.0...v1.11.0) (2018-04-04)
 
