@@ -62,8 +62,6 @@ export class AureliaSlickgridCustomElement {
   private _dataset: any[];
   private _eventHandler: any = new Slick.EventHandler();
   gridStateSubscriber: Subscription;
-  gridStyleHeight: { height: string; };
-  gridStyleWidth: { width: string; };
   groupItemMetadataProvider: any;
   localeChangedSubscriber: Subscription;
   showPagination = false;
@@ -76,8 +74,8 @@ export class AureliaSlickgridCustomElement {
   @bindable() gridId: string;
   @bindable() columnDefinitions: Column[];
   @bindable() gridOptions: GridOption;
-  @bindable() gridHeight = 200;
-  @bindable() gridWidth = 600;
+  @bindable() gridHeight: number;
+  @bindable() gridWidth: number;
   @bindable() pickerOptions: any;
 
   constructor(
@@ -93,7 +91,8 @@ export class AureliaSlickgridCustomElement {
     private i18n: I18N,
     private resizer: ResizerService,
     private sortService: SortService,
-    private container: Container) { }
+    private container: Container
+  ) { }
 
   attached() {
     this.elm.dispatchEvent(new CustomEvent(`${eventPrefix}-on-before-grid-create`, {
@@ -194,15 +193,6 @@ export class AureliaSlickgridCustomElement {
   bind(binding: any, contexts: any) {
     // get the grid options (priority is Global Options first, then user option which could overwrite the Global options)
     this.gridOptions = { ...GlobalGridOptions, ...binding.gridOptions };
-
-    if (!this.gridOptions.enableAutoResize) {
-      this.gridStyleWidth = {
-        width: `${this.gridWidth}px`
-      };
-      this.gridStyleHeight = {
-        height: `${this.gridHeight}px`
-      };
-    }
 
     // Wrap each editor class in the Factory resolver so consumers of this library can use
     // dependency injection. Aurelia will resolve all dependencies when we pass the container
@@ -461,8 +451,7 @@ export class AureliaSlickgridCustomElement {
       }
       if (this.grid && this.gridOptions.enableAutoResize) {
         // resize the grid inside a slight timeout, in case other DOM element changed prior to the resize (like a filter/pagination changed)
-        this.resizer.resizeGrid(10);
-        // this.grid.autosizeColumns();
+        this.resizer.resizeGrid(1);
       }
     }
   }
