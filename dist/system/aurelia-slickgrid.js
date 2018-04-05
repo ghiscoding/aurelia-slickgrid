@@ -135,8 +135,6 @@ System.register(["jquery-ui-dist/jquery-ui", "slickgrid/lib/jquery.event.drag-2.
                     this.container = container;
                     this._eventHandler = new Slick.EventHandler();
                     this.showPagination = false;
-                    this.gridHeight = 200;
-                    this.gridWidth = 600;
                 }
                 AureliaSlickgridCustomElement.prototype.attached = function () {
                     this.elm.dispatchEvent(new CustomEvent(eventPrefix + "-on-before-grid-create", {
@@ -225,14 +223,6 @@ System.register(["jquery-ui-dist/jquery-ui", "slickgrid/lib/jquery.event.drag-2.
                 AureliaSlickgridCustomElement.prototype.bind = function (binding, contexts) {
                     // get the grid options (priority is Global Options first, then user option which could overwrite the Global options)
                     this.gridOptions = __assign({}, global_grid_options_1.GlobalGridOptions, binding.gridOptions);
-                    if (!this.gridOptions.enableAutoResize) {
-                        this.gridStyleWidth = {
-                            width: this.gridWidth + "px"
-                        };
-                        this.gridStyleHeight = {
-                            height: this.gridHeight + "px"
-                        };
-                    }
                     // Wrap each editor class in the Factory resolver so consumers of this library can use
                     // dependency injection. Aurelia will resolve all dependencies when we pass the container
                     // and allow slickgrid to pass its arguments to the editors constructor last
@@ -482,8 +472,7 @@ System.register(["jquery-ui-dist/jquery-ui", "slickgrid/lib/jquery.event.drag-2.
                         }
                         if (this.grid && this.gridOptions.enableAutoResize) {
                             // resize the grid inside a slight timeout, in case other DOM element changed prior to the resize (like a filter/pagination changed)
-                            this.resizer.resizeGrid(10);
-                            // this.grid.autosizeColumns();
+                            this.resizer.resizeGrid(1);
                         }
                     }
                 };

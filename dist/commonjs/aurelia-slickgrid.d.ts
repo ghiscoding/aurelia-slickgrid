@@ -40,12 +40,6 @@ export declare class AureliaSlickgridCustomElement {
     private _dataset;
     private _eventHandler;
     gridStateSubscriber: Subscription;
-    gridStyleHeight: {
-        height: string;
-    };
-    gridStyleWidth: {
-        width: string;
-    };
     groupItemMetadataProvider: any;
     localeChangedSubscriber: Subscription;
     showPagination: boolean;

@@ -140,11 +140,12 @@ export class Example3 {
       formatter: Formatters.checkmark,
       type: FieldType.number,
       editor: Editors.checkbox,
-      minWidth: 100
+      minWidth: 70
     }, {
       id: 'prerequisites',
       name: 'Prerequisites',
       field: 'prerequisites',
+      minWidth: 100,
       sortable: true,
       type: FieldType.string,
       editor: Editors.multipleSelect,

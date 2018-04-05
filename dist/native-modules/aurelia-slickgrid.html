@@ -1,6 +1,6 @@
 <template>
-  <div id="slickGridContainer-${gridId}" class="gridPane" css.bind="gridStyleWidth">
-    <div id.bind="gridId" class="slickgrid-container" style="width: 100%" css.bind="gridStyleHeight">
+  <div id="slickGridContainer-${gridId}" class="gridPane" css="width: ${gridWidth}px">
+    <div id.bind="gridId" class="slickgrid-container" style="width: 100%" css="height: ${gridHeight}px">
     </div>
 
     <slick-pagination id="slickPagingContainer-${gridId}" if.bind="showPagination" asg-on-pagination-changed.delegate="paginationChanged($event.detail)"
