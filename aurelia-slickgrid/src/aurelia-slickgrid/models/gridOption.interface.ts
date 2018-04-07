@@ -52,6 +52,9 @@ export interface GridOption {
   /** Checkbox Select Plugin options (columnTitle, forceFitTitle, syncResizeTitle) */
   columnPicker?: ColumnPicker;
 
+  /** Default to false, which leads to create an extra pre-header panel (on top of column header) for column grouping purposes */
+  createPreHeaderPanel?: boolean;
+
   /** Unique property name on the dataset used by Slick.Data.DataView */
   datasetIdPropertyName?: string;
 
@@ -175,6 +178,9 @@ export interface GridOption {
   /** "params" is a generic property and can be used to pass custom paramaters to your Formatter/Editor or anything else */
   params?: any | any[];
 
+  /** Extra pre-header panel height (on top of column header) */
+  preHeaderPanelHeight?: number;
+
   /** Query presets before grid load (filters, sorters, pagination) */
   presets?: GridState;
 
@@ -192,6 +198,9 @@ export interface GridOption {
 
   /** Do we want to show header row? */
   showHeaderRow?: boolean;
+
+  /** Do we want to show the extra pre-header panel (on top of column header) for column grouping purposes */
+  showPreHeaderPanel?: boolean;
 
   /** Do we want to show top panel row? */
   showTopPanel?: boolean;

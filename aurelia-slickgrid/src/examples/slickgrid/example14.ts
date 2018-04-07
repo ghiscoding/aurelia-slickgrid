@@ -18,6 +18,7 @@ export class Example14 {
   gridOptions: GridOption;
   dataset = [];
   visibleColumns;
+  gridObj: any;
 
   constructor() {
     // define the grid options & columns and then create the grid itself
@@ -26,12 +27,12 @@ export class Example14 {
 
   defineGrid() {
     this.columnDefinitions = [
-      { id: 'title', name: 'Title', field: 'title', sortable: true },
-      { id: 'duration', name: 'Duration', field: 'duration' },
-      { id: '%', name: '% Complete', field: 'percentComplete', selectable: false },
-      { id: 'start', name: 'Start', field: 'start' },
-      { id: 'finish', name: 'Finish', field: 'finish' },
-      { id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', type: FieldType.boolean }
+      { id: 'title', name: 'Title', field: 'title', sortable: true, columnGroup: 'Common Factor' },
+      { id: 'duration', name: 'Duration', field: 'duration', columnGroup: 'Common Factor' },
+      { id: 'start', name: 'Start', field: 'start', columnGroup: 'Period' },
+      { id: 'finish', name: 'Finish', field: 'finish', columnGroup: 'Period' },
+      { id: '%', name: '% Complete', field: 'percentComplete', selectable: false, columnGroup: 'Analysis' },
+      { id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', type: FieldType.boolean, columnGroup: 'Analysis' }
     ];
 
     this.gridOptions = {
@@ -42,7 +43,11 @@ export class Example14 {
       },
       enableCellNavigation: true,
       enableColumnReorder: false,
-      enableSorting: true
+      enableSorting: true,
+      createPreHeaderPanel: true,
+      showPreHeaderPanel: true,
+      preHeaderPanelHeight: 23,
+      explicitInitialization: true
     };
   }
 
@@ -60,6 +65,32 @@ export class Example14 {
         effortDriven: (i % 5 === 0)
       };
     }
+  }
+
+  /** Execute after DataView is created and ready */
+  onDataviewCreated(dataView) {
+    // populate the dataset once the DataView is ready
+    this.getData();
+
+    // render different colspan right after the DataView is filled
+    this.renderDifferentColspan(dataView);
+  }
+
+  onGridCreated(grid) {
+    this.gridObj = grid;
+    setTimeout(() => {
+      console.log('delayed');
+      this.createAddlHeaderRow();
+    }, 50);
+  }
+
+  onColumnsResized(e, args) {
+    console.log('onColumnsResized');
+    this.createAddlHeaderRow();
+  }
+
+  onHeaderRowCellRendered(e, args) {
+    console.log(args);
   }
 
   /** Call the "getItemMetadata" on the DataView to render different column span */
@@ -87,12 +118,32 @@ export class Example14 {
     };
   }
 
-  /** Execute after DataView is created and ready */
-  onDataviewCreated(dataView) {
-    // populate the dataset once the DataView is ready
-    this.getData();
+  createAddlHeaderRow() {
+    const $preHeaderPanel = $(this.gridObj.getPreHeaderPanel())
+      .empty()
+      .addClass('slick-header-columns')
+      .css('left', '-1000px')
+      .width(this.gridObj.getHeadersWidth());
+    $preHeaderPanel.parent().addClass('slick-header');
+    const headerColumnWidthDiff = this.gridObj.getHeaderColumnWidthDiff();
+    let m;
+    let header;
+    let lastColumnGroup = '';
+    let widthTotal = 0;
 
-    // render different colspan right after the DataView is filled
-    this.renderDifferentColspan(dataView);
+    for (let i = 0; i < this.columnDefinitions.length; i++) {
+      m = this.columnDefinitions[i];
+      if (lastColumnGroup === m.columnGroup && i > 0) {
+        widthTotal += m.width;
+        header.width(widthTotal - headerColumnWidthDiff);
+      } else {
+        widthTotal = m.width;
+        header = $(`<div class="ui-state-default slick-header-column" />`)
+          .html(`<span class="slick-column-name" style="left: 50%">${m.columnGroup || ''}</span>`)
+          .width(m.width - headerColumnWidthDiff)
+          .appendTo($preHeaderPanel);
+      }
+      lastColumnGroup = m.columnGroup;
+    }
   }
 }

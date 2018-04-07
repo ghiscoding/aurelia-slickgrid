@@ -3,6 +3,7 @@
   <div class="subtitle" innerhtml.bind="subTitle"></div>
 
   <aurelia-slickgrid grid-id="grid1" column-definitions.bind="columnDefinitions" grid-options.bind="gridOptions" dataset.bind="dataset"
-    sg-on-dataview-created.delegate="onDataviewCreated($event.detail)">
+    sg-on-grid-created.delegate="onGridCreated($event.detail)" sg-on-columns-resized.delegate="onColumnsResized($event.detail.eventData, $event.detail.args)"
+    sg-on-header-row-cell-rendered.delegate="onHeaderRowCellRendered($event.detail.eventData, $event.detail.args)" sg-on-dataview-created.delegate="onDataviewCreated($event.detail)">
   </aurelia-slickgrid>
 </template>
