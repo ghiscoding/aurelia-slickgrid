@@ -1,6 +1,6 @@
 <template>
   <section class="au-animate">
-    <div class="col-sm-3 col-md-2">
+    <div class="col-sm-3 col-md-2" style="overflow: auto; max-height: calc(100% - 50px)">
       <ul class="nav nav-pills nav-stacked">
         <li repeat.for="row of router.navigation" class="${row.isActive ? 'active' : ''}">
           <a data-toggle="collapse" data-target="#skeleton-navigation-navbar-collapse.in" href.bind="row.href">${row.title}</a>
