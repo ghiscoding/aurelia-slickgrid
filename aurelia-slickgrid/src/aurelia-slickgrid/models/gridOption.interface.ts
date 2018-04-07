@@ -163,6 +163,9 @@ export interface GridOption {
   /** Do we want to enable multi-column sorting? */
   multiColumnSort?: boolean;
 
+  /** Defaults to true, which will display numbers indicating column sort precedence are displayed in the columns when multiple columns selected */
+  numberedMultiColumnSort?: boolean;
+
   /** DEPRECATED, Please use "backendServiceApi" instead */
   onBackendEventApi?: BackendEventChanged;
 
@@ -193,6 +196,12 @@ export interface GridOption {
   /** Do we want to show top panel row? */
   showTopPanel?: boolean;
 
+  /** Defaults to true, which leads to render a separate span for the number and styles it with css class <i>slick-sort-indicator-numbered</i> */
+  sortColNumberInSeparateSpan?: boolean;
+
   /** What is the top panel height in pixels (only type the number) */
   topPanelHeight?: number;
+
+  /** Defaults to false, when set to True will lead to multiple columns sorting without the need to hold or do shift-click to execute a multiple sort. */
+  tristateMultiColumnSort?: boolean;
 }
