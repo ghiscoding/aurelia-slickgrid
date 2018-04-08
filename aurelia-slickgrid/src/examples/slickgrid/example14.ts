@@ -12,7 +12,10 @@ export class Example14 {
       <b>only</b> after the "dataView" is created for it to render at the correct time (else you will face timing UI issues)
       </li>
       <li>Note that you can add Sort but remember that it will sort by the data that the row contains, even if the data is visually hidden by colspan it will still sort it</li>
-      <li>Header Grouping spanning accross multiple columns is working but has some UI issues on window resize. If anyone can fix it, please let us know.</li>
+      <li>
+        Header Grouping spanning accross multiple columns is working but has some UI issues on window resize.
+        If anyone can fix it, probably some CSS issues, please let us know.
+      </li>
     </ul>
   `;
   columnDefinitions: Column[];
@@ -36,11 +39,7 @@ export class Example14 {
     ];
 
     this.gridOptions = {
-      enableAutoResize: true,
-      autoResize: {
-        containerId: 'demo-container',
-        sidePadding: 15
-      },
+      enableAutoResize: false,
       enableCellNavigation: true,
       enableColumnReorder: false,
       enableSorting: true,
