@@ -4,7 +4,7 @@ import * as $ from 'jquery';
 
 @autoinject()
 export class Example14 {
-  title = 'Example 14: Column Span';
+  title = 'Example 14: Column Span & Header Grouping';
   subTitle = `
     This example demonstrates how to easily span a column over multiple columns.
     <ul>
@@ -12,13 +12,13 @@ export class Example14 {
       <b>only</b> after the "dataView" is created for it to render at the correct time (else you will face timing UI issues)
       </li>
       <li>Note that you can add Sort but remember that it will sort by the data that the row contains, even if the data is visually hidden by colspan it will still sort it</li>
+      <li>Header Grouping spanning accross multiple columns is working but has some UI issues on window resize. If anyone can fix it, please let us know.</li>
     </ul>
   `;
   columnDefinitions: Column[];
   gridOptions: GridOption;
   dataset = [];
   visibleColumns;
-  gridObj: any;
 
   constructor() {
     // define the grid options & columns and then create the grid itself
@@ -46,7 +46,7 @@ export class Example14 {
       enableSorting: true,
       createPreHeaderPanel: true,
       showPreHeaderPanel: true,
-      preHeaderPanelHeight: 23,
+      preHeaderPanelHeight: 25,
       explicitInitialization: true
     };
   }
@@ -76,23 +76,6 @@ export class Example14 {
     this.renderDifferentColspan(dataView);
   }
 
-  onGridCreated(grid) {
-    this.gridObj = grid;
-    setTimeout(() => {
-      console.log('delayed');
-      this.createAddlHeaderRow();
-    }, 50);
-  }
-
-  onColumnsResized(e, args) {
-    console.log('onColumnsResized');
-    this.createAddlHeaderRow();
-  }
-
-  onHeaderRowCellRendered(e, args) {
-    console.log(args);
-  }
-
   /** Call the "getItemMetadata" on the DataView to render different column span */
   renderDifferentColspan(dataView: any) {
     dataView.getItemMetadata = (rowNumber: number) => {
@@ -116,34 +99,5 @@ export class Example14 {
         };
       }
     };
-  }
-
-  createAddlHeaderRow() {
-    const $preHeaderPanel = $(this.gridObj.getPreHeaderPanel())
-      .empty()
-      .addClass('slick-header-columns')
-      .css('left', '-1000px')
-      .width(this.gridObj.getHeadersWidth());
-    $preHeaderPanel.parent().addClass('slick-header');
-    const headerColumnWidthDiff = this.gridObj.getHeaderColumnWidthDiff();
-    let m;
-    let header;
-    let lastColumnGroup = '';
-    let widthTotal = 0;
-
-    for (let i = 0; i < this.columnDefinitions.length; i++) {
-      m = this.columnDefinitions[i];
-      if (lastColumnGroup === m.columnGroup && i > 0) {
-        widthTotal += m.width;
-        header.width(widthTotal - headerColumnWidthDiff);
-      } else {
-        widthTotal = m.width;
-        header = $(`<div class="ui-state-default slick-header-column" />`)
-          .html(`<span class="slick-column-name" style="left: 50%">${m.columnGroup || ''}</span>`)
-          .width(m.width - headerColumnWidthDiff)
-          .appendTo($preHeaderPanel);
-      }
-      lastColumnGroup = m.columnGroup;
-    }
   }
 }

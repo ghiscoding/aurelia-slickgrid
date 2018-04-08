@@ -44,6 +44,7 @@ import {
   GridEventService,
   GridExtraService,
   GridStateService,
+  GroupingAndColspanService,
   ResizerService,
   SortService,
   toKebabCase
@@ -57,7 +58,22 @@ const aureliaEventPrefix = 'asg';
 const eventPrefix = 'sg';
 
 // Aurelia doesn't support well TypeScript @autoinject in a Plugin so we'll do it the old fashion way
-@inject(ControlAndPluginService, ExportService, Element, EventAggregator, FilterService, GraphqlService, GridEventService, GridExtraService, GridStateService, I18N, ResizerService, SortService, Container)
+@inject(
+  ControlAndPluginService,
+  ExportService,
+  Element,
+  EventAggregator,
+  FilterService,
+  GraphqlService,
+  GridEventService,
+  GridExtraService,
+  GridStateService,
+  GroupingAndColspanService,
+  I18N,
+  ResizerService,
+  SortService,
+  Container
+)
 export class AureliaSlickgridCustomElement {
   private _dataset: any[];
   private _eventHandler: any = new Slick.EventHandler();
@@ -88,6 +104,7 @@ export class AureliaSlickgridCustomElement {
     private gridEventService: GridEventService,
     private gridExtraService: GridExtraService,
     private gridStateService: GridStateService,
+    private groupingAndColspanService: GroupingAndColspanService,
     private i18n: I18N,
     private resizer: ResizerService,
     private sortService: SortService,
@@ -140,6 +157,11 @@ export class AureliaSlickgridCustomElement {
     // attach resize ONLY after the dataView is ready
     this.attachResizeHook(this.grid, this.gridOptions);
 
+    // attach grouping and header grouping colspan service
+    if (this.gridOptions.createPreHeaderPanel) {
+      this.groupingAndColspanService.init(this.grid, this.dataview);
+    }
+
     // attach grid extra service
     this.gridExtraService.init(this.grid, this.columnDefinitions, this.gridOptions, this.dataview);
 
@@ -174,6 +196,7 @@ export class AureliaSlickgridCustomElement {
     this.filterService.dispose();
     this.gridEventService.dispose();
     this.gridStateService.dispose();
+    this.groupingAndColspanService.dispose();
     this.resizer.dispose();
     this.sortService.dispose();
     this.grid.destroy();
@@ -392,7 +415,7 @@ export class AureliaSlickgridCustomElement {
     }
 
     // auto-resize grid on browser resize
-    this.resizer.init(grid, options);
+    this.resizer.init(grid);
     if (grid && options.enableAutoResize) {
       this.resizer.attachAutoResizeDataGrid();
       if (options.autoFitColumnsOnFirstLoad && typeof grid.autosizeColumns === 'function') {
