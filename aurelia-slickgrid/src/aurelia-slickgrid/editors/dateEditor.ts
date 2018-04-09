@@ -1,8 +1,9 @@
-import { mapFlatpickrDateFormatWithFieldType } from './../services/utilities';
+import { mapFlatpickrDateFormatWithFieldType, mapMomentDateFormatWithFieldType } from './../services/utilities';
 import { Column, Editor, FieldType, GridOption } from './../models/index';
 import { I18N } from 'aurelia-i18n';
 import { inject } from 'aurelia-framework';
 import * as flatpickr from 'flatpickr';
+import * as moment from 'moment';
 import * as $ from 'jquery';
 
 /*
@@ -20,31 +21,34 @@ export class DateEditor implements Editor {
   }
 
   init(): void {
-    const gridOptions = this.args.grid.getOptions() as GridOption;
-    this.defaultDate = this.args.item[this.args.column.field] || null;
-    const inputFormat = mapFlatpickrDateFormatWithFieldType(this.args.column.type || FieldType.dateIso);
-    const outputFormat = mapFlatpickrDateFormatWithFieldType(this.args.column.outputType || FieldType.dateUtc);
-    let currentLocale = this.i18n.getLocale() || 'en';
-    if (currentLocale.length > 2) {
-      currentLocale = currentLocale.substring(0, 2);
+    if (this.args && this.args.column) {
+      const columnDef = this.args.column;
+      const gridOptions = this.args.grid.getOptions() as GridOption;
+      this.defaultDate = (this.args.item) ? this.args.item[this.args.column.field] : null;
+      const inputFormat = mapFlatpickrDateFormatWithFieldType(this.args.column.type || FieldType.dateIso);
+      const outputFormat = mapFlatpickrDateFormatWithFieldType(this.args.column.outputType || FieldType.dateUtc);
+      let currentLocale = this.i18n.getLocale() || 'en';
+      if (currentLocale.length > 2) {
+        currentLocale = currentLocale.substring(0, 2);
+      }
+
+      const pickerOptions: any = {
+        defaultDate: this.defaultDate,
+        altInput: true,
+        altFormat: inputFormat,
+        dateFormat: outputFormat,
+        closeOnSelect: false,
+        locale: (currentLocale !== 'en') ? this.loadFlatpickrLocale(currentLocale) : 'en',
+        onChange: (selectedDates: any[] | any, dateStr: string, instance: any) => {
+          this.save();
+        },
+      };
+
+      this.$input = $(`<input type="text" data-defaultDate="${this.defaultDate}" class="editor-text flatpickr" />`);
+      this.$input.appendTo(this.args.container);
+      this.flatInstance = (flatpickr && this.$input[0] && typeof this.$input[0].flatpickr === 'function') ? this.$input[0].flatpickr(pickerOptions) : null;
+      this.show();
     }
-
-    const pickerOptions: any = {
-      defaultDate: this.defaultDate,
-      altInput: true,
-      altFormat: inputFormat,
-      dateFormat: outputFormat,
-      closeOnSelect: false,
-      locale: (currentLocale !== 'en') ? this.loadFlatpickrLocale(currentLocale) : 'en',
-      onChange: (selectedDates: any[] | any, dateStr: string, instance: any) => {
-        this.save();
-      },
-    };
-
-    this.$input = $(`<input type="text" data-defaultDate="${this.defaultDate}" class="editor-text flatpickr" />`);
-    this.$input.appendTo(this.args.container);
-    this.flatInstance = (flatpickr && this.$input[0] && typeof this.$input[0].flatpickr === 'function') ? this.$input[0].flatpickr(pickerOptions) : null;
-    this.show();
   }
 
   loadFlatpickrLocale(locale: string) {
@@ -87,7 +91,10 @@ export class DateEditor implements Editor {
   }
 
   serializeValue() {
-    return this.$input.val();
+    const outputFormat = mapMomentDateFormatWithFieldType(this.args.column.type || FieldType.dateIso);
+    const value = moment(this.defaultDate).format(outputFormat);
+
+    return value;
   }
 
   applyValue(item: any, state: any) {

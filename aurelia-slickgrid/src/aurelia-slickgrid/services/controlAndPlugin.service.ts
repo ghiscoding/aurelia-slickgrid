@@ -37,6 +37,7 @@ export class ControlAndPluginService {
   headerMenuPlugin: any;
   gridMenuControl: any;
   rowSelectionPlugin: any;
+  undoRedoBuffer: any;
 
   constructor(
     private exportService: ExportService,
@@ -116,6 +117,11 @@ export class ControlAndPluginService {
         }
       });
     }
+    if (options.enableExcelCopyBuffer) {
+      this.createUndoRedoBuffer();
+      this.hookUndoShortcutKey();
+      this.createCellExternalCopyManagerPlugin(grid);
+    }
     if (options.registerPlugins !== undefined) {
       if (Array.isArray(options.registerPlugins)) {
         options.registerPlugins.forEach((plugin) => {
@@ -125,6 +131,32 @@ export class ControlAndPluginService {
         grid.registerPlugin(options.registerPlugins);
       }
     }
+  }
+
+  createCellExternalCopyManagerPlugin(grid: any) {
+    let newRowIds = 0;
+    const pluginOptions = {
+      clipboardCommandHandler: (editCommand) => {
+        this.undoRedoBuffer.queueAndExecuteCommand.call(this.undoRedoBuffer, editCommand);
+      },
+      readOnlyMode: false,
+      includeHeaderWhenCopying: false,
+      newRowCreator: (count) => {
+        for (let i = 0; i < count; i++) {
+          const item = {
+            id: 'newRow_' + newRowIds++
+          };
+          grid.getData().addItem(item);
+        }
+      }
+    };
+
+    grid.setSelectionModel(new Slick.CellSelectionModel());
+
+    // set keyboard focus on the grid
+    grid.getCanvasNode().focus();
+
+    grid.registerPlugin(new Slick.CellExternalCopyManager(pluginOptions));
   }
 
   createColumnPicker(grid: any, columnDefinitions: Column[], options: GridOption) {
@@ -191,12 +223,55 @@ export class ControlAndPluginService {
     return gridMenuControl;
   }
 
+  createUndoRedoBuffer() {
+    const commandQueue = [];
+    let commandCtr = 0;
+
+    this.undoRedoBuffer = {
+      queueAndExecuteCommand: (editCommand) => {
+        commandQueue[commandCtr] = editCommand;
+        commandCtr++;
+        editCommand.execute();
+      },
+      undo: () => {
+        if (commandCtr === 0) { return; }
+        commandCtr--;
+        const command = commandQueue[commandCtr];
+        if (command && Slick.GlobalEditorLock.cancelCurrentEdit()) {
+          command.undo();
+        }
+      },
+      redo: () => {
+        if (commandCtr >= commandQueue.length) { return; }
+        const command = commandQueue[commandCtr];
+        commandCtr++;
+        if (command && Slick.GlobalEditorLock.cancelCurrentEdit()) {
+          command.execute();
+        }
+      }
+    };
+  }
+
   hideColumn(column: Column) {
     if (this._grid && this.visibleColumns) {
       const columnIndex = this._grid.getColumnIndex(column.id);
       this.visibleColumns = this.removeColumnByIndex(this.visibleColumns, columnIndex);
       this._grid.setColumns(this.visibleColumns);
     }
+  }
+
+  /** Attach an undo shortcut key hook that will redo/undo the copy buffer */
+  hookUndoShortcutKey() {
+    // undo shortcut
+    $(document).keydown((e) => {
+      if (e.which === 90 && (e.ctrlKey || e.metaKey)) {    // CTRL + (shift) + Z
+        if (e.shiftKey) {
+          this.undoRedoBuffer.redo();
+        } else {
+          this.undoRedoBuffer.undo();
+        }
+      }
+    });
   }
 
   removeColumnByIndex(array: any[], index: number) {

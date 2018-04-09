@@ -180,6 +180,7 @@ export class Example3 {
         this._commandQueue.push(editCommand);
         editCommand.execute();
       },
+      enableExcelCopyBuffer: true,
       params: {
         i18n: this.i18n
       }
