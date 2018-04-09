@@ -14,7 +14,6 @@ import {
   HeaderMenu,
   Pagination
 } from './../models/index';
-import { BooleanLiteral, NumberLiteralType } from 'typescript';
 
 export interface GridOption {
   /** CSS class name used on newly added row */
