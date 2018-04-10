@@ -353,6 +353,14 @@ export class AureliaSlickgridCustomElement {
       grid.invalidateRows(args.rows);
       grid.render();
     });
+
+    // does the user have a colspan callback?
+    if (gridOptions.colspanCallback) {
+      dataView.getItemMetadata = (rowNumber: number) => {
+        const item = dataView.getItem(rowNumber);
+        return gridOptions.colspanCallback(item);
+      };
+    }
   }
 
   attachBackendCallbackFunctions(gridOptions: GridOption) {

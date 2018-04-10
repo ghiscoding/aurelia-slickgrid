@@ -14,7 +14,6 @@ import {
   HeaderMenu,
   Pagination
 } from './../models/index';
-import { BooleanLiteral, NumberLiteralType } from 'typescript';
 
 export interface GridOption {
   /** CSS class name used on newly added row */
@@ -64,6 +63,9 @@ export interface GridOption {
 
   /** Checkbox Select Plugin options (columnId, cssClass, toolTip, width) */
   checkboxSelector?: CheckboxSelector;
+
+  /** A callback function that will be used to define row spanning accross multiple columns */
+  colspanCallback?: (item: any) => { columns: any };
 
   /** Checkbox Select Plugin options (columnTitle, forceFitTitle, syncResizeTitle) */
   columnPicker?: ColumnPicker;
