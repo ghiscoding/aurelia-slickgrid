@@ -10,7 +10,6 @@ import 'slickgrid/controls/slick.columnpicker';
 import 'slickgrid/controls/slick.gridmenu';
 import 'slickgrid/controls/slick.pager';
 import 'slickgrid/plugins/slick.autotooltips';
-import 'slickgrid/plugins/slick.cellcopymanager';
 import 'slickgrid/plugins/slick.cellexternalcopymanager';
 import 'slickgrid/plugins/slick.cellrangedecorator';
 import 'slickgrid/plugins/slick.cellrangeselector';
