@@ -4,7 +4,7 @@ import * as $ from 'jquery';
 
 @autoinject()
 export class Example14 {
-  title = 'Example 14: Column Span';
+  title = 'Example 14: Column Span & Header Grouping';
   subTitle = `
     This example demonstrates how to easily span a column over multiple columns.
     <ul>
@@ -12,6 +12,10 @@ export class Example14 {
       <b>only</b> after the "dataView" is created for it to render at the correct time (else you will face timing UI issues)
       </li>
       <li>Note that you can add Sort but remember that it will sort by the data that the row contains, even if the data is visually hidden by colspan it will still sort it</li>
+      <li>
+        Header Grouping spanning accross multiple columns is working but has some UI issues on window resize.
+        If anyone can fix it, probably some CSS issues, please let us know.
+      </li>
     </ul>
   `;
   columnDefinitions: Column[];
@@ -26,23 +30,23 @@ export class Example14 {
 
   defineGrid() {
     this.columnDefinitions = [
-      { id: 'title', name: 'Title', field: 'title', sortable: true },
-      { id: 'duration', name: 'Duration', field: 'duration' },
-      { id: '%', name: '% Complete', field: 'percentComplete', selectable: false },
-      { id: 'start', name: 'Start', field: 'start' },
-      { id: 'finish', name: 'Finish', field: 'finish' },
-      { id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', type: FieldType.boolean }
+      { id: 'title', name: 'Title', field: 'title', sortable: true, columnGroup: 'Common Factor' },
+      { id: 'duration', name: 'Duration', field: 'duration', columnGroup: 'Common Factor' },
+      { id: 'start', name: 'Start', field: 'start', columnGroup: 'Period' },
+      { id: 'finish', name: 'Finish', field: 'finish', columnGroup: 'Period' },
+      { id: '%', name: '% Complete', field: 'percentComplete', selectable: false, columnGroup: 'Analysis' },
+      { id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', type: FieldType.boolean, columnGroup: 'Analysis' }
     ];
 
     this.gridOptions = {
-      enableAutoResize: true,
-      autoResize: {
-        containerId: 'demo-container',
-        sidePadding: 15
-      },
+      enableAutoResize: false,
       enableCellNavigation: true,
       enableColumnReorder: false,
-      enableSorting: true
+      enableSorting: true,
+      createPreHeaderPanel: true,
+      showPreHeaderPanel: true,
+      preHeaderPanelHeight: 25,
+      explicitInitialization: true
     };
   }
 
@@ -60,6 +64,15 @@ export class Example14 {
         effortDriven: (i % 5 === 0)
       };
     }
+  }
+
+  /** Execute after DataView is created and ready */
+  onDataviewCreated(dataView) {
+    // populate the dataset once the DataView is ready
+    this.getData();
+
+    // render different colspan right after the DataView is filled
+    this.renderDifferentColspan(dataView);
   }
 
   /** Call the "getItemMetadata" on the DataView to render different column span */
@@ -85,14 +98,5 @@ export class Example14 {
         };
       }
     };
-  }
-
-  /** Execute after DataView is created and ready */
-  onDataviewCreated(dataView) {
-    // populate the dataset once the DataView is ready
-    this.getData();
-
-    // render different colspan right after the DataView is filled
-    this.renderDifferentColspan(dataView);
   }
 }

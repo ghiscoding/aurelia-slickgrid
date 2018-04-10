@@ -1,6 +1,7 @@
 import { inject } from 'aurelia-framework';
 import { GridOption } from './../models/index';
 import * as $ from 'jquery';
+import { EventAggregator } from 'aurelia-event-aggregator';
 
 // global constants, height/width are in pixels
 const DATAGRID_MIN_HEIGHT = 180;
@@ -15,14 +16,21 @@ export interface GridDimension {
   heightWithPagination?: number;
 }
 
+@inject(EventAggregator)
 export class ResizerService {
   private _grid: any;
   private _gridOptions: GridOption;
   private _lastDimensions: GridDimension;
+  aureliaEventPrefix: string;
 
-  init(grid: any, gridOptions: GridOption): void {
+  constructor(private ea: EventAggregator) { }
+
+  init(grid: any): void {
     this._grid = grid;
-    this._gridOptions = gridOptions;
+    if (grid) {
+      this._gridOptions = grid.getOptions();
+    }
+    this.aureliaEventPrefix = (this._gridOptions && this._gridOptions.defaultAureliaEventPrefix) ? this._gridOptions.defaultAureliaEventPrefix : 'asg';
   }
 
   /**
@@ -42,6 +50,7 @@ export class ResizerService {
     // -- 2nd attach a trigger on the Window DOM element, so that it happens also when resizing after first load
     // -- attach auto-resize to Window object only if it exist
     $(window).on('resize.grid', () => {
+      this.ea.publish(`${this.aureliaEventPrefix}:onBeforeResize`, true);
       // for some yet unknown reason, calling the resize twice removes any stuttering/flickering when changing the height and makes it much smoother
       this.resizeGrid();
       this.resizeGrid();

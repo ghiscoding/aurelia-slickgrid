@@ -68,6 +68,9 @@ export interface GridOption {
   /** Checkbox Select Plugin options (columnTitle, forceFitTitle, syncResizeTitle) */
   columnPicker?: ColumnPicker;
 
+  /** Default to false, which leads to create an extra pre-header panel (on top of column header) for column grouping purposes */
+  createPreHeaderPanel?: boolean;
+
   /** Defaults to false, which leads to create the footer row of the grid */
   createFooterRow?: boolean;
 
@@ -245,6 +248,9 @@ export interface GridOption {
   /** "params" is a generic property and can be used to pass custom paramaters to your Formatter/Editor or anything else */
   params?: any | any[];
 
+  /** Extra pre-header panel height (on top of column header) */
+  preHeaderPanelHeight?: number;
+
   /** Do we want to preserve copied selection on paste? */
   preserveCopiedSelectionOnPaste?: boolean;
 
@@ -274,6 +280,9 @@ export interface GridOption {
 
   /** Do we want to show header row? */
   showHeaderRow?: boolean;
+
+  /** Do we want to show the extra pre-header panel (on top of column header) for column grouping purposes */
+  showPreHeaderPanel?: boolean;
 
   /** Do we want to show top panel row? */
   showTopPanel?: boolean;
