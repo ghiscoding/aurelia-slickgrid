@@ -7,6 +7,7 @@ import {
   Column,
   ColumnFilter,
   ColumnFilters,
+  ColumnSort,
   CurrentFilter,
   CurrentPagination,
   CurrentSorter,
@@ -21,7 +22,6 @@ import {
   GridOption,
   Pagination,
   PaginationChangedArgs,
-  SortChanged,
   SortChangedArgs,
   SortDirection,
   SortDirectionString
@@ -441,7 +441,7 @@ export class GraphqlService implements BackendService {
    * loop through all columns to inspect sorters & update backend service sortingOptions
    * @param columnFilters
    */
-  updateSorters(sortColumns?: SortChanged[], presetSorters?: CurrentSorter[]) {
+  updateSorters(sortColumns?: ColumnSort[], presetSorters?: CurrentSorter[]) {
     let currentSorters: CurrentSorter[] = [];
     let graphqlSorters: GraphqlSortingOption[] = [];
 
