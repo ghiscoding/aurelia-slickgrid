@@ -16,6 +16,7 @@ import {
 import { ExportService } from './export.service';
 import { FilterService } from './filter.service';
 import { SortService } from './sort.service';
+import { sanitizeHtmlToText } from './../services/utilities';
 import * as $ from 'jquery';
 
 // using external non-typed js libraries
@@ -163,7 +164,11 @@ export class ControlAndPluginService {
         if (!gridOptions.editable || !columnDef.editor) {
           const isEvaluatingFormatter = (columnDef.exportWithFormatter !== undefined) ? columnDef.exportWithFormatter : gridOptions.exportOptions.exportWithFormatter;
           if (columnDef.formatter && isEvaluatingFormatter) {
-            return columnDef.formatter(0, 0, item[columnDef.field], columnDef, item, this._grid);
+            const formattedOutput = columnDef.formatter(0, 0, item[columnDef.field], columnDef, item, this._grid);
+            if (columnDef.sanitizeDataExport || (gridOptions.exportOptions && gridOptions.exportOptions.sanitizeDataExport)) {
+              return sanitizeHtmlToText(formattedOutput);
+            }
+            return formattedOutput;
           }
         }
 
