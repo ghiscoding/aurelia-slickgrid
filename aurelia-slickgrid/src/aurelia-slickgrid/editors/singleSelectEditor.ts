@@ -122,7 +122,7 @@ export class SingleSelectEditor implements Editor {
     this.defaultValue = item[this.columnDef.field].toString();
 
     this.$editorElm.find('option').each((i: number, $e: any) => {
-      if (this.defaultValue.indexOf($e.value) !== -1) {
+      if (this.defaultValue === $e.value) {
         $e.selected = true;
       } else {
         $e.selected = false;
