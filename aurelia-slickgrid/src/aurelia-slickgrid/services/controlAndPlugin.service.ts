@@ -37,6 +37,7 @@ export class ControlAndPluginService {
   headerMenuPlugin: any;
   gridMenuControl: any;
   rowSelectionPlugin: any;
+  undoRedoBuffer: any;
 
   constructor(
     private exportService: ExportService,
@@ -59,22 +60,29 @@ export class ControlAndPluginService {
     this._columnDefinitions = columnDefinitions;
     this.visibleColumns = columnDefinitions;
 
+    // Column Picker Plugin
     if (options.enableColumnPicker) {
       this.columnPickerControl = this.createColumnPicker(grid, columnDefinitions, options);
     }
+
+    // Grid Menu Plugin
     if (options.enableGridMenu) {
       this.gridMenuControl = this.createGridMenu(grid, columnDefinitions, options);
     }
+
+    // Auto Tooltip Plugin
     if (options.enableAutoTooltip) {
       this.autoTooltipPlugin = new Slick.AutoTooltips(options.autoTooltipOptions || {});
       grid.registerPlugin(this.autoTooltipPlugin);
     }
 
+    // Grouping Plugin
     // register the group item metadata provider to add expand/collapse group handlers
     if (options.enableGrouping) {
       grid.registerPlugin(groupItemMetadataProvider);
     }
 
+    // Checkbox Selector Plugin
     if (options.enableCheckboxSelector) {
       // when enabling the Checkbox Selector Plugin, we need to also watch onClick events to perform certain actions
       // the selector column has to be create BEFORE the grid (else it behaves oddly), but we can only watch grid events AFTER the grid is created
@@ -86,10 +94,14 @@ export class ControlAndPluginService {
         grid.setSelectionModel(this.rowSelectionPlugin);
       }
     }
+
+    // Row Selection Plugin
     if (options.enableRowSelection) {
       this.rowSelectionPlugin = new Slick.RowSelectionModel(options.rowSelectionOptions || {});
       grid.setSelectionModel(this.rowSelectionPlugin);
     }
+
+    // Header Button Plugin
     if (options.enableHeaderButton) {
       this.headerButtonsPlugin = new Slick.Plugins.HeaderButtons(options.headerButton || {});
       grid.registerPlugin(this.headerButtonsPlugin);
@@ -99,6 +111,8 @@ export class ControlAndPluginService {
         }
       });
     }
+
+    // Header Menu Plugin
     if (options.enableHeaderMenu) {
       const headerMenuOptions = options.headerMenu || {};
       headerMenuOptions.minWidth = headerMenuOptions.minWidth || 140;
@@ -116,6 +130,15 @@ export class ControlAndPluginService {
         }
       });
     }
+
+    // Cell External Copy Manager Plugin (Excel Like)
+    if (options.enableExcelCopyBuffer) {
+      this.createUndoRedoBuffer();
+      this.hookUndoShortcutKey();
+      this.createCellExternalCopyManagerPlugin(this._grid, this._gridOptions);
+    }
+
+    // manually register other plugins
     if (options.registerPlugins !== undefined) {
       if (Array.isArray(options.registerPlugins)) {
         options.registerPlugins.forEach((plugin) => {
@@ -125,6 +148,43 @@ export class ControlAndPluginService {
         grid.registerPlugin(options.registerPlugins);
       }
     }
+  }
+
+  /** Create the Excel like copy manager */
+  createCellExternalCopyManagerPlugin(grid: any, gridOptions: GridOption) {
+    let newRowIds = 0;
+    const pluginOptions = {
+      clipboardCommandHandler: (editCommand) => {
+        this.undoRedoBuffer.queueAndExecuteCommand.call(this.undoRedoBuffer, editCommand);
+      },
+      dataItemColumnValueExtractor: (item, columnDef) => {
+        // when grid or cell is not editable, we will possibly evaluate the Formatter if it was passed
+        // to decide if we evaluate the Formatter, we will use the same flag from Export which is "exportWithFormatter"
+        if (!gridOptions.editable || !columnDef.editor) {
+          const isEvaluatingFormatter = (columnDef.exportWithFormatter !== undefined) ? columnDef.exportWithFormatter : gridOptions.exportOptions.exportWithFormatter;
+          if (columnDef.formatter && isEvaluatingFormatter) {
+            return columnDef.formatter(0, 0, item[columnDef.field], columnDef, item, this._grid);
+          }
+        }
+
+        // else use the default "dataItemColumnValueExtractor" from the plugin itself
+        // we can do that by setting back the getter with null
+        return null;
+      },
+      readOnlyMode: false,
+      includeHeaderWhenCopying: false,
+      newRowCreator: (count) => {
+        for (let i = 0; i < count; i++) {
+          const item = {
+            id: 'newRow_' + newRowIds++
+          };
+          grid.getData().addItem(item);
+        }
+      }
+    };
+
+    grid.setSelectionModel(new Slick.CellSelectionModel());
+    grid.registerPlugin(new Slick.CellExternalCopyManager(pluginOptions));
   }
 
   createColumnPicker(grid: any, columnDefinitions: Column[], options: GridOption) {
@@ -191,12 +251,57 @@ export class ControlAndPluginService {
     return gridMenuControl;
   }
 
+  /** Create an undo redo buffer used by the Excel like copy */
+  createUndoRedoBuffer() {
+    const commandQueue = [];
+    let commandCtr = 0;
+
+    this.undoRedoBuffer = {
+      queueAndExecuteCommand: (editCommand) => {
+        commandQueue[commandCtr] = editCommand;
+        commandCtr++;
+        editCommand.execute();
+      },
+      undo: () => {
+        if (commandCtr === 0) { return; }
+        commandCtr--;
+        const command = commandQueue[commandCtr];
+        if (command && Slick.GlobalEditorLock.cancelCurrentEdit()) {
+          command.undo();
+        }
+      },
+      redo: () => {
+        if (commandCtr >= commandQueue.length) { return; }
+        const command = commandQueue[commandCtr];
+        commandCtr++;
+        if (command && Slick.GlobalEditorLock.cancelCurrentEdit()) {
+          command.execute();
+        }
+      }
+    };
+  }
+
+  /** Hide a column from the grid */
   hideColumn(column: Column) {
     if (this._grid && this.visibleColumns) {
       const columnIndex = this._grid.getColumnIndex(column.id);
       this.visibleColumns = this.removeColumnByIndex(this.visibleColumns, columnIndex);
       this._grid.setColumns(this.visibleColumns);
     }
+  }
+
+  /** Attach an undo shortcut key hook that will redo/undo the copy buffer */
+  hookUndoShortcutKey() {
+    // undo shortcut
+    $(document).keydown((e) => {
+      if (e.which === 90 && (e.ctrlKey || e.metaKey)) {    // CTRL + (shift) + Z
+        if (e.shiftKey) {
+          this.undoRedoBuffer.redo();
+        } else {
+          this.undoRedoBuffer.undo();
+        }
+      }
+    });
   }
 
   removeColumnByIndex(array: any[], index: number) {
