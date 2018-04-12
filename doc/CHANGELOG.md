@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.12.0"></a>
+# [1.12.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v1.11.1...v1.12.0) (2018-04-12)
+
+
+### Bug Fixes
+
+* **editor:** Single/MultiSelect Editors misbehave w/Desc Sort, fixes [#46](https://github.com/ghiscoding/aurelia-slickgrid/issues/46) ([71916dc](https://github.com/ghiscoding/aurelia-slickgrid/commit/71916dc))
+* **excelCopy:** Excel Copy Buffer should have sanitize option as export ([8c57298](https://github.com/ghiscoding/aurelia-slickgrid/commit/8c57298))
+* **formatter:** make sure object exist before getting property ([4961cab](https://github.com/ghiscoding/aurelia-slickgrid/commit/4961cab))
+* **grid:** calling refreshBackendDataset was not refreshing UI ([24a061e](https://github.com/ghiscoding/aurelia-slickgrid/commit/24a061e))
+
+
+### Features
+
+* **colspan:** add colspanCallback into gridOptions for easier usage ([6996862](https://github.com/ghiscoding/aurelia-slickgrid/commit/6996862))
+* **graphql:** add option to pass extra query arguments ([f278c73](https://github.com/ghiscoding/aurelia-slickgrid/commit/f278c73))
+* **grid:** add a default Header Menu with Sort Asc/Desc & HideColumn ([#47](https://github.com/ghiscoding/aurelia-slickgrid/issues/47)) ([db5fc16](https://github.com/ghiscoding/aurelia-slickgrid/commit/db5fc16))
+* **grid:** add all missing grid options available in SlickGrid ([7d194ed](https://github.com/ghiscoding/aurelia-slickgrid/commit/7d194ed))
+* **grid:** add Column Span (colspan) demo ([e20a3f6](https://github.com/ghiscoding/aurelia-slickgrid/commit/e20a3f6))
+* **grid:** add sample for Header Grouping spanning accros multiple cols ([#43](https://github.com/ghiscoding/aurelia-slickgrid/issues/43)) ([67ff867](https://github.com/ghiscoding/aurelia-slickgrid/commit/67ff867))
+* **grid:** Excel like Copy with Copy Manager Plugin ([#45](https://github.com/ghiscoding/aurelia-slickgrid/issues/45)) ([dbbbe56](https://github.com/ghiscoding/aurelia-slickgrid/commit/dbbbe56))
+* **sorting:** add support for multi-columns number indicator & tristate ([ada47cd](https://github.com/ghiscoding/aurelia-slickgrid/commit/ada47cd))
+
+
+
 <a name="1.11.1"></a>
 ## [1.11.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v1.11.0...v1.11.1) (2018-04-05)
 
