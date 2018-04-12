@@ -65,25 +65,29 @@ export class GroupingAndColspanService {
       .css('left', '-1000px')
       .width(this._grid.getHeadersWidth());
     $preHeaderPanel.parent().addClass('slick-header');
-    const headerColumnWidthDiff = this._grid.getHeaderColumnWidthDiff();
-    let m;
+    const headerColumnWidthDiff = this._grid.getHeaderColumnWidthDiff() || 0;
+    let columnDef;
     let header;
     let lastColumnGroup = '';
     let widthTotal = 0;
 
     for (let i = 0; i < this._columnDefinitions.length; i++) {
-      m = this._columnDefinitions[i];
-      if (lastColumnGroup === m.columnGroup && i > 0) {
-        widthTotal += m.width;
-        header.width(widthTotal - headerColumnWidthDiff);
-      } else {
-        widthTotal = m.width;
-        header = $(`<div class="ui-state-default slick-header-column" />`)
-          .html(`<span class="slick-column-name">${m.columnGroup || ''}</span>`)
-          .width(m.width - headerColumnWidthDiff)
-          .appendTo($preHeaderPanel);
+      columnDef = this._columnDefinitions[i];
+      if (columnDef) {
+        if (lastColumnGroup === columnDef.columnGroup && i > 0) {
+          widthTotal += columnDef.width || 0;
+          if (header && header.width) {
+            header.width(widthTotal - headerColumnWidthDiff);
+          }
+        } else {
+          widthTotal = columnDef.width || 0;
+          header = $(`<div class="ui-state-default slick-header-column" />`)
+            .html(`<span class="slick-column-name">${columnDef.columnGroup || ''}</span>`)
+            .width((columnDef.width || 0) - headerColumnWidthDiff)
+            .appendTo($preHeaderPanel);
+        }
+        lastColumnGroup = columnDef.columnGroup || '';
       }
-      lastColumnGroup = m.columnGroup;
     }
   }
 }

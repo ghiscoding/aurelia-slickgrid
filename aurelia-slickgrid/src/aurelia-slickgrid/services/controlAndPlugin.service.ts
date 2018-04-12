@@ -155,14 +155,15 @@ export class ControlAndPluginService {
   createCellExternalCopyManagerPlugin(grid: any, gridOptions: GridOption) {
     let newRowIds = 0;
     const pluginOptions = {
-      clipboardCommandHandler: (editCommand) => {
+      clipboardCommandHandler: (editCommand: any) => {
         this.undoRedoBuffer.queueAndExecuteCommand.call(this.undoRedoBuffer, editCommand);
       },
-      dataItemColumnValueExtractor: (item, columnDef) => {
+      dataItemColumnValueExtractor: (item: any, columnDef: Column) => {
         // when grid or cell is not editable, we will possibly evaluate the Formatter if it was passed
         // to decide if we evaluate the Formatter, we will use the same flag from Export which is "exportWithFormatter"
-        if (!gridOptions.editable || !columnDef.editor) {
-          const isEvaluatingFormatter = (columnDef.exportWithFormatter !== undefined) ? columnDef.exportWithFormatter : gridOptions.exportOptions.exportWithFormatter;
+        if (gridOptions && (!gridOptions.editable || !columnDef.editor)) {
+          const exportOptionWithFormatter = (gridOptions && gridOptions.exportOptions) ? gridOptions.exportOptions.exportWithFormatter : false;
+          const isEvaluatingFormatter = (columnDef.exportWithFormatter !== undefined) ? columnDef.exportWithFormatter : exportOptionWithFormatter;
           if (columnDef.formatter && isEvaluatingFormatter) {
             const formattedOutput = columnDef.formatter(0, 0, item[columnDef.field], columnDef, item, this._grid);
             if (columnDef.sanitizeDataExport || (gridOptions.exportOptions && gridOptions.exportOptions.sanitizeDataExport)) {
@@ -178,7 +179,7 @@ export class ControlAndPluginService {
       },
       readOnlyMode: false,
       includeHeaderWhenCopying: false,
-      newRowCreator: (count) => {
+      newRowCreator: (count: number) => {
         for (let i = 0; i < count; i++) {
           const item = {
             id: 'newRow_' + newRowIds++
@@ -258,11 +259,11 @@ export class ControlAndPluginService {
 
   /** Create an undo redo buffer used by the Excel like copy */
   createUndoRedoBuffer() {
-    const commandQueue = [];
+    const commandQueue: any[] = [];
     let commandCtr = 0;
 
     this.undoRedoBuffer = {
-      queueAndExecuteCommand: (editCommand) => {
+      queueAndExecuteCommand: (editCommand: any) => {
         commandQueue[commandCtr] = editCommand;
         commandCtr++;
         editCommand.execute();

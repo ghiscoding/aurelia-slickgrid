@@ -357,7 +357,10 @@ export class AureliaSlickgridCustomElement {
     if (gridOptions.colspanCallback) {
       dataView.getItemMetadata = (rowNumber: number) => {
         const item = dataView.getItem(rowNumber);
-        return gridOptions.colspanCallback(item);
+        if (gridOptions && gridOptions.colspanCallback) {
+          return gridOptions.colspanCallback(item);
+        }
+        return null;
       };
     }
   }
