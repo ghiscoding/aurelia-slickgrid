@@ -169,7 +169,7 @@ export class SortService {
     const columnDefinitions = this._grid.getColumns();
 
     // get the column definition but only keep column which are not equal to our current column
-    const sortedCols = oldSortColumns.reduce((cols, col) => {
+    const sortedCols = oldSortColumns.reduce((cols: ColumnSort[], col: ColumnSort) => {
       if (!columnId || col.columnId !== columnId) {
         cols.push({ sortCol: columnDefinitions[this._grid.getColumnIndex(col.columnId)], sortAsc: col.sortAsc });
       }

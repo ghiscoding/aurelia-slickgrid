@@ -650,7 +650,7 @@ export class ControlAndPluginService {
    * @param columnDefinitions
    * @return header menu
    */
-  private addHeaderMenuCustomCommands(grid: any, dataView: any, options: GridOption, columnDefinitions: Column[]): HeaderMenu {
+  private addHeaderMenuCustomCommands(grid: any, dataView: any, options: GridOption, columnDefinitions: Column[]): HeaderMenu | undefined {
     const headerMenuOptions = options.headerMenu;
 
     if (columnDefinitions && Array.isArray(columnDefinitions) && options.enableHeaderMenu) {
@@ -663,33 +663,35 @@ export class ControlAndPluginService {
               }
             };
           }
-          const columnHeaderMenuItems: HeaderMenuItem[] = columnDef.header.menu.items || [];
+          if (columnDef && columnDef.header && columnDef.header.menu) {
+            const columnHeaderMenuItems: HeaderMenuItem[] = columnDef.header.menu.items || [];
 
-          // Sorting Commands
-          if (options.enableSorting && columnDef.sortable && headerMenuOptions.showSortCommands) {
-            if (columnHeaderMenuItems.filter((item: HeaderMenuItem) => item.command === 'sort-asc').length === 0) {
+            // Sorting Commands
+            if (options.enableSorting && columnDef.sortable && headerMenuOptions && headerMenuOptions.showSortCommands) {
+              if (columnHeaderMenuItems.filter((item: HeaderMenuItem) => item.command === 'sort-asc').length === 0) {
+                columnHeaderMenuItems.push({
+                  iconCssClass: headerMenuOptions.iconSortAscCommand || 'fa fa-sort-asc',
+                  title: options.enableTranslate ? this.i18n.tr('SORT_ASCENDING') : 'Sort Ascending',
+                  command: 'sort-asc'
+                });
+              }
+              if (columnHeaderMenuItems.filter((item: HeaderMenuItem) => item.command === 'sort-desc').length === 0) {
+                columnHeaderMenuItems.push({
+                  iconCssClass: headerMenuOptions.iconSortDescCommand || 'fa fa-sort-desc',
+                  title: options.enableTranslate ? this.i18n.tr('SORT_DESCENDING') : 'Sort Descending',
+                  command: 'sort-desc'
+                });
+              }
+            }
+
+            // Hide Column Command
+            if (headerMenuOptions && headerMenuOptions.showColumnHideCommand && columnHeaderMenuItems.filter((item: HeaderMenuItem) => item.command === 'hide').length === 0) {
               columnHeaderMenuItems.push({
-                iconCssClass: headerMenuOptions.iconSortAscCommand || 'fa fa-sort-asc',
-                title: options.enableTranslate ? this.i18n.tr('SORT_ASCENDING') : 'Sort Ascending',
-                command: 'sort-asc'
+                iconCssClass: headerMenuOptions.iconColumnHideCommand || 'fa fa-times',
+                title: options.enableTranslate ? this.i18n.tr('HIDE_COLUMN') : 'Hide Column',
+                command: 'hide'
               });
             }
-            if (columnHeaderMenuItems.filter((item: HeaderMenuItem) => item.command === 'sort-desc').length === 0) {
-              columnHeaderMenuItems.push({
-                iconCssClass: headerMenuOptions.iconSortDescCommand || 'fa fa-sort-desc',
-                title: options.enableTranslate ? this.i18n.tr('SORT_DESCENDING') : 'Sort Descending',
-                command: 'sort-desc'
-              });
-            }
-          }
-
-          // Hide Column Command
-          if (headerMenuOptions.showColumnHideCommand && columnHeaderMenuItems.filter((item: HeaderMenuItem) => item.command === 'hide').length === 0) {
-            columnHeaderMenuItems.push({
-              iconCssClass: headerMenuOptions.iconColumnHideCommand || 'fa fa-times',
-              title: options.enableTranslate ? this.i18n.tr('HIDE_COLUMN') : 'Hide Column',
-              command: 'hide'
-            });
           }
         }
       });
@@ -718,7 +720,10 @@ export class ControlAndPluginService {
 
                 // update the this.gridObj sortColumns array which will at the same add the visual sort icon(s) on the UI
                 const newSortColumns: ColumnSort[] = cols.map((col) => {
-                  return { columnId: col.sortCol.id, sortAsc: col.sortAsc };
+                  return {
+                    columnId: (col && col.sortCol) ? col.sortCol.id : '',
+                    sortAsc: col.sortAsc
+                  };
                 });
                 grid.setSortColumns(newSortColumns); // add sort icon in UI
                 break;
