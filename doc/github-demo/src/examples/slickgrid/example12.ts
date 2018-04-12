@@ -98,11 +98,13 @@ export class Example12 {
         sidePadding: 15
       },
       enableAutoResize: true,
+      enableExcelCopyBuffer: true,
       enableFiltering: true,
       enableTranslate: true,
       exportOptions: {
         // set at the grid option level, meaning all column will evaluate the Formatter (when it has a Formatter defined)
         exportWithFormatter: true,
+        sanitizeDataExport: true
       },
       gridMenu: {
         showExportCsvCommand: true,           // true by default, so it's optional
