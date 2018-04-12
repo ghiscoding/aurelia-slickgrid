@@ -271,6 +271,7 @@ export class AureliaSlickgridCustomElement {
         this.controlAndPluginService.translateHeaders();
         this.controlAndPluginService.translateColumnPicker();
         this.controlAndPluginService.translateGridMenu();
+        this.controlAndPluginService.translateHeaderMenu();
       }
     });
 

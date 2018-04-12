@@ -2,16 +2,19 @@ import { inject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import {
   CellArgs,
-  CustomGridMenu,
   Column,
+  ColumnSort,
+  CustomGridMenu,
   DelimiterType,
+  FileType,
   GraphqlResult,
   GridMenu,
   GridOption,
   HeaderButtonOnCommandArgs,
+  HeaderMenu,
+  HeaderMenuItem,
   HeaderMenuOnCommandArgs,
   HeaderMenuOnBeforeMenuShowArgs,
-  FileType
 } from './../models/index';
 import { ExportService } from './export.service';
 import { FilterService } from './filter.service';
@@ -46,6 +49,11 @@ export class ControlAndPluginService {
     private i18n: I18N,
     private sortService: SortService
   ) { }
+
+  /** Auto-resize all the column in the grid to fit the grid width */
+  autoResizeColumns() {
+    this._grid.autosizeColumns();
+  }
 
   /**
    * Attach/Create different Controls or Plugins after the Grid is created
@@ -115,21 +123,7 @@ export class ControlAndPluginService {
 
     // Header Menu Plugin
     if (options.enableHeaderMenu) {
-      const headerMenuOptions = options.headerMenu || {};
-      headerMenuOptions.minWidth = headerMenuOptions.minWidth || 140;
-      headerMenuOptions.autoAlignOffset = headerMenuOptions.autoAlignOffset || 12;
-      this.headerMenuPlugin = new Slick.Plugins.HeaderMenu(headerMenuOptions);
-      grid.registerPlugin(this.headerMenuPlugin);
-      this.headerMenuPlugin.onCommand.subscribe((e: Event, args: HeaderMenuOnCommandArgs) => {
-        if (options.headerMenu && typeof options.headerMenu.onCommand === 'function') {
-          options.headerMenu.onCommand(e, args);
-        }
-      });
-      this.headerMenuPlugin.onCommand.subscribe((e: Event, args: HeaderMenuOnBeforeMenuShowArgs) => {
-        if (options.headerMenu && typeof options.headerMenu.onBeforeMenuShow === 'function') {
-          options.headerMenu.onBeforeMenuShow(e, args);
-        }
-      });
+      this.headerMenuPlugin = this.createHeaderMenu(this._grid, this._dataView, this._columnDefinitions, this._gridOptions);
     }
 
     // Cell External Copy Manager Plugin (Excel Like)
@@ -148,6 +142,22 @@ export class ControlAndPluginService {
       } else {
         grid.registerPlugin(options.registerPlugins);
       }
+    }
+  }
+
+  /**
+   * Attach/Create different plugins before the Grid creation.
+   * For example the multi-select have to be added to the column definition before the grid is created to work properly
+   * @param columnDefinitions
+   * @param options
+   */
+  createPluginBeforeGridCreation(columnDefinitions: Column[], options: GridOption) {
+    if (options.enableCheckboxSelector) {
+      this.checkboxSelectorPlugin = new Slick.CheckboxSelectColumn(options.checkboxSelector || {});
+      const selectionColumn: Column = this.checkboxSelectorPlugin.getColumnDefinition();
+      selectionColumn.excludeFromExport = true;
+      selectionColumn.excludeFromQuery = true;
+      columnDefinitions.unshift(selectionColumn);
     }
   }
 
@@ -193,6 +203,12 @@ export class ControlAndPluginService {
     grid.registerPlugin(new Slick.CellExternalCopyManager(pluginOptions));
   }
 
+  /**
+   * Create the Column Picker and expose all the available hooks that user can subscribe (onColumnsChanged)
+   * @param grid
+   * @param columnDefinitions
+   * @param options
+   */
   createColumnPicker(grid: any, columnDefinitions: Column[], options: GridOption) {
     // localization support for the picker
     const forceFitTitle = options.enableTranslate ? this.i18n.tr('FORCE_FIT_COLUMNS') : 'Force fit columns';
@@ -257,6 +273,35 @@ export class ControlAndPluginService {
     return gridMenuControl;
   }
 
+  /**
+   * Create the Header Menu and expose all the available hooks that user can subscribe (onCommand, onBeforeMenuShow, ...)
+   * @param grid
+   * @param columnDefinitions
+   * @param options
+   */
+  createHeaderMenu(grid: any, dataView: any, columnDefinitions: Column[], options: GridOption) {
+    options.headerMenu = { ...this.getDefaultHeaderMenuOptions(), ...options.headerMenu };
+    if (options.enableHeaderMenu) {
+      options.headerMenu = this.addHeaderMenuCustomCommands(grid, dataView, options, columnDefinitions);
+    }
+
+    const headerMenuPlugin = new Slick.Plugins.HeaderMenu(options.headerMenu);
+
+    grid.registerPlugin(headerMenuPlugin);
+    headerMenuPlugin.onCommand.subscribe((e: Event, args: HeaderMenuOnCommandArgs) => {
+      if (options.headerMenu && typeof options.headerMenu.onCommand === 'function') {
+        options.headerMenu.onCommand(e, args);
+      }
+    });
+    headerMenuPlugin.onCommand.subscribe((e: Event, args: HeaderMenuOnBeforeMenuShowArgs) => {
+      if (options.headerMenu && typeof options.headerMenu.onBeforeMenuShow === 'function') {
+        options.headerMenu.onBeforeMenuShow(e, args);
+      }
+    });
+
+    return headerMenuPlugin;
+  }
+
   /** Create an undo redo buffer used by the Excel like copy */
   createUndoRedoBuffer() {
     const commandQueue: any[] = [];
@@ -308,16 +353,6 @@ export class ControlAndPluginService {
         }
       }
     });
-  }
-
-  removeColumnByIndex(array: any[], index: number) {
-    return array.filter((el: any, i: number) => {
-      return index !== i;
-    });
-  }
-
-  autoResizeColumns() {
-    this._grid.autosizeColumns();
   }
 
   dispose() {
@@ -504,24 +539,6 @@ export class ControlAndPluginService {
     }
   }
 
-  /**
-   * @return default Grid Menu options
-   */
-  private getDefaultGridMenuOptions(): GridMenu {
-    return {
-      columnTitle: this.i18n.tr('COLUMNS') || 'Columns',
-      forceFitTitle: this.i18n.tr('FORCE_FIT_COLUMNS') || 'Force fit columns',
-      syncResizeTitle: this.i18n.tr('SYNCHRONOUS_RESIZE') || 'Synchronous resize',
-      iconCssClass: 'fa fa-bars',
-      menuWidth: 18,
-      customTitle: undefined,
-      customItems: [],
-      showClearAllFiltersCommand: true,
-      showRefreshDatasetCommand: true,
-      showToggleFilterCommand: true
-    };
-  }
-
   /** Call a refresh dataset with a BackendServiceApi */
   refreshBackendDataset() {
     let query;
@@ -556,20 +573,11 @@ export class ControlAndPluginService {
     }
   }
 
-  /**
-   * Reset all the Grid Menu options which have text to translate
-   * @param grid menu object
-   */
-  private resetGridMenuTranslations(gridMenu: GridMenu): GridMenu {
-    // we will reset the custom items array since the commands title have to be translated too (no worries, we will re-create it later)
-    gridMenu.customItems = [];
-    delete gridMenu.customTitle;
-
-    gridMenu.columnTitle = this.i18n.tr('COLUMNS') || 'Columns';
-    gridMenu.forceFitTitle = this.i18n.tr('FORCE_FIT_COLUMNS') || 'Force fit columns';
-    gridMenu.syncResizeTitle = this.i18n.tr('SYNCHRONOUS_RESIZE') || 'Synchronous resize';
-
-    return gridMenu;
+  /** Remove a column from the grid by it's index in the grid */
+  removeColumnByIndex(array: any[], index: number) {
+    return array.filter((el: any, i: number) => {
+      return index !== i;
+    });
   }
 
   /**
@@ -605,6 +613,16 @@ export class ControlAndPluginService {
   }
 
   /**
+   * Translate the Header Menu titles, we need to loop through all column definition to re-translate them
+   */
+  translateHeaderMenu() {
+    // reset all Grid Menu options that have translation text & then re-create the Grid Menu and also the custom items array
+    if (this._gridOptions && this._gridOptions.headerMenu) {
+      this.resetHeaderMenuTranslations(this.visibleColumns);
+    }
+  }
+
+  /**
    * Translate manually the header titles.
    * We could optionally pass a locale (that will change currently loaded locale), else it will use current locale
    * @param locale to use
@@ -625,18 +643,165 @@ export class ControlAndPluginService {
   }
 
   /**
-   * Attach/Create different plugins before the Grid creation.
-   * For example the multi-select have to be added to the column definition before the grid is created to work properly
-   * @param columnDefinitions
+   * Create Header Menu with Custom Commands if user has enabled Header Menu
+   * @param grid
+   * @param dataView
    * @param options
+   * @param columnDefinitions
+   * @return header menu
    */
-  createPluginBeforeGridCreation(columnDefinitions: Column[], options: GridOption) {
-    if (options.enableCheckboxSelector) {
-      this.checkboxSelectorPlugin = new Slick.CheckboxSelectColumn(options.checkboxSelector || {});
-      const selectionColumn: Column = this.checkboxSelectorPlugin.getColumnDefinition();
-      selectionColumn.excludeFromExport = true;
-      selectionColumn.excludeFromQuery = true;
-      columnDefinitions.unshift(selectionColumn);
+  private addHeaderMenuCustomCommands(grid: any, dataView: any, options: GridOption, columnDefinitions: Column[]): HeaderMenu {
+    const headerMenuOptions = options.headerMenu;
+
+    if (columnDefinitions && Array.isArray(columnDefinitions) && options.enableHeaderMenu) {
+      columnDefinitions.forEach((columnDef: Column) => {
+        if (columnDef) {
+          if (!columnDef.header || !columnDef.header.menu) {
+            columnDef.header = {
+              menu: {
+                items: []
+              }
+            };
+          }
+          const columnHeaderMenuItems: HeaderMenuItem[] = columnDef.header.menu.items || [];
+
+          // Sorting Commands
+          if (options.enableSorting && columnDef.sortable && headerMenuOptions.showSortCommands) {
+            if (columnHeaderMenuItems.filter((item: HeaderMenuItem) => item.command === 'sort-asc').length === 0) {
+              columnHeaderMenuItems.push({
+                iconCssClass: headerMenuOptions.iconSortAscCommand || 'fa fa-sort-asc',
+                title: options.enableTranslate ? this.i18n.tr('SORT_ASCENDING') : 'Sort Ascending',
+                command: 'sort-asc'
+              });
+            }
+            if (columnHeaderMenuItems.filter((item: HeaderMenuItem) => item.command === 'sort-desc').length === 0) {
+              columnHeaderMenuItems.push({
+                iconCssClass: headerMenuOptions.iconSortDescCommand || 'fa fa-sort-desc',
+                title: options.enableTranslate ? this.i18n.tr('SORT_DESCENDING') : 'Sort Descending',
+                command: 'sort-desc'
+              });
+            }
+          }
+
+          // Hide Column Command
+          if (headerMenuOptions.showColumnHideCommand && columnHeaderMenuItems.filter((item: HeaderMenuItem) => item.command === 'hide').length === 0) {
+            columnHeaderMenuItems.push({
+              iconCssClass: headerMenuOptions.iconColumnHideCommand || 'fa fa-times',
+              title: options.enableTranslate ? this.i18n.tr('HIDE_COLUMN') : 'Hide Column',
+              command: 'hide'
+            });
+          }
+        }
+      });
+
+      // Command callback, what will be executed after command is clicked
+      if (headerMenuOptions) {
+        headerMenuOptions.onCommand = (e, args) => {
+          if (args && args.command) {
+            switch (args.command) {
+              case 'hide':
+                this.hideColumn(args.column);
+                this.autoResizeColumns();
+                break;
+              case 'sort-asc':
+              case 'sort-desc':
+                // get previously sorted columns
+                const cols: ColumnSort[] = this.sortService.getPreviousColumnSorts(args.column.id + '');
+
+                // add to the column array, the column sorted by the header menu
+                cols.push({ sortCol: args.column, sortAsc: (args.command === 'sort-asc') });
+                if (options.backendServiceApi) {
+                  this.sortService.onBackendSortChanged(e, { multiColumnSort: true, sortCols: cols, grid });
+                } else {
+                  this.sortService.onLocalSortChanged(grid, options, dataView, cols);
+                }
+
+                // update the this.gridObj sortColumns array which will at the same add the visual sort icon(s) on the UI
+                const newSortColumns: ColumnSort[] = cols.map((col) => {
+                  return { columnId: col.sortCol.id, sortAsc: col.sortAsc };
+                });
+                grid.setSortColumns(newSortColumns); // add sort icon in UI
+                break;
+              default:
+                alert('Command: ' + args.command);
+                break;
+            }
+          }
+        };
+      }
     }
+
+    return headerMenuOptions;
+  }
+
+  /**
+   * @return default Grid Menu options
+   */
+  private getDefaultGridMenuOptions(): GridMenu {
+    return {
+      columnTitle: this.i18n.tr('COLUMNS') || 'Columns',
+      forceFitTitle: this.i18n.tr('FORCE_FIT_COLUMNS') || 'Force fit columns',
+      syncResizeTitle: this.i18n.tr('SYNCHRONOUS_RESIZE') || 'Synchronous resize',
+      iconCssClass: 'fa fa-bars',
+      menuWidth: 18,
+      customTitle: undefined,
+      customItems: [],
+      showClearAllFiltersCommand: true,
+      showRefreshDatasetCommand: true,
+      showToggleFilterCommand: true
+    };
+  }
+
+  /**
+   * @return default Header Menu options
+   */
+  private getDefaultHeaderMenuOptions(): HeaderMenu {
+    return {
+      autoAlignOffset: 12,
+      minWidth: 140,
+      showColumnHideCommand: true,
+      showSortCommands: true
+    };
+  }
+
+  /**
+   * Reset all the Grid Menu options which have text to translate
+   * @param grid menu object
+   */
+  private resetGridMenuTranslations(gridMenu: GridMenu): GridMenu {
+    // we will reset the custom items array since the commands title have to be translated too (no worries, we will re-create it later)
+    gridMenu.customItems = [];
+    delete gridMenu.customTitle;
+
+    gridMenu.columnTitle = this.i18n.tr('COLUMNS') || 'Columns';
+    gridMenu.forceFitTitle = this.i18n.tr('FORCE_FIT_COLUMNS') || 'Force fit columns';
+    gridMenu.syncResizeTitle = this.i18n.tr('SYNCHRONOUS_RESIZE') || 'Synchronous resize';
+
+    return gridMenu;
+  }
+
+  /**
+   * Reset all the Grid Menu options which have text to translate
+   * @param grid menu object
+   */
+  private resetHeaderMenuTranslations(columnDefinitions: Column[]) {
+    columnDefinitions.forEach((columnDef: Column) => {
+      if (columnDef && columnDef.header && columnDef.header && columnDef.header.menu && columnDef.header.menu.items) {
+        const columnHeaderMenuItems: HeaderMenuItem[] = columnDef.header.menu.items || [];
+        columnHeaderMenuItems.forEach((item) => {
+          switch (item.command) {
+            case 'sort-asc':
+              item.title = this.i18n.tr('SORT_ASCENDING') || 'Sort Ascending';
+              break;
+            case 'sort-desc':
+              item.title = this.i18n.tr('SORT_DESCENDING') || 'Sort Ascending';
+              break;
+            case 'hide':
+              item.title = this.i18n.tr('HIDE_COLUMN') || 'Sort Ascending';
+              break;
+          }
+        });
+      }
+    });
   }
 }

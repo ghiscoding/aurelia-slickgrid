@@ -2,10 +2,10 @@ import { inject } from 'aurelia-framework';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import {
   Column,
+  ColumnSort,
   FieldType,
   GridOption,
   SlickEvent,
-  SortChanged,
   SortDirection,
   CurrentSorter,
   CellArgs,
@@ -159,6 +159,27 @@ export class SortService {
   }
 
   /**
+   * Get column sorts,
+   * If a column is passed as an argument, we won't add this column to our output array since it is already in the array
+   * We want to know the sort prior to calling the next sorting command
+   */
+  getPreviousColumnSorts(columnId?: string) {
+    // getSortColumns() only returns sortAsc & columnId, we want the entire column definition
+    const oldSortColumns = this._grid.getSortColumns();
+    const columnDefinitions = this._grid.getColumns();
+
+    // get the column definition but only keep column which are not equal to our current column
+    const sortedCols = oldSortColumns.reduce((cols, col) => {
+      if (!columnId || col.columnId !== columnId) {
+        cols.push({ sortCol: columnDefinitions[this._grid.getColumnIndex(col.columnId)], sortAsc: col.sortAsc });
+      }
+      return cols;
+    }, []);
+
+    return sortedCols;
+  }
+
+  /**
    * load any presets if there are any
    * @param grid
    * @param gridOptions
@@ -166,7 +187,7 @@ export class SortService {
    * @param columnDefinitions
    */
   loadLocalPresets(grid: any, gridOptions: GridOption, dataView: any, columnDefinitions: Column[]) {
-    const sortCols: SortChanged[] = [];
+    const sortCols: ColumnSort[] = [];
     this._currentLocalSorters = []; // reset current local sorters
     if (gridOptions && gridOptions.presets && gridOptions.presets.sorters) {
       const sorters = gridOptions.presets.sorters;
@@ -191,12 +212,12 @@ export class SortService {
 
       if (sortCols.length > 0) {
         this.onLocalSortChanged(grid, gridOptions, dataView, sortCols);
-        grid.setSortColumns(sortCols);
+        grid.setSortColumns(sortCols); // add sort icon in UI
       }
     }
   }
 
-  onLocalSortChanged(grid: any, gridOptions: GridOption, dataView: any, sortColumns: SortChanged[]) {
+  onLocalSortChanged(grid: any, gridOptions: GridOption, dataView: any, sortColumns: ColumnSort[]) {
     dataView.sort((dataRow1: any, dataRow2: any) => {
       for (let i = 0, l = sortColumns.length; i < l; i++) {
         const columnSortObj = sortColumns[i];

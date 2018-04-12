@@ -18,6 +18,7 @@ export class Example7 {
   subTitle = `
     This example demonstrates using the <b>Slick.Plugins.HeaderButtons</b> plugin to easily add buttons to colum headers.
     These buttons can be specified directly in the column definition, and are very easy to configure and use.
+    (<a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Header-Menu-&-Header-Buttons" target="_blank">Wiki docs</a>)
     <ul>
       <li>Resize the 1st column to see all icon/command</li>
       <li>Mouse hover the 2nd column to see it's icon/command</li>
@@ -46,6 +47,7 @@ export class Example7 {
     this.gridOptions = {
       enableAutoResize: true,
       enableHeaderButton: true,
+      enableHeaderMenu: false,
       autoResize: {
         containerId: 'demo-container',
         sidePadding: 15

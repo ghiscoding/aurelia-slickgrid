@@ -27,6 +27,7 @@ export const GlobalGridOptions: GridOption = {
   defaultFilterPlaceholder: '&#128269;', // magnifying glass icon
   defaultFilterType: FilterType.input,
   enableAutoResize: true,
+  enableHeaderMenu: true,
   enableRowSelection: true,
   editable: false,
   enableCellNavigation: false,
@@ -65,6 +66,16 @@ export const GlobalGridOptions: GridOption = {
     showExportCsvCommand: true,
     showRefreshDatasetCommand: true,
     showToggleFilterCommand: true
+  },
+  headerMenu: {
+    autoAlign: true,
+    autoAlignOffset: 12,
+    minWidth: 140,
+    iconSortAscCommand: 'fa fa-sort-asc',
+    iconSortDescCommand: 'fa fa-sort-desc',
+    iconColumnHideCommand: 'fa fa-times',
+    showColumnHideCommand: true,
+    showSortCommands: true
   },
   headerRowHeight: 35,
   multiColumnSort: true,

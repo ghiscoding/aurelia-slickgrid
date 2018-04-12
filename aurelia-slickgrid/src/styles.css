@@ -29,3 +29,12 @@ body {
   overflow-x: hidden;
   overflow-y: auto;
 }
+.links {
+  background-color: #f9f9f9;
+  border-right: 1px solid #d0d0d0;
+  overflow-y: auto;
+  padding-top: 10px;
+
+  /* the height is 100% minus the 2 navbars */
+  height: calc(100vh - 50px);
+}
