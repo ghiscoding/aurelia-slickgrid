@@ -10,7 +10,7 @@ System.register([], function (exports_1, context_1) {
                     return '';
                 }
                 var complexField = columnDef.field || '';
-                return complexField.split('.').reduce(function (obj, i) { return obj[i]; }, dataContext);
+                return complexField.split('.').reduce(function (obj, i) { return (obj ? obj[i] : ''); }, dataContext);
             });
         }
     };

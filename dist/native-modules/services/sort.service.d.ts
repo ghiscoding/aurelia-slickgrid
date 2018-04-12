@@ -1,5 +1,5 @@
 import { EventAggregator } from 'aurelia-event-aggregator';
-import { Column, GridOption, SortChanged, CurrentSorter } from './../models/index';
+import { Column, ColumnSort, GridOption, CurrentSorter } from './../models/index';
 export declare class SortService {
     private ea;
     private _currentLocalSorters;
@@ -34,6 +34,12 @@ export declare class SortService {
     clearSorting(): void;
     getCurrentLocalSorters(): CurrentSorter[];
     /**
+     * Get column sorts,
+     * If a column is passed as an argument, we won't add this column to our output array since it is already in the array
+     * We want to know the sort prior to calling the next sorting command
+     */
+    getPreviousColumnSorts(columnId?: string): any;
+    /**
      * load any presets if there are any
      * @param grid
      * @param gridOptions
@@ -41,7 +47,7 @@ export declare class SortService {
      * @param columnDefinitions
      */
     loadLocalPresets(grid: any, gridOptions: GridOption, dataView: any, columnDefinitions: Column[]): void;
-    onLocalSortChanged(grid: any, gridOptions: GridOption, dataView: any, sortColumns: SortChanged[]): void;
+    onLocalSortChanged(grid: any, gridOptions: GridOption, dataView: any, sortColumns: ColumnSort[]): void;
     dispose(): void;
     /**
      * A simple function that will be called to emit a change when a sort changes.

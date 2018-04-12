@@ -318,6 +318,17 @@ System.register(["../models/index", "moment"], function (exports_1, context_1) {
     }
     exports_1("parseUtcDate", parseUtcDate);
     /**
+     * Sanitize, return only the text without HTML tags
+     * @input htmlString
+     * @return text
+     */
+    function sanitizeHtmlToText(htmlString) {
+        var temp = document.createElement('div');
+        temp.innerHTML = htmlString;
+        return temp.textContent || temp.innerText;
+    }
+    exports_1("sanitizeHtmlToText", sanitizeHtmlToText);
+    /**
      * Converts a string to camel case
      * @param str the string to convert
      * @return the string in camel case

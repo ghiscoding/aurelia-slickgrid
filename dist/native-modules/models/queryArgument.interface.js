@@ -1,0 +1,1 @@
+//# sourceMappingURL=queryArgument.interface.js.map

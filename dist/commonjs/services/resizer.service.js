@@ -1,6 +1,14 @@
 "use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+var aurelia_framework_1 = require("aurelia-framework");
 var $ = require("jquery");
+var aurelia_event_aggregator_1 = require("aurelia-event-aggregator");
 // global constants, height/width are in pixels
 var DATAGRID_MIN_HEIGHT = 180;
 var DATAGRID_MIN_WIDTH = 300;
@@ -8,11 +16,15 @@ var DATAGRID_BOTTOM_PADDING = 20;
 var DATAGRID_PAGINATION_HEIGHT = 35;
 var timer;
 var ResizerService = /** @class */ (function () {
-    function ResizerService() {
+    function ResizerService(ea) {
+        this.ea = ea;
     }
-    ResizerService.prototype.init = function (grid, gridOptions) {
+    ResizerService.prototype.init = function (grid) {
         this._grid = grid;
-        this._gridOptions = gridOptions;
+        if (grid) {
+            this._gridOptions = grid.getOptions();
+        }
+        this.aureliaEventPrefix = (this._gridOptions && this._gridOptions.defaultAureliaEventPrefix) ? this._gridOptions.defaultAureliaEventPrefix : 'asg';
     };
     /**
      * Attach an auto resize trigger on the datagrid, if that is enable then it will resize itself to the available space
@@ -30,6 +42,7 @@ var ResizerService = /** @class */ (function () {
         // -- 2nd attach a trigger on the Window DOM element, so that it happens also when resizing after first load
         // -- attach auto-resize to Window object only if it exist
         $(window).on('resize.grid', function () {
+            _this.ea.publish(_this.aureliaEventPrefix + ":onBeforeResize", true);
             // for some yet unknown reason, calling the resize twice removes any stuttering/flickering when changing the height and makes it much smoother
             _this.resizeGrid();
             _this.resizeGrid();
@@ -120,6 +133,9 @@ var ResizerService = /** @class */ (function () {
             }
         }, delay);
     };
+    ResizerService = __decorate([
+        aurelia_framework_1.inject(aurelia_event_aggregator_1.EventAggregator)
+    ], ResizerService);
     return ResizerService;
 }());
 exports.ResizerService = ResizerService;

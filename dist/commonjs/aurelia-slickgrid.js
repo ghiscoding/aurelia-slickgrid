@@ -60,7 +60,6 @@ require("slickgrid/controls/slick.columnpicker");
 require("slickgrid/controls/slick.gridmenu");
 require("slickgrid/controls/slick.pager");
 require("slickgrid/plugins/slick.autotooltips");
-require("slickgrid/plugins/slick.cellcopymanager");
 require("slickgrid/plugins/slick.cellexternalcopymanager");
 require("slickgrid/plugins/slick.cellrangedecorator");
 require("slickgrid/plugins/slick.cellrangeselector");
@@ -81,7 +80,7 @@ var aureliaEventPrefix = 'asg';
 var eventPrefix = 'sg';
 // Aurelia doesn't support well TypeScript @autoinject in a Plugin so we'll do it the old fashion way
 var AureliaSlickgridCustomElement = /** @class */ (function () {
-    function AureliaSlickgridCustomElement(controlAndPluginService, exportService, elm, ea, filterService, graphqlService, gridEventService, gridExtraService, gridStateService, i18n, resizer, sortService, container) {
+    function AureliaSlickgridCustomElement(controlAndPluginService, exportService, elm, ea, filterService, graphqlService, gridEventService, gridExtraService, gridStateService, groupingAndColspanService, i18n, resizer, sortService, container) {
         this.controlAndPluginService = controlAndPluginService;
         this.exportService = exportService;
         this.elm = elm;
@@ -91,6 +90,7 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
         this.gridEventService = gridEventService;
         this.gridExtraService = gridExtraService;
         this.gridStateService = gridStateService;
+        this.groupingAndColspanService = groupingAndColspanService;
         this.i18n = i18n;
         this.resizer = resizer;
         this.sortService = sortService;
@@ -138,6 +138,10 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
         this.ea.publish('onDataviewCreated', this.dataview);
         // attach resize ONLY after the dataView is ready
         this.attachResizeHook(this.grid, this.gridOptions);
+        // attach grouping and header grouping colspan service
+        if (this.gridOptions.createPreHeaderPanel) {
+            this.groupingAndColspanService.init(this.grid, this.dataview);
+        }
         // attach grid extra service
         this.gridExtraService.init(this.grid, this.columnDefinitions, this.gridOptions, this.dataview);
         // when user enables translation, we need to translate Headers on first pass & subsequently in the attachDifferentHooks
@@ -167,6 +171,7 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
         this.filterService.dispose();
         this.gridEventService.dispose();
         this.gridStateService.dispose();
+        this.groupingAndColspanService.dispose();
         this.resizer.dispose();
         this.sortService.dispose();
         this.grid.destroy();
@@ -239,6 +244,7 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
                 _this.controlAndPluginService.translateHeaders();
                 _this.controlAndPluginService.translateColumnPicker();
                 _this.controlAndPluginService.translateGridMenu();
+                _this.controlAndPluginService.translateHeaderMenu();
             }
         });
         // attach external sorting (backend) when available or default onSort (dataView)
@@ -318,6 +324,16 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
             grid.invalidateRows(args.rows);
             grid.render();
         });
+        // does the user have a colspan callback?
+        if (gridOptions.colspanCallback) {
+            dataView.getItemMetadata = function (rowNumber) {
+                var item = dataView.getItem(rowNumber);
+                if (gridOptions && gridOptions.colspanCallback) {
+                    return gridOptions.colspanCallback(item);
+                }
+                return null;
+            };
+        }
     };
     AureliaSlickgridCustomElement.prototype.attachBackendCallbackFunctions = function (gridOptions) {
         var _this = this;
@@ -381,7 +397,7 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
             this.grid.autosizeColumns();
         }
         // auto-resize grid on browser resize
-        this.resizer.init(grid, options);
+        this.resizer.init(grid);
         if (grid && options.enableAutoResize) {
             this.resizer.attachAutoResizeDataGrid();
             if (options.autoFitColumnsOnFirstLoad && typeof grid.autosizeColumns === 'function') {
@@ -486,7 +502,7 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
         aurelia_framework_1.bindable()
     ], AureliaSlickgridCustomElement.prototype, "pickerOptions", void 0);
     AureliaSlickgridCustomElement = __decorate([
-        aurelia_framework_1.inject(index_2.ControlAndPluginService, index_2.ExportService, Element, aurelia_event_aggregator_1.EventAggregator, index_2.FilterService, index_2.GraphqlService, index_2.GridEventService, index_2.GridExtraService, index_2.GridStateService, aurelia_i18n_1.I18N, index_2.ResizerService, index_2.SortService, aurelia_framework_1.Container)
+        aurelia_framework_1.inject(index_2.ControlAndPluginService, index_2.ExportService, Element, aurelia_event_aggregator_1.EventAggregator, index_2.FilterService, index_2.GraphqlService, index_2.GridEventService, index_2.GridExtraService, index_2.GridStateService, index_2.GroupingAndColspanService, aurelia_i18n_1.I18N, index_2.ResizerService, index_2.SortService, aurelia_framework_1.Container)
     ], AureliaSlickgridCustomElement);
     return AureliaSlickgridCustomElement;
 }());

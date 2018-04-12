@@ -113,7 +113,7 @@ System.register(["aurelia-framework", "aurelia-i18n", "../services/index", "jque
                     // convert to string because that is how the DOM will return these values
                     this.defaultValue = item[this.columnDef.field].map(function (i) { return i.toString(); });
                     this.$editorElm.find('option').each(function (i, $e) {
-                        if (_this.defaultValue.indexOf($e.value) !== -1) {
+                        if (_this.defaultValue === $e.value) {
                             $e.selected = true;
                         }
                         else {

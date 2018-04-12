@@ -6,7 +6,7 @@ define(["require", "exports"], function (require, exports) {
             return '';
         }
         var complexField = columnDef.field || '';
-        return complexField.split('.').reduce(function (obj, i) { return obj[i]; }, dataContext);
+        return complexField.split('.').reduce(function (obj, i) { return (obj ? obj[i] : ''); }, dataContext);
     };
 });
 //# sourceMappingURL=complexObjectFormatter.js.map

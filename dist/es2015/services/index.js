@@ -8,6 +8,7 @@ export * from './gridExtra.service';
 export * from './gridExtraUtils';
 export * from './gridState.service';
 export * from './grid-odata.service';
+export * from './groupingAndColspan.service';
 export * from './odata.service';
 export * from './resizer.service';
 export * from './sort.service';

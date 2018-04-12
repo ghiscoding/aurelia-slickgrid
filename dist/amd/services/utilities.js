@@ -318,6 +318,17 @@ define(["require", "exports", "../models/index", "moment"], function (require, e
     }
     exports.parseUtcDate = parseUtcDate;
     /**
+     * Sanitize, return only the text without HTML tags
+     * @input htmlString
+     * @return text
+     */
+    function sanitizeHtmlToText(htmlString) {
+        var temp = document.createElement('div');
+        temp.innerHTML = htmlString;
+        return temp.textContent || temp.innerText;
+    }
+    exports.sanitizeHtmlToText = sanitizeHtmlToText;
+    /**
      * Converts a string to camel case
      * @param str the string to convert
      * @return the string in camel case

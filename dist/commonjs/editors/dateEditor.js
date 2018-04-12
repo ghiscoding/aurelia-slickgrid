@@ -11,6 +11,7 @@ var index_1 = require("./../models/index");
 var aurelia_i18n_1 = require("aurelia-i18n");
 var aurelia_framework_1 = require("aurelia-framework");
 var flatpickr = require("flatpickr");
+var moment = require("moment");
 var $ = require("jquery");
 /*
  * An example of a date picker editor using Flatpickr
@@ -24,29 +25,32 @@ var DateEditor = /** @class */ (function () {
     }
     DateEditor.prototype.init = function () {
         var _this = this;
-        var gridOptions = this.args.grid.getOptions();
-        this.defaultDate = this.args.item[this.args.column.field] || null;
-        var inputFormat = utilities_1.mapFlatpickrDateFormatWithFieldType(this.args.column.type || index_1.FieldType.dateIso);
-        var outputFormat = utilities_1.mapFlatpickrDateFormatWithFieldType(this.args.column.outputType || index_1.FieldType.dateUtc);
-        var currentLocale = this.i18n.getLocale() || 'en';
-        if (currentLocale.length > 2) {
-            currentLocale = currentLocale.substring(0, 2);
+        if (this.args && this.args.column) {
+            var columnDef = this.args.column;
+            var gridOptions = this.args.grid.getOptions();
+            this.defaultDate = (this.args.item) ? this.args.item[this.args.column.field] : null;
+            var inputFormat = utilities_1.mapFlatpickrDateFormatWithFieldType(this.args.column.type || index_1.FieldType.dateIso);
+            var outputFormat = utilities_1.mapFlatpickrDateFormatWithFieldType(this.args.column.outputType || index_1.FieldType.dateUtc);
+            var currentLocale = this.i18n.getLocale() || 'en';
+            if (currentLocale.length > 2) {
+                currentLocale = currentLocale.substring(0, 2);
+            }
+            var pickerOptions = {
+                defaultDate: this.defaultDate,
+                altInput: true,
+                altFormat: inputFormat,
+                dateFormat: outputFormat,
+                closeOnSelect: false,
+                locale: (currentLocale !== 'en') ? this.loadFlatpickrLocale(currentLocale) : 'en',
+                onChange: function (selectedDates, dateStr, instance) {
+                    _this.save();
+                },
+            };
+            this.$input = $("<input type=\"text\" data-defaultDate=\"" + this.defaultDate + "\" class=\"editor-text flatpickr\" />");
+            this.$input.appendTo(this.args.container);
+            this.flatInstance = (flatpickr && this.$input[0] && typeof this.$input[0].flatpickr === 'function') ? this.$input[0].flatpickr(pickerOptions) : null;
+            this.show();
         }
-        var pickerOptions = {
-            defaultDate: this.defaultDate,
-            altInput: true,
-            altFormat: inputFormat,
-            dateFormat: outputFormat,
-            closeOnSelect: false,
-            locale: (currentLocale !== 'en') ? this.loadFlatpickrLocale(currentLocale) : 'en',
-            onChange: function (selectedDates, dateStr, instance) {
-                _this.save();
-            },
-        };
-        this.$input = $("<input type=\"text\" data-defaultDate=\"" + this.defaultDate + "\" class=\"editor-text flatpickr\" />");
-        this.$input.appendTo(this.args.container);
-        this.flatInstance = (flatpickr && this.$input[0] && typeof this.$input[0].flatpickr === 'function') ? this.$input[0].flatpickr(pickerOptions) : null;
-        this.show();
     };
     DateEditor.prototype.loadFlatpickrLocale = function (locale) {
         // change locale if needed, Flatpickr reference: https://chmln.github.io/flatpickr/localization/
@@ -81,7 +85,9 @@ var DateEditor = /** @class */ (function () {
         this.defaultDate = item[this.args.column.field];
     };
     DateEditor.prototype.serializeValue = function () {
-        return this.$input.val();
+        var outputFormat = utilities_1.mapMomentDateFormatWithFieldType(this.args.column.type || index_1.FieldType.dateIso);
+        var value = moment(this.defaultDate).format(outputFormat);
+        return value;
     };
     DateEditor.prototype.applyValue = function (item, state) {
         item[this.args.column.field] = state;

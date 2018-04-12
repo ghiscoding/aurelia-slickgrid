@@ -10,7 +10,7 @@ import { I18N } from 'aurelia-i18n';
 import { FileType } from './../models/index';
 import { TextEncoder } from 'text-encoding-utf-8';
 // import { TextEncoder } from 'utf8-encoding';
-import { addWhiteSpaces, htmlEntityDecode } from './../services/utilities';
+import { addWhiteSpaces, htmlEntityDecode, sanitizeHtmlToText } from './../services/utilities';
 import * as $ from 'jquery';
 let ExportService = class ExportService {
     constructor(i18n, ea) {
@@ -179,7 +179,7 @@ let ExportService = class ExportService {
             }
             // does the user want to sanitize the output data (remove HTML tags)?
             if (columnDef.sanitizeDataExport || this._exportOptions.sanitizeDataExport) {
-                itemData = this.sanitizeHtmlToText(itemData);
+                itemData = sanitizeHtmlToText(itemData);
             }
             // when CSV we also need to escape double quotes twice, so " becomes ""
             if (format === FileType.csv) {
@@ -198,7 +198,7 @@ let ExportService = class ExportService {
      * @param itemObj
      */
     readGroupedTitleRow(itemObj) {
-        let groupName = this.sanitizeHtmlToText(itemObj.title);
+        let groupName = sanitizeHtmlToText(itemObj.title);
         const exportQuoteWrapper = this._exportQuoteWrapper || '';
         const delimiter = this._exportOptions.delimiter;
         const format = this._exportOptions.format;
@@ -232,7 +232,7 @@ let ExportService = class ExportService {
             }
             // does the user want to sanitize the output data (remove HTML tags)?
             if (columnDef.sanitizeDataExport || this._exportOptions.sanitizeDataExport) {
-                itemData = this.sanitizeHtmlToText(itemData);
+                itemData = sanitizeHtmlToText(itemData);
             }
             if (format === FileType.csv) {
                 // when CSV we also need to escape double quotes twice, so a double quote " becomes 2x double quotes ""
@@ -244,16 +244,6 @@ let ExportService = class ExportService {
             output += exportQuoteWrapper + itemData + exportQuoteWrapper + delimiter;
         });
         return output;
-    }
-    /**
-     * Sanitize, return only the text without HTML tags
-     * @input htmlString
-     * @return text
-     */
-    sanitizeHtmlToText(htmlString) {
-        const temp = document.createElement('div');
-        temp.innerHTML = htmlString;
-        return temp.textContent || temp.innerText;
     }
     /**
      * Triggers download file with file format.

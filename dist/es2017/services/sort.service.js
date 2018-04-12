@@ -130,6 +130,24 @@ let SortService = class SortService {
         return this._currentLocalSorters;
     }
     /**
+     * Get column sorts,
+     * If a column is passed as an argument, we won't add this column to our output array since it is already in the array
+     * We want to know the sort prior to calling the next sorting command
+     */
+    getPreviousColumnSorts(columnId) {
+        // getSortColumns() only returns sortAsc & columnId, we want the entire column definition
+        const oldSortColumns = this._grid.getSortColumns();
+        const columnDefinitions = this._grid.getColumns();
+        // get the column definition but only keep column which are not equal to our current column
+        const sortedCols = oldSortColumns.reduce((cols, col) => {
+            if (!columnId || col.columnId !== columnId) {
+                cols.push({ sortCol: columnDefinitions[this._grid.getColumnIndex(col.columnId)], sortAsc: col.sortAsc });
+            }
+            return cols;
+        }, []);
+        return sortedCols;
+    }
+    /**
      * load any presets if there are any
      * @param grid
      * @param gridOptions
@@ -160,7 +178,7 @@ let SortService = class SortService {
             });
             if (sortCols.length > 0) {
                 this.onLocalSortChanged(grid, gridOptions, dataView, sortCols);
-                grid.setSortColumns(sortCols);
+                grid.setSortColumns(sortCols); // add sort icon in UI
             }
         }
     }

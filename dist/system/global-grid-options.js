@@ -36,6 +36,7 @@ System.register(["./models/index"], function (exports_1, context_1) {
                 defaultFilterPlaceholder: '&#128269;',
                 defaultFilterType: index_1.FilterType.input,
                 enableAutoResize: true,
+                enableHeaderMenu: true,
                 enableRowSelection: true,
                 editable: false,
                 enableCellNavigation: false,
@@ -75,8 +76,21 @@ System.register(["./models/index"], function (exports_1, context_1) {
                     showRefreshDatasetCommand: true,
                     showToggleFilterCommand: true
                 },
+                headerMenu: {
+                    autoAlign: true,
+                    autoAlignOffset: 12,
+                    minWidth: 140,
+                    iconSortAscCommand: 'fa fa-sort-asc',
+                    iconSortDescCommand: 'fa fa-sort-desc',
+                    iconColumnHideCommand: 'fa fa-times',
+                    showColumnHideCommand: true,
+                    showSortCommands: true
+                },
                 headerRowHeight: 35,
                 multiColumnSort: true,
+                numberedMultiColumnSort: true,
+                tristateMultiColumnSort: false,
+                sortColNumberInSeparateSpan: true,
                 pagination: {
                     pageSizes: [10, 15, 20, 25, 30, 40, 50, 75, 100],
                     pageSize: 25,

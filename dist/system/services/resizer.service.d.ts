@@ -1,14 +1,18 @@
 import { GridOption } from './../models/index';
+import { EventAggregator } from 'aurelia-event-aggregator';
 export interface GridDimension {
     height: number;
     width: number;
     heightWithPagination?: number;
 }
 export declare class ResizerService {
+    private ea;
     private _grid;
     private _gridOptions;
     private _lastDimensions;
-    init(grid: any, gridOptions: GridOption): void;
+    aureliaEventPrefix: string;
+    constructor(ea: EventAggregator);
+    init(grid: any): void;
     /**
      * Attach an auto resize trigger on the datagrid, if that is enable then it will resize itself to the available space
      * Options: we could also provide a % factor to resize on each height/width independently

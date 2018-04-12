@@ -307,6 +307,16 @@ export function parseUtcDate(inputDateString, useUtc) {
     return date;
 }
 /**
+ * Sanitize, return only the text without HTML tags
+ * @input htmlString
+ * @return text
+ */
+export function sanitizeHtmlToText(htmlString) {
+    var temp = document.createElement('div');
+    temp.innerHTML = htmlString;
+    return temp.textContent || temp.innerText;
+}
+/**
  * Converts a string to camel case
  * @param str the string to convert
  * @return the string in camel case

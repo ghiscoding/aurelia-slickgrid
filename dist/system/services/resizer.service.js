@@ -1,11 +1,23 @@
-System.register(["jquery"], function (exports_1, context_1) {
+System.register(["aurelia-framework", "jquery", "aurelia-event-aggregator"], function (exports_1, context_1) {
     "use strict";
+    var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+        var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+        if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+        else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+        return c > 3 && r && Object.defineProperty(target, key, r), r;
+    };
     var __moduleName = context_1 && context_1.id;
-    var $, DATAGRID_MIN_HEIGHT, DATAGRID_MIN_WIDTH, DATAGRID_BOTTOM_PADDING, DATAGRID_PAGINATION_HEIGHT, timer, ResizerService;
+    var aurelia_framework_1, $, aurelia_event_aggregator_1, DATAGRID_MIN_HEIGHT, DATAGRID_MIN_WIDTH, DATAGRID_BOTTOM_PADDING, DATAGRID_PAGINATION_HEIGHT, timer, ResizerService;
     return {
         setters: [
+            function (aurelia_framework_1_1) {
+                aurelia_framework_1 = aurelia_framework_1_1;
+            },
             function ($_1) {
                 $ = $_1;
+            },
+            function (aurelia_event_aggregator_1_1) {
+                aurelia_event_aggregator_1 = aurelia_event_aggregator_1_1;
             }
         ],
         execute: function () {
@@ -15,11 +27,15 @@ System.register(["jquery"], function (exports_1, context_1) {
             DATAGRID_BOTTOM_PADDING = 20;
             DATAGRID_PAGINATION_HEIGHT = 35;
             ResizerService = /** @class */ (function () {
-                function ResizerService() {
+                function ResizerService(ea) {
+                    this.ea = ea;
                 }
-                ResizerService.prototype.init = function (grid, gridOptions) {
+                ResizerService.prototype.init = function (grid) {
                     this._grid = grid;
-                    this._gridOptions = gridOptions;
+                    if (grid) {
+                        this._gridOptions = grid.getOptions();
+                    }
+                    this.aureliaEventPrefix = (this._gridOptions && this._gridOptions.defaultAureliaEventPrefix) ? this._gridOptions.defaultAureliaEventPrefix : 'asg';
                 };
                 /**
                  * Attach an auto resize trigger on the datagrid, if that is enable then it will resize itself to the available space
@@ -37,6 +53,7 @@ System.register(["jquery"], function (exports_1, context_1) {
                     // -- 2nd attach a trigger on the Window DOM element, so that it happens also when resizing after first load
                     // -- attach auto-resize to Window object only if it exist
                     $(window).on('resize.grid', function () {
+                        _this.ea.publish(_this.aureliaEventPrefix + ":onBeforeResize", true);
                         // for some yet unknown reason, calling the resize twice removes any stuttering/flickering when changing the height and makes it much smoother
                         _this.resizeGrid();
                         _this.resizeGrid();
@@ -127,6 +144,9 @@ System.register(["jquery"], function (exports_1, context_1) {
                         }
                     }, delay);
                 };
+                ResizerService = __decorate([
+                    aurelia_framework_1.inject(aurelia_event_aggregator_1.EventAggregator)
+                ], ResizerService);
                 return ResizerService;
             }());
             exports_1("ResizerService", ResizerService);

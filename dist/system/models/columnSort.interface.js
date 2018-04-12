@@ -7,4 +7,4 @@ System.register([], function (exports_1, context_1) {
         }
     };
 });
-//# sourceMappingURL=sortChanged.interface.js.map
+//# sourceMappingURL=columnSort.interface.js.map

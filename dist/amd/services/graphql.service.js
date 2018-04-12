@@ -94,6 +94,13 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "./utilities"
                 // first: 20, ... locale: "en-CA"
                 datasetFilters.locale = this.i18n.getLocale() || 'en';
             }
+            if (this.options.extraQueryArguments) {
+                // first: 20, ... userId: 123
+                for (var _a = 0, _b = this.options.extraQueryArguments; _a < _b.length; _a++) {
+                    var queryArgument = _b[_a];
+                    datasetFilters[queryArgument.field] = queryArgument.value;
+                }
+            }
             // query { users(first: 20, orderBy: [], filterBy: [])}
             datasetQb.filter(datasetFilters);
             queryQb.find(datasetQb);

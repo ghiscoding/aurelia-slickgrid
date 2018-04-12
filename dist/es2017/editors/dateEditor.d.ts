@@ -15,7 +15,7 @@ export declare class DateEditor implements Editor {
     focus(): void;
     save(): void;
     loadValue(item: any): void;
-    serializeValue(): any;
+    serializeValue(): string;
     applyValue(item: any, state: any): void;
     isValueChanged(): boolean;
     validate(): any;
