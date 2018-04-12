@@ -1,4 +1,4 @@
-import { Column, FieldType, GridOption } from '../../aurelia-slickgrid';
+import { FieldType } from '../../aurelia-slickgrid';
 
 export class Example14 {
   title = 'Example 14: Column Span & Header Grouping';
@@ -16,8 +16,8 @@ export class Example14 {
     </li>
   </ul>
   `;
-  columnDefinitions: Column[];
-  gridOptions: GridOption;
+  columnDefinitions;
+  gridOptions;
   dataset = [];
 
   constructor() {
@@ -74,7 +74,7 @@ export class Example14 {
    * Your callback will always have the "item" argument which you can use to decide on the colspan
    * Your return must always be in the form of:: return { columns: {}}
    */
-  renderDifferentColspan(item: any) {
+  renderDifferentColspan(item) {
     if (item.id % 2 === 1) {
       return {
         columns: {
