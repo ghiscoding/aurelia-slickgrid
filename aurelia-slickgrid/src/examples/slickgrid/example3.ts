@@ -251,8 +251,7 @@ export class Example3 {
       }
       if (column.columnDef.id === 'delete') {
         if (confirm('Are you sure?')) {
-          this.dataview.deleteItem(column.dataContext.id);
-          this.dataview.refresh();
+          this.gridExtraService.deleteDataGridItemById(column.dataContext.id);
         }
       }
     });
