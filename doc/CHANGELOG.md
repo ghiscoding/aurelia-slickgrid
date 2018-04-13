@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.12.1"></a>
+## [1.12.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v1.12.0...v1.12.1) (2018-04-13)
+
+
+### Bug Fixes
+
+* **grid:** after expanding a column,  scrolling should not resize grid ([bf83c90](https://github.com/ghiscoding/aurelia-slickgrid/commit/bf83c90))
+
+
+### Features
+
+* **grid:** add deleteDataGridItem & deleteDataGridItemById into Service ([2e927f2](https://github.com/ghiscoding/aurelia-slickgrid/commit/2e927f2))
+
+
+
 <a name="1.12.0"></a>
 # [1.12.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v1.11.1...v1.12.0) (2018-04-12)
 
