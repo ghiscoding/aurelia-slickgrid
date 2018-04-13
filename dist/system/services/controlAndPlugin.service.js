@@ -50,6 +50,7 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../models/index", "./ex
                     this.filterService = filterService;
                     this.i18n = i18n;
                     this.sortService = sortService;
+                    this.areVisibleColumnDifferent = false;
                 }
                 /** Auto-resize all the column in the grid to fit the grid width */
                 ControlAndPluginService.prototype.autoResizeColumns = function () {
@@ -218,6 +219,7 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../models/index", "./ex
                  * @param options
                  */
                 ControlAndPluginService.prototype.createGridMenu = function (grid, columnDefinitions, options) {
+                    var _this = this;
                     options.gridMenu = __assign({}, this.getDefaultGridMenuOptions(), options.gridMenu);
                     this.addGridMenuCustomCommands(grid, options);
                     var gridMenuControl = new Slick.Controls.GridMenu(columnDefinitions, grid, options);
@@ -228,6 +230,7 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../models/index", "./ex
                             }
                         });
                         gridMenuControl.onColumnsChanged.subscribe(function (e, args) {
+                            _this.areVisibleColumnDifferent = true;
                             if (options.gridMenu && typeof options.gridMenu.onColumnsChanged === 'function') {
                                 options.gridMenu.onColumnsChanged(e, args);
                             }
@@ -245,8 +248,9 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../models/index", "./ex
                             if (grid && typeof grid.autosizeColumns === 'function') {
                                 // make sure that the grid still exist (by looking if the Grid UID is found in the DOM tree)
                                 var gridUid = grid.getUID();
-                                if (gridUid && $("." + gridUid).length > 0) {
+                                if (_this.areVisibleColumnDifferent && gridUid && $("." + gridUid).length > 0) {
                                     grid.autosizeColumns();
+                                    _this.areVisibleColumnDifferent = false;
                                 }
                             }
                         });

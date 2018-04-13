@@ -18,6 +18,7 @@ let ControlAndPluginService = class ControlAndPluginService {
         this.filterService = filterService;
         this.i18n = i18n;
         this.sortService = sortService;
+        this.areVisibleColumnDifferent = false;
     }
     /** Auto-resize all the column in the grid to fit the grid width */
     autoResizeColumns() {
@@ -195,6 +196,7 @@ let ControlAndPluginService = class ControlAndPluginService {
                 }
             });
             gridMenuControl.onColumnsChanged.subscribe((e, args) => {
+                this.areVisibleColumnDifferent = true;
                 if (options.gridMenu && typeof options.gridMenu.onColumnsChanged === 'function') {
                     options.gridMenu.onColumnsChanged(e, args);
                 }
@@ -212,8 +214,9 @@ let ControlAndPluginService = class ControlAndPluginService {
                 if (grid && typeof grid.autosizeColumns === 'function') {
                     // make sure that the grid still exist (by looking if the Grid UID is found in the DOM tree)
                     const gridUid = grid.getUID();
-                    if (gridUid && $(`.${gridUid}`).length > 0) {
+                    if (this.areVisibleColumnDifferent && gridUid && $(`.${gridUid}`).length > 0) {
                         grid.autosizeColumns();
+                        this.areVisibleColumnDifferent = false;
                     }
                 }
             });
