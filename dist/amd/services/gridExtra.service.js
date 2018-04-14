@@ -115,7 +115,7 @@ define(["require", "exports", "jquery"], function (require, exports, $) {
         GridExtraService.prototype.deleteDataGridItem = function (item) {
             var row = this._dataView.getRowById(item.id);
             var itemId = (!item || !item.hasOwnProperty('id')) ? -1 : item.id;
-            if (itemId === -1) {
+            if (row === undefined || itemId === -1) {
                 throw new Error("Could not find the item in the grid or it's associated \"id\"");
             }
             // delete the item from the dataView
@@ -128,7 +128,7 @@ define(["require", "exports", "jquery"], function (require, exports, $) {
          */
         GridExtraService.prototype.deleteDataGridItemById = function (id) {
             var row = this._dataView.getRowById(id);
-            if (!row) {
+            if (row === undefined) {
                 throw new Error("Could not find the item in the grid by it's associated \"id\"");
             }
             // delete the item from the dataView
