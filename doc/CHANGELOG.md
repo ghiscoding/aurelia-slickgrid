@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.12.2"></a>
+## [1.12.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v1.12.1...v1.12.2) (2018-04-14)
+
+
+### Bug Fixes
+
+* **delete:** deleteDataGridItemById should also work on row index 0 ([af283f3](https://github.com/ghiscoding/aurelia-slickgrid/commit/af283f3))
+
+
+
 <a name="1.12.1"></a>
 ## [1.12.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v1.12.0...v1.12.1) (2018-04-13)
 
