@@ -159,7 +159,7 @@ export class Example3 {
       type: FieldType.string,
       editor: Editors.multipleSelect,
       params: {
-        collection: Array.from(Array(10).keys()).map(k => ({ value: `Task ${k}`, label: `Task ${k}` })),
+        collection: Array.from(Array(12).keys()).map(k => ({ value: `Task ${k}`, label: `Task ${k}` })),
         collectionSortBy: {
           property: 'label',
           sortDesc: true
@@ -213,7 +213,7 @@ export class Example3 {
         start: new Date(randomYear, randomMonth, randomDay),
         finish: new Date(randomYear, (randomMonth + 1), randomDay),
         effortDriven: (i % 5 === 0),
-        prerequisites: (i % 5 === 0) && i > 0 ? [`Task ${i}`, `Task ${i - 1}`] : []
+        prerequisites: (i % 2 === 0) && i !== 0 && i < 12 ? [`Task ${i}`, `Task ${i - 1}`] : []
       };
     }
     this.dataset = mockedDataset;
