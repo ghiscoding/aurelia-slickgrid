@@ -214,7 +214,7 @@ export class AureliaSlickgridCustomElement {
    */
   bind(binding: any, contexts: any) {
     // get the grid options (priority is Global Options first, then user option which could overwrite the Global options)
-    this.gridOptions = { ...GlobalGridOptions, ...binding.gridOptions };
+    this.gridOptions = { ...GlobalGridOptions, ...this.gridOptions };
 
     // Wrap each editor class in the Factory resolver so consumers of this library can use
     // dependency injection. Aurelia will resolve all dependencies when we pass the container
