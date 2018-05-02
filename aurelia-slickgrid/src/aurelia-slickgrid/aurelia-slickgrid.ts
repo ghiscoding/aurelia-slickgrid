@@ -208,13 +208,9 @@ export class AureliaSlickgridCustomElement {
     }));
   }
 
-  /**
-   * Keep original value(s) that could be passed by the user ViewModel.
-   * If nothing was passed, it will default to first option of select
-   */
-  bind(binding: any, contexts: any) {
+  bind() {
     // get the grid options (priority is Global Options first, then user option which could overwrite the Global options)
-    this.gridOptions = { ...GlobalGridOptions, ...binding.gridOptions };
+    this.gridOptions = { ...GlobalGridOptions, ...this.gridOptions };
 
     // Wrap each editor class in the Factory resolver so consumers of this library can use
     // dependency injection. Aurelia will resolve all dependencies when we pass the container
