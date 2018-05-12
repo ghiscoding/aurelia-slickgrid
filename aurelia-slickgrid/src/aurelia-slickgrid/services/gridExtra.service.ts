@@ -10,10 +10,10 @@ export class GridExtraService {
   private _columnDefinition: Column[];
   private _gridOptions: GridOption;
 
-  init(grid: any, columnDefinition: Column[], gridOptions: GridOption, dataView: any): void {
+  init(grid: any, dataView: any): void {
     this._grid = grid;
-    this._columnDefinition = columnDefinition;
-    this._gridOptions = gridOptions;
+    this._gridOptions = (grid && grid.getOptions) ? grid.getOptions() : {};
+    this._columnDefinition = (grid && grid.getColumns) ? grid.getColumns() : [];
     this._dataView = dataView;
   }
 

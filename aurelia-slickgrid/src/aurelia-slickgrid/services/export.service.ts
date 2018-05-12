@@ -50,10 +50,10 @@ export class ExportService {
    * @param gridOptions
    * @param dataView
    */
-  init(grid: any, gridOptions: GridOption, dataView: any): void {
+  init(grid: any, dataView: any): void {
     this._grid = grid;
-    this._gridOptions = gridOptions;
     this._dataView = dataView;
+    this._gridOptions = (grid && grid.getOptions) ? grid.getOptions() : {};
     this.aureliaEventPrefix = (this._gridOptions && this._gridOptions.defaultAureliaEventPrefix) ? this._gridOptions.defaultAureliaEventPrefix : 'asg';
   }
 

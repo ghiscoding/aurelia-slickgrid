@@ -63,85 +63,85 @@ export class ControlAndPluginService {
    * @param options
    * @param dataView
    */
-  attachDifferentControlOrPlugins(grid: any, columnDefinitions: Column[], options: GridOption, dataView: any, groupItemMetadataProvider: any) {
+  attachDifferentControlOrPlugins(grid: any, dataView: any, groupItemMetadataProvider: any) {
     this._grid = grid;
-    this._gridOptions = options;
     this._dataView = dataView;
-    this._columnDefinitions = columnDefinitions;
-    this.visibleColumns = columnDefinitions;
+    this._gridOptions = (grid && grid.getOptions) ? grid.getOptions() : {};
+    this._columnDefinitions = (grid && grid.getColumns) ? grid.getColumns() : [];
+    this.visibleColumns = this._columnDefinitions;
 
     // Column Picker Plugin
-    if (options.enableColumnPicker) {
-      this.columnPickerControl = this.createColumnPicker(grid, columnDefinitions, options);
+    if (this._gridOptions.enableColumnPicker) {
+      this.columnPickerControl = this.createColumnPicker(grid, this._columnDefinitions, this._gridOptions);
     }
 
     // Grid Menu Plugin
-    if (options.enableGridMenu) {
-      this.gridMenuControl = this.createGridMenu(grid, columnDefinitions, options);
+    if (this._gridOptions.enableGridMenu) {
+      this.gridMenuControl = this.createGridMenu(grid, this._columnDefinitions, this._gridOptions);
     }
 
     // Auto Tooltip Plugin
-    if (options.enableAutoTooltip) {
-      this.autoTooltipPlugin = new Slick.AutoTooltips(options.autoTooltipOptions || {});
+    if (this._gridOptions.enableAutoTooltip) {
+      this.autoTooltipPlugin = new Slick.AutoTooltips(this._gridOptions.autoTooltipOptions || {});
       grid.registerPlugin(this.autoTooltipPlugin);
     }
 
     // Grouping Plugin
     // register the group item metadata provider to add expand/collapse group handlers
-    if (options.enableGrouping) {
+    if (this._gridOptions.enableGrouping) {
       grid.registerPlugin(groupItemMetadataProvider);
     }
 
     // Checkbox Selector Plugin
-    if (options.enableCheckboxSelector) {
+    if (this._gridOptions.enableCheckboxSelector) {
       // when enabling the Checkbox Selector Plugin, we need to also watch onClick events to perform certain actions
       // the selector column has to be create BEFORE the grid (else it behaves oddly), but we can only watch grid events AFTER the grid is created
       grid.registerPlugin(this.checkboxSelectorPlugin);
 
       // this also requires the Row Selection Model to be registered as well
       if (!this.rowSelectionPlugin) {
-        this.rowSelectionPlugin = new Slick.RowSelectionModel(options.rowSelectionOptions || {});
+        this.rowSelectionPlugin = new Slick.RowSelectionModel(this._gridOptions.rowSelectionOptions || {});
         grid.setSelectionModel(this.rowSelectionPlugin);
       }
     }
 
     // Row Selection Plugin
-    if (!options.enableCheckboxSelector && options.enableRowSelection) {
-      this.rowSelectionPlugin = new Slick.RowSelectionModel(options.rowSelectionOptions || {});
+    if (!this._gridOptions.enableCheckboxSelector && this._gridOptions.enableRowSelection) {
+      this.rowSelectionPlugin = new Slick.RowSelectionModel(this._gridOptions.rowSelectionOptions || {});
       grid.setSelectionModel(this.rowSelectionPlugin);
     }
 
     // Header Button Plugin
-    if (options.enableHeaderButton) {
-      this.headerButtonsPlugin = new Slick.Plugins.HeaderButtons(options.headerButton || {});
+    if (this._gridOptions.enableHeaderButton) {
+      this.headerButtonsPlugin = new Slick.Plugins.HeaderButtons(this._gridOptions.headerButton || {});
       grid.registerPlugin(this.headerButtonsPlugin);
       this.headerButtonsPlugin.onCommand.subscribe((e: Event, args: HeaderButtonOnCommandArgs) => {
-        if (options.headerButton && typeof options.headerButton.onCommand === 'function') {
-          options.headerButton.onCommand(e, args);
+        if (this._gridOptions.headerButton && typeof this._gridOptions.headerButton.onCommand === 'function') {
+          this._gridOptions.headerButton.onCommand(e, args);
         }
       });
     }
 
     // Header Menu Plugin
-    if (options.enableHeaderMenu) {
+    if (this._gridOptions.enableHeaderMenu) {
       this.headerMenuPlugin = this.createHeaderMenu(this._grid, this._dataView, this._columnDefinitions, this._gridOptions);
     }
 
     // Cell External Copy Manager Plugin (Excel Like)
-    if (options.enableExcelCopyBuffer) {
+    if (this._gridOptions.enableExcelCopyBuffer) {
       this.createUndoRedoBuffer();
       this.hookUndoShortcutKey();
       this.createCellExternalCopyManagerPlugin(this._grid, this._gridOptions);
     }
 
     // manually register other plugins
-    if (options.registerPlugins !== undefined) {
-      if (Array.isArray(options.registerPlugins)) {
-        options.registerPlugins.forEach((plugin) => {
+    if (this._gridOptions.registerPlugins !== undefined) {
+      if (Array.isArray(this._gridOptions.registerPlugins)) {
+        this._gridOptions.registerPlugins.forEach((plugin) => {
           grid.registerPlugin(plugin);
         });
       } else {
-        grid.registerPlugin(options.registerPlugins);
+        grid.registerPlugin(this._gridOptions.registerPlugins);
       }
     }
   }
@@ -718,7 +718,7 @@ export class ControlAndPluginService {
                 if (options.backendServiceApi) {
                   this.sortService.onBackendSortChanged(e, { multiColumnSort: true, sortCols: cols, grid });
                 } else {
-                  this.sortService.onLocalSortChanged(grid, options, dataView, cols);
+                  this.sortService.onLocalSortChanged(grid, dataView, cols);
                 }
 
                 // update the this.gridObj sortColumns array which will at the same add the visual sort icon(s) on the UI
