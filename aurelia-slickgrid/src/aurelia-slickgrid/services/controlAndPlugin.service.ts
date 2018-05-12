@@ -106,7 +106,7 @@ export class ControlAndPluginService {
     }
 
     // Row Selection Plugin
-    if (options.enableRowSelection) {
+    if (!options.enableCheckboxSelector && options.enableRowSelection) {
       this.rowSelectionPlugin = new Slick.RowSelectionModel(options.rowSelectionOptions || {});
       grid.setSelectionModel(this.rowSelectionPlugin);
     }

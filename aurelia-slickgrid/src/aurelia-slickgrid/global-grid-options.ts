@@ -4,6 +4,7 @@ import { FilterType, DelimiterType, FileType, GridOption } from './models/index'
  * Default Options that can be passed to the Aurelia-Slickgrid
  */
 export const GlobalGridOptions: GridOption = {
+  alwaysShowVerticalScroll: true,
   autoEdit: false,
   asyncEditorLoading: false,
   autoFitColumnsOnFirstLoad: true,
@@ -60,7 +61,7 @@ export const GlobalGridOptions: GridOption = {
     iconRefreshDatasetCommand: 'fa fa-refresh',
     iconToggleFilterCommand: 'fa fa-random',
     menuWidth: 16,
-    resizeOnShowHeaderRow: false,
+    resizeOnShowHeaderRow: true,
     showClearAllFiltersCommand: true,
     showClearAllSortingCommand: true,
     showExportCsvCommand: true,
