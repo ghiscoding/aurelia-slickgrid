@@ -342,8 +342,8 @@ export class AureliaSlickgridCustomElement {
     });
 
     // on cell click, mainly used with the columnDef.action callback
-    this.gridEventService.attachOnCellChange(grid, this.gridOptions, dataView);
-    this.gridEventService.attachOnClick(grid, this.gridOptions, dataView);
+    this.gridEventService.attachOnCellChange(grid, dataView);
+    this.gridEventService.attachOnClick(grid, dataView);
 
     this._eventHandler.subscribe(dataView.onRowCountChanged, (e: any, args: any) => {
       grid.updateRowCount();
