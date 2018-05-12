@@ -1,5 +1,20 @@
 @import './variables';
 
+.slick-cell.active  {
+	input.editor-text {
+    border: $text-editor-border;
+    background: $text-editor-background;
+    padding-bottom: $text-editor-padding-bottom;
+    padding-left: $text-editor-padding-left;
+    padding-right: $text-editor-padding-right;
+    padding-top: $text-editor-padding-top;
+    margin-left: $text-editor-margin-left;
+    margin-bottom: $text-editor-margin-bottom;
+    margin-right: $text-editor-margin-right;
+    margin-top: $text-editor-margin-top;
+	}
+}
+
 /* Long Text Editor */
 .slick-large-editor-text {
   z-index: 10000;

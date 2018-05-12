@@ -85,13 +85,13 @@ export class Example3 {
       formatter: Formatters.deleteIcon,
       minWidth: 30,
       maxWidth: 30,
-      // use onCellClick OR grid.onClick.subscribe which you can see down below
-      /*
-      onCellClick: (args: OnEventArgs) => {
-        console.log(args);
-        this.alertWarning = `Deleting: ${args.dataContext.title}`;
-      }
-      */
+    // use onCellClick OR grid.onClick.subscribe which you can see down below
+    /*
+    onCellClick: (args: OnEventArgs) => {
+      console.log(args);
+      this.alertWarning = `Deleting: ${args.dataContext.title}`;
+    }
+    */
     }, {
       id: 'title',
       name: 'Title',
@@ -106,7 +106,7 @@ export class Example3 {
       field: 'duration',
       sortable: true,
       type: FieldType.number,
-      editor: Editors.text,
+      editor: Editors.integer,
       minWidth: 100
     }, {
       id: 'complete',
@@ -180,7 +180,13 @@ export class Example3 {
       },
       editable: true,
       enableCellNavigation: true,
-      enableExcelCopyBuffer: true,
+      enableCheckboxSelector: true,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        // Default to True when no "rowSelectionOptions" provided
+        selectActiveRow: true
+      },
+      enableExcelCopyBuffer: false,
       editCommandHandler: (item, column, editCommand) => {
         this._commandQueue.push(editCommand);
         editCommand.execute();

@@ -1,7 +1,7 @@
 import * as $ from 'jquery';
 import { Editor, KeyCode } from './../models/index';
 
-const defaultDecimalPlaces = 0;
+const defaultDecimalPlaces = 2;
 
 /*
  * An example of a 'detached' editor.
@@ -16,15 +16,17 @@ export class FloatEditor implements Editor {
   }
 
   init(): void {
-    this.$input = $(`<input type="text" class='editor-text' />`)
+    this.$input = $(`<input type="number" class='editor-text' />`)
       .appendTo(this.args.container)
       .on('keydown.nav', (e) => {
         if (e.keyCode === KeyCode.LEFT || e.keyCode === KeyCode.RIGHT) {
           e.stopImmediatePropagation();
         }
-      })
-      .focus()
-      .select();
+      });
+
+    setTimeout(() => {
+      this.$input.focus().select();
+    }, 50);
   }
 
   destroy() {
@@ -37,7 +39,8 @@ export class FloatEditor implements Editor {
 
   getDecimalPlaces() {
     // returns the number of fixed decimal places or null
-    let rtn = this.args.column.editorFixedDecimalPlaces;
+    const columnParams = this.args.column.params || {};
+    let rtn = (columnParams && columnParams.hasOwnProperty('decimalPlaces')) ? columnParams.decimalPlaces : undefined;
     if (rtn === undefined) {
       rtn = defaultDecimalPlaces;
     }
@@ -76,11 +79,13 @@ export class FloatEditor implements Editor {
   }
 
   isValueChanged() {
-    return (!(this.$input.val() === '' && this.defaultValue === null)) && (this.$input.val() !== this.defaultValue);
+    const elmValue = this.$input.val();
+    return (!(elmValue === '' && this.defaultValue === null)) && (elmValue !== this.defaultValue);
   }
 
   validate() {
-    if (isNaN(this.$input.val())) {
+    const elmValue = this.$input.val();
+    if (isNaN(elmValue as number)) {
       return {
         valid: false,
         msg: 'Please enter a valid number'
@@ -88,7 +93,7 @@ export class FloatEditor implements Editor {
     }
 
     if (this.args.column.validator) {
-      const validationResults = this.args.column.validator(this.$input.val());
+      const validationResults = this.args.column.validator(elmValue);
       if (!validationResults.valid) {
         return validationResults;
       }
