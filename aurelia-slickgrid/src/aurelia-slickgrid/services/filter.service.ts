@@ -31,14 +31,16 @@ export class FilterService {
   private _columnFilters: ColumnFilters = {};
   private _dataView: any;
   private _grid: any;
-  private _gridOptions: GridOption;
   private _onFilterChangedOptions: any;
 
   constructor(private ea: EventAggregator, private filterFactory: FilterFactory) { }
 
+  private get _gridOptions(): GridOption {
+    return (this._grid && this._grid.getOptions) ? this._grid.getOptions() : {};
+  }
+
   init(grid: any): void {
     this._grid = grid;
-    this._gridOptions = (grid && grid.getOptions) ? grid.getOptions() : {};
   }
 
   /**

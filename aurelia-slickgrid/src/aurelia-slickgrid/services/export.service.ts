@@ -37,12 +37,15 @@ export class ExportService {
   private _exportQuoteWrapper: string;
   private _columnHeaders: ExportColumnHeader[];
   private _groupedHeaders: ExportColumnHeader[];
-  private _gridOptions: GridOption;
   private _hasGroupedItems = false;
   private _exportOptions: ExportOption;
   aureliaEventPrefix: string;
 
   constructor(private i18n: I18N, private ea: EventAggregator) { }
+
+  private get _gridOptions(): GridOption {
+    return (this._grid && this._grid.getOptions) ? this._grid.getOptions() : {};
+  }
 
   /**
    * Initialize the Export Service
@@ -53,7 +56,6 @@ export class ExportService {
   init(grid: any, dataView: any): void {
     this._grid = grid;
     this._dataView = dataView;
-    this._gridOptions = (grid && grid.getOptions) ? grid.getOptions() : {};
     this.aureliaEventPrefix = (this._gridOptions && this._gridOptions.defaultAureliaEventPrefix) ? this._gridOptions.defaultAureliaEventPrefix : 'asg';
   }
 

@@ -24,11 +24,14 @@ export class SortService {
   private _eventHandler: any = new Slick.EventHandler();
   private _dataView: any;
   private _grid: any;
-  private _gridOptions: GridOption;
   private _isBackendGrid = false;
   private _slickSubscriber: SlickEvent = new Slick.Event();
 
   constructor(private ea: EventAggregator) { }
+
+  private get _gridOptions(): GridOption {
+    return (this._grid && this._grid.getOptions) ? this._grid.getOptions() : {};
+  }
 
   /**
    * Attach a backend sort (single/multi) hook to the grid
@@ -39,7 +42,6 @@ export class SortService {
     this._isBackendGrid = true;
     this._grid = grid;
     this._dataView = dataView;
-    this._gridOptions = (grid && grid.getOptions) ? grid.getOptions() : {};
     this._slickSubscriber = grid.onSort;
 
     // subscribe to the SlickGrid event and call the backend execution
@@ -89,7 +91,6 @@ export class SortService {
     let columnDefinitions: Column[] = [];
 
     if (grid) {
-      this._gridOptions = grid.getOptions();
       columnDefinitions = grid.getColumns();
     }
     this._slickSubscriber = grid.onSort;
