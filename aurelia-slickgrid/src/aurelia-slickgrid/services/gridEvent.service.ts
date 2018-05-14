@@ -7,13 +7,13 @@ export class GridEventService {
   private _eventHandler: any = new Slick.EventHandler();
 
   /* OnCellChange Event */
-  attachOnCellChange(grid: any, gridOptions: GridOption, dataView: any) {
+  attachOnCellChange(grid: any, dataView: any) {
     // subscribe to this Slickgrid event of onCellChange
     this._eventHandler.subscribe(grid.onCellChange, (e: Event, args: CellArgs) => {
-      if (!e || !args || !args.grid || args.cell === undefined || !args.grid.getColumns || !args.grid.getDataItem) {
+      if (!e || !args || !grid || args.cell === undefined || !grid.getColumns || !grid.getDataItem) {
         return;
       }
-      const column = args.grid.getColumns()[args.cell];
+      const column = grid.getColumns()[args.cell];
 
       // if the column definition has a onCellChange property (a callback function), then run it
       if (typeof column.onCellChange === 'function') {
@@ -22,10 +22,10 @@ export class GridEventService {
           row: args.row,
           cell: args.cell,
           dataView,
-          gridDefinition: gridOptions,
+          gridDefinition: grid.getOptions(),
           grid,
           columnDef: column,
-          dataContext: args.grid.getDataItem(args.row)
+          dataContext: grid.getDataItem(args.row)
         };
 
         // finally call up the Slick.column.onCellChanges.... function
@@ -35,12 +35,12 @@ export class GridEventService {
     });
   }
   /* OnClick Event */
-  attachOnClick(grid: any, gridOptions: GridOption, dataView: any) {
+  attachOnClick(grid: any, dataView: any) {
     this._eventHandler.subscribe(grid.onClick, (e: Event, args: CellArgs) => {
-      if (!e || !args || !args.grid || args.cell === undefined || !args.grid.getColumns || !args.grid.getDataItem) {
+      if (!e || !args || !grid || args.cell === undefined || !grid.getColumns || !grid.getDataItem) {
         return;
       }
-      const column = args.grid.getColumns()[args.cell];
+      const column = grid.getColumns()[args.cell];
 
       // if the column definition has a onCellClick property (a callback function), then run it
       if (typeof column.onCellClick === 'function') {
@@ -49,10 +49,10 @@ export class GridEventService {
           row: args.row,
           cell: args.cell,
           dataView,
-          gridDefinition: gridOptions,
+          gridDefinition: grid.getOptions(),
           grid,
           columnDef: column,
-          dataContext: args.grid.getDataItem(args.row)
+          dataContext: grid.getDataItem(args.row)
         };
 
         // finally call up the Slick.column.onCellClick.... function
