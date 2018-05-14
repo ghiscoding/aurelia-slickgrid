@@ -79,7 +79,8 @@ export class Example12 {
         filter: {
           collection: [{ value: '', label: '' }, { value: 'TRUE', labelKey: 'TRUE' }, { value: 'FALSE', labelKey: 'FALSE' }],
           collectionSortBy: {
-            property: 'labelKey' // will sort by translated value since "enableTranslateLabel" is true
+            property: 'labelKey', // will sort by translated value since "enableTranslateLabel" is true
+            sortDesc: true
           },
           type: FilterType.singleSelect,
           enableTranslateLabel: true,
