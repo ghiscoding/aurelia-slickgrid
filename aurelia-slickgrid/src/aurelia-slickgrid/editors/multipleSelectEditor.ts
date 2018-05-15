@@ -106,7 +106,7 @@ export class MultipleSelectEditor implements Editor {
     }
 
     // user might want to sort the collection
-    if (this.gridOptions && this.gridOptions.params && this.columnDef.params.collectionSortBy) {
+    if (this.columnDef.params && this.columnDef.params.collectionSortBy) {
       const sortBy = this.columnDef.params.collectionSortBy;
       newCollection = this.collectionService.sortCollection(newCollection, sortBy, this.enableTranslateLabel);
     }
@@ -130,7 +130,7 @@ export class MultipleSelectEditor implements Editor {
     this.defaultValue = item[this.columnDef.field].map((i: any) => i.toString());
 
     this.$editorElm.find('option').each((i: number, $e: any) => {
-      if (this.defaultValue === $e.value) {
+      if (this.defaultValue.indexOf($e.value) !== -1) {
         $e.selected = true;
       } else {
         $e.selected = false;

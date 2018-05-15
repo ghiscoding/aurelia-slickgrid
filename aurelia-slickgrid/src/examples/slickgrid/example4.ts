@@ -81,6 +81,11 @@ export class Example4 {
         filterable: true,
         filter: {
           collection: multiSelectFilterArray,
+          collectionSortBy: {
+            property: 'value',
+            sortDesc: true,
+            fieldType: FieldType.number
+          },
           type: FilterType.multipleSelect,
           searchTerms: [1, 33, 50], // default selection
           // we could add certain option(s) to the "multiple-select" plugin

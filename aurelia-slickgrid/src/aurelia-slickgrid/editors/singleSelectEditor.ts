@@ -98,7 +98,7 @@ export class SingleSelectEditor implements Editor {
     }
 
     // user might want to sort the collection
-    if (this.gridOptions.params && this.columnDef.params.collectionSortBy) {
+    if (this.columnDef.params && this.columnDef.params.collectionSortBy) {
       const sortBy = this.columnDef.params.collectionSortBy;
       newCollection = this.collectionService.sortCollection(newCollection, sortBy, this.enableTranslateLabel);
     }
