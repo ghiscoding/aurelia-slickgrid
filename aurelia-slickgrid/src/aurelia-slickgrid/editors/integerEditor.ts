@@ -14,15 +14,17 @@ export class IntegerEditor implements Editor {
   }
 
   init(): void {
-    this.$input = $(`<input type="text" class='editor-text' />`)
+    this.$input = $(`<input type="number" class='editor-text' />`)
       .appendTo(this.args.container)
       .on('keydown.nav', (e) => {
         if (e.keyCode === KeyCode.LEFT || e.keyCode === KeyCode.RIGHT) {
           e.stopImmediatePropagation();
         }
-      })
-      .focus()
-      .select();
+      });
+
+    setTimeout(() => {
+      this.$input.focus().select();
+    }, 50);
   }
 
   destroy() {
@@ -34,7 +36,7 @@ export class IntegerEditor implements Editor {
   }
 
   loadValue(item: any) {
-    this.defaultValue = item[this.args.column.field];
+    this.defaultValue = parseInt(item[this.args.column.field], 10);
     this.$input.val(this.defaultValue);
     this.$input[0].defaultValue = this.defaultValue;
     this.$input.select();
@@ -49,11 +51,14 @@ export class IntegerEditor implements Editor {
   }
 
   isValueChanged() {
-    return (!(this.$input.val() === '' && this.defaultValue === null)) && (this.$input.val() !== this.defaultValue);
+    const elmValue = this.$input.val();
+    const value = isNaN(elmValue) ? elmValue : parseInt(elmValue, 10);
+    return (!(value === '' && this.defaultValue === null)) && (value !== this.defaultValue);
   }
 
   validate() {
-    if (isNaN(this.$input.val() as number)) {
+    const elmValue = this.$input.val();
+    if (isNaN(elmValue as number)) {
       return {
         valid: false,
         msg: 'Please enter a valid integer'
@@ -61,7 +66,7 @@ export class IntegerEditor implements Editor {
     }
 
     if (this.args.column.validator) {
-      const validationResults = this.args.column.validator(this.$input.val());
+      const validationResults = this.args.column.validator(elmValue);
       if (!validationResults.valid) {
         return validationResults;
       }

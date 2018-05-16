@@ -110,7 +110,7 @@ export class Example3 {
       field: 'duration',
       sortable: true,
       type: FieldType.number,
-      editor: Editors.text,
+      editor: Editors.integer,
       minWidth: 100
     }, {
       id: 'complete',
@@ -184,7 +184,13 @@ export class Example3 {
       },
       editable: true,
       enableCellNavigation: true,
-      enableExcelCopyBuffer: true,
+      enableCheckboxSelector: true,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        // Default to True when no "rowSelectionOptions" provided
+        selectActiveRow: true
+      },
+      enableExcelCopyBuffer: false,
       editCommandHandler: (item, column, editCommand) => {
         this._commandQueue.push(editCommand);
         editCommand.execute();
