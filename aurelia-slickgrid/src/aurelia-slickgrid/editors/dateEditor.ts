@@ -91,14 +91,22 @@ export class DateEditor implements Editor {
   }
 
   serializeValue() {
+    const domValue: string = this.$input.val();
+
+    if (!domValue) return '';
+
     const outputFormat = mapMomentDateFormatWithFieldType(this.args.column.type || FieldType.dateIso);
-    const value = moment(this.defaultDate).format(outputFormat);
+    const value = moment(domValue).format(outputFormat);
 
     return value;
   }
 
   applyValue(item: any, state: any) {
-    item[this.args.column.field] = state;
+    if (!state) return;
+
+    const outputFormat = mapMomentDateFormatWithFieldType(this.args.column.type || FieldType.dateIso);
+
+    item[this.args.column.field] = moment(state, outputFormat).toDate();
   }
 
   isValueChanged() {
