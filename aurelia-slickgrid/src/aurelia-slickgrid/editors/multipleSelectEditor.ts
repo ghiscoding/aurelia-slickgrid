@@ -118,9 +118,7 @@ export class MultipleSelectEditor implements Editor {
   }
 
   applyValue(item: any, state: any): void {
-     item[this.args.column.field] = this.collection
-      .filter(c => state.indexOf(c[this.valueName].toString()) !== -1)
-      .map(c => c[this.valueName]);
+    item[this.args.column.field] = state;
   }
 
   destroy() {
@@ -143,7 +141,7 @@ export class MultipleSelectEditor implements Editor {
   }
 
   serializeValue(): any {
-    return this.$editorElm.val();
+    return this.currentValues;
   }
 
   focus() {

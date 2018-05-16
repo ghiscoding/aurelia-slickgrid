@@ -110,8 +110,7 @@ export class SingleSelectEditor implements Editor {
   }
 
   applyValue(item: any, state: any): void {
-    item[this.args.column.field] = findOrDefault(this.collection, (c: any) =>
-      c[this.valueName].toString() === state)[this.valueName];
+    item[this.args.column.field] = state;
   }
 
   destroy() {
@@ -135,7 +134,7 @@ export class SingleSelectEditor implements Editor {
   }
 
   serializeValue(): any {
-    return this.$editorElm.val();
+    return this.currentValue;
   }
 
   focus() {
