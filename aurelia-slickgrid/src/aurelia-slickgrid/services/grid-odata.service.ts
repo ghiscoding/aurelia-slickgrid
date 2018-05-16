@@ -32,11 +32,10 @@ const DEFAULT_PAGE_SIZE = 20;
 
 @inject(OdataService)
 export class GridOdataService implements BackendService {
+  private _columnDefinitions: Column[];
   private _currentFilters: CurrentFilter[];
   private _currentPagination: CurrentPagination;
   private _currentSorters: CurrentSorter[];
-  private _columnDefinitions: Column[];
-  private _gridOptions: GridOption;
   private _grid: any;
   options: OdataOption;
   pagination: Pagination | undefined;
@@ -48,10 +47,21 @@ export class GridOdataService implements BackendService {
 
   constructor(private odataService: OdataService) { }
 
+  /** Getter for the Grid Options pulled through the Grid Object */
+  private get _gridOptions(): GridOption {
+    return (this._grid && this._grid.getOptions) ? this._grid.getOptions() : {};
+  }
+
   buildQuery(): string {
     return this.odataService.buildQuery();
   }
 
+  /**
+   * Initialize the Service
+   * @param OData Options
+   * @param pagination
+   * @param grid
+   */
   init(options: OdataOption, pagination?: Pagination, grid?: any): void {
     this._grid = grid;
     const mergedOptions = { ...this.defaultOptions, ...options };
@@ -68,12 +78,8 @@ export class GridOdataService implements BackendService {
       pageSize: this.odataService.options.top || this.defaultOptions.top || DEFAULT_PAGE_SIZE
     };
 
-    if (grid && grid.getColumns && grid.getOptions) {
-      this._columnDefinitions = grid.getColumns() || options.columnDefinitions;
-      this._columnDefinitions = this._columnDefinitions.filter((column: Column) => !column.excludeFromQuery);
-
-      this._gridOptions = grid.getOptions();
-    }
+    this._columnDefinitions = this._gridOptions || options.columnDefinitions;
+    this._columnDefinitions = this._columnDefinitions.filter((column: Column) => !column.excludeFromQuery);
   }
 
   updateOptions(serviceOptions?: OdataOption) {

@@ -31,20 +31,31 @@ export class FilterService {
   private _columnFilters: ColumnFilters = {};
   private _dataView: any;
   private _grid: any;
-  private _gridOptions: GridOption;
   private _onFilterChangedOptions: any;
 
   constructor(private ea: EventAggregator, private filterFactory: FilterFactory) { }
 
+  /** Getter for the Grid Options pulled through the Grid Object */
+  private get _gridOptions(): GridOption {
+    return (this._grid && this._grid.getOptions) ? this._grid.getOptions() : {};
+  }
+
+  /** Getter for the Column Definitions pulled through the Grid Object */
+  private get _columnDefinitions(): Column[] {
+    return (this._grid && this._grid.getColumns) ? this._grid.getColumns() : [];
+  }
+
+  /**
+   * Initialize the Service
+   * @param grid
+   */
   init(grid: any): void {
     this._grid = grid;
-    this._gridOptions = (grid && grid.getOptions) ? grid.getOptions() : {};
   }
 
   /**
    * Attach a backend filter hook to the grid
    * @param grid SlickGrid Grid object
-   * @param gridOptions Grid Options object
    */
   attachBackendOnFilter(grid: any) {
     this._filters = [];
@@ -434,12 +445,9 @@ export class FilterService {
    * @param grid
    */
   populateColumnFilterSearchTerms(grid: any) {
-    const gridOptions: GridOption = (grid && grid.getOptions) ? grid.getOptions() : {};
-    const columnDefinitions: Column[] = (grid && grid.getColumns) ? grid.getColumns() : [];
-
-    if (gridOptions.presets && gridOptions.presets.filters) {
-      const filters = gridOptions.presets.filters;
-      columnDefinitions.forEach((columnDef: Column) => {
+    if (this._gridOptions.presets && this._gridOptions.presets.filters) {
+      const filters = this._gridOptions.presets.filters;
+      this._columnDefinitions.forEach((columnDef: Column) => {
         const columnPreset = filters.find((presetFilter: CurrentFilter) => {
           return presetFilter.columnId === columnDef.id;
         });
@@ -455,7 +463,7 @@ export class FilterService {
         }
       });
     }
-    return columnDefinitions;
+    return this._columnDefinitions;
   }
 
   private updateColumnFilters(searchTerm: SearchTerm | undefined, searchTerms: SearchTerm[] | undefined, columnDef: any) {

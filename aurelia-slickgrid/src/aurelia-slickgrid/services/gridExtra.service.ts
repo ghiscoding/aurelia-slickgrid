@@ -7,13 +7,24 @@ declare var Slick: any;
 export class GridExtraService {
   private _grid: any;
   private _dataView: any;
-  private _columnDefinition: Column[];
-  private _gridOptions: GridOption;
 
+  /** Getter for the Grid Options pulled through the Grid Object */
+  private get _gridOptions(): GridOption {
+    return (this._grid && this._grid.getOptions) ? this._grid.getOptions() : {};
+  }
+
+  /** Getter for the Column Definitions pulled through the Grid Object */
+  private get _columnDefinitions(): Column[] {
+    return (this._grid && this._grid.getColumns) ? this._grid.getColumns() : [];
+  }
+
+  /**
+   * Initialize the Service
+   * @param grid
+   * @param dataView
+   */
   init(grid: any, dataView: any): void {
     this._grid = grid;
-    this._gridOptions = (grid && grid.getOptions) ? grid.getOptions() : {};
-    this._columnDefinition = (grid && grid.getColumns) ? grid.getColumns() : [];
     this._dataView = dataView;
   }
 
@@ -67,10 +78,9 @@ export class GridExtraService {
     if (item && item.id) {
       item.rowClass = 'highlight';
       this._dataView.updateItem(item.id, item);
-      const gridOptions = this._grid.getOptions() as GridOption;
 
       // highlight the row for a user defined timeout
-      $(`#${gridOptions.gridId}`)
+      $(`#${this._gridOptions.gridId}`)
         .find(`.highlight.row${rowNumber}`)
         .first();
 
