@@ -455,6 +455,7 @@ export class AureliaSlickgridCustomElement {
   refreshGridData(dataset: any[], totalCount?: number) {
     if (dataset && this.grid && this.dataview && typeof this.dataview.setItems === 'function') {
       this.dataview.setItems(dataset, this.gridOptions.datasetIdPropertyName);
+      this.dataview.reSort();
 
       // this.grid.setData(dataset);
       this.grid.invalidate();
