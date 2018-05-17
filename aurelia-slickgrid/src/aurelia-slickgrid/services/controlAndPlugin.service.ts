@@ -213,7 +213,6 @@ export class ControlAndPluginService {
    * Create the Column Picker and expose all the available hooks that user can subscribe (onColumnsChanged)
    * @param grid
    * @param columnDefinitions
-   * @param _gridOptions
    */
   createColumnPicker(grid: any, columnDefinitions: Column[]) {
     // localization support for the picker
@@ -283,8 +282,8 @@ export class ControlAndPluginService {
   /**
    * Create the Header Menu and expose all the available hooks that user can subscribe (onCommand, onBeforeMenuShow, ...)
    * @param grid
+   * @param dataView
    * @param columnDefinitions
-   * @param _gridOptions
    */
   createHeaderMenu(grid: any, dataView: any, columnDefinitions: Column[]) {
     this._gridOptions.headerMenu = { ...this.getDefaultHeaderMenuOptions(), ...this._gridOptions.headerMenu };
@@ -400,7 +399,6 @@ export class ControlAndPluginService {
   /**
    * Create Grid Menu with Custom Commands if user has enabled Filters and/or uses a Backend Service (OData, GraphQL)
    * @param grid
-   * @param _gridOptions
    */
   private addGridMenuCustomCommands(grid: any) {
     const backendApi = this._gridOptions.backendServiceApi || this._gridOptions.onBackendEventApi || null;
@@ -580,7 +578,11 @@ export class ControlAndPluginService {
     }
   }
 
-  /** Remove a column from the grid by it's index in the grid */
+  /**
+   * Remove a column from the grid by it's index in the grid
+   * @param array input
+   * @param index
+   */
   removeColumnByIndex(array: any[], index: number) {
     return array.filter((el: any, i: number) => {
       return index !== i;
@@ -653,7 +655,6 @@ export class ControlAndPluginService {
    * Create Header Menu with Custom Commands if user has enabled Header Menu
    * @param grid
    * @param dataView
-   * @param _gridOptions
    * @param columnDefinitions
    * @return header menu
    */
@@ -778,7 +779,7 @@ export class ControlAndPluginService {
 
   /**
    * Reset all the Grid Menu options which have text to translate
-   * @param grid menu object
+   * @param gridMenu object
    */
   private resetGridMenuTranslations(gridMenu: GridMenu): GridMenu {
     // we will reset the custom items array since the commands title have to be translated too (no worries, we will re-create it later)
@@ -794,7 +795,7 @@ export class ControlAndPluginService {
 
   /**
    * Reset all the Grid Menu options which have text to translate
-   * @param grid menu object
+   * @param columnDefinitions
    */
   private resetHeaderMenuTranslations(columnDefinitions: Column[]) {
     columnDefinitions.forEach((columnDef: Column) => {
