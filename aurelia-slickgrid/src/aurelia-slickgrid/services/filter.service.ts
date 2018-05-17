@@ -31,22 +31,33 @@ export class FilterService {
   private _columnFilters: ColumnFilters = {};
   private _dataView: any;
   private _grid: any;
-  private _gridOptions: GridOption;
   private _onFilterChangedOptions: any;
 
   constructor(private ea: EventAggregator, private filterFactory: FilterFactory) { }
 
-  init(grid: any, gridOptions: GridOption, columnDefinitions: Column[]): void {
+  /** Getter for the Grid Options pulled through the Grid Object */
+  private get _gridOptions(): GridOption {
+    return (this._grid && this._grid.getOptions) ? this._grid.getOptions() : {};
+  }
+
+  /** Getter for the Column Definitions pulled through the Grid Object */
+  private get _columnDefinitions(): Column[] {
+    return (this._grid && this._grid.getColumns) ? this._grid.getColumns() : [];
+  }
+
+  /**
+   * Initialize the Service
+   * @param grid
+   */
+  init(grid: any): void {
     this._grid = grid;
-    this._gridOptions = gridOptions;
   }
 
   /**
    * Attach a backend filter hook to the grid
    * @param grid SlickGrid Grid object
-   * @param gridOptions Grid Options object
    */
-  attachBackendOnFilter(grid: any, options: GridOption) {
+  attachBackendOnFilter(grid: any) {
     this._filters = [];
     this._slickSubscriber = new Slick.Event();
 
@@ -101,7 +112,7 @@ export class FilterService {
    * @param gridOptions Grid Options object
    * @param dataView
    */
-  attachLocalOnFilter(grid: any, options: GridOption, dataView: any) {
+  attachLocalOnFilter(grid: any, dataView: any) {
     this._filters = [];
     this._dataView = dataView;
     this._slickSubscriber = new Slick.Event();
@@ -427,17 +438,16 @@ export class FilterService {
   }
 
   /**
-   * When user passes an array of preset filters, we need to pre-polulate each column filter searchTerm(s)
+   * When user passes an array of preset filters, we need to pre-populate each column filter searchTerm(s)
    * The process is to loop through the preset filters array, find the associated column from columnDefinitions and fill in the filter object searchTerm(s)
    * This is basically the same as if we would manually add searchTerm(s) to a column filter object in the column definition, but we do it programmatically.
    * At the end of the day, when creating the Filter (DOM Element), it will use these searchTerm(s) so we can take advantage of that without recoding each Filter type (DOM element)
-   * @param gridOptions
-   * @param columnDefinitions
+   * @param grid
    */
-  populateColumnFilterSearchTerms(gridOptions: GridOption, columnDefinitions: Column[]) {
-    if (gridOptions.presets && gridOptions.presets.filters) {
-      const filters = gridOptions.presets.filters;
-      columnDefinitions.forEach((columnDef: Column) => {
+  populateColumnFilterSearchTerms(grid: any) {
+    if (this._gridOptions.presets && this._gridOptions.presets.filters) {
+      const filters = this._gridOptions.presets.filters;
+      this._columnDefinitions.forEach((columnDef: Column) => {
         const columnPreset = filters.find((presetFilter: CurrentFilter) => {
           return presetFilter.columnId === columnDef.id;
         });
@@ -453,7 +463,7 @@ export class FilterService {
         }
       });
     }
-    return columnDefinitions;
+    return this._columnDefinitions;
   }
 
   private updateColumnFilters(searchTerm: SearchTerm | undefined, searchTerms: SearchTerm[] | undefined, columnDef: any) {

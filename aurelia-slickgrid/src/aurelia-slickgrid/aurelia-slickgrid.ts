@@ -132,7 +132,7 @@ export class AureliaSlickgridCustomElement {
     }
     this.controlAndPluginService.createPluginBeforeGridCreation(this.columnDefinitions, this.gridOptions);
     this.grid = new Slick.Grid(`#${this.gridId}`, this.dataview, this.columnDefinitions, this.gridOptions);
-    this.controlAndPluginService.attachDifferentControlOrPlugins(this.grid, this.columnDefinitions, this.gridOptions, this.dataview, this.groupItemMetadataProvider);
+    this.controlAndPluginService.attachDifferentControlOrPlugins(this.grid, this.dataview, this.groupItemMetadataProvider);
 
     this.attachDifferentHooks(this.grid, this.gridOptions, this.dataview);
 
@@ -162,7 +162,7 @@ export class AureliaSlickgridCustomElement {
     }
 
     // attach grid extra service
-    this.gridExtraService.init(this.grid, this.columnDefinitions, this.gridOptions, this.dataview);
+    this.gridExtraService.init(this.grid, this.dataview);
 
     // when user enables translation, we need to translate Headers on first pass & subsequently in the attachDifferentHooks
     if (this.gridOptions.enableTranslate) {
@@ -171,7 +171,7 @@ export class AureliaSlickgridCustomElement {
 
     // if Export is enabled, initialize the service with the necessary grid and other objects
     if (this.gridOptions.enableExport) {
-      this.exportService.init(this.grid, this.gridOptions, this.dataview);
+      this.exportService.init(this.grid, this.dataview);
     }
 
     // attach the Backend Service API callback functions only after the grid is initialized
@@ -278,13 +278,13 @@ export class AureliaSlickgridCustomElement {
 
     // attach external filter (backend) when available or default onFilter (dataView)
     if (gridOptions.enableFiltering) {
-      this.filterService.init(grid, gridOptions, this.columnDefinitions);
+      this.filterService.init(grid);
 
       // if user entered some "presets", we need to reflect them all in the DOM
       if (gridOptions.presets && gridOptions.presets.filters) {
-        this.filterService.populateColumnFilterSearchTerms(gridOptions, this.columnDefinitions);
+        this.filterService.populateColumnFilterSearchTerms(grid);
       }
-      (gridOptions.backendServiceApi || gridOptions.onBackendEventApi) ? this.filterService.attachBackendOnFilter(grid, gridOptions) : this.filterService.attachLocalOnFilter(grid, gridOptions, this.dataview);
+      (gridOptions.backendServiceApi || gridOptions.onBackendEventApi) ? this.filterService.attachBackendOnFilter(grid) : this.filterService.attachLocalOnFilter(grid, this.dataview);
     }
 
     // if user set an onInit Backend, we'll run it right away (and if so, we also need to run preProcess, internalPostProcess & postProcess)

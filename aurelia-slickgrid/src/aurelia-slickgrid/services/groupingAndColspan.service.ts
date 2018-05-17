@@ -14,19 +14,28 @@ export class GroupingAndColspanService {
   private _eventHandler = new Slick.EventHandler();
   private _dataView: any;
   private _grid: any;
-  private _gridOptions: GridOption;
-  private _columnDefinitions: Column[];
   aureliaEventPrefix: string;
 
   constructor(private ea: EventAggregator) { }
 
+  /** Getter for the Grid Options pulled through the Grid Object */
+  private get _gridOptions(): GridOption {
+    return (this._grid && this._grid.getOptions) ? this._grid.getOptions() : {};
+  }
+
+  /** Getter for the Column Definitions pulled through the Grid Object */
+  private get _columnDefinitions(): Column[] {
+    return (this._grid && this._grid.getColumns) ? this._grid.getColumns() : [];
+  }
+
+  /**
+   * Initialize the Service
+   * @param grid
+   * @param dataView
+   */
   init(grid: any, dataView: any) {
     this._grid = grid;
     this._dataView = dataView;
-    if (grid) {
-      this._gridOptions = grid.getOptions();
-      this._columnDefinitions = grid.getColumns();
-    }
 
     this.aureliaEventPrefix = (this._gridOptions && this._gridOptions.defaultAureliaEventPrefix) ? this._gridOptions.defaultAureliaEventPrefix : 'asg';
 

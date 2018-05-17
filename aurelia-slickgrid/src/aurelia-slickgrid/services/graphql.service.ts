@@ -39,8 +39,6 @@ export class GraphqlService implements BackendService {
   private _currentFilters: ColumnFilters | CurrentFilter[];
   private _currentPagination: CurrentPagination;
   private _currentSorters: CurrentSorter[];
-  private _columnDefinitions: Column[];
-  private _gridOptions: GridOption;
   private _grid: any;
 
   options: GraphqlServiceOption;
@@ -52,6 +50,16 @@ export class GraphqlService implements BackendService {
   };
 
   constructor(private i18n: I18N) { }
+
+  /** Getter for the Grid Options pulled through the Grid Object */
+  private get _gridOptions(): GridOption {
+    return (this._grid && this._grid.getOptions) ? this._grid.getOptions() : {};
+  }
+
+  /** Getter for the Column Definitions pulled through the Grid Object */
+  private get _columnDefinitions(): Column[] {
+    return (this._grid && this._grid.getColumns) ? this._grid.getColumns() : [];
+  }
 
   /**
    * Build the GraphQL query, since the service include/exclude cursor, the output query will be different.
@@ -170,16 +178,17 @@ export class GraphqlService implements BackendService {
       .replace(/\}$/, '');
   }
 
+  /**
+   * Initialize the Service
+   * @param GraphQL Service Options
+   * @param pagination
+   * @param grid
+   */
   init(serviceOptions?: GraphqlServiceOption, pagination?: Pagination, grid?: any): void {
     this._grid = grid;
     this.options = serviceOptions || {};
     if (pagination) {
       this.pagination = pagination;
-    }
-
-    if (grid && grid.getColumns && grid.getOptions) {
-      this._columnDefinitions = grid.getColumns();
-      this._gridOptions = grid.getOptions();
     }
   }
 

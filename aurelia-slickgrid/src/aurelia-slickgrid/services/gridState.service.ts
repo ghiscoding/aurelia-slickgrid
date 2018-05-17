@@ -14,7 +14,6 @@ import * as $ from 'jquery';
 @inject(EventAggregator)
 export class GridStateService {
   private _grid: any;
-  private _gridOptions: GridOption;
   private _preset: GridState;
   private filterService: FilterService;
   private _filterSubcription: Subscription;
@@ -23,17 +22,21 @@ export class GridStateService {
 
   constructor(private ea: EventAggregator) { }
 
+  /** Getter for the Grid Options pulled through the Grid Object */
+  private get _gridOptions(): GridOption {
+    return (this._grid && this._grid.getOptions) ? this._grid.getOptions() : {};
+  }
+
   /**
-   * Initialize the Export Service
+   * Initialize the Service
    * @param grid
-   * @param gridOptions
-   * @param dataView
+   * @param filterService
+   * @param sortService
    */
   init(grid: any, filterService: FilterService, sortService: SortService): void {
     this._grid = grid;
     this.filterService = filterService;
     this.sortService = sortService;
-    this._gridOptions = (grid && grid.getOptions) ? grid.getOptions() : {};
 
     // Subscribe to Event Emitter of Filter & Sort changed, go back to page 1 when that happen
     this._filterSubcription = this.ea.subscribe('filterService:filterChanged', (currentFilters: CurrentFilter[]) => {
