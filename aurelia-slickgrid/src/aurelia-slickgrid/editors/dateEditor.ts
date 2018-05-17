@@ -88,6 +88,7 @@ export class DateEditor implements Editor {
 
   loadValue(item: any) {
     this.defaultDate = item[this.args.column.field];
+    this.flatInstance.setDate(item[this.args.column.field]);
   }
 
   serializeValue() {
