@@ -424,7 +424,7 @@ export class AureliaSlickgridCustomElement {
     // auto-resize grid on browser resize
     this.resizer.init(grid);
     if (grid && options.enableAutoResize) {
-      this.resizer.attachAutoResizeDataGrid();
+      this.resizer.attachAutoResizeDataGrid({ height: this.gridHeight, width: this.gridWidth });
       if (options.autoFitColumnsOnFirstLoad && typeof grid.autosizeColumns === 'function') {
         grid.autosizeColumns();
       }
@@ -482,7 +482,7 @@ export class AureliaSlickgridCustomElement {
       }
       if (this.grid && this.gridOptions.enableAutoResize) {
         // resize the grid inside a slight timeout, in case other DOM element changed prior to the resize (like a filter/pagination changed)
-        this.resizer.resizeGrid(1);
+        this.resizer.resizeGrid(1, { height: this.gridHeight, width: this.gridWidth });
       }
     }
   }
