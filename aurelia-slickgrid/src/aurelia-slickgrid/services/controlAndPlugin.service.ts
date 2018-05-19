@@ -163,6 +163,7 @@ export class ControlAndPluginService {
       const selectionColumn: Column = this.checkboxSelectorPlugin.getColumnDefinition();
       selectionColumn.excludeFromExport = true;
       selectionColumn.excludeFromQuery = true;
+      selectionColumn.excludeFromHeaderMenu = true;
       columnDefinitions.unshift(selectionColumn);
     }
   }
@@ -663,7 +664,7 @@ export class ControlAndPluginService {
 
     if (columnDefinitions && Array.isArray(columnDefinitions) && this._gridOptions.enableHeaderMenu) {
       columnDefinitions.forEach((columnDef: Column) => {
-        if (columnDef) {
+        if (columnDef && !columnDef.excludeFromHeaderMenu) {
           if (!columnDef.header || !columnDef.header.menu) {
             columnDef.header = {
               menu: {
@@ -799,7 +800,7 @@ export class ControlAndPluginService {
    */
   private resetHeaderMenuTranslations(columnDefinitions: Column[]) {
     columnDefinitions.forEach((columnDef: Column) => {
-      if (columnDef && columnDef.header && columnDef.header && columnDef.header.menu && columnDef.header.menu.items) {
+      if (columnDef && !columnDef.excludeFromHeaderMenu && columnDef.header && columnDef.header.menu && columnDef.header.menu.items) {
         const columnHeaderMenuItems: HeaderMenuItem[] = columnDef.header.menu.items || [];
         columnHeaderMenuItems.forEach((item) => {
           switch (item.command) {
