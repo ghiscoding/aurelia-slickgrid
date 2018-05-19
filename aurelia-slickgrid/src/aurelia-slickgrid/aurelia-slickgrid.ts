@@ -87,10 +87,10 @@ export class AureliaSlickgridCustomElement {
 
   @bindable({ defaultBindingMode: bindingMode.twoWay }) columnDefinitions: Column[] = [];
   @bindable({ defaultBindingMode: bindingMode.twoWay }) element: Element;
-  @bindable({ defaultBindingMode: bindingMode.twoWay }) dataset: any[];
   @bindable({ defaultBindingMode: bindingMode.twoWay }) gridPaginationOptions: GridOption;
   @bindable({ defaultBindingMode: bindingMode.twoWay }) dataview: any;
   @bindable({ defaultBindingMode: bindingMode.twoWay }) grid: any;
+  @bindable() dataset: any[];
   @bindable() gridId: string;
   @bindable() gridOptions: GridOption;
   @bindable() gridHeight: number;
