@@ -69,6 +69,7 @@ export class Example3 {
     this.columnDefinitions = [{
       id: 'edit',
       field: 'id',
+      excludeFromHeaderMenu: true,
       formatter: Formatters.editIcon,
       minWidth: 30,
       maxWidth: 30,
@@ -82,16 +83,17 @@ export class Example3 {
     }, {
       id: 'delete',
       field: 'id',
+      excludeFromHeaderMenu: true,
       formatter: Formatters.deleteIcon,
       minWidth: 30,
       maxWidth: 30,
-      // use onCellClick OR grid.onClick.subscribe which you can see down below
-      /*
-      onCellClick: (args: OnEventArgs) => {
-        console.log(args);
-        this.alertWarning = `Deleting: ${args.dataContext.title}`;
-      }
-      */
+    // use onCellClick OR grid.onClick.subscribe which you can see down below
+    /*
+    onCellClick: (args: OnEventArgs) => {
+      console.log(args);
+      this.alertWarning = `Deleting: ${args.dataContext.title}`;
+    }
+    */
     }, {
       id: 'title',
       name: 'Title',
