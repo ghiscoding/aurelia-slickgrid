@@ -29,8 +29,14 @@ export class SortService {
 
   constructor(private ea: EventAggregator) { }
 
+  /** Getter for the Grid Options pulled through the Grid Object */
   private get _gridOptions(): GridOption {
     return (this._grid && this._grid.getOptions) ? this._grid.getOptions() : {};
+  }
+
+  /** Getter for the Column Definitions pulled through the Grid Object */
+  private get _columnDefinitions(): Column[] {
+    return (this._grid && this._grid.getColumns) ? this._grid.getColumns() : [];
   }
 
   /**
@@ -121,7 +127,7 @@ export class SortService {
       this._eventHandler.subscribe(dataView.onRowCountChanged, (e: Event, args: any) => {
         // load any presets if there are any
         if (args.current > 0) {
-          this.loadLocalPresets(grid, this._gridOptions, dataView, columnDefinitions);
+          this.loadLocalPresets(grid, dataView);
         }
       });
     }
@@ -145,9 +151,8 @@ export class SortService {
       if (this._isBackendGrid) {
         this.onBackendSortChanged(null, { grid: this._grid, sortCols: [] });
       } else {
-        const columnDefinitions = this._grid.getColumns() as Column[];
-        if (columnDefinitions && Array.isArray(columnDefinitions)) {
-          this.onLocalSortChanged(this._grid, this._dataView, new Array({ sortAsc: true, sortCol: columnDefinitions[0] }));
+        if (this._columnDefinitions && Array.isArray(this._columnDefinitions)) {
+          this.onLocalSortChanged(this._grid, this._dataView, new Array({ sortAsc: true, sortCol: this._columnDefinitions[0] }));
         }
       }
     }
@@ -170,7 +175,7 @@ export class SortService {
     // get the column definition but only keep column which are not equal to our current column
     const sortedCols = oldSortColumns.reduce((cols: ColumnSort[], col: ColumnSort) => {
       if (!columnId || col.columnId !== columnId) {
-        cols.push({ sortCol: columnDefinitions[this._grid.getColumnIndex(col.columnId)], sortAsc: col.sortAsc });
+        cols.push({ sortCol: this._columnDefinitions[this._grid.getColumnIndex(col.columnId)], sortAsc: col.sortAsc });
       }
       return cols;
     }, []);
@@ -185,12 +190,12 @@ export class SortService {
    * @param dataView
    * @param columnDefinitions
    */
-  loadLocalPresets(grid: any, gridOptions: GridOption, dataView: any, columnDefinitions: Column[]) {
+  loadLocalPresets(grid: any, dataView: any) {
     const sortCols: ColumnSort[] = [];
     this._currentLocalSorters = []; // reset current local sorters
-    if (gridOptions && gridOptions.presets && gridOptions.presets.sorters) {
-      const sorters = gridOptions.presets.sorters;
-      columnDefinitions.forEach((columnDef: Column) => {
+    if (this._gridOptions && this._gridOptions.presets && this._gridOptions.presets.sorters) {
+      const sorters = this._gridOptions.presets.sorters;
+      this._columnDefinitions.forEach((columnDef: Column) => {
         const columnPreset = sorters.find((currentSorter: CurrentSorter) => {
           return currentSorter.columnId === columnDef.id;
         });

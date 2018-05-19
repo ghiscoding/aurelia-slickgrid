@@ -19,17 +19,18 @@ export interface GridDimension {
 @inject(EventAggregator)
 export class ResizerService {
   private _grid: any;
-  private _gridOptions: GridOption;
   private _lastDimensions: GridDimension;
   aureliaEventPrefix: string;
 
   constructor(private ea: EventAggregator) { }
 
+  /** Getter for the Grid Options pulled through the Grid Object */
+  private get _gridOptions(): GridOption {
+    return (this._grid && this._grid.getOptions) ? this._grid.getOptions() : {};
+  }
+
   init(grid: any): void {
     this._grid = grid;
-    if (grid) {
-      this._gridOptions = grid.getOptions();
-    }
     this.aureliaEventPrefix = (this._gridOptions && this._gridOptions.defaultAureliaEventPrefix) ? this._gridOptions.defaultAureliaEventPrefix : 'asg';
   }
 

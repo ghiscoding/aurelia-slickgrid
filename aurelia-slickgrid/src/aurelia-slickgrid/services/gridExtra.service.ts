@@ -13,11 +13,6 @@ export class GridExtraService {
     return (this._grid && this._grid.getOptions) ? this._grid.getOptions() : {};
   }
 
-  /** Getter for the Column Definitions pulled through the Grid Object */
-  private get _columnDefinitions(): Column[] {
-    return (this._grid && this._grid.getColumns) ? this._grid.getColumns() : [];
-  }
-
   /**
    * Initialize the Service
    * @param grid
