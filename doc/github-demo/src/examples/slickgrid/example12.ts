@@ -36,6 +36,7 @@ export class Example12 {
   columnDefinitions: Column[];
   dataset: any[];
   selectedLanguage: string;
+  duplicateTitleHeaderCount = 1;
 
   constructor(private exportService: ExportService, private i18n: I18N) {
     // define the grid options & columns and then create the grid itself
@@ -137,6 +138,11 @@ export class Example12 {
     }
   }
 
+  dynamicallyAddTitleHeader() {
+    const newCol = { id: `title${this.duplicateTitleHeaderCount++}`, field: 'id', headerKey: 'TITLE', formatter: this.taskTranslateFormatter, sortable: true, minWidth: 100, filterable: true, params: { useFormatterOuputToFilter: true } };
+    this.columnDefinitions.push(newCol);
+  }
+
   exportToFile(type = 'csv') {
     this.exportService.exportToFile({
       delimiter: (type === 'csv') ? DelimiterType.comma : DelimiterType.tab,
@@ -154,5 +160,4 @@ export class Example12 {
   taskTranslateFormatter: Formatter = (row, cell, value, columnDef, dataContext) => {
     return this.i18n.tr('TASK_X', { x: value });
   }
-
 }

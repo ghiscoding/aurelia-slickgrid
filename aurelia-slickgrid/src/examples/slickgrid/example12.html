@@ -5,7 +5,10 @@
   <hr/>
 
   <div class="row">
-    <button class="btn btn-default btn-sm" click.delegate="switchLanguage()">Switch Language</button>
+    <button class="btn btn-default btn-sm" click.delegate="switchLanguage()">
+      <i class="fa fa-language"></i>
+      Switch Language
+    </button>
     <label>Locale</label>: ${selectedLanguage + '.json'}
 
     <span style="margin-left: 20px">
@@ -16,6 +19,10 @@
       <button class="btn btn-default btn-sm" click.delegate="exportToFile('txt')">
         <i class="fa fa-download"></i>
         Download to Text
+      </button>
+      <button class="btn btn-default btn-sm" click.delegate="dynamicallyAddTitleHeader()">
+        <i class="fa fa-plus"></i>
+        Dynamically Duplicate Title Column
       </button>
     </span>
   </div>
