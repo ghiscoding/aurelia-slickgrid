@@ -29,6 +29,11 @@ export class ResizerService {
     return (this._grid && this._grid.getOptions) ? this._grid.getOptions() : {};
   }
 
+  /** Getter for retrieving the Grid UID that is used when dealing with multiple grids in same view. */
+  private get _gridUid(): string {
+    return (this._grid && this._grid.getUID) ? this._grid.getUID() : this._gridOptions.gridId;
+  }
+
   init(grid: any): void {
     this._grid = grid;
     this.aureliaEventPrefix = (this._gridOptions && this._gridOptions.defaultAureliaEventPrefix) ? this._gridOptions.defaultAureliaEventPrefix : 'asg';
@@ -50,7 +55,7 @@ export class ResizerService {
 
     // -- 2nd attach a trigger on the Window DOM element, so that it happens also when resizing after first load
     // -- attach auto-resize to Window object only if it exist
-    $(window).on('resize.grid', () => {
+    $(window).on(`resize.grid.${this._gridUid}`, () => {
       this.ea.publish(`${this.aureliaEventPrefix}:onBeforeResize`, true);
       // for some yet unknown reason, calling the resize twice removes any stuttering/flickering when changing the height and makes it much smoother
       this.resizeGrid(0, newSizes);
@@ -104,7 +109,7 @@ export class ResizerService {
    * Dispose function when element is destroyed
    */
   dispose() {
-    $(window).off('resize.grid');
+    $(window).off(`resize.grid.${this._gridUid}`);
   }
 
   getLastResizeDimensions(): GridDimension {
