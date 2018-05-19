@@ -152,9 +152,8 @@ export class ResizerService {
           height: newHeight,
           width: newWidth
         };
-        this._lastDimensions = newSizes;
         this._lastDimensions.heightWithPagination = newHeight;
-        if ((this._gridOptions.enablePagination || this._gridOptions.backendServiceApi)) {
+        if (this._lastDimensions && this._lastDimensions.heightWithPagination && (this._gridOptions.enablePagination || this._gridOptions.backendServiceApi)) {
           this._lastDimensions.heightWithPagination += DATAGRID_PAGINATION_HEIGHT;
         }
 
