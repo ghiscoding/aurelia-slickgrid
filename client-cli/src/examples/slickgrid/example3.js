@@ -9,6 +9,7 @@ import {
   Formatters,
   GridExtraService,
   GridExtraUtils,
+  OperatorType,
   ResizerService
 } from 'aurelia-slickgrid';
 
@@ -83,13 +84,13 @@ export class Example3 {
       formatter: Formatters.deleteIcon,
       minWidth: 30,
       maxWidth: 30
-      // use onCellClick OR grid.onClick.subscribe which you can see down below
-      /*
-      onCellClick: (args: OnEventArgs) => {
-        console.log(args);
-        this.alertWarning = `Deleting: ${args.dataContext.title}`;
-      }
-      */
+    // use onCellClick OR grid.onClick.subscribe which you can see down below
+    /*
+    onCellClick: (args: OnEventArgs) => {
+      console.log(args);
+      this.alertWarning = `Deleting: ${args.dataContext.title}`;
+    }
+    */
     }, {
       id: 'title',
       name: 'Title',
@@ -116,7 +117,16 @@ export class Example3 {
       minWidth: 100,
       params: {
         formatters: [Formatters.collection, Formatters.percentCompleteBar],
-        collection: Array.from(Array(101).keys()).map(k => ({ value: k, label: k }))
+        collection: Array.from(Array(101).keys()).map(k => ({ value: k, label: k })),
+        collectionSortBy: {
+          property: 'label',
+          sortDesc: true
+        },
+        collectionFilterBy: {
+          property: 'value',
+          value: 0,
+          operator: OperatorType.notEqual
+        }
       }
     }, {
       id: 'start',
@@ -157,7 +167,15 @@ export class Example3 {
       editor: Editors.multipleSelect,
       params: {
         collection: Array.from(Array(10).keys()).map(k => ({ value: `Task ${k}`, label: `Task ${k}` })),
-        i18n: this.i18n
+        collectionSortBy: {
+          property: 'label',
+          sortDesc: true
+        },
+        collectionFilterBy: {
+          property: 'label',
+          value: ['Task 1', 'Task 2', 'Task 3', 'Task 4', 'Task 5', 'Task 6'],
+          operator: OperatorType.contains
+        }
       }
     }];
 
