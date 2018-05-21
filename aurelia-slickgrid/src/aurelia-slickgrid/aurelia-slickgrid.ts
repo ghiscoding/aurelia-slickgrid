@@ -20,7 +20,7 @@ import 'slickgrid/plugins/slick.headermenu';
 import 'slickgrid/plugins/slick.rowmovemanager';
 import 'slickgrid/plugins/slick.rowselectionmodel';
 
-import { Container, Factory, bindable, bindingMode, inject } from 'aurelia-framework';
+import { bindable, BindingEngine, bindingMode, Container, Factory, inject } from 'aurelia-framework';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
 import { I18N } from 'aurelia-i18n';
 import { GlobalGridOptions } from './global-grid-options';
@@ -58,6 +58,7 @@ const eventPrefix = 'sg';
 
 // Aurelia doesn't support well TypeScript @autoinject in a Plugin so we'll do it the old fashion way
 @inject(
+  BindingEngine,
   ControlAndPluginService,
   ExportService,
   Element,
@@ -74,26 +75,30 @@ const eventPrefix = 'sg';
   Container
 )
 export class AureliaSlickgridCustomElement {
+  private _columnDefinitions: Column[] = [];
   private _dataset: any[];
   private _eventHandler: any = new Slick.EventHandler();
+  columnDefSubscriber: Subscription;
   gridStateSubscriber: Subscription;
   groupItemMetadataProvider: any;
+  isGridInitialized = false;
   localeChangedSubscriber: Subscription;
   showPagination = false;
 
+  @bindable({ defaultBindingMode: bindingMode.twoWay }) columnDefinitions: Column[] = [];
   @bindable({ defaultBindingMode: bindingMode.twoWay }) element: Element;
-  @bindable({ defaultBindingMode: bindingMode.twoWay }) dataset: any[];
   @bindable({ defaultBindingMode: bindingMode.twoWay }) gridPaginationOptions: GridOption;
   @bindable({ defaultBindingMode: bindingMode.twoWay }) dataview: any;
   @bindable({ defaultBindingMode: bindingMode.twoWay }) grid: any;
+  @bindable() dataset: any[];
   @bindable() gridId: string;
-  @bindable() columnDefinitions: Column[];
   @bindable() gridOptions: GridOption;
   @bindable() gridHeight: number;
   @bindable() gridWidth: number;
   @bindable() pickerOptions: any;
 
   constructor(
+    private bindingEngine: BindingEngine,
     private controlAndPluginService: ControlAndPluginService,
     private exportService: ExportService,
     private elm: Element,
@@ -111,6 +116,11 @@ export class AureliaSlickgridCustomElement {
   ) { }
 
   attached() {
+    this.initialization();
+    this.isGridInitialized = true;
+  }
+
+  initialization() {
     this.elm.dispatchEvent(new CustomEvent(`${eventPrefix}-on-before-grid-create`, {
       bubbles: true,
     }));
@@ -130,8 +140,8 @@ export class AureliaSlickgridCustomElement {
     } else {
       this.dataview = new Slick.Data.DataView();
     }
-    this.controlAndPluginService.createPluginBeforeGridCreation(this.columnDefinitions, this.gridOptions);
-    this.grid = new Slick.Grid(`#${this.gridId}`, this.dataview, this.columnDefinitions, this.gridOptions);
+    this.controlAndPluginService.createPluginBeforeGridCreation(this._columnDefinitions, this.gridOptions);
+    this.grid = new Slick.Grid(`#${this.gridId}`, this.dataview, this._columnDefinitions, this.gridOptions);
     this.controlAndPluginService.attachDifferentControlOrPlugins(this.grid, this.dataview, this.groupItemMetadataProvider);
 
     this.attachDifferentHooks(this.grid, this.gridOptions, this.dataview);
@@ -166,7 +176,7 @@ export class AureliaSlickgridCustomElement {
 
     // when user enables translation, we need to translate Headers on first pass & subsequently in the attachDifferentHooks
     if (this.gridOptions.enableTranslate) {
-      this.controlAndPluginService.translateHeaders();
+      this.controlAndPluginService.translateColumnHeaders();
     }
 
     // if Export is enabled, initialize the service with the necessary grid and other objects
@@ -191,6 +201,7 @@ export class AureliaSlickgridCustomElement {
     }));
     this.dataview = [];
     this._eventHandler.unsubscribeAll();
+    this.columnDefSubscriber.dispose();
     this.controlAndPluginService.dispose();
     this.filterService.dispose();
     this.gridEventService.dispose();
@@ -211,16 +222,29 @@ export class AureliaSlickgridCustomElement {
   bind() {
     // get the grid options (priority is Global Options first, then user option which could overwrite the Global options)
     this.gridOptions = { ...GlobalGridOptions, ...this.gridOptions };
+    this._columnDefinitions = this.columnDefinitions;
+
+    // subscribe to column definitions assignment changes with BindingEngine
+    // assignment changes are not triggering a "changed" event https://stackoverflow.com/a/30286225/1212166
+    this.columnDefSubscriber = this.bindingEngine.collectionObserver(this.columnDefinitions)
+      .subscribe(changes => this.updateColumnDefinitionsList(this._columnDefinitions));
 
     // Wrap each editor class in the Factory resolver so consumers of this library can use
     // dependency injection. Aurelia will resolve all dependencies when we pass the container
     // and allow slickgrid to pass its arguments to the editors constructor last
     // when slickgrid creates the editor
     // https://github.com/aurelia/dependency-injection/blob/master/src/resolvers.js
-    for (const c of this.columnDefinitions) {
+    for (const c of this._columnDefinitions) {
       if (c.editor) {
         c.editor = Factory.of(c.editor).get(this.container);
       }
+    }
+  }
+
+  columnDefinitionsChanged(newColumnDefinitions: Column[]) {
+    this._columnDefinitions = newColumnDefinitions;
+    if (this.isGridInitialized) {
+      this.updateColumnDefinitionsList(newColumnDefinitions);
     }
   }
 
@@ -264,7 +288,7 @@ export class AureliaSlickgridCustomElement {
     // on locale change, we have to manually translate the Headers, GridMenu
     this.localeChangedSubscriber = this.ea.subscribe('i18n:locale:changed', (payload: any) => {
       if (gridOptions.enableTranslate) {
-        this.controlAndPluginService.translateHeaders();
+        this.controlAndPluginService.translateColumnHeaders();
         this.controlAndPluginService.translateColumnPicker();
         this.controlAndPluginService.translateGridMenu();
         this.controlAndPluginService.translateHeaderMenu();
@@ -501,5 +525,19 @@ export class AureliaSlickgridCustomElement {
     const isShowing = !this.grid.getOptions().showHeaderRow;
     this.grid.setHeaderRowVisibility(isShowing);
     return isShowing;
+  }
+
+  /**
+   * Dynamically change or update the column definitions list.
+   * We will re-render the grid so that the new header and data shows up correctly.
+   * If using i18n, we also need to trigger a re-translate of the column headers
+   */
+  updateColumnDefinitionsList(newColumnDefinitions) {
+    if (this.gridOptions.enableTranslate) {
+      this.controlAndPluginService.translateColumnHeaders();
+    } else {
+      this.controlAndPluginService.renderColumnHeaders(newColumnDefinitions);
+    }
+    this.grid.autosizeColumns();
   }
 }
