@@ -2,6 +2,42 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.13.0"></a>
+# [1.13.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v1.12.2...v1.13.0) (2018-05-21)
+
+
+### Bug Fixes
+
+* **control:** Grid Menu z-index is too low when inside a modal window ([b722f6d](https://github.com/ghiscoding/aurelia-slickgrid/commit/b722f6d))
+* **dataview:** preserve any previous sort when resetting items ([#62](https://github.com/ghiscoding/aurelia-slickgrid/issues/62)) ([2112768](https://github.com/ghiscoding/aurelia-slickgrid/commit/2112768))
+* **editor:** Int/Float Editors multiple small enhancements ([#54](https://github.com/ghiscoding/aurelia-slickgrid/issues/54)) ([b208fcf](https://github.com/ghiscoding/aurelia-slickgrid/commit/b208fcf))
+* **editors:** fix serialization/deserilization in editors ([2ee03b0](https://github.com/ghiscoding/aurelia-slickgrid/commit/2ee03b0)), closes [#56](https://github.com/ghiscoding/aurelia-slickgrid/issues/56)
+* **editors:** fix serialization/deserilization in editors ([f3610d7](https://github.com/ghiscoding/aurelia-slickgrid/commit/f3610d7)), closes [#58](https://github.com/ghiscoding/aurelia-slickgrid/issues/58)
+* **editors:** use indexOf in multiple select editor to load value ([21215c4](https://github.com/ghiscoding/aurelia-slickgrid/commit/21215c4)), closes [#50](https://github.com/ghiscoding/aurelia-slickgrid/issues/50)
+* **editors:** use indexOf in multiple select editor to load value ([599a803](https://github.com/ghiscoding/aurelia-slickgrid/commit/599a803))
+* **eventService:** use grid.getOptions for gridDefinition ([e67e93a](https://github.com/ghiscoding/aurelia-slickgrid/commit/e67e93a)), closes [#49](https://github.com/ghiscoding/aurelia-slickgrid/issues/49)
+* **eventService:** use grid.getOptions for gridDefinition in event service ([0be30fd](https://github.com/ghiscoding/aurelia-slickgrid/commit/0be30fd)), closes [#51](https://github.com/ghiscoding/aurelia-slickgrid/issues/51)
+* **grid:** issue [#44](https://github.com/ghiscoding/aurelia-slickgrid/issues/44), sort icon hidden behind grid menu w/small dataset ([#53](https://github.com/ghiscoding/aurelia-slickgrid/issues/53)) ([737da5f](https://github.com/ghiscoding/aurelia-slickgrid/commit/737da5f))
+* **grid:** Resizer on 1st grid stop working after 2nd grid is created ([ed462ca](https://github.com/ghiscoding/aurelia-slickgrid/commit/ed462ca))
+* **grid:** Support Row Selection & Inline Editors in 1 view ([1da7b7a](https://github.com/ghiscoding/aurelia-slickgrid/commit/1da7b7a))
+* **grid:** use this.gridOptions in bind & remove aurelia args ([3bd2d90](https://github.com/ghiscoding/aurelia-slickgrid/commit/3bd2d90))
+* **gridOptions:** use this.gridOptions in bind fn ([48de363](https://github.com/ghiscoding/aurelia-slickgrid/commit/48de363))
+* **headerMenu:** we should not display header menu on row select column ([#64](https://github.com/ghiscoding/aurelia-slickgrid/issues/64)) ([efe1c21](https://github.com/ghiscoding/aurelia-slickgrid/commit/efe1c21))
+
+
+### Features
+
+* **filters:** add more operator types to collection svc filter ([#66](https://github.com/ghiscoding/aurelia-slickgrid/issues/66)) ([4359e67](https://github.com/ghiscoding/aurelia-slickgrid/commit/4359e67)), closes [#63](https://github.com/ghiscoding/aurelia-slickgrid/issues/63)
+
+
+### BREAKING CHANGES
+
+* **filters:** Reversing the 'EQ' filter logic. This was done now because the filter feature was new and it follows the javascript `filter` logic (since equal will filter values equal to the value provided)
+
+* refactor(example): add example code to Doc and Client-CLI samples
+
+
+
 <a name="1.12.2"></a>
 ## [1.12.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v1.12.1...v1.12.2) (2018-04-14)
 
