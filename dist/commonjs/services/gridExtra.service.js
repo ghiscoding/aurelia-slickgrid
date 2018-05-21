@@ -4,10 +4,21 @@ var $ = require("jquery");
 var GridExtraService = /** @class */ (function () {
     function GridExtraService() {
     }
-    GridExtraService.prototype.init = function (grid, columnDefinition, gridOptions, dataView) {
+    Object.defineProperty(GridExtraService.prototype, "_gridOptions", {
+        /** Getter for the Grid Options pulled through the Grid Object */
+        get: function () {
+            return (this._grid && this._grid.getOptions) ? this._grid.getOptions() : {};
+        },
+        enumerable: true,
+        configurable: true
+    });
+    /**
+     * Initialize the Service
+     * @param grid
+     * @param dataView
+     */
+    GridExtraService.prototype.init = function (grid, dataView) {
         this._grid = grid;
-        this._columnDefinition = columnDefinition;
-        this._gridOptions = gridOptions;
         this._dataView = dataView;
     };
     GridExtraService.prototype.getDataItemByRowNumber = function (rowNumber) {
@@ -57,9 +68,8 @@ var GridExtraService = /** @class */ (function () {
         if (item && item.id) {
             item.rowClass = 'highlight';
             this._dataView.updateItem(item.id, item);
-            var gridOptions = this._grid.getOptions();
             // highlight the row for a user defined timeout
-            $("#" + gridOptions.gridId)
+            $("#" + this._gridOptions.gridId)
                 .find(".highlight.row" + rowNumber)
                 .first();
             // delete the row's CSS that was attached for highlighting

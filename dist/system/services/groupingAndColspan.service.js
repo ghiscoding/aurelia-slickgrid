@@ -26,14 +26,31 @@ System.register(["aurelia-event-aggregator", "aurelia-framework", "jquery"], fun
                     this.ea = ea;
                     this._eventHandler = new Slick.EventHandler();
                 }
+                Object.defineProperty(GroupingAndColspanService.prototype, "_gridOptions", {
+                    /** Getter for the Grid Options pulled through the Grid Object */
+                    get: function () {
+                        return (this._grid && this._grid.getOptions) ? this._grid.getOptions() : {};
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(GroupingAndColspanService.prototype, "_columnDefinitions", {
+                    /** Getter for the Column Definitions pulled through the Grid Object */
+                    get: function () {
+                        return (this._grid && this._grid.getColumns) ? this._grid.getColumns() : [];
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                /**
+                 * Initialize the Service
+                 * @param grid
+                 * @param dataView
+                 */
                 GroupingAndColspanService.prototype.init = function (grid, dataView) {
                     var _this = this;
                     this._grid = grid;
                     this._dataView = dataView;
-                    if (grid) {
-                        this._gridOptions = grid.getOptions();
-                        this._columnDefinitions = grid.getColumns();
-                    }
                     this.aureliaEventPrefix = (this._gridOptions && this._gridOptions.defaultAureliaEventPrefix) ? this._gridOptions.defaultAureliaEventPrefix : 'asg';
                     if (grid && this._gridOptions) {
                         // When dealing with Pre-Header Grouping colspan, we need to re-create the pre-header in multiple occasions

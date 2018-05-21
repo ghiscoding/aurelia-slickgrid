@@ -16,18 +16,23 @@ let SortService = class SortService {
         this._isBackendGrid = false;
         this._slickSubscriber = new Slick.Event();
     }
+    /** Getter for the Grid Options pulled through the Grid Object */
+    get _gridOptions() {
+        return (this._grid && this._grid.getOptions) ? this._grid.getOptions() : {};
+    }
+    /** Getter for the Column Definitions pulled through the Grid Object */
+    get _columnDefinitions() {
+        return (this._grid && this._grid.getColumns) ? this._grid.getColumns() : [];
+    }
     /**
      * Attach a backend sort (single/multi) hook to the grid
      * @param grid SlickGrid Grid object
-     * @param gridOptions Grid Options object
+     * @param dataView SlickGrid DataView object
      */
     attachBackendOnSort(grid, dataView) {
         this._isBackendGrid = true;
         this._grid = grid;
         this._dataView = dataView;
-        if (grid) {
-            this._gridOptions = grid.getOptions();
-        }
         this._slickSubscriber = grid.onSort;
         // subscribe to the SlickGrid event and call the backend execution
         this._slickSubscriber.subscribe(this.onBackendSortChanged.bind(this));
@@ -69,7 +74,6 @@ let SortService = class SortService {
         this._dataView = dataView;
         let columnDefinitions = [];
         if (grid) {
-            this._gridOptions = grid.getOptions();
             columnDefinitions = grid.getColumns();
         }
         this._slickSubscriber = grid.onSort;
@@ -89,14 +93,14 @@ let SortService = class SortService {
                     }
                 });
             }
-            this.onLocalSortChanged(grid, this._gridOptions, dataView, sortColumns);
+            this.onLocalSortChanged(grid, dataView, sortColumns);
             this.emitSortChanged('local');
         });
         if (dataView && dataView.onRowCountChanged) {
             this._eventHandler.subscribe(dataView.onRowCountChanged, (e, args) => {
                 // load any presets if there are any
                 if (args.current > 0) {
-                    this.loadLocalPresets(grid, this._gridOptions, dataView, columnDefinitions);
+                    this.loadLocalPresets(grid, dataView);
                 }
             });
         }
@@ -119,9 +123,8 @@ let SortService = class SortService {
                 this.onBackendSortChanged(null, { grid: this._grid, sortCols: [] });
             }
             else {
-                const columnDefinitions = this._grid.getColumns();
-                if (columnDefinitions && Array.isArray(columnDefinitions)) {
-                    this.onLocalSortChanged(this._grid, this._gridOptions, this._dataView, new Array({ sortAsc: true, sortCol: columnDefinitions[0] }));
+                if (this._columnDefinitions && Array.isArray(this._columnDefinitions)) {
+                    this.onLocalSortChanged(this._grid, this._dataView, new Array({ sortAsc: true, sortCol: this._columnDefinitions[0] }));
                 }
             }
         }
@@ -141,7 +144,7 @@ let SortService = class SortService {
         // get the column definition but only keep column which are not equal to our current column
         const sortedCols = oldSortColumns.reduce((cols, col) => {
             if (!columnId || col.columnId !== columnId) {
-                cols.push({ sortCol: columnDefinitions[this._grid.getColumnIndex(col.columnId)], sortAsc: col.sortAsc });
+                cols.push({ sortCol: this._columnDefinitions[this._grid.getColumnIndex(col.columnId)], sortAsc: col.sortAsc });
             }
             return cols;
         }, []);
@@ -154,12 +157,12 @@ let SortService = class SortService {
      * @param dataView
      * @param columnDefinitions
      */
-    loadLocalPresets(grid, gridOptions, dataView, columnDefinitions) {
+    loadLocalPresets(grid, dataView) {
         const sortCols = [];
         this._currentLocalSorters = []; // reset current local sorters
-        if (gridOptions && gridOptions.presets && gridOptions.presets.sorters) {
-            const sorters = gridOptions.presets.sorters;
-            columnDefinitions.forEach((columnDef) => {
+        if (this._gridOptions && this._gridOptions.presets && this._gridOptions.presets.sorters) {
+            const sorters = this._gridOptions.presets.sorters;
+            this._columnDefinitions.forEach((columnDef) => {
                 const columnPreset = sorters.find((currentSorter) => {
                     return currentSorter.columnId === columnDef.id;
                 });
@@ -177,12 +180,12 @@ let SortService = class SortService {
                 }
             });
             if (sortCols.length > 0) {
-                this.onLocalSortChanged(grid, gridOptions, dataView, sortCols);
+                this.onLocalSortChanged(grid, dataView, sortCols);
                 grid.setSortColumns(sortCols); // add sort icon in UI
             }
         }
     }
-    onLocalSortChanged(grid, gridOptions, dataView, sortColumns) {
+    onLocalSortChanged(grid, dataView, sortColumns) {
         dataView.sort((dataRow1, dataRow2) => {
             for (let i = 0, l = sortColumns.length; i < l; i++) {
                 const columnSortObj = sortColumns[i];

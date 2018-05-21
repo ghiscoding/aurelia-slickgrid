@@ -72,7 +72,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "../services/
                 newCollection = this.collectionService.filterCollection(newCollection, filterBy);
             }
             // user might want to sort the collection
-            if (this.gridOptions.params && this.columnDef.params.collectionSortBy) {
+            if (this.columnDef.params && this.columnDef.params.collectionSortBy) {
                 var sortBy = this.columnDef.params.collectionSortBy;
                 newCollection = this.collectionService.sortCollection(newCollection, sortBy, this.enableTranslateLabel);
             }
@@ -89,7 +89,8 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "../services/
         SingleSelectEditor.prototype.loadValue = function (item) {
             var _this = this;
             // convert to string because that is how the DOM will return these values
-            this.defaultValue = item[this.columnDef.field].toString();
+            // make sure the prop exists first
+            this.defaultValue = item[this.columnDef.field] && item[this.columnDef.field].toString();
             this.$editorElm.find('option').each(function (i, $e) {
                 if (_this.defaultValue === $e.value) {
                     $e.selected = true;

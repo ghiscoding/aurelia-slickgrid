@@ -1,7 +1,7 @@
 define(["require", "exports", "jquery", "./../models/index"], function (require, exports, $, index_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var defaultDecimalPlaces = 0;
+    var defaultDecimalPlaces = 2;
     /*
      * An example of a 'detached' editor.
      * KeyDown events are also handled to provide handling for Tab, Shift-Tab, Esc and Ctrl-Enter.
@@ -12,15 +12,17 @@ define(["require", "exports", "jquery", "./../models/index"], function (require,
             this.init();
         }
         FloatEditor.prototype.init = function () {
-            this.$input = $("<input type=\"text\" class='editor-text' />")
+            var _this = this;
+            this.$input = $("<input type=\"number\" class='editor-text' />")
                 .appendTo(this.args.container)
                 .on('keydown.nav', function (e) {
                 if (e.keyCode === index_1.KeyCode.LEFT || e.keyCode === index_1.KeyCode.RIGHT) {
                     e.stopImmediatePropagation();
                 }
-            })
-                .focus()
-                .select();
+            });
+            setTimeout(function () {
+                _this.$input.focus().select();
+            }, 50);
         };
         FloatEditor.prototype.destroy = function () {
             this.$input.remove();
@@ -30,7 +32,8 @@ define(["require", "exports", "jquery", "./../models/index"], function (require,
         };
         FloatEditor.prototype.getDecimalPlaces = function () {
             // returns the number of fixed decimal places or null
-            var rtn = this.args.column.editorFixedDecimalPlaces;
+            var columnParams = this.args.column.params || {};
+            var rtn = (columnParams && columnParams.hasOwnProperty('decimalPlaces')) ? columnParams.decimalPlaces : undefined;
             if (rtn === undefined) {
                 rtn = defaultDecimalPlaces;
             }
@@ -62,17 +65,19 @@ define(["require", "exports", "jquery", "./../models/index"], function (require,
             item[this.args.column.field] = state;
         };
         FloatEditor.prototype.isValueChanged = function () {
-            return (!(this.$input.val() === '' && this.defaultValue === null)) && (this.$input.val() !== this.defaultValue);
+            var elmValue = this.$input.val();
+            return (!(elmValue === '' && this.defaultValue === null)) && (elmValue !== this.defaultValue);
         };
         FloatEditor.prototype.validate = function () {
-            if (isNaN(this.$input.val())) {
+            var elmValue = this.$input.val();
+            if (isNaN(elmValue)) {
                 return {
                     valid: false,
                     msg: 'Please enter a valid number'
                 };
             }
             if (this.args.column.validator) {
-                var validationResults = this.args.column.validator(this.$input.val());
+                var validationResults = this.args.column.validator(elmValue);
                 if (!validationResults.valid) {
                     return validationResults;
                 }

@@ -19,15 +19,17 @@ let ExportService = class ExportService {
         this._lineCarriageReturn = '\n';
         this._hasGroupedItems = false;
     }
+    /** Getter for the Grid Options pulled through the Grid Object */
+    get _gridOptions() {
+        return (this._grid && this._grid.getOptions) ? this._grid.getOptions() : {};
+    }
     /**
-     * Initialize the Export Service
+     * Initialize the Service
      * @param grid
-     * @param gridOptions
      * @param dataView
      */
-    init(grid, gridOptions, dataView) {
+    init(grid, dataView) {
         this._grid = grid;
-        this._gridOptions = gridOptions;
         this._dataView = dataView;
         this.aureliaEventPrefix = (this._gridOptions && this._gridOptions.defaultAureliaEventPrefix) ? this._gridOptions.defaultAureliaEventPrefix : 'asg';
     }

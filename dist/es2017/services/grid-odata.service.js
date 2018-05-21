@@ -22,9 +22,19 @@ let GridOdataService = class GridOdataService {
             caseType: CaseType.pascalCase
         };
     }
+    /** Getter for the Grid Options pulled through the Grid Object */
+    get _gridOptions() {
+        return (this._grid && this._grid.getOptions) ? this._grid.getOptions() : {};
+    }
     buildQuery() {
         return this.odataService.buildQuery();
     }
+    /**
+     * Initialize the Service
+     * @param OData Options
+     * @param pagination
+     * @param grid
+     */
     init(options, pagination, grid) {
         this._grid = grid;
         const mergedOptions = Object.assign({}, this.defaultOptions, options);
@@ -39,10 +49,9 @@ let GridOdataService = class GridOdataService {
             pageNumber: 1,
             pageSize: this.odataService.options.top || this.defaultOptions.top || DEFAULT_PAGE_SIZE
         };
-        if (grid && grid.getColumns && grid.getOptions) {
-            this._columnDefinitions = grid.getColumns() || options.columnDefinitions;
+        if (grid && grid.getColumns) {
+            this._columnDefinitions = grid.getColumns() || options.columnDefinitions || {};
             this._columnDefinitions = this._columnDefinitions.filter((column) => !column.excludeFromQuery);
-            this._gridOptions = grid.getOptions();
         }
     }
     updateOptions(serviceOptions) {

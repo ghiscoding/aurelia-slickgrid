@@ -10,8 +10,6 @@ export declare class ControlAndPluginService {
     private sortService;
     private _dataView;
     private _grid;
-    private _gridOptions;
-    private _columnDefinitions;
     visibleColumns: Column[];
     areVisibleColumnDifferent: boolean;
     autoTooltipPlugin: any;
@@ -23,16 +21,19 @@ export declare class ControlAndPluginService {
     rowSelectionPlugin: any;
     undoRedoBuffer: any;
     constructor(exportService: ExportService, filterService: FilterService, i18n: I18N, sortService: SortService);
+    /** Getter for the Grid Options pulled through the Grid Object */
+    private readonly _gridOptions;
+    /** Getter for the Column Definitions pulled through the Grid Object */
+    private readonly _columnDefinitions;
     /** Auto-resize all the column in the grid to fit the grid width */
     autoResizeColumns(): void;
     /**
      * Attach/Create different Controls or Plugins after the Grid is created
      * @param grid
-     * @param columnDefinitions
-     * @param options
      * @param dataView
+     * @param groupItemMetadataProvider
      */
-    attachDifferentControlOrPlugins(grid: any, columnDefinitions: Column[], options: GridOption, dataView: any, groupItemMetadataProvider: any): void;
+    attachDifferentControlOrPlugins(grid: any, dataView: any, groupItemMetadataProvider: any): void;
     /**
      * Attach/Create different plugins before the Grid creation.
      * For example the multi-select have to be added to the column definition before the grid is created to work properly
@@ -41,28 +42,26 @@ export declare class ControlAndPluginService {
      */
     createPluginBeforeGridCreation(columnDefinitions: Column[], options: GridOption): void;
     /** Create the Excel like copy manager */
-    createCellExternalCopyManagerPlugin(grid: any, gridOptions: GridOption): void;
+    createCellExternalCopyManagerPlugin(grid: any): void;
     /**
      * Create the Column Picker and expose all the available hooks that user can subscribe (onColumnsChanged)
      * @param grid
      * @param columnDefinitions
-     * @param options
      */
-    createColumnPicker(grid: any, columnDefinitions: Column[], options: GridOption): void;
+    createColumnPicker(grid: any, columnDefinitions: Column[]): void;
     /**
      * Create (or re-create) Grid Menu and expose all the available hooks that user can subscribe (onCommand, onMenuClose, ...)
      * @param grid
      * @param columnDefinitions
-     * @param options
      */
-    createGridMenu(grid: any, columnDefinitions: Column[], options: GridOption): any;
+    createGridMenu(grid: any, columnDefinitions: Column[]): any;
     /**
      * Create the Header Menu and expose all the available hooks that user can subscribe (onCommand, onBeforeMenuShow, ...)
      * @param grid
+     * @param dataView
      * @param columnDefinitions
-     * @param options
      */
-    createHeaderMenu(grid: any, dataView: any, columnDefinitions: Column[], options: GridOption): any;
+    createHeaderMenu(grid: any, dataView: any, columnDefinitions: Column[]): any;
     /** Create an undo redo buffer used by the Excel like copy */
     createUndoRedoBuffer(): void;
     /** Hide a column from the grid */
@@ -73,12 +72,15 @@ export declare class ControlAndPluginService {
     /**
      * Create Grid Menu with Custom Commands if user has enabled Filters and/or uses a Backend Service (OData, GraphQL)
      * @param grid
-     * @param options
      */
-    private addGridMenuCustomCommands(grid, options);
+    private addGridMenuCustomCommands(grid);
     /** Call a refresh dataset with a BackendServiceApi */
     refreshBackendDataset(): void;
-    /** Remove a column from the grid by it's index in the grid */
+    /**
+     * Remove a column from the grid by it's index in the grid
+     * @param array input
+     * @param index
+     */
     removeColumnByIndex(array: any[], index: number): any[];
     /**
      * Translate the Column Picker and it's last 2 checkboxes
@@ -101,16 +103,20 @@ export declare class ControlAndPluginService {
      * We could optionally pass a locale (that will change currently loaded locale), else it will use current locale
      * @param locale to use
      */
-    translateHeaders(locale?: string): void;
+    translateColumnHeaders(locale?: string): void;
+    /**
+     * Render (or re-render) the column headers from column definitions.
+     * calling setColumns() will trigger a grid re-render
+     */
+    renderColumnHeaders(newColumnDefinitions?: Column[]): void;
     /**
      * Create Header Menu with Custom Commands if user has enabled Header Menu
      * @param grid
      * @param dataView
-     * @param options
      * @param columnDefinitions
      * @return header menu
      */
-    private addHeaderMenuCustomCommands(grid, dataView, options, columnDefinitions);
+    private addHeaderMenuCustomCommands(grid, dataView, columnDefinitions);
     /**
      * @return default Grid Menu options
      */
@@ -121,12 +127,12 @@ export declare class ControlAndPluginService {
     private getDefaultHeaderMenuOptions();
     /**
      * Reset all the Grid Menu options which have text to translate
-     * @param grid menu object
+     * @param gridMenu object
      */
     private resetGridMenuTranslations(gridMenu);
     /**
      * Reset all the Grid Menu options which have text to translate
-     * @param grid menu object
+     * @param columnDefinitions
      */
     private resetHeaderMenuTranslations(columnDefinitions);
 }

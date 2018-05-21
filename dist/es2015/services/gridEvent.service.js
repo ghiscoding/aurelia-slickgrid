@@ -3,13 +3,13 @@ export class GridEventService {
         this._eventHandler = new Slick.EventHandler();
     }
     /* OnCellChange Event */
-    attachOnCellChange(grid, gridOptions, dataView) {
+    attachOnCellChange(grid, dataView) {
         // subscribe to this Slickgrid event of onCellChange
         this._eventHandler.subscribe(grid.onCellChange, (e, args) => {
-            if (!e || !args || !args.grid || args.cell === undefined || !args.grid.getColumns || !args.grid.getDataItem) {
+            if (!e || !args || !grid || args.cell === undefined || !grid.getColumns || !grid.getDataItem) {
                 return;
             }
-            const column = args.grid.getColumns()[args.cell];
+            const column = grid.getColumns()[args.cell];
             // if the column definition has a onCellChange property (a callback function), then run it
             if (typeof column.onCellChange === 'function') {
                 // add to the output gridOptions & dataView since we'll need them inside the AJAX column.onCellChange
@@ -17,10 +17,10 @@ export class GridEventService {
                     row: args.row,
                     cell: args.cell,
                     dataView,
-                    gridDefinition: gridOptions,
+                    gridDefinition: grid.getOptions(),
                     grid,
                     columnDef: column,
-                    dataContext: args.grid.getDataItem(args.row)
+                    dataContext: grid.getDataItem(args.row)
                 };
                 // finally call up the Slick.column.onCellChanges.... function
                 column.onCellChange(returnedArgs);
@@ -29,12 +29,12 @@ export class GridEventService {
         });
     }
     /* OnClick Event */
-    attachOnClick(grid, gridOptions, dataView) {
+    attachOnClick(grid, dataView) {
         this._eventHandler.subscribe(grid.onClick, (e, args) => {
-            if (!e || !args || !args.grid || args.cell === undefined || !args.grid.getColumns || !args.grid.getDataItem) {
+            if (!e || !args || !grid || args.cell === undefined || !grid.getColumns || !grid.getDataItem) {
                 return;
             }
-            const column = args.grid.getColumns()[args.cell];
+            const column = grid.getColumns()[args.cell];
             // if the column definition has a onCellClick property (a callback function), then run it
             if (typeof column.onCellClick === 'function') {
                 // add to the output gridOptions & dataView since we'll need them inside the AJAX column.onClick
@@ -42,10 +42,10 @@ export class GridEventService {
                     row: args.row,
                     cell: args.cell,
                     dataView,
-                    gridDefinition: gridOptions,
+                    gridDefinition: grid.getOptions(),
                     grid,
                     columnDef: column,
-                    dataContext: args.grid.getDataItem(args.row)
+                    dataContext: grid.getDataItem(args.row)
                 };
                 // finally call up the Slick.column.onCellClick.... function
                 column.onCellClick(returnedArgs);

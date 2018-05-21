@@ -50,16 +50,34 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
             this._filters = [];
             this._columnFilters = {};
         }
-        FilterService.prototype.init = function (grid, gridOptions, columnDefinitions) {
+        Object.defineProperty(FilterService.prototype, "_gridOptions", {
+            /** Getter for the Grid Options pulled through the Grid Object */
+            get: function () {
+                return (this._grid && this._grid.getOptions) ? this._grid.getOptions() : {};
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(FilterService.prototype, "_columnDefinitions", {
+            /** Getter for the Column Definitions pulled through the Grid Object */
+            get: function () {
+                return (this._grid && this._grid.getColumns) ? this._grid.getColumns() : [];
+            },
+            enumerable: true,
+            configurable: true
+        });
+        /**
+         * Initialize the Service
+         * @param grid
+         */
+        FilterService.prototype.init = function (grid) {
             this._grid = grid;
-            this._gridOptions = gridOptions;
         };
         /**
          * Attach a backend filter hook to the grid
          * @param grid SlickGrid Grid object
-         * @param gridOptions Grid Options object
          */
-        FilterService.prototype.attachBackendOnFilter = function (grid, options) {
+        FilterService.prototype.attachBackendOnFilter = function (grid) {
             var _this = this;
             this._filters = [];
             this._slickSubscriber = new Slick.Event();
@@ -115,7 +133,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
          * @param gridOptions Grid Options object
          * @param dataView
          */
-        FilterService.prototype.attachLocalOnFilter = function (grid, options, dataView) {
+        FilterService.prototype.attachLocalOnFilter = function (grid, dataView) {
             var _this = this;
             this._filters = [];
             this._dataView = dataView;
@@ -411,17 +429,16 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
             }
         };
         /**
-         * When user passes an array of preset filters, we need to pre-polulate each column filter searchTerm(s)
+         * When user passes an array of preset filters, we need to pre-populate each column filter searchTerm(s)
          * The process is to loop through the preset filters array, find the associated column from columnDefinitions and fill in the filter object searchTerm(s)
          * This is basically the same as if we would manually add searchTerm(s) to a column filter object in the column definition, but we do it programmatically.
          * At the end of the day, when creating the Filter (DOM Element), it will use these searchTerm(s) so we can take advantage of that without recoding each Filter type (DOM element)
-         * @param gridOptions
-         * @param columnDefinitions
+         * @param grid
          */
-        FilterService.prototype.populateColumnFilterSearchTerms = function (gridOptions, columnDefinitions) {
-            if (gridOptions.presets && gridOptions.presets.filters) {
-                var filters_1 = gridOptions.presets.filters;
-                columnDefinitions.forEach(function (columnDef) {
+        FilterService.prototype.populateColumnFilterSearchTerms = function (grid) {
+            if (this._gridOptions.presets && this._gridOptions.presets.filters) {
+                var filters_1 = this._gridOptions.presets.filters;
+                this._columnDefinitions.forEach(function (columnDef) {
                     var columnPreset = filters_1.find(function (presetFilter) {
                         return presetFilter.columnId === columnDef.id;
                     });
@@ -437,7 +454,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
                     }
                 });
             }
-            return columnDefinitions;
+            return this._columnDefinitions;
         };
         FilterService.prototype.updateColumnFilters = function (searchTerm, searchTerms, columnDef) {
             if (searchTerm !== undefined && searchTerm !== null && searchTerm !== '') {

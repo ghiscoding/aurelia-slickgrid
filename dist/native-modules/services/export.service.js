@@ -19,15 +19,21 @@ var ExportService = /** @class */ (function () {
         this._lineCarriageReturn = '\n';
         this._hasGroupedItems = false;
     }
+    Object.defineProperty(ExportService.prototype, "_gridOptions", {
+        /** Getter for the Grid Options pulled through the Grid Object */
+        get: function () {
+            return (this._grid && this._grid.getOptions) ? this._grid.getOptions() : {};
+        },
+        enumerable: true,
+        configurable: true
+    });
     /**
-     * Initialize the Export Service
+     * Initialize the Service
      * @param grid
-     * @param gridOptions
      * @param dataView
      */
-    ExportService.prototype.init = function (grid, gridOptions, dataView) {
+    ExportService.prototype.init = function (grid, dataView) {
         this._grid = grid;
-        this._gridOptions = gridOptions;
         this._dataView = dataView;
         this.aureliaEventPrefix = (this._gridOptions && this._gridOptions.defaultAureliaEventPrefix) ? this._gridOptions.defaultAureliaEventPrefix : 'asg';
     };

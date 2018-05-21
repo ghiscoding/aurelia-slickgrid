@@ -23,6 +23,14 @@ let GraphqlService = class GraphqlService {
             offset: 0
         };
     }
+    /** Getter for the Grid Options pulled through the Grid Object */
+    get _gridOptions() {
+        return (this._grid && this._grid.getOptions) ? this._grid.getOptions() : {};
+    }
+    /** Getter for the Column Definitions pulled through the Grid Object */
+    get _columnDefinitions() {
+        return (this._grid && this._grid.getColumns) ? this._grid.getColumns() : [];
+    }
     /**
      * Build the GraphQL query, since the service include/exclude cursor, the output query will be different.
      * @param serviceOptions GraphqlServiceOption
@@ -122,15 +130,17 @@ let GraphqlService = class GraphqlService {
             .replace(/^\{/, '')
             .replace(/\}$/, '');
     }
+    /**
+     * Initialize the Service
+     * @param GraphQL Service Options
+     * @param pagination
+     * @param grid
+     */
     init(serviceOptions, pagination, grid) {
         this._grid = grid;
         this.options = serviceOptions || {};
         if (pagination) {
             this.pagination = pagination;
-        }
-        if (grid && grid.getColumns && grid.getOptions) {
-            this._columnDefinitions = grid.getColumns();
-            this._gridOptions = grid.getOptions();
         }
     }
     /**

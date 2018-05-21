@@ -12,13 +12,22 @@ let GroupingAndColspanService = class GroupingAndColspanService {
         this.ea = ea;
         this._eventHandler = new Slick.EventHandler();
     }
+    /** Getter for the Grid Options pulled through the Grid Object */
+    get _gridOptions() {
+        return (this._grid && this._grid.getOptions) ? this._grid.getOptions() : {};
+    }
+    /** Getter for the Column Definitions pulled through the Grid Object */
+    get _columnDefinitions() {
+        return (this._grid && this._grid.getColumns) ? this._grid.getColumns() : [];
+    }
+    /**
+     * Initialize the Service
+     * @param grid
+     * @param dataView
+     */
     init(grid, dataView) {
         this._grid = grid;
         this._dataView = dataView;
-        if (grid) {
-            this._gridOptions = grid.getOptions();
-            this._columnDefinitions = grid.getColumns();
-        }
         this.aureliaEventPrefix = (this._gridOptions && this._gridOptions.defaultAureliaEventPrefix) ? this._gridOptions.defaultAureliaEventPrefix : 'asg';
         if (grid && this._gridOptions) {
             // When dealing with Pre-Header Grouping colspan, we need to re-create the pre-header in multiple occasions

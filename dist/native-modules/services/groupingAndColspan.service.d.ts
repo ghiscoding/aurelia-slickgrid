@@ -4,10 +4,17 @@ export declare class GroupingAndColspanService {
     private _eventHandler;
     private _dataView;
     private _grid;
-    private _gridOptions;
-    private _columnDefinitions;
     aureliaEventPrefix: string;
     constructor(ea: EventAggregator);
+    /** Getter for the Grid Options pulled through the Grid Object */
+    private readonly _gridOptions;
+    /** Getter for the Column Definitions pulled through the Grid Object */
+    private readonly _columnDefinitions;
+    /**
+     * Initialize the Service
+     * @param grid
+     * @param dataView
+     */
     init(grid: any, dataView: any): void;
     dispose(): void;
     createPreHeaderRowGroupingTitle(): void;

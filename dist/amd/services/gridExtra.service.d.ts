@@ -1,10 +1,14 @@
-import { Column, GridOption } from './../models/index';
 export declare class GridExtraService {
     private _grid;
     private _dataView;
-    private _columnDefinition;
-    private _gridOptions;
-    init(grid: any, columnDefinition: Column[], gridOptions: GridOption, dataView: any): void;
+    /** Getter for the Grid Options pulled through the Grid Object */
+    private readonly _gridOptions;
+    /**
+     * Initialize the Service
+     * @param grid
+     * @param dataView
+     */
+    init(grid: any, dataView: any): void;
     getDataItemByRowNumber(rowNumber: number): any;
     /** Chain the item Metadata with our implementation of Metadata at given row index */
     getItemRowMetadata(previousItemMetadata: any): any;

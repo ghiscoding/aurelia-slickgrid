@@ -25,18 +25,25 @@ System.register(["aurelia-framework", "./../models/index", "aurelia-event-aggreg
                 function GridStateService(ea) {
                     this.ea = ea;
                 }
+                Object.defineProperty(GridStateService.prototype, "_gridOptions", {
+                    /** Getter for the Grid Options pulled through the Grid Object */
+                    get: function () {
+                        return (this._grid && this._grid.getOptions) ? this._grid.getOptions() : {};
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
                 /**
-                 * Initialize the Export Service
+                 * Initialize the Service
                  * @param grid
-                 * @param gridOptions
-                 * @param dataView
+                 * @param filterService
+                 * @param sortService
                  */
                 GridStateService.prototype.init = function (grid, filterService, sortService) {
                     var _this = this;
                     this._grid = grid;
                     this.filterService = filterService;
                     this.sortService = sortService;
-                    this._gridOptions = (grid && grid.getOptions) ? grid.getOptions() : {};
                     // Subscribe to Event Emitter of Filter & Sort changed, go back to page 1 when that happen
                     this._filterSubcription = this.ea.subscribe('filterService:filterChanged', function (currentFilters) {
                         _this.ea.publish('gridStateService:changed', { change: { newValues: currentFilters, type: index_1.GridStateType.filter }, gridState: _this.getCurrentGridState() });

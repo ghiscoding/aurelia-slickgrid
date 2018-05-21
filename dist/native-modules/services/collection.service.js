@@ -22,12 +22,23 @@ var CollectionService = /** @class */ (function () {
         if (filterBy) {
             var property_1 = filterBy.property || '';
             var operator = filterBy.operator || OperatorType.equal;
-            var value_1 = filterBy.value || '';
-            if (operator === OperatorType.equal) {
-                filteredCollection = collection.filter(function (item) { return item[property_1] !== value_1; });
-            }
-            else {
-                filteredCollection = collection.filter(function (item) { return item[property_1] === value_1; });
+            // just check for undefined since the filter value could be null, 0, '', false etc
+            var value_1 = typeof filterBy.value === 'undefined' ? '' : filterBy.value;
+            switch (operator) {
+                case OperatorType.equal:
+                    filteredCollection = collection.filter(function (item) { return item[property_1] === value_1; });
+                    break;
+                case OperatorType.in:
+                    filteredCollection = collection.filter(function (item) { return item[property_1].indexOf(value_1) !== -1; });
+                    break;
+                case OperatorType.notIn:
+                    filteredCollection = collection.filter(function (item) { return item[property_1].indexOf(value_1) === -1; });
+                    break;
+                case OperatorType.contains:
+                    filteredCollection = collection.filter(function (item) { return value_1.indexOf(item[property_1]) !== -1; });
+                    break;
+                default:
+                    filteredCollection = collection.filter(function (item) { return item[property_1] !== value_1; });
             }
         }
         return filteredCollection;
@@ -36,8 +47,7 @@ var CollectionService = /** @class */ (function () {
      * Sort items in a collection
      * @param collection
      * @param sortBy
-     * @param columnDef
-     * @param translate
+     * @param enableTranslateLabel
      */
     CollectionService.prototype.sortCollection = function (collection, sortBy, enableTranslateLabel) {
         var _this = this;

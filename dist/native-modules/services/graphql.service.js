@@ -31,6 +31,22 @@ var GraphqlService = /** @class */ (function () {
             offset: 0
         };
     }
+    Object.defineProperty(GraphqlService.prototype, "_gridOptions", {
+        /** Getter for the Grid Options pulled through the Grid Object */
+        get: function () {
+            return (this._grid && this._grid.getOptions) ? this._grid.getOptions() : {};
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(GraphqlService.prototype, "_columnDefinitions", {
+        /** Getter for the Column Definitions pulled through the Grid Object */
+        get: function () {
+            return (this._grid && this._grid.getColumns) ? this._grid.getColumns() : [];
+        },
+        enumerable: true,
+        configurable: true
+    });
     /**
      * Build the GraphQL query, since the service include/exclude cursor, the output query will be different.
      * @param serviceOptions GraphqlServiceOption
@@ -133,15 +149,17 @@ var GraphqlService = /** @class */ (function () {
             .replace(/^\{/, '')
             .replace(/\}$/, '');
     };
+    /**
+     * Initialize the Service
+     * @param GraphQL Service Options
+     * @param pagination
+     * @param grid
+     */
     GraphqlService.prototype.init = function (serviceOptions, pagination, grid) {
         this._grid = grid;
         this.options = serviceOptions || {};
         if (pagination) {
             this.pagination = pagination;
-        }
-        if (grid && grid.getColumns && grid.getOptions) {
-            this._columnDefinitions = grid.getColumns();
-            this._gridOptions = grid.getOptions();
         }
     };
     /**

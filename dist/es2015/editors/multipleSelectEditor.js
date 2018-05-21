@@ -67,7 +67,7 @@ let MultipleSelectEditor = class MultipleSelectEditor {
             newCollection = this.collectionService.filterCollection(newCollection, filterBy);
         }
         // user might want to sort the collection
-        if (this.gridOptions && this.gridOptions.params && this.columnDef.params.collectionSortBy) {
+        if (this.columnDef.params && this.columnDef.params.collectionSortBy) {
             const sortBy = this.columnDef.params.collectionSortBy;
             newCollection = this.collectionService.sortCollection(newCollection, sortBy, this.enableTranslateLabel);
         }
@@ -85,7 +85,7 @@ let MultipleSelectEditor = class MultipleSelectEditor {
         // convert to string because that is how the DOM will return these values
         this.defaultValue = item[this.columnDef.field].map((i) => i.toString());
         this.$editorElm.find('option').each((i, $e) => {
-            if (this.defaultValue === $e.value) {
+            if (this.defaultValue.indexOf($e.value) !== -1) {
                 $e.selected = true;
             }
             else {

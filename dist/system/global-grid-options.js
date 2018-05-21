@@ -13,6 +13,7 @@ System.register(["./models/index"], function (exports_1, context_1) {
              * Default Options that can be passed to the Aurelia-Slickgrid
              */
             exports_1("GlobalGridOptions", GlobalGridOptions = {
+                alwaysShowVerticalScroll: true,
                 autoEdit: false,
                 asyncEditorLoading: false,
                 autoFitColumnsOnFirstLoad: true,
@@ -69,7 +70,7 @@ System.register(["./models/index"], function (exports_1, context_1) {
                     iconRefreshDatasetCommand: 'fa fa-refresh',
                     iconToggleFilterCommand: 'fa fa-random',
                     menuWidth: 16,
-                    resizeOnShowHeaderRow: false,
+                    resizeOnShowHeaderRow: true,
                     showClearAllFiltersCommand: true,
                     showClearAllSortingCommand: true,
                     showExportCsvCommand: true,
@@ -87,17 +88,18 @@ System.register(["./models/index"], function (exports_1, context_1) {
                     showSortCommands: true
                 },
                 headerRowHeight: 35,
+                showHeaderRow: false,
                 multiColumnSort: true,
                 numberedMultiColumnSort: true,
                 tristateMultiColumnSort: false,
-                sortColNumberInSeparateSpan: true,
                 pagination: {
                     pageSizes: [10, 15, 20, 25, 30, 40, 50, 75, 100],
                     pageSize: 25,
                     totalItems: 0
                 },
                 rowHeight: 35,
-                showHeaderRow: false,
+                sortColNumberInSeparateSpan: true,
+                suppressActiveCellChangeOnEdit: true,
                 topPanelHeight: 35
             });
         }

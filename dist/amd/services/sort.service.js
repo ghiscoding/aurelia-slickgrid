@@ -50,18 +50,31 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
             this._isBackendGrid = false;
             this._slickSubscriber = new Slick.Event();
         }
+        Object.defineProperty(SortService.prototype, "_gridOptions", {
+            /** Getter for the Grid Options pulled through the Grid Object */
+            get: function () {
+                return (this._grid && this._grid.getOptions) ? this._grid.getOptions() : {};
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(SortService.prototype, "_columnDefinitions", {
+            /** Getter for the Column Definitions pulled through the Grid Object */
+            get: function () {
+                return (this._grid && this._grid.getColumns) ? this._grid.getColumns() : [];
+            },
+            enumerable: true,
+            configurable: true
+        });
         /**
          * Attach a backend sort (single/multi) hook to the grid
          * @param grid SlickGrid Grid object
-         * @param gridOptions Grid Options object
+         * @param dataView SlickGrid DataView object
          */
         SortService.prototype.attachBackendOnSort = function (grid, dataView) {
             this._isBackendGrid = true;
             this._grid = grid;
             this._dataView = dataView;
-            if (grid) {
-                this._gridOptions = grid.getOptions();
-            }
             this._slickSubscriber = grid.onSort;
             // subscribe to the SlickGrid event and call the backend execution
             this._slickSubscriber.subscribe(this.onBackendSortChanged.bind(this));
@@ -114,7 +127,6 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
             this._dataView = dataView;
             var columnDefinitions = [];
             if (grid) {
-                this._gridOptions = grid.getOptions();
                 columnDefinitions = grid.getColumns();
             }
             this._slickSubscriber = grid.onSort;
@@ -134,14 +146,14 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
                         }
                     });
                 }
-                _this.onLocalSortChanged(grid, _this._gridOptions, dataView, sortColumns);
+                _this.onLocalSortChanged(grid, dataView, sortColumns);
                 _this.emitSortChanged('local');
             });
             if (dataView && dataView.onRowCountChanged) {
                 this._eventHandler.subscribe(dataView.onRowCountChanged, function (e, args) {
                     // load any presets if there are any
                     if (args.current > 0) {
-                        _this.loadLocalPresets(grid, _this._gridOptions, dataView, columnDefinitions);
+                        _this.loadLocalPresets(grid, dataView);
                     }
                 });
             }
@@ -164,9 +176,8 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
                     this.onBackendSortChanged(null, { grid: this._grid, sortCols: [] });
                 }
                 else {
-                    var columnDefinitions = this._grid.getColumns();
-                    if (columnDefinitions && Array.isArray(columnDefinitions)) {
-                        this.onLocalSortChanged(this._grid, this._gridOptions, this._dataView, new Array({ sortAsc: true, sortCol: columnDefinitions[0] }));
+                    if (this._columnDefinitions && Array.isArray(this._columnDefinitions)) {
+                        this.onLocalSortChanged(this._grid, this._dataView, new Array({ sortAsc: true, sortCol: this._columnDefinitions[0] }));
                     }
                 }
             }
@@ -187,7 +198,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
             // get the column definition but only keep column which are not equal to our current column
             var sortedCols = oldSortColumns.reduce(function (cols, col) {
                 if (!columnId || col.columnId !== columnId) {
-                    cols.push({ sortCol: columnDefinitions[_this._grid.getColumnIndex(col.columnId)], sortAsc: col.sortAsc });
+                    cols.push({ sortCol: _this._columnDefinitions[_this._grid.getColumnIndex(col.columnId)], sortAsc: col.sortAsc });
                 }
                 return cols;
             }, []);
@@ -200,13 +211,13 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
          * @param dataView
          * @param columnDefinitions
          */
-        SortService.prototype.loadLocalPresets = function (grid, gridOptions, dataView, columnDefinitions) {
+        SortService.prototype.loadLocalPresets = function (grid, dataView) {
             var _this = this;
             var sortCols = [];
             this._currentLocalSorters = []; // reset current local sorters
-            if (gridOptions && gridOptions.presets && gridOptions.presets.sorters) {
-                var sorters_1 = gridOptions.presets.sorters;
-                columnDefinitions.forEach(function (columnDef) {
+            if (this._gridOptions && this._gridOptions.presets && this._gridOptions.presets.sorters) {
+                var sorters_1 = this._gridOptions.presets.sorters;
+                this._columnDefinitions.forEach(function (columnDef) {
                     var columnPreset = sorters_1.find(function (currentSorter) {
                         return currentSorter.columnId === columnDef.id;
                     });
@@ -224,12 +235,12 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
                     }
                 });
                 if (sortCols.length > 0) {
-                    this.onLocalSortChanged(grid, gridOptions, dataView, sortCols);
+                    this.onLocalSortChanged(grid, dataView, sortCols);
                     grid.setSortColumns(sortCols); // add sort icon in UI
                 }
             }
         };
-        SortService.prototype.onLocalSortChanged = function (grid, gridOptions, dataView, sortColumns) {
+        SortService.prototype.onLocalSortChanged = function (grid, dataView, sortColumns) {
             dataView.sort(function (dataRow1, dataRow2) {
                 for (var i = 0, l = sortColumns.length; i < l; i++) {
                     var columnSortObj = sortColumns[i];

@@ -99,14 +99,21 @@ System.register(["./../services/utilities", "./../models/index", "aurelia-i18n",
                 };
                 DateEditor.prototype.loadValue = function (item) {
                     this.defaultDate = item[this.args.column.field];
+                    this.flatInstance.setDate(item[this.args.column.field]);
                 };
                 DateEditor.prototype.serializeValue = function () {
+                    var domValue = this.$input.val();
+                    if (!domValue)
+                        return '';
                     var outputFormat = utilities_1.mapMomentDateFormatWithFieldType(this.args.column.type || index_1.FieldType.dateIso);
-                    var value = moment(this.defaultDate).format(outputFormat);
+                    var value = moment(domValue).format(outputFormat);
                     return value;
                 };
                 DateEditor.prototype.applyValue = function (item, state) {
-                    item[this.args.column.field] = state;
+                    if (!state)
+                        return;
+                    var outputFormat = utilities_1.mapMomentDateFormatWithFieldType(this.args.column.type || index_1.FieldType.dateIso);
+                    item[this.args.column.field] = moment(state, outputFormat).toDate();
                 };
                 DateEditor.prototype.isValueChanged = function () {
                     return (!(this.$input.val() === '' && this.defaultDate == null)) && (this.$input.val() !== this.defaultDate);

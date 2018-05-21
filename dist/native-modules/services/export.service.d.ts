@@ -1,6 +1,6 @@
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { I18N } from 'aurelia-i18n';
-import { Column, ExportOption, FileType, GridOption } from './../models/index';
+import { Column, ExportOption, FileType } from './../models/index';
 export interface ExportColumnHeader {
     key: string | number;
     title: string;
@@ -14,18 +14,18 @@ export declare class ExportService {
     private _exportQuoteWrapper;
     private _columnHeaders;
     private _groupedHeaders;
-    private _gridOptions;
     private _hasGroupedItems;
     private _exportOptions;
     aureliaEventPrefix: string;
     constructor(i18n: I18N, ea: EventAggregator);
+    /** Getter for the Grid Options pulled through the Grid Object */
+    private readonly _gridOptions;
     /**
-     * Initialize the Export Service
+     * Initialize the Service
      * @param grid
-     * @param gridOptions
      * @param dataView
      */
-    init(grid: any, gridOptions: GridOption, dataView: any): void;
+    init(grid: any, dataView: any): void;
     /**
      * Function to export the Grid result to an Excel CSV format using javascript for it to produce the CSV file.
      * This is a WYSIWYG export to file output (What You See is What You Get)

@@ -17,18 +17,31 @@ var ResizerService = /** @class */ (function () {
     function ResizerService(ea) {
         this.ea = ea;
     }
+    Object.defineProperty(ResizerService.prototype, "_gridOptions", {
+        /** Getter for the Grid Options pulled through the Grid Object */
+        get: function () {
+            return (this._grid && this._grid.getOptions) ? this._grid.getOptions() : {};
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ResizerService.prototype, "_gridUid", {
+        /** Getter for retrieving the Grid UID that is used when dealing with multiple grids in same view. */
+        get: function () {
+            return (this._grid && this._grid.getUID) ? this._grid.getUID() : this._gridOptions.gridId;
+        },
+        enumerable: true,
+        configurable: true
+    });
     ResizerService.prototype.init = function (grid) {
         this._grid = grid;
-        if (grid) {
-            this._gridOptions = grid.getOptions();
-        }
         this.aureliaEventPrefix = (this._gridOptions && this._gridOptions.defaultAureliaEventPrefix) ? this._gridOptions.defaultAureliaEventPrefix : 'asg';
     };
     /**
      * Attach an auto resize trigger on the datagrid, if that is enable then it will resize itself to the available space
      * Options: we could also provide a % factor to resize on each height/width independently
      */
-    ResizerService.prototype.attachAutoResizeDataGrid = function () {
+    ResizerService.prototype.attachAutoResizeDataGrid = function (newSizes) {
         var _this = this;
         // if we can't find the grid to resize, return without attaching anything
         var gridDomElm = $("#" + (this._gridOptions && this._gridOptions.gridId ? this._gridOptions.gridId : 'grid1'));
@@ -36,14 +49,14 @@ var ResizerService = /** @class */ (function () {
             return null;
         }
         // -- 1st resize the datagrid size at first load (we need this because the .on event is not triggered on first load)
-        this.resizeGrid();
+        this.resizeGrid(0, newSizes);
         // -- 2nd attach a trigger on the Window DOM element, so that it happens also when resizing after first load
         // -- attach auto-resize to Window object only if it exist
-        $(window).on('resize.grid', function () {
+        $(window).on("resize.grid." + this._gridUid, function () {
             _this.ea.publish(_this.aureliaEventPrefix + ":onBeforeResize", true);
             // for some yet unknown reason, calling the resize twice removes any stuttering/flickering when changing the height and makes it much smoother
-            _this.resizeGrid();
-            _this.resizeGrid();
+            _this.resizeGrid(0, newSizes);
+            _this.resizeGrid(0, newSizes);
         });
     };
     /**
@@ -87,7 +100,7 @@ var ResizerService = /** @class */ (function () {
      * Dispose function when element is destroyed
      */
     ResizerService.prototype.dispose = function () {
-        $(window).off('resize.grid');
+        $(window).off("resize.grid." + this._gridUid);
     };
     ResizerService.prototype.getLastResizeDimensions = function () {
         return this._lastDimensions;
@@ -102,20 +115,28 @@ var ResizerService = /** @class */ (function () {
         delay = delay || 0;
         clearTimeout(timer);
         timer = setTimeout(function () {
-            // calculate new available sizes but with minimum height of 220px
-            newSizes = newSizes || _this.calculateGridNewDimensions(_this._gridOptions);
+            // calculate the available sizes with minimum height defined as a constant
+            var availableDimensions = _this.calculateGridNewDimensions(_this._gridOptions);
             var gridElm = $("#" + _this._gridOptions.gridId);
             var gridContainerElm = $("#" + _this._gridOptions.gridContainerId);
-            if (newSizes && gridElm.length > 0) {
+            if ((newSizes || availableDimensions) && gridElm.length > 0) {
+                // get the new sizes, if new sizes are passed (not 0), we will use them else use available space
+                // basically if user passes 1 of the dimension, let say he passes just the height,
+                // we will use the height as a fixed height but the width will be resized by it's available space
+                var newHeight = (newSizes && newSizes.height) ? newSizes.height : availableDimensions.height;
+                var newWidth = (newSizes && newSizes.width) ? newSizes.width : availableDimensions.width;
                 // apply these new height/width to the datagrid
-                gridElm.height(newSizes.height);
-                gridElm.width(newSizes.width);
-                gridContainerElm.height(newSizes.height);
-                gridContainerElm.width(newSizes.width);
+                gridElm.height(newHeight);
+                gridElm.width(newWidth);
+                gridContainerElm.height(newHeight);
+                gridContainerElm.width(newWidth);
                 // keep last resized dimensions
-                _this._lastDimensions = newSizes;
-                _this._lastDimensions.heightWithPagination = newSizes.height;
-                if ((_this._gridOptions.enablePagination || _this._gridOptions.backendServiceApi)) {
+                _this._lastDimensions = {
+                    height: newHeight,
+                    width: newWidth
+                };
+                _this._lastDimensions.heightWithPagination = newHeight;
+                if (_this._lastDimensions && _this._lastDimensions.heightWithPagination && (_this._gridOptions.enablePagination || _this._gridOptions.backendServiceApi)) {
                     _this._lastDimensions.heightWithPagination += DATAGRID_PAGINATION_HEIGHT;
                 }
                 // resize the slickgrid canvas on all browser except some IE versions

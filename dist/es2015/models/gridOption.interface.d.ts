@@ -2,6 +2,8 @@ import { AutoResizeOption, BackendEventChanged, BackendServiceApi, Column, Colum
 export interface GridOption {
     /** CSS class name used on newly added row */
     addNewRowCssClass?: string;
+    /** Defaults to true, which leads to always show a vertical scrolling. This is rather important to use when using the Grid Menu (hamburger) */
+    alwaysShowVerticalScroll?: boolean;
     /** Defaults to 100, which is the asynchronous editor loading delay */
     asyncEditorLoadDelay?: number;
     /** Defaults to false, which leads to load editor asynchronously (delayed) */
@@ -12,6 +14,8 @@ export interface GridOption {
     asyncPostRenderCleanupDelay?: number;
     /** Defaults to false, when enabled will automatically open the inlined editor as soon as there is a focus on the cell (can be combined with "enableCellNavigation: true"). */
     autoEdit?: boolean;
+    /** Defaults to false, when enabled will automatically adjust grid height. */
+    autoHeight?: boolean;
     /** Defaults to true, which leads to automatically adjust the size of each column with the available space. Similar to "Force Fit Column" but only happens on first page/component load. */
     autoFitColumnsOnFirstLoad?: boolean;
     /** Auto-resize options (bottom padding, minHeight, ...)  */
@@ -125,7 +129,7 @@ export interface GridOption {
     footerRowHeight?: number;
     /** Do we want to force fit columns in the grid at all time? */
     forceFitColumns?: boolean;
-    /** Do we want to force synchronous scrolling? */
+    /** Defaults to false, force synchronous scrolling */
     forceSyncScrolling?: boolean;
     /** Formatter classes factory */
     formatterFactory?: any;
@@ -188,6 +192,11 @@ export interface GridOption {
     showTopPanel?: boolean;
     /** Defaults to true, which leads to render a separate span for the number and styles it with css class <i>slick-sort-indicator-numbered</i> */
     sortColNumberInSeparateSpan?: boolean;
+    /**
+     * Defaults to true, which leads to suppress the cell from becoming active when cell as an editor and is clicked.
+     * This flag should be enabled especially when mixing these 2 features (Row Selections & Inline Editors)
+     */
+    suppressActiveCellChangeOnEdit?: boolean;
     /** What is the top panel height in pixels (only type the number) */
     topPanelHeight?: number;
     /** Defaults to false, when set to True will lead to multiple columns sorting without the need to hold or do shift-click to execute a multiple sort. */

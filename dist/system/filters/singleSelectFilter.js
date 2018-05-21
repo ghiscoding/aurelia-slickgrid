@@ -90,7 +90,7 @@ System.register(["aurelia-i18n", "aurelia-framework", "./../models/index", "../s
                         newCollection = this.collectionService.filterCollection(newCollection, filterBy);
                     }
                     // user might want to sort the collection
-                    if (this.gridOptions.params && this.columnDef.filter.collectionSortBy) {
+                    if (this.columnDef.filter && this.columnDef.filter.collectionSortBy) {
                         var sortBy = this.columnDef.filter.collectionSortBy;
                         newCollection = this.collectionService.sortCollection(newCollection, sortBy, this.enableTranslateLabel);
                     }

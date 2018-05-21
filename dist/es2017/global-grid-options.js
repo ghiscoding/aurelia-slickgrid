@@ -3,6 +3,7 @@ import { FilterType, DelimiterType, FileType } from './models/index';
  * Default Options that can be passed to the Aurelia-Slickgrid
  */
 export const GlobalGridOptions = {
+    alwaysShowVerticalScroll: true,
     autoEdit: false,
     asyncEditorLoading: false,
     autoFitColumnsOnFirstLoad: true,
@@ -59,7 +60,7 @@ export const GlobalGridOptions = {
         iconRefreshDatasetCommand: 'fa fa-refresh',
         iconToggleFilterCommand: 'fa fa-random',
         menuWidth: 16,
-        resizeOnShowHeaderRow: false,
+        resizeOnShowHeaderRow: true,
         showClearAllFiltersCommand: true,
         showClearAllSortingCommand: true,
         showExportCsvCommand: true,
@@ -77,17 +78,18 @@ export const GlobalGridOptions = {
         showSortCommands: true
     },
     headerRowHeight: 35,
+    showHeaderRow: false,
     multiColumnSort: true,
     numberedMultiColumnSort: true,
     tristateMultiColumnSort: false,
-    sortColNumberInSeparateSpan: true,
     pagination: {
         pageSizes: [10, 15, 20, 25, 30, 40, 50, 75, 100],
         pageSize: 25,
         totalItems: 0
     },
     rowHeight: 35,
-    showHeaderRow: false,
+    sortColNumberInSeparateSpan: true,
+    suppressActiveCellChangeOnEdit: true,
     topPanelHeight: 35
 };
 //# sourceMappingURL=global-grid-options.js.map

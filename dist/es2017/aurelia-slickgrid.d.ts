@@ -17,12 +17,13 @@ import 'slickgrid/plugins/slick.headerbuttons';
 import 'slickgrid/plugins/slick.headermenu';
 import 'slickgrid/plugins/slick.rowmovemanager';
 import 'slickgrid/plugins/slick.rowselectionmodel';
-import { Container } from 'aurelia-framework';
+import { BindingEngine, Container } from 'aurelia-framework';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
 import { I18N } from 'aurelia-i18n';
 import { Column, GridOption, Pagination } from './models/index';
 import { ControlAndPluginService, ExportService, FilterService, GraphqlService, GridEventService, GridExtraService, GridStateService, GroupingAndColspanService, ResizerService, SortService } from './services/index';
 export declare class AureliaSlickgridCustomElement {
+    private bindingEngine;
     private controlAndPluginService;
     private exportService;
     private elm;
@@ -37,31 +38,32 @@ export declare class AureliaSlickgridCustomElement {
     private resizer;
     private sortService;
     private container;
+    private _columnDefinitions;
     private _dataset;
     private _eventHandler;
+    columnDefSubscriber: Subscription;
     gridStateSubscriber: Subscription;
     groupItemMetadataProvider: any;
+    isGridInitialized: boolean;
     localeChangedSubscriber: Subscription;
     showPagination: boolean;
+    columnDefinitions: Column[];
     element: Element;
-    dataset: any[];
     gridPaginationOptions: GridOption;
     dataview: any;
     grid: any;
+    dataset: any[];
     gridId: string;
-    columnDefinitions: Column[];
     gridOptions: GridOption;
     gridHeight: number;
     gridWidth: number;
     pickerOptions: any;
-    constructor(controlAndPluginService: ControlAndPluginService, exportService: ExportService, elm: Element, ea: EventAggregator, filterService: FilterService, graphqlService: GraphqlService, gridEventService: GridEventService, gridExtraService: GridExtraService, gridStateService: GridStateService, groupingAndColspanService: GroupingAndColspanService, i18n: I18N, resizer: ResizerService, sortService: SortService, container: Container);
+    constructor(bindingEngine: BindingEngine, controlAndPluginService: ControlAndPluginService, exportService: ExportService, elm: Element, ea: EventAggregator, filterService: FilterService, graphqlService: GraphqlService, gridEventService: GridEventService, gridExtraService: GridExtraService, gridStateService: GridStateService, groupingAndColspanService: GroupingAndColspanService, i18n: I18N, resizer: ResizerService, sortService: SortService, container: Container);
     attached(): void;
+    initialization(): void;
     detached(): void;
-    /**
-     * Keep original value(s) that could be passed by the user ViewModel.
-     * If nothing was passed, it will default to first option of select
-     */
-    bind(binding: any, contexts: any): void;
+    bind(): void;
+    columnDefinitionsChanged(newColumnDefinitions: Column[]): void;
     datasetChanged(newValue: any[], oldValue: any[]): void;
     /**
      * Define what our internal Post Process callback, it will execute internally after we get back result from the Process backend call
@@ -85,4 +87,10 @@ export declare class AureliaSlickgridCustomElement {
     showHeaderRow(isShowing: boolean): boolean;
     /** Toggle the filter row displayed on first row */
     toggleHeaderRow(): boolean;
+    /**
+     * Dynamically change or update the column definitions list.
+     * We will re-render the grid so that the new header and data shows up correctly.
+     * If using i18n, we also need to trigger a re-translate of the column headers
+     */
+    updateColumnDefinitionsList(newColumnDefinitions?: Column[]): void;
 }

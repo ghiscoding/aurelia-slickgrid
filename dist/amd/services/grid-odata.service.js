@@ -28,9 +28,23 @@ define(["require", "exports", "aurelia-framework", "./utilities", "./../models/i
                 caseType: index_1.CaseType.pascalCase
             };
         }
+        Object.defineProperty(GridOdataService.prototype, "_gridOptions", {
+            /** Getter for the Grid Options pulled through the Grid Object */
+            get: function () {
+                return (this._grid && this._grid.getOptions) ? this._grid.getOptions() : {};
+            },
+            enumerable: true,
+            configurable: true
+        });
         GridOdataService.prototype.buildQuery = function () {
             return this.odataService.buildQuery();
         };
+        /**
+         * Initialize the Service
+         * @param OData Options
+         * @param pagination
+         * @param grid
+         */
         GridOdataService.prototype.init = function (options, pagination, grid) {
             this._grid = grid;
             var mergedOptions = __assign({}, this.defaultOptions, options);
@@ -45,10 +59,9 @@ define(["require", "exports", "aurelia-framework", "./utilities", "./../models/i
                 pageNumber: 1,
                 pageSize: this.odataService.options.top || this.defaultOptions.top || DEFAULT_PAGE_SIZE
             };
-            if (grid && grid.getColumns && grid.getOptions) {
-                this._columnDefinitions = grid.getColumns() || options.columnDefinitions;
+            if (grid && grid.getColumns) {
+                this._columnDefinitions = grid.getColumns() || options.columnDefinitions || {};
                 this._columnDefinitions = this._columnDefinitions.filter(function (column) { return !column.excludeFromQuery; });
-                this._gridOptions = grid.getOptions();
             }
         };
         GridOdataService.prototype.updateOptions = function (serviceOptions) {

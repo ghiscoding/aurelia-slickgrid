@@ -81,7 +81,7 @@ var MultipleSelectEditor = /** @class */ (function () {
             newCollection = this.collectionService.filterCollection(newCollection, filterBy);
         }
         // user might want to sort the collection
-        if (this.gridOptions && this.gridOptions.params && this.columnDef.params.collectionSortBy) {
+        if (this.columnDef.params && this.columnDef.params.collectionSortBy) {
             var sortBy = this.columnDef.params.collectionSortBy;
             newCollection = this.collectionService.sortCollection(newCollection, sortBy, this.enableTranslateLabel);
         }
@@ -100,7 +100,7 @@ var MultipleSelectEditor = /** @class */ (function () {
         // convert to string because that is how the DOM will return these values
         this.defaultValue = item[this.columnDef.field].map(function (i) { return i.toString(); });
         this.$editorElm.find('option').each(function (i, $e) {
-            if (_this.defaultValue === $e.value) {
+            if (_this.defaultValue.indexOf($e.value) !== -1) {
                 $e.selected = true;
             }
             else {

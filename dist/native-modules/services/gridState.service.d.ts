@@ -4,18 +4,19 @@ import { EventAggregator } from 'aurelia-event-aggregator';
 export declare class GridStateService {
     private ea;
     private _grid;
-    private _gridOptions;
     private _preset;
     private filterService;
     private _filterSubcription;
     private _sorterSubcription;
     private sortService;
     constructor(ea: EventAggregator);
+    /** Getter for the Grid Options pulled through the Grid Object */
+    private readonly _gridOptions;
     /**
-     * Initialize the Export Service
+     * Initialize the Service
      * @param grid
-     * @param gridOptions
-     * @param dataView
+     * @param filterService
+     * @param sortService
      */
     init(grid: any, filterService: FilterService, sortService: SortService): void;
     dispose(): void;

@@ -80,7 +80,8 @@ var aureliaEventPrefix = 'asg';
 var eventPrefix = 'sg';
 // Aurelia doesn't support well TypeScript @autoinject in a Plugin so we'll do it the old fashion way
 var AureliaSlickgridCustomElement = /** @class */ (function () {
-    function AureliaSlickgridCustomElement(controlAndPluginService, exportService, elm, ea, filterService, graphqlService, gridEventService, gridExtraService, gridStateService, groupingAndColspanService, i18n, resizer, sortService, container) {
+    function AureliaSlickgridCustomElement(bindingEngine, controlAndPluginService, exportService, elm, ea, filterService, graphqlService, gridEventService, gridExtraService, gridStateService, groupingAndColspanService, i18n, resizer, sortService, container) {
+        this.bindingEngine = bindingEngine;
         this.controlAndPluginService = controlAndPluginService;
         this.exportService = exportService;
         this.elm = elm;
@@ -95,10 +96,17 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
         this.resizer = resizer;
         this.sortService = sortService;
         this.container = container;
+        this._columnDefinitions = [];
         this._eventHandler = new Slick.EventHandler();
+        this.isGridInitialized = false;
         this.showPagination = false;
+        this.columnDefinitions = [];
     }
     AureliaSlickgridCustomElement.prototype.attached = function () {
+        this.initialization();
+        this.isGridInitialized = true;
+    };
+    AureliaSlickgridCustomElement.prototype.initialization = function () {
         this.elm.dispatchEvent(new CustomEvent(eventPrefix + "-on-before-grid-create", {
             bubbles: true,
         }));
@@ -117,9 +125,9 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
         else {
             this.dataview = new Slick.Data.DataView();
         }
-        this.controlAndPluginService.createPluginBeforeGridCreation(this.columnDefinitions, this.gridOptions);
-        this.grid = new Slick.Grid("#" + this.gridId, this.dataview, this.columnDefinitions, this.gridOptions);
-        this.controlAndPluginService.attachDifferentControlOrPlugins(this.grid, this.columnDefinitions, this.gridOptions, this.dataview, this.groupItemMetadataProvider);
+        this.controlAndPluginService.createPluginBeforeGridCreation(this._columnDefinitions, this.gridOptions);
+        this.grid = new Slick.Grid("#" + this.gridId, this.dataview, this._columnDefinitions, this.gridOptions);
+        this.controlAndPluginService.attachDifferentControlOrPlugins(this.grid, this.dataview, this.groupItemMetadataProvider);
         this.attachDifferentHooks(this.grid, this.gridOptions, this.dataview);
         this.grid.init();
         this.dataview.beginUpdate();
@@ -143,14 +151,14 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
             this.groupingAndColspanService.init(this.grid, this.dataview);
         }
         // attach grid extra service
-        this.gridExtraService.init(this.grid, this.columnDefinitions, this.gridOptions, this.dataview);
+        this.gridExtraService.init(this.grid, this.dataview);
         // when user enables translation, we need to translate Headers on first pass & subsequently in the attachDifferentHooks
         if (this.gridOptions.enableTranslate) {
-            this.controlAndPluginService.translateHeaders();
+            this.controlAndPluginService.translateColumnHeaders();
         }
         // if Export is enabled, initialize the service with the necessary grid and other objects
         if (this.gridOptions.enableExport) {
-            this.exportService.init(this.grid, this.gridOptions, this.dataview);
+            this.exportService.init(this.grid, this.dataview);
         }
         // attach the Backend Service API callback functions only after the grid is initialized
         // because the preProcess() and onInit() might get triggered
@@ -167,6 +175,7 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
         }));
         this.dataview = [];
         this._eventHandler.unsubscribeAll();
+        this.columnDefSubscriber.dispose();
         this.controlAndPluginService.dispose();
         this.filterService.dispose();
         this.gridEventService.dispose();
@@ -183,23 +192,31 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
             detail: this.grid
         }));
     };
-    /**
-     * Keep original value(s) that could be passed by the user ViewModel.
-     * If nothing was passed, it will default to first option of select
-     */
-    AureliaSlickgridCustomElement.prototype.bind = function (binding, contexts) {
+    AureliaSlickgridCustomElement.prototype.bind = function () {
+        var _this = this;
         // get the grid options (priority is Global Options first, then user option which could overwrite the Global options)
-        this.gridOptions = __assign({}, global_grid_options_1.GlobalGridOptions, binding.gridOptions);
+        this.gridOptions = __assign({}, global_grid_options_1.GlobalGridOptions, this.gridOptions);
+        this._columnDefinitions = this.columnDefinitions;
+        // subscribe to column definitions assignment changes with BindingEngine
+        // assignment changes are not triggering a "changed" event https://stackoverflow.com/a/30286225/1212166
+        this.columnDefSubscriber = this.bindingEngine.collectionObserver(this.columnDefinitions)
+            .subscribe(function (changes) { return _this.updateColumnDefinitionsList(_this._columnDefinitions); });
         // Wrap each editor class in the Factory resolver so consumers of this library can use
         // dependency injection. Aurelia will resolve all dependencies when we pass the container
         // and allow slickgrid to pass its arguments to the editors constructor last
         // when slickgrid creates the editor
         // https://github.com/aurelia/dependency-injection/blob/master/src/resolvers.js
-        for (var _i = 0, _a = this.columnDefinitions; _i < _a.length; _i++) {
+        for (var _i = 0, _a = this._columnDefinitions; _i < _a.length; _i++) {
             var c = _a[_i];
             if (c.editor) {
                 c.editor = aurelia_framework_1.Factory.of(c.editor).get(this.container);
             }
+        }
+    };
+    AureliaSlickgridCustomElement.prototype.columnDefinitionsChanged = function (newColumnDefinitions) {
+        this._columnDefinitions = newColumnDefinitions;
+        if (this.isGridInitialized) {
+            this.updateColumnDefinitionsList(newColumnDefinitions);
         }
     };
     AureliaSlickgridCustomElement.prototype.datasetChanged = function (newValue, oldValue) {
@@ -241,7 +258,7 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
         // on locale change, we have to manually translate the Headers, GridMenu
         this.localeChangedSubscriber = this.ea.subscribe('i18n:locale:changed', function (payload) {
             if (gridOptions.enableTranslate) {
-                _this.controlAndPluginService.translateHeaders();
+                _this.controlAndPluginService.translateColumnHeaders();
                 _this.controlAndPluginService.translateColumnPicker();
                 _this.controlAndPluginService.translateGridMenu();
                 _this.controlAndPluginService.translateHeaderMenu();
@@ -253,12 +270,12 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
         }
         // attach external filter (backend) when available or default onFilter (dataView)
         if (gridOptions.enableFiltering) {
-            this.filterService.init(grid, gridOptions, this.columnDefinitions);
+            this.filterService.init(grid);
             // if user entered some "presets", we need to reflect them all in the DOM
             if (gridOptions.presets && gridOptions.presets.filters) {
-                this.filterService.populateColumnFilterSearchTerms(gridOptions, this.columnDefinitions);
+                this.filterService.populateColumnFilterSearchTerms(grid);
             }
-            (gridOptions.backendServiceApi || gridOptions.onBackendEventApi) ? this.filterService.attachBackendOnFilter(grid, gridOptions) : this.filterService.attachLocalOnFilter(grid, gridOptions, this.dataview);
+            (gridOptions.backendServiceApi || gridOptions.onBackendEventApi) ? this.filterService.attachBackendOnFilter(grid) : this.filterService.attachLocalOnFilter(grid, this.dataview);
         }
         // if user set an onInit Backend, we'll run it right away (and if so, we also need to run preProcess, internalPostProcess & postProcess)
         if (gridOptions.backendServiceApi || gridOptions.onBackendEventApi) {
@@ -314,8 +331,8 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
             }));
         });
         // on cell click, mainly used with the columnDef.action callback
-        this.gridEventService.attachOnCellChange(grid, this.gridOptions, dataView);
-        this.gridEventService.attachOnClick(grid, this.gridOptions, dataView);
+        this.gridEventService.attachOnCellChange(grid, dataView);
+        this.gridEventService.attachOnClick(grid, dataView);
         this._eventHandler.subscribe(dataView.onRowCountChanged, function (e, args) {
             grid.updateRowCount();
             grid.render();
@@ -399,7 +416,7 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
         // auto-resize grid on browser resize
         this.resizer.init(grid);
         if (grid && options.enableAutoResize) {
-            this.resizer.attachAutoResizeDataGrid();
+            this.resizer.attachAutoResizeDataGrid({ height: this.gridHeight, width: this.gridWidth });
             if (options.autoFitColumnsOnFirstLoad && typeof grid.autosizeColumns === 'function') {
                 grid.autosizeColumns();
             }
@@ -427,6 +444,7 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
     AureliaSlickgridCustomElement.prototype.refreshGridData = function (dataset, totalCount) {
         if (dataset && this.grid && this.dataview && typeof this.dataview.setItems === 'function') {
             this.dataview.setItems(dataset, this.gridOptions.datasetIdPropertyName);
+            this.dataview.reSort();
             // this.grid.setData(dataset);
             this.grid.invalidate();
             this.grid.render();
@@ -450,7 +468,7 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
             }
             if (this.grid && this.gridOptions.enableAutoResize) {
                 // resize the grid inside a slight timeout, in case other DOM element changed prior to the resize (like a filter/pagination changed)
-                this.resizer.resizeGrid(1);
+                this.resizer.resizeGrid(1, { height: this.gridHeight, width: this.gridWidth });
             }
         }
     };
@@ -468,12 +486,26 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
         this.grid.setHeaderRowVisibility(isShowing);
         return isShowing;
     };
+    /**
+     * Dynamically change or update the column definitions list.
+     * We will re-render the grid so that the new header and data shows up correctly.
+     * If using i18n, we also need to trigger a re-translate of the column headers
+     */
+    AureliaSlickgridCustomElement.prototype.updateColumnDefinitionsList = function (newColumnDefinitions) {
+        if (this.gridOptions.enableTranslate) {
+            this.controlAndPluginService.translateColumnHeaders();
+        }
+        else {
+            this.controlAndPluginService.renderColumnHeaders(newColumnDefinitions);
+        }
+        this.grid.autosizeColumns();
+    };
+    __decorate([
+        aurelia_framework_1.bindable({ defaultBindingMode: aurelia_framework_1.bindingMode.twoWay })
+    ], AureliaSlickgridCustomElement.prototype, "columnDefinitions", void 0);
     __decorate([
         aurelia_framework_1.bindable({ defaultBindingMode: aurelia_framework_1.bindingMode.twoWay })
     ], AureliaSlickgridCustomElement.prototype, "element", void 0);
-    __decorate([
-        aurelia_framework_1.bindable({ defaultBindingMode: aurelia_framework_1.bindingMode.twoWay })
-    ], AureliaSlickgridCustomElement.prototype, "dataset", void 0);
     __decorate([
         aurelia_framework_1.bindable({ defaultBindingMode: aurelia_framework_1.bindingMode.twoWay })
     ], AureliaSlickgridCustomElement.prototype, "gridPaginationOptions", void 0);
@@ -485,10 +517,10 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
     ], AureliaSlickgridCustomElement.prototype, "grid", void 0);
     __decorate([
         aurelia_framework_1.bindable()
-    ], AureliaSlickgridCustomElement.prototype, "gridId", void 0);
+    ], AureliaSlickgridCustomElement.prototype, "dataset", void 0);
     __decorate([
         aurelia_framework_1.bindable()
-    ], AureliaSlickgridCustomElement.prototype, "columnDefinitions", void 0);
+    ], AureliaSlickgridCustomElement.prototype, "gridId", void 0);
     __decorate([
         aurelia_framework_1.bindable()
     ], AureliaSlickgridCustomElement.prototype, "gridOptions", void 0);
@@ -502,7 +534,7 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
         aurelia_framework_1.bindable()
     ], AureliaSlickgridCustomElement.prototype, "pickerOptions", void 0);
     AureliaSlickgridCustomElement = __decorate([
-        aurelia_framework_1.inject(index_2.ControlAndPluginService, index_2.ExportService, Element, aurelia_event_aggregator_1.EventAggregator, index_2.FilterService, index_2.GraphqlService, index_2.GridEventService, index_2.GridExtraService, index_2.GridStateService, index_2.GroupingAndColspanService, aurelia_i18n_1.I18N, index_2.ResizerService, index_2.SortService, aurelia_framework_1.Container)
+        aurelia_framework_1.inject(aurelia_framework_1.BindingEngine, index_2.ControlAndPluginService, index_2.ExportService, Element, aurelia_event_aggregator_1.EventAggregator, index_2.FilterService, index_2.GraphqlService, index_2.GridEventService, index_2.GridExtraService, index_2.GridStateService, index_2.GroupingAndColspanService, aurelia_i18n_1.I18N, index_2.ResizerService, index_2.SortService, aurelia_framework_1.Container)
     ], AureliaSlickgridCustomElement);
     return AureliaSlickgridCustomElement;
 }());

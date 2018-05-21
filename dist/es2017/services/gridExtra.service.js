@@ -1,9 +1,16 @@
 import * as $ from 'jquery';
 export class GridExtraService {
-    init(grid, columnDefinition, gridOptions, dataView) {
+    /** Getter for the Grid Options pulled through the Grid Object */
+    get _gridOptions() {
+        return (this._grid && this._grid.getOptions) ? this._grid.getOptions() : {};
+    }
+    /**
+     * Initialize the Service
+     * @param grid
+     * @param dataView
+     */
+    init(grid, dataView) {
         this._grid = grid;
-        this._columnDefinition = columnDefinition;
-        this._gridOptions = gridOptions;
         this._dataView = dataView;
     }
     getDataItemByRowNumber(rowNumber) {
@@ -50,9 +57,8 @@ export class GridExtraService {
         if (item && item.id) {
             item.rowClass = 'highlight';
             this._dataView.updateItem(item.id, item);
-            const gridOptions = this._grid.getOptions();
             // highlight the row for a user defined timeout
-            $(`#${gridOptions.gridId}`)
+            $(`#${this._gridOptions.gridId}`)
                 .find(`.highlight.row${rowNumber}`)
                 .first();
             // delete the row's CSS that was attached for highlighting

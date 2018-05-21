@@ -22,12 +22,23 @@ let CollectionService = class CollectionService {
         if (filterBy) {
             const property = filterBy.property || '';
             const operator = filterBy.operator || OperatorType.equal;
-            const value = filterBy.value || '';
-            if (operator === OperatorType.equal) {
-                filteredCollection = collection.filter((item) => item[property] !== value);
-            }
-            else {
-                filteredCollection = collection.filter((item) => item[property] === value);
+            // just check for undefined since the filter value could be null, 0, '', false etc
+            const value = typeof filterBy.value === 'undefined' ? '' : filterBy.value;
+            switch (operator) {
+                case OperatorType.equal:
+                    filteredCollection = collection.filter((item) => item[property] === value);
+                    break;
+                case OperatorType.in:
+                    filteredCollection = collection.filter((item) => item[property].indexOf(value) !== -1);
+                    break;
+                case OperatorType.notIn:
+                    filteredCollection = collection.filter((item) => item[property].indexOf(value) === -1);
+                    break;
+                case OperatorType.contains:
+                    filteredCollection = collection.filter((item) => value.indexOf(item[property]) !== -1);
+                    break;
+                default:
+                    filteredCollection = collection.filter((item) => item[property] !== value);
             }
         }
         return filteredCollection;
@@ -36,8 +47,7 @@ let CollectionService = class CollectionService {
      * Sort items in a collection
      * @param collection
      * @param sortBy
-     * @param columnDef
-     * @param translate
+     * @param enableTranslateLabel
      */
     sortCollection(collection, sortBy, enableTranslateLabel) {
         let sortedCollection = [];

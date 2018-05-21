@@ -3,17 +3,24 @@ import { BackendService, ColumnFilters, ColumnSort, CurrentFilter, CurrentPagina
 import { OdataService } from './odata.service';
 export declare class GridOdataService implements BackendService {
     private odataService;
+    private _columnDefinitions;
     private _currentFilters;
     private _currentPagination;
     private _currentSorters;
-    private _columnDefinitions;
-    private _gridOptions;
     private _grid;
     options: OdataOption;
     pagination: Pagination | undefined;
     defaultOptions: OdataOption;
     constructor(odataService: OdataService);
+    /** Getter for the Grid Options pulled through the Grid Object */
+    private readonly _gridOptions;
     buildQuery(): string;
+    /**
+     * Initialize the Service
+     * @param OData Options
+     * @param pagination
+     * @param grid
+     */
     init(options: OdataOption, pagination?: Pagination, grid?: any): void;
     updateOptions(serviceOptions?: OdataOption): void;
     removeColumnFilter(fieldName: string): void;
