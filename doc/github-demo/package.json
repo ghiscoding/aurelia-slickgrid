@@ -20,7 +20,7 @@
     "aurelia-i18n": "^2.1.2",
     "aurelia-polyfills": "latest",
     "aurelia-router": "^1.5.0",
-    "aurelia-slickgrid": "^1.12.2",
+    "aurelia-slickgrid": "^1.13.0",
     "aurelia-validation": "^1.1.2",
     "bluebird": "^3.5.1",
     "bootstrap": "^3.3.7",
@@ -29,7 +29,6 @@
     "i18next-xhr-backend": "^1.5.1",
     "jquery": "^3.3.1",
     "moment": "^2.21.0",
-    "slickgrid": "^2.3.17",
     "text-encoding-utf-8": "^1.0.2"
   },
   "peerDependencies": {},
