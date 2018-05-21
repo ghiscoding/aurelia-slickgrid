@@ -28,7 +28,8 @@ All notable changes to this project will be documented in this file. See [standa
 ### Features
 
 * **filters:** add more operator types to collection svc filter ([#66](https://github.com/ghiscoding/aurelia-slickgrid/issues/66)) ([4359e67](https://github.com/ghiscoding/aurelia-slickgrid/commit/4359e67)), closes [#63](https://github.com/ghiscoding/aurelia-slickgrid/issues/63)
-
+* **grid:** ability to dynamically add or change Column Headers ([#65](https://github.com/ghiscoding/aurelia-slickgrid/pull/65)), closes [#57](https://github.com/ghiscoding/aurelia-slickgrid/issues/57)
+* **resize:** use gridHeight or gridWidth when provided on autoResize ([#59](https://github.com/ghiscoding/aurelia-slickgrid/pull/59)
 
 ### BREAKING CHANGES
 
