@@ -532,7 +532,7 @@ export class AureliaSlickgridCustomElement {
    * We will re-render the grid so that the new header and data shows up correctly.
    * If using i18n, we also need to trigger a re-translate of the column headers
    */
-  updateColumnDefinitionsList(newColumnDefinitions) {
+  updateColumnDefinitionsList(newColumnDefinitions?: Column[]) {
     if (this.gridOptions.enableTranslate) {
       this.controlAndPluginService.translateColumnHeaders();
     } else {
