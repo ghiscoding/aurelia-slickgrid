@@ -7,7 +7,7 @@ export const dateFilterCondition: FilterCondition = (options: FilterConditionOpt
   const filterSearchType = options.filterSearchType || FieldType.dateIso;
   const searchDateFormat = mapMomentDateFormatWithFieldType(filterSearchType);
   if (!moment(options.cellValue, moment.ISO_8601).isValid() || !moment(options.searchTerm, searchDateFormat, true).isValid()) {
-    return true;
+    return false;
   }
   const dateCell = moment(options.cellValue);
   const dateSearch = moment(options.searchTerm);
