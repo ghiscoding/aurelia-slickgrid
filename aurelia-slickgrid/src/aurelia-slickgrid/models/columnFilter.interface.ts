@@ -48,9 +48,6 @@ export interface ColumnFilter {
   /** Options that could be provided to the Filter, example: { container: 'body', maxHeight: 250} */
   filterOptions?: MultipleSelectOption | any;
 
-  /** DEPRECATED, please use "collection" instead which is more generic and not specific to a Select Filter. Refer to the Select Filter Wiki page for more info  */
-  selectOptions?: any[];
-
   /** Do we want the Filter to handle translation (localization)? */
   enableTranslateLabel?: boolean;
 
