@@ -160,7 +160,7 @@ export class SlickPaginationCustomElement {
         backendApi.preProcess();
       }
 
-      const query = backendApi.service.onPaginationChanged(event, { newPage: pageNumber, pageSize: itemsPerPage });
+      const query = backendApi.service.processOnPaginationChanged(event, { newPage: pageNumber, pageSize: itemsPerPage });
 
       // await for the Promise to resolve the data
       const processResult = await backendApi.process(query);

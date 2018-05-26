@@ -126,7 +126,7 @@ export class GridOdataService implements BackendService {
   /*
    * FILTERING
    */
-  onFilterChanged(event: Event, args: FilterChangedArgs): Promise<string> {
+  processOnFilterChanged(event: Event, args: FilterChangedArgs): Promise<string> {
     const serviceOptions: GridOption = args.grid.getOptions();
     const backendApi = serviceOptions.backendServiceApi;
 
@@ -159,7 +159,7 @@ export class GridOdataService implements BackendService {
   /*
    * PAGINATION
    */
-  onPaginationChanged(event: Event, args: PaginationChangedArgs) {
+  processOnPaginationChanged(event: Event, args: PaginationChangedArgs) {
     const pageSize = +(args.pageSize || DEFAULT_PAGE_SIZE);
     this.updatePagination(args.newPage, pageSize);
 
@@ -170,7 +170,7 @@ export class GridOdataService implements BackendService {
   /*
    * SORTING
    */
-  onSortChanged(event: Event, args: SortChangedArgs) {
+  processOnSortChanged(event: Event, args: SortChangedArgs) {
     const sortColumns = (args.multiColumnSort) ? args.sortCols : new Array({ sortCol: args.sortCol, sortAsc: args.sortAsc });
 
     // loop through all columns to inspect sorters & set the query
