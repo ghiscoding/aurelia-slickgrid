@@ -32,9 +32,9 @@ export function sortByFieldType(value1: any, value2: any, fieldType: FieldType, 
 export function compareDates(sortDirection, value1, value2, format, strict?: boolean) {
   let diff = 0;
 
-  if (!moment(value1, format, strict).isValid()) {
+  if (value1 === null || value1 === '' || !moment(value1, format, strict).isValid()) {
     diff = -1;
-  } else if (!moment(value2, format, strict).isValid()) {
+  } else if (value2 === null || value2 === '' || !moment(value2, format, strict).isValid()) {
     diff = 1;
   } else {
     const date1 = moment(value1, format, strict);
