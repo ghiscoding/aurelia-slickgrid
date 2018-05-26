@@ -5,6 +5,24 @@ import { SlickgridConfig } from './slickgrid-config';
 import { Filters, PLUGIN_NAME as FILTER_PLUGIN_NAME } from './filters/index';
 const SERVICE_NAME = 'AURELIA__SLICKGRID_SERVICES';
 
+// import all Services separately
+import {
+  CollectionService,
+  ControlAndPluginService,
+  ExportService,
+  FilterService,
+  GraphqlService,
+  GridEventService,
+  GridService,
+  GridExtraUtils,
+  GridStateService,
+  GridOdataService,
+  GroupingAndColspanService,
+  OdataService,
+  ResizerService,
+  SortService,
+} from './services/index';
+
 // expose all public classes
 // aggregators, editors, formatters, services...
 export * from './models/index';
@@ -17,24 +35,11 @@ export * from './editors/index';
 export * from './filter-conditions/index';
 export * from './filters/index';
 
-export { GridExtraUtils, GraphqlService, GridOdataService } from './services/index';
-
-// import all Services separately
-import {
-  CollectionService,
-  ControlAndPluginService,
-  ExportService,
-  FilterService,
-  GraphqlService,
-  GridEventService,
-  GridExtraService,
+// export some of the Services
+export {
   GridExtraUtils,
-  GridStateService,
-  GridOdataService,
-  GroupingAndColspanService,
-  OdataService,
-  ResizerService,
-  SortService,
+  GraphqlService,
+  GridOdataService
 } from './services/index';
 
 export function configure(aurelia: any, callback: any) {
@@ -55,7 +60,7 @@ export function configure(aurelia: any, callback: any) {
   aurelia.container.registerTransient(SERVICE_NAME, FilterService);
   aurelia.container.registerTransient(SERVICE_NAME, GraphqlService);
   aurelia.container.registerTransient(SERVICE_NAME, GridEventService);
-  aurelia.container.registerTransient(SERVICE_NAME, GridExtraService);
+  aurelia.container.registerTransient(SERVICE_NAME, GridService);
   aurelia.container.registerTransient(SERVICE_NAME, GridStateService);
   aurelia.container.registerTransient(SERVICE_NAME, GridOdataService);
   aurelia.container.registerTransient(SERVICE_NAME, GroupingAndColspanService);

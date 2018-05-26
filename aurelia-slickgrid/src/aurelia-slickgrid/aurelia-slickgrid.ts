@@ -42,7 +42,7 @@ import {
   FilterService,
   GraphqlService,
   GridEventService,
-  GridExtraService,
+  GridService,
   GridStateService,
   GroupingAndColspanService,
   ResizerService,
@@ -67,7 +67,7 @@ const eventPrefix = 'sg';
   FilterService,
   GraphqlService,
   GridEventService,
-  GridExtraService,
+  GridService,
   GridStateService,
   GroupingAndColspanService,
   I18N,
@@ -107,7 +107,7 @@ export class AureliaSlickgridCustomElement {
     private filterService: FilterService,
     private graphqlService: GraphqlService,
     private gridEventService: GridEventService,
-    private gridExtraService: GridExtraService,
+    private gridService: GridService,
     private gridStateService: GridStateService,
     private groupingAndColspanService: GroupingAndColspanService,
     private i18n: I18N,
@@ -172,8 +172,8 @@ export class AureliaSlickgridCustomElement {
       this.groupingAndColspanService.init(this.grid, this.dataview);
     }
 
-    // attach grid extra service
-    this.gridExtraService.init(this.grid, this.dataview);
+    // initialize grid service
+    this.gridService.init(this.grid, this.dataview);
 
     // when user enables translation, we need to translate Headers on first pass & subsequently in the attachDifferentHooks
     if (this.gridOptions.enableTranslate) {
@@ -200,7 +200,7 @@ export class AureliaSlickgridCustomElement {
       filterService: this.filterService,
       gridEventService: this.gridEventService,
       gridStateService: this.gridStateService,
-      gridService: this.gridExtraService,
+      gridService: this.gridService,
       groupingService: this.groupingAndColspanService,
       pluginService: this.controlAndPluginService,
       resizerService: this.resizer,

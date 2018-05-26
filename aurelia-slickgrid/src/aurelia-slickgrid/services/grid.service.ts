@@ -4,7 +4,7 @@ import * as $ from 'jquery';
 // using external non-typed js libraries
 declare var Slick: any;
 
-export class GridExtraService {
+export class GridService {
   private _grid: any;
   private _dataView: any;
 
