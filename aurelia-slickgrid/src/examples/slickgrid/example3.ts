@@ -57,13 +57,6 @@ export class Example3 {
     this.getData();
   }
 
-  detached() {
-    // unsubscrible any Slick.Event you might have used
-    // a reminder again, these are SlickGrid Event, not Event Aggregator events
-    this.gridObj.onCellChange.unsubscribe();
-    this.gridObj.onClick.unsubscribe();
-  }
-
   aureliaGridReady(aureliaGrid: AureliaGridInstance) {
     this.aureliaGrid = aureliaGrid;
   }
@@ -235,42 +228,29 @@ export class Example3 {
     this.dataset = mockedDataset;
   }
 
-  gridObjChanged(grid) {
-    grid.onBeforeEditCell.subscribe((e, args) => {
-      console.log('before edit', e);
-      e.stopImmediatePropagation();
-    });
-    grid.onBeforeCellEditorDestroy.subscribe((e, args) => {
-      console.log('before destroy');
-      e.stopPropagation();
-    });
+  onCellChanged(e, args) {
+    console.log('onCellChange', args);
+    this.updatedObject = args.item;
+    this.aureliaGrid.resizerService.resizeGrid(100);
+  }
 
-    grid.onCellChange.subscribe((e, args) => {
-      console.log('onCellChange', args);
-      this.updatedObject = args.item;
-      this.aureliaGrid.resizerService.resizeGrid(100);
-    });
+  onCellClicked(e, args) {
+    const metadata = this.aureliaGrid.gridService.getColumnFromEventArguments(args);
+    console.log(metadata);
 
-    // You could also subscribe to grid.onClick
-    // Note that if you had already setup "onCellClick" in the column definition, you cannot use grid.onClick
-    grid.onClick.subscribe((e, args) => {
-      const column = this.aureliaGrid.gridService.getColumnFromEventArguments(args);
-      console.log('onClick', args, column);
-      if (column.columnDef.id === 'edit') {
-        this.alertWarning = `open a modal window to edit: ${column.dataContext.title}`;
+    if (metadata.columnDef.id === 'edit') {
+      this.alertWarning = `open a modal window to edit: ${metadata.dataContext.title}`;
 
-        // highlight the row, to customize the color, you can change the SASS variable $row-highlight-background-color
-        this.aureliaGrid.gridService.highlightRow(args.row, 1500);
+      // highlight the row, to customize the color, you can change the SASS variable $row-highlight-background-color
+      this.aureliaGrid.gridService.highlightRow(args.row, 1500);
 
-        // you could also select the row, when using "enableCellNavigation: true", it automatically selects the row
-        // this.gridService.setSelectedRow(args.row);
+      // you could also select the row, when using "enableCellNavigation: true", it automatically selects the row
+      // this.aureliaGrid.gridService.setSelectedRow(args.row);
+    } else if (metadata.columnDef.id === 'delete') {
+      if (confirm('Are you sure?')) {
+        this.aureliaGrid.gridService.deleteDataGridItemById(metadata.dataContext.id);
       }
-      if (column.columnDef.id === 'delete') {
-        if (confirm('Are you sure?')) {
-          this.aureliaGrid.gridService.deleteDataGridItemById(column.dataContext.id);
-        }
-      }
-    });
+    }
   }
 
   setAutoEdit(isAutoEdit) {

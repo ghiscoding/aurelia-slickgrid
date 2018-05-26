@@ -121,7 +121,7 @@ export class AureliaSlickgridCustomElement {
   }
 
   initialization() {
-    this.elm.dispatchEvent(new CustomEvent(`${eventPrefix}-on-before-grid-create`, {
+    this.elm.dispatchEvent(new CustomEvent(`${aureliaEventPrefix}-on-before-grid-create`, {
       bubbles: true,
     }));
     this.ea.publish('onBeforeGridCreate', true);
@@ -152,12 +152,12 @@ export class AureliaSlickgridCustomElement {
     this.dataview.endUpdate();
 
     // publish certain events
-    this.elm.dispatchEvent(new CustomEvent(`${eventPrefix}-on-grid-created`, {
+    this.elm.dispatchEvent(new CustomEvent(`${aureliaEventPrefix}-on-grid-created`, {
       bubbles: true,
       detail: this.grid
     }));
     this.ea.publish('onGridCreated', this.grid);
-    this.elm.dispatchEvent(new CustomEvent(`${eventPrefix}-on-dataview-created`, {
+    this.elm.dispatchEvent(new CustomEvent(`${aureliaEventPrefix}-on-dataview-created`, {
       bubbles: true,
       detail: this.dataview
     }));
@@ -213,7 +213,7 @@ export class AureliaSlickgridCustomElement {
 
   detached() {
     this.ea.publish('onBeforeGridDestroy', this.grid);
-    this.elm.dispatchEvent(new CustomEvent(`${eventPrefix}-on-before-grid-destroy`, {
+    this.elm.dispatchEvent(new CustomEvent(`${aureliaEventPrefix}-on-before-grid-destroy`, {
       bubbles: true,
       detail: this.grid
     }));
@@ -231,7 +231,7 @@ export class AureliaSlickgridCustomElement {
     this.gridStateSubscriber.dispose();
     this.localeChangedSubscriber.dispose();
     this.ea.publish('onAfterGridDestroyed', true);
-    this.elm.dispatchEvent(new CustomEvent(`${eventPrefix}-on-after-grid-destroyed`, {
+    this.elm.dispatchEvent(new CustomEvent(`${aureliaEventPrefix}-on-after-grid-destroyed`, {
       bubbles: true,
       detail: this.grid
     }));
