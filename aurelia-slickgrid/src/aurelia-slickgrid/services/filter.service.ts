@@ -76,7 +76,7 @@ export class FilterService {
     }
     const gridOptions: GridOption = args.grid.getOptions() || {};
 
-    const backendApi = gridOptions.backendServiceApi || gridOptions.onBackendEventApi;
+    const backendApi = gridOptions.backendServiceApi;
     if (!backendApi || !backendApi.process || !backendApi.service) {
       throw new Error(`BackendServiceApi requires at least a "process" function and a "service" defined`);
     }

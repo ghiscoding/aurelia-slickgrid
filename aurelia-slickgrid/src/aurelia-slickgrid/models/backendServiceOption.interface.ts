@@ -23,7 +23,4 @@ export interface BackendServiceOption {
    * users (first: 20, offset: 10, userId: 123) { ... }
    */
   extraQueryArguments?: QueryArgument[];
-
-  /** Backend Service API callback definitions */
-  onBackendEventApi?: BackendEventChanged;
 }

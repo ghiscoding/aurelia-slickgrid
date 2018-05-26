@@ -58,7 +58,7 @@ export interface GridOption {
     maxToolTipLength: number;
   };
 
-  /** Backend Service API definition (GraphQL/OData Services), also goes with onBackendEventApi */
+  /** Backend Service API definition (GraphQL/OData Services) */
   backendServiceApi?: BackendServiceApi;
 
   /** CSS class name used to simulate cell flashing */
@@ -246,9 +246,6 @@ export interface GridOption {
 
   /** Defaults to true, which will display numbers indicating column sort precedence are displayed in the columns when multiple columns selected */
   numberedMultiColumnSort?: boolean;
-
-  /** DEPRECATED, Please use "backendServiceApi" instead */
-  onBackendEventApi?: BackendEventChanged;
 
   /** Pagination options, these are used ONLY with a Backend Service API (GraphQL/OData Services) */
   pagination?: Pagination;

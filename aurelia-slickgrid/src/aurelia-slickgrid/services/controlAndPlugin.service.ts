@@ -411,7 +411,7 @@ export class ControlAndPluginService {
    * @param grid
    */
   private addGridMenuCustomCommands(grid: any) {
-    const backendApi = this._gridOptions.backendServiceApi || this._gridOptions.onBackendEventApi || null;
+    const backendApi = this._gridOptions.backendServiceApi || null;
 
     if (this._gridOptions && this._gridOptions.enableFiltering) {
       // show grid menu: clear all filters
@@ -557,7 +557,7 @@ export class ControlAndPluginService {
   /** Call a refresh dataset with a BackendServiceApi */
   refreshBackendDataset() {
     let query;
-    const backendApi = this._gridOptions.backendServiceApi || this._gridOptions.onBackendEventApi;
+    const backendApi = this._gridOptions.backendServiceApi;
     if (!backendApi || !backendApi.service || !backendApi.process) {
       throw new Error(`BackendServiceApi requires at least a "process" function and a "service" defined`);
     }

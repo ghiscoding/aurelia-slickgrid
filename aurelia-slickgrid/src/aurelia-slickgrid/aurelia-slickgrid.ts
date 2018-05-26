@@ -187,7 +187,7 @@ export class AureliaSlickgridCustomElement {
 
     // attach the Backend Service API callback functions only after the grid is initialized
     // because the preProcess() and onInit() might get triggered
-    if (this.gridOptions && (this.gridOptions.backendServiceApi || this.gridOptions.onBackendEventApi)) {
+    if (this.gridOptions && this.gridOptions.backendServiceApi) {
       this.attachBackendCallbackFunctions(this.gridOptions);
     }
 
@@ -285,8 +285,8 @@ export class AureliaSlickgridCustomElement {
    * For now, this is GraphQL Service only feautre and it will basically refresh the Dataset & Pagination without having the user to create his own PostProcess every time
    */
   createBackendApiInternalPostProcessCallback(gridOptions: GridOption) {
-    if (gridOptions && (gridOptions.backendServiceApi || gridOptions.onBackendEventApi)) {
-      const backendApi = gridOptions.backendServiceApi || gridOptions.onBackendEventApi;
+    if (gridOptions && gridOptions.backendServiceApi) {
+      const backendApi = gridOptions.backendServiceApi;
 
       // internalPostProcess only works with a GraphQL Service, so make sure it is that type
       if (backendApi && backendApi.service && backendApi.service instanceof GraphqlService) {
@@ -316,7 +316,7 @@ export class AureliaSlickgridCustomElement {
 
     // attach external sorting (backend) when available or default onSort (dataView)
     if (gridOptions.enableSorting) {
-      (gridOptions.backendServiceApi || gridOptions.onBackendEventApi) ? this.sortService.attachBackendOnSort(grid, dataView) : this.sortService.attachLocalOnSort(grid, dataView);
+      gridOptions.backendServiceApi ? this.sortService.attachBackendOnSort(grid, dataView) : this.sortService.attachLocalOnSort(grid, dataView);
     }
 
     // attach external filter (backend) when available or default onFilter (dataView)
@@ -327,15 +327,12 @@ export class AureliaSlickgridCustomElement {
       if (gridOptions.presets && gridOptions.presets.filters) {
         this.filterService.populateColumnFilterSearchTerms(grid);
       }
-      (gridOptions.backendServiceApi || gridOptions.onBackendEventApi) ? this.filterService.attachBackendOnFilter(grid) : this.filterService.attachLocalOnFilter(grid, this.dataview);
+      gridOptions.backendServiceApi ? this.filterService.attachBackendOnFilter(grid) : this.filterService.attachLocalOnFilter(grid, this.dataview);
     }
 
     // if user set an onInit Backend, we'll run it right away (and if so, we also need to run preProcess, internalPostProcess & postProcess)
-    if (gridOptions.backendServiceApi || gridOptions.onBackendEventApi) {
-      const backendApi = gridOptions.backendServiceApi || gridOptions.onBackendEventApi;
-      if (gridOptions.onBackendEventApi) {
-        console.warn(`"onBackendEventApi" has been DEPRECATED, please consider using "backendServiceApi" in the short term since "onBackendEventApi" will be removed in future versions. You can take look at the Aurelia-Slickgrid Wikis for OData/GraphQL Services implementation`);
-      }
+    if (gridOptions.backendServiceApi) {
+      const backendApi = gridOptions.backendServiceApi;
 
       if (backendApi && backendApi.service && backendApi.service.init) {
         backendApi.service.init(backendApi.options, gridOptions.pagination, this.grid);
@@ -406,7 +403,7 @@ export class AureliaSlickgridCustomElement {
   }
 
   attachBackendCallbackFunctions(gridOptions: GridOption) {
-    const backendApi = gridOptions.backendServiceApi || gridOptions.onBackendEventApi;
+    const backendApi = gridOptions.backendServiceApi;
     const serviceOptions: BackendServiceOption = (backendApi && backendApi.service && backendApi.service.options) ? backendApi.service.options : {};
     const isExecuteCommandOnInit = (!serviceOptions) ? false : ((serviceOptions && serviceOptions.hasOwnProperty('executeProcessCommandOnInit')) ? serviceOptions['executeProcessCommandOnInit'] : true);
 
