@@ -104,6 +104,7 @@ export class Example6 {
       enableCheckboxSelector: true,
       enableRowSelection: true,
       enableTranslate: true,
+      i18n: this.i18n,
       gridMenu: {
         resizeOnShowHeaderRow: true,
       },
@@ -137,9 +138,6 @@ export class Example6 {
         process: (query) => this.getCustomerApiCall(query),
         postProcess: (result: GraphqlResult) => this.displaySpinner(false)
       },
-      params: {
-        i18n: this.i18n
-      }
     };
   }
 

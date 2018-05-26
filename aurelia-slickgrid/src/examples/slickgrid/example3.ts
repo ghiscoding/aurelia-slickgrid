@@ -194,9 +194,7 @@ export class Example3 {
         this._commandQueue.push(editCommand);
         editCommand.execute();
       },
-      params: {
-        i18n: this.i18n
-      }
+      i18n: this.i18n,
     };
   }
 

@@ -5,12 +5,11 @@ import { I18N } from 'aurelia-i18n';
 export const translateBooleanFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid: any) => {
   const gridOptions = (grid && typeof grid.getOptions === 'function') ? grid.getOptions() : {};
   const columnParams = columnDef.params || {};
-  const gridParams = gridOptions.params || {};
-  const i18n = gridParams.i18n || columnParams.i18n;
+  const i18n = gridOptions.i18n || columnParams.i18n;
 
   if (!i18n || typeof i18n.tr !== 'function') {
     throw new Error(`The translate formatter requires the "I18N" Service to be provided as a Grid Options or Column Definition "params".
-    For example: this.gridOptions = { enableTranslate: true, params: { i18n: this.i18n }}`);
+    For example: this.gridOptions = { enableTranslate: true, i18n: this.i18n }`);
   }
 
   // make sure the value is a string (for example a boolean value would throw an error)

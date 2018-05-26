@@ -84,13 +84,13 @@ export class Example3 {
       formatter: Formatters.deleteIcon,
       minWidth: 30,
       maxWidth: 30
-    // use onCellClick OR grid.onClick.subscribe which you can see down below
-    /*
-    onCellClick: (args: OnEventArgs) => {
-      console.log(args);
-      this.alertWarning = `Deleting: ${args.dataContext.title}`;
-    }
-    */
+      // use onCellClick OR grid.onClick.subscribe which you can see down below
+      /*
+      onCellClick: (args: OnEventArgs) => {
+        console.log(args);
+        this.alertWarning = `Deleting: ${args.dataContext.title}`;
+      }
+      */
     }, {
       id: 'title',
       name: 'Title',
@@ -136,10 +136,7 @@ export class Example3 {
       sortable: true,
       minWidth: 100,
       type: FieldType.date,
-      editor: Editors.date,
-      params: {
-        i18n: this.i18n
-      }
+      editor: Editors.date
     }, {
       id: 'finish',
       name: 'Finish',
@@ -191,7 +188,8 @@ export class Example3 {
       editCommandHandler: (item, column, editCommand) => {
         this._commandQueue.push(editCommand);
         editCommand.execute();
-      }
+      },
+      i18n: this.i18n
     };
   }
 

@@ -1,3 +1,4 @@
+import { I18N } from 'aurelia-i18n';
 import {
   AutoResizeOption,
   BackendEventChanged,
@@ -228,6 +229,9 @@ export interface GridOption {
 
   /** Header menu options */
   headerMenu?: HeaderMenu;
+
+  /** i18n translation service instance */
+  i18n?: I18N;
 
   /** Do we leave space for new rows in the DOM visible buffer */
   leaveSpaceForNewRows?: boolean;

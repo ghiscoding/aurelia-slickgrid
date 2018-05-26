@@ -118,6 +118,7 @@ export class Example12 {
       enableExcelCopyBuffer: true,
       enableFiltering: true,
       enableTranslate: true,
+      i18n: this.i18n,
       exportOptions: {
         // set at the grid option level, meaning all column will evaluate the Formatter (when it has a Formatter defined)
         exportWithFormatter: true,
@@ -126,9 +127,6 @@ export class Example12 {
       gridMenu: {
         hideExportCsvCommand: false,           // false by default, so it's optional
         hideExportTextDelimitedCommand: false  // true by default, so if you want it, you will need to disable the flag
-      },
-      params: {
-        i18n: this.i18n
       }
     };
   }

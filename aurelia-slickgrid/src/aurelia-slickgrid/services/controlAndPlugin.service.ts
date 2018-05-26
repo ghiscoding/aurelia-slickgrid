@@ -611,7 +611,13 @@ export class ControlAndPluginService {
       this.columnPickerControl = null;
     }
 
+    const tempHideForceFit = this._gridOptions.columnPicker.hideForceFitButton;
+    const tempSyncResize = this._gridOptions.columnPicker.hideSyncResizeButton;
     this._gridOptions.columnPicker = undefined;
+    this._gridOptions.columnPicker = {
+      hideForceFitButton: tempHideForceFit,
+      hideSyncResizeButton: tempSyncResize
+    }
     this.createColumnPicker(this._grid, this.visibleColumns);
   }
 
