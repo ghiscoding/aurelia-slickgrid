@@ -1,6 +1,6 @@
 import { inject } from 'aurelia-framework';
 import { HttpClient } from 'aurelia-http-client';
-import { FieldType, FilterType, FormElementType, GridOdataService } from 'aurelia-slickgrid';
+import { FieldType, FilterType, GridOdataService } from 'aurelia-slickgrid';
 
 const defaultPageSize = 20;
 const sampleDataRoot = 'src/examples/slickgrid/sample-data';
@@ -52,7 +52,7 @@ export class Example5 {
         id: 'gender', name: 'Gender', field: 'gender', filterable: true, sortable: true, minWidth: 100,
         filter: {
           collection: [{ value: '', label: '' }, { value: 'male', label: 'male' }, { value: 'female', label: 'female' }],
-          type: FormElementType.singleSelect
+          type: FilterType.singleSelect
         }
       },
       { id: 'company', name: 'Company', field: 'company', minWidth: 100 }

@@ -1,5 +1,5 @@
 import { autoinject } from 'aurelia-framework';
-import { Column, GridOption, FieldType, Formatters, FormElementType } from '../../aurelia-slickgrid';
+import { Column, GridOption, FieldType, Formatters } from '../../aurelia-slickgrid';
 
 let columnsWithHighlightingById = {};
 

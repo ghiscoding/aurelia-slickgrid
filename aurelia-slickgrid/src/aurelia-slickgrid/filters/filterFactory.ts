@@ -1,5 +1,5 @@
 import { inject, Container } from 'aurelia-framework';
-import { Filter, FilterType, FormElementType } from '../models/index';
+import { Filter, FilterType } from '../models/index';
 import { SlickgridConfig } from '../slickgrid-config';
 
 /** The name of the plugins the factory will initialize */
@@ -26,11 +26,11 @@ export class FilterFactory {
 
   /**
    * Creates a new Filter from the provided filterType
-   * @param {FilterType | FormElementType | string} [filterType] the type of filter to create
+   * @param {FilterType | string} [filterType] the type of filter to create
    * as an enum or custom string. The default filter type will be used if no value is passed
    * @return {Filter} the new Filter
    */
-  public createFilter(filterType?: FilterType | FormElementType | string): Filter {
+  public createFilter(filterType?: FilterType | string): Filter {
     const filters = this.container.getAll(PLUGIN_NAME);
 
     let filter: Filter | undefined = filters.find((f: Filter) =>
