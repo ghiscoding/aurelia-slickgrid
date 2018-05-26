@@ -7,6 +7,9 @@ export class Example2 {
   title = 'Example 10: Grid with Row Selection';
   subTitle = `
     Row selection, single or multi-select (<a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Row-Selection" target="_blank">Wiki docs</a>).
+    <ul>
+      <li>Note that "enableExcelCopyBuffer" cannot be used at the same time as Row Selection because there can exist only 1 SelectionModel at a time</li>
+    </ul>
   `;
 
   columnDefinitions: Column[];
@@ -49,7 +52,8 @@ export class Example2 {
       },
       enableAutoResize: true,
       enableCellNavigation: false,
-      enableCheckboxSelector: true
+      enableCheckboxSelector: true,
+      preselectedRows: [0, 2]
     };
   }
 

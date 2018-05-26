@@ -178,7 +178,7 @@ export class Example3 {
         },
         collectionFilterBy: {
           property: 'label',
-          value: [ 'Task 1', 'Task 2', 'Task 3', 'Task 4', 'Task 5', 'Task 6' ],
+          value: ['Task 1', 'Task 2', 'Task 3', 'Task 4', 'Task 5', 'Task 6'],
           operator: OperatorType.contains
         }
       }
@@ -193,13 +193,13 @@ export class Example3 {
       },
       editable: true,
       enableCellNavigation: true,
-      enableCheckboxSelector: true,
+      enableCheckboxSelector: false,
       rowSelectionOptions: {
         // True (Single Selection), False (Multiple Selections)
         // Default to True when no "rowSelectionOptions" provided
         selectActiveRow: true
       },
-      enableExcelCopyBuffer: false,
+      enableExcelCopyBuffer: true,
       editCommandHandler: (item, column, editCommand) => {
         this._commandQueue.push(editCommand);
         editCommand.execute();
