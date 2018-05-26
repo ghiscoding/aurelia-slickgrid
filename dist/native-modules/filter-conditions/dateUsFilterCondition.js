@@ -5,7 +5,7 @@ import * as moment from 'moment';
 var FORMAT = mapMomentDateFormatWithFieldType(FieldType.dateUs);
 export var dateUsFilterCondition = function (options) {
     if (!moment(options.cellValue, FORMAT, true).isValid() || !moment(options.searchTerm, FORMAT, true).isValid()) {
-        return true;
+        return false;
     }
     var dateCell = moment(options.cellValue, FORMAT, true);
     var dateSearch = moment(options.searchTerm, FORMAT, true);

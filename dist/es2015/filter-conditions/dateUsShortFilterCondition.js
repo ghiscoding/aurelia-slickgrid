@@ -5,7 +5,7 @@ import { mapMomentDateFormatWithFieldType } from './../services/utilities';
 const FORMAT = mapMomentDateFormatWithFieldType(FieldType.dateUsShort);
 export const dateUsShortFilterCondition = (options) => {
     if (!moment(options.cellValue, FORMAT, true).isValid() || !moment(options.searchTerm, FORMAT, true).isValid()) {
-        return true;
+        return false;
     }
     const dateCell = moment(options.cellValue, FORMAT, true);
     const dateSearch = moment(options.searchTerm, FORMAT, true);

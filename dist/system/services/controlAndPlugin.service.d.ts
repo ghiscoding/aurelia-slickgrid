@@ -12,12 +12,18 @@ export declare class ControlAndPluginService {
     private _grid;
     visibleColumns: Column[];
     areVisibleColumnDifferent: boolean;
+    pluginList: {
+        name: string;
+        plugin: any;
+    }[];
     autoTooltipPlugin: any;
+    cellExternalCopyManagerPlugin: any;
     checkboxSelectorPlugin: any;
     columnPickerControl: any;
     headerButtonsPlugin: any;
     headerMenuPlugin: any;
     gridMenuControl: any;
+    groupItemMetaProviderPlugin: any;
     rowSelectionPlugin: any;
     undoRedoBuffer: any;
     constructor(exportService: ExportService, filterService: FilterService, i18n: I18N, sortService: SortService);
@@ -27,6 +33,13 @@ export declare class ControlAndPluginService {
     private readonly _columnDefinitions;
     /** Auto-resize all the column in the grid to fit the grid width */
     autoResizeColumns(): void;
+    getPlugin(name?: string): {
+        name: string;
+        plugin: any;
+    } | {
+        name: string;
+        plugin: any;
+    }[] | undefined;
     /**
      * Attach/Create different Controls or Plugins after the Grid is created
      * @param grid
@@ -48,7 +61,7 @@ export declare class ControlAndPluginService {
      * @param grid
      * @param columnDefinitions
      */
-    createColumnPicker(grid: any, columnDefinitions: Column[]): void;
+    createColumnPicker(grid: any, columnDefinitions: Column[]): any;
     /**
      * Create (or re-create) Grid Menu and expose all the available hooks that user can subscribe (onCommand, onMenuClose, ...)
      * @param grid

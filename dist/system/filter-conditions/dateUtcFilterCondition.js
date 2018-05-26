@@ -18,7 +18,7 @@ System.register(["./../services/utilities", "./filterUtilities", "moment"], func
             exports_1("dateUtcFilterCondition", dateUtcFilterCondition = function (options) {
                 var searchDateFormat = utilities_1.mapMomentDateFormatWithFieldType(options.filterSearchType || options.fieldType);
                 if (!moment(options.cellValue, moment.ISO_8601).isValid() || !moment(options.searchTerm, searchDateFormat, true).isValid()) {
-                    return true;
+                    return false;
                 }
                 var dateCell = moment(options.cellValue, moment.ISO_8601, true);
                 var dateSearch = moment(options.searchTerm, searchDateFormat, true);

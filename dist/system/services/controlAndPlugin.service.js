@@ -51,6 +51,7 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../models/index", "./ex
                     this.i18n = i18n;
                     this.sortService = sortService;
                     this.areVisibleColumnDifferent = false;
+                    this.pluginList = [];
                 }
                 Object.defineProperty(ControlAndPluginService.prototype, "_gridOptions", {
                     /** Getter for the Grid Options pulled through the Grid Object */
@@ -72,6 +73,12 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../models/index", "./ex
                 ControlAndPluginService.prototype.autoResizeColumns = function () {
                     this._grid.autosizeColumns();
                 };
+                ControlAndPluginService.prototype.getPlugin = function (name) {
+                    if (name) {
+                        return this.pluginList.find(function (p) { return p.name === name; });
+                    }
+                    return this.pluginList;
+                };
                 /**
                  * Attach/Create different Controls or Plugins after the Grid is created
                  * @param grid
@@ -83,33 +90,44 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../models/index", "./ex
                     this._grid = grid;
                     this._dataView = dataView;
                     this.visibleColumns = this._columnDefinitions;
-                    // Column Picker Plugin
+                    // Column Picker Control
                     if (this._gridOptions.enableColumnPicker) {
                         this.columnPickerControl = this.createColumnPicker(grid, this._columnDefinitions);
+                        this.pluginList.push({ name: 'ColumnPicker', plugin: this.columnPickerControl });
                     }
-                    // Grid Menu Plugin
+                    // Grid Menu Control
                     if (this._gridOptions.enableGridMenu) {
                         this.gridMenuControl = this.createGridMenu(grid, this._columnDefinitions);
+                        this.pluginList.push({ name: 'GridMenu', plugin: this.gridMenuControl });
                     }
                     // Auto Tooltip Plugin
                     if (this._gridOptions.enableAutoTooltip) {
                         this.autoTooltipPlugin = new Slick.AutoTooltips(this._gridOptions.autoTooltipOptions || {});
                         grid.registerPlugin(this.autoTooltipPlugin);
+                        this.pluginList.push({ name: 'AutoTooltip', plugin: this.autoTooltipPlugin });
                     }
                     // Grouping Plugin
                     // register the group item metadata provider to add expand/collapse group handlers
                     if (this._gridOptions.enableGrouping) {
-                        grid.registerPlugin(groupItemMetadataProvider);
+                        this.groupItemMetaProviderPlugin = groupItemMetadataProvider || {};
+                        this._grid.registerPlugin(this.groupItemMetaProviderPlugin);
+                        this.pluginList.push({ name: 'GroupItemMetaProvider', plugin: this.groupItemMetaProviderPlugin });
                     }
                     // Checkbox Selector Plugin
                     if (this._gridOptions.enableCheckboxSelector) {
                         // when enabling the Checkbox Selector Plugin, we need to also watch onClick events to perform certain actions
-                        // the selector column has to be create BEFORE the grid (else it behaves oddly), but we can only watch grid events AFTER the grid is created
+                        // the selector column has to be created BEFORE the grid (else it behaves oddly), but we can only watch grid events AFTER the grid is created
                         grid.registerPlugin(this.checkboxSelectorPlugin);
+                        this.pluginList.push({ name: 'CheckboxSelector', plugin: this.checkboxSelectorPlugin });
                         // this also requires the Row Selection Model to be registered as well
-                        if (!this.rowSelectionPlugin) {
+                        if (!this.rowSelectionPlugin || !grid.getSelectionModel()) {
                             this.rowSelectionPlugin = new Slick.RowSelectionModel(this._gridOptions.rowSelectionOptions || {});
                             grid.setSelectionModel(this.rowSelectionPlugin);
+                        }
+                        // user might want to pre-select some rows
+                        // the setTimeout is because of timing issue with styling (row selection happen but rows aren't highlighted properly)
+                        if (this._gridOptions.preselectedRows && this.rowSelectionPlugin && grid.getSelectionModel()) {
+                            setTimeout(function () { return _this.checkboxSelectorPlugin.selectRows(_this._gridOptions.preselectedRows); }, 0);
                         }
                     }
                     // Row Selection Plugin
@@ -121,6 +139,7 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../models/index", "./ex
                     if (this._gridOptions.enableHeaderButton) {
                         this.headerButtonsPlugin = new Slick.Plugins.HeaderButtons(this._gridOptions.headerButton || {});
                         grid.registerPlugin(this.headerButtonsPlugin);
+                        this.pluginList.push({ name: 'HeaderButtons', plugin: this.headerButtonsPlugin });
                         this.headerButtonsPlugin.onCommand.subscribe(function (e, args) {
                             if (_this._gridOptions.headerButton && typeof _this._gridOptions.headerButton.onCommand === 'function') {
                                 _this._gridOptions.headerButton.onCommand(e, args);
@@ -142,10 +161,12 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../models/index", "./ex
                         if (Array.isArray(this._gridOptions.registerPlugins)) {
                             this._gridOptions.registerPlugins.forEach(function (plugin) {
                                 grid.registerPlugin(plugin);
+                                _this.pluginList.push({ name: 'generic', plugin: plugin });
                             });
                         }
                         else {
                             grid.registerPlugin(this._gridOptions.registerPlugins);
+                            this.pluginList.push({ name: 'generic', plugin: this._gridOptions.registerPlugins });
                         }
                     }
                 };
@@ -203,7 +224,9 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../models/index", "./ex
                         }
                     };
                     grid.setSelectionModel(new Slick.CellSelectionModel());
-                    grid.registerPlugin(new Slick.CellExternalCopyManager(pluginOptions));
+                    this.cellExternalCopyManagerPlugin = new Slick.CellExternalCopyManager(pluginOptions);
+                    grid.registerPlugin(this.cellExternalCopyManagerPlugin);
+                    this.pluginList.push({ name: 'CellExternalCopyManager', plugin: this.cellExternalCopyManagerPlugin });
                 };
                 /**
                  * Create the Column Picker and expose all the available hooks that user can subscribe (onColumnsChanged)
@@ -226,6 +249,7 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../models/index", "./ex
                             }
                         });
                     }
+                    return this.columnPickerControl;
                 };
                 /**
                  * Create (or re-create) Grid Menu and expose all the available hooks that user can subscribe (onCommand, onMenuClose, ...)
@@ -356,34 +380,13 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../models/index", "./ex
                     this._grid = null;
                     this._dataView = null;
                     this.visibleColumns = [];
-                    if (this.columnPickerControl) {
-                        this.columnPickerControl.destroy();
-                        this.columnPickerControl = null;
-                    }
-                    if (this.gridMenuControl) {
-                        this.gridMenuControl.destroy();
-                        this.gridMenuControl = null;
-                    }
-                    if (this.rowSelectionPlugin) {
-                        this.rowSelectionPlugin.destroy();
-                        this.rowSelectionPlugin = null;
-                    }
-                    if (this.checkboxSelectorPlugin) {
-                        this.checkboxSelectorPlugin.destroy();
-                        this.checkboxSelectorPlugin = null;
-                    }
-                    if (this.autoTooltipPlugin) {
-                        this.autoTooltipPlugin.destroy();
-                        this.autoTooltipPlugin = null;
-                    }
-                    if (this.headerButtonsPlugin) {
-                        this.headerButtonsPlugin.destroy();
-                        this.headerButtonsPlugin = null;
-                    }
-                    if (this.headerMenuPlugin) {
-                        this.headerMenuPlugin.destroy();
-                        this.headerMenuPlugin = null;
-                    }
+                    // dispose of each control/plugin if it has a destroy method
+                    this.pluginList.forEach(function (item) {
+                        if (item && item.plugin && item.plugin.destroy) {
+                            item.plugin.destroy();
+                        }
+                    });
+                    this.pluginList = [];
                 };
                 /**
                  * Create Grid Menu with Custom Commands if user has enabled Filters and/or uses a Backend Service (OData, GraphQL)

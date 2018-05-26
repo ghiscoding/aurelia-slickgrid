@@ -1,5 +1,6 @@
 import { FieldType } from './../models/fieldType.enum';
 import { Sorters } from './index';
+import * as moment from 'moment';
 export function sortByFieldType(value1, value2, fieldType, sortDirection) {
     var sortResult = 0;
     switch (fieldType) {
@@ -23,5 +24,20 @@ export function sortByFieldType(value1, value2, fieldType, sortDirection) {
             break;
     }
     return sortResult;
+}
+export function compareDates(sortDirection, value1, value2, format, strict) {
+    var diff = 0;
+    if (value1 === null || value1 === '' || !moment(value1, format, strict).isValid()) {
+        diff = -1;
+    }
+    else if (value2 === null || value2 === '' || !moment(value2, format, strict).isValid()) {
+        diff = 1;
+    }
+    else {
+        var date1 = moment(value1, format, strict);
+        var date2 = moment(value2, format, strict);
+        diff = parseInt(date1.format('X'), 10) - parseInt(date2.format('X'), 10);
+    }
+    return sortDirection * (diff === 0 ? 0 : (diff > 0 ? 1 : -1));
 }
 //# sourceMappingURL=sorterUtilities.js.map

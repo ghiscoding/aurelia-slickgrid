@@ -7,7 +7,7 @@ var utilities_1 = require("./../services/utilities");
 var FORMAT = utilities_1.mapMomentDateFormatWithFieldType(index_1.FieldType.dateUsShort);
 exports.dateUsShortFilterCondition = function (options) {
     if (!moment(options.cellValue, FORMAT, true).isValid() || !moment(options.searchTerm, FORMAT, true).isValid()) {
-        return true;
+        return false;
     }
     var dateCell = moment(options.cellValue, FORMAT, true);
     var dateSearch = moment(options.searchTerm, FORMAT, true);

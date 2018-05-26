@@ -52,7 +52,8 @@ export class Example2 {
       },
       enableAutoResize: true,
       enableCellNavigation: false,
-      enableCheckboxSelector: true
+      enableCheckboxSelector: true,
+      preselectedRows: [0, 2]
     };
   }
 

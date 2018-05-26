@@ -8,7 +8,7 @@ exports.dateFilterCondition = function (options) {
     var filterSearchType = options.filterSearchType || index_1.FieldType.dateIso;
     var searchDateFormat = utilities_1.mapMomentDateFormatWithFieldType(filterSearchType);
     if (!moment(options.cellValue, moment.ISO_8601).isValid() || !moment(options.searchTerm, searchDateFormat, true).isValid()) {
-        return true;
+        return false;
     }
     var dateCell = moment(options.cellValue);
     var dateSearch = moment(options.searchTerm);

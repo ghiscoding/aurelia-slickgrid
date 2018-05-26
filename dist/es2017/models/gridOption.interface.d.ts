@@ -169,6 +169,8 @@ export interface GridOption {
     preserveCopiedSelectionOnPaste?: boolean;
     /** Query presets before grid load (filters, sorters, pagination) */
     presets?: GridState;
+    /** Preselect certain rows by their row index ("enableCheckboxSelector" must be enabled) */
+    preselectedRows?: number[];
     /** Register 1 or more Slick Plugins */
     registerPlugins?: any | any[];
     /** Grid row height in pixels (only type the number). Row of cell values. */

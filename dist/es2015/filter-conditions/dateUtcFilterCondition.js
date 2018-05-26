@@ -4,7 +4,7 @@ import * as moment from 'moment';
 export const dateUtcFilterCondition = (options) => {
     const searchDateFormat = mapMomentDateFormatWithFieldType(options.filterSearchType || options.fieldType);
     if (!moment(options.cellValue, moment.ISO_8601).isValid() || !moment(options.searchTerm, searchDateFormat, true).isValid()) {
-        return true;
+        return false;
     }
     const dateCell = moment(options.cellValue, moment.ISO_8601, true);
     const dateSearch = moment(options.searchTerm, searchDateFormat, true);
