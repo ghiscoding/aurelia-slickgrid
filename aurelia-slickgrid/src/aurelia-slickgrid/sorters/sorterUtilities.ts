@@ -29,7 +29,7 @@ export function sortByFieldType(value1: any, value2: any, fieldType: FieldType, 
   return sortResult;
 }
 
-export function compareDates(sortDirection, value1, value2, format, strict?: boolean) {
+export function compareDates(sortDirection: number, value1: any, value2: any, format: string | moment.MomentBuiltinFormat, strict?: boolean) {
   let diff = 0;
 
   if (value1 === null || value1 === '' || !moment(value1, format, strict).isValid()) {
