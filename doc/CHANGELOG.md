@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.13.1"></a>
+## [1.13.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v1.13.0...v1.13.1) (2018-05-26)
+
+
+### Bug Fixes
+
+* **filters:** return false when invalid date ([#69](https://github.com/ghiscoding/aurelia-slickgrid/issues/69)) ([93f0db1](https://github.com/ghiscoding/aurelia-slickgrid/commit/93f0db1)), closes [#68](https://github.com/ghiscoding/aurelia-slickgrid/issues/68)
+* **sorters:** return -1 or 1 for invalid dates ([#70](https://github.com/ghiscoding/aurelia-slickgrid/issues/70)) ([04ce67e](https://github.com/ghiscoding/aurelia-slickgrid/commit/04ce67e)), closes [#68](https://github.com/ghiscoding/aurelia-slickgrid/issues/68) [#69](https://github.com/ghiscoding/aurelia-slickgrid/issues/69)
+
+
+### Features
+
+* **rowSelect:** add preselectedRows and expose all Plugin ([#71](https://github.com/ghiscoding/aurelia-slickgrid/issues/71)) ([02fa681](https://github.com/ghiscoding/aurelia-slickgrid/commit/02fa681))
+
+
+
 <a name="1.13.0"></a>
 # [1.13.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v1.12.2...v1.13.0) (2018-05-21)
 
