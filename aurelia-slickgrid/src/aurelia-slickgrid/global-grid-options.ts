@@ -51,7 +51,13 @@ export const GlobalGridOptions: GridOption = {
   },
   forceFitColumns: false,
   gridMenu: {
+    hideClearAllFiltersCommand: false,
+    hideClearAllSortingCommand: false,
+    hideExportCsvCommand: false,
+    hideExportTextDelimitedCommand: true,
     hideForceFitButton: false,
+    hideRefreshDatasetCommand: false,
+    hideToggleFilterCommand: false,
     hideSyncResizeButton: true,
     iconCssClass: 'fa fa-bars',
     iconClearAllFiltersCommand: 'fa fa-filter text-danger',
@@ -62,11 +68,6 @@ export const GlobalGridOptions: GridOption = {
     iconToggleFilterCommand: 'fa fa-random',
     menuWidth: 16,
     resizeOnShowHeaderRow: true,
-    showClearAllFiltersCommand: true,
-    showClearAllSortingCommand: true,
-    showExportCsvCommand: true,
-    showRefreshDatasetCommand: true,
-    showToggleFilterCommand: true
   },
   headerMenu: {
     autoAlign: true,
