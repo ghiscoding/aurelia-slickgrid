@@ -1,7 +1,7 @@
 import { autoinject } from 'aurelia-framework';
 import data from './sample-data/example-data';
 import { HttpClient } from 'aurelia-http-client';
-import { Column, FieldType, FilterType, GridOdataService, GridOption, OperatorType } from '../../aurelia-slickgrid';
+import { AureliaGridInstance, Column, FieldType, FilterType, GridOdataService, GridOption, OperatorType } from '../../aurelia-slickgrid';
 
 const defaultPageSize = 20;
 const sampleDataRoot = 'src/examples/slickgrid/sample-data';
@@ -24,6 +24,7 @@ export class Example5 {
       <li>You can also preload a grid with certain "presets" like Filters / Sorters / Pagination <a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Grid-State-&-Preset" target="_blank">Wiki - Grid Preset</a>
     </ul>
   `;
+  aureliaGrid: AureliaGridInstance;
   columnDefinitions: Column[];
   gridOptions: GridOption;
   dataset = [];
@@ -32,9 +33,13 @@ export class Example5 {
   processing = false;
   status = { text: '', class: '' };
 
-  constructor(private http: HttpClient, private odataService: GridOdataService) {
+  constructor(private http: HttpClient) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
+  }
+
+  aureliaGridReady(aureliaGrid: AureliaGridInstance) {
+    this.aureliaGrid = aureliaGrid;
   }
 
   defineGrid() {
@@ -72,7 +77,7 @@ export class Example5 {
         totalItems: 0
       },
       backendServiceApi: {
-        service: this.odataService,
+        service: new GridOdataService(),
         preProcess: () => this.displaySpinner(true),
         process: (query) => this.getCustomerApiCall(query),
         postProcess: (response) => {

@@ -1,5 +1,5 @@
 import { autoinject, bindable } from 'aurelia-framework';
-import { Column, ColumnSort, ControlAndPluginService, FieldType, Formatter, Formatters, GridOption, SortService } from '../../aurelia-slickgrid';
+import { AureliaGridInstance, Column, ColumnSort, FieldType, Formatter, Formatters, GridOption } from '../../aurelia-slickgrid';
 import * as $ from 'jquery';
 
 @autoinject()
@@ -18,12 +18,14 @@ export class Example8 {
       <li>Try hiding any columns (you use the "Column Picker" plugin by doing a right+click on the header to show the column back)</li>
     </ul>
   `;
+
+  aureliaGrid: AureliaGridInstance;
   columnDefinitions: Column[];
   gridOptions: GridOption;
   dataset = [];
   visibleColumns;
 
-  constructor(private controlService: ControlAndPluginService, private sortService: SortService) {
+  constructor() {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
   }
@@ -37,6 +39,10 @@ export class Example8 {
     // unsubscrible any Slick.Event you might have used
     // a reminder again, these are SlickGrid Event, not Event Aggregator events
     this.gridObj.onSort.unsubscribe();
+  }
+
+  aureliaGridReady(aureliaGrid: AureliaGridInstance) {
+    this.aureliaGrid = aureliaGrid;
   }
 
   defineGrid() {
@@ -90,15 +96,15 @@ export class Example8 {
       headerMenu: {
         onCommand: (e, args) => {
           if (args.command === 'hide') {
-            this.controlService.hideColumn(args.column);
-            this.controlService.autoResizeColumns();
+            this.aureliaGrid.pluginService.hideColumn(args.column);
+            this.aureliaGrid.pluginService.autoResizeColumns();
           } else if (args.command === 'sort-asc' || args.command === 'sort-desc') {
             // get previously sorted columns
-            const cols: ColumnSort[] = this.sortService.getPreviousColumnSorts(args.column.id + '');
+            const cols: ColumnSort[] = this.aureliaGrid.sortService.getPreviousColumnSorts(args.column.id + '');
 
             // add to the column array, the column sorted by the header menu
             cols.push({ sortCol: args.column, sortAsc: (args.command === 'sort-asc') });
-            this.sortService.onLocalSortChanged(this.gridObj, this.dataview, cols);
+            this.aureliaGrid.sortService.onLocalSortChanged(this.gridObj, this.dataview, cols);
 
             // update the this.gridObj sortColumns array which will at the same add the visual sort icon(s) on the UI
             const newSortColumns: ColumnSort[] = cols.map((col) => {

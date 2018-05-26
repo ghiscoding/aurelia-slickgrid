@@ -1,5 +1,4 @@
 import { EventAggregator } from 'aurelia-event-aggregator';
-import { inject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import { mapOperatorType, mapOperatorByFilterType, mapOperatorByFieldType } from './utilities';
 import {
@@ -34,7 +33,6 @@ const DEFAULT_FILTER_TYPING_DEBOUNCE = 750;
 const DEFAULT_ITEMS_PER_PAGE = 25;
 const DEFAULT_PAGE_SIZE = 20;
 
-@inject(I18N)
 export class GraphqlService implements BackendService {
   private _currentFilters: ColumnFilters | CurrentFilter[];
   private _currentPagination: CurrentPagination;
@@ -48,8 +46,6 @@ export class GraphqlService implements BackendService {
     first: DEFAULT_ITEMS_PER_PAGE,
     offset: 0
   };
-
-  constructor(private i18n: I18N) { }
 
   /** Getter for the Grid Options pulled through the Grid Object */
   private get _gridOptions(): GridOption {
@@ -134,7 +130,7 @@ export class GraphqlService implements BackendService {
     }
     if (this.options.addLocaleIntoQuery) {
       // first: 20, ... locale: "en-CA"
-      datasetFilters.locale = this.i18n.getLocale() || 'en';
+      datasetFilters.locale = (this._gridOptions.params && this._gridOptions.params.i18n && this._gridOptions.params.i18n.getLocale()) || 'en';
     }
     if (this.options.extraQueryArguments) {
       // first: 20, ... userId: 123

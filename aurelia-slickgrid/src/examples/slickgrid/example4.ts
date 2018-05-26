@@ -1,6 +1,6 @@
 import { autoinject } from 'aurelia-framework';
 import { CustomInputFilter } from './custom-inputFilter';
-import { Column, FieldType, FilterType, Formatter, Formatters, GridOption, GridStateService } from '../../aurelia-slickgrid';
+import { AureliaGridInstance, Column, FieldType, FilterType, Formatter, Formatters, GridOption } from '../../aurelia-slickgrid';
 
 function randomBetween(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -29,11 +29,12 @@ export class Example4 {
   </ul>
 `;
 
+  aureliaGrid: AureliaGridInstance;
   columnDefinitions: Column[];
   gridOptions: GridOption;
   dataset: any[];
 
-  constructor(private gridStateService: GridStateService) {
+  constructor() {
     this.defineGrid();
   }
 
@@ -44,6 +45,10 @@ export class Example4 {
 
   detached() {
     this.saveCurrentGridState();
+  }
+
+  aureliaGridReady(aureliaGrid: AureliaGridInstance) {
+    this.aureliaGrid = aureliaGrid;
   }
 
   /* Define grid Options and Columns */
@@ -187,6 +192,6 @@ export class Example4 {
 
   /** Save current Filters, Sorters in LocaleStorage or DB */
   saveCurrentGridState() {
-    console.log('Client sample, current Grid State:: ', this.gridStateService.getCurrentGridState());
+    console.log('Client sample, current Grid State:: ', this.aureliaGrid.gridStateService.getCurrentGridState());
   }
 }

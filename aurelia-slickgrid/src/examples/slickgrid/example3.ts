@@ -6,16 +6,15 @@ import {
   bindable
 } from 'aurelia-framework';
 import {
+  AureliaGridInstance,
   Column,
   Editors,
   FieldType,
   Formatters,
-  GridExtraService,
   GridExtraUtils,
   GridOption,
   OnEventArgs,
-  OperatorType,
-  ResizerService
+  OperatorType
 } from '../../aurelia-slickgrid';
 
 // using external non-typed js libraries
@@ -46,8 +45,9 @@ export class Example3 {
   isAutoEdit: boolean = true;
   alertWarning: any;
   selectedLanguage: string;
+  aureliaGrid: AureliaGridInstance;
 
-  constructor(private gridExtraService: GridExtraService, private i18n: I18N, private resizer: ResizerService) {
+  constructor(private i18n: I18N) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
     this.selectedLanguage = this.i18n.getLocale();
@@ -65,6 +65,10 @@ export class Example3 {
     this.gridObj.onClick.unsubscribe();
   }
 
+  aureliaGridReady(aureliaGrid: AureliaGridInstance) {
+    this.aureliaGrid = aureliaGrid;
+  }
+
   /* Define grid Options and Columns */
   defineGrid() {
     this.columnDefinitions = [{
@@ -78,8 +82,8 @@ export class Example3 {
       onCellClick: (args: OnEventArgs) => {
         console.log(args);
         this.alertWarning = `Editing: ${args.dataContext.title}`;
-        this.gridExtraService.highlightRow(args.row, 1500);
-        this.gridExtraService.setSelectedRow(args.row);
+        this.aureliaGrid.gridService.highlightRow(args.row, 1500);
+        this.aureliaGrid.gridService.setSelectedRow(args.row);
       }
     }, {
       id: 'delete',
@@ -88,13 +92,13 @@ export class Example3 {
       formatter: Formatters.deleteIcon,
       minWidth: 30,
       maxWidth: 30,
-    // use onCellClick OR grid.onClick.subscribe which you can see down below
-    /*
-    onCellClick: (args: OnEventArgs) => {
-      console.log(args);
-      this.alertWarning = `Deleting: ${args.dataContext.title}`;
-    }
-    */
+      // use onCellClick OR grid.onClick.subscribe which you can see down below
+      /*
+      onCellClick: (args: OnEventArgs) => {
+        console.log(args);
+        this.alertWarning = `Deleting: ${args.dataContext.title}`;
+      }
+      */
     }, {
       id: 'title',
       name: 'Title',
@@ -251,7 +255,7 @@ export class Example3 {
     grid.onCellChange.subscribe((e, args) => {
       console.log('onCellChange', args);
       this.updatedObject = args.item;
-      this.resizer.resizeGrid(100);
+      this.aureliaGrid.resizerService.resizeGrid(100);
     });
 
     // You could also subscribe to grid.onClick
@@ -263,14 +267,14 @@ export class Example3 {
         this.alertWarning = `open a modal window to edit: ${column.dataContext.title}`;
 
         // highlight the row, to customize the color, you can change the SASS variable $row-highlight-background-color
-        this.gridExtraService.highlightRow(args.row, 1500);
+        this.aureliaGrid.gridService.highlightRow(args.row, 1500);
 
         // you could also select the row, when using "enableCellNavigation: true", it automatically selects the row
-        // this.gridExtraService.setSelectedRow(args.row);
+        // this.gridService.setSelectedRow(args.row);
       }
       if (column.columnDef.id === 'delete') {
         if (confirm('Are you sure?')) {
-          this.gridExtraService.deleteDataGridItemById(column.dataContext.id);
+          this.aureliaGrid.gridService.deleteDataGridItemById(column.dataContext.id);
         }
       }
     });

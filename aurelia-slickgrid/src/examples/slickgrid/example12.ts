@@ -1,6 +1,16 @@
 import { autoinject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
-import { Column, DelimiterType, ExportService, FieldType, FileType, FilterType, Formatter, Formatters, GridOption } from '../../aurelia-slickgrid';
+import {
+  AureliaGridInstance,
+  Column,
+  DelimiterType,
+  FieldType,
+  FileType,
+  FilterType,
+  Formatter,
+  Formatters,
+  GridOption
+} from '../../aurelia-slickgrid';
 
 @autoinject()
 export class Example12 {
@@ -32,13 +42,14 @@ export class Example12 {
       </ol>
     `;
 
+  aureliaGrid: AureliaGridInstance;
   gridOptions: GridOption;
   columnDefinitions: Column[];
   dataset: any[];
   selectedLanguage: string;
   duplicateTitleHeaderCount = 1;
 
-  constructor(private exportService: ExportService, private i18n: I18N) {
+  constructor(private i18n: I18N) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
     this.selectedLanguage = this.i18n.getLocale();
@@ -47,6 +58,10 @@ export class Example12 {
   attached() {
     // populate the dataset once the grid is ready
     this.getData();
+  }
+
+  aureliaGridReady(aureliaGrid: AureliaGridInstance) {
+    this.aureliaGrid = aureliaGrid;
   }
 
   /* Define grid Options and Columns */
@@ -145,7 +160,7 @@ export class Example12 {
   }
 
   exportToFile(type = 'csv') {
-    this.exportService.exportToFile({
+    this.aureliaGrid.exportService.exportToFile({
       delimiter: (type === 'csv') ? DelimiterType.comma : DelimiterType.tab,
       filename: 'myExport',
       format: (type === 'csv') ? FileType.csv : FileType.txt

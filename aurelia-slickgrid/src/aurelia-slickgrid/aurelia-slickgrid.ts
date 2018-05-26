@@ -34,6 +34,7 @@ import {
   GridStateChange,
   GridStateType,
   Pagination,
+  AureliaGridInstance,
 } from './models/index';
 import {
   ControlAndPluginService,
@@ -191,6 +192,24 @@ export class AureliaSlickgridCustomElement {
     }
 
     this.gridStateService.init(this.grid, this.filterService, this.sortService);
+
+    // create the Aurelia Grid Instance with reference to all Services
+    const aureliaElementInstance: AureliaGridInstance = {
+      backendService: this.gridOptions && this.gridOptions.backendServiceApi && this.gridOptions.backendServiceApi.service,
+      exportService: this.exportService,
+      filterService: this.filterService,
+      gridEventService: this.gridEventService,
+      gridStateService: this.gridStateService,
+      gridService: this.gridExtraService,
+      groupingService: this.groupingAndColspanService,
+      pluginService: this.controlAndPluginService,
+      resizerService: this.resizer,
+      sortService: this.sortService,
+    };
+    this.elm.dispatchEvent(new CustomEvent(`${aureliaEventPrefix}-on-aurelia-grid-created`, {
+      bubbles: true,
+      detail: aureliaElementInstance
+    }));
   }
 
   detached() {

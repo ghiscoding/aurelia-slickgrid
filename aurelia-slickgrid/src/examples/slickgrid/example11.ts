@@ -1,5 +1,15 @@
 import { autoinject } from 'aurelia-framework';
-import { Column, Editors, FieldType, Formatter, Formatters, GridExtraService, GridExtraUtils, GridOption, OnEventArgs, ResizerService } from '../../aurelia-slickgrid';
+import {
+  AureliaGridInstance,
+  Column,
+  Editors,
+  FieldType,
+  Formatter,
+  Formatters,
+  GridExtraUtils,
+  GridOption,
+  OnEventArgs
+} from '../../aurelia-slickgrid';
 
 @autoinject()
 export class Example11 {
@@ -20,12 +30,13 @@ export class Example11 {
   </ul>
   `;
 
+  aureliaGrid: AureliaGridInstance;
   columnDefinitions: Column[];
   gridOptions: GridOption;
   dataset: any[];
   updatedObject: any;
 
-  constructor(private gridExtraService: GridExtraService, private resizer: ResizerService) {
+  constructor() {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
   }
@@ -33,6 +44,10 @@ export class Example11 {
   attached() {
     // populate the dataset once the grid is ready
     this.getData();
+  }
+
+  aureliaGridReady(aureliaGrid: AureliaGridInstance) {
+    this.aureliaGrid = aureliaGrid;
   }
 
   /* Define grid Options and Columns */
@@ -105,16 +120,16 @@ export class Example11 {
       finish: new Date(randomYear, (randomMonth + 2), randomDay),
       effortDriven: true
     };
-    this.gridExtraService.addItemToDatagrid(newItem);
+    this.aureliaGrid.gridService.addItemToDatagrid(newItem);
   }
 
   highlighFifthRow() {
-    this.gridExtraService.highlightRow(4, 1500);
+    this.aureliaGrid.gridService.highlightRow(4, 1500);
   }
 
   updateSecondItem() {
-    const firstItem = this.gridExtraService.getDataItemByRowNumber(1);
+    const firstItem = this.aureliaGrid.gridService.getDataItemByRowNumber(1);
     firstItem.duration = Math.round(Math.random() * 100);
-    this.gridExtraService.updateDataGridItem(firstItem);
+    this.aureliaGrid.gridService.updateDataGridItem(firstItem);
   }
 }

@@ -2,7 +2,19 @@ import { Subscription, EventAggregator } from 'aurelia-event-aggregator';
 import { autoinject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import { HttpClient } from 'aurelia-http-client';
-import { Column, FieldType, FilterType, Formatters, GraphqlResult, GraphqlService, GraphqlServiceOption, GridOption, GridStateService, OperatorType, SortDirection } from '../../aurelia-slickgrid';
+import {
+  AureliaGridInstance,
+  Column,
+  FieldType,
+  FilterType,
+  Formatters,
+  GraphqlResult,
+  GraphqlService,
+  GraphqlServiceOption,
+  GridOption,
+  OperatorType,
+  SortDirection
+} from '../../aurelia-slickgrid';
 
 const defaultPageSize = 20;
 const GRAPHQL_QUERY_DATASET_NAME = 'users';
@@ -24,6 +36,8 @@ export class Example6 {
       <li>You can also preload a grid with certain "presets" like Filters / Sorters / Pagination <a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Grid-State-&-Preset" target="_blank">Wiki - Grid Preset</a>
     </ul>
   `;
+
+  aureliaGrid: AureliaGridInstance;
   columnDefinitions: Column[];
   gridOptions: GridOption;
   dataset = [];
@@ -35,7 +49,7 @@ export class Example6 {
   status = { text: '', class: '' };
   Subscription: Subscription;
 
-  constructor(private ea: EventAggregator, private gridStateService: GridStateService, private http: HttpClient, private graphqlService: GraphqlService, private i18n: I18N) {
+  constructor(private ea: EventAggregator, private http: HttpClient, private i18n: I18N) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
     this.selectedLanguage = this.i18n.getLocale();
@@ -45,6 +59,10 @@ export class Example6 {
   detached() {
     this.saveCurrentGridState();
     this.Subscription.dispose();
+  }
+
+  aureliaGridReady(aureliaGrid: AureliaGridInstance) {
+    this.aureliaGrid = aureliaGrid;
   }
 
   defineGrid() {
@@ -111,13 +129,16 @@ export class Example6 {
       },
 
       backendServiceApi: {
-        service: this.graphqlService,
+        service: new GraphqlService(),
         options: this.getBackendOptions(this.isWithCursor),
         // you can define the onInit callback OR enable the "executeProcessCommandOnInit" flag in the service init
         // onInit: (query) => this.getCustomerApiCall(query)
         preProcess: () => this.displaySpinner(true),
         process: (query) => this.getCustomerApiCall(query),
         postProcess: (result: GraphqlResult) => this.displaySpinner(false)
+      },
+      params: {
+        i18n: this.i18n
       }
     };
   }
@@ -173,14 +194,14 @@ export class Example6 {
 
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        this.graphqlQuery = this.graphqlService.buildQuery();
+        this.graphqlQuery = this.aureliaGrid.backendService.buildQuery();
         resolve(mockedResult);
       }, 500);
     });
   }
 
   saveCurrentGridState() {
-    console.log('GraphQL current grid state', this.gridStateService.getCurrentGridState());
+    console.log('GraphQL current grid state', this.aureliaGrid.gridStateService.getCurrentGridState());
   }
 
   switchLanguage() {

@@ -1,5 +1,5 @@
 import { autoinject, bindable } from 'aurelia-framework';
-import { Column, FieldType, FilterType, FilterService, Formatter, Formatters, GridOption, SortService } from '../../aurelia-slickgrid';
+import { AureliaGridInstance, Column, FieldType, FilterType, Formatter, Formatters, GridOption } from '../../aurelia-slickgrid';
 
 @autoinject()
 export class Example9 {
@@ -17,12 +17,14 @@ export class Example9 {
       <li>Doing a "right+click" over any column header will also provide a way to show/hide a column (via the Column Picker Plugin)</li>
     </ul>
   `;
+
+  aureliaGrid: AureliaGridInstance;
   columnDefinitions: Column[];
   gridOptions: GridOption;
   dataset = [];
   visibleColumns;
 
-  constructor(private filterService: FilterService, private sortService: SortService) {
+  constructor() {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
   }
@@ -30,6 +32,10 @@ export class Example9 {
   attached() {
     // populate the dataset once the grid is ready
     this.getData();
+  }
+
+  aureliaGridReady(aureliaGrid: AureliaGridInstance) {
+    this.aureliaGrid = aureliaGrid;
   }
 
   defineGrid() {
@@ -130,10 +136,10 @@ export class Example9 {
           } else if (args.command === 'toggle-toppanel') {
             this.gridObj.setTopPanelVisibility(!this.gridObj.getOptions().showTopPanel);
           } else if (args.command === 'clear-filter') {
-            this.filterService.clearFilters();
+            this.aureliaGrid.filterService.clearFilters();
             this.dataviewObj.refresh();
           } else if (args.command === 'clear-sorting') {
-            this.sortService.clearSorting();
+            this.aureliaGrid.sortService.clearSorting();
             this.dataviewObj.refresh();
           } else {
             alert('Command: ' + args.command);

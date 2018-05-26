@@ -1,5 +1,5 @@
 import { autoinject, bindable } from 'aurelia-framework';
-import { Column, FieldType, Formatter, Formatters, GridExtraService, GridExtraUtils, GridOption } from '../../aurelia-slickgrid';
+import { AureliaGridInstance, Column, FieldType, Formatter, Formatters, GridExtraUtils, GridOption } from '../../aurelia-slickgrid';
 
 @autoinject()
 export class Example2 {
@@ -12,6 +12,7 @@ export class Example2 {
     </ul>
   `;
 
+  aureliaGrid: AureliaGridInstance;
   columnDefinitions: Column[];
   gridOptions: GridOption;
   dataset: any[];
@@ -19,7 +20,7 @@ export class Example2 {
   isMultiSelect = true;
   selectedObjects: any[] = [];
 
-  constructor(private gridExtraService: GridExtraService) {
+  constructor() {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
   }
@@ -33,6 +34,10 @@ export class Example2 {
     // unsubscrible any Slick.Event you might have used
     // a reminder again, these are SlickGrid Event, not Event Aggregator events
     this.gridObj.onSelectedRowsChanged.unsubscribe();
+  }
+
+  aureliaGridReady(aureliaGrid: AureliaGridInstance) {
+    this.aureliaGrid = aureliaGrid;
   }
 
   /* Define grid Options and Columns */
@@ -100,7 +105,7 @@ export class Example2 {
       enableCellNavigation: !isMultiSelect,
       enableCheckboxSelector: isMultiSelect
     }); // change the grid option dynamically
-    this.gridExtraService.setSelectedRows([]);
+    this.aureliaGrid.gridService.setSelectedRows([]);
 
     return true;
   }
