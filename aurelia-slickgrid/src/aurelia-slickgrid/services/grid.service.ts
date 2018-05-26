@@ -1,4 +1,4 @@
-import { Column, GridOption } from './../models/index';
+import { CellArgs, Column, GridOption, OnEventArgs } from './../models/index';
 import * as $ from 'jquery';
 
 // using external non-typed js libraries
@@ -21,6 +21,30 @@ export class GridService {
   init(grid: any, dataView: any): void {
     this._grid = grid;
     this._dataView = dataView;
+  }
+
+  /**
+   * From a SlickGrid Event triggered get the Column Definition and Item Data Context
+   *
+   * For example the SlickGrid onClick will return cell arguments when subscribing to it.
+   * From these cellArgs, we want to get the Column Definition and Item Data
+   * @param cell event args
+   * @return object with columnDef and dataContext
+   */
+  getColumnFromEventArguments(args: CellArgs): OnEventArgs {
+    if (!args || !args.grid || !args.grid.getColumns || !args.grid.getDataItem) {
+      throw new Error('To get the column definition and data, we need to have these arguments passed as objects (row, cell, grid)');
+    }
+
+    return {
+      row: args.row,
+      cell: args.cell,
+      columnDef: args.grid.getColumns()[args.cell],
+      dataContext: args.grid.getDataItem(args.row),
+      dataView: this._dataView,
+      grid: this._grid,
+      gridDefinition: this._gridOptions
+    };
   }
 
   getDataItemByRowNumber(rowNumber: number) {

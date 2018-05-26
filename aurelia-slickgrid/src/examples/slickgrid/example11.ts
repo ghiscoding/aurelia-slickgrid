@@ -6,7 +6,6 @@ import {
   FieldType,
   Formatter,
   Formatters,
-  GridExtraUtils,
   GridOption,
   OnEventArgs
 } from '../../aurelia-slickgrid';

@@ -3,7 +3,7 @@ import {
   ControlAndPluginService,
   ExportService,
   FilterService,
-  GridExtraService,
+  GridService,
   GridEventService,
   GridStateService,
   GroupingAndColspanService,
@@ -16,7 +16,7 @@ export interface AureliaGridInstance {
   pluginService: ControlAndPluginService;
   exportService: ExportService;
   filterService: FilterService;
-  gridService: GridExtraService;
+  gridService: GridService;
   gridEventService: GridEventService;
   gridStateService: GridStateService;
   groupingService: GroupingAndColspanService;

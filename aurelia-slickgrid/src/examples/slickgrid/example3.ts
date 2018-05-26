@@ -11,7 +11,6 @@ import {
   Editors,
   FieldType,
   Formatters,
-  GridExtraUtils,
   GridOption,
   OnEventArgs,
   OperatorType
@@ -197,12 +196,6 @@ export class Example3 {
       },
       editable: true,
       enableCellNavigation: true,
-      enableCheckboxSelector: false,
-      rowSelectionOptions: {
-        // True (Single Selection), False (Multiple Selections)
-        // Default to True when no "rowSelectionOptions" provided
-        selectActiveRow: true
-      },
       enableExcelCopyBuffer: true,
       editCommandHandler: (item, column, editCommand) => {
         this._commandQueue.push(editCommand);
@@ -261,7 +254,7 @@ export class Example3 {
     // You could also subscribe to grid.onClick
     // Note that if you had already setup "onCellClick" in the column definition, you cannot use grid.onClick
     grid.onClick.subscribe((e, args) => {
-      const column = GridExtraUtils.getColumnDefinitionAndData(args);
+      const column = this.aureliaGrid.gridService.getColumnFromEventArguments(args);
       console.log('onClick', args, column);
       if (column.columnDef.id === 'edit') {
         this.alertWarning = `open a modal window to edit: ${column.dataContext.title}`;

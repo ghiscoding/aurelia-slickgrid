@@ -14,7 +14,6 @@ import {
   GraphqlService,
   GridEventService,
   GridService,
-  GridExtraUtils,
   GridStateService,
   GridOdataService,
   GroupingAndColspanService,
@@ -35,12 +34,8 @@ export * from './editors/index';
 export * from './filter-conditions/index';
 export * from './filters/index';
 
-// export some of the Services
-export {
-  GridExtraUtils,
-  GraphqlService,
-  GridOdataService
-} from './services/index';
+// export the Backend Services
+export { GraphqlService, GridOdataService } from './services/index';
 
 export function configure(aurelia: any, callback: any) {
   aurelia.globalResources(PLATFORM.moduleName('./aurelia-slickgrid'));
