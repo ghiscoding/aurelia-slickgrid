@@ -4,7 +4,7 @@ import * as $ from 'jquery';
 export class CustomInputFilter implements Filter {
   private $filterElm: any;
   grid: any;
-  searchTerm: SearchTerm;
+  searchTerms: SearchTerm[];
   columnDef: Column;
   callback: FilterCallback;
 
@@ -15,13 +15,16 @@ export class CustomInputFilter implements Filter {
     this.grid = args.grid;
     this.callback = args.callback;
     this.columnDef = args.columnDef;
-    this.searchTerm = args.searchTerm;
+    this.searchTerms = args.searchTerms || [];
+
+    // filter input can only have 1 search term, so we will use the 1st array index if it exist
+    const searchTerm = (Array.isArray(this.searchTerms) && this.searchTerms[0]) || '';
 
     // step 1, create HTML string template
     const filterTemplate = this.buildTemplateHtmlString();
 
     // step 2, create the DOM Element of the filter & initialize it if searchTerm is filled
-    this.$filterElm = this.createDomElement(filterTemplate);
+    this.$filterElm = this.createDomElement(filterTemplate, searchTerm);
 
     // step 3, subscribe to the keyup event and run the callback when that happens
     this.$filterElm.keyup((e: any) => this.callback(e, { columnDef: this.columnDef }));
@@ -72,14 +75,15 @@ export class CustomInputFilter implements Filter {
    * From the html template string, create a DOM element
    * @param filterTemplate
    */
-  private createDomElement(filterTemplate: string) {
+  private createDomElement(filterTemplate: string, searchTerm?: SearchTerm) {
     const $headerElm = this.grid.getHeaderRowColumn(this.columnDef.id);
     $($headerElm).empty();
 
     // create the DOM element & add an ID and filter class
     const $filterElm = $(filterTemplate);
-    const searchTerm = (typeof this.searchTerm === 'boolean') ? `${this.searchTerm}` : this.searchTerm;
-    $filterElm.val(searchTerm);
+    const searchTermInput = searchTerm as string;
+
+    $filterElm.val(searchTermInput);
     $filterElm.attr('id', `filter-${this.columnDef.id}`);
     $filterElm.data('columnId', this.columnDef.id);
 

@@ -617,7 +617,7 @@ export class ControlAndPluginService {
     this._gridOptions.columnPicker = {
       hideForceFitButton: tempHideForceFit,
       hideSyncResizeButton: tempSyncResize
-    }
+    };
     this.createColumnPicker(this._grid, this.visibleColumns);
   }
 

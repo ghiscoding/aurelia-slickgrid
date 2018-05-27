@@ -361,7 +361,7 @@ export class GraphqlService implements BackendService {
 
         const fieldName = columnDef.queryField || columnDef.queryFieldFilter || columnDef.field || columnDef.name || '';
         const searchTerms = (columnFilter ? columnFilter.searchTerms : null) || [];
-        let fieldSearchValue = columnFilter.searchTerm;
+        let fieldSearchValue = (Array.isArray(searchTerms) && searchTerms.length === 1) ? searchTerms[0] : '';
         if (typeof fieldSearchValue === 'undefined') {
           fieldSearchValue = '';
         }
@@ -382,7 +382,7 @@ export class GraphqlService implements BackendService {
         }
 
         // when having more than 1 search term (we need to create a CSV string for GraphQL "IN" or "NOT IN" filter search)
-        if (searchTerms && searchTerms.length > 0) {
+        if (searchTerms && searchTerms.length > 1) {
           searchValue = searchTerms.join(',');
         } else if (typeof searchValue === 'string') {
           // escaping the search value
@@ -557,9 +557,8 @@ export class GraphqlService implements BackendService {
       }
       if (Array.isArray(filter.searchTerms)) {
         tmpFilter.searchTerms = filter.searchTerms;
-      } else {
-        tmpFilter.searchTerm = filter.searchTerm;
       }
+
       return tmpFilter;
     });
   }

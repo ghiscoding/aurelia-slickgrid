@@ -117,8 +117,8 @@ export class Example6 {
       presets: {
         // you can also type operator as string, e.g.: operator: 'EQ'
         filters: [
-          { columnId: 'gender', searchTerm: 'male', operator: OperatorType.equal },
-          { columnId: 'name', searchTerm: 'John Doe', operator: OperatorType.contains },
+          { columnId: 'gender', searchTerms: ['male'], operator: OperatorType.equal },
+          { columnId: 'name', searchTerms: ['John Doe'], operator: OperatorType.contains },
           { columnId: 'company', searchTerms: ['xyz'], operator: 'IN' }
         ],
         sorters: [
