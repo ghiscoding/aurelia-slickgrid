@@ -22,13 +22,10 @@ import 'slickgrid/plugins/slick.rowselectionmodel';
 
 import { bindable, BindingEngine, bindingMode, Container, Factory, inject } from 'aurelia-framework';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
-import { I18N } from 'aurelia-i18n';
 import { GlobalGridOptions } from './global-grid-options';
 import {
   BackendServiceOption,
-  CellArgs,
   Column,
-  GraphqlResult,
   GridOption,
   GridStateChange,
   GridStateType,
@@ -64,12 +61,10 @@ const eventPrefix = 'sg';
   Element,
   EventAggregator,
   FilterService,
-  GraphqlService,
   GridEventService,
   GridService,
   GridStateService,
   GroupingAndColspanService,
-  I18N,
   ResizerService,
   SortService,
   Container
@@ -104,12 +99,10 @@ export class AureliaSlickgridCustomElement {
     private elm: Element,
     private ea: EventAggregator,
     private filterService: FilterService,
-    private graphqlService: GraphqlService,
     private gridEventService: GridEventService,
     private gridService: GridService,
     private gridStateService: GridStateService,
     private groupingAndColspanService: GroupingAndColspanService,
-    private i18n: I18N,
     private resizer: ResizerService,
     private sortService: SortService,
     private container: Container

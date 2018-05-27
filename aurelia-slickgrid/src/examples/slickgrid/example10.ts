@@ -20,7 +20,7 @@ export class Example2 {
   dataset1: any[];
   dataset2: any[];
   selectedTitles: any[];
-  selectedTitle: any;
+  selectedTitle = '';
 
   constructor() {
     // define the grid options & columns and then create the grid itself
@@ -39,43 +39,37 @@ export class Example2 {
       { id: 'title', name: 'Title', field: 'title', sortable: true, type: FieldType.string },
       { id: 'duration', name: 'Duration (days)', field: 'duration', sortable: true, type: FieldType.number },
       { id: 'complete', name: '% Complete', field: 'percentComplete', formatter: Formatters.percentCompleteBar, type: FieldType.number, sortable: true },
-      { id: 'start', name: 'Start', field: 'start', formatter: Formatters.dateIso, sortable: true, type: FieldType.dateIso },
-      { id: 'finish', name: 'Finish', field: 'finish', formatter: Formatters.dateIso, sortable: true, type: FieldType.date },
+      { id: 'start', name: 'Start', field: 'start', formatter: Formatters.dateIso, sortable: true, type: FieldType.dateIso, exportWithFormatter: true },
+      { id: 'finish', name: 'Finish', field: 'finish', formatter: Formatters.dateIso, sortable: true, type: FieldType.date, exportWithFormatter: true },
       { id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', formatter: Formatters.checkmark, type: FieldType.number, sortable: true }
     ];
     this.columnDefinitions2 = [
       { id: 'title', name: 'Title', field: 'title', sortable: true, type: FieldType.string },
       { id: 'duration', name: 'Duration (days)', field: 'duration', sortable: true, type: FieldType.number },
       { id: 'complete', name: '% Complete', field: 'percentComplete', formatter: Formatters.percentCompleteBar, type: FieldType.number, sortable: true },
-      { id: 'start', name: 'Start', field: 'start', formatter: Formatters.dateIso, sortable: true, type: FieldType.dateIso },
-      { id: 'finish', name: 'Finish', field: 'finish', formatter: Formatters.dateIso, sortable: true, type: FieldType.date },
+      { id: 'start', name: 'Start', field: 'start', formatter: Formatters.dateIso, sortable: true, type: FieldType.dateIso, exportWithFormatter: true },
+      { id: 'finish', name: 'Finish', field: 'finish', formatter: Formatters.dateIso, sortable: true, type: FieldType.date, exportWithFormatter: true },
       { id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', formatter: Formatters.checkmark, type: FieldType.number, sortable: true }
     ];
     this.gridOptions1 = {
-      autoResize: {
-        containerId: 'demo-container',
-        sidePadding: 15
-      },
-      enableAutoResize: true,
-      enableCellNavigation: false,
+      enableAutoResize: false,
+      enableCellNavigation: true,
       enableCheckboxSelector: true,
       rowSelectionOptions: {
         // True (Single Selection), False (Multiple Selections)
         selectActiveRow: true
       },
+      enableRowSelection: true
     };
     this.gridOptions2 = {
-      autoResize: {
-        containerId: 'demo-container',
-        sidePadding: 15
-      },
-      enableAutoResize: true,
-      enableCellNavigation: false,
-      enableCheckboxSelector: true,
+      enableAutoResize: false,
+      enableCellNavigation: true,
       rowSelectionOptions: {
         // True (Single Selection), False (Multiple Selections)
         selectActiveRow: false
       },
+      enableCheckboxSelector: true,
+      enableRowSelection: true,
       preselectedRows: [0, 2]
     };
   }

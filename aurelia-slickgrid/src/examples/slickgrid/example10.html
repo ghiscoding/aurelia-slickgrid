@@ -16,8 +16,12 @@
     column-definitions.bind="columnDefinitions1"
     grid-options.bind="gridOptions1"
     dataset.bind="dataset1"
+    grid-height="200"
+    grid-width="800"
     sg-on-selected-rows-changed.delegate="onGrid1SelectedRowsChanged($event.detail.eventData, $event.detail.args)">
   </aurelia-slickgrid>
+
+  <hr>
 
   <div class="row">
     <div class="col-sm-8">
@@ -33,6 +37,8 @@
     column-definitions.bind="columnDefinitions2"
     grid-options.bind="gridOptions2"
     dataset.bind="dataset2"
+    grid-height="200"
+    grid-width="800"
     sg-on-selected-rows-changed.delegate="onGrid2SelectedRowsChanged($event.detail.eventData, $event.detail.args)">
   </aurelia-slickgrid>
 </template>
