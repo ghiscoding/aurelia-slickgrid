@@ -8,7 +8,7 @@ export const translateBooleanFormatter: Formatter = (row: number, cell: number, 
   const i18n = gridOptions.i18n || columnParams.i18n;
 
   if (!i18n || typeof i18n.tr !== 'function') {
-    throw new Error(`The translate formatter requires the "I18N" Service to be provided as a Grid Options or Column Definition "params".
+    throw new Error(`The translate formatter requires the "I18N" Service to be provided as a Grid Options or Column Definition "i18n".
     For example: this.gridOptions = { enableTranslate: true, i18n: this.i18n }`);
   }
 
