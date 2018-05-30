@@ -1,4 +1,4 @@
-import { inject } from 'aurelia-framework';
+import { inject, singleton } from 'aurelia-framework';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import {
   Column,
@@ -18,6 +18,7 @@ import { sortByFieldType } from '../sorters/sorterUtilities';
 // using external non-typed js libraries
 declare var Slick: any;
 
+@singleton(true)
 @inject(EventAggregator)
 export class SortService {
   private _currentLocalSorters: CurrentSorter[] = [];

@@ -1,9 +1,11 @@
+import { singleton } from 'aurelia-framework';
 import { CellArgs, Column, GridOption, OnEventArgs } from './../models/index';
 import * as $ from 'jquery';
 
 // using external non-typed js libraries
 declare var Slick: any;
 
+@singleton(true)
 export class GridService {
   private _grid: any;
   private _dataView: any;

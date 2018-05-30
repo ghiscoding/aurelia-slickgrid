@@ -1,5 +1,6 @@
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { I18N } from 'aurelia-i18n';
+import { singleton } from 'aurelia-framework';
 import { mapOperatorType, mapOperatorByFilterType, mapOperatorByFieldType } from './utilities';
 import {
   BackendService,
@@ -33,6 +34,7 @@ const DEFAULT_FILTER_TYPING_DEBOUNCE = 750;
 const DEFAULT_ITEMS_PER_PAGE = 25;
 const DEFAULT_PAGE_SIZE = 20;
 
+@singleton(true)
 export class GraphqlService implements BackendService {
   private _currentFilters: ColumnFilters | CurrentFilter[];
   private _currentPagination: CurrentPagination;

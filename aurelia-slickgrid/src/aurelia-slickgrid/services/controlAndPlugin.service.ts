@@ -1,4 +1,4 @@
-import { inject } from 'aurelia-framework';
+import { singleton, inject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import {
   CellArgs,
@@ -25,6 +25,7 @@ import * as $ from 'jquery';
 // using external non-typed js libraries
 declare var Slick: any;
 
+@singleton(true)
 @inject(ExportService, FilterService, I18N, SortService)
 export class ControlAndPluginService {
   private _dataView: any;

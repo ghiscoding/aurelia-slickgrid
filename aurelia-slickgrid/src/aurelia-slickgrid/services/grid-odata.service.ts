@@ -1,5 +1,5 @@
 import './global-utilities';
-import { inject } from 'aurelia-framework';
+import { singleton, inject } from 'aurelia-framework';
 import { parseUtcDate } from './utilities';
 import {
   BackendService,
@@ -30,6 +30,7 @@ const DEFAULT_FILTER_TYPING_DEBOUNCE = 750;
 const DEFAULT_ITEMS_PER_PAGE = 25;
 const DEFAULT_PAGE_SIZE = 20;
 
+@singleton(true)
 @inject(OdataService)
 export class GridOdataService implements BackendService {
   private _columnDefinitions: Column[];

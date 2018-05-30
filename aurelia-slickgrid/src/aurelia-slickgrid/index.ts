@@ -50,20 +50,6 @@ export function configure(aurelia: any, callback: any) {
   aurelia.container.registerTransient(FILTER_PLUGIN_NAME, Filters.singleSelect);
   aurelia.container.registerTransient(FILTER_PLUGIN_NAME, Filters.select);
 
-  // register all Services as transient to support multiple grids
-  aurelia.container.registerTransient(AURELIA_SERVICE_NAME, ControlAndPluginService);
-  aurelia.container.registerTransient(AURELIA_SERVICE_NAME, ExportService);
-  aurelia.container.registerTransient(AURELIA_SERVICE_NAME, FilterService);
-  aurelia.container.registerTransient(AURELIA_SERVICE_NAME, GraphqlService);
-  aurelia.container.registerTransient(AURELIA_SERVICE_NAME, GridEventService);
-  aurelia.container.registerTransient(AURELIA_SERVICE_NAME, GridService);
-  aurelia.container.registerTransient(AURELIA_SERVICE_NAME, GridStateService);
-  aurelia.container.registerTransient(AURELIA_SERVICE_NAME, GridOdataService);
-  aurelia.container.registerTransient(AURELIA_SERVICE_NAME, GroupingAndColspanService);
-  aurelia.container.registerTransient(AURELIA_SERVICE_NAME, OdataService);
-  aurelia.container.registerTransient(AURELIA_SERVICE_NAME, ResizerService);
-  aurelia.container.registerTransient(AURELIA_SERVICE_NAME, SortService);
-
   const config = new SlickgridConfig();
 
   aurelia.container.registerInstance(SlickgridConfig, config);

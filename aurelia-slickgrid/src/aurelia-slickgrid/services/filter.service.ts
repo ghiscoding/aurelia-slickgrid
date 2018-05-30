@@ -1,4 +1,4 @@
-import { inject } from 'aurelia-framework';
+import { singleton, inject } from 'aurelia-framework';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { FilterConditions } from './../filter-conditions/index';
 import { Filters, FilterFactory } from './../filters/index';
@@ -23,6 +23,7 @@ import * as $ from 'jquery';
 // using external non-typed js libraries
 declare var Slick: any;
 
+@singleton(true)
 @inject(EventAggregator, FilterFactory)
 export class FilterService {
   private _eventHandler = new Slick.EventHandler();
