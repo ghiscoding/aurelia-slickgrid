@@ -4,8 +4,6 @@ import * as $ from 'jquery';
 
 @autoinject()
 export class Example8 {
-  @bindable() gridObj: any;
-  @bindable() dataview: any;
   title = 'Example 8: Header Menu Plugin';
   subTitle = `
     This example demonstrates using the <b>Slick.Plugins.HeaderMenu</b> plugin to easily add menus to colum headers.<br/>
@@ -23,6 +21,8 @@ export class Example8 {
   columnDefinitions: Column[];
   gridOptions: GridOption;
   dataset = [];
+  dataView: any;
+  gridObj: any;
   visibleColumns;
 
   constructor() {
@@ -35,14 +35,16 @@ export class Example8 {
     this.getData();
   }
 
+  aureliaGridReady(aureliaGrid: AureliaGridInstance) {
+    this.aureliaGrid = aureliaGrid;
+    this.gridObj = aureliaGrid && aureliaGrid.slickGrid;
+    this.dataView = aureliaGrid && aureliaGrid.dataView;
+  }
+
   detached() {
     // unsubscrible any Slick.Event you might have used
     // a reminder again, these are SlickGrid Event, not Event Aggregator events
     this.gridObj.onSort.unsubscribe();
-  }
-
-  aureliaGridReady(aureliaGrid: AureliaGridInstance) {
-    this.aureliaGrid = aureliaGrid;
   }
 
   defineGrid() {
@@ -104,7 +106,7 @@ export class Example8 {
 
             // add to the column array, the column sorted by the header menu
             cols.push({ sortCol: args.column, sortAsc: (args.command === 'sort-asc') });
-            this.aureliaGrid.sortService.onLocalSortChanged(this.gridObj, this.dataview, cols);
+            this.aureliaGrid.sortService.onLocalSortChanged(this.gridObj, this.dataView, cols);
 
             // update the this.gridObj sortColumns array which will at the same add the visual sort icon(s) on the UI
             const newSortColumns: ColumnSort[] = cols.map((col) => {
@@ -134,13 +136,5 @@ export class Example8 {
       };
     }
     this.dataset = mockDataset;
-  }
-
-  gridObjChanged(grid) {
-    this.gridObj = grid;
-  }
-
-  dataviewChanged(dataview) {
-    this.dataview = dataview;
   }
 }

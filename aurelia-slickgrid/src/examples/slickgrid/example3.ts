@@ -21,8 +21,6 @@ declare var Slick: any;
 
 @autoinject()
 export class Example3 {
-  @bindable() gridObj: any;
-  @bindable() dataview: any;
   title = 'Example 3: Editors';
   subTitle = `
   Grid with Inline Editors and onCellClick actions (<a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Editors" target="_blank">Wiki docs</a>).
@@ -37,6 +35,8 @@ export class Example3 {
   </ul>
   `;
   private _commandQueue = [];
+  aureliaGrid: AureliaGridInstance;
+  gridObj: any;
   gridOptions: GridOption;
   columnDefinitions: Column[];
   dataset: any[];
@@ -44,7 +44,6 @@ export class Example3 {
   isAutoEdit: boolean = true;
   alertWarning: any;
   selectedLanguage: string;
-  aureliaGrid: AureliaGridInstance;
 
   constructor(private i18n: I18N) {
     // define the grid options & columns and then create the grid itself
@@ -59,6 +58,7 @@ export class Example3 {
 
   aureliaGridReady(aureliaGrid: AureliaGridInstance) {
     this.aureliaGrid = aureliaGrid;
+    this.gridObj = aureliaGrid && aureliaGrid.slickGrid;
   }
 
   /* Define grid Options and Columns */
@@ -196,10 +196,6 @@ export class Example3 {
       },
       i18n: this.i18n,
     };
-  }
-
-  dataviewChanged(dataview) {
-    this.dataview = dataview;
   }
 
   getData() {

@@ -3,8 +3,6 @@ import { AureliaGridInstance, Column, FieldType, FilterType, Formatter, Formatte
 
 @autoinject()
 export class Example9 {
-  @bindable() gridObj: any;
-  @bindable() dataviewObj: any;
   title = 'Example 9: Grid Menu Control';
   subTitle = `
     This example demonstrates using the <b>Slick.Controls.GridMenu</b> plugin to easily add a Grid Menu (aka hamburger menu) on the top right corner of the grid.<br/>
@@ -22,6 +20,8 @@ export class Example9 {
   columnDefinitions: Column[];
   gridOptions: GridOption;
   dataset = [];
+  dataView: any;
+  gridObj: any;
   visibleColumns;
 
   constructor() {
@@ -36,6 +36,8 @@ export class Example9 {
 
   aureliaGridReady(aureliaGrid: AureliaGridInstance) {
     this.aureliaGrid = aureliaGrid;
+    this.gridObj = aureliaGrid && aureliaGrid.slickGrid;
+    this.dataView = aureliaGrid && aureliaGrid.dataView;
   }
 
   defineGrid() {
@@ -137,10 +139,10 @@ export class Example9 {
             this.gridObj.setTopPanelVisibility(!this.gridObj.getOptions().showTopPanel);
           } else if (args.command === 'clear-filter') {
             this.aureliaGrid.filterService.clearFilters();
-            this.dataviewObj.refresh();
+            this.dataView.refresh();
           } else if (args.command === 'clear-sorting') {
             this.aureliaGrid.sortService.clearSorting();
-            this.dataviewObj.refresh();
+            this.dataView.refresh();
           } else {
             alert('Command: ' + args.command);
           }
@@ -167,13 +169,5 @@ export class Example9 {
       };
     }
     this.dataset = mockDataset;
-  }
-
-  gridObjChanged(grid) {
-    this.gridObj = grid;
-  }
-
-  dataviewChanged(dataview) {
-    this.dataviewObj = dataview;
   }
 }

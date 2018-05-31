@@ -187,6 +187,11 @@ export class AureliaSlickgridCustomElement {
 
     // create the Aurelia Grid Instance with reference to all Services
     const aureliaElementInstance: AureliaGridInstance = {
+      // Slick Grid & DataView objects
+      dataView: this.dataview,
+      slickGrid: this.grid,
+
+      // return all available Services (non-singleton)
       backendService: this.gridOptions && this.gridOptions.backendServiceApi && this.gridOptions.backendServiceApi.service,
       exportService: this.exportService,
       filterService: this.filterService,
