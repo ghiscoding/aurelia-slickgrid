@@ -1,5 +1,3 @@
-import { EventAggregator } from 'aurelia-event-aggregator';
-import { I18N } from 'aurelia-i18n';
 import { singleton } from 'aurelia-framework';
 import { mapOperatorType, mapOperatorByFilterType, mapOperatorByFieldType } from './utilities';
 import {
@@ -132,7 +130,7 @@ export class GraphqlService implements BackendService {
     }
     if (this.options.addLocaleIntoQuery) {
       // first: 20, ... locale: "en-CA"
-      datasetFilters.locale = (this._gridOptions.params && this._gridOptions.params.i18n && this._gridOptions.params.i18n.getLocale()) || 'en';
+      datasetFilters.locale = this._gridOptions && this._gridOptions.i18n && this._gridOptions.i18n.getLocale() || 'en';
     }
     if (this.options.extraQueryArguments) {
       // first: 20, ... userId: 123
