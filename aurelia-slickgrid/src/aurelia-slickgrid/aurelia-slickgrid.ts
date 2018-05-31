@@ -547,7 +547,7 @@ export class AureliaSlickgridCustomElement {
    */
   updateColumnDefinitionsList(newColumnDefinitions?: Column[]) {
     if (this.gridOptions.enableTranslate) {
-      this.controlAndPluginService.translateColumnHeaders();
+      this.controlAndPluginService.translateColumnHeaders(false, newColumnDefinitions);
     } else {
       this.controlAndPluginService.renderColumnHeaders(newColumnDefinitions);
     }
