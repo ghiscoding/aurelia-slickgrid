@@ -1,6 +1,5 @@
 import { inject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
-import { htmlEntityEncode } from './../services/utilities';
 import {
   Column,
   FieldType,

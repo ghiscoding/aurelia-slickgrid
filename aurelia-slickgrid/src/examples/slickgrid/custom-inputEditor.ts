@@ -1,11 +1,13 @@
-import * as $ from 'jquery';
-import { Editor, KeyCode } from './../models/index';
+import { Editor, KeyCode } from '../../aurelia-slickgrid';
+
+// using external non-typed js libraries
+declare var $: any;
 
 /*
  * An example of a 'detached' editor.
  * KeyDown events are also handled to provide handling for Tab, Shift-Tab, Esc and Ctrl-Enter.
  */
-export class TextEditor implements Editor {
+export class CustomInputEditor implements Editor {
   $input: any;
   defaultValue: any;
 
@@ -14,15 +16,17 @@ export class TextEditor implements Editor {
   }
 
   init(): void {
-    this.$input = $(`<input type="text" class="editor-text" />`)
+    this.$input = $(`<input type="text" class="editor-text" placeholder="custom" />`)
       .appendTo(this.args.container)
       .on('keydown.nav', (e) => {
         if (e.keyCode === KeyCode.LEFT || e.keyCode === KeyCode.RIGHT) {
           e.stopImmediatePropagation();
         }
-      })
-      .focus()
-      .select();
+      });
+
+    setTimeout(() => {
+      this.$input.focus().select();
+    }, 50);
   }
 
   destroy() {

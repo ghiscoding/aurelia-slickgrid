@@ -1,20 +1,16 @@
-import {
-  I18N
-} from 'aurelia-i18n';
-import {
-  autoinject,
-  bindable
-} from 'aurelia-framework';
+import { autoinject } from 'aurelia-framework';
+import { I18N } from 'aurelia-i18n';
 import {
   AureliaGridInstance,
   Column,
-  Editors,
+  EditorType,
   FieldType,
   Formatters,
   GridOption,
   OnEventArgs,
   OperatorType
 } from '../../aurelia-slickgrid';
+import { CustomInputEditor } from './custom-inputEditor';
 
 // using external non-typed js libraries
 declare var Slick: any;
@@ -97,19 +93,35 @@ export class Example3 {
       field: 'title',
       sortable: true,
       type: FieldType.string,
-      editor: Editors.longText,
+      editor: {
+        type: EditorType.longText
+      },
       minWidth: 100,
       onCellChange: (args: OnEventArgs) => {
         console.log(args);
         this.alertWarning = `Updated Title: ${args.dataContext.title}`;
       }
     }, {
+      id: 'title2',
+      name: 'Title, Custom Editor',
+      field: 'title',
+      sortable: true,
+      type: FieldType.string,
+      editor: {
+        type: EditorType.custom,
+        customEditor: CustomInputEditor
+      },
+      minWidth: 70
+    }, {
       id: 'duration',
       name: 'Duration (days)',
       field: 'duration',
       sortable: true,
       type: FieldType.number,
-      editor: Editors.integer,
+      editor: {
+        type: EditorType.float,
+        params: { decimalPlaces: 2 }
+      },
       minWidth: 100
     }, {
       id: 'complete',
@@ -117,10 +129,8 @@ export class Example3 {
       field: 'percentComplete',
       formatter: Formatters.multiple,
       type: FieldType.number,
-      editor: Editors.singleSelect,
-      minWidth: 100,
-      params: {
-        formatters: [Formatters.collection, Formatters.percentCompleteBar],
+      editor: {
+        type: EditorType.singleSelect,
         collection: Array.from(Array(101).keys()).map(k => ({ value: k, label: k })),
         collectionSortBy: {
           property: 'label',
@@ -131,6 +141,10 @@ export class Example3 {
           value: 0,
           operator: OperatorType.notEqual
         }
+      },
+      minWidth: 100,
+      params: {
+        formatters: [Formatters.collectionEditor, Formatters.percentCompleteBar],
       }
     }, {
       id: 'start',
@@ -140,7 +154,9 @@ export class Example3 {
       sortable: true,
       minWidth: 100,
       type: FieldType.date,
-      editor: Editors.date
+      editor: {
+        type: EditorType.date
+      },
     }, {
       id: 'finish',
       name: 'Finish',
@@ -149,14 +165,18 @@ export class Example3 {
       sortable: true,
       minWidth: 100,
       type: FieldType.date,
-      editor: Editors.date
+      editor: {
+        type: EditorType.date
+      },
     }, {
       id: 'effort-driven',
       name: 'Effort Driven',
       field: 'effortDriven',
       formatter: Formatters.checkmark,
       type: FieldType.number,
-      editor: Editors.checkbox,
+      editor: {
+        type: EditorType.checkbox,
+      },
       minWidth: 70
     }, {
       id: 'prerequisites',
@@ -165,8 +185,8 @@ export class Example3 {
       minWidth: 100,
       sortable: true,
       type: FieldType.string,
-      editor: Editors.multipleSelect,
-      params: {
+      editor: {
+        type: EditorType.multipleSelect,
         collection: Array.from(Array(12).keys()).map(k => ({ value: `Task ${k}`, label: `Task ${k}` })),
         collectionSortBy: {
           property: 'label',
