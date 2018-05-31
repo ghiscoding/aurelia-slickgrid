@@ -363,7 +363,7 @@ export class AureliaSlickgridCustomElement {
 
     // expose GridState Service changes event through dispatch
     this.gridStateSubscriber = this.ea.subscribe('gridStateService:changed', (gridStateChange: GridStateChange) => {
-      this.elm.dispatchEvent(new CustomEvent(`${aureliaEventPrefix}-on-grid-state-service-changed`, {
+      this.elm.dispatchEvent(new CustomEvent(`${aureliaEventPrefix}-on-grid-state-changed`, {
         bubbles: true,
         detail: gridStateChange
       }));
