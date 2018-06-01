@@ -23,12 +23,10 @@ import 'slickgrid/plugins/slick.rowselectionmodel';
 import { bindable, BindingEngine, bindingMode, Container, Factory, inject } from 'aurelia-framework';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
 import { GlobalGridOptions } from './global-grid-options';
-import { AVAILABLE_EDITORS } from './editors/index';
 import {
   AureliaGridInstance,
   BackendServiceOption,
   Column,
-  EditorType,
   GridOption,
   GridStateChange,
   GridStateType,
@@ -140,7 +138,16 @@ export class AureliaSlickgridCustomElement {
     // however "editor" is used internally by SlickGrid for it's Editor Factory
     // so in our lib we will swap "editor" and copy it into "internalColumnEditor"
     // then take back "editor.type" and make it the new "editor" so that SlickGrid Editor Factory still works
-    this._columnDefinitions = this.columnDefinitions.map((c: Column | any) => ({ ...c, editor: this.getEditor((c.editor && c.editor.type), c), internalColumnEditor: { ...c.editor } }));
+    // Wrap each editor class in the Factory resolver so consumers of this library can use
+    // dependency injection. Aurelia will resolve all dependencies when we pass the container
+     // and allow slickgrid to pass its arguments to the editors constructor last
+    // when slickgrid creates the editor
+    // https://github.com/aurelia/dependency-injection/blob/master/src/resolvers.js
+    this._columnDefinitions = this.columnDefinitions.map((c: Column | any) => ({
+      ...c,
+      editor: c.editor && Factory.of(c.editor.type).get(this.container),
+      internalColumnEditor: { ...c.editor }
+    }));
 
     this.controlAndPluginService.createPluginBeforeGridCreation(this._columnDefinitions, this.gridOptions);
     this.grid = new Slick.Grid(`#${this.gridId}`, this.dataview, this._columnDefinitions, this.gridOptions);
@@ -253,17 +260,6 @@ export class AureliaSlickgridCustomElement {
     // assignment changes are not triggering a "changed" event https://stackoverflow.com/a/30286225/1212166
     this.columnDefSubscriber = this.bindingEngine.collectionObserver(this.columnDefinitions)
       .subscribe(changes => this.updateColumnDefinitionsList(this._columnDefinitions));
-
-    // Wrap each editor class in the Factory resolver so consumers of this library can use
-    // dependency injection. Aurelia will resolve all dependencies when we pass the container
-    // and allow slickgrid to pass its arguments to the editors constructor last
-    // when slickgrid creates the editor
-    // https://github.com/aurelia/dependency-injection/blob/master/src/resolvers.js
-    for (const c of this._columnDefinitions) {
-      if (c.editor) {
-        c.editor = Factory.of(c.editor).get(this.container);
-      }
-    }
   }
 
   columnDefinitionsChanged(newColumnDefinitions: Column[]) {
@@ -284,25 +280,6 @@ export class AureliaSlickgridCustomElement {
         this.grid.autosizeColumns();
       }
     }
-  }
-
-  /**
-   * From the list of available editors, find the editor associated to it's type
-   * and if it's a custom one, return the "customEditor" from the column
-   * @param type
-   * @param column
-   */
-  getEditor(type: EditorType, column: Column) {
-    if (type === EditorType.custom && column && column.editor && column.editor.hasOwnProperty('customEditor')) {
-      return column.editor['customEditor'];
-    }
-
-    const editorFound = AVAILABLE_EDITORS.find(editor => editor.type === type);
-    if (editorFound && editorFound.editor) {
-      return editorFound.editor;
-    }
-
-    return undefined;
   }
 
   /**

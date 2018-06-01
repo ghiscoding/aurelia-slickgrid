@@ -3,7 +3,7 @@ import { I18N } from 'aurelia-i18n';
 import {
   AureliaGridInstance,
   Column,
-  EditorType,
+  Editors,
   FieldType,
   Formatters,
   GridOption,
@@ -94,7 +94,7 @@ export class Example3 {
       sortable: true,
       type: FieldType.string,
       editor: {
-        type: EditorType.longText
+        type: Editors.longText
       },
       minWidth: 100,
       onCellChange: (args: OnEventArgs) => {
@@ -108,8 +108,7 @@ export class Example3 {
       sortable: true,
       type: FieldType.string,
       editor: {
-        type: EditorType.custom,
-        customEditor: CustomInputEditor
+        type: CustomInputEditor
       },
       minWidth: 70
     }, {
@@ -119,7 +118,7 @@ export class Example3 {
       sortable: true,
       type: FieldType.number,
       editor: {
-        type: EditorType.float,
+        type: Editors.float,
         params: { decimalPlaces: 2 }
       },
       minWidth: 100
@@ -130,7 +129,7 @@ export class Example3 {
       formatter: Formatters.multiple,
       type: FieldType.number,
       editor: {
-        type: EditorType.singleSelect,
+        type: Editors.singleSelect,
         collection: Array.from(Array(101).keys()).map(k => ({ value: k, label: k })),
         collectionSortBy: {
           property: 'label',
@@ -155,7 +154,7 @@ export class Example3 {
       minWidth: 100,
       type: FieldType.date,
       editor: {
-        type: EditorType.date
+        type: Editors.date
       },
     }, {
       id: 'finish',
@@ -166,7 +165,7 @@ export class Example3 {
       minWidth: 100,
       type: FieldType.date,
       editor: {
-        type: EditorType.date
+        type: Editors.date
       },
     }, {
       id: 'effort-driven',
@@ -175,7 +174,7 @@ export class Example3 {
       formatter: Formatters.checkmark,
       type: FieldType.number,
       editor: {
-        type: EditorType.checkbox,
+        type: Editors.checkbox,
       },
       minWidth: 70
     }, {
@@ -186,7 +185,7 @@ export class Example3 {
       sortable: true,
       type: FieldType.string,
       editor: {
-        type: EditorType.multipleSelect,
+        type: Editors.multipleSelect,
         collection: Array.from(Array(12).keys()).map(k => ({ value: `Task ${k}`, label: `Task ${k}` })),
         collectionSortBy: {
           property: 'label',

@@ -2,7 +2,7 @@ import { autoinject } from 'aurelia-framework';
 import {
   AureliaGridInstance,
   Column,
-  EditorType,
+  Editors,
   FieldType,
   Formatters,
   GridOption,
@@ -56,7 +56,7 @@ export class Example11 {
         sortable: true,
         type: FieldType.string,
         editor: {
-          type: EditorType.longText
+          type: Editors.longText
         }
       },
       {
@@ -64,7 +64,7 @@ export class Example11 {
         sortable: true,
         type: FieldType.number,
         editor: {
-          type: EditorType.text
+          type: Editors.text
         },
         onCellChange: (args: OnEventArgs) => {
           alert('onCellChange directly attached to the column definition');
@@ -76,7 +76,7 @@ export class Example11 {
         formatter: Formatters.percentCompleteBar,
         type: FieldType.number,
         editor: {
-          type: EditorType.integer
+          type: Editors.integer
         }
       },
       {
@@ -86,7 +86,7 @@ export class Example11 {
         type: FieldType.date,
         /*
         editor: {
-          type: EditorType.date
+          type: Editors.date
         }
         */
       },
@@ -100,7 +100,7 @@ export class Example11 {
         formatter: Formatters.checkmark,
         type: FieldType.number,
         editor: {
-          type: EditorType.checkbox
+          type: Editors.checkbox
         }
       }
     ];
