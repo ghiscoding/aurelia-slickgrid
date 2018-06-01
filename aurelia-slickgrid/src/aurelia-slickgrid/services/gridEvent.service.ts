@@ -30,7 +30,6 @@ export class GridEventService {
 
         // finally call up the Slick.column.onCellChanges.... function
         column.onCellChange(returnedArgs);
-        // e.stopImmediatePropagation();
       }
     });
   }
@@ -57,13 +56,6 @@ export class GridEventService {
 
         // finally call up the Slick.column.onCellClick.... function
         column.onCellClick(returnedArgs);
-        e.stopImmediatePropagation();
-      }
-
-      // stop the click event bubbling
-      // NOTE: We don't want to stop bubbling when doing an input edit, if we do the autoEdit which has intent of doing singleClick edit will become doubleClick edit
-      if (grid.getOptions && !grid.getOptions().autoEdit) {
-        // e.stopImmediatePropagation();
       }
     });
   }
