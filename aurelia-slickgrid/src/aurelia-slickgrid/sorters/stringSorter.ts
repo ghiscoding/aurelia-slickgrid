@@ -1,6 +1,6 @@
 import { Sorter } from './../models/sorter.interface';
 
-export const stringSorter: Sorter = (value1, value2, sortDirection) => {
+export const stringSorter: Sorter = (value1: any, value2: any, sortDirection: number) => {
   let position = 0;
   if (value1 === null) {
     position = -1;
