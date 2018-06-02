@@ -67,7 +67,7 @@ export class Example3 {
       minWidth: 30,
       maxWidth: 30,
       // use onCellClick OR grid.onClick.subscribe which you can see down below
-      onCellClick: (args: OnEventArgs) => {
+      onCellClick: (e: Event, args: OnEventArgs) => {
         console.log(args);
         this.alertWarning = `Editing: ${args.dataContext.title}`;
         this.aureliaGrid.gridService.highlightRow(args.row, 1500);
@@ -82,7 +82,7 @@ export class Example3 {
       maxWidth: 30,
       // use onCellClick OR grid.onClick.subscribe which you can see down below
       /*
-      onCellClick: (args: OnEventArgs) => {
+      onCellClick: (e: Event, args: OnEventArgs) => {
         console.log(args);
         this.alertWarning = `Deleting: ${args.dataContext.title}`;
       }
@@ -97,7 +97,7 @@ export class Example3 {
         type: Editors.longText
       },
       minWidth: 100,
-      onCellChange: (args: OnEventArgs) => {
+      onCellChange: (e: Event, args: OnEventArgs) => {
         console.log(args);
         this.alertWarning = `Updated Title: ${args.dataContext.title}`;
       }

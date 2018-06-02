@@ -31,7 +31,7 @@ export class GridEventService {
         };
 
         // finally call up the Slick.column.onCellChanges.... function
-        column.onCellChange(returnedArgs);
+        column.onCellChange(e, returnedArgs);
       }
     });
   }
@@ -57,7 +57,7 @@ export class GridEventService {
         };
 
         // finally call up the Slick.column.onCellClick.... function
-        column.onCellClick(returnedArgs);
+        column.onCellClick(e, returnedArgs);
       }
     });
   }

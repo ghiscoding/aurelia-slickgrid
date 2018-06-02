@@ -66,7 +66,7 @@ export class Example11 {
         editor: {
           type: Editors.text
         },
-        onCellChange: (args: OnEventArgs) => {
+        onCellChange: (e: Event, args: OnEventArgs) => {
           alert('onCellChange directly attached to the column definition');
           console.log(args);
         }
