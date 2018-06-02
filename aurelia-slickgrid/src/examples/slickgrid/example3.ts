@@ -17,7 +17,7 @@ declare var Slick: any;
 
 @autoinject()
 export class Example3 {
-  title = 'Example 3: Editors';
+  title = 'Example 3: Editors / Delete';
   subTitle = `
   Grid with Inline Editors and onCellClick actions (<a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Editors" target="_blank">Wiki docs</a>).
   <ul>
@@ -244,7 +244,6 @@ export class Example3 {
   onCellChanged(e, args) {
     console.log('onCellChange', args);
     this.updatedObject = args.item;
-    this.aureliaGrid.resizerService.resizeGrid(100);
   }
 
   onCellClicked(e, args) {
@@ -262,6 +261,7 @@ export class Example3 {
     } else if (metadata.columnDef.id === 'delete') {
       if (confirm('Are you sure?')) {
         this.aureliaGrid.gridService.deleteDataGridItemById(metadata.dataContext.id);
+        this.alertWarning = `Deleted: ${metadata.dataContext.title}`;
       }
     }
   }
