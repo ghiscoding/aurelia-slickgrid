@@ -6,6 +6,7 @@ import {
   ColumnSort,
   CustomGridMenu,
   DelimiterType,
+  Extension,
   FileType,
   GraphqlResult,
   GridMenu,
@@ -32,7 +33,7 @@ export class ControlAndPluginService {
   private _grid: any;
   visibleColumns: Column[];
   areVisibleColumnDifferent = false;
-  pluginList: { name: string; plugin: any }[] = [];
+  extensionList: Extension[] = [];
 
   // controls & plugins
   autoTooltipPlugin: any;
@@ -68,11 +69,17 @@ export class ControlAndPluginService {
     this._grid.autosizeColumns();
   }
 
-  getPlugin(name?: string) {
-    if (name) {
-      return this.pluginList.find((p) => p.name === name);
-    }
-    return this.pluginList;
+  /** Get all Extensions */
+  getAllExtensions(): Extension[] {
+    return this.extensionList;
+  }
+
+  /**
+   * Get an Extension by it's name
+   *  @param name
+   */
+  getExtensionByName(name: string): Extension | undefined {
+    return this.extensionList.find((p) => p.name === name);
   }
 
   /**
@@ -89,20 +96,20 @@ export class ControlAndPluginService {
     // Column Picker Control
     if (this._gridOptions.enableColumnPicker) {
       this.columnPickerControl = this.createColumnPicker(grid, this._columnDefinitions);
-      this.pluginList.push({ name: 'ColumnPicker', plugin: this.columnPickerControl });
+      this.extensionList.push({ name: 'ColumnPicker', service: this.columnPickerControl });
     }
 
     // Grid Menu Control
     if (this._gridOptions.enableGridMenu) {
       this.gridMenuControl = this.createGridMenu(grid, this._columnDefinitions);
-      this.pluginList.push({ name: 'GridMenu', plugin: this.gridMenuControl });
+      this.extensionList.push({ name: 'GridMenu', service: this.gridMenuControl });
     }
 
     // Auto Tooltip Plugin
     if (this._gridOptions.enableAutoTooltip) {
       this.autoTooltipPlugin = new Slick.AutoTooltips(this._gridOptions.autoTooltipOptions || {});
       grid.registerPlugin(this.autoTooltipPlugin);
-      this.pluginList.push({ name: 'AutoTooltip', plugin: this.autoTooltipPlugin });
+      this.extensionList.push({ name: 'AutoTooltip', service: this.autoTooltipPlugin });
     }
 
     // Grouping Plugin
@@ -110,7 +117,7 @@ export class ControlAndPluginService {
     if (this._gridOptions.enableGrouping) {
       this.groupItemMetaProviderPlugin = groupItemMetadataProvider || {};
       this._grid.registerPlugin(this.groupItemMetaProviderPlugin);
-      this.pluginList.push({ name: 'GroupItemMetaProvider', plugin: this.groupItemMetaProviderPlugin });
+      this.extensionList.push({ name: 'GroupItemMetaProvider', service: this.groupItemMetaProviderPlugin });
     }
 
     // Checkbox Selector Plugin
@@ -118,7 +125,7 @@ export class ControlAndPluginService {
       // when enabling the Checkbox Selector Plugin, we need to also watch onClick events to perform certain actions
       // the selector column has to be created BEFORE the grid (else it behaves oddly), but we can only watch grid events AFTER the grid is created
       grid.registerPlugin(this.checkboxSelectorPlugin);
-      this.pluginList.push({ name: 'CheckboxSelector', plugin: this.checkboxSelectorPlugin });
+      this.extensionList.push({ name: 'CheckboxSelector', service: this.checkboxSelectorPlugin });
 
       // this also requires the Row Selection Model to be registered as well
       if (!this.rowSelectionPlugin || !grid.getSelectionModel()) {
@@ -143,7 +150,7 @@ export class ControlAndPluginService {
     if (this._gridOptions.enableHeaderButton) {
       this.headerButtonsPlugin = new Slick.Plugins.HeaderButtons(this._gridOptions.headerButton || {});
       grid.registerPlugin(this.headerButtonsPlugin);
-      this.pluginList.push({ name: 'HeaderButtons', plugin: this.headerButtonsPlugin });
+      this.extensionList.push({ name: 'HeaderButtons', service: this.headerButtonsPlugin });
 
       this.headerButtonsPlugin.onCommand.subscribe((e: Event, args: HeaderButtonOnCommandArgs) => {
         if (this._gridOptions.headerButton && typeof this._gridOptions.headerButton.onCommand === 'function') {
@@ -169,11 +176,11 @@ export class ControlAndPluginService {
       if (Array.isArray(this._gridOptions.registerPlugins)) {
         this._gridOptions.registerPlugins.forEach((plugin) => {
           grid.registerPlugin(plugin);
-          this.pluginList.push({ name: 'generic', plugin });
+          this.extensionList.push({ name: 'generic', service: plugin });
         });
       } else {
         grid.registerPlugin(this._gridOptions.registerPlugins);
-        this.pluginList.push({ name: 'generic', plugin: this._gridOptions.registerPlugins });
+        this.extensionList.push({ name: 'generic', service: this._gridOptions.registerPlugins });
       }
     }
   }
@@ -236,7 +243,7 @@ export class ControlAndPluginService {
     grid.setSelectionModel(new Slick.CellSelectionModel());
     this.cellExternalCopyManagerPlugin = new Slick.CellExternalCopyManager(pluginOptions);
     grid.registerPlugin(this.cellExternalCopyManagerPlugin);
-    this.pluginList.push({ name: 'CellExternalCopyManager', plugin: this.cellExternalCopyManagerPlugin });
+    this.extensionList.push({ name: 'CellExternalCopyManager', service: this.cellExternalCopyManagerPlugin });
   }
 
   /**
@@ -399,12 +406,12 @@ export class ControlAndPluginService {
     this.visibleColumns = [];
 
     // dispose of each control/plugin if it has a destroy method
-    this.pluginList.forEach((item) => {
-      if (item && item.plugin && item.plugin.destroy) {
-        item.plugin.destroy();
+    this.extensionList.forEach((item) => {
+      if (item && item.service && item.service.destroy) {
+        item.service.destroy();
       }
     });
-    this.pluginList = [];
+    this.extensionList = [];
   }
 
   /**
