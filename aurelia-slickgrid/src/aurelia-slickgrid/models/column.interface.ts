@@ -113,15 +113,6 @@ export interface Column {
    */
   internalColumnEditor?: any;
 
-  /** catchall for meta info */
-  json?: any;
-
-  /** a column key */
-  key?: string;
-
-  /** is the column manually sizable? */
-  manuallySized?: boolean;
-
   /** Maximum Width of the column in pixels (number only). */
   maxWidth?: number;
 
