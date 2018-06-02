@@ -1,31 +1,25 @@
 import { autoinject } from 'aurelia-framework';
 import { CustomInputFilter } from './custom-inputFilter';
-import { AureliaGridInstance, Column, FieldType, FilterType, Formatter, Formatters, GridOption } from '../../aurelia-slickgrid';
+import { AureliaGridInstance, Column, FieldType, FilterType, Formatter, Formatters, GridOption, GridState, GridStateChange } from '../../aurelia-slickgrid';
 
 function randomBetween(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
+const LOCAL_STORAGE_KEY = 'gridState';
 const NB_ITEMS = 500;
 
 @autoinject()
-export class Example4 {
-  title = 'Example 4: Client Side Sort/Filter';
+export class Example15 {
+  title = 'Example 15: Grid State & Presets using Local Storage';
   subTitle = `
-  Sort/Filter on client side only using SlickGrid DataView (<a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Sorting" target="_blank">Wiki docs</a>)
+  Grid State & Preset (<a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Grid-State-&-Preset" target="_blank">Wiki docs</a>)
   <br/>
   <ul class="small">
-    <li>Support multi-sort (by default), hold "Shift" key and click on the next column to sort.</li>
-    <li>All column types support the following operators: (>, >=, <, <=, <>, !=, =, ==, *)</li>
+    <li>This demo uses Local Storage to persist the Grid State and uses Grid Options "presets" to put the grid to same previous state</li>
     <ul>
-      <li>Example: >100 ... >=2001-01-01 ... >02/28/17</li>
-      <li><b>Note:</b> For filters to work properly (default is string), make sure to provide a FieldType (type is against the dataset, not the Formatter)</li>
+       <li>to demo this, simply change any columns (position, visibility, size, filter, sort), then refresh your browser</li>
     </ul>
-    <li>Date Filters</li>
-    <ul>
-      <li>FieldType of dateUtc/date (from dataset) can use an extra option of "filterSearchType" to let user filter more easily. For example, in the "UTC Date" field below, you can type "&gt;02/28/2017", also when dealing with UTC you have to take the time difference in consideration.</li>
-    </ul>
-    <li>On String filters, (*) can be used as startsWith (Hello* => matches "Hello Word") ... endsWith (*Doe => matches: "John Doe")</li>
-    <li>Custom Filter are now possible, "Description" column below, is a customized InputFilter with different placeholder. See <a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Custom-Filter" target="_blank">Wiki - Custom Filter</a></li>
+    <li>Even if this demo was made for Local Storage, you can use whichever is convenient for you (Local Storage, Session Storage, DB, ...)</li>
   </ul>
 `;
 
@@ -35,7 +29,12 @@ export class Example4 {
   dataset: any[];
 
   constructor() {
-    this.defineGrid();
+    const presets = JSON.parse(localStorage[LOCAL_STORAGE_KEY] || null);
+
+    // use some Grid State preset defaults if you wish
+    // presets = presets || this.useDefaultPresets();
+
+    this.defineGrid(presets);
   }
 
   attached() {
@@ -51,8 +50,12 @@ export class Example4 {
     this.aureliaGrid = aureliaGrid;
   }
 
+  clearGridStateFromLocalStorage() {
+    localStorage[LOCAL_STORAGE_KEY] = null;
+  }
+
   /* Define grid Options and Columns */
-  defineGrid() {
+  defineGrid(gridStatePresets?: GridState) {
     // prepare a multiple-select array to filter with
     const multiSelectFilterArray = [];
     for (let i = 0; i < NB_ITEMS; i++) {
@@ -138,32 +141,14 @@ export class Example4 {
         containerId: 'demo-container',
         sidePadding: 15
       },
-      enableFiltering: true,
-
-      // use columnDef searchTerms OR use presets as shown below
-      presets: {
-        columns: [
-          { columnId: 'description', width: 170 }, // flip column position of Title/Description to Description/Title
-          { columnId: 'title', width: 55 },
-          { columnId: 'duration' },
-          { columnId: 'complete' },
-          { columnId: 'start' },
-          { columnId: 'usDateShort' },
-          { columnId: 'utcDate' },
-          // { columnId: 'effort-driven' }, // to HIDE a column, simply ommit it from the preset array
-        ],
-        filters: [
-          { columnId: 'duration', searchTerms: [2, 22, 44] },
-          // { columnId: 'complete', searchTerms: ['5'], operator: '>' },
-          { columnId: 'usDateShort', operator: '<', searchTerms: ['4/20/25'] },
-          // { columnId: 'effort-driven', searchTerms: [true] }
-        ],
-        sorters: [
-          { columnId: 'duration', direction: 'DESC' },
-          { columnId: 'complete', direction: 'ASC' }
-        ],
-      }
+      enableFiltering: true
     };
+
+    // reload the Grid State with the grid options presets
+    // but make sure the colums array is part of the Grid State before using them as presets
+    if (gridStatePresets && (!Array.isArray(gridStatePresets.columns) || gridStatePresets.columns.length < 1)) {
+      this.gridOptions.presets = gridStatePresets;
+    }
   }
 
   getData() {
@@ -195,13 +180,42 @@ export class Example4 {
     }
   }
 
-  /** Dispatched event of a Grid State Changed event */
-  gridStateChanged(gridState) {
-    console.log('Client sample, Grid State changed:: ', gridState);
+  /** Dispatched event of a Grid State Changed event (which contain a "change" and the "gridState") */
+  gridStateChanged(gridStateChanges: GridStateChange) {
+    console.log('Client sample, Grid State changed:: ', gridStateChanges);
+    localStorage[LOCAL_STORAGE_KEY] = JSON.stringify(gridStateChanges.gridState);
   }
 
-  /** Save current Filters, Sorters in LocaleStorage or DB */
+  /** Save Grid State in LocaleStorage */
   saveCurrentGridState() {
-    console.log('Client sample, current Grid State:: ', this.aureliaGrid.gridStateService.getCurrentGridState());
+    const gridState: GridState = this.aureliaGrid.gridStateService.getCurrentGridState();
+    console.log('Client sample, current Grid State:: ', gridState);
+    localStorage[LOCAL_STORAGE_KEY] = JSON.stringify(gridState);
+  }
+
+  useDefaultPresets() {
+    // use columnDef searchTerms OR use presets as shown below
+    return {
+      columns: [
+        { columnId: 'description', width: 170 }, // flip column position of Title/Description to Description/Title
+        { columnId: 'title', width: 55 },
+        { columnId: 'duration' },
+        { columnId: 'complete' },
+        { columnId: 'start' },
+        { columnId: 'usDateShort' },
+        { columnId: 'utcDate' },
+        // { columnId: 'effort-driven' }, // to HIDE a column, simply ommit it from the preset array
+      ],
+      filters: [
+        { columnId: 'duration', searchTerms: [2, 22, 44] },
+        // { columnId: 'complete', searchTerms: ['5'], operator: '>' },
+        { columnId: 'usDateShort', operator: '<', searchTerms: ['4/20/25'] },
+        // { columnId: 'effort-driven', searchTerms: [true] }
+      ],
+      sorters: [
+        { columnId: 'duration', direction: 'DESC' },
+        { columnId: 'complete', direction: 'ASC' }
+      ],
+    };
   }
 }
