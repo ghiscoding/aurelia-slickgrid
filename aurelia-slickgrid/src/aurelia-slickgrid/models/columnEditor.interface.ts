@@ -6,7 +6,7 @@ import {
 
 export interface ColumnEditor {
   /** Any inline editor function that implements Editor for the cell */
-  type?: any;
+  model?: any;
 
   collection?: any[];
 
