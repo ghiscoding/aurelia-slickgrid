@@ -89,11 +89,6 @@ export class Example15 {
         filterable: true,
         filter: {
           collection: multiSelectFilterArray,
-          collectionSortBy: {
-            property: 'value',
-            sortDesc: true,
-            fieldType: FieldType.number
-          },
           type: FilterType.multipleSelect,
           // we could add certain option(s) to the "multiple-select" plugin
           filterOptions: {
@@ -145,7 +140,7 @@ export class Example15 {
 
     // reload the Grid State with the grid options presets
     // but make sure the colums array is part of the Grid State before using them as presets
-    if (gridStatePresets && (Array.isArray(gridStatePresets.columns) && gridStatePresets.columns.length > 0)) {
+    if (gridStatePresets) {
       this.gridOptions.presets = gridStatePresets;
     }
   }

@@ -338,12 +338,11 @@ export class AureliaSlickgridCustomElement {
     );
 
     // if user entered some Columns "presets", we need to reflect them all in the grid
-    if (gridOptions.presets && gridOptions.presets.columns) {
+    if (gridOptions.presets && gridOptions.presets.columns && Array.isArray(gridOptions.presets.columns) && gridOptions.presets.columns.length > 0) {
       const gridColumns: Column[] = this.gridStateService.getAssociatedGridColumns(grid, gridOptions.presets.columns);
       if (gridColumns && Array.isArray(gridColumns)) {
         grid.setColumns(gridColumns);
       }
-      // grid.setColumns(gridOptions.presets.columns);
     }
 
     // attach external sorting (backend) when available or default onSort (dataView)
