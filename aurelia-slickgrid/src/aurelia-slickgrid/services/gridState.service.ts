@@ -70,7 +70,7 @@ export class GridStateService {
    */
   getCurrentGridState(): GridState {
     const gridState: GridState = {
-      columns: this._currentColumns || this.getAssociatedCurrentColumns(this._grid.getColumns()),
+      columns: this.getCurrentColumns(),
       filters: this.getCurrentFilters(),
       sorters: this.getCurrentSorters()
     };
@@ -137,6 +137,21 @@ export class GridStateService {
     }
     this._columns = columns;
     return columns;
+  }
+
+  /**
+   * Get the Columns (and their state: visibility/position) that are currently applied in the grid
+   * @return current columns
+   */
+  getCurrentColumns(): CurrentColumn[] {
+    let currentColumns: CurrentColumn[] = [];
+    if (this._currentColumns && Array.isArray(this._currentColumns) && this._currentColumns.length > 0) {
+      currentColumns = this._currentColumns;
+    } else {
+      currentColumns = this.getAssociatedCurrentColumns(this._grid.getColumns());
+    }
+
+    return currentColumns;
   }
 
   /**

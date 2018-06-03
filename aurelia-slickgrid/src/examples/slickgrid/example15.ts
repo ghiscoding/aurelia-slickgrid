@@ -95,7 +95,6 @@ export class Example15 {
             fieldType: FieldType.number
           },
           type: FilterType.multipleSelect,
-          searchTerms: [1, 33, 50], // default selection
           // we could add certain option(s) to the "multiple-select" plugin
           filterOptions: {
             maxHeight: 250,
@@ -146,7 +145,7 @@ export class Example15 {
 
     // reload the Grid State with the grid options presets
     // but make sure the colums array is part of the Grid State before using them as presets
-    if (gridStatePresets && (!Array.isArray(gridStatePresets.columns) || gridStatePresets.columns.length < 1)) {
+    if (gridStatePresets && (Array.isArray(gridStatePresets.columns) && gridStatePresets.columns.length > 0)) {
       this.gridOptions.presets = gridStatePresets;
     }
   }
