@@ -157,6 +157,11 @@ export class SortService {
         }
       }
     }
+
+    // set current sorter to empty & emit a sort changed event
+    this._currentLocalSorters = [];
+    const sender = (this._gridOptions && this._gridOptions.backendServiceApi) ? 'remote' : 'local';
+    this.emitSortChanged(sender);
   }
 
   getCurrentLocalSorters(): CurrentSorter[] {
