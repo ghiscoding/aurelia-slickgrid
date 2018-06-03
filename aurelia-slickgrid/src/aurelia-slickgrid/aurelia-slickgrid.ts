@@ -355,8 +355,8 @@ export class AureliaSlickgridCustomElement {
       this.filterService.init(grid);
 
       // if user entered some "presets", we need to reflect them all in the DOM
-      if (gridOptions.presets && gridOptions.presets.filters) {
-        this.filterService.populateColumnFilterSearchTerms(grid);
+      if (gridOptions.presets && Array.isArray(gridOptions.presets.filters) && gridOptions.presets.filters.length > 0) {
+        this.filterService.populateColumnFilterSearchTerms();
       }
       gridOptions.backendServiceApi ? this.filterService.attachBackendOnFilter(grid) : this.filterService.attachLocalOnFilter(grid, this.dataview);
     }
@@ -443,13 +443,18 @@ export class AureliaSlickgridCustomElement {
     // update backend filters (if need be) before the query runs
     if (backendApi) {
       const backendService = backendApi.service;
+
+      // if user entered some any "presets", we need to reflect them all in the grid
       if (gridOptions && gridOptions.presets) {
-        if (backendService && backendService.updateFilters && gridOptions.presets.filters) {
+        // Filters "presets"
+        if (backendService && backendService.updateFilters && Array.isArray(gridOptions.presets.filters) && gridOptions.presets.filters.length > 0) {
           backendService.updateFilters(gridOptions.presets.filters, true);
         }
-        if (backendService && backendService.updateSorters && gridOptions.presets.sorters) {
+        // Sorters "presets"
+        if (backendService && backendService.updateSorters && Array.isArray(gridOptions.presets.sorters) && gridOptions.presets.sorters.length > 0) {
           backendService.updateSorters(undefined, gridOptions.presets.sorters);
         }
+        // Pagination "presets"
         if (backendService && backendService.updatePagination && gridOptions.presets.pagination) {
           backendService.updatePagination(gridOptions.presets.pagination.pageNumber, gridOptions.presets.pagination.pageSize);
         }

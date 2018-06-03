@@ -89,6 +89,7 @@ export class Example15 {
         filterable: true,
         filter: {
           collection: multiSelectFilterArray,
+          searchTerms: [1, 33, 50], // default selection
           type: FilterType.multipleSelect,
           // we could add certain option(s) to the "multiple-select" plugin
           filterOptions: {

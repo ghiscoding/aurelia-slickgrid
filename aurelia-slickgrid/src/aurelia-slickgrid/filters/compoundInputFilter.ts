@@ -72,7 +72,7 @@ export class CompoundInputFilter implements Filter {
       this.$selectOperatorElm.val(0);
       this.$filterInputElm.val('');
       if (triggerFilterKeyup) {
-        this.$filterElm.trigger('keyup');
+        this.onTriggerEvent(null);
       }
     }
   }
