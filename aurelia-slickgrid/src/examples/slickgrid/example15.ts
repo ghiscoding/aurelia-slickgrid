@@ -1,5 +1,4 @@
 import { autoinject } from 'aurelia-framework';
-import { CustomInputFilter } from './custom-inputFilter';
 import { AureliaGridInstance, Column, FieldType, FilterType, Formatter, Formatters, GridOption, GridState, GridStateChange } from '../../aurelia-slickgrid';
 
 function randomBetween(min, max) {
@@ -15,11 +14,11 @@ export class Example15 {
   Grid State & Preset (<a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Grid-State-&-Preset" target="_blank">Wiki docs</a>)
   <br/>
   <ul class="small">
-    <li>This demo uses Local Storage to persist the Grid State and uses Grid Options "presets" to put the grid to same previous state</li>
+    <li>Uses Local Storage to persist the Grid State and uses Grid Options "presets" to put the grid back to it's previous state</li>
     <ul>
-       <li>to demo this, simply change any columns (position, visibility, size, filter, sort), then refresh your browser</li>
+       <li>to demo this, simply change any columns (position reorder, visibility, size, filter, sort), then refresh your browser with (F5)</li>
     </ul>
-    <li>Even if this demo was made for Local Storage, you can use whichever is convenient for you (Local Storage, Session Storage, DB, ...)</li>
+    <li>Local Storage is just one option, you can use whichever is more convenient for you (Local Storage, Session Storage, DB, ...)</li>
   </ul>
 `;
 
@@ -50,8 +49,10 @@ export class Example15 {
     this.aureliaGrid = aureliaGrid;
   }
 
+  /** Clear the Grid State from Local Storage and reset the grid to it's original state */
   clearGridStateFromLocalStorage() {
     localStorage[LOCAL_STORAGE_KEY] = null;
+    this.aureliaGrid.gridService.resetGrid(this.columnDefinitions);
   }
 
   /* Define grid Options and Columns */
@@ -79,8 +80,7 @@ export class Example15 {
         id: 'description', name: 'Description', field: 'description', filterable: true, sortable: true, minWidth: 80,
         type: FieldType.string,
         filter: {
-          type: FilterType.custom,
-          customFilter: new CustomInputFilter() // create a new instance to make each Filter independent from each other
+          type: FilterType.input
         }
       },
       {
@@ -105,14 +105,6 @@ export class Example15 {
       {
         id: 'start', name: 'Start', field: 'start', formatter: Formatters.dateIso, sortable: true, minWidth: 75, exportWithFormatter: true,
         type: FieldType.date, filterable: true, filter: { type: FilterType.compoundDate }
-      },
-      {
-        id: 'usDateShort', name: 'US Date Short', field: 'usDateShort', sortable: true, minWidth: 70, width: 70,
-        type: FieldType.dateUsShort, filterable: true, filter: { type: FilterType.compoundDate }
-      },
-      {
-        id: 'utcDate', name: 'UTC Date', field: 'utcDate', formatter: Formatters.dateTimeIsoAmPm, sortable: true, minWidth: 115,
-        type: FieldType.dateUtc, outputType: FieldType.dateTimeIsoAmPm, filterable: true, filter: { type: FilterType.compoundDate }
       },
       {
         id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', minWidth: 85, maxWidth: 85, formatter: Formatters.checkmark,
@@ -167,7 +159,7 @@ export class Example15 {
         duration: randomDuration,
         percentComplete: randomPercent,
         percentCompleteNumber: randomPercent,
-        start: (i % 4) ? null : new Date(randomYear, randomMonth, randomDay),          // provide a Date format
+        start: new Date(randomYear, randomMonth, randomDay),          // provide a Date format
         usDateShort: `${randomMonth}/${randomDay}/${randomYearShort}`, // provide a date US Short in the dataset
         utcDate: `${randomYear}-${randomMonthStr}-${randomDay}T${randomHour}:${randomTime}:${randomTime}Z`,
         effortDriven: (i % 3 === 0)

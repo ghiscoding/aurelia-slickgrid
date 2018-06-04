@@ -110,7 +110,7 @@ export class SortService {
       // keep current sorters
       this._currentLocalSorters = []; // reset current local sorters
       if (Array.isArray(sortColumns)) {
-        sortColumns.forEach((sortColumn) => {
+        sortColumns.forEach((sortColumn: { sortCol: Column, sortAsc: number }) => {
           if (sortColumn.sortCol) {
             this._currentLocalSorters.push({
               columnId: sortColumn.sortCol.id,
@@ -161,7 +161,9 @@ export class SortService {
     // set current sorter to empty & emit a sort changed event
     this._currentLocalSorters = [];
     const sender = (this._gridOptions && this._gridOptions.backendServiceApi) ? 'remote' : 'local';
-    this.emitSortChanged(sender);
+
+    // emit an event when filters are all cleared
+    this.ea.publish('sortService:sortCleared', this._currentLocalSorters);
   }
 
   getCurrentLocalSorters(): CurrentSorter[] {

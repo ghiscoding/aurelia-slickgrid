@@ -22,7 +22,6 @@ export class GridStateService {
   private _columns: Column[] = [];
   private _currentColumns: CurrentColumn[] = [];
   private _grid: any;
-  private _preset: GridState;
   private controlAndPluginService: ControlAndPluginService;
   private filterService: FilterService;
   private sortService: SortService;
@@ -234,6 +233,12 @@ export class GridStateService {
     }
   }
 
+  resetColumns(columnDefinitions?: Column[]) {
+    const columns: Column[] = columnDefinitions || this._columns;
+    const currentColumns: CurrentColumn[] = this.getAssociatedCurrentColumns(columns);
+    this.ea.publish('gridStateService:changed', { change: { newValues: currentColumns, type: GridStateType.columns }, gridState: this.getCurrentGridState() });
+  }
+
   /**
    * Subscribe to all necessary SlickGrid or Service Events that deals with a Grid change,
    * when triggered, we will publish a Grid State Event with current Grid State
@@ -245,10 +250,22 @@ export class GridStateService {
         this.ea.publish('gridStateService:changed', { change: { newValues: currentFilters, type: GridStateType.filter }, gridState: this.getCurrentGridState() });
       })
     );
+    // Subscribe to Event Emitter of Filter cleared
+    this.subscriptions.push(
+      this.ea.subscribe('filterService:filterCleared', (currentFilters: CurrentFilter[]) => {
+        this.ea.publish('gridStateService:changed', { change: { newValues: currentFilters, type: GridStateType.filter }, gridState: this.getCurrentGridState() });
+      })
+    );
 
     // Subscribe to Event Emitter of Sort changed
     this.subscriptions.push(
       this.ea.subscribe('sortService:sortChanged', (currentSorters: CurrentSorter[]) => {
+        this.ea.publish('gridStateService:changed', { change: { newValues: currentSorters, type: GridStateType.sorter }, gridState: this.getCurrentGridState() });
+      })
+    );
+    // Subscribe to Event Emitter of Sort cleared
+    this.subscriptions.push(
+      this.ea.subscribe('sortService:sortCleared', (currentSorters: CurrentSorter[]) => {
         this.ea.publish('gridStateService:changed', { change: { newValues: currentSorters, type: GridStateType.sorter }, gridState: this.getCurrentGridState() });
       })
     );

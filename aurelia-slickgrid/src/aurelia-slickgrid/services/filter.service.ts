@@ -91,7 +91,11 @@ export class FilterService {
     const query = await backendApi.service.processOnFilterChanged(event, args);
 
     // emit an onFilterChanged event
-    this.emitFilterChanged('remote');
+    if (args && !args.clearFilterTriggered) {
+      this.emitFilterChanged('remote');
+    } else {
+      console.log('clear triggered', args);
+    }
 
     // await for the Promise to resolve the data
     const processResult = await backendApi.process(query);
@@ -126,7 +130,9 @@ export class FilterService {
       if (columnId != null) {
         dataView.refresh();
       }
-      this.emitFilterChanged('local');
+      if (args && !args.clearFilterTriggered) {
+        this.emitFilterChanged('local');
+      }
     });
 
     // subscribe to SlickGrid onHeaderRowCellRendered event to create filter template
@@ -137,10 +143,10 @@ export class FilterService {
 
   /** Clear the search filters (below the column titles) */
   clearFilters() {
-    this._filters.forEach((filter, index) => {
+    this._filters.forEach((filter: Filter) => {
       if (filter && filter.clear) {
         // clear element and trigger a change
-        filter.clear(true);
+        filter.clear();
       }
     });
 
@@ -159,6 +165,9 @@ export class FilterService {
       this._grid.invalidate();
       this._grid.render();
     }
+
+    // emit an event when filters are all cleared
+    this.ea.publish('filterService:filterCleared', {});
   }
 
   customLocalFilter(dataView: any, item: any, args: any) {
@@ -339,6 +348,7 @@ export class FilterService {
       }
 
       this.triggerEvent(this._slickSubscriber, {
+        clearFilterTriggered: args && args.clearFilterTriggered,
         columnId,
         columnDef: args.columnDef || null,
         columnFilters: this._columnFilters,
@@ -444,7 +454,9 @@ export class FilterService {
       const filters = this._gridOptions.presets.filters;
       this._columnDefinitions.forEach((columnDef: Column) => {
         // clear any columnDef searchTerms before applying Presets
-        delete columnDef.filter.searchTerms;
+        if (columnDef.filter && columnDef.filter.searchTerms) {
+          delete columnDef.filter.searchTerms;
+        }
 
         // from each presets, we will find the associated columnDef and apply the preset searchTerms & operator if there is
         const columnPreset = filters.find((presetFilter: CurrentFilter) => {
