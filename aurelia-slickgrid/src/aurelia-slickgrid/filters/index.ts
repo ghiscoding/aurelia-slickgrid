@@ -1,4 +1,3 @@
-import { Column, Filter } from './../models/index';
 import { CompoundDateFilter } from './compoundDateFilter';
 import { CompoundInputFilter } from './compoundInputFilter';
 import { InputFilter } from './inputFilter';
@@ -26,4 +25,4 @@ export const Filters = {
   select: SelectFilter
 };
 
-export { PLUGIN_NAME, FilterFactory } from './filterFactory';
+export { FilterFactory } from './filterFactory';

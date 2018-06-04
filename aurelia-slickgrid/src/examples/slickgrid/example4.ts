@@ -1,6 +1,6 @@
 import { autoinject } from 'aurelia-framework';
 import { CustomInputFilter } from './custom-inputFilter';
-import { AureliaGridInstance, Column, FieldType, FilterType, Formatter, Formatters, GridOption } from '../../aurelia-slickgrid';
+import { AureliaGridInstance, Column, FieldType, Filters, Formatter, Formatters, GridOption } from '../../aurelia-slickgrid';
 
 function randomBetween(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -69,15 +69,14 @@ export class Example4 {
         type: FieldType.string,
         minWidth: 45,
         filter: {
-          type: FilterType.compoundInput
+          model: Filters.compoundInput
         }
       },
       {
         id: 'description', name: 'Description', field: 'description', filterable: true, sortable: true, minWidth: 80,
         type: FieldType.string,
         filter: {
-          type: FilterType.custom,
-          customFilter: new CustomInputFilter() // create a new instance to make each Filter independent from each other
+          model: new CustomInputFilter() // create a new instance to make each Filter independent from each other          customFilter: 
         }
       },
       {
@@ -91,7 +90,7 @@ export class Example4 {
             sortDesc: true,
             fieldType: FieldType.number
           },
-          type: FilterType.multipleSelect,
+          model: Filters.multipleSelect,
           searchTerms: [1, 33, 50], // default selection
           // we could add certain option(s) to the "multiple-select" plugin
           filterOptions: {
@@ -102,19 +101,19 @@ export class Example4 {
       },
       {
         id: 'complete', name: '% Complete', field: 'percentComplete', formatter: Formatters.percentCompleteBar, minWidth: 70, type: FieldType.number, sortable: true,
-        filterable: true, filter: { type: FilterType.compoundInput }
+        filterable: true, filter: { model: Filters.compoundInput }
       },
       {
         id: 'start', name: 'Start', field: 'start', formatter: Formatters.dateIso, sortable: true, minWidth: 75, exportWithFormatter: true,
-        type: FieldType.date, filterable: true, filter: { type: FilterType.compoundDate }
+        type: FieldType.date, filterable: true, filter: { model: Filters.compoundDate }
       },
       {
         id: 'usDateShort', name: 'US Date Short', field: 'usDateShort', sortable: true, minWidth: 70, width: 70,
-        type: FieldType.dateUsShort, filterable: true, filter: { type: FilterType.compoundDate }
+        type: FieldType.dateUsShort, filterable: true, filter: { model: Filters.compoundDate }
       },
       {
         id: 'utcDate', name: 'UTC Date', field: 'utcDate', formatter: Formatters.dateTimeIsoAmPm, sortable: true, minWidth: 115,
-        type: FieldType.dateUtc, outputType: FieldType.dateTimeIsoAmPm, filterable: true, filter: { type: FilterType.compoundDate }
+        type: FieldType.dateUtc, outputType: FieldType.dateTimeIsoAmPm, filterable: true, filter: { model: Filters.compoundDate }
       },
       {
         id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', minWidth: 85, maxWidth: 85, formatter: Formatters.checkmark,
@@ -123,7 +122,7 @@ export class Example4 {
         filterable: true,
         filter: {
           collection: [{ value: '', label: '' }, { value: true, label: 'True' }, { value: false, label: 'False' }],
-          type: FilterType.singleSelect,
+          model: Filters.singleSelect,
 
           // we could add certain option(s) to the "multiple-select" plugin
           filterOptions: {

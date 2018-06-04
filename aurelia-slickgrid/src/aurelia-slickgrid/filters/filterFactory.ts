@@ -1,9 +1,6 @@
 import { inject, Container } from 'aurelia-framework';
-import { Filter, FilterType } from '../models/index';
+import { ColumnFilter, Filter } from '../models/index';
 import { SlickgridConfig } from '../slickgrid-config';
-
-/** The name of the plugins the factory will initialize */
-export const PLUGIN_NAME = 'GRID_FILTERS';
 
 /**
  * Factory class to create a Filter interface implementation
@@ -25,26 +22,21 @@ export class FilterFactory {
   }
 
   /**
-   * Creates a new Filter from the provided filterType
-   * @param {FilterType | string} [filterType] the type of filter to create
-   * as an enum or custom string. The default filter type will be used if no value is passed
+   * Creates a new Filter from the provided ColumnFilter or fallbacks to the default filter
+   * @param {columnFilter} a ColumnFilter object
    * @return {Filter} the new Filter
    */
-  public createFilter(filterType?: FilterType | string): Filter {
-    const filters = this.container.getAll(PLUGIN_NAME);
+  public createFilter(columnFilter: ColumnFilter): Filter {
+    let filter: Filter | undefined;
 
-    let filter: Filter | undefined = filters.find((f: Filter) =>
-      f.filterType === filterType);
+    if (columnFilter && columnFilter.model) {
+      // the model either needs to be retrieved or is already instantiated
+      filter = typeof columnFilter.model === 'function' ? this.container.get(columnFilter.model) : columnFilter.model;
+    }
 
-    // default to the input filter type when none is found
-    if (!filter) {
-      filter = filters.find((f: Filter) => f.filterType === this._options.defaultFilterType);
-
-      if (!filter) {
-        const enumOrCustom = FilterType[this._options.defaultFilterType] ? 'FilterType.enum' : 'custom';
-
-        throw new Error(`Default filter of type ${enumOrCustom}=${this._options.defaultFilterType} was not found`);
-      }
+    // fallback to the default filter
+    if (!filter && this._options.defaultFilter) {
+      filter = this.container.get(this._options.defaultFilter);
     }
 
     return filter;

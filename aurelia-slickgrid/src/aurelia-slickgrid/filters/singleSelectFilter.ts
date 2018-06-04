@@ -3,12 +3,13 @@ import { inject } from 'aurelia-framework';
 import {
   Column,
   Filter,
-  FilterType,
   FilterArguments,
   FilterCallback,
   GridOption,
   HtmlElementPosition,
   MultipleSelectOption,
+  OperatorString,
+  OperatorType,
   SearchTerm,
   SelectOption
 } from './../models/index';
@@ -23,7 +24,6 @@ export class SingleSelectFilter implements Filter {
   columnDef: Column;
   callback: FilterCallback;
   defaultOptions: MultipleSelectOption;
-  filterType = FilterType.singleSelect;
   isFilled = false;
   labelName: string;
   valueName: string;
@@ -53,6 +53,10 @@ export class SingleSelectFilter implements Filter {
     };
   }
 
+  get operator(): OperatorType | OperatorString {
+    return OperatorType.equal;
+  }
+
   /** Getter for the Grid Options pulled through the Grid Object */
   private get gridOptions(): GridOption {
     return (this.grid && this.grid.getOptions) ? this.grid.getOptions() : {};
@@ -71,7 +75,7 @@ export class SingleSelectFilter implements Filter {
     this.searchTerms = args.searchTerms || [];
 
     if (!this.grid || !this.columnDef || !this.columnDef.filter || !this.columnDef.filter.collection) {
-      throw new Error(`[Aurelia-SlickGrid] You need to pass a "collection" for the MultipleSelect Filter to work correctly. Also each option should include a value/label pair (or value/labelKey when using Locale). For example:: { filter: type: FilterType.multipleSelect, collection: [{ value: true, label: 'True' }, { value: false, label: 'False'}] }`);
+      throw new Error(`[Aurelia-SlickGrid] You need to pass a "collection" for the MultipleSelect Filter to work correctly. Also each option should include a value/label pair (or value/labelKey when using Locale). For example: { filter: { model: Filters.singleSelect, collection: [{ value: true, label: 'True' }, { value: false, label: 'False'}] } }`);
     }
 
     this.enableTranslateLabel = this.columnDef.filter.enableTranslateLabel || false;
@@ -149,7 +153,7 @@ export class SingleSelectFilter implements Filter {
     let options = '';
     optionCollection.forEach((option: SelectOption) => {
       if (!option || (option[this.labelName] === undefined && option.labelKey === undefined)) {
-        throw new Error(`A collection with value/label (or value/labelKey when using Locale) is required to populate the Select list, for example:: { filter: type: FilterType.singleSelect, collection: [ { value: '1', label: 'One' } ]')`);
+        throw new Error(`A collection with value/label (or value/labelKey when using Locale) is required to populate the Select list, for example: { filter: { model: Filter.singleSelect, collection: [ { value: '1', label: 'One' } ] } }`);
       }
 
       const labelKey = (option.labelKey || option[this.labelName]) as string;

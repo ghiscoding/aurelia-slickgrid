@@ -8,7 +8,7 @@ import {
   CheckboxSelector,
   EditCommand,
   ExportOption,
-  FilterType,
+  Filter,
   GridMenu,
   GridState,
   HeaderButton,
@@ -101,8 +101,8 @@ export interface GridOption {
   /** Default placeholder to use in Filters that support placeholder (input, flatpickr) */
   defaultFilterPlaceholder?: string;
 
-  /** The default filter type to use when none is specified */
-  defaultFilterType?: FilterType | string;
+  /** The default filter model to use when none is specified */
+  defaultFilter?: any;
 
   /** The default Formatter used */
   defaultFormatter?: any;

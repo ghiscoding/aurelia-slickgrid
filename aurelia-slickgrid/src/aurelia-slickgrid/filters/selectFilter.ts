@@ -3,9 +3,10 @@ import { inject } from 'aurelia-framework';
 import {
   Column,
   Filter,
-  FilterType,
   FilterArguments,
   FilterCallback,
+  OperatorString,
+  OperatorType,
   SearchTerm
 } from './../models/index';
 import * as $ from 'jquery';
@@ -17,9 +18,12 @@ export class SelectFilter implements Filter {
   searchTerms: SearchTerm[];
   columnDef: Column;
   callback: FilterCallback;
-  filterType = FilterType.select;
 
   constructor(private i18n: I18N) { }
+
+  get operator(): OperatorType | OperatorString {
+    return OperatorType.equal;
+  }
 
   /**
    * Initialize the Filter
@@ -89,7 +93,7 @@ export class SelectFilter implements Filter {
 
   private buildTemplateHtmlString() {
     if (!this.columnDef || !this.columnDef.filter || !this.columnDef.filter.collection) {
-      throw new Error(`[Aurelia-SlickGrid] You need to pass a "collection" for the Select Filter to work correctly. Also each option should include a value/label pair (or value/labelKey when using Locale). For example:: { filter: type: FilterType.select, collection: [{ value: true, label: 'True' }, { value: false, label: 'False'}] }`);
+      throw new Error(`[Aurelia-SlickGrid] You need to pass a "collection" for the Select Filter to work correctly. Also each option should include a value/label pair (or value/labelKey when using Locale). For example: { filter: { model: Filters.select, collection: [{ value: true, label: 'True' }, { value: false, label: 'False'}] } }`);
     }
 
     const optionCollection = this.columnDef.filter.collection || [];
@@ -100,7 +104,7 @@ export class SelectFilter implements Filter {
     let options = '';
     optionCollection.forEach((option: any) => {
       if (!option || (option[labelName] === undefined && option.labelKey === undefined)) {
-        throw new Error(`A collection with value/label (or value/labelKey when using Locale) is required to populate the Select list, for example:: { filter: type: FilterType.select, collection: [ { value: '1', label: 'One' } ]')`);
+        throw new Error(`A collection with value/label (or value/labelKey when using Locale) is required to populate the Select list, for example: { filter: { model: Filters.select, collection: [ { value: '1', label: 'One' } ] } }`);
       }
       const labelKey = option.labelKey || option[labelName];
       const textLabel = ((option.labelKey || isEnabledTranslate) && this.i18n && typeof this.i18n.tr === 'function') ? this.i18n.tr(labelKey || ' ') : labelKey;

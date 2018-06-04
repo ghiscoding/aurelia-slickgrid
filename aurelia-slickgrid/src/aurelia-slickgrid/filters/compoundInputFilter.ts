@@ -6,7 +6,6 @@ import {
   Filter,
   FilterArguments,
   FilterCallback,
-  FilterType,
   GridOption,
   OperatorString,
   OperatorType,
@@ -21,18 +20,24 @@ export class CompoundInputFilter implements Filter {
   private $filterElm: any;
   private $filterInputElm: any;
   private $selectOperatorElm: any;
+  private _operator: OperatorType | OperatorString;
   grid: any;
-  operator: OperatorType | OperatorString | undefined;
   searchTerms: SearchTerm[];
   columnDef: Column;
   callback: FilterCallback;
-  filterType = FilterType.compoundInput;
 
   constructor(private i18n: I18N) { }
 
   /** Getter for the Grid Options pulled through the Grid Object */
   private get gridOptions(): GridOption {
     return (this.grid && this.grid.getOptions) ? this.grid.getOptions() : {};
+  }
+
+  set operator(op: OperatorType | OperatorString) {
+    this._operator = op;
+  }
+  get operator(): OperatorType | OperatorString {
+    return this._operator || OperatorType.empty;
   }
 
   /**

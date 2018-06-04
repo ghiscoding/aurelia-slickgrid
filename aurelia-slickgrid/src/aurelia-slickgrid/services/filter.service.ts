@@ -11,7 +11,6 @@ import {
   FilterArguments,
   FilterCallbackArg,
   FieldType,
-  FilterType,
   GridOption,
   OperatorType,
   OperatorString,
@@ -195,24 +194,6 @@ export class FilterService {
         }
       }
 
-      // when using a Filter that is not a custom type, we want to make sure that we have a default operator type
-      // for example a multiple-select should always be using IN, while a single select will use an EQ
-      const filterType = (columnDef.filter && columnDef.filter.type) ? columnDef.filter.type : FilterType.input;
-      if (!operator && filterType !== FilterType.custom) {
-        switch (filterType) {
-          case FilterType.select:
-          case FilterType.multipleSelect:
-            operator = 'IN';
-            break;
-          case FilterType.singleSelect:
-            operator = 'EQ';
-            break;
-          default:
-            operator = operator;
-            break;
-        }
-      }
-
       // no need to query if search value is empty
       if (searchTerm === '' && !searchTerms) {
         return true;
@@ -374,22 +355,7 @@ export class FilterService {
         callback: this.callbackSearchEvent.bind(this)
       };
 
-      // depending on the Filter type, we will watch the correct event
-      const filterType = (columnDef.filter && columnDef.filter.type) ? columnDef.filter.type : this._gridOptions.defaultFilterType;
-
-      let filter: Filter;
-      switch (filterType) {
-        case FilterType.custom:
-          if (columnDef && columnDef.filter && columnDef.filter.customFilter) {
-            filter = columnDef.filter.customFilter;
-          } else {
-            throw new Error('[Aurelia-Slickgrid] A Filter type of "custom" must include a Filter class that is defined and instantiated.');
-          }
-          break;
-        default:
-          filter = this.filterFactory.createFilter(filterType);
-          break;
-      }
+      const filter: Filter = this.filterFactory.createFilter(args.column.filter);
 
       if (filter) {
         filter.init(filterArguments);
@@ -460,8 +426,7 @@ export class FilterService {
         columnId: columnDef.id,
         columnDef,
         searchTerms,
-        operator: (columnDef && columnDef.filter && columnDef.filter.operator) ? columnDef.filter.operator : null,
-        type: (columnDef && columnDef.filter && columnDef.filter.type) ? columnDef.filter.type : FilterType.input
+        operator: (columnDef && columnDef.filter && columnDef.filter.operator) ? columnDef.filter.operator : null
       };
     }
   }

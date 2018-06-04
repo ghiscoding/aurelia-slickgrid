@@ -1,5 +1,5 @@
 import { autoinject, bindable } from 'aurelia-framework';
-import { AureliaGridInstance, Column, FieldType, FilterType, Formatter, Formatters, GridOption } from '../../aurelia-slickgrid';
+import { AureliaGridInstance, Column, FieldType, Filters, Formatter, Formatters, GridOption } from '../../aurelia-slickgrid';
 
 @autoinject()
 export class Example9 {
@@ -55,7 +55,7 @@ export class Example9 {
         filterable: true,
         filter: {
           collection: [{ value: '', label: '' }, { value: true, label: 'true' }, { value: false, label: 'false' }],
-          type: FilterType.singleSelect,
+          model: Filters.singleSelect,
           filterOptions: {
             // you can add "multiple-select" plugin options like styling the first row
             offsetLeft: 14,

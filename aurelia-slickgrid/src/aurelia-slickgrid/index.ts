@@ -2,9 +2,7 @@ import { PLATFORM } from 'aurelia-pal';
 import { AureliaSlickgridCustomElement } from './aurelia-slickgrid';
 import { SlickPaginationCustomElement } from './slick-pagination';
 import { SlickgridConfig } from './slickgrid-config';
-import { Filters, PLUGIN_NAME as FILTER_PLUGIN_NAME } from './filters/index';
-
-const AURELIA_SERVICE_NAME = 'AURELIA_SLICKGRID_SERVICES';
+import { Filters } from './filters/index';
 
 // import all Services separately
 import {
@@ -43,12 +41,12 @@ export function configure(aurelia: any, callback: any) {
   aurelia.globalResources(PLATFORM.moduleName('./slick-pagination'));
 
   // must register a transient so the container will get a new instance everytime
-  aurelia.container.registerTransient(FILTER_PLUGIN_NAME, Filters.compoundDate);
-  aurelia.container.registerTransient(FILTER_PLUGIN_NAME, Filters.compoundInput);
-  aurelia.container.registerTransient(FILTER_PLUGIN_NAME, Filters.input);
-  aurelia.container.registerTransient(FILTER_PLUGIN_NAME, Filters.multipleSelect);
-  aurelia.container.registerTransient(FILTER_PLUGIN_NAME, Filters.singleSelect);
-  aurelia.container.registerTransient(FILTER_PLUGIN_NAME, Filters.select);
+  aurelia.container.registerTransient(Filters.compoundDate);
+  aurelia.container.registerTransient(Filters.compoundInput);
+  aurelia.container.registerTransient(Filters.input);
+  aurelia.container.registerTransient(Filters.multipleSelect);
+  aurelia.container.registerTransient(Filters.singleSelect);
+  aurelia.container.registerTransient(Filters.select);
 
   const config = new SlickgridConfig();
 

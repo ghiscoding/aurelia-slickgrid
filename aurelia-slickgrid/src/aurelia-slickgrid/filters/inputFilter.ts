@@ -1,10 +1,11 @@
 import {
   Column,
   Filter,
-  FilterType,
   FilterArguments,
   FilterCallback,
   GridOption,
+  OperatorType,
+  OperatorString,
   SearchTerm
 } from './../models/index';
 import * as $ from 'jquery';
@@ -15,11 +16,14 @@ export class InputFilter implements Filter {
   searchTerms: SearchTerm[];
   columnDef: Column;
   callback: FilterCallback;
-  filterType = FilterType.input;
 
   /** Getter for the Grid Options pulled through the Grid Object */
   private get gridOptions(): GridOption {
     return (this.grid && this.grid.getOptions) ? this.grid.getOptions() : {};
+  }
+
+  get operator(): OperatorType | OperatorString {
+    return OperatorType.equal;
   }
 
   /**
