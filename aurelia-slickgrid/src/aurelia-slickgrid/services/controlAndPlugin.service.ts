@@ -632,9 +632,11 @@ export class ControlAndPluginService {
   /** Translate the Column Picker and it's last 2 checkboxes */
   translateColumnPicker() {
     // update the properties by pointers, that is the only way to get Grid Menu Control to see the new values
-    this._gridOptions.columnPicker.columnTitle = this.getDefaultTranslationByKey('columns');
-    this._gridOptions.columnPicker.forceFitTitle = this.getDefaultTranslationByKey('forcefit');
-    this._gridOptions.columnPicker.syncResizeTitle = this.getDefaultTranslationByKey('synch');
+    if (this._gridOptions && this._gridOptions.columnPicker) {
+      this._gridOptions.columnPicker.columnTitle = this.getDefaultTranslationByKey('columns');
+      this._gridOptions.columnPicker.forceFitTitle = this.getDefaultTranslationByKey('forcefit');
+      this._gridOptions.columnPicker.syncResizeTitle = this.getDefaultTranslationByKey('synch');
+    }
   }
 
   /** Translate the Grid Menu titles and column picker */

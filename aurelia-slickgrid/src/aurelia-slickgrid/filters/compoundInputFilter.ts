@@ -76,7 +76,7 @@ export class CompoundInputFilter implements Filter {
     if (this.$filterElm && this.$selectOperatorElm) {
       this.$selectOperatorElm.val(0);
       this.$filterInputElm.val('');
-      this.onTriggerEvent(null, true);
+      this.onTriggerEvent(undefined, true);
     }
   }
 

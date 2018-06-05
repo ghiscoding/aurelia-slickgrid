@@ -123,7 +123,7 @@ export class GridStateService {
 
     if (currentColumns && Array.isArray(currentColumns)) {
       currentColumns.forEach((currentColumn: CurrentColumn, index: number) => {
-        const gridColumn: Column = gridColumns.find((c: Column) => c.id === currentColumn.columnId);
+        const gridColumn: Column | undefined = gridColumns.find((c: Column) => c.id === currentColumn.columnId);
         if (gridColumn && gridColumn.id) {
           columns.push({
             ...gridColumn,

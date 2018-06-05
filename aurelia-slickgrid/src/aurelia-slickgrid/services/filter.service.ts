@@ -368,7 +368,7 @@ export class FilterService {
         callback: this.callbackSearchEvent.bind(this)
       };
 
-      const filter: Filter = this.filterFactory.createFilter(args.column.filter);
+      const filter: Filter | undefined = this.filterFactory.createFilter(args.column.filter);
 
       if (filter) {
         filter.init(filterArguments);

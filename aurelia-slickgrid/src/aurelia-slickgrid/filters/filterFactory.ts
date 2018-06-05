@@ -26,7 +26,7 @@ export class FilterFactory {
    * @param {columnFilter} a ColumnFilter object
    * @return {Filter} the new Filter
    */
-  public createFilter(columnFilter: ColumnFilter): Filter {
+  public createFilter(columnFilter: ColumnFilter | undefined): Filter | undefined {
     let filter: Filter | undefined;
 
     if (columnFilter && columnFilter.model) {
