@@ -113,21 +113,6 @@ export interface Column {
    */
   internalColumnEditor?: any;
 
-  /** is the column editable? Goes with grid option "editable: true". */
-  isEditable?: boolean;
-
-  /** is the field hidden? (part of the dataset but not shown in the grid/UI) */
-  isHidden?: boolean;
-
-  /** catchall for meta info */
-  json?: any;
-
-  /** a column key */
-  key?: string;
-
-  /** is the column manually sizable? */
-  manuallySized?: boolean;
-
   /** Maximum Width of the column in pixels (number only). */
   maxWidth?: number;
 
@@ -172,9 +157,6 @@ export interface Column {
 
   /** Is the column selectable? Goes with grid option "enableCellNavigation: true". */
   selectable?: boolean;
-
-  /** do we want to show hidden column? */
-  showHidden?: boolean;
 
   /** Is the column sortable? Goes with grid option "enableSorting: true". */
   sortable?: boolean;

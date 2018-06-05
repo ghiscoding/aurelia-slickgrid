@@ -90,7 +90,11 @@ export class FilterService {
     const query = await backendApi.service.processOnFilterChanged(event, args);
 
     // emit an onFilterChanged event
-    this.emitFilterChanged('remote');
+    if (args && !args.clearFilterTriggered) {
+      this.emitFilterChanged('remote');
+    } else {
+      console.log('clear triggered', args);
+    }
 
     // await for the Promise to resolve the data
     const processResult = await backendApi.process(query);
@@ -125,7 +129,9 @@ export class FilterService {
       if (columnId != null) {
         dataView.refresh();
       }
-      this.emitFilterChanged('local');
+      if (args && !args.clearFilterTriggered) {
+        this.emitFilterChanged('local');
+      }
     });
 
     // subscribe to SlickGrid onHeaderRowCellRendered event to create filter template
@@ -136,10 +142,10 @@ export class FilterService {
 
   /** Clear the search filters (below the column titles) */
   clearFilters() {
-    this._filters.forEach((filter, index) => {
+    this._filters.forEach((filter: Filter) => {
       if (filter && filter.clear) {
         // clear element and trigger a change
-        filter.clear(true);
+        filter.clear();
       }
     });
 
@@ -150,6 +156,7 @@ export class FilterService {
         delete this._columnFilters[columnId];
       }
     }
+    this._columnFilters = {};
 
     // we also need to refresh the dataView and optionally the grid (it's optional since we use DataView)
     if (this._dataView) {
@@ -157,6 +164,9 @@ export class FilterService {
       this._grid.invalidate();
       this._grid.render();
     }
+
+    // emit an event when filters are all cleared
+    this.ea.publish('filterService:filterCleared', {});
   }
 
   customLocalFilter(dataView: any, item: any, args: any) {
@@ -172,8 +182,8 @@ export class FilterService {
 
       let cellValue = item[columnDef.queryField || columnDef.queryFieldFilter || columnDef.field];
       const searchTerms = (columnFilter && columnFilter.searchTerms) ? columnFilter.searchTerms : null;
-      let fieldSearchValue = (Array.isArray(searchTerms) && searchTerms.length === 1) ? searchTerms[0] : '';
 
+      let fieldSearchValue = (Array.isArray(searchTerms) && searchTerms.length === 1) ? searchTerms[0] : '';
       if (typeof fieldSearchValue === 'undefined') {
         fieldSearchValue = '';
       }
@@ -285,7 +295,9 @@ export class FilterService {
         if (columnFilter.operator) {
           filter.operator = columnFilter.operator;
         }
-        currentFilters.push(filter);
+        if (Array.isArray(filter.searchTerms) && filter.searchTerms.length > 0 && filter.searchTerms[0] !== '') {
+          currentFilters.push(filter);
+        }
       }
     }
     return currentFilters;
@@ -317,6 +329,7 @@ export class FilterService {
       }
 
       this.triggerEvent(this._slickSubscriber, {
+        clearFilterTriggered: args && args.clearFilterTriggered,
         columnId,
         columnDef: args.columnDef || null,
         columnFilters: this._columnFilters,
@@ -355,7 +368,7 @@ export class FilterService {
         callback: this.callbackSearchEvent.bind(this)
       };
 
-      const filter: Filter = this.filterFactory.createFilter(args.column.filter);
+      const filter: Filter | undefined = this.filterFactory.createFilter(args.column.filter);
 
       if (filter) {
         filter.init(filterArguments);
@@ -402,16 +415,22 @@ export class FilterService {
    * At the end of the day, when creating the Filter (DOM Element), it will use these searchTerm(s) so we can take advantage of that without recoding each Filter type (DOM element)
    * @param grid
    */
-  populateColumnFilterSearchTerms(grid: any) {
-    if (this._gridOptions.presets && this._gridOptions.presets.filters) {
+  populateColumnFilterSearchTerms() {
+    if (this._gridOptions.presets && Array.isArray(this._gridOptions.presets.filters) && this._gridOptions.presets.filters.length > 0) {
       const filters = this._gridOptions.presets.filters;
       this._columnDefinitions.forEach((columnDef: Column) => {
+        // clear any columnDef searchTerms before applying Presets
+        if (columnDef.filter && columnDef.filter.searchTerms) {
+          delete columnDef.filter.searchTerms;
+        }
+
+        // from each presets, we will find the associated columnDef and apply the preset searchTerms & operator if there is
         const columnPreset = filters.find((presetFilter: CurrentFilter) => {
           return presetFilter.columnId === columnDef.id;
         });
-        if (columnPreset && columnPreset.searchTerms) {
+        if (columnPreset && columnPreset.searchTerms && Array.isArray(columnPreset.searchTerms)) {
           columnDef.filter = columnDef.filter || {};
-          columnDef.filter.operator = columnPreset.operator || columnDef.filter.operator || OperatorType.in;
+          columnDef.filter.operator = columnPreset.operator || columnDef.filter.operator || '';
           columnDef.filter.searchTerms = columnPreset.searchTerms;
         }
       });

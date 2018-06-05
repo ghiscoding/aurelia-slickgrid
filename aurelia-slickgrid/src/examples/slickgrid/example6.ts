@@ -115,6 +115,13 @@ export class Example6 {
       },
 
       presets: {
+        columns: [
+          { columnId: 'name', width: 120 },
+          { columnId: 'gender', width: 55 },
+          { columnId: 'company' },
+          { columnId: 'billing.address.zip' }, // flip column position of Street/Zip to Zip/Street
+          { columnId: 'billing.address.street', width: 120 },
+        ],
         // you can also type operator as string, e.g.: operator: 'EQ'
         filters: [
           { columnId: 'gender', searchTerms: ['male'], operator: OperatorType.equal },

@@ -38,6 +38,10 @@ export class SlickPaginationCustomElement {
     this._filterSubscriber = this.ea.subscribe('filterService:filterChanged', (data: string) => {
       this.refreshPagination(true);
     });
+    // Subscribe to Filter clear and go back to page 1 when that happen
+    this._filterSubscriber = this.ea.subscribe('filterService:filterCleared', (data: string) => {
+      this.refreshPagination(true);
+    });
   }
 
   gridPaginationOptionsChanged(newGridOptions: GridOption) {

@@ -72,13 +72,11 @@ export class CompoundInputFilter implements Filter {
   /**
    * Clear the filter value
    */
-  clear(triggerFilterKeyup = true) {
+  clear() {
     if (this.$filterElm && this.$selectOperatorElm) {
       this.$selectOperatorElm.val(0);
       this.$filterInputElm.val('');
-      if (triggerFilterKeyup) {
-        this.$filterElm.trigger('keyup');
-      }
+      this.onTriggerEvent(undefined, true);
     }
   }
 
@@ -201,10 +199,14 @@ export class CompoundInputFilter implements Filter {
     return $filterContainerElm;
   }
 
-  private onTriggerEvent(e: Event | undefined) {
-    const selectedOperator = this.$selectOperatorElm.find('option:selected').text();
-    const value = this.$filterInputElm.val();
-    (value) ? this.$filterElm.addClass('filled') : this.$filterElm.removeClass('filled');
-    this.callback(e, { columnDef: this.columnDef, searchTerms: [value], operator: selectedOperator || '' });
+  private onTriggerEvent(e: Event | undefined, clearFilterTriggered?: boolean) {
+    if (clearFilterTriggered) {
+      this.callback(e, { columnDef: this.columnDef, clearFilterTriggered: true });
+    } else {
+      const selectedOperator = this.$selectOperatorElm.find('option:selected').text();
+      const value = this.$filterInputElm.val();
+      (value) ? this.$filterElm.addClass('filled') : this.$filterElm.removeClass('filled');
+      this.callback(e, { columnDef: this.columnDef, searchTerms: [value], operator: selectedOperator || '' });
+    }
   }
 }
