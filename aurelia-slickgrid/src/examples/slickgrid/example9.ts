@@ -44,9 +44,9 @@ export class Example9 {
     this.columnDefinitions = [
       { id: 'title', name: 'Title', field: 'title', filterable: true, type: FieldType.string },
       { id: 'duration', name: 'Duration', field: 'duration', sortable: true, filterable: true, type: FieldType.string },
-      { id: '%', name: '% Complete', field: 'percentComplete', sortable: true, filterable: true, type: FieldType.number },
-      { id: 'start', name: 'Start', field: 'start', filterable: true, type: FieldType.string },
-      { id: 'finish', name: 'Finish', field: 'finish', filterable: true, type: FieldType.string },
+      { id: '%', name: '% Complete', field: 'percentComplete', sortable: true, filterable: true, type: FieldType.number, formatter: Formatters.percentCompleteBar },
+      { id: 'start', name: 'Start', field: 'start', filterable: true, type: FieldType.dateUs, filter: { model: Filters.compoundDate } },
+      { id: 'finish', name: 'Finish', field: 'finish', filterable: true, type: FieldType.dateUs, filter: { model: Filters.compoundDate } },
       {
         id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', maxWidth: 80, formatter: Formatters.checkmark,
         type: FieldType.boolean,
