@@ -1,5 +1,5 @@
 import { autoinject } from 'aurelia-framework';
-import { Column, GridOption, FieldType, Formatters, FormElementType } from '../../aurelia-slickgrid';
+import { AureliaGridInstance, Column, GridOption, FieldType, Formatters } from '../../aurelia-slickgrid';
 
 let columnsWithHighlightingById = {};
 
@@ -28,6 +28,7 @@ export class Example7 {
   columnDefinitions: Column[];
   gridOptions: GridOption;
   dataset = [];
+  aureliaGrid: AureliaGridInstance;
   gridObj: any;
 
   constructor() {
@@ -39,6 +40,11 @@ export class Example7 {
   attached() {
     // populate the dataset once the grid is ready
     this.getData();
+  }
+
+  aureliaGridReady(aureliaGrid: AureliaGridInstance) {
+    this.aureliaGrid = aureliaGrid;
+    this.gridObj = aureliaGrid && aureliaGrid.slickGrid;
   }
 
   defineGrid() {
@@ -155,9 +161,5 @@ export class Example7 {
       }
     }
     this.dataset = mockDataset;
-  }
-
-  gridObjChanged(grid) {
-    this.gridObj = grid;
   }
 }

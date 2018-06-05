@@ -1,5 +1,5 @@
+import { ColumnEditor } from './columnEditor.interface';
 import { ColumnFilter } from './columnFilter.interface';
-import { Editor } from './editor.interface';
 import { FieldType } from './fieldType.enum';
 import { Formatter } from './formatter.interface';
 import { GroupTotalsFormatter } from './groupTotalsFormatter.interface';
@@ -27,8 +27,8 @@ export interface Column {
   /** Do we want default sort to be ascending? True by default */
   defaultSortAsc?: boolean;
 
-  /** Inline editor for the cell value */
-  editor?: Editor | any;
+  /** Any inline editor function that implements Editor for the cell value or ColumnEditor */
+  editor?: any | ColumnEditor;
 
   /** Default to false, which leads to exclude the column from the export? */
   excludeFromExport?: boolean;
@@ -108,20 +108,10 @@ export interface Column {
   /** ID of the column, each row have to be unique or SlickGrid will throw an error. */
   id: number | string;
 
-  /** is the column editable? Goes with grid option "editable: true". */
-  isEditable?: boolean;
-
-  /** is the field hidden? (part of the dataset but not shown in the grid/UI) */
-  isHidden?: boolean;
-
-  /** catchall for meta info */
-  json?: any;
-
-  /** a column key */
-  key?: string;
-
-  /** is the column manually sizable? */
-  manuallySized?: boolean;
+  /**
+   * @internal used internally by Aurelia-Slickgrid, to copy over the Column Editor Options
+   */
+  internalColumnEditor?: any;
 
   /** Maximum Width of the column in pixels (number only). */
   maxWidth?: number;
@@ -133,10 +123,10 @@ export interface Column {
   name?: string;
 
   /** an event that can be used for triggering an action after a cell change */
-  onCellChange?: (args: OnEventArgs) => void;
+  onCellChange?: (e: Event, args: OnEventArgs) => void;
 
   /** an event that can be used for triggering an action after a cell click */
-  onCellClick?: (args: OnEventArgs) => void;
+  onCellClick?: (e: Event, args: OnEventArgs) => void;
 
   /** column output type */
   outputType?: FieldType;
@@ -167,9 +157,6 @@ export interface Column {
 
   /** Is the column selectable? Goes with grid option "enableCellNavigation: true". */
   selectable?: boolean;
-
-  /** do we want to show hidden column? */
-  showHidden?: boolean;
 
   /** Is the column sortable? Goes with grid option "enableSorting: true". */
   sortable?: boolean;

@@ -28,13 +28,19 @@
       <strong>Updated Item:</strong> ${updatedObject | stringify}
     </div>
     <div class="alert alert-warning" show.bind="alertWarning">
-      <strong></strong> ${alertWarning}
+      ${alertWarning}
     </div>
   </div>
 
   <div id="grid-container" class="col-sm-12">
-    <aurelia-slickgrid grid-id="grid1" dataview.bind="dataview" grid.bind="gridObj" column-definitions.bind="columnDefinitions"
-      grid-options.bind="gridOptions" dataset.bind="dataset">
+    <aurelia-slickgrid
+      grid-id="grid1"
+      column-definitions.bind="columnDefinitions"
+      grid-options.bind="gridOptions"
+      dataset.bind="dataset"
+      sg-on-cell-change.delegate="onCellChanged($event.detail.eventData, $event.detail.args)"
+      sg-on-click.delegate="onCellClicked($event.detail.eventData, $event.detail.args)"
+      asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
     </aurelia-slickgrid>
   </div>
 </template>

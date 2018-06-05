@@ -24,9 +24,6 @@ export interface BackendService {
   /** initialize the backend service with certain options */
   init?: (serviceOptions?: BackendServiceOption, pagination?: Pagination, grid?: any) => void;
 
-  /** DEPRECATED, please use "init()" instead */
-  initOptions?: (serviceOptions?: BackendServiceOption, pagination?: Pagination, gridOptions?: GridOption, columnDefinitions?: Column[]) => void;
-
   /** Get the dataset name */
   getDatasetName?: () => string;
 
@@ -37,7 +34,7 @@ export interface BackendService {
   getCurrentPagination?: () => CurrentPagination;
 
   /** Get the Sorters that are currently used by the grid */
-  getCurrentSorters?: () => ColumnFilters | CurrentFilter[];
+  getCurrentSorters?: () => CurrentSorter[];
 
   /** Reset the pagination options */
   resetPaginationOptions: () => void;
@@ -59,11 +56,11 @@ export interface BackendService {
   // -----------------
 
   /** Execute when any of the filters changed */
-  onFilterChanged: (event: Event, args: FilterChangedArgs) => Promise<string>;
+  processOnFilterChanged: (event: Event, args: FilterChangedArgs) => Promise<string>;
 
   /** Execute when the pagination changed */
-  onPaginationChanged: (event: Event | undefined, args: PaginationChangedArgs) => string;
+  processOnPaginationChanged: (event: Event | undefined, args: PaginationChangedArgs) => string;
 
   /** Execute when any of the sorters changed */
-  onSortChanged: (event: Event | null, args: SortChangedArgs) => string;
+  processOnSortChanged: (event: Event | null, args: SortChangedArgs) => string;
 }

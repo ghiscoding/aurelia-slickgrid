@@ -38,6 +38,10 @@ export class SlickPaginationCustomElement {
     this._filterSubscriber = this.ea.subscribe('filterService:filterChanged', (data: string) => {
       this.refreshPagination(true);
     });
+    // Subscribe to Filter clear and go back to page 1 when that happen
+    this._filterSubscriber = this.ea.subscribe('filterService:filterCleared', (data: string) => {
+      this.refreshPagination(true);
+    });
   }
 
   gridPaginationOptionsChanged(newGridOptions: GridOption) {
@@ -105,7 +109,7 @@ export class SlickPaginationCustomElement {
   }
 
   refreshPagination(isPageNumberReset: boolean = false) {
-    const backendApi = this._gridPaginationOptions.backendServiceApi || this._gridPaginationOptions.onBackendEventApi;
+    const backendApi = this._gridPaginationOptions.backendServiceApi;
     if (!backendApi || !backendApi.service || !backendApi.process) {
       throw new Error(`BackendServiceApi requires at least a "process" function and a "service" defined`);
     }
@@ -143,7 +147,7 @@ export class SlickPaginationCustomElement {
   async onPageChanged(event: Event | undefined, pageNumber: number) {
     this.recalculateFromToIndexes();
 
-    const backendApi = this._gridPaginationOptions.backendServiceApi || this._gridPaginationOptions.onBackendEventApi;
+    const backendApi = this._gridPaginationOptions.backendServiceApi;
     if (!backendApi || !backendApi.service || !backendApi.process) {
       throw new Error(`BackendServiceApi requires at least a "process" function and a "service" defined`);
     }
@@ -160,7 +164,7 @@ export class SlickPaginationCustomElement {
         backendApi.preProcess();
       }
 
-      const query = backendApi.service.onPaginationChanged(event, { newPage: pageNumber, pageSize: itemsPerPage });
+      const query = backendApi.service.processOnPaginationChanged(event, { newPage: pageNumber, pageSize: itemsPerPage });
 
       // await for the Promise to resolve the data
       const processResult = await backendApi.process(query);

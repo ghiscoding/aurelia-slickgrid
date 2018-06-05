@@ -1,5 +1,5 @@
 import { EventAggregator } from 'aurelia-event-aggregator';
-import { inject } from 'aurelia-framework';
+import { singleton, inject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import {
   CellArgs,
@@ -29,6 +29,7 @@ export interface ExportColumnHeader {
   title: string;
 }
 
+@singleton(true)
 @inject(I18N, EventAggregator)
 export class ExportService {
   private _lineCarriageReturn = '\n';
@@ -213,7 +214,7 @@ export class ExportService {
       }
 
       // does the user want to evaluate current column Formatter?
-      const isEvaluatingFormatter = (columnDef.exportWithFormatter !== undefined) ? columnDef.exportWithFormatter : (this._exportOptions.exportWithFormatter || this._gridOptions.exportWithFormatter);
+      const isEvaluatingFormatter = (columnDef.exportWithFormatter !== undefined) ? columnDef.exportWithFormatter : this._exportOptions.exportWithFormatter;
 
       let itemData = '';
 

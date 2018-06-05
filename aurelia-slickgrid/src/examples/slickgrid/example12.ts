@@ -1,6 +1,16 @@
 import { autoinject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
-import { Column, DelimiterType, ExportService, FieldType, FileType, FilterType, Formatter, Formatters, GridOption } from '../../aurelia-slickgrid';
+import {
+  AureliaGridInstance,
+  Column,
+  DelimiterType,
+  FieldType,
+  FileType,
+  Filters,
+  Formatter,
+  Formatters,
+  GridOption
+} from '../../aurelia-slickgrid';
 
 @autoinject()
 export class Example12 {
@@ -32,13 +42,14 @@ export class Example12 {
       </ol>
     `;
 
+  aureliaGrid: AureliaGridInstance;
   gridOptions: GridOption;
   columnDefinitions: Column[];
   dataset: any[];
   selectedLanguage: string;
   duplicateTitleHeaderCount = 1;
 
-  constructor(private exportService: ExportService, private i18n: I18N) {
+  constructor(private i18n: I18N) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
     this.selectedLanguage = this.i18n.getLocale();
@@ -49,14 +60,18 @@ export class Example12 {
     this.getData();
   }
 
+  aureliaGridReady(aureliaGrid: AureliaGridInstance) {
+    this.aureliaGrid = aureliaGrid;
+  }
+
   /* Define grid Options and Columns */
   defineGrid() {
     this.columnDefinitions = [
       { id: 'title', name: 'Title', field: 'id', headerKey: 'TITLE', formatter: this.taskTranslateFormatter, sortable: true, minWidth: 100, filterable: true, params: { useFormatterOuputToFilter: true } },
       { id: 'description', name: 'Description', field: 'description', filterable: true, sortable: true, minWidth: 80 },
       { id: 'duration', name: 'Duration (days)', field: 'duration', headerKey: 'DURATION', sortable: true, minWidth: 100, filterable: true },
-      { id: 'start', name: 'Start', field: 'start', headerKey: 'START', formatter: Formatters.dateIso, minWidth: 100, filterable: true },
-      { id: 'finish', name: 'Finish', field: 'finish', headerKey: 'FINISH', formatter: Formatters.dateIso, minWidth: 100, filterable: true },
+      { id: 'start', name: 'Start', field: 'start', headerKey: 'START', formatter: Formatters.dateIso, minWidth: 100, filterable: true, filter: { model: Filters.compoundDate } },
+      { id: 'finish', name: 'Finish', field: 'finish', headerKey: 'FINISH', formatter: Formatters.dateIso, minWidth: 100, filterable: true, filter: { model: Filters.compoundDate } },
       {
         id: 'completedBool', name: 'Completed', field: 'completedBool', headerKey: 'COMPLETED', minWidth: 100,
         sortable: true,
@@ -65,7 +80,7 @@ export class Example12 {
         filterable: true,
         filter: {
           collection: [{ value: '', label: '' }, { value: true, labelKey: 'TRUE' }, { value: false, labelKey: 'FALSE' }],
-          type: FilterType.singleSelect,
+          model: Filters.singleSelect,
           enableTranslateLabel: true,
           filterOptions: {
             autoDropWidth: true
@@ -83,7 +98,7 @@ export class Example12 {
             property: 'labelKey', // will sort by translated value since "enableTranslateLabel" is true
             sortDesc: true
           },
-          type: FilterType.singleSelect,
+          model: Filters.singleSelect,
           enableTranslateLabel: true,
           filterOptions: {
             autoDropWidth: true
@@ -103,17 +118,15 @@ export class Example12 {
       enableExcelCopyBuffer: true,
       enableFiltering: true,
       enableTranslate: true,
+      i18n: this.i18n,
       exportOptions: {
         // set at the grid option level, meaning all column will evaluate the Formatter (when it has a Formatter defined)
         exportWithFormatter: true,
         sanitizeDataExport: true
       },
       gridMenu: {
-        showExportCsvCommand: true,           // true by default, so it's optional
-        showExportTextDelimitedCommand: true  // false by default, so if you want it, you will need to enable it
-      },
-      params: {
-        i18n: this.i18n
+        hideExportCsvCommand: false,           // false by default, so it's optional
+        hideExportTextDelimitedCommand: false  // true by default, so if you want it, you will need to disable the flag
       }
     };
   }
@@ -145,7 +158,7 @@ export class Example12 {
   }
 
   exportToFile(type = 'csv') {
-    this.exportService.exportToFile({
+    this.aureliaGrid.exportService.exportToFile({
       delimiter: (type === 'csv') ? DelimiterType.comma : DelimiterType.tab,
       filename: 'myExport',
       format: (type === 'csv') ? FileType.csv : FileType.txt

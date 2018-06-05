@@ -15,7 +15,7 @@ export class Example12 {
         <li>For the cell values, you need to use a Formatter, there's 2 ways of doing it</li>
         <ul>
           <li>formatter: myCustomTranslateFormatter <b>&lt;= "Title" column uses it</b></li>
-          <li>formatter: Formatters.translate, params: { i18n: this.i18n } <b>&lt;= "Completed" column uses it</b></li>
+          <li>formatter: Formatters.translate, i18n: this.i18n <b>&lt;= "Completed" column uses it</b></li>
         </ul>
       </ul>
       <li>For date localization, you need to create your own custom formatter. </li>
@@ -101,6 +101,7 @@ export class Example12 {
       enableAutoResize: true,
       enableFiltering: true,
       enableTranslate: true,
+      i18n: this.i18n,
       exportOptions: {
         // set at the grid option level, meaning all column will evaluate the Formatter (when it has a Formatter defined)
         exportWithFormatter: true
@@ -109,9 +110,6 @@ export class Example12 {
         showExportCsvCommand: true,           // true by default, so it's optional
         showExportTextDelimitedCommand: true  // false by default, so if you want it, you will need to enable it
       },
-      params: {
-        i18n: this.i18n
-      }
     };
   }
 

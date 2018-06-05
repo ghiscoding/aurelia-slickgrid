@@ -1,8 +1,10 @@
+import { singleton } from 'aurelia-framework';
 import { OnEventArgs, CellArgs, GridOption } from './../models/index';
 
 // using external non-typed js libraries
 declare var Slick: any;
 
+@singleton(true)
 export class GridEventService {
   private _eventHandler: any = new Slick.EventHandler();
 
@@ -29,7 +31,7 @@ export class GridEventService {
         };
 
         // finally call up the Slick.column.onCellChanges.... function
-        column.onCellChange(returnedArgs);
+        column.onCellChange(e, returnedArgs);
       }
     });
   }
@@ -55,7 +57,7 @@ export class GridEventService {
         };
 
         // finally call up the Slick.column.onCellClick.... function
-        column.onCellClick(returnedArgs);
+        column.onCellClick(e, returnedArgs);
       }
     });
   }

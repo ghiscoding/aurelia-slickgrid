@@ -1,5 +1,5 @@
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
-import { inject } from 'aurelia-framework';
+import { singleton, inject } from 'aurelia-framework';
 import {
   Column,
   GridOption
@@ -9,6 +9,7 @@ import * as $ from 'jquery';
 // using external non-typed js libraries
 declare var Slick: any;
 
+@singleton(true)
 @inject(EventAggregator)
 export class GroupingAndColspanService {
   private _eventHandler = new Slick.EventHandler();

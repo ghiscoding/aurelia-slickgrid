@@ -1,4 +1,5 @@
-import { FieldType, OperatorType, FilterType, FormElementType } from '../models/index';
+import { Filters } from '../filters/index';
+import { FieldType, OperatorType } from '../models/index';
 import * as moment from 'moment';
 
 /**
@@ -279,29 +280,6 @@ export function mapOperatorByFieldType(fieldType: FieldType | string): OperatorT
     case FieldType.dateTimeUsShortAM_PM:
     default:
       map = OperatorType.equal;
-      break;
-  }
-
-  return map;
-}
-
-/**
- * Mapper for query operator by a Filter Type
- * For example a multiple-select typically uses 'IN' operator
- * @param operator
- * @returns string map
- */
-export function mapOperatorByFilterType(filterType: FilterType | FormElementType | string): OperatorType {
-  let map = OperatorType.empty;
-
-  switch (filterType) {
-    case FilterType.multipleSelect:
-      map = OperatorType.in;
-      break;
-    case FilterType.singleSelect:
-      map = OperatorType.equal;
-      break;
-    default:
       break;
   }
 

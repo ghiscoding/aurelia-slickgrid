@@ -1,6 +1,8 @@
 import './global-utilities';
+import { singleton } from 'aurelia-framework';
 import { CaseType, OdataOption } from './../models/index';
 
+@singleton(true)
 export class OdataService {
   _columnFilters: any;
   _defaultSortBy: string;

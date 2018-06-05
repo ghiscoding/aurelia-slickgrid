@@ -5,10 +5,11 @@ import {
   Filter,
   FilterArguments,
   FilterCallback,
-  FilterType,
   GridOption,
   HtmlElementPosition,
   MultipleSelectOption,
+  OperatorType,
+  OperatorString,
   SearchTerm,
   SelectOption
 } from './../models/index';
@@ -19,13 +20,11 @@ import * as $ from 'jquery';
 export class MultipleSelectFilter implements Filter {
   $filterElm: any;
   grid: any;
-  gridOptions: GridOption;
   searchTerms: SearchTerm[];
   columnDef: Column;
   callback: FilterCallback;
   defaultOptions: MultipleSelectOption;
   isFilled = false;
-  filterType = FilterType.multipleSelect;
   labelName: string;
   valueName: string;
   enableTranslateLabel = false;
@@ -62,6 +61,15 @@ export class MultipleSelectFilter implements Filter {
     };
   }
 
+  /** Getter for the Grid Options pulled through the Grid Object */
+  private get gridOptions(): GridOption {
+    return (this.grid && this.grid.getOptions) ? this.grid.getOptions() : {};
+  }
+
+  get operator(): OperatorType | OperatorString {
+    return OperatorType.in;
+  }
+
   /**
    * Initialize the filter template
    */
@@ -75,7 +83,7 @@ export class MultipleSelectFilter implements Filter {
     this.searchTerms = args.searchTerms || [];
 
     if (!this.grid || !this.columnDef || !this.columnDef.filter || !this.columnDef.filter.collection) {
-      throw new Error(`[Aurelia-SlickGrid] You need to pass a "collection" for the MultipleSelect Filter to work correctly. Also each option should include a value/label pair (or value/labelKey when using Locale). For example:: { filter: type: FilterType.multipleSelect, collection: [{ value: true, label: 'True' }, { value: false, label: 'False'}] }`);
+      throw new Error(`[Aurelia-SlickGrid] You need to pass a "collection" for the MultipleSelect Filter to work correctly. Also each option should include a value/label pair (or value/labelKey when using Locale). For example: { filter: { model: Filters.multipleSelect, collection: [{ value: true, label: 'True' }, { value: false, label: 'False'}] } }`);
     }
 
     this.enableTranslateLabel = this.columnDef.filter.enableTranslateLabel || false;
@@ -83,7 +91,6 @@ export class MultipleSelectFilter implements Filter {
     this.valueName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.value : 'value';
 
     let newCollection = this.columnDef.filter.collection || [];
-    this.gridOptions = this.grid.getOptions();
 
     // user might want to filter certain items of the collection
     if (this.gridOptions.params && this.columnDef.filter.collectionFilterBy) {
@@ -108,16 +115,13 @@ export class MultipleSelectFilter implements Filter {
   /**
    * Clear the filter values
    */
-  clear(triggerFilterChange = true) {
+  clear() {
     if (this.$filterElm && this.$filterElm.multipleSelect) {
       // reload the filter element by it's id, to make sure it's still a valid element (because of some issue in the GraphQL example)
       // this.$filterElm = $(`#${this.$filterElm[0].id}`);
       this.$filterElm.multipleSelect('setSelects', []);
-
-      if (triggerFilterChange) {
-        this.$filterElm.removeClass('filled');
-        this.callback(undefined, { columnDef: this.columnDef, operator: 'IN', searchTerms: [] });
-      }
+      this.$filterElm.removeClass('filled');
+      this.callback(undefined, { columnDef: this.columnDef, clearFilterTriggered: true });
     }
   }
 
@@ -150,7 +154,7 @@ export class MultipleSelectFilter implements Filter {
     let options = '';
     optionCollection.forEach((option: SelectOption) => {
       if (!option || (option[this.labelName] === undefined && option.labelKey === undefined)) {
-        throw new Error(`A collection with value/label (or value/labelKey when using Locale) is required to populate the Select list, for example:: { filter: type: FilterType.multipleSelect, collection: [ { value: '1', label: 'One' } ]')`);
+        throw new Error(`A collection with value/label (or value/labelKey when using Locale) is required to populate the Select list, for example:: { filter: model: Filters.multipleSelect, collection: [ { value: '1', label: 'One' } ]')`);
       }
       const labelKey = (option.labelKey || option[this.labelName]) as string;
       const selected = (this.findValueInSearchTerms(option[this.valueName]) >= 0) ? 'selected' : '';

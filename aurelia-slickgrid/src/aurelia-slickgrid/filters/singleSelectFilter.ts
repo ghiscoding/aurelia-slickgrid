@@ -3,12 +3,13 @@ import { inject } from 'aurelia-framework';
 import {
   Column,
   Filter,
-  FilterType,
   FilterArguments,
   FilterCallback,
   GridOption,
   HtmlElementPosition,
   MultipleSelectOption,
+  OperatorString,
+  OperatorType,
   SearchTerm,
   SelectOption
 } from './../models/index';
@@ -19,12 +20,10 @@ import * as $ from 'jquery';
 export class SingleSelectFilter implements Filter {
   $filterElm: any;
   grid: any;
-  gridOptions: GridOption;
-  searchTerm: SearchTerm;
+  searchTerms: SearchTerm[];
   columnDef: Column;
   callback: FilterCallback;
   defaultOptions: MultipleSelectOption;
-  filterType = FilterType.singleSelect;
   isFilled = false;
   labelName: string;
   valueName: string;
@@ -49,9 +48,18 @@ export class SingleSelectFilter implements Filter {
           this.isFilled = false;
           this.$filterElm.removeClass('filled').siblings('div .search-filter').removeClass('filled');
         }
-        this.callback(undefined, { columnDef: this.columnDef, operator: 'EQ', searchTerm: selectedItem });
+        this.callback(undefined, { columnDef: this.columnDef, operator: 'EQ', searchTerms: [selectedItem] });
       }
     };
+  }
+
+  get operator(): OperatorType | OperatorString {
+    return OperatorType.equal;
+  }
+
+  /** Getter for the Grid Options pulled through the Grid Object */
+  private get gridOptions(): GridOption {
+    return (this.grid && this.grid.getOptions) ? this.grid.getOptions() : {};
   }
 
   /**
@@ -64,10 +72,10 @@ export class SingleSelectFilter implements Filter {
     this.grid = args.grid;
     this.callback = args.callback;
     this.columnDef = args.columnDef;
-    this.searchTerm = args.searchTerm || '';
+    this.searchTerms = args.searchTerms || [];
 
     if (!this.grid || !this.columnDef || !this.columnDef.filter || !this.columnDef.filter.collection) {
-      throw new Error(`[Aurelia-SlickGrid] You need to pass a "collection" for the MultipleSelect Filter to work correctly. Also each option should include a value/label pair (or value/labelKey when using Locale). For example:: { filter: type: FilterType.multipleSelect, collection: [{ value: true, label: 'True' }, { value: false, label: 'False'}] }`);
+      throw new Error(`[Aurelia-SlickGrid] You need to pass a "collection" for the MultipleSelect Filter to work correctly. Also each option should include a value/label pair (or value/labelKey when using Locale). For example: { filter: { model: Filters.singleSelect, collection: [{ value: true, label: 'True' }, { value: false, label: 'False'}] } }`);
     }
 
     this.enableTranslateLabel = this.columnDef.filter.enableTranslateLabel || false;
@@ -75,7 +83,6 @@ export class SingleSelectFilter implements Filter {
     this.valueName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.value : 'value';
 
     let newCollection = this.columnDef.filter.collection || [];
-    this.gridOptions = this.grid.getOptions();
 
     // user might want to filter certain items of the collection
     if (this.gridOptions.params && this.columnDef.filter.collectionFilterBy) {
@@ -89,8 +96,13 @@ export class SingleSelectFilter implements Filter {
       newCollection = this.collectionService.sortCollection(newCollection, sortBy, this.enableTranslateLabel);
     }
 
+    let searchTerm = (Array.isArray(this.searchTerms) && this.searchTerms[0]) || '';
+    if (typeof searchTerm === 'boolean' || typeof searchTerm === 'number') {
+      searchTerm = `${searchTerm}`;
+    }
+
     // step 1, create HTML string template
-    const filterTemplate = this.buildTemplateHtmlString(newCollection || []);
+    const filterTemplate = this.buildTemplateHtmlString(newCollection || [], searchTerm);
 
     // step 2, create the DOM Element of the filter & pre-load search term
     this.createDomElement(filterTemplate);
@@ -99,15 +111,12 @@ export class SingleSelectFilter implements Filter {
   /**
    * Clear the filter values
    */
-  clear(triggerFilterChange = true) {
+  clear() {
     if (this.$filterElm && this.$filterElm.multipleSelect) {
       // reload the filter element by it's id, to make sure it's still a valid element (because of some issue in the GraphQL example)
       // this.$filterElm = $(`#${this.$filterElm[0].id}`);
       this.$filterElm.multipleSelect('setSelects', []);
-
-      if (triggerFilterChange) {
-        this.callback(undefined, { columnDef: this.columnDef, operator: 'IN', searchTerm: undefined });
-      }
+      this.callback(undefined, { columnDef: this.columnDef, clearFilterTriggered: true });
     }
   }
 
@@ -123,7 +132,7 @@ export class SingleSelectFilter implements Filter {
   /**
    * Set value(s) on the DOM element
    */
-  setValues(values: SearchTerm | SearchTerm[]) {
+  setValues(values: SearchTerm[]) {
     if (values) {
       values = Array.isArray(values) ? values : [values];
       this.$filterElm.multipleSelect('setSelects', values);
@@ -137,15 +146,15 @@ export class SingleSelectFilter implements Filter {
   /**
    * Create the HTML template as a string
    */
-  private buildTemplateHtmlString(optionCollection: any[]) {
+  private buildTemplateHtmlString(optionCollection: any[], searchTerm?: SearchTerm) {
     let options = '';
     optionCollection.forEach((option: SelectOption) => {
       if (!option || (option[this.labelName] === undefined && option.labelKey === undefined)) {
-        throw new Error(`A collection with value/label (or value/labelKey when using Locale) is required to populate the Select list, for example:: { filter: type: FilterType.singleSelect, collection: [ { value: '1', label: 'One' } ]')`);
+        throw new Error(`A collection with value/label (or value/labelKey when using Locale) is required to populate the Select list, for example: { filter: { model: Filter.singleSelect, collection: [ { value: '1', label: 'One' } ] } }`);
       }
 
       const labelKey = (option.labelKey || option[this.labelName]) as string;
-      const selected = (option[this.valueName] === this.searchTerm) ? 'selected' : '';
+      const selected = (option[this.valueName] === searchTerm) ? 'selected' : '';
       const textLabel = ((option.labelKey || this.enableTranslateLabel) && this.i18n && typeof this.i18n.tr === 'function') ? this.i18n.tr(labelKey || ' ') : labelKey;
 
       // html text of each select option

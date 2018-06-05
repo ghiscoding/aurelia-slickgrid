@@ -1,31 +1,23 @@
+import { autoinject } from 'aurelia-framework';
+import { I18N } from 'aurelia-i18n';
 import {
-  I18N
-} from 'aurelia-i18n';
-import {
-  autoinject,
-  bindable
-} from 'aurelia-framework';
-import {
+  AureliaGridInstance,
   Column,
   Editors,
   FieldType,
   Formatters,
-  GridExtraService,
-  GridExtraUtils,
   GridOption,
   OnEventArgs,
-  OperatorType,
-  ResizerService
+  OperatorType
 } from '../../aurelia-slickgrid';
+import { CustomInputEditor } from './custom-inputEditor';
 
 // using external non-typed js libraries
 declare var Slick: any;
 
 @autoinject()
 export class Example3 {
-  @bindable() gridObj: any;
-  @bindable() dataview: any;
-  title = 'Example 3: Editors';
+  title = 'Example 3: Editors / Delete';
   subTitle = `
   Grid with Inline Editors and onCellClick actions (<a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Editors" target="_blank">Wiki docs</a>).
   <ul>
@@ -39,6 +31,8 @@ export class Example3 {
   </ul>
   `;
   private _commandQueue = [];
+  aureliaGrid: AureliaGridInstance;
+  gridObj: any;
   gridOptions: GridOption;
   columnDefinitions: Column[];
   dataset: any[];
@@ -47,7 +41,7 @@ export class Example3 {
   alertWarning: any;
   selectedLanguage: string;
 
-  constructor(private gridExtraService: GridExtraService, private i18n: I18N, private resizer: ResizerService) {
+  constructor(private i18n: I18N) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
     this.selectedLanguage = this.i18n.getLocale();
@@ -58,11 +52,9 @@ export class Example3 {
     this.getData();
   }
 
-  detached() {
-    // unsubscrible any Slick.Event you might have used
-    // a reminder again, these are SlickGrid Event, not Event Aggregator events
-    this.gridObj.onCellChange.unsubscribe();
-    this.gridObj.onClick.unsubscribe();
+  aureliaGridReady(aureliaGrid: AureliaGridInstance) {
+    this.aureliaGrid = aureliaGrid;
+    this.gridObj = aureliaGrid && aureliaGrid.slickGrid;
   }
 
   /* Define grid Options and Columns */
@@ -75,11 +67,11 @@ export class Example3 {
       minWidth: 30,
       maxWidth: 30,
       // use onCellClick OR grid.onClick.subscribe which you can see down below
-      onCellClick: (args: OnEventArgs) => {
+      onCellClick: (e: Event, args: OnEventArgs) => {
         console.log(args);
         this.alertWarning = `Editing: ${args.dataContext.title}`;
-        this.gridExtraService.highlightRow(args.row, 1500);
-        this.gridExtraService.setSelectedRow(args.row);
+        this.aureliaGrid.gridService.highlightRow(args.row, 1500);
+        this.aureliaGrid.gridService.setSelectedRow(args.row);
       }
     }, {
       id: 'delete',
@@ -88,32 +80,47 @@ export class Example3 {
       formatter: Formatters.deleteIcon,
       minWidth: 30,
       maxWidth: 30,
-    // use onCellClick OR grid.onClick.subscribe which you can see down below
-    /*
-    onCellClick: (args: OnEventArgs) => {
-      console.log(args);
-      this.alertWarning = `Deleting: ${args.dataContext.title}`;
-    }
-    */
+      // use onCellClick OR grid.onClick.subscribe which you can see down below
+      /*
+      onCellClick: (e: Event, args: OnEventArgs) => {
+        console.log(args);
+        this.alertWarning = `Deleting: ${args.dataContext.title}`;
+      }
+      */
     }, {
       id: 'title',
       name: 'Title',
       field: 'title',
       sortable: true,
       type: FieldType.string,
-      editor: Editors.longText,
+      editor: {
+        model: Editors.longText
+      },
       minWidth: 100,
-      onCellChange: (args: OnEventArgs) => {
+      onCellChange: (e: Event, args: OnEventArgs) => {
         console.log(args);
         this.alertWarning = `Updated Title: ${args.dataContext.title}`;
       }
+    }, {
+      id: 'title2',
+      name: 'Title, Custom Editor',
+      field: 'title',
+      sortable: true,
+      type: FieldType.string,
+      editor: {
+        model: CustomInputEditor
+      },
+      minWidth: 70
     }, {
       id: 'duration',
       name: 'Duration (days)',
       field: 'duration',
       sortable: true,
       type: FieldType.number,
-      editor: Editors.integer,
+      editor: {
+        model: Editors.float,
+        params: { decimalPlaces: 2 }
+      },
       minWidth: 100
     }, {
       id: 'complete',
@@ -121,10 +128,8 @@ export class Example3 {
       field: 'percentComplete',
       formatter: Formatters.multiple,
       type: FieldType.number,
-      editor: Editors.singleSelect,
-      minWidth: 100,
-      params: {
-        formatters: [Formatters.collection, Formatters.percentCompleteBar],
+      editor: {
+        model: Editors.singleSelect,
         collection: Array.from(Array(101).keys()).map(k => ({ value: k, label: k })),
         collectionSortBy: {
           property: 'label',
@@ -135,6 +140,10 @@ export class Example3 {
           value: 0,
           operator: OperatorType.notEqual
         }
+      },
+      minWidth: 100,
+      params: {
+        formatters: [Formatters.collectionEditor, Formatters.percentCompleteBar],
       }
     }, {
       id: 'start',
@@ -144,7 +153,9 @@ export class Example3 {
       sortable: true,
       minWidth: 100,
       type: FieldType.date,
-      editor: Editors.date
+      editor: {
+        model: Editors.date
+      },
     }, {
       id: 'finish',
       name: 'Finish',
@@ -153,14 +164,18 @@ export class Example3 {
       sortable: true,
       minWidth: 100,
       type: FieldType.date,
-      editor: Editors.date
+      editor: {
+        model: Editors.date
+      },
     }, {
       id: 'effort-driven',
       name: 'Effort Driven',
       field: 'effortDriven',
       formatter: Formatters.checkmark,
       type: FieldType.number,
-      editor: Editors.checkbox,
+      editor: {
+        model: Editors.checkbox,
+      },
       minWidth: 70
     }, {
       id: 'prerequisites',
@@ -169,8 +184,8 @@ export class Example3 {
       minWidth: 100,
       sortable: true,
       type: FieldType.string,
-      editor: Editors.multipleSelect,
-      params: {
+      editor: {
+        model: Editors.multipleSelect,
         collection: Array.from(Array(12).keys()).map(k => ({ value: `Task ${k}`, label: `Task ${k}` })),
         collectionSortBy: {
           property: 'label',
@@ -193,25 +208,13 @@ export class Example3 {
       },
       editable: true,
       enableCellNavigation: true,
-      enableCheckboxSelector: false,
-      rowSelectionOptions: {
-        // True (Single Selection), False (Multiple Selections)
-        // Default to True when no "rowSelectionOptions" provided
-        selectActiveRow: true
-      },
       enableExcelCopyBuffer: true,
       editCommandHandler: (item, column, editCommand) => {
         this._commandQueue.push(editCommand);
         editCommand.execute();
       },
-      params: {
-        i18n: this.i18n
-      }
+      i18n: this.i18n,
     };
-  }
-
-  dataviewChanged(dataview) {
-    this.dataview = dataview;
   }
 
   getData() {
@@ -238,42 +241,29 @@ export class Example3 {
     this.dataset = mockedDataset;
   }
 
-  gridObjChanged(grid) {
-    grid.onBeforeEditCell.subscribe((e, args) => {
-      console.log('before edit', e);
-      e.stopImmediatePropagation();
-    });
-    grid.onBeforeCellEditorDestroy.subscribe((e, args) => {
-      console.log('before destroy');
-      e.stopPropagation();
-    });
+  onCellChanged(e, args) {
+    console.log('onCellChange', args);
+    this.updatedObject = args.item;
+  }
 
-    grid.onCellChange.subscribe((e, args) => {
-      console.log('onCellChange', args);
-      this.updatedObject = args.item;
-      this.resizer.resizeGrid(100);
-    });
+  onCellClicked(e, args) {
+    const metadata = this.aureliaGrid.gridService.getColumnFromEventArguments(args);
+    console.log(metadata);
 
-    // You could also subscribe to grid.onClick
-    // Note that if you had already setup "onCellClick" in the column definition, you cannot use grid.onClick
-    grid.onClick.subscribe((e, args) => {
-      const column = GridExtraUtils.getColumnDefinitionAndData(args);
-      console.log('onClick', args, column);
-      if (column.columnDef.id === 'edit') {
-        this.alertWarning = `open a modal window to edit: ${column.dataContext.title}`;
+    if (metadata.columnDef.id === 'edit') {
+      this.alertWarning = `open a modal window to edit: ${metadata.dataContext.title}`;
 
-        // highlight the row, to customize the color, you can change the SASS variable $row-highlight-background-color
-        this.gridExtraService.highlightRow(args.row, 1500);
+      // highlight the row, to customize the color, you can change the SASS variable $row-highlight-background-color
+      this.aureliaGrid.gridService.highlightRow(args.row, 1500);
 
-        // you could also select the row, when using "enableCellNavigation: true", it automatically selects the row
-        // this.gridExtraService.setSelectedRow(args.row);
+      // you could also select the row, when using "enableCellNavigation: true", it automatically selects the row
+      // this.aureliaGrid.gridService.setSelectedRow(args.row);
+    } else if (metadata.columnDef.id === 'delete') {
+      if (confirm('Are you sure?')) {
+        this.aureliaGrid.gridService.deleteDataGridItemById(metadata.dataContext.id);
+        this.alertWarning = `Deleted: ${metadata.dataContext.title}`;
       }
-      if (column.columnDef.id === 'delete') {
-        if (confirm('Are you sure?')) {
-          this.gridExtraService.deleteDataGridItemById(column.dataContext.id);
-        }
-      }
-    });
+    }
   }
 
   setAutoEdit(isAutoEdit) {

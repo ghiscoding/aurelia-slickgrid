@@ -1,4 +1,4 @@
-import { inject } from 'aurelia-framework';
+import { singleton, inject } from 'aurelia-framework';
 import { GridOption } from './../models/index';
 import * as $ from 'jquery';
 import { EventAggregator } from 'aurelia-event-aggregator';
@@ -16,6 +16,7 @@ export interface GridDimension {
   heightWithPagination?: number;
 }
 
+@singleton(true)
 @inject(EventAggregator)
 export class ResizerService {
   private _grid: any;

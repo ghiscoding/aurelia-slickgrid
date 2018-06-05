@@ -1,5 +1,13 @@
 import { autoinject } from 'aurelia-framework';
-import { Column, Editors, FieldType, Formatter, Formatters, GridExtraService, GridExtraUtils, GridOption, OnEventArgs, ResizerService } from '../../aurelia-slickgrid';
+import {
+  AureliaGridInstance,
+  Column,
+  Editors,
+  FieldType,
+  Formatters,
+  GridOption,
+  OnEventArgs
+} from '../../aurelia-slickgrid';
 
 @autoinject()
 export class Example11 {
@@ -20,12 +28,13 @@ export class Example11 {
   </ul>
   `;
 
+  aureliaGrid: AureliaGridInstance;
   columnDefinitions: Column[];
   gridOptions: GridOption;
   dataset: any[];
   updatedObject: any;
 
-  constructor(private gridExtraService: GridExtraService, private resizer: ResizerService) {
+  constructor() {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
   }
@@ -35,21 +44,65 @@ export class Example11 {
     this.getData();
   }
 
+  aureliaGridReady(aureliaGrid: AureliaGridInstance) {
+    this.aureliaGrid = aureliaGrid;
+  }
+
   /* Define grid Options and Columns */
   defineGrid() {
     this.columnDefinitions = [
-      { id: 'title', name: 'Title', field: 'title', sortable: true, type: FieldType.string, editor: Editors.longText },
       {
-        id: 'duration', name: 'Duration (days)', field: 'duration', sortable: true, type: FieldType.number, editor: Editors.text,
-        onCellChange: (args: OnEventArgs) => {
+        id: 'title', name: 'Title', field: 'title',
+        sortable: true,
+        type: FieldType.string,
+        editor: {
+          model: Editors.longText
+        }
+      },
+      {
+        id: 'duration', name: 'Duration (days)', field: 'duration',
+        sortable: true,
+        type: FieldType.number,
+        editor: {
+          model: Editors.text
+        },
+        onCellChange: (e: Event, args: OnEventArgs) => {
           alert('onCellChange directly attached to the column definition');
           console.log(args);
         }
       },
-      { id: 'complete', name: '% Complete', field: 'percentComplete', formatter: Formatters.percentCompleteBar, type: FieldType.number, editor: Editors.integer },
-      { id: 'start', name: 'Start', field: 'start', formatter: Formatters.dateIso, sortable: true, type: FieldType.date/*, editor: Editors.date*/ },
-      { id: 'finish', name: 'Finish', field: 'finish', formatter: Formatters.dateIso, sortable: true, type: FieldType.date },
-      { id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', formatter: Formatters.checkmark, type: FieldType.number, editor: Editors.checkbox }
+      {
+        id: 'complete', name: '% Complete', field: 'percentComplete',
+        formatter: Formatters.percentCompleteBar,
+        type: FieldType.number,
+        editor: {
+          model: Editors.integer
+        }
+      },
+      {
+        id: 'start', name: 'Start', field: 'start',
+        formatter: Formatters.dateIso,
+        sortable: true,
+        type: FieldType.date,
+        /*
+        editor: {
+          model: Editors.date
+        }
+        */
+      },
+      {
+        id: 'finish', name: 'Finish', field: 'finish',
+        formatter: Formatters.dateIso, sortable: true,
+        type: FieldType.date
+      },
+      {
+        id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven',
+        formatter: Formatters.checkmark,
+        type: FieldType.number,
+        editor: {
+          model: Editors.checkbox
+        }
+      }
     ];
 
     this.gridOptions = {
@@ -105,16 +158,16 @@ export class Example11 {
       finish: new Date(randomYear, (randomMonth + 2), randomDay),
       effortDriven: true
     };
-    this.gridExtraService.addItemToDatagrid(newItem);
+    this.aureliaGrid.gridService.addItemToDatagrid(newItem);
   }
 
   highlighFifthRow() {
-    this.gridExtraService.highlightRow(4, 1500);
+    this.aureliaGrid.gridService.highlightRow(4, 1500);
   }
 
   updateSecondItem() {
-    const firstItem = this.gridExtraService.getDataItemByRowNumber(1);
+    const firstItem = this.aureliaGrid.gridService.getDataItemByRowNumber(1);
     firstItem.duration = Math.round(Math.random() * 100);
-    this.gridExtraService.updateDataGridItem(firstItem);
+    this.aureliaGrid.gridService.updateDataGridItem(firstItem);
   }
 }

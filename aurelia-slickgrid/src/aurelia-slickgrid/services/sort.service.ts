@@ -1,4 +1,4 @@
-import { inject } from 'aurelia-framework';
+import { inject, singleton } from 'aurelia-framework';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import {
   Column,
@@ -18,6 +18,7 @@ import { sortByFieldType } from '../sorters/sorterUtilities';
 // using external non-typed js libraries
 declare var Slick: any;
 
+@singleton(true)
 @inject(EventAggregator)
 export class SortService {
   private _currentLocalSorters: CurrentSorter[] = [];
@@ -59,7 +60,7 @@ export class SortService {
       throw new Error('Something went wrong when trying to attach the "onBackendSortChanged(event, args)" function, it seems that "args" is not populated correctly');
     }
     const gridOptions: GridOption = args.grid.getOptions() || {};
-    const backendApi = gridOptions.backendServiceApi || gridOptions.onBackendEventApi;
+    const backendApi = gridOptions.backendServiceApi;
 
     if (!backendApi || !backendApi.process || !backendApi.service) {
       throw new Error(`BackendServiceApi requires at least a "process" function and a "service" defined`);
@@ -67,7 +68,7 @@ export class SortService {
     if (backendApi.preProcess) {
       backendApi.preProcess();
     }
-    const query = backendApi.service.onSortChanged(event, args);
+    const query = backendApi.service.processOnSortChanged(event, args);
     this.emitSortChanged('remote');
 
     // await for the Promise to resolve the data
@@ -109,7 +110,7 @@ export class SortService {
       // keep current sorters
       this._currentLocalSorters = []; // reset current local sorters
       if (Array.isArray(sortColumns)) {
-        sortColumns.forEach((sortColumn) => {
+        sortColumns.forEach((sortColumn: { sortCol: Column, sortAsc: number }) => {
           if (sortColumn.sortCol) {
             this._currentLocalSorters.push({
               columnId: sortColumn.sortCol.id,
@@ -156,6 +157,13 @@ export class SortService {
         }
       }
     }
+
+    // set current sorter to empty & emit a sort changed event
+    this._currentLocalSorters = [];
+    const sender = (this._gridOptions && this._gridOptions.backendServiceApi) ? 'remote' : 'local';
+
+    // emit an event when filters are all cleared
+    this.ea.publish('sortService:sortCleared', this._currentLocalSorters);
   }
 
   getCurrentLocalSorters(): CurrentSorter[] {
@@ -195,28 +203,27 @@ export class SortService {
     this._currentLocalSorters = []; // reset current local sorters
     if (this._gridOptions && this._gridOptions.presets && this._gridOptions.presets.sorters) {
       const sorters = this._gridOptions.presets.sorters;
-      this._columnDefinitions.forEach((columnDef: Column) => {
-        const columnPreset = sorters.find((currentSorter: CurrentSorter) => {
-          return currentSorter.columnId === columnDef.id;
-        });
-        if (columnPreset) {
+
+      sorters.forEach((presetSorting: CurrentSorter) => {
+        const gridColumn = this._columnDefinitions.find((col: Column) => col.id === presetSorting.columnId);
+        if (gridColumn) {
           sortCols.push({
-            columnId: columnDef.id,
-            sortAsc: ((columnPreset.direction.toUpperCase() === SortDirection.ASC) ? true : false),
-            sortCol: columnDef
+            columnId: gridColumn.id,
+            sortAsc: ((presetSorting.direction.toUpperCase() === SortDirection.ASC) ? true : false),
+            sortCol: gridColumn
           });
 
           // keep current sorters
           this._currentLocalSorters.push({
-            columnId: columnDef.id + '',
-            direction: columnPreset.direction.toUpperCase() as SortDirectionString
+            columnId: gridColumn.id + '',
+            direction: presetSorting.direction.toUpperCase() as SortDirectionString
           });
         }
       });
 
       if (sortCols.length > 0) {
         this.onLocalSortChanged(grid, dataView, sortCols);
-        grid.setSortColumns(sortCols); // add sort icon in UI
+        grid.setSortColumns(sortCols); // use this to add sort icon(s) in UI
       }
     }
   }

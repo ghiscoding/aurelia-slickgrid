@@ -1,12 +1,25 @@
-import { Column, GridOption } from './../models/index';
+import { singleton, inject } from 'aurelia-framework';
+import { CellArgs, Column, GridOption, OnEventArgs } from './../models/index';
+import { FilterService } from './filter.service';
+import { GridStateService } from './gridState.service';
+import { SortService } from './sort.service';
 import * as $ from 'jquery';
 
 // using external non-typed js libraries
 declare var Slick: any;
 
-export class GridExtraService {
+@singleton(true)
+@inject(FilterService, GridStateService, SortService)
+export class GridService {
   private _grid: any;
   private _dataView: any;
+
+  constructor(private filterService: FilterService, private gridStateService: GridStateService, private sortService: SortService) { }
+
+  /** Getter for the Column Definitions pulled through the Grid Object */
+  private get _columnDefinitions(): Column[] {
+    return (this._grid && this._grid.getColumns) ? this._grid.getColumns() : [];
+  }
 
   /** Getter for the Grid Options pulled through the Grid Object */
   private get _gridOptions(): GridOption {
@@ -21,6 +34,30 @@ export class GridExtraService {
   init(grid: any, dataView: any): void {
     this._grid = grid;
     this._dataView = dataView;
+  }
+
+  /**
+   * From a SlickGrid Event triggered get the Column Definition and Item Data Context
+   *
+   * For example the SlickGrid onClick will return cell arguments when subscribing to it.
+   * From these cellArgs, we want to get the Column Definition and Item Data
+   * @param cell event args
+   * @return object with columnDef and dataContext
+   */
+  getColumnFromEventArguments(args: CellArgs): OnEventArgs {
+    if (!args || !args.grid || !args.grid.getColumns || !args.grid.getDataItem) {
+      throw new Error('To get the column definition and data, we need to have these arguments passed as objects (row, cell, grid)');
+    }
+
+    return {
+      row: args.row,
+      cell: args.cell,
+      columnDef: args.grid.getColumns()[args.cell],
+      dataContext: args.grid.getDataItem(args.row),
+      dataView: this._dataView,
+      grid: this._grid,
+      gridDefinition: this._gridOptions
+    };
   }
 
   getDataItemByRowNumber(rowNumber: number) {
@@ -92,20 +129,51 @@ export class GridExtraService {
     }
   }
 
+  /** Get the currently selected rows */
   getSelectedRows() {
     return this._grid.getSelectedRows();
   }
+
+  /** Select the selected row by a row index */
   setSelectedRow(rowIndex: number) {
     this._grid.setSelectedRows([rowIndex]);
   }
+
+  /** Set selected rows with provided array of row indexes */
   setSelectedRows(rowIndexes: number[]) {
     this._grid.setSelectedRows(rowIndexes);
   }
 
+  /** Re-Render the Grid */
   renderGrid() {
     if (this._grid && typeof this._grid.invalidate === 'function') {
       this._grid.invalidate();
       this._grid.render();
+    }
+  }
+
+  /**
+   * Reset the grid to it's original state (clear any filters, sorting & pagination if exists) .
+   * The column definitions could be passed as argument to reset (this can be used after a Grid State reset)
+   * The reset will clear the Filters & Sort, then will reset the Columns to their original state
+   */
+  resetGrid(columnDefinitions?: Column[]) {
+    if (this.filterService && this.filterService.clearFilters) {
+      this.filterService.clearFilters();
+    }
+    if (this.sortService && this.sortService.clearSorting) {
+      this.sortService.clearSorting();
+    }
+
+    // reset columns to original states & refresh the grid
+    if (this._grid && this._dataView) {
+      const originalColumns = columnDefinitions || this._columnDefinitions;
+      if (Array.isArray(originalColumns) && originalColumns.length > 0) {
+        this._grid.setColumns(originalColumns);
+        this._dataView.refresh();
+        this._grid.autosizeColumns();
+        this.gridStateService.resetColumns(columnDefinitions);
+      }
     }
   }
 
@@ -137,11 +205,23 @@ export class GridExtraService {
    * @param object item: item object holding all properties of that row
    */
   deleteDataGridItem(item: any) {
-    const row = this._dataView.getRowById(item.id);
-    const itemId = (!item || !item.hasOwnProperty('id')) ? -1 : item.id;
+    if (!item || !item.hasOwnProperty('id')) {
+      throw new Error(`deleteDataGridItem() requires an item object which includes the "id" property`);
+    }
+    const itemId = (!item || !item.hasOwnProperty('id')) ? undefined : item.id;
+    this.deleteDataGridItemById(itemId);
+  }
 
-    if (row === undefined || itemId === -1) {
-      throw new Error(`Could not find the item in the grid or it's associated "id"`);
+  /**
+   * Delete an existing item from the datagrid (dataView) by it's id
+   * @param itemId: item unique id
+   */
+  deleteDataGridItemById(itemId: string | number) {
+    if (itemId === undefined) {
+      throw new Error(`Cannot delete a row without a valid "id"`);
+    }
+    if (this._dataView.getRowById(itemId) === undefined) {
+      throw new Error(`Could not find the item in the grid by it's associated "id"`);
     }
 
     // delete the item from the dataView
@@ -150,30 +230,31 @@ export class GridExtraService {
   }
 
   /**
-   * Delete an existing item from the datagrid (dataView)
-   * @param object item: item object holding all properties of that row
-   */
-  deleteDataGridItemById(id: string | number) {
-    const row = this._dataView.getRowById(id);
-
-    if (row === undefined) {
-      throw new Error(`Could not find the item in the grid by it's associated "id"`);
-    }
-
-    // delete the item from the dataView
-    this._dataView.deleteItem(id);
-    this._dataView.refresh();
-  }
-
-  /**
-   * Update an existing item with new properties inside the datagrid (dataView)
+   * Update an existing item with new properties inside the datagrid
    * @param object item: item object holding all properties of that row
    */
   updateDataGridItem(item: any) {
-    const row = this._dataView.getRowById(item.id);
-    const itemId = (!item || !item.hasOwnProperty('id')) ? -1 : item.id;
+    const itemId = (!item || !item.hasOwnProperty('id')) ? undefined : item.id;
 
-    if (itemId === -1) {
+    if (itemId === undefined) {
+      throw new Error(`Could not find the item in the grid or it's associated "id"`);
+    }
+
+    this.updateDataGridItemById(itemId, item);
+  }
+
+  /**
+   * Update an existing item in the datagrid by it's id and new properties
+   * @param itemId: item unique id
+   * @param object item: item object holding all properties of that row
+   */
+  updateDataGridItemById(itemId: number | string, item: any) {
+    if (itemId === undefined) {
+      throw new Error(`Cannot update a row without a valid "id"`);
+    }
+    const row = this._dataView.getRowById(itemId);
+
+    if (!item || !row) {
       throw new Error(`Could not find the item in the grid or it's associated "id"`);
     }
 

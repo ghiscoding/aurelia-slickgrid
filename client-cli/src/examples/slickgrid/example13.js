@@ -10,7 +10,7 @@ export class Example13 {
       <li><a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Grouping-&-Aggregators" target="_blank">Wiki docs</a></li>
       <li>Fully dynamic and interactive multi-level grouping with filtering and aggregates over 50'000 items</li>
       <li>Each grouping level can have its own aggregates (over child rows, child groups, or all descendant rows)..</li>
-      <li>Use "Aggregators" and "GroupTotalFormatters" directly from Angular-Slickgrid</li>
+      <li>Use "Aggregators" and "GroupTotalFormatters" directly from Aurelia-Slickgrid</li>
     </ul>
   `;
 

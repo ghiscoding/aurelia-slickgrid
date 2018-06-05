@@ -1,6 +1,6 @@
 import { autoinject } from 'aurelia-framework';
 import { HttpClient } from 'aurelia-http-client';
-import { CaseType, Column, GridOption, FieldType, FilterType, Formatters, FormElementType, GridOdataService, OperatorType } from 'aurelia-slickgrid';
+import { CaseType, Column, GridOption, FieldType, FilterType, Formatters, GridOdataService, OperatorType } from 'aurelia-slickgrid';
 
 const defaultPageSize = 20;
 const sampleDataRoot = 'assets/data';

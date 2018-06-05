@@ -1,13 +1,11 @@
 import { inject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
-import { htmlEntityEncode } from './../services/utilities';
 import {
   Column,
   FieldType,
   Filter,
   FilterArguments,
   FilterCallback,
-  FilterType,
   GridOption,
   OperatorString,
   OperatorType,
@@ -22,15 +20,25 @@ export class CompoundInputFilter implements Filter {
   private $filterElm: any;
   private $filterInputElm: any;
   private $selectOperatorElm: any;
+  private _operator: OperatorType | OperatorString;
   grid: any;
-  gridOptions: GridOption;
-  operator: OperatorType | OperatorString | undefined;
-  searchTerm: SearchTerm | undefined;
+  searchTerms: SearchTerm[];
   columnDef: Column;
   callback: FilterCallback;
-  filterType = FilterType.compoundInput;
 
   constructor(private i18n: I18N) { }
+
+  /** Getter for the Grid Options pulled through the Grid Object */
+  private get gridOptions(): GridOption {
+    return (this.grid && this.grid.getOptions) ? this.grid.getOptions() : {};
+  }
+
+  set operator(op: OperatorType | OperatorString) {
+    this._operator = op;
+  }
+  get operator(): OperatorType | OperatorString {
+    return this._operator || OperatorType.empty;
+  }
 
   /**
    * Initialize the Filter
@@ -41,14 +49,14 @@ export class CompoundInputFilter implements Filter {
       this.callback = args.callback;
       this.columnDef = args.columnDef;
       this.operator = args.operator || '';
-      this.searchTerm = args.searchTerm;
-      if (this.grid && typeof this.grid.getOptions === 'function') {
-        this.gridOptions = this.grid.getOptions();
-      }
+      this.searchTerms = args.searchTerms || [];
+
+      // filter input can only have 1 search term, so we will use the 1st array index if it exist
+      const searchTerm = (Array.isArray(this.searchTerms) && this.searchTerms[0]) || '';
 
       // step 1, create the DOM Element of the filter which contain the compound Operator+Input
       // and initialize it if searchTerm is filled
-      this.$filterElm = this.createDomElement();
+      this.$filterElm = this.createDomElement(searchTerm);
 
       // step 3, subscribe to the keyup event and run the callback when that happens
       // also add/remove "filled" class for styling purposes
@@ -64,13 +72,11 @@ export class CompoundInputFilter implements Filter {
   /**
    * Clear the filter value
    */
-  clear(triggerFilterKeyup = true) {
+  clear() {
     if (this.$filterElm && this.$selectOperatorElm) {
       this.$selectOperatorElm.val(0);
       this.$filterInputElm.val('');
-      if (triggerFilterKeyup) {
-        this.$filterElm.trigger('keyup');
-      }
+      this.onTriggerEvent(undefined, true);
     }
   }
 
@@ -86,9 +92,9 @@ export class CompoundInputFilter implements Filter {
   /**
    * Set value(s) on the DOM element
    */
-  setValues(values: SearchTerm) {
-    if (values) {
-      this.$filterElm.val(values);
+  setValues(values: SearchTerm[]) {
+    if (values && Array.isArray(values)) {
+      this.$filterElm.val(values[0]);
     }
   }
 
@@ -146,7 +152,7 @@ export class CompoundInputFilter implements Filter {
   /**
    * Create the DOM element
    */
-  private createDomElement() {
+  private createDomElement(searchTerm?: SearchTerm) {
     const $headerElm = this.grid.getHeaderRowColumn(this.columnDef.id);
     $($headerElm).empty();
 
@@ -173,7 +179,6 @@ export class CompoundInputFilter implements Filter {
     $filterContainerElm.append($containerInputGroup);
     $filterContainerElm.attr('id', `filter-${this.columnDef.id}`);
 
-    const searchTerm = (typeof this.searchTerm === 'boolean') ? `${this.searchTerm}` : this.searchTerm;
     this.$filterInputElm.val(searchTerm);
     this.$filterInputElm.data('columnId', this.columnDef.id);
 
@@ -182,7 +187,7 @@ export class CompoundInputFilter implements Filter {
     }
 
     // if there's a search term, we will add the "filled" class for styling purposes
-    if (this.searchTerm) {
+    if (searchTerm) {
       $filterContainerElm.addClass('filled');
     }
 
@@ -194,10 +199,14 @@ export class CompoundInputFilter implements Filter {
     return $filterContainerElm;
   }
 
-  private onTriggerEvent(e: Event | undefined) {
-    const selectedOperator = this.$selectOperatorElm.find('option:selected').text();
-    const value = this.$filterInputElm.val();
-    (value) ? this.$filterElm.addClass('filled') : this.$filterElm.removeClass('filled');
-    this.callback(e, { columnDef: this.columnDef, searchTerm: value, operator: selectedOperator || '' });
+  private onTriggerEvent(e: Event | undefined, clearFilterTriggered?: boolean) {
+    if (clearFilterTriggered) {
+      this.callback(e, { columnDef: this.columnDef, clearFilterTriggered: true });
+    } else {
+      const selectedOperator = this.$selectOperatorElm.find('option:selected').text();
+      const value = this.$filterInputElm.val();
+      (value) ? this.$filterElm.addClass('filled') : this.$filterElm.removeClass('filled');
+      this.callback(e, { columnDef: this.columnDef, searchTerms: [value], operator: selectedOperator || '' });
+    }
   }
 }

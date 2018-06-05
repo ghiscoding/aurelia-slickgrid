@@ -7,7 +7,6 @@ import {
   Filter,
   FilterArguments,
   FilterCallback,
-  FilterType,
   GridOption,
   OperatorString,
   OperatorType,
@@ -22,16 +21,26 @@ export class CompoundDateFilter implements Filter {
   private $filterInputElm: any;
   private $selectOperatorElm: any;
   private _currentValue: string;
+  private _operator: OperatorType | OperatorString;
   flatInstance: any;
   grid: any;
-  gridOptions: GridOption;
-  operator: OperatorType | OperatorString | undefined;
-  searchTerm: SearchTerm | undefined;
+  searchTerms: SearchTerm[];
   columnDef: Column;
   callback: FilterCallback;
-  filterType = FilterType.compoundDate;
 
   constructor(private i18n: I18N) { }
+
+  /** Getter for the Grid Options pulled through the Grid Object */
+  private get gridOptions(): GridOption {
+    return (this.grid && this.grid.getOptions) ? this.grid.getOptions() : {};
+  }
+
+  set operator(op: OperatorType | OperatorString) {
+    this._operator = op;
+  }
+  get operator(): OperatorType | OperatorString {
+    return this._operator || OperatorType.empty;
+  }
 
   /**
    * Initialize the Filter
@@ -42,14 +51,14 @@ export class CompoundDateFilter implements Filter {
       this.callback = args.callback;
       this.columnDef = args.columnDef;
       this.operator = args.operator || '';
-      this.searchTerm = args.searchTerm;
-      if (this.grid && typeof this.grid.getOptions === 'function') {
-        this.gridOptions = this.grid.getOptions();
-      }
+      this.searchTerms = args.searchTerms || [];
+
+      // date input can only have 1 search term, so we will use the 1st array index if it exist
+      const searchTerm = (Array.isArray(this.searchTerms) && this.searchTerms[0]) || '';
 
       // step 1, create the DOM Element of the filter which contain the compound Operator+Input
       // and initialize it if searchTerm is filled
-      this.$filterElm = this.createDomElement();
+      this.$filterElm = this.createDomElement(searchTerm);
 
       // step 3, subscribe to the keyup event and run the callback when that happens
       // also add/remove "filled" class for styling purposes
@@ -65,7 +74,7 @@ export class CompoundDateFilter implements Filter {
   /**
    * Clear the filter value
    */
-  clear(triggerFilterKeyup = true) {
+  clear() {
     if (this.flatInstance && this.$selectOperatorElm) {
       this.$selectOperatorElm.val(0);
       this.flatInstance.clear();
@@ -84,9 +93,9 @@ export class CompoundDateFilter implements Filter {
   /**
    * Set value(s) on the DOM element
    */
-  setValues(values: SearchTerm) {
-    if (values) {
-      this.flatInstance.setDate(values);
+  setValues(values: SearchTerm[]) {
+    if (values && Array.isArray(values)) {
+      this.flatInstance.setDate(values[0]);
     }
   }
 
@@ -94,7 +103,7 @@ export class CompoundDateFilter implements Filter {
   // private functions
   // ------------------
 
-  private buildDatePickerInput(searchTerm: SearchTerm) {
+  private buildDatePickerInput(searchTerm?: SearchTerm) {
     const inputFormat = mapFlatpickrDateFormatWithFieldType(this.columnDef.type || FieldType.dateIso);
     const outputFormat = mapFlatpickrDateFormatWithFieldType(this.columnDef.outputType || this.columnDef.type || FieldType.dateUtc);
     let currentLocale = this.i18n.getLocale() || 'en';
@@ -116,9 +125,9 @@ export class CompoundDateFilter implements Filter {
         // when using the time picker, we can simulate a keyup event to avoid multiple backend request
         // since backend request are only executed after user start typing, changing the time should be treated the same way
         if (pickerOptions.enableTime) {
-          this.onTriggerEvent(new CustomEvent('keyup'));
+          this.onTriggerEvent(new CustomEvent('keyup'), dateStr === '');
         } else {
-          this.onTriggerEvent(undefined);
+          this.onTriggerEvent(undefined, dateStr === '');
         }
       }
     };
@@ -159,14 +168,9 @@ export class CompoundDateFilter implements Filter {
   /**
    * Create the DOM element
    */
-  private createDomElement() {
+  private createDomElement(searchTerm?: SearchTerm) {
     const $headerElm = this.grid.getHeaderRowColumn(this.columnDef.id);
     $($headerElm).empty();
-
-    const searchTerm = (this.searchTerm || '') as string;
-    if (searchTerm) {
-      this._currentValue = searchTerm;
-    }
 
     // create the DOM Select dropdown for the Operator
     this.$selectOperatorElm = $(this.buildSelectOperatorHtmlString());
@@ -199,8 +203,9 @@ export class CompoundDateFilter implements Filter {
     }
 
     // if there's a search term, we will add the "filled" class for styling purposes
-    if (this.searchTerm) {
+    if (searchTerm) {
       $filterContainerElm.addClass('filled');
+      this._currentValue = searchTerm as string;
     }
 
     // append the new DOM element to the header row
@@ -220,10 +225,14 @@ export class CompoundDateFilter implements Filter {
     return 'en';
   }
 
-  private onTriggerEvent(e: Event | undefined) {
-    const selectedOperator = this.$selectOperatorElm.find('option:selected').text();
-    (this._currentValue) ? this.$filterElm.addClass('filled') : this.$filterElm.removeClass('filled');
-    this.callback(e, { columnDef: this.columnDef, searchTerm: this._currentValue, operator: selectedOperator || '=' });
+  private onTriggerEvent(e: Event | undefined, clearFilterTriggered?: boolean) {
+    if (clearFilterTriggered) {
+      this.callback(e, { columnDef: this.columnDef, clearFilterTriggered: true });
+    } else {
+      const selectedOperator = this.$selectOperatorElm.find('option:selected').text();
+      (this._currentValue) ? this.$filterElm.addClass('filled') : this.$filterElm.removeClass('filled');
+      this.callback(e, { columnDef: this.columnDef, searchTerms: [this._currentValue], operator: selectedOperator || '' });
+    }
   }
 
   private hide() {
