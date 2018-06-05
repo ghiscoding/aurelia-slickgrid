@@ -45,12 +45,7 @@
     </span>
   </div>
 
-  <aurelia-slickgrid
-    grid-id="grid1"
-    column-definitions.bind="columnDefinitions"
-    grid-options.bind="gridOptions"
-    dataset.bind="dataset"
-    asg-on-grid-created.delegate="onGridCreated($event.detail)"
+  <aurelia-slickgrid grid-id="grid1" column-definitions.bind="columnDefinitions" grid-options.bind="gridOptions" dataset.bind="dataset"
     asg-on-dataview-created.delegate="onDataviewCreated($event.detail)">
   </aurelia-slickgrid>
 </template>

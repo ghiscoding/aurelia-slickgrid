@@ -1,11 +1,6 @@
-import { inject, bindable } from 'aurelia-framework';
-import { ControlAndPluginService, Formatters, SortService } from 'aurelia-slickgrid';
-import * as $ from 'jquery';
+import { Formatters } from 'aurelia-slickgrid';
 
-@inject(ControlAndPluginService, SortService)
 export class Example8 {
-  @bindable() gridObj;
-  @bindable() dataview;
   title = 'Example 8: Header Menu Plugin';
   subTitle = `
     This example demonstrates using the <b>Slick.Plugins.HeaderMenu</b> plugin to easily add menus to colum headers.<br/>
@@ -18,22 +13,29 @@ export class Example8 {
       <li>Try hiding any columns (you use the "Column Picker" plugin by doing a right+click on the header to show the column back)</li>
     </ul>
   `;
+
+  aureliaGrid;
   columnDefinitions;
   gridOptions;
   dataset = [];
-  controlService;
-  sortService;
+  dataView;
+  gridObj;
+  visibleColumns;
 
-  constructor(controlService, sortService) {
+  constructor() {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
-    this.controlService = controlService;
-    this.sortService = sortService;
   }
 
   attached() {
     // populate the dataset once the grid is ready
     this.getData();
+  }
+
+  aureliaGridReady(aureliaGrid) {
+    this.aureliaGrid = aureliaGrid;
+    this.gridObj = aureliaGrid && aureliaGrid.slickGrid;
+    this.dataView = aureliaGrid && aureliaGrid.dataView;
   }
 
   detached() {
@@ -51,25 +53,23 @@ export class Example8 {
       { id: 'finish', name: 'Finish', field: 'finish' },
       { id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', formatter: Formatters.checkmark }
     ];
-
-    this.columnDefinitions.forEach((columnDef) => {
-      columnDef.header = {
+    for (let i = 0; i < this.columnDefinitions.length; i++) {
+      this.columnDefinitions[i].header = {
         menu: {
           items: [
             {
               iconCssClass: 'fa fa-sort-asc',
               title: 'Sort Ascending',
-              disabled: !columnDef.sortable,
+              disabled: !this.columnDefinitions[i].sortable,
               command: 'sort-asc'
             },
             {
               iconCssClass: 'fa fa-sort-desc',
               title: 'Sort Descending',
-              disabled: !columnDef.sortable,
+              disabled: !this.columnDefinitions[i].sortable,
               command: 'sort-desc'
             },
             {
-              iconCssClass: 'fa fa-times',
               title: 'Hide Column',
               command: 'hide'
             },
@@ -81,7 +81,7 @@ export class Example8 {
           ]
         }
       };
-    });
+    }
 
     this.gridOptions = {
       enableAutoResize: true,
@@ -95,15 +95,15 @@ export class Example8 {
       headerMenu: {
         onCommand: (e, args) => {
           if (args.command === 'hide') {
-            this.controlService.hideColumn(args.column);
-            this.controlService.autoResizeColumns();
+            this.aureliaGrid.pluginService.hideColumn(args.column);
+            this.aureliaGrid.pluginService.autoResizeColumns();
           } else if (args.command === 'sort-asc' || args.command === 'sort-desc') {
             // get previously sorted columns
-            const cols = this.sortService.getPreviousColumnSorts(args.column.id + '');
+            const cols = this.aureliaGrid.sortService.getPreviousColumnSorts(args.column.id + '');
 
             // add to the column array, the column sorted by the header menu
             cols.push({ sortCol: args.column, sortAsc: (args.command === 'sort-asc') });
-            this.sortService.onLocalSortChanged(this.gridObj, this.dataview, cols);
+            this.aureliaGrid.sortService.onLocalSortChanged(this.gridObj, this.dataView, cols);
 
             // update the this.gridObj sortColumns array which will at the same add the visual sort icon(s) on the UI
             const newSortColumns = cols.map((col) => {
@@ -133,13 +133,5 @@ export class Example8 {
       };
     }
     this.dataset = mockDataset;
-  }
-
-  gridObjChanged(grid) {
-    this.gridObj = grid;
-  }
-
-  dataviewChanged(dataview) {
-    this.dataview = dataview;
   }
 }

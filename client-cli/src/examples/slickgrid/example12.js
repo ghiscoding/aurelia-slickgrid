@@ -1,8 +1,13 @@
 import { inject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
-import { DelimiterType, ExportService, FileType, FilterType, Formatters } from '../../aurelia-slickgrid';
+import {
+  DelimiterType,
+  FileType,
+  Filters,
+  Formatters
+} from 'aurelia-slickgrid';
 
-@inject(ExportService, I18N)
+@inject(I18N)
 export class Example12 {
   title = 'Example 12: Localization (i18n)';
   subTitle = `Support multiple locales with the i18next plugin, following these steps.
@@ -15,7 +20,7 @@ export class Example12 {
         <li>For the cell values, you need to use a Formatter, there's 2 ways of doing it</li>
         <ul>
           <li>formatter: myCustomTranslateFormatter <b>&lt;= "Title" column uses it</b></li>
-          <li>formatter: Formatters.translate, i18n: this.i18n <b>&lt;= "Completed" column uses it</b></li>
+          <li>formatter: Formatters.translate <b>&lt;= "Completed" column uses it</b></li>
         </ul>
       </ul>
       <li>For date localization, you need to create your own custom formatter. </li>
@@ -32,19 +37,16 @@ export class Example12 {
       </ol>
     `;
 
-  exportService;
-  i18n;
+  aureliaGrid;
   gridOptions;
   columnDefinitions;
   dataset = [];
   selectedLanguage;
   duplicateTitleHeaderCount = 1;
 
-  constructor(exportService, i18n) {
-    // define the grid options & columns and then create the grid itself
-    this.exportService = exportService;
+  constructor(i18n) {
     this.i18n = i18n;
-    this.selectedLanguage = this.i18n.getLocale();
+    // define the grid options & columns and then create the grid itself
     this.defineGrid();
     this.selectedLanguage = this.i18n.getLocale();
   }
@@ -54,14 +56,18 @@ export class Example12 {
     this.getData();
   }
 
+  aureliaGridReady(aureliaGrid) {
+    this.aureliaGrid = aureliaGrid;
+  }
+
   /* Define grid Options and Columns */
   defineGrid() {
     this.columnDefinitions = [
       { id: 'title', name: 'Title', field: 'id', headerKey: 'TITLE', formatter: this.taskTranslateFormatter, sortable: true, minWidth: 100, filterable: true, params: { useFormatterOuputToFilter: true } },
       { id: 'description', name: 'Description', field: 'description', filterable: true, sortable: true, minWidth: 80 },
       { id: 'duration', name: 'Duration (days)', field: 'duration', headerKey: 'DURATION', sortable: true, minWidth: 100, filterable: true },
-      { id: 'start', name: 'Start', field: 'start', headerKey: 'START', formatter: Formatters.dateIso, minWidth: 100, filterable: true },
-      { id: 'finish', name: 'Finish', field: 'finish', headerKey: 'FINISH', formatter: Formatters.dateIso, minWidth: 100, filterable: true },
+      { id: 'start', name: 'Start', field: 'start', headerKey: 'START', formatter: Formatters.dateIso, minWidth: 100, filterable: true, filter: { model: Filters.compoundDate } },
+      { id: 'finish', name: 'Finish', field: 'finish', headerKey: 'FINISH', formatter: Formatters.dateIso, minWidth: 100, filterable: true, filter: { model: Filters.compoundDate } },
       {
         id: 'completedBool', name: 'Completed', field: 'completedBool', headerKey: 'COMPLETED', minWidth: 100,
         sortable: true,
@@ -70,7 +76,8 @@ export class Example12 {
         filterable: true,
         filter: {
           collection: [{ value: '', label: '' }, { value: true, labelKey: 'TRUE' }, { value: false, labelKey: 'FALSE' }],
-          type: FilterType.singleSelect,
+          model: Filters.singleSelect,
+          enableTranslateLabel: true,
           filterOptions: {
             autoDropWidth: true
           }
@@ -83,7 +90,12 @@ export class Example12 {
         filterable: true,
         filter: {
           collection: [{ value: '', label: '' }, { value: 'TRUE', labelKey: 'TRUE' }, { value: 'FALSE', labelKey: 'FALSE' }],
-          type: FilterType.singleSelect,
+          collectionSortBy: {
+            property: 'labelKey', // will sort by translated value since "enableTranslateLabel" is true
+            sortDesc: true
+          },
+          model: Filters.singleSelect,
+          enableTranslateLabel: true,
           filterOptions: {
             autoDropWidth: true
           }
@@ -99,17 +111,19 @@ export class Example12 {
         sidePadding: 15
       },
       enableAutoResize: true,
+      enableExcelCopyBuffer: true,
       enableFiltering: true,
       enableTranslate: true,
       i18n: this.i18n,
       exportOptions: {
         // set at the grid option level, meaning all column will evaluate the Formatter (when it has a Formatter defined)
-        exportWithFormatter: true
+        exportWithFormatter: true,
+        sanitizeDataExport: true
       },
       gridMenu: {
-        showExportCsvCommand: true,           // true by default, so it's optional
-        showExportTextDelimitedCommand: true  // false by default, so if you want it, you will need to enable it
-      },
+        hideExportCsvCommand: false,           // false by default, so it's optional
+        hideExportTextDelimitedCommand: false  // true by default, so if you want it, you will need to disable the flag
+      }
     };
   }
 
@@ -139,7 +153,7 @@ export class Example12 {
   }
 
   exportToFile(type = 'csv') {
-    this.exportService.exportToFile({
+    this.aureliaGrid.exportService.exportToFile({
       delimiter: (type === 'csv') ? DelimiterType.comma : DelimiterType.tab,
       filename: 'myExport',
       format: (type === 'csv') ? FileType.csv : FileType.txt
@@ -155,5 +169,4 @@ export class Example12 {
   taskTranslateFormatter = (row, cell, value, columnDef, dataContext) => {
     return this.i18n.tr('TASK_X', { x: value });
   }
-
 }

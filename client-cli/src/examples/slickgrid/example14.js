@@ -1,4 +1,4 @@
-import { FieldType } from '../../aurelia-slickgrid';
+import { FieldType } from 'aurelia-slickgrid';
 
 export class Example14 {
   title = 'Example 14: Column Span & Header Grouping';

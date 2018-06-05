@@ -1,37 +1,36 @@
-import { inject } from 'aurelia-framework';
-import { Editors, FieldType, Formatters, GridExtraService, ResizerService } from 'aurelia-slickgrid';
+import {
+  Editors,
+  FieldType,
+  Formatters
+} from 'aurelia-slickgrid';
 
-@inject(GridExtraService, ResizerService)
 export class Example11 {
   title = 'Example 11: Add / Update / Highlight a Datagrid Item';
   subTitle = `
-    Add / Update / Hightlight an Item from the Datagrid (<a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Add,-Update-or-Highlight-a-Datagrid-Item" target="_blank">Wiki docs</a>).
+  Add / Update / Hightlight an Item from the Datagrid (<a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Add,-Update-or-Highlight-a-Datagrid-Item" target="_blank">Wiki docs</a>).
+  <ul>
+    <li><b>Note:</b> this demo is <b>only</b> on the datagrid (client) side, you still need to deal with the backend yourself</li>
+    <li>Adding an item, will always be showing as the 1st item in the grid because that is the best visual place to add it</li>
+    <li>Add/Update an item requires a valid Slickgrid Selection Model, you have 2 choices to deal with this:</li>
+    <ul><li>You can enable "enableCheckboxSelector" or "enableRowSelection" to True</li></ul>
+    <li>Click on any of the buttons below to test this out</li>
+    <li>You can change the highlighted color &amp; animation by changing the SASS variables:</li>
     <ul>
-      <li><b>Note:</b> this demo is <b>only</b> on the datagrid (client) side, you still need to deal with the backend yourself</li>
-      <li>Adding an item, will always be showing as the 1st item in the grid because that is the best visual place to add it</li>
-      <li>Add/Update an item requires a valid Slickgrid Selection Model, you have 2 choices to deal with this:</li>
-      <ul><li>You can enable "enableCheckboxSelector" or "enableRowSelection" to True</li></ul>
-      <li>Click on any of the buttons below to test this out</li>
-      <li>You can change the highlighted color &amp; animation by changing the SASS variables:</li>
-      <ul>
-        <li>"$row-highlight-background-color" or "$row-highlight-fade-animation"</li>
-        <li>Take a look at the available <a href="https://github.com/ghiscoding/aurelia-slickgrid/blob/master/aurelia-slickgrid/src/aurelia-slickgrid/styles/_variables.scss" target="_blank">SASS Variables</a></li>
-      </ul>
+      <li>"$row-highlight-background-color" or "$row-highlight-fade-animation"</li>
+      <li>Take a look at the available <a href="https://github.com/ghiscoding/aurelia-slickgrid/blob/master/aurelia-slickgrid/src/aurelia-slickgrid/styles/_variables.scss" target="_blank">SASS Variables</a></li>
     </ul>
+  </ul>
   `;
 
+  aureliaGrid;
   columnDefinitions;
   gridOptions;
   dataset = [];
   updatedObject;
-  gridExtraService;
-  resizer;
 
-  constructor(gridExtraService, resizer) {
+  constructor() {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
-    this.gridExtraService = gridExtraService;
-    this.resizer = resizer;
   }
 
   attached() {
@@ -39,21 +38,65 @@ export class Example11 {
     this.getData();
   }
 
+  aureliaGridReady(aureliaGrid) {
+    this.aureliaGrid = aureliaGrid;
+  }
+
   /* Define grid Options and Columns */
   defineGrid() {
     this.columnDefinitions = [
-      { id: 'title', name: 'Title', field: 'title', sortable: true, type: FieldType.string, editor: Editors.longText },
       {
-        id: 'duration', name: 'Duration (days)', field: 'duration', sortable: true, type: FieldType.number, editor: Editors.text,
-        onCellChange: (args) => {
+        id: 'title', name: 'Title', field: 'title',
+        sortable: true,
+        type: FieldType.string,
+        editor: {
+          model: Editors.longText
+        }
+      },
+      {
+        id: 'duration', name: 'Duration (days)', field: 'duration',
+        sortable: true,
+        type: FieldType.number,
+        editor: {
+          model: Editors.text
+        },
+        onCellChange: (e, args) => {
           alert('onCellChange directly attached to the column definition');
           console.log(args);
         }
       },
-      { id: 'complete', name: '% Complete', field: 'percentComplete', formatter: Formatters.percentCompleteBar, type: FieldType.number, editor: Editors.integer },
-      { id: 'start', name: 'Start', field: 'start', formatter: Formatters.dateIso, sortable: true, type: FieldType.date/*, editor: Editors.date*/ },
-      { id: 'finish', name: 'Finish', field: 'finish', formatter: Formatters.dateIso, sortable: true, type: FieldType.date },
-      { id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', formatter: Formatters.checkmark, type: FieldType.number, editor: Editors.checkbox }
+      {
+        id: 'complete', name: '% Complete', field: 'percentComplete',
+        formatter: Formatters.percentCompleteBar,
+        type: FieldType.number,
+        editor: {
+          model: Editors.integer
+        }
+      },
+      {
+        id: 'start', name: 'Start', field: 'start',
+        formatter: Formatters.dateIso,
+        sortable: true,
+        type: FieldType.date
+        /*
+        editor: {
+          model: Editors.date
+        }
+        */
+      },
+      {
+        id: 'finish', name: 'Finish', field: 'finish',
+        formatter: Formatters.dateIso, sortable: true,
+        type: FieldType.date
+      },
+      {
+        id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven',
+        formatter: Formatters.checkmark,
+        type: FieldType.number,
+        editor: {
+          model: Editors.checkbox
+        }
+      }
     ];
 
     this.gridOptions = {
@@ -109,16 +152,16 @@ export class Example11 {
       finish: new Date(randomYear, (randomMonth + 2), randomDay),
       effortDriven: true
     };
-    this.gridExtraService.addItemToDatagrid(newItem);
+    this.aureliaGrid.gridService.addItemToDatagrid(newItem);
   }
 
   highlighFifthRow() {
-    this.gridExtraService.highlightRow(4, 1500);
+    this.aureliaGrid.gridService.highlightRow(4, 1500);
   }
 
   updateSecondItem() {
-    const firstItem = this.gridExtraService.getDataItemByRowNumber(1);
+    const firstItem = this.aureliaGrid.gridService.getDataItemByRowNumber(1);
     firstItem.duration = Math.round(Math.random() * 100);
-    this.gridExtraService.updateDataGridItem(firstItem);
+    this.aureliaGrid.gridService.updateDataGridItem(firstItem);
   }
 }

@@ -1,6 +1,6 @@
 import { autoinject } from 'aurelia-framework';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
-import { Aggregators, Column, FieldType, Formatter, Formatters, GridOption, GroupTotalFormatters, SortDirectionNumber, Sorters } from 'aurelia-slickgrid';
+import { Aggregators, Column, FieldType, Formatters, GridOption, GroupTotalFormatters, SortDirectionNumber, Sorters } from 'aurelia-slickgrid';
 
 @autoinject()
 export class Example13 {
@@ -189,7 +189,7 @@ export class Example13 {
         new Aggregators.Avg('percentComplete'),
         new Aggregators.Sum('cost')
       ],
-      aggregateCollapsed: false,
+      aggregateCollapsed,
       lazyTotalsCalculation: true
     });
   }

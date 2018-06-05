@@ -3,28 +3,42 @@
   <div class="subtitle" innerhtml.bind="subTitle"></div>
 
   <div class="row">
-    <div class="col-sm-4">
-      <div class="form-inline">
-        <label class="control-label" for="radioWithCursor">Multi-Select / Single</label>
-        <span id="radioWithCursor">
-          <label class="radio-inline control-label" for="radioTrue">
-            <input type="radio" name="inlineRadioOptions" id="radioTrue" checked value.bind="isMultiSelect" click.delegate="onChooseMultiSelectType(true)"> Multi-Select
-          </label>
-          <label class="radio-inline control-label" for="radioFalse">
-            <input type="radio" name="inlineRadioOptions" id="radioFalse" value.bind="isMultiSelect" click.delegate="onChooseMultiSelectType(false)"> Single
-          </label>
-        </span>
-      </div>
-    </div>
     <div class="col-sm-8">
-      <div class="alert alert-info">
-        <strong>Selected Row(s):</strong>
-        <div innerhtml.bind="selectedObjects"></div>
+      <div class="alert alert-success">
+        <strong>(single select) Selected Row:</strong>
+        <span innerhtml.bind="selectedTitle"></span>
       </div>
     </div>
   </div>
 
-  <aurelia-slickgrid grid-id="grid1" dataview.bind="dataview" grid.bind="gridObj" column-definitions.bind="columnDefinitions"
-    grid-options.bind="gridOptions" dataset.bind="dataset">
+  <aurelia-slickgrid
+    grid-id="grid1"
+    column-definitions.bind="columnDefinitions1"
+    grid-options.bind="gridOptions1"
+    dataset.bind="dataset1"
+    grid-height="200"
+    grid-width="800"
+    sg-on-selected-rows-changed.delegate="onGrid1SelectedRowsChanged($event.detail.eventData, $event.detail.args)">
+  </aurelia-slickgrid>
+
+  <hr>
+
+  <div class="row">
+    <div class="col-sm-8">
+      <div class="alert alert-success">
+        <strong>(multi-select) Selected Row(s):</strong>
+        <span innerhtml.bind="selectedTitles"></span>
+      </div>
+    </div>
+  </div>
+
+  <aurelia-slickgrid
+    grid-id="grid2"
+    column-definitions.bind="columnDefinitions2"
+    grid-options.bind="gridOptions2"
+    dataset.bind="dataset2"
+    grid-height="200"
+    grid-width="800"
+    sg-on-selected-rows-changed.delegate="onGrid2SelectedRowsChanged($event.detail.eventData, $event.detail.args)">
   </aurelia-slickgrid>
 </template>

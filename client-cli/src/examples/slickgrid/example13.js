@@ -21,11 +21,9 @@ export class Example13 {
   processing = false;
   subOnBeforeExport;
   subOnAfterExport;
-  ea;
 
-  constructor(eventAggregator) {
-    this.ea = eventAggregator;
-
+  constructor(ea) {
+    this.ea = ea;
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
   }

@@ -1,15 +1,15 @@
 import { inject } from 'aurelia-framework';
 import { HttpClient } from 'aurelia-http-client';
-import { FieldType, FilterType, GridOdataService } from 'aurelia-slickgrid';
+import { FieldType, Filters, GridOdataService } from 'aurelia-slickgrid';
 
 const defaultPageSize = 20;
 const sampleDataRoot = 'src/examples/slickgrid/sample-data';
 
-@inject(HttpClient, GridOdataService)
+@inject(HttpClient)
 export class Example5 {
   title = 'Example 5: Grid with Backend OData Service';
   subTitle = `
-    Use it when you need to support Pagination with a OData endpoint (for simple JSON, use a regular grid)
+    Use it when you need to support Pagination with a OData endpoint (for simple JSON, use a regular grid)<br/>
     Take a look at the (<a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/OData" target="_blank">Wiki documentation</a>)
     <br/>
     <ul class="small">
@@ -17,26 +17,29 @@ export class Example5 {
       <li>String column also support operator (>, >=, <, <=, <>, !=, =, ==, *)
       <ul>
         <li>The (*) can be used as startsWith (ex.: "abc*" => startsWith "abc") / endsWith (ex.: "*xyz" => endsWith "xyz")</li>
-        <li>The other operators can be used on column type number for example: ">=100" (greater or equal than 100)</li>
+        <li>The other operators can be used on column type number for example: ">=100" (greater than or equal to 100)</li>
       </ul>
+      <li>OData Service could be replaced by other Service type in the future (GraphQL or whichever you provide)</li>
+      <li>You can also preload a grid with certain "presets" like Filters / Sorters / Pagination <a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Grid-State-&-Preset" target="_blank">Wiki - Grid Preset</a>
     </ul>
   `;
+  aureliaGrid;
   columnDefinitions;
   gridOptions;
   dataset = [];
-  http;
-  odataService;
 
   odataQuery = '';
   processing = false;
   status = { text: '', class: '' };
 
-  constructor(http, odataService) {
+  constructor(http) {
     this.http = http;
-    this.odataService = odataService;
-
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
+  }
+
+  aureliaGridReady(aureliaGrid) {
+    this.aureliaGrid = aureliaGrid;
   }
 
   defineGrid() {
@@ -45,17 +48,17 @@ export class Example5 {
         id: 'name', name: 'Name', field: 'name', sortable: true, type: FieldType.string,
         filterable: true,
         filter: {
-          type: FilterType.compoundInput
+          model: Filters.compoundInput
         }
       },
       {
-        id: 'gender', name: 'Gender', field: 'gender', filterable: true, sortable: true, minWidth: 100,
+        id: 'gender', name: 'Gender', field: 'gender', filterable: true, sortable: true,
         filter: {
-          collection: [{ value: '', label: '' }, { value: 'male', label: 'male' }, { value: 'female', label: 'female' }],
-          type: FilterType.singleSelect
+          model: Filters.singleSelect,
+          collection: [{ value: '', label: '' }, { value: 'male', label: 'male' }, { value: 'female', label: 'female' }]
         }
       },
-      { id: 'company', name: 'Company', field: 'company', minWidth: 100 }
+      { id: 'company', name: 'Company', field: 'company' }
     ];
 
     this.gridOptions = {
@@ -64,19 +67,20 @@ export class Example5 {
         containerId: 'demo-container',
         sidePadding: 15
       },
-      enableFiltering: true,
       enableCellNavigation: true,
+      enableFiltering: true,
+      enableCheckboxSelector: true,
+      enableRowSelection: true,
       pagination: {
         pageSizes: [10, 15, 20, 25, 30, 40, 50, 75, 100],
         pageSize: defaultPageSize,
         totalItems: 0
       },
       backendServiceApi: {
-        service: this.odataService,
+        service: new GridOdataService(),
         preProcess: () => this.displaySpinner(true),
         process: (query) => this.getCustomerApiCall(query),
         postProcess: (response) => {
-          console.log(response);
           this.displaySpinner(false);
           this.getCustomerCallback(response);
         }
@@ -110,7 +114,7 @@ export class Example5 {
 
   /**
    * This function is only here to mock a WebAPI call (since we are using a JSON file for the demo)
-   * in your case the getCustomer() should be a WebAPI function returning a Promise
+   *  in your case the getCustomer() should be a WebAPI function returning a Promise
    */
   getCustomerDataApiMock(query) {
     // the mock is returning a Promise, just like a WebAPI typically does
@@ -120,7 +124,7 @@ export class Example5 {
       let skip = 0;
       let orderBy = '';
       let countTotalItems = 100;
-      let columnFilters = {};
+      const columnFilters = {};
 
       for (const param of queryParams) {
         if (param.includes('$top=')) {
@@ -133,7 +137,7 @@ export class Example5 {
           orderBy = param.substring('$orderby='.length);
         }
         if (param.includes('$filter=')) {
-          const filterBy = param.substring('$filter='.length);
+          const filterBy = param.substring('$filter='.length).replace('%20', ' ');
           if (filterBy.includes('substringof')) {
             const filterMatch = filterBy.match(/substringof\('(.*?)',([a-zA-Z ]*)/);
             const fieldName = filterMatch[2].trim();
@@ -203,11 +207,19 @@ export class Example5 {
                 filteredData = filteredData.filter(column => {
                   const filterType = columnFilters[columnId].type;
                   const searchTerm = columnFilters[columnId].term;
-                  switch (filterType) {
-                    case 'equal': return column[columnId] === searchTerm;
-                    case 'ends': return column[columnId].toLowerCase().endsWith(searchTerm);
-                    case 'starts': return column[columnId].toLowerCase().startsWith(searchTerm);
-                    case 'substring': return column[columnId].toLowerCase().includes(searchTerm);
+                  let colId = columnId;
+                  if (columnId && columnId.indexOf(' ') !== -1) {
+                    const splitIds = columnId.split(' ');
+                    colId = splitIds[splitIds.length - 1];
+                  }
+                  const filterTerm = column[colId];
+                  if (filterTerm) {
+                    switch (filterType) {
+                      case 'equal': return filterTerm.toLowerCase() === searchTerm;
+                      case 'ends': return filterTerm.toLowerCase().endsWith(searchTerm);
+                      case 'starts': return filterTerm.toLowerCase().startsWith(searchTerm);
+                      case 'substring': return filterTerm.toLowerCase().includes(searchTerm);
+                    }
                   }
                 });
               }

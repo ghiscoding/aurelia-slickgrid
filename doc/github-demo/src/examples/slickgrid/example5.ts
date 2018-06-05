@@ -1,6 +1,7 @@
 import { autoinject } from 'aurelia-framework';
+import data from './sample-data/example-data';
 import { HttpClient } from 'aurelia-http-client';
-import { CaseType, Column, GridOption, FieldType, FilterType, Formatters, GridOdataService, OperatorType } from 'aurelia-slickgrid';
+import { AureliaGridInstance, Column, FieldType, Filters, GridOdataService, GridOption, OperatorType } from 'aurelia-slickgrid';
 
 const defaultPageSize = 20;
 const sampleDataRoot = 'assets/data';
@@ -23,6 +24,7 @@ export class Example5 {
       <li>You can also preload a grid with certain "presets" like Filters / Sorters / Pagination <a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Grid-State-&-Preset" target="_blank">Wiki - Grid Preset</a>
     </ul>
   `;
+  aureliaGrid: AureliaGridInstance;
   columnDefinitions: Column[];
   gridOptions: GridOption;
   dataset = [];
@@ -31,9 +33,13 @@ export class Example5 {
   processing = false;
   status = { text: '', class: '' };
 
-  constructor(private http: HttpClient, private odataService: GridOdataService) {
+  constructor(private http: HttpClient) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
+  }
+
+  aureliaGridReady(aureliaGrid: AureliaGridInstance) {
+    this.aureliaGrid = aureliaGrid;
   }
 
   defineGrid() {
@@ -42,13 +48,13 @@ export class Example5 {
         id: 'name', name: 'Name', field: 'name', sortable: true, type: FieldType.string,
         filterable: true,
         filter: {
-          type: FilterType.compoundInput
+          model: Filters.compoundInput
         }
       },
       {
         id: 'gender', name: 'Gender', field: 'gender', filterable: true, sortable: true,
         filter: {
-          type: FilterType.singleSelect,
+          model: Filters.singleSelect,
           collection: [{ value: '', label: '' }, { value: 'male', label: 'male' }, { value: 'female', label: 'female' }]
         }
       },
@@ -61,8 +67,8 @@ export class Example5 {
         containerId: 'demo-container',
         sidePadding: 15
       },
-      enableFiltering: true,
       enableCellNavigation: true,
+      enableFiltering: true,
       enableCheckboxSelector: true,
       enableRowSelection: true,
       pagination: {
@@ -71,7 +77,7 @@ export class Example5 {
         totalItems: 0
       },
       backendServiceApi: {
-        service: this.odataService,
+        service: new GridOdataService(),
         preProcess: () => this.displaySpinner(true),
         process: (query) => this.getCustomerApiCall(query),
         postProcess: (response) => {
@@ -108,7 +114,7 @@ export class Example5 {
 
   /**
    * This function is only here to mock a WebAPI call (since we are using a JSON file for the demo)
-   * in your case the getCustomer() should be a WebAPI function returning a Promise
+   *  in your case the getCustomer() should be a WebAPI function returning a Promise
    */
   getCustomerDataApiMock(query) {
     // the mock is returning a Promise, just like a WebAPI typically does
@@ -131,7 +137,7 @@ export class Example5 {
           orderBy = param.substring('$orderby='.length);
         }
         if (param.includes('$filter=')) {
-          const filterBy = param.substring('$filter='.length);
+          const filterBy = param.substring('$filter='.length).replace('%20', ' ');
           if (filterBy.includes('substringof')) {
             const filterMatch = filterBy.match(/substringof\('(.*?)',([a-zA-Z ]*)/);
             const fieldName = filterMatch[2].trim();
@@ -201,11 +207,19 @@ export class Example5 {
                 filteredData = filteredData.filter(column => {
                   const filterType = columnFilters[columnId].type;
                   const searchTerm = columnFilters[columnId].term;
-                  switch (filterType) {
-                    case 'equal': return column[columnId] === searchTerm;
-                    case 'ends': return column[columnId].toLowerCase().endsWith(searchTerm);
-                    case 'starts': return column[columnId].toLowerCase().startsWith(searchTerm);
-                    case 'substring': return column[columnId].toLowerCase().includes(searchTerm);
+                  let colId = columnId;
+                  if (columnId && columnId.indexOf(' ') !== -1) {
+                    const splitIds = columnId.split(' ');
+                    colId = splitIds[splitIds.length - 1];
+                  }
+                  const filterTerm = column[colId];
+                  if (filterTerm) {
+                    switch (filterType) {
+                      case 'equal': return filterTerm.toLowerCase() === searchTerm;
+                      case 'ends': return filterTerm.toLowerCase().endsWith(searchTerm);
+                      case 'starts': return filterTerm.toLowerCase().startsWith(searchTerm);
+                      case 'substring': return filterTerm.toLowerCase().includes(searchTerm);
+                    }
                   }
                 });
               }

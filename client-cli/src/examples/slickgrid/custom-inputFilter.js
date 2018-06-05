@@ -1,11 +1,12 @@
-import $ from 'jquery';
+import { OperatorType } from 'aurelia-slickgrid';
 
 export class CustomInputFilter {
   $filterElm;
   grid;
-  searchTerm;
+  searchTerms;
   columnDef;
   callback;
+  operator = OperatorType.equal;
 
   /**
    * Initialize the Filter
@@ -14,13 +15,16 @@ export class CustomInputFilter {
     this.grid = args.grid;
     this.callback = args.callback;
     this.columnDef = args.columnDef;
-    this.searchTerm = args.searchTerm;
+    this.searchTerms = args.searchTerms || [];
+
+    // filter input can only have 1 search term, so we will use the 1st array index if it exist
+    const searchTerm = (Array.isArray(this.searchTerms) && this.searchTerms[0]) || '';
 
     // step 1, create HTML string template
     const filterTemplate = this.buildTemplateHtmlString();
 
     // step 2, create the DOM Element of the filter & initialize it if searchTerm is filled
-    this.$filterElm = this.createDomElement(filterTemplate);
+    this.$filterElm = this.createDomElement(filterTemplate, searchTerm);
 
     // step 3, subscribe to the keyup event and run the callback when that happens
     this.$filterElm.keyup((e) => this.callback(e, { columnDef: this.columnDef }));
@@ -45,6 +49,15 @@ export class CustomInputFilter {
     }
   }
 
+  /**
+   * Set value(s) on the DOM element
+   */
+  setValues(values) {
+    if (values) {
+      this.$filterElm.val(values);
+    }
+  }
+
   //
   // private functions
   // ------------------
@@ -60,14 +73,15 @@ export class CustomInputFilter {
    * From the html template string, create a DOM element
    * @param filterTemplate
    */
-  createDomElement(filterTemplate) {
+  createDomElement(filterTemplate, searchTerm) {
     const $headerElm = this.grid.getHeaderRowColumn(this.columnDef.id);
     $($headerElm).empty();
 
     // create the DOM element & add an ID and filter class
     const $filterElm = $(filterTemplate);
-    const searchTerm = (typeof this.searchTerm === 'boolean') ? `${this.searchTerm}` : this.searchTerm;
-    $filterElm.val(searchTerm);
+    const searchTermInput = searchTerm;
+
+    $filterElm.val(searchTermInput);
     $filterElm.attr('id', `filter-${this.columnDef.id}`);
     $filterElm.data('columnId', this.columnDef.id);
 

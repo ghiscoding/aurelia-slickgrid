@@ -16,6 +16,7 @@ export class Example2 {
       </li>
     </ul>
   `;
+
   gridOptions: GridOption;
   columnDefinitions: Column[];
   dataset: any[];
@@ -47,7 +48,7 @@ export class Example2 {
         containerId: 'demo-container',
         sidePadding: 15
       },
-      enableExcelCopyBuffer: true
+      enableExcelCopyBuffer: true,
     };
   }
 

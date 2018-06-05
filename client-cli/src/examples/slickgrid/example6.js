@@ -1,12 +1,20 @@
+import { EventAggregator } from 'aurelia-event-aggregator';
 import { inject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import { HttpClient } from 'aurelia-http-client';
-import { FieldType, FilterType, Formatters, GraphqlService } from 'aurelia-slickgrid';
+import {
+  FieldType,
+  Filters,
+  Formatters,
+  GraphqlService,
+  OperatorType,
+  SortDirection
+} from 'aurelia-slickgrid';
 
 const defaultPageSize = 20;
 const GRAPHQL_QUERY_DATASET_NAME = 'users';
 
-@inject(GraphqlService, HttpClient, I18N)
+@inject(EventAggregator, HttpClient, I18N)
 export class Example6 {
   title = 'Example 6: Grid with Backend GraphQL Service';
   subTitle = `
@@ -20,76 +28,115 @@ export class Example6 {
         <li>The (*) can be used as startsWith (ex.: "abc*" => startsWith "abc") / endsWith (ex.: "*xyz" => endsWith "xyz")</li>
         <li>The other operators can be used on column type number for example: ">=100" (greater or equal than 100)</li>
       </ul>
+      <li>You can also preload a grid with certain "presets" like Filters / Sorters / Pagination <a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Grid-State-&-Preset" target="_blank">Wiki - Grid Preset</a>
     </ul>
   `;
+
+  aureliaGrid;
   columnDefinitions;
   gridOptions;
   dataset = [];
-  graphqlService;
-  http;
-  i18n;
 
   isWithCursor = false;
   graphqlQuery = '';
   processing = false;
   selectedLanguage;
   status = { text: '', class: '' };
+  Subscription;
 
-  constructor(graphqlService, http, i18n) {
-    this.graphqlService = graphqlService;
+  constructor(ea, http, i18n) {
+    this.ea = ea;
     this.http = http;
     this.i18n = i18n;
+
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
     this.selectedLanguage = this.i18n.getLocale();
+    this.Subscription = this.ea.subscribe('gridStateService:changed', (data) => console.log(data));
+  }
+
+  detached() {
+    this.saveCurrentGridState();
+    this.Subscription.dispose();
+  }
+
+  aureliaGridReady(aureliaGrid) {
+    this.aureliaGrid = aureliaGrid;
   }
 
   defineGrid() {
     this.columnDefinitions = [
-      { id: 'name', name: 'Name', field: 'name', headerKey: 'NAME', filterable: true, sortable: true, type: FieldType.string },
+      { id: 'name', field: 'name', headerKey: 'NAME', filterable: true, sortable: true, type: FieldType.string, width: 60 },
       {
-        id: 'gender', name: 'Gender', field: 'gender', headerKey: 'GENDER', filterable: true, sortable: true,
+        id: 'gender', field: 'gender', headerKey: 'GENDER', filterable: true, sortable: true, width: 60,
         filter: {
-          type: FilterType.singleSelect,
+          model: Filters.singleSelect,
           collection: [{ value: '', label: '' }, { value: 'male', label: 'male', labelKey: 'MALE' }, { value: 'female', label: 'female', labelKey: 'FEMALE' }]
         }
       },
       {
-        id: 'company', name: 'Company', field: 'company', headerKey: 'COMPANY',
+        id: 'company', field: 'company', headerKey: 'COMPANY', width: 60,
+        sortable: true,
         filterable: true,
         filter: {
-          type: FilterType.multipleSelect,
-          collection: [{ value: 'ABC', label: 'Company ABC' }, { value: 'XYZ', label: 'Company XYZ' }]
+          model: Filters.multipleSelect,
+          collection: [{ value: 'acme', label: 'Acme' }, { value: 'abc', label: 'Company ABC' }, { value: 'xyz', label: 'Company XYZ' }]
         }
       },
-      { id: 'billing.address.street', name: 'Billing Address Street', field: 'billing.address.street', headerKey: 'BILLING.ADDRESS.STREET', filterable: true, sortable: true },
+      { id: 'billing.address.street', field: 'billing.address.street', headerKey: 'BILLING.ADDRESS.STREET', width: 60, filterable: true, sortable: true },
       {
-        id: 'billing.address.zip', field: 'billing.address.zip', headerKey: 'BILLING.ADDRESS.ZIP',
+        id: 'billing.address.zip', field: 'billing.address.zip', headerKey: 'BILLING.ADDRESS.ZIP', width: 60,
         type: FieldType.number,
         filterable: true, sortable: true,
         filter: {
-          type: FilterType.compoundInput
+          model: Filters.compoundInput
         },
         formatter: Formatters.multiple, params: { formatters: [Formatters.complexObject, Formatters.translate] }
       }
     ];
 
     this.gridOptions = {
-      enableAutoResize: true,
-      autoResize: {
-        containerId: 'demo-container',
-        sidePadding: 15
-      },
+      autoHeight: false,
+      enableAutoResize: false,
       enableFiltering: true,
       enableCellNavigation: true,
+      enableCheckboxSelector: true,
+      enableRowSelection: true,
       enableTranslate: true,
+      i18n: this.i18n,
+      gridMenu: {
+        resizeOnShowHeaderRow: true
+      },
       pagination: {
         pageSizes: [10, 15, 20, 25, 30, 40, 50, 75, 100],
         pageSize: defaultPageSize,
         totalItems: 0
       },
+
+      presets: {
+        columns: [
+          { columnId: 'name', width: 120 },
+          { columnId: 'gender', width: 55 },
+          { columnId: 'company' },
+          { columnId: 'billing.address.zip' }, // flip column position of Street/Zip to Zip/Street
+          { columnId: 'billing.address.street', width: 120 }
+        ],
+        // you can also type operator as string, e.g.: operator: 'EQ'
+        filters: [
+          { columnId: 'gender', searchTerms: ['male'], operator: OperatorType.equal },
+          { columnId: 'name', searchTerms: ['John Doe'], operator: OperatorType.contains },
+          { columnId: 'company', searchTerms: ['xyz'], operator: 'IN' }
+        ],
+        sorters: [
+          // direction can typed as 'asc' (uppercase or lowercase) and/or use the SortDirection type
+          { columnId: 'name', direction: 'asc' },
+          { columnId: 'company', direction: SortDirection.DESC }
+        ],
+        pagination: { pageNumber: 2, pageSize: 20 }
+      },
+
       backendServiceApi: {
-        service: this.graphqlService,
+        service: new GraphqlService(),
         options: this.getBackendOptions(this.isWithCursor),
         // you can define the onInit callback OR enable the "executeProcessCommandOnInit" flag in the service init
         // onInit: (query) => this.getCustomerApiCall(query)
@@ -151,10 +198,14 @@ export class Example6 {
 
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        this.graphqlQuery = this.graphqlService.buildQuery();
+        this.graphqlQuery = this.aureliaGrid.backendService.buildQuery();
         resolve(mockedResult);
       }, 500);
     });
+  }
+
+  saveCurrentGridState() {
+    console.log('GraphQL current grid state', this.aureliaGrid.gridStateService.getCurrentGridState());
   }
 
   switchLanguage() {

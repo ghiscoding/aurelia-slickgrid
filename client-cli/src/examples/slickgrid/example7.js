@@ -1,6 +1,3 @@
-import { autoinject } from 'aurelia-framework';
-import { Column, GridOption, Formatters } from 'aurelia-slickgrid';
-
 let columnsWithHighlightingById = {};
 
 // create a custom Formatter to highlight negative values in red
@@ -12,22 +9,22 @@ const highlightingFormatter = (row, cell, value, columnDef, dataContext) => {
   }
 };
 
-@autoinject()
 export class Example7 {
   title = 'Example 7: Header Button Plugin';
   subTitle = `
-    This example demonstrates using the <b>Slick.Plugins.HeaderButtons</b> plugin to easily add buttons to colum headers.
+    This example demonstrates using the < b > Slick.Plugins.HeaderButtons</b > plugin to easily add buttons to colum headers.
     These buttons can be specified directly in the column definition, and are very easy to configure and use.
     (<a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Header-Menu-&-Header-Buttons" target="_blank">Wiki docs</a>)
-    <ul>
+      < ul >
       <li>Resize the 1st column to see all icon/command</li>
       <li>Mouse hover the 2nd column to see it's icon/command</li>
       <li>For all the other columns, click on top-right red circle icon to enable highlight of negative numbers.</li>
-    </ul>
+    </ul >
   `;
   columnDefinitions;
   gridOptions;
   dataset = [];
+  aureliaGrid;
   gridObj;
 
   constructor() {
@@ -39,6 +36,11 @@ export class Example7 {
   attached() {
     // populate the dataset once the grid is ready
     this.getData();
+  }
+
+  aureliaGridReady(aureliaGrid) {
+    this.aureliaGrid = aureliaGrid;
+    this.gridObj = aureliaGrid && aureliaGrid.slickGrid;
   }
 
   defineGrid() {
@@ -149,15 +151,11 @@ export class Example7 {
     const mockDataset = [];
     for (let i = 0; i < 100; i++) {
       const d = (mockDataset[i] = {});
-      d['id'] = i;
+      d.id = i;
       for (let j = 0; j < this.columnDefinitions.length; j++) {
         d[j] = Math.round(Math.random() * 10) - 5;
       }
     }
     this.dataset = mockDataset;
-  }
-
-  gridObjChanged(grid) {
-    this.gridObj = grid;
   }
 }

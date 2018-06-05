@@ -1,24 +1,28 @@
 export class Example1 {
   title = 'Example 1: Basic Grid';
-  subTitle = `Simple Grid with Fixed Sizes (800 x 400) using "grid-height" &amp; "grid-width"`;
+  subTitle = 'Simple Grid with Fixed Sizes (800 x 400) using "grid-height" &amp; "grid-width"';
 
-  gridOptions;
-  columnDefinitions;
-  dataset = [];
+  gridOptions1;
+  gridOptions2;
+  columnDefinitions1;
+  columnDefinitions2;
+  dataset1;
+  dataset2;
 
   constructor() {
     // define the grid options & columns and then create the grid itself
-    this.defineGrid();
+    this.defineGrids();
   }
 
   attached() {
-    // populate the dataset once the grid is ready
-    this.getData();
+    // mock some data (different in each dataset)
+    this.dataset1 = this.mockData();
+    this.dataset2 = this.mockData();
   }
 
   /* Define grid Options and Columns */
-  defineGrid() {
-    this.columnDefinitions = [
+  defineGrids() {
+    this.columnDefinitions1 = [
       { id: 'title', name: 'Title', field: 'title', sortable: true, minWidth: 100 },
       { id: 'duration', name: 'Duration (days)', field: 'duration', sortable: true, minWidth: 100 },
       { id: '%', name: '% Complete', field: 'percentComplete', sortable: true, minWidth: 100 },
@@ -26,21 +30,26 @@ export class Example1 {
       { id: 'finish', name: 'Finish', field: 'finish', minWidth: 100 },
       { id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', sortable: true, minWidth: 100 }
     ];
-    this.gridOptions = {
-      enableAutoResize: false
+    this.gridOptions1 = {
+      enableAutoResize: false,
+      enableSorting: true
     };
+
+    // copy the same Grid Options and Column Definitions to 2nd grid
+    this.columnDefinitions2 = this.columnDefinitions1;
+    this.gridOptions2 = this.gridOptions1;
   }
 
-  getData() {
+  mockData() {
     // mock a dataset
-    this.dataset = [];
+    const mockDataset = [];
     for (let i = 0; i < 1000; i++) {
       const randomYear = 2000 + Math.floor(Math.random() * 10);
       const randomMonth = Math.floor(Math.random() * 11);
       const randomDay = Math.floor((Math.random() * 29));
       const randomPercent = Math.round(Math.random() * 100);
 
-      this.dataset[i] = {
+      mockDataset[i] = {
         id: i,
         title: 'Task ' + i,
         duration: Math.round(Math.random() * 100) + '',
@@ -50,5 +59,7 @@ export class Example1 {
         effortDriven: (i % 5 === 0)
       };
     }
+
+    return mockDataset;
   }
 }

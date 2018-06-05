@@ -20,7 +20,7 @@ export class Index {
       { route: 'example11', moduleId: PLATFORM.moduleName('./example11'), name: 'example11', nav: true, title: '11- Add/Update Grid Item' },
       { route: 'example12', moduleId: PLATFORM.moduleName('./example12'), name: 'example12', nav: true, title: '12- Localization (i18n)' },
       { route: 'example13', moduleId: PLATFORM.moduleName('./example13'), name: 'example13', nav: true, title: '13- Grouping & Aggregators' },
-      { route: 'example14', moduleId: PLATFORM.moduleName('./example14'), name: 'example14', nav: true, title: '14- Column Span' },
+      { route: 'example14', moduleId: PLATFORM.moduleName('./example14'), name: 'example14', nav: true, title: '14- Column Span & Header Grouping' },
       { route: 'example15', moduleId: PLATFORM.moduleName('./example15'), name: 'example15', nav: true, title: '15- Grid State & Local Storage' },
     ];
 
