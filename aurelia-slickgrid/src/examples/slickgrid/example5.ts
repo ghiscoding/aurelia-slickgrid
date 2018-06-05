@@ -1,7 +1,7 @@
 import { autoinject } from 'aurelia-framework';
 import data from './sample-data/example-data';
 import { HttpClient } from 'aurelia-http-client';
-import { AureliaGridInstance, Column, FieldType, FilterType, GridOdataService, GridOption, OperatorType } from '../../aurelia-slickgrid';
+import { AureliaGridInstance, Column, FieldType, Filters, GridOdataService, GridOption, OperatorType } from '../../aurelia-slickgrid';
 
 const defaultPageSize = 20;
 const sampleDataRoot = 'src/examples/slickgrid/sample-data';
@@ -48,13 +48,13 @@ export class Example5 {
         id: 'name', name: 'Name', field: 'name', sortable: true, type: FieldType.string,
         filterable: true,
         filter: {
-          type: FilterType.compoundInput
+          model: Filters.compoundInput
         }
       },
       {
         id: 'gender', name: 'Gender', field: 'gender', filterable: true, sortable: true,
         filter: {
-          type: FilterType.singleSelect,
+          model: Filters.singleSelect,
           collection: [{ value: '', label: '' }, { value: 'male', label: 'male' }, { value: 'female', label: 'female' }]
         }
       },

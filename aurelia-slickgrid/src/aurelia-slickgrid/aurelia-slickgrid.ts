@@ -148,7 +148,7 @@ export class AureliaSlickgridCustomElement {
     // for convenience, we provide the property "editor" as an Aurelia-Slickgrid editor complex object
     // however "editor" is used internally by SlickGrid for it's Editor Factory
     // so in our lib we will swap "editor" and copy it into "internalColumnEditor"
-    // then take back "editor.type" and make it the new "editor" so that SlickGrid Editor Factory still works
+    // then take back "editor.model" and make it the new "editor" so that SlickGrid Editor Factory still works
     // Wrap each editor class in the Factory resolver so consumers of this library can use
     // dependency injection. Aurelia will resolve all dependencies when we pass the container
     // and allow slickgrid to pass its arguments to the editors constructor last
@@ -156,7 +156,7 @@ export class AureliaSlickgridCustomElement {
     // https://github.com/aurelia/dependency-injection/blob/master/src/resolvers.js
     this._columnDefinitions = this.columnDefinitions.map((c: Column | any) => ({
       ...c,
-      editor: c.editor && Factory.of(c.editor.type).get(this.container),
+      editor: c.editor && Factory.of(c.editor.model).get(this.container),
       internalColumnEditor: { ...c.editor }
     }));
 

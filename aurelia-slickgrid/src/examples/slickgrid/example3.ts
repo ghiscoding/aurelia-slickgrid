@@ -94,7 +94,7 @@ export class Example3 {
       sortable: true,
       type: FieldType.string,
       editor: {
-        type: Editors.longText
+        model: Editors.longText
       },
       minWidth: 100,
       onCellChange: (e: Event, args: OnEventArgs) => {
@@ -108,7 +108,7 @@ export class Example3 {
       sortable: true,
       type: FieldType.string,
       editor: {
-        type: CustomInputEditor
+        model: CustomInputEditor
       },
       minWidth: 70
     }, {
@@ -118,7 +118,7 @@ export class Example3 {
       sortable: true,
       type: FieldType.number,
       editor: {
-        type: Editors.float,
+        model: Editors.float,
         params: { decimalPlaces: 2 }
       },
       minWidth: 100
@@ -129,7 +129,7 @@ export class Example3 {
       formatter: Formatters.multiple,
       type: FieldType.number,
       editor: {
-        type: Editors.singleSelect,
+        model: Editors.singleSelect,
         collection: Array.from(Array(101).keys()).map(k => ({ value: k, label: k })),
         collectionSortBy: {
           property: 'label',
@@ -154,7 +154,7 @@ export class Example3 {
       minWidth: 100,
       type: FieldType.date,
       editor: {
-        type: Editors.date
+        model: Editors.date
       },
     }, {
       id: 'finish',
@@ -165,7 +165,7 @@ export class Example3 {
       minWidth: 100,
       type: FieldType.date,
       editor: {
-        type: Editors.date
+        model: Editors.date
       },
     }, {
       id: 'effort-driven',
@@ -174,7 +174,7 @@ export class Example3 {
       formatter: Formatters.checkmark,
       type: FieldType.number,
       editor: {
-        type: Editors.checkbox,
+        model: Editors.checkbox,
       },
       minWidth: 70
     }, {
@@ -185,7 +185,7 @@ export class Example3 {
       sortable: true,
       type: FieldType.string,
       editor: {
-        type: Editors.multipleSelect,
+        model: Editors.multipleSelect,
         collection: Array.from(Array(12).keys()).map(k => ({ value: `Task ${k}`, label: `Task ${k}` })),
         collectionSortBy: {
           property: 'label',

@@ -1,5 +1,5 @@
 import { singleton } from 'aurelia-framework';
-import { mapOperatorType, mapOperatorByFilterType, mapOperatorByFieldType } from './utilities';
+import { mapOperatorType, mapOperatorByFieldType } from './utilities';
 import {
   BackendService,
   Column,
@@ -395,7 +395,7 @@ export class GraphqlService implements BackendService {
         // if we didn't find an Operator but we have a Filter Type, we should use default Operator
         // multipleSelect is "IN", while singleSelect is "EQ", else don't map any operator
         if (!operator && columnDef.filter) {
-          operator = mapOperatorByFilterType(columnDef.filter.type || '');
+          operator = columnDef.filter.operator;
         }
 
         // if we still don't have an operator find the proper Operator to use by it's field type

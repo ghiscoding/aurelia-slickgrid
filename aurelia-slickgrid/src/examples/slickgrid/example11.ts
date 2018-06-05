@@ -56,7 +56,7 @@ export class Example11 {
         sortable: true,
         type: FieldType.string,
         editor: {
-          type: Editors.longText
+          model: Editors.longText
         }
       },
       {
@@ -64,7 +64,7 @@ export class Example11 {
         sortable: true,
         type: FieldType.number,
         editor: {
-          type: Editors.text
+          model: Editors.text
         },
         onCellChange: (e: Event, args: OnEventArgs) => {
           alert('onCellChange directly attached to the column definition');
@@ -76,7 +76,7 @@ export class Example11 {
         formatter: Formatters.percentCompleteBar,
         type: FieldType.number,
         editor: {
-          type: Editors.integer
+          model: Editors.integer
         }
       },
       {
@@ -86,7 +86,7 @@ export class Example11 {
         type: FieldType.date,
         /*
         editor: {
-          type: Editors.date
+          model: Editors.date
         }
         */
       },
@@ -100,7 +100,7 @@ export class Example11 {
         formatter: Formatters.checkmark,
         type: FieldType.number,
         editor: {
-          type: Editors.checkbox
+          model: Editors.checkbox
         }
       }
     ];

@@ -6,7 +6,7 @@ import {
   DelimiterType,
   FieldType,
   FileType,
-  FilterType,
+  Filters,
   Formatter,
   Formatters,
   GridOption
@@ -80,7 +80,7 @@ export class Example12 {
         filterable: true,
         filter: {
           collection: [{ value: '', label: '' }, { value: true, labelKey: 'TRUE' }, { value: false, labelKey: 'FALSE' }],
-          type: FilterType.singleSelect,
+          model: Filters.singleSelect,
           enableTranslateLabel: true,
           filterOptions: {
             autoDropWidth: true
@@ -98,7 +98,7 @@ export class Example12 {
             property: 'labelKey', // will sort by translated value since "enableTranslateLabel" is true
             sortDesc: true
           },
-          type: FilterType.singleSelect,
+          model: Filters.singleSelect,
           enableTranslateLabel: true,
           filterOptions: {
             autoDropWidth: true
