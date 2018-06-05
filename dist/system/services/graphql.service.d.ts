@@ -1,7 +1,5 @@
-import { I18N } from 'aurelia-i18n';
 import { BackendService, ColumnFilters, ColumnSort, CurrentFilter, CurrentPagination, CurrentSorter, FilterChangedArgs, GraphqlCursorPaginationOption, GraphqlDatasetFilter, GraphqlPaginationOption, GraphqlServiceOption, GraphqlSortingOption, Pagination, PaginationChangedArgs, SortChangedArgs } from './../models/index';
 export declare class GraphqlService implements BackendService {
-    private i18n;
     private _currentFilters;
     private _currentPagination;
     private _currentSorters;
@@ -10,7 +8,6 @@ export declare class GraphqlService implements BackendService {
     pagination: Pagination;
     defaultOrderBy: GraphqlSortingOption;
     defaultPaginationOptions: GraphqlPaginationOption | GraphqlCursorPaginationOption;
-    constructor(i18n: I18N);
     /** Getter for the Grid Options pulled through the Grid Object */
     private readonly _gridOptions;
     /** Getter for the Column Definitions pulled through the Grid Object */
@@ -54,9 +51,9 @@ export declare class GraphqlService implements BackendService {
     getCurrentSorters(): CurrentSorter[];
     resetPaginationOptions(): void;
     updateOptions(serviceOptions?: GraphqlServiceOption): void;
-    onFilterChanged(event: Event, args: FilterChangedArgs): Promise<string>;
-    onPaginationChanged(event: Event, args: PaginationChangedArgs): string;
-    onSortChanged(event: Event, args: SortChangedArgs): string;
+    processOnFilterChanged(event: Event, args: FilterChangedArgs): Promise<string>;
+    processOnPaginationChanged(event: Event, args: PaginationChangedArgs): string;
+    processOnSortChanged(event: Event, args: SortChangedArgs): string;
     /**
      * loop through all columns to inspect filters & update backend service filteringOptions
      * @param columnFilters

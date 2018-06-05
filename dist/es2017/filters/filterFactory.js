@@ -5,10 +5,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { inject, Container } from 'aurelia-framework';
-import { FilterType } from '../models/index';
 import { SlickgridConfig } from '../slickgrid-config';
-/** The name of the plugins the factory will initialize */
-export const PLUGIN_NAME = 'GRID_FILTERS';
 /**
  * Factory class to create a Filter interface implementation
  */
@@ -24,21 +21,19 @@ let FilterFactory = class FilterFactory {
         this._options = config.options;
     }
     /**
-     * Creates a new Filter from the provided filterType
-     * @param {FilterType | FormElementType | string} [filterType] the type of filter to create
-     * as an enum or custom string. The default filter type will be used if no value is passed
+     * Creates a new Filter from the provided ColumnFilter or fallbacks to the default filter
+     * @param {columnFilter} a ColumnFilter object
      * @return {Filter} the new Filter
      */
-    createFilter(filterType) {
-        const filters = this.container.getAll(PLUGIN_NAME);
-        let filter = filters.find((f) => f.filterType === filterType);
-        // default to the input filter type when none is found
-        if (!filter) {
-            filter = filters.find((f) => f.filterType === this._options.defaultFilterType);
-            if (!filter) {
-                const enumOrCustom = FilterType[this._options.defaultFilterType] ? 'FilterType.enum' : 'custom';
-                throw new Error(`Default filter of type ${enumOrCustom}=${this._options.defaultFilterType} was not found`);
-            }
+    createFilter(columnFilter) {
+        let filter;
+        if (columnFilter && columnFilter.model) {
+            // the model either needs to be retrieved or is already instantiated
+            filter = typeof columnFilter.model === 'function' ? this.container.get(columnFilter.model) : columnFilter.model;
+        }
+        // fallback to the default filter
+        if (!filter && this._options.defaultFilter) {
+            filter = this.container.get(this._options.defaultFilter);
         }
         return filter;
     }

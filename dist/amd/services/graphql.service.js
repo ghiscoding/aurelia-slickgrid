@@ -12,7 +12,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-define(["require", "exports", "aurelia-framework", "aurelia-i18n", "./utilities", "./../models/index", "./graphqlQueryBuilder"], function (require, exports, aurelia_framework_1, aurelia_i18n_1, utilities_1, index_1, graphqlQueryBuilder_1) {
+define(["require", "exports", "aurelia-framework", "./utilities", "./../models/index", "./graphqlQueryBuilder"], function (require, exports, aurelia_framework_1, utilities_1, index_1, graphqlQueryBuilder_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     // timer for keeping track of user typing waits
@@ -21,8 +21,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "./utilities"
     var DEFAULT_ITEMS_PER_PAGE = 25;
     var DEFAULT_PAGE_SIZE = 20;
     var GraphqlService = /** @class */ (function () {
-        function GraphqlService(i18n) {
-            this.i18n = i18n;
+        function GraphqlService() {
             this.defaultOrderBy = { field: 'id', direction: index_1.SortDirection.ASC };
             this.defaultPaginationOptions = {
                 first: DEFAULT_ITEMS_PER_PAGE,
@@ -108,7 +107,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "./utilities"
             }
             if (this.options.addLocaleIntoQuery) {
                 // first: 20, ... locale: "en-CA"
-                datasetFilters.locale = this.i18n.getLocale() || 'en';
+                datasetFilters.locale = this._gridOptions && this._gridOptions.i18n && this._gridOptions.i18n.getLocale() || 'en';
             }
             if (this.options.extraQueryArguments) {
                 // first: 20, ... userId: 123
@@ -214,10 +213,10 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "./utilities"
         /*
          * FILTERING
          */
-        GraphqlService.prototype.onFilterChanged = function (event, args) {
+        GraphqlService.prototype.processOnFilterChanged = function (event, args) {
             var _this = this;
             var gridOptions = this._gridOptions || args.grid.getOptions();
-            var backendApi = gridOptions.backendServiceApi || gridOptions.onBackendEventApi;
+            var backendApi = gridOptions.backendServiceApi;
             if (backendApi === undefined) {
                 throw new Error('Something went wrong in the GraphqlService, "backendServiceApi" is not initialized');
             }
@@ -268,7 +267,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "./utilities"
          *     }
          *   }
          */
-        GraphqlService.prototype.onPaginationChanged = function (event, args) {
+        GraphqlService.prototype.processOnPaginationChanged = function (event, args) {
             var pageSize = +(args.pageSize || ((this.pagination) ? this.pagination.pageSize : DEFAULT_PAGE_SIZE));
             this.updatePagination(args.newPage, pageSize);
             // build the GraphQL query which we will use in the WebAPI callback
@@ -279,7 +278,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "./utilities"
          * we will use sorting as per a Facebook suggestion on a Github issue (with some small changes)
          * https://github.com/graphql/graphql-relay-js/issues/20#issuecomment-220494222
          */
-        GraphqlService.prototype.onSortChanged = function (event, args) {
+        GraphqlService.prototype.processOnSortChanged = function (event, args) {
             var sortColumns = (args.multiColumnSort) ? args.sortCols : new Array({ sortCol: args.sortCol, sortAsc: args.sortAsc });
             // loop through all columns to inspect sorters & set the query
             this.updateSorters(sortColumns);
@@ -311,7 +310,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "./utilities"
                     }
                     var fieldName = columnDef.queryField || columnDef.queryFieldFilter || columnDef.field || columnDef.name || '';
                     var searchTerms = (columnFilter_1 ? columnFilter_1.searchTerms : null) || [];
-                    var fieldSearchValue = columnFilter_1.searchTerm;
+                    var fieldSearchValue = (Array.isArray(searchTerms) && searchTerms.length === 1) ? searchTerms[0] : '';
                     if (typeof fieldSearchValue === 'undefined') {
                         fieldSearchValue = '';
                     }
@@ -328,7 +327,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "./utilities"
                         return "continue";
                     }
                     // when having more than 1 search term (we need to create a CSV string for GraphQL "IN" or "NOT IN" filter search)
-                    if (searchTerms && searchTerms.length > 0) {
+                    if (searchTerms && searchTerms.length > 1) {
                         searchValue = searchTerms.join(',');
                     }
                     else if (typeof searchValue === 'string') {
@@ -341,7 +340,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "./utilities"
                     // if we didn't find an Operator but we have a Filter Type, we should use default Operator
                     // multipleSelect is "IN", while singleSelect is "EQ", else don't map any operator
                     if (!operator && columnDef.filter) {
-                        operator = utilities_1.mapOperatorByFilterType(columnDef.filter.type || '');
+                        operator = columnDef.filter.operator;
                     }
                     // if we still don't have an operator find the proper Operator to use by it's field type
                     if (!operator) {
@@ -498,14 +497,11 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "./utilities"
                 if (Array.isArray(filter.searchTerms)) {
                     tmpFilter.searchTerms = filter.searchTerms;
                 }
-                else {
-                    tmpFilter.searchTerm = filter.searchTerm;
-                }
                 return tmpFilter;
             });
         };
         GraphqlService = __decorate([
-            aurelia_framework_1.inject(aurelia_i18n_1.I18N)
+            aurelia_framework_1.singleton(true)
         ], GraphqlService);
         return GraphqlService;
     }());

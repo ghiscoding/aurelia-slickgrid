@@ -24,7 +24,6 @@ var SingleSelectFilter = /** @class */ (function () {
         var _this = this;
         this.collectionService = collectionService;
         this.i18n = i18n;
-        this.filterType = index_1.FilterType.singleSelect;
         this.isFilled = false;
         this.enableTranslateLabel = false;
         // default options used by this Filter, user can overwrite any of these by passing "otions"
@@ -45,10 +44,25 @@ var SingleSelectFilter = /** @class */ (function () {
                     _this.isFilled = false;
                     _this.$filterElm.removeClass('filled').siblings('div .search-filter').removeClass('filled');
                 }
-                _this.callback(undefined, { columnDef: _this.columnDef, operator: 'EQ', searchTerm: selectedItem });
+                _this.callback(undefined, { columnDef: _this.columnDef, operator: 'EQ', searchTerms: [selectedItem] });
             }
         };
     }
+    Object.defineProperty(SingleSelectFilter.prototype, "operator", {
+        get: function () {
+            return index_1.OperatorType.equal;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(SingleSelectFilter.prototype, "gridOptions", {
+        /** Getter for the Grid Options pulled through the Grid Object */
+        get: function () {
+            return (this.grid && this.grid.getOptions) ? this.grid.getOptions() : {};
+        },
+        enumerable: true,
+        configurable: true
+    });
     /**
      * Initialize the Filter
      */
@@ -59,15 +73,14 @@ var SingleSelectFilter = /** @class */ (function () {
         this.grid = args.grid;
         this.callback = args.callback;
         this.columnDef = args.columnDef;
-        this.searchTerm = args.searchTerm || '';
+        this.searchTerms = args.searchTerms || [];
         if (!this.grid || !this.columnDef || !this.columnDef.filter || !this.columnDef.filter.collection) {
-            throw new Error("[Aurelia-SlickGrid] You need to pass a \"collection\" for the MultipleSelect Filter to work correctly. Also each option should include a value/label pair (or value/labelKey when using Locale). For example:: { filter: type: FilterType.multipleSelect, collection: [{ value: true, label: 'True' }, { value: false, label: 'False'}] }");
+            throw new Error("[Aurelia-SlickGrid] You need to pass a \"collection\" for the MultipleSelect Filter to work correctly. Also each option should include a value/label pair (or value/labelKey when using Locale). For example: { filter: { model: Filters.singleSelect, collection: [{ value: true, label: 'True' }, { value: false, label: 'False'}] } }");
         }
         this.enableTranslateLabel = this.columnDef.filter.enableTranslateLabel || false;
         this.labelName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.label : 'label';
         this.valueName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.value : 'value';
         var newCollection = this.columnDef.filter.collection || [];
-        this.gridOptions = this.grid.getOptions();
         // user might want to filter certain items of the collection
         if (this.gridOptions.params && this.columnDef.filter.collectionFilterBy) {
             var filterBy = this.columnDef.filter.collectionFilterBy;
@@ -78,23 +91,24 @@ var SingleSelectFilter = /** @class */ (function () {
             var sortBy = this.columnDef.filter.collectionSortBy;
             newCollection = this.collectionService.sortCollection(newCollection, sortBy, this.enableTranslateLabel);
         }
+        var searchTerm = (Array.isArray(this.searchTerms) && this.searchTerms[0]) || '';
+        if (typeof searchTerm === 'boolean' || typeof searchTerm === 'number') {
+            searchTerm = "" + searchTerm;
+        }
         // step 1, create HTML string template
-        var filterTemplate = this.buildTemplateHtmlString(newCollection || []);
+        var filterTemplate = this.buildTemplateHtmlString(newCollection || [], searchTerm);
         // step 2, create the DOM Element of the filter & pre-load search term
         this.createDomElement(filterTemplate);
     };
     /**
      * Clear the filter values
      */
-    SingleSelectFilter.prototype.clear = function (triggerFilterChange) {
-        if (triggerFilterChange === void 0) { triggerFilterChange = true; }
+    SingleSelectFilter.prototype.clear = function () {
         if (this.$filterElm && this.$filterElm.multipleSelect) {
             // reload the filter element by it's id, to make sure it's still a valid element (because of some issue in the GraphQL example)
             // this.$filterElm = $(`#${this.$filterElm[0].id}`);
             this.$filterElm.multipleSelect('setSelects', []);
-            if (triggerFilterChange) {
-                this.callback(undefined, { columnDef: this.columnDef, operator: 'IN', searchTerm: undefined });
-            }
+            this.callback(undefined, { columnDef: this.columnDef, clearFilterTriggered: true });
         }
     };
     /**
@@ -120,15 +134,15 @@ var SingleSelectFilter = /** @class */ (function () {
     /**
      * Create the HTML template as a string
      */
-    SingleSelectFilter.prototype.buildTemplateHtmlString = function (optionCollection) {
+    SingleSelectFilter.prototype.buildTemplateHtmlString = function (optionCollection, searchTerm) {
         var _this = this;
         var options = '';
         optionCollection.forEach(function (option) {
             if (!option || (option[_this.labelName] === undefined && option.labelKey === undefined)) {
-                throw new Error("A collection with value/label (or value/labelKey when using Locale) is required to populate the Select list, for example:: { filter: type: FilterType.singleSelect, collection: [ { value: '1', label: 'One' } ]')");
+                throw new Error("A collection with value/label (or value/labelKey when using Locale) is required to populate the Select list, for example: { filter: { model: Filter.singleSelect, collection: [ { value: '1', label: 'One' } ] } }");
             }
             var labelKey = (option.labelKey || option[_this.labelName]);
-            var selected = (option[_this.valueName] === _this.searchTerm) ? 'selected' : '';
+            var selected = (option[_this.valueName] === searchTerm) ? 'selected' : '';
             var textLabel = ((option.labelKey || _this.enableTranslateLabel) && _this.i18n && typeof _this.i18n.tr === 'function') ? _this.i18n.tr(labelKey || ' ') : labelKey;
             // html text of each select option
             options += "<option value=\"" + option[_this.valueName] + "\" " + selected + ">" + textLabel + "</option>";

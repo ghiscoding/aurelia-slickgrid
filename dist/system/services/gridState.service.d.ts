@@ -1,14 +1,16 @@
-import { CurrentFilter, CurrentPagination, CurrentSorter, GridState } from './../models/index';
-import { FilterService, SortService } from './../services/index';
+import { Column, CurrentColumn, CurrentFilter, CurrentPagination, CurrentSorter, GridState } from './../models/index';
+import { ControlAndPluginService, FilterService, SortService } from './../services/index';
 import { EventAggregator } from 'aurelia-event-aggregator';
 export declare class GridStateService {
     private ea;
+    private _eventHandler;
+    private _columns;
+    private _currentColumns;
     private _grid;
-    private _preset;
+    private controlAndPluginService;
     private filterService;
-    private _filterSubcription;
-    private _sorterSubcription;
     private sortService;
+    private subscriptions;
     constructor(ea: EventAggregator);
     /** Getter for the Grid Options pulled through the Grid Object */
     private readonly _gridOptions;
@@ -18,13 +20,35 @@ export declare class GridStateService {
      * @param filterService
      * @param sortService
      */
-    init(grid: any, filterService: FilterService, sortService: SortService): void;
+    init(grid: any, controlAndPluginService: ControlAndPluginService, filterService: FilterService, sortService: SortService): void;
+    /** Dispose of all the SlickGrid & Aurelia subscriptions */
     dispose(): void;
     /**
      * Get the current grid state (filters/sorters/pagination)
      * @return grid state
      */
     getCurrentGridState(): GridState;
+    /**
+     * Get the Columns (and their state: visibility/position) that are currently applied in the grid
+     * @return current columns
+     */
+    getColumns(): Column[];
+    /**
+     * From an array of Grid Column Definitions, get the associated Current Columns
+     * @param gridColumns
+     */
+    getAssociatedCurrentColumns(gridColumns: Column[]): CurrentColumn[];
+    /**
+     * From an array of Current Columns, get the associated Grid Column Definitions
+     * @param grid
+     * @param currentColumns
+     */
+    getAssociatedGridColumns(grid: any, currentColumns: CurrentColumn[]): Column[];
+    /**
+     * Get the Columns (and their state: visibility/position) that are currently applied in the grid
+     * @return current columns
+     */
+    getCurrentColumns(): CurrentColumn[];
     /**
      * Get the Filters (and their state, columnId, searchTerm(s)) that are currently applied in the grid
      * @return current filters
@@ -40,4 +64,22 @@ export declare class GridStateService {
      * @return current sorters
      */
     getCurrentSorters(): CurrentSorter[] | null;
+    /**
+     * Hook a SlickGrid Extension Event to a Grid State change event
+     * @param extension name
+     * @param grid
+     */
+    hookExtensionEventToGridStateChange(extensionName: string, eventName: string): void;
+    /**
+     * Hook a Grid Event to a Grid State change event
+     * @param event name
+     * @param grid
+     */
+    hookSlickGridEventToGridStateChange(eventName: string, grid: any): void;
+    resetColumns(columnDefinitions?: Column[]): void;
+    /**
+     * Subscribe to all necessary SlickGrid or Service Events that deals with a Grid change,
+     * when triggered, we will publish a Grid State Event with current Grid State
+     */
+    subscribeToAllGridChanges(grid: any): void;
 }

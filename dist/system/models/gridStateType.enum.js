@@ -6,6 +6,7 @@ System.register([], function (exports_1, context_1) {
         setters: [],
         execute: function () {
             (function (GridStateType) {
+                GridStateType["columns"] = "columns";
                 GridStateType["filter"] = "filter";
                 GridStateType["pagination"] = "pagination";
                 GridStateType["sorter"] = "sorter";

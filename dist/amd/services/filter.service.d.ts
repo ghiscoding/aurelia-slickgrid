@@ -63,7 +63,7 @@ export declare class FilterService {
      * At the end of the day, when creating the Filter (DOM Element), it will use these searchTerm(s) so we can take advantage of that without recoding each Filter type (DOM element)
      * @param grid
      */
-    populateColumnFilterSearchTerms(grid: any): Column[];
-    private updateColumnFilters(searchTerm, searchTerms, columnDef);
+    populateColumnFilterSearchTerms(): Column[];
+    private updateColumnFilters(searchTerms, columnDef);
     private triggerEvent(slickEvent, args, e);
 }

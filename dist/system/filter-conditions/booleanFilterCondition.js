@@ -9,7 +9,8 @@ System.register([], function (exports_1, context_1) {
         setters: [],
         execute: function () {
             exports_1("booleanFilterCondition", booleanFilterCondition = function (options) {
-                return parseBoolean(options.cellValue) === parseBoolean(options.searchTerm || false);
+                var searchTerm = Array.isArray(options.searchTerms) && options.searchTerms[0] || '';
+                return parseBoolean(options.cellValue) === parseBoolean(searchTerm);
             });
         }
     };

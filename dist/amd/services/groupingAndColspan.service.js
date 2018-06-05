@@ -96,6 +96,7 @@ define(["require", "exports", "aurelia-event-aggregator", "aurelia-framework", "
             }
         };
         GroupingAndColspanService = __decorate([
+            aurelia_framework_1.singleton(true),
             aurelia_framework_1.inject(aurelia_event_aggregator_1.EventAggregator)
         ], GroupingAndColspanService);
         return GroupingAndColspanService;

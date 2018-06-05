@@ -1,11 +1,14 @@
-System.register(["./models/index"], function (exports_1, context_1) {
+System.register(["./filters/index", "./models/index"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var index_1, GlobalGridOptions;
+    var index_1, index_2, GlobalGridOptions;
     return {
         setters: [
             function (index_1_1) {
                 index_1 = index_1_1;
+            },
+            function (index_2_1) {
+                index_2 = index_2_1;
             }
         ],
         execute: function () {
@@ -35,7 +38,7 @@ System.register(["./models/index"], function (exports_1, context_1) {
                 defaultAureliaEventPrefix: 'asg',
                 defaultSlickgridEventPrefix: 'sg',
                 defaultFilterPlaceholder: '&#128269;',
-                defaultFilterType: index_1.FilterType.input,
+                defaultFilter: index_1.Filters.input,
                 enableAutoResize: true,
                 enableHeaderMenu: true,
                 enableRowSelection: true,
@@ -50,17 +53,23 @@ System.register(["./models/index"], function (exports_1, context_1) {
                 enableTextSelectionOnCells: true,
                 explicitInitialization: true,
                 exportOptions: {
-                    delimiter: index_1.DelimiterType.comma,
+                    delimiter: index_2.DelimiterType.comma,
                     exportWithFormatter: false,
                     filename: 'export',
-                    format: index_1.FileType.csv,
+                    format: index_2.FileType.csv,
                     groupingAggregatorRowText: '',
                     sanitizeDataExport: false,
                     useUtf8WithBom: true
                 },
                 forceFitColumns: false,
                 gridMenu: {
+                    hideClearAllFiltersCommand: false,
+                    hideClearAllSortingCommand: false,
+                    hideExportCsvCommand: false,
+                    hideExportTextDelimitedCommand: true,
                     hideForceFitButton: false,
+                    hideRefreshDatasetCommand: false,
+                    hideToggleFilterCommand: false,
                     hideSyncResizeButton: true,
                     iconCssClass: 'fa fa-bars',
                     iconClearAllFiltersCommand: 'fa fa-filter text-danger',
@@ -71,11 +80,6 @@ System.register(["./models/index"], function (exports_1, context_1) {
                     iconToggleFilterCommand: 'fa fa-random',
                     menuWidth: 16,
                     resizeOnShowHeaderRow: true,
-                    showClearAllFiltersCommand: true,
-                    showClearAllSortingCommand: true,
-                    showExportCsvCommand: true,
-                    showRefreshDatasetCommand: true,
-                    showToggleFilterCommand: true
                 },
                 headerMenu: {
                     autoAlign: true,

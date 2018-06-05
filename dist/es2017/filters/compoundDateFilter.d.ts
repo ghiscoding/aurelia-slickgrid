@@ -1,20 +1,21 @@
 import { I18N } from 'aurelia-i18n';
-import { Column, Filter, FilterArguments, FilterCallback, FilterType, GridOption, OperatorString, OperatorType, SearchTerm } from './../models/index';
+import { Column, Filter, FilterArguments, FilterCallback, OperatorString, OperatorType, SearchTerm } from './../models/index';
 export declare class CompoundDateFilter implements Filter {
     private i18n;
     private $filterElm;
     private $filterInputElm;
     private $selectOperatorElm;
     private _currentValue;
+    private _operator;
     flatInstance: any;
     grid: any;
-    gridOptions: GridOption;
-    operator: OperatorType | OperatorString | undefined;
-    searchTerm: SearchTerm | undefined;
+    searchTerms: SearchTerm[];
     columnDef: Column;
     callback: FilterCallback;
-    filterType: FilterType;
     constructor(i18n: I18N);
+    /** Getter for the Grid Options pulled through the Grid Object */
+    private readonly gridOptions;
+    operator: OperatorType | OperatorString;
     /**
      * Initialize the Filter
      */
@@ -22,7 +23,7 @@ export declare class CompoundDateFilter implements Filter {
     /**
      * Clear the filter value
      */
-    clear(triggerFilterKeyup?: boolean): void;
+    clear(): void;
     /**
      * destroy the filter
      */
@@ -30,16 +31,16 @@ export declare class CompoundDateFilter implements Filter {
     /**
      * Set value(s) on the DOM element
      */
-    setValues(values: SearchTerm): void;
-    private buildDatePickerInput(searchTerm);
+    setValues(values: SearchTerm[]): void;
+    private buildDatePickerInput(searchTerm?);
     private buildSelectOperatorHtmlString();
     private getOptionValues();
     /**
      * Create the DOM element
      */
-    private createDomElement();
+    private createDomElement(searchTerm?);
     private loadFlatpickrLocale(locale);
-    private onTriggerEvent(e);
+    private onTriggerEvent(e, clearFilterTriggered?);
     private hide();
     private show();
 }

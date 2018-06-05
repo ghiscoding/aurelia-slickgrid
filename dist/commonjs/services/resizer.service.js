@@ -155,6 +155,7 @@ var ResizerService = /** @class */ (function () {
         }, delay);
     };
     ResizerService = __decorate([
+        aurelia_framework_1.singleton(true),
         aurelia_framework_1.inject(aurelia_event_aggregator_1.EventAggregator)
     ], ResizerService);
     return ResizerService;

@@ -7,13 +7,22 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import { inject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import { mapFlatpickrDateFormatWithFieldType } from '../services/utilities';
-import { FieldType, FilterType } from './../models/index';
+import { FieldType, OperatorType } from './../models/index';
 import * as flatpickr from 'flatpickr';
 import * as $ from 'jquery';
 let CompoundDateFilter = class CompoundDateFilter {
     constructor(i18n) {
         this.i18n = i18n;
-        this.filterType = FilterType.compoundDate;
+    }
+    /** Getter for the Grid Options pulled through the Grid Object */
+    get gridOptions() {
+        return (this.grid && this.grid.getOptions) ? this.grid.getOptions() : {};
+    }
+    set operator(op) {
+        this._operator = op;
+    }
+    get operator() {
+        return this._operator || OperatorType.empty;
     }
     /**
      * Initialize the Filter
@@ -24,13 +33,12 @@ let CompoundDateFilter = class CompoundDateFilter {
             this.callback = args.callback;
             this.columnDef = args.columnDef;
             this.operator = args.operator || '';
-            this.searchTerm = args.searchTerm;
-            if (this.grid && typeof this.grid.getOptions === 'function') {
-                this.gridOptions = this.grid.getOptions();
-            }
+            this.searchTerms = args.searchTerms || [];
+            // date input can only have 1 search term, so we will use the 1st array index if it exist
+            const searchTerm = (Array.isArray(this.searchTerms) && this.searchTerms[0]) || '';
             // step 1, create the DOM Element of the filter which contain the compound Operator+Input
             // and initialize it if searchTerm is filled
-            this.$filterElm = this.createDomElement();
+            this.$filterElm = this.createDomElement(searchTerm);
             // step 3, subscribe to the keyup event and run the callback when that happens
             // also add/remove "filled" class for styling purposes
             this.$filterInputElm.keyup((e) => {
@@ -44,7 +52,7 @@ let CompoundDateFilter = class CompoundDateFilter {
     /**
      * Clear the filter value
      */
-    clear(triggerFilterKeyup = true) {
+    clear() {
         if (this.flatInstance && this.$selectOperatorElm) {
             this.$selectOperatorElm.val(0);
             this.flatInstance.clear();
@@ -62,8 +70,8 @@ let CompoundDateFilter = class CompoundDateFilter {
      * Set value(s) on the DOM element
      */
     setValues(values) {
-        if (values) {
-            this.flatInstance.setDate(values);
+        if (values && Array.isArray(values)) {
+            this.flatInstance.setDate(values[0]);
         }
     }
     //
@@ -89,10 +97,10 @@ let CompoundDateFilter = class CompoundDateFilter {
                 // when using the time picker, we can simulate a keyup event to avoid multiple backend request
                 // since backend request are only executed after user start typing, changing the time should be treated the same way
                 if (pickerOptions.enableTime) {
-                    this.onTriggerEvent(new CustomEvent('keyup'));
+                    this.onTriggerEvent(new CustomEvent('keyup'), dateStr === '');
                 }
                 else {
-                    this.onTriggerEvent(undefined);
+                    this.onTriggerEvent(undefined, dateStr === '');
                 }
             }
         };
@@ -127,13 +135,9 @@ let CompoundDateFilter = class CompoundDateFilter {
     /**
      * Create the DOM element
      */
-    createDomElement() {
+    createDomElement(searchTerm) {
         const $headerElm = this.grid.getHeaderRowColumn(this.columnDef.id);
         $($headerElm).empty();
-        const searchTerm = (this.searchTerm || '');
-        if (searchTerm) {
-            this._currentValue = searchTerm;
-        }
         // create the DOM Select dropdown for the Operator
         this.$selectOperatorElm = $(this.buildSelectOperatorHtmlString());
         this.$filterInputElm = this.buildDatePickerInput(searchTerm);
@@ -161,8 +165,9 @@ let CompoundDateFilter = class CompoundDateFilter {
             this.$selectOperatorElm.val(this.operator);
         }
         // if there's a search term, we will add the "filled" class for styling purposes
-        if (this.searchTerm) {
+        if (searchTerm) {
             $filterContainerElm.addClass('filled');
+            this._currentValue = searchTerm;
         }
         // append the new DOM element to the header row
         if ($filterContainerElm && typeof $filterContainerElm.appendTo === 'function') {
@@ -178,10 +183,15 @@ let CompoundDateFilter = class CompoundDateFilter {
         }
         return 'en';
     }
-    onTriggerEvent(e) {
-        const selectedOperator = this.$selectOperatorElm.find('option:selected').text();
-        (this._currentValue) ? this.$filterElm.addClass('filled') : this.$filterElm.removeClass('filled');
-        this.callback(e, { columnDef: this.columnDef, searchTerm: this._currentValue, operator: selectedOperator || '=' });
+    onTriggerEvent(e, clearFilterTriggered) {
+        if (clearFilterTriggered) {
+            this.callback(e, { columnDef: this.columnDef, clearFilterTriggered: true });
+        }
+        else {
+            const selectedOperator = this.$selectOperatorElm.find('option:selected').text();
+            (this._currentValue) ? this.$filterElm.addClass('filled') : this.$filterElm.removeClass('filled');
+            this.callback(e, { columnDef: this.columnDef, searchTerms: [this._currentValue], operator: selectedOperator || '' });
+        }
     }
     hide() {
         if (this.flatInstance && typeof this.flatInstance.close === 'function') {

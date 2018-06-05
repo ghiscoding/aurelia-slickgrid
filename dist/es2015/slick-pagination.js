@@ -41,6 +41,10 @@ let SlickPaginationCustomElement = class SlickPaginationCustomElement {
         this._filterSubscriber = this.ea.subscribe('filterService:filterChanged', (data) => {
             this.refreshPagination(true);
         });
+        // Subscribe to Filter clear and go back to page 1 when that happen
+        this._filterSubscriber = this.ea.subscribe('filterService:filterCleared', (data) => {
+            this.refreshPagination(true);
+        });
     }
     gridPaginationOptionsChanged(newGridOptions) {
         this._gridPaginationOptions = newGridOptions;
@@ -98,7 +102,7 @@ let SlickPaginationCustomElement = class SlickPaginationCustomElement {
         this.onPageChanged(event, this.pageNumber);
     }
     refreshPagination(isPageNumberReset = false) {
-        const backendApi = this._gridPaginationOptions.backendServiceApi || this._gridPaginationOptions.onBackendEventApi;
+        const backendApi = this._gridPaginationOptions.backendServiceApi;
         if (!backendApi || !backendApi.service || !backendApi.process) {
             throw new Error(`BackendServiceApi requires at least a "process" function and a "service" defined`);
         }
@@ -132,7 +136,7 @@ let SlickPaginationCustomElement = class SlickPaginationCustomElement {
     onPageChanged(event, pageNumber) {
         return __awaiter(this, void 0, void 0, function* () {
             this.recalculateFromToIndexes();
-            const backendApi = this._gridPaginationOptions.backendServiceApi || this._gridPaginationOptions.onBackendEventApi;
+            const backendApi = this._gridPaginationOptions.backendServiceApi;
             if (!backendApi || !backendApi.service || !backendApi.process) {
                 throw new Error(`BackendServiceApi requires at least a "process" function and a "service" defined`);
             }
@@ -147,7 +151,7 @@ let SlickPaginationCustomElement = class SlickPaginationCustomElement {
                 if (backendApi.preProcess) {
                     backendApi.preProcess();
                 }
-                const query = backendApi.service.onPaginationChanged(event, { newPage: pageNumber, pageSize: itemsPerPage });
+                const query = backendApi.service.processOnPaginationChanged(event, { newPage: pageNumber, pageSize: itemsPerPage });
                 // await for the Promise to resolve the data
                 const processResult = yield backendApi.process(query);
                 // from the result, call our internal post process to update the Dataset and Pagination info

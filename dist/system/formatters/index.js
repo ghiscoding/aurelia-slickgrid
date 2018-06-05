@@ -1,7 +1,7 @@
-System.register(["./arrayToCsvFormatter", "./boldFormatter", "./checkboxFormatter", "./checkmarkFormatter", "./complexObjectFormatter", "./dateIsoFormatter", "./dateTimeIsoAmPmFormatter", "./dateTimeIsoFormatter", "./dateTimeUsAmPmFormatter", "./dateTimeUsFormatter", "./dateUsFormatter", "./deleteIconFormatter", "./dollarColoredBoldFormatter", "./dollarColoredFormatter", "./dollarFormatter", "./editIconFormatter", "./hyperlinkFormatter", "./hyperlinkUriPrefixFormatter", "./infoIconFormatter", "./lowercaseFormatter", "./multipleFormatter", "./percentCompleteFormatter", "./percentCompleteBarFormatter", "./progressBarFormatter", "./translateFormatter", "./translateBooleanFormatter", "./uppercaseFormatter", "./yesNoFormatter", "./collectionFormatter"], function (exports_1, context_1) {
+System.register(["./arrayToCsvFormatter", "./boldFormatter", "./checkboxFormatter", "./checkmarkFormatter", "./collectionFormatter", "./collectionEditorFormatter", "./complexObjectFormatter", "./dateIsoFormatter", "./dateTimeIsoAmPmFormatter", "./dateTimeIsoFormatter", "./dateTimeUsAmPmFormatter", "./dateTimeUsFormatter", "./dateUsFormatter", "./deleteIconFormatter", "./dollarColoredBoldFormatter", "./dollarColoredFormatter", "./dollarFormatter", "./editIconFormatter", "./hyperlinkFormatter", "./hyperlinkUriPrefixFormatter", "./infoIconFormatter", "./lowercaseFormatter", "./multipleFormatter", "./percentFormatter", "./percentCompleteBarFormatter", "./percentCompleteFormatter", "./percentSymbolFormatter", "./progressBarFormatter", "./translateFormatter", "./translateBooleanFormatter", "./uppercaseFormatter", "./yesNoFormatter"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var arrayToCsvFormatter_1, boldFormatter_1, checkboxFormatter_1, checkmarkFormatter_1, complexObjectFormatter_1, dateIsoFormatter_1, dateTimeIsoAmPmFormatter_1, dateTimeIsoFormatter_1, dateTimeUsAmPmFormatter_1, dateTimeUsFormatter_1, dateUsFormatter_1, deleteIconFormatter_1, dollarColoredBoldFormatter_1, dollarColoredFormatter_1, dollarFormatter_1, editIconFormatter_1, hyperlinkFormatter_1, hyperlinkUriPrefixFormatter_1, infoIconFormatter_1, lowercaseFormatter_1, multipleFormatter_1, percentCompleteFormatter_1, percentCompleteBarFormatter_1, progressBarFormatter_1, translateFormatter_1, translateBooleanFormatter_1, uppercaseFormatter_1, yesNoFormatter_1, collectionFormatter_1, Formatters;
+    var arrayToCsvFormatter_1, boldFormatter_1, checkboxFormatter_1, checkmarkFormatter_1, collectionFormatter_1, collectionEditorFormatter_1, complexObjectFormatter_1, dateIsoFormatter_1, dateTimeIsoAmPmFormatter_1, dateTimeIsoFormatter_1, dateTimeUsAmPmFormatter_1, dateTimeUsFormatter_1, dateUsFormatter_1, deleteIconFormatter_1, dollarColoredBoldFormatter_1, dollarColoredFormatter_1, dollarFormatter_1, editIconFormatter_1, hyperlinkFormatter_1, hyperlinkUriPrefixFormatter_1, infoIconFormatter_1, lowercaseFormatter_1, multipleFormatter_1, percentFormatter_1, percentCompleteBarFormatter_1, percentCompleteFormatter_1, percentSymbolFormatter_1, progressBarFormatter_1, translateFormatter_1, translateBooleanFormatter_1, uppercaseFormatter_1, yesNoFormatter_1, Formatters;
     return {
         setters: [
             function (arrayToCsvFormatter_1_1) {
@@ -15,6 +15,12 @@ System.register(["./arrayToCsvFormatter", "./boldFormatter", "./checkboxFormatte
             },
             function (checkmarkFormatter_1_1) {
                 checkmarkFormatter_1 = checkmarkFormatter_1_1;
+            },
+            function (collectionFormatter_1_1) {
+                collectionFormatter_1 = collectionFormatter_1_1;
+            },
+            function (collectionEditorFormatter_1_1) {
+                collectionEditorFormatter_1 = collectionEditorFormatter_1_1;
             },
             function (complexObjectFormatter_1_1) {
                 complexObjectFormatter_1 = complexObjectFormatter_1_1;
@@ -67,11 +73,17 @@ System.register(["./arrayToCsvFormatter", "./boldFormatter", "./checkboxFormatte
             function (multipleFormatter_1_1) {
                 multipleFormatter_1 = multipleFormatter_1_1;
             },
-            function (percentCompleteFormatter_1_1) {
-                percentCompleteFormatter_1 = percentCompleteFormatter_1_1;
+            function (percentFormatter_1_1) {
+                percentFormatter_1 = percentFormatter_1_1;
             },
             function (percentCompleteBarFormatter_1_1) {
                 percentCompleteBarFormatter_1 = percentCompleteBarFormatter_1_1;
+            },
+            function (percentCompleteFormatter_1_1) {
+                percentCompleteFormatter_1 = percentCompleteFormatter_1_1;
+            },
+            function (percentSymbolFormatter_1_1) {
+                percentSymbolFormatter_1 = percentSymbolFormatter_1_1;
             },
             function (progressBarFormatter_1_1) {
                 progressBarFormatter_1 = progressBarFormatter_1_1;
@@ -87,9 +99,6 @@ System.register(["./arrayToCsvFormatter", "./boldFormatter", "./checkboxFormatte
             },
             function (yesNoFormatter_1_1) {
                 yesNoFormatter_1 = yesNoFormatter_1_1;
-            },
-            function (collectionFormatter_1_1) {
-                collectionFormatter_1 = collectionFormatter_1_1;
             }
         ],
         execute: function () {
@@ -109,14 +118,18 @@ System.register(["./arrayToCsvFormatter", "./boldFormatter", "./checkboxFormatte
                  * Looks up values from the columnDefinition.params.collection property and displays the label in CSV or string format
                  * @example
                  * // the grid will display 'foo' and 'bar' and not 1 and 2 from your dataset
-                 * {
-                 *   params: {
-                 *     collection: [{ value: 1, label: 'foo'}, {value: 2, label: 'bar' }]
-                 *   }
-                 * }
+                 * { params: { collection: [{ value: 1, label: 'foo'}, {value: 2, label: 'bar' }] }}
                  * const dataset = [{ value: 1 },{ value: 2 }];
                  */
                 collection: collectionFormatter_1.collectionFormatter,
+                /**
+                 * Looks up values from the columnDefinition.editor.collection property and displays the label in CSV or string format
+                 * @example
+                 * // the grid will display 'foo' and 'bar' and not 1 and 2 from your dataset
+                 * { params: { collection: [{ value: 1, label: 'foo'}, {value: 2, label: 'bar' }] }}
+                 * const dataset = [{ value: 1 },{ value: 2 }];
+                 */
+                collectionEditor: collectionEditorFormatter_1.collectionEditorFormatter,
                 /** Takes a Date object and displays it as an ISO Date format */
                 dateIso: dateIsoFormatter_1.dateIsoFormatter,
                 /** Takes a Date object and displays it as an ISO Date+Time format */
@@ -152,13 +165,17 @@ System.register(["./arrayToCsvFormatter", "./boldFormatter", "./checkboxFormatte
                  * { field: 'title', formatter: Formatters.multiple, params: { formatters: [ Formatters.lowercase, Formatters.uppercase ] }
                  */
                 multiple: multipleFormatter_1.multipleFormatter,
+                /** Takes a cell value number (between 0.0-1.0) and displays a red (<50) or green (>=50) bar */
+                percent: percentFormatter_1.percentFormatter,
                 /** Takes a cell value number (between 0-100) and displays a red (<50) or green (>=50) bar */
                 percentComplete: percentCompleteFormatter_1.percentCompleteFormatter,
                 /** Takes a cell value number (between 0-100) and displays Bootstrap "percent-complete-bar" a red (<30), silver (>30 & <70) or green (>=70) bar */
                 percentCompleteBar: percentCompleteBarFormatter_1.percentCompleteBarFormatter,
+                /** Takes a cell value number (between 0-100) and add the "%" after the number */
+                percentSymbol: percentSymbolFormatter_1.percentSymbolFormatter,
                 /** Takes a cell value number (between 0-100) and displays Bootstrap "progress-bar" a red (<30), silver (>30 & <70) or green (>=70) bar */
                 progressBar: progressBarFormatter_1.progressBarFormatter,
-                /** Takes a cell value and translates it (i18n). Requires an instance of the Translate Service:: `params: { i18n: this.translate } */
+                /** Takes a cell value and translates it (i18n). Requires an instance of the Translate Service:: `i18n: this.translate */
                 translate: translateFormatter_1.translateFormatter,
                 /** Takes a boolean value, cast it to upperCase string and finally translates it (i18n). */
                 translateBoolean: translateBooleanFormatter_1.translateBooleanFormatter,

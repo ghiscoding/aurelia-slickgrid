@@ -1,12 +1,13 @@
-import { Column, Filter, FilterType, FilterArguments, FilterCallback, GridOption, SearchTerm } from './../models/index';
+import { Column, Filter, FilterArguments, FilterCallback, OperatorType, OperatorString, SearchTerm } from './../models/index';
 export declare class InputFilter implements Filter {
     private $filterElm;
     grid: any;
-    gridOptions: GridOption;
-    searchTerm: SearchTerm;
+    searchTerms: SearchTerm[];
     columnDef: Column;
     callback: FilterCallback;
-    filterType: FilterType;
+    /** Getter for the Grid Options pulled through the Grid Object */
+    private readonly gridOptions;
+    readonly operator: OperatorType | OperatorString;
     /**
      * Initialize the Filter
      */
@@ -14,7 +15,7 @@ export declare class InputFilter implements Filter {
     /**
      * Clear the filter value
      */
-    clear(triggerFilterKeyup?: boolean): void;
+    clear(): void;
     /**
      * destroy the filter
      */
@@ -31,5 +32,5 @@ export declare class InputFilter implements Filter {
      * From the html template string, create a DOM element
      * @param filterTemplate
      */
-    private createDomElement(filterTemplate);
+    private createDomElement(filterTemplate, searchTerm?);
 }

@@ -69,6 +69,10 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
             this._filterSubscriber = this.ea.subscribe('filterService:filterChanged', function (data) {
                 _this.refreshPagination(true);
             });
+            // Subscribe to Filter clear and go back to page 1 when that happen
+            this._filterSubscriber = this.ea.subscribe('filterService:filterCleared', function (data) {
+                _this.refreshPagination(true);
+            });
         };
         SlickPaginationCustomElement.prototype.gridPaginationOptionsChanged = function (newGridOptions) {
             this._gridPaginationOptions = newGridOptions;
@@ -127,7 +131,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
         };
         SlickPaginationCustomElement.prototype.refreshPagination = function (isPageNumberReset) {
             if (isPageNumberReset === void 0) { isPageNumberReset = false; }
-            var backendApi = this._gridPaginationOptions.backendServiceApi || this._gridPaginationOptions.onBackendEventApi;
+            var backendApi = this._gridPaginationOptions.backendServiceApi;
             if (!backendApi || !backendApi.service || !backendApi.process) {
                 throw new Error("BackendServiceApi requires at least a \"process\" function and a \"service\" defined");
             }
@@ -165,7 +169,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
                     switch (_a.label) {
                         case 0:
                             this.recalculateFromToIndexes();
-                            backendApi = this._gridPaginationOptions.backendServiceApi || this._gridPaginationOptions.onBackendEventApi;
+                            backendApi = this._gridPaginationOptions.backendServiceApi;
                             if (!backendApi || !backendApi.service || !backendApi.process) {
                                 throw new Error("BackendServiceApi requires at least a \"process\" function and a \"service\" defined");
                             }
@@ -180,7 +184,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
                             if (backendApi.preProcess) {
                                 backendApi.preProcess();
                             }
-                            query = backendApi.service.onPaginationChanged(event, { newPage: pageNumber, pageSize: itemsPerPage });
+                            query = backendApi.service.processOnPaginationChanged(event, { newPage: pageNumber, pageSize: itemsPerPage });
                             return [4 /*yield*/, backendApi.process(query)];
                         case 1:
                             processResult = _a.sent();

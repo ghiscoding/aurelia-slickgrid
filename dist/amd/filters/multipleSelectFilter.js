@@ -24,7 +24,6 @@ define(["require", "exports", "aurelia-i18n", "aurelia-framework", "./../models/
             this.collectionService = collectionService;
             this.i18n = i18n;
             this.isFilled = false;
-            this.filterType = index_1.FilterType.multipleSelect;
             this.enableTranslateLabel = false;
             // default options used by this Filter, user can overwrite any of these by passing "otions"
             this.defaultOptions = {
@@ -53,6 +52,21 @@ define(["require", "exports", "aurelia-i18n", "aurelia-framework", "./../models/
                 }
             };
         }
+        Object.defineProperty(MultipleSelectFilter.prototype, "gridOptions", {
+            /** Getter for the Grid Options pulled through the Grid Object */
+            get: function () {
+                return (this.grid && this.grid.getOptions) ? this.grid.getOptions() : {};
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(MultipleSelectFilter.prototype, "operator", {
+            get: function () {
+                return index_1.OperatorType.in;
+            },
+            enumerable: true,
+            configurable: true
+        });
         /**
          * Initialize the filter template
          */
@@ -65,13 +79,12 @@ define(["require", "exports", "aurelia-i18n", "aurelia-framework", "./../models/
             this.columnDef = args.columnDef;
             this.searchTerms = args.searchTerms || [];
             if (!this.grid || !this.columnDef || !this.columnDef.filter || !this.columnDef.filter.collection) {
-                throw new Error("[Aurelia-SlickGrid] You need to pass a \"collection\" for the MultipleSelect Filter to work correctly. Also each option should include a value/label pair (or value/labelKey when using Locale). For example:: { filter: type: FilterType.multipleSelect, collection: [{ value: true, label: 'True' }, { value: false, label: 'False'}] }");
+                throw new Error("[Aurelia-SlickGrid] You need to pass a \"collection\" for the MultipleSelect Filter to work correctly. Also each option should include a value/label pair (or value/labelKey when using Locale). For example: { filter: { model: Filters.multipleSelect, collection: [{ value: true, label: 'True' }, { value: false, label: 'False'}] } }");
             }
             this.enableTranslateLabel = this.columnDef.filter.enableTranslateLabel || false;
             this.labelName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.label : 'label';
             this.valueName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.value : 'value';
             var newCollection = this.columnDef.filter.collection || [];
-            this.gridOptions = this.grid.getOptions();
             // user might want to filter certain items of the collection
             if (this.gridOptions.params && this.columnDef.filter.collectionFilterBy) {
                 var filterBy = this.columnDef.filter.collectionFilterBy;
@@ -91,16 +104,13 @@ define(["require", "exports", "aurelia-i18n", "aurelia-framework", "./../models/
         /**
          * Clear the filter values
          */
-        MultipleSelectFilter.prototype.clear = function (triggerFilterChange) {
-            if (triggerFilterChange === void 0) { triggerFilterChange = true; }
+        MultipleSelectFilter.prototype.clear = function () {
             if (this.$filterElm && this.$filterElm.multipleSelect) {
                 // reload the filter element by it's id, to make sure it's still a valid element (because of some issue in the GraphQL example)
                 // this.$filterElm = $(`#${this.$filterElm[0].id}`);
                 this.$filterElm.multipleSelect('setSelects', []);
-                if (triggerFilterChange) {
-                    this.$filterElm.removeClass('filled');
-                    this.callback(undefined, { columnDef: this.columnDef, operator: 'IN', searchTerms: [] });
-                }
+                this.$filterElm.removeClass('filled');
+                this.callback(undefined, { columnDef: this.columnDef, clearFilterTriggered: true });
             }
         };
         /**
@@ -130,7 +140,7 @@ define(["require", "exports", "aurelia-i18n", "aurelia-framework", "./../models/
             var options = '';
             optionCollection.forEach(function (option) {
                 if (!option || (option[_this.labelName] === undefined && option.labelKey === undefined)) {
-                    throw new Error("A collection with value/label (or value/labelKey when using Locale) is required to populate the Select list, for example:: { filter: type: FilterType.multipleSelect, collection: [ { value: '1', label: 'One' } ]')");
+                    throw new Error("A collection with value/label (or value/labelKey when using Locale) is required to populate the Select list, for example:: { filter: model: Filters.multipleSelect, collection: [ { value: '1', label: 'One' } ]')");
                 }
                 var labelKey = (option.labelKey || option[_this.labelName]);
                 var selected = (_this.findValueInSearchTerms(option[_this.valueName]) >= 0) ? 'selected' : '';

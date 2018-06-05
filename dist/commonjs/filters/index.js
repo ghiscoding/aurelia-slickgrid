@@ -21,6 +21,5 @@ exports.Filters = {
     select: selectFilter_1.SelectFilter
 };
 var filterFactory_1 = require("./filterFactory");
-exports.PLUGIN_NAME = filterFactory_1.PLUGIN_NAME;
 exports.FilterFactory = filterFactory_1.FilterFactory;
 //# sourceMappingURL=index.js.map

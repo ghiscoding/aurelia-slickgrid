@@ -5,7 +5,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { EventAggregator } from 'aurelia-event-aggregator';
-import { inject } from 'aurelia-framework';
+import { singleton, inject } from 'aurelia-framework';
 import * as $ from 'jquery';
 let GroupingAndColspanService = class GroupingAndColspanService {
     constructor(ea) {
@@ -88,6 +88,7 @@ let GroupingAndColspanService = class GroupingAndColspanService {
     }
 };
 GroupingAndColspanService = __decorate([
+    singleton(true),
     inject(EventAggregator)
 ], GroupingAndColspanService);
 export { GroupingAndColspanService };

@@ -1,18 +1,16 @@
 import { I18N } from 'aurelia-i18n';
-import { Column, Filter, FilterArguments, FilterCallback, FilterType, GridOption, MultipleSelectOption, SearchTerm } from './../models/index';
+import { Column, Filter, FilterArguments, FilterCallback, MultipleSelectOption, OperatorType, OperatorString, SearchTerm } from './../models/index';
 import { CollectionService } from '../services/collection.service';
 export declare class MultipleSelectFilter implements Filter {
     private collectionService;
     private i18n;
     $filterElm: any;
     grid: any;
-    gridOptions: GridOption;
     searchTerms: SearchTerm[];
     columnDef: Column;
     callback: FilterCallback;
     defaultOptions: MultipleSelectOption;
     isFilled: boolean;
-    filterType: FilterType;
     labelName: string;
     valueName: string;
     enableTranslateLabel: boolean;
@@ -20,6 +18,9 @@ export declare class MultipleSelectFilter implements Filter {
      * Initialize the Filter
      */
     constructor(collectionService: CollectionService, i18n: I18N);
+    /** Getter for the Grid Options pulled through the Grid Object */
+    private readonly gridOptions;
+    readonly operator: OperatorType | OperatorString;
     /**
      * Initialize the filter template
      */
@@ -27,7 +28,7 @@ export declare class MultipleSelectFilter implements Filter {
     /**
      * Clear the filter values
      */
-    clear(triggerFilterChange?: boolean): void;
+    clear(): void;
     /**
      * destroy the filter
      */

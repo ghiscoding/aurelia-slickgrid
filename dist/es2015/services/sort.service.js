@@ -12,7 +12,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { inject } from 'aurelia-framework';
+import { inject, singleton } from 'aurelia-framework';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { FieldType, SortDirection, SortDirectionNumber } from './../models/index';
 import { sortByFieldType } from '../sorters/sorterUtilities';
@@ -51,14 +51,14 @@ let SortService = class SortService {
                 throw new Error('Something went wrong when trying to attach the "onBackendSortChanged(event, args)" function, it seems that "args" is not populated correctly');
             }
             const gridOptions = args.grid.getOptions() || {};
-            const backendApi = gridOptions.backendServiceApi || gridOptions.onBackendEventApi;
+            const backendApi = gridOptions.backendServiceApi;
             if (!backendApi || !backendApi.process || !backendApi.service) {
                 throw new Error(`BackendServiceApi requires at least a "process" function and a "service" defined`);
             }
             if (backendApi.preProcess) {
                 backendApi.preProcess();
             }
-            const query = backendApi.service.onSortChanged(event, args);
+            const query = backendApi.service.processOnSortChanged(event, args);
             this.emitSortChanged('remote');
             // await for the Promise to resolve the data
             const processResult = yield backendApi.process(query);
@@ -138,6 +138,11 @@ let SortService = class SortService {
                 }
             }
         }
+        // set current sorter to empty & emit a sort changed event
+        this._currentLocalSorters = [];
+        const sender = (this._gridOptions && this._gridOptions.backendServiceApi) ? 'remote' : 'local';
+        // emit an event when filters are all cleared
+        this.ea.publish('sortService:sortCleared', this._currentLocalSorters);
     }
     getCurrentLocalSorters() {
         return this._currentLocalSorters;
@@ -172,26 +177,24 @@ let SortService = class SortService {
         this._currentLocalSorters = []; // reset current local sorters
         if (this._gridOptions && this._gridOptions.presets && this._gridOptions.presets.sorters) {
             const sorters = this._gridOptions.presets.sorters;
-            this._columnDefinitions.forEach((columnDef) => {
-                const columnPreset = sorters.find((currentSorter) => {
-                    return currentSorter.columnId === columnDef.id;
-                });
-                if (columnPreset) {
+            sorters.forEach((presetSorting) => {
+                const gridColumn = this._columnDefinitions.find((col) => col.id === presetSorting.columnId);
+                if (gridColumn) {
                     sortCols.push({
-                        columnId: columnDef.id,
-                        sortAsc: ((columnPreset.direction.toUpperCase() === SortDirection.ASC) ? true : false),
-                        sortCol: columnDef
+                        columnId: gridColumn.id,
+                        sortAsc: ((presetSorting.direction.toUpperCase() === SortDirection.ASC) ? true : false),
+                        sortCol: gridColumn
                     });
                     // keep current sorters
                     this._currentLocalSorters.push({
-                        columnId: columnDef.id + '',
-                        direction: columnPreset.direction.toUpperCase()
+                        columnId: gridColumn.id + '',
+                        direction: presetSorting.direction.toUpperCase()
                     });
                 }
             });
             if (sortCols.length > 0) {
                 this.onLocalSortChanged(grid, dataView, sortCols);
-                grid.setSortColumns(sortCols); // add sort icon in UI
+                grid.setSortColumns(sortCols); // use this to add sort icon(s) in UI
             }
         }
     }
@@ -244,6 +247,7 @@ let SortService = class SortService {
     }
 };
 SortService = __decorate([
+    singleton(true),
     inject(EventAggregator)
 ], SortService);
 export { SortService };

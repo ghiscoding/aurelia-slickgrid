@@ -4,9 +4,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { inject } from 'aurelia-framework';
-import { I18N } from 'aurelia-i18n';
-import { mapOperatorType, mapOperatorByFilterType, mapOperatorByFieldType } from './utilities';
+import { singleton } from 'aurelia-framework';
+import { mapOperatorType, mapOperatorByFieldType } from './utilities';
 import { FieldType, SortDirection } from './../models/index';
 import QueryBuilder from './graphqlQueryBuilder';
 // timer for keeping track of user typing waits
@@ -15,8 +14,7 @@ const DEFAULT_FILTER_TYPING_DEBOUNCE = 750;
 const DEFAULT_ITEMS_PER_PAGE = 25;
 const DEFAULT_PAGE_SIZE = 20;
 let GraphqlService = class GraphqlService {
-    constructor(i18n) {
-        this.i18n = i18n;
+    constructor() {
         this.defaultOrderBy = { field: 'id', direction: SortDirection.ASC };
         this.defaultPaginationOptions = {
             first: DEFAULT_ITEMS_PER_PAGE,
@@ -93,7 +91,7 @@ let GraphqlService = class GraphqlService {
         }
         if (this.options.addLocaleIntoQuery) {
             // first: 20, ... locale: "en-CA"
-            datasetFilters.locale = this.i18n.getLocale() || 'en';
+            datasetFilters.locale = this._gridOptions && this._gridOptions.i18n && this._gridOptions.i18n.getLocale() || 'en';
         }
         if (this.options.extraQueryArguments) {
             // first: 20, ... userId: 123
@@ -197,9 +195,9 @@ let GraphqlService = class GraphqlService {
     /*
      * FILTERING
      */
-    onFilterChanged(event, args) {
+    processOnFilterChanged(event, args) {
         const gridOptions = this._gridOptions || args.grid.getOptions();
-        const backendApi = gridOptions.backendServiceApi || gridOptions.onBackendEventApi;
+        const backendApi = gridOptions.backendServiceApi;
         if (backendApi === undefined) {
             throw new Error('Something went wrong in the GraphqlService, "backendServiceApi" is not initialized');
         }
@@ -250,7 +248,7 @@ let GraphqlService = class GraphqlService {
      *     }
      *   }
      */
-    onPaginationChanged(event, args) {
+    processOnPaginationChanged(event, args) {
         const pageSize = +(args.pageSize || ((this.pagination) ? this.pagination.pageSize : DEFAULT_PAGE_SIZE));
         this.updatePagination(args.newPage, pageSize);
         // build the GraphQL query which we will use in the WebAPI callback
@@ -261,7 +259,7 @@ let GraphqlService = class GraphqlService {
      * we will use sorting as per a Facebook suggestion on a Github issue (with some small changes)
      * https://github.com/graphql/graphql-relay-js/issues/20#issuecomment-220494222
      */
-    onSortChanged(event, args) {
+    processOnSortChanged(event, args) {
         const sortColumns = (args.multiColumnSort) ? args.sortCols : new Array({ sortCol: args.sortCol, sortAsc: args.sortAsc });
         // loop through all columns to inspect sorters & set the query
         this.updateSorters(sortColumns);
@@ -293,7 +291,7 @@ let GraphqlService = class GraphqlService {
                 }
                 const fieldName = columnDef.queryField || columnDef.queryFieldFilter || columnDef.field || columnDef.name || '';
                 const searchTerms = (columnFilter ? columnFilter.searchTerms : null) || [];
-                let fieldSearchValue = columnFilter.searchTerm;
+                let fieldSearchValue = (Array.isArray(searchTerms) && searchTerms.length === 1) ? searchTerms[0] : '';
                 if (typeof fieldSearchValue === 'undefined') {
                     fieldSearchValue = '';
                 }
@@ -310,7 +308,7 @@ let GraphqlService = class GraphqlService {
                     continue;
                 }
                 // when having more than 1 search term (we need to create a CSV string for GraphQL "IN" or "NOT IN" filter search)
-                if (searchTerms && searchTerms.length > 0) {
+                if (searchTerms && searchTerms.length > 1) {
                     searchValue = searchTerms.join(',');
                 }
                 else if (typeof searchValue === 'string') {
@@ -323,7 +321,7 @@ let GraphqlService = class GraphqlService {
                 // if we didn't find an Operator but we have a Filter Type, we should use default Operator
                 // multipleSelect is "IN", while singleSelect is "EQ", else don't map any operator
                 if (!operator && columnDef.filter) {
-                    operator = mapOperatorByFilterType(columnDef.filter.type || '');
+                    operator = columnDef.filter.operator;
                 }
                 // if we still don't have an operator find the proper Operator to use by it's field type
                 if (!operator) {
@@ -474,15 +472,12 @@ let GraphqlService = class GraphqlService {
             if (Array.isArray(filter.searchTerms)) {
                 tmpFilter.searchTerms = filter.searchTerms;
             }
-            else {
-                tmpFilter.searchTerm = filter.searchTerm;
-            }
             return tmpFilter;
         });
     }
 };
 GraphqlService = __decorate([
-    inject(I18N)
+    singleton(true)
 ], GraphqlService);
 export { GraphqlService };
 //# sourceMappingURL=graphql.service.js.map

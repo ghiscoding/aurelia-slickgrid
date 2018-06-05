@@ -1,5 +1,5 @@
 import { I18N } from 'aurelia-i18n';
-import { Column, GridOption } from './../models/index';
+import { Column, Extension, GridOption } from './../models/index';
 import { ExportService } from './export.service';
 import { FilterService } from './filter.service';
 import { SortService } from './sort.service';
@@ -10,12 +10,10 @@ export declare class ControlAndPluginService {
     private sortService;
     private _dataView;
     private _grid;
+    allColumns: Column[];
     visibleColumns: Column[];
     areVisibleColumnDifferent: boolean;
-    pluginList: {
-        name: string;
-        plugin: any;
-    }[];
+    extensionList: Extension[];
     autoTooltipPlugin: any;
     cellExternalCopyManagerPlugin: any;
     checkboxSelectorPlugin: any;
@@ -33,13 +31,17 @@ export declare class ControlAndPluginService {
     private readonly _columnDefinitions;
     /** Auto-resize all the column in the grid to fit the grid width */
     autoResizeColumns(): void;
-    getPlugin(name?: string): {
-        name: string;
-        plugin: any;
-    } | {
-        name: string;
-        plugin: any;
-    }[] | undefined;
+    /** Get all columns (includes visible and non-visible) */
+    getAllColumns(): Column[];
+    /** Get only visible columns */
+    getVisibleColumns(): Column[];
+    /** Get all Extensions */
+    getAllExtensions(): Extension[];
+    /**
+     * Get an Extension by it's name
+     *  @param name
+     */
+    getExtensionByName(name: string): Extension | undefined;
     /**
      * Attach/Create different Controls or Plugins after the Grid is created
      * @param grid
@@ -95,17 +97,9 @@ export declare class ControlAndPluginService {
      * @param index
      */
     removeColumnByIndex(array: any[], index: number): any[];
-    /**
-     * Translate the Column Picker and it's last 2 checkboxes
-     * Note that the only way that seems to work is to destroy and re-create the Column Picker
-     * Changing only the columnPicker.columnTitle with i18n translate was not enough.
-     */
+    /** Translate the Column Picker and it's last 2 checkboxes */
     translateColumnPicker(): void;
-    /**
-     * Translate the Grid Menu ColumnTitle and CustomTitle.
-     * Note that the only way that seems to work is to destroy and re-create the Grid Menu
-     * Changing only the gridMenu.columnTitle with i18n translate was not enough.
-     */
+    /** Translate the Grid Menu titles and column picker */
     translateGridMenu(): void;
     /**
      * Translate the Header Menu titles, we need to loop through all column definition to re-translate them
@@ -116,7 +110,7 @@ export declare class ControlAndPluginService {
      * We could optionally pass a locale (that will change currently loaded locale), else it will use current locale
      * @param locale to use
      */
-    translateColumnHeaders(locale?: string): void;
+    translateColumnHeaders(locale?: boolean | string, newColumnDefinitions?: Column[]): void;
     /**
      * Render (or re-render) the column headers from column definitions.
      * calling setColumns() will trigger a grid re-render
@@ -138,11 +132,7 @@ export declare class ControlAndPluginService {
      * @return default Header Menu options
      */
     private getDefaultHeaderMenuOptions();
-    /**
-     * Reset all the Grid Menu options which have text to translate
-     * @param gridMenu object
-     */
-    private resetGridMenuTranslations(gridMenu);
+    private getDefaultTranslationByKey(key);
     /**
      * Reset all the Grid Menu options which have text to translate
      * @param columnDefinitions

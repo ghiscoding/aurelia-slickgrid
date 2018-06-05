@@ -1,16 +1,16 @@
-System.register(["aurelia-pal", "./aurelia-slickgrid", "./slick-pagination", "./slickgrid-config", "./filters/index", "./models/index", "./services/index", "./formatters/index", "./grouping-formatters/index", "./sorters/index", "./aggregators/index", "./editors/index", "./filter-conditions/index"], function (exports_1, context_1) {
+System.register(["aurelia-pal", "./aurelia-slickgrid", "./slick-pagination", "./slickgrid-config", "./filters/index", "./models/index", "./formatters/index", "./grouping-formatters/index", "./sorters/index", "./aggregators/index", "./editors/index", "./filter-conditions/index", "./services/index"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     function configure(aurelia, callback) {
         aurelia.globalResources(aurelia_pal_1.PLATFORM.moduleName('./aurelia-slickgrid'));
         aurelia.globalResources(aurelia_pal_1.PLATFORM.moduleName('./slick-pagination'));
         // must register a transient so the container will get a new instance everytime
-        aurelia.container.registerTransient(index_1.PLUGIN_NAME, index_1.Filters.compoundDate);
-        aurelia.container.registerTransient(index_1.PLUGIN_NAME, index_1.Filters.compoundInput);
-        aurelia.container.registerTransient(index_1.PLUGIN_NAME, index_1.Filters.input);
-        aurelia.container.registerTransient(index_1.PLUGIN_NAME, index_1.Filters.multipleSelect);
-        aurelia.container.registerTransient(index_1.PLUGIN_NAME, index_1.Filters.singleSelect);
-        aurelia.container.registerTransient(index_1.PLUGIN_NAME, index_1.Filters.select);
+        aurelia.container.registerTransient(index_1.Filters.compoundDate);
+        aurelia.container.registerTransient(index_1.Filters.compoundInput);
+        aurelia.container.registerTransient(index_1.Filters.input);
+        aurelia.container.registerTransient(index_1.Filters.multipleSelect);
+        aurelia.container.registerTransient(index_1.Filters.singleSelect);
+        aurelia.container.registerTransient(index_1.Filters.select);
         var config = new slickgrid_config_1.SlickgridConfig();
         aurelia.container.registerInstance(slickgrid_config_1.SlickgridConfig, config);
         if (typeof callback === 'function') {
@@ -23,7 +23,9 @@ System.register(["aurelia-pal", "./aurelia-slickgrid", "./slick-pagination", "./
         "configure": true,
         "AureliaSlickgridCustomElement": true,
         "SlickPaginationCustomElement": true,
-        "SlickgridConfig": true
+        "SlickgridConfig": true,
+        "GraphqlService": true,
+        "GridOdataService": true
     };
     function exportStar_1(m) {
         var exports = {};
@@ -72,7 +74,10 @@ System.register(["aurelia-pal", "./aurelia-slickgrid", "./slick-pagination", "./
                 exportStar_1(index_8_1);
             },
             function (index_9_1) {
-                exportStar_1(index_9_1);
+                exports_1({
+                    "GraphqlService": index_9_1["GraphqlService"],
+                    "GridOdataService": index_9_1["GridOdataService"]
+                });
             }
         ],
         execute: function () {

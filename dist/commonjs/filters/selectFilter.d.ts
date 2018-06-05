@@ -1,14 +1,14 @@
 import { I18N } from 'aurelia-i18n';
-import { Column, Filter, FilterType, FilterArguments, FilterCallback, SearchTerm } from './../models/index';
+import { Column, Filter, FilterArguments, FilterCallback, OperatorString, OperatorType, SearchTerm } from './../models/index';
 export declare class SelectFilter implements Filter {
     private i18n;
     $filterElm: any;
     grid: any;
-    searchTerm: SearchTerm;
+    searchTerms: SearchTerm[];
     columnDef: Column;
     callback: FilterCallback;
-    filterType: FilterType;
     constructor(i18n: I18N);
+    readonly operator: OperatorType | OperatorString;
     /**
      * Initialize the Filter
      */
@@ -16,7 +16,7 @@ export declare class SelectFilter implements Filter {
     /**
      * Clear the filter values
      */
-    clear(triggerFilterChange?: boolean): void;
+    clear(): void;
     /**
      * destroy the filter
      */
@@ -30,5 +30,5 @@ export declare class SelectFilter implements Filter {
      * From the html template string, create a DOM element
      * @param filterTemplate
      */
-    private createDomElement(filterTemplate);
+    private createDomElement(filterTemplate, searchTerm?);
 }

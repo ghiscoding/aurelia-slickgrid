@@ -15,7 +15,6 @@ define(["require", "exports", "./compoundDateFilter", "./compoundInputFilter", "
         /** Select filter, which uses native DOM element select */
         select: selectFilter_1.SelectFilter
     };
-    exports.PLUGIN_NAME = filterFactory_1.PLUGIN_NAME;
     exports.FilterFactory = filterFactory_1.FilterFactory;
 });
 //# sourceMappingURL=index.js.map

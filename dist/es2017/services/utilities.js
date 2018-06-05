@@ -1,4 +1,4 @@
-import { FieldType, OperatorType, FilterType } from '../models/index';
+import { FieldType, OperatorType } from '../models/index';
 import * as moment from 'moment';
 /**
  * Simple function to which will loop and create as demanded the number of white spaces,
@@ -265,26 +265,6 @@ export function mapOperatorByFieldType(fieldType) {
         case FieldType.dateTimeUsShortAM_PM:
         default:
             map = OperatorType.equal;
-            break;
-    }
-    return map;
-}
-/**
- * Mapper for query operator by a Filter Type
- * For example a multiple-select typically uses 'IN' operator
- * @param operator
- * @returns string map
- */
-export function mapOperatorByFilterType(filterType) {
-    let map = OperatorType.empty;
-    switch (filterType) {
-        case FilterType.multipleSelect:
-            map = OperatorType.in;
-            break;
-        case FilterType.singleSelect:
-            map = OperatorType.equal;
-            break;
-        default:
             break;
     }
     return map;

@@ -3,6 +3,7 @@ define(["require", "exports"], function (require, exports) {
     Object.defineProperty(exports, "__esModule", { value: true });
     var GridStateType;
     (function (GridStateType) {
+        GridStateType["columns"] = "columns";
         GridStateType["filter"] = "filter";
         GridStateType["pagination"] = "pagination";
         GridStateType["sorter"] = "sorter";

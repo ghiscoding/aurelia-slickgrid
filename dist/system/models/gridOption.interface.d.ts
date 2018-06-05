@@ -1,4 +1,5 @@
-import { AutoResizeOption, BackendEventChanged, BackendServiceApi, Column, ColumnPicker, CheckboxSelector, EditCommand, ExportOption, FilterType, GridMenu, GridState, HeaderButton, HeaderMenu, Pagination } from './../models/index';
+import { I18N } from 'aurelia-i18n';
+import { AutoResizeOption, BackendServiceApi, Column, ColumnPicker, CheckboxSelector, EditCommand, ExportOption, GridMenu, GridState, HeaderButton, HeaderMenu, Pagination } from './../models/index';
 export interface GridOption {
     /** CSS class name used on newly added row */
     addNewRowCssClass?: string;
@@ -29,7 +30,7 @@ export interface GridOption {
         /** what is the maximum tooltip length in pixels (only type the number) */
         maxToolTipLength: number;
     };
-    /** Backend Service API definition (GraphQL/OData Services), also goes with onBackendEventApi */
+    /** Backend Service API definition (GraphQL/OData Services) */
     backendServiceApi?: BackendServiceApi;
     /** CSS class name used to simulate cell flashing */
     cellFlashingCssClass?: string;
@@ -59,8 +60,8 @@ export interface GridOption {
     defaultColumnWidth?: number;
     /** Default placeholder to use in Filters that support placeholder (input, flatpickr) */
     defaultFilterPlaceholder?: string;
-    /** The default filter type to use when none is specified */
-    defaultFilterType?: FilterType | string;
+    /** The default filter model to use when none is specified */
+    defaultFilter?: any;
     /** The default Formatter used */
     defaultFormatter?: any;
     /** Default prefix for SlickGrid Event names */
@@ -123,8 +124,6 @@ export interface GridOption {
     explicitInitialization?: boolean;
     /** Some default options to set for the export service */
     exportOptions?: ExportOption;
-    /** @deprecated Defaults to false, which leads to all Formatters of the grid being evaluated on export. You can also override a column by changing the propery on the column itself */
-    exportWithFormatter?: boolean;
     /** Defaults to 25, which is the grid footer row panel height */
     footerRowHeight?: number;
     /** Do we want to force fit columns in the grid at all time? */
@@ -147,6 +146,8 @@ export interface GridOption {
     headerButton?: HeaderButton;
     /** Header menu options */
     headerMenu?: HeaderMenu;
+    /** i18n translation service instance */
+    i18n?: I18N;
     /** Do we leave space for new rows in the DOM visible buffer */
     leaveSpaceForNewRows?: boolean;
     /** What is the minimum row buffer to use? */
@@ -157,8 +158,6 @@ export interface GridOption {
     multiSelect?: boolean;
     /** Defaults to true, which will display numbers indicating column sort precedence are displayed in the columns when multiple columns selected */
     numberedMultiColumnSort?: boolean;
-    /** DEPRECATED, Please use "backendServiceApi" instead */
-    onBackendEventApi?: BackendEventChanged;
     /** Pagination options, these are used ONLY with a Backend Service API (GraphQL/OData Services) */
     pagination?: Pagination;
     /** "params" is a generic property and can be used to pass custom paramaters to your Formatter/Editor or anything else */

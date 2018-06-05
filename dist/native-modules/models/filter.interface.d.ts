@@ -1,17 +1,15 @@
-import { FilterType, FilterCallback, Column, FilterArguments, SearchTerm } from './../models/index';
+import { FilterCallback, Column, FilterArguments, OperatorType, OperatorString, SearchTerm } from './../models/index';
 export interface Filter {
     /** Column definition */
     columnDef: Column;
     /** Callback that will be run after the filter triggers */
     callback: FilterCallback;
-    /** the type of filter used */
-    filterType?: FilterType | string;
     /** SlickGrid grid object */
     grid: any;
-    /** Defined search term to pre-load */
-    searchTerm?: SearchTerm;
     /** Array of defined search terms to pre-load */
     searchTerms?: SearchTerm[];
+    /** The search operator for the filter */
+    operator: OperatorType | OperatorString;
     /** You can use "params" to pass any types of arguments to your Filter */
     params?: any | any[];
     /** Funtion to initialize the Filter class */

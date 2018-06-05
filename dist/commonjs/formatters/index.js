@@ -4,6 +4,8 @@ var arrayToCsvFormatter_1 = require("./arrayToCsvFormatter");
 var boldFormatter_1 = require("./boldFormatter");
 var checkboxFormatter_1 = require("./checkboxFormatter");
 var checkmarkFormatter_1 = require("./checkmarkFormatter");
+var collectionFormatter_1 = require("./collectionFormatter");
+var collectionEditorFormatter_1 = require("./collectionEditorFormatter");
 var complexObjectFormatter_1 = require("./complexObjectFormatter");
 var dateIsoFormatter_1 = require("./dateIsoFormatter");
 var dateTimeIsoAmPmFormatter_1 = require("./dateTimeIsoAmPmFormatter");
@@ -21,14 +23,15 @@ var hyperlinkUriPrefixFormatter_1 = require("./hyperlinkUriPrefixFormatter");
 var infoIconFormatter_1 = require("./infoIconFormatter");
 var lowercaseFormatter_1 = require("./lowercaseFormatter");
 var multipleFormatter_1 = require("./multipleFormatter");
-var percentCompleteFormatter_1 = require("./percentCompleteFormatter");
+var percentFormatter_1 = require("./percentFormatter");
 var percentCompleteBarFormatter_1 = require("./percentCompleteBarFormatter");
+var percentCompleteFormatter_1 = require("./percentCompleteFormatter");
+var percentSymbolFormatter_1 = require("./percentSymbolFormatter");
 var progressBarFormatter_1 = require("./progressBarFormatter");
 var translateFormatter_1 = require("./translateFormatter");
 var translateBooleanFormatter_1 = require("./translateBooleanFormatter");
 var uppercaseFormatter_1 = require("./uppercaseFormatter");
 var yesNoFormatter_1 = require("./yesNoFormatter");
-var collectionFormatter_1 = require("./collectionFormatter");
 /** Provides a list of different Formatters that will change the cell value displayed in the UI */
 exports.Formatters = {
     /** Takes an array of string and converts it to a comma delimited string */
@@ -45,14 +48,18 @@ exports.Formatters = {
      * Looks up values from the columnDefinition.params.collection property and displays the label in CSV or string format
      * @example
      * // the grid will display 'foo' and 'bar' and not 1 and 2 from your dataset
-     * {
-     *   params: {
-     *     collection: [{ value: 1, label: 'foo'}, {value: 2, label: 'bar' }]
-     *   }
-     * }
+     * { params: { collection: [{ value: 1, label: 'foo'}, {value: 2, label: 'bar' }] }}
      * const dataset = [{ value: 1 },{ value: 2 }];
      */
     collection: collectionFormatter_1.collectionFormatter,
+    /**
+     * Looks up values from the columnDefinition.editor.collection property and displays the label in CSV or string format
+     * @example
+     * // the grid will display 'foo' and 'bar' and not 1 and 2 from your dataset
+     * { params: { collection: [{ value: 1, label: 'foo'}, {value: 2, label: 'bar' }] }}
+     * const dataset = [{ value: 1 },{ value: 2 }];
+     */
+    collectionEditor: collectionEditorFormatter_1.collectionEditorFormatter,
     /** Takes a Date object and displays it as an ISO Date format */
     dateIso: dateIsoFormatter_1.dateIsoFormatter,
     /** Takes a Date object and displays it as an ISO Date+Time format */
@@ -88,13 +95,17 @@ exports.Formatters = {
      * { field: 'title', formatter: Formatters.multiple, params: { formatters: [ Formatters.lowercase, Formatters.uppercase ] }
      */
     multiple: multipleFormatter_1.multipleFormatter,
+    /** Takes a cell value number (between 0.0-1.0) and displays a red (<50) or green (>=50) bar */
+    percent: percentFormatter_1.percentFormatter,
     /** Takes a cell value number (between 0-100) and displays a red (<50) or green (>=50) bar */
     percentComplete: percentCompleteFormatter_1.percentCompleteFormatter,
     /** Takes a cell value number (between 0-100) and displays Bootstrap "percent-complete-bar" a red (<30), silver (>30 & <70) or green (>=70) bar */
     percentCompleteBar: percentCompleteBarFormatter_1.percentCompleteBarFormatter,
+    /** Takes a cell value number (between 0-100) and add the "%" after the number */
+    percentSymbol: percentSymbolFormatter_1.percentSymbolFormatter,
     /** Takes a cell value number (between 0-100) and displays Bootstrap "progress-bar" a red (<30), silver (>30 & <70) or green (>=70) bar */
     progressBar: progressBarFormatter_1.progressBarFormatter,
-    /** Takes a cell value and translates it (i18n). Requires an instance of the Translate Service:: `params: { i18n: this.translate } */
+    /** Takes a cell value and translates it (i18n). Requires an instance of the Translate Service:: `i18n: this.translate */
     translate: translateFormatter_1.translateFormatter,
     /** Takes a boolean value, cast it to upperCase string and finally translates it (i18n). */
     translateBoolean: translateBooleanFormatter_1.translateBooleanFormatter,

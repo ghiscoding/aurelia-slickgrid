@@ -195,7 +195,7 @@ System.register(["aurelia-event-aggregator", "aurelia-framework", "aurelia-i18n"
                             rowOutputString += "\"\"" + delimiter;
                         }
                         // does the user want to evaluate current column Formatter?
-                        var isEvaluatingFormatter = (columnDef.exportWithFormatter !== undefined) ? columnDef.exportWithFormatter : (this._exportOptions.exportWithFormatter || this._gridOptions.exportWithFormatter);
+                        var isEvaluatingFormatter = (columnDef.exportWithFormatter !== undefined) ? columnDef.exportWithFormatter : this._exportOptions.exportWithFormatter;
                         var itemData = '';
                         // did the user provide a Custom Formatter for the export
                         if (columnDef.exportCustomFormatter) {
@@ -327,6 +327,7 @@ System.register(["aurelia-event-aggregator", "aurelia-framework", "aurelia-i18n"
                     }
                 };
                 ExportService = __decorate([
+                    aurelia_framework_1.singleton(true),
                     aurelia_framework_1.inject(aurelia_i18n_1.I18N, aurelia_event_aggregator_1.EventAggregator)
                 ], ExportService);
                 return ExportService;

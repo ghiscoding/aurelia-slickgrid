@@ -7,10 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var aurelia_framework_1 = require("aurelia-framework");
-var index_1 = require("../models/index");
 var slickgrid_config_1 = require("../slickgrid-config");
-/** The name of the plugins the factory will initialize */
-exports.PLUGIN_NAME = 'GRID_FILTERS';
 /**
  * Factory class to create a Filter interface implementation
  */
@@ -26,24 +23,19 @@ var FilterFactory = /** @class */ (function () {
         this._options = config.options;
     }
     /**
-     * Creates a new Filter from the provided filterType
-     * @param {FilterType | FormElementType | string} [filterType] the type of filter to create
-     * as an enum or custom string. The default filter type will be used if no value is passed
+     * Creates a new Filter from the provided ColumnFilter or fallbacks to the default filter
+     * @param {columnFilter} a ColumnFilter object
      * @return {Filter} the new Filter
      */
-    FilterFactory.prototype.createFilter = function (filterType) {
-        var _this = this;
-        var filters = this.container.getAll(exports.PLUGIN_NAME);
-        var filter = filters.find(function (f) {
-            return f.filterType === filterType;
-        });
-        // default to the input filter type when none is found
-        if (!filter) {
-            filter = filters.find(function (f) { return f.filterType === _this._options.defaultFilterType; });
-            if (!filter) {
-                var enumOrCustom = index_1.FilterType[this._options.defaultFilterType] ? 'FilterType.enum' : 'custom';
-                throw new Error("Default filter of type " + enumOrCustom + "=" + this._options.defaultFilterType + " was not found");
-            }
+    FilterFactory.prototype.createFilter = function (columnFilter) {
+        var filter;
+        if (columnFilter && columnFilter.model) {
+            // the model either needs to be retrieved or is already instantiated
+            filter = typeof columnFilter.model === 'function' ? this.container.get(columnFilter.model) : columnFilter.model;
+        }
+        // fallback to the default filter
+        if (!filter && this._options.defaultFilter) {
+            filter = this.container.get(this._options.defaultFilter);
         }
         return filter;
     };

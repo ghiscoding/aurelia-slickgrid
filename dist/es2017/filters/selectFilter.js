@@ -6,12 +6,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 import { I18N } from 'aurelia-i18n';
 import { inject } from 'aurelia-framework';
-import { FilterType } from './../models/index';
+import { OperatorType } from './../models/index';
 import * as $ from 'jquery';
 let SelectFilter = class SelectFilter {
     constructor(i18n) {
         this.i18n = i18n;
-        this.filterType = FilterType.select;
+    }
+    get operator() {
+        return OperatorType.equal;
     }
     /**
      * Initialize the Filter
@@ -23,27 +25,37 @@ let SelectFilter = class SelectFilter {
         this.grid = args.grid;
         this.callback = args.callback;
         this.columnDef = args.columnDef;
-        this.searchTerm = args.searchTerm || '';
+        this.searchTerms = args.searchTerms || [];
+        // filter input can only have 1 search term, so we will use the 1st array index if it exist
+        let searchTerm = (Array.isArray(this.searchTerms) && this.searchTerms[0]) || '';
+        if (typeof searchTerm === 'boolean' || typeof searchTerm === 'number') {
+            searchTerm = `${searchTerm}`;
+        }
         // step 1, create HTML string template
         const filterTemplate = this.buildTemplateHtmlString();
         // step 2, create the DOM Element of the filter & initialize it if searchTerm is filled
-        this.$filterElm = this.createDomElement(filterTemplate);
+        this.$filterElm = this.createDomElement(filterTemplate, searchTerm);
         // step 3, subscribe to the change event and run the callback when that happens
         // also add/remove "filled" class for styling purposes
         this.$filterElm.change((e) => {
-            (e && e.target && e.target.value) ? this.$filterElm.addClass('filled') : this.$filterElm.removeClass('filled');
-            this.callback(e, { columnDef: this.columnDef, operator: 'EQ' });
+            const value = e && e.target && e.target.value || '';
+            if (!value || value === '') {
+                this.callback(e, { columnDef: this.columnDef, clearFilterTriggered: true });
+                this.$filterElm.removeClass('filled');
+            }
+            else {
+                this.$filterElm.addClass('filled');
+                this.callback(e, { columnDef: this.columnDef, searchTerms: [value], operator: 'EQ' });
+            }
         });
     }
     /**
      * Clear the filter values
      */
-    clear(triggerFilterChange = true) {
+    clear() {
         if (this.$filterElm) {
             this.$filterElm.val('');
-            if (triggerFilterChange) {
-                this.$filterElm.trigger('change');
-            }
+            this.$filterElm.trigger('change');
         }
     }
     /**
@@ -66,20 +78,17 @@ let SelectFilter = class SelectFilter {
     // private functions
     // ------------------
     buildTemplateHtmlString() {
-        if (!this.columnDef || !this.columnDef.filter || (!this.columnDef.filter.collection && !this.columnDef.filter.selectOptions)) {
-            throw new Error(`[Aurelia-SlickGrid] You need to pass a "collection" for the Select Filter to work correctly. Also each option should include a value/label pair (or value/labelKey when using Locale). For example:: { filter: type: FilterType.select, collection: [{ value: true, label: 'True' }, { value: false, label: 'False'}] }`);
+        if (!this.columnDef || !this.columnDef.filter || !this.columnDef.filter.collection) {
+            throw new Error(`[Aurelia-SlickGrid] You need to pass a "collection" for the Select Filter to work correctly. Also each option should include a value/label pair (or value/labelKey when using Locale). For example: { filter: { model: Filters.select, collection: [{ value: true, label: 'True' }, { value: false, label: 'False'}] } }`);
         }
-        if (!this.columnDef.filter.collection && this.columnDef.filter.selectOptions) {
-            console.warn(`[Aurelia-SlickGrid] The Select Filter "selectOptions" property will de deprecated in future version. Please use the new "collection" property which is more generic and can be used with other Filters (not just Select).`);
-        }
-        const optionCollection = this.columnDef.filter.collection || this.columnDef.filter.selectOptions || [];
+        const optionCollection = this.columnDef.filter.collection || [];
         const labelName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.label : 'label';
         const valueName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.value : 'value';
         const isEnabledTranslate = (this.columnDef.filter.enableTranslateLabel) ? this.columnDef.filter.enableTranslateLabel : false;
         let options = '';
         optionCollection.forEach((option) => {
             if (!option || (option[labelName] === undefined && option.labelKey === undefined)) {
-                throw new Error(`A collection with value/label (or value/labelKey when using Locale) is required to populate the Select list, for example:: { filter: type: FilterType.select, collection: [ { value: '1', label: 'One' } ]')`);
+                throw new Error(`A collection with value/label (or value/labelKey when using Locale) is required to populate the Select list, for example: { filter: { model: Filters.select, collection: [ { value: '1', label: 'One' } ] } }`);
             }
             const labelKey = option.labelKey || option[labelName];
             const textLabel = ((option.labelKey || isEnabledTranslate) && this.i18n && typeof this.i18n.tr === 'function') ? this.i18n.tr(labelKey || ' ') : labelKey;
@@ -91,13 +100,13 @@ let SelectFilter = class SelectFilter {
      * From the html template string, create a DOM element
      * @param filterTemplate
      */
-    createDomElement(filterTemplate) {
+    createDomElement(filterTemplate, searchTerm) {
         const $headerElm = this.grid.getHeaderRowColumn(this.columnDef.id);
         $($headerElm).empty();
         // create the DOM element & add an ID and filter class
         const $filterElm = $(filterTemplate);
-        const searchTerm = (typeof this.searchTerm === 'boolean') ? `${this.searchTerm}` : this.searchTerm;
-        $filterElm.val(searchTerm || '');
+        const searchTermInput = (searchTerm || '');
+        $filterElm.val(searchTermInput);
         $filterElm.attr('id', `filter-${this.columnDef.id}`);
         $filterElm.data('columnId', this.columnDef.id);
         // append the new DOM element to the header row

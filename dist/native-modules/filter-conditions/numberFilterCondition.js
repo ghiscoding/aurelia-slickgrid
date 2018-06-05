@@ -1,7 +1,13 @@
 import { testFilterCondition } from './filterUtilities';
 export var numberFilterCondition = function (options) {
     var cellValue = parseFloat(options.cellValue);
-    var searchTerm = (typeof options.searchTerm === 'string') ? parseFloat(options.searchTerm) : options.searchTerm;
+    var searchTerm = (Array.isArray(options.searchTerms) && options.searchTerms[0]) || 0;
+    if (typeof searchTerm === 'string') {
+        searchTerm = parseFloat(searchTerm);
+    }
+    if (!searchTerm && (!options.operator || options.operator === '')) {
+        return true;
+    }
     return testFilterCondition(options.operator || '==', cellValue, searchTerm);
 };
 //# sourceMappingURL=numberFilterCondition.js.map

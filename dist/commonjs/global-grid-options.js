@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var index_1 = require("./models/index");
+var index_1 = require("./filters/index");
+var index_2 = require("./models/index");
 /**
  * Default Options that can be passed to the Aurelia-Slickgrid
  */
@@ -27,7 +28,7 @@ exports.GlobalGridOptions = {
     defaultAureliaEventPrefix: 'asg',
     defaultSlickgridEventPrefix: 'sg',
     defaultFilterPlaceholder: '&#128269;',
-    defaultFilterType: index_1.FilterType.input,
+    defaultFilter: index_1.Filters.input,
     enableAutoResize: true,
     enableHeaderMenu: true,
     enableRowSelection: true,
@@ -42,17 +43,23 @@ exports.GlobalGridOptions = {
     enableTextSelectionOnCells: true,
     explicitInitialization: true,
     exportOptions: {
-        delimiter: index_1.DelimiterType.comma,
+        delimiter: index_2.DelimiterType.comma,
         exportWithFormatter: false,
         filename: 'export',
-        format: index_1.FileType.csv,
+        format: index_2.FileType.csv,
         groupingAggregatorRowText: '',
         sanitizeDataExport: false,
         useUtf8WithBom: true
     },
     forceFitColumns: false,
     gridMenu: {
+        hideClearAllFiltersCommand: false,
+        hideClearAllSortingCommand: false,
+        hideExportCsvCommand: false,
+        hideExportTextDelimitedCommand: true,
         hideForceFitButton: false,
+        hideRefreshDatasetCommand: false,
+        hideToggleFilterCommand: false,
         hideSyncResizeButton: true,
         iconCssClass: 'fa fa-bars',
         iconClearAllFiltersCommand: 'fa fa-filter text-danger',
@@ -63,11 +70,6 @@ exports.GlobalGridOptions = {
         iconToggleFilterCommand: 'fa fa-random',
         menuWidth: 16,
         resizeOnShowHeaderRow: true,
-        showClearAllFiltersCommand: true,
-        showClearAllSortingCommand: true,
-        showExportCsvCommand: true,
-        showRefreshDatasetCommand: true,
-        showToggleFilterCommand: true
     },
     headerMenu: {
         autoAlign: true,

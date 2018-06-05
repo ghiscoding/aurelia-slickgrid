@@ -33,8 +33,25 @@ System.register(["aurelia-framework", "aurelia-i18n", "../services/utilities", "
             CompoundDateFilter = /** @class */ (function () {
                 function CompoundDateFilter(i18n) {
                     this.i18n = i18n;
-                    this.filterType = index_1.FilterType.compoundDate;
                 }
+                Object.defineProperty(CompoundDateFilter.prototype, "gridOptions", {
+                    /** Getter for the Grid Options pulled through the Grid Object */
+                    get: function () {
+                        return (this.grid && this.grid.getOptions) ? this.grid.getOptions() : {};
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(CompoundDateFilter.prototype, "operator", {
+                    get: function () {
+                        return this._operator || index_1.OperatorType.empty;
+                    },
+                    set: function (op) {
+                        this._operator = op;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
                 /**
                  * Initialize the Filter
                  */
@@ -45,13 +62,12 @@ System.register(["aurelia-framework", "aurelia-i18n", "../services/utilities", "
                         this.callback = args.callback;
                         this.columnDef = args.columnDef;
                         this.operator = args.operator || '';
-                        this.searchTerm = args.searchTerm;
-                        if (this.grid && typeof this.grid.getOptions === 'function') {
-                            this.gridOptions = this.grid.getOptions();
-                        }
+                        this.searchTerms = args.searchTerms || [];
+                        // date input can only have 1 search term, so we will use the 1st array index if it exist
+                        var searchTerm = (Array.isArray(this.searchTerms) && this.searchTerms[0]) || '';
                         // step 1, create the DOM Element of the filter which contain the compound Operator+Input
                         // and initialize it if searchTerm is filled
-                        this.$filterElm = this.createDomElement();
+                        this.$filterElm = this.createDomElement(searchTerm);
                         // step 3, subscribe to the keyup event and run the callback when that happens
                         // also add/remove "filled" class for styling purposes
                         this.$filterInputElm.keyup(function (e) {
@@ -65,8 +81,7 @@ System.register(["aurelia-framework", "aurelia-i18n", "../services/utilities", "
                 /**
                  * Clear the filter value
                  */
-                CompoundDateFilter.prototype.clear = function (triggerFilterKeyup) {
-                    if (triggerFilterKeyup === void 0) { triggerFilterKeyup = true; }
+                CompoundDateFilter.prototype.clear = function () {
                     if (this.flatInstance && this.$selectOperatorElm) {
                         this.$selectOperatorElm.val(0);
                         this.flatInstance.clear();
@@ -84,8 +99,8 @@ System.register(["aurelia-framework", "aurelia-i18n", "../services/utilities", "
                  * Set value(s) on the DOM element
                  */
                 CompoundDateFilter.prototype.setValues = function (values) {
-                    if (values) {
-                        this.flatInstance.setDate(values);
+                    if (values && Array.isArray(values)) {
+                        this.flatInstance.setDate(values[0]);
                     }
                 };
                 //
@@ -112,10 +127,10 @@ System.register(["aurelia-framework", "aurelia-i18n", "../services/utilities", "
                             // when using the time picker, we can simulate a keyup event to avoid multiple backend request
                             // since backend request are only executed after user start typing, changing the time should be treated the same way
                             if (pickerOptions.enableTime) {
-                                _this.onTriggerEvent(new CustomEvent('keyup'));
+                                _this.onTriggerEvent(new CustomEvent('keyup'), dateStr === '');
                             }
                             else {
-                                _this.onTriggerEvent(undefined);
+                                _this.onTriggerEvent(undefined, dateStr === '');
                             }
                         }
                     };
@@ -150,13 +165,9 @@ System.register(["aurelia-framework", "aurelia-i18n", "../services/utilities", "
                 /**
                  * Create the DOM element
                  */
-                CompoundDateFilter.prototype.createDomElement = function () {
+                CompoundDateFilter.prototype.createDomElement = function (searchTerm) {
                     var $headerElm = this.grid.getHeaderRowColumn(this.columnDef.id);
                     $($headerElm).empty();
-                    var searchTerm = (this.searchTerm || '');
-                    if (searchTerm) {
-                        this._currentValue = searchTerm;
-                    }
                     // create the DOM Select dropdown for the Operator
                     this.$selectOperatorElm = $(this.buildSelectOperatorHtmlString());
                     this.$filterInputElm = this.buildDatePickerInput(searchTerm);
@@ -184,8 +195,9 @@ System.register(["aurelia-framework", "aurelia-i18n", "../services/utilities", "
                         this.$selectOperatorElm.val(this.operator);
                     }
                     // if there's a search term, we will add the "filled" class for styling purposes
-                    if (this.searchTerm) {
+                    if (searchTerm) {
                         $filterContainerElm.addClass('filled');
+                        this._currentValue = searchTerm;
                     }
                     // append the new DOM element to the header row
                     if ($filterContainerElm && typeof $filterContainerElm.appendTo === 'function') {
@@ -201,10 +213,15 @@ System.register(["aurelia-framework", "aurelia-i18n", "../services/utilities", "
                     }
                     return 'en';
                 };
-                CompoundDateFilter.prototype.onTriggerEvent = function (e) {
-                    var selectedOperator = this.$selectOperatorElm.find('option:selected').text();
-                    (this._currentValue) ? this.$filterElm.addClass('filled') : this.$filterElm.removeClass('filled');
-                    this.callback(e, { columnDef: this.columnDef, searchTerm: this._currentValue, operator: selectedOperator || '=' });
+                CompoundDateFilter.prototype.onTriggerEvent = function (e, clearFilterTriggered) {
+                    if (clearFilterTriggered) {
+                        this.callback(e, { columnDef: this.columnDef, clearFilterTriggered: true });
+                    }
+                    else {
+                        var selectedOperator = this.$selectOperatorElm.find('option:selected').text();
+                        (this._currentValue) ? this.$filterElm.addClass('filled') : this.$filterElm.removeClass('filled');
+                        this.callback(e, { columnDef: this.columnDef, searchTerms: [this._currentValue], operator: selectedOperator || '' });
+                    }
                 };
                 CompoundDateFilter.prototype.hide = function () {
                     if (this.flatInstance && typeof this.flatInstance.close === 'function') {

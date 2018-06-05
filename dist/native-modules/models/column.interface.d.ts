@@ -1,5 +1,5 @@
+import { ColumnEditor } from './columnEditor.interface';
 import { ColumnFilter } from './columnFilter.interface';
-import { Editor } from './editor.interface';
 import { FieldType } from './fieldType.enum';
 import { Formatter } from './formatter.interface';
 import { GroupTotalsFormatter } from './groupTotalsFormatter.interface';
@@ -20,8 +20,8 @@ export interface Column {
     cssClass?: string;
     /** Do we want default sort to be ascending? True by default */
     defaultSortAsc?: boolean;
-    /** Inline editor for the cell value */
-    editor?: Editor | any;
+    /** Any inline editor function that implements Editor for the cell value or ColumnEditor */
+    editor?: any | ColumnEditor;
     /** Default to false, which leads to exclude the column from the export? */
     excludeFromExport?: boolean;
     /** Defaults to false, which leads to exclude the column from getting a header menu. For example, the checkbox row selection should not have a header menu. */
@@ -81,16 +81,6 @@ export interface Column {
     headerKey?: string;
     /** ID of the column, each row have to be unique or SlickGrid will throw an error. */
     id: number | string;
-    /** is the column editable? Goes with grid option "editable: true". */
-    isEditable?: boolean;
-    /** is the field hidden? (part of the dataset but not shown in the grid/UI) */
-    isHidden?: boolean;
-    /** catchall for meta info */
-    json?: any;
-    /** a column key */
-    key?: string;
-    /** is the column manually sizable? */
-    manuallySized?: boolean;
     /** Maximum Width of the column in pixels (number only). */
     maxWidth?: number;
     /** Minimum Width of the column in pixels (number only). */
@@ -98,9 +88,9 @@ export interface Column {
     /** Field Name to be displayed in the Grid (UI) */
     name?: string;
     /** an event that can be used for triggering an action after a cell change */
-    onCellChange?: (args: OnEventArgs) => void;
+    onCellChange?: (e: Event, args: OnEventArgs) => void;
     /** an event that can be used for triggering an action after a cell click */
-    onCellClick?: (args: OnEventArgs) => void;
+    onCellClick?: (e: Event, args: OnEventArgs) => void;
     /** column output type */
     outputType?: FieldType;
     /** if you want to pass custom paramaters to your Formatter/Editor or anything else */
@@ -121,8 +111,6 @@ export interface Column {
     sanitizeDataExport?: boolean;
     /** Is the column selectable? Goes with grid option "enableCellNavigation: true". */
     selectable?: boolean;
-    /** do we want to show hidden column? */
-    showHidden?: boolean;
     /** Is the column sortable? Goes with grid option "enableSorting: true". */
     sortable?: boolean;
     /** Custom Sorter function that can be provided to the column */

@@ -22,7 +22,7 @@ System.register(["jquery", "./../models/index"], function (exports_1, context_1)
                     this.init();
                 }
                 TextEditor.prototype.init = function () {
-                    this.$input = $("<input type=\"text\" class='editor-text' />")
+                    this.$input = $("<input type=\"text\" class=\"editor-text\" />")
                         .appendTo(this.args.container)
                         .on('keydown.nav', function (e) {
                         if (e.keyCode === index_1.KeyCode.LEFT || e.keyCode === index_1.KeyCode.RIGHT) {

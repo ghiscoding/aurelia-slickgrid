@@ -1,4 +1,5 @@
-import { FilterType, DelimiterType, FileType } from './models/index';
+import { Filters } from './filters/index';
+import { DelimiterType, FileType } from './models/index';
 /**
  * Default Options that can be passed to the Aurelia-Slickgrid
  */
@@ -25,7 +26,7 @@ export const GlobalGridOptions = {
     defaultAureliaEventPrefix: 'asg',
     defaultSlickgridEventPrefix: 'sg',
     defaultFilterPlaceholder: '&#128269;',
-    defaultFilterType: FilterType.input,
+    defaultFilter: Filters.input,
     enableAutoResize: true,
     enableHeaderMenu: true,
     enableRowSelection: true,
@@ -50,7 +51,13 @@ export const GlobalGridOptions = {
     },
     forceFitColumns: false,
     gridMenu: {
+        hideClearAllFiltersCommand: false,
+        hideClearAllSortingCommand: false,
+        hideExportCsvCommand: false,
+        hideExportTextDelimitedCommand: true,
         hideForceFitButton: false,
+        hideRefreshDatasetCommand: false,
+        hideToggleFilterCommand: false,
         hideSyncResizeButton: true,
         iconCssClass: 'fa fa-bars',
         iconClearAllFiltersCommand: 'fa fa-filter text-danger',
@@ -61,11 +68,6 @@ export const GlobalGridOptions = {
         iconToggleFilterCommand: 'fa fa-random',
         menuWidth: 16,
         resizeOnShowHeaderRow: true,
-        showClearAllFiltersCommand: true,
-        showClearAllSortingCommand: true,
-        showExportCsvCommand: true,
-        showRefreshDatasetCommand: true,
-        showToggleFilterCommand: true
     },
     headerMenu: {
         autoAlign: true,

@@ -1,22 +1,23 @@
 import { I18N } from 'aurelia-i18n';
-import { Column, Filter, FilterType, FilterArguments, FilterCallback, GridOption, MultipleSelectOption, SearchTerm } from './../models/index';
+import { Column, Filter, FilterArguments, FilterCallback, MultipleSelectOption, OperatorString, OperatorType, SearchTerm } from './../models/index';
 import { CollectionService } from '../services/collection.service';
 export declare class SingleSelectFilter implements Filter {
     private collectionService;
     private i18n;
     $filterElm: any;
     grid: any;
-    gridOptions: GridOption;
-    searchTerm: SearchTerm;
+    searchTerms: SearchTerm[];
     columnDef: Column;
     callback: FilterCallback;
     defaultOptions: MultipleSelectOption;
-    filterType: FilterType;
     isFilled: boolean;
     labelName: string;
     valueName: string;
     enableTranslateLabel: boolean;
     constructor(collectionService: CollectionService, i18n: I18N);
+    readonly operator: OperatorType | OperatorString;
+    /** Getter for the Grid Options pulled through the Grid Object */
+    private readonly gridOptions;
     /**
      * Initialize the Filter
      */
@@ -24,7 +25,7 @@ export declare class SingleSelectFilter implements Filter {
     /**
      * Clear the filter values
      */
-    clear(triggerFilterChange?: boolean): void;
+    clear(): void;
     /**
      * destroy the filter
      */
@@ -32,11 +33,11 @@ export declare class SingleSelectFilter implements Filter {
     /**
      * Set value(s) on the DOM element
      */
-    setValues(values: SearchTerm | SearchTerm[]): void;
+    setValues(values: SearchTerm[]): void;
     /**
      * Create the HTML template as a string
      */
-    private buildTemplateHtmlString(optionCollection);
+    private buildTemplateHtmlString(optionCollection, searchTerm?);
     /**
      * From the html template string, create a DOM element
      * Subscribe to the onClose event and run the callback when that happens

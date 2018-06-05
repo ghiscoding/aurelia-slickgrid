@@ -1,4 +1,4 @@
-define(["require", "exports", "./models/index"], function (require, exports, index_1) {
+define(["require", "exports", "./filters/index", "./models/index"], function (require, exports, index_1, index_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -27,7 +27,7 @@ define(["require", "exports", "./models/index"], function (require, exports, ind
         defaultAureliaEventPrefix: 'asg',
         defaultSlickgridEventPrefix: 'sg',
         defaultFilterPlaceholder: '&#128269;',
-        defaultFilterType: index_1.FilterType.input,
+        defaultFilter: index_1.Filters.input,
         enableAutoResize: true,
         enableHeaderMenu: true,
         enableRowSelection: true,
@@ -42,17 +42,23 @@ define(["require", "exports", "./models/index"], function (require, exports, ind
         enableTextSelectionOnCells: true,
         explicitInitialization: true,
         exportOptions: {
-            delimiter: index_1.DelimiterType.comma,
+            delimiter: index_2.DelimiterType.comma,
             exportWithFormatter: false,
             filename: 'export',
-            format: index_1.FileType.csv,
+            format: index_2.FileType.csv,
             groupingAggregatorRowText: '',
             sanitizeDataExport: false,
             useUtf8WithBom: true
         },
         forceFitColumns: false,
         gridMenu: {
+            hideClearAllFiltersCommand: false,
+            hideClearAllSortingCommand: false,
+            hideExportCsvCommand: false,
+            hideExportTextDelimitedCommand: true,
             hideForceFitButton: false,
+            hideRefreshDatasetCommand: false,
+            hideToggleFilterCommand: false,
             hideSyncResizeButton: true,
             iconCssClass: 'fa fa-bars',
             iconClearAllFiltersCommand: 'fa fa-filter text-danger',
@@ -63,11 +69,6 @@ define(["require", "exports", "./models/index"], function (require, exports, ind
             iconToggleFilterCommand: 'fa fa-random',
             menuWidth: 16,
             resizeOnShowHeaderRow: true,
-            showClearAllFiltersCommand: true,
-            showClearAllSortingCommand: true,
-            showExportCsvCommand: true,
-            showRefreshDatasetCommand: true,
-            showToggleFilterCommand: true
         },
         headerMenu: {
             autoAlign: true,

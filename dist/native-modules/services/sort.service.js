@@ -39,7 +39,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-import { inject } from 'aurelia-framework';
+import { inject, singleton } from 'aurelia-framework';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { FieldType, SortDirection, SortDirectionNumber } from './../models/index';
 import { sortByFieldType } from '../sorters/sorterUtilities';
@@ -90,14 +90,14 @@ var SortService = /** @class */ (function () {
                             throw new Error('Something went wrong when trying to attach the "onBackendSortChanged(event, args)" function, it seems that "args" is not populated correctly');
                         }
                         gridOptions = args.grid.getOptions() || {};
-                        backendApi = gridOptions.backendServiceApi || gridOptions.onBackendEventApi;
+                        backendApi = gridOptions.backendServiceApi;
                         if (!backendApi || !backendApi.process || !backendApi.service) {
                             throw new Error("BackendServiceApi requires at least a \"process\" function and a \"service\" defined");
                         }
                         if (backendApi.preProcess) {
                             backendApi.preProcess();
                         }
-                        query = backendApi.service.onSortChanged(event, args);
+                        query = backendApi.service.processOnSortChanged(event, args);
                         this.emitSortChanged('remote');
                         return [4 /*yield*/, backendApi.process(query)];
                     case 1:
@@ -182,6 +182,11 @@ var SortService = /** @class */ (function () {
                 }
             }
         }
+        // set current sorter to empty & emit a sort changed event
+        this._currentLocalSorters = [];
+        var sender = (this._gridOptions && this._gridOptions.backendServiceApi) ? 'remote' : 'local';
+        // emit an event when filters are all cleared
+        this.ea.publish('sortService:sortCleared', this._currentLocalSorters);
     };
     SortService.prototype.getCurrentLocalSorters = function () {
         return this._currentLocalSorters;
@@ -217,27 +222,25 @@ var SortService = /** @class */ (function () {
         var sortCols = [];
         this._currentLocalSorters = []; // reset current local sorters
         if (this._gridOptions && this._gridOptions.presets && this._gridOptions.presets.sorters) {
-            var sorters_1 = this._gridOptions.presets.sorters;
-            this._columnDefinitions.forEach(function (columnDef) {
-                var columnPreset = sorters_1.find(function (currentSorter) {
-                    return currentSorter.columnId === columnDef.id;
-                });
-                if (columnPreset) {
+            var sorters = this._gridOptions.presets.sorters;
+            sorters.forEach(function (presetSorting) {
+                var gridColumn = _this._columnDefinitions.find(function (col) { return col.id === presetSorting.columnId; });
+                if (gridColumn) {
                     sortCols.push({
-                        columnId: columnDef.id,
-                        sortAsc: ((columnPreset.direction.toUpperCase() === SortDirection.ASC) ? true : false),
-                        sortCol: columnDef
+                        columnId: gridColumn.id,
+                        sortAsc: ((presetSorting.direction.toUpperCase() === SortDirection.ASC) ? true : false),
+                        sortCol: gridColumn
                     });
                     // keep current sorters
                     _this._currentLocalSorters.push({
-                        columnId: columnDef.id + '',
-                        direction: columnPreset.direction.toUpperCase()
+                        columnId: gridColumn.id + '',
+                        direction: presetSorting.direction.toUpperCase()
                     });
                 }
             });
             if (sortCols.length > 0) {
                 this.onLocalSortChanged(grid, dataView, sortCols);
-                grid.setSortColumns(sortCols); // add sort icon in UI
+                grid.setSortColumns(sortCols); // use this to add sort icon(s) in UI
             }
         }
     };
@@ -289,6 +292,7 @@ var SortService = /** @class */ (function () {
         }
     };
     SortService = __decorate([
+        singleton(true),
         inject(EventAggregator)
     ], SortService);
     return SortService;

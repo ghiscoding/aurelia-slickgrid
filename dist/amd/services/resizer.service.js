@@ -153,6 +153,7 @@ define(["require", "exports", "aurelia-framework", "jquery", "aurelia-event-aggr
             }, delay);
         };
         ResizerService = __decorate([
+            aurelia_framework_1.singleton(true),
             aurelia_framework_1.inject(aurelia_event_aggregator_1.EventAggregator)
         ], ResizerService);
         return ResizerService;

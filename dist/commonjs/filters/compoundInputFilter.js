@@ -12,8 +12,25 @@ var index_1 = require("./../models/index");
 var CompoundInputFilter = /** @class */ (function () {
     function CompoundInputFilter(i18n) {
         this.i18n = i18n;
-        this.filterType = index_1.FilterType.compoundInput;
     }
+    Object.defineProperty(CompoundInputFilter.prototype, "gridOptions", {
+        /** Getter for the Grid Options pulled through the Grid Object */
+        get: function () {
+            return (this.grid && this.grid.getOptions) ? this.grid.getOptions() : {};
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(CompoundInputFilter.prototype, "operator", {
+        get: function () {
+            return this._operator || index_1.OperatorType.empty;
+        },
+        set: function (op) {
+            this._operator = op;
+        },
+        enumerable: true,
+        configurable: true
+    });
     /**
      * Initialize the Filter
      */
@@ -24,13 +41,12 @@ var CompoundInputFilter = /** @class */ (function () {
             this.callback = args.callback;
             this.columnDef = args.columnDef;
             this.operator = args.operator || '';
-            this.searchTerm = args.searchTerm;
-            if (this.grid && typeof this.grid.getOptions === 'function') {
-                this.gridOptions = this.grid.getOptions();
-            }
+            this.searchTerms = args.searchTerms || [];
+            // filter input can only have 1 search term, so we will use the 1st array index if it exist
+            var searchTerm = (Array.isArray(this.searchTerms) && this.searchTerms[0]) || '';
             // step 1, create the DOM Element of the filter which contain the compound Operator+Input
             // and initialize it if searchTerm is filled
-            this.$filterElm = this.createDomElement();
+            this.$filterElm = this.createDomElement(searchTerm);
             // step 3, subscribe to the keyup event and run the callback when that happens
             // also add/remove "filled" class for styling purposes
             this.$filterInputElm.keyup(function (e) {
@@ -44,14 +60,11 @@ var CompoundInputFilter = /** @class */ (function () {
     /**
      * Clear the filter value
      */
-    CompoundInputFilter.prototype.clear = function (triggerFilterKeyup) {
-        if (triggerFilterKeyup === void 0) { triggerFilterKeyup = true; }
+    CompoundInputFilter.prototype.clear = function () {
         if (this.$filterElm && this.$selectOperatorElm) {
             this.$selectOperatorElm.val(0);
             this.$filterInputElm.val('');
-            if (triggerFilterKeyup) {
-                this.$filterElm.trigger('keyup');
-            }
+            this.onTriggerEvent(undefined, true);
         }
     };
     /**
@@ -66,8 +79,8 @@ var CompoundInputFilter = /** @class */ (function () {
      * Set value(s) on the DOM element
      */
     CompoundInputFilter.prototype.setValues = function (values) {
-        if (values) {
-            this.$filterElm.val(values);
+        if (values && Array.isArray(values)) {
+            this.$filterElm.val(values[0]);
         }
     };
     //
@@ -114,7 +127,7 @@ var CompoundInputFilter = /** @class */ (function () {
     /**
      * Create the DOM element
      */
-    CompoundInputFilter.prototype.createDomElement = function () {
+    CompoundInputFilter.prototype.createDomElement = function (searchTerm) {
         var $headerElm = this.grid.getHeaderRowColumn(this.columnDef.id);
         $($headerElm).empty();
         // create the DOM Select dropdown for the Operator
@@ -137,14 +150,13 @@ var CompoundInputFilter = /** @class */ (function () {
         // create the DOM element & add an ID and filter class
         $filterContainerElm.append($containerInputGroup);
         $filterContainerElm.attr('id', "filter-" + this.columnDef.id);
-        var searchTerm = (typeof this.searchTerm === 'boolean') ? "" + this.searchTerm : this.searchTerm;
         this.$filterInputElm.val(searchTerm);
         this.$filterInputElm.data('columnId', this.columnDef.id);
         if (this.operator) {
             this.$selectOperatorElm.val(this.operator);
         }
         // if there's a search term, we will add the "filled" class for styling purposes
-        if (this.searchTerm) {
+        if (searchTerm) {
             $filterContainerElm.addClass('filled');
         }
         // append the new DOM element to the header row
@@ -153,11 +165,16 @@ var CompoundInputFilter = /** @class */ (function () {
         }
         return $filterContainerElm;
     };
-    CompoundInputFilter.prototype.onTriggerEvent = function (e) {
-        var selectedOperator = this.$selectOperatorElm.find('option:selected').text();
-        var value = this.$filterInputElm.val();
-        (value) ? this.$filterElm.addClass('filled') : this.$filterElm.removeClass('filled');
-        this.callback(e, { columnDef: this.columnDef, searchTerm: value, operator: selectedOperator || '' });
+    CompoundInputFilter.prototype.onTriggerEvent = function (e, clearFilterTriggered) {
+        if (clearFilterTriggered) {
+            this.callback(e, { columnDef: this.columnDef, clearFilterTriggered: true });
+        }
+        else {
+            var selectedOperator = this.$selectOperatorElm.find('option:selected').text();
+            var value = this.$filterInputElm.val();
+            (value) ? this.$filterElm.addClass('filled') : this.$filterElm.removeClass('filled');
+            this.callback(e, { columnDef: this.columnDef, searchTerms: [value], operator: selectedOperator || '' });
+        }
     };
     CompoundInputFilter = __decorate([
         aurelia_framework_1.inject(aurelia_i18n_1.I18N)

@@ -1,4 +1,3 @@
-import { BackendEventChanged } from './backendEventChanged.interface';
 import { QueryArgument } from './queryArgument.interface';
 export interface BackendServiceOption {
     /** What is the dataset name, this is required for the GraphQL query to be built */
@@ -17,6 +16,4 @@ export interface BackendServiceOption {
      * users (first: 20, offset: 10, userId: 123) { ... }
      */
     extraQueryArguments?: QueryArgument[];
-    /** Backend Service API callback definitions */
-    onBackendEventApi?: BackendEventChanged;
 }

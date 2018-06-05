@@ -5,7 +5,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { EventAggregator } from 'aurelia-event-aggregator';
-import { inject } from 'aurelia-framework';
+import { singleton, inject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import { FileType } from './../models/index';
 import { TextEncoder } from 'text-encoding-utf-8';
@@ -167,7 +167,7 @@ let ExportService = class ExportService {
                 rowOutputString += `""` + delimiter;
             }
             // does the user want to evaluate current column Formatter?
-            const isEvaluatingFormatter = (columnDef.exportWithFormatter !== undefined) ? columnDef.exportWithFormatter : (this._exportOptions.exportWithFormatter || this._gridOptions.exportWithFormatter);
+            const isEvaluatingFormatter = (columnDef.exportWithFormatter !== undefined) ? columnDef.exportWithFormatter : this._exportOptions.exportWithFormatter;
             let itemData = '';
             // did the user provide a Custom Formatter for the export
             if (columnDef.exportCustomFormatter) {
@@ -299,6 +299,7 @@ let ExportService = class ExportService {
     }
 };
 ExportService = __decorate([
+    singleton(true),
     inject(I18N, EventAggregator)
 ], ExportService);
 export { ExportService };

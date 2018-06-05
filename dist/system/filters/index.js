@@ -24,7 +24,6 @@ System.register(["./compoundDateFilter", "./compoundInputFilter", "./inputFilter
             },
             function (filterFactory_1_1) {
                 exports_1({
-                    "PLUGIN_NAME": filterFactory_1_1["PLUGIN_NAME"],
                     "FilterFactory": filterFactory_1_1["FilterFactory"]
                 });
             }

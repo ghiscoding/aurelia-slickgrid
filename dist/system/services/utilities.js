@@ -279,27 +279,6 @@ System.register(["../models/index", "moment"], function (exports_1, context_1) {
     }
     exports_1("mapOperatorByFieldType", mapOperatorByFieldType);
     /**
-     * Mapper for query operator by a Filter Type
-     * For example a multiple-select typically uses 'IN' operator
-     * @param operator
-     * @returns string map
-     */
-    function mapOperatorByFilterType(filterType) {
-        var map = index_1.OperatorType.empty;
-        switch (filterType) {
-            case index_1.FilterType.multipleSelect:
-                map = index_1.OperatorType.in;
-                break;
-            case index_1.FilterType.singleSelect:
-                map = index_1.OperatorType.equal;
-                break;
-            default:
-                break;
-        }
-        return map;
-    }
-    exports_1("mapOperatorByFilterType", mapOperatorByFilterType);
-    /**
      * Parse a date passed as a string and return a Date object (if valid)
      * @param string inputDateString
      * @returns string date formatted

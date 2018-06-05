@@ -21,7 +21,6 @@ let MultipleSelectEditor = class MultipleSelectEditor {
         /** The options label/value object to use in the select list */
         this.collection = [];
         this.gridOptions = this.args.grid.getOptions();
-        const params = this.gridOptions.params || this.args.column.params || {};
         this.defaultOptions = {
             container: 'body',
             filter: false,
@@ -51,24 +50,23 @@ let MultipleSelectEditor = class MultipleSelectEditor {
             throw new Error('[Aurelia-SlickGrid] An editor must always have an "init()" with valid arguments.');
         }
         this.columnDef = this.args.column;
-        if (!this.columnDef || !this.columnDef.params || !this.columnDef.params.collection) {
-            throw new Error('[Aurelia-SlickGrid] You need to pass a "collection" on the params property in the column definition for ' +
-                'the SingleSelect Editor to work correctly. Also each option should include ' +
-                'a value/label pair (or value/labelKey when using Locale). For example: { params: { ' +
-                '{ collection: [{ value: true, label: \'True\' }, { value: false, label: \'False\'}] } } }');
+        if (!this.columnDef || !this.columnDef.internalColumnEditor || !this.columnDef.internalColumnEditor.collection) {
+            throw new Error(`[Aurelia-SlickGrid] You need to pass a "collection" inside Column Definition Editor for the MultipleSelect Editor to work correctly.
+      Also each option should include a value/label pair (or value/labelKey when using Locale).
+      For example: { editor: { collection: [{ value: true, label: 'True' },{ value: false, label: 'False'}] } }`);
         }
-        this.enableTranslateLabel = (this.columnDef.params.enableTranslateLabel) ? this.columnDef.params.enableTranslateLabel : false;
-        let newCollection = this.columnDef.params.collection || [];
-        this.labelName = (this.columnDef.params.customStructure) ? this.columnDef.params.customStructure.label : 'label';
-        this.valueName = (this.columnDef.params.customStructure) ? this.columnDef.params.customStructure.value : 'value';
+        this.enableTranslateLabel = (this.columnDef.internalColumnEditor.enableTranslateLabel) ? this.columnDef.internalColumnEditor.enableTranslateLabel : false;
+        let newCollection = this.columnDef.internalColumnEditor.collection || [];
+        this.labelName = (this.columnDef.internalColumnEditor.customStructure) ? this.columnDef.internalColumnEditor.customStructure.label : 'label';
+        this.valueName = (this.columnDef.internalColumnEditor.customStructure) ? this.columnDef.internalColumnEditor.customStructure.value : 'value';
         // user might want to filter certain items of the collection
-        if (this.gridOptions && this.gridOptions.params && this.columnDef.params.collectionFilterBy) {
-            const filterBy = this.columnDef.params.collectionFilterBy;
+        if (this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.collectionFilterBy) {
+            const filterBy = this.columnDef.internalColumnEditor.collectionFilterBy;
             newCollection = this.collectionService.filterCollection(newCollection, filterBy);
         }
         // user might want to sort the collection
-        if (this.columnDef.params && this.columnDef.params.collectionSortBy) {
-            const sortBy = this.columnDef.params.collectionSortBy;
+        if (this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.collectionSortBy) {
+            const sortBy = this.columnDef.internalColumnEditor.collectionSortBy;
             newCollection = this.collectionService.sortCollection(newCollection, sortBy, this.enableTranslateLabel);
         }
         this.collection = newCollection;
@@ -173,7 +171,7 @@ let MultipleSelectEditor = class MultipleSelectEditor {
             this.$editorElm.addClass('form-control');
         }
         else {
-            const elementOptions = (this.columnDef.params) ? this.columnDef.params.elementOptions : {};
+            const elementOptions = (this.columnDef.internalColumnEditor) ? this.columnDef.internalColumnEditor.elementOptions : {};
             this.editorElmOptions = Object.assign({}, this.defaultOptions, elementOptions);
             this.$editorElm = this.$editorElm.multipleSelect(this.editorElmOptions);
             setTimeout(() => this.$editorElm.multipleSelect('open'));

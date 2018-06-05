@@ -18,5 +18,5 @@ export var Filters = {
     /** Select filter, which uses native DOM element select */
     select: SelectFilter
 };
-export { PLUGIN_NAME, FilterFactory } from './filterFactory';
+export { FilterFactory } from './filterFactory';
 //# sourceMappingURL=index.js.map

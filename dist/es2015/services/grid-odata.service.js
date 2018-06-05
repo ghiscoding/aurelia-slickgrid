@@ -5,7 +5,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import './global-utilities';
-import { inject } from 'aurelia-framework';
+import { singleton, inject } from 'aurelia-framework';
 import { parseUtcDate } from './utilities';
 import { CaseType, FieldType, SortDirection } from './../models/index';
 import { OdataService } from './odata.service';
@@ -14,13 +14,13 @@ const DEFAULT_FILTER_TYPING_DEBOUNCE = 750;
 const DEFAULT_ITEMS_PER_PAGE = 25;
 const DEFAULT_PAGE_SIZE = 20;
 let GridOdataService = class GridOdataService {
-    constructor(odataService) {
-        this.odataService = odataService;
+    constructor() {
         this.defaultOptions = {
             top: DEFAULT_ITEMS_PER_PAGE,
             orderBy: '',
             caseType: CaseType.pascalCase
         };
+        this.odataService = new OdataService();
     }
     /** Getter for the Grid Options pulled through the Grid Object */
     get _gridOptions() {
@@ -86,9 +86,9 @@ let GridOdataService = class GridOdataService {
     /*
      * FILTERING
      */
-    onFilterChanged(event, args) {
+    processOnFilterChanged(event, args) {
         const serviceOptions = args.grid.getOptions();
-        const backendApi = serviceOptions.backendServiceApi || serviceOptions.onBackendEventApi;
+        const backendApi = serviceOptions.backendServiceApi;
         if (backendApi === undefined) {
             throw new Error('Something went wrong in the GridOdataService, "backendServiceApi" is not initialized');
         }
@@ -113,7 +113,7 @@ let GridOdataService = class GridOdataService {
     /*
      * PAGINATION
      */
-    onPaginationChanged(event, args) {
+    processOnPaginationChanged(event, args) {
         const pageSize = +(args.pageSize || DEFAULT_PAGE_SIZE);
         this.updatePagination(args.newPage, pageSize);
         // build the OData query which we will use in the WebAPI callback
@@ -122,7 +122,7 @@ let GridOdataService = class GridOdataService {
     /*
      * SORTING
      */
-    onSortChanged(event, args) {
+    processOnSortChanged(event, args) {
         const sortColumns = (args.multiColumnSort) ? args.sortCols : new Array({ sortCol: args.sortCol, sortAsc: args.sortAsc });
         // loop through all columns to inspect sorters & set the query
         this.updateSorters(sortColumns);
@@ -157,7 +157,7 @@ let GridOdataService = class GridOdataService {
                 let fieldName = columnDef.queryField || columnDef.queryFieldFilter || columnDef.field || columnDef.name || '';
                 const fieldType = columnDef.type || 'string';
                 const searchTerms = (columnFilter ? columnFilter.searchTerms : null) || [];
-                let fieldSearchValue = columnFilter.searchTerm;
+                let fieldSearchValue = (Array.isArray(searchTerms) && searchTerms.length === 1) ? searchTerms[0] : '';
                 if (typeof fieldSearchValue === 'undefined') {
                     fieldSearchValue = '';
                 }
@@ -171,7 +171,7 @@ let GridOdataService = class GridOdataService {
                 const lastValueChar = (!!matches) ? matches[3] : (operator === '*z' ? '*' : '');
                 const bypassOdataQuery = columnFilter.bypassBackendQuery || false;
                 // no need to query if search value is empty
-                if (fieldName && searchValue === '') {
+                if (fieldName && searchValue === '' && searchTerms.length === 0) {
                     this.removeColumnFilter(fieldName);
                     continue;
                 }
@@ -192,7 +192,7 @@ let GridOdataService = class GridOdataService {
                         fieldName = String.titleCase(fieldName || '');
                     }
                     // when having more than 1 search term (then check if we have a "IN" or "NOT IN" filter search)
-                    if (searchTerms && searchTerms.length > 0) {
+                    if (searchTerms && searchTerms.length > 1) {
                         const tmpSearchTerms = [];
                         if (operator === 'IN') {
                             // example:: (Stage eq "Expired" or Stage eq "Renewal")
@@ -348,9 +348,6 @@ let GridOdataService = class GridOdataService {
             if (Array.isArray(filter.searchTerms)) {
                 tmpFilter.searchTerms = filter.searchTerms;
             }
-            else {
-                tmpFilter.searchTerm = filter.searchTerm;
-            }
             return tmpFilter;
         });
     }
@@ -388,6 +385,7 @@ let GridOdataService = class GridOdataService {
     }
 };
 GridOdataService = __decorate([
+    singleton(true),
     inject(OdataService)
 ], GridOdataService);
 export { GridOdataService };

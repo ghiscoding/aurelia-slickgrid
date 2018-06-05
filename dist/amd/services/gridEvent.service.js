@@ -1,4 +1,10 @@
-define(["require", "exports"], function (require, exports) {
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+define(["require", "exports", "aurelia-framework"], function (require, exports, aurelia_framework_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var GridEventService = /** @class */ (function () {
@@ -26,8 +32,7 @@ define(["require", "exports"], function (require, exports) {
                         dataContext: grid.getDataItem(args.row)
                     };
                     // finally call up the Slick.column.onCellChanges.... function
-                    column.onCellChange(returnedArgs);
-                    // e.stopImmediatePropagation();
+                    column.onCellChange(e, returnedArgs);
                 }
             });
         };
@@ -51,19 +56,16 @@ define(["require", "exports"], function (require, exports) {
                         dataContext: grid.getDataItem(args.row)
                     };
                     // finally call up the Slick.column.onCellClick.... function
-                    column.onCellClick(returnedArgs);
-                    e.stopImmediatePropagation();
-                }
-                // stop the click event bubbling
-                // NOTE: We don't want to stop bubbling when doing an input edit, if we do the autoEdit which has intent of doing singleClick edit will become doubleClick edit
-                if (grid.getOptions && !grid.getOptions().autoEdit) {
-                    // e.stopImmediatePropagation();
+                    column.onCellClick(e, returnedArgs);
                 }
             });
         };
         GridEventService.prototype.dispose = function () {
             this._eventHandler.unsubscribeAll();
         };
+        GridEventService = __decorate([
+            aurelia_framework_1.singleton(true)
+        ], GridEventService);
         return GridEventService;
     }());
     exports.GridEventService = GridEventService;

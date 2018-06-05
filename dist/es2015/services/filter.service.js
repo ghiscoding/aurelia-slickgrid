@@ -12,11 +12,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { inject } from 'aurelia-framework';
+import { singleton, inject } from 'aurelia-framework';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { FilterConditions } from './../filter-conditions/index';
 import { FilterFactory } from './../filters/index';
-import { FieldType, FilterType, OperatorType } from './../models/index';
+import { FieldType, OperatorType } from './../models/index';
 import * as $ from 'jquery';
 let FilterService = class FilterService {
     constructor(ea, filterFactory) {
@@ -61,7 +61,7 @@ let FilterService = class FilterService {
                 throw new Error('Something went wrong when trying to attach the "attachBackendOnFilterSubscribe(event, args)" function, it seems that "args" is not populated correctly');
             }
             const gridOptions = args.grid.getOptions() || {};
-            const backendApi = gridOptions.backendServiceApi || gridOptions.onBackendEventApi;
+            const backendApi = gridOptions.backendServiceApi;
             if (!backendApi || !backendApi.process || !backendApi.service) {
                 throw new Error(`BackendServiceApi requires at least a "process" function and a "service" defined`);
             }
@@ -70,9 +70,14 @@ let FilterService = class FilterService {
                 backendApi.preProcess();
             }
             // call the service to get a query back
-            const query = yield backendApi.service.onFilterChanged(event, args);
+            const query = yield backendApi.service.processOnFilterChanged(event, args);
             // emit an onFilterChanged event
-            this.emitFilterChanged('remote');
+            if (args && !args.clearFilterTriggered) {
+                this.emitFilterChanged('remote');
+            }
+            else {
+                console.log('clear triggered', args);
+            }
             // await for the Promise to resolve the data
             const processResult = yield backendApi.process(query);
             // from the result, call our internal post process to update the Dataset and Pagination info
@@ -102,7 +107,9 @@ let FilterService = class FilterService {
             if (columnId != null) {
                 dataView.refresh();
             }
-            this.emitFilterChanged('local');
+            if (args && !args.clearFilterTriggered) {
+                this.emitFilterChanged('local');
+            }
         });
         // subscribe to SlickGrid onHeaderRowCellRendered event to create filter template
         this._eventHandler.subscribe(grid.onHeaderRowCellRendered, (e, args) => {
@@ -111,10 +118,10 @@ let FilterService = class FilterService {
     }
     /** Clear the search filters (below the column titles) */
     clearFilters() {
-        this._filters.forEach((filter, index) => {
+        this._filters.forEach((filter) => {
             if (filter && filter.clear) {
                 // clear element and trigger a change
-                filter.clear(true);
+                filter.clear();
             }
         });
         // we need to loop through all columnFilters and delete them 1 by 1
@@ -124,12 +131,15 @@ let FilterService = class FilterService {
                 delete this._columnFilters[columnId];
             }
         }
+        this._columnFilters = {};
         // we also need to refresh the dataView and optionally the grid (it's optional since we use DataView)
         if (this._dataView) {
             this._dataView.refresh();
             this._grid.invalidate();
             this._grid.render();
         }
+        // emit an event when filters are all cleared
+        this.ea.publish('filterService:filterCleared', {});
     }
     customLocalFilter(dataView, item, args) {
         for (const columnId of Object.keys(args.columnFilters)) {
@@ -143,7 +153,7 @@ let FilterService = class FilterService {
             const filterSearchType = (columnDef.filterSearchType) ? columnDef.filterSearchType : null;
             let cellValue = item[columnDef.queryField || columnDef.queryFieldFilter || columnDef.field];
             const searchTerms = (columnFilter && columnFilter.searchTerms) ? columnFilter.searchTerms : null;
-            let fieldSearchValue = (columnFilter && (columnFilter.searchTerm !== undefined || columnFilter.searchTerm !== null)) ? columnFilter.searchTerm : undefined;
+            let fieldSearchValue = (Array.isArray(searchTerms) && searchTerms.length === 1) ? searchTerms[0] : '';
             if (typeof fieldSearchValue === 'undefined') {
                 fieldSearchValue = '';
             }
@@ -152,7 +162,7 @@ let FilterService = class FilterService {
             let operator = columnFilter.operator || ((matches) ? matches[1] : '');
             const searchTerm = (!!matches) ? matches[2] : '';
             const lastValueChar = (!!matches) ? matches[3] : (operator === '*z' ? '*' : '');
-            if (searchTerms && searchTerms.length > 0) {
+            if (searchTerms && searchTerms.length > 1) {
                 fieldSearchValue = searchTerms.join(',');
             }
             else if (typeof fieldSearchValue === 'string') {
@@ -160,23 +170,6 @@ let FilterService = class FilterService {
                 fieldSearchValue = fieldSearchValue.replace(`'`, `''`); // escape single quotes by doubling them
                 if (operator === '*' || operator === 'a*' || operator === '*z' || lastValueChar === '*') {
                     operator = (operator === '*' || operator === '*z') ? OperatorType.endsWith : OperatorType.startsWith;
-                }
-            }
-            // when using a Filter that is not a custom type, we want to make sure that we have a default operator type
-            // for example a multiple-select should always be using IN, while a single select will use an EQ
-            const filterType = (columnDef.filter && columnDef.filter.type) ? columnDef.filter.type : FilterType.input;
-            if (!operator && filterType !== FilterType.custom) {
-                switch (filterType) {
-                    case FilterType.select:
-                    case FilterType.multipleSelect:
-                        operator = 'IN';
-                        break;
-                    case FilterType.singleSelect:
-                        operator = 'EQ';
-                        break;
-                    default:
-                        operator = operator;
-                        break;
                 }
             }
             // no need to query if search value is empty
@@ -203,7 +196,6 @@ let FilterService = class FilterService {
             const conditionOptions = {
                 fieldType,
                 searchTerms,
-                searchTerm,
                 cellValue,
                 operator,
                 cellValueLastChar: lastValueChar,
@@ -255,25 +247,24 @@ let FilterService = class FilterService {
                 if (columnFilter && columnFilter.searchTerms) {
                     filter.searchTerms = columnFilter.searchTerms;
                 }
-                else {
-                    filter.searchTerm = (columnFilter && (columnFilter.searchTerm !== undefined || columnFilter.searchTerm !== null)) ? columnFilter.searchTerm : undefined;
-                }
                 if (columnFilter.operator) {
                     filter.operator = columnFilter.operator;
                 }
-                currentFilters.push(filter);
+                if (Array.isArray(filter.searchTerms) && filter.searchTerms.length > 0 && filter.searchTerms[0] !== '') {
+                    currentFilters.push(filter);
+                }
             }
         }
         return currentFilters;
     }
     callbackSearchEvent(e, args) {
         if (args) {
-            const searchTerm = args.searchTerm ? args.searchTerm : ((e && e.target) ? e.target.value : undefined);
-            const searchTerms = (args.searchTerms && Array.isArray(args.searchTerms)) ? args.searchTerms : undefined;
+            const searchTerm = ((e && e.target) ? e.target.value : undefined);
+            const searchTerms = (args.searchTerms && Array.isArray(args.searchTerms)) ? args.searchTerms : searchTerm ? [searchTerm] : undefined;
             const columnDef = args.columnDef || null;
             const columnId = columnDef ? (columnDef.id || '') : '';
             const operator = args.operator || undefined;
-            if (!searchTerm && (!searchTerms || (Array.isArray(searchTerms) && searchTerms.length === 0))) {
+            if (!searchTerms || (Array.isArray(searchTerms) && searchTerms.length === 0)) {
                 // delete the property from the columnFilters when it becomes empty
                 // without doing this, it would leave an incorrect state of the previous column filters when filtering on another column
                 delete this._columnFilters[columnId];
@@ -283,7 +274,6 @@ let FilterService = class FilterService {
                 const colFilter = {
                     columnId: colId,
                     columnDef,
-                    searchTerm,
                     searchTerms,
                 };
                 if (operator) {
@@ -292,11 +282,11 @@ let FilterService = class FilterService {
                 this._columnFilters[colId] = colFilter;
             }
             this.triggerEvent(this._slickSubscriber, {
+                clearFilterTriggered: args && args.clearFilterTriggered,
                 columnId,
                 columnDef: args.columnDef || null,
                 columnFilters: this._columnFilters,
                 operator,
-                searchTerm,
                 searchTerms,
                 serviceOptions: this._onFilterChangedOptions,
                 grid: this._grid
@@ -308,10 +298,8 @@ let FilterService = class FilterService {
         const columnId = columnDef.id || '';
         if (columnDef && columnId !== 'selector' && columnDef.filterable) {
             let searchTerms;
-            let searchTerm;
             let operator;
             if (this._columnFilters[columnDef.id]) {
-                searchTerm = this._columnFilters[columnDef.id].searchTerm || undefined;
                 searchTerms = this._columnFilters[columnDef.id].searchTerms || undefined;
                 operator = this._columnFilters[columnDef.id].operator || undefined;
             }
@@ -319,34 +307,17 @@ let FilterService = class FilterService {
                 // when hiding/showing (with Column Picker or Grid Menu), it will try to re-create yet again the filters (since SlickGrid does a re-render)
                 // because of that we need to first get searchTerm(s) from the columnFilters (that is what the user last entered)
                 searchTerms = columnDef.filter.searchTerms || undefined;
-                searchTerm = columnDef.filter.searchTerm || undefined;
                 operator = columnDef.filter.operator || undefined;
-                this.updateColumnFilters(searchTerm, searchTerms, columnDef);
+                this.updateColumnFilters(searchTerms, columnDef);
             }
             const filterArguments = {
                 grid: this._grid,
                 operator,
-                searchTerm,
                 searchTerms,
                 columnDef,
                 callback: this.callbackSearchEvent.bind(this)
             };
-            // depending on the Filter type, we will watch the correct event
-            const filterType = (columnDef.filter && columnDef.filter.type) ? columnDef.filter.type : this._gridOptions.defaultFilterType;
-            let filter;
-            switch (filterType) {
-                case FilterType.custom:
-                    if (columnDef && columnDef.filter && columnDef.filter.customFilter) {
-                        filter = columnDef.filter.customFilter;
-                    }
-                    else {
-                        throw new Error('[Aurelia-Slickgrid] A Filter type of "custom" must include a Filter class that is defined and instantiated.');
-                    }
-                    break;
-                default:
-                    filter = this.filterFactory.createFilter(filterType);
-                    break;
-            }
+            const filter = this.filterFactory.createFilter(args.column.filter);
             if (filter) {
                 filter.init(filterArguments);
                 const filterExistIndex = this._filters.findIndex((filt) => filter.columnDef.name === filt.columnDef.name);
@@ -359,8 +330,8 @@ let FilterService = class FilterService {
                 }
                 // when hiding/showing (with Column Picker or Grid Menu), it will try to re-create yet again the filters (since SlickGrid does a re-render)
                 // we need to also set again the values in the DOM elements if the values were set by a searchTerm(s)
-                if ((searchTerm || searchTerms) && filter.setValues) {
-                    filter.setValues(searchTerm || searchTerms);
+                if (searchTerms && filter.setValues) {
+                    filter.setValues(searchTerms);
                 }
             }
         }
@@ -390,45 +361,35 @@ let FilterService = class FilterService {
      * At the end of the day, when creating the Filter (DOM Element), it will use these searchTerm(s) so we can take advantage of that without recoding each Filter type (DOM element)
      * @param grid
      */
-    populateColumnFilterSearchTerms(grid) {
-        if (this._gridOptions.presets && this._gridOptions.presets.filters) {
+    populateColumnFilterSearchTerms() {
+        if (this._gridOptions.presets && Array.isArray(this._gridOptions.presets.filters) && this._gridOptions.presets.filters.length > 0) {
             const filters = this._gridOptions.presets.filters;
             this._columnDefinitions.forEach((columnDef) => {
+                // clear any columnDef searchTerms before applying Presets
+                if (columnDef.filter && columnDef.filter.searchTerms) {
+                    delete columnDef.filter.searchTerms;
+                }
+                // from each presets, we will find the associated columnDef and apply the preset searchTerms & operator if there is
                 const columnPreset = filters.find((presetFilter) => {
                     return presetFilter.columnId === columnDef.id;
                 });
-                if (columnPreset && columnPreset.searchTerm) {
+                if (columnPreset && columnPreset.searchTerms && Array.isArray(columnPreset.searchTerms)) {
                     columnDef.filter = columnDef.filter || {};
-                    columnDef.filter.operator = columnPreset.operator;
-                    columnDef.filter.searchTerm = columnPreset.searchTerm;
-                }
-                if (columnPreset && columnPreset.searchTerms) {
-                    columnDef.filter = columnDef.filter || {};
-                    columnDef.filter.operator = columnPreset.operator || columnDef.filter.operator || OperatorType.in;
+                    columnDef.filter.operator = columnPreset.operator || columnDef.filter.operator || '';
                     columnDef.filter.searchTerms = columnPreset.searchTerms;
                 }
             });
         }
         return this._columnDefinitions;
     }
-    updateColumnFilters(searchTerm, searchTerms, columnDef) {
-        if (searchTerm !== undefined && searchTerm !== null && searchTerm !== '') {
-            this._columnFilters[columnDef.id] = {
-                columnId: columnDef.id,
-                columnDef,
-                searchTerm,
-                operator: (columnDef && columnDef.filter && columnDef.filter.operator) ? columnDef.filter.operator : null,
-                type: (columnDef && columnDef.filter && columnDef.filter.type) ? columnDef.filter.type : FilterType.input
-            };
-        }
+    updateColumnFilters(searchTerms, columnDef) {
         if (searchTerms) {
             // this._columnFilters.searchTerms = searchTerms;
             this._columnFilters[columnDef.id] = {
                 columnId: columnDef.id,
                 columnDef,
                 searchTerms,
-                operator: (columnDef && columnDef.filter && columnDef.filter.operator) ? columnDef.filter.operator : null,
-                type: (columnDef && columnDef.filter && columnDef.filter.type) ? columnDef.filter.type : FilterType.input
+                operator: (columnDef && columnDef.filter && columnDef.filter.operator) ? columnDef.filter.operator : null
             };
         }
     }
@@ -444,6 +405,7 @@ let FilterService = class FilterService {
     }
 };
 FilterService = __decorate([
+    singleton(true),
     inject(EventAggregator, FilterFactory)
 ], FilterService);
 export { FilterService };

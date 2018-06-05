@@ -13,7 +13,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import './global-utilities';
-import { inject } from 'aurelia-framework';
+import { singleton, inject } from 'aurelia-framework';
 import { parseUtcDate } from './utilities';
 import { CaseType, FieldType, SortDirection } from './../models/index';
 import { OdataService } from './odata.service';
@@ -22,13 +22,13 @@ var DEFAULT_FILTER_TYPING_DEBOUNCE = 750;
 var DEFAULT_ITEMS_PER_PAGE = 25;
 var DEFAULT_PAGE_SIZE = 20;
 var GridOdataService = /** @class */ (function () {
-    function GridOdataService(odataService) {
-        this.odataService = odataService;
+    function GridOdataService() {
         this.defaultOptions = {
             top: DEFAULT_ITEMS_PER_PAGE,
             orderBy: '',
             caseType: CaseType.pascalCase
         };
+        this.odataService = new OdataService();
     }
     Object.defineProperty(GridOdataService.prototype, "_gridOptions", {
         /** Getter for the Grid Options pulled through the Grid Object */
@@ -98,10 +98,10 @@ var GridOdataService = /** @class */ (function () {
     /*
      * FILTERING
      */
-    GridOdataService.prototype.onFilterChanged = function (event, args) {
+    GridOdataService.prototype.processOnFilterChanged = function (event, args) {
         var _this = this;
         var serviceOptions = args.grid.getOptions();
-        var backendApi = serviceOptions.backendServiceApi || serviceOptions.onBackendEventApi;
+        var backendApi = serviceOptions.backendServiceApi;
         if (backendApi === undefined) {
             throw new Error('Something went wrong in the GridOdataService, "backendServiceApi" is not initialized');
         }
@@ -126,7 +126,7 @@ var GridOdataService = /** @class */ (function () {
     /*
      * PAGINATION
      */
-    GridOdataService.prototype.onPaginationChanged = function (event, args) {
+    GridOdataService.prototype.processOnPaginationChanged = function (event, args) {
         var pageSize = +(args.pageSize || DEFAULT_PAGE_SIZE);
         this.updatePagination(args.newPage, pageSize);
         // build the OData query which we will use in the WebAPI callback
@@ -135,7 +135,7 @@ var GridOdataService = /** @class */ (function () {
     /*
      * SORTING
      */
-    GridOdataService.prototype.onSortChanged = function (event, args) {
+    GridOdataService.prototype.processOnSortChanged = function (event, args) {
         var sortColumns = (args.multiColumnSort) ? args.sortCols : new Array({ sortCol: args.sortCol, sortAsc: args.sortAsc });
         // loop through all columns to inspect sorters & set the query
         this.updateSorters(sortColumns);
@@ -169,7 +169,7 @@ var GridOdataService = /** @class */ (function () {
                 var fieldName = columnDef.queryField || columnDef.queryFieldFilter || columnDef.field || columnDef.name || '';
                 var fieldType = columnDef.type || 'string';
                 var searchTerms = (columnFilter_1 ? columnFilter_1.searchTerms : null) || [];
-                var fieldSearchValue = columnFilter_1.searchTerm;
+                var fieldSearchValue = (Array.isArray(searchTerms) && searchTerms.length === 1) ? searchTerms[0] : '';
                 if (typeof fieldSearchValue === 'undefined') {
                     fieldSearchValue = '';
                 }
@@ -183,7 +183,7 @@ var GridOdataService = /** @class */ (function () {
                 var lastValueChar = (!!matches) ? matches[3] : (operator === '*z' ? '*' : '');
                 var bypassOdataQuery = columnFilter_1.bypassBackendQuery || false;
                 // no need to query if search value is empty
-                if (fieldName && searchValue === '') {
+                if (fieldName && searchValue === '' && searchTerms.length === 0) {
                     this_1.removeColumnFilter(fieldName);
                     return "continue";
                 }
@@ -204,7 +204,7 @@ var GridOdataService = /** @class */ (function () {
                         fieldName = String.titleCase(fieldName || '');
                     }
                     // when having more than 1 search term (then check if we have a "IN" or "NOT IN" filter search)
-                    if (searchTerms && searchTerms.length > 0) {
+                    if (searchTerms && searchTerms.length > 1) {
                         var tmpSearchTerms = [];
                         if (operator === 'IN') {
                             // example:: (Stage eq "Expired" or Stage eq "Renewal")
@@ -366,9 +366,6 @@ var GridOdataService = /** @class */ (function () {
             if (Array.isArray(filter.searchTerms)) {
                 tmpFilter.searchTerms = filter.searchTerms;
             }
-            else {
-                tmpFilter.searchTerm = filter.searchTerm;
-            }
             return tmpFilter;
         });
     };
@@ -405,6 +402,7 @@ var GridOdataService = /** @class */ (function () {
         return map;
     };
     GridOdataService = __decorate([
+        singleton(true),
         inject(OdataService)
     ], GridOdataService);
     return GridOdataService;

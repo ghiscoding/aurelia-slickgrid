@@ -2,6 +2,8 @@ import { arrayToCsvFormatter } from './arrayToCsvFormatter';
 import { boldFormatter } from './boldFormatter';
 import { checkboxFormatter } from './checkboxFormatter';
 import { checkmarkFormatter } from './checkmarkFormatter';
+import { collectionFormatter } from './collectionFormatter';
+import { collectionEditorFormatter } from './collectionEditorFormatter';
 import { complexObjectFormatter } from './complexObjectFormatter';
 import { dateIsoFormatter } from './dateIsoFormatter';
 import { dateTimeIsoAmPmFormatter } from './dateTimeIsoAmPmFormatter';
@@ -19,14 +21,15 @@ import { hyperlinkUriPrefixFormatter } from './hyperlinkUriPrefixFormatter';
 import { infoIconFormatter } from './infoIconFormatter';
 import { lowercaseFormatter } from './lowercaseFormatter';
 import { multipleFormatter } from './multipleFormatter';
-import { percentCompleteFormatter } from './percentCompleteFormatter';
+import { percentFormatter } from './percentFormatter';
 import { percentCompleteBarFormatter } from './percentCompleteBarFormatter';
+import { percentCompleteFormatter } from './percentCompleteFormatter';
+import { percentSymbolFormatter } from './percentSymbolFormatter';
 import { progressBarFormatter } from './progressBarFormatter';
 import { translateFormatter } from './translateFormatter';
 import { translateBooleanFormatter } from './translateBooleanFormatter';
 import { uppercaseFormatter } from './uppercaseFormatter';
 import { yesNoFormatter } from './yesNoFormatter';
-import { collectionFormatter } from './collectionFormatter';
 /** Provides a list of different Formatters that will change the cell value displayed in the UI */
 export const Formatters = {
     /** Takes an array of string and converts it to a comma delimited string */
@@ -43,14 +46,18 @@ export const Formatters = {
      * Looks up values from the columnDefinition.params.collection property and displays the label in CSV or string format
      * @example
      * // the grid will display 'foo' and 'bar' and not 1 and 2 from your dataset
-     * {
-     *   params: {
-     *     collection: [{ value: 1, label: 'foo'}, {value: 2, label: 'bar' }]
-     *   }
-     * }
+     * { params: { collection: [{ value: 1, label: 'foo'}, {value: 2, label: 'bar' }] }}
      * const dataset = [{ value: 1 },{ value: 2 }];
      */
     collection: collectionFormatter,
+    /**
+     * Looks up values from the columnDefinition.editor.collection property and displays the label in CSV or string format
+     * @example
+     * // the grid will display 'foo' and 'bar' and not 1 and 2 from your dataset
+     * { params: { collection: [{ value: 1, label: 'foo'}, {value: 2, label: 'bar' }] }}
+     * const dataset = [{ value: 1 },{ value: 2 }];
+     */
+    collectionEditor: collectionEditorFormatter,
     /** Takes a Date object and displays it as an ISO Date format */
     dateIso: dateIsoFormatter,
     /** Takes a Date object and displays it as an ISO Date+Time format */
@@ -86,13 +93,17 @@ export const Formatters = {
      * { field: 'title', formatter: Formatters.multiple, params: { formatters: [ Formatters.lowercase, Formatters.uppercase ] }
      */
     multiple: multipleFormatter,
+    /** Takes a cell value number (between 0.0-1.0) and displays a red (<50) or green (>=50) bar */
+    percent: percentFormatter,
     /** Takes a cell value number (between 0-100) and displays a red (<50) or green (>=50) bar */
     percentComplete: percentCompleteFormatter,
     /** Takes a cell value number (between 0-100) and displays Bootstrap "percent-complete-bar" a red (<30), silver (>30 & <70) or green (>=70) bar */
     percentCompleteBar: percentCompleteBarFormatter,
+    /** Takes a cell value number (between 0-100) and add the "%" after the number */
+    percentSymbol: percentSymbolFormatter,
     /** Takes a cell value number (between 0-100) and displays Bootstrap "progress-bar" a red (<30), silver (>30 & <70) or green (>=70) bar */
     progressBar: progressBarFormatter,
-    /** Takes a cell value and translates it (i18n). Requires an instance of the Translate Service:: `params: { i18n: this.translate } */
+    /** Takes a cell value and translates it (i18n). Requires an instance of the Translate Service:: `i18n: this.translate */
     translate: translateFormatter,
     /** Takes a boolean value, cast it to upperCase string and finally translates it (i18n). */
     translateBoolean: translateBooleanFormatter,

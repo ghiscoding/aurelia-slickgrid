@@ -1,4 +1,4 @@
-import { FieldType, OperatorType, FilterType, FormElementType } from '../models/index';
+import { FieldType, OperatorType } from '../models/index';
 /**
  * Simple function to which will loop and create as demanded the number of white spaces,
  * this will be used in the Excel export
@@ -50,13 +50,6 @@ export declare function mapOperatorType(operator: string): OperatorType;
  * @returns string map
  */
 export declare function mapOperatorByFieldType(fieldType: FieldType | string): OperatorType;
-/**
- * Mapper for query operator by a Filter Type
- * For example a multiple-select typically uses 'IN' operator
- * @param operator
- * @returns string map
- */
-export declare function mapOperatorByFilterType(filterType: FilterType | FormElementType | string): OperatorType;
 /**
  * Parse a date passed as a string and return a Date object (if valid)
  * @param string inputDateString

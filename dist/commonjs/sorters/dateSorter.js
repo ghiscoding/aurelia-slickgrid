@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var moment = require("moment");
-var sorterUtilities_1 = require("./sorterUtilities");
+var compareDateUtility_1 = require("./compareDateUtility");
 exports.dateSorter = function (value1, value2, sortDirection) {
-    return sorterUtilities_1.compareDates(sortDirection, value1, value2, moment.ISO_8601);
+    return compareDateUtility_1.compareDates(value1, value2, sortDirection, moment.ISO_8601);
 };
 //# sourceMappingURL=dateSorter.js.map

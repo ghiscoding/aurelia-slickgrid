@@ -27,8 +27,14 @@ System.register(["aurelia-i18n", "aurelia-framework", "./../models/index", "jque
             SelectFilter = /** @class */ (function () {
                 function SelectFilter(i18n) {
                     this.i18n = i18n;
-                    this.filterType = index_1.FilterType.select;
                 }
+                Object.defineProperty(SelectFilter.prototype, "operator", {
+                    get: function () {
+                        return index_1.OperatorType.equal;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
                 /**
                  * Initialize the Filter
                  */
@@ -40,28 +46,37 @@ System.register(["aurelia-i18n", "aurelia-framework", "./../models/index", "jque
                     this.grid = args.grid;
                     this.callback = args.callback;
                     this.columnDef = args.columnDef;
-                    this.searchTerm = args.searchTerm || '';
+                    this.searchTerms = args.searchTerms || [];
+                    // filter input can only have 1 search term, so we will use the 1st array index if it exist
+                    var searchTerm = (Array.isArray(this.searchTerms) && this.searchTerms[0]) || '';
+                    if (typeof searchTerm === 'boolean' || typeof searchTerm === 'number') {
+                        searchTerm = "" + searchTerm;
+                    }
                     // step 1, create HTML string template
                     var filterTemplate = this.buildTemplateHtmlString();
                     // step 2, create the DOM Element of the filter & initialize it if searchTerm is filled
-                    this.$filterElm = this.createDomElement(filterTemplate);
+                    this.$filterElm = this.createDomElement(filterTemplate, searchTerm);
                     // step 3, subscribe to the change event and run the callback when that happens
                     // also add/remove "filled" class for styling purposes
                     this.$filterElm.change(function (e) {
-                        (e && e.target && e.target.value) ? _this.$filterElm.addClass('filled') : _this.$filterElm.removeClass('filled');
-                        _this.callback(e, { columnDef: _this.columnDef, operator: 'EQ' });
+                        var value = e && e.target && e.target.value || '';
+                        if (!value || value === '') {
+                            _this.callback(e, { columnDef: _this.columnDef, clearFilterTriggered: true });
+                            _this.$filterElm.removeClass('filled');
+                        }
+                        else {
+                            _this.$filterElm.addClass('filled');
+                            _this.callback(e, { columnDef: _this.columnDef, searchTerms: [value], operator: 'EQ' });
+                        }
                     });
                 };
                 /**
                  * Clear the filter values
                  */
-                SelectFilter.prototype.clear = function (triggerFilterChange) {
-                    if (triggerFilterChange === void 0) { triggerFilterChange = true; }
+                SelectFilter.prototype.clear = function () {
                     if (this.$filterElm) {
                         this.$filterElm.val('');
-                        if (triggerFilterChange) {
-                            this.$filterElm.trigger('change');
-                        }
+                        this.$filterElm.trigger('change');
                     }
                 };
                 /**
@@ -85,20 +100,17 @@ System.register(["aurelia-i18n", "aurelia-framework", "./../models/index", "jque
                 // ------------------
                 SelectFilter.prototype.buildTemplateHtmlString = function () {
                     var _this = this;
-                    if (!this.columnDef || !this.columnDef.filter || (!this.columnDef.filter.collection && !this.columnDef.filter.selectOptions)) {
-                        throw new Error("[Aurelia-SlickGrid] You need to pass a \"collection\" for the Select Filter to work correctly. Also each option should include a value/label pair (or value/labelKey when using Locale). For example:: { filter: type: FilterType.select, collection: [{ value: true, label: 'True' }, { value: false, label: 'False'}] }");
+                    if (!this.columnDef || !this.columnDef.filter || !this.columnDef.filter.collection) {
+                        throw new Error("[Aurelia-SlickGrid] You need to pass a \"collection\" for the Select Filter to work correctly. Also each option should include a value/label pair (or value/labelKey when using Locale). For example: { filter: { model: Filters.select, collection: [{ value: true, label: 'True' }, { value: false, label: 'False'}] } }");
                     }
-                    if (!this.columnDef.filter.collection && this.columnDef.filter.selectOptions) {
-                        console.warn("[Aurelia-SlickGrid] The Select Filter \"selectOptions\" property will de deprecated in future version. Please use the new \"collection\" property which is more generic and can be used with other Filters (not just Select).");
-                    }
-                    var optionCollection = this.columnDef.filter.collection || this.columnDef.filter.selectOptions || [];
+                    var optionCollection = this.columnDef.filter.collection || [];
                     var labelName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.label : 'label';
                     var valueName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.value : 'value';
                     var isEnabledTranslate = (this.columnDef.filter.enableTranslateLabel) ? this.columnDef.filter.enableTranslateLabel : false;
                     var options = '';
                     optionCollection.forEach(function (option) {
                         if (!option || (option[labelName] === undefined && option.labelKey === undefined)) {
-                            throw new Error("A collection with value/label (or value/labelKey when using Locale) is required to populate the Select list, for example:: { filter: type: FilterType.select, collection: [ { value: '1', label: 'One' } ]')");
+                            throw new Error("A collection with value/label (or value/labelKey when using Locale) is required to populate the Select list, for example: { filter: { model: Filters.select, collection: [ { value: '1', label: 'One' } ] } }");
                         }
                         var labelKey = option.labelKey || option[labelName];
                         var textLabel = ((option.labelKey || isEnabledTranslate) && _this.i18n && typeof _this.i18n.tr === 'function') ? _this.i18n.tr(labelKey || ' ') : labelKey;
@@ -110,13 +122,13 @@ System.register(["aurelia-i18n", "aurelia-framework", "./../models/index", "jque
                  * From the html template string, create a DOM element
                  * @param filterTemplate
                  */
-                SelectFilter.prototype.createDomElement = function (filterTemplate) {
+                SelectFilter.prototype.createDomElement = function (filterTemplate, searchTerm) {
                     var $headerElm = this.grid.getHeaderRowColumn(this.columnDef.id);
                     $($headerElm).empty();
                     // create the DOM element & add an ID and filter class
                     var $filterElm = $(filterTemplate);
-                    var searchTerm = (typeof this.searchTerm === 'boolean') ? "" + this.searchTerm : this.searchTerm;
-                    $filterElm.val(searchTerm || '');
+                    var searchTermInput = (searchTerm || '');
+                    $filterElm.val(searchTermInput);
                     $filterElm.attr('id', "filter-" + this.columnDef.id);
                     $filterElm.data('columnId', this.columnDef.id);
                     // append the new DOM element to the header row

@@ -12,4 +12,4 @@ export declare const Filters: {
     singleSelect: typeof SingleSelectFilter;
     select: typeof SelectFilter;
 };
-export { PLUGIN_NAME, FilterFactory } from './filterFactory';
+export { FilterFactory } from './filterFactory';
