@@ -125,9 +125,7 @@ export class AureliaSlickgridCustomElement {
   }
 
   initialization() {
-    this.elm.dispatchEvent(new CustomEvent(`${aureliaEventPrefix}-on-before-grid-create`, {
-      bubbles: true,
-    }));
+    this.dispatchCustomEvent(`${aureliaEventPrefix}-on-before-grid-create`);
     this.ea.publish('onBeforeGridCreate', true);
 
     // make sure the dataset is initialized (if not it will throw an error that it cannot getLength of null)
@@ -171,17 +169,13 @@ export class AureliaSlickgridCustomElement {
     this.dataview.setItems(this._dataset, this.gridOptions.datasetIdPropertyName);
     this.dataview.endUpdate();
 
-    // publish certain events
-    this.elm.dispatchEvent(new CustomEvent(`${aureliaEventPrefix}-on-grid-created`, {
-      bubbles: true,
-      detail: this.grid
-    }));
+    this.executeAfterDataviewCreated(this.grid, this.gridOptions, this.dataview);
+
+    // publish & dispatch certain events
     this.ea.publish('onGridCreated', this.grid);
-    this.elm.dispatchEvent(new CustomEvent(`${aureliaEventPrefix}-on-dataview-created`, {
-      bubbles: true,
-      detail: this.dataview
-    }));
     this.ea.publish('onDataviewCreated', this.dataview);
+    this.dispatchCustomEvent(`${aureliaEventPrefix}-on-grid-created`, this.grid);
+    this.dispatchCustomEvent(`${aureliaEventPrefix}-on-dataview-created`, this.dataview);
 
     // attach resize ONLY after the dataView is ready
     this.attachResizeHook(this.grid, this.gridOptions);
@@ -230,26 +224,17 @@ export class AureliaSlickgridCustomElement {
       resizerService: this.resizerService,
       sortService: this.sortService,
     };
-    this.elm.dispatchEvent(new CustomEvent(`${aureliaEventPrefix}-on-aurelia-grid-created`, {
-      bubbles: true,
-      detail: aureliaElementInstance
-    }));
+    this.dispatchCustomEvent(`${aureliaEventPrefix}-on-aurelia-grid-created`, aureliaElementInstance);
   }
 
   detached() {
     this.ea.publish('onBeforeGridDestroy', this.grid);
-    this.elm.dispatchEvent(new CustomEvent(`${aureliaEventPrefix}-on-before-grid-destroy`, {
-      bubbles: true,
-      detail: this.grid
-    }));
+    this.dispatchCustomEvent(`${aureliaEventPrefix}-on-before-grid-destroy`, this.grid);
     this.dataview = [];
     this._eventHandler.unsubscribeAll();
     this.grid.destroy();
     this.ea.publish('onAfterGridDestroyed', true);
-    this.elm.dispatchEvent(new CustomEvent(`${aureliaEventPrefix}-on-after-grid-destroyed`, {
-      bubbles: true,
-      detail: this.grid
-    }));
+    this.dispatchCustomEvent(`${aureliaEventPrefix}-on-after-grid-destroyed`, this.grid);
 
     // dispose of all Services
     this.serviceList.forEach((service: any) => {
@@ -509,6 +494,15 @@ export class AureliaSlickgridCustomElement {
     }
   }
 
+  executeAfterDataviewCreated(grid: any, gridOptions: GridOption, dataView: any) {
+    // if user entered some Sort "presets", we need to reflect them all in the DOM
+    if (gridOptions.enableSorting) {
+      if (gridOptions.presets && Array.isArray(gridOptions.presets.sorters) && gridOptions.presets.sorters.length > 0) {
+        this.sortService.loadLocalPresets(grid, dataView);
+      }
+    }
+  }
+
   mergeGridOptions(gridOptions: GridOption): GridOption {
     gridOptions.gridId = this.gridId;
     gridOptions.gridContainerId = `slickGridContainer-${this.gridId}`;
@@ -593,5 +587,13 @@ export class AureliaSlickgridCustomElement {
       this.controlAndPluginService.renderColumnHeaders(newColumnDefinitions);
     }
     this.grid.autosizeColumns();
+  }
+
+  private dispatchCustomEvent(eventName: string, data?: any, isBubbling: boolean = true) {
+    const eventInit: CustomEventInit = { bubbles: isBubbling };
+    if (data) {
+      eventInit.detail = data;
+    }
+    this.elm.dispatchEvent(new CustomEvent(eventName, eventInit));
   }
 }
