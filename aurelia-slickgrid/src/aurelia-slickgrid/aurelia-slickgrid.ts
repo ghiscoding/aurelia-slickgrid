@@ -359,13 +359,7 @@ export class AureliaSlickgridCustomElement {
     for (const prop in grid) {
       if (grid.hasOwnProperty(prop) && prop.startsWith('on')) {
         this._eventHandler.subscribe(grid[prop], (e: any, args: any) => {
-          this.elm.dispatchEvent(new CustomEvent(`${eventPrefix}-${toKebabCase(prop)}`, {
-            bubbles: true,
-            detail: {
-              eventData: e,
-              args
-            }
-          }));
+          this.dispatchCustomEvent(`${eventPrefix}-${toKebabCase(prop)}`, { eventData: e, args });
         });
       }
     }
@@ -374,13 +368,7 @@ export class AureliaSlickgridCustomElement {
     for (const prop in dataView) {
       if (dataView.hasOwnProperty(prop) && prop.startsWith('on')) {
         this._eventHandler.subscribe(dataView[prop], (e: any, args: any) => {
-          this.elm.dispatchEvent(new CustomEvent(`${eventPrefix}-${toKebabCase(prop)}`, {
-            bubbles: true,
-            detail: {
-              eventData: e,
-              args
-            }
-          }));
+          this.dispatchCustomEvent(`${eventPrefix}-${toKebabCase(prop)}`, { eventData: e, args });
         });
       }
     }
