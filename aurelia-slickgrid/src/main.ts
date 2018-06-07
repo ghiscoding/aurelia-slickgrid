@@ -16,8 +16,13 @@ import { I18N, TCustomAttribute } from 'aurelia-i18n';
 import * as Backend from 'i18next-xhr-backend';
 import 'bootstrap';
 
-// remove out if you don't want a Promise polyfill (remove also from webpack.config.js)
-Bluebird.config({ warnings: { wForgottenReturn: false } });
+/** Disable long stack traces for IE11 */
+Bluebird.config({
+  warnings: {
+    wForgottenReturn: false
+  },
+  longStackTraces: false
+});
 
 export function configure(aurelia: Aurelia) {
   aurelia.use.standardConfiguration();
