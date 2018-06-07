@@ -231,7 +231,7 @@ export class CompoundDateFilter implements Filter {
     } else {
       const selectedOperator = this.$selectOperatorElm.find('option:selected').text();
       (this._currentValue) ? this.$filterElm.addClass('filled') : this.$filterElm.removeClass('filled');
-      this.callback(e, { columnDef: this.columnDef, searchTerms: [this._currentValue], operator: selectedOperator || '' });
+      this.callback(e, { columnDef: this.columnDef, searchTerms: (this._currentValue ? [this._currentValue] : null), operator: selectedOperator || '' });
     }
   }
 

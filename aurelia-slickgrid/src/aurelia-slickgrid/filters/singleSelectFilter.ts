@@ -41,14 +41,14 @@ export class SingleSelectFilter implements Filter {
         let selectedItem = '';
 
         if (Array.isArray(selectedItems) && selectedItems.length > 0) {
-          selectedItem = selectedItems[0];
+          selectedItem = selectedItems[0] || null;
           this.isFilled = true;
           this.$filterElm.addClass('filled').siblings('div .search-filter').addClass('filled');
         } else {
           this.isFilled = false;
           this.$filterElm.removeClass('filled').siblings('div .search-filter').removeClass('filled');
         }
-        this.callback(undefined, { columnDef: this.columnDef, operator: 'EQ', searchTerms: [selectedItem] });
+        this.callback(undefined, { columnDef: this.columnDef, operator: 'EQ', searchTerms: (selectedItem ? [selectedItem] : null) });
       }
     };
   }
