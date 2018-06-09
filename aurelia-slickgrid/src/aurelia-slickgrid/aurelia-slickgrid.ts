@@ -158,7 +158,7 @@ export class AureliaSlickgridCustomElement {
       internalColumnEditor: { ...c.editor }
     }));
 
-    this.controlAndPluginService.createPluginBeforeGridCreation(this._columnDefinitions, this.gridOptions);
+    this.controlAndPluginService.createCheckboxPluginBeforeGridCreation(this._columnDefinitions, this.gridOptions);
     this.grid = new Slick.Grid(`#${this.gridId}`, this.dataview, this._columnDefinitions, this.gridOptions);
     this.controlAndPluginService.attachDifferentControlOrPlugins(this.grid, this.dataview, this.groupItemMetadataProvider);
 
@@ -169,6 +169,7 @@ export class AureliaSlickgridCustomElement {
     this.dataview.setItems(this._dataset, this.gridOptions.datasetIdPropertyName);
     this.dataview.endUpdate();
 
+    // after the DataView is created & updated execute some processes
     this.executeAfterDataviewCreated(this.grid, this.gridOptions, this.dataview);
 
     // publish & dispatch certain events
@@ -325,7 +326,16 @@ export class AureliaSlickgridCustomElement {
     // if user entered some Columns "presets", we need to reflect them all in the grid
     if (gridOptions.presets && gridOptions.presets.columns && Array.isArray(gridOptions.presets.columns) && gridOptions.presets.columns.length > 0) {
       const gridColumns: Column[] = this.gridStateService.getAssociatedGridColumns(grid, gridOptions.presets.columns);
-      if (gridColumns && Array.isArray(gridColumns)) {
+      if (gridColumns && Array.isArray(gridColumns) && gridColumns.length > 0) {
+        // make sure that the checkbox selector is also visible if it is enabled
+        if (gridOptions.enableCheckboxSelector) {
+          const checkboxColumn = (Array.isArray(this.columnDefinitions) && this.columnDefinitions.length > 0) ? this.columnDefinitions[0] : null;
+          if (checkboxColumn && checkboxColumn.id === '_checkbox_selector' && gridColumns[0].id !== '_checkbox_selector') {
+            gridColumns.unshift(checkboxColumn);
+          }
+        }
+
+        // finally set the new presets columns (including checkbox selector if need be)
         grid.setColumns(gridColumns);
       }
     }

@@ -92,8 +92,6 @@ export class FilterService {
     // emit an onFilterChanged event
     if (args && !args.clearFilterTriggered) {
       this.emitFilterChanged('remote');
-    } else {
-      console.log('clear triggered', args);
     }
 
     // await for the Promise to resolve the data
@@ -156,7 +154,8 @@ export class FilterService {
         delete this._columnFilters[columnId];
       }
     }
-    this._columnFilters = {};
+    console.log(this._columnFilters);
+    // this._columnFilters = {};
 
     // we also need to refresh the dataView and optionally the grid (it's optional since we use DataView)
     if (this._dataView) {

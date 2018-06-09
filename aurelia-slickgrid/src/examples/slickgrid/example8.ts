@@ -56,35 +56,26 @@ export class Example8 {
       { id: 'finish', name: 'Finish', field: 'finish' },
       { id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', formatter: Formatters.checkmark }
     ];
-    for (let i = 0; i < this.columnDefinitions.length; i++) {
-      this.columnDefinitions[i].header = {
+
+    this.columnDefinitions.forEach((columnDef) => {
+      columnDef.header = {
         menu: {
           items: [
-            {
-              iconCssClass: 'fa fa-sort-asc',
-              title: 'Sort Ascending',
-              disabled: !this.columnDefinitions[i].sortable,
-              command: 'sort-asc'
-            },
-            {
-              iconCssClass: 'fa fa-sort-desc',
-              title: 'Sort Descending',
-              disabled: !this.columnDefinitions[i].sortable,
-              command: 'sort-desc'
-            },
-            {
-              title: 'Hide Column',
-              command: 'hide'
-            },
+            // add Custom Header Menu Item Commands at the bottom of the already existing internal custom items
+            // you cannot override an internal command but you can hide them and create your own
+            // also note that the internal custom commands are in the positionOrder range of 50-60,
+            // if you want yours at the bottom then start with 61, below 50 will make your command(s) on top
             {
               iconCssClass: 'fa fa-question-circle',
+              disabled: (columnDef.id === 'effort-driven'), // you can disable a command with certain logic
               title: 'Help',
-              command: 'help'
+              command: 'help',
+              positionOrder: 99
             }
           ]
         }
       };
-    }
+    });
 
     this.gridOptions = {
       enableAutoResize: true,
@@ -96,25 +87,11 @@ export class Example8 {
       enableFiltering: false,
       enableCellNavigation: true,
       headerMenu: {
+        hideSortCommands: false,
+        hideColumnHideCommand: false,
         onCommand: (e, args) => {
-          if (args.command === 'hide') {
-            this.aureliaGrid.pluginService.hideColumn(args.column);
-            this.aureliaGrid.pluginService.autoResizeColumns();
-          } else if (args.command === 'sort-asc' || args.command === 'sort-desc') {
-            // get previously sorted columns
-            const cols: ColumnSort[] = this.aureliaGrid.sortService.getPreviousColumnSorts(args.column.id + '');
-
-            // add to the column array, the column sorted by the header menu
-            cols.push({ sortCol: args.column, sortAsc: (args.command === 'sort-asc') });
-            this.aureliaGrid.sortService.onLocalSortChanged(this.gridObj, this.dataView, cols);
-
-            // update the this.gridObj sortColumns array which will at the same add the visual sort icon(s) on the UI
-            const newSortColumns: ColumnSort[] = cols.map((col) => {
-              return { columnId: col.sortCol.id, sortAsc: col.sortAsc };
-            });
-            this.gridObj.setSortColumns(newSortColumns); // add sort icon in UI
-          } else {
-            alert('Command: ' + args.command);
+          if (args.command === 'help') {
+            alert('Please help!!!');
           }
         }
       }

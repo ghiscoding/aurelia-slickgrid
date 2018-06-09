@@ -139,16 +139,6 @@ export class Example4 {
 
       // use columnDef searchTerms OR use presets as shown below
       presets: {
-        columns: [
-          { columnId: 'description', width: 170 }, // flip column position of Title/Description to Description/Title
-          { columnId: 'title', width: 55 },
-          { columnId: 'duration' },
-          { columnId: 'complete' },
-          { columnId: 'start' },
-          { columnId: 'usDateShort' },
-          { columnId: 'utcDate' }
-          // { columnId: 'effort-driven' }, // to HIDE a column, simply ommit it from the preset array
-        ],
         filters: [
           { columnId: 'duration', searchTerms: [2, 22, 44] },
           // { columnId: 'complete', searchTerms: ['5'], operator: '>' },

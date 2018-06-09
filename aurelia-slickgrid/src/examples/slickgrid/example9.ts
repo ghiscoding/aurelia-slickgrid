@@ -1,3 +1,4 @@
+import { I18N } from 'aurelia-i18n';
 import { autoinject, bindable } from 'aurelia-framework';
 import { AureliaGridInstance, Column, FieldType, Filters, Formatter, Formatters, GridOption } from '../../aurelia-slickgrid';
 
@@ -22,11 +23,13 @@ export class Example9 {
   dataset = [];
   dataView: any;
   gridObj: any;
+  selectedLanguage: string;
   visibleColumns;
 
-  constructor() {
+  constructor(private i18n: I18N) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
+    this.selectedLanguage = this.i18n.getLocale();
   }
 
   attached() {
@@ -87,37 +90,14 @@ export class Example9 {
         iconCssClass: 'fa fa-ellipsis-v',
         hideForceFitButton: true,
         hideSyncResizeButton: true,
+        hideToggleFilterCommand: false, // show/hide internal custom commands
         menuWidth: 17,
         resizeOnShowHeaderRow: true,
         customItems: [
-          {
-            iconCssClass: 'fa fa-filter text-danger',
-            title: 'Clear All Filters',
-            disabled: false,
-            command: 'clear-filter',
-            positionOrder: 0
-          },
-          {
-            iconCssClass: 'fa fa-unsorted text-danger',
-            title: 'Clear All Sorting',
-            disabled: false,
-            command: 'clear-sorting',
-            positionOrder: 1
-          },
-          {
-            iconCssClass: 'fa fa-random',
-            title: 'Toggle Filter Row',
-            disabled: false,
-            command: 'toggle-filter',
-            positionOrder: 2
-          },
-          {
-            iconCssClass: 'fa fa-random',
-            title: 'Toggle Top Panel',
-            disabled: false,
-            command: 'toggle-toppanel',
-            positionOrder: 3
-          },
+          // add Custom Items Commands at the bottom of the already existing internal custom items
+          // you cannot override an internal items but you can hide them and create your own
+          // also note that the internal custom commands are in the positionOrder range of 50-60,
+          // if you want yours at the bottom then start with 61, below 50 will make your command(s) on top
           {
             iconCssClass: 'fa fa-question-circle',
             title: 'Help',
@@ -133,17 +113,7 @@ export class Example9 {
           }
         ],
         onCommand: (e, args) => {
-          if (args.command === 'toggle-filter') {
-            this.gridObj.setHeaderRowVisibility(!this.gridObj.getOptions().showHeaderRow);
-          } else if (args.command === 'toggle-toppanel') {
-            this.gridObj.setTopPanelVisibility(!this.gridObj.getOptions().showTopPanel);
-          } else if (args.command === 'clear-filter') {
-            this.aureliaGrid.filterService.clearFilters();
-            this.dataView.refresh();
-          } else if (args.command === 'clear-sorting') {
-            this.aureliaGrid.sortService.clearSorting();
-            this.dataView.refresh();
-          } else {
+          if (args.command === 'help') {
             alert('Command: ' + args.command);
           }
         },
@@ -151,6 +121,8 @@ export class Example9 {
           console.log('Column selection changed from Grid Menu, visible columns: ', args.columns);
         }
       },
+      enableTranslate: true,
+      i18n: this.i18n
     };
   }
 
@@ -169,5 +141,10 @@ export class Example9 {
       };
     }
     this.dataset = mockDataset;
+  }
+
+  switchLanguage() {
+    this.selectedLanguage = (this.selectedLanguage === 'en') ? 'fr' : 'en';
+    this.i18n.setLocale(this.selectedLanguage);
   }
 }
