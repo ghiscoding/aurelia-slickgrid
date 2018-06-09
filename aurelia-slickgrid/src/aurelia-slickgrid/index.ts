@@ -44,6 +44,7 @@ export function configure(aurelia: any, callback: any) {
   aurelia.container.registerTransient(Filters.compoundDate);
   aurelia.container.registerTransient(Filters.compoundInput);
   aurelia.container.registerTransient(Filters.input);
+  aurelia.container.registerTransient(Filters.slider);
   aurelia.container.registerTransient(Filters.multipleSelect);
   aurelia.container.registerTransient(Filters.singleSelect);
   aurelia.container.registerTransient(Filters.select);
