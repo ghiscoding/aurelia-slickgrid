@@ -154,8 +154,6 @@ export class FilterService {
         delete this._columnFilters[columnId];
       }
     }
-    console.log(this._columnFilters);
-    // this._columnFilters = {};
 
     // we also need to refresh the dataView and optionally the grid (it's optional since we use DataView)
     if (this._dataView) {
@@ -165,7 +163,7 @@ export class FilterService {
     }
 
     // emit an event when filters are all cleared
-    this.ea.publish('filterService:filterCleared', {});
+    this.ea.publish('filterService:filterCleared', this._columnFilters);
   }
 
   customLocalFilter(dataView: any, item: any, args: any) {
