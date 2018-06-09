@@ -324,12 +324,12 @@ export class AureliaSlickgridCustomElement {
     );
 
     // if user entered some Columns "presets", we need to reflect them all in the grid
-    if (gridOptions.presets && gridOptions.presets.columns && Array.isArray(gridOptions.presets.columns) && gridOptions.presets.columns.length > 0) {
+    if (gridOptions.presets && Array.isArray(gridOptions.presets.columns) && gridOptions.presets.columns.length > 0) {
       const gridColumns: Column[] = this.gridStateService.getAssociatedGridColumns(grid, gridOptions.presets.columns);
       if (gridColumns && Array.isArray(gridColumns) && gridColumns.length > 0) {
         // make sure that the checkbox selector is also visible if it is enabled
         if (gridOptions.enableCheckboxSelector) {
-          const checkboxColumn = (Array.isArray(this.columnDefinitions) && this.columnDefinitions.length > 0) ? this.columnDefinitions[0] : null;
+          const checkboxColumn = (Array.isArray(this._columnDefinitions) && this._columnDefinitions.length > 0) ? this._columnDefinitions[0] : null;
           if (checkboxColumn && checkboxColumn.id === '_checkbox_selector' && gridColumns[0].id !== '_checkbox_selector') {
             gridColumns.unshift(checkboxColumn);
           }
