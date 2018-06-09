@@ -127,18 +127,18 @@ export class Example5 {
       const columnFilters = {};
 
       for (const param of queryParams) {
-        if (param.includes('$top=')) {
+        if (param.indexOf('$top=') > -1) {
           top = +(param.substring('$top='.length));
         }
-        if (param.includes('$skip=')) {
+        if (param.indexOf('$skip=') > -1) {
           skip = +(param.substring('$skip='.length));
         }
-        if (param.includes('$orderby=')) {
+        if (param.indexOf('$orderby=') > -1) {
           orderBy = param.substring('$orderby='.length);
         }
-        if (param.includes('$filter=')) {
+        if (param.indexOf('$filter=') > -1) {
           const filterBy = param.substring('$filter='.length).replace('%20', ' ');
-          if (filterBy.includes('substringof')) {
+          if (filterBy.indexOf('substringof') > -1) {
             const filterMatch = filterBy.match(/substringof\('(.*?)',([a-zA-Z ]*)/);
             const fieldName = filterMatch[2].trim();
             columnFilters[fieldName] = {
@@ -146,7 +146,7 @@ export class Example5 {
               term: filterMatch[1].trim()
             };
           }
-          if (filterBy.includes('eq')) {
+          if (filterBy.indexOf('eq') > -1) {
             const filterMatch = filterBy.match(/([a-zA-Z ]*) eq '(.*?)'/);
             const fieldName = filterMatch[1].trim();
             columnFilters[fieldName] = {
@@ -154,7 +154,7 @@ export class Example5 {
               term: filterMatch[2].trim()
             };
           }
-          if (filterBy.includes('startswith')) {
+          if (filterBy.indexOf('startswith') > -1) {
             const filterMatch = filterBy.match(/startswith\(([a-zA-Z ]*),\s?'(.*?)'/);
             const fieldName = filterMatch[1].trim();
             columnFilters[fieldName] = {
@@ -162,7 +162,7 @@ export class Example5 {
               term: filterMatch[2].trim()
             };
           }
-          if (filterBy.includes('endswith')) {
+          if (filterBy.indexOf('endswith') > -1) {
             const filterMatch = filterBy.match(/endswith\(([a-zA-Z ]*),\s?'(.*?)'/);
             const fieldName = filterMatch[1].trim();
             columnFilters[fieldName] = {
@@ -173,9 +173,9 @@ export class Example5 {
         }
       }
 
-      const sort = orderBy.includes('asc')
+      const sort = (orderBy.indexOf('asc') > -1)
         ? 'ASC'
-        : orderBy.includes('desc')
+        : (orderBy.indexOf('desc') > -1)
           ? 'DESC'
           : '';
 
@@ -218,7 +218,7 @@ export class Example5 {
                       case 'equal': return filterTerm.toLowerCase() === searchTerm;
                       case 'ends': return filterTerm.toLowerCase().endsWith(searchTerm);
                       case 'starts': return filterTerm.toLowerCase().startsWith(searchTerm);
-                      case 'substring': return filterTerm.toLowerCase().includes(searchTerm);
+                      case 'substring': return (filterTerm.toLowerCase().indexOf(searchTerm) > -1);
                     }
                   }
                 });

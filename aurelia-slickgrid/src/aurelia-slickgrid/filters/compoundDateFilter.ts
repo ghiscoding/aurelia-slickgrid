@@ -133,7 +133,7 @@ export class CompoundDateFilter implements Filter {
     };
 
     // add the time picker when format is UTC (Z) or has the 'h' (meaning hours)
-    if (outputFormat && (outputFormat === 'Z' || outputFormat.toLowerCase().includes('h'))) {
+    if (outputFormat && (outputFormat === 'Z' || outputFormat.toLowerCase().indexOf('h') > -1)) {
       pickerOptions.enableTime = true;
     }
 
