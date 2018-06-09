@@ -3,7 +3,6 @@ import { singleton, inject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import {
   CellArgs,
-  CustomGridMenu,
   Column,
   DelimiterType,
   ExportOption,
@@ -11,6 +10,7 @@ import {
   Formatter,
   GraphqlResult,
   GridMenu,
+  GridMenuItem,
   GridOption,
   HeaderButtonOnCommandArgs,
   HeaderMenuOnCommandArgs,

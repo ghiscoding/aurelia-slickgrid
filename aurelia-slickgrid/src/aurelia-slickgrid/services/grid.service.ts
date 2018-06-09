@@ -11,7 +11,7 @@ import * as $ from 'jquery';
 declare var Slick: any;
 
 @singleton(true)
-@inject(FilterService, GridStateService, SortService)
+@inject(ControlAndPluginService, FilterService, I18N, GridStateService, SortService)
 export class GridService {
   private _grid: any;
   private _dataView: any;
