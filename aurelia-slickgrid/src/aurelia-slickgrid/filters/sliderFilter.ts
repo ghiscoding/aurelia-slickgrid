@@ -12,16 +12,16 @@ import * as $ from 'jquery';
 
 const DEFAULT_VALUE = '0';
 
-export class InputRangeFilter implements Filter {
+export class SliderFilter implements Filter {
   private $filterElm: any;
   grid: any;
   searchTerms: SearchTerm[];
   columnDef: Column;
   callback: FilterCallback;
 
-  /** Getter for the Grid Options pulled through the Grid Object */
-  private get gridOptions(): GridOption {
-    return (this.grid && this.grid.getOptions) ? this.grid.getOptions() : {};
+  /** Getter for the Filter Generic Params */
+  private get filterParams(): any {
+    return this.columnDef && this.columnDef.filter && this.columnDef.filter.params || {};
   }
 
   get operator(): OperatorType | OperatorString {
@@ -68,7 +68,7 @@ export class InputRangeFilter implements Filter {
    */
   clear() {
     if (this.$filterElm) {
-      const clearedValue = this.columnDef && this.columnDef.params && this.columnDef.params.sliderDefaultValue || DEFAULT_VALUE;
+      const clearedValue = this.filterParams.sliderDefaultValue || DEFAULT_VALUE;
       this.$filterElm.children('input').val(clearedValue);
       this.$filterElm.children('span.input-group-addon').html(clearedValue);
       this.$filterElm.trigger('change');
@@ -101,7 +101,7 @@ export class InputRangeFilter implements Filter {
    * Create the HTML template as a string
    */
   private buildTemplateHtmlString() {
-    const maxValue = this.columnDef && this.columnDef.params && this.columnDef.params.sliderMaxValue || 100;
+    const maxValue = this.filterParams.sliderMaxValue || 100;
     return `
     <div class="input-group">
       <input type="range" id="rangeInput_${this.columnDef.field}"

@@ -343,82 +343,93 @@ input.search-filter[type=range] {
   /*removes default webkit styles*/
   -webkit-appearance: none;
 
+  /* change runnable track color while in focus on all browsers */
+  &:focus {
+    outline: none;
+
+    &::-webkit-slider-runnable-track {
+      background: $slide-filter-runnable-track-bgcolor;
+    }
+    &::-moz-range-track {
+      background: $slide-filter-runnable-track-bgcolor;
+    }
+    &::-ms-fill-lower {
+      background: $slide-filter-fill-focus-lower-color;
+    }
+    &::-ms-fill-upper {
+      background: $slide-filter-runnable-track-bgcolor;
+    }
+  }
+
+  /* WebKit specific (Opera/Chrome/Safari) */
+  &::-webkit-slider-runnable-track {
+    height: 5px;
+    background: $slide-filter-bgcolor;
+    border: none;
+    border-radius: 3px;
+  }
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: $slide-filter-handle-color;
+    margin-top: -4px;
+  }
+
+  /* Mozilla Firefox specific */
+
   /*fix for FF unable to apply focus style bug */
   border: $slide-filter-border;
-}
-input.search-filter[type=range]::-webkit-slider-runnable-track {
-  height: 5px;
-  background: $slide-filter-bgcolor;
-  border: none;
-  border-radius: 3px;
-}
-input.search-filter[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  border: none;
-  height: 16px;
-  width: 16px;
-  border-radius: 50%;
-  background: $slide-filter-handle-color;
-  margin-top: -4px;
-}
-input.search-filter[type=range]:focus {
-  outline: none;
-}
-input.search-filter[type=range]:focus::-webkit-slider-runnable-track {
-  background: $slide-filter-runnable-track-bgcolor;
-}
 
-input.search-filter[type=range]::-moz-range-track {
-  height: 5px;
-  background: $slide-filter-bgcolor;
-  border: none;
-  border-radius: 3px;
-}
-input.search-filter[type=range]::-moz-range-thumb {
-  border: none;
-  height: 16px;
-  width: 16px;
-  border-radius: 50%;
-  background: $slide-filter-handle-color;
-}
+  &::-moz-range-track {
+    height: 5px;
+    background: $slide-filter-bgcolor;
+    border: none;
+    border-radius: 3px;
+  }
+  &::-moz-range-thumb {
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: $slide-filter-handle-color;
+  }
 
-/*hide the outline behind the border*/
-input.search-filter[type=range]:-moz-focusring{
-  outline: 1px solid white;
-  outline-offset: -1px;
-}
+  /*hide the outline behind the border*/
+  &:-moz-focusring{
+    outline: 1px solid white;
+    outline-offset: -1px;
+  }
 
-input.search-filter[type=range]::-ms-track {
-  height: 5px;
+  /* Microsoft IE specific */
+  &::-ms-track {
+    height: 5px;
 
-  /*remove bg colour from the track, we'll use ms-fill-lower and ms-fill-upper instead */
-  background: transparent;
+    /*remove bg colour from the track, we'll use ms-fill-lower and ms-fill-upper instead */
+    background: transparent;
 
-  /*leave room for the larger thumb to overflow with a transparent border */
-  border-color: transparent;
-  border-width: 6px 0;
+    /*leave room for the larger thumb to overflow with a transparent border */
+    border-color: transparent;
+    border-width: 6px 0;
 
-  /*remove default tick marks*/
-  color: transparent;
-}
-input.search-filter[type=range]::-ms-fill-lower {
-  background: $slide-filter-fill-lower-color;
-  border-radius: 10px;
-}
-input.search-filter[type=range]::-ms-fill-upper {
-  background: $slide-filter-bgcolor;
-  border-radius: 10px;
-}
-input.search-filter[type=range]::-ms-thumb {
-  border: none;
-  height: 16px;
-  width: 16px;
-  border-radius: 50%;
-  background: $slide-filter-handle-color;
-}
-input.search-filter[type=range]:focus::-ms-fill-lower {
-  background: $slide-filter-fill-focus-lower-color;
-}
-input.search-filter[type=range]:focus::-ms-fill-upper {
-  background: $slide-filter-runnable-track-bgcolor;
+    /*remove default tick marks*/
+    color: transparent;
+  }
+  &::-ms-fill-lower {
+    background: $slide-filter-fill-lower-color;
+    border-radius: 10px;
+  }
+  &::-ms-fill-upper {
+    background: $slide-filter-bgcolor;
+    border-radius: 10px;
+  }
+  &::-ms-thumb {
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: $slide-filter-handle-color;
+  }
 }
