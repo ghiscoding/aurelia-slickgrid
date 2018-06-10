@@ -10,6 +10,8 @@ import {
 } from './../models/index';
 import * as $ from 'jquery';
 
+const DEFAULT_VALUE = '0';
+
 export class InputRangeFilter implements Filter {
   private $filterElm: any;
   grid: any;
@@ -66,7 +68,9 @@ export class InputRangeFilter implements Filter {
    */
   clear() {
     if (this.$filterElm) {
-      this.$filterElm.val('');
+      const clearedValue = this.columnDef && this.columnDef.params && this.columnDef.params.sliderDefaultValue || DEFAULT_VALUE;
+      this.$filterElm.children('input').val(clearedValue);
+      this.$filterElm.children('span.input-group-addon').html(clearedValue);
       this.$filterElm.trigger('change');
     }
   }
@@ -102,7 +106,7 @@ export class InputRangeFilter implements Filter {
     <div class="input-group">
       <input type="range" id="rangeInput_${this.columnDef.field}"
         name="rangeInput_${this.columnDef.field}"
-        defaultValue="0" value="0" max="${maxValue}"
+        defaultValue="0" max="${maxValue}"
         class="form-control search-filter range"
         oninput="$('#rangeOuput_${this.columnDef.field}').html(rangeInput_${this.columnDef.field}.value)"
       >
@@ -123,7 +127,8 @@ export class InputRangeFilter implements Filter {
     const $filterElm = $(filterTemplate);
     const searchTermInput = (searchTerm || '0') as string;
 
-    $filterElm.val(searchTermInput);
+    $filterElm.children('input').val(searchTermInput);
+    $filterElm.children('span.input-group-addon').html(searchTermInput);
     $filterElm.attr('id', `filter-${this.columnDef.id}`);
     $filterElm.data('columnId', this.columnDef.id);
 
