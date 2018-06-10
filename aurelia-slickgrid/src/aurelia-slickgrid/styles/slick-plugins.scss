@@ -345,12 +345,8 @@ input.search-filter[type=range] {
 
   /*fix for FF unable to apply focus style bug */
   border: $slide-filter-border;
-
-  /*required for proper track sizing in FF*/
-  width: 300px;
 }
 input.search-filter[type=range]::-webkit-slider-runnable-track {
-  width: 300px;
   height: 5px;
   background: $slide-filter-bgcolor;
   border: none;
@@ -393,7 +389,6 @@ input.search-filter[type=range]:-moz-focusring{
 }
 
 input.search-filter[type=range]::-ms-track {
-  width: 300px;
   height: 5px;
 
   /*remove bg colour from the track, we'll use ms-fill-lower and ms-fill-upper instead */

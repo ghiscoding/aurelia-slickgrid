@@ -97,8 +97,18 @@ export class InputRangeFilter implements Filter {
    * Create the HTML template as a string
    */
   private buildTemplateHtmlString() {
-    const placeholder = (this.gridOptions) ? (this.gridOptions.defaultFilterPlaceholder || '') : '';
-    return `<input type="range" defaultValue="0" value="0" class="form-control search-filter range">`;
+    const maxValue = this.columnDef && this.columnDef.params && this.columnDef.params.sliderMaxValue || 100;
+    return `
+    <div class="input-group">
+      <input type="range" id="rangeInput_${this.columnDef.field}"
+        name="rangeInput_${this.columnDef.field}"
+        defaultValue="0" value="0" max="${maxValue}"
+        class="form-control search-filter range"
+        oninput="$('#rangeOuput_${this.columnDef.field}').html(rangeInput_${this.columnDef.field}.value)"
+      >
+      <span class="input-group-addon" id="rangeOuput_${this.columnDef.field}">0</span>
+    </div>
+    `;
   }
 
   /**

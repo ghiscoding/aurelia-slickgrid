@@ -172,13 +172,13 @@ $compound-filter-text-color:            $primary-color !default;
 $compound-filter-text-font-size:        13px !default;
 $compound-filter-text-padding:          0 0 0 2px !default;
 
-/* Input Range Filter */@at-root
-$slide-filter-handle-color:             rgb(157, 199, 214) !default;
+/* Input Range Filter */
+$slide-filter-handle-color:             rgb(159, 190, 162) !default;
 $slide-filter-border:                   1px solid #ccc !default;
 $slide-filter-bgcolor:                  #eee !default;
-$slide-filter-runnable-track-bgcolor:   #aaa !default;
-$slide-filter-fill-lower-color:         #777 !default; /* ms only */
-$slide-filter-fill-focus-lower-color:   #888 !default; /* ms only */
+$slide-filter-runnable-track-bgcolor:   #ddd !default;
+$slide-filter-fill-lower-color:         #ddd !default; /* ms only */
+$slide-filter-fill-focus-lower-color:   #aaa !default; /* ms only */
 
 /* Multiple-Select Filter */
 $multiselect-input-filter-border:       1px solid #ccc !default;
