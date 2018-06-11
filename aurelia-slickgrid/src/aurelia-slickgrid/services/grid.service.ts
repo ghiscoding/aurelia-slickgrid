@@ -263,7 +263,7 @@ export class GridService {
     }
     const row = this._dataView.getRowById(itemId);
 
-    if (!item || !row) {
+    if (!item || row === undefined) {
       throw new Error(`Could not find the item in the grid or it's associated "id"`);
     }
 

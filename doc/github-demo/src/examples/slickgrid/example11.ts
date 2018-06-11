@@ -166,8 +166,11 @@ export class Example11 {
   }
 
   updateSecondItem() {
-    const firstItem = this.aureliaGrid.gridService.getDataItemByRowNumber(1);
-    firstItem.duration = Math.round(Math.random() * 100);
-    this.aureliaGrid.gridService.updateDataGridItem(firstItem);
+    const updatedItem = this.aureliaGrid.gridService.getDataItemByRowNumber(1);
+    updatedItem.duration = Math.round(Math.random() * 100);
+    this.aureliaGrid.gridService.updateDataGridItem(updatedItem);
+
+    // OR by id
+    // this.aureliaGrid.gridService.updateDataGridItemById(updatedItem.id, updatedItem);
   }
 }
