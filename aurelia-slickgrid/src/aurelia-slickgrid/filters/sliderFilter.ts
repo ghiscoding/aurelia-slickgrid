@@ -109,16 +109,24 @@ export class SliderFilter implements Filter {
     const maxValue = this.filterParams.sliderMaxValue || DEFAULT_MAX_VALUE;
     const step = this.filterParams.sliderStep || DEFAULT_STEP;
 
+    if (this.filterParams.hideSliderValue) {
+      return `
+        <input type="range" id="rangeInput_${this.columnDef.field}"
+          name="rangeInput_${this.columnDef.field}"
+          defaultValue="${defaultValue}" min="${minValue}" max="${maxValue}" step="${step}"
+          class="form-control search-filter range"
+          onmousemove="$('#rangeOuput_${this.columnDef.field}').html(rangeInput_${this.columnDef.field}.value)" />`;
+    }
+
     return `
-    <div class="input-group">
-      <input type="range" id="rangeInput_${this.columnDef.field}"
-        name="rangeInput_${this.columnDef.field}"
-        defaultValue="${defaultValue}" min="${minValue}" max="${maxValue}" step="${step}"
-        class="form-control search-filter range"
-        oninput="$('#rangeOuput_${this.columnDef.field}').html(rangeInput_${this.columnDef.field}.value)" />
-      <span class="input-group-addon" id="rangeOuput_${this.columnDef.field}">${defaultValue}</span>
-    </div>
-    `;
+      <div class="input-group">
+        <input type="range" id="rangeInput_${this.columnDef.field}"
+          name="rangeInput_${this.columnDef.field}"
+          defaultValue="${defaultValue}" min="${minValue}" max="${maxValue}" step="${step}"
+          class="form-control search-filter range"
+          onmousemove="$('#rangeOuput_${this.columnDef.field}').html(rangeInput_${this.columnDef.field}.value)" />
+        <span class="input-group-addon" id="rangeOuput_${this.columnDef.field}">${defaultValue}</span>
+      </div>`;
   }
 
   /**
