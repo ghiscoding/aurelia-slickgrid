@@ -10,7 +10,10 @@ import {
 } from './../models/index';
 import * as $ from 'jquery';
 
-const DEFAULT_VALUE = '0';
+const DEFAULT_VALUE = 0;
+const DEFAULT_MIN_VALUE = 0;
+const DEFAULT_MAX_VALUE = 100;
+const DEFAULT_STEP = 1;
 
 export class SliderFilter implements Filter {
   private $filterElm: any;
@@ -101,16 +104,19 @@ export class SliderFilter implements Filter {
    * Create the HTML template as a string
    */
   private buildTemplateHtmlString() {
-    const maxValue = this.filterParams.sliderMaxValue || 100;
+    const defaultValue = this.filterParams.sliderDefaultValue || DEFAULT_VALUE;
+    const minValue = this.filterParams.sliderMinValue || DEFAULT_MIN_VALUE;
+    const maxValue = this.filterParams.sliderMaxValue || DEFAULT_MAX_VALUE;
+    const step = this.filterParams.sliderStep || DEFAULT_STEP;
+
     return `
     <div class="input-group">
       <input type="range" id="rangeInput_${this.columnDef.field}"
         name="rangeInput_${this.columnDef.field}"
-        defaultValue="0" max="${maxValue}"
+        defaultValue="${defaultValue}" min="${minValue}" max="${maxValue}" step="${step}"
         class="form-control search-filter range"
-        oninput="$('#rangeOuput_${this.columnDef.field}').html(rangeInput_${this.columnDef.field}.value)"
-      >
-      <span class="input-group-addon" id="rangeOuput_${this.columnDef.field}">0</span>
+        oninput="$('#rangeOuput_${this.columnDef.field}').html(rangeInput_${this.columnDef.field}.value)" />
+      <span class="input-group-addon" id="rangeOuput_${this.columnDef.field}">${defaultValue}</span>
     </div>
     `;
   }
