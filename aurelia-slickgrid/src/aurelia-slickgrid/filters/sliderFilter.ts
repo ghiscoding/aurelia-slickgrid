@@ -10,7 +10,6 @@ import {
 } from './../models/index';
 import * as $ from 'jquery';
 
-const DEFAULT_VALUE = 0;
 const DEFAULT_MIN_VALUE = 0;
 const DEFAULT_MAX_VALUE = 100;
 const DEFAULT_STEP = 1;
@@ -71,7 +70,7 @@ export class SliderFilter implements Filter {
    */
   clear() {
     if (this.$filterElm) {
-      const clearedValue = this.filterParams.sliderDefaultValue || DEFAULT_VALUE;
+      const clearedValue = this.filterParams.hasOwnProperty('sliderDefaultValue') ? this.filterParams.sliderDefaultValue : DEFAULT_MIN_VALUE;
       this.$filterElm.children('input').val(clearedValue);
       this.$filterElm.children('span.input-group-addon').html(clearedValue);
       this.$filterElm.trigger('change');
@@ -104,10 +103,10 @@ export class SliderFilter implements Filter {
    * Create the HTML template as a string
    */
   private buildTemplateHtmlString() {
-    const defaultValue = this.filterParams.sliderDefaultValue || DEFAULT_VALUE;
-    const minValue = this.filterParams.sliderMinValue || DEFAULT_MIN_VALUE;
-    const maxValue = this.filterParams.sliderMaxValue || DEFAULT_MAX_VALUE;
-    const step = this.filterParams.sliderStep || DEFAULT_STEP;
+    const minValue = this.filterParams.hasOwnProperty('sliderMinValue') ? this.filterParams.sliderMinValue : DEFAULT_MIN_VALUE;
+    const maxValue = this.filterParams.hasOwnProperty('sliderMaxValue') ? this.filterParams.sliderMaxValue : DEFAULT_MAX_VALUE;
+    const defaultValue = this.filterParams.hasOwnProperty('sliderDefaultValue') ? this.filterParams.sliderDefaultValue : minValue;
+    const step = this.filterParams.hasOwnProperty('sliderStep') ? this.filterParams.sliderStep : DEFAULT_STEP;
 
     if (this.filterParams.hideSliderValue) {
       return `
