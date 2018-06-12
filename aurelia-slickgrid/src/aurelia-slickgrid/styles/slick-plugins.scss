@@ -348,23 +348,23 @@ input.search-filter[type=range] {
     outline: none;
 
     &::-webkit-slider-runnable-track {
-      background: $slide-filter-runnable-track-bgcolor;
+      background: $slider-filter-runnable-track-bgcolor;
     }
     &::-moz-range-track {
-      background: $slide-filter-runnable-track-bgcolor;
+      background: $slider-filter-runnable-track-bgcolor;
     }
     &::-ms-fill-lower {
-      background: $slide-filter-fill-focus-lower-color;
+      background: $slider-filter-fill-focus-lower-color;
     }
     &::-ms-fill-upper {
-      background: $slide-filter-runnable-track-bgcolor;
+      background: $slider-filter-runnable-track-bgcolor;
     }
   }
 
   /* WebKit specific (Opera/Chrome/Safari) */
   &::-webkit-slider-runnable-track {
     height: 5px;
-    background: $slide-filter-bgcolor;
+    background: $slider-filter-bgcolor;
     border: none;
     border-radius: 3px;
   }
@@ -374,18 +374,18 @@ input.search-filter[type=range] {
     height: 16px;
     width: 16px;
     border-radius: 50%;
-    background: $slide-filter-handle-color;
+    background: $slider-filter-handle-color;
     margin-top: -4px;
   }
 
   /* Mozilla Firefox specific */
 
   /*fix for FF unable to apply focus style bug */
-  border: $slide-filter-border;
+  border: $slider-filter-border;
 
   &::-moz-range-track {
     height: 5px;
-    background: $slide-filter-bgcolor;
+    background: $slider-filter-bgcolor;
     border: none;
     border-radius: 3px;
   }
@@ -394,7 +394,7 @@ input.search-filter[type=range] {
     height: 16px;
     width: 16px;
     border-radius: 50%;
-    background: $slide-filter-handle-color;
+    background: $slider-filter-handle-color;
   }
 
   /*hide the outline behind the border*/
@@ -418,11 +418,11 @@ input.search-filter[type=range] {
     color: transparent;
   }
   &::-ms-fill-lower {
-    background: $slide-filter-fill-lower-color;
+    background: $slider-filter-fill-lower-color;
     border-radius: 10px;
   }
   &::-ms-fill-upper {
-    background: $slide-filter-bgcolor;
+    background: $slider-filter-bgcolor;
     border-radius: 10px;
   }
   &::-ms-thumb {
@@ -430,11 +430,14 @@ input.search-filter[type=range] {
     height: 16px;
     width: 16px;
     border-radius: 50%;
-    background: $slide-filter-handle-color;
+    background: $slider-filter-handle-color;
   }
 }
 
-.slider-value {
-  font-size: ($font-size-base-value - 1px) !important;
-  height: $header-input-height;
+.search-filter {
+  .slider-value {
+    padding: $slider-filter-number-padding !important;
+    font-size: $slider-filter-number-font-size !important;
+    height: $header-input-height;
+  }
 }
