@@ -1,12 +1,12 @@
 import {
   Column,
+  ColumnFilter,
   Filter,
   FilterArguments,
   FilterCallback,
-  GridOption,
   OperatorType,
   OperatorString,
-  SearchTerm
+  SearchTerm,
 } from './../models/index';
 import * as $ from 'jquery';
 
@@ -26,8 +26,13 @@ export class SliderFilter implements Filter {
     return this.columnDef && this.columnDef.filter && this.columnDef.filter.params || {};
   }
 
+  /** Getter for the `filter` properties */
+  private get filterProperties(): ColumnFilter {
+    return this.columnDef && this.columnDef.filter || {};
+  }
+
   get operator(): OperatorType | OperatorString {
-    return OperatorType.equal;
+    return this.columnDef.filter.operator || OperatorType.equal;
   }
 
   /**
@@ -60,7 +65,7 @@ export class SliderFilter implements Filter {
         this.$filterElm.removeClass('filled');
       } else {
         this.$filterElm.addClass('filled');
-        this.callback(e, { columnDef: this.columnDef, searchTerms: [value] });
+        this.callback(e, { columnDef: this.columnDef, operator: this.operator, searchTerms: [value] });
       }
     });
   }
@@ -70,7 +75,7 @@ export class SliderFilter implements Filter {
    */
   clear() {
     if (this.$filterElm) {
-      const clearedValue = this.filterParams.hasOwnProperty('sliderDefaultValue') ? this.filterParams.sliderDefaultValue : DEFAULT_MIN_VALUE;
+      const clearedValue = this.filterParams.hasOwnProperty('sliderStartValue') ? this.filterParams.sliderStartValue : DEFAULT_MIN_VALUE;
       this.$filterElm.children('input').val(clearedValue);
       this.$filterElm.children('span.input-group-addon').html(clearedValue);
       this.$filterElm.trigger('change');
@@ -103,18 +108,17 @@ export class SliderFilter implements Filter {
    * Create the HTML template as a string
    */
   private buildTemplateHtmlString() {
-    const minValue = this.filterParams.hasOwnProperty('sliderMinValue') ? this.filterParams.sliderMinValue : DEFAULT_MIN_VALUE;
-    const maxValue = this.filterParams.hasOwnProperty('sliderMaxValue') ? this.filterParams.sliderMaxValue : DEFAULT_MAX_VALUE;
-    const defaultValue = this.filterParams.hasOwnProperty('sliderDefaultValue') ? this.filterParams.sliderDefaultValue : minValue;
-    const step = this.filterParams.hasOwnProperty('sliderStep') ? this.filterParams.sliderStep : DEFAULT_STEP;
+    const minValue = this.filterProperties.hasOwnProperty('minValue') ? this.filterProperties.minValue : DEFAULT_MIN_VALUE;
+    const maxValue = this.filterProperties.hasOwnProperty('maxValue') ? this.filterProperties.maxValue : DEFAULT_MAX_VALUE;
+    const defaultValue = this.filterParams.hasOwnProperty('sliderStartValue') ? this.filterParams.sliderStartValue : minValue;
+    const step = this.filterProperties.hasOwnProperty('valueStep') ? this.filterProperties.valueStep : DEFAULT_STEP;
 
-    if (this.filterParams.hideSliderValue) {
+    if (this.filterParams.hideSliderNumber) {
       return `
         <input type="range" id="rangeInput_${this.columnDef.field}"
           name="rangeInput_${this.columnDef.field}"
           defaultValue="${defaultValue}" min="${minValue}" max="${maxValue}" step="${step}"
-          class="form-control search-filter range"
-          onmousemove="$('#rangeOuput_${this.columnDef.field}').html(rangeInput_${this.columnDef.field}.value)" />`;
+          class="form-control search-filter range" />`;
     }
 
     return `
@@ -124,7 +128,7 @@ export class SliderFilter implements Filter {
           defaultValue="${defaultValue}" min="${minValue}" max="${maxValue}" step="${step}"
           class="form-control search-filter range"
           onmousemove="$('#rangeOuput_${this.columnDef.field}').html(rangeInput_${this.columnDef.field}.value)" />
-        <span class="input-group-addon" id="rangeOuput_${this.columnDef.field}">${defaultValue}</span>
+        <span class="input-group-addon slider-value" id="rangeOuput_${this.columnDef.field}">${defaultValue}</span>
       </div>`;
   }
 

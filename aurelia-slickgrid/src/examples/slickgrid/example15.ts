@@ -105,7 +105,7 @@ export class Example15 {
       },
       {
         id: 'complete', name: '% Complete', field: 'percentComplete', minWidth: 70, type: FieldType.number, sortable: true, width: 100,
-        formatter: Formatters.percentCompleteBar, filterable: true, filter: { model: Filters.slider }
+        formatter: Formatters.percentCompleteBar, filterable: true, filter: { model: Filters.slider, operator: '>' }
       },
       {
         id: 'start', name: 'Start', field: 'start', headerKey: 'START', formatter: Formatters.dateIso, sortable: true, minWidth: 75, exportWithFormatter: true, width: 100,

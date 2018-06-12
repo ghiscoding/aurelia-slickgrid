@@ -433,3 +433,8 @@ input.search-filter[type=range] {
     background: $slide-filter-handle-color;
   }
 }
+
+.slider-value {
+  font-size: ($font-size-base-value - 1px) !important;
+  height: $header-input-height;
+}
