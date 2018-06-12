@@ -363,7 +363,7 @@ input.search-filter[type=range] {
 
   /* WebKit specific (Opera/Chrome/Safari) */
   &::-webkit-slider-runnable-track {
-    height: 5px;
+    height: $slider-filter-runnable-track-height;
     background: $slider-filter-bgcolor;
     border: none;
     border-radius: 3px;
@@ -371,10 +371,11 @@ input.search-filter[type=range] {
   &::-webkit-slider-thumb {
     -webkit-appearance: none;
     border: none;
-    height: 16px;
-    width: 16px;
+    height: $slider-filter-thumb-size;
+    width: $slider-filter-thumb-size;
     border-radius: 50%;
-    background: $slider-filter-handle-color;
+    border: $slider-filter-thumb-border;
+    background: $slider-filter-thumb-color;
     margin-top: -4px;
   }
 
@@ -384,17 +385,18 @@ input.search-filter[type=range] {
   border: $slider-filter-border;
 
   &::-moz-range-track {
-    height: 5px;
+    height: $slider-filter-runnable-track-height;
     background: $slider-filter-bgcolor;
     border: none;
     border-radius: 3px;
   }
   &::-moz-range-thumb {
     border: none;
-    height: 16px;
-    width: 16px;
+    height: $slider-filter-thumb-size;
+    width: $slider-filter-thumb-size;
     border-radius: 50%;
-    background: $slider-filter-handle-color;
+    border: $slider-filter-thumb-border;
+    background: $slider-filter-thumb-color;
   }
 
   /*hide the outline behind the border*/
@@ -405,7 +407,7 @@ input.search-filter[type=range] {
 
   /* Microsoft IE specific */
   &::-ms-track {
-    height: 5px;
+    height: $slider-filter-runnable-track-height;
 
     /*remove bg colour from the track, we'll use ms-fill-lower and ms-fill-upper instead */
     background: transparent;
@@ -427,10 +429,12 @@ input.search-filter[type=range] {
   }
   &::-ms-thumb {
     border: none;
-    height: 16px;
-    width: 16px;
+    height: $slider-filter-thumb-size;
+    width: $slider-filter-thumb-size;
     border-radius: 50%;
-    background: $slider-filter-handle-color;
+    border: $slider-filter-thumb-border;
+    background: $slider-filter-thumb-color;
+    margin-top: 2px;
   }
 }
 
