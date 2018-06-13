@@ -115,10 +115,12 @@ export class SliderFilter implements Filter {
 
     if (this.filterParams.hideSliderNumber) {
       return `
+      <div>
         <input type="range" id="rangeInput_${this.columnDef.field}"
           name="rangeInput_${this.columnDef.field}"
           defaultValue="${defaultValue}" min="${minValue}" max="${maxValue}" step="${step}"
-          class="form-control search-filter range" />`;
+          class="form-control search-filter range" />
+      </div>`;
     }
 
     return `
