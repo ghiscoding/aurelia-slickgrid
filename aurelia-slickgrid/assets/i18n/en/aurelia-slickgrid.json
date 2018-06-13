@@ -14,6 +14,7 @@
   "GROUP_BY": "Group by",
   "HIDE_COLUMN": "Hide Column",
   "IN_COLLECTION_SEPERATED_BY_COMMA": "Search items in a collection, must be separated by a comma (a,b)",
+  "INVALID_FLOAT": "The number must valid and have a maximum of {{maxDecimal}} decimals.",
   "ITEMS": "Items",
   "ITEMS_PER_PAGE": "items per page",
   "NOT_IN_COLLECTION_SEPERATED_BY_COMMA": "Search items not in a collection, must be separated by a comma (a,b)",
@@ -35,6 +36,7 @@
       "ZIP": "Billing Address Zip"
     }
   },
+  "CUSTOM_COMMANDS": "Custom Commands",
   "DURATION": "Duration",
   "COMPANY": "Company",
   "COMPLETED": "Completed",
@@ -42,6 +44,7 @@
   "FEMALE": "Female",
   "FINISH": "Finish",
   "GENDER": "Gender",
+  "HELP": "Help",
   "MALE": "Male",
   "NAME": "Name",
   "START": "Start",

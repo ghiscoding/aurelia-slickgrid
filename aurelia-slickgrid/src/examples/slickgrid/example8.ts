@@ -1,3 +1,4 @@
+import { I18N } from 'aurelia-i18n';
 import { autoinject, bindable } from 'aurelia-framework';
 import { AureliaGridInstance, Column, ColumnSort, FieldType, Formatter, Formatters, GridOption } from '../../aurelia-slickgrid';
 import * as $ from 'jquery';
@@ -23,11 +24,13 @@ export class Example8 {
   dataset = [];
   dataView: any;
   gridObj: any;
+  selectedLanguage: string;
   visibleColumns;
 
-  constructor() {
+  constructor(private i18n: I18N) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
+    this.selectedLanguage = this.i18n.getLocale();
   }
 
   attached() {
@@ -49,12 +52,12 @@ export class Example8 {
 
   defineGrid() {
     this.columnDefinitions = [
-      { id: 'title', name: 'Title', field: 'title' },
-      { id: 'duration', name: 'Duration', field: 'duration', sortable: true },
+      { id: 'title', name: 'Title', field: 'title', headerKey: 'TITLE' },
+      { id: 'duration', name: 'Duration', field: 'duration', headerKey: 'DURATION', sortable: true },
       { id: '%', name: '% Complete', field: 'percentComplete', sortable: true },
-      { id: 'start', name: 'Start', field: 'start' },
-      { id: 'finish', name: 'Finish', field: 'finish' },
-      { id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', formatter: Formatters.checkmark }
+      { id: 'start', name: 'Start', field: 'start', headerKey: 'START' },
+      { id: 'finish', name: 'Finish', field: 'finish', headerKey: 'FINISH' },
+      { id: 'completed', name: 'Completed', field: 'completed', headerKey: 'COMPLETED', formatter: Formatters.checkmark }
     ];
 
     this.columnDefinitions.forEach((columnDef) => {
@@ -68,7 +71,7 @@ export class Example8 {
             {
               iconCssClass: 'fa fa-question-circle',
               disabled: (columnDef.id === 'effort-driven'), // you can disable a command with certain logic
-              title: 'Help',
+              titleKey: 'HELP', // use "title" as plain string OR "titleKey" when using a translation key
               command: 'help',
               positionOrder: 99
             }
@@ -94,7 +97,9 @@ export class Example8 {
             alert('Please help!!!');
           }
         }
-      }
+      },
+      enableTranslate: true,
+      i18n: this.i18n
     };
   }
 
@@ -109,9 +114,14 @@ export class Example8 {
         percentComplete: Math.round(Math.random() * 100),
         start: '01/01/2009',
         finish: '01/05/2009',
-        effortDriven: (i % 5 === 0)
+        completed: (i % 5 === 0)
       };
     }
     this.dataset = mockDataset;
+  }
+
+  switchLanguage() {
+    this.selectedLanguage = (this.selectedLanguage === 'en') ? 'fr' : 'en';
+    this.i18n.setLocale(this.selectedLanguage);
   }
 }

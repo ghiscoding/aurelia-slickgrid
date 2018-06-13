@@ -45,18 +45,18 @@ export class Example9 {
 
   defineGrid() {
     this.columnDefinitions = [
-      { id: 'title', name: 'Title', field: 'title', filterable: true, type: FieldType.string },
-      { id: 'duration', name: 'Duration', field: 'duration', sortable: true, filterable: true, type: FieldType.string },
+      { id: 'title', name: 'Title', field: 'title', headerKey: 'TITLE', filterable: true, type: FieldType.string },
+      { id: 'duration', name: 'Duration', field: 'duration', headerKey: 'DURATION', sortable: true, filterable: true, type: FieldType.string },
       {
         id: '%', name: '% Complete', field: 'percentComplete', sortable: true, filterable: true,
         type: FieldType.number,
         formatter: Formatters.percentCompleteBar,
         filter: { model: Filters.compoundSlider, params: { hideSliderNumber: false } }
       },
-      { id: 'start', name: 'Start', field: 'start', filterable: true, type: FieldType.dateUs, filter: { model: Filters.compoundDate } },
-      { id: 'finish', name: 'Finish', field: 'finish', filterable: true, type: FieldType.dateUs, filter: { model: Filters.compoundDate } },
+      { id: 'start', name: 'Start', field: 'start', headerKey: 'START', filterable: true, type: FieldType.dateUs, filter: { model: Filters.compoundDate } },
+      { id: 'finish', name: 'Finish', field: 'finish', headerKey: 'FINISH', filterable: true, type: FieldType.dateUs, filter: { model: Filters.compoundDate } },
       {
-        id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', maxWidth: 80, formatter: Formatters.checkmark,
+        id: 'completed', name: 'Completed', field: 'completed', headerKey: 'COMPLETED', maxWidth: 80, formatter: Formatters.checkmark,
         type: FieldType.boolean,
         minWidth: 100,
         sortable: true,
@@ -90,8 +90,9 @@ export class Example9 {
       enableFiltering: true,
       enableCellNavigation: true,
       gridMenu: {
-        customTitle: 'Custom Commands',
-        columnTitle: 'Columns',
+        // all titles optionally support translation keys, if you wish to use that feature then use the title properties finishing by 'Key'
+        // example "customTitle" for a plain string OR "customTitleKey" to use a translation key
+        customTitleKey: 'CUSTOM_COMMANDS',
         iconCssClass: 'fa fa-ellipsis-v',
         hideForceFitButton: true,
         hideSyncResizeButton: true,
@@ -105,7 +106,7 @@ export class Example9 {
           // if you want yours at the bottom then start with 61, below 50 will make your command(s) on top
           {
             iconCssClass: 'fa fa-question-circle',
-            title: 'Help',
+            titleKey: 'HELP',
             disabled: false,
             command: 'help',
             positionOrder: 99
@@ -142,7 +143,7 @@ export class Example9 {
         percentComplete: Math.round(Math.random() * 100),
         start: '01/01/2009',
         finish: '01/05/2009',
-        effortDriven: (i % 5 === 0)
+        completed: (i % 5 === 0)
       };
     }
     this.dataset = mockDataset;
