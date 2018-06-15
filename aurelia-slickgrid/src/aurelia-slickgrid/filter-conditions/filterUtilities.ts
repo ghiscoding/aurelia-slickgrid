@@ -15,6 +15,11 @@ export const testFilterCondition = (operator: string, value1: any, value2: any):
     case '==':
     case 'EQ': return (value1 === value2);
     case 'IN': return ((value2 && value2.indexOf) ? (value2.indexOf(value1) > -1) : false);
+    case 'IN_CONTAINS':
+      if (value2 && Array.isArray(value2) && value2.findIndex) {
+        return ((value2.findIndex((val) => value1.indexOf(val) > -1)) > -1);
+      }
+      return false;
   }
   return true;
 };

@@ -56,7 +56,7 @@ export class MultipleSelectFilter implements Filter {
           this.isFilled = false;
           this.$filterElm.removeClass('filled').siblings('div .search-filter').removeClass('filled');
         }
-        this.callback(undefined, { columnDef: this.columnDef, operator: 'IN', searchTerms: selectedItems });
+        this.callback(undefined, { columnDef: this.columnDef, operator: this.operator, searchTerms: selectedItems });
       }
     };
   }
@@ -67,7 +67,7 @@ export class MultipleSelectFilter implements Filter {
   }
 
   get operator(): OperatorType | OperatorString {
-    return OperatorType.in;
+    return this.columnDef.filter.operator || OperatorType.in;
   }
 
   /**
@@ -220,7 +220,7 @@ export class MultipleSelectFilter implements Filter {
     this.$filterElm.multipleSelect({
       onClose: () => {
         const selectedItems = this.$filterElm.multipleSelect('getSelects');
-        this.callback(undefined, { columnDef: this.columnDef, operator: 'IN', searchTerms: selectedItems });
+        this.callback(undefined, { columnDef: this.columnDef, operator: this.operator, searchTerms: selectedItems });
       }
     });
   }

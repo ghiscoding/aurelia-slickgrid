@@ -11,7 +11,8 @@ import { FieldType, FilterCondition, FilterConditionOption } from '../models/ind
 
 export const executeMappedCondition: FilterCondition = (options: FilterConditionOption) => {
   // when using a multi-select ('IN' operator) we will not use the field type but instead go directly with a collection search
-  if (options && options.operator && options.operator.toUpperCase() === 'IN') {
+  const operator = options.operator && options.operator.toUpperCase();
+  if (options && options.operator && (operator === 'IN' || operator === 'NIN' || operator === 'IN_CONTAINS' || operator === 'NIN_CONTAINS')) {
     return collectionSearchFilterCondition(options);
   }
 
