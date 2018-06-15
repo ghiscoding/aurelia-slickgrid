@@ -353,6 +353,8 @@ export class FilterService {
     if (columnDef && columnId !== 'selector' && columnDef.filterable) {
       let searchTerms: SearchTerm[] | undefined;
       let operator: OperatorString | OperatorType | undefined;
+      const filter: Filter | undefined = this.filterFactory.createFilter(args.column.filter);
+      operator = (columnDef && columnDef.filter && columnDef.filter.operator) || (filter && filter.operator);
 
       if (this._columnFilters[columnDef.id]) {
         searchTerms = this._columnFilters[columnDef.id].searchTerms || undefined;
@@ -361,8 +363,7 @@ export class FilterService {
         // when hiding/showing (with Column Picker or Grid Menu), it will try to re-create yet again the filters (since SlickGrid does a re-render)
         // because of that we need to first get searchTerm(s) from the columnFilters (that is what the user last entered)
         searchTerms = columnDef.filter.searchTerms || undefined;
-        operator = columnDef.filter.operator || undefined;
-        this.updateColumnFilters(searchTerms, columnDef);
+        this.updateColumnFilters(searchTerms, columnDef, operator);
       }
 
       const filterArguments: FilterArguments = {
@@ -372,8 +373,6 @@ export class FilterService {
         columnDef,
         callback: this.callbackSearchEvent.bind(this)
       };
-
-      const filter: Filter | undefined = this.filterFactory.createFilter(args.column.filter);
 
       if (filter) {
         filter.init(filterArguments);
@@ -443,14 +442,13 @@ export class FilterService {
     return this._columnDefinitions;
   }
 
-  private updateColumnFilters(searchTerms: SearchTerm[] | undefined, columnDef: any) {
-    if (searchTerms) {
-      // this._columnFilters.searchTerms = searchTerms;
+  private updateColumnFilters(searchTerms: SearchTerm[] | undefined, columnDef: any, operator?: OperatorType | OperatorString) {
+    if (searchTerms && columnDef) {
       this._columnFilters[columnDef.id] = {
         columnId: columnDef.id,
         columnDef,
         searchTerms,
-        operator: (columnDef && columnDef.filter && columnDef.filter.operator) ? columnDef.filter.operator : null
+        operator
       };
     }
   }

@@ -54,7 +54,7 @@ export class SingleSelectFilter implements Filter {
   }
 
   get operator(): OperatorType | OperatorString {
-    return this.columnDef.filter.operator || OperatorType.equal;
+    return (this.columnDef && this.columnDef.filter && this.columnDef.filter.operator) || OperatorType.equal;
   }
 
   /** Getter for the Grid Options pulled through the Grid Object */

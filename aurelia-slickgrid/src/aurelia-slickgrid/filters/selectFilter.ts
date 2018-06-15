@@ -22,7 +22,7 @@ export class SelectFilter implements Filter {
   constructor(private i18n: I18N) { }
 
   get operator(): OperatorType | OperatorString {
-    return this.columnDef.filter.operator || OperatorType.equal;
+    return (this.columnDef && this.columnDef.filter && this.columnDef.filter.operator) || OperatorType.equal;
   }
 
   /**

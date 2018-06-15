@@ -32,7 +32,7 @@ export class SliderFilter implements Filter {
   }
 
   get operator(): OperatorType | OperatorString {
-    return this.columnDef.filter.operator || OperatorType.equal;
+    return (this.columnDef && this.columnDef.filter && this.columnDef.filter.operator) || OperatorType.equal;
   }
 
   /**
