@@ -2,8 +2,6 @@ import { EditorValidatorOutput } from './editorValidatorOutput.interface';
 
 export interface Editor {
   init: () => void;
-  applyValue: (item: any, state: any) => void;
-  handleKeyDown?: (e: any) => void;
   save?: () => void;
   cancel?: () => void;
   hide?: () => void;
@@ -11,6 +9,7 @@ export interface Editor {
   position?: (position: any) => void;
   destroy: () => void;
   focus: () => void;
+  applyValue: (item: any, state: any) => void;
   loadValue: (item: any) => void;
   serializeValue: () => any;
   isValueChanged: () => boolean;

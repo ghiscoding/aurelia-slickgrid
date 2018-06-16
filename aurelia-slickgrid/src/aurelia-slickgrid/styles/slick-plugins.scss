@@ -337,11 +337,14 @@ input.search-filter {
 }
 
 // ----------------------------------------------
-// Input Range Filter
+// Input Range Filter (Slider)
 // ----------------------------------------------
+input.slider-editor-input[type=range],
 input.search-filter[type=range] {
   /*removes default webkit styles*/
   -webkit-appearance: none;
+
+  padding: $slider-filter-runnable-track-padding !important;
 
   /* change runnable track color while in focus on all browsers */
   &:focus {
@@ -438,7 +441,12 @@ input.search-filter[type=range] {
   }
 }
 
-.search-filter {
+input.slider-editor-input[type=range] {
+  padding: $slider-editor-runnable-track-padding !important;
+  height: $slider-editor-height !important;
+}
+
+.search-filter, .slider-editor {
   .slider-value {
     padding: $slider-filter-number-padding !important;
     font-size: $slider-filter-number-font-size !important;

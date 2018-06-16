@@ -132,6 +132,13 @@ export class Example3 {
       sortable: true,
       type: FieldType.number,
       editor: {
+        model: Editors.slider,
+        minValue: 0,
+        maxValue: 100,
+        // params: { hideSliderNumber: true },
+      },
+      /*
+      editor: {
         // default is 0 decimals, if no decimals is passed it will accept 0 or more decimals
         // however if you pass the "decimalPlaces", it will validate with that maximum
         model: Editors.float,
@@ -141,6 +148,7 @@ export class Example3 {
         // errorMessage: this.i18n.tr('INVALID_FLOAT', { maxDecimal: 2 }),
         params: { decimalPlaces: 2 },
       },
+      */
       minWidth: 100
     }, {
       id: 'complete',
