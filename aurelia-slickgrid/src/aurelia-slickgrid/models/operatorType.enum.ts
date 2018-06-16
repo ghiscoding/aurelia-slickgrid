@@ -33,7 +33,7 @@ export enum OperatorType {
   in = 'IN',
 
   /** Inverse (Not In) of an equal match inside a collection */
-  notIn = 'NIN',
+  notIn = 'NOT_IN',
 
   /**
    * Find a substring contained inside a collection
@@ -43,5 +43,5 @@ export enum OperatorType {
   inContains = 'IN_CONTAINS',
 
   /** Inversed (Not In) of substring contained inside a collection */
-  notInContains = 'NIN_CONTAINS',
+  notInContains = 'NOT_IN_CONTAINS',
 }
