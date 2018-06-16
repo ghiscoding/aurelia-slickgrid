@@ -1,5 +1,5 @@
 import * as $ from 'jquery';
-import { Editor, KeyCode } from './../models/index';
+import { Column, Editor, KeyCode } from './../models/index';
 
 /*
  * An example of a 'detached' editor.
@@ -61,8 +61,10 @@ export class TextEditor implements Editor {
   }
 
   validate() {
-    if (this.args.column.validator) {
-      const validationResults = this.args.column.validator(this.$input.val());
+    const column = (this.args && this.args.column) as Column;
+
+    if (column.validator) {
+      const validationResults = column.validator(this.$input.val());
       if (!validationResults.valid) {
         return validationResults;
       }

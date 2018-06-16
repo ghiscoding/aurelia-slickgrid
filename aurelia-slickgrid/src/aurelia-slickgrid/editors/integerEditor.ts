@@ -1,5 +1,5 @@
 import * as $ from 'jquery';
-import { Editor, KeyCode } from './../models/index';
+import { Column, Editor, KeyCode } from './../models/index';
 
 /*
  * An example of a 'detached' editor.
@@ -35,6 +35,10 @@ export class IntegerEditor implements Editor {
     this.$input.focus();
   }
 
+  getColumnEditor() {
+    return this.args && this.args.column && this.args.column.internalColumnEditor && this.args.column.internalColumnEditor;
+  }
+
   loadValue(item: any) {
     this.defaultValue = parseInt(item[this.args.column.field], 10);
     this.$input.val(this.defaultValue);
@@ -57,19 +61,21 @@ export class IntegerEditor implements Editor {
   }
 
   validate() {
+    const column = (this.args && this.args.column) as Column;
+    const columnEditor = this.getColumnEditor();
+    const errorMsg = columnEditor.params && columnEditor.params.validatorErrorMessage;
     const elmValue = this.$input.val();
-    if (isNaN(elmValue as number)) {
-      return {
-        valid: false,
-        msg: 'Please enter a valid integer'
-      };
-    }
 
-    if (this.args.column.validator) {
-      const validationResults = this.args.column.validator(elmValue);
+    if (column.validator) {
+      const validationResults = column.validator(elmValue);
       if (!validationResults.valid) {
         return validationResults;
       }
+    } else if (isNaN(elmValue as number) || !/^[+-]?\d+$/.test(elmValue)) {
+      return {
+        valid: false,
+        msg: errorMsg || 'Please enter a valid integer number'
+      };
     }
 
     return {

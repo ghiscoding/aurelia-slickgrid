@@ -3,6 +3,7 @@ import { I18N } from 'aurelia-i18n';
 import {
   AureliaGridInstance,
   Column,
+  CustomEditorValidator,
   Editors,
   FieldType,
   Formatters,
@@ -14,6 +15,17 @@ import { CustomInputEditor } from './custom-inputEditor';
 
 // using external non-typed js libraries
 declare var Slick: any;
+
+// you can create custom validator to pass to an inline editor
+const myCustomTitleValidator: CustomEditorValidator = (value) => {
+  if (value == null || value === undefined || !value.length) {
+    return { valid: false, msg: 'This is a required field' };
+  } else if (!/^Task\s\d+$/.test(value)) {
+    return { valid: false, msg: 'Your title is invalid, it must start with "Task" followed by a number' };
+  } else {
+    return { valid: true, msg: '' };
+  }
+};
 
 @autoinject()
 export class Example3 {
@@ -96,6 +108,7 @@ export class Example3 {
       editor: {
         model: Editors.longText
       },
+      validator: myCustomTitleValidator, // use a custom validator
       minWidth: 100,
       onCellChange: (e: Event, args: OnEventArgs) => {
         console.log(args);
@@ -110,6 +123,7 @@ export class Example3 {
       editor: {
         model: CustomInputEditor
       },
+      validator: myCustomTitleValidator, // use a custom validator
       minWidth: 70
     }, {
       id: 'duration',
@@ -118,8 +132,11 @@ export class Example3 {
       sortable: true,
       type: FieldType.number,
       editor: {
+        // default is 0 decimals, if no decimals is passed it will accept 0 or more decimals
+        // however if you pass the decimalPlaces, it will validate with that maximum
+        // the default validation error message is in English but you can override it by using validatorErrorMessage in params
         model: Editors.float,
-        params: { decimalPlaces: 2 }
+        params: { decimalPlaces: 2, validatorErrorMessage: this.i18n.tr('INVALID_FLOAT', { maxDecimal: 2 }) },
       },
       minWidth: 100
     }, {
@@ -264,6 +281,10 @@ export class Example3 {
         this.alertWarning = `Deleted: ${metadata.dataContext.title}`;
       }
     }
+  }
+
+  onCellValidation(e, args) {
+    alert(args.validationResults.msg);
   }
 
   setAutoEdit(isAutoEdit) {

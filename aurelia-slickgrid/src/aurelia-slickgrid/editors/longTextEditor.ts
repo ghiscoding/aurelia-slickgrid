@@ -1,5 +1,5 @@
 import * as $ from 'jquery';
-import { Editor, HtmlElementPosition, KeyCode } from './../models/index';
+import { Column, Editor, HtmlElementPosition, KeyCode } from './../models/index';
 
 /*
  * An example of a 'detached' editor.
@@ -47,6 +47,10 @@ export class LongTextEditor implements Editor {
       e.preventDefault();
       this.args.grid.navigateNext();
     }
+  }
+
+  getColumnEditor() {
+    return this.args && this.args.column && this.args.column.internalColumnEditor && this.args.column.internalColumnEditor;
   }
 
   save() {
@@ -98,14 +102,18 @@ export class LongTextEditor implements Editor {
   }
 
   validate() {
-    let valid = true;
-    let msg = null;
-    if (this.args.column.validator) {
-      const validationResults = this.args.column.validator(this.$input.val(), this.args);
-      valid = validationResults.valid;
-      msg = validationResults.msg;
+    const column = (this.args && this.args.column) as Column;
+
+    if (column.validator) {
+      const validationResults = column.validator(this.$input.val(), this.args);
+      if (!validationResults.valid) {
+        return validationResults;
+      }
     }
 
-    return { valid, msg };
+    return {
+      valid: true,
+      msg: null
+    };
   }
 }

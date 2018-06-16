@@ -66,6 +66,10 @@ export class DateEditor implements Editor {
     // this.flatInstance.destroy();
   }
 
+  getColumnEditor() {
+    return this.args && this.args.column && this.args.column.internalColumnEditor && this.args.column.internalColumnEditor;
+  }
+
   show() {
     if (this.flatInstance && typeof this.flatInstance.open === 'function') {
       this.flatInstance.open();
@@ -94,7 +98,9 @@ export class DateEditor implements Editor {
   serializeValue() {
     const domValue: string = this.$input.val();
 
-    if (!domValue) return '';
+    if (!domValue) {
+      return '';
+    }
 
     const outputFormat = mapMomentDateFormatWithFieldType(this.args.column.type || FieldType.dateIso);
     const value = moment(domValue).format(outputFormat);
@@ -103,10 +109,11 @@ export class DateEditor implements Editor {
   }
 
   applyValue(item: any, state: any) {
-    if (!state) return;
+    if (!state) {
+      return;
+    }
 
     const outputFormat = mapMomentDateFormatWithFieldType(this.args.column.type || FieldType.dateIso);
-
     item[this.args.column.field] = moment(state, outputFormat).toDate();
   }
 
@@ -115,8 +122,10 @@ export class DateEditor implements Editor {
   }
 
   validate() {
-    if (this.args.column.validator) {
-      const validationResults = this.args.column.validator(this.$input.val(), this.args);
+    const column = (this.args && this.args.column) as Column;
+
+    if (column.validator) {
+      const validationResults = column.validator(this.$input.val(), this.args);
       if (!validationResults.valid) {
         return validationResults;
       }
