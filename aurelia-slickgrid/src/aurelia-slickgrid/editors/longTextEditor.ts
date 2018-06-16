@@ -1,5 +1,12 @@
 import * as $ from 'jquery';
-import { Column, Editor, HtmlElementPosition, KeyCode } from './../models/index';
+import {
+  Column,
+  Editor,
+  EditorValidator,
+  EditorValidatorOutput,
+  HtmlElementPosition,
+  KeyCode
+} from './../models/index';
 
 /*
  * An example of a 'detached' editor.
@@ -13,6 +20,21 @@ export class LongTextEditor implements Editor {
 
   constructor(private args: any) {
     this.init();
+  }
+
+  /** Get Column Definition object */
+  get columnDef(): Column {
+    return this.args && this.args.column || {};
+  }
+
+  /** Get Column Editor object */
+  get columnEditor(): any {
+    return this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor || {};
+  }
+
+  /** Get the Validator function, can be passed in Editor property or Column Definition */
+  get validator(): EditorValidator {
+    return this.columnEditor.validator || this.columnDef.validator;
   }
 
   init(): void {
@@ -49,10 +71,6 @@ export class LongTextEditor implements Editor {
     }
   }
 
-  getColumnEditor() {
-    return this.args && this.args.column && this.args.column.internalColumnEditor && this.args.column.internalColumnEditor;
-  }
-
   save() {
     this.args.commitChanges();
   }
@@ -85,7 +103,7 @@ export class LongTextEditor implements Editor {
   }
 
   loadValue(item: any) {
-    this.$input.val(this.defaultValue = item[this.args.column.field]);
+    this.$input.val(this.defaultValue = item[this.columnDef.field]);
     this.$input.select();
   }
 
@@ -94,23 +112,23 @@ export class LongTextEditor implements Editor {
   }
 
   applyValue(item: any, state: any) {
-    item[this.args.column.field] = state;
+    item[this.columnDef.field] = state;
   }
 
   isValueChanged() {
     return (!(this.$input.val() === '' && this.defaultValue == null)) && (this.$input.val() !== this.defaultValue);
   }
 
-  validate() {
-    const column = (this.args && this.args.column) as Column;
-
-    if (column.validator) {
-      const validationResults = column.validator(this.$input.val(), this.args);
+  validate(): EditorValidatorOutput {
+    if (this.validator) {
+      const validationResults = this.validator(this.$input.val());
       if (!validationResults.valid) {
         return validationResults;
       }
     }
 
+    // by default the editor is always valid
+    // if user want it to be a required checkbox, he would have to provide his own validator
     return {
       valid: true,
       msg: null

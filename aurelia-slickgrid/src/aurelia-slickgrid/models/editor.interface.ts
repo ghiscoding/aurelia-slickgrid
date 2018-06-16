@@ -1,3 +1,5 @@
+import { EditorValidatorOutput } from './editorValidatorOutput.interface';
+
 export interface Editor {
   init: () => void;
   applyValue: (item: any, state: any) => void;
@@ -12,5 +14,5 @@ export interface Editor {
   loadValue: (item: any) => void;
   serializeValue: () => any;
   isValueChanged: () => boolean;
-  validate: () => { valid: boolean, msg: string | null };
+  validate: () => EditorValidatorOutput;
 }

@@ -1,5 +1,6 @@
+import { Constants } from './../constants';
+import { Column, Editor, EditorValidator, EditorValidatorOutput, KeyCode } from './../models/index';
 import * as $ from 'jquery';
-import { Column, Editor, KeyCode } from './../models/index';
 
 /*
  * An example of a 'detached' editor.
@@ -11,6 +12,21 @@ export class IntegerEditor implements Editor {
 
   constructor(private args: any) {
     this.init();
+  }
+
+  /** Get Column Definition object */
+  get columnDef(): Column {
+    return this.args && this.args.column || {};
+  }
+
+  /** Get Column Editor object */
+  get columnEditor(): any {
+    return this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor || {};
+  }
+
+  /** Get the Validator function, can be passed in Editor property or Column Definition */
+  get validator(): EditorValidator {
+    return this.columnEditor.validator || this.columnDef.validator;
   }
 
   init(): void {
@@ -35,10 +51,6 @@ export class IntegerEditor implements Editor {
     this.$input.focus();
   }
 
-  getColumnEditor() {
-    return this.args && this.args.column && this.args.column.internalColumnEditor && this.args.column.internalColumnEditor;
-  }
-
   loadValue(item: any) {
     this.defaultValue = parseInt(item[this.args.column.field], 10);
     this.$input.val(this.defaultValue);
@@ -60,21 +72,19 @@ export class IntegerEditor implements Editor {
     return (!(value === '' && this.defaultValue === null)) && (value !== this.defaultValue);
   }
 
-  validate() {
-    const column = (this.args && this.args.column) as Column;
-    const columnEditor = this.getColumnEditor();
-    const errorMsg = columnEditor.params && columnEditor.params.validatorErrorMessage;
+  validate(): EditorValidatorOutput {
     const elmValue = this.$input.val();
+    const errorMsg = this.columnEditor.params && this.columnEditor.errorMessage;
 
-    if (column.validator) {
-      const validationResults = column.validator(elmValue);
+    if (this.validator) {
+      const validationResults = this.validator(elmValue);
       if (!validationResults.valid) {
         return validationResults;
       }
     } else if (isNaN(elmValue as number) || !/^[+-]?\d+$/.test(elmValue)) {
       return {
         valid: false,
-        msg: errorMsg || 'Please enter a valid integer number'
+        msg: errorMsg || Constants.VALIDATION_EDITOR_VALID_INTEGER
       };
     }
 
