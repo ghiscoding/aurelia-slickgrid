@@ -35,6 +35,7 @@ export class Example2 {
   defineGrid() {
     this.columnDefinitions = [
       { id: 'title', name: 'Title', field: 'title', sortable: true, type: FieldType.string, minWidth: 100 },
+      { id: 'phone', name: 'Phone Number', field: 'phone', sortable: true, type: FieldType.number, minWidth: 100, formatter: Formatters.mask, params: { mask: '(000) 000-0000' } },
       { id: 'duration', name: 'Duration (days)', field: 'duration', sortable: true, type: FieldType.number, minWidth: 100 },
       { id: 'complete', name: '% Complete', field: 'percentComplete', formatter: Formatters.percentCompleteBar, type: FieldType.number, sortable: true, minWidth: 100 },
       { id: 'percent2', name: '% Complete', field: 'percentComplete2', formatter: Formatters.progressBar, type: FieldType.number, sortable: true, minWidth: 100 },
@@ -64,6 +65,7 @@ export class Example2 {
       this.dataset[i] = {
         id: i,
         title: 'Task ' + i,
+        phone: this.generatePhoneNumber(),
         duration: Math.round(Math.random() * 100) + '',
         percentComplete: randomPercent,
         percentComplete2: randomPercent,
@@ -73,5 +75,13 @@ export class Example2 {
         effortDriven: (i % 5 === 0)
       };
     }
+  }
+
+  generatePhoneNumber() {
+    let phone = '';
+    for (let i = 0; i < 10; i++) {
+      phone += Math.round(Math.random() * 9) + '';
+    }
+    return phone;
   }
 }
