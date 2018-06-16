@@ -46,8 +46,6 @@ export class SliderEditor implements Editor {
     // create HTML string template
     const editorTemplate = this.buildTemplateHtmlString();
     this.$editorElm = $(editorTemplate);
-    console.log($(container))
-    $(container).css('{ padding: 0 !important }');
     this.$input = this.$editorElm.children('input');
     this.$sliderNumber = this.$editorElm.children('span.input-group-addon');
 
