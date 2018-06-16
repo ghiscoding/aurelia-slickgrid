@@ -1,4 +1,5 @@
 export class Constants {
+  static TEXT_CANCEL = 'Cancel';
   static TEXT_CLEAR_ALL_FILTERS = 'Clear All Filters';
   static TEXT_CLEAR_ALL_SORTING = 'Clear All Sorting';
   static TEXT_COLUMNS = 'Columns';
@@ -8,6 +9,7 @@ export class Constants {
   static TEXT_FORCE_FIT_COLUMNS = 'Force fit columns';
   static TEXT_HIDE_COLUMN = 'Hide Column';
   static TEXT_REFRESH_DATASET = 'Refresh Dataset';
+  static TEXT_SAVE = 'Save';
   static TEXT_SYNCHRONOUS_RESIZE = 'Synchronous resize';
   static TEXT_SORT_ASCENDING = 'Sort Ascending';
   static TEXT_SORT_DESCENDING = 'Sort Descending';

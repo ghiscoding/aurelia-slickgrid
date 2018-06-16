@@ -1,5 +1,6 @@
 {
   "ALL_SELECTED": "All Selected",
+  "CANCEL": "Cancel",
   "CLEAR_ALL_FILTERS": "Clear All Filters",
   "CLEAR_ALL_SORTING": "Clear All Sorting",
   "COLUMNS": "Columns",
@@ -22,6 +23,7 @@
   "PAGE": "Page",
   "PAGE_X_OF_Y": "page {{x}} of {{y}}",
   "REFRESH_DATASET": "Refresh Dataset",
+  "SAVE": "Save",
   "SELECT_ALL": "Select All",
   "SORT_ASCENDING": "Sort Ascending",
   "SORT_DESCENDING": "Sort Descending",
