@@ -23,7 +23,7 @@ export class InputFilter implements Filter {
   }
 
   get operator(): OperatorType | OperatorString {
-    return OperatorType.equal;
+    return (this.columnDef && this.columnDef.filter && this.columnDef.filter.operator) || OperatorType.equal;
   }
 
   /**
@@ -56,7 +56,7 @@ export class InputFilter implements Filter {
         this.$filterElm.removeClass('filled');
       } else {
         this.$filterElm.addClass('filled');
-        this.callback(e, { columnDef: this.columnDef, searchTerms: [value] });
+        this.callback(e, { columnDef: this.columnDef, operator: this.operator, searchTerms: [value] });
       }
     });
   }
