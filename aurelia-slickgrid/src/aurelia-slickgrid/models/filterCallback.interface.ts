@@ -4,7 +4,7 @@ export interface FilterCallbackArg {
   clearFilterTriggered?: boolean;
   columnDef: Column;
   operator?: OperatorType | OperatorString;
-  searchTerms?: SearchTerm[];
+  searchTerms?: SearchTerm[] | undefined | null;
 }
 
 export type FilterCallback = (e: Event | undefined, args: FilterCallbackArg) => void;

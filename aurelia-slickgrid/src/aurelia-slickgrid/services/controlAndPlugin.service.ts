@@ -237,7 +237,7 @@ export class ControlAndPluginService {
         // when grid or cell is not editable, we will possibly evaluate the Formatter if it was passed
         // to decide if we evaluate the Formatter, we will use the same flag from Export which is "exportWithFormatter"
         if (!this._gridOptions.editable || !columnDef.editor) {
-          const isEvaluatingFormatter = (columnDef.exportWithFormatter !== undefined) ? columnDef.exportWithFormatter : this._gridOptions.exportOptions.exportWithFormatter;
+          const isEvaluatingFormatter = (columnDef.exportWithFormatter !== undefined) ? columnDef.exportWithFormatter : (this._gridOptions.exportOptions && this._gridOptions.exportOptions.exportWithFormatter);
           if (columnDef.formatter && isEvaluatingFormatter) {
             const formattedOutput = columnDef.formatter(0, 0, item[columnDef.field], columnDef, item, this._grid);
             if (columnDef.sanitizeDataExport || (this._gridOptions.exportOptions && this._gridOptions.exportOptions.sanitizeDataExport)) {
@@ -535,7 +535,7 @@ export class ControlAndPluginService {
     }
 
     // add the custom "Commands" title if there are any commands
-    if (this._gridOptions && this._gridOptions.gridMenu && (gridMenuCustomItems.length > 0 || this._gridOptions.gridMenu.customItems.length > 0)) {
+    if (this._gridOptions && this._gridOptions.gridMenu && (gridMenuCustomItems.length > 0 || (Array.isArray(this._gridOptions.gridMenu.customItems) && this._gridOptions.gridMenu.customItems.length > 0))) {
       this._gridOptions.gridMenu.customTitle = this._gridOptions.gridMenu.customTitle || this.getGridMenuTitleOutputString('customTitle');
     }
 
@@ -548,7 +548,7 @@ export class ControlAndPluginService {
    * @param columnDefinitions
    * @return header menu
    */
-  private addHeaderMenuCustomCommands(options: GridOption, columnDefinitions: Column[]): HeaderMenu {
+  private addHeaderMenuCustomCommands(options: GridOption, columnDefinitions: Column[]): HeaderMenu | undefined {
     const headerMenuOptions = options.headerMenu;
 
     if (columnDefinitions && Array.isArray(columnDefinitions) && options.enableHeaderMenu) {
@@ -561,13 +561,13 @@ export class ControlAndPluginService {
               }
             };
           }
-          const columnHeaderMenuItems: HeaderMenuItem[] = columnDef.header.menu.items || [];
+          const columnHeaderMenuItems: HeaderMenuItem[] = (columnDef && columnDef.header && columnDef.header.menu && columnDef.header.menu.items) || [];
 
           // Sorting Commands
-          if (options.enableSorting && columnDef.sortable && !headerMenuOptions.hideSortCommands) {
+          if (options.enableSorting && columnDef.sortable && headerMenuOptions && !headerMenuOptions.hideSortCommands) {
             if (columnHeaderMenuItems.filter((item: HeaderMenuItem) => item.command === 'sort-asc').length === 0) {
               columnHeaderMenuItems.push({
-                iconCssClass: headerMenuOptions.iconSortAscCommand || 'fa fa-sort-asc',
+                iconCssClass: (headerMenuOptions && headerMenuOptions.iconSortAscCommand) || 'fa fa-sort-asc',
                 title: options.enableTranslate ? this.i18n.tr('SORT_ASCENDING') : Constants.TEXT_SORT_ASCENDING,
                 command: 'sort-asc',
                 positionOrder: 50
@@ -575,7 +575,7 @@ export class ControlAndPluginService {
             }
             if (columnHeaderMenuItems.filter((item: HeaderMenuItem) => item.command === 'sort-desc').length === 0) {
               columnHeaderMenuItems.push({
-                iconCssClass: headerMenuOptions.iconSortDescCommand || 'fa fa-sort-desc',
+                iconCssClass: (headerMenuOptions && headerMenuOptions.iconSortDescCommand) || 'fa fa-sort-desc',
                 title: options.enableTranslate ? this.i18n.tr('SORT_DESCENDING') : Constants.TEXT_SORT_DESCENDING,
                 command: 'sort-desc',
                 positionOrder: 51
@@ -584,7 +584,7 @@ export class ControlAndPluginService {
           }
 
           // Hide Column Command
-          if (!headerMenuOptions.hideColumnHideCommand && columnHeaderMenuItems.filter((item: HeaderMenuItem) => item.command === 'hide').length === 0) {
+          if (headerMenuOptions && !headerMenuOptions.hideColumnHideCommand && columnHeaderMenuItems.filter((item: HeaderMenuItem) => item.command === 'hide').length === 0) {
             columnHeaderMenuItems.push({
               iconCssClass: headerMenuOptions.iconColumnHideCommand || 'fa fa-times',
               title: options.enableTranslate ? this.i18n.tr('HIDE_COLUMN') : Constants.TEXT_HIDE_COLUMN,
@@ -596,7 +596,7 @@ export class ControlAndPluginService {
           this.translateItems(columnHeaderMenuItems, 'titleKey', 'title');
 
           // sort the custom items by their position in the list
-          columnHeaderMenuItems.sort((itemA, itemB) => {
+          columnHeaderMenuItems.sort((itemA: any, itemB: any) => {
             if (itemA && itemB && itemA.hasOwnProperty('positionOrder') && itemB.hasOwnProperty('positionOrder')) {
               return itemA.positionOrder - itemB.positionOrder;
             }
@@ -604,7 +604,6 @@ export class ControlAndPluginService {
           });
         }
       });
-
     }
 
     return headerMenuOptions;
@@ -633,7 +632,13 @@ export class ControlAndPluginService {
 
           // update the this.gridObj sortColumns array which will at the same add the visual sort icon(s) on the UI
           const newSortColumns: ColumnSort[] = cols.map((col) => {
-            return { columnId: col.sortCol.id, sortAsc: col.sortAsc };
+            if (col && col.sortCol) {
+              return {
+                columnId: col.sortCol.id || '',
+                sortAsc: col.sortAsc || false
+              };
+            }
+            return {};
           });
           this._grid.setSortColumns(newSortColumns); // add sort icon in UI
           break;
@@ -817,10 +822,12 @@ export class ControlAndPluginService {
   }
 
   private emptyGridMenuTitles() {
-    this._gridOptions.gridMenu.customTitle = '';
-    this._gridOptions.gridMenu.columnTitle = '';
-    this._gridOptions.gridMenu.forceFitTitle = '';
-    this._gridOptions.gridMenu.syncResizeTitle = '';
+    if (this._gridOptions && this._gridOptions.gridMenu) {
+      this._gridOptions.gridMenu.customTitle = '';
+      this._gridOptions.gridMenu.columnTitle = '';
+      this._gridOptions.gridMenu.forceFitTitle = '';
+      this._gridOptions.gridMenu.syncResizeTitle = '';
+    }
   }
 
   /**

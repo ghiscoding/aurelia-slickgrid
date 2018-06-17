@@ -169,7 +169,7 @@ export class FilterService {
   /** Local Grid Filter search */
   customLocalFilter(dataView: any, item: any, args: any) {
     for (const columnId of Object.keys(args.columnFilters)) {
-      const columnFilter = args.columnFilters[columnId];
+      const columnFilter: ColumnFilter = args.columnFilters[columnId];
       const columnIndex = args.grid.getColumnIndex(columnId);
       const columnDef = args.grid.getColumns()[columnIndex];
       if (!columnDef) {
@@ -183,7 +183,7 @@ export class FilterService {
       // if we find searchTerms use them but make a deep copy so that we don't affect original array
       // we might have to overwrite the value(s) locally that are returned
       // e.g: we don't want to operator within the search value, since it will fail filter condition check trigger afterward
-      const searchValues = (columnFilter && columnFilter.searchTerms) ? [...columnFilter.searchTerms] : null;
+      const searchValues: SearchTerm[] = (columnFilter && columnFilter.searchTerms) ? [...columnFilter.searchTerms] : [];
 
       let fieldSearchValue = (Array.isArray(searchValues) && searchValues.length === 1) ? searchValues[0] : '';
       fieldSearchValue = '' + fieldSearchValue; // make sure it's a string

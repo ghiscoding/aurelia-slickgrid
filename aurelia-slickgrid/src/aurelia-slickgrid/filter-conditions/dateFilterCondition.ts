@@ -4,7 +4,7 @@ import { testFilterCondition } from './filterUtilities';
 import * as moment from 'moment';
 
 export const dateFilterCondition: FilterCondition = (options: FilterConditionOption) => {
-  const searchTerm = Array.isArray(options.searchTerms) && options.searchTerms[0] || '';
+  const searchTerm = (Array.isArray(options.searchTerms) && options.searchTerms[0] || '') as string;
   const filterSearchType = options.filterSearchType || FieldType.dateIso;
   const searchDateFormat = mapMomentDateFormatWithFieldType(filterSearchType);
   if (searchTerm === null || searchTerm === '' || !moment(options.cellValue, moment.ISO_8601).isValid() || !moment(searchTerm, searchDateFormat, true).isValid()) {

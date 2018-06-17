@@ -204,7 +204,7 @@ export class CompoundInputFilter implements Filter {
       this.callback(e, { columnDef: this.columnDef, clearFilterTriggered: true });
     } else {
       const selectedOperator = this.$selectOperatorElm.find('option:selected').text();
-      const value = this.$filterInputElm.val();
+      const value: string = this.$filterInputElm.val();
       (value) ? this.$filterElm.addClass('filled') : this.$filterElm.removeClass('filled');
       this.callback(e, { columnDef: this.columnDef, searchTerms: (value ? [value] : null), operator: selectedOperator || '' });
     }

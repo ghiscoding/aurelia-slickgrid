@@ -19,7 +19,7 @@ export interface ColumnFilter {
   columnDef?: Column;
 
   /** Search terms (collection) */
-  searchTerms?: SearchTerm[];
+  searchTerms?: SearchTerm[] | undefined;
 
   /** Operator to use when filtering (>, >=, EQ, IN, ...) */
   operator?: OperatorType | OperatorString;
