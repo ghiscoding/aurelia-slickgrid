@@ -340,9 +340,10 @@ input.search-filter {
 // Input Range Filter (Slider)
 // ----------------------------------------------
 input.slider-editor-input[type=range],
-input.search-filter[type=range] {
+input.slider-filter-input[type=range] {
   /*removes default webkit styles*/
   -webkit-appearance: none;
+  height: $slider-filter-height;
 
   padding: $slider-filter-runnable-track-padding !important;
 
@@ -440,16 +441,28 @@ input.search-filter[type=range] {
     margin-top: 2px;
   }
 }
+.search-filter {
+  .slider-value {
+    padding: $slider-filter-number-padding !important;
+    font-size: $slider-filter-number-font-size !important;
+    height: $slider-filter-height;
+  }
+}
+input.slider-filter-input[type=range] {
+  padding: $slider-filter-runnable-track-padding !important;
+  height: $slider-filter-height !important;
+}
 
+/* Slider Editor */
 input.slider-editor-input[type=range] {
   padding: $slider-editor-runnable-track-padding !important;
   height: $slider-editor-height !important;
 }
 
-.search-filter, .slider-editor {
+.slider-editor {
   .slider-value {
-    padding: $slider-filter-number-padding !important;
+    padding: $slider-editor-number-padding !important;
     font-size: $slider-filter-number-font-size !important;
-    height: $header-input-height;
+    height: $slider-editor-height;
   }
 }

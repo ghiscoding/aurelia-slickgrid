@@ -6,6 +6,7 @@ import {
   EditorValidator,
   Editors,
   FieldType,
+  Filters,
   Formatters,
   GridOption,
   OnEventArgs,
@@ -103,6 +104,7 @@ export class Example3 {
       id: 'title',
       name: 'Title',
       field: 'title',
+      filterable: true,
       sortable: true,
       type: FieldType.string,
       editor: {
@@ -118,6 +120,7 @@ export class Example3 {
       id: 'title2',
       name: 'Title, Custom Editor',
       field: 'title',
+      filterable: true,
       sortable: true,
       type: FieldType.string,
       editor: {
@@ -129,8 +132,10 @@ export class Example3 {
       id: 'duration',
       name: 'Duration (days)',
       field: 'duration',
+      filterable: true,
       sortable: true,
       type: FieldType.number,
+      filter: { model: Filters.slider, params: { hideSliderNumber: false } },
       editor: {
         model: Editors.slider,
         minValue: 0,
@@ -154,6 +159,7 @@ export class Example3 {
       id: 'complete',
       name: '% Complete',
       field: 'percentComplete',
+      filterable: true,
       formatter: Formatters.multiple,
       type: FieldType.number,
       editor: {
@@ -177,6 +183,8 @@ export class Example3 {
       id: 'start',
       name: 'Start',
       field: 'start',
+      filterable: true,
+      filter: { model: Filters.compoundDate },
       formatter: Formatters.dateIso,
       sortable: true,
       minWidth: 100,
@@ -188,6 +196,8 @@ export class Example3 {
       id: 'finish',
       name: 'Finish',
       field: 'finish',
+      filterable: true,
+      filter: { model: Filters.compoundDate },
       formatter: Formatters.dateIso,
       sortable: true,
       minWidth: 100,
@@ -199,8 +209,13 @@ export class Example3 {
       id: 'effort-driven',
       name: 'Effort Driven',
       field: 'effortDriven',
+      filterable: true,
+      type: FieldType.boolean,
+      filter: {
+        model: Filters.singleSelect,
+        collection: [{ value: '', label: '' }, { value: true, label: 'True' }, { value: false, label: 'False' }],
+      },
       formatter: Formatters.checkmark,
-      type: FieldType.number,
       editor: {
         model: Editors.checkbox,
       },
@@ -209,6 +224,7 @@ export class Example3 {
       id: 'prerequisites',
       name: 'Prerequisites',
       field: 'prerequisites',
+      filterable: true,
       minWidth: 100,
       sortable: true,
       type: FieldType.string,
@@ -224,6 +240,14 @@ export class Example3 {
           value: ['Task 1', 'Task 2', 'Task 3', 'Task 4', 'Task 5', 'Task 6'],
           operator: OperatorType.contains
         }
+      },
+      filter: {
+        model: Filters.multipleSelect,
+        filterOptions: {
+          autoDropWidth: true
+        },
+        operator: OperatorType.inContains,
+        collection: Array.from(Array(12).keys()).map(k => ({ value: `Task ${k}`, label: `Task ${k}` })),
       }
     }];
 
@@ -237,6 +261,7 @@ export class Example3 {
       editable: true,
       enableCellNavigation: true,
       enableExcelCopyBuffer: true,
+      enableFiltering: true,
       editCommandHandler: (item, column, editCommand) => {
         this._commandQueue.push(editCommand);
         editCommand.execute();
