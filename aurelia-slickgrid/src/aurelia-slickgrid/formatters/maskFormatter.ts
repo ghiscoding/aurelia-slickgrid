@@ -8,6 +8,10 @@ export const maskFormatter: Formatter = (row: number, cell: number, value: any, 
   const params = columnDef.params || {};
   const mask = params.mask;
 
+  if (!mask) {
+    throw new Error(`You must provide a "mask" via the generic "params" options (e.g.: { formatter: Formatters.mask, params: { mask: '000-000' }}`);
+  }
+
   if (value && mask) {
     let i = 0;
     const v = value.toString();
