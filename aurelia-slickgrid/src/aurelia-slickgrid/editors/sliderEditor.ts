@@ -74,7 +74,7 @@ export class SliderEditor implements Editor {
 
   loadValue(item: any) {
     // this.$input.val(this.defaultValue = item[this.columnDef.field]);
-    this.defaultValue = item[this.args.column.field];
+    this.defaultValue = item[this.columnDef.field];
     this.$input.val(this.defaultValue);
     this.$input[0].defaultValue = this.defaultValue;
     this.$sliderNumber.html(this.defaultValue);
@@ -138,12 +138,13 @@ export class SliderEditor implements Editor {
     const maxValue = this.columnEditor.hasOwnProperty('maxValue') ? this.columnEditor.maxValue : DEFAULT_MAX_VALUE;
     const defaultValue = this.editorParams.hasOwnProperty('sliderStartValue') ? this.editorParams.sliderStartValue : minValue;
     const step = this.columnEditor.hasOwnProperty('valueStep') ? this.columnEditor.valueStep : DEFAULT_STEP;
+    const itemId = this.args && this.args.item && this.args.item.id;
 
     if (this.editorParams.hideSliderNumber) {
       return `
       <div class="slider-editor">
-        <input type="range" id="rangeInput_${this.columnDef.field}"
-          name="rangeInput_${this.columnDef.field}"
+        <input type="range" id="rangeInput_${this.columnDef.field}_${itemId}"
+          name="rangeInput_${this.columnDef.field}_${itemId}"
           defaultValue="${defaultValue}" min="${minValue}" max="${maxValue}" step="${step}"
           class="form-control slider-editor-input range" />
       </div>`;
@@ -151,12 +152,12 @@ export class SliderEditor implements Editor {
 
     return `
       <div class="input-group slider-editor">
-        <input type="range" id="rangeInput_${this.columnDef.field}"
-          name="rangeInput_${this.columnDef.field}"
+        <input type="range" id="rangeInput_${this.columnDef.field}_${itemId}"
+          name="rangeInput_${this.columnDef.field}_${itemId}"
           defaultValue="${defaultValue}" min="${minValue}" max="${maxValue}" step="${step}"
           class="form-control slider-editor-input range"
-          onmousemove="$('#rangeOuput_${this.columnDef.field}').html(rangeInput_${this.columnDef.field}.value)" />
-        <span class="input-group-addon slider-value" id="rangeOuput_${this.columnDef.field}">${defaultValue}</span>
+          onmousemove="$('#rangeOuput_${this.columnDef.field}_${itemId}').html(rangeInput_${this.columnDef.field}_${itemId}.value)" />
+        <span class="input-group-addon slider-value" id="rangeOuput_${this.columnDef.field}_${itemId}">${defaultValue}</span>
       </div>`;
   }
 }
