@@ -1,8 +1,10 @@
 import { inject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import {
-  Editor,
   Column,
+  Editor,
+  EditorValidator,
+  EditorValidatorOutput,
   GridOption,
   MultipleSelectOption,
   SelectOption
@@ -23,9 +25,6 @@ export class SingleSelectEditor implements Editor {
 
   /** Editor Multiple-Select options */
   editorElmOptions: MultipleSelectOption;
-
-  /** The slick grid column being edited */
-  columnDef: Column;
 
   /** The multiple-select options for a single select */
   defaultOptions: any;
@@ -50,7 +49,6 @@ export class SingleSelectEditor implements Editor {
 
   constructor(private collectionService: CollectionService, private i18n: I18N, private args: any) {
     this.gridOptions = this.args.grid.getOptions() as GridOption;
-    const params = this.gridOptions.params || this.args.column.params || {};
 
     this.defaultOptions = {
       container: 'body',
@@ -65,6 +63,16 @@ export class SingleSelectEditor implements Editor {
     this.init();
   }
 
+  /** Get Column Definition object */
+  get columnDef(): Column {
+    return this.args && this.args.column || {};
+  }
+
+  /** Get Column Editor object */
+  get columnEditor(): any {
+    return this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor || {};
+  }
+
   /**
    * The current selected value from the collection
    */
@@ -73,12 +81,15 @@ export class SingleSelectEditor implements Editor {
       c[this.valueName].toString() === this.$editorElm.val())[this.valueName];
   }
 
+  /** Get the Validator function, can be passed in Editor property or Column Definition */
+  get validator(): EditorValidator {
+    return this.columnEditor.validator || this.columnDef.validator;
+  }
+
   init() {
     if (!this.args) {
       throw new Error('[Aurelia-SlickGrid] An editor must always have an "init()" with valid arguments.');
     }
-
-    this.columnDef = this.args.column;
 
     if (!this.columnDef || !this.columnDef.internalColumnEditor || !this.columnDef.internalColumnEditor.collection) {
       throw new Error(`[Aurelia-SlickGrid] You need to pass a "collection" inside Column Definition Editor for the SingleSelect Editor to work correctly.
@@ -110,7 +121,7 @@ export class SingleSelectEditor implements Editor {
   }
 
   applyValue(item: any, state: any): void {
-    item[this.args.column.field] = state;
+    item[this.columnDef.field] = state;
   }
 
   destroy() {
@@ -145,14 +156,16 @@ export class SingleSelectEditor implements Editor {
     return this.$editorElm.val() !== this.defaultValue;
   }
 
-  validate() {
-    if (this.args.column.validator) {
-      const validationResults = this.args.column.validator(this.currentValue, this.args);
+  validate(): EditorValidatorOutput {
+    if (this.validator) {
+      const validationResults = this.validator(this.currentValue);
       if (!validationResults.valid) {
         return validationResults;
       }
     }
 
+    // by default the editor is always valid
+    // if user want it to be a required checkbox, he would have to provide his own validator
     return {
       valid: true,
       msg: null

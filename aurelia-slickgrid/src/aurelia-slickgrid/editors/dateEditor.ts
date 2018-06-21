@@ -1,5 +1,5 @@
 import { mapFlatpickrDateFormatWithFieldType, mapMomentDateFormatWithFieldType } from './../services/utilities';
-import { Column, Editor, FieldType, GridOption } from './../models/index';
+import { Column, Editor, EditorValidator, EditorValidatorOutput, FieldType, GridOption } from './../models/index';
 import { I18N } from 'aurelia-i18n';
 import { inject } from 'aurelia-framework';
 import * as flatpickr from 'flatpickr';
@@ -20,10 +20,23 @@ export class DateEditor implements Editor {
     this.init();
   }
 
+  /** Get Column Definition object */
+  get columnDef(): Column {
+    return this.args && this.args.column || {};
+  }
+
+  /** Get Column Editor object */
+  get columnEditor(): any {
+    return this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor || {};
+  }
+
+  /** Get the Validator function, can be passed in Editor property or Column Definition */
+  get validator(): EditorValidator {
+    return this.columnEditor.validator || this.columnDef.validator;
+  }
+
   init(): void {
     if (this.args && this.args.column) {
-      const columnDef = this.args.column;
-      const gridOptions = this.args.grid.getOptions() as GridOption;
       this.defaultDate = (this.args.item) ? this.args.item[this.args.column.field] : null;
       const inputFormat = mapFlatpickrDateFormatWithFieldType(this.args.column.type || FieldType.dateIso);
       const outputFormat = mapFlatpickrDateFormatWithFieldType(this.args.column.outputType || FieldType.dateUtc);
@@ -66,6 +79,10 @@ export class DateEditor implements Editor {
     // this.flatInstance.destroy();
   }
 
+  getColumnEditor() {
+    return this.args && this.args.column && this.args.column.internalColumnEditor && this.args.column.internalColumnEditor;
+  }
+
   show() {
     if (this.flatInstance && typeof this.flatInstance.open === 'function') {
       this.flatInstance.open();
@@ -94,7 +111,9 @@ export class DateEditor implements Editor {
   serializeValue() {
     const domValue: string = this.$input.val();
 
-    if (!domValue) return '';
+    if (!domValue) {
+      return '';
+    }
 
     const outputFormat = mapMomentDateFormatWithFieldType(this.args.column.type || FieldType.dateIso);
     const value = moment(domValue).format(outputFormat);
@@ -103,10 +122,11 @@ export class DateEditor implements Editor {
   }
 
   applyValue(item: any, state: any) {
-    if (!state) return;
+    if (!state) {
+      return;
+    }
 
     const outputFormat = mapMomentDateFormatWithFieldType(this.args.column.type || FieldType.dateIso);
-
     item[this.args.column.field] = moment(state, outputFormat).toDate();
   }
 
@@ -114,14 +134,16 @@ export class DateEditor implements Editor {
     return (!(this.$input.val() === '' && this.defaultDate == null)) && (this.$input.val() !== this.defaultDate);
   }
 
-  validate() {
-    if (this.args.column.validator) {
-      const validationResults = this.args.column.validator(this.$input.val(), this.args);
+  validate(): EditorValidatorOutput {
+    if (this.validator) {
+      const validationResults = this.validator(this.$input.val());
       if (!validationResults.valid) {
         return validationResults;
       }
     }
 
+    // by default the editor is always valid
+    // if user want it to be a required checkbox, he would have to provide his own validator
     return {
       valid: true,
       msg: null

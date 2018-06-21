@@ -1,5 +1,6 @@
+import { Constants } from './../constants';
+import { Column, Editor, EditorValidator, EditorValidatorOutput, KeyCode } from './../models/index';
 import * as $ from 'jquery';
-import { Editor, KeyCode } from './../models/index';
 
 /*
  * An example of a 'detached' editor.
@@ -11,6 +12,21 @@ export class IntegerEditor implements Editor {
 
   constructor(private args: any) {
     this.init();
+  }
+
+  /** Get Column Definition object */
+  get columnDef(): Column {
+    return this.args && this.args.column || {};
+  }
+
+  /** Get Column Editor object */
+  get columnEditor(): any {
+    return this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor || {};
+  }
+
+  /** Get the Validator function, can be passed in Editor property or Column Definition */
+  get validator(): EditorValidator {
+    return this.columnEditor.validator || this.columnDef.validator;
   }
 
   init(): void {
@@ -56,20 +72,20 @@ export class IntegerEditor implements Editor {
     return (!(value === '' && this.defaultValue === null)) && (value !== this.defaultValue);
   }
 
-  validate() {
+  validate(): EditorValidatorOutput {
     const elmValue = this.$input.val();
-    if (isNaN(elmValue as number)) {
-      return {
-        valid: false,
-        msg: 'Please enter a valid integer'
-      };
-    }
+    const errorMsg = this.columnEditor.params && this.columnEditor.errorMessage;
 
-    if (this.args.column.validator) {
-      const validationResults = this.args.column.validator(elmValue);
+    if (this.validator) {
+      const validationResults = this.validator(elmValue);
       if (!validationResults.valid) {
         return validationResults;
       }
+    } else if (isNaN(elmValue as number) || !/^[+-]?\d+$/.test(elmValue)) {
+      return {
+        valid: false,
+        msg: errorMsg || Constants.VALIDATION_EDITOR_VALID_INTEGER
+      };
     }
 
     return {
