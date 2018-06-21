@@ -20,7 +20,7 @@ export class CheckboxEditor implements Editor {
 
   /** Get Column Editor object */
   get columnEditor(): any {
-    return this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor || {};
+    return this.columnDef && this.columnDef.internalColumnEditor || {};
   }
 
   /** Get the Validator function, can be passed in Editor property or Column Definition */

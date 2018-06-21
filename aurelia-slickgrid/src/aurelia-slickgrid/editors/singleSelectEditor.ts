@@ -70,7 +70,7 @@ export class SingleSelectEditor implements Editor {
 
   /** Get Column Editor object */
   get columnEditor(): any {
-    return this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor || {};
+    return this.columnDef && this.columnDef.internalColumnEditor || {};
   }
 
   /**
