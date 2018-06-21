@@ -20,6 +20,8 @@ export * from './currentColumn.interface';
 export * from './currentFilter.interface';
 export * from './currentPagination.interface';
 export * from './currentSorter.interface';
+export * from './editorValidator.interface';
+export * from './editorValidatorOutput.interface';
 export * from './delimiterType.enum';
 export * from './editor.interface';
 export * from './editCommand.interface';

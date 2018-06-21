@@ -5,7 +5,7 @@ import * as moment from 'moment';
 const FORMAT = mapMomentDateFormatWithFieldType(FieldType.dateUs);
 
 export const dateUsFilterCondition: FilterCondition = (options: FilterConditionOption) => {
-  const searchTerm = Array.isArray(options.searchTerms) && options.searchTerms[0] || '';
+  const searchTerm = (Array.isArray(options.searchTerms) && options.searchTerms[0] || '') as string;
   if (searchTerm === null || searchTerm === '' || !moment(options.cellValue, FORMAT, true).isValid() || !moment(searchTerm, FORMAT, true).isValid()) {
     return false;
   }

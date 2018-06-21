@@ -1,7 +1,8 @@
 import {
   CollectionFilterBy,
   CollectionSortBy,
-  MultipleSelectOption
+  EditorValidator,
+  MultipleSelectOption,
 } from './../models/index';
 
 export interface ColumnEditor {
@@ -21,6 +22,21 @@ export interface ColumnEditor {
 
   /** Do we want the Editor to handle translation (localization)? */
   enableTranslateLabel?: boolean;
+
+  /** Error message to display when validation fails */
+  errorMessage?: string;
+
+  /** Maximum value of the filter, works only with Filters supporting it (text, number, float, slider) */
+  maxValue?: number | string;
+
+  /** Minimum value of the filter, works only with Filters supporting it (text, number, float, slider) */
+  minValue?: number | string;
+
+  /** Editor Validator */
+  validator?: EditorValidator;
+
+  /** Step value of the filter, works only with Filters supporting it (input text, number, float, range, slider) */
+  valueStep?: number | string;
 
   /** A custom structure can be used instead of the default label/value pair. Commonly used with Select/Multi-Select Editor */
   customStructure?: {
