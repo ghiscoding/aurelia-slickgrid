@@ -4,12 +4,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-define(["require", "exports", "aurelia-framework", "./filter.service", "./gridState.service", "./sort.service", "jquery"], function (require, exports, aurelia_framework_1, filter_service_1, gridState_service_1, sort_service_1, $) {
+define(["require", "exports", "aurelia-i18n", "aurelia-framework", "./controlAndPlugin.service", "./filter.service", "./gridState.service", "./sort.service", "jquery"], function (require, exports, aurelia_i18n_1, aurelia_framework_1, controlAndPlugin_service_1, filter_service_1, gridState_service_1, sort_service_1, $) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var GridService = /** @class */ (function () {
-        function GridService(filterService, gridStateService, sortService) {
+        function GridService(controlAndPluginService, filterService, i18n, gridStateService, sortService) {
+            this.controlAndPluginService = controlAndPluginService;
             this.filterService = filterService;
+            this.i18n = i18n;
             this.gridStateService = gridStateService;
             this.sortService = sortService;
         }
@@ -148,21 +150,23 @@ define(["require", "exports", "aurelia-framework", "./filter.service", "./gridSt
          * The reset will clear the Filters & Sort, then will reset the Columns to their original state
          */
         GridService.prototype.resetGrid = function (columnDefinitions) {
-            if (this.filterService && this.filterService.clearFilters) {
-                this.filterService.clearFilters();
-            }
-            if (this.sortService && this.sortService.clearSorting) {
-                this.sortService.clearSorting();
-            }
             // reset columns to original states & refresh the grid
             if (this._grid && this._dataView) {
-                var originalColumns = columnDefinitions || this._columnDefinitions;
+                var originalColumns = this.controlAndPluginService.getAllColumns();
+                // const originalColumns = columnDefinitions || this._columnDefinitions;
                 if (Array.isArray(originalColumns) && originalColumns.length > 0) {
+                    // set the grid columns to it's original column definitions
                     this._grid.setColumns(originalColumns);
                     this._dataView.refresh();
                     this._grid.autosizeColumns();
                     this.gridStateService.resetColumns(columnDefinitions);
                 }
+            }
+            if (this.filterService && this.filterService.clearFilters) {
+                this.filterService.clearFilters();
+            }
+            if (this.sortService && this.sortService.clearSorting) {
+                this.sortService.clearSorting();
             }
         };
         /**
@@ -231,7 +235,7 @@ define(["require", "exports", "aurelia-framework", "./filter.service", "./gridSt
                 throw new Error("Cannot update a row without a valid \"id\"");
             }
             var row = this._dataView.getRowById(itemId);
-            if (!item || !row) {
+            if (!item || row === undefined) {
                 throw new Error("Could not find the item in the grid or it's associated \"id\"");
             }
             var gridIdx = this._dataView.getIdxById(itemId);
@@ -246,7 +250,7 @@ define(["require", "exports", "aurelia-framework", "./filter.service", "./gridSt
         };
         GridService = __decorate([
             aurelia_framework_1.singleton(true),
-            aurelia_framework_1.inject(filter_service_1.FilterService, gridState_service_1.GridStateService, sort_service_1.SortService)
+            aurelia_framework_1.inject(controlAndPlugin_service_1.ControlAndPluginService, filter_service_1.FilterService, aurelia_i18n_1.I18N, gridState_service_1.GridStateService, sort_service_1.SortService)
         ], GridService);
         return GridService;
     }());

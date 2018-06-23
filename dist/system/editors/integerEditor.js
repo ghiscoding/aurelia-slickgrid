@@ -1,14 +1,17 @@
-System.register(["jquery", "./../models/index"], function (exports_1, context_1) {
+System.register(["./../constants", "./../models/index", "jquery"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var $, index_1, IntegerEditor;
+    var constants_1, index_1, $, IntegerEditor;
     return {
         setters: [
-            function ($_1) {
-                $ = $_1;
+            function (constants_1_1) {
+                constants_1 = constants_1_1;
             },
             function (index_1_1) {
                 index_1 = index_1_1;
+            },
+            function ($_1) {
+                $ = $_1;
             }
         ],
         execute: function () {
@@ -21,6 +24,30 @@ System.register(["jquery", "./../models/index"], function (exports_1, context_1)
                     this.args = args;
                     this.init();
                 }
+                Object.defineProperty(IntegerEditor.prototype, "columnDef", {
+                    /** Get Column Definition object */
+                    get: function () {
+                        return this.args && this.args.column || {};
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(IntegerEditor.prototype, "columnEditor", {
+                    /** Get Column Editor object */
+                    get: function () {
+                        return this.columnDef && this.columnDef.internalColumnEditor || {};
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(IntegerEditor.prototype, "validator", {
+                    /** Get the Validator function, can be passed in Editor property or Column Definition */
+                    get: function () {
+                        return this.columnEditor.validator || this.columnDef.validator;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
                 IntegerEditor.prototype.init = function () {
                     var _this = this;
                     this.$input = $("<input type=\"number\" class='editor-text' />")
@@ -59,17 +86,18 @@ System.register(["jquery", "./../models/index"], function (exports_1, context_1)
                 };
                 IntegerEditor.prototype.validate = function () {
                     var elmValue = this.$input.val();
-                    if (isNaN(elmValue)) {
-                        return {
-                            valid: false,
-                            msg: 'Please enter a valid integer'
-                        };
-                    }
-                    if (this.args.column.validator) {
-                        var validationResults = this.args.column.validator(elmValue);
+                    var errorMsg = this.columnEditor.params && this.columnEditor.errorMessage;
+                    if (this.validator) {
+                        var validationResults = this.validator(elmValue);
                         if (!validationResults.valid) {
                             return validationResults;
                         }
+                    }
+                    else if (isNaN(elmValue) || !/^[+-]?\d+$/.test(elmValue)) {
+                        return {
+                            valid: false,
+                            msg: errorMsg || constants_1.Constants.VALIDATION_EDITOR_VALID_INTEGER
+                        };
                     }
                     return {
                         valid: true,

@@ -1,5 +1,5 @@
 import { I18N } from 'aurelia-i18n';
-import { Column, Extension, GridOption } from './../models/index';
+import { Column, Extension, GridMenu, GridMenuItem, GridOption, HeaderMenuOnCommandArgs } from './../models/index';
 import { ExportService } from './export.service';
 import { FilterService } from './filter.service';
 import { SortService } from './sort.service';
@@ -14,23 +14,22 @@ export declare class ControlAndPluginService {
     visibleColumns: Column[];
     areVisibleColumnDifferent: boolean;
     extensionList: Extension[];
+    undoRedoBuffer: any;
+    userOriginalGridMenu: GridMenu;
     autoTooltipPlugin: any;
     cellExternalCopyManagerPlugin: any;
     checkboxSelectorPlugin: any;
     columnPickerControl: any;
-    headerButtonsPlugin: any;
-    headerMenuPlugin: any;
     gridMenuControl: any;
     groupItemMetaProviderPlugin: any;
+    headerButtonsPlugin: any;
+    headerMenuPlugin: any;
     rowSelectionPlugin: any;
-    undoRedoBuffer: any;
     constructor(exportService: ExportService, filterService: FilterService, i18n: I18N, sortService: SortService);
     /** Getter for the Grid Options pulled through the Grid Object */
     private readonly _gridOptions;
     /** Getter for the Column Definitions pulled through the Grid Object */
     private readonly _columnDefinitions;
-    /** Auto-resize all the column in the grid to fit the grid width */
-    autoResizeColumns(): void;
     /** Get all columns (includes visible and non-visible) */
     getAllColumns(): Column[];
     /** Get only visible columns */
@@ -42,6 +41,8 @@ export declare class ControlAndPluginService {
      *  @param name
      */
     getExtensionByName(name: string): Extension | undefined;
+    /** Auto-resize all the column in the grid to fit the grid width */
+    autoResizeColumns(): void;
     /**
      * Attach/Create different Controls or Plugins after the Grid is created
      * @param grid
@@ -55,7 +56,7 @@ export declare class ControlAndPluginService {
      * @param columnDefinitions
      * @param options
      */
-    createPluginBeforeGridCreation(columnDefinitions: Column[], options: GridOption): void;
+    createCheckboxPluginBeforeGridCreation(columnDefinitions: Column[], options: GridOption): void;
     /** Create the Excel like copy manager */
     createCellExternalCopyManagerPlugin(grid: any): void;
     /**
@@ -83,13 +84,27 @@ export declare class ControlAndPluginService {
     hideColumn(column: Column): void;
     /** Attach an undo shortcut key hook that will redo/undo the copy buffer */
     hookUndoShortcutKey(): void;
+    /** Dispose of all the controls & plugins */
     dispose(): void;
+    /** Create Grid Menu with Custom Commands if user has enabled Filters and/or uses a Backend Service (OData, GraphQL) */
+    private addGridMenuCustomCommands();
     /**
-     * Create Grid Menu with Custom Commands if user has enabled Filters and/or uses a Backend Service (OData, GraphQL)
-     * @param grid
+     * Create Header Menu with Custom Commands if user has enabled Header Menu
+     * @param options
+     * @param columnDefinitions
+     * @return header menu
      */
-    private addGridMenuCustomCommands(grid);
-    /** Call a refresh dataset with a BackendServiceApi */
+    private addHeaderMenuCustomCommands(options, columnDefinitions);
+    /** Execute the Header Menu Commands that was triggered by the onCommand subscribe */
+    executeHeaderMenuInternalCommands(e: Event, args: HeaderMenuOnCommandArgs): void;
+    /**
+     * Execute the Grid Menu Custom command callback that was triggered by the onCommand subscribe
+     * These are the default internal custom commands
+     * @param event
+     * @param GridMenuItem args
+     */
+    executeGridMenuInternalCustomCommands(e: Event, args: GridMenuItem): void;
+    /** Refresh the dataset through the Backend Service */
     refreshBackendDataset(): void;
     /**
      * Remove a column from the grid by it's index in the grid
@@ -109,6 +124,7 @@ export declare class ControlAndPluginService {
      * Translate manually the header titles.
      * We could optionally pass a locale (that will change currently loaded locale), else it will use current locale
      * @param locale to use
+     * @param new column definitions (optional)
      */
     translateColumnHeaders(locale?: boolean | string, newColumnDefinitions?: Column[]): void;
     /**
@@ -116,14 +132,8 @@ export declare class ControlAndPluginService {
      * calling setColumns() will trigger a grid re-render
      */
     renderColumnHeaders(newColumnDefinitions?: Column[]): void;
-    /**
-     * Create Header Menu with Custom Commands if user has enabled Header Menu
-     * @param grid
-     * @param dataView
-     * @param columnDefinitions
-     * @return header menu
-     */
-    private addHeaderMenuCustomCommands(grid, dataView, columnDefinitions);
+    private emptyColumnPickerTitles();
+    private emptyGridMenuTitles();
     /**
      * @return default Grid Menu options
      */
@@ -132,10 +142,25 @@ export declare class ControlAndPluginService {
      * @return default Header Menu options
      */
     private getDefaultHeaderMenuOptions();
-    private getDefaultTranslationByKey(key);
+    /**
+     * From a Grid Menu object property name, we will return the correct title output string following this order
+     * 1- if user provided a title, use it as the output title
+     * 2- else if user provided a title key, use it to translate the output title
+     * 3- else if nothing is provided use
+     */
+    private getPickerTitleOutputString(propName, pickerName);
     /**
      * Reset all the Grid Menu options which have text to translate
-     * @param columnDefinitions
+     * @param grid menu object
      */
     private resetHeaderMenuTranslations(columnDefinitions);
+    /**
+     * Sort items in an array by a property name
+     * @params items array
+     * @param property name to sort with
+     * @return sorted array
+     */
+    private sortItems(items, propertyName);
+    /** Translate the an array of items from an input key and assign to the output key */
+    private translateItems(items, inputKey, outputKey);
 }

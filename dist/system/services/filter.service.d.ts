@@ -36,6 +36,7 @@ export declare class FilterService {
     attachLocalOnFilter(grid: any, dataView: any): void;
     /** Clear the search filters (below the column titles) */
     clearFilters(): void;
+    /** Local Grid Filter search */
     customLocalFilter(dataView: any, item: any, args: any): boolean;
     dispose(): void;
     /**
@@ -64,6 +65,6 @@ export declare class FilterService {
      * @param grid
      */
     populateColumnFilterSearchTerms(): Column[];
-    private updateColumnFilters(searchTerms, columnDef);
+    private updateColumnFilters(searchTerms, columnDef, operator?);
     private triggerEvent(slickEvent, args, e);
 }

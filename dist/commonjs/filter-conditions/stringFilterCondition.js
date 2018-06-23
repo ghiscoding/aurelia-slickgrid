@@ -18,7 +18,7 @@ exports.stringFilterCondition = function (options) {
         return cellValue.startsWith(searchTerm);
     }
     else if (options.operator === '') {
-        return cellValue.includes(searchTerm);
+        return (cellValue.indexOf(searchTerm) > -1);
     }
     return filterUtilities_1.testFilterCondition(options.operator || '==', cellValue, searchTerm);
 };

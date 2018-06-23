@@ -11,6 +11,30 @@ var TextEditor = /** @class */ (function () {
         this.args = args;
         this.init();
     }
+    Object.defineProperty(TextEditor.prototype, "columnDef", {
+        /** Get Column Definition object */
+        get: function () {
+            return this.args && this.args.column || {};
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextEditor.prototype, "columnEditor", {
+        /** Get Column Editor object */
+        get: function () {
+            return this.columnDef && this.columnDef.internalColumnEditor || {};
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TextEditor.prototype, "validator", {
+        /** Get the Validator function, can be passed in Editor property or Column Definition */
+        get: function () {
+            return this.columnEditor.validator || this.columnDef.validator;
+        },
+        enumerable: true,
+        configurable: true
+    });
     TextEditor.prototype.init = function () {
         this.$input = $("<input type=\"text\" class=\"editor-text\" />")
             .appendTo(this.args.container)
@@ -50,12 +74,14 @@ var TextEditor = /** @class */ (function () {
         return (!(this.$input.val() === '' && this.defaultValue === null)) && (this.$input.val() !== this.defaultValue);
     };
     TextEditor.prototype.validate = function () {
-        if (this.args.column.validator) {
-            var validationResults = this.args.column.validator(this.$input.val());
+        if (this.validator) {
+            var validationResults = this.validator(this.$input.val());
             if (!validationResults.valid) {
                 return validationResults;
             }
         }
+        // by default the editor is always valid
+        // if user want it to be a required checkbox, he would have to provide his own validator
         return {
             valid: true,
             msg: null

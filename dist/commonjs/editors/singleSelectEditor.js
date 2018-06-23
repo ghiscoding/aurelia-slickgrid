@@ -32,7 +32,6 @@ var SingleSelectEditor = /** @class */ (function () {
         /** The options label/value object to use in the select list */
         this.collection = [];
         this.gridOptions = this.args.grid.getOptions();
-        var params = this.gridOptions.params || this.args.column.params || {};
         this.defaultOptions = {
             container: 'body',
             filter: false,
@@ -44,6 +43,22 @@ var SingleSelectEditor = /** @class */ (function () {
         };
         this.init();
     }
+    Object.defineProperty(SingleSelectEditor.prototype, "columnDef", {
+        /** Get Column Definition object */
+        get: function () {
+            return this.args && this.args.column || {};
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(SingleSelectEditor.prototype, "columnEditor", {
+        /** Get Column Editor object */
+        get: function () {
+            return this.columnDef && this.columnDef.internalColumnEditor || {};
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(SingleSelectEditor.prototype, "currentValue", {
         /**
          * The current selected value from the collection
@@ -57,11 +72,18 @@ var SingleSelectEditor = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(SingleSelectEditor.prototype, "validator", {
+        /** Get the Validator function, can be passed in Editor property or Column Definition */
+        get: function () {
+            return this.columnEditor.validator || this.columnDef.validator;
+        },
+        enumerable: true,
+        configurable: true
+    });
     SingleSelectEditor.prototype.init = function () {
         if (!this.args) {
             throw new Error('[Aurelia-SlickGrid] An editor must always have an "init()" with valid arguments.');
         }
-        this.columnDef = this.args.column;
         if (!this.columnDef || !this.columnDef.internalColumnEditor || !this.columnDef.internalColumnEditor.collection) {
             throw new Error("[Aurelia-SlickGrid] You need to pass a \"collection\" inside Column Definition Editor for the SingleSelect Editor to work correctly.\n      Also each option should include a value/label pair (or value/labelKey when using Locale).\n      For example: { editor: { collection: [{ value: true, label: 'True' },{ value: false, label: 'False'}] } }");
         }
@@ -84,7 +106,7 @@ var SingleSelectEditor = /** @class */ (function () {
         this.createDomElement(editorTemplate);
     };
     SingleSelectEditor.prototype.applyValue = function (item, state) {
-        item[this.args.column.field] = state;
+        item[this.columnDef.field] = state;
     };
     SingleSelectEditor.prototype.destroy = function () {
         this.$editorElm.remove();
@@ -114,12 +136,14 @@ var SingleSelectEditor = /** @class */ (function () {
         return this.$editorElm.val() !== this.defaultValue;
     };
     SingleSelectEditor.prototype.validate = function () {
-        if (this.args.column.validator) {
-            var validationResults = this.args.column.validator(this.currentValue, this.args);
+        if (this.validator) {
+            var validationResults = this.validator(this.currentValue);
             if (!validationResults.valid) {
                 return validationResults;
             }
         }
+        // by default the editor is always valid
+        // if user want it to be a required checkbox, he would have to provide his own validator
         return {
             valid: true,
             msg: null

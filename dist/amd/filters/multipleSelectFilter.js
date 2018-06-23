@@ -48,7 +48,7 @@ define(["require", "exports", "aurelia-i18n", "aurelia-framework", "./../models/
                         _this.isFilled = false;
                         _this.$filterElm.removeClass('filled').siblings('div .search-filter').removeClass('filled');
                     }
-                    _this.callback(undefined, { columnDef: _this.columnDef, operator: 'IN', searchTerms: selectedItems });
+                    _this.callback(undefined, { columnDef: _this.columnDef, operator: _this.operator, searchTerms: selectedItems });
                 }
             };
         }
@@ -62,7 +62,7 @@ define(["require", "exports", "aurelia-i18n", "aurelia-framework", "./../models/
         });
         Object.defineProperty(MultipleSelectFilter.prototype, "operator", {
             get: function () {
-                return index_1.OperatorType.in;
+                return (this.columnDef && this.columnDef.filter && this.columnDef.filter.operator) || index_1.OperatorType.in;
             },
             enumerable: true,
             configurable: true
@@ -197,7 +197,7 @@ define(["require", "exports", "aurelia-i18n", "aurelia-framework", "./../models/
             this.$filterElm.multipleSelect({
                 onClose: function () {
                     var selectedItems = _this.$filterElm.multipleSelect('getSelects');
-                    _this.callback(undefined, { columnDef: _this.columnDef, operator: 'IN', searchTerms: selectedItems });
+                    _this.callback(undefined, { columnDef: _this.columnDef, operator: _this.operator, searchTerms: selectedItems });
                 }
             });
         };

@@ -1,4 +1,4 @@
-define(["require", "exports", "jquery", "./../models/index"], function (require, exports, $, index_1) {
+define(["require", "exports", "./../constants", "./../models/index", "jquery"], function (require, exports, constants_1, index_1, $) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /*
@@ -10,6 +10,30 @@ define(["require", "exports", "jquery", "./../models/index"], function (require,
             this.args = args;
             this.init();
         }
+        Object.defineProperty(IntegerEditor.prototype, "columnDef", {
+            /** Get Column Definition object */
+            get: function () {
+                return this.args && this.args.column || {};
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(IntegerEditor.prototype, "columnEditor", {
+            /** Get Column Editor object */
+            get: function () {
+                return this.columnDef && this.columnDef.internalColumnEditor || {};
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(IntegerEditor.prototype, "validator", {
+            /** Get the Validator function, can be passed in Editor property or Column Definition */
+            get: function () {
+                return this.columnEditor.validator || this.columnDef.validator;
+            },
+            enumerable: true,
+            configurable: true
+        });
         IntegerEditor.prototype.init = function () {
             var _this = this;
             this.$input = $("<input type=\"number\" class='editor-text' />")
@@ -48,17 +72,18 @@ define(["require", "exports", "jquery", "./../models/index"], function (require,
         };
         IntegerEditor.prototype.validate = function () {
             var elmValue = this.$input.val();
-            if (isNaN(elmValue)) {
-                return {
-                    valid: false,
-                    msg: 'Please enter a valid integer'
-                };
-            }
-            if (this.args.column.validator) {
-                var validationResults = this.args.column.validator(elmValue);
+            var errorMsg = this.columnEditor.params && this.columnEditor.errorMessage;
+            if (this.validator) {
+                var validationResults = this.validator(elmValue);
                 if (!validationResults.valid) {
                     return validationResults;
                 }
+            }
+            else if (isNaN(elmValue) || !/^[+-]?\d+$/.test(elmValue)) {
+                return {
+                    valid: false,
+                    msg: errorMsg || constants_1.Constants.VALIDATION_EDITOR_VALID_INTEGER
+                };
             }
             return {
                 valid: true,

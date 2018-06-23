@@ -9,6 +9,18 @@ export class TextEditor {
         this.args = args;
         this.init();
     }
+    /** Get Column Definition object */
+    get columnDef() {
+        return this.args && this.args.column || {};
+    }
+    /** Get Column Editor object */
+    get columnEditor() {
+        return this.columnDef && this.columnDef.internalColumnEditor || {};
+    }
+    /** Get the Validator function, can be passed in Editor property or Column Definition */
+    get validator() {
+        return this.columnEditor.validator || this.columnDef.validator;
+    }
     init() {
         this.$input = $(`<input type="text" class="editor-text" />`)
             .appendTo(this.args.container)
@@ -48,12 +60,14 @@ export class TextEditor {
         return (!(this.$input.val() === '' && this.defaultValue === null)) && (this.$input.val() !== this.defaultValue);
     }
     validate() {
-        if (this.args.column.validator) {
-            const validationResults = this.args.column.validator(this.$input.val());
+        if (this.validator) {
+            const validationResults = this.validator(this.$input.val());
             if (!validationResults.valid) {
                 return validationResults;
             }
         }
+        // by default the editor is always valid
+        // if user want it to be a required checkbox, he would have to provide his own validator
         return {
             valid: true,
             msg: null

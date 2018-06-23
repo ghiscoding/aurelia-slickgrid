@@ -18,6 +18,30 @@ System.register(["jquery"], function (exports_1, context_1) {
                     this.args = args;
                     this.init();
                 }
+                Object.defineProperty(CheckboxEditor.prototype, "columnDef", {
+                    /** Get Column Definition object */
+                    get: function () {
+                        return this.args && this.args.column || {};
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(CheckboxEditor.prototype, "columnEditor", {
+                    /** Get Column Editor object */
+                    get: function () {
+                        return this.columnDef && this.columnDef.internalColumnEditor || {};
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(CheckboxEditor.prototype, "validator", {
+                    /** Get the Validator function, can be passed in Editor property or Column Definition */
+                    get: function () {
+                        return this.columnEditor.validator || this.columnDef.validator;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
                 CheckboxEditor.prototype.init = function () {
                     this.$input = $("<input type=\"checkbox\" value=\"true\" class=\"editor-checkbox\" />");
                     this.$input.appendTo(this.args.container);
@@ -36,7 +60,7 @@ System.register(["jquery"], function (exports_1, context_1) {
                     this.$input.show();
                 };
                 CheckboxEditor.prototype.loadValue = function (item) {
-                    this.defaultValue = !!item[this.args.column.field];
+                    this.defaultValue = !!item[this.columnDef.field];
                     if (this.defaultValue) {
                         this.$input.prop('checked', true);
                     }
@@ -51,12 +75,20 @@ System.register(["jquery"], function (exports_1, context_1) {
                     return this.$input.prop('checked');
                 };
                 CheckboxEditor.prototype.applyValue = function (item, state) {
-                    item[this.args.column.field] = state;
+                    item[this.columnDef.field] = state;
                 };
                 CheckboxEditor.prototype.isValueChanged = function () {
                     return (this.serializeValue() !== this.defaultValue);
                 };
                 CheckboxEditor.prototype.validate = function () {
+                    if (this.validator) {
+                        var validationResults = this.validator(this.$input.val());
+                        if (!validationResults.valid) {
+                            return validationResults;
+                        }
+                    }
+                    // by default the editor is always valid
+                    // if user want it to be a required checkbox, he would have to provide his own validator
                     return {
                         valid: true,
                         msg: null

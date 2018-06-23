@@ -41,7 +41,7 @@ let MultipleSelectFilter = class MultipleSelectFilter {
                     this.isFilled = false;
                     this.$filterElm.removeClass('filled').siblings('div .search-filter').removeClass('filled');
                 }
-                this.callback(undefined, { columnDef: this.columnDef, operator: 'IN', searchTerms: selectedItems });
+                this.callback(undefined, { columnDef: this.columnDef, operator: this.operator, searchTerms: selectedItems });
             }
         };
     }
@@ -50,7 +50,7 @@ let MultipleSelectFilter = class MultipleSelectFilter {
         return (this.grid && this.grid.getOptions) ? this.grid.getOptions() : {};
     }
     get operator() {
-        return OperatorType.in;
+        return (this.columnDef && this.columnDef.filter && this.columnDef.filter.operator) || OperatorType.in;
     }
     /**
      * Initialize the filter template
@@ -180,7 +180,7 @@ let MultipleSelectFilter = class MultipleSelectFilter {
         this.$filterElm.multipleSelect({
             onClose: () => {
                 const selectedItems = this.$filterElm.multipleSelect('getSelects');
-                this.callback(undefined, { columnDef: this.columnDef, operator: 'IN', searchTerms: selectedItems });
+                this.callback(undefined, { columnDef: this.columnDef, operator: this.operator, searchTerms: selectedItems });
             }
         });
     }

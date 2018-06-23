@@ -1,6 +1,8 @@
 import { CompoundDateFilter } from './compoundDateFilter';
 import { CompoundInputFilter } from './compoundInputFilter';
+import { CompoundSliderFilter } from './compoundSliderFilter';
 import { InputFilter } from './inputFilter';
+import { SliderFilter } from './sliderFilter';
 import { MultipleSelectFilter } from './multipleSelectFilter';
 import { SelectFilter } from './selectFilter';
 import { SingleSelectFilter } from './singleSelectFilter';
@@ -9,8 +11,12 @@ export var Filters = {
     compoundDate: CompoundDateFilter,
     /** Compound Input Filter (compound of Operator + Input) */
     compoundInput: CompoundInputFilter,
-    /** Default Filter, input type text filter with a magnifying glass placeholder */
+    /** Compound Slider Filter (compound of Operator + Slider) */
+    compoundSlider: CompoundSliderFilter,
+    /** Default Filter, input type text filter */
     input: InputFilter,
+    /** Slider Filter */
+    slider: SliderFilter,
     /** Multiple Select filter, which uses 3rd party lib "multiple-select.js" */
     multipleSelect: MultipleSelectFilter,
     /** Single Select filter, which uses 3rd party lib "multiple-select.js" */

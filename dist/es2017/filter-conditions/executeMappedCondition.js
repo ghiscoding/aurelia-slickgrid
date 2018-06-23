@@ -10,7 +10,8 @@ import { stringFilterCondition } from './stringFilterCondition';
 import { FieldType } from '../models/index';
 export const executeMappedCondition = (options) => {
     // when using a multi-select ('IN' operator) we will not use the field type but instead go directly with a collection search
-    if (options && options.operator && options.operator.toUpperCase() === 'IN') {
+    const operator = options.operator && options.operator.toUpperCase();
+    if (options && options.operator && (operator === 'IN' || operator === 'NIN' || operator === 'IN_CONTAINS' || operator === 'NIN_CONTAINS')) {
         return collectionSearchFilterCondition(options);
     }
     // execute the mapped type, or default to String condition check

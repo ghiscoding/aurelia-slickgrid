@@ -22,6 +22,7 @@ var hyperlinkFormatter_1 = require("./hyperlinkFormatter");
 var hyperlinkUriPrefixFormatter_1 = require("./hyperlinkUriPrefixFormatter");
 var infoIconFormatter_1 = require("./infoIconFormatter");
 var lowercaseFormatter_1 = require("./lowercaseFormatter");
+var maskFormatter_1 = require("./maskFormatter");
 var multipleFormatter_1 = require("./multipleFormatter");
 var percentFormatter_1 = require("./percentFormatter");
 var percentCompleteBarFormatter_1 = require("./percentCompleteBarFormatter");
@@ -90,6 +91,11 @@ exports.Formatters = {
     infoIcon: infoIconFormatter_1.infoIconFormatter,
     /** Takes a value and displays it all lowercase */
     lowercase: lowercaseFormatter_1.lowercaseFormatter,
+    /**
+     * Takes a value display it according to a mask provided
+     * e.: 1234567890 with mask "(000) 000-0000" will display "(123) 456-7890"
+     */
+    mask: maskFormatter_1.maskFormatter,
     /**
      * You can pipe multiple formatters (executed in sequence), use params to pass the list of formatters. For example::
      * { field: 'title', formatter: Formatters.multiple, params: { formatters: [ Formatters.lowercase, Formatters.uppercase ] }

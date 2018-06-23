@@ -106,14 +106,6 @@ let SortService = class SortService {
             this.onLocalSortChanged(grid, dataView, sortColumns);
             this.emitSortChanged('local');
         });
-        if (dataView && dataView.onRowCountChanged) {
-            this._eventHandler.subscribe(dataView.onRowCountChanged, (e, args) => {
-                // load any presets if there are any
-                if (args.current > 0) {
-                    this.loadLocalPresets(grid, dataView);
-                }
-            });
-        }
     }
     /**
      * Clear Sorting
@@ -140,7 +132,6 @@ let SortService = class SortService {
         }
         // set current sorter to empty & emit a sort changed event
         this._currentLocalSorters = [];
-        const sender = (this._gridOptions && this._gridOptions.backendServiceApi) ? 'remote' : 'local';
         // emit an event when filters are all cleared
         this.ea.publish('sortService:sortCleared', this._currentLocalSorters);
     }

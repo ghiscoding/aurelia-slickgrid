@@ -1,7 +1,7 @@
-System.register(["./compoundDateFilter", "./compoundInputFilter", "./inputFilter", "./multipleSelectFilter", "./selectFilter", "./singleSelectFilter", "./filterFactory"], function (exports_1, context_1) {
+System.register(["./compoundDateFilter", "./compoundInputFilter", "./compoundSliderFilter", "./inputFilter", "./sliderFilter", "./multipleSelectFilter", "./selectFilter", "./singleSelectFilter", "./filterFactory"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var compoundDateFilter_1, compoundInputFilter_1, inputFilter_1, multipleSelectFilter_1, selectFilter_1, singleSelectFilter_1, Filters;
+    var compoundDateFilter_1, compoundInputFilter_1, compoundSliderFilter_1, inputFilter_1, sliderFilter_1, multipleSelectFilter_1, selectFilter_1, singleSelectFilter_1, Filters;
     return {
         setters: [
             function (compoundDateFilter_1_1) {
@@ -10,8 +10,14 @@ System.register(["./compoundDateFilter", "./compoundInputFilter", "./inputFilter
             function (compoundInputFilter_1_1) {
                 compoundInputFilter_1 = compoundInputFilter_1_1;
             },
+            function (compoundSliderFilter_1_1) {
+                compoundSliderFilter_1 = compoundSliderFilter_1_1;
+            },
             function (inputFilter_1_1) {
                 inputFilter_1 = inputFilter_1_1;
+            },
+            function (sliderFilter_1_1) {
+                sliderFilter_1 = sliderFilter_1_1;
             },
             function (multipleSelectFilter_1_1) {
                 multipleSelectFilter_1 = multipleSelectFilter_1_1;
@@ -34,8 +40,12 @@ System.register(["./compoundDateFilter", "./compoundInputFilter", "./inputFilter
                 compoundDate: compoundDateFilter_1.CompoundDateFilter,
                 /** Compound Input Filter (compound of Operator + Input) */
                 compoundInput: compoundInputFilter_1.CompoundInputFilter,
-                /** Default Filter, input type text filter with a magnifying glass placeholder */
+                /** Compound Slider Filter (compound of Operator + Slider) */
+                compoundSlider: compoundSliderFilter_1.CompoundSliderFilter,
+                /** Default Filter, input type text filter */
                 input: inputFilter_1.InputFilter,
+                /** Slider Filter */
+                slider: sliderFilter_1.SliderFilter,
                 /** Multiple Select filter, which uses 3rd party lib "multiple-select.js" */
                 multipleSelect: multipleSelectFilter_1.MultipleSelectFilter,
                 /** Single Select filter, which uses 3rd party lib "multiple-select.js" */

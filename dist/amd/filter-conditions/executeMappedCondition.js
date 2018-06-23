@@ -3,7 +3,8 @@ define(["require", "exports", "./booleanFilterCondition", "./dateFilterCondition
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.executeMappedCondition = function (options) {
         // when using a multi-select ('IN' operator) we will not use the field type but instead go directly with a collection search
-        if (options && options.operator && options.operator.toUpperCase() === 'IN') {
+        var operator = options.operator && options.operator.toUpperCase();
+        if (options && options.operator && (operator === 'IN' || operator === 'NIN' || operator === 'IN_CONTAINS' || operator === 'NIN_CONTAINS')) {
             return collectionSearchFilterCondition_1.collectionSearchFilterCondition(options);
         }
         // execute the mapped type, or default to String condition check

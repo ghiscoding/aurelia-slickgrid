@@ -69,6 +69,7 @@ export declare class AureliaSlickgridCustomElement {
     attachDifferentHooks(grid: any, gridOptions: GridOption, dataView: any): void;
     attachBackendCallbackFunctions(gridOptions: GridOption): void;
     attachResizeHook(grid: any, options: GridOption): void;
+    executeAfterDataviewCreated(grid: any, gridOptions: GridOption, dataView: any): void;
     mergeGridOptions(gridOptions: GridOption): GridOption;
     paginationChanged(pagination: Pagination): void;
     /**
@@ -89,4 +90,5 @@ export declare class AureliaSlickgridCustomElement {
      * If using i18n, we also need to trigger a re-translate of the column headers
      */
     updateColumnDefinitionsList(newColumnDefinitions?: Column[]): void;
+    private dispatchCustomEvent(eventName, data?, isBubbling?);
 }

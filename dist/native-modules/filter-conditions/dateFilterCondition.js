@@ -3,7 +3,7 @@ import { mapMomentDateFormatWithFieldType } from './../services/utilities';
 import { testFilterCondition } from './filterUtilities';
 import * as moment from 'moment';
 export var dateFilterCondition = function (options) {
-    var searchTerm = Array.isArray(options.searchTerms) && options.searchTerms[0] || '';
+    var searchTerm = (Array.isArray(options.searchTerms) && options.searchTerms[0] || '');
     var filterSearchType = options.filterSearchType || FieldType.dateIso;
     var searchDateFormat = mapMomentDateFormatWithFieldType(filterSearchType);
     if (searchTerm === null || searchTerm === '' || !moment(options.cellValue, moment.ISO_8601).isValid() || !moment(searchTerm, searchDateFormat, true).isValid()) {

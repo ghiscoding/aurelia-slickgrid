@@ -126,6 +126,8 @@ System.register(["./global-utilities", "aurelia-framework", "./utilities", "./..
                     if (event && (event.type === 'keyup' || event.type === 'keydown')) {
                         debounceTypingDelay = backendApi.filterTypingDebounce || DEFAULT_FILTER_TYPING_DEBOUNCE;
                     }
+                    // keep current filters & always save it as an array (columnFilters can be an object when it is dealt by SlickGrid Filter)
+                    this._currentFilters = this.castFilterToColumnFilter(args.columnFilters);
                     var promise = new Promise(function (resolve, reject) {
                         // reset Pagination, then build the OData query which we will use in the WebAPI callback
                         // wait a minimum user typing inactivity before processing any query
@@ -163,7 +165,6 @@ System.register(["./global-utilities", "aurelia-framework", "./utilities", "./..
                  * @param columnFilters
                  */
                 GridOdataService.prototype.updateFilters = function (columnFilters, isUpdatedByPreset) {
-                    this._currentFilters = this.castFilterToColumnFilter(columnFilters);
                     var searchBy = '';
                     var searchByArray = [];
                     var _loop_1 = function (columnId) {

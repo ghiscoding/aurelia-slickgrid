@@ -21,10 +21,12 @@ export function configure(aurelia, callback) {
     // must register a transient so the container will get a new instance everytime
     aurelia.container.registerTransient(Filters.compoundDate);
     aurelia.container.registerTransient(Filters.compoundInput);
+    aurelia.container.registerTransient(Filters.compoundSlider);
     aurelia.container.registerTransient(Filters.input);
     aurelia.container.registerTransient(Filters.multipleSelect);
     aurelia.container.registerTransient(Filters.singleSelect);
     aurelia.container.registerTransient(Filters.select);
+    aurelia.container.registerTransient(Filters.slider);
     var config = new SlickgridConfig();
     aurelia.container.registerInstance(SlickgridConfig, config);
     if (typeof callback === 'function') {

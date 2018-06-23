@@ -21,7 +21,6 @@ let SingleSelectEditor = class SingleSelectEditor {
         /** The options label/value object to use in the select list */
         this.collection = [];
         this.gridOptions = this.args.grid.getOptions();
-        const params = this.gridOptions.params || this.args.column.params || {};
         this.defaultOptions = {
             container: 'body',
             filter: false,
@@ -33,17 +32,28 @@ let SingleSelectEditor = class SingleSelectEditor {
         };
         this.init();
     }
+    /** Get Column Definition object */
+    get columnDef() {
+        return this.args && this.args.column || {};
+    }
+    /** Get Column Editor object */
+    get columnEditor() {
+        return this.columnDef && this.columnDef.internalColumnEditor || {};
+    }
     /**
      * The current selected value from the collection
      */
     get currentValue() {
         return findOrDefault(this.collection, (c) => c[this.valueName].toString() === this.$editorElm.val())[this.valueName];
     }
+    /** Get the Validator function, can be passed in Editor property or Column Definition */
+    get validator() {
+        return this.columnEditor.validator || this.columnDef.validator;
+    }
     init() {
         if (!this.args) {
             throw new Error('[Aurelia-SlickGrid] An editor must always have an "init()" with valid arguments.');
         }
-        this.columnDef = this.args.column;
         if (!this.columnDef || !this.columnDef.internalColumnEditor || !this.columnDef.internalColumnEditor.collection) {
             throw new Error(`[Aurelia-SlickGrid] You need to pass a "collection" inside Column Definition Editor for the SingleSelect Editor to work correctly.
       Also each option should include a value/label pair (or value/labelKey when using Locale).
@@ -68,7 +78,7 @@ let SingleSelectEditor = class SingleSelectEditor {
         this.createDomElement(editorTemplate);
     }
     applyValue(item, state) {
-        item[this.args.column.field] = state;
+        item[this.columnDef.field] = state;
     }
     destroy() {
         this.$editorElm.remove();
@@ -97,12 +107,14 @@ let SingleSelectEditor = class SingleSelectEditor {
         return this.$editorElm.val() !== this.defaultValue;
     }
     validate() {
-        if (this.args.column.validator) {
-            const validationResults = this.args.column.validator(this.currentValue, this.args);
+        if (this.validator) {
+            const validationResults = this.validator(this.currentValue);
             if (!validationResults.valid) {
                 return validationResults;
             }
         }
+        // by default the editor is always valid
+        // if user want it to be a required checkbox, he would have to provide his own validator
         return {
             valid: true,
             msg: null

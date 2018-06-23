@@ -68,7 +68,7 @@ System.register(["aurelia-i18n", "aurelia-framework", "./../models/index", "../s
                                 _this.isFilled = false;
                                 _this.$filterElm.removeClass('filled').siblings('div .search-filter').removeClass('filled');
                             }
-                            _this.callback(undefined, { columnDef: _this.columnDef, operator: 'IN', searchTerms: selectedItems });
+                            _this.callback(undefined, { columnDef: _this.columnDef, operator: _this.operator, searchTerms: selectedItems });
                         }
                     };
                 }
@@ -82,7 +82,7 @@ System.register(["aurelia-i18n", "aurelia-framework", "./../models/index", "../s
                 });
                 Object.defineProperty(MultipleSelectFilter.prototype, "operator", {
                     get: function () {
-                        return index_1.OperatorType.in;
+                        return (this.columnDef && this.columnDef.filter && this.columnDef.filter.operator) || index_1.OperatorType.in;
                     },
                     enumerable: true,
                     configurable: true
@@ -217,7 +217,7 @@ System.register(["aurelia-i18n", "aurelia-framework", "./../models/index", "../s
                     this.$filterElm.multipleSelect({
                         onClose: function () {
                             var selectedItems = _this.$filterElm.multipleSelect('getSelects');
-                            _this.callback(undefined, { columnDef: _this.columnDef, operator: 'IN', searchTerms: selectedItems });
+                            _this.callback(undefined, { columnDef: _this.columnDef, operator: _this.operator, searchTerms: selectedItems });
                         }
                     });
                 };

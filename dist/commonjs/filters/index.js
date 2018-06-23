@@ -2,7 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var compoundDateFilter_1 = require("./compoundDateFilter");
 var compoundInputFilter_1 = require("./compoundInputFilter");
+var compoundSliderFilter_1 = require("./compoundSliderFilter");
 var inputFilter_1 = require("./inputFilter");
+var sliderFilter_1 = require("./sliderFilter");
 var multipleSelectFilter_1 = require("./multipleSelectFilter");
 var selectFilter_1 = require("./selectFilter");
 var singleSelectFilter_1 = require("./singleSelectFilter");
@@ -11,8 +13,12 @@ exports.Filters = {
     compoundDate: compoundDateFilter_1.CompoundDateFilter,
     /** Compound Input Filter (compound of Operator + Input) */
     compoundInput: compoundInputFilter_1.CompoundInputFilter,
-    /** Default Filter, input type text filter with a magnifying glass placeholder */
+    /** Compound Slider Filter (compound of Operator + Slider) */
+    compoundSlider: compoundSliderFilter_1.CompoundSliderFilter,
+    /** Default Filter, input type text filter */
     input: inputFilter_1.InputFilter,
+    /** Slider Filter */
+    slider: sliderFilter_1.SliderFilter,
     /** Multiple Select filter, which uses 3rd party lib "multiple-select.js" */
     multipleSelect: multipleSelectFilter_1.MultipleSelectFilter,
     /** Single Select filter, which uses 3rd party lib "multiple-select.js" */

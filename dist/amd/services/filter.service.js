@@ -113,9 +113,6 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
                             if (args && !args.clearFilterTriggered) {
                                 this.emitFilterChanged('remote');
                             }
-                            else {
-                                console.log('clear triggered', args);
-                            }
                             return [4 /*yield*/, backendApi.process(query)];
                         case 2:
                             processResult = _a.sent();
@@ -174,7 +171,6 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
                     delete this._columnFilters[columnId];
                 }
             }
-            this._columnFilters = {};
             // we also need to refresh the dataView and optionally the grid (it's optional since we use DataView)
             if (this._dataView) {
                 this._dataView.refresh();
@@ -182,8 +178,9 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
                 this._grid.render();
             }
             // emit an event when filters are all cleared
-            this.ea.publish('filterService:filterCleared', {});
+            this.ea.publish('filterService:filterCleared', this._columnFilters);
         };
+        /** Local Grid Filter search */
         FilterService.prototype.customLocalFilter = function (dataView, item, args) {
             for (var _i = 0, _a = Object.keys(args.columnFilters); _i < _a.length; _i++) {
                 var columnId = _a[_i];
@@ -196,18 +193,18 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
                 var fieldType = columnDef.type || index_3.FieldType.string;
                 var filterSearchType = (columnDef.filterSearchType) ? columnDef.filterSearchType : null;
                 var cellValue = item[columnDef.queryField || columnDef.queryFieldFilter || columnDef.field];
-                var searchTerms = (columnFilter && columnFilter.searchTerms) ? columnFilter.searchTerms : null;
-                var fieldSearchValue = (Array.isArray(searchTerms) && searchTerms.length === 1) ? searchTerms[0] : '';
-                if (typeof fieldSearchValue === 'undefined') {
-                    fieldSearchValue = '';
-                }
+                // if we find searchTerms use them but make a deep copy so that we don't affect original array
+                // we might have to overwrite the value(s) locally that are returned
+                // e.g: we don't want to operator within the search value, since it will fail filter condition check trigger afterward
+                var searchValues = (columnFilter && columnFilter.searchTerms) ? columnFilter.searchTerms.slice() : [];
+                var fieldSearchValue = (Array.isArray(searchValues) && searchValues.length === 1) ? searchValues[0] : '';
                 fieldSearchValue = '' + fieldSearchValue; // make sure it's a string
                 var matches = fieldSearchValue.match(/^([<>!=\*]{0,2})(.*[^<>!=\*])([\*]?)$/); // group 1: Operator, 2: searchValue, 3: last char is '*' (meaning starts with, ex.: abc*)
                 var operator = columnFilter.operator || ((matches) ? matches[1] : '');
                 var searchTerm = (!!matches) ? matches[2] : '';
                 var lastValueChar = (!!matches) ? matches[3] : (operator === '*z' ? '*' : '');
-                if (searchTerms && searchTerms.length > 1) {
-                    fieldSearchValue = searchTerms.join(',');
+                if (searchValues && searchValues.length > 1) {
+                    fieldSearchValue = searchValues.join(',');
                 }
                 else if (typeof fieldSearchValue === 'string') {
                     // escaping the search value
@@ -217,15 +214,20 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
                     }
                 }
                 // no need to query if search value is empty
-                if (searchTerm === '' && !searchTerms) {
+                if (searchTerm === '' && (!searchValues || (Array.isArray(searchValues) && searchValues.length === 0))) {
                     return true;
+                }
+                // if search value has a regex match we will only keep the value without the operator
+                // in this case we need to overwrite the returned search values to truncate operator from the string search
+                if (Array.isArray(matches) && matches.length >= 1 && (Array.isArray(searchValues) && searchValues.length === 1)) {
+                    searchValues[0] = searchTerm;
                 }
                 // filter search terms should always be string type (even though we permit the end user to input numbers)
                 // so make sure each term are strings, if user has some default search terms, we will cast them to string
-                if (searchTerms && Array.isArray(searchTerms)) {
-                    for (var k = 0, ln = searchTerms.length; k < ln; k++) {
+                if (searchValues && Array.isArray(searchValues)) {
+                    for (var k = 0, ln = searchValues.length; k < ln; k++) {
                         // make sure all search terms are strings
-                        searchTerms[k] = ((searchTerms[k] === undefined || searchTerms[k] === null) ? '' : searchTerms[k]) + '';
+                        searchValues[k] = ((searchValues[k] === undefined || searchValues[k] === null) ? '' : searchValues[k]) + '';
                     }
                 }
                 // when using localization (i18n), we should use the formatter output to search as the new cell value
@@ -239,7 +241,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
                 }
                 var conditionOptions = {
                     fieldType: fieldType,
-                    searchTerms: searchTerms,
+                    searchTerms: searchValues,
                     cellValue: cellValue,
                     operator: operator,
                     cellValueLastChar: lastValueChar,
@@ -305,7 +307,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
         FilterService.prototype.callbackSearchEvent = function (e, args) {
             if (args) {
                 var searchTerm = ((e && e.target) ? e.target.value : undefined);
-                var searchTerms = (args.searchTerms && Array.isArray(args.searchTerms)) ? args.searchTerms : searchTerm ? [searchTerm] : undefined;
+                var searchTerms = (args.searchTerms && Array.isArray(args.searchTerms)) ? args.searchTerms : (searchTerm ? [searchTerm] : undefined);
                 var columnDef = args.columnDef || null;
                 var columnId = columnDef ? (columnDef.id || '') : '';
                 var operator = args.operator || undefined;
@@ -344,6 +346,8 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
             if (columnDef && columnId !== 'selector' && columnDef.filterable) {
                 var searchTerms = void 0;
                 var operator = void 0;
+                var filter_1 = this.filterFactory.createFilter(args.column.filter);
+                operator = (columnDef && columnDef.filter && columnDef.filter.operator) || (filter_1 && filter_1.operator);
                 if (this._columnFilters[columnDef.id]) {
                     searchTerms = this._columnFilters[columnDef.id].searchTerms || undefined;
                     operator = this._columnFilters[columnDef.id].operator || undefined;
@@ -352,8 +356,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
                     // when hiding/showing (with Column Picker or Grid Menu), it will try to re-create yet again the filters (since SlickGrid does a re-render)
                     // because of that we need to first get searchTerm(s) from the columnFilters (that is what the user last entered)
                     searchTerms = columnDef.filter.searchTerms || undefined;
-                    operator = columnDef.filter.operator || undefined;
-                    this.updateColumnFilters(searchTerms, columnDef);
+                    this.updateColumnFilters(searchTerms, columnDef, operator);
                 }
                 var filterArguments = {
                     grid: this._grid,
@@ -362,7 +365,6 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
                     columnDef: columnDef,
                     callback: this.callbackSearchEvent.bind(this)
                 };
-                var filter_1 = this.filterFactory.createFilter(args.column.filter);
                 if (filter_1) {
                     filter_1.init(filterArguments);
                     var filterExistIndex = this._filters.findIndex(function (filt) { return filter_1.columnDef.name === filt.columnDef.name; });
@@ -427,14 +429,13 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
             }
             return this._columnDefinitions;
         };
-        FilterService.prototype.updateColumnFilters = function (searchTerms, columnDef) {
-            if (searchTerms) {
-                // this._columnFilters.searchTerms = searchTerms;
+        FilterService.prototype.updateColumnFilters = function (searchTerms, columnDef, operator) {
+            if (searchTerms && columnDef) {
                 this._columnFilters[columnDef.id] = {
                     columnId: columnDef.id,
                     columnDef: columnDef,
                     searchTerms: searchTerms,
-                    operator: (columnDef && columnDef.filter && columnDef.filter.operator) ? columnDef.filter.operator : null
+                    operator: operator
                 };
             }
         };

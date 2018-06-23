@@ -25,7 +25,7 @@ let SingleSelectFilter = class SingleSelectFilter {
                 const selectedItems = this.$filterElm.multipleSelect('getSelects');
                 let selectedItem = '';
                 if (Array.isArray(selectedItems) && selectedItems.length > 0) {
-                    selectedItem = selectedItems[0];
+                    selectedItem = selectedItems[0] || null;
                     this.isFilled = true;
                     this.$filterElm.addClass('filled').siblings('div .search-filter').addClass('filled');
                 }
@@ -33,12 +33,12 @@ let SingleSelectFilter = class SingleSelectFilter {
                     this.isFilled = false;
                     this.$filterElm.removeClass('filled').siblings('div .search-filter').removeClass('filled');
                 }
-                this.callback(undefined, { columnDef: this.columnDef, operator: 'EQ', searchTerms: [selectedItem] });
+                this.callback(undefined, { columnDef: this.columnDef, operator: this.operator, searchTerms: (selectedItem ? [selectedItem] : null) });
             }
         };
     }
     get operator() {
-        return OperatorType.equal;
+        return (this.columnDef && this.columnDef.filter && this.columnDef.filter.operator) || OperatorType.equal;
     }
     /** Getter for the Grid Options pulled through the Grid Object */
     get gridOptions() {

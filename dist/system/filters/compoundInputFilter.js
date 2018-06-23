@@ -185,7 +185,7 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../models/index"], func
                         var selectedOperator = this.$selectOperatorElm.find('option:selected').text();
                         var value = this.$filterInputElm.val();
                         (value) ? this.$filterElm.addClass('filled') : this.$filterElm.removeClass('filled');
-                        this.callback(e, { columnDef: this.columnDef, searchTerms: [value], operator: selectedOperator || '' });
+                        this.callback(e, { columnDef: this.columnDef, searchTerms: (value ? [value] : null), operator: selectedOperator || '' });
                     }
                 };
                 CompoundInputFilter = __decorate([

@@ -13,7 +13,7 @@ var InputFilter = /** @class */ (function () {
     });
     Object.defineProperty(InputFilter.prototype, "operator", {
         get: function () {
-            return OperatorType.equal;
+            return (this.columnDef && this.columnDef.filter && this.columnDef.filter.operator) || OperatorType.equal;
         },
         enumerable: true,
         configurable: true
@@ -46,7 +46,7 @@ var InputFilter = /** @class */ (function () {
             }
             else {
                 _this.$filterElm.addClass('filled');
-                _this.callback(e, { columnDef: _this.columnDef, searchTerms: [value] });
+                _this.callback(e, { columnDef: _this.columnDef, operator: _this.operator, searchTerms: [value] });
             }
         });
     };

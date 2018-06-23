@@ -6,7 +6,7 @@ exports.hyperlinkUriPrefixFormatter = function (row, cell, value, columnDef, dat
     if (!uriPrefix) {
         throw new Error("HyperlinkUriPrefix Formatter require a \"uriPrefix\" that can be passed through params. e.g.:: formatter: Formatters.hyperlinkUriPrefix, params: { uriPrefix: '/users/' }");
     }
-    if (value && uriPrefix && typeof uriPrefix === 'string' && !uriPrefix.includes('<script>')) {
+    if (value && uriPrefix && typeof uriPrefix === 'string' && uriPrefix.indexOf('<script>') === -1) {
         uriPrefix += value;
         return '<a href="' + uriPrefix + '">' + value + '</a>';
     }

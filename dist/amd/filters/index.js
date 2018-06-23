@@ -1,4 +1,4 @@
-define(["require", "exports", "./compoundDateFilter", "./compoundInputFilter", "./inputFilter", "./multipleSelectFilter", "./selectFilter", "./singleSelectFilter", "./filterFactory"], function (require, exports, compoundDateFilter_1, compoundInputFilter_1, inputFilter_1, multipleSelectFilter_1, selectFilter_1, singleSelectFilter_1, filterFactory_1) {
+define(["require", "exports", "./compoundDateFilter", "./compoundInputFilter", "./compoundSliderFilter", "./inputFilter", "./sliderFilter", "./multipleSelectFilter", "./selectFilter", "./singleSelectFilter", "./filterFactory"], function (require, exports, compoundDateFilter_1, compoundInputFilter_1, compoundSliderFilter_1, inputFilter_1, sliderFilter_1, multipleSelectFilter_1, selectFilter_1, singleSelectFilter_1, filterFactory_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.Filters = {
@@ -6,8 +6,12 @@ define(["require", "exports", "./compoundDateFilter", "./compoundInputFilter", "
         compoundDate: compoundDateFilter_1.CompoundDateFilter,
         /** Compound Input Filter (compound of Operator + Input) */
         compoundInput: compoundInputFilter_1.CompoundInputFilter,
-        /** Default Filter, input type text filter with a magnifying glass placeholder */
+        /** Compound Slider Filter (compound of Operator + Slider) */
+        compoundSlider: compoundSliderFilter_1.CompoundSliderFilter,
+        /** Default Filter, input type text filter */
         input: inputFilter_1.InputFilter,
+        /** Slider Filter */
+        slider: sliderFilter_1.SliderFilter,
         /** Multiple Select filter, which uses 3rd party lib "multiple-select.js" */
         multipleSelect: multipleSelectFilter_1.MultipleSelectFilter,
         /** Single Select filter, which uses 3rd party lib "multiple-select.js" */

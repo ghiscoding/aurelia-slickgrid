@@ -32,7 +32,7 @@ define(["require", "exports", "aurelia-i18n", "aurelia-framework", "./../models/
                     var selectedItems = _this.$filterElm.multipleSelect('getSelects');
                     var selectedItem = '';
                     if (Array.isArray(selectedItems) && selectedItems.length > 0) {
-                        selectedItem = selectedItems[0];
+                        selectedItem = selectedItems[0] || null;
                         _this.isFilled = true;
                         _this.$filterElm.addClass('filled').siblings('div .search-filter').addClass('filled');
                     }
@@ -40,13 +40,13 @@ define(["require", "exports", "aurelia-i18n", "aurelia-framework", "./../models/
                         _this.isFilled = false;
                         _this.$filterElm.removeClass('filled').siblings('div .search-filter').removeClass('filled');
                     }
-                    _this.callback(undefined, { columnDef: _this.columnDef, operator: 'EQ', searchTerms: [selectedItem] });
+                    _this.callback(undefined, { columnDef: _this.columnDef, operator: _this.operator, searchTerms: (selectedItem ? [selectedItem] : null) });
                 }
             };
         }
         Object.defineProperty(SingleSelectFilter.prototype, "operator", {
             get: function () {
-                return index_1.OperatorType.equal;
+                return (this.columnDef && this.columnDef.filter && this.columnDef.filter.operator) || index_1.OperatorType.equal;
             },
             enumerable: true,
             configurable: true

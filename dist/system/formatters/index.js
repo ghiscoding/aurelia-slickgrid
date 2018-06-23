@@ -1,7 +1,7 @@
-System.register(["./arrayToCsvFormatter", "./boldFormatter", "./checkboxFormatter", "./checkmarkFormatter", "./collectionFormatter", "./collectionEditorFormatter", "./complexObjectFormatter", "./dateIsoFormatter", "./dateTimeIsoAmPmFormatter", "./dateTimeIsoFormatter", "./dateTimeUsAmPmFormatter", "./dateTimeUsFormatter", "./dateUsFormatter", "./deleteIconFormatter", "./dollarColoredBoldFormatter", "./dollarColoredFormatter", "./dollarFormatter", "./editIconFormatter", "./hyperlinkFormatter", "./hyperlinkUriPrefixFormatter", "./infoIconFormatter", "./lowercaseFormatter", "./multipleFormatter", "./percentFormatter", "./percentCompleteBarFormatter", "./percentCompleteFormatter", "./percentSymbolFormatter", "./progressBarFormatter", "./translateFormatter", "./translateBooleanFormatter", "./uppercaseFormatter", "./yesNoFormatter"], function (exports_1, context_1) {
+System.register(["./arrayToCsvFormatter", "./boldFormatter", "./checkboxFormatter", "./checkmarkFormatter", "./collectionFormatter", "./collectionEditorFormatter", "./complexObjectFormatter", "./dateIsoFormatter", "./dateTimeIsoAmPmFormatter", "./dateTimeIsoFormatter", "./dateTimeUsAmPmFormatter", "./dateTimeUsFormatter", "./dateUsFormatter", "./deleteIconFormatter", "./dollarColoredBoldFormatter", "./dollarColoredFormatter", "./dollarFormatter", "./editIconFormatter", "./hyperlinkFormatter", "./hyperlinkUriPrefixFormatter", "./infoIconFormatter", "./lowercaseFormatter", "./maskFormatter", "./multipleFormatter", "./percentFormatter", "./percentCompleteBarFormatter", "./percentCompleteFormatter", "./percentSymbolFormatter", "./progressBarFormatter", "./translateFormatter", "./translateBooleanFormatter", "./uppercaseFormatter", "./yesNoFormatter"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var arrayToCsvFormatter_1, boldFormatter_1, checkboxFormatter_1, checkmarkFormatter_1, collectionFormatter_1, collectionEditorFormatter_1, complexObjectFormatter_1, dateIsoFormatter_1, dateTimeIsoAmPmFormatter_1, dateTimeIsoFormatter_1, dateTimeUsAmPmFormatter_1, dateTimeUsFormatter_1, dateUsFormatter_1, deleteIconFormatter_1, dollarColoredBoldFormatter_1, dollarColoredFormatter_1, dollarFormatter_1, editIconFormatter_1, hyperlinkFormatter_1, hyperlinkUriPrefixFormatter_1, infoIconFormatter_1, lowercaseFormatter_1, multipleFormatter_1, percentFormatter_1, percentCompleteBarFormatter_1, percentCompleteFormatter_1, percentSymbolFormatter_1, progressBarFormatter_1, translateFormatter_1, translateBooleanFormatter_1, uppercaseFormatter_1, yesNoFormatter_1, Formatters;
+    var arrayToCsvFormatter_1, boldFormatter_1, checkboxFormatter_1, checkmarkFormatter_1, collectionFormatter_1, collectionEditorFormatter_1, complexObjectFormatter_1, dateIsoFormatter_1, dateTimeIsoAmPmFormatter_1, dateTimeIsoFormatter_1, dateTimeUsAmPmFormatter_1, dateTimeUsFormatter_1, dateUsFormatter_1, deleteIconFormatter_1, dollarColoredBoldFormatter_1, dollarColoredFormatter_1, dollarFormatter_1, editIconFormatter_1, hyperlinkFormatter_1, hyperlinkUriPrefixFormatter_1, infoIconFormatter_1, lowercaseFormatter_1, maskFormatter_1, multipleFormatter_1, percentFormatter_1, percentCompleteBarFormatter_1, percentCompleteFormatter_1, percentSymbolFormatter_1, progressBarFormatter_1, translateFormatter_1, translateBooleanFormatter_1, uppercaseFormatter_1, yesNoFormatter_1, Formatters;
     return {
         setters: [
             function (arrayToCsvFormatter_1_1) {
@@ -69,6 +69,9 @@ System.register(["./arrayToCsvFormatter", "./boldFormatter", "./checkboxFormatte
             },
             function (lowercaseFormatter_1_1) {
                 lowercaseFormatter_1 = lowercaseFormatter_1_1;
+            },
+            function (maskFormatter_1_1) {
+                maskFormatter_1 = maskFormatter_1_1;
             },
             function (multipleFormatter_1_1) {
                 multipleFormatter_1 = multipleFormatter_1_1;
@@ -160,6 +163,11 @@ System.register(["./arrayToCsvFormatter", "./boldFormatter", "./checkboxFormatte
                 infoIcon: infoIconFormatter_1.infoIconFormatter,
                 /** Takes a value and displays it all lowercase */
                 lowercase: lowercaseFormatter_1.lowercaseFormatter,
+                /**
+                 * Takes a value display it according to a mask provided
+                 * e.: 1234567890 with mask "(000) 000-0000" will display "(123) 456-7890"
+                 */
+                mask: maskFormatter_1.maskFormatter,
                 /**
                  * You can pipe multiple formatters (executed in sequence), use params to pass the list of formatters. For example::
                  * { field: 'title', formatter: Formatters.multiple, params: { formatters: [ Formatters.lowercase, Formatters.uppercase ] }

@@ -105,7 +105,7 @@ let CompoundDateFilter = class CompoundDateFilter {
             }
         };
         // add the time picker when format is UTC (Z) or has the 'h' (meaning hours)
-        if (outputFormat && (outputFormat === 'Z' || outputFormat.toLowerCase().includes('h'))) {
+        if (outputFormat && (outputFormat === 'Z' || outputFormat.toLowerCase().indexOf('h') > -1)) {
             pickerOptions.enableTime = true;
         }
         const placeholder = (this.gridOptions) ? (this.gridOptions.defaultFilterPlaceholder || '') : '';
@@ -190,7 +190,7 @@ let CompoundDateFilter = class CompoundDateFilter {
         else {
             const selectedOperator = this.$selectOperatorElm.find('option:selected').text();
             (this._currentValue) ? this.$filterElm.addClass('filled') : this.$filterElm.removeClass('filled');
-            this.callback(e, { columnDef: this.columnDef, searchTerms: [this._currentValue], operator: selectedOperator || '' });
+            this.callback(e, { columnDef: this.columnDef, searchTerms: (this._currentValue ? [this._currentValue] : null), operator: selectedOperator || '' });
         }
     }
     hide() {

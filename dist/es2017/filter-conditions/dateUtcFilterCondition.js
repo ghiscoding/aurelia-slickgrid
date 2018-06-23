@@ -2,7 +2,7 @@ import { mapMomentDateFormatWithFieldType } from './../services/utilities';
 import { testFilterCondition } from './filterUtilities';
 import * as moment from 'moment';
 export const dateUtcFilterCondition = (options) => {
-    const searchTerm = Array.isArray(options.searchTerms) && options.searchTerms[0] || '';
+    const searchTerm = (Array.isArray(options.searchTerms) && options.searchTerms[0] || '');
     const searchDateFormat = mapMomentDateFormatWithFieldType(options.filterSearchType || options.fieldType);
     if (searchTerm === null || searchTerm === '' || !moment(options.cellValue, moment.ISO_8601).isValid() || !moment(searchTerm, searchDateFormat, true).isValid()) {
         return false;

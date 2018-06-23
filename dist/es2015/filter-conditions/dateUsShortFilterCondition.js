@@ -4,7 +4,7 @@ import * as moment from 'moment';
 import { mapMomentDateFormatWithFieldType } from './../services/utilities';
 const FORMAT = mapMomentDateFormatWithFieldType(FieldType.dateUsShort);
 export const dateUsShortFilterCondition = (options) => {
-    const searchTerm = Array.isArray(options.searchTerms) && options.searchTerms[0] || '';
+    const searchTerm = (Array.isArray(options.searchTerms) && options.searchTerms[0] || '');
     if (searchTerm === null || searchTerm === '' || !moment(options.cellValue, FORMAT, true).isValid() || !moment(searchTerm, FORMAT, true).isValid()) {
         return false;
     }

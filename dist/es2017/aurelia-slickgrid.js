@@ -72,9 +72,7 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
         this.isGridInitialized = true;
     }
     initialization() {
-        this.elm.dispatchEvent(new CustomEvent(`${aureliaEventPrefix}-on-before-grid-create`, {
-            bubbles: true,
-        }));
+        this.dispatchCustomEvent(`${aureliaEventPrefix}-on-before-grid-create`);
         this.ea.publish('onBeforeGridCreate', true);
         // make sure the dataset is initialized (if not it will throw an error that it cannot getLength of null)
         this._dataset = this._dataset || this.dataset || [];
@@ -100,7 +98,7 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
         // when slickgrid creates the editor
         // https://github.com/aurelia/dependency-injection/blob/master/src/resolvers.js
         this._columnDefinitions = this.columnDefinitions.map((c) => (Object.assign({}, c, { editor: c.editor && Factory.of(c.editor.model).get(this.container), internalColumnEditor: Object.assign({}, c.editor) })));
-        this.controlAndPluginService.createPluginBeforeGridCreation(this._columnDefinitions, this.gridOptions);
+        this.controlAndPluginService.createCheckboxPluginBeforeGridCreation(this._columnDefinitions, this.gridOptions);
         this.grid = new Slick.Grid(`#${this.gridId}`, this.dataview, this._columnDefinitions, this.gridOptions);
         this.controlAndPluginService.attachDifferentControlOrPlugins(this.grid, this.dataview, this.groupItemMetadataProvider);
         this.attachDifferentHooks(this.grid, this.gridOptions, this.dataview);
@@ -108,17 +106,13 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
         this.dataview.beginUpdate();
         this.dataview.setItems(this._dataset, this.gridOptions.datasetIdPropertyName);
         this.dataview.endUpdate();
-        // publish certain events
-        this.elm.dispatchEvent(new CustomEvent(`${aureliaEventPrefix}-on-grid-created`, {
-            bubbles: true,
-            detail: this.grid
-        }));
+        // after the DataView is created & updated execute some processes
+        this.executeAfterDataviewCreated(this.grid, this.gridOptions, this.dataview);
+        // publish & dispatch certain events
         this.ea.publish('onGridCreated', this.grid);
-        this.elm.dispatchEvent(new CustomEvent(`${aureliaEventPrefix}-on-dataview-created`, {
-            bubbles: true,
-            detail: this.dataview
-        }));
         this.ea.publish('onDataviewCreated', this.dataview);
+        this.dispatchCustomEvent(`${aureliaEventPrefix}-on-grid-created`, this.grid);
+        this.dispatchCustomEvent(`${aureliaEventPrefix}-on-dataview-created`, this.dataview);
         // attach resize ONLY after the dataView is ready
         this.attachResizeHook(this.grid, this.gridOptions);
         // attach grouping and header grouping colspan service
@@ -158,25 +152,16 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
             resizerService: this.resizerService,
             sortService: this.sortService,
         };
-        this.elm.dispatchEvent(new CustomEvent(`${aureliaEventPrefix}-on-aurelia-grid-created`, {
-            bubbles: true,
-            detail: aureliaElementInstance
-        }));
+        this.dispatchCustomEvent(`${aureliaEventPrefix}-on-aurelia-grid-created`, aureliaElementInstance);
     }
     detached() {
         this.ea.publish('onBeforeGridDestroy', this.grid);
-        this.elm.dispatchEvent(new CustomEvent(`${aureliaEventPrefix}-on-before-grid-destroy`, {
-            bubbles: true,
-            detail: this.grid
-        }));
+        this.dispatchCustomEvent(`${aureliaEventPrefix}-on-before-grid-destroy`, this.grid);
         this.dataview = [];
         this._eventHandler.unsubscribeAll();
         this.grid.destroy();
         this.ea.publish('onAfterGridDestroyed', true);
-        this.elm.dispatchEvent(new CustomEvent(`${aureliaEventPrefix}-on-after-grid-destroyed`, {
-            bubbles: true,
-            detail: this.grid
-        }));
+        this.dispatchCustomEvent(`${aureliaEventPrefix}-on-after-grid-destroyed`, this.grid);
         // dispose of all Services
         this.serviceList.forEach((service) => {
             if (service && service.dispose) {
@@ -251,9 +236,17 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
             }
         }));
         // if user entered some Columns "presets", we need to reflect them all in the grid
-        if (gridOptions.presets && gridOptions.presets.columns && Array.isArray(gridOptions.presets.columns) && gridOptions.presets.columns.length > 0) {
+        if (gridOptions.presets && Array.isArray(gridOptions.presets.columns) && gridOptions.presets.columns.length > 0) {
             const gridColumns = this.gridStateService.getAssociatedGridColumns(grid, gridOptions.presets.columns);
-            if (gridColumns && Array.isArray(gridColumns)) {
+            if (gridColumns && Array.isArray(gridColumns) && gridColumns.length > 0) {
+                // make sure that the checkbox selector is also visible if it is enabled
+                if (gridOptions.enableCheckboxSelector) {
+                    const checkboxColumn = (Array.isArray(this._columnDefinitions) && this._columnDefinitions.length > 0) ? this._columnDefinitions[0] : null;
+                    if (checkboxColumn && checkboxColumn.id === '_checkbox_selector' && gridColumns[0].id !== '_checkbox_selector') {
+                        gridColumns.unshift(checkboxColumn);
+                    }
+                }
+                // finally set the new presets columns (including checkbox selector if need be)
                 grid.setColumns(gridColumns);
             }
         }
@@ -281,13 +274,7 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
         for (const prop in grid) {
             if (grid.hasOwnProperty(prop) && prop.startsWith('on')) {
                 this._eventHandler.subscribe(grid[prop], (e, args) => {
-                    this.elm.dispatchEvent(new CustomEvent(`${eventPrefix}-${toKebabCase(prop)}`, {
-                        bubbles: true,
-                        detail: {
-                            eventData: e,
-                            args
-                        }
-                    }));
+                    this.dispatchCustomEvent(`${eventPrefix}-${toKebabCase(prop)}`, { eventData: e, args });
                 });
             }
         }
@@ -295,13 +282,7 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
         for (const prop in dataView) {
             if (dataView.hasOwnProperty(prop) && prop.startsWith('on')) {
                 this._eventHandler.subscribe(dataView[prop], (e, args) => {
-                    this.elm.dispatchEvent(new CustomEvent(`${eventPrefix}-${toKebabCase(prop)}`, {
-                        bubbles: true,
-                        detail: {
-                            eventData: e,
-                            args
-                        }
-                    }));
+                    this.dispatchCustomEvent(`${eventPrefix}-${toKebabCase(prop)}`, { eventData: e, args });
                 });
             }
         }
@@ -399,6 +380,14 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
             }
         }
     }
+    executeAfterDataviewCreated(grid, gridOptions, dataView) {
+        // if user entered some Sort "presets", we need to reflect them all in the DOM
+        if (gridOptions.enableSorting) {
+            if (gridOptions.presets && Array.isArray(gridOptions.presets.sorters) && gridOptions.presets.sorters.length > 0) {
+                this.sortService.loadLocalPresets(grid, dataView);
+            }
+        }
+    }
     mergeGridOptions(gridOptions) {
         gridOptions.gridId = this.gridId;
         gridOptions.gridContainerId = `slickGridContainer-${this.gridId}`;
@@ -476,6 +465,13 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
             this.controlAndPluginService.renderColumnHeaders(newColumnDefinitions);
         }
         this.grid.autosizeColumns();
+    }
+    dispatchCustomEvent(eventName, data, isBubbling = true) {
+        const eventInit = { bubbles: isBubbling };
+        if (data) {
+            eventInit.detail = data;
+        }
+        this.elm.dispatchEvent(new CustomEvent(eventName, eventInit));
     }
 };
 __decorate([

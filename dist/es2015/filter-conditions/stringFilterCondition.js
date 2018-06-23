@@ -16,7 +16,7 @@ export const stringFilterCondition = (options) => {
         return cellValue.startsWith(searchTerm);
     }
     else if (options.operator === '') {
-        return cellValue.includes(searchTerm);
+        return (cellValue.indexOf(searchTerm) > -1);
     }
     return testFilterCondition(options.operator || '==', cellValue, searchTerm);
 };

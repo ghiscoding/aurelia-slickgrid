@@ -4,14 +4,18 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+import { I18N } from 'aurelia-i18n';
 import { singleton, inject } from 'aurelia-framework';
+import { ControlAndPluginService } from './controlAndPlugin.service';
 import { FilterService } from './filter.service';
 import { GridStateService } from './gridState.service';
 import { SortService } from './sort.service';
 import * as $ from 'jquery';
 let GridService = class GridService {
-    constructor(filterService, gridStateService, sortService) {
+    constructor(controlAndPluginService, filterService, i18n, gridStateService, sortService) {
+        this.controlAndPluginService = controlAndPluginService;
         this.filterService = filterService;
+        this.i18n = i18n;
         this.gridStateService = gridStateService;
         this.sortService = sortService;
     }
@@ -139,21 +143,23 @@ let GridService = class GridService {
      * The reset will clear the Filters & Sort, then will reset the Columns to their original state
      */
     resetGrid(columnDefinitions) {
-        if (this.filterService && this.filterService.clearFilters) {
-            this.filterService.clearFilters();
-        }
-        if (this.sortService && this.sortService.clearSorting) {
-            this.sortService.clearSorting();
-        }
         // reset columns to original states & refresh the grid
         if (this._grid && this._dataView) {
-            const originalColumns = columnDefinitions || this._columnDefinitions;
+            const originalColumns = this.controlAndPluginService.getAllColumns();
+            // const originalColumns = columnDefinitions || this._columnDefinitions;
             if (Array.isArray(originalColumns) && originalColumns.length > 0) {
+                // set the grid columns to it's original column definitions
                 this._grid.setColumns(originalColumns);
                 this._dataView.refresh();
                 this._grid.autosizeColumns();
                 this.gridStateService.resetColumns(columnDefinitions);
             }
+        }
+        if (this.filterService && this.filterService.clearFilters) {
+            this.filterService.clearFilters();
+        }
+        if (this.sortService && this.sortService.clearSorting) {
+            this.sortService.clearSorting();
         }
     }
     /**
@@ -222,7 +228,7 @@ let GridService = class GridService {
             throw new Error(`Cannot update a row without a valid "id"`);
         }
         const row = this._dataView.getRowById(itemId);
-        if (!item || !row) {
+        if (!item || row === undefined) {
             throw new Error(`Could not find the item in the grid or it's associated "id"`);
         }
         const gridIdx = this._dataView.getIdxById(itemId);
@@ -238,7 +244,7 @@ let GridService = class GridService {
 };
 GridService = __decorate([
     singleton(true),
-    inject(FilterService, GridStateService, SortService)
+    inject(ControlAndPluginService, FilterService, I18N, GridStateService, SortService)
 ], GridService);
 export { GridService };
 //# sourceMappingURL=grid.service.js.map

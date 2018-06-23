@@ -149,14 +149,6 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
                 _this.onLocalSortChanged(grid, dataView, sortColumns);
                 _this.emitSortChanged('local');
             });
-            if (dataView && dataView.onRowCountChanged) {
-                this._eventHandler.subscribe(dataView.onRowCountChanged, function (e, args) {
-                    // load any presets if there are any
-                    if (args.current > 0) {
-                        _this.loadLocalPresets(grid, dataView);
-                    }
-                });
-            }
         };
         /**
          * Clear Sorting
@@ -183,7 +175,6 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
             }
             // set current sorter to empty & emit a sort changed event
             this._currentLocalSorters = [];
-            var sender = (this._gridOptions && this._gridOptions.backendServiceApi) ? 'remote' : 'local';
             // emit an event when filters are all cleared
             this.ea.publish('sortService:sortCleared', this._currentLocalSorters);
         };

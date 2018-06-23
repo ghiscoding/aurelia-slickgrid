@@ -8,6 +8,18 @@ export class CheckboxEditor {
         this.args = args;
         this.init();
     }
+    /** Get Column Definition object */
+    get columnDef() {
+        return this.args && this.args.column || {};
+    }
+    /** Get Column Editor object */
+    get columnEditor() {
+        return this.columnDef && this.columnDef.internalColumnEditor || {};
+    }
+    /** Get the Validator function, can be passed in Editor property or Column Definition */
+    get validator() {
+        return this.columnEditor.validator || this.columnDef.validator;
+    }
     init() {
         this.$input = $(`<input type="checkbox" value="true" class="editor-checkbox" />`);
         this.$input.appendTo(this.args.container);
@@ -26,7 +38,7 @@ export class CheckboxEditor {
         this.$input.show();
     }
     loadValue(item) {
-        this.defaultValue = !!item[this.args.column.field];
+        this.defaultValue = !!item[this.columnDef.field];
         if (this.defaultValue) {
             this.$input.prop('checked', true);
         }
@@ -41,12 +53,20 @@ export class CheckboxEditor {
         return this.$input.prop('checked');
     }
     applyValue(item, state) {
-        item[this.args.column.field] = state;
+        item[this.columnDef.field] = state;
     }
     isValueChanged() {
         return (this.serializeValue() !== this.defaultValue);
     }
     validate() {
+        if (this.validator) {
+            const validationResults = this.validator(this.$input.val());
+            if (!validationResults.valid) {
+                return validationResults;
+            }
+        }
+        // by default the editor is always valid
+        // if user want it to be a required checkbox, he would have to provide his own validator
         return {
             valid: true,
             msg: null

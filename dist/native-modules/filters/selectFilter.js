@@ -14,7 +14,7 @@ var SelectFilter = /** @class */ (function () {
     }
     Object.defineProperty(SelectFilter.prototype, "operator", {
         get: function () {
-            return OperatorType.equal;
+            return (this.columnDef && this.columnDef.filter && this.columnDef.filter.operator) || OperatorType.equal;
         },
         enumerable: true,
         configurable: true
@@ -50,7 +50,7 @@ var SelectFilter = /** @class */ (function () {
             }
             else {
                 _this.$filterElm.addClass('filled');
-                _this.callback(e, { columnDef: _this.columnDef, searchTerms: [value], operator: 'EQ' });
+                _this.callback(e, { columnDef: _this.columnDef, operator: _this.operator, searchTerms: [value] });
             }
         });
     };

@@ -206,6 +206,8 @@ let GraphqlService = class GraphqlService {
         if (event && (event.type === 'keyup' || event.type === 'keydown')) {
             debounceTypingDelay = backendApi.filterTypingDebounce || DEFAULT_FILTER_TYPING_DEBOUNCE;
         }
+        // keep current filters & always save it as an array (columnFilters can be an object when it is dealt by SlickGrid Filter)
+        this._currentFilters = this.castFilterToColumnFilter(args.columnFilters);
         const promise = new Promise((resolve, reject) => {
             if (!args || !args.grid) {
                 throw new Error('Something went wrong when trying create the GraphQL Backend Service, it seems that "args" is not populated correctly');
@@ -271,8 +273,6 @@ let GraphqlService = class GraphqlService {
      * @param columnFilters
      */
     updateFilters(columnFilters, isUpdatedByPreset) {
-        // keep current filters & always save it as an array (columnFilters can be an object when it is dealt by SlickGrid Filter)
-        this._currentFilters = this.castFilterToColumnFilter(columnFilters);
         const searchByArray = [];
         let searchValue;
         for (const columnId in columnFilters) {

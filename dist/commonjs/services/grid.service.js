@@ -6,14 +6,18 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var aurelia_i18n_1 = require("aurelia-i18n");
 var aurelia_framework_1 = require("aurelia-framework");
+var controlAndPlugin_service_1 = require("./controlAndPlugin.service");
 var filter_service_1 = require("./filter.service");
 var gridState_service_1 = require("./gridState.service");
 var sort_service_1 = require("./sort.service");
 var $ = require("jquery");
 var GridService = /** @class */ (function () {
-    function GridService(filterService, gridStateService, sortService) {
+    function GridService(controlAndPluginService, filterService, i18n, gridStateService, sortService) {
+        this.controlAndPluginService = controlAndPluginService;
         this.filterService = filterService;
+        this.i18n = i18n;
         this.gridStateService = gridStateService;
         this.sortService = sortService;
     }
@@ -152,21 +156,23 @@ var GridService = /** @class */ (function () {
      * The reset will clear the Filters & Sort, then will reset the Columns to their original state
      */
     GridService.prototype.resetGrid = function (columnDefinitions) {
-        if (this.filterService && this.filterService.clearFilters) {
-            this.filterService.clearFilters();
-        }
-        if (this.sortService && this.sortService.clearSorting) {
-            this.sortService.clearSorting();
-        }
         // reset columns to original states & refresh the grid
         if (this._grid && this._dataView) {
-            var originalColumns = columnDefinitions || this._columnDefinitions;
+            var originalColumns = this.controlAndPluginService.getAllColumns();
+            // const originalColumns = columnDefinitions || this._columnDefinitions;
             if (Array.isArray(originalColumns) && originalColumns.length > 0) {
+                // set the grid columns to it's original column definitions
                 this._grid.setColumns(originalColumns);
                 this._dataView.refresh();
                 this._grid.autosizeColumns();
                 this.gridStateService.resetColumns(columnDefinitions);
             }
+        }
+        if (this.filterService && this.filterService.clearFilters) {
+            this.filterService.clearFilters();
+        }
+        if (this.sortService && this.sortService.clearSorting) {
+            this.sortService.clearSorting();
         }
     };
     /**
@@ -235,7 +241,7 @@ var GridService = /** @class */ (function () {
             throw new Error("Cannot update a row without a valid \"id\"");
         }
         var row = this._dataView.getRowById(itemId);
-        if (!item || !row) {
+        if (!item || row === undefined) {
             throw new Error("Could not find the item in the grid or it's associated \"id\"");
         }
         var gridIdx = this._dataView.getIdxById(itemId);
@@ -250,7 +256,7 @@ var GridService = /** @class */ (function () {
     };
     GridService = __decorate([
         aurelia_framework_1.singleton(true),
-        aurelia_framework_1.inject(filter_service_1.FilterService, gridState_service_1.GridStateService, sort_service_1.SortService)
+        aurelia_framework_1.inject(controlAndPlugin_service_1.ControlAndPluginService, filter_service_1.FilterService, aurelia_i18n_1.I18N, gridState_service_1.GridStateService, sort_service_1.SortService)
     ], GridService);
     return GridService;
 }());

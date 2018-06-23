@@ -19,7 +19,7 @@ System.register(["../models/index", "./../services/utilities", "./filterUtilitie
         ],
         execute: function () {
             exports_1("dateFilterCondition", dateFilterCondition = function (options) {
-                var searchTerm = Array.isArray(options.searchTerms) && options.searchTerms[0] || '';
+                var searchTerm = (Array.isArray(options.searchTerms) && options.searchTerms[0] || '');
                 var filterSearchType = options.filterSearchType || index_1.FieldType.dateIso;
                 var searchDateFormat = utilities_1.mapMomentDateFormatWithFieldType(filterSearchType);
                 if (searchTerm === null || searchTerm === '' || !moment(options.cellValue, moment.ISO_8601).isValid() || !moment(searchTerm, searchDateFormat, true).isValid()) {

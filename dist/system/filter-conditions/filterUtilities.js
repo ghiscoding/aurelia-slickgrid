@@ -21,7 +21,21 @@ System.register([], function (exports_1, context_1) {
                     case '=':
                     case '==':
                     case 'EQ': return (value1 === value2);
-                    case 'IN': return ((value2 && value2.includes) ? (value2.includes(value1)) : false);
+                    case 'IN': return ((value2 && value2.indexOf) ? (value2.indexOf(value1) > -1) : false);
+                    case 'NIN':
+                    case 'NOT_IN':
+                        return ((value2 && value2.includes) ? (!value2.includes(value1)) : false);
+                    case 'IN_CONTAINS':
+                        if (value2 && Array.isArray(value2) && value2.findIndex) {
+                            return ((value2.findIndex(function (val) { return value1.indexOf(val) > -1; })) > -1);
+                        }
+                        return false;
+                    case 'NIN_CONTAINS':
+                    case 'NOT_IN_CONTAINS':
+                        if (value2 && Array.isArray(value2) && value2.findIndex) {
+                            return !((value2.findIndex(function (val) { return value1.indexOf(val) > -1; })) > -1);
+                        }
+                        return false;
                 }
                 return true;
             });

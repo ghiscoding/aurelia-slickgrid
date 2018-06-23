@@ -6,7 +6,7 @@ var utilities_1 = require("./../services/utilities");
 var moment = require("moment");
 var FORMAT = utilities_1.mapMomentDateFormatWithFieldType(index_1.FieldType.dateUs);
 exports.dateUsFilterCondition = function (options) {
-    var searchTerm = Array.isArray(options.searchTerms) && options.searchTerms[0] || '';
+    var searchTerm = (Array.isArray(options.searchTerms) && options.searchTerms[0] || '');
     if (searchTerm === null || searchTerm === '' || !moment(options.cellValue, FORMAT, true).isValid() || !moment(searchTerm, FORMAT, true).isValid()) {
         return false;
     }

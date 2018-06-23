@@ -20,7 +20,7 @@ System.register(["../models/index", "./filterUtilities", "moment", "./../service
         execute: function () {
             FORMAT = utilities_1.mapMomentDateFormatWithFieldType(index_1.FieldType.dateUsShort);
             exports_1("dateUsShortFilterCondition", dateUsShortFilterCondition = function (options) {
-                var searchTerm = Array.isArray(options.searchTerms) && options.searchTerms[0] || '';
+                var searchTerm = (Array.isArray(options.searchTerms) && options.searchTerms[0] || '');
                 if (searchTerm === null || searchTerm === '' || !moment(options.cellValue, FORMAT, true).isValid() || !moment(searchTerm, FORMAT, true).isValid()) {
                     return false;
                 }

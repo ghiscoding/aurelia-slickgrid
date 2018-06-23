@@ -7,10 +7,12 @@ System.register(["aurelia-pal", "./aurelia-slickgrid", "./slick-pagination", "./
         // must register a transient so the container will get a new instance everytime
         aurelia.container.registerTransient(index_1.Filters.compoundDate);
         aurelia.container.registerTransient(index_1.Filters.compoundInput);
+        aurelia.container.registerTransient(index_1.Filters.compoundSlider);
         aurelia.container.registerTransient(index_1.Filters.input);
         aurelia.container.registerTransient(index_1.Filters.multipleSelect);
         aurelia.container.registerTransient(index_1.Filters.singleSelect);
         aurelia.container.registerTransient(index_1.Filters.select);
+        aurelia.container.registerTransient(index_1.Filters.slider);
         var config = new slickgrid_config_1.SlickgridConfig();
         aurelia.container.registerInstance(slickgrid_config_1.SlickgridConfig, config);
         if (typeof callback === 'function') {

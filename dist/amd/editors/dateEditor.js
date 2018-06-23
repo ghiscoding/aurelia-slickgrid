@@ -17,11 +17,33 @@ define(["require", "exports", "./../services/utilities", "./../models/index", "a
             this.args = args;
             this.init();
         }
+        Object.defineProperty(DateEditor.prototype, "columnDef", {
+            /** Get Column Definition object */
+            get: function () {
+                return this.args && this.args.column || {};
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(DateEditor.prototype, "columnEditor", {
+            /** Get Column Editor object */
+            get: function () {
+                return this.columnDef && this.columnDef.internalColumnEditor || {};
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(DateEditor.prototype, "validator", {
+            /** Get the Validator function, can be passed in Editor property or Column Definition */
+            get: function () {
+                return this.columnEditor.validator || this.columnDef.validator;
+            },
+            enumerable: true,
+            configurable: true
+        });
         DateEditor.prototype.init = function () {
             var _this = this;
             if (this.args && this.args.column) {
-                var columnDef = this.args.column;
-                var gridOptions = this.args.grid.getOptions();
                 this.defaultDate = (this.args.item) ? this.args.item[this.args.column.field] : null;
                 var inputFormat = utilities_1.mapFlatpickrDateFormatWithFieldType(this.args.column.type || index_1.FieldType.dateIso);
                 var outputFormat = utilities_1.mapFlatpickrDateFormatWithFieldType(this.args.column.outputType || index_1.FieldType.dateUtc);
@@ -59,6 +81,9 @@ define(["require", "exports", "./../services/utilities", "./../models/index", "a
             this.$input.remove();
             // this.flatInstance.destroy();
         };
+        DateEditor.prototype.getColumnEditor = function () {
+            return this.args && this.args.column && this.args.column.internalColumnEditor && this.args.column.internalColumnEditor;
+        };
         DateEditor.prototype.show = function () {
             if (this.flatInstance && typeof this.flatInstance.open === 'function') {
                 this.flatInstance.open();
@@ -81,15 +106,17 @@ define(["require", "exports", "./../services/utilities", "./../models/index", "a
         };
         DateEditor.prototype.serializeValue = function () {
             var domValue = this.$input.val();
-            if (!domValue)
+            if (!domValue) {
                 return '';
+            }
             var outputFormat = utilities_1.mapMomentDateFormatWithFieldType(this.args.column.type || index_1.FieldType.dateIso);
             var value = moment(domValue).format(outputFormat);
             return value;
         };
         DateEditor.prototype.applyValue = function (item, state) {
-            if (!state)
+            if (!state) {
                 return;
+            }
             var outputFormat = utilities_1.mapMomentDateFormatWithFieldType(this.args.column.type || index_1.FieldType.dateIso);
             item[this.args.column.field] = moment(state, outputFormat).toDate();
         };
@@ -97,12 +124,14 @@ define(["require", "exports", "./../services/utilities", "./../models/index", "a
             return (!(this.$input.val() === '' && this.defaultDate == null)) && (this.$input.val() !== this.defaultDate);
         };
         DateEditor.prototype.validate = function () {
-            if (this.args.column.validator) {
-                var validationResults = this.args.column.validator(this.$input.val(), this.args);
+            if (this.validator) {
+                var validationResults = this.validator(this.$input.val());
                 if (!validationResults.valid) {
                     return validationResults;
                 }
             }
+            // by default the editor is always valid
+            // if user want it to be a required checkbox, he would have to provide his own validator
             return {
                 valid: true,
                 msg: null

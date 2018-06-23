@@ -25,7 +25,7 @@ System.register(["./../models/index", "jquery"], function (exports_1, context_1)
                 });
                 Object.defineProperty(InputFilter.prototype, "operator", {
                     get: function () {
-                        return index_1.OperatorType.equal;
+                        return (this.columnDef && this.columnDef.filter && this.columnDef.filter.operator) || index_1.OperatorType.equal;
                     },
                     enumerable: true,
                     configurable: true
@@ -58,7 +58,7 @@ System.register(["./../models/index", "jquery"], function (exports_1, context_1)
                         }
                         else {
                             _this.$filterElm.addClass('filled');
-                            _this.callback(e, { columnDef: _this.columnDef, searchTerms: [value] });
+                            _this.callback(e, { columnDef: _this.columnDef, operator: _this.operator, searchTerms: [value] });
                         }
                     });
                 };

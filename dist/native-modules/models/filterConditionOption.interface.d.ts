@@ -1,3 +1,4 @@
+import { SearchTerm } from './searchTerm.type';
 import { FieldType } from './fieldType.enum';
 export interface FilterConditionOption {
     operator: string;
@@ -5,5 +6,5 @@ export interface FilterConditionOption {
     cellValueLastChar?: string;
     fieldType: FieldType;
     filterSearchType?: FieldType;
-    searchTerms?: string[] | number[];
+    searchTerms?: SearchTerm[] | undefined;
 }
