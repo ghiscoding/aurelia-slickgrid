@@ -2,6 +2,37 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.0.0"></a>
+# [2.0.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.0.0-beta...v2.0.0) (2018-06-23)
+
+
+### Bug Fixes
+
+* **filter:** clear filter should trigger only 1 Grid State change ([43fc269](https://github.com/ghiscoding/aurelia-slickgrid/commit/43fc269))
+* **filter:** Grid State incorrect after clear filters w/backend service ([289deec](https://github.com/ghiscoding/aurelia-slickgrid/commit/289deec))
+* **filter:** multipleSelect filter doesn't handle cell value arrays ([e695660](https://github.com/ghiscoding/aurelia-slickgrid/commit/e695660))
+* **filter:** regression, input filter using with typed operator ([65aa4eb](https://github.com/ghiscoding/aurelia-slickgrid/commit/65aa4eb))
+* **filter:** SingleSelect Filter (& others) should return all when empty ([#77](https://github.com/ghiscoding/aurelia-slickgrid/issues/77)) ([266507e](https://github.com/ghiscoding/aurelia-slickgrid/commit/266507e))
+* **gridMenu:** custom user commands not recreated after locale switch ([d585de5](https://github.com/ghiscoding/aurelia-slickgrid/commit/d585de5))
+* **gridState:** multiple fixes with Grid State & Presets with locale ([8182351](https://github.com/ghiscoding/aurelia-slickgrid/commit/8182351))
+* **menu:** Column Picker menu list was not being translated ([3f41262](https://github.com/ghiscoding/aurelia-slickgrid/commit/3f41262))
+* **menu:** Grid Menu & Header Menu custom items were not translated ([729242e](https://github.com/ghiscoding/aurelia-slickgrid/commit/729242e))
+* **merge:** fix merge conflict ([a4456ae](https://github.com/ghiscoding/aurelia-slickgrid/commit/a4456ae))
+* **presets:** Presets w/MultipleFilter only taking 1st filtered value ([eacd633](https://github.com/ghiscoding/aurelia-slickgrid/commit/eacd633))
+* **selector:** Checkbox selector was not working correctly with Presets ([8055050](https://github.com/ghiscoding/aurelia-slickgrid/commit/8055050))
+* **slider:** slider should always be starting at 0 ([b771182](https://github.com/ghiscoding/aurelia-slickgrid/commit/b771182))
+* **sort:** Presets & Sort caused unintended behavior w/dataview changed ([#76](https://github.com/ghiscoding/aurelia-slickgrid/issues/76)) ([d199488](https://github.com/ghiscoding/aurelia-slickgrid/commit/d199488))
+* **update:** updateDataGridItemById was throwing error on 1st row (0) ([94e0820](https://github.com/ghiscoding/aurelia-slickgrid/commit/94e0820))
+
+
+### Features
+
+* **editor:** add new Slider Editor & refactor Editor Validation ([#80](https://github.com/ghiscoding/aurelia-slickgrid/issues/80)) ([46f140c](https://github.com/ghiscoding/aurelia-slickgrid/commit/46f140c))
+* **filter:** add new Slider Filter (input range) ([#79](https://github.com/ghiscoding/aurelia-slickgrid/issues/79)) ([6b45b0c](https://github.com/ghiscoding/aurelia-slickgrid/commit/6b45b0c))
+* **formatter:** add new Mask Formatter ([1c3c09c](https://github.com/ghiscoding/aurelia-slickgrid/commit/1c3c09c))
+
+
+
 <a name="1.13.1"></a>
 ## [1.13.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v1.13.0...v1.13.1) (2018-05-26)
 
