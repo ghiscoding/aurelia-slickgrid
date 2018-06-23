@@ -3,10 +3,22 @@ import { I18N } from 'aurelia-i18n';
 import {
   Editors,
   FieldType,
+  Filters,
   Formatters,
   OperatorType
 } from 'aurelia-slickgrid';
 import { CustomInputEditor } from './custom-inputEditor';
+
+// you can create custom validator to pass to an inline editor
+const myCustomTitleValidator = (value) => {
+  if (value === null || value === undefined || !value.length) {
+    return { valid: false, msg: 'This is a required field' };
+  } else if (!/^Task\s\d+$/.test(value)) {
+    return { valid: false, msg: 'Your title is invalid, it must start with "Task" followed by a number' };
+  }
+
+  return { valid: true, msg: '' };
+};
 
 @inject(I18N)
 export class Example3 {
@@ -85,10 +97,12 @@ export class Example3 {
       id: 'title',
       name: 'Title',
       field: 'title',
+      filterable: true,
       sortable: true,
       type: FieldType.string,
       editor: {
-        model: Editors.longText
+        model: Editors.longText,
+        validator: myCustomTitleValidator // use a custom validator
       },
       minWidth: 100,
       onCellChange: (e, args) => {
@@ -99,27 +113,46 @@ export class Example3 {
       id: 'title2',
       name: 'Title, Custom Editor',
       field: 'title',
+      filterable: true,
       sortable: true,
       type: FieldType.string,
       editor: {
-        model: CustomInputEditor
+        model: CustomInputEditor,
+        validator: myCustomTitleValidator // use a custom validator
       },
       minWidth: 70
     }, {
       id: 'duration',
       name: 'Duration (days)',
       field: 'duration',
+      filterable: true,
       sortable: true,
       type: FieldType.number,
+      filter: { model: Filters.slider, params: { hideSliderNumber: false } },
       editor: {
-        model: Editors.float,
-        params: { decimalPlaces: 2 }
+        model: Editors.slider,
+        minValue: 0,
+        maxValue: 100
+        // params: { hideSliderNumber: true },
       },
+      /*
+      editor: {
+        // default is 0 decimals, if no decimals is passed it will accept 0 or more decimals
+        // however if you pass the "decimalPlaces", it will validate with that maximum
+        model: Editors.float,
+        minValue: 0,
+        maxValue: 365,
+        // the default validation error message is in English but you can override it by using "errorMessage"
+        // errorMessage: this.i18n.tr('INVALID_FLOAT', { maxDecimal: 2 }),
+        params: { decimalPlaces: 2 },
+      },
+      */
       minWidth: 100
     }, {
       id: 'complete',
       name: '% Complete',
       field: 'percentComplete',
+      filterable: true,
       formatter: Formatters.multiple,
       type: FieldType.number,
       editor: {
@@ -143,6 +176,8 @@ export class Example3 {
       id: 'start',
       name: 'Start',
       field: 'start',
+      filterable: true,
+      filter: { model: Filters.compoundDate },
       formatter: Formatters.dateIso,
       sortable: true,
       minWidth: 100,
@@ -154,6 +189,8 @@ export class Example3 {
       id: 'finish',
       name: 'Finish',
       field: 'finish',
+      filterable: true,
+      filter: { model: Filters.compoundDate },
       formatter: Formatters.dateIso,
       sortable: true,
       minWidth: 100,
@@ -165,8 +202,13 @@ export class Example3 {
       id: 'effort-driven',
       name: 'Effort Driven',
       field: 'effortDriven',
+      filterable: true,
+      type: FieldType.boolean,
+      filter: {
+        model: Filters.singleSelect,
+        collection: [{ value: '', label: '' }, { value: true, label: 'True' }, { value: false, label: 'False' }]
+      },
       formatter: Formatters.checkmark,
-      type: FieldType.number,
       editor: {
         model: Editors.checkbox
       },
@@ -175,6 +217,7 @@ export class Example3 {
       id: 'prerequisites',
       name: 'Prerequisites',
       field: 'prerequisites',
+      filterable: true,
       minWidth: 100,
       sortable: true,
       type: FieldType.string,
@@ -190,6 +233,14 @@ export class Example3 {
           value: ['Task 1', 'Task 2', 'Task 3', 'Task 4', 'Task 5', 'Task 6'],
           operator: OperatorType.contains
         }
+      },
+      filter: {
+        model: Filters.multipleSelect,
+        filterOptions: {
+          autoDropWidth: true
+        },
+        operator: OperatorType.inContains,
+        collection: Array.from(Array(12).keys()).map(k => ({ value: `Task ${k}`, label: `Task ${k}` }))
       }
     }];
 
@@ -203,6 +254,7 @@ export class Example3 {
       editable: true,
       enableCellNavigation: true,
       enableExcelCopyBuffer: true,
+      enableFiltering: true,
       editCommandHandler: (item, column, editCommand) => {
         this._commandQueue.push(editCommand);
         editCommand.execute();
@@ -258,6 +310,10 @@ export class Example3 {
         this.alertWarning = `Deleted: ${metadata.dataContext.title}`;
       }
     }
+  }
+
+  onCellValidation(e, args) {
+    alert(args.validationResults.msg);
   }
 
   setAutoEdit(isAutoEdit) {

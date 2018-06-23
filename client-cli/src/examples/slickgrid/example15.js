@@ -1,3 +1,5 @@
+import { inject } from 'aurelia-framework';
+import { I18N } from 'aurelia-i18n';
 import { FieldType, Filters, Formatters } from 'aurelia-slickgrid';
 
 function randomBetween(min, max) {
@@ -6,6 +8,7 @@ function randomBetween(min, max) {
 const LOCAL_STORAGE_KEY = 'gridState';
 const NB_ITEMS = 500;
 
+@inject(I18N)
 export class Example15 {
   title = 'Example 15: Grid State & Presets using Local Storage';
   subTitle = `
@@ -24,14 +27,17 @@ export class Example15 {
   columnDefinitions;
   gridOptions;
   dataset = [];
+  selectedLanguage;
 
-  constructor() {
+  constructor(i18n) {
+    this.i18n = i18n;
     const presets = JSON.parse(localStorage[LOCAL_STORAGE_KEY] || null);
 
     // use some Grid State preset defaults if you wish
     // presets = presets || this.useDefaultPresets();
 
     this.defineGrid(presets);
+    this.selectedLanguage = this.i18n.getLocale();
   }
 
   attached() {
@@ -66,16 +72,17 @@ export class Example15 {
         id: 'title',
         name: 'Title',
         field: 'title',
+        headerKey: 'TITLE',
         filterable: true,
         sortable: true,
         type: FieldType.string,
-        minWidth: 45,
+        minWidth: 45, width: 100,
         filter: {
           model: Filters.compoundInput
         }
       },
       {
-        id: 'description', name: 'Description', field: 'description', filterable: true, sortable: true, minWidth: 80,
+        id: 'description', name: 'Description', field: 'description', filterable: true, sortable: true, minWidth: 80, width: 100,
         type: FieldType.string,
         filter: {
           model: Filters.input
@@ -83,12 +90,13 @@ export class Example15 {
       },
       {
         id: 'duration', name: 'Duration (days)', field: 'duration', sortable: true, type: FieldType.number, exportCsvForceToKeepAsString: true,
-        minWidth: 55,
+        minWidth: 55, width: 100,
+        headerKey: 'DURATION',
         filterable: true,
         filter: {
           collection: multiSelectFilterArray,
-          searchTerms: [1, 33, 50], // default selection
           model: Filters.multipleSelect,
+          searchTerms: [1, 33, 44, 50, 66], // default selection
           // we could add certain option(s) to the "multiple-select" plugin
           filterOptions: {
             maxHeight: 250,
@@ -97,15 +105,15 @@ export class Example15 {
         }
       },
       {
-        id: 'complete', name: '% Complete', field: 'percentComplete', formatter: Formatters.percentCompleteBar, minWidth: 70, type: FieldType.number, sortable: true,
-        filterable: true, filter: { model: Filters.compoundInput }
+        id: 'complete', name: '% Complete', field: 'percentComplete', minWidth: 70, type: FieldType.number, sortable: true, width: 100,
+        formatter: Formatters.percentCompleteBar, filterable: true, filter: { model: Filters.slider, operator: '>' }
       },
       {
-        id: 'start', name: 'Start', field: 'start', formatter: Formatters.dateIso, sortable: true, minWidth: 75, exportWithFormatter: true,
+        id: 'start', name: 'Start', field: 'start', headerKey: 'START', formatter: Formatters.dateIso, sortable: true, minWidth: 75, exportWithFormatter: true, width: 100,
         type: FieldType.date, filterable: true, filter: { model: Filters.compoundDate }
       },
       {
-        id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', minWidth: 85, maxWidth: 85, formatter: Formatters.checkmark,
+        id: 'completed', field: 'completed', headerKey: 'COMPLETED', minWidth: 85, maxWidth: 85, formatter: Formatters.checkmark, width: 100,
         type: FieldType.boolean,
         sortable: true,
         filterable: true,
@@ -126,7 +134,10 @@ export class Example15 {
         containerId: 'demo-container',
         sidePadding: 15
       },
-      enableFiltering: true
+      enableCheckboxSelector: true,
+      enableFiltering: true,
+      enableTranslate: true,
+      i18n: this.i18n
     };
 
     // reload the Grid State with the grid options presets
@@ -176,6 +187,11 @@ export class Example15 {
     const gridState = this.aureliaGrid.gridStateService.getCurrentGridState();
     console.log('Client sample, current Grid State:: ', gridState);
     localStorage[LOCAL_STORAGE_KEY] = JSON.stringify(gridState);
+  }
+
+  switchLanguage() {
+    this.selectedLanguage = (this.selectedLanguage === 'en') ? 'fr' : 'en';
+    this.i18n.setLocale(this.selectedLanguage);
   }
 
   useDefaultPresets() {

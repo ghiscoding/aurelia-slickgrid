@@ -1,5 +1,8 @@
+import { I18N } from 'aurelia-i18n';
+import { inject } from 'aurelia-framework';
 import { Formatters } from 'aurelia-slickgrid';
 
+@inject(I18N)
 export class Example8 {
   title = 'Example 8: Header Menu Plugin';
   subTitle = `
@@ -20,11 +23,14 @@ export class Example8 {
   dataset = [];
   dataView;
   gridObj;
+  selectedLanguage;
   visibleColumns;
 
-  constructor() {
+  constructor(i18n) {
+    this.i18n = i18n;
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
+    this.selectedLanguage = this.i18n.getLocale();
   }
 
   attached() {
@@ -46,42 +52,33 @@ export class Example8 {
 
   defineGrid() {
     this.columnDefinitions = [
-      { id: 'title', name: 'Title', field: 'title' },
-      { id: 'duration', name: 'Duration', field: 'duration', sortable: true },
+      { id: 'title', name: 'Title', field: 'title', headerKey: 'TITLE' },
+      { id: 'duration', name: 'Duration', field: 'duration', headerKey: 'DURATION', sortable: true },
       { id: '%', name: '% Complete', field: 'percentComplete', sortable: true },
-      { id: 'start', name: 'Start', field: 'start' },
-      { id: 'finish', name: 'Finish', field: 'finish' },
-      { id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', formatter: Formatters.checkmark }
+      { id: 'start', name: 'Start', field: 'start', headerKey: 'START' },
+      { id: 'finish', name: 'Finish', field: 'finish', headerKey: 'FINISH' },
+      { id: 'completed', name: 'Completed', field: 'completed', headerKey: 'COMPLETED', formatter: Formatters.checkmark }
     ];
-    for (let i = 0; i < this.columnDefinitions.length; i++) {
-      this.columnDefinitions[i].header = {
+
+    this.columnDefinitions.forEach((columnDef) => {
+      columnDef.header = {
         menu: {
           items: [
-            {
-              iconCssClass: 'fa fa-sort-asc',
-              title: 'Sort Ascending',
-              disabled: !this.columnDefinitions[i].sortable,
-              command: 'sort-asc'
-            },
-            {
-              iconCssClass: 'fa fa-sort-desc',
-              title: 'Sort Descending',
-              disabled: !this.columnDefinitions[i].sortable,
-              command: 'sort-desc'
-            },
-            {
-              title: 'Hide Column',
-              command: 'hide'
-            },
+            // add Custom Header Menu Item Commands at the bottom of the already existing internal custom items
+            // you cannot override an internal command but you can hide them and create your own
+            // also note that the internal custom commands are in the positionOrder range of 50-60,
+            // if you want yours at the bottom then start with 61, below 50 will make your command(s) on top
             {
               iconCssClass: 'fa fa-question-circle',
-              title: 'Help',
-              command: 'help'
+              disabled: (columnDef.id === 'effort-driven'), // you can disable a command with certain logic
+              titleKey: 'HELP', // use "title" as plain string OR "titleKey" when using a translation key
+              command: 'help',
+              positionOrder: 99
             }
           ]
         }
       };
-    }
+    });
 
     this.gridOptions = {
       enableAutoResize: true,
@@ -93,28 +90,16 @@ export class Example8 {
       enableFiltering: false,
       enableCellNavigation: true,
       headerMenu: {
+        hideSortCommands: false,
+        hideColumnHideCommand: false,
         onCommand: (e, args) => {
-          if (args.command === 'hide') {
-            this.aureliaGrid.pluginService.hideColumn(args.column);
-            this.aureliaGrid.pluginService.autoResizeColumns();
-          } else if (args.command === 'sort-asc' || args.command === 'sort-desc') {
-            // get previously sorted columns
-            const cols = this.aureliaGrid.sortService.getPreviousColumnSorts(args.column.id + '');
-
-            // add to the column array, the column sorted by the header menu
-            cols.push({ sortCol: args.column, sortAsc: (args.command === 'sort-asc') });
-            this.aureliaGrid.sortService.onLocalSortChanged(this.gridObj, this.dataView, cols);
-
-            // update the this.gridObj sortColumns array which will at the same add the visual sort icon(s) on the UI
-            const newSortColumns = cols.map((col) => {
-              return { columnId: col.sortCol.id, sortAsc: col.sortAsc };
-            });
-            this.gridObj.setSortColumns(newSortColumns); // add sort icon in UI
-          } else {
-            alert('Command: ' + args.command);
+          if (args.command === 'help') {
+            alert('Please help!!!');
           }
         }
-      }
+      },
+      enableTranslate: true,
+      i18n: this.i18n
     };
   }
 
@@ -129,9 +114,14 @@ export class Example8 {
         percentComplete: Math.round(Math.random() * 100),
         start: '01/01/2009',
         finish: '01/05/2009',
-        effortDriven: (i % 5 === 0)
+        completed: (i % 5 === 0)
       };
     }
     this.dataset = mockDataset;
+  }
+
+  switchLanguage() {
+    this.selectedLanguage = (this.selectedLanguage === 'en') ? 'fr' : 'en';
+    this.i18n.setLocale(this.selectedLanguage);
   }
 }
