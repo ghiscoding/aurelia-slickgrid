@@ -537,7 +537,7 @@ export class ControlAndPluginService {
     }
 
     // add the custom "Commands" title if there are any commands
-    if (this._gridOptions && this._gridOptions.gridMenu && (gridMenuCustomItems.length > 0 || this._gridOptions.gridMenu.customItems.length > 0)) {
+    if (this._gridOptions && this._gridOptions.gridMenu && (gridMenuCustomItems.length > 0 || (this._gridOptions.gridMenu.customItems && this._gridOptions.gridMenu.customItems.length > 0))) {
       this._gridOptions.gridMenu.customTitle = this._gridOptions.gridMenu.customTitle || this.getPickerTitleOutputString('customTitle', 'gridMenu');
     }
 
@@ -835,9 +835,11 @@ export class ControlAndPluginService {
   }
 
   private emptyColumnPickerTitles() {
-    this._gridOptions.columnPicker.columnTitle = '';
-    this._gridOptions.columnPicker.forceFitTitle = '';
-    this._gridOptions.columnPicker.syncResizeTitle = '';
+    if (this._gridOptions && this._gridOptions.columnPicker) {
+      this._gridOptions.columnPicker.columnTitle = '';
+      this._gridOptions.columnPicker.forceFitTitle = '';
+      this._gridOptions.columnPicker.syncResizeTitle = '';
+    }
   }
 
   private emptyGridMenuTitles() {
