@@ -23,7 +23,7 @@ export class InputFilter implements Filter {
   }
 
   get operator(): OperatorType | OperatorString {
-    return (this.columnDef && this.columnDef.filter && this.columnDef.filter.operator) || OperatorType.equal;
+    return this.columnDef && this.columnDef.filter && this.columnDef.filter.operator;
   }
 
   /**
