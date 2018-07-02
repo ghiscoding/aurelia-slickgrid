@@ -3,6 +3,7 @@ bower_components
 .chrome
 .idea
 screenshots
+aurelia-slickgrid
 client-cli
 client-wp
 client-ts-wp
