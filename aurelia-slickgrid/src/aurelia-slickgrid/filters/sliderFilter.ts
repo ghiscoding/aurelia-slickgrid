@@ -15,8 +15,8 @@ const DEFAULT_MAX_VALUE = 100;
 const DEFAULT_STEP = 1;
 
 export class SliderFilter implements Filter {
-  private _elementRangeInputId: string;
-  private _elementRangeOutputId: string;
+  private _elementRangeInputId: string = '';
+  private _elementRangeOutputId: string = '';
   private $filterElm: any;
   grid: any;
   searchTerms: SearchTerm[];
@@ -80,8 +80,11 @@ export class SliderFilter implements Filter {
     if (!this.filterParams.hideSliderNumber) {
       this.$filterElm.on('input change', (e: { target: HTMLInputElement }) => {
         const value = e && e.target && e.target.value || '';
-        if (value) {
-          document.getElementById(this._elementRangeOutputId).innerHTML = value;
+        if (value && document) {
+          const elm = document.getElementById(this._elementRangeOutputId || '');
+          if (elm && elm.innerHTML) {
+            elm.innerHTML = value;
+          }
         }
       });
     }

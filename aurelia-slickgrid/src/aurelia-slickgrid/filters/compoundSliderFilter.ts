@@ -19,8 +19,8 @@ const DEFAULT_STEP = 1;
 
 @inject(I18N)
 export class CompoundSliderFilter implements Filter {
-  private _elementRangeInputId: string;
-  private _elementRangeOutputId: string;
+  private _elementRangeInputId: string = '';
+  private _elementRangeOutputId: string = '';
   private _operator: OperatorType | OperatorString;
   private $containerInputGroupElm: any;
   private $filterElm: any;
@@ -92,8 +92,11 @@ export class CompoundSliderFilter implements Filter {
       if (!this.filterParams.hideSliderNumber) {
         this.$filterInputElm.on('input change', (e: { target: HTMLInputElement }) => {
           const value = e && e.target && e.target.value || '';
-          if (value) {
-            document.getElementById(this._elementRangeOutputId).innerHTML = value;
+          if (value && document) {
+            const elm = document.getElementById(this._elementRangeOutputId || '');
+            if (elm && elm.innerHTML) {
+              elm.innerHTML = value;
+            }
           }
         });
       }

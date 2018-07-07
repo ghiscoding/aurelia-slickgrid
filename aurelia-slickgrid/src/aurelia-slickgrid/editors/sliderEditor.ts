@@ -11,8 +11,8 @@ const DEFAULT_STEP = 1;
  * KeyDown events are also handled to provide handling for Tab, Shift-Tab, Esc and Ctrl-Enter.
  */
 export class SliderEditor implements Editor {
-  private _elementRangeInputId: string;
-  private _elementRangeOutputId: string;
+  private _elementRangeInputId: string = '';
+  private _elementRangeOutputId: string = '';
   $editorElm: any;
   $input: any;
   $sliderNumber: any;
@@ -66,8 +66,11 @@ export class SliderEditor implements Editor {
     if (!this.editorParams.hideSliderNumber) {
       this.$editorElm.on('input change', (e: { target: HTMLInputElement }) => {
         const value = e && e.target && e.target.value || '';
-        if (value) {
-          document.getElementById(this._elementRangeOutputId).innerHTML = e.target.value;
+        if (value && document) {
+          const elm = document.getElementById(this._elementRangeOutputId || '');
+          if (elm && elm.innerHTML) {
+            elm.innerHTML = e.target.value;
+          }
         }
       });
     }
