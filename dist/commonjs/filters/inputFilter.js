@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var index_1 = require("./../models/index");
 var $ = require("jquery");
 var InputFilter = /** @class */ (function () {
     function InputFilter() {
@@ -15,7 +14,7 @@ var InputFilter = /** @class */ (function () {
     });
     Object.defineProperty(InputFilter.prototype, "operator", {
         get: function () {
-            return (this.columnDef && this.columnDef.filter && this.columnDef.filter.operator) || index_1.OperatorType.equal;
+            return this.columnDef && this.columnDef.filter && this.columnDef.filter.operator || '';
         },
         enumerable: true,
         configurable: true

@@ -1,4 +1,4 @@
-define(["require", "exports", "./../models/index", "jquery"], function (require, exports, index_1, $) {
+define(["require", "exports", "jquery"], function (require, exports, $) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var InputFilter = /** @class */ (function () {
@@ -14,7 +14,7 @@ define(["require", "exports", "./../models/index", "jquery"], function (require,
         });
         Object.defineProperty(InputFilter.prototype, "operator", {
             get: function () {
-                return (this.columnDef && this.columnDef.filter && this.columnDef.filter.operator) || index_1.OperatorType.equal;
+                return this.columnDef && this.columnDef.filter && this.columnDef.filter.operator || '';
             },
             enumerable: true,
             configurable: true

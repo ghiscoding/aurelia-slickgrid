@@ -11,6 +11,7 @@ import { dateTimeIsoFormatter } from './dateTimeIsoFormatter';
 import { dateTimeUsAmPmFormatter } from './dateTimeUsAmPmFormatter';
 import { dateTimeUsFormatter } from './dateTimeUsFormatter';
 import { dateUsFormatter } from './dateUsFormatter';
+import { decimalFormatter } from './decimalFormatter';
 import { deleteIconFormatter } from './deleteIconFormatter';
 import { dollarColoredBoldFormatter } from './dollarColoredBoldFormatter';
 import { dollarColoredFormatter } from './dollarColoredFormatter';
@@ -73,6 +74,12 @@ export const Formatters = {
     dateTimeUsAmPm: dateTimeUsAmPmFormatter,
     /** Displays a Font-Awesome delete icon (fa-trash) */
     deleteIcon: deleteIconFormatter,
+    /**
+     * Display the value as x decimals formatted, defaults to 2 decimals.
+     * You can pass "decimalPlaces" or "minDecimalPlaces" and/or "maxDecimalPlaces" to the generic "params" property, example:: `{ formatter: Formatters.decimal, params: { decimalPlaces: 3 }}`
+     * The property "decimalPlaces" is an alias of "minDecimalPlaces"
+     */
+    decimal: decimalFormatter,
     /** Display the value as 2 decimals formatted with dollar sign '$' at the end of of the value */
     dollar: dollarFormatter,
     /** Display the value as 2 decimals formatted with dollar sign '$' at the end of of the value, change color of text to red/green on negative/positive value */

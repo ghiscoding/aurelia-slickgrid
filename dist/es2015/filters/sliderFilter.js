@@ -4,6 +4,10 @@ const DEFAULT_MIN_VALUE = 0;
 const DEFAULT_MAX_VALUE = 100;
 const DEFAULT_STEP = 1;
 export class SliderFilter {
+    constructor() {
+        this._elementRangeInputId = '';
+        this._elementRangeOutputId = '';
+    }
     /** Getter for the Filter Generic Params */
     get filterParams() {
         return this.columnDef && this.columnDef.filter && this.columnDef.filter.params || {};
@@ -26,6 +30,9 @@ export class SliderFilter {
         this.callback = args.callback;
         this.columnDef = args.columnDef;
         this.searchTerms = args.searchTerms || [];
+        // define the input & slider number IDs
+        this._elementRangeInputId = `rangeInput_${this.columnDef.field}`;
+        this._elementRangeOutputId = `rangeOutput_${this.columnDef.field}`;
         // filter input can only have 1 search term, so we will use the 1st array index if it exist
         const searchTerm = (Array.isArray(this.searchTerms) && this.searchTerms[0]) || '';
         // step 1, create HTML string template
@@ -45,6 +52,19 @@ export class SliderFilter {
                 this.callback(e, { columnDef: this.columnDef, operator: this.operator, searchTerms: [value] });
             }
         });
+        // if user chose to display the slider number on the right side, then update it every time it changes
+        // we need to use both "input" and "change" event to be all cross-browser
+        if (!this.filterParams.hideSliderNumber) {
+            this.$filterElm.on('input change', (e) => {
+                const value = e && e.target && e.target.value || '';
+                if (value && document) {
+                    const elm = document.getElementById(this._elementRangeOutputId || '');
+                    if (elm && elm.innerHTML) {
+                        elm.innerHTML = value;
+                    }
+                }
+            });
+        }
     }
     /**
      * Clear the filter value
@@ -53,7 +73,7 @@ export class SliderFilter {
         if (this.$filterElm) {
             const clearedValue = this.filterParams.hasOwnProperty('sliderStartValue') ? this.filterParams.sliderStartValue : DEFAULT_MIN_VALUE;
             this.$filterElm.children('input').val(clearedValue);
-            this.$filterElm.children('span.input-group-addon').html(clearedValue);
+            this.$filterElm.children('div.input-group-addon.input-group-append').children().html(clearedValue);
             this.$filterElm.trigger('change');
         }
     }
@@ -87,20 +107,21 @@ export class SliderFilter {
         if (this.filterParams.hideSliderNumber) {
             return `
       <div class="search-filter">
-        <input type="range" id="rangeInput_${this.columnDef.field}"
-          name="rangeInput_${this.columnDef.field}"
+        <input type="range" id="${this._elementRangeInputId}"
+          name="${this._elementRangeInputId}"
           defaultValue="${defaultValue}" min="${minValue}" max="${maxValue}" step="${step}"
           class="form-control slider-filter-input range" />
       </div>`;
         }
         return `
       <div class="input-group search-filter">
-        <input type="range" id="rangeInput_${this.columnDef.field}"
-          name="rangeInput_${this.columnDef.field}"
+        <input type="range" id="${this._elementRangeInputId}"
+          name="${this._elementRangeInputId}"
           defaultValue="${defaultValue}" min="${minValue}" max="${maxValue}" step="${step}"
-          class="form-control slider-filter-input range"
-          onmousemove="$('#rangeOuput_${this.columnDef.field}').html(rangeInput_${this.columnDef.field}.value)" />
-        <span class="input-group-addon slider-value" id="rangeOuput_${this.columnDef.field}">${defaultValue}</span>
+          class="form-control slider-filter-input range" />
+        <div class="input-group-addon input-group-append slider-value">
+          <span class="input-group-text" id="${this._elementRangeOutputId}">${defaultValue}</span>
+        </div>
       </div>`;
     }
     /**
@@ -114,7 +135,7 @@ export class SliderFilter {
         const $filterElm = $(filterTemplate);
         const searchTermInput = (searchTerm || '0');
         $filterElm.children('input').val(searchTermInput);
-        $filterElm.children('span.input-group-addon').html(searchTermInput);
+        $filterElm.children('div.input-group-addon.input-group-append').children().html(searchTermInput);
         $filterElm.attr('id', `filter-${this.columnDef.id}`);
         $filterElm.data('columnId', this.columnDef.id);
         // if there's a search term, we will add the "filled" class for styling purposes

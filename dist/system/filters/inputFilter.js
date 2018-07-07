@@ -1,12 +1,9 @@
-System.register(["./../models/index", "jquery"], function (exports_1, context_1) {
+System.register(["jquery"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var index_1, $, InputFilter;
+    var $, InputFilter;
     return {
         setters: [
-            function (index_1_1) {
-                index_1 = index_1_1;
-            },
             function ($_1) {
                 $ = $_1;
             }
@@ -25,7 +22,7 @@ System.register(["./../models/index", "jquery"], function (exports_1, context_1)
                 });
                 Object.defineProperty(InputFilter.prototype, "operator", {
                     get: function () {
-                        return (this.columnDef && this.columnDef.filter && this.columnDef.filter.operator) || index_1.OperatorType.equal;
+                        return this.columnDef && this.columnDef.filter && this.columnDef.filter.operator || '';
                     },
                     enumerable: true,
                     configurable: true

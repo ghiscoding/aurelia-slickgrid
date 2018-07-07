@@ -17,7 +17,8 @@ System.register(["./../models/index", "./../services/utilities", "moment"], func
         execute: function () {
             FORMAT = utilities_1.mapMomentDateFormatWithFieldType(index_1.FieldType.dateUs);
             exports_1("dateUsFormatter", dateUsFormatter = function (row, cell, value, columnDef, dataContext) {
-                return value ? moment(value).format(FORMAT) : '';
+                var isDateValid = moment(value, FORMAT, true).isValid();
+                return (value && isDateValid) ? moment(value).format(FORMAT) : value;
             });
         }
     };

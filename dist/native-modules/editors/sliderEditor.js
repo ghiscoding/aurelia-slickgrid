@@ -10,6 +10,8 @@ var DEFAULT_STEP = 1;
 var SliderEditor = /** @class */ (function () {
     function SliderEditor(args) {
         this.args = args;
+        this._elementRangeInputId = '';
+        this._elementRangeOutputId = '';
         this.init();
     }
     Object.defineProperty(SliderEditor.prototype, "columnDef", {
@@ -47,15 +49,32 @@ var SliderEditor = /** @class */ (function () {
     SliderEditor.prototype.init = function () {
         var _this = this;
         var container = this.args.container;
+        // define the input & slider number IDs
+        var itemId = this.args && this.args.item && this.args.item.id;
+        this._elementRangeInputId = "rangeInput_" + this.columnDef.field + "_" + itemId;
+        this._elementRangeOutputId = "rangeOutput_" + this.columnDef.field + "_" + itemId;
         // create HTML string template
         var editorTemplate = this.buildTemplateHtmlString();
         this.$editorElm = $(editorTemplate);
         this.$input = this.$editorElm.children('input');
-        this.$sliderNumber = this.$editorElm.children('span.input-group-addon');
+        this.$sliderNumber = this.$editorElm.children('div.input-group-addon.input-group-append').children();
         // watch on change event
         this.$editorElm
             .appendTo(this.args.container)
-            .on('change', function (event) { return _this.save(); });
+            .on('mouseup', function (event) { return _this.save(); });
+        // if user chose to display the slider number on the right side, then update it every time it changes
+        // we need to use both "input" and "change" event to be all cross-browser
+        if (!this.editorParams.hideSliderNumber) {
+            this.$editorElm.on('input change', function (e) {
+                var value = e && e.target && e.target.value || '';
+                if (value && document) {
+                    var elm = document.getElementById(_this._elementRangeOutputId || '');
+                    if (elm && elm.innerHTML) {
+                        elm.innerHTML = e.target.value;
+                    }
+                }
+            });
+        }
     };
     SliderEditor.prototype.destroy = function () {
         this.$editorElm.remove();
@@ -85,7 +104,6 @@ var SliderEditor = /** @class */ (function () {
     };
     SliderEditor.prototype.isValueChanged = function () {
         var elmValue = this.$input.val();
-        console.log(elmValue);
         return (!(elmValue === '' && this.defaultValue === null)) && (elmValue !== this.defaultValue);
     };
     SliderEditor.prototype.validate = function () {
@@ -131,9 +149,9 @@ var SliderEditor = /** @class */ (function () {
         var step = this.columnEditor.hasOwnProperty('valueStep') ? this.columnEditor.valueStep : DEFAULT_STEP;
         var itemId = this.args && this.args.item && this.args.item.id;
         if (this.editorParams.hideSliderNumber) {
-            return "\n      <div class=\"slider-editor\">\n        <input type=\"range\" id=\"rangeInput_" + this.columnDef.field + "_" + itemId + "\"\n          name=\"rangeInput_" + this.columnDef.field + "_" + itemId + "\"\n          defaultValue=\"" + defaultValue + "\" min=\"" + minValue + "\" max=\"" + maxValue + "\" step=\"" + step + "\"\n          class=\"form-control slider-editor-input range\" />\n      </div>";
+            return "\n      <div class=\"slider-editor\">\n        <input type=\"range\" id=\"" + this._elementRangeInputId + "\"\n          name=\"" + this._elementRangeInputId + "\"\n          defaultValue=\"" + defaultValue + "\" min=\"" + minValue + "\" max=\"" + maxValue + "\" step=\"" + step + "\"\n          class=\"form-control slider-editor-input range\" />\n      </div>";
         }
-        return "\n      <div class=\"input-group slider-editor\">\n        <input type=\"range\" id=\"rangeInput_" + this.columnDef.field + "_" + itemId + "\"\n          name=\"rangeInput_" + this.columnDef.field + "_" + itemId + "\"\n          defaultValue=\"" + defaultValue + "\" min=\"" + minValue + "\" max=\"" + maxValue + "\" step=\"" + step + "\"\n          class=\"form-control slider-editor-input range\"\n          onmousemove=\"$('#rangeOuput_" + this.columnDef.field + "_" + itemId + "').html(rangeInput_" + this.columnDef.field + "_" + itemId + ".value)\" />\n        <span class=\"input-group-addon slider-value\" id=\"rangeOuput_" + this.columnDef.field + "_" + itemId + "\">" + defaultValue + "</span>\n      </div>";
+        return "\n      <div class=\"input-group slider-editor\">\n        <input type=\"range\" id=\"" + this._elementRangeInputId + "\"\n          name=\"" + this._elementRangeInputId + "\"\n          defaultValue=\"" + defaultValue + "\" min=\"" + minValue + "\" max=\"" + maxValue + "\" step=\"" + step + "\"\n          class=\"form-control slider-editor-input range\" />\n        <div class=\"input-group-addon input-group-append slider-value\"><span class=\"input-group-text\" id=\"" + this._elementRangeOutputId + "\">" + defaultValue + "</span></div>\n      </div>";
     };
     return SliderEditor;
 }());

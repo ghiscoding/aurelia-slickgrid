@@ -119,7 +119,7 @@ var CompoundDateFilter = /** @class */ (function () {
             pickerOptions.enableTime = true;
         }
         var placeholder = (this.gridOptions) ? (this.gridOptions.defaultFilterPlaceholder || '') : '';
-        var $filterInputElm = $("<div class=flatpickr><input type=\"text\" class=\"form-control\" data-input placeholder=\"" + placeholder + "\"></div>");
+        var $filterInputElm = $("<div class=\"flatpickr\"><input type=\"text\" class=\"form-control\" data-input placeholder=\"" + placeholder + "\"></div>");
         this.flatInstance = (flatpickr && $filterInputElm[0] && typeof $filterInputElm[0].flatpickr === 'function') ? $filterInputElm[0].flatpickr(pickerOptions) : null;
         return $filterInputElm;
     };
@@ -153,10 +153,10 @@ var CompoundDateFilter = /** @class */ (function () {
         this.$filterInputElm = this.buildDatePickerInput(searchTerm);
         var $filterContainerElm = $("<div class=\"form-group search-filter\"></div>");
         var $containerInputGroup = $("<div class=\"input-group flatpickr\"></div>");
-        var $operatorInputGroupAddon = $("<div class=\"input-group-addon operator\"></div>");
+        var $operatorInputGroupAddon = $("<div class=\"input-group-addon input-group-prepend operator\"></div>");
         /* the DOM element final structure will be
           <div class="input-group">
-            <div class="input-group-addon operator">
+            <div class="input-group-addon input-group-prepend operator">
               <select class="form-control"></select>
             </div>
             <div class=flatpickr>

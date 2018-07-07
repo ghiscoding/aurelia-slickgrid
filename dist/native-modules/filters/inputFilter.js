@@ -1,4 +1,3 @@
-import { OperatorType } from './../models/index';
 import * as $ from 'jquery';
 var InputFilter = /** @class */ (function () {
     function InputFilter() {
@@ -13,7 +12,7 @@ var InputFilter = /** @class */ (function () {
     });
     Object.defineProperty(InputFilter.prototype, "operator", {
         get: function () {
-            return (this.columnDef && this.columnDef.filter && this.columnDef.filter.operator) || OperatorType.equal;
+            return this.columnDef && this.columnDef.filter && this.columnDef.filter.operator || '';
         },
         enumerable: true,
         configurable: true

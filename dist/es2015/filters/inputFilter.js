@@ -1,4 +1,3 @@
-import { OperatorType } from './../models/index';
 import * as $ from 'jquery';
 export class InputFilter {
     /** Getter for the Grid Options pulled through the Grid Object */
@@ -6,7 +5,7 @@ export class InputFilter {
         return (this.grid && this.grid.getOptions) ? this.grid.getOptions() : {};
     }
     get operator() {
-        return (this.columnDef && this.columnDef.filter && this.columnDef.filter.operator) || OperatorType.equal;
+        return this.columnDef && this.columnDef.filter && this.columnDef.filter.operator || '';
     }
     /**
      * Initialize the Filter

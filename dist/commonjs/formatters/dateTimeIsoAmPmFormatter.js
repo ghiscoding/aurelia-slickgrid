@@ -5,6 +5,7 @@ var utilities_1 = require("./../services/utilities");
 var moment = require("moment");
 var FORMAT = utilities_1.mapMomentDateFormatWithFieldType(index_1.FieldType.dateTimeIsoAmPm);
 exports.dateTimeIsoAmPmFormatter = function (row, cell, value, columnDef, dataContext) {
-    return value ? moment(value).format(FORMAT) : '';
+    var isDateValid = moment(value, FORMAT, true).isValid();
+    return (value && isDateValid) ? moment(value).format(FORMAT) : value;
 };
 //# sourceMappingURL=dateTimeIsoAmPmFormatter.js.map

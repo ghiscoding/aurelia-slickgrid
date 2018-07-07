@@ -13,6 +13,7 @@ var dateTimeIsoFormatter_1 = require("./dateTimeIsoFormatter");
 var dateTimeUsAmPmFormatter_1 = require("./dateTimeUsAmPmFormatter");
 var dateTimeUsFormatter_1 = require("./dateTimeUsFormatter");
 var dateUsFormatter_1 = require("./dateUsFormatter");
+var decimalFormatter_1 = require("./decimalFormatter");
 var deleteIconFormatter_1 = require("./deleteIconFormatter");
 var dollarColoredBoldFormatter_1 = require("./dollarColoredBoldFormatter");
 var dollarColoredFormatter_1 = require("./dollarColoredFormatter");
@@ -75,6 +76,12 @@ exports.Formatters = {
     dateTimeUsAmPm: dateTimeUsAmPmFormatter_1.dateTimeUsAmPmFormatter,
     /** Displays a Font-Awesome delete icon (fa-trash) */
     deleteIcon: deleteIconFormatter_1.deleteIconFormatter,
+    /**
+     * Display the value as x decimals formatted, defaults to 2 decimals.
+     * You can pass "decimalPlaces" or "minDecimalPlaces" and/or "maxDecimalPlaces" to the generic "params" property, example:: `{ formatter: Formatters.decimal, params: { decimalPlaces: 3 }}`
+     * The property "decimalPlaces" is an alias of "minDecimalPlaces"
+     */
+    decimal: decimalFormatter_1.decimalFormatter,
     /** Display the value as 2 decimals formatted with dollar sign '$' at the end of of the value */
     dollar: dollarFormatter_1.dollarFormatter,
     /** Display the value as 2 decimals formatted with dollar sign '$' at the end of of the value, change color of text to red/green on negative/positive value */

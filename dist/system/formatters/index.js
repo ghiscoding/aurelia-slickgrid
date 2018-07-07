@@ -1,7 +1,7 @@
-System.register(["./arrayToCsvFormatter", "./boldFormatter", "./checkboxFormatter", "./checkmarkFormatter", "./collectionFormatter", "./collectionEditorFormatter", "./complexObjectFormatter", "./dateIsoFormatter", "./dateTimeIsoAmPmFormatter", "./dateTimeIsoFormatter", "./dateTimeUsAmPmFormatter", "./dateTimeUsFormatter", "./dateUsFormatter", "./deleteIconFormatter", "./dollarColoredBoldFormatter", "./dollarColoredFormatter", "./dollarFormatter", "./editIconFormatter", "./hyperlinkFormatter", "./hyperlinkUriPrefixFormatter", "./infoIconFormatter", "./lowercaseFormatter", "./maskFormatter", "./multipleFormatter", "./percentFormatter", "./percentCompleteBarFormatter", "./percentCompleteFormatter", "./percentSymbolFormatter", "./progressBarFormatter", "./translateFormatter", "./translateBooleanFormatter", "./uppercaseFormatter", "./yesNoFormatter"], function (exports_1, context_1) {
+System.register(["./arrayToCsvFormatter", "./boldFormatter", "./checkboxFormatter", "./checkmarkFormatter", "./collectionFormatter", "./collectionEditorFormatter", "./complexObjectFormatter", "./dateIsoFormatter", "./dateTimeIsoAmPmFormatter", "./dateTimeIsoFormatter", "./dateTimeUsAmPmFormatter", "./dateTimeUsFormatter", "./dateUsFormatter", "./decimalFormatter", "./deleteIconFormatter", "./dollarColoredBoldFormatter", "./dollarColoredFormatter", "./dollarFormatter", "./editIconFormatter", "./hyperlinkFormatter", "./hyperlinkUriPrefixFormatter", "./infoIconFormatter", "./lowercaseFormatter", "./maskFormatter", "./multipleFormatter", "./percentFormatter", "./percentCompleteBarFormatter", "./percentCompleteFormatter", "./percentSymbolFormatter", "./progressBarFormatter", "./translateFormatter", "./translateBooleanFormatter", "./uppercaseFormatter", "./yesNoFormatter"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var arrayToCsvFormatter_1, boldFormatter_1, checkboxFormatter_1, checkmarkFormatter_1, collectionFormatter_1, collectionEditorFormatter_1, complexObjectFormatter_1, dateIsoFormatter_1, dateTimeIsoAmPmFormatter_1, dateTimeIsoFormatter_1, dateTimeUsAmPmFormatter_1, dateTimeUsFormatter_1, dateUsFormatter_1, deleteIconFormatter_1, dollarColoredBoldFormatter_1, dollarColoredFormatter_1, dollarFormatter_1, editIconFormatter_1, hyperlinkFormatter_1, hyperlinkUriPrefixFormatter_1, infoIconFormatter_1, lowercaseFormatter_1, maskFormatter_1, multipleFormatter_1, percentFormatter_1, percentCompleteBarFormatter_1, percentCompleteFormatter_1, percentSymbolFormatter_1, progressBarFormatter_1, translateFormatter_1, translateBooleanFormatter_1, uppercaseFormatter_1, yesNoFormatter_1, Formatters;
+    var arrayToCsvFormatter_1, boldFormatter_1, checkboxFormatter_1, checkmarkFormatter_1, collectionFormatter_1, collectionEditorFormatter_1, complexObjectFormatter_1, dateIsoFormatter_1, dateTimeIsoAmPmFormatter_1, dateTimeIsoFormatter_1, dateTimeUsAmPmFormatter_1, dateTimeUsFormatter_1, dateUsFormatter_1, decimalFormatter_1, deleteIconFormatter_1, dollarColoredBoldFormatter_1, dollarColoredFormatter_1, dollarFormatter_1, editIconFormatter_1, hyperlinkFormatter_1, hyperlinkUriPrefixFormatter_1, infoIconFormatter_1, lowercaseFormatter_1, maskFormatter_1, multipleFormatter_1, percentFormatter_1, percentCompleteBarFormatter_1, percentCompleteFormatter_1, percentSymbolFormatter_1, progressBarFormatter_1, translateFormatter_1, translateBooleanFormatter_1, uppercaseFormatter_1, yesNoFormatter_1, Formatters;
     return {
         setters: [
             function (arrayToCsvFormatter_1_1) {
@@ -42,6 +42,9 @@ System.register(["./arrayToCsvFormatter", "./boldFormatter", "./checkboxFormatte
             },
             function (dateUsFormatter_1_1) {
                 dateUsFormatter_1 = dateUsFormatter_1_1;
+            },
+            function (decimalFormatter_1_1) {
+                decimalFormatter_1 = decimalFormatter_1_1;
             },
             function (deleteIconFormatter_1_1) {
                 deleteIconFormatter_1 = deleteIconFormatter_1_1;
@@ -147,6 +150,12 @@ System.register(["./arrayToCsvFormatter", "./boldFormatter", "./checkboxFormatte
                 dateTimeUsAmPm: dateTimeUsAmPmFormatter_1.dateTimeUsAmPmFormatter,
                 /** Displays a Font-Awesome delete icon (fa-trash) */
                 deleteIcon: deleteIconFormatter_1.deleteIconFormatter,
+                /**
+                 * Display the value as x decimals formatted, defaults to 2 decimals.
+                 * You can pass "decimalPlaces" or "minDecimalPlaces" and/or "maxDecimalPlaces" to the generic "params" property, example:: `{ formatter: Formatters.decimal, params: { decimalPlaces: 3 }}`
+                 * The property "decimalPlaces" is an alias of "minDecimalPlaces"
+                 */
+                decimal: decimalFormatter_1.decimalFormatter,
                 /** Display the value as 2 decimals formatted with dollar sign '$' at the end of of the value */
                 dollar: dollarFormatter_1.dollarFormatter,
                 /** Display the value as 2 decimals formatted with dollar sign '$' at the end of of the value, change color of text to red/green on negative/positive value */

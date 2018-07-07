@@ -133,10 +133,10 @@ var CompoundInputFilter = /** @class */ (function () {
         this.$filterInputElm = $(this.buildInputHtmlString());
         var $filterContainerElm = $("<div class=\"form-group search-filter\"></div>");
         var $containerInputGroup = $("<div class=\"input-group\"></div>");
-        var $operatorInputGroupAddon = $("<div class=\"input-group-addon operator\"></div>");
+        var $operatorInputGroupAddon = $("<div class=\"input-group-addon input-group-prepend operator\"></div>");
         /* the DOM element final structure will be
           <div class="input-group">
-            <div class="input-group-addon operator">
+            <div class="input-group-addon input-group-prepend operator">
               <select class="form-control"></select>
             </div>
             <input class="form-control" type="text" />

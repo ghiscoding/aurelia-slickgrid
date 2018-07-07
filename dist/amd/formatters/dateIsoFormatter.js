@@ -3,7 +3,8 @@ define(["require", "exports", "./../models/index", "./../services/utilities", "m
     Object.defineProperty(exports, "__esModule", { value: true });
     var FORMAT = utilities_1.mapMomentDateFormatWithFieldType(index_1.FieldType.dateIso);
     exports.dateIsoFormatter = function (row, cell, value, columnDef, dataContext) {
-        return value ? moment(value).format(FORMAT) : '';
+        var isDateValid = moment(value, FORMAT, true).isValid();
+        return (value && isDateValid) ? moment(value).format(FORMAT) : value;
     };
 });
 //# sourceMappingURL=dateIsoFormatter.js.map

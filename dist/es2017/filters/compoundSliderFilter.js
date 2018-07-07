@@ -14,6 +14,8 @@ const DEFAULT_STEP = 1;
 let CompoundSliderFilter = class CompoundSliderFilter {
     constructor(i18n) {
         this.i18n = i18n;
+        this._elementRangeInputId = '';
+        this._elementRangeOutputId = '';
     }
     /** Getter for the Grid Options pulled through the Grid Object */
     get gridOptions() {
@@ -43,6 +45,9 @@ let CompoundSliderFilter = class CompoundSliderFilter {
             this.columnDef = args.columnDef;
             this.operator = args.operator || '';
             this.searchTerms = args.searchTerms || [];
+            // define the input & slider number IDs
+            this._elementRangeInputId = `rangeInput_${this.columnDef.field}`;
+            this._elementRangeOutputId = `rangeOutput_${this.columnDef.field}`;
             // filter input can only have 1 search term, so we will use the 1st array index if it exist
             const searchTerm = (Array.isArray(this.searchTerms) && this.searchTerms[0]) || '';
             // step 1, create the DOM Element of the filter which contain the compound Operator+Input
@@ -56,6 +61,19 @@ let CompoundSliderFilter = class CompoundSliderFilter {
             this.$selectOperatorElm.change((e) => {
                 this.onTriggerEvent(e);
             });
+            // if user chose to display the slider number on the right side, then update it every time it changes
+            // we need to use both "input" and "change" event to be all cross-browser
+            if (!this.filterParams.hideSliderNumber) {
+                this.$filterInputElm.on('input change', (e) => {
+                    const value = e && e.target && e.target.value || '';
+                    if (value && document) {
+                        const elm = document.getElementById(this._elementRangeOutputId || '');
+                        if (elm && elm.innerHTML) {
+                            elm.innerHTML = value;
+                        }
+                    }
+                });
+            }
         }
     }
     /**
@@ -67,7 +85,7 @@ let CompoundSliderFilter = class CompoundSliderFilter {
             this.$selectOperatorElm.val(0);
             this.$filterInputElm.val(clearedValue);
             if (!this.filterParams.hideSliderNumber) {
-                this.$containerInputGroupElm.children('span.input-group-addon').last().html(clearedValue);
+                this.$containerInputGroupElm.children('div.input-group-addon.input-group-append').children().last().html(clearedValue);
             }
             this.onTriggerEvent(undefined, true);
         }
@@ -86,7 +104,7 @@ let CompoundSliderFilter = class CompoundSliderFilter {
     setValues(values) {
         if (values && Array.isArray(values)) {
             this.$filterInputElm.val(values[0]);
-            this.$containerInputGroupElm.children('span.input-group-addon').last().html(values[0]);
+            this.$containerInputGroupElm.children('div.input-group-addon.input-group-append').children().last().html(values[0]);
         }
     }
     //
@@ -98,17 +116,16 @@ let CompoundSliderFilter = class CompoundSliderFilter {
         const maxValue = this.filterProperties.hasOwnProperty('maxValue') ? this.filterProperties.maxValue : DEFAULT_MAX_VALUE;
         const defaultValue = this.filterParams.hasOwnProperty('sliderStartValue') ? this.filterParams.sliderStartValue : minValue;
         const step = this.filterProperties.hasOwnProperty('valueStep') ? this.filterProperties.valueStep : DEFAULT_STEP;
-        return `<input type="range" id="rangeInput_${this.columnDef.field}"
-              name="rangeInput_${this.columnDef.field}"
+        return `<input type="range" id="${this._elementRangeInputId}"
+              name="${this._elementRangeInputId}"
               defaultValue="${defaultValue}" min="${minValue}" max="${maxValue}" step="${step}"
-              class="form-control slider-filter-input range compound-slider"
-              onmousemove="$('#rangeOuput_${this.columnDef.field}').html(rangeInput_${this.columnDef.field}.value)" />`;
+              class="form-control slider-filter-input range compound-slider" />`;
     }
     /** Build HTML Template for the text (number) that is shown appended to the slider */
     buildTemplateSliderTextHtmlString() {
         const minValue = this.filterProperties.hasOwnProperty('minValue') ? this.filterProperties.minValue : DEFAULT_MIN_VALUE;
         const defaultValue = this.filterParams.hasOwnProperty('sliderStartValue') ? this.filterParams.sliderStartValue : minValue;
-        return `<span class="input-group-addon slider-value" id="rangeOuput_${this.columnDef.field}">${defaultValue}</span>`;
+        return `<div class="input-group-addon input-group-append slider-value"><span class="input-group-text" id="${this._elementRangeOutputId}">${defaultValue}</span></div>`;
     }
     /** Build HTML Template select dropdown (operator) */
     buildSelectOperatorHtmlString() {
@@ -143,14 +160,14 @@ let CompoundSliderFilter = class CompoundSliderFilter {
         this.$filterInputElm = $(this.buildTemplateHtmlString());
         const $filterContainerElm = $(`<div class="form-group search-filter"></div>`);
         this.$containerInputGroupElm = $(`<div class="input-group search-filter"></div>`);
-        const $operatorInputGroupAddon = $(`<span class="input-group-addon operator"></span>`);
+        const $operatorInputGroupAddon = $(`<span class="input-group-addon input-group-prepend operator"></span>`);
         /* the DOM element final structure will be
           <div class="input-group">
-            <div class="input-group-addon operator">
+            <div class="input-group-addon input-group-prepend operator">
               <select class="form-control"></select>
             </div>
             <input class="form-control" type="text" />
-            <span class="input-group-addon" id="rangeOuput_percentComplete">0</span>
+            <div class="input-group-addon input-group-prepend" id="rangeOuput_percentComplete"><span class="input-group-text">0</span></div>
           </div>
         */
         $operatorInputGroupAddon.append(this.$selectOperatorElm);
@@ -158,7 +175,7 @@ let CompoundSliderFilter = class CompoundSliderFilter {
         this.$containerInputGroupElm.append(this.$filterInputElm);
         if (!this.filterParams.hideSliderNumber) {
             const $sliderTextInputAppendAddon = $(this.buildTemplateSliderTextHtmlString());
-            $sliderTextInputAppendAddon.html(searchTermInput);
+            $sliderTextInputAppendAddon.children().html(searchTermInput);
             this.$containerInputGroupElm.append($sliderTextInputAppendAddon);
         }
         // create the DOM element & add an ID and filter class

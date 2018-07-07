@@ -7,6 +7,8 @@ var DEFAULT_MAX_VALUE = 100;
 var DEFAULT_STEP = 1;
 var SliderFilter = /** @class */ (function () {
     function SliderFilter() {
+        this._elementRangeInputId = '';
+        this._elementRangeOutputId = '';
     }
     Object.defineProperty(SliderFilter.prototype, "filterParams", {
         /** Getter for the Filter Generic Params */
@@ -43,6 +45,9 @@ var SliderFilter = /** @class */ (function () {
         this.callback = args.callback;
         this.columnDef = args.columnDef;
         this.searchTerms = args.searchTerms || [];
+        // define the input & slider number IDs
+        this._elementRangeInputId = "rangeInput_" + this.columnDef.field;
+        this._elementRangeOutputId = "rangeOutput_" + this.columnDef.field;
         // filter input can only have 1 search term, so we will use the 1st array index if it exist
         var searchTerm = (Array.isArray(this.searchTerms) && this.searchTerms[0]) || '';
         // step 1, create HTML string template
@@ -62,6 +67,19 @@ var SliderFilter = /** @class */ (function () {
                 _this.callback(e, { columnDef: _this.columnDef, operator: _this.operator, searchTerms: [value] });
             }
         });
+        // if user chose to display the slider number on the right side, then update it every time it changes
+        // we need to use both "input" and "change" event to be all cross-browser
+        if (!this.filterParams.hideSliderNumber) {
+            this.$filterElm.on('input change', function (e) {
+                var value = e && e.target && e.target.value || '';
+                if (value && document) {
+                    var elm = document.getElementById(_this._elementRangeOutputId || '');
+                    if (elm && elm.innerHTML) {
+                        elm.innerHTML = value;
+                    }
+                }
+            });
+        }
     };
     /**
      * Clear the filter value
@@ -70,7 +88,7 @@ var SliderFilter = /** @class */ (function () {
         if (this.$filterElm) {
             var clearedValue = this.filterParams.hasOwnProperty('sliderStartValue') ? this.filterParams.sliderStartValue : DEFAULT_MIN_VALUE;
             this.$filterElm.children('input').val(clearedValue);
-            this.$filterElm.children('span.input-group-addon').html(clearedValue);
+            this.$filterElm.children('div.input-group-addon.input-group-append').children().html(clearedValue);
             this.$filterElm.trigger('change');
         }
     };
@@ -102,9 +120,9 @@ var SliderFilter = /** @class */ (function () {
         var defaultValue = this.filterParams.hasOwnProperty('sliderStartValue') ? this.filterParams.sliderStartValue : minValue;
         var step = this.filterProperties.hasOwnProperty('valueStep') ? this.filterProperties.valueStep : DEFAULT_STEP;
         if (this.filterParams.hideSliderNumber) {
-            return "\n      <div class=\"search-filter\">\n        <input type=\"range\" id=\"rangeInput_" + this.columnDef.field + "\"\n          name=\"rangeInput_" + this.columnDef.field + "\"\n          defaultValue=\"" + defaultValue + "\" min=\"" + minValue + "\" max=\"" + maxValue + "\" step=\"" + step + "\"\n          class=\"form-control slider-filter-input range\" />\n      </div>";
+            return "\n      <div class=\"search-filter\">\n        <input type=\"range\" id=\"" + this._elementRangeInputId + "\"\n          name=\"" + this._elementRangeInputId + "\"\n          defaultValue=\"" + defaultValue + "\" min=\"" + minValue + "\" max=\"" + maxValue + "\" step=\"" + step + "\"\n          class=\"form-control slider-filter-input range\" />\n      </div>";
         }
-        return "\n      <div class=\"input-group search-filter\">\n        <input type=\"range\" id=\"rangeInput_" + this.columnDef.field + "\"\n          name=\"rangeInput_" + this.columnDef.field + "\"\n          defaultValue=\"" + defaultValue + "\" min=\"" + minValue + "\" max=\"" + maxValue + "\" step=\"" + step + "\"\n          class=\"form-control slider-filter-input range\"\n          onmousemove=\"$('#rangeOuput_" + this.columnDef.field + "').html(rangeInput_" + this.columnDef.field + ".value)\" />\n        <span class=\"input-group-addon slider-value\" id=\"rangeOuput_" + this.columnDef.field + "\">" + defaultValue + "</span>\n      </div>";
+        return "\n      <div class=\"input-group search-filter\">\n        <input type=\"range\" id=\"" + this._elementRangeInputId + "\"\n          name=\"" + this._elementRangeInputId + "\"\n          defaultValue=\"" + defaultValue + "\" min=\"" + minValue + "\" max=\"" + maxValue + "\" step=\"" + step + "\"\n          class=\"form-control slider-filter-input range\" />\n        <div class=\"input-group-addon input-group-append slider-value\">\n          <span class=\"input-group-text\" id=\"" + this._elementRangeOutputId + "\">" + defaultValue + "</span>\n        </div>\n      </div>";
     };
     /**
      * From the html template string, create a DOM element
@@ -117,7 +135,7 @@ var SliderFilter = /** @class */ (function () {
         var $filterElm = $(filterTemplate);
         var searchTermInput = (searchTerm || '0');
         $filterElm.children('input').val(searchTermInput);
-        $filterElm.children('span.input-group-addon').html(searchTermInput);
+        $filterElm.children('div.input-group-addon.input-group-append').children().html(searchTermInput);
         $filterElm.attr('id', "filter-" + this.columnDef.id);
         $filterElm.data('columnId', this.columnDef.id);
         // if there's a search term, we will add the "filled" class for styling purposes
