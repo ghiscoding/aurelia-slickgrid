@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.1.0"></a>
+# [2.1.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.0.1...v2.1.0) (2018-07-07)
+
+
+### Bug Fixes
+
+* **filter:** input filter was using EQ operator instead of Contains ([9a86a74](https://github.com/ghiscoding/aurelia-slickgrid/commit/9a86a74))
+* **formatter:** Date Formatters should only transform on valid dates ([2e08e47](https://github.com/ghiscoding/aurelia-slickgrid/commit/2e08e47))
+* **formatter:** Date Formatters should only transform on valid dates ([d1ab5e5](https://github.com/ghiscoding/aurelia-slickgrid/commit/d1ab5e5))
+* **formatter:** Date Formatters should only transform on valid dates ([8f67cd9](https://github.com/ghiscoding/aurelia-slickgrid/commit/8f67cd9))
+* **slider:** slider issues with IE and Edge ([4c2a193](https://github.com/ghiscoding/aurelia-slickgrid/commit/4c2a193))
+* **slider:** slider issues with IE and Edge ([015ecfc](https://github.com/ghiscoding/aurelia-slickgrid/commit/015ecfc))
+* **slider:** slider number shown on right was sometime offset ([f21dba3](https://github.com/ghiscoding/aurelia-slickgrid/commit/f21dba3))
+
+
+### Features
+
+* **bs4:** support Bootstrap 4 ([6865bed](https://github.com/ghiscoding/aurelia-slickgrid/commit/6865bed))
+* **formatter:** add new Decimal Formatter ([f33d075](https://github.com/ghiscoding/aurelia-slickgrid/commit/f33d075))
+
+
+
 <a name="2.0.1"></a>
 ## [2.0.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.0.0...v2.0.1) (2018-06-23)
 
