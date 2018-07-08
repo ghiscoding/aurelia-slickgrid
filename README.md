@@ -1,12 +1,6 @@
 # Aurelia-Slickgrid
 One of the best javascript datagrid [SlickGrid](https://github.com/mleibman/SlickGrid) which was originally developed by @mleibman is now available to Aurelia. I have tried and used a few datagrids and SlickGrid beats most of them in terms of functionalities and performance (it can easily deal with even a million row).
 
-### Bootstrap support
-The creation of `Aurelia-Slickgrid` started with `Bootstrap 3` support and `Bootstrap 4` is now supported as well since version `1.2.0`
-- [Bootstrap 3 demo](https://ghiscoding.github.io/aurelia-slickgrid) / [examples repo](https://github.com/ghiscoding/aurelia-slickgrid/tree/master/aurelia-slickgrid/src/examples/slickgrid)
-- [Bootstrap 4 demo](https://ghiscoding.github.io/aurelia-slickgrid-bs4-demo) / [examples repo](https://github.com/ghiscoding/aurelia-slickgrid-bs4-demo/tree/master/src/examples/slickgrid)
-
-
 ### SlickGrid Source
 We will be using [6pac SlickGrid fork](https://github.com/6pac/SlickGrid/) (the most active fork since the original @mleibman fork was closed some time ago by his author for personal reasons).
 
@@ -14,7 +8,10 @@ We will be using [6pac SlickGrid fork](https://github.com/6pac/SlickGrid/) (the 
 The goal is of course to be able to run SlickGrid within Aurelia but also to incorporate as much as possible the entire list of functionalities (and more) that SlickGrid offers (you can see a vast list of samples on the [6pac SlickGrid examples](https://github.com/6pac/SlickGrid/wiki/Examples) website).
 
 ### Demo page
-[https://ghiscoding.github.io/aurelia-slickgrid](https://ghiscoding.github.io/aurelia-slickgrid/#/slickgrid)
+The creation of `Aurelia-Slickgrid` started with `Bootstrap 3` support and `Bootstrap 4` is now supported as well starting with version `1.2.0`
+- [Bootstrap 3 demo](https://ghiscoding.github.io/aurelia-slickgrid) / [examples repo](https://github.com/ghiscoding/aurelia-slickgrid/tree/master/aurelia-slickgrid/src/examples/slickgrid)
+- [Bootstrap 4 demo](https://ghiscoding.github.io/aurelia-slickgrid-bs4-demo) / [examples repo](https://github.com/ghiscoding/aurelia-slickgrid-bs4-demo/tree/master/src/examples/slickgrid)
+
 
 ### NPM Package
 [Aurelia-Slickgrid on NPM](https://www.npmjs.com/package/aurelia-slickgrid)
