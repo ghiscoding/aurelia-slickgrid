@@ -4,6 +4,6 @@ import * as moment from 'moment';
 const FORMAT = mapMomentDateFormatWithFieldType(FieldType.dateTimeUs);
 
 export const dateTimeUsFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any) => {
-  const isDateValid = moment(value, FORMAT, true).isValid();
+  const isDateValid = moment(value, FORMAT, false).isValid();
   return (value && isDateValid) ? moment(value).format(FORMAT) : value;
 };
