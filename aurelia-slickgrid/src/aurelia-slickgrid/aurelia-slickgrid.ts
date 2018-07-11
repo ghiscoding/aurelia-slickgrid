@@ -261,16 +261,17 @@ export class AureliaSlickgridCustomElement {
 
     // subscribe to column definitions assignment changes with BindingEngine
     // assignment changes are not triggering a "changed" event https://stackoverflow.com/a/30286225/1212166
+    // also binding docs https://github.com/aurelia/binding/blob/master/doc/article/en-US/binding-observables.md#observing-collections
     this.subscriptions.push(
       this.bindingEngine.collectionObserver(this.columnDefinitions)
-        .subscribe(changes => this.updateColumnDefinitionsList(this._columnDefinitions))
+        .subscribe(this.columnDefinitionsChanged.bind(this))
     );
   }
 
-  columnDefinitionsChanged(newColumnDefinitions: Column[]) {
-    this._columnDefinitions = newColumnDefinitions;
+  columnDefinitionsChanged() {
+    this._columnDefinitions = this.columnDefinitions;
     if (this.isGridInitialized) {
-      this.updateColumnDefinitionsList(newColumnDefinitions);
+      this.updateColumnDefinitionsList(this.columnDefinitions);
     }
   }
 
