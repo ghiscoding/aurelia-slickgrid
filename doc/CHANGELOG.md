@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.1.1"></a>
+## [2.1.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.1.0...v2.1.1) (2018-07-14)
+
+
+### Bug Fixes
+
+* **css:** plugin styling was affecting pages outside of slickgrid ([2c103c0](https://github.com/ghiscoding/aurelia-slickgrid/commit/2c103c0))
+* **formatter:** don't use strict date check on Date Formatters ([8746f11](https://github.com/ghiscoding/aurelia-slickgrid/commit/8746f11))
+* **graphql:** resort was causing issues when used with Presets ([5715bce](https://github.com/ghiscoding/aurelia-slickgrid/commit/5715bce))
+* **graphql:** typing empty filter in GraphQL shouldn't include empty str ([3d17d7e](https://github.com/ghiscoding/aurelia-slickgrid/commit/3d17d7e))
+* **gridState:** Grid Stage changed was not being called on empty filter ([842d6e7](https://github.com/ghiscoding/aurelia-slickgrid/commit/842d6e7))
+* **regression:** dynamically add a new column definition ([b8b4d01](https://github.com/ghiscoding/aurelia-slickgrid/commit/b8b4d01))
+
+
+
 <a name="2.1.0"></a>
 # [2.1.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.0.1...v2.1.0) (2018-07-07)
 
