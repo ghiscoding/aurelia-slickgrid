@@ -10,6 +10,7 @@ define(["require", "exports", "aurelia-i18n", "aurelia-framework", "./../models/
     var SelectFilter = /** @class */ (function () {
         function SelectFilter(i18n) {
             this.i18n = i18n;
+            this._clearFilterTriggered = false;
         }
         Object.defineProperty(SelectFilter.prototype, "operator", {
             get: function () {
@@ -43,8 +44,9 @@ define(["require", "exports", "aurelia-i18n", "aurelia-framework", "./../models/
             // also add/remove "filled" class for styling purposes
             this.$filterElm.change(function (e) {
                 var value = e && e.target && e.target.value || '';
-                if (!value || value === '') {
-                    _this.callback(e, { columnDef: _this.columnDef, clearFilterTriggered: true });
+                if (_this._clearFilterTriggered) {
+                    _this.callback(e, { columnDef: _this.columnDef, clearFilterTriggered: _this._clearFilterTriggered });
+                    _this._clearFilterTriggered = false; // reset flag for next use
                     _this.$filterElm.removeClass('filled');
                 }
                 else {
@@ -58,6 +60,7 @@ define(["require", "exports", "aurelia-i18n", "aurelia-framework", "./../models/
          */
         SelectFilter.prototype.clear = function () {
             if (this.$filterElm) {
+                this._clearFilterTriggered = true;
                 this.$filterElm.val('');
                 this.$filterElm.trigger('change');
             }

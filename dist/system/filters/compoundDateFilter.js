@@ -33,6 +33,7 @@ System.register(["aurelia-framework", "aurelia-i18n", "../services/utilities", "
             CompoundDateFilter = /** @class */ (function () {
                 function CompoundDateFilter(i18n) {
                     this.i18n = i18n;
+                    this._clearFilterTriggered = false;
                 }
                 Object.defineProperty(CompoundDateFilter.prototype, "gridOptions", {
                     /** Getter for the Grid Options pulled through the Grid Object */
@@ -83,6 +84,7 @@ System.register(["aurelia-framework", "aurelia-i18n", "../services/utilities", "
                  */
                 CompoundDateFilter.prototype.clear = function () {
                     if (this.flatInstance && this.$selectOperatorElm) {
+                        this._clearFilterTriggered = true;
                         this.$selectOperatorElm.val(0);
                         this.flatInstance.clear();
                     }
@@ -127,10 +129,10 @@ System.register(["aurelia-framework", "aurelia-i18n", "../services/utilities", "
                             // when using the time picker, we can simulate a keyup event to avoid multiple backend request
                             // since backend request are only executed after user start typing, changing the time should be treated the same way
                             if (pickerOptions.enableTime) {
-                                _this.onTriggerEvent(new CustomEvent('keyup'), dateStr === '');
+                                _this.onTriggerEvent(new CustomEvent('keyup'));
                             }
                             else {
-                                _this.onTriggerEvent(undefined, dateStr === '');
+                                _this.onTriggerEvent(undefined);
                             }
                         }
                     };
@@ -213,9 +215,10 @@ System.register(["aurelia-framework", "aurelia-i18n", "../services/utilities", "
                     }
                     return 'en';
                 };
-                CompoundDateFilter.prototype.onTriggerEvent = function (e, clearFilterTriggered) {
-                    if (clearFilterTriggered) {
-                        this.callback(e, { columnDef: this.columnDef, clearFilterTriggered: true });
+                CompoundDateFilter.prototype.onTriggerEvent = function (e) {
+                    if (this._clearFilterTriggered) {
+                        this.callback(e, { columnDef: this.columnDef, clearFilterTriggered: this._clearFilterTriggered });
+                        this._clearFilterTriggered = false; // reset flag for next use
                     }
                     else {
                         var selectedOperator = this.$selectOperatorElm.find('option:selected').text();

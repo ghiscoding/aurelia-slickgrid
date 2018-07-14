@@ -5,6 +5,7 @@ const DEFAULT_MAX_VALUE = 100;
 const DEFAULT_STEP = 1;
 export class SliderFilter {
     constructor() {
+        this._clearFilterTriggered = false;
         this._elementRangeInputId = '';
         this._elementRangeOutputId = '';
     }
@@ -43,8 +44,9 @@ export class SliderFilter {
         // also add/remove "filled" class for styling purposes
         this.$filterElm.change((e) => {
             const value = e && e.target && e.target.value || '';
-            if (!value || value === '') {
-                this.callback(e, { columnDef: this.columnDef, clearFilterTriggered: true });
+            if (this._clearFilterTriggered) {
+                this.callback(e, { columnDef: this.columnDef, clearFilterTriggered: this._clearFilterTriggered });
+                this._clearFilterTriggered = false; // reset flag for next use
                 this.$filterElm.removeClass('filled');
             }
             else {
@@ -71,6 +73,7 @@ export class SliderFilter {
      */
     clear() {
         if (this.$filterElm) {
+            this._clearFilterTriggered = true;
             const clearedValue = this.filterParams.hasOwnProperty('sliderStartValue') ? this.filterParams.sliderStartValue : DEFAULT_MIN_VALUE;
             this.$filterElm.children('input').val(clearedValue);
             this.$filterElm.children('div.input-group-addon.input-group-append').children().html(clearedValue);

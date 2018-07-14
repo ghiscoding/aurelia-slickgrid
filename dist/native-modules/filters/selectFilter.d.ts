@@ -2,6 +2,7 @@ import { I18N } from 'aurelia-i18n';
 import { Column, Filter, FilterArguments, FilterCallback, OperatorString, OperatorType, SearchTerm } from './../models/index';
 export declare class SelectFilter implements Filter {
     private i18n;
+    private _clearFilterTriggered;
     $filterElm: any;
     grid: any;
     searchTerms: SearchTerm[];

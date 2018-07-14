@@ -2,6 +2,7 @@ import { I18N } from 'aurelia-i18n';
 import { Column, Filter, FilterArguments, FilterCallback, OperatorString, OperatorType, SearchTerm } from './../models/index';
 export declare class CompoundSliderFilter implements Filter {
     private i18n;
+    private _clearFilterTriggered;
     private _elementRangeInputId;
     private _elementRangeOutputId;
     private _operator;
@@ -49,5 +50,5 @@ export declare class CompoundSliderFilter implements Filter {
      * Create the DOM element
      */
     private createDomElement(searchTerm?);
-    private onTriggerEvent(e, clearFilterTriggered?);
+    private onTriggerEvent(e);
 }

@@ -3,7 +3,7 @@ define(["require", "exports", "./../models/index", "./../services/utilities", "m
     Object.defineProperty(exports, "__esModule", { value: true });
     var FORMAT = utilities_1.mapMomentDateFormatWithFieldType(index_1.FieldType.dateTimeUs);
     exports.dateTimeUsFormatter = function (row, cell, value, columnDef, dataContext) {
-        var isDateValid = moment(value, FORMAT, true).isValid();
+        var isDateValid = moment(value, FORMAT, false).isValid();
         return (value && isDateValid) ? moment(value).format(FORMAT) : value;
     };
 });

@@ -10,6 +10,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "./../models/
     var CompoundInputFilter = /** @class */ (function () {
         function CompoundInputFilter(i18n) {
             this.i18n = i18n;
+            this._clearFilterTriggered = false;
         }
         Object.defineProperty(CompoundInputFilter.prototype, "gridOptions", {
             /** Getter for the Grid Options pulled through the Grid Object */
@@ -60,9 +61,10 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "./../models/
          */
         CompoundInputFilter.prototype.clear = function () {
             if (this.$filterElm && this.$selectOperatorElm) {
+                this._clearFilterTriggered = true;
                 this.$selectOperatorElm.val(0);
                 this.$filterInputElm.val('');
-                this.onTriggerEvent(undefined, true);
+                this.onTriggerEvent(undefined);
             }
         };
         /**
@@ -163,9 +165,10 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "./../models/
             }
             return $filterContainerElm;
         };
-        CompoundInputFilter.prototype.onTriggerEvent = function (e, clearFilterTriggered) {
-            if (clearFilterTriggered) {
-                this.callback(e, { columnDef: this.columnDef, clearFilterTriggered: true });
+        CompoundInputFilter.prototype.onTriggerEvent = function (e) {
+            if (this._clearFilterTriggered) {
+                this.callback(e, { columnDef: this.columnDef, clearFilterTriggered: this._clearFilterTriggered });
+                this._clearFilterTriggered = false; // reset flag for next use
             }
             else {
                 var selectedOperator = this.$selectOperatorElm.find('option:selected').text();

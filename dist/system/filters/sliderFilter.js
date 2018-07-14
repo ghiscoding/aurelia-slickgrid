@@ -17,6 +17,7 @@ System.register(["./../models/index", "jquery"], function (exports_1, context_1)
             DEFAULT_STEP = 1;
             SliderFilter = /** @class */ (function () {
                 function SliderFilter() {
+                    this._clearFilterTriggered = false;
                     this._elementRangeInputId = '';
                     this._elementRangeOutputId = '';
                 }
@@ -68,8 +69,9 @@ System.register(["./../models/index", "jquery"], function (exports_1, context_1)
                     // also add/remove "filled" class for styling purposes
                     this.$filterElm.change(function (e) {
                         var value = e && e.target && e.target.value || '';
-                        if (!value || value === '') {
-                            _this.callback(e, { columnDef: _this.columnDef, clearFilterTriggered: true });
+                        if (_this._clearFilterTriggered) {
+                            _this.callback(e, { columnDef: _this.columnDef, clearFilterTriggered: _this._clearFilterTriggered });
+                            _this._clearFilterTriggered = false; // reset flag for next use
                             _this.$filterElm.removeClass('filled');
                         }
                         else {
@@ -96,6 +98,7 @@ System.register(["./../models/index", "jquery"], function (exports_1, context_1)
                  */
                 SliderFilter.prototype.clear = function () {
                     if (this.$filterElm) {
+                        this._clearFilterTriggered = true;
                         var clearedValue = this.filterParams.hasOwnProperty('sliderStartValue') ? this.filterParams.sliderStartValue : DEFAULT_MIN_VALUE;
                         this.$filterElm.children('input').val(clearedValue);
                         this.$filterElm.children('div.input-group-addon.input-group-append').children().html(clearedValue);

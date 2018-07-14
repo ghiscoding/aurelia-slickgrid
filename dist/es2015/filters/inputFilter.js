@@ -1,5 +1,8 @@
 import * as $ from 'jquery';
 export class InputFilter {
+    constructor() {
+        this._clearFilterTriggered = false;
+    }
     /** Getter for the Grid Options pulled through the Grid Object */
     get gridOptions() {
         return (this.grid && this.grid.getOptions) ? this.grid.getOptions() : {};
@@ -28,8 +31,9 @@ export class InputFilter {
         // also add/remove "filled" class for styling purposes
         this.$filterElm.keyup((e) => {
             const value = e && e.target && e.target.value || '';
-            if (!value || value === '') {
-                this.callback(e, { columnDef: this.columnDef, clearFilterTriggered: true });
+            if (this._clearFilterTriggered) {
+                this.callback(e, { columnDef: this.columnDef, clearFilterTriggered: this._clearFilterTriggered });
+                this._clearFilterTriggered = false; // reset flag for next use
                 this.$filterElm.removeClass('filled');
             }
             else {
@@ -43,6 +47,7 @@ export class InputFilter {
      */
     clear() {
         if (this.$filterElm) {
+            this._clearFilterTriggered = true;
             this.$filterElm.val('');
             this.$filterElm.trigger('keyup');
         }

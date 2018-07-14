@@ -1,6 +1,7 @@
 import * as $ from 'jquery';
 var InputFilter = /** @class */ (function () {
     function InputFilter() {
+        this._clearFilterTriggered = false;
     }
     Object.defineProperty(InputFilter.prototype, "gridOptions", {
         /** Getter for the Grid Options pulled through the Grid Object */
@@ -39,8 +40,9 @@ var InputFilter = /** @class */ (function () {
         // also add/remove "filled" class for styling purposes
         this.$filterElm.keyup(function (e) {
             var value = e && e.target && e.target.value || '';
-            if (!value || value === '') {
-                _this.callback(e, { columnDef: _this.columnDef, clearFilterTriggered: true });
+            if (_this._clearFilterTriggered) {
+                _this.callback(e, { columnDef: _this.columnDef, clearFilterTriggered: _this._clearFilterTriggered });
+                _this._clearFilterTriggered = false; // reset flag for next use
                 _this.$filterElm.removeClass('filled');
             }
             else {
@@ -54,6 +56,7 @@ var InputFilter = /** @class */ (function () {
      */
     InputFilter.prototype.clear = function () {
         if (this.$filterElm) {
+            this._clearFilterTriggered = true;
             this.$filterElm.val('');
             this.$filterElm.trigger('keyup');
         }

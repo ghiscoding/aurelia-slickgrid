@@ -24,6 +24,7 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../models/index"], func
             CompoundInputFilter = /** @class */ (function () {
                 function CompoundInputFilter(i18n) {
                     this.i18n = i18n;
+                    this._clearFilterTriggered = false;
                 }
                 Object.defineProperty(CompoundInputFilter.prototype, "gridOptions", {
                     /** Getter for the Grid Options pulled through the Grid Object */
@@ -74,9 +75,10 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../models/index"], func
                  */
                 CompoundInputFilter.prototype.clear = function () {
                     if (this.$filterElm && this.$selectOperatorElm) {
+                        this._clearFilterTriggered = true;
                         this.$selectOperatorElm.val(0);
                         this.$filterInputElm.val('');
-                        this.onTriggerEvent(undefined, true);
+                        this.onTriggerEvent(undefined);
                     }
                 };
                 /**
@@ -177,9 +179,10 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../models/index"], func
                     }
                     return $filterContainerElm;
                 };
-                CompoundInputFilter.prototype.onTriggerEvent = function (e, clearFilterTriggered) {
-                    if (clearFilterTriggered) {
-                        this.callback(e, { columnDef: this.columnDef, clearFilterTriggered: true });
+                CompoundInputFilter.prototype.onTriggerEvent = function (e) {
+                    if (this._clearFilterTriggered) {
+                        this.callback(e, { columnDef: this.columnDef, clearFilterTriggered: this._clearFilterTriggered });
+                        this._clearFilterTriggered = false; // reset flag for next use
                     }
                     else {
                         var selectedOperator = this.$selectOperatorElm.find('option:selected').text();

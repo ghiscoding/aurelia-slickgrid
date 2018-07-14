@@ -11,6 +11,7 @@ import * as $ from 'jquery';
 let SelectFilter = class SelectFilter {
     constructor(i18n) {
         this.i18n = i18n;
+        this._clearFilterTriggered = false;
     }
     get operator() {
         return (this.columnDef && this.columnDef.filter && this.columnDef.filter.operator) || OperatorType.equal;
@@ -39,8 +40,9 @@ let SelectFilter = class SelectFilter {
         // also add/remove "filled" class for styling purposes
         this.$filterElm.change((e) => {
             const value = e && e.target && e.target.value || '';
-            if (!value || value === '') {
-                this.callback(e, { columnDef: this.columnDef, clearFilterTriggered: true });
+            if (this._clearFilterTriggered) {
+                this.callback(e, { columnDef: this.columnDef, clearFilterTriggered: this._clearFilterTriggered });
+                this._clearFilterTriggered = false; // reset flag for next use
                 this.$filterElm.removeClass('filled');
             }
             else {
@@ -54,6 +56,7 @@ let SelectFilter = class SelectFilter {
      */
     clear() {
         if (this.$filterElm) {
+            this._clearFilterTriggered = true;
             this.$filterElm.val('');
             this.$filterElm.trigger('change');
         }

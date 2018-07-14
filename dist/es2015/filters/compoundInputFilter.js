@@ -10,6 +10,7 @@ import { FieldType, OperatorType } from './../models/index';
 let CompoundInputFilter = class CompoundInputFilter {
     constructor(i18n) {
         this.i18n = i18n;
+        this._clearFilterTriggered = false;
     }
     /** Getter for the Grid Options pulled through the Grid Object */
     get gridOptions() {
@@ -51,9 +52,10 @@ let CompoundInputFilter = class CompoundInputFilter {
      */
     clear() {
         if (this.$filterElm && this.$selectOperatorElm) {
+            this._clearFilterTriggered = true;
             this.$selectOperatorElm.val(0);
             this.$filterInputElm.val('');
-            this.onTriggerEvent(undefined, true);
+            this.onTriggerEvent(undefined);
         }
     }
     /**
@@ -154,9 +156,10 @@ let CompoundInputFilter = class CompoundInputFilter {
         }
         return $filterContainerElm;
     }
-    onTriggerEvent(e, clearFilterTriggered) {
-        if (clearFilterTriggered) {
-            this.callback(e, { columnDef: this.columnDef, clearFilterTriggered: true });
+    onTriggerEvent(e) {
+        if (this._clearFilterTriggered) {
+            this.callback(e, { columnDef: this.columnDef, clearFilterTriggered: this._clearFilterTriggered });
+            this._clearFilterTriggered = false; // reset flag for next use
         }
         else {
             const selectedOperator = this.$selectOperatorElm.find('option:selected').text();

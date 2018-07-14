@@ -183,13 +183,14 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
         this._columnDefinitions = this.columnDefinitions;
         // subscribe to column definitions assignment changes with BindingEngine
         // assignment changes are not triggering a "changed" event https://stackoverflow.com/a/30286225/1212166
+        // also binding docs https://github.com/aurelia/binding/blob/master/doc/article/en-US/binding-observables.md#observing-collections
         this.subscriptions.push(this.bindingEngine.collectionObserver(this.columnDefinitions)
-            .subscribe(changes => this.updateColumnDefinitionsList(this._columnDefinitions)));
+            .subscribe(this.columnDefinitionsChanged.bind(this)));
     }
-    columnDefinitionsChanged(newColumnDefinitions) {
-        this._columnDefinitions = newColumnDefinitions;
+    columnDefinitionsChanged() {
+        this._columnDefinitions = this.columnDefinitions;
         if (this.isGridInitialized) {
-            this.updateColumnDefinitionsList(newColumnDefinitions);
+            this.updateColumnDefinitionsList(this.columnDefinitions);
         }
     }
     datasetChanged(newValue, oldValue) {
@@ -410,7 +411,9 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
     refreshGridData(dataset, totalCount) {
         if (dataset && this.grid && this.dataview && typeof this.dataview.setItems === 'function') {
             this.dataview.setItems(dataset, this.gridOptions.datasetIdPropertyName);
-            this.dataview.reSort();
+            if (!this.gridOptions.backendServiceApi) {
+                this.dataview.reSort();
+            }
             // this.grid.setData(dataset);
             this.grid.invalidate();
             this.grid.render();

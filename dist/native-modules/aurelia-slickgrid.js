@@ -222,19 +222,19 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
         this.subscriptions = [];
     };
     AureliaSlickgridCustomElement.prototype.bind = function () {
-        var _this = this;
         // get the grid options (priority is Global Options first, then user option which could overwrite the Global options)
         this.gridOptions = __assign({}, GlobalGridOptions, this.gridOptions);
         this._columnDefinitions = this.columnDefinitions;
         // subscribe to column definitions assignment changes with BindingEngine
         // assignment changes are not triggering a "changed" event https://stackoverflow.com/a/30286225/1212166
+        // also binding docs https://github.com/aurelia/binding/blob/master/doc/article/en-US/binding-observables.md#observing-collections
         this.subscriptions.push(this.bindingEngine.collectionObserver(this.columnDefinitions)
-            .subscribe(function (changes) { return _this.updateColumnDefinitionsList(_this._columnDefinitions); }));
+            .subscribe(this.columnDefinitionsChanged.bind(this)));
     };
-    AureliaSlickgridCustomElement.prototype.columnDefinitionsChanged = function (newColumnDefinitions) {
-        this._columnDefinitions = newColumnDefinitions;
+    AureliaSlickgridCustomElement.prototype.columnDefinitionsChanged = function () {
+        this._columnDefinitions = this.columnDefinitions;
         if (this.isGridInitialized) {
-            this.updateColumnDefinitionsList(newColumnDefinitions);
+            this.updateColumnDefinitionsList(this.columnDefinitions);
         }
     };
     AureliaSlickgridCustomElement.prototype.datasetChanged = function (newValue, oldValue) {
@@ -474,7 +474,9 @@ var AureliaSlickgridCustomElement = /** @class */ (function () {
     AureliaSlickgridCustomElement.prototype.refreshGridData = function (dataset, totalCount) {
         if (dataset && this.grid && this.dataview && typeof this.dataview.setItems === 'function') {
             this.dataview.setItems(dataset, this.gridOptions.datasetIdPropertyName);
-            this.dataview.reSort();
+            if (!this.gridOptions.backendServiceApi) {
+                this.dataview.reSort();
+            }
             // this.grid.setData(dataset);
             this.grid.invalidate();
             this.grid.render();

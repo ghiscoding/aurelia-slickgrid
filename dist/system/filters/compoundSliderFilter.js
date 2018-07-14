@@ -30,6 +30,7 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../models/index", "jque
             CompoundSliderFilter = /** @class */ (function () {
                 function CompoundSliderFilter(i18n) {
                     this.i18n = i18n;
+                    this._clearFilterTriggered = false;
                     this._elementRangeInputId = '';
                     this._elementRangeOutputId = '';
                 }
@@ -114,13 +115,14 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../models/index", "jque
                  */
                 CompoundSliderFilter.prototype.clear = function () {
                     if (this.$filterElm && this.$selectOperatorElm) {
+                        this._clearFilterTriggered = true;
                         var clearedValue = this.filterParams.hasOwnProperty('sliderStartValue') ? this.filterParams.sliderStartValue : DEFAULT_MIN_VALUE;
                         this.$selectOperatorElm.val(0);
                         this.$filterInputElm.val(clearedValue);
                         if (!this.filterParams.hideSliderNumber) {
                             this.$containerInputGroupElm.children('div.input-group-addon.input-group-append').children().last().html(clearedValue);
                         }
-                        this.onTriggerEvent(undefined, true);
+                        this.onTriggerEvent(undefined);
                     }
                 };
                 /**
@@ -226,9 +228,10 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../models/index", "jque
                     }
                     return $filterContainerElm;
                 };
-                CompoundSliderFilter.prototype.onTriggerEvent = function (e, clearFilterTriggered) {
-                    if (clearFilterTriggered) {
-                        this.callback(e, { columnDef: this.columnDef, clearFilterTriggered: true });
+                CompoundSliderFilter.prototype.onTriggerEvent = function (e) {
+                    if (this._clearFilterTriggered) {
+                        this.callback(e, { columnDef: this.columnDef, clearFilterTriggered: this._clearFilterTriggered });
+                        this._clearFilterTriggered = false; // reset flag for next use
                     }
                     else {
                         var selectedOperator = this.$selectOperatorElm.find('option:selected').text();

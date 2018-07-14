@@ -2,6 +2,7 @@ import { I18N } from 'aurelia-i18n';
 import { Column, Filter, FilterArguments, FilterCallback, OperatorString, OperatorType, SearchTerm } from './../models/index';
 export declare class CompoundDateFilter implements Filter {
     private i18n;
+    private _clearFilterTriggered;
     private $filterElm;
     private $filterInputElm;
     private $selectOperatorElm;
@@ -40,7 +41,7 @@ export declare class CompoundDateFilter implements Filter {
      */
     private createDomElement(searchTerm?);
     private loadFlatpickrLocale(locale);
-    private onTriggerEvent(e, clearFilterTriggered?);
+    private onTriggerEvent(e);
     private hide();
     private show();
 }

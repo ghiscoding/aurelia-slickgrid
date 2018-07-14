@@ -111,7 +111,6 @@ var MultipleSelectFilter = /** @class */ (function () {
     MultipleSelectFilter.prototype.clear = function () {
         if (this.$filterElm && this.$filterElm.multipleSelect) {
             // reload the filter element by it's id, to make sure it's still a valid element (because of some issue in the GraphQL example)
-            // this.$filterElm = $(`#${this.$filterElm[0].id}`);
             this.$filterElm.multipleSelect('setSelects', []);
             this.$filterElm.removeClass('filled');
             this.callback(undefined, { columnDef: this.columnDef, clearFilterTriggered: true });

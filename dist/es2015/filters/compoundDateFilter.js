@@ -13,6 +13,7 @@ import * as $ from 'jquery';
 let CompoundDateFilter = class CompoundDateFilter {
     constructor(i18n) {
         this.i18n = i18n;
+        this._clearFilterTriggered = false;
     }
     /** Getter for the Grid Options pulled through the Grid Object */
     get gridOptions() {
@@ -54,6 +55,7 @@ let CompoundDateFilter = class CompoundDateFilter {
      */
     clear() {
         if (this.flatInstance && this.$selectOperatorElm) {
+            this._clearFilterTriggered = true;
             this.$selectOperatorElm.val(0);
             this.flatInstance.clear();
         }
@@ -97,10 +99,10 @@ let CompoundDateFilter = class CompoundDateFilter {
                 // when using the time picker, we can simulate a keyup event to avoid multiple backend request
                 // since backend request are only executed after user start typing, changing the time should be treated the same way
                 if (pickerOptions.enableTime) {
-                    this.onTriggerEvent(new CustomEvent('keyup'), dateStr === '');
+                    this.onTriggerEvent(new CustomEvent('keyup'));
                 }
                 else {
-                    this.onTriggerEvent(undefined, dateStr === '');
+                    this.onTriggerEvent(undefined);
                 }
             }
         };
@@ -183,9 +185,10 @@ let CompoundDateFilter = class CompoundDateFilter {
         }
         return 'en';
     }
-    onTriggerEvent(e, clearFilterTriggered) {
-        if (clearFilterTriggered) {
-            this.callback(e, { columnDef: this.columnDef, clearFilterTriggered: true });
+    onTriggerEvent(e) {
+        if (this._clearFilterTriggered) {
+            this.callback(e, { columnDef: this.columnDef, clearFilterTriggered: this._clearFilterTriggered });
+            this._clearFilterTriggered = false; // reset flag for next use
         }
         else {
             const selectedOperator = this.$selectOperatorElm.find('option:selected').text();

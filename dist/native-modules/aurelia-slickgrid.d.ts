@@ -59,7 +59,7 @@ export declare class AureliaSlickgridCustomElement {
     initialization(): void;
     detached(): void;
     bind(): void;
-    columnDefinitionsChanged(newColumnDefinitions: Column[]): void;
+    columnDefinitionsChanged(): void;
     datasetChanged(newValue: any[], oldValue: any[]): void;
     /**
      * Define what our internal Post Process callback, it will execute internally after we get back result from the Process backend call

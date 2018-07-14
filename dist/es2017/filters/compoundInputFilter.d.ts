@@ -2,6 +2,7 @@ import { I18N } from 'aurelia-i18n';
 import { Column, Filter, FilterArguments, FilterCallback, OperatorString, OperatorType, SearchTerm } from './../models/index';
 export declare class CompoundInputFilter implements Filter {
     private i18n;
+    private _clearFilterTriggered;
     private $filterElm;
     private $filterInputElm;
     private $selectOperatorElm;
@@ -37,5 +38,5 @@ export declare class CompoundInputFilter implements Filter {
      * Create the DOM element
      */
     private createDomElement(searchTerm?);
-    private onTriggerEvent(e, clearFilterTriggered?);
+    private onTriggerEvent(e);
 }
