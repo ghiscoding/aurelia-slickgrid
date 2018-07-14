@@ -163,17 +163,17 @@ export class Example4 {
   addItem() {
     const lastRowIndex = this.dataset.length + 1;
     const newRows = this.mockData(1, lastRowIndex);
-    this.aureliaGrid.gridService.addItemToDatagrid(newRows[0]);
 
-    const durationColumnDef = this.columnDefinitions.find((column: Column) => column.id === 'duration');
-    if (durationColumnDef) {
-      const collection = durationColumnDef.filter.collection;
-      if (Array.isArray(collection)) {
-        setTimeout(() => {
+    setTimeout(() => {
+      const durationColumnDef = this.columnDefinitions.find((column: Column) => column.id === 'duration');
+      if (durationColumnDef) {
+        const collection = durationColumnDef.filter.collection;
+        if (Array.isArray(collection)) {
+          this.aureliaGrid.gridService.addItemToDatagrid(newRows[0]);
           collection.push({ value: lastRowIndex, label: lastRowIndex });
-        }, 3000);
+        }
       }
-    }
+    }, 3000);
   }
 
   deleteItem() {

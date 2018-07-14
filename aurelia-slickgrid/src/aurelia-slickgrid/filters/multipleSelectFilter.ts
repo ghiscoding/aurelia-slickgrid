@@ -189,6 +189,8 @@ export class MultipleSelectFilter implements Filter {
                   // add the new item to the Multiple Select
                   const $opt = $('<option />', { value: option.value, text: option.label });
                   this.$filterElm.prepend($opt).multipleSelect('refresh');
+                  // this.renderDomElement(updatedCollection);
+                  // this.$filterElm.multipleSelect('refresh');
                 } else if (Array.isArray(change.removed) && change.removed.length > 0) {
                   // instead of trying to find the deleted item in the Multiple Select
                   // it's easier to just recreate the Select DOM Element
