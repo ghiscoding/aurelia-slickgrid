@@ -40,7 +40,7 @@ export class Example4 {
 
   attached() {
     // populate the dataset once the grid is ready
-    this.getData();
+    this.dataset = this.mockData(NB_ITEMS);
   }
 
   detached() {
@@ -53,12 +53,6 @@ export class Example4 {
 
   /* Define grid Options and Columns */
   defineGrid() {
-    // prepare a multiple-select array to filter with
-    const multiSelectFilterArray = [];
-    for (let i = 0; i < NB_ITEMS; i++) {
-      multiSelectFilterArray.push({ value: i, label: i });
-    }
-
     this.columnDefinitions = [
       {
         id: 'title',
@@ -84,7 +78,18 @@ export class Example4 {
         minWidth: 55,
         filterable: true,
         filter: {
-          collection: multiSelectFilterArray,
+          asyncCollection: new Promise<any>((resolve) => {
+            // prepare a multiple-select array to filter with
+            const multiSelectFilterArray = [];
+            for (let i = 0; i <= NB_ITEMS; i++) {
+              multiSelectFilterArray.push({ value: i, label: i });
+            }
+
+            // simulate async server load
+            setTimeout(() => {
+              resolve(multiSelectFilterArray);
+            }, 500);
+          }),
           collectionSortBy: {
             property: 'value',
             sortDesc: true,
@@ -155,10 +160,36 @@ export class Example4 {
     };
   }
 
-  getData() {
+  addItem() {
+    const lastRowIndex = this.dataset.length + 1;
+    const newRows = this.mockData(1, lastRowIndex);
+    this.aureliaGrid.gridService.addItemToDatagrid(newRows[0]);
+
+    const durationColumnDef = this.columnDefinitions.find((column: Column) => column.id === 'duration');
+    if (durationColumnDef) {
+      const collection = durationColumnDef.filter.collection;
+      if (Array.isArray(collection)) {
+        setTimeout(() => {
+          collection.push({ value: lastRowIndex, label: lastRowIndex });
+        }, 3000);
+      }
+    }
+  }
+
+  deleteItem() {
+    const durationColumnDef = this.columnDefinitions.find((column: Column) => column.id === 'duration');
+    if (durationColumnDef) {
+      const collection = durationColumnDef.filter.collection;
+      if (Array.isArray(collection)) {
+        collection.pop();
+      }
+    }
+  }
+
+  mockData(itemCount, startingIndex = 0): any[] {
     // mock a dataset
-    this.dataset = [];
-    for (let i = 0; i < NB_ITEMS; i++) {
+    const tempDataset = [];
+    for (let i = startingIndex; i < (startingIndex + itemCount); i++) {
       const randomDuration = Math.round(Math.random() * 100);
       const randomYear = randomBetween(2000, 2025);
       const randomYearShort = randomBetween(10, 25);
@@ -169,7 +200,7 @@ export class Example4 {
       const randomHour = randomBetween(10, 23);
       const randomTime = randomBetween(10, 59);
 
-      this.dataset[i] = {
+      tempDataset.push({
         id: i,
         title: 'Task ' + i,
         description: (i % 5) ? 'desc ' + i : null, // also add some random to test NULL field
@@ -180,8 +211,10 @@ export class Example4 {
         usDateShort: `${randomMonth}/${randomDay}/${randomYearShort}`, // provide a date US Short in the dataset
         utcDate: `${randomYear}-${randomMonthStr}-${randomDay}T${randomHour}:${randomTime}:${randomTime}Z`,
         effortDriven: (i % 3 === 0)
-      };
+      });
     }
+
+    return tempDataset;
   }
 
   /** Dispatched event of a Grid State Changed event */

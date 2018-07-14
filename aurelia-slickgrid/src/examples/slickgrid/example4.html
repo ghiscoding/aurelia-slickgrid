@@ -2,12 +2,9 @@
   <h2>${title}</h2>
   <div class="subtitle" innerhtml.bind="subTitle"></div>
 
-  <aurelia-slickgrid
-    grid-id="grid1"
-    column-definitions.bind="columnDefinitions"
-    grid-options.bind="gridOptions"
-    dataset.bind="dataset"
-    asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)"
-    asg-on-grid-state-changed.delegate="gridStateChanged($event.detail)">
+  <button class="btn btn-default" click.delegate="addItem()">Add item</button>
+  <button class="btn btn-default" click.delegate="deleteItem()">Delete item</button>
+  <aurelia-slickgrid grid-id="grid1" column-definitions.bind="columnDefinitions" grid-options.bind="gridOptions" dataset.bind="dataset"
+    asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)" asg-on-grid-state-changed.delegate="gridStateChanged($event.detail)">
   </aurelia-slickgrid>
 </template>

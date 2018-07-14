@@ -33,6 +33,9 @@ export interface ColumnFilter {
   /** Filter to use (input, multipleSelect, singleSelect, select, custom) */
   model?: any;
 
+  /** A collection of items/options that will be loaded asynchronously (commonly used with a Select/Multi-Select Editor) */
+  asyncCollection?: Promise<any>;
+
   /** A collection of items/options (commonly used with a Select/Multi-Select Filter) */
   collection?: any[];
 

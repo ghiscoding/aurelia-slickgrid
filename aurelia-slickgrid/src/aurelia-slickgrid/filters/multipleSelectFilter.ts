@@ -1,5 +1,5 @@
 import { I18N } from 'aurelia-i18n';
-import { inject } from 'aurelia-framework';
+import { inject, BindingEngine } from 'aurelia-framework';
 import {
   Column,
   Filter,
@@ -15,8 +15,9 @@ import {
 } from './../models/index';
 import { CollectionService } from '../services/collection.service';
 import * as $ from 'jquery';
+import { Subscription } from 'aurelia-event-aggregator';
 
-@inject(CollectionService, I18N)
+@inject(BindingEngine, CollectionService, I18N)
 export class MultipleSelectFilter implements Filter {
   $filterElm: any;
   grid: any;
@@ -28,11 +29,12 @@ export class MultipleSelectFilter implements Filter {
   labelName: string;
   valueName: string;
   enableTranslateLabel = false;
+  subscriptions: Subscription[] = [];
 
   /**
    * Initialize the Filter
    */
-  constructor(private collectionService: CollectionService, private i18n: I18N) {
+  constructor(private bindingEngine: BindingEngine, private collectionService: CollectionService, private i18n: I18N) {
     // default options used by this Filter, user can overwrite any of these by passing "otions"
     this.defaultOptions = {
       container: 'body',
@@ -82,8 +84,8 @@ export class MultipleSelectFilter implements Filter {
     this.columnDef = args.columnDef;
     this.searchTerms = args.searchTerms || [];
 
-    if (!this.grid || !this.columnDef || !this.columnDef.filter || !this.columnDef.filter.collection) {
-      throw new Error(`[Aurelia-SlickGrid] You need to pass a "collection" for the MultipleSelect Filter to work correctly. Also each option should include a value/label pair (or value/labelKey when using Locale). For example: { filter: { model: Filters.multipleSelect, collection: [{ value: true, label: 'True' }, { value: false, label: 'False'}] } }`);
+    if (!this.grid || !this.columnDef || !this.columnDef.filter || (!this.columnDef.filter.collection && !this.columnDef.filter.asyncCollection)) {
+      throw new Error(`[Angular-SlickGrid] You need to pass a "collection" (or "asyncCollection") for the MultipleSelect Filter to work correctly. Also each option should include a value/label pair (or value/labelKey when using Locale). For example:: { filter: model: Filters.multipleSelect, collection: [{ value: true, label: 'True' }, { value: false, label: 'False'}] }`);
     }
 
     this.enableTranslateLabel = this.columnDef.filter.enableTranslateLabel || false;
@@ -91,21 +93,17 @@ export class MultipleSelectFilter implements Filter {
     this.valueName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.value : 'value';
 
     let newCollection = this.columnDef.filter.collection || [];
+    const asyncCollection = this.columnDef.filter.asyncCollection;
 
-    // user might want to filter certain items of the collection
-    if (this.gridOptions.params && this.columnDef.filter.collectionFilterBy) {
-      const filterBy = this.columnDef.filter.collectionFilterBy;
-      newCollection = this.collectionService.filterCollection(newCollection, filterBy);
+    if (asyncCollection) {
+      this.renderOptionsAsync(asyncCollection);
     }
 
-    // user might want to sort the collection
-    if (this.columnDef.filter && this.columnDef.filter.collectionSortBy) {
-      const sortBy = this.columnDef.filter.collectionSortBy;
-      newCollection = this.collectionService.sortCollection(newCollection, sortBy, this.enableTranslateLabel);
-    }
+    // user might want to filter or sort certain items of the collection
+    newCollection = this.filterAndSortCollection(newCollection);
 
     // step 1, create HTML string template
-    const filterTemplate = this.buildTemplateHtmlString(newCollection);
+    const filterTemplate = this.buildTemplateHtmlString(newCollection, this.searchTerms);
 
     // step 2, create the DOM Element of the filter & pre-load search terms
     // also subscribe to the onClose event
@@ -147,16 +145,87 @@ export class MultipleSelectFilter implements Filter {
   // ------------------
 
   /**
+   * user might want to filter and/or sort certain items of the collection
+   * @param inputCollection
+   * @return outputCollection filtered and/or sorted collection
+   */
+  private filterAndSortCollection(inputCollection) {
+    let outputCollection = [];
+
+    // user might want to filter certain items of the collection
+    if (this.columnDef && this.columnDef.filter && this.columnDef.filter.collectionFilterBy) {
+      const filterBy = this.columnDef.filter.collectionFilterBy;
+      outputCollection = this.collectionService.filterCollection(inputCollection, filterBy);
+    }
+
+    // user might want to sort the collection
+    if (this.columnDef && this.columnDef.filter && this.columnDef.filter.collectionSortBy) {
+      const sortBy = this.columnDef.filter.collectionSortBy;
+      outputCollection = this.collectionService.sortCollection(inputCollection, sortBy, this.enableTranslateLabel);
+    }
+
+    return outputCollection;
+  }
+
+  private async renderOptionsAsync(asyncCollection: Promise<any>) {
+    if (asyncCollection) {
+      // wait for the "asyncCollection", once resolved we will save it into the "collection" for later reference
+      const awaitedCollection: any[] = await asyncCollection;
+      this.columnDef.filter.collection = awaitedCollection;
+
+      // recreate Multiple Select after getting async collection
+      this.renderDomElement(awaitedCollection);
+
+      // subscribe to the "collection" property changes with BindingEngine
+      this.subscriptions.push(
+        this.bindingEngine
+          .collectionObserver(this.columnDef.filter.collection)
+          .subscribe((changes: { index: number, addedCount: number, removed: any[] }[]) => {
+            const updatedCollection = this.columnDef && this.columnDef.filter && this.columnDef.filter.collection || [];
+            if (Array.isArray(changes)) {
+              changes.forEach((change) => {
+                const option = updatedCollection[change.index];
+                if (change.addedCount) {
+                  // add the new item to the Multiple Select
+                  const $opt = $('<option />', { value: option.value, text: option.label });
+                  this.$filterElm.prepend($opt).multipleSelect('refresh');
+                } else if (Array.isArray(change.removed) && change.removed.length > 0) {
+                  // instead of trying to find the deleted item in the Multiple Select
+                  // it's easier to just recreate the Select DOM Element
+                  this.renderDomElement(updatedCollection);
+                }
+              });
+            }
+          })
+      );
+    }
+  }
+
+  private renderDomElement(collection) {
+    let newCollection = collection;
+
+    // user might want to filter and/or sort certain items of the collection
+    newCollection = this.filterAndSortCollection(newCollection);
+
+    // step 1, create HTML string template
+    const filterTemplate = this.buildTemplateHtmlString(newCollection, this.searchTerms);
+
+    // step 2, create the DOM Element of the filter & pre-load search terms
+    // also subscribe to the onClose event
+    this.createDomElement(filterTemplate);
+  }
+
+  /**
    * Create the HTML template as a string
    */
-  private buildTemplateHtmlString(optionCollection: any[]) {
+  private buildTemplateHtmlString(optionCollection: any[], searchTerms: SearchTerm[]) {
     let options = '';
     optionCollection.forEach((option: SelectOption) => {
       if (!option || (option[this.labelName] === undefined && option.labelKey === undefined)) {
         throw new Error(`A collection with value/label (or value/labelKey when using Locale) is required to populate the Select list, for example:: { filter: model: Filters.multipleSelect, collection: [ { value: '1', label: 'One' } ]')`);
       }
       const labelKey = (option.labelKey || option[this.labelName]) as string;
-      const selected = (this.findValueInSearchTerms(option[this.valueName]) >= 0) ? 'selected' : '';
+      const selected = (searchTerms.findIndex((term) => term === option[this.valueName]) >= 0) ? 'selected' : '';
       const textLabel = ((option.labelKey || this.enableTranslateLabel) && this.i18n && typeof this.i18n.tr === 'function') ? this.i18n.tr(labelKey || ' ') : labelKey;
 
       // html text of each select option
@@ -202,17 +271,6 @@ export class MultipleSelectFilter implements Filter {
     const filterOptions = (this.columnDef.filter) ? this.columnDef.filter.filterOptions : {};
     const options: MultipleSelectOption = { ...this.defaultOptions, ...filterOptions };
     this.$filterElm = this.$filterElm.multipleSelect(options);
-  }
-
-  private findValueInSearchTerms(value: number | string): number {
-    if (this.searchTerms && Array.isArray(this.searchTerms)) {
-      for (let i = 0; i < this.searchTerms.length; i++) {
-        if (this.searchTerms[i] && this.searchTerms[i] === value) {
-          return i;
-        }
-      }
-    }
-    return -1;
   }
 
   private subscribeOnClose() {

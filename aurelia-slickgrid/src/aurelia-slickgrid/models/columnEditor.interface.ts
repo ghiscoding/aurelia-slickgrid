@@ -6,8 +6,8 @@ import {
 } from './../models/index';
 
 export interface ColumnEditor {
-  /** Any inline editor function that implements Editor for the cell */
-  model?: any;
+  /** A collection of items/options that will be loaded asynchronously (commonly used with a Select/Multi-Select Editor) */
+  asyncCollection?: Promise<any>;
 
   collection?: any[];
 
@@ -31,6 +31,9 @@ export interface ColumnEditor {
 
   /** Minimum value of the filter, works only with Filters supporting it (text, number, float, slider) */
   minValue?: number | string;
+
+  /** Any inline editor function that implements Editor for the cell */
+  model?: any;
 
   /** Editor Validator */
   validator?: EditorValidator;
