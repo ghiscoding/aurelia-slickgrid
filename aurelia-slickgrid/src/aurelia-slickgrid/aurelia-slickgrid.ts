@@ -213,6 +213,9 @@ export class AureliaSlickgridCustomElement {
       dataView: this.dataview,
       slickGrid: this.grid,
 
+      // public methods
+      dispose: this.dispose.bind(this),
+
       // return all available Services (non-singleton)
       backendService: this.gridOptions && this.gridOptions.backendServiceApi && this.gridOptions.backendServiceApi.service,
       exportService: this.exportService,
@@ -228,12 +231,16 @@ export class AureliaSlickgridCustomElement {
     this.dispatchCustomEvent(`${aureliaEventPrefix}-on-aurelia-grid-created`, aureliaElementInstance);
   }
 
-  detached() {
+  detached(emptyDomElementContainer = false) {
     this.ea.publish('onBeforeGridDestroy', this.grid);
     this.dispatchCustomEvent(`${aureliaEventPrefix}-on-before-grid-destroy`, this.grid);
     this.dataview = [];
     this._eventHandler.unsubscribeAll();
     this.grid.destroy();
+    if (emptyDomElementContainer) {
+      $(this.gridOptions.gridContainerId).empty();
+    }
+
     this.ea.publish('onAfterGridDestroyed', true);
     this.dispatchCustomEvent(`${aureliaEventPrefix}-on-after-grid-destroyed`, this.grid);
 
@@ -252,6 +259,10 @@ export class AureliaSlickgridCustomElement {
       }
     });
     this.subscriptions = [];
+  }
+
+  dispose(emptyDomElementContainer = false) {
+    this.detached(emptyDomElementContainer);
   }
 
   bind() {
