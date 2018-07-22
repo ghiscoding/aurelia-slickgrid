@@ -224,7 +224,7 @@ export class GridService {
   }
 
   /**
-   * Add an item (data item) to the datagrid
+   * Add an item (data item) to the datagrid, by default it will highlight (flashing) the inserted row but we can disable it too
    * @param object dataItem: item object holding all properties of that row
    * @param shouldHighlightRow do we want to highlight the row after adding item
    */
@@ -244,6 +244,17 @@ export class GridService {
 
     // refresh dataview & grid
     this._dataView.refresh();
+  }
+
+  /**
+   * Add item array (data item) to the datagrid, by default it will highlight (flashing) the inserted row but we can disable it too
+   * @param dataItem array: item object holding all properties of that row
+   * @param shouldHighlightRow do we want to highlight the row after adding item
+   */
+  addItemsToDatagrid(items: any[], shouldHighlightRow = true) {
+    if (Array.isArray(items)) {
+      items.forEach((item: any) => this.addItemToDatagrid(item, shouldHighlightRow));
+    }
   }
 
   /**
