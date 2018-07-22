@@ -1,11 +1,11 @@
 import { bindable, inject } from 'aurelia-framework';
 import { Subscription, EventAggregator } from 'aurelia-event-aggregator';
 import { GridOption } from './models/index';
-import { FilterService, SortService } from './services/index';
+import { FilterService } from './services/index';
 
 const aureliaEventPrefix = 'asg';
 
-@inject(Element, EventAggregator, FilterService, SortService)
+@inject(Element, EventAggregator, FilterService)
 export class SlickPaginationCustomElement {
   private _filterSubscriber: Subscription;
   private _sorterSubscriber: Subscription;
@@ -23,9 +23,8 @@ export class SlickPaginationCustomElement {
   paginationCallback: () => void;
   paginationPageSizes = [25, 75, 100];
 
-  constructor(private elm: Element, private ea: EventAggregator, private filterService: FilterService, private sortService: SortService) {
+  constructor(private elm: Element, private ea: EventAggregator, private filterService: FilterService) {
     this.filterService = filterService;
-    this.sortService = sortService;
   }
 
   bind(binding: any, contexts: any) {
