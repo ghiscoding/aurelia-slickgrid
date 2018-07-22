@@ -1,5 +1,7 @@
 import { I18N } from 'aurelia-i18n';
 import { inject, BindingEngine } from 'aurelia-framework';
+import { HttpClient as FetchClient, json } from 'aurelia-fetch-client';
+import { HttpClient, HttpResponseMessage } from 'aurelia-http-client';
 import {
   Column,
   Filter,
@@ -171,13 +173,35 @@ export class MultipleSelectFilter implements Filter {
   private async renderOptionsAsync(collectionAsync: Promise<any>) {
     if (collectionAsync) {
       // wait for the "collectionAsync", once resolved we will save it into the "collection" for later reference
-      const awaitedCollection: any[] = await collectionAsync;
+      const response: HttpResponseMessage | Response | any[] = await collectionAsync;
+
+      let awaitedCollection: any = [];
+      if (response instanceof Response && typeof response['json'] === 'function') {
+        awaitedCollection = await response['json']();
+      } else if (response instanceof HttpResponseMessage) {
+        awaitedCollection = response['content'];
+      } else {
+        awaitedCollection = response;
+      }
+
+      if (!Array.isArray(awaitedCollection)) {
+        throw new Error('Something went wrong while trying to pull the collection from the "collectionAsync" call');
+      }
+
+      // copy over the array received from the async call to the "collection" as the new collection to use
       this.columnDef.filter.collection = awaitedCollection;
 
       // recreate Multiple Select after getting async collection
       this.renderDomElement(awaitedCollection);
 
-      // subscribe to the "collection" property changes with BindingEngine
+      // subscribe to the "collection" changes (array replace) with BindingEngine
+      this.bindingEngine.propertyObserver(this.columnDef.filter, 'collection')
+        .subscribe((newVal) => {
+          console.log('collection replaced', newVal);
+          this.renderDomElement(newVal);
+        });
+
+      // subscribe to the "collection" changes (array `push`, `unshift`, `splice`, ...) with BindingEngine
       this.subscriptions.push(
         this.bindingEngine
           .collectionObserver(this.columnDef.filter.collection)

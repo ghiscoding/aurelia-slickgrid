@@ -1,3 +1,5 @@
+import { HttpClient as FetchClient } from 'aurelia-fetch-client';
+import { HttpClient } from 'aurelia-http-client';
 import { autoinject } from 'aurelia-framework';
 import { CustomInputFilter } from './custom-inputFilter';
 import { AureliaGridInstance, Column, FieldType, Filters, Formatter, Formatters, GridOption } from '../../aurelia-slickgrid';
@@ -6,6 +8,7 @@ function randomBetween(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 const NB_ITEMS = 500;
+const URL_SAMPLE_COLLECTION_DATA = 'src/examples/slickgrid/sample-data/collection_500_numbers.json';
 
 @autoinject()
 export class Example4 {
@@ -34,7 +37,7 @@ export class Example4 {
   gridOptions: GridOption;
   dataset: any[];
 
-  constructor() {
+  constructor(private http: HttpClient, private httpFetch: FetchClient) {
     this.defineGrid();
   }
 
@@ -78,18 +81,25 @@ export class Example4 {
         minWidth: 55,
         filterable: true,
         filter: {
-          collectionAsync: new Promise<any>((resolve) => {
-            // prepare a multiple-select array to filter with
-            const multiSelectFilterArray = [];
-            for (let i = 0; i <= NB_ITEMS; i++) {
-              multiSelectFilterArray.push({ value: i, label: i });
-            }
+          // USE HttpClient from "aurelia-http-client"
+          // collectionAsync: this.http.createRequest(URL_SAMPLE_COLLECTION_DATA).asGet().send(),
 
-            // simulate async server load
-            setTimeout(() => {
-              resolve(multiSelectFilterArray);
-            }, 500);
-          }),
+          // OR use "aurelia-fetch-client", they are both supported
+          collectionAsync: this.httpFetch.fetch(URL_SAMPLE_COLLECTION_DATA),
+
+          // OR use a Promise, it's also supported
+          // collectionAsync: new Promise<any>((resolve) => {
+          //   // prepare a multiple-select array to filter with
+          //   const multiSelectFilterArray = [];
+          //   for (let i = 0; i <= NB_ITEMS; i++) {
+          //     multiSelectFilterArray.push({ value: i, label: i });
+          //   }
+
+          //   // simulate async server load
+          //   setTimeout(() => {
+          //     resolve(multiSelectFilterArray);
+          //   }, 500);
+          // }),
           collectionSortBy: {
             property: 'value',
             sortDesc: true,
@@ -161,7 +171,7 @@ export class Example4 {
   }
 
   addItem() {
-    const lastRowIndex = this.dataset.length + 1;
+    const lastRowIndex = this.dataset.length;
     const newRows = this.mockData(1, lastRowIndex);
 
     setTimeout(() => {
@@ -170,10 +180,14 @@ export class Example4 {
         const collection = durationColumnDef.filter.collection;
         if (Array.isArray(collection)) {
           this.aureliaGrid.gridService.addItemToDatagrid(newRows[0]);
-          collection.push({ value: lastRowIndex, label: lastRowIndex });
+          // Push to the "collection"
+          // collection.push({ value: lastRowIndex, label: lastRowIndex });
+
+          // "collection" replaced is also supported
+          durationColumnDef.filter.collection = [...collection, ...[{ value: lastRowIndex, label: lastRowIndex }]];
         }
       }
-    }, 3000);
+    }, 500);
   }
 
   deleteItem() {
