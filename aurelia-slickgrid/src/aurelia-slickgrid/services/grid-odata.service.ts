@@ -33,10 +33,10 @@ const DEFAULT_PAGE_SIZE = 20;
 @singleton(true)
 @inject(OdataService)
 export class GridOdataService implements BackendService {
-  private _columnDefinitions: Column[];
   private _currentFilters: CurrentFilter[];
   private _currentPagination: CurrentPagination;
   private _currentSorters: CurrentSorter[];
+  private _columnDefinitions: Column[];
   private _grid: any;
   odataService: OdataService;
   options: OdataOption;
@@ -83,7 +83,7 @@ export class GridOdataService implements BackendService {
     };
 
     if (grid && grid.getColumns) {
-      this._columnDefinitions = grid.getColumns() || options.columnDefinitions || {};
+      this._columnDefinitions = options.columnDefinitions || grid.getColumns();
       this._columnDefinitions = this._columnDefinitions.filter((column: Column) => !column.excludeFromQuery);
     }
   }
@@ -219,7 +219,7 @@ export class GridOdataService implements BackendService {
         }
 
         if (typeof fieldSearchValue !== 'string' && !searchTerms) {
-          throw new Error(`ODdata filter searchTerm property must be provided as type "string", if you use filter with options then make sure your IDs are also string. For example: filter: {type: FilterType.select, collection: [{ id: "0", value: "0" }, { id: "1", value: "1" }]`);
+          throw new Error(`ODdata filter searchTerm property must be provided as type "string", if you use filter with options then make sure your IDs are also string. For example: filter: {model: Filters.select, collection: [{ id: "0", value: "0" }, { id: "1", value: "1" }]`);
         }
 
         fieldSearchValue = '' + fieldSearchValue; // make sure it's a string
@@ -238,6 +238,7 @@ export class GridOdataService implements BackendService {
         // escaping the search value
         searchValue = searchValue.replace(`'`, `''`); // escape single quotes by doubling them
         searchValue = encodeURIComponent(searchValue); // encode URI of the final search value
+
         // extra query arguments
         if (bypassOdataQuery) {
           // push to our temp array and also trim white spaces
