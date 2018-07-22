@@ -37,10 +37,10 @@ export class GraphqlService implements BackendService {
   private _currentFilters: ColumnFilters | CurrentFilter[];
   private _currentPagination: CurrentPagination;
   private _currentSorters: CurrentSorter[];
+  private _columnDefinitions: Column[];
   private _grid: any;
-
   options: GraphqlServiceOption;
-  pagination: Pagination;
+  pagination: Pagination | undefined;
   defaultOrderBy: GraphqlSortingOption = { field: 'id', direction: SortDirection.ASC };
   defaultPaginationOptions: GraphqlPaginationOption | GraphqlCursorPaginationOption = {
     first: DEFAULT_ITEMS_PER_PAGE,
@@ -50,11 +50,6 @@ export class GraphqlService implements BackendService {
   /** Getter for the Grid Options pulled through the Grid Object */
   private get _gridOptions(): GridOption {
     return (this._grid && this._grid.getOptions) ? this._grid.getOptions() : {};
-  }
-
-  /** Getter for the Column Definitions pulled through the Grid Object */
-  private get _columnDefinitions(): Column[] {
-    return (this._grid && this._grid.getColumns) ? this._grid.getColumns() : [];
   }
 
   /**
@@ -174,17 +169,13 @@ export class GraphqlService implements BackendService {
       .replace(/\}$/, '');
   }
 
-  /**
-   * Initialize the Service
-   * @param GraphQL Service Options
-   * @param pagination
-   * @param grid
-   */
   init(serviceOptions?: GraphqlServiceOption, pagination?: Pagination, grid?: any): void {
     this._grid = grid;
     this.options = serviceOptions || {};
-    if (pagination) {
-      this.pagination = pagination;
+    this.pagination = pagination;
+
+    if (grid && grid.getColumns) {
+      this._columnDefinitions = serviceOptions.columnDefinitions || grid.getColumns();
     }
   }
 
@@ -367,7 +358,7 @@ export class GraphqlService implements BackendService {
         }
 
         if (typeof fieldSearchValue !== 'string' && !searchTerms) {
-          throw new Error(`GraphQL filter searchTerm property must be provided as type "string", if you use filter with options then make sure your IDs are also string. For example: filter: {type: FilterType.select, collection: [{ id: "0", value: "0" }, { id: "1", value: "1" }]`);
+          throw new Error(`GraphQL filter searchTerm property must be provided as type "string", if you use filter with options then make sure your IDs are also string. For example: filter: {model: Filters.select, collection: [{ id: "0", value: "0" }, { id: "1", value: "1" }]`);
         }
 
         fieldSearchValue = '' + fieldSearchValue; // make sure it's a string
@@ -558,7 +549,6 @@ export class GraphqlService implements BackendService {
       if (Array.isArray(filter.searchTerms)) {
         tmpFilter.searchTerms = filter.searchTerms;
       }
-
       return tmpFilter;
     });
   }
