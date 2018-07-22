@@ -6,10 +6,11 @@ import {
 } from './../models/index';
 
 export interface ColumnEditor {
-  /** A collection of items/options that will be loaded asynchronously (commonly used with a Select/Multi-Select Editor) */
-  asyncCollection?: Promise<any>;
-
+  /** A collection of items/options that can be used by Select (dropdown) or any other type of Editors */
   collection?: any[];
+
+  /** A collection of items/options that will be loaded asynchronously (commonly used with a Select/Multi-Select Editor) */
+  collectionAsync?: Promise<any>;
 
   /** We could filter some items from the collection */
   collectionFilterBy?: CollectionFilterBy;

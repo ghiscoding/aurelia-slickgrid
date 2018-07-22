@@ -78,7 +78,7 @@ export class Example4 {
         minWidth: 55,
         filterable: true,
         filter: {
-          asyncCollection: new Promise<any>((resolve) => {
+          collectionAsync: new Promise<any>((resolve) => {
             // prepare a multiple-select array to filter with
             const multiSelectFilterArray = [];
             for (let i = 0; i <= NB_ITEMS; i++) {
