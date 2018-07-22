@@ -76,6 +76,7 @@ export class CompoundInputFilter implements Filter {
   clear() {
     if (this.$filterElm && this.$selectOperatorElm) {
       this._clearFilterTriggered = true;
+      this.searchTerms = [];
       this.$selectOperatorElm.val(0);
       this.$filterInputElm.val('');
       this.onTriggerEvent(undefined);
