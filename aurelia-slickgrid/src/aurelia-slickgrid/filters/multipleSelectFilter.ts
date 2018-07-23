@@ -77,7 +77,7 @@ export class MultipleSelectFilter implements Filter {
   /**
    * Initialize the filter template
    */
-  init(args: FilterArguments) {
+  async init(args: FilterArguments) {
     if (!args) {
       throw new Error('[Aurelia-SlickGrid] A filter must always have an "init()" with valid arguments.');
     }
@@ -87,29 +87,25 @@ export class MultipleSelectFilter implements Filter {
     this.searchTerms = args.searchTerms || [];
 
     if (!this.grid || !this.columnDef || !this.columnDef.filter || (!this.columnDef.filter.collection && !this.columnDef.filter.collectionAsync)) {
-      throw new Error(`[Angular-SlickGrid] You need to pass a "collection" (or "collectionAsync") for the MultipleSelect Filter to work correctly. Also each option should include a value/label pair (or value/labelKey when using Locale). For example:: { filter: model: Filters.multipleSelect, collection: [{ value: true, label: 'True' }, { value: false, label: 'False'}] }`);
+      throw new Error(`[Aurelia-SlickGrid] You need to pass a "collection" (or "collectionAsync") for the MultipleSelect Filter to work correctly. Also each option should include a value/label pair (or value/labelKey when using Locale). For example:: { filter: model: Filters.multipleSelect, collection: [{ value: true, label: 'True' }, { value: false, label: 'False'}] }`);
     }
 
     this.enableTranslateLabel = this.columnDef.filter.enableTranslateLabel || false;
     this.labelName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.label : 'label';
     this.valueName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.value : 'value';
 
+    // always render the Select (dropdown) DOM element, even if user passed a "collectionAsync",
+    // if that is the case, the Select will simply be without any options but we still have to render it (else SlickGrid would throw an error)
     let newCollection = this.columnDef.filter.collection || [];
-    const collectionAsync = this.columnDef.filter.collectionAsync;
+    this.renderDomElement(newCollection);
 
+    const collectionAsync = this.columnDef.filter.collectionAsync;
     if (collectionAsync) {
-      this.renderOptionsAsync(collectionAsync);
+      newCollection = await this.renderOptionsAsync(collectionAsync);
     }
 
-    // user might want to filter or sort certain items of the collection
-    newCollection = this.filterAndSortCollection(newCollection);
-
-    // step 1, create HTML string template
-    const filterTemplate = this.buildTemplateHtmlString(newCollection, this.searchTerms);
-
-    // step 2, create the DOM Element of the filter & pre-load search terms
-    // also subscribe to the onClose event
-    this.createDomElement(filterTemplate);
+    // subscribe to both CollectionObserver and PropertyObserver
+    this.subscribeToCollectionAndPropertyObservers();
   }
 
   /**
@@ -153,29 +149,30 @@ export class MultipleSelectFilter implements Filter {
    * @return outputCollection filtered and/or sorted collection
    */
   private filterAndSortCollection(inputCollection) {
-    let outputCollection = [];
+    let outputCollection = inputCollection;
 
     // user might want to filter certain items of the collection
     if (this.columnDef && this.columnDef.filter && this.columnDef.filter.collectionFilterBy) {
       const filterBy = this.columnDef.filter.collectionFilterBy;
-      outputCollection = this.collectionService.filterCollection(inputCollection, filterBy);
+      outputCollection = this.collectionService.filterCollection(outputCollection, filterBy);
     }
 
     // user might want to sort the collection
     if (this.columnDef && this.columnDef.filter && this.columnDef.filter.collectionSortBy) {
       const sortBy = this.columnDef.filter.collectionSortBy;
-      outputCollection = this.collectionService.sortCollection(inputCollection, sortBy, this.enableTranslateLabel);
+      outputCollection = this.collectionService.sortCollection(outputCollection, sortBy, this.enableTranslateLabel);
     }
 
     return outputCollection;
   }
 
-  private async renderOptionsAsync(collectionAsync: Promise<any>) {
+  private async renderOptionsAsync(collectionAsync: Promise<any>): Promise<any[]> {
+    let awaitedCollection: any = [];
+
     if (collectionAsync) {
       // wait for the "collectionAsync", once resolved we will save it into the "collection" for later reference
       const response: HttpResponseMessage | Response | any[] = await collectionAsync;
 
-      let awaitedCollection: any = [];
       if (response instanceof Response && typeof response['json'] === 'function') {
         awaitedCollection = await response['json']();
       } else if (response instanceof HttpResponseMessage) {
@@ -189,43 +186,43 @@ export class MultipleSelectFilter implements Filter {
       }
 
       // copy over the array received from the async call to the "collection" as the new collection to use
+      // this has to be BEFORE the `collectionObserver().subscribe` to avoid going into an infinite loop
       this.columnDef.filter.collection = awaitedCollection;
 
       // recreate Multiple Select after getting async collection
       this.renderDomElement(awaitedCollection);
+    }
 
-      // subscribe to the "collection" changes (array replace) with BindingEngine
+    return awaitedCollection;
+  }
+
+  /**
+   * Subscribe to both CollectionObserver & PropertyObserver with BindingEngine.
+   * They each have their own purpose, the "propertyObserver" will trigger once the collection is replaced entirely
+   * while the "collectionObverser" will trigger on collection changes (`push`, `unshift`, `splice`, ...)
+   */
+  private subscribeToCollectionAndPropertyObservers() {
+    // subscribe to the "collection" changes (array replace)
+    this.subscriptions.push(
       this.bindingEngine.propertyObserver(this.columnDef.filter, 'collection')
         .subscribe((newVal) => {
-          console.log('collection replaced', newVal);
+          // simply recreate/re-render the Select (dropdown) DOM Element
           this.renderDomElement(newVal);
-        });
+        })
+    );
 
-      // subscribe to the "collection" changes (array `push`, `unshift`, `splice`, ...) with BindingEngine
-      this.subscriptions.push(
-        this.bindingEngine
-          .collectionObserver(this.columnDef.filter.collection)
-          .subscribe((changes: { index: number, addedCount: number, removed: any[] }[]) => {
+    // subscribe to the "collection" changes (array `push`, `unshift`, `splice`, ...)
+    this.subscriptions.push(
+      this.bindingEngine
+        .collectionObserver(this.columnDef.filter.collection)
+        .subscribe((changes: { index: number, addedCount: number, removed: any[] }[]) => {
+          if (Array.isArray(changes)) {
+            // simply recreate/re-render the Select (dropdown) DOM Element
             const updatedCollection = this.columnDef && this.columnDef.filter && this.columnDef.filter.collection || [];
-            if (Array.isArray(changes)) {
-              changes.forEach((change) => {
-                const option = updatedCollection[change.index];
-                if (change.addedCount) {
-                  // add the new item to the Multiple Select
-                  const $opt = $('<option />', { value: option.value, text: option.label });
-                  this.$filterElm.prepend($opt).multipleSelect('refresh');
-                  // this.renderDomElement(updatedCollection);
-                  // this.$filterElm.multipleSelect('refresh');
-                } else if (Array.isArray(change.removed) && change.removed.length > 0) {
-                  // instead of trying to find the deleted item in the Multiple Select
-                  // it's easier to just recreate the Select DOM Element
-                  this.renderDomElement(updatedCollection);
-                }
-              });
-            }
-          })
-      );
-    }
+            this.renderDomElement(updatedCollection);
+          }
+        })
+    );
   }
 
   private renderDomElement(collection) {
@@ -298,14 +295,5 @@ export class MultipleSelectFilter implements Filter {
     const filterOptions = (this.columnDef.filter) ? this.columnDef.filter.filterOptions : {};
     const options: MultipleSelectOption = { ...this.defaultOptions, ...filterOptions };
     this.$filterElm = this.$filterElm.multipleSelect(options);
-  }
-
-  private subscribeOnClose() {
-    this.$filterElm.multipleSelect({
-      onClose: () => {
-        const selectedItems = this.$filterElm.multipleSelect('getSelects');
-        this.callback(undefined, { columnDef: this.columnDef, operator: this.operator, searchTerms: selectedItems });
-      }
-    });
   }
 }

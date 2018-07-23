@@ -2,7 +2,7 @@ import { HttpClient as FetchClient } from 'aurelia-fetch-client';
 import { HttpClient } from 'aurelia-http-client';
 import { autoinject } from 'aurelia-framework';
 import { CustomInputFilter } from './custom-inputFilter';
-import { AureliaGridInstance, Column, FieldType, Filters, Formatter, Formatters, GridOption } from '../../aurelia-slickgrid';
+import { AureliaGridInstance, Column, FieldType, Filters, Formatter, Formatters, GridOption, OperatorType } from '../../aurelia-slickgrid';
 
 function randomBetween(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -81,33 +81,31 @@ export class Example4 {
         minWidth: 55,
         filterable: true,
         filter: {
-          // USE HttpClient from "aurelia-http-client"
+          model: Filters.multipleSelect,
+          // We can load the "collection" asynchronously (on first load only, after that we will simply use "collection")
+          // 3 ways are supported (aurelia-http-client, aurelia-fetch-client OR even Promise)
+
+          // 1- USE HttpClient from "aurelia-http-client" to load collection asynchronously
           // collectionAsync: this.http.createRequest(URL_SAMPLE_COLLECTION_DATA).asGet().send(),
 
-          // OR use "aurelia-fetch-client", they are both supported
+          // OR 2- use "aurelia-fetch-client", they are both supported
           collectionAsync: this.httpFetch.fetch(URL_SAMPLE_COLLECTION_DATA),
 
-          // OR use a Promise, it's also supported
-          // collectionAsync: new Promise<any>((resolve) => {
-          //   // prepare a multiple-select array to filter with
-          //   const multiSelectFilterArray = [];
-          //   for (let i = 0; i <= NB_ITEMS; i++) {
-          //     multiSelectFilterArray.push({ value: i, label: i });
-          //   }
+          // remove the value 365 from the select dropdown
+          collectionFilterBy: {
+            property: 'value',
+            operator: OperatorType.notEqual,
+            value: 365
+          },
 
-          //   // simulate async server load
-          //   setTimeout(() => {
-          //     resolve(multiSelectFilterArray);
-          //   }, 500);
-          // }),
+          // sort the select dropdown in a descending order
           collectionSortBy: {
             property: 'value',
             sortDesc: true,
             fieldType: FieldType.number
           },
-          model: Filters.multipleSelect,
-          searchTerms: [1, 33, 50], // default selection
-          // we could add certain option(s) to the "multiple-select" plugin
+
+          // we can also add certain option(s) to the "multiple-select" 3rd party plugin
           filterOptions: {
             maxHeight: 250,
             width: 175
@@ -170,32 +168,41 @@ export class Example4 {
     };
   }
 
+  /** Add a new row to the grid and refresh the Filter collection */
   addItem() {
     const lastRowIndex = this.dataset.length;
     const newRows = this.mockData(1, lastRowIndex);
 
+    // wrap into a timer to simulate a backend async call
     setTimeout(() => {
+      // at any time, we can poke the "collection" property and modify it
       const durationColumnDef = this.columnDefinitions.find((column: Column) => column.id === 'duration');
       if (durationColumnDef) {
         const collection = durationColumnDef.filter.collection;
         if (Array.isArray(collection)) {
+          // add the new row to the grid
           this.aureliaGrid.gridService.addItemToDatagrid(newRows[0]);
-          // Push to the "collection"
-          // collection.push({ value: lastRowIndex, label: lastRowIndex });
 
-          // "collection" replaced is also supported
-          durationColumnDef.filter.collection = [...collection, ...[{ value: lastRowIndex, label: lastRowIndex }]];
+          // then refresh the Filter "collection", we have 2 ways of doing it
+
+          // 1- push to the "collection"
+          collection.push({ value: lastRowIndex, label: lastRowIndex });
+
+          // OR 2- replace the entire "collection" is also supported
+          // durationColumnDef.filter.collection = [...collection, ...[{ value: lastRowIndex, label: lastRowIndex }]];
         }
       }
-    }, 500);
+    }, 250);
   }
 
+  /** Delete last inserted row */
   deleteItem() {
     const durationColumnDef = this.columnDefinitions.find((column: Column) => column.id === 'duration');
     if (durationColumnDef) {
       const collection = durationColumnDef.filter.collection;
       if (Array.isArray(collection)) {
-        collection.pop();
+        const selectCollectionObj = collection.pop();
+        this.aureliaGrid.gridService.deleteDataGridItemById(selectCollectionObj.value);
       }
     }
   }
