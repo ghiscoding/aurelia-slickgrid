@@ -34,6 +34,7 @@ import {
 } from './models/index';
 import {
   ControlAndPluginService,
+  disposeAllSubscriptions,
   ExportService,
   FilterService,
   GraphqlService,
@@ -43,7 +44,7 @@ import {
   GroupingAndColspanService,
   ResizerService,
   SortService,
-  toKebabCase
+  toKebabCase,
 } from './services/index';
 import * as $ from 'jquery';
 
@@ -252,13 +253,8 @@ export class AureliaSlickgridCustomElement {
     });
     this.serviceList = [];
 
-    // also unsubscribe all Subscriptions
-    this.subscriptions.forEach((subscription: Subscription) => {
-      if (subscription && subscription.dispose) {
-        subscription.dispose();
-      }
-    });
-    this.subscriptions = [];
+    // also dispose of all Subscriptions
+    this.subscriptions = disposeAllSubscriptions(this.subscriptions);
   }
 
   dispose(emptyDomElementContainer = false) {

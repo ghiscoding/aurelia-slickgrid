@@ -91,7 +91,7 @@ export class Example4 {
           // OR 2- use "aurelia-fetch-client", they are both supported
           collectionAsync: this.httpFetch.fetch(URL_SAMPLE_COLLECTION_DATA),
 
-          // remove the value 365 from the select dropdown
+          // remove certain value(s) from the select dropdown
           collectionFilterBy: {
             property: 'value',
             operator: OperatorType.notEqual,

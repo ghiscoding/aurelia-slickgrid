@@ -18,6 +18,13 @@ export interface ColumnEditor {
   /** We could sort the collection by their value, or by translated value when enableTranslateLabel is True */
   collectionSortBy?: CollectionSortBy;
 
+  /**
+   * Defaults to false, when enable it will add collection observers and re-render the Filter DOM element
+   * with the new collection when changes are detected. Also note that using "collectionAsync" automatically watch for changes,
+   * in consequence, there's no need to enable this flag in that particular case.
+   */
+  enableCollectionWatch?: boolean;
+
   /** Options that could be provided to the Editor, example: { container: 'body', maxHeight: 250} */
   editorOptions?: MultipleSelectOption | any;
 

@@ -45,11 +45,18 @@ export interface ColumnFilter {
   /** We could sort the collection by their value, or by translated value when enableTranslateLabel is True */
   collectionSortBy?: CollectionSortBy;
 
-  /** Options that could be provided to the Filter, example: { container: 'body', maxHeight: 250} */
-  filterOptions?: MultipleSelectOption | any;
+  /**
+   * Defaults to false, when enable it will add collection observers and re-render the Filter DOM element
+   * with the new collection when changes are detected. Also note that using "collectionAsync" automatically watch for changes,
+   * in consequence, there's no need to enable this flag in that particular case.
+   */
+  enableCollectionWatch?: boolean;
 
   /** Do we want the Filter to handle translation (localization)? */
   enableTranslateLabel?: boolean;
+
+  /** Options that could be provided to the Filter, example: { container: 'body', maxHeight: 250} */
+  filterOptions?: MultipleSelectOption | any;
 
   /** A custom structure can be used instead of the default label/value pair. Commonly used with Select/Multi-Select Filter */
   customStructure?: {

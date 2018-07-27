@@ -9,7 +9,7 @@ import {
   GridState,
   GridStateType,
 } from './../models/index';
-import { ControlAndPluginService, FilterService, SortService } from './../services/index';
+import { ControlAndPluginService, disposeAllSubscriptions, FilterService, SortService } from './../services/index';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
 import * as $ from 'jquery';
 
@@ -54,13 +54,8 @@ export class GridStateService {
     // unsubscribe all SlickGrid events
     this._eventHandler.unsubscribeAll();
 
-    // also unsubscribe all Aurelia Subscriptions
-    this.subscriptions.forEach((subscription: Subscription) => {
-      if (subscription && subscription.dispose) {
-        subscription.dispose();
-      }
-    });
-    this.subscriptions = [];
+    // also dispose of all Subscriptions
+    this.subscriptions = disposeAllSubscriptions(this.subscriptions);
   }
 
   /**

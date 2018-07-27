@@ -1,14 +1,12 @@
 import { I18N } from 'aurelia-i18n';
 import { inject, BindingEngine } from 'aurelia-framework';
-import { HttpClient as FetchClient, json } from 'aurelia-fetch-client';
-import { HttpClient, HttpResponseMessage } from 'aurelia-http-client';
+import { HttpResponseMessage } from 'aurelia-http-client';
 import {
   Column,
+  ColumnFilter,
   Filter,
   FilterArguments,
   FilterCallback,
-  GridOption,
-  HtmlElementPosition,
   MultipleSelectOption,
   OperatorType,
   OperatorString,
@@ -18,6 +16,7 @@ import {
 import { CollectionService } from '../services/collection.service';
 import * as $ from 'jquery';
 import { Subscription } from 'aurelia-event-aggregator';
+import { disposeAllSubscriptions } from '../services/utilities';
 
 @inject(BindingEngine, CollectionService, I18N)
 export class MultipleSelectFilter implements Filter {
@@ -65,11 +64,12 @@ export class MultipleSelectFilter implements Filter {
     };
   }
 
-  /** Getter for the Grid Options pulled through the Grid Object */
-  private get gridOptions(): GridOption {
-    return (this.grid && this.grid.getOptions) ? this.grid.getOptions() : {};
+  /** Getter for the Filter Operator */
+  get columnFilter(): ColumnFilter {
+    return this.columnDef && this.columnDef.filter || {};
   }
 
+  /** Getter for the Filter Operator */
   get operator(): OperatorType | OperatorString {
     return (this.columnDef && this.columnDef.filter && this.columnDef.filter.operator) || OperatorType.in;
   }
@@ -86,26 +86,29 @@ export class MultipleSelectFilter implements Filter {
     this.columnDef = args.columnDef;
     this.searchTerms = args.searchTerms || [];
 
-    if (!this.grid || !this.columnDef || !this.columnDef.filter || (!this.columnDef.filter.collection && !this.columnDef.filter.collectionAsync)) {
+    if (!this.grid || !this.columnDef || !this.columnFilter || (!this.columnFilter.collection && !this.columnFilter.collectionAsync)) {
       throw new Error(`[Aurelia-SlickGrid] You need to pass a "collection" (or "collectionAsync") for the MultipleSelect Filter to work correctly. Also each option should include a value/label pair (or value/labelKey when using Locale). For example:: { filter: model: Filters.multipleSelect, collection: [{ value: true, label: 'True' }, { value: false, label: 'False'}] }`);
     }
 
-    this.enableTranslateLabel = this.columnDef.filter.enableTranslateLabel || false;
-    this.labelName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.label : 'label';
-    this.valueName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.value : 'value';
+    this.enableTranslateLabel = this.columnFilter.enableTranslateLabel || false;
+    this.labelName = (this.columnFilter.customStructure) ? this.columnFilter.customStructure.label : 'label';
+    this.valueName = (this.columnFilter.customStructure) ? this.columnFilter.customStructure.value : 'value';
 
     // always render the Select (dropdown) DOM element, even if user passed a "collectionAsync",
     // if that is the case, the Select will simply be without any options but we still have to render it (else SlickGrid would throw an error)
-    let newCollection = this.columnDef.filter.collection || [];
+    let newCollection = this.columnFilter.collection || [];
     this.renderDomElement(newCollection);
 
-    const collectionAsync = this.columnDef.filter.collectionAsync;
+    const collectionAsync = this.columnFilter.collectionAsync;
     if (collectionAsync) {
       newCollection = await this.renderOptionsAsync(collectionAsync);
     }
 
     // subscribe to both CollectionObserver and PropertyObserver
-    this.subscribeToCollectionAndPropertyObservers();
+    // any collection changes will trigger a re-render of the DOM element filter
+    if (collectionAsync || (this.columnFilter.enableCollectionWatch)) {
+      this.watchCollectionChanges();
+    }
   }
 
   /**
@@ -127,6 +130,9 @@ export class MultipleSelectFilter implements Filter {
   destroy() {
     if (this.$filterElm) {
       this.$filterElm.off().remove();
+
+      // also dispose of all Subscriptions
+      this.subscriptions = disposeAllSubscriptions(this.subscriptions);
     }
   }
 
@@ -152,21 +158,21 @@ export class MultipleSelectFilter implements Filter {
     let outputCollection = inputCollection;
 
     // user might want to filter certain items of the collection
-    if (this.columnDef && this.columnDef.filter && this.columnDef.filter.collectionFilterBy) {
-      const filterBy = this.columnDef.filter.collectionFilterBy;
+    if (this.columnFilter.collectionFilterBy) {
+      const filterBy = this.columnFilter.collectionFilterBy;
       outputCollection = this.collectionService.filterCollection(outputCollection, filterBy);
     }
 
     // user might want to sort the collection
-    if (this.columnDef && this.columnDef.filter && this.columnDef.filter.collectionSortBy) {
-      const sortBy = this.columnDef.filter.collectionSortBy;
+    if (this.columnFilter.collectionSortBy) {
+      const sortBy = this.columnFilter.collectionSortBy;
       outputCollection = this.collectionService.sortCollection(outputCollection, sortBy, this.enableTranslateLabel);
     }
 
     return outputCollection;
   }
 
-  private async renderOptionsAsync(collectionAsync: Promise<any>): Promise<any[]> {
+  private async renderOptionsAsync(collectionAsync: Promise<HttpResponseMessage | Response | any[]>): Promise<any[]> {
     let awaitedCollection: any = [];
 
     if (collectionAsync) {
@@ -187,7 +193,7 @@ export class MultipleSelectFilter implements Filter {
 
       // copy over the array received from the async call to the "collection" as the new collection to use
       // this has to be BEFORE the `collectionObserver().subscribe` to avoid going into an infinite loop
-      this.columnDef.filter.collection = awaitedCollection;
+      this.columnFilter.collection = awaitedCollection;
 
       // recreate Multiple Select after getting async collection
       this.renderDomElement(awaitedCollection);
@@ -201,10 +207,10 @@ export class MultipleSelectFilter implements Filter {
    * They each have their own purpose, the "propertyObserver" will trigger once the collection is replaced entirely
    * while the "collectionObverser" will trigger on collection changes (`push`, `unshift`, `splice`, ...)
    */
-  private subscribeToCollectionAndPropertyObservers() {
+  private watchCollectionChanges() {
     // subscribe to the "collection" changes (array replace)
     this.subscriptions.push(
-      this.bindingEngine.propertyObserver(this.columnDef.filter, 'collection')
+      this.bindingEngine.propertyObserver(this.columnFilter, 'collection')
         .subscribe((newVal) => {
           // simply recreate/re-render the Select (dropdown) DOM Element
           this.renderDomElement(newVal);
@@ -214,11 +220,11 @@ export class MultipleSelectFilter implements Filter {
     // subscribe to the "collection" changes (array `push`, `unshift`, `splice`, ...)
     this.subscriptions.push(
       this.bindingEngine
-        .collectionObserver(this.columnDef.filter.collection)
+        .collectionObserver(this.columnFilter.collection)
         .subscribe((changes: { index: number, addedCount: number, removed: any[] }[]) => {
           if (Array.isArray(changes)) {
             // simply recreate/re-render the Select (dropdown) DOM Element
-            const updatedCollection = this.columnDef && this.columnDef.filter && this.columnDef.filter.collection || [];
+            const updatedCollection = this.columnFilter.collection || [];
             this.renderDomElement(updatedCollection);
           }
         })
@@ -292,7 +298,7 @@ export class MultipleSelectFilter implements Filter {
     }
 
     // merge options & attach multiSelect
-    const filterOptions = (this.columnDef.filter) ? this.columnDef.filter.filterOptions : {};
+    const filterOptions = (this.columnFilter) ? this.columnFilter.filterOptions : {};
     const options: MultipleSelectOption = { ...this.defaultOptions, ...filterOptions };
     this.$filterElm = this.$filterElm.multipleSelect(options);
   }

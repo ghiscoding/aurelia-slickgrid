@@ -1,3 +1,4 @@
+import { Subscription } from 'aurelia-event-aggregator';
 import { Filters } from '../filters/index';
 import { FieldType, OperatorType } from '../models/index';
 import * as moment from 'moment';
@@ -62,6 +63,15 @@ export function decimalFormatted(input: number | string, minDecimal?: number, ma
     amount += '0';
   }
   return amount;
+}
+
+export function disposeAllSubscriptions(subscriptions: Subscription[]) {
+  subscriptions.forEach((subscription: Subscription) => {
+    if (subscription && subscription.dispose) {
+      subscription.dispose();
+    }
+  });
+  return subscriptions = [];
 }
 
 /**
