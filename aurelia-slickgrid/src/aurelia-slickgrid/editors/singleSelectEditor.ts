@@ -38,6 +38,12 @@ export class SingleSelectEditor implements Editor {
   /** The property name for labels in the collection */
   labelName: string;
 
+  /** The property name for a prefix that can be added to the labels in the collection */
+  labelPrefixName: string;
+
+  /** The property name for a suffix that can be added to the labels in the collection */
+  labelSuffixName: string;
+
   /** The property name for values in the collection */
   valueName: string;
 
@@ -100,6 +106,8 @@ export class SingleSelectEditor implements Editor {
     this.enableTranslateLabel = (this.columnDef.internalColumnEditor.enableTranslateLabel) ? this.columnDef.internalColumnEditor.enableTranslateLabel : false;
     let newCollection = this.columnDef.internalColumnEditor.collection || [];
     this.labelName = (this.columnDef.internalColumnEditor.customStructure) ? this.columnDef.internalColumnEditor.customStructure.label : 'label';
+    this.labelPrefixName = (this.columnDef.internalColumnEditor.customStructure) ? this.columnDef.internalColumnEditor.customStructure.labelPrefix : 'labelPrefix';
+    this.labelSuffixName = (this.columnDef.internalColumnEditor.customStructure) ? this.columnDef.internalColumnEditor.customStructure.labelSuffix : 'labelSuffix';
     this.valueName = (this.columnDef.internalColumnEditor.customStructure) ? this.columnDef.internalColumnEditor.customStructure.value : 'value';
 
     // user might want to filter certain items of the collection
@@ -216,9 +224,12 @@ export class SingleSelectEditor implements Editor {
           '{ collection: [ { value: \'1\', label: \'One\' } ] } } }');
       }
       const labelKey = (option.labelKey || option[this.labelName]) as string;
-      const textLabel = (option.labelKey || this.enableTranslateLabel) ? this.i18n.tr(labelKey || ' ') : labelKey;
+      const labelText = (option.labelKey || this.enableTranslateLabel) ? this.i18n.tr(labelKey || ' ') : labelKey;
+      const prefixText = option[this.labelPrefixName] || '';
+      const suffixText = option[this.labelSuffixName] || '';
+      const optionText = prefixText + labelText + suffixText;
 
-      options += `<option value="${option[this.valueName]}">${textLabel}</option>`;
+      options += `<option value="${option[this.valueName]}">${optionText}</option>`;
     });
 
     return `<select class="ms-filter search-filter">${options}</select>`;

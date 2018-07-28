@@ -164,7 +164,7 @@ export class Example3 {
       type: FieldType.number,
       editor: {
         model: Editors.singleSelect,
-        collection: Array.from(Array(101).keys()).map(k => ({ value: k, label: k })),
+        collection: Array.from(Array(101).keys()).map(k => ({ value: k, label: k, labelSuffix: '%' })),
         collectionSortBy: {
           property: 'label',
           sortDesc: true

@@ -42,6 +42,8 @@ export interface ColumnEditor {
   customStructure?: {
     label: string;
     value: string;
+    labelPrefix?: string;
+    labelSuffix?: string;
   };
 
   /**
