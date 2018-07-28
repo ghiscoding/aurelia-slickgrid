@@ -383,7 +383,7 @@ export class AureliaSlickgridCustomElement {
     for (const prop in grid) {
       if (grid.hasOwnProperty(prop) && prop.startsWith('on')) {
         this._eventHandler.subscribe(grid[prop], (e: any, args: any) => {
-          this.dispatchCustomEvent(`${eventPrefix}-${toKebabCase(prop)}`, { eventData: e, args });
+          return this.dispatchCustomEvent(`${eventPrefix}-${toKebabCase(prop)}`, { eventData: e, args });
         });
       }
     }
@@ -392,7 +392,7 @@ export class AureliaSlickgridCustomElement {
     for (const prop in dataView) {
       if (dataView.hasOwnProperty(prop) && prop.startsWith('on')) {
         this._eventHandler.subscribe(dataView[prop], (e: any, args: any) => {
-          this.dispatchCustomEvent(`${eventPrefix}-${toKebabCase(prop)}`, { eventData: e, args });
+          return this.dispatchCustomEvent(`${eventPrefix}-${toKebabCase(prop)}`, { eventData: e, args });
         });
       }
     }
@@ -614,11 +614,11 @@ export class AureliaSlickgridCustomElement {
     this.grid.autosizeColumns();
   }
 
-  private dispatchCustomEvent(eventName: string, data?: any, isBubbling: boolean = true) {
-    const eventInit: CustomEventInit = { bubbles: isBubbling };
+  private dispatchCustomEvent(eventName: string, data?: any, isBubbling: boolean = true, isCancelable = true): boolean {
+    const eventInit: CustomEventInit = { bubbles: isBubbling, cancelable: isCancelable };
     if (data) {
       eventInit.detail = data;
     }
-    this.elm.dispatchEvent(new CustomEvent(eventName, eventInit));
+    return this.elm.dispatchEvent(new CustomEvent(eventName, eventInit));
   }
 }
