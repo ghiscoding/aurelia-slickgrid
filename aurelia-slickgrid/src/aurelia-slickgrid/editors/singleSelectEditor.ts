@@ -9,7 +9,8 @@ import {
   MultipleSelectOption,
   SelectOption
 } from '../models/index';
-import { findOrDefault, CollectionService } from '../services/index';
+import { CollectionService, findOrDefault, htmlEncode } from '../services/index';
+import * as sanitizeHtml from 'sanitize-html';
 import * as $ from 'jquery';
 
 // height in pixel of the multiple-select DOM element
@@ -64,6 +65,11 @@ export class SingleSelectEditor implements Editor {
       offsetLeft: 20,
       single: true,
       onOpen: () => this.autoAdjustDropPosition(this.$editorElm, this.editorElmOptions),
+      textTemplate: ($elm) => {
+        // render HTML code or not, by default it is sanitized and won't be rendered
+        const isRenderHtmlEnabled = this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.enableRenderHtml || false;
+        return isRenderHtmlEnabled ? $elm.text() : $elm.html();
+      },
     };
 
     this.init();
@@ -217,6 +223,8 @@ export class SingleSelectEditor implements Editor {
   /** Build the template HTML string */
   private buildTemplateHtmlString(collection: any[]) {
     let options = '';
+    const isRenderHtmlEnabled = this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.enableRenderHtml || false;
+
     collection.forEach((option: SelectOption) => {
       if (!option || (option[this.labelName] === undefined && option.labelKey === undefined)) {
         throw new Error('A collection with value/label (or value/labelKey when using ' +
@@ -227,7 +235,16 @@ export class SingleSelectEditor implements Editor {
       const labelText = (option.labelKey || this.enableTranslateLabel) ? this.i18n.tr(labelKey || ' ') : labelKey;
       const prefixText = option[this.labelPrefixName] || '';
       const suffixText = option[this.labelSuffixName] || '';
-      const optionText = prefixText + labelText + suffixText;
+      let optionText = prefixText + labelText + suffixText;
+
+      // if user specifically wants to render html text, he needs to opt-in else it will stripped out by default
+      // also, the 3rd party lib will saninitze any html code unless it's encoded, so we'll do that
+      if (isRenderHtmlEnabled) {
+        // sanitize any unauthorized html tags like script and others
+        // for the remaining allowed tags we'll permit all attributes
+        const sanitizedOption = sanitizeHtml(optionText, { allowedAttributes: { '*': ['*'] } });
+        optionText = htmlEncode(sanitizedOption);
+      }
 
       options += `<option value="${option[this.valueName]}">${optionText}</option>`;
     });

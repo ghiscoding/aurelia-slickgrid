@@ -164,6 +164,11 @@ export class Example3 {
       type: FieldType.number,
       editor: {
         model: Editors.singleSelect,
+
+        // We can also add HTML text to be rendered (any bad script will be sanitized) but we have to opt-in, else it will be sanitized
+        // enableRenderHtml: true,
+        // collection: Array.from(Array(101).keys()).map(k => ({ value: k, label: k, labelSuffix: '<i class="fa fa-percent" style="color:blue"></i>' })),
+
         collection: Array.from(Array(101).keys()).map(k => ({ value: k, label: k })),
         collectionSortBy: {
           property: 'label',
