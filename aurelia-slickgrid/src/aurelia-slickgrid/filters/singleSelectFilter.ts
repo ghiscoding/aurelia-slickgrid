@@ -13,7 +13,8 @@ import {
   SelectOption
 } from './../models/index';
 import { CollectionService } from '../services/collection.service';
-import { isArrayEqual } from '../services/utilities';
+import { arraysEqual, htmlEncode } from '../services/utilities';
+import * as sanitizeHtml from 'sanitize-html';
 import * as $ from 'jquery';
 
 @inject(CollectionService, I18N)
@@ -38,6 +39,11 @@ export class SingleSelectFilter implements Filter {
       filter: false,  // input search term on top of the select option list
       maxHeight: 200,
       single: true,
+      textTemplate: ($elm) => {
+        // render HTML code or not, by default it is sanitized and won't be rendered
+        const isRenderHtmlEnabled = this.columnDef && this.columnDef.filter && this.columnDef.filter.enableRenderHtml || false;
+        return isRenderHtmlEnabled ? $elm.text() : $elm.html();
+      },
       onClose: () => {
         const selectedItems = this.$filterElm.multipleSelect('getSelects');
         let selectedItem = '';
@@ -51,7 +57,7 @@ export class SingleSelectFilter implements Filter {
           this.$filterElm.removeClass('filled').siblings('div .search-filter').removeClass('filled');
         }
 
-        if (!isArrayEqual(selectedItems, this.searchTerms)) {
+        if (!arraysEqual(selectedItems, this.searchTerms)) {
           this.callback(undefined, { columnDef: this.columnDef, operator: this.operator, searchTerms: (selectedItem ? [selectedItem] : null) });
         }
       }
@@ -156,6 +162,8 @@ export class SingleSelectFilter implements Filter {
    */
   private buildTemplateHtmlString(optionCollection: any[], searchTerm?: SearchTerm) {
     let options = '';
+    const isRenderHtmlEnabled = this.columnDef && this.columnDef.filter && this.columnDef.filter.enableRenderHtml || false;
+
     optionCollection.forEach((option: SelectOption) => {
       if (!option || (option[this.labelName] === undefined && option.labelKey === undefined)) {
         throw new Error(`A collection with value/label (or value/labelKey when using Locale) is required to populate the Select list, for example: { filter: { model: Filter.singleSelect, collection: [ { value: '1', label: 'One' } ] } }`);
@@ -166,7 +174,16 @@ export class SingleSelectFilter implements Filter {
       const labelText = ((option.labelKey || this.enableTranslateLabel) && this.i18n && typeof this.i18n.tr === 'function') ? this.i18n.tr(labelKey || ' ') : labelKey;
       const prefixText = option[this.labelPrefixName] || '';
       const suffixText = option[this.labelSuffixName] || '';
-      const optionText = prefixText + labelText + suffixText;
+      let optionText = prefixText + labelText + suffixText;
+
+      // if user specifically wants to render html text, he needs to opt-in else it will stripped out by default
+      // also, the 3rd party lib will saninitze any html code unless it's encoded, so we'll do that
+      if (isRenderHtmlEnabled) {
+        // sanitize any unauthorized html tags like script and others
+        // for the remaining allowed tags we'll permit all attributes
+        const sanitizedOption = sanitizeHtml(optionText, { allowedAttributes: { '*': ['*'] } });
+        optionText = htmlEncode(sanitizedOption);
+      }
 
       // html text of each select option
       options += `<option value="${option[this.valueName]}" ${selected}>${optionText}</option>`;

@@ -45,6 +45,12 @@ export interface ColumnFilter {
   /** Options that could be provided to the Filter, example: { container: 'body', maxHeight: 250} */
   filterOptions?: MultipleSelectOption | any;
 
+  /**
+   * Defaults to false, when set it will render any HTML code instead of removing it (sanitized)
+   * Only used so far in the MultipleSelect & SingleSelect Filters will support it
+   */
+  enableRenderHtml?: boolean;
+
   /** Do we want the Filter to handle translation (localization)? */
   enableTranslateLabel?: boolean;
 
