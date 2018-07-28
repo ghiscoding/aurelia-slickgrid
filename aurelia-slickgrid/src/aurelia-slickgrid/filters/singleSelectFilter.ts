@@ -6,7 +6,6 @@ import {
   FilterArguments,
   FilterCallback,
   GridOption,
-  HtmlElementPosition,
   MultipleSelectOption,
   OperatorString,
   OperatorType,
@@ -14,6 +13,7 @@ import {
   SelectOption
 } from './../models/index';
 import { CollectionService } from '../services/collection.service';
+import { isArrayEqual } from '../services/utilities';
 import * as $ from 'jquery';
 
 @inject(CollectionService, I18N)
@@ -48,7 +48,10 @@ export class SingleSelectFilter implements Filter {
           this.isFilled = false;
           this.$filterElm.removeClass('filled').siblings('div .search-filter').removeClass('filled');
         }
-        this.callback(undefined, { columnDef: this.columnDef, operator: this.operator, searchTerms: (selectedItem ? [selectedItem] : null) });
+
+        if (!isArrayEqual(selectedItems, this.searchTerms)) {
+          this.callback(undefined, { columnDef: this.columnDef, operator: this.operator, searchTerms: (selectedItem ? [selectedItem] : null) });
+        }
       }
     };
   }
