@@ -157,8 +157,12 @@ export class SlickPaginationCustomElement {
     } else if (this.totalItems < this.itemsPerPage) {
       this.dataTo = this.totalItems;
     }
+
     if (backendApi) {
       const itemsPerPage = +this.itemsPerPage;
+
+      // keep start time & end timestamps & return it after process execution
+      const startTime = new Date();
 
       if (backendApi.preProcess) {
         backendApi.preProcess();
@@ -168,6 +172,7 @@ export class SlickPaginationCustomElement {
 
       // await for the Promise to resolve the data
       const processResult = await backendApi.process(query);
+      const endTime = new Date();
 
       // from the result, call our internal post process to update the Dataset and Pagination info
       if (processResult && backendApi.internalPostProcess) {
@@ -176,6 +181,15 @@ export class SlickPaginationCustomElement {
 
       // send the response process to the postProcess callback
       if (backendApi.postProcess) {
+        if (processResult instanceof Object) {
+          processResult.statistics = {
+            startTime,
+            endTime,
+            executionTime: endTime.valueOf() - startTime.valueOf(),
+            itemCount: this.totalItems,
+            totalItemCount: this.totalItems
+          };
+        }
         backendApi.postProcess(processResult);
       }
     } else {

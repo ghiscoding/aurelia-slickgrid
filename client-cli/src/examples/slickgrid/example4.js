@@ -31,6 +31,7 @@ export class Example4 {
   columnDefinitions;
   gridOptions;
   dataset = [];
+  statistics;
 
   constructor() {
     this.defineGrid();
@@ -190,5 +191,17 @@ export class Example4 {
   /** Save current Filters, Sorters in LocaleStorage or DB */
   saveCurrentGridState() {
     console.log('Client sample, current Grid State:: ', this.aureliaGrid.gridStateService.getCurrentGridState());
+  }
+
+  refreshStatistics(e, args) {
+    if (args && args.current > 0) {
+      setTimeout(() => {
+        this.statistics = {
+          startTime: new Date(),
+          itemCount: args && args.current,
+          totalItemCount: this.dataset.length
+        };
+      });
+    }
   }
 }

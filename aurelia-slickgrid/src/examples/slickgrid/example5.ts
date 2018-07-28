@@ -1,7 +1,7 @@
 import { autoinject } from 'aurelia-framework';
 import data from './sample-data/example-data';
 import { HttpClient } from 'aurelia-http-client';
-import { AureliaGridInstance, Column, FieldType, Filters, GridOdataService, GridOption, OperatorType } from '../../aurelia-slickgrid';
+import { AureliaGridInstance, Column, FieldType, Filters, GridOdataService, GridOption, Statistic } from '../../aurelia-slickgrid';
 
 const defaultPageSize = 20;
 const sampleDataRoot = 'src/examples/slickgrid/sample-data';
@@ -28,6 +28,7 @@ export class Example5 {
   columnDefinitions: Column[];
   gridOptions: GridOption;
   dataset = [];
+  statistics: Statistic;
 
   odataQuery = '';
   processing = false;
@@ -81,6 +82,7 @@ export class Example5 {
         preProcess: () => this.displaySpinner(true),
         process: (query) => this.getCustomerApiCall(query),
         postProcess: (response) => {
+          this.statistics = response.statistics;
           this.displaySpinner(false);
           this.getCustomerCallback(response);
         }
@@ -100,6 +102,9 @@ export class Example5 {
     // however we need to force Aurelia to do a dirty check, doing a clone object will do just that
     this.gridOptions.pagination.totalItems = data['totalRecordCount'];
     this.gridOptions = { ...{}, ...this.gridOptions };
+    if (this.statistics) {
+      this.statistics.totalItemCount = data['totalRecordCount'];
+    }
 
     // once pagination totalItems is filled, we can update the dataset
     this.dataset = data['items'];

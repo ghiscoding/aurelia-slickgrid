@@ -27,6 +27,7 @@ export class Example5 {
   columnDefinitions;
   gridOptions;
   dataset = [];
+  statistics;
 
   odataQuery = '';
   processing = false;
@@ -81,6 +82,7 @@ export class Example5 {
         preProcess: () => this.displaySpinner(true),
         process: (query) => this.getCustomerApiCall(query),
         postProcess: (response) => {
+          this.statistics = response.statistics;
           this.displaySpinner(false);
           this.getCustomerCallback(response);
         }
@@ -100,6 +102,9 @@ export class Example5 {
     // however we need to force Aurelia to do a dirty check, doing a clone object will do just that
     this.gridOptions.pagination.totalItems = data.totalRecordCount;
     this.gridOptions = { ...{}, ...this.gridOptions };
+    if (this.statistics) {
+      this.statistics.totalItemCount = data.totalRecordCount;
+    }
 
     // once pagination totalItems is filled, we can update the dataset
     this.dataset = data.items;

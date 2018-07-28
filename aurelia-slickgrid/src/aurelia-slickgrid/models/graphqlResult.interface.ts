@@ -1,3 +1,5 @@
+import { Statistic } from './statistic.interface';
+
 export interface GraphqlResult {
   data: {
     [datasetName: string]: {
@@ -8,4 +10,6 @@ export interface GraphqlResult {
       totalCount: number
     }
   };
+
+  statistics?: Statistic;
 }
