@@ -13,7 +13,8 @@ import {
   GraphqlServiceOption,
   GridOption,
   OperatorType,
-  SortDirection
+  SortDirection,
+  Statistic
 } from 'aurelia-slickgrid';
 
 const defaultPageSize = 20;
@@ -41,6 +42,7 @@ export class Example6 {
   columnDefinitions: Column[];
   gridOptions: GridOption;
   dataset = [];
+  statistics: Statistic;
 
   isWithCursor = false;
   graphqlQuery = '';
@@ -143,7 +145,10 @@ export class Example6 {
         // onInit: (query) => this.getCustomerApiCall(query)
         preProcess: () => this.displaySpinner(true),
         process: (query) => this.getCustomerApiCall(query),
-        postProcess: (result: GraphqlResult) => this.displaySpinner(false)
+        postProcess: (result: GraphqlResult) => {
+          this.statistics = result.statistics;
+          this.displaySpinner(false);
+        }
       },
     };
   }

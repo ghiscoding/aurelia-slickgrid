@@ -27,10 +27,12 @@ import {
   AureliaGridInstance,
   BackendServiceOption,
   Column,
+  GraphqlResult,
   GridOption,
   GridStateChange,
   GridStateType,
   Pagination,
+  Statistic,
 } from './models/index';
 import {
   ControlAndPluginService,
@@ -463,12 +465,16 @@ export class AureliaSlickgridCustomElement {
 
       // wrap this inside a setTimeout to avoid timing issue since the gridOptions needs to be ready before running this onInit
       setTimeout(async () => {
+        // keep start time & end timestamps & return it after process execution
+        const startTime = new Date();
+
         if (backendApi.preProcess) {
           backendApi.preProcess();
         }
 
         // await for the Promise to resolve the data
-        const processResult = await onInitPromise;
+        const processResult: GraphqlResult | any = await onInitPromise;
+        const endTime = new Date();
 
         // define what our internal Post Process callback, only available for GraphQL Service for now
         // it will basically refresh the Dataset & Pagination without having the user to create his own PostProcess every time
@@ -478,6 +484,12 @@ export class AureliaSlickgridCustomElement {
 
         // send the response process to the postProcess callback
         if (backendApi.postProcess) {
+          processResult.statistics = {
+            startTime,
+            endTime,
+            executionTime: endTime.valueOf() - startTime.valueOf(),
+            totalItemCount: this.gridOptions && this.gridOptions.pagination && this.gridOptions.pagination.totalItems
+          };
           backendApi.postProcess(processResult);
         }
       });
@@ -568,8 +580,9 @@ export class AureliaSlickgridCustomElement {
         }
         this.gridPaginationOptions = this.mergeGridOptions(this.gridOptions);
       }
+
+      // resize the grid inside a slight timeout, in case other DOM element changed prior to the resize (like a filter/pagination changed)
       if (this.grid && this.gridOptions.enableAutoResize) {
-        // resize the grid inside a slight timeout, in case other DOM element changed prior to the resize (like a filter/pagination changed)
         this.resizerService.resizeGrid(1, { height: this.gridHeight, width: this.gridWidth });
       }
     }
