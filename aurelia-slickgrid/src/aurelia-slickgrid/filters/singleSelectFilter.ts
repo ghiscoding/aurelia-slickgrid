@@ -26,6 +26,8 @@ export class SingleSelectFilter implements Filter {
   defaultOptions: MultipleSelectOption;
   isFilled = false;
   labelName: string;
+  labelPrefixName: string;
+  labelSuffixName: string;
   valueName: string;
   enableTranslateLabel = false;
 
@@ -83,6 +85,8 @@ export class SingleSelectFilter implements Filter {
 
     this.enableTranslateLabel = this.columnDef.filter.enableTranslateLabel || false;
     this.labelName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.label : 'label';
+    this.labelPrefixName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.labelPrefix : 'labelPrefix';
+    this.labelSuffixName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.labelSuffix : 'labelSuffix';
     this.valueName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.value : 'value';
 
     let newCollection = this.columnDef.filter.collection || [];
@@ -159,10 +163,13 @@ export class SingleSelectFilter implements Filter {
 
       const labelKey = (option.labelKey || option[this.labelName]) as string;
       const selected = (option[this.valueName] === searchTerm) ? 'selected' : '';
-      const textLabel = ((option.labelKey || this.enableTranslateLabel) && this.i18n && typeof this.i18n.tr === 'function') ? this.i18n.tr(labelKey || ' ') : labelKey;
+      const labelText = ((option.labelKey || this.enableTranslateLabel) && this.i18n && typeof this.i18n.tr === 'function') ? this.i18n.tr(labelKey || ' ') : labelKey;
+      const prefixText = option[this.labelPrefixName] || '';
+      const suffixText = option[this.labelSuffixName] || '';
+      const optionText = prefixText + labelText + suffixText;
 
       // html text of each select option
-      options += `<option value="${option[this.valueName]}" ${selected}>${textLabel}</option>`;
+      options += `<option value="${option[this.valueName]}" ${selected}>${optionText}</option>`;
 
       // if there's a search term, we will add the "filled" class for styling purposes
       if (selected) {

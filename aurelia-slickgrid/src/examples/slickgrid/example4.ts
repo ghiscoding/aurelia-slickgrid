@@ -57,7 +57,7 @@ export class Example4 {
     // prepare a multiple-select array to filter with
     const multiSelectFilterArray = [];
     for (let i = 0; i < NB_ITEMS; i++) {
-      multiSelectFilterArray.push({ value: i, label: i });
+      multiSelectFilterArray.push({ value: i, label: i, labelSuffix: ' days' });
     }
 
     this.columnDefinitions = [

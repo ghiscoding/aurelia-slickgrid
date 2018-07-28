@@ -52,6 +52,8 @@ export interface ColumnFilter {
   customStructure?: {
     label: string;
     value: string;
+    labelPrefix?: string;
+    labelSuffix?: string;
   };
 
   /**
