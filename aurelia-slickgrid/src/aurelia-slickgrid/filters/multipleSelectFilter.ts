@@ -165,6 +165,7 @@ export class MultipleSelectFilter implements Filter {
   private buildTemplateHtmlString(optionCollection: any[]) {
     let options = '';
     const isRenderHtmlEnabled = this.columnDef && this.columnDef.filter && this.columnDef.filter.enableRenderHtml || false;
+    const sanitizedOptions = this.gridOptions && this.gridOptions.sanitizeHtmlOptions || {};
 
     optionCollection.forEach((option: SelectOption) => {
       if (!option || (option[this.labelName] === undefined && option.labelKey === undefined)) {
@@ -182,8 +183,8 @@ export class MultipleSelectFilter implements Filter {
       if (isRenderHtmlEnabled) {
         // sanitize any unauthorized html tags like script and others
         // for the remaining allowed tags we'll permit all attributes
-        const sanitizedOption = sanitizeHtml(optionText, { allowedAttributes: { '*': ['*'] } });
-        optionText = htmlEncode(sanitizedOption);
+        const sanitizeText = sanitizeHtml(optionText, sanitizedOptions);
+        optionText = htmlEncode(sanitizeText);
       }
 
       // html text of each select option
