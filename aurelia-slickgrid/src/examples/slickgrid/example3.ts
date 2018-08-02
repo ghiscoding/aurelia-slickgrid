@@ -167,9 +167,14 @@ export class Example3 {
 
         // We can also add HTML text to be rendered (any bad script will be sanitized) but we have to opt-in, else it will be sanitized
         enableRenderHtml: true,
-        collection: Array.from(Array(101).keys()).map(k => ({ value: k, label: k, labelSuffix: '<i class="fa fa-percent" style="color:cadetblue"></i>' })),
-
-        // collection: Array.from(Array(101).keys()).map(k => ({ value: k, label: k, labelSuffix: '%' })),
+        collection: Array.from(Array(101).keys()).map(k => ({ value: k, label: k, symbol: '<i class="fa fa-percent" style="color:cadetblue"></i>' })),
+        customStructure: {
+          value: 'value',
+          label: 'label',
+          labelSuffix: 'symbol',
+          addSpaceBetweenLabels: false
+        },
+        // collection: Array.from(Array(101).keys()).map(k => ({ value: k, label: k, symbol: '%' })),
         collectionSortBy: {
           property: 'label',
           sortDesc: true
