@@ -57,7 +57,7 @@ export class Example4 {
     // prepare a multiple-select array to filter with
     const multiSelectFilterArray = [];
     for (let i = 0; i < NB_ITEMS; i++) {
-      multiSelectFilterArray.push({ value: i, label: i, labelSuffix: ' days' });
+      multiSelectFilterArray.push({ value: i, label: i, text: ' days' });
     }
 
     this.columnDefinitions = [
@@ -90,6 +90,12 @@ export class Example4 {
             property: 'value',
             sortDesc: true,
             fieldType: FieldType.number
+          },
+          customStructure: {
+            value: 'value',
+            label: 'label',
+            labelSuffix: 'text',
+            addSpaceBetweenLabels: true
           },
           model: Filters.multipleSelect,
           searchTerms: [1, 33, 50], // default selection
