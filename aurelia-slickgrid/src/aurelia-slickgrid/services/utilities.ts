@@ -365,7 +365,7 @@ export function arraysEqual(a: any[], b: any[], orderMatters: boolean = false): 
     return true;
   }
 
-  if (a === null || b === null) {
+  if (!a || !b) {
     return false;
   }
 
@@ -385,6 +385,22 @@ export function arraysEqual(a: any[], b: any[], orderMatters: boolean = false): 
   }
 
   return true;
+}
+
+/**
+ * Compares two objects to determine if all the properties are equal
+ * We will do a deep check recursively to make sure all properties really are the same
+ * @param x first object
+ * @param y second object to compare with a
+ */
+export function objectsDeepEqual(x, y) {
+  const ok = Object.keys;
+  const tx = typeof x;
+  const ty = typeof y;
+  return x && y && tx === 'object' && tx === ty ? (
+    ok(x).length === ok(y).length &&
+    ok(x).every(key => objectsDeepEqual(x[key], y[key]))
+  ) : (x === y);
 }
 
 /**

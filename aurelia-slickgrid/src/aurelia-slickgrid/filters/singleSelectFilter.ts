@@ -13,7 +13,7 @@ import {
   SelectOption
 } from './../models/index';
 import { CollectionService } from '../services/collection.service';
-import { arraysEqual, htmlEncode } from '../services/utilities';
+import { htmlEncode } from '../services/utilities';
 import * as sanitizeHtml from 'sanitize-html';
 import * as $ from 'jquery';
 
@@ -57,9 +57,7 @@ export class SingleSelectFilter implements Filter {
           this.$filterElm.removeClass('filled').siblings('div .search-filter').removeClass('filled');
         }
 
-        if (!arraysEqual(selectedItems, this.searchTerms)) {
-          this.callback(undefined, { columnDef: this.columnDef, operator: this.operator, searchTerms: (selectedItem ? [selectedItem] : null) });
-        }
+        this.callback(undefined, { columnDef: this.columnDef, operator: this.operator, searchTerms: (selectedItem ? [selectedItem] : null) });
       }
     };
   }
