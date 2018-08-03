@@ -65,33 +65,6 @@ export function decimalFormatted(input: number | string, minDecimal?: number, ma
 }
 
 /**
- * Are 2 provided arrays equal
- * @param arrayA
- * @param arrayB
- * @return boolean is equal
- */
-export function isArrayEqual(a, b) {
-  if (a === b) {
-    return true;
-  }
-  if (a == null || b == null) {
-    return false;
-  }
-  if (a.length !== b.length) {
-    return false;
-  }
-  // If you don't care about the order of the elements inside
-  // the array, you should sort both arrays here.
-  for (let i = 0; i < a.length; ++i) {
-    if (a[i] !== b[i]) {
-      return false;
-    }
-  }
-
-  return true;
-}
-
-/**
  * From a Date FieldType, return it's equivalent moment.js format
  * refer to moment.js for the format standard used: https://momentjs.com/docs/#/parsing/string-format/
  * @param fieldType
@@ -381,7 +354,7 @@ export function arraysEqual(a: any[], b: any[], orderMatters: boolean = false): 
     return true;
   }
 
-  if (a === null || b === null) {
+  if (!a || !b) {
     return false;
   }
 
@@ -401,6 +374,22 @@ export function arraysEqual(a: any[], b: any[], orderMatters: boolean = false): 
   }
 
   return true;
+}
+
+/**
+ * Compares two objects to determine if all the properties are equal
+ * We will do a deep check recursively to make sure all properties really are the same
+ * @param x first object
+ * @param y second object to compare with a
+ */
+export function objectsDeepEqual(x, y) {
+  const ok = Object.keys;
+  const tx = typeof x;
+  const ty = typeof y;
+  return x && y && tx === 'object' && tx === ty ? (
+    ok(x).length === ok(y).length &&
+    ok(x).every(key => objectsDeepEqual(x[key], y[key]))
+  ) : (x === y);
 }
 
 /**

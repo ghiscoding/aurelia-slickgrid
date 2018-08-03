@@ -1,7 +1,7 @@
 import { singleton, inject } from 'aurelia-framework';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { FilterConditions } from './../filter-conditions/index';
-import { Filters, FilterFactory } from './../filters/index';
+import { FilterFactory } from './../filters/index';
 import {
   Column,
   ColumnFilter,
@@ -17,6 +17,7 @@ import {
   SearchTerm,
   SlickEvent
 } from './../models/index';
+import { objectsDeepEqual } from './utilities';
 import * as $ from 'jquery';
 
 // using external non-typed js libraries
@@ -330,6 +331,9 @@ export class FilterService {
       const hasSearchTerms = searchTerms && Array.isArray(searchTerms);
       const termsCount = Array.isArray(searchTerms) && searchTerms.length || 0;
 
+      // keep deep copy of old filter values
+      const oldColumnFilters = { ...this._columnFilters };
+
       if (!hasSearchTerms || termsCount === 0 || (termsCount === 1 && Array.isArray(searchTerms) && searchTerms[0] === '')) {
         // delete the property from the columnFilters when it becomes empty
         // without doing this, it would leave an incorrect state of the previous column filters when filtering on another column
@@ -347,16 +351,19 @@ export class FilterService {
         this._columnFilters[colId] = colFilter;
       }
 
-      this.triggerEvent(this._slickSubscriber, {
-        clearFilterTriggered: args && args.clearFilterTriggered,
-        columnId,
-        columnDef: args.columnDef || null,
-        columnFilters: this._columnFilters,
-        operator,
-        searchTerms,
-        serviceOptions: this._onFilterChangedOptions,
-        grid: this._grid
-      }, e);
+      // trigger an event only if Filters changed
+      if (!objectsDeepEqual(oldColumnFilters, this._columnFilters)) {
+        this.triggerEvent(this._slickSubscriber, {
+          clearFilterTriggered: args && args.clearFilterTriggered,
+          columnId,
+          columnDef: args.columnDef || null,
+          columnFilters: this._columnFilters,
+          operator,
+          searchTerms,
+          serviceOptions: this._onFilterChangedOptions,
+          grid: this._grid
+        }, e);
+      }
     }
   }
 
