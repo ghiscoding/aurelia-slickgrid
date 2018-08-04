@@ -57,7 +57,7 @@ export class Example4 {
     // prepare a multiple-select array to filter with
     const multiSelectFilterArray = [];
     for (let i = 0; i < NB_ITEMS; i++) {
-      multiSelectFilterArray.push({ value: i, label: i });
+      multiSelectFilterArray.push({ value: i, label: i, text: ' days' });
     }
 
     this.columnDefinitions = [
@@ -91,6 +91,12 @@ export class Example4 {
             sortDesc: true,
             fieldType: FieldType.number
           },
+          customStructure: {
+            value: 'value',
+            label: 'label',
+            labelSuffix: 'text',
+            addSpaceBetweenLabels: true
+          },
           model: Filters.multipleSelect,
           searchTerms: [1, 33, 50], // default selection
           // we could add certain option(s) to the "multiple-select" plugin
@@ -117,11 +123,15 @@ export class Example4 {
         type: FieldType.dateUtc, outputType: FieldType.dateTimeIsoAmPm, filterable: true, filter: { model: Filters.compoundDate }
       },
       {
-        id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', minWidth: 85, maxWidth: 85, formatter: Formatters.checkmark,
+        id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', minWidth: 85, maxWidth: 95, formatter: Formatters.checkmark,
         type: FieldType.boolean,
         sortable: true,
         filterable: true,
         filter: {
+          // We can also add HTML text to be rendered (any bad script will be sanitized) but we have to opt-in, else it will be sanitized
+          // enableRenderHtml: true,
+          // collection: [{ value: '', label: '' }, { value: true, label: 'True', labelPrefix: `<i class="fa fa-check"></i> ` }, { value: false, label: 'False' }],
+
           collection: [{ value: '', label: '' }, { value: true, label: 'True' }, { value: false, label: 'False' }],
           model: Filters.singleSelect,
 
