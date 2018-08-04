@@ -1,6 +1,6 @@
-import { Filters } from '../filters/index';
 import { FieldType, OperatorType } from '../models/index';
 import * as moment from 'moment';
+import * as $ from 'jquery';
 
 /**
  * Simple function to which will loop and create as demanded the number of white spaces,
@@ -14,6 +14,17 @@ export function addWhiteSpaces(nbSpaces: number): string {
     result += ' ';
   }
   return result;
+}
+
+/** HTML encode using jQuery */
+export function htmlEncode(value) {
+  // create a in-memory div, set it's inner text(which jQuery automatically encodes)
+  // then grab the encoded contents back out.  The div never exists on the page.
+  return $('<div/>').text(value).html();
+}
+/** HTML decode using jQuery */
+export function htmlDecode(value) {
+  return $('<div/>').html(value).text();
 }
 
 /**
