@@ -1,4 +1,4 @@
-System.register(["aurelia-framework", "aurelia-i18n", "../services/index", "jquery"], function (exports_1, context_1) {
+System.register(["aurelia-framework", "aurelia-i18n", "../services/index", "../services/utilities", "sanitize-html", "jquery"], function (exports_1, context_1) {
     "use strict";
     var __assign = (this && this.__assign) || Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -15,7 +15,7 @@ System.register(["aurelia-framework", "aurelia-i18n", "../services/index", "jque
         return c > 3 && r && Object.defineProperty(target, key, r), r;
     };
     var __moduleName = context_1 && context_1.id;
-    var aurelia_framework_1, aurelia_i18n_1, index_1, $, SELECT_ELEMENT_HEIGHT, MultipleSelectEditor;
+    var aurelia_framework_1, aurelia_i18n_1, index_1, utilities_1, sanitizeHtml, $, SELECT_ELEMENT_HEIGHT, MultipleSelectEditor;
     return {
         setters: [
             function (aurelia_framework_1_1) {
@@ -26,6 +26,12 @@ System.register(["aurelia-framework", "aurelia-i18n", "../services/index", "jque
             },
             function (index_1_1) {
                 index_1 = index_1_1;
+            },
+            function (utilities_1_1) {
+                utilities_1 = utilities_1_1;
+            },
+            function (sanitizeHtml_1) {
+                sanitizeHtml = sanitizeHtml_1;
             },
             function ($_1) {
                 $ = $_1;
@@ -53,6 +59,11 @@ System.register(["aurelia-framework", "aurelia-i18n", "../services/index", "jque
                         width: 150,
                         offsetLeft: 20,
                         onOpen: function () { return _this.autoAdjustDropPosition(_this.$editorElm, _this.editorElmOptions); },
+                        textTemplate: function ($elm) {
+                            // render HTML code or not, by default it is sanitized and won't be rendered
+                            var isRenderHtmlEnabled = _this.columnDef && _this.columnDef.internalColumnEditor && _this.columnDef.internalColumnEditor.enableRenderHtml || false;
+                            return isRenderHtmlEnabled ? $elm.text() : $elm.html();
+                        },
                     };
                     this.defaultOptions.countSelected = this.i18n.tr('X_OF_Y_SELECTED');
                     this.defaultOptions.allSelected = this.i18n.tr('ALL_SELECTED');
@@ -104,9 +115,11 @@ System.register(["aurelia-framework", "aurelia-i18n", "../services/index", "jque
                         throw new Error("[Aurelia-SlickGrid] You need to pass a \"collection\" inside Column Definition Editor for the MultipleSelect Editor to work correctly.\n      Also each option should include a value/label pair (or value/labelKey when using Locale).\n      For example: { editor: { collection: [{ value: true, label: 'True' },{ value: false, label: 'False'}] } }");
                     }
                     this.enableTranslateLabel = (this.columnDef.internalColumnEditor.enableTranslateLabel) ? this.columnDef.internalColumnEditor.enableTranslateLabel : false;
+                    this.labelName = this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.customStructure && this.columnDef.internalColumnEditor.customStructure.label || 'label';
+                    this.labelPrefixName = this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.customStructure && this.columnDef.internalColumnEditor.customStructure.labelPrefix || 'labelPrefix';
+                    this.labelSuffixName = this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.customStructure && this.columnDef.internalColumnEditor.customStructure.labelSuffix || 'labelSuffix';
+                    this.valueName = this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.customStructure && this.columnDef.internalColumnEditor.customStructure.value || 'value';
                     var newCollection = this.columnDef.internalColumnEditor.collection || [];
-                    this.labelName = (this.columnDef.internalColumnEditor.customStructure) ? this.columnDef.internalColumnEditor.customStructure.label : 'label';
-                    this.valueName = (this.columnDef.internalColumnEditor.customStructure) ? this.columnDef.internalColumnEditor.customStructure.value : 'value';
                     // user might want to filter certain items of the collection
                     if (this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.collectionFilterBy) {
                         var filterBy = this.columnDef.internalColumnEditor.collectionFilterBy;
@@ -148,7 +161,7 @@ System.register(["aurelia-framework", "aurelia-i18n", "../services/index", "jque
                     this.$editorElm.focus();
                 };
                 MultipleSelectEditor.prototype.isValueChanged = function () {
-                    return !index_1.arraysEqual(this.$editorElm.val(), this.defaultValue);
+                    return !utilities_1.arraysEqual(this.$editorElm.val(), this.defaultValue);
                 };
                 MultipleSelectEditor.prototype.validate = function () {
                     if (this.validator) {
@@ -201,6 +214,9 @@ System.register(["aurelia-framework", "aurelia-i18n", "../services/index", "jque
                 MultipleSelectEditor.prototype.buildTemplateHtmlString = function (collection) {
                     var _this = this;
                     var options = '';
+                    var isAddingSpaceBetweenLabels = this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.customStructure && this.columnDef.internalColumnEditor.customStructure.addSpaceBetweenLabels || false;
+                    var isRenderHtmlEnabled = this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.enableRenderHtml || false;
+                    var sanitizedOptions = this.gridOptions && this.gridOptions.sanitizeHtmlOptions || {};
                     collection.forEach(function (option) {
                         if (!option || (option[_this.labelName] === undefined && option.labelKey === undefined)) {
                             throw new Error('A collection with value/label (or value/labelKey when using ' +
@@ -208,8 +224,19 @@ System.register(["aurelia-framework", "aurelia-i18n", "../services/index", "jque
                                 '{ collection: [ { value: \'1\', label: \'One\' } ])');
                         }
                         var labelKey = (option.labelKey || option[_this.labelName]);
-                        var textLabel = (option.labelKey || _this.enableTranslateLabel) ? _this.i18n.tr(labelKey || ' ') : labelKey;
-                        options += "<option value=\"" + option[_this.valueName] + "\">" + textLabel + "</option>";
+                        var labelText = (option.labelKey || _this.enableTranslateLabel) ? _this.i18n.tr(labelKey || ' ') : labelKey;
+                        var prefixText = option[_this.labelPrefixName] || '';
+                        var suffixText = option[_this.labelSuffixName] || '';
+                        var optionText = isAddingSpaceBetweenLabels ? prefixText + " " + labelText + " " + suffixText : (prefixText + labelText + suffixText);
+                        // if user specifically wants to render html text, he needs to opt-in else it will stripped out by default
+                        // also, the 3rd party lib will saninitze any html code unless it's encoded, so we'll do that
+                        if (isRenderHtmlEnabled) {
+                            // sanitize any unauthorized html tags like script and others
+                            // for the remaining allowed tags we'll permit all attributes
+                            var sanitizeText = sanitizeHtml(optionText, sanitizedOptions);
+                            optionText = utilities_1.htmlEncode(sanitizeText);
+                        }
+                        options += "<option value=\"" + option[_this.valueName] + "\">" + optionText + "</option>";
                     });
                     return "<select class=\"ms-filter search-filter\" multiple=\"multiple\">" + options + "</select>";
                 };

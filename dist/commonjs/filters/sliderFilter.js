@@ -89,6 +89,7 @@ var SliderFilter = /** @class */ (function () {
     SliderFilter.prototype.clear = function () {
         if (this.$filterElm) {
             this._clearFilterTriggered = true;
+            this.searchTerms = [];
             var clearedValue = this.filterParams.hasOwnProperty('sliderStartValue') ? this.filterParams.sliderStartValue : DEFAULT_MIN_VALUE;
             this.$filterElm.children('input').val(clearedValue);
             this.$filterElm.children('div.input-group-addon.input-group-append').children().html(clearedValue);

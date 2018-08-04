@@ -1,5 +1,6 @@
 import { FieldType, OperatorType } from '../models/index';
 import * as moment from 'moment';
+import * as $ from 'jquery';
 /**
  * Simple function to which will loop and create as demanded the number of white spaces,
  * this will be used in the Excel export
@@ -11,6 +12,16 @@ export function addWhiteSpaces(nbSpaces) {
         result += ' ';
     }
     return result;
+}
+/** HTML encode using jQuery */
+export function htmlEncode(value) {
+    // create a in-memory div, set it's inner text(which jQuery automatically encodes)
+    // then grab the encoded contents back out.  The div never exists on the page.
+    return $('<div/>').text(value).html();
+}
+/** HTML decode using jQuery */
+export function htmlDecode(value) {
+    return $('<div/>').html(value).text();
 }
 /**
  * decode text into html entity
@@ -330,7 +341,7 @@ export function arraysEqual(a, b, orderMatters) {
     if (a === b) {
         return true;
     }
-    if (a === null || b === null) {
+    if (!a || !b) {
         return false;
     }
     if (a.length !== b.length) {
@@ -346,6 +357,19 @@ export function arraysEqual(a, b, orderMatters) {
         }
     }
     return true;
+}
+/**
+ * Compares two objects to determine if all the properties are equal
+ * We will do a deep check recursively to make sure all properties really are the same
+ * @param x first object
+ * @param y second object to compare with a
+ */
+export function objectsDeepEqual(x, y) {
+    var ok = Object.keys;
+    var tx = typeof x;
+    var ty = typeof y;
+    return x && y && tx === 'object' && tx === ty ? (ok(x).length === ok(y).length &&
+        ok(x).every(function (key) { return objectsDeepEqual(x[key], y[key]); })) : (x === y);
 }
 /**
  * Uses the logic function to find an item in an array or returns the default

@@ -12,6 +12,8 @@ export declare class SingleSelectFilter implements Filter {
     defaultOptions: MultipleSelectOption;
     isFilled: boolean;
     labelName: string;
+    labelPrefixName: string;
+    labelSuffixName: string;
     valueName: string;
     enableTranslateLabel: boolean;
     constructor(collectionService: CollectionService, i18n: I18N);

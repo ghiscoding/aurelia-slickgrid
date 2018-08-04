@@ -116,6 +116,7 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../models/index", "jque
                 CompoundSliderFilter.prototype.clear = function () {
                     if (this.$filterElm && this.$selectOperatorElm) {
                         this._clearFilterTriggered = true;
+                        this.searchTerms = [];
                         var clearedValue = this.filterParams.hasOwnProperty('sliderStartValue') ? this.filterParams.sliderStartValue : DEFAULT_MIN_VALUE;
                         this.$selectOperatorElm.val(0);
                         this.$filterInputElm.val(clearedValue);

@@ -5,6 +5,8 @@ export interface AureliaGridInstance {
     dataView: any;
     /** Slick Grid object */
     slickGrid: any;
+    /** Dispose of the grid and optionally empty the DOM element grid container as well */
+    dispose: (emptyDomElementContainer?: boolean) => void;
     /** Backend Service, when available */
     backendService?: BackendService;
     /** Plugin (and Control) Service */

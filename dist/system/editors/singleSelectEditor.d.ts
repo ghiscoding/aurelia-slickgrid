@@ -20,6 +20,10 @@ export declare class SingleSelectEditor implements Editor {
     collection: SelectOption[];
     /** The property name for labels in the collection */
     labelName: string;
+    /** The property name for a prefix that can be added to the labels in the collection */
+    labelPrefixName: string;
+    /** The property name for a suffix that can be added to the labels in the collection */
+    labelSuffixName: string;
     /** The property name for values in the collection */
     valueName: string;
     /** Grid options */

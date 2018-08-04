@@ -57,6 +57,7 @@ let SelectFilter = class SelectFilter {
     clear() {
         if (this.$filterElm) {
             this._clearFilterTriggered = true;
+            this.searchTerms = [];
             this.$filterElm.val('');
             this.$filterElm.trigger('change');
         }

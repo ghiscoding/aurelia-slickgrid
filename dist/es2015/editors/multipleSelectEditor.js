@@ -6,7 +6,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 import { inject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
-import { arraysEqual, CollectionService } from '../services/index';
+import { CollectionService } from '../services/index';
+import { arraysEqual, htmlEncode } from '../services/utilities';
+import * as sanitizeHtml from 'sanitize-html';
 import * as $ from 'jquery';
 // height in pixel of the multiple-select DOM element
 const SELECT_ELEMENT_HEIGHT = 26;
@@ -31,6 +33,11 @@ let MultipleSelectEditor = class MultipleSelectEditor {
             width: 150,
             offsetLeft: 20,
             onOpen: () => this.autoAdjustDropPosition(this.$editorElm, this.editorElmOptions),
+            textTemplate: ($elm) => {
+                // render HTML code or not, by default it is sanitized and won't be rendered
+                const isRenderHtmlEnabled = this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.enableRenderHtml || false;
+                return isRenderHtmlEnabled ? $elm.text() : $elm.html();
+            },
         };
         this.defaultOptions.countSelected = this.i18n.tr('X_OF_Y_SELECTED');
         this.defaultOptions.allSelected = this.i18n.tr('ALL_SELECTED');
@@ -67,9 +74,11 @@ let MultipleSelectEditor = class MultipleSelectEditor {
       For example: { editor: { collection: [{ value: true, label: 'True' },{ value: false, label: 'False'}] } }`);
         }
         this.enableTranslateLabel = (this.columnDef.internalColumnEditor.enableTranslateLabel) ? this.columnDef.internalColumnEditor.enableTranslateLabel : false;
+        this.labelName = this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.customStructure && this.columnDef.internalColumnEditor.customStructure.label || 'label';
+        this.labelPrefixName = this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.customStructure && this.columnDef.internalColumnEditor.customStructure.labelPrefix || 'labelPrefix';
+        this.labelSuffixName = this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.customStructure && this.columnDef.internalColumnEditor.customStructure.labelSuffix || 'labelSuffix';
+        this.valueName = this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.customStructure && this.columnDef.internalColumnEditor.customStructure.value || 'value';
         let newCollection = this.columnDef.internalColumnEditor.collection || [];
-        this.labelName = (this.columnDef.internalColumnEditor.customStructure) ? this.columnDef.internalColumnEditor.customStructure.label : 'label';
-        this.valueName = (this.columnDef.internalColumnEditor.customStructure) ? this.columnDef.internalColumnEditor.customStructure.value : 'value';
         // user might want to filter certain items of the collection
         if (this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.collectionFilterBy) {
             const filterBy = this.columnDef.internalColumnEditor.collectionFilterBy;
@@ -162,6 +171,9 @@ let MultipleSelectEditor = class MultipleSelectEditor {
     /** Build the template HTML string */
     buildTemplateHtmlString(collection) {
         let options = '';
+        const isAddingSpaceBetweenLabels = this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.customStructure && this.columnDef.internalColumnEditor.customStructure.addSpaceBetweenLabels || false;
+        const isRenderHtmlEnabled = this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.enableRenderHtml || false;
+        const sanitizedOptions = this.gridOptions && this.gridOptions.sanitizeHtmlOptions || {};
         collection.forEach((option) => {
             if (!option || (option[this.labelName] === undefined && option.labelKey === undefined)) {
                 throw new Error('A collection with value/label (or value/labelKey when using ' +
@@ -169,8 +181,19 @@ let MultipleSelectEditor = class MultipleSelectEditor {
                     '{ collection: [ { value: \'1\', label: \'One\' } ])');
             }
             const labelKey = (option.labelKey || option[this.labelName]);
-            const textLabel = (option.labelKey || this.enableTranslateLabel) ? this.i18n.tr(labelKey || ' ') : labelKey;
-            options += `<option value="${option[this.valueName]}">${textLabel}</option>`;
+            const labelText = (option.labelKey || this.enableTranslateLabel) ? this.i18n.tr(labelKey || ' ') : labelKey;
+            const prefixText = option[this.labelPrefixName] || '';
+            const suffixText = option[this.labelSuffixName] || '';
+            let optionText = isAddingSpaceBetweenLabels ? `${prefixText} ${labelText} ${suffixText}` : (prefixText + labelText + suffixText);
+            // if user specifically wants to render html text, he needs to opt-in else it will stripped out by default
+            // also, the 3rd party lib will saninitze any html code unless it's encoded, so we'll do that
+            if (isRenderHtmlEnabled) {
+                // sanitize any unauthorized html tags like script and others
+                // for the remaining allowed tags we'll permit all attributes
+                const sanitizeText = sanitizeHtml(optionText, sanitizedOptions);
+                optionText = htmlEncode(sanitizeText);
+            }
+            options += `<option value="${option[this.valueName]}">${optionText}</option>`;
         });
         return `<select class="ms-filter search-filter" multiple="multiple">${options}</select>`;
     }

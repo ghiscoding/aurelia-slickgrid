@@ -9,6 +9,7 @@ import { EventAggregator } from 'aurelia-event-aggregator';
 import { FilterConditions } from './../filter-conditions/index';
 import { FilterFactory } from './../filters/index';
 import { FieldType, OperatorType } from './../models/index';
+import { objectsDeepEqual } from './utilities';
 import * as $ from 'jquery';
 let FilterService = class FilterService {
     constructor(ea, filterFactory) {
@@ -56,12 +57,15 @@ let FilterService = class FilterService {
         if (!backendApi || !backendApi.process || !backendApi.service) {
             throw new Error(`BackendServiceApi requires at least a "process" function and a "service" defined`);
         }
+        // keep start time & end timestamps & return it after process execution
+        const startTime = new Date();
         // run a preProcess callback if defined
         if (backendApi.preProcess) {
             backendApi.preProcess();
         }
         // call the service to get a query back
         const query = await backendApi.service.processOnFilterChanged(event, args);
+        const endTime = new Date();
         // emit an onFilterChanged event
         if (args && !args.clearFilterTriggered) {
             this.emitFilterChanged('remote');
@@ -74,6 +78,14 @@ let FilterService = class FilterService {
         }
         // send the response process to the postProcess callback
         if (backendApi.postProcess !== undefined) {
+            if (processResult instanceof Object) {
+                processResult.statistics = {
+                    startTime,
+                    endTime,
+                    executionTime: endTime.valueOf() - startTime.valueOf(),
+                    totalItemCount: this._gridOptions && this._gridOptions.pagination && this._gridOptions.pagination.totalItems
+                };
+            }
             backendApi.postProcess(processResult);
         }
     }
@@ -258,6 +270,8 @@ let FilterService = class FilterService {
             const operator = args.operator || undefined;
             const hasSearchTerms = searchTerms && Array.isArray(searchTerms);
             const termsCount = Array.isArray(searchTerms) && searchTerms.length || 0;
+            // keep deep copy of old filter values
+            const oldColumnFilters = Object.assign({}, this._columnFilters);
             if (!hasSearchTerms || termsCount === 0 || (termsCount === 1 && Array.isArray(searchTerms) && searchTerms[0] === '')) {
                 // delete the property from the columnFilters when it becomes empty
                 // without doing this, it would leave an incorrect state of the previous column filters when filtering on another column
@@ -275,16 +289,19 @@ let FilterService = class FilterService {
                 }
                 this._columnFilters[colId] = colFilter;
             }
-            this.triggerEvent(this._slickSubscriber, {
-                clearFilterTriggered: args && args.clearFilterTriggered,
-                columnId,
-                columnDef: args.columnDef || null,
-                columnFilters: this._columnFilters,
-                operator,
-                searchTerms,
-                serviceOptions: this._onFilterChangedOptions,
-                grid: this._grid
-            }, e);
+            // trigger an event only if Filters changed
+            if (!objectsDeepEqual(oldColumnFilters, this._columnFilters)) {
+                this.triggerEvent(this._slickSubscriber, {
+                    clearFilterTriggered: args && args.clearFilterTriggered,
+                    columnId,
+                    columnDef: args.columnDef || null,
+                    columnFilters: this._columnFilters,
+                    operator,
+                    searchTerms,
+                    serviceOptions: this._onFilterChangedOptions,
+                    grid: this._grid
+                }, e);
+            }
         }
     }
     addFilterTemplateToHeaderRow(args) {

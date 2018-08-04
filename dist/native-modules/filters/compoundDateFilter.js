@@ -65,6 +65,7 @@ var CompoundDateFilter = /** @class */ (function () {
     CompoundDateFilter.prototype.clear = function () {
         if (this.flatInstance && this.$selectOperatorElm) {
             this._clearFilterTriggered = true;
+            this.searchTerms = [];
             this.$selectOperatorElm.val(0);
             this.flatInstance.clear();
         }

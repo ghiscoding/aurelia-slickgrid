@@ -161,6 +161,8 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
                 // Slick Grid & DataView objects
                 dataView: this.dataview,
                 slickGrid: this.grid,
+                // public methods
+                dispose: this.dispose.bind(this),
                 // return all available Services (non-singleton)
                 backendService: this.gridOptions && this.gridOptions.backendServiceApi && this.gridOptions.backendServiceApi.service,
                 exportService: this.exportService,
@@ -175,12 +177,16 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
             };
             this.dispatchCustomEvent(aureliaEventPrefix + "-on-aurelia-grid-created", aureliaElementInstance);
         };
-        AureliaSlickgridCustomElement.prototype.detached = function () {
+        AureliaSlickgridCustomElement.prototype.detached = function (emptyDomElementContainer) {
+            if (emptyDomElementContainer === void 0) { emptyDomElementContainer = false; }
             this.ea.publish('onBeforeGridDestroy', this.grid);
             this.dispatchCustomEvent(aureliaEventPrefix + "-on-before-grid-destroy", this.grid);
             this.dataview = [];
             this._eventHandler.unsubscribeAll();
             this.grid.destroy();
+            if (emptyDomElementContainer) {
+                $(this.gridOptions.gridContainerId).empty();
+            }
             this.ea.publish('onAfterGridDestroyed', true);
             this.dispatchCustomEvent(aureliaEventPrefix + "-on-after-grid-destroyed", this.grid);
             // dispose of all Services
@@ -197,6 +203,10 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
                 }
             });
             this.subscriptions = [];
+        };
+        AureliaSlickgridCustomElement.prototype.dispose = function (emptyDomElementContainer) {
+            if (emptyDomElementContainer === void 0) { emptyDomElementContainer = false; }
+            this.detached(emptyDomElementContainer);
         };
         AureliaSlickgridCustomElement.prototype.bind = function () {
             // get the grid options (priority is Global Options first, then user option which could overwrite the Global options)
@@ -297,7 +307,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
             var _loop_1 = function (prop) {
                 if (grid.hasOwnProperty(prop) && prop.startsWith('on')) {
                     this_1._eventHandler.subscribe(grid[prop], function (e, args) {
-                        _this.dispatchCustomEvent(eventPrefix + "-" + index_2.toKebabCase(prop), { eventData: e, args: args });
+                        return _this.dispatchCustomEvent(eventPrefix + "-" + index_2.toKebabCase(prop), { eventData: e, args: args });
                     });
                 }
             };
@@ -309,7 +319,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
             var _loop_2 = function (prop) {
                 if (dataView.hasOwnProperty(prop) && prop.startsWith('on')) {
                     this_2._eventHandler.subscribe(dataView[prop], function (e, args) {
-                        _this.dispatchCustomEvent(eventPrefix + "-" + index_2.toKebabCase(prop), { eventData: e, args: args });
+                        return _this.dispatchCustomEvent(eventPrefix + "-" + index_2.toKebabCase(prop), { eventData: e, args: args });
                     });
                 }
             };
@@ -382,16 +392,18 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
                 var onInitPromise_1 = (isExecuteCommandOnInit) ? (backendApi && backendApi.process) ? backendApi.process(query) : undefined : (backendApi && backendApi.onInit) ? backendApi.onInit(query) : null;
                 // wrap this inside a setTimeout to avoid timing issue since the gridOptions needs to be ready before running this onInit
                 setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
-                    var processResult;
+                    var startTime, processResult, endTime;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
+                                startTime = new Date();
                                 if (backendApi.preProcess) {
                                     backendApi.preProcess();
                                 }
                                 return [4 /*yield*/, onInitPromise_1];
                             case 1:
                                 processResult = _a.sent();
+                                endTime = new Date();
                                 // define what our internal Post Process callback, only available for GraphQL Service for now
                                 // it will basically refresh the Dataset & Pagination without having the user to create his own PostProcess every time
                                 if (processResult && backendApi && backendApi.service instanceof index_2.GraphqlService && backendApi.internalPostProcess) {
@@ -399,6 +411,12 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
                                 }
                                 // send the response process to the postProcess callback
                                 if (backendApi.postProcess) {
+                                    processResult.statistics = {
+                                        startTime: startTime,
+                                        endTime: endTime,
+                                        executionTime: endTime.valueOf() - startTime.valueOf(),
+                                        totalItemCount: this.gridOptions && this.gridOptions.pagination && this.gridOptions.pagination.totalItems
+                                    };
                                     backendApi.postProcess(processResult);
                                 }
                                 return [2 /*return*/];
@@ -438,7 +456,14 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
             // use jquery extend to deep merge and avoid immutable properties changed in GlobalGridOptions after route change
             return $.extend(true, {}, global_grid_options_1.GlobalGridOptions, gridOptions);
         };
+        /**
+         * On a Pagination changed, we will trigger a Grid State changed with the new pagination info
+         * Also if we use Row Selection or the Checkbox Selector, we need to reset any selection
+         */
         AureliaSlickgridCustomElement.prototype.paginationChanged = function (pagination) {
+            if (this.gridOptions.enableRowSelection || this.gridOptions.enableCheckboxSelector) {
+                this.grid.setSelectedRows([]);
+            }
             this.ea.publish('gridStateService:changed', {
                 change: { newValues: pagination, type: index_1.GridStateType.pagination },
                 gridState: this.gridStateService.getCurrentGridState()
@@ -457,7 +482,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
                 // this.grid.setData(dataset);
                 this.grid.invalidate();
                 this.grid.render();
-                if (this.gridOptions.enablePagination || this.gridOptions.backendServiceApi) {
+                if (this.gridOptions.backendServiceApi) {
                     // do we want to show pagination?
                     // if we have a backendServiceApi and the enablePagination is undefined, we'll assume that we do want to see it, else get that defined value
                     this.showPagination = ((this.gridOptions.backendServiceApi && this.gridOptions.enablePagination === undefined) ? true : this.gridOptions.enablePagination) || false;
@@ -475,8 +500,8 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
                     }
                     this.gridPaginationOptions = this.mergeGridOptions(this.gridOptions);
                 }
+                // resize the grid inside a slight timeout, in case other DOM element changed prior to the resize (like a filter/pagination changed)
                 if (this.grid && this.gridOptions.enableAutoResize) {
-                    // resize the grid inside a slight timeout, in case other DOM element changed prior to the resize (like a filter/pagination changed)
                     this.resizerService.resizeGrid(1, { height: this.gridHeight, width: this.gridWidth });
                 }
             }
@@ -509,13 +534,14 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
             }
             this.grid.autosizeColumns();
         };
-        AureliaSlickgridCustomElement.prototype.dispatchCustomEvent = function (eventName, data, isBubbling) {
+        AureliaSlickgridCustomElement.prototype.dispatchCustomEvent = function (eventName, data, isBubbling, isCancelable) {
             if (isBubbling === void 0) { isBubbling = true; }
-            var eventInit = { bubbles: isBubbling };
+            if (isCancelable === void 0) { isCancelable = true; }
+            var eventInit = { bubbles: isBubbling, cancelable: isCancelable };
             if (data) {
                 eventInit.detail = data;
             }
-            this.elm.dispatchEvent(new CustomEvent(eventName, eventInit));
+            return this.elm.dispatchEvent(new CustomEvent(eventName, eventInit));
         };
         __decorate([
             aurelia_framework_1.bindable({ defaultBindingMode: aurelia_framework_1.bindingMode.twoWay })

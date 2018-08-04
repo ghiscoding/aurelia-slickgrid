@@ -36,14 +36,6 @@ define(["require", "exports", "aurelia-framework", "./utilities", "./../models/i
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(GraphqlService.prototype, "_columnDefinitions", {
-            /** Getter for the Column Definitions pulled through the Grid Object */
-            get: function () {
-                return (this._grid && this._grid.getColumns) ? this._grid.getColumns() : [];
-            },
-            enumerable: true,
-            configurable: true
-        });
         /**
          * Build the GraphQL query, since the service include/exclude cursor, the output query will be different.
          * @param serviceOptions GraphqlServiceOption
@@ -146,17 +138,12 @@ define(["require", "exports", "aurelia-framework", "./utilities", "./../models/i
                 .replace(/^\{/, '')
                 .replace(/\}$/, '');
         };
-        /**
-         * Initialize the Service
-         * @param GraphQL Service Options
-         * @param pagination
-         * @param grid
-         */
         GraphqlService.prototype.init = function (serviceOptions, pagination, grid) {
             this._grid = grid;
             this.options = serviceOptions || {};
-            if (pagination) {
-                this.pagination = pagination;
+            this.pagination = pagination;
+            if (grid && grid.getColumns) {
+                this._columnDefinitions = serviceOptions && serviceOptions.columnDefinitions || grid.getColumns();
             }
         };
         /**
@@ -315,7 +302,7 @@ define(["require", "exports", "aurelia-framework", "./utilities", "./../models/i
                         fieldSearchValue = '';
                     }
                     if (typeof fieldSearchValue !== 'string' && !searchTerms) {
-                        throw new Error("GraphQL filter searchTerm property must be provided as type \"string\", if you use filter with options then make sure your IDs are also string. For example: filter: {type: FilterType.select, collection: [{ id: \"0\", value: \"0\" }, { id: \"1\", value: \"1\" }]");
+                        throw new Error("GraphQL filter searchTerm property must be provided as type \"string\", if you use filter with options then make sure your IDs are also string. For example: filter: {model: Filters.select, collection: [{ id: \"0\", value: \"0\" }, { id: \"1\", value: \"1\" }]");
                     }
                     fieldSearchValue = '' + fieldSearchValue; // make sure it's a string
                     var matches = fieldSearchValue.match(/^([<>!=\*]{0,2})(.*[^<>!=\*])([\*]?)$/); // group 1: Operator, 2: searchValue, 3: last char is '*' (meaning starts with, ex.: abc*)

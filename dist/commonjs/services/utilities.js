@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var index_1 = require("../models/index");
 var moment = require("moment");
+var $ = require("jquery");
 /**
  * Simple function to which will loop and create as demanded the number of white spaces,
  * this will be used in the Excel export
@@ -15,6 +16,18 @@ function addWhiteSpaces(nbSpaces) {
     return result;
 }
 exports.addWhiteSpaces = addWhiteSpaces;
+/** HTML encode using jQuery */
+function htmlEncode(value) {
+    // create a in-memory div, set it's inner text(which jQuery automatically encodes)
+    // then grab the encoded contents back out.  The div never exists on the page.
+    return $('<div/>').text(value).html();
+}
+exports.htmlEncode = htmlEncode;
+/** HTML decode using jQuery */
+function htmlDecode(value) {
+    return $('<div/>').html(value).text();
+}
+exports.htmlDecode = htmlDecode;
 /**
  * decode text into html entity
  * @param string text: input text
@@ -344,7 +357,7 @@ function arraysEqual(a, b, orderMatters) {
     if (a === b) {
         return true;
     }
-    if (a === null || b === null) {
+    if (!a || !b) {
         return false;
     }
     if (a.length !== b.length) {
@@ -362,6 +375,20 @@ function arraysEqual(a, b, orderMatters) {
     return true;
 }
 exports.arraysEqual = arraysEqual;
+/**
+ * Compares two objects to determine if all the properties are equal
+ * We will do a deep check recursively to make sure all properties really are the same
+ * @param x first object
+ * @param y second object to compare with a
+ */
+function objectsDeepEqual(x, y) {
+    var ok = Object.keys;
+    var tx = typeof x;
+    var ty = typeof y;
+    return x && y && tx === 'object' && tx === ty ? (ok(x).length === ok(y).length &&
+        ok(x).every(function (key) { return objectsDeepEqual(x[key], y[key]); })) : (x === y);
+}
+exports.objectsDeepEqual = objectsDeepEqual;
 /**
  * Uses the logic function to find an item in an array or returns the default
  * value provided (empty object by default)

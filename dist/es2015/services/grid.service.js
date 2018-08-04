@@ -58,6 +58,7 @@ let GridService = class GridService {
             gridDefinition: this._gridOptions
         };
     }
+    /** Get data item by it's row index number */
     getDataItemByRowNumber(rowNumber) {
         if (!this._grid || typeof this._grid.getDataItem !== 'function') {
             throw new Error('We could not find SlickGrid Grid object');
@@ -118,9 +119,37 @@ let GridService = class GridService {
             }, fadeDelay + 10);
         }
     }
-    /** Get the currently selected rows */
+    /** Get the Data Item from a grid row index */
+    getDataItemByRowIndex(index) {
+        if (!this._grid || typeof this._grid.getDataItem !== 'function') {
+            throw new Error('We could not find SlickGrid Grid object');
+        }
+        return this._grid.getDataItem(index);
+    }
+    /** Get the Data Item from an array of grid row indexes */
+    getDataItemByRowIndexes(indexes) {
+        if (!this._grid || typeof this._grid.getDataItem !== 'function') {
+            throw new Error('We could not find SlickGrid Grid object');
+        }
+        const dataItems = [];
+        if (Array.isArray(indexes)) {
+            indexes.forEach((idx) => {
+                dataItems.push(this._grid.getDataItem(idx));
+            });
+        }
+        return dataItems;
+    }
+    /** Get the currently selected row indexes */
     getSelectedRows() {
         return this._grid.getSelectedRows();
+    }
+    /** Get the currently selected rows item data */
+    getSelectedRowsDataItem() {
+        if (!this._grid || typeof this._grid.getSelectedRows !== 'function') {
+            throw new Error('We could not find SlickGrid Grid object');
+        }
+        const selectedRowIndexes = this._grid.getSelectedRows();
+        return this.getDataItemByRowIndexes(selectedRowIndexes);
     }
     /** Select the selected row by a row index */
     setSelectedRow(rowIndex) {
@@ -163,23 +192,33 @@ let GridService = class GridService {
         }
     }
     /**
-     * Add an item (data item) to the datagrid
+     * Add an item (data item) to the datagrid, by default it will highlight (flashing) the inserted row but we can disable it too
      * @param object dataItem: item object holding all properties of that row
+     * @param shouldHighlightRow do we want to highlight the row after adding item
      */
-    addItemToDatagrid(item) {
+    addItemToDatagrid(item, shouldHighlightRow = true) {
         if (!this._grid || !this._gridOptions || !this._dataView) {
             throw new Error('We could not find SlickGrid Grid, DataView objects');
         }
-        if (!this._gridOptions || (!this._gridOptions.enableCheckboxSelector && !this._gridOptions.enableRowSelection)) {
-            throw new Error('addItemToDatagrid() requires to have a valid Slickgrid Selection Model. You can overcome this issue by enabling enableCheckboxSelector or enableRowSelection to True');
-        }
         const row = 0;
         this._dataView.insertItem(row, item);
-        // scroll to first row and highlight it
-        this._grid.scrollRowIntoView(0);
-        this.highlightRow(0, 1500);
+        this._grid.scrollRowIntoView(0); // scroll to row 0
+        // highlight the row we just added, if defined
+        if (shouldHighlightRow) {
+            this.highlightRow(0, 1500);
+        }
         // refresh dataview & grid
         this._dataView.refresh();
+    }
+    /**
+     * Add item array (data item) to the datagrid, by default it will highlight (flashing) the inserted row but we can disable it too
+     * @param dataItem array: item object holding all properties of that row
+     * @param shouldHighlightRow do we want to highlight the row after adding item
+     */
+    addItemsToDatagrid(items, shouldHighlightRow = true) {
+        if (Array.isArray(items)) {
+            items.forEach((item) => this.addItemToDatagrid(item, shouldHighlightRow));
+        }
     }
     /**
      * Delete an existing item from the datagrid (dataView)
@@ -222,8 +261,9 @@ let GridService = class GridService {
      * Update an existing item in the datagrid by it's id and new properties
      * @param itemId: item unique id
      * @param object item: item object holding all properties of that row
+     * @param shouldHighlightRow do we want to highlight the row after update
      */
-    updateDataGridItemById(itemId, item) {
+    updateDataGridItemById(itemId, item, shouldHighlightRow = true) {
         if (itemId === undefined) {
             throw new Error(`Cannot update a row without a valid "id"`);
         }
@@ -235,8 +275,10 @@ let GridService = class GridService {
         if (gridIdx !== undefined) {
             // Update the item itself inside the dataView
             this._dataView.updateItem(itemId, item);
-            // highlight the row we just updated
-            this.highlightRow(row, 1500);
+            // highlight the row we just updated, if defined
+            if (shouldHighlightRow) {
+                this.highlightRow(row, 1500);
+            }
             // refresh dataview & grid
             this._dataView.refresh();
         }

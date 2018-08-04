@@ -14,7 +14,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 import { inject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
-import { arraysEqual, CollectionService } from '../services/index';
+import { CollectionService } from '../services/index';
+import { arraysEqual, htmlEncode } from '../services/utilities';
+import * as sanitizeHtml from 'sanitize-html';
 import * as $ from 'jquery';
 // height in pixel of the multiple-select DOM element
 var SELECT_ELEMENT_HEIGHT = 26;
@@ -40,6 +42,11 @@ var MultipleSelectEditor = /** @class */ (function () {
             width: 150,
             offsetLeft: 20,
             onOpen: function () { return _this.autoAdjustDropPosition(_this.$editorElm, _this.editorElmOptions); },
+            textTemplate: function ($elm) {
+                // render HTML code or not, by default it is sanitized and won't be rendered
+                var isRenderHtmlEnabled = _this.columnDef && _this.columnDef.internalColumnEditor && _this.columnDef.internalColumnEditor.enableRenderHtml || false;
+                return isRenderHtmlEnabled ? $elm.text() : $elm.html();
+            },
         };
         this.defaultOptions.countSelected = this.i18n.tr('X_OF_Y_SELECTED');
         this.defaultOptions.allSelected = this.i18n.tr('ALL_SELECTED');
@@ -91,9 +98,11 @@ var MultipleSelectEditor = /** @class */ (function () {
             throw new Error("[Aurelia-SlickGrid] You need to pass a \"collection\" inside Column Definition Editor for the MultipleSelect Editor to work correctly.\n      Also each option should include a value/label pair (or value/labelKey when using Locale).\n      For example: { editor: { collection: [{ value: true, label: 'True' },{ value: false, label: 'False'}] } }");
         }
         this.enableTranslateLabel = (this.columnDef.internalColumnEditor.enableTranslateLabel) ? this.columnDef.internalColumnEditor.enableTranslateLabel : false;
+        this.labelName = this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.customStructure && this.columnDef.internalColumnEditor.customStructure.label || 'label';
+        this.labelPrefixName = this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.customStructure && this.columnDef.internalColumnEditor.customStructure.labelPrefix || 'labelPrefix';
+        this.labelSuffixName = this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.customStructure && this.columnDef.internalColumnEditor.customStructure.labelSuffix || 'labelSuffix';
+        this.valueName = this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.customStructure && this.columnDef.internalColumnEditor.customStructure.value || 'value';
         var newCollection = this.columnDef.internalColumnEditor.collection || [];
-        this.labelName = (this.columnDef.internalColumnEditor.customStructure) ? this.columnDef.internalColumnEditor.customStructure.label : 'label';
-        this.valueName = (this.columnDef.internalColumnEditor.customStructure) ? this.columnDef.internalColumnEditor.customStructure.value : 'value';
         // user might want to filter certain items of the collection
         if (this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.collectionFilterBy) {
             var filterBy = this.columnDef.internalColumnEditor.collectionFilterBy;
@@ -188,6 +197,9 @@ var MultipleSelectEditor = /** @class */ (function () {
     MultipleSelectEditor.prototype.buildTemplateHtmlString = function (collection) {
         var _this = this;
         var options = '';
+        var isAddingSpaceBetweenLabels = this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.customStructure && this.columnDef.internalColumnEditor.customStructure.addSpaceBetweenLabels || false;
+        var isRenderHtmlEnabled = this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.enableRenderHtml || false;
+        var sanitizedOptions = this.gridOptions && this.gridOptions.sanitizeHtmlOptions || {};
         collection.forEach(function (option) {
             if (!option || (option[_this.labelName] === undefined && option.labelKey === undefined)) {
                 throw new Error('A collection with value/label (or value/labelKey when using ' +
@@ -195,8 +207,19 @@ var MultipleSelectEditor = /** @class */ (function () {
                     '{ collection: [ { value: \'1\', label: \'One\' } ])');
             }
             var labelKey = (option.labelKey || option[_this.labelName]);
-            var textLabel = (option.labelKey || _this.enableTranslateLabel) ? _this.i18n.tr(labelKey || ' ') : labelKey;
-            options += "<option value=\"" + option[_this.valueName] + "\">" + textLabel + "</option>";
+            var labelText = (option.labelKey || _this.enableTranslateLabel) ? _this.i18n.tr(labelKey || ' ') : labelKey;
+            var prefixText = option[_this.labelPrefixName] || '';
+            var suffixText = option[_this.labelSuffixName] || '';
+            var optionText = isAddingSpaceBetweenLabels ? prefixText + " " + labelText + " " + suffixText : (prefixText + labelText + suffixText);
+            // if user specifically wants to render html text, he needs to opt-in else it will stripped out by default
+            // also, the 3rd party lib will saninitze any html code unless it's encoded, so we'll do that
+            if (isRenderHtmlEnabled) {
+                // sanitize any unauthorized html tags like script and others
+                // for the remaining allowed tags we'll permit all attributes
+                var sanitizeText = sanitizeHtml(optionText, sanitizedOptions);
+                optionText = htmlEncode(sanitizeText);
+            }
+            options += "<option value=\"" + option[_this.valueName] + "\">" + optionText + "</option>";
         });
         return "<select class=\"ms-filter search-filter\" multiple=\"multiple\">" + options + "</select>";
     };

@@ -12,7 +12,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-define(["require", "exports", "aurelia-i18n", "aurelia-framework", "./../models/index", "../services/collection.service", "jquery"], function (require, exports, aurelia_i18n_1, aurelia_framework_1, index_1, collection_service_1, $) {
+define(["require", "exports", "aurelia-i18n", "aurelia-framework", "./../models/index", "../services/collection.service", "../services/utilities", "sanitize-html", "jquery"], function (require, exports, aurelia_i18n_1, aurelia_framework_1, index_1, collection_service_1, utilities_1, sanitizeHtml, $) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var SingleSelectFilter = /** @class */ (function () {
@@ -28,6 +28,11 @@ define(["require", "exports", "aurelia-i18n", "aurelia-framework", "./../models/
                 filter: false,
                 maxHeight: 200,
                 single: true,
+                textTemplate: function ($elm) {
+                    // render HTML code or not, by default it is sanitized and won't be rendered
+                    var isRenderHtmlEnabled = _this.columnDef && _this.columnDef.filter && _this.columnDef.filter.enableRenderHtml || false;
+                    return isRenderHtmlEnabled ? $elm.text() : $elm.html();
+                },
                 onClose: function () {
                     var selectedItems = _this.$filterElm.multipleSelect('getSelects');
                     var selectedItem = '';
@@ -74,9 +79,11 @@ define(["require", "exports", "aurelia-i18n", "aurelia-framework", "./../models/
                 throw new Error("[Aurelia-SlickGrid] You need to pass a \"collection\" for the MultipleSelect Filter to work correctly. Also each option should include a value/label pair (or value/labelKey when using Locale). For example: { filter: { model: Filters.singleSelect, collection: [{ value: true, label: 'True' }, { value: false, label: 'False'}] } }");
             }
             this.enableTranslateLabel = this.columnDef.filter.enableTranslateLabel || false;
-            this.labelName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.label : 'label';
-            this.valueName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.value : 'value';
-            var newCollection = this.columnDef.filter.collection || [];
+            this.labelName = this.columnDef && this.columnDef.filter && this.columnDef.filter.customStructure && this.columnDef.filter.customStructure.label || 'label';
+            this.labelPrefixName = this.columnDef && this.columnDef.filter && this.columnDef.filter.customStructure && this.columnDef.filter.customStructure.labelPrefix || 'labelPrefix';
+            this.labelSuffixName = this.columnDef && this.columnDef.filter && this.columnDef.filter.customStructure && this.columnDef.filter.customStructure.labelSuffix || 'labelSuffix';
+            this.valueName = this.columnDef && this.columnDef.filter && this.columnDef.filter.customStructure && this.columnDef.filter.customStructure.value || 'value';
+            var newCollection = this.columnDef && this.columnDef.filter && this.columnDef.filter.collection || [];
             // user might want to filter certain items of the collection
             if (this.gridOptions.params && this.columnDef.filter.collectionFilterBy) {
                 var filterBy = this.columnDef.filter.collectionFilterBy;
@@ -104,6 +111,7 @@ define(["require", "exports", "aurelia-i18n", "aurelia-framework", "./../models/
                 // reload the filter element by it's id, to make sure it's still a valid element (because of some issue in the GraphQL example)
                 this.$filterElm.multipleSelect('setSelects', []);
                 this.$filterElm.removeClass('filled');
+                this.searchTerms = [];
                 this.callback(undefined, { columnDef: this.columnDef, clearFilterTriggered: true });
             }
         };
@@ -133,15 +141,29 @@ define(["require", "exports", "aurelia-i18n", "aurelia-framework", "./../models/
         SingleSelectFilter.prototype.buildTemplateHtmlString = function (optionCollection, searchTerm) {
             var _this = this;
             var options = '';
+            var isAddingSpaceBetweenLabels = this.columnDef && this.columnDef.filter && this.columnDef.filter.customStructure && this.columnDef.filter.customStructure.addSpaceBetweenLabels || false;
+            var isRenderHtmlEnabled = this.columnDef && this.columnDef.filter && this.columnDef.filter.enableRenderHtml || false;
+            var sanitizedOptions = this.gridOptions && this.gridOptions.sanitizeHtmlOptions || {};
             optionCollection.forEach(function (option) {
                 if (!option || (option[_this.labelName] === undefined && option.labelKey === undefined)) {
                     throw new Error("A collection with value/label (or value/labelKey when using Locale) is required to populate the Select list, for example: { filter: { model: Filter.singleSelect, collection: [ { value: '1', label: 'One' } ] } }");
                 }
                 var labelKey = (option.labelKey || option[_this.labelName]);
                 var selected = (option[_this.valueName] === searchTerm) ? 'selected' : '';
-                var textLabel = ((option.labelKey || _this.enableTranslateLabel) && _this.i18n && typeof _this.i18n.tr === 'function') ? _this.i18n.tr(labelKey || ' ') : labelKey;
+                var labelText = ((option.labelKey || _this.enableTranslateLabel) && _this.i18n && typeof _this.i18n.tr === 'function') ? _this.i18n.tr(labelKey || ' ') : labelKey;
+                var prefixText = option[_this.labelPrefixName] || '';
+                var suffixText = option[_this.labelSuffixName] || '';
+                var optionText = isAddingSpaceBetweenLabels ? prefixText + " " + labelText + " " + suffixText : (prefixText + labelText + suffixText);
+                // if user specifically wants to render html text, he needs to opt-in else it will stripped out by default
+                // also, the 3rd party lib will saninitze any html code unless it's encoded, so we'll do that
+                if (isRenderHtmlEnabled) {
+                    // sanitize any unauthorized html tags like script and others
+                    // for the remaining allowed tags we'll permit all attributes
+                    var sanitizeText = sanitizeHtml(optionText, sanitizedOptions);
+                    optionText = utilities_1.htmlEncode(sanitizeText);
+                }
                 // html text of each select option
-                options += "<option value=\"" + option[_this.valueName] + "\" " + selected + ">" + textLabel + "</option>";
+                options += "<option value=\"" + option[_this.valueName] + "\" " + selected + ">" + optionText + "</option>";
                 // if there's a search term, we will add the "filled" class for styling purposes
                 if (selected) {
                     _this.isFilled = true;
