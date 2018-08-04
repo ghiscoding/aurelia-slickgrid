@@ -17,13 +17,13 @@ export function addWhiteSpaces(nbSpaces: number): string {
 }
 
 /** HTML encode using jQuery */
-export function htmlEncode(value) {
+export function htmlEncode(value: string): any {
   // create a in-memory div, set it's inner text(which jQuery automatically encodes)
   // then grab the encoded contents back out.  The div never exists on the page.
   return $('<div/>').text(value).html();
 }
 /** HTML decode using jQuery */
-export function htmlDecode(value) {
+export function htmlDecode(value: string): string {
   return $('<div/>').html(value).text();
 }
 
@@ -393,7 +393,7 @@ export function arraysEqual(a: any[], b: any[], orderMatters: boolean = false): 
  * @param x first object
  * @param y second object to compare with a
  */
-export function objectsDeepEqual(x, y) {
+export function objectsDeepEqual(x: any, y: any): boolean {
   const ok = Object.keys;
   const tx = typeof x;
   const ty = typeof y;

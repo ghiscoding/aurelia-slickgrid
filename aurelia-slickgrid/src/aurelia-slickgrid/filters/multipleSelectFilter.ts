@@ -95,12 +95,11 @@ export class MultipleSelectFilter implements Filter {
     }
 
     this.enableTranslateLabel = this.columnDef.filter.enableTranslateLabel || false;
-    this.labelName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.label : 'label';
-    this.labelPrefixName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.labelPrefix : 'labelPrefix';
-    this.labelSuffixName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.labelSuffix : 'labelSuffix';
-    this.valueName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.value : 'value';
-
-    let newCollection = this.columnDef.filter.collection || [];
+    this.labelName = this.columnDef && this.columnDef.filter && this.columnDef.filter.customStructure && this.columnDef.filter.customStructure.label || 'label';
+    this.labelPrefixName = this.columnDef && this.columnDef.filter && this.columnDef.filter.customStructure && this.columnDef.filter.customStructure.labelPrefix || 'labelPrefix';
+    this.labelSuffixName = this.columnDef && this.columnDef.filter && this.columnDef.filter.customStructure && this.columnDef.filter.customStructure.labelSuffix || 'labelSuffix';
+    this.valueName = this.columnDef && this.columnDef.filter && this.columnDef.filter.customStructure && this.columnDef.filter.customStructure.value || 'value';
+    let newCollection = this.columnDef && this.columnDef.filter && this.columnDef.filter.collection || [];
 
     // user might want to filter certain items of the collection
     if (this.gridOptions.params && this.columnDef.filter.collectionFilterBy) {
