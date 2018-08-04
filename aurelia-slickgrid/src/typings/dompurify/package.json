@@ -1,0 +1,26 @@
+{
+    "name": "@types/dompurify",
+    "version": "0.0.31",
+    "description": "TypeScript definitions for DOM Purify",
+    "license": "MIT",
+    "contributors": [
+        {
+            "name": "Dave Taylor",
+            "url": "http://davetayls.me"
+        },
+        {
+            "name": "Samira Bazuzi",
+            "url": "https://github.com/bazuzi",
+            "githubUsername": "bazuzi"
+        }
+    ],
+    "main": "",
+    "repository": {
+        "type": "git",
+        "url": "https://www.github.com/DefinitelyTyped/DefinitelyTyped.git"
+    },
+    "scripts": {},
+    "dependencies": {},
+    "typesPublisherContentHash": "cf1b4a72550a5c349165f4f2cc58ebe5ca8f07d48652b9a9a325b84861be0ce7",
+    "typeScriptVersion": "2.0"
+}
