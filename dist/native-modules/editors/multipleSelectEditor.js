@@ -16,7 +16,7 @@ import { inject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import { CollectionService } from '../services/index';
 import { arraysEqual, htmlEncode } from '../services/utilities';
-import * as sanitizeHtml from 'sanitize-html';
+import DOMPurify from 'dompurify';
 import * as $ from 'jquery';
 // height in pixel of the multiple-select DOM element
 var SELECT_ELEMENT_HEIGHT = 26;
@@ -216,8 +216,8 @@ var MultipleSelectEditor = /** @class */ (function () {
             if (isRenderHtmlEnabled) {
                 // sanitize any unauthorized html tags like script and others
                 // for the remaining allowed tags we'll permit all attributes
-                var sanitizeText = sanitizeHtml(optionText, sanitizedOptions);
-                optionText = htmlEncode(sanitizeText);
+                var sanitizedText = DOMPurify.sanitize(optionText, sanitizedOptions);
+                optionText = htmlEncode(sanitizedText);
             }
             options += "<option value=\"" + option[_this.valueName] + "\">" + optionText + "</option>";
         });

@@ -18,7 +18,7 @@ var aurelia_framework_1 = require("aurelia-framework");
 var aurelia_i18n_1 = require("aurelia-i18n");
 var index_1 = require("../services/index");
 var utilities_1 = require("../services/utilities");
-var sanitizeHtml = require("sanitize-html");
+var dompurify_1 = require("dompurify");
 var $ = require("jquery");
 // height in pixel of the multiple-select DOM element
 var SELECT_ELEMENT_HEIGHT = 26;
@@ -218,8 +218,8 @@ var MultipleSelectEditor = /** @class */ (function () {
             if (isRenderHtmlEnabled) {
                 // sanitize any unauthorized html tags like script and others
                 // for the remaining allowed tags we'll permit all attributes
-                var sanitizeText = sanitizeHtml(optionText, sanitizedOptions);
-                optionText = utilities_1.htmlEncode(sanitizeText);
+                var sanitizedText = dompurify_1.default.sanitize(optionText, sanitizedOptions);
+                optionText = utilities_1.htmlEncode(sanitizedText);
             }
             options += "<option value=\"" + option[_this.valueName] + "\">" + optionText + "</option>";
         });

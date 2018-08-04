@@ -1,4 +1,4 @@
-System.register(["aurelia-i18n", "aurelia-framework", "./../models/index", "../services/collection.service", "../services/utilities", "sanitize-html", "jquery"], function (exports_1, context_1) {
+System.register(["aurelia-i18n", "aurelia-framework", "./../models/index", "../services/collection.service", "../services/utilities", "dompurify", "jquery"], function (exports_1, context_1) {
     "use strict";
     var __assign = (this && this.__assign) || Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -15,7 +15,7 @@ System.register(["aurelia-i18n", "aurelia-framework", "./../models/index", "../s
         return c > 3 && r && Object.defineProperty(target, key, r), r;
     };
     var __moduleName = context_1 && context_1.id;
-    var aurelia_i18n_1, aurelia_framework_1, index_1, collection_service_1, utilities_1, sanitizeHtml, $, MultipleSelectFilter;
+    var aurelia_i18n_1, aurelia_framework_1, index_1, collection_service_1, utilities_1, dompurify_1, $, MultipleSelectFilter;
     return {
         setters: [
             function (aurelia_i18n_1_1) {
@@ -33,8 +33,8 @@ System.register(["aurelia-i18n", "aurelia-framework", "./../models/index", "../s
             function (utilities_1_1) {
                 utilities_1 = utilities_1_1;
             },
-            function (sanitizeHtml_1) {
-                sanitizeHtml = sanitizeHtml_1;
+            function (dompurify_1_1) {
+                dompurify_1 = dompurify_1_1;
             },
             function ($_1) {
                 $ = $_1;
@@ -189,8 +189,8 @@ System.register(["aurelia-i18n", "aurelia-framework", "./../models/index", "../s
                         if (isRenderHtmlEnabled) {
                             // sanitize any unauthorized html tags like script and others
                             // for the remaining allowed tags we'll permit all attributes
-                            var sanitizeText = sanitizeHtml(optionText, sanitizedOptions);
-                            optionText = utilities_1.htmlEncode(sanitizeText);
+                            var sanitizedText = dompurify_1.default.sanitize(optionText, sanitizedOptions);
+                            optionText = utilities_1.htmlEncode(sanitizedText);
                         }
                         // html text of each select option
                         options += "<option value=\"" + option[_this.valueName] + "\" " + selected + ">" + optionText + "</option>";

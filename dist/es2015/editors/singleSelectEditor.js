@@ -7,7 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import { inject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import { CollectionService, findOrDefault, htmlEncode } from '../services/index';
-import * as sanitizeHtml from 'sanitize-html';
+import DOMPurify from 'dompurify';
 import * as $ from 'jquery';
 // height in pixel of the multiple-select DOM element
 const SELECT_ELEMENT_HEIGHT = 26;
@@ -183,8 +183,8 @@ let SingleSelectEditor = class SingleSelectEditor {
             if (isRenderHtmlEnabled) {
                 // sanitize any unauthorized html tags like script and others
                 // for the remaining allowed tags we'll permit all attributes
-                const sanitizeText = sanitizeHtml(optionText, sanitizedOptions);
-                optionText = htmlEncode(sanitizeText);
+                const sanitizedText = DOMPurify.sanitize(optionText, sanitizedOptions);
+                optionText = htmlEncode(sanitizedText);
             }
             options += `<option value="${option[this.valueName]}">${optionText}</option>`;
         });

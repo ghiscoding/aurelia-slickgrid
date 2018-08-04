@@ -9,7 +9,7 @@ import { inject } from 'aurelia-framework';
 import { OperatorType } from './../models/index';
 import { CollectionService } from '../services/collection.service';
 import { htmlEncode } from '../services/utilities';
-import * as sanitizeHtml from 'sanitize-html';
+import DOMPurify from 'dompurify';
 import * as $ from 'jquery';
 let SingleSelectFilter = class SingleSelectFilter {
     constructor(collectionService, i18n) {
@@ -145,8 +145,8 @@ let SingleSelectFilter = class SingleSelectFilter {
             if (isRenderHtmlEnabled) {
                 // sanitize any unauthorized html tags like script and others
                 // for the remaining allowed tags we'll permit all attributes
-                const sanitizeText = sanitizeHtml(optionText, sanitizedOptions);
-                optionText = htmlEncode(sanitizeText);
+                const sanitizedText = DOMPurify.sanitize(optionText, sanitizedOptions);
+                optionText = htmlEncode(sanitizedText);
             }
             // html text of each select option
             options += `<option value="${option[this.valueName]}" ${selected}>${optionText}</option>`;

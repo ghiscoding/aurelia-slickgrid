@@ -19,7 +19,7 @@ var aurelia_framework_1 = require("aurelia-framework");
 var index_1 = require("./../models/index");
 var collection_service_1 = require("../services/collection.service");
 var utilities_1 = require("../services/utilities");
-var sanitizeHtml = require("sanitize-html");
+var dompurify_1 = require("dompurify");
 var $ = require("jquery");
 var SingleSelectFilter = /** @class */ (function () {
     function SingleSelectFilter(collectionService, i18n) {
@@ -165,8 +165,8 @@ var SingleSelectFilter = /** @class */ (function () {
             if (isRenderHtmlEnabled) {
                 // sanitize any unauthorized html tags like script and others
                 // for the remaining allowed tags we'll permit all attributes
-                var sanitizeText = sanitizeHtml(optionText, sanitizedOptions);
-                optionText = utilities_1.htmlEncode(sanitizeText);
+                var sanitizedText = dompurify_1.default.sanitize(optionText, sanitizedOptions);
+                optionText = utilities_1.htmlEncode(sanitizedText);
             }
             // html text of each select option
             options += "<option value=\"" + option[_this.valueName] + "\" " + selected + ">" + optionText + "</option>";
