@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.2.0"></a>
+# [2.2.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.1.1...v2.2.0) (2018-08-04)
+
+
+### Bug Fixes
+
+* **error:** add item to datagrid should not require selection model ([7b7fffe](https://github.com/ghiscoding/aurelia-slickgrid/commit/7b7fffe))
+* **event:** dispatchEvent should be cancelable, closes [#84](https://github.com/ghiscoding/aurelia-slickgrid/issues/84) ([#86](https://github.com/ghiscoding/aurelia-slickgrid/issues/86)) ([44cfd38](https://github.com/ghiscoding/aurelia-slickgrid/commit/44cfd38))
+* **filter:** Filters should trigger only when different ([2464558](https://github.com/ghiscoding/aurelia-slickgrid/commit/2464558))
+* **filter:** MultipleSelect & SingleSelect Filters only trigger changes ([17d8ee3](https://github.com/ghiscoding/aurelia-slickgrid/commit/17d8ee3))
+* **filter:** searchTerms sometime comes back even after clear filter ([735c03b](https://github.com/ghiscoding/aurelia-slickgrid/commit/735c03b))
+* **odata:** missing column in query using Grid Presets and hidden col ([23b8981](https://github.com/ghiscoding/aurelia-slickgrid/commit/23b8981))
+* **pagination:** Only display Pagination with backendServiceApi ([3b5133e](https://github.com/ghiscoding/aurelia-slickgrid/commit/3b5133e))
+* **selection:** On filter or Page changed, remove any rows selection ([6578a97](https://github.com/ghiscoding/aurelia-slickgrid/commit/6578a97))
+* **selection:** single row selector should hide "Select All", closes [#85](https://github.com/ghiscoding/aurelia-slickgrid/issues/85) ([6b6753a](https://github.com/ghiscoding/aurelia-slickgrid/commit/6b6753a))
+
+
+### Features
+
+* **filter:** add Prefix/Suffix/RenderHtml to Filters & Editors ([#87](https://github.com/ghiscoding/aurelia-slickgrid/issues/87)) ([701f51e](https://github.com/ghiscoding/aurelia-slickgrid/commit/701f51e))
+* **graphql:** export dispose function to aureliaGridInstance ([64d5dd0](https://github.com/ghiscoding/aurelia-slickgrid/commit/64d5dd0))
+* **service:** add commonly functions to get item data ([982de13](https://github.com/ghiscoding/aurelia-slickgrid/commit/982de13))
+* **service:** add more commonly used functions ([88a0c07](https://github.com/ghiscoding/aurelia-slickgrid/commit/88a0c07))
+
+
+
 <a name="2.1.1"></a>
 ## [2.1.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.1.0...v2.1.1) (2018-07-14)
 
