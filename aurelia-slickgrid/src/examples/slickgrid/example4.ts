@@ -105,8 +105,13 @@ export class Example4 {
             sortDesc: true,
             fieldType: FieldType.number
           },
-
-          // we can also add certain option(s) to the "multiple-select" 3rd party plugin
+          customStructure: {
+            value: 'value',
+            label: 'label',
+            labelSuffix: 'text',
+            addSpaceBetweenLabels: true
+          },
+          // we could add certain option(s) to the "multiple-select" plugin
           filterOptions: {
             maxHeight: 250,
             width: 175
@@ -130,11 +135,15 @@ export class Example4 {
         type: FieldType.dateUtc, outputType: FieldType.dateTimeIsoAmPm, filterable: true, filter: { model: Filters.compoundDate }
       },
       {
-        id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', minWidth: 85, maxWidth: 85, formatter: Formatters.checkmark,
+        id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', minWidth: 85, maxWidth: 95, formatter: Formatters.checkmark,
         type: FieldType.boolean,
         sortable: true,
         filterable: true,
         filter: {
+          // We can also add HTML text to be rendered (any bad script will be sanitized) but we have to opt-in, else it will be sanitized
+          // enableRenderHtml: true,
+          // collection: [{ value: '', label: '' }, { value: true, label: 'True', labelPrefix: `<i class="fa fa-check"></i> ` }, { value: false, label: 'False' }],
+
           collection: [{ value: '', label: '' }, { value: true, label: 'True' }, { value: false, label: 'False' }],
           model: Filters.singleSelect,
 

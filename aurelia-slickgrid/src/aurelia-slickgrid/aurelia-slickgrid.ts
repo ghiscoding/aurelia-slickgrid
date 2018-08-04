@@ -379,7 +379,7 @@ export class AureliaSlickgridCustomElement {
     for (const prop in grid) {
       if (grid.hasOwnProperty(prop) && prop.startsWith('on')) {
         this._eventHandler.subscribe(grid[prop], (e: any, args: any) => {
-          this.dispatchCustomEvent(`${eventPrefix}-${toKebabCase(prop)}`, { eventData: e, args });
+          return this.dispatchCustomEvent(`${eventPrefix}-${toKebabCase(prop)}`, { eventData: e, args });
         });
       }
     }
@@ -388,7 +388,7 @@ export class AureliaSlickgridCustomElement {
     for (const prop in dataView) {
       if (dataView.hasOwnProperty(prop) && prop.startsWith('on')) {
         this._eventHandler.subscribe(dataView[prop], (e: any, args: any) => {
-          this.dispatchCustomEvent(`${eventPrefix}-${toKebabCase(prop)}`, { eventData: e, args });
+          return this.dispatchCustomEvent(`${eventPrefix}-${toKebabCase(prop)}`, { eventData: e, args });
         });
       }
     }
@@ -533,11 +533,11 @@ export class AureliaSlickgridCustomElement {
 
   /**
    * On a Pagination changed, we will trigger a Grid State changed with the new pagination info
-   * Also if we use Row Selection, we need to reset them to nothing selected
+   * Also if we use Row Selection or the Checkbox Selector, we need to reset any selection
    */
   paginationChanged(pagination: Pagination) {
-    if (this.gridOptions.enableRowSelection) {
-      this.gridService.setSelectedRows([]);
+    if (this.gridOptions.enableRowSelection || this.gridOptions.enableCheckboxSelector) {
+      this.grid.setSelectedRows([]);
     }
 
     this.ea.publish('gridStateService:changed', {
@@ -561,7 +561,7 @@ export class AureliaSlickgridCustomElement {
       this.grid.invalidate();
       this.grid.render();
 
-      if (this.gridOptions.enablePagination || this.gridOptions.backendServiceApi) {
+      if (this.gridOptions.backendServiceApi) {
         // do we want to show pagination?
         // if we have a backendServiceApi and the enablePagination is undefined, we'll assume that we do want to see it, else get that defined value
         this.showPagination = ((this.gridOptions.backendServiceApi && this.gridOptions.enablePagination === undefined) ? true : this.gridOptions.enablePagination) || false;
@@ -618,11 +618,11 @@ export class AureliaSlickgridCustomElement {
     this.grid.autosizeColumns();
   }
 
-  private dispatchCustomEvent(eventName: string, data?: any, isBubbling: boolean = true) {
-    const eventInit: CustomEventInit = { bubbles: isBubbling };
+  private dispatchCustomEvent(eventName: string, data?: any, isBubbling: boolean = true, isCancelable = true): boolean {
+    const eventInit: CustomEventInit = { bubbles: isBubbling, cancelable: isCancelable };
     if (data) {
       eventInit.detail = data;
     }
-    this.elm.dispatchEvent(new CustomEvent(eventName, eventInit));
+    return this.elm.dispatchEvent(new CustomEvent(eventName, eventInit));
   }
 }

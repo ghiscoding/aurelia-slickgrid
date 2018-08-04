@@ -7,6 +7,7 @@ import {
   Filter,
   FilterArguments,
   FilterCallback,
+  GridOption,
   MultipleSelectOption,
   OperatorType,
   OperatorString,
@@ -14,9 +15,10 @@ import {
   SelectOption
 } from './../models/index';
 import { CollectionService } from '../services/collection.service';
+import { disposeAllSubscriptions, htmlEncode } from '../services/utilities';
+import * as sanitizeHtml from 'sanitize-html';
 import * as $ from 'jquery';
 import { Subscription } from 'aurelia-event-aggregator';
-import { disposeAllSubscriptions } from '../services/utilities';
 
 @inject(BindingEngine, CollectionService, I18N)
 export class MultipleSelectFilter implements Filter {
@@ -28,6 +30,8 @@ export class MultipleSelectFilter implements Filter {
   defaultOptions: MultipleSelectOption;
   isFilled = false;
   labelName: string;
+  labelPrefixName: string;
+  labelSuffixName: string;
   valueName: string;
   enableTranslateLabel = false;
   subscriptions: Subscription[] = [];
@@ -47,10 +51,14 @@ export class MultipleSelectFilter implements Filter {
       allSelected: this.i18n.tr('ALL_SELECTED'),
       selectAllText: this.i18n.tr('SELECT_ALL'),
       selectAllDelimiter: ['', ''], // remove default square brackets of default text "[Select All]" => "Select All"
-
-      // we will subscribe to the onClose event for triggering our callback
-      // also add/remove "filled" class for styling purposes
+      textTemplate: ($elm) => {
+        // render HTML code or not, by default it is sanitized and won't be rendered
+        const isRenderHtmlEnabled = this.columnDef && this.columnDef.filter && this.columnDef.filter.enableRenderHtml || false;
+        return isRenderHtmlEnabled ? $elm.text() : $elm.html();
+      },
       onClose: () => {
+        // we will subscribe to the onClose event for triggering our callback
+        // also add/remove "filled" class for styling purposes
         const selectedItems = this.$filterElm.multipleSelect('getSelects');
         if (Array.isArray(selectedItems) && selectedItems.length > 0) {
           this.isFilled = true;
@@ -59,6 +67,7 @@ export class MultipleSelectFilter implements Filter {
           this.isFilled = false;
           this.$filterElm.removeClass('filled').siblings('div .search-filter').removeClass('filled');
         }
+
         this.callback(undefined, { columnDef: this.columnDef, operator: this.operator, searchTerms: selectedItems });
       }
     };
@@ -67,6 +76,11 @@ export class MultipleSelectFilter implements Filter {
   /** Getter for the Filter Operator */
   get columnFilter(): ColumnFilter {
     return this.columnDef && this.columnDef.filter || {};
+  }
+
+  /** Getter for the Grid Options pulled through the Grid Object */
+  private get gridOptions(): GridOption {
+    return (this.grid && this.grid.getOptions) ? this.grid.getOptions() : {};
   }
 
   /** Getter for the Filter Operator */
@@ -90,9 +104,11 @@ export class MultipleSelectFilter implements Filter {
       throw new Error(`[Aurelia-SlickGrid] You need to pass a "collection" (or "collectionAsync") for the MultipleSelect Filter to work correctly. Also each option should include a value/label pair (or value/labelKey when using Locale). For example:: { filter: model: Filters.multipleSelect, collection: [{ value: true, label: 'True' }, { value: false, label: 'False'}] }`);
     }
 
-    this.enableTranslateLabel = this.columnFilter.enableTranslateLabel || false;
-    this.labelName = (this.columnFilter.customStructure) ? this.columnFilter.customStructure.label : 'label';
-    this.valueName = (this.columnFilter.customStructure) ? this.columnFilter.customStructure.value : 'value';
+    this.enableTranslateLabel = this.columnDef.filter.enableTranslateLabel || false;
+    this.labelName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.label : 'label';
+    this.labelPrefixName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.labelPrefix : 'labelPrefix';
+    this.labelSuffixName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.labelSuffix : 'labelSuffix';
+    this.valueName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.value : 'value';
 
     // always render the Select (dropdown) DOM element, even if user passed a "collectionAsync",
     // if that is the case, the Select will simply be without any options but we still have to render it (else SlickGrid would throw an error)
@@ -250,16 +266,32 @@ export class MultipleSelectFilter implements Filter {
    */
   private buildTemplateHtmlString(optionCollection: any[], searchTerms: SearchTerm[]) {
     let options = '';
+    const isAddingSpaceBetweenLabels = this.columnDef && this.columnDef.filter && this.columnDef.filter.customStructure && this.columnDef.filter.customStructure.addSpaceBetweenLabels || false;
+    const isRenderHtmlEnabled = this.columnDef && this.columnDef.filter && this.columnDef.filter.enableRenderHtml || false;
+    const sanitizedOptions = this.gridOptions && this.gridOptions.sanitizeHtmlOptions || {};
+
     optionCollection.forEach((option: SelectOption) => {
       if (!option || (option[this.labelName] === undefined && option.labelKey === undefined)) {
         throw new Error(`A collection with value/label (or value/labelKey when using Locale) is required to populate the Select list, for example:: { filter: model: Filters.multipleSelect, collection: [ { value: '1', label: 'One' } ]')`);
       }
       const labelKey = (option.labelKey || option[this.labelName]) as string;
       const selected = (searchTerms.findIndex((term) => term === option[this.valueName]) >= 0) ? 'selected' : '';
-      const textLabel = ((option.labelKey || this.enableTranslateLabel) && this.i18n && typeof this.i18n.tr === 'function') ? this.i18n.tr(labelKey || ' ') : labelKey;
+      const labelText = ((option.labelKey || this.enableTranslateLabel) && this.i18n && typeof this.i18n.tr === 'function') ? this.i18n.tr(labelKey || ' ') : labelKey;
+      const prefixText = option[this.labelPrefixName] || '';
+      const suffixText = option[this.labelSuffixName] || '';
+      let optionText = isAddingSpaceBetweenLabels ? `${prefixText} ${labelText} ${suffixText}` : (prefixText + labelText + suffixText);
+
+      // if user specifically wants to render html text, he needs to opt-in else it will stripped out by default
+      // also, the 3rd party lib will saninitze any html code unless it's encoded, so we'll do that
+      if (isRenderHtmlEnabled) {
+        // sanitize any unauthorized html tags like script and others
+        // for the remaining allowed tags we'll permit all attributes
+        const sanitizeText = sanitizeHtml(optionText, sanitizedOptions);
+        optionText = htmlEncode(sanitizeText);
+      }
 
       // html text of each select option
-      options += `<option value="${option[this.valueName]}" ${selected}>${textLabel}</option>`;
+      options += `<option value="${option[this.valueName]}" ${selected}>${optionText}</option>`;
 
       // if there's a search term, we will add the "filled" class for styling purposes
       if (selected) {

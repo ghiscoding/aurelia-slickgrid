@@ -33,7 +33,6 @@
   },
   "peerDependencies": {},
   "devDependencies": {
-    "@types/lodash": "^4.14.69",
     "@types/node": "^6.0.45",
     "@types/webpack": "^3.0.4",
     "aurelia-cli": "^0.32.0",
