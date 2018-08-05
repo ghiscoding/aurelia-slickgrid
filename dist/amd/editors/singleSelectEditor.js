@@ -12,7 +12,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-define(["require", "exports", "aurelia-framework", "aurelia-i18n", "../services/index", "dompurify", "jquery"], function (require, exports, aurelia_framework_1, aurelia_i18n_1, index_1, dompurify_1, $) {
+define(["require", "exports", "aurelia-framework", "aurelia-i18n", "../services/index", "dompurify", "jquery"], function (require, exports, aurelia_framework_1, aurelia_i18n_1, index_1, DOMPurify, $) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     // height in pixel of the multiple-select DOM element
@@ -209,7 +209,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "../services/
                 if (isRenderHtmlEnabled) {
                     // sanitize any unauthorized html tags like script and others
                     // for the remaining allowed tags we'll permit all attributes
-                    var sanitizedText = dompurify_1.default.sanitize(optionText, sanitizedOptions);
+                    var sanitizedText = DOMPurify.sanitize(optionText, sanitizedOptions);
                     optionText = index_1.htmlEncode(sanitizedText);
                 }
                 options += "<option value=\"" + option[_this.valueName] + "\">" + optionText + "</option>";

@@ -17,7 +17,7 @@ import { inject } from 'aurelia-framework';
 import { OperatorType } from './../models/index';
 import { CollectionService } from '../services/collection.service';
 import { htmlEncode } from '../services/utilities';
-import DOMPurify from 'dompurify';
+import * as DOMPurify from 'dompurify';
 import * as $ from 'jquery';
 var SingleSelectFilter = /** @class */ (function () {
     function SingleSelectFilter(collectionService, i18n) {

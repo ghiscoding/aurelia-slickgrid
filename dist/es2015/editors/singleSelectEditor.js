@@ -7,7 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import { inject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import { CollectionService, findOrDefault, htmlEncode } from '../services/index';
-import DOMPurify from 'dompurify';
+import * as DOMPurify from 'dompurify';
 import * as $ from 'jquery';
 // height in pixel of the multiple-select DOM element
 const SELECT_ELEMENT_HEIGHT = 26;

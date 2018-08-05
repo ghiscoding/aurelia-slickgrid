@@ -16,7 +16,7 @@ import { inject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import { CollectionService } from '../services/index';
 import { arraysEqual, htmlEncode } from '../services/utilities';
-import DOMPurify from 'dompurify';
+import * as DOMPurify from 'dompurify';
 import * as $ from 'jquery';
 // height in pixel of the multiple-select DOM element
 var SELECT_ELEMENT_HEIGHT = 26;

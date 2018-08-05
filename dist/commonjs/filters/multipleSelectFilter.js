@@ -19,7 +19,7 @@ var aurelia_framework_1 = require("aurelia-framework");
 var index_1 = require("./../models/index");
 var collection_service_1 = require("../services/collection.service");
 var utilities_1 = require("../services/utilities");
-var dompurify_1 = require("dompurify");
+var DOMPurify = require("dompurify");
 var $ = require("jquery");
 var MultipleSelectFilter = /** @class */ (function () {
     /**
@@ -169,7 +169,7 @@ var MultipleSelectFilter = /** @class */ (function () {
             if (isRenderHtmlEnabled) {
                 // sanitize any unauthorized html tags like script and others
                 // for the remaining allowed tags we'll permit all attributes
-                var sanitizedText = dompurify_1.default.sanitize(optionText, sanitizedOptions);
+                var sanitizedText = DOMPurify.sanitize(optionText, sanitizedOptions);
                 optionText = utilities_1.htmlEncode(sanitizedText);
             }
             // html text of each select option
