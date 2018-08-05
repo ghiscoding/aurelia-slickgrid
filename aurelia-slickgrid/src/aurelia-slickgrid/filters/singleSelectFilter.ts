@@ -14,7 +14,7 @@ import {
 } from './../models/index';
 import { CollectionService } from '../services/collection.service';
 import { htmlEncode } from '../services/utilities';
-import DOMPurify from 'dompurify';
+import * as DOMPurify from 'dompurify';
 import * as $ from 'jquery';
 
 @inject(CollectionService, I18N)

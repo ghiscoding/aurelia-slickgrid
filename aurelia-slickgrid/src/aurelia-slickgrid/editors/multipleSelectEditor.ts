@@ -11,7 +11,7 @@ import {
 } from './../models/index';
 import { CollectionService } from '../services/index';
 import { arraysEqual, htmlEncode } from '../services/utilities';
-import DOMPurify from 'dompurify';
+import * as DOMPurify from 'dompurify';
 import * as $ from 'jquery';
 
 // height in pixel of the multiple-select DOM element

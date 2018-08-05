@@ -10,7 +10,7 @@ import {
   SelectOption
 } from '../models/index';
 import { CollectionService, findOrDefault, htmlEncode } from '../services/index';
-import DOMPurify from 'dompurify';
+import * as DOMPurify from 'dompurify';
 import * as $ from 'jquery';
 
 // height in pixel of the multiple-select DOM element
