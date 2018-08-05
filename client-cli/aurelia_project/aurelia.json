@@ -147,6 +147,12 @@
               "jquery-event",
               "jquery-ui-dist"
             ]
+          },
+          {
+            "name": "dompurify",
+            "main": "dist/purify",
+            "path": "../node_modules/dompurify",
+            "resources": []
           }
         ]
       }

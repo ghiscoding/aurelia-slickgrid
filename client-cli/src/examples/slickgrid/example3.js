@@ -16,7 +16,6 @@ const myCustomTitleValidator = (value) => {
   } else if (!/^Task\s\d+$/.test(value)) {
     return { valid: false, msg: 'Your title is invalid, it must start with "Task" followed by a number' };
   }
-
   return { valid: true, msg: '' };
 };
 
@@ -40,7 +39,7 @@ export class Example3 {
   gridObj;
   gridOptions;
   columnDefinitions;
-  dataset;
+  dataset = [];
   updatedObject;
   isAutoEdit = true;
   alertWarning;
@@ -159,10 +158,15 @@ export class Example3 {
         model: Editors.singleSelect,
 
         // We can also add HTML text to be rendered (any bad script will be sanitized) but we have to opt-in, else it will be sanitized
-        // enableRenderHtml: true,
-        // collection: Array.from(Array(101).keys()).map(k => ({ value: k, label: k, labelSuffix: '<i class="fa fa-percent" style="color:blue"></i>' })),
-
-        collection: Array.from(Array(101).keys()).map(k => ({ value: k, label: k })),
+        enableRenderHtml: true,
+        collection: Array.from(Array(101).keys()).map(k => ({ value: k, label: k, symbol: '<i class="fa fa-percent" style="color:cadetblue"></i>' })),
+        customStructure: {
+          value: 'value',
+          label: 'label',
+          labelSuffix: 'symbol',
+          addSpaceBetweenLabels: false
+        },
+        // collection: Array.from(Array(101).keys()).map(k => ({ value: k, label: k, symbol: '%' })),
         collectionSortBy: {
           property: 'label',
           sortDesc: true
