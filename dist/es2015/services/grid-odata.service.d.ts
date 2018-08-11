@@ -2,10 +2,10 @@ import './global-utilities';
 import { BackendService, ColumnFilters, ColumnSort, CurrentFilter, CurrentPagination, CurrentSorter, FilterChangedArgs, OdataOption, Pagination, PaginationChangedArgs, SortChangedArgs } from './../models/index';
 import { OdataService } from './odata.service';
 export declare class GridOdataService implements BackendService {
-    private _columnDefinitions;
     private _currentFilters;
     private _currentPagination;
     private _currentSorters;
+    private _columnDefinitions;
     private _grid;
     odataService: OdataService;
     options: OdataOption;

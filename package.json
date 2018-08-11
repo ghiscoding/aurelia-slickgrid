@@ -1,6 +1,6 @@
 {
   "name": "aurelia-slickgrid",
-  "version": "2.1.1",
+  "version": "2.2.3",
   "description": "Slickgrid components made available in Aurelia",
   "keywords": [
     "aurelia",
@@ -79,13 +79,14 @@
     "aurelia-framework": ">=1.1.0",
     "aurelia-i18n": ">=2.1.0",
     "aurelia-pal": ">=1.4.0",
+    "dompurify": "^1.0.7",
     "flatpickr": ">=4.2.4",
     "i18next-xhr-backend": ">=1.5.0",
     "jquery": ">=3.2.1",
     "jquery-ui-dist": "^1.12.1",
     "moment": ">=2.18.1",
     "moment-mini": ">=2.18.1",
-    "sanitize-html": "^1.18.2",
+    "sanitize-html": "^1.18.4",
     "slickgrid": "~2.3.21",
     "text-encoding-utf-8": "^1.0.2"
   },
@@ -94,6 +95,7 @@
     "@types/jquery": "^3.3.0",
     "@types/moment": "^2.13.0",
     "@types/node": "^8.0.20",
+    "@types/sanitize-html": "^1.18.0",
     "@types/text-encoding-utf-8": "^1.0.1",
     "aurelia-bootstrapper": "^2.1.1",
     "aurelia-pal-browser": "^1.2.1",

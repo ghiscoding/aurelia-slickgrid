@@ -57,7 +57,8 @@ export declare class AureliaSlickgridCustomElement {
     constructor(bindingEngine: BindingEngine, controlAndPluginService: ControlAndPluginService, exportService: ExportService, elm: Element, ea: EventAggregator, filterService: FilterService, gridEventService: GridEventService, gridService: GridService, gridStateService: GridStateService, groupingAndColspanService: GroupingAndColspanService, resizerService: ResizerService, sortService: SortService, container: Container);
     attached(): void;
     initialization(): void;
-    detached(): void;
+    detached(emptyDomElementContainer?: boolean): void;
+    dispose(emptyDomElementContainer?: boolean): void;
     bind(): void;
     columnDefinitionsChanged(): void;
     datasetChanged(newValue: any[], oldValue: any[]): void;
@@ -71,6 +72,10 @@ export declare class AureliaSlickgridCustomElement {
     attachResizeHook(grid: any, options: GridOption): void;
     executeAfterDataviewCreated(grid: any, gridOptions: GridOption, dataView: any): void;
     mergeGridOptions(gridOptions: GridOption): GridOption;
+    /**
+     * On a Pagination changed, we will trigger a Grid State changed with the new pagination info
+     * Also if we use Row Selection or the Checkbox Selector, we need to reset any selection
+     */
     paginationChanged(pagination: Pagination): void;
     /**
      * When dataset changes, we need to refresh the entire grid UI & possibly resize it as well
@@ -90,5 +95,5 @@ export declare class AureliaSlickgridCustomElement {
      * If using i18n, we also need to trigger a re-translate of the column headers
      */
     updateColumnDefinitionsList(newColumnDefinitions?: Column[]): void;
-    private dispatchCustomEvent(eventName, data?, isBubbling?);
+    private dispatchCustomEvent(eventName, data?, isBubbling?, isCancelable?);
 }

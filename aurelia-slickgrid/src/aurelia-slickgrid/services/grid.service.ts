@@ -148,12 +148,12 @@ export class GridService {
   }
 
   /** Get the Data Item from an array of grid row indexes */
-  getDataItemByRowIndexes(indexes: number[]) {
+  getDataItemByRowIndexes(indexes: number[]): any[] {
     if (!this._grid || typeof this._grid.getDataItem !== 'function') {
       throw new Error('We could not find SlickGrid Grid object');
     }
 
-    const dataItems = [];
+    const dataItems: any[] = [];
 
     if (Array.isArray(indexes)) {
       indexes.forEach((idx) => {

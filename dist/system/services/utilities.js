@@ -1,4 +1,4 @@
-System.register(["../models/index", "moment"], function (exports_1, context_1) {
+System.register(["../models/index", "moment", "jquery"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     /**
@@ -14,6 +14,18 @@ System.register(["../models/index", "moment"], function (exports_1, context_1) {
         return result;
     }
     exports_1("addWhiteSpaces", addWhiteSpaces);
+    /** HTML encode using jQuery */
+    function htmlEncode(value) {
+        // create a in-memory div, set it's inner text(which jQuery automatically encodes)
+        // then grab the encoded contents back out.  The div never exists on the page.
+        return $('<div/>').text(value).html();
+    }
+    exports_1("htmlEncode", htmlEncode);
+    /** HTML decode using jQuery */
+    function htmlDecode(value) {
+        return $('<div/>').html(value).text();
+    }
+    exports_1("htmlDecode", htmlDecode);
     /**
      * decode text into html entity
      * @param string text: input text
@@ -343,7 +355,7 @@ System.register(["../models/index", "moment"], function (exports_1, context_1) {
         if (a === b) {
             return true;
         }
-        if (a === null || b === null) {
+        if (!a || !b) {
             return false;
         }
         if (a.length !== b.length) {
@@ -362,6 +374,20 @@ System.register(["../models/index", "moment"], function (exports_1, context_1) {
     }
     exports_1("arraysEqual", arraysEqual);
     /**
+     * Compares two objects to determine if all the properties are equal
+     * We will do a deep check recursively to make sure all properties really are the same
+     * @param x first object
+     * @param y second object to compare with a
+     */
+    function objectsDeepEqual(x, y) {
+        var ok = Object.keys;
+        var tx = typeof x;
+        var ty = typeof y;
+        return x && y && tx === 'object' && tx === ty ? (ok(x).length === ok(y).length &&
+            ok(x).every(function (key) { return objectsDeepEqual(x[key], y[key]); })) : (x === y);
+    }
+    exports_1("objectsDeepEqual", objectsDeepEqual);
+    /**
      * Uses the logic function to find an item in an array or returns the default
      * value provided (empty object by default)
      * @param any[] array the array to filter
@@ -374,7 +400,7 @@ System.register(["../models/index", "moment"], function (exports_1, context_1) {
         return array.find(logic) || defaultVal;
     }
     exports_1("findOrDefault", findOrDefault);
-    var index_1, moment;
+    var index_1, moment, $;
     return {
         setters: [
             function (index_1_1) {
@@ -382,6 +408,9 @@ System.register(["../models/index", "moment"], function (exports_1, context_1) {
             },
             function (moment_1) {
                 moment = moment_1;
+            },
+            function ($_1) {
+                $ = $_1;
             }
         ],
         execute: function () {

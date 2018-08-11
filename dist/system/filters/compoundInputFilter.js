@@ -76,6 +76,7 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../models/index"], func
                 CompoundInputFilter.prototype.clear = function () {
                     if (this.$filterElm && this.$selectOperatorElm) {
                         this._clearFilterTriggered = true;
+                        this.searchTerms = [];
                         this.$selectOperatorElm.val(0);
                         this.$filterInputElm.val('');
                         this.onTriggerEvent(undefined);

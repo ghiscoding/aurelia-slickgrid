@@ -61,6 +61,7 @@ define(["require", "exports", "aurelia-i18n", "aurelia-framework", "./../models/
         SelectFilter.prototype.clear = function () {
             if (this.$filterElm) {
                 this._clearFilterTriggered = true;
+                this.searchTerms = [];
                 this.$filterElm.val('');
                 this.$filterElm.trigger('change');
             }

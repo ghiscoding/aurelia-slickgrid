@@ -179,6 +179,12 @@ export interface GridOption {
         /** do we want to select the active row? */
         selectActiveRow: boolean;
     };
+    /**
+     * Optionally pass some options to the 3rd party lib "cure32/DOMPurify" used in some Filters.
+     * For this to work, "enableRenderHtml" as to be enabled.
+     * Aurelia-Slickgrid uses the default options with 2 slight differences (1- allow all attributes with "*", 2- add "<span>" to the allowed tags).
+     */
+    sanitizeHtmlOptions?: any;
     /** CSS class name used when cell is selected */
     selectedCellCssClass?: string;
     /** Do we want to show cell selection? */

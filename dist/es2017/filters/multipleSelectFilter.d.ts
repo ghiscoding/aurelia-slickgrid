@@ -12,6 +12,8 @@ export declare class MultipleSelectFilter implements Filter {
     defaultOptions: MultipleSelectOption;
     isFilled: boolean;
     labelName: string;
+    labelPrefixName: string;
+    labelSuffixName: string;
     valueName: string;
     enableTranslateLabel: boolean;
     /**

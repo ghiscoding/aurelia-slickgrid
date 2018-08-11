@@ -62,6 +62,7 @@ var SelectFilter = /** @class */ (function () {
     SelectFilter.prototype.clear = function () {
         if (this.$filterElm) {
             this._clearFilterTriggered = true;
+            this.searchTerms = [];
             this.$filterElm.val('');
             this.$filterElm.trigger('change');
         }

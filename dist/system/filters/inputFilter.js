@@ -67,6 +67,7 @@ System.register(["jquery"], function (exports_1, context_1) {
                 InputFilter.prototype.clear = function () {
                     if (this.$filterElm) {
                         this._clearFilterTriggered = true;
+                        this.searchTerms = [];
                         this.$filterElm.val('');
                         this.$filterElm.trigger('keyup');
                     }

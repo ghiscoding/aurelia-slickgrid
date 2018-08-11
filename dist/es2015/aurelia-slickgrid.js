@@ -148,6 +148,8 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
             // Slick Grid & DataView objects
             dataView: this.dataview,
             slickGrid: this.grid,
+            // public methods
+            dispose: this.dispose.bind(this),
             // return all available Services (non-singleton)
             backendService: this.gridOptions && this.gridOptions.backendServiceApi && this.gridOptions.backendServiceApi.service,
             exportService: this.exportService,
@@ -162,12 +164,15 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
         };
         this.dispatchCustomEvent(`${aureliaEventPrefix}-on-aurelia-grid-created`, aureliaElementInstance);
     }
-    detached() {
+    detached(emptyDomElementContainer = false) {
         this.ea.publish('onBeforeGridDestroy', this.grid);
         this.dispatchCustomEvent(`${aureliaEventPrefix}-on-before-grid-destroy`, this.grid);
         this.dataview = [];
         this._eventHandler.unsubscribeAll();
         this.grid.destroy();
+        if (emptyDomElementContainer) {
+            $(this.gridOptions.gridContainerId).empty();
+        }
         this.ea.publish('onAfterGridDestroyed', true);
         this.dispatchCustomEvent(`${aureliaEventPrefix}-on-after-grid-destroyed`, this.grid);
         // dispose of all Services
@@ -184,6 +189,9 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
             }
         });
         this.subscriptions = [];
+    }
+    dispose(emptyDomElementContainer = false) {
+        this.detached(emptyDomElementContainer);
     }
     bind() {
         // get the grid options (priority is Global Options first, then user option which could overwrite the Global options)
@@ -283,7 +291,7 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
         for (const prop in grid) {
             if (grid.hasOwnProperty(prop) && prop.startsWith('on')) {
                 this._eventHandler.subscribe(grid[prop], (e, args) => {
-                    this.dispatchCustomEvent(`${eventPrefix}-${toKebabCase(prop)}`, { eventData: e, args });
+                    return this.dispatchCustomEvent(`${eventPrefix}-${toKebabCase(prop)}`, { eventData: e, args });
                 });
             }
         }
@@ -291,7 +299,7 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
         for (const prop in dataView) {
             if (dataView.hasOwnProperty(prop) && prop.startsWith('on')) {
                 this._eventHandler.subscribe(dataView[prop], (e, args) => {
-                    this.dispatchCustomEvent(`${eventPrefix}-${toKebabCase(prop)}`, { eventData: e, args });
+                    return this.dispatchCustomEvent(`${eventPrefix}-${toKebabCase(prop)}`, { eventData: e, args });
                 });
             }
         }
@@ -358,11 +366,14 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
             const onInitPromise = (isExecuteCommandOnInit) ? (backendApi && backendApi.process) ? backendApi.process(query) : undefined : (backendApi && backendApi.onInit) ? backendApi.onInit(query) : null;
             // wrap this inside a setTimeout to avoid timing issue since the gridOptions needs to be ready before running this onInit
             setTimeout(() => __awaiter(this, void 0, void 0, function* () {
+                // keep start time & end timestamps & return it after process execution
+                const startTime = new Date();
                 if (backendApi.preProcess) {
                     backendApi.preProcess();
                 }
                 // await for the Promise to resolve the data
                 const processResult = yield onInitPromise;
+                const endTime = new Date();
                 // define what our internal Post Process callback, only available for GraphQL Service for now
                 // it will basically refresh the Dataset & Pagination without having the user to create his own PostProcess every time
                 if (processResult && backendApi && backendApi.service instanceof GraphqlService && backendApi.internalPostProcess) {
@@ -370,6 +381,12 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
                 }
                 // send the response process to the postProcess callback
                 if (backendApi.postProcess) {
+                    processResult.statistics = {
+                        startTime,
+                        endTime,
+                        executionTime: endTime.valueOf() - startTime.valueOf(),
+                        totalItemCount: this.gridOptions && this.gridOptions.pagination && this.gridOptions.pagination.totalItems
+                    };
                     backendApi.postProcess(processResult);
                 }
             }));
@@ -406,7 +423,14 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
         // use jquery extend to deep merge and avoid immutable properties changed in GlobalGridOptions after route change
         return $.extend(true, {}, GlobalGridOptions, gridOptions);
     }
+    /**
+     * On a Pagination changed, we will trigger a Grid State changed with the new pagination info
+     * Also if we use Row Selection or the Checkbox Selector, we need to reset any selection
+     */
     paginationChanged(pagination) {
+        if (this.gridOptions.enableRowSelection || this.gridOptions.enableCheckboxSelector) {
+            this.grid.setSelectedRows([]);
+        }
         this.ea.publish('gridStateService:changed', {
             change: { newValues: pagination, type: GridStateType.pagination },
             gridState: this.gridStateService.getCurrentGridState()
@@ -425,7 +449,7 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
             // this.grid.setData(dataset);
             this.grid.invalidate();
             this.grid.render();
-            if (this.gridOptions.enablePagination || this.gridOptions.backendServiceApi) {
+            if (this.gridOptions.backendServiceApi) {
                 // do we want to show pagination?
                 // if we have a backendServiceApi and the enablePagination is undefined, we'll assume that we do want to see it, else get that defined value
                 this.showPagination = ((this.gridOptions.backendServiceApi && this.gridOptions.enablePagination === undefined) ? true : this.gridOptions.enablePagination) || false;
@@ -443,8 +467,8 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
                 }
                 this.gridPaginationOptions = this.mergeGridOptions(this.gridOptions);
             }
+            // resize the grid inside a slight timeout, in case other DOM element changed prior to the resize (like a filter/pagination changed)
             if (this.grid && this.gridOptions.enableAutoResize) {
-                // resize the grid inside a slight timeout, in case other DOM element changed prior to the resize (like a filter/pagination changed)
                 this.resizerService.resizeGrid(1, { height: this.gridHeight, width: this.gridWidth });
             }
         }
@@ -477,12 +501,12 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
         }
         this.grid.autosizeColumns();
     }
-    dispatchCustomEvent(eventName, data, isBubbling = true) {
-        const eventInit = { bubbles: isBubbling };
+    dispatchCustomEvent(eventName, data, isBubbling = true, isCancelable = true) {
+        const eventInit = { bubbles: isBubbling, cancelable: isCancelable };
         if (data) {
             eventInit.detail = data;
         }
-        this.elm.dispatchEvent(new CustomEvent(eventName, eventInit));
+        return this.elm.dispatchEvent(new CustomEvent(eventName, eventInit));
     }
 };
 __decorate([

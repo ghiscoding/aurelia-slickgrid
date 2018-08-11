@@ -50,7 +50,7 @@ let GridOdataService = class GridOdataService {
             pageSize: this.odataService.options.top || this.defaultOptions.top || DEFAULT_PAGE_SIZE
         };
         if (grid && grid.getColumns) {
-            this._columnDefinitions = grid.getColumns() || options.columnDefinitions || {};
+            this._columnDefinitions = (options && options.columnDefinitions) || grid.getColumns();
             this._columnDefinitions = this._columnDefinitions.filter((column) => !column.excludeFromQuery);
         }
     }
@@ -163,7 +163,7 @@ let GridOdataService = class GridOdataService {
                     fieldSearchValue = '';
                 }
                 if (typeof fieldSearchValue !== 'string' && !searchTerms) {
-                    throw new Error(`ODdata filter searchTerm property must be provided as type "string", if you use filter with options then make sure your IDs are also string. For example: filter: {type: FilterType.select, collection: [{ id: "0", value: "0" }, { id: "1", value: "1" }]`);
+                    throw new Error(`ODdata filter searchTerm property must be provided as type "string", if you use filter with options then make sure your IDs are also string. For example: filter: {model: Filters.select, collection: [{ id: "0", value: "0" }, { id: "1", value: "1" }]`);
                 }
                 fieldSearchValue = '' + fieldSearchValue; // make sure it's a string
                 const matches = fieldSearchValue.match(/^([<>!=\*]{0,2})(.*[^<>!=\*])([\*]?)$/); // group 1: Operator, 2: searchValue, 3: last char is '*' (meaning starts with, ex.: abc*)

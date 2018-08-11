@@ -1,3 +1,11 @@
+var __assign = (this && this.__assign) || Object.assign || function(t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+            t[p] = s[p];
+    }
+    return t;
+};
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -39,7 +47,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "./../filter-conditions/index", "./../filters/index", "./../models/index", "jquery"], function (require, exports, aurelia_framework_1, aurelia_event_aggregator_1, index_1, index_2, index_3, $) {
+define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "./../filter-conditions/index", "./../filters/index", "./../models/index", "./utilities", "jquery"], function (require, exports, aurelia_framework_1, aurelia_event_aggregator_1, index_1, index_2, index_3, utilities_1, $) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var FilterService = /** @class */ (function () {
@@ -90,7 +98,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
         };
         FilterService.prototype.attachBackendOnFilterSubscribe = function (event, args) {
             return __awaiter(this, void 0, void 0, function () {
-                var gridOptions, backendApi, query, processResult;
+                var gridOptions, backendApi, startTime, query, endTime, processResult;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
@@ -102,6 +110,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
                             if (!backendApi || !backendApi.process || !backendApi.service) {
                                 throw new Error("BackendServiceApi requires at least a \"process\" function and a \"service\" defined");
                             }
+                            startTime = new Date();
                             // run a preProcess callback if defined
                             if (backendApi.preProcess) {
                                 backendApi.preProcess();
@@ -109,6 +118,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
                             return [4 /*yield*/, backendApi.service.processOnFilterChanged(event, args)];
                         case 1:
                             query = _a.sent();
+                            endTime = new Date();
                             // emit an onFilterChanged event
                             if (args && !args.clearFilterTriggered) {
                                 this.emitFilterChanged('remote');
@@ -122,6 +132,14 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
                             }
                             // send the response process to the postProcess callback
                             if (backendApi.postProcess !== undefined) {
+                                if (processResult instanceof Object) {
+                                    processResult.statistics = {
+                                        startTime: startTime,
+                                        endTime: endTime,
+                                        executionTime: endTime.valueOf() - startTime.valueOf(),
+                                        totalItemCount: this._gridOptions && this._gridOptions.pagination && this._gridOptions.pagination.totalItems
+                                    };
+                                }
                                 backendApi.postProcess(processResult);
                             }
                             return [2 /*return*/];
@@ -313,6 +331,8 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
                 var operator = args.operator || undefined;
                 var hasSearchTerms = searchTerms && Array.isArray(searchTerms);
                 var termsCount = Array.isArray(searchTerms) && searchTerms.length || 0;
+                // keep deep copy of old filter values
+                var oldColumnFilters = __assign({}, this._columnFilters);
                 if (!hasSearchTerms || termsCount === 0 || (termsCount === 1 && Array.isArray(searchTerms) && searchTerms[0] === '')) {
                     // delete the property from the columnFilters when it becomes empty
                     // without doing this, it would leave an incorrect state of the previous column filters when filtering on another column
@@ -330,16 +350,19 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
                     }
                     this._columnFilters[colId] = colFilter;
                 }
-                this.triggerEvent(this._slickSubscriber, {
-                    clearFilterTriggered: args && args.clearFilterTriggered,
-                    columnId: columnId,
-                    columnDef: args.columnDef || null,
-                    columnFilters: this._columnFilters,
-                    operator: operator,
-                    searchTerms: searchTerms,
-                    serviceOptions: this._onFilterChangedOptions,
-                    grid: this._grid
-                }, e);
+                // trigger an event only if Filters changed
+                if (!utilities_1.objectsDeepEqual(oldColumnFilters, this._columnFilters)) {
+                    this.triggerEvent(this._slickSubscriber, {
+                        clearFilterTriggered: args && args.clearFilterTriggered,
+                        columnId: columnId,
+                        columnDef: args.columnDef || null,
+                        columnFilters: this._columnFilters,
+                        operator: operator,
+                        searchTerms: searchTerms,
+                        serviceOptions: this._onFilterChangedOptions,
+                        grid: this._grid
+                    }, e);
+                }
             }
         };
         FilterService.prototype.addFilterTemplateToHeaderRow = function (args) {

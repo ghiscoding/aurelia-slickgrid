@@ -178,7 +178,7 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./services/in
                 };
                 SlickPaginationCustomElement.prototype.onPageChanged = function (event, pageNumber) {
                     return __awaiter(this, void 0, void 0, function () {
-                        var backendApi, itemsPerPage, query, processResult;
+                        var backendApi, itemsPerPage, startTime, query, processResult, endTime;
                         return __generator(this, function (_a) {
                             switch (_a.label) {
                                 case 0:
@@ -195,6 +195,7 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./services/in
                                     }
                                     if (!backendApi) return [3 /*break*/, 2];
                                     itemsPerPage = +this.itemsPerPage;
+                                    startTime = new Date();
                                     if (backendApi.preProcess) {
                                         backendApi.preProcess();
                                     }
@@ -202,12 +203,22 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./services/in
                                     return [4 /*yield*/, backendApi.process(query)];
                                 case 1:
                                     processResult = _a.sent();
+                                    endTime = new Date();
                                     // from the result, call our internal post process to update the Dataset and Pagination info
                                     if (processResult && backendApi.internalPostProcess) {
                                         backendApi.internalPostProcess(processResult);
                                     }
                                     // send the response process to the postProcess callback
                                     if (backendApi.postProcess) {
+                                        if (processResult instanceof Object) {
+                                            processResult.statistics = {
+                                                startTime: startTime,
+                                                endTime: endTime,
+                                                executionTime: endTime.valueOf() - startTime.valueOf(),
+                                                itemCount: this.totalItems,
+                                                totalItemCount: this.totalItems
+                                            };
+                                        }
                                         backendApi.postProcess(processResult);
                                     }
                                     return [3 /*break*/, 3];

@@ -9,6 +9,11 @@ export interface ColumnEditor {
     collectionSortBy?: CollectionSortBy;
     /** Options that could be provided to the Editor, example: { container: 'body', maxHeight: 250} */
     editorOptions?: MultipleSelectOption | any;
+    /**
+     * Defaults to false, when set it will render any HTML code instead of removing it (sanitized)
+     * Only used so far in the MultipleSelect & SingleSelect Filters will support it
+     */
+    enableRenderHtml?: boolean;
     /** Do we want the Editor to handle translation (localization)? */
     enableTranslateLabel?: boolean;
     /** Error message to display when validation fails */
@@ -23,8 +28,16 @@ export interface ColumnEditor {
     valueStep?: number | string;
     /** A custom structure can be used instead of the default label/value pair. Commonly used with Select/Multi-Select Editor */
     customStructure?: {
+        /** your custom property name to for the "label" (text displayed in the select dropdown UI) */
         label: string;
+        /** your custom property name to use for the "value" (equals of the "option" in a select dropdown) */
         value: string;
+        /** an optional prefix that will be prepended before the label text */
+        labelPrefix?: string;
+        /** an optional suffix that will be appended to the label text */
+        labelSuffix?: string;
+        /** defaults to false, when using label with prefix/suffix, do we want to add spaces between each? */
+        addSpaceBetweenLabels?: boolean;
     };
     /**
      * Use "params" to pass any type of arguments to your Custom Editor

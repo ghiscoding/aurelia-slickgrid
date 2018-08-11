@@ -225,10 +225,18 @@ var GridStateService = /** @class */ (function () {
         var _this = this;
         // Subscribe to Event Emitter of Filter changed
         this.subscriptions.push(this.ea.subscribe('filterService:filterChanged', function (currentFilters) {
+            // if we use Row Selection or the Checkbox Selector, we need to reset any selection
+            if (_this._gridOptions.enableRowSelection || _this._gridOptions.enableCheckboxSelector) {
+                _this._grid.setSelectedRows([]);
+            }
             _this.ea.publish('gridStateService:changed', { change: { newValues: currentFilters, type: GridStateType.filter }, gridState: _this.getCurrentGridState() });
         }));
         // Subscribe to Event Emitter of Filter cleared
         this.subscriptions.push(this.ea.subscribe('filterService:filterCleared', function (currentFilters) {
+            // if we use Row Selection or the Checkbox Selector, we need to reset any selection
+            if (_this._gridOptions.enableRowSelection || _this._gridOptions.enableCheckboxSelector) {
+                _this._grid.setSelectedRows([]);
+            }
             _this.ea.publish('gridStateService:changed', { change: { newValues: currentFilters, type: GridStateType.filter }, gridState: _this.getCurrentGridState() });
         }));
         // Subscribe to Event Emitter of Sort changed

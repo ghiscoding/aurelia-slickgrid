@@ -614,6 +614,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "../constants
         };
         /** Refresh the dataset through the Backend Service */
         ControlAndPluginService.prototype.refreshBackendDataset = function () {
+            var _this = this;
             var query;
             var backendApi = this._gridOptions.backendServiceApi;
             if (!backendApi || !backendApi.service || !backendApi.process) {
@@ -623,6 +624,8 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "../constants
                 query = backendApi.service.buildQuery();
             }
             if (query && query !== '') {
+                // keep start time & end timestamps & return it after process execution
+                var startTime_1 = new Date();
                 if (backendApi.preProcess) {
                     backendApi.preProcess();
                 }
@@ -630,12 +633,21 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "../constants
                 // in any case, we need to have a Promise so that we can await on it (if an Observable, convert it to Promise)
                 var processPromise = backendApi.process(query);
                 processPromise.then(function (processResult) {
+                    var endTime = new Date();
                     // from the result, call our internal post process to update the Dataset and Pagination info
                     if (processResult && backendApi && backendApi.internalPostProcess) {
                         backendApi.internalPostProcess(processResult);
                     }
                     // send the response process to the postProcess callback
                     if (backendApi && backendApi.postProcess) {
+                        if (processResult instanceof Object) {
+                            processResult.statistics = {
+                                startTime: startTime_1,
+                                endTime: endTime,
+                                executionTime: endTime.valueOf() - startTime_1.valueOf(),
+                                totalItemCount: _this._gridOptions && _this._gridOptions.pagination && _this._gridOptions.pagination.totalItems
+                            };
+                        }
                         backendApi.postProcess(processResult);
                     }
                 });

@@ -8,6 +8,8 @@ import { I18N } from 'aurelia-i18n';
 import { inject } from 'aurelia-framework';
 import { OperatorType } from './../models/index';
 import { CollectionService } from '../services/collection.service';
+import { htmlEncode } from '../services/utilities';
+import * as DOMPurify from 'dompurify';
 import * as $ from 'jquery';
 let MultipleSelectFilter = class MultipleSelectFilter {
     /**
@@ -29,9 +31,14 @@ let MultipleSelectFilter = class MultipleSelectFilter {
             allSelected: this.i18n.tr('ALL_SELECTED'),
             selectAllText: this.i18n.tr('SELECT_ALL'),
             selectAllDelimiter: ['', ''],
-            // we will subscribe to the onClose event for triggering our callback
-            // also add/remove "filled" class for styling purposes
+            textTemplate: ($elm) => {
+                // render HTML code or not, by default it is sanitized and won't be rendered
+                const isRenderHtmlEnabled = this.columnDef && this.columnDef.filter && this.columnDef.filter.enableRenderHtml || false;
+                return isRenderHtmlEnabled ? $elm.text() : $elm.html();
+            },
             onClose: () => {
+                // we will subscribe to the onClose event for triggering our callback
+                // also add/remove "filled" class for styling purposes
                 const selectedItems = this.$filterElm.multipleSelect('getSelects');
                 if (Array.isArray(selectedItems) && selectedItems.length > 0) {
                     this.isFilled = true;
@@ -67,9 +74,11 @@ let MultipleSelectFilter = class MultipleSelectFilter {
             throw new Error(`[Aurelia-SlickGrid] You need to pass a "collection" for the MultipleSelect Filter to work correctly. Also each option should include a value/label pair (or value/labelKey when using Locale). For example: { filter: { model: Filters.multipleSelect, collection: [{ value: true, label: 'True' }, { value: false, label: 'False'}] } }`);
         }
         this.enableTranslateLabel = this.columnDef.filter.enableTranslateLabel || false;
-        this.labelName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.label : 'label';
-        this.valueName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.value : 'value';
-        let newCollection = this.columnDef.filter.collection || [];
+        this.labelName = this.columnDef && this.columnDef.filter && this.columnDef.filter.customStructure && this.columnDef.filter.customStructure.label || 'label';
+        this.labelPrefixName = this.columnDef && this.columnDef.filter && this.columnDef.filter.customStructure && this.columnDef.filter.customStructure.labelPrefix || 'labelPrefix';
+        this.labelSuffixName = this.columnDef && this.columnDef.filter && this.columnDef.filter.customStructure && this.columnDef.filter.customStructure.labelSuffix || 'labelSuffix';
+        this.valueName = this.columnDef && this.columnDef.filter && this.columnDef.filter.customStructure && this.columnDef.filter.customStructure.value || 'value';
+        let newCollection = this.columnDef && this.columnDef.filter && this.columnDef.filter.collection || [];
         // user might want to filter certain items of the collection
         if (this.gridOptions.params && this.columnDef.filter.collectionFilterBy) {
             const filterBy = this.columnDef.filter.collectionFilterBy;
@@ -94,6 +103,7 @@ let MultipleSelectFilter = class MultipleSelectFilter {
             // reload the filter element by it's id, to make sure it's still a valid element (because of some issue in the GraphQL example)
             this.$filterElm.multipleSelect('setSelects', []);
             this.$filterElm.removeClass('filled');
+            this.searchTerms = [];
             this.callback(undefined, { columnDef: this.columnDef, clearFilterTriggered: true });
         }
     }
@@ -121,15 +131,29 @@ let MultipleSelectFilter = class MultipleSelectFilter {
      */
     buildTemplateHtmlString(optionCollection) {
         let options = '';
+        const isAddingSpaceBetweenLabels = this.columnDef && this.columnDef.filter && this.columnDef.filter.customStructure && this.columnDef.filter.customStructure.addSpaceBetweenLabels || false;
+        const isRenderHtmlEnabled = this.columnDef && this.columnDef.filter && this.columnDef.filter.enableRenderHtml || false;
+        const sanitizedOptions = this.gridOptions && this.gridOptions.sanitizeHtmlOptions || {};
         optionCollection.forEach((option) => {
             if (!option || (option[this.labelName] === undefined && option.labelKey === undefined)) {
                 throw new Error(`A collection with value/label (or value/labelKey when using Locale) is required to populate the Select list, for example:: { filter: model: Filters.multipleSelect, collection: [ { value: '1', label: 'One' } ]')`);
             }
             const labelKey = (option.labelKey || option[this.labelName]);
             const selected = (this.findValueInSearchTerms(option[this.valueName]) >= 0) ? 'selected' : '';
-            const textLabel = ((option.labelKey || this.enableTranslateLabel) && this.i18n && typeof this.i18n.tr === 'function') ? this.i18n.tr(labelKey || ' ') : labelKey;
+            const labelText = ((option.labelKey || this.enableTranslateLabel) && this.i18n && typeof this.i18n.tr === 'function') ? this.i18n.tr(labelKey || ' ') : labelKey;
+            const prefixText = option[this.labelPrefixName] || '';
+            const suffixText = option[this.labelSuffixName] || '';
+            let optionText = isAddingSpaceBetweenLabels ? `${prefixText} ${labelText} ${suffixText}` : (prefixText + labelText + suffixText);
+            // if user specifically wants to render html text, he needs to opt-in else it will stripped out by default
+            // also, the 3rd party lib will saninitze any html code unless it's encoded, so we'll do that
+            if (isRenderHtmlEnabled) {
+                // sanitize any unauthorized html tags like script and others
+                // for the remaining allowed tags we'll permit all attributes
+                const sanitizedText = DOMPurify.sanitize(optionText, sanitizedOptions);
+                optionText = htmlEncode(sanitizedText);
+            }
             // html text of each select option
-            options += `<option value="${option[this.valueName]}" ${selected}>${textLabel}</option>`;
+            options += `<option value="${option[this.valueName]}" ${selected}>${optionText}</option>`;
             // if there's a search term, we will add the "filled" class for styling purposes
             if (selected) {
                 this.isFilled = true;

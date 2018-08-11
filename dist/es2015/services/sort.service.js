@@ -55,6 +55,8 @@ let SortService = class SortService {
             if (!backendApi || !backendApi.process || !backendApi.service) {
                 throw new Error(`BackendServiceApi requires at least a "process" function and a "service" defined`);
             }
+            // keep start time & end timestamps & return it after process execution
+            const startTime = new Date();
             if (backendApi.preProcess) {
                 backendApi.preProcess();
             }
@@ -62,8 +64,17 @@ let SortService = class SortService {
             this.emitSortChanged('remote');
             // await for the Promise to resolve the data
             const processResult = yield backendApi.process(query);
+            const endTime = new Date();
             // from the result, call our internal post process to update the Dataset and Pagination info
             if (processResult && backendApi.internalPostProcess) {
+                if (processResult instanceof Object) {
+                    processResult.statistics = {
+                        startTime,
+                        endTime,
+                        executionTime: endTime.valueOf() - startTime.valueOf(),
+                        totalItemCount: this._gridOptions && this._gridOptions.pagination && this._gridOptions.pagination.totalItems
+                    };
+                }
                 backendApi.internalPostProcess(processResult);
             }
             // send the response process to the postProcess callback
