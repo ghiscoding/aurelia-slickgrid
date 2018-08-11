@@ -1,5 +1,6 @@
 import { I18N } from 'aurelia-i18n';
-import { inject, BindingEngine } from 'aurelia-framework';
+import { Subscription } from 'aurelia-event-aggregator';
+import { BindingEngine } from 'aurelia-framework';
 import { HttpResponseMessage } from 'aurelia-http-client';
 import {
   Column,
@@ -16,11 +17,9 @@ import {
 } from './../models/index';
 import { CollectionService } from '../services/collection.service';
 import { disposeAllSubscriptions, htmlEncode } from '../services/utilities';
-import * as sanitizeHtml from 'sanitize-html';
+import * as DOMPurify from 'dompurify';
 import * as $ from 'jquery';
-import { Subscription } from 'aurelia-event-aggregator';
 
-@inject(BindingEngine, CollectionService, I18N)
 export class SelectFilter implements Filter {
   $filterElm: any;
   grid: any;
@@ -171,11 +170,11 @@ export class SelectFilter implements Filter {
   // ------------------
 
   /**
-   * user might want to filter and/or sort certain items of the collection
+   * user might want to filter certain items of the collection
    * @param inputCollection
    * @return outputCollection filtered and/or sorted collection
    */
-  protected filterAndSortCollection(inputCollection) {
+  protected filterCollection(inputCollection) {
     let outputCollection = inputCollection;
 
     // user might want to filter certain items of the collection
@@ -183,6 +182,17 @@ export class SelectFilter implements Filter {
       const filterBy = this.columnFilter.collectionFilterBy;
       outputCollection = this.collectionService.filterCollection(outputCollection, filterBy);
     }
+
+    return outputCollection;
+  }
+
+  /**
+   * user might want to sort the collection in a certain way
+   * @param inputCollection
+   * @return outputCollection filtered and/or sorted collection
+   */
+  protected sortCollection(inputCollection) {
+    let outputCollection = inputCollection;
 
     // user might want to sort the collection
     if (this.columnFilter.collectionSortBy) {
@@ -256,7 +266,8 @@ export class SelectFilter implements Filter {
     let newCollection = collection;
 
     // user might want to filter and/or sort certain items of the collection
-    newCollection = this.filterAndSortCollection(newCollection);
+    newCollection = this.filterCollection(newCollection);
+    newCollection = this.sortCollection(newCollection);
 
     // step 1, create HTML string template
     const filterTemplate = this.buildTemplateHtmlString(newCollection, this.searchTerms);
@@ -291,8 +302,8 @@ export class SelectFilter implements Filter {
       if (isRenderHtmlEnabled) {
         // sanitize any unauthorized html tags like script and others
         // for the remaining allowed tags we'll permit all attributes
-        const sanitizeText = sanitizeHtml(optionText, sanitizedOptions);
-        optionText = htmlEncode(sanitizeText);
+        const sanitizedText = DOMPurify.sanitize(optionText, sanitizedOptions);
+        optionText = htmlEncode(sanitizedText);
       }
 
       // html text of each select option

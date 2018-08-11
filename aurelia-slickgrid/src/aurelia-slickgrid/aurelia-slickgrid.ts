@@ -21,6 +21,7 @@ import 'slickgrid/plugins/slick.rowmovemanager';
 import 'slickgrid/plugins/slick.rowselectionmodel';
 
 import { bindable, BindingEngine, bindingMode, Container, Factory, inject } from 'aurelia-framework';
+import { HttpResponseMessage } from 'aurelia-http-client';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
 import { GlobalGridOptions } from './global-grid-options';
 import {
@@ -155,11 +156,13 @@ export class AureliaSlickgridCustomElement {
     // and allow slickgrid to pass its arguments to the editors constructor last
     // when slickgrid creates the editor
     // https://github.com/aurelia/dependency-injection/blob/master/src/resolvers.js
-    this._columnDefinitions = this.columnDefinitions.map((c: Column | any) => ({
-      ...c,
-      editor: c.editor && Factory.of(c.editor.model).get(this.container),
-      internalColumnEditor: { ...c.editor }
-    }));
+    this._columnDefinitions = this.columnDefinitions.map((c: Column | any, index: number) => {
+      if (c.editor && c.editor.collectionAsync) {
+        this.loadEditorAsyncCollection(c.editor, index);
+      }
+
+      return { ...c, editor: c.editor && Factory.of(c.editor.model).get(this.container), internalColumnEditor: { ...c.editor } };
+    });
 
     this.controlAndPluginService.createCheckboxPluginBeforeGridCreation(this._columnDefinitions, this.gridOptions);
     this.grid = new Slick.Grid(`#${this.gridId}`, this.dataview, this._columnDefinitions, this.gridOptions);
@@ -616,6 +619,33 @@ export class AureliaSlickgridCustomElement {
       this.controlAndPluginService.renderColumnHeaders(newColumnDefinitions);
     }
     this.grid.autosizeColumns();
+  }
+
+  //
+  // private functions
+  // ------------------
+  private loadEditorAsyncCollection(internalEditor: any, columnIndex: number): any[] {
+    if (internalEditor && internalEditor.collectionAsync) {
+      // wait for the "collectionAsync", once resolved we will save it into the "collection"
+      internalEditor.collectionAsync.then((response: HttpResponseMessage | Response | any[]) => {
+        if (response instanceof Response && typeof response['json'] === 'function') {
+          response['json']().then(data => this.updateEditorCollection(internalEditor, columnIndex, data));
+        } else if (response instanceof HttpResponseMessage) {
+          this.updateEditorCollection(internalEditor, columnIndex, response['content']);
+        } else if (Array.isArray(response)) {
+          this.updateEditorCollection(internalEditor, columnIndex, response);
+        }
+      });
+    }
+    return [];
+  }
+
+  private updateEditorCollection(internalEditor: any, columnIndex: number, newCollection: any[]) {
+    internalEditor.collection = newCollection;
+    const columns = this.grid.getColumns();
+    if (columns && columns[columnIndex]) {
+      columns[columnIndex].internalColumnEditor = internalEditor;
+    }
   }
 
   private dispatchCustomEvent(eventName: string, data?: any, isBubbling: boolean = true, isCancelable = true): boolean {

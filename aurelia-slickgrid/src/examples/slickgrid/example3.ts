@@ -1,4 +1,6 @@
 import { autoinject } from 'aurelia-framework';
+import { HttpClient as FetchClient } from 'aurelia-fetch-client';
+import { HttpClient } from 'aurelia-http-client';
 import { I18N } from 'aurelia-i18n';
 import {
   AureliaGridInstance,
@@ -16,6 +18,9 @@ import { CustomInputEditor } from './custom-inputEditor';
 
 // using external non-typed js libraries
 declare var Slick: any;
+
+const NB_ITEMS = 100;
+const URL_SAMPLE_COLLECTION_DATA = 'src/examples/slickgrid/sample-data/collection_100_numbers.json';
 
 // you can create custom validator to pass to an inline editor
 const myCustomTitleValidator: EditorValidator = (value) => {
@@ -41,6 +46,7 @@ export class Example3 {
         Support Excel Copy Buffer (SlickGrid Copy Manager Plugin), you can use it by simply enabling "enableExcelCopyBuffer" flag.
         Note that it will only evaluate Formatter when the "exportWithFormatter" flag is enabled (through "ExportOptions" or the column definition)
     </li>
+    <li>Support of "collectionAsync" is possible, click on "Clear Filters/Sorting" then add/delete item(s) and look at "Prerequisites" Select Filter</li>
   </ul>
   `;
   private _commandQueue = [];
@@ -54,7 +60,7 @@ export class Example3 {
   alertWarning: any;
   selectedLanguage: string;
 
-  constructor(private i18n: I18N) {
+  constructor(private http: HttpClient, private httpFetch: FetchClient, private i18n: I18N) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
     this.selectedLanguage = this.i18n.getLocale();
@@ -62,7 +68,7 @@ export class Example3 {
 
   attached() {
     // populate the dataset once the grid is ready
-    this.getData();
+    this.mockData(NB_ITEMS);
   }
 
   aureliaGridReady(aureliaGrid: AureliaGridInstance) {
@@ -240,15 +246,35 @@ export class Example3 {
       type: FieldType.string,
       editor: {
         model: Editors.multipleSelect,
-        collection: Array.from(Array(12).keys()).map(k => ({ value: `Task ${k}`, label: `Task ${k}` })),
+        // We can load the "collection" asynchronously (on first load only, after that we will simply use "collection")
+        // 3 ways are supported (aurelia-http-client, aurelia-fetch-client OR even Promise)
+
+        // 1- USE HttpClient from "aurelia-http-client" to load collection asynchronously
+        // collectionAsync: this.http.createRequest(URL_SAMPLE_COLLECTION_DATA).asGet().send(),
+
+        // OR 2- use "aurelia-fetch-client", they are both supported
+        // collectionAsync: this.httpFetch.fetch(URL_SAMPLE_COLLECTION_DATA),
+
+        // OR 3- use a Promise
+        collectionAsync: new Promise<any>((resolve) => {
+          // simulate async server load
+          setTimeout(() => {
+            resolve(Array.from(Array(NB_ITEMS).keys()).map(k => ({ value: k, label: k, prefix: 'Task', suffix: 'days' })));
+          }, 500);
+        }),
+
+        // OR a regular "collection" load
+        // collection: Array.from(Array(12).keys()).map(k => ({ value: `Task ${k}`, label: `Task ${k}` })),
         collectionSortBy: {
           property: 'label',
           sortDesc: true
         },
-        collectionFilterBy: {
-          property: 'label',
-          value: ['Task 1', 'Task 2', 'Task 3', 'Task 4', 'Task 5', 'Task 6'],
-          operator: OperatorType.contains
+        customStructure: {
+          label: 'label',
+          value: 'value',
+          labelPrefix: 'prefix',
+          addSpaceBetweenLabels: true,
+          includePrefixSuffixToSelectedValues: true
         }
       },
       filter: {
@@ -280,16 +306,55 @@ export class Example3 {
     };
   }
 
-  getData() {
+  /** Add a new row to the grid and refresh the Filter collection */
+  addItem() {
+    const lastRowIndex = this.dataset.length;
+    const newRows = this.mockData(1, lastRowIndex);
+
+    // wrap into a timer to simulate a backend async call
+    setTimeout(() => {
+      // at any time, we can poke the "collection" property and modify it
+      const durationColumnDef = this.columnDefinitions.find((column: Column) => column.id === 'duration');
+      if (durationColumnDef) {
+        const collection = durationColumnDef.filter.collection;
+        if (Array.isArray(collection)) {
+          // add the new row to the grid
+          this.aureliaGrid.gridService.addItemToDatagrid(newRows[0]);
+
+          // then refresh the Filter "collection", we have 2 ways of doing it
+
+          // 1- push to the "collection"
+          collection.push({ value: lastRowIndex, label: lastRowIndex });
+
+          // OR 2- replace the entire "collection" is also supported
+          // durationColumnDef.filter.collection = [...collection, ...[{ value: lastRowIndex, label: lastRowIndex }]];
+        }
+      }
+    }, 250);
+  }
+
+  /** Delete last inserted row */
+  deleteItem() {
+    const durationColumnDef = this.columnDefinitions.find((column: Column) => column.id === 'duration');
+    if (durationColumnDef) {
+      const collection = durationColumnDef.filter.collection;
+      if (Array.isArray(collection)) {
+        const selectCollectionObj = collection.pop();
+        this.aureliaGrid.gridService.deleteDataGridItemById(selectCollectionObj.value);
+      }
+    }
+  }
+
+  mockData(itemCount, startingIndex = 0) {
     // mock a dataset
-    const mockedDataset = [];
-    for (let i = 0; i < 1000; i++) {
+    const tempDataset = [];
+    for (let i = startingIndex; i < (startingIndex + itemCount); i++) {
       const randomYear = 2000 + Math.floor(Math.random() * 10);
       const randomMonth = Math.floor(Math.random() * 11);
       const randomDay = Math.floor((Math.random() * 29));
       const randomPercent = Math.round(Math.random() * 100);
 
-      mockedDataset[i] = {
+      tempDataset[i] = {
         id: i,
         title: 'Task ' + i,
         duration: Math.round(Math.random() * 100) + '',
@@ -301,7 +366,7 @@ export class Example3 {
         prerequisites: (i % 2 === 0) && i !== 0 && i < 12 ? [`Task ${i}`, `Task ${i - 1}`] : []
       };
     }
-    this.dataset = mockedDataset;
+    this.dataset = tempDataset;
   }
 
   onCellChanged(e, args) {
