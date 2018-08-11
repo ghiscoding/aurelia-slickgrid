@@ -105,12 +105,17 @@ export class SelectEditor implements Editor {
     return this.columnDef && this.columnDef.internalColumnEditor || {};
   }
 
+  /** Getter for the Custom Structure if exist */
+  protected get customStructure(): any {
+    return this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.customStructure;
+  }
+
   /**
    * The current selected values (multiple select) from the collection
    */
   get currentValues() {
-    const isAddingSpaceBetweenLabels = this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.customStructure && this.columnDef.internalColumnEditor.customStructure.addSpaceBetweenLabels || false;
-    const isIncludingPrefixSuffix = this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.customStructure && this.columnDef.internalColumnEditor.customStructure.includePrefixSuffixToSelectedValues || false;
+    const isAddingSpaceBetweenLabels = this.columnDef && this.columnDef.internalColumnEditor && this.customStructure && this.customStructure.addSpaceBetweenLabels || false;
+    const isIncludingPrefixSuffix = this.columnDef && this.columnDef.internalColumnEditor && this.customStructure && this.customStructure.includePrefixSuffixToSelectedValues || false;
 
     return this.collection
       .filter(c => this.$editorElm.val().indexOf(c[this.valueName].toString()) !== -1)
@@ -129,8 +134,8 @@ export class SelectEditor implements Editor {
    * The current selected values (single select) from the collection
    */
   get currentValue() {
-    const isAddingSpaceBetweenLabels = this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.customStructure && this.columnDef.internalColumnEditor.customStructure.addSpaceBetweenLabels || false;
-    const isIncludingPrefixSuffix = this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.customStructure && this.columnDef.internalColumnEditor.customStructure.includePrefixSuffixToSelectedValues || false;
+    const isAddingSpaceBetweenLabels = this.columnDef && this.columnDef.internalColumnEditor && this.customStructure && this.customStructure.addSpaceBetweenLabels || false;
+    const isIncludingPrefixSuffix = this.columnDef && this.columnDef.internalColumnEditor && this.customStructure && this.customStructure.includePrefixSuffixToSelectedValues || false;
     const itemFound = findOrDefault(this.collection, (c: any) => c[this.valueName].toString() === this.$editorElm.val());
 
     if (itemFound) {
@@ -150,7 +155,7 @@ export class SelectEditor implements Editor {
     return this.columnEditor.validator || this.columnDef.validator;
   }
 
-  async init() {
+  init() {
     if (!this.args) {
       throw new Error('[Aurelia-SlickGrid] An editor must always have an "init()" with valid arguments.');
     }
@@ -162,15 +167,14 @@ export class SelectEditor implements Editor {
     }
 
     this.enableTranslateLabel = (this.columnDef.internalColumnEditor.enableTranslateLabel) ? this.columnDef.internalColumnEditor.enableTranslateLabel : false;
-    this.labelName = this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.customStructure && this.columnDef.internalColumnEditor.customStructure.label || 'label';
-    this.labelPrefixName = this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.customStructure && this.columnDef.internalColumnEditor.customStructure.labelPrefix || 'labelPrefix';
-    this.labelSuffixName = this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.customStructure && this.columnDef.internalColumnEditor.customStructure.labelSuffix || 'labelSuffix';
-    this.valueName = this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.customStructure && this.columnDef.internalColumnEditor.customStructure.value || 'value';
+    this.labelName = (this.customStructure) ? this.customStructure.label : 'label';
+    this.labelPrefixName = (this.customStructure) ? this.customStructure.labelPrefix : 'labelPrefix';
+    this.labelSuffixName = (this.customStructure) ? this.customStructure.labelSuffix : 'labelSuffix';
+    this.valueName = (this.customStructure) ? this.customStructure.value : 'value';
 
     // always render the Select (dropdown) DOM element, even if user passed a "collectionAsync",
     // if that is the case, the Select will simply be without any options but we still have to render it (else SlickGrid would throw an error)
-    const collection = this.collection || [];
-    this.renderDomElement(collection);
+    this.renderDomElement(this.collection);
   }
 
   applyValue(item: any, state: any): void {
@@ -283,85 +287,12 @@ export class SelectEditor implements Editor {
     return outputCollection;
   }
 
-  protected async renderOptionsAsync(collectionAsync: Promise<HttpResponseMessage | Response | any[]>): Promise<any[]> {
-    let awaitedCollection: any = [];
-
-    if (collectionAsync) {
-      // wait for the "collectionAsync", once resolved we will save it into the "collection"
-      const response: HttpResponseMessage | Response | any[] = await collectionAsync;
-
-      if (response instanceof Response && typeof response['json'] === 'function') {
-        awaitedCollection = await response['json']();
-      } else if (response instanceof HttpResponseMessage) {
-        awaitedCollection = response['content'];
-      } else {
-        awaitedCollection = response;
-      }
-
-      if (!Array.isArray(awaitedCollection)) {
-        throw new Error('Something went wrong while trying to pull the collection from the "collectionAsync" call');
-      }
-
-      // copy over the array received from the async call to the "collection" as the new collection to use
-      // this has to be BEFORE the `collectionObserver().subscribe` to avoid going into an infinite loop
-      this.columnEditor.collection = awaitedCollection;
-
-      // recreate Multiple Select after getting async collection
-      this.renderDomElement(awaitedCollection);
-    }
-
-    return awaitedCollection;
-  }
-
-  /**
-   * Subscribe to both CollectionObserver & PropertyObserver with BindingEngine.
-   * They each have their own purpose, the "propertyObserver" will trigger once the collection is replaced entirely
-   * while the "collectionObverser" will trigger on collection changes (`push`, `unshift`, `splice`, ...)
-   */
-  protected watchCollectionChanges() {
-    // subscribe to the "collection" changes (array replace)
-    this.subscriptions.push(
-      this.bindingEngine.propertyObserver(this.columnEditor, 'collection')
-        .subscribe((newVal) => {
-          // simply recreate/re-render the Select (dropdown) DOM Element
-          this.renderDomElement(newVal);
-        })
-    );
-
-    // subscribe to the "collection" changes (array `push`, `unshift`, `splice`, ...)
-    this.subscriptions.push(
-      this.bindingEngine
-        .collectionObserver(this.columnEditor.collection)
-        .subscribe((changes: { index: number, addedCount: number, removed: any[] }[]) => {
-          if (Array.isArray(changes)) {
-            // simply recreate/re-render the Select (dropdown) DOM Element
-            const updatedCollection = this.columnEditor.collection || [];
-            this.renderDomElement(updatedCollection);
-          }
-        })
-    );
-  }
-
-  /**
-   * When user use a CollectionAsync we will use the returned collection to render the filter DOM element
-   * and reinitialize filter collection with this new collection
-   */
-  protected renderDomElementFromCollectionAsync(collection) {
-    if (!Array.isArray(collection)) {
-      throw new Error('Something went wrong while trying to pull the collection from the "collectionAsync" call');
-    }
-    // copy over the array received from the async call to the "collection" as the new collection to use
-    // this has to be BEFORE the `collectionObserver().subscribe` to avoid going into an infinite loop
-    this.columnDef.internalColumnEditor.collection = collection;
-    // recreate Multiple Select after getting async collection
-    this.renderDomElement(collection);
-  }
-
   protected renderDomElement(collection) {
     let newCollection = collection;
     // user might want to filter and/or sort certain items of the collection
     newCollection = this.filterCollection(newCollection);
     newCollection = this.sortCollection(newCollection);
+
     // step 1, create HTML string template
     const editorTemplate = this.buildTemplateHtmlString(newCollection);
     // step 2, create the DOM Element of the editor
@@ -406,7 +337,7 @@ export class SelectEditor implements Editor {
   /** Build the template HTML string */
   protected buildTemplateHtmlString(collection: any[]) {
     let options = '';
-    const isAddingSpaceBetweenLabels = this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.customStructure && this.columnDef.internalColumnEditor.customStructure.addSpaceBetweenLabels || false;
+    const isAddingSpaceBetweenLabels = this.columnDef && this.columnDef.internalColumnEditor && this.customStructure && this.customStructure.addSpaceBetweenLabels || false;
     const isRenderHtmlEnabled = this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.enableRenderHtml || false;
     const sanitizedOptions = this.gridOptions && this.gridOptions.sanitizeHtmlOptions || {};
 

@@ -68,7 +68,7 @@ export class Example3 {
 
   attached() {
     // populate the dataset once the grid is ready
-    this.mockData(NB_ITEMS);
+    this.dataset = this.mockData(NB_ITEMS);
   }
 
   aureliaGridReady(aureliaGrid: AureliaGridInstance) {
@@ -245,7 +245,6 @@ export class Example3 {
       sortable: true,
       type: FieldType.string,
       editor: {
-        model: Editors.multipleSelect,
         // We can load the "collection" asynchronously (on first load only, after that we will simply use "collection")
         // 3 ways are supported (aurelia-http-client, aurelia-fetch-client OR even Promise)
 
@@ -253,21 +252,21 @@ export class Example3 {
         // collectionAsync: this.http.createRequest(URL_SAMPLE_COLLECTION_DATA).asGet().send(),
 
         // OR 2- use "aurelia-fetch-client", they are both supported
-        // collectionAsync: this.httpFetch.fetch(URL_SAMPLE_COLLECTION_DATA),
+        collectionAsync: this.httpFetch.fetch(URL_SAMPLE_COLLECTION_DATA),
 
         // OR 3- use a Promise
-        collectionAsync: new Promise<any>((resolve) => {
-          // simulate async server load
-          setTimeout(() => {
-            resolve(Array.from(Array(NB_ITEMS).keys()).map(k => ({ value: k, label: k, prefix: 'Task', suffix: 'days' })));
-          }, 500);
-        }),
+        // collectionAsync: new Promise<any>((resolve) => {
+        //   setTimeout(() => {
+        //     resolve(Array.from(Array(NB_ITEMS).keys()).map(k => ({ value: k, label: k, prefix: 'Task', suffix: 'days' })));
+        //   }, 500);
+        // }),
 
         // OR a regular "collection" load
-        // collection: Array.from(Array(12).keys()).map(k => ({ value: `Task ${k}`, label: `Task ${k}` })),
+        // collection: Array.from(Array(NB_ITEMS).keys()).map(k => ({ value: k, label: k, prefix: 'Task', suffix: 'days' })),
         collectionSortBy: {
-          property: 'label',
-          sortDesc: true
+          property: 'value',
+          sortDesc: true,
+          fieldType: FieldType.number
         },
         customStructure: {
           label: 'label',
@@ -275,20 +274,33 @@ export class Example3 {
           labelPrefix: 'prefix',
           addSpaceBetweenLabels: true,
           includePrefixSuffixToSelectedValues: true
-        }
+        },
+        model: Editors.multipleSelect,
       },
       filter: {
-        model: Filters.multipleSelect,
+        collectionAsync: this.httpFetch.fetch(URL_SAMPLE_COLLECTION_DATA),
+        // OR a regular collection load
+        // collection: Array.from(Array(NB_ITEMS).keys()).map(k => ({ value: k, label: k, prefix: 'Task', suffix: 'days' })),
+        collectionSortBy: {
+          property: 'value',
+          sortDesc: true,
+          fieldType: FieldType.number
+        },
+        customStructure: {
+          label: 'label',
+          value: 'value',
+          labelPrefix: 'prefix',
+          addSpaceBetweenLabels: true
+        },
         filterOptions: {
           autoDropWidth: true
         },
+        model: Filters.multipleSelect,
         operator: OperatorType.inContains,
-        collection: Array.from(Array(12).keys()).map(k => ({ value: `Task ${k}`, label: `Task ${k}` })),
       }
     }];
 
     this.gridOptions = {
-      asyncEditorLoading: false,
       autoEdit: this.isAutoEdit,
       autoResize: {
         containerId: 'demo-container',
@@ -314,20 +326,24 @@ export class Example3 {
     // wrap into a timer to simulate a backend async call
     setTimeout(() => {
       // at any time, we can poke the "collection" property and modify it
-      const durationColumnDef = this.columnDefinitions.find((column: Column) => column.id === 'duration');
-      if (durationColumnDef) {
-        const collection = durationColumnDef.filter.collection;
-        if (Array.isArray(collection)) {
+      const requisiteColumnDef = this.columnDefinitions.find((column: Column) => column.id === 'prerequisites');
+      if (requisiteColumnDef) {
+        const collectionEditor = requisiteColumnDef.editor.collection;
+        const collectionFilter = requisiteColumnDef.filter.collection;
+
+        if (Array.isArray(collectionEditor) && Array.isArray(collectionFilter)) {
           // add the new row to the grid
           this.aureliaGrid.gridService.addItemToDatagrid(newRows[0]);
 
-          // then refresh the Filter "collection", we have 2 ways of doing it
+          // then refresh the Editor/Filter "collection", we have 2 ways of doing it
 
           // 1- push to the "collection"
-          collection.push({ value: lastRowIndex, label: lastRowIndex });
+          collectionEditor.push({ value: lastRowIndex, label: lastRowIndex, prefix: 'Task', suffix: 'days' });
+          collectionFilter.push({ value: lastRowIndex, label: lastRowIndex, prefix: 'Task', suffix: 'days' });
 
           // OR 2- replace the entire "collection" is also supported
           // durationColumnDef.filter.collection = [...collection, ...[{ value: lastRowIndex, label: lastRowIndex }]];
+          // durationColumnDef.editor.collection = [...collection, ...[{ value: lastRowIndex, label: lastRowIndex }]];
         }
       }
     }, 250);
@@ -335,11 +351,15 @@ export class Example3 {
 
   /** Delete last inserted row */
   deleteItem() {
-    const durationColumnDef = this.columnDefinitions.find((column: Column) => column.id === 'duration');
-    if (durationColumnDef) {
-      const collection = durationColumnDef.filter.collection;
-      if (Array.isArray(collection)) {
-        const selectCollectionObj = collection.pop();
+    const requisiteColumnDef = this.columnDefinitions.find((column: Column) => column.id === 'prerequisites');
+    if (requisiteColumnDef) {
+      const collectionEditor = requisiteColumnDef.editor.collection;
+      const collectionFilter = requisiteColumnDef.filter.collection;
+      console.log('before', collectionFilter)
+      if (Array.isArray(collectionEditor) && Array.isArray(collectionFilter)) {
+        const selectCollectionObj = collectionEditor.pop();
+        collectionFilter.pop();
+        console.log('after', collectionFilter)
         this.aureliaGrid.gridService.deleteDataGridItemById(selectCollectionObj.value);
       }
     }
@@ -354,7 +374,7 @@ export class Example3 {
       const randomDay = Math.floor((Math.random() * 29));
       const randomPercent = Math.round(Math.random() * 100);
 
-      tempDataset[i] = {
+      tempDataset.push({
         id: i,
         title: 'Task ' + i,
         duration: Math.round(Math.random() * 100) + '',
@@ -364,9 +384,9 @@ export class Example3 {
         finish: new Date(randomYear, (randomMonth + 1), randomDay),
         effortDriven: (i % 5 === 0),
         prerequisites: (i % 2 === 0) && i !== 0 && i < 12 ? [`Task ${i}`, `Task ${i - 1}`] : []
-      };
+      });
     }
-    this.dataset = tempDataset;
+    return tempDataset;
   }
 
   onCellChanged(e, args) {

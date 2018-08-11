@@ -148,20 +148,21 @@ export class AureliaSlickgridCustomElement {
     }
 
     // for convenience, we provide the property "editor" as an Aurelia-Slickgrid editor complex object
-    // however "editor" is used internally by SlickGrid for it's Editor Factory
-    // so in our lib we will swap "editor" and copy it into "internalColumnEditor"
+    // however "editor" is used internally by SlickGrid for it's own Editor Factory
+    // so in our lib we will swap "editor" and copy it into a new property called "internalColumnEditor"
     // then take back "editor.model" and make it the new "editor" so that SlickGrid Editor Factory still works
     // Wrap each editor class in the Factory resolver so consumers of this library can use
     // dependency injection. Aurelia will resolve all dependencies when we pass the container
     // and allow slickgrid to pass its arguments to the editors constructor last
     // when slickgrid creates the editor
     // https://github.com/aurelia/dependency-injection/blob/master/src/resolvers.js
-    this._columnDefinitions = this.columnDefinitions.map((c: Column | any, index: number) => {
-      if (c.editor && c.editor.collectionAsync) {
-        this.loadEditorAsyncCollection(c.editor, index);
+    this._columnDefinitions = this.columnDefinitions.map((column: Column | any) => {
+      // on every Editor which have a "collection" or a "collectionAsync"
+      if (column.editor && column.editor.collectionAsync) {
+        this.loadEditorCollectionAsync(column);
       }
 
-      return { ...c, editor: c.editor && Factory.of(c.editor.model).get(this.container), internalColumnEditor: { ...c.editor } };
+      return { ...column, editor: column.editor && Factory.of(column.editor.model).get(this.container), internalColumnEditor: { ...column.editor } };
     });
 
     this.controlAndPluginService.createCheckboxPluginBeforeGridCreation(this._columnDefinitions, this.gridOptions);
@@ -624,30 +625,43 @@ export class AureliaSlickgridCustomElement {
   //
   // private functions
   // ------------------
-  private loadEditorAsyncCollection(internalEditor: any, columnIndex: number): any[] {
-    if (internalEditor && internalEditor.collectionAsync) {
+
+  /** Load the Editor Collection asynchronously and replace the "collection" property when Promise resolves */
+  private loadEditorCollectionAsync(column: Column): any[] {
+    const collectionAsync = column && column.editor && column.editor.collectionAsync;
+    if (collectionAsync) {
       // wait for the "collectionAsync", once resolved we will save it into the "collection"
-      internalEditor.collectionAsync.then((response: HttpResponseMessage | Response | any[]) => {
+      collectionAsync.then((response: HttpResponseMessage | Response | any[]) => {
         if (response instanceof Response && typeof response['json'] === 'function') {
-          response['json']().then(data => this.updateEditorCollection(internalEditor, columnIndex, data));
+          response['json']().then(data => this.updateEditorCollection(column, data));
         } else if (response instanceof HttpResponseMessage) {
-          this.updateEditorCollection(internalEditor, columnIndex, response['content']);
+          this.updateEditorCollection(column, response['content']);
         } else if (Array.isArray(response)) {
-          this.updateEditorCollection(internalEditor, columnIndex, response);
+          this.updateEditorCollection(column, response);
         }
       });
     }
     return [];
   }
 
-  private updateEditorCollection(internalEditor: any, columnIndex: number, newCollection: any[]) {
-    internalEditor.collection = newCollection;
+  /**
+   * Update the "internalColumnEditor.collection" property.
+   * Since this is called after the async call resolves, the pointer will not be the same as the "column" argument passed.
+   * Once we found the new pointer, we will reassign the "editor" and "collection" to the "internalColumnEditor" so it has newest collection
+   */
+  private updateEditorCollection(column: Column, newCollection: any[]) {
+    column.editor.collection = newCollection;
+    column.internalColumnEditor = column.editor;
+
+    // find the new column reference pointer
     const columns = this.grid.getColumns();
-    if (columns && columns[columnIndex]) {
-      columns[columnIndex].internalColumnEditor = internalEditor;
+    if (Array.isArray(columns)) {
+      const columnRef: Column = columns.find((col: Column) => col.id === column.id);
+      columnRef.internalColumnEditor = column.editor;
     }
   }
 
+  /** Dispatch of Custom Event, which by default will bubble & is cancelable */
   private dispatchCustomEvent(eventName: string, data?: any, isBubbling: boolean = true, isCancelable = true): boolean {
     const eventInit: CustomEventInit = { bubbles: isBubbling, cancelable: isCancelable };
     if (data) {

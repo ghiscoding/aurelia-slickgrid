@@ -189,6 +189,7 @@ export class Example4 {
       const durationColumnDef = this.columnDefinitions.find((column: Column) => column.id === 'duration');
       if (durationColumnDef) {
         const collection = durationColumnDef.filter.collection;
+
         if (Array.isArray(collection)) {
           // add the new row to the grid
           this.aureliaGrid.gridService.addItemToDatagrid(newRows[0]);

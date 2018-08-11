@@ -81,6 +81,11 @@ export class SelectFilter implements Filter {
     return this.columnDef && this.columnDef.filter || {};
   }
 
+  /** Getter for the Custom Structure if exist */
+  get customStructure(): any {
+    return this.columnDef && this.columnDef.filter && this.columnDef.filter.customStructure;
+  }
+
   /** Getter for the Grid Options pulled through the Grid Object */
   get gridOptions(): GridOption {
     return (this.grid && this.grid.getOptions) ? this.grid.getOptions() : {};
@@ -107,11 +112,11 @@ export class SelectFilter implements Filter {
       throw new Error(`[Aurelia-SlickGrid] You need to pass a "collection" (or "collectionAsync") for the MultipleSelect Filter to work correctly. Also each option should include a value/label pair (or value/labelKey when using Locale). For example:: { filter: model: Filters.multipleSelect, collection: [{ value: true, label: 'True' }, { value: false, label: 'False'}] }`);
     }
 
-    this.enableTranslateLabel = this.columnDef.filter.enableTranslateLabel || false;
-    this.labelName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.label : 'label';
-    this.labelPrefixName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.labelPrefix : 'labelPrefix';
-    this.labelSuffixName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.labelSuffix : 'labelSuffix';
-    this.valueName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.value : 'value';
+    this.enableTranslateLabel = this.columnFilter.enableTranslateLabel || false;
+    this.labelName = (this.columnFilter.customStructure) ? this.columnFilter.customStructure.label : 'label';
+    this.labelPrefixName = (this.columnFilter.customStructure) ? this.columnFilter.customStructure.labelPrefix : 'labelPrefix';
+    this.labelSuffixName = (this.columnFilter.customStructure) ? this.columnFilter.customStructure.labelSuffix : 'labelSuffix';
+    this.valueName = (this.columnFilter.customStructure) ? this.columnFilter.customStructure.value : 'value';
 
     // always render the Select (dropdown) DOM element, even if user passed a "collectionAsync",
     // if that is the case, the Select will simply be without any options but we still have to render it (else SlickGrid would throw an error)
@@ -178,7 +183,7 @@ export class SelectFilter implements Filter {
     let outputCollection = inputCollection;
 
     // user might want to filter certain items of the collection
-    if (this.columnFilter.collectionFilterBy) {
+    if (this.columnFilter && this.columnFilter.collectionFilterBy) {
       const filterBy = this.columnFilter.collectionFilterBy;
       outputCollection = this.collectionService.filterCollection(outputCollection, filterBy);
     }
@@ -195,7 +200,7 @@ export class SelectFilter implements Filter {
     let outputCollection = inputCollection;
 
     // user might want to sort the collection
-    if (this.columnFilter.collectionSortBy) {
+    if (this.columnFilter && this.columnFilter.collectionSortBy) {
       const sortBy = this.columnFilter.collectionSortBy;
       outputCollection = this.collectionService.sortCollection(outputCollection, sortBy, this.enableTranslateLabel);
     }
@@ -241,7 +246,8 @@ export class SelectFilter implements Filter {
   protected watchCollectionChanges() {
     // subscribe to the "collection" changes (array replace)
     this.subscriptions.push(
-      this.bindingEngine.propertyObserver(this.columnFilter, 'collection')
+      this.bindingEngine
+        .propertyObserver(this.columnFilter, 'collection')
         .subscribe((newVal) => {
           // simply recreate/re-render the Select (dropdown) DOM Element
           this.renderDomElement(newVal);
@@ -253,7 +259,7 @@ export class SelectFilter implements Filter {
       this.bindingEngine
         .collectionObserver(this.columnFilter.collection)
         .subscribe((changes: { index: number, addedCount: number, removed: any[] }[]) => {
-          if (Array.isArray(changes)) {
+          if (Array.isArray(changes) && changes.length > 0) {
             // simply recreate/re-render the Select (dropdown) DOM Element
             const updatedCollection = this.columnFilter.collection || [];
             this.renderDomElement(updatedCollection);
@@ -282,8 +288,8 @@ export class SelectFilter implements Filter {
    */
   protected buildTemplateHtmlString(optionCollection: any[], searchTerms: SearchTerm[]) {
     let options = '';
-    const isAddingSpaceBetweenLabels = this.columnDef && this.columnDef.filter && this.columnDef.filter.customStructure && this.columnDef.filter.customStructure.addSpaceBetweenLabels || false;
-    const isRenderHtmlEnabled = this.columnDef && this.columnDef.filter && this.columnDef.filter.enableRenderHtml || false;
+    const isAddingSpaceBetweenLabels = this.columnFilter && this.columnFilter.customStructure && this.columnFilter.customStructure.addSpaceBetweenLabels || false;
+    const isRenderHtmlEnabled = this.columnFilter && this.columnFilter.enableRenderHtml || false;
     const sanitizedOptions = this.gridOptions && this.gridOptions.sanitizeHtmlOptions || {};
 
     optionCollection.forEach((option: SelectOption) => {
