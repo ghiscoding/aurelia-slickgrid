@@ -304,7 +304,7 @@ export class SelectFilter implements Filter {
       }
     });
 
-    return `<select class="ms-filter search-filter" ${this.isMultipleSelect ? 'multiple="multiple"' : ''}>${options}</select>`;
+    return `<select class="ms-filter search-filter" multiple="multiple">${options}</select>`;
   }
 
   /**

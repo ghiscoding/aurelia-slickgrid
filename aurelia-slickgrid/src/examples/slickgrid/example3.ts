@@ -306,7 +306,7 @@ export class Example3 {
 
   onCellChanged(e, args) {
     console.log('onCellChange', args);
-    this.updatedObject = args.item;
+    this.updatedObject = { ...args.item };
   }
 
   onCellClicked(e, args) {
