@@ -4,7 +4,7 @@ import { CompoundSliderFilter } from './compoundSliderFilter';
 import { InputFilter } from './inputFilter';
 import { SliderFilter } from './sliderFilter';
 import { MultipleSelectFilter } from './multipleSelectFilter';
-import { SelectFilter } from './selectFilter';
+import { NativeSelectFilter } from './nativeSelectFilter';
 import { SingleSelectFilter } from './singleSelectFilter';
 
 export const Filters = {
@@ -30,7 +30,7 @@ export const Filters = {
   singleSelect: SingleSelectFilter,
 
   /** Select filter, which uses native DOM element select */
-  select: SelectFilter
+  select: NativeSelectFilter
 };
 
 export { FilterFactory } from './filterFactory';
