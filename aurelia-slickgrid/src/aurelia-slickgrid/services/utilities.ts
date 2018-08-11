@@ -403,22 +403,6 @@ export function arraysEqual(a: any[], b: any[], orderMatters: boolean = false): 
 }
 
 /**
- * Compares two objects to determine if all the properties are equal
- * We will do a deep check recursively to make sure all properties really are the same
- * @param x first object
- * @param y second object to compare with a
- */
-export function objectsDeepEqual(x: any, y: any): boolean {
-  const ok = Object.keys;
-  const tx = typeof x;
-  const ty = typeof y;
-  return x && y && tx === 'object' && tx === ty ? (
-    ok(x).length === ok(y).length &&
-    ok(x).every(key => objectsDeepEqual(x[key], y[key]))
-  ) : (x === y);
-}
-
-/**
  * Uses the logic function to find an item in an array or returns the default
  * value provided (empty object by default)
  * @param any[] array the array to filter
