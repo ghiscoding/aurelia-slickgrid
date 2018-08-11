@@ -21,7 +21,7 @@
     "aurelia-bootstrapper": "^2.1.1",
     "aurelia-http-client": "^1.2.1",
     "aurelia-i18n": "^2.1.0",
-    "aurelia-slickgrid": "^2.2.2",
+    "aurelia-slickgrid": "^2.2.3",
     "bluebird": "^3.4.1",
     "bootstrap": "^3.3.7",
     "flatpickr": "^4.2.4",
