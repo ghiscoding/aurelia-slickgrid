@@ -109,7 +109,7 @@ export class Example4 {
             value: 'value',
             label: 'label',
             labelSuffix: 'text',
-            addSpaceBetweenLabels: true
+            separatorBetweenTextLabels: ''
           },
           // we could add certain option(s) to the "multiple-select" plugin
           filterOptions: {
@@ -176,46 +176,6 @@ export class Example4 {
         ],
       }
     };
-  }
-
-  /** Add a new row to the grid and refresh the Filter collection */
-  addItem() {
-    const lastRowIndex = this.dataset.length;
-    const newRows = this.mockData(1, lastRowIndex);
-
-    // wrap into a timer to simulate a backend async call
-    setTimeout(() => {
-      // at any time, we can poke the "collection" property and modify it
-      const durationColumnDef = this.columnDefinitions.find((column: Column) => column.id === 'duration');
-      if (durationColumnDef) {
-        const collection = durationColumnDef.filter.collection;
-
-        if (Array.isArray(collection)) {
-          // add the new row to the grid
-          this.aureliaGrid.gridService.addItemToDatagrid(newRows[0]);
-
-          // then refresh the Filter "collection", we have 2 ways of doing it
-
-          // 1- push to the "collection"
-          collection.push({ value: lastRowIndex, label: lastRowIndex });
-
-          // OR 2- replace the entire "collection" is also supported
-          // durationColumnDef.filter.collection = [...collection, ...[{ value: lastRowIndex, label: lastRowIndex }]];
-        }
-      }
-    }, 250);
-  }
-
-  /** Delete last inserted row */
-  deleteItem() {
-    const durationColumnDef = this.columnDefinitions.find((column: Column) => column.id === 'duration');
-    if (durationColumnDef) {
-      const collection = durationColumnDef.filter.collection;
-      if (Array.isArray(collection)) {
-        const selectCollectionObj = collection.pop();
-        this.aureliaGrid.gridService.deleteDataGridItemById(selectCollectionObj.value);
-      }
-    }
   }
 
   mockData(itemCount, startingIndex = 0): any[] {

@@ -1,9 +1,9 @@
-import { HttpResponseMessage } from 'aurelia-http-client';
 import { BindingEngine } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import { Subscription } from 'aurelia-event-aggregator';
 import {
   Editor,
+  EditorCustomStructure,
   EditorValidator,
   EditorValidatorOutput,
   Column,
@@ -58,7 +58,6 @@ export class SelectEditor implements Editor {
 
   constructor(protected bindingEngine: BindingEngine, protected collectionService: CollectionService, protected i18n: I18N, protected args: any, protected isMultipleSelect = true) {
     this.gridOptions = this.args.grid.getOptions() as GridOption;
-    const gridOptions = this.gridOptions || this.args.column.params || {};
 
     const libOptions: MultipleSelectOption = {
       container: 'body',
@@ -106,7 +105,7 @@ export class SelectEditor implements Editor {
   }
 
   /** Getter for the Custom Structure if exist */
-  protected get customStructure(): any {
+  protected get customStructure(): EditorCustomStructure {
     return this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.customStructure;
   }
 
@@ -114,8 +113,8 @@ export class SelectEditor implements Editor {
    * The current selected values (multiple select) from the collection
    */
   get currentValues() {
-    const isAddingSpaceBetweenLabels = this.columnDef && this.columnDef.internalColumnEditor && this.customStructure && this.customStructure.addSpaceBetweenLabels || false;
-    const isIncludingPrefixSuffix = this.columnDef && this.columnDef.internalColumnEditor && this.customStructure && this.customStructure.includePrefixSuffixToSelectedValues || false;
+    const separatorBetweenLabels = this.customStructure && this.customStructure.separatorBetweenTextLabels || '';
+    const isIncludingPrefixSuffix = this.customStructure && this.customStructure.includePrefixSuffixToSelectedValues || false;
 
     return this.collection
       .filter(c => this.$editorElm.val().indexOf(c[this.valueName].toString()) !== -1)
@@ -124,7 +123,7 @@ export class SelectEditor implements Editor {
         const prefixText = c[this.labelPrefixName] || '';
         const suffixText = c[this.labelSuffixName] || '';
         if (isIncludingPrefixSuffix) {
-          return isAddingSpaceBetweenLabels ? `${prefixText} ${labelText} ${suffixText}` : ('' + prefixText + labelText + suffixText);
+          return ('' + prefixText + separatorBetweenLabels + labelText + separatorBetweenLabels + suffixText);
         }
         return labelText;
       });
@@ -134,8 +133,8 @@ export class SelectEditor implements Editor {
    * The current selected values (single select) from the collection
    */
   get currentValue() {
-    const isAddingSpaceBetweenLabels = this.columnDef && this.columnDef.internalColumnEditor && this.customStructure && this.customStructure.addSpaceBetweenLabels || false;
-    const isIncludingPrefixSuffix = this.columnDef && this.columnDef.internalColumnEditor && this.customStructure && this.customStructure.includePrefixSuffixToSelectedValues || false;
+    const separatorBetweenLabels = this.customStructure && this.customStructure.separatorBetweenTextLabels || '';
+    const isIncludingPrefixSuffix = this.customStructure && this.customStructure.includePrefixSuffixToSelectedValues || false;
     const itemFound = findOrDefault(this.collection, (c: any) => c[this.valueName].toString() === this.$editorElm.val());
 
     if (itemFound) {
@@ -143,7 +142,7 @@ export class SelectEditor implements Editor {
       if (isIncludingPrefixSuffix) {
         const prefixText = itemFound[this.labelPrefixName] || '';
         const suffixText = itemFound[this.labelSuffixName] || '';
-        return isAddingSpaceBetweenLabels ? `${prefixText} ${labelText} ${suffixText}` : (prefixText + labelText + suffixText);
+        return ('' + prefixText + separatorBetweenLabels + labelText + separatorBetweenLabels + suffixText);
       }
       return labelText;
     }
@@ -337,8 +336,8 @@ export class SelectEditor implements Editor {
   /** Build the template HTML string */
   protected buildTemplateHtmlString(collection: any[]) {
     let options = '';
-    const isAddingSpaceBetweenLabels = this.columnDef && this.columnDef.internalColumnEditor && this.customStructure && this.customStructure.addSpaceBetweenLabels || false;
-    const isRenderHtmlEnabled = this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.enableRenderHtml || false;
+    const separatorBetweenLabels = this.customStructure && this.customStructure.separatorBetweenTextLabels || '';
+    const isRenderHtmlEnabled = this.columnDef.internalColumnEditor.enableRenderHtml || false;
     const sanitizedOptions = this.gridOptions && this.gridOptions.sanitizeHtmlOptions || {};
 
     collection.forEach((option: SelectOption) => {
@@ -352,7 +351,7 @@ export class SelectEditor implements Editor {
       const labelText = (option.labelKey || this.enableTranslateLabel) ? this.i18n.tr(labelKey || ' ') : labelKey;
       const prefixText = option[this.labelPrefixName] || '';
       const suffixText = option[this.labelSuffixName] || '';
-      let optionText = isAddingSpaceBetweenLabels ? `${prefixText} ${labelText} ${suffixText}` : (prefixText + labelText + suffixText);
+      let optionText = ('' + prefixText + separatorBetweenLabels + labelText + separatorBetweenLabels + suffixText);
 
       // if user specifically wants to render html text, he needs to opt-in else it will stripped out by default
       // also, the 3rd party lib will saninitze any html code unless it's encoded, so we'll do that

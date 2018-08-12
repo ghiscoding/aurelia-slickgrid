@@ -95,7 +95,7 @@ export class Example4 {
             value: 'value',
             label: 'label',
             labelSuffix: 'text',
-            addSpaceBetweenLabels: true
+            separatorBetweenTextLabels: ''
           },
           model: Filters.multipleSelect,
           searchTerms: [1, 33, 50], // default selection

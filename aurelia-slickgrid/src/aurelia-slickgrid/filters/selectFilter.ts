@@ -8,6 +8,7 @@ import {
   Filter,
   FilterArguments,
   FilterCallback,
+  FilterCustomStructure,
   GridOption,
   MultipleSelectOption,
   OperatorType,
@@ -82,7 +83,7 @@ export class SelectFilter implements Filter {
   }
 
   /** Getter for the Custom Structure if exist */
-  get customStructure(): any {
+  get customStructure(): FilterCustomStructure {
     return this.columnDef && this.columnDef.filter && this.columnDef.filter.customStructure;
   }
 
@@ -113,10 +114,10 @@ export class SelectFilter implements Filter {
     }
 
     this.enableTranslateLabel = this.columnFilter.enableTranslateLabel || false;
-    this.labelName = (this.columnFilter.customStructure) ? this.columnFilter.customStructure.label : 'label';
-    this.labelPrefixName = (this.columnFilter.customStructure) ? this.columnFilter.customStructure.labelPrefix : 'labelPrefix';
-    this.labelSuffixName = (this.columnFilter.customStructure) ? this.columnFilter.customStructure.labelSuffix : 'labelSuffix';
-    this.valueName = (this.columnFilter.customStructure) ? this.columnFilter.customStructure.value : 'value';
+    this.labelName = (this.customStructure) ? this.customStructure.label : 'label';
+    this.labelPrefixName = (this.customStructure) ? this.customStructure.labelPrefix : 'labelPrefix';
+    this.labelSuffixName = (this.customStructure) ? this.customStructure.labelSuffix : 'labelSuffix';
+    this.valueName = (this.customStructure) ? this.customStructure.value : 'value';
 
     // always render the Select (dropdown) DOM element, even if user passed a "collectionAsync",
     // if that is the case, the Select will simply be without any options but we still have to render it (else SlickGrid would throw an error)
@@ -288,7 +289,7 @@ export class SelectFilter implements Filter {
    */
   protected buildTemplateHtmlString(optionCollection: any[], searchTerms: SearchTerm[]) {
     let options = '';
-    const isAddingSpaceBetweenLabels = this.columnFilter && this.columnFilter.customStructure && this.columnFilter.customStructure.addSpaceBetweenLabels || false;
+    const separatorBetweenLabels = this.customStructure && this.customStructure.separatorBetweenTextLabels || '';
     const isRenderHtmlEnabled = this.columnFilter && this.columnFilter.enableRenderHtml || false;
     const sanitizedOptions = this.gridOptions && this.gridOptions.sanitizeHtmlOptions || {};
 
@@ -301,7 +302,7 @@ export class SelectFilter implements Filter {
       const labelText = ((option.labelKey || this.enableTranslateLabel) && this.i18n && typeof this.i18n.tr === 'function') ? this.i18n.tr(labelKey || ' ') : labelKey;
       const prefixText = option[this.labelPrefixName] || '';
       const suffixText = option[this.labelSuffixName] || '';
-      let optionText = isAddingSpaceBetweenLabels ? `${prefixText} ${labelText} ${suffixText}` : (prefixText + labelText + suffixText);
+      let optionText = (prefixText + separatorBetweenLabels + labelText + separatorBetweenLabels + suffixText);
 
       // if user specifically wants to render html text, he needs to opt-in else it will stripped out by default
       // also, the 3rd party lib will saninitze any html code unless it's encoded, so we'll do that

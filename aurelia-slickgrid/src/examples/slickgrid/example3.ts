@@ -169,18 +169,14 @@ export class Example3 {
       formatter: Formatters.multiple,
       type: FieldType.number,
       editor: {
-        model: Editors.singleSelect,
-
         // We can also add HTML text to be rendered (any bad script will be sanitized) but we have to opt-in, else it will be sanitized
         enableRenderHtml: true,
-        collection: Array.from(Array(101).keys()).map(k => ({ value: k, label: k, symbol: '<i class="fa fa-percent" style="color:cadetblue"></i>' })),
+        collection: Array.from(Array(NB_ITEMS).keys()).map(k => ({ value: k, label: k, symbol: '<i class="fa fa-percent" style="color:cadetblue"></i>' })),
         customStructure: {
           value: 'value',
           label: 'label',
-          labelSuffix: 'symbol',
-          addSpaceBetweenLabels: false
+          labelSuffix: 'symbol'
         },
-        // collection: Array.from(Array(101).keys()).map(k => ({ value: k, label: k, symbol: '%' })),
         collectionSortBy: {
           property: 'label',
           sortDesc: true
@@ -189,7 +185,8 @@ export class Example3 {
           property: 'value',
           value: 0,
           operator: OperatorType.notEqual
-        }
+        },
+        model: Editors.singleSelect,
       },
       minWidth: 100,
       params: {
@@ -272,7 +269,7 @@ export class Example3 {
           label: 'label',
           value: 'value',
           labelPrefix: 'prefix',
-          addSpaceBetweenLabels: true,
+          separatorBetweenTextLabels: '',
           includePrefixSuffixToSelectedValues: true
         },
         model: Editors.multipleSelect,
@@ -290,7 +287,7 @@ export class Example3 {
           label: 'label',
           value: 'value',
           labelPrefix: 'prefix',
-          addSpaceBetweenLabels: true
+          separatorBetweenTextLabels: ''
         },
         filterOptions: {
           autoDropWidth: true

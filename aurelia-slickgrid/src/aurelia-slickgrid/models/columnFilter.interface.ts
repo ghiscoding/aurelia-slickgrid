@@ -2,6 +2,7 @@ import {
   CollectionFilterBy,
   CollectionSortBy,
   Column,
+  FilterCustomStructure,
   MultipleSelectOption,
   OperatorString,
   OperatorType,
@@ -65,22 +66,7 @@ export interface ColumnFilter {
   filterOptions?: MultipleSelectOption | any;
 
   /** A custom structure can be used instead of the default label/value pair. Commonly used with Select/Multi-Select Filter */
-  customStructure?: {
-    /** your custom property name to for the "label" (text displayed in the select dropdown UI) */
-    label: string;
-
-    /** your custom property name to use for the "value" (equals of the "option" in a select dropdown) */
-    value: string;
-
-    /** an optional prefix that will be prepended before the label text */
-    labelPrefix?: string;
-
-    /** an optional suffix that will be appended to the label text */
-    labelSuffix?: string;
-
-    /** defaults to false, when using label with prefix/suffix, do we want to add spaces between each? */
-    addSpaceBetweenLabels?: boolean;
-  };
+  customStructure?: FilterCustomStructure;
 
   /**
    * Use "params" to pass any type of arguments to your Custom Filter

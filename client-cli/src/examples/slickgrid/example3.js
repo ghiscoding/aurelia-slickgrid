@@ -163,8 +163,7 @@ export class Example3 {
         customStructure: {
           value: 'value',
           label: 'label',
-          labelSuffix: 'symbol',
-          addSpaceBetweenLabels: false
+          labelSuffix: 'symbol'
         },
         // collection: Array.from(Array(101).keys()).map(k => ({ value: k, label: k, symbol: '%' })),
         collectionSortBy: {

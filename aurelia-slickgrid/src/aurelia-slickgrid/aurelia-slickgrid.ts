@@ -162,7 +162,11 @@ export class AureliaSlickgridCustomElement {
         this.loadEditorCollectionAsync(column);
       }
 
-      return { ...column, editor: column.editor && Factory.of(column.editor.model).get(this.container), internalColumnEditor: { ...column.editor } };
+      return {
+        ...column,
+        editor: column.editor && Factory.of(column.editor.model).get(this.container),
+        internalColumnEditor: { ...column.editor }
+      };
     });
 
     this.controlAndPluginService.createCheckboxPluginBeforeGridCreation(this._columnDefinitions, this.gridOptions);
@@ -626,11 +630,21 @@ export class AureliaSlickgridCustomElement {
   // private functions
   // ------------------
 
+  /** Dispatch of Custom Event, which by default will bubble & is cancelable */
+  private dispatchCustomEvent(eventName: string, data?: any, isBubbling: boolean = true, isCancelable = true): boolean {
+    const eventInit: CustomEventInit = { bubbles: isBubbling, cancelable: isCancelable };
+    if (data) {
+      eventInit.detail = data;
+    }
+    return this.elm.dispatchEvent(new CustomEvent(eventName, eventInit));
+  }
+
   /** Load the Editor Collection asynchronously and replace the "collection" property when Promise resolves */
   private loadEditorCollectionAsync(column: Column): any[] {
     const collectionAsync = column && column.editor && column.editor.collectionAsync;
     if (collectionAsync) {
       // wait for the "collectionAsync", once resolved we will save it into the "collection"
+      // the collectionAsync can be of 3 types HttpClient, HttpFetch or a Promise
       collectionAsync.then((response: HttpResponseMessage | Response | any[]) => {
         if (response instanceof Response && typeof response['json'] === 'function') {
           response['json']().then(data => this.updateEditorCollection(column, data));
@@ -659,14 +673,5 @@ export class AureliaSlickgridCustomElement {
       const columnRef: Column = columns.find((col: Column) => col.id === column.id);
       columnRef.internalColumnEditor = column.editor;
     }
-  }
-
-  /** Dispatch of Custom Event, which by default will bubble & is cancelable */
-  private dispatchCustomEvent(eventName: string, data?: any, isBubbling: boolean = true, isCancelable = true): boolean {
-    const eventInit: CustomEventInit = { bubbles: isBubbling, cancelable: isCancelable };
-    if (data) {
-      eventInit.detail = data;
-    }
-    return this.elm.dispatchEvent(new CustomEvent(eventName, eventInit));
   }
 }
