@@ -159,13 +159,13 @@ export class SelectEditor implements Editor {
       throw new Error('[Aurelia-SlickGrid] An editor must always have an "init()" with valid arguments.');
     }
 
-    if (!this.columnDef || !this.columnDef.internalColumnEditor || (!this.columnDef.internalColumnEditor.collection && !this.columnDef.internalColumnEditor.collectionAsync)) {
+    if (!this.columnDef || !this.columnEditor || (!this.columnEditor.collection && !this.columnEditor.collectionAsync)) {
       throw new Error(`[Aurelia-SlickGrid] You need to pass a "collection" (or "collectionAsync") inside Column Definition Editor for the MultipleSelect/SingleSelect Editor to work correctly.
       Also each option should include a value/label pair (or value/labelKey when using Locale).
       For example: { editor: { collection: [{ value: true, label: 'True' },{ value: false, label: 'False'}] } }`);
     }
 
-    this.enableTranslateLabel = (this.columnDef.internalColumnEditor.enableTranslateLabel) ? this.columnDef.internalColumnEditor.enableTranslateLabel : false;
+    this.enableTranslateLabel = (this.columnEditor.enableTranslateLabel) ? this.columnEditor.enableTranslateLabel : false;
     this.labelName = (this.customStructure) ? this.customStructure.label : 'label';
     this.labelPrefixName = (this.customStructure) ? this.customStructure.labelPrefix : 'labelPrefix';
     this.labelSuffixName = (this.customStructure) ? this.customStructure.labelSuffix : 'labelSuffix';
@@ -261,8 +261,8 @@ export class SelectEditor implements Editor {
     let outputCollection = inputCollection;
 
     // user might want to filter certain items of the collection
-    if (this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.collectionFilterBy) {
-      const filterBy = this.columnDef.internalColumnEditor.collectionFilterBy;
+    if (this.columnEditor && this.columnEditor.collectionFilterBy) {
+      const filterBy = this.columnEditor.collectionFilterBy;
       outputCollection = this.collectionService.filterCollection(outputCollection, filterBy);
     }
 
@@ -278,8 +278,8 @@ export class SelectEditor implements Editor {
     let outputCollection = inputCollection;
 
     // user might want to sort the collection
-    if (this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.collectionSortBy) {
-      const sortBy = this.columnDef.internalColumnEditor.collectionSortBy;
+    if (this.columnEditor && this.columnEditor.collectionSortBy) {
+      const sortBy = this.columnEditor.collectionSortBy;
       outputCollection = this.collectionService.sortCollection(outputCollection, sortBy, this.enableTranslateLabel);
     }
 
@@ -337,7 +337,7 @@ export class SelectEditor implements Editor {
   protected buildTemplateHtmlString(collection: any[]) {
     let options = '';
     const separatorBetweenLabels = this.customStructure && this.customStructure.separatorBetweenTextLabels || '';
-    const isRenderHtmlEnabled = this.columnDef.internalColumnEditor.enableRenderHtml || false;
+    const isRenderHtmlEnabled = this.columnEditor.enableRenderHtml || false;
     const sanitizedOptions = this.gridOptions && this.gridOptions.sanitizeHtmlOptions || {};
 
     collection.forEach((option: SelectOption) => {
@@ -379,7 +379,7 @@ export class SelectEditor implements Editor {
       // fallback to bootstrap
       this.$editorElm.addClass('form-control');
     } else {
-      const elementOptions = (this.columnDef.internalColumnEditor) ? this.columnDef.internalColumnEditor.elementOptions : {};
+      const elementOptions = (this.columnEditor) ? this.columnEditor.elementOptions : {};
       this.editorElmOptions = { ...this.defaultOptions, ...elementOptions };
       this.$editorElm = this.$editorElm.multipleSelect(this.editorElmOptions);
       setTimeout(() => this.$editorElm.multipleSelect('open'));

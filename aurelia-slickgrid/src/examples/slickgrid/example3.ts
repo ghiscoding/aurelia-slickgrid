@@ -352,14 +352,18 @@ export class Example3 {
     if (requisiteColumnDef) {
       const collectionEditor = requisiteColumnDef.editor.collection;
       const collectionFilter = requisiteColumnDef.filter.collection;
-      console.log('before', collectionFilter)
+
       if (Array.isArray(collectionEditor) && Array.isArray(collectionFilter)) {
-        const selectCollectionObj = collectionEditor.pop();
-        collectionFilter.pop();
-        console.log('after', collectionFilter)
+        // sort collection in descending order and take out last collection option
+        const selectCollectionObj = this.sortCollectionDescending(collectionEditor).pop();
+        this.sortCollectionDescending(collectionFilter).pop();
         this.aureliaGrid.gridService.deleteDataGridItemById(selectCollectionObj.value);
       }
     }
+  }
+
+  sortCollectionDescending(collection) {
+    return collection.sort((item1, item2) => item1.value - item2.value);
   }
 
   mockData(itemCount, startingIndex = 0) {

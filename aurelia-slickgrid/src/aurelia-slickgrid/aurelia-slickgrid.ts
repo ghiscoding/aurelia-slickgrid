@@ -665,9 +665,8 @@ export class AureliaSlickgridCustomElement {
    */
   private updateEditorCollection(column: Column, newCollection: any[]) {
     column.editor.collection = newCollection;
-    column.internalColumnEditor = column.editor;
 
-    // find the new column reference pointer
+    // find the new column reference pointer & reassign the new editor to the internalColumnEditor
     const columns = this.grid.getColumns();
     if (Array.isArray(columns)) {
       const columnRef: Column = columns.find((col: Column) => col.id === column.id);
