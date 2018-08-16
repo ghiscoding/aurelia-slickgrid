@@ -339,8 +339,8 @@ export class Example3 {
           collectionFilter.push({ value: lastRowIndex, label: lastRowIndex, prefix: 'Task', suffix: 'days' });
 
           // OR 2- replace the entire "collection" is also supported
-          // durationColumnDef.filter.collection = [...collection, ...[{ value: lastRowIndex, label: lastRowIndex }]];
-          // durationColumnDef.editor.collection = [...collection, ...[{ value: lastRowIndex, label: lastRowIndex }]];
+          // requisiteColumnDef.filter.collection = [...collection, ...[{ value: lastRowIndex, label: lastRowIndex }]];
+          // requisiteColumnDef.editor.collection = [...collection, ...[{ value: lastRowIndex, label: lastRowIndex }]];
         }
       }
     }, 250);
@@ -354,7 +354,7 @@ export class Example3 {
       const collectionFilter = requisiteColumnDef.filter.collection;
 
       if (Array.isArray(collectionEditor) && Array.isArray(collectionFilter)) {
-        // sort collection in descending order and take out last collection option
+        // sort collection in descending order and take out last option from the collection
         const selectCollectionObj = this.sortCollectionDescending(collectionEditor).pop();
         this.sortCollectionDescending(collectionFilter).pop();
         this.aureliaGrid.gridService.deleteDataGridItemById(selectCollectionObj.value);
