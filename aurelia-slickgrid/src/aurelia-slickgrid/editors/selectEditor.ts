@@ -294,7 +294,14 @@ export class SelectEditor implements Editor {
       throw new Error('The "collection" passed to the Select Editor is not a valid array');
     }
 
+    // user can optionally add a blank entry at the beginning of the collection
+    if (this.customStructure && this.customStructure.addBlankEntry) {
+      collection.unshift(this.createBlankEntry());
+    }
+
+    // assign the collection to a temp variable before filtering/sorting the collection
     let newCollection = collection;
+
     // user might want to filter and/or sort certain items of the collection
     newCollection = this.filterCollection(newCollection);
     newCollection = this.sortCollection(newCollection);
@@ -375,6 +382,22 @@ export class SelectEditor implements Editor {
     return `<select class="ms-filter search-filter" ${this.isMultipleSelect ? 'multiple="multiple"' : ''}>${options}</select>`;
   }
 
+  /** Create a blank entry that can be added to the collection. It will also reuse the same customStructure if need be */
+  protected createBlankEntry() {
+    const blankEntry = {
+      [this.labelName]: '',
+      [this.valueName]: ''
+    };
+    if (this.labelPrefixName) {
+      blankEntry[this.labelPrefixName] = '';
+    }
+    if (this.labelSuffixName) {
+      blankEntry[this.labelSuffixName] = '';
+    }
+    return blankEntry;
+  }
+
+  /** From the html template string, create the DOM element of the Multiple/Single Select Editor */
   protected createDomElement(editorTemplate: string) {
     this.$editorElm = $(editorTemplate);
 
