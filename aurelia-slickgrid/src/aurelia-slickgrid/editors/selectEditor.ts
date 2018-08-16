@@ -12,7 +12,7 @@ import {
   SelectOption,
 } from './../models/index';
 import { CollectionService, findOrDefault, disposeAllSubscriptions } from '../services/index';
-import { arraysEqual, htmlEncode } from '../services/utilities';
+import { arraysEqual, getDescendantProperty, htmlEncode } from '../services/utilities';
 import * as DOMPurify from 'dompurify';
 import * as $ from 'jquery';
 
@@ -287,6 +287,13 @@ export class SelectEditor implements Editor {
   }
 
   protected renderDomElement(collection) {
+    if (!Array.isArray(collection) && this.customStructure && this.customStructure.collectionInObjectProperty) {
+      collection = getDescendantProperty(collection, this.customStructure.collectionInObjectProperty);
+    }
+    if (!Array.isArray(collection)) {
+      throw new Error('The "collection" passed to the Select Editor is not a valid array');
+    }
+
     let newCollection = collection;
     // user might want to filter and/or sort certain items of the collection
     newCollection = this.filterCollection(newCollection);
