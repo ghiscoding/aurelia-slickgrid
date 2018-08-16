@@ -17,7 +17,7 @@ import {
   SelectOption
 } from './../models/index';
 import { CollectionService } from '../services/collection.service';
-import { disposeAllSubscriptions, htmlEncode } from '../services/utilities';
+import { disposeAllSubscriptions, getDescendantProperty, htmlEncode } from '../services/utilities';
 import * as DOMPurify from 'dompurify';
 import * as $ from 'jquery';
 
@@ -270,6 +270,13 @@ export class SelectFilter implements Filter {
   }
 
   protected renderDomElement(collection) {
+    if (!Array.isArray(collection) && this.customStructure && this.customStructure.collectionInObjectProperty) {
+      collection = getDescendantProperty(collection, this.customStructure.collectionInObjectProperty);
+    }
+    if (!Array.isArray(collection)) {
+      throw new Error('The "collection" passed to the Select Filter is not a valid array');
+    }
+
     let newCollection = collection;
 
     // user might want to filter and/or sort certain items of the collection
