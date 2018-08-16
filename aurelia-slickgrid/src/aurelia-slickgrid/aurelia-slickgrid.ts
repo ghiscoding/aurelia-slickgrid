@@ -138,8 +138,7 @@ export class AureliaSlickgridCustomElement {
     if (this.gridOptions.enableGrouping) {
       this.groupItemMetadataProvider = new Slick.Data.GroupItemMetadataProvider();
       this.dataview = new Slick.Data.DataView({
-        groupItemMetadataProvider: this.groupItemMetadataProvider,
-        inlineFilters: true
+        groupItemMetadataProvider: this.groupItemMetadataProvider
       });
     } else {
       this.dataview = new Slick.Data.DataView();
