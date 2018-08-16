@@ -239,6 +239,13 @@ export class GridStateService {
     this.ea.publish('gridStateService:changed', { change: { newValues: currentColumns, type: GridStateType.columns }, gridState: this.getCurrentGridState() });
   }
 
+  /** if we use Row Selection or the Checkbox Selector, we need to reset any selection */
+  resetRowSelection() {
+    if (this._gridOptions.enableRowSelection || this._gridOptions.enableCheckboxSelector) {
+      this._grid.setSelectedRows([]);
+    }
+  }
+
   /**
    * Subscribe to all necessary SlickGrid or Service Events that deals with a Grid change,
    * when triggered, we will publish a Grid State Event with current Grid State
@@ -247,20 +254,14 @@ export class GridStateService {
     // Subscribe to Event Emitter of Filter changed
     this.subscriptions.push(
       this.ea.subscribe('filterService:filterChanged', (currentFilters: CurrentFilter[]) => {
-        // if we use Row Selection or the Checkbox Selector, we need to reset any selection
-        if (this._gridOptions.enableRowSelection || this._gridOptions.enableCheckboxSelector) {
-          this._grid.setSelectedRows([]);
-        }
+        this.resetRowSelection();
         this.ea.publish('gridStateService:changed', { change: { newValues: currentFilters, type: GridStateType.filter }, gridState: this.getCurrentGridState() });
       })
     );
     // Subscribe to Event Emitter of Filter cleared
     this.subscriptions.push(
       this.ea.subscribe('filterService:filterCleared', (currentFilters: CurrentFilter[]) => {
-        // if we use Row Selection or the Checkbox Selector, we need to reset any selection
-        if (this._gridOptions.enableRowSelection || this._gridOptions.enableCheckboxSelector) {
-          this._grid.setSelectedRows([]);
-        }
+        this.resetRowSelection();
         this.ea.publish('gridStateService:changed', { change: { newValues: currentFilters, type: GridStateType.filter }, gridState: this.getCurrentGridState() });
       })
     );
@@ -268,12 +269,14 @@ export class GridStateService {
     // Subscribe to Event Emitter of Sort changed
     this.subscriptions.push(
       this.ea.subscribe('sortService:sortChanged', (currentSorters: CurrentSorter[]) => {
+        this.resetRowSelection();
         this.ea.publish('gridStateService:changed', { change: { newValues: currentSorters, type: GridStateType.sorter }, gridState: this.getCurrentGridState() });
       })
     );
     // Subscribe to Event Emitter of Sort cleared
     this.subscriptions.push(
       this.ea.subscribe('sortService:sortCleared', (currentSorters: CurrentSorter[]) => {
+        this.resetRowSelection();
         this.ea.publish('gridStateService:changed', { change: { newValues: currentSorters, type: GridStateType.sorter }, gridState: this.getCurrentGridState() });
       })
     );
