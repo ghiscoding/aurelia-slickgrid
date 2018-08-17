@@ -1,7 +1,8 @@
 import {
+  CollectionCustomStructure,
   CollectionFilterBy,
+  CollectionOption,
   CollectionSortBy,
-  EditorCustomStructure,
   EditorValidator,
   MultipleSelectOption,
 } from './../models/index';
@@ -13,11 +14,17 @@ export interface ColumnEditor {
   /** A collection of items/options that will be loaded asynchronously (commonly used with a Select/Multi-Select Editor) */
   collectionAsync?: Promise<any>;
 
+  /** Options to change the behavior of the "collection" */
+  collectionOptions?: CollectionOption;
+
   /** We could filter some items from the collection */
   collectionFilterBy?: CollectionFilterBy;
 
   /** We could sort the collection by their value, or by translated value when enableTranslateLabel is True */
   collectionSortBy?: CollectionSortBy;
+
+  /** A custom structure can be used instead of the default label/value pair. Commonly used with Select/Multi-Select Editor */
+  customStructure?: CollectionCustomStructure;
 
   /**
    * Defaults to false, when enable it will add collection observers and re-render the Filter DOM element
@@ -55,9 +62,6 @@ export interface ColumnEditor {
 
   /** Step value of the filter, works only with Filters supporting it (input text, number, float, range, slider) */
   valueStep?: number | string;
-
-  /** A custom structure can be used instead of the default label/value pair. Commonly used with Select/Multi-Select Editor */
-  customStructure?: EditorCustomStructure;
 
   /**
    * Use "params" to pass any type of arguments to your Custom Editor

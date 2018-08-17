@@ -3,12 +3,13 @@ import { Subscription } from 'aurelia-event-aggregator';
 import { BindingEngine } from 'aurelia-framework';
 import { HttpResponseMessage } from 'aurelia-http-client';
 import {
+  CollectionCustomStructure,
+  CollectionOption,
   Column,
   ColumnFilter,
   Filter,
   FilterArguments,
   FilterCallback,
-  FilterCustomStructure,
   GridOption,
   MultipleSelectOption,
   OperatorType,
@@ -77,13 +78,18 @@ export class SelectFilter implements Filter {
     this.defaultOptions = options;
   }
 
+  /** Getter for the Collection Options */
+  protected get collectionOptions(): CollectionOption {
+    return this.columnDef && this.columnDef.filter && this.columnDef.filter.collectionOptions;
+  }
+
   /** Getter for the Filter Operator */
   get columnFilter(): ColumnFilter {
     return this.columnDef && this.columnDef.filter || {};
   }
 
   /** Getter for the Custom Structure if exist */
-  get customStructure(): FilterCustomStructure {
+  get customStructure(): CollectionCustomStructure {
     return this.columnDef && this.columnDef.filter && this.columnDef.filter.customStructure;
   }
 
@@ -180,7 +186,7 @@ export class SelectFilter implements Filter {
    * @param inputCollection
    * @return outputCollection filtered and/or sorted collection
    */
-  protected filterCollection(inputCollection) {
+  protected filterCollection(inputCollection: any[]): any[] {
     let outputCollection = inputCollection;
 
     // user might want to filter certain items of the collection
@@ -197,7 +203,7 @@ export class SelectFilter implements Filter {
    * @param inputCollection
    * @return outputCollection filtered and/or sorted collection
    */
-  protected sortCollection(inputCollection) {
+  protected sortCollection(inputCollection: any[]): any[] {
     let outputCollection = inputCollection;
 
     // user might want to sort the collection
@@ -244,7 +250,7 @@ export class SelectFilter implements Filter {
    * They each have their own purpose, the "propertyObserver" will trigger once the collection is replaced entirely
    * while the "collectionObverser" will trigger on collection changes (`push`, `unshift`, `splice`, ...)
    */
-  protected watchCollectionChanges() {
+  protected watchCollectionChanges(): void {
     // subscribe to the "collection" changes (array replace)
     this.subscriptions.push(
       this.bindingEngine
@@ -269,16 +275,16 @@ export class SelectFilter implements Filter {
     );
   }
 
-  protected renderDomElement(collection) {
-    if (!Array.isArray(collection) && this.customStructure && this.customStructure.collectionInObjectProperty) {
-      collection = getDescendantProperty(collection, this.customStructure.collectionInObjectProperty);
+  protected renderDomElement(collection: any[]) {
+    if (!Array.isArray(collection) && this.collectionOptions && this.collectionOptions.collectionInObjectProperty) {
+      collection = getDescendantProperty(collection, this.collectionOptions.collectionInObjectProperty);
     }
     if (!Array.isArray(collection)) {
       throw new Error('The "collection" passed to the Select Filter is not a valid array');
     }
 
     // user can optionally add a blank entry at the beginning of the collection
-    if (this.customStructure && this.customStructure.addBlankEntry) {
+    if (this.collectionOptions && this.collectionOptions.addBlankEntry) {
       collection.unshift(this.createBlankEntry());
     }
 
@@ -300,9 +306,9 @@ export class SelectFilter implements Filter {
   /**
    * Create the HTML template as a string
    */
-  protected buildTemplateHtmlString(optionCollection: any[], searchTerms: SearchTerm[]) {
+  protected buildTemplateHtmlString(optionCollection: any[], searchTerms: SearchTerm[]): string {
     let options = '';
-    const separatorBetweenLabels = this.customStructure && this.customStructure.separatorBetweenTextLabels || '';
+    const separatorBetweenLabels = this.collectionOptions && this.collectionOptions.separatorBetweenTextLabels || '';
     const isRenderHtmlEnabled = this.columnFilter && this.columnFilter.enableRenderHtml || false;
     const sanitizedOptions = this.gridOptions && this.gridOptions.sanitizeHtmlOptions || {};
 
@@ -338,8 +344,8 @@ export class SelectFilter implements Filter {
     return `<select class="ms-filter search-filter" multiple="multiple">${options}</select>`;
   }
 
-  /** Create a blank entry that can be added to the collection. It will also reuse the same customStructure if need be */
-  protected createBlankEntry() {
+  /** Create a blank entry that can be added to the collection. It will also reuse the same collection structure provided by the user */
+  protected createBlankEntry(): any {
     const blankEntry = {
       [this.labelName]: '',
       [this.valueName]: ''

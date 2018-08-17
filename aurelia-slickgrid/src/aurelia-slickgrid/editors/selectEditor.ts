@@ -2,8 +2,9 @@ import { BindingEngine } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import { Subscription } from 'aurelia-event-aggregator';
 import {
+  CollectionCustomStructure,
+  CollectionOption,
   Editor,
-  EditorCustomStructure,
   EditorValidator,
   EditorValidatorOutput,
   Column,
@@ -94,6 +95,11 @@ export class SelectEditor implements Editor {
     return this.columnDef && this.columnDef && this.columnDef.internalColumnEditor.collection || [];
   }
 
+  /** Getter for the Collection Options */
+  get collectionOptions(): CollectionOption {
+    return this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.collectionOptions;
+  }
+
   /** Get Column Definition object */
   get columnDef(): Column {
     return this.args && this.args.column || {};
@@ -105,16 +111,16 @@ export class SelectEditor implements Editor {
   }
 
   /** Getter for the Custom Structure if exist */
-  protected get customStructure(): EditorCustomStructure {
+  protected get customStructure(): CollectionCustomStructure {
     return this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.customStructure;
   }
 
   /**
    * The current selected values (multiple select) from the collection
    */
-  get currentValues() {
-    const separatorBetweenLabels = this.customStructure && this.customStructure.separatorBetweenTextLabels || '';
-    const isIncludingPrefixSuffix = this.customStructure && this.customStructure.includePrefixSuffixToSelectedValues || false;
+  get currentValues(): any[] {
+    const separatorBetweenLabels = this.collectionOptions && this.collectionOptions.separatorBetweenTextLabels || '';
+    const isIncludingPrefixSuffix = this.collectionOptions && this.collectionOptions.includePrefixSuffixToSelectedValues || false;
 
     return this.collection
       .filter(c => this.$editorElm.val().indexOf(c[this.valueName].toString()) !== -1)
@@ -132,9 +138,9 @@ export class SelectEditor implements Editor {
   /**
    * The current selected values (single select) from the collection
    */
-  get currentValue() {
-    const separatorBetweenLabels = this.customStructure && this.customStructure.separatorBetweenTextLabels || '';
-    const isIncludingPrefixSuffix = this.customStructure && this.customStructure.includePrefixSuffixToSelectedValues || false;
+  get currentValue(): number | string {
+    const separatorBetweenLabels = this.collectionOptions && this.collectionOptions.separatorBetweenTextLabels || '';
+    const isIncludingPrefixSuffix = this.collectionOptions && this.collectionOptions.includePrefixSuffixToSelectedValues || false;
     const itemFound = findOrDefault(this.collection, (c: any) => c[this.valueName].toString() === this.$editorElm.val());
 
     if (itemFound) {
@@ -257,7 +263,7 @@ export class SelectEditor implements Editor {
    * @param inputCollection
    * @return outputCollection filtered and/or sorted collection
    */
-  protected filterCollection(inputCollection) {
+  protected filterCollection(inputCollection: any[]): any[] {
     let outputCollection = inputCollection;
 
     // user might want to filter certain items of the collection
@@ -274,7 +280,7 @@ export class SelectEditor implements Editor {
    * @param inputCollection
    * @return outputCollection filtered and/or sorted collection
    */
-  protected sortCollection(inputCollection) {
+  protected sortCollection(inputCollection: any[]): any[] {
     let outputCollection = inputCollection;
 
     // user might want to sort the collection
@@ -286,16 +292,16 @@ export class SelectEditor implements Editor {
     return outputCollection;
   }
 
-  protected renderDomElement(collection) {
-    if (!Array.isArray(collection) && this.customStructure && this.customStructure.collectionInObjectProperty) {
-      collection = getDescendantProperty(collection, this.customStructure.collectionInObjectProperty);
+  protected renderDomElement(collection: any[]) {
+    if (!Array.isArray(collection) && this.collectionOptions && this.collectionOptions.collectionInObjectProperty) {
+      collection = getDescendantProperty(collection, this.collectionOptions.collectionInObjectProperty);
     }
     if (!Array.isArray(collection)) {
       throw new Error('The "collection" passed to the Select Editor is not a valid array');
     }
 
     // user can optionally add a blank entry at the beginning of the collection
-    if (this.customStructure && this.customStructure.addBlankEntry) {
+    if (this.collectionOptions && this.collectionOptions.addBlankEntry) {
       collection.unshift(this.createBlankEntry());
     }
 
@@ -348,9 +354,9 @@ export class SelectEditor implements Editor {
   }
 
   /** Build the template HTML string */
-  protected buildTemplateHtmlString(collection: any[]) {
+  protected buildTemplateHtmlString(collection: any[]): string {
     let options = '';
-    const separatorBetweenLabels = this.customStructure && this.customStructure.separatorBetweenTextLabels || '';
+    const separatorBetweenLabels = this.collectionOptions && this.collectionOptions.separatorBetweenTextLabels || '';
     const isRenderHtmlEnabled = this.columnEditor.enableRenderHtml || false;
     const sanitizedOptions = this.gridOptions && this.gridOptions.sanitizeHtmlOptions || {};
 
@@ -382,8 +388,8 @@ export class SelectEditor implements Editor {
     return `<select class="ms-filter search-filter" ${this.isMultipleSelect ? 'multiple="multiple"' : ''}>${options}</select>`;
   }
 
-  /** Create a blank entry that can be added to the collection. It will also reuse the same customStructure if need be */
-  protected createBlankEntry() {
+  /** Create a blank entry that can be added to the collection. It will also reuse the same collection structure provided by the user */
+  protected createBlankEntry(): any {
     const blankEntry = {
       [this.labelName]: '',
       [this.valueName]: ''

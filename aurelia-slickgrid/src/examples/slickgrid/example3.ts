@@ -269,6 +269,8 @@ export class Example3 {
           label: 'label',
           value: 'value',
           labelPrefix: 'prefix',
+        },
+        collectionOptions: {
           separatorBetweenTextLabels: '',
           includePrefixSuffixToSelectedValues: true
         },
@@ -287,6 +289,8 @@ export class Example3 {
           label: 'label',
           value: 'value',
           labelPrefix: 'prefix',
+        },
+        collectionOptions: {
           separatorBetweenTextLabels: ''
         },
         filterOptions: {

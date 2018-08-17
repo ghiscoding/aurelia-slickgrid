@@ -109,6 +109,8 @@ export class Example4 {
             value: 'value',
             label: 'label',
             labelSuffix: 'text',
+          },
+          collectionOptions: {
             separatorBetweenTextLabels: ''
           },
           // we could add certain option(s) to the "multiple-select" plugin
