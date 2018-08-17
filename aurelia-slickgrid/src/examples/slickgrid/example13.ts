@@ -1,6 +1,16 @@
 import { autoinject } from 'aurelia-framework';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
-import { Aggregators, Column, FieldType, Formatter, Formatters, GridOption, GroupTotalFormatters, SortDirectionNumber, Sorters, Filters } from '../../aurelia-slickgrid';
+import {
+  Aggregators,
+  Column,
+  FieldType,
+  Filters,
+  Formatters,
+  GridOption,
+  GroupTotalFormatters,
+  SortDirectionNumber,
+  Sorters,
+} from '../../aurelia-slickgrid';
 
 @autoinject()
 export class Example13 {
@@ -82,6 +92,7 @@ export class Example13 {
       {
         id: 'start', name: 'Start', field: 'start',
         minWidth: 60,
+        maxWidth: 130,
         filterable: true,
         filter: { model: Filters.compoundDate },
         sortable: true,
@@ -92,6 +103,7 @@ export class Example13 {
       {
         id: 'finish', name: 'Finish', field: 'finish',
         minWidth: 60,
+        maxWidth: 130,
         filterable: true,
         filter: { model: Filters.compoundDate },
         sortable: true,
@@ -102,7 +114,8 @@ export class Example13 {
       {
         id: 'cost', name: 'Cost', field: 'cost',
         minWidth: 70,
-        width: 100,
+        width: 80,
+        maxWidth: 120,
         filterable: true,
         filter: { model: Filters.compoundInput },
         type: FieldType.number,
@@ -114,7 +127,7 @@ export class Example13 {
       },
       {
         id: 'effort-driven', name: 'Effort Driven',
-        minWidth: 20, width: 80, maxWidth: 80,
+        minWidth: 30, width: 80, maxWidth: 90,
         cssClass: 'cell-effort-driven',
         field: 'effortDriven',
         formatter: Formatters.checkmark,

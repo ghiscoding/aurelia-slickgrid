@@ -137,9 +137,7 @@ export class AureliaSlickgridCustomElement {
 
     if (this.gridOptions.enableGrouping) {
       this.groupItemMetadataProvider = new Slick.Data.GroupItemMetadataProvider();
-      this.dataview = new Slick.Data.DataView({
-        groupItemMetadataProvider: this.groupItemMetadataProvider
-      });
+      this.dataview = new Slick.Data.DataView({ groupItemMetadataProvider: this.groupItemMetadataProvider });
     } else {
       this.dataview = new Slick.Data.DataView();
     }
@@ -302,7 +300,8 @@ export class AureliaSlickgridCustomElement {
 
   /**
    * Define what our internal Post Process callback, it will execute internally after we get back result from the Process backend call
-   * For now, this is GraphQL Service only feautre and it will basically refresh the Dataset & Pagination without having the user to create his own PostProcess every time
+   * For now, this is GraphQL Service only feature and it will basically
+   * refresh the Dataset & Pagination without having the user to create his own PostProcess every time
    */
   createBackendApiInternalPostProcessCallback(gridOptions: GridOption) {
     if (gridOptions && gridOptions.backendServiceApi) {
