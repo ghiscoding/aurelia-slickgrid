@@ -1,6 +1,16 @@
 import { autoinject } from 'aurelia-framework';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
-import { Aggregators, Column, FieldType, Formatter, Formatters, GridOption, GroupTotalFormatters, SortDirectionNumber, Sorters } from '../../aurelia-slickgrid';
+import {
+  Aggregators,
+  Column,
+  FieldType,
+  Filters,
+  Formatters,
+  GridOption,
+  GroupTotalFormatters,
+  SortDirectionNumber,
+  Sorters,
+} from '../../aurelia-slickgrid';
 
 @autoinject()
 export class Example13 {
@@ -47,6 +57,7 @@ export class Example13 {
         id: 'sel', name: '#', field: 'num', width: 40,
         maxWidth: 70,
         resizable: true,
+        filterable: true,
         selectable: false,
         focusable: false
       },
@@ -55,11 +66,14 @@ export class Example13 {
         width: 50,
         minWidth: 50,
         cssClass: 'cell-title',
+        filterable: true,
         sortable: true
       },
       {
         id: 'duration', name: 'Duration', field: 'duration',
         minWidth: 50, width: 60,
+        filterable: true,
+        filter: { model: Filters.slider, operator: '>=' },
         sortable: true,
         type: FieldType.number,
         groupTotalsFormatter: GroupTotalFormatters.sumTotals,
@@ -69,6 +83,8 @@ export class Example13 {
         id: '%', name: '% Complete', field: 'percentComplete',
         minWidth: 70, width: 90,
         formatter: Formatters.percentCompleteBar,
+        filterable: true,
+        filter: { model: Filters.compoundSlider },
         sortable: true,
         groupTotalsFormatter: GroupTotalFormatters.avgTotalsPercentage,
         params: { groupFormatterPrefix: '<i>Avg</i>: ' }
@@ -76,21 +92,33 @@ export class Example13 {
       {
         id: 'start', name: 'Start', field: 'start',
         minWidth: 60,
+        maxWidth: 130,
+        filterable: true,
+        filter: { model: Filters.compoundDate },
         sortable: true,
+        type: FieldType.dateIso,
         formatter: Formatters.dateIso,
         exportWithFormatter: true
       },
       {
         id: 'finish', name: 'Finish', field: 'finish',
         minWidth: 60,
+        maxWidth: 130,
+        filterable: true,
+        filter: { model: Filters.compoundDate },
         sortable: true,
+        type: FieldType.dateIso,
         formatter: Formatters.dateIso,
         exportWithFormatter: true
       },
       {
         id: 'cost', name: 'Cost', field: 'cost',
         minWidth: 70,
-        width: 100,
+        width: 80,
+        maxWidth: 120,
+        filterable: true,
+        filter: { model: Filters.compoundInput },
+        type: FieldType.number,
         sortable: true,
         exportWithFormatter: true,
         formatter: Formatters.dollar,
@@ -99,10 +127,21 @@ export class Example13 {
       },
       {
         id: 'effort-driven', name: 'Effort Driven',
-        minWidth: 20, width: 80, maxWidth: 80,
+        minWidth: 30, width: 80, maxWidth: 90,
         cssClass: 'cell-effort-driven',
         field: 'effortDriven',
-        formatter: Formatters.checkmark, sortable: true
+        formatter: Formatters.checkmark,
+        sortable: true,
+        filterable: true,
+        filter: {
+          collection: [{ value: '', label: '' }, { value: true, label: 'True' }, { value: false, label: 'False' }],
+          model: Filters.singleSelect,
+
+          // we could add certain option(s) to the "multiple-select" plugin
+          filterOptions: {
+            autoDropWidth: true
+          },
+        }
       }
     ];
 
@@ -111,6 +150,7 @@ export class Example13 {
         containerId: 'demo-container',
         sidePadding: 15
       },
+      enableFiltering: true,
       enableGrouping: true,
       exportOptions: {
         sanitizeDataExport: true

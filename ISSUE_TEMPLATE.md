@@ -9,7 +9,7 @@ CHOOSE the relevant headings, DELETE the other(s).
 **I'm submitting a bug report**
 **I'm submitting a feature request**
 
-* **Framework Version:**
+* **Library Version:**
 major.minor.patch
 
 **Please tell us about your environment:**
@@ -17,13 +17,7 @@ major.minor.patch
 OSX 10.x|Linux (distro)|Windows [7|8|8.1|10]
 
 * **Bundler used (WebPack/RequireJS/SystemJS**
-JSPM 0.16.32 | webpack 2.1.0-beta.17
-<!--
-If using JSPM
-run `jspm -v`
-If using Webpack
-run `webpack --help | grep webpack`
--->
+JSPM | WebPack | RequireJS
 
 * **Browser:**
 all | Chrome XX | Firefox XX | Edge XX | IE XX | Safari XX | Mobile Chrome XX | Android X.X Web Browser | iOS XX Safari | iOS XX UIWebView | iOS XX WKWebView
