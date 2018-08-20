@@ -645,9 +645,16 @@ export class AureliaSlickgridCustomElement {
     if (collectionAsync) {
       // wait for the "collectionAsync", once resolved we will save it into the "collection"
       // the collectionAsync can be of 3 types HttpClient, HttpFetch or a Promise
+      //
       collectionAsync.then((response: HttpResponseMessage | Response | any[]) => {
-        if (response instanceof Response && typeof response['json'] === 'function') {
-          response['json']().then(data => this.updateEditorCollection(column, data));
+        if (response instanceof Response && typeof response.json === 'function') {
+          if (response.bodyUsed) {
+            throw new Error('[Aurelia-SlickGrid] The response body passed to collectionAsync was ' +
+                            'already read. Either pass the dataset from the Response ' +
+                            'or clone the response first using response.clone()');
+          }
+
+          (response as Response).json().then(data => this.updateEditorCollection(column, data));
         } else if (response instanceof HttpResponseMessage) {
           this.updateEditorCollection(column, response['content']);
         } else if (Array.isArray(response)) {
