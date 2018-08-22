@@ -171,8 +171,7 @@ export class Example3 {
         customStructure: {
           value: 'value',
           label: 'label',
-          labelSuffix: 'symbol',
-          addSpaceBetweenLabels: false
+          labelSuffix: 'symbol'
         },
         // collection: Array.from(Array(101).keys()).map(k => ({ value: k, label: k, symbol: '%' })),
         collectionSortBy: {
@@ -306,7 +305,7 @@ export class Example3 {
 
   onCellChanged(e, args) {
     console.log('onCellChange', args);
-    this.updatedObject = args.item;
+    this.updatedObject = { ...args.item };
   }
 
   onCellClicked(e, args) {

@@ -1,11 +1,14 @@
+import { HttpClient as FetchClient } from 'aurelia-fetch-client';
+import { HttpClient } from 'aurelia-http-client';
 import { autoinject } from 'aurelia-framework';
 import { CustomInputFilter } from './custom-inputFilter';
-import { AureliaGridInstance, Column, FieldType, Filters, Formatters, GridOption, Statistic } from '../../aurelia-slickgrid';
+import { AureliaGridInstance, Column, FieldType, Filters, Formatters, GridOption, OperatorType, Statistic } from '../../aurelia-slickgrid';
 
 function randomBetween(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 const NB_ITEMS = 500;
+const URL_SAMPLE_COLLECTION_DATA = 'src/examples/slickgrid/sample-data/collection_500_numbers.json';
 
 @autoinject()
 export class Example4 {
@@ -35,13 +38,13 @@ export class Example4 {
   dataset: any[];
   statistics: Statistic;
 
-  constructor() {
+  constructor(private http: HttpClient, private httpFetch: FetchClient) {
     this.defineGrid();
   }
 
   attached() {
     // populate the dataset once the grid is ready
-    this.getData();
+    this.dataset = this.mockData(NB_ITEMS);
   }
 
   detached() {
@@ -54,12 +57,6 @@ export class Example4 {
 
   /* Define grid Options and Columns */
   defineGrid() {
-    // prepare a multiple-select array to filter with
-    const multiSelectFilterArray = [];
-    for (let i = 0; i < NB_ITEMS; i++) {
-      multiSelectFilterArray.push({ value: i, label: i, text: ' days' });
-    }
-
     this.columnDefinitions = [
       {
         id: 'title',
@@ -85,7 +82,24 @@ export class Example4 {
         minWidth: 55,
         filterable: true,
         filter: {
-          collection: multiSelectFilterArray,
+          model: Filters.multipleSelect,
+          // We can load the "collection" asynchronously (on first load only, after that we will simply use "collection")
+          // 3 ways are supported (aurelia-http-client, aurelia-fetch-client OR even Promise)
+
+          // 1- USE HttpClient from "aurelia-http-client" to load collection asynchronously
+          // collectionAsync: this.http.createRequest(URL_SAMPLE_COLLECTION_DATA).asGet().send(),
+
+          // OR 2- use "aurelia-fetch-client", they are both supported
+          collectionAsync: this.httpFetch.fetch(URL_SAMPLE_COLLECTION_DATA),
+
+          // remove certain value(s) from the select dropdown
+          collectionFilterBy: {
+            property: 'value',
+            operator: OperatorType.notEqual,
+            value: 365
+          },
+
+          // sort the select dropdown in a descending order
           collectionSortBy: {
             property: 'value',
             sortDesc: true,
@@ -95,10 +109,10 @@ export class Example4 {
             value: 'value',
             label: 'label',
             labelSuffix: 'text',
-            addSpaceBetweenLabels: true
           },
-          model: Filters.multipleSelect,
-          searchTerms: [1, 33, 50], // default selection
+          collectionOptions: {
+            separatorBetweenTextLabels: ''
+          },
           // we could add certain option(s) to the "multiple-select" plugin
           filterOptions: {
             maxHeight: 250,
@@ -166,10 +180,10 @@ export class Example4 {
     };
   }
 
-  getData() {
+  mockData(itemCount, startingIndex = 0): any[] {
     // mock a dataset
-    this.dataset = [];
-    for (let i = 0; i < NB_ITEMS; i++) {
+    const tempDataset = [];
+    for (let i = startingIndex; i < (startingIndex + itemCount); i++) {
       const randomDuration = Math.round(Math.random() * 100);
       const randomYear = randomBetween(2000, 2025);
       const randomYearShort = randomBetween(10, 25);
@@ -180,7 +194,7 @@ export class Example4 {
       const randomHour = randomBetween(10, 23);
       const randomTime = randomBetween(10, 59);
 
-      this.dataset[i] = {
+      tempDataset.push({
         id: i,
         title: 'Task ' + i,
         description: (i % 5) ? 'desc ' + i : null, // also add some random to test NULL field
@@ -191,8 +205,10 @@ export class Example4 {
         usDateShort: `${randomMonth}/${randomDay}/${randomYearShort}`, // provide a date US Short in the dataset
         utcDate: `${randomYear}-${randomMonthStr}-${randomDay}T${randomHour}:${randomTime}:${randomTime}Z`,
         effortDriven: (i % 3 === 0)
-      };
+      });
     }
+
+    return tempDataset;
   }
 
   /** Dispatched event of a Grid State Changed event */

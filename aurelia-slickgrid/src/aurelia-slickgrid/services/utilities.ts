@@ -1,3 +1,4 @@
+import { Subscription } from 'aurelia-event-aggregator';
 import { FieldType, OperatorType } from '../models/index';
 import * as moment from 'moment';
 import * as $ from 'jquery';
@@ -73,6 +74,25 @@ export function decimalFormatted(input: number | string, minDecimal?: number, ma
     amount += '0';
   }
   return amount;
+}
+
+/**
+ * Loop through and dispose of all subscriptions when they are disposable
+ * @param subscriptions
+ * @return empty array
+ */
+export function disposeAllSubscriptions(subscriptions: Subscription[]) {
+  subscriptions.forEach((subscription: Subscription) => {
+    if (subscription && subscription.dispose) {
+      subscription.dispose();
+    }
+  });
+  return subscriptions = [];
+}
+
+/** From a dot (.) notation find and return a property within an object given a path */
+export function getDescendantProperty(obj: any, path: string) {
+  return path.split('.').reduce((acc, part) => acc && acc[part], obj);
 }
 
 /**
@@ -388,28 +408,12 @@ export function arraysEqual(a: any[], b: any[], orderMatters: boolean = false): 
 }
 
 /**
- * Compares two objects to determine if all the properties are equal
- * We will do a deep check recursively to make sure all properties really are the same
- * @param x first object
- * @param y second object to compare with a
- */
-export function objectsDeepEqual(x: any, y: any): boolean {
-  const ok = Object.keys;
-  const tx = typeof x;
-  const ty = typeof y;
-  return x && y && tx === 'object' && tx === ty ? (
-    ok(x).length === ok(y).length &&
-    ok(x).every(key => objectsDeepEqual(x[key], y[key]))
-  ) : (x === y);
-}
-
-/**
  * Uses the logic function to find an item in an array or returns the default
  * value provided (empty object by default)
  * @param any[] array the array to filter
  * @param function logic the logic to find the item
  * @param any [defaultVal={}] the default value to return
- * @return object the found object or deafult value
+ * @return object the found object or default value
  */
 export function findOrDefault(array: any[], logic: (item: any) => boolean, defaultVal = {}): any {
   return array.find(logic) || defaultVal;

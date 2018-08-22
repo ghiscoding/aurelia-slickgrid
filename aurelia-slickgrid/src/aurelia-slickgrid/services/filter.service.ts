@@ -17,8 +17,8 @@ import {
   SearchTerm,
   SlickEvent
 } from './../models/index';
-import { objectsDeepEqual } from './utilities';
 import * as $ from 'jquery';
+const isequal = require('lodash.isequal');
 
 // using external non-typed js libraries
 declare var Slick: any;
@@ -352,7 +352,7 @@ export class FilterService {
       }
 
       // trigger an event only if Filters changed
-      if (!objectsDeepEqual(oldColumnFilters, this._columnFilters)) {
+      if (!isequal(oldColumnFilters, this._columnFilters)) {
         this.triggerEvent(this._slickSubscriber, {
           clearFilterTriggered: args && args.clearFilterTriggered,
           columnId,

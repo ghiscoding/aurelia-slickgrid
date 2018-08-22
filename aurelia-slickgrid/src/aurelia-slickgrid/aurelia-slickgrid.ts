@@ -21,6 +21,7 @@ import 'slickgrid/plugins/slick.rowmovemanager';
 import 'slickgrid/plugins/slick.rowselectionmodel';
 
 import { bindable, BindingEngine, bindingMode, Container, Factory, inject } from 'aurelia-framework';
+import { HttpResponseMessage } from 'aurelia-http-client';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
 import { GlobalGridOptions } from './global-grid-options';
 import {
@@ -36,6 +37,7 @@ import {
 } from './models/index';
 import {
   ControlAndPluginService,
+  disposeAllSubscriptions,
   ExportService,
   FilterService,
   GraphqlService,
@@ -45,7 +47,7 @@ import {
   GroupingAndColspanService,
   ResizerService,
   SortService,
-  toKebabCase
+  toKebabCase,
 } from './services/index';
 import * as $ from 'jquery';
 
@@ -143,19 +145,26 @@ export class AureliaSlickgridCustomElement {
     }
 
     // for convenience, we provide the property "editor" as an Aurelia-Slickgrid editor complex object
-    // however "editor" is used internally by SlickGrid for it's Editor Factory
-    // so in our lib we will swap "editor" and copy it into "internalColumnEditor"
+    // however "editor" is used internally by SlickGrid for it's own Editor Factory
+    // so in our lib we will swap "editor" and copy it into a new property called "internalColumnEditor"
     // then take back "editor.model" and make it the new "editor" so that SlickGrid Editor Factory still works
     // Wrap each editor class in the Factory resolver so consumers of this library can use
     // dependency injection. Aurelia will resolve all dependencies when we pass the container
     // and allow slickgrid to pass its arguments to the editors constructor last
     // when slickgrid creates the editor
     // https://github.com/aurelia/dependency-injection/blob/master/src/resolvers.js
-    this._columnDefinitions = this.columnDefinitions.map((c: Column | any) => ({
-      ...c,
-      editor: c.editor && Factory.of(c.editor.model).get(this.container),
-      internalColumnEditor: { ...c.editor }
-    }));
+    this._columnDefinitions = this.columnDefinitions.map((column: Column | any) => {
+      // on every Editor which have a "collection" or a "collectionAsync"
+      if (column.editor && column.editor.collectionAsync) {
+        this.loadEditorCollectionAsync(column);
+      }
+
+      return {
+        ...column,
+        editor: column.editor && Factory.of(column.editor.model).get(this.container),
+        internalColumnEditor: { ...column.editor }
+      };
+    });
 
     this.controlAndPluginService.createCheckboxPluginBeforeGridCreation(this._columnDefinitions, this.gridOptions);
     this.grid = new Slick.Grid(`#${this.gridId}`, this.dataview, this._columnDefinitions, this.gridOptions);
@@ -251,13 +260,8 @@ export class AureliaSlickgridCustomElement {
     });
     this.serviceList = [];
 
-    // also unsubscribe all Subscriptions
-    this.subscriptions.forEach((subscription: Subscription) => {
-      if (subscription && subscription.dispose) {
-        subscription.dispose();
-      }
-    });
-    this.subscriptions = [];
+    // also dispose of all Subscriptions
+    this.subscriptions = disposeAllSubscriptions(this.subscriptions);
   }
 
   dispose(emptyDomElementContainer = false) {
@@ -620,11 +624,58 @@ export class AureliaSlickgridCustomElement {
     this.grid.autosizeColumns();
   }
 
+  //
+  // private functions
+  // ------------------
+
+  /** Dispatch of Custom Event, which by default will bubble & is cancelable */
   private dispatchCustomEvent(eventName: string, data?: any, isBubbling: boolean = true, isCancelable = true): boolean {
     const eventInit: CustomEventInit = { bubbles: isBubbling, cancelable: isCancelable };
     if (data) {
       eventInit.detail = data;
     }
     return this.elm.dispatchEvent(new CustomEvent(eventName, eventInit));
+  }
+
+  /** Load the Editor Collection asynchronously and replace the "collection" property when Promise resolves */
+  private loadEditorCollectionAsync(column: Column): any[] {
+    const collectionAsync = column && column.editor && column.editor.collectionAsync;
+    if (collectionAsync) {
+      // wait for the "collectionAsync", once resolved we will save it into the "collection"
+      // the collectionAsync can be of 3 types HttpClient, HttpFetch or a Promise
+      //
+      collectionAsync.then((response: HttpResponseMessage | Response | any[]) => {
+        if (response instanceof Response && typeof response.json === 'function') {
+          if (response.bodyUsed) {
+            throw new Error('[Aurelia-SlickGrid] The response body passed to collectionAsync was ' +
+                            'already read. Either pass the dataset from the Response ' +
+                            'or clone the response first using response.clone()');
+          }
+
+          (response as Response).json().then(data => this.updateEditorCollection(column, data));
+        } else if (response instanceof HttpResponseMessage) {
+          this.updateEditorCollection(column, response['content']);
+        } else if (Array.isArray(response)) {
+          this.updateEditorCollection(column, response);
+        }
+      });
+    }
+    return [];
+  }
+
+  /**
+   * Update the "internalColumnEditor.collection" property.
+   * Since this is called after the async call resolves, the pointer will not be the same as the "column" argument passed.
+   * Once we found the new pointer, we will reassign the "editor" and "collection" to the "internalColumnEditor" so it has newest collection
+   */
+  private updateEditorCollection(column: Column, newCollection: any[]) {
+    column.editor.collection = newCollection;
+
+    // find the new column reference pointer & reassign the new editor to the internalColumnEditor
+    const columns = this.grid.getColumns();
+    if (Array.isArray(columns)) {
+      const columnRef: Column = columns.find((col: Column) => col.id === column.id);
+      columnRef.internalColumnEditor = column.editor;
+    }
   }
 }
