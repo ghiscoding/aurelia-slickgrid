@@ -533,8 +533,16 @@ export class AureliaSlickgridCustomElement {
     if (gridOptions.enableFiltering) {
       gridOptions.showHeaderRow = true;
     }
-    // use jquery extend to deep merge and avoid immutable properties changed in GlobalGridOptions after route change
-    return $.extend(true, {}, GlobalGridOptions, gridOptions);
+
+    // use jquery extend to deep merge & copy to avoid immutable properties being changed in GlobalGridOptions after a route change
+    const options = $.extend(true, {}, GlobalGridOptions, gridOptions);
+
+    // also make sure to show the header row if user have enabled filtering
+    if (options.enableFiltering && !options.showHeaderRow) {
+      options.showHeaderRow = true;
+    }
+
+    return options;
   }
 
   /**
