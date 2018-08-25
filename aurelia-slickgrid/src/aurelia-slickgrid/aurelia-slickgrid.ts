@@ -589,7 +589,8 @@ export class AureliaSlickgridCustomElement {
 
       // resize the grid inside a slight timeout, in case other DOM element changed prior to the resize (like a filter/pagination changed)
       if (this.grid && this.gridOptions.enableAutoResize) {
-        this.resizerService.resizeGrid(1, { height: this.gridHeight, width: this.gridWidth });
+        const delay = this.gridOptions.autoResize && this.gridOptions.autoResize.delay || 10;
+        this.resizerService.resizeGrid(delay, { height: this.gridHeight, width: this.gridWidth });
       }
     }
   }
@@ -648,8 +649,8 @@ export class AureliaSlickgridCustomElement {
         if (response instanceof Response && typeof response.json === 'function') {
           if (response.bodyUsed) {
             throw new Error('[Aurelia-SlickGrid] The response body passed to collectionAsync was ' +
-                            'already read. Either pass the dataset from the Response ' +
-                            'or clone the response first using response.clone()');
+              'already read. Either pass the dataset from the Response ' +
+              'or clone the response first using response.clone()');
           }
 
           (response as Response).json().then(data => this.updateEditorCollection(column, data));
