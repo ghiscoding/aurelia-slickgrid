@@ -113,6 +113,9 @@ export function mapMomentDateFormatWithFieldType(fieldType: FieldType): string {
     case FieldType.dateTimeIsoAM_PM:
       map = 'YYYY-MM-DD hh:mm:ss A';
       break;
+    case FieldType.dateTimeShortIso:
+      map = 'YYYY-MM-DD HH:mm';
+      break;
     case FieldType.dateUs:
       map = 'MM/DD/YYYY';
       break;
@@ -133,6 +136,9 @@ export function mapMomentDateFormatWithFieldType(fieldType: FieldType): string {
       break;
     case FieldType.dateTimeUsShortAmPm:
       map = 'M/D/YY h:m:s a';
+      break;
+    case FieldType.dateTimeShortUs:
+      map = 'MM/DD/YYYY HH:mm';
       break;
     case FieldType.dateUtc:
       map = 'YYYY-MM-DDTHH:mm:ss.SSSZ';
