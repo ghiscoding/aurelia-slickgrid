@@ -22,8 +22,19 @@ import { disposeAllSubscriptions, getDescendantProperty, htmlEncode } from '../s
 import * as DOMPurify from 'dompurify';
 import * as $ from 'jquery';
 
+// height in pixel of the multiple-select DOM element
+const SELECT_ELEMENT_HEIGHT = 26;
+
 export class SelectFilter implements Filter {
+  /** DOM Element Name, useful for auto-detecting positioning (dropup / dropdown) */
+  elementName: string;
+
+  /** Filter Multiple-Select options */
+  filterElmOptions: MultipleSelectOption;
+
+  /** The JQuery DOM element */
   $filterElm: any;
+
   grid: any;
   searchTerms: SearchTerm[];
   columnDef: Column;
@@ -52,6 +63,7 @@ export class SelectFilter implements Filter {
         const isRenderHtmlEnabled = this.columnDef && this.columnDef.filter && this.columnDef.filter.enableRenderHtml || false;
         return isRenderHtmlEnabled ? $elm.text() : $elm.html();
       },
+      onOpen: () => this.autoAdjustDropPosition(this.filterElmOptions),
       onClose: () => {
         // we will subscribe to the onClose event for triggering our callback
         // also add/remove "filled" class for styling purposes
@@ -180,6 +192,39 @@ export class SelectFilter implements Filter {
   //
   // protected functions
   // ------------------
+
+  /**
+   * Automatically adjust the multiple-select dropup or dropdown by available space
+   */
+  protected autoAdjustDropPosition(multipleSelectOptions: MultipleSelectOption) {
+    // height in pixel of the multiple-select element
+    const selectElmHeight = SELECT_ELEMENT_HEIGHT;
+
+    const windowHeight = $(window).innerHeight() || 300;
+    const pageScroll = $('body').scrollTop() || 0;
+    const $msDrop: any = $(`[name="${this.elementName}"].ms-drop`);
+    const msDropHeight = $msDrop.height() || 0;
+    const msDropOffsetTop = $msDrop.offset().top;
+    const space = windowHeight - (msDropOffsetTop - pageScroll);
+
+    if (space < msDropHeight) {
+      if (multipleSelectOptions.container) {
+        // when using a container, we need to offset the drop ourself
+        // and also make sure there's space available on top before doing so
+        const newOffsetTop = (msDropOffsetTop - msDropHeight - selectElmHeight);
+        if (newOffsetTop > 0) {
+          $msDrop.offset({ top: newOffsetTop < 0 ? 0 : newOffsetTop });
+        }
+      } else {
+        // without container, we simply need to add the "top" class to the drop
+        $msDrop.addClass('top');
+      }
+      $msDrop.removeClass('bottom');
+    } else {
+      $msDrop.addClass('bottom');
+      $msDrop.removeClass('top');
+    }
+  }
 
   /**
    * user might want to filter certain items of the collection
@@ -365,6 +410,12 @@ export class SelectFilter implements Filter {
    * @param filterTemplate
    */
   protected createDomElement(filterTemplate: string) {
+    const fieldId = this.columnDef && this.columnDef.field || this.columnDef && this.columnDef.id;
+
+    // provide the name attribute to the DOM element which will be needed to auto-adjust drop position (dropup / dropdown)
+    this.elementName = `filter_${fieldId}`;
+    this.defaultOptions.name = this.elementName;
+
     const $headerElm = this.grid.getHeaderRowColumn(this.columnDef.id);
     $($headerElm).empty();
 
@@ -373,8 +424,8 @@ export class SelectFilter implements Filter {
     if (typeof this.$filterElm.multipleSelect !== 'function') {
       throw new Error(`multiple-select.js was not found, make sure to read the HOWTO Wiki on how to install it`);
     }
-    this.$filterElm.attr('id', `filter-${this.columnDef.id}`);
-    this.$filterElm.data('columnId', this.columnDef.id);
+    this.$filterElm.attr('id', this.elementName);
+    this.$filterElm.data('columnId', fieldId);
 
     // if there's a search term, we will add the "filled" class for styling purposes
     if (this.isFilled) {
@@ -388,7 +439,7 @@ export class SelectFilter implements Filter {
 
     // merge options & attach multiSelect
     const filterOptions = (this.columnFilter) ? this.columnFilter.filterOptions : {};
-    const options: MultipleSelectOption = { ...this.defaultOptions, ...filterOptions };
-    this.$filterElm = this.$filterElm.multipleSelect(options);
+    this.filterElmOptions = { ...this.defaultOptions, ...filterOptions };
+    this.$filterElm = this.$filterElm.multipleSelect(this.filterElmOptions);
   }
 }
