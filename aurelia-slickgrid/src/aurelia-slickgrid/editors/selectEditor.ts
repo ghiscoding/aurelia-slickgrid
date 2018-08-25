@@ -30,6 +30,9 @@ export class SelectEditor implements Editor {
   /** Editor Multiple-Select options */
   editorElmOptions: MultipleSelectOption;
 
+  /** DOM Element Name, useful for auto-detecting positioning (dropup / dropdown) */
+  elementName: string;
+
   /** The multiple-select options for a multiple select list */
   defaultOptions: MultipleSelectOption;
 
@@ -60,14 +63,19 @@ export class SelectEditor implements Editor {
   constructor(protected bindingEngine: BindingEngine, protected collectionService: CollectionService, protected i18n: I18N, protected args: any, protected isMultipleSelect = true) {
     this.gridOptions = this.args.grid.getOptions() as GridOption;
 
+    // provide the name attribute to the DOM element which will be needed to auto-adjust drop position (dropup / dropdown)
+    const fieldId = this.columnDef && this.columnDef.field || this.columnDef && this.columnDef.id;
+    this.elementName = `editor_${fieldId}`;
+
     const libOptions: MultipleSelectOption = {
       container: 'body',
       filter: false,
       maxHeight: 200,
+      name: this.elementName,
       width: 150,
       offsetLeft: 20,
       single: true,
-      onOpen: () => this.autoAdjustDropPosition(this.$editorElm, this.editorElmOptions),
+      onOpen: () => this.autoAdjustDropPosition(this.editorElmOptions),
       textTemplate: ($elm) => {
         // render HTML code or not, by default it is sanitized and won't be rendered
         const isRenderHtmlEnabled = this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.enableRenderHtml || false;
@@ -322,14 +330,13 @@ export class SelectEditor implements Editor {
   /**
    * Automatically adjust the multiple-select dropup or dropdown by available space
    */
-  protected autoAdjustDropPosition(multipleSelectDomElement: any, multipleSelectOptions: MultipleSelectOption) {
+  protected autoAdjustDropPosition(multipleSelectOptions: MultipleSelectOption) {
     // height in pixel of the multiple-select element
     const selectElmHeight = SELECT_ELEMENT_HEIGHT;
 
     const windowHeight = $(window).innerHeight() || 300;
     const pageScroll = $('body').scrollTop() || 0;
-    const $msDropContainer = multipleSelectOptions.container ? $(multipleSelectOptions.container) : multipleSelectDomElement;
-    const $msDrop = $msDropContainer.find('.ms-drop');
+    const $msDrop: any = $(`[name="${this.elementName}"].ms-drop`);
     const msDropHeight = $msDrop.height() || 0;
     const msDropOffsetTop = $msDrop.offset().top;
     const space = windowHeight - (msDropOffsetTop - pageScroll);
@@ -385,7 +392,7 @@ export class SelectEditor implements Editor {
       options += `<option value="${option[this.valueName]}">${optionText}</option>`;
     });
 
-    return `<select class="ms-filter search-filter" ${this.isMultipleSelect ? 'multiple="multiple"' : ''}>${options}</select>`;
+    return `<select id="${this.elementName}" class="ms-filter search-filter" ${this.isMultipleSelect ? 'multiple="multiple"' : ''}>${options}</select>`;
   }
 
   /** Create a blank entry that can be added to the collection. It will also reuse the same collection structure provided by the user */
