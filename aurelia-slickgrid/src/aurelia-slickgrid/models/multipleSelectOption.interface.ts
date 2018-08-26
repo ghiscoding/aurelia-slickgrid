@@ -8,8 +8,17 @@ export interface MultipleSelectOption {
   /** The text displays when the select all selected.By default this option is set to "All selected". */
   allSelected?: boolean | string;
 
-  /** Drop menu to automatically get same width as the input select element */
+  /** Auto-adjust the Drop menu height to fit with available space */
+  autoDropHeight?: boolean;
+
+  /** Auto-adjust the Drop position on the side with the most available space (dropup / dropdown) */
+  autoDropPosition?: boolean;
+
+  /** Drop menu to automatically set same width as the input select element */
   autoDropWidth?: boolean;
+
+  /** Drop menu to automatically set it's width as the maximum available width of text */
+  autoDropWidthByTextSize?: boolean;
 
   /** HTML container to use for the drop menu, e.g. 'body' */
   container?: string;

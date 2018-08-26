@@ -24,6 +24,8 @@ import * as $ from 'jquery';
 
 // height in pixel of the multiple-select DOM element
 const SELECT_ELEMENT_HEIGHT = 26;
+const SELECT_OK_BUTTON_HEIGHT = 26;
+const SELECT_ALL_HEIGHT = 39;
 
 export class SelectFilter implements Filter {
   /** DOM Element Name, useful for auto-detecting positioning (dropup / dropdown) */
@@ -57,13 +59,16 @@ export class SelectFilter implements Filter {
       container: 'body',
       filter: false,  // input search term on top of the select option list
       maxHeight: 200,
+      autoDropHeight: true,
+      autoDropPosition: true,
+      autoDropWidthByTextSize: true,
       single: true,
       textTemplate: ($elm) => {
         // render HTML code or not, by default it is sanitized and won't be rendered
         const isRenderHtmlEnabled = this.columnDef && this.columnDef.filter && this.columnDef.filter.enableRenderHtml || false;
         return isRenderHtmlEnabled ? $elm.text() : $elm.html();
       },
-      onOpen: () => this.autoAdjustDropPosition(this.filterElmOptions),
+      // onOpen: () => this.autoAdjustDropPosition(this.filterElmOptions),
       onClose: () => {
         // we will subscribe to the onClose event for triggering our callback
         // also add/remove "filled" class for styling purposes
@@ -199,15 +204,22 @@ export class SelectFilter implements Filter {
   protected autoAdjustDropPosition(multipleSelectOptions: MultipleSelectOption) {
     // height in pixel of the multiple-select element
     const selectElmHeight = SELECT_ELEMENT_HEIGHT;
+    const okButtonHeight = this.defaultOptions.okButton ? SELECT_OK_BUTTON_HEIGHT : 0;
+    const selectAllHeight = this.isMultipleSelect ? SELECT_ALL_HEIGHT : 0;
+    const msDropMinimalHeight = okButtonHeight + selectAllHeight + 7;
 
     const windowHeight = $(window).innerHeight() || 300;
     const pageScroll = $('body').scrollTop() || 0;
     const $msDrop: any = $(`[name="${this.elementName}"].ms-drop`);
     const msDropHeight = $msDrop.height() || 0;
     const msDropOffsetTop = $msDrop.offset().top;
-    const space = windowHeight - (msDropOffsetTop - pageScroll);
+    const spaceBottom = windowHeight - (msDropOffsetTop - pageScroll);
+    const spaceTop = msDropOffsetTop - SELECT_ELEMENT_HEIGHT;
 
-    if (space < msDropHeight) {
+    if ((spaceBottom < msDropHeight) && (spaceBottom > 200)) {
+      const newHeight = spaceBottom - msDropMinimalHeight;
+      $msDrop.find('ul').css('max-height', newHeight + 'px');
+    } else if (spaceBottom < msDropHeight && spaceTop > msDropHeight) {
       if (multipleSelectOptions.container) {
         // when using a container, we need to offset the drop ourself
         // and also make sure there's space available on top before doing so

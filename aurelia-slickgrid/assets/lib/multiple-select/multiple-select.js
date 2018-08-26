@@ -12,9 +12,16 @@
  * - "okButtonText" was also added to change locale
  * - made code changes to support re-styling of the radio/checkbox with Font-Awesome or any other font
  * - width option was not working when using "container", added some code to support it
- * - "offsetLeft" (default to 0) if we want the drop to be offset from the select element (by default it is aligned left to the element with 0 offset)
- * - "autoDropWidth" (default to False) when set will automatically adjust the dropdown with the same size as the select element width
+ * - "offsetLeft" (defaults to 0) if we want the drop to be offset from the select element (by default it is aligned left to the element with 0 offset)
+ * - "autoDropWidth" (defaults to False) when set will automatically adjust the dropdown width with the same size as the select element width
+ * - "autoDropWidthByTextSize" (defaults to false) when set will automatically adjust the dropdown width by the text size (will use largest text width)
+ * - "maxWidth" (defaults to 500) when using "autoDropWidthByTextSize" we want to make sure not to go too wide, so we can use "maxWidth" to cover that
  */
+
+// declare size constants in pixels
+var SELECT_SIDE_PADDING = 26;
+var SELECT_OK_BUTTON_HEIGHT = 26;
+var SELECT_ALL_HEIGHT = 39;
 
 (function ($) {
 
@@ -470,8 +477,19 @@
         });
       }
 
-      if (this.options.autoDropWidth && !this.options.width) {
+      if (!this.options.autoDropWidth && this.options.autoDropWidthByTextSize) {
+        this.adjustDropWidthByText();
+      } else if (!this.options.width && this.options.autoDropWidth) {
         this.$drop.css('width', this.$parent.width());
+      }
+
+      var newPosition = this.options.position;
+      if (this.options.autoDropPosition) {
+        newPosition = this.adjustDropPosition(this.options.autoDropHeight);
+      }
+      if (this.options.autoDropHeight) {
+        console.log(newPosition)
+        this.adjustDropHeight(newPosition);
       }
 
       if (this.options.container) {
@@ -490,6 +508,7 @@
         this.$searchInput.focus();
         this.filter();
       }
+
       this.options.onOpen();
     },
 
@@ -520,6 +539,93 @@
       };
 
       return methods[method][this.options.animate] || method;
+    },
+
+    adjustDropHeight: function (position) {
+      var isDropPositionBottom = position !== 'top' ? true : false;
+      var okButtonHeight = this.options.okButton ? SELECT_OK_BUTTON_HEIGHT : 0;
+      var selectAllHeight = this.options.single ? 0 : SELECT_ALL_HEIGHT;
+      var msDropMinimalHeight = okButtonHeight + selectAllHeight + 5;
+
+      var msDropHeight = this.$drop.height() || 0;
+      var spaceBottom = this.availableSpaceBottom();
+      var spaceTop = this.availableSpaceTop();
+      console.log(spaceTop)
+
+      var newHeight = this.options.minHeight;
+      if (isDropPositionBottom) {
+        newHeight = spaceBottom - msDropMinimalHeight;
+      } else {
+        newHeight = spaceTop - msDropMinimalHeight;
+      }
+
+      if (this.options.maxHeight && newHeight > this.options.minHeight) {
+        if ((isDropPositionBottom && spaceBottom < msDropHeight) || (!isDropPositionBottom && spaceTop < msDropHeight)) {
+          this.$drop.find('ul').css('max-height', (newHeight + 'px'));
+        }
+      }
+    },
+
+    adjustDropPosition: function (forceToggle) {
+      var position = 'bottom';
+      var msDropHeight = this.$drop.height() || 0;
+      var msDropOffsetTop = this.$drop.offset().top;
+      var spaceBottom = this.availableSpaceBottom();
+      var spaceTop = this.availableSpaceTop();
+
+      if (spaceTop > spaceBottom) {
+        if (this.options.container) {
+          // when using a container, we need to offset the drop ourself
+          // and also make sure there's space available on top before doing so
+          var newOffsetTop = (msDropOffsetTop - msDropHeight - this.options.filterHeight);
+          if (newOffsetTop > 0 || forceToggle) {
+            position = 'top';
+            this.$drop.offset({ top: newOffsetTop < 0 ? 0 : newOffsetTop });
+          }
+        } else {
+          // without container, we simply need to add the "top" class to the drop
+          position = 'top';
+          this.$drop.addClass(position);
+        }
+        this.$drop.removeClass('bottom');
+      } else {
+        position = 'bottom';
+        this.$drop.addClass(position);
+        this.$drop.removeClass('top');
+      }
+
+      return position;
+    },
+
+    adjustDropWidthByText: function () {
+      var selectAllWidth = $('span', this.$drop).width() + SELECT_SIDE_PADDING;
+      var maxDropWidth = 0;
+
+      $('li span', this.$drop).each((index, elm) => {
+        var spanWidth = $(elm).width();
+        if (spanWidth > maxDropWidth) {
+          maxDropWidth = spanWidth;
+        }
+      });
+      maxDropWidth += SELECT_SIDE_PADDING + 20; // add a padding which should include the browser scrolling width
+      if (maxDropWidth < selectAllWidth) {
+        maxDropWidth = selectAllWidth;
+      }
+
+      if (!this.options.dropWidth || (this.options.dropWidth && (maxDropWidth < this.options.maxWidth))) {
+        this.$drop.css('width', maxDropWidth);
+      }
+    },
+
+    availableSpaceBottom: function () {
+      var windowHeight = $(window).innerHeight() || this.options.maxHeight;
+      var pageScroll = $('body').scrollTop() || 0;
+      var msDropOffsetTop = this.$drop.offset().top;
+      return windowHeight - (msDropOffsetTop - pageScroll);
+    },
+
+    availableSpaceTop: function () {
+      return this.$parent.offset().top;
     },
 
     update: function (isInit) {
@@ -773,11 +879,17 @@
     multipleWidth: 80,
     single: false,
     filter: false,
+    filterHeight: 26,
     offsetLeft: 0,
+    autoDropHeight: false,
+    autoDropPosition: false,
     autoDropWidth: false,
+    autoDropWidthByTextSize: false,
     width: undefined,
     dropWidth: undefined,
     maxHeight: 250,
+    maxWidth: 500,
+    minHeight: 175,
     container: null,
     position: 'bottom',
     keepOpen: false,
