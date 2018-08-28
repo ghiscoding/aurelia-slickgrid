@@ -13,15 +13,16 @@
  * - made code changes to support re-styling of the radio/checkbox with Font-Awesome or any other font
  * - width option was not working when using "container", added some code to support it
  * - "offsetLeft" (defaults to 0) if we want the drop to be offset from the select element (by default it is aligned left to the element with 0 offset)
+ * - "autoDropHeight" (defaults to False) when set will automatically adjust the drop (up or down) height
+ * - "autoDropPosition" (defaults to False) when set will automatically calculate the area with the most available space and use best possible choise for the drop to show (up or down)
  * - "autoDropWidth" (defaults to False) when set will automatically adjust the dropdown width with the same size as the select element width
- * - "autoDropWidthByTextSize" (defaults to false) when set will automatically adjust the dropdown width by the text size (will use largest text width)
+ * - "autoDropWidthByTextSize" (defaults to false) when set will automatically adjust the drop (up or down) width by the text size (it will use largest text width)
  * - "maxWidth" (defaults to 500) when using "autoDropWidthByTextSize" we want to make sure not to go too wide, so we can use "maxWidth" to cover that
+ * - "minWidth" (defaults to undefined) when using "autoDropWidthByTextSize" and we want to make sure to have a minimum width
+ * - "domElmOkButtonHeight" defaults to 26 (as per CSS), that is the "OK" button element height in pixels inside the drop when using multiple-selection
+ * - "domElmSelectSidePadding" defaults to 26 (as per CSS), that is the select DOM element padding in pixels (that is not the drop but the select itself, how tall is it)
+ * - "domElmSelectAllHeight" defaults to 39 (as per CSS), that is the DOM element of the "Select All" text area
  */
-
-// declare size constants in pixels
-var SELECT_SIDE_PADDING = 26;
-var SELECT_OK_BUTTON_HEIGHT = 26;
-var SELECT_ALL_HEIGHT = 39;
 
 (function ($) {
 
@@ -483,15 +484,6 @@ var SELECT_ALL_HEIGHT = 39;
         this.$drop.css('width', this.$parent.width());
       }
 
-      var newPosition = this.options.position;
-      if (this.options.autoDropPosition) {
-        newPosition = this.adjustDropPosition(this.options.autoDropHeight);
-      }
-      if (this.options.autoDropHeight) {
-        console.log(newPosition)
-        this.adjustDropHeight(newPosition);
-      }
-
       if (this.options.container) {
         var offset = this.$drop.offset();
         var leftPos = this.options.offsetLeft ? (offset.left - this.options.offsetLeft) : offset.left;
@@ -507,6 +499,17 @@ var SELECT_ALL_HEIGHT = 39;
         this.$searchInput.val('');
         this.$searchInput.focus();
         this.filter();
+      }
+
+      var newPosition = this.options.position;
+      if (this.options.autoDropPosition) {
+        newPosition = this.adjustDropPosition(this.options.autoDropHeight);
+      }
+      if (this.options.autoDropHeight) {
+        if (this.adjustDropHeight(newPosition)) {
+          // we adjusted the height, we might need to reposition the drop
+          this.adjustDropPosition(this.options.autoDropHeight);
+        }
       }
 
       this.options.onOpen();
@@ -543,44 +546,51 @@ var SELECT_ALL_HEIGHT = 39;
 
     adjustDropHeight: function (position) {
       var isDropPositionBottom = position !== 'top' ? true : false;
-      var okButtonHeight = this.options.okButton ? SELECT_OK_BUTTON_HEIGHT : 0;
-      var selectAllHeight = this.options.single ? 0 : SELECT_ALL_HEIGHT;
+      var okButtonHeight = this.options.single ? 0 : this.options.domElmOkButtonHeight;
+      var selectAllHeight = this.options.single ? 0 : this.options.domElmSelectAllHeight;
       var msDropMinimalHeight = okButtonHeight + selectAllHeight + 5;
 
-      var msDropHeight = this.$drop.height() || 0;
+      var msDropHeight = this.$drop.outerHeight() || 0;
       var spaceBottom = this.availableSpaceBottom();
       var spaceTop = this.availableSpaceTop();
-      console.log(spaceTop)
 
-      var newHeight = this.options.minHeight;
+      var newHeight = this.options.maxHeight;
       if (isDropPositionBottom) {
         newHeight = spaceBottom - msDropMinimalHeight;
       } else {
         newHeight = spaceTop - msDropMinimalHeight;
       }
 
-      if (this.options.maxHeight && newHeight > this.options.minHeight) {
+      if (this.options.maxHeight && newHeight) {
         if ((isDropPositionBottom && spaceBottom < msDropHeight) || (!isDropPositionBottom && spaceTop < msDropHeight)) {
           this.$drop.find('ul').css('max-height', (newHeight + 'px'));
+          return true; // return true, we adjusted the height
         }
       }
+
+      // did we adjusted the drop height? false
+      return false;
     },
 
     adjustDropPosition: function (forceToggle) {
       var position = 'bottom';
-      var msDropHeight = this.$drop.height() || 0;
-      var msDropOffsetTop = this.$drop.offset().top;
+      var msDropHeight = this.$drop.outerHeight() || 0;
+      var selectOffsetTop = this.$parent.offset().top;
       var spaceBottom = this.availableSpaceBottom();
       var spaceTop = this.availableSpaceTop();
 
-      if (spaceTop > spaceBottom) {
+      // find the optimal position of the drop (always choose "bottom" as the default to use)
+      if (spaceBottom > msDropHeight) {
+        position = 'bottom';
+      } else if ((msDropHeight > spaceBottom) && (spaceTop > spaceBottom)) {
         if (this.options.container) {
           // when using a container, we need to offset the drop ourself
           // and also make sure there's space available on top before doing so
-          var newOffsetTop = (msDropOffsetTop - msDropHeight - this.options.filterHeight);
+          var newOffsetTop = selectOffsetTop - msDropHeight;
+
           if (newOffsetTop > 0 || forceToggle) {
             position = 'top';
-            this.$drop.offset({ top: newOffsetTop < 0 ? 0 : newOffsetTop });
+            this.$drop.offset({ top: (newOffsetTop < 0) ? 0 : newOffsetTop });
           }
         } else {
           // without container, we simply need to add the "top" class to the drop
@@ -588,17 +598,19 @@ var SELECT_ALL_HEIGHT = 39;
           this.$drop.addClass(position);
         }
         this.$drop.removeClass('bottom');
-      } else {
-        position = 'bottom';
-        this.$drop.addClass(position);
-        this.$drop.removeClass('top');
       }
 
       return position;
     },
 
     adjustDropWidthByText: function () {
-      var selectAllWidth = $('span', this.$drop).width() + SELECT_SIDE_PADDING;
+      // if the dropWidth or width is specified, we won't adjust anything here
+      if (this.options.dropWidth || this.options.width) {
+        return;
+      }
+
+      // calculate the "Select All" element width, this text is configurable which is why we recalculate every time
+      var selectAllElmWidth = $('span', this.$drop).width() + this.options.domElmSelectSidePadding;
       var maxDropWidth = 0;
 
       $('li span', this.$drop).each((index, elm) => {
@@ -607,14 +619,25 @@ var SELECT_ALL_HEIGHT = 39;
           maxDropWidth = spanWidth;
         }
       });
-      maxDropWidth += SELECT_SIDE_PADDING + 20; // add a padding which should include the browser scrolling width
-      if (maxDropWidth < selectAllWidth) {
-        maxDropWidth = selectAllWidth;
+      maxDropWidth += this.options.domElmSelectSidePadding + 20; // add a padding & include the browser scrolling width as well
+
+      // make sure the new calculated width is wide enough to include the "Select All" text (this text is configurable)
+      if (maxDropWidth < selectAllElmWidth) {
+        maxDropWidth = selectAllElmWidth;
       }
 
-      if (!this.options.dropWidth || (this.options.dropWidth && (maxDropWidth < this.options.maxWidth))) {
-        this.$drop.css('width', maxDropWidth);
+      // if a maxWidth is defined, make sure our new calculate width is not over the maxWidth
+      if (this.options.maxWidth && maxDropWidth > this.options.maxWidth) {
+        maxDropWidth = this.options.maxWidth;
       }
+
+      // if a minWidth is defined, make sure our new calculate width is not below the minWidth
+      if (this.options.minWidth && maxDropWidth < this.options.minWidth) {
+        maxDropWidth = this.options.minWidth;
+      }
+
+      // finally re-adjust the drop to the new calculated width
+      this.$drop.css('width', maxDropWidth);
     },
 
     availableSpaceBottom: function () {
@@ -868,6 +891,9 @@ var SELECT_ALL_HEIGHT = 39;
   };
 
   $.fn.multipleSelect.defaults = {
+    domElmSelectSidePadding: 26,
+    domElmOkButtonHeight: 26,
+    domElmSelectAllHeight: 39,
     name: '',
     isOpen: false,
     placeholder: '',
@@ -879,7 +905,6 @@ var SELECT_ALL_HEIGHT = 39;
     multipleWidth: 80,
     single: false,
     filter: false,
-    filterHeight: 26,
     offsetLeft: 0,
     autoDropHeight: false,
     autoDropPosition: false,
@@ -889,7 +914,7 @@ var SELECT_ALL_HEIGHT = 39;
     dropWidth: undefined,
     maxHeight: 250,
     maxWidth: 500,
-    minHeight: 175,
+    minWidth: undefined,
     container: null,
     position: 'bottom',
     keepOpen: false,

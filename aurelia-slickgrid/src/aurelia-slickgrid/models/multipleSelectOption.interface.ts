@@ -53,8 +53,14 @@ export interface MultipleSelectOption {
   /** Keep the select dropdown always open.By default this option is set to false. */
   keepOpen?: boolean;
 
-  /** Define the maximum height property of the dropdown list.By default this option is set to 250. */
+  /** Defaults to 250, define the maximum height property of the dropdown list. */
   maxHeight?: number;
+
+  /** Defaults to 500, define the maximum width of the drop when using the "autoDropWidthByTextSize: true" flag. */
+  maxWidth?: number;
+
+  /** Define the minimum width of the drop when using the "autoDropWidthByTextSize: true" flag. */
+  minWidth?: number;
 
   /** countSelected will be shown only if more than X items where selected.By default this option is set to 3. */
   minimumCountSelected?: number;
