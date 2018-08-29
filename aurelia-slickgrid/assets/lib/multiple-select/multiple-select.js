@@ -655,7 +655,7 @@
       }
 
       // finally re-adjust the drop to the new calculated width
-      this.$drop.css('max-width', maxDropWidth);
+      this.$drop.css({ 'width': maxDropWidth, 'max-width': maxDropWidth });
     },
 
     availableSpaceBottom: function () {
