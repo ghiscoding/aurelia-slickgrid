@@ -620,6 +620,7 @@
       }
 
       // calculate the "Select All" element width, this text is configurable which is why we recalculate every time
+      var selectParentWidth = this.$parent.width();
       var selectAllElmWidth = $('span', this.$drop).width() + this.options.domElmSelectSidePadding;
       var hasScrollbar = $('ul', this.$drop).hasScrollBar();
       var scrollbarWidth = hasScrollbar ? this.getScrollbarWidth() : 0;
@@ -646,6 +647,11 @@
       // if a minWidth is defined, make sure our new calculate width is not below the minWidth
       if (this.options.minWidth && maxDropWidth < this.options.minWidth) {
         maxDropWidth = this.options.minWidth;
+      }
+
+      // if select parent DOM element is bigger then new calculated width, we'll use the same width for the drop as the parent
+      if (maxDropWidth < selectParentWidth) {
+        maxDropWidth = selectParentWidth;
       }
 
       // finally re-adjust the drop to the new calculated width

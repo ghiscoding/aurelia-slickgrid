@@ -73,7 +73,7 @@ export class SelectEditor implements Editor {
       autoAdjustDropWidthByTextSize: true,
       container: 'body',
       filter: false,
-      maxHeight: 200,
+      maxHeight: 275,
       name: this.elementName,
       single: true,
       textTemplate: ($elm) => {

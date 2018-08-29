@@ -56,7 +56,7 @@ export class SelectFilter implements Filter {
       autoAdjustDropWidthByTextSize: true,
       container: 'body',
       filter: false,  // input search term on top of the select option list
-      maxHeight: 200,
+      maxHeight: 275,
       single: true,
       textTemplate: ($elm) => {
         // render HTML code or not, by default it is sanitized and won't be rendered
