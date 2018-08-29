@@ -51,9 +51,9 @@ export class SelectFilter implements Filter {
   constructor(protected bindingEngine: BindingEngine, protected collectionService: CollectionService, protected i18n: I18N, protected isMultipleSelect = true) {
     // default options used by this Filter, user can overwrite any of these by passing "otions"
     const options: MultipleSelectOption = {
-      autoDropHeight: true,
-      autoDropPosition: true,
-      autoDropWidthByTextSize: true,
+      autoAdjustDropHeight: true,
+      autoAdjustDropPosition: true,
+      autoAdjustDropWidthByTextSize: true,
       container: 'body',
       filter: false,  // input search term on top of the select option list
       maxHeight: 200,
