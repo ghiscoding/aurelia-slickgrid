@@ -244,9 +244,6 @@ export class Example3 {
       },
       filter: {
         model: Filters.multipleSelect,
-        filterOptions: {
-          autoDropWidth: true
-        },
         operator: OperatorType.inContains,
         collection: Array.from(Array(12).keys()).map(k => ({ value: `Task ${k}`, label: `Task ${k}` }))
       }

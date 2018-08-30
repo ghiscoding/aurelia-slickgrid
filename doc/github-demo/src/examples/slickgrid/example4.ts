@@ -133,12 +133,7 @@ export class Example4 {
           // collection: [{ value: '', label: '' }, { value: true, label: 'True', labelPrefix: `<i class="fa fa-check"></i> ` }, { value: false, label: 'False' }],
 
           collection: [{ value: '', label: '' }, { value: true, label: 'True' }, { value: false, label: 'False' }],
-          model: Filters.singleSelect,
-
-          // we could add certain option(s) to the "multiple-select" plugin
-          filterOptions: {
-            autoDropWidth: true
-          },
+          model: Filters.singleSelect
         }
       }
     ];

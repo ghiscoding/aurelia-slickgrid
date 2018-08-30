@@ -119,12 +119,7 @@ export class Example15 {
         filterable: true,
         filter: {
           collection: [{ value: '', label: '' }, { value: true, label: 'True' }, { value: false, label: 'False' }],
-          model: Filters.singleSelect,
-
-          // we could add certain option(s) to the "multiple-select" plugin
-          filterOptions: {
-            autoDropWidth: true
-          }
+          model: Filters.singleSelect
         }
       }
     ];

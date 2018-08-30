@@ -226,10 +226,7 @@ export class Example3 {
       type: FieldType.boolean,
       filter: {
         model: Filters.singleSelect,
-        collection: [{ value: '', label: '' }, { value: true, label: 'True' }, { value: false, label: 'False' }],
-        filterOptions: {
-          autoDropWidth: true
-        }
+        collection: [{ value: '', label: '' }, { value: true, label: 'True' }, { value: false, label: 'False' }]
       },
       formatter: Formatters.checkmark,
       editor: {

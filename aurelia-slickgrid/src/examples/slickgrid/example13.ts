@@ -139,7 +139,7 @@ export class Example13 {
 
           // we could add certain option(s) to the "multiple-select" plugin
           filterOptions: {
-            autoDropWidth: true
+            maxHeight: 250
           },
         }
       }

@@ -83,10 +83,7 @@ export class Example12 {
         filter: {
           collection: [{ value: '', label: '' }, { value: true, labelKey: 'TRUE' }, { value: false, labelKey: 'FALSE' }],
           model: Filters.singleSelect,
-          enableTranslateLabel: true,
-          filterOptions: {
-            autoDropWidth: true
-          }
+          enableTranslateLabel: true
         }
       },
       {
@@ -101,10 +98,7 @@ export class Example12 {
             sortDesc: true
           },
           model: Filters.singleSelect,
-          enableTranslateLabel: true,
-          filterOptions: {
-            autoDropWidth: true
-          }
+          enableTranslateLabel: true
         }
       }
       // OR via your own custom translate formatter

@@ -151,7 +151,7 @@ export class Example4 {
 
           // we could add certain option(s) to the "multiple-select" plugin
           filterOptions: {
-            autoDropWidth: true
+            maxHeight: 250
           },
         }
       }
