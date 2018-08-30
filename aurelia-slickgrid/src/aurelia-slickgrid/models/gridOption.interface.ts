@@ -1,14 +1,12 @@
 import { I18N } from 'aurelia-i18n';
 import {
   AutoResizeOption,
-  BackendEventChanged,
   BackendServiceApi,
   Column,
   ColumnPicker,
   CheckboxSelector,
   EditCommand,
   ExportOption,
-  Filter,
   GridMenu,
   GridState,
   HeaderButton,
@@ -38,11 +36,11 @@ export interface GridOption {
   /** Defaults to false, when enabled will automatically open the inlined editor as soon as there is a focus on the cell (can be combined with "enableCellNavigation: true"). */
   autoEdit?: boolean;
 
-  /** Defaults to false, when enabled will automatically adjust grid height. */
-  autoHeight?: boolean;
-
   /** Defaults to true, which leads to automatically adjust the size of each column with the available space. Similar to "Force Fit Column" but only happens on first page/component load. */
   autoFitColumnsOnFirstLoad?: boolean;
+
+  /** Defaults to false, when enabled will automatically adjust grid height. */
+  autoHeight?: boolean;
 
   /** Auto-resize options (bottom padding, minHeight, ...)  */
   autoResize?: AutoResizeOption;
@@ -77,11 +75,11 @@ export interface GridOption {
   /** Checkbox Select Plugin options (columnTitle, forceFitTitle, syncResizeTitle) */
   columnPicker?: ColumnPicker;
 
-  /** Default to false, which leads to create an extra pre-header panel (on top of column header) for column grouping purposes */
-  createPreHeaderPanel?: boolean;
-
   /** Defaults to false, which leads to create the footer row of the grid */
   createFooterRow?: boolean;
+
+  /** Default to false, which leads to create an extra pre-header panel (on top of column header) for column grouping purposes */
+  createPreHeaderPanel?: boolean;
 
   /** Data item column value extractor (getter) that can be used by the Excel like copy buffer plugin */
   dataItemColumnValueExtractor?: (item: any, columnDef: Column) => any;
@@ -134,8 +132,11 @@ export interface GridOption {
   /** Defaults to false, which leads to cleanup after the post render is finished executing */
   enableAsyncPostRenderCleanup?: boolean;
 
-  /** Defaults to true, which will automatically resize the grid whenever the browser size changes  */
+  /** Defaults to true, which will automatically resize the grid whenever the browser size changes */
   enableAutoResize?: boolean;
+
+  /** Defaults to true, which will automatically resize the column headers whenever the grid size changes */
+  enableAutoSizeColumns?: boolean;
 
   /** Defaults to false, which leads to showing tooltip over cell & header values that are not shown completely (... ellipsis) */
   enableAutoTooltip?: boolean;
@@ -158,14 +159,14 @@ export interface GridOption {
   /** Do we want to enable the Export to File? (if Yes, it will show up in the Grid Menu) */
   enableExport?: boolean;
 
-  /** Defaults to false, do we want to enable the Grouping & Aggregator? */
-  enableGrouping?: boolean;
-
   /** Do we want to enable Filters? */
   enableFiltering?: boolean;
 
   /** Do we want to enable Grid Menu (aka hamburger menu) */
   enableGridMenu?: boolean;
+
+  /** Defaults to false, do we want to enable the Grouping & Aggregator? */
+  enableGrouping?: boolean;
 
   /** Do we want to enable Header Buttons? (buttons with commands that can be shown beside each column)  */
   enableHeaderButton?: boolean;
@@ -248,7 +249,7 @@ export interface GridOption {
   /** Defaults to true, which will display numbers indicating column sort precedence are displayed in the columns when multiple columns selected */
   numberedMultiColumnSort?: boolean;
 
-  /** Pagination options, these are used ONLY with a Backend Service API (GraphQL/OData Services) */
+  /** Pagination options, these are currently used ONLY with a Backend Service API (GraphQL/OData Services) */
   pagination?: Pagination;
 
   /** "params" is a generic property and can be used to pass custom paramaters to your Formatter/Editor or anything else */

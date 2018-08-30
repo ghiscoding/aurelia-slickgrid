@@ -158,7 +158,7 @@ export class ResizerService {
           }
 
           // also call the grid auto-size columns so that it takes available when going bigger
-          if (this._grid && typeof this._grid.autosizeColumns === 'function') {
+          if (this._grid && this._gridOptions && this._gridOptions.enableAutoSizeColumns && typeof this._grid.autosizeColumns === 'function') {
             this._grid.autosizeColumns();
           }
 

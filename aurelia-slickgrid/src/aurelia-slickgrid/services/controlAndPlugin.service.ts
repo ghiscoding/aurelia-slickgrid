@@ -346,7 +346,9 @@ export class ControlAndPluginService {
             // make sure that the grid still exist (by looking if the Grid UID is found in the DOM tree)
             const gridUid = grid.getUID();
             if (this.areVisibleColumnDifferent && gridUid && $(`.${gridUid}`).length > 0) {
-              grid.autosizeColumns();
+              if (this._gridOptions && this._gridOptions.enableAutoSizeColumns) {
+                grid.autosizeColumns();
+              }
               this.areVisibleColumnDifferent = false;
             }
           }
@@ -622,7 +624,9 @@ export class ControlAndPluginService {
       switch (args.command) {
         case 'hide':
           this.hideColumn(args.column);
-          this.autoResizeColumns();
+          if (this._gridOptions && this._gridOptions.enableAutoSizeColumns) {
+            this._grid.autosizeColumns();
+          }
           break;
         case 'sort-asc':
         case 'sort-desc':

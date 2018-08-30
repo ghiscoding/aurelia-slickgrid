@@ -29,6 +29,7 @@ export const GlobalGridOptions: GridOption = {
   defaultFilterPlaceholder: '&#128269;', // magnifying glass icon
   defaultFilter: Filters.input,
   enableAutoResize: true,
+  enableAutoSizeColumns: true,
   enableHeaderMenu: true,
   enableRowSelection: true,
   editable: false,

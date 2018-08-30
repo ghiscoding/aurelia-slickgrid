@@ -504,7 +504,7 @@ export class AureliaSlickgridCustomElement {
 
   attachResizeHook(grid: any, options: GridOption) {
     // expand/autofit columns on first page load
-    if (grid && options.autoFitColumnsOnFirstLoad && typeof grid.autosizeColumns === 'function') {
+    if (grid && options.autoFitColumnsOnFirstLoad && options.enableAutoSizeColumns && typeof grid.autosizeColumns === 'function') {
       this.grid.autosizeColumns();
     }
 
@@ -512,7 +512,7 @@ export class AureliaSlickgridCustomElement {
     this.resizerService.init(grid);
     if (grid && options.enableAutoResize) {
       this.resizerService.attachAutoResizeDataGrid({ height: this.gridHeight, width: this.gridWidth });
-      if (options.autoFitColumnsOnFirstLoad && typeof grid.autosizeColumns === 'function') {
+      if (options.autoFitColumnsOnFirstLoad && options.enableAutoSizeColumns && typeof grid.autosizeColumns === 'function') {
         grid.autosizeColumns();
       }
     }
@@ -630,7 +630,10 @@ export class AureliaSlickgridCustomElement {
     } else {
       this.controlAndPluginService.renderColumnHeaders(newColumnDefinitions);
     }
-    this.grid.autosizeColumns();
+
+    if (this.gridOptions && this.gridOptions.enableAutoSizeColumns) {
+      this.grid.autosizeColumns();
+    }
   }
 
   //
