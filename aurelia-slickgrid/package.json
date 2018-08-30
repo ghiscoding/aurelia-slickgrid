@@ -51,7 +51,6 @@
     "@types/i18next": "^8.4.2",
     "@types/i18next-xhr-backend": "^1.4.1",
     "@types/jest": "19.2.4",
-    "@types/lodash.isequal": "^4.5.3",
     "@types/moment": "^2.13.0",
     "@types/node": "^6.0.45",
     "@types/text-encoding-utf-8": "^1.0.1",

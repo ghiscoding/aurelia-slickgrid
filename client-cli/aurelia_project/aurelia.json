@@ -113,6 +113,11 @@
             ]
           },
           {
+            "name": "lodash.isequal",
+            "path": "../node_modules/lodash.isequal",
+            "main": "index"
+          },
+          {
             "name": "multiple-select",
             "path": "../node_modules/aurelia-slickgrid/dist/lib/multiple-select",
             "main": "multiple-select",

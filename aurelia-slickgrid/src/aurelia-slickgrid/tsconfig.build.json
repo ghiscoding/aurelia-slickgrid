@@ -7,6 +7,10 @@
       "es2017",
       "dom"
     ],
+    "typeRoots": [
+      "../typings",
+      "../../node_modules/@types"
+    ],
     "outDir": "dist/amd",
     "noImplicitAny": true,
     "suppressImplicitAnyIndexErrors": true,

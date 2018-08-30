@@ -18,7 +18,7 @@ import {
   SlickEvent
 } from './../models/index';
 import * as $ from 'jquery';
-const isequal = require('lodash.isequal');
+import * as isequal from 'lodash.isequal';
 
 // using external non-typed js libraries
 declare var Slick: any;
