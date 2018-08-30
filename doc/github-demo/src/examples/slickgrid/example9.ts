@@ -63,12 +63,7 @@ export class Example9 {
         filterable: true,
         filter: {
           collection: [{ value: '', label: '' }, { value: true, label: 'true' }, { value: false, label: 'false' }],
-          model: Filters.singleSelect,
-          filterOptions: {
-            // you can add "multiple-select" plugin options like styling the first row
-            offsetLeft: 14,
-            width: 100
-          }
+          model: Filters.singleSelect
         }
       }
     ];

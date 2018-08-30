@@ -227,6 +227,9 @@ export class Example3 {
       filter: {
         model: Filters.singleSelect,
         collection: [{ value: '', label: '' }, { value: true, label: 'True' }, { value: false, label: 'False' }],
+        filterOptions: {
+          autoDropWidth: true
+        }
       },
       formatter: Formatters.checkmark,
       editor: {
@@ -292,9 +295,6 @@ export class Example3 {
         },
         collectionOptions: {
           separatorBetweenTextLabels: ''
-        },
-        filterOptions: {
-          autoDropWidth: true
         },
         model: Filters.multipleSelect,
         operator: OperatorType.inContains,
