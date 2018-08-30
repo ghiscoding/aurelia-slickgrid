@@ -14,14 +14,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { bindable, inject } from 'aurelia-framework';
 import { EventAggregator } from 'aurelia-event-aggregator';
-import { FilterService, SortService } from './services/index';
+import { FilterService } from './services/index';
 const aureliaEventPrefix = 'asg';
 let SlickPaginationCustomElement = class SlickPaginationCustomElement {
-    constructor(elm, ea, filterService, sortService) {
+    constructor(elm, ea, filterService) {
         this.elm = elm;
         this.ea = ea;
         this.filterService = filterService;
-        this.sortService = sortService;
         this._isFirstRender = true;
         this.dataFrom = 1;
         this.dataTo = 1;
@@ -30,7 +29,6 @@ let SlickPaginationCustomElement = class SlickPaginationCustomElement {
         this.totalItems = 0;
         this.paginationPageSizes = [25, 75, 100];
         this.filterService = filterService;
-        this.sortService = sortService;
     }
     bind(binding, contexts) {
         this._gridPaginationOptions = binding.gridPaginationOptions;
@@ -202,7 +200,7 @@ __decorate([
     bindable()
 ], SlickPaginationCustomElement.prototype, "gridPaginationOptions", void 0);
 SlickPaginationCustomElement = __decorate([
-    inject(Element, EventAggregator, FilterService, SortService)
+    inject(Element, EventAggregator, FilterService)
 ], SlickPaginationCustomElement);
 export { SlickPaginationCustomElement };
 //# sourceMappingURL=slick-pagination.js.map

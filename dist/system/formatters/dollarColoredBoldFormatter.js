@@ -10,14 +10,19 @@ System.register(["./../services/utilities"], function (exports_1, context_1) {
         ],
         execute: function () {
             exports_1("dollarColoredBoldFormatter", dollarColoredBoldFormatter = function (row, cell, value, columnDef, dataContext) {
-                if (isNaN(+value)) {
+                var isNumber = (value === null || value === undefined) ? false : !isNaN(+value);
+                var params = columnDef && columnDef.params || {};
+                var minDecimal = params.minDecimal || 2;
+                var maxDecimal = params.minDecimal || 4;
+                var outputValue = (isNumber && (params.minDecimal || params.maxDecimal)) ? utilities_1.decimalFormatted(value, minDecimal, maxDecimal) : value;
+                if (!isNumber) {
                     return '';
                 }
                 else if (value >= 0) {
-                    return "<span style=\"color:green; font-weight: bold;\">$" + utilities_1.decimalFormatted(value, 2, 2) + "</span>";
+                    return "<span style=\"color:green; font-weight: bold;\">$" + outputValue + "</span>";
                 }
                 else {
-                    return "<span style=\"color:red; font-weight: bold;\">$" + utilities_1.decimalFormatted(value, 2, 2) + "</span>";
+                    return "<span style=\"color:red; font-weight: bold;\">$" + outputValue + "</span>";
                 }
             });
         }

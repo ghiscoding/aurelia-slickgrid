@@ -2,7 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var utilities_1 = require("./../services/utilities");
 exports.boldFormatter = function (row, cell, value, columnDef, dataContext) {
-    if (!isNaN(+value)) {
+    var isNumber = (value === null || value === undefined) ? false : !isNaN(+value);
+    if (!isNumber) {
         return '';
     }
     else if (value >= 0) {

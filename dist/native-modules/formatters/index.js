@@ -1,3 +1,4 @@
+import { arrayObjectToCsvFormatter } from './arrayObjectToCsvFormatter';
 import { arrayToCsvFormatter } from './arrayToCsvFormatter';
 import { boldFormatter } from './boldFormatter';
 import { checkboxFormatter } from './checkboxFormatter';
@@ -10,6 +11,8 @@ import { dateTimeIsoAmPmFormatter } from './dateTimeIsoAmPmFormatter';
 import { dateTimeIsoFormatter } from './dateTimeIsoFormatter';
 import { dateTimeUsAmPmFormatter } from './dateTimeUsAmPmFormatter';
 import { dateTimeUsFormatter } from './dateTimeUsFormatter';
+import { dateTimeShortIsoFormatter } from './dateTimeShortIsoFormatter';
+import { dateTimeShortUsFormatter } from './dateTimeShortUsFormatter';
 import { dateUsFormatter } from './dateUsFormatter';
 import { decimalFormatter } from './decimalFormatter';
 import { deleteIconFormatter } from './deleteIconFormatter';
@@ -34,6 +37,13 @@ import { uppercaseFormatter } from './uppercaseFormatter';
 import { yesNoFormatter } from './yesNoFormatter';
 /** Provides a list of different Formatters that will change the cell value displayed in the UI */
 export var Formatters = {
+    /**
+     * Takes an array of complex objects converts it to a comma delimited string.
+     * Requires to pass an array of "propertyNames" in the column definition the generic "params" property
+     * For example, if we have an array of user objects that have the property of firstName & lastName then we need to pass in your column definition::
+     * { params: { propertyNames: ['firtName'] }}
+     */
+    arrayObjectToCsv: arrayObjectToCsvFormatter,
     /** Takes an array of string and converts it to a comma delimited string */
     arrayToCsv: arrayToCsvFormatter,
     /** show value in bold font weight as well */
@@ -64,19 +74,24 @@ export var Formatters = {
     dateIso: dateIsoFormatter,
     /** Takes a Date object and displays it as an ISO Date+Time format */
     dateTimeIso: dateTimeIsoFormatter,
+    /** Takes a Date object and displays it as an ISO Date+Time (without seconds) format */
+    dateTimeShortIso: dateTimeShortIsoFormatter,
     /** Takes a Date object and displays it as an ISO Date+Time+(am/pm) format */
     dateTimeIsoAmPm: dateTimeIsoAmPmFormatter,
     /** Takes a Date object and displays it as an US Date format */
     dateUs: dateUsFormatter,
     /** Takes a Date object and displays it as an US Date+Time format */
     dateTimeUs: dateTimeUsFormatter,
+    /** Takes a Date object and displays it as an US Date+Time (without seconds) format */
+    dateTimeShortUs: dateTimeShortUsFormatter,
     /** Takes a Date object and displays it as an US Date+Time+(am/pm) format */
     dateTimeUsAmPm: dateTimeUsAmPmFormatter,
     /** Displays a Font-Awesome delete icon (fa-trash) */
     deleteIcon: deleteIconFormatter,
     /**
      * Display the value as x decimals formatted, defaults to 2 decimals.
-     * You can pass "decimalPlaces" or "minDecimalPlaces" and/or "maxDecimalPlaces" to the generic "params" property, example:: `{ formatter: Formatters.decimal, params: { decimalPlaces: 3 }}`
+     * You can pass "decimalPlaces" or "minDecimalPlaces" and/or "maxDecimalPlaces" to the "params" property.
+     * For example:: `{ formatter: Formatters.decimal, params: { decimalPlaces: 3 }}`
      * The property "decimalPlaces" is an alias of "minDecimalPlaces"
      */
     decimal: decimalFormatter,
@@ -102,7 +117,9 @@ export var Formatters = {
      */
     mask: maskFormatter,
     /**
-     * You can pipe multiple formatters (executed in sequence), use params to pass the list of formatters. For example::
+     * You can pipe multiple formatters (executed in sequence), use params to pass the list of formatters.
+     * Requires to pass an array of "formatters" in the column definition the generic "params" property
+     * For example::
      * { field: 'title', formatter: Formatters.multiple, params: { formatters: [ Formatters.lowercase, Formatters.uppercase ] }
      */
     multiple: multipleFormatter,

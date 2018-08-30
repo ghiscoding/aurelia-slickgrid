@@ -1,4 +1,4 @@
-System.register(["jquery-ui-dist/jquery-ui", "slickgrid/lib/jquery.event.drag-2.3.0", "slickgrid/slick.core", "slickgrid/slick.dataview", "slickgrid/slick.grid", "slickgrid/slick.groupitemmetadataprovider", "slickgrid/controls/slick.columnpicker", "slickgrid/controls/slick.gridmenu", "slickgrid/controls/slick.pager", "slickgrid/plugins/slick.autotooltips", "slickgrid/plugins/slick.cellexternalcopymanager", "slickgrid/plugins/slick.cellrangedecorator", "slickgrid/plugins/slick.cellrangeselector", "slickgrid/plugins/slick.cellselectionmodel", "slickgrid/plugins/slick.checkboxselectcolumn", "slickgrid/plugins/slick.headerbuttons", "slickgrid/plugins/slick.headermenu", "slickgrid/plugins/slick.rowmovemanager", "slickgrid/plugins/slick.rowselectionmodel", "aurelia-framework", "aurelia-event-aggregator", "./global-grid-options", "./models/index", "./services/index", "jquery"], function (exports_1, context_1) {
+System.register(["jquery-ui-dist/jquery-ui", "slickgrid/lib/jquery.event.drag-2.3.0", "slickgrid/slick.core", "slickgrid/slick.dataview", "slickgrid/slick.grid", "slickgrid/slick.groupitemmetadataprovider", "slickgrid/controls/slick.columnpicker", "slickgrid/controls/slick.gridmenu", "slickgrid/controls/slick.pager", "slickgrid/plugins/slick.autotooltips", "slickgrid/plugins/slick.cellexternalcopymanager", "slickgrid/plugins/slick.cellrangedecorator", "slickgrid/plugins/slick.cellrangeselector", "slickgrid/plugins/slick.cellselectionmodel", "slickgrid/plugins/slick.checkboxselectcolumn", "slickgrid/plugins/slick.headerbuttons", "slickgrid/plugins/slick.headermenu", "slickgrid/plugins/slick.rowmovemanager", "slickgrid/plugins/slick.rowselectionmodel", "aurelia-framework", "aurelia-http-client", "aurelia-event-aggregator", "./global-grid-options", "./models/index", "./services/index", "jquery"], function (exports_1, context_1) {
     "use strict";
     var __assign = (this && this.__assign) || Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -50,7 +50,7 @@ System.register(["jquery-ui-dist/jquery-ui", "slickgrid/lib/jquery.event.drag-2.
         }
     };
     var __moduleName = context_1 && context_1.id;
-    var aurelia_framework_1, aurelia_event_aggregator_1, global_grid_options_1, index_1, index_2, $, aureliaEventPrefix, eventPrefix, AureliaSlickgridCustomElement;
+    var aurelia_framework_1, aurelia_http_client_1, aurelia_event_aggregator_1, global_grid_options_1, index_1, index_2, $, aureliaEventPrefix, eventPrefix, AureliaSlickgridCustomElement;
     return {
         setters: [
             function (_1) {
@@ -93,6 +93,9 @@ System.register(["jquery-ui-dist/jquery-ui", "slickgrid/lib/jquery.event.drag-2.
             },
             function (aurelia_framework_1_1) {
                 aurelia_framework_1 = aurelia_framework_1_1;
+            },
+            function (aurelia_http_client_1_1) {
+                aurelia_http_client_1 = aurelia_http_client_1_1;
             },
             function (aurelia_event_aggregator_1_1) {
                 aurelia_event_aggregator_1 = aurelia_event_aggregator_1_1;
@@ -161,24 +164,27 @@ System.register(["jquery-ui-dist/jquery-ui", "slickgrid/lib/jquery.event.drag-2.
                     this.createBackendApiInternalPostProcessCallback(this.gridOptions);
                     if (this.gridOptions.enableGrouping) {
                         this.groupItemMetadataProvider = new Slick.Data.GroupItemMetadataProvider();
-                        this.dataview = new Slick.Data.DataView({
-                            groupItemMetadataProvider: this.groupItemMetadataProvider,
-                            inlineFilters: true
-                        });
+                        this.dataview = new Slick.Data.DataView({ groupItemMetadataProvider: this.groupItemMetadataProvider });
                     }
                     else {
                         this.dataview = new Slick.Data.DataView();
                     }
                     // for convenience, we provide the property "editor" as an Aurelia-Slickgrid editor complex object
-                    // however "editor" is used internally by SlickGrid for it's Editor Factory
-                    // so in our lib we will swap "editor" and copy it into "internalColumnEditor"
+                    // however "editor" is used internally by SlickGrid for it's own Editor Factory
+                    // so in our lib we will swap "editor" and copy it into a new property called "internalColumnEditor"
                     // then take back "editor.model" and make it the new "editor" so that SlickGrid Editor Factory still works
                     // Wrap each editor class in the Factory resolver so consumers of this library can use
                     // dependency injection. Aurelia will resolve all dependencies when we pass the container
                     // and allow slickgrid to pass its arguments to the editors constructor last
                     // when slickgrid creates the editor
                     // https://github.com/aurelia/dependency-injection/blob/master/src/resolvers.js
-                    this._columnDefinitions = this.columnDefinitions.map(function (c) { return (__assign({}, c, { editor: c.editor && aurelia_framework_1.Factory.of(c.editor.model).get(_this.container), internalColumnEditor: __assign({}, c.editor) })); });
+                    this._columnDefinitions = this.columnDefinitions.map(function (column) {
+                        // on every Editor which have a "collection" or a "collectionAsync"
+                        if (column.editor && column.editor.collectionAsync) {
+                            _this.loadEditorCollectionAsync(column);
+                        }
+                        return __assign({}, column, { editor: column.editor && aurelia_framework_1.Factory.of(column.editor.model).get(_this.container), internalColumnEditor: __assign({}, column.editor) });
+                    });
                     this.controlAndPluginService.createCheckboxPluginBeforeGridCreation(this._columnDefinitions, this.gridOptions);
                     this.grid = new Slick.Grid("#" + this.gridId, this.dataview, this._columnDefinitions, this.gridOptions);
                     this.controlAndPluginService.attachDifferentControlOrPlugins(this.grid, this.dataview, this.groupItemMetadataProvider);
@@ -256,13 +262,8 @@ System.register(["jquery-ui-dist/jquery-ui", "slickgrid/lib/jquery.event.drag-2.
                         }
                     });
                     this.serviceList = [];
-                    // also unsubscribe all Subscriptions
-                    this.subscriptions.forEach(function (subscription) {
-                        if (subscription && subscription.dispose) {
-                            subscription.dispose();
-                        }
-                    });
-                    this.subscriptions = [];
+                    // also dispose of all Subscriptions
+                    this.subscriptions = index_2.disposeAllSubscriptions(this.subscriptions);
                 };
                 AureliaSlickgridCustomElement.prototype.dispose = function (emptyDomElementContainer) {
                     if (emptyDomElementContainer === void 0) { emptyDomElementContainer = false; }
@@ -297,7 +298,8 @@ System.register(["jquery-ui-dist/jquery-ui", "slickgrid/lib/jquery.event.drag-2.
                 };
                 /**
                  * Define what our internal Post Process callback, it will execute internally after we get back result from the Process backend call
-                 * For now, this is GraphQL Service only feautre and it will basically refresh the Dataset & Pagination without having the user to create his own PostProcess every time
+                 * For now, this is GraphQL Service only feature and it will basically
+                 * refresh the Dataset & Pagination without having the user to create his own PostProcess every time
                  */
                 AureliaSlickgridCustomElement.prototype.createBackendApiInternalPostProcessCallback = function (gridOptions) {
                     var _this = this;
@@ -487,14 +489,14 @@ System.register(["jquery-ui-dist/jquery-ui", "slickgrid/lib/jquery.event.drag-2.
                 };
                 AureliaSlickgridCustomElement.prototype.attachResizeHook = function (grid, options) {
                     // expand/autofit columns on first page load
-                    if (grid && options.autoFitColumnsOnFirstLoad && typeof grid.autosizeColumns === 'function') {
+                    if (grid && options.autoFitColumnsOnFirstLoad && options.enableAutoSizeColumns && typeof grid.autosizeColumns === 'function') {
                         this.grid.autosizeColumns();
                     }
                     // auto-resize grid on browser resize
                     this.resizerService.init(grid);
                     if (grid && options.enableAutoResize) {
                         this.resizerService.attachAutoResizeDataGrid({ height: this.gridHeight, width: this.gridWidth });
-                        if (options.autoFitColumnsOnFirstLoad && typeof grid.autosizeColumns === 'function') {
+                        if (options.autoFitColumnsOnFirstLoad && options.enableAutoSizeColumns && typeof grid.autosizeColumns === 'function') {
                             grid.autosizeColumns();
                         }
                     }
@@ -513,8 +515,13 @@ System.register(["jquery-ui-dist/jquery-ui", "slickgrid/lib/jquery.event.drag-2.
                     if (gridOptions.enableFiltering) {
                         gridOptions.showHeaderRow = true;
                     }
-                    // use jquery extend to deep merge and avoid immutable properties changed in GlobalGridOptions after route change
-                    return $.extend(true, {}, global_grid_options_1.GlobalGridOptions, gridOptions);
+                    // use jquery extend to deep merge & copy to avoid immutable properties being changed in GlobalGridOptions after a route change
+                    var options = $.extend(true, {}, global_grid_options_1.GlobalGridOptions, gridOptions);
+                    // also make sure to show the header row if user have enabled filtering
+                    if (options.enableFiltering && !options.showHeaderRow) {
+                        options.showHeaderRow = true;
+                    }
+                    return options;
                 };
                 /**
                  * On a Pagination changed, we will trigger a Grid State changed with the new pagination info
@@ -562,7 +569,8 @@ System.register(["jquery-ui-dist/jquery-ui", "slickgrid/lib/jquery.event.drag-2.
                         }
                         // resize the grid inside a slight timeout, in case other DOM element changed prior to the resize (like a filter/pagination changed)
                         if (this.grid && this.gridOptions.enableAutoResize) {
-                            this.resizerService.resizeGrid(1, { height: this.gridHeight, width: this.gridWidth });
+                            var delay = this.gridOptions.autoResize && this.gridOptions.autoResize.delay || 10;
+                            this.resizerService.resizeGrid(delay, { height: this.gridHeight, width: this.gridWidth });
                         }
                     }
                 };
@@ -592,8 +600,14 @@ System.register(["jquery-ui-dist/jquery-ui", "slickgrid/lib/jquery.event.drag-2.
                     else {
                         this.controlAndPluginService.renderColumnHeaders(newColumnDefinitions);
                     }
-                    this.grid.autosizeColumns();
+                    if (this.gridOptions && this.gridOptions.enableAutoSizeColumns) {
+                        this.grid.autosizeColumns();
+                    }
                 };
+                //
+                // private functions
+                // ------------------
+                /** Dispatch of Custom Event, which by default will bubble & is cancelable */
                 AureliaSlickgridCustomElement.prototype.dispatchCustomEvent = function (eventName, data, isBubbling, isCancelable) {
                     if (isBubbling === void 0) { isBubbling = true; }
                     if (isCancelable === void 0) { isCancelable = true; }
@@ -602,6 +616,47 @@ System.register(["jquery-ui-dist/jquery-ui", "slickgrid/lib/jquery.event.drag-2.
                         eventInit.detail = data;
                     }
                     return this.elm.dispatchEvent(new CustomEvent(eventName, eventInit));
+                };
+                /** Load the Editor Collection asynchronously and replace the "collection" property when Promise resolves */
+                AureliaSlickgridCustomElement.prototype.loadEditorCollectionAsync = function (column) {
+                    var _this = this;
+                    var collectionAsync = column && column.editor && column.editor.collectionAsync;
+                    if (collectionAsync) {
+                        // wait for the "collectionAsync", once resolved we will save it into the "collection"
+                        // the collectionAsync can be of 3 types HttpClient, HttpFetch or a Promise
+                        //
+                        collectionAsync.then(function (response) {
+                            if (response instanceof Response && typeof response.json === 'function') {
+                                if (response.bodyUsed) {
+                                    throw new Error('[Aurelia-SlickGrid] The response body passed to collectionAsync was ' +
+                                        'already read. Either pass the dataset from the Response ' +
+                                        'or clone the response first using response.clone()');
+                                }
+                                response.json().then(function (data) { return _this.updateEditorCollection(column, data); });
+                            }
+                            else if (response instanceof aurelia_http_client_1.HttpResponseMessage) {
+                                _this.updateEditorCollection(column, response['content']);
+                            }
+                            else if (Array.isArray(response)) {
+                                _this.updateEditorCollection(column, response);
+                            }
+                        });
+                    }
+                    return [];
+                };
+                /**
+                 * Update the "internalColumnEditor.collection" property.
+                 * Since this is called after the async call resolves, the pointer will not be the same as the "column" argument passed.
+                 * Once we found the new pointer, we will reassign the "editor" and "collection" to the "internalColumnEditor" so it has newest collection
+                 */
+                AureliaSlickgridCustomElement.prototype.updateEditorCollection = function (column, newCollection) {
+                    column.editor.collection = newCollection;
+                    // find the new column reference pointer & reassign the new editor to the internalColumnEditor
+                    var columns = this.grid.getColumns();
+                    if (Array.isArray(columns)) {
+                        var columnRef = columns.find(function (col) { return col.id === column.id; });
+                        columnRef.internalColumnEditor = column.editor;
+                    }
                 };
                 __decorate([
                     aurelia_framework_1.bindable({ defaultBindingMode: aurelia_framework_1.bindingMode.twoWay })

@@ -17,8 +17,8 @@ import { EventAggregator } from 'aurelia-event-aggregator';
 import { FilterConditions } from './../filter-conditions/index';
 import { FilterFactory } from './../filters/index';
 import { FieldType, OperatorType } from './../models/index';
-import { objectsDeepEqual } from './utilities';
 import * as $ from 'jquery';
+import * as isequal from 'lodash.isequal';
 let FilterService = class FilterService {
     constructor(ea, filterFactory) {
         this.ea = ea;
@@ -300,7 +300,7 @@ let FilterService = class FilterService {
                 this._columnFilters[colId] = colFilter;
             }
             // trigger an event only if Filters changed
-            if (!objectsDeepEqual(oldColumnFilters, this._columnFilters)) {
+            if (!isequal(oldColumnFilters, this._columnFilters)) {
                 this.triggerEvent(this._slickSubscriber, {
                     clearFilterTriggered: args && args.clearFilterTriggered,
                     columnId,

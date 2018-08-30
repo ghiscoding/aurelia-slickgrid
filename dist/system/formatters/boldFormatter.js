@@ -10,7 +10,8 @@ System.register(["./../services/utilities"], function (exports_1, context_1) {
         ],
         execute: function () {
             exports_1("boldFormatter", boldFormatter = function (row, cell, value, columnDef, dataContext) {
-                if (!isNaN(+value)) {
+                var isNumber = (value === null || value === undefined) ? false : !isNaN(+value);
+                if (!isNumber) {
                     return '';
                 }
                 else if (value >= 0) {

@@ -1,4 +1,4 @@
-System.register(["aurelia-framework", "aurelia-event-aggregator", "./../filter-conditions/index", "./../filters/index", "./../models/index", "./utilities", "jquery"], function (exports_1, context_1) {
+System.register(["aurelia-framework", "aurelia-event-aggregator", "./../filter-conditions/index", "./../filters/index", "./../models/index", "jquery", "lodash.isequal"], function (exports_1, context_1) {
     "use strict";
     var __assign = (this && this.__assign) || Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -50,7 +50,7 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./../filter-c
         }
     };
     var __moduleName = context_1 && context_1.id;
-    var aurelia_framework_1, aurelia_event_aggregator_1, index_1, index_2, index_3, utilities_1, $, FilterService;
+    var aurelia_framework_1, aurelia_event_aggregator_1, index_1, index_2, index_3, $, isequal, FilterService;
     return {
         setters: [
             function (aurelia_framework_1_1) {
@@ -68,11 +68,11 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./../filter-c
             function (index_3_1) {
                 index_3 = index_3_1;
             },
-            function (utilities_1_1) {
-                utilities_1 = utilities_1_1;
-            },
             function ($_1) {
                 $ = $_1;
+            },
+            function (isequal_1) {
+                isequal = isequal_1;
             }
         ],
         execute: function () {
@@ -377,7 +377,7 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./../filter-c
                             this._columnFilters[colId] = colFilter;
                         }
                         // trigger an event only if Filters changed
-                        if (!utilities_1.objectsDeepEqual(oldColumnFilters, this._columnFilters)) {
+                        if (!isequal(oldColumnFilters, this._columnFilters)) {
                             this.triggerEvent(this._slickSubscriber, {
                                 clearFilterTriggered: args && args.clearFilterTriggered,
                                 columnId: columnId,

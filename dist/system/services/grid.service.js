@@ -214,7 +214,9 @@ System.register(["aurelia-i18n", "aurelia-framework", "./controlAndPlugin.servic
                             // set the grid columns to it's original column definitions
                             this._grid.setColumns(originalColumns);
                             this._dataView.refresh();
-                            this._grid.autosizeColumns();
+                            if (this._gridOptions && this._gridOptions.enableAutoSizeColumns) {
+                                this._grid.autosizeColumns();
+                            }
                             this.gridStateService.resetColumns(columnDefinitions);
                         }
                     }

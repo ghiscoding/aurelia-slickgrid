@@ -37,6 +37,10 @@ var ControlAndPluginService = /** @class */ (function () {
         get: function () {
             return (this._grid && this._grid.getOptions) ? this._grid.getOptions() : {};
         },
+        /** Setter for the Grid Options pulled through the Grid Object */
+        set: function (gridOptions) {
+            this._gridOptions = gridOptions;
+        },
         enumerable: true,
         configurable: true
     });
@@ -296,7 +300,9 @@ var ControlAndPluginService = /** @class */ (function () {
                         // make sure that the grid still exist (by looking if the Grid UID is found in the DOM tree)
                         var gridUid = grid.getUID();
                         if (_this.areVisibleColumnDifferent && gridUid && $("." + gridUid).length > 0) {
-                            grid.autosizeColumns();
+                            if (_this._gridOptions && _this._gridOptions.enableAutoSizeColumns) {
+                                grid.autosizeColumns();
+                            }
                             _this.areVisibleColumnDifferent = false;
                         }
                     }
@@ -542,7 +548,9 @@ var ControlAndPluginService = /** @class */ (function () {
             switch (args.command) {
                 case 'hide':
                     this.hideColumn(args.column);
-                    this.autoResizeColumns();
+                    if (this._gridOptions && this._gridOptions.enableAutoSizeColumns) {
+                        this._grid.autosizeColumns();
+                    }
                     break;
                 case 'sort-asc':
                 case 'sort-desc':
@@ -621,9 +629,13 @@ var ControlAndPluginService = /** @class */ (function () {
         }
     };
     /** Refresh the dataset through the Backend Service */
-    ControlAndPluginService.prototype.refreshBackendDataset = function () {
+    ControlAndPluginService.prototype.refreshBackendDataset = function (gridOptions) {
         var _this = this;
-        var query;
+        var query = '';
+        // user can pass new set of grid options which will override current ones
+        if (gridOptions) {
+            this._gridOptions = __assign({}, this._gridOptions, gridOptions);
+        }
         var backendApi = this._gridOptions.backendServiceApi;
         if (!backendApi || !backendApi.service || !backendApi.process) {
             throw new Error("BackendServiceApi requires at least a \"process\" function and a \"service\" defined");

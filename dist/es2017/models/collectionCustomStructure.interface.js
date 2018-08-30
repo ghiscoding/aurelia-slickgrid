@@ -1,0 +1,1 @@
+//# sourceMappingURL=collectionCustomStructure.interface.js.map

@@ -1,4 +1,4 @@
-define(["require", "exports", "./compoundDateFilter", "./compoundInputFilter", "./compoundSliderFilter", "./inputFilter", "./sliderFilter", "./multipleSelectFilter", "./selectFilter", "./singleSelectFilter", "./filterFactory"], function (require, exports, compoundDateFilter_1, compoundInputFilter_1, compoundSliderFilter_1, inputFilter_1, sliderFilter_1, multipleSelectFilter_1, selectFilter_1, singleSelectFilter_1, filterFactory_1) {
+define(["require", "exports", "./compoundDateFilter", "./compoundInputFilter", "./compoundSliderFilter", "./inputFilter", "./sliderFilter", "./multipleSelectFilter", "./nativeSelectFilter", "./singleSelectFilter", "./filterFactory"], function (require, exports, compoundDateFilter_1, compoundInputFilter_1, compoundSliderFilter_1, inputFilter_1, sliderFilter_1, multipleSelectFilter_1, nativeSelectFilter_1, singleSelectFilter_1, filterFactory_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.Filters = {
@@ -17,7 +17,7 @@ define(["require", "exports", "./compoundDateFilter", "./compoundInputFilter", "
         /** Single Select filter, which uses 3rd party lib "multiple-select.js" */
         singleSelect: singleSelectFilter_1.SingleSelectFilter,
         /** Select filter, which uses native DOM element select */
-        select: selectFilter_1.SelectFilter
+        select: nativeSelectFilter_1.NativeSelectFilter
     };
     exports.FilterFactory = filterFactory_1.FilterFactory;
 });

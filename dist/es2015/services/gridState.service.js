@@ -6,6 +6,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 import { inject } from 'aurelia-framework';
 import { GridStateType, } from './../models/index';
+import { disposeAllSubscriptions } from './../services/index';
 import { EventAggregator } from 'aurelia-event-aggregator';
 let GridStateService = class GridStateService {
     constructor(ea) {
@@ -36,13 +37,8 @@ let GridStateService = class GridStateService {
     dispose() {
         // unsubscribe all SlickGrid events
         this._eventHandler.unsubscribeAll();
-        // also unsubscribe all Aurelia Subscriptions
-        this.subscriptions.forEach((subscription) => {
-            if (subscription && subscription.dispose) {
-                subscription.dispose();
-            }
-        });
-        this.subscriptions = [];
+        // also dispose of all Subscriptions
+        this.subscriptions = disposeAllSubscriptions(this.subscriptions);
     }
     /**
      * Get the current grid state (filters/sorters/pagination)
@@ -203,6 +199,12 @@ let GridStateService = class GridStateService {
         const currentColumns = this.getAssociatedCurrentColumns(columns);
         this.ea.publish('gridStateService:changed', { change: { newValues: currentColumns, type: GridStateType.columns }, gridState: this.getCurrentGridState() });
     }
+    /** if we use Row Selection or the Checkbox Selector, we need to reset any selection */
+    resetRowSelection() {
+        if (this._gridOptions.enableRowSelection || this._gridOptions.enableCheckboxSelector) {
+            this._grid.setSelectedRows([]);
+        }
+    }
     /**
      * Subscribe to all necessary SlickGrid or Service Events that deals with a Grid change,
      * when triggered, we will publish a Grid State Event with current Grid State
@@ -210,26 +212,22 @@ let GridStateService = class GridStateService {
     subscribeToAllGridChanges(grid) {
         // Subscribe to Event Emitter of Filter changed
         this.subscriptions.push(this.ea.subscribe('filterService:filterChanged', (currentFilters) => {
-            // if we use Row Selection or the Checkbox Selector, we need to reset any selection
-            if (this._gridOptions.enableRowSelection || this._gridOptions.enableCheckboxSelector) {
-                this._grid.setSelectedRows([]);
-            }
+            this.resetRowSelection();
             this.ea.publish('gridStateService:changed', { change: { newValues: currentFilters, type: GridStateType.filter }, gridState: this.getCurrentGridState() });
         }));
         // Subscribe to Event Emitter of Filter cleared
         this.subscriptions.push(this.ea.subscribe('filterService:filterCleared', (currentFilters) => {
-            // if we use Row Selection or the Checkbox Selector, we need to reset any selection
-            if (this._gridOptions.enableRowSelection || this._gridOptions.enableCheckboxSelector) {
-                this._grid.setSelectedRows([]);
-            }
+            this.resetRowSelection();
             this.ea.publish('gridStateService:changed', { change: { newValues: currentFilters, type: GridStateType.filter }, gridState: this.getCurrentGridState() });
         }));
         // Subscribe to Event Emitter of Sort changed
         this.subscriptions.push(this.ea.subscribe('sortService:sortChanged', (currentSorters) => {
+            this.resetRowSelection();
             this.ea.publish('gridStateService:changed', { change: { newValues: currentSorters, type: GridStateType.sorter }, gridState: this.getCurrentGridState() });
         }));
         // Subscribe to Event Emitter of Sort cleared
         this.subscriptions.push(this.ea.subscribe('sortService:sortCleared', (currentSorters) => {
+            this.resetRowSelection();
             this.ea.publish('gridStateService:changed', { change: { newValues: currentSorters, type: GridStateType.sorter }, gridState: this.getCurrentGridState() });
         }));
         // Subscribe to ColumnPicker and/or GridMenu for show/hide Columns visibility changes

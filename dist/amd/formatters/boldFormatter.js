@@ -2,7 +2,8 @@ define(["require", "exports", "./../services/utilities"], function (require, exp
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.boldFormatter = function (row, cell, value, columnDef, dataContext) {
-        if (!isNaN(+value)) {
+        var isNumber = (value === null || value === undefined) ? false : !isNaN(+value);
+        if (!isNumber) {
             return '';
         }
         else if (value >= 0) {

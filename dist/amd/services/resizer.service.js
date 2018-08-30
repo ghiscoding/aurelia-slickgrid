@@ -111,46 +111,48 @@ define(["require", "exports", "aurelia-framework", "jquery", "aurelia-event-aggr
             if (!this._grid || !this._gridOptions) {
                 throw new Error("\n      Aurelia-Slickgrid resizer requires a valid Grid object and Grid Options defined.\n      You can fix this by setting your gridOption to use \"enableAutoResize\" or create an instance of the ResizerService by calling attachAutoResizeDataGrid()");
             }
-            // because of the javascript async nature, we might want to delay the resize a little bit
-            delay = delay || 0;
-            clearTimeout(timer);
-            timer = setTimeout(function () {
-                // calculate the available sizes with minimum height defined as a constant
-                var availableDimensions = _this.calculateGridNewDimensions(_this._gridOptions);
-                var gridElm = $("#" + _this._gridOptions.gridId);
-                var gridContainerElm = $("#" + _this._gridOptions.gridContainerId);
-                if ((newSizes || availableDimensions) && gridElm.length > 0) {
-                    // get the new sizes, if new sizes are passed (not 0), we will use them else use available space
-                    // basically if user passes 1 of the dimension, let say he passes just the height,
-                    // we will use the height as a fixed height but the width will be resized by it's available space
-                    var newHeight = (newSizes && newSizes.height) ? newSizes.height : availableDimensions.height;
-                    var newWidth = (newSizes && newSizes.width) ? newSizes.width : availableDimensions.width;
-                    // apply these new height/width to the datagrid
-                    gridElm.height(newHeight);
-                    gridElm.width(newWidth);
-                    gridContainerElm.height(newHeight);
-                    gridContainerElm.width(newWidth);
-                    // keep last resized dimensions
-                    _this._lastDimensions = {
-                        height: newHeight,
-                        width: newWidth
-                    };
-                    _this._lastDimensions.heightWithPagination = newHeight;
-                    if (_this._lastDimensions && _this._lastDimensions.heightWithPagination && (_this._gridOptions.enablePagination || _this._gridOptions.backendServiceApi)) {
-                        _this._lastDimensions.heightWithPagination += DATAGRID_PAGINATION_HEIGHT;
+            return new Promise(function (resolve) {
+                // because of the javascript async nature, we might want to delay the resize a little bit
+                delay = delay || 0;
+                clearTimeout(timer);
+                timer = setTimeout(function () {
+                    // calculate the available sizes with minimum height defined as a constant
+                    var availableDimensions = _this.calculateGridNewDimensions(_this._gridOptions);
+                    var gridElm = $("#" + _this._gridOptions.gridId);
+                    var gridContainerElm = $("#" + _this._gridOptions.gridContainerId);
+                    if ((newSizes || availableDimensions) && gridElm.length > 0) {
+                        // get the new sizes, if new sizes are passed (not 0), we will use them else use available space
+                        // basically if user passes 1 of the dimension, let say he passes just the height,
+                        // we will use the height as a fixed height but the width will be resized by it's available space
+                        var newHeight = (newSizes && newSizes.height) ? newSizes.height : (availableDimensions && availableDimensions.height) || 0;
+                        var newWidth = (newSizes && newSizes.width) ? newSizes.width : (availableDimensions && availableDimensions.width) || 0;
+                        // apply these new height/width to the datagrid
+                        gridElm.height(newHeight);
+                        gridElm.width(newWidth);
+                        gridContainerElm.height(newHeight);
+                        gridContainerElm.width(newWidth);
+                        // resize the slickgrid canvas on all browser except some IE versions
+                        // exclude all IE below IE11
+                        // IE11 wants to be a better standard (W3C) follower (finally) they even changed their appName output to also have 'Netscape'
+                        if (new RegExp('MSIE [6-8]').exec(navigator.userAgent) === null && _this._grid) {
+                            _this._grid.resizeCanvas();
+                        }
+                        // also call the grid auto-size columns so that it takes available when going bigger
+                        if (_this._grid && _this._gridOptions && _this._gridOptions.enableAutoSizeColumns && typeof _this._grid.autosizeColumns === 'function') {
+                            _this._grid.autosizeColumns();
+                        }
+                        // keep last resized dimensions & resolve them to the Promise
+                        _this._lastDimensions = {
+                            height: newHeight,
+                            width: newWidth
+                        };
+                        if ((_this._gridOptions.enablePagination || _this._gridOptions.backendServiceApi)) {
+                            _this._lastDimensions.heightWithPagination = newHeight + DATAGRID_PAGINATION_HEIGHT;
+                        }
+                        resolve(_this._lastDimensions);
                     }
-                    // resize the slickgrid canvas on all browser except some IE versions
-                    // exclude all IE below IE11
-                    // IE11 wants to be a better standard (W3C) follower (finally) they even changed their appName output to also have 'Netscape'
-                    if (new RegExp('MSIE [6-8]').exec(navigator.userAgent) === null && _this._grid) {
-                        _this._grid.resizeCanvas();
-                    }
-                    // also call the grid auto-size columns so that it takes available when going bigger
-                    if (_this._grid && typeof _this._grid.autosizeColumns === 'function') {
-                        _this._grid.autosizeColumns();
-                    }
-                }
-            }, delay);
+                }, delay);
+            });
         };
         ResizerService = __decorate([
             aurelia_framework_1.singleton(true),

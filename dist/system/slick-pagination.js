@@ -58,11 +58,10 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./services/in
         execute: function () {
             aureliaEventPrefix = 'asg';
             SlickPaginationCustomElement = /** @class */ (function () {
-                function SlickPaginationCustomElement(elm, ea, filterService, sortService) {
+                function SlickPaginationCustomElement(elm, ea, filterService) {
                     this.elm = elm;
                     this.ea = ea;
                     this.filterService = filterService;
-                    this.sortService = sortService;
                     this._isFirstRender = true;
                     this.dataFrom = 1;
                     this.dataTo = 1;
@@ -71,7 +70,6 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./services/in
                     this.totalItems = 0;
                     this.paginationPageSizes = [25, 75, 100];
                     this.filterService = filterService;
-                    this.sortService = sortService;
                 }
                 SlickPaginationCustomElement.prototype.bind = function (binding, contexts) {
                     var _this = this;
@@ -250,7 +248,7 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./services/in
                     aurelia_framework_1.bindable()
                 ], SlickPaginationCustomElement.prototype, "gridPaginationOptions", void 0);
                 SlickPaginationCustomElement = __decorate([
-                    aurelia_framework_1.inject(Element, aurelia_event_aggregator_1.EventAggregator, index_1.FilterService, index_1.SortService)
+                    aurelia_framework_1.inject(Element, aurelia_event_aggregator_1.EventAggregator, index_1.FilterService)
                 ], SlickPaginationCustomElement);
                 return SlickPaginationCustomElement;
             }());

@@ -47,7 +47,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "./../filter-conditions/index", "./../filters/index", "./../models/index", "./utilities", "jquery"], function (require, exports, aurelia_framework_1, aurelia_event_aggregator_1, index_1, index_2, index_3, utilities_1, $) {
+define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "./../filter-conditions/index", "./../filters/index", "./../models/index", "jquery", "lodash.isequal"], function (require, exports, aurelia_framework_1, aurelia_event_aggregator_1, index_1, index_2, index_3, $, isequal) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var FilterService = /** @class */ (function () {
@@ -351,7 +351,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
                     this._columnFilters[colId] = colFilter;
                 }
                 // trigger an event only if Filters changed
-                if (!utilities_1.objectsDeepEqual(oldColumnFilters, this._columnFilters)) {
+                if (!isequal(oldColumnFilters, this._columnFilters)) {
                     this.triggerEvent(this._slickSubscriber, {
                         clearFilterTriggered: args && args.clearFilterTriggered,
                         columnId: columnId,

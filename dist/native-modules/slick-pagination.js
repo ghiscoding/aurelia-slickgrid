@@ -41,14 +41,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 import { bindable, inject } from 'aurelia-framework';
 import { EventAggregator } from 'aurelia-event-aggregator';
-import { FilterService, SortService } from './services/index';
+import { FilterService } from './services/index';
 var aureliaEventPrefix = 'asg';
 var SlickPaginationCustomElement = /** @class */ (function () {
-    function SlickPaginationCustomElement(elm, ea, filterService, sortService) {
+    function SlickPaginationCustomElement(elm, ea, filterService) {
         this.elm = elm;
         this.ea = ea;
         this.filterService = filterService;
-        this.sortService = sortService;
         this._isFirstRender = true;
         this.dataFrom = 1;
         this.dataTo = 1;
@@ -57,7 +56,6 @@ var SlickPaginationCustomElement = /** @class */ (function () {
         this.totalItems = 0;
         this.paginationPageSizes = [25, 75, 100];
         this.filterService = filterService;
-        this.sortService = sortService;
     }
     SlickPaginationCustomElement.prototype.bind = function (binding, contexts) {
         var _this = this;
@@ -236,7 +234,7 @@ var SlickPaginationCustomElement = /** @class */ (function () {
         bindable()
     ], SlickPaginationCustomElement.prototype, "gridPaginationOptions", void 0);
     SlickPaginationCustomElement = __decorate([
-        inject(Element, EventAggregator, FilterService, SortService)
+        inject(Element, EventAggregator, FilterService)
     ], SlickPaginationCustomElement);
     return SlickPaginationCustomElement;
 }());

@@ -73,6 +73,25 @@ System.register(["../models/index", "moment", "jquery"], function (exports_1, co
     }
     exports_1("decimalFormatted", decimalFormatted);
     /**
+     * Loop through and dispose of all subscriptions when they are disposable
+     * @param subscriptions
+     * @return empty array
+     */
+    function disposeAllSubscriptions(subscriptions) {
+        subscriptions.forEach(function (subscription) {
+            if (subscription && subscription.dispose) {
+                subscription.dispose();
+            }
+        });
+        return subscriptions = [];
+    }
+    exports_1("disposeAllSubscriptions", disposeAllSubscriptions);
+    /** From a dot (.) notation find and return a property within an object given a path */
+    function getDescendantProperty(obj, path) {
+        return path.split('.').reduce(function (acc, part) { return acc && acc[part]; }, obj);
+    }
+    exports_1("getDescendantProperty", getDescendantProperty);
+    /**
      * From a Date FieldType, return it's equivalent moment.js format
      * refer to moment.js for the format standard used: https://momentjs.com/docs/#/parsing/string-format/
      * @param fieldType
@@ -89,6 +108,9 @@ System.register(["../models/index", "moment", "jquery"], function (exports_1, co
                 break;
             case index_1.FieldType.dateTimeIsoAM_PM:
                 map = 'YYYY-MM-DD hh:mm:ss A';
+                break;
+            case index_1.FieldType.dateTimeShortIso:
+                map = 'YYYY-MM-DD HH:mm';
                 break;
             case index_1.FieldType.dateUs:
                 map = 'MM/DD/YYYY';
@@ -110,6 +132,9 @@ System.register(["../models/index", "moment", "jquery"], function (exports_1, co
                 break;
             case index_1.FieldType.dateTimeUsShortAmPm:
                 map = 'M/D/YY h:m:s a';
+                break;
+            case index_1.FieldType.dateTimeShortUs:
+                map = 'MM/DD/YYYY HH:mm';
                 break;
             case index_1.FieldType.dateUtc:
                 map = 'YYYY-MM-DDTHH:mm:ss.SSSZ';
@@ -374,26 +399,12 @@ System.register(["../models/index", "moment", "jquery"], function (exports_1, co
     }
     exports_1("arraysEqual", arraysEqual);
     /**
-     * Compares two objects to determine if all the properties are equal
-     * We will do a deep check recursively to make sure all properties really are the same
-     * @param x first object
-     * @param y second object to compare with a
-     */
-    function objectsDeepEqual(x, y) {
-        var ok = Object.keys;
-        var tx = typeof x;
-        var ty = typeof y;
-        return x && y && tx === 'object' && tx === ty ? (ok(x).length === ok(y).length &&
-            ok(x).every(function (key) { return objectsDeepEqual(x[key], y[key]); })) : (x === y);
-    }
-    exports_1("objectsDeepEqual", objectsDeepEqual);
-    /**
      * Uses the logic function to find an item in an array or returns the default
      * value provided (empty object by default)
      * @param any[] array the array to filter
      * @param function logic the logic to find the item
      * @param any [defaultVal={}] the default value to return
-     * @return object the found object or deafult value
+     * @return object the found object or default value
      */
     function findOrDefault(array, logic, defaultVal) {
         if (defaultVal === void 0) { defaultVal = {}; }

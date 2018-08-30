@@ -4,7 +4,7 @@ import { CompoundSliderFilter } from './compoundSliderFilter';
 import { InputFilter } from './inputFilter';
 import { SliderFilter } from './sliderFilter';
 import { MultipleSelectFilter } from './multipleSelectFilter';
-import { SelectFilter } from './selectFilter';
+import { NativeSelectFilter } from './nativeSelectFilter';
 import { SingleSelectFilter } from './singleSelectFilter';
 export declare const Filters: {
     compoundDate: typeof CompoundDateFilter;
@@ -14,6 +14,6 @@ export declare const Filters: {
     slider: typeof SliderFilter;
     multipleSelect: typeof MultipleSelectFilter;
     singleSelect: typeof SingleSelectFilter;
-    select: typeof SelectFilter;
+    select: typeof NativeSelectFilter;
 };
 export { FilterFactory } from './filterFactory';

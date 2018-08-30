@@ -1,3 +1,4 @@
+import { Subscription } from 'aurelia-event-aggregator';
 import { FieldType, OperatorType } from '../models/index';
 /**
  * Simple function to which will loop and create as demanded the number of white spaces,
@@ -28,6 +29,14 @@ export declare function htmlEntityEncode(input: any): string;
  * @param maxDecimal
  */
 export declare function decimalFormatted(input: number | string, minDecimal?: number, maxDecimal?: number): string | number;
+/**
+ * Loop through and dispose of all subscriptions when they are disposable
+ * @param subscriptions
+ * @return empty array
+ */
+export declare function disposeAllSubscriptions(subscriptions: Subscription[]): never[];
+/** From a dot (.) notation find and return a property within an object given a path */
+export declare function getDescendantProperty(obj: any, path: string): any;
 /**
  * From a Date FieldType, return it's equivalent moment.js format
  * refer to moment.js for the format standard used: https://momentjs.com/docs/#/parsing/string-format/
@@ -87,18 +96,11 @@ export declare function toKebabCase(str: string): string;
  */
 export declare function arraysEqual(a: any[], b: any[], orderMatters?: boolean): boolean;
 /**
- * Compares two objects to determine if all the properties are equal
- * We will do a deep check recursively to make sure all properties really are the same
- * @param x first object
- * @param y second object to compare with a
- */
-export declare function objectsDeepEqual(x: any, y: any): boolean;
-/**
  * Uses the logic function to find an item in an array or returns the default
  * value provided (empty object by default)
  * @param any[] array the array to filter
  * @param function logic the logic to find the item
  * @param any [defaultVal={}] the default value to return
- * @return object the found object or deafult value
+ * @return object the found object or default value
  */
 export declare function findOrDefault(array: any[], logic: (item: any) => boolean, defaultVal?: {}): any;

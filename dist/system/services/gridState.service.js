@@ -1,4 +1,4 @@
-System.register(["aurelia-framework", "./../models/index", "aurelia-event-aggregator"], function (exports_1, context_1) {
+System.register(["aurelia-framework", "./../models/index", "./../services/index", "aurelia-event-aggregator"], function (exports_1, context_1) {
     "use strict";
     var __assign = (this && this.__assign) || Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -15,7 +15,7 @@ System.register(["aurelia-framework", "./../models/index", "aurelia-event-aggreg
         return c > 3 && r && Object.defineProperty(target, key, r), r;
     };
     var __moduleName = context_1 && context_1.id;
-    var aurelia_framework_1, index_1, aurelia_event_aggregator_1, GridStateService;
+    var aurelia_framework_1, index_1, index_2, aurelia_event_aggregator_1, GridStateService;
     return {
         setters: [
             function (aurelia_framework_1_1) {
@@ -23,6 +23,9 @@ System.register(["aurelia-framework", "./../models/index", "aurelia-event-aggreg
             },
             function (index_1_1) {
                 index_1 = index_1_1;
+            },
+            function (index_2_1) {
+                index_2 = index_2_1;
             },
             function (aurelia_event_aggregator_1_1) {
                 aurelia_event_aggregator_1 = aurelia_event_aggregator_1_1;
@@ -62,13 +65,8 @@ System.register(["aurelia-framework", "./../models/index", "aurelia-event-aggreg
                 GridStateService.prototype.dispose = function () {
                     // unsubscribe all SlickGrid events
                     this._eventHandler.unsubscribeAll();
-                    // also unsubscribe all Aurelia Subscriptions
-                    this.subscriptions.forEach(function (subscription) {
-                        if (subscription && subscription.dispose) {
-                            subscription.dispose();
-                        }
-                    });
-                    this.subscriptions = [];
+                    // also dispose of all Subscriptions
+                    this.subscriptions = index_2.disposeAllSubscriptions(this.subscriptions);
                 };
                 /**
                  * Get the current grid state (filters/sorters/pagination)
@@ -231,6 +229,12 @@ System.register(["aurelia-framework", "./../models/index", "aurelia-event-aggreg
                     var currentColumns = this.getAssociatedCurrentColumns(columns);
                     this.ea.publish('gridStateService:changed', { change: { newValues: currentColumns, type: index_1.GridStateType.columns }, gridState: this.getCurrentGridState() });
                 };
+                /** if we use Row Selection or the Checkbox Selector, we need to reset any selection */
+                GridStateService.prototype.resetRowSelection = function () {
+                    if (this._gridOptions.enableRowSelection || this._gridOptions.enableCheckboxSelector) {
+                        this._grid.setSelectedRows([]);
+                    }
+                };
                 /**
                  * Subscribe to all necessary SlickGrid or Service Events that deals with a Grid change,
                  * when triggered, we will publish a Grid State Event with current Grid State
@@ -239,26 +243,22 @@ System.register(["aurelia-framework", "./../models/index", "aurelia-event-aggreg
                     var _this = this;
                     // Subscribe to Event Emitter of Filter changed
                     this.subscriptions.push(this.ea.subscribe('filterService:filterChanged', function (currentFilters) {
-                        // if we use Row Selection or the Checkbox Selector, we need to reset any selection
-                        if (_this._gridOptions.enableRowSelection || _this._gridOptions.enableCheckboxSelector) {
-                            _this._grid.setSelectedRows([]);
-                        }
+                        _this.resetRowSelection();
                         _this.ea.publish('gridStateService:changed', { change: { newValues: currentFilters, type: index_1.GridStateType.filter }, gridState: _this.getCurrentGridState() });
                     }));
                     // Subscribe to Event Emitter of Filter cleared
                     this.subscriptions.push(this.ea.subscribe('filterService:filterCleared', function (currentFilters) {
-                        // if we use Row Selection or the Checkbox Selector, we need to reset any selection
-                        if (_this._gridOptions.enableRowSelection || _this._gridOptions.enableCheckboxSelector) {
-                            _this._grid.setSelectedRows([]);
-                        }
+                        _this.resetRowSelection();
                         _this.ea.publish('gridStateService:changed', { change: { newValues: currentFilters, type: index_1.GridStateType.filter }, gridState: _this.getCurrentGridState() });
                     }));
                     // Subscribe to Event Emitter of Sort changed
                     this.subscriptions.push(this.ea.subscribe('sortService:sortChanged', function (currentSorters) {
+                        _this.resetRowSelection();
                         _this.ea.publish('gridStateService:changed', { change: { newValues: currentSorters, type: index_1.GridStateType.sorter }, gridState: _this.getCurrentGridState() });
                     }));
                     // Subscribe to Event Emitter of Sort cleared
                     this.subscriptions.push(this.ea.subscribe('sortService:sortCleared', function (currentSorters) {
+                        _this.resetRowSelection();
                         _this.ea.publish('gridStateService:changed', { change: { newValues: currentSorters, type: index_1.GridStateType.sorter }, gridState: _this.getCurrentGridState() });
                     }));
                     // Subscribe to ColumnPicker and/or GridMenu for show/hide Columns visibility changes

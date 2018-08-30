@@ -1,7 +1,7 @@
-System.register(["./compoundDateFilter", "./compoundInputFilter", "./compoundSliderFilter", "./inputFilter", "./sliderFilter", "./multipleSelectFilter", "./selectFilter", "./singleSelectFilter", "./filterFactory"], function (exports_1, context_1) {
+System.register(["./compoundDateFilter", "./compoundInputFilter", "./compoundSliderFilter", "./inputFilter", "./sliderFilter", "./multipleSelectFilter", "./nativeSelectFilter", "./singleSelectFilter", "./filterFactory"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var compoundDateFilter_1, compoundInputFilter_1, compoundSliderFilter_1, inputFilter_1, sliderFilter_1, multipleSelectFilter_1, selectFilter_1, singleSelectFilter_1, Filters;
+    var compoundDateFilter_1, compoundInputFilter_1, compoundSliderFilter_1, inputFilter_1, sliderFilter_1, multipleSelectFilter_1, nativeSelectFilter_1, singleSelectFilter_1, Filters;
     return {
         setters: [
             function (compoundDateFilter_1_1) {
@@ -22,8 +22,8 @@ System.register(["./compoundDateFilter", "./compoundInputFilter", "./compoundSli
             function (multipleSelectFilter_1_1) {
                 multipleSelectFilter_1 = multipleSelectFilter_1_1;
             },
-            function (selectFilter_1_1) {
-                selectFilter_1 = selectFilter_1_1;
+            function (nativeSelectFilter_1_1) {
+                nativeSelectFilter_1 = nativeSelectFilter_1_1;
             },
             function (singleSelectFilter_1_1) {
                 singleSelectFilter_1 = singleSelectFilter_1_1;
@@ -51,7 +51,7 @@ System.register(["./compoundDateFilter", "./compoundInputFilter", "./compoundSli
                 /** Single Select filter, which uses 3rd party lib "multiple-select.js" */
                 singleSelect: singleSelectFilter_1.SingleSelectFilter,
                 /** Select filter, which uses native DOM element select */
-                select: selectFilter_1.SelectFilter
+                select: nativeSelectFilter_1.NativeSelectFilter
             });
         }
     };

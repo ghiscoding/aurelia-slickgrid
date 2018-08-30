@@ -40,6 +40,7 @@ System.register(["./filters/index", "./models/index"], function (exports_1, cont
                 defaultFilterPlaceholder: '&#128269;',
                 defaultFilter: index_1.Filters.input,
                 enableAutoResize: true,
+                enableAutoSizeColumns: true,
                 enableHeaderMenu: true,
                 enableRowSelection: true,
                 editable: false,

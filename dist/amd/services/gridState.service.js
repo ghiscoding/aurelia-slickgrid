@@ -12,7 +12,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-define(["require", "exports", "aurelia-framework", "./../models/index", "aurelia-event-aggregator"], function (require, exports, aurelia_framework_1, index_1, aurelia_event_aggregator_1) {
+define(["require", "exports", "aurelia-framework", "./../models/index", "./../services/index", "aurelia-event-aggregator"], function (require, exports, aurelia_framework_1, index_1, index_2, aurelia_event_aggregator_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var GridStateService = /** @class */ (function () {
@@ -48,13 +48,8 @@ define(["require", "exports", "aurelia-framework", "./../models/index", "aurelia
         GridStateService.prototype.dispose = function () {
             // unsubscribe all SlickGrid events
             this._eventHandler.unsubscribeAll();
-            // also unsubscribe all Aurelia Subscriptions
-            this.subscriptions.forEach(function (subscription) {
-                if (subscription && subscription.dispose) {
-                    subscription.dispose();
-                }
-            });
-            this.subscriptions = [];
+            // also dispose of all Subscriptions
+            this.subscriptions = index_2.disposeAllSubscriptions(this.subscriptions);
         };
         /**
          * Get the current grid state (filters/sorters/pagination)
@@ -217,6 +212,12 @@ define(["require", "exports", "aurelia-framework", "./../models/index", "aurelia
             var currentColumns = this.getAssociatedCurrentColumns(columns);
             this.ea.publish('gridStateService:changed', { change: { newValues: currentColumns, type: index_1.GridStateType.columns }, gridState: this.getCurrentGridState() });
         };
+        /** if we use Row Selection or the Checkbox Selector, we need to reset any selection */
+        GridStateService.prototype.resetRowSelection = function () {
+            if (this._gridOptions.enableRowSelection || this._gridOptions.enableCheckboxSelector) {
+                this._grid.setSelectedRows([]);
+            }
+        };
         /**
          * Subscribe to all necessary SlickGrid or Service Events that deals with a Grid change,
          * when triggered, we will publish a Grid State Event with current Grid State
@@ -225,26 +226,22 @@ define(["require", "exports", "aurelia-framework", "./../models/index", "aurelia
             var _this = this;
             // Subscribe to Event Emitter of Filter changed
             this.subscriptions.push(this.ea.subscribe('filterService:filterChanged', function (currentFilters) {
-                // if we use Row Selection or the Checkbox Selector, we need to reset any selection
-                if (_this._gridOptions.enableRowSelection || _this._gridOptions.enableCheckboxSelector) {
-                    _this._grid.setSelectedRows([]);
-                }
+                _this.resetRowSelection();
                 _this.ea.publish('gridStateService:changed', { change: { newValues: currentFilters, type: index_1.GridStateType.filter }, gridState: _this.getCurrentGridState() });
             }));
             // Subscribe to Event Emitter of Filter cleared
             this.subscriptions.push(this.ea.subscribe('filterService:filterCleared', function (currentFilters) {
-                // if we use Row Selection or the Checkbox Selector, we need to reset any selection
-                if (_this._gridOptions.enableRowSelection || _this._gridOptions.enableCheckboxSelector) {
-                    _this._grid.setSelectedRows([]);
-                }
+                _this.resetRowSelection();
                 _this.ea.publish('gridStateService:changed', { change: { newValues: currentFilters, type: index_1.GridStateType.filter }, gridState: _this.getCurrentGridState() });
             }));
             // Subscribe to Event Emitter of Sort changed
             this.subscriptions.push(this.ea.subscribe('sortService:sortChanged', function (currentSorters) {
+                _this.resetRowSelection();
                 _this.ea.publish('gridStateService:changed', { change: { newValues: currentSorters, type: index_1.GridStateType.sorter }, gridState: _this.getCurrentGridState() });
             }));
             // Subscribe to Event Emitter of Sort cleared
             this.subscriptions.push(this.ea.subscribe('sortService:sortCleared', function (currentSorters) {
+                _this.resetRowSelection();
                 _this.ea.publish('gridStateService:changed', { change: { newValues: currentSorters, type: index_1.GridStateType.sorter }, gridState: _this.getCurrentGridState() });
             }));
             // Subscribe to ColumnPicker and/or GridMenu for show/hide Columns visibility changes

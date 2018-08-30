@@ -4,7 +4,7 @@ import { CompoundSliderFilter } from './compoundSliderFilter';
 import { InputFilter } from './inputFilter';
 import { SliderFilter } from './sliderFilter';
 import { MultipleSelectFilter } from './multipleSelectFilter';
-import { SelectFilter } from './selectFilter';
+import { NativeSelectFilter } from './nativeSelectFilter';
 import { SingleSelectFilter } from './singleSelectFilter';
 export var Filters = {
     /** Compound Date Filter (compound of Operator + Date picker) */
@@ -22,7 +22,7 @@ export var Filters = {
     /** Single Select filter, which uses 3rd party lib "multiple-select.js" */
     singleSelect: SingleSelectFilter,
     /** Select filter, which uses native DOM element select */
-    select: SelectFilter
+    select: NativeSelectFilter
 };
 export { FilterFactory } from './filterFactory';
 //# sourceMappingURL=index.js.map

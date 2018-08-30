@@ -67,6 +67,23 @@ export function decimalFormatted(input, minDecimal, maxDecimal) {
     return amount;
 }
 /**
+ * Loop through and dispose of all subscriptions when they are disposable
+ * @param subscriptions
+ * @return empty array
+ */
+export function disposeAllSubscriptions(subscriptions) {
+    subscriptions.forEach((subscription) => {
+        if (subscription && subscription.dispose) {
+            subscription.dispose();
+        }
+    });
+    return subscriptions = [];
+}
+/** From a dot (.) notation find and return a property within an object given a path */
+export function getDescendantProperty(obj, path) {
+    return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+}
+/**
  * From a Date FieldType, return it's equivalent moment.js format
  * refer to moment.js for the format standard used: https://momentjs.com/docs/#/parsing/string-format/
  * @param fieldType
@@ -83,6 +100,9 @@ export function mapMomentDateFormatWithFieldType(fieldType) {
             break;
         case FieldType.dateTimeIsoAM_PM:
             map = 'YYYY-MM-DD hh:mm:ss A';
+            break;
+        case FieldType.dateTimeShortIso:
+            map = 'YYYY-MM-DD HH:mm';
             break;
         case FieldType.dateUs:
             map = 'MM/DD/YYYY';
@@ -104,6 +124,9 @@ export function mapMomentDateFormatWithFieldType(fieldType) {
             break;
         case FieldType.dateTimeUsShortAmPm:
             map = 'M/D/YY h:m:s a';
+            break;
+        case FieldType.dateTimeShortUs:
+            map = 'MM/DD/YYYY HH:mm';
             break;
         case FieldType.dateUtc:
             map = 'YYYY-MM-DDTHH:mm:ss.SSSZ';
@@ -358,25 +381,12 @@ export function arraysEqual(a, b, orderMatters = false) {
     return true;
 }
 /**
- * Compares two objects to determine if all the properties are equal
- * We will do a deep check recursively to make sure all properties really are the same
- * @param x first object
- * @param y second object to compare with a
- */
-export function objectsDeepEqual(x, y) {
-    const ok = Object.keys;
-    const tx = typeof x;
-    const ty = typeof y;
-    return x && y && tx === 'object' && tx === ty ? (ok(x).length === ok(y).length &&
-        ok(x).every(key => objectsDeepEqual(x[key], y[key]))) : (x === y);
-}
-/**
  * Uses the logic function to find an item in an array or returns the default
  * value provided (empty object by default)
  * @param any[] array the array to filter
  * @param function logic the logic to find the item
  * @param any [defaultVal={}] the default value to return
- * @return object the found object or deafult value
+ * @return object the found object or default value
  */
 export function findOrDefault(array, logic, defaultVal = {}) {
     return array.find(logic) || defaultVal;

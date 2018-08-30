@@ -54,8 +54,8 @@ var aurelia_event_aggregator_1 = require("aurelia-event-aggregator");
 var index_1 = require("./../filter-conditions/index");
 var index_2 = require("./../filters/index");
 var index_3 = require("./../models/index");
-var utilities_1 = require("./utilities");
 var $ = require("jquery");
+var isequal = require("lodash.isequal");
 var FilterService = /** @class */ (function () {
     function FilterService(ea, filterFactory) {
         this.ea = ea;
@@ -357,7 +357,7 @@ var FilterService = /** @class */ (function () {
                 this._columnFilters[colId] = colFilter;
             }
             // trigger an event only if Filters changed
-            if (!utilities_1.objectsDeepEqual(oldColumnFilters, this._columnFilters)) {
+            if (!isequal(oldColumnFilters, this._columnFilters)) {
                 this.triggerEvent(this._slickSubscriber, {
                     clearFilterTriggered: args && args.clearFilterTriggered,
                     columnId: columnId,

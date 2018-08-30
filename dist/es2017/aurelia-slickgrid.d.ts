@@ -64,7 +64,8 @@ export declare class AureliaSlickgridCustomElement {
     datasetChanged(newValue: any[], oldValue: any[]): void;
     /**
      * Define what our internal Post Process callback, it will execute internally after we get back result from the Process backend call
-     * For now, this is GraphQL Service only feautre and it will basically refresh the Dataset & Pagination without having the user to create his own PostProcess every time
+     * For now, this is GraphQL Service only feature and it will basically
+     * refresh the Dataset & Pagination without having the user to create his own PostProcess every time
      */
     createBackendApiInternalPostProcessCallback(gridOptions: GridOption): void;
     attachDifferentHooks(grid: any, gridOptions: GridOption, dataView: any): void;
@@ -95,5 +96,14 @@ export declare class AureliaSlickgridCustomElement {
      * If using i18n, we also need to trigger a re-translate of the column headers
      */
     updateColumnDefinitionsList(newColumnDefinitions?: Column[]): void;
+    /** Dispatch of Custom Event, which by default will bubble & is cancelable */
     private dispatchCustomEvent(eventName, data?, isBubbling?, isCancelable?);
+    /** Load the Editor Collection asynchronously and replace the "collection" property when Promise resolves */
+    private loadEditorCollectionAsync(column);
+    /**
+     * Update the "internalColumnEditor.collection" property.
+     * Since this is called after the async call resolves, the pointer will not be the same as the "column" argument passed.
+     * Once we found the new pointer, we will reassign the "editor" and "collection" to the "internalColumnEditor" so it has newest collection
+     */
+    private updateEditorCollection(column, newCollection);
 }

@@ -1,6 +1,7 @@
 import { decimalFormatted } from './../services/utilities';
 export var boldFormatter = function (row, cell, value, columnDef, dataContext) {
-    if (!isNaN(+value)) {
+    var isNumber = (value === null || value === undefined) ? false : !isNaN(+value);
+    if (!isNumber) {
         return '';
     }
     else if (value >= 0) {

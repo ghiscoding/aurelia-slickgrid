@@ -28,6 +28,7 @@ export var GlobalGridOptions = {
     defaultFilterPlaceholder: '&#128269;',
     defaultFilter: Filters.input,
     enableAutoResize: true,
+    enableAutoSizeColumns: true,
     enableHeaderMenu: true,
     enableRowSelection: true,
     editable: false,

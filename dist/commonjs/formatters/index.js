@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var arrayObjectToCsvFormatter_1 = require("./arrayObjectToCsvFormatter");
 var arrayToCsvFormatter_1 = require("./arrayToCsvFormatter");
 var boldFormatter_1 = require("./boldFormatter");
 var checkboxFormatter_1 = require("./checkboxFormatter");
@@ -12,6 +13,8 @@ var dateTimeIsoAmPmFormatter_1 = require("./dateTimeIsoAmPmFormatter");
 var dateTimeIsoFormatter_1 = require("./dateTimeIsoFormatter");
 var dateTimeUsAmPmFormatter_1 = require("./dateTimeUsAmPmFormatter");
 var dateTimeUsFormatter_1 = require("./dateTimeUsFormatter");
+var dateTimeShortIsoFormatter_1 = require("./dateTimeShortIsoFormatter");
+var dateTimeShortUsFormatter_1 = require("./dateTimeShortUsFormatter");
 var dateUsFormatter_1 = require("./dateUsFormatter");
 var decimalFormatter_1 = require("./decimalFormatter");
 var deleteIconFormatter_1 = require("./deleteIconFormatter");
@@ -36,6 +39,13 @@ var uppercaseFormatter_1 = require("./uppercaseFormatter");
 var yesNoFormatter_1 = require("./yesNoFormatter");
 /** Provides a list of different Formatters that will change the cell value displayed in the UI */
 exports.Formatters = {
+    /**
+     * Takes an array of complex objects converts it to a comma delimited string.
+     * Requires to pass an array of "propertyNames" in the column definition the generic "params" property
+     * For example, if we have an array of user objects that have the property of firstName & lastName then we need to pass in your column definition::
+     * { params: { propertyNames: ['firtName'] }}
+     */
+    arrayObjectToCsv: arrayObjectToCsvFormatter_1.arrayObjectToCsvFormatter,
     /** Takes an array of string and converts it to a comma delimited string */
     arrayToCsv: arrayToCsvFormatter_1.arrayToCsvFormatter,
     /** show value in bold font weight as well */
@@ -66,19 +76,24 @@ exports.Formatters = {
     dateIso: dateIsoFormatter_1.dateIsoFormatter,
     /** Takes a Date object and displays it as an ISO Date+Time format */
     dateTimeIso: dateTimeIsoFormatter_1.dateTimeIsoFormatter,
+    /** Takes a Date object and displays it as an ISO Date+Time (without seconds) format */
+    dateTimeShortIso: dateTimeShortIsoFormatter_1.dateTimeShortIsoFormatter,
     /** Takes a Date object and displays it as an ISO Date+Time+(am/pm) format */
     dateTimeIsoAmPm: dateTimeIsoAmPmFormatter_1.dateTimeIsoAmPmFormatter,
     /** Takes a Date object and displays it as an US Date format */
     dateUs: dateUsFormatter_1.dateUsFormatter,
     /** Takes a Date object and displays it as an US Date+Time format */
     dateTimeUs: dateTimeUsFormatter_1.dateTimeUsFormatter,
+    /** Takes a Date object and displays it as an US Date+Time (without seconds) format */
+    dateTimeShortUs: dateTimeShortUsFormatter_1.dateTimeShortUsFormatter,
     /** Takes a Date object and displays it as an US Date+Time+(am/pm) format */
     dateTimeUsAmPm: dateTimeUsAmPmFormatter_1.dateTimeUsAmPmFormatter,
     /** Displays a Font-Awesome delete icon (fa-trash) */
     deleteIcon: deleteIconFormatter_1.deleteIconFormatter,
     /**
      * Display the value as x decimals formatted, defaults to 2 decimals.
-     * You can pass "decimalPlaces" or "minDecimalPlaces" and/or "maxDecimalPlaces" to the generic "params" property, example:: `{ formatter: Formatters.decimal, params: { decimalPlaces: 3 }}`
+     * You can pass "decimalPlaces" or "minDecimalPlaces" and/or "maxDecimalPlaces" to the "params" property.
+     * For example:: `{ formatter: Formatters.decimal, params: { decimalPlaces: 3 }}`
      * The property "decimalPlaces" is an alias of "minDecimalPlaces"
      */
     decimal: decimalFormatter_1.decimalFormatter,
@@ -104,7 +119,9 @@ exports.Formatters = {
      */
     mask: maskFormatter_1.maskFormatter,
     /**
-     * You can pipe multiple formatters (executed in sequence), use params to pass the list of formatters. For example::
+     * You can pipe multiple formatters (executed in sequence), use params to pass the list of formatters.
+     * Requires to pass an array of "formatters" in the column definition the generic "params" property
+     * For example::
      * { field: 'title', formatter: Formatters.multiple, params: { formatters: [ Formatters.lowercase, Formatters.uppercase ] }
      */
     multiple: multipleFormatter_1.multipleFormatter,

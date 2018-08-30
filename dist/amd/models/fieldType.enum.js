@@ -24,22 +24,26 @@ define(["require", "exports"], function (require, exports) {
         FieldType[FieldType["dateTimeIsoAmPm"] = 11] = "dateTimeIsoAmPm";
         /** Format: 'YYYY-MM-DD h:mm:ss A' => 2001-01-01 11:01:01 PM */
         FieldType[FieldType["dateTimeIsoAM_PM"] = 12] = "dateTimeIsoAM_PM";
+        /** Format: 'YYYY-MM-DD HH:mm' => 2001-01-01 14:01 */
+        FieldType[FieldType["dateTimeShortIso"] = 13] = "dateTimeShortIso";
         /** Format: 'MM/DD/YYYY' => 02/28/2001 */
-        FieldType[FieldType["dateUs"] = 13] = "dateUs";
+        FieldType[FieldType["dateUs"] = 14] = "dateUs";
         /** Format: 'M/D/YY' => 2/28/12 */
-        FieldType[FieldType["dateUsShort"] = 14] = "dateUsShort";
+        FieldType[FieldType["dateUsShort"] = 15] = "dateUsShort";
+        /** Format: 'MM/DD/YYYY HH:mm' => 02/28/2001 13:01 */
+        FieldType[FieldType["dateTimeShortUs"] = 16] = "dateTimeShortUs";
         /** Format: 'MM/DD/YYYY HH:mm:ss' => 02/28/2001 13:01:01 */
-        FieldType[FieldType["dateTimeUs"] = 15] = "dateTimeUs";
+        FieldType[FieldType["dateTimeUs"] = 17] = "dateTimeUs";
         /** Format: 'MM/DD/YYYY hh:mm:ss a' => 02/28/2001 11:01:01 pm */
-        FieldType[FieldType["dateTimeUsAmPm"] = 16] = "dateTimeUsAmPm";
+        FieldType[FieldType["dateTimeUsAmPm"] = 18] = "dateTimeUsAmPm";
         /** Format: 'MM/DD/YYYY hh:mm:ss A' => 02/28/2001 11:01:01 PM */
-        FieldType[FieldType["dateTimeUsAM_PM"] = 17] = "dateTimeUsAM_PM";
+        FieldType[FieldType["dateTimeUsAM_PM"] = 19] = "dateTimeUsAM_PM";
         /** Format: 'M/D/YY H:m:s' => 2/28/14 14:1:2 */
-        FieldType[FieldType["dateTimeUsShort"] = 18] = "dateTimeUsShort";
+        FieldType[FieldType["dateTimeUsShort"] = 20] = "dateTimeUsShort";
         /** Format: 'M/D/YY h:m:s a' => 2/28/14 1:2:10 pm */
-        FieldType[FieldType["dateTimeUsShortAmPm"] = 19] = "dateTimeUsShortAmPm";
+        FieldType[FieldType["dateTimeUsShortAmPm"] = 21] = "dateTimeUsShortAmPm";
         /** Format: 'M/D/YY h:m:s A' => 2/28/14 14:1:1 PM */
-        FieldType[FieldType["dateTimeUsShortAM_PM"] = 20] = "dateTimeUsShortAM_PM";
+        FieldType[FieldType["dateTimeUsShortAM_PM"] = 22] = "dateTimeUsShortAM_PM";
     })(FieldType = exports.FieldType || (exports.FieldType = {}));
 });
 //# sourceMappingURL=fieldType.enum.js.map
