@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.3.0"></a>
+# [2.3.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.2.3...v2.3.0) (2018-08-30)
+
+
+### Bug Fixes
+
+* **editor:** auto adjust drop position (up/down) broken multiple editors ([a477e53](https://github.com/ghiscoding/aurelia-slickgrid/commit/a477e53))
+* **filter:** MultipleSelect Filter had z-index too low in modal window ([c78c9fd](https://github.com/ghiscoding/aurelia-slickgrid/commit/c78c9fd))
+* **formatter:** null values not handled properly with number formatters ([9dd649a](https://github.com/ghiscoding/aurelia-slickgrid/commit/9dd649a))
+* **grouping:** Filter & Grouping should work together, closes [#90](https://github.com/ghiscoding/aurelia-slickgrid/issues/90) ([#91](https://github.com/ghiscoding/aurelia-slickgrid/issues/91)) ([153e6cc](https://github.com/ghiscoding/aurelia-slickgrid/commit/153e6cc))
+* **import:** add missing typings to fix import lodash.isequal ([a32773b](https://github.com/ghiscoding/aurelia-slickgrid/commit/a32773b))
+* **options:** be able to disable filtering even when set globally ([1d50635](https://github.com/ghiscoding/aurelia-slickgrid/commit/1d50635))
+* **selector:** Row Selection should be reset on Sort changes ([f7162fb](https://github.com/ghiscoding/aurelia-slickgrid/commit/f7162fb))
+* **style:** use the correct radio icon for singleSelect ([18478d9](https://github.com/ghiscoding/aurelia-slickgrid/commit/18478d9))
+
+
+### Features
+
+* **async:** Filter & Editor load Collection Async & Watch, closes [#83](https://github.com/ghiscoding/aurelia-slickgrid/issues/83) ([#89](https://github.com/ghiscoding/aurelia-slickgrid/issues/89)) ([e12019b](https://github.com/ghiscoding/aurelia-slickgrid/commit/e12019b))
+* **columnSize:** add flag enableAutoSizeColumns ([5641871](https://github.com/ghiscoding/aurelia-slickgrid/commit/5641871))
+* **filter:** auto adjust drop position (up/down) of select filter ([c362e3c](https://github.com/ghiscoding/aurelia-slickgrid/commit/c362e3c))
+* **formatter:** add 2 new DateTime Short Formatter without seconds ([ac14e4e](https://github.com/ghiscoding/aurelia-slickgrid/commit/ac14e4e))
+* **formatter:** add new arrayObjectToCsv Formatter ([cdf801e](https://github.com/ghiscoding/aurelia-slickgrid/commit/cdf801e))
+* **multiselect:** auto-adjust height & position of multiple-select.js ([#93](https://github.com/ghiscoding/aurelia-slickgrid/issues/93)) ([b8f3e72](https://github.com/ghiscoding/aurelia-slickgrid/commit/b8f3e72))
+* **resize:** add possibility to override default delay before resizing ([583e63a](https://github.com/ghiscoding/aurelia-slickgrid/commit/583e63a))
+
+
+
 <a name="2.2.3"></a>
 ## [2.2.3](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.2.2...v2.2.3) (2018-08-05)
 
