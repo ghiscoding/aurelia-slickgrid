@@ -91,7 +91,7 @@ export class SelectFilter implements Filter {
 
   /** Getter for the Collection Options */
   protected get collectionOptions(): CollectionOption {
-    return this.columnDef && this.columnDef.filter && this.columnDef.filter.collectionOptions;
+    return this.columnDef && this.columnDef.filter && this.columnDef.filter.collectionOptions || {};
   }
 
   /** Getter for the Filter Operator */
@@ -100,7 +100,7 @@ export class SelectFilter implements Filter {
   }
 
   /** Getter for the Custom Structure if exist */
-  get customStructure(): CollectionCustomStructure {
+  get customStructure(): CollectionCustomStructure | undefined {
     return this.columnDef && this.columnDef.filter && this.columnDef.filter.customStructure;
   }
 
@@ -130,11 +130,11 @@ export class SelectFilter implements Filter {
       throw new Error(`[Aurelia-SlickGrid] You need to pass a "collection" (or "collectionAsync") for the MultipleSelect Filter to work correctly. Also each option should include a value/label pair (or value/labelKey when using Locale). For example:: { filter: model: Filters.multipleSelect, collection: [{ value: true, label: 'True' }, { value: false, label: 'False'}] }`);
     }
 
-    this.enableTranslateLabel = this.columnFilter.enableTranslateLabel || false;
-    this.labelName = (this.customStructure) ? this.customStructure.label : 'label';
-    this.labelPrefixName = (this.customStructure) ? this.customStructure.labelPrefix : 'labelPrefix';
-    this.labelSuffixName = (this.customStructure) ? this.customStructure.labelSuffix : 'labelSuffix';
-    this.valueName = (this.customStructure) ? this.customStructure.value : 'value';
+    this.enableTranslateLabel = this.columnFilter && this.columnFilter.enableTranslateLabel || false;
+    this.labelName = this.customStructure && this.customStructure.label || 'label';
+    this.labelPrefixName = this.customStructure && this.customStructure.labelPrefix || 'labelPrefix';
+    this.labelSuffixName = this.customStructure && this.customStructure.labelSuffix || 'labelSuffix';
+    this.valueName = this.customStructure && this.customStructure.value || 'value';
 
     // always render the Select (dropdown) DOM element, even if user passed a "collectionAsync",
     // if that is the case, the Select will simply be without any options but we still have to render it (else SlickGrid would throw an error)
@@ -273,17 +273,19 @@ export class SelectFilter implements Filter {
     );
 
     // subscribe to the "collection" changes (array `push`, `unshift`, `splice`, ...)
-    this.subscriptions.push(
-      this.bindingEngine
-        .collectionObserver(this.columnFilter.collection)
-        .subscribe((changes: { index: number, addedCount: number, removed: any[] }[]) => {
-          if (Array.isArray(changes) && changes.length > 0) {
-            // simply recreate/re-render the Select (dropdown) DOM Element
-            const updatedCollection = this.columnFilter.collection || [];
-            this.renderDomElement(updatedCollection);
-          }
-        })
-    );
+    if (this.columnFilter && this.columnFilter.collection) {
+      this.subscriptions.push(
+        this.bindingEngine
+          .collectionObserver(this.columnFilter.collection)
+          .subscribe((changes: { index: number, addedCount: number, removed: any[] }[]) => {
+            if (Array.isArray(changes) && changes.length > 0) {
+              // simply recreate/re-render the Select (dropdown) DOM Element
+              const updatedCollection = this.columnFilter.collection || [];
+              this.renderDomElement(updatedCollection);
+            }
+          })
+      );
+    }
   }
 
   protected renderDomElement(collection: any[]) {

@@ -3,7 +3,7 @@ import { Formatter } from './../models/formatter.interface';
 
 export const arrayObjectToCsvFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any) => {
   const propertyNames = columnDef && columnDef.params && columnDef.params.propertyNames;
-  const parentObjectKeyName = columnDef && columnDef.field && columnDef.field.split('.')[0]; // e.g. "users.roles" would be "users"
+  const parentObjectKeyName: string = columnDef && columnDef.field && columnDef.field.split('.')[0]; // e.g. "users.roles" would be "users"
   if (!propertyNames || !Array.isArray(propertyNames) || !parentObjectKeyName) {
     throw new Error(`Formatters.arrayObjectToCsv requires you to pass an array of "propertyNames" (declared in "params") that you want to pull the data from.
       For example, if we have an array of user objects that have the property of firstName & lastName then we need to pass in your column definition:: { params: { propertyNames: ['firtName'] }}`);
@@ -14,9 +14,9 @@ export const arrayObjectToCsvFormatter: Formatter = (row: number, cell: number, 
   if (dataContext[parentObjectKeyName] && Array.isArray(dataContext[parentObjectKeyName])) {
     // we will 1st get the object from the dataContext, then
     if (Array.isArray(dataContext[parentObjectKeyName])) {
-      const outputStrings = [];
-      dataContext[parentObjectKeyName].forEach((data) => {
-        const strings = [];
+      const outputStrings: string[] = [];
+      dataContext[parentObjectKeyName].forEach((data: any) => {
+        const strings: string[] = [];
 
         // 2nd from that data loop through all propertyNames we want to use (e.g.: ['firstName', 'lastName'])
         propertyNames.forEach((prop) => {

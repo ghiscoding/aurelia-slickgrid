@@ -179,11 +179,11 @@ export class SelectEditor implements Editor {
       For example: { editor: { collection: [{ value: true, label: 'True' },{ value: false, label: 'False'}] } }`);
     }
 
-    this.enableTranslateLabel = (this.columnEditor.enableTranslateLabel) ? this.columnEditor.enableTranslateLabel : false;
-    this.labelName = (this.customStructure) ? this.customStructure.label : 'label';
-    this.labelPrefixName = (this.customStructure) ? this.customStructure.labelPrefix : 'labelPrefix';
-    this.labelSuffixName = (this.customStructure) ? this.customStructure.labelSuffix : 'labelSuffix';
-    this.valueName = (this.customStructure) ? this.customStructure.value : 'value';
+    this.enableTranslateLabel = this.columnEditor && this.columnEditor.enableTranslateLabel || false;
+    this.labelName = this.customStructure && this.customStructure.label || 'label';
+    this.labelPrefixName = this.customStructure && this.customStructure.labelPrefix || 'labelPrefix';
+    this.labelSuffixName = this.customStructure && this.customStructure.labelSuffix || 'labelSuffix';
+    this.valueName = this.customStructure && this.customStructure.value || 'value';
 
     // always render the Select (dropdown) DOM element, even if user passed a "collectionAsync",
     // if that is the case, the Select will simply be without any options but we still have to render it (else SlickGrid would throw an error)

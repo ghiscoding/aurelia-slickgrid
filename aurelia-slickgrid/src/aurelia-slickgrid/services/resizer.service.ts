@@ -141,8 +141,8 @@ export class ResizerService {
           // get the new sizes, if new sizes are passed (not 0), we will use them else use available space
           // basically if user passes 1 of the dimension, let say he passes just the height,
           // we will use the height as a fixed height but the width will be resized by it's available space
-          const newHeight = (newSizes && newSizes.height) ? newSizes.height : availableDimensions.height;
-          const newWidth = (newSizes && newSizes.width) ? newSizes.width : availableDimensions.width;
+          const newHeight = (newSizes && newSizes.height) ? newSizes.height : (availableDimensions && availableDimensions.height) || 0;
+          const newWidth = (newSizes && newSizes.width) ? newSizes.width : (availableDimensions && availableDimensions.width) || 0;
 
           // apply these new height/width to the datagrid
           gridElm.height(newHeight);
