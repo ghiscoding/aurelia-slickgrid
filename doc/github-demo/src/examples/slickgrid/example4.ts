@@ -91,11 +91,13 @@ export class Example4 {
             sortDesc: true,
             fieldType: FieldType.number
           },
+          collectionOptions: {
+            separatorBetweenTextLabels: ''
+          },
           customStructure: {
             value: 'value',
             label: 'label',
-            labelSuffix: 'text',
-            separatorBetweenTextLabels: ''
+            labelSuffix: 'text'
           },
           model: Filters.multipleSelect,
           searchTerms: [1, 33, 50], // default selection
