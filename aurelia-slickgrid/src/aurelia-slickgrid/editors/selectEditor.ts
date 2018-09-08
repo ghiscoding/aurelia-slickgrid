@@ -17,9 +17,6 @@ import { arraysEqual, getDescendantProperty, htmlEncode } from '../services/util
 import * as DOMPurify from 'dompurify';
 import * as $ from 'jquery';
 
-// height in pixel of the multiple-select DOM element
-const SELECT_ELEMENT_HEIGHT = 26;
-
 /**
  * Slickgrid editor class for multiple select lists
  */
@@ -81,6 +78,7 @@ export class SelectEditor implements Editor {
         const isRenderHtmlEnabled = this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.enableRenderHtml || false;
         return isRenderHtmlEnabled ? $elm.text() : $elm.html();
       },
+      onBlur: () => this.destroy()
     };
     if (isMultipleSelect) {
       libOptions.single = false;
@@ -195,7 +193,8 @@ export class SelectEditor implements Editor {
   }
 
   destroy() {
-    if (this.$editorElm) {
+    if (this.$editorElm && this.$editorElm.multipleSelect) {
+      this.$editorElm.multipleSelect('close');
       this.$editorElm.remove();
     }
     this.subscriptions = disposeAllSubscriptions(this.subscriptions);
@@ -236,7 +235,9 @@ export class SelectEditor implements Editor {
   }
 
   focus() {
-    this.$editorElm.focus();
+    if (this.$editorElm && this.$editorElm.multipleSelect) {
+      this.$editorElm.multipleSelect('focus');
+    }
   }
 
   isValueChanged(): boolean {
