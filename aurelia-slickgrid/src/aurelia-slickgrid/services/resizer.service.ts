@@ -160,6 +160,10 @@ export class ResizerService {
           // also call the grid auto-size columns so that it takes available when going bigger
           if (this._grid && this._gridOptions && this._gridOptions.enableAutoSizeColumns && typeof this._grid.autosizeColumns === 'function') {
             this._grid.autosizeColumns();
+
+            // Chrome always show the horizontal scroll,
+            // we can patch it by adding 3px to grid but only after resizing column headers
+            gridElm.width(newWidth + 3);
           }
 
           // keep last resized dimensions & resolve them to the Promise
