@@ -117,6 +117,19 @@ export class ResizerService {
     return this._lastDimensions;
   }
 
+  /**
+   * Adjust Chrome width to avoid showing an extra horizontal scroll,
+   * we can patch it by adding 3px to grid but only after resizing column headers
+   */
+  adjustChromeHorizontalScroll(gridOptions: GridOption) {
+    const gridElm = $(`#${gridOptions.gridId}`);
+
+    if (gridElm && gridElm.width && !!window['chrome'] && window.navigator && window.navigator.vendor && window.navigator.vendor.includes('Google')) {
+      // adding 3px in grid width in Chrome is enough to remove scroll
+      gridElm.width(gridElm.width() + 3);
+    }
+  }
+
   /** Resize the datagrid to fit the browser height & width */
   resizeGrid(delay?: number, newSizes?: GridDimension): Promise<GridDimension> {
     if (!this._grid || !this._gridOptions) {
@@ -161,9 +174,8 @@ export class ResizerService {
           if (this._grid && this._gridOptions && this._gridOptions.enableAutoSizeColumns && typeof this._grid.autosizeColumns === 'function') {
             this._grid.autosizeColumns();
 
-            // Chrome always show the horizontal scroll,
-            // we can patch it by adding 3px to grid but only after resizing column headers
-            gridElm.width(newWidth + 3);
+            // patch Chrome horizontal scroll
+            this.adjustChromeHorizontalScroll(this._gridOptions);
           }
 
           // keep last resized dimensions & resolve them to the Promise

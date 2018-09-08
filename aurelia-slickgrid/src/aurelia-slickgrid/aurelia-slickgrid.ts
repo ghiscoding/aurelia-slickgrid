@@ -506,6 +506,9 @@ export class AureliaSlickgridCustomElement {
     // expand/autofit columns on first page load
     if (grid && options.autoFitColumnsOnFirstLoad && options.enableAutoSizeColumns && typeof grid.autosizeColumns === 'function') {
       this.grid.autosizeColumns();
+
+      // patch Chrome horizontal scroll
+      this.resizerService.adjustChromeHorizontalScroll(this.gridOptions);
     }
 
     // auto-resize grid on browser resize
