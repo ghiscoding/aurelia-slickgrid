@@ -1,7 +1,8 @@
 import { singleton, inject } from 'aurelia-framework';
-import { GridOption } from './../models/index';
-import * as $ from 'jquery';
 import { EventAggregator } from 'aurelia-event-aggregator';
+import { GridOption } from './../models/index';
+import { getScrollBarWidth } from './utilities';
+import * as $ from 'jquery';
 
 // global constants, height/width are in pixels
 const DATAGRID_MIN_HEIGHT = 180;
@@ -113,20 +114,31 @@ export class ResizerService {
     $(window).off(`resize.grid.${this._gridUid}`);
   }
 
+  /**
+   * Return the last resize dimensions used
+   * @return last dimensions
+   */
   getLastResizeDimensions(): GridDimension {
     return this._lastDimensions;
   }
 
   /**
-   * Adjust Chrome width to avoid showing an extra horizontal scroll,
-   * we can patch it by adding 3px to grid but only after resizing column headers
+   * For some reason this only seems to happen in Chrome and is sometime miscalculated by SlickGrid measureSrollbar() method
+   * When that happens we will compensate and resize the Grid Viewport to avoid seeing horizontal scrollbar
+   * Most of the time it happens, it's a tiny offset calculation of usually 3px (enough to show scrollbar)
+   * GitHub issue reference: https://github.com/6pac/SlickGrid/issues/275
    */
-  adjustChromeHorizontalScroll(gridOptions: GridOption) {
+  compensateHorizontalScroll(grid: any, gridOptions: GridOption) {
     const gridElm = $(`#${gridOptions.gridId}`);
 
-    if (gridElm && gridElm.width && !!window['chrome'] && window.navigator && window.navigator.vendor && window.navigator.vendor.includes('Google')) {
-      // adding 3px in grid width in Chrome is enough to remove scroll
-      gridElm.width(gridElm.width() + 3);
+    const scrollbarDimensions = grid && grid.getScrollbarDimensions();
+    const slickGridScrollbarWidth = scrollbarDimensions && scrollbarDimensions.width;
+    const calculatedScrollbarWidth = getScrollBarWidth();
+
+    // if scrollbar width is different from SlickGrid calculation to our custom calculation
+    // then resize the grid with the missing pixels to remove scroll (usually only 3px)
+    if (slickGridScrollbarWidth < calculatedScrollbarWidth) {
+      gridElm.width(gridElm.width() + (calculatedScrollbarWidth - slickGridScrollbarWidth));
     }
   }
 
@@ -175,7 +187,7 @@ export class ResizerService {
             this._grid.autosizeColumns();
 
             // patch Chrome horizontal scroll
-            this.adjustChromeHorizontalScroll(this._gridOptions);
+            this.compensateHorizontalScroll(this._grid, this._gridOptions);
           }
 
           // keep last resized dimensions & resolve them to the Promise

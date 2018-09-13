@@ -507,8 +507,8 @@ export class AureliaSlickgridCustomElement {
     if (grid && options.autoFitColumnsOnFirstLoad && options.enableAutoSizeColumns && typeof grid.autosizeColumns === 'function') {
       this.grid.autosizeColumns();
 
-      // patch Chrome horizontal scroll
-      this.resizerService.adjustChromeHorizontalScroll(this.gridOptions);
+      // compensate anytime SlickGrid measureScrollbar is incorrect (only seems to happen in Chrome 1/5 computers)
+      this.resizerService.compensateHorizontalScroll(this.grid, this.gridOptions);
     }
 
     // auto-resize grid on browser resize
