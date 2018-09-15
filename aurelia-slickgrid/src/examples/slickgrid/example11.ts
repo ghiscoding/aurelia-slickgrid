@@ -8,6 +8,8 @@ import {
   GridOption,
   OnEventArgs
 } from '../../aurelia-slickgrid';
+import './custom-styles.scss';
+import { GridService } from '../../aurelia-slickgrid/services';
 
 @autoinject()
 export class Example11 {
@@ -20,15 +22,21 @@ export class Example11 {
     <li>Add/Update an item requires a valid Slickgrid Selection Model, you have 2 choices to deal with this:</li>
     <ul><li>You can enable "enableCheckboxSelector" or "enableRowSelection" to True</li></ul>
     <li>Click on any of the buttons below to test this out</li>
-    <li>You can change the highlighted color &amp; animation by changing the SASS variables:</li>
+    <li>You can change the highlighted color &amp; animation by changing the <a href="https://github.com/ghiscoding/aurelia-slickgrid/blob/master/aurelia-slickgrid/src/aurelia-slickgrid/styles/_variables.scss" target="_blank">SASS Variables</a></li>
     <ul>
       <li>"$row-highlight-background-color" or "$row-highlight-fade-animation"</li>
-      <li>Take a look at the available <a href="https://github.com/ghiscoding/aurelia-slickgrid/blob/master/aurelia-slickgrid/src/aurelia-slickgrid/styles/_variables.scss" target="_blank">SASS Variables</a></li>
+    </ul>
+    <li>You can also add CSS class(es) on the fly (or on page load) on rows with certain criteria, (e.g. click on last button)
+    <ul>
+      <li>Example, click on button "Highlight Rows with Duration over 50" to see row styling changing. <a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Dynamically-Add-CSS-Classes-to-Item-Rows" target="_blank">Wiki doc</a></li>
     </ul>
   </ul>
   `;
 
   aureliaGrid: AureliaGridInstance;
+  grid: any;
+  gridService: GridService;
+  dataView: any;
   columnDefinitions: Column[];
   gridOptions: GridOption;
   dataset: any[];
@@ -46,6 +54,16 @@ export class Example11 {
 
   aureliaGridReady(aureliaGrid: AureliaGridInstance) {
     this.aureliaGrid = aureliaGrid;
+    this.dataView = aureliaGrid.dataView;
+    this.grid = aureliaGrid.slickGrid;
+    this.gridService = aureliaGrid.gridService;
+    // if you want to change background color of Duration over 50 right after page load,
+    // you would put the code here, also make sure to re-render the grid for the styling to be applied right away
+    /*
+    this.dataView.getItemMetadata = this.updateItemMetadataForDurationOver50(this.dataView.getItemMetadata);
+    this.grid.invalidate();
+    this.grid.render();
+    */
   }
 
   /* Define grid Options and Columns */
@@ -161,8 +179,43 @@ export class Example11 {
     this.aureliaGrid.gridService.addItemToDatagrid(newItem);
   }
 
+  /** Change the Duration Rows Background Color */
+  changeDurationBackgroundColor() {
+    this.dataView.getItemMetadata = this.updateItemMetadataForDurationOver50(this.dataView.getItemMetadata);
+    // also re-render the grid for the styling to be applied right away
+    this.grid.invalidate();
+    this.grid.render();
+    // or use the Aurelia-SlickGrid GridService
+    // this.gridService.renderGrid();
+  }
+
+  /** Highlight the 5th row using the Aurelia-Slickgrid GridService */
   highlighFifthRow() {
     this.aureliaGrid.gridService.highlightRow(4, 1500);
+  }
+
+  /**
+   * Change the SlickGrid Item Metadata, we will add a CSS class on all rows with a Duration over 50
+   * For more info, you can see this SO https://stackoverflow.com/a/19985148/1212166
+   */
+  updateItemMetadataForDurationOver50(previousItemMetadata: any) {
+    const newCssClass = 'duration-bg';
+    return (rowNumber: number) => {
+      const item = this.dataView.getItem(rowNumber);
+      let meta = {
+        cssClasses: ''
+      };
+      if (typeof previousItemMetadata === 'object') {
+        meta = previousItemMetadata(rowNumber);
+      }
+      if (meta && item && item.duration) {
+        const duration = +item.duration; // convert to number
+        if (duration > 50) {
+          meta.cssClasses = (meta.cssClasses || '') + ' ' + newCssClass;
+        }
+      }
+      return meta;
+    };
   }
 
   updateSecondItem() {
