@@ -41,6 +41,10 @@ export class LongTextEditor implements Editor {
     return this.columnEditor.validator || this.columnDef.validator;
   }
 
+  get hasAutoCommitEdit() {
+    return this.args.grid.getOptions().autoCommitEdit;
+  }
+
   init(): void {
     const cancelText = this.i18n.tr('CANCEL') || Constants.TEXT_CANCEL;
     const saveText = this.i18n.tr('SAVE') || Constants.TEXT_SAVE;
@@ -48,6 +52,12 @@ export class LongTextEditor implements Editor {
 
     this.$wrapper = $(`<div class="slick-large-editor-text" />`).appendTo($container);
     this.$input = $(`<textarea hidefocus rows="5">`).appendTo(this.$wrapper);
+
+    // aurelia-slickgrid does not get the focus out event for some reason
+    // so register it here
+    if (this.hasAutoCommitEdit) {
+      this.$input.on('focusout', () => this.save());
+    }
 
     $(`<div class="editor-footer">
         <button class="btn btn-primary btn-xs">${saveText}</button>
@@ -82,7 +92,9 @@ export class LongTextEditor implements Editor {
   }
 
   save() {
-    if (this.args && this.args.commitChanges) {
+    if (this.hasAutoCommitEdit) {
+      this.args.grid.getEditorLock().commitCurrentEdit();
+    } else {
       this.args.commitChanges();
     }
   }
