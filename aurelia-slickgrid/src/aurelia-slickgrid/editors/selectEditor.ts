@@ -86,8 +86,7 @@ export class SelectEditor implements Editor {
       onClose: () => {
         if (!this._destroying && args.grid.getOptions().autoCommitEdit) {
           // do not use args.commitChanges() as this sets the focus to the next
-          // row and does not have a nice user experience. Also the select list will
-          // stay shown when clicking off the grid
+          // row. Also the select list will stay shown when clicking off the grid
           args.grid.getEditorLock().commitCurrentEdit();
         }
       }

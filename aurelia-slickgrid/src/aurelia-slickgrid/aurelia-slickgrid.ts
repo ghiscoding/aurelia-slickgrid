@@ -300,8 +300,6 @@ export class AureliaSlickgridCustomElement {
       // tries to commit the edit when going from one editor to another on the grid
       // through the click event. If the timeout was not here it would
       // try to commit/destroy the twice, which would throw a jquery
-      //
-      //
       // error about the element not being in the DOM
       setTimeout(() => {
         // make sure the target is the active editor so we do not
