@@ -137,8 +137,9 @@ export class ResizerService {
 
     // if scrollbar width is different from SlickGrid calculation to our custom calculation
     // then resize the grid with the missing pixels to remove scroll (usually only 3px)
-    if (slickGridScrollbarWidth < calculatedScrollbarWidth) {
-      gridElm.width(gridElm.width() + (calculatedScrollbarWidth - slickGridScrollbarWidth));
+    if (slickGridScrollbarWidth < calculatedScrollbarWidth && gridElm && gridElm.width) {
+      const oldWidth = gridElm && gridElm.width && gridElm.width() || 0;
+      gridElm.width(oldWidth + (calculatedScrollbarWidth - slickGridScrollbarWidth));
     }
   }
 

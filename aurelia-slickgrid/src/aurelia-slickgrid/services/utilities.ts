@@ -428,7 +428,7 @@ export function findOrDefault(array: any[], logic: (item: any) => boolean, defau
 /** Get the browser's scrollbar width, this is different to each browser */
 export function getScrollBarWidth() {
   const $outer = $('<div>').css({ visibility: 'hidden', width: 100, overflow: 'scroll' }).appendTo('body');
-  const widthWithScroll = $('<div>').css({ width: '100%' }).appendTo($outer).outerWidth();
+  const widthWithScroll = $('<div>').css({ width: '100%' }).appendTo($outer).outerWidth() || 0;
   $outer.remove();
   return Math.ceil(100 - widthWithScroll);
 }
