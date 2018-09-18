@@ -33,6 +33,16 @@ const myCustomTitleValidator: EditorValidator = (value) => {
   }
 };
 
+// create a custom Formatter to show the Task + value
+const taskFormatter = (row, cell, value, columnDef, dataContext) => {
+  if (value && Array.isArray(value)) {
+    const taskValues = value.map((val) => `Task ${val}`);
+    const values = taskValues.join(', ');
+    return `<span title="${values}">${values}</span>`;
+  }
+  return '';
+};
+
 @autoinject()
 export class Example3 {
   title = 'Example 3: Editors / Delete';
@@ -238,6 +248,7 @@ export class Example3 {
       name: 'Prerequisites',
       field: 'prerequisites',
       filterable: true,
+      formatter: taskFormatter,
       minWidth: 100,
       sortable: true,
       type: FieldType.string,
@@ -271,8 +282,7 @@ export class Example3 {
           labelPrefix: 'prefix',
         },
         collectionOptions: {
-          separatorBetweenTextLabels: '',
-          includePrefixSuffixToSelectedValues: true
+          separatorBetweenTextLabels: ' '
         },
         model: Editors.multipleSelect,
       },
@@ -385,7 +395,7 @@ export class Example3 {
         start: new Date(randomYear, randomMonth, randomDay),
         finish: new Date(randomYear, (randomMonth + 1), randomDay),
         effortDriven: (i % 5 === 0),
-        prerequisites: (i % 2 === 0) && i !== 0 && i < 12 ? [`Task ${i}`, `Task ${i - 1}`] : []
+        prerequisites: (i % 2 === 0) && i !== 0 && i < 12 ? [i, i - 1] : []
       });
     }
     return tempDataset;
