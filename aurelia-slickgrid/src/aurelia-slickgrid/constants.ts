@@ -14,8 +14,10 @@ export class Constants {
   static TEXT_SORT_ASCENDING = 'Sort Ascending';
   static TEXT_SORT_DESCENDING = 'Sort Descending';
   static TEXT_TOGGLE_FILTER_ROW = 'Toggle Filter Row';
+  static VALIDATION_EDITOR_DECIMAL_BETWEEN = 'Please enter a valid number with a maximum of {{maxDecimal}} decimals';
+  static VALIDATION_EDITOR_NUMBER_BETWEEN = 'Please enter a valid number between {{minValue}} and {{maxValue}}';
+  static VALIDATION_EDITOR_NUMBER_MAX = 'Please enter a valid number that is lower than {{maxValue}}';
+  static VALIDATION_EDITOR_NUMBER_MIN = 'Please enter a valid number that is greater than {{minValue}}';
   static VALIDATION_EDITOR_VALID_NUMBER = 'Please enter a valid number';
   static VALIDATION_EDITOR_VALID_INTEGER = 'Please enter a valid integer number';
-  static VALIDATION_EDITOR_NUMBER_BETWEEN = 'Please enter a valid number between {{minValue}} and {{maxValue}}';
-  static VALIDATION_EDITOR_DECIMAL_BETWEEN = 'Please enter a valid number with a maximum of {{maxDecimal}} decimals';
 }

@@ -249,7 +249,8 @@ export class SelectEditor implements Editor {
 
   validate(): EditorValidatorOutput {
     if (this.validator) {
-      const validationResults = this.validator(this.isMultipleSelect ? this.currentValues : this.currentValue);
+      const value = this.isMultipleSelect ? this.currentValues : this.currentValue;
+      const validationResults = this.validator(value, this.args);
       if (!validationResults.valid) {
         return validationResults;
       }
