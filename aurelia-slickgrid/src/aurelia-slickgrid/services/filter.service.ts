@@ -190,13 +190,13 @@ export class FilterService {
         return false;
       }
 
-      const fieldName = columnDef.queryField || columnDef.queryFieldFilter || columnDef.field;
+      const fieldName = columnDef.queryField || columnDef.queryFieldFilter || columnDef.field || '';
       const fieldType = columnDef.type || FieldType.string;
       const filterSearchType = (columnDef.filterSearchType) ? columnDef.filterSearchType : null;
       let cellValue = item[fieldName];
 
-      // when item is a complex object, we need to filter the value contained in the object following the dot "." notation
-      if (columnDef && columnDef.filter && columnDef.filter.isComplexObject) {
+      // when item is a complex object (dot "." notation), we need to filter the value contained in the object tree
+      if (fieldName && fieldName.indexOf('.') >= 0) {
         cellValue = getDescendantProperty(item, fieldName);
       }
 

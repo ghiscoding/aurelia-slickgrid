@@ -69,12 +69,6 @@ export interface ColumnFilter {
   /** Do we want the Filter to handle translation (localization)? */
   enableTranslateLabel?: boolean;
 
-  /**
-   * Defaults to false, does the filter has to deal with item that are complex object?
-   * If so, it will explode the object using the dot "." notation to find the value to filter against.
-   */
-  isComplexObject?: boolean;
-
   /** Options that could be provided to the Filter, example: { container: 'body', maxHeight: 250} */
   filterOptions?: MultipleSelectOption | any;
 

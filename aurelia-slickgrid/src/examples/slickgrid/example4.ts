@@ -146,6 +146,7 @@ export class Example4 {
         formatter: Formatters.multiple,
         params: { formatters: [Formatters.complexObject, Formatters.checkmark] },
 
+        // when the "field" string includes the dot "." notation, the library will consider this to be a complex object and Filter accordingly
         filterable: true,
         filter: {
           // We can also add HTML text to be rendered (any bad script will be sanitized) but we have to opt-in, else it will be sanitized
@@ -158,10 +159,6 @@ export class Example4 {
             label: 'label'
           },
           model: Filters.singleSelect,
-
-          // the EffortDriven is a complex object, to filter against it, we need to enable the isComplexObject flag
-          // the filter will use the "." notation from the "field" name to filter properly, e.g.: { field: 'effortDriven.isEffort' }
-          isComplexObject: true,
 
           // we could add certain option(s) to the "multiple-select" plugin
           filterOptions: {
