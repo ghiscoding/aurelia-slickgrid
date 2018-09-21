@@ -21,7 +21,6 @@ import 'slickgrid/plugins/slick.rowmovemanager';
 import 'slickgrid/plugins/slick.rowselectionmodel';
 
 import { bindable, BindingEngine, bindingMode, Container, Factory, inject } from 'aurelia-framework';
-import { HttpResponseMessage } from 'aurelia-http-client';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
 import { GlobalGridOptions } from './global-grid-options';
 import {
@@ -659,19 +658,19 @@ export class AureliaSlickgridCustomElement {
       // wait for the "collectionAsync", once resolved we will save it into the "collection"
       // the collectionAsync can be of 3 types HttpClient, HttpFetch or a Promise
       //
-      collectionAsync.then((response: HttpResponseMessage | Response | any[]) => {
-        if (response instanceof Response && typeof response.json === 'function') {
+      collectionAsync.then((response: any | any[]) => {
+        if (Array.isArray(response)) {
+          this.updateEditorCollection(column, response); // from Promise
+        } else if (response instanceof Response && typeof response.json === 'function') {
           if (response.bodyUsed) {
             throw new Error('[Aurelia-SlickGrid] The response body passed to collectionAsync was ' +
               'already read. Either pass the dataset from the Response ' +
               'or clone the response first using response.clone()');
           }
-
+          // from aurelia-fetch-client
           (response as Response).json().then(data => this.updateEditorCollection(column, data));
-        } else if (response instanceof HttpResponseMessage) {
-          this.updateEditorCollection(column, response['content']);
-        } else if (Array.isArray(response)) {
-          this.updateEditorCollection(column, response);
+        } else if (response && response['content']) {
+          this.updateEditorCollection(column, response['content']); // from aurelia-http-client
         }
       });
     }
