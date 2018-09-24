@@ -667,7 +667,7 @@ export class AureliaSlickgridCustomElement {
               'already read. Either pass the dataset from the Response ' +
               'or clone the response first using response.clone()');
           }
-          // from aurelia-fetch-client
+          // from Fetch
           (response as Response).json().then(data => this.updateEditorCollection(column, data));
         } else if (response && response['content']) {
           this.updateEditorCollection(column, response['content']); // from aurelia-http-client
