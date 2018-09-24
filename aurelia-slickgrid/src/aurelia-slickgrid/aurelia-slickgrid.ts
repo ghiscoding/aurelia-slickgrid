@@ -245,8 +245,9 @@ export class AureliaSlickgridCustomElement {
     this.dataview = [];
     this._eventHandler.unsubscribeAll();
     this.grid.destroy();
-    if (emptyDomElementContainer) {
-      $(this.gridOptions.gridContainerId).empty();
+    if (emptyDomElementContainer && this.gridId) {
+      const containerId = this.gridOptions && this.gridOptions.gridContainerId || `slickGridContainer-${this.gridId}`;
+      $(containerId).empty();
     }
 
     this.ea.publish('onAfterGridDestroyed', true);
