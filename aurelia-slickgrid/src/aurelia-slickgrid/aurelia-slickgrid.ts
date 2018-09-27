@@ -289,6 +289,28 @@ export class AureliaSlickgridCustomElement {
     }
   }
 
+  /**
+   * Commits the current edit to the grid
+   */
+  commitEdit(target: Element) {
+    if (this.grid.getOptions().autoCommitEdit) {
+      const activeNode = this.grid.getActiveCellNode();
+
+      // a timeout must be set or this could come into conflict when slickgrid
+      // tries to commit the edit when going from one editor to another on the grid
+      // through the click event. If the timeout was not here it would
+      // try to commit/destroy the twice, which would throw a jquery
+      // error about the element not being in the DOM
+      setTimeout(() => {
+        // make sure the target is the active editor so we do not
+        // commit prematurely
+        if (activeNode && activeNode.contains(target) && this.grid.getEditorLock().isActive()) {
+          this.grid.getEditorLock().commitCurrentEdit();
+        }
+      });
+    }
+  }
+
   datasetChanged(newValue: any[], oldValue: any[]) {
     this._dataset = newValue;
     this.refreshGridData(newValue);

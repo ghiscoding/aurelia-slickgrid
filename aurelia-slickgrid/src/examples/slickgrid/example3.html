@@ -22,6 +22,10 @@
           <i class="fa fa-undo"></i>
           Undo last edit(s)
         </button>
+        <label class="checkbox-inline control-label" for="autoCommitEdit">
+          <input type="checkbox" id="autoCommitEdit" value.bind="gridOptions.autoCommitEdit" click.delegate="changeAutoCommit()">
+          Auto Commit Edit
+        </label>
       </div>
     </span>
     <div class="row" style="margin-top: 5px">

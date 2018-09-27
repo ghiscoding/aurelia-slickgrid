@@ -57,6 +57,10 @@ export class SelectEditor implements Editor {
   /** Event Subscriptions */
   subscriptions: Subscription[] = [];
 
+  // flag to signal that the editor is destroying itself, helps prevent
+  // commit changes from being called twice and erroring
+  _destroying = false;
+
   constructor(protected bindingEngine: BindingEngine, protected collectionService: CollectionService, protected i18n: I18N, protected args: any, protected isMultipleSelect = true) {
     this.gridOptions = this.args.grid.getOptions() as GridOption;
 
@@ -78,7 +82,14 @@ export class SelectEditor implements Editor {
         const isRenderHtmlEnabled = this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.enableRenderHtml || false;
         return isRenderHtmlEnabled ? $elm.text() : $elm.html();
       },
-      onBlur: () => this.destroy()
+      onBlur: () => this.destroy(),
+      onClose: () => {
+        if (!this._destroying && args.grid.getOptions().autoCommitEdit) {
+          // do not use args.commitChanges() as this sets the focus to the next
+          // row. Also the select list will stay shown when clicking off the grid
+          args.grid.getEditorLock().commitCurrentEdit();
+        }
+      }
     };
     if (isMultipleSelect) {
       libOptions.single = false;
@@ -193,6 +204,7 @@ export class SelectEditor implements Editor {
   }
 
   destroy() {
+    this._destroying = true;
     if (this.$editorElm && this.$editorElm.multipleSelect) {
       this.$editorElm.multipleSelect('close');
       this.$editorElm.remove();

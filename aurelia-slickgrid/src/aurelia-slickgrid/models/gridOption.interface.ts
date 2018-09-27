@@ -36,6 +36,9 @@ export interface GridOption {
   /** Defaults to false, when enabled will automatically open the inlined editor as soon as there is a focus on the cell (can be combined with "enableCellNavigation: true"). */
   autoEdit?: boolean;
 
+  /** Defaults to false, when enabled will try to commit the current edit without focusing on the next row. If a custom editor is implemented and the grid cannot auto commit, you must use this option to implement it yourself */
+  autoCommitEdit?: boolean;
+
   /** Defaults to true, which leads to automatically adjust the size of each column with the available space. Similar to "Force Fit Column" but only happens on first page/component load. */
   autoFitColumnsOnFirstLoad?: boolean;
 
