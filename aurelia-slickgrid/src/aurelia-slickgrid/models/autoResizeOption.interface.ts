@@ -5,11 +5,17 @@ export interface AutoResizeOption {
   /** container id */
   containerId?: string;
 
-  /** minimum height to use in pixels */
-  minHeight?: any;
+  /** maximum height (pixels) of the grid */
+  maxHeight?: number;
 
-  /** minimum width to use in pixels */
-  minWidth?: any;
+  /** minimum height (pixels) of the grid */
+  minHeight?: number;
+
+  /** maximum width (pixels) of the grid */
+  maxWidth?: number;
+
+  /** minimum width (pixels) of the grid */
+  minWidth?: number;
 
   /** side (left/right) padding in pixels */
   sidePadding?: number;
