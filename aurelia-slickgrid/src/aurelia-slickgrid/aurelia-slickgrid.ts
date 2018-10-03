@@ -32,7 +32,6 @@ import {
   GridStateChange,
   GridStateType,
   Pagination,
-  Statistic,
 } from './models/index';
 import {
   ControlAndPluginService,
@@ -76,6 +75,7 @@ export class AureliaSlickgridCustomElement {
   private _columnDefinitions: Column[] = [];
   private _dataset: any[];
   private _eventHandler: any = new Slick.EventHandler();
+  private _hideHeaderRowAfterPageLoad = false;
   groupItemMetadataProvider: any;
   isGridInitialized = false;
   showPagination = false;
@@ -175,6 +175,12 @@ export class AureliaSlickgridCustomElement {
     this.dataview.beginUpdate();
     this.dataview.setItems(this._dataset, this.gridOptions.datasetIdPropertyName);
     this.dataview.endUpdate();
+
+    // user might want to hide the header row on page load but still have `enableFiltering: true`
+    // if that is the case, we need to hide the headerRow ONLY AFTER all filters got created & dataView exist
+    if (this._hideHeaderRowAfterPageLoad) {
+      this.showHeaderRow(false);
+    }
 
     // after the DataView is created & updated execute some processes
     this.executeAfterDataviewCreated(this.grid, this.gridOptions, this.dataview);
@@ -555,16 +561,14 @@ export class AureliaSlickgridCustomElement {
   mergeGridOptions(gridOptions: GridOption): GridOption {
     gridOptions.gridId = this.gridId;
     gridOptions.gridContainerId = `slickGridContainer-${this.gridId}`;
-    if (gridOptions.enableFiltering) {
-      gridOptions.showHeaderRow = true;
-    }
 
     // use jquery extend to deep merge & copy to avoid immutable properties being changed in GlobalGridOptions after a route change
     const options = $.extend(true, {}, GlobalGridOptions, gridOptions);
 
     // also make sure to show the header row if user have enabled filtering
+    this._hideHeaderRowAfterPageLoad = (options.showHeaderRow === false);
     if (options.enableFiltering && !options.showHeaderRow) {
-      options.showHeaderRow = true;
+      options.showHeaderRow = options.enableFiltering;
     }
 
     return options;
