@@ -92,12 +92,17 @@ export class Example4 {
           // OR 2- use "aurelia-fetch-client", they are both supported
           collectionAsync: this.httpFetch.fetch(URL_SAMPLE_COLLECTION_DATA),
 
-          // remove certain value(s) from the select dropdown
-          collectionFilterBy: {
+          // collectionFilterBy & collectionSortBy accept a single option and/or array of options
+          // remove value 365 & 360 from the dropdown filter
+          collectionFilterBy: [{
             property: 'value',
             operator: OperatorType.notEqual,
             value: 365
-          },
+          }, {
+            property: 'value',
+            operator: OperatorType.notEqual,
+            value: 360
+          }],
 
           // sort the select dropdown in a descending order
           collectionSortBy: {
@@ -111,7 +116,7 @@ export class Example4 {
             labelSuffix: 'text',
           },
           collectionOptions: {
-            separatorBetweenTextLabels: ''
+            separatorBetweenTextLabels: ' '
           },
           // we could add certain option(s) to the "multiple-select" plugin
           filterOptions: {
