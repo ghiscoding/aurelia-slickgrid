@@ -3,11 +3,14 @@ import { I18N } from 'aurelia-i18n';
 import {
   CollectionFilterBy,
   CollectionSortBy,
+  FilterMultiplePassType,
+  FilterMultiplePassTypeString,
   FieldType,
   OperatorType,
   SortDirectionNumber,
 } from './../models/index';
 import { sortByFieldType } from '../sorters/sorterUtilities';
+import { uniqueArray } from './utilities';
 
 @inject(I18N)
 export class CollectionService {
@@ -18,15 +21,21 @@ export class CollectionService {
    * @param collection
    * @param filterByOptions
    */
-  filterCollection(collection: any[], filterByOptions: CollectionFilterBy | CollectionFilterBy[]): any[] {
+  filterCollection(collection: any[], filterByOptions: CollectionFilterBy | CollectionFilterBy[], filterByType: FilterMultiplePassType | FilterMultiplePassTypeString = FilterMultiplePassType.chained): any[] {
     let filteredCollection: any[] = [];
 
     // when it's array, we will use the new filtered collection after every pass
     // basically if input collection has 10 items on 1st pass and 1 item is filtered out, then on 2nd pass the input collection will be 9 items
     if (Array.isArray(filterByOptions)) {
-      filteredCollection = collection;
+      filteredCollection = (filterByType === FilterMultiplePassType.merged) ? [] : [...collection];
+
       for (const filter of filterByOptions) {
-        filteredCollection = this.singleFilterCollection(filteredCollection, filter);
+        if (filterByType === FilterMultiplePassType.merged) {
+          const filteredPass = this.singleFilterCollection(collection, filter);
+          filteredCollection = uniqueArray([...filteredCollection, ...filteredPass]);
+        } else {
+          filteredCollection = this.singleFilterCollection(filteredCollection, filter);
+        }
       }
     } else {
       filteredCollection = this.singleFilterCollection(collection, filterByOptions);
@@ -53,15 +62,13 @@ export class CollectionService {
         case OperatorType.equal:
           filteredCollection = collection.filter((item) => item[property] === value);
           break;
-        case OperatorType.in:
-          filteredCollection = collection.filter((item) => item[property].indexOf(value) !== -1);
-          break;
-        case OperatorType.notIn:
-          filteredCollection = collection.filter((item) => item[property].indexOf(value) === -1);
-          break;
         case OperatorType.contains:
-          filteredCollection = collection.filter((item) => value.indexOf(item[property]) !== -1);
+          filteredCollection = collection.filter((item) => item[property].toString().indexOf(value.toString()) !== -1);
           break;
+        case OperatorType.notContains:
+          filteredCollection = collection.filter((item) => item[property].toString().indexOf(value.toString()) === -1);
+          break;
+        case OperatorType.notEqual:
         default:
           filteredCollection = collection.filter((item) => item[property] !== value);
       }

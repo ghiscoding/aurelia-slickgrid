@@ -432,3 +432,14 @@ export function getScrollBarWidth() {
   $outer.remove();
   return Math.ceil(100 - widthWithScroll);
 }
+
+/**
+ * Takes an input array and makes sure the array has unique values by removing duplicates
+ * @param array input with possible duplicates
+ * @return array output without duplicates
+ */
+export function uniqueArray(arr): any[] {
+  return arr.filter((item, index) => {
+    return arr.indexOf(item) >= index;
+  });
+}
