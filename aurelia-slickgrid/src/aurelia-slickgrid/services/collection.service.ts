@@ -21,16 +21,16 @@ export class CollectionService {
    * @param collection
    * @param filterByOptions
    */
-  filterCollection(collection: any[], filterByOptions: CollectionFilterBy | CollectionFilterBy[], filterByType: FilterMultiplePassType | FilterMultiplePassTypeString = FilterMultiplePassType.chained): any[] {
+  filterCollection(collection: any[], filterByOptions: CollectionFilterBy | CollectionFilterBy[], filterByType: FilterMultiplePassType | FilterMultiplePassTypeString = FilterMultiplePassType.chain): any[] {
     let filteredCollection: any[] = [];
 
     // when it's array, we will use the new filtered collection after every pass
     // basically if input collection has 10 items on 1st pass and 1 item is filtered out, then on 2nd pass the input collection will be 9 items
     if (Array.isArray(filterByOptions)) {
-      filteredCollection = (filterByType === FilterMultiplePassType.merged) ? [] : [...collection];
+      filteredCollection = (filterByType === FilterMultiplePassType.merge) ? [] : [...collection];
 
       for (const filter of filterByOptions) {
-        if (filterByType === FilterMultiplePassType.merged) {
+        if (filterByType === FilterMultiplePassType.merge) {
           const filteredPass = this.singleFilterCollection(collection, filter);
           filteredCollection = uniqueArray([...filteredCollection, ...filteredPass]);
         } else {

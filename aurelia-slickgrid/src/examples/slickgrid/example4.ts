@@ -93,15 +93,15 @@ export class Example4 {
           collectionAsync: this.httpFetch.fetch(URL_SAMPLE_COLLECTION_DATA),
 
           // collectionFilterBy & collectionSortBy accept a single option and/or array of options
-          // remove value 365 & 360 from the dropdown filter
+          // exclude certains values 365 & 360 from the dropdown filter
           collectionFilterBy: [{
             property: 'value',
             operator: OperatorType.notEqual,
-            value: 10
+            value: 365
           }, {
             property: 'value',
             operator: OperatorType.notEqual,
-            value: 20
+            value: 360
           }],
 
           // sort the select dropdown in a descending order
@@ -117,7 +117,7 @@ export class Example4 {
           },
           collectionOptions: {
             separatorBetweenTextLabels: ' ',
-            filterResultAfterEachPass: 'merged' // options are "merged" or "chained" (defaults to "chained")
+            filterResultAfterEachPass: 'chain' // options are "merge" or "chain" (defaults to "chain")
           },
           // we could add certain option(s) to the "multiple-select" plugin
           filterOptions: {

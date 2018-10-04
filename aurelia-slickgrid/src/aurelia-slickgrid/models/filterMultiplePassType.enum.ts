@@ -1,4 +1,4 @@
 export enum FilterMultiplePassType {
-  merged = 'merged',
-  chained = 'chained'
+  merge = 'merge',
+  chain = 'chain'
 }
