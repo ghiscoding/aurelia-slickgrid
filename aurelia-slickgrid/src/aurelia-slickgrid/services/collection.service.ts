@@ -21,7 +21,7 @@ export class CollectionService {
    * @param collection
    * @param filterByOptions
    */
-  filterCollection(collection: any[], filterByOptions: CollectionFilterBy | CollectionFilterBy[], filterByType: FilterMultiplePassType | FilterMultiplePassTypeString = FilterMultiplePassType.chain): any[] {
+  filterCollection(collection: any[], filterByOptions: CollectionFilterBy | CollectionFilterBy[], filterByType: FilterMultiplePassType | FilterMultiplePassTypeString | null = FilterMultiplePassType.chain): any[] {
     let filteredCollection: any[] = [];
 
     // when it's array, we will use the new filtered collection after every pass

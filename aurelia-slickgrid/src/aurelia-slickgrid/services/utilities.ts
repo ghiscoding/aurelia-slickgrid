@@ -9,23 +9,23 @@ import * as $ from 'jquery';
  * @param int nbSpaces: number of white spaces to create
  */
 export function addWhiteSpaces(nbSpaces: number): string {
-  let result = '';
+    let result = '';
 
-  for (let i = 0; i < nbSpaces; i++) {
-    result += ' ';
-  }
-  return result;
+    for (let i = 0; i < nbSpaces; i++) {
+        result += ' ';
+    }
+    return result;
 }
 
 /** HTML encode using jQuery */
 export function htmlEncode(value: string): any {
-  // create a in-memory div, set it's inner text(which jQuery automatically encodes)
-  // then grab the encoded contents back out.  The div never exists on the page.
-  return $('<div/>').text(value).html();
+    // create a in-memory div, set it's inner text(which jQuery automatically encodes)
+    // then grab the encoded contents back out.  The div never exists on the page.
+    return $('<div/>').text(value).html();
 }
 /** HTML decode using jQuery */
 export function htmlDecode(value: string): string {
-  return $('<div/>').html(value).text();
+    return $('<div/>').html(value).text();
 }
 
 /**
@@ -34,9 +34,9 @@ export function htmlDecode(value: string): string {
  * @param string text: output text
  */
 export function htmlEntityDecode(input: string): string {
-  return input.replace(/&#(\d+);/g, (match, dec) => {
-    return String.fromCharCode(dec);
-  });
+    return input.replace(/&#(\d+);/g, (match, dec) => {
+        return String.fromCharCode(dec);
+    });
 }
 
 /**
@@ -45,11 +45,11 @@ export function htmlEntityDecode(input: string): string {
  * @param string text: output text
  */
 export function htmlEntityEncode(input: any): string {
-  const buf = [];
-  for (let i = input.length - 1; i >= 0; i--) {
-    buf.unshift(['&#', input[i].charCodeAt(), ';'].join(''));
-  }
-  return buf.join('');
+    const buf = [];
+    for (let i = input.length - 1; i >= 0; i--) {
+        buf.unshift(['&#', input[i].charCodeAt(), ';'].join(''));
+    }
+    return buf.join('');
 }
 
 /**
@@ -59,21 +59,21 @@ export function htmlEntityEncode(input: any): string {
  * @param maxDecimal
  */
 export function decimalFormatted(input: number | string, minDecimal?: number, maxDecimal?: number) {
-  if (isNaN(+input)) {
-    return input;
-  }
+    if (isNaN(+input)) {
+        return input;
+    }
 
-  const minDec = (minDecimal === undefined) ? 2 : minDecimal;
-  const maxDec = (maxDecimal === undefined) ? 2 : maxDecimal;
-  let amount = String(Math.round(+input * Math.pow(10, maxDec)) / Math.pow(10, maxDec));
+    const minDec = (minDecimal === undefined) ? 2 : minDecimal;
+    const maxDec = (maxDecimal === undefined) ? 2 : maxDecimal;
+    let amount = String(Math.round(+input * Math.pow(10, maxDec)) / Math.pow(10, maxDec));
 
-  if (amount.indexOf('.') < 0) {
-    amount += '.';
-  }
-  while ((amount.length - amount.indexOf('.')) <= minDec) {
-    amount += '0';
-  }
-  return amount;
+    if (amount.indexOf('.') < 0) {
+        amount += '.';
+    }
+    while ((amount.length - amount.indexOf('.')) <= minDec) {
+        amount += '0';
+    }
+    return amount;
 }
 
 /**
@@ -82,17 +82,17 @@ export function decimalFormatted(input: number | string, minDecimal?: number, ma
  * @return empty array
  */
 export function disposeAllSubscriptions(subscriptions: Subscription[]) {
-  subscriptions.forEach((subscription: Subscription) => {
-    if (subscription && subscription.dispose) {
-      subscription.dispose();
-    }
-  });
-  return subscriptions = [];
+    subscriptions.forEach((subscription: Subscription) => {
+        if (subscription && subscription.dispose) {
+            subscription.dispose();
+        }
+    });
+    return subscriptions = [];
 }
 
 /** From a dot (.) notation find and return a property within an object given a path */
 export function getDescendantProperty(obj: any, path: string) {
-  return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+    return path.split('.').reduce((acc, part) => acc && acc[part], obj);
 }
 
 /**
@@ -101,55 +101,55 @@ export function getDescendantProperty(obj: any, path: string) {
  * @param fieldType
  */
 export function mapMomentDateFormatWithFieldType(fieldType: FieldType): string {
-  let map: string;
-  switch (fieldType) {
-    case FieldType.dateTime:
-    case FieldType.dateTimeIso:
-      map = 'YYYY-MM-DD HH:mm:ss';
-      break;
-    case FieldType.dateTimeIsoAmPm:
-      map = 'YYYY-MM-DD hh:mm:ss a';
-      break;
-    case FieldType.dateTimeIsoAM_PM:
-      map = 'YYYY-MM-DD hh:mm:ss A';
-      break;
-    case FieldType.dateTimeShortIso:
-      map = 'YYYY-MM-DD HH:mm';
-      break;
-    case FieldType.dateUs:
-      map = 'MM/DD/YYYY';
-      break;
-    case FieldType.dateUsShort:
-      map = 'M/D/YY';
-      break;
-    case FieldType.dateTimeUs:
-      map = 'MM/DD/YYYY HH:mm:ss';
-      break;
-    case FieldType.dateTimeUsAmPm:
-      map = 'MM/DD/YYYY hh:mm:ss a';
-      break;
-    case FieldType.dateTimeUsAM_PM:
-      map = 'MM/DD/YYYY hh:mm:ss A';
-      break;
-    case FieldType.dateTimeUsShort:
-      map = 'M/D/YY H:m:s';
-      break;
-    case FieldType.dateTimeUsShortAmPm:
-      map = 'M/D/YY h:m:s a';
-      break;
-    case FieldType.dateTimeShortUs:
-      map = 'MM/DD/YYYY HH:mm';
-      break;
-    case FieldType.dateUtc:
-      map = 'YYYY-MM-DDTHH:mm:ss.SSSZ';
-      break;
-    case FieldType.date:
-    case FieldType.dateIso:
-    default:
-      map = 'YYYY-MM-DD';
-      break;
-  }
-  return map;
+    let map: string;
+    switch (fieldType) {
+        case FieldType.dateTime:
+        case FieldType.dateTimeIso:
+            map = 'YYYY-MM-DD HH:mm:ss';
+            break;
+        case FieldType.dateTimeIsoAmPm:
+            map = 'YYYY-MM-DD hh:mm:ss a';
+            break;
+        case FieldType.dateTimeIsoAM_PM:
+            map = 'YYYY-MM-DD hh:mm:ss A';
+            break;
+        case FieldType.dateTimeShortIso:
+            map = 'YYYY-MM-DD HH:mm';
+            break;
+        case FieldType.dateUs:
+            map = 'MM/DD/YYYY';
+            break;
+        case FieldType.dateUsShort:
+            map = 'M/D/YY';
+            break;
+        case FieldType.dateTimeUs:
+            map = 'MM/DD/YYYY HH:mm:ss';
+            break;
+        case FieldType.dateTimeUsAmPm:
+            map = 'MM/DD/YYYY hh:mm:ss a';
+            break;
+        case FieldType.dateTimeUsAM_PM:
+            map = 'MM/DD/YYYY hh:mm:ss A';
+            break;
+        case FieldType.dateTimeUsShort:
+            map = 'M/D/YY H:m:s';
+            break;
+        case FieldType.dateTimeUsShortAmPm:
+            map = 'M/D/YY h:m:s a';
+            break;
+        case FieldType.dateTimeShortUs:
+            map = 'MM/DD/YYYY HH:mm';
+            break;
+        case FieldType.dateUtc:
+            map = 'YYYY-MM-DDTHH:mm:ss.SSSZ';
+            break;
+        case FieldType.date:
+        case FieldType.dateIso:
+        default:
+            map = 'YYYY-MM-DD';
+            break;
+    }
+    return map;
 }
 
 /**
@@ -159,70 +159,70 @@ export function mapMomentDateFormatWithFieldType(fieldType: FieldType): string {
  * @param fieldType
  */
 export function mapFlatpickrDateFormatWithFieldType(fieldType: FieldType): string {
-  /*
-    d: Day of the month, 2 digits with leading zeros	01 to 31
-    D: A textual representation of a day	Mon through Sun
-    l: (lowercase 'L')	A full textual representation of the day of the week	Sunday through Saturday
-    j: Day of the month without leading zeros	1 to 31
-    J: Day of the month without leading zeros and ordinal suffix	1st, 2nd, to 31st
-    w: Numeric representation of the day of the week	0 (for Sunday) through 6 (for Saturday)
-    F: A full textual representation of a month	January through December
-    m: Numeric representation of a month, with leading zero	01 through 12
-    n: Numeric representation of a month, without leading zeros	1 through 12
-    M: A short textual representation of a month	Jan through Dec
-    U: The number of seconds since the Unix Epoch	1413704993
-    y: A two digit representation of a year	99 or 03
-    Y: A full numeric representation of a year, 4 digits	1999 or 2003
-    H: Hours (24 hours)	00 to 23
-    h: Hours	1 to 12
-    i: Minutes	00 to 59
-    S: Seconds, 2 digits	00 to 59
-    s: Seconds	0, 1 to 59
-    K: AM/PM	AM or PM
-  */
-  let map: string;
-  switch (fieldType) {
-    case FieldType.dateTime:
-    case FieldType.dateTimeIso:
-      map = 'Y-m-d H:i:S';
-      break;
-    case FieldType.dateTimeIsoAmPm:
-      map = 'Y-m-d h:i:S K'; // there is no lowercase in Flatpickr :(
-      break;
-    case FieldType.dateTimeIsoAM_PM:
-      map = 'Y-m-d h:i:S K';
-      break;
-    case FieldType.dateUs:
-      map = 'm/d/Y';
-      break;
-    case FieldType.dateUsShort:
-      map = 'm/d/y';
-      break;
-    case FieldType.dateTimeUs:
-      map = 'm/d/Y H:i:S';
-      break;
-    case FieldType.dateTimeUsAmPm:
-      map = 'm/d/Y h:i:S K'; // there is no lowercase in Flatpickr :(
-      break;
-    case FieldType.dateTimeUsAM_PM:
-      map = 'm/d/Y h:i:s K';
-      break;
-    case FieldType.dateTimeUsShort:
-      map = 'm/d/y H:i:s';
-      break;
-    case FieldType.dateTimeUsShortAmPm:
-      map = 'm/d/y h:i:s K'; // there is no lowercase in Flatpickr :(
-      break;
-    case FieldType.dateUtc:
-      map = 'Z';
-      break;
-    case FieldType.date:
-    case FieldType.dateIso:
-    default:
-      map = 'Y-m-d';
-      break;
-  }
-  return map;
+    /*
+      d: Day of the month, 2 digits with leading zeros	01 to 31
+      D: A textual representation of a day	Mon through Sun
+      l: (lowercase 'L')	A full textual representation of the day of the week	Sunday through Saturday
+      j: Day of the month without leading zeros	1 to 31
+      J: Day of the month without leading zeros and ordinal suffix	1st, 2nd, to 31st
+      w: Numeric representation of the day of the week	0 (for Sunday) through 6 (for Saturday)
+      F: A full textual representation of a month	January through December
+      m: Numeric representation of a month, with leading zero	01 through 12
+      n: Numeric representation of a month, without leading zeros	1 through 12
+      M: A short textual representation of a month	Jan through Dec
+      U: The number of seconds since the Unix Epoch	1413704993
+      y: A two digit representation of a year	99 or 03
+      Y: A full numeric representation of a year, 4 digits	1999 or 2003
+      H: Hours (24 hours)	00 to 23
+      h: Hours	1 to 12
+      i: Minutes	00 to 59
+      S: Seconds, 2 digits	00 to 59
+      s: Seconds	0, 1 to 59
+      K: AM/PM	AM or PM
+    */
+    let map: string;
+    switch (fieldType) {
+        case FieldType.dateTime:
+        case FieldType.dateTimeIso:
+            map = 'Y-m-d H:i:S';
+            break;
+        case FieldType.dateTimeIsoAmPm:
+            map = 'Y-m-d h:i:S K'; // there is no lowercase in Flatpickr :(
+            break;
+        case FieldType.dateTimeIsoAM_PM:
+            map = 'Y-m-d h:i:S K';
+            break;
+        case FieldType.dateUs:
+            map = 'm/d/Y';
+            break;
+        case FieldType.dateUsShort:
+            map = 'm/d/y';
+            break;
+        case FieldType.dateTimeUs:
+            map = 'm/d/Y H:i:S';
+            break;
+        case FieldType.dateTimeUsAmPm:
+            map = 'm/d/Y h:i:S K'; // there is no lowercase in Flatpickr :(
+            break;
+        case FieldType.dateTimeUsAM_PM:
+            map = 'm/d/Y h:i:s K';
+            break;
+        case FieldType.dateTimeUsShort:
+            map = 'm/d/y H:i:s';
+            break;
+        case FieldType.dateTimeUsShortAmPm:
+            map = 'm/d/y h:i:s K'; // there is no lowercase in Flatpickr :(
+            break;
+        case FieldType.dateUtc:
+            map = 'Z';
+            break;
+        case FieldType.date:
+        case FieldType.dateIso:
+        default:
+            map = 'Y-m-d';
+            break;
+    }
+    return map;
 }
 
 /**
@@ -231,57 +231,57 @@ export function mapFlatpickrDateFormatWithFieldType(fieldType: FieldType): strin
  * @returns string map
  */
 export function mapOperatorType(operator: string): OperatorType {
-  let map: OperatorType;
+    let map: OperatorType;
 
-  switch (operator) {
-    case '<':
-      map = OperatorType.lessThan;
-      break;
-    case '<=':
-      map = OperatorType.lessThanOrEqual;
-      break;
-    case '>':
-      map = OperatorType.greaterThan;
-      break;
-    case '>=':
-      map = OperatorType.greaterThanOrEqual;
-      break;
-    case '<>':
-    case '!=':
-    case 'neq':
-    case 'NEQ':
-      map = OperatorType.notEqual;
-      break;
-    case '*':
-    case '.*':
-    case 'startsWith':
-      map = OperatorType.startsWith;
-      break;
-    case '*.':
-    case 'endsWith':
-      map = OperatorType.endsWith;
-      break;
-    case '=':
-    case '==':
-    case 'eq':
-    case 'EQ':
-      map = OperatorType.equal;
-      break;
-    case 'in':
-    case 'IN':
-      map = OperatorType.in;
-      break;
-    case 'notIn':
-    case 'NIN':
-    case 'NOT_IN':
-      map = OperatorType.notIn;
-      break;
-    default:
-      map = OperatorType.contains;
-      break;
-  }
+    switch (operator) {
+        case '<':
+            map = OperatorType.lessThan;
+            break;
+        case '<=':
+            map = OperatorType.lessThanOrEqual;
+            break;
+        case '>':
+            map = OperatorType.greaterThan;
+            break;
+        case '>=':
+            map = OperatorType.greaterThanOrEqual;
+            break;
+        case '<>':
+        case '!=':
+        case 'neq':
+        case 'NEQ':
+            map = OperatorType.notEqual;
+            break;
+        case '*':
+        case '.*':
+        case 'startsWith':
+            map = OperatorType.startsWith;
+            break;
+        case '*.':
+        case 'endsWith':
+            map = OperatorType.endsWith;
+            break;
+        case '=':
+        case '==':
+        case 'eq':
+        case 'EQ':
+            map = OperatorType.equal;
+            break;
+        case 'in':
+        case 'IN':
+            map = OperatorType.in;
+            break;
+        case 'notIn':
+        case 'NIN':
+        case 'NOT_IN':
+            map = OperatorType.notIn;
+            break;
+        default:
+            map = OperatorType.contains;
+            break;
+    }
 
-  return map;
+    return map;
 }
 
 /**
@@ -291,36 +291,36 @@ export function mapOperatorType(operator: string): OperatorType {
  * @returns string map
  */
 export function mapOperatorByFieldType(fieldType: FieldType | string): OperatorType {
-  let map: OperatorType;
+    let map: OperatorType;
 
-  switch (fieldType) {
-    case FieldType.string:
-    case FieldType.unknown:
-      map = OperatorType.contains;
-      break;
-    case FieldType.float:
-    case FieldType.number:
-    case FieldType.date:
-    case FieldType.dateIso:
-    case FieldType.dateUtc:
-    case FieldType.dateTime:
-    case FieldType.dateTimeIso:
-    case FieldType.dateTimeIsoAmPm:
-    case FieldType.dateTimeIsoAM_PM:
-    case FieldType.dateUs:
-    case FieldType.dateUsShort:
-    case FieldType.dateTimeUs:
-    case FieldType.dateTimeUsAmPm:
-    case FieldType.dateTimeUsAM_PM:
-    case FieldType.dateTimeUsShort:
-    case FieldType.dateTimeUsShortAmPm:
-    case FieldType.dateTimeUsShortAM_PM:
-    default:
-      map = OperatorType.equal;
-      break;
-  }
+    switch (fieldType) {
+        case FieldType.string:
+        case FieldType.unknown:
+            map = OperatorType.contains;
+            break;
+        case FieldType.float:
+        case FieldType.number:
+        case FieldType.date:
+        case FieldType.dateIso:
+        case FieldType.dateUtc:
+        case FieldType.dateTime:
+        case FieldType.dateTimeIso:
+        case FieldType.dateTimeIsoAmPm:
+        case FieldType.dateTimeIsoAM_PM:
+        case FieldType.dateUs:
+        case FieldType.dateUsShort:
+        case FieldType.dateTimeUs:
+        case FieldType.dateTimeUsAmPm:
+        case FieldType.dateTimeUsAM_PM:
+        case FieldType.dateTimeUsShort:
+        case FieldType.dateTimeUsShortAmPm:
+        case FieldType.dateTimeUsShortAM_PM:
+        default:
+            map = OperatorType.equal;
+            break;
+    }
 
-  return map;
+    return map;
 }
 
 /**
@@ -329,18 +329,18 @@ export function mapOperatorByFieldType(fieldType: FieldType | string): OperatorT
  * @returns string date formatted
  */
 export function parseUtcDate(inputDateString: string, useUtc: boolean): string | null {
-  let date = null;
+    let date = null;
 
-  if (/^[0-9\-\/]*$/.test(inputDateString)) {
-    // get the UTC datetime with moment.js but we need to decode the value so that it's valid text
-    const dateString = decodeURIComponent(inputDateString);
-    const dateMoment = moment(new Date(dateString));
-    if (dateMoment.isValid() && dateMoment.year().toString().length === 4) {
-      date = (useUtc) ? dateMoment.utc().format() : dateMoment.format();
+    if (/^[0-9\-\/]*$/.test(inputDateString)) {
+        // get the UTC datetime with moment.js but we need to decode the value so that it's valid text
+        const dateString = decodeURIComponent(inputDateString);
+        const dateMoment = moment(new Date(dateString));
+        if (dateMoment.isValid() && dateMoment.year().toString().length === 4) {
+            date = (useUtc) ? dateMoment.utc().format() : dateMoment.format();
+        }
     }
-  }
 
-  return date;
+    return date;
 }
 
 /**
@@ -349,9 +349,9 @@ export function parseUtcDate(inputDateString: string, useUtc: boolean): string |
  * @return text
  */
 export function sanitizeHtmlToText(htmlString: string) {
-  const temp = document.createElement('div');
-  temp.innerHTML = htmlString;
-  return temp.textContent || temp.innerText;
+    const temp = document.createElement('div');
+    temp.innerHTML = htmlString;
+    return temp.textContent || temp.innerText;
 }
 
 /**
@@ -360,14 +360,14 @@ export function sanitizeHtmlToText(htmlString: string) {
  * @return the string in camel case
  */
 export function toCamelCase(str: string): string {
-  return str.replace(/(?:^\w|[A-Z]|\b\w|[\s+\-_\/])/g, (match: string, offset: number) => {
-    // remove white space or hypens or underscores
-    if (/[\s+\-_\/]/.test(match)) {
-      return '';
-    }
+    return str.replace(/(?:^\w|[A-Z]|\b\w|[\s+\-_\/])/g, (match: string, offset: number) => {
+        // remove white space or hypens or underscores
+        if (/[\s+\-_\/]/.test(match)) {
+            return '';
+        }
 
-    return offset === 0 ? match.toLowerCase() : match.toUpperCase();
-  });
+        return offset === 0 ? match.toLowerCase() : match.toUpperCase();
+    });
 }
 
 /**
@@ -376,7 +376,7 @@ export function toCamelCase(str: string): string {
  * @return the string in kebab case
  */
 export function toKebabCase(str: string): string {
-  return toCamelCase(str).replace(/([A-Z])/g, '-$1').toLowerCase();
+    return toCamelCase(str).replace(/([A-Z])/g, '-$1').toLowerCase();
 }
 
 /**
@@ -387,30 +387,30 @@ export function toKebabCase(str: string): string {
  * @return boolean true if equal, else false
  */
 export function arraysEqual(a: any[], b: any[], orderMatters: boolean = false): boolean {
-  if (a === b) {
-    return true;
-  }
-
-  if (!a || !b) {
-    return false;
-  }
-
-  if (a.length !== b.length) {
-    return false;
-  }
-
-  if (!orderMatters) {
-    a.sort();
-    b.sort();
-  }
-
-  for (let i = 0; i < a.length; ++i) {
-    if (a[i] !== b[i]) {
-      return false;
+    if (a === b) {
+        return true;
     }
-  }
 
-  return true;
+    if (!a || !b) {
+        return false;
+    }
+
+    if (a.length !== b.length) {
+        return false;
+    }
+
+    if (!orderMatters) {
+        a.sort();
+        b.sort();
+    }
+
+    for (let i = 0; i < a.length; ++i) {
+        if (a[i] !== b[i]) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 /**
@@ -422,15 +422,15 @@ export function arraysEqual(a: any[], b: any[], orderMatters: boolean = false): 
  * @return object the found object or default value
  */
 export function findOrDefault(array: any[], logic: (item: any) => boolean, defaultVal = {}): any {
-  return array.find(logic) || defaultVal;
+    return array.find(logic) || defaultVal;
 }
 
 /** Get the browser's scrollbar width, this is different to each browser */
 export function getScrollBarWidth() {
-  const $outer = $('<div>').css({ visibility: 'hidden', width: 100, overflow: 'scroll' }).appendTo('body');
-  const widthWithScroll = $('<div>').css({ width: '100%' }).appendTo($outer).outerWidth() || 0;
-  $outer.remove();
-  return Math.ceil(100 - widthWithScroll);
+    const $outer = $('<div>').css({ visibility: 'hidden', width: 100, overflow: 'scroll' }).appendTo('body');
+    const widthWithScroll = $('<div>').css({ width: '100%' }).appendTo($outer).outerWidth() || 0;
+    $outer.remove();
+    return Math.ceil(100 - widthWithScroll);
 }
 
 /**
@@ -438,8 +438,8 @@ export function getScrollBarWidth() {
  * @param array input with possible duplicates
  * @return array output without duplicates
  */
-export function uniqueArray(arr): any[] {
-  return arr.filter((item, index) => {
-    return arr.indexOf(item) >= index;
-  });
+export function uniqueArray(arr: any[]): any[] {
+    return arr.filter((item: any, index: number) => {
+        return arr.indexOf(item) >= index;
+    });
 }
