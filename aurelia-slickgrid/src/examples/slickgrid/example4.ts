@@ -92,16 +92,16 @@ export class Example4 {
           // OR 2- use "aurelia-fetch-client", they are both supported
           collectionAsync: this.httpFetch.fetch(URL_SAMPLE_COLLECTION_DATA),
 
-          // collectionFilterBy & collectionSortBy accept a single option and/or array of options
-          // exclude certains values 365 & 360 from the dropdown filter
+          // collectionFilterBy & collectionSortBy accept a single or multiple options
+          // we can exclude certains values 365 & 360 from the dropdown filter
           collectionFilterBy: [{
             property: 'value',
             operator: OperatorType.notEqual,
-            value: 365
+            value: 360
           }, {
             property: 'value',
             operator: OperatorType.notEqual,
-            value: 360
+            value: 365
           }],
 
           // sort the select dropdown in a descending order
