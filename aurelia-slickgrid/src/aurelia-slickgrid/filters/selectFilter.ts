@@ -40,6 +40,7 @@ export class SelectFilter implements Filter {
   labelName: string;
   labelPrefixName: string;
   labelSuffixName: string;
+  optionLabel: string;
   valueName: string;
   enableTranslateLabel = false;
   subscriptions: Subscription[] = [];
@@ -133,6 +134,7 @@ export class SelectFilter implements Filter {
     this.labelName = this.customStructure && this.customStructure.label || 'label';
     this.labelPrefixName = this.customStructure && this.customStructure.labelPrefix || 'labelPrefix';
     this.labelSuffixName = this.customStructure && this.customStructure.labelSuffix || 'labelSuffix';
+    this.optionLabel = (this.customStructure) ? this.customStructure.optionLabel : 'value';
     this.valueName = this.customStructure && this.customStructure.value || 'value';
 
     // always render the Select (dropdown) DOM element, even if user passed a "collectionAsync",
@@ -335,6 +337,8 @@ export class SelectFilter implements Filter {
       const labelText = ((option.labelKey || this.enableTranslateLabel) && this.i18n && typeof this.i18n.tr === 'function') ? this.i18n.tr(labelKey || ' ') : labelKey;
       const prefixText = option[this.labelPrefixName] || '';
       const suffixText = option[this.labelSuffixName] || '';
+      let optionLabel = option[this.optionLabel] || '';
+      optionLabel = optionLabel.toString().replace(/\"/g, '\''); // replace double quotes by single quotes to avoid interfering with regular html
       let optionText = (prefixText + separatorBetweenLabels + labelText + separatorBetweenLabels + suffixText);
 
       // if user specifically wants to render html text, he needs to opt-in else it will stripped out by default
@@ -347,7 +351,7 @@ export class SelectFilter implements Filter {
       }
 
       // html text of each select option
-      options += `<option value="${option[this.valueName]}" ${selected}>${optionText}</option>`;
+      options += `<option value="${option[this.valueName]}" label="${optionLabel}" ${selected}>${optionText}</option>`;
 
       // if there's a search term, we will add the "filled" class for styling purposes
       if (selected) {
