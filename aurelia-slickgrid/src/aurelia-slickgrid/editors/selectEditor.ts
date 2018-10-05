@@ -45,6 +45,9 @@ export class SelectEditor implements Editor {
   /** The property name for a suffix that can be added to the labels in the collection */
   labelSuffixName: string;
 
+  /** A label that can be added to each option and can be used as an alternative to display selected options */
+  optionLabel: string;
+
   /** The property name for values in the collection */
   valueName: string;
 
@@ -192,6 +195,7 @@ export class SelectEditor implements Editor {
     this.labelName = this.customStructure && this.customStructure.label || 'label';
     this.labelPrefixName = this.customStructure && this.customStructure.labelPrefix || 'labelPrefix';
     this.labelSuffixName = this.customStructure && this.customStructure.labelSuffix || 'labelSuffix';
+    this.optionLabel = (this.customStructure) ? this.customStructure.optionLabel : 'value';
     this.valueName = this.customStructure && this.customStructure.value || 'value';
 
     // always render the Select (dropdown) DOM element, even if user passed a "collectionAsync",
@@ -356,6 +360,8 @@ export class SelectEditor implements Editor {
       const labelText = (option.labelKey || this.enableTranslateLabel) ? this.i18n.tr(labelKey || ' ') : labelKey;
       const prefixText = option[this.labelPrefixName] || '';
       const suffixText = option[this.labelSuffixName] || '';
+      let optionLabel = option[this.optionLabel] || '';
+      optionLabel = optionLabel.toString().replace(/\"/g, '\''); // replace double quotes by single quotes to avoid interfering with regular html
       let optionText = ('' + prefixText + separatorBetweenLabels + labelText + separatorBetweenLabels + suffixText);
 
       // if user specifically wants to render html text, he needs to opt-in else it will stripped out by default
@@ -367,7 +373,7 @@ export class SelectEditor implements Editor {
         optionText = htmlEncode(sanitizedText);
       }
 
-      options += `<option value="${option[this.valueName]}">${optionText}</option>`;
+      options += `<option value="${option[this.valueName]}" label="${optionLabel}">${optionText}</option>`;
     });
 
     return `<select id="${this.elementName}" class="ms-filter search-filter" ${this.isMultipleSelect ? 'multiple="multiple"' : ''}>${options}</select>`;

@@ -113,6 +113,7 @@ export class Example4 {
           customStructure: {
             value: 'value',
             label: 'label',
+            optionLabel: 'value', // if selected text is too long, we can use option labels instead
             labelSuffix: 'text',
           },
           collectionOptions: {
@@ -122,7 +123,11 @@ export class Example4 {
           // we could add certain option(s) to the "multiple-select" plugin
           filterOptions: {
             maxHeight: 250,
-            width: 175
+            width: 175,
+
+            // if we want to display shorter text as the selected text (on the select filter itself, parent element)
+            // we can use "useSelectOptionLabel" or "useSelectOptionLabelToHtml" the latter will parse html
+            useSelectOptionLabelToHtml: true
           }
         }
       },
