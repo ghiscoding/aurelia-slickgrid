@@ -92,12 +92,17 @@ export class Example4 {
           // OR 2- use "aurelia-fetch-client", they are both supported
           collectionAsync: this.httpFetch.fetch(URL_SAMPLE_COLLECTION_DATA),
 
-          // remove certain value(s) from the select dropdown
-          collectionFilterBy: {
+          // collectionFilterBy & collectionSortBy accept a single or multiple options
+          // we can exclude certains values 365 & 360 from the dropdown filter
+          collectionFilterBy: [{
+            property: 'value',
+            operator: OperatorType.notEqual,
+            value: 360
+          }, {
             property: 'value',
             operator: OperatorType.notEqual,
             value: 365
-          },
+          }],
 
           // sort the select dropdown in a descending order
           collectionSortBy: {
@@ -108,15 +113,21 @@ export class Example4 {
           customStructure: {
             value: 'value',
             label: 'label',
+            optionLabel: 'value', // if selected text is too long, we can use option labels instead
             labelSuffix: 'text',
           },
           collectionOptions: {
-            separatorBetweenTextLabels: ''
+            separatorBetweenTextLabels: ' ',
+            filterResultAfterEachPass: 'chain' // options are "merge" or "chain" (defaults to "chain")
           },
           // we could add certain option(s) to the "multiple-select" plugin
           filterOptions: {
             maxHeight: 250,
-            width: 175
+            width: 175,
+
+            // if we want to display shorter text as the selected text (on the select filter itself, parent element)
+            // we can use "useSelectOptionLabel" or "useSelectOptionLabelToHtml" the latter will parse html
+            useSelectOptionLabelToHtml: true
           }
         }
       },
@@ -178,7 +189,7 @@ export class Example4 {
       // use columnDef searchTerms OR use presets as shown below
       presets: {
         filters: [
-          { columnId: 'duration', searchTerms: [2, 22, 44] },
+          { columnId: 'duration', searchTerms: [10, 220] },
           // { columnId: 'complete', searchTerms: ['5'], operator: '>' },
           { columnId: 'usDateShort', operator: '<', searchTerms: ['4/20/25'] },
           // { columnId: 'effort-driven', searchTerms: [true] }

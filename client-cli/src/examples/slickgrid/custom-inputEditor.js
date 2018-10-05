@@ -9,6 +9,7 @@ export class CustomInputEditor {
   defaultValue;
 
   constructor(args) {
+    this.args = args;
     this.init();
   }
 

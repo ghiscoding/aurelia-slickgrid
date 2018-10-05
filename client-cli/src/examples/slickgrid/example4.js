@@ -1,11 +1,15 @@
+import { HttpClient } from 'aurelia-http-client';
+import { inject } from 'aurelia-framework';
 import { CustomInputFilter } from './custom-inputFilter';
-import { FieldType, Filters, Formatters } from 'aurelia-slickgrid';
+import { AureliaGridInstance, Column, FieldType, Filters, Formatters, GridOption, OperatorType, Statistic } from 'aurelia-slickgrid';
 
 function randomBetween(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 const NB_ITEMS = 500;
+const URL_SAMPLE_COLLECTION_DATA = 'assets/data/collection_500_numbers.json';
 
+@inject(HttpClient)
 export class Example4 {
   title = 'Example 4: Client Side Sort/Filter';
   subTitle = `
@@ -28,18 +32,19 @@ export class Example4 {
 `;
 
   aureliaGrid;
-  columnDefinitions;
+  columnDefinitions = [];
   gridOptions;
   dataset = [];
   statistics;
 
-  constructor() {
+  constructor(http) {
+    this.http = http;
     this.defineGrid();
   }
 
   attached() {
     // populate the dataset once the grid is ready
-    this.getData();
+    this.dataset = this.mockData(NB_ITEMS);
   }
 
   detached() {
@@ -52,12 +57,6 @@ export class Example4 {
 
   /* Define grid Options and Columns */
   defineGrid() {
-    // prepare a multiple-select array to filter with
-    const multiSelectFilterArray = [];
-    for (let i = 0; i < NB_ITEMS; i++) {
-      multiSelectFilterArray.push({ value: i, label: i });
-    }
-
     this.columnDefinitions = [
       {
         id: 'title',
@@ -83,18 +82,52 @@ export class Example4 {
         minWidth: 55,
         filterable: true,
         filter: {
-          collection: multiSelectFilterArray,
+          model: Filters.multipleSelect,
+          // We can load the "collection" asynchronously (on first load only, after that we will simply use "collection")
+          // 3 ways are supported (aurelia-http-client, aurelia-fetch-client OR even Promise)
+
+          // 1- USE HttpClient from "aurelia-http-client" to load collection asynchronously
+          collectionAsync: this.http.createRequest(URL_SAMPLE_COLLECTION_DATA).asGet().send(),
+
+          // OR 2- use "aurelia-fetch-client", they are both supported
+          // collectionAsync: this.httpFetch.fetch(URL_SAMPLE_COLLECTION_DATA),
+
+          // collectionFilterBy & collectionSortBy accept a single or multiple options
+          // we can exclude certains values 365 & 360 from the dropdown filter
+          collectionFilterBy: [{
+            property: 'value',
+            operator: OperatorType.notEqual,
+            value: 360
+          }, {
+            property: 'value',
+            operator: OperatorType.notEqual,
+            value: 365
+          }],
+
+          // sort the select dropdown in a descending order
           collectionSortBy: {
             property: 'value',
             sortDesc: true,
             fieldType: FieldType.number
           },
-          model: Filters.multipleSelect,
-          searchTerms: [1, 33, 50], // default selection
+          customStructure: {
+            value: 'value',
+            label: 'label',
+            optionLabel: 'value', // if selected text is too long, we can use option labels instead
+            labelSuffix: 'text'
+          },
+          collectionOptions: {
+            separatorBetweenTextLabels: ' ',
+            filterResultAfterEachPass: 'chain' // options are "merge" or "chain" (defaults to "chain")
+          },
           // we could add certain option(s) to the "multiple-select" plugin
           filterOptions: {
             maxHeight: 250,
-            width: 175
+            width: 175,
+
+            // if we want to display shorter text as the selected text (on the select filter itself, parent element)
+            // we can use "useSelectOptionLabel" or "useSelectOptionLabelToHtml" the latter will parse html
+            useSelectOptionLabelToHtml: true
           }
         }
       },
@@ -115,17 +148,33 @@ export class Example4 {
         type: FieldType.dateUtc, outputType: FieldType.dateTimeIsoAmPm, filterable: true, filter: { model: Filters.compoundDate }
       },
       {
-        id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', minWidth: 85, maxWidth: 85, formatter: Formatters.checkmark,
+        id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven.isEffort', minWidth: 85, maxWidth: 95,
         type: FieldType.boolean,
         sortable: true,
+
+        // to pass multiple formatters, use the params property
+        // also these formatters are executed in sequence, so if you want the checkmark to work correctly, it has to be the last formatter defined
+        formatter: Formatters.multiple,
+        params: { formatters: [Formatters.complexObject, Formatters.checkmark] },
+
+        // when the "field" string includes the dot "." notation, the library will consider this to be a complex object and Filter accordingly
         filterable: true,
         filter: {
           // We can also add HTML text to be rendered (any bad script will be sanitized) but we have to opt-in, else it will be sanitized
           // enableRenderHtml: true,
           // collection: [{ value: '', label: '' }, { value: true, label: 'True', labelPrefix: `<i class="fa fa-check"></i> ` }, { value: false, label: 'False' }],
 
-          collection: [{ value: '', label: '' }, { value: true, label: 'True' }, { value: false, label: 'False' }],
-          model: Filters.singleSelect
+          collection: [{ isEffort: '', label: '' }, { isEffort: true, label: 'True' }, { isEffort: false, label: 'False' }],
+          customStructure: {
+            value: 'isEffort',
+            label: 'label'
+          },
+          model: Filters.singleSelect,
+
+          // we could add certain option(s) to the "multiple-select" plugin
+          filterOptions: {
+            maxHeight: 250
+          }
         }
       }
     ];
@@ -140,7 +189,7 @@ export class Example4 {
       // use columnDef searchTerms OR use presets as shown below
       presets: {
         filters: [
-          { columnId: 'duration', searchTerms: [2, 22, 44] },
+          { columnId: 'duration', searchTerms: [10, 220] },
           // { columnId: 'complete', searchTerms: ['5'], operator: '>' },
           { columnId: 'usDateShort', operator: '<', searchTerms: ['4/20/25'] }
           // { columnId: 'effort-driven', searchTerms: [true] }
@@ -153,10 +202,10 @@ export class Example4 {
     };
   }
 
-  getData() {
+  mockData(itemCount, startingIndex = 0) {
     // mock a dataset
-    this.dataset = [];
-    for (let i = 0; i < NB_ITEMS; i++) {
+    const tempDataset = [];
+    for (let i = startingIndex; i < (startingIndex + itemCount); i++) {
       const randomDuration = Math.round(Math.random() * 100);
       const randomYear = randomBetween(2000, 2025);
       const randomYearShort = randomBetween(10, 25);
@@ -166,8 +215,9 @@ export class Example4 {
       const randomPercent = randomBetween(0, 100);
       const randomHour = randomBetween(10, 23);
       const randomTime = randomBetween(10, 59);
+      const randomIsEffort = (i % 3 === 0);
 
-      this.dataset[i] = {
+      tempDataset.push({
         id: i,
         title: 'Task ' + i,
         description: (i % 5) ? 'desc ' + i : null, // also add some random to test NULL field
@@ -177,9 +227,14 @@ export class Example4 {
         start: (i % 4) ? null : new Date(randomYear, randomMonth, randomDay),          // provide a Date format
         usDateShort: `${randomMonth}/${randomDay}/${randomYearShort}`, // provide a date US Short in the dataset
         utcDate: `${randomYear}-${randomMonthStr}-${randomDay}T${randomHour}:${randomTime}:${randomTime}Z`,
-        effortDriven: (i % 3 === 0)
-      };
+        effortDriven: {
+          isEffort: randomIsEffort,
+          label: randomIsEffort ? 'Effort' : 'NoEffort'
+        }
+      });
     }
+
+    return tempDataset;
   }
 
   /** Dispatched event of a Grid State Changed event */
