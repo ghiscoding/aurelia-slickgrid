@@ -71,15 +71,16 @@ export class ResizerService {
    */
   calculateGridNewDimensions(gridOptions: GridOption): GridDimension | null {
     const gridDomElm = $(`#${gridOptions.gridId}`);
-    const containerElm = (gridOptions.autoResize && gridOptions.autoResize.containerId) ? $(`#${gridOptions.autoResize.containerId}`) : $(`#${gridOptions.gridContainerId}`);
+    const autoResizeOptions = gridOptions && gridOptions.autoResize;
+    const containerElm = (autoResizeOptions && autoResizeOptions.containerId) ? $(`#${autoResizeOptions.containerId}`) : $(`#${gridOptions.gridContainerId}`);
     const windowElm = $(window);
-    if (windowElm === undefined || containerElm === undefined || gridDomElm === undefined) {
+    if (windowElm === undefined || containerElm === undefined || gridDomElm === undefined || gridOptions === undefined) {
       return null;
     }
 
     // calculate bottom padding
     // if using pagination, we need to add the pagination height to this bottom padding
-    let bottomPadding = (gridOptions.autoResize && gridOptions.autoResize.bottomPadding) ? gridOptions.autoResize.bottomPadding : DATAGRID_BOTTOM_PADDING;
+    let bottomPadding = (autoResizeOptions && autoResizeOptions.bottomPadding) ? autoResizeOptions.bottomPadding : DATAGRID_BOTTOM_PADDING;
     if (bottomPadding && (gridOptions.enablePagination || this._gridOptions.backendServiceApi)) {
       bottomPadding += DATAGRID_PAGINATION_HEIGHT;
     }
@@ -89,13 +90,13 @@ export class ResizerService {
     const gridOffsetTop = (coordOffsetTop !== undefined) ? coordOffsetTop.top : 0;
     const availableHeight = gridHeight - gridOffsetTop - bottomPadding;
     const availableWidth = containerElm.width() || 0;
-    const maxHeight = (gridOptions.autoResize && gridOptions.autoResize.maxHeight > 0) ? gridOptions.autoResize.maxHeight : undefined;
-    const minHeight = (gridOptions.autoResize && gridOptions.autoResize.minHeight < 0) ? gridOptions.autoResize.minHeight : DATAGRID_MIN_HEIGHT;
-    const maxWidth = (gridOptions.autoResize && gridOptions.autoResize.maxWidth > 0) ? gridOptions.autoResize.maxWidth : undefined;
-    const minWidth = (gridOptions.autoResize && gridOptions.autoResize.minWidth < 0) ? gridOptions.autoResize.minWidth : DATAGRID_MIN_WIDTH;
+    const maxHeight = (autoResizeOptions && autoResizeOptions.maxHeight && autoResizeOptions.maxHeight > 0) ? autoResizeOptions.maxHeight : undefined;
+    const minHeight = (autoResizeOptions && autoResizeOptions.minHeight && autoResizeOptions.minHeight < 0) ? autoResizeOptions.minHeight : DATAGRID_MIN_HEIGHT;
+    const maxWidth = (autoResizeOptions && autoResizeOptions.maxWidth && autoResizeOptions.maxWidth > 0) ? autoResizeOptions.maxWidth : undefined;
+    const minWidth = (autoResizeOptions && autoResizeOptions.minWidth && autoResizeOptions.minWidth < 0) ? autoResizeOptions.minWidth : DATAGRID_MIN_WIDTH;
 
     let newHeight = availableHeight;
-    let newWidth = (gridOptions.autoResize && gridOptions.autoResize.sidePadding) ? availableWidth - gridOptions.autoResize.sidePadding : availableWidth;
+    let newWidth = (autoResizeOptions && autoResizeOptions.sidePadding) ? availableWidth - autoResizeOptions.sidePadding : availableWidth;
 
     // optionally (when defined), make sure that grid height & width are within their thresholds
     if (newHeight < minHeight) {

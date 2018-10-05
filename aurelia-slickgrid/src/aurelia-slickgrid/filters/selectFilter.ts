@@ -134,7 +134,7 @@ export class SelectFilter implements Filter {
     this.labelName = this.customStructure && this.customStructure.label || 'label';
     this.labelPrefixName = this.customStructure && this.customStructure.labelPrefix || 'labelPrefix';
     this.labelSuffixName = this.customStructure && this.customStructure.labelSuffix || 'labelSuffix';
-    this.optionLabel = (this.customStructure) ? this.customStructure.optionLabel : 'value';
+    this.optionLabel = this.customStructure && this.customStructure.optionLabel || 'value';
     this.valueName = this.customStructure && this.customStructure.value || 'value';
 
     // always render the Select (dropdown) DOM element, even if user passed a "collectionAsync",
