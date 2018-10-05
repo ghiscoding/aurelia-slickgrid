@@ -89,7 +89,16 @@ let DateEditor = class DateEditor {
         this.$input.focus();
     }
     save() {
-        this.args.commitChanges();
+        // autocommit will not focus the next editor
+        const validation = this.validate();
+        if (validation && validation.valid) {
+            if (this.args.grid.getOptions().autoCommitEdit) {
+                this.args.grid.getEditorLock().commitCurrentEdit();
+            }
+            else {
+                this.args.commitChanges();
+            }
+        }
     }
     loadValue(item) {
         this.defaultDate = item[this.args.column.field];
@@ -116,7 +125,8 @@ let DateEditor = class DateEditor {
     }
     validate() {
         if (this.validator) {
-            const validationResults = this.validator(this.$input.val());
+            const value = this.$input && this.$input.val && this.$input.val();
+            const validationResults = this.validator(value, this.args);
             if (!validationResults.valid) {
                 return validationResults;
             }

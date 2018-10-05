@@ -38,6 +38,7 @@ export declare class AureliaSlickgridCustomElement {
     private _columnDefinitions;
     private _dataset;
     private _eventHandler;
+    private _hideHeaderRowAfterPageLoad;
     groupItemMetadataProvider: any;
     isGridInitialized: boolean;
     showPagination: boolean;
@@ -61,6 +62,10 @@ export declare class AureliaSlickgridCustomElement {
     dispose(emptyDomElementContainer?: boolean): void;
     bind(): void;
     columnDefinitionsChanged(): void;
+    /**
+     * Commits the current edit to the grid
+     */
+    commitEdit(target: Element): void;
     datasetChanged(newValue: any[], oldValue: any[]): void;
     /**
      * Define what our internal Post Process callback, it will execute internally after we get back result from the Process backend call

@@ -42,6 +42,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 import { inject, singleton } from 'aurelia-framework';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { FieldType, SortDirection, SortDirectionNumber } from './../models/index';
+import { getDescendantProperty } from './utilities';
 import { sortByFieldType } from '../sorters/sorterUtilities';
 var SortService = /** @class */ (function () {
     function SortService(ea) {
@@ -255,6 +256,11 @@ var SortService = /** @class */ (function () {
                     var fieldType = columnSortObj.sortCol.type || FieldType.string;
                     var value1 = dataRow1[sortField];
                     var value2 = dataRow2[sortField];
+                    // when item is a complex object (dot "." notation), we need to filter the value contained in the object tree
+                    if (sortField && sortField.indexOf('.') >= 0) {
+                        value1 = getDescendantProperty(dataRow1, sortField);
+                        value2 = getDescendantProperty(dataRow2, sortField);
+                    }
                     var sortResult = sortByFieldType(value1, value2, fieldType, sortDirection);
                     if (sortResult !== SortDirectionNumber.neutral) {
                         return sortResult;

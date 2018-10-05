@@ -34,8 +34,8 @@ export declare class GridService {
     getColumnFromEventArguments(args: CellArgs): OnEventArgs;
     /** Get data item by it's row index number */
     getDataItemByRowNumber(rowNumber: number): any;
-    /** Chain the item Metadata with our implementation of Metadata at given row index */
-    getItemRowMetadata(previousItemMetadata: any): any;
+    /** Override the item Metadata with our implementation of Metadata at given row index */
+    getItemRowMetadataToHighlight(previousItemMetadata: any): any;
     /**
      * Highlight then fade a row for x seconds.
      * The implementation follows this SO answer: https://stackoverflow.com/a/19985148/1212166

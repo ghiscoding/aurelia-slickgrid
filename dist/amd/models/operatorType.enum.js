@@ -7,6 +7,8 @@ define(["require", "exports"], function (require, exports) {
         OperatorType["empty"] = "";
         /** value contains x */
         OperatorType["contains"] = "Contains";
+        /** value not contains x (inversed of contains) */
+        OperatorType["notContains"] = "Not_Contains";
         /** value less than x */
         OperatorType["lessThan"] = "LT";
         /** value less than or equal to x */

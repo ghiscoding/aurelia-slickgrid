@@ -95,21 +95,22 @@ System.register(["aurelia-i18n", "aurelia-framework", "./controlAndPlugin.servic
                     }
                     return this._grid.getDataItem(rowNumber);
                 };
-                /** Chain the item Metadata with our implementation of Metadata at given row index */
-                GridService.prototype.getItemRowMetadata = function (previousItemMetadata) {
+                /** Override the item Metadata with our implementation of Metadata at given row index */
+                GridService.prototype.getItemRowMetadataToHighlight = function (previousItemMetadata) {
                     var _this = this;
                     return function (rowNumber) {
                         var item = _this._dataView.getItem(rowNumber);
-                        var meta = {
-                            cssClasses: ''
-                        };
-                        if (typeof previousItemMetadata === 'object' && !$.isEmptyObject(previousItemMetadata)) {
+                        var meta = { cssClasses: '' };
+                        if (typeof previousItemMetadata === 'function') {
                             meta = previousItemMetadata(rowNumber);
                         }
                         if (item && item._dirty) {
-                            meta.cssClasses = (meta.cssClasses || '') + ' dirty';
+                            meta.cssClasses = (meta && meta.cssClasses || '') + ' dirty';
                         }
-                        if (item && item.rowClass) {
+                        if (!meta) {
+                            meta = { cssClasses: '' };
+                        }
+                        if (item && item.rowClass && meta) {
                             meta.cssClasses += " " + item.rowClass;
                             meta.cssClasses += " row" + rowNumber;
                         }
@@ -131,7 +132,7 @@ System.register(["aurelia-i18n", "aurelia-framework", "./controlAndPlugin.servic
                         this._grid.setSelectionModel(rowSelectionPlugin);
                     }
                     this._grid.setSelectedRows([rowNumber]);
-                    this._dataView.getItemMetadata = this.getItemRowMetadata(this._dataView.getItemMetadata);
+                    this._dataView.getItemMetadata = this.getItemRowMetadataToHighlight(this._dataView.getItemMetadata);
                     var item = this._dataView.getItem(rowNumber);
                     if (item && item.id) {
                         item.rowClass = 'highlight';

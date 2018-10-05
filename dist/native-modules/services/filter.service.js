@@ -52,6 +52,7 @@ import { EventAggregator } from 'aurelia-event-aggregator';
 import { FilterConditions } from './../filter-conditions/index';
 import { FilterFactory } from './../filters/index';
 import { FieldType, OperatorType } from './../models/index';
+import { getDescendantProperty } from './utilities';
 import * as $ from 'jquery';
 import * as isequal from 'lodash.isequal';
 var FilterService = /** @class */ (function () {
@@ -212,9 +213,14 @@ var FilterService = /** @class */ (function () {
             if (!columnDef) {
                 return false;
             }
+            var fieldName = columnDef.queryField || columnDef.queryFieldFilter || columnDef.field || '';
             var fieldType = columnDef.type || FieldType.string;
             var filterSearchType = (columnDef.filterSearchType) ? columnDef.filterSearchType : null;
-            var cellValue = item[columnDef.queryField || columnDef.queryFieldFilter || columnDef.field];
+            var cellValue = item[fieldName];
+            // when item is a complex object (dot "." notation), we need to filter the value contained in the object tree
+            if (fieldName && fieldName.indexOf('.') >= 0) {
+                cellValue = getDescendantProperty(item, fieldName);
+            }
             // if we find searchTerms use them but make a deep copy so that we don't affect original array
             // we might have to overwrite the value(s) locally that are returned
             // e.g: we don't want to operator within the search value, since it will fail filter condition check trigger afterward

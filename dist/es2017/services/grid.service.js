@@ -65,20 +65,21 @@ let GridService = class GridService {
         }
         return this._grid.getDataItem(rowNumber);
     }
-    /** Chain the item Metadata with our implementation of Metadata at given row index */
-    getItemRowMetadata(previousItemMetadata) {
+    /** Override the item Metadata with our implementation of Metadata at given row index */
+    getItemRowMetadataToHighlight(previousItemMetadata) {
         return (rowNumber) => {
             const item = this._dataView.getItem(rowNumber);
-            let meta = {
-                cssClasses: ''
-            };
-            if (typeof previousItemMetadata === 'object' && !$.isEmptyObject(previousItemMetadata)) {
+            let meta = { cssClasses: '' };
+            if (typeof previousItemMetadata === 'function') {
                 meta = previousItemMetadata(rowNumber);
             }
             if (item && item._dirty) {
-                meta.cssClasses = (meta.cssClasses || '') + ' dirty';
+                meta.cssClasses = (meta && meta.cssClasses || '') + ' dirty';
             }
-            if (item && item.rowClass) {
+            if (!meta) {
+                meta = { cssClasses: '' };
+            }
+            if (item && item.rowClass && meta) {
                 meta.cssClasses += ` ${item.rowClass}`;
                 meta.cssClasses += ` row${rowNumber}`;
             }
@@ -98,7 +99,7 @@ let GridService = class GridService {
             this._grid.setSelectionModel(rowSelectionPlugin);
         }
         this._grid.setSelectedRows([rowNumber]);
-        this._dataView.getItemMetadata = this.getItemRowMetadata(this._dataView.getItemMetadata);
+        this._dataView.getItemMetadata = this.getItemRowMetadataToHighlight(this._dataView.getItemMetadata);
         const item = this._dataView.getItem(rowNumber);
         if (item && item.id) {
             item.rowClass = 'highlight';

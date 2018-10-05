@@ -28,6 +28,8 @@ export declare class SelectEditor implements Editor {
     labelPrefixName: string;
     /** The property name for a suffix that can be added to the labels in the collection */
     labelSuffixName: string;
+    /** A label that can be added to each option and can be used as an alternative to display selected options */
+    optionLabel: string;
     /** The property name for values in the collection */
     valueName: string;
     /** Grid options */
@@ -36,6 +38,7 @@ export declare class SelectEditor implements Editor {
     enableTranslateLabel: boolean;
     /** Event Subscriptions */
     subscriptions: Subscription[];
+    _destroying: boolean;
     constructor(bindingEngine: BindingEngine, collectionService: CollectionService, i18n: I18N, args: any, isMultipleSelect?: boolean);
     /** Get the Collection */
     readonly collection: SelectOption[];
@@ -61,6 +64,7 @@ export declare class SelectEditor implements Editor {
     applyValue(item: any, state: any): void;
     destroy(): void;
     loadValue(item: any): void;
+    loadMultipleValues(items: any[]): void;
     loadSingleValue(item: any): void;
     serializeValue(): any;
     focus(): void;

@@ -41,7 +41,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-import { HttpResponseMessage } from 'aurelia-http-client';
 import { OperatorType } from './../models/index';
 import { disposeAllSubscriptions, getDescendantProperty, htmlEncode } from '../services/utilities';
 import * as DOMPurify from 'dompurify';
@@ -163,6 +162,7 @@ var SelectFilter = /** @class */ (function () {
                         this.labelName = this.customStructure && this.customStructure.label || 'label';
                         this.labelPrefixName = this.customStructure && this.customStructure.labelPrefix || 'labelPrefix';
                         this.labelSuffixName = this.customStructure && this.customStructure.labelSuffix || 'labelSuffix';
+                        this.optionLabel = this.customStructure && this.customStructure.optionLabel || 'value';
                         this.valueName = this.customStructure && this.customStructure.value || 'value';
                         newCollection = this.columnFilter.collection || [];
                         this.renderDomElement(newCollection);
@@ -200,6 +200,7 @@ var SelectFilter = /** @class */ (function () {
      */
     SelectFilter.prototype.destroy = function () {
         if (this.$filterElm) {
+            // remove event watcher
             this.$filterElm.off().remove();
             // also dispose of all Subscriptions
             this.subscriptions = disposeAllSubscriptions(this.subscriptions);
@@ -227,7 +228,8 @@ var SelectFilter = /** @class */ (function () {
         // user might want to filter certain items of the collection
         if (this.columnFilter && this.columnFilter.collectionFilterBy) {
             var filterBy = this.columnFilter.collectionFilterBy;
-            outputCollection = this.collectionService.filterCollection(outputCollection, filterBy);
+            var filterCollectionBy = this.columnFilter.collectionOptions && this.columnFilter.collectionOptions.filterResultAfterEachPass || null;
+            outputCollection = this.collectionService.filterCollection(outputCollection, filterBy, filterCollectionBy);
         }
         return outputCollection;
     };
@@ -252,24 +254,25 @@ var SelectFilter = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         awaitedCollection = [];
-                        if (!collectionAsync) return [3 /*break*/, 5];
+                        if (!collectionAsync) return [3 /*break*/, 6];
                         return [4 /*yield*/, collectionAsync];
                     case 1:
                         response = _a.sent();
-                        if (!(response instanceof Response && typeof response['json'] === 'function')) return [3 /*break*/, 3];
-                        return [4 /*yield*/, response['json']()];
+                        if (!Array.isArray(response)) return [3 /*break*/, 2];
+                        awaitedCollection = response; // from Promise
+                        return [3 /*break*/, 5];
                     case 2:
-                        awaitedCollection = _a.sent();
-                        return [3 /*break*/, 4];
+                        if (!(response instanceof Response && typeof response['json'] === 'function')) return [3 /*break*/, 4];
+                        return [4 /*yield*/, response['json']()];
                     case 3:
-                        if (response instanceof HttpResponseMessage) {
-                            awaitedCollection = response['content'];
-                        }
-                        else {
-                            awaitedCollection = response;
-                        }
-                        _a.label = 4;
+                        awaitedCollection = _a.sent(); // from Fetch
+                        return [3 /*break*/, 5];
                     case 4:
+                        if (response && response['content']) {
+                            awaitedCollection = response['content']; // from aurelia-http-client
+                        }
+                        _a.label = 5;
+                    case 5:
                         if (!Array.isArray(awaitedCollection)) {
                             throw new Error('Something went wrong while trying to pull the collection from the "collectionAsync" call');
                         }
@@ -278,8 +281,8 @@ var SelectFilter = /** @class */ (function () {
                         this.columnFilter.collection = awaitedCollection;
                         // recreate Multiple Select after getting async collection
                         this.renderDomElement(awaitedCollection);
-                        _a.label = 5;
-                    case 5: return [2 /*return*/, awaitedCollection];
+                        _a.label = 6;
+                    case 6: return [2 /*return*/, awaitedCollection];
                 }
             });
         });
@@ -351,6 +354,8 @@ var SelectFilter = /** @class */ (function () {
             var labelText = ((option.labelKey || _this.enableTranslateLabel) && _this.i18n && typeof _this.i18n.tr === 'function') ? _this.i18n.tr(labelKey || ' ') : labelKey;
             var prefixText = option[_this.labelPrefixName] || '';
             var suffixText = option[_this.labelSuffixName] || '';
+            var optionLabel = option[_this.optionLabel] || '';
+            optionLabel = optionLabel.toString().replace(/\"/g, '\''); // replace double quotes by single quotes to avoid interfering with regular html
             var optionText = (prefixText + separatorBetweenLabels + labelText + separatorBetweenLabels + suffixText);
             // if user specifically wants to render html text, he needs to opt-in else it will stripped out by default
             // also, the 3rd party lib will saninitze any html code unless it's encoded, so we'll do that
@@ -361,7 +366,7 @@ var SelectFilter = /** @class */ (function () {
                 optionText = htmlEncode(sanitizedText);
             }
             // html text of each select option
-            options += "<option value=\"" + option[_this.valueName] + "\" " + selected + ">" + optionText + "</option>";
+            options += "<option value=\"" + option[_this.valueName] + "\" label=\"" + optionLabel + "\" " + selected + ">" + optionText + "</option>";
             // if there's a search term, we will add the "filled" class for styling purposes
             if (selected) {
                 _this.isFilled = true;

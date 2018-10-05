@@ -1,4 +1,4 @@
-System.register(["aurelia-framework", "aurelia-event-aggregator", "./../filter-conditions/index", "./../filters/index", "./../models/index", "jquery", "lodash.isequal"], function (exports_1, context_1) {
+System.register(["aurelia-framework", "aurelia-event-aggregator", "./../filter-conditions/index", "./../filters/index", "./../models/index", "./utilities", "jquery", "lodash.isequal"], function (exports_1, context_1) {
     "use strict";
     var __assign = (this && this.__assign) || Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -50,7 +50,7 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./../filter-c
         }
     };
     var __moduleName = context_1 && context_1.id;
-    var aurelia_framework_1, aurelia_event_aggregator_1, index_1, index_2, index_3, $, isequal, FilterService;
+    var aurelia_framework_1, aurelia_event_aggregator_1, index_1, index_2, index_3, utilities_1, $, isequal, FilterService;
     return {
         setters: [
             function (aurelia_framework_1_1) {
@@ -67,6 +67,9 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./../filter-c
             },
             function (index_3_1) {
                 index_3 = index_3_1;
+            },
+            function (utilities_1_1) {
+                utilities_1 = utilities_1_1;
             },
             function ($_1) {
                 $ = $_1;
@@ -234,9 +237,14 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./../filter-c
                         if (!columnDef) {
                             return false;
                         }
+                        var fieldName = columnDef.queryField || columnDef.queryFieldFilter || columnDef.field || '';
                         var fieldType = columnDef.type || index_3.FieldType.string;
                         var filterSearchType = (columnDef.filterSearchType) ? columnDef.filterSearchType : null;
-                        var cellValue = item[columnDef.queryField || columnDef.queryFieldFilter || columnDef.field];
+                        var cellValue = item[fieldName];
+                        // when item is a complex object (dot "." notation), we need to filter the value contained in the object tree
+                        if (fieldName && fieldName.indexOf('.') >= 0) {
+                            cellValue = utilities_1.getDescendantProperty(item, fieldName);
+                        }
                         // if we find searchTerms use them but make a deep copy so that we don't affect original array
                         // we might have to overwrite the value(s) locally that are returned
                         // e.g: we don't want to operator within the search value, since it will fail filter condition check trigger afterward

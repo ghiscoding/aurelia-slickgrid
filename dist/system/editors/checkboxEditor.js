@@ -43,9 +43,14 @@ System.register(["jquery"], function (exports_1, context_1) {
                     configurable: true
                 });
                 CheckboxEditor.prototype.init = function () {
+                    var _this = this;
                     this.$input = $("<input type=\"checkbox\" value=\"true\" class=\"editor-checkbox\" />");
                     this.$input.appendTo(this.args.container);
                     this.$input.focus();
+                    // make the checkbox editor act like a regular checkbox that commit the value on click
+                    if (this.args.grid.getOptions().autoCommitEdit) {
+                        this.$input.click(function () { return _this.args.grid.getEditorLock().commitCurrentEdit(); });
+                    }
                 };
                 CheckboxEditor.prototype.destroy = function () {
                     this.$input.remove();
@@ -82,7 +87,8 @@ System.register(["jquery"], function (exports_1, context_1) {
                 };
                 CheckboxEditor.prototype.validate = function () {
                     if (this.validator) {
-                        var validationResults = this.validator(this.$input.val());
+                        var value = this.$input && this.$input.val && this.$input.val();
+                        var validationResults = this.validator(value, this.args);
                         if (!validationResults.valid) {
                             return validationResults;
                         }

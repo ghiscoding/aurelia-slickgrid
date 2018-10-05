@@ -32,20 +32,28 @@ let LongTextEditor = class LongTextEditor {
     get validator() {
         return this.columnEditor.validator || this.columnDef.validator;
     }
+    get hasAutoCommitEdit() {
+        return this.args.grid.getOptions().autoCommitEdit;
+    }
     init() {
         const cancelText = this.i18n.tr('CANCEL') || Constants.TEXT_CANCEL;
         const saveText = this.i18n.tr('SAVE') || Constants.TEXT_SAVE;
         const $container = $('body');
         this.$wrapper = $(`<div class="slick-large-editor-text" />`).appendTo($container);
         this.$input = $(`<textarea hidefocus rows="5">`).appendTo(this.$wrapper);
+        // aurelia-slickgrid does not get the focus out event for some reason
+        // so register it here
+        if (this.hasAutoCommitEdit) {
+            this.$input.on('focusout', () => this.save());
+        }
         $(`<div class="editor-footer">
         <button class="btn btn-primary btn-xs">${saveText}</button>
         <button class="btn btn-default btn-xs">${cancelText}</button>
       </div>`).appendTo(this.$wrapper);
-        this.$wrapper.find('button:first').on('click', (event) => this.save());
-        this.$wrapper.find('button:last').on('click', (event) => this.cancel());
-        this.$input.on('keydown', this.handleKeyDown);
-        this.position(this.args.position);
+        this.$wrapper.find('button:first').on('click', () => this.save());
+        this.$wrapper.find('button:last').on('click', () => this.cancel());
+        this.$input.on('keydown', this.handleKeyDown.bind(this));
+        this.position(this.args && this.args.position);
         this.$input.focus().select();
     }
     handleKeyDown(e) {
@@ -58,19 +66,33 @@ let LongTextEditor = class LongTextEditor {
         }
         else if (e.which === KeyCode.TAB && e.shiftKey) {
             e.preventDefault();
-            this.args.grid.navigatePrev();
+            if (this.args && this.args.grid) {
+                this.args.grid.navigatePrev();
+            }
         }
         else if (e.which === KeyCode.TAB) {
             e.preventDefault();
-            this.args.grid.navigateNext();
+            if (this.args && this.args.grid) {
+                this.args.grid.navigateNext();
+            }
         }
     }
     save() {
-        this.args.commitChanges();
+        const validation = this.validate();
+        if (validation && validation.valid) {
+            if (this.hasAutoCommitEdit) {
+                this.args.grid.getEditorLock().commitCurrentEdit();
+            }
+            else {
+                this.args.commitChanges();
+            }
+        }
     }
     cancel() {
         this.$input.val(this.defaultValue);
-        this.args.cancelChanges();
+        if (this.args && this.args.cancelChanges) {
+            this.args.cancelChanges();
+        }
     }
     hide() {
         this.$wrapper.hide();
@@ -104,7 +126,8 @@ let LongTextEditor = class LongTextEditor {
     }
     validate() {
         if (this.validator) {
-            const validationResults = this.validator(this.$input.val());
+            const value = this.$input && this.$input.val && this.$input.val();
+            const validationResults = this.validator(value, this.args);
             if (!validationResults.valid) {
                 return validationResults;
             }

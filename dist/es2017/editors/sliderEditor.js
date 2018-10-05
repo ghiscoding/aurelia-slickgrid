@@ -66,7 +66,15 @@ export class SliderEditor {
         this.$editorElm.focus();
     }
     save() {
-        this.args.commitChanges();
+        const validation = this.validate();
+        if (validation && validation.valid) {
+            if (this.args.grid.getOptions().autoCommitEdit) {
+                this.args.grid.getEditorLock().commitCurrentEdit();
+            }
+            else {
+                this.args.commitChanges();
+            }
+        }
     }
     cancel() {
         this.$input.val(this.defaultValue);
@@ -99,7 +107,7 @@ export class SliderEditor {
             '{{maxValue}}': maxValue
         };
         if (this.validator) {
-            const validationResults = this.validator(elmValue);
+            const validationResults = this.validator(elmValue, this.args);
             if (!validationResults.valid) {
                 return validationResults;
             }

@@ -84,7 +84,15 @@ define(["require", "exports", "../constants", "jquery"], function (require, expo
             this.$editorElm.focus();
         };
         SliderEditor.prototype.save = function () {
-            this.args.commitChanges();
+            var validation = this.validate();
+            if (validation && validation.valid) {
+                if (this.args.grid.getOptions().autoCommitEdit) {
+                    this.args.grid.getEditorLock().commitCurrentEdit();
+                }
+                else {
+                    this.args.commitChanges();
+                }
+            }
         };
         SliderEditor.prototype.cancel = function () {
             this.$input.val(this.defaultValue);
@@ -117,7 +125,7 @@ define(["require", "exports", "../constants", "jquery"], function (require, expo
                 '{{maxValue}}': maxValue
             };
             if (this.validator) {
-                var validationResults = this.validator(elmValue);
+                var validationResults = this.validator(elmValue, this.args);
                 if (!validationResults.valid) {
                     return validationResults;
                 }

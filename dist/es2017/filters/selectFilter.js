@@ -1,4 +1,3 @@
-import { HttpResponseMessage } from 'aurelia-http-client';
 import { OperatorType } from './../models/index';
 import { disposeAllSubscriptions, getDescendantProperty, htmlEncode } from '../services/utilities';
 import * as DOMPurify from 'dompurify';
@@ -93,6 +92,7 @@ export class SelectFilter {
         this.labelName = this.customStructure && this.customStructure.label || 'label';
         this.labelPrefixName = this.customStructure && this.customStructure.labelPrefix || 'labelPrefix';
         this.labelSuffixName = this.customStructure && this.customStructure.labelSuffix || 'labelSuffix';
+        this.optionLabel = this.customStructure && this.customStructure.optionLabel || 'value';
         this.valueName = this.customStructure && this.customStructure.value || 'value';
         // always render the Select (dropdown) DOM element, even if user passed a "collectionAsync",
         // if that is the case, the Select will simply be without any options but we still have to render it (else SlickGrid would throw an error)
@@ -125,6 +125,7 @@ export class SelectFilter {
      */
     destroy() {
         if (this.$filterElm) {
+            // remove event watcher
             this.$filterElm.off().remove();
             // also dispose of all Subscriptions
             this.subscriptions = disposeAllSubscriptions(this.subscriptions);
@@ -152,7 +153,8 @@ export class SelectFilter {
         // user might want to filter certain items of the collection
         if (this.columnFilter && this.columnFilter.collectionFilterBy) {
             const filterBy = this.columnFilter.collectionFilterBy;
-            outputCollection = this.collectionService.filterCollection(outputCollection, filterBy);
+            const filterCollectionBy = this.columnFilter.collectionOptions && this.columnFilter.collectionOptions.filterResultAfterEachPass || null;
+            outputCollection = this.collectionService.filterCollection(outputCollection, filterBy, filterCollectionBy);
         }
         return outputCollection;
     }
@@ -175,14 +177,14 @@ export class SelectFilter {
         if (collectionAsync) {
             // wait for the "collectionAsync", once resolved we will save it into the "collection"
             const response = await collectionAsync;
-            if (response instanceof Response && typeof response['json'] === 'function') {
-                awaitedCollection = await response['json']();
+            if (Array.isArray(response)) {
+                awaitedCollection = response; // from Promise
             }
-            else if (response instanceof HttpResponseMessage) {
-                awaitedCollection = response['content'];
+            else if (response instanceof Response && typeof response['json'] === 'function') {
+                awaitedCollection = await response['json'](); // from Fetch
             }
-            else {
-                awaitedCollection = response;
+            else if (response && response['content']) {
+                awaitedCollection = response['content']; // from aurelia-http-client
             }
             if (!Array.isArray(awaitedCollection)) {
                 throw new Error('Something went wrong while trying to pull the collection from the "collectionAsync" call');
@@ -260,6 +262,8 @@ export class SelectFilter {
             const labelText = ((option.labelKey || this.enableTranslateLabel) && this.i18n && typeof this.i18n.tr === 'function') ? this.i18n.tr(labelKey || ' ') : labelKey;
             const prefixText = option[this.labelPrefixName] || '';
             const suffixText = option[this.labelSuffixName] || '';
+            let optionLabel = option[this.optionLabel] || '';
+            optionLabel = optionLabel.toString().replace(/\"/g, '\''); // replace double quotes by single quotes to avoid interfering with regular html
             let optionText = (prefixText + separatorBetweenLabels + labelText + separatorBetweenLabels + suffixText);
             // if user specifically wants to render html text, he needs to opt-in else it will stripped out by default
             // also, the 3rd party lib will saninitze any html code unless it's encoded, so we'll do that
@@ -270,7 +274,7 @@ export class SelectFilter {
                 optionText = htmlEncode(sanitizedText);
             }
             // html text of each select option
-            options += `<option value="${option[this.valueName]}" ${selected}>${optionText}</option>`;
+            options += `<option value="${option[this.valueName]}" label="${optionLabel}" ${selected}>${optionText}</option>`;
             // if there's a search term, we will add the "filled" class for styling purposes
             if (selected) {
                 this.isFilled = true;

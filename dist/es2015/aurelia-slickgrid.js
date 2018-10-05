@@ -33,7 +33,6 @@ import 'slickgrid/plugins/slick.headermenu';
 import 'slickgrid/plugins/slick.rowmovemanager';
 import 'slickgrid/plugins/slick.rowselectionmodel';
 import { bindable, BindingEngine, bindingMode, Container, Factory, inject } from 'aurelia-framework';
-import { HttpResponseMessage } from 'aurelia-http-client';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { GlobalGridOptions } from './global-grid-options';
 import { GridStateType, } from './models/index';
@@ -59,6 +58,7 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
         this.container = container;
         this._columnDefinitions = [];
         this._eventHandler = new Slick.EventHandler();
+        this._hideHeaderRowAfterPageLoad = false;
         this.isGridInitialized = false;
         this.showPagination = false;
         this.serviceList = [];
@@ -118,6 +118,11 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
         this.dataview.beginUpdate();
         this.dataview.setItems(this._dataset, this.gridOptions.datasetIdPropertyName);
         this.dataview.endUpdate();
+        // user might want to hide the header row on page load but still have `enableFiltering: true`
+        // if that is the case, we need to hide the headerRow ONLY AFTER all filters got created & dataView exist
+        if (this._hideHeaderRowAfterPageLoad) {
+            this.showHeaderRow(false);
+        }
         // after the DataView is created & updated execute some processes
         this.executeAfterDataviewCreated(this.grid, this.gridOptions, this.dataview);
         // publish & dispatch certain events
@@ -174,8 +179,9 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
         this.dataview = [];
         this._eventHandler.unsubscribeAll();
         this.grid.destroy();
-        if (emptyDomElementContainer) {
-            $(this.gridOptions.gridContainerId).empty();
+        if (emptyDomElementContainer && this.gridId) {
+            const containerId = this.gridOptions && this.gridOptions.gridContainerId || `slickGridContainer-${this.gridId}`;
+            $(containerId).empty();
         }
         this.ea.publish('onAfterGridDestroyed', true);
         this.dispatchCustomEvent(`${aureliaEventPrefix}-on-after-grid-destroyed`, this.grid);
@@ -206,6 +212,26 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
         this._columnDefinitions = this.columnDefinitions;
         if (this.isGridInitialized) {
             this.updateColumnDefinitionsList(this.columnDefinitions);
+        }
+    }
+    /**
+     * Commits the current edit to the grid
+     */
+    commitEdit(target) {
+        if (this.grid.getOptions().autoCommitEdit) {
+            const activeNode = this.grid.getActiveCellNode();
+            // a timeout must be set or this could come into conflict when slickgrid
+            // tries to commit the edit when going from one editor to another on the grid
+            // through the click event. If the timeout was not here it would
+            // try to commit/destroy the twice, which would throw a jquery
+            // error about the element not being in the DOM
+            setTimeout(() => {
+                // make sure the target is the active editor so we do not
+                // commit prematurely
+                if (activeNode && activeNode.contains(target) && this.grid.getEditorLock().isActive()) {
+                    this.grid.getEditorLock().commitCurrentEdit();
+                }
+            });
         }
     }
     datasetChanged(newValue, oldValue) {
@@ -396,6 +422,8 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
         // expand/autofit columns on first page load
         if (grid && options.autoFitColumnsOnFirstLoad && options.enableAutoSizeColumns && typeof grid.autosizeColumns === 'function') {
             this.grid.autosizeColumns();
+            // compensate anytime SlickGrid measureScrollbar is incorrect (only seems to happen in Chrome 1/5 computers)
+            this.resizerService.compensateHorizontalScroll(this.grid, this.gridOptions);
         }
         // auto-resize grid on browser resize
         this.resizerService.init(grid);
@@ -417,14 +445,12 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
     mergeGridOptions(gridOptions) {
         gridOptions.gridId = this.gridId;
         gridOptions.gridContainerId = `slickGridContainer-${this.gridId}`;
-        if (gridOptions.enableFiltering) {
-            gridOptions.showHeaderRow = true;
-        }
         // use jquery extend to deep merge & copy to avoid immutable properties being changed in GlobalGridOptions after a route change
         const options = $.extend(true, {}, GlobalGridOptions, gridOptions);
         // also make sure to show the header row if user have enabled filtering
+        this._hideHeaderRowAfterPageLoad = (options.showHeaderRow === false);
         if (options.enableFiltering && !options.showHeaderRow) {
-            options.showHeaderRow = true;
+            options.showHeaderRow = options.enableFiltering;
         }
         return options;
     }
@@ -528,19 +554,20 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
             // the collectionAsync can be of 3 types HttpClient, HttpFetch or a Promise
             //
             collectionAsync.then((response) => {
-                if (response instanceof Response && typeof response.json === 'function') {
+                if (Array.isArray(response)) {
+                    this.updateEditorCollection(column, response); // from Promise
+                }
+                else if (response instanceof Response && typeof response.json === 'function') {
                     if (response.bodyUsed) {
                         throw new Error('[Aurelia-SlickGrid] The response body passed to collectionAsync was ' +
                             'already read. Either pass the dataset from the Response ' +
                             'or clone the response first using response.clone()');
                     }
+                    // from Fetch
                     response.json().then(data => this.updateEditorCollection(column, data));
                 }
-                else if (response instanceof HttpResponseMessage) {
-                    this.updateEditorCollection(column, response['content']);
-                }
-                else if (Array.isArray(response)) {
-                    this.updateEditorCollection(column, response);
+                else if (response && response['content']) {
+                    this.updateEditorCollection(column, response['content']); // from aurelia-http-client
                 }
             });
         }

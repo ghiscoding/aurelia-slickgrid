@@ -1,5 +1,5 @@
-import { GridOption } from './../models/index';
 import { EventAggregator } from 'aurelia-event-aggregator';
+import { GridOption } from './../models/index';
 export interface GridDimension {
     height: number;
     width: number;
@@ -30,7 +30,18 @@ export declare class ResizerService {
      * Dispose function when element is destroyed
      */
     dispose(): void;
+    /**
+     * Return the last resize dimensions used
+     * @return last dimensions
+     */
     getLastResizeDimensions(): GridDimension;
+    /**
+     * For some reason this only seems to happen in Chrome and is sometime miscalculated by SlickGrid measureSrollbar() method
+     * When that happens we will compensate and resize the Grid Viewport to avoid seeing horizontal scrollbar
+     * Most of the time it happens, it's a tiny offset calculation of usually 3px (enough to show scrollbar)
+     * GitHub issue reference: https://github.com/6pac/SlickGrid/issues/275
+     */
+    compensateHorizontalScroll(grid: any, gridOptions: GridOption): void;
     /** Resize the datagrid to fit the browser height & width */
     resizeGrid(delay?: number, newSizes?: GridDimension): Promise<GridDimension>;
 }

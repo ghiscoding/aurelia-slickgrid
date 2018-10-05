@@ -39,7 +39,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "./../models/index", "../sorters/sorterUtilities"], function (require, exports, aurelia_framework_1, aurelia_event_aggregator_1, index_1, sorterUtilities_1) {
+define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "./../models/index", "./utilities", "../sorters/sorterUtilities"], function (require, exports, aurelia_framework_1, aurelia_event_aggregator_1, index_1, utilities_1, sorterUtilities_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var SortService = /** @class */ (function () {
@@ -254,6 +254,11 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
                         var fieldType = columnSortObj.sortCol.type || index_1.FieldType.string;
                         var value1 = dataRow1[sortField];
                         var value2 = dataRow2[sortField];
+                        // when item is a complex object (dot "." notation), we need to filter the value contained in the object tree
+                        if (sortField && sortField.indexOf('.') >= 0) {
+                            value1 = utilities_1.getDescendantProperty(dataRow1, sortField);
+                            value2 = utilities_1.getDescendantProperty(dataRow2, sortField);
+                        }
                         var sortResult = sorterUtilities_1.sortByFieldType(value1, value2, fieldType, sortDirection);
                         if (sortResult !== index_1.SortDirectionNumber.neutral) {
                             return sortResult;

@@ -5,8 +5,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { singleton, inject } from 'aurelia-framework';
-import * as $ from 'jquery';
 import { EventAggregator } from 'aurelia-event-aggregator';
+import { getScrollBarWidth } from './utilities';
+import * as $ from 'jquery';
 // global constants, height/width are in pixels
 const DATAGRID_MIN_HEIGHT = 180;
 const DATAGRID_MIN_WIDTH = 300;
@@ -56,14 +57,15 @@ let ResizerService = class ResizerService {
      */
     calculateGridNewDimensions(gridOptions) {
         const gridDomElm = $(`#${gridOptions.gridId}`);
-        const containerElm = (gridOptions.autoResize && gridOptions.autoResize.containerId) ? $(`#${gridOptions.autoResize.containerId}`) : $(`#${gridOptions.gridContainerId}`);
+        const autoResizeOptions = gridOptions && gridOptions.autoResize;
+        const containerElm = (autoResizeOptions && autoResizeOptions.containerId) ? $(`#${autoResizeOptions.containerId}`) : $(`#${gridOptions.gridContainerId}`);
         const windowElm = $(window);
-        if (windowElm === undefined || containerElm === undefined || gridDomElm === undefined) {
+        if (windowElm === undefined || containerElm === undefined || gridDomElm === undefined || gridOptions === undefined) {
             return null;
         }
         // calculate bottom padding
         // if using pagination, we need to add the pagination height to this bottom padding
-        let bottomPadding = (gridOptions.autoResize && gridOptions.autoResize.bottomPadding) ? gridOptions.autoResize.bottomPadding : DATAGRID_BOTTOM_PADDING;
+        let bottomPadding = (autoResizeOptions && autoResizeOptions.bottomPadding) ? autoResizeOptions.bottomPadding : DATAGRID_BOTTOM_PADDING;
         if (bottomPadding && (gridOptions.enablePagination || this._gridOptions.backendServiceApi)) {
             bottomPadding += DATAGRID_PAGINATION_HEIGHT;
         }
@@ -72,15 +74,24 @@ let ResizerService = class ResizerService {
         const gridOffsetTop = (coordOffsetTop !== undefined) ? coordOffsetTop.top : 0;
         const availableHeight = gridHeight - gridOffsetTop - bottomPadding;
         const availableWidth = containerElm.width() || 0;
-        const minHeight = (gridOptions.autoResize && gridOptions.autoResize.minHeight < 0) ? gridOptions.autoResize.minHeight : DATAGRID_MIN_HEIGHT;
-        const minWidth = (gridOptions.autoResize && gridOptions.autoResize.minWidth < 0) ? gridOptions.autoResize.minWidth : DATAGRID_MIN_WIDTH;
+        const maxHeight = (autoResizeOptions && autoResizeOptions.maxHeight && autoResizeOptions.maxHeight > 0) ? autoResizeOptions.maxHeight : undefined;
+        const minHeight = (autoResizeOptions && autoResizeOptions.minHeight && autoResizeOptions.minHeight < 0) ? autoResizeOptions.minHeight : DATAGRID_MIN_HEIGHT;
+        const maxWidth = (autoResizeOptions && autoResizeOptions.maxWidth && autoResizeOptions.maxWidth > 0) ? autoResizeOptions.maxWidth : undefined;
+        const minWidth = (autoResizeOptions && autoResizeOptions.minWidth && autoResizeOptions.minWidth < 0) ? autoResizeOptions.minWidth : DATAGRID_MIN_WIDTH;
         let newHeight = availableHeight;
-        let newWidth = (gridOptions.autoResize && gridOptions.autoResize.sidePadding) ? availableWidth - gridOptions.autoResize.sidePadding : availableWidth;
+        let newWidth = (autoResizeOptions && autoResizeOptions.sidePadding) ? availableWidth - autoResizeOptions.sidePadding : availableWidth;
+        // optionally (when defined), make sure that grid height & width are within their thresholds
         if (newHeight < minHeight) {
             newHeight = minHeight;
         }
+        if (maxHeight && newHeight > maxHeight) {
+            newHeight = maxHeight;
+        }
         if (newWidth < minWidth) {
             newWidth = minWidth;
+        }
+        if (maxWidth && newWidth > maxWidth) {
+            newWidth = maxWidth;
         }
         return {
             height: newHeight,
@@ -93,8 +104,30 @@ let ResizerService = class ResizerService {
     dispose() {
         $(window).off(`resize.grid.${this._gridUid}`);
     }
+    /**
+     * Return the last resize dimensions used
+     * @return last dimensions
+     */
     getLastResizeDimensions() {
         return this._lastDimensions;
+    }
+    /**
+     * For some reason this only seems to happen in Chrome and is sometime miscalculated by SlickGrid measureSrollbar() method
+     * When that happens we will compensate and resize the Grid Viewport to avoid seeing horizontal scrollbar
+     * Most of the time it happens, it's a tiny offset calculation of usually 3px (enough to show scrollbar)
+     * GitHub issue reference: https://github.com/6pac/SlickGrid/issues/275
+     */
+    compensateHorizontalScroll(grid, gridOptions) {
+        const gridElm = $(`#${gridOptions.gridId}`);
+        const scrollbarDimensions = grid && grid.getScrollbarDimensions();
+        const slickGridScrollbarWidth = scrollbarDimensions && scrollbarDimensions.width;
+        const calculatedScrollbarWidth = getScrollBarWidth();
+        // if scrollbar width is different from SlickGrid calculation to our custom calculation
+        // then resize the grid with the missing pixels to remove scroll (usually only 3px)
+        if (slickGridScrollbarWidth < calculatedScrollbarWidth && gridElm && gridElm.width) {
+            const oldWidth = gridElm && gridElm.width && gridElm.width() || 0;
+            gridElm.width(oldWidth + (calculatedScrollbarWidth - slickGridScrollbarWidth));
+        }
     }
     /** Resize the datagrid to fit the browser height & width */
     resizeGrid(delay, newSizes) {
@@ -132,6 +165,8 @@ let ResizerService = class ResizerService {
                     // also call the grid auto-size columns so that it takes available when going bigger
                     if (this._grid && this._gridOptions && this._gridOptions.enableAutoSizeColumns && typeof this._grid.autosizeColumns === 'function') {
                         this._grid.autosizeColumns();
+                        // patch Chrome horizontal scroll
+                        this.compensateHorizontalScroll(this._grid, this._gridOptions);
                     }
                     // keep last resized dimensions & resolve them to the Promise
                     this._lastDimensions = {

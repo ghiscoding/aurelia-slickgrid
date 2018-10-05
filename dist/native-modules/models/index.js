@@ -2,6 +2,7 @@ export * from './caseType';
 export * from './delimiterType.enum';
 export * from './fieldType.enum';
 export * from './fileType.enum';
+export * from './filterMultiplePassType.enum';
 export * from './gridStateType.enum';
 export * from './keyCode.enum';
 export * from './operatorType.enum';

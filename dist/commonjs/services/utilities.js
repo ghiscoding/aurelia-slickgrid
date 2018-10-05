@@ -413,4 +413,23 @@ function findOrDefault(array, logic, defaultVal) {
     return array.find(logic) || defaultVal;
 }
 exports.findOrDefault = findOrDefault;
+/** Get the browser's scrollbar width, this is different to each browser */
+function getScrollBarWidth() {
+    var $outer = $('<div>').css({ visibility: 'hidden', width: 100, overflow: 'scroll' }).appendTo('body');
+    var widthWithScroll = $('<div>').css({ width: '100%' }).appendTo($outer).outerWidth() || 0;
+    $outer.remove();
+    return Math.ceil(100 - widthWithScroll);
+}
+exports.getScrollBarWidth = getScrollBarWidth;
+/**
+ * Takes an input array and makes sure the array has unique values by removing duplicates
+ * @param array input with possible duplicates
+ * @return array output without duplicates
+ */
+function uniqueArray(arr) {
+    return arr.filter(function (item, index) {
+        return arr.indexOf(item) >= index;
+    });
+}
+exports.uniqueArray = uniqueArray;
 //# sourceMappingURL=utilities.js.map

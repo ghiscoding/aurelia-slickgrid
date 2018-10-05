@@ -7,6 +7,7 @@ __export(require("./caseType"));
 __export(require("./delimiterType.enum"));
 __export(require("./fieldType.enum"));
 __export(require("./fileType.enum"));
+__export(require("./filterMultiplePassType.enum"));
 __export(require("./gridStateType.enum"));
 __export(require("./keyCode.enum"));
 __export(require("./operatorType.enum"));

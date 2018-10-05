@@ -18,6 +18,7 @@ export declare class ExportService {
     private _exportOptions;
     aureliaEventPrefix: string;
     constructor(i18n: I18N, ea: EventAggregator);
+    private readonly datasetIdName;
     /** Getter for the Grid Options pulled through the Grid Object */
     private readonly _gridOptions;
     /**

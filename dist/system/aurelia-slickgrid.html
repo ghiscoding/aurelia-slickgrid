@@ -1,6 +1,7 @@
 <template>
   <div id="slickGridContainer-${gridId}" class="gridPane" css="width: ${gridWidth}px">
-    <div id.bind="gridId" class="slickgrid-container" style="width: 100%" css="height: ${gridHeight}px">
+    <div id.bind="gridId" class="slickgrid-container" style="width: 100%" css="height: ${gridHeight}px"
+      focusout.delegate="commitEdit($event.target)">
     </div>
 
     <slick-pagination id="slickPagingContainer-${gridId}" if.bind="showPagination" asg-on-pagination-changed.delegate="paginationChanged($event.detail)"

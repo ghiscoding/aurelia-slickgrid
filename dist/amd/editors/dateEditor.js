@@ -98,7 +98,16 @@ define(["require", "exports", "./../services/utilities", "./../models/index", "a
             this.$input.focus();
         };
         DateEditor.prototype.save = function () {
-            this.args.commitChanges();
+            // autocommit will not focus the next editor
+            var validation = this.validate();
+            if (validation && validation.valid) {
+                if (this.args.grid.getOptions().autoCommitEdit) {
+                    this.args.grid.getEditorLock().commitCurrentEdit();
+                }
+                else {
+                    this.args.commitChanges();
+                }
+            }
         };
         DateEditor.prototype.loadValue = function (item) {
             this.defaultDate = item[this.args.column.field];
@@ -125,7 +134,8 @@ define(["require", "exports", "./../services/utilities", "./../models/index", "a
         };
         DateEditor.prototype.validate = function () {
             if (this.validator) {
-                var validationResults = this.validator(this.$input.val());
+                var value = this.$input && this.$input.val && this.$input.val();
+                var validationResults = this.validator(value, this.args);
                 if (!validationResults.valid) {
                     return validationResults;
                 }

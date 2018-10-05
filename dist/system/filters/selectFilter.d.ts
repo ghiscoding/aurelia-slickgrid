@@ -1,7 +1,6 @@
 import { I18N } from 'aurelia-i18n';
 import { Subscription } from 'aurelia-event-aggregator';
 import { BindingEngine } from 'aurelia-framework';
-import { HttpResponseMessage } from 'aurelia-http-client';
 import { CollectionCustomStructure, CollectionOption, Column, ColumnFilter, Filter, FilterArguments, FilterCallback, GridOption, MultipleSelectOption, OperatorType, OperatorString, SearchTerm } from './../models/index';
 import { CollectionService } from '../services/collection.service';
 export declare class SelectFilter implements Filter {
@@ -24,6 +23,7 @@ export declare class SelectFilter implements Filter {
     labelName: string;
     labelPrefixName: string;
     labelSuffixName: string;
+    optionLabel: string;
     valueName: string;
     enableTranslateLabel: boolean;
     subscriptions: Subscription[];
@@ -69,7 +69,7 @@ export declare class SelectFilter implements Filter {
      * @return outputCollection filtered and/or sorted collection
      */
     protected sortCollection(inputCollection: any[]): any[];
-    protected renderOptionsAsync(collectionAsync: Promise<HttpResponseMessage | Response | any[]>): Promise<any[]>;
+    protected renderOptionsAsync(collectionAsync: Promise<any | any[]>): Promise<any[]>;
     /**
      * Subscribe to both CollectionObserver & PropertyObserver with BindingEngine.
      * They each have their own purpose, the "propertyObserver" will trigger once the collection is replaced entirely

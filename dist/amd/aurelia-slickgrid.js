@@ -47,7 +47,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "aurelia-framework", "aurelia-http-client", "aurelia-event-aggregator", "./global-grid-options", "./models/index", "./services/index", "jquery", "jquery-ui-dist/jquery-ui", "slickgrid/lib/jquery.event.drag-2.3.0", "slickgrid/slick.core", "slickgrid/slick.dataview", "slickgrid/slick.grid", "slickgrid/slick.groupitemmetadataprovider", "slickgrid/controls/slick.columnpicker", "slickgrid/controls/slick.gridmenu", "slickgrid/controls/slick.pager", "slickgrid/plugins/slick.autotooltips", "slickgrid/plugins/slick.cellexternalcopymanager", "slickgrid/plugins/slick.cellrangedecorator", "slickgrid/plugins/slick.cellrangeselector", "slickgrid/plugins/slick.cellselectionmodel", "slickgrid/plugins/slick.checkboxselectcolumn", "slickgrid/plugins/slick.headerbuttons", "slickgrid/plugins/slick.headermenu", "slickgrid/plugins/slick.rowmovemanager", "slickgrid/plugins/slick.rowselectionmodel"], function (require, exports, aurelia_framework_1, aurelia_http_client_1, aurelia_event_aggregator_1, global_grid_options_1, index_1, index_2, $) {
+define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "./global-grid-options", "./models/index", "./services/index", "jquery", "jquery-ui-dist/jquery-ui", "slickgrid/lib/jquery.event.drag-2.3.0", "slickgrid/slick.core", "slickgrid/slick.dataview", "slickgrid/slick.grid", "slickgrid/slick.groupitemmetadataprovider", "slickgrid/controls/slick.columnpicker", "slickgrid/controls/slick.gridmenu", "slickgrid/controls/slick.pager", "slickgrid/plugins/slick.autotooltips", "slickgrid/plugins/slick.cellexternalcopymanager", "slickgrid/plugins/slick.cellrangedecorator", "slickgrid/plugins/slick.cellrangeselector", "slickgrid/plugins/slick.cellselectionmodel", "slickgrid/plugins/slick.checkboxselectcolumn", "slickgrid/plugins/slick.headerbuttons", "slickgrid/plugins/slick.headermenu", "slickgrid/plugins/slick.rowmovemanager", "slickgrid/plugins/slick.rowselectionmodel"], function (require, exports, aurelia_framework_1, aurelia_event_aggregator_1, global_grid_options_1, index_1, index_2, $) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var aureliaEventPrefix = 'asg';
@@ -70,6 +70,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-http-client", "aurel
             this.container = container;
             this._columnDefinitions = [];
             this._eventHandler = new Slick.EventHandler();
+            this._hideHeaderRowAfterPageLoad = false;
             this.isGridInitialized = false;
             this.showPagination = false;
             this.serviceList = [];
@@ -130,6 +131,11 @@ define(["require", "exports", "aurelia-framework", "aurelia-http-client", "aurel
             this.dataview.beginUpdate();
             this.dataview.setItems(this._dataset, this.gridOptions.datasetIdPropertyName);
             this.dataview.endUpdate();
+            // user might want to hide the header row on page load but still have `enableFiltering: true`
+            // if that is the case, we need to hide the headerRow ONLY AFTER all filters got created & dataView exist
+            if (this._hideHeaderRowAfterPageLoad) {
+                this.showHeaderRow(false);
+            }
             // after the DataView is created & updated execute some processes
             this.executeAfterDataviewCreated(this.grid, this.gridOptions, this.dataview);
             // publish & dispatch certain events
@@ -187,8 +193,9 @@ define(["require", "exports", "aurelia-framework", "aurelia-http-client", "aurel
             this.dataview = [];
             this._eventHandler.unsubscribeAll();
             this.grid.destroy();
-            if (emptyDomElementContainer) {
-                $(this.gridOptions.gridContainerId).empty();
+            if (emptyDomElementContainer && this.gridId) {
+                var containerId = this.gridOptions && this.gridOptions.gridContainerId || "slickGridContainer-" + this.gridId;
+                $(containerId).empty();
             }
             this.ea.publish('onAfterGridDestroyed', true);
             this.dispatchCustomEvent(aureliaEventPrefix + "-on-after-grid-destroyed", this.grid);
@@ -220,6 +227,27 @@ define(["require", "exports", "aurelia-framework", "aurelia-http-client", "aurel
             this._columnDefinitions = this.columnDefinitions;
             if (this.isGridInitialized) {
                 this.updateColumnDefinitionsList(this.columnDefinitions);
+            }
+        };
+        /**
+         * Commits the current edit to the grid
+         */
+        AureliaSlickgridCustomElement.prototype.commitEdit = function (target) {
+            var _this = this;
+            if (this.grid.getOptions().autoCommitEdit) {
+                var activeNode_1 = this.grid.getActiveCellNode();
+                // a timeout must be set or this could come into conflict when slickgrid
+                // tries to commit the edit when going from one editor to another on the grid
+                // through the click event. If the timeout was not here it would
+                // try to commit/destroy the twice, which would throw a jquery
+                // error about the element not being in the DOM
+                setTimeout(function () {
+                    // make sure the target is the active editor so we do not
+                    // commit prematurely
+                    if (activeNode_1 && activeNode_1.contains(target) && _this.grid.getEditorLock().isActive()) {
+                        _this.grid.getEditorLock().commitCurrentEdit();
+                    }
+                });
             }
         };
         AureliaSlickgridCustomElement.prototype.datasetChanged = function (newValue, oldValue) {
@@ -428,6 +456,8 @@ define(["require", "exports", "aurelia-framework", "aurelia-http-client", "aurel
             // expand/autofit columns on first page load
             if (grid && options.autoFitColumnsOnFirstLoad && options.enableAutoSizeColumns && typeof grid.autosizeColumns === 'function') {
                 this.grid.autosizeColumns();
+                // compensate anytime SlickGrid measureScrollbar is incorrect (only seems to happen in Chrome 1/5 computers)
+                this.resizerService.compensateHorizontalScroll(this.grid, this.gridOptions);
             }
             // auto-resize grid on browser resize
             this.resizerService.init(grid);
@@ -449,14 +479,12 @@ define(["require", "exports", "aurelia-framework", "aurelia-http-client", "aurel
         AureliaSlickgridCustomElement.prototype.mergeGridOptions = function (gridOptions) {
             gridOptions.gridId = this.gridId;
             gridOptions.gridContainerId = "slickGridContainer-" + this.gridId;
-            if (gridOptions.enableFiltering) {
-                gridOptions.showHeaderRow = true;
-            }
             // use jquery extend to deep merge & copy to avoid immutable properties being changed in GlobalGridOptions after a route change
             var options = $.extend(true, {}, global_grid_options_1.GlobalGridOptions, gridOptions);
             // also make sure to show the header row if user have enabled filtering
+            this._hideHeaderRowAfterPageLoad = (options.showHeaderRow === false);
             if (options.enableFiltering && !options.showHeaderRow) {
-                options.showHeaderRow = true;
+                options.showHeaderRow = options.enableFiltering;
             }
             return options;
         };
@@ -563,19 +591,20 @@ define(["require", "exports", "aurelia-framework", "aurelia-http-client", "aurel
                 // the collectionAsync can be of 3 types HttpClient, HttpFetch or a Promise
                 //
                 collectionAsync.then(function (response) {
-                    if (response instanceof Response && typeof response.json === 'function') {
+                    if (Array.isArray(response)) {
+                        _this.updateEditorCollection(column, response); // from Promise
+                    }
+                    else if (response instanceof Response && typeof response.json === 'function') {
                         if (response.bodyUsed) {
                             throw new Error('[Aurelia-SlickGrid] The response body passed to collectionAsync was ' +
                                 'already read. Either pass the dataset from the Response ' +
                                 'or clone the response first using response.clone()');
                         }
+                        // from Fetch
                         response.json().then(function (data) { return _this.updateEditorCollection(column, data); });
                     }
-                    else if (response instanceof aurelia_http_client_1.HttpResponseMessage) {
-                        _this.updateEditorCollection(column, response['content']);
-                    }
-                    else if (Array.isArray(response)) {
-                        _this.updateEditorCollection(column, response);
+                    else if (response && response['content']) {
+                        _this.updateEditorCollection(column, response['content']); // from aurelia-http-client
                     }
                 });
             }

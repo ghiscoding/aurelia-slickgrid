@@ -2,8 +2,6 @@ import { findOrDefault, disposeAllSubscriptions } from '../services/index';
 import { arraysEqual, getDescendantProperty, htmlEncode } from '../services/utilities';
 import * as DOMPurify from 'dompurify';
 import * as $ from 'jquery';
-// height in pixel of the multiple-select DOM element
-const SELECT_ELEMENT_HEIGHT = 26;
 /**
  * Slickgrid editor class for multiple select lists
  */
@@ -16,6 +14,9 @@ export class SelectEditor {
         this.isMultipleSelect = isMultipleSelect;
         /** Event Subscriptions */
         this.subscriptions = [];
+        // flag to signal that the editor is destroying itself, helps prevent
+        // commit changes from being called twice and erroring
+        this._destroying = false;
         this.gridOptions = this.args.grid.getOptions();
         // provide the name attribute to the DOM element which will be needed to auto-adjust drop position (dropup / dropdown)
         const fieldId = this.columnDef && this.columnDef.field || this.columnDef && this.columnDef.id;
@@ -34,6 +35,17 @@ export class SelectEditor {
                 const isRenderHtmlEnabled = this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.enableRenderHtml || false;
                 return isRenderHtmlEnabled ? $elm.text() : $elm.html();
             },
+            onBlur: () => this.destroy(),
+            onClose: () => {
+                if (!this._destroying && args.grid.getOptions().autoCommitEdit) {
+                    // do not use args.commitChanges() as this sets the focus to the next
+                    // row. Also the select list will stay shown when clicking off the grid
+                    const validation = this.validate();
+                    if (validation && validation.valid) {
+                        args.grid.getEditorLock().commitCurrentEdit();
+                    }
+                }
+            }
         };
         if (isMultipleSelect) {
             libOptions.single = false;
@@ -123,6 +135,7 @@ export class SelectEditor {
         this.labelName = this.customStructure && this.customStructure.label || 'label';
         this.labelPrefixName = this.customStructure && this.customStructure.labelPrefix || 'labelPrefix';
         this.labelSuffixName = this.customStructure && this.customStructure.labelSuffix || 'labelSuffix';
+        this.optionLabel = this.customStructure && this.customStructure.optionLabel || 'value';
         this.valueName = this.customStructure && this.customStructure.value || 'value';
         // always render the Select (dropdown) DOM element, even if user passed a "collectionAsync",
         // if that is the case, the Select will simply be without any options but we still have to render it (else SlickGrid would throw an error)
@@ -132,47 +145,44 @@ export class SelectEditor {
         item[this.columnDef.field] = state;
     }
     destroy() {
-        if (this.$editorElm) {
+        this._destroying = true;
+        if (this.$editorElm && this.$editorElm.multipleSelect) {
+            this.$editorElm.multipleSelect('close');
             this.$editorElm.remove();
         }
         this.subscriptions = disposeAllSubscriptions(this.subscriptions);
     }
     loadValue(item) {
         if (this.isMultipleSelect) {
-            // convert to string because that is how the DOM will return these values
-            this.defaultValue = item[this.columnDef.field].map((i) => i.toString());
-            this.$editorElm.find('option').each((i, $e) => {
-                if (this.defaultValue.indexOf($e.value) !== -1) {
-                    $e.selected = true;
-                }
-                else {
-                    $e.selected = false;
-                }
-            });
+            this.loadMultipleValues(item);
         }
         else {
             this.loadSingleValue(item);
         }
         this.refresh();
     }
+    loadMultipleValues(items) {
+        // convert to string because that is how the DOM will return these values
+        this.defaultValue = items[this.columnDef.field].map((i) => i.toString());
+        this.$editorElm.find('option').each((i, $e) => {
+            $e.selected = (this.defaultValue.indexOf($e.value) !== -1);
+        });
+    }
     loadSingleValue(item) {
         // convert to string because that is how the DOM will return these values
         // make sure the prop exists first
         this.defaultValue = item[this.columnDef.field] && item[this.columnDef.field].toString();
         this.$editorElm.find('option').each((i, $e) => {
-            if (this.defaultValue === $e.value) {
-                $e.selected = true;
-            }
-            else {
-                $e.selected = false;
-            }
+            $e.selected = (this.defaultValue === $e.value);
         });
     }
     serializeValue() {
         return (this.isMultipleSelect) ? this.currentValues : this.currentValue;
     }
     focus() {
-        this.$editorElm.focus();
+        if (this.$editorElm && this.$editorElm.multipleSelect) {
+            this.$editorElm.multipleSelect('focus');
+        }
     }
     isValueChanged() {
         if (this.isMultipleSelect) {
@@ -182,7 +192,8 @@ export class SelectEditor {
     }
     validate() {
         if (this.validator) {
-            const validationResults = this.validator(this.isMultipleSelect ? this.currentValues : this.currentValue);
+            const value = this.isMultipleSelect ? this.currentValues : this.currentValue;
+            const validationResults = this.validator(value, this.args);
             if (!validationResults.valid) {
                 return validationResults;
             }
@@ -207,7 +218,8 @@ export class SelectEditor {
         // user might want to filter certain items of the collection
         if (this.columnEditor && this.columnEditor.collectionFilterBy) {
             const filterBy = this.columnEditor.collectionFilterBy;
-            outputCollection = this.collectionService.filterCollection(outputCollection, filterBy);
+            const filterCollectionBy = this.columnEditor.collectionOptions && this.columnEditor.collectionOptions.filterAfterEachPass || null;
+            outputCollection = this.collectionService.filterCollection(outputCollection, filterBy, filterCollectionBy);
         }
         return outputCollection;
     }
@@ -263,6 +275,8 @@ export class SelectEditor {
             const labelText = (option.labelKey || this.enableTranslateLabel) ? this.i18n.tr(labelKey || ' ') : labelKey;
             const prefixText = option[this.labelPrefixName] || '';
             const suffixText = option[this.labelSuffixName] || '';
+            let optionLabel = option[this.optionLabel] || '';
+            optionLabel = optionLabel.toString().replace(/\"/g, '\''); // replace double quotes by single quotes to avoid interfering with regular html
             let optionText = ('' + prefixText + separatorBetweenLabels + labelText + separatorBetweenLabels + suffixText);
             // if user specifically wants to render html text, he needs to opt-in else it will stripped out by default
             // also, the 3rd party lib will saninitze any html code unless it's encoded, so we'll do that
@@ -272,7 +286,7 @@ export class SelectEditor {
                 const sanitizedText = DOMPurify.sanitize(optionText, sanitizedOptions);
                 optionText = htmlEncode(sanitizedText);
             }
-            options += `<option value="${option[this.valueName]}">${optionText}</option>`;
+            options += `<option value="${option[this.valueName]}" label="${optionLabel}">${optionText}</option>`;
         });
         return `<select id="${this.elementName}" class="ms-filter search-filter" ${this.isMultipleSelect ? 'multiple="multiple"' : ''}>${options}</select>`;
     }

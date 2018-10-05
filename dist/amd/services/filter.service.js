@@ -47,7 +47,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "./../filter-conditions/index", "./../filters/index", "./../models/index", "jquery", "lodash.isequal"], function (require, exports, aurelia_framework_1, aurelia_event_aggregator_1, index_1, index_2, index_3, $, isequal) {
+define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "./../filter-conditions/index", "./../filters/index", "./../models/index", "./utilities", "jquery", "lodash.isequal"], function (require, exports, aurelia_framework_1, aurelia_event_aggregator_1, index_1, index_2, index_3, utilities_1, $, isequal) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var FilterService = /** @class */ (function () {
@@ -208,9 +208,14 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
                 if (!columnDef) {
                     return false;
                 }
+                var fieldName = columnDef.queryField || columnDef.queryFieldFilter || columnDef.field || '';
                 var fieldType = columnDef.type || index_3.FieldType.string;
                 var filterSearchType = (columnDef.filterSearchType) ? columnDef.filterSearchType : null;
-                var cellValue = item[columnDef.queryField || columnDef.queryFieldFilter || columnDef.field];
+                var cellValue = item[fieldName];
+                // when item is a complex object (dot "." notation), we need to filter the value contained in the object tree
+                if (fieldName && fieldName.indexOf('.') >= 0) {
+                    cellValue = utilities_1.getDescendantProperty(item, fieldName);
+                }
                 // if we find searchTerms use them but make a deep copy so that we don't affect original array
                 // we might have to overwrite the value(s) locally that are returned
                 // e.g: we don't want to operator within the search value, since it will fail filter condition check trigger afterward

@@ -104,3 +104,11 @@ export declare function arraysEqual(a: any[], b: any[], orderMatters?: boolean):
  * @return object the found object or default value
  */
 export declare function findOrDefault(array: any[], logic: (item: any) => boolean, defaultVal?: {}): any;
+/** Get the browser's scrollbar width, this is different to each browser */
+export declare function getScrollBarWidth(): number;
+/**
+ * Takes an input array and makes sure the array has unique values by removing duplicates
+ * @param array input with possible duplicates
+ * @return array output without duplicates
+ */
+export declare function uniqueArray(arr: any[]): any[];

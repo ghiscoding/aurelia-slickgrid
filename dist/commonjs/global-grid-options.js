@@ -83,7 +83,6 @@ exports.GlobalGridOptions = {
         hideSortCommands: false
     },
     headerRowHeight: 35,
-    showHeaderRow: false,
     multiColumnSort: true,
     numberedMultiColumnSort: true,
     tristateMultiColumnSort: false,

@@ -74,7 +74,7 @@ define(["require", "exports", "./../constants", "./../models/index", "jquery"], 
             var elmValue = this.$input.val();
             var errorMsg = this.columnEditor.params && this.columnEditor.errorMessage;
             if (this.validator) {
-                var validationResults = this.validator(elmValue);
+                var validationResults = this.validator(elmValue, this.args);
                 if (!validationResults.valid) {
                     return validationResults;
                 }

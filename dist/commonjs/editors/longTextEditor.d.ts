@@ -13,6 +13,7 @@ export declare class LongTextEditor implements Editor {
     readonly columnEditor: any;
     /** Get the Validator function, can be passed in Editor property or Column Definition */
     readonly validator: EditorValidator;
+    readonly hasAutoCommitEdit: any;
     init(): void;
     handleKeyDown(e: any): void;
     save(): void;

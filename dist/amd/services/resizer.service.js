@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-define(["require", "exports", "aurelia-framework", "jquery", "aurelia-event-aggregator"], function (require, exports, aurelia_framework_1, $, aurelia_event_aggregator_1) {
+define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "./utilities", "jquery"], function (require, exports, aurelia_framework_1, aurelia_event_aggregator_1, utilities_1, $) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     // global constants, height/width are in pixels
@@ -65,14 +65,15 @@ define(["require", "exports", "aurelia-framework", "jquery", "aurelia-event-aggr
          */
         ResizerService.prototype.calculateGridNewDimensions = function (gridOptions) {
             var gridDomElm = $("#" + gridOptions.gridId);
-            var containerElm = (gridOptions.autoResize && gridOptions.autoResize.containerId) ? $("#" + gridOptions.autoResize.containerId) : $("#" + gridOptions.gridContainerId);
+            var autoResizeOptions = gridOptions && gridOptions.autoResize;
+            var containerElm = (autoResizeOptions && autoResizeOptions.containerId) ? $("#" + autoResizeOptions.containerId) : $("#" + gridOptions.gridContainerId);
             var windowElm = $(window);
-            if (windowElm === undefined || containerElm === undefined || gridDomElm === undefined) {
+            if (windowElm === undefined || containerElm === undefined || gridDomElm === undefined || gridOptions === undefined) {
                 return null;
             }
             // calculate bottom padding
             // if using pagination, we need to add the pagination height to this bottom padding
-            var bottomPadding = (gridOptions.autoResize && gridOptions.autoResize.bottomPadding) ? gridOptions.autoResize.bottomPadding : DATAGRID_BOTTOM_PADDING;
+            var bottomPadding = (autoResizeOptions && autoResizeOptions.bottomPadding) ? autoResizeOptions.bottomPadding : DATAGRID_BOTTOM_PADDING;
             if (bottomPadding && (gridOptions.enablePagination || this._gridOptions.backendServiceApi)) {
                 bottomPadding += DATAGRID_PAGINATION_HEIGHT;
             }
@@ -81,15 +82,24 @@ define(["require", "exports", "aurelia-framework", "jquery", "aurelia-event-aggr
             var gridOffsetTop = (coordOffsetTop !== undefined) ? coordOffsetTop.top : 0;
             var availableHeight = gridHeight - gridOffsetTop - bottomPadding;
             var availableWidth = containerElm.width() || 0;
-            var minHeight = (gridOptions.autoResize && gridOptions.autoResize.minHeight < 0) ? gridOptions.autoResize.minHeight : DATAGRID_MIN_HEIGHT;
-            var minWidth = (gridOptions.autoResize && gridOptions.autoResize.minWidth < 0) ? gridOptions.autoResize.minWidth : DATAGRID_MIN_WIDTH;
+            var maxHeight = (autoResizeOptions && autoResizeOptions.maxHeight && autoResizeOptions.maxHeight > 0) ? autoResizeOptions.maxHeight : undefined;
+            var minHeight = (autoResizeOptions && autoResizeOptions.minHeight && autoResizeOptions.minHeight < 0) ? autoResizeOptions.minHeight : DATAGRID_MIN_HEIGHT;
+            var maxWidth = (autoResizeOptions && autoResizeOptions.maxWidth && autoResizeOptions.maxWidth > 0) ? autoResizeOptions.maxWidth : undefined;
+            var minWidth = (autoResizeOptions && autoResizeOptions.minWidth && autoResizeOptions.minWidth < 0) ? autoResizeOptions.minWidth : DATAGRID_MIN_WIDTH;
             var newHeight = availableHeight;
-            var newWidth = (gridOptions.autoResize && gridOptions.autoResize.sidePadding) ? availableWidth - gridOptions.autoResize.sidePadding : availableWidth;
+            var newWidth = (autoResizeOptions && autoResizeOptions.sidePadding) ? availableWidth - autoResizeOptions.sidePadding : availableWidth;
+            // optionally (when defined), make sure that grid height & width are within their thresholds
             if (newHeight < minHeight) {
                 newHeight = minHeight;
             }
+            if (maxHeight && newHeight > maxHeight) {
+                newHeight = maxHeight;
+            }
             if (newWidth < minWidth) {
                 newWidth = minWidth;
+            }
+            if (maxWidth && newWidth > maxWidth) {
+                newWidth = maxWidth;
             }
             return {
                 height: newHeight,
@@ -102,8 +112,30 @@ define(["require", "exports", "aurelia-framework", "jquery", "aurelia-event-aggr
         ResizerService.prototype.dispose = function () {
             $(window).off("resize.grid." + this._gridUid);
         };
+        /**
+         * Return the last resize dimensions used
+         * @return last dimensions
+         */
         ResizerService.prototype.getLastResizeDimensions = function () {
             return this._lastDimensions;
+        };
+        /**
+         * For some reason this only seems to happen in Chrome and is sometime miscalculated by SlickGrid measureSrollbar() method
+         * When that happens we will compensate and resize the Grid Viewport to avoid seeing horizontal scrollbar
+         * Most of the time it happens, it's a tiny offset calculation of usually 3px (enough to show scrollbar)
+         * GitHub issue reference: https://github.com/6pac/SlickGrid/issues/275
+         */
+        ResizerService.prototype.compensateHorizontalScroll = function (grid, gridOptions) {
+            var gridElm = $("#" + gridOptions.gridId);
+            var scrollbarDimensions = grid && grid.getScrollbarDimensions();
+            var slickGridScrollbarWidth = scrollbarDimensions && scrollbarDimensions.width;
+            var calculatedScrollbarWidth = utilities_1.getScrollBarWidth();
+            // if scrollbar width is different from SlickGrid calculation to our custom calculation
+            // then resize the grid with the missing pixels to remove scroll (usually only 3px)
+            if (slickGridScrollbarWidth < calculatedScrollbarWidth && gridElm && gridElm.width) {
+                var oldWidth = gridElm && gridElm.width && gridElm.width() || 0;
+                gridElm.width(oldWidth + (calculatedScrollbarWidth - slickGridScrollbarWidth));
+            }
         };
         /** Resize the datagrid to fit the browser height & width */
         ResizerService.prototype.resizeGrid = function (delay, newSizes) {
@@ -140,6 +172,8 @@ define(["require", "exports", "aurelia-framework", "jquery", "aurelia-event-aggr
                         // also call the grid auto-size columns so that it takes available when going bigger
                         if (_this._grid && _this._gridOptions && _this._gridOptions.enableAutoSizeColumns && typeof _this._grid.autosizeColumns === 'function') {
                             _this._grid.autosizeColumns();
+                            // patch Chrome horizontal scroll
+                            _this.compensateHorizontalScroll(_this._grid, _this._gridOptions);
                         }
                         // keep last resized dimensions & resolve them to the Promise
                         _this._lastDimensions = {

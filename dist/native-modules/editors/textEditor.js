@@ -73,7 +73,8 @@ var TextEditor = /** @class */ (function () {
     };
     TextEditor.prototype.validate = function () {
         if (this.validator) {
-            var validationResults = this.validator(this.$input.val());
+            var value = this.$input && this.$input.val && this.$input.val();
+            var validationResults = this.validator(value, this.args);
             if (!validationResults.valid) {
                 return validationResults;
             }

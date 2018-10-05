@@ -1,4 +1,4 @@
-System.register(["aurelia-framework", "aurelia-i18n", "./../models/index", "../sorters/sorterUtilities"], function (exports_1, context_1) {
+System.register(["aurelia-framework", "aurelia-i18n", "./../models/index", "../sorters/sorterUtilities", "./utilities"], function (exports_1, context_1) {
     "use strict";
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -7,7 +7,7 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../models/index", "../s
         return c > 3 && r && Object.defineProperty(target, key, r), r;
     };
     var __moduleName = context_1 && context_1.id;
-    var aurelia_framework_1, aurelia_i18n_1, index_1, sorterUtilities_1, CollectionService;
+    var aurelia_framework_1, aurelia_i18n_1, index_1, sorterUtilities_1, utilities_1, CollectionService;
     return {
         setters: [
             function (aurelia_framework_1_1) {
@@ -21,6 +21,9 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../models/index", "../s
             },
             function (sorterUtilities_1_1) {
                 sorterUtilities_1 = sorterUtilities_1_1;
+            },
+            function (utilities_1_1) {
+                utilities_1 = utilities_1_1;
             }
         ],
         execute: function () {
@@ -29,11 +32,39 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../models/index", "../s
                     this.i18n = i18n;
                 }
                 /**
-                 * Filter items from a collection
+                 * Filter 1 or more items from a collection
+                 * @param collection
+                 * @param filterByOptions
+                 */
+                CollectionService.prototype.filterCollection = function (collection, filterByOptions, filterResultBy) {
+                    if (filterResultBy === void 0) { filterResultBy = index_1.FilterMultiplePassType.chain; }
+                    var filteredCollection = [];
+                    // when it's array, we will use the new filtered collection after every pass
+                    // basically if input collection has 10 items on 1st pass and 1 item is filtered out, then on 2nd pass the input collection will be 9 items
+                    if (Array.isArray(filterByOptions)) {
+                        filteredCollection = (filterResultBy === index_1.FilterMultiplePassType.merge) ? [] : collection.slice();
+                        for (var _i = 0, filterByOptions_1 = filterByOptions; _i < filterByOptions_1.length; _i++) {
+                            var filter = filterByOptions_1[_i];
+                            if (filterResultBy === index_1.FilterMultiplePassType.merge) {
+                                var filteredPass = this.singleFilterCollection(collection, filter);
+                                filteredCollection = utilities_1.uniqueArray(filteredCollection.concat(filteredPass));
+                            }
+                            else {
+                                filteredCollection = this.singleFilterCollection(filteredCollection, filter);
+                            }
+                        }
+                    }
+                    else {
+                        filteredCollection = this.singleFilterCollection(collection, filterByOptions);
+                    }
+                    return filteredCollection;
+                };
+                /**
+                 * Filter an item from a collection
                  * @param collection
                  * @param filterBy
                  */
-                CollectionService.prototype.filterCollection = function (collection, filterBy) {
+                CollectionService.prototype.singleFilterCollection = function (collection, filterBy) {
                     var filteredCollection = [];
                     if (filterBy) {
                         var property_1 = filterBy.property || '';
@@ -44,15 +75,13 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../models/index", "../s
                             case index_1.OperatorType.equal:
                                 filteredCollection = collection.filter(function (item) { return item[property_1] === value_1; });
                                 break;
-                            case index_1.OperatorType.in:
-                                filteredCollection = collection.filter(function (item) { return item[property_1].indexOf(value_1) !== -1; });
-                                break;
-                            case index_1.OperatorType.notIn:
-                                filteredCollection = collection.filter(function (item) { return item[property_1].indexOf(value_1) === -1; });
-                                break;
                             case index_1.OperatorType.contains:
-                                filteredCollection = collection.filter(function (item) { return value_1.indexOf(item[property_1]) !== -1; });
+                                filteredCollection = collection.filter(function (item) { return item[property_1].toString().indexOf(value_1.toString()) !== -1; });
                                 break;
+                            case index_1.OperatorType.notContains:
+                                filteredCollection = collection.filter(function (item) { return item[property_1].toString().indexOf(value_1.toString()) === -1; });
+                                break;
+                            case index_1.OperatorType.notEqual:
                             default:
                                 filteredCollection = collection.filter(function (item) { return item[property_1] !== value_1; });
                         }
@@ -60,24 +89,50 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../models/index", "../s
                     return filteredCollection;
                 };
                 /**
-                 * Sort items in a collection
+                 * Sort 1 or more items in a collection
                  * @param collection
-                 * @param sortBy
+                 * @param sortByOptions
                  * @param enableTranslateLabel
                  */
-                CollectionService.prototype.sortCollection = function (collection, sortBy, enableTranslateLabel) {
+                CollectionService.prototype.sortCollection = function (collection, sortByOptions, enableTranslateLabel) {
                     var _this = this;
                     var sortedCollection = [];
-                    if (sortBy) {
-                        var property_2 = sortBy.property || '';
-                        var sortDirection_1 = sortBy.hasOwnProperty('sortDesc') ? (sortBy.sortDesc ? -1 : 1) : 1;
-                        var fieldType_1 = sortBy.fieldType || index_1.FieldType.string;
-                        sortedCollection = collection.sort(function (dataRow1, dataRow2) {
-                            var value1 = (enableTranslateLabel) ? _this.i18n.tr(dataRow1[property_2] || ' ') : dataRow1[property_2];
-                            var value2 = (enableTranslateLabel) ? _this.i18n.tr(dataRow2[property_2] || ' ') : dataRow2[property_2];
-                            var result = sorterUtilities_1.sortByFieldType(value1, value2, fieldType_1, sortDirection_1);
-                            return result;
-                        });
+                    if (sortByOptions) {
+                        if (Array.isArray(sortByOptions)) {
+                            // multi-sort
+                            sortedCollection = collection.sort(function (dataRow1, dataRow2) {
+                                for (var i = 0, l = sortByOptions.length; i < l; i++) {
+                                    var sortBy = sortByOptions[i];
+                                    if (sortBy) {
+                                        var sortDirection = sortBy.sortDesc ? index_1.SortDirectionNumber.desc : index_1.SortDirectionNumber.asc;
+                                        var propertyName = sortBy.property || '';
+                                        var fieldType = sortBy.fieldType || index_1.FieldType.string;
+                                        var value1 = (enableTranslateLabel) ? _this.i18n.tr(dataRow1[propertyName] || ' ') : dataRow1[propertyName];
+                                        var value2 = (enableTranslateLabel) ? _this.i18n.tr(dataRow2[propertyName] || ' ') : dataRow2[propertyName];
+                                        var sortResult = sorterUtilities_1.sortByFieldType(value1, value2, fieldType, sortDirection);
+                                        if (sortResult !== index_1.SortDirectionNumber.neutral) {
+                                            return sortResult;
+                                        }
+                                    }
+                                }
+                                return index_1.SortDirectionNumber.neutral;
+                            });
+                        }
+                        else {
+                            // single sort
+                            var propertyName_1 = sortByOptions.property || '';
+                            var sortDirection_1 = sortByOptions.sortDesc ? index_1.SortDirectionNumber.desc : index_1.SortDirectionNumber.asc;
+                            var fieldType_1 = sortByOptions.fieldType || index_1.FieldType.string;
+                            sortedCollection = collection.sort(function (dataRow1, dataRow2) {
+                                var value1 = (enableTranslateLabel) ? _this.i18n.tr(dataRow1[propertyName_1] || ' ') : dataRow1[propertyName_1];
+                                var value2 = (enableTranslateLabel) ? _this.i18n.tr(dataRow2[propertyName_1] || ' ') : dataRow2[propertyName_1];
+                                var sortResult = sorterUtilities_1.sortByFieldType(value1, value2, fieldType_1, sortDirection_1);
+                                if (sortResult !== index_1.SortDirectionNumber.neutral) {
+                                    return sortResult;
+                                }
+                                return index_1.SortDirectionNumber.neutral;
+                            });
+                        }
                     }
                     return sortedCollection;
                 };

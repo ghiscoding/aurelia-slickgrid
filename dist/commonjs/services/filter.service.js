@@ -54,6 +54,7 @@ var aurelia_event_aggregator_1 = require("aurelia-event-aggregator");
 var index_1 = require("./../filter-conditions/index");
 var index_2 = require("./../filters/index");
 var index_3 = require("./../models/index");
+var utilities_1 = require("./utilities");
 var $ = require("jquery");
 var isequal = require("lodash.isequal");
 var FilterService = /** @class */ (function () {
@@ -214,9 +215,14 @@ var FilterService = /** @class */ (function () {
             if (!columnDef) {
                 return false;
             }
+            var fieldName = columnDef.queryField || columnDef.queryFieldFilter || columnDef.field || '';
             var fieldType = columnDef.type || index_3.FieldType.string;
             var filterSearchType = (columnDef.filterSearchType) ? columnDef.filterSearchType : null;
-            var cellValue = item[columnDef.queryField || columnDef.queryFieldFilter || columnDef.field];
+            var cellValue = item[fieldName];
+            // when item is a complex object (dot "." notation), we need to filter the value contained in the object tree
+            if (fieldName && fieldName.indexOf('.') >= 0) {
+                cellValue = utilities_1.getDescendantProperty(item, fieldName);
+            }
             // if we find searchTerms use them but make a deep copy so that we don't affect original array
             // we might have to overwrite the value(s) locally that are returned
             // e.g: we don't want to operator within the search value, since it will fail filter condition check trigger afterward

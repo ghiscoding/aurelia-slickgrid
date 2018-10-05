@@ -104,6 +104,7 @@ define(["require", "exports", "../constants", "./../models/index", "jquery"], fu
         };
         FloatEditor.prototype.validate = function () {
             var elmValue = this.$input.val();
+            var floatNumber = !isNaN(elmValue) ? parseFloat(elmValue) : null;
             var decPlaces = this.getDecimalPlaces();
             var minValue = this.columnEditor.minValue;
             var maxValue = this.columnEditor.maxValue;
@@ -115,26 +116,43 @@ define(["require", "exports", "../constants", "./../models/index", "jquery"], fu
                 '{{maxDecimal}}': decPlaces
             };
             if (this.validator) {
-                var validationResults = this.validator(elmValue);
+                var validationResults = this.validator(elmValue, this.args);
                 if (!validationResults.valid) {
                     return validationResults;
                 }
             }
-            else if (isNaN(elmValue) || (decPlaces === 0 && !/^(\d+(\.)?(\d)*)$/.test(elmValue))) {
+            else if (isNaN(elmValue) || (decPlaces === 0 && !/^[-+]?(\d+(\.)?(\d)*)$/.test(elmValue))) {
                 // when decimal value is 0 (which is the default), we accept 0 or more decimal values
                 return {
                     valid: false,
                     msg: errorMsg || constants_1.Constants.VALIDATION_EDITOR_VALID_NUMBER
                 };
             }
-            else if (minValue !== undefined && (elmValue < minValue || elmValue > maxValue)) {
+            else if (minValue !== undefined && maxValue !== undefined && floatNumber !== null && (floatNumber < minValue || floatNumber > maxValue)) {
+                // MIN & MAX Values provided
                 // when decimal value is bigger than 0, we only accept the decimal values as that value set
                 // for example if we set decimalPlaces to 2, we will only accept numbers between 0 and 2 decimals
                 return {
                     valid: false,
-                    msg: errorMsg || constants_1.Constants.VALIDATION_EDITOR_NUMBER_BETWEEN.replace(/{{minValue}}|{{maxValue}}/gi, function (matched) {
-                        return mapValidation[matched];
-                    })
+                    msg: errorMsg || constants_1.Constants.VALIDATION_EDITOR_NUMBER_BETWEEN.replace(/{{minValue}}|{{maxValue}}/gi, function (matched) { return mapValidation[matched]; })
+                };
+            }
+            else if (minValue !== undefined && floatNumber !== null && floatNumber <= minValue) {
+                // MIN VALUE ONLY
+                // when decimal value is bigger than 0, we only accept the decimal values as that value set
+                // for example if we set decimalPlaces to 2, we will only accept numbers between 0 and 2 decimals
+                return {
+                    valid: false,
+                    msg: errorMsg || constants_1.Constants.VALIDATION_EDITOR_NUMBER_MIN.replace(/{{minValue}}/gi, function (matched) { return mapValidation[matched]; })
+                };
+            }
+            else if (maxValue !== undefined && floatNumber !== null && floatNumber >= maxValue) {
+                // MAX VALUE ONLY
+                // when decimal value is bigger than 0, we only accept the decimal values as that value set
+                // for example if we set decimalPlaces to 2, we will only accept numbers between 0 and 2 decimals
+                return {
+                    valid: false,
+                    msg: errorMsg || constants_1.Constants.VALIDATION_EDITOR_NUMBER_MAX.replace(/{{maxValue}}/gi, function (matched) { return mapValidation[matched]; })
                 };
             }
             else if ((decPlaces > 0 && !new RegExp("^(\\d+(\\.)?(\\d){0," + decPlaces + "})$").test(elmValue))) {
@@ -142,9 +160,7 @@ define(["require", "exports", "../constants", "./../models/index", "jquery"], fu
                 // for example if we set decimalPlaces to 2, we will only accept numbers between 0 and 2 decimals
                 return {
                     valid: false,
-                    msg: errorMsg || constants_1.Constants.VALIDATION_EDITOR_DECIMAL_BETWEEN.replace(/{{minDecimal}}|{{maxDecimal}}/gi, function (matched) {
-                        return mapValidation[matched];
-                    })
+                    msg: errorMsg || constants_1.Constants.VALIDATION_EDITOR_DECIMAL_BETWEEN.replace(/{{minDecimal}}|{{maxDecimal}}/gi, function (matched) { return mapValidation[matched]; })
                 };
             }
             return {

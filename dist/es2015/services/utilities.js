@@ -391,4 +391,21 @@ export function arraysEqual(a, b, orderMatters = false) {
 export function findOrDefault(array, logic, defaultVal = {}) {
     return array.find(logic) || defaultVal;
 }
+/** Get the browser's scrollbar width, this is different to each browser */
+export function getScrollBarWidth() {
+    const $outer = $('<div>').css({ visibility: 'hidden', width: 100, overflow: 'scroll' }).appendTo('body');
+    const widthWithScroll = $('<div>').css({ width: '100%' }).appendTo($outer).outerWidth() || 0;
+    $outer.remove();
+    return Math.ceil(100 - widthWithScroll);
+}
+/**
+ * Takes an input array and makes sure the array has unique values by removing duplicates
+ * @param array input with possible duplicates
+ * @return array output without duplicates
+ */
+export function uniqueArray(arr) {
+    return arr.filter((item, index) => {
+        return arr.indexOf(item) >= index;
+    });
+}
 //# sourceMappingURL=utilities.js.map

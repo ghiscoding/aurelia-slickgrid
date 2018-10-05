@@ -12,8 +12,6 @@ var index_1 = require("../services/index");
 var utilities_1 = require("../services/utilities");
 var DOMPurify = require("dompurify");
 var $ = require("jquery");
-// height in pixel of the multiple-select DOM element
-var SELECT_ELEMENT_HEIGHT = 26;
 /**
  * Slickgrid editor class for multiple select lists
  */
@@ -28,6 +26,9 @@ var SelectEditor = /** @class */ (function () {
         this.isMultipleSelect = isMultipleSelect;
         /** Event Subscriptions */
         this.subscriptions = [];
+        // flag to signal that the editor is destroying itself, helps prevent
+        // commit changes from being called twice and erroring
+        this._destroying = false;
         this.gridOptions = this.args.grid.getOptions();
         // provide the name attribute to the DOM element which will be needed to auto-adjust drop position (dropup / dropdown)
         var fieldId = this.columnDef && this.columnDef.field || this.columnDef && this.columnDef.id;
@@ -46,6 +47,17 @@ var SelectEditor = /** @class */ (function () {
                 var isRenderHtmlEnabled = _this.columnDef && _this.columnDef.internalColumnEditor && _this.columnDef.internalColumnEditor.enableRenderHtml || false;
                 return isRenderHtmlEnabled ? $elm.text() : $elm.html();
             },
+            onBlur: function () { return _this.destroy(); },
+            onClose: function () {
+                if (!_this._destroying && args.grid.getOptions().autoCommitEdit) {
+                    // do not use args.commitChanges() as this sets the focus to the next
+                    // row. Also the select list will stay shown when clicking off the grid
+                    var validation = _this.validate();
+                    if (validation && validation.valid) {
+                        args.grid.getEditorLock().commitCurrentEdit();
+                    }
+                }
+            }
         };
         if (isMultipleSelect) {
             libOptions.single = false;
@@ -167,6 +179,7 @@ var SelectEditor = /** @class */ (function () {
         this.labelName = this.customStructure && this.customStructure.label || 'label';
         this.labelPrefixName = this.customStructure && this.customStructure.labelPrefix || 'labelPrefix';
         this.labelSuffixName = this.customStructure && this.customStructure.labelSuffix || 'labelSuffix';
+        this.optionLabel = this.customStructure && this.customStructure.optionLabel || 'value';
         this.valueName = this.customStructure && this.customStructure.value || 'value';
         // always render the Select (dropdown) DOM element, even if user passed a "collectionAsync",
         // if that is the case, the Select will simply be without any options but we still have to render it (else SlickGrid would throw an error)
@@ -176,29 +189,29 @@ var SelectEditor = /** @class */ (function () {
         item[this.columnDef.field] = state;
     };
     SelectEditor.prototype.destroy = function () {
-        if (this.$editorElm) {
+        this._destroying = true;
+        if (this.$editorElm && this.$editorElm.multipleSelect) {
+            this.$editorElm.multipleSelect('close');
             this.$editorElm.remove();
         }
         this.subscriptions = index_1.disposeAllSubscriptions(this.subscriptions);
     };
     SelectEditor.prototype.loadValue = function (item) {
-        var _this = this;
         if (this.isMultipleSelect) {
-            // convert to string because that is how the DOM will return these values
-            this.defaultValue = item[this.columnDef.field].map(function (i) { return i.toString(); });
-            this.$editorElm.find('option').each(function (i, $e) {
-                if (_this.defaultValue.indexOf($e.value) !== -1) {
-                    $e.selected = true;
-                }
-                else {
-                    $e.selected = false;
-                }
-            });
+            this.loadMultipleValues(item);
         }
         else {
             this.loadSingleValue(item);
         }
         this.refresh();
+    };
+    SelectEditor.prototype.loadMultipleValues = function (items) {
+        var _this = this;
+        // convert to string because that is how the DOM will return these values
+        this.defaultValue = items[this.columnDef.field].map(function (i) { return i.toString(); });
+        this.$editorElm.find('option').each(function (i, $e) {
+            $e.selected = (_this.defaultValue.indexOf($e.value) !== -1);
+        });
     };
     SelectEditor.prototype.loadSingleValue = function (item) {
         var _this = this;
@@ -206,19 +219,16 @@ var SelectEditor = /** @class */ (function () {
         // make sure the prop exists first
         this.defaultValue = item[this.columnDef.field] && item[this.columnDef.field].toString();
         this.$editorElm.find('option').each(function (i, $e) {
-            if (_this.defaultValue === $e.value) {
-                $e.selected = true;
-            }
-            else {
-                $e.selected = false;
-            }
+            $e.selected = (_this.defaultValue === $e.value);
         });
     };
     SelectEditor.prototype.serializeValue = function () {
         return (this.isMultipleSelect) ? this.currentValues : this.currentValue;
     };
     SelectEditor.prototype.focus = function () {
-        this.$editorElm.focus();
+        if (this.$editorElm && this.$editorElm.multipleSelect) {
+            this.$editorElm.multipleSelect('focus');
+        }
     };
     SelectEditor.prototype.isValueChanged = function () {
         if (this.isMultipleSelect) {
@@ -228,7 +238,8 @@ var SelectEditor = /** @class */ (function () {
     };
     SelectEditor.prototype.validate = function () {
         if (this.validator) {
-            var validationResults = this.validator(this.isMultipleSelect ? this.currentValues : this.currentValue);
+            var value = this.isMultipleSelect ? this.currentValues : this.currentValue;
+            var validationResults = this.validator(value, this.args);
             if (!validationResults.valid) {
                 return validationResults;
             }
@@ -253,7 +264,8 @@ var SelectEditor = /** @class */ (function () {
         // user might want to filter certain items of the collection
         if (this.columnEditor && this.columnEditor.collectionFilterBy) {
             var filterBy = this.columnEditor.collectionFilterBy;
-            outputCollection = this.collectionService.filterCollection(outputCollection, filterBy);
+            var filterCollectionBy = this.columnEditor.collectionOptions && this.columnEditor.collectionOptions.filterAfterEachPass || null;
+            outputCollection = this.collectionService.filterCollection(outputCollection, filterBy, filterCollectionBy);
         }
         return outputCollection;
     };
@@ -310,6 +322,8 @@ var SelectEditor = /** @class */ (function () {
             var labelText = (option.labelKey || _this.enableTranslateLabel) ? _this.i18n.tr(labelKey || ' ') : labelKey;
             var prefixText = option[_this.labelPrefixName] || '';
             var suffixText = option[_this.labelSuffixName] || '';
+            var optionLabel = option[_this.optionLabel] || '';
+            optionLabel = optionLabel.toString().replace(/\"/g, '\''); // replace double quotes by single quotes to avoid interfering with regular html
             var optionText = ('' + prefixText + separatorBetweenLabels + labelText + separatorBetweenLabels + suffixText);
             // if user specifically wants to render html text, he needs to opt-in else it will stripped out by default
             // also, the 3rd party lib will saninitze any html code unless it's encoded, so we'll do that
@@ -319,7 +333,7 @@ var SelectEditor = /** @class */ (function () {
                 var sanitizedText = DOMPurify.sanitize(optionText, sanitizedOptions);
                 optionText = utilities_1.htmlEncode(sanitizedText);
             }
-            options += "<option value=\"" + option[_this.valueName] + "\">" + optionText + "</option>";
+            options += "<option value=\"" + option[_this.valueName] + "\" label=\"" + optionLabel + "\">" + optionText + "</option>";
         });
         return "<select id=\"" + this.elementName + "\" class=\"ms-filter search-filter\" " + (this.isMultipleSelect ? 'multiple="multiple"' : '') + ">" + options + "</select>";
     };

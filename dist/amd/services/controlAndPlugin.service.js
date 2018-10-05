@@ -365,9 +365,9 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "../constants
         };
         /** Hide a column from the grid */
         ControlAndPluginService.prototype.hideColumn = function (column) {
-            if (this._grid && this.visibleColumns) {
+            if (this._grid && this._grid.getColumns && this._grid.setColumns) {
                 var columnIndex = this._grid.getColumnIndex(column.id);
-                this.visibleColumns = this.removeColumnByIndex(this.visibleColumns, columnIndex);
+                this.visibleColumns = this.removeColumnByIndex(this._grid.getColumns(), columnIndex);
                 this._grid.setColumns(this.visibleColumns);
             }
         };

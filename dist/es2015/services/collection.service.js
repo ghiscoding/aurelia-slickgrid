@@ -6,18 +6,45 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 import { inject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
-import { FieldType, OperatorType, } from './../models/index';
+import { FilterMultiplePassType, FieldType, OperatorType, SortDirectionNumber, } from './../models/index';
 import { sortByFieldType } from '../sorters/sorterUtilities';
+import { uniqueArray } from './utilities';
 let CollectionService = class CollectionService {
     constructor(i18n) {
         this.i18n = i18n;
     }
     /**
-     * Filter items from a collection
+     * Filter 1 or more items from a collection
+     * @param collection
+     * @param filterByOptions
+     */
+    filterCollection(collection, filterByOptions, filterResultBy = FilterMultiplePassType.chain) {
+        let filteredCollection = [];
+        // when it's array, we will use the new filtered collection after every pass
+        // basically if input collection has 10 items on 1st pass and 1 item is filtered out, then on 2nd pass the input collection will be 9 items
+        if (Array.isArray(filterByOptions)) {
+            filteredCollection = (filterResultBy === FilterMultiplePassType.merge) ? [] : [...collection];
+            for (const filter of filterByOptions) {
+                if (filterResultBy === FilterMultiplePassType.merge) {
+                    const filteredPass = this.singleFilterCollection(collection, filter);
+                    filteredCollection = uniqueArray([...filteredCollection, ...filteredPass]);
+                }
+                else {
+                    filteredCollection = this.singleFilterCollection(filteredCollection, filter);
+                }
+            }
+        }
+        else {
+            filteredCollection = this.singleFilterCollection(collection, filterByOptions);
+        }
+        return filteredCollection;
+    }
+    /**
+     * Filter an item from a collection
      * @param collection
      * @param filterBy
      */
-    filterCollection(collection, filterBy) {
+    singleFilterCollection(collection, filterBy) {
         let filteredCollection = [];
         if (filterBy) {
             const property = filterBy.property || '';
@@ -28,15 +55,13 @@ let CollectionService = class CollectionService {
                 case OperatorType.equal:
                     filteredCollection = collection.filter((item) => item[property] === value);
                     break;
-                case OperatorType.in:
-                    filteredCollection = collection.filter((item) => item[property].indexOf(value) !== -1);
-                    break;
-                case OperatorType.notIn:
-                    filteredCollection = collection.filter((item) => item[property].indexOf(value) === -1);
-                    break;
                 case OperatorType.contains:
-                    filteredCollection = collection.filter((item) => value.indexOf(item[property]) !== -1);
+                    filteredCollection = collection.filter((item) => item[property].toString().indexOf(value.toString()) !== -1);
                     break;
+                case OperatorType.notContains:
+                    filteredCollection = collection.filter((item) => item[property].toString().indexOf(value.toString()) === -1);
+                    break;
+                case OperatorType.notEqual:
                 default:
                     filteredCollection = collection.filter((item) => item[property] !== value);
             }
@@ -44,23 +69,49 @@ let CollectionService = class CollectionService {
         return filteredCollection;
     }
     /**
-     * Sort items in a collection
+     * Sort 1 or more items in a collection
      * @param collection
-     * @param sortBy
+     * @param sortByOptions
      * @param enableTranslateLabel
      */
-    sortCollection(collection, sortBy, enableTranslateLabel) {
+    sortCollection(collection, sortByOptions, enableTranslateLabel) {
         let sortedCollection = [];
-        if (sortBy) {
-            const property = sortBy.property || '';
-            const sortDirection = sortBy.hasOwnProperty('sortDesc') ? (sortBy.sortDesc ? -1 : 1) : 1;
-            const fieldType = sortBy.fieldType || FieldType.string;
-            sortedCollection = collection.sort((dataRow1, dataRow2) => {
-                const value1 = (enableTranslateLabel) ? this.i18n.tr(dataRow1[property] || ' ') : dataRow1[property];
-                const value2 = (enableTranslateLabel) ? this.i18n.tr(dataRow2[property] || ' ') : dataRow2[property];
-                const result = sortByFieldType(value1, value2, fieldType, sortDirection);
-                return result;
-            });
+        if (sortByOptions) {
+            if (Array.isArray(sortByOptions)) {
+                // multi-sort
+                sortedCollection = collection.sort((dataRow1, dataRow2) => {
+                    for (let i = 0, l = sortByOptions.length; i < l; i++) {
+                        const sortBy = sortByOptions[i];
+                        if (sortBy) {
+                            const sortDirection = sortBy.sortDesc ? SortDirectionNumber.desc : SortDirectionNumber.asc;
+                            const propertyName = sortBy.property || '';
+                            const fieldType = sortBy.fieldType || FieldType.string;
+                            const value1 = (enableTranslateLabel) ? this.i18n.tr(dataRow1[propertyName] || ' ') : dataRow1[propertyName];
+                            const value2 = (enableTranslateLabel) ? this.i18n.tr(dataRow2[propertyName] || ' ') : dataRow2[propertyName];
+                            const sortResult = sortByFieldType(value1, value2, fieldType, sortDirection);
+                            if (sortResult !== SortDirectionNumber.neutral) {
+                                return sortResult;
+                            }
+                        }
+                    }
+                    return SortDirectionNumber.neutral;
+                });
+            }
+            else {
+                // single sort
+                const propertyName = sortByOptions.property || '';
+                const sortDirection = sortByOptions.sortDesc ? SortDirectionNumber.desc : SortDirectionNumber.asc;
+                const fieldType = sortByOptions.fieldType || FieldType.string;
+                sortedCollection = collection.sort((dataRow1, dataRow2) => {
+                    const value1 = (enableTranslateLabel) ? this.i18n.tr(dataRow1[propertyName] || ' ') : dataRow1[propertyName];
+                    const value2 = (enableTranslateLabel) ? this.i18n.tr(dataRow2[propertyName] || ' ') : dataRow2[propertyName];
+                    const sortResult = sortByFieldType(value1, value2, fieldType, sortDirection);
+                    if (sortResult !== SortDirectionNumber.neutral) {
+                        return sortResult;
+                    }
+                    return SortDirectionNumber.neutral;
+                });
+            }
         }
         return sortedCollection;
     }

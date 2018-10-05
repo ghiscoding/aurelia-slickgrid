@@ -57,6 +57,13 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../constants", "./../mo
                     enumerable: true,
                     configurable: true
                 });
+                Object.defineProperty(LongTextEditor.prototype, "hasAutoCommitEdit", {
+                    get: function () {
+                        return this.args.grid.getOptions().autoCommitEdit;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
                 LongTextEditor.prototype.init = function () {
                     var _this = this;
                     var cancelText = this.i18n.tr('CANCEL') || constants_1.Constants.TEXT_CANCEL;
@@ -64,11 +71,16 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../constants", "./../mo
                     var $container = $('body');
                     this.$wrapper = $("<div class=\"slick-large-editor-text\" />").appendTo($container);
                     this.$input = $("<textarea hidefocus rows=\"5\">").appendTo(this.$wrapper);
+                    // aurelia-slickgrid does not get the focus out event for some reason
+                    // so register it here
+                    if (this.hasAutoCommitEdit) {
+                        this.$input.on('focusout', function () { return _this.save(); });
+                    }
                     $("<div class=\"editor-footer\">\n        <button class=\"btn btn-primary btn-xs\">" + saveText + "</button>\n        <button class=\"btn btn-default btn-xs\">" + cancelText + "</button>\n      </div>").appendTo(this.$wrapper);
-                    this.$wrapper.find('button:first').on('click', function (event) { return _this.save(); });
-                    this.$wrapper.find('button:last').on('click', function (event) { return _this.cancel(); });
-                    this.$input.on('keydown', this.handleKeyDown);
-                    this.position(this.args.position);
+                    this.$wrapper.find('button:first').on('click', function () { return _this.save(); });
+                    this.$wrapper.find('button:last').on('click', function () { return _this.cancel(); });
+                    this.$input.on('keydown', this.handleKeyDown.bind(this));
+                    this.position(this.args && this.args.position);
                     this.$input.focus().select();
                 };
                 LongTextEditor.prototype.handleKeyDown = function (e) {
@@ -81,19 +93,33 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../constants", "./../mo
                     }
                     else if (e.which === index_1.KeyCode.TAB && e.shiftKey) {
                         e.preventDefault();
-                        this.args.grid.navigatePrev();
+                        if (this.args && this.args.grid) {
+                            this.args.grid.navigatePrev();
+                        }
                     }
                     else if (e.which === index_1.KeyCode.TAB) {
                         e.preventDefault();
-                        this.args.grid.navigateNext();
+                        if (this.args && this.args.grid) {
+                            this.args.grid.navigateNext();
+                        }
                     }
                 };
                 LongTextEditor.prototype.save = function () {
-                    this.args.commitChanges();
+                    var validation = this.validate();
+                    if (validation && validation.valid) {
+                        if (this.hasAutoCommitEdit) {
+                            this.args.grid.getEditorLock().commitCurrentEdit();
+                        }
+                        else {
+                            this.args.commitChanges();
+                        }
+                    }
                 };
                 LongTextEditor.prototype.cancel = function () {
                     this.$input.val(this.defaultValue);
-                    this.args.cancelChanges();
+                    if (this.args && this.args.cancelChanges) {
+                        this.args.cancelChanges();
+                    }
                 };
                 LongTextEditor.prototype.hide = function () {
                     this.$wrapper.hide();
@@ -127,7 +153,8 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../constants", "./../mo
                 };
                 LongTextEditor.prototype.validate = function () {
                     if (this.validator) {
-                        var validationResults = this.validator(this.$input.val());
+                        var value = this.$input && this.$input.val && this.$input.val();
+                        var validationResults = this.validator(value, this.args);
                         if (!validationResults.valid) {
                             return validationResults;
                         }
