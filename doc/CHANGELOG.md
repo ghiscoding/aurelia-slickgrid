@@ -2,6 +2,40 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.4.0"></a>
+# [2.4.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.3.0...v2.4.0) (2018-10-05)
+
+
+### Bug Fixes
+
+* **autocommit:** auto-commit should not save if field is invalid ([#108](https://github.com/ghiscoding/aurelia-slickgrid/issues/108)) ([dac989b](https://github.com/ghiscoding/aurelia-slickgrid/commit/dac989b))
+* **chrome:** Compensate incorrect SlickGrid measureScrollbar ([24a1bfa](https://github.com/ghiscoding/aurelia-slickgrid/commit/24a1bfa))
+* **chrome:** patch horizontal scroll appearing only in Chrome ([877f5a3](https://github.com/ghiscoding/aurelia-slickgrid/commit/877f5a3))
+* **chrome:** patch horizontal scroll appearing only in Chrome ([e1ef209](https://github.com/ghiscoding/aurelia-slickgrid/commit/e1ef209))
+* **editor:** Select Editor should close when tabbing away, fixes [#92](https://github.com/ghiscoding/aurelia-slickgrid/issues/92) ([#94](https://github.com/ghiscoding/aurelia-slickgrid/issues/94)) ([f8f808c](https://github.com/ghiscoding/aurelia-slickgrid/commit/f8f808c))
+* **example:** prerequisite prop should only use integer values, closes [#95](https://github.com/ghiscoding/aurelia-slickgrid/issues/95) ([#97](https://github.com/ghiscoding/aurelia-slickgrid/issues/97)) ([fddda24](https://github.com/ghiscoding/aurelia-slickgrid/commit/fddda24))
+* **export:** Export should work with datasetIdPropertyName defined ([#99](https://github.com/ghiscoding/aurelia-slickgrid/issues/99)) ([fad2117](https://github.com/ghiscoding/aurelia-slickgrid/commit/fad2117))
+* **export:** remove extra comma at the end of each line ([501b779](https://github.com/ghiscoding/aurelia-slickgrid/commit/501b779))
+* **header:** hidding column from header menu after reordering column ([88097ad](https://github.com/ghiscoding/aurelia-slickgrid/commit/88097ad))
+* **header:** use showHeaderRow flag when defined by user ([#105](https://github.com/ghiscoding/aurelia-slickgrid/issues/105)) ([d9ccdf2](https://github.com/ghiscoding/aurelia-slickgrid/commit/d9ccdf2))
+* **http:** remove aurelia-http-client dependency, closes [#101](https://github.com/ghiscoding/aurelia-slickgrid/issues/101) ([#103](https://github.com/ghiscoding/aurelia-slickgrid/issues/103)) ([f203b0f](https://github.com/ghiscoding/aurelia-slickgrid/commit/f203b0f))
+* **styling:** remove black border bottom from column headers ([3e42538](https://github.com/ghiscoding/aurelia-slickgrid/commit/3e42538))
+
+
+### Features
+
+* **collection:** support multiple filterBy/sortBy in CollectionService ([#106](https://github.com/ghiscoding/aurelia-slickgrid/issues/106)) ([86e8561](https://github.com/ghiscoding/aurelia-slickgrid/commit/86e8561))
+* **demo:** Add Dynamic Row CSS Styling example ([bb7f757](https://github.com/ghiscoding/aurelia-slickgrid/commit/bb7f757))
+* **demo:** Add Dynamic Row CSS Styling example ([ab16a4e](https://github.com/ghiscoding/aurelia-slickgrid/commit/ab16a4e))
+* **editor:** Add auto commit edit flag to grid options ([#96](https://github.com/ghiscoding/aurelia-slickgrid/issues/96)) ([6c9c197](https://github.com/ghiscoding/aurelia-slickgrid/commit/6c9c197)), closes [#82](https://github.com/ghiscoding/aurelia-slickgrid/issues/82)
+* **editor:** pass Editor Args to Editor Custom Validators  ([#98](https://github.com/ghiscoding/aurelia-slickgrid/issues/98)) ([27c7132](https://github.com/ghiscoding/aurelia-slickgrid/commit/27c7132))
+* **filter:** add posibility to filter complex objects ([#100](https://github.com/ghiscoding/aurelia-slickgrid/issues/100)) ([cfc5565](https://github.com/ghiscoding/aurelia-slickgrid/commit/cfc5565))
+* **resize:** add maxHeight & maxWidth options to resizer ([#104](https://github.com/ghiscoding/aurelia-slickgrid/issues/104)) ([547faa5](https://github.com/ghiscoding/aurelia-slickgrid/commit/547faa5))
+* **select:** add option to use label as selected text ([#107](https://github.com/ghiscoding/aurelia-slickgrid/issues/107)) ([8df592b](https://github.com/ghiscoding/aurelia-slickgrid/commit/8df592b))
+* **sort:** add posibility to sort complex objects ([#102](https://github.com/ghiscoding/aurelia-slickgrid/issues/102)) ([ed6e729](https://github.com/ghiscoding/aurelia-slickgrid/commit/ed6e729))
+
+
+
 <a name="2.3.0"></a>
 # [2.3.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.2.3...v2.3.0) (2018-08-30)
 
