@@ -287,7 +287,8 @@ export class SelectEditor implements Editor {
     // user might want to filter certain items of the collection
     if (this.columnEditor && this.columnEditor.collectionFilterBy) {
       const filterBy = this.columnEditor.collectionFilterBy;
-      outputCollection = this.collectionService.filterCollection(outputCollection, filterBy);
+      const filterCollectionBy = this.columnEditor.collectionOptions && this.columnEditor.collectionOptions.filterAfterEachPass || null;
+      outputCollection = this.collectionService.filterCollection(outputCollection, filterBy, filterCollectionBy);
     }
 
     return outputCollection;
