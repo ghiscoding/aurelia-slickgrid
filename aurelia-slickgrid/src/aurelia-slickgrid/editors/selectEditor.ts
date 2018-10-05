@@ -87,7 +87,10 @@ export class SelectEditor implements Editor {
         if (!this._destroying && args.grid.getOptions().autoCommitEdit) {
           // do not use args.commitChanges() as this sets the focus to the next
           // row. Also the select list will stay shown when clicking off the grid
-          args.grid.getEditorLock().commitCurrentEdit();
+          const validation = this.validate();
+          if (validation && validation.valid) {
+            args.grid.getEditorLock().commitCurrentEdit();
+          }
         }
       }
     };
