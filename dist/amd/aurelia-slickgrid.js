@@ -533,7 +533,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
                     this.gridPaginationOptions = this.mergeGridOptions(this.gridOptions);
                 }
                 // resize the grid inside a slight timeout, in case other DOM element changed prior to the resize (like a filter/pagination changed)
-                if (this.grid && this.gridOptions.enableAutoResize) {
+                if (this.gridOptions && this.gridOptions.enableAutoResize) {
                     var delay = this.gridOptions.autoResize && this.gridOptions.autoResize.delay || 10;
                     this.resizerService.resizeGrid(delay, { height: this.gridHeight, width: this.gridWidth });
                 }

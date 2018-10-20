@@ -164,6 +164,9 @@ var SelectFilter = /** @class */ (function () {
                         this.labelSuffixName = this.customStructure && this.customStructure.labelSuffix || 'labelSuffix';
                         this.optionLabel = this.customStructure && this.customStructure.optionLabel || 'value';
                         this.valueName = this.customStructure && this.customStructure.value || 'value';
+                        if (this.enableTranslateLabel && (!this.i18n || typeof this.i18n.tr !== 'function')) {
+                            throw new Error("[select-filter] The i18n Service is required for the Select Filter to work correctly");
+                        }
                         newCollection = this.columnFilter.collection || [];
                         this.renderDomElement(newCollection);
                         collectionAsync = this.columnFilter.collectionAsync;
@@ -347,16 +350,22 @@ var SelectFilter = /** @class */ (function () {
         var sanitizedOptions = this.gridOptions && this.gridOptions.sanitizeHtmlOptions || {};
         optionCollection.forEach(function (option) {
             if (!option || (option[_this.labelName] === undefined && option.labelKey === undefined)) {
-                throw new Error("A collection with value/label (or value/labelKey when using Locale) is required to populate the Select list, for example:: { filter: model: Filters.multipleSelect, collection: [ { value: '1', label: 'One' } ]')");
+                throw new Error("[select-filter] A collection with value/label (or value/labelKey when using Locale) is required to populate the Select list, for example:: { filter: model: Filters.multipleSelect, collection: [ { value: '1', label: 'One' } ]')");
             }
             var labelKey = (option.labelKey || option[_this.labelName]);
             var selected = (searchTerms.findIndex(function (term) { return term === option[_this.valueName]; }) >= 0) ? 'selected' : '';
-            var labelText = ((option.labelKey || _this.enableTranslateLabel) && _this.i18n && typeof _this.i18n.tr === 'function') ? _this.i18n.tr(labelKey || ' ') : labelKey;
+            var labelText = ((option.labelKey || _this.enableTranslateLabel) && labelKey) ? _this.i18n.tr(labelKey || ' ') : labelKey;
             var prefixText = option[_this.labelPrefixName] || '';
             var suffixText = option[_this.labelSuffixName] || '';
             var optionLabel = option[_this.optionLabel] || '';
             optionLabel = optionLabel.toString().replace(/\"/g, '\''); // replace double quotes by single quotes to avoid interfering with regular html
-            var optionText = (prefixText + separatorBetweenLabels + labelText + separatorBetweenLabels + suffixText);
+            // also translate prefix/suffix if enableTranslateLabel is true and text is a string
+            prefixText = (_this.enableTranslateLabel && prefixText && typeof prefixText === 'string') ? _this.i18n.tr(prefixText || ' ') : prefixText;
+            suffixText = (_this.enableTranslateLabel && suffixText && typeof suffixText === 'string') ? _this.i18n.tr(suffixText || ' ') : suffixText;
+            optionLabel = (_this.enableTranslateLabel && optionLabel && typeof optionLabel === 'string') ? _this.i18n.tr(optionLabel || ' ') : optionLabel;
+            // add to a temp array for joining purpose and filter out empty text
+            var tmpOptionArray = [prefixText, labelText, suffixText].filter(function (text) { return text; });
+            var optionText = tmpOptionArray.join(separatorBetweenLabels);
             // if user specifically wants to render html text, he needs to opt-in else it will stripped out by default
             // also, the 3rd party lib will saninitze any html code unless it's encoded, so we'll do that
             if (isRenderHtmlEnabled) {

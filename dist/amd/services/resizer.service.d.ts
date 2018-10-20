@@ -44,4 +44,5 @@ export declare class ResizerService {
     compensateHorizontalScroll(grid: any, gridOptions: GridOption): void;
     /** Resize the datagrid to fit the browser height & width */
     resizeGrid(delay?: number, newSizes?: GridDimension): Promise<GridDimension>;
+    resizeGridWithDimensions(newSizes?: GridDimension): GridDimension;
 }

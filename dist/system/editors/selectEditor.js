@@ -142,8 +142,12 @@ System.register(["../services/index", "../services/utilities", "dompurify", "jqu
                             var labelText = c[_this.valueName];
                             var prefixText = c[_this.labelPrefixName] || '';
                             var suffixText = c[_this.labelSuffixName] || '';
+                            // also translate prefix/suffix if enableTranslateLabel is true and text is a string
+                            prefixText = (_this.enableTranslateLabel && prefixText && typeof prefixText === 'string') ? _this.i18n.tr(prefixText || ' ') : prefixText;
+                            suffixText = (_this.enableTranslateLabel && suffixText && typeof suffixText === 'string') ? _this.i18n.tr(suffixText || ' ') : suffixText;
                             if (isIncludingPrefixSuffix) {
-                                return ('' + prefixText + separatorBetweenLabels + labelText + separatorBetweenLabels + suffixText);
+                                var tmpOptionArray = [prefixText, labelText, suffixText].filter(function (text) { return text; }); // add to a temp array for joining purpose and filter out empty text
+                                return tmpOptionArray.join(separatorBetweenLabels);
                             }
                             return labelText;
                         });
@@ -165,7 +169,12 @@ System.register(["../services/index", "../services/utilities", "dompurify", "jqu
                             if (isIncludingPrefixSuffix) {
                                 var prefixText = itemFound[this.labelPrefixName] || '';
                                 var suffixText = itemFound[this.labelSuffixName] || '';
-                                return ('' + prefixText + separatorBetweenLabels + labelText + separatorBetweenLabels + suffixText);
+                                // also translate prefix/suffix if enableTranslateLabel is true and text is a string
+                                prefixText = (this.enableTranslateLabel && prefixText && typeof prefixText === 'string') ? this.i18n.tr(prefixText || ' ') : prefixText;
+                                suffixText = (this.enableTranslateLabel && suffixText && typeof suffixText === 'string') ? this.i18n.tr(suffixText || ' ') : suffixText;
+                                // add to a temp array for joining purpose and filter out empty text
+                                var tmpOptionArray = [prefixText, labelText, suffixText].filter(function (text) { return text; });
+                                return tmpOptionArray.join(separatorBetweenLabels);
                             }
                             return labelText;
                         }
@@ -195,6 +204,9 @@ System.register(["../services/index", "../services/utilities", "dompurify", "jqu
                     this.labelSuffixName = this.customStructure && this.customStructure.labelSuffix || 'labelSuffix';
                     this.optionLabel = this.customStructure && this.customStructure.optionLabel || 'value';
                     this.valueName = this.customStructure && this.customStructure.value || 'value';
+                    if (this.enableTranslateLabel && (!this.i18n || typeof this.i18n.tr !== 'function')) {
+                        throw new Error("[select-editor] The i18n Service is required for the Select Editor to work correctly");
+                    }
                     // always render the Select (dropdown) DOM element, even if user passed a "collectionAsync",
                     // if that is the case, the Select will simply be without any options but we still have to render it (else SlickGrid would throw an error)
                     this.renderDomElement(this.collection);
@@ -328,17 +340,23 @@ System.register(["../services/index", "../services/utilities", "dompurify", "jqu
                     var sanitizedOptions = this.gridOptions && this.gridOptions.sanitizeHtmlOptions || {};
                     collection.forEach(function (option) {
                         if (!option || (option[_this.labelName] === undefined && option.labelKey === undefined)) {
-                            throw new Error('A collection with value/label (or value/labelKey when using ' +
+                            throw new Error('[select-editor] A collection with value/label (or value/labelKey when using ' +
                                 'Locale) is required to populate the Select list, for example: ' +
                                 '{ collection: [ { value: \'1\', label: \'One\' } ])');
                         }
                         var labelKey = (option.labelKey || option[_this.labelName]);
-                        var labelText = (option.labelKey || _this.enableTranslateLabel) ? _this.i18n.tr(labelKey || ' ') : labelKey;
+                        var labelText = ((option.labelKey || _this.enableTranslateLabel) && labelKey) ? _this.i18n.tr(labelKey || ' ') : labelKey;
                         var prefixText = option[_this.labelPrefixName] || '';
                         var suffixText = option[_this.labelSuffixName] || '';
                         var optionLabel = option[_this.optionLabel] || '';
                         optionLabel = optionLabel.toString().replace(/\"/g, '\''); // replace double quotes by single quotes to avoid interfering with regular html
-                        var optionText = ('' + prefixText + separatorBetweenLabels + labelText + separatorBetweenLabels + suffixText);
+                        // also translate prefix/suffix if enableTranslateLabel is true and text is a string
+                        prefixText = (_this.enableTranslateLabel && prefixText && typeof prefixText === 'string') ? _this.i18n.tr(prefixText || ' ') : prefixText;
+                        suffixText = (_this.enableTranslateLabel && suffixText && typeof suffixText === 'string') ? _this.i18n.tr(suffixText || ' ') : suffixText;
+                        optionLabel = (_this.enableTranslateLabel && optionLabel && typeof optionLabel === 'string') ? _this.i18n.tr(optionLabel || ' ') : optionLabel;
+                        // add to a temp array for joining purpose and filter out empty text
+                        var tmpOptionArray = [prefixText, labelText, suffixText].filter(function (text) { return text; });
+                        var optionText = tmpOptionArray.join(separatorBetweenLabels);
                         // if user specifically wants to render html text, he needs to opt-in else it will stripped out by default
                         // also, the 3rd party lib will saninitze any html code unless it's encoded, so we'll do that
                         if (isRenderHtmlEnabled) {
