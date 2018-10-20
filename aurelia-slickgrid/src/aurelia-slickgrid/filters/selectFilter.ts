@@ -137,6 +137,10 @@ export class SelectFilter implements Filter {
     this.optionLabel = this.customStructure && this.customStructure.optionLabel || 'value';
     this.valueName = this.customStructure && this.customStructure.value || 'value';
 
+    if (this.enableTranslateLabel && (!this.i18n || typeof this.i18n.tr !== 'function')) {
+      throw new Error(`[select-filter] The i18n Service is required for the Select Filter to work correctly`);
+    }
+
     // always render the Select (dropdown) DOM element, even if user passed a "collectionAsync",
     // if that is the case, the Select will simply be without any options but we still have to render it (else SlickGrid would throw an error)
     let newCollection = this.columnFilter.collection || [];
@@ -330,16 +334,23 @@ export class SelectFilter implements Filter {
 
     optionCollection.forEach((option: SelectOption) => {
       if (!option || (option[this.labelName] === undefined && option.labelKey === undefined)) {
-        throw new Error(`A collection with value/label (or value/labelKey when using Locale) is required to populate the Select list, for example:: { filter: model: Filters.multipleSelect, collection: [ { value: '1', label: 'One' } ]')`);
+        throw new Error(`[select-filter] A collection with value/label (or value/labelKey when using Locale) is required to populate the Select list, for example:: { filter: model: Filters.multipleSelect, collection: [ { value: '1', label: 'One' } ]')`);
       }
       const labelKey = (option.labelKey || option[this.labelName]) as string;
       const selected = (searchTerms.findIndex((term) => term === option[this.valueName]) >= 0) ? 'selected' : '';
-      const labelText = ((option.labelKey || this.enableTranslateLabel) && this.i18n && typeof this.i18n.tr === 'function') ? this.i18n.tr(labelKey || ' ') : labelKey;
-      const prefixText = option[this.labelPrefixName] || '';
-      const suffixText = option[this.labelSuffixName] || '';
+      const labelText = ((option.labelKey || this.enableTranslateLabel) && labelKey) ? this.i18n.tr(labelKey || ' ') : labelKey;
+      let prefixText = option[this.labelPrefixName] || '';
+      let suffixText = option[this.labelSuffixName] || '';
       let optionLabel = option[this.optionLabel] || '';
       optionLabel = optionLabel.toString().replace(/\"/g, '\''); // replace double quotes by single quotes to avoid interfering with regular html
-      let optionText = (prefixText + separatorBetweenLabels + labelText + separatorBetweenLabels + suffixText);
+
+      // also translate prefix/suffix if enableTranslateLabel is true and text is a string
+      prefixText = (this.enableTranslateLabel && prefixText && typeof prefixText === 'string') ? this.i18n.tr(prefixText || ' ') : prefixText;
+      suffixText = (this.enableTranslateLabel && suffixText && typeof suffixText === 'string') ? this.i18n.tr(suffixText || ' ') : suffixText;
+      optionLabel = (this.enableTranslateLabel && optionLabel && typeof optionLabel === 'string') ? this.i18n.tr(optionLabel || ' ') : optionLabel;
+      // add to a temp array for joining purpose and filter out empty text
+      const tmpOptionArray = [prefixText, labelText, suffixText].filter((text) => text);
+      let optionText = tmpOptionArray.join(separatorBetweenLabels);
 
       // if user specifically wants to render html text, he needs to opt-in else it will stripped out by default
       // also, the 3rd party lib will saninitze any html code unless it's encoded, so we'll do that
