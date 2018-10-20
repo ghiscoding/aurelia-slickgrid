@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.4.2"></a>
+## [2.4.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.4.0...v2.4.2) (2018-10-20)
+
+
+### Bug Fixes
+
+* **resize:** autoAdjustDropWidthByTextSize should handle 100% width ([c567f73](https://github.com/ghiscoding/aurelia-slickgrid/commit/c567f73))
+* **resize:** when having 2 grids resize only works on 1 grid ([5cf81e1](https://github.com/ghiscoding/aurelia-slickgrid/commit/5cf81e1))
+
+
+### Features
+
+* **select:** Filter/Editor able to translate prefix/suffix/optionLabel ([0732e53](https://github.com/ghiscoding/aurelia-slickgrid/commit/0732e53))
+
+
+
 <a name="2.4.0"></a>
 # [2.4.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.3.0...v2.4.0) (2018-10-05)
 
