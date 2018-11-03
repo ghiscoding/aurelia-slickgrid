@@ -48,6 +48,7 @@ export class ControlAndPluginService {
   groupItemMetaProviderPlugin: any;
   headerButtonsPlugin: any;
   headerMenuPlugin: any;
+  rowDetailViewPlugin: any;
   rowSelectionPlugin: any;
 
   constructor(
@@ -148,6 +149,19 @@ export class ControlAndPluginService {
       this.extensionList.push({ name: 'GroupItemMetaProvider', service: this.groupItemMetaProviderPlugin });
     }
 
+    // Row Detail View Plugin
+    if (this._gridOptions.enableRowDetailView) {
+      // this also requires the Row Selection Model to be registered as well
+      if (!this.rowSelectionPlugin || !this._grid.getSelectionModel()) {
+        this.rowSelectionPlugin = new Slick.RowSelectionModel(this._gridOptions.rowSelectionOptions || { selectActiveRow: true });
+        this._grid.setSelectionModel(this.rowSelectionPlugin);
+      }
+
+      this.createRowDetailViewPlugin(this._columnDefinitions, this._gridOptions);
+      this._grid.registerPlugin(this.rowDetailViewPlugin);
+      this.extensionList.push({ name: 'RowDetailViewPlugin', service: this.rowDetailViewPlugin });
+    }
+
     // Checkbox Selector Plugin
     if (this._gridOptions.enableCheckboxSelector) {
       // when enabling the Checkbox Selector Plugin, we need to also watch onClick events to perform certain actions
@@ -224,6 +238,23 @@ export class ControlAndPluginService {
         this.checkboxSelectorPlugin = new Slick.CheckboxSelectColumn(options.checkboxSelector || {});
       }
       const selectionColumn: Column = this.checkboxSelectorPlugin.getColumnDefinition();
+      selectionColumn.excludeFromExport = true;
+      selectionColumn.excludeFromQuery = true;
+      selectionColumn.excludeFromHeaderMenu = true;
+      columnDefinitions.unshift(selectionColumn);
+    }
+  }
+
+  /** Create the Row Detail View */
+  createRowDetailViewPlugin(columnDefinitions: Column[], options: GridOption) {
+    if (options.enableRowDetailView) {
+      if (!options.rowDetailViewOptions) {
+        throw new Error('The Row Detail View requires options to be passed via the "rowDetailViewOptions" property of the Grid Options');
+      }
+      if (!this.rowDetailViewPlugin) {
+        this.rowDetailViewPlugin = new Slick.Plugins.RowDetailView(options.rowDetailViewOptions);
+      }
+      const selectionColumn: Column = this.rowDetailViewPlugin.getColumnDefinition();
       selectionColumn.excludeFromExport = true;
       selectionColumn.excludeFromQuery = true;
       selectionColumn.excludeFromHeaderMenu = true;

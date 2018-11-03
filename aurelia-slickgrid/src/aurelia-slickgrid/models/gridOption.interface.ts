@@ -11,7 +11,8 @@ import {
   GridState,
   HeaderButton,
   HeaderMenu,
-  Pagination
+  Pagination,
+  RowDetailViewOption
 } from './../models/index';
 
 export interface GridOption {
@@ -168,7 +169,7 @@ export interface GridOption {
   /** Do we want to enable Grid Menu (aka hamburger menu) */
   enableGridMenu?: boolean;
 
-  /** Defaults to false, do we want to enable the Grouping & Aggregator? */
+  /** Defaults to false, do we want to enable the Grouping & Aggregator Plugin? */
   enableGrouping?: boolean;
 
   /** Do we want to enable Header Buttons? (buttons with commands that can be shown beside each column)  */
@@ -182,6 +183,9 @@ export interface GridOption {
 
   /** Do we want to enable pagination? Currently only works with a Backend Service API */
   enablePagination?: boolean;
+
+  /** Defaults to false, do we want to enable the Row Detail Plugin? */
+  enableRowDetailView?: boolean;
 
   /** Do we want to enable row selection? */
   enableRowSelection?: boolean;
@@ -272,6 +276,9 @@ export interface GridOption {
 
   /** Register 1 or more Slick Plugins */
   registerPlugins?: any | any[];
+
+  /** Row Detail View Plugin options (columnId, cssClass, toolTip, width) */
+  rowDetailViewOptions?: RowDetailViewOption;
 
   /** Grid row height in pixels (only type the number). Row of cell values. */
   rowHeight?: number;

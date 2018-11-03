@@ -17,6 +17,7 @@ import 'slickgrid/plugins/slick.cellselectionmodel';
 import 'slickgrid/plugins/slick.checkboxselectcolumn';
 import 'slickgrid/plugins/slick.headerbuttons';
 import 'slickgrid/plugins/slick.headermenu';
+import 'slickgrid/plugins/slick.rowdetailview';
 import 'slickgrid/plugins/slick.rowmovemanager';
 import 'slickgrid/plugins/slick.rowselectionmodel';
 

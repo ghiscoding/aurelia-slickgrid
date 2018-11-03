@@ -74,6 +74,7 @@ export * from './operatorType.enum';
 export * from './pagination.interface';
 export * from './paginationChangedArgs.interface';
 export * from './queryArgument.interface';
+export * from './rowDetailViewOption.interface';
 export * from './searchTerm.type';
 export * from './selectOption.interface';
 export * from './slickEvent.interface';

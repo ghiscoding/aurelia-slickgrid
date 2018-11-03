@@ -1,7 +1,7 @@
 import { Column, Formatter } from './../models/index';
 
 export const progressBarFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any): string => {
-  if (value === null || value === '') {
+  if (value === null || value === undefined || value === '') {
     return '';
   }
 

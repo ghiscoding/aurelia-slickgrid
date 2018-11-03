@@ -52,7 +52,7 @@ export class ResizerService {
       return null;
     }
 
-    // -- 1st resize the datagrid size at first load (we need this because the .on event is not triggered on first load)
+    // -- also we add a slight delay (in ms) so that we resize after the grid render is done
     this.resizeGrid(10, newSizes);
 
     // -- 2nd attach a trigger on the Window DOM element, so that it happens also when resizing after first load
@@ -167,10 +167,14 @@ export class ResizerService {
       if (delay > 0) {
         clearTimeout(timer);
         timer = setTimeout(() => {
-          resolve(this.resizeGridWithDimensions(newSizes));
+          const lastDimensions = this.resizeGridWithDimensions(newSizes);
+          this.ea.publish(`${this.aureliaEventPrefix}:onAfterResize`, lastDimensions);
+          resolve(lastDimensions);
         }, delay);
       } else {
-        resolve(this.resizeGridWithDimensions(newSizes));
+        const lastDimensions = this.resizeGridWithDimensions(newSizes);
+        this.ea.publish(`${this.aureliaEventPrefix}:onAfterResize`, lastDimensions);
+        resolve(lastDimensions);
       }
     });
   }

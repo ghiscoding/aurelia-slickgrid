@@ -11,7 +11,6 @@ import {
 } from './../models/index';
 import { ControlAndPluginService, disposeAllSubscriptions, FilterService, SortService } from './../services/index';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
-import * as $ from 'jquery';
 
 // using external non-typed js libraries
 declare var Slick: any;
