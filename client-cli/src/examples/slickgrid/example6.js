@@ -97,7 +97,6 @@ export class Example6 {
     ];
 
     this.gridOptions = {
-      autoHeight: false,
       enableAutoResize: false,
       enableFiltering: true,
       enableCellNavigation: true,

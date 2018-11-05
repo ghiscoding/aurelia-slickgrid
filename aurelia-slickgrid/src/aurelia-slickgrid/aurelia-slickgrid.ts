@@ -75,6 +75,8 @@ export class AureliaSlickgridCustomElement {
   private _columnDefinitions: Column[] = [];
   private _dataset: any[];
   private _eventHandler: any = new Slick.EventHandler();
+  private _fixedHeight: number;
+  private _fixedWidth: number;
   private _hideHeaderRowAfterPageLoad = false;
   groupItemMetadataProvider: any;
   isGridInitialized = false;
@@ -275,6 +277,9 @@ export class AureliaSlickgridCustomElement {
   }
 
   bind() {
+    this._fixedHeight = this.gridHeight !== undefined ? +this.gridHeight : undefined;
+    this._fixedWidth = this.gridWidth !== undefined ? +this.gridWidth : undefined;
+
     // get the grid options (priority is Global Options first, then user option which could overwrite the Global options)
     this.gridOptions = { ...GlobalGridOptions, ...this.gridOptions };
     this._columnDefinitions = this.columnDefinitions;
@@ -540,9 +545,13 @@ export class AureliaSlickgridCustomElement {
     }
 
     // auto-resize grid on browser resize
-    this.resizerService.init(grid);
-    if (grid && options.enableAutoResize) {
-      this.resizerService.attachAutoResizeDataGrid({ height: this.gridHeight, width: this.gridWidth });
+    if (this._fixedHeight || this._fixedWidth) {
+      this.resizerService.init(grid, { height: this._fixedHeight, width: this._fixedWidth });
+    } else {
+      this.resizerService.init(grid);
+    }
+    if (grid && options && options.enableAutoResize) {
+      this.resizerService.attachAutoResizeDataGrid();
       if (options.autoFitColumnsOnFirstLoad && options.enableAutoSizeColumns && typeof grid.autosizeColumns === 'function') {
         grid.autosizeColumns();
       }
@@ -627,7 +636,7 @@ export class AureliaSlickgridCustomElement {
       // resize the grid inside a slight timeout, in case other DOM element changed prior to the resize (like a filter/pagination changed)
       if (this.gridOptions && this.gridOptions.enableAutoResize) {
         const delay = this.gridOptions.autoResize && this.gridOptions.autoResize.delay || 10;
-        this.resizerService.resizeGrid(delay, { height: this.gridHeight, width: this.gridWidth });
+        this.resizerService.resizeGrid(delay);
       }
     }
   }
