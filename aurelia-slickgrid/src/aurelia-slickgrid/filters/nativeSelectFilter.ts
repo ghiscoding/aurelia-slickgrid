@@ -107,6 +107,7 @@ export class NativeSelectFilter implements Filter {
     const optionCollection = this.columnDef.filter.collection || [];
     const labelName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.label : 'label';
     const valueName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.value : 'value';
+    const isEnabledTranslate = (this.columnDef.filter.enableTranslateLabel) ? this.columnDef.filter.enableTranslateLabel : false;
 
     let options = '';
 
@@ -121,7 +122,7 @@ export class NativeSelectFilter implements Filter {
           throw new Error(`A collection with value/label (or value/labelKey when using Locale) is required to populate the Select list, for example:: { filter: model: Filters.select, collection: [ { value: '1', label: 'One' } ]')`);
         }
         const labelKey = option.labelKey || option[labelName];
-        const textLabel = ((option.labelKey || this.columnDef.filter.enableTranslateLabel) && this.i18n && typeof this.i18n.tr === 'function') ? this.i18n.tr(labelKey || ' ') : labelKey;
+        const textLabel = ((option.labelKey || isEnabledTranslate) && this.i18n && typeof this.i18n.tr === 'function') ? this.i18n.tr(labelKey || ' ') : labelKey;
         options += `<option value="${option[valueName]}">${textLabel}</option>`;
       });
     }

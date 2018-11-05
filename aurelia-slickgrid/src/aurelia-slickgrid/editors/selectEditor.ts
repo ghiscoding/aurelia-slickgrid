@@ -381,7 +381,7 @@ export class SelectEditor implements Editor {
     const sanitizedOptions = this.gridOptions && this.gridOptions.sanitizeHtmlOptions || {};
 
     // collection could be an Array of Strings OR Objects
-    if (collection.every(x => typeof x === 'string')) {
+    if (collection.every((x: any) => typeof x === 'string')) {
       collection.forEach((option: string) => {
         options += `<option value="${option}" label="${option}">${option}</option>`;
       });

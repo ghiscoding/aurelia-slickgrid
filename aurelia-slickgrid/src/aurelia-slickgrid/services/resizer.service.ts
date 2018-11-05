@@ -12,16 +12,16 @@ const DATAGRID_PAGINATION_HEIGHT = 35;
 let timer: any;
 
 export interface GridDimension {
-  height: number;
-  width: number;
-  heightWithPagination?: number;
+  height: number | undefined;
+  width: number | undefined;
+  heightWithPagination?: number | undefined;
 }
 
 @singleton(true)
 @inject(EventAggregator)
 export class ResizerService {
-  private _fixedHeight: number;
-  private _fixedWidth: number;
+  private _fixedHeight: number | undefined;
+  private _fixedWidth: number | undefined;
   private _grid: any;
   private _lastDimensions: GridDimension;
   aureliaEventPrefix: string;

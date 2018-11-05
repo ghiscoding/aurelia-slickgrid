@@ -16,7 +16,7 @@ export const collectionEditorFormatter: Formatter = (row: number, cell: number, 
   const valueName = (internalColumnEditor.customStructure) ? internalColumnEditor.customStructure.value : 'value';
 
   if (Array.isArray(value)) {
-    if (collection.every(x => typeof x === 'string')) {
+    if (collection.every((x: any) => typeof x === 'string')) {
       return arrayToCsvFormatter(row,
         cell,
         value.map((v: any) => findOrDefault(collection, (c: any) => c === v)),

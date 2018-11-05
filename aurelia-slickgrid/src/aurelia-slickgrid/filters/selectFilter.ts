@@ -337,7 +337,7 @@ export class SelectFilter implements Filter {
     const sanitizedOptions = this.gridOptions && this.gridOptions.sanitizeHtmlOptions || {};
 
     // collection could be an Array of Strings OR Objects
-    if (optionCollection.every(x => typeof x === 'string')) {
+    if (optionCollection.every((x: any) => typeof x === 'string')) {
       optionCollection.forEach((option: string) => {
         const selected = (searchTerms.findIndex((term) => term === option) >= 0) ? 'selected' : '';
         options += `<option value="${option}" label="${option}" ${selected}>${option}</option>`;
