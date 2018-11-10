@@ -1,7 +1,7 @@
 import { BackendService } from './../models';
 import {
-  ControlAndPluginService,
   ExportService,
+  ExtensionService,
   FilterService,
   GridService,
   GridEventService,
@@ -29,8 +29,11 @@ export interface AureliaGridInstance {
   /** Backend Service, when available */
   backendService?: BackendService;
 
-  /** Plugin (and Control) Service */
-  pluginService: ControlAndPluginService;
+  /** Extension (Plugins & Controls) Service */
+  extensionService: ExtensionService;
+
+  /** @deprecated, use `extensionService` instead. Plugin and Control Service */
+  pluginService: ExtensionService;
 
   /** Export Service */
   exportService: ExportService;

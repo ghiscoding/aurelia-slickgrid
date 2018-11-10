@@ -5,11 +5,12 @@ import {
   CurrentFilter,
   CurrentPagination,
   CurrentSorter,
+  ExtensionName,
   GridOption,
   GridState,
   GridStateType,
 } from './../models/index';
-import { ControlAndPluginService, disposeAllSubscriptions, FilterService, SortService } from './../services/index';
+import { ExtensionService, disposeAllSubscriptions, FilterService, SortService } from './../services/index';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
 import * as $ from 'jquery';
 
@@ -22,7 +23,7 @@ export class GridStateService {
   private _columns: Column[] = [];
   private _currentColumns: CurrentColumn[] = [];
   private _grid: any;
-  private controlAndPluginService: ControlAndPluginService;
+  private extensionService: ExtensionService;
   private filterService: FilterService;
   private sortService: SortService;
   private subscriptions: Subscription[] = [];
@@ -40,9 +41,9 @@ export class GridStateService {
    * @param filterService
    * @param sortService
    */
-  init(grid: any, controlAndPluginService: ControlAndPluginService, filterService: FilterService, sortService: SortService): void {
+  init(grid: any, extensionService: ExtensionService, filterService: FilterService, sortService: SortService): void {
     this._grid = grid;
-    this.controlAndPluginService = controlAndPluginService;
+    this.extensionService = extensionService;
     this.filterService = filterService;
     this.sortService = sortService;
 
@@ -201,8 +202,8 @@ export class GridStateService {
    * @param extension name
    * @param grid
    */
-  hookExtensionEventToGridStateChange(extensionName: string, eventName: string) {
-    const extension = this.controlAndPluginService && this.controlAndPluginService.getExtensionByName(extensionName);
+  hookExtensionEventToGridStateChange(extensionName: ExtensionName, eventName: string) {
+    const extension = this.extensionService && this.extensionService.getExtensionByName(extensionName);
 
     if (extension && extension.service && extension.service[eventName] && extension.service[eventName].subscribe) {
       this._eventHandler.subscribe(extension.service[eventName], (e: Event, args: any) => {
@@ -277,8 +278,8 @@ export class GridStateService {
     );
 
     // Subscribe to ColumnPicker and/or GridMenu for show/hide Columns visibility changes
-    this.hookExtensionEventToGridStateChange('ColumnPicker', 'onColumnsChanged');
-    this.hookExtensionEventToGridStateChange('GridMenu', 'onColumnsChanged');
+    this.hookExtensionEventToGridStateChange(ExtensionName.columnPicker, 'onColumnsChanged');
+    this.hookExtensionEventToGridStateChange(ExtensionName.gridMenu, 'onColumnsChanged');
 
     // subscribe to Column Resize & Reordering
     this.hookSlickGridEventToGridStateChange('onColumnsReordered', grid);
