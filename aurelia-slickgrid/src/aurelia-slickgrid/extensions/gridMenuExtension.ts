@@ -22,6 +22,7 @@ import { SharedService } from '../services/shared.service';
 // using external non-typed js libraries
 declare var Slick: any;
 declare var $: any;
+declare function require(name: string);
 
 @singleton(true)
 @inject(
@@ -33,8 +34,9 @@ declare var $: any;
   SortService,
 )
 export class GridMenuExtension {
+  private _eventHandler: any = new Slick.EventHandler();
+  private _extension: any;
   areVisibleColumnDifferent = false;
-  extension: any;
   userOriginalGridMenu: GridMenu;
 
   constructor(
@@ -46,12 +48,24 @@ export class GridMenuExtension {
     private sortService: SortService,
   ) { }
 
+  dispose() {
+    // unsubscribe all SlickGrid events
+    this._eventHandler.unsubscribeAll();
+
+    if (this._extension && this._extension.destroy) {
+      this._extension.destroy();
+    }
+  }
+
   /** Create the Header Menu and expose all the available hooks that user can subscribe (onCommand, onBeforeMenuShow, ...) */
-  register() {
+  register(): any {
     // keep original user grid menu, useful when switching locale to translate
     this.userOriginalGridMenu = { ...this.sharedService.gridOptions.gridMenu };
 
     if (this.sharedService.gridOptions && this.sharedService.gridOptions.gridMenu) {
+      // dynamically import the SlickGrid plugin with requireJS
+      require('slickgrid/controls/slick.gridmenu');
+
       this.sharedService.gridOptions.gridMenu = { ...this.getDefaultGridMenuOptions(), ...this.sharedService.gridOptions.gridMenu };
 
       // merge original user grid menu items with internal items
@@ -60,26 +74,26 @@ export class GridMenuExtension {
       this.extensionUtility.translateItems(this.sharedService.gridOptions.gridMenu.customItems, 'titleKey', 'title');
       this.extensionUtility.sortItems(this.sharedService.gridOptions.gridMenu.customItems, 'positionOrder');
 
-      this.extension = new Slick.Controls.GridMenu(this.sharedService.columnDefinitions, this.sharedService.grid, this.sharedService.gridOptions);
+      this._extension = new Slick.Controls.GridMenu(this.sharedService.columnDefinitions, this.sharedService.grid, this.sharedService.gridOptions);
       if (this.sharedService.grid && this.sharedService.gridOptions.gridMenu) {
-        this.extension.onBeforeMenuShow.subscribe((e: Event, args: CellArgs) => {
+        this._eventHandler.subscribe(this._extension.onBeforeMenuShow, (e: any, args: CellArgs) => {
           if (this.sharedService.gridOptions.gridMenu && typeof this.sharedService.gridOptions.gridMenu.onBeforeMenuShow === 'function') {
             this.sharedService.gridOptions.gridMenu.onBeforeMenuShow(e, args);
           }
         });
-        this.extension.onColumnsChanged.subscribe((e: Event, args: CellArgs) => {
+        this._eventHandler.subscribe(this._extension.onColumnsChanged, (e: any, args: CellArgs) => {
           this.areVisibleColumnDifferent = true;
           if (this.sharedService.gridOptions.gridMenu && typeof this.sharedService.gridOptions.gridMenu.onColumnsChanged === 'function') {
             this.sharedService.gridOptions.gridMenu.onColumnsChanged(e, args);
           }
         });
-        this.extension.onCommand.subscribe((e: Event, args: GridMenuItem) => {
+        this._eventHandler.subscribe(this._extension.onCommand, (e: any, args: any) => {
           this.executeGridMenuInternalCustomCommands(e, args);
           if (this.sharedService.gridOptions.gridMenu && typeof this.sharedService.gridOptions.gridMenu.onCommand === 'function') {
             this.sharedService.gridOptions.gridMenu.onCommand(e, args);
           }
         });
-        this.extension.onMenuClose.subscribe((e: Event, args: CellArgs) => {
+        this._eventHandler.subscribe(this._extension.onMenuClose, (e: any, args: CellArgs) => {
           if (this.sharedService.gridOptions.gridMenu && typeof this.sharedService.gridOptions.gridMenu.onMenuClose === 'function') {
             this.sharedService.gridOptions.gridMenu.onMenuClose(e, args);
           }
@@ -97,7 +111,7 @@ export class GridMenuExtension {
           }
         });
       }
-      return this.extension;
+      return this._extension;
     }
     return null;
   }
@@ -365,8 +379,8 @@ export class GridMenuExtension {
 
       // re-initialize the Grid Menu, that will recreate all the menus & list
       // doing an "init()" won't drop any existing command attached
-      if (this.extension.init) {
-        this.extension.init(this.sharedService.grid);
+      if (this._extension.init) {
+        this._extension.init(this.sharedService.grid);
       }
     }
   }

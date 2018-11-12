@@ -1,8 +1,13 @@
+// import common 3rd party SlickGrid plugins/libs
+import 'slickgrid/plugins/slick.cellrangedecorator';
+import 'slickgrid/plugins/slick.cellrangeselector';
+import 'slickgrid/plugins/slick.cellselectionmodel';
+
 import { singleton, inject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import {
   Column,
-  Extension,
+  ExtensionModel,
   ExtensionName,
   GridOption,
 } from '../models/index';
@@ -36,7 +41,7 @@ import { SharedService } from './shared.service';
   SharedService,
 )
 export class ExtensionService {
-  extensionList: Extension[] = [];
+  extensionList: ExtensionModel[] = [];
 
   constructor(
     private autoTooltipExtension: AutoTooltipExtension,
@@ -53,6 +58,20 @@ export class ExtensionService {
     private sharedService: SharedService,
   ) { }
 
+  /** Dispose of all the controls & plugins */
+  dispose() {
+    this.sharedService.grid = null;
+    this.sharedService.visibleColumns = [];
+
+    // dispose of each control/plugin if it has a destroy method
+    this.extensionList.forEach((item) => {
+      if (item && item.class && item.class.dispose) {
+        item.class.dispose();
+      }
+    });
+    this.extensionList = [];
+  }
+
   /** Get all columns (includes visible and non-visible) */
   getAllColumns(): Column[] {
     return this.sharedService.allColumns || [];
@@ -64,7 +83,7 @@ export class ExtensionService {
   }
 
   /** Get all Extensions */
-  getAllExtensions(): Extension[] {
+  getAllExtensions(): ExtensionModel[] {
     return this.extensionList;
   }
 
@@ -72,7 +91,7 @@ export class ExtensionService {
    * Get an Extension by it's name
    *  @param name
    */
-  getExtensionByName(name: string): Extension | undefined {
+  getExtensionByName(name: string): ExtensionModel | undefined {
     return this.extensionList.find((p) => p.name === name);
   }
 
@@ -81,12 +100,7 @@ export class ExtensionService {
     this.sharedService.grid.autosizeColumns();
   }
 
-  /**
-   * Attach/Create different Controls or Plugins after the Grid is created
-   * @param grid
-   * @param dataView
-   * @param groupItemMetadataProvider
-   */
+  /** Attach/Create different Controls or Plugins after the Grid is created */
   attachDifferentExtensions() {
     // make sure all columns are translated before creating ColumnPicker/GridMenu Controls
     // this is to avoid having hidden columns not being translated on first load
@@ -94,24 +108,24 @@ export class ExtensionService {
       this.translateItems(this.sharedService.allColumns, 'headerKey', 'name');
     }
 
+    // Auto Tooltip Plugin
+    if (this.sharedService.gridOptions.enableAutoTooltip) {
+      if (this.autoTooltipExtension && this.autoTooltipExtension.register) {
+        this.extensionList.push({ name: ExtensionName.autoTooltip, class: this.autoTooltipExtension, extension: this.autoTooltipExtension.register() });
+      }
+    }
+
     // Column Picker Control
     if (this.sharedService.gridOptions.enableColumnPicker) {
       if (this.columnPickerExtension && this.columnPickerExtension.register) {
-        this.extensionList.push({ name: ExtensionName.columnPicker, service: this.columnPickerExtension.register() });
+        this.extensionList.push({ name: ExtensionName.columnPicker, class: this.columnPickerExtension, extension: this.columnPickerExtension.register() });
       }
     }
 
     // Grid Menu Control
     if (this.sharedService.gridOptions.enableGridMenu) {
       if (this.gridMenuExtension && this.gridMenuExtension.register) {
-        this.extensionList.push({ name: ExtensionName.gridMenu, service: this.gridMenuExtension.register() });
-      }
-    }
-
-    // Auto Tooltip Plugin
-    if (this.sharedService.gridOptions.enableAutoTooltip) {
-      if (this.autoTooltipExtension && this.autoTooltipExtension.register) {
-        this.extensionList.push({ name: ExtensionName.autoTooltip, service: this.autoTooltipExtension.register() });
+        this.extensionList.push({ name: ExtensionName.gridMenu, class: this.gridMenuExtension, extension: this.gridMenuExtension.register() });
       }
     }
 
@@ -119,7 +133,7 @@ export class ExtensionService {
     // register the group item metadata provider to add expand/collapse group handlers
     if (this.sharedService.gridOptions.enableGrouping) {
       if (this.groupItemMetaExtension && this.groupItemMetaExtension.register) {
-        this.extensionList.push({ name: ExtensionName.groupItemMetaProvider, service: this.groupItemMetaExtension.register() });
+        this.extensionList.push({ name: ExtensionName.groupItemMetaProvider, class: this.groupItemMetaExtension, extension: this.groupItemMetaExtension.register() });
       }
     }
 
@@ -127,42 +141,42 @@ export class ExtensionService {
     if (this.sharedService.gridOptions.enableCheckboxSelector) {
       if (this.checkboxSelectorExtension && this.checkboxSelectorExtension.register) {
         const rowSelectionExtension = this.getExtensionByName(ExtensionName.rowSelectionExtension);
-        this.extensionList.push({ name: ExtensionName.checkboxSelector, service: this.checkboxSelectorExtension.register(rowSelectionExtension) });
+        this.extensionList.push({ name: ExtensionName.checkboxSelector, class: this.checkboxSelectorExtension, extension: this.checkboxSelectorExtension.register(rowSelectionExtension) });
       }
     }
 
     // Row Move Manager Plugin
     if (this.sharedService.gridOptions.enableRowMoveManager) {
       if (this.rowMoveManagerExtension && this.rowMoveManagerExtension.register) {
-        this.extensionList.push({ name: ExtensionName.rowMoveManager, service: this.rowMoveManagerExtension.register() });
+        this.extensionList.push({ name: ExtensionName.rowMoveManager, class: this.rowMoveManagerExtension, extension: this.rowMoveManagerExtension.register() });
       }
     }
 
     // Row Selection Plugin
     if (!this.sharedService.gridOptions.enableCheckboxSelector && this.sharedService.gridOptions.enableRowSelection) {
       if (this.rowSelectionExtension && this.rowSelectionExtension.register) {
-        this.extensionList.push({ name: ExtensionName.rowSelectionExtension, service: this.rowSelectionExtension.register() });
+        this.extensionList.push({ name: ExtensionName.rowSelectionExtension, class: this.rowSelectionExtension, extension: this.rowSelectionExtension.register() });
       }
     }
 
     // Header Button Plugin
     if (this.sharedService.gridOptions.enableHeaderButton) {
       if (this.headerButtonExtension && this.headerButtonExtension.register) {
-        this.extensionList.push({ name: ExtensionName.headerButtons, service: this.headerButtonExtension.register() });
+        this.extensionList.push({ name: ExtensionName.headerButtons, class: this.headerButtonExtension, extension: this.headerButtonExtension.register() });
       }
     }
 
     // Header Menu Plugin
     if (this.sharedService.gridOptions.enableHeaderMenu) {
       if (this.headerMenuExtension && this.headerMenuExtension.register) {
-        this.extensionList.push({ name: ExtensionName.headerMenu, service: this.headerMenuExtension.register() });
+        this.extensionList.push({ name: ExtensionName.headerMenu, class: this.headerMenuExtension, extension: this.headerMenuExtension.register() });
       }
     }
 
     // Cell External Copy Manager Plugin (Excel Like)
     if (this.sharedService.gridOptions.enableExcelCopyBuffer) {
       if (this.cellExternalCopyExtension && this.cellExternalCopyExtension.register) {
-        this.extensionList.push({ name: ExtensionName.cellExternalCopyManager, service: this.cellExternalCopyExtension.register() });
+        this.extensionList.push({ name: ExtensionName.cellExternalCopyManager, class: this.cellExternalCopyExtension, extension: this.cellExternalCopyExtension.register() });
       }
     }
 
@@ -171,11 +185,11 @@ export class ExtensionService {
       if (Array.isArray(this.sharedService.gridOptions.registerPlugins)) {
         this.sharedService.gridOptions.registerPlugins.forEach((plugin) => {
           this.sharedService.grid.registerPlugin(plugin);
-          this.extensionList.push({ name: ExtensionName.noname, service: plugin });
+          this.extensionList.push({ name: ExtensionName.noname, class: null, extension: plugin });
         });
       } else {
         this.sharedService.grid.registerPlugin(this.sharedService.gridOptions.registerPlugins);
-        this.extensionList.push({ name: ExtensionName.noname, service: this.sharedService.gridOptions.registerPlugins });
+        this.extensionList.push({ name: ExtensionName.noname, class: null, extension: this.sharedService.gridOptions.registerPlugins });
       }
     }
   }
@@ -199,20 +213,6 @@ export class ExtensionService {
       this.sharedService.visibleColumns = this.removeColumnByIndex(this.sharedService.grid.getColumns(), columnIndex);
       this.sharedService.grid.setColumns(this.sharedService.visibleColumns);
     }
-  }
-
-  /** Dispose of all the controls & plugins */
-  dispose() {
-    this.sharedService.grid = null;
-    this.sharedService.visibleColumns = [];
-
-    // dispose of each control/plugin if it has a destroy method
-    this.extensionList.forEach((item) => {
-      if (item && item.service && item.service.destroy) {
-        item.service.destroy();
-      }
-    });
-    this.extensionList = [];
   }
 
   /** Refresh the dataset through the Backend Service */

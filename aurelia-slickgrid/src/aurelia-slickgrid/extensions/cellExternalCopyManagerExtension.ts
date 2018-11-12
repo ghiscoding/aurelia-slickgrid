@@ -1,24 +1,36 @@
 import { singleton, inject } from 'aurelia-framework';
-import { Column } from '../models';
+import { Column, Extension } from '../models';
 import { sanitizeHtmlToText } from '../services/utilities';
 import { SharedService } from '../services/shared.service';
 
 // using external non-typed js libraries
 declare var Slick: any;
 declare var $: any;
+declare function require(name: string);
 
 @singleton(true)
 @inject(SharedService)
-export class CellExternalCopyManagerExtension {
+export class CellExternalCopyManagerExtension implements Extension {
+  private _extension: any;
   undoRedoBuffer: any;
 
   constructor(private sharedService: SharedService) { }
 
-  register() {
-    this.createUndoRedoBuffer();
-    this.hookUndoShortcutKey();
+  dispose() {
+    if (this._extension && this._extension.destroy) {
+      this._extension.destroy();
+    }
+  }
 
-    if (this.sharedService.grid && this.sharedService.gridOptions) {
+  register(): any {
+
+    if (this.sharedService && this.sharedService.grid && this.sharedService.gridOptions) {
+      // dynamically import the SlickGrid plugin with requireJS
+      require('slickgrid/plugins/slick.cellexternalcopymanager');
+
+      this.createUndoRedoBuffer();
+      this.hookUndoShortcutKey();
+
       let newRowIds = 0;
       const pluginOptions = {
         clipboardCommandHandler: (editCommand: any) => {
@@ -55,10 +67,10 @@ export class CellExternalCopyManagerExtension {
       };
 
       this.sharedService.grid.setSelectionModel(new Slick.CellSelectionModel());
-      const plugin = new Slick.CellExternalCopyManager(pluginOptions);
-      this.sharedService.grid.registerPlugin(plugin);
+      this._extension = new Slick.CellExternalCopyManager(pluginOptions);
+      this.sharedService.grid.registerPlugin(this._extension);
 
-      return plugin;
+      return this._extension;
     }
 
     return null;

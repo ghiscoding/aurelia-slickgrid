@@ -1,10 +1,12 @@
 import { mapFlatpickrDateFormatWithFieldType, mapMomentDateFormatWithFieldType } from './../services/utilities';
-import { Column, Editor, EditorValidator, EditorValidatorOutput, FieldType, GridOption } from './../models/index';
+import { Column, Editor, EditorValidator, EditorValidatorOutput, FieldType } from './../models/index';
 import { I18N } from 'aurelia-i18n';
 import { inject } from 'aurelia-framework';
 import * as flatpickr from 'flatpickr';
 import * as moment from 'moment';
 import * as $ from 'jquery';
+
+declare function require(name: string);
 
 /*
  * An example of a date picker editor using Flatpickr

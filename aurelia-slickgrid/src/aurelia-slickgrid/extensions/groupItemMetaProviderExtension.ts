@@ -4,13 +4,23 @@ import { SharedService } from '../services/shared.service';
 @singleton(true)
 @inject(SharedService)
 export class GroupItemMetaProviderExtension {
+  private _extension: any;
+
   constructor(private sharedService: SharedService) { }
 
-  /** register the group item metadata provider to add expand/collapse group handlers */
-  register() {
-    const plugin = this.sharedService.groupItemMetadataProvider || {};
-    this.sharedService.grid.registerPlugin(plugin);
+  dispose() {
+    if (this._extension && this._extension.destroy) {
+      this._extension.destroy();
+    }
+  }
 
-    return plugin;
+  /** register the group item metadata provider to add expand/collapse group handlers */
+  register(): any {
+    if (this.sharedService && this.sharedService.grid) {
+      this._extension = this.sharedService.groupItemMetadataProvider || {};
+      this.sharedService.grid.registerPlugin(this._extension);
+      return this._extension;
+    }
+    return null;
   }
 }

@@ -1,24 +1,10 @@
 // import 3rd party vendor libs
+// only import the necessary core lib, each will be imported on demand when enabled (via require)
 import 'jquery-ui-dist/jquery-ui';
 import 'slickgrid/lib/jquery.event.drag-2.3.0';
-
 import 'slickgrid/slick.core';
 import 'slickgrid/slick.dataview';
 import 'slickgrid/slick.grid';
-import 'slickgrid/slick.groupitemmetadataprovider';
-import 'slickgrid/controls/slick.columnpicker';
-import 'slickgrid/controls/slick.gridmenu';
-import 'slickgrid/controls/slick.pager';
-import 'slickgrid/plugins/slick.autotooltips';
-import 'slickgrid/plugins/slick.cellexternalcopymanager';
-import 'slickgrid/plugins/slick.cellrangedecorator';
-import 'slickgrid/plugins/slick.cellrangeselector';
-import 'slickgrid/plugins/slick.cellselectionmodel';
-import 'slickgrid/plugins/slick.checkboxselectcolumn';
-import 'slickgrid/plugins/slick.headerbuttons';
-import 'slickgrid/plugins/slick.headermenu';
-import 'slickgrid/plugins/slick.rowmovemanager';
-import 'slickgrid/plugins/slick.rowselectionmodel';
 
 import { bindable, BindingEngine, bindingMode, Container, Factory, inject } from 'aurelia-framework';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
@@ -52,6 +38,7 @@ import * as $ from 'jquery';
 
 // using external non-typed js libraries
 declare var Slick: any;
+declare function require(name: string);
 
 const aureliaEventPrefix = 'asg';
 const eventPrefix = 'sg';
@@ -142,7 +129,9 @@ export class AureliaSlickgridCustomElement {
     this.createBackendApiInternalPostProcessCallback(this.gridOptions);
 
     if (this.gridOptions.enableGrouping) {
+      require('slickgrid/slick.groupitemmetadataprovider');
       this.groupItemMetadataProvider = new Slick.Data.GroupItemMetadataProvider();
+      this.sharedService.groupItemMetadataProvider = this.groupItemMetadataProvider;
       this.dataview = new Slick.Data.DataView({ groupItemMetadataProvider: this.groupItemMetadataProvider });
     } else {
       this.dataview = new Slick.Data.DataView();
@@ -178,7 +167,6 @@ export class AureliaSlickgridCustomElement {
 
     this.sharedService.dataView = this.dataview;
     this.sharedService.grid = this.grid;
-    this.sharedService.groupItemMetadataProvider = this.groupItemMetadataProvider;
     this.extensionService.attachDifferentExtensions();
 
     this.attachDifferentHooks(this.grid, this.gridOptions, this.dataview);

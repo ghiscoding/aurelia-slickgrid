@@ -16,6 +16,7 @@ import { ExtensionUtility } from './extensionUtility';
 
 // using external non-typed js libraries
 declare var Slick: any;
+declare function require(name: string);
 
 @singleton(true)
 @inject(
@@ -25,6 +26,9 @@ declare var Slick: any;
   SortService,
 )
 export class HeaderMenuExtension {
+  private _eventHandler: any = new Slick.EventHandler();
+  private _extension: any;
+
   constructor(
     private extensionUtility: ExtensionUtility,
     private i18n: I18N,
@@ -32,33 +36,48 @@ export class HeaderMenuExtension {
     private sortService: SortService,
   ) { }
 
+  dispose() {
+    // unsubscribe all SlickGrid events
+    this._eventHandler.unsubscribeAll();
+
+    if (this._extension && this._extension.destroy) {
+      this._extension.destroy();
+    }
+  }
+
   /**
    * Create the Header Menu and expose all the available hooks that user can subscribe (onCommand, onBeforeMenuShow, ...)
    * @param grid
    * @param dataView
    * @param columnDefinitions
    */
-  register() {
-    this.sharedService.gridOptions.headerMenu = { ...this.getDefaultHeaderMenuOptions(), ...this.sharedService.gridOptions.headerMenu };
-    if (this.sharedService.gridOptions.enableHeaderMenu) {
-      this.sharedService.gridOptions.headerMenu = this.addHeaderMenuCustomCommands(this.sharedService.gridOptions, this.sharedService.columnDefinitions);
+  register(): any {
+    if (this.sharedService && this.sharedService.grid && this.sharedService.gridOptions) {
+      // dynamically import the SlickGrid plugin with requireJS
+      require('slickgrid/plugins/slick.headermenu');
+
+      this.sharedService.gridOptions.headerMenu = { ...this.getDefaultHeaderMenuOptions(), ...this.sharedService.gridOptions.headerMenu };
+      if (this.sharedService.gridOptions.enableHeaderMenu) {
+        this.sharedService.gridOptions.headerMenu = this.addHeaderMenuCustomCommands(this.sharedService.gridOptions, this.sharedService.columnDefinitions);
+      }
+      this._extension = new Slick.Plugins.HeaderMenu(this.sharedService.gridOptions.headerMenu);
+
+      this.sharedService.grid.registerPlugin(this._extension);
+      this._eventHandler.subscribe(this._extension.onCommand, (e: any, args: HeaderMenuOnCommandArgs) => {
+        this.executeHeaderMenuInternalCommands(e, args);
+        if (this.sharedService.gridOptions.headerMenu && typeof this.sharedService.gridOptions.headerMenu.onCommand === 'function') {
+          this.sharedService.gridOptions.headerMenu.onCommand(e, args);
+        }
+      });
+      this._eventHandler.subscribe(this._extension.onBeforeMenuShow, (e: any, args: HeaderMenuOnBeforeMenuShowArgs) => {
+        if (this.sharedService.gridOptions.headerMenu && typeof this.sharedService.gridOptions.headerMenu.onBeforeMenuShow === 'function') {
+          this.sharedService.gridOptions.headerMenu.onBeforeMenuShow(e, args);
+        }
+      });
+
+      return this._extension;
     }
-    const headerMenuPlugin = new Slick.Plugins.HeaderMenu(this.sharedService.gridOptions.headerMenu);
-
-    this.sharedService.grid.registerPlugin(headerMenuPlugin);
-    headerMenuPlugin.onCommand.subscribe((e: Event, args: HeaderMenuOnCommandArgs) => {
-      this.executeHeaderMenuInternalCommands(e, args);
-      if (this.sharedService.gridOptions.headerMenu && typeof this.sharedService.gridOptions.headerMenu.onCommand === 'function') {
-        this.sharedService.gridOptions.headerMenu.onCommand(e, args);
-      }
-    });
-    headerMenuPlugin.onBeforeMenuShow.subscribe((e: Event, args: HeaderMenuOnBeforeMenuShowArgs) => {
-      if (this.sharedService.gridOptions.headerMenu && typeof this.sharedService.gridOptions.headerMenu.onBeforeMenuShow === 'function') {
-        this.sharedService.gridOptions.headerMenu.onBeforeMenuShow(e, args);
-      }
-    });
-
-    return headerMenuPlugin;
+    return null;
   }
 
   /**

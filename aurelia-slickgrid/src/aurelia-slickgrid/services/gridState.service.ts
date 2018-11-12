@@ -12,7 +12,6 @@ import {
 } from './../models/index';
 import { ExtensionService, disposeAllSubscriptions, FilterService, SortService } from './../services/index';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
-import * as $ from 'jquery';
 
 // using external non-typed js libraries
 declare var Slick: any;
@@ -200,13 +199,13 @@ export class GridStateService {
   /**
    * Hook a SlickGrid Extension Event to a Grid State change event
    * @param extension name
-   * @param grid
+   * @param event name
    */
   hookExtensionEventToGridStateChange(extensionName: ExtensionName, eventName: string) {
     const extension = this.extensionService && this.extensionService.getExtensionByName(extensionName);
 
-    if (extension && extension.service && extension.service[eventName] && extension.service[eventName].subscribe) {
-      this._eventHandler.subscribe(extension.service[eventName], (e: Event, args: any) => {
+    if (extension && extension.class && extension.class[eventName] && extension.class[eventName].subscribe) {
+      this._eventHandler.subscribe(extension.class[eventName], (e: Event, args: any) => {
         const columns: Column[] = args && args.columns;
         const currentColumns: CurrentColumn[] = this.getAssociatedCurrentColumns(columns);
         this.ea.publish('gridStateService:changed', { change: { newValues: currentColumns, type: GridStateType.columns }, gridState: this.getCurrentGridState() });

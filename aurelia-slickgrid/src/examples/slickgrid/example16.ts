@@ -1,14 +1,16 @@
+import { Formatters } from './../../aurelia-slickgrid/formatters/index';
 import { autoinject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import { AureliaGridInstance, Column, GridOption } from '../../aurelia-slickgrid';
 
 @autoinject()
 export class Example16 {
-  title = 'Example 16: Row Move Plugin';
+  title = 'Example 16: Row Move Plugin / Row Reordering';
   subTitle = `
     This example demonstrates using the <b>Slick.Plugins.RowMoveManager</b> plugin to easily move a row in the grid.<br/>
     <ul>
-      <li>From the 1st column, click on the icon and start dragging a row to another row position in the grid</li>
+      <li>Click to select, Ctrl+Click to toggle selection, Shift+Click to select a range.</li>
+      <li>Drag one or more rows by the handle (icon) to reorder</li>
     </ul>
   `;
 
@@ -35,13 +37,19 @@ export class Example16 {
   /* Define grid Options and Columns */
   defineGrid() {
     this.columnDefinitions = [
-      { id: '#', field: '', name: '', width: 40, behavior: 'selectAndMove', selectable: false, resizable: false, cssClass: 'cell-reorder dnd', excludeFromExport: true },
-      { id: 'title', name: 'Title', field: 'title', headerKey: 'TITLE' },
-      { id: 'duration', name: 'Duration', field: 'duration', headerKey: 'DURATION', sortable: true },
+      {
+        id: '#', field: '', name: '', width: 40,
+        behavior: 'selectAndMove',
+        selectable: false, resizable: false,
+        cssClass: 'cell-reorder dnd',
+        excludeFromExport: true
+      },
+      { id: 'title', name: 'Title', field: 'title' },
+      { id: 'duration', name: 'Duration', field: 'duration', sortable: true },
       { id: '%', name: '% Complete', field: 'percentComplete', sortable: true },
-      { id: 'start', name: 'Start', field: 'start', headerKey: 'START' },
-      { id: 'finish', name: 'Finish', field: 'finish', headerKey: 'FINISH' },
-      { id: 'effort-driven', name: 'Completed', field: 'effortDriven', headerKey: 'COMPLETED' }
+      { id: 'start', name: 'Start', field: 'start' },
+      { id: 'finish', name: 'Finish', field: 'finish' },
+      { id: 'effort-driven', name: 'Completed', field: 'effortDriven', formatter: Formatters.checkmark }
     ];
 
     this.gridOptions = {
@@ -50,7 +58,6 @@ export class Example16 {
         containerId: 'demo-container',
         sidePadding: 15
       },
-      enableFiltering: false,
       enableCellNavigation: true,
       enableRowMoveManager: true,
       gridMenu: {
