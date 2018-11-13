@@ -4,19 +4,19 @@ import { Constants } from '../constants';
 import {
   Column,
   ColumnSort,
+  ExtensionName,
   GridOption,
   HeaderMenu,
   HeaderMenuItem,
   HeaderMenuOnCommandArgs,
   HeaderMenuOnBeforeMenuShowArgs,
-} from '../models';
+} from '../models/index';
 import { SortService } from '../services/sort.service';
 import { SharedService } from '../services/shared.service';
 import { ExtensionUtility } from './extensionUtility';
 
 // using external non-typed js libraries
 declare var Slick: any;
-declare function require(name: string);
 
 @singleton(true)
 @inject(
@@ -54,7 +54,7 @@ export class HeaderMenuExtension {
   register(): any {
     if (this.sharedService && this.sharedService.grid && this.sharedService.gridOptions) {
       // dynamically import the SlickGrid plugin with requireJS
-      require('slickgrid/plugins/slick.headermenu');
+      this.extensionUtility.loadExtensionDynamically(ExtensionName.headerMenu);
 
       this.sharedService.gridOptions.headerMenu = { ...this.getDefaultHeaderMenuOptions(), ...this.sharedService.gridOptions.headerMenu };
       if (this.sharedService.gridOptions.enableHeaderMenu) {
@@ -87,7 +87,7 @@ export class HeaderMenuExtension {
    * @return header menu
    */
   private addHeaderMenuCustomCommands(options: GridOption, columnDefinitions: Column[]): HeaderMenu {
-    const headerMenuOptions = options.headerMenu;
+    const headerMenuOptions = options.headerMenu || {};
 
     if (columnDefinitions && Array.isArray(columnDefinitions) && options.enableHeaderMenu) {
       columnDefinitions.forEach((columnDef: Column) => {
@@ -99,10 +99,10 @@ export class HeaderMenuExtension {
               }
             };
           }
-          const columnHeaderMenuItems: HeaderMenuItem[] = columnDef.header.menu.items || [];
+          const columnHeaderMenuItems: HeaderMenuItem[] = columnDef && columnDef.header && columnDef.header.menu && columnDef.header.menu.items || [];
 
           // Sorting Commands
-          if (options.enableSorting && columnDef.sortable && !headerMenuOptions.hideSortCommands) {
+          if (options.enableSorting && columnDef.sortable && headerMenuOptions && !headerMenuOptions.hideSortCommands) {
             if (columnHeaderMenuItems.filter((item: HeaderMenuItem) => item.command === 'sort-asc').length === 0) {
               columnHeaderMenuItems.push({
                 iconCssClass: headerMenuOptions.iconSortAscCommand || 'fa fa-sort-asc',
@@ -122,7 +122,7 @@ export class HeaderMenuExtension {
           }
 
           // Hide Column Command
-          if (!headerMenuOptions.hideColumnHideCommand && columnHeaderMenuItems.filter((item: HeaderMenuItem) => item.command === 'hide').length === 0) {
+          if (headerMenuOptions && !headerMenuOptions.hideColumnHideCommand && columnHeaderMenuItems.filter((item: HeaderMenuItem) => item.command === 'hide').length === 0) {
             columnHeaderMenuItems.push({
               iconCssClass: headerMenuOptions.iconColumnHideCommand || 'fa fa-times',
               title: options.enableTranslate ? this.i18n.tr('HIDE_COLUMN') : Constants.TEXT_HIDE_COLUMN,
@@ -134,7 +134,7 @@ export class HeaderMenuExtension {
           this.extensionUtility.translateItems(columnHeaderMenuItems, 'titleKey', 'title');
 
           // sort the custom items by their position in the list
-          columnHeaderMenuItems.sort((itemA, itemB) => {
+          columnHeaderMenuItems.sort((itemA: any, itemB: any) => {
             if (itemA && itemB && itemA.hasOwnProperty('positionOrder') && itemB.hasOwnProperty('positionOrder')) {
               return itemA.positionOrder - itemB.positionOrder;
             }
@@ -173,7 +173,10 @@ export class HeaderMenuExtension {
 
           // update the this.sharedService.gridObj sortColumns array which will at the same add the visual sort icon(s) on the UI
           const newSortColumns: ColumnSort[] = cols.map((col) => {
-            return { columnId: col.sortCol.id, sortAsc: col.sortAsc };
+            return {
+              columnId: col && col.sortCol && col.sortCol.id,
+              sortAsc: col && col.sortAsc
+            };
           });
           this.sharedService.grid.setSortColumns(newSortColumns); // add sort icon in UI
           break;

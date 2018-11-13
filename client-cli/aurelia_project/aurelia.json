@@ -139,6 +139,11 @@
             "main": "jquery.event.drag-2.3.0"
           },
           {
+            "name": "slick-gridmenu",
+            "path": "../node_modules/slickgrid/controls",
+            "main": "slick.gridmenu.js"
+          },
+          {
             "name": "jquery-ui-dist",
             "path": "../node_modules/jquery-ui-dist",
             "main": "jquery-ui"
@@ -151,6 +156,11 @@
               "jquery",
               "jquery-event",
               "jquery-ui-dist"
+            ],
+            "resources": [
+              "controls/*.js",
+              "plugins/*.js",
+              "slick.groupitemmetadataprovider.js"
             ]
           },
           {

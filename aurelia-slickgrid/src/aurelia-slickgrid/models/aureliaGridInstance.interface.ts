@@ -1,4 +1,4 @@
-import { BackendService } from './../models';
+import { BackendService } from './../models/index';
 import {
   ExportService,
   ExtensionService,
@@ -9,7 +9,7 @@ import {
   GroupingAndColspanService,
   ResizerService,
   SortService
-} from '../services';
+} from '../services/index';
 
 export interface AureliaGridInstance {
   /** Slick DataView object */

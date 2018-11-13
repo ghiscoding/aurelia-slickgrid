@@ -1,20 +1,20 @@
 import { singleton, inject } from 'aurelia-framework';
-import { Column, Extension } from '../models';
+import { Column, Extension, ExtensionName } from '../models/index';
 import { sanitizeHtmlToText } from '../services/utilities';
 import { SharedService } from '../services/shared.service';
+import { ExtensionUtility } from './extensionUtility';
 
 // using external non-typed js libraries
 declare var Slick: any;
 declare var $: any;
-declare function require(name: string);
 
 @singleton(true)
-@inject(SharedService)
+@inject(ExtensionUtility, SharedService)
 export class CellExternalCopyManagerExtension implements Extension {
   private _extension: any;
   undoRedoBuffer: any;
 
-  constructor(private sharedService: SharedService) { }
+  constructor(private extensionUtility: ExtensionUtility, private sharedService: SharedService) { }
 
   dispose() {
     if (this._extension && this._extension.destroy) {
@@ -23,10 +23,9 @@ export class CellExternalCopyManagerExtension implements Extension {
   }
 
   register(): any {
-
     if (this.sharedService && this.sharedService.grid && this.sharedService.gridOptions) {
       // dynamically import the SlickGrid plugin with requireJS
-      require('slickgrid/plugins/slick.cellexternalcopymanager');
+      this.extensionUtility.loadExtensionDynamically(ExtensionName.cellExternalCopyManager);
 
       this.createUndoRedoBuffer();
       this.hookUndoShortcutKey();
@@ -40,7 +39,7 @@ export class CellExternalCopyManagerExtension implements Extension {
           // when grid or cell is not editable, we will possibly evaluate the Formatter if it was passed
           // to decide if we evaluate the Formatter, we will use the same flag from Export which is "exportWithFormatter"
           if (!this.sharedService.gridOptions.editable || !columnDef.editor) {
-            const isEvaluatingFormatter = (columnDef.exportWithFormatter !== undefined) ? columnDef.exportWithFormatter : this.sharedService.gridOptions.exportOptions.exportWithFormatter;
+            const isEvaluatingFormatter = (columnDef.exportWithFormatter !== undefined) ? columnDef.exportWithFormatter : (this.sharedService.gridOptions.exportOptions && this.sharedService.gridOptions.exportOptions.exportWithFormatter);
             if (columnDef.formatter && isEvaluatingFormatter) {
               const formattedOutput = columnDef.formatter(0, 0, item[columnDef.field], columnDef, item, this.sharedService.grid);
               if (columnDef.sanitizeDataExport || (this.sharedService.gridOptions.exportOptions && this.sharedService.gridOptions.exportOptions.sanitizeDataExport)) {
@@ -109,7 +108,7 @@ export class CellExternalCopyManagerExtension implements Extension {
   /** Attach an undo shortcut key hook that will redo/undo the copy buffer */
   private hookUndoShortcutKey() {
     // undo shortcut
-    $(document).keydown((e) => {
+    $(document).keydown((e: any) => {
       if (e.which === 90 && (e.ctrlKey || e.metaKey)) {    // CTRL + (shift) + Z
         if (e.shiftKey) {
           this.undoRedoBuffer.redo();

@@ -1,4 +1,5 @@
 import { inject } from 'aurelia-framework';
+import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
 import {
   Column,
   CurrentColumn,
@@ -10,8 +11,12 @@ import {
   GridState,
   GridStateType,
 } from './../models/index';
-import { ExtensionService, disposeAllSubscriptions, FilterService, SortService } from './../services/index';
-import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
+import {
+  disposeAllSubscriptions,
+  ExtensionService,
+  FilterService,
+  SortService,
+} from './../services/index';
 
 // using external non-typed js libraries
 declare var Slick: any;

@@ -1,10 +1,10 @@
 import { singleton, inject } from 'aurelia-framework';
-import { CellArgs, Extension } from '../models';
+import { CellArgs, Extension, ExtensionName } from '../models/index';
+import { ExtensionUtility } from './extensionUtility';
 import { SharedService } from '../services/shared.service';
 
 // using external non-typed js libraries
 declare var Slick: any;
-declare function require(name: string);
 
 @singleton(true)
 @inject(SharedService)
@@ -12,7 +12,7 @@ export class RowMoveManagerExtension implements Extension {
   private _eventHandler: any = new Slick.EventHandler();
   private _extension: any;
 
-  constructor(private sharedService: SharedService) { }
+  constructor(private extensionUtility: ExtensionUtility, private sharedService: SharedService) { }
 
   dispose() {
     // unsubscribe all SlickGrid events
@@ -26,11 +26,11 @@ export class RowMoveManagerExtension implements Extension {
   register(rowSelectionPlugin?: any): any {
     if (this.sharedService && this.sharedService.grid && this.sharedService.gridOptions) {
       // dynamically import the SlickGrid plugin with requireJS
-      require('slickgrid/plugins/slick.rowmovemanager.js');
+      this.extensionUtility.loadExtensionDynamically(ExtensionName.rowMoveManager);
 
       // this also requires the Row Selection Model to be registered as well
       if (!rowSelectionPlugin || !this.sharedService.grid.getSelectionModel()) {
-        require('slickgrid/plugins/slick.rowselectionmodel');
+        this.extensionUtility.loadExtensionDynamically(ExtensionName.rowSelection);
         rowSelectionPlugin = new Slick.RowSelectionModel(this.sharedService.gridOptions.rowSelectionOptions || {});
         this.sharedService.grid.setSelectionModel(rowSelectionPlugin);
       }

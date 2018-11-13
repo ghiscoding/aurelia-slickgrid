@@ -1,5 +1,5 @@
 import { singleton } from 'aurelia-framework';
-import { Column, GridOption } from '../models';
+import { Column, GridOption } from '../models/index';
 
 @singleton(true)
 export class SharedService {

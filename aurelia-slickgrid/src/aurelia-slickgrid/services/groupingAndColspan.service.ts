@@ -1,5 +1,5 @@
-import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
-import { singleton, inject } from 'aurelia-framework';
+import { EventAggregator } from 'aurelia-event-aggregator';
+import { inject, singleton } from 'aurelia-framework';
 import {
   Column,
   GridOption

@@ -1,11 +1,10 @@
 import { singleton, inject } from 'aurelia-framework';
-import { CellArgs, Extension } from '../models';
+import { CellArgs, Extension, ExtensionName } from '../models/index';
 import { ExtensionUtility } from './extensionUtility';
 import { SharedService } from '../services/shared.service';
 
 // using external non-typed js libraries
 declare var Slick: any;
-declare function require(name: string);
 
 @singleton(true)
 @inject(ExtensionUtility, SharedService)
@@ -30,7 +29,7 @@ export class ColumnPickerExtension implements Extension {
   register(): any {
     if (this.sharedService && this.sharedService.grid && this.sharedService.gridOptions) {
       // dynamically import the SlickGrid plugin with requireJS
-      require('slickgrid/controls/slick.columnpicker');
+      this.extensionUtility.loadExtensionDynamically(ExtensionName.columnPicker);
 
       // localization support for the picker
       const columnTitle = this.extensionUtility.getPickerTitleOutputString('columnTitle', 'columnPicker');
@@ -53,7 +52,6 @@ export class ColumnPickerExtension implements Extension {
 
       return this._extension;
     }
-    return null;
   }
 
   /** Translate the Column Picker and it's last 2 checkboxes */
@@ -80,7 +78,7 @@ export class ColumnPickerExtension implements Extension {
   }
 
   private emptyColumnPickerTitles() {
-    if (this.sharedService && this.sharedService.gridOptions) {
+    if (this.sharedService && this.sharedService.gridOptions && this.sharedService.gridOptions.columnPicker) {
       this.sharedService.gridOptions.columnPicker.columnTitle = '';
       this.sharedService.gridOptions.columnPicker.forceFitTitle = '';
       this.sharedService.gridOptions.columnPicker.syncResizeTitle = '';

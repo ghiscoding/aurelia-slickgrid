@@ -1,17 +1,17 @@
 import { singleton, inject } from 'aurelia-framework';
-import { Extension } from './../models';
+import { Extension, ExtensionName } from './../models/index';
+import { ExtensionUtility } from './extensionUtility';
 import { SharedService } from '../services/shared.service';
 
 // using external non-typed js libraries
 declare var Slick: any;
-declare function require(name: string);
 
 @singleton(true)
 @inject(SharedService)
 export class RowSelectionExtension implements Extension {
   private _extension: any;
 
-  constructor(private sharedService: SharedService) { }
+  constructor(private extensionUtility: ExtensionUtility, private sharedService: SharedService) { }
 
   dispose() {
     if (this._extension && this._extension.destroy) {
@@ -22,7 +22,7 @@ export class RowSelectionExtension implements Extension {
   register(): any {
     if (this.sharedService && this.sharedService.grid && this.sharedService.gridOptions) {
       // dynamically import the SlickGrid plugin with requireJS
-      require('slickgrid/plugins/slick.rowselectionmodel');
+      this.extensionUtility.loadExtensionDynamically(ExtensionName.rowSelection);
 
       this._extension = new Slick.RowSelectionModel(this.sharedService.gridOptions.rowSelectionOptions || {});
       this.sharedService.grid.setSelectionModel(this._extension);

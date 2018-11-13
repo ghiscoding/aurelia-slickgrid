@@ -11,8 +11,9 @@ import {
   CellArgs,
   DelimiterType,
   FileType,
-  GraphqlResult
-} from '../models';
+  GraphqlResult,
+  ExtensionName
+} from '../models/index';
 import { ExportService } from '../services/export.service';
 import { ExtensionUtility } from './extensionUtility';
 import { FilterService } from '../services/filter.service';
@@ -22,8 +23,6 @@ import { SharedService } from '../services/shared.service';
 // using external non-typed js libraries
 declare var Slick: any;
 declare var $: any;
-declare function require(name: string);
-
 @singleton(true)
 @inject(
   ExportService,
@@ -64,7 +63,7 @@ export class GridMenuExtension {
 
     if (this.sharedService.gridOptions && this.sharedService.gridOptions.gridMenu) {
       // dynamically import the SlickGrid plugin with requireJS
-      require('slickgrid/controls/slick.gridmenu');
+      this.extensionUtility.loadExtensionDynamically(ExtensionName.gridMenu);
 
       this.sharedService.gridOptions.gridMenu = { ...this.getDefaultGridMenuOptions(), ...this.sharedService.gridOptions.gridMenu };
 
@@ -305,7 +304,7 @@ export class GridMenuExtension {
     }
 
     // add the custom "Commands" title if there are any commands
-    if (this.sharedService.gridOptions && this.sharedService.gridOptions.gridMenu && (gridMenuCustomItems.length > 0 || this.sharedService.gridOptions.gridMenu.customItems.length > 0)) {
+    if (this.sharedService.gridOptions && this.sharedService.gridOptions.gridMenu && (gridMenuCustomItems.length > 0 || (this.sharedService.gridOptions.gridMenu.customItems && this.sharedService.gridOptions.gridMenu.customItems.length > 0))) {
       this.sharedService.gridOptions.gridMenu.customTitle = this.sharedService.gridOptions.gridMenu.customTitle || this.extensionUtility.getPickerTitleOutputString('customTitle', 'gridMenu');
     }
 
@@ -337,7 +336,10 @@ export class GridMenuExtension {
 
           // update the this.sharedService.gridObj sortColumns array which will at the same add the visual sort icon(s) on the UI
           const newSortColumns: ColumnSort[] = cols.map((col) => {
-            return { columnId: col.sortCol.id, sortAsc: col.sortAsc };
+            return {
+              columnId: col && col.sortCol && col.sortCol.id,
+              sortAsc: col && col.sortAsc
+            };
           });
           this.sharedService.grid.setSortColumns(newSortColumns); // add sort icon in UI
           break;
@@ -386,10 +388,12 @@ export class GridMenuExtension {
   }
 
   private emptyGridMenuTitles() {
-    this.sharedService.gridOptions.gridMenu.customTitle = '';
-    this.sharedService.gridOptions.gridMenu.columnTitle = '';
-    this.sharedService.gridOptions.gridMenu.forceFitTitle = '';
-    this.sharedService.gridOptions.gridMenu.syncResizeTitle = '';
+    if (this.sharedService && this.sharedService.gridOptions && this.sharedService.gridOptions.gridMenu) {
+      this.sharedService.gridOptions.gridMenu.customTitle = '';
+      this.sharedService.gridOptions.gridMenu.columnTitle = '';
+      this.sharedService.gridOptions.gridMenu.forceFitTitle = '';
+      this.sharedService.gridOptions.gridMenu.syncResizeTitle = '';
+    }
   }
 
   /**

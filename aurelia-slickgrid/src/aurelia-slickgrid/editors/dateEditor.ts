@@ -6,7 +6,7 @@ import * as flatpickr from 'flatpickr';
 import * as moment from 'moment';
 import * as $ from 'jquery';
 
-declare function require(name: string);
+declare function require(name: string): any;
 
 /*
  * An example of a date picker editor using Flatpickr

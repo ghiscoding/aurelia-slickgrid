@@ -22,7 +22,7 @@ import {
   HeaderMenuExtension,
   RowMoveManagerExtension,
   RowSelectionExtension,
-} from '../extensions';
+} from '../extensions/index';
 import { SharedService } from './shared.service';
 
 @singleton(true)
@@ -140,7 +140,7 @@ export class ExtensionService {
     // Checkbox Selector Plugin
     if (this.sharedService.gridOptions.enableCheckboxSelector) {
       if (this.checkboxSelectorExtension && this.checkboxSelectorExtension.register) {
-        const rowSelectionExtension = this.getExtensionByName(ExtensionName.rowSelectionExtension);
+        const rowSelectionExtension = this.getExtensionByName(ExtensionName.rowSelection);
         this.extensionList.push({ name: ExtensionName.checkboxSelector, class: this.checkboxSelectorExtension, extension: this.checkboxSelectorExtension.register(rowSelectionExtension) });
       }
     }
@@ -155,7 +155,7 @@ export class ExtensionService {
     // Row Selection Plugin
     if (!this.sharedService.gridOptions.enableCheckboxSelector && this.sharedService.gridOptions.enableRowSelection) {
       if (this.rowSelectionExtension && this.rowSelectionExtension.register) {
-        this.extensionList.push({ name: ExtensionName.rowSelectionExtension, class: this.rowSelectionExtension, extension: this.rowSelectionExtension.register() });
+        this.extensionList.push({ name: ExtensionName.rowSelection, class: this.rowSelectionExtension, extension: this.rowSelectionExtension.register() });
       }
     }
 

@@ -1,10 +1,10 @@
 import { singleton, inject } from 'aurelia-framework';
-import { HeaderButtonOnCommandArgs } from '../models';
+import { ExtensionName, HeaderButtonOnCommandArgs } from '../models/index';
+import { ExtensionUtility } from './extensionUtility';
 import { SharedService } from '../services/shared.service';
 
 // using external non-typed js libraries
 declare var Slick: any;
-declare function require(name: string);
 
 @singleton(true)
 @inject(SharedService)
@@ -12,7 +12,7 @@ export class HeaderButtonExtension {
   private _eventHandler: any = new Slick.EventHandler();
   private _extension: any;
 
-  constructor(private sharedService: SharedService) { }
+  constructor(private extensionUtility: ExtensionUtility, private sharedService: SharedService) { }
 
   dispose() {
     // unsubscribe all SlickGrid events
@@ -27,7 +27,7 @@ export class HeaderButtonExtension {
   register(): any {
     if (this.sharedService && this.sharedService.grid && this.sharedService.gridOptions) {
       // dynamically import the SlickGrid plugin with requireJS
-      require('slickgrid/plugins/slick.headerbuttons');
+      this.extensionUtility.loadExtensionDynamically(ExtensionName.headerButtons);
 
       this._extension = new Slick.Plugins.HeaderButtons(this.sharedService.gridOptions.headerButton || {});
       this.sharedService.grid.registerPlugin(this._extension);

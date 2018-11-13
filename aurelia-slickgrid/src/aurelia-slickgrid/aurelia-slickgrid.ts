@@ -18,6 +18,7 @@ import {
   GridStateChange,
   GridStateType,
   Pagination,
+  ExtensionName,
 } from './models/index';
 import {
   disposeAllSubscriptions,
@@ -33,12 +34,12 @@ import {
   SortService,
   toKebabCase,
 } from './services/index';
+import { ExtensionUtility } from './extensions/extensionUtility';
 import { SharedService } from './services/shared.service';
 import * as $ from 'jquery';
 
 // using external non-typed js libraries
 declare var Slick: any;
-declare function require(name: string);
 
 const aureliaEventPrefix = 'asg';
 const eventPrefix = 'sg';
@@ -50,6 +51,7 @@ const eventPrefix = 'sg';
   Element,
   EventAggregator,
   ExtensionService,
+  ExtensionUtility,
   FilterService,
   GridEventService,
   GridService,
@@ -64,8 +66,8 @@ export class AureliaSlickgridCustomElement {
   private _columnDefinitions: Column[] = [];
   private _dataset: any[];
   private _eventHandler: any = new Slick.EventHandler();
-  private _fixedHeight: number;
-  private _fixedWidth: number;
+  private _fixedHeight: number | null;
+  private _fixedWidth: number | null;
   private _hideHeaderRowAfterPageLoad = false;
   groupItemMetadataProvider: any;
   isGridInitialized = false;
@@ -91,6 +93,7 @@ export class AureliaSlickgridCustomElement {
     private elm: Element,
     private ea: EventAggregator,
     private extensionService: ExtensionService,
+    private extensionUtility: ExtensionUtility,
     private filterService: FilterService,
     private gridEventService: GridEventService,
     private gridService: GridService,
@@ -129,7 +132,7 @@ export class AureliaSlickgridCustomElement {
     this.createBackendApiInternalPostProcessCallback(this.gridOptions);
 
     if (this.gridOptions.enableGrouping) {
-      require('slickgrid/slick.groupitemmetadataprovider');
+      this.extensionUtility.loadExtensionDynamically(ExtensionName.groupItemMetaProvider);
       this.groupItemMetadataProvider = new Slick.Data.GroupItemMetadataProvider();
       this.sharedService.groupItemMetadataProvider = this.groupItemMetadataProvider;
       this.dataview = new Slick.Data.DataView({ groupItemMetadataProvider: this.groupItemMetadataProvider });
@@ -278,8 +281,8 @@ export class AureliaSlickgridCustomElement {
   }
 
   bind() {
-    this._fixedHeight = this.gridHeight !== undefined ? +this.gridHeight : undefined;
-    this._fixedWidth = this.gridWidth !== undefined ? +this.gridWidth : undefined;
+    this._fixedHeight = this.gridHeight ? +this.gridHeight : null;
+    this._fixedWidth = this.gridWidth ? +this.gridWidth : null;
 
     // get the grid options (priority is Global Options first, then user option which could overwrite the Global options)
     this.gridOptions = { ...GlobalGridOptions, ...this.gridOptions };

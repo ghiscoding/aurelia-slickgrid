@@ -1,17 +1,17 @@
 import { singleton, inject } from 'aurelia-framework';
-import { Column, Extension, GridOption } from '../models';
+import { Column, Extension, ExtensionName, GridOption } from '../models/index';
 import { SharedService } from '../services/shared.service';
+import { ExtensionUtility } from './extensionUtility';
 
 // using external non-typed js libraries
 declare var Slick: any;
-declare function require(name: string);
 
 @singleton(true)
-@inject(SharedService)
+@inject(ExtensionUtility, SharedService)
 export class CheckboxSelectorExtension implements Extension {
   private _extension: any;
 
-  constructor(private sharedService: SharedService) { }
+  constructor(private extensionUtility: ExtensionUtility, private sharedService: SharedService) { }
 
   dispose() {
     if (this._extension && this._extension.destroy) {
@@ -26,7 +26,7 @@ export class CheckboxSelectorExtension implements Extension {
   create(columnDefinitions: Column[], gridOptions: GridOption) {
     if (columnDefinitions && gridOptions) {
       // dynamically import the SlickGrid plugin with requireJS
-      require('slickgrid/plugins/slick.checkboxselectcolumn');
+      this.extensionUtility.loadExtensionDynamically(ExtensionName.checkboxSelector);
 
       if (!this._extension) {
         this._extension = new Slick.CheckboxSelectColumn(gridOptions.checkboxSelector || {});
@@ -49,7 +49,7 @@ export class CheckboxSelectorExtension implements Extension {
 
       // this also requires the Row Selection Model to be registered as well
       if (!rowSelectionPlugin || !this.sharedService.grid.getSelectionModel()) {
-        require('slickgrid/plugins/slick.rowselectionmodel');
+        this.extensionUtility.loadExtensionDynamically(ExtensionName.rowSelection);
         rowSelectionPlugin = new Slick.RowSelectionModel(this.sharedService.gridOptions.rowSelectionOptions || {});
         this.sharedService.grid.setSelectionModel(rowSelectionPlugin);
       }

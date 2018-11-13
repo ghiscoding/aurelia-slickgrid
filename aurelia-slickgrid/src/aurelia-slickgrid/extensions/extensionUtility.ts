@@ -2,6 +2,10 @@ import { singleton, inject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import { Constants } from '../constants';
 import { SharedService } from '../services/shared.service';
+import { ExtensionName } from '../models/index';
+
+declare function require(name: string): any;
+declare function require(name: string[], loadedFile: any): any;
 
 @singleton(true)
 @inject(I18N, SharedService)
@@ -17,6 +21,46 @@ export class ExtensionUtility {
     return array.filter((el: any, i: number) => {
       return index !== i;
     });
+  }
+
+  loadExtensionDynamically(extensionName: ExtensionName): any {
+    try {
+      switch (extensionName) {
+        case ExtensionName.autoTooltip:
+          require('slickgrid/plugins/slick.autotooltips');
+          break;
+        case ExtensionName.cellExternalCopyManager:
+          require('slickgrid/plugins/slick.cellexternalcopymanager');
+          break;
+        case ExtensionName.checkboxSelector:
+          require('slickgrid/plugins/slick.checkboxselectcolumn');
+          break;
+        case ExtensionName.columnPicker:
+          require('slickgrid/controls/slick.columnpicker');
+          break;
+        case ExtensionName.gridMenu:
+          require('slickgrid/controls/slick.gridmenu');
+          break;
+        case ExtensionName.groupItemMetaProvider:
+          require('slickgrid/slick.groupitemmetadataprovider');
+          break;
+        case ExtensionName.headerButtons:
+          require('slickgrid/plugins/slick.headerbuttons');
+          break;
+        case ExtensionName.headerMenu:
+          require('slickgrid/plugins/slick.headermenu');
+          break;
+        case ExtensionName.rowSelection:
+          require('slickgrid/plugins/slick.rowselectionmodel');
+          break;
+        case ExtensionName.rowMoveManager:
+          require('slickgrid/plugins/slick.rowmovemanager.js');
+          break;
+      }
+    } catch (e) {
+      // do nothing, we fall here when using Aurelia-CLI and RequireJS
+      // if you do use RequireJS then you need to make sure to include all necessary extensions in your `aurelia.json`
+    }
   }
 
   /**
