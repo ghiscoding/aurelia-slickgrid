@@ -109,7 +109,8 @@
             "path": "../node_modules/flatpickr/dist",
             "main": "flatpickr.min",
             "resources": [
-              "flatpickr.min.css"
+              "flatpickr.min.css",
+              "l10n/fr.js"
             ]
           },
           {

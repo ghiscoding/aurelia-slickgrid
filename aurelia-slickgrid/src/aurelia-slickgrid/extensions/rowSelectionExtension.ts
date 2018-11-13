@@ -7,7 +7,7 @@ import { SharedService } from '../services/shared.service';
 declare var Slick: any;
 
 @singleton(true)
-@inject(SharedService)
+@inject(ExtensionUtility, SharedService)
 export class RowSelectionExtension implements Extension {
   private _extension: any;
 

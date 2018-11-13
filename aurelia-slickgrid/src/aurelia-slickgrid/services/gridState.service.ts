@@ -17,11 +17,12 @@ import {
   FilterService,
   SortService,
 } from './../services/index';
+import { RowSelectionExtension } from '../extensions/rowSelectionExtension';
 
 // using external non-typed js libraries
 declare var Slick: any;
 
-@inject(EventAggregator)
+@inject(EventAggregator, RowSelectionExtension)
 export class GridStateService {
   private _eventHandler = new Slick.EventHandler();
   private _columns: Column[] = [];
@@ -32,7 +33,7 @@ export class GridStateService {
   private sortService: SortService;
   private subscriptions: Subscription[] = [];
 
-  constructor(private ea: EventAggregator) { }
+  constructor(private ea: EventAggregator, private rowSelectionExtension: RowSelectionExtension) { }
 
   /** Getter for the Grid Options pulled through the Grid Object */
   private get _gridOptions(): GridOption {
@@ -242,6 +243,13 @@ export class GridStateService {
   /** if we use Row Selection or the Checkbox Selector, we need to reset any selection */
   resetRowSelection() {
     if (this._gridOptions.enableRowSelection || this._gridOptions.enableCheckboxSelector) {
+      // this also requires the Row Selection Model to be registered as well
+      const rowSelectionExtension = this.extensionService && this.extensionService.getExtensionByName && this.extensionService.getExtensionByName(ExtensionName.rowSelection);
+      if (!rowSelectionExtension || !rowSelectionExtension.extension) {
+        if (this.rowSelectionExtension && this.rowSelectionExtension.register) {
+          this.rowSelectionExtension.register();
+        }
+      }
       this._grid.setSelectedRows([]);
     }
   }

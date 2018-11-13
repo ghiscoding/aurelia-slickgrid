@@ -1,8 +1,8 @@
-import { autoinject } from 'aurelia-framework';
+import { inject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
-import { AureliaGridInstance, Column, Formatters, GridOption } from '../../aurelia-slickgrid';
+import { Formatters } from 'aurelia-slickgrid';
 
-@autoinject()
+@inject(I18N)
 export class Example16 {
   title = 'Example 16: Row Move Plugin / Row Reordering';
   subTitle = `
@@ -13,18 +13,19 @@ export class Example16 {
     </ul>
   `;
 
-  aureliaGrid: AureliaGridInstance;
-  columnDefinitions: Column[];
-  gridOptions: GridOption;
-  dataset: any[];
-  selectedLanguage: string;
+  aureliaGrid;
+  columnDefinitions = [];
+  gridOptions;
+  dataset = [];
+  selectedLanguage;
 
-  constructor(private i18n: I18N) {
+  constructor(i18n) {
+    this.i18n = i18n;
     this.selectedLanguage = this.i18n.getLocale();
     this.defineGrid();
   }
 
-  aureliaGridReady(aureliaGrid: AureliaGridInstance) {
+  aureliaGridReady(aureliaGrid) {
     this.aureliaGrid = aureliaGrid;
   }
 
@@ -60,11 +61,11 @@ export class Example16 {
       enableCellNavigation: true,
       enableRowMoveManager: true,
       gridMenu: {
-        iconCssClass: 'fa fa-ellipsis-v',
+        iconCssClass: 'fa fa-ellipsis-v'
       },
       rowMoveManager: {
         onBeforeMoveRows: (e, args) => this.onBeforeMoveRow(e, args),
-        onMoveRows: (e, args) => this.onMoveRows(e, args),
+        onMoveRows: (e, args) => this.onMoveRows(e, args)
       },
       enableTranslate: true,
       i18n: this.i18n

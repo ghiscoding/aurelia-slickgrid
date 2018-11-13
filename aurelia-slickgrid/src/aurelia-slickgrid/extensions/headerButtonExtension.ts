@@ -7,7 +7,7 @@ import { SharedService } from '../services/shared.service';
 declare var Slick: any;
 
 @singleton(true)
-@inject(SharedService)
+@inject(ExtensionUtility, SharedService)
 export class HeaderButtonExtension {
   private _eventHandler: any = new Slick.EventHandler();
   private _extension: any;
