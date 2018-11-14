@@ -67,7 +67,8 @@ export class SelectFilter implements Filter {
         // we will subscribe to the onClose event for triggering our callback
         // also add/remove "filled" class for styling purposes
         const selectedItems = this.$filterElm.multipleSelect('getSelects');
-        if (Array.isArray(selectedItems) && selectedItems.length > 0) {
+
+        if (Array.isArray(selectedItems) && !(selectedItems.length === 1 && selectedItems[0] === '') || selectedItems.length > 1) {
           this.isFilled = true;
           this.$filterElm.addClass('filled').siblings('div .search-filter').addClass('filled');
         } else {
@@ -336,43 +337,57 @@ export class SelectFilter implements Filter {
     const isRenderHtmlEnabled = this.columnFilter && this.columnFilter.enableRenderHtml || false;
     const sanitizedOptions = this.gridOptions && this.gridOptions.sanitizeHtmlOptions || {};
 
-    optionCollection.forEach((option: SelectOption) => {
-      if (!option || (option[this.labelName] === undefined && option.labelKey === undefined)) {
-        throw new Error(`[select-filter] A collection with value/label (or value/labelKey when using Locale) is required to populate the Select list, for example:: { filter: model: Filters.multipleSelect, collection: [ { value: '1', label: 'One' } ]')`);
-      }
-      const labelKey = (option.labelKey || option[this.labelName]) as string;
-      const selected = (searchTerms.findIndex((term) => term === option[this.valueName]) >= 0) ? 'selected' : '';
-      const labelText = ((option.labelKey || this.enableTranslateLabel) && labelKey) ? this.i18n.tr(labelKey || ' ') : labelKey;
-      let prefixText = option[this.labelPrefixName] || '';
-      let suffixText = option[this.labelSuffixName] || '';
-      let optionLabel = option[this.optionLabel] || '';
-      optionLabel = optionLabel.toString().replace(/\"/g, '\''); // replace double quotes by single quotes to avoid interfering with regular html
+    // collection could be an Array of Strings OR Objects
+    if (optionCollection.every((x: any) => typeof x === 'string')) {
+      optionCollection.forEach((option: string) => {
+        const selected = (searchTerms.findIndex((term) => term === option) >= 0) ? 'selected' : '';
+        options += `<option value="${option}" label="${option}" ${selected}>${option}</option>`;
 
-      // also translate prefix/suffix if enableTranslateLabel is true and text is a string
-      prefixText = (this.enableTranslateLabel && prefixText && typeof prefixText === 'string') ? this.i18n.tr(prefixText || ' ') : prefixText;
-      suffixText = (this.enableTranslateLabel && suffixText && typeof suffixText === 'string') ? this.i18n.tr(suffixText || ' ') : suffixText;
-      optionLabel = (this.enableTranslateLabel && optionLabel && typeof optionLabel === 'string') ? this.i18n.tr(optionLabel || ' ') : optionLabel;
-      // add to a temp array for joining purpose and filter out empty text
-      const tmpOptionArray = [prefixText, labelText, suffixText].filter((text) => text);
-      let optionText = tmpOptionArray.join(separatorBetweenLabels);
+        // if there's at least 1 search term found, we will add the "filled" class for styling purposes
+        if (selected) {
+          this.isFilled = true;
+        }
+      });
+    } else {
+      // array of objects will require a label/value pair unless a customStructure is passed
+      optionCollection.forEach((option: SelectOption) => {
+        if (!option || (option[this.labelName] === undefined && option.labelKey === undefined)) {
+          throw new Error(`[select-filter] A collection with value/label (or value/labelKey when using Locale) is required to populate the Select list, for example:: { filter: model: Filters.multipleSelect, collection: [ { value: '1', label: 'One' } ]')`);
+        }
+        const labelKey = (option.labelKey || option[this.labelName]) as string;
+        const selected = (searchTerms.findIndex((term) => term === option[this.valueName]) >= 0) ? 'selected' : '';
+        const labelText = ((option.labelKey || this.enableTranslateLabel) && labelKey) ? this.i18n.tr(labelKey || ' ') : labelKey;
+        let prefixText = option[this.labelPrefixName] || '';
+        let suffixText = option[this.labelSuffixName] || '';
+        let optionLabel = option[this.optionLabel] || '';
+        optionLabel = optionLabel.toString().replace(/\"/g, '\''); // replace double quotes by single quotes to avoid interfering with regular html
 
-      // if user specifically wants to render html text, he needs to opt-in else it will stripped out by default
-      // also, the 3rd party lib will saninitze any html code unless it's encoded, so we'll do that
-      if (isRenderHtmlEnabled) {
-        // sanitize any unauthorized html tags like script and others
-        // for the remaining allowed tags we'll permit all attributes
-        const sanitizedText = DOMPurify.sanitize(optionText, sanitizedOptions);
-        optionText = htmlEncode(sanitizedText);
-      }
+        // also translate prefix/suffix if enableTranslateLabel is true and text is a string
+        prefixText = (this.enableTranslateLabel && prefixText && typeof prefixText === 'string') ? this.i18n.tr(prefixText || ' ') : prefixText;
+        suffixText = (this.enableTranslateLabel && suffixText && typeof suffixText === 'string') ? this.i18n.tr(suffixText || ' ') : suffixText;
+        optionLabel = (this.enableTranslateLabel && optionLabel && typeof optionLabel === 'string') ? this.i18n.tr(optionLabel || ' ') : optionLabel;
+        // add to a temp array for joining purpose and filter out empty text
+        const tmpOptionArray = [prefixText, labelText, suffixText].filter((text) => text);
+        let optionText = tmpOptionArray.join(separatorBetweenLabels);
 
-      // html text of each select option
-      options += `<option value="${option[this.valueName]}" label="${optionLabel}" ${selected}>${optionText}</option>`;
+        // if user specifically wants to render html text, he needs to opt-in else it will stripped out by default
+        // also, the 3rd party lib will saninitze any html code unless it's encoded, so we'll do that
+        if (isRenderHtmlEnabled) {
+          // sanitize any unauthorized html tags like script and others
+          // for the remaining allowed tags we'll permit all attributes
+          const sanitizedText = DOMPurify.sanitize(optionText, sanitizedOptions);
+          optionText = htmlEncode(sanitizedText);
+        }
 
-      // if there's a search term, we will add the "filled" class for styling purposes
-      if (selected) {
-        this.isFilled = true;
-      }
-    });
+        // html text of each select option
+        options += `<option value="${option[this.valueName]}" label="${optionLabel}" ${selected}>${optionText}</option>`;
+
+        // if there's a search term, we will add the "filled" class for styling purposes
+        if (selected) {
+          this.isFilled = true;
+        }
+      });
+    }
 
     return `<select class="ms-filter search-filter filter-${fieldId}" multiple="multiple">${options}</select>`;
   }

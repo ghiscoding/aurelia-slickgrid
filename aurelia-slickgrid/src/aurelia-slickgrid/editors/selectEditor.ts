@@ -142,6 +142,12 @@ export class SelectEditor implements Editor {
    * The current selected values (multiple select) from the collection
    */
   get currentValues(): any[] {
+    // collection of strings, just return the filtered string that are equals
+    if (this.collection.every(x => typeof x === 'string')) {
+      return this.collection.filter(c => this.$editorElm.val().indexOf(c.toString()) !== -1);
+    }
+
+    // collection of label/value pair
     const separatorBetweenLabels = this.collectionOptions && this.collectionOptions.separatorBetweenTextLabels || '';
     const isIncludingPrefixSuffix = this.collectionOptions && this.collectionOptions.includePrefixSuffixToSelectedValues || false;
 
@@ -168,6 +174,12 @@ export class SelectEditor implements Editor {
    * The current selected values (single select) from the collection
    */
   get currentValue(): number | string {
+    // collection of strings, just return the filtered string that are equals
+    if (this.collection.every(x => typeof x === 'string')) {
+      return findOrDefault(this.collection, (c: any) => c.toString() === this.$editorElm.val());
+    }
+
+    // collection of label/value pair
     const separatorBetweenLabels = this.collectionOptions && this.collectionOptions.separatorBetweenTextLabels || '';
     const isIncludingPrefixSuffix = this.collectionOptions && this.collectionOptions.includePrefixSuffixToSelectedValues || false;
     const itemFound = findOrDefault(this.collection, (c: any) => c[this.valueName].toString() === this.$editorElm.val());
@@ -368,38 +380,46 @@ export class SelectEditor implements Editor {
     const isRenderHtmlEnabled = this.columnEditor.enableRenderHtml || false;
     const sanitizedOptions = this.gridOptions && this.gridOptions.sanitizeHtmlOptions || {};
 
-    collection.forEach((option: SelectOption) => {
-      if (!option || (option[this.labelName] === undefined && option.labelKey === undefined)) {
-        throw new Error('[select-editor] A collection with value/label (or value/labelKey when using ' +
-          'Locale) is required to populate the Select list, for example: ' +
-          '{ collection: [ { value: \'1\', label: \'One\' } ])');
-      }
-      const labelKey = (option.labelKey || option[this.labelName]) as string;
-      const labelText = ((option.labelKey || this.enableTranslateLabel) && labelKey) ? this.i18n.tr(labelKey || ' ') : labelKey;
-      let prefixText = option[this.labelPrefixName] || '';
-      let suffixText = option[this.labelSuffixName] || '';
-      let optionLabel = option[this.optionLabel] || '';
-      optionLabel = optionLabel.toString().replace(/\"/g, '\''); // replace double quotes by single quotes to avoid interfering with regular html
+    // collection could be an Array of Strings OR Objects
+    if (collection.every((x: any) => typeof x === 'string')) {
+      collection.forEach((option: string) => {
+        options += `<option value="${option}" label="${option}">${option}</option>`;
+      });
+    } else {
+      // array of objects will require a label/value pair unless a customStructure is passed
+      collection.forEach((option: SelectOption) => {
+        if (!option || (option[this.labelName] === undefined && option.labelKey === undefined)) {
+          throw new Error('[select-editor] A collection with value/label (or value/labelKey when using ' +
+            'Locale) is required to populate the Select list, for example: ' +
+            '{ collection: [ { value: \'1\', label: \'One\' } ])');
+        }
+        const labelKey = (option.labelKey || option[this.labelName]) as string;
+        const labelText = ((option.labelKey || this.enableTranslateLabel) && labelKey) ? this.i18n.tr(labelKey || ' ') : labelKey;
+        let prefixText = option[this.labelPrefixName] || '';
+        let suffixText = option[this.labelSuffixName] || '';
+        let optionLabel = option[this.optionLabel] || '';
+        optionLabel = optionLabel.toString().replace(/\"/g, '\''); // replace double quotes by single quotes to avoid interfering with regular html
 
-      // also translate prefix/suffix if enableTranslateLabel is true and text is a string
-      prefixText = (this.enableTranslateLabel && prefixText && typeof prefixText === 'string') ? this.i18n.tr(prefixText || ' ') : prefixText;
-      suffixText = (this.enableTranslateLabel && suffixText && typeof suffixText === 'string') ? this.i18n.tr(suffixText || ' ') : suffixText;
-      optionLabel = (this.enableTranslateLabel && optionLabel && typeof optionLabel === 'string') ? this.i18n.tr(optionLabel || ' ') : optionLabel;
-      // add to a temp array for joining purpose and filter out empty text
-      const tmpOptionArray = [prefixText, labelText, suffixText].filter((text) => text);
-      let optionText = tmpOptionArray.join(separatorBetweenLabels);
+        // also translate prefix/suffix if enableTranslateLabel is true and text is a string
+        prefixText = (this.enableTranslateLabel && prefixText && typeof prefixText === 'string') ? this.i18n.tr(prefixText || ' ') : prefixText;
+        suffixText = (this.enableTranslateLabel && suffixText && typeof suffixText === 'string') ? this.i18n.tr(suffixText || ' ') : suffixText;
+        optionLabel = (this.enableTranslateLabel && optionLabel && typeof optionLabel === 'string') ? this.i18n.tr(optionLabel || ' ') : optionLabel;
+        // add to a temp array for joining purpose and filter out empty text
+        const tmpOptionArray = [prefixText, labelText, suffixText].filter((text) => text);
+        let optionText = tmpOptionArray.join(separatorBetweenLabels);
 
-      // if user specifically wants to render html text, he needs to opt-in else it will stripped out by default
-      // also, the 3rd party lib will saninitze any html code unless it's encoded, so we'll do that
-      if (isRenderHtmlEnabled) {
-        // sanitize any unauthorized html tags like script and others
-        // for the remaining allowed tags we'll permit all attributes
-        const sanitizedText = DOMPurify.sanitize(optionText, sanitizedOptions);
-        optionText = htmlEncode(sanitizedText);
-      }
+        // if user specifically wants to render html text, he needs to opt-in else it will stripped out by default
+        // also, the 3rd party lib will saninitze any html code unless it's encoded, so we'll do that
+        if (isRenderHtmlEnabled) {
+          // sanitize any unauthorized html tags like script and others
+          // for the remaining allowed tags we'll permit all attributes
+          const sanitizedText = DOMPurify.sanitize(optionText, sanitizedOptions);
+          optionText = htmlEncode(sanitizedText);
+        }
 
-      options += `<option value="${option[this.valueName]}" label="${optionLabel}">${optionText}</option>`;
-    });
+        options += `<option value="${option[this.valueName]}" label="${optionLabel}">${optionText}</option>`;
+      });
+    }
 
     return `<select id="${this.elementName}" class="ms-filter search-filter" ${this.isMultipleSelect ? 'multiple="multiple"' : ''}>${options}</select>`;
   }

@@ -75,8 +75,8 @@ export class AureliaSlickgridCustomElement {
   private _columnDefinitions: Column[] = [];
   private _dataset: any[];
   private _eventHandler: any = new Slick.EventHandler();
-  private _fixedHeight: number;
-  private _fixedWidth: number;
+  private _fixedHeight: number | undefined;
+  private _fixedWidth: number | undefined;
   private _hideHeaderRowAfterPageLoad = false;
   groupItemMetadataProvider: any;
   isGridInitialized = false;
