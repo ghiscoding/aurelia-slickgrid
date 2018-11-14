@@ -2,17 +2,18 @@ import { singleton, inject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import { Constants } from '../constants';
 import {
-  Column,
-  GridOption,
-  HeaderMenuOnCommandArgs,
-  ColumnSort,
-  GridMenu,
-  GridMenuItem,
   CellArgs,
+  Column,
+  ColumnSort,
   DelimiterType,
+  ExtensionName,
+  Extension,
   FileType,
   GraphqlResult,
-  ExtensionName
+  GridMenu,
+  GridMenuItem,
+  GridOption,
+  HeaderMenuOnCommandArgs,
 } from '../models/index';
 import { ExportService } from '../services/export.service';
 import { ExtensionUtility } from './extensionUtility';
@@ -32,7 +33,7 @@ declare var $: any;
   SharedService,
   SortService,
 )
-export class GridMenuExtension {
+export class GridMenuExtension implements Extension {
   private _eventHandler: any = new Slick.EventHandler();
   private _extension: any;
   areVisibleColumnDifferent = false;

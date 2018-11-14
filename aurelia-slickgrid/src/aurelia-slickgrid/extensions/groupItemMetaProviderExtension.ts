@@ -1,9 +1,10 @@
 import { singleton, inject } from 'aurelia-framework';
+import { Extension } from '../models/index';
 import { SharedService } from '../services/shared.service';
 
 @singleton(true)
 @inject(SharedService)
-export class GroupItemMetaProviderExtension {
+export class GroupItemMetaProviderExtension implements Extension {
   private _extension: any;
 
   constructor(private sharedService: SharedService) { }

@@ -63,7 +63,7 @@ export class ExtensionService {
     this.sharedService.grid = null;
     this.sharedService.visibleColumns = [];
 
-    // dispose of each control/plugin if it has a destroy method
+    // dispose of each control/plugin & reset the list
     this.extensionList.forEach((item) => {
       if (item && item.class && item.class.dispose) {
         item.class.dispose();
@@ -115,6 +115,21 @@ export class ExtensionService {
       }
     }
 
+    // Cell External Copy Manager Plugin (Excel Like)
+    if (this.sharedService.gridOptions.enableExcelCopyBuffer) {
+      if (this.cellExternalCopyExtension && this.cellExternalCopyExtension.register) {
+        this.extensionList.push({ name: ExtensionName.cellExternalCopyManager, class: this.cellExternalCopyExtension, extension: this.cellExternalCopyExtension.register() });
+      }
+    }
+
+    // Checkbox Selector Plugin
+    if (this.sharedService.gridOptions.enableCheckboxSelector) {
+      if (this.checkboxSelectorExtension && this.checkboxSelectorExtension.register) {
+        const rowSelectionExtension = this.getExtensionByName(ExtensionName.rowSelection);
+        this.extensionList.push({ name: ExtensionName.checkboxSelector, class: this.checkboxSelectorExtension, extension: this.checkboxSelectorExtension.register(rowSelectionExtension) });
+      }
+    }
+
     // Column Picker Control
     if (this.sharedService.gridOptions.enableColumnPicker) {
       if (this.columnPickerExtension && this.columnPickerExtension.register) {
@@ -137,11 +152,17 @@ export class ExtensionService {
       }
     }
 
-    // Checkbox Selector Plugin
-    if (this.sharedService.gridOptions.enableCheckboxSelector) {
-      if (this.checkboxSelectorExtension && this.checkboxSelectorExtension.register) {
-        const rowSelectionExtension = this.getExtensionByName(ExtensionName.rowSelection);
-        this.extensionList.push({ name: ExtensionName.checkboxSelector, class: this.checkboxSelectorExtension, extension: this.checkboxSelectorExtension.register(rowSelectionExtension) });
+    // Header Button Plugin
+    if (this.sharedService.gridOptions.enableHeaderButton) {
+      if (this.headerButtonExtension && this.headerButtonExtension.register) {
+        this.extensionList.push({ name: ExtensionName.headerButton, class: this.headerButtonExtension, extension: this.headerButtonExtension.register() });
+      }
+    }
+
+    // Header Menu Plugin
+    if (this.sharedService.gridOptions.enableHeaderMenu) {
+      if (this.headerMenuExtension && this.headerMenuExtension.register) {
+        this.extensionList.push({ name: ExtensionName.headerMenu, class: this.headerMenuExtension, extension: this.headerMenuExtension.register() });
       }
     }
 
@@ -156,27 +177,6 @@ export class ExtensionService {
     if (!this.sharedService.gridOptions.enableCheckboxSelector && this.sharedService.gridOptions.enableRowSelection) {
       if (this.rowSelectionExtension && this.rowSelectionExtension.register) {
         this.extensionList.push({ name: ExtensionName.rowSelection, class: this.rowSelectionExtension, extension: this.rowSelectionExtension.register() });
-      }
-    }
-
-    // Header Button Plugin
-    if (this.sharedService.gridOptions.enableHeaderButton) {
-      if (this.headerButtonExtension && this.headerButtonExtension.register) {
-        this.extensionList.push({ name: ExtensionName.headerButtons, class: this.headerButtonExtension, extension: this.headerButtonExtension.register() });
-      }
-    }
-
-    // Header Menu Plugin
-    if (this.sharedService.gridOptions.enableHeaderMenu) {
-      if (this.headerMenuExtension && this.headerMenuExtension.register) {
-        this.extensionList.push({ name: ExtensionName.headerMenu, class: this.headerMenuExtension, extension: this.headerMenuExtension.register() });
-      }
-    }
-
-    // Cell External Copy Manager Plugin (Excel Like)
-    if (this.sharedService.gridOptions.enableExcelCopyBuffer) {
-      if (this.cellExternalCopyExtension && this.cellExternalCopyExtension.register) {
-        this.extensionList.push({ name: ExtensionName.cellExternalCopyManager, class: this.cellExternalCopyExtension, extension: this.cellExternalCopyExtension.register() });
       }
     }
 
@@ -233,23 +233,21 @@ export class ExtensionService {
 
   /** Translate the Column Picker and it's last 2 checkboxes */
   translateColumnPicker() {
-    this.columnPickerExtension.translateColumnPicker();
+    if (this.columnPickerExtension && this.columnPickerExtension.translateColumnPicker) {
+      this.columnPickerExtension.translateColumnPicker();
+    }
   }
 
-  /**
-   * Translate the Header Menu titles, we need to loop through all column definition to re-translate them
-   */
+  /** Translate the Header Menu titles, we need to loop through all column definition to re-translate them */
   translateGridMenu() {
-    if (this.sharedService.gridOptions && this.sharedService.gridOptions.gridMenu) {
+    if (this.gridMenuExtension && this.gridMenuExtension.translateGridMenu) {
       this.gridMenuExtension.translateGridMenu();
     }
   }
 
-  /**
-   * Translate the Header Menu titles, we need to loop through all column definition to re-translate them
-   */
+  /** Translate the Header Menu titles, we need to loop through all column definition to re-translate them */
   translateHeaderMenu() {
-    if (this.sharedService.gridOptions && this.sharedService.gridOptions.headerMenu) {
+    if (this.headerMenuExtension && this.headerMenuExtension.translateHeaderMenu) {
       this.headerMenuExtension.translateHeaderMenu();
     }
   }

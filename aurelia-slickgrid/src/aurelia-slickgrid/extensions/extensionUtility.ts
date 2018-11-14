@@ -5,7 +5,6 @@ import { SharedService } from '../services/shared.service';
 import { ExtensionName } from '../models/index';
 
 declare function require(name: string): any;
-declare function require(name: string[], loadedFile: any): any;
 
 @singleton(true)
 @inject(I18N, SharedService)
@@ -23,6 +22,11 @@ export class ExtensionUtility {
     });
   }
 
+  /**
+   * Load SlickGrid Extension (Control/Plugin) dynamically (on demand)
+   * This will basically only load the extension when user enables the feature
+   * @param extensionName
+   */
   loadExtensionDynamically(extensionName: ExtensionName): any {
     try {
       switch (extensionName) {
@@ -44,7 +48,7 @@ export class ExtensionUtility {
         case ExtensionName.groupItemMetaProvider:
           require('slickgrid/slick.groupitemmetadataprovider');
           break;
-        case ExtensionName.headerButtons:
+        case ExtensionName.headerButton:
           require('slickgrid/plugins/slick.headerbuttons');
           break;
         case ExtensionName.headerMenu:

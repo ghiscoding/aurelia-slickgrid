@@ -4,6 +4,7 @@ import { Constants } from '../constants';
 import {
   Column,
   ColumnSort,
+  Extension,
   ExtensionName,
   GridOption,
   HeaderMenu,
@@ -25,7 +26,7 @@ declare var Slick: any;
   SharedService,
   SortService,
 )
-export class HeaderMenuExtension {
+export class HeaderMenuExtension implements Extension {
   private _eventHandler: any = new Slick.EventHandler();
   private _extension: any;
 

@@ -11,18 +11,15 @@ import {
   GridState,
   GridStateType,
 } from './../models/index';
-import {
-  disposeAllSubscriptions,
-  ExtensionService,
-  FilterService,
-  SortService,
-} from './../services/index';
-import { RowSelectionExtension } from '../extensions/rowSelectionExtension';
+import { disposeAllSubscriptions } from './utilities';
+import { ExtensionService } from './extension.service';
+import { FilterService } from './filter.service';
+import { SortService } from './sort.service';
 
 // using external non-typed js libraries
 declare var Slick: any;
 
-@inject(EventAggregator, RowSelectionExtension)
+@inject(EventAggregator)
 export class GridStateService {
   private _eventHandler = new Slick.EventHandler();
   private _columns: Column[] = [];
@@ -33,7 +30,7 @@ export class GridStateService {
   private sortService: SortService;
   private subscriptions: Subscription[] = [];
 
-  constructor(private ea: EventAggregator, private rowSelectionExtension: RowSelectionExtension) { }
+  constructor(private ea: EventAggregator) { }
 
   /** Getter for the Grid Options pulled through the Grid Object */
   private get _gridOptions(): GridOption {
@@ -245,12 +242,9 @@ export class GridStateService {
     if (this._gridOptions.enableRowSelection || this._gridOptions.enableCheckboxSelector) {
       // this also requires the Row Selection Model to be registered as well
       const rowSelectionExtension = this.extensionService && this.extensionService.getExtensionByName && this.extensionService.getExtensionByName(ExtensionName.rowSelection);
-      if (!rowSelectionExtension || !rowSelectionExtension.extension) {
-        if (this.rowSelectionExtension && this.rowSelectionExtension.register) {
-          this.rowSelectionExtension.register();
-        }
+      if (rowSelectionExtension && rowSelectionExtension.extension) {
+        this._grid.setSelectedRows([]);
       }
-      this._grid.setSelectedRows([]);
     }
   }
 
