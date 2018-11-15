@@ -101,9 +101,9 @@ export class InputFilter implements Filter {
    * Create the HTML template as a string
    */
   private buildTemplateHtmlString() {
-    const fieldId = this.columnDef && this.columnDef.id;
+    const columnId = this.columnDef && this.columnDef.id;
     const placeholder = (this.gridOptions) ? (this.gridOptions.defaultFilterPlaceholder || '') : '';
-    return `<input type="text" class="form-control search-filter filter-${fieldId}" placeholder="${placeholder}">`;
+    return `<input type="text" class="form-control search-filter filter-${columnId}" placeholder="${placeholder}">`;
   }
 
   /**
@@ -111,8 +111,8 @@ export class InputFilter implements Filter {
    * @param filterTemplate
    */
   private createDomElement(filterTemplate: string, searchTerm?: SearchTerm) {
-    const fieldId = this.columnDef && this.columnDef.id;
-    const $headerElm = this.grid.getHeaderRowColumn(fieldId);
+    const columnId = this.columnDef && this.columnDef.id;
+    const $headerElm = this.grid.getHeaderRowColumn(columnId);
     $($headerElm).empty();
 
     // create the DOM element & add an ID and filter class
@@ -120,8 +120,8 @@ export class InputFilter implements Filter {
     const searchTermInput = searchTerm as string;
 
     $filterElm.val(searchTermInput);
-    $filterElm.attr('id', `filter-${fieldId}`);
-    $filterElm.data('columnId', fieldId);
+    $filterElm.attr('id', `filter-${columnId}`);
+    $filterElm.data('columnId', columnId);
 
     // if there's a search term, we will add the "filled" class for styling purposes
     if (searchTerm) {

@@ -332,7 +332,7 @@ export class SelectFilter implements Filter {
    */
   protected buildTemplateHtmlString(optionCollection: any[], searchTerms: SearchTerm[]): string {
     let options = '';
-    const fieldId = this.columnDef && this.columnDef.id;
+    const columnId = this.columnDef && this.columnDef.id;
     const separatorBetweenLabels = this.collectionOptions && this.collectionOptions.separatorBetweenTextLabels || '';
     const isRenderHtmlEnabled = this.columnFilter && this.columnFilter.enableRenderHtml || false;
     const sanitizedOptions = this.gridOptions && this.gridOptions.sanitizeHtmlOptions || {};
@@ -389,7 +389,7 @@ export class SelectFilter implements Filter {
       });
     }
 
-    return `<select class="ms-filter search-filter filter-${fieldId}" multiple="multiple">${options}</select>`;
+    return `<select class="ms-filter search-filter filter-${columnId}" multiple="multiple">${options}</select>`;
   }
 
   /** Create a blank entry that can be added to the collection. It will also reuse the same collection structure provided by the user */
@@ -413,13 +413,13 @@ export class SelectFilter implements Filter {
    * @param filterTemplate
    */
   protected createDomElement(filterTemplate: string) {
-    const fieldId = this.columnDef && this.columnDef.id;
+    const columnId = this.columnDef && this.columnDef.id;
 
     // provide the name attribute to the DOM element which will be needed to auto-adjust drop position (dropup / dropdown)
-    this.elementName = `filter-${fieldId}`;
+    this.elementName = `filter-${columnId}`;
     this.defaultOptions.name = this.elementName;
 
-    const $headerElm = this.grid.getHeaderRowColumn(fieldId);
+    const $headerElm = this.grid.getHeaderRowColumn(columnId);
     $($headerElm).empty();
 
     // create the DOM element & add an ID and filter class
@@ -428,7 +428,7 @@ export class SelectFilter implements Filter {
       throw new Error(`multiple-select.js was not found, make sure to read the HOWTO Wiki on how to install it`);
     }
     this.$filterElm.attr('id', this.elementName);
-    this.$filterElm.data('columnId', fieldId);
+    this.$filterElm.data('columnId', columnId);
 
     // if there's a search term, we will add the "filled" class for styling purposes
     if (this.isFilled) {
