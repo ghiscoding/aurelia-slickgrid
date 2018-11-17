@@ -29,7 +29,8 @@ export class TextEditor implements Editor {
   }
 
   init(): void {
-    this.$input = $(`<input type="text" class="editor-text" />`)
+    const columnId = this.columnDef && this.columnDef.id;
+    this.$input = $(`<input type="text" class="editor-text editor-${columnId}" />`)
       .appendTo(this.args.container)
       .on('keydown.nav', (e) => {
         if (e.keyCode === KeyCode.LEFT || e.keyCode === KeyCode.RIGHT) {

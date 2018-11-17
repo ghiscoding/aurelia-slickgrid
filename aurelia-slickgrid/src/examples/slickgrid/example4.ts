@@ -164,11 +164,7 @@ export class Example4 {
           // enableRenderHtml: true,
           // collection: [{ value: '', label: '' }, { value: true, label: 'True', labelPrefix: `<i class="fa fa-check"></i> ` }, { value: false, label: 'False' }],
 
-          collection: [{ isEffort: '', label: '' }, { isEffort: true, label: 'True' }, { isEffort: false, label: 'False' }],
-          customStructure: {
-            value: 'isEffort',
-            label: 'label'
-          },
+          collection: ['', 'True', 'False'],
           model: Filters.singleSelect,
 
           // we could add certain option(s) to the "multiple-select" plugin

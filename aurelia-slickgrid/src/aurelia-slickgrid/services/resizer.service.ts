@@ -12,14 +12,16 @@ const DATAGRID_PAGINATION_HEIGHT = 35;
 let timer: any;
 
 export interface GridDimension {
-  height: number;
-  width: number;
-  heightWithPagination?: number;
+  height: number | null;
+  width: number | null;
+  heightWithPagination?: number | null;
 }
 
 @singleton(true)
 @inject(EventAggregator)
 export class ResizerService {
+  private _fixedHeight: number | null;
+  private _fixedWidth: number | null;
   private _grid: any;
   private _lastDimensions: GridDimension;
   aureliaEventPrefix: string;
@@ -36,9 +38,13 @@ export class ResizerService {
     return (this._grid && this._grid.getUID) ? this._grid.getUID() : this._gridOptions.gridId;
   }
 
-  init(grid: any): void {
+  init(grid: any, fixedDimensions?: GridDimension): void {
     this._grid = grid;
     this.aureliaEventPrefix = (this._gridOptions && this._gridOptions.defaultAureliaEventPrefix) ? this._gridOptions.defaultAureliaEventPrefix : 'asg';
+    if (fixedDimensions) {
+      this._fixedHeight = fixedDimensions.height;
+      this._fixedWidth = fixedDimensions.width;
+    }
   }
 
   /**
@@ -52,6 +58,7 @@ export class ResizerService {
       return null;
     }
 
+    // -- 1st resize the datagrid size at first load (we need this because the .on event is not triggered on first load)
     // -- also we add a slight delay (in ms) so that we resize after the grid render is done
     this.resizeGrid(10, newSizes);
 
@@ -110,9 +117,10 @@ export class ResizerService {
       newWidth = maxWidth;
     }
 
+    // return the new dimensions unless a fixed height/width was defined
     return {
-      height: newHeight,
-      width: newWidth
+      height: this._fixedHeight || newHeight,
+      width: this._fixedWidth || newWidth
     };
   }
 
