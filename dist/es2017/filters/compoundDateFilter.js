@@ -139,12 +139,13 @@ let CompoundDateFilter = class CompoundDateFilter {
      * Create the DOM element
      */
     createDomElement(searchTerm) {
-        const $headerElm = this.grid.getHeaderRowColumn(this.columnDef.id);
+        const columnId = this.columnDef && this.columnDef.id;
+        const $headerElm = this.grid.getHeaderRowColumn(columnId);
         $($headerElm).empty();
         // create the DOM Select dropdown for the Operator
         this.$selectOperatorElm = $(this.buildSelectOperatorHtmlString());
         this.$filterInputElm = this.buildDatePickerInput(searchTerm);
-        const $filterContainerElm = $(`<div class="form-group search-filter"></div>`);
+        const $filterContainerElm = $(`<div class="form-group search-filter filter-${columnId}"></div>`);
         const $containerInputGroup = $(`<div class="input-group flatpickr"></div>`);
         const $operatorInputGroupAddon = $(`<div class="input-group-addon input-group-prepend operator"></div>`);
         /* the DOM element final structure will be
@@ -162,8 +163,8 @@ let CompoundDateFilter = class CompoundDateFilter {
         $containerInputGroup.append(this.$filterInputElm);
         // create the DOM element & add an ID and filter class
         $filterContainerElm.append($containerInputGroup);
-        $filterContainerElm.attr('id', `filter-${this.columnDef.id}`);
-        this.$filterInputElm.data('columnId', this.columnDef.id);
+        $filterContainerElm.attr('id', `filter-${columnId}`);
+        this.$filterInputElm.data('columnId', columnId);
         if (this.operator) {
             this.$selectOperatorElm.val(this.operator);
         }
@@ -180,7 +181,10 @@ let CompoundDateFilter = class CompoundDateFilter {
     }
     loadFlatpickrLocale(locale) {
         // change locale if needed, Flatpickr reference: https://chmln.github.io/flatpickr/localization/
-        if (locale !== 'en') {
+        if (this.gridOptions && this.gridOptions.params && this.gridOptions.params.flapickrLocale) {
+            return this.gridOptions.params.flapickrLocale;
+        }
+        else if (locale !== 'en') {
             const localeDefault = require(`flatpickr/dist/l10n/${locale}.js`).default;
             return (localeDefault && localeDefault[locale]) ? localeDefault[locale] : 'en';
         }

@@ -13,9 +13,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { inject } from 'aurelia-framework';
-import { GridStateType, } from './../models/index';
-import { disposeAllSubscriptions } from './../services/index';
 import { EventAggregator } from 'aurelia-event-aggregator';
+import { ExtensionName, GridStateType, } from './../models/index';
+import { disposeAllSubscriptions } from './utilities';
 var GridStateService = /** @class */ (function () {
     function GridStateService(ea) {
         this.ea = ea;
@@ -38,9 +38,9 @@ var GridStateService = /** @class */ (function () {
      * @param filterService
      * @param sortService
      */
-    GridStateService.prototype.init = function (grid, controlAndPluginService, filterService, sortService) {
+    GridStateService.prototype.init = function (grid, extensionService, filterService, sortService) {
         this._grid = grid;
-        this.controlAndPluginService = controlAndPluginService;
+        this.extensionService = extensionService;
         this.filterService = filterService;
         this.sortService = sortService;
         this.subscribeToAllGridChanges(grid);
@@ -180,13 +180,13 @@ var GridStateService = /** @class */ (function () {
     /**
      * Hook a SlickGrid Extension Event to a Grid State change event
      * @param extension name
-     * @param grid
+     * @param event name
      */
     GridStateService.prototype.hookExtensionEventToGridStateChange = function (extensionName, eventName) {
         var _this = this;
-        var extension = this.controlAndPluginService && this.controlAndPluginService.getExtensionByName(extensionName);
-        if (extension && extension.service && extension.service[eventName] && extension.service[eventName].subscribe) {
-            this._eventHandler.subscribe(extension.service[eventName], function (e, args) {
+        var extension = this.extensionService && this.extensionService.getExtensionByName(extensionName);
+        if (extension && extension.class && extension.class[eventName] && extension.class[eventName].subscribe) {
+            this._eventHandler.subscribe(extension.class[eventName], function (e, args) {
                 var columns = args && args.columns;
                 var currentColumns = _this.getAssociatedCurrentColumns(columns);
                 _this.ea.publish('gridStateService:changed', { change: { newValues: currentColumns, type: GridStateType.columns }, gridState: _this.getCurrentGridState() });
@@ -216,7 +216,11 @@ var GridStateService = /** @class */ (function () {
     /** if we use Row Selection or the Checkbox Selector, we need to reset any selection */
     GridStateService.prototype.resetRowSelection = function () {
         if (this._gridOptions.enableRowSelection || this._gridOptions.enableCheckboxSelector) {
-            this._grid.setSelectedRows([]);
+            // this also requires the Row Selection Model to be registered as well
+            var rowSelectionExtension = this.extensionService && this.extensionService.getExtensionByName && this.extensionService.getExtensionByName(ExtensionName.rowSelection);
+            if (rowSelectionExtension && rowSelectionExtension.extension) {
+                this._grid.setSelectedRows([]);
+            }
         }
     };
     /**
@@ -246,8 +250,8 @@ var GridStateService = /** @class */ (function () {
             _this.ea.publish('gridStateService:changed', { change: { newValues: currentSorters, type: GridStateType.sorter }, gridState: _this.getCurrentGridState() });
         }));
         // Subscribe to ColumnPicker and/or GridMenu for show/hide Columns visibility changes
-        this.hookExtensionEventToGridStateChange('ColumnPicker', 'onColumnsChanged');
-        this.hookExtensionEventToGridStateChange('GridMenu', 'onColumnsChanged');
+        this.hookExtensionEventToGridStateChange(ExtensionName.columnPicker, 'onColumnsChanged');
+        this.hookExtensionEventToGridStateChange(ExtensionName.gridMenu, 'onColumnsChanged');
         // subscribe to Column Resize & Reordering
         this.hookSlickGridEventToGridStateChange('onColumnsReordered', grid);
         this.hookSlickGridEventToGridStateChange('onColumnsResized', grid);

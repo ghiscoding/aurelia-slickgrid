@@ -1,4 +1,4 @@
-System.register(["aurelia-i18n", "aurelia-framework", "./controlAndPlugin.service", "./filter.service", "./gridState.service", "./sort.service", "jquery"], function (exports_1, context_1) {
+System.register(["aurelia-framework", "aurelia-i18n", "./extension.service", "./filter.service", "./gridState.service", "./sort.service", "jquery"], function (exports_1, context_1) {
     "use strict";
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -7,17 +7,17 @@ System.register(["aurelia-i18n", "aurelia-framework", "./controlAndPlugin.servic
         return c > 3 && r && Object.defineProperty(target, key, r), r;
     };
     var __moduleName = context_1 && context_1.id;
-    var aurelia_i18n_1, aurelia_framework_1, controlAndPlugin_service_1, filter_service_1, gridState_service_1, sort_service_1, $, GridService;
+    var aurelia_framework_1, aurelia_i18n_1, extension_service_1, filter_service_1, gridState_service_1, sort_service_1, $, GridService;
     return {
         setters: [
-            function (aurelia_i18n_1_1) {
-                aurelia_i18n_1 = aurelia_i18n_1_1;
-            },
             function (aurelia_framework_1_1) {
                 aurelia_framework_1 = aurelia_framework_1_1;
             },
-            function (controlAndPlugin_service_1_1) {
-                controlAndPlugin_service_1 = controlAndPlugin_service_1_1;
+            function (aurelia_i18n_1_1) {
+                aurelia_i18n_1 = aurelia_i18n_1_1;
+            },
+            function (extension_service_1_1) {
+                extension_service_1 = extension_service_1_1;
             },
             function (filter_service_1_1) {
                 filter_service_1 = filter_service_1_1;
@@ -34,8 +34,8 @@ System.register(["aurelia-i18n", "aurelia-framework", "./controlAndPlugin.servic
         ],
         execute: function () {
             GridService = /** @class */ (function () {
-                function GridService(controlAndPluginService, filterService, i18n, gridStateService, sortService) {
-                    this.controlAndPluginService = controlAndPluginService;
+                function GridService(extensionService, filterService, i18n, gridStateService, sortService) {
+                    this.extensionService = extensionService;
                     this.filterService = filterService;
                     this.i18n = i18n;
                     this.gridStateService = gridStateService;
@@ -209,7 +209,7 @@ System.register(["aurelia-i18n", "aurelia-framework", "./controlAndPlugin.servic
                 GridService.prototype.resetGrid = function (columnDefinitions) {
                     // reset columns to original states & refresh the grid
                     if (this._grid && this._dataView) {
-                        var originalColumns = this.controlAndPluginService.getAllColumns();
+                        var originalColumns = this.extensionService.getAllColumns();
                         // const originalColumns = columnDefinitions || this._columnDefinitions;
                         if (Array.isArray(originalColumns) && originalColumns.length > 0) {
                             // set the grid columns to it's original column definitions
@@ -326,7 +326,7 @@ System.register(["aurelia-i18n", "aurelia-framework", "./controlAndPlugin.servic
                 };
                 GridService = __decorate([
                     aurelia_framework_1.singleton(true),
-                    aurelia_framework_1.inject(controlAndPlugin_service_1.ControlAndPluginService, filter_service_1.FilterService, aurelia_i18n_1.I18N, gridState_service_1.GridStateService, sort_service_1.SortService)
+                    aurelia_framework_1.inject(extension_service_1.ExtensionService, filter_service_1.FilterService, aurelia_i18n_1.I18N, gridState_service_1.GridStateService, sort_service_1.SortService)
                 ], GridService);
                 return GridService;
             }());

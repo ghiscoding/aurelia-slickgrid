@@ -120,12 +120,13 @@ let CompoundInputFilter = class CompoundInputFilter {
      * Create the DOM element
      */
     createDomElement(searchTerm) {
-        const $headerElm = this.grid.getHeaderRowColumn(this.columnDef.id);
+        const columnId = this.columnDef && this.columnDef.id;
+        const $headerElm = this.grid.getHeaderRowColumn(columnId);
         $($headerElm).empty();
         // create the DOM Select dropdown for the Operator
         this.$selectOperatorElm = $(this.buildSelectOperatorHtmlString());
         this.$filterInputElm = $(this.buildInputHtmlString());
-        const $filterContainerElm = $(`<div class="form-group search-filter"></div>`);
+        const $filterContainerElm = $(`<div class="form-group search-filter filter-${columnId}"></div>`);
         const $containerInputGroup = $(`<div class="input-group"></div>`);
         const $operatorInputGroupAddon = $(`<div class="input-group-addon input-group-prepend operator"></div>`);
         /* the DOM element final structure will be
@@ -141,9 +142,9 @@ let CompoundInputFilter = class CompoundInputFilter {
         $containerInputGroup.append(this.$filterInputElm);
         // create the DOM element & add an ID and filter class
         $filterContainerElm.append($containerInputGroup);
-        $filterContainerElm.attr('id', `filter-${this.columnDef.id}`);
+        $filterContainerElm.attr('id', `filter-${columnId}`);
         this.$filterInputElm.val(searchTerm);
-        this.$filterInputElm.data('columnId', this.columnDef.id);
+        this.$filterInputElm.data('columnId', columnId);
         if (this.operator) {
             this.$selectOperatorElm.val(this.operator);
         }

@@ -15,9 +15,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var aurelia_framework_1 = require("aurelia-framework");
-var index_1 = require("./../models/index");
-var index_2 = require("./../services/index");
 var aurelia_event_aggregator_1 = require("aurelia-event-aggregator");
+var index_1 = require("./../models/index");
+var utilities_1 = require("./utilities");
 var GridStateService = /** @class */ (function () {
     function GridStateService(ea) {
         this.ea = ea;
@@ -40,9 +40,9 @@ var GridStateService = /** @class */ (function () {
      * @param filterService
      * @param sortService
      */
-    GridStateService.prototype.init = function (grid, controlAndPluginService, filterService, sortService) {
+    GridStateService.prototype.init = function (grid, extensionService, filterService, sortService) {
         this._grid = grid;
-        this.controlAndPluginService = controlAndPluginService;
+        this.extensionService = extensionService;
         this.filterService = filterService;
         this.sortService = sortService;
         this.subscribeToAllGridChanges(grid);
@@ -52,7 +52,7 @@ var GridStateService = /** @class */ (function () {
         // unsubscribe all SlickGrid events
         this._eventHandler.unsubscribeAll();
         // also dispose of all Subscriptions
-        this.subscriptions = index_2.disposeAllSubscriptions(this.subscriptions);
+        this.subscriptions = utilities_1.disposeAllSubscriptions(this.subscriptions);
     };
     /**
      * Get the current grid state (filters/sorters/pagination)
@@ -182,13 +182,13 @@ var GridStateService = /** @class */ (function () {
     /**
      * Hook a SlickGrid Extension Event to a Grid State change event
      * @param extension name
-     * @param grid
+     * @param event name
      */
     GridStateService.prototype.hookExtensionEventToGridStateChange = function (extensionName, eventName) {
         var _this = this;
-        var extension = this.controlAndPluginService && this.controlAndPluginService.getExtensionByName(extensionName);
-        if (extension && extension.service && extension.service[eventName] && extension.service[eventName].subscribe) {
-            this._eventHandler.subscribe(extension.service[eventName], function (e, args) {
+        var extension = this.extensionService && this.extensionService.getExtensionByName(extensionName);
+        if (extension && extension.class && extension.class[eventName] && extension.class[eventName].subscribe) {
+            this._eventHandler.subscribe(extension.class[eventName], function (e, args) {
                 var columns = args && args.columns;
                 var currentColumns = _this.getAssociatedCurrentColumns(columns);
                 _this.ea.publish('gridStateService:changed', { change: { newValues: currentColumns, type: index_1.GridStateType.columns }, gridState: _this.getCurrentGridState() });
@@ -218,7 +218,11 @@ var GridStateService = /** @class */ (function () {
     /** if we use Row Selection or the Checkbox Selector, we need to reset any selection */
     GridStateService.prototype.resetRowSelection = function () {
         if (this._gridOptions.enableRowSelection || this._gridOptions.enableCheckboxSelector) {
-            this._grid.setSelectedRows([]);
+            // this also requires the Row Selection Model to be registered as well
+            var rowSelectionExtension = this.extensionService && this.extensionService.getExtensionByName && this.extensionService.getExtensionByName(index_1.ExtensionName.rowSelection);
+            if (rowSelectionExtension && rowSelectionExtension.extension) {
+                this._grid.setSelectedRows([]);
+            }
         }
     };
     /**
@@ -248,8 +252,8 @@ var GridStateService = /** @class */ (function () {
             _this.ea.publish('gridStateService:changed', { change: { newValues: currentSorters, type: index_1.GridStateType.sorter }, gridState: _this.getCurrentGridState() });
         }));
         // Subscribe to ColumnPicker and/or GridMenu for show/hide Columns visibility changes
-        this.hookExtensionEventToGridStateChange('ColumnPicker', 'onColumnsChanged');
-        this.hookExtensionEventToGridStateChange('GridMenu', 'onColumnsChanged');
+        this.hookExtensionEventToGridStateChange(index_1.ExtensionName.columnPicker, 'onColumnsChanged');
+        this.hookExtensionEventToGridStateChange(index_1.ExtensionName.gridMenu, 'onColumnsChanged');
         // subscribe to Column Resize & Reordering
         this.hookSlickGridEventToGridStateChange('onColumnsReordered', grid);
         this.hookSlickGridEventToGridStateChange('onColumnsResized', grid);

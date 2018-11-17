@@ -1,4 +1,4 @@
-System.register(["./collection.service", "./controlAndPlugin.service", "./export.service", "./filter.service", "./graphql.service", "./gridEvent.service", "./grid.service", "./gridState.service", "./grid-odata.service", "./groupingAndColspan.service", "./odata.service", "./resizer.service", "./sort.service", "./utilities"], function (exports_1, context_1) {
+System.register(["./collection.service", "./export.service", "./extension.service", "./filter.service", "./graphql.service", "./gridEvent.service", "./grid.service", "./gridState.service", "./grid-odata.service", "./groupingAndColspan.service", "./odata.service", "./resizer.service", "./shared.service", "./sort.service", "./utilities"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     function exportStar_1(m) {
@@ -13,11 +13,11 @@ System.register(["./collection.service", "./controlAndPlugin.service", "./export
             function (collection_service_1_1) {
                 exportStar_1(collection_service_1_1);
             },
-            function (controlAndPlugin_service_1_1) {
-                exportStar_1(controlAndPlugin_service_1_1);
-            },
             function (export_service_1_1) {
                 exportStar_1(export_service_1_1);
+            },
+            function (extension_service_1_1) {
+                exportStar_1(extension_service_1_1);
             },
             function (filter_service_1_1) {
                 exportStar_1(filter_service_1_1);
@@ -45,6 +45,9 @@ System.register(["./collection.service", "./controlAndPlugin.service", "./export
             },
             function (resizer_service_1_1) {
                 exportStar_1(resizer_service_1_1);
+            },
+            function (shared_service_1_1) {
+                exportStar_1(shared_service_1_1);
             },
             function (sort_service_1_1) {
                 exportStar_1(sort_service_1_1);

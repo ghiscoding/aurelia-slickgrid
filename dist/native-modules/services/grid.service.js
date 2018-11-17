@@ -4,16 +4,16 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { I18N } from 'aurelia-i18n';
 import { singleton, inject } from 'aurelia-framework';
-import { ControlAndPluginService } from './controlAndPlugin.service';
+import { I18N } from 'aurelia-i18n';
+import { ExtensionService } from './extension.service';
 import { FilterService } from './filter.service';
 import { GridStateService } from './gridState.service';
 import { SortService } from './sort.service';
 import * as $ from 'jquery';
 var GridService = /** @class */ (function () {
-    function GridService(controlAndPluginService, filterService, i18n, gridStateService, sortService) {
-        this.controlAndPluginService = controlAndPluginService;
+    function GridService(extensionService, filterService, i18n, gridStateService, sortService) {
+        this.extensionService = extensionService;
         this.filterService = filterService;
         this.i18n = i18n;
         this.gridStateService = gridStateService;
@@ -187,7 +187,7 @@ var GridService = /** @class */ (function () {
     GridService.prototype.resetGrid = function (columnDefinitions) {
         // reset columns to original states & refresh the grid
         if (this._grid && this._dataView) {
-            var originalColumns = this.controlAndPluginService.getAllColumns();
+            var originalColumns = this.extensionService.getAllColumns();
             // const originalColumns = columnDefinitions || this._columnDefinitions;
             if (Array.isArray(originalColumns) && originalColumns.length > 0) {
                 // set the grid columns to it's original column definitions
@@ -304,7 +304,7 @@ var GridService = /** @class */ (function () {
     };
     GridService = __decorate([
         singleton(true),
-        inject(ControlAndPluginService, FilterService, I18N, GridStateService, SortService)
+        inject(ExtensionService, FilterService, I18N, GridStateService, SortService)
     ], GridService);
     return GridService;
 }());

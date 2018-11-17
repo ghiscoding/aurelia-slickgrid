@@ -1,13 +1,15 @@
-import { Column, CurrentColumn, CurrentFilter, CurrentPagination, CurrentSorter, GridState } from './../models/index';
-import { ControlAndPluginService, FilterService, SortService } from './../services/index';
 import { EventAggregator } from 'aurelia-event-aggregator';
+import { Column, CurrentColumn, CurrentFilter, CurrentPagination, CurrentSorter, ExtensionName, GridState } from './../models/index';
+import { ExtensionService } from './extension.service';
+import { FilterService } from './filter.service';
+import { SortService } from './sort.service';
 export declare class GridStateService {
     private ea;
     private _eventHandler;
     private _columns;
     private _currentColumns;
     private _grid;
-    private controlAndPluginService;
+    private extensionService;
     private filterService;
     private sortService;
     private subscriptions;
@@ -20,7 +22,7 @@ export declare class GridStateService {
      * @param filterService
      * @param sortService
      */
-    init(grid: any, controlAndPluginService: ControlAndPluginService, filterService: FilterService, sortService: SortService): void;
+    init(grid: any, extensionService: ExtensionService, filterService: FilterService, sortService: SortService): void;
     /** Dispose of all the SlickGrid & Aurelia subscriptions */
     dispose(): void;
     /**
@@ -67,9 +69,9 @@ export declare class GridStateService {
     /**
      * Hook a SlickGrid Extension Event to a Grid State change event
      * @param extension name
-     * @param grid
+     * @param event name
      */
-    hookExtensionEventToGridStateChange(extensionName: string, eventName: string): void;
+    hookExtensionEventToGridStateChange(extensionName: ExtensionName, eventName: string): void;
     /**
      * Hook a Grid Event to a Grid State change event
      * @param event name

@@ -107,34 +107,44 @@ System.register(["aurelia-i18n", "aurelia-framework", "./../models/index", "jque
                     if (!this.columnDef || !this.columnDef.filter || !this.columnDef.filter.collection) {
                         throw new Error("[Aurelia-SlickGrid] You need to pass a \"collection\" for the Select Filter to work correctly. Also each option should include a value/label pair (or value/labelKey when using Locale). For example: { filter: { model: Filters.select, collection: [{ value: true, label: 'True' }, { value: false, label: 'False'}] } }");
                     }
+                    var columnId = this.columnDef && this.columnDef.id;
                     var optionCollection = this.columnDef.filter.collection || [];
                     var labelName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.label : 'label';
                     var valueName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.value : 'value';
                     var isEnabledTranslate = (this.columnDef.filter.enableTranslateLabel) ? this.columnDef.filter.enableTranslateLabel : false;
                     var options = '';
-                    optionCollection.forEach(function (option) {
-                        if (!option || (option[labelName] === undefined && option.labelKey === undefined)) {
-                            throw new Error("A collection with value/label (or value/labelKey when using Locale) is required to populate the Select list, for example: { filter: { model: Filters.select, collection: [ { value: '1', label: 'One' } ] } }");
-                        }
-                        var labelKey = option.labelKey || option[labelName];
-                        var textLabel = ((option.labelKey || isEnabledTranslate) && _this.i18n && typeof _this.i18n.tr === 'function') ? _this.i18n.tr(labelKey || ' ') : labelKey;
-                        options += "<option value=\"" + option[valueName] + "\">" + textLabel + "</option>";
-                    });
-                    return "<select class=\"form-control search-filter\">" + options + "</select>";
+                    // collection could be an Array of Strings OR Objects
+                    if (optionCollection.every(function (x) { return typeof x === 'string'; })) {
+                        optionCollection.forEach(function (option) {
+                            options += "<option value=\"" + option + "\" label=\"" + option + "\">" + option + "</option>";
+                        });
+                    }
+                    else {
+                        optionCollection.forEach(function (option) {
+                            if (!option || (option[labelName] === undefined && option.labelKey === undefined)) {
+                                throw new Error("A collection with value/label (or value/labelKey when using Locale) is required to populate the Select list, for example:: { filter: model: Filters.select, collection: [ { value: '1', label: 'One' } ]')");
+                            }
+                            var labelKey = option.labelKey || option[labelName];
+                            var textLabel = ((option.labelKey || isEnabledTranslate) && _this.i18n && typeof _this.i18n.tr === 'function') ? _this.i18n.tr(labelKey || ' ') : labelKey;
+                            options += "<option value=\"" + option[valueName] + "\">" + textLabel + "</option>";
+                        });
+                    }
+                    return "<select class=\"form-control search-filter filter-" + columnId + "\">" + options + "</select>";
                 };
                 /**
                  * From the html template string, create a DOM element
                  * @param filterTemplate
                  */
                 NativeSelectFilter.prototype.createDomElement = function (filterTemplate, searchTerm) {
-                    var $headerElm = this.grid.getHeaderRowColumn(this.columnDef.id);
+                    var columnId = this.columnDef && this.columnDef.id;
+                    var $headerElm = this.grid.getHeaderRowColumn(columnId);
                     $($headerElm).empty();
                     // create the DOM element & add an ID and filter class
                     var $filterElm = $(filterTemplate);
                     var searchTermInput = (searchTerm || '');
                     $filterElm.val(searchTermInput);
-                    $filterElm.attr('id', "filter-" + this.columnDef.id);
-                    $filterElm.data('columnId', this.columnDef.id);
+                    $filterElm.attr('id', "filter-" + columnId);
+                    $filterElm.data('columnId', columnId);
                     // append the new DOM element to the header row
                     if ($filterElm && typeof $filterElm.appendTo === 'function') {
                         $filterElm.appendTo($headerElm);

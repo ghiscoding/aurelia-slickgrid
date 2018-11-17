@@ -35,6 +35,7 @@ let DateEditor = class DateEditor {
     }
     init() {
         if (this.args && this.args.column) {
+            const columnId = this.columnDef && this.columnDef.id;
             this.defaultDate = (this.args.item) ? this.args.item[this.args.column.field] : null;
             const inputFormat = mapFlatpickrDateFormatWithFieldType(this.args.column.type || FieldType.dateIso);
             const outputFormat = mapFlatpickrDateFormatWithFieldType(this.args.column.outputType || FieldType.dateUtc);
@@ -53,7 +54,7 @@ let DateEditor = class DateEditor {
                     this.save();
                 },
             };
-            this.$input = $(`<input type="text" data-defaultDate="${this.defaultDate}" class="editor-text flatpickr" />`);
+            this.$input = $(`<input type="text" data-defaultDate="${this.defaultDate}" class="editor-text editor-${columnId} flatpickr" />`);
             this.$input.appendTo(this.args.container);
             this.flatInstance = (flatpickr && this.$input[0] && typeof this.$input[0].flatpickr === 'function') ? this.$input[0].flatpickr(pickerOptions) : null;
             this.show();
@@ -61,7 +62,11 @@ let DateEditor = class DateEditor {
     }
     loadFlatpickrLocale(locale) {
         // change locale if needed, Flatpickr reference: https://chmln.github.io/flatpickr/localization/
-        if (locale !== 'en') {
+        const gridOptions = this.args && this.args.grid && this.args.grid.getOptions();
+        if (gridOptions && gridOptions.params && gridOptions.params.flapickrLocale) {
+            return gridOptions.params.flapickrLocale;
+        }
+        else if (locale !== 'en') {
             const localeDefault = require(`flatpickr/dist/l10n/${locale}.js`).default;
             return (localeDefault && localeDefault[locale]) ? localeDefault[locale] : 'en';
         }

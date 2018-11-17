@@ -37,7 +37,8 @@ define(["require", "exports", "../constants", "./../models/index", "jquery"], fu
         });
         FloatEditor.prototype.init = function () {
             var _this = this;
-            this.$input = $("<input type=\"number\" class=\"editor-text\" step=\"" + this.getInputDecimalSteps() + "\" />")
+            var columnId = this.columnDef && this.columnDef.id;
+            this.$input = $("<input type=\"number\" class=\"editor-text editor-" + columnId + "\" step=\"" + this.getInputDecimalSteps() + "\" />")
                 .appendTo(this.args.container)
                 .on('keydown.nav', function (e) {
                 if (e.keyCode === index_1.KeyCode.LEFT || e.keyCode === index_1.KeyCode.RIGHT) {

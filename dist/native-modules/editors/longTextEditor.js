@@ -53,10 +53,11 @@ var LongTextEditor = /** @class */ (function () {
     });
     LongTextEditor.prototype.init = function () {
         var _this = this;
+        var columnId = this.columnDef && this.columnDef.id;
         var cancelText = this.i18n.tr('CANCEL') || Constants.TEXT_CANCEL;
         var saveText = this.i18n.tr('SAVE') || Constants.TEXT_SAVE;
         var $container = $('body');
-        this.$wrapper = $("<div class=\"slick-large-editor-text\" />").appendTo($container);
+        this.$wrapper = $("<div class=\"slick-large-editor-text editor-" + columnId + "\" />").appendTo($container);
         this.$input = $("<textarea hidefocus rows=\"5\">").appendTo(this.$wrapper);
         // aurelia-slickgrid does not get the focus out event for some reason
         // so register it here

@@ -23,7 +23,8 @@ export class IntegerEditor {
         return this.columnEditor.validator || this.columnDef.validator;
     }
     init() {
-        this.$input = $(`<input type="number" class='editor-text' />`)
+        const columnId = this.columnDef && this.columnDef.id;
+        this.$input = $(`<input type="number" class="editor-text editor-${columnId}" />`)
             .appendTo(this.args.container)
             .on('keydown.nav', (e) => {
             if (e.keyCode === KeyCode.LEFT || e.keyCode === KeyCode.RIGHT) {

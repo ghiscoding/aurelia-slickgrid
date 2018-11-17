@@ -36,10 +36,11 @@ let LongTextEditor = class LongTextEditor {
         return this.args.grid.getOptions().autoCommitEdit;
     }
     init() {
+        const columnId = this.columnDef && this.columnDef.id;
         const cancelText = this.i18n.tr('CANCEL') || Constants.TEXT_CANCEL;
         const saveText = this.i18n.tr('SAVE') || Constants.TEXT_SAVE;
         const $container = $('body');
-        this.$wrapper = $(`<div class="slick-large-editor-text" />`).appendTo($container);
+        this.$wrapper = $(`<div class="slick-large-editor-text editor-${columnId}" />`).appendTo($container);
         this.$input = $(`<textarea hidefocus rows="5">`).appendTo(this.$wrapper);
         // aurelia-slickgrid does not get the focus out event for some reason
         // so register it here

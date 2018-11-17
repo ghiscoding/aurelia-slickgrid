@@ -129,29 +129,31 @@ System.register(["./../models/index", "jquery"], function (exports_1, context_1)
                  * Create the HTML template as a string
                  */
                 SliderFilter.prototype.buildTemplateHtmlString = function () {
+                    var columnId = this.columnDef && this.columnDef.id;
                     var minValue = this.filterProperties.hasOwnProperty('minValue') ? this.filterProperties.minValue : DEFAULT_MIN_VALUE;
                     var maxValue = this.filterProperties.hasOwnProperty('maxValue') ? this.filterProperties.maxValue : DEFAULT_MAX_VALUE;
                     var defaultValue = this.filterParams.hasOwnProperty('sliderStartValue') ? this.filterParams.sliderStartValue : minValue;
                     var step = this.filterProperties.hasOwnProperty('valueStep') ? this.filterProperties.valueStep : DEFAULT_STEP;
                     if (this.filterParams.hideSliderNumber) {
-                        return "\n      <div class=\"search-filter\">\n        <input type=\"range\" id=\"" + this._elementRangeInputId + "\"\n          name=\"" + this._elementRangeInputId + "\"\n          defaultValue=\"" + defaultValue + "\" min=\"" + minValue + "\" max=\"" + maxValue + "\" step=\"" + step + "\"\n          class=\"form-control slider-filter-input range\" />\n      </div>";
+                        return "\n      <div class=\"search-filter filter-" + columnId + "\">\n        <input type=\"range\" id=\"" + this._elementRangeInputId + "\"\n          name=\"" + this._elementRangeInputId + "\"\n          defaultValue=\"" + defaultValue + "\" min=\"" + minValue + "\" max=\"" + maxValue + "\" step=\"" + step + "\"\n          class=\"form-control slider-filter-input range\" />\n      </div>";
                     }
-                    return "\n      <div class=\"input-group search-filter\">\n        <input type=\"range\" id=\"" + this._elementRangeInputId + "\"\n          name=\"" + this._elementRangeInputId + "\"\n          defaultValue=\"" + defaultValue + "\" min=\"" + minValue + "\" max=\"" + maxValue + "\" step=\"" + step + "\"\n          class=\"form-control slider-filter-input range\" />\n        <div class=\"input-group-addon input-group-append slider-value\">\n          <span class=\"input-group-text\" id=\"" + this._elementRangeOutputId + "\">" + defaultValue + "</span>\n        </div>\n      </div>";
+                    return "\n      <div class=\"input-group search-filter filter-" + columnId + "\">\n        <input type=\"range\" id=\"" + this._elementRangeInputId + "\"\n          name=\"" + this._elementRangeInputId + "\"\n          defaultValue=\"" + defaultValue + "\" min=\"" + minValue + "\" max=\"" + maxValue + "\" step=\"" + step + "\"\n          class=\"form-control slider-filter-input range\" />\n        <div class=\"input-group-addon input-group-append slider-value\">\n          <span class=\"input-group-text\" id=\"" + this._elementRangeOutputId + "\">" + defaultValue + "</span>\n        </div>\n      </div>";
                 };
                 /**
                  * From the html template string, create a DOM element
                  * @param filterTemplate
                  */
                 SliderFilter.prototype.createDomElement = function (filterTemplate, searchTerm) {
-                    var $headerElm = this.grid.getHeaderRowColumn(this.columnDef.id);
+                    var columnId = this.columnDef && this.columnDef.id;
+                    var $headerElm = this.grid.getHeaderRowColumn(columnId);
                     $($headerElm).empty();
                     // create the DOM element & add an ID and filter class
                     var $filterElm = $(filterTemplate);
                     var searchTermInput = (searchTerm || '0');
                     $filterElm.children('input').val(searchTermInput);
                     $filterElm.children('div.input-group-addon.input-group-append').children().html(searchTermInput);
-                    $filterElm.attr('id', "filter-" + this.columnDef.id);
-                    $filterElm.data('columnId', this.columnDef.id);
+                    $filterElm.attr('id', "filter-" + columnId);
+                    $filterElm.data('columnId', columnId);
                     // if there's a search term, we will add the "filled" class for styling purposes
                     if (searchTerm) {
                         $filterElm.addClass('filled');

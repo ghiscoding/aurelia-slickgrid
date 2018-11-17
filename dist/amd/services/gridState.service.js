@@ -12,7 +12,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-define(["require", "exports", "aurelia-framework", "./../models/index", "./../services/index", "aurelia-event-aggregator"], function (require, exports, aurelia_framework_1, index_1, index_2, aurelia_event_aggregator_1) {
+define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "./../models/index", "./utilities"], function (require, exports, aurelia_framework_1, aurelia_event_aggregator_1, index_1, utilities_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var GridStateService = /** @class */ (function () {
@@ -37,9 +37,9 @@ define(["require", "exports", "aurelia-framework", "./../models/index", "./../se
          * @param filterService
          * @param sortService
          */
-        GridStateService.prototype.init = function (grid, controlAndPluginService, filterService, sortService) {
+        GridStateService.prototype.init = function (grid, extensionService, filterService, sortService) {
             this._grid = grid;
-            this.controlAndPluginService = controlAndPluginService;
+            this.extensionService = extensionService;
             this.filterService = filterService;
             this.sortService = sortService;
             this.subscribeToAllGridChanges(grid);
@@ -49,7 +49,7 @@ define(["require", "exports", "aurelia-framework", "./../models/index", "./../se
             // unsubscribe all SlickGrid events
             this._eventHandler.unsubscribeAll();
             // also dispose of all Subscriptions
-            this.subscriptions = index_2.disposeAllSubscriptions(this.subscriptions);
+            this.subscriptions = utilities_1.disposeAllSubscriptions(this.subscriptions);
         };
         /**
          * Get the current grid state (filters/sorters/pagination)
@@ -179,13 +179,13 @@ define(["require", "exports", "aurelia-framework", "./../models/index", "./../se
         /**
          * Hook a SlickGrid Extension Event to a Grid State change event
          * @param extension name
-         * @param grid
+         * @param event name
          */
         GridStateService.prototype.hookExtensionEventToGridStateChange = function (extensionName, eventName) {
             var _this = this;
-            var extension = this.controlAndPluginService && this.controlAndPluginService.getExtensionByName(extensionName);
-            if (extension && extension.service && extension.service[eventName] && extension.service[eventName].subscribe) {
-                this._eventHandler.subscribe(extension.service[eventName], function (e, args) {
+            var extension = this.extensionService && this.extensionService.getExtensionByName(extensionName);
+            if (extension && extension.class && extension.class[eventName] && extension.class[eventName].subscribe) {
+                this._eventHandler.subscribe(extension.class[eventName], function (e, args) {
                     var columns = args && args.columns;
                     var currentColumns = _this.getAssociatedCurrentColumns(columns);
                     _this.ea.publish('gridStateService:changed', { change: { newValues: currentColumns, type: index_1.GridStateType.columns }, gridState: _this.getCurrentGridState() });
@@ -215,7 +215,11 @@ define(["require", "exports", "aurelia-framework", "./../models/index", "./../se
         /** if we use Row Selection or the Checkbox Selector, we need to reset any selection */
         GridStateService.prototype.resetRowSelection = function () {
             if (this._gridOptions.enableRowSelection || this._gridOptions.enableCheckboxSelector) {
-                this._grid.setSelectedRows([]);
+                // this also requires the Row Selection Model to be registered as well
+                var rowSelectionExtension = this.extensionService && this.extensionService.getExtensionByName && this.extensionService.getExtensionByName(index_1.ExtensionName.rowSelection);
+                if (rowSelectionExtension && rowSelectionExtension.extension) {
+                    this._grid.setSelectedRows([]);
+                }
             }
         };
         /**
@@ -245,8 +249,8 @@ define(["require", "exports", "aurelia-framework", "./../models/index", "./../se
                 _this.ea.publish('gridStateService:changed', { change: { newValues: currentSorters, type: index_1.GridStateType.sorter }, gridState: _this.getCurrentGridState() });
             }));
             // Subscribe to ColumnPicker and/or GridMenu for show/hide Columns visibility changes
-            this.hookExtensionEventToGridStateChange('ColumnPicker', 'onColumnsChanged');
-            this.hookExtensionEventToGridStateChange('GridMenu', 'onColumnsChanged');
+            this.hookExtensionEventToGridStateChange(index_1.ExtensionName.columnPicker, 'onColumnsChanged');
+            this.hookExtensionEventToGridStateChange(index_1.ExtensionName.gridMenu, 'onColumnsChanged');
             // subscribe to Column Resize & Reordering
             this.hookSlickGridEventToGridStateChange('onColumnsReordered', grid);
             this.hookSlickGridEventToGridStateChange('onColumnsResized', grid);

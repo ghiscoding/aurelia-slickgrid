@@ -24,7 +24,8 @@ export class FloatEditor {
         return this.columnEditor.validator || this.columnDef.validator;
     }
     init() {
-        this.$input = $(`<input type="number" class="editor-text" step="${this.getInputDecimalSteps()}" />`)
+        const columnId = this.columnDef && this.columnDef.id;
+        this.$input = $(`<input type="number" class="editor-text editor-${columnId}" step="${this.getInputDecimalSteps()}" />`)
             .appendTo(this.args.container)
             .on('keydown.nav', (e) => {
             if (e.keyCode === KeyCode.LEFT || e.keyCode === KeyCode.RIGHT) {

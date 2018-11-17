@@ -104,13 +104,14 @@ export class SliderFilter {
      * Create the HTML template as a string
      */
     buildTemplateHtmlString() {
+        const columnId = this.columnDef && this.columnDef.id;
         const minValue = this.filterProperties.hasOwnProperty('minValue') ? this.filterProperties.minValue : DEFAULT_MIN_VALUE;
         const maxValue = this.filterProperties.hasOwnProperty('maxValue') ? this.filterProperties.maxValue : DEFAULT_MAX_VALUE;
         const defaultValue = this.filterParams.hasOwnProperty('sliderStartValue') ? this.filterParams.sliderStartValue : minValue;
         const step = this.filterProperties.hasOwnProperty('valueStep') ? this.filterProperties.valueStep : DEFAULT_STEP;
         if (this.filterParams.hideSliderNumber) {
             return `
-      <div class="search-filter">
+      <div class="search-filter filter-${columnId}">
         <input type="range" id="${this._elementRangeInputId}"
           name="${this._elementRangeInputId}"
           defaultValue="${defaultValue}" min="${minValue}" max="${maxValue}" step="${step}"
@@ -118,7 +119,7 @@ export class SliderFilter {
       </div>`;
         }
         return `
-      <div class="input-group search-filter">
+      <div class="input-group search-filter filter-${columnId}">
         <input type="range" id="${this._elementRangeInputId}"
           name="${this._elementRangeInputId}"
           defaultValue="${defaultValue}" min="${minValue}" max="${maxValue}" step="${step}"
@@ -133,15 +134,16 @@ export class SliderFilter {
      * @param filterTemplate
      */
     createDomElement(filterTemplate, searchTerm) {
-        const $headerElm = this.grid.getHeaderRowColumn(this.columnDef.id);
+        const columnId = this.columnDef && this.columnDef.id;
+        const $headerElm = this.grid.getHeaderRowColumn(columnId);
         $($headerElm).empty();
         // create the DOM element & add an ID and filter class
         const $filterElm = $(filterTemplate);
         const searchTermInput = (searchTerm || '0');
         $filterElm.children('input').val(searchTermInput);
         $filterElm.children('div.input-group-addon.input-group-append').children().html(searchTermInput);
-        $filterElm.attr('id', `filter-${this.columnDef.id}`);
-        $filterElm.data('columnId', this.columnDef.id);
+        $filterElm.attr('id', `filter-${columnId}`);
+        $filterElm.data('columnId', columnId);
         // if there's a search term, we will add the "filled" class for styling purposes
         if (searchTerm) {
             $filterElm.addClass('filled');
