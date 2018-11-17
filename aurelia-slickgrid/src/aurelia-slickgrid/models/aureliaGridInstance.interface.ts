@@ -1,7 +1,7 @@
-import { BackendService } from './../models';
+import { BackendService } from './../models/index';
 import {
-  ControlAndPluginService,
   ExportService,
+  ExtensionService,
   FilterService,
   GridService,
   GridEventService,
@@ -9,7 +9,7 @@ import {
   GroupingAndColspanService,
   ResizerService,
   SortService
-} from '../services';
+} from '../services/index';
 
 export interface AureliaGridInstance {
   /** Slick DataView object */
@@ -29,8 +29,11 @@ export interface AureliaGridInstance {
   /** Backend Service, when available */
   backendService?: BackendService;
 
-  /** Plugin (and Control) Service */
-  pluginService: ControlAndPluginService;
+  /** Extension (Plugins & Controls) Service */
+  extensionService: ExtensionService;
+
+  /** @deprecated, use `extensionService` instead. Plugin and Control Service */
+  pluginService: ExtensionService;
 
   /** Export Service */
   exportService: ExportService;

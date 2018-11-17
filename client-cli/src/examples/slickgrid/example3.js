@@ -2,19 +2,14 @@ import { inject } from 'aurelia-framework';
 import { HttpClient } from 'aurelia-http-client';
 import { I18N } from 'aurelia-i18n';
 import {
-  AureliaGridInstance,
-  Column,
   Editors,
-  EditorArgs,
-  EditorValidator,
   FieldType,
   Filters,
   Formatters,
-  GridOption,
-  OnEventArgs,
-  OperatorType,
+  OperatorType
 } from 'aurelia-slickgrid';
 import { CustomInputEditor } from './custom-inputEditor';
+import { French } from 'flatpickr/l10n/fr';
 
 const NB_ITEMS = 100;
 const URL_SAMPLE_COLLECTION_DATA = 'assets/data/collection_100_numbers.json';
@@ -333,7 +328,10 @@ export class Example3 {
         this._commandQueue.push(editCommand);
         editCommand.execute();
       },
-      i18n: this.i18n
+      i18n: this.i18n,
+      params: {
+        flapickrLocale: French
+      }
     };
   }
 

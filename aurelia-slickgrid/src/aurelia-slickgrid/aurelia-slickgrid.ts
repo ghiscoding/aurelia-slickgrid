@@ -1,24 +1,10 @@
 // import 3rd party vendor libs
+// only import the necessary core lib, each will be imported on demand when enabled (via require)
 import 'jquery-ui-dist/jquery-ui';
 import 'slickgrid/lib/jquery.event.drag-2.3.0';
-
 import 'slickgrid/slick.core';
 import 'slickgrid/slick.dataview';
 import 'slickgrid/slick.grid';
-import 'slickgrid/slick.groupitemmetadataprovider';
-import 'slickgrid/controls/slick.columnpicker';
-import 'slickgrid/controls/slick.gridmenu';
-import 'slickgrid/controls/slick.pager';
-import 'slickgrid/plugins/slick.autotooltips';
-import 'slickgrid/plugins/slick.cellexternalcopymanager';
-import 'slickgrid/plugins/slick.cellrangedecorator';
-import 'slickgrid/plugins/slick.cellrangeselector';
-import 'slickgrid/plugins/slick.cellselectionmodel';
-import 'slickgrid/plugins/slick.checkboxselectcolumn';
-import 'slickgrid/plugins/slick.headerbuttons';
-import 'slickgrid/plugins/slick.headermenu';
-import 'slickgrid/plugins/slick.rowmovemanager';
-import 'slickgrid/plugins/slick.rowselectionmodel';
 
 import { bindable, BindingEngine, bindingMode, Container, Factory, inject } from 'aurelia-framework';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
@@ -32,11 +18,12 @@ import {
   GridStateChange,
   GridStateType,
   Pagination,
+  ExtensionName,
 } from './models/index';
 import {
-  ControlAndPluginService,
   disposeAllSubscriptions,
   ExportService,
+  ExtensionService,
   FilterService,
   GraphqlService,
   GridEventService,
@@ -47,6 +34,8 @@ import {
   SortService,
   toKebabCase,
 } from './services/index';
+import { ExtensionUtility } from './extensions/extensionUtility';
+import { SharedService } from './services/shared.service';
 import * as $ from 'jquery';
 
 // using external non-typed js libraries
@@ -58,16 +47,18 @@ const eventPrefix = 'sg';
 // Aurelia doesn't support well TypeScript @autoinject in a Plugin so we'll do it the old fashion way
 @inject(
   BindingEngine,
-  ControlAndPluginService,
   ExportService,
   Element,
   EventAggregator,
+  ExtensionService,
+  ExtensionUtility,
   FilterService,
   GridEventService,
   GridService,
   GridStateService,
   GroupingAndColspanService,
   ResizerService,
+  SharedService,
   SortService,
   Container
 )
@@ -75,8 +66,8 @@ export class AureliaSlickgridCustomElement {
   private _columnDefinitions: Column[] = [];
   private _dataset: any[];
   private _eventHandler: any = new Slick.EventHandler();
-  private _fixedHeight: number | undefined;
-  private _fixedWidth: number | undefined;
+  private _fixedHeight: number | null;
+  private _fixedWidth: number | null;
   private _hideHeaderRowAfterPageLoad = false;
   groupItemMetadataProvider: any;
   isGridInitialized = false;
@@ -98,22 +89,24 @@ export class AureliaSlickgridCustomElement {
 
   constructor(
     private bindingEngine: BindingEngine,
-    private controlAndPluginService: ControlAndPluginService,
     private exportService: ExportService,
     private elm: Element,
     private ea: EventAggregator,
+    private extensionService: ExtensionService,
+    private extensionUtility: ExtensionUtility,
     private filterService: FilterService,
     private gridEventService: GridEventService,
     private gridService: GridService,
     private gridStateService: GridStateService,
     private groupingAndColspanService: GroupingAndColspanService,
     private resizerService: ResizerService,
+    private sharedService: SharedService,
     private sortService: SortService,
     private container: Container
   ) {
     this.serviceList = [
-      controlAndPluginService,
       exportService,
+      extensionService,
       filterService,
       gridEventService,
       gridService,
@@ -139,7 +132,9 @@ export class AureliaSlickgridCustomElement {
     this.createBackendApiInternalPostProcessCallback(this.gridOptions);
 
     if (this.gridOptions.enableGrouping) {
+      this.extensionUtility.loadExtensionDynamically(ExtensionName.groupItemMetaProvider);
       this.groupItemMetadataProvider = new Slick.Data.GroupItemMetadataProvider();
+      this.sharedService.groupItemMetadataProvider = this.groupItemMetadataProvider;
       this.dataview = new Slick.Data.DataView({ groupItemMetadataProvider: this.groupItemMetadataProvider });
     } else {
       this.dataview = new Slick.Data.DataView();
@@ -167,9 +162,15 @@ export class AureliaSlickgridCustomElement {
       };
     });
 
-    this.controlAndPluginService.createCheckboxPluginBeforeGridCreation(this._columnDefinitions, this.gridOptions);
+    // save reference for all columns before they optionally become hidden/visible
+    this.sharedService.allColumns = this._columnDefinitions;
+    this.sharedService.visibleColumns = this._columnDefinitions;
+    this.extensionService.createCheckboxPluginBeforeGridCreation(this._columnDefinitions, this.gridOptions);
     this.grid = new Slick.Grid(`#${this.gridId}`, this.dataview, this._columnDefinitions, this.gridOptions);
-    this.controlAndPluginService.attachDifferentControlOrPlugins(this.grid, this.dataview, this.groupItemMetadataProvider);
+
+    this.sharedService.dataView = this.dataview;
+    this.sharedService.grid = this.grid;
+    this.extensionService.attachDifferentExtensions();
 
     this.attachDifferentHooks(this.grid, this.gridOptions, this.dataview);
 
@@ -206,7 +207,7 @@ export class AureliaSlickgridCustomElement {
 
     // when user enables translation, we need to translate Headers on first pass & subsequently in the attachDifferentHooks
     if (this.gridOptions.enableTranslate) {
-      this.controlAndPluginService.translateColumnHeaders();
+      this.extensionService.translateColumnHeaders();
     }
 
     // if Export is enabled, initialize the service with the necessary grid and other objects
@@ -220,7 +221,7 @@ export class AureliaSlickgridCustomElement {
       this.attachBackendCallbackFunctions(this.gridOptions);
     }
 
-    this.gridStateService.init(this.grid, this.controlAndPluginService, this.filterService, this.sortService);
+    this.gridStateService.init(this.grid, this.extensionService, this.filterService, this.sortService);
 
     // create the Aurelia Grid Instance with reference to all Services
     const aureliaElementInstance: AureliaGridInstance = {
@@ -239,7 +240,10 @@ export class AureliaSlickgridCustomElement {
       gridStateService: this.gridStateService,
       gridService: this.gridService,
       groupingService: this.groupingAndColspanService,
-      pluginService: this.controlAndPluginService,
+      extensionService: this.extensionService,
+
+      /** @deprecated please use "extensionService" instead */
+      pluginService: this.extensionService,
       resizerService: this.resizerService,
       sortService: this.sortService,
     };
@@ -277,8 +281,8 @@ export class AureliaSlickgridCustomElement {
   }
 
   bind() {
-    this._fixedHeight = this.gridHeight !== undefined ? +this.gridHeight : undefined;
-    this._fixedWidth = this.gridWidth !== undefined ? +this.gridWidth : undefined;
+    this._fixedHeight = this.gridHeight ? +this.gridHeight : null;
+    this._fixedWidth = this.gridWidth ? +this.gridWidth : null;
 
     // get the grid options (priority is Global Options first, then user option which could overwrite the Global options)
     this.gridOptions = { ...GlobalGridOptions, ...this.gridOptions };
@@ -364,10 +368,10 @@ export class AureliaSlickgridCustomElement {
     this.subscriptions.push(
       this.ea.subscribe('i18n:locale:changed', (payload: any) => {
         if (gridOptions.enableTranslate) {
-          this.controlAndPluginService.translateColumnHeaders();
-          this.controlAndPluginService.translateColumnPicker();
-          this.controlAndPluginService.translateGridMenu();
-          this.controlAndPluginService.translateHeaderMenu();
+          this.extensionService.translateColumnHeaders();
+          this.extensionService.translateColumnPicker();
+          this.extensionService.translateGridMenu();
+          this.extensionService.translateHeaderMenu();
         }
       })
     );
@@ -664,9 +668,9 @@ export class AureliaSlickgridCustomElement {
    */
   updateColumnDefinitionsList(newColumnDefinitions?: Column[]) {
     if (this.gridOptions.enableTranslate) {
-      this.controlAndPluginService.translateColumnHeaders(false, newColumnDefinitions);
+      this.extensionService.translateColumnHeaders(false, newColumnDefinitions);
     } else {
-      this.controlAndPluginService.renderColumnHeaders(newColumnDefinitions);
+      this.extensionService.renderColumnHeaders(newColumnDefinitions);
     }
 
     if (this.gridOptions && this.gridOptions.enableAutoSizeColumns) {
