@@ -1,0 +1,16 @@
+<template>
+  <h2>${title}</h2>
+  <div class="subtitle"
+       innerhtml.bind="subTitle"></div>
+
+  <aurelia-slickgrid grid-id="grid16"
+                     column-definitions.bind="columnDefinitions"
+                     grid-options.bind="gridOptions"
+                     dataset.bind="dataset"
+                     asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)"
+                     sg-on-scroll.delegate="onScroll($event.detail.eventData, $event.detail.args)"
+                     sg-on-columns-reordered.delegate="onColumnsReordered($event.detail.eventData, $event.detail.args)"
+                     sg-on-sort.delegate="onSort($event.detail.eventData, $event.detail.args)"
+                     asg-on-grid-state-changed.delegate="onGridStateChanged($event.detail)">
+  </aurelia-slickgrid>
+</template>

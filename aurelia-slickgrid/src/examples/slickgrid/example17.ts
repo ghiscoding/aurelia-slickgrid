@@ -1,4 +1,3 @@
-import { CreatedView } from './example16';
 import { Subscription, EventAggregator } from 'aurelia-event-aggregator';
 import { Column, FieldType, Formatters, GridOption, AureliaGridInstance, Filters, GridStateChange } from '../../aurelia-slickgrid';
 import { autoinject, TemplatingEngine, ViewCompiler, Container, ViewResources, ViewSlot, createOverrideContext, PLATFORM, View } from 'aurelia-framework';
@@ -18,8 +17,8 @@ export interface CreatedView {
 }
 
 @autoinject()
-export class Example16 {
-  title = 'Example 16: Row Detail View';
+export class Example17 {
+  title = 'Example 17: Row Detail View';
   subTitle = `
     Add functionality to show extra information with a Row Detail View
   `;
@@ -78,7 +77,7 @@ export class Example16 {
     this.gridRowBuffer = aureliaGrid && aureliaGrid.slickGrid && aureliaGrid.slickGrid.getOptions().minRowBuffer;
     const plugin: any = this.aureliaGrid.pluginService.getExtensionByName('RowDetailViewPlugin');
     this.detailView = plugin && plugin.service;
-    console.log(this.gridRowBuffer)
+    console.log(this.gridRowBuffer);
     setTimeout(() => {
       const renderedRange = this.aureliaGrid.slickGrid.getRenderedRange() || {};
       this.visibleRenderedCellCount = renderedRange.bottom - renderedRange.top - this.gridRowBuffer;
@@ -309,8 +308,6 @@ export class Example16 {
     }
   }
 
-  onViewPortChanged(e, args) { }
-
   onColumnsReordered(e, args) {
     this.slots.forEach((slot) => {
       slot.rowIndex = null;
@@ -361,10 +358,10 @@ export class Example16 {
 
         if (!isAddingToArray && this.outOfViewportRangeRows.findIndex((rowIdx) => rowIdx === rowIndex) >= 0) {
           this.redrawView(slot);
-          console.log('outOfViewportRangeRows', this.outOfViewportRangeRows)
+          console.log('outOfViewportRangeRows', this.outOfViewportRangeRows);
         } else if (isAddingToArray) {
           this.updateOutOfRangeRows(rowIndex, isAddingToArray);
-          console.log('outOfViewportRangeRows', this.outOfViewportRangeRows)
+          console.log('outOfViewportRangeRows', this.outOfViewportRangeRows);
         }
 
         // console.log('array of out of range', this.outOfViewportRangeRows);

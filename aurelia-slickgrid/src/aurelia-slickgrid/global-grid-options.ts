@@ -90,9 +90,6 @@ export const GlobalGridOptions: GridOption = {
     pageSize: 25,
     totalItems: 0
   },
-  rowDetailViewOptions: {
-    keyPrefix: '__'
-  },
   rowHeight: 35,
   sortColNumberInSeparateSpan: true,
   suppressActiveCellChangeOnEdit: true,
