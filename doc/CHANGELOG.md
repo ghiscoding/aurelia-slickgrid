@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.5.0"></a>
+# [2.5.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.4.2...v2.5.0) (2018-11-17)
+
+
+### Bug Fixes
+
+* **resize:** auto-resize shouldn't resize when fixing gridHeight/Width ([4586d29](https://github.com/ghiscoding/aurelia-slickgrid/commit/4586d29))
+* **select:** multiple-select autoAdjustDropWidth sometime incorrect ([2e86cec](https://github.com/ghiscoding/aurelia-slickgrid/commit/2e86cec))
+* **select:** Single Select should use EQ operator instead of IN ([550a974](https://github.com/ghiscoding/aurelia-slickgrid/commit/550a974))
+* **select:** Single Select should use EQ operator instead of IN ([3f3f9ed](https://github.com/ghiscoding/aurelia-slickgrid/commit/3f3f9ed))
+
+
+### Features
+
+* **editor:** add "editor-{id}" to all Editors. easier styling & target ([#112](https://github.com/ghiscoding/aurelia-slickgrid/issues/112)) ([6d52536](https://github.com/ghiscoding/aurelia-slickgrid/commit/6d52536))
+* **filter:** add "filter-{id}" to all Filters. easier styling & target ([#111](https://github.com/ghiscoding/aurelia-slickgrid/issues/111)) ([d836e7c](https://github.com/ghiscoding/aurelia-slickgrid/commit/d836e7c))
+* **plugin:** split out all controls/plugins into their own class ([#110](https://github.com/ghiscoding/aurelia-slickgrid/issues/110)) ([6027d0c](https://github.com/ghiscoding/aurelia-slickgrid/commit/6027d0c))
+* **select:** collection can also be of type String ([#109](https://github.com/ghiscoding/aurelia-slickgrid/issues/109)) ([9733d08](https://github.com/ghiscoding/aurelia-slickgrid/commit/9733d08))
+
+
+
 <a name="2.4.2"></a>
 ## [2.4.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.4.0...v2.4.2) (2018-10-20)
 
