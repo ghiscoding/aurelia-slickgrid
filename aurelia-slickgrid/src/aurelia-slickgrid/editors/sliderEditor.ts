@@ -43,7 +43,7 @@ export class SliderEditor implements Editor {
   }
 
   init(): void {
-    const container = this.args.container;
+    const container = this.args && this.args.container;
 
     // define the input & slider number IDs
     const itemId = this.args && this.args.item && this.args.item.id;
@@ -58,8 +58,8 @@ export class SliderEditor implements Editor {
 
     // watch on change event
     this.$editorElm
-      .appendTo(this.args.container)
-      .on('mouseup', (event: Event) => this.save());
+      .appendTo(container)
+      .on('mouseup', () => this.save());
 
     // if user chose to display the slider number on the right side, then update it every time it changes
     // we need to use both "input" and "change" event to be all cross-browser
@@ -161,15 +161,15 @@ export class SliderEditor implements Editor {
    * Create the HTML template as a string
    */
   private buildTemplateHtmlString() {
+    const columnId = this.columnDef && this.columnDef.id;
     const minValue = this.columnEditor.hasOwnProperty('minValue') ? this.columnEditor.minValue : DEFAULT_MIN_VALUE;
     const maxValue = this.columnEditor.hasOwnProperty('maxValue') ? this.columnEditor.maxValue : DEFAULT_MAX_VALUE;
     const defaultValue = this.editorParams.hasOwnProperty('sliderStartValue') ? this.editorParams.sliderStartValue : minValue;
     const step = this.columnEditor.hasOwnProperty('valueStep') ? this.columnEditor.valueStep : DEFAULT_STEP;
-    const itemId = this.args && this.args.item && this.args.item.id;
 
     if (this.editorParams.hideSliderNumber) {
       return `
-      <div class="slider-editor">
+      <div class="slider-editor editor-${columnId}">
         <input type="range" id="${this._elementRangeInputId}"
           name="${this._elementRangeInputId}"
           defaultValue="${defaultValue}" min="${minValue}" max="${maxValue}" step="${step}"
@@ -178,7 +178,7 @@ export class SliderEditor implements Editor {
     }
 
     return `
-      <div class="input-group slider-editor">
+      <div class="input-group slider-editor editor-${columnId}">
         <input type="range" id="${this._elementRangeInputId}"
           name="${this._elementRangeInputId}"
           defaultValue="${defaultValue}" min="${minValue}" max="${maxValue}" step="${step}"

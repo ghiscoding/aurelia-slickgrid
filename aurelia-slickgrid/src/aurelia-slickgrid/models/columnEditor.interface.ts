@@ -8,7 +8,10 @@ import {
 } from './../models/index';
 
 export interface ColumnEditor {
-  /** A collection of items/options that can be used by Select (dropdown) or any other type of Editors */
+  /**
+   * A collection of items/options (commonly used with a Select/Multi-Select Editor)
+   * It can be a collection of string or label/value pair (the pair can be customized via the "customStructure" option)
+   */
   collection?: any[];
 
   /** A collection of items/options that will be loaded asynchronously (commonly used with a Select/Multi-Select Editor) */
