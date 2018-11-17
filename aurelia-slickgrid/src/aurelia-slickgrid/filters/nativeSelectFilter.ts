@@ -104,6 +104,7 @@ export class NativeSelectFilter implements Filter {
       throw new Error(`[Aurelia-SlickGrid] You need to pass a "collection" for the Select Filter to work correctly. Also each option should include a value/label pair (or value/labelKey when using Locale). For example: { filter: { model: Filters.select, collection: [{ value: true, label: 'True' }, { value: false, label: 'False'}] } }`);
     }
 
+    const columnId = this.columnDef && this.columnDef.id;
     const optionCollection = this.columnDef.filter.collection || [];
     const labelName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.label : 'label';
     const valueName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.value : 'value';
@@ -126,7 +127,7 @@ export class NativeSelectFilter implements Filter {
         options += `<option value="${option[valueName]}">${textLabel}</option>`;
       });
     }
-    return `<select class="form-control search-filter">${options}</select>`;
+    return `<select class="form-control search-filter filter-${columnId}">${options}</select>`;
   }
 
   /**
@@ -134,7 +135,8 @@ export class NativeSelectFilter implements Filter {
    * @param filterTemplate
    */
   private createDomElement(filterTemplate: string, searchTerm?: SearchTerm) {
-    const $headerElm = this.grid.getHeaderRowColumn(this.columnDef.id);
+    const columnId = this.columnDef && this.columnDef.id;
+    const $headerElm = this.grid.getHeaderRowColumn(columnId);
     $($headerElm).empty();
 
     // create the DOM element & add an ID and filter class
@@ -142,8 +144,8 @@ export class NativeSelectFilter implements Filter {
     const searchTermInput = (searchTerm || '') as string;
 
     $filterElm.val(searchTermInput);
-    $filterElm.attr('id', `filter-${this.columnDef.id}`);
-    $filterElm.data('columnId', this.columnDef.id);
+    $filterElm.attr('id', `filter-${columnId}`);
+    $filterElm.data('columnId', columnId);
 
     // append the new DOM element to the header row
     if ($filterElm && typeof $filterElm.appendTo === 'function') {
