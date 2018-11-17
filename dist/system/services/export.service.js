@@ -218,7 +218,7 @@ System.register(["aurelia-event-aggregator", "aurelia-framework", "aurelia-i18n"
                             itemData = utilities_1.sanitizeHtmlToText(itemData);
                         }
                         // when CSV we also need to escape double quotes twice, so " becomes ""
-                        if (format === index_1.FileType.csv) {
+                        if (format === index_1.FileType.csv && itemData) {
                             itemData = itemData.toString().replace(/"/gi, "\"\"");
                         }
                         // do we have a wrapper to keep as a string? in certain cases like "1E06", we don't want excel to transform it into exponential (1.0E06)

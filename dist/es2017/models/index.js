@@ -1,5 +1,6 @@
 export * from './caseType';
 export * from './delimiterType.enum';
+export * from './extensionName.enum';
 export * from './fieldType.enum';
 export * from './fileType.enum';
 export * from './filterMultiplePassType.enum';

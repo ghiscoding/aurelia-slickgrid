@@ -7,6 +7,7 @@ import {
   Filters,
   Formatters
 } from 'aurelia-slickgrid';
+import { French } from 'flatpickr/l10n/fr';
 
 @inject(I18N)
 export class Example12 {
@@ -123,6 +124,9 @@ export class Example12 {
       gridMenu: {
         hideExportCsvCommand: false,           // false by default, so it's optional
         hideExportTextDelimitedCommand: false  // true by default, so if you want it, you will need to disable the flag
+      },
+      params: {
+        flapickrLocale: French
       }
     };
   }

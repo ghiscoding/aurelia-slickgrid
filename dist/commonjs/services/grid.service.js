@@ -6,16 +6,16 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var aurelia_i18n_1 = require("aurelia-i18n");
 var aurelia_framework_1 = require("aurelia-framework");
-var controlAndPlugin_service_1 = require("./controlAndPlugin.service");
+var aurelia_i18n_1 = require("aurelia-i18n");
+var extension_service_1 = require("./extension.service");
 var filter_service_1 = require("./filter.service");
 var gridState_service_1 = require("./gridState.service");
 var sort_service_1 = require("./sort.service");
 var $ = require("jquery");
 var GridService = /** @class */ (function () {
-    function GridService(controlAndPluginService, filterService, i18n, gridStateService, sortService) {
-        this.controlAndPluginService = controlAndPluginService;
+    function GridService(extensionService, filterService, i18n, gridStateService, sortService) {
+        this.extensionService = extensionService;
         this.filterService = filterService;
         this.i18n = i18n;
         this.gridStateService = gridStateService;
@@ -189,7 +189,7 @@ var GridService = /** @class */ (function () {
     GridService.prototype.resetGrid = function (columnDefinitions) {
         // reset columns to original states & refresh the grid
         if (this._grid && this._dataView) {
-            var originalColumns = this.controlAndPluginService.getAllColumns();
+            var originalColumns = this.extensionService.getAllColumns();
             // const originalColumns = columnDefinitions || this._columnDefinitions;
             if (Array.isArray(originalColumns) && originalColumns.length > 0) {
                 // set the grid columns to it's original column definitions
@@ -306,7 +306,7 @@ var GridService = /** @class */ (function () {
     };
     GridService = __decorate([
         aurelia_framework_1.singleton(true),
-        aurelia_framework_1.inject(controlAndPlugin_service_1.ControlAndPluginService, filter_service_1.FilterService, aurelia_i18n_1.I18N, gridState_service_1.GridStateService, sort_service_1.SortService)
+        aurelia_framework_1.inject(extension_service_1.ExtensionService, filter_service_1.FilterService, aurelia_i18n_1.I18N, gridState_service_1.GridStateService, sort_service_1.SortService)
     ], GridService);
     return GridService;
 }());

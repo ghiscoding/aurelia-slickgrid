@@ -165,7 +165,7 @@ export class Example15 {
         start: new Date(randomYear, randomMonth, randomDay),          // provide a Date format
         usDateShort: `${randomMonth}/${randomDay}/${randomYearShort}`, // provide a date US Short in the dataset
         utcDate: `${randomYear}-${randomMonthStr}-${randomDay}T${randomHour}:${randomTime}:${randomTime}Z`,
-        effortDriven: (i % 3 === 0)
+        completed: (i % 3 === 0)
       };
     }
   }

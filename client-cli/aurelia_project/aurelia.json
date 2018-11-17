@@ -109,7 +109,8 @@
             "path": "../node_modules/flatpickr/dist",
             "main": "flatpickr.min",
             "resources": [
-              "flatpickr.min.css"
+              "flatpickr.min.css",
+              "l10n/fr.js"
             ]
           },
           {
@@ -139,6 +140,11 @@
             "main": "jquery.event.drag-2.3.0"
           },
           {
+            "name": "slick-gridmenu",
+            "path": "../node_modules/slickgrid/controls",
+            "main": "slick.gridmenu.js"
+          },
+          {
             "name": "jquery-ui-dist",
             "path": "../node_modules/jquery-ui-dist",
             "main": "jquery-ui"
@@ -151,6 +157,11 @@
               "jquery",
               "jquery-event",
               "jquery-ui-dist"
+            ],
+            "resources": [
+              "controls/*.js",
+              "plugins/*.js",
+              "slick.groupitemmetadataprovider.js"
             ]
           },
           {

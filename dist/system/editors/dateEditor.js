@@ -66,6 +66,7 @@ System.register(["./../services/utilities", "./../models/index", "aurelia-i18n",
                 DateEditor.prototype.init = function () {
                     var _this = this;
                     if (this.args && this.args.column) {
+                        var columnId = this.columnDef && this.columnDef.id;
                         this.defaultDate = (this.args.item) ? this.args.item[this.args.column.field] : null;
                         var inputFormat = utilities_1.mapFlatpickrDateFormatWithFieldType(this.args.column.type || index_1.FieldType.dateIso);
                         var outputFormat = utilities_1.mapFlatpickrDateFormatWithFieldType(this.args.column.outputType || index_1.FieldType.dateUtc);
@@ -84,7 +85,7 @@ System.register(["./../services/utilities", "./../models/index", "aurelia-i18n",
                                 _this.save();
                             },
                         };
-                        this.$input = $("<input type=\"text\" data-defaultDate=\"" + this.defaultDate + "\" class=\"editor-text flatpickr\" />");
+                        this.$input = $("<input type=\"text\" data-defaultDate=\"" + this.defaultDate + "\" class=\"editor-text editor-" + columnId + " flatpickr\" />");
                         this.$input.appendTo(this.args.container);
                         this.flatInstance = (flatpickr && this.$input[0] && typeof this.$input[0].flatpickr === 'function') ? this.$input[0].flatpickr(pickerOptions) : null;
                         this.show();
@@ -92,7 +93,11 @@ System.register(["./../services/utilities", "./../models/index", "aurelia-i18n",
                 };
                 DateEditor.prototype.loadFlatpickrLocale = function (locale) {
                     // change locale if needed, Flatpickr reference: https://chmln.github.io/flatpickr/localization/
-                    if (locale !== 'en') {
+                    var gridOptions = this.args && this.args.grid && this.args.grid.getOptions();
+                    if (gridOptions && gridOptions.params && gridOptions.params.flapickrLocale) {
+                        return gridOptions.params.flapickrLocale;
+                    }
+                    else if (locale !== 'en') {
                         var localeDefault = require("flatpickr/dist/l10n/" + locale + ".js").default;
                         return (localeDefault && localeDefault[locale]) ? localeDefault[locale] : 'en';
                     }

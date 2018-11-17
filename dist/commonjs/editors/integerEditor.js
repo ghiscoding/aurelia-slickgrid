@@ -38,7 +38,8 @@ var IntegerEditor = /** @class */ (function () {
     });
     IntegerEditor.prototype.init = function () {
         var _this = this;
-        this.$input = $("<input type=\"number\" class='editor-text' />")
+        var columnId = this.columnDef && this.columnDef.id;
+        this.$input = $("<input type=\"number\" class=\"editor-text editor-" + columnId + "\" />")
             .appendTo(this.args.container)
             .on('keydown.nav', function (e) {
             if (e.keyCode === index_1.KeyCode.LEFT || e.keyCode === index_1.KeyCode.RIGHT) {

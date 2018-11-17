@@ -35,7 +35,8 @@ define(["require", "exports", "jquery", "./../models/index"], function (require,
             configurable: true
         });
         TextEditor.prototype.init = function () {
-            this.$input = $("<input type=\"text\" class=\"editor-text\" />")
+            var columnId = this.columnDef && this.columnDef.id;
+            this.$input = $("<input type=\"text\" class=\"editor-text editor-" + columnId + "\" />")
                 .appendTo(this.args.container)
                 .on('keydown.nav', function (e) {
                 if (e.keyCode === index_1.KeyCode.LEFT || e.keyCode === index_1.KeyCode.RIGHT) {

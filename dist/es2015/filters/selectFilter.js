@@ -40,7 +40,7 @@ export class SelectFilter {
                 // we will subscribe to the onClose event for triggering our callback
                 // also add/remove "filled" class for styling purposes
                 const selectedItems = this.$filterElm.multipleSelect('getSelects');
-                if (Array.isArray(selectedItems) && selectedItems.length > 0) {
+                if (Array.isArray(selectedItems) && !(selectedItems.length === 1 && selectedItems[0] === '') || selectedItems.length > 1) {
                     this.isFilled = true;
                     this.$filterElm.addClass('filled').siblings('div .search-filter').addClass('filled');
                 }
@@ -80,7 +80,10 @@ export class SelectFilter {
     }
     /** Getter for the Filter Operator */
     get operator() {
-        return (this.columnDef && this.columnDef.filter && this.columnDef.filter.operator) || OperatorType.in;
+        if (this.columnDef && this.columnDef.filter && this.columnDef.filter.operator) {
+            return this.columnDef.filter.operator;
+        }
+        return this.isMultipleSelect ? OperatorType.in : OperatorType.equal;
     }
     /**
      * Initialize the filter template
@@ -265,43 +268,58 @@ export class SelectFilter {
      */
     buildTemplateHtmlString(optionCollection, searchTerms) {
         let options = '';
+        const columnId = this.columnDef && this.columnDef.id;
         const separatorBetweenLabels = this.collectionOptions && this.collectionOptions.separatorBetweenTextLabels || '';
         const isRenderHtmlEnabled = this.columnFilter && this.columnFilter.enableRenderHtml || false;
         const sanitizedOptions = this.gridOptions && this.gridOptions.sanitizeHtmlOptions || {};
-        optionCollection.forEach((option) => {
-            if (!option || (option[this.labelName] === undefined && option.labelKey === undefined)) {
-                throw new Error(`[select-filter] A collection with value/label (or value/labelKey when using Locale) is required to populate the Select list, for example:: { filter: model: Filters.multipleSelect, collection: [ { value: '1', label: 'One' } ]')`);
-            }
-            const labelKey = (option.labelKey || option[this.labelName]);
-            const selected = (searchTerms.findIndex((term) => term === option[this.valueName]) >= 0) ? 'selected' : '';
-            const labelText = ((option.labelKey || this.enableTranslateLabel) && labelKey) ? this.i18n.tr(labelKey || ' ') : labelKey;
-            let prefixText = option[this.labelPrefixName] || '';
-            let suffixText = option[this.labelSuffixName] || '';
-            let optionLabel = option[this.optionLabel] || '';
-            optionLabel = optionLabel.toString().replace(/\"/g, '\''); // replace double quotes by single quotes to avoid interfering with regular html
-            // also translate prefix/suffix if enableTranslateLabel is true and text is a string
-            prefixText = (this.enableTranslateLabel && prefixText && typeof prefixText === 'string') ? this.i18n.tr(prefixText || ' ') : prefixText;
-            suffixText = (this.enableTranslateLabel && suffixText && typeof suffixText === 'string') ? this.i18n.tr(suffixText || ' ') : suffixText;
-            optionLabel = (this.enableTranslateLabel && optionLabel && typeof optionLabel === 'string') ? this.i18n.tr(optionLabel || ' ') : optionLabel;
-            // add to a temp array for joining purpose and filter out empty text
-            const tmpOptionArray = [prefixText, labelText, suffixText].filter((text) => text);
-            let optionText = tmpOptionArray.join(separatorBetweenLabels);
-            // if user specifically wants to render html text, he needs to opt-in else it will stripped out by default
-            // also, the 3rd party lib will saninitze any html code unless it's encoded, so we'll do that
-            if (isRenderHtmlEnabled) {
-                // sanitize any unauthorized html tags like script and others
-                // for the remaining allowed tags we'll permit all attributes
-                const sanitizedText = DOMPurify.sanitize(optionText, sanitizedOptions);
-                optionText = htmlEncode(sanitizedText);
-            }
-            // html text of each select option
-            options += `<option value="${option[this.valueName]}" label="${optionLabel}" ${selected}>${optionText}</option>`;
-            // if there's a search term, we will add the "filled" class for styling purposes
-            if (selected) {
-                this.isFilled = true;
-            }
-        });
-        return `<select class="ms-filter search-filter" multiple="multiple">${options}</select>`;
+        // collection could be an Array of Strings OR Objects
+        if (optionCollection.every((x) => typeof x === 'string')) {
+            optionCollection.forEach((option) => {
+                const selected = (searchTerms.findIndex((term) => term === option) >= 0) ? 'selected' : '';
+                options += `<option value="${option}" label="${option}" ${selected}>${option}</option>`;
+                // if there's at least 1 search term found, we will add the "filled" class for styling purposes
+                if (selected) {
+                    this.isFilled = true;
+                }
+            });
+        }
+        else {
+            // array of objects will require a label/value pair unless a customStructure is passed
+            optionCollection.forEach((option) => {
+                if (!option || (option[this.labelName] === undefined && option.labelKey === undefined)) {
+                    throw new Error(`[select-filter] A collection with value/label (or value/labelKey when using Locale) is required to populate the Select list, for example:: { filter: model: Filters.multipleSelect, collection: [ { value: '1', label: 'One' } ]')`);
+                }
+                const labelKey = (option.labelKey || option[this.labelName]);
+                const selected = (searchTerms.findIndex((term) => term === option[this.valueName]) >= 0) ? 'selected' : '';
+                const labelText = ((option.labelKey || this.enableTranslateLabel) && labelKey) ? this.i18n.tr(labelKey || ' ') : labelKey;
+                let prefixText = option[this.labelPrefixName] || '';
+                let suffixText = option[this.labelSuffixName] || '';
+                let optionLabel = option[this.optionLabel] || '';
+                optionLabel = optionLabel.toString().replace(/\"/g, '\''); // replace double quotes by single quotes to avoid interfering with regular html
+                // also translate prefix/suffix if enableTranslateLabel is true and text is a string
+                prefixText = (this.enableTranslateLabel && prefixText && typeof prefixText === 'string') ? this.i18n.tr(prefixText || ' ') : prefixText;
+                suffixText = (this.enableTranslateLabel && suffixText && typeof suffixText === 'string') ? this.i18n.tr(suffixText || ' ') : suffixText;
+                optionLabel = (this.enableTranslateLabel && optionLabel && typeof optionLabel === 'string') ? this.i18n.tr(optionLabel || ' ') : optionLabel;
+                // add to a temp array for joining purpose and filter out empty text
+                const tmpOptionArray = [prefixText, labelText, suffixText].filter((text) => text);
+                let optionText = tmpOptionArray.join(separatorBetweenLabels);
+                // if user specifically wants to render html text, he needs to opt-in else it will stripped out by default
+                // also, the 3rd party lib will saninitze any html code unless it's encoded, so we'll do that
+                if (isRenderHtmlEnabled) {
+                    // sanitize any unauthorized html tags like script and others
+                    // for the remaining allowed tags we'll permit all attributes
+                    const sanitizedText = DOMPurify.sanitize(optionText, sanitizedOptions);
+                    optionText = htmlEncode(sanitizedText);
+                }
+                // html text of each select option
+                options += `<option value="${option[this.valueName]}" label="${optionLabel}" ${selected}>${optionText}</option>`;
+                // if there's a search term, we will add the "filled" class for styling purposes
+                if (selected) {
+                    this.isFilled = true;
+                }
+            });
+        }
+        return `<select class="ms-filter search-filter filter-${columnId}" multiple="multiple">${options}</select>`;
     }
     /** Create a blank entry that can be added to the collection. It will also reuse the same collection structure provided by the user */
     createBlankEntry() {
@@ -323,11 +341,11 @@ export class SelectFilter {
      * @param filterTemplate
      */
     createDomElement(filterTemplate) {
-        const fieldId = this.columnDef && this.columnDef.field || this.columnDef && this.columnDef.id;
+        const columnId = this.columnDef && this.columnDef.id;
         // provide the name attribute to the DOM element which will be needed to auto-adjust drop position (dropup / dropdown)
-        this.elementName = `filter_${fieldId}`;
+        this.elementName = `filter-${columnId}`;
         this.defaultOptions.name = this.elementName;
-        const $headerElm = this.grid.getHeaderRowColumn(this.columnDef.id);
+        const $headerElm = this.grid.getHeaderRowColumn(columnId);
         $($headerElm).empty();
         // create the DOM element & add an ID and filter class
         this.$filterElm = $(filterTemplate);
@@ -335,7 +353,7 @@ export class SelectFilter {
             throw new Error(`multiple-select.js was not found, make sure to read the HOWTO Wiki on how to install it`);
         }
         this.$filterElm.attr('id', this.elementName);
-        this.$filterElm.data('columnId', fieldId);
+        this.$filterElm.data('columnId', columnId);
         // if there's a search term, we will add the "filled" class for styling purposes
         if (this.isFilled) {
             this.$filterElm.addClass('filled');

@@ -87,22 +87,24 @@ define(["require", "exports", "jquery"], function (require, exports, $) {
          * Create the HTML template as a string
          */
         InputFilter.prototype.buildTemplateHtmlString = function () {
+            var columnId = this.columnDef && this.columnDef.id;
             var placeholder = (this.gridOptions) ? (this.gridOptions.defaultFilterPlaceholder || '') : '';
-            return "<input type=\"text\" class=\"form-control search-filter\" placeholder=\"" + placeholder + "\">";
+            return "<input type=\"text\" class=\"form-control search-filter filter-" + columnId + "\" placeholder=\"" + placeholder + "\">";
         };
         /**
          * From the html template string, create a DOM element
          * @param filterTemplate
          */
         InputFilter.prototype.createDomElement = function (filterTemplate, searchTerm) {
-            var $headerElm = this.grid.getHeaderRowColumn(this.columnDef.id);
+            var columnId = this.columnDef && this.columnDef.id;
+            var $headerElm = this.grid.getHeaderRowColumn(columnId);
             $($headerElm).empty();
             // create the DOM element & add an ID and filter class
             var $filterElm = $(filterTemplate);
             var searchTermInput = searchTerm;
             $filterElm.val(searchTermInput);
-            $filterElm.attr('id', "filter-" + this.columnDef.id);
-            $filterElm.data('columnId', this.columnDef.id);
+            $filterElm.attr('id', "filter-" + columnId);
+            $filterElm.data('columnId', columnId);
             // if there's a search term, we will add the "filled" class for styling purposes
             if (searchTerm) {
                 $filterElm.addClass('filled');

@@ -12,7 +12,12 @@ export const collectionEditorFormatter = (row, cell, value, columnDef, dataConte
     const labelName = (internalColumnEditor.customStructure) ? internalColumnEditor.customStructure.label : 'label';
     const valueName = (internalColumnEditor.customStructure) ? internalColumnEditor.customStructure.value : 'value';
     if (Array.isArray(value)) {
-        return arrayToCsvFormatter(row, cell, value.map((v) => findOrDefault(collection, (c) => c[valueName] === v)[labelName]), columnDef, dataContext);
+        if (collection.every((x) => typeof x === 'string')) {
+            return arrayToCsvFormatter(row, cell, value.map((v) => findOrDefault(collection, (c) => c === v)), columnDef, dataContext);
+        }
+        else {
+            return arrayToCsvFormatter(row, cell, value.map((v) => findOrDefault(collection, (c) => c[valueName] === v)[labelName]), columnDef, dataContext);
+        }
     }
     return findOrDefault(collection, (c) => c[valueName] === value)[labelName] || '';
 };

@@ -1,7 +1,7 @@
-import { I18N } from 'aurelia-i18n';
 import { singleton, inject } from 'aurelia-framework';
+import { I18N } from 'aurelia-i18n';
 import { CellArgs, Column, GridOption, OnEventArgs } from './../models/index';
-import { ControlAndPluginService } from './controlAndPlugin.service';
+import { ExtensionService } from './extension.service';
 import { FilterService } from './filter.service';
 import { GridStateService } from './gridState.service';
 import { SortService } from './sort.service';
@@ -11,13 +11,13 @@ import * as $ from 'jquery';
 declare var Slick: any;
 
 @singleton(true)
-@inject(ControlAndPluginService, FilterService, I18N, GridStateService, SortService)
+@inject(ExtensionService, FilterService, I18N, GridStateService, SortService)
 export class GridService {
   private _grid: any;
   private _dataView: any;
 
   constructor(
-    private controlAndPluginService: ControlAndPluginService,
+    private extensionService: ExtensionService,
     private filterService: FilterService,
     private i18n: I18N,
     private gridStateService: GridStateService,
@@ -208,7 +208,7 @@ export class GridService {
   resetGrid(columnDefinitions?: Column[]) {
     // reset columns to original states & refresh the grid
     if (this._grid && this._dataView) {
-      const originalColumns = this.controlAndPluginService.getAllColumns();
+      const originalColumns = this.extensionService.getAllColumns();
       // const originalColumns = columnDefinitions || this._columnDefinitions;
       if (Array.isArray(originalColumns) && originalColumns.length > 0) {
         // set the grid columns to it's original column definitions

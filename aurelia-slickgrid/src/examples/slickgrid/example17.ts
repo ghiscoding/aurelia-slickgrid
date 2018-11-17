@@ -1,5 +1,5 @@
 import { Subscription, EventAggregator } from 'aurelia-event-aggregator';
-import { Column, FieldType, Formatters, GridOption, AureliaGridInstance, Filters, GridStateChange } from '../../aurelia-slickgrid';
+import { Column, FieldType, Formatters, GridOption, AureliaGridInstance, Filters, GridStateChange, ExtensionName } from '../../aurelia-slickgrid';
 import { autoinject, TemplatingEngine, ViewCompiler, Container, ViewResources, ViewSlot, createOverrideContext, PLATFORM, View } from 'aurelia-framework';
 
 // create my custom Formatter with the Formatter type
@@ -75,8 +75,9 @@ export class Example17 {
   aureliaGridReady(aureliaGrid: AureliaGridInstance) {
     this.aureliaGrid = aureliaGrid;
     this.gridRowBuffer = aureliaGrid && aureliaGrid.slickGrid && aureliaGrid.slickGrid.getOptions().minRowBuffer;
-    const plugin: any = this.aureliaGrid.pluginService.getExtensionByName('RowDetailViewPlugin');
-    this.detailView = plugin && plugin.service;
+    const plugin = this.aureliaGrid.pluginService.getExtensionByName(ExtensionName.rowDetailView);
+    this.detailView = plugin && plugin.extension;
+    console.log('plugin', this.detailView);
     console.log(this.gridRowBuffer);
     setTimeout(() => {
       const renderedRange = this.aureliaGrid.slickGrid.getRenderedRange() || {};
@@ -124,12 +125,12 @@ export class Example17 {
       });
     });
 
-    this.detailView.onRowOutOfVisibleRange.subscribe((e, args) => {
+    this.detailView.onRowOutOfViewportRange.subscribe((e, args) => {
       console.log('reached out of range', args);
     });
 
-    this.detailView.onRowBackToVisibleRange.subscribe((e, args) => {
-      console.log('back to visible range', args);
+    this.detailView.onRowBackToViewportRange.subscribe((e, args) => {
+      console.log('back to Viewport range', args);
       this.slots.forEach((slot) => {
         // this.redrawView(slot);
       });
@@ -223,7 +224,7 @@ export class Example17 {
       },
       enableFiltering: true,
       enableRowDetailView: true,
-      rowDetailViewOptions: {
+      rowDetailView: {
         cssClass: 'detail-view-toggle',
         preTemplate: this.loadingTemplate,
         postTemplate: this.loadView,

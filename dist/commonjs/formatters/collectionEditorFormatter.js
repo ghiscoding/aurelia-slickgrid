@@ -14,7 +14,12 @@ exports.collectionEditorFormatter = function (row, cell, value, columnDef, dataC
     var labelName = (internalColumnEditor.customStructure) ? internalColumnEditor.customStructure.label : 'label';
     var valueName = (internalColumnEditor.customStructure) ? internalColumnEditor.customStructure.value : 'value';
     if (Array.isArray(value)) {
-        return arrayToCsvFormatter_1.arrayToCsvFormatter(row, cell, value.map(function (v) { return index_1.findOrDefault(collection, function (c) { return c[valueName] === v; })[labelName]; }), columnDef, dataContext);
+        if (collection.every(function (x) { return typeof x === 'string'; })) {
+            return arrayToCsvFormatter_1.arrayToCsvFormatter(row, cell, value.map(function (v) { return index_1.findOrDefault(collection, function (c) { return c === v; }); }), columnDef, dataContext);
+        }
+        else {
+            return arrayToCsvFormatter_1.arrayToCsvFormatter(row, cell, value.map(function (v) { return index_1.findOrDefault(collection, function (c) { return c[valueName] === v; })[labelName]; }), columnDef, dataContext);
+        }
     }
     return index_1.findOrDefault(collection, function (c) { return c[valueName] === value; })[labelName] || '';
 };

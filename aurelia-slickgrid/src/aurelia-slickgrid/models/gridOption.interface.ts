@@ -12,7 +12,8 @@ import {
   HeaderButton,
   HeaderMenu,
   Pagination,
-  RowDetailViewOption
+  RowDetailView,
+  RowMoveManager,
 } from './../models/index';
 
 export interface GridOption {
@@ -73,7 +74,7 @@ export interface GridOption {
   /** A callback function that will be used to define row spanning accross multiple columns */
   colspanCallback?: (item: any) => { columns: any };
 
-  /** Checkbox Select Plugin options (columnTitle, forceFitTitle, syncResizeTitle) */
+  /** Column Picker Plugin options (columnTitle, forceFitTitle, syncResizeTitle) */
   columnPicker?: ColumnPicker;
 
   /** Defaults to false, which leads to create the footer row of the grid */
@@ -184,6 +185,9 @@ export interface GridOption {
   /** Defaults to false, do we want to enable the Row Detail Plugin? */
   enableRowDetailView?: boolean;
 
+  /** Defaults to false, when enabled it will make possible to move rows in the grid. */
+  enableRowMoveManager?: boolean;
+
   /** Do we want to enable row selection? */
   enableRowSelection?: boolean;
 
@@ -274,11 +278,14 @@ export interface GridOption {
   /** Register 1 or more Slick Plugins */
   registerPlugins?: any | any[];
 
-  /** Row Detail View Plugin options (columnId, cssClass, toolTip, width) */
-  rowDetailViewOptions?: RowDetailViewOption;
+  /** Row Detail View Plugin options & events (columnId, cssClass, toolTip, width) */
+  rowDetailView?: RowDetailView;
 
   /** Grid row height in pixels (only type the number). Row of cell values. */
   rowHeight?: number;
+
+  /** Row Move Manager Plugin options & events */
+  rowMoveManager?: RowMoveManager;
 
   /** Row selection options */
   rowSelectionOptions?: {

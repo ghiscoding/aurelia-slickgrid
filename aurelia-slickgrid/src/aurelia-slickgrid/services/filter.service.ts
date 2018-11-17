@@ -192,7 +192,7 @@ export class FilterService {
 
       // Row Detail View plugin, if the row is padding we just get the value we're filtering on from it's parent
       if (this._gridOptions.enableRowDetailView) {
-        const metadataPrefix = this._gridOptions.rowDetailViewOptions && this._gridOptions.rowDetailViewOptions.keyPrefix || '__';
+        const metadataPrefix = this._gridOptions.rowDetailView && this._gridOptions.rowDetailView.keyPrefix || '__';
         if (item[`${metadataPrefix}isPadding`] && item[`${metadataPrefix}parent`]) {
           item = item[`${metadataPrefix}parent`];
         }

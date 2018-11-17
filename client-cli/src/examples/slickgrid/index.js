@@ -20,6 +20,7 @@ export class Index {
       { route: 'example13', moduleId: PLATFORM.moduleName('./example13'), name: 'example13', nav: true, title: '13- Grouping & Aggregators' },
       { route: 'example14', moduleId: PLATFORM.moduleName('./example14'), name: 'example14', nav: true, title: '14- Column Span' },
       { route: 'example15', moduleId: PLATFORM.moduleName('./example15'), name: 'example15', nav: true, title: '15- Grid State & Local Storage' },
+      { route: 'example16', moduleId: PLATFORM.moduleName('./example16'), name: 'example16', nav: true, title: '16- Row Move Plugin' }
     ];
 
     config.map(mapping);

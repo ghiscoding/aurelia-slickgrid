@@ -155,14 +155,15 @@ let CompoundSliderFilter = class CompoundSliderFilter {
      * Create the DOM element
      */
     createDomElement(searchTerm) {
+        const columnId = this.columnDef && this.columnDef.id;
         const searchTermInput = (searchTerm || '0');
         const $headerElm = this.grid.getHeaderRowColumn(this.columnDef.id);
         $($headerElm).empty();
         // create the DOM Select dropdown for the Operator
         this.$selectOperatorElm = $(this.buildSelectOperatorHtmlString());
         this.$filterInputElm = $(this.buildTemplateHtmlString());
-        const $filterContainerElm = $(`<div class="form-group search-filter"></div>`);
-        this.$containerInputGroupElm = $(`<div class="input-group search-filter"></div>`);
+        const $filterContainerElm = $(`<div class="form-group search-filter filter-${columnId}"></div>`);
+        this.$containerInputGroupElm = $(`<div class="input-group search-filter filter-${columnId}"></div>`);
         const $operatorInputGroupAddon = $(`<span class="input-group-addon input-group-prepend operator"></span>`);
         /* the DOM element final structure will be
           <div class="input-group">
@@ -183,9 +184,9 @@ let CompoundSliderFilter = class CompoundSliderFilter {
         }
         // create the DOM element & add an ID and filter class
         $filterContainerElm.append(this.$containerInputGroupElm);
-        $filterContainerElm.attr('id', `filter-${this.columnDef.field}`);
+        $filterContainerElm.attr('id', `filter-${columnId}`);
         this.$filterInputElm.val(searchTermInput);
-        this.$filterInputElm.data('columnId', this.columnDef.field);
+        this.$filterInputElm.data('columnId', columnId);
         if (this.operator) {
             this.$selectOperatorElm.val(this.operator);
         }

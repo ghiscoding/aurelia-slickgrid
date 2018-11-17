@@ -4,23 +4,6 @@ import { SlickPaginationCustomElement } from './slick-pagination';
 import { SlickgridConfig } from './slickgrid-config';
 import { Filters } from './filters/index';
 
-// import all Services separately
-import {
-  CollectionService,
-  ControlAndPluginService,
-  ExportService,
-  FilterService,
-  GraphqlService,
-  GridEventService,
-  GridService,
-  GridStateService,
-  GridOdataService,
-  GroupingAndColspanService,
-  OdataService,
-  ResizerService,
-  SortService,
-} from './services/index';
-
 // expose all public classes
 // aggregators, editors, formatters, services...
 export * from './models/index';

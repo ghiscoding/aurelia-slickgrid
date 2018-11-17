@@ -1,18 +1,18 @@
 import { I18N } from 'aurelia-i18n';
 import { CellArgs, Column, OnEventArgs } from './../models/index';
-import { ControlAndPluginService } from './controlAndPlugin.service';
+import { ExtensionService } from './extension.service';
 import { FilterService } from './filter.service';
 import { GridStateService } from './gridState.service';
 import { SortService } from './sort.service';
 export declare class GridService {
-    private controlAndPluginService;
+    private extensionService;
     private filterService;
     private i18n;
     private gridStateService;
     private sortService;
     private _grid;
     private _dataView;
-    constructor(controlAndPluginService: ControlAndPluginService, filterService: FilterService, i18n: I18N, gridStateService: GridStateService, sortService: SortService);
+    constructor(extensionService: ExtensionService, filterService: FilterService, i18n: I18N, gridStateService: GridStateService, sortService: SortService);
     /** Getter for the Column Definitions pulled through the Grid Object */
     private readonly _columnDefinitions;
     /** Getter for the Grid Options pulled through the Grid Object */

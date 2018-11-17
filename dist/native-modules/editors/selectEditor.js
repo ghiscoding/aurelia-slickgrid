@@ -29,8 +29,8 @@ var SelectEditor = /** @class */ (function () {
         this._destroying = false;
         this.gridOptions = this.args.grid.getOptions();
         // provide the name attribute to the DOM element which will be needed to auto-adjust drop position (dropup / dropdown)
-        var fieldId = this.columnDef && this.columnDef.field || this.columnDef && this.columnDef.id;
-        this.elementName = "editor_" + fieldId;
+        var columnId = this.columnDef && this.columnDef.id;
+        this.elementName = "editor-" + columnId;
         var libOptions = {
             autoAdjustDropHeight: true,
             autoAdjustDropPosition: true,
@@ -118,6 +118,11 @@ var SelectEditor = /** @class */ (function () {
          */
         get: function () {
             var _this = this;
+            // collection of strings, just return the filtered string that are equals
+            if (this.collection.every(function (x) { return typeof x === 'string'; })) {
+                return this.collection.filter(function (c) { return _this.$editorElm.val().indexOf(c.toString()) !== -1; });
+            }
+            // collection of label/value pair
             var separatorBetweenLabels = this.collectionOptions && this.collectionOptions.separatorBetweenTextLabels || '';
             var isIncludingPrefixSuffix = this.collectionOptions && this.collectionOptions.includePrefixSuffixToSelectedValues || false;
             return this.collection
@@ -145,6 +150,11 @@ var SelectEditor = /** @class */ (function () {
          */
         get: function () {
             var _this = this;
+            // collection of strings, just return the filtered string that are equals
+            if (this.collection.every(function (x) { return typeof x === 'string'; })) {
+                return findOrDefault(this.collection, function (c) { return c.toString() === _this.$editorElm.val(); });
+            }
+            // collection of label/value pair
             var separatorBetweenLabels = this.collectionOptions && this.collectionOptions.separatorBetweenTextLabels || '';
             var isIncludingPrefixSuffix = this.collectionOptions && this.collectionOptions.includePrefixSuffixToSelectedValues || false;
             var itemFound = findOrDefault(this.collection, function (c) { return c[_this.valueName].toString() === _this.$editorElm.val(); });
@@ -319,39 +329,49 @@ var SelectEditor = /** @class */ (function () {
     SelectEditor.prototype.buildTemplateHtmlString = function (collection) {
         var _this = this;
         var options = '';
+        var columnId = this.columnDef && this.columnDef.id;
         var separatorBetweenLabels = this.collectionOptions && this.collectionOptions.separatorBetweenTextLabels || '';
         var isRenderHtmlEnabled = this.columnEditor.enableRenderHtml || false;
         var sanitizedOptions = this.gridOptions && this.gridOptions.sanitizeHtmlOptions || {};
-        collection.forEach(function (option) {
-            if (!option || (option[_this.labelName] === undefined && option.labelKey === undefined)) {
-                throw new Error('[select-editor] A collection with value/label (or value/labelKey when using ' +
-                    'Locale) is required to populate the Select list, for example: ' +
-                    '{ collection: [ { value: \'1\', label: \'One\' } ])');
-            }
-            var labelKey = (option.labelKey || option[_this.labelName]);
-            var labelText = ((option.labelKey || _this.enableTranslateLabel) && labelKey) ? _this.i18n.tr(labelKey || ' ') : labelKey;
-            var prefixText = option[_this.labelPrefixName] || '';
-            var suffixText = option[_this.labelSuffixName] || '';
-            var optionLabel = option[_this.optionLabel] || '';
-            optionLabel = optionLabel.toString().replace(/\"/g, '\''); // replace double quotes by single quotes to avoid interfering with regular html
-            // also translate prefix/suffix if enableTranslateLabel is true and text is a string
-            prefixText = (_this.enableTranslateLabel && prefixText && typeof prefixText === 'string') ? _this.i18n.tr(prefixText || ' ') : prefixText;
-            suffixText = (_this.enableTranslateLabel && suffixText && typeof suffixText === 'string') ? _this.i18n.tr(suffixText || ' ') : suffixText;
-            optionLabel = (_this.enableTranslateLabel && optionLabel && typeof optionLabel === 'string') ? _this.i18n.tr(optionLabel || ' ') : optionLabel;
-            // add to a temp array for joining purpose and filter out empty text
-            var tmpOptionArray = [prefixText, labelText, suffixText].filter(function (text) { return text; });
-            var optionText = tmpOptionArray.join(separatorBetweenLabels);
-            // if user specifically wants to render html text, he needs to opt-in else it will stripped out by default
-            // also, the 3rd party lib will saninitze any html code unless it's encoded, so we'll do that
-            if (isRenderHtmlEnabled) {
-                // sanitize any unauthorized html tags like script and others
-                // for the remaining allowed tags we'll permit all attributes
-                var sanitizedText = DOMPurify.sanitize(optionText, sanitizedOptions);
-                optionText = htmlEncode(sanitizedText);
-            }
-            options += "<option value=\"" + option[_this.valueName] + "\" label=\"" + optionLabel + "\">" + optionText + "</option>";
-        });
-        return "<select id=\"" + this.elementName + "\" class=\"ms-filter search-filter\" " + (this.isMultipleSelect ? 'multiple="multiple"' : '') + ">" + options + "</select>";
+        // collection could be an Array of Strings OR Objects
+        if (collection.every(function (x) { return typeof x === 'string'; })) {
+            collection.forEach(function (option) {
+                options += "<option value=\"" + option + "\" label=\"" + option + "\">" + option + "</option>";
+            });
+        }
+        else {
+            // array of objects will require a label/value pair unless a customStructure is passed
+            collection.forEach(function (option) {
+                if (!option || (option[_this.labelName] === undefined && option.labelKey === undefined)) {
+                    throw new Error('[select-editor] A collection with value/label (or value/labelKey when using ' +
+                        'Locale) is required to populate the Select list, for example: ' +
+                        '{ collection: [ { value: \'1\', label: \'One\' } ])');
+                }
+                var labelKey = (option.labelKey || option[_this.labelName]);
+                var labelText = ((option.labelKey || _this.enableTranslateLabel) && labelKey) ? _this.i18n.tr(labelKey || ' ') : labelKey;
+                var prefixText = option[_this.labelPrefixName] || '';
+                var suffixText = option[_this.labelSuffixName] || '';
+                var optionLabel = option[_this.optionLabel] || '';
+                optionLabel = optionLabel.toString().replace(/\"/g, '\''); // replace double quotes by single quotes to avoid interfering with regular html
+                // also translate prefix/suffix if enableTranslateLabel is true and text is a string
+                prefixText = (_this.enableTranslateLabel && prefixText && typeof prefixText === 'string') ? _this.i18n.tr(prefixText || ' ') : prefixText;
+                suffixText = (_this.enableTranslateLabel && suffixText && typeof suffixText === 'string') ? _this.i18n.tr(suffixText || ' ') : suffixText;
+                optionLabel = (_this.enableTranslateLabel && optionLabel && typeof optionLabel === 'string') ? _this.i18n.tr(optionLabel || ' ') : optionLabel;
+                // add to a temp array for joining purpose and filter out empty text
+                var tmpOptionArray = [prefixText, labelText, suffixText].filter(function (text) { return text; });
+                var optionText = tmpOptionArray.join(separatorBetweenLabels);
+                // if user specifically wants to render html text, he needs to opt-in else it will stripped out by default
+                // also, the 3rd party lib will saninitze any html code unless it's encoded, so we'll do that
+                if (isRenderHtmlEnabled) {
+                    // sanitize any unauthorized html tags like script and others
+                    // for the remaining allowed tags we'll permit all attributes
+                    var sanitizedText = DOMPurify.sanitize(optionText, sanitizedOptions);
+                    optionText = htmlEncode(sanitizedText);
+                }
+                options += "<option value=\"" + option[_this.valueName] + "\" label=\"" + optionLabel + "\">" + optionText + "</option>";
+            });
+        }
+        return "<select id=\"" + this.elementName + "\" class=\"ms-filter search-filter editor-" + columnId + "\" " + (this.isMultipleSelect ? 'multiple="multiple"' : '') + ">" + options + "</select>";
     };
     /** Create a blank entry that can be added to the collection. It will also reuse the same collection structure provided by the user */
     SelectEditor.prototype.createBlankEntry = function () {

@@ -34,7 +34,8 @@ var CheckboxEditor = /** @class */ (function () {
     });
     CheckboxEditor.prototype.init = function () {
         var _this = this;
-        this.$input = $("<input type=\"checkbox\" value=\"true\" class=\"editor-checkbox\" />");
+        var columnId = this.columnDef && this.columnDef.id;
+        this.$input = $("<input type=\"checkbox\" value=\"true\" class=\"editor-checkbox editor-" + columnId + "\" />");
         this.$input.appendTo(this.args.container);
         this.$input.focus();
         // make the checkbox editor act like a regular checkbox that commit the value on click

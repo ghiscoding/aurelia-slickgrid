@@ -5,6 +5,7 @@ function __export(m) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __export(require("./caseType"));
 __export(require("./delimiterType.enum"));
+__export(require("./extensionName.enum"));
 __export(require("./fieldType.enum"));
 __export(require("./fileType.enum"));
 __export(require("./filterMultiplePassType.enum"));

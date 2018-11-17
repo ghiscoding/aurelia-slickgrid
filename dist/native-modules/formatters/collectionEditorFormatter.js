@@ -12,7 +12,12 @@ export var collectionEditorFormatter = function (row, cell, value, columnDef, da
     var labelName = (internalColumnEditor.customStructure) ? internalColumnEditor.customStructure.label : 'label';
     var valueName = (internalColumnEditor.customStructure) ? internalColumnEditor.customStructure.value : 'value';
     if (Array.isArray(value)) {
-        return arrayToCsvFormatter(row, cell, value.map(function (v) { return findOrDefault(collection, function (c) { return c[valueName] === v; })[labelName]; }), columnDef, dataContext);
+        if (collection.every(function (x) { return typeof x === 'string'; })) {
+            return arrayToCsvFormatter(row, cell, value.map(function (v) { return findOrDefault(collection, function (c) { return c === v; }); }), columnDef, dataContext);
+        }
+        else {
+            return arrayToCsvFormatter(row, cell, value.map(function (v) { return findOrDefault(collection, function (c) { return c[valueName] === v; })[labelName]; }), columnDef, dataContext);
+        }
     }
     return findOrDefault(collection, function (c) { return c[valueName] === value; })[labelName] || '';
 };
