@@ -161,6 +161,7 @@ export class Example3 {
       name: 'Duration (days)',
       field: 'duration',
       filterable: true,
+      minWidth: 100,
       sortable: true,
       type: FieldType.number,
       filter: { model: Filters.slider, params: { hideSliderNumber: false } },
@@ -182,7 +183,6 @@ export class Example3 {
         params: { decimalPlaces: 2 },
       },
       */
-      minWidth: 100
     }, {
       id: 'complete',
       name: '% Complete',
