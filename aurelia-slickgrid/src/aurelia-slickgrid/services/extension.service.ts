@@ -1,3 +1,4 @@
+import { DraggableGroupingExtension } from './../extensions/draggableGroupingExtension';
 // import common 3rd party SlickGrid plugins/libs
 import 'slickgrid/plugins/slick.cellrangedecorator';
 import 'slickgrid/plugins/slick.cellrangeselector';
@@ -31,6 +32,7 @@ import { SharedService } from './shared.service';
   CellExternalCopyManagerExtension,
   CheckboxSelectorExtension,
   ColumnPickerExtension,
+  DraggableGroupingExtension,
   GridMenuExtension,
   GroupItemMetaProviderExtension,
   I18N,
@@ -48,6 +50,7 @@ export class ExtensionService {
     private cellExternalCopyExtension: CellExternalCopyManagerExtension,
     private checkboxSelectorExtension: CheckboxSelectorExtension,
     private columnPickerExtension: ColumnPickerExtension,
+    private draggableGroupingExtension: DraggableGroupingExtension,
     private gridMenuExtension: GridMenuExtension,
     private groupItemMetaExtension: GroupItemMetaProviderExtension,
     private i18n: I18N,
@@ -91,7 +94,7 @@ export class ExtensionService {
    * Get an Extension by it's name
    *  @param name
    */
-  getExtensionByName(name: string): ExtensionModel | undefined {
+  getExtensionByName(name: ExtensionName): ExtensionModel | undefined {
     return this.extensionList.find((p) => p.name === name);
   }
 
@@ -134,6 +137,13 @@ export class ExtensionService {
     if (this.sharedService.gridOptions.enableColumnPicker) {
       if (this.columnPickerExtension && this.columnPickerExtension.register) {
         this.extensionList.push({ name: ExtensionName.columnPicker, class: this.columnPickerExtension, extension: this.columnPickerExtension.register() });
+      }
+    }
+
+    // Draggable Grouping Plugin
+    if (this.sharedService.gridOptions.enableDraggableGrouping) {
+      if (this.draggableGroupingExtension && this.draggableGroupingExtension.register) {
+        this.extensionList.push({ name: ExtensionName.draggableGrouping, class: this.draggableGroupingExtension, extension: this.draggableGroupingExtension.register() });
       }
     }
 
@@ -195,14 +205,18 @@ export class ExtensionService {
   }
 
   /**
-   * Attach/Create different plugins before the Grid creation.
-   * For example the multi-select have to be added to the column definition before the grid is created to work properly
+   * Attach/Create certain plugins before the Grid creation, else they might behave oddly.
+   * Mostly because the column definitions might change after the grid creation
    * @param columnDefinitions
    * @param options
    */
-  createCheckboxPluginBeforeGridCreation(columnDefinitions: Column[], options: GridOption) {
+  createExtensionsBeforeGridCreation(columnDefinitions: Column[], options: GridOption) {
     if (options.enableCheckboxSelector) {
       this.checkboxSelectorExtension.create(columnDefinitions, options);
+    }
+    if (options.enableDraggableGrouping) {
+      const plugin = this.draggableGroupingExtension.create(options);
+      options.enableColumnReorder = plugin.getSetupColumnReorder;
     }
   }
 

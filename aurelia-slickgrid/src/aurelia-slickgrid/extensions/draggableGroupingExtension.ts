@@ -1,0 +1,58 @@
+import { singleton, inject } from 'aurelia-framework';
+import { SharedService } from '../services/shared.service';
+import { Extension, ExtensionName, CellArgs, GridOption } from '../models/index';
+import { ExtensionUtility } from './extensionUtility';
+
+// using external non-typed js libraries
+declare var Slick: any;
+
+@singleton(true)
+@inject(ExtensionUtility, SharedService)
+export class DraggableGroupingExtension implements Extension {
+  private _eventHandler: any = new Slick.EventHandler();
+  private _extension: any;
+
+  constructor(private extensionUtility: ExtensionUtility, private sharedService: SharedService) { }
+
+  dispose() {
+    // unsubscribe all SlickGrid events
+    this._eventHandler.unsubscribeAll();
+
+    if (this._extension && this._extension.destroy) {
+      this._extension.destroy();
+    }
+  }
+
+  /**
+   * Attach/Create different plugins before the Grid creation.
+   * For example the multi-select have to be added to the column definition before the grid is created to work properly
+   */
+  create(gridOptions: GridOption) {
+    // dynamically import the SlickGrid plugin with requireJS
+    this.extensionUtility.loadExtensionDynamically(ExtensionName.draggableGrouping);
+
+    if (!this._extension && gridOptions) {
+      this._extension = new Slick.DraggableGrouping(gridOptions.draggableGrouping || {});
+    }
+    return this._extension;
+  }
+
+  register(): any {
+    if (this.sharedService && this.sharedService.grid && this.sharedService.gridOptions) {
+      // this.sharedService.gridOptions.enableColumnReorder = this._extension.getSetupColumnReorder;
+      this.sharedService.grid.registerPlugin(this._extension);
+
+      // Events
+      if (this.sharedService.grid && this.sharedService.gridOptions.draggableGrouping) {
+        this._eventHandler.subscribe(this._extension.onGroupChanged, (e: any, args: { groupColumns: [] }) => {
+          if (this.sharedService.gridOptions.draggableGrouping && typeof this.sharedService.gridOptions.draggableGrouping.onGroupChanged === 'function') {
+            this.sharedService.gridOptions.draggableGrouping.onGroupChanged(e, args);
+          }
+        });
+      }
+
+      return this._extension;
+    }
+    return null;
+  }
+}

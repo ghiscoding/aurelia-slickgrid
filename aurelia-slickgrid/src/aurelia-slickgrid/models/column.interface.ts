@@ -1,3 +1,4 @@
+import { Aggregator } from './aggregator.interface';
 import { ColumnEditor } from './columnEditor.interface';
 import { ColumnFilter } from './columnFilter.interface';
 import { EditorValidator } from './editorValidator.interface';
@@ -90,6 +91,16 @@ export interface Column {
 
   /** Formatter function that can be used to change and format certain column(s) in the grid */
   formatter?: Formatter;
+
+  /** Grouping option used by a Draggable Grouping Column */
+  grouping?: {
+    getter?: string;
+    formatter?: (g: any) => string;
+    aggregators?: Aggregator[];
+    aggregateCollapsed?: boolean;
+    collapsed?: boolean;
+    lazyTotalsCalculation?: boolean;
+  };
 
   /** Group Totals Formatter function that can be used to add grouping totals in the grid */
   groupTotalsFormatter?: GroupTotalsFormatter;
