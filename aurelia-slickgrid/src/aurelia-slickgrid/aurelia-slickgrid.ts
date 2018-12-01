@@ -168,12 +168,8 @@ export class AureliaSlickgridCustomElement {
     this.sharedService.visibleColumns = this._columnDefinitions;
     this.extensionService.createCheckboxPluginBeforeGridCreation(this._columnDefinitions, this.gridOptions);
 
-    // user can optionally pass a custom dataview (e.g. remote model)
-    if (this.customDataview) {
-      this.grid = new Slick.Grid(`#${this.gridId}`, this.customDataview, this._columnDefinitions, this.gridOptions);
-    } else {
-      this.grid = new Slick.Grid(`#${this.gridId}`, this.dataview, this._columnDefinitions, this.gridOptions);
-    }
+    // build SlickGrid Grid, also user might optionally pass a custom dataview (e.g. remote model)
+    this.grid = new Slick.Grid(`#${this.gridId}`, this.customDataview || this.dataview, this._columnDefinitions, this.gridOptions);
 
     this.sharedService.dataView = this.dataview;
     this.sharedService.grid = this.grid;
