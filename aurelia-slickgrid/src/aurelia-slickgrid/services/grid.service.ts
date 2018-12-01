@@ -369,5 +369,6 @@ export class GridService {
 
       return gridIdx;
     }
+    return -1;
   }
 }
