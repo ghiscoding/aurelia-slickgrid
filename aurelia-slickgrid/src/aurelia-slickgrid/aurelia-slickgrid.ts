@@ -80,6 +80,7 @@ export class AureliaSlickgridCustomElement {
   @bindable({ defaultBindingMode: bindingMode.twoWay }) gridPaginationOptions: GridOption;
   @bindable({ defaultBindingMode: bindingMode.twoWay }) dataview: any;
   @bindable({ defaultBindingMode: bindingMode.twoWay }) grid: any;
+  @bindable() customDataview: any;
   @bindable() dataset: any[];
   @bindable() gridId: string;
   @bindable() gridOptions: GridOption;
@@ -166,7 +167,13 @@ export class AureliaSlickgridCustomElement {
     this.sharedService.allColumns = this._columnDefinitions;
     this.sharedService.visibleColumns = this._columnDefinitions;
     this.extensionService.createCheckboxPluginBeforeGridCreation(this._columnDefinitions, this.gridOptions);
-    this.grid = new Slick.Grid(`#${this.gridId}`, this.dataview, this._columnDefinitions, this.gridOptions);
+
+    // user can optionally pass a custom dataview (e.g. remote model)
+    if (this.customDataview) {
+      this.grid = new Slick.Grid(`#${this.gridId}`, this.customDataview, this._columnDefinitions, this.gridOptions);
+    } else {
+      this.grid = new Slick.Grid(`#${this.gridId}`, this.dataview, this._columnDefinitions, this.gridOptions);
+    }
 
     this.sharedService.dataView = this.dataview;
     this.sharedService.grid = this.grid;
@@ -394,12 +401,12 @@ export class AureliaSlickgridCustomElement {
     }
 
     // attach external sorting (backend) when available or default onSort (dataView)
-    if (gridOptions.enableSorting) {
+    if (gridOptions.enableSorting && !this.customDataview) {
       gridOptions.backendServiceApi ? this.sortService.attachBackendOnSort(grid, dataView) : this.sortService.attachLocalOnSort(grid, dataView);
     }
 
     // attach external filter (backend) when available or default onFilter (dataView)
-    if (gridOptions.enableFiltering) {
+    if (gridOptions.enableFiltering && !this.customDataview) {
       this.filterService.init(grid);
 
       // if user entered some "presets", we need to reflect them all in the DOM
