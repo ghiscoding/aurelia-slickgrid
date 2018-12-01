@@ -178,6 +178,19 @@ $compound-filter-text-color:              $primary-color !default;
 $compound-filter-text-font-size:          13px !default;
 $compound-filter-text-padding:            0 0 0 2px !default;
 
+/* Draggable Plugin */
+$draggable-group-placeholder-font-style:  italic !default;
+$draggable-group-placeholder-height:      25px !default;
+$draggable-group-placeholder-color:       #000000 !default;
+$draggable-group-placeholder-bgcolor:     #ffffff !default;
+$draggable-group-placeholder-padding:     2px !default;
+$draggable-group-placeholder-radius:      2px !default;
+$draggable-group-delete-color:            pink !default;
+$draggable-group-delete-hover-color:      red !default;
+$draggable-group-delete-padding-left:     5px !default;
+$draggable-group-delete-font-size:        16px !default;
+
+
 /* Input Range Filter */
 $slider-filter-border:                    1px solid #ccc !default;
 $slider-filter-bgcolor:                   #eee !default;

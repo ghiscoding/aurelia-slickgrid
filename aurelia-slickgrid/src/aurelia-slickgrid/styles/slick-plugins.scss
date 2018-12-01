@@ -344,6 +344,7 @@ input.search-filter {
 // ----------------------------------------------
 // Date Picker Filter
 // ----------------------------------------------
+
 .input-group.flatpickr {
   .flatpickr {
     flex: 1;
@@ -360,47 +361,67 @@ input.search-filter {
 // ----------------------------------------------
 // Draggable Grouping Plugin
 // ----------------------------------------------
-.slick-group-toggle-all.expanded {
-  width: 9px;
-  height: 9px;
-  position: absolute;
-  display: inline-block;
-  right: 10px;
+
+.slick-preheader-panel {
+  .ui-droppable {
+    padding: 5px;
+
+    .slick-placeholder {
+      height: $draggable-group-placeholder-height;
+      font-style: $draggable-group-placeholder-font-style;
+      color: $draggable-group-placeholder-color;
+      background-color: $draggable-group-placeholder-bgcolor;
+      width: calc(100% - 10px);
+      padding: $draggable-group-placeholder-padding;
+      border-radius: $draggable-group-placeholder-radius;
+    }
+
+    .slick-group-toggle-all {
+      &.expanded {
+        width: 9px;
+        height: 9px;
+        position: absolute;
+        display: inline-block;
+        right: 10px;
+      }
+      &.collapsed {
+        width: 9px;
+        height: 9px;
+        position: absolute;
+        display: inline-block;
+        right: 10px;
+      }
+    }
+
+    .slick-dropped-grouping {
+      color: black;
+      display: inline-block;
+      margin-right: 5px;
+      vertical-align: middle;
+      cursor: pointer;
+    }
+
+    .slick-groupby-remove {
+      color: $draggable-group-delete-color;
+      padding-left: $draggable-group-delete-padding-left;
+      display: inline-flex;
+      font-size: $draggable-group-delete-font-size;
+      &:hover {
+        color: $draggable-group-delete-hover-color;
+      }
+    }
+  }
 }
 
-.slick-group-toggle-all.collapsed {
-  width: 9px;
-  height: 9px;
-  position: absolute;
-  display: inline-block;
-  right: 10px;
-}
-
-.slick-column-groupable {
-  width: 9px;
-  height: 9px;
-  display: inline-block;
-  margin-left: 4px;
-}
-
-.slick-dropped-grouping {
-  display: inline-block;
-  margin-right: 5px;
-  vertical-align: middle;
-  cursor: pointer;
-}
-
-.slick-groupby-remove {
-  padding-right: 20px;
-  display: inline-flex;
-}
-
-.slick-placeholder {
-  height: 25px;
-}
-
-.ui-droppable {
-  padding: 5px;
+.slick-header {
+  .slick-header-columns {
+    .slick-column-groupable {
+      width: 9px;
+      height: 9px;
+      display: inline-block;
+      margin-left: 4px;
+    }
+  }
 }
 
 // ----------------------------------------------

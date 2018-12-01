@@ -80,6 +80,7 @@ export class AureliaSlickgridCustomElement {
   @bindable({ defaultBindingMode: bindingMode.twoWay }) gridPaginationOptions: GridOption;
   @bindable({ defaultBindingMode: bindingMode.twoWay }) dataview: any;
   @bindable({ defaultBindingMode: bindingMode.twoWay }) grid: any;
+  @bindable() customDataview: any;
   @bindable() dataset: any[];
   @bindable() gridId: string;
   @bindable() gridOptions: GridOption;
@@ -166,7 +167,9 @@ export class AureliaSlickgridCustomElement {
     this.sharedService.allColumns = this._columnDefinitions;
     this.sharedService.visibleColumns = this._columnDefinitions;
     this.extensionService.createExtensionsBeforeGridCreation(this._columnDefinitions, this.gridOptions);
-    this.grid = new Slick.Grid(`#${this.gridId}`, this.dataview, this._columnDefinitions, this.gridOptions);
+
+    // build SlickGrid Grid, also user might optionally pass a custom dataview (e.g. remote model)
+    this.grid = new Slick.Grid(`#${this.gridId}`, this.customDataview || this.dataview, this._columnDefinitions, this.gridOptions);
 
     this.sharedService.dataView = this.dataview;
     this.sharedService.grid = this.grid;
@@ -394,12 +397,12 @@ export class AureliaSlickgridCustomElement {
     }
 
     // attach external sorting (backend) when available or default onSort (dataView)
-    if (gridOptions.enableSorting) {
+    if (gridOptions.enableSorting && !this.customDataview) {
       gridOptions.backendServiceApi ? this.sortService.attachBackendOnSort(grid, dataView) : this.sortService.attachLocalOnSort(grid, dataView);
     }
 
     // attach external filter (backend) when available or default onFilter (dataView)
-    if (gridOptions.enableFiltering) {
+    if (gridOptions.enableFiltering && !this.customDataview) {
       this.filterService.init(grid);
 
       // if user entered some "presets", we need to reflect them all in the DOM
@@ -515,25 +518,33 @@ export class AureliaSlickgridCustomElement {
           backendApi.preProcess();
         }
 
-        // await for the Promise to resolve the data
-        const processResult: GraphqlResult | any = await onInitPromise;
-        const endTime = new Date();
+        try {
+          // await for the Promise to resolve the data
+          const processResult: GraphqlResult | any = await onInitPromise;
+          const endTime = new Date();
 
-        // define what our internal Post Process callback, only available for GraphQL Service for now
-        // it will basically refresh the Dataset & Pagination without having the user to create his own PostProcess every time
-        if (processResult && backendApi && backendApi.service instanceof GraphqlService && backendApi.internalPostProcess) {
-          backendApi.internalPostProcess(processResult);
-        }
+          // define what our internal Post Process callback, only available for GraphQL Service for now
+          // it will basically refresh the Dataset & Pagination without having the user to create his own PostProcess every time
+          if (processResult && backendApi && backendApi.service instanceof GraphqlService && backendApi.internalPostProcess) {
+            backendApi.internalPostProcess(processResult);
+          }
 
-        // send the response process to the postProcess callback
-        if (backendApi.postProcess) {
-          processResult.statistics = {
-            startTime,
-            endTime,
-            executionTime: endTime.valueOf() - startTime.valueOf(),
-            totalItemCount: this.gridOptions && this.gridOptions.pagination && this.gridOptions.pagination.totalItems
-          };
-          backendApi.postProcess(processResult);
+          // send the response process to the postProcess callback
+          if (backendApi.postProcess) {
+            processResult.statistics = {
+              startTime,
+              endTime,
+              executionTime: endTime.valueOf() - startTime.valueOf(),
+              totalItemCount: this.gridOptions && this.gridOptions.pagination && this.gridOptions.pagination.totalItems
+            };
+            backendApi.postProcess(processResult);
+          }
+        } catch (e) {
+          if (backendApi && backendApi.onError) {
+            backendApi.onError(e);
+          } else {
+            throw e;
+          }
         }
       });
     }

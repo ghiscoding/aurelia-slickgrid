@@ -1,7 +1,7 @@
 import 'slickgrid/lib/jquery.jsonp-2.4.min';
 import 'slickgrid/slick.remotemodel'; // SlickGrid Remote Plugin
 import { bindable, bindingMode } from 'aurelia-framework';
-import { AureliaGridInstance, Column, Formatter, GridOption } from '../../aurelia-slickgrid';
+import { AureliaGridInstance, Column, Formatter, GridOption } from 'aurelia-slickgrid';
 
 declare var Slick: any;
 
