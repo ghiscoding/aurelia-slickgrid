@@ -158,38 +158,46 @@ export class SlickPaginationCustomElement {
     }
 
     if (backendApi) {
-      const itemsPerPage = +this.itemsPerPage;
+      try {
+        const itemsPerPage = +this.itemsPerPage;
 
-      // keep start time & end timestamps & return it after process execution
-      const startTime = new Date();
+        // keep start time & end timestamps & return it after process execution
+        const startTime = new Date();
 
-      if (backendApi.preProcess) {
-        backendApi.preProcess();
-      }
-
-      const query = backendApi.service.processOnPaginationChanged(event, { newPage: pageNumber, pageSize: itemsPerPage });
-
-      // await for the Promise to resolve the data
-      const processResult = await backendApi.process(query);
-      const endTime = new Date();
-
-      // from the result, call our internal post process to update the Dataset and Pagination info
-      if (processResult && backendApi.internalPostProcess) {
-        backendApi.internalPostProcess(processResult);
-      }
-
-      // send the response process to the postProcess callback
-      if (backendApi.postProcess) {
-        if (processResult instanceof Object) {
-          processResult.statistics = {
-            startTime,
-            endTime,
-            executionTime: endTime.valueOf() - startTime.valueOf(),
-            itemCount: this.totalItems,
-            totalItemCount: this.totalItems
-          };
+        if (backendApi.preProcess) {
+          backendApi.preProcess();
         }
-        backendApi.postProcess(processResult);
+
+        const query = backendApi.service.processOnPaginationChanged(event, { newPage: pageNumber, pageSize: itemsPerPage });
+
+        // await for the Promise to resolve the data
+        const processResult = await backendApi.process(query);
+        const endTime = new Date();
+
+        // from the result, call our internal post process to update the Dataset and Pagination info
+        if (processResult && backendApi.internalPostProcess) {
+          backendApi.internalPostProcess(processResult);
+        }
+
+        // send the response process to the postProcess callback
+        if (backendApi.postProcess) {
+          if (processResult instanceof Object) {
+            processResult.statistics = {
+              startTime,
+              endTime,
+              executionTime: endTime.valueOf() - startTime.valueOf(),
+              itemCount: this.totalItems,
+              totalItemCount: this.totalItems
+            };
+          }
+          backendApi.postProcess(processResult);
+        }
+      } catch (e) {
+        if (backendApi && backendApi.onError) {
+          backendApi.onError(e);
+        } else {
+          throw e;
+        }
       }
     } else {
       throw new Error('Pagination with a backend service requires "BackendServiceApi" to be defined in your grid options');

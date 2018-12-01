@@ -518,25 +518,33 @@ export class AureliaSlickgridCustomElement {
           backendApi.preProcess();
         }
 
-        // await for the Promise to resolve the data
-        const processResult: GraphqlResult | any = await onInitPromise;
-        const endTime = new Date();
+        try {
+          // await for the Promise to resolve the data
+          const processResult: GraphqlResult | any = await onInitPromise;
+          const endTime = new Date();
 
-        // define what our internal Post Process callback, only available for GraphQL Service for now
-        // it will basically refresh the Dataset & Pagination without having the user to create his own PostProcess every time
-        if (processResult && backendApi && backendApi.service instanceof GraphqlService && backendApi.internalPostProcess) {
-          backendApi.internalPostProcess(processResult);
-        }
+          // define what our internal Post Process callback, only available for GraphQL Service for now
+          // it will basically refresh the Dataset & Pagination without having the user to create his own PostProcess every time
+          if (processResult && backendApi && backendApi.service instanceof GraphqlService && backendApi.internalPostProcess) {
+            backendApi.internalPostProcess(processResult);
+          }
 
-        // send the response process to the postProcess callback
-        if (backendApi.postProcess) {
-          processResult.statistics = {
-            startTime,
-            endTime,
-            executionTime: endTime.valueOf() - startTime.valueOf(),
-            totalItemCount: this.gridOptions && this.gridOptions.pagination && this.gridOptions.pagination.totalItems
-          };
-          backendApi.postProcess(processResult);
+          // send the response process to the postProcess callback
+          if (backendApi.postProcess) {
+            processResult.statistics = {
+              startTime,
+              endTime,
+              executionTime: endTime.valueOf() - startTime.valueOf(),
+              totalItemCount: this.gridOptions && this.gridOptions.pagination && this.gridOptions.pagination.totalItems
+            };
+            backendApi.postProcess(processResult);
+          }
+        } catch (e) {
+          if (backendApi && backendApi.onError) {
+            backendApi.onError(e);
+          } else {
+            throw e;
+          }
         }
       });
     }
