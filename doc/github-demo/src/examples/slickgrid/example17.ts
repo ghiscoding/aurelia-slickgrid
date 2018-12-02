@@ -25,11 +25,16 @@ export class Example17 {
   subTitle = `
     This example demonstrates how to use "slick.remotemodel.js" or any Remote implementation through an external Remote Service
     <ul>
-      <li>If the demo throws some errors, try again later (there's a limit per day)</li>
+      <li>Your browser might block access to the Octopart query, if you get "block content" then just unblock it.</li>
+      <li>If the demo throws some errors, try again later (there's a limit per day).</li>
       <li>
         Uses <a href="https://github.com/6pac/SlickGrid/blob/master/slick.remotemodel.js" target="_blank">slick.remotemodel.js</a>
         which is hooked up to load search results from Octopart, but can easily be extended
         to support any JSONP-compatible backend that accepts paging parameters.
+      </li>
+      <li>
+        This demo implements a custom DataView, however please note that you are on your own to implement all necessary DataView methods
+        for Sorting, Filtering, etc...
       </li>
     </ul>
   `;
@@ -96,7 +101,7 @@ export class Example17 {
       });
 
       this._eventHandler.subscribe(this.loaderDataView.onDataLoaded, (e: Event, args: any) => {
-        if (args && args.from && args.to && this.gridObj && this.gridObj.invalidateRow && this.gridObj.updateRowCount && this.gridObj.render) {
+        if (args && this.gridObj && this.gridObj.invalidateRow && this.gridObj.updateRowCount && this.gridObj.render) {
           for (let i = args.from; i <= args.to; i++) {
             this.gridObj.invalidateRow(i);
           }
