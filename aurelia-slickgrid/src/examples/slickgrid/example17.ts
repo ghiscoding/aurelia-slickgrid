@@ -96,7 +96,7 @@ export class Example17 {
       });
 
       this._eventHandler.subscribe(this.loaderDataView.onDataLoaded, (e: Event, args: any) => {
-        if (args && args.from && args.to && this.gridObj && this.gridObj.invalidateRow && this.gridObj.updateRowCount && this.gridObj.render) {
+        if (args && this.gridObj && this.gridObj.invalidateRow && this.gridObj.updateRowCount && this.gridObj.render) {
           for (let i = args.from; i <= args.to; i++) {
             this.gridObj.invalidateRow(i);
           }
