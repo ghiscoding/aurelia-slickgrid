@@ -36,6 +36,9 @@ export class Example17 {
         This demo implements a custom DataView, however please note that you are on your own to implement all necessary DataView methods
         for Sorting, Filtering, etc...
       </li>
+      <li>
+        Soure code for this example is available <a href="https://github.com/ghiscoding/aurelia-slickgrid/blob/master/doc/github-demo/src/examples/slickgrid/example17.ts" target="_blank">here</a>
+      </li>
     </ul>
   `;
   aureliaGrid: AureliaGridInstance;
