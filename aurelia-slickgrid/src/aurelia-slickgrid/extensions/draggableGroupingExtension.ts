@@ -39,11 +39,13 @@ export class DraggableGroupingExtension implements Extension {
 
   register(): any {
     if (this.sharedService && this.sharedService.grid && this.sharedService.gridOptions) {
-      // this.sharedService.gridOptions.enableColumnReorder = this._extension.getSetupColumnReorder;
       this.sharedService.grid.registerPlugin(this._extension);
 
       // Events
       if (this.sharedService.grid && this.sharedService.gridOptions.draggableGrouping) {
+        if (this.sharedService.gridOptions.draggableGrouping.onExtensionRegistered) {
+          this.sharedService.gridOptions.draggableGrouping.onExtensionRegistered(this._extension);
+        }
         this._eventHandler.subscribe(this._extension.onGroupChanged, (e: any, args: { groupColumns: [] }) => {
           if (this.sharedService.gridOptions.draggableGrouping && typeof this.sharedService.gridOptions.draggableGrouping.onGroupChanged === 'function') {
             this.sharedService.gridOptions.draggableGrouping.onGroupChanged(e, args);

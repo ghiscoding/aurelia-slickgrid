@@ -59,6 +59,7 @@ export * from './gridState.interface';
 export * from './gridStateChange.interface';
 export * from './gridStateType.enum';
 export * from './groupFormatter.interface';
+export * from './grouping.interface';
 export * from './groupTotalsFormatter.interface';
 export * from './headerButton.interface';
 export * from './headerButtonItem.interface';

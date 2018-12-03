@@ -14,6 +14,7 @@ export class Constants {
   static TEXT_SORT_ASCENDING = 'Sort Ascending';
   static TEXT_SORT_DESCENDING = 'Sort Descending';
   static TEXT_TOGGLE_FILTER_ROW = 'Toggle Filter Row';
+  static TEXT_TOGGLE_PRE_HEADER_ROW = 'Toggle Pre-Header Row';
   static VALIDATION_EDITOR_DECIMAL_BETWEEN = 'Please enter a valid number with a maximum of {{maxDecimal}} decimals';
   static VALIDATION_EDITOR_NUMBER_BETWEEN = 'Please enter a valid number between {{minValue}} and {{maxValue}}';
   static VALIDATION_EDITOR_NUMBER_MAX = 'Please enter a valid number that is lower than {{maxValue}}';

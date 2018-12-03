@@ -363,63 +363,70 @@ input.search-filter {
 // ----------------------------------------------
 
 .slick-preheader-panel {
-  .ui-droppable {
-    padding: 5px;
+  .ui-droppable, .ui-droppable-hover {
+    padding: $draggable-group-drop-padding;
+    height: $draggable-group-drop-height;
+    border: $draggable-group-drop-border !important;
+    width: $draggable-group-drop-width !important;
+    border-radius: $draggable-group-drop-radius;
+    background-color: $draggable-group-drop-bgcolor;
 
     .slick-placeholder {
-      height: $draggable-group-placeholder-height;
       font-style: $draggable-group-placeholder-font-style;
       color: $draggable-group-placeholder-color;
-      background-color: $draggable-group-placeholder-bgcolor;
-      width: calc(100% - 10px);
-      padding: $draggable-group-placeholder-padding;
-      border-radius: $draggable-group-placeholder-radius;
     }
 
     .slick-group-toggle-all {
-      &.expanded {
-        width: 9px;
-        height: 9px;
-        position: absolute;
-        display: inline-block;
-        right: 10px;
+      position: absolute;
+      cursor: pointer;      
+      font-family: $icon-font-family;
+      color: $draggable-group-toggle-all-color;
+      display: $draggable-group-toggle-all-display !important;
+      top: $draggable-group-toggle-all-pos-top;
+      right: $draggable-group-toggle-all-pos-right;
+
+      &.expanded:before {
+        content: $draggable-group-toggle-expanded-icon;
       }
-      &.collapsed {
-        width: 9px;
-        height: 9px;
-        position: absolute;
-        display: inline-block;
-        right: 10px;
+      &.collapsed:before {
+        content: $draggable-group-toggle-collapsed-icon;
       }
     }
 
     .slick-dropped-grouping {
-      color: black;
       display: inline-block;
-      margin-right: 5px;
       vertical-align: middle;
-      cursor: pointer;
     }
-
+    
     .slick-groupby-remove {
+      cursor: pointer;
+      display: inline-flex;
       color: $draggable-group-delete-color;
       padding-left: $draggable-group-delete-padding-left;
-      display: inline-flex;
+      padding-right: $draggable-group-delete-padding-right;
       font-size: $draggable-group-delete-font-size;
       &:hover {
         color: $draggable-group-delete-hover-color;
       }
     }
   }
+  .ui-droppable-active {
+    background-color: $draggable-group-droppable-active-bgcolor;
+  }
+  .ui-droppable-hover {
+    background-color: $draggable-group-droppable-hover-bgcolor;
+  }
 }
 
 .slick-header {
   .slick-header-columns {
     .slick-column-groupable {
-      width: 9px;
-      height: 9px;
       display: inline-block;
-      margin-left: 4px;
+      font-weight: $draggable-group-column-icon-font-weight;
+      color: $draggable-group-column-icon-color;
+      width: $draggable-group-column-icon-width;
+      height: $draggable-group-column-icon-height;
+      margin-left: $draggable-group-column-icon-margin-left;
     }
   }
 }

@@ -2,14 +2,15 @@ import { autoinject } from 'aurelia-framework';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
 import {
   Aggregators,
+  AureliaGridInstance,
   Column,
   FieldType,
   Filters,
   Formatters,
   GridOption,
   GroupTotalFormatters,
-  SortDirectionNumber,
   Sorters,
+  SortDirectionNumber,
 } from '../../aurelia-slickgrid';
 
 @autoinject()
@@ -18,17 +19,21 @@ export class Example18 {
   subTitle = `
     <ul>
       <li><a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Grouping-&-Aggregators" target="_blank">Wiki docs</a></li>
-      <li>Drag any Column Header to group by the column (support multi-columns grouping)</li>
+      <li>Drag any Column Header on the top placeholder to group by that column (support multi-columns grouping by adding more columns).</li>
       <li>Fully dynamic and interactive multi-level grouping with filtering and aggregates over 50'000 items</li>
       <li>Each grouping level can have its own aggregates (over child rows, child groups, or all descendant rows)..</li>
       <li>Use "Aggregators" and "GroupTotalFormatters" directly from Aurelia-Slickgrid</li>
     </ul>
   `;
 
+  aureliaGrid: AureliaGridInstance;
   columnDefinitions: Column[];
-  gridOptions: GridOption;
   dataset: any[];
   dataviewObj: any;
+  draggableGroupingPlugin: any;
+  durationOrderByCount = false;
+  gridObj: any;
+  gridOptions: GridOption;
   processing = false;
   subOnBeforeExport: Subscription;
   subOnAfterExport: Subscription;
@@ -41,7 +46,6 @@ export class Example18 {
 
   attached() {
     // populate the dataset once the grid is ready
-
     this.subOnBeforeExport = this.ea.subscribe('asg:onBeforeExportToFile', () => this.processing = true);
     this.subOnAfterExport = this.ea.subscribe('asg:onAfterExportToFile', () => this.processing = false);
   }
@@ -51,15 +55,21 @@ export class Example18 {
     this.subOnBeforeExport.dispose();
   }
 
+  aureliaGridReady(aureliaGrid: AureliaGridInstance) {
+    this.aureliaGrid = aureliaGrid;
+    this.gridObj = aureliaGrid.slickGrid; // grid object
+    this.dataviewObj = aureliaGrid.dataView;
+  }
+
   /* Define grid Options and Columns */
   defineGrid() {
     this.columnDefinitions = [
       {
-        id: 'sel', name: '#', field: 'sel', cssClass: 'cell-selection', width: 40, resizable: false, selectable: false, focusable: false,
-        grouping: {}
-      },
-      {
-        id: 'title', name: 'Title', field: 'title', width: 70, minWidth: 50, cssClass: 'cell-title', sortable: true,
+        id: 'title', name: 'Title', field: 'title',
+        width: 70, minWidth: 50,
+        cssClass: 'cell-title',
+        filterable: true,
+        sortable: true,
         grouping: {
           getter: 'title',
           formatter: (g) => {
@@ -73,11 +83,20 @@ export class Example18 {
         }
       },
       {
-        id: 'duration', name: 'Duration', field: 'duration', width: 70, sortable: true, groupTotalsFormatter: GroupTotalFormatters.sumTotals,
+        id: 'duration', name: 'Duration', field: 'duration',
+        width: 70,
+        sortable: true,
+        filterable: true,
+        filter: { model: Filters.slider, operator: '>=' },
+        type: FieldType.number,
+        groupTotalsFormatter: GroupTotalFormatters.sumTotals,
         grouping: {
           getter: 'duration',
           formatter: (g) => {
             return `Duration:  ${g.value}  <span style="color:green">(${g.count} items)</span>`;
+          },
+          comparer: (a, b) => {
+            return this.durationOrderByCount ? (a.count - b.count) : Sorters.numeric(a.value, b.value, SortDirectionNumber.asc);
           },
           aggregators: [
             new Aggregators.Sum('cost')
@@ -87,8 +106,36 @@ export class Example18 {
         }
       },
       {
-        id: 'start', name: 'Start', field: 'start', minWidth: 60, sortable: true,
-        formatter: Formatters.dateIso, type: FieldType.dateUtc, exportWithFormatter: true,
+        id: '%', name: '% Complete', field: 'percentComplete',
+        minWidth: 70, width: 90,
+        formatter: Formatters.percentCompleteBar,
+        type: FieldType.number,
+        filterable: true,
+        filter: { model: Filters.compoundSlider },
+        sortable: true,
+        groupTotalsFormatter: GroupTotalFormatters.avgTotalsPercentage,
+        grouping: {
+          getter: 'percentComplete',
+          formatter: (g) => {
+            return `% Complete:  ${g.value}  <span style="color:green">(${g.count} items)</span>`;
+          },
+          aggregators: [
+            new Aggregators.Sum('cost')
+          ],
+          aggregateCollapsed: false,
+          collapsed: false
+        },
+        params: { groupFormatterPrefix: '<i>Avg</i>: ' }
+      },
+      {
+        id: 'start', name: 'Start', field: 'start', minWidth: 60,
+        sortable: true,
+        filterable: true,
+        filter: { model: Filters.compoundDate },
+        formatter: Formatters.dateIso,
+        type: FieldType.dateUtc,
+        outputType: FieldType.dateIso,
+        exportWithFormatter: true,
         grouping: {
           getter: 'start',
           formatter: (g) => {
@@ -102,8 +149,15 @@ export class Example18 {
         }
       },
       {
-        id: 'finish', name: 'Finish', field: 'finish', minWidth: 60, sortable: true,
-        formatter: Formatters.dateIso, type: FieldType.dateUtc, exportWithFormatter: true,
+        id: 'finish', name: 'Finish', field: 'finish',
+        minWidth: 60,
+        sortable: true,
+        filterable: true,
+        filter: { model: Filters.compoundDate },
+        formatter: Formatters.dateIso,
+        type: FieldType.dateUtc,
+        outputType: FieldType.dateIso,
+        exportWithFormatter: true,
         grouping: {
           getter: 'finish',
           formatter: (g) => {
@@ -117,7 +171,14 @@ export class Example18 {
         }
       },
       {
-        id: 'cost', name: 'Cost', field: 'cost', width: 90, sortable: true, groupTotalsFormatter: GroupTotalFormatters.sumTotals,
+        id: 'cost', name: 'Cost', field: 'cost',
+        width: 90,
+        sortable: true,
+        filterable: true,
+        filter: { model: Filters.compoundInput },
+        formatter: Formatters.dollar,
+        groupTotalsFormatter: GroupTotalFormatters.sumTotalsDollar,
+        type: FieldType.number,
         grouping: {
           getter: 'cost',
           formatter: (g) => {
@@ -132,8 +193,15 @@ export class Example18 {
       },
       {
         id: 'effortDriven', name: 'Effort Driven', field: 'effortDriven',
-        width: 80, minWidth: 20, maxWidth: 80, cssClass: 'cell-effort-driven',
-        formatter: Formatters.checkmark, sortable: true,
+        width: 80, minWidth: 20, maxWidth: 100,
+        cssClass: 'cell-effort-driven',
+        sortable: true,
+        filterable: true,
+        filter: {
+          collection: [{ value: '', label: '' }, { value: true, label: 'True' }, { value: false, label: 'False' }],
+          model: Filters.singleSelect
+        },
+        formatter: Formatters.checkmark,
         grouping: {
           getter: 'effortDriven',
           formatter: (g) => {
@@ -155,17 +223,26 @@ export class Example18 {
       enableDraggableGrouping: true,
       createPreHeaderPanel: true,
       showPreHeaderPanel: true,
-      preHeaderPanelHeight: 35,
-      enableFiltering: false,
-      enableSorting: false,
+      preHeaderPanelHeight: 40,
+      enableFiltering: true,
+      enableSorting: true,
       enableColumnReorder: true,
       exportOptions: {
         sanitizeDataExport: true
+      },
+      gridMenu: {
+        onCommand: (e, args) => {
+          if (args.command === 'toggle-preheader') {
+            // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+            this.clearGrouping();
+          }
+        },
       },
       draggableGrouping: {
         dropPlaceHolderText: 'Drop a column header here to group by the column',
         // groupIconCssClass: 'fa fa-outdent',
         deleteIconCssClass: 'fa fa-times',
+        onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
       }
     };
   }
@@ -194,12 +271,10 @@ export class Example18 {
     }
   }
 
-  onDataviewCreated(dataview) {
-    this.dataviewObj = dataview;
-  }
-
   clearGrouping() {
-    this.dataviewObj.setGrouping([]);
+    if (this.draggableGroupingPlugin && this.draggableGroupingPlugin.setDroppedGroups) {
+      this.draggableGroupingPlugin.clearDroppedGroups();
+    }
   }
 
   collapseAllGroups() {
@@ -211,107 +286,35 @@ export class Example18 {
   }
 
   groupByDuration() {
-    this.dataviewObj.setGrouping({
-      getter: 'duration',
-      formatter: (g) => {
-        return `Duration:  ${g.value} <span style="color:green">(${g.count} items)</span>`;
-      },
-      comparer: (a, b) => {
-        return Sorters.numeric(a.value, b.value, SortDirectionNumber.asc);
-      },
-      aggregators: [
-        new Aggregators.Avg('percentComplete'),
-        new Aggregators.Sum('cost')
-      ],
-      aggregateCollapsed: false,
-      lazyTotalsCalculation: true
-    });
+    if (this.draggableGroupingPlugin && this.draggableGroupingPlugin.setDroppedGroups) {
+      this.showPreHeader();
+      this.draggableGroupingPlugin.setDroppedGroups('duration');
+      this.gridObj.invalidate();
+      this.gridObj.render();
+    }
   }
 
-  groupByDurationOrderByCount(aggregateCollapsed) {
-    this.dataviewObj.setGrouping({
-      getter: 'duration',
-      formatter: (g) => {
-        return `Duration:  ${g.value} <span style="color:green">(${g.count} items)</span>`;
-      },
-      comparer: (a, b) => {
-        return a.count - b.count;
-      },
-      aggregators: [
-        new Aggregators.Avg('percentComplete'),
-        new Aggregators.Sum('cost')
-      ],
-      aggregateCollapsed,
-      lazyTotalsCalculation: true
-    });
+  groupByDurationOrderByCount(isOrderingByCount = false) {
+    this.durationOrderByCount = isOrderingByCount;
+    this.clearGrouping();
+    this.groupByDuration();
   }
 
   groupByDurationEffortDriven() {
-    this.dataviewObj.setGrouping([
-      {
-        getter: 'duration',
-        formatter: (g) => {
-          return `Duration:  ${g.value}  <span style="color:green">(${g.count} items)</span>`;
-        },
-        aggregators: [
-          new Aggregators.Sum('duration'),
-          new Aggregators.Sum('cost')
-        ],
-        aggregateCollapsed: true,
-        lazyTotalsCalculation: true
-      },
-      {
-        getter: 'effortDriven',
-        formatter: (g) => {
-          return `Effort-Driven:  ${(g.value ? 'True' : 'False')} <span style="color:green">(${g.count} items)</span>`;
-        },
-        aggregators: [
-          new Aggregators.Avg('percentComplete'),
-          new Aggregators.Sum('cost')
-        ],
-        collapsed: true,
-        lazyTotalsCalculation: true
-      }
-    ]);
+    if (this.draggableGroupingPlugin && this.draggableGroupingPlugin.setDroppedGroups) {
+      this.showPreHeader();
+      this.draggableGroupingPlugin.setDroppedGroups(['duration', 'effortDriven']);
+      this.gridObj.invalidate();
+      this.gridObj.render();
+    }
   }
 
-  groupByDurationEffortDrivenPercent() {
-    this.dataviewObj.setGrouping([
-      {
-        getter: 'duration',
-        formatter: (g) => {
-          return `Duration:  ${g.value}  <span style="color:green">(${g.count} items)</span>`;
-        },
-        aggregators: [
-          new Aggregators.Sum('duration'),
-          new Aggregators.Sum('cost')
-        ],
-        aggregateCollapsed: true,
-        lazyTotalsCalculation: true
-      },
-      {
-        getter: 'effortDriven',
-        formatter: (g) => {
-          return `Effort-Driven:  ${(g.value ? 'True' : 'False')}  <span style="color:green">(${g.count} items)</span>`;
-        },
-        aggregators: [
-          new Aggregators.Sum('duration'),
-          new Aggregators.Sum('cost')
-        ],
-        lazyTotalsCalculation: true
-      },
-      {
-        getter: 'percentComplete',
-        formatter: (g) => {
-          return `% Complete:  ${g.value}  <span style="color:green">(${g.count} items)</span>`;
-        },
-        aggregators: [
-          new Aggregators.Avg('percentComplete')
-        ],
-        aggregateCollapsed: true,
-        collapsed: true,
-        lazyTotalsCalculation: true
-      }
-    ]);
+  showPreHeader() {
+    this.gridObj.setPreHeaderPanelVisibility(true);
+  }
+
+  toggleDraggableGroupingRow() {
+    this.clearGrouping();
+    this.gridObj.setPreHeaderPanelVisibility(!this.gridObj.getOptions().showPreHeaderPanel);
   }
 }
