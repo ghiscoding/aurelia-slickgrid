@@ -132,13 +132,15 @@ export class AureliaSlickgridCustomElement {
     this.gridOptions = this.mergeGridOptions(this.gridOptions);
     this.createBackendApiInternalPostProcessCallback(this.gridOptions);
 
-    if (this.gridOptions.enableGrouping) {
-      this.extensionUtility.loadExtensionDynamically(ExtensionName.groupItemMetaProvider);
-      this.groupItemMetadataProvider = new Slick.Data.GroupItemMetadataProvider();
-      this.sharedService.groupItemMetadataProvider = this.groupItemMetadataProvider;
-      this.dataview = new Slick.Data.DataView({ groupItemMetadataProvider: this.groupItemMetadataProvider });
-    } else {
-      this.dataview = new Slick.Data.DataView();
+    if (!this.customDataView) {
+      if (this.gridOptions.enableGrouping) {
+        this.extensionUtility.loadExtensionDynamically(ExtensionName.groupItemMetaProvider);
+        this.groupItemMetadataProvider = new Slick.Data.GroupItemMetadataProvider();
+        this.sharedService.groupItemMetadataProvider = this.groupItemMetadataProvider;
+        this.dataview = new Slick.Data.DataView({ groupItemMetadataProvider: this.groupItemMetadataProvider });
+      } else {
+        this.dataview = new Slick.Data.DataView();
+      }
     }
 
     // for convenience, we provide the property "editor" as an Aurelia-Slickgrid editor complex object
@@ -178,9 +180,12 @@ export class AureliaSlickgridCustomElement {
     this.attachDifferentHooks(this.grid, this.gridOptions, this.dataview);
 
     this.grid.init();
-    this.dataview.beginUpdate();
-    this.dataview.setItems(this._dataset, this.gridOptions.datasetIdPropertyName);
-    this.dataview.endUpdate();
+
+    if (!this.customDataView && (this.dataview && this.dataview.beginUpdate && this.dataview.setItems && this.dataview.endUpdate)) {
+      this.dataview.beginUpdate();
+      this.dataview.setItems(this._dataset, this.gridOptions.datasetIdPropertyName);
+      this.dataview.endUpdate();
+    }
 
     // user might want to hide the header row on page load but still have `enableFiltering: true`
     // if that is the case, we need to hide the headerRow ONLY AFTER all filters got created & dataView exist
@@ -188,14 +193,16 @@ export class AureliaSlickgridCustomElement {
       this.showHeaderRow(false);
     }
 
-    // after the DataView is created & updated execute some processes
-    this.executeAfterDataviewCreated(this.grid, this.gridOptions, this.dataview);
-
     // publish & dispatch certain events
     this.ea.publish('onGridCreated', this.grid);
-    this.ea.publish('onDataviewCreated', this.dataview);
     this.dispatchCustomEvent(`${aureliaEventPrefix}-on-grid-created`, this.grid);
-    this.dispatchCustomEvent(`${aureliaEventPrefix}-on-dataview-created`, this.dataview);
+
+    // after the DataView is created & updated execute some processes & dispatch some events
+    if (!this.customDataView) {
+      this.executeAfterDataviewCreated(this.grid, this.gridOptions, this.dataview);
+      this.ea.publish('onDataviewCreated', this.dataview);
+      this.dispatchCustomEvent(`${aureliaEventPrefix}-on-dataview-created`, this.dataview);
+    }
 
     // attach resize ONLY after the dataView is ready
     this.attachResizeHook(this.grid, this.gridOptions);
@@ -453,14 +460,16 @@ export class AureliaSlickgridCustomElement {
     this.gridEventService.attachOnCellChange(grid, dataView);
     this.gridEventService.attachOnClick(grid, dataView);
 
-    this._eventHandler.subscribe(dataView.onRowCountChanged, (e: any, args: any) => {
-      grid.updateRowCount();
-      grid.render();
-    });
-    this._eventHandler.subscribe(dataView.onRowsChanged, (e: any, args: any) => {
-      grid.invalidateRows(args.rows);
-      grid.render();
-    });
+    if (dataView && grid) {
+      this._eventHandler.subscribe(dataView.onRowCountChanged, (e: any, args: any) => {
+        grid.updateRowCount();
+        grid.render();
+      });
+      this._eventHandler.subscribe(dataView.onRowsChanged, (e: any, args: any) => {
+        grid.invalidateRows(args.rows);
+        grid.render();
+      });
+    }
 
     // does the user have a colspan callback?
     if (gridOptions.colspanCallback) {
