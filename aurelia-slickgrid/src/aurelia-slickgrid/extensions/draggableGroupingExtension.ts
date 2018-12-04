@@ -46,7 +46,7 @@ export class DraggableGroupingExtension implements Extension {
         if (this.sharedService.gridOptions.draggableGrouping.onExtensionRegistered) {
           this.sharedService.gridOptions.draggableGrouping.onExtensionRegistered(this._extension);
         }
-        this._eventHandler.subscribe(this._extension.onGroupChanged, (e: any, args: { groupColumns: [] }) => {
+        this._eventHandler.subscribe(this._extension.onGroupChanged, (e: any, args: { groupColumns: any[] }) => {
           if (this.sharedService.gridOptions.draggableGrouping && typeof this.sharedService.gridOptions.draggableGrouping.onGroupChanged === 'function') {
             this.sharedService.gridOptions.draggableGrouping.onGroupChanged(e, args);
           }
