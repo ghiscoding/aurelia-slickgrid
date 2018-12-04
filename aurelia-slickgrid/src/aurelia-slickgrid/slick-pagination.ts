@@ -1,14 +1,12 @@
 import { bindable, inject } from 'aurelia-framework';
 import { Subscription, EventAggregator } from 'aurelia-event-aggregator';
 import { GridOption } from './models/index';
-import { FilterService } from './services/index';
 
 const aureliaEventPrefix = 'asg';
 
-@inject(Element, EventAggregator, FilterService)
+@inject(Element, EventAggregator)
 export class SlickPaginationCustomElement {
   private _filterSubscriber: Subscription;
-  private _sorterSubscriber: Subscription;
   @bindable() grid: any;
   @bindable() gridPaginationOptions: GridOption;
   private _gridPaginationOptions: GridOption;
@@ -23,14 +21,14 @@ export class SlickPaginationCustomElement {
   paginationCallback: () => void;
   paginationPageSizes = [25, 75, 100];
 
-  constructor(private elm: Element, private ea: EventAggregator, private filterService: FilterService) {
-    this.filterService = filterService;
-  }
+  constructor(private elm: Element, private ea: EventAggregator) { }
 
   bind(binding: any, contexts: any) {
     this._gridPaginationOptions = binding.gridPaginationOptions;
     if (!binding.gridPaginationOptions || (binding.gridPaginationOptions.pagination && binding.gridPaginationOptions.pagination.totalItems !== this.totalItems)) {
       this.refreshPagination();
+    } else if (binding.gridPaginationOptions.pagination.totalItems === 0) {
+      this.recalculateFromToIndexes();
     }
 
     // Subscribe to Filter changed and go back to page 1 when that happen
@@ -84,7 +82,7 @@ export class SlickPaginationCustomElement {
   }
 
   changeToCurrentPage(event: any) {
-    this.pageNumber = (event && event.target && event.target.value) ? event.target.value : 1;
+    this.pageNumber = +((event && event.target && event.target.value) ? event.target.value : 1);
     if (this.pageNumber < 1) {
       this.pageNumber = 1;
     } else if (this.pageNumber > this.pageCount) {
@@ -102,7 +100,7 @@ export class SlickPaginationCustomElement {
   onChangeItemPerPage(event: any) {
     const itemsPerPage = +event.target.value;
     this.pageCount = Math.ceil(this.totalItems / itemsPerPage);
-    this.pageNumber = 1;
+    this.pageNumber = (this.totalItems > 0) ? 1 : 0;
     this.itemsPerPage = itemsPerPage;
     this.onPageChanged(event, this.pageNumber);
   }
@@ -216,7 +214,13 @@ export class SlickPaginationCustomElement {
   }
 
   recalculateFromToIndexes() {
-    this.dataFrom = (this.pageNumber * this.itemsPerPage) - this.itemsPerPage + 1;
-    this.dataTo = (this.totalItems < this.itemsPerPage) ? this.totalItems : (this.pageNumber * this.itemsPerPage);
+    if (this.totalItems === 0) {
+      this.dataFrom = 0;
+      this.dataTo = 0;
+      this.pageNumber = 0;
+    } else {
+      this.dataFrom = (this.pageNumber * this.itemsPerPage) - this.itemsPerPage + 1;
+      this.dataTo = (this.totalItems < this.itemsPerPage) ? this.totalItems : (this.pageNumber * this.itemsPerPage);
+    }
   }
 }
