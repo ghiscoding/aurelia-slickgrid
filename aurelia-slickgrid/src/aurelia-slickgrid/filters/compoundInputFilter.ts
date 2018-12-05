@@ -18,6 +18,7 @@ declare var $: any;
 @inject(I18N)
 export class CompoundInputFilter implements Filter {
   private _clearFilterTriggered = false;
+  private _inputType = 'text';
   private $filterElm: any;
   private $filterInputElm: any;
   private $selectOperatorElm: any;
@@ -27,18 +28,31 @@ export class CompoundInputFilter implements Filter {
   columnDef: Column;
   callback: FilterCallback;
 
-  constructor(private i18n: I18N) { }
+  constructor(protected i18n: I18N) { }
 
   /** Getter for the Grid Options pulled through the Grid Object */
   private get gridOptions(): GridOption {
     return (this.grid && this.grid.getOptions) ? this.grid.getOptions() : {};
   }
 
-  set operator(op: OperatorType | OperatorString) {
-    this._operator = op;
+  /** Getter of input type (text, number, password) */
+  get inputType() {
+    return this._inputType;
   }
+
+  /** Setter of input type (text, number, password) */
+  set inputType(type: string) {
+    this._inputType = type;
+  }
+
+  /** Getter of the Operator to use when doing the filter comparing */
   get operator(): OperatorType | OperatorString {
     return this._operator || OperatorType.empty;
+  }
+
+  /** Getter of the Operator to use when doing the filter comparing */
+  set operator(op: OperatorType | OperatorString) {
+    this._operator = op;
   }
 
   /**
@@ -107,7 +121,7 @@ export class CompoundInputFilter implements Filter {
 
   private buildInputHtmlString() {
     const placeholder = (this.gridOptions) ? (this.gridOptions.defaultFilterPlaceholder || '') : '';
-    return `<input class="form-control" type="text" placeholder="${placeholder}" />`;
+    return `<input class="form-control" type="${this._inputType || 'text'}" placeholder="${placeholder}" />`;
   }
 
   private buildSelectOperatorHtmlString() {
@@ -210,7 +224,7 @@ export class CompoundInputFilter implements Filter {
     } else {
       const selectedOperator = this.$selectOperatorElm.find('option:selected').text();
       const value: string = this.$filterInputElm.val();
-      (value) ? this.$filterElm.addClass('filled') : this.$filterElm.removeClass('filled');
+      (value !== null && value !== undefined && value !== '') ? this.$filterElm.addClass('filled') : this.$filterElm.removeClass('filled');
       this.callback(e, { columnDef: this.columnDef, searchTerms: (value ? [value] : null), operator: selectedOperator || '' });
     }
   }

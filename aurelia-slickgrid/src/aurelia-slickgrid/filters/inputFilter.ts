@@ -12,19 +12,31 @@ import * as $ from 'jquery';
 
 export class InputFilter implements Filter {
   private _clearFilterTriggered = false;
+  private _inputType = 'text';
   private $filterElm: any;
   grid: any;
   searchTerms: SearchTerm[];
   columnDef: Column;
   callback: FilterCallback;
 
+  /** Getter of input type (text, number, password) */
+  get inputType() {
+    return this._inputType;
+  }
+
+  /** Setter of input type (text, number, password) */
+  set inputType(type: string) {
+    this._inputType = type;
+  }
+
+  /** Getter of the Operator to use when doing the filter comparing */
+  get operator(): OperatorType | OperatorString {
+    return this.columnDef && this.columnDef.filter && this.columnDef.filter.operator || '';
+  }
+
   /** Getter for the Grid Options pulled through the Grid Object */
   private get gridOptions(): GridOption {
     return (this.grid && this.grid.getOptions) ? this.grid.getOptions() : {};
-  }
-
-  get operator(): OperatorType | OperatorString {
-    return this.columnDef && this.columnDef.filter && this.columnDef.filter.operator || '';
   }
 
   /**
@@ -103,7 +115,7 @@ export class InputFilter implements Filter {
   private buildTemplateHtmlString() {
     const columnId = this.columnDef && this.columnDef.id;
     const placeholder = (this.gridOptions) ? (this.gridOptions.defaultFilterPlaceholder || '') : '';
-    return `<input type="text" class="form-control search-filter filter-${columnId}" placeholder="${placeholder}">`;
+    return `<input type="${this._inputType || 'text'}" class="form-control search-filter filter-${columnId}" placeholder="${placeholder}">`;
   }
 
   /**
