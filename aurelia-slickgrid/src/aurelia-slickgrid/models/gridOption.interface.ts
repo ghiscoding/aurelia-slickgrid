@@ -5,6 +5,7 @@ import {
   Column,
   ColumnPicker,
   CheckboxSelector,
+  DraggableGrouping,
   EditCommand,
   ExportOption,
   GridMenu,
@@ -14,7 +15,6 @@ import {
   Pagination,
   RowMoveManager
 } from './../models/index';
-import { DraggableGrouping } from './draggableGrouping.interface';
 
 export interface GridOption {
   /** CSS class name used on newly added row */

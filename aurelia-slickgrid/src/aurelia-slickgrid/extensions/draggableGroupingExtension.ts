@@ -1,6 +1,6 @@
 import { singleton, inject } from 'aurelia-framework';
 import { SharedService } from '../services/shared.service';
-import { Extension, ExtensionName, CellArgs, GridOption } from '../models/index';
+import { Extension, ExtensionName, GridOption } from '../models/index';
 import { ExtensionUtility } from './extensionUtility';
 
 // using external non-typed js libraries

@@ -268,7 +268,7 @@ export class GridMenuExtension implements Extension {
     }
 
     if (this.sharedService.gridOptions.showPreHeaderPanel) {
-      // show grid menu: toggle top-panel row
+      // show grid menu: toggle pre-header row
       if (this.sharedService.gridOptions && this.sharedService.gridOptions.gridMenu && !this.sharedService.gridOptions.gridMenu.hideTogglePreHeaderCommand) {
         gridMenuCustomItems.push(
           {

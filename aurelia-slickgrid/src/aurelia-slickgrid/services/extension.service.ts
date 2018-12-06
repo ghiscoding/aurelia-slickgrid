@@ -1,4 +1,3 @@
-import { DraggableGroupingExtension } from './../extensions/draggableGroupingExtension';
 // import common 3rd party SlickGrid plugins/libs
 import 'slickgrid/plugins/slick.cellrangedecorator';
 import 'slickgrid/plugins/slick.cellrangeselector';
@@ -17,6 +16,7 @@ import {
   CellExternalCopyManagerExtension,
   CheckboxSelectorExtension,
   ColumnPickerExtension,
+  DraggableGroupingExtension,
   GridMenuExtension,
   GroupItemMetaProviderExtension,
   HeaderButtonExtension,
