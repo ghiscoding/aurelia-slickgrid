@@ -1,6 +1,6 @@
 import { singleton, inject } from 'aurelia-framework';
 import { SharedService } from '../services/shared.service';
-import { Extension, ExtensionName, GridOption } from '../models/index';
+import { Extension, ExtensionName, GridOption, Grouping } from '../models/index';
 import { ExtensionUtility } from './extensionUtility';
 
 // using external non-typed js libraries
@@ -46,7 +46,7 @@ export class DraggableGroupingExtension implements Extension {
         if (this.sharedService.gridOptions.draggableGrouping.onExtensionRegistered) {
           this.sharedService.gridOptions.draggableGrouping.onExtensionRegistered(this._extension);
         }
-        this._eventHandler.subscribe(this._extension.onGroupChanged, (e: any, args: { groupColumns: any[] }) => {
+        this._eventHandler.subscribe(this._extension.onGroupChanged, (e: any, args: { caller?: string; groupColumns: Grouping[] }) => {
           if (this.sharedService.gridOptions.draggableGrouping && typeof this.sharedService.gridOptions.draggableGrouping.onGroupChanged === 'function') {
             this.sharedService.gridOptions.draggableGrouping.onGroupChanged(e, args);
           }
