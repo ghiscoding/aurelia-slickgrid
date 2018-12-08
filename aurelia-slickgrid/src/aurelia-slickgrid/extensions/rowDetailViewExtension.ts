@@ -66,6 +66,9 @@ export class RowDetailViewExtension implements Extension {
 
       // hook all events
       if (this.sharedService.grid && this.sharedService.gridOptions.rowDetailView) {
+        if (this.sharedService.gridOptions.rowDetailView.onExtensionRegistered) {
+          this.sharedService.gridOptions.rowDetailView.onExtensionRegistered(this._extension);
+        }
         this._eventHandler.subscribe(this._extension.onAsyncResponse, (e: any, args: any) => {
           if (this.sharedService.gridOptions.rowDetailView && typeof this.sharedService.gridOptions.rowDetailView.onAsyncResponse === 'function') {
             this.sharedService.gridOptions.rowDetailView.onAsyncResponse(e, args);

@@ -45,6 +45,9 @@ export interface RowDetailView {
   // --
   // SlickGrid Events
 
+  /** Fired after extension (plugin) is registered by SlickGrid */
+  onExtensionRegistered?: (plugin: any) => void;
+
   /** This event must be used with the "notify" by the end user once the Asynchronous Server call returns the item detail */
   onAsyncResponse?: (e: Event, args: { item: any, detailView?: any }) => void;
 
