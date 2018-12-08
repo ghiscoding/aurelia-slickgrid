@@ -5,6 +5,7 @@ import {
   Column,
   ColumnPicker,
   CheckboxSelector,
+  DraggableGrouping,
   EditCommand,
   ExportOption,
   GridMenu,
@@ -109,6 +110,9 @@ export interface GridOption {
   /** Default prefix for SlickGrid Event names */
   defaultSlickgridEventPrefix?: string;
 
+  /** Draggable Grouping Plugin options & events */
+  draggableGrouping?: DraggableGrouping;
+
   /** Defaults to false, when enabled will give the possibility to edit cell values with inline editors. */
   editable?: boolean;
 
@@ -153,6 +157,9 @@ export interface GridOption {
 
   /** Defaults to true, which permits the user to move an entire column from a position to another. */
   enableColumnReorder?: boolean;
+
+  /** Defaults to false, do we want to enable the Draggable Grouping Plugin? */
+  enableDraggableGrouping?: boolean;
 
   /** Defaults to true, which leads to use an Excel like copy buffer that gets copied in clipboard and can be pasted back in Excel or any other app */
   enableExcelCopyBuffer?: boolean;

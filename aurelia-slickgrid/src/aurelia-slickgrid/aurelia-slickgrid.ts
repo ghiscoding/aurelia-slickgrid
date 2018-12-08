@@ -133,7 +133,7 @@ export class AureliaSlickgridCustomElement {
     this.createBackendApiInternalPostProcessCallback(this.gridOptions);
 
     if (!this.customDataView) {
-      if (this.gridOptions.enableGrouping) {
+      if (this.gridOptions.draggableGrouping || this.gridOptions.enableGrouping) {
         this.extensionUtility.loadExtensionDynamically(ExtensionName.groupItemMetaProvider);
         this.groupItemMetadataProvider = new Slick.Data.GroupItemMetadataProvider();
         this.sharedService.groupItemMetadataProvider = this.groupItemMetadataProvider;
@@ -168,7 +168,7 @@ export class AureliaSlickgridCustomElement {
     // save reference for all columns before they optionally become hidden/visible
     this.sharedService.allColumns = this._columnDefinitions;
     this.sharedService.visibleColumns = this._columnDefinitions;
-    this.extensionService.createCheckboxPluginBeforeGridCreation(this._columnDefinitions, this.gridOptions);
+    this.extensionService.createExtensionsBeforeGridCreation(this._columnDefinitions, this.gridOptions);
 
     // build SlickGrid Grid, also user might optionally pass a custom dataview (e.g. remote model)
     this.grid = new Slick.Grid(`#${this.gridId}`, this.customDataView || this.dataview, this._columnDefinitions, this.gridOptions);
@@ -208,7 +208,7 @@ export class AureliaSlickgridCustomElement {
     this.attachResizeHook(this.grid, this.gridOptions);
 
     // attach grouping and header grouping colspan service
-    if (this.gridOptions.createPreHeaderPanel) {
+    if (this.gridOptions.createPreHeaderPanel && !this.gridOptions.enableDraggableGrouping) {
       this.groupingAndColspanService.init(this.grid, this.dataview);
     }
 
@@ -627,7 +627,7 @@ export class AureliaSlickgridCustomElement {
    * @param dataset
    */
   refreshGridData(dataset: any[], totalCount?: number) {
-    if (dataset && this.grid && this.dataview && typeof this.dataview.setItems === 'function') {
+    if (Array.isArray(dataset) && this.grid && this.dataview && typeof this.dataview.setItems === 'function') {
       this.dataview.setItems(dataset, this.gridOptions.datasetIdPropertyName);
       if (!this.gridOptions.backendServiceApi) {
         this.dataview.reSort();
