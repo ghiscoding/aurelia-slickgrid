@@ -1,5 +1,4 @@
-import { autoinject } from 'aurelia-framework';
-import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
+import { autoinject, bindable } from 'aurelia-framework';
 import {
   Aggregators,
   AureliaGridInstance,
@@ -11,19 +10,25 @@ import {
   GroupTotalFormatters,
   Sorters,
   SortDirectionNumber,
+  Grouping,
 } from '../../aurelia-slickgrid';
 
 @autoinject()
 export class Example18 {
   title = 'Example 18: Draggable Grouping & Aggregators';
   subTitle = `
-    <ul>
-      <li><a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Grouping-&-Aggregators" target="_blank">Wiki docs</a></li>
-      <li>Drag any Column Header on the top placeholder to group by that column (support multi-columns grouping by adding more columns).</li>
-      <li>Fully dynamic and interactive multi-level grouping with filtering and aggregates over 50'000 items</li>
-      <li>Each grouping level can have its own aggregates (over child rows, child groups, or all descendant rows)..</li>
-      <li>Use "Aggregators" and "GroupTotalFormatters" directly from Aurelia-Slickgrid</li>
-    </ul>
+  <ul>
+  <li><a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Grouping-&-Aggregators" target="_blank">Wiki docs</a></li>
+  <li>This example shows 3 ways of grouping</li>
+  <ol>
+  <li>Drag any Column Header on the top placeholder to group by that column (support moti-columns grouping by adding more columns to the drop area).</li>
+  <li>Use buttons and defined functions to group by wichever field you want</li>
+  <li>Use the Select dropdown to group, the position of the Selects represent the grouping level</li>
+  </ol>
+  <li>Fully dynamic and interactive multi-level grouping with filtering and aggregates ovor 50'000 items</li>
+  <li>Each grouping level can have its own aggregates (over child rows, child groups, or all descendant rows)..</li>
+  <li>Use "Aggregators" and "GroupTotalFormatters" directly from Aurelia-Slickgrid</li>
+  </ul>
   `;
 
   aureliaGrid: AureliaGridInstance;
@@ -35,24 +40,12 @@ export class Example18 {
   gridObj: any;
   gridOptions: GridOption;
   processing = false;
-  subOnBeforeExport: Subscription;
-  subOnAfterExport: Subscription;
+  selectedGroupingFields: string[] = ['', '', ''];
 
-  constructor(private ea: EventAggregator) {
+  constructor() {
     // define the grid options & columns and then create the grid itself
     this.loadData(500);
     this.defineGrid();
-  }
-
-  attached() {
-    // populate the dataset once the grid is ready
-    this.subOnBeforeExport = this.ea.subscribe('asg:onBeforeExportToFile', () => this.processing = true);
-    this.subOnAfterExport = this.ea.subscribe('asg:onAfterExportToFile', () => this.processing = false);
-  }
-
-  detached() {
-    this.subOnAfterExport.dispose();
-    this.subOnBeforeExport.dispose();
   }
 
   aureliaGridReady(aureliaGrid: AureliaGridInstance) {
@@ -106,7 +99,7 @@ export class Example18 {
         }
       },
       {
-        id: '%', name: '% Complete', field: 'percentComplete',
+        id: 'percentComplete', name: '% Complete', field: 'percentComplete',
         minWidth: 70, width: 90,
         formatter: Formatters.percentCompleteBar,
         type: FieldType.number,
@@ -187,8 +180,8 @@ export class Example18 {
           aggregators: [
             new Aggregators.Sum('cost')
           ],
-          aggregateCollapsed: false,
-          collapsed: false
+          aggregateCollapsed: true,
+          collapsed: true
         }
       },
       {
@@ -242,6 +235,7 @@ export class Example18 {
         dropPlaceHolderText: 'Drop a column header here to group by the column',
         // groupIconCssClass: 'fa fa-outdent',
         deleteIconCssClass: 'fa fa-times',
+        onGroupChanged: (e, args) => this.onGroupChanged(args && args.groupColumns),
         onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
       }
     };
@@ -271,6 +265,16 @@ export class Example18 {
     }
   }
 
+  clearGroupsAndSelects() {
+    this.clearGroupingSelects();
+    this.clearGrouping();
+  }
+
+  clearGroupingSelects() {
+    this.selectedGroupingFields.forEach((g, i) => this.selectedGroupingFields[i] = '');
+    this.selectedGroupingFields = [...this.selectedGroupingFields]; // force dirty checking
+  }
+
   clearGrouping() {
     if (this.draggableGroupingPlugin && this.draggableGroupingPlugin.setDroppedGroups) {
       this.draggableGroupingPlugin.clearDroppedGroups();
@@ -286,6 +290,7 @@ export class Example18 {
   }
 
   groupByDuration() {
+    this.clearGrouping();
     if (this.draggableGroupingPlugin && this.draggableGroupingPlugin.setDroppedGroups) {
       this.showPreHeader();
       this.draggableGroupingPlugin.setDroppedGroups('duration');
@@ -301,11 +306,37 @@ export class Example18 {
   }
 
   groupByDurationEffortDriven() {
+    this.clearGrouping();
     if (this.draggableGroupingPlugin && this.draggableGroupingPlugin.setDroppedGroups) {
       this.showPreHeader();
       this.draggableGroupingPlugin.setDroppedGroups(['duration', 'effortDriven']);
       this.gridObj.invalidate();
       this.gridObj.render();
+    }
+  }
+
+  groupByFieldName(fieldName, index) {
+    this.clearGrouping();
+    if (this.draggableGroupingPlugin && this.draggableGroupingPlugin.setDroppedGroups) {
+      this.showPreHeader();
+
+      // get the field names from Group By select(s) dropdown, but filter out any empty fields
+      const groupedFields = this.selectedGroupingFields.filter((g) => g !== '');
+      if (groupedFields.length === 0) {
+        this.clearGrouping();
+      } else {
+        this.draggableGroupingPlugin.setDroppedGroups(groupedFields);
+      }
+      this.gridObj.invalidate();
+      this.gridObj.render();
+    }
+  }
+
+  onGroupChanged(groups: Grouping[]) {
+    if (Array.isArray(this.selectedGroupingFields) && Array.isArray(groups) && groups.length > 0) {
+      // update all Group By select dropdown
+      this.selectedGroupingFields.forEach((g, i) => this.selectedGroupingFields[i] = groups[i] && groups[i].getter || '');
+      this.selectedGroupingFields = [...this.selectedGroupingFields]; // force dirty checking
     }
   }
 

@@ -378,7 +378,7 @@ input.search-filter {
 
     .slick-group-toggle-all {
       position: absolute;
-      cursor: pointer;      
+      cursor: pointer;
       font-family: $icon-font-family;
       color: $draggable-group-toggle-all-color;
       display: $draggable-group-toggle-all-display !important;
@@ -396,8 +396,9 @@ input.search-filter {
     .slick-dropped-grouping {
       display: inline-block;
       vertical-align: middle;
+      cursor: move;
     }
-    
+
     .slick-groupby-remove {
       cursor: pointer;
       display: inline-flex;
