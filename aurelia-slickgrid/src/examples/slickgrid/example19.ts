@@ -2,10 +2,6 @@ import { Subscription, EventAggregator } from 'aurelia-event-aggregator';
 import { Column, FieldType, Formatters, GridOption, AureliaGridInstance, Filters, GridStateChange, ExtensionName } from '../../aurelia-slickgrid';
 import { autoinject, TemplatingEngine, ViewCompiler, Container, ViewResources, ViewSlot, createOverrideContext, PLATFORM, View } from 'aurelia-framework';
 
-// create my custom Formatter with the Formatter type
-const myCustomCheckmarkFormatter = (row, cell, value, columnDef, dataContext) =>
-  value ? `<i class="fa fa-fire" aria-hidden="true"></i>` : '<i class="fa fa-snowflake-o" aria-hidden="true"></i>';
-
 declare var $: any;
 
 export interface CreatedView {
@@ -75,9 +71,9 @@ export class Example19 {
   aureliaGridReady(aureliaGrid: AureliaGridInstance) {
     this.aureliaGrid = aureliaGrid;
     this.gridRowBuffer = aureliaGrid && aureliaGrid.slickGrid && aureliaGrid.slickGrid.getOptions().minRowBuffer;
-    const plugin = this.aureliaGrid.pluginService.getExtensionByName(ExtensionName.rowDetailView);
-    this.detailView = plugin && plugin.extension;
-    console.log('plugin', this.detailView);
+    // const plugin = this.aureliaGrid.pluginService.getExtensionByName(ExtensionName.rowDetailView);
+    // this.detailView = plugin && plugin.extension;
+    // console.log('plugin', this.detailView);
     console.log(this.gridRowBuffer);
     setTimeout(() => {
       const renderedRange = this.aureliaGrid.slickGrid.getRenderedRange() || {};
@@ -87,58 +83,7 @@ export class Example19 {
 
     // console.log('detailView', this.detailView);
 
-    this.detailView.onBeforeRowDetailToggle.subscribe((e, args) => {
-      // console.log('before toggling row detail', args.item);
-      // console.log(`is ${args.item.__collapsed ? 'expanding' : 'collapsing'}`);
 
-      // expanding
-      if (args && args.item && args.item.__collapsed) {
-        // console.log('yes we are expanding');
-        // expanding row detail
-        if (args && args.item) {
-          const viewInfo: CreatedView = {
-            id: args.item.id,
-            dataContext: args.item,
-            rowIndex: this.aureliaGrid.dataView.getIdxById(args.item.id)
-          };
-          this.updateArrayById(this.slots, viewInfo, true);
-          // console.log('slots', this.slots)
-        }
-      } else {
-        // collapsing, so dispose of the View/ViewSlot
-        // console.log('closing!!!');
-        const foundSlotIndex = this.slots.findIndex((slot: CreatedView) => slot.id === args.item.id);
-        if (foundSlotIndex >= 0) {
-          // console.log('found slot', this.slots[foundSlotIndex])
-          if (this.disposeViewSlot(this.slots[foundSlotIndex])) {
-            this.slots.splice(foundSlotIndex, 1);
-          }
-        }
-      }
-    });
-
-    this.detailView.onAfterRowDetailToggle.subscribe((e, args) => {
-      // console.log('after toggling row detail', args.item);
-      // this.detailView.collapseAll();
-      this.slots.forEach((slot) => {
-        this.renderView(slot.dataContext, false);
-      });
-    });
-
-    this.detailView.onRowOutOfViewportRange.subscribe((e, args) => {
-      console.log('reached out of range', args);
-    });
-
-    this.detailView.onRowBackToViewportRange.subscribe((e, args) => {
-      console.log('back to Viewport range', args);
-      this.slots.forEach((slot) => {
-        // this.redrawView(slot);
-      });
-    });
-
-    this.detailView.onAsyncEndUpdate.subscribe((e, args) => {
-      this.renderView(args && args.itemDetail, true);
-    });
   }
 
   disposeAllViewSlot() {
@@ -208,7 +153,7 @@ export class Example19 {
       {
         id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven',
         minWidth: 100,
-        formatter: myCustomCheckmarkFormatter, type: FieldType.boolean,
+        formatter: Formatters.checkmark, type: FieldType.boolean,
         filterable: true, sortable: true,
         filter: {
           collection: [{ value: '', label: '' }, { value: true, label: 'True' }, { value: false, label: 'False' }],
@@ -239,7 +184,12 @@ export class Example19 {
         // also note that the detail view adds an extra 1 row for padding purposes
         // so if you choose 4 panelRows, the display will in fact use 5 rows
         panelRows: 6,
-        keyPrefix: '__'
+        keyPrefix: '__',
+
+        onExtensionRegistered: (extension) => {
+          this.hookAllEvents(extension);
+          console.log('extension', extension);
+        }
       },
       rowSelectionOptions: {
         selectActiveRow: true
@@ -326,6 +276,63 @@ export class Example19 {
     this.slots.forEach((slot) => {
       slot.rowIndex = null;
       this.redrawView(slot);
+    });
+  }
+
+  hookAllEvents(extension) {
+    this.detailView = extension;
+
+    this.detailView.onBeforeRowDetailToggle.subscribe((e, args) => {
+      // console.log('before toggling row detail', args.item);
+      // console.log(`is ${args.item.__collapsed ? 'expanding' : 'collapsing'}`);
+
+      // expanding
+      if (args && args.item && args.item.__collapsed) {
+        // console.log('yes we are expanding');
+        // expanding row detail
+        if (args && args.item) {
+          const viewInfo: CreatedView = {
+            id: args.item.id,
+            dataContext: args.item,
+            rowIndex: this.aureliaGrid.dataView.getIdxById(args.item.id)
+          };
+          this.updateArrayById(this.slots, viewInfo, true);
+          // console.log('slots', this.slots)
+        }
+      } else {
+        // collapsing, so dispose of the View/ViewSlot
+        // console.log('closing!!!');
+        const foundSlotIndex = this.slots.findIndex((slot: CreatedView) => slot.id === args.item.id);
+        if (foundSlotIndex >= 0) {
+          // console.log('found slot', this.slots[foundSlotIndex])
+          if (this.disposeViewSlot(this.slots[foundSlotIndex])) {
+            this.slots.splice(foundSlotIndex, 1);
+          }
+        }
+      }
+    });
+
+    this.detailView.onAfterRowDetailToggle.subscribe((e, args) => {
+      // console.log('after toggling row detail', args.item);
+      // this.detailView.collapseAll();
+      this.slots.forEach((slot) => {
+        this.renderView(slot.dataContext, false);
+      });
+    });
+
+    this.detailView.onRowOutOfViewportRange.subscribe((e, args) => {
+      console.log('reached out of range', args);
+    });
+
+    this.detailView.onRowBackToViewportRange.subscribe((e, args) => {
+      console.log('back to Viewport range', args);
+      this.slots.forEach((slot) => {
+        // this.redrawView(slot);
+      });
+    });
+
+    this.detailView.onAsyncEndUpdate.subscribe((e, args) => {
+      this.renderView(args && args.itemDetail, true);
     });
   }
 
