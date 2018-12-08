@@ -16,6 +16,7 @@ import {
   CellExternalCopyManagerExtension,
   CheckboxSelectorExtension,
   ColumnPickerExtension,
+  DraggableGroupingExtension,
   GridMenuExtension,
   GroupItemMetaProviderExtension,
   HeaderButtonExtension,
@@ -32,6 +33,7 @@ import { SharedService } from './shared.service';
   CellExternalCopyManagerExtension,
   CheckboxSelectorExtension,
   ColumnPickerExtension,
+  DraggableGroupingExtension,
   GridMenuExtension,
   GroupItemMetaProviderExtension,
   I18N,
@@ -50,6 +52,7 @@ export class ExtensionService {
     private cellExternalCopyExtension: CellExternalCopyManagerExtension,
     private checkboxSelectorExtension: CheckboxSelectorExtension,
     private columnPickerExtension: ColumnPickerExtension,
+    private draggableGroupingExtension: DraggableGroupingExtension,
     private gridMenuExtension: GridMenuExtension,
     private groupItemMetaExtension: GroupItemMetaProviderExtension,
     private i18n: I18N,
@@ -140,6 +143,13 @@ export class ExtensionService {
       }
     }
 
+    // Draggable Grouping Plugin
+    if (this.sharedService.gridOptions.enableDraggableGrouping) {
+      if (this.draggableGroupingExtension && this.draggableGroupingExtension.register) {
+        this.extensionList.push({ name: ExtensionName.draggableGrouping, class: this.draggableGroupingExtension, extension: this.draggableGroupingExtension.register() });
+      }
+    }
+
     // Grid Menu Control
     if (this.sharedService.gridOptions.enableGridMenu) {
       if (this.gridMenuExtension && this.gridMenuExtension.register) {
@@ -217,6 +227,10 @@ export class ExtensionService {
     }
     if (options.enableRowDetailView) {
       this.rowDetailViewExtension.create(columnDefinitions, options);
+    }
+    if (options.enableDraggableGrouping) {
+      const plugin = this.draggableGroupingExtension.create(options);
+      options.enableColumnReorder = plugin.getSetupColumnReorder;
     }
   }
 

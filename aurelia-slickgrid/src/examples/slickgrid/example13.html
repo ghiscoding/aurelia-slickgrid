@@ -1,51 +1,65 @@
 <template>
   <h2>${title}</h2>
-  <div class="subtitle" innerhtml.bind="subTitle"></div>
+  <div class="subtitle"
+       innerhtml.bind="subTitle"></div>
 
   <div class="row col-sm-12">
-    <button class="btn btn-default btn-xs" click.delegate="loadData(500)">
+    <button class="btn btn-default btn-xs"
+            click.delegate="loadData(500)">
       500 rows
     </button>
-    <button class="btn btn-default btn-xs" click.delegate="loadData(50000)">
+    <button class="btn btn-default btn-xs"
+            click.delegate="loadData(50000)">
       50k rows
     </button>
-    <button class="btn btn-default btn-xs" click.delegate="clearGrouping()">
+    <button class="btn btn-default btn-xs"
+            click.delegate="clearGrouping()">
       Clear grouping
     </button>
-    <button class="btn btn-default btn-xs" click.delegate="collapseAllGroups()">
+    <button class="btn btn-default btn-xs"
+            click.delegate="collapseAllGroups()">
       Collapse all groups
     </button>
-    <button class="btn btn-default btn-xs" click.delegate="expandAllGroups()">
+    <button class="btn btn-default btn-xs"
+            click.delegate="expandAllGroups()">
       Expand all groups
     </button>
   </div>
 
-  <hr/>
+  <hr />
 
   <div class="row col-sm-12">
-    <button class="btn btn-default btn-xs" click.delegate="groupByDuration()">
-      Group by duration &amp; sort groups by value
+    <button class="btn btn-default btn-xs"
+            click.delegate="groupByDuration()">
+      Group by Duration &amp; sort groups by value
     </button>
-    <button class="btn btn-default btn-xs" click.delegate="groupByDurationOrderByCount(false)">
-      Group by duration &amp; sort groups by count
+    <button class="btn btn-default btn-xs"
+            click.delegate="groupByDurationOrderByCount(false)">
+      Group by Duration &amp; sort groups by count
     </button>
   </div>
   <div class="row col-sm-12">
-    <button class="btn btn-default btn-xs" click.delegate="groupByDurationOrderByCount(true)">
-      Group by duration &amp; sort groups by count, aggregate collapsed
+    <button class="btn btn-default btn-xs"
+            click.delegate="groupByDurationOrderByCount(true)">
+      Group by Duration &amp; sort groups by count, aggregate collapsed
     </button>
-    <button class="btn btn-default btn-xs" click.delegate="groupByDurationEffortDriven()">
-      Group by duration then effort-driven
+    <button class="btn btn-default btn-xs"
+            click.delegate="groupByDurationEffortDriven()">
+      Group by Duration then Effort-Driven
     </button>
-    <button class="btn btn-default btn-xs" click.delegate="groupByDurationEffortDrivenPercent()">
-      Group by duration then effort-driven then percent.
+    <button class="btn btn-default btn-xs"
+            click.delegate="groupByDurationEffortDrivenPercent()">
+      Group by Duration then Effort-Driven then Percent.
     </button>
     <span hidden.bind="!processing">
       <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
     </span>
   </div>
 
-  <aurelia-slickgrid grid-id="grid1" column-definitions.bind="columnDefinitions" grid-options.bind="gridOptions" dataset.bind="dataset"
-    asg-on-dataview-created.delegate="onDataviewCreated($event.detail)">
+  <aurelia-slickgrid grid-id="grid1"
+                     column-definitions.bind="columnDefinitions"
+                     grid-options.bind="gridOptions"
+                     dataset.bind="dataset"
+                     asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
   </aurelia-slickgrid>
 </template>

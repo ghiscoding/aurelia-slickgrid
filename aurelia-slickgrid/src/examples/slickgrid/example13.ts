@@ -2,11 +2,13 @@ import { autoinject } from 'aurelia-framework';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
 import {
   Aggregators,
+  AureliaGridInstance,
   Column,
   FieldType,
   Filters,
   Formatters,
   GridOption,
+  Grouping,
   GroupTotalFormatters,
   SortDirectionNumber,
   Sorters,
@@ -24,6 +26,7 @@ export class Example13 {
     </ul>
   `;
 
+  aureliaGrid: AureliaGridInstance;
   columnDefinitions: Column[];
   gridOptions: GridOption;
   dataset: any[];
@@ -48,6 +51,11 @@ export class Example13 {
   detached() {
     this.subOnAfterExport.dispose();
     this.subOnBeforeExport.dispose();
+  }
+
+  aureliaGridReady(aureliaGrid: AureliaGridInstance) {
+    this.aureliaGrid = aureliaGrid;
+    this.dataviewObj = aureliaGrid.dataView;
   }
 
   /* Define grid Options and Columns */
@@ -135,12 +143,7 @@ export class Example13 {
         filterable: true,
         filter: {
           collection: [{ value: '', label: '' }, { value: true, label: 'True' }, { value: false, label: 'False' }],
-          model: Filters.singleSelect,
-
-          // we could add certain option(s) to the "multiple-select" plugin
-          filterOptions: {
-            maxHeight: 250
-          },
+          model: Filters.singleSelect
         }
       }
     ];
@@ -182,10 +185,6 @@ export class Example13 {
     }
   }
 
-  onDataviewCreated(dataview) {
-    this.dataviewObj = dataview;
-  }
-
   clearGrouping() {
     this.dataviewObj.setGrouping([]);
   }
@@ -213,7 +212,7 @@ export class Example13 {
       ],
       aggregateCollapsed: false,
       lazyTotalsCalculation: true
-    });
+    } as Grouping);
   }
 
   groupByDurationOrderByCount(aggregateCollapsed) {
@@ -231,7 +230,7 @@ export class Example13 {
       ],
       aggregateCollapsed,
       lazyTotalsCalculation: true
-    });
+    } as Grouping);
   }
 
   groupByDurationEffortDriven() {
@@ -260,7 +259,7 @@ export class Example13 {
         collapsed: true,
         lazyTotalsCalculation: true
       }
-    ]);
+    ] as Grouping[]);
   }
 
   groupByDurationEffortDrivenPercent() {
@@ -300,6 +299,6 @@ export class Example13 {
         collapsed: true,
         lazyTotalsCalculation: true
       }
-    ]);
+    ] as Grouping[]);
   }
 }

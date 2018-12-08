@@ -1,7 +1,14 @@
 import { autoinject } from 'aurelia-framework';
-import data from './sample-data/example-data';
 import { HttpClient } from 'aurelia-http-client';
-import { AureliaGridInstance, Column, FieldType, Filters, GridOdataService, GridOption, Statistic } from '../../aurelia-slickgrid';
+import {
+  AureliaGridInstance,
+  Column,
+  FieldType,
+  Filters,
+  GridOdataService,
+  GridOption,
+  Statistic
+} from '../../aurelia-slickgrid';
 
 const defaultPageSize = 20;
 const sampleDataRoot = 'src/examples/slickgrid/sample-data';
@@ -67,6 +74,11 @@ export class Example5 {
       autoResize: {
         containerId: 'demo-container',
         sidePadding: 15
+      },
+      checkboxSelector: {
+        // you can toggle these 2 properties to show the "select all" checkbox in different location
+        hideInFilterHeaderRow: false,
+        hideInColumnTitleRow: true
       },
       enableCellNavigation: true,
       enableFiltering: true,

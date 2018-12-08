@@ -140,6 +140,7 @@ export class Example6 {
       backendServiceApi: {
         service: new GraphqlService(),
         options: this.getBackendOptions(this.isWithCursor),
+        onError: (e) => console.log(e),
         // you can define the onInit callback OR enable the "executeProcessCommandOnInit" flag in the service init
         // onInit: (query) => this.getCustomerApiCall(query)
         preProcess: () => this.displaySpinner(true),

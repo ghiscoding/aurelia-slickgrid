@@ -67,7 +67,7 @@ export class Example4 {
         type: FieldType.string,
         minWidth: 45,
         filter: {
-          model: Filters.compoundInput
+          model: Filters.compoundInputText
         }
       },
       {
@@ -133,7 +133,7 @@ export class Example4 {
       },
       {
         id: 'complete', name: '% Complete', field: 'percentComplete', formatter: Formatters.percentCompleteBar, minWidth: 70, type: FieldType.number, sortable: true,
-        filterable: true, filter: { model: Filters.compoundInput }
+        filterable: true, filter: { model: Filters.compoundInputNumber }
       },
       {
         id: 'start', name: 'Start', field: 'start', formatter: Formatters.dateIso, sortable: true, minWidth: 75, exportWithFormatter: true,
