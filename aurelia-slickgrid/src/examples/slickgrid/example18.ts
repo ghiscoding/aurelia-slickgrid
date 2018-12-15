@@ -333,7 +333,6 @@ export class Example18 {
   }
 
   onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
-    // the "caller" property might not be in the SlickGrid core lib yet, reference PR https://github.com/6pac/SlickGrid/pull/303
     const caller = change && change.caller || [];
     const groups = change && change.groupColumns || [];
 

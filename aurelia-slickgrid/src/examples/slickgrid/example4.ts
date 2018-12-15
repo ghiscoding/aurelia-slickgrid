@@ -211,6 +211,7 @@ export class Example4 {
       const randomPercent = randomBetween(0, 100);
       const randomHour = randomBetween(10, 23);
       const randomTime = randomBetween(10, 59);
+      const randomMilliseconds = `${randomBetween(1, 9)}${randomBetween(10, 99)}`;
       const randomIsEffort = (i % 3 === 0);
 
       tempDataset.push({
@@ -222,7 +223,7 @@ export class Example4 {
         percentCompleteNumber: randomPercent,
         start: (i % 4) ? null : new Date(randomYear, randomMonth, randomDay),          // provide a Date format
         usDateShort: `${randomMonth}/${randomDay}/${randomYearShort}`, // provide a date US Short in the dataset
-        utcDate: `${randomYear}-${randomMonthStr}-${randomDay}T${randomHour}:${randomTime}:${randomTime}Z`,
+        utcDate: `${randomYear}-${randomMonthStr}-${randomDay}T${randomHour}:${randomTime}:${randomTime}.${randomMilliseconds}Z`,
         effortDriven: {
           isEffort: randomIsEffort,
           label: randomIsEffort ? 'Effort' : 'NoEffort',
