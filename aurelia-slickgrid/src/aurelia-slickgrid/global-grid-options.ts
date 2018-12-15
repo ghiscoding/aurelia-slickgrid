@@ -103,6 +103,7 @@ export const GlobalGridOptions: GridOption = {
     // these 2 methods should always be overriden by the user
     process: () => new Promise((resolve) => resolve('')),
     postTemplate: () => '',
+    viewModel: '',
   },
   rowHeight: 35,
   sortColNumberInSeparateSpan: true,

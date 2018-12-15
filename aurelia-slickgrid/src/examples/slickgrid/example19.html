@@ -6,9 +6,6 @@
   <aurelia-slickgrid grid-id="grid16"
                      column-definitions.bind="columnDefinitions"
                      grid-options.bind="gridOptions"
-                     dataset.bind="dataset"
-                     sg-on-columns-reordered.delegate="onColumnsReordered($event.detail.eventData, $event.detail.args)"
-                     sg-on-sort.delegate="onSort($event.detail.eventData, $event.detail.args)"
-                     asg-on-grid-state-changed.delegate="onGridStateChanged($event.detail)">
+                     dataset.bind="dataset">
   </aurelia-slickgrid>
 </template>

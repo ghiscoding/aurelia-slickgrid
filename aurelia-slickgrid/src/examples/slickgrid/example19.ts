@@ -1,31 +1,12 @@
 import { Subscription } from 'aurelia-event-aggregator';
-import {
-  autoinject,
-  createOverrideContext,
-  Container,
-  PLATFORM,
-  View,
-  ViewCompiler,
-  ViewResources,
-  ViewSlot
-} from 'aurelia-framework';
+import { autoinject, PLATFORM } from 'aurelia-framework';
 import {
   Column,
   FieldType,
   Filters,
   Formatters,
   GridOption,
-  GridStateChange
 } from '../../aurelia-slickgrid';
-
-declare var $: any;
-
-export interface CreatedView {
-  id: string | number;
-  dataContext: any;
-  view?: View;
-  viewSlot?: ViewSlot;
-}
 
 @autoinject()
 export class Example19 {
@@ -41,77 +22,16 @@ export class Example19 {
   gridOptions: GridOption;
   columnDefinitions: Column[];
   dataset: any[];
-
-  bindingContext: any;
-  overrideContext: any;
-  detailViewExtension: any;
-  slots: CreatedView[] = [];
   subscriptions: Subscription[];
 
-  constructor(
-    private container: Container,
-    private viewCompiler: ViewCompiler,
-    private viewResources: ViewResources,
-  ) {
+  constructor() {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
-  }
-
-  bind(bindingContext, overrideContext) {
-    this.bindingContext = bindingContext;
-    this.overrideContext = overrideContext;
   }
 
   attached() {
     // populate the dataset once the grid is ready
     this.getData();
-  }
-
-  disposeAllViewSlot() {
-    this.slots.forEach((slot) => this.disposeViewSlot(slot));
-    this.slots = [];
-  }
-
-  disposeViewSlot(expandedView: CreatedView) {
-    if (expandedView && expandedView.view && expandedView.viewSlot && expandedView.view.unbind && expandedView.viewSlot.remove) {
-      const container = $('#container_' + this.slots[0].id);
-      if (container && container.length > 0) {
-        expandedView.viewSlot.remove(expandedView.view);
-        expandedView.view.unbind();
-        container.empty();
-        return expandedView;
-      }
-    }
-    return null;
-  }
-
-  /** Render (or rerender) the View Slot (Row Detail) */
-  renderView(itemDetail: any) {
-    const containerElement = $('#container_' + itemDetail.id);
-    const viewFactory = this.viewCompiler.compile('<template><compose view-model.bind="template" model.bind="modeling"></compose><template>', this.viewResources);
-
-    if (containerElement.length) {
-      // Creates a view
-      containerElement.empty();
-      const view = viewFactory.create(this.container);
-      const viewModel = {
-        template: PLATFORM.moduleName('examples/slickgrid/detail-view'),
-        model: itemDetail
-      };
-
-      view.bind(viewModel, createOverrideContext(viewModel));
-
-      // Add the view to the slot
-      const viewSlot = new ViewSlot(containerElement[0], true);
-      viewSlot.add(view);
-
-      const slotObj = this.slots.find((obj) => obj.id === itemDetail.id);
-
-      if (slotObj) {
-        slotObj.view = view;
-        slotObj.viewSlot = viewSlot;
-      }
-    }
   }
 
   /* Define grid Options and Columns */
@@ -145,9 +65,11 @@ export class Example19 {
         selectActiveRow: true
       },
       rowDetailView: {
-        preTemplate: this.loadingTemplate,
-        postTemplate: this.loadView,
+        preTemplate: () => `<i class="fa fa-refresh fa-spin fa-2x fa-fw"></i> <h4>Loading...</h4>`,
         process: (item) => this.simulateServerAsyncCall(item),
+
+        // load only once and reuse the same item detail without calling process method
+        loadOnce: true,
 
         // false by default, clicking anywhere on the row will open the detail view
         // when set to false, only the "+" icon would open the row detail
@@ -159,13 +81,8 @@ export class Example19 {
         // so if you choose 4 panelRows, the display will in fact use 5 rows
         panelRows: 7,
 
-        // hook to multiple events of the plugin
-        onExtensionRegistered: (extension) => this.detailViewExtension = extension,
-        onBeforeRowDetailToggle: (e, args) => this.onBeforeRowDetailToggle(e, args),
-        onAfterRowDetailToggle: (e, args) => this.slots.forEach((slot) => this.renderView(slot.dataContext)),
-        onRowOutOfViewportRange: (e, args) => console.log('reached out of range', args),
-        onRowBackToViewportRange: (e, args) => this.onRowBackToViewportRange(e, args),
-        onAsyncEndUpdate: (e, args) => this.renderView(args && args.item), // triggers after backend called "onAsyncResponse.notify()"
+        // View Model Template to load when row detail opens
+        viewModel: PLATFORM.moduleName('examples/slickgrid/detail-view'),
       }
     };
   }
@@ -193,16 +110,8 @@ export class Example19 {
     }
   }
 
-  loadingTemplate() {
-    return `<i class="fa fa-refresh fa-spin fa-2x fa-fw"></i> <h4>Loading...</h4>`;
-  }
-
-  loadView(itemDetail: any) {
-    return `<div id="container_${itemDetail.id}" class="au-target"></div>`;
-  }
-
   /** Just for demo purposes, we will simulate an async server call and return more details on the selected row item */
-  simulateServerAsyncCall(item) {
+  simulateServerAsyncCall(item: any) {
     // random set of names to use for more item detail
     const randomNames = ['John Doe', 'Jane Doe', 'Chuck Norris', 'Bumblebee', 'Jackie Chan', 'Elvis Presley', 'Bob Marley', 'Mohammed Ali', 'Bruce Lee', 'Rocky Balboa'];
 
@@ -215,93 +124,10 @@ export class Example19 {
         itemDetail.assignee = randomNames[this.randomNumber(0, 10)];
         itemDetail.reporter = randomNames[this.randomNumber(0, 10)];
 
-        // this will notify the Row Detail Plugin of the updated item details
-        this.notifyTemplate(itemDetail);
-
         // resolve the data after delay specified
         resolve(itemDetail);
       }, 1000);
     });
-  }
-
-  /**
-   * notify the onAsyncResponse with the "args.item" (required property)
-   * the plugin will then use item to populate the row detail panel with the "postTemplate"
-   * @param item
-   */
-  notifyTemplate(item) {
-    if (this.detailViewExtension) {
-      this.detailViewExtension.onAsyncResponse.notify({ item }, undefined, this);
-    }
-  }
-
-  /** On Column Reordering, we need to redraw the View */
-  onColumnsReordered(e, args) {
-    this.slots.forEach((slot) => {
-      this.redrawView(slot);
-    });
-  }
-
-  /** on sort, all row detail are collapsed so we can dispose of all the Views as well */
-  onSort(e, args) {
-    this.disposeAllViewSlot();
-  }
-
-  onBeforeRowDetailToggle(e, args) {
-    // expanding
-    if (args && args.item && args.item.__collapsed) {
-      // expanding row detail
-      if (args && args.item) {
-        const viewInfo: CreatedView = {
-          id: args.item.id,
-          dataContext: args.item
-        };
-        this.addToArrayWhenNotFound(this.slots, viewInfo);
-      }
-    } else {
-      // collapsing, so dispose of the View/ViewSlot
-      const foundSlotIndex = this.slots.findIndex((slot: CreatedView) => slot.id === args.item.id);
-      if (foundSlotIndex >= 0) {
-        if (this.disposeViewSlot(this.slots[foundSlotIndex])) {
-          this.slots.splice(foundSlotIndex, 1);
-        }
-      }
-    }
-  }
-
-  /** When Row comes back to Viewport Range, we need to redraw the View */
-  onRowBackToViewportRange(e: Event, args: { grid: any; item: any; rowId: number; rowIndex: number; expandedRows: any[]; rowIdsOutOfViewport: number[]; }) {
-    if (args && args.item) {
-      this.slots.forEach((slot) => {
-        if (slot.id === args.item.id) {
-          this.redrawView(slot);
-        }
-      });
-    }
-  }
-
-  /** Dispatched event of a Grid State Changed event (which contain a "change" and the "gridState") */
-  onGridStateChanged(gridStateChanges: GridStateChange) {
-    if (gridStateChanges.change.type === 'filter') {
-      this.slots.forEach((slot) => {
-        this.redrawView(slot);
-      });
-    }
-  }
-
-  /** Redraw the necessary View Slot */
-  redrawView(slot: CreatedView) {
-    const containerElement = $('#container_' + slot.id);
-    if (containerElement && containerElement.length) {
-      this.renderView(slot.dataContext);
-    }
-  }
-
-  private addToArrayWhenNotFound(inputArray: any[], inputObj: any) {
-    const arrayRowIndex = inputArray.findIndex((obj) => obj.id === inputObj.id);
-    if (arrayRowIndex < 0) {
-      inputArray.push(inputObj);
-    }
   }
 
   private randomNumber(min: number, max: number) {

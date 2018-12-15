@@ -3,10 +3,10 @@ import { Column, Extension, ExtensionName } from '../models/index';
 import { sanitizeHtmlToText } from '../services/utilities';
 import { SharedService } from '../services/shared.service';
 import { ExtensionUtility } from './extensionUtility';
+import * as $ from 'jquery';
 
 // using external non-typed js libraries
 declare var Slick: any;
-declare var $: any;
 
 @singleton(true)
 @inject(ExtensionUtility, SharedService)

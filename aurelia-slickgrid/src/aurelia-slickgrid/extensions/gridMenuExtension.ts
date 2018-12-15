@@ -20,10 +20,11 @@ import { ExtensionUtility } from './extensionUtility';
 import { FilterService } from '../services/filter.service';
 import { SortService } from '../services/sort.service';
 import { SharedService } from '../services/shared.service';
+import * as $ from 'jquery';
 
 // using external non-typed js libraries
 declare var Slick: any;
-declare var $: any;
+
 @singleton(true)
 @inject(
   ExportService,

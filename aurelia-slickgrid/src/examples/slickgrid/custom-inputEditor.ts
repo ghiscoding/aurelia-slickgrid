@@ -1,7 +1,5 @@
 import { Column, Editor, EditorValidator, EditorValidatorOutput, KeyCode } from '../../aurelia-slickgrid';
-
-// using external non-typed js libraries
-declare var $: any;
+import * as $ from 'jquery';
 
 /*
  * An example of a 'detached' editor.

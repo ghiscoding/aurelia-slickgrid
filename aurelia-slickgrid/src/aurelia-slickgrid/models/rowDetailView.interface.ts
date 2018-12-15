@@ -36,6 +36,9 @@ export interface RowDetailView {
    */
   useSimpleViewportCalc?: boolean;
 
+  /** View Model template that will be loaded once the async function finishes */
+  viewModel: string;
+
   // --
   // Callback Methods
 
@@ -43,7 +46,7 @@ export interface RowDetailView {
   preTemplate?: () => string;
 
   /** Template that will be loaded once the async function finishes */
-  postTemplate: (item: any) => string;
+  postTemplate?: (item: any) => string;
 
   /** Async server function call */
   process: (item: any) => Promise<any>;
