@@ -69,32 +69,32 @@ export class RowDetailViewExtension implements Extension {
         if (this.sharedService.gridOptions.rowDetailView.onExtensionRegistered) {
           this.sharedService.gridOptions.rowDetailView.onExtensionRegistered(this._extension);
         }
-        this._eventHandler.subscribe(this._extension.onAsyncResponse, (e: any, args: any) => {
+        this._eventHandler.subscribe(this._extension.onAsyncResponse, (e: any, args: { item: any; detailView: any }) => {
           if (this.sharedService.gridOptions.rowDetailView && typeof this.sharedService.gridOptions.rowDetailView.onAsyncResponse === 'function') {
             this.sharedService.gridOptions.rowDetailView.onAsyncResponse(e, args);
           }
         });
-        this._eventHandler.subscribe(this._extension.onAsyncEndUpdate, (e: any, args: any) => {
+        this._eventHandler.subscribe(this._extension.onAsyncEndUpdate, (e: any, args: { grid: any; item: any; }) => {
           if (this.sharedService.gridOptions.rowDetailView && typeof this.sharedService.gridOptions.rowDetailView.onAsyncEndUpdate === 'function') {
             this.sharedService.gridOptions.rowDetailView.onAsyncEndUpdate(e, args);
           }
         });
-        this._eventHandler.subscribe(this._extension.onAfterRowDetailToggle, (e: any, args: any) => {
+        this._eventHandler.subscribe(this._extension.onAfterRowDetailToggle, (e: any, args: { grid: any; item: any; expandedRows: any[]; }) => {
           if (this.sharedService.gridOptions.rowDetailView && typeof this.sharedService.gridOptions.rowDetailView.onAfterRowDetailToggle === 'function') {
             this.sharedService.gridOptions.rowDetailView.onAfterRowDetailToggle(e, args);
           }
         });
-        this._eventHandler.subscribe(this._extension.onBeforeRowDetailToggle, (e: any, args: any) => {
+        this._eventHandler.subscribe(this._extension.onBeforeRowDetailToggle, (e: any, args: { grid: any; item: any; }) => {
           if (this.sharedService.gridOptions.rowDetailView && typeof this.sharedService.gridOptions.rowDetailView.onBeforeRowDetailToggle === 'function') {
             this.sharedService.gridOptions.rowDetailView.onBeforeRowDetailToggle(e, args);
           }
         });
-        this._eventHandler.subscribe(this._extension.onRowBackToViewportRange, (e: any, args: any) => {
+        this._eventHandler.subscribe(this._extension.onRowBackToViewportRange, (e: any, args: { grid: any; item: any; rowId: number; rowIndex: number; expandedRows: any[]; rowIdsOutOfViewport: number[]; }) => {
           if (this.sharedService.gridOptions.rowDetailView && typeof this.sharedService.gridOptions.rowDetailView.onRowBackToViewportRange === 'function') {
             this.sharedService.gridOptions.rowDetailView.onRowBackToViewportRange(e, args);
           }
         });
-        this._eventHandler.subscribe(this._extension.onRowOutOfViewportRange, (e: any, args: any) => {
+        this._eventHandler.subscribe(this._extension.onRowOutOfViewportRange, (e: any, args: { grid: any; item: any; rowId: number; rowIndex: number; expandedRows: any[]; rowIdsOutOfViewport: number[]; }) => {
           if (this.sharedService.gridOptions.rowDetailView && typeof this.sharedService.gridOptions.rowDetailView.onRowOutOfViewportRange === 'function') {
             this.sharedService.gridOptions.rowDetailView.onRowOutOfViewportRange(e, args);
           }

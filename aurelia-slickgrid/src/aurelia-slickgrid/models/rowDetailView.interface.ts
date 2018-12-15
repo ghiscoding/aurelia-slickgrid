@@ -30,6 +30,12 @@ export interface RowDetailView {
   /** Defaults to true, which will save the row detail view in a cache when it detects that it will become out of the viewport buffer */
   saveDetailViewOnScroll?: boolean;
 
+  /**
+   * Defaults to false, which will use a simpler way of calculating when rows become out (or back) of viewport range.
+   * It is recommended to enable this flag since it seems to work correctly with Aurelia-Slickgrid while the inverse is misbehaving
+   */
+  useSimpleViewportCalc?: boolean;
+
   // --
   // Callback Methods
 
@@ -49,20 +55,20 @@ export interface RowDetailView {
   onExtensionRegistered?: (plugin: any) => void;
 
   /** This event must be used with the "notify" by the end user once the Asynchronous Server call returns the item detail */
-  onAsyncResponse?: (e: Event, args: { item: any, detailView?: any }) => void;
+  onAsyncResponse?: (e: Event, args: { item: any; detailView?: any }) => void;
 
   /** Fired when the async response finished */
-  onAsyncEndUpdate?: (e: Event, args: { grid: any, item: any }) => void;
+  onAsyncEndUpdate?: (e: Event, args: { grid: any; item: any }) => void;
 
   /** Fired after the row detail gets toggled */
-  onAfterRowDetailToggle?: (e: Event, args: { grid: any, item: any, expandedRows: any[] }) => void;
+  onAfterRowDetailToggle?: (e: Event, args: { grid: any; item: any; expandedRows: any[] }) => void;
 
   /** Fired before the row detail gets toggled */
-  onBeforeRowDetailToggle?: (e: Event, args: { grid: any, item: any }) => void;
+  onBeforeRowDetailToggle?: (e: Event, args: { grid: any; item: any }) => void;
 
   /** Fired after the row detail gets toggled */
-  onRowBackToViewportRange?: (e: Event, args: { grid: any, item: any, expandedRows: any[], rowsOutOfViewport: any[] }) => void;
+  onRowBackToViewportRange?: (e: Event, args: { grid: any; item: any; rowId: number; rowIndex: number; expandedRows: any[]; rowIdsOutOfViewport: number[]; }) => void;
 
   /** Fired after a row becomes out of viewport range (user can't see the row anymore) */
-  onRowOutOfViewportRange?: (e: Event, args: { grid: any, item: any, expandedRows: any[], rowsOutOfViewport: any[] }) => void;
+  onRowOutOfViewportRange?: (e: Event, args: { grid: any; item: any; rowId: number; rowIndex: number; expandedRows: any[]; rowIdsOutOfViewport: number[]; }) => void;
 }
