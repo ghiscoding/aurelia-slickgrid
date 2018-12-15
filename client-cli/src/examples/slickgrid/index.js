@@ -24,6 +24,7 @@ export class Index {
     ];
 
     config.map(mapping);
+    config.mapUnknownRoutes(PLATFORM.moduleName('./example1'));
 
     this.router = router;
   }
