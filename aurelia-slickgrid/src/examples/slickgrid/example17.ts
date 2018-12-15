@@ -73,8 +73,8 @@ export class Example17 {
     this.loaderDataView.setSort('score', -1);
     this.gridObj.setSortColumn('score', false);
 
-    // notify of a change to preload the first page
-    this.gridObj.onViewportChanged.notify();
+    // simulate a delayed search to preload the first page
+    setTimeout(() => this.searchChanged(this.search), 100);
   }
 
   defineGrid() {
