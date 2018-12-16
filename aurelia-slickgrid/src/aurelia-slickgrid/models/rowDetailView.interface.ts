@@ -36,16 +36,27 @@ export interface RowDetailView {
    */
   useSimpleViewportCalc?: boolean;
 
+  /** View Model of the preload template which shows after opening row detail & before row detail data shows up */
+  preloadView?: string;
+
   /** View Model template that will be loaded once the async function finishes */
   viewModel: string;
 
   // --
   // Callback Methods
 
-  /** Template that will be used before the async process (typically used to show a spinner/loading) */
+  /**
+   * HTML Preload Template that will be used before the async process (typically used to show a spinner/loading)
+   * It's preferable to use the "preloadView" property to use an Aurelia View instead of plain HTML.
+   * If you still wish to use these methods, we strongly suggest you to sanitize your HTML, e.g. "DOMPurify.sanitize()"
+   */
   preTemplate?: () => string;
 
-  /** Template that will be loaded once the async function finishes */
+  /**
+   * HTML Post Template (when Row Detail data is available) that will be loaded once the async function finishes
+   * It's preferable to use the "preloadView" property to use an Aurelia View instead of plain HTML
+   * If you still wish to use these methods, we strongly suggest you to sanitize your HTML, e.g. "DOMPurify.sanitize()"
+   */
   postTemplate?: (item: any) => string;
 
   /** Async server function call */

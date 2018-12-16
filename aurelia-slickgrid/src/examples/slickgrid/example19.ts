@@ -65,8 +65,9 @@ export class Example19 {
         selectActiveRow: true
       },
       rowDetailView: {
-        preTemplate: () => `<i class="fa fa-refresh fa-spin fa-2x fa-fw"></i> <h4>Loading...</h4>`,
+        // We can load the "process" asynchronously in 3 different ways (aurelia-http-client, aurelia-fetch-client OR even Promise)
         process: (item) => this.simulateServerAsyncCall(item),
+        // process: this.httpFetch.fetch(`api/item/${item.id}`),
 
         // load only once and reuse the same item detail without calling process method
         loadOnce: true,
@@ -81,8 +82,11 @@ export class Example19 {
         // so if you choose 4 panelRows, the display will in fact use 5 rows
         panelRows: 7,
 
-        // View Model Template to load when row detail opens
-        viewModel: PLATFORM.moduleName('examples/slickgrid/detail-view'),
+        // Preload View Template
+        preloadView: PLATFORM.moduleName('examples/slickgrid/example19-preload.html'),
+
+        // ViewModel Template to load when row detail data is ready
+        viewModel: PLATFORM.moduleName('examples/slickgrid/example19-detail-view'),
       }
     };
   }
@@ -120,7 +124,7 @@ export class Example19 {
       setTimeout(() => {
         const itemDetail = item;
 
-        // let's add some property to our item for a better async simulation
+        // let's add some extra properties to our item for a better async simulation
         itemDetail.assignee = randomNames[this.randomNumber(0, 10)];
         itemDetail.reporter = randomNames[this.randomNumber(0, 10)];
 

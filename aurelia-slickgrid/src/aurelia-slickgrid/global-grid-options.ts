@@ -100,9 +100,8 @@ export const GlobalGridOptions: GridOption = {
     useSimpleViewportCalc: true,
     saveDetailViewOnScroll: false,
 
-    // these 2 methods should always be overriden by the user
+    // the following 2 property/method should always be override by the user
     process: () => new Promise((resolve) => resolve('')),
-    postTemplate: () => '',
     viewModel: '',
   },
   rowHeight: 35,

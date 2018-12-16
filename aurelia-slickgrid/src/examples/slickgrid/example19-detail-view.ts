@@ -1,6 +1,5 @@
-import { bindable, autoinject } from 'aurelia-framework';
+import { bindable } from 'aurelia-framework';
 
-@autoinject()
 export class DetailViewCustomElement {
   @bindable() model;
 
@@ -14,7 +13,7 @@ export class DetailViewCustomElement {
     }
   }
 
-  sayHello(name: string) {
+  alertAssignee(name: string) {
     if (typeof name === 'string') {
       alert(`Assignee on this task is: ${name.toUpperCase()}`);
     } else {

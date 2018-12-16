@@ -37,6 +37,8 @@ export interface CreatedView {
 export class RowDetailViewExtension implements Extension {
   private _eventHandler: any = new Slick.EventHandler();
   private _extension: any;
+  private _preloadView: string;
+  private _slotPreload: ViewSlot;
   private _slots: CreatedView[] = [];
   private _viewModel: string;
   private _userProcessFn: (item: any) => Promise<any>;
@@ -82,9 +84,20 @@ export class RowDetailViewExtension implements Extension {
           } else {
             throw new Error('You need to provide a "process" function for the Row Detail Extension to work properly');
           }
-          gridOptions.rowDetailView.postTemplate = (itemDetail: any) => DOMPurify.sanitize(`<div id="container_${itemDetail.id}" class="au-target"></div>`);
+
+          // load the Preload & RowDetail Templates (could be straight HTML or Aurelia View/ViewModel)
+          // when those are Aurelia View/ViewModel, we need to create View Slot & provide the html containers to the Plugin (preTemplate/postTemplate methods)
+          if (!gridOptions.rowDetailView.preTemplate) {
+            this._preloadView = gridOptions.rowDetailView.preloadView;
+            gridOptions.rowDetailView.preTemplate = () => DOMPurify.sanitize(`<div class="container_loading au-target"></div>`);
+          }
+          if (!gridOptions.rowDetailView.postTemplate) {
+            this._viewModel = gridOptions.rowDetailView.viewModel;
+            gridOptions.rowDetailView.postTemplate = (itemDetail: any) => DOMPurify.sanitize(`<div class="container_${itemDetail.id} au-target"></div>`);
+          }
+
+          // finally register the Row Detail View Plugin
           this._extension = new Slick.Plugins.RowDetailView(gridOptions.rowDetailView);
-          this._viewModel = gridOptions.rowDetailView.viewModel;
         }
         const selectionColumn: Column = this._extension.getColumnDefinition();
         selectionColumn.excludeFromExport = true;
@@ -123,25 +136,34 @@ export class RowDetailViewExtension implements Extension {
           }
         });
         this._eventHandler.subscribe(this._extension.onAsyncEndUpdate, (e: any, args: { grid: any; item: any; }) => {
-          this.renderView(args && args.item); // triggers after backend called "onAsyncResponse.notify()"
+          // triggers after backend called "onAsyncResponse.notify()"
+          this.renderViewModel(args && args.item);
+
           if (this.sharedService.gridOptions.rowDetailView && typeof this.sharedService.gridOptions.rowDetailView.onAsyncEndUpdate === 'function') {
             this.sharedService.gridOptions.rowDetailView.onAsyncEndUpdate(e, args);
           }
         });
         this._eventHandler.subscribe(this._extension.onAfterRowDetailToggle, (e: any, args: { grid: any; item: any; expandedRows: any[]; }) => {
-          this._slots.forEach((slot) => this.renderView(slot.dataContext)); // internal process
+          // display preload template & re-render all the other Detail Views after toggling
+          this.renderPreloadView();
+          this._slots.forEach((slot) => this.renderViewModel(slot.dataContext));
+
           if (this.sharedService.gridOptions.rowDetailView && typeof this.sharedService.gridOptions.rowDetailView.onAfterRowDetailToggle === 'function') {
             this.sharedService.gridOptions.rowDetailView.onAfterRowDetailToggle(e, args);
           }
         });
         this._eventHandler.subscribe(this._extension.onBeforeRowDetailToggle, (e: any, args: { grid: any; item: any; }) => {
-          this.onBeforeRowDetailToggle(e, args); // internal process
+          // before toggling row detail, we need to create View Slot if it doesn't exist
+          this.onBeforeRowDetailToggle(e, args);
+
           if (this.sharedService.gridOptions.rowDetailView && typeof this.sharedService.gridOptions.rowDetailView.onBeforeRowDetailToggle === 'function') {
             this.sharedService.gridOptions.rowDetailView.onBeforeRowDetailToggle(e, args);
           }
         });
         this._eventHandler.subscribe(this._extension.onRowBackToViewportRange, (e: any, args: { grid: any; item: any; rowId: number; rowIndex: number; expandedRows: any[]; rowIdsOutOfViewport: number[]; }) => {
-          this.onRowBackToViewportRange(e, args); // internal process
+          // when row is back to viewport range, we will re-render the View Slot(s)
+          this.onRowBackToViewportRange(e, args);
+
           if (this.sharedService.gridOptions.rowDetailView && typeof this.sharedService.gridOptions.rowDetailView.onRowBackToViewportRange === 'function') {
             this.sharedService.gridOptions.rowDetailView.onRowBackToViewportRange(e, args);
           }
@@ -161,7 +183,7 @@ export class RowDetailViewExtension implements Extension {
         this._eventHandler.subscribe(this.sharedService.grid.onSort, () => this.disposeAllViewSlot());
 
         // on filter changed, we need to re-render all Views
-        this.ea.subscribe('filterService:filterChanged', () => this._slots.forEach((slot) => this.redrawView(slot)));
+        this.ea.subscribe('filterService:filterChanged', () => this._slots.forEach((slot) => this.redrawViewModel(slot)));
       }
       return this._extension;
     }
@@ -171,6 +193,31 @@ export class RowDetailViewExtension implements Extension {
   // --
   // private functions
   // ------------------
+
+  private addToArrayWhenNotFound(inputArray: any[], inputObj: any) {
+    const arrayRowIndex = inputArray.findIndex((obj) => obj.id === inputObj.id);
+    if (arrayRowIndex < 0) {
+      inputArray.push(inputObj);
+    }
+  }
+
+  private disposeAllViewSlot() {
+    this._slots.forEach((slot) => this.disposeViewSlot(slot));
+    this._slots = [];
+  }
+
+  private disposeViewSlot(expandedView: CreatedView) {
+    if (expandedView && expandedView.view && expandedView.viewSlot && expandedView.view.unbind && expandedView.viewSlot.remove) {
+      const container = $(`.container_${this._slots[0].id}`);
+      if (container && container.length > 0) {
+        expandedView.viewSlot.remove(expandedView.view);
+        expandedView.view.unbind();
+        container.empty();
+        return expandedView;
+      }
+    }
+    return null;
+  }
 
   /**
    * notify the onAsyncResponse with the "args.item" (required property)
@@ -211,36 +258,11 @@ export class RowDetailViewExtension implements Extension {
   /** On Column Reordering, we need to redraw the View */
   private onColumnsReordered() {
     this._slots.forEach((slot) => {
-      this.redrawView(slot);
+      this.redrawViewModel(slot);
     });
   }
 
-  private addToArrayWhenNotFound(inputArray: any[], inputObj: any) {
-    const arrayRowIndex = inputArray.findIndex((obj) => obj.id === inputObj.id);
-    if (arrayRowIndex < 0) {
-      inputArray.push(inputObj);
-    }
-  }
-
-  private disposeAllViewSlot() {
-    this._slots.forEach((slot) => this.disposeViewSlot(slot));
-    this._slots = [];
-  }
-
-  private disposeViewSlot(expandedView: CreatedView) {
-    if (expandedView && expandedView.view && expandedView.viewSlot && expandedView.view.unbind && expandedView.viewSlot.remove) {
-      const container = $('#container_' + this._slots[0].id);
-      if (container && container.length > 0) {
-        expandedView.viewSlot.remove(expandedView.view);
-        expandedView.view.unbind();
-        container.empty();
-        return expandedView;
-      }
-    }
-    return null;
-  }
-
-  private onBeforeRowDetailToggle(e, args) {
+  private onBeforeRowDetailToggle(e: Event, args: { grid: any; item: any; }) {
     // expanding
     if (args && args.item && args.item.__collapsed) {
       // expanding row detail
@@ -267,33 +289,43 @@ export class RowDetailViewExtension implements Extension {
     if (args && args.item) {
       this._slots.forEach((slot) => {
         if (slot.id === args.item.id) {
-          this.redrawView(slot);
+          this.redrawViewModel(slot);
         }
       });
     }
   }
 
-  /** Dispatched event of a Grid State Changed event (which contain a "change" and the "gridState") */
-  private onGridStateChanged(gridStateChanges: GridStateChange) {
-    if (gridStateChanges.change.type === 'filter') {
-      this._slots.forEach((slot) => {
-        this.redrawView(slot);
-      });
-    }
-  }
-
   /** Redraw the necessary View Slot */
-  private redrawView(slot: CreatedView) {
-    const containerElement = $('#container_' + slot.id);
+  private redrawViewModel(slot: CreatedView) {
+    const containerElement = $(`.container_${slot.id}`);
     if (containerElement && containerElement.length) {
-      this.renderView(slot.dataContext);
+      this.renderViewModel(slot.dataContext);
     }
   }
 
   /** Render (or rerender) the View Slot (Row Detail) */
-  private renderView(item: any) {
-    const containerElement = $('#container_' + item.id);
-    const viewFactory = this.viewCompiler.compile('<template><compose view-model.bind="template" model.bind="modeling"></compose><template>', this.viewResources);
+  private renderPreloadView() {
+    const containerElement = $(`.container_loading`);
+    const viewFactory = this.viewCompiler.compile('<template><compose view.bind="template"></compose><template>', this.viewResources);
+
+    if (containerElement.length) {
+      // Creates a view
+      containerElement.empty();
+      const view = viewFactory.create(this.container);
+      const viewModel = { template: this._preloadView || '' };
+
+      view.bind(viewModel, createOverrideContext(viewModel));
+
+      // Add the view to the slot
+      this._slotPreload = new ViewSlot(containerElement[0], true);
+      this._slotPreload.add(view);
+    }
+  }
+
+  /** Render (or rerender) the View Slot (Row Detail) */
+  private renderViewModel(item: any) {
+    const containerElement = $(`.container_${item.id}`);
+    const viewFactory = this.viewCompiler.compile('<template><compose view-model.bind="template"></compose><template>', this.viewResources);
 
     if (containerElement.length) {
       // Creates a view
@@ -315,5 +347,4 @@ export class RowDetailViewExtension implements Extension {
       }
     }
   }
-
 }
