@@ -94,11 +94,11 @@ export class RowDetailViewExtension implements Extension {
           // load the Preload & RowDetail Templates (could be straight HTML or Aurelia View/ViewModel)
           // when those are Aurelia View/ViewModel, we need to create View Slot & provide the html containers to the Plugin (preTemplate/postTemplate methods)
           if (!gridOptions.rowDetailView.preTemplate) {
-            this._preloadView = gridOptions.rowDetailView.preloadView;
+            this._preloadView = gridOptions && gridOptions.rowDetailView && gridOptions.rowDetailView.preloadView || '';
             gridOptions.rowDetailView.preTemplate = () => DOMPurify.sanitize(`<div class="${PRELOAD_CONTAINER_PREFIX} au-target"></div>`);
           }
           if (!gridOptions.rowDetailView.postTemplate) {
-            this._viewModel = gridOptions.rowDetailView.viewModel;
+            this._viewModel = gridOptions && gridOptions.rowDetailView && gridOptions.rowDetailView.viewModel || '';
             gridOptions.rowDetailView.postTemplate = (itemDetail: any) => DOMPurify.sanitize(`<div class="${ROW_DETAIL_CONTAINER_PREFIX}${itemDetail.id} au-target"></div>`);
           }
 
