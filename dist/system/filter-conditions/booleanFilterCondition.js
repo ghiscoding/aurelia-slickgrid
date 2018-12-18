@@ -1,10 +1,10 @@
 System.register([], function (exports_1, context_1) {
     "use strict";
+    var booleanFilterCondition;
     var __moduleName = context_1 && context_1.id;
     function parseBoolean(input) {
         return /(true|1)/i.test(input + '');
     }
-    var booleanFilterCondition;
     return {
         setters: [],
         execute: function () {

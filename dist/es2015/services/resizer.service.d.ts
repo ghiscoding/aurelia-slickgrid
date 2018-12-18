@@ -3,7 +3,7 @@ import { GridOption } from './../models/index';
 export interface GridDimension {
     height: number | null;
     width: number | null;
-    heightWithPagination?: number;
+    heightWithPagination?: number | null;
 }
 export declare class ResizerService {
     private ea;
@@ -11,6 +11,7 @@ export declare class ResizerService {
     private _fixedWidth;
     private _grid;
     private _lastDimensions;
+    private _timer;
     aureliaEventPrefix: string;
     constructor(ea: EventAggregator);
     /** Getter for the Grid Options pulled through the Grid Object */

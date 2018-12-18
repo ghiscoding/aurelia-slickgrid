@@ -23,6 +23,7 @@ var extensionUtility_1 = require("./extensionUtility");
 var filter_service_1 = require("../services/filter.service");
 var sort_service_1 = require("../services/sort.service");
 var shared_service_1 = require("../services/shared.service");
+var $ = require("jquery");
 var GridMenuExtension = /** @class */ (function () {
     function GridMenuExtension(exportService, extensionUtility, filterService, i18n, sharedService, sortService) {
         this.exportService = exportService;
@@ -56,7 +57,11 @@ var GridMenuExtension = /** @class */ (function () {
             this.extensionUtility.translateItems(this.sharedService.gridOptions.gridMenu.customItems, 'titleKey', 'title');
             this.extensionUtility.sortItems(this.sharedService.gridOptions.gridMenu.customItems, 'positionOrder');
             this._extension = new Slick.Controls.GridMenu(this.sharedService.columnDefinitions, this.sharedService.grid, this.sharedService.gridOptions);
+            // hook all events
             if (this.sharedService.grid && this.sharedService.gridOptions.gridMenu) {
+                if (this.sharedService.gridOptions.gridMenu.onExtensionRegistered) {
+                    this.sharedService.gridOptions.gridMenu.onExtensionRegistered(this._extension);
+                }
                 this._eventHandler.subscribe(this._extension.onBeforeMenuShow, function (e, args) {
                     if (_this.sharedService.gridOptions.gridMenu && typeof _this.sharedService.gridOptions.gridMenu.onBeforeMenuShow === 'function') {
                         _this.sharedService.gridOptions.gridMenu.onBeforeMenuShow(e, args);
@@ -133,6 +138,9 @@ var GridMenuExtension = /** @class */ (function () {
                     break;
                 case 'toggle-toppanel':
                     this.sharedService.grid.setTopPanelVisibility(!this.sharedService.grid.getOptions().showTopPanel);
+                    break;
+                case 'toggle-preheader':
+                    this.sharedService.grid.setPreHeaderPanelVisibility(!this.sharedService.grid.getOptions().showPreHeaderPanel);
                     break;
                 case 'refresh-dataset':
                     this.refreshBackendDataset();
@@ -220,6 +228,18 @@ var GridMenuExtension = /** @class */ (function () {
                     disabled: false,
                     command: 'refresh-dataset',
                     positionOrder: 54
+                });
+            }
+        }
+        if (this.sharedService.gridOptions.showPreHeaderPanel) {
+            // show grid menu: toggle pre-header row
+            if (this.sharedService.gridOptions && this.sharedService.gridOptions.gridMenu && !this.sharedService.gridOptions.gridMenu.hideTogglePreHeaderCommand) {
+                gridMenuCustomItems.push({
+                    iconCssClass: this.sharedService.gridOptions.gridMenu.iconTogglePreHeaderCommand || 'fa fa-random',
+                    title: this.sharedService.gridOptions.enableTranslate ? this.i18n.tr('TOGGLE_PRE_HEADER_ROW') : constants_1.Constants.TEXT_TOGGLE_PRE_HEADER_ROW,
+                    disabled: false,
+                    command: 'toggle-preheader',
+                    positionOrder: 52
                 });
             }
         }

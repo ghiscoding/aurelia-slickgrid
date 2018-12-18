@@ -4,7 +4,7 @@ import * as moment from 'moment';
 export var dateUtcFilterCondition = function (options) {
     var searchTerm = (Array.isArray(options.searchTerms) && options.searchTerms[0] || '');
     var searchDateFormat = mapMomentDateFormatWithFieldType(options.filterSearchType || options.fieldType);
-    if (searchTerm === null || searchTerm === '' || !moment(options.cellValue, moment.ISO_8601).isValid() || !moment(searchTerm, searchDateFormat, true).isValid()) {
+    if (!moment(options.cellValue, moment.ISO_8601).isValid() || !moment(searchTerm, searchDateFormat, true).isValid()) {
         return false;
     }
     var dateCell = moment(options.cellValue, moment.ISO_8601, true);

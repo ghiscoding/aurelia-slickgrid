@@ -1,7 +1,7 @@
 System.register(["./dateUsShortSorter", "./dateSorter", "./dateIsoSorter", "./dateUsSorter", "./numericSorter", "./stringSorter"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var dateUsShortSorter_1, dateSorter_1, dateIsoSorter_1, dateUsSorter_1, numericSorter_1, stringSorter_1, Sorters;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (dateUsShortSorter_1_1) {

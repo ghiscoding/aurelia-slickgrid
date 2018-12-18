@@ -6,8 +6,8 @@ System.register(["aurelia-framework", "../models/index", "./extensionUtility", "
         else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
         return c > 3 && r && Object.defineProperty(target, key, r), r;
     };
-    var __moduleName = context_1 && context_1.id;
     var aurelia_framework_1, index_1, extensionUtility_1, shared_service_1, RowMoveManagerExtension;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (aurelia_framework_1_1) {
@@ -52,6 +52,9 @@ System.register(["aurelia-framework", "../models/index", "./extensionUtility", "
                         this.sharedService.grid.registerPlugin(this._extension);
                         // hook all events
                         if (this.sharedService.grid && this.sharedService.gridOptions.rowMoveManager) {
+                            if (this.sharedService.gridOptions.rowMoveManager.onExtensionRegistered) {
+                                this.sharedService.gridOptions.rowMoveManager.onExtensionRegistered(this._extension);
+                            }
                             this._eventHandler.subscribe(this._extension.onBeforeMoveRows, function (e, args) {
                                 if (_this.sharedService.gridOptions.rowMoveManager && typeof _this.sharedService.gridOptions.rowMoveManager.onBeforeMoveRows === 'function') {
                                     _this.sharedService.gridOptions.rowMoveManager.onBeforeMoveRows(e, args);

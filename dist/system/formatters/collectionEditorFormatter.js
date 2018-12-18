@@ -1,7 +1,7 @@
 System.register(["./arrayToCsvFormatter", "../services/index"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var arrayToCsvFormatter_1, index_1, collectionEditorFormatter;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (arrayToCsvFormatter_1_1) {

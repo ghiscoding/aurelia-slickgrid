@@ -12,7 +12,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-define(["require", "exports", "aurelia-framework", "aurelia-i18n", "../constants", "../models/index", "../services/export.service", "./extensionUtility", "../services/filter.service", "../services/sort.service", "../services/shared.service"], function (require, exports, aurelia_framework_1, aurelia_i18n_1, constants_1, index_1, export_service_1, extensionUtility_1, filter_service_1, sort_service_1, shared_service_1) {
+define(["require", "exports", "aurelia-framework", "aurelia-i18n", "../constants", "../models/index", "../services/export.service", "./extensionUtility", "../services/filter.service", "../services/sort.service", "../services/shared.service", "jquery"], function (require, exports, aurelia_framework_1, aurelia_i18n_1, constants_1, index_1, export_service_1, extensionUtility_1, filter_service_1, sort_service_1, shared_service_1, $) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var GridMenuExtension = /** @class */ (function () {
@@ -48,7 +48,11 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "../constants
                 this.extensionUtility.translateItems(this.sharedService.gridOptions.gridMenu.customItems, 'titleKey', 'title');
                 this.extensionUtility.sortItems(this.sharedService.gridOptions.gridMenu.customItems, 'positionOrder');
                 this._extension = new Slick.Controls.GridMenu(this.sharedService.columnDefinitions, this.sharedService.grid, this.sharedService.gridOptions);
+                // hook all events
                 if (this.sharedService.grid && this.sharedService.gridOptions.gridMenu) {
+                    if (this.sharedService.gridOptions.gridMenu.onExtensionRegistered) {
+                        this.sharedService.gridOptions.gridMenu.onExtensionRegistered(this._extension);
+                    }
                     this._eventHandler.subscribe(this._extension.onBeforeMenuShow, function (e, args) {
                         if (_this.sharedService.gridOptions.gridMenu && typeof _this.sharedService.gridOptions.gridMenu.onBeforeMenuShow === 'function') {
                             _this.sharedService.gridOptions.gridMenu.onBeforeMenuShow(e, args);
@@ -125,6 +129,9 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "../constants
                         break;
                     case 'toggle-toppanel':
                         this.sharedService.grid.setTopPanelVisibility(!this.sharedService.grid.getOptions().showTopPanel);
+                        break;
+                    case 'toggle-preheader':
+                        this.sharedService.grid.setPreHeaderPanelVisibility(!this.sharedService.grid.getOptions().showPreHeaderPanel);
                         break;
                     case 'refresh-dataset':
                         this.refreshBackendDataset();
@@ -212,6 +219,18 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "../constants
                         disabled: false,
                         command: 'refresh-dataset',
                         positionOrder: 54
+                    });
+                }
+            }
+            if (this.sharedService.gridOptions.showPreHeaderPanel) {
+                // show grid menu: toggle pre-header row
+                if (this.sharedService.gridOptions && this.sharedService.gridOptions.gridMenu && !this.sharedService.gridOptions.gridMenu.hideTogglePreHeaderCommand) {
+                    gridMenuCustomItems.push({
+                        iconCssClass: this.sharedService.gridOptions.gridMenu.iconTogglePreHeaderCommand || 'fa fa-random',
+                        title: this.sharedService.gridOptions.enableTranslate ? this.i18n.tr('TOGGLE_PRE_HEADER_ROW') : constants_1.Constants.TEXT_TOGGLE_PRE_HEADER_ROW,
+                        disabled: false,
+                        command: 'toggle-preheader',
+                        positionOrder: 52
                     });
                 }
             }

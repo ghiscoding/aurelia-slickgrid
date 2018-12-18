@@ -14,8 +14,8 @@ System.register(["aurelia-framework", "aurelia-i18n", "../constants", "../models
         else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
         return c > 3 && r && Object.defineProperty(target, key, r), r;
     };
-    var __moduleName = context_1 && context_1.id;
     var aurelia_framework_1, aurelia_i18n_1, constants_1, index_1, sort_service_1, shared_service_1, extensionUtility_1, HeaderMenuExtension;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (aurelia_framework_1_1) {
@@ -73,17 +73,23 @@ System.register(["aurelia-framework", "aurelia-i18n", "../constants", "../models
                         }
                         this._extension = new Slick.Plugins.HeaderMenu(this.sharedService.gridOptions.headerMenu);
                         this.sharedService.grid.registerPlugin(this._extension);
-                        this._eventHandler.subscribe(this._extension.onCommand, function (e, args) {
-                            _this.executeHeaderMenuInternalCommands(e, args);
-                            if (_this.sharedService.gridOptions.headerMenu && typeof _this.sharedService.gridOptions.headerMenu.onCommand === 'function') {
-                                _this.sharedService.gridOptions.headerMenu.onCommand(e, args);
+                        // hook all events
+                        if (this.sharedService.grid && this.sharedService.gridOptions.headerMenu) {
+                            if (this.sharedService.gridOptions.headerMenu.onExtensionRegistered) {
+                                this.sharedService.gridOptions.headerMenu.onExtensionRegistered(this._extension);
                             }
-                        });
-                        this._eventHandler.subscribe(this._extension.onBeforeMenuShow, function (e, args) {
-                            if (_this.sharedService.gridOptions.headerMenu && typeof _this.sharedService.gridOptions.headerMenu.onBeforeMenuShow === 'function') {
-                                _this.sharedService.gridOptions.headerMenu.onBeforeMenuShow(e, args);
-                            }
-                        });
+                            this._eventHandler.subscribe(this._extension.onCommand, function (e, args) {
+                                _this.executeHeaderMenuInternalCommands(e, args);
+                                if (_this.sharedService.gridOptions.headerMenu && typeof _this.sharedService.gridOptions.headerMenu.onCommand === 'function') {
+                                    _this.sharedService.gridOptions.headerMenu.onCommand(e, args);
+                                }
+                            });
+                            this._eventHandler.subscribe(this._extension.onBeforeMenuShow, function (e, args) {
+                                if (_this.sharedService.gridOptions.headerMenu && typeof _this.sharedService.gridOptions.headerMenu.onBeforeMenuShow === 'function') {
+                                    _this.sharedService.gridOptions.headerMenu.onBeforeMenuShow(e, args);
+                                }
+                            });
+                        }
                         return this._extension;
                     }
                     return null;
@@ -168,8 +174,14 @@ System.register(["aurelia-framework", "aurelia-i18n", "../constants", "../models
                                 if (this.sharedService.gridOptions.backendServiceApi) {
                                     this.sortService.onBackendSortChanged(e, { multiColumnSort: true, sortCols: cols, grid: this.sharedService.grid });
                                 }
-                                else {
+                                else if (this.sharedService.dataView) {
                                     this.sortService.onLocalSortChanged(this.sharedService.grid, this.sharedService.dataView, cols);
+                                }
+                                else {
+                                    // when using customDataView, we will simply send it as a onSort event with notify
+                                    var isMultiSort = this.sharedService && this.sharedService.gridOptions && this.sharedService.gridOptions.multiColumnSort || false;
+                                    var sortOutput = isMultiSort ? cols : cols[0];
+                                    args.grid.onSort.notify(sortOutput);
                                 }
                                 // update the this.sharedService.gridObj sortColumns array which will at the same add the visual sort icon(s) on the UI
                                 var newSortColumns = cols.map(function (col) {

@@ -1,7 +1,7 @@
 System.register(["./avgAggregator", "./minAggregator", "./maxAggregator", "./sumAggregator"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var avgAggregator_1, minAggregator_1, maxAggregator_1, sumAggregator_1, Aggregators;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (avgAggregator_1_1) {

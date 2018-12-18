@@ -1,7 +1,7 @@
 System.register(["./../models/index", "jquery"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var index_1, $, DEFAULT_MIN_VALUE, DEFAULT_MAX_VALUE, DEFAULT_STEP, SliderFilter;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (index_1_1) {

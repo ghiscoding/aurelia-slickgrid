@@ -21,8 +21,8 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./../models/i
         function step(op) {
             if (f) throw new TypeError("Generator is already executing.");
             while (_) try {
-                if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
-                if (y = 0, t) op = [0, t.value];
+                if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+                if (y = 0, t) op = [op[0] & 2, t.value];
                 switch (op[0]) {
                     case 0: case 1: t = op; break;
                     case 4: _.label++; return { value: op[1], done: false };
@@ -41,8 +41,8 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./../models/i
             if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
         }
     };
-    var __moduleName = context_1 && context_1.id;
     var aurelia_framework_1, aurelia_event_aggregator_1, index_1, utilities_1, sorterUtilities_1, SortService;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (aurelia_framework_1_1) {
@@ -101,7 +101,7 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./../models/i
                 };
                 SortService.prototype.onBackendSortChanged = function (event, args) {
                     return __awaiter(this, void 0, void 0, function () {
-                        var gridOptions, backendApi, startTime, query, processResult, endTime;
+                        var gridOptions, backendApi, startTime, query, processResult, endTime, e_1;
                         return __generator(this, function (_a) {
                             switch (_a.label) {
                                 case 0:
@@ -113,6 +113,9 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./../models/i
                                     if (!backendApi || !backendApi.process || !backendApi.service) {
                                         throw new Error("BackendServiceApi requires at least a \"process\" function and a \"service\" defined");
                                     }
+                                    _a.label = 1;
+                                case 1:
+                                    _a.trys.push([1, 3, , 4]);
                                     startTime = new Date();
                                     if (backendApi.preProcess) {
                                         backendApi.preProcess();
@@ -120,7 +123,7 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./../models/i
                                     query = backendApi.service.processOnSortChanged(event, args);
                                     this.emitSortChanged('remote');
                                     return [4 /*yield*/, backendApi.process(query)];
-                                case 1:
+                                case 2:
                                     processResult = _a.sent();
                                     endTime = new Date();
                                     // from the result, call our internal post process to update the Dataset and Pagination info
@@ -139,7 +142,17 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./../models/i
                                     if (backendApi.postProcess) {
                                         backendApi.postProcess(processResult);
                                     }
-                                    return [2 /*return*/];
+                                    return [3 /*break*/, 4];
+                                case 3:
+                                    e_1 = _a.sent();
+                                    if (backendApi && backendApi.onError) {
+                                        backendApi.onError(e_1);
+                                    }
+                                    else {
+                                        throw e_1;
+                                    }
+                                    return [3 /*break*/, 4];
+                                case 4: return [2 /*return*/];
                             }
                         });
                     });
@@ -219,16 +232,18 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./../models/i
                 SortService.prototype.getPreviousColumnSorts = function (columnId) {
                     var _this = this;
                     // getSortColumns() only returns sortAsc & columnId, we want the entire column definition
-                    var oldSortColumns = this._grid.getSortColumns();
-                    var columnDefinitions = this._grid.getColumns();
+                    var oldSortColumns = this._grid && this._grid.getSortColumns();
                     // get the column definition but only keep column which are not equal to our current column
-                    var sortedCols = oldSortColumns.reduce(function (cols, col) {
-                        if (!columnId || col.columnId !== columnId) {
-                            cols.push({ sortCol: _this._columnDefinitions[_this._grid.getColumnIndex(col.columnId)], sortAsc: col.sortAsc });
-                        }
-                        return cols;
-                    }, []);
-                    return sortedCols;
+                    if (Array.isArray(oldSortColumns)) {
+                        var sortedCols = oldSortColumns.reduce(function (cols, col) {
+                            if (!columnId || col.columnId !== columnId) {
+                                cols.push({ sortCol: _this._columnDefinitions[_this._grid.getColumnIndex(col.columnId)], sortAsc: col.sortAsc });
+                            }
+                            return cols;
+                        }, []);
+                        return sortedCols;
+                    }
+                    return [];
                 };
                 /**
                  * load any presets if there are any
@@ -265,30 +280,32 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./../models/i
                     }
                 };
                 SortService.prototype.onLocalSortChanged = function (grid, dataView, sortColumns) {
-                    dataView.sort(function (dataRow1, dataRow2) {
-                        for (var i = 0, l = sortColumns.length; i < l; i++) {
-                            var columnSortObj = sortColumns[i];
-                            if (columnSortObj && columnSortObj.sortCol) {
-                                var sortDirection = columnSortObj.sortAsc ? index_1.SortDirectionNumber.asc : index_1.SortDirectionNumber.desc;
-                                var sortField = columnSortObj.sortCol.queryField || columnSortObj.sortCol.queryFieldFilter || columnSortObj.sortCol.field;
-                                var fieldType = columnSortObj.sortCol.type || index_1.FieldType.string;
-                                var value1 = dataRow1[sortField];
-                                var value2 = dataRow2[sortField];
-                                // when item is a complex object (dot "." notation), we need to filter the value contained in the object tree
-                                if (sortField && sortField.indexOf('.') >= 0) {
-                                    value1 = utilities_1.getDescendantProperty(dataRow1, sortField);
-                                    value2 = utilities_1.getDescendantProperty(dataRow2, sortField);
-                                }
-                                var sortResult = sorterUtilities_1.sortByFieldType(value1, value2, fieldType, sortDirection);
-                                if (sortResult !== index_1.SortDirectionNumber.neutral) {
-                                    return sortResult;
+                    if (grid && dataView) {
+                        dataView.sort(function (dataRow1, dataRow2) {
+                            for (var i = 0, l = sortColumns.length; i < l; i++) {
+                                var columnSortObj = sortColumns[i];
+                                if (columnSortObj && columnSortObj.sortCol) {
+                                    var sortDirection = columnSortObj.sortAsc ? index_1.SortDirectionNumber.asc : index_1.SortDirectionNumber.desc;
+                                    var sortField = columnSortObj.sortCol.queryField || columnSortObj.sortCol.queryFieldFilter || columnSortObj.sortCol.field;
+                                    var fieldType = columnSortObj.sortCol.type || index_1.FieldType.string;
+                                    var value1 = dataRow1[sortField];
+                                    var value2 = dataRow2[sortField];
+                                    // when item is a complex object (dot "." notation), we need to filter the value contained in the object tree
+                                    if (sortField && sortField.indexOf('.') >= 0) {
+                                        value1 = utilities_1.getDescendantProperty(dataRow1, sortField);
+                                        value2 = utilities_1.getDescendantProperty(dataRow2, sortField);
+                                    }
+                                    var sortResult = sorterUtilities_1.sortByFieldType(value1, value2, fieldType, sortDirection);
+                                    if (sortResult !== index_1.SortDirectionNumber.neutral) {
+                                        return sortResult;
+                                    }
                                 }
                             }
-                        }
-                        return 0;
-                    });
-                    grid.invalidate();
-                    grid.render();
+                            return 0;
+                        });
+                        grid.invalidate();
+                        grid.render();
+                    }
                 };
                 SortService.prototype.dispose = function () {
                     // unsubscribe local event

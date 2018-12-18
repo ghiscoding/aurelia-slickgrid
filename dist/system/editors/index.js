@@ -1,7 +1,7 @@
 System.register(["./checkboxEditor", "./dateEditor", "./floatEditor", "./integerEditor", "./longTextEditor", "./multipleSelectEditor", "./singleSelectEditor", "./sliderEditor", "./textEditor"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var checkboxEditor_1, dateEditor_1, floatEditor_1, integerEditor_1, longTextEditor_1, multipleSelectEditor_1, singleSelectEditor_1, sliderEditor_1, textEditor_1, Editors;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (checkboxEditor_1_1) {

@@ -6,8 +6,8 @@ System.register(["aurelia-framework", "aurelia-i18n", "../constants", "../servic
         else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
         return c > 3 && r && Object.defineProperty(target, key, r), r;
     };
-    var __moduleName = context_1 && context_1.id;
     var aurelia_framework_1, aurelia_i18n_1, constants_1, shared_service_1, index_1, ExtensionUtility;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (aurelia_framework_1_1) {
@@ -62,6 +62,9 @@ System.register(["aurelia-framework", "aurelia-i18n", "../constants", "../servic
                             case index_1.ExtensionName.columnPicker:
                                 require('slickgrid/controls/slick.columnpicker');
                                 break;
+                            case index_1.ExtensionName.draggableGrouping:
+                                require('slickgrid/plugins/slick.draggablegrouping.js');
+                                break;
                             case index_1.ExtensionName.gridMenu:
                                 require('slickgrid/controls/slick.gridmenu');
                                 break;
@@ -76,6 +79,9 @@ System.register(["aurelia-framework", "aurelia-i18n", "../constants", "../servic
                                 break;
                             case index_1.ExtensionName.rowSelection:
                                 require('slickgrid/plugins/slick.rowselectionmodel');
+                                break;
+                            case index_1.ExtensionName.rowDetailView:
+                                require('slickgrid/plugins/slick.rowdetailview.js');
                                 break;
                             case index_1.ExtensionName.rowMoveManager:
                                 require('slickgrid/plugins/slick.rowmovemanager.js');

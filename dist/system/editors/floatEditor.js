@@ -1,7 +1,7 @@
 System.register(["../constants", "./../models/index", "jquery"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var constants_1, index_1, $, defaultDecimalPlaces, FloatEditor;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (constants_1_1) {
@@ -170,7 +170,7 @@ System.register(["../constants", "./../models/index", "jquery"], function (expor
                             msg: errorMsg || constants_1.Constants.VALIDATION_EDITOR_NUMBER_MAX.replace(/{{maxValue}}/gi, function (matched) { return mapValidation[matched]; })
                         };
                     }
-                    else if ((decPlaces > 0 && !new RegExp("^(\\d+(\\.)?(\\d){0," + decPlaces + "})$").test(elmValue))) {
+                    else if ((decPlaces > 0 && !new RegExp("^(\\d*(\\.)?(\\d){0," + decPlaces + "})$").test(elmValue))) {
                         // when decimal value is bigger than 0, we only accept the decimal values as that value set
                         // for example if we set decimalPlaces to 2, we will only accept numbers between 0 and 2 decimals
                         return {

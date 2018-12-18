@@ -9,6 +9,7 @@ import { ExtensionName } from '../models/index';
 import { sanitizeHtmlToText } from '../services/utilities';
 import { SharedService } from '../services/shared.service';
 import { ExtensionUtility } from './extensionUtility';
+import * as $ from 'jquery';
 var CellExternalCopyManagerExtension = /** @class */ (function () {
     function CellExternalCopyManagerExtension(extensionUtility, sharedService) {
         this.extensionUtility = extensionUtility;
@@ -103,7 +104,7 @@ var CellExternalCopyManagerExtension = /** @class */ (function () {
         var _this = this;
         // undo shortcut
         $(document).keydown(function (e) {
-            if (e.which === 90 && (e.ctrlKey || e.metaKey)) {
+            if (e.which === 90 && (e.ctrlKey || e.metaKey)) { // CTRL + (shift) + Z
                 if (e.shiftKey) {
                     _this.undoRedoBuffer.redo();
                 }

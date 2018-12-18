@@ -8,11 +8,13 @@ define(["require", "exports"], function (require, exports) {
         ExtensionName["cellExternalCopyManager"] = "cellExternalCopyManager";
         ExtensionName["checkboxSelector"] = "checkboxSelector";
         ExtensionName["columnPicker"] = "columnPicker";
+        ExtensionName["draggableGrouping"] = "draggableGrouping";
         ExtensionName["groupItemMetaProvider"] = "groupItemMetaProvider";
         ExtensionName["gridMenu"] = "gridMenu";
         ExtensionName["headerButton"] = "headerButton";
         ExtensionName["headerMenu"] = "headerMenu";
         ExtensionName["noname"] = "noname";
+        ExtensionName["rowDetailView"] = "rowDetailView";
         ExtensionName["rowMoveManager"] = "rowMoveManager";
         ExtensionName["rowSelection"] = "rowSelection";
     })(ExtensionName = exports.ExtensionName || (exports.ExtensionName = {}));

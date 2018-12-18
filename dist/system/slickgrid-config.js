@@ -1,7 +1,7 @@
 System.register(["./global-grid-options"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var global_grid_options_1, SlickgridConfig;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (global_grid_options_1_1) {

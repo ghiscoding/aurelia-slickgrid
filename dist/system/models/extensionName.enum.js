@@ -1,7 +1,7 @@
 System.register([], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var ExtensionName;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [],
         execute: function () {
@@ -11,11 +11,13 @@ System.register([], function (exports_1, context_1) {
                 ExtensionName["cellExternalCopyManager"] = "cellExternalCopyManager";
                 ExtensionName["checkboxSelector"] = "checkboxSelector";
                 ExtensionName["columnPicker"] = "columnPicker";
+                ExtensionName["draggableGrouping"] = "draggableGrouping";
                 ExtensionName["groupItemMetaProvider"] = "groupItemMetaProvider";
                 ExtensionName["gridMenu"] = "gridMenu";
                 ExtensionName["headerButton"] = "headerButton";
                 ExtensionName["headerMenu"] = "headerMenu";
                 ExtensionName["noname"] = "noname";
+                ExtensionName["rowDetailView"] = "rowDetailView";
                 ExtensionName["rowMoveManager"] = "rowMoveManager";
                 ExtensionName["rowSelection"] = "rowSelection";
             })(ExtensionName || (ExtensionName = {}));

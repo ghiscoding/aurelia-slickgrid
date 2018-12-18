@@ -29,8 +29,8 @@ System.register(["jquery-ui-dist/jquery-ui", "slickgrid/lib/jquery.event.drag-2.
         function step(op) {
             if (f) throw new TypeError("Generator is already executing.");
             while (_) try {
-                if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
-                if (y = 0, t) op = [0, t.value];
+                if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+                if (y = 0, t) op = [op[0] & 2, t.value];
                 switch (op[0]) {
                     case 0: case 1: t = op; break;
                     case 4: _.label++; return { value: op[1], done: false };
@@ -49,8 +49,8 @@ System.register(["jquery-ui-dist/jquery-ui", "slickgrid/lib/jquery.event.drag-2.
             if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
         }
     };
-    var __moduleName = context_1 && context_1.id;
     var aurelia_framework_1, aurelia_event_aggregator_1, global_grid_options_1, index_1, index_2, extensionUtility_1, shared_service_1, $, aureliaEventPrefix, eventPrefix, AureliaSlickgridCustomElement;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (_1) {
@@ -140,14 +140,16 @@ System.register(["jquery-ui-dist/jquery-ui", "slickgrid/lib/jquery.event.drag-2.
                     this._dataset = this._dataset || this.dataset || [];
                     this.gridOptions = this.mergeGridOptions(this.gridOptions);
                     this.createBackendApiInternalPostProcessCallback(this.gridOptions);
-                    if (this.gridOptions.enableGrouping) {
-                        this.extensionUtility.loadExtensionDynamically(index_1.ExtensionName.groupItemMetaProvider);
-                        this.groupItemMetadataProvider = new Slick.Data.GroupItemMetadataProvider();
-                        this.sharedService.groupItemMetadataProvider = this.groupItemMetadataProvider;
-                        this.dataview = new Slick.Data.DataView({ groupItemMetadataProvider: this.groupItemMetadataProvider });
-                    }
-                    else {
-                        this.dataview = new Slick.Data.DataView();
+                    if (!this.customDataView) {
+                        if (this.gridOptions.draggableGrouping || this.gridOptions.enableGrouping) {
+                            this.extensionUtility.loadExtensionDynamically(index_1.ExtensionName.groupItemMetaProvider);
+                            this.groupItemMetadataProvider = new Slick.Data.GroupItemMetadataProvider();
+                            this.sharedService.groupItemMetadataProvider = this.groupItemMetadataProvider;
+                            this.dataview = new Slick.Data.DataView({ groupItemMetadataProvider: this.groupItemMetadataProvider });
+                        }
+                        else {
+                            this.dataview = new Slick.Data.DataView();
+                        }
                     }
                     // for convenience, we provide the property "editor" as an Aurelia-Slickgrid editor complex object
                     // however "editor" is used internally by SlickGrid for it's own Editor Factory
@@ -168,32 +170,37 @@ System.register(["jquery-ui-dist/jquery-ui", "slickgrid/lib/jquery.event.drag-2.
                     // save reference for all columns before they optionally become hidden/visible
                     this.sharedService.allColumns = this._columnDefinitions;
                     this.sharedService.visibleColumns = this._columnDefinitions;
-                    this.extensionService.createCheckboxPluginBeforeGridCreation(this._columnDefinitions, this.gridOptions);
-                    this.grid = new Slick.Grid("#" + this.gridId, this.dataview, this._columnDefinitions, this.gridOptions);
+                    this.extensionService.createExtensionsBeforeGridCreation(this._columnDefinitions, this.gridOptions);
+                    // build SlickGrid Grid, also user might optionally pass a custom dataview (e.g. remote model)
+                    this.grid = new Slick.Grid("#" + this.gridId, this.customDataView || this.dataview, this._columnDefinitions, this.gridOptions);
                     this.sharedService.dataView = this.dataview;
                     this.sharedService.grid = this.grid;
                     this.extensionService.attachDifferentExtensions();
                     this.attachDifferentHooks(this.grid, this.gridOptions, this.dataview);
                     this.grid.init();
-                    this.dataview.beginUpdate();
-                    this.dataview.setItems(this._dataset, this.gridOptions.datasetIdPropertyName);
-                    this.dataview.endUpdate();
+                    if (!this.customDataView && (this.dataview && this.dataview.beginUpdate && this.dataview.setItems && this.dataview.endUpdate)) {
+                        this.dataview.beginUpdate();
+                        this.dataview.setItems(this._dataset, this.gridOptions.datasetIdPropertyName);
+                        this.dataview.endUpdate();
+                    }
                     // user might want to hide the header row on page load but still have `enableFiltering: true`
                     // if that is the case, we need to hide the headerRow ONLY AFTER all filters got created & dataView exist
                     if (this._hideHeaderRowAfterPageLoad) {
                         this.showHeaderRow(false);
                     }
-                    // after the DataView is created & updated execute some processes
-                    this.executeAfterDataviewCreated(this.grid, this.gridOptions, this.dataview);
                     // publish & dispatch certain events
                     this.ea.publish('onGridCreated', this.grid);
-                    this.ea.publish('onDataviewCreated', this.dataview);
                     this.dispatchCustomEvent(aureliaEventPrefix + "-on-grid-created", this.grid);
-                    this.dispatchCustomEvent(aureliaEventPrefix + "-on-dataview-created", this.dataview);
+                    // after the DataView is created & updated execute some processes & dispatch some events
+                    if (!this.customDataView) {
+                        this.executeAfterDataviewCreated(this.grid, this.gridOptions, this.dataview);
+                        this.ea.publish('onDataviewCreated', this.dataview);
+                        this.dispatchCustomEvent(aureliaEventPrefix + "-on-dataview-created", this.dataview);
+                    }
                     // attach resize ONLY after the dataView is ready
                     this.attachResizeHook(this.grid, this.gridOptions);
                     // attach grouping and header grouping colspan service
-                    if (this.gridOptions.createPreHeaderPanel) {
+                    if (this.gridOptions.createPreHeaderPanel && !this.gridOptions.enableDraggableGrouping) {
                         this.groupingAndColspanService.init(this.grid, this.dataview);
                     }
                     // initialize grid service
@@ -363,11 +370,11 @@ System.register(["jquery-ui-dist/jquery-ui", "slickgrid/lib/jquery.event.drag-2.
                         }
                     }
                     // attach external sorting (backend) when available or default onSort (dataView)
-                    if (gridOptions.enableSorting) {
+                    if (gridOptions.enableSorting && !this.customDataView) {
                         gridOptions.backendServiceApi ? this.sortService.attachBackendOnSort(grid, dataView) : this.sortService.attachLocalOnSort(grid, dataView);
                     }
                     // attach external filter (backend) when available or default onFilter (dataView)
-                    if (gridOptions.enableFiltering) {
+                    if (gridOptions.enableFiltering && !this.customDataView) {
                         this.filterService.init(grid);
                         // if user entered some "presets", we need to reflect them all in the DOM
                         if (gridOptions.presets && Array.isArray(gridOptions.presets.filters) && gridOptions.presets.filters.length > 0) {
@@ -416,14 +423,16 @@ System.register(["jquery-ui-dist/jquery-ui", "slickgrid/lib/jquery.event.drag-2.
                     // on cell click, mainly used with the columnDef.action callback
                     this.gridEventService.attachOnCellChange(grid, dataView);
                     this.gridEventService.attachOnClick(grid, dataView);
-                    this._eventHandler.subscribe(dataView.onRowCountChanged, function (e, args) {
-                        grid.updateRowCount();
-                        grid.render();
-                    });
-                    this._eventHandler.subscribe(dataView.onRowsChanged, function (e, args) {
-                        grid.invalidateRows(args.rows);
-                        grid.render();
-                    });
+                    if (dataView && grid) {
+                        this._eventHandler.subscribe(dataView.onRowCountChanged, function (e, args) {
+                            grid.updateRowCount();
+                            grid.render();
+                        });
+                        this._eventHandler.subscribe(dataView.onRowsChanged, function (e, args) {
+                            grid.invalidateRows(args.rows);
+                            grid.render();
+                        });
+                    }
                     // does the user have a colspan callback?
                     if (gridOptions.colspanCallback) {
                         dataView.getItemMetadata = function (rowNumber) {
@@ -470,7 +479,7 @@ System.register(["jquery-ui-dist/jquery-ui", "slickgrid/lib/jquery.event.drag-2.
                         var onInitPromise_1 = (isExecuteCommandOnInit) ? (backendApi && backendApi.process) ? backendApi.process(query) : undefined : (backendApi && backendApi.onInit) ? backendApi.onInit(query) : null;
                         // wrap this inside a setTimeout to avoid timing issue since the gridOptions needs to be ready before running this onInit
                         setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
-                            var startTime, processResult, endTime;
+                            var startTime, processResult, endTime, e_1;
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
                                     case 0:
@@ -478,8 +487,11 @@ System.register(["jquery-ui-dist/jquery-ui", "slickgrid/lib/jquery.event.drag-2.
                                         if (backendApi.preProcess) {
                                             backendApi.preProcess();
                                         }
-                                        return [4 /*yield*/, onInitPromise_1];
+                                        _a.label = 1;
                                     case 1:
+                                        _a.trys.push([1, 3, , 4]);
+                                        return [4 /*yield*/, onInitPromise_1];
+                                    case 2:
                                         processResult = _a.sent();
                                         endTime = new Date();
                                         // define what our internal Post Process callback, only available for GraphQL Service for now
@@ -497,7 +509,17 @@ System.register(["jquery-ui-dist/jquery-ui", "slickgrid/lib/jquery.event.drag-2.
                                             };
                                             backendApi.postProcess(processResult);
                                         }
-                                        return [2 /*return*/];
+                                        return [3 /*break*/, 4];
+                                    case 3:
+                                        e_1 = _a.sent();
+                                        if (backendApi && backendApi.onError) {
+                                            backendApi.onError(e_1);
+                                        }
+                                        else {
+                                            throw e_1;
+                                        }
+                                        return [3 /*break*/, 4];
+                                    case 4: return [2 /*return*/];
                                 }
                             });
                         }); });
@@ -562,7 +584,7 @@ System.register(["jquery-ui-dist/jquery-ui", "slickgrid/lib/jquery.event.drag-2.
                  * @param dataset
                  */
                 AureliaSlickgridCustomElement.prototype.refreshGridData = function (dataset, totalCount) {
-                    if (dataset && this.grid && this.dataview && typeof this.dataview.setItems === 'function') {
+                    if (Array.isArray(dataset) && this.grid && this.dataview && typeof this.dataview.setItems === 'function') {
                         this.dataview.setItems(dataset, this.gridOptions.datasetIdPropertyName);
                         if (!this.gridOptions.backendServiceApi) {
                             this.dataview.reSort();
@@ -579,7 +601,7 @@ System.register(["jquery-ui-dist/jquery-ui", "slickgrid/lib/jquery.event.drag-2.
                             if (!this.gridOptions.pagination) {
                                 this.gridOptions.pagination = (this.gridOptions.pagination) ? this.gridOptions.pagination : undefined;
                             }
-                            if (this.gridOptions.pagination && totalCount) {
+                            if (this.gridOptions.pagination && totalCount !== undefined) {
                                 this.gridOptions.pagination.totalItems = totalCount;
                             }
                             if (this.gridOptions.presets && this.gridOptions.presets.pagination && this.gridOptions.pagination) {
@@ -695,6 +717,9 @@ System.register(["jquery-ui-dist/jquery-ui", "slickgrid/lib/jquery.event.drag-2.
                 __decorate([
                     aurelia_framework_1.bindable({ defaultBindingMode: aurelia_framework_1.bindingMode.twoWay })
                 ], AureliaSlickgridCustomElement.prototype, "grid", void 0);
+                __decorate([
+                    aurelia_framework_1.bindable()
+                ], AureliaSlickgridCustomElement.prototype, "customDataView", void 0);
                 __decorate([
                     aurelia_framework_1.bindable()
                 ], AureliaSlickgridCustomElement.prototype, "dataset", void 0);

@@ -1,7 +1,7 @@
 System.register([], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var Constants;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [],
         execute: function () {
@@ -23,6 +23,7 @@ System.register([], function (exports_1, context_1) {
                 Constants.TEXT_SORT_ASCENDING = 'Sort Ascending';
                 Constants.TEXT_SORT_DESCENDING = 'Sort Descending';
                 Constants.TEXT_TOGGLE_FILTER_ROW = 'Toggle Filter Row';
+                Constants.TEXT_TOGGLE_PRE_HEADER_ROW = 'Toggle Pre-Header Row';
                 Constants.VALIDATION_EDITOR_DECIMAL_BETWEEN = 'Please enter a valid number with a maximum of {{maxDecimal}} decimals';
                 Constants.VALIDATION_EDITOR_NUMBER_BETWEEN = 'Please enter a valid number between {{minValue}} and {{maxValue}}';
                 Constants.VALIDATION_EDITOR_NUMBER_MAX = 'Please enter a valid number that is lower than {{maxValue}}';

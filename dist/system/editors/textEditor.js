@@ -1,7 +1,7 @@
 System.register(["jquery", "./../models/index"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var $, index_1, TextEditor;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function ($_1) {

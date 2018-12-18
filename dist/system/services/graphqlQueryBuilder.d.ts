@@ -32,7 +32,7 @@ export default class GraphqlQueryBuilder {
      * @return
      */
     toString(): string;
-    private parceFind(_levelA);
-    private getGraphQLValue(value);
-    private objectToString(obj);
+    private parceFind;
+    private getGraphQLValue;
+    private objectToString;
 }

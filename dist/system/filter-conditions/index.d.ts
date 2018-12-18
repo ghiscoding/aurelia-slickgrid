@@ -1,14 +1,13 @@
-import { FilterConditionOption } from './../models/filterConditionOption.interface';
 export declare const FilterConditions: {
-    executeMappedCondition: (options: FilterConditionOption) => boolean;
-    booleanFilter: (options: FilterConditionOption) => boolean;
-    collectionSearchFilter: (options: FilterConditionOption) => boolean;
-    dateFilter: (options: FilterConditionOption) => boolean;
-    dateIsoFilter: (options: FilterConditionOption) => boolean;
-    dateUtcFilter: (options: FilterConditionOption) => boolean;
-    dateUsFilter: (options: FilterConditionOption) => boolean;
-    dateUsShortFilter: (options: FilterConditionOption) => boolean;
-    numberFilter: (options: FilterConditionOption) => boolean;
-    stringFilter: (options: FilterConditionOption) => boolean;
+    executeMappedCondition: import("../../../../../../../OwnSyncDev/GitHub/aurelia-slickgrid/aurelia-slickgrid/src/aurelia-slickgrid/models/filterCondition.interface").FilterCondition;
+    booleanFilter: import("../../../../../../../OwnSyncDev/GitHub/aurelia-slickgrid/aurelia-slickgrid/src/aurelia-slickgrid/models/filterCondition.interface").FilterCondition;
+    collectionSearchFilter: import("../../../../../../../OwnSyncDev/GitHub/aurelia-slickgrid/aurelia-slickgrid/src/aurelia-slickgrid/models/filterCondition.interface").FilterCondition;
+    dateFilter: import("../../../../../../../OwnSyncDev/GitHub/aurelia-slickgrid/aurelia-slickgrid/src/aurelia-slickgrid/models/filterCondition.interface").FilterCondition;
+    dateIsoFilter: import("../../../../../../../OwnSyncDev/GitHub/aurelia-slickgrid/aurelia-slickgrid/src/aurelia-slickgrid/models/filterCondition.interface").FilterCondition;
+    dateUtcFilter: import("../../../../../../../OwnSyncDev/GitHub/aurelia-slickgrid/aurelia-slickgrid/src/aurelia-slickgrid/models/filterCondition.interface").FilterCondition;
+    dateUsFilter: import("../../../../../../../OwnSyncDev/GitHub/aurelia-slickgrid/aurelia-slickgrid/src/aurelia-slickgrid/models/filterCondition.interface").FilterCondition;
+    dateUsShortFilter: import("../../../../../../../OwnSyncDev/GitHub/aurelia-slickgrid/aurelia-slickgrid/src/aurelia-slickgrid/models/filterCondition.interface").FilterCondition;
+    numberFilter: import("../../../../../../../OwnSyncDev/GitHub/aurelia-slickgrid/aurelia-slickgrid/src/aurelia-slickgrid/models/filterCondition.interface").FilterCondition;
+    stringFilter: import("../../../../../../../OwnSyncDev/GitHub/aurelia-slickgrid/aurelia-slickgrid/src/aurelia-slickgrid/models/filterCondition.interface").FilterCondition;
     testFilter: (operator: string, value1: any, value2: any) => boolean;
 };

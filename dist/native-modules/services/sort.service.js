@@ -19,8 +19,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
         while (_) try {
-            if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [0, t.value];
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
                 case 0: case 1: t = op; break;
                 case 4: _.label++; return { value: op[1], done: false };
@@ -83,7 +83,7 @@ var SortService = /** @class */ (function () {
     };
     SortService.prototype.onBackendSortChanged = function (event, args) {
         return __awaiter(this, void 0, void 0, function () {
-            var gridOptions, backendApi, startTime, query, processResult, endTime;
+            var gridOptions, backendApi, startTime, query, processResult, endTime, e_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -95,6 +95,9 @@ var SortService = /** @class */ (function () {
                         if (!backendApi || !backendApi.process || !backendApi.service) {
                             throw new Error("BackendServiceApi requires at least a \"process\" function and a \"service\" defined");
                         }
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
                         startTime = new Date();
                         if (backendApi.preProcess) {
                             backendApi.preProcess();
@@ -102,7 +105,7 @@ var SortService = /** @class */ (function () {
                         query = backendApi.service.processOnSortChanged(event, args);
                         this.emitSortChanged('remote');
                         return [4 /*yield*/, backendApi.process(query)];
-                    case 1:
+                    case 2:
                         processResult = _a.sent();
                         endTime = new Date();
                         // from the result, call our internal post process to update the Dataset and Pagination info
@@ -121,7 +124,17 @@ var SortService = /** @class */ (function () {
                         if (backendApi.postProcess) {
                             backendApi.postProcess(processResult);
                         }
-                        return [2 /*return*/];
+                        return [3 /*break*/, 4];
+                    case 3:
+                        e_1 = _a.sent();
+                        if (backendApi && backendApi.onError) {
+                            backendApi.onError(e_1);
+                        }
+                        else {
+                            throw e_1;
+                        }
+                        return [3 /*break*/, 4];
+                    case 4: return [2 /*return*/];
                 }
             });
         });
@@ -201,16 +214,18 @@ var SortService = /** @class */ (function () {
     SortService.prototype.getPreviousColumnSorts = function (columnId) {
         var _this = this;
         // getSortColumns() only returns sortAsc & columnId, we want the entire column definition
-        var oldSortColumns = this._grid.getSortColumns();
-        var columnDefinitions = this._grid.getColumns();
+        var oldSortColumns = this._grid && this._grid.getSortColumns();
         // get the column definition but only keep column which are not equal to our current column
-        var sortedCols = oldSortColumns.reduce(function (cols, col) {
-            if (!columnId || col.columnId !== columnId) {
-                cols.push({ sortCol: _this._columnDefinitions[_this._grid.getColumnIndex(col.columnId)], sortAsc: col.sortAsc });
-            }
-            return cols;
-        }, []);
-        return sortedCols;
+        if (Array.isArray(oldSortColumns)) {
+            var sortedCols = oldSortColumns.reduce(function (cols, col) {
+                if (!columnId || col.columnId !== columnId) {
+                    cols.push({ sortCol: _this._columnDefinitions[_this._grid.getColumnIndex(col.columnId)], sortAsc: col.sortAsc });
+                }
+                return cols;
+            }, []);
+            return sortedCols;
+        }
+        return [];
     };
     /**
      * load any presets if there are any
@@ -247,30 +262,32 @@ var SortService = /** @class */ (function () {
         }
     };
     SortService.prototype.onLocalSortChanged = function (grid, dataView, sortColumns) {
-        dataView.sort(function (dataRow1, dataRow2) {
-            for (var i = 0, l = sortColumns.length; i < l; i++) {
-                var columnSortObj = sortColumns[i];
-                if (columnSortObj && columnSortObj.sortCol) {
-                    var sortDirection = columnSortObj.sortAsc ? SortDirectionNumber.asc : SortDirectionNumber.desc;
-                    var sortField = columnSortObj.sortCol.queryField || columnSortObj.sortCol.queryFieldFilter || columnSortObj.sortCol.field;
-                    var fieldType = columnSortObj.sortCol.type || FieldType.string;
-                    var value1 = dataRow1[sortField];
-                    var value2 = dataRow2[sortField];
-                    // when item is a complex object (dot "." notation), we need to filter the value contained in the object tree
-                    if (sortField && sortField.indexOf('.') >= 0) {
-                        value1 = getDescendantProperty(dataRow1, sortField);
-                        value2 = getDescendantProperty(dataRow2, sortField);
-                    }
-                    var sortResult = sortByFieldType(value1, value2, fieldType, sortDirection);
-                    if (sortResult !== SortDirectionNumber.neutral) {
-                        return sortResult;
+        if (grid && dataView) {
+            dataView.sort(function (dataRow1, dataRow2) {
+                for (var i = 0, l = sortColumns.length; i < l; i++) {
+                    var columnSortObj = sortColumns[i];
+                    if (columnSortObj && columnSortObj.sortCol) {
+                        var sortDirection = columnSortObj.sortAsc ? SortDirectionNumber.asc : SortDirectionNumber.desc;
+                        var sortField = columnSortObj.sortCol.queryField || columnSortObj.sortCol.queryFieldFilter || columnSortObj.sortCol.field;
+                        var fieldType = columnSortObj.sortCol.type || FieldType.string;
+                        var value1 = dataRow1[sortField];
+                        var value2 = dataRow2[sortField];
+                        // when item is a complex object (dot "." notation), we need to filter the value contained in the object tree
+                        if (sortField && sortField.indexOf('.') >= 0) {
+                            value1 = getDescendantProperty(dataRow1, sortField);
+                            value2 = getDescendantProperty(dataRow2, sortField);
+                        }
+                        var sortResult = sortByFieldType(value1, value2, fieldType, sortDirection);
+                        if (sortResult !== SortDirectionNumber.neutral) {
+                            return sortResult;
+                        }
                     }
                 }
-            }
-            return 0;
-        });
-        grid.invalidate();
-        grid.render();
+                return 0;
+            });
+            grid.invalidate();
+            grid.render();
+        }
     };
     SortService.prototype.dispose = function () {
         // unsubscribe local event

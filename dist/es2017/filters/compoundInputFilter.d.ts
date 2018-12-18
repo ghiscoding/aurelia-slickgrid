@@ -1,8 +1,9 @@
 import { I18N } from 'aurelia-i18n';
 import { Column, Filter, FilterArguments, FilterCallback, OperatorString, OperatorType, SearchTerm } from './../models/index';
 export declare class CompoundInputFilter implements Filter {
-    private i18n;
+    protected i18n: I18N;
     private _clearFilterTriggered;
+    private _inputType;
     private $filterElm;
     private $filterInputElm;
     private $selectOperatorElm;
@@ -14,6 +15,11 @@ export declare class CompoundInputFilter implements Filter {
     constructor(i18n: I18N);
     /** Getter for the Grid Options pulled through the Grid Object */
     private readonly gridOptions;
+    /** Getter of input type (text, number, password) */
+    /** Setter of input type (text, number, password) */
+    inputType: string;
+    /** Getter of the Operator to use when doing the filter comparing */
+    /** Getter of the Operator to use when doing the filter comparing */
     operator: OperatorType | OperatorString;
     /**
      * Initialize the Filter
@@ -31,12 +37,13 @@ export declare class CompoundInputFilter implements Filter {
      * Set value(s) on the DOM element
      */
     setValues(values: SearchTerm[]): void;
-    private buildInputHtmlString();
-    private buildSelectOperatorHtmlString();
-    private getOptionValues();
+    private buildInputHtmlString;
+    private buildSelectOperatorHtmlString;
+    private getOptionValues;
     /**
      * Create the DOM element
      */
-    private createDomElement(searchTerm?);
-    private onTriggerEvent(e);
+    private createDomElement;
+    /** Event trigger, could be called by the Operator dropdown or the input itself */
+    private onTriggerEvent;
 }

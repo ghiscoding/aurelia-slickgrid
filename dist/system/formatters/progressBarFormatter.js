@@ -1,12 +1,12 @@
 System.register([], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var progressBarFormatter;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [],
         execute: function () {
             exports_1("progressBarFormatter", progressBarFormatter = function (row, cell, value, columnDef, dataContext) {
-                if (value === null || value === '') {
+                if (value === null || value === undefined || value === '') {
                     return '';
                 }
                 var color;

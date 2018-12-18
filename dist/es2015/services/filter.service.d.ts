@@ -65,6 +65,6 @@ export declare class FilterService {
      * @param grid
      */
     populateColumnFilterSearchTerms(): Column[];
-    private updateColumnFilters(searchTerms, columnDef, operator?);
-    private triggerEvent(slickEvent, args, e);
+    private updateColumnFilters;
+    private triggerEvent;
 }

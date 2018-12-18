@@ -1,12 +1,9 @@
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { GridOption } from './models/index';
-import { FilterService } from './services/index';
 export declare class SlickPaginationCustomElement {
     private elm;
     private ea;
-    private filterService;
     private _filterSubscriber;
-    private _sorterSubscriber;
     grid: any;
     gridPaginationOptions: GridOption;
     private _gridPaginationOptions;
@@ -19,7 +16,7 @@ export declare class SlickPaginationCustomElement {
     totalItems: number;
     paginationCallback: () => void;
     paginationPageSizes: number[];
-    constructor(elm: Element, ea: EventAggregator, filterService: FilterService);
+    constructor(elm: Element, ea: EventAggregator);
     bind(binding: any, contexts: any): void;
     gridPaginationOptionsChanged(newGridOptions: GridOption): void;
     detached(): void;

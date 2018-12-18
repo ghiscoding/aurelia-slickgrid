@@ -1,5 +1,6 @@
 System.register(["../models/index", "moment", "jquery"], function (exports_1, context_1) {
     "use strict";
+    var index_1, moment, $;
     var __moduleName = context_1 && context_1.id;
     /**
      * Simple function to which will loop and create as demanded the number of white spaces,
@@ -430,7 +431,6 @@ System.register(["../models/index", "moment", "jquery"], function (exports_1, co
         });
     }
     exports_1("uniqueArray", uniqueArray);
-    var index_1, moment, $;
     return {
         setters: [
             function (index_1_1) {

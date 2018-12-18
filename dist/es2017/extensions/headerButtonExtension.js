@@ -28,11 +28,17 @@ let HeaderButtonExtension = class HeaderButtonExtension {
             this.extensionUtility.loadExtensionDynamically(ExtensionName.headerButton);
             this._extension = new Slick.Plugins.HeaderButtons(this.sharedService.gridOptions.headerButton || {});
             this.sharedService.grid.registerPlugin(this._extension);
-            this._eventHandler.subscribe(this._extension.onCommand, (e, args) => {
-                if (this.sharedService.gridOptions.headerButton && typeof this.sharedService.gridOptions.headerButton.onCommand === 'function') {
-                    this.sharedService.gridOptions.headerButton.onCommand(e, args);
+            // hook all events
+            if (this.sharedService.grid && this.sharedService.gridOptions.headerButton) {
+                if (this.sharedService.gridOptions.headerButton.onExtensionRegistered) {
+                    this.sharedService.gridOptions.headerButton.onExtensionRegistered(this._extension);
                 }
-            });
+                this._eventHandler.subscribe(this._extension.onCommand, (e, args) => {
+                    if (this.sharedService.gridOptions.headerButton && typeof this.sharedService.gridOptions.headerButton.onCommand === 'function') {
+                        this.sharedService.gridOptions.headerButton.onCommand(e, args);
+                    }
+                });
+            }
             return this._extension;
         }
         return null;

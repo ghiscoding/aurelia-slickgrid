@@ -28,6 +28,7 @@ exports.GridOdataService = index_2.GridOdataService;
 function configure(aurelia, callback) {
     aurelia.globalResources(aurelia_pal_1.PLATFORM.moduleName('./aurelia-slickgrid'));
     aurelia.globalResources(aurelia_pal_1.PLATFORM.moduleName('./slick-pagination'));
+    aurelia.globalResources(aurelia_pal_1.PLATFORM.moduleName('./value-converters/number'));
     // must register a transient so the container will get a new instance everytime
     aurelia.container.registerTransient(index_1.Filters.compoundDate);
     aurelia.container.registerTransient(index_1.Filters.compoundInput);

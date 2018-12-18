@@ -1,7 +1,7 @@
 System.register(["./avgTotalsPercentageFormatter", "./avgTotalsDollarFormatter", "./avgTotalsFormatter", "./minTotalsFormatter", "./maxTotalsFormatter", "./sumTotalsColoredFormatter", "./sumTotalsDollarColoredBoldFormatter", "./sumTotalsDollarColoredFormatter", "./sumTotalsDollarBoldFormatter", "./sumTotalsDollarFormatter", "./sumTotalsFormatter", "./sumTotalsBoldFormatter"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var avgTotalsPercentageFormatter_1, avgTotalsDollarFormatter_1, avgTotalsFormatter_1, minTotalsFormatter_1, maxTotalsFormatter_1, sumTotalsColoredFormatter_1, sumTotalsDollarColoredBoldFormatter_1, sumTotalsDollarColoredFormatter_1, sumTotalsDollarBoldFormatter_1, sumTotalsDollarFormatter_1, sumTotalsFormatter_1, sumTotalsBoldFormatter_1, GroupTotalFormatters;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (avgTotalsPercentageFormatter_1_1) {

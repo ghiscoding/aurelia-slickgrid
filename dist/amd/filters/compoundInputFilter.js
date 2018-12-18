@@ -4,13 +4,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-define(["require", "exports", "aurelia-framework", "aurelia-i18n", "./../models/index"], function (require, exports, aurelia_framework_1, aurelia_i18n_1, index_1) {
+define(["require", "exports", "aurelia-framework", "aurelia-i18n", "./../models/index", "jquery"], function (require, exports, aurelia_framework_1, aurelia_i18n_1, index_1, $) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var CompoundInputFilter = /** @class */ (function () {
         function CompoundInputFilter(i18n) {
             this.i18n = i18n;
             this._clearFilterTriggered = false;
+            this._inputType = 'text';
         }
         Object.defineProperty(CompoundInputFilter.prototype, "gridOptions", {
             /** Getter for the Grid Options pulled through the Grid Object */
@@ -20,10 +21,24 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "./../models/
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(CompoundInputFilter.prototype, "inputType", {
+            /** Getter of input type (text, number, password) */
+            get: function () {
+                return this._inputType;
+            },
+            /** Setter of input type (text, number, password) */
+            set: function (type) {
+                this._inputType = type;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(CompoundInputFilter.prototype, "operator", {
+            /** Getter of the Operator to use when doing the filter comparing */
             get: function () {
                 return this._operator || index_1.OperatorType.empty;
             },
+            /** Getter of the Operator to use when doing the filter comparing */
             set: function (op) {
                 this._operator = op;
             },
@@ -48,10 +63,10 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "./../models/
                 this.$filterElm = this.createDomElement(searchTerm);
                 // step 3, subscribe to the keyup event and run the callback when that happens
                 // also add/remove "filled" class for styling purposes
-                this.$filterInputElm.keyup(function (e) {
+                this.$filterInputElm.on('keyup input change', function (e) {
                     _this.onTriggerEvent(e);
                 });
-                this.$selectOperatorElm.change(function (e) {
+                this.$selectOperatorElm.on('change', function (e) {
                     _this.onTriggerEvent(e);
                 });
             }
@@ -72,8 +87,9 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "./../models/
          * destroy the filter
          */
         CompoundInputFilter.prototype.destroy = function () {
-            if (this.$filterElm) {
-                this.$filterElm.off('keyup').remove();
+            if (this.$filterElm && this.$selectOperatorElm) {
+                this.$filterElm.off('keyup input change').remove();
+                this.$selectOperatorElm.off('change');
             }
         };
         /**
@@ -89,7 +105,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "./../models/
         // ------------------
         CompoundInputFilter.prototype.buildInputHtmlString = function () {
             var placeholder = (this.gridOptions) ? (this.gridOptions.defaultFilterPlaceholder || '') : '';
-            return "<input class=\"form-control\" type=\"text\" placeholder=\"" + placeholder + "\" />";
+            return "<input class=\"form-control\" type=\"" + (this._inputType || 'text') + "\" placeholder=\"" + placeholder + "\" />";
         };
         CompoundInputFilter.prototype.buildSelectOperatorHtmlString = function () {
             var optionValues = this.getOptionValues();
@@ -167,6 +183,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "./../models/
             }
             return $filterContainerElm;
         };
+        /** Event trigger, could be called by the Operator dropdown or the input itself */
         CompoundInputFilter.prototype.onTriggerEvent = function (e) {
             if (this._clearFilterTriggered) {
                 this.callback(e, { columnDef: this.columnDef, clearFilterTriggered: this._clearFilterTriggered });
@@ -175,7 +192,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "./../models/
             else {
                 var selectedOperator = this.$selectOperatorElm.find('option:selected').text();
                 var value = this.$filterInputElm.val();
-                (value) ? this.$filterElm.addClass('filled') : this.$filterElm.removeClass('filled');
+                (value !== null && value !== undefined && value !== '') ? this.$filterElm.addClass('filled') : this.$filterElm.removeClass('filled');
                 this.callback(e, { columnDef: this.columnDef, searchTerms: (value ? [value] : null), operator: selectedOperator || '' });
             }
         };

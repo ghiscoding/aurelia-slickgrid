@@ -1,5 +1,6 @@
 System.register(["./../models/fieldType.enum", "./index"], function (exports_1, context_1) {
     "use strict";
+    var fieldType_enum_1, index_1;
     var __moduleName = context_1 && context_1.id;
     function sortByFieldType(value1, value2, fieldType, sortDirection) {
         var sortResult = 0;
@@ -26,7 +27,6 @@ System.register(["./../models/fieldType.enum", "./index"], function (exports_1, 
         return sortResult;
     }
     exports_1("sortByFieldType", sortByFieldType);
-    var fieldType_enum_1, index_1;
     return {
         setters: [
             function (fieldType_enum_1_1) {

@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-define(["require", "exports", "aurelia-framework", "../models/index", "../services/utilities", "../services/shared.service", "./extensionUtility"], function (require, exports, aurelia_framework_1, index_1, utilities_1, shared_service_1, extensionUtility_1) {
+define(["require", "exports", "aurelia-framework", "../models/index", "../services/utilities", "../services/shared.service", "./extensionUtility", "jquery"], function (require, exports, aurelia_framework_1, index_1, utilities_1, shared_service_1, extensionUtility_1, $) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var CellExternalCopyManagerExtension = /** @class */ (function () {
@@ -101,7 +101,7 @@ define(["require", "exports", "aurelia-framework", "../models/index", "../servic
             var _this = this;
             // undo shortcut
             $(document).keydown(function (e) {
-                if (e.which === 90 && (e.ctrlKey || e.metaKey)) {
+                if (e.which === 90 && (e.ctrlKey || e.metaKey)) { // CTRL + (shift) + Z
                     if (e.shiftKey) {
                         _this.undoRedoBuffer.redo();
                     }

@@ -56,31 +56,41 @@ let SortService = class SortService {
             if (!backendApi || !backendApi.process || !backendApi.service) {
                 throw new Error(`BackendServiceApi requires at least a "process" function and a "service" defined`);
             }
-            // keep start time & end timestamps & return it after process execution
-            const startTime = new Date();
-            if (backendApi.preProcess) {
-                backendApi.preProcess();
-            }
-            const query = backendApi.service.processOnSortChanged(event, args);
-            this.emitSortChanged('remote');
-            // await for the Promise to resolve the data
-            const processResult = yield backendApi.process(query);
-            const endTime = new Date();
-            // from the result, call our internal post process to update the Dataset and Pagination info
-            if (processResult && backendApi.internalPostProcess) {
-                if (processResult instanceof Object) {
-                    processResult.statistics = {
-                        startTime,
-                        endTime,
-                        executionTime: endTime.valueOf() - startTime.valueOf(),
-                        totalItemCount: this._gridOptions && this._gridOptions.pagination && this._gridOptions.pagination.totalItems
-                    };
+            try {
+                // keep start time & end timestamps & return it after process execution
+                const startTime = new Date();
+                if (backendApi.preProcess) {
+                    backendApi.preProcess();
                 }
-                backendApi.internalPostProcess(processResult);
+                const query = backendApi.service.processOnSortChanged(event, args);
+                this.emitSortChanged('remote');
+                // await for the Promise to resolve the data
+                const processResult = yield backendApi.process(query);
+                const endTime = new Date();
+                // from the result, call our internal post process to update the Dataset and Pagination info
+                if (processResult && backendApi.internalPostProcess) {
+                    if (processResult instanceof Object) {
+                        processResult.statistics = {
+                            startTime,
+                            endTime,
+                            executionTime: endTime.valueOf() - startTime.valueOf(),
+                            totalItemCount: this._gridOptions && this._gridOptions.pagination && this._gridOptions.pagination.totalItems
+                        };
+                    }
+                    backendApi.internalPostProcess(processResult);
+                }
+                // send the response process to the postProcess callback
+                if (backendApi.postProcess) {
+                    backendApi.postProcess(processResult);
+                }
             }
-            // send the response process to the postProcess callback
-            if (backendApi.postProcess) {
-                backendApi.postProcess(processResult);
+            catch (e) {
+                if (backendApi && backendApi.onError) {
+                    backendApi.onError(e);
+                }
+                else {
+                    throw e;
+                }
             }
         });
     }
@@ -157,16 +167,18 @@ let SortService = class SortService {
      */
     getPreviousColumnSorts(columnId) {
         // getSortColumns() only returns sortAsc & columnId, we want the entire column definition
-        const oldSortColumns = this._grid.getSortColumns();
-        const columnDefinitions = this._grid.getColumns();
+        const oldSortColumns = this._grid && this._grid.getSortColumns();
         // get the column definition but only keep column which are not equal to our current column
-        const sortedCols = oldSortColumns.reduce((cols, col) => {
-            if (!columnId || col.columnId !== columnId) {
-                cols.push({ sortCol: this._columnDefinitions[this._grid.getColumnIndex(col.columnId)], sortAsc: col.sortAsc });
-            }
-            return cols;
-        }, []);
-        return sortedCols;
+        if (Array.isArray(oldSortColumns)) {
+            const sortedCols = oldSortColumns.reduce((cols, col) => {
+                if (!columnId || col.columnId !== columnId) {
+                    cols.push({ sortCol: this._columnDefinitions[this._grid.getColumnIndex(col.columnId)], sortAsc: col.sortAsc });
+                }
+                return cols;
+            }, []);
+            return sortedCols;
+        }
+        return [];
     }
     /**
      * load any presets if there are any
@@ -202,30 +214,32 @@ let SortService = class SortService {
         }
     }
     onLocalSortChanged(grid, dataView, sortColumns) {
-        dataView.sort((dataRow1, dataRow2) => {
-            for (let i = 0, l = sortColumns.length; i < l; i++) {
-                const columnSortObj = sortColumns[i];
-                if (columnSortObj && columnSortObj.sortCol) {
-                    const sortDirection = columnSortObj.sortAsc ? SortDirectionNumber.asc : SortDirectionNumber.desc;
-                    const sortField = columnSortObj.sortCol.queryField || columnSortObj.sortCol.queryFieldFilter || columnSortObj.sortCol.field;
-                    const fieldType = columnSortObj.sortCol.type || FieldType.string;
-                    let value1 = dataRow1[sortField];
-                    let value2 = dataRow2[sortField];
-                    // when item is a complex object (dot "." notation), we need to filter the value contained in the object tree
-                    if (sortField && sortField.indexOf('.') >= 0) {
-                        value1 = getDescendantProperty(dataRow1, sortField);
-                        value2 = getDescendantProperty(dataRow2, sortField);
-                    }
-                    const sortResult = sortByFieldType(value1, value2, fieldType, sortDirection);
-                    if (sortResult !== SortDirectionNumber.neutral) {
-                        return sortResult;
+        if (grid && dataView) {
+            dataView.sort((dataRow1, dataRow2) => {
+                for (let i = 0, l = sortColumns.length; i < l; i++) {
+                    const columnSortObj = sortColumns[i];
+                    if (columnSortObj && columnSortObj.sortCol) {
+                        const sortDirection = columnSortObj.sortAsc ? SortDirectionNumber.asc : SortDirectionNumber.desc;
+                        const sortField = columnSortObj.sortCol.queryField || columnSortObj.sortCol.queryFieldFilter || columnSortObj.sortCol.field;
+                        const fieldType = columnSortObj.sortCol.type || FieldType.string;
+                        let value1 = dataRow1[sortField];
+                        let value2 = dataRow2[sortField];
+                        // when item is a complex object (dot "." notation), we need to filter the value contained in the object tree
+                        if (sortField && sortField.indexOf('.') >= 0) {
+                            value1 = getDescendantProperty(dataRow1, sortField);
+                            value2 = getDescendantProperty(dataRow2, sortField);
+                        }
+                        const sortResult = sortByFieldType(value1, value2, fieldType, sortDirection);
+                        if (sortResult !== SortDirectionNumber.neutral) {
+                            return sortResult;
+                        }
                     }
                 }
-            }
-            return 0;
-        });
-        grid.invalidate();
-        grid.render();
+                return 0;
+            });
+            grid.invalidate();
+            grid.render();
+        }
     }
     dispose() {
         // unsubscribe local event

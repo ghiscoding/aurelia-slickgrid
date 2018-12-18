@@ -14,8 +14,8 @@ System.register(["./global-utilities", "aurelia-framework", "./utilities", "./..
         else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
         return c > 3 && r && Object.defineProperty(target, key, r), r;
     };
-    var __moduleName = context_1 && context_1.id;
     var aurelia_framework_1, utilities_1, index_1, odata_service_1, timer, DEFAULT_FILTER_TYPING_DEBOUNCE, DEFAULT_ITEMS_PER_PAGE, DEFAULT_PAGE_SIZE, GridOdataService;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (_1) {

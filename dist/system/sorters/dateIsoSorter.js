@@ -1,7 +1,7 @@
 System.register(["./../services/utilities", "./../models/index", "./compareDateUtility"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var utilities_1, index_1, compareDateUtility_1, FORMAT, dateIsoSorter;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (utilities_1_1) {

@@ -1,7 +1,7 @@
 System.register(["./filters/index", "./models/index"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var index_1, index_2, GlobalGridOptions;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (index_1_1) {
@@ -71,6 +71,7 @@ System.register(["./filters/index", "./models/index"], function (exports_1, cont
                     hideForceFitButton: false,
                     hideRefreshDatasetCommand: false,
                     hideToggleFilterCommand: false,
+                    hideTogglePreHeaderCommand: false,
                     hideSyncResizeButton: true,
                     iconCssClass: 'fa fa-bars',
                     iconClearAllFiltersCommand: 'fa fa-filter text-danger',
@@ -79,6 +80,7 @@ System.register(["./filters/index", "./models/index"], function (exports_1, cont
                     iconExportTextDelimitedCommand: 'fa fa-download',
                     iconRefreshDatasetCommand: 'fa fa-refresh',
                     iconToggleFilterCommand: 'fa fa-random',
+                    iconTogglePreHeaderCommand: 'fa fa-random',
                     menuWidth: 16,
                     resizeOnShowHeaderRow: true,
                 },
@@ -100,6 +102,17 @@ System.register(["./filters/index", "./models/index"], function (exports_1, cont
                     pageSizes: [10, 15, 20, 25, 30, 40, 50, 75, 100],
                     pageSize: 25,
                     totalItems: 0
+                },
+                rowDetailView: {
+                    cssClass: 'detail-view-toggle',
+                    panelRows: 1,
+                    keyPrefix: '__',
+                    useRowClick: true,
+                    useSimpleViewportCalc: true,
+                    saveDetailViewOnScroll: false,
+                    // the following 2 property/method should always be override by the user
+                    process: function () { return new Promise(function (resolve) { return resolve(''); }); },
+                    viewModel: '',
                 },
                 rowHeight: 35,
                 sortColNumberInSeparateSpan: true,

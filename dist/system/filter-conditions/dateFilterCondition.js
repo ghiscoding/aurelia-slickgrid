@@ -1,7 +1,7 @@
 System.register(["../models/index", "./../services/utilities", "./filterUtilities", "moment"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var index_1, utilities_1, filterUtilities_1, moment, dateFilterCondition;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (index_1_1) {

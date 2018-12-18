@@ -1,7 +1,7 @@
 System.register(["../constants", "jquery"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var constants_1, $, DEFAULT_MIN_VALUE, DEFAULT_MAX_VALUE, DEFAULT_STEP, SliderEditor;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (constants_1_1) {

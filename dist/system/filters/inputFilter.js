@@ -1,7 +1,7 @@
 System.register(["jquery"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var $, InputFilter;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function ($_1) {
@@ -12,18 +12,32 @@ System.register(["jquery"], function (exports_1, context_1) {
             InputFilter = /** @class */ (function () {
                 function InputFilter() {
                     this._clearFilterTriggered = false;
+                    this._inputType = 'text';
                 }
-                Object.defineProperty(InputFilter.prototype, "gridOptions", {
-                    /** Getter for the Grid Options pulled through the Grid Object */
+                Object.defineProperty(InputFilter.prototype, "inputType", {
+                    /** Getter of input type (text, number, password) */
                     get: function () {
-                        return (this.grid && this.grid.getOptions) ? this.grid.getOptions() : {};
+                        return this._inputType;
+                    },
+                    /** Setter of input type (text, number, password) */
+                    set: function (type) {
+                        this._inputType = type;
                     },
                     enumerable: true,
                     configurable: true
                 });
                 Object.defineProperty(InputFilter.prototype, "operator", {
+                    /** Getter of the Operator to use when doing the filter comparing */
                     get: function () {
                         return this.columnDef && this.columnDef.filter && this.columnDef.filter.operator || '';
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(InputFilter.prototype, "gridOptions", {
+                    /** Getter for the Grid Options pulled through the Grid Object */
+                    get: function () {
+                        return (this.grid && this.grid.getOptions) ? this.grid.getOptions() : {};
                     },
                     enumerable: true,
                     configurable: true
@@ -48,7 +62,7 @@ System.register(["jquery"], function (exports_1, context_1) {
                     this.$filterElm = this.createDomElement(filterTemplate, searchTerm);
                     // step 3, subscribe to the keyup event and run the callback when that happens
                     // also add/remove "filled" class for styling purposes
-                    this.$filterElm.keyup(function (e) {
+                    this.$filterElm.on('keyup input change', function (e) {
                         var value = e && e.target && e.target.value || '';
                         if (_this._clearFilterTriggered) {
                             _this.callback(e, { columnDef: _this.columnDef, clearFilterTriggered: _this._clearFilterTriggered });
@@ -77,7 +91,7 @@ System.register(["jquery"], function (exports_1, context_1) {
                  */
                 InputFilter.prototype.destroy = function () {
                     if (this.$filterElm) {
-                        this.$filterElm.off('keyup').remove();
+                        this.$filterElm.off('keyup input change').remove();
                     }
                 };
                 /**
@@ -97,7 +111,7 @@ System.register(["jquery"], function (exports_1, context_1) {
                 InputFilter.prototype.buildTemplateHtmlString = function () {
                     var columnId = this.columnDef && this.columnDef.id;
                     var placeholder = (this.gridOptions) ? (this.gridOptions.defaultFilterPlaceholder || '') : '';
-                    return "<input type=\"text\" class=\"form-control search-filter filter-" + columnId + "\" placeholder=\"" + placeholder + "\">";
+                    return "<input type=\"" + (this._inputType || 'text') + "\" class=\"form-control search-filter filter-" + columnId + "\" placeholder=\"" + placeholder + "\">";
                 };
                 /**
                  * From the html template string, create a DOM element

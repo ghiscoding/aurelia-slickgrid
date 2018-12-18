@@ -8,8 +8,8 @@ System.register(["../services/index", "../services/utilities", "dompurify", "jqu
         }
         return t;
     };
-    var __moduleName = context_1 && context_1.id;
     var index_1, utilities_1, DOMPurify, $, SelectEditor;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (index_1_1) {
@@ -391,6 +391,7 @@ System.register(["../services/index", "../services/utilities", "dompurify", "jqu
                 };
                 /** Create a blank entry that can be added to the collection. It will also reuse the same collection structure provided by the user */
                 SelectEditor.prototype.createBlankEntry = function () {
+                    var _a;
                     var blankEntry = (_a = {},
                         _a[this.labelName] = '',
                         _a[this.valueName] = '',
@@ -402,7 +403,6 @@ System.register(["../services/index", "../services/utilities", "dompurify", "jqu
                         blankEntry[this.labelSuffixName] = '';
                     }
                     return blankEntry;
-                    var _a;
                 };
                 /** From the html template string, create the DOM element of the Multiple/Single Select Editor */
                 SelectEditor.prototype.createDomElement = function (editorTemplate) {

@@ -44,6 +44,9 @@ var ExtensionUtility = /** @class */ (function () {
                 case ExtensionName.columnPicker:
                     require('slickgrid/controls/slick.columnpicker');
                     break;
+                case ExtensionName.draggableGrouping:
+                    require('slickgrid/plugins/slick.draggablegrouping.js');
+                    break;
                 case ExtensionName.gridMenu:
                     require('slickgrid/controls/slick.gridmenu');
                     break;
@@ -58,6 +61,9 @@ var ExtensionUtility = /** @class */ (function () {
                     break;
                 case ExtensionName.rowSelection:
                     require('slickgrid/plugins/slick.rowselectionmodel');
+                    break;
+                case ExtensionName.rowDetailView:
+                    require('slickgrid/plugins/slick.rowdetailview.js');
                     break;
                 case ExtensionName.rowMoveManager:
                     require('slickgrid/plugins/slick.rowmovemanager.js');

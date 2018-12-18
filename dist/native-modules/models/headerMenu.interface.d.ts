@@ -33,6 +33,8 @@ export interface HeaderMenu {
     title?: string;
     /** Item tooltip. */
     tooltip?: string;
+    /** Fired after extension (plugin) is registered by SlickGrid */
+    onExtensionRegistered?: (plugin: any) => void;
     /** Fired before the header menu shows up. */
     onBeforeMenuShow?: (e: Event, args: HeaderMenuOnBeforeMenuShowArgs) => void;
     /** Fired when a command is clicked */

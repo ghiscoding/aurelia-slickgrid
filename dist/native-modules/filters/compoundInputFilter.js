@@ -7,10 +7,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import { inject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import { FieldType, OperatorType } from './../models/index';
+import * as $ from 'jquery';
 var CompoundInputFilter = /** @class */ (function () {
     function CompoundInputFilter(i18n) {
         this.i18n = i18n;
         this._clearFilterTriggered = false;
+        this._inputType = 'text';
     }
     Object.defineProperty(CompoundInputFilter.prototype, "gridOptions", {
         /** Getter for the Grid Options pulled through the Grid Object */
@@ -20,10 +22,24 @@ var CompoundInputFilter = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(CompoundInputFilter.prototype, "inputType", {
+        /** Getter of input type (text, number, password) */
+        get: function () {
+            return this._inputType;
+        },
+        /** Setter of input type (text, number, password) */
+        set: function (type) {
+            this._inputType = type;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(CompoundInputFilter.prototype, "operator", {
+        /** Getter of the Operator to use when doing the filter comparing */
         get: function () {
             return this._operator || OperatorType.empty;
         },
+        /** Getter of the Operator to use when doing the filter comparing */
         set: function (op) {
             this._operator = op;
         },
@@ -48,10 +64,10 @@ var CompoundInputFilter = /** @class */ (function () {
             this.$filterElm = this.createDomElement(searchTerm);
             // step 3, subscribe to the keyup event and run the callback when that happens
             // also add/remove "filled" class for styling purposes
-            this.$filterInputElm.keyup(function (e) {
+            this.$filterInputElm.on('keyup input change', function (e) {
                 _this.onTriggerEvent(e);
             });
-            this.$selectOperatorElm.change(function (e) {
+            this.$selectOperatorElm.on('change', function (e) {
                 _this.onTriggerEvent(e);
             });
         }
@@ -72,8 +88,9 @@ var CompoundInputFilter = /** @class */ (function () {
      * destroy the filter
      */
     CompoundInputFilter.prototype.destroy = function () {
-        if (this.$filterElm) {
-            this.$filterElm.off('keyup').remove();
+        if (this.$filterElm && this.$selectOperatorElm) {
+            this.$filterElm.off('keyup input change').remove();
+            this.$selectOperatorElm.off('change');
         }
     };
     /**
@@ -89,7 +106,7 @@ var CompoundInputFilter = /** @class */ (function () {
     // ------------------
     CompoundInputFilter.prototype.buildInputHtmlString = function () {
         var placeholder = (this.gridOptions) ? (this.gridOptions.defaultFilterPlaceholder || '') : '';
-        return "<input class=\"form-control\" type=\"text\" placeholder=\"" + placeholder + "\" />";
+        return "<input class=\"form-control\" type=\"" + (this._inputType || 'text') + "\" placeholder=\"" + placeholder + "\" />";
     };
     CompoundInputFilter.prototype.buildSelectOperatorHtmlString = function () {
         var optionValues = this.getOptionValues();
@@ -167,6 +184,7 @@ var CompoundInputFilter = /** @class */ (function () {
         }
         return $filterContainerElm;
     };
+    /** Event trigger, could be called by the Operator dropdown or the input itself */
     CompoundInputFilter.prototype.onTriggerEvent = function (e) {
         if (this._clearFilterTriggered) {
             this.callback(e, { columnDef: this.columnDef, clearFilterTriggered: this._clearFilterTriggered });
@@ -175,7 +193,7 @@ var CompoundInputFilter = /** @class */ (function () {
         else {
             var selectedOperator = this.$selectOperatorElm.find('option:selected').text();
             var value = this.$filterInputElm.val();
-            (value) ? this.$filterElm.addClass('filled') : this.$filterElm.removeClass('filled');
+            (value !== null && value !== undefined && value !== '') ? this.$filterElm.addClass('filled') : this.$filterElm.removeClass('filled');
             this.callback(e, { columnDef: this.columnDef, searchTerms: (value ? [value] : null), operator: selectedOperator || '' });
         }
     };

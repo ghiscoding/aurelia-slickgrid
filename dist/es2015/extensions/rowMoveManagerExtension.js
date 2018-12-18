@@ -35,6 +35,9 @@ let RowMoveManagerExtension = class RowMoveManagerExtension {
             this.sharedService.grid.registerPlugin(this._extension);
             // hook all events
             if (this.sharedService.grid && this.sharedService.gridOptions.rowMoveManager) {
+                if (this.sharedService.gridOptions.rowMoveManager.onExtensionRegistered) {
+                    this.sharedService.gridOptions.rowMoveManager.onExtensionRegistered(this._extension);
+                }
                 this._eventHandler.subscribe(this._extension.onBeforeMoveRows, (e, args) => {
                     if (this.sharedService.gridOptions.rowMoveManager && typeof this.sharedService.gridOptions.rowMoveManager.onBeforeMoveRows === 'function') {
                         this.sharedService.gridOptions.rowMoveManager.onBeforeMoveRows(e, args);

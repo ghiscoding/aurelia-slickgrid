@@ -6,8 +6,8 @@ System.register(["./../services/utilities", "./../models/index", "aurelia-i18n",
         else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
         return c > 3 && r && Object.defineProperty(target, key, r), r;
     };
-    var __moduleName = context_1 && context_1.id;
     var utilities_1, index_1, aurelia_i18n_1, aurelia_framework_1, flatpickr, moment, $, DateEditor;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (utilities_1_1) {

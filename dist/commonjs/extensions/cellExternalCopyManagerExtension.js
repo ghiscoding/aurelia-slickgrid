@@ -11,6 +11,7 @@ var index_1 = require("../models/index");
 var utilities_1 = require("../services/utilities");
 var shared_service_1 = require("../services/shared.service");
 var extensionUtility_1 = require("./extensionUtility");
+var $ = require("jquery");
 var CellExternalCopyManagerExtension = /** @class */ (function () {
     function CellExternalCopyManagerExtension(extensionUtility, sharedService) {
         this.extensionUtility = extensionUtility;
@@ -105,7 +106,7 @@ var CellExternalCopyManagerExtension = /** @class */ (function () {
         var _this = this;
         // undo shortcut
         $(document).keydown(function (e) {
-            if (e.which === 90 && (e.ctrlKey || e.metaKey)) {
+            if (e.which === 90 && (e.ctrlKey || e.metaKey)) { // CTRL + (shift) + Z
                 if (e.shiftKey) {
                     _this.undoRedoBuffer.redo();
                 }

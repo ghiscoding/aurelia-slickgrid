@@ -13,7 +13,6 @@ var DATAGRID_MIN_HEIGHT = 180;
 var DATAGRID_MIN_WIDTH = 300;
 var DATAGRID_BOTTOM_PADDING = 20;
 var DATAGRID_PAGINATION_HEIGHT = 35;
-var timer;
 var ResizerService = /** @class */ (function () {
     function ResizerService(ea) {
         this.ea = ea;
@@ -153,13 +152,15 @@ var ResizerService = /** @class */ (function () {
             // because of the javascript async nature, we might want to delay the resize a little bit
             delay = delay || 0;
             if (delay > 0) {
-                clearTimeout(timer);
-                timer = setTimeout(function () {
+                clearTimeout(_this._timer);
+                _this._timer = setTimeout(function () {
                     resolve(_this.resizeGridWithDimensions(newSizes));
                 }, delay);
             }
             else {
-                resolve(_this.resizeGridWithDimensions(newSizes));
+                var lastDimensions = _this.resizeGridWithDimensions(newSizes);
+                _this.ea.publish(_this.aureliaEventPrefix + ":onAfterResize", lastDimensions);
+                resolve(lastDimensions);
             }
         });
     };

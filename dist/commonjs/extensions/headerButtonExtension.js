@@ -31,11 +31,17 @@ var HeaderButtonExtension = /** @class */ (function () {
             this.extensionUtility.loadExtensionDynamically(index_1.ExtensionName.headerButton);
             this._extension = new Slick.Plugins.HeaderButtons(this.sharedService.gridOptions.headerButton || {});
             this.sharedService.grid.registerPlugin(this._extension);
-            this._eventHandler.subscribe(this._extension.onCommand, function (e, args) {
-                if (_this.sharedService.gridOptions.headerButton && typeof _this.sharedService.gridOptions.headerButton.onCommand === 'function') {
-                    _this.sharedService.gridOptions.headerButton.onCommand(e, args);
+            // hook all events
+            if (this.sharedService.grid && this.sharedService.gridOptions.headerButton) {
+                if (this.sharedService.gridOptions.headerButton.onExtensionRegistered) {
+                    this.sharedService.gridOptions.headerButton.onExtensionRegistered(this._extension);
                 }
-            });
+                this._eventHandler.subscribe(this._extension.onCommand, function (e, args) {
+                    if (_this.sharedService.gridOptions.headerButton && typeof _this.sharedService.gridOptions.headerButton.onCommand === 'function') {
+                        _this.sharedService.gridOptions.headerButton.onCommand(e, args);
+                    }
+                });
+            }
             return this._extension;
         }
         return null;

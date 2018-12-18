@@ -1,0 +1,1 @@
+{"version":3,"file":"number.js","sourceRoot":"","sources":["../../../aurelia-slickgrid/src/aurelia-slickgrid/value-converters/number.ts"],"names":[],"mappings":"AAAA;IAAA;IAKA,CAAC;IAJC,uCAAQ,GAAR,UAAS,KAAU,EAAE,MAAc;QACjC,IAAM,MAAM,GAAG,UAAU,CAAC,KAAK,CAAC,CAAC;QACjC,OAAO,KAAK,CAAC,MAAM,CAAC,CAAC,CAAC,CAAC,KAAK,CAAC,CAAC,CAAC,MAAM,CAAC;IACxC,CAAC;IACH,2BAAC;AAAD,CAAC,AALD,IAKC"}

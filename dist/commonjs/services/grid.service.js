@@ -97,42 +97,6 @@ var GridService = /** @class */ (function () {
             return meta;
         };
     };
-    /**
-     * Highlight then fade a row for x seconds.
-     * The implementation follows this SO answer: https://stackoverflow.com/a/19985148/1212166
-     * @param rowNumber
-     * @param fadeDelay
-     */
-    GridService.prototype.highlightRow = function (rowNumber, fadeDelay) {
-        var _this = this;
-        if (fadeDelay === void 0) { fadeDelay = 1500; }
-        // create a SelectionModel if there's not one yet
-        if (!this._grid.getSelectionModel()) {
-            var rowSelectionPlugin = new Slick.RowSelectionModel(this._gridOptions.rowSelectionOptions || {});
-            this._grid.setSelectionModel(rowSelectionPlugin);
-        }
-        this._grid.setSelectedRows([rowNumber]);
-        this._dataView.getItemMetadata = this.getItemRowMetadataToHighlight(this._dataView.getItemMetadata);
-        var item = this._dataView.getItem(rowNumber);
-        if (item && item.id) {
-            item.rowClass = 'highlight';
-            this._dataView.updateItem(item.id, item);
-            // highlight the row for a user defined timeout
-            $("#" + this._gridOptions.gridId)
-                .find(".highlight.row" + rowNumber)
-                .first();
-            // delete the row's CSS that was attached for highlighting
-            setTimeout(function () {
-                if (item && item.id) {
-                    delete item.rowClass;
-                    var gridIdx = _this._dataView.getIdxById(item.id);
-                    if (gridIdx !== undefined) {
-                        _this._dataView.updateItem(item.id, item);
-                    }
-                }
-            }, fadeDelay + 10);
-        }
-    };
     /** Get the Data Item from a grid row index */
     GridService.prototype.getDataItemByRowIndex = function (index) {
         if (!this._grid || typeof this._grid.getDataItem !== 'function') {
@@ -165,6 +129,54 @@ var GridService = /** @class */ (function () {
         }
         var selectedRowIndexes = this._grid.getSelectedRows();
         return this.getDataItemByRowIndexes(selectedRowIndexes);
+    };
+    /**
+     * Highlight then fade a row for x seconds.
+     * The implementation follows this SO answer: https://stackoverflow.com/a/19985148/1212166
+     * @param rowNumber
+     * @param fadeDelay
+     */
+    GridService.prototype.highlightRow = function (rowNumber, fadeDelay) {
+        var _this = this;
+        if (fadeDelay === void 0) { fadeDelay = 1500; }
+        // create a SelectionModel if there's not one yet
+        if (!this._grid.getSelectionModel()) {
+            var rowSelectionPlugin = new Slick.RowSelectionModel(this._gridOptions.rowSelectionOptions || {});
+            this._grid.setSelectionModel(rowSelectionPlugin);
+        }
+        var rowIndexes = Array.isArray(rowNumber) ? rowNumber : [rowNumber];
+        this._grid.setSelectedRows(rowIndexes);
+        if (Array.isArray(rowNumber)) {
+            rowNumber.forEach(function (row) { return _this.highlightRowByMetadata(row, fadeDelay); });
+        }
+        else {
+            this.highlightRowByMetadata(rowNumber, fadeDelay);
+        }
+    };
+    GridService.prototype.highlightRowByMetadata = function (rowNumber, fadeDelay) {
+        var _this = this;
+        if (fadeDelay === void 0) { fadeDelay = 1500; }
+        this._dataView.getItemMetadata = this.getItemRowMetadataToHighlight(this._dataView.getItemMetadata);
+        var item = this._dataView.getItem(rowNumber);
+        if (item && item.id) {
+            item.rowClass = 'highlight';
+            this._dataView.updateItem(item.id, item);
+            var gridOptions = this._grid.getOptions();
+            // highlight the row for a user defined timeout
+            $("#" + gridOptions.gridId)
+                .find(".highlight.row" + rowNumber)
+                .first();
+            // delete the row's CSS that was attached for highlighting
+            setTimeout(function () {
+                if (item && item.id) {
+                    delete item.rowClass;
+                    var gridIdx = _this._dataView.getIdxById(item.id);
+                    if (gridIdx !== undefined) {
+                        _this._dataView.updateItem(item.id, item);
+                    }
+                }
+            }, fadeDelay + 10);
+        }
     };
     /** Select the selected row by a row index */
     GridService.prototype.setSelectedRow = function (rowIndex) {
@@ -269,19 +281,42 @@ var GridService = /** @class */ (function () {
     /**
      * Update an existing item with new properties inside the datagrid
      * @param object item: item object holding all properties of that row
+     * @return grid row index
      */
-    GridService.prototype.updateDataGridItem = function (item) {
+    GridService.prototype.updateDataGridItem = function (item, shouldHighlightRow) {
+        if (shouldHighlightRow === void 0) { shouldHighlightRow = true; }
         var itemId = (!item || !item.hasOwnProperty('id')) ? undefined : item.id;
         if (itemId === undefined) {
             throw new Error("Could not find the item in the grid or it's associated \"id\"");
         }
-        this.updateDataGridItemById(itemId, item);
+        return this.updateDataGridItemById(itemId, item, shouldHighlightRow);
+    };
+    /**
+     * Update an array of existing items with new properties inside the datagrid
+     * @param object item: item object holding all properties of that row
+     */
+    GridService.prototype.updateDataGridItems = function (items, shouldHighlightRow) {
+        var _this = this;
+        if (shouldHighlightRow === void 0) { shouldHighlightRow = true; }
+        if (!Array.isArray(items)) {
+            throw new Error('The function "updateDataGridItems" only support array of items, if you wish to only update 1 item then use "updateDataGridItem"');
+        }
+        var gridIndexes = [];
+        items.forEach(function (item) {
+            gridIndexes.push(_this.updateDataGridItem(item, false));
+        });
+        // only highlight at the end, all at once
+        // we have to do this because doing highlight 1 by 1 would only re-select the last highlighted row which is wrong behavior
+        if (shouldHighlightRow) {
+            this.highlightRow(gridIndexes);
+        }
     };
     /**
      * Update an existing item in the datagrid by it's id and new properties
      * @param itemId: item unique id
      * @param object item: item object holding all properties of that row
      * @param shouldHighlightRow do we want to highlight the row after update
+     * @return grid row index
      */
     GridService.prototype.updateDataGridItemById = function (itemId, item, shouldHighlightRow) {
         if (shouldHighlightRow === void 0) { shouldHighlightRow = true; }
@@ -302,7 +337,9 @@ var GridService = /** @class */ (function () {
             }
             // refresh dataview & grid
             this._dataView.refresh();
+            return gridIdx;
         }
+        return -1;
     };
     GridService = __decorate([
         aurelia_framework_1.singleton(true),

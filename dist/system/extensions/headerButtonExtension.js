@@ -6,8 +6,8 @@ System.register(["aurelia-framework", "../models/index", "./extensionUtility", "
         else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
         return c > 3 && r && Object.defineProperty(target, key, r), r;
     };
-    var __moduleName = context_1 && context_1.id;
     var aurelia_framework_1, index_1, extensionUtility_1, shared_service_1, HeaderButtonExtension;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (aurelia_framework_1_1) {
@@ -45,11 +45,17 @@ System.register(["aurelia-framework", "../models/index", "./extensionUtility", "
                         this.extensionUtility.loadExtensionDynamically(index_1.ExtensionName.headerButton);
                         this._extension = new Slick.Plugins.HeaderButtons(this.sharedService.gridOptions.headerButton || {});
                         this.sharedService.grid.registerPlugin(this._extension);
-                        this._eventHandler.subscribe(this._extension.onCommand, function (e, args) {
-                            if (_this.sharedService.gridOptions.headerButton && typeof _this.sharedService.gridOptions.headerButton.onCommand === 'function') {
-                                _this.sharedService.gridOptions.headerButton.onCommand(e, args);
+                        // hook all events
+                        if (this.sharedService.grid && this.sharedService.gridOptions.headerButton) {
+                            if (this.sharedService.gridOptions.headerButton.onExtensionRegistered) {
+                                this.sharedService.gridOptions.headerButton.onExtensionRegistered(this._extension);
                             }
-                        });
+                            this._eventHandler.subscribe(this._extension.onCommand, function (e, args) {
+                                if (_this.sharedService.gridOptions.headerButton && typeof _this.sharedService.gridOptions.headerButton.onCommand === 'function') {
+                                    _this.sharedService.gridOptions.headerButton.onCommand(e, args);
+                                }
+                            });
+                        }
                         return this._extension;
                     }
                     return null;

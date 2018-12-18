@@ -8,8 +8,8 @@ export declare class CheckboxSelectorExtension implements Extension {
     constructor(extensionUtility: ExtensionUtility, sharedService: SharedService);
     dispose(): void;
     /**
-     * Attach/Create different plugins before the Grid creation.
-     * For example the multi-select have to be added to the column definition before the grid is created to work properly
+     * Create the plugin before the Grid creation, else it will behave oddly.
+     * Mostly because the column definitions might change after the grid creation
      */
     create(columnDefinitions: Column[], gridOptions: GridOption): any;
     register(rowSelectionPlugin?: any): any;

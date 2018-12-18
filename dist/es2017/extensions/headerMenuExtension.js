@@ -42,17 +42,23 @@ let HeaderMenuExtension = class HeaderMenuExtension {
             }
             this._extension = new Slick.Plugins.HeaderMenu(this.sharedService.gridOptions.headerMenu);
             this.sharedService.grid.registerPlugin(this._extension);
-            this._eventHandler.subscribe(this._extension.onCommand, (e, args) => {
-                this.executeHeaderMenuInternalCommands(e, args);
-                if (this.sharedService.gridOptions.headerMenu && typeof this.sharedService.gridOptions.headerMenu.onCommand === 'function') {
-                    this.sharedService.gridOptions.headerMenu.onCommand(e, args);
+            // hook all events
+            if (this.sharedService.grid && this.sharedService.gridOptions.headerMenu) {
+                if (this.sharedService.gridOptions.headerMenu.onExtensionRegistered) {
+                    this.sharedService.gridOptions.headerMenu.onExtensionRegistered(this._extension);
                 }
-            });
-            this._eventHandler.subscribe(this._extension.onBeforeMenuShow, (e, args) => {
-                if (this.sharedService.gridOptions.headerMenu && typeof this.sharedService.gridOptions.headerMenu.onBeforeMenuShow === 'function') {
-                    this.sharedService.gridOptions.headerMenu.onBeforeMenuShow(e, args);
-                }
-            });
+                this._eventHandler.subscribe(this._extension.onCommand, (e, args) => {
+                    this.executeHeaderMenuInternalCommands(e, args);
+                    if (this.sharedService.gridOptions.headerMenu && typeof this.sharedService.gridOptions.headerMenu.onCommand === 'function') {
+                        this.sharedService.gridOptions.headerMenu.onCommand(e, args);
+                    }
+                });
+                this._eventHandler.subscribe(this._extension.onBeforeMenuShow, (e, args) => {
+                    if (this.sharedService.gridOptions.headerMenu && typeof this.sharedService.gridOptions.headerMenu.onBeforeMenuShow === 'function') {
+                        this.sharedService.gridOptions.headerMenu.onBeforeMenuShow(e, args);
+                    }
+                });
+            }
             return this._extension;
         }
         return null;
@@ -136,8 +142,14 @@ let HeaderMenuExtension = class HeaderMenuExtension {
                     if (this.sharedService.gridOptions.backendServiceApi) {
                         this.sortService.onBackendSortChanged(e, { multiColumnSort: true, sortCols: cols, grid: this.sharedService.grid });
                     }
-                    else {
+                    else if (this.sharedService.dataView) {
                         this.sortService.onLocalSortChanged(this.sharedService.grid, this.sharedService.dataView, cols);
+                    }
+                    else {
+                        // when using customDataView, we will simply send it as a onSort event with notify
+                        const isMultiSort = this.sharedService && this.sharedService.gridOptions && this.sharedService.gridOptions.multiColumnSort || false;
+                        const sortOutput = isMultiSort ? cols : cols[0];
+                        args.grid.onSort.notify(sortOutput);
                     }
                     // update the this.sharedService.gridObj sortColumns array which will at the same add the visual sort icon(s) on the UI
                     const newSortColumns = cols.map((col) => {

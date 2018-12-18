@@ -21,8 +21,8 @@ var CheckboxSelectorExtension = /** @class */ (function () {
         }
     };
     /**
-     * Attach/Create different plugins before the Grid creation.
-     * For example the multi-select have to be added to the column definition before the grid is created to work properly
+     * Create the plugin before the Grid creation, else it will behave oddly.
+     * Mostly because the column definitions might change after the grid creation
      */
     CheckboxSelectorExtension.prototype.create = function (columnDefinitions, gridOptions) {
         if (columnDefinitions && gridOptions) {
@@ -43,8 +43,7 @@ var CheckboxSelectorExtension = /** @class */ (function () {
     CheckboxSelectorExtension.prototype.register = function (rowSelectionPlugin) {
         var _this = this;
         if (this.sharedService && this.sharedService.grid && this.sharedService.gridOptions) {
-            // when enabling the Checkbox Selector Plugin, we need to also watch onClick events to perform certain actions
-            // the selector column has to be created BEFORE the grid (else it behaves oddly), but we can only watch grid events AFTER the grid is created
+            // the plugin has to be created BEFORE the grid (else it behaves oddly), but we can only watch grid events AFTER the grid is created
             this.sharedService.grid.registerPlugin(this._extension);
             // this also requires the Row Selection Model to be registered as well
             if (!rowSelectionPlugin || !this.sharedService.grid.getSelectionModel()) {

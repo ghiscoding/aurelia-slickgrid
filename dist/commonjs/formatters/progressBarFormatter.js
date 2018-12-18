@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.progressBarFormatter = function (row, cell, value, columnDef, dataContext) {
-    if (value === null || value === '') {
+    if (value === null || value === undefined || value === '') {
         return '';
     }
     var color;

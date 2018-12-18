@@ -78,14 +78,16 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
         this._dataset = this._dataset || this.dataset || [];
         this.gridOptions = this.mergeGridOptions(this.gridOptions);
         this.createBackendApiInternalPostProcessCallback(this.gridOptions);
-        if (this.gridOptions.enableGrouping) {
-            this.extensionUtility.loadExtensionDynamically(ExtensionName.groupItemMetaProvider);
-            this.groupItemMetadataProvider = new Slick.Data.GroupItemMetadataProvider();
-            this.sharedService.groupItemMetadataProvider = this.groupItemMetadataProvider;
-            this.dataview = new Slick.Data.DataView({ groupItemMetadataProvider: this.groupItemMetadataProvider });
-        }
-        else {
-            this.dataview = new Slick.Data.DataView();
+        if (!this.customDataView) {
+            if (this.gridOptions.draggableGrouping || this.gridOptions.enableGrouping) {
+                this.extensionUtility.loadExtensionDynamically(ExtensionName.groupItemMetaProvider);
+                this.groupItemMetadataProvider = new Slick.Data.GroupItemMetadataProvider();
+                this.sharedService.groupItemMetadataProvider = this.groupItemMetadataProvider;
+                this.dataview = new Slick.Data.DataView({ groupItemMetadataProvider: this.groupItemMetadataProvider });
+            }
+            else {
+                this.dataview = new Slick.Data.DataView();
+            }
         }
         // for convenience, we provide the property "editor" as an Aurelia-Slickgrid editor complex object
         // however "editor" is used internally by SlickGrid for it's own Editor Factory
@@ -106,32 +108,37 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
         // save reference for all columns before they optionally become hidden/visible
         this.sharedService.allColumns = this._columnDefinitions;
         this.sharedService.visibleColumns = this._columnDefinitions;
-        this.extensionService.createCheckboxPluginBeforeGridCreation(this._columnDefinitions, this.gridOptions);
-        this.grid = new Slick.Grid(`#${this.gridId}`, this.dataview, this._columnDefinitions, this.gridOptions);
+        this.extensionService.createExtensionsBeforeGridCreation(this._columnDefinitions, this.gridOptions);
+        // build SlickGrid Grid, also user might optionally pass a custom dataview (e.g. remote model)
+        this.grid = new Slick.Grid(`#${this.gridId}`, this.customDataView || this.dataview, this._columnDefinitions, this.gridOptions);
         this.sharedService.dataView = this.dataview;
         this.sharedService.grid = this.grid;
         this.extensionService.attachDifferentExtensions();
         this.attachDifferentHooks(this.grid, this.gridOptions, this.dataview);
         this.grid.init();
-        this.dataview.beginUpdate();
-        this.dataview.setItems(this._dataset, this.gridOptions.datasetIdPropertyName);
-        this.dataview.endUpdate();
+        if (!this.customDataView && (this.dataview && this.dataview.beginUpdate && this.dataview.setItems && this.dataview.endUpdate)) {
+            this.dataview.beginUpdate();
+            this.dataview.setItems(this._dataset, this.gridOptions.datasetIdPropertyName);
+            this.dataview.endUpdate();
+        }
         // user might want to hide the header row on page load but still have `enableFiltering: true`
         // if that is the case, we need to hide the headerRow ONLY AFTER all filters got created & dataView exist
         if (this._hideHeaderRowAfterPageLoad) {
             this.showHeaderRow(false);
         }
-        // after the DataView is created & updated execute some processes
-        this.executeAfterDataviewCreated(this.grid, this.gridOptions, this.dataview);
         // publish & dispatch certain events
         this.ea.publish('onGridCreated', this.grid);
-        this.ea.publish('onDataviewCreated', this.dataview);
         this.dispatchCustomEvent(`${aureliaEventPrefix}-on-grid-created`, this.grid);
-        this.dispatchCustomEvent(`${aureliaEventPrefix}-on-dataview-created`, this.dataview);
+        // after the DataView is created & updated execute some processes & dispatch some events
+        if (!this.customDataView) {
+            this.executeAfterDataviewCreated(this.grid, this.gridOptions, this.dataview);
+            this.ea.publish('onDataviewCreated', this.dataview);
+            this.dispatchCustomEvent(`${aureliaEventPrefix}-on-dataview-created`, this.dataview);
+        }
         // attach resize ONLY after the dataView is ready
         this.attachResizeHook(this.grid, this.gridOptions);
         // attach grouping and header grouping colspan service
-        if (this.gridOptions.createPreHeaderPanel) {
+        if (this.gridOptions.createPreHeaderPanel && !this.gridOptions.enableDraggableGrouping) {
             this.groupingAndColspanService.init(this.grid, this.dataview);
         }
         // initialize grid service
@@ -296,11 +303,11 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
             }
         }
         // attach external sorting (backend) when available or default onSort (dataView)
-        if (gridOptions.enableSorting) {
+        if (gridOptions.enableSorting && !this.customDataView) {
             gridOptions.backendServiceApi ? this.sortService.attachBackendOnSort(grid, dataView) : this.sortService.attachLocalOnSort(grid, dataView);
         }
         // attach external filter (backend) when available or default onFilter (dataView)
-        if (gridOptions.enableFiltering) {
+        if (gridOptions.enableFiltering && !this.customDataView) {
             this.filterService.init(grid);
             // if user entered some "presets", we need to reflect them all in the DOM
             if (gridOptions.presets && Array.isArray(gridOptions.presets.filters) && gridOptions.presets.filters.length > 0) {
@@ -341,14 +348,16 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
         // on cell click, mainly used with the columnDef.action callback
         this.gridEventService.attachOnCellChange(grid, dataView);
         this.gridEventService.attachOnClick(grid, dataView);
-        this._eventHandler.subscribe(dataView.onRowCountChanged, (e, args) => {
-            grid.updateRowCount();
-            grid.render();
-        });
-        this._eventHandler.subscribe(dataView.onRowsChanged, (e, args) => {
-            grid.invalidateRows(args.rows);
-            grid.render();
-        });
+        if (dataView && grid) {
+            this._eventHandler.subscribe(dataView.onRowCountChanged, (e, args) => {
+                grid.updateRowCount();
+                grid.render();
+            });
+            this._eventHandler.subscribe(dataView.onRowsChanged, (e, args) => {
+                grid.invalidateRows(args.rows);
+                grid.render();
+            });
+        }
         // does the user have a colspan callback?
         if (gridOptions.colspanCallback) {
             dataView.getItemMetadata = (rowNumber) => {
@@ -399,23 +408,33 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
                 if (backendApi.preProcess) {
                     backendApi.preProcess();
                 }
-                // await for the Promise to resolve the data
-                const processResult = yield onInitPromise;
-                const endTime = new Date();
-                // define what our internal Post Process callback, only available for GraphQL Service for now
-                // it will basically refresh the Dataset & Pagination without having the user to create his own PostProcess every time
-                if (processResult && backendApi && backendApi.service instanceof GraphqlService && backendApi.internalPostProcess) {
-                    backendApi.internalPostProcess(processResult);
+                try {
+                    // await for the Promise to resolve the data
+                    const processResult = yield onInitPromise;
+                    const endTime = new Date();
+                    // define what our internal Post Process callback, only available for GraphQL Service for now
+                    // it will basically refresh the Dataset & Pagination without having the user to create his own PostProcess every time
+                    if (processResult && backendApi && backendApi.service instanceof GraphqlService && backendApi.internalPostProcess) {
+                        backendApi.internalPostProcess(processResult);
+                    }
+                    // send the response process to the postProcess callback
+                    if (backendApi.postProcess) {
+                        processResult.statistics = {
+                            startTime,
+                            endTime,
+                            executionTime: endTime.valueOf() - startTime.valueOf(),
+                            totalItemCount: this.gridOptions && this.gridOptions.pagination && this.gridOptions.pagination.totalItems
+                        };
+                        backendApi.postProcess(processResult);
+                    }
                 }
-                // send the response process to the postProcess callback
-                if (backendApi.postProcess) {
-                    processResult.statistics = {
-                        startTime,
-                        endTime,
-                        executionTime: endTime.valueOf() - startTime.valueOf(),
-                        totalItemCount: this.gridOptions && this.gridOptions.pagination && this.gridOptions.pagination.totalItems
-                    };
-                    backendApi.postProcess(processResult);
+                catch (e) {
+                    if (backendApi && backendApi.onError) {
+                        backendApi.onError(e);
+                    }
+                    else {
+                        throw e;
+                    }
                 }
             }));
         }
@@ -479,7 +498,7 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
      * @param dataset
      */
     refreshGridData(dataset, totalCount) {
-        if (dataset && this.grid && this.dataview && typeof this.dataview.setItems === 'function') {
+        if (Array.isArray(dataset) && this.grid && this.dataview && typeof this.dataview.setItems === 'function') {
             this.dataview.setItems(dataset, this.gridOptions.datasetIdPropertyName);
             if (!this.gridOptions.backendServiceApi) {
                 this.dataview.reSort();
@@ -496,7 +515,7 @@ let AureliaSlickgridCustomElement = class AureliaSlickgridCustomElement {
                 if (!this.gridOptions.pagination) {
                     this.gridOptions.pagination = (this.gridOptions.pagination) ? this.gridOptions.pagination : undefined;
                 }
-                if (this.gridOptions.pagination && totalCount) {
+                if (this.gridOptions.pagination && totalCount !== undefined) {
                     this.gridOptions.pagination.totalItems = totalCount;
                 }
                 if (this.gridOptions.presets && this.gridOptions.presets.pagination && this.gridOptions.pagination) {
@@ -610,6 +629,9 @@ __decorate([
 __decorate([
     bindable({ defaultBindingMode: bindingMode.twoWay })
 ], AureliaSlickgridCustomElement.prototype, "grid", void 0);
+__decorate([
+    bindable()
+], AureliaSlickgridCustomElement.prototype, "customDataView", void 0);
 __decorate([
     bindable()
 ], AureliaSlickgridCustomElement.prototype, "dataset", void 0);

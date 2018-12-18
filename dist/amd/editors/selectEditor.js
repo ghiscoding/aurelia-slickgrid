@@ -374,6 +374,7 @@ define(["require", "exports", "../services/index", "../services/utilities", "dom
         };
         /** Create a blank entry that can be added to the collection. It will also reuse the same collection structure provided by the user */
         SelectEditor.prototype.createBlankEntry = function () {
+            var _a;
             var blankEntry = (_a = {},
                 _a[this.labelName] = '',
                 _a[this.valueName] = '',
@@ -385,7 +386,6 @@ define(["require", "exports", "../services/index", "../services/utilities", "dom
                 blankEntry[this.labelSuffixName] = '';
             }
             return blankEntry;
-            var _a;
         };
         /** From the html template string, create the DOM element of the Multiple/Single Select Editor */
         SelectEditor.prototype.createDomElement = function (editorTemplate) {

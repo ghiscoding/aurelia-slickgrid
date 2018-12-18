@@ -6,8 +6,8 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./utilities",
         else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
         return c > 3 && r && Object.defineProperty(target, key, r), r;
     };
+    var aurelia_framework_1, aurelia_event_aggregator_1, utilities_1, $, DATAGRID_MIN_HEIGHT, DATAGRID_MIN_WIDTH, DATAGRID_BOTTOM_PADDING, DATAGRID_PAGINATION_HEIGHT, ResizerService;
     var __moduleName = context_1 && context_1.id;
-    var aurelia_framework_1, aurelia_event_aggregator_1, utilities_1, $, DATAGRID_MIN_HEIGHT, DATAGRID_MIN_WIDTH, DATAGRID_BOTTOM_PADDING, DATAGRID_PAGINATION_HEIGHT, timer, ResizerService;
     return {
         setters: [
             function (aurelia_framework_1_1) {
@@ -168,13 +168,15 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./utilities",
                         // because of the javascript async nature, we might want to delay the resize a little bit
                         delay = delay || 0;
                         if (delay > 0) {
-                            clearTimeout(timer);
-                            timer = setTimeout(function () {
+                            clearTimeout(_this._timer);
+                            _this._timer = setTimeout(function () {
                                 resolve(_this.resizeGridWithDimensions(newSizes));
                             }, delay);
                         }
                         else {
-                            resolve(_this.resizeGridWithDimensions(newSizes));
+                            var lastDimensions = _this.resizeGridWithDimensions(newSizes);
+                            _this.ea.publish(_this.aureliaEventPrefix + ":onAfterResize", lastDimensions);
+                            resolve(lastDimensions);
                         }
                     });
                 };

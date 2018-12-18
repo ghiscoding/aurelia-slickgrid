@@ -30,6 +30,8 @@ export interface GridMenu {
     hideSyncResizeButton?: boolean;
     /** Defaults to false, which will hide the "Toggle Filter Row" command in the Grid Menu (Grid Option "enableFiltering: true" has to be enabled) */
     hideToggleFilterCommand?: boolean;
+    /** Defaults to true, which will hide the "Toggle Pre-Header Row" (used by draggable grouping) command in the Grid Menu (Grid Option "showPreHeaderPanel: true" has to be enabled) */
+    hideTogglePreHeaderCommand?: boolean;
     /** CSS class for the displaying the Grid menu icon image (basically the hamburger menu) */
     iconCssClass?: string;
     /** icon for the "Clear All Filters" command */
@@ -46,6 +48,8 @@ export interface GridMenu {
     iconRefreshDatasetCommand?: string;
     /** icon for the "Toggle Filter Row" command */
     iconToggleFilterCommand?: string;
+    /** icon for the "Toggle Pre-Header Row" command */
+    iconTogglePreHeaderCommand?: string;
     /** Defaults to False, which leads to leaving the menu open after a click */
     leaveOpen?: boolean;
     /** Defaults to 16 pixels (only the number), which is the width in pixels of the Grid Menu icon */
@@ -56,6 +60,8 @@ export interface GridMenu {
     syncResizeTitle?: string;
     /** Same as "syncResizeTitle", except that it's a translation key which can be used on page load and/or when switching locale */
     syncResizeTitleKey?: string;
+    /** Fired after extension (control) is registered by SlickGrid */
+    onExtensionRegistered?: (plugin: any) => void;
     /** SlickGrid Event fired before the menu is shown. */
     onBeforeMenuShow?: (e: Event, args: any) => void;
     /** SlickGrid Event fired when any of the columns checkbox selection changes. */

@@ -42,6 +42,9 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "../constants
                     case index_1.ExtensionName.columnPicker:
                         require('slickgrid/controls/slick.columnpicker');
                         break;
+                    case index_1.ExtensionName.draggableGrouping:
+                        require('slickgrid/plugins/slick.draggablegrouping.js');
+                        break;
                     case index_1.ExtensionName.gridMenu:
                         require('slickgrid/controls/slick.gridmenu');
                         break;
@@ -56,6 +59,9 @@ define(["require", "exports", "aurelia-framework", "aurelia-i18n", "../constants
                         break;
                     case index_1.ExtensionName.rowSelection:
                         require('slickgrid/plugins/slick.rowselectionmodel');
+                        break;
+                    case index_1.ExtensionName.rowDetailView:
+                        require('slickgrid/plugins/slick.rowdetailview.js');
                         break;
                     case index_1.ExtensionName.rowMoveManager:
                         require('slickgrid/plugins/slick.rowmovemanager.js');

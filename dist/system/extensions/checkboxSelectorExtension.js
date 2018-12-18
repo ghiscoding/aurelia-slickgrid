@@ -6,8 +6,8 @@ System.register(["aurelia-framework", "../models/index", "../services/shared.ser
         else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
         return c > 3 && r && Object.defineProperty(target, key, r), r;
     };
-    var __moduleName = context_1 && context_1.id;
     var aurelia_framework_1, index_1, shared_service_1, extensionUtility_1, CheckboxSelectorExtension;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (aurelia_framework_1_1) {
@@ -35,8 +35,8 @@ System.register(["aurelia-framework", "../models/index", "../services/shared.ser
                     }
                 };
                 /**
-                 * Attach/Create different plugins before the Grid creation.
-                 * For example the multi-select have to be added to the column definition before the grid is created to work properly
+                 * Create the plugin before the Grid creation, else it will behave oddly.
+                 * Mostly because the column definitions might change after the grid creation
                  */
                 CheckboxSelectorExtension.prototype.create = function (columnDefinitions, gridOptions) {
                     if (columnDefinitions && gridOptions) {
@@ -57,8 +57,7 @@ System.register(["aurelia-framework", "../models/index", "../services/shared.ser
                 CheckboxSelectorExtension.prototype.register = function (rowSelectionPlugin) {
                     var _this = this;
                     if (this.sharedService && this.sharedService.grid && this.sharedService.gridOptions) {
-                        // when enabling the Checkbox Selector Plugin, we need to also watch onClick events to perform certain actions
-                        // the selector column has to be created BEFORE the grid (else it behaves oddly), but we can only watch grid events AFTER the grid is created
+                        // the plugin has to be created BEFORE the grid (else it behaves oddly), but we can only watch grid events AFTER the grid is created
                         this.sharedService.grid.registerPlugin(this._extension);
                         // this also requires the Row Selection Model to be registered as well
                         if (!rowSelectionPlugin || !this.sharedService.grid.getSelectionModel()) {

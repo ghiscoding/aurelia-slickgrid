@@ -41,6 +41,7 @@ export declare class AureliaSlickgridCustomElement {
     gridPaginationOptions: GridOption;
     dataview: any;
     grid: any;
+    customDataView: any;
     dataset: any[];
     gridId: string;
     gridOptions: GridOption;
@@ -94,13 +95,13 @@ export declare class AureliaSlickgridCustomElement {
      */
     updateColumnDefinitionsList(newColumnDefinitions?: Column[]): void;
     /** Dispatch of Custom Event, which by default will bubble & is cancelable */
-    private dispatchCustomEvent(eventName, data?, isBubbling?, isCancelable?);
+    private dispatchCustomEvent;
     /** Load the Editor Collection asynchronously and replace the "collection" property when Promise resolves */
-    private loadEditorCollectionAsync(column);
+    private loadEditorCollectionAsync;
     /**
      * Update the "internalColumnEditor.collection" property.
      * Since this is called after the async call resolves, the pointer will not be the same as the "column" argument passed.
      * Once we found the new pointer, we will reassign the "editor" and "collection" to the "internalColumnEditor" so it has newest collection
      */
-    private updateEditorCollection(column, newCollection);
+    private updateEditorCollection;
 }

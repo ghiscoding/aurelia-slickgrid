@@ -59,6 +59,7 @@ export var GlobalGridOptions = {
         hideForceFitButton: false,
         hideRefreshDatasetCommand: false,
         hideToggleFilterCommand: false,
+        hideTogglePreHeaderCommand: false,
         hideSyncResizeButton: true,
         iconCssClass: 'fa fa-bars',
         iconClearAllFiltersCommand: 'fa fa-filter text-danger',
@@ -67,6 +68,7 @@ export var GlobalGridOptions = {
         iconExportTextDelimitedCommand: 'fa fa-download',
         iconRefreshDatasetCommand: 'fa fa-refresh',
         iconToggleFilterCommand: 'fa fa-random',
+        iconTogglePreHeaderCommand: 'fa fa-random',
         menuWidth: 16,
         resizeOnShowHeaderRow: true,
     },
@@ -88,6 +90,17 @@ export var GlobalGridOptions = {
         pageSizes: [10, 15, 20, 25, 30, 40, 50, 75, 100],
         pageSize: 25,
         totalItems: 0
+    },
+    rowDetailView: {
+        cssClass: 'detail-view-toggle',
+        panelRows: 1,
+        keyPrefix: '__',
+        useRowClick: true,
+        useSimpleViewportCalc: true,
+        saveDetailViewOnScroll: false,
+        // the following 2 property/method should always be override by the user
+        process: function () { return new Promise(function (resolve) { return resolve(''); }); },
+        viewModel: '',
     },
     rowHeight: 35,
     sortColNumberInSeparateSpan: true,

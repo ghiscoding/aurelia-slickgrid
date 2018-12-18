@@ -1,5 +1,5 @@
 export const progressBarFormatter = (row, cell, value, columnDef, dataContext) => {
-    if (value === null || value === '') {
+    if (value === null || value === undefined || value === '') {
         return '';
     }
     let color;

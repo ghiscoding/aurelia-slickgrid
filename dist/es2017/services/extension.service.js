@@ -11,19 +11,21 @@ import 'slickgrid/plugins/slick.cellselectionmodel';
 import { singleton, inject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import { ExtensionName, } from '../models/index';
-import { AutoTooltipExtension, CellExternalCopyManagerExtension, CheckboxSelectorExtension, ColumnPickerExtension, GridMenuExtension, GroupItemMetaProviderExtension, HeaderButtonExtension, HeaderMenuExtension, RowMoveManagerExtension, RowSelectionExtension, } from '../extensions/index';
+import { AutoTooltipExtension, CellExternalCopyManagerExtension, CheckboxSelectorExtension, ColumnPickerExtension, DraggableGroupingExtension, GridMenuExtension, GroupItemMetaProviderExtension, HeaderButtonExtension, HeaderMenuExtension, RowDetailViewExtension, RowMoveManagerExtension, RowSelectionExtension, } from '../extensions/index';
 import { SharedService } from './shared.service';
 let ExtensionService = class ExtensionService {
-    constructor(autoTooltipExtension, cellExternalCopyExtension, checkboxSelectorExtension, columnPickerExtension, gridMenuExtension, groupItemMetaExtension, i18n, headerButtonExtension, headerMenuExtension, rowMoveManagerExtension, rowSelectionExtension, sharedService) {
+    constructor(autoTooltipExtension, cellExternalCopyExtension, checkboxSelectorExtension, columnPickerExtension, draggableGroupingExtension, gridMenuExtension, groupItemMetaExtension, i18n, headerButtonExtension, headerMenuExtension, rowDetailViewExtension, rowMoveManagerExtension, rowSelectionExtension, sharedService) {
         this.autoTooltipExtension = autoTooltipExtension;
         this.cellExternalCopyExtension = cellExternalCopyExtension;
         this.checkboxSelectorExtension = checkboxSelectorExtension;
         this.columnPickerExtension = columnPickerExtension;
+        this.draggableGroupingExtension = draggableGroupingExtension;
         this.gridMenuExtension = gridMenuExtension;
         this.groupItemMetaExtension = groupItemMetaExtension;
         this.i18n = i18n;
         this.headerButtonExtension = headerButtonExtension;
         this.headerMenuExtension = headerMenuExtension;
+        this.rowDetailViewExtension = rowDetailViewExtension;
         this.rowMoveManagerExtension = rowMoveManagerExtension;
         this.rowSelectionExtension = rowSelectionExtension;
         this.sharedService = sharedService;
@@ -96,6 +98,12 @@ let ExtensionService = class ExtensionService {
                 this.extensionList.push({ name: ExtensionName.columnPicker, class: this.columnPickerExtension, extension: this.columnPickerExtension.register() });
             }
         }
+        // Draggable Grouping Plugin
+        if (this.sharedService.gridOptions.enableDraggableGrouping) {
+            if (this.draggableGroupingExtension && this.draggableGroupingExtension.register) {
+                this.extensionList.push({ name: ExtensionName.draggableGrouping, class: this.draggableGroupingExtension, extension: this.draggableGroupingExtension.register() });
+            }
+        }
         // Grid Menu Control
         if (this.sharedService.gridOptions.enableGridMenu) {
             if (this.gridMenuExtension && this.gridMenuExtension.register) {
@@ -119,6 +127,13 @@ let ExtensionService = class ExtensionService {
         if (this.sharedService.gridOptions.enableHeaderMenu) {
             if (this.headerMenuExtension && this.headerMenuExtension.register) {
                 this.extensionList.push({ name: ExtensionName.headerMenu, class: this.headerMenuExtension, extension: this.headerMenuExtension.register() });
+            }
+        }
+        // Row Detail View Plugin
+        if (this.sharedService.gridOptions.enableRowDetailView) {
+            if (this.rowDetailViewExtension && this.rowDetailViewExtension.register) {
+                const rowSelectionExtension = this.getExtensionByName(ExtensionName.rowSelection);
+                this.extensionList.push({ name: ExtensionName.rowDetailView, class: this.rowDetailViewExtension, extension: this.rowDetailViewExtension.register(rowSelectionExtension) });
             }
         }
         // Row Move Manager Plugin
@@ -148,14 +163,21 @@ let ExtensionService = class ExtensionService {
         }
     }
     /**
-     * Attach/Create different plugins before the Grid creation.
-     * For example the multi-select have to be added to the column definition before the grid is created to work properly
+     * Attach/Create certain plugins before the Grid creation, else they might behave oddly.
+     * Mostly because the column definitions might change after the grid creation
      * @param columnDefinitions
      * @param options
      */
-    createCheckboxPluginBeforeGridCreation(columnDefinitions, options) {
+    createExtensionsBeforeGridCreation(columnDefinitions, options) {
         if (options.enableCheckboxSelector) {
             this.checkboxSelectorExtension.create(columnDefinitions, options);
+        }
+        if (options.enableRowDetailView) {
+            this.rowDetailViewExtension.create(columnDefinitions, options);
+        }
+        if (options.enableDraggableGrouping) {
+            const plugin = this.draggableGroupingExtension.create(options);
+            options.enableColumnReorder = plugin.getSetupColumnReorder;
         }
     }
     /** Hide a column from the grid */
@@ -235,7 +257,7 @@ let ExtensionService = class ExtensionService {
 };
 ExtensionService = __decorate([
     singleton(true),
-    inject(AutoTooltipExtension, CellExternalCopyManagerExtension, CheckboxSelectorExtension, ColumnPickerExtension, GridMenuExtension, GroupItemMetaProviderExtension, I18N, HeaderButtonExtension, HeaderMenuExtension, RowMoveManagerExtension, RowSelectionExtension, SharedService)
+    inject(AutoTooltipExtension, CellExternalCopyManagerExtension, CheckboxSelectorExtension, ColumnPickerExtension, DraggableGroupingExtension, GridMenuExtension, GroupItemMetaProviderExtension, I18N, HeaderButtonExtension, HeaderMenuExtension, RowDetailViewExtension, RowMoveManagerExtension, RowSelectionExtension, SharedService)
 ], ExtensionService);
 export { ExtensionService };
 //# sourceMappingURL=extension.service.js.map

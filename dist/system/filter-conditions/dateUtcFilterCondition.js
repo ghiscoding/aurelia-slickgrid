@@ -1,7 +1,7 @@
 System.register(["./../services/utilities", "./filterUtilities", "moment"], function (exports_1, context_1) {
     "use strict";
-    var __moduleName = context_1 && context_1.id;
     var utilities_1, filterUtilities_1, moment, dateUtcFilterCondition;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (utilities_1_1) {
@@ -18,7 +18,7 @@ System.register(["./../services/utilities", "./filterUtilities", "moment"], func
             exports_1("dateUtcFilterCondition", dateUtcFilterCondition = function (options) {
                 var searchTerm = (Array.isArray(options.searchTerms) && options.searchTerms[0] || '');
                 var searchDateFormat = utilities_1.mapMomentDateFormatWithFieldType(options.filterSearchType || options.fieldType);
-                if (searchTerm === null || searchTerm === '' || !moment(options.cellValue, moment.ISO_8601).isValid() || !moment(searchTerm, searchDateFormat, true).isValid()) {
+                if (!moment(options.cellValue, moment.ISO_8601).isValid() || !moment(searchTerm, searchDateFormat, true).isValid()) {
                     return false;
                 }
                 var dateCell = moment(options.cellValue, moment.ISO_8601, true);

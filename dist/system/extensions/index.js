@@ -1,4 +1,4 @@
-System.register(["./autoTooltipExtension", "./cellExternalCopyManagerExtension", "./checkboxSelectorExtension", "./columnPickerExtension", "./extensionUtility", "./gridMenuExtension", "./groupItemMetaProviderExtension", "./headerButtonExtension", "./headerMenuExtension", "./rowMoveManagerExtension", "./rowSelectionExtension"], function (exports_1, context_1) {
+System.register(["./autoTooltipExtension", "./cellExternalCopyManagerExtension", "./checkboxSelectorExtension", "./columnPickerExtension", "./draggableGroupingExtension", "./extensionUtility", "./gridMenuExtension", "./groupItemMetaProviderExtension", "./headerButtonExtension", "./headerMenuExtension", "./rowDetailViewExtension", "./rowMoveManagerExtension", "./rowSelectionExtension"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     function exportStar_1(m) {
@@ -22,6 +22,9 @@ System.register(["./autoTooltipExtension", "./cellExternalCopyManagerExtension",
             function (columnPickerExtension_1_1) {
                 exportStar_1(columnPickerExtension_1_1);
             },
+            function (draggableGroupingExtension_1_1) {
+                exportStar_1(draggableGroupingExtension_1_1);
+            },
             function (extensionUtility_1_1) {
                 exportStar_1(extensionUtility_1_1);
             },
@@ -36,6 +39,9 @@ System.register(["./autoTooltipExtension", "./cellExternalCopyManagerExtension",
             },
             function (headerMenuExtension_1_1) {
                 exportStar_1(headerMenuExtension_1_1);
+            },
+            function (rowDetailViewExtension_1_1) {
+                exportStar_1(rowDetailViewExtension_1_1);
             },
             function (rowMoveManagerExtension_1_1) {
                 exportStar_1(rowMoveManagerExtension_1_1);

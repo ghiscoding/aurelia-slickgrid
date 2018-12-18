@@ -36,13 +36,6 @@ export declare class GridService {
     getDataItemByRowNumber(rowNumber: number): any;
     /** Override the item Metadata with our implementation of Metadata at given row index */
     getItemRowMetadataToHighlight(previousItemMetadata: any): any;
-    /**
-     * Highlight then fade a row for x seconds.
-     * The implementation follows this SO answer: https://stackoverflow.com/a/19985148/1212166
-     * @param rowNumber
-     * @param fadeDelay
-     */
-    highlightRow(rowNumber: number, fadeDelay?: number): void;
     /** Get the Data Item from a grid row index */
     getDataItemByRowIndex(index: number): any;
     /** Get the Data Item from an array of grid row indexes */
@@ -51,6 +44,14 @@ export declare class GridService {
     getSelectedRows(): number[];
     /** Get the currently selected rows item data */
     getSelectedRowsDataItem(): any[];
+    /**
+     * Highlight then fade a row for x seconds.
+     * The implementation follows this SO answer: https://stackoverflow.com/a/19985148/1212166
+     * @param rowNumber
+     * @param fadeDelay
+     */
+    highlightRow(rowNumber: number | number[], fadeDelay?: number): void;
+    highlightRowByMetadata(rowNumber: number, fadeDelay?: number): void;
     /** Select the selected row by a row index */
     setSelectedRow(rowIndex: number): void;
     /** Set selected rows with provided array of row indexes */
@@ -88,13 +89,20 @@ export declare class GridService {
     /**
      * Update an existing item with new properties inside the datagrid
      * @param object item: item object holding all properties of that row
+     * @return grid row index
      */
-    updateDataGridItem(item: any): void;
+    updateDataGridItem(item: any, shouldHighlightRow?: boolean): number;
+    /**
+     * Update an array of existing items with new properties inside the datagrid
+     * @param object item: item object holding all properties of that row
+     */
+    updateDataGridItems(items: any[], shouldHighlightRow?: boolean): void;
     /**
      * Update an existing item in the datagrid by it's id and new properties
      * @param itemId: item unique id
      * @param object item: item object holding all properties of that row
      * @param shouldHighlightRow do we want to highlight the row after update
+     * @return grid row index
      */
-    updateDataGridItemById(itemId: number | string, item: any, shouldHighlightRow?: boolean): void;
+    updateDataGridItemById(itemId: number | string, item: any, shouldHighlightRow?: boolean): number;
 }

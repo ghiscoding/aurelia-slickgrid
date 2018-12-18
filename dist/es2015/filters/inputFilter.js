@@ -2,13 +2,23 @@ import * as $ from 'jquery';
 export class InputFilter {
     constructor() {
         this._clearFilterTriggered = false;
+        this._inputType = 'text';
+    }
+    /** Getter of input type (text, number, password) */
+    get inputType() {
+        return this._inputType;
+    }
+    /** Setter of input type (text, number, password) */
+    set inputType(type) {
+        this._inputType = type;
+    }
+    /** Getter of the Operator to use when doing the filter comparing */
+    get operator() {
+        return this.columnDef && this.columnDef.filter && this.columnDef.filter.operator || '';
     }
     /** Getter for the Grid Options pulled through the Grid Object */
     get gridOptions() {
         return (this.grid && this.grid.getOptions) ? this.grid.getOptions() : {};
-    }
-    get operator() {
-        return this.columnDef && this.columnDef.filter && this.columnDef.filter.operator || '';
     }
     /**
      * Initialize the Filter
@@ -29,7 +39,7 @@ export class InputFilter {
         this.$filterElm = this.createDomElement(filterTemplate, searchTerm);
         // step 3, subscribe to the keyup event and run the callback when that happens
         // also add/remove "filled" class for styling purposes
-        this.$filterElm.keyup((e) => {
+        this.$filterElm.on('keyup input change', (e) => {
             const value = e && e.target && e.target.value || '';
             if (this._clearFilterTriggered) {
                 this.callback(e, { columnDef: this.columnDef, clearFilterTriggered: this._clearFilterTriggered });
@@ -58,7 +68,7 @@ export class InputFilter {
      */
     destroy() {
         if (this.$filterElm) {
-            this.$filterElm.off('keyup').remove();
+            this.$filterElm.off('keyup input change').remove();
         }
     }
     /**
@@ -78,7 +88,7 @@ export class InputFilter {
     buildTemplateHtmlString() {
         const columnId = this.columnDef && this.columnDef.id;
         const placeholder = (this.gridOptions) ? (this.gridOptions.defaultFilterPlaceholder || '') : '';
-        return `<input type="text" class="form-control search-filter filter-${columnId}" placeholder="${placeholder}">`;
+        return `<input type="${this._inputType || 'text'}" class="form-control search-filter filter-${columnId}" placeholder="${placeholder}">`;
     }
     /**
      * From the html template string, create a DOM element

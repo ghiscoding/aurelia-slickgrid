@@ -14,8 +14,8 @@ System.register(["aurelia-framework", "./utilities", "./../models/index", "./gra
         else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
         return c > 3 && r && Object.defineProperty(target, key, r), r;
     };
-    var __moduleName = context_1 && context_1.id;
     var aurelia_framework_1, utilities_1, index_1, graphqlQueryBuilder_1, timer, DEFAULT_FILTER_TYPING_DEBOUNCE, DEFAULT_ITEMS_PER_PAGE, DEFAULT_PAGE_SIZE, GraphqlService;
+    var __moduleName = context_1 && context_1.id;
     return {
         setters: [
             function (aurelia_framework_1_1) {
@@ -100,9 +100,13 @@ System.register(["aurelia-framework", "./utilities", "./../models/index", "./gra
                         datasetQb.find(['totalCount', dataQb]);
                     }
                     // add dataset filters, could be Pagination and SortingFilters and/or FieldFilters
-                    var datasetFilters = __assign({}, this.options.paginationOptions, { first: ((this.options.paginationOptions && this.options.paginationOptions.first) ? this.options.paginationOptions.first : ((this.pagination && this.pagination.pageSize) ? this.pagination.pageSize : null)) || this.defaultPaginationOptions.first });
-                    if (!this.options.isWithCursor) {
-                        datasetFilters.offset = ((this.options.paginationOptions && this.options.paginationOptions.hasOwnProperty('offset')) ? +this.options.paginationOptions['offset'] : 0);
+                    var datasetFilters = {};
+                    // only add pagination if it's enabled in the grid options
+                    if (this._gridOptions.enablePagination !== false) {
+                        datasetFilters = __assign({}, this.options.paginationOptions, { first: ((this.options.paginationOptions && this.options.paginationOptions.first) ? this.options.paginationOptions.first : ((this.pagination && this.pagination.pageSize) ? this.pagination.pageSize : null)) || this.defaultPaginationOptions.first });
+                        if (!this.options.isWithCursor) {
+                            datasetFilters.offset = ((this.options.paginationOptions && this.options.paginationOptions.hasOwnProperty('offset')) ? +this.options.paginationOptions['offset'] : 0);
+                        }
                     }
                     if (this.options.sortingOptions && Array.isArray(this.options.sortingOptions) && this.options.sortingOptions.length > 0) {
                         // orderBy: [{ field:x, direction: 'ASC' }]

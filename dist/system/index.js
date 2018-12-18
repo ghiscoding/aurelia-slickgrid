@@ -1,9 +1,11 @@
 System.register(["aurelia-pal", "./aurelia-slickgrid", "./slick-pagination", "./slickgrid-config", "./filters/index", "./models/index", "./formatters/index", "./grouping-formatters/index", "./sorters/index", "./aggregators/index", "./editors/index", "./filter-conditions/index", "./services/index"], function (exports_1, context_1) {
     "use strict";
+    var aurelia_pal_1, aurelia_slickgrid_1, slick_pagination_1, slickgrid_config_1, index_1;
     var __moduleName = context_1 && context_1.id;
     function configure(aurelia, callback) {
         aurelia.globalResources(aurelia_pal_1.PLATFORM.moduleName('./aurelia-slickgrid'));
         aurelia.globalResources(aurelia_pal_1.PLATFORM.moduleName('./slick-pagination'));
+        aurelia.globalResources(aurelia_pal_1.PLATFORM.moduleName('./value-converters/number'));
         // must register a transient so the container will get a new instance everytime
         aurelia.container.registerTransient(index_1.Filters.compoundDate);
         aurelia.container.registerTransient(index_1.Filters.compoundInput);
@@ -20,7 +22,6 @@ System.register(["aurelia-pal", "./aurelia-slickgrid", "./slick-pagination", "./
         }
     }
     exports_1("configure", configure);
-    var aurelia_pal_1, aurelia_slickgrid_1, slick_pagination_1, slickgrid_config_1, index_1;
     var exportedNames_1 = {
         "configure": true,
         "AureliaSlickgridCustomElement": true,

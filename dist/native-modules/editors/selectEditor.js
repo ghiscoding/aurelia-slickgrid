@@ -375,6 +375,7 @@ var SelectEditor = /** @class */ (function () {
     };
     /** Create a blank entry that can be added to the collection. It will also reuse the same collection structure provided by the user */
     SelectEditor.prototype.createBlankEntry = function () {
+        var _a;
         var blankEntry = (_a = {},
             _a[this.labelName] = '',
             _a[this.valueName] = '',
@@ -386,7 +387,6 @@ var SelectEditor = /** @class */ (function () {
             blankEntry[this.labelSuffixName] = '';
         }
         return blankEntry;
-        var _a;
     };
     /** From the html template string, create the DOM element of the Multiple/Single Select Editor */
     SelectEditor.prototype.createDomElement = function (editorTemplate) {

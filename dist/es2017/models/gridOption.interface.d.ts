@@ -1,5 +1,5 @@
 import { I18N } from 'aurelia-i18n';
-import { AutoResizeOption, BackendServiceApi, Column, ColumnPicker, CheckboxSelector, EditCommand, ExportOption, GridMenu, GridState, HeaderButton, HeaderMenu, Pagination, RowMoveManager } from './../models/index';
+import { AutoResizeOption, BackendServiceApi, Column, ColumnPicker, CheckboxSelector, DraggableGrouping, EditCommand, ExportOption, GridMenu, GridState, HeaderButton, HeaderMenu, Pagination, RowDetailView, RowMoveManager } from './../models/index';
 export interface GridOption {
     /** CSS class name used on newly added row */
     addNewRowCssClass?: string;
@@ -66,6 +66,8 @@ export interface GridOption {
     defaultFormatter?: any;
     /** Default prefix for SlickGrid Event names */
     defaultSlickgridEventPrefix?: string;
+    /** Draggable Grouping Plugin options & events */
+    draggableGrouping?: DraggableGrouping;
     /** Defaults to false, when enabled will give the possibility to edit cell values with inline editors. */
     editable?: boolean;
     /** option to intercept edit commands and implement undo support. */
@@ -96,6 +98,8 @@ export interface GridOption {
     enableColumnPicker?: boolean;
     /** Defaults to true, which permits the user to move an entire column from a position to another. */
     enableColumnReorder?: boolean;
+    /** Defaults to false, do we want to enable the Draggable Grouping Plugin? */
+    enableDraggableGrouping?: boolean;
     /** Defaults to true, which leads to use an Excel like copy buffer that gets copied in clipboard and can be pasted back in Excel or any other app */
     enableExcelCopyBuffer?: boolean;
     /** Do we want to enable the Export to File? (if Yes, it will show up in the Grid Menu) */
@@ -104,7 +108,7 @@ export interface GridOption {
     enableFiltering?: boolean;
     /** Do we want to enable Grid Menu (aka hamburger menu) */
     enableGridMenu?: boolean;
-    /** Defaults to false, do we want to enable the Grouping & Aggregator? */
+    /** Defaults to false, do we want to enable the Grouping & Aggregator Plugin? */
     enableGrouping?: boolean;
     /** Do we want to enable Header Buttons? (buttons with commands that can be shown beside each column)  */
     enableHeaderButton?: boolean;
@@ -114,6 +118,8 @@ export interface GridOption {
     enableMouseHoverHighlightRow?: boolean;
     /** Do we want to enable pagination? Currently only works with a Backend Service API */
     enablePagination?: boolean;
+    /** Defaults to false, do we want to enable the Row Detail Plugin? */
+    enableRowDetailView?: boolean;
     /** Defaults to false, when enabled it will make possible to move rows in the grid. */
     enableRowMoveManager?: boolean;
     /** Do we want to enable row selection? */
@@ -176,6 +182,8 @@ export interface GridOption {
     preselectedRows?: number[];
     /** Register 1 or more Slick Plugins */
     registerPlugins?: any | any[];
+    /** Row Detail View Plugin options & events (columnId, cssClass, toolTip, width) */
+    rowDetailView?: RowDetailView;
     /** Grid row height in pixels (only type the number). Row of cell values. */
     rowHeight?: number;
     /** Row Move Manager Plugin options & events */

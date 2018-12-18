@@ -27,8 +27,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
         while (_) try {
-            if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [0, t.value];
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
                 case 0: case 1: t = op; break;
                 case 4: _.label++; return { value: op[1], done: false };
@@ -98,7 +98,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
         };
         FilterService.prototype.attachBackendOnFilterSubscribe = function (event, args) {
             return __awaiter(this, void 0, void 0, function () {
-                var gridOptions, backendApi, startTime, query, endTime, processResult;
+                var gridOptions, backendApi, startTime, query, endTime, processResult, e_1;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
@@ -110,13 +110,16 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
                             if (!backendApi || !backendApi.process || !backendApi.service) {
                                 throw new Error("BackendServiceApi requires at least a \"process\" function and a \"service\" defined");
                             }
+                            _a.label = 1;
+                        case 1:
+                            _a.trys.push([1, 4, , 5]);
                             startTime = new Date();
                             // run a preProcess callback if defined
                             if (backendApi.preProcess) {
                                 backendApi.preProcess();
                             }
                             return [4 /*yield*/, backendApi.service.processOnFilterChanged(event, args)];
-                        case 1:
+                        case 2:
                             query = _a.sent();
                             endTime = new Date();
                             // emit an onFilterChanged event
@@ -124,7 +127,7 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
                                 this.emitFilterChanged('remote');
                             }
                             return [4 /*yield*/, backendApi.process(query)];
-                        case 2:
+                        case 3:
                             processResult = _a.sent();
                             // from the result, call our internal post process to update the Dataset and Pagination info
                             if (processResult && backendApi.internalPostProcess) {
@@ -142,7 +145,17 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
                                 }
                                 backendApi.postProcess(processResult);
                             }
-                            return [2 /*return*/];
+                            return [3 /*break*/, 5];
+                        case 4:
+                            e_1 = _a.sent();
+                            if (backendApi && backendApi.onError) {
+                                backendApi.onError(e_1);
+                            }
+                            else {
+                                throw e_1;
+                            }
+                            return [3 /*break*/, 5];
+                        case 5: return [2 /*return*/];
                     }
                 });
             });
@@ -207,6 +220,13 @@ define(["require", "exports", "aurelia-framework", "aurelia-event-aggregator", "
                 var columnDef = args.grid.getColumns()[columnIndex];
                 if (!columnDef) {
                     return false;
+                }
+                // Row Detail View plugin, if the row is padding we just get the value we're filtering on from it's parent
+                if (this._gridOptions.enableRowDetailView) {
+                    var metadataPrefix = this._gridOptions.rowDetailView && this._gridOptions.rowDetailView.keyPrefix || '__';
+                    if (item[metadataPrefix + "isPadding"] && item[metadataPrefix + "parent"]) {
+                        item = item[metadataPrefix + "parent"];
+                    }
                 }
                 var fieldName = columnDef.queryField || columnDef.queryFieldFilter || columnDef.field || '';
                 var fieldType = columnDef.type || index_3.FieldType.string;

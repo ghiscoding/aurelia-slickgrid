@@ -1,4 +1,4 @@
-System.register(["aurelia-framework", "aurelia-event-aggregator", "./services/index"], function (exports_1, context_1) {
+System.register(["aurelia-framework", "aurelia-event-aggregator"], function (exports_1, context_1) {
     "use strict";
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -21,8 +21,8 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./services/in
         function step(op) {
             if (f) throw new TypeError("Generator is already executing.");
             while (_) try {
-                if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
-                if (y = 0, t) op = [0, t.value];
+                if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+                if (y = 0, t) op = [op[0] & 2, t.value];
                 switch (op[0]) {
                     case 0: case 1: t = op; break;
                     case 4: _.label++; return { value: op[1], done: false };
@@ -41,8 +41,8 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./services/in
             if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
         }
     };
+    var aurelia_framework_1, aurelia_event_aggregator_1, aureliaEventPrefix, SlickPaginationCustomElement;
     var __moduleName = context_1 && context_1.id;
-    var aurelia_framework_1, aurelia_event_aggregator_1, index_1, aureliaEventPrefix, SlickPaginationCustomElement;
     return {
         setters: [
             function (aurelia_framework_1_1) {
@@ -50,18 +50,14 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./services/in
             },
             function (aurelia_event_aggregator_1_1) {
                 aurelia_event_aggregator_1 = aurelia_event_aggregator_1_1;
-            },
-            function (index_1_1) {
-                index_1 = index_1_1;
             }
         ],
         execute: function () {
             aureliaEventPrefix = 'asg';
             SlickPaginationCustomElement = /** @class */ (function () {
-                function SlickPaginationCustomElement(elm, ea, filterService) {
+                function SlickPaginationCustomElement(elm, ea) {
                     this.elm = elm;
                     this.ea = ea;
-                    this.filterService = filterService;
                     this._isFirstRender = true;
                     this.dataFrom = 1;
                     this.dataTo = 1;
@@ -69,13 +65,15 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./services/in
                     this.pageNumber = 1;
                     this.totalItems = 0;
                     this.paginationPageSizes = [25, 75, 100];
-                    this.filterService = filterService;
                 }
                 SlickPaginationCustomElement.prototype.bind = function (binding, contexts) {
                     var _this = this;
                     this._gridPaginationOptions = binding.gridPaginationOptions;
                     if (!binding.gridPaginationOptions || (binding.gridPaginationOptions.pagination && binding.gridPaginationOptions.pagination.totalItems !== this.totalItems)) {
                         this.refreshPagination();
+                    }
+                    else if (binding.gridPaginationOptions.pagination.totalItems === 0) {
+                        this.recalculateFromToIndexes();
                     }
                     // Subscribe to Filter changed and go back to page 1 when that happen
                     this._filterSubscriber = this.ea.subscribe('filterService:filterChanged', function (data) {
@@ -120,7 +118,7 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./services/in
                     }
                 };
                 SlickPaginationCustomElement.prototype.changeToCurrentPage = function (event) {
-                    this.pageNumber = (event && event.target && event.target.value) ? event.target.value : 1;
+                    this.pageNumber = +((event && event.target && event.target.value) ? event.target.value : 1);
                     if (this.pageNumber < 1) {
                         this.pageNumber = 1;
                     }
@@ -137,7 +135,7 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./services/in
                 SlickPaginationCustomElement.prototype.onChangeItemPerPage = function (event) {
                     var itemsPerPage = +event.target.value;
                     this.pageCount = Math.ceil(this.totalItems / itemsPerPage);
-                    this.pageNumber = 1;
+                    this.pageNumber = (this.totalItems > 0) ? 1 : 0;
                     this.itemsPerPage = itemsPerPage;
                     this.onPageChanged(event, this.pageNumber);
                 };
@@ -176,7 +174,7 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./services/in
                 };
                 SlickPaginationCustomElement.prototype.onPageChanged = function (event, pageNumber) {
                     return __awaiter(this, void 0, void 0, function () {
-                        var backendApi, itemsPerPage, startTime, query, processResult, endTime;
+                        var backendApi, itemsPerPage, startTime, query, processResult, endTime, e_1;
                         return __generator(this, function (_a) {
                             switch (_a.label) {
                                 case 0:
@@ -191,7 +189,10 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./services/in
                                     else if (this.totalItems < this.itemsPerPage) {
                                         this.dataTo = this.totalItems;
                                     }
-                                    if (!backendApi) return [3 /*break*/, 2];
+                                    if (!backendApi) return [3 /*break*/, 5];
+                                    _a.label = 1;
+                                case 1:
+                                    _a.trys.push([1, 3, , 4]);
                                     itemsPerPage = +this.itemsPerPage;
                                     startTime = new Date();
                                     if (backendApi.preProcess) {
@@ -199,7 +200,7 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./services/in
                                     }
                                     query = backendApi.service.processOnPaginationChanged(event, { newPage: pageNumber, pageSize: itemsPerPage });
                                     return [4 /*yield*/, backendApi.process(query)];
-                                case 1:
+                                case 2:
                                     processResult = _a.sent();
                                     endTime = new Date();
                                     // from the result, call our internal post process to update the Dataset and Pagination info
@@ -219,9 +220,19 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./services/in
                                         }
                                         backendApi.postProcess(processResult);
                                     }
-                                    return [3 /*break*/, 3];
-                                case 2: throw new Error('Pagination with a backend service requires "BackendServiceApi" to be defined in your grid options');
+                                    return [3 /*break*/, 4];
                                 case 3:
+                                    e_1 = _a.sent();
+                                    if (backendApi && backendApi.onError) {
+                                        backendApi.onError(e_1);
+                                    }
+                                    else {
+                                        throw e_1;
+                                    }
+                                    return [3 /*break*/, 4];
+                                case 4: return [3 /*break*/, 6];
+                                case 5: throw new Error('Pagination with a backend service requires "BackendServiceApi" to be defined in your grid options');
+                                case 6:
                                     // dispatch the changes to the parent component
                                     this.elm.dispatchEvent(new CustomEvent(aureliaEventPrefix + "-on-pagination-changed", {
                                         bubbles: true,
@@ -238,8 +249,15 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./services/in
                     });
                 };
                 SlickPaginationCustomElement.prototype.recalculateFromToIndexes = function () {
-                    this.dataFrom = (this.pageNumber * this.itemsPerPage) - this.itemsPerPage + 1;
-                    this.dataTo = (this.totalItems < this.itemsPerPage) ? this.totalItems : (this.pageNumber * this.itemsPerPage);
+                    if (this.totalItems === 0) {
+                        this.dataFrom = 0;
+                        this.dataTo = 0;
+                        this.pageNumber = 0;
+                    }
+                    else {
+                        this.dataFrom = (this.pageNumber * this.itemsPerPage) - this.itemsPerPage + 1;
+                        this.dataTo = (this.totalItems < this.itemsPerPage) ? this.totalItems : (this.pageNumber * this.itemsPerPage);
+                    }
                 };
                 __decorate([
                     aurelia_framework_1.bindable()
@@ -248,7 +266,7 @@ System.register(["aurelia-framework", "aurelia-event-aggregator", "./services/in
                     aurelia_framework_1.bindable()
                 ], SlickPaginationCustomElement.prototype, "gridPaginationOptions", void 0);
                 SlickPaginationCustomElement = __decorate([
-                    aurelia_framework_1.inject(Element, aurelia_event_aggregator_1.EventAggregator, index_1.FilterService)
+                    aurelia_framework_1.inject(Element, aurelia_event_aggregator_1.EventAggregator)
                 ], SlickPaginationCustomElement);
                 return SlickPaginationCustomElement;
             }());

@@ -2,24 +2,26 @@ import 'slickgrid/plugins/slick.cellrangedecorator';
 import 'slickgrid/plugins/slick.cellrangeselector';
 import 'slickgrid/plugins/slick.cellselectionmodel';
 import { I18N } from 'aurelia-i18n';
-import { Column, ExtensionModel, GridOption } from '../models/index';
-import { AutoTooltipExtension, CellExternalCopyManagerExtension, CheckboxSelectorExtension, ColumnPickerExtension, GridMenuExtension, GroupItemMetaProviderExtension, HeaderButtonExtension, HeaderMenuExtension, RowMoveManagerExtension, RowSelectionExtension } from '../extensions/index';
+import { Column, ExtensionModel, ExtensionName, GridOption } from '../models/index';
+import { AutoTooltipExtension, CellExternalCopyManagerExtension, CheckboxSelectorExtension, ColumnPickerExtension, DraggableGroupingExtension, GridMenuExtension, GroupItemMetaProviderExtension, HeaderButtonExtension, HeaderMenuExtension, RowDetailViewExtension, RowMoveManagerExtension, RowSelectionExtension } from '../extensions/index';
 import { SharedService } from './shared.service';
 export declare class ExtensionService {
     private autoTooltipExtension;
     private cellExternalCopyExtension;
     private checkboxSelectorExtension;
     private columnPickerExtension;
+    private draggableGroupingExtension;
     private gridMenuExtension;
     private groupItemMetaExtension;
     private i18n;
     private headerButtonExtension;
     private headerMenuExtension;
+    private rowDetailViewExtension;
     private rowMoveManagerExtension;
     private rowSelectionExtension;
     private sharedService;
     extensionList: ExtensionModel[];
-    constructor(autoTooltipExtension: AutoTooltipExtension, cellExternalCopyExtension: CellExternalCopyManagerExtension, checkboxSelectorExtension: CheckboxSelectorExtension, columnPickerExtension: ColumnPickerExtension, gridMenuExtension: GridMenuExtension, groupItemMetaExtension: GroupItemMetaProviderExtension, i18n: I18N, headerButtonExtension: HeaderButtonExtension, headerMenuExtension: HeaderMenuExtension, rowMoveManagerExtension: RowMoveManagerExtension, rowSelectionExtension: RowSelectionExtension, sharedService: SharedService);
+    constructor(autoTooltipExtension: AutoTooltipExtension, cellExternalCopyExtension: CellExternalCopyManagerExtension, checkboxSelectorExtension: CheckboxSelectorExtension, columnPickerExtension: ColumnPickerExtension, draggableGroupingExtension: DraggableGroupingExtension, gridMenuExtension: GridMenuExtension, groupItemMetaExtension: GroupItemMetaProviderExtension, i18n: I18N, headerButtonExtension: HeaderButtonExtension, headerMenuExtension: HeaderMenuExtension, rowDetailViewExtension: RowDetailViewExtension, rowMoveManagerExtension: RowMoveManagerExtension, rowSelectionExtension: RowSelectionExtension, sharedService: SharedService);
     /** Dispose of all the controls & plugins */
     dispose(): void;
     /** Get all columns (includes visible and non-visible) */
@@ -32,18 +34,18 @@ export declare class ExtensionService {
      * Get an Extension by it's name
      *  @param name
      */
-    getExtensionByName(name: string): ExtensionModel | undefined;
+    getExtensionByName(name: ExtensionName): ExtensionModel | undefined;
     /** Auto-resize all the column in the grid to fit the grid width */
     autoResizeColumns(): void;
     /** Attach/Create different Controls or Plugins after the Grid is created */
     attachDifferentExtensions(): void;
     /**
-     * Attach/Create different plugins before the Grid creation.
-     * For example the multi-select have to be added to the column definition before the grid is created to work properly
+     * Attach/Create certain plugins before the Grid creation, else they might behave oddly.
+     * Mostly because the column definitions might change after the grid creation
      * @param columnDefinitions
      * @param options
      */
-    createCheckboxPluginBeforeGridCreation(columnDefinitions: Column[], options: GridOption): void;
+    createExtensionsBeforeGridCreation(columnDefinitions: Column[], options: GridOption): void;
     /** Hide a column from the grid */
     hideColumn(column: Column): void;
     /** Refresh the dataset through the Backend Service */
@@ -73,5 +75,5 @@ export declare class ExtensionService {
      */
     renderColumnHeaders(newColumnDefinitions?: Column[]): void;
     /** Translate the an array of items from an input key and assign to the output key */
-    private translateItems(items, inputKey, outputKey);
+    private translateItems;
 }

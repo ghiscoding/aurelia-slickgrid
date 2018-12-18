@@ -1,4 +1,4 @@
-System.register(["aurelia-framework", "aurelia-i18n", "./../models/index"], function (exports_1, context_1) {
+System.register(["aurelia-framework", "aurelia-i18n", "./../models/index", "jquery"], function (exports_1, context_1) {
     "use strict";
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -6,8 +6,8 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../models/index"], func
         else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
         return c > 3 && r && Object.defineProperty(target, key, r), r;
     };
+    var aurelia_framework_1, aurelia_i18n_1, index_1, $, CompoundInputFilter;
     var __moduleName = context_1 && context_1.id;
-    var aurelia_framework_1, aurelia_i18n_1, index_1, CompoundInputFilter;
     return {
         setters: [
             function (aurelia_framework_1_1) {
@@ -18,6 +18,9 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../models/index"], func
             },
             function (index_1_1) {
                 index_1 = index_1_1;
+            },
+            function ($_1) {
+                $ = $_1;
             }
         ],
         execute: function () {
@@ -25,6 +28,7 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../models/index"], func
                 function CompoundInputFilter(i18n) {
                     this.i18n = i18n;
                     this._clearFilterTriggered = false;
+                    this._inputType = 'text';
                 }
                 Object.defineProperty(CompoundInputFilter.prototype, "gridOptions", {
                     /** Getter for the Grid Options pulled through the Grid Object */
@@ -34,10 +38,24 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../models/index"], func
                     enumerable: true,
                     configurable: true
                 });
+                Object.defineProperty(CompoundInputFilter.prototype, "inputType", {
+                    /** Getter of input type (text, number, password) */
+                    get: function () {
+                        return this._inputType;
+                    },
+                    /** Setter of input type (text, number, password) */
+                    set: function (type) {
+                        this._inputType = type;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
                 Object.defineProperty(CompoundInputFilter.prototype, "operator", {
+                    /** Getter of the Operator to use when doing the filter comparing */
                     get: function () {
                         return this._operator || index_1.OperatorType.empty;
                     },
+                    /** Getter of the Operator to use when doing the filter comparing */
                     set: function (op) {
                         this._operator = op;
                     },
@@ -62,10 +80,10 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../models/index"], func
                         this.$filterElm = this.createDomElement(searchTerm);
                         // step 3, subscribe to the keyup event and run the callback when that happens
                         // also add/remove "filled" class for styling purposes
-                        this.$filterInputElm.keyup(function (e) {
+                        this.$filterInputElm.on('keyup input change', function (e) {
                             _this.onTriggerEvent(e);
                         });
-                        this.$selectOperatorElm.change(function (e) {
+                        this.$selectOperatorElm.on('change', function (e) {
                             _this.onTriggerEvent(e);
                         });
                     }
@@ -86,8 +104,9 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../models/index"], func
                  * destroy the filter
                  */
                 CompoundInputFilter.prototype.destroy = function () {
-                    if (this.$filterElm) {
-                        this.$filterElm.off('keyup').remove();
+                    if (this.$filterElm && this.$selectOperatorElm) {
+                        this.$filterElm.off('keyup input change').remove();
+                        this.$selectOperatorElm.off('change');
                     }
                 };
                 /**
@@ -103,7 +122,7 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../models/index"], func
                 // ------------------
                 CompoundInputFilter.prototype.buildInputHtmlString = function () {
                     var placeholder = (this.gridOptions) ? (this.gridOptions.defaultFilterPlaceholder || '') : '';
-                    return "<input class=\"form-control\" type=\"text\" placeholder=\"" + placeholder + "\" />";
+                    return "<input class=\"form-control\" type=\"" + (this._inputType || 'text') + "\" placeholder=\"" + placeholder + "\" />";
                 };
                 CompoundInputFilter.prototype.buildSelectOperatorHtmlString = function () {
                     var optionValues = this.getOptionValues();
@@ -181,6 +200,7 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../models/index"], func
                     }
                     return $filterContainerElm;
                 };
+                /** Event trigger, could be called by the Operator dropdown or the input itself */
                 CompoundInputFilter.prototype.onTriggerEvent = function (e) {
                     if (this._clearFilterTriggered) {
                         this.callback(e, { columnDef: this.columnDef, clearFilterTriggered: this._clearFilterTriggered });
@@ -189,7 +209,7 @@ System.register(["aurelia-framework", "aurelia-i18n", "./../models/index"], func
                     else {
                         var selectedOperator = this.$selectOperatorElm.find('option:selected').text();
                         var value = this.$filterInputElm.val();
-                        (value) ? this.$filterElm.addClass('filled') : this.$filterElm.removeClass('filled');
+                        (value !== null && value !== undefined && value !== '') ? this.$filterElm.addClass('filled') : this.$filterElm.removeClass('filled');
                         this.callback(e, { columnDef: this.columnDef, searchTerms: (value ? [value] : null), operator: selectedOperator || '' });
                     }
                 };
