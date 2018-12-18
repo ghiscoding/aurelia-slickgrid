@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.6.0"></a>
+# [2.6.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.5.0...v2.6.0) (2018-12-18)
+
+
+### Bug Fixes
+
+* **editor:** Float Editor not working with .5 but works with 0.5 ([1082fdf](https://github.com/ghiscoding/aurelia-slickgrid/commit/1082fdf))
+* **filter:** Date in UTC format with milliseconds not filtering well ([718b7c4](https://github.com/ghiscoding/aurelia-slickgrid/commit/718b7c4))
+* **pagination:** fixed a few pagination problem used by backend service ([4f2362b](https://github.com/ghiscoding/aurelia-slickgrid/commit/4f2362b))
+* **resize:** global delay timer was affecting multiple grid resize ([a661115](https://github.com/ghiscoding/aurelia-slickgrid/commit/a661115))
+
+
+### Features
+
+* **backend:** add onError callback which catch error from process ([#116](https://github.com/ghiscoding/aurelia-slickgrid/issues/116)) ([17092b8](https://github.com/ghiscoding/aurelia-slickgrid/commit/17092b8))
+* **badge:** add download count badge ([1676d7c](https://github.com/ghiscoding/aurelia-slickgrid/commit/1676d7c))
+* **grouping:** draggable grouping plugin ([#114](https://github.com/ghiscoding/aurelia-slickgrid/issues/114)) ([0972471](https://github.com/ghiscoding/aurelia-slickgrid/commit/0972471))
+* **inputType:** Add multiple Filter input types (number/password) ([#117](https://github.com/ghiscoding/aurelia-slickgrid/issues/117)) ([387cd21](https://github.com/ghiscoding/aurelia-slickgrid/commit/387cd21))
+* **plugin:** add Row Detail Plugin extension ([#113](https://github.com/ghiscoding/aurelia-slickgrid/issues/113)) ([755e026](https://github.com/ghiscoding/aurelia-slickgrid/commit/755e026))
+* **remote:** add Remote Model example with custom dataview ([#115](https://github.com/ghiscoding/aurelia-slickgrid/issues/115)) ([7cc2faa](https://github.com/ghiscoding/aurelia-slickgrid/commit/7cc2faa))
+* **selector:** add new property to display Select All chkbox elsewhere ([#118](https://github.com/ghiscoding/aurelia-slickgrid/issues/118)) ([db68f7e](https://github.com/ghiscoding/aurelia-slickgrid/commit/db68f7e))
+* **update:** add updateDataGridItems for multiple changes ([824af29](https://github.com/ghiscoding/aurelia-slickgrid/commit/824af29))
+
+
+
 <a name="2.5.0"></a>
 # [2.5.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.4.2...v2.5.0) (2018-11-17)
 
