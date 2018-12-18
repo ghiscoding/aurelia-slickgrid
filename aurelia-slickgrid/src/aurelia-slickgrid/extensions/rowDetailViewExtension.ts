@@ -8,15 +8,19 @@ import {
   ViewResources,
   ViewSlot
 } from 'aurelia-framework';
-import { EventAggregator } from 'aurelia-event-aggregator';
+import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
 import { Column, Extension, ExtensionName, GridOption, GridStateChange } from '../models/index';
 import { ExtensionUtility } from './extensionUtility';
 import { SharedService } from '../services/shared.service';
+import { disposeAllSubscriptions } from '../services/utilities';
 import * as DOMPurify from 'dompurify';
 import * as $ from 'jquery';
 
 // using external non-typed js libraries
 declare var Slick: any;
+
+const ROW_DETAIL_CONTAINER_PREFIX = 'container_';
+const PRELOAD_CONTAINER_PREFIX = 'container_loading';
 
 export interface CreatedView {
   id: string | number;
@@ -41,6 +45,7 @@ export class RowDetailViewExtension implements Extension {
   private _slotPreload: ViewSlot;
   private _slots: CreatedView[] = [];
   private _viewModel: string;
+  private _subscriptions: Subscription[] = [];
   private _userProcessFn: (item: any) => Promise<any>;
 
   constructor(
@@ -59,6 +64,7 @@ export class RowDetailViewExtension implements Extension {
     if (this._extension && this._extension.destroy) {
       this._extension.destroy();
     }
+    disposeAllSubscriptions(this._subscriptions);
   }
 
   /**
@@ -89,11 +95,11 @@ export class RowDetailViewExtension implements Extension {
           // when those are Aurelia View/ViewModel, we need to create View Slot & provide the html containers to the Plugin (preTemplate/postTemplate methods)
           if (!gridOptions.rowDetailView.preTemplate) {
             this._preloadView = gridOptions.rowDetailView.preloadView;
-            gridOptions.rowDetailView.preTemplate = () => DOMPurify.sanitize(`<div class="container_loading au-target"></div>`);
+            gridOptions.rowDetailView.preTemplate = () => DOMPurify.sanitize(`<div class="${PRELOAD_CONTAINER_PREFIX} au-target"></div>`);
           }
           if (!gridOptions.rowDetailView.postTemplate) {
             this._viewModel = gridOptions.rowDetailView.viewModel;
-            gridOptions.rowDetailView.postTemplate = (itemDetail: any) => DOMPurify.sanitize(`<div class="container_${itemDetail.id} au-target"></div>`);
+            gridOptions.rowDetailView.postTemplate = (itemDetail: any) => DOMPurify.sanitize(`<div class="${ROW_DETAIL_CONTAINER_PREFIX}${itemDetail.id} au-target"></div>`);
           }
 
           // finally register the Row Detail View Plugin
@@ -145,8 +151,9 @@ export class RowDetailViewExtension implements Extension {
         });
         this._eventHandler.subscribe(this._extension.onAfterRowDetailToggle, (e: any, args: { grid: any; item: any; expandedRows: any[]; }) => {
           // display preload template & re-render all the other Detail Views after toggling
+          // the preload View will eventually go away once the data gets loaded after the "onAsyncEndUpdate" event
           this.renderPreloadView();
-          this._slots.forEach((slot) => this.renderViewModel(slot.dataContext));
+          this.renderAllViewModels();
 
           if (this.sharedService.gridOptions.rowDetailView && typeof this.sharedService.gridOptions.rowDetailView.onAfterRowDetailToggle === 'function') {
             this.sharedService.gridOptions.rowDetailView.onAfterRowDetailToggle(e, args);
@@ -177,13 +184,15 @@ export class RowDetailViewExtension implements Extension {
         // --
         // hook some events needed by the Plugin itself
 
-        this._eventHandler.subscribe(this.sharedService.grid.onColumnsReordered, () => this.onColumnsReordered());
+        this._eventHandler.subscribe(this.sharedService.grid.onColumnsReordered, () => this.redrawAllViewSlots());
 
         // on sort, all row detail are collapsed so we can dispose of all the Views as well
         this._eventHandler.subscribe(this.sharedService.grid.onSort, () => this.disposeAllViewSlot());
 
         // on filter changed, we need to re-render all Views
-        this.ea.subscribe('filterService:filterChanged', () => this._slots.forEach((slot) => this.redrawViewModel(slot)));
+        this._subscriptions.push(
+          this.ea.subscribe('filterService:filterChanged', () => this.redrawAllViewSlots())
+        );
       }
       return this._extension;
     }
@@ -208,7 +217,7 @@ export class RowDetailViewExtension implements Extension {
 
   private disposeViewSlot(expandedView: CreatedView) {
     if (expandedView && expandedView.view && expandedView.viewSlot && expandedView.view.unbind && expandedView.viewSlot.remove) {
-      const container = $(`.container_${this._slots[0].id}`);
+      const container = $(`.${ROW_DETAIL_CONTAINER_PREFIX}${this._slots[0].id}`);
       if (container && container.length > 0) {
         expandedView.viewSlot.remove(expandedView.view);
         expandedView.view.unbind();
@@ -255,13 +264,28 @@ export class RowDetailViewExtension implements Extension {
     }
   }
 
-  /** On Column Reordering, we need to redraw the View */
-  private onColumnsReordered() {
+  /** Redraw (re-render) all the expanded row detail View Slots */
+  private redrawAllViewSlots() {
     this._slots.forEach((slot) => {
-      this.redrawViewModel(slot);
+      this.redrawViewSlot(slot);
     });
   }
 
+  /** Render all the expanded row detail View Slots */
+  private renderAllViewModels() {
+    this._slots.forEach((slot) => {
+      if (slot && slot.dataContext) {
+        this.renderViewModel(slot.dataContext);
+      }
+    });
+  }
+
+  /**
+   * Just before the row get expanded or collapsed we will do the following
+   * First determine if the row is expanding or collapsing,
+   * if it's expanding we will add it to our View Slots reference array if we don't already have it
+   * or if it's collapsing we will remove it from our View Slots reference array
+   */
   private onBeforeRowDetailToggle(e: Event, args: { grid: any; item: any; }) {
     // expanding
     if (args && args.item && args.item.__collapsed) {
@@ -289,15 +313,15 @@ export class RowDetailViewExtension implements Extension {
     if (args && args.item) {
       this._slots.forEach((slot) => {
         if (slot.id === args.item.id) {
-          this.redrawViewModel(slot);
+          this.redrawViewSlot(slot);
         }
       });
     }
   }
 
   /** Redraw the necessary View Slot */
-  private redrawViewModel(slot: CreatedView) {
-    const containerElement = $(`.container_${slot.id}`);
+  private redrawViewSlot(slot: CreatedView) {
+    const containerElement = $(`.${ROW_DETAIL_CONTAINER_PREFIX}${slot.id}`);
     if (containerElement && containerElement.length) {
       this.renderViewModel(slot.dataContext);
     }
@@ -305,7 +329,7 @@ export class RowDetailViewExtension implements Extension {
 
   /** Render (or rerender) the View Slot (Row Detail) */
   private renderPreloadView() {
-    const containerElement = $(`.container_loading`);
+    const containerElement = $(`.${PRELOAD_CONTAINER_PREFIX}`);
     const viewFactory = this.viewCompiler.compile('<template><compose view.bind="template"></compose><template>', this.viewResources);
 
     if (containerElement.length) {
@@ -324,7 +348,7 @@ export class RowDetailViewExtension implements Extension {
 
   /** Render (or rerender) the View Slot (Row Detail) */
   private renderViewModel(item: any) {
-    const containerElement = $(`.container_${item.id}`);
+    const containerElement = $(`.${ROW_DETAIL_CONTAINER_PREFIX}${item.id}`);
     const viewFactory = this.viewCompiler.compile('<template><compose view-model.bind="template"></compose><template>', this.viewResources);
 
     if (containerElement.length) {

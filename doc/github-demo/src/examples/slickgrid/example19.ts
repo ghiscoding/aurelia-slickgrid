@@ -6,7 +6,7 @@ import {
   Filters,
   Formatters,
   GridOption,
-} from '../../aurelia-slickgrid';
+} from 'aurelia-slickgrid';
 
 @autoinject()
 export class Example19 {

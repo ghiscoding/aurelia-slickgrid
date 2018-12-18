@@ -24,6 +24,8 @@ export class Index {
       { route: 'example15', moduleId: PLATFORM.moduleName('./example15'), name: 'example15', nav: true, title: '15- Grid State & Local Storage' },
       { route: 'example16', moduleId: PLATFORM.moduleName('./example16'), name: 'example16', nav: true, title: '16- Row Move Plugin' },
       { route: 'example17', moduleId: PLATFORM.moduleName('./example17'), name: 'example17', nav: true, title: '17- Remote Model' },
+      { route: 'example18', moduleId: PLATFORM.moduleName('./example18'), name: 'example18', nav: true, title: '18- Draggable Grouping & Aggregators' },
+      { route: 'example19', moduleId: PLATFORM.moduleName('./example19'), name: 'example19', nav: true, title: '19- Row Detail View' },
     ];
 
     config.map(mapping);
