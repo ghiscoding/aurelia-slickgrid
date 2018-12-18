@@ -5,6 +5,9 @@ export interface RowMoveManager {
   //
   // Events
 
+  /** Fired after extension (plugin) is registered by SlickGrid */
+  onExtensionRegistered?: (plugin: any) => void;
+
   /** SlickGrid Event fired before the row is moved. */
   onBeforeMoveRows?: (e: Event, args: any) => void;
 

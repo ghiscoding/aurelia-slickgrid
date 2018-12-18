@@ -24,7 +24,7 @@
     "aurelia-slickgrid": "^2.5.0",
     "aurelia-validation": "^1.1.2",
     "bluebird": "^3.5.1",
-    "bootstrap": "^3.3.7",
+    "bootstrap": "^3.4.0",
     "flatpickr": "^4.3.2",
     "font-awesome": "^4.7.0",
     "i18next-xhr-backend": "^1.5.1",

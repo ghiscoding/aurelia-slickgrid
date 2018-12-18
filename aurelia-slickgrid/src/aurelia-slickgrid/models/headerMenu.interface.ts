@@ -54,6 +54,9 @@ export interface HeaderMenu {
   // Events
   // ------------
 
+  /** Fired after extension (plugin) is registered by SlickGrid */
+  onExtensionRegistered?: (plugin: any) => void;
+
   /** Fired before the header menu shows up. */
   onBeforeMenuShow?: (e: Event, args: HeaderMenuOnBeforeMenuShowArgs) => void;
 

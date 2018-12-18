@@ -1,8 +1,5 @@
 import { Editor, KeyCode } from 'aurelia-slickgrid';
-
-// using external non-typed js libraries
-declare var $: any;
-
+import * as $ from 'jquery';
 /*
  * An example of a 'detached' editor.
  * KeyDown events are also handled to provide handling for Tab, Shift-Tab, Esc and Ctrl-Enter.

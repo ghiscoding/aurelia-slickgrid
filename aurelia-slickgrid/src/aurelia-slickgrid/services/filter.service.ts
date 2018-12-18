@@ -198,6 +198,14 @@ export class FilterService {
         return false;
       }
 
+      // Row Detail View plugin, if the row is padding we just get the value we're filtering on from it's parent
+      if (this._gridOptions.enableRowDetailView) {
+        const metadataPrefix = this._gridOptions.rowDetailView && this._gridOptions.rowDetailView.keyPrefix || '__';
+        if (item[`${metadataPrefix}isPadding`] && item[`${metadataPrefix}parent`]) {
+          item = item[`${metadataPrefix}parent`];
+        }
+      }
+
       const fieldName = columnDef.queryField || columnDef.queryFieldFilter || columnDef.field || '';
       const fieldType = columnDef.type || FieldType.string;
       const filterSearchType = (columnDef.filterSearchType) ? columnDef.filterSearchType : null;

@@ -25,9 +25,11 @@ export class Index {
       { route: 'example16', moduleId: PLATFORM.moduleName('./example16'), name: 'example16', nav: true, title: '16- Row Move Plugin' },
       { route: 'example17', moduleId: PLATFORM.moduleName('./example17'), name: 'example17', nav: true, title: '17- Remote Model' },
       { route: 'example18', moduleId: PLATFORM.moduleName('./example18'), name: 'example18', nav: true, title: '18- Draggable Grouping & Aggregators' },
+      { route: 'example19', moduleId: PLATFORM.moduleName('./example19'), name: 'example19', nav: true, title: '19- Row Detail View' },
     ];
 
     config.map(mapping);
+    config.mapUnknownRoutes(PLATFORM.moduleName('./example1'));
 
     this.router = router;
   }

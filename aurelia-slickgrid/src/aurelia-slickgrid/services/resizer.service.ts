@@ -13,7 +13,7 @@ const DATAGRID_PAGINATION_HEIGHT = 35;
 export interface GridDimension {
   height: number | null;
   width: number | null;
-  heightWithPagination?: number;
+  heightWithPagination?: number | null;
 }
 
 @singleton(true)
@@ -178,7 +178,9 @@ export class ResizerService {
           resolve(this.resizeGridWithDimensions(newSizes));
         }, delay);
       } else {
-        resolve(this.resizeGridWithDimensions(newSizes));
+        const lastDimensions = this.resizeGridWithDimensions(newSizes);
+        this.ea.publish(`${this.aureliaEventPrefix}:onAfterResize`, lastDimensions);
+        resolve(lastDimensions);
       }
     });
   }

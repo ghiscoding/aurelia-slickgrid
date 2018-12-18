@@ -30,7 +30,7 @@
     "aurelia-polyfills": "latest",
     "aurelia-router": "^1.5.0",
     "bluebird": "^3.4.1",
-    "bootstrap": "^3.3.7",
+    "bootstrap": "^3.4.0",
     "dompurify": "^1.0.7",
     "flatpickr": "^4.2.4",
     "font-awesome": "^4.7.0",
@@ -41,7 +41,7 @@
     "moment": "^2.19.1",
     "moment-mini": "^2.18.1",
     "nps": "^5.7.1",
-    "slickgrid": "~2.3.23",
+    "slickgrid": "github:6pac/SlickGrid",
     "text-encoding-utf-8": "^1.0.2"
   },
   "peerDependencies": {},

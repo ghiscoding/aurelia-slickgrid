@@ -20,10 +20,11 @@ import { ExtensionUtility } from './extensionUtility';
 import { FilterService } from '../services/filter.service';
 import { SortService } from '../services/sort.service';
 import { SharedService } from '../services/shared.service';
+import * as $ from 'jquery';
 
 // using external non-typed js libraries
 declare var Slick: any;
-declare var $: any;
+
 @singleton(true)
 @inject(
   ExportService,
@@ -75,7 +76,12 @@ export class GridMenuExtension implements Extension {
       this.extensionUtility.sortItems(this.sharedService.gridOptions.gridMenu.customItems, 'positionOrder');
 
       this._extension = new Slick.Controls.GridMenu(this.sharedService.columnDefinitions, this.sharedService.grid, this.sharedService.gridOptions);
+
+      // hook all events
       if (this.sharedService.grid && this.sharedService.gridOptions.gridMenu) {
+        if (this.sharedService.gridOptions.gridMenu.onExtensionRegistered) {
+          this.sharedService.gridOptions.gridMenu.onExtensionRegistered(this._extension);
+        }
         this._eventHandler.subscribe(this._extension.onBeforeMenuShow, (e: any, args: CellArgs) => {
           if (this.sharedService.gridOptions.gridMenu && typeof this.sharedService.gridOptions.gridMenu.onBeforeMenuShow === 'function') {
             this.sharedService.gridOptions.gridMenu.onBeforeMenuShow(e, args);

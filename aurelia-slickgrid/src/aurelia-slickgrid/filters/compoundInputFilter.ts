@@ -11,9 +11,7 @@ import {
   OperatorType,
   SearchTerm
 } from './../models/index';
-
-// using external non-typed js libraries
-declare var $: any;
+import * as $ from 'jquery';
 
 @inject(I18N)
 export class CompoundInputFilter implements Filter {
