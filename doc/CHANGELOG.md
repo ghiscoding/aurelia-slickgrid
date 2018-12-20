@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.6.1"></a>
+## [2.6.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.6.0...v2.6.1) (2018-12-20)
+
+
+### Bug Fixes
+
+* **grouping:** toggle group not working in example 18, fixes [#119](https://github.com/ghiscoding/aurelia-slickgrid/issues/119) ([#120](https://github.com/ghiscoding/aurelia-slickgrid/issues/120)) ([10c6190](https://github.com/ghiscoding/aurelia-slickgrid/commit/10c6190))
+
+
+
 <a name="2.6.0"></a>
 # [2.6.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.5.0...v2.6.0) (2018-12-18)
 
