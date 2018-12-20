@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.6.2"></a>
+## [2.6.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.6.1...v2.6.2) (2018-12-20)
+
+
+### Bug Fixes
+
+* **converter:** add prefix to value converter to avoid conflicts ([87ad6cc](https://github.com/ghiscoding/aurelia-slickgrid/commit/87ad6cc))
+* **converter:** rename converter camel case with prefix ([5b83be8](https://github.com/ghiscoding/aurelia-slickgrid/commit/5b83be8))
+
+
+
 <a name="2.6.1"></a>
 ## [2.6.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.6.0...v2.6.1) (2018-12-20)
 
