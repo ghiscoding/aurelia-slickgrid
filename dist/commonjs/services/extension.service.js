@@ -115,7 +115,7 @@ var ExtensionService = /** @class */ (function () {
         }
         // Grouping Plugin
         // register the group item metadata provider to add expand/collapse group handlers
-        if (this.sharedService.gridOptions.enableGrouping) {
+        if (this.sharedService.gridOptions.enableDraggableGrouping || this.sharedService.gridOptions.enableGrouping) {
             if (this.groupItemMetaExtension && this.groupItemMetaExtension.register) {
                 this.extensionList.push({ name: index_1.ExtensionName.groupItemMetaProvider, class: this.groupItemMetaExtension, extension: this.groupItemMetaExtension.register() });
             }
