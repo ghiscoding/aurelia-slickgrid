@@ -28,7 +28,7 @@
           <span t="PAGE"></span>
           <input type="text"
                  class="form-control"
-                 value.bind="pageNumber | number"
+                 value.bind="pageNumber | asgNumber"
                  size="1"
                  readonly.bind="totalItems === 0"
                  change.delegate="changeToCurrentPage($event)">
@@ -59,7 +59,7 @@
       </div>
       <span class="slick-pagination-settings">
         <select id="items-per-page-label"
-                value.bind="itemsPerPage | number"
+                value.bind="itemsPerPage | asgNumber"
                 change.delegate="onChangeItemPerPage($event)">
           <option value="${pageSize}"
                   repeat.for="pageSize of paginationPageSizes"

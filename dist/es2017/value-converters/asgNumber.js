@@ -1,7 +1,7 @@
-export class NumberValueConverter {
+export class AsgNumberValueConverter {
     fromView(value, format) {
         const number = parseFloat(value);
         return isNaN(number) ? value : number;
     }
 }
-//# sourceMappingURL=number.js.map
+//# sourceMappingURL=asgNumber.js.map

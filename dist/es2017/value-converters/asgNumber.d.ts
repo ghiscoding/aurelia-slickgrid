@@ -1,3 +1,3 @@
-export declare class NumberValueConverter {
+export declare class AsgNumberValueConverter {
     fromView(value: any, format: string): number;
 }
