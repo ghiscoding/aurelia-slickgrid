@@ -26,6 +26,7 @@ export class Index {
       { route: 'example17', moduleId: PLATFORM.moduleName('./example17'), name: 'example17', nav: true, title: '17- Remote Model' },
       { route: 'example18', moduleId: PLATFORM.moduleName('./example18'), name: 'example18', nav: true, title: '18- Draggable Grouping' },
       { route: 'example19', moduleId: PLATFORM.moduleName('./example19'), name: 'example19', nav: true, title: '19- Row Detail View' },
+      { route: 'example20', moduleId: PLATFORM.moduleName('./example20'), name: 'example20', nav: true, title: '20- Frozen Columns/Rows' },
     ];
 
     config.map(mapping);

@@ -1,0 +1,33 @@
+<template>
+  <h2>${title}</h2>
+  <div class="subtitle"
+       innerhtml.bind="subTitle"></div>
+
+  <div class="row col-sm-12">
+    <span>
+      <label for="">Frozen Row: </label>
+      <input type="number"
+             value.bind="frozenRowCount">
+      <button class="btn btn-default btn-xs"
+              click.delegate="changeFrozenRowCount()">
+        Set
+      </button>
+    </span>
+    <span style="margin-left: 10px">
+      <label for="">Frozen Column: </label>
+      <input type="number"
+             value.bind="frozenColumnCount">
+      <button class="btn btn-default btn-xs"
+              click.delegate="changeFrozenColumnCount()">
+        Set
+      </button>
+    </span>
+  </div>
+
+  <aurelia-slickgrid grid-id="grid16"
+                     column-definitions.bind="columnDefinitions"
+                     grid-options.bind="gridOptions"
+                     dataset.bind="dataset"
+                     asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
+  </aurelia-slickgrid>
+</template>

@@ -1,0 +1,10 @@
+.slick-row .slick-cell.frozen:last-child,
+.slick-header-column.frozen:last-child,
+.slick-headerrow-column.frozen:last-child,
+.slick-footerrow-column.frozen:last-child {
+  border-right: 2px solid #999 !important;
+}
+
+.slick-row.frozen:last-child .slick-cell {
+  border-bottom: 2px solid #999 !important;
+}
