@@ -1,13 +1,13 @@
 import { autoinject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
-import { AureliaGridInstance, Column, Formatters, GridOption, Filters } from '../../aurelia-slickgrid';
+import { AureliaGridInstance, Column, Formatters, GridOption, Filters, FieldType } from '../../aurelia-slickgrid';
 import './example20.scss';
 
 @autoinject()
 export class Example20 {
-  title = 'Example 20: Frozen Columns/Rows';
+  title = 'Example 20: Pinned (frozen) Columns/Rows';
   subTitle = `
-    This example demonstrates the use of Frozen Columns and/or Frozen Rows<br/>
+    This example demonstrates the use of Pinned (aka frozen) Columns and/or Rows<br/>
     <ul>
       <li>You can dynamically change the frozen columns or rows</li>
     </ul>
@@ -41,59 +41,49 @@ export class Example20 {
   defineGrid() {
     this.columnDefinitions = [
       {
-        id: 'sel',
-        name: '#',
-        field: 'id',
-        behavior: 'select',
-        cssClass: 'cell-selection',
-        width: 20,
+        id: 'sel', name: '#', field: 'id',
+        minWidth: 35, width: 35, maxWidth: 35,
         cannotTriggerInsert: true,
         resizable: false,
         unselectable: true,
       },
       {
-        id: 'title',
-        name: 'Title',
-        field: 'title',
-        cssClass: 'cell-title',
+        id: 'title', name: 'Title', field: 'title',
+        minWidth: 100, width: 120,
         filterable: true,
         sortable: true
       },
       {
-        id: 'duration',
-        name: 'Duration',
-        field: 'duration',
+        id: 'duration', name: 'Duration', field: 'duration',
+        minWidth: 100, width: 120,
         filterable: true,
         sortable: true
       },
       {
-        id: '%',
-        name: '% Complete',
-        field: 'percentComplete',
+        id: 'percentComplete', name: '% Complete', field: 'percentComplete',
         resizable: false,
-        width: 80,
-        formatter: Formatters.percentComplete,
+        minWidth: 130, width: 140,
+        formatter: Formatters.percentCompleteBar,
+        type: FieldType.number,
+        filterable: true,
+        filter: { model: Filters.slider, operator: '>=' },
+        sortable: true
+      },
+      {
+        id: 'start', name: 'Start', field: 'start',
+        minWidth: 100, width: 120,
         filterable: true,
         sortable: true
       },
       {
-        id: 'start',
-        name: 'Start',
-        field: 'start',
+        id: 'finish', name: 'Finish', field: 'finish',
+        minWidth: 100, width: 120,
         filterable: true,
         sortable: true
       },
       {
-        id: 'finish',
-        name: 'Finish',
-        field: 'finish',
-        filterable: true,
-        sortable: true
-      },
-      {
-        id: 'effortDriven',
-        name: 'Effort Driven',
-        field: 'effortDriven',
+        id: 'effortDriven', name: 'Effort Driven', field: 'effortDriven',
+        minWidth: 100, width: 120,
         formatter: Formatters.checkmark,
         filterable: true,
         filter: {
@@ -103,45 +93,37 @@ export class Example20 {
         sortable: true
       },
       {
-        id: 'title1',
-        name: 'Title1',
-        field: 'title1',
-        cssClass: 'cell-title',
+        id: 'title1', name: 'Title1', field: 'title1',
+        minWidth: 100, width: 120,
         filterable: true,
         sortable: true
       },
       {
-        id: 'title2',
-        name: 'Title2',
-        field: 'title2',
-        cssClass: 'cell-title',
+        id: 'title2', name: 'Title2', field: 'title2',
+        minWidth: 100, width: 120,
         filterable: true,
         sortable: true
       },
       {
-        id: 'title3',
-        name: 'Title3',
-        field: 'title3',
-        cssClass: 'cell-title',
+        id: 'title3', name: 'Title3', field: 'title3',
+        minWidth: 100, width: 120,
         filterable: true,
         sortable: true
       },
       {
-        id: 'title4',
-        name: 'Title4',
-        field: 'title4',
-        cssClass: 'cell-title',
+        id: 'title4', name: 'Title4', field: 'title4',
+        minWidth: 100, width: 120,
         filterable: true,
         sortable: true
       }
     ];
 
     this.gridOptions = {
-      // enableAutoResize: true,
-      // autoResize: {
-      //   containerId: 'demo-container',
-      //   sidePadding: 15
-      // },
+      enableAutoResize: true,
+      autoResize: {
+        containerId: 'demo-container',
+        sidePadding: 15
+      },
       alwaysShowVerticalScroll: false,
       enableCellNavigation: true,
       enableFiltering: true,

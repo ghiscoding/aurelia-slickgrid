@@ -78,9 +78,9 @@ $header-filter-row-border-left:           0 none !default;
 $header-resizable-hover:                  1px solid #d0d0d0 !default;
 $header-scroll-width-to-remove:           16px !default;                        // without this, the header (which doesn't have scrolling) will be wider than the data viewport
 
-/* Frozen row/column */
-$frozen-border-bottom:                    1px solid #999 !default;
-$frozen-border-right:                     1px solid #999 !default;
+/* Frozen pinned rows/columns */
+$frozen-border-bottom:                    1px solid #b0b0b0 !default;
+$frozen-border-right:                     1px solid #b0b0b0 !default;
 
 /* icon font is using Font-Awesome by default but could be changed to any other icon package like Glyphicons, ... */
 $icon-font-family:                        "FontAwesome" !default;               // or Glyphicons Halflings */

@@ -5,7 +5,7 @@
 
   <div class="row col-sm-12">
     <span>
-      <label for="">Frozen Row: </label>
+      <label for="">Pinned Rows: </label>
       <input type="number"
              value.bind="frozenRowCount">
       <button class="btn btn-default btn-xs"
@@ -14,7 +14,7 @@
       </button>
     </span>
     <span style="margin-left: 10px">
-      <label for="">Frozen Column: </label>
+      <label for="">Pinned Columns: </label>
       <input type="number"
              value.bind="frozenColumnCount">
       <button class="btn btn-default btn-xs"
@@ -25,6 +25,7 @@
   </div>
 
   <aurelia-slickgrid grid-id="grid16"
+                     grid-width="850"
                      column-definitions.bind="columnDefinitions"
                      grid-options.bind="gridOptions"
                      dataset.bind="dataset"

@@ -1,10 +1,12 @@
+/** You can change the pinned border styling through these css override */
+
 .slick-row .slick-cell.frozen:last-child,
-.slick-header-column.frozen:last-child,
+// .slick-header-column.frozen:last-child,
 .slick-headerrow-column.frozen:last-child,
 .slick-footerrow-column.frozen:last-child {
-  border-right: 2px solid #999 !important;
+  border-right: 1px solid #c0c0c0 !important;
 }
 
 .slick-row.frozen:last-child .slick-cell {
-  border-bottom: 2px solid #999 !important;
+  border-bottom: 1px solid #c0c0c0 !important;
 }
