@@ -3,6 +3,8 @@
   <div class="subtitle"
        innerhtml.bind="subTitle"></div>
 
+  <br>
+
   <div class="row col-sm-12">
     <span>
       <label for="">Pinned Rows: </label>
@@ -24,8 +26,12 @@
     </span>
   </div>
 
+  <div class="col-sm-12">
+    <hr>
+  </div>
+
   <aurelia-slickgrid grid-id="grid16"
-                     grid-width="850"
+                     grid-width="875"
                      column-definitions.bind="columnDefinitions"
                      grid-options.bind="gridOptions"
                      dataset.bind="dataset"
