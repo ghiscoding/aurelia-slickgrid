@@ -264,15 +264,6 @@ export class AureliaSlickgridCustomElement {
       sortService: this.sortService,
     };
     this.dispatchCustomEvent(`${aureliaEventPrefix}-on-aurelia-grid-created`, aureliaElementInstance);
-
-    // TODO this hack is necessary only for the frozenRow, need to investigate why this is necessary
-    if (this.gridOptions && this.gridOptions.frozenRow) {
-      setTimeout(() => {
-        this.grid.setOptions({
-          frozenRow: this.gridOptions.frozenRow
-        });
-      }, 100);
-    }
   }
 
   detached(emptyDomElementContainer = false) {

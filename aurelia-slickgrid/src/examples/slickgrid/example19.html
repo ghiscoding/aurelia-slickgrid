@@ -3,9 +3,38 @@
   <div class="subtitle"
        innerhtml.bind="subTitle"></div>
 
+  <br>
+
+  <div class="row col-sm-12">
+    <span>
+      <label for="">Pinned Rows: </label>
+      <input type="number"
+             value.bind="frozenRowCount">
+      <button class="btn btn-default btn-xs"
+              click.delegate="changeFrozenRowCount()">
+        Set
+      </button>
+    </span>
+    <span style="margin-left: 10px">
+      <label for="">Pinned Columns: </label>
+      <input type="number"
+             value.bind="frozenColumnCount">
+      <button class="btn btn-default btn-xs"
+              click.delegate="changeFrozenColumnCount()">
+        Set
+      </button>
+    </span>
+  </div>
+
+  <div class="col-sm-12">
+    <hr>
+  </div>
+
   <aurelia-slickgrid grid-id="grid16"
+                     grid-width="875"
                      column-definitions.bind="columnDefinitions"
                      grid-options.bind="gridOptions"
-                     dataset.bind="dataset">
+                     dataset.bind="dataset"
+                     asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
   </aurelia-slickgrid>
 </template>
