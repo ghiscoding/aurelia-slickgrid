@@ -52,6 +52,22 @@
     margin: 0;
     outline: 0;
   }
+
+  .slick-top-panel-scroller {
+    overflow: hidden;
+  }
+
+  .slick-pane {
+    position: absolute;
+    outline: 0;
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .slick-pane-header {
+    display: block;
+  }
+
   .slick-viewport {
     overflow: auto;
     ::-webkit-scrollbar {
