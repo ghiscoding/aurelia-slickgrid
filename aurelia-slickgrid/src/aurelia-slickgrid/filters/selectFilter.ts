@@ -151,7 +151,9 @@ export class SelectFilter implements Filter {
     this.renderDomElement(newCollection);
 
     const collectionAsync = this.columnFilter.collectionAsync;
-    if (collectionAsync) {
+    if (collectionAsync && !this.columnFilter.collection) {
+      // only read the collectionAsync once (on the 1st load),
+      // we do this because Http Fetch will throw an error saying body was already read and is streaming is locked
       newCollection = await this.renderOptionsAsync(collectionAsync);
     }
 

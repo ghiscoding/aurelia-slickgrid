@@ -29,6 +29,9 @@ export interface Column {
   /** CSS class to add to the column cell */
   cssClass?: string;
 
+  /** Data key, for example this could be used as a property key for complex object comparison (e.g. dataKey: 'id') */
+  dataKey?: any;
+
   /** Do we want default sort to be ascending? True by default */
   defaultSortAsc?: boolean;
 
@@ -120,6 +123,9 @@ export interface Column {
    * @internal used internally by Aurelia-Slickgrid, to copy over the Column Editor Options
    */
   internalColumnEditor?: any;
+
+  /** Label key, for example this could be used as a property key for complex object label display (e.g. dataKey: 'name') */
+  labelKey?: any;
 
   /** Maximum Width of the column in pixels (number only). */
   maxWidth?: number;

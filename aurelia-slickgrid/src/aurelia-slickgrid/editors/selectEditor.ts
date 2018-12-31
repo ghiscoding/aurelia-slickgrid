@@ -97,17 +97,20 @@ export class SelectEditor implements Editor {
         }
       }
     };
+
     if (isMultipleSelect) {
       libOptions.single = false;
       libOptions.addTitle = true;
       libOptions.okButton = true;
       libOptions.selectAllDelimiter = ['', ''];
+
       if (this.i18n && this.i18n.tr) {
         libOptions.countSelected = this.i18n.tr('X_OF_Y_SELECTED');
         libOptions.allSelected = this.i18n.tr('ALL_SELECTED');
         libOptions.selectAllText = this.i18n.tr('SELECT_ALL');
       }
     }
+
     // assign the multiple select lib options
     this.defaultOptions = libOptions;
     this.init();

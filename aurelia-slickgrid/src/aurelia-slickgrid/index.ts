@@ -25,6 +25,7 @@ export function configure(aurelia: any, callback: any) {
   aurelia.globalResources(PLATFORM.moduleName('./value-converters/asgNumber'));
 
   // must register a transient so the container will get a new instance everytime
+  aurelia.container.registerTransient(Filters.autoComplete);
   aurelia.container.registerTransient(Filters.compoundDate);
   aurelia.container.registerTransient(Filters.compoundInput);
   aurelia.container.registerTransient(Filters.compoundSlider);
