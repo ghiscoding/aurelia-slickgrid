@@ -1,6 +1,6 @@
 import { autoinject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
-import { AureliaGridInstance, Column, Formatters, GridOption, Filters, FieldType } from '../../aurelia-slickgrid';
+import { AureliaGridInstance, Column, Formatters, GridOption, Filters, FieldType } from 'aurelia-slickgrid';
 import './example19.scss'; // provide custom CSS/SASS styling
 
 @autoinject()
