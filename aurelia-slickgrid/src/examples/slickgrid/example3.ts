@@ -16,6 +16,7 @@ import {
   OperatorType,
 } from '../../aurelia-slickgrid';
 import { CustomInputEditor } from './custom-inputEditor';
+import * as $ from 'jquery';
 
 // using external non-typed js libraries
 declare var Slick: any;
