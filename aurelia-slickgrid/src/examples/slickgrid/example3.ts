@@ -245,21 +245,6 @@ export class Example3 {
           model: Editors.date
         },
       }, {
-        id: 'effort-driven',
-        name: 'Effort Driven',
-        field: 'effortDriven',
-        filterable: true,
-        type: FieldType.boolean,
-        filter: {
-          model: Filters.singleSelect,
-          collection: [{ value: '', label: '' }, { value: true, label: 'True' }, { value: false, label: 'False' }]
-        },
-        formatter: Formatters.checkmark,
-        editor: {
-          model: Editors.checkbox,
-        },
-        minWidth: 70
-      }, {
         id: 'cityOfOrigin', name: 'City of Origin', field: 'cityOfOrigin',
         filterable: true,
         minWidth: 100,
@@ -339,6 +324,21 @@ export class Example3 {
           model: Filters.autoComplete,
           collectionAsync: this.httpFetch.fetch(URL_COUNTRY_NAMES),
         }
+      }, {
+        id: 'effort-driven',
+        name: 'Effort Driven',
+        field: 'effortDriven',
+        filterable: true,
+        type: FieldType.boolean,
+        filter: {
+          model: Filters.singleSelect,
+          collection: [{ value: '', label: '' }, { value: true, label: 'True' }, { value: false, label: 'False' }]
+        },
+        formatter: Formatters.checkmark,
+        editor: {
+          model: Editors.checkbox,
+        },
+        minWidth: 70
       }, {
         id: 'prerequisites',
         name: 'Prerequisites',
