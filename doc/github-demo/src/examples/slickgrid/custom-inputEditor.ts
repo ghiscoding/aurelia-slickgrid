@@ -1,5 +1,6 @@
-import { Editor, KeyCode } from 'aurelia-slickgrid';
+import { Column, Editor, EditorValidator, EditorValidatorOutput, KeyCode } from 'aurelia-slickgrid';
 import * as $ from 'jquery';
+
 /*
  * An example of a 'detached' editor.
  * KeyDown events are also handled to provide handling for Tab, Shift-Tab, Esc and Ctrl-Enter.
@@ -12,8 +13,25 @@ export class CustomInputEditor implements Editor {
     this.init();
   }
 
+  /** Get Column Definition object */
+  get columnDef(): Column {
+    return this.args && this.args.column || {};
+  }
+
+  /** Get Column Editor object */
+  get columnEditor(): any {
+    return this.columnDef && this.columnDef.internalColumnEditor || {};
+  }
+
+  /** Get the Validator function, can be passed in Editor property or Column Definition */
+  get validator(): EditorValidator {
+    return this.columnEditor.validator || this.columnDef.validator;
+  }
+
   init(): void {
-    this.$input = $(`<input type="text" class="editor-text" placeholder="custom" />`)
+    const placeholder = this.columnEditor && this.columnEditor.placeholder || '';
+
+    this.$input = $(`<input type="text" class="editor-text" placeholder="${placeholder}" />`)
       .appendTo(this.args.container)
       .on('keydown.nav', (e) => {
         if (e.keyCode === KeyCode.LEFT || e.keyCode === KeyCode.RIGHT) {
@@ -61,9 +79,10 @@ export class CustomInputEditor implements Editor {
     return (!(this.$input.val() === '' && this.defaultValue === null)) && (this.$input.val() !== this.defaultValue);
   }
 
-  validate() {
-    if (this.args.column.validator) {
-      const validationResults = this.args.column.validator(this.$input.val());
+  validate(): EditorValidatorOutput {
+    if (this.validator) {
+      const value = this.$input && this.$input.val && this.$input.val();
+      const validationResults = this.validator(value, this.args);
       if (!validationResults.valid) {
         return validationResults;
       }

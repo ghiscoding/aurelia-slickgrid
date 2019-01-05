@@ -1,5 +1,4 @@
 import { Column, Editor, EditorValidator, EditorValidatorOutput, KeyCode, CollectionCustomStructure, FieldType } from './../models/index';
-import { findOrDefault } from '../services/utilities';
 import * as $ from 'jquery';
 
 /*
@@ -48,7 +47,7 @@ export class AutoCompleteEditor implements Editor {
 
   init(): void {
     const columnId = this.columnDef && this.columnDef.id;
-    const placeholder = this.columnDef && this.columnDef.params && this.columnDef.params.placeholder || '';
+    const placeholder = this.columnEditor && this.columnEditor.placeholder || '';
     this.labelName = this.customStructure && this.customStructure.label || 'label';
     this.valueName = this.customStructure && this.customStructure.value || 'value';
 

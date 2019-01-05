@@ -16,6 +16,7 @@ import {
   OperatorType,
 } from '../../aurelia-slickgrid';
 import { CustomInputEditor } from './custom-inputEditor';
+import { CustomInputFilter } from './custom-inputFilter';
 import * as $ from 'jquery';
 
 // using external non-typed js libraries
@@ -157,7 +158,12 @@ export class Example3 {
         type: FieldType.string,
         editor: {
           model: CustomInputEditor,
+          placeholder: 'custom',
           validator: myCustomTitleValidator, // use a custom validator
+        },
+        filter: {
+          model: CustomInputFilter,
+          placeholder: '&#128269; custom',
         },
         minWidth: 70
       }, {
@@ -250,6 +256,7 @@ export class Example3 {
         minWidth: 100,
         editor: {
           model: Editors.autoComplete,
+          placeholder: '&#128269; search city',
 
           // We can use the autocomplete through 3 ways "collection", "collectionAsync" or with your own autocomplete options
           // use your own autocomplete options, instead of $.ajax, use Aurelia HttpClient or FetchClient
@@ -272,6 +279,7 @@ export class Example3 {
         },
         filter: {
           model: Filters.autoComplete,
+          placeholder: '&#128269; search city',
 
           // We can use the autocomplete through 3 ways "collection", "collectionAsync" or with your own autocomplete options
           // collectionAsync: this.httpFetch.fetch(URL_COUNTRIES_COLLECTION),
