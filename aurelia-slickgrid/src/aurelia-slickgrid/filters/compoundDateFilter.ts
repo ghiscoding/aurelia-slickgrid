@@ -3,6 +3,7 @@ import { I18N } from 'aurelia-i18n';
 import { mapFlatpickrDateFormatWithFieldType } from '../services/utilities';
 import {
   Column,
+  ColumnFilter,
   FieldType,
   Filter,
   FilterArguments,
@@ -10,7 +11,7 @@ import {
   GridOption,
   OperatorString,
   OperatorType,
-  SearchTerm
+  SearchTerm,
 } from './../models/index';
 import * as flatpickr from 'flatpickr';
 import * as $ from 'jquery';
@@ -37,6 +38,11 @@ export class CompoundDateFilter implements Filter {
   /** Getter for the Grid Options pulled through the Grid Object */
   private get gridOptions(): GridOption {
     return (this.grid && this.grid.getOptions) ? this.grid.getOptions() : {};
+  }
+
+  /** Getter for the Filter Operator */
+  get columnFilter(): ColumnFilter {
+    return this.columnDef && this.columnDef.filter || {};
   }
 
   set operator(op: OperatorType | OperatorString) {
@@ -143,7 +149,10 @@ export class CompoundDateFilter implements Filter {
       pickerOptions.enableTime = true;
     }
 
-    const placeholder = (this.gridOptions) ? (this.gridOptions.defaultFilterPlaceholder || '') : '';
+    let placeholder = (this.gridOptions) ? (this.gridOptions.defaultFilterPlaceholder || '') : '';
+    if (this.columnFilter && this.columnFilter.placeholder) {
+      placeholder = this.columnDef.filter.placeholder;
+    }
     const $filterInputElm: any = $(`<div class="flatpickr"><input type="text" class="form-control" data-input placeholder="${placeholder}"></div>`);
     this.flatInstance = (flatpickr && $filterInputElm[0] && typeof $filterInputElm[0].flatpickr === 'function') ? $filterInputElm[0].flatpickr(pickerOptions) : null;
     return $filterInputElm;

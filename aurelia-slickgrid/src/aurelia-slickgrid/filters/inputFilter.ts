@@ -1,12 +1,13 @@
 import {
   Column,
+  ColumnFilter,
   Filter,
   FilterArguments,
   FilterCallback,
   GridOption,
   OperatorType,
   OperatorString,
-  SearchTerm
+  SearchTerm,
 } from './../models/index';
 import * as $ from 'jquery';
 
@@ -18,6 +19,11 @@ export class InputFilter implements Filter {
   searchTerms: SearchTerm[];
   columnDef: Column;
   callback: FilterCallback;
+
+  /** Getter for the Filter Operator */
+  get columnFilter(): ColumnFilter {
+    return this.columnDef && this.columnDef.filter || {};
+  }
 
   /** Getter of input type (text, number, password) */
   get inputType() {
@@ -114,7 +120,10 @@ export class InputFilter implements Filter {
    */
   private buildTemplateHtmlString() {
     const columnId = this.columnDef && this.columnDef.id;
-    const placeholder = (this.gridOptions) ? (this.gridOptions.defaultFilterPlaceholder || '') : '';
+    let placeholder = (this.gridOptions) ? (this.gridOptions.defaultFilterPlaceholder || '') : '';
+    if (this.columnFilter && this.columnFilter.placeholder) {
+      placeholder = this.columnDef.filter.placeholder;
+    }
     return `<input type="${this._inputType || 'text'}" class="form-control search-filter filter-${columnId}" placeholder="${placeholder}">`;
   }
 

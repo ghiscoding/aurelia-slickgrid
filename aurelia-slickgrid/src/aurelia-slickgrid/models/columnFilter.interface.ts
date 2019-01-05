@@ -76,6 +76,12 @@ export interface ColumnFilter {
   filterOptions?: MultipleSelectOption | any;
 
   /**
+   * Placeholder text that can be used by some Filters.
+   * Note that this will override the default placeholder configured in the global config
+   */
+  placeholder?: string;
+
+  /**
    * Use "params" to pass any type of arguments to your Custom Filter
    * for example, to pass a second collection to a select Filter we can type this:
    * params: { options: [{ value: true, label: 'True' }, { value: true, label: 'True'} ]}

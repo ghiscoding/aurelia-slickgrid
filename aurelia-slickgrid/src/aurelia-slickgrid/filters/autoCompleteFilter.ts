@@ -301,7 +301,10 @@ export class AutoCompleteFilter implements Filter {
    */
   private buildTemplateHtmlString() {
     const columnId = this.columnDef && this.columnDef.id;
-    const placeholder = (this.gridOptions) ? (this.gridOptions.defaultFilterPlaceholder || '') : '';
+    let placeholder = (this.gridOptions) ? (this.gridOptions.defaultFilterPlaceholder || '') : '';
+    if (this.columnFilter && this.columnFilter.placeholder) {
+      placeholder = this.columnDef.filter.placeholder;
+    }
     return `<input type="text" class="form-control search-filter filter-${columnId}" placeholder="${placeholder}">`;
   }
 
