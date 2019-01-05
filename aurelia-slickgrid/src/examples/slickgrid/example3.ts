@@ -279,7 +279,7 @@ export class Example3 {
         },
         filter: {
           model: Filters.autoComplete,
-          placeholder: '&#128269; search city',
+          // placeholder: '&#128269; search city',
 
           // We can use the autocomplete through 3 ways "collection", "collectionAsync" or with your own autocomplete options
           // collectionAsync: this.httpFetch.fetch(URL_COUNTRIES_COLLECTION),
