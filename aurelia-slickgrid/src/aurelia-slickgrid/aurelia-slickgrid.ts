@@ -185,6 +185,12 @@ export class AureliaSlickgridCustomElement {
       this.dataview.beginUpdate();
       this.dataview.setItems(this._dataset, this.gridOptions.datasetIdPropertyName);
       this.dataview.endUpdate();
+
+      // if you don't want the items that are not visible (due to being filtered out
+      // or being on a different page) to stay selected, pass 'false' to the second arg
+      if (this.gridOptions && this.gridOptions.dataView && this.gridOptions.dataView.hasOwnProperty('syncGridSelection')) {
+        this.dataview.syncGridSelection(this.grid, this.gridOptions.dataView.syncGridSelection);
+      }
     }
 
     // user might want to hide the header row on page load but still have `enableFiltering: true`
