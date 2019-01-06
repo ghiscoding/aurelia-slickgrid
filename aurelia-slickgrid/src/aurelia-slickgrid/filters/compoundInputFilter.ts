@@ -127,7 +127,7 @@ export class CompoundInputFilter implements Filter {
   private buildInputHtmlString() {
     let placeholder = (this.gridOptions) ? (this.gridOptions.defaultFilterPlaceholder || '') : '';
     if (this.columnFilter && this.columnFilter.placeholder) {
-      placeholder = this.columnDef.filter.placeholder;
+      placeholder = this.columnFilter.placeholder;
     }
     return `<input class="form-control" type="${this._inputType || 'text'}" placeholder="${placeholder}" />`;
   }

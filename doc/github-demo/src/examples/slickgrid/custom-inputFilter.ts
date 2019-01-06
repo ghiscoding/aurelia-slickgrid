@@ -102,7 +102,7 @@ export class CustomInputFilter implements Filter {
   private buildTemplateHtmlString() {
     let placeholder = (this.gridOptions) ? (this.gridOptions.defaultFilterPlaceholder || '') : '';
     if (this.columnFilter && this.columnFilter.placeholder) {
-      placeholder = this.columnDef.filter.placeholder;
+      placeholder = this.columnFilter.placeholder;
     }
     return `<input type="text" class="form-control search-filter" placeholder="${placeholder}">`;
   }

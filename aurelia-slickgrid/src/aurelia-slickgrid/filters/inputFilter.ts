@@ -122,7 +122,7 @@ export class InputFilter implements Filter {
     const columnId = this.columnDef && this.columnDef.id;
     let placeholder = (this.gridOptions) ? (this.gridOptions.defaultFilterPlaceholder || '') : '';
     if (this.columnFilter && this.columnFilter.placeholder) {
-      placeholder = this.columnDef.filter.placeholder;
+      placeholder = this.columnFilter.placeholder;
     }
     return `<input type="${this._inputType || 'text'}" class="form-control search-filter filter-${columnId}" placeholder="${placeholder}">`;
   }
