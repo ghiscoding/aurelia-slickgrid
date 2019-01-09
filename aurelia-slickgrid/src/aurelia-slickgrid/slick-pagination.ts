@@ -4,10 +4,14 @@ import { GridOption } from './models/index';
 
 const aureliaEventPrefix = 'asg';
 
+// using external non-typed js libraries
+declare var Slick: any;
+
 @inject(Element, EventAggregator)
 export class SlickPaginationCustomElement {
+  private _eventHandler = new Slick.EventHandler();
   private _filterSubscriber: Subscription;
-  @bindable() grid: any;
+  @bindable() dataview: any;
   @bindable() gridPaginationOptions: GridOption;
   private _gridPaginationOptions: GridOption;
   private _isFirstRender = true;
@@ -31,14 +35,15 @@ export class SlickPaginationCustomElement {
       this.recalculateFromToIndexes();
     }
 
-    // Subscribe to Filter changed and go back to page 1 when that happen
-    this._filterSubscriber = this.ea.subscribe('filterService:filterChanged', (data: string) => {
-      this.refreshPagination(true);
-    });
-    // Subscribe to Filter clear and go back to page 1 when that happen
-    this._filterSubscriber = this.ea.subscribe('filterService:filterCleared', (data: string) => {
-      this.refreshPagination(true);
-    });
+    // Subscribe to Filter Clear & Changed and go back to page 1 when that happen
+    this._filterSubscriber = this.ea.subscribe('filterService:filterChanged', () => this.refreshPagination(true));
+    this._filterSubscriber = this.ea.subscribe('filterService:filterCleared', () => this.refreshPagination(true));
+
+    // Subscribe to any dataview row count changed so that when Adding/Deleting item(s) through the DataView
+    // that would trigger a refresh of the pagination numbers
+    if (this.dataview && this.dataview.onRowCountChanged) {
+      this._eventHandler.subscribe(this.dataview.onRowCountChanged, (e: Event, args: any) => this.onDataViewRowCountChanged(args));
+    }
   }
 
   gridPaginationOptionsChanged(newGridOptions: GridOption) {
@@ -95,6 +100,8 @@ export class SlickPaginationCustomElement {
     if (this._filterSubscriber) {
       this._filterSubscriber.dispose();
     }
+    // unsubscribe all SlickGrid events
+    this._eventHandler.unsubscribeAll();
   }
 
   onChangeItemPerPage(event: any) {
@@ -221,6 +228,26 @@ export class SlickPaginationCustomElement {
     } else {
       this.dataFrom = (this.pageNumber * this.itemsPerPage) - this.itemsPerPage + 1;
       this.dataTo = (this.totalItems < this.itemsPerPage) ? this.totalItems : (this.pageNumber * this.itemsPerPage);
+    }
+  }
+
+  /**
+   * When the DataView Row Count changes, we will refresh the numbers on the pagination however we won't trigger a backend change
+   * This will have a side effect though, which is that the "To" count won't be matching the "items per page" count,
+   * that is a necessary side effect to avoid triggering a backend query just to refresh the paging,
+   * basically we assume that this offset is fine for the time being,
+   * until user does an action which will refresh the data hence the pagination which will then become normal again
+   */
+  private onDataViewRowCountChanged(args: { current: number; previous: number; }) {
+    if (args && args.hasOwnProperty('current') && args.hasOwnProperty('previous')) {
+      const previousDataTo = this.dataTo;
+      const itemCountChanged = args.current - args.previous;
+      this.totalItems = this.totalItems + itemCountChanged;
+      this.recalculateFromToIndexes(); // basically refresh the total count in UI
+
+      // finally refresh the "To" count and we know it might be different than the "items per page" count
+      // but this is necessary since we don't want an actual backend refresh
+      this.dataTo = previousDataTo + itemCountChanged;
     }
   }
 }
