@@ -1,39 +1,32 @@
-import { autoinject } from 'aurelia-framework';
-import { I18N } from 'aurelia-i18n';
-import { AureliaGridInstance, Column, Formatters, GridOption, Filters, FieldType } from 'aurelia-slickgrid';
-import './example19.scss'; // provide custom CSS/SASS styling
+import { autoinject, PLATFORM } from 'aurelia-framework';
+import { Subscription } from 'aurelia-event-aggregator';
+import {
+  Column,
+  FieldType,
+  Filters,
+  Formatters,
+  GridOption,
+} from 'aurelia-slickgrid';
 
 @autoinject()
 export class Example19 {
-  title = 'Example 19: Pinned (frozen) Columns/Rows';
+  title = 'Example 19: Row Detail View';
   subTitle = `
-    This example demonstrates the use of Pinned (aka frozen) Columns and/or Rows<br/>
+    Add functionality to show extra information with a Row Detail View
     <ul>
-      <li>Option to pin any number of columns (left only) or rows</li>
-      <li>Option to pin the rows at the bottom instead of the top (default)</li>
-      <li>You can also dynamically any of these options, through SlickGrid "setOptions()"</li>
-      <li>Possibility to change the styling of the line border between pinned columns/rows</li>
+      <li>Click on the row "+" icon or anywhere on the row to open it (the latter can be changed via property "useRowClick: false")</li>
+      <li>Pass a View/Model as a Template to the Row Detail</li>
     </ul>
   `;
 
-  aureliaGrid: AureliaGridInstance;
-  columnDefinitions: Column[];
-  gridObj: any;
   gridOptions: GridOption;
-  frozenColumnCount = 2;
-  frozenRowCount = 3;
-  isFrozenBottom = false;
+  columnDefinitions: Column[];
   dataset: any[];
-  selectedLanguage: string;
+  subscriptions: Subscription[];
 
-  constructor(private i18n: I18N) {
-    this.selectedLanguage = this.i18n.getLocale();
+  constructor() {
+    // define the grid options & columns and then create the grid itself
     this.defineGrid();
-  }
-
-  aureliaGridReady(aureliaGrid: AureliaGridInstance) {
-    this.aureliaGrid = aureliaGrid;
-    this.gridObj = aureliaGrid && aureliaGrid.slickGrid;
   }
 
   attached() {
@@ -44,150 +37,104 @@ export class Example19 {
   /* Define grid Options and Columns */
   defineGrid() {
     this.columnDefinitions = [
+      { id: 'title', name: 'Title', field: 'title', sortable: true, type: FieldType.string, width: 70, filterable: true },
+      { id: 'duration', name: 'Duration (days)', field: 'duration', formatter: Formatters.decimal, params: { minDecimalPlaces: 1, maxDecimalPlaces: 2 }, sortable: true, type: FieldType.number, minWidth: 90, filterable: true },
+      { id: 'percent2', name: '% Complete', field: 'percentComplete2', formatter: Formatters.progressBar, type: FieldType.number, sortable: true, minWidth: 100, filterable: true, filter: { model: Filters.slider, operator: '>' } },
+      { id: 'start', name: 'Start', field: 'start', formatter: Formatters.dateIso, sortable: true, type: FieldType.date, minWidth: 90, exportWithFormatter: true, filterable: true, filter: { model: Filters.compoundDate } },
+      { id: 'finish', name: 'Finish', field: 'finish', formatter: Formatters.dateIso, sortable: true, type: FieldType.date, minWidth: 90, exportWithFormatter: true, filterable: true, filter: { model: Filters.compoundDate } },
       {
-        id: 'sel', name: '#', field: 'id',
-        minWidth: 40, width: 40, maxWidth: 40,
-        cannotTriggerInsert: true,
-        resizable: false,
-        unselectable: true,
-      },
-      {
-        id: 'title', name: 'Title', field: 'title',
-        minWidth: 100, width: 120,
-        filterable: true,
-        sortable: true
-      },
-      {
-        id: 'duration', name: 'Duration', field: 'duration',
-        minWidth: 100, width: 120,
-        filterable: true,
-        sortable: true
-      },
-      {
-        id: 'percentComplete', name: '% Complete', field: 'percentComplete',
-        resizable: false,
-        minWidth: 130, width: 140,
-        formatter: Formatters.percentCompleteBar,
-        type: FieldType.number,
-        filterable: true,
-        filter: { model: Filters.slider, operator: '>=' },
-        sortable: true
-      },
-      {
-        id: 'start', name: 'Start', field: 'start',
-        minWidth: 100, width: 120,
-        filterable: true,
-        sortable: true
-      },
-      {
-        id: 'finish', name: 'Finish', field: 'finish',
-        minWidth: 100, width: 120,
-        filterable: true,
-        sortable: true
-      },
-      {
-        id: 'effortDriven', name: 'Effort Driven', field: 'effortDriven',
-        minWidth: 100, width: 120,
-        formatter: Formatters.checkmark,
-        filterable: true,
+        id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven',
+        minWidth: 100,
+        formatter: Formatters.checkmark, type: FieldType.boolean,
+        filterable: true, sortable: true,
         filter: {
           collection: [{ value: '', label: '' }, { value: true, label: 'True' }, { value: false, label: 'False' }],
           model: Filters.singleSelect
-        },
-        sortable: true
-      },
-      {
-        id: 'title1', name: 'Title1', field: 'title1',
-        minWidth: 100, width: 120,
-        filterable: true,
-        sortable: true
-      },
-      {
-        id: 'title2', name: 'Title2', field: 'title2',
-        minWidth: 100, width: 120,
-        filterable: true,
-        sortable: true
-      },
-      {
-        id: 'title3', name: 'Title3', field: 'title3',
-        minWidth: 100, width: 120,
-        filterable: true,
-        sortable: true
-      },
-      {
-        id: 'title4', name: 'Title4', field: 'title4',
-        minWidth: 100, width: 120,
-        filterable: true,
-        sortable: true
+        }
       }
     ];
 
     this.gridOptions = {
-      enableAutoResize: true,
       autoResize: {
         containerId: 'demo-container',
         sidePadding: 15
       },
-      alwaysShowVerticalScroll: false, // disable scroll since we don't want it to show on the left pinned columns
-      enableCellNavigation: true,
       enableFiltering: true,
-      asyncEditorLoading: true,
-      forceFitColumns: false,
-      autoEdit: false,
-      frozenColumn: this.frozenColumnCount,
-      frozenRow: this.frozenRowCount,
-      // frozenBottom: true, // if you want to freeze the bottom instead of the top, you can enable this property
-      showHeaderRow: true,
-      syncColumnCellResize: false,
+      enableRowDetailView: true,
+      rowSelectionOptions: {
+        selectActiveRow: true
+      },
+      rowDetailView: {
+        // We can load the "process" asynchronously in 3 different ways (aurelia-http-client, aurelia-fetch-client OR even Promise)
+        process: (item) => this.simulateServerAsyncCall(item),
+        // process: this.httpFetch.fetch(`api/item/${item.id}`),
+
+        // load only once and reuse the same item detail without calling process method
+        loadOnce: true,
+
+        // false by default, clicking anywhere on the row will open the detail view
+        // when set to false, only the "+" icon would open the row detail
+        // if you use editor or cell navigation you would want this flag set to false (default)
+        useRowClick: true,
+
+        // how many grid rows do we want to use for the row detail panel (this is only set once and will be used for all row detail)
+        // also note that the detail view adds an extra 1 row for padding purposes
+        // so if you choose 4 panelRows, the display will in fact use 5 rows
+        panelRows: 7,
+
+        // Preload View Template
+        preloadView: PLATFORM.moduleName('examples/slickgrid/example19-preload.html'),
+
+        // ViewModel Template to load when row detail data is ready
+        viewModel: PLATFORM.moduleName('examples/slickgrid/example19-detail-view'),
+      }
     };
   }
 
   getData() {
-    // Set up some test columns.
-    const mockDataset = [];
-    for (let i = 0; i < 500; i++) {
-      mockDataset[i] = {
+    // mock a dataset
+    this.dataset = [];
+    for (let i = 0; i < 1000; i++) {
+      const randomYear = 2000 + Math.floor(Math.random() * 10);
+      const randomMonth = Math.floor(Math.random() * 11);
+      const randomDay = Math.floor((Math.random() * 29));
+      const randomPercent = Math.round(Math.random() * 100);
+
+      this.dataset[i] = {
         id: i,
         title: 'Task ' + i,
-        duration: Math.round(Math.random() * 25) + ' days',
-        percentComplete: Math.round(Math.random() * 100),
-        start: '01/01/2009',
-        finish: '01/05/2009',
-        effortDriven: (i % 5 === 0),
-        title1: Math.round(Math.random() * 25),
-        title2: Math.round(Math.random() * 25),
-        title3: Math.round(Math.random() * 25),
-        title4: Math.round(Math.random() * 25),
+        duration: (i % 33 === 0) ? null : Math.random() * 100 + '',
+        percentComplete: randomPercent,
+        percentComplete2: randomPercent,
+        percentCompleteNumber: randomPercent,
+        start: new Date(randomYear, randomMonth, randomDay),
+        finish: new Date(randomYear, (randomMonth + 1), randomDay),
+        effortDriven: (i % 5 === 0)
       };
     }
-    this.dataset = mockDataset;
   }
 
-  /** change dynamically, through slickgrid "setOptions()" the number of pinned columns */
-  changeFrozenColumnCount() {
-    if (this.gridObj && this.gridObj.setOptions) {
-      this.gridObj.setOptions({
-        frozenColumn: this.frozenColumnCount
-      });
-    }
+  /** Just for demo purposes, we will simulate an async server call and return more details on the selected row item */
+  simulateServerAsyncCall(item: any) {
+    // random set of names to use for more item detail
+    const randomNames = ['John Doe', 'Jane Doe', 'Chuck Norris', 'Bumblebee', 'Jackie Chan', 'Elvis Presley', 'Bob Marley', 'Mohammed Ali', 'Bruce Lee', 'Rocky Balboa'];
+
+    // fill the template on async delay
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const itemDetail = item;
+
+        // let's add some extra properties to our item for a better async simulation
+        itemDetail.assignee = randomNames[this.randomNumber(0, 10)];
+        itemDetail.reporter = randomNames[this.randomNumber(0, 10)];
+
+        // resolve the data after delay specified
+        resolve(itemDetail);
+      }, 1000);
+    });
   }
 
-  /** change dynamically, through slickgrid "setOptions()" the number of pinned rows */
-  changeFrozenRowCount() {
-    if (this.gridObj && this.gridObj.setOptions) {
-      this.gridObj.setOptions({
-        frozenRow: this.frozenRowCount
-      });
-    }
-  }
-
-  /** toggle dynamically, through slickgrid "setOptions()" the top/bottom pinned location */
-  toggleFrozenBottomRows() {
-    if (this.gridObj && this.gridObj.setOptions) {
-      this.gridObj.setOptions({
-        frozenBottom: !this.isFrozenBottom
-      });
-      this.isFrozenBottom = !this.isFrozenBottom; // toggle the variable
-    }
+  private randomNumber(min: number, max: number) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
   }
 }
