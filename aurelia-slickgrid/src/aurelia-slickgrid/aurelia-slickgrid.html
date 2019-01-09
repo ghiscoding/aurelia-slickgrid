@@ -4,7 +4,10 @@
       focusout.delegate="commitEdit($event.target)">
     </div>
 
-    <slick-pagination id="slickPagingContainer-${gridId}" if.bind="showPagination" asg-on-pagination-changed.delegate="paginationChanged($event.detail)"
-      grid-pagination-options.bind="gridPaginationOptions"></slick-pagination>
+    <slick-pagination id="slickPagingContainer-${gridId}" if.bind="showPagination"
+      asg-on-pagination-changed.delegate="paginationChanged($event.detail)"
+      dataview.bind="dataview"
+      grid-pagination-options.bind="gridPaginationOptions">
+    </slick-pagination>
   </div>
 </template>
