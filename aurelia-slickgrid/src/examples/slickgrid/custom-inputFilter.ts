@@ -1,4 +1,14 @@
-import { Column, Filter, FilterArguments, FilterCallback, SearchTerm, OperatorType, OperatorString } from '../../aurelia-slickgrid';
+import {
+  Column,
+  ColumnFilter,
+  Filter,
+  FilterArguments,
+  FilterCallback,
+  GridOption,
+  OperatorType,
+  OperatorString,
+  SearchTerm,
+} from '../../aurelia-slickgrid';
 import * as $ from 'jquery';
 
 export class CustomInputFilter implements Filter {
@@ -9,6 +19,16 @@ export class CustomInputFilter implements Filter {
   columnDef: Column;
   callback: FilterCallback;
   operator: OperatorType | OperatorString = OperatorType.equal;
+
+  /** Getter for the Filter Operator */
+  get columnFilter(): ColumnFilter {
+    return this.columnDef && this.columnDef.filter || {};
+  }
+
+  /** Getter for the Grid Options pulled through the Grid Object */
+  get gridOptions(): GridOption {
+    return (this.grid && this.grid.getOptions) ? this.grid.getOptions() : {};
+  }
 
   /**
    * Initialize the Filter
@@ -80,7 +100,11 @@ export class CustomInputFilter implements Filter {
    * Create the HTML template as a string
    */
   private buildTemplateHtmlString() {
-    return `<input type="text" class="form-control search-filter" placeholder="Custom Filter">`;
+    let placeholder = (this.gridOptions) ? (this.gridOptions.defaultFilterPlaceholder || '') : '';
+    if (this.columnFilter && this.columnFilter.placeholder) {
+      placeholder = this.columnFilter.placeholder;
+    }
+    return `<input type="text" class="form-control search-filter" placeholder="${placeholder}">`;
   }
 
   /**

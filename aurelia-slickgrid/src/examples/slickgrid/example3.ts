@@ -16,12 +16,16 @@ import {
   OperatorType,
 } from '../../aurelia-slickgrid';
 import { CustomInputEditor } from './custom-inputEditor';
+import { CustomInputFilter } from './custom-inputFilter';
+import * as $ from 'jquery';
 
 // using external non-typed js libraries
 declare var Slick: any;
 
 const NB_ITEMS = 100;
 const URL_SAMPLE_COLLECTION_DATA = 'src/examples/slickgrid/sample-data/collection_100_numbers.json';
+const URL_COUNTRIES_COLLECTION = 'src/examples/slickgrid/sample-data/countries.json';
+const URL_COUNTRY_NAMES = 'src/examples/slickgrid/sample-data/country_names.json';
 
 // you can create custom validator to pass to an inline editor
 const myCustomTitleValidator: EditorValidator = (value: any, args: EditorArgs) => {
@@ -100,225 +104,314 @@ export class Example3 {
 
   /* Define grid Options and Columns */
   defineGrid() {
-    this.columnDefinitions = [{
-      id: 'edit',
-      field: 'id',
-      excludeFromHeaderMenu: true,
-      formatter: Formatters.editIcon,
-      minWidth: 30,
-      maxWidth: 30,
-      // use onCellClick OR grid.onClick.subscribe which you can see down below
-      onCellClick: (e: Event, args: OnEventArgs) => {
-        console.log(args);
-        this.alertWarning = `Editing: ${args.dataContext.title}`;
-        this.aureliaGrid.gridService.highlightRow(args.row, 1500);
-        this.aureliaGrid.gridService.setSelectedRow(args.row);
-      }
-    }, {
-      id: 'delete',
-      field: 'id',
-      excludeFromHeaderMenu: true,
-      formatter: Formatters.deleteIcon,
-      minWidth: 30,
-      maxWidth: 30,
-      // use onCellClick OR grid.onClick.subscribe which you can see down below
-      /*
-      onCellClick: (e: Event, args: OnEventArgs) => {
-        console.log(args);
-        this.alertWarning = `Deleting: ${args.dataContext.title}`;
-      }
-      */
-    }, {
-      id: 'title',
-      name: 'Title',
-      field: 'title',
-      filterable: true,
-      sortable: true,
-      type: FieldType.string,
-      editor: {
-        model: Editors.longText,
-        validator: myCustomTitleValidator, // use a custom validator
-      },
-      minWidth: 100,
-      onCellChange: (e: Event, args: OnEventArgs) => {
-        console.log(args);
-        this.alertWarning = `Updated Title: ${args.dataContext.title}`;
-      }
-    }, {
-      id: 'title2',
-      name: 'Title, Custom Editor',
-      field: 'title',
-      filterable: true,
-      sortable: true,
-      type: FieldType.string,
-      editor: {
-        model: CustomInputEditor,
-        validator: myCustomTitleValidator, // use a custom validator
-      },
-      minWidth: 70
-    }, {
-      id: 'duration',
-      name: 'Duration (days)',
-      field: 'duration',
-      filterable: true,
-      minWidth: 100,
-      sortable: true,
-      type: FieldType.number,
-      filter: { model: Filters.slider, params: { hideSliderNumber: false } },
-      editor: {
-        model: Editors.slider,
-        minValue: 0,
-        maxValue: 100,
-        // params: { hideSliderNumber: true },
-      },
-      /*
-      editor: {
-        // default is 0 decimals, if no decimals is passed it will accept 0 or more decimals
-        // however if you pass the "decimalPlaces", it will validate with that maximum
-        model: Editors.float,
-        minValue: 0,
-        maxValue: 365,
-        // the default validation error message is in English but you can override it by using "errorMessage"
-        // errorMessage: this.i18n.tr('INVALID_FLOAT', { maxDecimal: 2 }),
-        params: { decimalPlaces: 2 },
-      },
-      */
-    }, {
-      id: 'complete',
-      name: '% Complete',
-      field: 'percentComplete',
-      filterable: true,
-      formatter: Formatters.multiple,
-      type: FieldType.number,
-      editor: {
-        // We can also add HTML text to be rendered (any bad script will be sanitized) but we have to opt-in, else it will be sanitized
-        enableRenderHtml: true,
-        collection: Array.from(Array(101).keys()).map(k => ({ value: k, label: k, symbol: '<i class="fa fa-percent" style="color:cadetblue"></i>' })),
-        customStructure: {
-          value: 'value',
-          label: 'label',
-          labelSuffix: 'symbol'
+    this.columnDefinitions = [
+      {
+        id: 'edit',
+        field: 'id',
+        excludeFromHeaderMenu: true,
+        formatter: Formatters.editIcon,
+        minWidth: 30,
+        maxWidth: 30,
+        // use onCellClick OR grid.onClick.subscribe which you can see down below
+        onCellClick: (e: Event, args: OnEventArgs) => {
+          console.log(args);
+          this.alertWarning = `Editing: ${args.dataContext.title}`;
+          this.aureliaGrid.gridService.highlightRow(args.row, 1500);
+          this.aureliaGrid.gridService.setSelectedRow(args.row);
+        }
+      }, {
+        id: 'delete',
+        field: 'id',
+        excludeFromHeaderMenu: true,
+        formatter: Formatters.deleteIcon,
+        minWidth: 30,
+        maxWidth: 30,
+        // use onCellClick OR grid.onClick.subscribe which you can see down below
+        /*
+        onCellClick: (e: Event, args: OnEventArgs) => {
+          console.log(args);
+          this.alertWarning = `Deleting: ${args.dataContext.title}`;
+        }
+        */
+      }, {
+        id: 'title',
+        name: 'Title',
+        field: 'title',
+        filterable: true,
+        sortable: true,
+        type: FieldType.string,
+        editor: {
+          model: Editors.longText,
+          validator: myCustomTitleValidator, // use a custom validator
         },
-        collectionSortBy: {
-          property: 'label',
-          sortDesc: true
+        minWidth: 100,
+        onCellChange: (e: Event, args: OnEventArgs) => {
+          console.log(args);
+          this.alertWarning = `Updated Title: ${args.dataContext.title}`;
+        }
+      }, {
+        id: 'title2',
+        name: 'Title, Custom Editor',
+        field: 'title',
+        filterable: true,
+        sortable: true,
+        type: FieldType.string,
+        editor: {
+          model: CustomInputEditor,
+          placeholder: 'custom',
+          validator: myCustomTitleValidator, // use a custom validator
         },
-        collectionFilterBy: {
-          property: 'value',
-          value: 0,
-          operator: OperatorType.notEqual
+        filter: {
+          model: CustomInputFilter,
+          placeholder: '&#128269; custom',
         },
-        model: Editors.singleSelect,
-      },
-      minWidth: 100,
-      params: {
-        formatters: [Formatters.collectionEditor, Formatters.percentCompleteBar],
-      }
-    }, {
-      id: 'start',
-      name: 'Start',
-      field: 'start',
-      filterable: true,
-      filter: { model: Filters.compoundDate },
-      formatter: Formatters.dateIso,
-      sortable: true,
-      minWidth: 100,
-      type: FieldType.date,
-      editor: {
-        model: Editors.date
-      },
-    }, {
-      id: 'finish',
-      name: 'Finish',
-      field: 'finish',
-      filterable: true,
-      filter: { model: Filters.compoundDate },
-      formatter: Formatters.dateIso,
-      sortable: true,
-      minWidth: 100,
-      type: FieldType.date,
-      editor: {
-        model: Editors.date
-      },
-    }, {
-      id: 'effort-driven',
-      name: 'Effort Driven',
-      field: 'effortDriven',
-      filterable: true,
-      type: FieldType.boolean,
-      filter: {
-        model: Filters.singleSelect,
-        collection: [{ value: '', label: '' }, { value: true, label: 'True' }, { value: false, label: 'False' }]
-      },
-      formatter: Formatters.checkmark,
-      editor: {
-        model: Editors.checkbox,
-      },
-      minWidth: 70
-    }, {
-      id: 'prerequisites',
-      name: 'Prerequisites',
-      field: 'prerequisites',
-      filterable: true,
-      formatter: taskFormatter,
-      minWidth: 100,
-      sortable: true,
-      type: FieldType.string,
-      editor: {
-        // We can load the "collection" asynchronously (on first load only, after that we will simply use "collection")
-        // 3 ways are supported (aurelia-http-client, aurelia-fetch-client OR even Promise)
+        minWidth: 70
+      }, {
+        id: 'duration',
+        name: 'Duration (days)',
+        field: 'duration',
+        filterable: true,
+        minWidth: 100,
+        sortable: true,
+        type: FieldType.number,
+        filter: { model: Filters.slider, params: { hideSliderNumber: false } },
+        editor: {
+          model: Editors.slider,
+          minValue: 0,
+          maxValue: 100,
+          // params: { hideSliderNumber: true },
+        },
+        /*
+        editor: {
+          // default is 0 decimals, if no decimals is passed it will accept 0 or more decimals
+          // however if you pass the "decimalPlaces", it will validate with that maximum
+          model: Editors.float,
+          minValue: 0,
+          maxValue: 365,
+          // the default validation error message is in English but you can override it by using "errorMessage"
+          // errorMessage: this.i18n.tr('INVALID_FLOAT', { maxDecimal: 2 }),
+          params: { decimalPlaces: 2 },
+        },
+        */
+      }, {
+        id: 'complete',
+        name: '% Complete',
+        field: 'percentComplete',
+        filterable: true,
+        formatter: Formatters.multiple,
+        type: FieldType.number,
+        editor: {
+          // We can also add HTML text to be rendered (any bad script will be sanitized) but we have to opt-in, else it will be sanitized
+          enableRenderHtml: true,
+          collection: Array.from(Array(101).keys()).map(k => ({ value: k, label: k, symbol: '<i class="fa fa-percent" style="color:cadetblue"></i>' })),
+          customStructure: {
+            value: 'value',
+            label: 'label',
+            labelSuffix: 'symbol'
+          },
+          collectionSortBy: {
+            property: 'label',
+            sortDesc: true
+          },
+          collectionFilterBy: {
+            property: 'value',
+            value: 0,
+            operator: OperatorType.notEqual
+          },
+          model: Editors.singleSelect,
+        },
+        minWidth: 100,
+        params: {
+          formatters: [Formatters.collectionEditor, Formatters.percentCompleteBar],
+        }
+      }, {
+        id: 'start',
+        name: 'Start',
+        field: 'start',
+        filterable: true,
+        filter: { model: Filters.compoundDate },
+        formatter: Formatters.dateIso,
+        sortable: true,
+        minWidth: 100,
+        type: FieldType.date,
+        editor: {
+          model: Editors.date
+        },
+      }, {
+        id: 'finish',
+        name: 'Finish',
+        field: 'finish',
+        filterable: true,
+        filter: { model: Filters.compoundDate },
+        formatter: Formatters.dateIso,
+        sortable: true,
+        minWidth: 100,
+        type: FieldType.date,
+        editor: {
+          model: Editors.date
+        },
+      }, {
+        id: 'cityOfOrigin', name: 'City of Origin', field: 'cityOfOrigin',
+        filterable: true,
+        minWidth: 100,
+        editor: {
+          model: Editors.autoComplete,
+          placeholder: '&#128269; search city',
 
-        // 1- USE HttpClient from "aurelia-http-client" to load collection asynchronously
-        // collectionAsync: this.http.createRequest(URL_SAMPLE_COLLECTION_DATA).asGet().send(),
+          // We can use the autocomplete through 3 ways "collection", "collectionAsync" or with your own autocomplete options
+          // use your own autocomplete options, instead of $.ajax, use Aurelia HttpClient or FetchClient
+          // here we use $.ajax just because I'm not sure how to configure Aurelia HttpClient with JSONP and CORS
+          editorOptions: {
+            minLength: 3,
+            source: (request, response) => {
+              $.ajax({
+                url: 'http://gd.geobytes.com/AutoCompleteCity',
+                dataType: 'jsonp',
+                data: {
+                  q: request.term
+                },
+                success: (data) => {
+                  response(data);
+                }
+              });
+            }
+          },
+        },
+        filter: {
+          model: Filters.autoComplete,
+          // placeholder: '&#128269; search city',
 
-        // OR 2- use "aurelia-fetch-client", they are both supported
-        collectionAsync: this.httpFetch.fetch(URL_SAMPLE_COLLECTION_DATA),
+          // We can use the autocomplete through 3 ways "collection", "collectionAsync" or with your own autocomplete options
+          // collectionAsync: this.httpFetch.fetch(URL_COUNTRIES_COLLECTION),
 
-        // OR 3- use a Promise
-        // collectionAsync: new Promise<any>((resolve) => {
-        //   setTimeout(() => {
-        //     resolve(Array.from(Array(NB_ITEMS).keys()).map(k => ({ value: k, label: k, prefix: 'Task', suffix: 'days' })));
-        //   }, 500);
-        // }),
+          // OR use your own autocomplete options, instead of $.ajax, use Aurelia HttpClient or FetchClient
+          // here we use $.ajax just because I'm not sure how to configure Aurelia HttpClient with JSONP and CORS
+          filterOptions: {
+            minLength: 3,
+            source: (request, response) => {
+              $.ajax({
+                url: 'http://gd.geobytes.com/AutoCompleteCity',
+                dataType: 'jsonp',
+                data: {
+                  q: request.term
+                },
+                success: (data) => {
+                  response(data);
+                }
+              });
+            }
+          },
+        }
+      }, {
+        id: 'countryOfOrigin', name: 'Country of Origin', field: 'countryOfOrigin',
+        formatter: Formatters.complexObject,
+        dataKey: 'code',
+        labelKey: 'name',
+        type: FieldType.object,
+        filterable: true,
+        minWidth: 100,
+        editor: {
+          model: Editors.autoComplete,
+          customStructure: { label: 'name', value: 'code' },
+          collectionAsync: this.httpFetch.fetch(URL_COUNTRIES_COLLECTION),
+        },
+        filter: {
+          model: Filters.autoComplete,
+          customStructure: { label: 'name', value: 'code' },
+          collectionAsync: this.httpFetch.fetch(URL_COUNTRIES_COLLECTION),
+        }
+      }, {
+        id: 'countryOfOriginName', name: 'Country of Origin Name', field: 'countryOfOriginName',
+        filterable: true,
+        minWidth: 100,
+        editor: {
+          model: Editors.autoComplete,
+          collectionAsync: this.httpFetch.fetch(URL_COUNTRY_NAMES),
+        },
+        filter: {
+          model: Filters.autoComplete,
+          collectionAsync: this.httpFetch.fetch(URL_COUNTRY_NAMES),
+        }
+      }, {
+        id: 'effort-driven',
+        name: 'Effort Driven',
+        field: 'effortDriven',
+        filterable: true,
+        type: FieldType.boolean,
+        filter: {
+          model: Filters.singleSelect,
+          collection: [{ value: '', label: '' }, { value: true, label: 'True' }, { value: false, label: 'False' }]
+        },
+        formatter: Formatters.checkmark,
+        editor: {
+          model: Editors.checkbox,
+        },
+        minWidth: 70
+      }, {
+        id: 'prerequisites',
+        name: 'Prerequisites',
+        field: 'prerequisites',
+        filterable: true,
+        formatter: taskFormatter,
+        minWidth: 100,
+        sortable: true,
+        type: FieldType.string,
+        editor: {
+          // We can load the "collection" asynchronously (on first load only, after that we will simply use "collection")
+          // 3 ways are supported (aurelia-http-client, aurelia-fetch-client OR even Promise)
 
-        // OR a regular "collection" load
-        // collection: Array.from(Array(NB_ITEMS).keys()).map(k => ({ value: k, label: k, prefix: 'Task', suffix: 'days' })),
-        collectionSortBy: {
-          property: 'value',
-          sortDesc: true,
-          fieldType: FieldType.number
+          // 1- USE HttpClient from "aurelia-http-client" to load collection asynchronously
+          // collectionAsync: this.http.createRequest(URL_SAMPLE_COLLECTION_DATA).asGet().send(),
+
+          // OR 2- use "aurelia-fetch-client", they are both supported
+          collectionAsync: this.httpFetch.fetch(URL_SAMPLE_COLLECTION_DATA),
+
+          // OR 3- use a Promise
+          // collectionAsync: new Promise<any>((resolve) => {
+          //   setTimeout(() => {
+          //     resolve(Array.from(Array(NB_ITEMS).keys()).map(k => ({ value: k, label: k, prefix: 'Task', suffix: 'days' })));
+          //   }, 500);
+          // }),
+
+          // OR a regular "collection" load
+          // collection: Array.from(Array(NB_ITEMS).keys()).map(k => ({ value: k, label: k, prefix: 'Task', suffix: 'days' })),
+          collectionSortBy: {
+            property: 'value',
+            sortDesc: true,
+            fieldType: FieldType.number
+          },
+          customStructure: {
+            label: 'label',
+            value: 'value',
+            labelPrefix: 'prefix',
+          },
+          collectionOptions: {
+            separatorBetweenTextLabels: ' '
+          },
+          model: Editors.multipleSelect,
         },
-        customStructure: {
-          label: 'label',
-          value: 'value',
-          labelPrefix: 'prefix',
+        filter: {
+          collectionAsync: this.httpFetch.fetch(URL_SAMPLE_COLLECTION_DATA),
+          // OR a regular collection load
+          // collection: Array.from(Array(NB_ITEMS).keys()).map(k => ({ value: k, label: k, prefix: 'Task', suffix: 'days' })),
+          collectionSortBy: {
+            property: 'value',
+            sortDesc: true,
+            fieldType: FieldType.number
+          },
+          customStructure: {
+            label: 'label',
+            value: 'value',
+            labelPrefix: 'prefix',
+          },
+          collectionOptions: {
+            separatorBetweenTextLabels: ''
+          },
+          model: Filters.multipleSelect,
+          operator: OperatorType.inContains,
         },
-        collectionOptions: {
-          separatorBetweenTextLabels: ' '
-        },
-        model: Editors.multipleSelect,
-      },
-      filter: {
-        collectionAsync: this.httpFetch.fetch(URL_SAMPLE_COLLECTION_DATA),
-        // OR a regular collection load
-        // collection: Array.from(Array(NB_ITEMS).keys()).map(k => ({ value: k, label: k, prefix: 'Task', suffix: 'days' })),
-        collectionSortBy: {
-          property: 'value',
-          sortDesc: true,
-          fieldType: FieldType.number
-        },
-        customStructure: {
-          label: 'label',
-          value: 'value',
-          labelPrefix: 'prefix',
-        },
-        collectionOptions: {
-          separatorBetweenTextLabels: ''
-        },
-        model: Filters.multipleSelect,
-        operator: OperatorType.inContains,
       }
-    }];
+    ];
 
     this.gridOptions = {
       autoEdit: this.isAutoEdit,
@@ -408,7 +501,10 @@ export class Example3 {
         start: new Date(randomYear, randomMonth, randomDay),
         finish: new Date(randomYear, (randomMonth + 1), randomDay),
         effortDriven: (i % 5 === 0),
-        prerequisites: (i % 2 === 0) && i !== 0 && i < 12 ? [i, i - 1] : []
+        prerequisites: (i % 2 === 0) && i !== 0 && i < 12 ? [i, i - 1] : [],
+        countryOfOrigin: (i % 2) ? { code: 'CA', name: 'Canada' } : { code: 'US', name: 'United States' },
+        countryOfOriginName: (i % 2) ? 'Canada' : 'United States',
+        cityOfOrigin: (i % 2) ? 'Vancouver, BC, Canada' : 'Boston, MA, United States',
       });
     }
     return tempDataset;

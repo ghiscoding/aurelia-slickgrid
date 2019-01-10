@@ -2,6 +2,7 @@ import { inject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import {
   Column,
+  ColumnFilter,
   FieldType,
   Filter,
   FilterArguments,
@@ -9,7 +10,7 @@ import {
   GridOption,
   OperatorString,
   OperatorType,
-  SearchTerm
+  SearchTerm,
 } from './../models/index';
 import * as $ from 'jquery';
 
@@ -31,6 +32,11 @@ export class CompoundInputFilter implements Filter {
   /** Getter for the Grid Options pulled through the Grid Object */
   private get gridOptions(): GridOption {
     return (this.grid && this.grid.getOptions) ? this.grid.getOptions() : {};
+  }
+
+  /** Getter for the Filter Operator */
+  get columnFilter(): ColumnFilter {
+    return this.columnDef && this.columnDef.filter || {};
   }
 
   /** Getter of input type (text, number, password) */
@@ -119,7 +125,10 @@ export class CompoundInputFilter implements Filter {
   // ------------------
 
   private buildInputHtmlString() {
-    const placeholder = (this.gridOptions) ? (this.gridOptions.defaultFilterPlaceholder || '') : '';
+    let placeholder = (this.gridOptions) ? (this.gridOptions.defaultFilterPlaceholder || '') : '';
+    if (this.columnFilter && this.columnFilter.placeholder) {
+      placeholder = this.columnFilter.placeholder;
+    }
     return `<input class="form-control" type="${this._inputType || 'text'}" placeholder="${placeholder}" />`;
   }
 
