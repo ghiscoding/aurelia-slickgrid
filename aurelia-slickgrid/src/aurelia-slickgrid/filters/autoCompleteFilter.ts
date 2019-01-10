@@ -9,7 +9,6 @@ import {
   FilterArguments,
   FilterCallback,
   GridOption,
-  MultipleSelectOption,
   OperatorType,
   OperatorString,
   SearchTerm
@@ -21,13 +20,9 @@ import * as $ from 'jquery';
 @inject(BindingEngine, CollectionService)
 export class AutoCompleteFilter implements Filter {
   private _clearFilterTriggered = false;
-  private _currentValue: any;
 
   /** DOM Element Name, useful for auto-detecting positioning (dropup / dropdown) */
   elementName: string;
-
-  /** Filter Multiple-Select options */
-  filterElmOptions: MultipleSelectOption;
 
   /** The JQuery DOM element */
   $filterElm: any;
@@ -36,7 +31,6 @@ export class AutoCompleteFilter implements Filter {
   searchTerms: SearchTerm[];
   columnDef: Column;
   callback: FilterCallback;
-  defaultOptions: MultipleSelectOption;
   isFilled = false;
 
   /** The property name for labels in the collection */
@@ -54,9 +48,7 @@ export class AutoCompleteFilter implements Filter {
   /**
    * Initialize the Filter
    */
-  constructor(protected bindingEngine: BindingEngine, protected collectionService: CollectionService) {
-    this.defaultOptions = {};
-  }
+  constructor(protected bindingEngine: BindingEngine, protected collectionService: CollectionService) { }
 
   /** Getter for the Collection Options */
   protected get collectionOptions(): CollectionOption {
@@ -96,15 +88,14 @@ export class AutoCompleteFilter implements Filter {
     this.searchTerms = args.searchTerms || [];
 
     if (!this.grid || !this.columnDef || !this.columnFilter || (!this.columnFilter.collection && !this.columnFilter.collectionAsync && !this.columnFilter.filterOptions)) {
-      throw new Error(`[Aurelia-SlickGrid] You need to pass a "collection" (or "collectionAsync") for the MultipleSelect Filter to work correctly. Also each option should include a value/label pair (or value/labelKey when using Locale). For example:: { filter: model: Filters.multipleSelect, collection: [{ value: true, label: 'True' }, { value: false, label: 'False'}] }`);
+      throw new Error(`[Aurelia-SlickGrid] You need to pass a "collection" (or "collectionAsync") for the AutoComplete Filter to work correctly. Also each option should include a value/label pair (or value/labelKey when using Locale). For example:: { filter: model: Filters.autoComplete, collection: [{ value: true, label: 'True' }, { value: false, label: 'False'}] }`);
     }
 
     this.enableTranslateLabel = this.columnFilter && this.columnFilter.enableTranslateLabel || false;
     this.labelName = this.customStructure && this.customStructure.label || 'label';
     this.valueName = this.customStructure && this.customStructure.value || 'value';
 
-    // always render the Select (dropdown) DOM element, even if user passed a "collectionAsync",
-    // if that is the case, the Select will simply be without any options but we still have to render it (else SlickGrid would throw an error)
+    // always render the DOM element, even if user passed a "collectionAsync"
     let newCollection = this.columnFilter.collection || [];
     this.renderDomElement(newCollection);
 
@@ -148,8 +139,7 @@ export class AutoCompleteFilter implements Filter {
    */
   setValues(values: SearchTerm | SearchTerm[]) {
     if (values) {
-      values = Array.isArray(values) ? values : [values];
-      this.$filterElm.multipleSelect('setSelects', values);
+      this.$filterElm.val(values);
     }
   }
 
@@ -215,7 +205,7 @@ export class AutoCompleteFilter implements Filter {
       // this has to be BEFORE the `collectionObserver().subscribe` to avoid going into an infinite loop
       this.columnFilter.collection = awaitedCollection;
 
-      // recreate Multiple Select after getting async collection
+      // recreate DOM element after getting async collection
       this.renderDomElement(awaitedCollection);
     }
 
@@ -233,7 +223,7 @@ export class AutoCompleteFilter implements Filter {
       this.bindingEngine
         .propertyObserver(this.columnFilter, 'collection')
         .subscribe((newVal) => {
-          // simply recreate/re-render the Select (dropdown) DOM Element
+          // simply recreate/re-render the DOM Element
           this.renderDomElement(newVal);
         })
     );
@@ -245,7 +235,7 @@ export class AutoCompleteFilter implements Filter {
           .collectionObserver(this.columnFilter.collection)
           .subscribe((changes: { index: number, addedCount: number, removed: any[] }[]) => {
             if (Array.isArray(changes) && changes.length > 0) {
-              // simply recreate/re-render the Select (dropdown) DOM Element
+              // simply recreate/re-render the DOM Element
               const updatedCollection = this.columnFilter.collection || [];
               this.renderDomElement(updatedCollection);
             }
@@ -259,7 +249,7 @@ export class AutoCompleteFilter implements Filter {
       collection = getDescendantProperty(collection, this.collectionOptions.collectionInObjectProperty);
     }
     if (!Array.isArray(collection)) {
-      throw new Error('The "collection" passed to the Select Filter is not a valid array');
+      throw new Error('The "collection" passed to the Autocomplete Filter is not a valid array');
     }
 
     // assign the collection to a temp variable before filtering/sorting the collection
@@ -335,7 +325,7 @@ export class AutoCompleteFilter implements Filter {
     // when user passes it's own autocomplete options
     // we still need to provide our own "select" callback implementation
     if (autoCompleteOptions) {
-      autoCompleteOptions.select = (event: Event, ui: any) => this.onClose(event, ui);
+      autoCompleteOptions.select = (event: Event, ui: any) => this.onSelect(event, ui);
       $filterElm.autocomplete(autoCompleteOptions);
     } else {
       if (!Array.isArray(collection)) {
@@ -345,7 +335,7 @@ export class AutoCompleteFilter implements Filter {
       $filterElm.autocomplete({
         minLength: 0,
         source: collection,
-        select: (event: Event, ui: any) => this.onClose(event, ui),
+        select: (event: Event, ui: any) => this.onSelect(event, ui),
       });
     }
 
@@ -370,11 +360,10 @@ export class AutoCompleteFilter implements Filter {
   // private functions
   // ------------------
 
-  private onClose(event: Event, ui: any) {
+  private onSelect(event: Event, ui: any) {
     if (ui && ui.item) {
       const itemLabel = typeof ui.item === 'string' ? ui.item : ui.item.label;
       const itemValue = typeof ui.item === 'string' ? ui.item : ui.item.value;
-      this._currentValue = itemValue;
       this.$filterElm.val(itemLabel);
       this.callback(event, { columnDef: this.columnDef, operator: this.operator, searchTerms: [itemValue] });
     }
