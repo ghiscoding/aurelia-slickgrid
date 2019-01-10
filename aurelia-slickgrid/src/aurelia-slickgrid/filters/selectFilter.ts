@@ -22,6 +22,8 @@ import * as DOMPurify from 'dompurify';
 import * as $ from 'jquery';
 
 export class SelectFilter implements Filter {
+  private _isFilterFirstRender = true;
+
   /** DOM Element Name, useful for auto-detecting positioning (dropup / dropdown) */
   elementName: string;
 
@@ -121,10 +123,11 @@ export class SelectFilter implements Filter {
   /**
    * Initialize the filter template
    */
-  async init(args: FilterArguments) {
+  async init(args: FilterArguments, isFilterFirstRender: boolean) {
     if (!args) {
       throw new Error('[Aurelia-SlickGrid] A filter must always have an "init()" with valid arguments.');
     }
+    this._isFilterFirstRender = isFilterFirstRender;
     this.grid = args.grid;
     this.callback = args.callback;
     this.columnDef = args.columnDef;
@@ -310,7 +313,7 @@ export class SelectFilter implements Filter {
     }
 
     // user can optionally add a blank entry at the beginning of the collection
-    if (this.collectionOptions && this.collectionOptions.addBlankEntry) {
+    if (this.collectionOptions && this.collectionOptions.addBlankEntry && this._isFilterFirstRender) {
       collection.unshift(this.createBlankEntry());
     }
 
