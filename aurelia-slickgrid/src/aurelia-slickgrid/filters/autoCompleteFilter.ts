@@ -307,6 +307,10 @@ export class AutoCompleteFilter implements Filter {
     const $headerElm = this.grid.getHeaderRowColumn(columnId);
     $($headerElm).empty();
 
+    // When the value is null, the parents of the input field will be checked for a class of ui-front.
+    // If an element with the ui-front class is found, the menu will be appended to that element.
+    $($headerElm).addClass('ui-front');
+
     // create the DOM element & add an ID and filter class
     const $filterElm = $(filterTemplate) as any;
     const searchTermInput = searchTerm as string;

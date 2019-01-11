@@ -51,6 +51,10 @@ export class AutoCompleteEditor implements Editor {
     this.labelName = this.customStructure && this.customStructure.label || 'label';
     this.valueName = this.customStructure && this.customStructure.value || 'value';
 
+    // When the value is null, the parents of the input field will be checked for a class of ui-front.
+    // If an element with the ui-front class is found, the menu will be appended to that element.
+    $(this.args.container).addClass('ui-front');
+
     this.$input = $(`<input type="text" class="editor-text editor-${columnId}" placeholder="${placeholder}" />`)
       .appendTo(this.args.container)
       .on('keydown.nav', (e) => {
