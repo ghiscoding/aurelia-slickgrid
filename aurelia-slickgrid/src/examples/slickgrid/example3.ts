@@ -14,6 +14,7 @@ import {
   GridOption,
   OnEventArgs,
   OperatorType,
+  Sorters,
 } from '../../aurelia-slickgrid';
 import { CustomInputEditor } from './custom-inputEditor';
 import { CustomInputFilter } from './custom-inputFilter';
@@ -253,6 +254,7 @@ export class Example3 {
       }, {
         id: 'cityOfOrigin', name: 'City of Origin', field: 'cityOfOrigin',
         filterable: true,
+        sortable: true,
         minWidth: 100,
         editor: {
           model: Editors.autoComplete,
@@ -308,7 +310,9 @@ export class Example3 {
         dataKey: 'code',
         labelKey: 'name',
         type: FieldType.object,
+        sorter: Sorters.objectString,
         filterable: true,
+        sortable: true,
         minWidth: 100,
         editor: {
           model: Editors.autoComplete,
@@ -323,6 +327,7 @@ export class Example3 {
       }, {
         id: 'countryOfOriginName', name: 'Country of Origin Name', field: 'countryOfOriginName',
         filterable: true,
+        sortable: true,
         minWidth: 100,
         editor: {
           model: Editors.autoComplete,
