@@ -73,7 +73,13 @@ export class Example8 {
               titleKey: 'HELP', // use "title" as plain string OR "titleKey" when using a translation key
               command: 'help',
               positionOrder: 99
-            }
+            },
+            // you can also add divider between commands (command is a required property but you can set it to empty string)
+            {
+              divider: true,
+              command: '',
+              positionOrder: 98
+            },
           ]
         }
       };

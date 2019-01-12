@@ -106,6 +106,12 @@ export class Example9 {
             command: 'help',
             positionOrder: 99
           },
+          // you can also add divider between commands (command is a required property but you can set it to empty string)
+          {
+            divider: true,
+            command: '',
+            positionOrder: 98
+          },
           {
             title: 'Disabled command',
             disabled: true,
