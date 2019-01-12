@@ -343,7 +343,7 @@ export class SelectEditor implements Editor {
     // user might want to sort the collection
     if (this.columnEditor && this.columnEditor.collectionSortBy) {
       const sortBy = this.columnEditor.collectionSortBy;
-      outputCollection = this.collectionService.sortCollection(outputCollection, sortBy, this.enableTranslateLabel);
+      outputCollection = this.collectionService.sortCollection(this.columnDef, outputCollection, sortBy, this.enableTranslateLabel);
     }
 
     return outputCollection;

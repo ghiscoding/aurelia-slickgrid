@@ -1,6 +1,6 @@
+import { Column } from '../models/column.interface';
 import { FieldType } from './../models/fieldType.enum';
 import { Sorters } from './index';
-import { Column } from '../models/column.interface';
 
 export function sortByFieldType(value1: any, value2: any, fieldType: FieldType, sortDirection: number, sortColumn: Column) {
   let sortResult = 0;

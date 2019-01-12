@@ -1,5 +1,5 @@
-import { Sorter } from './../models/sorter.interface';
 import { Column } from '../models/column.interface';
+import { Sorter } from './../models/sorter.interface';
 
 export const objectStringSorter: Sorter = (value1: any, value2: any, sortDirection: number, sortColumn: Column) => {
   if (!sortColumn || !sortColumn.dataKey) {

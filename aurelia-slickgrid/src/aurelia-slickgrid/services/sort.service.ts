@@ -261,9 +261,9 @@ export class SortService {
 
             // user could provide his own custom Sorter
             if (columnSortObj.sortCol && columnSortObj.sortCol.sorter) {
-              const sortResult = columnSortObj.sortCol.sorter(value1, value2, sortDirection, columnSortObj.sortCol);
-              if (sortResult !== SortDirectionNumber.neutral) {
-                return sortResult;
+              const customSortResult = columnSortObj.sortCol.sorter(value1, value2, sortDirection, columnSortObj.sortCol);
+              if (customSortResult !== SortDirectionNumber.neutral) {
+                return customSortResult;
               }
             }
 
