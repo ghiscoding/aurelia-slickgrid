@@ -12,6 +12,7 @@ import {
   HeaderMenuOnCommandArgs,
   HeaderMenuOnBeforeMenuShowArgs,
 } from '../models/index';
+import { FilterService } from '../services/filter.service';
 import { SortService } from '../services/sort.service';
 import { SharedService } from '../services/shared.service';
 import { ExtensionUtility } from './extensionUtility';
@@ -22,6 +23,7 @@ declare var Slick: any;
 @singleton(true)
 @inject(
   ExtensionUtility,
+  FilterService,
   I18N,
   SharedService,
   SortService,
@@ -32,6 +34,7 @@ export class HeaderMenuExtension implements Extension {
 
   constructor(
     private extensionUtility: ExtensionUtility,
+    private filterService: FilterService,
     private i18n: I18N,
     private sharedService: SharedService,
     private sortService: SortService,
@@ -135,13 +138,25 @@ export class HeaderMenuExtension implements Extension {
             }
           }
 
+          // Filtering Commands
+          if (options.enableFiltering && columnDef.filterable && headerMenuOptions && !headerMenuOptions.hideFilterCommands) {
+            if (!headerMenuOptions.hideClearFilterCommand && columnHeaderMenuItems.filter((item: HeaderMenuItem) => item.command === 'clear-filter').length === 0) {
+              columnHeaderMenuItems.push({
+                iconCssClass: headerMenuOptions.iconClearFilterCommand || 'fa fa-filter',
+                title: options.enableTranslate ? this.i18n.tr('REMOVE_FILTER') : Constants.TEXT_REMOVE_FILTER,
+                command: 'clear-filter',
+                positionOrder: 53
+              });
+            }
+          }
+
           // Hide Column Command
           if (headerMenuOptions && !headerMenuOptions.hideColumnHideCommand && columnHeaderMenuItems.filter((item: HeaderMenuItem) => item.command === 'hide').length === 0) {
             columnHeaderMenuItems.push({
               iconCssClass: headerMenuOptions.iconColumnHideCommand || 'fa fa-times',
               title: options.enableTranslate ? this.i18n.tr('HIDE_COLUMN') : Constants.TEXT_HIDE_COLUMN,
               command: 'hide',
-              positionOrder: 53
+              positionOrder: 54
             });
           }
 
@@ -171,6 +186,9 @@ export class HeaderMenuExtension implements Extension {
           if (this.sharedService.gridOptions && this.sharedService.gridOptions.enableAutoSizeColumns) {
             this.sharedService.grid.autosizeColumns();
           }
+          break;
+        case 'clear-filter':
+          this.clearColumnFilter(e, args);
           break;
         case 'clear-sort':
           this.clearColumnSort(e, args);
@@ -207,6 +225,9 @@ export class HeaderMenuExtension implements Extension {
 
           columnHeaderMenuItems.forEach((item) => {
             switch (item.command) {
+              case 'clear-filter':
+                item.title = this.i18n.tr('REMOVE_FILTER') || Constants.TEXT_REMOVE_FILTER;
+                break;
               case 'clear-sort':
                 item.title = this.i18n.tr('REMOVE_SORT') || Constants.TEXT_REMOVE_SORT;
                 break;
@@ -280,6 +301,13 @@ export class HeaderMenuExtension implements Extension {
         };
       });
       this.sharedService.grid.setSortColumns(newSortColumns); // add sort icon in UI
+    }
+  }
+
+  /** Clear the Filter on the current column (if it's actually filtered) */
+  private clearColumnFilter(e: Event, args: HeaderMenuOnCommandArgs) {
+    if (args && args.column) {
+      this.filterService.clearFilterByColumnId(args.column.id);
     }
   }
 
