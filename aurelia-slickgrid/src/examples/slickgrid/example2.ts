@@ -1,4 +1,11 @@
-import { Column, FieldType, Formatters, GridOption } from '../../aurelia-slickgrid';
+import {
+  Column,
+  FieldType,
+  Filters,
+  Formatters,
+  GridOption,
+  OperatorType,
+} from '../../aurelia-slickgrid';
 
 // create my custom Formatter with the Formatter type
 const myCustomCheckmarkFormatter = (row, cell, value, columnDef, dataContext) =>
@@ -35,7 +42,16 @@ export class Example2 {
   defineGrid() {
     this.columnDefinitions = [
       { id: 'title', name: 'Title', field: 'title', sortable: true, type: FieldType.string, width: 70 },
-      { id: 'phone', name: 'Phone Number using mask', field: 'phone', sortable: true, type: FieldType.number, minWidth: 100, formatter: Formatters.mask, params: { mask: '(000) 000-0000' } },
+      {
+        id: 'phone', name: 'Phone Number using mask', field: 'phone',
+        filterable: true, sortable: true, minWidth: 100,
+        type: FieldType.string, // because we use a mask filter, we should always assume the value is a string for it to behave correctly
+        formatter: Formatters.mask, params: { mask: '(000) 000-0000' },
+        filter: {
+          model: Filters.inputMask,
+          operator: OperatorType.startsWith
+        }
+      },
       { id: 'duration', name: 'Duration (days)', field: 'duration', formatter: Formatters.decimal, params: { minDecimalPlaces: 1, maxDecimalPlaces: 2 }, sortable: true, type: FieldType.number, minWidth: 90 },
       { id: 'complete', name: '% Complete', field: 'percentComplete', formatter: Formatters.percentCompleteBar, type: FieldType.number, sortable: true, minWidth: 100 },
       { id: 'percent2', name: '% Complete', field: 'percentComplete2', formatter: Formatters.progressBar, type: FieldType.number, sortable: true, minWidth: 100 },
@@ -50,6 +66,7 @@ export class Example2 {
         sidePadding: 15
       },
       enableExcelCopyBuffer: true,
+      enableFiltering: true,
     };
   }
 
