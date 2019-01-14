@@ -139,7 +139,7 @@ export class HeaderMenuExtension implements Extension {
                 iconCssClass: headerMenuOptions.iconClearSortCommand || 'fa fa-unsorted',
                 title: options.enableTranslate ? this.i18n.tr('REMOVE_SORT') : Constants.TEXT_REMOVE_SORT,
                 command: 'clear-sort',
-                positionOrder: 52
+                positionOrder: 53
               });
             }
           }
@@ -151,7 +151,7 @@ export class HeaderMenuExtension implements Extension {
                 iconCssClass: headerMenuOptions.iconClearFilterCommand || 'fa fa-filter',
                 title: options.enableTranslate ? this.i18n.tr('REMOVE_FILTER') : Constants.TEXT_REMOVE_FILTER,
                 command: 'clear-filter',
-                positionOrder: 53
+                positionOrder: 52
               });
             }
           }
