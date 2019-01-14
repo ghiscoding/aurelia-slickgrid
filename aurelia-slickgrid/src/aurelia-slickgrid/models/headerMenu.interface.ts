@@ -32,6 +32,12 @@ export interface HeaderMenu {
   /** Defaults to false, which will hide Sort (Asc/Desc & Clear Sort) commands in the Header Menu (Grid Option "enableHeaderMenu: true" has to be enabled) */
   hideSortCommands?: boolean;
 
+  /**
+   * Defaults to false, which will hide the Divider (separator) between the top sort commands and the other clear commands
+   * (Grid Option "enableHeaderMenu" and "enableSorting" have to be enabled)
+   */
+  hideSortCommandsDivider?: boolean;
+
   /** Defaults to false, which will hide the "Hide Column" command in the Header Menu (Grid Option "enableHeaderMenu: true" has to be enabled) */
   hideColumnHideCommand?: boolean;
 

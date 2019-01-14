@@ -128,12 +128,18 @@ export class HeaderMenuExtension implements Extension {
                 positionOrder: 51
               });
             }
+
+            // add a divider (separator) between the top sort commands and the other clear commands
+            if (!headerMenuOptions.hideSortCommandsDivider) {
+              columnHeaderMenuItems.push({ divider: true, command: '', positionOrder: 52 });
+            }
+
             if (!headerMenuOptions.hideClearSortCommand && columnHeaderMenuItems.filter((item: HeaderMenuItem) => item.command === 'clear-sort').length === 0) {
               columnHeaderMenuItems.push({
                 iconCssClass: headerMenuOptions.iconClearSortCommand || 'fa fa-unsorted',
                 title: options.enableTranslate ? this.i18n.tr('REMOVE_SORT') : Constants.TEXT_REMOVE_SORT,
                 command: 'clear-sort',
-                positionOrder: 52
+                positionOrder: 53
               });
             }
           }
@@ -145,7 +151,7 @@ export class HeaderMenuExtension implements Extension {
                 iconCssClass: headerMenuOptions.iconClearFilterCommand || 'fa fa-filter',
                 title: options.enableTranslate ? this.i18n.tr('REMOVE_FILTER') : Constants.TEXT_REMOVE_FILTER,
                 command: 'clear-filter',
-                positionOrder: 53
+                positionOrder: 52
               });
             }
           }
