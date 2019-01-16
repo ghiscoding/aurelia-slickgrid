@@ -36,14 +36,15 @@ export class InputMaskFilter extends InputFilter {
 
     // step 3, subscribe to the keyup event and run the callback when that happens
     // also add/remove "filled" class for styling purposes
+
     this.$filterElm.on('keyup input change', (e: any) => {
       let value = '';
       if (e && e.target && e.target.value) {
-        value = e.target.value;
+        const targetValue = e.target.value;
 
         // if it has a mask, we need to do a bit more work
         // and replace the filter string by the masked output without triggering an event
-        const unmaskedValue = this.unmaskValue(value);
+        const unmaskedValue = this.unmaskValue(targetValue);
         const maskedValue = this.maskValue(unmaskedValue);
         value = unmaskedValue;
 
@@ -73,8 +74,8 @@ export class InputMaskFilter extends InputFilter {
       maskedValue = this.inputMask.replace(/[09A]/gi, (match) => {
         // only replace the char when the mask is a 0 or 9 for a digit OR the mask is "A" and the char is a non-digit meaning a string char
         if (
-          ((match === '0' || match === '9') && /\d*/g.test(inputValue[i]))    // mask is 0 or 9 and value is a digit
-          || (match.toUpperCase() === 'A' && /[^\d]*/gi.test(inputValue[i]))  // OR mask is an "A" and value is non-digit
+          ((match === '0' || match === '9') && /\d+/g.test(inputValue[i]))    // mask is 0 or 9 and value is a digit
+          || (match.toUpperCase() === 'A' && /[^\d]+/gi.test(inputValue[i]))  // OR mask is an "A" and value is non-digit
         ) {
           return inputValue[i++] || '';
         }
@@ -87,20 +88,25 @@ export class InputMaskFilter extends InputFilter {
 
   /** From a masked string, we will remove the mask and make a regular string again */
   private unmaskValue(maskedValue: string): string {
-    let maskedMatches = [];
+    // remove anything else but digits and chars from both the input mask and the input masked value for later comparison
+    // e.g. (000) 000-0000 would return 0000000000
+    const valueWithoutSymbols = maskedValue.replace(/[^0-9a-z]*/gi, '');
+    const maskWithoutSymbols = this.inputMask.replace(/[^0-9a-z]*/gi, '');
 
-    if (/[a-z]/gi.test(this.inputMask) && /[^0-9]/gi.test(this.inputMask)) {
-      // chars only without numbers in the string
-      maskedMatches = maskedValue.match(/[a-z]*/gi);
-    } else if (/[0-9]/gi.test(this.inputMask) && /[^a-z]/gi.test(this.inputMask)) {
-      // numbers only without chars in the string
-      maskedMatches = maskedValue.match(/[0-9]*/gi);
-    } else {
-      maskedMatches = maskedValue.match(/[0-9a-z]*/gi);
+    // then we can analyze if each char on each indexes equals what the mask requires, if not the char will be disregarded from the output
+    // basically, if our mask is "0A0" and input value is "2ab", then only "2a" will be returned since the last char "b" is not part of the mask and is invalid
+    let output = '';
+    for (let i = 0; i < maskWithoutSymbols.length; i++) {
+      if (valueWithoutSymbols[i]) {
+        if (
+          ((maskWithoutSymbols[i] === '0' || maskWithoutSymbols[i] === '9') && /\d+/g.test(valueWithoutSymbols[i]))    // mask is 0 or 9 and value is a digit
+          || (maskWithoutSymbols[i].toUpperCase() === 'A' && /[^\d]+/gi.test(valueWithoutSymbols[i]))  // OR mask is an "A" and value is non-digit
+        ) {
+          output += valueWithoutSymbols[i]; // valid and matches the Mask, so we can add it up to the string output
+        }
+      }
     }
-    if (Array.isArray(maskedMatches)) {
-      return maskedMatches.join('');
-    }
-    return '';
+
+    return output;
   }
 }
