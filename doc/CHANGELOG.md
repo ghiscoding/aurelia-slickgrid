@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.7.0"></a>
+# [2.7.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.6.2...v2.7.0) (2019-01-16)
+
+
+### Bug Fixes
+
+* **autocomplete:** add "ui-front" to parent container of autocomplete ([a2b07ff](https://github.com/ghiscoding/aurelia-slickgrid/commit/a2b07ff))
+* **filter:** Select Filter "addBlankEntry" sometimes add 2x entries ([#126](https://github.com/ghiscoding/aurelia-slickgrid/issues/126)) ([e07e726](https://github.com/ghiscoding/aurelia-slickgrid/commit/e07e726))
+* **pagination:** refresh paging after adding/deleting item with DataView ([#124](https://github.com/ghiscoding/aurelia-slickgrid/issues/124)) ([3e31b24](https://github.com/ghiscoding/aurelia-slickgrid/commit/3e31b24))
+* **translateFormatter:** shouldn't convert null values to string ([#127](https://github.com/ghiscoding/aurelia-slickgrid/issues/127)) ([79a159c](https://github.com/ghiscoding/aurelia-slickgrid/commit/79a159c))
+
+
+### Features
+
+* **autocomplete:** Editor & Filter autocomplete feature  ([#122](https://github.com/ghiscoding/aurelia-slickgrid/issues/122)) ([d89b3ab](https://github.com/ghiscoding/aurelia-slickgrid/commit/d89b3ab))
+* **build:** distribution folder shouldn't be part of the Git ([#128](https://github.com/ghiscoding/aurelia-slickgrid/issues/128)) ([f84662c](https://github.com/ghiscoding/aurelia-slickgrid/commit/f84662c))
+* **divider:** add divider option to Grid Menu & Column Header Menu ([#131](https://github.com/ghiscoding/aurelia-slickgrid/issues/131)) ([4788904](https://github.com/ghiscoding/aurelia-slickgrid/commit/4788904))
+* **filter:** input mask filter ([#132](https://github.com/ghiscoding/aurelia-slickgrid/issues/132)) ([d591a8b](https://github.com/ghiscoding/aurelia-slickgrid/commit/d591a8b))
+* **frozen:** add frozen column/row example ([#121](https://github.com/ghiscoding/aurelia-slickgrid/issues/121)) ([12dde76](https://github.com/ghiscoding/aurelia-slickgrid/commit/12dde76))
+* **frozen:** add option to freeze bottom instead of just top ([#123](https://github.com/ghiscoding/aurelia-slickgrid/issues/123)) ([deb1e19](https://github.com/ghiscoding/aurelia-slickgrid/commit/deb1e19))
+* **headermenu:** add Clear Filter to each Column Header Menu ([#130](https://github.com/ghiscoding/aurelia-slickgrid/issues/130)) ([b7fa750](https://github.com/ghiscoding/aurelia-slickgrid/commit/b7fa750))
+* **sorter:** add object with dataKey as a Sort and add custom Sorter ([#129](https://github.com/ghiscoding/aurelia-slickgrid/issues/129)) ([189fb20](https://github.com/ghiscoding/aurelia-slickgrid/commit/189fb20))
+* **sorting:** add "Clear Sort" in each Column Header Menu ([#125](https://github.com/ghiscoding/aurelia-slickgrid/issues/125)) ([cd6a6e5](https://github.com/ghiscoding/aurelia-slickgrid/commit/cd6a6e5))
+
+
+
 <a name="2.6.2"></a>
 ## [2.6.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.6.1...v2.6.2) (2018-12-20)
 
