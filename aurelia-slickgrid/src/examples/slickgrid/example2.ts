@@ -1,4 +1,11 @@
-import { Column, FieldType, Formatters, GridOption } from '../../aurelia-slickgrid';
+import {
+  Column,
+  FieldType,
+  Filters,
+  Formatters,
+  GridOption,
+  OperatorType,
+} from '../../aurelia-slickgrid';
 
 // create my custom Formatter with the Formatter type
 const myCustomCheckmarkFormatter = (row, cell, value, columnDef, dataContext) =>
@@ -50,6 +57,7 @@ export class Example2 {
         sidePadding: 15
       },
       enableExcelCopyBuffer: true,
+      enableFiltering: true,
     };
   }
 

@@ -1,6 +1,6 @@
 import { I18N } from 'aurelia-i18n';
-import { autoinject, bindable } from 'aurelia-framework';
-import { AureliaGridInstance, Column, FieldType, Filters, Formatter, Formatters, GridOption } from '../../aurelia-slickgrid';
+import { autoinject } from 'aurelia-framework';
+import { AureliaGridInstance, Column, FieldType, Filters, Formatters, GridOption, OperatorType } from '../../aurelia-slickgrid';
 
 @autoinject()
 export class Example9 {
@@ -46,6 +46,16 @@ export class Example9 {
   defineGrid() {
     this.columnDefinitions = [
       { id: 'title', name: 'Title', field: 'title', headerKey: 'TITLE', filterable: true, type: FieldType.string },
+      {
+        id: 'phone', name: 'Phone Number using mask', field: 'phone',
+        filterable: true, sortable: true, minWidth: 100,
+        type: FieldType.string, // because we use a mask filter, we should always assume the value is a string for it to behave correctly
+        formatter: Formatters.mask, params: { mask: '(000) 000-0000' },
+        filter: {
+          model: Filters.inputMask,
+          operator: OperatorType.startsWith
+        }
+      },
       { id: 'duration', name: 'Duration', field: 'duration', headerKey: 'DURATION', sortable: true, filterable: true, type: FieldType.string },
       {
         id: '%', name: '% Complete', field: 'percentComplete', sortable: true, filterable: true,
@@ -140,6 +150,7 @@ export class Example9 {
       mockDataset[i] = {
         id: i,
         title: 'Task ' + i,
+        phone: this.generatePhoneNumber(),
         duration: Math.round(Math.random() * 25) + ' days',
         percentComplete: Math.round(Math.random() * 100),
         start: '01/01/2009',
@@ -148,6 +159,14 @@ export class Example9 {
       };
     }
     this.dataset = mockDataset;
+  }
+
+  generatePhoneNumber() {
+    let phone = '';
+    for (let i = 0; i < 10; i++) {
+      phone += Math.round(Math.random() * 9) + '';
+    }
+    return phone;
   }
 
   switchLanguage() {

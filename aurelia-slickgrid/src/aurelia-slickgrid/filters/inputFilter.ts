@@ -12,9 +12,9 @@ import {
 import * as $ from 'jquery';
 
 export class InputFilter implements Filter {
-  private _clearFilterTriggered = false;
-  private _inputType = 'text';
-  private $filterElm: any;
+  protected _clearFilterTriggered = false;
+  protected _inputType = 'text';
+  protected $filterElm: any;
   grid: any;
   searchTerms: SearchTerm[];
   columnDef: Column;
@@ -41,7 +41,7 @@ export class InputFilter implements Filter {
   }
 
   /** Getter for the Grid Options pulled through the Grid Object */
-  private get gridOptions(): GridOption {
+  protected get gridOptions(): GridOption {
     return (this.grid && this.grid.getOptions) ? this.grid.getOptions() : {};
   }
 
@@ -70,6 +70,7 @@ export class InputFilter implements Filter {
     // also add/remove "filled" class for styling purposes
     this.$filterElm.on('keyup input change', (e: any) => {
       const value = e && e.target && e.target.value || '';
+
       if (this._clearFilterTriggered) {
         this.callback(e, { columnDef: this.columnDef, clearFilterTriggered: this._clearFilterTriggered });
         this._clearFilterTriggered = false; // reset flag for next use
@@ -112,13 +113,13 @@ export class InputFilter implements Filter {
   }
 
   //
-  // private functions
+  // protected functions
   // ------------------
 
   /**
    * Create the HTML template as a string
    */
-  private buildTemplateHtmlString() {
+  protected buildTemplateHtmlString() {
     const columnId = this.columnDef && this.columnDef.id;
     let placeholder = (this.gridOptions) ? (this.gridOptions.defaultFilterPlaceholder || '') : '';
     if (this.columnFilter && this.columnFilter.placeholder) {
@@ -131,7 +132,7 @@ export class InputFilter implements Filter {
    * From the html template string, create a DOM element
    * @param filterTemplate
    */
-  private createDomElement(filterTemplate: string, searchTerm?: SearchTerm) {
+  protected createDomElement(filterTemplate: string, searchTerm?: SearchTerm) {
     const columnId = this.columnDef && this.columnDef.id;
     const $headerElm = this.grid.getHeaderRowColumn(columnId);
     $($headerElm).empty();
