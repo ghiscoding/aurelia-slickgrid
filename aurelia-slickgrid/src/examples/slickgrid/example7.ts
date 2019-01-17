@@ -23,6 +23,7 @@ export class Example7 {
       <li>Resize the 1st column to see all icon/command</li>
       <li>Mouse hover the 2nd column to see it's icon/command</li>
       <li>For all the other columns, click on top-right red circle icon to enable highlight of negative numbers.</li>
+      <li>Note: The "Header Button" & "Header Menu" Plugins cannot be used at the same time</li>
     </ul>
   `;
   columnDefinitions: Column[];

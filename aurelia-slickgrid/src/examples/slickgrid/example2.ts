@@ -1,10 +1,8 @@
 import {
   Column,
   FieldType,
-  Filters,
   Formatters,
   GridOption,
-  OperatorType,
 } from '../../aurelia-slickgrid';
 
 // create my custom Formatter with the Formatter type
