@@ -105,7 +105,7 @@ export class FilterService {
       const query = await backendApi.service.processOnFilterChanged(event, args);
       const endTime = new Date();
 
-      // emit an onFilterChanged event
+      // emit an onFilterChanged event when it's not called by clearAllFilters
       if (args && !args.clearFilterTriggered) {
         this.emitFilterChanged('remote');
       }
@@ -158,6 +158,8 @@ export class FilterService {
       if (columnId != null) {
         dataView.refresh();
       }
+
+      // emit an onFilterChanged event when it's not called by clearAllFilters
       if (args && !args.clearFilterTriggered) {
         this.emitFilterChanged('local');
       }
@@ -182,6 +184,10 @@ export class FilterService {
         delete this._columnFilters[colId];
       }
     }
+
+    // emit an event when filter is cleared
+    const caller = this._gridOptions && this._gridOptions.backendServiceApi ? 'remote' : 'local';
+    this.emitFilterChanged(caller);
   }
 
   /** Clear the search filters (below the column titles) */
@@ -471,17 +477,17 @@ export class FilterService {
   /**
    * A simple function that will be called to emit a change when a filter changes.
    * Other services, like Pagination, can then subscribe to it.
-   * @param sender
+   * @param caller
    */
-  emitFilterChanged(sender: 'local' | 'remote') {
-    if (sender === 'remote' && this._gridOptions && this._gridOptions.backendServiceApi) {
+  emitFilterChanged(caller: 'local' | 'remote') {
+    if (caller === 'remote' && this._gridOptions && this._gridOptions.backendServiceApi) {
       let currentFilters: CurrentFilter[] = [];
       const backendService = this._gridOptions.backendServiceApi.service;
       if (backendService && backendService.getCurrentFilters) {
         currentFilters = backendService.getCurrentFilters() as CurrentFilter[];
       }
       this.ea.publish('filterService:filterChanged', currentFilters);
-    } else if (sender === 'local') {
+    } else if (caller === 'local') {
       this.ea.publish('filterService:filterChanged', this.getCurrentLocalFilters());
     }
   }
