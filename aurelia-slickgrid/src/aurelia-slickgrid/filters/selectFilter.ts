@@ -70,7 +70,7 @@ export class SelectFilter implements Filter {
         // also add/remove "filled" class for styling purposes
         const selectedItems = this.$filterElm.multipleSelect('getSelects');
 
-        if (Array.isArray(selectedItems) && !(selectedItems.length === 1 && selectedItems[0] === '') || selectedItems.length > 1) {
+        if (Array.isArray(selectedItems) && selectedItems.length > 1 || (selectedItems.length === 1 && selectedItems[0] !== '')) {
           this.isFilled = true;
           this.$filterElm.addClass('filled').siblings('div .search-filter').addClass('filled');
         } else {
@@ -174,7 +174,7 @@ export class SelectFilter implements Filter {
     if (this.$filterElm && this.$filterElm.multipleSelect) {
       // reload the filter element by it's id, to make sure it's still a valid element (because of some issue in the GraphQL example)
       this.$filterElm.multipleSelect('setSelects', []);
-      this.$filterElm.removeClass('filled');
+      this.$filterElm.removeClass('filled').siblings('div .search-filter').removeClass('filled');
       this.searchTerms = [];
       this.callback(undefined, { columnDef: this.columnDef, clearFilterTriggered: true });
     }
