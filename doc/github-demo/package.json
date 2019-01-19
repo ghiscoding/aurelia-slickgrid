@@ -16,6 +16,7 @@
     "test": "nps test",
     "build": "nps build",
     "build-demo": "npm-run-all build del-ghpage copy-ghpage:dist",
+    "build-demo-copy-files": "npm-run-all build del-ghpage copy-ghpage:dist",
     "copy-ghpage:dist": "cross-env copyfiles --up 1 dist/**/*.* ../../../aurelia-slickgrid-GhPages",
     "del-ghpage": "cross-env rimraf ../../../aurelia-slickgrid-GhPages/**/*.*"
   },
