@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.8.0"></a>
+# [2.8.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.7.0...v2.8.0) (2019-01-19)
+
+
+### Bug Fixes
+
+* **filter:** Header Menu Clear Filter not calling Grid State change ([85e34d3](https://github.com/ghiscoding/aurelia-slickgrid/commit/85e34d3))
+* **styling:** fix a small styling issue when Filters are filled ([58bb1e1](https://github.com/ghiscoding/aurelia-slickgrid/commit/58bb1e1))
+
+
+
 <a name="2.7.0"></a>
 # [2.7.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.6.2...v2.7.0) (2019-01-16)
 
