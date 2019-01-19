@@ -55,7 +55,6 @@ export class Example2 {
         sidePadding: 15
       },
       enableExcelCopyBuffer: true,
-      enableFiltering: true,
     };
   }
 
