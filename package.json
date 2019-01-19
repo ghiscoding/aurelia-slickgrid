@@ -71,7 +71,7 @@
     "start:dev": "cd aurelia-slickgrid && yarn start",
     "prestart:client-cli": "cross-env npm run copy-i18n:client-cli",
     "start:client-cli": "cd client-cli && au run --watch",
-    "build:github-demo": "cd doc/github-demo && yarn start build",
+    "build:github-demo": "cd doc/github-demo && yarn run build-demo",
     "prestart:github-demo": "cross-env npm run copy-i18n:github-demo",
     "start:github-demo": "cd doc/github-demo && yarn start"
   },
