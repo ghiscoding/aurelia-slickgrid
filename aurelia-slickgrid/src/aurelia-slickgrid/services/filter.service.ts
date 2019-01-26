@@ -12,10 +12,11 @@ import {
   FilterCallbackArg,
   FieldType,
   GridOption,
+  KeyCode,
   OperatorType,
   OperatorString,
   SearchTerm,
-  SlickEvent
+  SlickEvent,
 } from './../models/index';
 import { getDescendantProperty } from './utilities';
 import * as $ from 'jquery';
@@ -23,6 +24,10 @@ import * as isequal from 'lodash.isequal';
 
 // using external non-typed js libraries
 declare var Slick: any;
+
+// timer for keeping track of user typing waits
+let timer: any;
+const DEFAULT_FILTER_TYPING_DEBOUNCE = 500;
 
 @singleton(true)
 @inject(EventAggregator, FilterFactory)
@@ -61,7 +66,8 @@ export class FilterService {
    * Attach a backend filter hook to the grid
    * @param grid SlickGrid Grid object
    */
-  attachBackendOnFilter(grid: any) {
+  attachBackendOnFilter(grid: any, dataView: any) {
+    this._dataView = dataView;
     this._filters = [];
     this._slickSubscriber = new Slick.Event();
 
@@ -81,7 +87,7 @@ export class FilterService {
     });
   }
 
-  async attachBackendOnFilterSubscribe(event: Event, args: any) {
+  async attachBackendOnFilterSubscribe(event: KeyboardEvent, args: any) {
     if (!args || !args.grid) {
       throw new Error('Something went wrong when trying to attach the "attachBackendOnFilterSubscribe(event, args)" function, it seems that "args" is not populated correctly');
     }
@@ -101,35 +107,44 @@ export class FilterService {
         backendApi.preProcess();
       }
 
+      // only add a delay when user is typing, on select dropdown filter it will execute right away
+      let debounceTypingDelay = 0;
+      if (event && event.keyCode !== KeyCode.ENTER && (event.type === 'input' || event.type === 'keyup' || event.type === 'keydown')) {
+        debounceTypingDelay = backendApi.filterTypingDebounce || DEFAULT_FILTER_TYPING_DEBOUNCE;
+      }
+
       // call the service to get a query back
-      const query = await backendApi.service.processOnFilterChanged(event, args);
-      const endTime = new Date();
+      clearTimeout(timer);
+      timer = setTimeout(async () => {
+        const query = await backendApi.service.processOnFilterChanged(event, args);
+        const endTime = new Date();
 
-      // emit an onFilterChanged event when it's not called by clearAllFilters
-      if (args && !args.clearFilterTriggered) {
-        this.emitFilterChanged('remote');
-      }
-
-      // await for the Promise to resolve the data
-      const processResult = await backendApi.process(query);
-
-      // from the result, call our internal post process to update the Dataset and Pagination info
-      if (processResult && backendApi.internalPostProcess) {
-        backendApi.internalPostProcess(processResult);
-      }
-
-      // send the response process to the postProcess callback
-      if (backendApi.postProcess !== undefined) {
-        if (processResult instanceof Object) {
-          processResult.statistics = {
-            startTime,
-            endTime,
-            executionTime: endTime.valueOf() - startTime.valueOf(),
-            totalItemCount: this._gridOptions && this._gridOptions.pagination && this._gridOptions.pagination.totalItems
-          };
+        // emit an onFilterChanged event when it's not called by clearAllFilters
+        if (args && !args.clearFilterTriggered) {
+          this.emitFilterChanged('remote');
         }
-        backendApi.postProcess(processResult);
-      }
+
+        // await for the Promise to resolve the data
+        const processResult = await backendApi.process(query);
+
+        // from the result, call our internal post process to update the Dataset and Pagination info
+        if (processResult && backendApi.internalPostProcess) {
+          backendApi.internalPostProcess(processResult);
+        }
+
+        // send the response process to the postProcess callback
+        if (backendApi.postProcess !== undefined) {
+          if (processResult instanceof Object) {
+            processResult.statistics = {
+              startTime,
+              endTime,
+              executionTime: endTime.valueOf() - startTime.valueOf(),
+              totalItemCount: this._gridOptions && this._gridOptions.pagination && this._gridOptions.pagination.totalItems
+            };
+          }
+          backendApi.postProcess(processResult);
+        }
+      }, debounceTypingDelay);
     } catch (e) {
       if (backendApi && backendApi.onError) {
         backendApi.onError(e);
@@ -380,7 +395,7 @@ export class FilterService {
     return currentFilters;
   }
 
-  callbackSearchEvent(e: Event | undefined, args: FilterCallbackArg) {
+  callbackSearchEvent(e: KeyboardEvent | undefined, args: FilterCallbackArg) {
     if (args) {
       const searchTerm = ((e && e.target) ? (e.target as HTMLInputElement).value : undefined);
       const searchTerms = (args.searchTerms && Array.isArray(args.searchTerms)) ? args.searchTerms : (searchTerm ? [searchTerm] : undefined);
@@ -410,8 +425,8 @@ export class FilterService {
         this._columnFilters[colId] = colFilter;
       }
 
-      // trigger an event only if Filters changed
-      if (!isequal(oldColumnFilters, this._columnFilters)) {
+      // trigger an event only if Filters changed or if ENTER key was pressed
+      if (e && e.keyCode === KeyCode.ENTER || !isequal(oldColumnFilters, this._columnFilters)) {
         this.triggerEvent(this._slickSubscriber, {
           clearFilterTriggered: args && args.clearFilterTriggered,
           columnId,
