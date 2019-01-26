@@ -339,8 +339,14 @@ export class GridService {
     if (itemId === undefined) {
       throw new Error(`Cannot delete a row without a valid "id"`);
     }
+
     if (this._dataView.getRowById(itemId) === undefined) {
       throw new Error(`Could not find the item in the grid by it's associated "id"`);
+    }
+
+    // when user has row selection enabled, we should clear any selection to avoid confusion after a delete
+    if (this._grid && this._gridOptions && (this._gridOptions.enableCheckboxSelector || this._gridOptions.enableRowSelection)) {
+      this._grid.setSelectedRows([]);
     }
 
     // delete the item from the dataView
