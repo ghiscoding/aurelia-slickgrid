@@ -1,18 +1,19 @@
 import { bindable, inject } from 'aurelia-framework';
-import { Subscription, EventAggregator } from 'aurelia-event-aggregator';
+import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
 import { GridOption } from './models/index';
 
-const aureliaEventPrefix = 'asg';
+const DEFAULT_AURELIA_EVENT_PREFIX = 'asg';
 
 // using external non-typed js libraries
 declare var Slick: any;
 
 @inject(Element, EventAggregator)
 export class SlickPaginationCustomElement {
-  private _eventHandler = new Slick.EventHandler();
-  private _filterSubscriber: Subscription;
   @bindable() dataview: any;
   @bindable() gridPaginationOptions: GridOption;
+  private _aureliaEventPrefix = DEFAULT_AURELIA_EVENT_PREFIX;
+  private _eventHandler = new Slick.EventHandler();
+  private _filterSubscriber: Subscription;
   private _gridPaginationOptions: GridOption;
   private _isFirstRender = true;
 
@@ -29,6 +30,8 @@ export class SlickPaginationCustomElement {
 
   bind(binding: any, contexts: any) {
     this._gridPaginationOptions = binding.gridPaginationOptions;
+    this._aureliaEventPrefix = (this._gridPaginationOptions && this._gridPaginationOptions.defaultAureliaEventPrefix) ? this._gridPaginationOptions.defaultAureliaEventPrefix : DEFAULT_AURELIA_EVENT_PREFIX;
+
     if (!binding.gridPaginationOptions || (binding.gridPaginationOptions.pagination && binding.gridPaginationOptions.pagination.totalItems !== this.totalItems)) {
       this.refreshPagination();
     } else if (binding.gridPaginationOptions.pagination.totalItems === 0) {
@@ -41,9 +44,8 @@ export class SlickPaginationCustomElement {
 
     // Subscribe to any dataview row count changed so that when Adding/Deleting item(s) through the DataView
     // that would trigger a refresh of the pagination numbers
-    if (this.dataview && this.dataview.onRowCountChanged) {
-      this._eventHandler.subscribe(this.dataview.onRowCountChanged, (e: Event, args: any) => this.onDataViewRowCountChanged(args));
-    }
+    this.ea.subscribe(`${this._aureliaEventPrefix}:on-item-added`, (items: any | any[]) => this.onItemAddedOrRemoved(items, true));
+    this.ea.subscribe(`${this._aureliaEventPrefix}:on-item-deleted`, (items: any | any[]) => this.onItemAddedOrRemoved(items, false));
   }
 
   gridPaginationOptionsChanged(newGridOptions: GridOption) {
@@ -209,7 +211,7 @@ export class SlickPaginationCustomElement {
     }
 
     // dispatch the changes to the parent component
-    this.elm.dispatchEvent(new CustomEvent(`${aureliaEventPrefix}-on-pagination-changed`, {
+    this.elm.dispatchEvent(new CustomEvent(`${this._aureliaEventPrefix}-on-pagination-changed`, {
       bubbles: true,
       detail: {
         pageNumber: this.pageNumber,
@@ -232,22 +234,24 @@ export class SlickPaginationCustomElement {
   }
 
   /**
-   * When the DataView Row Count changes, we will refresh the numbers on the pagination however we won't trigger a backend change
+   * When item is added or removed, we will refresh the numbers on the pagination however we won't trigger a backend change
    * This will have a side effect though, which is that the "To" count won't be matching the "items per page" count,
    * that is a necessary side effect to avoid triggering a backend query just to refresh the paging,
    * basically we assume that this offset is fine for the time being,
    * until user does an action which will refresh the data hence the pagination which will then become normal again
    */
-  private onDataViewRowCountChanged(args: { current: number; previous: number; }) {
-    if (args && args.hasOwnProperty('current') && args.hasOwnProperty('previous')) {
+  private onItemAddedOrRemoved(items: any | any[], isItemAdded = true) {
+    if (items !== null) {
       const previousDataTo = this.dataTo;
-      const itemCountChanged = args.current - args.previous;
-      this.totalItems = this.totalItems + itemCountChanged;
-      this.recalculateFromToIndexes(); // basically refresh the total count in UI
+      const itemCount = Array.isArray(items) ? items.length : 1;
+      const itemCountWithDirection = isItemAdded ? +itemCount : -itemCount;
+      // refresh the total count in the pagination and in the UI
+      this.totalItems += itemCountWithDirection;
+      this.recalculateFromToIndexes();
 
       // finally refresh the "To" count and we know it might be different than the "items per page" count
       // but this is necessary since we don't want an actual backend refresh
-      this.dataTo = previousDataTo + itemCountChanged;
+      this.dataTo = previousDataTo + itemCountWithDirection;
     }
   }
 }

@@ -41,8 +41,8 @@ import * as $ from 'jquery';
 // using external non-typed js libraries
 declare var Slick: any;
 
-const aureliaEventPrefix = 'asg';
-const eventPrefix = 'sg';
+const DEFAULT_AURELIA_EVENT_PREFIX = 'asg';
+const DEFAULT_SLICKGRID_EVENT_PREFIX = 'sg';
 
 // Aurelia doesn't support well TypeScript @autoinject in a Plugin so we'll do it the old fashion way
 @inject(
@@ -124,7 +124,7 @@ export class AureliaSlickgridCustomElement {
   }
 
   initialization() {
-    this.dispatchCustomEvent(`${aureliaEventPrefix}-on-before-grid-create`);
+    this.dispatchCustomEvent(`${DEFAULT_AURELIA_EVENT_PREFIX}-on-before-grid-create`);
     this.ea.publish('onBeforeGridCreate', true);
 
     // make sure the dataset is initialized (if not it will throw an error that it cannot getLength of null)
@@ -201,13 +201,13 @@ export class AureliaSlickgridCustomElement {
 
     // publish & dispatch certain events
     this.ea.publish('onGridCreated', this.grid);
-    this.dispatchCustomEvent(`${aureliaEventPrefix}-on-grid-created`, this.grid);
+    this.dispatchCustomEvent(`${DEFAULT_AURELIA_EVENT_PREFIX}-on-grid-created`, this.grid);
 
     // after the DataView is created & updated execute some processes & dispatch some events
     if (!this.customDataView) {
       this.executeAfterDataviewCreated(this.grid, this.gridOptions, this.dataview);
       this.ea.publish('onDataviewCreated', this.dataview);
-      this.dispatchCustomEvent(`${aureliaEventPrefix}-on-dataview-created`, this.dataview);
+      this.dispatchCustomEvent(`${DEFAULT_AURELIA_EVENT_PREFIX}-on-dataview-created`, this.dataview);
     }
 
     // attach resize ONLY after the dataView is ready
@@ -263,12 +263,12 @@ export class AureliaSlickgridCustomElement {
       resizerService: this.resizerService,
       sortService: this.sortService,
     };
-    this.dispatchCustomEvent(`${aureliaEventPrefix}-on-aurelia-grid-created`, aureliaElementInstance);
+    this.dispatchCustomEvent(`${DEFAULT_AURELIA_EVENT_PREFIX}-on-aurelia-grid-created`, aureliaElementInstance);
   }
 
   detached(emptyDomElementContainer = false) {
     this.ea.publish('onBeforeGridDestroy', this.grid);
-    this.dispatchCustomEvent(`${aureliaEventPrefix}-on-before-grid-destroy`, this.grid);
+    this.dispatchCustomEvent(`${DEFAULT_AURELIA_EVENT_PREFIX}-on-before-grid-destroy`, this.grid);
     this.dataview = [];
     this._eventHandler.unsubscribeAll();
     this.grid.destroy();
@@ -278,7 +278,7 @@ export class AureliaSlickgridCustomElement {
     }
 
     this.ea.publish('onAfterGridDestroyed', true);
-    this.dispatchCustomEvent(`${aureliaEventPrefix}-on-after-grid-destroyed`, this.grid);
+    this.dispatchCustomEvent(`${DEFAULT_AURELIA_EVENT_PREFIX}-on-after-grid-destroyed`, this.grid);
 
     // dispose of all Services
     this.serviceList.forEach((service: any) => {
@@ -438,7 +438,7 @@ export class AureliaSlickgridCustomElement {
     for (const prop in grid) {
       if (grid.hasOwnProperty(prop) && prop.startsWith('on')) {
         this._eventHandler.subscribe(grid[prop], (e: any, args: any) => {
-          return this.dispatchCustomEvent(`${eventPrefix}-${toKebabCase(prop)}`, { eventData: e, args });
+          return this.dispatchCustomEvent(`${DEFAULT_SLICKGRID_EVENT_PREFIX}-${toKebabCase(prop)}`, { eventData: e, args });
         });
       }
     }
@@ -447,7 +447,7 @@ export class AureliaSlickgridCustomElement {
     for (const prop in dataView) {
       if (dataView.hasOwnProperty(prop) && prop.startsWith('on')) {
         this._eventHandler.subscribe(dataView[prop], (e: any, args: any) => {
-          return this.dispatchCustomEvent(`${eventPrefix}-${toKebabCase(prop)}`, { eventData: e, args });
+          return this.dispatchCustomEvent(`${DEFAULT_SLICKGRID_EVENT_PREFIX}-${toKebabCase(prop)}`, { eventData: e, args });
         });
       }
     }
@@ -455,7 +455,7 @@ export class AureliaSlickgridCustomElement {
     // expose GridState Service changes event through dispatch
     this.subscriptions.push(
       this.ea.subscribe('gridStateService:changed', (gridStateChange: GridStateChange) => {
-        this.elm.dispatchEvent(new CustomEvent(`${aureliaEventPrefix}-on-grid-state-changed`, {
+        this.elm.dispatchEvent(new CustomEvent(`${DEFAULT_AURELIA_EVENT_PREFIX}-on-grid-state-changed`, {
           bubbles: true,
           detail: gridStateChange
         }));
