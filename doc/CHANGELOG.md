@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.8.1"></a>
+## [2.8.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.8.0...v2.8.1) (2019-02-02)
+
+
+### Bug Fixes
+
+* **backend:** debounceTypingDelay on input Filter was no longer working ([#134](https://github.com/ghiscoding/aurelia-slickgrid/issues/134)) ([ab2be81](https://github.com/ghiscoding/aurelia-slickgrid/commit/ab2be81))
+* **pagination:** incorrect pagination behavior on adding/removing items ([#135](https://github.com/ghiscoding/aurelia-slickgrid/issues/135)) ([1092282](https://github.com/ghiscoding/aurelia-slickgrid/commit/1092282))
+
+
+### Features
+
+* **gridService:** add new methods to GridService ([#133](https://github.com/ghiscoding/aurelia-slickgrid/issues/133)) ([e881bd3](https://github.com/ghiscoding/aurelia-slickgrid/commit/e881bd3)), closes [#110](https://github.com/ghiscoding/aurelia-slickgrid/issues/110) [#111](https://github.com/ghiscoding/aurelia-slickgrid/issues/111)
+
+
+
 <a name="2.8.0"></a>
 # [2.8.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.7.0...v2.8.0) (2019-01-19)
 
