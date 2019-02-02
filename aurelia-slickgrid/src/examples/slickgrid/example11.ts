@@ -70,6 +70,21 @@ export class Example11 {
   defineGrid() {
     this.columnDefinitions = [
       {
+        id: 'delete',
+        field: 'id',
+        excludeFromHeaderMenu: true,
+        formatter: Formatters.deleteIcon,
+        minWidth: 30,
+        maxWidth: 30,
+        // use onCellClick OR grid.onClick.subscribe which you can see down below
+        onCellClick: (e: Event, args: OnEventArgs) => {
+          console.log(args);
+          if (confirm('Are you sure?')) {
+            this.aureliaGrid.gridService.deleteDataGridItemById(args.dataContext.id);
+          }
+        }
+      },
+      {
         id: 'title', name: 'Title', field: 'title',
         sortable: true,
         type: FieldType.string,
@@ -176,7 +191,7 @@ export class Example11 {
       finish: new Date(randomYear, (randomMonth + 2), randomDay),
       effortDriven: true
     };
-    this.aureliaGrid.gridService.addItemToDatagrid(newItem);
+    this.aureliaGrid.gridService.addItemToDatagrid(newItem, true, true);
   }
 
   /** Change the Duration Rows Background Color */
