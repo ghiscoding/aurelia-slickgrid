@@ -356,8 +356,8 @@ export class AureliaSlickgridCustomElement {
   }
 
   /**
-   * Define what our internal Post Process callback, it will execute internally after we get back result from the Process backend call
-   * For now, this is GraphQL Service only feature and it will basically
+   * Define our internal Post Process callback, it will execute internally after we get back result from the Process backend call
+   * For now, this is GraphQL Service ONLY feature and it will basically
    * refresh the Dataset & Pagination without having the user to create his own PostProcess every time
    */
   createBackendApiInternalPostProcessCallback(gridOptions: GridOption) {
@@ -422,7 +422,7 @@ export class AureliaSlickgridCustomElement {
       if (gridOptions.presets && Array.isArray(gridOptions.presets.filters) && gridOptions.presets.filters.length > 0) {
         this.filterService.populateColumnFilterSearchTerms();
       }
-      gridOptions.backendServiceApi ? this.filterService.attachBackendOnFilter(grid) : this.filterService.attachLocalOnFilter(grid, this.dataview);
+      gridOptions.backendServiceApi ? this.filterService.attachBackendOnFilter(grid, this.dataview) : this.filterService.attachLocalOnFilter(grid, this.dataview);
     }
 
     // if user set an onInit Backend, we'll run it right away (and if so, we also need to run preProcess, internalPostProcess & postProcess)
@@ -639,9 +639,10 @@ export class AureliaSlickgridCustomElement {
         this.dataview.reSort();
       }
 
-      // this.grid.setData(dataset);
-      this.grid.invalidate();
-      this.grid.render();
+      if (dataset) {
+        this.grid.invalidate();
+        this.grid.render();
+      }
 
       if (this.gridOptions.backendServiceApi) {
         // do we want to show pagination?
