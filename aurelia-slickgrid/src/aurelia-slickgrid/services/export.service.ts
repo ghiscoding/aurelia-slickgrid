@@ -12,6 +12,8 @@ import { TextEncoder } from 'text-encoding-utf-8';
 import { addWhiteSpaces, htmlEntityDecode, sanitizeHtmlToText } from './../services/utilities';
 import * as $ from 'jquery';
 
+const DEFAULT_AURELIA_EVENT_PREFIX = 'asg';
+
 export interface ExportColumnHeader {
   key: string | number;
   title: string;
@@ -28,7 +30,7 @@ export class ExportService {
   private _groupedHeaders: ExportColumnHeader[];
   private _hasGroupedItems = false;
   private _exportOptions: ExportOption;
-  aureliaEventPrefix: string;
+  private _aureliaEventPrefix: string;
 
   constructor(private i18n: I18N, private ea: EventAggregator) { }
 
@@ -49,7 +51,7 @@ export class ExportService {
   init(grid: any, dataView: any): void {
     this._grid = grid;
     this._dataView = dataView;
-    this.aureliaEventPrefix = (this._gridOptions && this._gridOptions.defaultAureliaEventPrefix) ? this._gridOptions.defaultAureliaEventPrefix : 'asg';
+    this._aureliaEventPrefix = (this._gridOptions && this._gridOptions.defaultAureliaEventPrefix) ? this._gridOptions.defaultAureliaEventPrefix : DEFAULT_AURELIA_EVENT_PREFIX;
   }
 
   /**
@@ -62,7 +64,7 @@ export class ExportService {
    * Example: exportToFile({ format: FileType.csv, delimiter: DelimiterType.comma })
    */
   exportToFile(options: ExportOption) {
-    this.ea.publish(`${this.aureliaEventPrefix}:onBeforeExportToFile`, true);
+    this.ea.publish(`${this._aureliaEventPrefix}:onBeforeExportToFile`, true);
     this._exportOptions = $.extend(true, {}, this._gridOptions.exportOptions, options);
 
     // get the CSV output from the grid data
@@ -78,7 +80,7 @@ export class ExportService {
         useUtf8WithBom: this._exportOptions.useUtf8WithBom || true
       };
       this.startDownloadFile(downloadOptions);
-      this.ea.publish(`${this.aureliaEventPrefix}:onAfterExportToFile`, downloadOptions);
+      this.ea.publish(`${this._aureliaEventPrefix}:onAfterExportToFile`, downloadOptions);
     }, 0);
   }
 
