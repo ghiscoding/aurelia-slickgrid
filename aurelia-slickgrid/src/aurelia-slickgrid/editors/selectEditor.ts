@@ -246,6 +246,7 @@ export class SelectEditor implements Editor {
     if (this.$editorElm && this.$editorElm.multipleSelect) {
       this.$editorElm.multipleSelect('close');
       this.$editorElm.remove();
+      $(`[name=${this.elementName}].ms-drop`).remove();
     }
     this.subscriptions = disposeAllSubscriptions(this.subscriptions);
   }
