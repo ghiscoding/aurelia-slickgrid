@@ -187,6 +187,7 @@ export class SelectFilter implements Filter {
     if (this.$filterElm) {
       // remove event watcher
       this.$filterElm.off().remove();
+      $(`[name=${this.elementName}].ms-drop`).remove();
 
       // also dispose of all Subscriptions
       this.subscriptions = disposeAllSubscriptions(this.subscriptions);
