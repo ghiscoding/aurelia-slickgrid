@@ -1,13 +1,16 @@
 import {
   Column,
   FieldType,
+  Formatter,
   Formatters,
   GridOption,
 } from '../../aurelia-slickgrid';
 
 // create my custom Formatter with the Formatter type
-const myCustomCheckmarkFormatter = (row, cell, value, columnDef, dataContext) =>
-  value ? `<i class="fa fa-fire" aria-hidden="true"></i>` : '<i class="fa fa-snowflake-o" aria-hidden="true"></i>';
+const myCustomCheckmarkFormatter: Formatter = (row, cell, value, columnDef, dataContext) => {
+  // you can return a string of a object (of type FormatterResultObject), the 2 types are shown below
+  return value ? `<i class="fa fa-fire red" aria-hidden="true"></i>` : { text: '<i class="fa fa-snowflake-o" aria-hidden="true"></i>', addClasses: 'lightblue', toolTip: 'Freezing' };
+};
 
 export class Example2 {
   title = 'Example 2: Formatters';
@@ -41,7 +44,7 @@ export class Example2 {
     this.columnDefinitions = [
       { id: 'title', name: 'Title', field: 'title', sortable: true, type: FieldType.string, width: 70 },
       { id: 'phone', name: 'Phone Number using mask', field: 'phone', sortable: true, type: FieldType.number, minWidth: 100, formatter: Formatters.mask, params: { mask: '(000) 000-0000' } },
-      { id: 'duration', name: 'Duration (days)', field: 'duration', formatter: Formatters.decimal, params: { minDecimalPlaces: 1, maxDecimalPlaces: 2 }, sortable: true, type: FieldType.number, minWidth: 90 },
+      { id: 'duration', name: 'Duration (days)', field: 'duration', formatter: Formatters.decimal, params: { minDecimalPlaces: 1, maxDecimalPlaces: 2 }, sortable: true, type: FieldType.number, minWidth: 90, exportWithFormatter: true },
       { id: 'complete', name: '% Complete', field: 'percentComplete', formatter: Formatters.percentCompleteBar, type: FieldType.number, sortable: true, minWidth: 100 },
       { id: 'percent2', name: '% Complete', field: 'percentComplete2', formatter: Formatters.progressBar, type: FieldType.number, sortable: true, minWidth: 100 },
       { id: 'start', name: 'Start', field: 'start', formatter: Formatters.dateIso, sortable: true, type: FieldType.date, minWidth: 90, exportWithFormatter: true },

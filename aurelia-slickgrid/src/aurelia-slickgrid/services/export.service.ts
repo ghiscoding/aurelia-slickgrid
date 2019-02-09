@@ -5,6 +5,7 @@ import {
   Column,
   ExportOption,
   FileType,
+  Formatter,
   GridOption,
 } from './../models/index';
 import { TextEncoder } from 'text-encoding-utf-8';
@@ -209,15 +210,35 @@ export class ExportService {
       // does the user want to evaluate current column Formatter?
       const isEvaluatingFormatter = (columnDef.exportWithFormatter !== undefined) ? columnDef.exportWithFormatter : this._exportOptions.exportWithFormatter;
 
+      // did the user provide a Custom Formatter for the export
+      const exportCustomFormatter: Formatter = (columnDef.exportCustomFormatter !== undefined) ? columnDef.exportCustomFormatter : undefined;
+
       let itemData = '';
 
       // did the user provide a Custom Formatter for the export
-      if (columnDef.exportCustomFormatter) {
-        itemData = columnDef.exportCustomFormatter(row, col, itemObj[fieldId], columnDef, itemObj, this._grid);
-      } else if (isEvaluatingFormatter && !!columnDef.formatter) {
-        itemData = columnDef.formatter(row, col, itemObj[fieldId], columnDef, itemObj, this._grid);
+      if (itemObj && itemObj[fieldId] && exportCustomFormatter !== undefined && exportCustomFormatter !== null) {
+        const formattedData = exportCustomFormatter(row, col, itemObj[fieldId], columnDef, itemObj, this._grid);
+        itemData = formattedData as string;
+        if (formattedData && typeof formattedData === 'object' && formattedData.hasOwnProperty('text')) {
+          itemData = formattedData.text;
+        }
+        if (itemData === null) {
+          itemData = '';
+        }
+      } else if (isEvaluatingFormatter && columnDef.formatter !== undefined && columnDef.formatter !== null) {
+        const formattedData = columnDef.formatter(row, col, itemObj[fieldId], columnDef, itemObj, this._grid);
+        itemData = formattedData as string;
+        if (formattedData && typeof formattedData === 'object' && formattedData.hasOwnProperty('text')) {
+          itemData = formattedData.text;
+        }
+        if (itemData === null) {
+          itemData = '';
+        }
       } else {
         itemData = (itemObj[fieldId] === null || itemObj[fieldId] === undefined) ? '' : itemObj[fieldId];
+        if (itemData === null) {
+          itemData = '';
+        }
       }
 
       // does the user want to sanitize the output data (remove HTML tags)?

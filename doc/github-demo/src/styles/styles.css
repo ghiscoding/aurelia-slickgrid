@@ -10,6 +10,9 @@ body {
 .faded:hover {
   opacity: 0.5;
 }
+.lightblue {
+  color: lightblue;
+}
 .red {
   color: red;
 }
