@@ -7,8 +7,10 @@ import {
 } from 'aurelia-slickgrid';
 
 // create my custom Formatter with the Formatter type
-const myCustomCheckmarkFormatter: Formatter = (row, cell, value, columnDef, dataContext) =>
-  value ? `<i class="fa fa-fire" aria-hidden="true"></i>` : '<i class="fa fa-snowflake-o" aria-hidden="true"></i>';
+const myCustomCheckmarkFormatter: Formatter = (row, cell, value, columnDef, dataContext) => {
+  // you can return a string of a object (of type FormatterResultObject), the 2 types are shown below
+  return value ? `<i class="fa fa-fire red" aria-hidden="true"></i>` : { text: '<i class="fa fa-snowflake-o" aria-hidden="true"></i>', addClasses: 'lightblue', toolTip: 'Freezing' };
+};
 
 export class Example2 {
   title = 'Example 2: Formatters';
