@@ -18,7 +18,7 @@ import * as $ from 'jquery';
  */
 @inject(I18N)
 export class LongTextEditor implements Editor {
-  $input: any;
+  $textarea: any;
   $wrapper: any;
   defaultValue: any;
 
@@ -53,12 +53,12 @@ export class LongTextEditor implements Editor {
     const $container = $('body');
 
     this.$wrapper = $(`<div class="slick-large-editor-text editor-${columnId}" />`).appendTo($container);
-    this.$input = $(`<textarea hidefocus rows="5" placeholder="${placeholder}">`).appendTo(this.$wrapper);
+    this.$textarea = $(`<textarea hidefocus rows="5" placeholder="${placeholder}">`).appendTo(this.$wrapper);
 
     // aurelia-slickgrid does not get the focus out event for some reason
     // so register it here
     if (this.hasAutoCommitEdit) {
-      this.$input.on('focusout', () => this.save());
+      this.$textarea.on('focusout', () => this.save());
     }
 
     $(`<div class="editor-footer">
@@ -68,10 +68,10 @@ export class LongTextEditor implements Editor {
 
     this.$wrapper.find('button:first').on('click', () => this.save());
     this.$wrapper.find('button:last').on('click', () => this.cancel());
-    this.$input.on('keydown', this.handleKeyDown.bind(this));
+    this.$textarea.on('keydown', this.handleKeyDown.bind(this));
 
     this.position(this.args && this.args.position);
-    this.$input.focus().select();
+    this.$textarea.focus().select();
   }
 
   handleKeyDown(e: any) {
@@ -105,7 +105,7 @@ export class LongTextEditor implements Editor {
   }
 
   cancel() {
-    this.$input.val(this.defaultValue);
+    this.$textarea.val(this.defaultValue);
     if (this.args && this.args.cancelChanges) {
       this.args.cancelChanges();
     }
@@ -126,20 +126,21 @@ export class LongTextEditor implements Editor {
   }
 
   destroy() {
+    this.$textarea.off('keydown focusout');
     this.$wrapper.remove();
   }
 
   focus() {
-    this.$input.focus();
+    this.$textarea.focus();
   }
 
   loadValue(item: any) {
-    this.$input.val(this.defaultValue = item[this.columnDef.field]);
-    this.$input.select();
+    this.$textarea.val(this.defaultValue = item[this.columnDef.field]);
+    this.$textarea.select();
   }
 
   serializeValue() {
-    return this.$input.val();
+    return this.$textarea.val();
   }
 
   applyValue(item: any, state: any) {
@@ -147,12 +148,12 @@ export class LongTextEditor implements Editor {
   }
 
   isValueChanged() {
-    return (!(this.$input.val() === '' && this.defaultValue == null)) && (this.$input.val() !== this.defaultValue);
+    return (!(this.$textarea.val() === '' && this.defaultValue == null)) && (this.$textarea.val() !== this.defaultValue);
   }
 
   validate(): EditorValidatorOutput {
     if (this.validator) {
-      const value = this.$input && this.$input.val && this.$input.val();
+      const value = this.$textarea && this.$textarea.val && this.$textarea.val();
       const validationResults = this.validator(value, this.args);
       if (!validationResults.valid) {
         return validationResults;

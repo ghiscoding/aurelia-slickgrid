@@ -44,7 +44,7 @@ export class TextEditor implements Editor {
   }
 
   destroy() {
-    this.$input.remove();
+    this.$input.off('keydown.nav').remove();
   }
 
   focus() {
