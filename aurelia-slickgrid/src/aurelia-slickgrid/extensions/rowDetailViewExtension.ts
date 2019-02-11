@@ -330,7 +330,7 @@ export class RowDetailViewExtension implements Extension {
   /** Render (or rerender) the View Slot (Row Detail) */
   private renderPreloadView() {
     const containerElement = $(`.${PRELOAD_CONTAINER_PREFIX}`);
-    const viewFactory = this.viewCompiler.compile('<template><compose view.bind="template"></compose><template>', this.viewResources);
+    const viewFactory = this.viewCompiler.compile('<template><compose view.bind="template"></compose></template>', this.viewResources);
 
     if (containerElement.length) {
       // Creates a view
@@ -349,7 +349,7 @@ export class RowDetailViewExtension implements Extension {
   /** Render (or rerender) the View Slot (Row Detail) */
   private renderViewModel(item: any) {
     const containerElement = $(`.${ROW_DETAIL_CONTAINER_PREFIX}${item.id}`);
-    const viewFactory = this.viewCompiler.compile('<template><compose view-model.bind="template"></compose><template>', this.viewResources);
+    const viewFactory = this.viewCompiler.compile('<template><compose view-model.bind="template"></compose></template>', this.viewResources);
 
     if (containerElement.length) {
       // Creates a view
