@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.8.2"></a>
+## [2.8.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.8.1...v2.8.2) (2019-02-09)
+
+
+### Bug Fixes
+
+* **filter:** all jquery .on bound event should also be unbound ([#137](https://github.com/ghiscoding/aurelia-slickgrid/issues/137)) ([0570a95](https://github.com/ghiscoding/aurelia-slickgrid/commit/0570a95))
+* **filter:** select filter drop doesn't get removed on destroy ([#138](https://github.com/ghiscoding/aurelia-slickgrid/issues/138)) ([d967348](https://github.com/ghiscoding/aurelia-slickgrid/commit/d967348))
+
+
+
 <a name="2.8.1"></a>
 ## [2.8.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.8.0...v2.8.1) (2019-02-02)
 

@@ -49,7 +49,7 @@ export class FloatEditor implements Editor {
   }
 
   destroy() {
-    this.$input.remove();
+    this.$input.off('keydown.nav').remove();
   }
 
   focus() {

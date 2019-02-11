@@ -77,7 +77,7 @@ export class SliderEditor implements Editor {
   }
 
   destroy() {
-    this.$editorElm.remove();
+    this.$editorElm.off('input change mouseup').remove();
   }
 
   focus() {
