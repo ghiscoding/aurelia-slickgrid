@@ -52,7 +52,7 @@
     "browser-sync": "^2.13.0",
     "connect-history-api-fallback": "^1.2.0",
     "debounce": "^1.0.2",
-    "gulp": "github:gulpjs/gulp#4.0",
+    "gulp": "4.0",
     "gulp-babel": "^6.1.2",
     "gulp-changed-in-place": "^2.0.3",
     "gulp-eslint": "^2.0.0",
