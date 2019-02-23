@@ -319,7 +319,7 @@ export class HeaderMenuExtension implements Extension {
 
   /** Clear the Sort on the current column (if it's actually sorted) */
   private clearColumnSort(e: Event, args: HeaderMenuOnCommandArgs) {
-    if (args && args.column) {
+    if (args && args.column && this.sharedService) {
       // get previously sorted columns
       const allSortedCols: ColumnSort[] = this.sortService.getPreviousColumnSorts();
       const sortedColsWithoutCurrent: ColumnSort[] = this.sortService.getPreviousColumnSorts(args.column.id + '');
