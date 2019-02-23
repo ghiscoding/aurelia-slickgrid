@@ -1,7 +1,15 @@
 import { bindable } from 'aurelia-framework';
 
 export class DetailViewCustomElement {
-  @bindable() model;
+  @bindable() model: {
+    duration: Date;
+    percentComplete: number;
+    reporter: string;
+    start: Date;
+    finish: Date;
+    effortDriven: boolean;
+    assignee: string; title: string;
+  };
 
   bind(bindingContext, overrideContext) {
     if (bindingContext.model) {

@@ -1,17 +1,14 @@
 import {
-  createOverrideContext,
-  Container,
   inject,
   singleton,
   View,
-  ViewCompiler,
-  ViewResources,
   ViewSlot
 } from 'aurelia-framework';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
-import { Column, Extension, ExtensionName, GridOption, GridStateChange } from '../models/index';
+import { Column, Extension, ExtensionName, GridOption } from '../models/index';
 import { ExtensionUtility } from './extensionUtility';
 import { SharedService } from '../services/shared.service';
+import { AureliaUtilService } from './../services/aureliaUtilService';
 import { disposeAllSubscriptions } from '../services/utilities';
 import * as DOMPurify from 'dompurify';
 import * as $ from 'jquery';
@@ -31,30 +28,25 @@ export interface CreatedView {
 
 @singleton(true)
 @inject(
-  Container,
+  AureliaUtilService,
   EventAggregator,
   ExtensionUtility,
   SharedService,
-  ViewCompiler,
-  ViewResources
 )
 export class RowDetailViewExtension implements Extension {
   private _eventHandler: any = new Slick.EventHandler();
   private _extension: any;
   private _preloadView: string;
-  private _slotPreload: ViewSlot;
   private _slots: CreatedView[] = [];
   private _viewModel: string;
   private _subscriptions: Subscription[] = [];
   private _userProcessFn: (item: any) => Promise<any>;
 
   constructor(
-    private container: Container,
+    private aureliaUtilService: AureliaUtilService,
     private ea: EventAggregator,
     private extensionUtility: ExtensionUtility,
     private sharedService: SharedService,
-    private viewCompiler: ViewCompiler,
-    private viewResources: ViewResources,
   ) { }
 
   dispose() {
@@ -329,45 +321,23 @@ export class RowDetailViewExtension implements Extension {
 
   /** Render (or rerender) the View Slot (Row Detail) */
   private renderPreloadView() {
-    const containerElement = $(`.${PRELOAD_CONTAINER_PREFIX}`);
-    const viewFactory = this.viewCompiler.compile('<template><compose view.bind="template"></compose></template>', this.viewResources);
-
-    if (containerElement.length) {
-      // Creates a view
-      containerElement.empty();
-      const view = viewFactory.create(this.container);
-      const viewModel = { template: this._preloadView || '' };
-
-      view.bind(viewModel, createOverrideContext(viewModel));
-
-      // Add the view to the slot
-      this._slotPreload = new ViewSlot(containerElement[0], true);
-      this._slotPreload.add(view);
+    const containerElements = document.getElementsByClassName(`${PRELOAD_CONTAINER_PREFIX}`);
+    if (containerElements && containerElements.length) {
+      this.aureliaUtilService.appendAureliaViewToDom(this._preloadView, containerElements[0]);
     }
   }
 
   /** Render (or rerender) the View Slot (Row Detail) */
   private renderViewModel(item: any) {
-    const containerElement = $(`.${ROW_DETAIL_CONTAINER_PREFIX}${item.id}`);
-    const viewFactory = this.viewCompiler.compile('<template><compose view-model.bind="template"></compose></template>', this.viewResources);
-
-    if (containerElement.length) {
-      // Creates a view
-      containerElement.empty();
-      const view = viewFactory.create(this.container);
-      const viewModel = { template: this._viewModel || '', model: item };
-
-      view.bind(viewModel, createOverrideContext(viewModel));
-
-      // Add the view to the slot
-      const viewSlot = new ViewSlot(containerElement[0], true);
-      viewSlot.add(view);
+    const containerElements = document.getElementsByClassName(`${ROW_DETAIL_CONTAINER_PREFIX}${item.id}`);
+    if (containerElements && containerElements.length) {
+      const aureliaComp = this.aureliaUtilService.appendAureliaViewModelToDom(this._viewModel, item, containerElements[0]);
 
       const slotObj = this._slots.find((obj) => obj.id === item.id);
 
       if (slotObj) {
-        slotObj.view = view;
-        slotObj.viewSlot = viewSlot;
+        slotObj.view = aureliaComp.view;
+        slotObj.viewSlot = aureliaComp.viewSlot;
       }
     }
   }
