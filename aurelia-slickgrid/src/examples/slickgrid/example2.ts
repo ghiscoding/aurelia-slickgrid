@@ -57,6 +57,7 @@ export class Example2 {
         containerId: 'demo-container',
         sidePadding: 15
       },
+      enableCellNavigation: true,
       enableExcelCopyBuffer: true,
     };
   }

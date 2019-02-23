@@ -31,7 +31,6 @@ export const GlobalGridOptions: GridOption = {
   enableAutoResize: true,
   enableAutoSizeColumns: true,
   enableHeaderMenu: true,
-  enableRowSelection: true,
   editable: false,
   enableCellNavigation: false,
   enableCheckboxSelector: false,
