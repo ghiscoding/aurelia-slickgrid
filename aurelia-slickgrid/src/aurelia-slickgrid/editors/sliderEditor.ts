@@ -1,5 +1,5 @@
 import { Constants } from '../constants';
-import { Column, Editor, EditorValidator, EditorValidatorOutput, KeyCode } from './../models/index';
+import { Column, Editor, EditorValidator, EditorValidatorOutput, KeyCode, ColumnEditor } from './../models/index';
 import * as $ from 'jquery';
 
 const DEFAULT_MIN_VALUE = 0;
@@ -11,6 +11,7 @@ const DEFAULT_STEP = 1;
  * KeyDown events are also handled to provide handling for Tab, Shift-Tab, Esc and Ctrl-Enter.
  */
 export class SliderEditor implements Editor {
+  private _lastInputEvent: JQueryEventObject;
   private _elementRangeInputId: string = '';
   private _elementRangeOutputId: string = '';
   $editorElm: any;
@@ -28,7 +29,7 @@ export class SliderEditor implements Editor {
   }
 
   /** Get Column Editor object */
-  get columnEditor(): any {
+  get columnEditor(): ColumnEditor {
     return this.columnDef && this.columnDef.internalColumnEditor || {};
   }
 
@@ -64,12 +65,13 @@ export class SliderEditor implements Editor {
     // if user chose to display the slider number on the right side, then update it every time it changes
     // we need to use both "input" and "change" event to be all cross-browser
     if (!this.editorParams.hideSliderNumber) {
-      this.$editorElm.on('input change', (e: { target: HTMLInputElement }) => {
-        const value = e && e.target && e.target.value || '';
+      this.$editorElm.on('input change', (event: JQueryEventObject & { target: HTMLInputElement }) => {
+        this._lastInputEvent = event;
+        const value = event && event.target && event.target.value || '';
         if (value && document) {
           const elm = document.getElementById(this._elementRangeOutputId || '');
           if (elm && elm.innerHTML) {
-            elm.innerHTML = e.target.value;
+            elm.innerHTML = event.target.value;
           }
         }
       });
@@ -118,11 +120,16 @@ export class SliderEditor implements Editor {
 
   isValueChanged() {
     const elmValue = this.$input.val();
+    const lastEvent = this._lastInputEvent && this._lastInputEvent.keyCode;
+    if (this.columnEditor && this.columnEditor.alwaysSaveOnEnterKey && lastEvent === KeyCode.ENTER) {
+      return true;
+    }
     return (!(elmValue === '' && this.defaultValue === null)) && (elmValue !== this.defaultValue);
   }
 
   validate(): EditorValidatorOutput {
     const elmValue = this.$input.val();
+    const isRequired = this.columnEditor.required;
     const minValue = this.columnEditor.minValue;
     const maxValue = this.columnEditor.maxValue;
     const errorMsg = this.columnEditor.errorMessage;
@@ -132,10 +139,12 @@ export class SliderEditor implements Editor {
     };
 
     if (this.validator) {
-      const validationResults = this.validator(elmValue, this.args);
-      if (!validationResults.valid) {
-        return validationResults;
-      }
+      return this.validator(elmValue, this.args);
+    } else if (isRequired && elmValue === '') {
+      return {
+        valid: false,
+        msg: errorMsg || Constants.VALIDATION_REQUIRED_FIELD
+      };
     } else if (minValue !== undefined && (elmValue < minValue || elmValue > maxValue)) {
       // when decimal value is bigger than 0, we only accept the decimal values as that value set
       // for example if we set decimalPlaces to 2, we will only accept numbers between 0 and 2 decimals

@@ -1,13 +1,15 @@
 import { BindingEngine } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import { Subscription } from 'aurelia-event-aggregator';
+import { Constants } from '../constants';
 import {
   CollectionCustomStructure,
   CollectionOption,
+  Column,
+  ColumnEditor,
   Editor,
   EditorValidator,
   EditorValidatorOutput,
-  Column,
   GridOption,
   MultipleSelectOption,
   SelectOption,
@@ -87,7 +89,7 @@ export class SelectEditor implements Editor {
       },
       onBlur: () => this.destroy(),
       onClose: () => {
-        if (!this._destroying && args.grid.getOptions().autoCommitEdit) {
+        if (!this._destroying && this.hasAutoCommitEdit) {
           // do not use args.commitChanges() as this sets the focus to the next
           // row. Also the select list will stay shown when clicking off the grid
           const validation = this.validate();
@@ -132,13 +134,17 @@ export class SelectEditor implements Editor {
   }
 
   /** Get Column Editor object */
-  get columnEditor(): any {
+  get columnEditor(): ColumnEditor {
     return this.columnDef && this.columnDef.internalColumnEditor || {};
   }
 
   /** Getter for the Custom Structure if exist */
   protected get customStructure(): CollectionCustomStructure {
     return this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.customStructure;
+  }
+
+  get hasAutoCommitEdit() {
+    return this.args.grid.getOptions().autoCommitEdit;
   }
 
   /**
@@ -296,16 +302,23 @@ export class SelectEditor implements Editor {
   }
 
   validate(): EditorValidatorOutput {
+    const isRequired = this.columnEditor.required;
+    const elmValue = this.$editorElm && this.$editorElm.val && this.$editorElm.val();
+    const errorMsg = this.columnEditor.errorMessage;
+
     if (this.validator) {
       const value = this.isMultipleSelect ? this.currentValues : this.currentValue;
-      const validationResults = this.validator(value, this.args);
-      if (!validationResults.valid) {
-        return validationResults;
-      }
+      return this.validator(value, this.args);
     }
 
-    // by default the editor is always valid
-    // if user want it to be a required checkbox, he would have to provide his own validator
+    // by default the editor is almost always valid (except when it's required but not provided)
+    if (isRequired && (elmValue === '' || (Array.isArray(elmValue) && elmValue.length === 0))) {
+      return {
+        valid: false,
+        msg: errorMsg || Constants.VALIDATION_REQUIRED_FIELD
+      };
+    }
+
     return {
       valid: true,
       msg: null
@@ -327,7 +340,7 @@ export class SelectEditor implements Editor {
     // user might want to filter certain items of the collection
     if (this.columnEditor && this.columnEditor.collectionFilterBy) {
       const filterBy = this.columnEditor.collectionFilterBy;
-      const filterCollectionBy = this.columnEditor.collectionOptions && this.columnEditor.collectionOptions.filterAfterEachPass || null;
+      const filterCollectionBy = this.columnEditor.collectionOptions && this.columnEditor.collectionOptions.filterResultAfterEachPass || null;
       outputCollection = this.collectionService.filterCollection(outputCollection, filterBy, filterCollectionBy);
     }
 
