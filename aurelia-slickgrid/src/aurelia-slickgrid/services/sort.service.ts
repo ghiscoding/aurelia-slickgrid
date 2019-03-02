@@ -3,13 +3,14 @@ import { EventAggregator } from 'aurelia-event-aggregator';
 import {
   Column,
   ColumnSort,
+  EmitterType,
   FieldType,
   GridOption,
   SlickEvent,
   SortDirection,
   CurrentSorter,
   SortDirectionNumber,
-  SortDirectionString
+  SortDirectionString,
 } from './../models/index';
 import { getDescendantProperty } from './utilities';
 import { sortByFieldType } from '../sorters/sorterUtilities';
@@ -74,7 +75,7 @@ export class SortService {
       }
 
       const query = backendApi.service.processOnSortChanged(event, args);
-      this.emitSortChanged('remote');
+      this.emitSortChanged(EmitterType.remote);
 
       // await for the Promise to resolve the data
       const processResult = await backendApi.process(query);
@@ -137,7 +138,7 @@ export class SortService {
       }
 
       this.onLocalSortChanged(grid, dataView, sortColumns);
-      this.emitSortChanged('local');
+      this.emitSortChanged(EmitterType.local);
     });
   }
 
@@ -304,15 +305,15 @@ export class SortService {
    * Other services, like Pagination, can then subscribe to it.
    * @param sender
    */
-  emitSortChanged(sender: 'local' | 'remote') {
-    if (sender === 'remote' && this._gridOptions && this._gridOptions.backendServiceApi) {
+  emitSortChanged(sender: EmitterType) {
+    if (sender === EmitterType.remote && this._gridOptions && this._gridOptions.backendServiceApi) {
       let currentSorters: CurrentSorter[] = [];
       const backendService = this._gridOptions.backendServiceApi.service;
       if (backendService && backendService.getCurrentSorters) {
         currentSorters = backendService.getCurrentSorters() as CurrentSorter[];
       }
       this.ea.publish('sortService:sortChanged', currentSorters);
-    } else if (sender === 'local') {
+    } else if (sender === EmitterType.local) {
       this.ea.publish('sortService:sortChanged', this.getCurrentLocalSorters());
     }
   }
