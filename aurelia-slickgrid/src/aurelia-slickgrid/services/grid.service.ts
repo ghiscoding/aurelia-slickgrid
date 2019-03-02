@@ -253,8 +253,7 @@ export class GridService {
       throw new Error('We could not find SlickGrid Grid, DataView objects');
     }
 
-    const row = 0;
-    this._dataView.insertItem(row, item);
+    this._dataView.insertItem(0, item);
 
     // when user doesn't want resort, we will insert row on 1st index and scroll to it
     if (!shouldResortGrid) {
@@ -461,9 +460,9 @@ export class GridService {
     if (itemId === undefined) {
       throw new Error(`Cannot update a row without a valid "id"`);
     }
-    const row = this._dataView.getRowById(itemId);
+    const rowNumber = this._dataView.getRowById(itemId);
 
-    if (!item || row === undefined) {
+    if (!item || rowNumber === undefined) {
       throw new Error(`Could not find the item in the grid or it's associated "id"`);
     }
 
@@ -474,7 +473,7 @@ export class GridService {
 
       // highlight the row we just updated, if defined
       if (shouldHighlightRow) {
-        this.highlightRow(row, 1500);
+        this.highlightRow(rowNumber, 1500);
       }
 
       // do we want to trigger an event after updating the item
