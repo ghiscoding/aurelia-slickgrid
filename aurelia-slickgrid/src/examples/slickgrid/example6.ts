@@ -147,7 +147,7 @@ export class Example6 {
         // you can define the onInit callback OR enable the "executeProcessCommandOnInit" flag in the service init
         // onInit: (query) => this.getCustomerApiCall(query)
         preProcess: () => this.displaySpinner(true),
-        process: (query) => { console.log(query); return this.getCustomerApiCall(query); },
+        process: (query) => this.getCustomerApiCall(query),
         postProcess: (result: GraphqlResult) => {
           this.statistics = result.statistics;
           this.displaySpinner(false);
