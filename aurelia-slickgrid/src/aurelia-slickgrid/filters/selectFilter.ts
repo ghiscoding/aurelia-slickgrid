@@ -23,6 +23,7 @@ import * as $ from 'jquery';
 
 export class SelectFilter implements Filter {
   private _isFilterFirstRender = true;
+  private _shouldTriggerQuery = true;
 
   /** DOM Element Name, useful for auto-detecting positioning (dropup / dropdown) */
   elementName: string;
@@ -77,7 +78,7 @@ export class SelectFilter implements Filter {
           this.isFilled = false;
           this.$filterElm.removeClass('filled').siblings('div .search-filter').removeClass('filled');
         }
-        this.callback(undefined, { columnDef: this.columnDef, operator: this.operator, searchTerms: selectedItems });
+        this.callback(undefined, { columnDef: this.columnDef, operator: this.operator, searchTerms: selectedItems, shouldTriggerQuery: this._shouldTriggerQuery });
       }
     };
     if (this.isMultipleSelect) {
@@ -170,13 +171,14 @@ export class SelectFilter implements Filter {
   /**
    * Clear the filter values
    */
-  clear() {
+  clear(shouldTriggerQuery = true) {
     if (this.$filterElm && this.$filterElm.multipleSelect) {
       // reload the filter element by it's id, to make sure it's still a valid element (because of some issue in the GraphQL example)
       this.$filterElm.multipleSelect('setSelects', []);
       this.$filterElm.removeClass('filled').siblings('div .search-filter').removeClass('filled');
       this.searchTerms = [];
-      this.callback(undefined, { columnDef: this.columnDef, clearFilterTriggered: true });
+      this._shouldTriggerQuery = shouldTriggerQuery;
+      this.callback(undefined, { columnDef: this.columnDef, clearFilterTriggered: true, shouldTriggerQuery: this._shouldTriggerQuery });
     }
   }
 

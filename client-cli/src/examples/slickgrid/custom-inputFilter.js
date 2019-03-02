@@ -2,6 +2,7 @@ import { OperatorType } from 'aurelia-slickgrid';
 
 export class CustomInputFilter {
   _clearFilterTriggered = false;
+  _shouldTriggerQuery = true;
   $filterElm;
   grid;
   searchTerms;
@@ -32,12 +33,12 @@ export class CustomInputFilter {
     this.$filterElm.keyup((e) => {
       const value = e && e.target && e.target.value || '';
       if (this._clearFilterTriggered) {
-        this.callback(e, { columnDef: this.columnDef, clearFilterTriggered: this._clearFilterTriggered });
+        this.callback(e, { columnDef: this.columnDef, clearFilterTriggered: this._clearFilterTriggered, shouldTriggerQuery: this._shouldTriggerQuery });
         this._clearFilterTriggered = false; // reset flag for next use
         this.$filterElm.removeClass('filled');
       } else {
         this.$filterElm.addClass('filled');
-        this.callback(e, { columnDef: this.columnDef, searchTerms: [value] });
+        this.callback(e, { columnDef: this.columnDef, searchTerms: [value], shouldTriggerQuery: this._shouldTriggerQuery });
       }
     });
   }
@@ -45,9 +46,10 @@ export class CustomInputFilter {
   /**
    * Clear the filter value
    */
-  clear() {
+  clear(shouldTriggerQuery = true) {
     if (this.$filterElm) {
       this._clearFilterTriggered = true;
+      this._shouldTriggerQuery = shouldTriggerQuery;
       this.$filterElm.val('');
       this.$filterElm.trigger('keyup');
     }

@@ -22,6 +22,7 @@ declare function require(name: string[], loadedFile: any): any;
 @inject(I18N)
 export class CompoundDateFilter implements Filter {
   private _clearFilterTriggered = false;
+  private _shouldTriggerQuery = true;
   private $filterElm: any;
   private $filterInputElm: any;
   private $selectOperatorElm: any;
@@ -84,9 +85,10 @@ export class CompoundDateFilter implements Filter {
   /**
    * Clear the filter value
    */
-  clear() {
+  clear(shouldTriggerQuery = true) {
     if (this.flatInstance && this.$selectOperatorElm) {
       this._clearFilterTriggered = true;
+      this._shouldTriggerQuery = shouldTriggerQuery;
       this.searchTerms = [];
       this.$selectOperatorElm.val(0);
       this.flatInstance.clear();
@@ -245,13 +247,13 @@ export class CompoundDateFilter implements Filter {
 
   private onTriggerEvent(e: Event | undefined) {
     if (this._clearFilterTriggered) {
-      this.callback(e, { columnDef: this.columnDef, clearFilterTriggered: this._clearFilterTriggered });
+      this.callback(e, { columnDef: this.columnDef, clearFilterTriggered: this._clearFilterTriggered, shouldTriggerQuery: this._shouldTriggerQuery });
       this._clearFilterTriggered = false; // reset flag for next use
       this.$filterElm.removeClass('filled');
     } else {
       const selectedOperator = this.$selectOperatorElm.find('option:selected').text();
       (this._currentValue) ? this.$filterElm.addClass('filled') : this.$filterElm.removeClass('filled');
-      this.callback(e, { columnDef: this.columnDef, searchTerms: (this._currentValue ? [this._currentValue] : null), operator: selectedOperator || '' });
+      this.callback(e, { columnDef: this.columnDef, searchTerms: (this._currentValue ? [this._currentValue] : null), operator: selectedOperator || '', shouldTriggerQuery: this._shouldTriggerQuery });
     }
   }
 
