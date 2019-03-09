@@ -82,7 +82,7 @@
   min-width: 200px;
   cursor: default;
   position:absolute;
-  z-index:20;
+  z-index: $grid-menu-z-index;
 	overflow: auto;
   resize: both;
 

@@ -242,7 +242,7 @@ export class GridStateService {
     if (this._gridOptions.enableRowSelection || this._gridOptions.enableCheckboxSelector) {
       // this also requires the Row Selection Model to be registered as well
       const rowSelectionExtension = this.extensionService && this.extensionService.getExtensionByName && this.extensionService.getExtensionByName(ExtensionName.rowSelection);
-      if (rowSelectionExtension && rowSelectionExtension.extension) {
+      if (rowSelectionExtension && rowSelectionExtension.addon) {
         this._grid.setSelectedRows([]);
       }
     }
