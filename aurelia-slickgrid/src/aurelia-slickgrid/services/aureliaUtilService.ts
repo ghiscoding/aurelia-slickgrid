@@ -5,8 +5,8 @@ import {
   ViewCompiler,
   ViewResources,
   ViewSlot,
-  View,
 } from 'aurelia-framework';
+import { AureliaViewOutput } from './../models/aureliaViewOutput.interface';
 
 @inject(
   Container,
@@ -20,12 +20,15 @@ export class AureliaUtilService {
     private viewResources: ViewResources,
   ) { }
 
-  appendAureliaViewModelToDom(template: string, item: any, targetElement?: HTMLElement | Element): { view: View, viewSlot: ViewSlot } {
+  createAureliaViewModelAddToSlot(template: string, item: any, targetElement?: HTMLElement | Element, clearTargetContent = false): AureliaViewOutput {
     const viewFactory = this.viewCompiler.compile('<template><compose view-model.bind="template"></compose></template>', this.viewResources);
 
     if (targetElement) {
+      if (clearTargetContent && targetElement.innerHTML) {
+        targetElement.innerHTML = '';
+      }
+
       // Creates a view
-      // targetElement.empty();
       const view = viewFactory.create(this.container);
       const viewModel = { template: template || '', model: item };
 
@@ -41,12 +44,15 @@ export class AureliaUtilService {
     }
   }
 
-  appendAureliaViewToDom(template: string, targetElement?: HTMLElement | Element): { view: View, viewSlot: ViewSlot } {
+  createAureliaViewAddToSlot(template: string, targetElement?: HTMLElement | Element, clearTargetContent = false): AureliaViewOutput {
     const viewFactory = this.viewCompiler.compile('<template><compose view.bind="template"></compose></template>', this.viewResources);
 
     if (targetElement) {
+      if (clearTargetContent && targetElement.innerHTML) {
+        targetElement.innerHTML = '';
+      }
+
       // Creates a view
-      // targetElement.empty();
       const view = viewFactory.create(this.container);
       const viewModel = { template: template || '' };
 
