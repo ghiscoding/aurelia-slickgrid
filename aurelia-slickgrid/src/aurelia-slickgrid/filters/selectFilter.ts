@@ -79,6 +79,7 @@ export class SelectFilter implements Filter {
           this.$filterElm.removeClass('filled').siblings('div .search-filter').removeClass('filled');
         }
         this.callback(undefined, { columnDef: this.columnDef, operator: this.operator, searchTerms: selectedItems, shouldTriggerQuery: this._shouldTriggerQuery });
+        this._shouldTriggerQuery = true; // reset flag for next use
       }
     };
     if (this.isMultipleSelect) {
@@ -179,6 +180,7 @@ export class SelectFilter implements Filter {
       this.searchTerms = [];
       this._shouldTriggerQuery = shouldTriggerQuery;
       this.callback(undefined, { columnDef: this.columnDef, clearFilterTriggered: true, shouldTriggerQuery: this._shouldTriggerQuery });
+      this._shouldTriggerQuery = true; // reset flag for next use
     }
   }
 
