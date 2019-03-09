@@ -95,10 +95,10 @@ export class ResizerService {
     const gridOffsetTop = (coordOffsetTop !== undefined) ? coordOffsetTop.top : 0;
     const availableHeight = gridHeight - gridOffsetTop - bottomPadding;
     const availableWidth = containerElm.width() || 0;
-    const maxHeight = (autoResizeOptions && autoResizeOptions.maxHeight && autoResizeOptions.maxHeight > 0) ? autoResizeOptions.maxHeight : undefined;
-    const minHeight = (autoResizeOptions && autoResizeOptions.minHeight && autoResizeOptions.minHeight < 0) ? autoResizeOptions.minHeight : DATAGRID_MIN_HEIGHT;
-    const maxWidth = (autoResizeOptions && autoResizeOptions.maxWidth && autoResizeOptions.maxWidth > 0) ? autoResizeOptions.maxWidth : undefined;
-    const minWidth = (autoResizeOptions && autoResizeOptions.minWidth && autoResizeOptions.minWidth < 0) ? autoResizeOptions.minWidth : DATAGRID_MIN_WIDTH;
+    const maxHeight = autoResizeOptions && autoResizeOptions.maxHeight || undefined;
+    const minHeight = autoResizeOptions && autoResizeOptions.minHeight || DATAGRID_MIN_HEIGHT;
+    const maxWidth = autoResizeOptions && autoResizeOptions.maxWidth || undefined;
+    const minWidth = autoResizeOptions && autoResizeOptions.minWidth || DATAGRID_MIN_WIDTH;
 
     let newHeight = availableHeight;
     let newWidth = (autoResizeOptions && autoResizeOptions.sidePadding) ? availableWidth - autoResizeOptions.sidePadding : availableWidth;
@@ -199,9 +199,11 @@ export class ResizerService {
       const newWidth = (newSizes && newSizes.width) ? newSizes.width : (availableDimensions && availableDimensions.width) || 0;
 
       // apply these new height/width to the datagrid
-      gridElm.height(newHeight);
+      if (!this._gridOptions.autoHeight) {
+        gridElm.height(newHeight);
+        gridContainerElm.height(newHeight);
+      }
       gridElm.width(newWidth);
-      gridContainerElm.height(newHeight);
       gridContainerElm.width(newWidth);
 
       // resize the slickgrid canvas on all browser except some IE versions
