@@ -9,6 +9,12 @@ import {
 
 export interface ColumnEditor {
   /**
+   * Defaults to false, when set to True and user presses the ENTER key (on Editors that supports it),
+   * it will always call a Save regardless if the current value is null and/or previous value was null
+   */
+  alwaysSaveOnEnterKey?: boolean;
+
+  /**
    * A collection of items/options (commonly used with a Select/Multi-Select Editor)
    * It can be a collection of string or label/value pair (the pair can be customized via the "customStructure" option)
    */
@@ -66,11 +72,20 @@ export interface ColumnEditor {
    */
   placeholder?: string;
 
+  /**
+   * Defaults to false, is the field required to be valid?
+   * Only on Editors that supports it.
+   */
+  required?: boolean;
+
   /** Editor Validator */
   validator?: EditorValidator;
 
   /** Step value of the filter, works only with Filters supporting it (input text, number, float, range, slider) */
   valueStep?: number | string;
+
+  /** DOM element extra options */
+  elementOptions?: any;
 
   /**
    * Use "params" to pass any type of arguments to your Custom Editor
