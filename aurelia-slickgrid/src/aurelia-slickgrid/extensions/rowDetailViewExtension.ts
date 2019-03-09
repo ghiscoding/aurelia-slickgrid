@@ -1,9 +1,5 @@
-import {
-  inject,
-  singleton,
-  View,
-  ViewSlot
-} from 'aurelia-framework';
+import { AureliaViewOutput } from './../models/aureliaViewOutput.interface';
+import { inject, singleton } from 'aurelia-framework';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
 import { Column, Extension, ExtensionName, GridOption } from '../models/index';
 import { ExtensionUtility } from './extensionUtility';
@@ -11,7 +7,6 @@ import { SharedService } from '../services/shared.service';
 import { AureliaUtilService } from './../services/aureliaUtilService';
 import { disposeAllSubscriptions } from '../services/utilities';
 import * as DOMPurify from 'dompurify';
-import * as $ from 'jquery';
 
 // using external non-typed js libraries
 declare var Slick: any;
@@ -19,11 +14,9 @@ declare var Slick: any;
 const ROW_DETAIL_CONTAINER_PREFIX = 'container_';
 const PRELOAD_CONTAINER_PREFIX = 'container_loading';
 
-export interface CreatedView {
+export interface CreatedView extends AureliaViewOutput {
   id: string | number;
   dataContext: any;
-  view?: View;
-  viewSlot?: ViewSlot;
 }
 
 @singleton(true)
@@ -57,6 +50,7 @@ export class RowDetailViewExtension implements Extension {
       this._extension.destroy();
     }
     disposeAllSubscriptions(this._subscriptions);
+    this.disposeAllViewSlot();
   }
 
   /**
@@ -203,17 +197,20 @@ export class RowDetailViewExtension implements Extension {
   }
 
   private disposeAllViewSlot() {
-    this._slots.forEach((slot) => this.disposeViewSlot(slot));
+    if (Array.isArray(this._slots)) {
+      this._slots.forEach((slot) => this.disposeViewSlot(slot));
+    }
     this._slots = [];
   }
 
   private disposeViewSlot(expandedView: CreatedView) {
     if (expandedView && expandedView.view && expandedView.viewSlot && expandedView.view.unbind && expandedView.viewSlot.remove) {
-      const container = $(`.${ROW_DETAIL_CONTAINER_PREFIX}${this._slots[0].id}`);
+      const container = document.getElementsByClassName(`${ROW_DETAIL_CONTAINER_PREFIX}${this._slots[0].id}`);
       if (container && container.length > 0) {
         expandedView.viewSlot.remove(expandedView.view);
         expandedView.view.unbind();
-        container.empty();
+        container[0].innerHTML = '';
+        console.log('disposed', container[0])
         return expandedView;
       }
     }
@@ -313,7 +310,7 @@ export class RowDetailViewExtension implements Extension {
 
   /** Redraw the necessary View Slot */
   private redrawViewSlot(slot: CreatedView) {
-    const containerElement = $(`.${ROW_DETAIL_CONTAINER_PREFIX}${slot.id}`);
+    const containerElement = document.getElementsByClassName(`${ROW_DETAIL_CONTAINER_PREFIX}${slot.id}`);
     if (containerElement && containerElement.length) {
       this.renderViewModel(slot.dataContext);
     }
@@ -323,7 +320,7 @@ export class RowDetailViewExtension implements Extension {
   private renderPreloadView() {
     const containerElements = document.getElementsByClassName(`${PRELOAD_CONTAINER_PREFIX}`);
     if (containerElements && containerElements.length) {
-      this.aureliaUtilService.appendAureliaViewToDom(this._preloadView, containerElements[0]);
+      this.aureliaUtilService.createAureliaViewAddToSlot(this._preloadView, containerElements[0], true);
     }
   }
 
@@ -331,7 +328,7 @@ export class RowDetailViewExtension implements Extension {
   private renderViewModel(item: any) {
     const containerElements = document.getElementsByClassName(`${ROW_DETAIL_CONTAINER_PREFIX}${item.id}`);
     if (containerElements && containerElements.length) {
-      const aureliaComp = this.aureliaUtilService.appendAureliaViewModelToDom(this._viewModel, item, containerElements[0]);
+      const aureliaComp = this.aureliaUtilService.createAureliaViewModelAddToSlot(this._viewModel, item, containerElements[0], true);
 
       const slotObj = this._slots.find((obj) => obj.id === item.id);
 

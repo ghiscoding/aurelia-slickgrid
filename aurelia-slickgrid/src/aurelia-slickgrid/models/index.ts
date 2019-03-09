@@ -1,5 +1,6 @@
 export * from './aggregator.interface';
 export * from './aureliaGridInstance.interface';
+export * from './aureliaViewOutput.interface';
 export * from './autoResizeOption.interface';
 export * from './backendService.interface';
 export * from './backendEventChanged.interface';
