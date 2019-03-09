@@ -103,11 +103,17 @@ export class SliderEditor implements Editor {
   }
 
   loadValue(item: any) {
-    // this.$input.val(this.defaultValue = item[this.columnDef.field]);
-    this.defaultValue = item[this.columnDef.field];
-    this.$input.val(this.defaultValue);
-    this.$input[0].defaultValue = this.defaultValue;
-    this.$sliderNumber.html(this.defaultValue);
+    const fieldName = this.columnDef && this.columnDef.field;
+
+    // when it's a complex object, then pull the object name only, e.g.: "user.firstName" => "user"
+    const fieldNameFromComplexObject = fieldName.indexOf('.') ? fieldName.substring(0, fieldName.indexOf('.')) : '';
+
+    if (item && this.columnDef && (item.hasOwnProperty(fieldName) || item.hasOwnProperty(fieldNameFromComplexObject))) {
+      this.defaultValue = item[fieldNameFromComplexObject || fieldName];
+      this.$input.val(this.defaultValue);
+      this.$input[0].defaultValue = this.defaultValue;
+      this.$sliderNumber.html(this.defaultValue);
+    }
   }
 
   serializeValue() {
@@ -115,7 +121,10 @@ export class SliderEditor implements Editor {
   }
 
   applyValue(item: any, state: any) {
-    item[this.columnDef.field] = state;
+    const fieldName = this.columnDef && this.columnDef.field;
+    // when it's a complex object, then pull the object name only, e.g.: "user.firstName" => "user"
+    const fieldNameFromComplexObject = fieldName.indexOf('.') ? fieldName.substring(0, fieldName.indexOf('.')) : '';
+    item[fieldNameFromComplexObject || fieldName] = state;
   }
 
   isValueChanged() {

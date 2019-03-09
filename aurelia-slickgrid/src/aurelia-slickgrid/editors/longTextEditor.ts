@@ -133,8 +133,16 @@ export class LongTextEditor implements Editor {
   }
 
   loadValue(item: any) {
-    this.$textarea.val(this.defaultValue = item[this.columnDef.field]);
-    this.$textarea.select();
+    const fieldName = this.columnDef && this.columnDef.field;
+
+    // when it's a complex object, then pull the object name only, e.g.: "user.firstName" => "user"
+    const fieldNameFromComplexObject = fieldName.indexOf('.') ? fieldName.substring(0, fieldName.indexOf('.')) : '';
+
+    if (item && this.columnDef && (item.hasOwnProperty(fieldName) || item.hasOwnProperty(fieldNameFromComplexObject))) {
+      this.defaultValue = item[fieldNameFromComplexObject || fieldName];
+      this.$textarea.val(this.defaultValue);
+      this.$textarea.select();
+    }
   }
 
   serializeValue() {
@@ -142,7 +150,10 @@ export class LongTextEditor implements Editor {
   }
 
   applyValue(item: any, state: any) {
-    item[this.columnDef.field] = state;
+    const fieldName = this.columnDef && this.columnDef.field;
+    // when it's a complex object, then pull the object name only, e.g.: "user.firstName" => "user"
+    const fieldNameFromComplexObject = fieldName.indexOf('.') ? fieldName.substring(0, fieldName.indexOf('.')) : '';
+    item[fieldNameFromComplexObject || fieldName] = state;
   }
 
   isValueChanged() {
