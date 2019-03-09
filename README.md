@@ -7,19 +7,26 @@
 One of the best javascript datagrid [SlickGrid](https://github.com/mleibman/SlickGrid) which was originally developed by @mleibman is now available to Aurelia. I have tried and used a few datagrids and SlickGrid beats most of them in terms of functionalities and performance (it can easily deal with even a million row).
 
 ### SlickGrid Source
-We will be using [6pac SlickGrid fork](https://github.com/6pac/SlickGrid/) (the most active fork since the original @mleibman fork was closed some time ago by his author for personal reasons).
+We will be using [6pac SlickGrid fork](https://github.com/6pac/SlickGrid/), this the most active fork since the original @mleibman fork was closed some time ago by his author personal reasons. Also worth to know, I also contributed a lot to that fork to benefit Aurelia-Slickgrid.
 
 ### Goal
 The goal is of course to be able to run SlickGrid within Aurelia but also to incorporate as much as possible the entire list of functionalities (and more) that SlickGrid offers (you can see a vast list of samples on the [6pac SlickGrid examples](https://github.com/6pac/SlickGrid/wiki/Examples) website).
+
+### NPM Package
+[Aurelia-Slickgrid on NPM](https://www.npmjs.com/package/aurelia-slickgrid)
 
 ### Demo page
 `Aurelia-Slickgrid` supports both `Bootstrap 3` and `Bootstrap 4`, you can see a demo of each one below.
 - [Bootstrap 3 demo](https://ghiscoding.github.io/aurelia-slickgrid) / [examples repo](https://github.com/ghiscoding/aurelia-slickgrid/tree/master/aurelia-slickgrid/src/examples/slickgrid)
 - [Bootstrap 4 demo](https://ghiscoding.github.io/aurelia-slickgrid-bs4-demo) / [examples repo](https://github.com/ghiscoding/aurelia-slickgrid-bs4-demo/tree/master/src/examples/slickgrid)
 
-
-### NPM Package
-[Aurelia-Slickgrid on NPM](https://www.npmjs.com/package/aurelia-slickgrid)
+#### Working Demo
+For a complete and working local demo, you can clone the [Aurelia-Slickgrid Bootstrap 4](https://github.com/ghiscoding/aurelia-slickgrid-bs4-demo) repository. That repo is updated frequently and is the actual [Bootstrap 4 demo](https://ghiscoding.github.io/aurelia-slickgrid-bs4-demo/#/slickgrid).
+```bash
+git clone https://github.com/ghiscoding/aurelia-slickgrid-bs4-demo
+npm install # OR yarn install
+npm start # OR yarn start
+```
 
 ## Installation
 Refer to the [Wiki - HOWTO Step by Step](https://github.com/ghiscoding/aurelia-slickgrid/wiki/HOWTO--Step-by-Step)
@@ -30,9 +37,9 @@ The Wiki is where all the documentation and instructions will go, so please cons
 ## Main features
 You can see some screenshots below and the instructions down below.
 
-This is a work in progress, but so far here are some of the features that `aurelia-slickgrid` brings (on top of Slickgrid itself):
+See a quick look at the features that `aurelia-slickgrid` brings (on top of Slickgrid itself)::
 - Easier use of SlickGrid within `Aurelia` as it is just a component (simply pass a column definitions and a dataset and you're good to go)
-- Bootstrap Theme with SASS variables for extra customization (if you create a theme, then please make a PR)
+- Bootstrap Theme with SASS variables for extra customization (if you create a new theme, then please make a PR)
 - Auto-resize (boolean flag), will resize the datagrid viewport with available space, that includes when browser resize (basically takes available space from it's parent container)
 - Support all SlickGrid [Controls](https://github.com/6pac/SlickGrid/tree/master/controls) and [Plugins](https://github.com/6pac/SlickGrid/tree/master/plugins).
 - Row(s) Selection
@@ -42,14 +49,18 @@ This is a work in progress, but so far here are some of the features that `aurel
 - Some features of SlickGrid itself which are working out of the gate
   - Sort/Multi-Sort (client/server side)
   - Header Row with Filters (currently support `Input` and `Select` dropdown, multi-select is planned)
-  - Inline Editors (a few defaults were added, and you can easily create custom ones too)
-  - Formatters (this as well includes some defaults and they are customizable)
+  - Inline Editors (number, float, text, longText, date picker, ... you can also create your own custom ones)
+  - Formatters to display something different in UI. For example, a boolean flag can be shown as a Font-Awesome checkmark icon
+  - Filters & Compound Filters (input text, single & multi select, slider, auto-complete, & even custom filter)
   - Optimized DataView which brings a lot of functionalities (sort, grouping, and more)
     - even server side data is saved back into a SlickGrid DataView to use these functionalities (e.g grouping)
-  - All the [SlickGrid Events](https://github.com/6pac/SlickGrid/wiki/Grid-Events) are supported, see the [Wiki](https://github.com/ghiscoding/aurelia-slickgrid/wiki/Grid-&-DataView-Events)
-- Pinned (aka frozen) Columns/Rows, see the [Wiki](https://github.com/ghiscoding/aurelia-slickgrid/wiki/Pinned-(aka-Frozen)-Columns-Rows)
+  - Grouping & Aggregators
+  - Grouping by Column Dragging
+  - Row Detail View
+  - Expose all the [SlickGrid Events](https://github.com/6pac/SlickGrid/wiki/Grid-Events) are supported, see the [Wiki](https://github.com/ghiscoding/aurelia-slickgrid/wiki/Grid-&-DataView-Events)
+  - Pinned (aka frozen) Columns/Rows, see the [Wiki](https://github.com/ghiscoding/aurelia-slickgrid/wiki/Pinned-(aka-Frozen)-Columns-Rows)
 
-### License
+## License
 [MIT License](LICENSE)
 
 ## Contributions/Comments
