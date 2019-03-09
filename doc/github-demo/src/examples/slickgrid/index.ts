@@ -27,6 +27,7 @@ export class Index {
       { route: 'example18', moduleId: PLATFORM.moduleName('./example18'), name: 'example18', nav: true, title: '18- Draggable Grouping' },
       { route: 'example19', moduleId: PLATFORM.moduleName('./example19'), name: 'example19', nav: true, title: '19- Row Detail View' },
       { route: 'example20', moduleId: PLATFORM.moduleName('./example20'), name: 'example20', nav: true, title: '20- Pinned Columns/Rows' },
+      { route: 'example21', moduleId: PLATFORM.moduleName('./example21'), name: 'example21', nav: true, title: '21- Grid AutoHeight (full height)' },
     ];
 
     config.map(mapping);
