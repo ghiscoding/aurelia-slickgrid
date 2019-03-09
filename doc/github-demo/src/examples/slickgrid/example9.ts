@@ -1,6 +1,15 @@
 import { I18N } from 'aurelia-i18n';
 import { autoinject } from 'aurelia-framework';
-import { AureliaGridInstance, Column, FieldType, Filters, Formatters, GridOption, OperatorType } from 'aurelia-slickgrid';
+import {
+  AureliaGridInstance,
+  Column,
+  ExtensionName,
+  FieldType,
+  Filters,
+  Formatters,
+  GridOption,
+  OperatorType
+} from 'aurelia-slickgrid';
 
 @autoinject()
 export class Example9 {
@@ -9,11 +18,11 @@ export class Example9 {
     This example demonstrates using the <b>Slick.Controls.GridMenu</b> plugin to easily add a Grid Menu (aka hamburger menu) on the top right corner of the grid.<br/>
     (<a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Grid-Menu" target="_blank">Wiki docs</a>)
     <ul>
-      <li>The Grid Menu uses the following icon by default "fa-bars"&nbsp;&nbsp;<span class="fa fa-bars"></span>&nbsp;&nbsp;(which looks like a hamburger, hence the name)</li>
-      <ul><li>Another icon which you could use is "fa-ellipsis-v"&nbsp;&nbsp;<span class="fa fa-ellipsis-v"></span>&nbsp;&nbsp;(which is shown in this example)</li></ul>
-      <li>By default the Grid Menu shows all columns which you can show/hide</li>
-      <li>You can configure multiple "commands" to show up in the Grid Menu and use the "onGridMenuCommand()" callback</li>
-      <li>Doing a "right+click" over any column header will also provide a way to show/hide a column (via the Column Picker Plugin)</li>
+    <li>You can change the Grid Menu icon, for example "fa-ellipsis-v"&nbsp;&nbsp;<span class="fa fa-ellipsis-v"></span>&nbsp;&nbsp;(which is shown in this example)</li>
+    <li>By default the Grid Menu shows all columns which you can show/hide them</li>
+    <li>You can configure multiple custom "commands" to show up in the Grid Menu and use the "onGridMenuCommand()" callback</li>
+    <li>Doing a "right+click" over any column header will also provide a way to show/hide a column (via the Column Picker Plugin)</li>
+    <li><i class="fa fa-arrow-down"></i> You can also show the Grid Menu anywhere on your page</li>
     </ul>
   `;
 
@@ -172,5 +181,12 @@ export class Example9 {
   switchLanguage() {
     this.selectedLanguage = (this.selectedLanguage === 'en') ? 'fr' : 'en';
     this.i18n.setLocale(this.selectedLanguage);
+  }
+
+  toggleGridMenu(e) {
+    if (this.aureliaGrid && this.aureliaGrid.extensionService) {
+      const gridMenuInstance = this.aureliaGrid.extensionService.getSlickgridAddonInstance(ExtensionName.gridMenu);
+      gridMenuInstance.showGridMenu(e);
+    }
   }
 }
