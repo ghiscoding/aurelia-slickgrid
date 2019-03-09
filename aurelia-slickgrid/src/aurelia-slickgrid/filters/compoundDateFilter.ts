@@ -151,12 +151,15 @@ export class CompoundDateFilter implements Filter {
       pickerOptions.enableTime = true;
     }
 
+    // merge options with optional user's custom options
+    const pickerMergedOptions = { ...pickerOptions, ...this.columnFilter.filterOptions };
+
     let placeholder = (this.gridOptions) ? (this.gridOptions.defaultFilterPlaceholder || '') : '';
     if (this.columnFilter && this.columnFilter.placeholder) {
       placeholder = this.columnFilter.placeholder;
     }
     const $filterInputElm: any = $(`<div class="flatpickr"><input type="text" class="form-control" data-input placeholder="${placeholder}"></div>`);
-    this.flatInstance = (flatpickr && $filterInputElm[0] && typeof $filterInputElm[0].flatpickr === 'function') ? $filterInputElm[0].flatpickr(pickerOptions) : null;
+    this.flatInstance = (flatpickr && $filterInputElm[0] && typeof $filterInputElm[0].flatpickr === 'function') ? $filterInputElm[0].flatpickr(pickerMergedOptions) : null;
     return $filterInputElm;
   }
 
@@ -202,7 +205,7 @@ export class CompoundDateFilter implements Filter {
         <div class="input-group-addon input-group-prepend operator">
           <select class="form-control"></select>
         </div>
-        <div class=flatpickr>
+        <div class="flatpickr">
           <input type="text" class="form-control" data-input>
         </div>
       </div>

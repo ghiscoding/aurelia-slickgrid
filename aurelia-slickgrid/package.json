@@ -32,7 +32,7 @@
     "bluebird": "^3.4.1",
     "bootstrap": "^3.4.1",
     "dompurify": "^1.0.7",
-    "flatpickr": "^4.2.4",
+    "flatpickr": ">=4.2.4",
     "font-awesome": "^4.7.0",
     "i18next-xhr-backend": "^1.5.0",
     "jquery": "^3.2.1",
