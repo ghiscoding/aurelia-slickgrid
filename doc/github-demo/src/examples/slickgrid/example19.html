@@ -3,9 +3,20 @@
   <div class="subtitle"
        innerhtml.bind="subTitle"></div>
 
+  <span>
+    <label for="">Detail View Rows Shown: </label>
+    <input type="number"
+           value.bind="detailViewRowCount">
+    <button class="btn btn-default btn-xs"
+            click.delegate="changeDetailViewRowCount()">
+      Set
+    </button>
+  </span>
+
   <aurelia-slickgrid grid-id="grid16"
                      column-definitions.bind="columnDefinitions"
                      grid-options.bind="gridOptions"
-                     dataset.bind="dataset">
+                     dataset.bind="dataset"
+                     asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
   </aurelia-slickgrid>
 </template>
