@@ -87,18 +87,24 @@ export class FloatEditor implements Editor {
   }
 
   loadValue(item: any) {
-    this.defaultValue = item[this.columnDef.field];
+    const fieldName = this.columnDef && this.columnDef.field;
 
-    const decPlaces = this.getDecimalPlaces();
-    if (decPlaces !== null
-      && (this.defaultValue || this.defaultValue === 0)
-      && this.defaultValue.toFixed) {
-      this.defaultValue = this.defaultValue.toFixed(decPlaces);
+    // when it's a complex object, then pull the object name only, e.g.: "user.firstName" => "user"
+    const fieldNameFromComplexObject = fieldName.indexOf('.') ? fieldName.substring(0, fieldName.indexOf('.')) : '';
+
+    if (item && this.columnDef && (item.hasOwnProperty(fieldName) || item.hasOwnProperty(fieldNameFromComplexObject))) {
+      this.defaultValue = item[fieldNameFromComplexObject || fieldName];
+      const decPlaces = this.getDecimalPlaces();
+      if (decPlaces !== null
+        && (this.defaultValue || this.defaultValue === 0)
+        && this.defaultValue.toFixed) {
+        this.defaultValue = this.defaultValue.toFixed(decPlaces);
+      }
+
+      this.$input.val(this.defaultValue);
+      this.$input[0].defaultValue = this.defaultValue;
+      this.$input.select();
     }
-
-    this.$input.val(this.defaultValue);
-    this.$input[0].defaultValue = this.defaultValue;
-    this.$input.select();
   }
 
   serializeValue() {
@@ -119,7 +125,10 @@ export class FloatEditor implements Editor {
   }
 
   applyValue(item: any, state: any) {
-    item[this.columnDef.field] = state;
+    const fieldName = this.columnDef && this.columnDef.field;
+    // when it's a complex object, then pull the object name only, e.g.: "user.firstName" => "user"
+    const fieldNameFromComplexObject = fieldName.indexOf('.') ? fieldName.substring(0, fieldName.indexOf('.')) : '';
+    item[fieldNameFromComplexObject || fieldName] = state;
   }
 
   isValueChanged() {

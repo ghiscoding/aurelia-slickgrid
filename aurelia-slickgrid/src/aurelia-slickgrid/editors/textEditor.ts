@@ -67,10 +67,17 @@ export class TextEditor implements Editor {
   }
 
   loadValue(item: any) {
-    this.defaultValue = item[this.args.column.field] || '';
-    this.$input.val(this.defaultValue);
-    this.$input[0].defaultValue = this.defaultValue;
-    this.$input.select();
+    const fieldName = this.columnDef && this.columnDef.field;
+
+    // when it's a complex object, then pull the object name only, e.g.: "user.firstName" => "user"
+    const fieldNameFromComplexObject = fieldName.indexOf('.') ? fieldName.substring(0, fieldName.indexOf('.')) : '';
+
+    if (item && this.columnDef && (item.hasOwnProperty(fieldName) || item.hasOwnProperty(fieldNameFromComplexObject))) {
+      this.defaultValue = item[fieldNameFromComplexObject || fieldName] || '';
+      this.$input.val(this.defaultValue);
+      this.$input[0].defaultValue = this.defaultValue;
+      this.$input.select();
+    }
   }
 
   serializeValue() {
@@ -78,7 +85,10 @@ export class TextEditor implements Editor {
   }
 
   applyValue(item: any, state: any) {
-    item[this.args.column.field] = state;
+    const fieldName = this.columnDef && this.columnDef.field;
+    // when it's a complex object, then pull the object name only, e.g.: "user.firstName" => "user"
+    const fieldNameFromComplexObject = fieldName.indexOf('.') ? fieldName.substring(0, fieldName.indexOf('.')) : '';
+    item[fieldNameFromComplexObject || fieldName] = state;
   }
 
   isValueChanged() {
