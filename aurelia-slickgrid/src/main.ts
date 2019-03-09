@@ -6,7 +6,7 @@ import 'font-awesome/css/font-awesome.css';
 import 'flatpickr/dist/flatpickr.min.css';
 import '../assets/lib/multiple-select/multiple-select.css';
 import '../assets/lib/multiple-select/multiple-select.js';
-import './styles.css';
+import './styles.scss';
 import './slickgrid.scss';
 import { PLATFORM } from 'aurelia-pal';
 import { Aurelia } from 'aurelia-framework';

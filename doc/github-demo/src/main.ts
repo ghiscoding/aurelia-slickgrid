@@ -4,7 +4,7 @@
 import 'bootstrap/dist/css/bootstrap.css';
 import 'font-awesome/css/font-awesome.css';
 import 'flatpickr/dist/flatpickr.min.css';
-import './styles/styles.css';
+import './styles/styles.scss';
 import 'aurelia-slickgrid/dist/lib/multiple-select/multiple-select.css';
 import 'aurelia-slickgrid/dist/lib/multiple-select/multiple-select.js';
 import 'aurelia-slickgrid/dist/styles/css/slickgrid-theme-bootstrap.css';
