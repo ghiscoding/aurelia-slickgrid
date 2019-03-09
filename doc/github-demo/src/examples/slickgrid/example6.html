@@ -1,31 +1,48 @@
 <template>
   <h2>${title}</h2>
-  <div class="subtitle" innerhtml.bind="subTitle"></div>
+  <div class="subtitle"
+       innerhtml.bind="subTitle"></div>
 
   <div class="row">
-    <div class="col-sm-4">
-      <div class.bind="status.class" role="alert">
+    <div class="col-sm-5">
+      <div class.bind="status.class"
+           role="alert">
         <strong>Status: </strong> ${status.text}
         <span hidden.bind="!processing">
           <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
         </span>
       </div>
-      <button class="btn btn-default btn-sm" click.delegate="switchLanguage()">Switch Language</button>
+      <button class="btn btn-default btn-sm"
+              click.delegate="clearAllFiltersAndSorts()">
+        <i class="fa fa-filter text-danger"></i>
+        Clear all Filter & Sorts
+      </button>
+      <button class="btn btn-default btn-sm"
+              click.delegate="switchLanguage()">
+        <i class="fa fa-language"></i>
+        Switch Language
+      </button>
       <span><label>Locale</label>: ${selectedLanguage + '.json'}</span>
-      <br/>
+      <br />
       <span if.bind="statistics">
-        <b>Statistics:</b> ${statistics.endTime | dateFormat: 'DD MMM, h:mm:ss a'} | ${statistics.executionTime}ms | ${statistics.totalItemCount}
+        <b>Statistics:</b> ${statistics.endTime | dateFormat: 'DD MMM, h:mm:ss a'} | ${statistics.executionTime}ms |
+        ${statistics.totalItemCount}
         items
       </span>
     </div>
-    <div class="col-sm-8">
+    <div class="col-sm-7">
       <div class="alert alert-info">
         <strong>GraphQL Query:</strong> ${graphqlQuery}
       </div>
     </div>
   </div>
 
-  <aurelia-slickgrid grid-id="grid1" column-definitions.bind="columnDefinitions" grid-options.bind="gridOptions" dataset.bind="dataset"
-    grid-height="200" grid-width="800" asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
+  <aurelia-slickgrid grid-id="grid1"
+                     column-definitions.bind="columnDefinitions"
+                     grid-options.bind="gridOptions"
+                     dataset.bind="dataset"
+                     grid-height="200"
+                     grid-width="800"
+                     asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
   </aurelia-slickgrid>
 </template>

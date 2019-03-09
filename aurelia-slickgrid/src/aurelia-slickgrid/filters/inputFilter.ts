@@ -13,6 +13,7 @@ import * as $ from 'jquery';
 
 export class InputFilter implements Filter {
   protected _clearFilterTriggered = false;
+  protected _shouldTriggerQuery = true;
   protected _inputType = 'text';
   protected $filterElm: any;
   grid: any;
@@ -72,22 +73,25 @@ export class InputFilter implements Filter {
       const value = e && e.target && e.target.value || '';
 
       if (this._clearFilterTriggered) {
-        this.callback(e, { columnDef: this.columnDef, clearFilterTriggered: this._clearFilterTriggered });
-        this._clearFilterTriggered = false; // reset flag for next use
+        this.callback(e, { columnDef: this.columnDef, clearFilterTriggered: this._clearFilterTriggered, shouldTriggerQuery: this._shouldTriggerQuery });
         this.$filterElm.removeClass('filled');
       } else {
         value === '' ? this.$filterElm.removeClass('filled') : this.$filterElm.addClass('filled');
-        this.callback(e, { columnDef: this.columnDef, operator: this.operator, searchTerms: [value] });
+        this.callback(e, { columnDef: this.columnDef, operator: this.operator, searchTerms: [value], shouldTriggerQuery: this._shouldTriggerQuery });
       }
+      // reset both flags for next use
+      this._clearFilterTriggered = false;
+      this._shouldTriggerQuery = true;
     });
   }
 
   /**
    * Clear the filter value
    */
-  clear() {
+  clear(shouldTriggerQuery = true) {
     if (this.$filterElm) {
       this._clearFilterTriggered = true;
+      this._shouldTriggerQuery = shouldTriggerQuery;
       this.searchTerms = [];
       this.$filterElm.val('');
       this.$filterElm.trigger('keyup');

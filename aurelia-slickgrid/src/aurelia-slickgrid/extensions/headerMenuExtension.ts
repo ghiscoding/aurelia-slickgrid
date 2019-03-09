@@ -72,15 +72,15 @@ export class HeaderMenuExtension implements Extension {
         if (this.sharedService.gridOptions.headerMenu.onExtensionRegistered) {
           this.sharedService.gridOptions.headerMenu.onExtensionRegistered(this._extension);
         }
-        this._eventHandler.subscribe(this._extension.onCommand, (e: any, args: HeaderMenuOnCommandArgs) => {
-          this.executeHeaderMenuInternalCommands(e, args);
+        this._eventHandler.subscribe(this._extension.onCommand, (event: Event, args: HeaderMenuOnCommandArgs) => {
+          this.executeHeaderMenuInternalCommands(event, args);
           if (this.sharedService.gridOptions.headerMenu && typeof this.sharedService.gridOptions.headerMenu.onCommand === 'function') {
-            this.sharedService.gridOptions.headerMenu.onCommand(e, args);
+            this.sharedService.gridOptions.headerMenu.onCommand(event, args);
           }
         });
-        this._eventHandler.subscribe(this._extension.onBeforeMenuShow, (e: any, args: HeaderMenuOnBeforeMenuShowArgs) => {
+        this._eventHandler.subscribe(this._extension.onBeforeMenuShow, (event: Event, args: HeaderMenuOnBeforeMenuShowArgs) => {
           if (this.sharedService.gridOptions.headerMenu && typeof this.sharedService.gridOptions.headerMenu.onBeforeMenuShow === 'function') {
-            this.sharedService.gridOptions.headerMenu.onBeforeMenuShow(e, args);
+            this.sharedService.gridOptions.headerMenu.onBeforeMenuShow(event, args);
           }
         });
       }
@@ -184,7 +184,7 @@ export class HeaderMenuExtension implements Extension {
   }
 
   /** Execute the Header Menu Commands that was triggered by the onCommand subscribe */
-  executeHeaderMenuInternalCommands(e: Event, args: HeaderMenuOnCommandArgs) {
+  executeHeaderMenuInternalCommands(event: Event, args: HeaderMenuOnCommandArgs) {
     if (args && args.command) {
       switch (args.command) {
         case 'hide':
@@ -194,15 +194,15 @@ export class HeaderMenuExtension implements Extension {
           }
           break;
         case 'clear-filter':
-          this.clearColumnFilter(e, args);
+          this.clearColumnFilter(event, args);
           break;
         case 'clear-sort':
-          this.clearColumnSort(e, args);
+          this.clearColumnSort(event, args);
           break;
         case 'sort-asc':
         case 'sort-desc':
           const isSortingAsc = (args.command === 'sort-asc');
-          this.sortColumn(e, args, isSortingAsc);
+          this.sortColumn(event, args, isSortingAsc);
           break;
         default:
           break;
@@ -281,7 +281,7 @@ export class HeaderMenuExtension implements Extension {
   }
 
   /** Sort the current column */
-  private sortColumn(e: Event, args: HeaderMenuOnCommandArgs, isSortingAsc = true) {
+  private sortColumn(event: Event, args: HeaderMenuOnCommandArgs, isSortingAsc = true) {
     if (args && args.column) {
       // get previously sorted columns
       const sortedColsWithoutCurrent: ColumnSort[] = this.sortService.getPreviousColumnSorts(args.column.id + '');
@@ -289,7 +289,7 @@ export class HeaderMenuExtension implements Extension {
       // add to the column array, the column sorted by the header menu
       sortedColsWithoutCurrent.push({ sortCol: args.column, sortAsc: isSortingAsc });
       if (this.sharedService.gridOptions.backendServiceApi) {
-        this.sortService.onBackendSortChanged(e, { multiColumnSort: true, sortCols: sortedColsWithoutCurrent, grid: this.sharedService.grid });
+        this.sortService.onBackendSortChanged(event, { multiColumnSort: true, sortCols: sortedColsWithoutCurrent, grid: this.sharedService.grid });
       } else if (this.sharedService.dataView) {
         this.sortService.onLocalSortChanged(this.sharedService.grid, this.sharedService.dataView, sortedColsWithoutCurrent);
       } else {

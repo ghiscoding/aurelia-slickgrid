@@ -3,13 +3,14 @@ import { EventAggregator } from 'aurelia-event-aggregator';
 import {
   Column,
   ColumnSort,
+  EmitterType,
   FieldType,
   GridOption,
   SlickEvent,
   SortDirection,
   CurrentSorter,
   SortDirectionNumber,
-  SortDirectionString
+  SortDirectionString,
 } from './../models/index';
 import { getDescendantProperty } from './utilities';
 import { sortByFieldType } from '../sorters/sorterUtilities';
@@ -74,7 +75,7 @@ export class SortService {
       }
 
       const query = backendApi.service.processOnSortChanged(event, args);
-      this.emitSortChanged('remote');
+      this.emitSortChanged(EmitterType.remote);
 
       // await for the Promise to resolve the data
       const processResult = await backendApi.process(query);
@@ -137,7 +138,7 @@ export class SortService {
       }
 
       this.onLocalSortChanged(grid, dataView, sortColumns);
-      this.emitSortChanged('local');
+      this.emitSortChanged(EmitterType.local);
     });
   }
 
@@ -147,8 +148,9 @@ export class SortService {
    * - 2nd, we also need to trigger a sort change
    *   - for a backend grid, we will trigger a backend sort changed with an empty sort columns array
    *   - however for a local grid, we need to pass a sort column and so we will sort by the 1st column
+   * @param trigger query event after executing clear filter?
    */
-  clearSorting() {
+  clearSorting(triggerQueryEvent = true) {
     if (this._grid && this._gridOptions && this._dataView) {
       // remove any sort icons (this setSortColumns function call really does only that)
       this._grid.setSortColumns([]);
@@ -156,11 +158,18 @@ export class SortService {
       // we also need to trigger a sort change
       // for a backend grid, we will trigger a backend sort changed with an empty sort columns array
       // however for a local grid, we need to pass a sort column and so we will sort by the 1st column
-      if (this._isBackendGrid) {
-        this.onBackendSortChanged(null, { grid: this._grid, sortCols: [] });
-      } else {
-        if (this._columnDefinitions && Array.isArray(this._columnDefinitions)) {
-          this.onLocalSortChanged(this._grid, this._dataView, new Array({ sortAsc: true, sortCol: this._columnDefinitions[0] }));
+      if (triggerQueryEvent) {
+        if (this._isBackendGrid) {
+          this.onBackendSortChanged(undefined, { grid: this._grid, sortCols: [] });
+        } else {
+          if (this._columnDefinitions && Array.isArray(this._columnDefinitions)) {
+            this.onLocalSortChanged(this._grid, this._dataView, new Array({ sortAsc: true, sortCol: this._columnDefinitions[0] }));
+          }
+        }
+      } else if (this._isBackendGrid) {
+        const backendService = this._gridOptions && this._gridOptions.backendServiceApi && this._gridOptions.backendServiceApi.service;
+        if (backendService && backendService.clearSorters) {
+          backendService.clearSorters();
         }
       }
     }
@@ -168,7 +177,7 @@ export class SortService {
     // set current sorter to empty & emit a sort changed event
     this._currentLocalSorters = [];
 
-    // emit an event when filters are all cleared
+    // emit an event when sorts are all cleared
     this.ea.publish('sortService:sortCleared', this._currentLocalSorters);
   }
 
@@ -248,7 +257,7 @@ export class SortService {
           const columnSortObj = sortColumns[i];
           if (columnSortObj && columnSortObj.sortCol) {
             const sortDirection = columnSortObj.sortAsc ? SortDirectionNumber.asc : SortDirectionNumber.desc;
-            const sortField = columnSortObj.sortCol.queryField || columnSortObj.sortCol.queryFieldFilter || columnSortObj.sortCol.field;
+            const sortField = columnSortObj.sortCol.queryField || columnSortObj.sortCol.queryFieldSorter || columnSortObj.sortCol.field;
             const fieldType = columnSortObj.sortCol.type || FieldType.string;
             let value1 = dataRow1[sortField];
             let value2 = dataRow2[sortField];
@@ -296,15 +305,15 @@ export class SortService {
    * Other services, like Pagination, can then subscribe to it.
    * @param sender
    */
-  emitSortChanged(sender: 'local' | 'remote') {
-    if (sender === 'remote' && this._gridOptions && this._gridOptions.backendServiceApi) {
+  emitSortChanged(sender: EmitterType) {
+    if (sender === EmitterType.remote && this._gridOptions && this._gridOptions.backendServiceApi) {
       let currentSorters: CurrentSorter[] = [];
       const backendService = this._gridOptions.backendServiceApi.service;
       if (backendService && backendService.getCurrentSorters) {
         currentSorters = backendService.getCurrentSorters() as CurrentSorter[];
       }
       this.ea.publish('sortService:sortChanged', currentSorters);
-    } else if (sender === 'local') {
+    } else if (sender === EmitterType.local) {
       this.ea.publish('sortService:sortChanged', this.getCurrentLocalSorters());
     }
   }

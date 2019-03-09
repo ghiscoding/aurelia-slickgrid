@@ -56,6 +56,16 @@ export class GridOdataService implements BackendService {
     return this.odataService.buildQuery();
   }
 
+  clearFilters() {
+    this._currentFilters = [];
+    this.updateOptions({ filteringOptions: [] });
+  }
+
+  clearSorters() {
+    this._currentSorters = [];
+    this.updateOptions({ sortingOptions: [] });
+  }
+
   /**
    * Initialize the Service
    * @param OData Options

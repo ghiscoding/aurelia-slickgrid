@@ -156,6 +156,12 @@ export class Example6 {
     };
   }
 
+  clearAllFiltersAndSorts() {
+    if (this.aureliaGrid && this.aureliaGrid.gridService) {
+      this.aureliaGrid.gridService.clearAllFiltersAndSorts();
+    }
+  }
+
   displaySpinner(isProcessing) {
     this.processing = isProcessing;
     this.status = (isProcessing)

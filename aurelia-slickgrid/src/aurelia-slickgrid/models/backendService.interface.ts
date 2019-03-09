@@ -1,14 +1,12 @@
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
 import {
   BackendServiceOption,
-  Column,
   ColumnFilters,
   ColumnSort,
   CurrentFilter,
   CurrentPagination,
   CurrentSorter,
   FilterChangedArgs,
-  GridOption,
   Pagination,
   PaginationChangedArgs,
   SortChangedArgs,
@@ -20,6 +18,12 @@ export interface BackendService {
 
   /** Build and the return the backend service query string */
   buildQuery: (serviceOptions?: BackendServiceOption) => string;
+
+  /** Clear all sorts */
+  clearFilters?: () => void;
+
+  /** Clear all sorts */
+  clearSorters?: () => void;
 
   /** initialize the backend service with certain options */
   init?: (serviceOptions?: BackendServiceOption, pagination?: Pagination, grid?: any) => void;

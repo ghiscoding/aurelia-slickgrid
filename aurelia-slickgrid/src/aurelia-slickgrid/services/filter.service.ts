@@ -7,6 +7,7 @@ import {
   ColumnFilter,
   ColumnFilters,
   CurrentFilter,
+  EmitterType,
   Filter,
   FilterArguments,
   FilterCallbackArg,
@@ -17,10 +18,13 @@ import {
   OperatorString,
   SearchTerm,
   SlickEvent,
+  GraphqlResult,
+  BackendServiceApi,
 } from './../models/index';
 import { getDescendantProperty } from './utilities';
 import * as $ from 'jquery';
 import * as isequal from 'lodash.isequal';
+import { executeBackendProcessesCallback, onBackendError } from './backend-utilities';
 
 // using external non-typed js libraries
 declare var Slick: any;
@@ -72,11 +76,11 @@ export class FilterService {
     this._slickSubscriber = new Slick.Event();
 
     // subscribe to the SlickGrid event and call the backend execution
-    this._slickSubscriber.subscribe(this.attachBackendOnFilterSubscribe.bind(this));
+    this._slickSubscriber.subscribe(this.onBackendFilterChange.bind(this));
 
     // subscribe to SlickGrid onHeaderRowCellRendered event to create filter template
     this._eventHandler.subscribe(grid.onHeaderRowCellRendered, (e: KeyboardEvent, args: any) => {
-      // firstColumnIdRendered is null at first, so if becomes filled and equal then we know it was already rendered
+      // firstColumnIdRendered is null at first, so if it changes to being filled and equal then we know it was already rendered
       if (args.column.id === this._firstColumnIdRendered) {
         this._isFilterFirstRender = false;
       }
@@ -87,17 +91,14 @@ export class FilterService {
     });
   }
 
-  async attachBackendOnFilterSubscribe(event: KeyboardEvent, args: any) {
+  onBackendFilterChange(event: KeyboardEvent, args: any) {
     if (!args || !args.grid) {
       throw new Error('Something went wrong when trying to attach the "attachBackendOnFilterSubscribe(event, args)" function, it seems that "args" is not populated correctly');
     }
-    const gridOptions: GridOption = args.grid.getOptions() || {};
-
-    const backendApi = gridOptions.backendServiceApi;
+    const backendApi = this._gridOptions.backendServiceApi;
     if (!backendApi || !backendApi.process || !backendApi.service) {
       throw new Error(`BackendServiceApi requires at least a "process" function and a "service" defined`);
     }
-
     try {
       // keep start time & end timestamps & return it after process execution
       const startTime = new Date();
@@ -113,44 +114,33 @@ export class FilterService {
         debounceTypingDelay = backendApi.filterTypingDebounce || DEFAULT_FILTER_TYPING_DEBOUNCE;
       }
 
-      // call the service to get a query back
-      clearTimeout(timer);
-      timer = setTimeout(async () => {
-        const query = await backendApi.service.processOnFilterChanged(event, args);
-        const endTime = new Date();
-
-        // emit an onFilterChanged event when it's not called by clearAllFilters
-        if (args && !args.clearFilterTriggered) {
-          this.emitFilterChanged('remote');
+      // query backend, except when it's called by a ClearFilters then we won't
+      if (args && args.shouldTriggerQuery) {
+        // call the service to get a query back
+        if (debounceTypingDelay > 0) {
+          clearTimeout(timer);
+          timer = setTimeout(() => this.executeBackendCallback(event, args, startTime, backendApi), debounceTypingDelay);
+        } else {
+          this.executeBackendCallback(event, args, startTime, backendApi);
         }
-
-        // await for the Promise to resolve the data
-        const processResult = await backendApi.process(query);
-
-        // from the result, call our internal post process to update the Dataset and Pagination info
-        if (processResult && backendApi.internalPostProcess) {
-          backendApi.internalPostProcess(processResult);
-        }
-
-        // send the response process to the postProcess callback
-        if (backendApi.postProcess !== undefined) {
-          if (processResult instanceof Object) {
-            processResult.statistics = {
-              startTime,
-              endTime,
-              executionTime: endTime.valueOf() - startTime.valueOf(),
-              totalItemCount: this._gridOptions && this._gridOptions.pagination && this._gridOptions.pagination.totalItems
-            };
-          }
-          backendApi.postProcess(processResult);
-        }
-      }, debounceTypingDelay);
-    } catch (e) {
-      if (backendApi && backendApi.onError) {
-        backendApi.onError(e);
-      } else {
-        throw e;
       }
+    } catch (error) {
+      onBackendError(error, backendApi);
+    }
+  }
+
+  async executeBackendCallback(event: KeyboardEvent, args: any, startTime: Date, backendApi: BackendServiceApi) {
+    const query = await backendApi.service.processOnFilterChanged(event, args);
+
+    // emit an onFilterChanged event when it's not called by a clear filter
+    if (args && !args.clearFilterTriggered) {
+      this.emitFilterChanged(EmitterType.remote);
+    }
+
+    // the processes can be Observables (like HttpClient) or Promises
+    const process = backendApi.process(query);
+    if (process instanceof Promise && process.then) {
+      process.then((processResult: GraphqlResult | any) => executeBackendProcessesCallback(startTime, processResult, backendApi, this._gridOptions));
     }
   }
 
@@ -174,9 +164,9 @@ export class FilterService {
         dataView.refresh();
       }
 
-      // emit an onFilterChanged event when it's not called by clearAllFilters
+      // emit an onFilterChanged event when it's not called by a clear filter
       if (args && !args.clearFilterTriggered) {
-        this.emitFilterChanged('local');
+        this.emitFilterChanged(EmitterType.local);
       }
     });
 
@@ -189,7 +179,7 @@ export class FilterService {
   clearFilterByColumnId(columnId: number | string) {
     const colFilter: Filter = this._filters.find((filter: Filter) => filter.columnDef.id === columnId);
     if (colFilter && colFilter.clear) {
-      colFilter.clear();
+      colFilter.clear(true);
     }
 
     // we need to loop through all columnFilters and delete the filter found
@@ -200,9 +190,17 @@ export class FilterService {
       }
     }
 
+    let emitter: EmitterType = EmitterType.local;
+    const isBackendApi = this._gridOptions && this._gridOptions.backendServiceApi || false;
+
+    // when using a backend service, we need to manually trigger a filter change
+    if (isBackendApi) {
+      emitter = EmitterType.remote;
+      this.onBackendFilterChange(event as KeyboardEvent, { grid: this._grid, columnFilters: this._columnFilters });
+    }
+
     // emit an event when filter is cleared
-    const caller = this._gridOptions && this._gridOptions.backendServiceApi ? 'remote' : 'local';
-    this.emitFilterChanged(caller);
+    this.emitFilterChanged(emitter);
   }
 
   /** Clear the search filters (below the column titles) */
@@ -210,7 +208,7 @@ export class FilterService {
     this._filters.forEach((filter: Filter) => {
       if (filter && filter.clear) {
         // clear element and trigger a change
-        filter.clear();
+        filter.clear(false);
       }
     });
 
@@ -223,10 +221,15 @@ export class FilterService {
     }
 
     // we also need to refresh the dataView and optionally the grid (it's optional since we use DataView)
-    if (this._dataView) {
+    if (this._dataView && this._grid) {
       this._dataView.refresh();
       this._grid.invalidate();
-      this._grid.render();
+    }
+
+    // when using backend service, we need to query only once so it's better to do it here
+    if (this._gridOptions && this._gridOptions.backendServiceApi) {
+      const callbackArgs = { clearFilterTriggered: true, shouldTriggerQuery: true, grid: this._grid, columnFilters: this._columnFilters };
+      this.executeBackendCallback(undefined, callbackArgs, new Date(), this._gridOptions.backendServiceApi);
     }
 
     // emit an event when filters are all cleared
@@ -429,7 +432,8 @@ export class FilterService {
       const eventKeyCode = e && e.keyCode;
       if (eventKeyCode === KeyCode.ENTER || !isequal(oldColumnFilters, this._columnFilters)) {
         this.triggerEvent(this._slickSubscriber, {
-          clearFilterTriggered: args && args.clearFilterTriggered,
+          clearFilterTriggered: args.clearFilterTriggered,
+          shouldTriggerQuery: args.shouldTriggerQuery,
           columnId,
           columnDef: args.columnDef || null,
           columnFilters: this._columnFilters,
@@ -495,15 +499,15 @@ export class FilterService {
    * Other services, like Pagination, can then subscribe to it.
    * @param caller
    */
-  emitFilterChanged(caller: 'local' | 'remote') {
-    if (caller === 'remote' && this._gridOptions && this._gridOptions.backendServiceApi) {
+  emitFilterChanged(caller: EmitterType) {
+    if (caller === EmitterType.remote && this._gridOptions && this._gridOptions.backendServiceApi) {
       let currentFilters: CurrentFilter[] = [];
       const backendService = this._gridOptions.backendServiceApi.service;
       if (backendService && backendService.getCurrentFilters) {
         currentFilters = backendService.getCurrentFilters() as CurrentFilter[];
       }
       this.ea.publish('filterService:filterChanged', currentFilters);
-    } else if (caller === 'local') {
+    } else if (caller === EmitterType.local) {
       this.ea.publish('filterService:filterChanged', this.getCurrentLocalFilters());
     }
   }
