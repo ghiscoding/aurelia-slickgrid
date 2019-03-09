@@ -58,6 +58,11 @@ export class GridMenuExtension implements Extension {
     }
   }
 
+  /** Show the Grid Menu typically from a button click since we need to know the event */
+  showGridMenu(e) {
+    this._extension.showGridMenu(e);
+  }
+
   /** Create the Header Menu and expose all the available hooks that user can subscribe (onCommand, onBeforeMenuShow, ...) */
   register(): any {
     // keep original user grid menu, useful when switching locale to translate
