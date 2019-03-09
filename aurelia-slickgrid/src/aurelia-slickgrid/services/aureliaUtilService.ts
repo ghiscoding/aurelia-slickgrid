@@ -20,7 +20,7 @@ export class AureliaUtilService {
     private viewResources: ViewResources,
   ) { }
 
-  createAureliaViewModelAddToSlot(template: string, item: any, targetElement?: HTMLElement | Element, clearTargetContent = false): AureliaViewOutput {
+  createAureliaViewModelAddToSlot(template: string, item: any, targetElement?: HTMLElement | Element, clearTargetContent = false): AureliaViewOutput | null {
     const viewFactory = this.viewCompiler.compile('<template><compose view-model.bind="template"></compose></template>', this.viewResources);
 
     if (targetElement) {
@@ -42,9 +42,10 @@ export class AureliaUtilService {
 
       return { view, viewSlot };
     }
+    return null;
   }
 
-  createAureliaViewAddToSlot(template: string, targetElement?: HTMLElement | Element, clearTargetContent = false): AureliaViewOutput {
+  createAureliaViewAddToSlot(template: string, targetElement?: HTMLElement | Element, clearTargetContent = false): AureliaViewOutput | null {
     const viewFactory = this.viewCompiler.compile('<template><compose view.bind="template"></compose></template>', this.viewResources);
 
     if (targetElement) {
@@ -66,5 +67,6 @@ export class AureliaUtilService {
 
       return { view, viewSlot };
     }
+    return null;
   }
 }

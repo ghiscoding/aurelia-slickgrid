@@ -60,11 +60,11 @@ export interface BackendService {
   // -----------------
 
   /** Execute when any of the filters changed */
-  processOnFilterChanged: (event: Event, args: FilterChangedArgs) => Promise<string>;
+  processOnFilterChanged: (event: Event | KeyboardEvent | undefined, args: FilterChangedArgs) => Promise<string>;
 
   /** Execute when the pagination changed */
   processOnPaginationChanged: (event: Event | undefined, args: PaginationChangedArgs) => string;
 
   /** Execute when any of the sorters changed */
-  processOnSortChanged: (event: Event | null, args: SortChangedArgs) => string;
+  processOnSortChanged: (event: Event | undefined, args: SortChangedArgs) => string;
 }

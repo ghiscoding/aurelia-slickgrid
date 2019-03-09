@@ -59,7 +59,7 @@ export class GridMenuExtension implements Extension {
   }
 
   /** Show the Grid Menu typically from a button click since we need to know the event */
-  showGridMenu(e) {
+  showGridMenu(e: Event) {
     this._extension.showGridMenu(e);
   }
 

@@ -39,7 +39,7 @@ export class SliderEditor implements Editor {
   }
 
   /** Get the Validator function, can be passed in Editor property or Column Definition */
-  get validator(): EditorValidator {
+  get validator(): EditorValidator | undefined {
     return this.columnEditor.validator || this.columnDef.validator;
   }
 
@@ -154,7 +154,7 @@ export class SliderEditor implements Editor {
         valid: false,
         msg: errorMsg || Constants.VALIDATION_REQUIRED_FIELD
       };
-    } else if (minValue !== undefined && (elmValue < minValue || elmValue > maxValue)) {
+    } else if (minValue !== undefined && maxValue !== undefined && elmValue !== null && (elmValue < minValue || elmValue > maxValue)) {
       // when decimal value is bigger than 0, we only accept the decimal values as that value set
       // for example if we set decimalPlaces to 2, we will only accept numbers between 0 and 2 decimals
       return {

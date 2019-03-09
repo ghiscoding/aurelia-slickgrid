@@ -332,7 +332,7 @@ export class RowDetailViewExtension implements Extension {
 
       const slotObj = this._slots.find((obj) => obj.id === item.id);
 
-      if (slotObj) {
+      if (slotObj && aureliaComp) {
         slotObj.view = aureliaComp.view;
         slotObj.viewSlot = aureliaComp.viewSlot;
       }

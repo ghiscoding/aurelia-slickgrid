@@ -478,7 +478,7 @@ export class AureliaSlickgridCustomElement {
       if (gridOptions && gridOptions.enableFiltering && !gridOptions.enableRowDetailView) {
         this._eventHandler.subscribe(dataView.onRowsChanged, (e: any, args: any) => {
           if (args && args.rows && Array.isArray(args.rows)) {
-            args.rows.forEach((row) => grid.updateRow(row));
+            args.rows.forEach((row: any) => grid.updateRow(row));
             grid.render();
           }
         });

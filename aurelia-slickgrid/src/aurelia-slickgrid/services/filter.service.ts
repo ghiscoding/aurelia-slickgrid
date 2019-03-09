@@ -129,7 +129,7 @@ export class FilterService {
     }
   }
 
-  async executeBackendCallback(event: KeyboardEvent, args: any, startTime: Date, backendApi: BackendServiceApi) {
+  async executeBackendCallback(event: KeyboardEvent | undefined, args: any, startTime: Date, backendApi: BackendServiceApi) {
     const query = await backendApi.service.processOnFilterChanged(event, args);
 
     // emit an onFilterChanged event when it's not called by a clear filter
