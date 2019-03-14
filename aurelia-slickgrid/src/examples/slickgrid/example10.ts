@@ -102,6 +102,7 @@ export class Example2 {
         // remove the unnecessary "Select All" checkbox in header when in single selection mode
         hideSelectAllCheckbox: true
       },
+      multiSelect: false,
       rowSelectionOptions: {
         // True (Single Selection), False (Multiple Selections)
         selectActiveRow: true,
