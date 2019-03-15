@@ -481,6 +481,7 @@ export class GridService {
     if (gridIdx !== undefined) {
       // Update the item itself inside the dataView
       this._dataView.updateItem(itemId, item);
+      this._grid.updateRow(rowNumber);
 
       // highlight the row we just updated, if defined
       if (shouldHighlightRow) {

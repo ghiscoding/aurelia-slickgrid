@@ -468,8 +468,7 @@ export class AureliaSlickgridCustomElement {
 
     if (dataView && grid) {
       this._eventHandler.subscribe(dataView.onRowCountChanged, (e: any, args: any) => {
-        grid.updateRowCount();
-        grid.render();
+        grid.invalidate();
       });
 
       // without this, filtering data with local dataset will not always show correctly
