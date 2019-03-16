@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.9.0"></a>
+# [2.9.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.8.2...v2.9.0) (2019-03-16)
+
+
+### Bug Fixes
+
+* **cellCopy:** fix a small issue with cell copy ([b31edc4](https://github.com/ghiscoding/aurelia-slickgrid/commit/b31edc4))
+* **client-cli:** replace gulp package link, ref issue [#139](https://github.com/ghiscoding/aurelia-slickgrid/issues/139) ([eb662e2](https://github.com/ghiscoding/aurelia-slickgrid/commit/eb662e2))
+* **editor:** allow all Editors to work with complex objects ([#145](https://github.com/ghiscoding/aurelia-slickgrid/issues/145)) ([ffa62f3](https://github.com/ghiscoding/aurelia-slickgrid/commit/ffa62f3))
+* **example:** multiSelect should be false when using single row select ([a3afa3d](https://github.com/ghiscoding/aurelia-slickgrid/commit/a3afa3d))
+* **formatters:** some formatters were not considering empty string ([74bfcaa](https://github.com/ghiscoding/aurelia-slickgrid/commit/74bfcaa))
+* **mapDateFormat:** add missing date format in map utility ([fd00013](https://github.com/ghiscoding/aurelia-slickgrid/commit/fd00013))
+* **rowDetail:** clear Row Detail content before recreating it ([#146](https://github.com/ghiscoding/aurelia-slickgrid/issues/146)) ([83bb1dd](https://github.com/ghiscoding/aurelia-slickgrid/commit/83bb1dd))
+* **RowDetail:** fix missing html tag closing for <template> ([7ddbd6c](https://github.com/ghiscoding/aurelia-slickgrid/commit/7ddbd6c))
+* **select:** when destroying Select Filter/Editor, escape dot in name ([1ae74d0](https://github.com/ghiscoding/aurelia-slickgrid/commit/1ae74d0))
+* **updateItem:** call grid.updateRow instead of grid.invalidateRow ([8c503a4](https://github.com/ghiscoding/aurelia-slickgrid/commit/8c503a4))
+
+
+### Features
+
+* **autoHeight:** add autoHeight Grid Option with Example ([#142](https://github.com/ghiscoding/aurelia-slickgrid/issues/142)) ([688173e](https://github.com/ghiscoding/aurelia-slickgrid/commit/688173e))
+* **editors:** add "required" and "alwaysSaveOnEnterKey" options ([#141](https://github.com/ghiscoding/aurelia-slickgrid/issues/141)) ([9900f74](https://github.com/ghiscoding/aurelia-slickgrid/commit/9900f74))
+* **flatpickr:** add filterOptions & editorOptions ([#147](https://github.com/ghiscoding/aurelia-slickgrid/issues/147)) ([2f829f6](https://github.com/ghiscoding/aurelia-slickgrid/commit/2f829f6))
+* **gridMenu:** demo Grid Menu button can be added anywhere ([#144](https://github.com/ghiscoding/aurelia-slickgrid/issues/144)) ([ec4c78a](https://github.com/ghiscoding/aurelia-slickgrid/commit/ec4c78a))
+* **rowDetail:** dynamically change row detail view row count ([acb881c](https://github.com/ghiscoding/aurelia-slickgrid/commit/acb881c))
+
+
+
 <a name="2.8.2"></a>
 ## [2.8.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.8.1...v2.8.2) (2019-02-09)
 
