@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.9.2"></a>
+## [2.9.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.9.1...v2.9.2) (2019-03-18)
+
+
+
 <a name="2.9.1"></a>
 ## [2.9.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.9.0...v2.9.1) (2019-03-18)
 
