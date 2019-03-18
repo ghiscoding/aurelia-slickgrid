@@ -120,11 +120,11 @@ export class SelectEditor implements Editor {
 
   /** Get the Collection */
   get collection(): SelectOption[] {
-    return this.columnDef && this.columnDef && this.columnDef.internalColumnEditor.collection || [];
+    return this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.collection || [];
   }
 
   /** Getter for the Collection Options */
-  get collectionOptions(): CollectionOption {
+  get collectionOptions(): CollectionOption | undefined {
     return this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.collectionOptions;
   }
 
@@ -139,7 +139,7 @@ export class SelectEditor implements Editor {
   }
 
   /** Getter for the Custom Structure if exist */
-  protected get customStructure(): CollectionCustomStructure {
+  protected get customStructure(): CollectionCustomStructure | undefined {
     return this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.customStructure;
   }
 

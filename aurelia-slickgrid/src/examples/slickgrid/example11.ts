@@ -6,10 +6,10 @@ import {
   FieldType,
   Formatters,
   GridOption,
+  GridService,
   OnEventArgs
 } from '../../aurelia-slickgrid';
 import './custom-styles.scss';
-import { GridService } from '../../aurelia-slickgrid/services';
 
 @autoinject()
 export class Example11 {

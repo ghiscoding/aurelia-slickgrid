@@ -120,9 +120,9 @@ export interface Column {
   id: number | string;
 
   /**
-   * @internal used internally by Aurelia-Slickgrid, to copy over the Column Editor Options
+   * INTERNAL used internally by Aurelia-Slickgrid, to copy over the Column Editor Options
    */
-  internalColumnEditor?: any;
+  internalColumnEditor?: ColumnEditor;
 
   /** Label key, for example this could be used as a property key for complex object label display (e.g. dataKey: 'name') */
   labelKey?: any;

@@ -33,7 +33,7 @@ export class AutoCompleteEditor implements Editor {
 
   /** Get the Collection */
   get collection(): any[] {
-    return this.columnDef && this.columnDef && this.columnDef.internalColumnEditor.collection || [];
+    return this.columnDef && this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.collection || [];
   }
 
   /** Get Column Definition object */
@@ -47,8 +47,8 @@ export class AutoCompleteEditor implements Editor {
   }
 
   /** Getter for the Custom Structure if exist */
-  get customStructure(): CollectionCustomStructure {
-    return this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.customStructure;
+  get customStructure(): CollectionCustomStructure | undefined {
+    return this.columnEditor && this.columnEditor.customStructure;
   }
 
   get hasAutoCommitEdit() {
