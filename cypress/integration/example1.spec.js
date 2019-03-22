@@ -1,11 +1,9 @@
 /// <reference types="Cypress" />
 
-describe('Example - Basic Grid', () => {
+describe('Example 1 - Basic Grids', () => {
   it('should display Example 1 title', () => {
     cy.visit(`${Cypress.config('baseUrl')}`);
-    cy.get('h2').should(($h2) => {
-      expect($h2, 'text content').to.have.text('Example 1: Basic Grid');
-    });
+    cy.get('h2').should('contain', 'Example 1: Basic Grid');
   });
 
   it('should have 2 grids of size 800 by 300px', () => {
