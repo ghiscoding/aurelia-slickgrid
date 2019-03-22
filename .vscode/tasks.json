@@ -20,6 +20,12 @@
       "problemMatcher": []
     },
     {
+      "label": "Cypress Open Tool",
+      "type": "shell",
+      "command": "yarn run cypress open",
+      "problemMatcher": []
+    },
+    {
       "label": "Start Library Development",
       "type": "shell",
       "command": "yarn start:dev",

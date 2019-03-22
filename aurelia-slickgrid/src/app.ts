@@ -8,6 +8,7 @@ export class App {
 
   configureRouter(config: RouterConfiguration, router: Router) {
     config.title = 'Aurelia-Slickgrid';
+    config.options.pushState = true;
     config.map([
       { route: 'home', name: 'home', title: 'Home', moduleId: PLATFORM.moduleName('./home'), nav: true, settings: { icon: 'fa fa-home' } },
       { route: 'slickgrid', name: 'slickgrid', title: 'SlickGrid Examples', moduleId: PLATFORM.moduleName('./examples/slickgrid/index'), nav: true },
