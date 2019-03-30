@@ -50,8 +50,8 @@
     }
   ],
   "integrationTestRunner": {
-    "id": "protractor",
-    "displayName": "Protractor"
+    "id": "cypress",
+    "displayName": "Cypress"
   },
   "paths": {
     "root": "src",
