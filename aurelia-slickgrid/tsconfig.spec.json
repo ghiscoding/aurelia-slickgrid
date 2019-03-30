@@ -1,16 +1,12 @@
+
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "../out-tsc/spec",
+    "esModuleInterop": false,
     "baseUrl": "./",
     "types": [
-      "cypress",
       "jest",
       "node"
     ]
-  },
-  "include": [
-    "**/*.spec.ts",
-    "**/*.d.ts"
-  ]
+  }
 }

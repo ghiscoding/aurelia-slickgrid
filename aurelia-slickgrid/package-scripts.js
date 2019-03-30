@@ -14,8 +14,6 @@ module.exports = {
         accept: 'jest -u',
         watch: 'jest --watch',
       },
-
-
       lint: {
         default: 'eslint src',
         fix: 'eslint --fix'

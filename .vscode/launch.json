@@ -14,6 +14,23 @@
       "sourceMapPathOverrides": {
         "webpack:///./src/*": "${webRoot}/*"
       }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Jest Test",
+      "program": "${workspaceRoot}/aurelia-slickgrid/node_modules/.bin/jest",
+      "args": [
+        "--runInBand",
+        "--config",
+        "aurelia-slickgrid/jest.config.js"
+      ],
+      "disableOptimisticBPs": true,
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "windows": {
+        "program": "${workspaceRoot}/aurelia-slickgrid/node_modules/jest/bin/jest",
+      }
     }
   ]
 }
