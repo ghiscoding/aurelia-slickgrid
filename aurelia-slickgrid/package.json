@@ -41,24 +41,23 @@
     "moment": "^2.19.1",
     "moment-mini": "^2.18.1",
     "nps": "^5.7.1",
-    "slickgrid": "^2.4.4",
+    "slickgrid": "^2.4.5",
     "text-encoding-utf-8": "^1.0.2"
   },
   "peerDependencies": {},
   "devDependencies": {
-    "@types/dompurify": "^0.0.31",
+    "@types/dompurify": "^0.0.32",
     "@types/flatpickr": "^3.1.2",
     "@types/i18next": "^8.4.2",
     "@types/i18next-xhr-backend": "^1.4.1",
-    "@types/jest": "19.2.4",
+    "@types/jest": "^24.0.11",
     "@types/moment": "^2.13.0",
-    "@types/node": "^6.0.45",
+    "@types/node": "^11.12.2",
     "@types/text-encoding-utf-8": "^1.0.1",
     "@types/webpack": "^3.0.4",
     "aurelia-cli": "^0.31.3",
     "aurelia-loader-nodejs": "^1.0.1",
-    "aurelia-pal-nodejs": "1.0.0-beta.2.0.0",
-    "aurelia-protractor-plugin": "^1.0.5",
+    "aurelia-pal-nodejs": "^1.1.1",
     "aurelia-testing": "^1.0.0-beta.3.0.1",
     "aurelia-tools": "^1.0.0",
     "aurelia-webpack-plugin": "^2.0.0-rc.4",
@@ -74,19 +73,19 @@
     "gulp-util": "^3.0.8",
     "html-loader": "0.4.5",
     "html-webpack-plugin": "2.30.1",
-    "istanbul-instrumenter-loader": "^2.0.0",
-    "jest": "20.0.4",
-    "jest-cli": "20.0.4",
+    "istanbul-instrumenter-loader": "^3.0.1",
+    "jest": "^24.5.0",
+    "jest-cli": "^24.5.0",
     "json-loader": "0.5.7",
     "minimatch": "^3.0.2",
     "node-sass": "4.9.0",
     "nps-utils": "1.2.0",
     "opn": "^5.1.0",
-    "protractor": "^5.1.2",
     "sass-loader": "^6.0.6",
     "style-loader": "0.18.2",
     "through2": "^2.0.1",
-    "ts-jest": "20.0.6",
+    "ts-jest": "^24.0.1",
+    "ts-loader": "^5.2.1",
     "ts-node": "^3.2.0",
     "typescript": "^2.7.2",
     "uglify-js": "^3.0.19",
@@ -95,43 +94,6 @@
     "wait-on": "2.0.2",
     "webpack": "3.5.5",
     "webpack-dev-server": "^2.11.2"
-  },
-  "jest": {
-    "modulePaths": [
-      "<rootDir>/src",
-      "<rootDir>/node_modules"
-    ],
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "ts"
-    ],
-    "transform": {
-      "^.+\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
-    },
-    "testRegex": "\\.spec\\.(ts|js)x?$",
-    "setupFiles": [
-      "<rootDir>/test/jest-pretest.ts"
-    ],
-    "testEnvironment": "node",
-    "moduleNameMapper": {
-      "aurelia-(.*)": "<rootDir>/node_modules/$1"
-    },
-    "collectCoverage": true,
-    "collectCoverageFrom": [
-      "src/**/*.{js,ts}",
-      "!**/*.spec.{js,ts}",
-      "!**/node_modules/**",
-      "!**/test/**"
-    ],
-    "coverageDirectory": "<rootDir>/test/coverage-jest",
-    "coverageReporters": [
-      "json",
-      "lcov",
-      "text",
-      "html"
-    ],
-    "mapCoverage": true
   },
   "engines": {
     "node": ">= 6.0.0"

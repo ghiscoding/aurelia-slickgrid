@@ -44,38 +44,49 @@ export class Example21 {
     this.columnDefinitions = [
       {
         id: 'title', name: 'Title', field: 'title',
+        width: 100,
         sortable: true,
         type: FieldType.string
       },
       {
         id: 'duration', name: 'Duration (days)', field: 'duration',
+        width: 100,
         sortable: true,
         type: FieldType.number
       },
       {
         id: 'complete', name: '% Complete', field: 'percentComplete',
+        width: 100,
         formatter: Formatters.percentCompleteBar,
         type: FieldType.number
       },
       {
         id: 'start', name: 'Start', field: 'start',
+        width: 100,
         formatter: Formatters.dateIso,
         sortable: true,
         type: FieldType.date
       },
       {
         id: 'finish', name: 'Finish', field: 'finish',
+        width: 100,
         formatter: Formatters.dateIso, sortable: true,
         type: FieldType.date
       },
       {
         id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven',
+        width: 100,
         formatter: Formatters.checkmark,
         type: FieldType.number
       }
     ];
 
     this.gridOptions = {
+      // if you want to disable autoResize and used a fixed width that requires horizontal scrolling
+      // you should disable the autoFitColumnsOnFirstLoad as well
+      // enableAutoResize: false,
+      // autoFitColumnsOnFirstLoad: false,
+
       autoHeight: true,
       autoResize: {
         containerId: 'demo-container',

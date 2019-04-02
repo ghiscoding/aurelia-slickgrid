@@ -6,7 +6,8 @@
   <div class="row">
     <div class="col-sm-5">
       <div class.bind="status.class"
-           role="alert">
+           role="alert"
+           data-test="status">
         <strong>Status: </strong> ${status.text}
         <span hidden.bind="!processing">
           <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
@@ -31,13 +32,14 @@
       </span>
     </div>
     <div class="col-sm-7">
-      <div class="alert alert-info">
-        <strong>GraphQL Query:</strong> ${graphqlQuery}
+      <div class="alert alert-info"
+           data-test="alert-graphql-query">
+        <strong>GraphQL Query:</strong> <span data-test="graphql-query-result">${graphqlQuery}</span>
       </div>
     </div>
   </div>
 
-  <aurelia-slickgrid grid-id="grid1"
+  <aurelia-slickgrid grid-id="grid6"
                      column-definitions.bind="columnDefinitions"
                      grid-options.bind="gridOptions"
                      dataset.bind="dataset"

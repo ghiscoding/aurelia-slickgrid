@@ -17,3 +17,6 @@ screenshots
 test
 yarn.lock
 yarn-error.log
+
+# Testing Folders
+aurelia-slickgrid/test/coverage-jest/**
