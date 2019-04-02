@@ -2,11 +2,17 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "esModuleInterop": false,
+    "outDir": "../out-tsc/spec",
     "baseUrl": "./",
+    "module": "commonjs",
+    "target": "es5",
     "types": [
       "jest",
       "node"
     ]
-  }
+  },
+  "include": [
+    "**/*.spec.ts",
+    "**/*.d.ts"
+  ]
 }

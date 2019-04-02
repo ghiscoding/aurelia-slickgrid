@@ -19,4 +19,4 @@ yarn.lock
 yarn-error.log
 
 # Testing Folders
-aurelia-slickgrid/test/**
+aurelia-slickgrid/test/coverage-jest/**

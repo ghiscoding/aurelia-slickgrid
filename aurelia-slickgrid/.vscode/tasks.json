@@ -1,0 +1,77 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build Library",
+      "type": "shell",
+      "command": "yarn run build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Build Github Demo Page",
+      "type": "shell",
+      "command": "yarn build:github-demo",
+      "problemMatcher": []
+    },
+    {
+      "label": "Build Github Demo Page & Copy Files to GhPages Folder",
+      "type": "shell",
+      "command": "yarn build:github-demo-copy-files",
+      "problemMatcher": []
+    },
+    {
+      "label": "Cypress Open Tool",
+      "type": "shell",
+      "command": "yarn run cypress open",
+      "problemMatcher": []
+    },
+    {
+      "label": "Run Jest Tests with Coverage",
+      "type": "shell",
+      "command": "yarn start test",
+      "options": {
+        "cwd": "${workspaceFolder}/aurelia-slickgrid",
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Run Jest Watch",
+      "type": "shell",
+      "command": "yarn start test.jest.watch",
+      "options": {
+        "cwd": "${workspaceFolder}/aurelia-slickgrid",
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Start Library Development",
+      "type": "shell",
+      "command": "yarn start:dev",
+      "problemMatcher": []
+    },
+    {
+      "label": "Start Client-CLI",
+      "type": "shell",
+      "command": "yarn start:client-cli",
+      "problemMatcher": []
+    },
+    {
+      "label": "Start Github Demo Page",
+      "type": "shell",
+      "command": "yarn start:github-demo",
+      "problemMatcher": []
+    },
+    {
+      "label": "Prepare Release as Minor (0.x.0)",
+      "type": "shell",
+      "command": "yarn run release -- --release-as minor --infile ./doc/CHANGELOG.md",
+      "problemMatcher": []
+    },
+    {
+      "label": "Prepare Release as Patch (0.0.x)",
+      "type": "shell",
+      "command": "yarn run release -- --release-as patch --infile ./doc/CHANGELOG.md",
+      "problemMatcher": []
+    }
+  ]
+}

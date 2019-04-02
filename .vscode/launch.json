@@ -31,6 +31,57 @@
       "windows": {
         "program": "${workspaceRoot}/aurelia-slickgrid/node_modules/jest/bin/jest",
       }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Jest All Tests",
+      "program": "${workspaceFolder}/aurelia-slickgrid/node_modules/.bin/jest",
+      "args": [
+        "--config",
+        "${workspaceFolder}/aurelia-slickgrid/jest.config.js"
+      ],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "windows": {
+        "program": "${workspaceFolder}/aurelia-slickgrid/node_modules/jest/bin/jest",
+      }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Jest Current File",
+      "program": "${workspaceFolder}/aurelia-slickgrid/node_modules/.bin/jest",
+      "args": [
+        "--runInBand",
+        "${fileBasename}",
+        "--config",
+        "${workspaceFolder}/aurelia-slickgrid/jest.config.js"
+      ],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "disableOptimisticBPs": true,
+      "windows": {
+        "program": "${workspaceFolder}/aurelia-slickgrid/node_modules/jest/bin/jest",
+      }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Jest Selected Test Name",
+      "program": "${workspaceFolder}/aurelia-slickgrid/node_modules/.bin/jest",
+      "args": [
+        "${fileBasename}",
+        "--config",
+        "${workspaceFolder}/aurelia-slickgrid/jest.config.js",
+        "-t=${selectedText}$",
+        "--watch"
+      ],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "windows": {
+        "program": "${workspaceFolder}/aurelia-slickgrid/node_modules/jest/bin/jest",
+      }
     }
   ]
 }
