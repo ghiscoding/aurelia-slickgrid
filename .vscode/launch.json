@@ -9,7 +9,7 @@
       "type": "chrome",
       "request": "launch",
       "url": "http://localhost:9000",
-      "webRoot": "${workspaceRoot}/aurelia-slickgrid/src",
+      "webRoot": "${workspaceRoot}/src",
       "userDataDir": "${workspaceRoot}/.chrome",
       "sourceMapPathOverrides": {
         "webpack:///./src/*": "${webRoot}/*"
@@ -18,69 +18,54 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Jest Test",
-      "program": "${workspaceRoot}/aurelia-slickgrid/node_modules/.bin/jest",
+      "name": "Jest All Tests",
+      "program": "${workspaceFolder}/node_modules/.bin/jest",
       "args": [
         "--runInBand",
         "--config",
-        "aurelia-slickgrid/jest.config.js"
-      ],
-      "disableOptimisticBPs": true,
-      "console": "integratedTerminal",
-      "internalConsoleOptions": "neverOpen",
-      "windows": {
-        "program": "${workspaceRoot}/aurelia-slickgrid/node_modules/jest/bin/jest",
-      }
-    },
-    {
-      "type": "node",
-      "request": "launch",
-      "name": "Jest All Tests",
-      "program": "${workspaceFolder}/aurelia-slickgrid/node_modules/.bin/jest",
-      "args": [
-        "--config",
-        "${workspaceFolder}/aurelia-slickgrid/jest.config.js"
+        "${workspaceFolder}/jest.config.js"
       ],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "windows": {
-        "program": "${workspaceFolder}/aurelia-slickgrid/node_modules/jest/bin/jest",
+        "program": "${workspaceFolder}/node_modules/jest/bin/jest",
       }
     },
     {
       "type": "node",
       "request": "launch",
       "name": "Jest Current File",
-      "program": "${workspaceFolder}/aurelia-slickgrid/node_modules/.bin/jest",
+      "program": "${workspaceFolder}/node_modules/.bin/jest",
       "args": [
         "--runInBand",
         "${fileBasename}",
         "--config",
-        "${workspaceFolder}/aurelia-slickgrid/jest.config.js"
+        "${workspaceFolder}/jest.config.js"
       ],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "disableOptimisticBPs": true,
       "windows": {
-        "program": "${workspaceFolder}/aurelia-slickgrid/node_modules/jest/bin/jest",
+        "program": "${workspaceFolder}/node_modules/jest/bin/jest",
       }
     },
     {
       "type": "node",
       "request": "launch",
       "name": "Jest Selected Test Name",
-      "program": "${workspaceFolder}/aurelia-slickgrid/node_modules/.bin/jest",
+      "program": "${workspaceFolder}/node_modules/.bin/jest",
       "args": [
+        "--runInBand",
         "${fileBasename}",
         "--config",
-        "${workspaceFolder}/aurelia-slickgrid/jest.config.js",
+        "${workspaceFolder}/jest.config.js",
         "-t=${selectedText}$",
         "--watch"
       ],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "windows": {
-        "program": "${workspaceFolder}/aurelia-slickgrid/node_modules/jest/bin/jest",
+        "program": "${workspaceFolder}/node_modules/jest/bin/jest",
       }
     }
   ]

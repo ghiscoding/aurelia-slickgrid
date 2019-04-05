@@ -1,22 +1,21 @@
 .chrome
 .idea
 .vscode
-aurelia-slickgrid
-bower_components
-client-cli
-client-wp
-client-ts-wp
 CONTRIBUTING.md
+cypress.json
 doc
-images
+src
 ISSUE_TEMPLATE.md
-jspm_packages
-karma.conf.js
+index.ejs
+jest.conf.js
 npm-debug.log
+package-scripts.js
 screenshots
 test
+
+# Lock & error files
 yarn.lock
 yarn-error.log
 
-# Testing Folders
-aurelia-slickgrid/test/coverage-jest/**
+# Test Coverage
+test/coverage-jest

@@ -12,5 +12,5 @@ yarn-error.log
 # Distribution folder
 **/dist
 
-# Testing Folders
-aurelia-slickgrid/test/coverage-jest/**
+# Test Coverage
+test/coverage-jest
