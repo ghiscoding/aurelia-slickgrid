@@ -63,10 +63,11 @@ export class AutoCompleteEditor implements Editor {
   init(): void {
     const columnId = this.columnDef && this.columnDef.id;
     const placeholder = this.columnEditor && this.columnEditor.placeholder || '';
+    const title = this.columnEditor && this.columnEditor.title || '';
     this.labelName = this.customStructure && this.customStructure.label || 'label';
     this.valueName = this.customStructure && this.customStructure.value || 'value';
 
-    this.$input = $(`<input type="text" class="editor-text editor-${columnId}" placeholder="${placeholder}" />`)
+    this.$input = $(`<input type="text" class="editor-text editor-${columnId}" placeholder="${placeholder}" title="${title}" />`)
       .appendTo(this.args.container)
       .on('keydown.nav', (event: JQueryEventObject) => {
         this._lastInputEvent = event;

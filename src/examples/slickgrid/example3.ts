@@ -143,6 +143,8 @@ export class Example3 {
         type: FieldType.string,
         editor: {
           model: Editors.longText,
+          placeholder: 'something',
+          title: 'some title',
           validator: myCustomTitleValidator, // use a custom validator
         },
         minWidth: 100,
