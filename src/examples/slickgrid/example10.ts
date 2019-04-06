@@ -10,6 +10,7 @@ export class Example2 {
       <li>Single Select, you can click on any cell to make the row active</li>
       <li>Multiple Selections, you need to specifically click on the checkbox to make 1 or more selections</li>
       <li>Note that "enableExcelCopyBuffer" cannot be used at the same time as Row Selection because there can exist only 1 SelectionModel at a time</li>
+      <li>You can use "selectableOverride()" callback to override logic to display checkbox on every row (for example only show it every 2nd row)</li>
     </ul>
   `;
 
@@ -100,7 +101,11 @@ export class Example2 {
       enableCheckboxSelector: true,
       checkboxSelector: {
         // remove the unnecessary "Select All" checkbox in header when in single selection mode
-        hideSelectAllCheckbox: true
+        hideSelectAllCheckbox: true,
+
+        // you can override the logic for showing (or not) the expand icon
+        // for example, display the expand icon only on every 2nd row
+        // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
       },
       multiSelect: false,
       rowSelectionOptions: {
