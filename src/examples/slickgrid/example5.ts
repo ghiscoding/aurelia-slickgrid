@@ -85,7 +85,7 @@ export class Example5 {
       enableCheckboxSelector: true,
       enableRowSelection: true,
       pagination: {
-        pageSizes: [10, 15, 20, 25, 30, 40, 50, 75, 100],
+        pageSizes: [10, 20, 50, 100, 500],
         pageSize: defaultPageSize,
         totalItems: 0
       },
