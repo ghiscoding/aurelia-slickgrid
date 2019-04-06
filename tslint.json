@@ -3,6 +3,7 @@
   "rules": {
     "max-line-length": false,
     "member-access":false,
+    "no-console": false,
     "variable-name":false,
     "quotemark": [true, "single"],
     "object-literal-sort-keys": false,
@@ -17,8 +18,8 @@
     "array-type": ["array-simple"],
     "arrow-parens": false,
     "max-classes-per-file": [false],
+    "no-var-requires": false,
     "no-object-literal-type-assertion": false,
-    "no-console": false,
     "prefer-for-of": false,
     "prefer-conditional-expression": false
   }
