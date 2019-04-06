@@ -13,4 +13,5 @@ yarn-error.log
 **/dist
 
 # Test Coverage
+coverage
 test/coverage-jest

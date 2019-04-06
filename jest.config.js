@@ -7,7 +7,6 @@ module.exports = {
   collectCoverage: false,
   collectCoverageFrom: [
     'src/**/*.{js,ts}',
-    'test-examples/**/*.{js,ts}',
     '!**/*.spec.{js,ts}',
     '!**/node_modules/**',
     '!**/test/**'
@@ -15,6 +14,8 @@ module.exports = {
   coverageDirectory: '<rootDir>/test/coverage-jest',
   coveragePathIgnorePatterns: [
     '!*.d.ts',
+    '!*.enum.ts',
+    '!*.interface.ts',
     'constants.ts',
     'environment.ts',
     'example-data.js',
@@ -27,23 +28,31 @@ module.exports = {
     'text',
     'html'
   ],
-  modulePaths: [
-    '<rootDir>/src',
-    '<rootDir>/node_modules'
-  ],
   moduleFileExtensions: [
     'json',
     'js',
     'ts'
   ],
-  setupFiles: [
-    '<rootDir>/test/jest-pretest.ts'
+  modulePaths: [
+    '<rootDir>/src',
+    '<rootDir>/node_modules'
   ],
+  setupFiles: ['<rootDir>/test/jest-pretest.ts'],
+  setupTestFrameworkScriptFile: '<rootDir>/test/jest-setup.ts',
   transform: {
     '^.+\\.(ts|tsx)$': '<rootDir>/node_modules/ts-jest'
   },
-  transformIgnorePatterns: ['node_modules/(?!@ngrx)', '!*.d.ts'],
-  testMatch: ['**/__tests__/**/*.+(ts|js)', '**/+(*.)+(spec|test).+(ts|js)'],
+  transformIgnorePatterns: [
+    '!*.d.ts',
+    'node_modules/(?!@ngrx)',
+  ],
+  testMatch: [
+    '**/__tests__/**/*.+(ts|js)',
+    '**/+(*.)+(spec|test).+(ts|js)'
+  ],
   testEnvironment: 'node',
-  testPathIgnorePatterns: ['cypress/'],
+  testPathIgnorePatterns: [
+    'cypress/',
+    '/node_modules/',
+  ],
 };
