@@ -31,9 +31,9 @@ const DEFAULT_PAGE_SIZE = 20;
 
 @singleton(true)
 export class GraphqlService implements BackendService {
-  private _currentFilters: ColumnFilters | CurrentFilter[];
+  private _currentFilters: ColumnFilters | CurrentFilter[] = [];
   private _currentPagination: CurrentPagination;
-  private _currentSorters: CurrentSorter[];
+  private _currentSorters: CurrentSorter[] = [];
   private _columnDefinitions: Column[];
   private _grid: any;
   options: GraphqlServiceOption;
@@ -334,6 +334,11 @@ export class GraphqlService implements BackendService {
   updateFilters(columnFilters: ColumnFilters | CurrentFilter[], isUpdatedByPreset: boolean) {
     const searchByArray: GraphqlFilteringOption[] = [];
     let searchValue: string | string[];
+
+    // on filter preset load, we need to keep current filters
+    if (isUpdatedByPreset) {
+      this._currentFilters = this.castFilterToColumnFilter(columnFilters);
+    }
 
     for (const columnId in columnFilters) {
       if (columnFilters.hasOwnProperty(columnId)) {
