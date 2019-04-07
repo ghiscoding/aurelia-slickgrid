@@ -160,22 +160,23 @@ export class Example21 {
   }
 
   updateFilter() {
-    if (this.selectedColumn) {
-      const fieldName = this.selectedColumn.field;
-      const filter: FilterCallbackArg = {
-        columnDef: this.selectedColumn,
-        operator: this.selectedOperator as OperatorString, // or fix one yourself like '='
-        searchTerms: [this.searchValue]
-      };
+    const fieldName = this.selectedColumn.field;
+    const filter = {};
+    const filterArg: FilterCallbackArg = {
+      columnDef: this.selectedColumn,
+      operator: this.selectedOperator as OperatorString, // or fix one yourself like '='
+      searchTerms: [this.searchValue || '']
+    };
 
-      this.aureliaGrid.dataView.setFilterArgs({
-        columnFilters: {
-          // pass a columnFilter object as an object which it's property name must be a column field name (e.g.: 'duration': {...} )
-          [fieldName]: filter
-        },
-        grid: this.aureliaGrid.slickGrid
-      });
-      this.aureliaGrid.dataView.refresh();
+    if (this.searchValue) {
+      // pass a columnFilter object as an object which it's property name must be a column field name (e.g.: 'duration': {...} )
+      filter[fieldName] = filterArg;
     }
+
+    this.aureliaGrid.dataView.setFilterArgs({
+      columnFilters: filter,
+      grid: this.aureliaGrid.slickGrid
+    });
+    this.aureliaGrid.dataView.refresh();
   }
 }
