@@ -38,6 +38,7 @@ export class CustomInputEditor implements Editor {
 
   init(): void {
     const placeholder = this.columnEditor && this.columnEditor.placeholder || '';
+    const title = this.columnEditor && this.columnEditor.title || '';
 
     // this.$input = $(`<input type="text" class="editor-text" placeholder="${placeholder}" />`)
     //   .appendTo(this.args.container)

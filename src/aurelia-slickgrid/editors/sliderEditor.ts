@@ -180,6 +180,7 @@ export class SliderEditor implements Editor {
    */
   private buildTemplateHtmlString() {
     const columnId = this.columnDef && this.columnDef.id;
+    const title = this.columnEditor && this.columnEditor.title || '';
     const minValue = this.columnEditor.hasOwnProperty('minValue') ? this.columnEditor.minValue : DEFAULT_MIN_VALUE;
     const maxValue = this.columnEditor.hasOwnProperty('maxValue') ? this.columnEditor.maxValue : DEFAULT_MAX_VALUE;
     const defaultValue = this.editorParams.hasOwnProperty('sliderStartValue') ? this.editorParams.sliderStartValue : minValue;
@@ -190,6 +191,7 @@ export class SliderEditor implements Editor {
       <div class="slider-editor editor-${columnId}">
         <input type="range" id="${this._elementRangeInputId}"
           name="${this._elementRangeInputId}"
+          title="${title}"
           defaultValue="${defaultValue}" min="${minValue}" max="${maxValue}" step="${step}"
           class="form-control slider-editor-input range" />
       </div>`;
@@ -199,6 +201,7 @@ export class SliderEditor implements Editor {
       <div class="input-group slider-editor editor-${columnId}">
         <input type="range" id="${this._elementRangeInputId}"
           name="${this._elementRangeInputId}"
+          title="${title}"
           defaultValue="${defaultValue}" min="${minValue}" max="${maxValue}" step="${step}"
           class="form-control slider-editor-input range" />
         <div class="input-group-addon input-group-append slider-value"><span class="input-group-text" id="${this._elementRangeOutputId}">${defaultValue}</span></div>
