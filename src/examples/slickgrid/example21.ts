@@ -89,8 +89,8 @@ export class Example21 {
     ];
 
     this.gridOptions = {
-      // if you want to disable autoResize and used a fixed width that requires horizontal scrolling
-      // you should disable the autoFitColumnsOnFirstLoad as well
+      // if you want to disable autoResize and use a fixed width which requires horizontal scrolling
+      // it's advised to disable the autoFitColumnsOnFirstLoad as well
       // enableAutoResize: false,
       // autoFitColumnsOnFirstLoad: false,
 
@@ -99,8 +99,11 @@ export class Example21 {
         containerId: 'demo-container',
         sidePadding: 15
       },
+
+      // enable the filtering but hide the user filter row since we use our own single filter
       enableFiltering: true,
-      showHeaderRow: false, // hide the usual filter row (header row) since we use our own single filter
+      showHeaderRow: false, // hide the filter row (header row)
+
       enableGridMenu: false, // disable grid menu & remove vertical scroll
       alwaysShowVerticalScroll: false,
       enableColumnPicker: true,
@@ -141,22 +144,22 @@ export class Example21 {
   }
 
   //
-  // -- if any of the Search form input changes, we'll call the searching() method
+  // -- if any of the Search form input changes, we'll call the updateFilter() method
   //
 
   selectedOperatorChanged() {
-    this.searching();
+    this.updateFilter();
   }
 
   selectedColumnChanged() {
-    this.searching();
+    this.updateFilter();
   }
 
   searchValueChanged() {
-    this.searching();
+    this.updateFilter();
   }
 
-  searching() {
+  updateFilter() {
     if (this.selectedColumn) {
       const fieldName = this.selectedColumn.field;
       const filter: FilterCallbackArg = {
