@@ -19,6 +19,7 @@ export class Example19 {
     <ul>
       <li>Click on the row "+" icon or anywhere on the row to open it (the latter can be changed via property "useRowClick: false")</li>
       <li>Pass a View/Model as a Template to the Row Detail</li>
+      <li>You can use "expandableOverride()" callback to override logic to display expand icon on every row (for example only show it every 2nd row)</li>
     </ul>
   `;
 
@@ -89,6 +90,10 @@ export class Example19 {
         // also note that the detail view adds an extra 1 row for padding purposes
         // so if you choose 4 panelRows, the display will in fact use 5 rows
         panelRows: this.detailViewRowCount,
+
+        // you can override the logic for showing (or not) the expand icon
+        // for example, display the expand icon only on every 2nd row
+        // expandableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1),
 
         // Preload View Template
         preloadView: PLATFORM.moduleName('examples/slickgrid/example19-preload.html'),
