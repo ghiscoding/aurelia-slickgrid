@@ -3,9 +3,37 @@
   <div class="subtitle"
        innerhtml.bind="subTitle"></div>
 
+  <form class="form-inline">
+    <div class="form-group">
+      <label>
+        Single Search:<br>
+      </label>
+      <select value.bind="selectedColumn"
+              class="form-control">
+        <option repeat.for="column of columnDefinitions"
+                model.bind="column">
+          ${column.name}
+        </option>
+      </select>
+    </div>
+    <select value.bind="selectedOperator"
+            class="form-control">
+      <option repeat.for="operator of operatorList"
+              model.bind="operator">
+        ${operator}
+      </option>
+    </select>
+    <input type="text"
+           class="form-control"
+           placeholder="search value"
+           value.bind="searchValue">
+  </form>
+  <hr />
+
   <aurelia-slickgrid grid-id="grid21"
                      column-definitions.bind="columnDefinitions"
                      grid-options.bind="gridOptions"
-                     dataset.bind="dataset">
+                     dataset.bind="dataset"
+                     asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
   </aurelia-slickgrid>
 </template>
