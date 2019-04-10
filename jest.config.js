@@ -38,7 +38,7 @@ module.exports = {
     '<rootDir>/node_modules'
   ],
   setupFiles: ['<rootDir>/test/jest-pretest.ts'],
-  setupTestFrameworkScriptFile: '<rootDir>/test/jest-setup.ts',
+  setupFilesAfterEnv: ['<rootDir>/test/jest-setup.ts'],
   transform: {
     '^.+\\.(ts|tsx)$': '<rootDir>/node_modules/ts-jest'
   },
