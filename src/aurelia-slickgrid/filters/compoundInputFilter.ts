@@ -234,7 +234,12 @@ export class CompoundInputFilter implements Filter {
       this.$filterElm.removeClass('filled');
     } else {
       const selectedOperator = this.$selectOperatorElm.find('option:selected').text();
-      const value: string = this.$filterInputElm.val();
+      let value = this.$filterInputElm.val() as string;
+      const enableWhiteSpaceTrim = this.gridOptions.enableFilterTrimWhiteSpace || this.columnFilter.enableTrimWhiteSpace;
+      if (typeof value === 'string' && enableWhiteSpaceTrim) {
+        value = value.trim();
+      }
+
       (value !== null && value !== undefined && value !== '') ? this.$filterElm.addClass('filled') : this.$filterElm.removeClass('filled');
       this.callback(e, { columnDef: this.columnDef, searchTerms: (value ? [value] : null), operator: selectedOperator || '', shouldTriggerQuery: this._shouldTriggerQuery });
     }

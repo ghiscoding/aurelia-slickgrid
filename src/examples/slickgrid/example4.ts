@@ -74,7 +74,8 @@ export class Example4 {
         id: 'description', name: 'Description', field: 'description', filterable: true, sortable: true, minWidth: 80,
         type: FieldType.string,
         filter: {
-          model: new CustomInputFilter() // create a new instance to make each Filter independent from each other customFilter
+          model: new CustomInputFilter(), // create a new instance to make each Filter independent from each other customFilter
+          enableTrimWhiteSpace: true
         }
       },
       {
@@ -190,6 +191,7 @@ export class Example4 {
         sidePadding: 15
       },
       enableFiltering: true,
+      // enableFilterTrimWhiteSpace: true,
 
       // use columnDef searchTerms OR use presets as shown below
       presets: {

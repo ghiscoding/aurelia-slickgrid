@@ -26,8 +26,8 @@ export const GlobalGridOptions: GridOption = {
   datasetIdPropertyName: 'id',
   defaultAureliaEventPrefix: 'asg',
   defaultSlickgridEventPrefix: 'sg',
-  defaultFilterPlaceholder: '&#128269;', // magnifying glass icon
   defaultFilter: Filters.input,
+  defaultFilterPlaceholder: '&#128269;', // magnifying glass icon
   enableAutoResize: true,
   enableAutoSizeColumns: true,
   enableHeaderMenu: true,
@@ -37,6 +37,7 @@ export const GlobalGridOptions: GridOption = {
   enableColumnPicker: true,
   enableColumnReorder: true,
   enableExport: true,
+  enableFilterTrimWhiteSpace: false, // do we want to trim white spaces on all Filters?
   enableGridMenu: true,
   enableSorting: true,
   enableTextSelectionOnCells: true,

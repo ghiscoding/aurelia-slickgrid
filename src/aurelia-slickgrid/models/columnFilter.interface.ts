@@ -72,6 +72,9 @@ export interface ColumnFilter {
   /** Do we want the Filter to handle translation (localization)? */
   enableTranslateLabel?: boolean;
 
+  /** Defaults to false, do we want to trim white spaces from the filter value typed by the user? */
+  enableTrimWhiteSpace?: boolean;
+
   /** Options that could be provided to the Filter, example: { container: 'body', maxHeight: 250} */
   filterOptions?: MultipleSelectOption | any;
 
