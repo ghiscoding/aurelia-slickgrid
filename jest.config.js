@@ -7,6 +7,7 @@ module.exports = {
   collectCoverage: false,
   collectCoverageFrom: [
     'src/**/*.{js,ts}',
+    '!src/assets/**',
     '!**/*.spec.{js,ts}',
     '!**/node_modules/**',
     '!**/test/**'
