@@ -133,7 +133,7 @@ export class InputFilter implements Filter {
     if (this.columnFilter && this.columnFilter.placeholder) {
       placeholder = this.columnFilter.placeholder;
     }
-    return `<input type="${this._inputType || 'text'}" class="form-control search-filter filter-${columnId}" autocomplete="off" placeholder="${placeholder}"><span></span>`;
+    return `<input type="${this._inputType || 'text'}" class="form-control search-filter filter-${columnId}" role="presentation" autocomplete="off" placeholder="${placeholder}"><span></span>`;
   }
 
   /**

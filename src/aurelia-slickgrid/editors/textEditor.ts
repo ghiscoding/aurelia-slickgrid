@@ -39,7 +39,7 @@ export class TextEditor implements Editor {
     const placeholder = this.columnEditor && this.columnEditor.placeholder || '';
     const title = this.columnEditor && this.columnEditor.title || '';
 
-    this.$input = $(`<input type="text" class="editor-text editor-${columnId}" autocomplete="off" placeholder="${placeholder}" title="${title}" />`)
+    this.$input = $(`<input type="text" class="editor-text editor-${columnId}" role="presentation" autocomplete="off" placeholder="${placeholder}" title="${title}" />`)
       .appendTo(this.args.container)
       .on('keydown.nav', (event: JQueryEventObject) => {
         this._lastInputEvent = event;
