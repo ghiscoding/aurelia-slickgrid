@@ -20,13 +20,8 @@ The goal is of course to be able to run SlickGrid within Aurelia but also to inc
 - [Bootstrap 3 demo](https://ghiscoding.github.io/aurelia-slickgrid) / [examples repo](https://github.com/ghiscoding/aurelia-slickgrid/tree/master/aurelia-slickgrid/src/examples/slickgrid)
 - [Bootstrap 4 demo](https://ghiscoding.github.io/aurelia-slickgrid-bs4-demo) / [examples repo](https://github.com/ghiscoding/aurelia-slickgrid-bs4-demo/tree/master/src/examples/slickgrid)
 
-#### Working Demo
-For a complete and working local demo, you can clone the [Aurelia-Slickgrid Bootstrap 4](https://github.com/ghiscoding/aurelia-slickgrid-bs4-demo) repository. That repo is updated frequently and is the actual [Bootstrap 4 demo](https://ghiscoding.github.io/aurelia-slickgrid-bs4-demo/#/slickgrid).
-```bash
-git clone https://github.com/ghiscoding/aurelia-slickgrid-bs4-demo
-npm install # OR yarn install
-npm start # OR yarn start
-```
+#### Working Demos
+For complete working local demos, you can clone the [Aurelia-Slickgrid Demos](https://github.com/ghiscoding/aurelia-slickgrid-demos) repository (instruction are provided in that repository). The 2 WebPacks demos are updated frequently and they are the actual [Bootstrap 3 demo](https://ghiscoding.github.io/aurelia-slickgrid) / [Bootstrap 4 demo](https://ghiscoding.github.io/aurelia-slickgrid-bs4-demo/#/slickgrid).
 
 ## Installation
 Refer to the [Wiki - HOWTO Step by Step](https://github.com/ghiscoding/aurelia-slickgrid/wiki/HOWTO--Step-by-Step)
