@@ -1,5 +1,6 @@
 // import 3rd party vendor libs
 // only import the necessary core lib, each will be imported on demand when enabled (via require)
+import * as $ from 'jquery';
 import 'jquery-ui-dist/jquery-ui';
 import 'slickgrid/lib/jquery.event.drag-2.3.0';
 import 'slickgrid/slick.core';
@@ -7,6 +8,7 @@ import 'slickgrid/slick.dataview';
 import 'slickgrid/slick.grid';
 
 import { bindable, BindingEngine, bindingMode, Container, Factory, inject } from 'aurelia-framework';
+import { DOM } from 'aurelia-pal';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
 import { GlobalGridOptions } from './global-grid-options';
 import {
@@ -36,7 +38,6 @@ import {
 } from './services/index';
 import { ExtensionUtility } from './extensions/extensionUtility';
 import { SharedService } from './services/shared.service';
-import * as $ from 'jquery';
 
 // using external non-typed js libraries
 declare var Slick: any;
@@ -47,6 +48,7 @@ const DEFAULT_SLICKGRID_EVENT_PREFIX = 'sg';
 // Aurelia doesn't support well TypeScript @autoinject in a Plugin so we'll do it the old fashion way
 @inject(
   BindingEngine,
+  Container,
   ExportService,
   Element,
   EventAggregator,
@@ -60,7 +62,6 @@ const DEFAULT_SLICKGRID_EVENT_PREFIX = 'sg';
   ResizerService,
   SharedService,
   SortService,
-  Container
 )
 export class AureliaSlickgridCustomElement {
   private _columnDefinitions: Column[] = [];
@@ -90,6 +91,7 @@ export class AureliaSlickgridCustomElement {
 
   constructor(
     private bindingEngine: BindingEngine,
+    private container: Container,
     private exportService: ExportService,
     private elm: Element,
     private ea: EventAggregator,
@@ -103,7 +105,6 @@ export class AureliaSlickgridCustomElement {
     private resizerService: ResizerService,
     private sharedService: SharedService,
     private sortService: SortService,
-    private container: Container
   ) {
     this.serviceList = [
       exportService,
@@ -455,7 +456,7 @@ export class AureliaSlickgridCustomElement {
     // expose GridState Service changes event through dispatch
     this.subscriptions.push(
       this.ea.subscribe('gridStateService:changed', (gridStateChange: GridStateChange) => {
-        this.elm.dispatchEvent(new CustomEvent(`${DEFAULT_AURELIA_EVENT_PREFIX}-on-grid-state-changed`, {
+        this.elm.dispatchEvent(DOM.createCustomEvent(`${DEFAULT_AURELIA_EVENT_PREFIX}-on-grid-state-changed`, {
           bubbles: true,
           detail: gridStateChange
         }));
@@ -614,8 +615,8 @@ export class AureliaSlickgridCustomElement {
     // using jQuery extend to do a deep clone has an unwanted side on objects and pageSizes but ES6 spread has other worst side effects
     // so we will just overwrite the pageSizes when needed, this is the only one causing issues so far.
     // jQuery wrote this on their docs:: On a deep extend, Object and Array are extended, but object wrappers on primitive types such as String, Boolean, and Number are not.
-    if (gridOptions && gridOptions.backendServiceApi) {
-      if (gridOptions.pagination && Array.isArray(gridOptions.pagination.pageSizes) && gridOptions.pagination.pageSizes.length > 0) {
+    if (options && gridOptions && gridOptions.backendServiceApi) {
+      if (options.pagination && gridOptions.pagination && Array.isArray(gridOptions.pagination.pageSizes) && gridOptions.pagination.pageSizes.length > 0) {
         options.pagination.pageSizes = gridOptions.pagination.pageSizes;
       }
     }
@@ -731,7 +732,7 @@ export class AureliaSlickgridCustomElement {
     if (data) {
       eventInit.detail = data;
     }
-    return this.elm.dispatchEvent(new CustomEvent(eventName, eventInit));
+    return this.elm.dispatchEvent(DOM.createCustomEvent(eventName, eventInit));
   }
 
   /** Load the Editor Collection asynchronously and replace the "collection" property when Promise resolves */

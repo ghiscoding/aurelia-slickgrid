@@ -1,8 +1,9 @@
 module.exports = {
   globals: {
     'ts-jest': {
+      diagnostics: false,
       tsConfig: './tsconfig.spec.json'
-    }
+    },
   },
   collectCoverage: false,
   collectCoverageFrom: [
@@ -37,14 +38,14 @@ module.exports = {
     '<rootDir>/src',
     '<rootDir>/node_modules'
   ],
+  preset: 'ts-jest',
   setupFiles: ['<rootDir>/test/jest-pretest.ts'],
-  setupFilesAfterEnv: ['<rootDir>/test/jest-setup.ts'],
   transform: {
-    '^.+\\.(ts|tsx)$': '<rootDir>/node_modules/ts-jest'
+    '^.+\.ts$': 'ts-jest',
   },
   transformIgnorePatterns: [
-    '!*.d.ts',
     'node_modules/(?!@ngrx)',
+    '<rootDir>/node_modules/slickgrid/'
   ],
   testMatch: [
     '**/__tests__/**/*.+(ts|js)',

@@ -1,5 +1,8 @@
 {
   "recommendations": [
-    "eg2.tslint"
+    "aureliaeffect.aurelia",
+    "editorconfig.editorconfig",
+    "msjsdiag.debugger-for-chrome",
+    "ms-vscode.vscode-typescript-tslint-plugin"
   ]
 }
