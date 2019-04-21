@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.10.0"></a>
+# [2.10.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.9.2...v2.10.0) (2019-04-21)
+
+
+### Bug Fixes
+
+* **backend:** Filter presets is getting removed when calling sort ([98e8199](https://github.com/ghiscoding/aurelia-slickgrid/commit/98e8199))
+* **formatter:** rewrite formatter do what it was supposed to do ([9100e2c](https://github.com/ghiscoding/aurelia-slickgrid/commit/9100e2c))
+* **headerMenu:** calling "Clear Filter" was calling incorrect grid state ([a699c45](https://github.com/ghiscoding/aurelia-slickgrid/commit/a699c45))
+* **input:** remove autocomplete from all Editors & Filters ([6db160e](https://github.com/ghiscoding/aurelia-slickgrid/commit/6db160e))
+* **input:** remove autocomplete from all Editors & Filters again ([437e913](https://github.com/ghiscoding/aurelia-slickgrid/commit/437e913))
+* **pageSizes:** setting different sizes extend global sizes, fixes [#150](https://github.com/ghiscoding/aurelia-slickgrid/issues/150) ([d64cf9a](https://github.com/ghiscoding/aurelia-slickgrid/commit/d64cf9a))
+* **rowDetail:** use latest Github SlickGrid code, temporary fix ([c4a319b](https://github.com/ghiscoding/aurelia-slickgrid/commit/c4a319b))
+* **select:** sync multiple-select.js with core lib & fix some js event ([a9b6093](https://github.com/ghiscoding/aurelia-slickgrid/commit/a9b6093))
+
+
+### Features
+
+* **e2e:** add Jest & Cypress to the lib ([#148](https://github.com/ghiscoding/aurelia-slickgrid/issues/148)) ([9905245](https://github.com/ghiscoding/aurelia-slickgrid/commit/9905245))
+* **editor:** add title attribute to all Editors ([#156](https://github.com/ghiscoding/aurelia-slickgrid/issues/156)) ([6e0d125](https://github.com/ghiscoding/aurelia-slickgrid/commit/6e0d125))
+* **filter:** add demo of single search filter, closes [#152](https://github.com/ghiscoding/aurelia-slickgrid/issues/152) ([#157](https://github.com/ghiscoding/aurelia-slickgrid/issues/157)) ([919872e](https://github.com/ghiscoding/aurelia-slickgrid/commit/919872e))
+* **filters:** add flag to optionally trim filter white spaces ([f0496fb](https://github.com/ghiscoding/aurelia-slickgrid/commit/f0496fb))
+* **jest:** write a couple more Jest unit tests ([35537ba](https://github.com/ghiscoding/aurelia-slickgrid/commit/35537ba))
+* **rowDetail:** user can override expand icon logic ([#154](https://github.com/ghiscoding/aurelia-slickgrid/issues/154)) ([4c887c6](https://github.com/ghiscoding/aurelia-slickgrid/commit/4c887c6))
+* **rowSelection:** user can override row selection checkbox logic ([#155](https://github.com/ghiscoding/aurelia-slickgrid/issues/155)) ([b5d7546](https://github.com/ghiscoding/aurelia-slickgrid/commit/b5d7546))
+
+
+
 <a name="2.9.2"></a>
 ## [2.9.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.9.1...v2.9.2) (2019-03-18)
 
