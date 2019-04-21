@@ -2,7 +2,7 @@
   "compileOnSave": false,
   "compilerOptions": {
     "target": "es5",
-    "module": "es2015",
+    "module": "esnext",
     "sourceMap": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
@@ -23,6 +23,7 @@
     "aurelia_project",
     "cypress",
     "dist",
+    "jspm_packages",
     "node_modules",
     "**/*.spec.ts"
   ],
@@ -31,7 +32,8 @@
     "./test/**/*.ts",
     "./custom_typings/**/*.d.ts"
   ],
-  "atom": {
-    "rewriteTsconfig": false
-  }
+  "include": [
+    "src/**/*.ts",
+    "src/typings/**/*.ts"
+  ]
 }

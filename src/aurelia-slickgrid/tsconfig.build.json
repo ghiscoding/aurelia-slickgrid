@@ -31,7 +31,8 @@
     "src/aurelia_project",
     "src/examples",
     "src/resources",
-    "src/test"
+    "src/test",
+    "**/*.spec.ts"
   ],
   "include": [
     "../typings",

@@ -1,29 +1,25 @@
 <template>
-  <!--The content below is only a placeholder and can be replaced.-->
-  <div class="container">
-    <h2>${title}</h2>
-    <div class="subtitle" innerhtml.bind="subTitle"></div>
+  <h2>${title}</h2>
+  <div class="subtitle"
+       innerhtml.bind="subTitle"></div>
 
-    <h3>Grid 1</h3>
-    <aurelia-slickgrid
-        grid-id="grid1"
-        column-definitions.bind="columnDefinitions1"
-        grid-options.bind="gridOptions2"
-        dataset.bind="dataset2"
-        grid-height="300"
-        grid-width="800">
-    </aurelia-slickgrid>
+  <h3>Grid 1</h3>
+  <aurelia-slickgrid grid-id="grid1"
+                     column-definitions.bind="columnDefinitions1"
+                     grid-options.bind="gridOptions2"
+                     dataset.bind="dataset2"
+                     grid-height="300"
+                     grid-width="800">
+  </aurelia-slickgrid>
 
-    <hr/>
+  <hr />
 
-    <h3>Grid 2</h3>
-    <aurelia-slickgrid
-        grid-id="grid2"
-        column-definitions.bind="columnDefinitions2"
-        grid-options.bind="gridOptions2"
-        dataset.bind="dataset2"
-        grid-height="300"
-        grid-width="800">
-    </aurelia-slickgrid>
-  </div>
+  <h3>Grid 2</h3>
+  <aurelia-slickgrid grid-id="grid2"
+                     column-definitions.bind="columnDefinitions2"
+                     grid-options.bind="gridOptions2"
+                     dataset.bind="dataset2"
+                     grid-height="300"
+                     grid-width="800">
+  </aurelia-slickgrid>
 </template>

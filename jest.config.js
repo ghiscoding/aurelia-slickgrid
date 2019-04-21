@@ -1,26 +1,27 @@
 module.exports = {
   globals: {
     'ts-jest': {
+      diagnostics: false,
       tsConfig: './tsconfig.spec.json'
-    }
+    },
   },
   collectCoverage: false,
   collectCoverageFrom: [
-    'src/**/*.{js,ts}',
+    'src/**/*.ts',
     '!src/assets/**',
     '!**/node_modules/**',
-    '!**/test/**'
+    '!**/test/**',
+    '!src/aurelia-slickgrid/models/**',
   ],
   coverageDirectory: '<rootDir>/test/coverage-jest',
   coveragePathIgnorePatterns: [
-    '!*.d.ts',
-    '!*.enum.ts',
-    '!*.interface.ts',
+    'index.ts',
     'constants.ts',
     'environment.ts',
     'example-data.js',
-    'index.ts',
     'main.ts',
+    '\\.d\\.ts$',
+    '<rootDir>/node_modules/'
   ],
   coverageReporters: [
     'json',
@@ -37,14 +38,14 @@ module.exports = {
     '<rootDir>/src',
     '<rootDir>/node_modules'
   ],
+  preset: 'ts-jest',
   setupFiles: ['<rootDir>/test/jest-pretest.ts'],
-  setupFilesAfterEnv: ['<rootDir>/test/jest-setup.ts'],
   transform: {
-    '^.+\\.(ts|tsx)$': '<rootDir>/node_modules/ts-jest'
+    '^.+\\.ts$': 'ts-jest',
   },
   transformIgnorePatterns: [
-    '!*.d.ts',
     'node_modules/(?!@ngrx)',
+    '<rootDir>/node_modules/slickgrid/'
   ],
   testMatch: [
     '**/__tests__/**/*.+(ts|js)',
