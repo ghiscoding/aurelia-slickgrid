@@ -7,8 +7,8 @@ import { translateFormatter } from './translateFormatter';
 describe('the Translate Formatter', () => {
   let i18n: I18N;
 
-  // mock methods of the Grid object
-  const gridMock = {
+  // stub some methods of the SlickGrid Grid instance
+  const gridStub = {
     getOptions: jest.fn()
   };
 
@@ -22,25 +22,33 @@ describe('the Translate Formatter', () => {
     });
   });
 
+  it('should return an empty string when null value is passed', async () => {
+    await i18n.setLocale('fr');
+    gridStub.getOptions.mockReturnValueOnce({ i18n });
+    const output = translateFormatter(1, 1, null, {} as Column, {}, gridStub);
+    expect(i18n.getLocale()).toBe('fr');
+    expect(output).toBe('');
+  });
+
   it('should return an empty string when no value is passed', async () => {
     await i18n.setLocale('fr');
-    gridMock.getOptions.mockReturnValueOnce({ i18n });
-    const output = translateFormatter(1, 1, '', {} as Column, {}, gridMock);
+    gridStub.getOptions.mockReturnValueOnce({ i18n });
+    const output = translateFormatter(1, 1, '', {} as Column, {}, gridStub);
     expect(i18n.getLocale()).toBe('fr');
     expect(output).toBe('');
   });
 
   it('should return the translated value as string', async () => {
     await i18n.setLocale('fr');
-    gridMock.getOptions.mockReturnValueOnce({ i18n });
-    const output = translateFormatter(1, 1, 'HELLO', {} as Column, {}, gridMock);
+    gridStub.getOptions.mockReturnValueOnce({ i18n });
+    const output = translateFormatter(1, 1, 'HELLO', {} as Column, {}, gridStub);
     expect(output).toBe('Bonjour');
   });
 
   it('should return the translated value when value passed is a string and i18n service is passed as a ColumnDef Params', async () => {
     await i18n.setLocale('fr');
-    gridMock.getOptions.mockReturnValueOnce({});
-    const output = translateFormatter(1, 1, 'HELLO', { params: { i18n } } as Column, {}, gridMock);
+    gridStub.getOptions.mockReturnValueOnce({});
+    const output = translateFormatter(1, 1, 'HELLO', { params: { i18n } } as Column, {}, gridStub);
     expect(output).toBe('Bonjour');
   });
 
@@ -52,13 +60,13 @@ describe('the Translate Formatter', () => {
 
   it('should convert any type of value to string', async () => {
     await i18n.setLocale('fr');
-    gridMock.getOptions.mockReturnValueOnce({ i18n });
-    const output = translateFormatter(1, 1, 99, {} as Column, {}, gridMock);
+    gridStub.getOptions.mockReturnValueOnce({ i18n });
+    const output = translateFormatter(1, 1, 99, {} as Column, {}, gridStub);
     expect(output).toBe('99');
   });
 
   it('should throw an error when no I18N service provided to neither ColumnDefinition and GridOptions', () => {
-    gridMock.getOptions.mockReturnValueOnce({});
-    expect(() => translateFormatter(1, 1, null, {} as Column, {}, gridMock)).toThrowError('formatter requires the "I18N" Service');
+    gridStub.getOptions.mockReturnValueOnce({});
+    expect(() => translateFormatter(1, 1, null, {} as Column, {}, gridStub)).toThrowError('formatter requires the "I18N" Service');
   });
 });
