@@ -1,79 +1,91 @@
-import { StageComponent, ComponentTester } from 'aurelia-testing';
+import { StageComponent } from 'aurelia-testing';
 import { bootstrap } from 'aurelia-bootstrapper';
-import { Container } from 'aurelia-dependency-injection';
 import { PLATFORM } from 'aurelia-pal';
-import { AureliaSlickgridCustomElement } from './aurelia-slickgrid';
-import { ExtensionService, ExportService, FilterService, GridEventService, GridService, GridStateService, GroupingAndColspanService, ResizerService, SharedService, SortService } from './services';
-import { BindingEngine } from 'aurelia-binding';
-import { EventAggregator } from 'aurelia-event-aggregator';
-import { ExtensionUtility } from './extensions';
 
 // jest.mock('slickgrid/slick.grid', () => { });
+const eventAggregator = {
+  publish: jest.fn(),
+  subscribe: jest.fn()
+}
 jest.mock('flatpickr', () => { });
+jest.mock('aurelia-event-aggregator', () => ({
+  EventAggregator: eventAggregator
+}));
+
+const aureliaGridReady = jest.fn();
 
 describe('Aurelia-Slickgrid Custom Component', () => {
-  // let component: ComponentTester<AureliaSlickgridCustomElement>;
   let component;
-  let container: Container;
-  let bindingEngine;
-  let exportService;
-  let eventAggregator;
-  let extensionService;
-  let extensionUtility;
-  let filterService;
-  let gridEventService;
-  let gridService;
-  let gridStateService;
-  let groupingAndColspanService;
-  let resizerService;
-  let sharedService;
-  let sortService;
-  let viewModel: AureliaSlickgridCustomElement;
 
   beforeEach(() => {
-    container = new Container();
-    bindingEngine = container.get(BindingEngine);
-    exportService = container.get(ExportService);
-    eventAggregator = container.get(EventAggregator);
-    extensionService = container.get(ExtensionService);
-    extensionUtility = container.get(ExtensionUtility);
-    filterService = container.get(FilterService);
-    gridEventService = container.get(GridEventService);
-    gridService = container.get(GridService);
-    gridStateService = container.get(GridStateService);
-    groupingAndColspanService = container.get(GroupingAndColspanService);
-    resizerService = container.get(ResizerService);
-    sharedService = container.get(SharedService);
-    sortService = container.get(SortService);
-    // viewModel = container.get(AureliaSlickgridCustomElement);
-
     component = StageComponent
       .withResources(PLATFORM.moduleName('./aurelia-slickgrid'))
-      .inView('<aurelia-slickgrid grid-id.bind="gridId"></aurelia-slickgrid>')
-      .boundTo({ gridId: 'grid1', Slick: {} });
-    // .boundTo(viewModel);
+      .inView('<aurelia-slickgrid grid-id.bind="gridId" column-definitions: columnDefinitions dataset.bind="dataset" asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)"></aurelia-slickgrid>')
+      .boundTo({ gridId: 'grid1', columnDefinitions: [], dataset: [], aureliaGridReady });
 
     component.bootstrap((aurelia) => {
       aurelia.use.standardConfiguration();
-      // aurelia.container.registerInstance(BindingEngine, bindingEngine);
     });
   });
 
   it('should make sure Aurelia-Slickgrid is defined', () => {
     expect(component).toBeTruthy();
+    expect(component.constructor).toBeDefined();
   });
 
-  it('should create a grid and a slickgrid container in the DOM', (done) => {
-    component.create(bootstrap)
-      .then(() => {
-        const gridElement = document.querySelector('.gridPane');
-        expect(gridElement.innerHTML).toContain('grid1');
-        expect(gridElement.id).toBe('slickGridContainer-grid1');
-        done();
-        component.dispose();
-      })
-      .catch((error) => console.log(error));
+  it('should create a grid and expect multiple Event Aggregator being called', async () => {
+    await component.create(bootstrap);
+    expect(eventAggregator.publish).toHaveBeenCalledTimes(3);
+    expect(eventAggregator.publish).toHaveBeenNthCalledWith(1, 'onBeforeGridCreate', true);
+    expect(eventAggregator.publish).toHaveBeenNthCalledWith(2, 'onGridCreated', expect.any(Object));
+    expect(eventAggregator.publish).toHaveBeenNthCalledWith(3, 'onDataviewCreated', expect.any(Object));
 
+    component.dispose();
+    expect(eventAggregator.publish).toHaveBeenNthCalledWith(4, 'onBeforeGridDestroy', expect.any(Object));
+    expect(eventAggregator.publish).toHaveBeenNthCalledWith(5, 'onAfterGridDestroyed', true);
+  });
+
+  it('should create a grid and expect multiple CustomEvent being dispatched', (done) => {
+    let spy;
+
+    component
+      .manuallyHandleLifecycle()
+      .create(bootstrap)
+      .then(() => spy = jest.spyOn(component.viewModel, 'dispatchCustomEvent'))
+      .then(() => component.bind())
+      .then(() => component.attached())
+      .then(() => {
+        expect(spy).toHaveBeenNthCalledWith(1, 'asg-on-before-grid-create');
+        expect(spy).toHaveBeenNthCalledWith(2, 'sg-on-scroll', expect.any(Object));
+        expect(spy).toHaveBeenNthCalledWith(3, 'sg-on-rendered', expect.any(Object));
+        expect(spy).toHaveBeenNthCalledWith(4, 'asg-on-grid-created', expect.any(Object));
+        expect(spy).toHaveBeenNthCalledWith(5, 'asg-on-dataview-created', expect.any(Object));
+        expect(spy).toHaveBeenLastCalledWith('asg-on-aurelia-grid-created', expect.any(Object));
+      })
+      .then(() => component.detached(true))
+      .then(() => {
+        expect(spy).toHaveBeenLastCalledWith('asg-on-after-grid-destroyed', expect.any(Object));
+      })
+      .then(() => component.unbind())
+      .then(done)
+      .then(() => component.dispose(true));
+  });
+
+  it('should create a grid and a slickgrid container in the DOM', async () => {
+    await component.create(bootstrap);
+    const gridElement = document.querySelector('.gridPane');
+
+    expect(gridElement.innerHTML).toContain('grid1');
+    expect(gridElement.id).toBe('slickGridContainer-grid1');
+  });
+
+  it('should dispose & detache the grid when disposing of the element', async () => {
+    await component.create(bootstrap);
+    const spy = jest.spyOn(component.viewModel, 'detached');
+
+    component.viewModel.dispose(true);
+    expect(spy).toHaveBeenCalledWith(true);
+    component.dispose(true);
   });
 });
 

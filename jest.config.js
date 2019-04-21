@@ -7,21 +7,21 @@ module.exports = {
   },
   collectCoverage: false,
   collectCoverageFrom: [
-    'src/**/*.{js,ts}',
+    'src/**/*.ts',
     '!src/assets/**',
     '!**/node_modules/**',
-    '!**/test/**'
+    '!**/test/**',
+    '!src/aurelia-slickgrid/models/**',
   ],
   coverageDirectory: '<rootDir>/test/coverage-jest',
   coveragePathIgnorePatterns: [
-    '!*.d.ts',
-    '!*.enum.ts',
-    '!*.interface.ts',
+    'index.ts',
     'constants.ts',
     'environment.ts',
     'example-data.js',
-    'index.ts',
     'main.ts',
+    '\\.d\\.ts$',
+    '<rootDir>/node_modules/'
   ],
   coverageReporters: [
     'json',
@@ -41,7 +41,7 @@ module.exports = {
   preset: 'ts-jest',
   setupFiles: ['<rootDir>/test/jest-pretest.ts'],
   transform: {
-    '^.+\.ts$': 'ts-jest',
+    '^.+\\.ts$': 'ts-jest',
   },
   transformIgnorePatterns: [
     'node_modules/(?!@ngrx)',

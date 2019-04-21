@@ -59,6 +59,6 @@ describe('the Translate Formatter', () => {
 
   it('should throw an error when no I18N service provided to neither ColumnDefinition and GridOptions', () => {
     gridMock.getOptions.mockReturnValueOnce({});
-    expect(() => { translateFormatter(1, 1, null, {} as Column, {}, gridMock) }).toThrowError('formatter requires the "I18N" Service');
+    expect(() => translateFormatter(1, 1, null, {} as Column, {}, gridMock)).toThrowError('formatter requires the "I18N" Service');
   });
 });
