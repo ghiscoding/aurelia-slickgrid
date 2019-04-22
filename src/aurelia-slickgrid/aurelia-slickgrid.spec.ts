@@ -101,7 +101,7 @@ describe('Aurelia-Slickgrid Custom Component', () => {
       .create(bootstrap)
       .then(() => component.bind({ gridHeight: null, gridOptions: { enableAutoResize: false } }))
       .catch((error) => {
-        expect(error.message).toContain('[Aurelia-Slickgrid] requires a "grid-height" or the "autoResize"')
+        expect(error.message).toContain('[Aurelia-Slickgrid] requires a "grid-height" or the "enableAutoResize" grid option to be enabled.')
         done();
         component.dispose(true);
       });
