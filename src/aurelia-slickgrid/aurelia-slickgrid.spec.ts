@@ -16,12 +16,19 @@ const aureliaGridReady = jest.fn();
 
 describe('Aurelia-Slickgrid Custom Component', () => {
   let component;
+  const view = `<aurelia-slickgrid
+    grid-id.bind="gridId"
+    column-definitions: columnDefinitions
+    dataset.bind="dataset"
+    grid-options.bind="gridOptions"
+    asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
+  </aurelia-slickgrid>`;
 
   beforeEach(() => {
     component = StageComponent
       .withResources(PLATFORM.moduleName('./aurelia-slickgrid'))
-      .inView('<aurelia-slickgrid grid-id.bind="gridId" column-definitions: columnDefinitions dataset.bind="dataset" asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)"></aurelia-slickgrid>')
-      .boundTo({ gridId: 'grid1', columnDefinitions: [], dataset: [], aureliaGridReady });
+      .inView(view)
+      .boundTo({ gridId: 'grid1', columnDefinitions: [], dataset: [], gridOptions: {}, aureliaGridReady });
 
     component.bootstrap((aurelia) => {
       aurelia.use.standardConfiguration();
@@ -86,6 +93,18 @@ describe('Aurelia-Slickgrid Custom Component', () => {
     component.viewModel.dispose(true);
     expect(spy).toHaveBeenCalledWith(true);
     component.dispose(true);
+  });
+
+  it('should throw an error when the "enableAutoResize" is disabled and no "grid-height" is provided', (done) => {
+    component
+      .manuallyHandleLifecycle()
+      .create(bootstrap)
+      .then(() => component.bind({ gridHeight: null, gridOptions: { enableAutoResize: false } }))
+      .catch((error) => {
+        expect(error.message).toContain('[Aurelia-Slickgrid] requires a "grid-height" or the "autoResize"')
+        done();
+        component.dispose(true);
+      });
   });
 });
 

@@ -305,6 +305,14 @@ export class AureliaSlickgridCustomElement {
     this.gridOptions = { ...GlobalGridOptions, ...this.gridOptions };
     this._columnDefinitions = this.columnDefinitions;
 
+    // user must provide a "gridHeight" or use "autoResize: true" in the grid options
+    if (!this._fixedHeight && !this.gridOptions.enableAutoResize) {
+      throw new Error(
+        `[Aurelia-Slickgrid] requires a "grid-height" or the "autoResize" grid option to be enabled.
+        Without that the grid will seem empty while in fact it just does not have any height define.`
+      );
+    }
+
     // subscribe to column definitions assignment changes with BindingEngine
     // assignment changes are not triggering a "changed" event https://stackoverflow.com/a/30286225/1212166
     // also binding docs https://github.com/aurelia/binding/blob/master/doc/article/en-US/binding-observables.md#observing-collections
