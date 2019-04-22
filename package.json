@@ -21,7 +21,7 @@
   },
   "scripts": {
     "lint": "cross-env tslint --project tsconfig.json",
-    "pretest": "cross-env npm run lint",
+    "delete:dist": "cross-env rimraf dist",
     "prebuild:amd": "cross-env rimraf dist/amd",
     "build:amd": "cross-env tsc --project src/aurelia-slickgrid/tsconfig.build.json --outDir dist/amd --module amd",
     "postbuild:amd": "cross-env copyfiles --up 2 src/aurelia-slickgrid/**/*.html dist/amd",
@@ -40,7 +40,7 @@
     "prebuild:system": "cross-env rimraf dist/system",
     "build:system": "cross-env tsc --project src/aurelia-slickgrid/tsconfig.build.json --outDir dist/system --module system",
     "postbuild:system": "cross-env copyfiles --up 2 src/aurelia-slickgrid/**/*.html dist/system",
-    "prebuild": "cross-env rimraf dist",
+    "prebuild": "npm-run-all delete:dist test:jest",
     "build": "npm-run-all build:amd build:commonjs build:es2015 build:es2017 build:native-modules build:system sass:build sass:copy copy-i18n:dist copy-asset-lib",
     "prebuild-lib-demo": "cross-env rimraf dist",
     "copy-asset-lib": "cross-env copyfiles --up 2 src/assets/lib/** dist",
@@ -50,7 +50,6 @@
     "postdoc": "cross-env node doc/shape-doc && rimraf dist/doc-temp",
     "changelog": "cross-env conventional-changelog -p angular -i doc/CHANGELOG.md -s",
     "bump-version": "npm --no-git-tag-version version",
-    "preprepare-release": "cross-env npm run test",
     "prepare-release": "cross-env npm run changelog && npm run build && npm run doc",
     "release": "standard-version",
     "sass-build-task:scss-compile": "node-sass --source-map true src/aurelia-slickgrid/styles/ -o dist/styles/css",
@@ -60,7 +59,8 @@
     "sass:watch": "node-sass 'src/aurelia-slickgrid/styles/**/*.scss' -c 'npm run sass:build'",
     "sass:dev": "npm-run-all -p sass:*",
     "start": "nps",
-    "start:dev": "nps"
+    "start:dev": "nps",
+    "test:jest": "nps test.jest"
   },
   "dependencies": {
     "aurelia-event-aggregator": ">=1.0.1",
