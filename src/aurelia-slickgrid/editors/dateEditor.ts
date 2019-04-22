@@ -1,6 +1,6 @@
 import { Constants } from './../constants';
 import { mapFlatpickrDateFormatWithFieldType, mapMomentDateFormatWithFieldType } from './../services/utilities';
-import { Column, ColumnEditor, Editor, EditorValidator, EditorValidatorOutput, FieldType } from './../models/index';
+import { Column, ColumnEditor, Editor, EditorValidator, EditorValidatorOutput, FieldType, KeyCode } from './../models/index';
 import { I18N } from 'aurelia-i18n';
 import { inject } from 'aurelia-framework';
 import * as flatpickr from 'flatpickr';
@@ -15,6 +15,7 @@ declare function require(name: string): any;
  */
 @inject(I18N)
 export class DateEditor implements Editor {
+  private _$inputWithData: any;
   $input: any;
   flatInstance: any;
   defaultDate: string;
@@ -54,6 +55,7 @@ export class DateEditor implements Editor {
       const pickerOptions: any = {
         defaultDate: this.defaultDate,
         altInput: true,
+        altInputClass: 'flatpickr-alt-input',
         altFormat: inputFormat,
         dateFormat: outputFormat,
         closeOnSelect: false,
@@ -65,11 +67,16 @@ export class DateEditor implements Editor {
 
       // merge options with optional user's custom options
       const pickerMergedOptions = { ...pickerOptions, ...this.columnEditor.editorOptions };
+      const inputCssClasses = `.editor-text.editor-${columnId}.flatpickr`;
 
-      this.$input = $(`<input type="text" data-defaultDate="${this.defaultDate}" class="editor-text editor-${columnId} flatpickr" placeholder="${placeholder}" title="${title}" />`);
+      this.$input = $(`<input type="text" data-defaultDate="${this.defaultDate}" class="${inputCssClasses.replace(/\./g, ' ')}" placeholder="${placeholder}" title="${title}" />`);
       this.$input.appendTo(this.args.container);
       this.flatInstance = (flatpickr && this.$input[0] && typeof this.$input[0].flatpickr === 'function') ? this.$input[0].flatpickr(pickerMergedOptions) : null;
       this.show();
+
+      // when we're using an alternate input to display data, we'll consider this input as the one to do the focus later on
+      // else just use the top one
+      this._$inputWithData = (pickerMergedOptions && pickerMergedOptions.altInput) ? $(`${inputCssClasses}.flatpickr-alt-input`) : this.$input;
     }
   }
 
@@ -88,7 +95,6 @@ export class DateEditor implements Editor {
   destroy() {
     this.hide();
     this.$input.remove();
-    // this.flatInstance.destroy();
   }
 
   getColumnEditor() {
@@ -108,7 +114,11 @@ export class DateEditor implements Editor {
   }
 
   focus() {
-    this.$input.focus();
+    if (this._$inputWithData && this._$inputWithData.focus) {
+      this._$inputWithData.focus().select();
+    } else if (this.$input && this.$input.focus) {
+      this.$input.focus().select();
+    }
   }
 
   save() {
@@ -132,6 +142,7 @@ export class DateEditor implements Editor {
     if (item && this.columnDef && (item.hasOwnProperty(fieldName) || item.hasOwnProperty(fieldNameFromComplexObject))) {
       this.defaultDate = item[fieldNameFromComplexObject || fieldName];
       this.flatInstance.setDate(item[this.args.column.field]);
+      this.focus();
     }
   }
 
@@ -149,16 +160,12 @@ export class DateEditor implements Editor {
   }
 
   applyValue(item: any, state: any) {
-    if (!state) {
-      return;
-    }
-
     const fieldName = this.columnDef && this.columnDef.field;
     const outputFormat = mapMomentDateFormatWithFieldType(this.args.column.type || FieldType.dateIso);
 
     // when it's a complex object, then pull the object name only, e.g.: "user.firstName" => "user"
     const fieldNameFromComplexObject = fieldName.indexOf('.') ? fieldName.substring(0, fieldName.indexOf('.')) : '';
-    item[fieldNameFromComplexObject || fieldName] = moment(state, outputFormat).toDate();
+    item[fieldNameFromComplexObject || fieldName] = state ? moment(state, outputFormat).toDate() : '';
   }
 
   isValueChanged() {
