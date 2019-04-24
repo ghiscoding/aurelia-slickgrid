@@ -8,9 +8,21 @@
       "problemMatcher": []
     },
     {
+      "label": "Build Library (with E2E Cypress tests)",
+      "type": "shell",
+      "command": "yarn run build:with-e2e",
+      "problemMatcher": []
+    },
+    {
       "label": "Cypress Open Tool",
       "type": "shell",
       "command": "yarn run cypress open",
+      "problemMatcher": []
+    },
+    {
+      "label": "Cypress CI",
+      "type": "shell",
+      "command": "yarn nps e2e.ci",
       "problemMatcher": []
     },
     {

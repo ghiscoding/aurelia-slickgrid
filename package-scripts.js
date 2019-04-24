@@ -24,6 +24,30 @@ module.exports = {
         lint: 'nps test.lint'
       })
     },
+    e2e: {
+      default: concurrent({
+        webpack: `webpack-dev-server -d --port=${WEB_UI_PORT}`,
+        cypress: 'nps e2e.whenReady',
+      }) + ' --kill-others --success first',
+      ci: concurrent({
+        webpack: `webpack-dev-server -d --port=${WEB_UI_PORT}`,
+        cypress: 'nps e2e.whenReady.ci',
+      }) + ' --kill-others --success first',
+      cypress: {
+        default: 'cypress open',
+        ci: `node node_modules/cypress/bin/cypress run --reporter xunit --reporter-options output=testresult.xml`,
+      },
+      whenReady: {
+        default: series(
+          `wait-on --timeout 120000 http-get://localhost:${WEB_UI_PORT}/index.html`,
+          'nps e2e.cypress'
+        ),
+        ci: series(
+          `wait-on --timeout 120000 http-get://localhost:${WEB_UI_PORT}/index.html`,
+          'nps e2e.cypress.ci'
+        ),
+      },
+    },
     build: 'nps webpack.build',
     webpack: {
       default: 'nps webpack.server',

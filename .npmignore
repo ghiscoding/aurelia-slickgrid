@@ -18,4 +18,6 @@ yarn.lock
 yarn-error.log
 
 # Test Coverage
+coverage
 test/coverage-jest
+testresult.xml

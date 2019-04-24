@@ -41,7 +41,9 @@
     "build:system": "cross-env tsc --project src/aurelia-slickgrid/tsconfig.build.json --outDir dist/system --module system",
     "postbuild:system": "cross-env copyfiles --up 2 src/aurelia-slickgrid/**/*.html dist/system",
     "prebuild": "npm-run-all delete:dist test:jest",
-    "build": "npm-run-all build:amd build:commonjs build:es2015 build:es2017 build:native-modules build:system sass:build sass:copy copy-i18n:dist copy-asset-lib",
+    "build": "npm-run-all build:amd build:commonjs build:es2015 build:es2017 build:native-modules build:system",
+    "postbuild": "npm-run-all sass:build sass:copy copy-i18n:dist copy-asset-lib",
+    "build:with-e2e": "npm-run-all build e2e:ci",
     "prebuild-lib-demo": "cross-env rimraf dist",
     "copy-asset-lib": "cross-env copyfiles --up 2 src/assets/lib/** dist",
     "copy-i18n:dist": "cross-env copyfiles --up 3 src/assets/i18n/**/*.* dist/i18n",
@@ -60,7 +62,9 @@
     "sass:dev": "npm-run-all -p sass:*",
     "start": "nps",
     "start:dev": "nps",
-    "test:jest": "nps test.jest"
+    "e2e:ci": "nps e2e.ci",
+    "cypress:ci": "node node_modules/cypress/bin/cypress run --reporter xunit --reporter-options output=testresult.xml",
+    "test:jest": "node_modules/.bin/jest"
   },
   "dependencies": {
     "aurelia-event-aggregator": ">=1.0.1",
