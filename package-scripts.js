@@ -35,7 +35,7 @@ module.exports = {
       }) + ' --kill-others --success first',
       cypress: {
         default: 'cypress open',
-        ci: `node node_modules/cypress/bin/cypress run --reporter xunit --reporter-options output=testresult.xml`,
+        ci: `node test/cypress.js`,
       },
       whenReady: {
         default: series(

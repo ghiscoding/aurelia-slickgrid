@@ -63,7 +63,8 @@
     "start": "nps",
     "start:dev": "nps",
     "e2e:ci": "nps e2e.ci",
-    "cypress:ci": "node node_modules/cypress/bin/cypress run --reporter xunit --reporter-options output=testresult.xml",
+    "cypress:ci:mochawesome": "node test/cypress.js",
+    "cypress:ci:xml": "node node_modules/cypress/bin/cypress run --reporter xunit --reporter-options output=testresult.xml",
     "test:jest": "node_modules/.bin/jest"
   },
   "dependencies": {
@@ -130,6 +131,10 @@
     "jest": "^24.7.1",
     "jest-cli": "^24.7.1",
     "json-loader": "0.5.7",
+    "mocha": "^5.2.0",
+    "mochawesome": "^3.1.2",
+    "mochawesome-merge": "^1.0.7",
+    "mochawesome-report-generator": "^3.1.5",
     "minimatch": "^3.0.2",
     "node-sass": "4.9.0",
     "npm-run-all": "^4.1.1",

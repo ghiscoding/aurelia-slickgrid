@@ -14,5 +14,6 @@ yarn-error.log
 
 # Test Coverage
 coverage
+mochawesome-report
 test/coverage-jest
 testresult.xml
