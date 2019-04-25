@@ -79,8 +79,10 @@ describe('Aurelia-Slickgrid Custom Component', () => {
   });
 
   it('should create a grid and a slickgrid container in the DOM', async () => {
-    await component.create(bootstrap);
-    const gridElement = document.querySelector('.gridPane');
+    await component.manuallyHandleLifecycle().create(bootstrap);
+    await component.bind();
+    await component.attached();
+    const gridElement = component.element.querySelector('.gridPane');
 
     expect(gridElement.innerHTML).toContain('grid1');
     expect(gridElement.id).toBe('slickGridContainer-grid1');

@@ -17,7 +17,8 @@ test
 yarn.lock
 yarn-error.log
 
-# Test Coverage
+# Tests & Coverage
+*.spec.ts
 coverage
 mochawesome-report
 test/coverage-jest

@@ -8,18 +8,23 @@ module.exports = {
   collectCoverage: false,
   collectCoverageFrom: [
     'src/**/*.ts',
+    '!dist/**',
     '!src/assets/**',
     '!**/node_modules/**',
     '!**/test/**',
+    '!src/examples/**',
     '!src/aurelia-slickgrid/models/**',
   ],
   coverageDirectory: '<rootDir>/test/coverage-jest',
   coveragePathIgnorePatterns: [
+    'app.ts',
+    'main.ts',
     'index.ts',
     'constants.ts',
     'environment.ts',
     'example-data.js',
-    'main.ts',
+    'global-grid-options.ts',
+    'slickgrid-config.ts',
     '\\.d\\.ts$',
     '<rootDir>/node_modules/'
   ],
@@ -40,6 +45,7 @@ module.exports = {
   ],
   preset: 'ts-jest',
   setupFiles: ['<rootDir>/test/jest-pretest.ts'],
+  setupFilesAfterEnv: ['<rootDir>/test/jest-global-mocks.ts'],
   transform: {
     '^.+\\.ts$': 'ts-jest',
   },
