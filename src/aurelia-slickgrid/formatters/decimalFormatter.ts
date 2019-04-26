@@ -1,4 +1,3 @@
-
 import { Column, Formatter } from './../models/index';
 import { decimalFormatted } from './../services/utilities';
 
