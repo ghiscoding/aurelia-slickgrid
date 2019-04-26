@@ -63,7 +63,7 @@
     "start": "nps",
     "start:dev": "nps",
     "e2e:ci": "nps e2e.ci",
-    "cypress:ci:mochawesome": "node test/cypress.js",
+    "cypress:ci:mochawesome": "node test/cypress-mochawesome.js",
     "cypress:ci:xml": "node node_modules/cypress/bin/cypress run --reporter xunit --reporter-options output=testresult.xml",
     "test:jest": "node_modules/.bin/jest"
   },

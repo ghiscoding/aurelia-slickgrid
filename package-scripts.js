@@ -35,7 +35,7 @@ module.exports = {
       }) + ' --kill-others --success first',
       cypress: {
         default: 'cypress open',
-        ci: `node test/cypress.js`,
+        ci: `node test/cypress-mochawesome.js`,
       },
       whenReady: {
         default: series(

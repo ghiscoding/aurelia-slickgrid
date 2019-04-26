@@ -3,6 +3,7 @@
 .vscode
 CONTRIBUTING.md
 cypress.json
+cypress-mochawesome.js
 doc
 src
 ISSUE_TEMPLATE.md
