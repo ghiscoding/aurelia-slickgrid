@@ -43,6 +43,9 @@ export class GridEventService {
       }
       const column = grid.getColumns()[args.cell];
 
+      // always make the cell active (in focus) when clicked
+      grid.setActiveCell(args.row, args.cell);
+
       // if the column definition has a onCellClick property (a callback function), then run it
       if (typeof column.onCellClick === 'function') {
         // add to the output gridOptions & dataView since we'll need them inside the AJAX column.onClick

@@ -264,11 +264,13 @@ export class SelectEditor implements Editor {
 
   destroy() {
     this._destroying = true;
-    if (this.$editorElm && this.$editorElm.multipleSelect) {
-      this.$editorElm.multipleSelect('close');
+    if (this.$editorElm && typeof this.$editorElm.multipleSelect === 'function') {
+      this.$editorElm.multipleSelect('destroy');
       this.$editorElm.remove();
       const elementClassName = this.elementName.toString().replace('.', '\\.'); // make sure to escape any dot "." from CSS class to avoid console error
       $(`[name=${elementClassName}].ms-drop`).remove();
+    } else if (this.$editorElm && typeof this.$editorElm.remove === 'function') {
+      this.$editorElm.remove();
     }
     this.subscriptions = disposeAllSubscriptions(this.subscriptions);
   }
@@ -499,7 +501,11 @@ export class SelectEditor implements Editor {
       const elementOptions = (this.columnEditor) ? this.columnEditor.elementOptions : {};
       this.editorElmOptions = { ...this.defaultOptions, ...elementOptions };
       this.$editorElm = this.$editorElm.multipleSelect(this.editorElmOptions);
-      setTimeout(() => this.$editorElm.multipleSelect('open'));
+      setTimeout(() => {
+        if (this.$editorElm && typeof this.$editorElm.multipleSelect === 'function') {
+          this.$editorElm.multipleSelect('open');
+        }
+      });
     }
   }
 
