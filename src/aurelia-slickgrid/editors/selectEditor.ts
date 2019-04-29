@@ -10,6 +10,7 @@ import {
   Editor,
   EditorValidator,
   EditorValidatorOutput,
+  FieldType,
   GridOption,
   MultipleSelectOption,
   SelectOption,
@@ -257,9 +258,23 @@ export class SelectEditor implements Editor {
 
   applyValue(item: any, state: any): void {
     const fieldName = this.columnDef && this.columnDef.field;
+    const fieldType = this.columnDef && this.columnDef.type;
+    let value = state;
+
+    // when the provided user defined the column field type as a possible number then try parsing the state value as that
+    if (fieldType === FieldType.number || fieldType === FieldType.integer || fieldType === FieldType.boolean) {
+      value = parseFloat(state);
+    }
+
+    // when set as a multiple selection, we can assume that the 3rd party lib multiple-select will return a CSV string
+    // we need to re-split that into an array to be the same as the original column
+    if (this.isMultipleSelect && typeof state === 'string' && state.indexOf(',') >= 0) {
+      value = state.split(',');
+    }
+
     // when it's a complex object, then pull the object name only, e.g.: "user.firstName" => "user"
     const fieldNameFromComplexObject = fieldName.indexOf('.') ? fieldName.substring(0, fieldName.indexOf('.')) : '';
-    item[fieldNameFromComplexObject || fieldName] = state;
+    item[fieldNameFromComplexObject || fieldName] = value;
   }
 
   destroy() {
@@ -296,19 +311,21 @@ export class SelectEditor implements Editor {
   loadMultipleValues(currentValues: any[]) {
     // convert to string because that is how the DOM will return these values
     if (Array.isArray(currentValues)) {
-      this.defaultValue = currentValues.map((i: any) => i.toString());
+      this.defaultValue = currentValues.map((i: any) => i);
+      const defaultStringValue = currentValues.map((i: any) => i.toString());
       this.$editorElm.find('option').each((i: number, $e: any) => {
-        $e.selected = (this.defaultValue.indexOf($e.value) !== -1);
+        $e.selected = (defaultStringValue.indexOf($e.value) !== -1);
       });
     }
   }
 
   loadSingleValue(currentValue: any) {
-    // convert to string because that is how the DOM will return these values
     // make sure the prop exists first
-    this.defaultValue = currentValue && currentValue.toString();
+    this.defaultValue = currentValue;
+
     this.$editorElm.find('option').each((i: number, $e: any) => {
-      $e.selected = (this.defaultValue === $e.value);
+      // check equality after converting defaultValue to string since the DOM value will always be of type string
+      $e.selected = (this.defaultValue.toString() === $e.value);
     });
   }
 
