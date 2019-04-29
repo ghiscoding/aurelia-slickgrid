@@ -311,21 +311,25 @@ export class SelectEditor implements Editor {
   loadMultipleValues(currentValues: any[]) {
     // convert to string because that is how the DOM will return these values
     if (Array.isArray(currentValues)) {
+      // keep the default values in memory for references
       this.defaultValue = currentValues.map((i: any) => i);
-      const defaultStringValue = currentValues.map((i: any) => i.toString());
+
+      // compare all the array values but as string type since multiple-select always return string
+      const currentStringValues = currentValues.map((i: any) => i.toString());
       this.$editorElm.find('option').each((i: number, $e: any) => {
-        $e.selected = (defaultStringValue.indexOf($e.value) !== -1);
+        $e.selected = (currentStringValues.indexOf($e.value) !== -1);
       });
     }
   }
 
   loadSingleValue(currentValue: any) {
-    // make sure the prop exists first
+    // keep the default value in memory for references
     this.defaultValue = currentValue;
 
+    // make sure the prop exists first
     this.$editorElm.find('option').each((i: number, $e: any) => {
       // check equality after converting defaultValue to string since the DOM value will always be of type string
-      $e.selected = (this.defaultValue.toString() === $e.value);
+      $e.selected = (currentValue.toString() === $e.value);
     });
   }
 
