@@ -274,7 +274,8 @@ export class SelectEditor implements Editor {
 
     // when it's a complex object, then pull the object name only, e.g.: "user.firstName" => "user"
     const fieldNameFromComplexObject = fieldName.indexOf('.') ? fieldName.substring(0, fieldName.indexOf('.')) : '';
-    item[fieldNameFromComplexObject || fieldName] = newValue;
+    const validation = this.validate(newValue);
+    item[fieldNameFromComplexObject || fieldName] = (validation && validation.valid) ? newValue : '';
   }
 
   destroy() {
@@ -350,13 +351,13 @@ export class SelectEditor implements Editor {
     return this.$editorElm.val() !== this.defaultValue;
   }
 
-  validate(): EditorValidatorOutput {
+  validate(inputValue?: any): EditorValidatorOutput {
     const isRequired = this.columnEditor.required;
-    const elmValue = this.$editorElm && this.$editorElm.val && this.$editorElm.val();
+    const elmValue = (inputValue !== undefined) ? inputValue : this.$editorElm && this.$editorElm.val && this.$editorElm.val();
     const errorMsg = this.columnEditor.errorMessage;
 
     if (this.validator) {
-      const value = this.isMultipleSelect ? this.currentValues : this.currentValue;
+      const value = (inputValue !== undefined) ? inputValue : (this.isMultipleSelect ? this.currentValues : this.currentValue);
       return this.validator(value, this.args);
     }
 

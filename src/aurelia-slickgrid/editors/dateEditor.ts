@@ -1,6 +1,6 @@
 import { Constants } from './../constants';
 import { mapFlatpickrDateFormatWithFieldType, mapMomentDateFormatWithFieldType } from './../services/utilities';
-import { Column, ColumnEditor, Editor, EditorValidator, EditorValidatorOutput, FieldType, KeyCode } from './../models/index';
+import { Column, ColumnEditor, Editor, EditorValidator, EditorValidatorOutput, FieldType, KeyCode, GridOption } from './../models/index';
 import { I18N } from 'aurelia-i18n';
 import { inject } from 'aurelia-framework';
 import * as flatpickr from 'flatpickr';
@@ -34,6 +34,11 @@ export class DateEditor implements Editor {
     return this.columnDef && this.columnDef.internalColumnEditor || {};
   }
 
+  /** Get Flatpickr options passed to the editor by the user */
+  get editorOptions(): any {
+    return this.columnEditor.editorOptions || {};
+  }
+
   /** Get the Validator function, can be passed in Editor property or Column Definition */
   get validator(): EditorValidator | undefined {
     return this.columnEditor.validator || this.columnDef.validator;
@@ -44,9 +49,10 @@ export class DateEditor implements Editor {
       const columnId = this.columnDef && this.columnDef.id;
       const placeholder = this.columnEditor && this.columnEditor.placeholder || '';
       const title = this.columnEditor && this.columnEditor.title || '';
+      const gridOptions = this.args.grid.getOptions() as GridOption;
       this.defaultDate = (this.args.item) ? this.args.item[this.args.column.field] : null;
-      const inputFormat = mapFlatpickrDateFormatWithFieldType(this.args.column.type || FieldType.dateIso);
-      const outputFormat = mapFlatpickrDateFormatWithFieldType(this.args.column.outputType || FieldType.dateUtc);
+      const inputFormat = mapFlatpickrDateFormatWithFieldType(this.columnDef.type || FieldType.dateIso);
+      const outputFormat = mapFlatpickrDateFormatWithFieldType(this.columnDef.outputType || FieldType.dateUtc);
       let currentLocale = this.i18n.getLocale() || 'en';
       if (currentLocale.length > 2) {
         currentLocale = currentLocale.substring(0, 2);
@@ -66,7 +72,7 @@ export class DateEditor implements Editor {
       };
 
       // merge options with optional user's custom options
-      const pickerMergedOptions = { ...pickerOptions, ...this.columnEditor.editorOptions };
+      const pickerMergedOptions = { ...pickerOptions, ...this.editorOptions };
       const inputCssClasses = `.editor-text.editor-${columnId}.flatpickr`;
 
       this.$input = $(`<input type="text" data-defaultDate="${this.defaultDate}" class="${inputCssClasses.replace(/\./g, ' ')}" placeholder="${placeholder}" title="${title}" />`);
@@ -97,10 +103,6 @@ export class DateEditor implements Editor {
     if (this._$inputWithData && typeof this._$inputWithData.remove === 'function') {
       this._$inputWithData.remove();
     }
-  }
-
-  getColumnEditor() {
-    return this.args && this.args.column && this.args.column.internalColumnEditor && this.args.column.internalColumnEditor;
   }
 
   show() {
@@ -167,21 +169,22 @@ export class DateEditor implements Editor {
 
     // when it's a complex object, then pull the object name only, e.g.: "user.firstName" => "user"
     const fieldNameFromComplexObject = fieldName.indexOf('.') ? fieldName.substring(0, fieldName.indexOf('.')) : '';
-    item[fieldNameFromComplexObject || fieldName] = state ? moment(state, outputFormat).toDate() : '';
+    const newValue = state ? moment(state, outputFormat).toDate() : '';
+    const validation = this.validate(newValue);
+    item[fieldNameFromComplexObject || fieldName] = (validation && validation.valid) ? newValue : '';
   }
 
   isValueChanged() {
     return (!(this.$input.val() === '' && this.defaultDate == null)) && (this.$input.val() !== this.defaultDate);
   }
 
-  validate(): EditorValidatorOutput {
+  validate(inputValue?: any): EditorValidatorOutput {
     const isRequired = this.columnEditor.required;
-    const elmValue = this.$input && this.$input.val && this.$input.val();
+    const elmValue = (inputValue !== undefined) ? inputValue : this.$input && this.$input.val && this.$input.val();
     const errorMsg = this.columnEditor.errorMessage;
 
     if (this.validator) {
-      const value = this.$input && this.$input.val && this.$input.val();
-      return this.validator(value, this.args);
+      return this.validator(elmValue, this.args);
     }
 
     // by default the editor is almost always valid (except when it's required but not provided)
