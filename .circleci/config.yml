@@ -1,0 +1,30 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/aurelia-slickgrid
+    docker:
+      - image: circleci/node:8-browsers
+    steps:
+      - checkout
+      - restore_cache:
+          key: AureliaCircleCI-{{ .Branch }}-{{ checksum "package.json" }}
+      - run: yarn install
+      - save_cache:
+          key: AureliaCircleCI-{{ .Branch }}-{{ checksum "package.json" }}
+          paths:
+            - "node_modules"
+      - run:
+          name: Install JUnit coverage reporter
+          command: yarn add --dev jest-junit
+      - run:
+          name: Run tests with JUnit as reporter
+          command: ./node_modules/.bin/jest --ci --runInBand --collectCoverage=true --reporters=default --reporters=jest-junit
+          environment:
+              JEST_JUNIT_OUTPUT: "reports/junit/js-test-results.xml"
+      - store_test_results:
+          path: reports/junit
+      - store_artifacts:
+          path: reports/junit
+      - run:
+          name: Upload coverage to Codecov
+          command: ./node_modules/.bin/codecov --token="${CODECOV_TOKEN}"
