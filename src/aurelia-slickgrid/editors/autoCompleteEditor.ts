@@ -9,6 +9,7 @@ import {
   CollectionCustomStructure,
   FieldType
 } from './../models/index';
+import { findOrDefault } from '../services/utilities';
 import * as $ from 'jquery';
 
 /*
@@ -166,10 +167,23 @@ export class AutoCompleteEditor implements Editor {
   }
 
   applyValue(item: any, state: any) {
+    let newValue = state;
     const fieldName = this.columnDef && this.columnDef.field;
+
+    // if we have a collection defined, we will try to find the string within the collection and return it
+    if (Array.isArray(this.collection) && this.collection.length > 0) {
+      newValue = findOrDefault(this.collection, (collectionItem: any) => {
+        if (collectionItem && collectionItem.hasOwnProperty(this.labelName)) {
+          return collectionItem[this.labelName].toString() === state;
+        }
+        return collectionItem.toString() === state;
+      });
+    }
+
     // when it's a complex object, then pull the object name only, e.g.: "user.firstName" => "user"
     const fieldNameFromComplexObject = fieldName.indexOf('.') ? fieldName.substring(0, fieldName.indexOf('.')) : '';
-    item[fieldNameFromComplexObject || fieldName] = state;
+    const validation = this.validate(newValue);
+    item[fieldNameFromComplexObject || fieldName] = (validation && validation.valid) ? newValue : '';
   }
 
   isValueChanged() {
@@ -180,9 +194,9 @@ export class AutoCompleteEditor implements Editor {
     return (!(this.$input.val() === '' && this._defaultTextValue === null)) && (this.$input.val() !== this._defaultTextValue);
   }
 
-  validate(): EditorValidatorOutput {
+  validate(inputValue?: any): EditorValidatorOutput {
     const isRequired = this.columnEditor.required;
-    const elmValue = this.$input && this.$input.val && this.$input.val();
+    const elmValue = (inputValue !== undefined) ? inputValue : this.$input && this.$input.val && this.$input.val();
     const errorMsg = this.columnEditor.errorMessage;
 
     if (this.validator) {

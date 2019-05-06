@@ -87,7 +87,8 @@ export class IntegerEditor implements Editor {
     const fieldName = this.columnDef && this.columnDef.field;
     // when it's a complex object, then pull the object name only, e.g.: "user.firstName" => "user"
     const fieldNameFromComplexObject = fieldName.indexOf('.') ? fieldName.substring(0, fieldName.indexOf('.')) : '';
-    item[fieldNameFromComplexObject || fieldName] = state;
+    const validation = this.validate(state);
+    item[fieldNameFromComplexObject || fieldName] = (validation && validation.valid) ? state : '';
   }
 
   isValueChanged() {
@@ -112,8 +113,8 @@ export class IntegerEditor implements Editor {
     }
   }
 
-  validate(): EditorValidatorOutput {
-    const elmValue = this.$input.val();
+  validate(inputValue?: any): EditorValidatorOutput {
+    const elmValue = (inputValue !== undefined) ? inputValue : this.$input && this.$input.val && this.$input.val();
     const intNumber = !isNaN(elmValue as number) ? parseInt(elmValue, 10) : null;
     const errorMsg = this.columnEditor.errorMessage;
     const isRequired = this.columnEditor.required;

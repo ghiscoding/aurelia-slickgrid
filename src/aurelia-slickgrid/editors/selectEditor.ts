@@ -10,6 +10,7 @@ import {
   Editor,
   EditorValidator,
   EditorValidatorOutput,
+  FieldType,
   GridOption,
   MultipleSelectOption,
   SelectOption,
@@ -257,18 +258,35 @@ export class SelectEditor implements Editor {
 
   applyValue(item: any, state: any): void {
     const fieldName = this.columnDef && this.columnDef.field;
+    const fieldType = this.columnDef && this.columnDef.type;
+    let newValue = state;
+
+    // when the provided user defined the column field type as a possible number then try parsing the state value as that
+    if (fieldType === FieldType.number || fieldType === FieldType.integer || fieldType === FieldType.boolean) {
+      newValue = parseFloat(state);
+    }
+
+    // when set as a multiple selection, we can assume that the 3rd party lib multiple-select will return a CSV string
+    // we need to re-split that into an array to be the same as the original column
+    if (this.isMultipleSelect && typeof state === 'string' && state.indexOf(',') >= 0) {
+      newValue = state.split(',');
+    }
+
     // when it's a complex object, then pull the object name only, e.g.: "user.firstName" => "user"
     const fieldNameFromComplexObject = fieldName.indexOf('.') ? fieldName.substring(0, fieldName.indexOf('.')) : '';
-    item[fieldNameFromComplexObject || fieldName] = state;
+    const validation = this.validate(newValue);
+    item[fieldNameFromComplexObject || fieldName] = (validation && validation.valid) ? newValue : '';
   }
 
   destroy() {
     this._destroying = true;
-    if (this.$editorElm && this.$editorElm.multipleSelect) {
-      this.$editorElm.multipleSelect('close');
+    if (this.$editorElm && typeof this.$editorElm.multipleSelect === 'function') {
+      this.$editorElm.multipleSelect('destroy');
       this.$editorElm.remove();
       const elementClassName = this.elementName.toString().replace('.', '\\.'); // make sure to escape any dot "." from CSS class to avoid console error
       $(`[name=${elementClassName}].ms-drop`).remove();
+    } else if (this.$editorElm && typeof this.$editorElm.remove === 'function') {
+      this.$editorElm.remove();
     }
     this.subscriptions = disposeAllSubscriptions(this.subscriptions);
   }
@@ -294,19 +312,25 @@ export class SelectEditor implements Editor {
   loadMultipleValues(currentValues: any[]) {
     // convert to string because that is how the DOM will return these values
     if (Array.isArray(currentValues)) {
-      this.defaultValue = currentValues.map((i: any) => i.toString());
+      // keep the default values in memory for references
+      this.defaultValue = currentValues.map((i: any) => i);
+
+      // compare all the array values but as string type since multiple-select always return string
+      const currentStringValues = currentValues.map((i: any) => i.toString());
       this.$editorElm.find('option').each((i: number, $e: any) => {
-        $e.selected = (this.defaultValue.indexOf($e.value) !== -1);
+        $e.selected = (currentStringValues.indexOf($e.value) !== -1);
       });
     }
   }
 
   loadSingleValue(currentValue: any) {
-    // convert to string because that is how the DOM will return these values
+    // keep the default value in memory for references
+    this.defaultValue = currentValue;
+
     // make sure the prop exists first
-    this.defaultValue = currentValue && currentValue.toString();
     this.$editorElm.find('option').each((i: number, $e: any) => {
-      $e.selected = (this.defaultValue === $e.value);
+      // check equality after converting defaultValue to string since the DOM value will always be of type string
+      $e.selected = (currentValue.toString() === $e.value);
     });
   }
 
@@ -327,13 +351,13 @@ export class SelectEditor implements Editor {
     return this.$editorElm.val() !== this.defaultValue;
   }
 
-  validate(): EditorValidatorOutput {
+  validate(inputValue?: any): EditorValidatorOutput {
     const isRequired = this.columnEditor.required;
-    const elmValue = this.$editorElm && this.$editorElm.val && this.$editorElm.val();
+    const elmValue = (inputValue !== undefined) ? inputValue : this.$editorElm && this.$editorElm.val && this.$editorElm.val();
     const errorMsg = this.columnEditor.errorMessage;
 
     if (this.validator) {
-      const value = this.isMultipleSelect ? this.currentValues : this.currentValue;
+      const value = (inputValue !== undefined) ? inputValue : (this.isMultipleSelect ? this.currentValues : this.currentValue);
       return this.validator(value, this.args);
     }
 
@@ -499,7 +523,11 @@ export class SelectEditor implements Editor {
       const elementOptions = (this.columnEditor) ? this.columnEditor.elementOptions : {};
       this.editorElmOptions = { ...this.defaultOptions, ...elementOptions };
       this.$editorElm = this.$editorElm.multipleSelect(this.editorElmOptions);
-      setTimeout(() => this.$editorElm.multipleSelect('open'));
+      setTimeout(() => {
+        if (this.$editorElm && typeof this.$editorElm.multipleSelect === 'function') {
+          this.$editorElm.multipleSelect('open');
+        }
+      });
     }
   }
 

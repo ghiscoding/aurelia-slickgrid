@@ -19,8 +19,9 @@ yarn.lock
 yarn-error.log
 
 # Tests & Coverage
+test/
 *.spec.ts
 coverage
+junit.xml
 mochawesome-report
-test/coverage-jest
 testresult.xml
