@@ -272,6 +272,7 @@ export class Example3 {
           // here we use $.ajax just because I'm not sure how to configure Aurelia HttpClient with JSONP and CORS
           editorOptions: {
             minLength: 3,
+            forceUserInput: true,
             source: (request, response) => {
               $.ajax({
                 url: 'http://gd.geobytes.com/AutoCompleteCity',

@@ -52,6 +52,10 @@ export class AutoCompleteEditor implements Editor {
     return this.columnEditor && this.columnEditor.customStructure;
   }
 
+  get editorOptions() {
+    return this.columnEditor && this.columnEditor.editorOptions || {};
+  }
+
   get hasAutoCommitEdit() {
     return this.args.grid.getOptions().autoCommitEdit;
   }
@@ -152,6 +156,9 @@ export class AutoCompleteEditor implements Editor {
 
   serializeValue() {
     // if user provided a custom structure, we will serialize the value returned from the object with custom structure
+    if (this.editorOptions.forceUserInput) {
+      this._currentValue = this.$input.val().length > 3 ? this.$input.val() : this._currentValue;
+    }
     if (this.customStructure && this._currentValue.hasOwnProperty(this.labelName)) {
       return this._currentValue[this.labelName];
     } else if (this._currentValue.label) {
