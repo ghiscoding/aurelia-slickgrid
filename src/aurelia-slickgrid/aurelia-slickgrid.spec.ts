@@ -1,8 +1,8 @@
 import { StageComponent } from 'aurelia-testing';
 import { bootstrap } from 'aurelia-bootstrapper';
 import { PLATFORM } from 'aurelia-pal';
+import { SlickgridConfig } from './slickgrid-config';
 
-// jest.mock('slickgrid/slick.grid', () => { });
 const eventAggregator = {
   publish: jest.fn(),
   subscribe: jest.fn()
@@ -14,24 +14,28 @@ jest.mock('aurelia-event-aggregator', () => ({
 
 const aureliaGridReady = jest.fn();
 
-xdescribe('Aurelia-Slickgrid Custom Component', () => {
+describe('Aurelia-Slickgrid Custom Component', () => {
   let component;
   const view = `<aurelia-slickgrid
-    grid-id.bind="gridId"
-    column-definitions: columnDefinitions
-    dataset.bind="dataset"
+    grid-id="grid1"
+    column-definitions.bind="columnDefinitions"
     grid-options.bind="gridOptions"
-    asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
+    dataset.bind="dataset">
   </aurelia-slickgrid>`;
 
   beforeEach(() => {
     component = StageComponent
-      .withResources(PLATFORM.moduleName('./aurelia-slickgrid'))
+      .withResources([
+        PLATFORM.moduleName('./aurelia-slickgrid'),
+        PLATFORM.moduleName('./slick-pagination'),
+        PLATFORM.moduleName('./value-converters/asgNumber')
+      ])
       .inView(view)
       .boundTo({ gridId: 'grid1', columnDefinitions: [], dataset: [], gridOptions: {}, aureliaGridReady });
 
-    component.bootstrap((aurelia) => {
+    component.bootstrap((aurelia, callback) => {
       aurelia.use.standardConfiguration();
+      // aurelia.container.registerInstance(SlickgridConfig, new SlickgridConfig());
     });
   });
 
