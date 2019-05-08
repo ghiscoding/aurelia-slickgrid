@@ -597,7 +597,7 @@ export class AureliaSlickgridCustomElement {
       this.resizerService.init(grid);
     }
     if (grid && options && options.enableAutoResize) {
-      this.resizerService.attachAutoResizeDataGrid();
+      this.resizerService.bindAutoResizeDataGrid();
       if (options.autoFitColumnsOnFirstLoad && options.enableAutoSizeColumns && typeof grid.autosizeColumns === 'function') {
         grid.autosizeColumns();
       }

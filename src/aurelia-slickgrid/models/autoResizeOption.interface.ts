@@ -2,6 +2,9 @@ export interface AutoResizeOption {
   /** bottom padding of the grid in pixels */
   bottomPadding?: number;
 
+  /** Defaults to 'window', which DOM element are we using to calculate the available size for the grid? */
+  calculateAvailableSizeBy?: 'container' | 'window';
+
   /** container id */
   containerId?: string;
 
