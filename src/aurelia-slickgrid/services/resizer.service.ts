@@ -184,15 +184,17 @@ export class ResizerService {
 
       if (delay > 0) {
         clearTimeout(this._timer);
-        this._timer = setTimeout(() => {
-          resolve(this.resizeGridWithDimensions(newSizes));
-        }, delay);
+        this._timer = setTimeout(() => resolve(this.resizeGridCallback(newSizes)), delay);
       } else {
-        const lastDimensions = this.resizeGridWithDimensions(newSizes);
-        this.ea.publish(`${this.aureliaEventPrefix}:onAfterResize`, lastDimensions);
-        resolve(lastDimensions);
+        resolve(this.resizeGridCallback(newSizes));
       }
     });
+  }
+
+  resizeGridCallback(newSizes: GridDimension) {
+    const lastDimensions = this.resizeGridWithDimensions(newSizes);
+    this.ea.publish(`${this.aureliaEventPrefix}:onAfterResize`, lastDimensions);
+    return lastDimensions;
   }
 
   resizeGridWithDimensions(newSizes?: GridDimension): GridDimension {
