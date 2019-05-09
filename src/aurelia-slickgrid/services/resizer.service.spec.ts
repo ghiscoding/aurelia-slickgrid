@@ -7,11 +7,13 @@ const DATAGRID_MIN_HEIGHT = 180;
 const DATAGRID_MIN_WIDTH = 300;
 const DATAGRID_BOTTOM_PADDING = 20;
 const DATAGRID_PAGINATION_HEIGHT = 35;
+const aureliaEventPrefix = 'asg';
 const gridId = 'grid1';
 const gridUid = 'slickgrid_124343';
 const containerId = 'demo-container';
 
 const gridOptionMock = {
+  defaultAureliaEventPrefix: aureliaEventPrefix,
   gridId,
   gridContainerId: `slickGridContainer-${gridId}`,
   autoResize: { containerId },
@@ -40,13 +42,14 @@ const template =
 
 describe('Resizer Service', () => {
   let service: ResizerService;
+  let ea = new EventAggregator();
 
   beforeEach(() => {
     const div = document.createElement('div');
     div.innerHTML = template;
     document.body.appendChild(div);
 
-    service = new ResizerService(new EventAggregator());
+    service = new ResizerService(ea);
     service.init(gridStub);
   });
 
@@ -74,6 +77,7 @@ describe('Resizer Service', () => {
     // arrange
     const newHeight = 500;
     const previousHeight = window.innerHeight;
+    const eaSpy = jest.spyOn(ea, 'publish');
     const gridSpy = jest.spyOn(gridStub, 'getOptions');
     const serviceCalculateSpy = jest.spyOn(service, 'calculateGridNewDimensions');
     const serviceResizeSpy = jest.spyOn(service, 'resizeGrid');
@@ -95,7 +99,9 @@ describe('Resizer Service', () => {
     expect(window.innerHeight).not.toEqual(previousHeight);
     expect(serviceCalculateSpy).toReturnWith(dimensionResult);
     expect(lastDimensions).toEqual(dimensionResult);
-    // service.onGridBeforeResize.subscribe((result) => expect(result).toBe(true));
+    expect(eaSpy).toHaveBeenCalledTimes(2);
+    expect(eaSpy).toHaveBeenNthCalledWith(1, `${aureliaEventPrefix}:onBeforeResize`, true);
+    expect(eaSpy).toHaveBeenNthCalledWith(2, `${aureliaEventPrefix}:onAfterResize`, dimensionResult);
   });
 
   it('should resize grid to a defined height and width when fixed dimensions are provided to the init method', () => {
