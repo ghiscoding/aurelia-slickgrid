@@ -35,7 +35,7 @@ export class ResizerService {
 
   /** Getter for retrieving the Grid UID that is used when dealing with multiple grids in same view. */
   private get _gridUid(): string {
-    return (this._grid && this._grid.getUID) ? this._grid.getUID() : this._gridOptions.gridId;
+    return (this._grid && this._grid.getUID) ? this._grid.getUID() : this._gridOptions && this._gridOptions.gridId;
   }
 
   init(grid: any, fixedDimensions?: GridDimension): void {
@@ -78,8 +78,7 @@ export class ResizerService {
     const gridDomElm = $(`#${gridOptions.gridId}`);
     const autoResizeOptions = gridOptions && gridOptions.autoResize || {};
     const containerElm = (autoResizeOptions && autoResizeOptions.containerId) ? $(`#${autoResizeOptions.containerId}`) : $(`#${gridOptions.gridContainerId}`);
-    const windowElm = $(window);
-    if (windowElm === undefined || containerElm === undefined || gridDomElm === undefined || gridOptions === undefined) {
+    if (!window || containerElm === undefined || gridDomElm === undefined) {
       return null;
     }
 
@@ -99,7 +98,7 @@ export class ResizerService {
       gridHeight = containerElm.height() || 0;
     } else {
       // uses the browser's window height with its top offset to calculate grid height
-      gridHeight = windowElm.height() || 0;
+      gridHeight = window.innerHeight || 0;
       const coordOffsetTop = gridDomElm.offset();
       gridOffsetTop = (coordOffsetTop !== undefined) ? coordOffsetTop.top : 0;
     }
@@ -227,7 +226,7 @@ export class ResizerService {
       // also call the grid auto-size columns so that it takes available when going bigger
       if (this._gridOptions && this._gridOptions.enableAutoSizeColumns && typeof this._grid.autosizeColumns) {
         // make sure that the grid still exist (by looking if the Grid UID is found in the DOM tree) to avoid SlickGrid error "missing stylesheet"
-        if (this._gridUid && $(`.${this._gridUid}`).length > 0) {
+        if (this._gridUid && $(`.slickgrid_${this._gridUid}`).length > 0) {
           this._grid.autosizeColumns();
         }
         // compensate anytime SlickGrid measureScrollbar is incorrect
