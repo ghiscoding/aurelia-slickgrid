@@ -103,7 +103,7 @@ export class ExtensionService {
 
   /**
    * Get the instance of the SlickGrid addon (control or plugin).
-   * This is the raw addon coming directly from SlickGrid itself, not to confuse with Angular-Slickgrid extension
+   * This is the raw addon coming directly from SlickGrid itself, not to confuse with Aurelia-Slickgrid extension
    *  @param name
    */
   getSlickgridAddonInstance(name: ExtensionName): any {
