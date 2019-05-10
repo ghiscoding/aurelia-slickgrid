@@ -18,8 +18,8 @@ Thanks for filing an issue! However, before you submit, please read the followin
 <!--- Include as many relevant details as possible about the environment you experienced the bug in -->
 | Software          | Version(s) |
 | ----------------- | ---------- |
-| Angular           |
-| Angular-Slickgrid |
+| Aurelia           |
+| Aurelia-Slickgrid |
 | TypeScript        |
 | Operating System  |
 | NPM/Node/Yarn     |
