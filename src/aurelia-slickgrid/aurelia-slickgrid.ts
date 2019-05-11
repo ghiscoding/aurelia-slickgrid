@@ -482,7 +482,7 @@ export class AureliaSlickgridCustomElement {
 
       // without this, filtering data with local dataset will not always show correctly
       // also don't use "invalidateRows" since it destroys the entire row and as bad user experience when updating a row
-      // see commit: https://github.com/ghiscoding/Angular-Slickgrid/commit/bb62c0aa2314a5d61188ff005ccb564577f08805
+      // see commit: https://github.com/ghiscoding/aurelia-slickgrid/commit/8c503a4d45fba11cbd8d8cc467fae8d177cc4f60
       if (gridOptions && gridOptions.enableFiltering && !gridOptions.enableRowDetailView) {
         this._eventHandler.subscribe(dataView.onRowsChanged, (e: any, args: any) => {
           if (args && args.rows && Array.isArray(args.rows)) {
@@ -597,7 +597,7 @@ export class AureliaSlickgridCustomElement {
       this.resizerService.init(grid);
     }
     if (grid && options && options.enableAutoResize) {
-      this.resizerService.attachAutoResizeDataGrid();
+      this.resizerService.bindAutoResizeDataGrid();
       if (options.autoFitColumnsOnFirstLoad && options.enableAutoSizeColumns && typeof grid.autosizeColumns === 'function') {
         grid.autosizeColumns();
       }
