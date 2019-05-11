@@ -225,6 +225,7 @@ export class SelectFilter implements Filter {
     if (this.columnFilter && this.columnFilter.collectionFilterBy) {
       const filterBy = this.columnFilter.collectionFilterBy;
       const filterCollectionBy = this.columnFilter.collectionOptions && this.columnFilter.collectionOptions.filterResultAfterEachPass || null;
+      console.log(outputCollection, filterBy, filterCollectionBy)
       outputCollection = this.collectionService.filterCollection(outputCollection, filterBy, filterCollectionBy);
     }
 
