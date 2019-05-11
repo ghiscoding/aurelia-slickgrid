@@ -1,3 +1,4 @@
+import { FrameworkConfiguration } from 'aurelia-framework';
 import { PLATFORM } from 'aurelia-pal';
 import { AureliaSlickgridCustomElement } from './aurelia-slickgrid';
 import { SlickPaginationCustomElement } from './slick-pagination';
@@ -17,7 +18,7 @@ export * from './filter-conditions/index';
 export * from './filters/index';
 export * from './services/index';
 
-export function configure(aurelia: any, callback: any) {
+export function configure(aurelia: FrameworkConfiguration, callback: (instance: SlickgridConfig) => void) {
   aurelia.globalResources(PLATFORM.moduleName('./aurelia-slickgrid'));
   aurelia.globalResources(PLATFORM.moduleName('./slick-pagination'));
   aurelia.globalResources(PLATFORM.moduleName('./value-converters/asgNumber'));
