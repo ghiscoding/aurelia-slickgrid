@@ -69,11 +69,12 @@ export const Formatters = {
   complexObject: complexObjectFormatter,
 
   /**
-   * Looks up values from the columnDefinition.params.collection property and displays the label in CSV or string format
+   * Roughly the same as the "collectionFormatter" except that it
+   * looks up values from the columnDefinition.editor.collection (instead of params) property and displays the label in CSV or string format
    * @example
    * // the grid will display 'foo' and 'bar' and not 1 and 2 from your dataset
-   * { params: { collection: [{ value: 1, label: 'foo'}, {value: 2, label: 'bar' }] }}
-   * const dataset = [{ value: 1 },{ value: 2 }];
+   * { editor: { collection: [{ value: 1, label: 'foo'}, {value: 2, label: 'bar' }] }}
+   * const dataset = [1, 2];
    */
   collection: collectionFormatter,
 
@@ -82,7 +83,7 @@ export const Formatters = {
    * @example
    * // the grid will display 'foo' and 'bar' and not 1 and 2 from your dataset
    * { params: { collection: [{ value: 1, label: 'foo'}, {value: 2, label: 'bar' }] }}
-   * const dataset = [{ value: 1 },{ value: 2 }];
+   * const dataset = [1, 2];
    */
   collectionEditor: collectionEditorFormatter,
 
