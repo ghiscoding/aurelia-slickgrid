@@ -4,6 +4,7 @@
 [![npm version](https://badge.fury.io/js/aurelia-slickgrid.svg)](https://badge.fury.io/js/aurelia-slickgrid)
 [![NPM downloads](https://img.shields.io/npm/dt/aurelia-slickgrid.svg)](https://npmjs.org/package/aurelia-slickgrid)
 [![CircleCI](https://circleci.com/gh/ghiscoding/aurelia-slickgrid/tree/master.svg?style=shield)](https://circleci.com/gh/ghiscoding/workflows/aurelia-slickgrid/tree/master)
+[![codecov](https://codecov.io/gh/ghiscoding/aurelia-slickgrid/branch/master/graph/badge.svg)](https://codecov.io/gh/ghiscoding/aurelia-slickgrid)
 
 One of the best javascript datagrid [SlickGrid](https://github.com/mleibman/SlickGrid) which was originally developed by @mleibman is now available to Aurelia. I have tried and used a few datagrids and SlickGrid beats most of them in terms of functionalities and performance (it can easily deal with even a million row). We will be using [6pac SlickGrid fork](https://github.com/6pac/SlickGrid/), this the most active fork since the original @mleibman fork was closed some time ago by his author personal reasons. Also worth to know, I also contributed a lot to that fork to benefit Aurelia-Slickgrid.
 
