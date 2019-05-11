@@ -16,10 +16,7 @@ module.exports = {
   ],
   coverageDirectory: '<rootDir>/test/coverage-jest',
   coveragePathIgnorePatterns: [
-    'app.ts',
-    'main.ts',
     'example-data.js',
-    'slickgrid-config.ts',
     '\\.d\\.ts$',
     '<rootDir>/node_modules/'
   ],
