@@ -53,8 +53,8 @@ export class CollectionService {
   singleFilterCollection(collection: any[], filterBy: CollectionFilterBy): any[] {
     let filteredCollection: any[] = [];
 
-    if (filterBy) {
-      const property = filterBy.property || '';
+    if (filterBy && filterBy.property) {
+      const property = filterBy.property;
       const operator = filterBy.operator || OperatorType.equal;
       // just check for undefined since the filter value could be null, 0, '', false etc
       const value = typeof filterBy.value === 'undefined' ? '' : filterBy.value;
@@ -74,7 +74,6 @@ export class CollectionService {
           filteredCollection = collection.filter((item) => item[property] !== value);
       }
     }
-
     return filteredCollection;
   }
 
@@ -95,9 +94,9 @@ export class CollectionService {
           for (let i = 0, l = sortByOptions.length; i < l; i++) {
             const sortBy = sortByOptions[i];
 
-            if (sortBy) {
+            if (sortBy && sortBy.property) {
               const sortDirection = sortBy.sortDesc ? SortDirectionNumber.desc : SortDirectionNumber.asc;
-              const propertyName = sortBy.property || '';
+              const propertyName = sortBy.property;
               const fieldType = sortBy.fieldType || FieldType.string;
               const value1 = (enableTranslateLabel) ? this.i18n.tr(dataRow1[propertyName] || ' ') : dataRow1[propertyName];
               const value2 = (enableTranslateLabel) ? this.i18n.tr(dataRow2[propertyName] || ' ') : dataRow2[propertyName];
@@ -110,9 +109,9 @@ export class CollectionService {
           }
           return SortDirectionNumber.neutral;
         });
-      } else {
+      } else if (sortByOptions && sortByOptions.property) {
         // single sort
-        const propertyName = sortByOptions.property || '';
+        const propertyName = sortByOptions.property;
         const sortDirection = sortByOptions.sortDesc ? SortDirectionNumber.desc : SortDirectionNumber.asc;
         const fieldType = sortByOptions.fieldType || FieldType.string;
 
@@ -127,7 +126,6 @@ export class CollectionService {
         });
       }
     }
-
     return sortedCollection;
   }
 }

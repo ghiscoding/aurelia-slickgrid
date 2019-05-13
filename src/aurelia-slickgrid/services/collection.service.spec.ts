@@ -2,7 +2,14 @@ import { I18N } from 'aurelia-i18n';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { BindingSignaler } from 'aurelia-templating-resources';
 import { CollectionService } from './collection.service';
-import { CollectionFilterBy } from '../models/collectionFilterBy.interface';
+import {
+  CollectionFilterBy,
+  CollectionSortBy,
+  FilterMultiplePassType,
+  OperatorType,
+  Column,
+  FieldType,
+} from './../models/index';
 
 describe('CollectionService', () => {
   let collection = [];
@@ -17,7 +24,27 @@ describe('CollectionService', () => {
   beforeEach(() => {
     i18n = new I18N(new EventAggregator(), new BindingSignaler());
     i18n.setup({
-      resources: { en: { translation: { HELLO: 'Hello' } }, fr: { translation: { HELLO: 'Bonjour' } } },
+      resources: {
+        en: {
+          translation: {
+            SALES_REP: 'Sales Rep.',
+            FINANCE_MANAGER: 'Finance Manager',
+            HUMAN_RESOURCES: 'Human Resources',
+            IT_ADMIN: 'IT Admin',
+            DEVELOPER: 'Developer',
+          }
+        },
+        fr: {
+          translation:
+          {
+            SALES_REP: 'Représentant des ventes',
+            FINANCE_MANAGER: 'Responsable des finances',
+            HUMAN_RESOURCES: 'Ressources humaines',
+            IT_ADMIN: 'Administrateur IT',
+            DEVELOPER: 'Développeur',
+          }
+        }
+      },
       lng: '0',
       fallbackLng: 'en',
       debug: false
@@ -25,12 +52,15 @@ describe('CollectionService', () => {
     service = new CollectionService(i18n);
 
     collection = [
-      { firstName: 'John', lastName: 'Z' },
-      { firstName: 'Jane', lastName: 'Doe' },
-      { firstName: 'Ava', lastName: null },
-      { firstName: '', lastName: 'Cash' },
-      { firstName: 'Bob', lastName: 'Cash' },
-      { firstName: 'John', lastName: 'Doe' },
+      { firstName: 'John', lastName: 'Z', position: 'SALES_REP' },
+      { firstName: 'Jane', lastName: 'Doe', position: 'FINANCE_MANAGER' },
+      { firstName: 'Ava Luna', lastName: null, position: 'HUMAN_RESOURCES' },
+      { firstName: '', lastName: 'Cash', position: 'SALES_REP' },
+      { firstName: 'Bob', lastName: 'Cash', position: 'SALES_REP' },
+      { firstName: 'John', lastName: 'Doe', position: null },
+      { firstName: 'John', lastName: 'Zachary', position: 'SALES_REP' },
+      { firstName: 'John', lastName: 'Doe', position: 'DEVELOPER' },
+      { firstName: 'John Foo', lastName: 'Bar', position: 'SALES_REP' },
     ];
   });
 
@@ -42,31 +72,157 @@ describe('CollectionService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should return array without filtered value', () => {
+  it('should return an array without certain filtered values', () => {
     const filterBy = { property: 'firstName', operator: 'NE', value: 'John' } as CollectionFilterBy;
 
     const result = service.filterCollection(collection, filterBy);
 
     expect(result).toEqual([
-      { firstName: 'Jane', lastName: 'Doe' },
-      { firstName: 'Ava', lastName: null },
-      { firstName: '', lastName: 'Cash' },
-      { firstName: 'Bob', lastName: 'Cash' },
+      { firstName: 'Jane', lastName: 'Doe', position: 'FINANCE_MANAGER' },
+      { firstName: 'Ava Luna', lastName: null, position: 'HUMAN_RESOURCES' },
+      { firstName: '', lastName: 'Cash', position: 'SALES_REP' },
+      { firstName: 'Bob', lastName: 'Cash', position: 'SALES_REP' },
+      { firstName: 'John Foo', lastName: 'Bar', position: 'SALES_REP' },
     ]);
   });
 
-  it('should return array without filtered values', () => {
+  it('should return an array without certain filtered valuess in a "chain" way', () => {
     const filterBy = [
       { property: 'firstName', operator: 'NE', value: 'John' },
       { property: 'lastName', operator: 'NE', value: 'Doe' }
     ] as CollectionFilterBy[];
 
-    const result = service.filterCollection(collection, filterBy);
+    const result1 = service.filterCollection(collection, filterBy);
+    const result2 = service.filterCollection(collection, filterBy, 'chain'); // chain is default
+
+    expect(result1).toEqual([
+      { firstName: 'Ava Luna', lastName: null, position: 'HUMAN_RESOURCES' },
+      { firstName: '', lastName: 'Cash', position: 'SALES_REP' },
+      { firstName: 'Bob', lastName: 'Cash', position: 'SALES_REP' },
+      { firstName: 'John Foo', lastName: 'Bar', position: 'SALES_REP' },
+    ]);
+    expect(result1).toEqual(result2);
+  });
+
+  it('should return an array with merged output of filtered values', () => {
+    const filterBy = [
+      { property: 'firstName', operator: OperatorType.equal, value: 'John' },
+      { property: 'lastName', value: 'Doe' } // ommitted operator are Equal by default
+    ] as CollectionFilterBy[];
+
+    const result = service.filterCollection(collection, filterBy, FilterMultiplePassType.merge);
 
     expect(result).toEqual([
-      { firstName: 'Ava', lastName: null },
-      { firstName: '', lastName: 'Cash' },
-      { firstName: 'Bob', lastName: 'Cash' },
+      // the array will have all "John" 1st, then all "Doe"
+      { firstName: 'John', lastName: 'Z', position: 'SALES_REP' },
+      { firstName: 'John', lastName: 'Doe', position: null },
+      { firstName: 'John', lastName: 'Zachary', position: 'SALES_REP' },
+      { firstName: 'John', lastName: 'Doe', position: 'DEVELOPER' },
+      { firstName: 'Jane', lastName: 'Doe', position: 'FINANCE_MANAGER' },
+    ]);
+  });
+
+  it('should return an array by using the "contains" filter type', () => {
+    const filterBy = { property: 'firstName', operator: OperatorType.contains, value: 'Foo' } as CollectionFilterBy;
+
+    const result = service.singleFilterCollection(collection, filterBy);
+
+    expect(result).toEqual([{ firstName: 'John Foo', lastName: 'Bar', position: 'SALES_REP' }]);
+  });
+
+  it('should return an array by using the "notContains" filter type', () => {
+    const filterBy = { property: 'firstName', operator: OperatorType.notContains, value: 'John' } as CollectionFilterBy;
+
+    const result = service.singleFilterCollection(collection, filterBy);
+
+    expect(result).toEqual([
+      { firstName: 'Jane', lastName: 'Doe', position: 'FINANCE_MANAGER' },
+      { firstName: 'Ava Luna', lastName: null, position: 'HUMAN_RESOURCES' },
+      { firstName: '', lastName: 'Cash', position: 'SALES_REP' },
+      { firstName: 'Bob', lastName: 'Cash', position: 'SALES_REP' },
+    ]);
+  });
+
+  it('should return a collection sorted by a "dataKey"', () => {
+    const columnDef = { id: 'users', field: 'users', dataKey: 'lastName' } as Column;
+
+    const result = service.sortCollection(columnDef, collection, { property: 'lastName', sortDesc: true, fieldType: FieldType.string });
+
+    expect(result).toEqual([
+      { firstName: 'John', lastName: 'Zachary', position: 'SALES_REP' },
+      { firstName: 'John', lastName: 'Z', position: 'SALES_REP' },
+      { firstName: 'Jane', lastName: 'Doe', position: 'FINANCE_MANAGER' },
+      { firstName: 'John', lastName: 'Doe', position: null },
+      { firstName: 'John', lastName: 'Doe', position: 'DEVELOPER' },
+      { firstName: '', lastName: 'Cash', position: 'SALES_REP' },
+      { firstName: 'Bob', lastName: 'Cash', position: 'SALES_REP' },
+      { firstName: 'John Foo', lastName: 'Bar', position: 'SALES_REP' },
+      { firstName: 'Ava Luna', lastName: null, position: 'HUMAN_RESOURCES' },
+    ]);
+  });
+
+  it('should return a collection sorted by multiple sortBy entities', () => {
+    const columnDef = { id: 'users', field: 'users', dataKey: 'lastName' } as Column;
+    const sortBy = [
+      { property: 'firstName', sortDesc: false, fieldType: FieldType.string },
+      { property: 'lastName', sortDesc: true, fieldType: FieldType.string },
+    ] as CollectionSortBy[];
+
+    const result = service.sortCollection(columnDef, collection, sortBy);
+
+    expect(result).toEqual([
+      { firstName: '', lastName: 'Cash', position: 'SALES_REP' },
+      { firstName: 'Ava Luna', lastName: null, position: 'HUMAN_RESOURCES' },
+      { firstName: 'Bob', lastName: 'Cash', position: 'SALES_REP' },
+      { firstName: 'Jane', lastName: 'Doe', position: 'FINANCE_MANAGER' },
+      { firstName: 'John', lastName: 'Zachary', position: 'SALES_REP' },
+      { firstName: 'John', lastName: 'Z', position: 'SALES_REP' },
+      { firstName: 'John', lastName: 'Doe', position: null },
+      { firstName: 'John', lastName: 'Doe', position: 'DEVELOPER' },
+      { firstName: 'John Foo', lastName: 'Bar', position: 'SALES_REP' },
+    ]);
+  });
+
+  it('should return a collection sorted by multiple sortBy entities and their translated value', () => {
+    i18n.setLocale('fr');
+    const columnDef = { id: 'users', field: 'users', dataKey: 'lastName' } as Column;
+    const sortBy = [
+      { property: 'firstName', sortDesc: false, fieldType: FieldType.string },
+      { property: 'position', sortDesc: true }, // fieldType is string by default
+    ] as CollectionSortBy[];
+
+    const result = service.sortCollection(columnDef, collection, sortBy, true);
+
+    expect(result).toEqual([
+      { firstName: '', lastName: 'Cash', position: 'SALES_REP' },
+      { firstName: 'Ava Luna', lastName: null, position: 'HUMAN_RESOURCES' },
+      { firstName: 'Bob', lastName: 'Cash', position: 'SALES_REP' },
+      { firstName: 'Jane', lastName: 'Doe', position: 'FINANCE_MANAGER' },
+      { firstName: 'John', lastName: 'Z', position: 'SALES_REP' },
+      { firstName: 'John', lastName: 'Zachary', position: 'SALES_REP' },
+      { firstName: 'John', lastName: 'Doe', position: 'DEVELOPER' },
+      { firstName: 'John', lastName: 'Doe', position: null },
+      { firstName: 'John Foo', lastName: 'Bar', position: 'SALES_REP' },
+    ]);
+  });
+
+  it('should return a collection sorted by a single sortBy entity and their translated value', () => {
+    i18n.setLocale('en');
+    const columnDef = { id: 'users', field: 'users', dataKey: 'lastName' } as Column;
+    const sortBy = { property: 'position', sortDesc: false } as CollectionSortBy; // fieldType is string by default
+
+    const result = service.sortCollection(columnDef, collection, sortBy, true);
+
+    expect(result).toEqual([
+      { firstName: 'John', lastName: 'Doe', position: null },
+      { firstName: 'John', lastName: 'Doe', position: 'DEVELOPER' },
+      { firstName: 'Jane', lastName: 'Doe', position: 'FINANCE_MANAGER' },
+      { firstName: 'Ava Luna', lastName: null, position: 'HUMAN_RESOURCES' },
+      { firstName: 'John', lastName: 'Z', position: 'SALES_REP' },
+      { firstName: '', lastName: 'Cash', position: 'SALES_REP' },
+      { firstName: 'Bob', lastName: 'Cash', position: 'SALES_REP' },
+      { firstName: 'John', lastName: 'Zachary', position: 'SALES_REP' },
+      { firstName: 'John Foo', lastName: 'Bar', position: 'SALES_REP' },
     ]);
   });
 });
