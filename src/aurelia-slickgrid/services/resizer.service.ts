@@ -191,7 +191,7 @@ export class ResizerService {
     });
   }
 
-  resizeGridCallback(newSizes: GridDimension) {
+  resizeGridCallback(newSizes: GridDimension | undefined) {
     const lastDimensions = this.resizeGridWithDimensions(newSizes);
     this.ea.publish(`${this.aureliaEventPrefix}:onAfterResize`, lastDimensions);
     return lastDimensions;
