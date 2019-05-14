@@ -1,4 +1,6 @@
-version: 2
+version: 2.1
+orbs:
+  codecov: codecov/codecov@1.0.4
 jobs:
   build:
     working_directory: ~/aurelia-slickgrid
@@ -25,6 +27,5 @@ jobs:
           path: reports/junit
       - store_artifacts:
           path: reports/junit
-      - run:
-          name: Upload coverage to Codecov
-          command: ./node_modules/.bin/codecov --token="${CODECOV_TOKEN}"
+      - codecov/upload:
+        file: ./test/coverage-jest/lcov.info
