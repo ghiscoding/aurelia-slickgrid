@@ -76,6 +76,34 @@ export function decimalFormatted(input: number | string, minDecimal?: number, ma
   return amount;
 }
 
+export function formatNumber(input: number | string, minDecimal?: number, maxDecimal?: number, displayNegativeWithParentheses?: boolean, symbolPrefix = '', symbolSuffix = '') {
+  if (isNaN(+input)) {
+    return input;
+  }
+
+  const calculatedValue = ((Math.round(parseFloat(input as string) * 1000000) / 1000000));
+
+  if (calculatedValue < 0) {
+    const absValue = Math.abs(calculatedValue);
+    if (displayNegativeWithParentheses) {
+      if (!isNaN(minDecimal) || !isNaN(maxDecimal)) {
+        return `(${symbolPrefix}${decimalFormatted(absValue, minDecimal, maxDecimal)})${symbolSuffix}`;
+      }
+      return `(${symbolPrefix}${absValue})${symbolSuffix}`;
+    } else {
+      if (!isNaN(minDecimal) || !isNaN(maxDecimal)) {
+        return `-${symbolPrefix}${decimalFormatted(absValue, minDecimal, maxDecimal)}${symbolSuffix}`;
+      }
+      return `-${symbolPrefix}${absValue}${symbolSuffix}`;
+    }
+  } else {
+    if (!isNaN(minDecimal) || !isNaN(maxDecimal)) {
+      return `${symbolPrefix}${decimalFormatted(input, minDecimal, maxDecimal)}${symbolSuffix}`;
+    }
+    return `${symbolPrefix}${input}${symbolSuffix}`;
+  }
+}
+
 /**
  * Loop through and dispose of all subscriptions when they are disposable
  * @param subscriptions
