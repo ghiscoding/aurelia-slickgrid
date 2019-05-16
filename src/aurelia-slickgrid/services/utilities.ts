@@ -67,7 +67,7 @@ export function decimalFormatted(input: number | string, minDecimal?: number, ma
   const maxDec = (maxDecimal === undefined) ? 2 : maxDecimal;
   let amount = String(Math.round(+input * Math.pow(10, maxDec)) / Math.pow(10, maxDec));
 
-  if (amount.indexOf('.') < 0) {
+  if ((amount.indexOf('.') < 0) && (minDec > 0)) {
     amount += '.';
   }
   while ((amount.length - amount.indexOf('.')) <= minDec) {
@@ -76,20 +76,20 @@ export function decimalFormatted(input: number | string, minDecimal?: number, ma
   return amount;
 }
 
-export function formatNumber(input: number | string, minDecimal?: number, maxDecimal?: number, displayNegativeWithParentheses?: boolean, symbolPrefix = '', symbolSuffix = '') {
+export function formatNumber(input: number | string, minDecimal?: number, maxDecimal?: number, displayNegativeNumberWithParentheses?: boolean, symbolPrefix = '', symbolSuffix = ''): string {
   if (isNaN(+input)) {
-    return input;
+    return input as string;
   }
 
   const calculatedValue = ((Math.round(parseFloat(input as string) * 1000000) / 1000000));
 
   if (calculatedValue < 0) {
     const absValue = Math.abs(calculatedValue);
-    if (displayNegativeWithParentheses) {
+    if (displayNegativeNumberWithParentheses) {
       if (!isNaN(minDecimal) || !isNaN(maxDecimal)) {
-        return `(${symbolPrefix}${decimalFormatted(absValue, minDecimal, maxDecimal)})${symbolSuffix}`;
+        return `(${symbolPrefix}${decimalFormatted(absValue, minDecimal, maxDecimal)}${symbolSuffix})`;
       }
-      return `(${symbolPrefix}${absValue})${symbolSuffix}`;
+      return `(${symbolPrefix}${absValue}${symbolSuffix})`;
     } else {
       if (!isNaN(minDecimal) || !isNaN(maxDecimal)) {
         return `-${symbolPrefix}${decimalFormatted(absValue, minDecimal, maxDecimal)}${symbolSuffix}`;
