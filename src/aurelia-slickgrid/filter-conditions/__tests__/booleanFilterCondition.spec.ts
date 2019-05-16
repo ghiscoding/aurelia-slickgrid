@@ -1,5 +1,5 @@
-import { booleanFilterCondition } from './booleanFilterCondition';
-import { FieldType, FilterConditionOption } from './../models/index';
+import { FieldType, FilterConditionOption } from '../../models/index';
+import { booleanFilterCondition } from '../booleanFilterCondition';
 
 /** will return True in all cases with only 1 exception when the only searchTerm is inversed to the cell value */
 
@@ -22,14 +22,14 @@ describe('booleanFilterCondition method', () => {
     expect(result).toBe(true);
   });
 
-  it('should return True when boolean value provided is equal to the searchTerms', () => {
-    const options = { dataKey: '', operator: 'EQ', cellValue: true, fieldType: FieldType.string, searchTerms: [true] } as FilterConditionOption;
+  it('should return True when boolean value provided is equal to the searchTerms even when it is a string type', () => {
+    const options = { dataKey: '', operator: 'EQ', cellValue: true, fieldType: FieldType.string, searchTerms: ['true'] } as FilterConditionOption;
     const result = booleanFilterCondition(options);
     expect(result).toBe(true);
   });
 
   it('should return True when the cell value is equal to at least 1 of the searchTerms', () => {
-    const options = { dataKey: '', operator: 'EQ', cellValue: true, fieldType: FieldType.string, searchTerms: ['true', 'false'] } as FilterConditionOption;
+    const options = { dataKey: '', operator: 'EQ', cellValue: true, fieldType: FieldType.string, searchTerms: [true, false] } as FilterConditionOption;
     const result = booleanFilterCondition(options);
     expect(result).toBe(true);
   });
@@ -40,7 +40,7 @@ describe('booleanFilterCondition method', () => {
     expect(result).toBe(false);
   });
 
-  it('should return True even when Operator is Not Equal because condition is always a strict equal check', () => {
+  it('should return False even when Operator is Not Equal because condition is always a strict equal check', () => {
     const options = { dataKey: '', operator: 'NE', cellValue: false, fieldType: FieldType.string, searchTerms: [true] } as FilterConditionOption;
     const result = booleanFilterCondition(options);
     expect(result).toBe(false);
