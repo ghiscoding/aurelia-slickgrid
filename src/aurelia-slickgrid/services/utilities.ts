@@ -22,7 +22,7 @@ export function addWhiteSpaces(nbSpaces: number): string {
  * Create a in-memory div, set it's inner text(which jQuery automatically encodes)
  * then grab the encoded contents back out.  The div never exists on the page.
  */
-export function htmlDecode(encodedStr: string): string {
+export function htmlDecode(encodedStr: string): string | null {
   const parser = new DOMParser();
   if (parser && parser.parseFromString) {
     const dom = parser.parseFromString(
