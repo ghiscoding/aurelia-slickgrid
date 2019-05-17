@@ -86,18 +86,18 @@ export function formatNumber(input: number | string, minDecimal?: number, maxDec
   if (calculatedValue < 0) {
     const absValue = Math.abs(calculatedValue);
     if (displayNegativeNumberWithParentheses) {
-      if (!isNaN(minDecimal) || !isNaN(maxDecimal)) {
+      if (!isNaN(minDecimal as number) || !isNaN(maxDecimal as number)) {
         return `(${symbolPrefix}${decimalFormatted(absValue, minDecimal, maxDecimal)}${symbolSuffix})`;
       }
       return `(${symbolPrefix}${absValue}${symbolSuffix})`;
     } else {
-      if (!isNaN(minDecimal) || !isNaN(maxDecimal)) {
+      if (!isNaN(minDecimal as number) || !isNaN(maxDecimal as number)) {
         return `-${symbolPrefix}${decimalFormatted(absValue, minDecimal, maxDecimal)}${symbolSuffix}`;
       }
       return `-${symbolPrefix}${absValue}${symbolSuffix}`;
     }
   } else {
-    if (!isNaN(minDecimal) || !isNaN(maxDecimal)) {
+    if (!isNaN(minDecimal as number) || !isNaN(maxDecimal as number)) {
       return `${symbolPrefix}${decimalFormatted(input, minDecimal, maxDecimal)}${symbolSuffix}`;
     }
     return `${symbolPrefix}${input}${symbolSuffix}`;
