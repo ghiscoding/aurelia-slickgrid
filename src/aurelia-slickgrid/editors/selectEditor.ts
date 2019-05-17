@@ -16,7 +16,7 @@ import {
   SelectOption,
 } from './../models/index';
 import { CollectionService, findOrDefault, disposeAllSubscriptions } from '../services/index';
-import { arraysEqual, getDescendantProperty, htmlEncode } from '../services/utilities';
+import { charArraysEqual, getDescendantProperty, htmlEncode } from '../services/utilities';
 import * as DOMPurify from 'dompurify';
 import * as $ from 'jquery';
 
@@ -346,7 +346,7 @@ export class SelectEditor implements Editor {
 
   isValueChanged(): boolean {
     if (this.isMultipleSelect) {
-      return !arraysEqual(this.$editorElm.val(), this.defaultValue);
+      return !charArraysEqual(this.$editorElm.val(), this.defaultValue);
     }
     return this.$editorElm.val() !== this.defaultValue;
   }
