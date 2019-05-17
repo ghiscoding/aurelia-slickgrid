@@ -1,4 +1,6 @@
 import { booleanFilterCondition } from './booleanFilterCondition';
+import { dateEuroShortFilterCondition } from './dateEuroShortFilterCondition';
+import { dateEuroFilterCondition } from './dateEuroFilterCondition';
 import { dateFilterCondition } from './dateFilterCondition';
 import { dateIsoFilterCondition } from './dateIsoFilterCondition';
 import { dateUsShortFilterCondition } from './dateUsShortFilterCondition';
@@ -23,10 +25,18 @@ export const executeMappedCondition: FilterCondition = (options: FilterCondition
       return booleanFilterCondition(options);
     case FieldType.date:
       return dateFilterCondition(options);
-    case FieldType.dateUtc:
-      return dateUtcFilterCondition(options);
     case FieldType.dateIso:
       return dateIsoFilterCondition(options);
+    case FieldType.dateUtc:
+      return dateUtcFilterCondition(options);
+    // all Euro Formats (date/month/year)
+    case FieldType.dateEuro:
+    case FieldType.dateTimeEuro:
+      return dateEuroFilterCondition(options);
+    case FieldType.dateEuroShort:
+    case FieldType.dateTimeEuroShort:
+      return dateEuroShortFilterCondition(options);
+    // all US Formats (month/date/year)
     case FieldType.dateUs:
     case FieldType.dateTimeUs:
       return dateUsFilterCondition(options);

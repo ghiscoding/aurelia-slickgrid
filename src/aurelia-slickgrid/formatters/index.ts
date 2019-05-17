@@ -6,11 +6,15 @@ import { checkmarkFormatter } from './checkmarkFormatter';
 import { collectionFormatter } from './collectionFormatter';
 import { collectionEditorFormatter } from './collectionEditorFormatter';
 import { complexObjectFormatter } from './complexObjectFormatter';
+import { dateEuroFormatter } from './dateEuroFormatter';
 import { dateIsoFormatter } from './dateIsoFormatter';
+import { dateTimeEuroAmPmFormatter } from './dateTimeEuroAmPmFormatter';
+import { dateTimeEuroFormatter } from './dateTimeEuroFormatter';
 import { dateTimeIsoAmPmFormatter } from './dateTimeIsoAmPmFormatter';
 import { dateTimeIsoFormatter } from './dateTimeIsoFormatter';
 import { dateTimeUsAmPmFormatter } from './dateTimeUsAmPmFormatter';
 import { dateTimeUsFormatter } from './dateTimeUsFormatter';
+import { dateTimeShortEuroFormatter } from './dateTimeShortEuroFormatter';
 import { dateTimeShortIsoFormatter } from './dateTimeShortIsoFormatter';
 import { dateTimeShortUsFormatter } from './dateTimeShortUsFormatter';
 import { dateUsFormatter } from './dateUsFormatter';
@@ -69,20 +73,20 @@ export const Formatters = {
   complexObject: complexObjectFormatter,
 
   /**
-   * Roughly the same as the "collectionFormatter" except that it
-   * looks up values from the columnDefinition.editor.collection (instead of params) property and displays the label in CSV or string format
+   * Looks up values from the columnDefinition.params.collection property and displays the label in CSV or string format
    * @example
    * // the grid will display 'foo' and 'bar' and not 1 and 2 from your dataset
-   * { editor: { collection: [{ value: 1, label: 'foo'}, {value: 2, label: 'bar' }] }}
+   * { params: { collection: [{ value: 1, label: 'foo'}, {value: 2, label: 'bar' }] }}
    * const dataset = [1, 2];
    */
   collection: collectionFormatter,
 
   /**
-   * Looks up values from the columnDefinition.editor.collection property and displays the label in CSV or string format
+   * Roughly the same as the "collectionFormatter" except that it
+   * looks up values from the columnDefinition.editor.collection (instead of params) property and displays the label in CSV or string format
    * @example
    * // the grid will display 'foo' and 'bar' and not 1 and 2 from your dataset
-   * { params: { collection: [{ value: 1, label: 'foo'}, {value: 2, label: 'bar' }] }}
+   * { editor: { collection: [{ value: 1, label: 'foo'}, {value: 2, label: 'bar' }] }}
    * const dataset = [1, 2];
    */
   collectionEditor: collectionEditorFormatter,
@@ -98,6 +102,18 @@ export const Formatters = {
 
   /** Takes a Date object and displays it as an ISO Date+Time+(am/pm) format */
   dateTimeIsoAmPm: dateTimeIsoAmPmFormatter,
+
+  /** Takes a Date object and displays it as an Euro Date format */
+  dateEuro: dateEuroFormatter,
+
+  /** Takes a Date object and displays it as an Euro Date+Time format */
+  dateTimeEuro: dateTimeEuroFormatter,
+
+  /** Takes a Date object and displays it as an Euro Date+Time (without seconds) format */
+  dateTimeShortEuro: dateTimeShortEuroFormatter,
+
+  /** Takes a Date object and displays it as an Euro Date+Time+(am/pm) format */
+  dateTimeEuroAmPm: dateTimeEuroAmPmFormatter,
 
   /** Takes a Date object and displays it as an US Date format */
   dateUs: dateUsFormatter,
