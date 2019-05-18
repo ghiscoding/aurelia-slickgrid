@@ -87,9 +87,9 @@ export function htmlEntityEncode(input: any): string {
  * @param minDecimal
  * @param maxDecimal
  */
-export function decimalFormatted(input: number | string, minDecimal?: number, maxDecimal?: number) {
+export function decimalFormatted(input: number | string, minDecimal?: number, maxDecimal?: number): string {
   if (isNaN(+input)) {
-    return input;
+    return input as string;
   }
 
   const minDec = (minDecimal === undefined) ? 2 : minDecimal;
@@ -148,7 +148,7 @@ export function disposeAllSubscriptions(subscriptions: Subscription[]) {
 }
 
 /** From a dot (.) notation find and return a property within an object given a path */
-export function getDescendantProperty(obj: any, path: string) {
+export function getDescendantProperty(obj: any, path: string): any {
   return path.split('.').reduce((acc, part) => acc && acc[part], obj);
 }
 
@@ -447,7 +447,7 @@ export function mapOperatorByFieldType(fieldType: FieldType | string): OperatorT
 }
 
 /** Parse any input (bool, number, string) and return a boolean or False when not possible */
-export function parseBoolean(input: boolean | number | string) {
+export function parseBoolean(input: boolean | number | string): boolean {
   return /(true|1)/i.test(input + '');
 }
 
@@ -476,7 +476,7 @@ export function parseUtcDate(inputDateString: string, useUtc?: boolean): string 
  * @input htmlString
  * @return text
  */
-export function sanitizeHtmlToText(htmlString: string) {
+export function sanitizeHtmlToText(htmlString: string): string {
   const temp = document.createElement('div');
   temp.innerHTML = htmlString;
   return temp.textContent || temp.innerText;
@@ -488,7 +488,7 @@ export function sanitizeHtmlToText(htmlString: string) {
  * @param inputStr
  * @returns string
  */
-export function titleCase(inputStr: string, caseEveryWords = false) {
+export function titleCase(inputStr: string, caseEveryWords = false): string {
   if (typeof inputStr === 'string') {
     if (caseEveryWords) {
       return inputStr.replace(/\w\S*/g, (outputStr) => {
@@ -577,7 +577,7 @@ export function findOrDefault(array: any[], logic: (item: any) => boolean, defau
 }
 
 /** Get the browser's scrollbar width, this is different to each browser */
-export function getScrollBarWidth() {
+export function getScrollBarWidth(): number {
   const $outer = $('<div>').css({ visibility: 'hidden', width: 100, overflow: 'scroll' }).appendTo('body');
   const widthWithScroll = $('<div>').css({ width: '100%' }).appendTo($outer).outerWidth() || 0;
   $outer.remove();
