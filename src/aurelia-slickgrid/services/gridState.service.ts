@@ -276,7 +276,7 @@ export class GridStateService {
     const extension = this.extensionService && this.extensionService.getExtensionByName && this.extensionService.getExtensionByName(extensionName);
     const slickEvent = extension && extension.addon && extension.addon[eventName];
 
-    if (slickEvent && slickEvent.subscribe) {
+    if (slickEvent && typeof slickEvent.subscribe === 'function') {
       this._eventHandler.subscribe(slickEvent, (e: Event, args: any) => {
         const columns: Column[] = args && args.columns;
         const currentColumns: CurrentColumn[] = this.getAssociatedCurrentColumns(columns);
@@ -293,7 +293,7 @@ export class GridStateService {
   bindSlickGridEventToGridStateChange(eventName: string, grid: any) {
     const slickGridEvent = grid && grid[eventName];
 
-    if (slickGridEvent && slickGridEvent.subscribe) {
+    if (slickGridEvent && typeof slickGridEvent.subscribe === 'function') {
       this._eventHandler.subscribe(slickGridEvent, (e: Event, args: any) => {
         const columns: Column[] = grid.getColumns();
         const currentColumns: CurrentColumn[] = this.getAssociatedCurrentColumns(columns);
