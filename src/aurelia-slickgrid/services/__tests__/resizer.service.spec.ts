@@ -1,7 +1,7 @@
 import { DOM } from 'aurelia-pal';
 import { EventAggregator } from 'aurelia-event-aggregator';
-import { GridOption } from './../models/gridOption.interface';
-import { ResizerService } from './resizer.service';
+import { GridOption } from '../../models/gridOption.interface';
+import { ResizerService } from '../resizer.service';
 
 const DATAGRID_MIN_HEIGHT = 180;
 const DATAGRID_MIN_WIDTH = 300;
@@ -42,7 +42,7 @@ const template =
 
 describe('Resizer Service', () => {
   let service: ResizerService;
-  let ea = new EventAggregator();
+  const ea = new EventAggregator();
 
   beforeEach(() => {
     const div = document.createElement('div');

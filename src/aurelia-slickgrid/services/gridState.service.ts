@@ -54,6 +54,9 @@ export class GridStateService {
 
   /** Dispose of all the SlickGrid & Aurelia subscriptions */
   dispose() {
+    this._currentColumns = [];
+    this._columns = [];
+
     // unsubscribe all SlickGrid events
     this._eventHandler.unsubscribeAll();
 
@@ -84,7 +87,7 @@ export class GridStateService {
    * @return current columns
    */
   getColumns(): Column[] {
-    return this._columns || this._grid.getColumns();
+    return this._columns;
   }
 
   /**
@@ -199,38 +202,6 @@ export class GridStateService {
     return null;
   }
 
-  /**
-   * Hook a SlickGrid Extension Event to a Grid State change event
-   * @param extension name
-   * @param event name
-   */
-  hookExtensionEventToGridStateChange(extensionName: ExtensionName, eventName: string) {
-    const extension = this.extensionService && this.extensionService.getExtensionByName(extensionName);
-
-    if (extension && extension.class && extension.class[eventName] && extension.class[eventName].subscribe) {
-      this._eventHandler.subscribe(extension.class[eventName], (e: Event, args: any) => {
-        const columns: Column[] = args && args.columns;
-        const currentColumns: CurrentColumn[] = this.getAssociatedCurrentColumns(columns);
-        this.ea.publish('gridStateService:changed', { change: { newValues: currentColumns, type: GridStateType.columns }, gridState: this.getCurrentGridState() });
-      });
-    }
-  }
-
-  /**
-   * Hook a Grid Event to a Grid State change event
-   * @param event name
-   * @param grid
-   */
-  hookSlickGridEventToGridStateChange(eventName: string, grid: any) {
-    if (grid && grid[eventName] && grid[eventName].subscribe) {
-      this._eventHandler.subscribe(grid[eventName], (e: Event, args: any) => {
-        const columns: Column[] = grid.getColumns();
-        const currentColumns: CurrentColumn[] = this.getAssociatedCurrentColumns(columns);
-        this.ea.publish('gridStateService:changed', { change: { newValues: currentColumns, type: GridStateType.columns }, gridState: this.getCurrentGridState() });
-      });
-    }
-  }
-
   resetColumns(columnDefinitions?: Column[]) {
     const columns: Column[] = columnDefinitions || this._columns;
     const currentColumns: CurrentColumn[] = this.getAssociatedCurrentColumns(columns);
@@ -284,11 +255,50 @@ export class GridStateService {
     );
 
     // Subscribe to ColumnPicker and/or GridMenu for show/hide Columns visibility changes
-    this.hookExtensionEventToGridStateChange(ExtensionName.columnPicker, 'onColumnsChanged');
-    this.hookExtensionEventToGridStateChange(ExtensionName.gridMenu, 'onColumnsChanged');
+    this.bindExtensionAddonEventToGridStateChange(ExtensionName.columnPicker, 'onColumnsChanged');
+    this.bindExtensionAddonEventToGridStateChange(ExtensionName.gridMenu, 'onColumnsChanged');
 
     // subscribe to Column Resize & Reordering
-    this.hookSlickGridEventToGridStateChange('onColumnsReordered', grid);
-    this.hookSlickGridEventToGridStateChange('onColumnsResized', grid);
+    this.bindSlickGridEventToGridStateChange('onColumnsReordered', grid);
+    this.bindSlickGridEventToGridStateChange('onColumnsResized', grid);
+  }
+
+  // --
+  // private methods
+  // ------------------
+
+  /**
+   * Bind a SlickGrid Extension Event to a Grid State change event
+   * @param extension name
+   * @param event name
+   */
+  bindExtensionAddonEventToGridStateChange(extensionName: ExtensionName, eventName: string) {
+    const extension = this.extensionService && this.extensionService.getExtensionByName && this.extensionService.getExtensionByName(extensionName);
+    const slickEvent = extension && extension.addon && extension.addon[eventName];
+
+    if (slickEvent && slickEvent.subscribe) {
+      this._eventHandler.subscribe(slickEvent, (e: Event, args: any) => {
+        const columns: Column[] = args && args.columns;
+        const currentColumns: CurrentColumn[] = this.getAssociatedCurrentColumns(columns);
+        this.ea.publish('gridStateService:changed', { change: { newValues: currentColumns, type: GridStateType.columns }, gridState: this.getCurrentGridState() });
+      });
+    }
+  }
+
+  /**
+   * Bind a Grid Event to a Grid State change event
+   * @param event name
+   * @param grid
+   */
+  bindSlickGridEventToGridStateChange(eventName: string, grid: any) {
+    const slickGridEvent = grid && grid[eventName];
+
+    if (slickGridEvent && slickGridEvent.subscribe) {
+      this._eventHandler.subscribe(slickGridEvent, (e: Event, args: any) => {
+        const columns: Column[] = grid.getColumns();
+        const currentColumns: CurrentColumn[] = this.getAssociatedCurrentColumns(columns);
+        this.ea.publish('gridStateService:changed', { change: { newValues: currentColumns, type: GridStateType.columns }, gridState: this.getCurrentGridState() });
+      });
+    }
   }
 }

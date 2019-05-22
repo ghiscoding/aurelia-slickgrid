@@ -19,7 +19,7 @@ import {
   toSnakeCase,
   uniqueArray,
   uniqueObjectArray,
-} from './utilities';
+} from '../utilities';
 import { Subscription, EventAggregator } from 'aurelia-event-aggregator';
 
 describe('Service/Utilies', () => {
