@@ -1,7 +1,7 @@
 import { I18N } from 'aurelia-i18n';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { BindingSignaler } from 'aurelia-templating-resources';
-import { CollectionService } from './collection.service';
+import { CollectionService } from '../collection.service';
 import {
   CollectionFilterBy,
   CollectionSortBy,
@@ -9,17 +9,12 @@ import {
   OperatorType,
   Column,
   FieldType,
-} from './../models/index';
+} from '../../models/index';
 
 describe('CollectionService', () => {
   let collection = [];
   let i18n: I18N;
   let service: CollectionService;
-
-  // stub some methods of the SlickGrid Grid instance
-  const gridStub = {
-    getOptions: jest.fn()
-  };
 
   beforeEach(() => {
     i18n = new I18N(new EventAggregator(), new BindingSignaler());
