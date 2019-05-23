@@ -142,6 +142,8 @@ export class AureliaSlickgridCustomElement {
       } else {
         this.dataview = new Slick.Data.DataView();
       }
+      this.ea.publish('onDataviewCreated', this.dataview);
+      this.dispatchCustomEvent(`${DEFAULT_AURELIA_EVENT_PREFIX}-on-dataview-created`, this.dataview);
     }
 
     // for convenience, we provide the property "editor" as an Aurelia-Slickgrid editor complex object
@@ -187,10 +189,15 @@ export class AureliaSlickgridCustomElement {
       this.dataview.setItems(this._dataset, this.gridOptions.datasetIdPropertyName);
       this.dataview.endUpdate();
 
-      // if you don't want the items that are not visible (due to being filtered out
-      // or being on a different page) to stay selected, pass 'false' to the second arg
+      // if you don't want the items that are not visible (due to being filtered out or being on a different page)
+      // to stay selected, pass 'false' to the second arg
       if (this.gridOptions && this.gridOptions.dataView && this.gridOptions.dataView.hasOwnProperty('syncGridSelection')) {
-        this.dataview.syncGridSelection(this.grid, this.gridOptions.dataView.syncGridSelection);
+        const syncGridSelection = this.gridOptions.dataView.syncGridSelection;
+        if (typeof syncGridSelection === 'boolean') {
+          this.dataview.syncGridSelection(this.grid, this.gridOptions.dataView.syncGridSelection);
+        } else {
+          this.dataview.syncGridSelection(this.grid, syncGridSelection.preserveHidden, syncGridSelection.preserveHiddenOnSelectionChange);
+        }
       }
     }
 
@@ -207,8 +214,6 @@ export class AureliaSlickgridCustomElement {
     // after the DataView is created & updated execute some processes & dispatch some events
     if (!this.customDataView) {
       this.executeAfterDataviewCreated(this.grid, this.gridOptions, this.dataview);
-      this.ea.publish('onDataviewCreated', this.dataview);
-      this.dispatchCustomEvent(`${DEFAULT_AURELIA_EVENT_PREFIX}-on-dataview-created`, this.dataview);
     }
 
     // attach resize ONLY after the dataView is ready
@@ -270,7 +275,7 @@ export class AureliaSlickgridCustomElement {
   detached(emptyDomElementContainer = false) {
     this.ea.publish('onBeforeGridDestroy', this.grid);
     this.dispatchCustomEvent(`${DEFAULT_AURELIA_EVENT_PREFIX}-on-before-grid-destroy`, this.grid);
-    this.dataview = [];
+    this.dataview = undefined;
     this._eventHandler.unsubscribeAll();
     this.grid.destroy();
     if (emptyDomElementContainer && this.gridId) {
