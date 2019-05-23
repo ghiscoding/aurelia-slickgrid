@@ -383,6 +383,8 @@ describe('GridStateService', () => {
       filterMock = [{ columnId: 'field1', operator: 'EQ', searchTerms: [] }, { columnId: 'field2', operator: '>=', searchTerms: [2] }] as CurrentFilter[];
       sorterMock = [{ columnId: 'field1', direction: 'ASC' }] as CurrentSorter[];
       currentColumnsMock = [{ columnId: 'field1', cssClass: 'red', headerCssClass: '', width: 100 }] as CurrentColumn[];
+
+      jest.spyOn(filterServiceStub, 'getCurrentLocalFilters').mockReturnValue(filterMock);
       jest.spyOn(sortServiceStub, 'getCurrentLocalSorters').mockReturnValue(sorterMock);
       jest.spyOn(gridStub, 'getColumns').mockReturnValue(columnsMock);
     });
@@ -399,7 +401,8 @@ describe('GridStateService', () => {
 
     it('should trigger a "gridStateService:changed" event when "filterService:filterCleared" is triggered', () => {
       const gridStateMock = { columns: currentColumnsMock, filters: filterMock, sorters: sorterMock } as GridState;
-      const stateChangeMock = { change: { newValues: filterMock, type: GridStateType.filter }, gridState: gridStateMock } as GridStateChange;
+
+      const stateChangeMock = { change: { newValues: [], type: GridStateType.filter }, gridState: gridStateMock } as GridStateChange;
 
       const eaSpy = jest.spyOn(ea, 'publish');
 
@@ -419,7 +422,8 @@ describe('GridStateService', () => {
 
     it('should trigger a "gridStateService:changed" event when "sortService:sortCleared" is triggered', () => {
       const gridStateMock = { columns: currentColumnsMock, filters: filterMock, sorters: sorterMock } as GridState;
-      const stateChangeMock = { change: { newValues: sorterMock, type: GridStateType.sorter }, gridState: gridStateMock } as GridStateChange;
+
+      const stateChangeMock = { change: { newValues: [], type: GridStateType.sorter }, gridState: gridStateMock } as GridStateChange;
 
       const eaSpy = jest.spyOn(ea, 'publish');
 

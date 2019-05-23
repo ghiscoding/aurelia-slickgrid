@@ -235,7 +235,7 @@ export class FilterService {
     }
 
     // emit an event when filters are all cleared
-    this.ea.publish('filterService:filterCleared', this._columnFilters);
+    this.ea.publish('filterService:filterCleared', true);
   }
 
   /** Local Grid Filter search */

@@ -233,9 +233,9 @@ export class GridStateService {
     );
     // Subscribe to Event Emitter of Filter cleared
     this.subscriptions.push(
-      this.ea.subscribe('filterService:filterCleared', (currentFilters: CurrentFilter[]) => {
+      this.ea.subscribe('filterService:filterCleared', () => {
         this.resetRowSelection();
-        this.ea.publish('gridStateService:changed', { change: { newValues: currentFilters, type: GridStateType.filter }, gridState: this.getCurrentGridState() });
+        this.ea.publish('gridStateService:changed', { change: { newValues: [], type: GridStateType.filter }, gridState: this.getCurrentGridState() });
       })
     );
 
@@ -248,9 +248,9 @@ export class GridStateService {
     );
     // Subscribe to Event Emitter of Sort cleared
     this.subscriptions.push(
-      this.ea.subscribe('sortService:sortCleared', (currentSorters: CurrentSorter[]) => {
+      this.ea.subscribe('sortService:sortCleared', () => {
         this.resetRowSelection();
-        this.ea.publish('gridStateService:changed', { change: { newValues: currentSorters, type: GridStateType.sorter }, gridState: this.getCurrentGridState() });
+        this.ea.publish('gridStateService:changed', { change: { newValues: [], type: GridStateType.sorter }, gridState: this.getCurrentGridState() });
       })
     );
 

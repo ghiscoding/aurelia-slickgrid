@@ -67,7 +67,7 @@ export class Example17 {
     this._eventHandler.unsubscribeAll();
   }
 
-  aureliaGridReady(aureliaGrid: any) {
+  aureliaGridReady(aureliaGrid: AureliaGridInstance) {
     this.aureliaGrid = aureliaGrid;
     this.gridObj = aureliaGrid.slickGrid; // grid object
     this.loaderDataView.setSort('score', -1);

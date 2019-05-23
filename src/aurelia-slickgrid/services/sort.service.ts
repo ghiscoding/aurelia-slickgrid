@@ -178,7 +178,7 @@ export class SortService {
     this._currentLocalSorters = [];
 
     // emit an event when sorts are all cleared
-    this.ea.publish('sortService:sortCleared', this._currentLocalSorters);
+    this.ea.publish('sortService:sortCleared', true);
   }
 
   getCurrentLocalSorters(): CurrentSorter[] {
