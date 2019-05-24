@@ -178,7 +178,7 @@ export class AureliaSlickgridCustomElement {
 
     this.sharedService.dataView = this.dataview;
     this.sharedService.grid = this.grid;
-    this.extensionService.attachDifferentExtensions();
+    this.extensionService.bindDifferentExtensions();
 
     this.attachDifferentHooks(this.grid, this.gridOptions, this.dataview);
 

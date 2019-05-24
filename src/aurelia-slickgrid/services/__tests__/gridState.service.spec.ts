@@ -1,4 +1,8 @@
 import { EventAggregator } from 'aurelia-event-aggregator';
+import { ExtensionService } from '../extension.service';
+import { FilterService } from '../filter.service';
+import { GridStateService } from '../gridState.service';
+import { SortService } from '../sort.service';
 import {
   BackendService,
   GridOption,
@@ -12,13 +16,8 @@ import {
   GridState,
   ExtensionName
 } from '../../models';
-import { FilterService } from '../filter.service';
-import { GridStateService } from '../gridState.service';
-import { ExtensionService } from '../extension.service';
-import { SortService } from '../sort.service';
 
 declare var Slick: any;
-const aureliaEventPrefix = 'asg';
 
 const gridOptionMock = {
   enableAutoResize: true
