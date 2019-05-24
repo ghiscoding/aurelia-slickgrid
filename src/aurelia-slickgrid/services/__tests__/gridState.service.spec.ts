@@ -1,5 +1,17 @@
 import { EventAggregator } from 'aurelia-event-aggregator';
-import { BackendService, GridOption, CurrentPagination, CurrentSorter, CurrentFilter, Column, CurrentColumn, GridStateChange, GridStateType, GridState, ExtensionName } from '../../models';
+import {
+  BackendService,
+  GridOption,
+  CurrentPagination,
+  CurrentSorter,
+  CurrentFilter,
+  Column,
+  CurrentColumn,
+  GridStateChange,
+  GridStateType,
+  GridState,
+  ExtensionName
+} from '../../models';
 import { FilterService } from '../filter.service';
 import { GridStateService } from '../gridState.service';
 import { ExtensionService } from '../extension.service';
