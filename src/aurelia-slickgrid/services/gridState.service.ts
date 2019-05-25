@@ -213,7 +213,7 @@ export class GridStateService {
     if (this._gridOptions.enableRowSelection || this._gridOptions.enableCheckboxSelector) {
       // this also requires the Row Selection Model to be registered as well
       const rowSelectionExtension = this.extensionService && this.extensionService.getExtensionByName && this.extensionService.getExtensionByName(ExtensionName.rowSelection);
-      if (rowSelectionExtension && rowSelectionExtension.addon) {
+      if (rowSelectionExtension && rowSelectionExtension.instance) {
         this._grid.setSelectedRows([]);
       }
     }
@@ -274,7 +274,7 @@ export class GridStateService {
    */
   bindExtensionAddonEventToGridStateChange(extensionName: ExtensionName, eventName: string) {
     const extension = this.extensionService && this.extensionService.getExtensionByName && this.extensionService.getExtensionByName(extensionName);
-    const slickEvent = extension && extension.addon && extension.addon[eventName];
+    const slickEvent = extension && extension.instance && extension.instance[eventName];
 
     if (slickEvent && typeof slickEvent.subscribe === 'function') {
       this._eventHandler.subscribe(slickEvent, (e: Event, args: any) => {
