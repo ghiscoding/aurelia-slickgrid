@@ -48,8 +48,8 @@ xdescribe('Aurelia-Slickgrid Custom Component', () => {
     await component.create(bootstrap);
     expect(eventAggregator.publish).toHaveBeenCalledTimes(3);
     expect(eventAggregator.publish).toHaveBeenNthCalledWith(1, 'onBeforeGridCreate', true);
-    expect(eventAggregator.publish).toHaveBeenNthCalledWith(2, 'onGridCreated', expect.any(Object));
-    expect(eventAggregator.publish).toHaveBeenNthCalledWith(3, 'onDataviewCreated', expect.any(Object));
+    expect(eventAggregator.publish).toHaveBeenNthCalledWith(2, 'onDataviewCreated', expect.any(Object));
+    expect(eventAggregator.publish).toHaveBeenNthCalledWith(3, 'onGridCreated', expect.any(Object));
 
     component.dispose();
     expect(eventAggregator.publish).toHaveBeenNthCalledWith(4, 'onBeforeGridDestroy', expect.any(Object));
@@ -67,10 +67,10 @@ xdescribe('Aurelia-Slickgrid Custom Component', () => {
       .then(() => component.attached())
       .then(() => {
         expect(spy).toHaveBeenNthCalledWith(1, 'asg-on-before-grid-create');
-        expect(spy).toHaveBeenNthCalledWith(2, 'sg-on-scroll', expect.any(Object));
-        expect(spy).toHaveBeenNthCalledWith(3, 'sg-on-rendered', expect.any(Object));
-        expect(spy).toHaveBeenNthCalledWith(4, 'asg-on-grid-created', expect.any(Object));
-        expect(spy).toHaveBeenNthCalledWith(5, 'asg-on-dataview-created', expect.any(Object));
+        expect(spy).toHaveBeenNthCalledWith(2, 'asg-on-dataview-created', expect.any(Object));
+        expect(spy).toHaveBeenNthCalledWith(3, 'sg-on-scroll', expect.any(Object));
+        expect(spy).toHaveBeenNthCalledWith(4, 'sg-on-rendered', expect.any(Object));
+        expect(spy).toHaveBeenNthCalledWith(5, 'asg-on-grid-created', expect.any(Object));
         expect(spy).toHaveBeenLastCalledWith('asg-on-aurelia-grid-created', expect.any(Object));
       })
       .then(() => component.detached(true))
