@@ -34,6 +34,8 @@ export class CheckboxSelectorExtension implements Extension {
       const selectionColumn: Column = this._addon.getColumnDefinition();
       if (typeof selectionColumn === 'object') {
         selectionColumn.excludeFromExport = true;
+        selectionColumn.excludeFromColumnPicker = true;
+        selectionColumn.excludeFromGridMenu = true;
         selectionColumn.excludeFromQuery = true;
         selectionColumn.excludeFromHeaderMenu = true;
         columnDefinitions.unshift(selectionColumn);

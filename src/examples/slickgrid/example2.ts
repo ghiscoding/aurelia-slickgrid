@@ -4,6 +4,7 @@ import {
   Formatter,
   Formatters,
   GridOption,
+  SelectedRange,
 } from '../../aurelia-slickgrid';
 
 // create my custom Formatter with the Formatter type
@@ -58,7 +59,21 @@ export class Example2 {
         sidePadding: 15
       },
       enableCellNavigation: true,
+
+      // you customize the date separator through "formatterOptions"
+      /*
+      formatterOptions: {
+        dateSeparator: '.'
+      },
+      */
+
+      // when using the ExcelCopyBuffer, you can see what the selection range is
       enableExcelCopyBuffer: true,
+      excelCopyBufferOptions: {
+        onCopyCells: (e, args: { ranges: SelectedRange[] }) => console.log('onCopyCells', args.ranges),
+        onPasteCells: (e, args: { ranges: SelectedRange[] }) => console.log('onPasteCells', args.ranges),
+        onCopyCancelled: (e, args: { ranges: SelectedRange[] }) => console.log('onCopyCancelled', args.ranges),
+      }
     };
   }
 

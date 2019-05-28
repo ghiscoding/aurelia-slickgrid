@@ -7,6 +7,7 @@ export class SharedService {
   private _dataView: any;
   private _groupItemMetadataProvider: any;
   private _grid: any;
+  private _gridOptions: GridOption;
   private _visibleColumns: Column[];
 
   // --
@@ -47,11 +48,6 @@ export class SharedService {
   /** Getter for the Grid Options pulled through the Grid Object */
   get gridOptions(): GridOption {
     return (this._grid && this._grid.getOptions) ? this._grid.getOptions() : {};
-  }
-
-  /** Setter for the Grid Options pulled through the Grid Object */
-  set gridOptions(gridOptions: GridOption) {
-    this.gridOptions = gridOptions;
   }
 
   /** Getter for the Grid Options */

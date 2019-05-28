@@ -1,7 +1,4 @@
-import { I18N } from 'aurelia-i18n';
-import { GridOption } from '../../models/gridOption.interface';
 import { GroupItemMetaProviderExtension } from '../groupItemMetaProviderExtension';
-import { ExtensionUtility } from '../extensionUtility';
 import { SharedService } from '../../services/shared.service';
 
 declare var Slick: any;

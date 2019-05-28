@@ -12,14 +12,25 @@ const gridStub = {
   setSelectionModel: jest.fn(),
 };
 
+const mockCore = jest.fn().mockImplementation(() => ({
+  subscribe: jest.fn(),
+  unsubscribe: jest.fn(),
+  unsubscribeAll: jest.fn(),
+}));
 const mockAddon = jest.fn().mockImplementation(() => ({
   init: jest.fn(),
   destroy: jest.fn(),
+  onCopyCells: jest.fn(),
+  onCopyCancelled: jest.fn(),
+  onPasteCells: jest.fn(),
 }));
 const mockSelectionModel = jest.fn().mockImplementation(() => ({
   init: jest.fn(),
   destroy: jest.fn()
 }));
+
+jest.mock('slickgrid/slick.core', () => mockCore);
+Slick.EventHandler = mockCore;
 
 jest.mock('slickgrid/plugins/slick.cellexternalcopymanager', () => mockAddon);
 Slick.CellExternalCopyManager = mockAddon;
@@ -31,7 +42,15 @@ describe('cellExternalCopyManagerExtension', () => {
   let extension: CellExternalCopyManagerExtension;
   let extensionUtility: ExtensionUtility;
   let sharedService: SharedService;
-  const gridOptionsMock = { enableCheckboxSelector: true } as GridOption;
+  const gridOptionsMock = {
+    enableCheckboxSelector: true,
+    excelCopyBufferOptions: {
+      onExtensionRegistered: jest.fn(),
+      onCopyCells: jest.fn(),
+      onCopyCancelled: jest.fn(),
+      onPasteCells: jest.fn(),
+    }
+  } as GridOption;
 
   beforeEach(() => {
     extensionUtility = new ExtensionUtility({} as I18N, sharedService);
@@ -52,9 +71,11 @@ describe('cellExternalCopyManagerExtension', () => {
 
     it('should register the addon', () => {
       const pluginSpy = jest.spyOn(SharedService.prototype.grid, 'registerPlugin');
+      const optionSpy = jest.spyOn(SharedService.prototype.gridOptions.excelCopyBufferOptions, 'onExtensionRegistered');
 
       const instance = extension.register();
 
+      expect(optionSpy).toHaveBeenCalledWith(instance);
       expect(pluginSpy).toHaveBeenCalledWith(instance);
       expect(mockSelectionModel).toHaveBeenCalled();
       expect(mockAddon).toHaveBeenCalledWith({
@@ -63,7 +84,17 @@ describe('cellExternalCopyManagerExtension', () => {
         newRowCreator: expect.anything(),
         includeHeaderWhenCopying: false,
         readOnlyMode: false,
+        onCopyCancelled: expect.anything(),
+        onCopyCells: expect.anything(),
+        onExtensionRegistered: expect.anything(),
+        onPasteCells: expect.anything(),
       });
+    });
+
+    it('should call internal event handler subscribe and expect the "onCopyCells" option to be called', () => {
+      const instance = extension.register();
+
+      expect(mockCore).toHaveBeenCalledWith({})
     });
 
     it('should dispose of the addon', () => {

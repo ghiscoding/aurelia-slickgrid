@@ -104,7 +104,7 @@ describe('checkboxSelectorExtension', () => {
     it('should provide addon options and expect them to be called in the addon constructor', () => {
       const optionMock = { selectActiveRow: true };
       const selectionModelOptions = { ...gridOptionsMock, rowSelectionOptions: optionMock };
-      const selectionColumn = { ...columnSelectionMock, excludeFromExport: true, excludeFromQuery: true, excludeFromHeaderMenu: true };
+      const selectionColumn = { ...columnSelectionMock, excludeFromExport: true, excludeFromColumnPicker: true, excludeFromGridMenu: true, excludeFromQuery: true, excludeFromHeaderMenu: true };
       jest.spyOn(SharedService.prototype, 'gridOptions', 'get').mockReturnValue(selectionModelOptions);
 
       // we can only spy after 1st "create" call, we'll only get a valid selectionColumn on 2nd "create" call

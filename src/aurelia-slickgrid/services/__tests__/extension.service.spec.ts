@@ -29,14 +29,12 @@ jest.mock('flatpickr', () => { });
 const gridStub = {
   autosizeColumns: jest.fn(),
   getColumnIndex: jest.fn(),
-  getScrollbarDimensions: jest.fn(),
   getOptions: jest.fn(),
   getColumns: jest.fn(),
   setColumns: jest.fn(),
   onColumnsReordered: jest.fn(),
   onColumnsResized: jest.fn(),
   registerPlugin: jest.fn(),
-  setSelectedRows: jest.fn(),
 };
 
 const extensionStub = {
