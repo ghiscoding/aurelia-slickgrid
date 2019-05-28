@@ -91,7 +91,7 @@ describe('cellExternalCopyManagerExtension', () => {
       });
     });
 
-    it('should call internal event handler subscribe and expect the "onCopyCells" option to be called', () => {
+    xit('should call internal event handler subscribe and expect the "onCopyCells" option to be called', () => {
       const instance = extension.register();
 
       expect(mockCore).toHaveBeenCalledWith({})
