@@ -25,7 +25,7 @@ export class CheckboxSelectorExtension implements Extension {
    */
   create(columnDefinitions: Column[], gridOptions: GridOption) {
     if (Array.isArray(columnDefinitions) && gridOptions) {
-      // dynamically import the SlickGrid plugin with requireJS
+      // dynamically import the SlickGrid plugin (addon) with RequireJS
       this.extensionUtility.loadExtensionDynamically(ExtensionName.checkboxSelector);
 
       if (!this._addon) {

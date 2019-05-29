@@ -26,7 +26,7 @@ export class HeaderButtonExtension implements Extension {
   // Header Button Plugin
   register(): any {
     if (this.sharedService && this.sharedService.grid && this.sharedService.gridOptions) {
-      // dynamically import the SlickGrid plugin with requireJS
+      // dynamically import the SlickGrid plugin (addon) with RequireJS
       this.extensionUtility.loadExtensionDynamically(ExtensionName.headerButton);
 
       this._extension = new Slick.Plugins.HeaderButtons(this.sharedService.gridOptions.headerButton || {});

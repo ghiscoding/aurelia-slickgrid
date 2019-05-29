@@ -1,4 +1,4 @@
-import { ExtensionService, SharedService } from '..';
+import { SharedService } from '..';
 import { Column, GridOption } from '../../models';
 
 jest.mock('flatpickr', () => { });
