@@ -3,6 +3,7 @@ import { GridOption } from '../../models/gridOption.interface';
 import { CellExternalCopyManagerExtension } from '../cellExternalCopyManagerExtension';
 import { ExtensionUtility } from '../extensionUtility';
 import { SharedService } from '../../services/shared.service';
+import { SelectedRange } from '../../models';
 
 declare var Slick: any;
 
@@ -12,25 +13,18 @@ const gridStub = {
   setSelectionModel: jest.fn(),
 };
 
-const mockCore = jest.fn().mockImplementation(() => ({
-  subscribe: jest.fn(),
-  unsubscribe: jest.fn(),
-  unsubscribeAll: jest.fn(),
-}));
-const mockAddon = jest.fn().mockImplementation(() => ({
+const addonStub = {
   init: jest.fn(),
   destroy: jest.fn(),
-  onCopyCells: jest.fn(),
-  onCopyCancelled: jest.fn(),
-  onPasteCells: jest.fn(),
-}));
+  onCopyCells: new Slick.Event(),
+  onCopyCancelled: new Slick.Event(),
+  onPasteCells: new Slick.Event(),
+};
+const mockAddon = jest.fn().mockImplementation(() => addonStub);
 const mockSelectionModel = jest.fn().mockImplementation(() => ({
   init: jest.fn(),
   destroy: jest.fn()
 }));
-
-jest.mock('slickgrid/slick.core', () => mockCore);
-Slick.EventHandler = mockCore;
 
 jest.mock('slickgrid/plugins/slick.cellexternalcopymanager', () => mockAddon);
 Slick.CellExternalCopyManager = mockAddon;
@@ -39,6 +33,10 @@ jest.mock('slickgrid/plugins/slick.cellselectionmodel', () => mockSelectionModel
 Slick.CellSelectionModel = mockSelectionModel;
 
 describe('cellExternalCopyManagerExtension', () => {
+  const mockEventCallback = (e, args: { ranges: SelectedRange[] }) => { };
+  const mockSelectRange = [{ fromCell: 1, fromRow: 1, toCell: 1, toRow: 1 }] as SelectedRange[];
+  const mockSelectRangeEvent = { ranges: mockSelectRange };
+
   let extension: CellExternalCopyManagerExtension;
   let extensionUtility: ExtensionUtility;
   let sharedService: SharedService;
@@ -46,9 +44,9 @@ describe('cellExternalCopyManagerExtension', () => {
     enableCheckboxSelector: true,
     excelCopyBufferOptions: {
       onExtensionRegistered: jest.fn(),
-      onCopyCells: jest.fn(),
-      onCopyCancelled: jest.fn(),
-      onPasteCells: jest.fn(),
+      onCopyCells: mockEventCallback,
+      onCopyCancelled: mockEventCallback,
+      onPasteCells: mockEventCallback,
     }
   } as GridOption;
 
@@ -56,6 +54,10 @@ describe('cellExternalCopyManagerExtension', () => {
     extensionUtility = new ExtensionUtility({} as I18N, sharedService);
     sharedService = new SharedService();
     extension = new CellExternalCopyManagerExtension(extensionUtility, sharedService);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   it('should return null when either the grid object or the grid options is missing', () => {
@@ -91,10 +93,61 @@ describe('cellExternalCopyManagerExtension', () => {
       });
     });
 
-    xit('should call internal event handler subscribe and expect the "onCopyCells" option to be called', () => {
-      const instance = extension.register();
+    it('should call internal event handler subscribe and expect the "onCopyCells" option to be called when addon notify is called', () => {
+      const handlerSpy = jest.spyOn(extension.eventHandler, 'subscribe');
+      const onCopySpy = jest.spyOn(SharedService.prototype.gridOptions.excelCopyBufferOptions, 'onCopyCells');
+      const onCancelSpy = jest.spyOn(SharedService.prototype.gridOptions.excelCopyBufferOptions, 'onCopyCancelled');
+      const onPasteSpy = jest.spyOn(SharedService.prototype.gridOptions.excelCopyBufferOptions, 'onPasteCells');
 
-      expect(mockCore).toHaveBeenCalledWith({})
+      const instance = extension.register();
+      instance.onCopyCells.notify(mockSelectRangeEvent, new Slick.EventData(), gridStub);
+
+      expect(handlerSpy).toHaveBeenCalledTimes(3);
+      expect(handlerSpy).toHaveBeenCalledWith(
+        { notify: expect.anything(), subscribe: expect.anything(), unsubscribe: expect.anything(), },
+        expect.anything()
+      );
+      expect(onCopySpy).toHaveBeenCalledWith(expect.anything(), mockSelectRangeEvent);
+      expect(onCancelSpy).not.toHaveBeenCalled();
+      expect(onPasteSpy).not.toHaveBeenCalled();
+    });
+
+    it('should call internal event handler subscribe and expect the "onCopyCancelled" option to be called when addon notify is called', () => {
+      const handlerSpy = jest.spyOn(extension.eventHandler, 'subscribe');
+      const onCopySpy = jest.spyOn(SharedService.prototype.gridOptions.excelCopyBufferOptions, 'onCopyCells');
+      const onCancelSpy = jest.spyOn(SharedService.prototype.gridOptions.excelCopyBufferOptions, 'onCopyCancelled');
+      const onPasteSpy = jest.spyOn(SharedService.prototype.gridOptions.excelCopyBufferOptions, 'onPasteCells');
+
+      const instance = extension.register();
+      instance.onCopyCancelled.notify(mockSelectRangeEvent, new Slick.EventData(), gridStub);
+
+      expect(handlerSpy).toHaveBeenCalledTimes(3);
+      expect(handlerSpy).toHaveBeenCalledWith(
+        { notify: expect.anything(), subscribe: expect.anything(), unsubscribe: expect.anything(), },
+        expect.anything()
+      );
+      expect(onCopySpy).not.toHaveBeenCalled();
+      expect(onCancelSpy).toHaveBeenCalledWith(expect.anything(), mockSelectRangeEvent);
+      expect(onPasteSpy).not.toHaveBeenCalled();
+    });
+
+    it('should call internal event handler subscribe and expect the "onPasteCells" option to be called when addon notify is called', () => {
+      const handlerSpy = jest.spyOn(extension.eventHandler, 'subscribe');
+      const onCopySpy = jest.spyOn(SharedService.prototype.gridOptions.excelCopyBufferOptions, 'onCopyCells');
+      const onCancelSpy = jest.spyOn(SharedService.prototype.gridOptions.excelCopyBufferOptions, 'onCopyCancelled');
+      const onPasteSpy = jest.spyOn(SharedService.prototype.gridOptions.excelCopyBufferOptions, 'onPasteCells');
+
+      const instance = extension.register();
+      instance.onPasteCells.notify(mockSelectRangeEvent, new Slick.EventData(), gridStub);
+
+      expect(handlerSpy).toHaveBeenCalledTimes(3);
+      expect(handlerSpy).toHaveBeenCalledWith(
+        { notify: expect.anything(), subscribe: expect.anything(), unsubscribe: expect.anything(), },
+        expect.anything()
+      );
+      expect(onCopySpy).not.toHaveBeenCalled();
+      expect(onCancelSpy).not.toHaveBeenCalled();
+      expect(onPasteSpy).toHaveBeenCalledWith(expect.anything(), mockSelectRangeEvent);
     });
 
     it('should dispose of the addon', () => {

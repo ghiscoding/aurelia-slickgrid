@@ -1,5 +1,5 @@
 import { singleton, inject } from 'aurelia-framework';
-import { Column, ExcelCopyBufferOption, Extension, ExtensionName, SelectedRange } from '../models/index';
+import { Column, ExcelCopyBufferOption, Extension, ExtensionName, SelectedRange, SlickEventHandler } from '../models/index';
 import { sanitizeHtmlToText } from '../services/utilities';
 import { SharedService } from '../services/shared.service';
 import { ExtensionUtility } from './extensionUtility';
@@ -11,11 +11,17 @@ declare var Slick: any;
 @singleton(true)
 @inject(ExtensionUtility, SharedService)
 export class CellExternalCopyManagerExtension implements Extension {
-  private _eventHandler: any = new Slick.EventHandler();
+  private _eventHandler: SlickEventHandler;
   private _addon: any;
   private _undoRedoBuffer: any;
 
-  constructor(private extensionUtility: ExtensionUtility, private sharedService: SharedService) { }
+  constructor(private extensionUtility: ExtensionUtility, private sharedService: SharedService) {
+    this._eventHandler = new Slick.EventHandler();
+  }
+
+  get eventHandler(): SlickEventHandler {
+    return this._eventHandler;
+  }
 
   dispose() {
     // unsubscribe all SlickGrid events
