@@ -146,7 +146,7 @@ export class AureliaSlickgridCustomElement {
       this.dispatchCustomEvent(`${DEFAULT_AURELIA_EVENT_PREFIX}-on-dataview-created`, this.dataview);
     }
 
-    // for convenience, we provide the property "editor" as an Aurelia-Slickgrid editor complex object
+    // for convenience to the user, we provide the property "editor" as an Aurelia-Slickgrid editor complex object
     // however "editor" is used internally by SlickGrid for it's own Editor Factory
     // so in our lib we will swap "editor" and copy it into a new property called "internalColumnEditor"
     // then take back "editor.model" and make it the new "editor" so that SlickGrid Editor Factory still works
@@ -155,18 +155,8 @@ export class AureliaSlickgridCustomElement {
     // and allow slickgrid to pass its arguments to the editors constructor last
     // when slickgrid creates the editor
     // https://github.com/aurelia/dependency-injection/blob/master/src/resolvers.js
-    this._columnDefinitions = this.columnDefinitions.map((column: Column | any) => {
-      // on every Editor which have a "collection" or a "collectionAsync"
-      if (column.editor && column.editor.collectionAsync) {
-        this.loadEditorCollectionAsync(column);
-      }
+    this._columnDefinitions = this.swapInternalEditorToSlickGridFactoryEditor(this._columnDefinitions);
 
-      return {
-        ...column,
-        editor: column.editor && Factory.of(column.editor.model).get(this.container),
-        internalColumnEditor: { ...column.editor }
-      };
-    });
 
     // save reference for all columns before they optionally become hidden/visible
     this.sharedService.allColumns = this._columnDefinitions;
@@ -724,6 +714,9 @@ export class AureliaSlickgridCustomElement {
    * If using i18n, we also need to trigger a re-translate of the column headers
    */
   updateColumnDefinitionsList(newColumnDefinitions?: Column[]) {
+    // map/swap the internal library Editor to the SlickGrid Editor factory
+    newColumnDefinitions = this.swapInternalEditorToSlickGridFactoryEditor(newColumnDefinitions);
+
     if (this.gridOptions.enableTranslate) {
       this.extensionService.translateColumnHeaders(false, newColumnDefinitions);
     } else {
@@ -772,6 +765,27 @@ export class AureliaSlickgridCustomElement {
       });
     }
     return [];
+  }
+
+  /**
+   * For convenience to the user, we provide the property "editor" as an Angular-Slickgrid editor complex object
+   * however "editor" is used internally by SlickGrid for it's own Editor Factory
+   * so in our lib we will swap "editor" and copy it into a new property called "internalColumnEditor"
+   * then take back "editor.model" and make it the new "editor" so that SlickGrid Editor Factory still works
+   */
+  private swapInternalEditorToSlickGridFactoryEditor(columnDefinitions: Column[]) {
+    return columnDefinitions.map((column: Column | any) => {
+      // on every Editor which have a "collection" or a "collectionAsync"
+      if (column.editor && column.editor.collectionAsync) {
+        this.loadEditorCollectionAsync(column);
+      }
+
+      return {
+        ...column,
+        editor: column.editor && Factory.of(column.editor.model).get(this.container),
+        internalColumnEditor: { ...column.editor }
+      };
+    });
   }
 
   /**
