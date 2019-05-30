@@ -236,10 +236,10 @@ export class Example11 {
   updateSecondItem() {
     const updatedItem = this.aureliaGrid.gridService.getDataItemByRowNumber(1);
     updatedItem.duration = Math.round(Math.random() * 100);
-    this.aureliaGrid.gridService.updateDataGridItem(updatedItem);
+    this.aureliaGrid.gridService.updateItem(updatedItem);
 
     // OR by id
-    // this.aureliaGrid.gridService.updateDataGridItemById(updatedItem.id, updatedItem);
+    // this.aureliaGrid.gridService.updateItemById(updatedItem.id, updatedItem);
 
     // OR multiple changes
     /*
@@ -247,7 +247,7 @@ export class Example11 {
     const updatedItem2 = this.aureliaGrid.gridService.getDataItemByRowNumber(2);
     updatedItem1.duration = Math.round(Math.random() * 100);
     updatedItem2.duration = Math.round(Math.random() * 100);
-    this.aureliaGrid.gridService.updateDataGridItems([updatedItem1, updatedItem2], true);
+    this.aureliaGrid.gridService.updateItems([updatedItem1, updatedItem2], true);
     */
   }
 }
