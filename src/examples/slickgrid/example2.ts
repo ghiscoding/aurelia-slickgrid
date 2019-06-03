@@ -1,4 +1,5 @@
 import {
+  AureliaGridInstance,
   Column,
   FieldType,
   Formatter,
@@ -13,12 +14,21 @@ const myCustomCheckmarkFormatter: Formatter = (row, cell, value, columnDef, data
   return value ? `<i class="fa fa-fire red" aria-hidden="true"></i>` : { text: '<i class="fa fa-snowflake-o" aria-hidden="true"></i>', addClasses: 'lightblue', toolTip: 'Freezing' };
 };
 
+const customEnableButtonFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid: any) => {
+  return `<span style="margin-left: 5px">
+      <button class="btn btn-xs btn-default">
+        <i class="fa ${value ? 'fa-check-circle' : 'fa-circle-thin'} fa-lg" style="color: ${value ? 'black' : 'lavender'}"></i>
+      </button>
+    </span>`;
+};
+
 export class Example2 {
   title = 'Example 2: Formatters';
   subTitle = `
     Grid with Custom and/or included Slickgrid Formatters (<a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Formatters" target="_blank">Wiki docs</a>).
     <ul>
-      <li>Last column is a Custom Formatter</li>
+      <li>The 2 last columns are using Custom Formatters</li>
+      <ul><li>The "Completed" column uses a the "onCellClick" event and a formatter to simulate a toggle action</li></ul>
       <li>
         Support Excel Copy Buffer (SlickGrid Copy Manager Plugin), you can use it by simply enabling "enableExcelCopyBuffer" flag.
         Note that it will only evaluate Formatter when the "exportWithFormatter" flag is enabled (through "ExportOptions" or the column definition)
@@ -26,6 +36,7 @@ export class Example2 {
     </ul>
   `;
 
+  aureliaGrid: AureliaGridInstance;
   gridOptions: GridOption;
   columnDefinitions: Column[];
   dataset: any[];
@@ -33,6 +44,10 @@ export class Example2 {
   constructor() {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
+  }
+
+  aureliaGridReady(aureliaGrid: AureliaGridInstance) {
+    this.aureliaGrid = aureliaGrid;
   }
 
   attached() {
@@ -50,7 +65,14 @@ export class Example2 {
       { id: 'percent2', name: '% Complete', field: 'percentComplete2', formatter: Formatters.progressBar, type: FieldType.number, sortable: true, minWidth: 100 },
       { id: 'start', name: 'Start', field: 'start', formatter: Formatters.dateIso, sortable: true, type: FieldType.date, minWidth: 90, exportWithFormatter: true },
       { id: 'finish', name: 'Finish', field: 'finish', formatter: Formatters.dateIso, sortable: true, type: FieldType.date, minWidth: 90, exportWithFormatter: true },
-      { id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', formatter: myCustomCheckmarkFormatter, type: FieldType.number, sortable: true, minWidth: 100 }
+      { id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', formatter: myCustomCheckmarkFormatter, type: FieldType.number, sortable: true, minWidth: 100 },
+      {
+        id: 'completed', name: 'Completed', field: 'completed', type: FieldType.number, sortable: true, minWidth: 100,
+        formatter: customEnableButtonFormatter,
+        onCellClick: (e, args) => {
+          this.toggleCompletedProperty(args && args.dataContext);
+        }
+      }
     ];
 
     this.gridOptions = {
@@ -107,5 +129,17 @@ export class Example2 {
       phone += Math.round(Math.random() * 9) + '';
     }
     return phone;
+  }
+
+  toggleCompletedProperty(item) {
+    // toggle property
+    if (typeof item === 'object') {
+      item.completed = !item.completed;
+
+      // simulate a backend http call and refresh the grid row after delay
+      setTimeout(() => {
+        this.aureliaGrid.gridService.updateItemById(item.id, item, false);
+      }, 250);
+    }
   }
 }
