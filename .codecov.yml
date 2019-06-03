@@ -7,5 +7,4 @@ coverage:
     project:
       default:
         target: auto
-        threshold: .05
-        branches: null
+        threshold: 1%
