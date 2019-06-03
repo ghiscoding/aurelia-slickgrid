@@ -5,10 +5,10 @@ import { ExtensionService } from './extension.service';
 import { FilterService } from './filter.service';
 import { GridStateService } from './gridState.service';
 import { SortService } from './sort.service';
-import * as $ from 'jquery';
 
 // using external non-typed js libraries
 declare var Slick: any;
+let highlightTimerEnd: any;
 
 const DEFAULT_AURELIA_EVENT_PREFIX = 'asg';
 
@@ -81,7 +81,7 @@ export class GridService {
   /** Get data item by it's row index number */
   getDataItemByRowNumber(rowNumber: number): any {
     if (!this._grid || typeof this._grid.getDataItem !== 'function') {
-      throw new Error('We could not find SlickGrid Grid object');
+      throw new Error(`We could not find SlickGrid Grid object or it's "getDataItem" method`);
     }
     return this._grid.getDataItem(rowNumber);
   }
@@ -95,12 +95,12 @@ export class GridService {
         meta = previousItemMetadata(rowNumber);
       }
 
-      if (item && item._dirty) {
-        meta.cssClasses = (meta && meta.cssClasses || '') + ' dirty';
-      }
-
       if (!meta) {
         meta = { cssClasses: '' };
+      }
+
+      if (item && item._dirty) {
+        meta.cssClasses = (meta && meta.cssClasses || '') + ' dirty';
       }
 
       if (item && item.rowClass && meta) {
@@ -159,46 +159,47 @@ export class GridService {
    * @param rowNumber
    * @param fadeDelay
    */
-  highlightRow(rowNumber: number | number[], fadeDelay: number = 1500) {
+  highlightRow(rowNumber: number | number[], fadeDelay: number = 1500, fadeOutDelay = 300) {
     // create a SelectionModel if there's not one yet
     if (!this._grid.getSelectionModel()) {
       const rowSelectionPlugin = new Slick.RowSelectionModel(this._gridOptions.rowSelectionOptions || {});
       this._grid.setSelectionModel(rowSelectionPlugin);
     }
 
-    const rowIndexes = Array.isArray(rowNumber) ? rowNumber : [rowNumber];
-    this._grid.setSelectedRows(rowIndexes);
     if (Array.isArray(rowNumber)) {
-      rowNumber.forEach(row => this.highlightRowByMetadata(row, fadeDelay));
+      rowNumber.forEach(row => this.highlightRowByMetadata(row, fadeDelay, fadeOutDelay));
     } else {
-      this.highlightRowByMetadata(rowNumber, fadeDelay);
+      this.highlightRowByMetadata(rowNumber, fadeDelay, fadeOutDelay);
     }
   }
 
-  highlightRowByMetadata(rowNumber: number, fadeDelay: number = 1500) {
+  highlightRowByMetadata(rowNumber: number, fadeDelay: number = 1500, fadeOutDelay = 300) {
     this._dataView.getItemMetadata = this.getItemRowMetadataToHighlight(this._dataView.getItemMetadata);
 
     const item = this._dataView.getItem(rowNumber);
     if (item && item.id) {
       item.rowClass = 'highlight';
       this._dataView.updateItem(item.id, item);
-      const gridOptions = this._grid.getOptions() as GridOption;
+      this._grid.invalidate();
 
-      // highlight the row for a user defined timeout
-      $(`#${gridOptions.gridId}`)
-        .find(`.highlight.row${rowNumber}`)
-        .first();
+      // fade out
+      clearTimeout(highlightTimerEnd);
+      highlightTimerEnd = setTimeout(() => {
+        item.rowClass = 'highlight-end';
+        this._dataView.updateItem(item.id, item);
+        this._grid.invalidate();
+      }, fadeOutDelay);
 
-      // delete the row's CSS that was attached for highlighting
+      // delete the row's CSS highlight classes once the delay is passed
       setTimeout(() => {
         if (item && item.id) {
           delete item.rowClass;
-          const gridIdx = this._dataView.getIdxById(item.id);
-          if (gridIdx !== undefined) {
+          if (this._dataView.getIdxById(item.id) !== undefined) {
             this._dataView.updateItem(item.id, item);
+            this._grid.invalidate();
           }
         }
-      }, fadeDelay + 10);
+      }, fadeDelay + fadeOutDelay);
     }
   }
 
