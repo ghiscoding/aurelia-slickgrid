@@ -197,13 +197,13 @@ describe('Resizer Service', () => {
   it('should stop resizing when user called "pauseResizer" with true', () => {
     service.bindAutoResizeDataGrid();
     Object.defineProperty(window, 'innerHeight', { writable: true, configurable: true, value: 450 });
-    window.dispatchEvent(new Event('resize'));
+    window.dispatchEvent(DOM.createCustomEvent(`resize`, { bubbles: true }));
 
     service.pauseResizer(true);
     const spy = jest.spyOn(service, 'resizeGrid');
 
     Object.defineProperty(window, 'innerHeight', { writable: true, configurable: true, value: 550 });
-    window.dispatchEvent(new Event('resize'));
+    window.dispatchEvent(DOM.createCustomEvent(`resize`, { bubbles: true }));
 
     expect(spy).not.toHaveBeenCalled();
   });
