@@ -138,7 +138,7 @@ export class Example2 {
 
       // simulate a backend http call and refresh the grid row after delay
       setTimeout(() => {
-        this.aureliaGrid.gridService.updateItemById(item.id, item, false);
+        this.aureliaGrid.gridService.updateItemById(item.id, item, { highlightRow: false });
       }, 250);
     }
   }

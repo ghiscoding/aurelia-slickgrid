@@ -6,12 +6,14 @@
     "baseUrl": "./",
     "types": [
       "jest",
+      "jest-extended",
       "jquery",
       "node"
     ]
   },
   "include": [
     "**/*.spec.ts",
+    "src/typings/**/*.ts",
     "**/*.d.ts"
   ]
 }
