@@ -23,6 +23,7 @@ export class ResizerService {
   private _fixedWidth: number | null;
   private _grid: any;
   private _lastDimensions: GridDimension;
+  private _resizePaused = false;
   private _timer: any;
   aureliaEventPrefix: string;
 
@@ -64,9 +65,11 @@ export class ResizerService {
 
     // -- 2nd attach a trigger on the Window DOM element, so that it happens also when resizing after first load
     // -- attach auto-resize to Window object only if it exist
-    $(window).on(`resize.grid.${this._gridUid}`, () => {
-      this.ea.publish(`${this.aureliaEventPrefix}:onBeforeResize`, true);
-      this.resizeGrid(0, newSizes);
+    $(window).on(`resize.grid.${this._gridUid}`, (event: Event) => {
+      this.ea.publish(`${this.aureliaEventPrefix}:onBeforeResize`, event);
+      if (!this._resizePaused) {
+        this.resizeGrid(0, newSizes);
+      }
     });
   }
 
@@ -168,6 +171,11 @@ export class ResizerService {
       const oldWidth = gridElm && gridElm.width && gridElm.width() || 0;
       gridElm.width(oldWidth + (calculatedScrollbarWidth - slickGridScrollbarWidth));
     }
+  }
+
+  /** Provide the possibility to pause the resizer for some time, until user decides to re-enabled it later if he wish to. */
+  pauseResizer(isResizePaused: boolean) {
+    this._resizePaused = isResizePaused;
   }
 
   /** Resize the datagrid to fit the browser height & width */

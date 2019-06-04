@@ -3,6 +3,11 @@
   <div class="subtitle"
        innerhtml.bind="subTitle"></div>
 
+  <button class="btn btn-default btn-sm"
+          click.delegate="togglePauseResizer()">
+    Pause auto-resize: <b>${resizerPaused}</b>
+  </button>
+
   <aurelia-slickgrid grid-id="grid1"
                      column-definitions.bind="columnDefinitions"
                      grid-options.bind="gridOptions"
