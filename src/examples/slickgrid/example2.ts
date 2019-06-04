@@ -33,6 +33,7 @@ export class Example2 {
         Support Excel Copy Buffer (SlickGrid Copy Manager Plugin), you can use it by simply enabling "enableExcelCopyBuffer" flag.
         Note that it will only evaluate Formatter when the "exportWithFormatter" flag is enabled (through "ExportOptions" or the column definition)
       </li>
+      <li>This example also has auto-resize enabled, and we also demo how you can pause the resizer if you wish to</li>
     </ul>
   `;
 
@@ -40,6 +41,7 @@ export class Example2 {
   gridOptions: GridOption;
   columnDefinitions: Column[];
   dataset: any[];
+  resizerPaused = false;
 
   constructor() {
     // define the grid options & columns and then create the grid itself
@@ -129,6 +131,11 @@ export class Example2 {
       phone += Math.round(Math.random() * 9) + '';
     }
     return phone;
+  }
+
+  togglePauseResizer() {
+    this.resizerPaused = !this.resizerPaused;
+    this.aureliaGrid.resizerService.pauseResizer(this.resizerPaused);
   }
 
   toggleCompletedProperty(item) {
