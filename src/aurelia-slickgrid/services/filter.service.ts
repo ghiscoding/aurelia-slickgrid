@@ -178,7 +178,7 @@ export class FilterService {
     });
   }
 
-  clearFilterByColumnId(columnId: number | string) {
+  clearFilterByColumnId(event: Event, columnId: number | string) {
     const colFilter: Filter = this._filters.find((filter: Filter) => filter.columnDef.id === columnId);
     if (colFilter && colFilter.clear) {
       colFilter.clear(true);

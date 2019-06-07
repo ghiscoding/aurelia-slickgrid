@@ -6,15 +6,13 @@ import { FilterService } from './filter.service';
 import { GridStateService } from './gridState.service';
 import { SortService } from './sort.service';
 
-const GridServiceDeleteOptionDefaults: GridServiceDeleteOption = { triggerEvent: true };
-const GridServiceInsertOptionDefaults: GridServiceInsertOption = { highlightRow: true, resortGrid: false, selectRow: false, triggerEvent: true };
-const GridServiceUpdateOptionDefaults: GridServiceUpdateOption = { highlightRow: true, selectRow: false, triggerEvent: true };
-
 // using external non-typed js libraries
 declare var Slick: any;
 let highlightTimerEnd: any;
-
 const DEFAULT_AURELIA_EVENT_PREFIX = 'asg';
+const GridServiceDeleteOptionDefaults: GridServiceDeleteOption = { triggerEvent: true };
+const GridServiceInsertOptionDefaults: GridServiceInsertOption = { highlightRow: true, resortGrid: false, selectRow: false, triggerEvent: true };
+const GridServiceUpdateOptionDefaults: GridServiceUpdateOption = { highlightRow: true, selectRow: false, triggerEvent: true };
 
 @singleton(true)
 @inject(EventAggregator, ExtensionService, FilterService, GridStateService, SortService)
