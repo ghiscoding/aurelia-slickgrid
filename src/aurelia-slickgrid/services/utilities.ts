@@ -479,7 +479,7 @@ export function parseUtcDate(inputDateString: string, useUtc?: boolean): string 
 export function sanitizeHtmlToText(htmlString: string): string {
   const temp = document.createElement('div');
   temp.innerHTML = htmlString;
-  return temp.textContent || temp.innerText;
+  return temp.textContent || temp.innerText || '';
 }
 
 /**
