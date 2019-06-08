@@ -1,6 +1,6 @@
 {
   "name": "aurelia-slickgrid",
-  "version": "2.11.0",
+  "version": "2.11.1",
   "description": "Slickgrid components made available in Aurelia",
   "keywords": [
     "aurelia",
@@ -194,7 +194,7 @@
       "lodash.isequal": "^4.5.0",
       "moment": ">=2.18.1",
       "moment-mini": ">=2.18.1",
-      "slickgrid": "^2.4.7",
+      "slickgrid": "github:6pac/SlickGrid",
       "text-encoding-utf-8": "^1.0.2"
     }
   },
