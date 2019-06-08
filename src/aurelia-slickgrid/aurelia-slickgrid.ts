@@ -185,7 +185,7 @@ export class AureliaSlickgridCustomElement {
         const syncGridSelection = this.gridOptions.dataView.syncGridSelection;
         if (typeof syncGridSelection === 'boolean') {
           this.dataview.syncGridSelection(this.grid, this.gridOptions.dataView.syncGridSelection);
-        } else {
+        } else if (typeof syncGridSelection === 'object') {
           this.dataview.syncGridSelection(this.grid, syncGridSelection.preserveHidden, syncGridSelection.preserveHiddenOnSelectionChange);
         }
       }
@@ -713,18 +713,20 @@ export class AureliaSlickgridCustomElement {
    * We will re-render the grid so that the new header and data shows up correctly.
    * If using i18n, we also need to trigger a re-translate of the column headers
    */
-  updateColumnDefinitionsList(newColumnDefinitions?: Column[]) {
-    // map/swap the internal library Editor to the SlickGrid Editor factory
-    newColumnDefinitions = this.swapInternalEditorToSlickGridFactoryEditor(newColumnDefinitions);
+  updateColumnDefinitionsList(newColumnDefinitions: Column[]) {
+    if (newColumnDefinitions) {
+      // map/swap the internal library Editor to the SlickGrid Editor factory
+      newColumnDefinitions = this.swapInternalEditorToSlickGridFactoryEditor(newColumnDefinitions);
 
-    if (this.gridOptions.enableTranslate) {
-      this.extensionService.translateColumnHeaders(false, newColumnDefinitions);
-    } else {
-      this.extensionService.renderColumnHeaders(newColumnDefinitions);
-    }
+      if (this.gridOptions.enableTranslate) {
+        this.extensionService.translateColumnHeaders(false, newColumnDefinitions);
+      } else {
+        this.extensionService.renderColumnHeaders(newColumnDefinitions);
+      }
 
-    if (this.gridOptions && this.gridOptions.enableAutoSizeColumns) {
-      this.grid.autosizeColumns();
+      if (this.gridOptions && this.gridOptions.enableAutoSizeColumns) {
+        this.grid.autosizeColumns();
+      }
     }
   }
 
