@@ -108,12 +108,10 @@ describe('rowDetailViewExtension', () => {
   });
 
   describe('create method', () => {
-    let columnSelectionMock: Column;
     let columnsMock: Column[];
 
     beforeEach(() => {
       columnsMock = [{ id: 'field1', field: 'field1', width: 100, cssClass: 'red' }];
-      columnSelectionMock = { id: '_checkbox_selector', field: 'sel' };
       jest.spyOn(SharedService.prototype, 'grid', 'get').mockReturnValue(gridStub);
       jest.spyOn(SharedService.prototype, 'gridOptions', 'get').mockReturnValue(gridOptionsMock);
       jest.clearAllMocks();
@@ -184,14 +182,12 @@ describe('rowDetailViewExtension', () => {
   });
 
   describe('registered addon', () => {
-    let columnSelectionMock: Column;
     let columnsMock: Column[];
 
     beforeEach(() => {
       gridOptionsMock.rowDetailView.preloadView = 'some-preload-view';
       gridOptionsMock.rowDetailView.viewModel = 'some-view';
       columnsMock = [{ id: 'field1', field: 'field1', width: 100, cssClass: 'red' }];
-      columnSelectionMock = { id: '_checkbox_selector', field: 'sel' };
       jest.spyOn(SharedService.prototype, 'grid', 'get').mockReturnValue(gridStub);
       jest.spyOn(SharedService.prototype, 'gridOptions', 'get').mockReturnValue(gridOptionsMock);
       jest.clearAllMocks();
