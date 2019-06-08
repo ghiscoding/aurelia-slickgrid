@@ -9,10 +9,9 @@ import {
   SelectedRange,
   SlickEventHandler,
 } from '../models/index';
+import { ExtensionUtility } from './extensionUtility';
 import { sanitizeHtmlToText } from '../services/utilities';
 import { SharedService } from '../services/shared.service';
-import { ExtensionUtility } from './extensionUtility';
-import * as $ from 'jquery';
 
 // using external non-typed js libraries
 declare var Slick: any;
@@ -175,15 +174,15 @@ export class CellExternalCopyManagerExtension implements Extension {
     };
   }
 
-  /** Attach an undo shortcut key hook that will redo/undo the copy buffer */
+  /** Attach an undo shortcut key hook that will redo/undo the copy buffer using Ctrl+(Shift)+Z keyboard events */
   private hookUndoShortcutKey() {
-    // undo shortcut
-    $(document).keydown((e: any) => {
-      if (e.which === 90 && (e.ctrlKey || e.metaKey)) {    // CTRL + (shift) + Z
+    document.addEventListener('keydown', (e: KeyboardEvent) => {
+      const keyCode = e.keyCode || e.code;
+      if (keyCode === 90 && (e.ctrlKey || e.metaKey)) {
         if (e.shiftKey) {
-          this._undoRedoBuffer.redo();
+          this._undoRedoBuffer.redo(); // Ctrl + Shift + Z
         } else {
-          this._undoRedoBuffer.undo();
+          this._undoRedoBuffer.undo(); // Ctrl + Z
         }
       }
     });

@@ -241,9 +241,41 @@ describe('cellExternalCopyManagerExtension', () => {
 
     it('should have a single entry in the queue buffer after calling "queueAndExecuteCommand" once', () => {
       extension.register();
-      const undoRedoBuffer = extension.undoRedoBuffer;
-      undoRedoBuffer.queueAndExecuteCommand(queueCallback);
+      extension.undoRedoBuffer.queueAndExecuteCommand(queueCallback);
       expect(extension.commandQueue).toHaveLength(1);
+    });
+
+    it('should call a redo when Ctrl+Shift+Z keyboard event occurs', () => {
+      extension.register();
+      const spy = jest.spyOn(queueCallback, 'execute');
+
+      extension.undoRedoBuffer.queueAndExecuteCommand(queueCallback);
+      const body = window.document.body;
+      body.dispatchEvent(new (window.window as any).KeyboardEvent('keydown', {
+        keyCode: 90,
+        ctrlKey: true,
+        shiftKey: true,
+        bubbles: true,
+        cancelable: true
+      }));
+
+      expect(spy).toHaveBeenCalledTimes(2);
+    });
+
+    it('should call a undo when Ctrl+Z keyboard event occurs', () => {
+      extension.register();
+      const spy = jest.spyOn(queueCallback, 'undo');
+
+      extension.undoRedoBuffer.queueAndExecuteCommand(queueCallback);
+      const body = window.document.body;
+      body.dispatchEvent(new (window.window as any).KeyboardEvent('keydown', {
+        keyCode: 90,
+        ctrlKey: true,
+        shiftKey: false,
+        bubbles: true
+      }));
+
+      expect(spy).toHaveBeenCalled();
     });
   });
 
