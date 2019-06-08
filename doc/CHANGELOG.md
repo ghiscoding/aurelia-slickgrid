@@ -2,6 +2,52 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.11.0"></a>
+# [2.11.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.10.1...v2.11.0) (2019-06-08)
+
+
+### Bug Fixes
+
+* **copy:** copy+paste cells was not working ([#160](https://github.com/ghiscoding/aurelia-slickgrid/issues/160)) ([7d5090a](https://github.com/ghiscoding/aurelia-slickgrid/commit/7d5090a))
+* **dateEditor:** allow backspace for deleting a date ([7ddb0cc](https://github.com/ghiscoding/aurelia-slickgrid/commit/7ddb0cc))
+* **editor:** dynamically adding editor column throws error ([#181](https://github.com/ghiscoding/aurelia-slickgrid/issues/181)) ([41517d4](https://github.com/ghiscoding/aurelia-slickgrid/commit/41517d4))
+* **editor:** force user input in autocomplete ([15cfa2d](https://github.com/ghiscoding/aurelia-slickgrid/commit/15cfa2d))
+* **editor:** integer editor was always showing invalid when null value ([#180](https://github.com/ghiscoding/aurelia-slickgrid/issues/180)) ([ca7c591](https://github.com/ghiscoding/aurelia-slickgrid/commit/ca7c591))
+* **gridState:** columnPicker & gridMenu not triggering gridState change ([#170](https://github.com/ghiscoding/aurelia-slickgrid/issues/170)) ([01e5a56](https://github.com/ghiscoding/aurelia-slickgrid/commit/01e5a56))
+* **height:** should throw error when no height or enableAutoResize ([70f069c](https://github.com/ghiscoding/aurelia-slickgrid/commit/70f069c))
+* **rowDetail:** update to latest SlickGrid version to fix scrolling ([c159be0](https://github.com/ghiscoding/aurelia-slickgrid/commit/c159be0))
+* **selection:** styling of row selection is incorrect when adding rows ([325ff0b](https://github.com/ghiscoding/aurelia-slickgrid/commit/325ff0b))
+* **selection:** syncGridSelection and preserveHidden ([#173](https://github.com/ghiscoding/aurelia-slickgrid/issues/173)) ([bc33773](https://github.com/ghiscoding/aurelia-slickgrid/commit/bc33773))
+
+
+### Features
+
+* **build:** add Codecov badge to show coverage ([601078a](https://github.com/ghiscoding/aurelia-slickgrid/commit/601078a))
+* **build:** add Cypress CI to build plan ([4e7b1fa](https://github.com/ghiscoding/aurelia-slickgrid/commit/4e7b1fa))
+* **copy:** add ExcelCopyBufferOptions to grid option ([#178](https://github.com/ghiscoding/aurelia-slickgrid/issues/178)) ([b309e82](https://github.com/ghiscoding/aurelia-slickgrid/commit/b309e82))
+* **demo:** add custom formatter with onCellClick ([dd4d109](https://github.com/ghiscoding/aurelia-slickgrid/commit/dd4d109))
+* **euro:** add Euro Formatters and Sorters (day/month/year) ([#168](https://github.com/ghiscoding/aurelia-slickgrid/issues/168)) ([ab408a1](https://github.com/ghiscoding/aurelia-slickgrid/commit/ab408a1))
+* **formatter:** add formatterOptions to Formatters, Grouping Formatters ([#166](https://github.com/ghiscoding/aurelia-slickgrid/issues/166)) ([015476d](https://github.com/ghiscoding/aurelia-slickgrid/commit/015476d))
+* **formatters:** consolidate all Date Formatters into 1 method call DRY ([#169](https://github.com/ghiscoding/aurelia-slickgrid/issues/169)) ([4bcb74b](https://github.com/ghiscoding/aurelia-slickgrid/commit/4bcb74b))
+* **gridService:** add "upsertItem" method to Grid Service ([#179](https://github.com/ghiscoding/aurelia-slickgrid/issues/179)) ([e65609b](https://github.com/ghiscoding/aurelia-slickgrid/commit/e65609b))
+* **jest:** add few more Formatter unit tests & fixed some Formatters ([0d8ca4a](https://github.com/ghiscoding/aurelia-slickgrid/commit/0d8ca4a))
+* **menu:** add options to exclude column titles from Menus ([#176](https://github.com/ghiscoding/aurelia-slickgrid/issues/176)) ([71d290d](https://github.com/ghiscoding/aurelia-slickgrid/commit/71d290d))
+* **resizer:** add calculateAvailableSizeBy container option ([#161](https://github.com/ghiscoding/aurelia-slickgrid/issues/161)) ([2085a62](https://github.com/ghiscoding/aurelia-slickgrid/commit/2085a62))
+* **resizer:** add new method "pauseResizer" ([#183](https://github.com/ghiscoding/aurelia-slickgrid/issues/183)) ([72fa5db](https://github.com/ghiscoding/aurelia-slickgrid/commit/72fa5db))
+* **rowDetail:** add option to limit expanded row to only 1 at a time ([#177](https://github.com/ghiscoding/aurelia-slickgrid/issues/177)) ([e835b34](https://github.com/ghiscoding/aurelia-slickgrid/commit/e835b34))
+* **test:** add lib index entry point unit tests ([#163](https://github.com/ghiscoding/aurelia-slickgrid/issues/163)) ([5c6d028](https://github.com/ghiscoding/aurelia-slickgrid/commit/5c6d028))
+* **tests:** add Aggregators full test suite ([802521a](https://github.com/ghiscoding/aurelia-slickgrid/commit/802521a))
+* **tests:** add Extension Service full test suite ([#174](https://github.com/ghiscoding/aurelia-slickgrid/issues/174)) ([55c3502](https://github.com/ghiscoding/aurelia-slickgrid/commit/55c3502))
+* **tests:** add few Grid Service unit tests ([#182](https://github.com/ghiscoding/aurelia-slickgrid/issues/182)) ([b34b585](https://github.com/ghiscoding/aurelia-slickgrid/commit/b34b585))
+* **tests:** add Grouping Formatters full test suite ([#165](https://github.com/ghiscoding/aurelia-slickgrid/issues/165)) ([f9a7872](https://github.com/ghiscoding/aurelia-slickgrid/commit/f9a7872))
+* **tests:** add missing Formatter unit tests ([#162](https://github.com/ghiscoding/aurelia-slickgrid/issues/162)) ([51c0bbd](https://github.com/ghiscoding/aurelia-slickgrid/commit/51c0bbd))
+* **tests:** add more Extensions unit tests ([#184](https://github.com/ghiscoding/aurelia-slickgrid/issues/184)) ([5f6f3b0](https://github.com/ghiscoding/aurelia-slickgrid/commit/5f6f3b0))
+* **tests:** add more RowDetailExtension tests ([#185](https://github.com/ghiscoding/aurelia-slickgrid/issues/185)) ([e4d99e9](https://github.com/ghiscoding/aurelia-slickgrid/commit/e4d99e9))
+* **tests:** add Service Utilities full test suite ([#167](https://github.com/ghiscoding/aurelia-slickgrid/issues/167)) ([e6e4ed8](https://github.com/ghiscoding/aurelia-slickgrid/commit/e6e4ed8))
+* **tests:** add Sorters full test suite ([#164](https://github.com/ghiscoding/aurelia-slickgrid/issues/164)) ([d375939](https://github.com/ghiscoding/aurelia-slickgrid/commit/d375939))
+
+
+
 <a name="2.10.1"></a>
 ## [2.10.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.10.0...v2.10.1) (2019-04-21)
 
