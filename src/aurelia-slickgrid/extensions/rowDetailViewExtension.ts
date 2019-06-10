@@ -48,6 +48,7 @@ export class RowDetailViewExtension implements Extension {
     return this._eventHandler;
   }
 
+  /** Dispose of the RowDetailView Extension */
   dispose() {
     // unsubscribe all SlickGrid events
     this._eventHandler.unsubscribeAll();
@@ -57,6 +58,14 @@ export class RowDetailViewExtension implements Extension {
     }
     disposeAllSubscriptions(this._subscriptions);
     this.disposeAllViewSlot();
+  }
+
+  /** Dispose of all the opened Row Detail Panels Aurelia View Slots */
+  disposeAllViewSlot() {
+    if (Array.isArray(this._slots)) {
+      this._slots.forEach((slot) => this.disposeViewSlot(slot));
+    }
+    this._slots = [];
   }
 
   /**
@@ -206,13 +215,6 @@ export class RowDetailViewExtension implements Extension {
     }
   }
 
-  private disposeAllViewSlot() {
-    if (Array.isArray(this._slots)) {
-      this._slots.forEach((slot) => this.disposeViewSlot(slot));
-    }
-    this._slots = [];
-  }
-
   private disposeViewSlot(expandedView: CreatedView) {
     if (expandedView && expandedView.view && expandedView.viewSlot && expandedView.view.unbind && expandedView.viewSlot.remove) {
       const container = document.getElementsByClassName(`${ROW_DETAIL_CONTAINER_PREFIX}${this._slots[0].id}`);
@@ -262,22 +264,6 @@ export class RowDetailViewExtension implements Extension {
     }
   }
 
-  /** Redraw (re-render) all the expanded row detail View Slots */
-  private redrawAllViewSlots() {
-    this._slots.forEach((slot) => {
-      this.redrawViewSlot(slot);
-    });
-  }
-
-  /** Render all the expanded row detail View Slots */
-  private renderAllViewModels() {
-    this._slots.forEach((slot) => {
-      if (slot && slot.dataContext) {
-        this.renderViewModel(slot.dataContext);
-      }
-    });
-  }
-
   /**
    * Just before the row get expanded or collapsed we will do the following
    * First determine if the row is expanding or collapsing,
@@ -315,6 +301,22 @@ export class RowDetailViewExtension implements Extension {
         }
       });
     }
+  }
+
+  /** Redraw (re-render) all the expanded row detail View Slots */
+  private redrawAllViewSlots() {
+    this._slots.forEach((slot) => {
+      this.redrawViewSlot(slot);
+    });
+  }
+
+  /** Render all the expanded row detail View Slots */
+  private renderAllViewModels() {
+    this._slots.forEach((slot) => {
+      if (slot && slot.dataContext) {
+        this.renderViewModel(slot.dataContext);
+      }
+    });
   }
 
   /** Redraw the necessary View Slot */

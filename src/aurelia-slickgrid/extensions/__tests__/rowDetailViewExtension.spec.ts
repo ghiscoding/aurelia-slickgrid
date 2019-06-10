@@ -381,10 +381,11 @@ describe('rowDetailViewExtension', () => {
         });
     });
 
-    it('should call Angular Util "createAngularComponentAppendToDom" when grid "onColumnsReordered" is triggered', (done) => {
+    it('should call Aurelia Util "createAureliaViewModelAddToSlot" when grid "onColumnsReordered" is triggered', (done) => {
       const mockColumn = { id: 'field1', field: 'field1', width: 100, cssClass: 'red', __collapsed: true };
       const handlerSpy = jest.spyOn(extension.eventHandler, 'subscribe');
-      const appendSpy = jest.spyOn(aureliaUtilServiceStub, 'createAureliaViewModelAddToSlot');
+      // @ts-ignore:2345
+      const appendSpy = jest.spyOn(aureliaUtilServiceStub, 'createAureliaViewModelAddToSlot').mockReturnValue({ view: {}, viewSlot: {} });
 
       const instance = extension.create(columnsMock, gridOptionsMock);
       extension.register();
@@ -398,23 +399,85 @@ describe('rowDetailViewExtension', () => {
       expect(handlerSpy).toHaveBeenCalled();
     });
 
-    // xit('should call Angular Util "detachView" when grid "onSort" is triggered', (done) => {
-    //   const mockColumn = { id: 'field1', field: 'field1', width: 100, cssClass: 'red', __collapsed: true };
-    //   jest.spyOn(aureliaUtilServiceStub, 'createAureliaViewModelAddToSlot').mockReturnValue({ componentRef: { instance: {} } } as any);
-    //   const handlerSpy = jest.spyOn(extension.eventHandler, 'subscribe');
-    //   const detachSpy = jest.spyOn(applicationRefStub, 'detachView');
+    it('should call "redrawAllViewSlots" when event "filterChanged" is triggered', (done) => {
+      const mockColumn = { id: 'field1', field: 'field1', width: 100, cssClass: 'red', __collapsed: true };
+      const handlerSpy = jest.spyOn(extension.eventHandler, 'subscribe');
+      // @ts-ignore:2345
+      const appendSpy = jest.spyOn(aureliaUtilServiceStub, 'createAureliaViewModelAddToSlot').mockReturnValue({ view: { unbind: jest.fn() }, viewSlot: { remove: jest.fn() } });
 
-    //   const instance = extension.create(columnsMock, gridOptionsMock);
-    //   extension.register();
-    //   instance.onBeforeRowDetailToggle.subscribe(() => {
-    //     gridStub.onSort.notify({ impactedColumns: mockColumn }, new Slick.EventData(), gridStub);
-    //     expect(detachSpy).toHaveBeenCalledWith(undefined, expect.objectContaining({ className: 'container_field1' }), true);
-    //     done();
-    //   });
-    //   instance.onBeforeRowDetailToggle.notify({ item: mockColumn, grid: gridStub }, new Slick.EventData(), gridStub);
+      const instance = extension.create(columnsMock, gridOptionsMock);
 
-    //   expect(handlerSpy).toHaveBeenCalled();
-    // });
+      extension.register();
+      instance.onBeforeRowDetailToggle.subscribe(() => {
+        ea.publish('filterService:filterChanged', { columnId: 'field1', operator: '=', searchTerms: [] });
+        expect(appendSpy).toHaveBeenCalledWith(undefined, mockColumn, expect.objectContaining({ className: 'container_field1' }), true);
+        done();
+      });
+      instance.onBeforeRowDetailToggle.notify({ item: mockColumn, grid: gridStub }, new Slick.EventData(), gridStub);
+      instance.onBeforeRowDetailToggle.notify({ item: { ...mockColumn, __collapsed: false }, grid: gridStub }, new Slick.EventData(), gridStub);
+
+      expect(handlerSpy).toHaveBeenCalled();
+    });
+
+    it('should call "renderAllViewModels" when grid event "onAfterRowDetailToggle" is triggered', (done) => {
+      const mockColumn = { id: 'field1', field: 'field1', width: 100, cssClass: 'red', __collapsed: true };
+      const handlerSpy = jest.spyOn(extension.eventHandler, 'subscribe');
+      const getElementSpy = jest.spyOn(document, 'getElementsByClassName');
+      // @ts-ignore:2345
+      const appendSpy = jest.spyOn(aureliaUtilServiceStub, 'createAureliaViewModelAddToSlot').mockReturnValue({ view: { unbind: jest.fn() }, viewSlot: { remove: jest.fn() } });
+
+      const instance = extension.create(columnsMock, gridOptionsMock);
+
+      extension.register();
+      instance.onAfterRowDetailToggle.subscribe(() => {
+        expect(getElementSpy).toHaveBeenCalledWith('container_field1');
+        expect(appendSpy).toHaveBeenCalledWith(undefined, mockColumn, expect.objectContaining({ className: 'container_field1' }), true);
+        done();
+      });
+      instance.onBeforeRowDetailToggle.notify({ item: mockColumn, grid: gridStub }, new Slick.EventData(), gridStub);
+      instance.onAfterRowDetailToggle.notify({ item: mockColumn, grid: gridStub }, new Slick.EventData(), gridStub);
+
+      expect(handlerSpy).toHaveBeenCalled();
+    });
+
+    it('should call "redrawViewSlot" when grid event "onRowBackToViewportRange" is triggered', (done) => {
+      const mockColumn = { id: 'field1', field: 'field1', width: 100, cssClass: 'red', __collapsed: true };
+      const handlerSpy = jest.spyOn(extension.eventHandler, 'subscribe');
+      const getElementSpy = jest.spyOn(document, 'getElementsByClassName');
+      // @ts-ignore:2345
+      const appendSpy = jest.spyOn(aureliaUtilServiceStub, 'createAureliaViewModelAddToSlot').mockReturnValue({ view: { unbind: jest.fn() }, viewSlot: { remove: jest.fn() } });
+
+      const instance = extension.create(columnsMock, gridOptionsMock);
+
+      extension.register();
+      instance.onRowBackToViewportRange.subscribe(() => {
+        expect(getElementSpy).toHaveBeenCalledWith('container_field1');
+        expect(appendSpy).toHaveBeenCalledWith(undefined, mockColumn, expect.objectContaining({ className: 'container_field1' }), true);
+        done();
+      });
+      instance.onBeforeRowDetailToggle.notify({ item: mockColumn, grid: gridStub }, new Slick.EventData(), gridStub);
+      instance.onRowBackToViewportRange.notify({ item: mockColumn, grid: gridStub }, new Slick.EventData(), gridStub);
+
+      expect(handlerSpy).toHaveBeenCalled();
+    });
+
+    it('should call Aurelia Util "disposeAllViewSlot" when grid "onSort" is triggered', (done) => {
+      const mockColumn = { id: 'field1', field: 'field1', width: 100, cssClass: 'red', __collapsed: true };
+      jest.spyOn(aureliaUtilServiceStub, 'createAureliaViewModelAddToSlot').mockReturnValue({ componentRef: { instance: {} } } as any);
+      const handlerSpy = jest.spyOn(extension.eventHandler, 'subscribe');
+      const disposeSpy = jest.spyOn(extension, 'disposeAllViewSlot');
+
+      const instance = extension.create(columnsMock, gridOptionsMock);
+      extension.register();
+      instance.onBeforeRowDetailToggle.subscribe(() => {
+        gridStub.onSort.notify({ impactedColumns: mockColumn }, new Slick.EventData(), gridStub);
+        expect(disposeSpy).toHaveBeenCalled();
+        done();
+      });
+      instance.onBeforeRowDetailToggle.notify({ item: mockColumn, grid: gridStub }, new Slick.EventData(), gridStub);
+
+      expect(handlerSpy).toHaveBeenCalled();
+    });
 
     it('should dispose of the addon', () => {
       const instance = extension.create(columnsMock, gridOptionsMock);
