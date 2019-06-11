@@ -5,7 +5,7 @@ import { Column, Extension, ExtensionName, GridOption, SlickEventHandler } from 
 import { ExtensionUtility } from './extensionUtility';
 import { SharedService } from '../services/shared.service';
 import { AureliaUtilService } from './../services/aureliaUtilService';
-import { disposeAllSubscriptions } from '../services/utilities';
+import { addToArrayWhenNotExists, disposeAllSubscriptions } from '../services/utilities';
 import * as DOMPurify from 'dompurify';
 
 // using external non-typed js libraries
@@ -208,13 +208,6 @@ export class RowDetailViewExtension implements Extension {
   // private functions
   // ------------------
 
-  private addToArrayWhenNotFound(inputArray: any[], inputObj: any) {
-    const arrayRowIndex = inputArray.findIndex((obj) => obj.id === inputObj.id);
-    if (arrayRowIndex < 0) {
-      inputArray.push(inputObj);
-    }
-  }
-
   private disposeViewSlot(expandedView: CreatedView) {
     if (expandedView && expandedView.view && expandedView.viewSlot && expandedView.view.unbind && expandedView.viewSlot.remove) {
       const container = document.getElementsByClassName(`${ROW_DETAIL_CONTAINER_PREFIX}${this._slots[0].id}`);
@@ -235,7 +228,7 @@ export class RowDetailViewExtension implements Extension {
    */
   private notifyTemplate(item: any) {
     if (this._addon) {
-      this._addon.onAsyncResponse.notify({ item }, undefined, this);
+      this._addon.onAsyncResponse.notify({ item }, new Slick.EventData(), this);
     }
   }
 
@@ -245,11 +238,11 @@ export class RowDetailViewExtension implements Extension {
    */
   private async onProcessing(item: any) {
     if (item && typeof this._userProcessFn === 'function') {
+      let awaitedItemDetail: any;
       const userProcessFn = this._userProcessFn(item);
 
       // wait for the "userProcessFn", once resolved we will save it into the "collection"
       const response: any | any[] = await userProcessFn;
-      let awaitedItemDetail: any;
 
       if (response.hasOwnProperty('id')) {
         awaitedItemDetail = response; // from Promise
@@ -257,6 +250,11 @@ export class RowDetailViewExtension implements Extension {
         awaitedItemDetail = await response['json'](); // from Fetch
       } else if (response && response['content']) {
         awaitedItemDetail = response['content']; // from aurelia-http-client
+      }
+
+      if (!awaitedItemDetail || !awaitedItemDetail.hasOwnProperty('id')) {
+        throw new Error(`[Aurelia-Slickgrid] could not process the Row Detail, you must make sure that your "process" callback
+          (a Promise or an HttpClient call returning an Observable) returns an item object that has an "id" property`);
       }
 
       // notify the plugin with the new item details
@@ -279,7 +277,7 @@ export class RowDetailViewExtension implements Extension {
           id: args.item.id,
           dataContext: args.item
         };
-        this.addToArrayWhenNotFound(this._slots, viewInfo);
+        addToArrayWhenNotExists(this._slots, viewInfo);
       }
     } else {
       // collapsing, so dispose of the View/ViewSlot
