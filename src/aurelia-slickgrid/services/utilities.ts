@@ -4,6 +4,24 @@ import * as moment from 'moment';
 import * as $ from 'jquery';
 
 /**
+ * Add an item to an array only when the item does not exists, when the item is an object we will be using their "id" to compare
+ * @param inputArray
+ * @param inputItem
+ */
+export function addToArrayWhenNotExists(inputArray: any[], inputItem: any) {
+  let arrayRowIndex = -1;
+  if (typeof inputItem === 'object' && inputItem.hasOwnProperty('id')) {
+    arrayRowIndex = inputArray.findIndex((item) => item.id === inputItem.id);
+  } else {
+    arrayRowIndex = inputArray.findIndex((item) => item === inputItem);
+  }
+
+  if (arrayRowIndex < 0) {
+    inputArray.push(inputItem);
+  }
+}
+
+/**
  * Simple function to which will loop and create as demanded the number of white spaces,
  * this is used in the CSV export
  * @param int nbSpaces: number of white spaces to create
@@ -22,8 +40,10 @@ export function addWhiteSpaces(nbSpaces: number): string {
  * Create a in-memory div, set it's inner text(which jQuery automatically encodes)
  * then grab the encoded contents back out.  The div never exists on the page.
  */
-export function htmlDecode(encodedStr: string): string | null {
-  const parser = new DOMParser();
+export function htmlDecode(encodedStr: string): string {
+  // tslint:disable-next-line new-parens
+  const parser = DOMParser && new DOMParser();
+
   if (parser && parser.parseFromString) {
     const dom = parser.parseFromString(
       '<!doctype html><body>' + encodedStr,
@@ -273,10 +293,8 @@ export function mapFlatpickrDateFormatWithFieldType(fieldType: FieldType): strin
       map = 'Y-m-d H:i';
       break;
     case FieldType.dateTimeIsoAmPm:
-      map = 'Y-m-d h:i:S K'; // there is no lowercase in Flatpickr :(
-      break;
     case FieldType.dateTimeIsoAM_PM:
-      map = 'Y-m-d h:i:S K';
+      map = 'Y-m-d h:i:S K'; // there is no lowercase in Flatpickr :(
       break;
     // all Euro Formats (date/month/year)
     case FieldType.dateEuro:
