@@ -1,7 +1,7 @@
-import { Column, FieldType } from './../models/index';
+import { Column, FieldType, SortDirectionNumber } from './../models/index';
 import { Sorters } from './index';
 
-export function sortByFieldType(value1: any, value2: any, fieldType: FieldType, sortDirection: number, sortColumn: Column) {
+export function sortByFieldType(value1: any, value2: any, fieldType: FieldType, sortDirection: number | SortDirectionNumber, sortColumn: Column) {
   let sortResult = 0;
 
   switch (fieldType) {
