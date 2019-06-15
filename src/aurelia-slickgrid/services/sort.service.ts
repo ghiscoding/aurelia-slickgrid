@@ -257,7 +257,7 @@ export class SortService {
           const columnSortObj = sortColumns[i];
           if (columnSortObj && columnSortObj.sortCol) {
             const sortDirection = columnSortObj.sortAsc ? SortDirectionNumber.asc : SortDirectionNumber.desc;
-            const sortField = columnSortObj.sortCol.queryField || columnSortObj.sortCol.queryFieldSorter || columnSortObj.sortCol.field;
+            const sortField = columnSortObj.sortCol.queryFieldSorter || columnSortObj.sortCol.queryField || columnSortObj.sortCol.field;
             const fieldType = columnSortObj.sortCol.type || FieldType.string;
             let value1 = dataRow1[sortField];
             let value2 = dataRow2[sortField];
