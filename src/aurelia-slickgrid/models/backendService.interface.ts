@@ -60,7 +60,8 @@ export interface BackendService {
   // -----------------
 
   /** Execute when any of the filters changed */
-  processOnFilterChanged: (event: Event | KeyboardEvent | undefined, args: FilterChangedArgs) => Promise<string>;
+  // @deprecated return output should be string only not Promise
+  processOnFilterChanged: (event: Event | KeyboardEvent | undefined, args: FilterChangedArgs) => string | Promise<string>;
 
   /** Execute when the pagination changed */
   processOnPaginationChanged: (event: Event | undefined, args: PaginationChangedArgs) => string;
