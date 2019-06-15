@@ -1,4 +1,4 @@
-import { inject } from 'aurelia-framework';
+import { inject, singleton } from 'aurelia-framework';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
 import {
   Column,
@@ -19,6 +19,7 @@ import { SortService } from './sort.service';
 // using external non-typed js libraries
 declare var Slick: any;
 
+@singleton(true)
 @inject(EventAggregator)
 export class GridStateService {
   private _eventHandler = new Slick.EventHandler();
