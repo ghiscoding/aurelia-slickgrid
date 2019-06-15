@@ -8,10 +8,10 @@ export interface BackendServiceOption {
   /** Pagination options (itemsPerPage, pageSize, pageSizes) */
   paginationOptions?: any;
 
-  /** Filtering options, array of filter options */
+  /** array of Filtering Options, ex.: [{ field: 'firstName', operator: 'EQ', value: 'John' }] */
   filteringOptions?: any[];
 
-  /** Sorting options, array of sorter options */
+  /** array of Sorting Options, ex.: [{ field: 'firstName', direction: 'DESC' }] */
   sortingOptions?: any[];
 
   /** Execute the process callback command on component init (page load) */

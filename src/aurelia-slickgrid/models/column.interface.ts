@@ -50,7 +50,7 @@ export interface Column {
   /** Defaults to false, which leads to exclude the column from getting a header menu. For example, the checkbox row selection should not have a header menu. */
   excludeFromHeaderMenu?: boolean;
 
-  /** Defaults to false, which leads to exclude the field from the query (mostly a backend service query) */
+  /** Defaults to false, which leads to exclude the field from the query (typically a backend service query) */
   excludeFromQuery?: boolean;
 
   /**
