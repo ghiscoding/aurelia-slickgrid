@@ -7,7 +7,9 @@ import {
   Filters,
   GridOdataService,
   GridOption,
-  Statistic
+  OperatorType,
+  SortDirection,
+  Statistic,
 } from '../../aurelia-slickgrid';
 
 const defaultPageSize = 20;
@@ -88,6 +90,18 @@ export class Example5 {
         pageSizes: [10, 20, 50, 100, 500],
         pageSize: defaultPageSize,
         totalItems: 0
+      },
+      presets: {
+        // you can also type operator as string, e.g.: operator: 'EQ'
+        filters: [
+          { columnId: 'gender', searchTerms: ['male'], operator: OperatorType.equal },
+        ],
+        sorters: [
+          // direction can be written as 'asc' (uppercase or lowercase) and/or use the SortDirection type
+          { columnId: 'name', direction: 'asc' },
+          { columnId: 'gender', direction: SortDirection.DESC }
+        ],
+        pagination: { pageNumber: 2, pageSize: 20 }
       },
       backendServiceApi: {
         service: new GridOdataService(),
