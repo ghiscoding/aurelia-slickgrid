@@ -48,7 +48,7 @@ export function htmlDecode(encodedStr: string): string {
     const dom = parser.parseFromString(
       '<!doctype html><body>' + encodedStr,
       'text/html');
-    return dom && dom.body && dom.body.textContent;
+    return dom && dom.body && dom.body.textContent || '';
   } else {
     // for some browsers that might not support DOMParser, use jQuery instead
     return $('<div/>').html(encodedStr).text();

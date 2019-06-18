@@ -107,7 +107,7 @@ export const GlobalGridOptions: GridOption = {
     saveDetailViewOnScroll: false,
 
     // the following 2 property/method should always be override by the user
-    process: undefined,
+    process: () => new Promise((resolve) => resolve('')),
     viewModel: '',
   },
   rowHeight: 35,
