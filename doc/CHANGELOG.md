@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.11.3"></a>
+## [2.11.3](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.11.2...v2.11.3) (2019-06-18)
+
+
+### Bug Fixes
+
+* **core:** update to latest SlickGrid version to fix column resize ([4590844](https://github.com/ghiscoding/aurelia-slickgrid/commit/4590844))
+* **queryField:** queryFieldFilter and queryFieldSorter have precedence ([#191](https://github.com/ghiscoding/aurelia-slickgrid/issues/191)) ([73c8f37](https://github.com/ghiscoding/aurelia-slickgrid/commit/73c8f37))
+* **singleton:** all Services should be singleton, fixes [#190](https://github.com/ghiscoding/aurelia-slickgrid/issues/190) ([#192](https://github.com/ghiscoding/aurelia-slickgrid/issues/192)) ([0bbb0ae](https://github.com/ghiscoding/aurelia-slickgrid/commit/0bbb0ae))
+
+
+### Features
+
+* **example:** add Bootstrap Tabs example ([8255772](https://github.com/ghiscoding/aurelia-slickgrid/commit/8255772))
+* **odata:** add presets to GridOdata Service (and unit tests) ([#193](https://github.com/ghiscoding/aurelia-slickgrid/issues/193)) ([64b07fe](https://github.com/ghiscoding/aurelia-slickgrid/commit/64b07fe))
+* **tests:** add GraphqlQueryBuilder unit tests ([#189](https://github.com/ghiscoding/aurelia-slickgrid/issues/189)) ([3f9edba](https://github.com/ghiscoding/aurelia-slickgrid/commit/3f9edba))
+* **tests:** add missing sorterUtilities test ([#188](https://github.com/ghiscoding/aurelia-slickgrid/issues/188)) ([a2f5a67](https://github.com/ghiscoding/aurelia-slickgrid/commit/a2f5a67))
+* **tests:** add more RowDetailViewExtension unit tests ([#187](https://github.com/ghiscoding/aurelia-slickgrid/issues/187)) ([ffd9f0f](https://github.com/ghiscoding/aurelia-slickgrid/commit/ffd9f0f))
+
+
+
 <a name="2.11.2"></a>
 ## [2.11.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.11.1...v2.11.2) (2019-06-08)
 
