@@ -1,4 +1,4 @@
-import { inject } from 'aurelia-framework';
+import { inject, singleton } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import {
   CollectionFilterBy,
@@ -13,6 +13,7 @@ import {
 import { sortByFieldType } from '../sorters/sorterUtilities';
 import { uniqueArray } from './utilities';
 
+@singleton(true)
 @inject(I18N)
 export class CollectionService {
   constructor(private i18n: I18N) { }
