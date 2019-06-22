@@ -415,7 +415,7 @@ export class AureliaSlickgridCustomElement {
 
     // attach external sorting (backend) when available or default onSort (dataView)
     if (gridOptions.enableSorting && !this.customDataView) {
-      gridOptions.backendServiceApi ? this.sortService.attachBackendOnSort(grid, dataView) : this.sortService.attachLocalOnSort(grid, dataView);
+      gridOptions.backendServiceApi ? this.sortService.bindBackendOnSort(grid, dataView) : this.sortService.bindLocalOnSort(grid, dataView);
     }
 
     // attach external filter (backend) when available or default onFilter (dataView)
@@ -467,8 +467,8 @@ export class AureliaSlickgridCustomElement {
     );
 
     // on cell click, mainly used with the columnDef.action callback
-    this.gridEventService.attachOnCellChange(grid, dataView);
-    this.gridEventService.attachOnClick(grid, dataView);
+    this.gridEventService.bindOnCellChange(grid, dataView);
+    this.gridEventService.bindOnClick(grid, dataView);
 
     if (dataView && grid) {
       this._eventHandler.subscribe(dataView.onRowCountChanged, (e: any, args: any) => {
@@ -603,7 +603,7 @@ export class AureliaSlickgridCustomElement {
     // if user entered some Sort "presets", we need to reflect them all in the DOM
     if (gridOptions.enableSorting) {
       if (gridOptions.presets && Array.isArray(gridOptions.presets.sorters) && gridOptions.presets.sorters.length > 0) {
-        this.sortService.loadLocalPresets(grid, dataView);
+        this.sortService.loadLocalGridPresets(grid, dataView);
       }
     }
   }

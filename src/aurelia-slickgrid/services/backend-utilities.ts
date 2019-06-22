@@ -1,4 +1,3 @@
-
 import { GraphqlResult } from '../models/graphqlResult.interface';
 import { BackendServiceApi } from '../models/backendServiceApi.interface';
 import { GridOption } from '../models/index';
