@@ -9,11 +9,14 @@ import {
   SlickEvent,
   SortDirection,
   CurrentSorter,
+  SlickEventHandler,
   SortDirectionNumber,
   SortDirectionString,
+  GraphqlResult,
 } from './../models/index';
 import { getDescendantProperty } from './utilities';
 import { sortByFieldType } from '../sorters/sorterUtilities';
+import { executeBackendProcessesCallback, onBackendError } from './backend-utilities';
 
 // using external non-typed js libraries
 declare var Slick: any;
@@ -22,13 +25,18 @@ declare var Slick: any;
 @inject(EventAggregator)
 export class SortService {
   private _currentLocalSorters: CurrentSorter[] = [];
-  private _eventHandler: any = new Slick.EventHandler();
+  private _eventHandler: SlickEventHandler;
   private _dataView: any;
   private _grid: any;
   private _isBackendGrid = false;
-  private _slickSubscriber: SlickEvent = new Slick.Event();
 
-  constructor(private ea: EventAggregator) { }
+  get eventHandler(): SlickEventHandler {
+    return this._eventHandler;
+  }
+
+  constructor(private ea: EventAggregator) {
+    this._eventHandler = new Slick.EventHandler();
+  }
 
   /** Getter for the Grid Options pulled through the Grid Object */
   private get _gridOptions(): GridOption {
@@ -41,85 +49,31 @@ export class SortService {
   }
 
   /**
-   * Attach a backend sort (single/multi) hook to the grid
+   * Bind a backend sort (single/multi) hook to the grid
    * @param grid SlickGrid Grid object
    * @param dataView SlickGrid DataView object
    */
-  attachBackendOnSort(grid: any, dataView: any) {
+  bindBackendOnSort(grid: any, dataView: any) {
     this._isBackendGrid = true;
     this._grid = grid;
     this._dataView = dataView;
-    this._slickSubscriber = grid.onSort;
 
     // subscribe to the SlickGrid event and call the backend execution
-    this._slickSubscriber.subscribe(this.onBackendSortChanged.bind(this));
-  }
-
-  async onBackendSortChanged(event: Event | undefined, args: any) {
-    if (!args || !args.grid) {
-      throw new Error('Something went wrong when trying to attach the "onBackendSortChanged(event, args)" function, it seems that "args" is not populated correctly');
-    }
-    const gridOptions: GridOption = args.grid.getOptions() || {};
-    const backendApi = gridOptions.backendServiceApi;
-
-    if (!backendApi || !backendApi.process || !backendApi.service) {
-      throw new Error(`BackendServiceApi requires at least a "process" function and a "service" defined`);
-    }
-
-    try {
-      // keep start time & end timestamps & return it after process execution
-      const startTime = new Date();
-
-      if (backendApi.preProcess) {
-        backendApi.preProcess();
-      }
-
-      const query = backendApi.service.processOnSortChanged(event, args);
-      this.emitSortChanged(EmitterType.remote);
-
-      // await for the Promise to resolve the data
-      const processResult = await backendApi.process(query);
-      const endTime = new Date();
-
-      // from the result, call our internal post process to update the Dataset and Pagination info
-      if (processResult && backendApi.internalPostProcess) {
-        if (processResult instanceof Object) {
-          processResult.statistics = {
-            startTime,
-            endTime,
-            executionTime: endTime.valueOf() - startTime.valueOf(),
-            totalItemCount: this._gridOptions && this._gridOptions.pagination && this._gridOptions.pagination.totalItems
-          };
-        }
-        backendApi.internalPostProcess(processResult);
-      }
-
-      // send the response process to the postProcess callback
-      if (backendApi.postProcess) {
-        backendApi.postProcess(processResult);
-      }
-    } catch (e) {
-      if (backendApi && backendApi.onError) {
-        backendApi.onError(e);
-      } else {
-        throw e;
-      }
-    }
+    this._eventHandler.subscribe(grid.onSort, this.onBackendSortChanged.bind(this));
   }
 
   /**
-   * Attach a local sort (single/multi) hook to the grid
+   * Bind a local sort (single/multi) hook to the grid
    * @param grid SlickGrid Grid object
    * @param gridOptions Grid Options object
    * @param dataView
    */
-  attachLocalOnSort(grid: any, dataView: any) {
+  bindLocalOnSort(grid: any, dataView: any) {
     this._isBackendGrid = false;
     this._grid = grid;
     this._dataView = dataView;
-    this._slickSubscriber = grid.onSort;
 
-    this._slickSubscriber.subscribe((e: any, args: any) => {
+    this._eventHandler.subscribe(grid.onSort, (e: any, args: any) => {
       // multiSort and singleSort are not exactly the same, but we want to structure it the same for the (for loop) after
       // also to avoid having to rewrite the for loop in the sort, we will make the singleSort an array of 1 object
       const sortColumns = (args.multiColumnSort) ? args.sortCols : new Array({ sortAsc: args.sortAsc, sortCol: args.sortCol });
@@ -186,18 +140,18 @@ export class SortService {
   }
 
   /**
-   * Get column sorts,
-   * If a column is passed as an argument, we won't add this column to our output array since it is already in the array
-   * We want to know the sort prior to calling the next sorting command
+   * Get current column sorts,
+   * If a column is passed as an argument, that will be exclusion so we won't add this column to our output array since it is already in the array.
+   * The usage of this method is that we want to know the sort prior to calling the next sorting command
    */
-  getPreviousColumnSorts(columnId?: string) {
+  getCurrentColumnSorts(excludedColumnId?: string) {
     // getSortColumns() only returns sortAsc & columnId, we want the entire column definition
     const oldSortColumns = this._grid && this._grid.getSortColumns();
 
     // get the column definition but only keep column which are not equal to our current column
     if (Array.isArray(oldSortColumns)) {
       const sortedCols = oldSortColumns.reduce((cols: ColumnSort[], col: ColumnSort) => {
-        if (!columnId || col.columnId !== columnId) {
+        if (!excludedColumnId || col.columnId !== excludedColumnId) {
           cols.push({ sortCol: this._columnDefinitions[this._grid.getColumnIndex(col.columnId)], sortAsc: col.sortAsc });
         }
         return cols;
@@ -209,13 +163,13 @@ export class SortService {
   }
 
   /**
-   * load any presets if there are any
+   * Load any presets, if there are any, that are defined in the Grid Options
    * @param grid
    * @param gridOptions
    * @param dataView
    * @param columnDefinitions
    */
-  loadLocalPresets(grid: any, dataView: any) {
+  loadLocalGridPresets(grid: any, dataView: any) {
     const sortCols: ColumnSort[] = [];
     this._currentLocalSorters = []; // reset current local sorters
     if (this._gridOptions && this._gridOptions.presets && this._gridOptions.presets.sorters) {
@@ -245,6 +199,41 @@ export class SortService {
     }
   }
 
+  dispose() {
+    // unsubscribe all SlickGrid events
+    this._eventHandler.unsubscribeAll();
+  }
+
+  onBackendSortChanged(event: Event | undefined, args: any) {
+    if (!args || !args.grid) {
+      throw new Error('Something went wrong when trying to bind the "onBackendSortChanged(event, args)" function, it seems that "args" is not populated correctly');
+    }
+    const gridOptions: GridOption = (args.grid && args.grid.getOptions) ? args.grid.getOptions() : {};
+    const backendApi = gridOptions.backendServiceApi;
+
+    if (!backendApi || !backendApi.process || !backendApi.service) {
+      throw new Error(`BackendServiceApi requires at least a "process" function and a "service" defined`);
+    }
+
+    // keep start time & end timestamps & return it after process execution
+    const startTime = new Date();
+
+    if (backendApi.preProcess) {
+      backendApi.preProcess();
+    }
+
+    const query = backendApi.service.processOnSortChanged(event, args);
+    this.emitSortChanged(EmitterType.remote);
+
+    // await for the Promise to resolve the data
+    // the processes can be Observables (like HttpClient) or Promises
+    const process = backendApi.process(query);
+    if (process instanceof Promise && process.then) {
+      process.then((processResult: GraphqlResult | any) => executeBackendProcessesCallback(startTime, processResult, backendApi, this._gridOptions))
+        .catch((error: any) => onBackendError(error, backendApi));
+    }
+  }
+
   /** When a Sort Changes on a Local grid (JSON dataset) */
   onLocalSortChanged(grid: any, dataView: any, sortColumns: ColumnSort[], forceReSort = false) {
     if (grid && dataView) {
@@ -252,60 +241,59 @@ export class SortService {
         dataView.reSort();
       }
 
-      dataView.sort((dataRow1: any, dataRow2: any) => {
-        for (let i = 0, l = sortColumns.length; i < l; i++) {
-          const columnSortObj = sortColumns[i];
-          if (columnSortObj && columnSortObj.sortCol) {
-            const sortDirection = columnSortObj.sortAsc ? SortDirectionNumber.asc : SortDirectionNumber.desc;
-            const sortField = columnSortObj.sortCol.queryFieldSorter || columnSortObj.sortCol.queryField || columnSortObj.sortCol.field;
-            const fieldType = columnSortObj.sortCol.type || FieldType.string;
-            let value1 = dataRow1[sortField];
-            let value2 = dataRow2[sortField];
-
-            // when item is a complex object (dot "." notation), we need to filter the value contained in the object tree
-            if (sortField && sortField.indexOf('.') >= 0) {
-              value1 = getDescendantProperty(dataRow1, sortField);
-              value2 = getDescendantProperty(dataRow2, sortField);
-            }
-
-            // user could provide his own custom Sorter
-            if (columnSortObj.sortCol && columnSortObj.sortCol.sorter) {
-              const customSortResult = columnSortObj.sortCol.sorter(value1, value2, sortDirection, columnSortObj.sortCol);
-              if (customSortResult !== SortDirectionNumber.neutral) {
-                return customSortResult;
-              }
-            }
-
-            const sortResult = sortByFieldType(value1, value2, fieldType, sortDirection, columnSortObj.sortCol);
-            if (sortResult !== SortDirectionNumber.neutral) {
-              return sortResult;
-            }
-          }
-        }
-        return 0;
-      });
+      dataView.sort(this.sortComparer.bind(this, sortColumns));
 
       grid.invalidate();
       grid.render();
     }
   }
 
-  dispose() {
-    // unsubscribe local event
-    if (this._slickSubscriber && typeof this._slickSubscriber.unsubscribe === 'function') {
-      this._slickSubscriber.unsubscribe();
-    }
+  sortComparer(sortColumns: ColumnSort[], dataRow1: any, dataRow2: any) {
+    if (Array.isArray(sortColumns)) {
+      for (let i = 0, l = sortColumns.length; i < l; i++) {
+        const columnSortObj = sortColumns[i];
+        if (columnSortObj && columnSortObj.sortCol) {
+          const sortDirection = columnSortObj.sortAsc ? SortDirectionNumber.asc : SortDirectionNumber.desc;
+          const sortField = columnSortObj.sortCol.queryFieldSorter || columnSortObj.sortCol.queryField || columnSortObj.sortCol.field;
+          const fieldType = columnSortObj.sortCol.type || FieldType.string;
+          let value1 = dataRow1[sortField];
+          let value2 = dataRow2[sortField];
 
-    // unsubscribe all SlickGrid events
-    this._eventHandler.unsubscribeAll();
+          // when item is a complex object (dot "." notation), we need to filter the value contained in the object tree
+          if (sortField && sortField.indexOf('.') >= 0) {
+            value1 = getDescendantProperty(dataRow1, sortField);
+            value2 = getDescendantProperty(dataRow2, sortField);
+          }
+
+          // user could provide his own custom Sorter
+          if (columnSortObj.sortCol && columnSortObj.sortCol.sorter) {
+            const customSortResult = columnSortObj.sortCol.sorter(value1, value2, sortDirection, columnSortObj.sortCol);
+            if (customSortResult !== SortDirectionNumber.neutral) {
+              return customSortResult;
+            }
+          } else {
+            const sortResult = sortByFieldType(value1, value2, fieldType, sortDirection, columnSortObj.sortCol);
+            if (sortResult !== SortDirectionNumber.neutral) {
+              return sortResult;
+            }
+          }
+
+        }
+      }
+    }
+    return SortDirectionNumber.neutral;
   }
+
+  // --
+  // private functions
+  // -------------------
 
   /**
    * A simple function that will be called to emit a change when a sort changes.
    * Other services, like Pagination, can then subscribe to it.
    * @param sender
    */
-  emitSortChanged(sender: EmitterType) {
+  private emitSortChanged(sender: EmitterType) {
     if (sender === EmitterType.remote && this._gridOptions && this._gridOptions.backendServiceApi) {
       let currentSorters: CurrentSorter[] = [];
       const backendService = this._gridOptions.backendServiceApi.service;

@@ -268,8 +268,8 @@ export class HeaderMenuExtension implements Extension {
   private clearColumnSort(e: Event, args: HeaderMenuOnCommandArgs) {
     if (args && args.column && this.sharedService) {
       // get previously sorted columns
-      const allSortedCols: ColumnSort[] = this.sortService.getPreviousColumnSorts();
-      const sortedColsWithoutCurrent: ColumnSort[] = this.sortService.getPreviousColumnSorts(args.column.id + '');
+      const allSortedCols: ColumnSort[] = this.sortService.getCurrentColumnSorts();
+      const sortedColsWithoutCurrent: ColumnSort[] = this.sortService.getCurrentColumnSorts(args.column.id + '');
 
       if (Array.isArray(allSortedCols) && Array.isArray(sortedColsWithoutCurrent) && allSortedCols.length !== sortedColsWithoutCurrent.length) {
         if (this.sharedService.gridOptions.backendServiceApi) {
@@ -327,7 +327,7 @@ export class HeaderMenuExtension implements Extension {
   private sortColumn(event: Event, args: HeaderMenuOnCommandArgs, isSortingAsc = true) {
     if (args && args.column) {
       // get previously sorted columns
-      const sortedColsWithoutCurrent: ColumnSort[] = this.sortService.getPreviousColumnSorts(args.column.id + '');
+      const sortedColsWithoutCurrent: ColumnSort[] = this.sortService.getCurrentColumnSorts(args.column.id + '');
 
       // add to the column array, the column sorted by the header menu
       sortedColsWithoutCurrent.push({ sortCol: args.column, sortAsc: isSortingAsc });
