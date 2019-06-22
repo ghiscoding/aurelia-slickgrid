@@ -28,7 +28,7 @@ export class Index {
       { route: 'example19', moduleId: PLATFORM.moduleName('./example19'), name: 'example19', nav: true, title: '19- Row Detail View' },
       { route: 'example20', moduleId: PLATFORM.moduleName('./example20'), name: 'example20', nav: true, title: '20- Pinned Columns/Rows' },
       { route: 'example21', moduleId: PLATFORM.moduleName('./example21'), name: 'example21', nav: true, title: '21- Grid AutoHeight (full height)' },
-      { route: 'example22', moduleId: PLATFORM.moduleName('./example22'), name: 'example22', nav: true, title: '22- within Bootstrap Tabs' },
+      { route: 'example22', moduleId: PLATFORM.moduleName('./example22'), name: 'example22', nav: true, title: '22- with Bootstrap Tabs' },
     ];
 
     config.map(mapping);
