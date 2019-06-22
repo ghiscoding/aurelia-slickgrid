@@ -12,6 +12,14 @@ import {
   GridOption
 } from '../../aurelia-slickgrid';
 
+// create a custom translate Formatter (typically you would move that a separate file, for separation of concerns)
+const taskTranslateFormatter: Formatter = (row: number, cell: number, value: any, columnDef: any, dataContext: any, grid: any) => {
+  const gridOptions = (grid && typeof grid.getOptions === 'function') ? grid.getOptions() : {};
+  const i18n = gridOptions.i18n;
+
+  return i18n && i18n.tr && i18n.tr('TASK_X', { x: value });
+};
+
 @autoinject()
 export class Example12 {
   title = 'Example 12: Localization (i18n)';
@@ -67,7 +75,7 @@ export class Example12 {
   /* Define grid Options and Columns */
   defineGrid() {
     this.columnDefinitions = [
-      { id: 'title', name: 'Title', field: 'id', headerKey: 'TITLE', formatter: this.taskTranslateFormatter, sortable: true, minWidth: 100, filterable: true, params: { useFormatterOuputToFilter: true } },
+      { id: 'title', name: 'Title', field: 'id', headerKey: 'TITLE', formatter: taskTranslateFormatter, sortable: true, minWidth: 100, filterable: true, params: { useFormatterOuputToFilter: true } },
       { id: 'description', name: 'Description', field: 'description', filterable: true, sortable: true, minWidth: 80 },
       {
         id: 'duration', name: 'Duration (days)', field: 'duration', headerKey: 'DURATION', sortable: true,
@@ -152,7 +160,7 @@ export class Example12 {
   }
 
   dynamicallyAddTitleHeader() {
-    const newCol = { id: `title${this.duplicateTitleHeaderCount++}`, field: 'id', headerKey: 'TITLE', formatter: this.taskTranslateFormatter, sortable: true, minWidth: 100, filterable: true, params: { useFormatterOuputToFilter: true } };
+    const newCol = { id: `title${this.duplicateTitleHeaderCount++}`, field: 'id', headerKey: 'TITLE', formatter: taskTranslateFormatter, sortable: true, minWidth: 100, filterable: true, params: { useFormatterOuputToFilter: true } };
     this.columnDefinitions.push(newCol);
   }
 
@@ -167,10 +175,5 @@ export class Example12 {
   switchLanguage() {
     this.selectedLanguage = (this.selectedLanguage === 'en') ? 'fr' : 'en';
     this.i18n.setLocale(this.selectedLanguage);
-  }
-
-  // create a custom translate Formatter
-  taskTranslateFormatter: Formatter = (row, cell, value, columnDef, dataContext) => {
-    return this.i18n.tr('TASK_X', { x: value });
   }
 }
