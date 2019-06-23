@@ -6,7 +6,7 @@ import { SlickgridConfig } from './slickgrid-config';
 const eventAggregator = {
   publish: jest.fn(),
   subscribe: jest.fn()
-}
+};
 jest.mock('flatpickr', () => { });
 jest.mock('aurelia-event-aggregator', () => ({
   EventAggregator: eventAggregator
