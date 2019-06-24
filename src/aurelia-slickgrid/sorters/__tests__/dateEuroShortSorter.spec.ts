@@ -2,14 +2,14 @@ import { SortDirectionNumber } from '../../models/sortDirectionNumber.enum';
 import { dateEuroShortSorter } from '../dateEuroShortSorter';
 
 describe('the Date Euro Short Sorter', () => {
-  it('should return an array of US dates sorted ascending when only valid dates are provided', () => {
+  it('should return an array of dates sorted ascending when only valid dates are provided', () => {
     const direction = SortDirectionNumber.asc;
     const inputArray = ['8/8/98', '8/10/98', '8/8/98', '01/01/18', '14/12/98'];
     inputArray.sort((value1, value2) => dateEuroShortSorter(value1, value2, direction));
     expect(inputArray).toEqual(['8/8/98', '8/8/98', '8/10/98', '14/12/98', '01/01/18']);
   });
 
-  it('should return an array of US dates sorted descending when only valid dates are provided', () => {
+  it('should return an array of dates sorted descending when only valid dates are provided', () => {
     const direction = SortDirectionNumber.desc;
     const inputArray = ['8/8/98', '8/10/98', null, '8/8/98', '01/01/18', '14/12/98'];
     inputArray.sort((value1, value2) => dateEuroShortSorter(value1, value2, direction));
