@@ -6,7 +6,6 @@ import {
   EmitterType,
   FieldType,
   GridOption,
-  SlickEvent,
   SortDirection,
   CurrentSorter,
   SlickEventHandler,
@@ -30,12 +29,13 @@ export class SortService {
   private _grid: any;
   private _isBackendGrid = false;
 
-  get eventHandler(): SlickEventHandler {
-    return this._eventHandler;
-  }
-
   constructor(private ea: EventAggregator) {
     this._eventHandler = new Slick.EventHandler();
+  }
+
+  /** Getter of the SlickGrid Event Handler */
+  get eventHandler(): SlickEventHandler {
+    return this._eventHandler;
   }
 
   /** Getter for the Grid Options pulled through the Grid Object */
