@@ -1,8 +1,7 @@
-import { Column } from '../models/column.interface';
-import { FieldType } from './../models/fieldType.enum';
+import { Column, FieldType, SortDirectionNumber } from './../models/index';
 import { Sorters } from './index';
 
-export function sortByFieldType(value1: any, value2: any, fieldType: FieldType, sortDirection: number, sortColumn: Column) {
+export function sortByFieldType(value1: any, value2: any, fieldType: FieldType, sortDirection: number | SortDirectionNumber, sortColumn: Column) {
   let sortResult = 0;
 
   switch (fieldType) {
@@ -15,6 +14,14 @@ export function sortByFieldType(value1: any, value2: any, fieldType: FieldType, 
     case FieldType.dateIso:
       sortResult = Sorters.dateIso(value1, value2, sortDirection);
       break;
+    // all Euro Formats (date/month/year)
+    case FieldType.dateEuro:
+      sortResult = Sorters.dateEuro(value1, value2, sortDirection);
+      break;
+    case FieldType.dateEuroShort:
+      sortResult = Sorters.dateEuroShort(value1, value2, sortDirection);
+      break;
+    // all US Formats (month/date/year)
     case FieldType.dateUs:
       sortResult = Sorters.dateUs(value1, value2, sortDirection);
       break;

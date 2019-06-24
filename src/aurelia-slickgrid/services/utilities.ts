@@ -4,8 +4,26 @@ import * as moment from 'moment';
 import * as $ from 'jquery';
 
 /**
+ * Add an item to an array only when the item does not exists, when the item is an object we will be using their "id" to compare
+ * @param inputArray
+ * @param inputItem
+ */
+export function addToArrayWhenNotExists(inputArray: any[], inputItem: any) {
+  let arrayRowIndex = -1;
+  if (typeof inputItem === 'object' && inputItem.hasOwnProperty('id')) {
+    arrayRowIndex = inputArray.findIndex((item) => item.id === inputItem.id);
+  } else {
+    arrayRowIndex = inputArray.findIndex((item) => item === inputItem);
+  }
+
+  if (arrayRowIndex < 0) {
+    inputArray.push(inputItem);
+  }
+}
+
+/**
  * Simple function to which will loop and create as demanded the number of white spaces,
- * this will be used in the Excel export
+ * this is used in the CSV export
  * @param int nbSpaces: number of white spaces to create
  */
 export function addWhiteSpaces(nbSpaces: number): string {
@@ -17,15 +35,46 @@ export function addWhiteSpaces(nbSpaces: number): string {
   return result;
 }
 
-/** HTML encode using jQuery */
-export function htmlEncode(value: string): any {
-  // create a in-memory div, set it's inner text(which jQuery automatically encodes)
-  // then grab the encoded contents back out.  The div never exists on the page.
-  return $('<div/>').text(value).html();
+/**
+ * HTML decode using jQuery with a <div>
+ * Create a in-memory div, set it's inner text(which jQuery automatically encodes)
+ * then grab the encoded contents back out.  The div never exists on the page.
+ */
+export function htmlDecode(encodedStr: string): string {
+  // tslint:disable-next-line new-parens
+  const parser = DOMParser && new DOMParser();
+
+  if (parser && parser.parseFromString) {
+    const dom = parser.parseFromString(
+      '<!doctype html><body>' + encodedStr,
+      'text/html');
+    return dom && dom.body && dom.body.textContent || '';
+  } else {
+    // for some browsers that might not support DOMParser, use jQuery instead
+    return $('<div/>').html(encodedStr).text();
+  }
 }
-/** HTML decode using jQuery */
-export function htmlDecode(value: string): string {
-  return $('<div/>').html(value).text();
+
+/**
+ * HTML encode using jQuery with a <div>
+ * Create a in-memory div, set it's inner text(which jQuery automatically encodes)
+ * then grab the encoded contents back out.  The div never exists on the page.
+ */
+export function htmlEncode(inputValue: string): string {
+  const entityMap = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    '\'': '&#39;',
+    // '/': '&#x2F;',
+    // '`': '&#x60;',
+    // '=': '&#x3D;'
+  };
+  // all symbols::  /[&<>"'`=\/]/g
+  return inputValue.replace(/[&<>"']/g, (s) => {
+    return entityMap[s];
+  });
 }
 
 /**
@@ -58,22 +107,50 @@ export function htmlEntityEncode(input: any): string {
  * @param minDecimal
  * @param maxDecimal
  */
-export function decimalFormatted(input: number | string, minDecimal?: number, maxDecimal?: number) {
+export function decimalFormatted(input: number | string, minDecimal?: number, maxDecimal?: number): string {
   if (isNaN(+input)) {
-    return input;
+    return input as string;
   }
 
   const minDec = (minDecimal === undefined) ? 2 : minDecimal;
   const maxDec = (maxDecimal === undefined) ? 2 : maxDecimal;
   let amount = String(Math.round(+input * Math.pow(10, maxDec)) / Math.pow(10, maxDec));
 
-  if (amount.indexOf('.') < 0) {
+  if ((amount.indexOf('.') < 0) && (minDec > 0)) {
     amount += '.';
   }
   while ((amount.length - amount.indexOf('.')) <= minDec) {
     amount += '0';
   }
   return amount;
+}
+
+export function formatNumber(input: number | string, minDecimal?: number, maxDecimal?: number, displayNegativeNumberWithParentheses?: boolean, symbolPrefix = '', symbolSuffix = ''): string {
+  if (isNaN(+input)) {
+    return input as string;
+  }
+
+  const calculatedValue = ((Math.round(parseFloat(input as string) * 1000000) / 1000000));
+
+  if (calculatedValue < 0) {
+    const absValue = Math.abs(calculatedValue);
+    if (displayNegativeNumberWithParentheses) {
+      if (!isNaN(minDecimal as number) || !isNaN(maxDecimal as number)) {
+        return `(${symbolPrefix}${decimalFormatted(absValue, minDecimal, maxDecimal)}${symbolSuffix})`;
+      }
+      return `(${symbolPrefix}${absValue}${symbolSuffix})`;
+    } else {
+      if (!isNaN(minDecimal as number) || !isNaN(maxDecimal as number)) {
+        return `-${symbolPrefix}${decimalFormatted(absValue, minDecimal, maxDecimal)}${symbolSuffix}`;
+      }
+      return `-${symbolPrefix}${absValue}${symbolSuffix}`;
+    }
+  } else {
+    if (!isNaN(minDecimal as number) || !isNaN(maxDecimal as number)) {
+      return `${symbolPrefix}${decimalFormatted(input, minDecimal, maxDecimal)}${symbolSuffix}`;
+    }
+    return `${symbolPrefix}${input}${symbolSuffix}`;
+  }
 }
 
 /**
@@ -91,7 +168,7 @@ export function disposeAllSubscriptions(subscriptions: Subscription[]) {
 }
 
 /** From a dot (.) notation find and return a property within an object given a path */
-export function getDescendantProperty(obj: any, path: string) {
+export function getDescendantProperty(obj: any, path: string): any {
   return path.split('.').reduce((acc, part) => acc && acc[part], obj);
 }
 
@@ -116,6 +193,32 @@ export function mapMomentDateFormatWithFieldType(fieldType: FieldType): string {
     case FieldType.dateTimeShortIso:
       map = 'YYYY-MM-DD HH:mm';
       break;
+    // all Euro Formats (date/month/year)
+    case FieldType.dateEuro:
+      map = 'DD/MM/YYYY';
+      break;
+    case FieldType.dateEuroShort:
+      map = 'D/M/YY';
+      break;
+    case FieldType.dateTimeEuro:
+      map = 'DD/MM/YYYY HH:mm:ss';
+      break;
+    case FieldType.dateTimeShortEuro:
+      map = 'DD/MM/YYYY HH:mm';
+      break;
+    case FieldType.dateTimeEuroAmPm:
+      map = 'DD/MM/YYYY hh:mm:ss a';
+      break;
+    case FieldType.dateTimeEuroAM_PM:
+      map = 'DD/MM/YYYY hh:mm:ss A';
+      break;
+    case FieldType.dateTimeEuroShort:
+      map = 'D/M/YY H:m:s';
+      break;
+    case FieldType.dateTimeEuroShortAmPm:
+      map = 'D/M/YY h:m:s a';
+      break;
+    // all US Formats (month/date/year)
     case FieldType.dateUs:
       map = 'MM/DD/YYYY';
       break;
@@ -190,11 +293,35 @@ export function mapFlatpickrDateFormatWithFieldType(fieldType: FieldType): strin
       map = 'Y-m-d H:i';
       break;
     case FieldType.dateTimeIsoAmPm:
+    case FieldType.dateTimeIsoAM_PM:
       map = 'Y-m-d h:i:S K'; // there is no lowercase in Flatpickr :(
       break;
-    case FieldType.dateTimeIsoAM_PM:
-      map = 'Y-m-d h:i:S K';
+    // all Euro Formats (date/month/year)
+    case FieldType.dateEuro:
+      map = 'd/m/Y';
       break;
+    case FieldType.dateEuroShort:
+      map = 'd/m/y';
+      break;
+    case FieldType.dateTimeEuro:
+      map = 'd/m/Y H:i:S';
+      break;
+    case FieldType.dateTimeShortEuro:
+      map = 'd/m/y H:i';
+      break;
+    case FieldType.dateTimeEuroAmPm:
+      map = 'd/m/Y h:i:S K'; // there is no lowercase in Flatpickr :(
+      break;
+    case FieldType.dateTimeEuroAM_PM:
+      map = 'd/m/Y h:i:s K';
+      break;
+    case FieldType.dateTimeEuroShort:
+      map = 'd/m/y H:i:s';
+      break;
+    case FieldType.dateTimeEuroShortAmPm:
+      map = 'd/m/y h:i:s K'; // there is no lowercase in Flatpickr :(
+      break;
+    // all US Formats (month/date/year)
     case FieldType.dateUs:
       map = 'm/d/Y';
       break;
@@ -260,11 +387,15 @@ export function mapOperatorType(operator: string): OperatorType {
       break;
     case '*':
     case '.*':
+    case 'a*':
     case 'startsWith':
+    case 'StartsWith':
       map = OperatorType.startsWith;
       break;
     case '*.':
+    case '*z':
     case 'endsWith':
+    case 'EndsWith':
       map = OperatorType.endsWith;
       break;
     case '=':
@@ -282,6 +413,14 @@ export function mapOperatorType(operator: string): OperatorType {
     case 'NOT_IN':
       map = OperatorType.notIn;
       break;
+    case 'not_contains':
+    case 'Not_Contains':
+    case 'notContains':
+    case 'NotContains':
+    case 'NOT_CONTAINS':
+      map = OperatorType.notContains;
+      break;
+    case 'Contains':
     default:
       map = OperatorType.contains;
       break;
@@ -291,8 +430,8 @@ export function mapOperatorType(operator: string): OperatorType {
 }
 
 /**
- * Mapper for query operator by a Field Type
- * For example a String should use "Contains" but a number should use "EQ" operator
+ * Mapper for query operator by a Filter Type
+ * For example a multiple-select typically uses 'IN' operator
  * @param operator
  * @returns string map
  */
@@ -313,6 +452,14 @@ export function mapOperatorByFieldType(fieldType: FieldType | string): OperatorT
     case FieldType.dateTimeIso:
     case FieldType.dateTimeIsoAmPm:
     case FieldType.dateTimeIsoAM_PM:
+    case FieldType.dateEuro:
+    case FieldType.dateEuroShort:
+    case FieldType.dateTimeEuro:
+    case FieldType.dateTimeEuroAmPm:
+    case FieldType.dateTimeEuroAM_PM:
+    case FieldType.dateTimeEuroShort:
+    case FieldType.dateTimeEuroShortAmPm:
+    case FieldType.dateTimeEuroShortAM_PM:
     case FieldType.dateUs:
     case FieldType.dateUsShort:
     case FieldType.dateTimeUs:
@@ -330,16 +477,16 @@ export function mapOperatorByFieldType(fieldType: FieldType | string): OperatorT
 }
 
 /** Parse any input (bool, number, string) and return a boolean or False when not possible */
-export function parseBoolean(input: boolean | number | string) {
+export function parseBoolean(input: boolean | number | string): boolean {
   return /(true|1)/i.test(input + '');
 }
 
 /**
- * Parse a date passed as a string and return a Date object (if valid)
- * @param string inputDateString
+ * Parse a date passed as a string (Date only, without time) and return a Date object (if valid)
+ * @param inputDateString
  * @returns string date formatted
  */
-export function parseUtcDate(inputDateString: string, useUtc: boolean): string | null {
+export function parseUtcDate(inputDateString: string, useUtc?: boolean): string | null {
   let date = null;
 
   if (/^[0-9\-\/]*$/.test(inputDateString)) {
@@ -359,26 +506,47 @@ export function parseUtcDate(inputDateString: string, useUtc: boolean): string |
  * @input htmlString
  * @return text
  */
-export function sanitizeHtmlToText(htmlString: string) {
+export function sanitizeHtmlToText(htmlString: string): string {
   const temp = document.createElement('div');
   temp.innerHTML = htmlString;
-  return temp.textContent || temp.innerText;
+  return temp.textContent || temp.innerText || '';
 }
 
 /**
- * Converts a string to camel case
- * @param str the string to convert
+ * Title case (or capitalize) first char of a string
+ * Optionall title case the complete sentence (upper case first char of each word while changing everything else to lower case)
+ * @param inputStr
+ * @returns string
+ */
+export function titleCase(inputStr: string, caseEveryWords = false): string {
+  if (typeof inputStr === 'string') {
+    if (caseEveryWords) {
+      return inputStr.replace(/\w\S*/g, (outputStr) => {
+        return outputStr.charAt(0).toUpperCase() + outputStr.substr(1).toLowerCase();
+      });
+    }
+    return inputStr.charAt(0).toUpperCase() + inputStr.slice(1);
+  }
+  return inputStr;
+}
+
+/**
+ * Converts a string to camel case (camelCase)
+ * @param inputStr the string to convert
  * @return the string in camel case
  */
-export function toCamelCase(str: string): string {
-  return str.replace(/(?:^\w|[A-Z]|\b\w|[\s+\-_\/])/g, (match: string, offset: number) => {
-    // remove white space or hypens or underscores
-    if (/[\s+\-_\/]/.test(match)) {
-      return '';
-    }
+export function toCamelCase(inputStr: string): string {
+  if (typeof inputStr === 'string') {
+    return inputStr.replace(/(?:^\w|[A-Z]|\b\w|[\s+\-_\/])/g, (match: string, offset: number) => {
+      // remove white space or hypens or underscores
+      if (/[\s+\-_\/]/.test(match)) {
+        return '';
+      }
 
-    return offset === 0 ? match.toLowerCase() : match.toUpperCase();
-  });
+      return offset === 0 ? match.toLowerCase() : match.toUpperCase();
+    });
+  }
+  return inputStr;
 }
 
 /**
@@ -386,23 +554,22 @@ export function toCamelCase(str: string): string {
  * @param str the string to convert
  * @return the string in kebab case
  */
-export function toKebabCase(str: string): string {
-  return toCamelCase(str).replace(/([A-Z])/g, '-$1').toLowerCase();
+export function toKebabCase(inputStr: string): string {
+  if (typeof inputStr === 'string') {
+    return toCamelCase(inputStr).replace(/([A-Z])/g, '-$1').toLowerCase();
+  }
+  return inputStr;
 }
 
 /**
- * Compares two arrays to determine if all the items are equal
+ * Compares two arrays of characters to determine if all the items are equal
  * @param a first array
  * @param b second array to compare with a
- * @param [orderMatters=false] flag if the order matters, if not arrays will be sorted
+ * @param [orderMatters=false] flag if the order matters, if not arrays will be sorted before comparison
  * @return boolean true if equal, else false
  */
-export function arraysEqual(a: any[], b: any[], orderMatters: boolean = false): boolean {
-  if (a === b) {
-    return true;
-  }
-
-  if (!a || !b) {
+export function charArraysEqual(a: any[], b: any[], orderMatters: boolean = false): boolean {
+  if (!Array.isArray(a) || !Array.isArray(a)) {
     return false;
   }
 
@@ -433,11 +600,14 @@ export function arraysEqual(a: any[], b: any[], orderMatters: boolean = false): 
  * @return object the found object or default value
  */
 export function findOrDefault(array: any[], logic: (item: any) => boolean, defaultVal = {}): any {
-  return array.find(logic) || defaultVal;
+  if (Array.isArray(array)) {
+    return array.find(logic) || defaultVal;
+  }
+  return array;
 }
 
 /** Get the browser's scrollbar width, this is different to each browser */
-export function getScrollBarWidth() {
+export function getScrollBarWidth(): number {
   const $outer = $('<div>').css({ visibility: 'hidden', width: 100, overflow: 'scroll' }).appendTo('body');
   const widthWithScroll = $('<div>').css({ width: '100%' }).appendTo($outer).outerWidth() || 0;
   $outer.remove();
@@ -445,12 +615,54 @@ export function getScrollBarWidth() {
 }
 
 /**
+ * Converts a string from camelCase to snake_case (underscore) case
+ * @param str the string to convert
+ * @return the string in kebab case
+ */
+export function toSnakeCase(inputStr: string): string {
+  if (typeof inputStr === 'string') {
+    return toCamelCase(inputStr).replace(/([A-Z])/g, '_$1').toLowerCase();
+  }
+  return inputStr;
+}
+
+/**
  * Takes an input array and makes sure the array has unique values by removing duplicates
  * @param array input with possible duplicates
+ * @param objectProperty optionally provide an object property to compare (example: 'id')
  * @return array output without duplicates
  */
 export function uniqueArray(arr: any[]): any[] {
-  return arr.filter((item: any, index: number) => {
-    return arr.indexOf(item) >= index;
-  });
+  if (Array.isArray(arr) && arr.length > 0) {
+    return arr.filter((item: any, index: number) => {
+      return arr.indexOf(item) >= index;
+    });
+  }
+  return arr;
+}
+
+/**
+ * Takes an input array of objects and makes sure the array has unique object values by removing duplicates
+ * it will loop through the array using a property name (or "id" when is not provided) to compare uniqueness
+ * @param array input with possible duplicates
+ * @param propertyName defaults to "id"
+ * @return array output without duplicates
+ */
+export function uniqueObjectArray(arr: any[], propertyName = 'id'): any[] {
+  if (Array.isArray(arr) && arr.length > 0) {
+    const result = [];
+    const map = new Map();
+
+    for (const item of arr) {
+      if (!map.has(item[propertyName])) {
+        map.set(item[propertyName], true);    // set any value to Map
+        result.push({
+          id: item[propertyName],
+          name: item.name
+        });
+      }
+    }
+    return result;
+  }
+  return arr;
 }

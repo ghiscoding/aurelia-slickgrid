@@ -1,7 +1,6 @@
-
 import { GraphqlResult } from '../models/graphqlResult.interface';
 import { BackendServiceApi } from '../models/backendServiceApi.interface';
-import { GridOption } from '../models';
+import { GridOption } from '../models/index';
 
 /** Execute the Backend Processes Callback, that could come from an Observable or a Promise callback */
 export function executeBackendProcessesCallback(startTime: Date, processResult: GraphqlResult | any, backendApi: BackendServiceApi, gridOptions: GridOption): GraphqlResult | any {

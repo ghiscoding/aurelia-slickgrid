@@ -142,9 +142,11 @@ export class AureliaSlickgridCustomElement {
       } else {
         this.dataview = new Slick.Data.DataView();
       }
+      this.ea.publish('onDataviewCreated', this.dataview);
+      this.dispatchCustomEvent(`${DEFAULT_AURELIA_EVENT_PREFIX}-on-dataview-created`, this.dataview);
     }
 
-    // for convenience, we provide the property "editor" as an Aurelia-Slickgrid editor complex object
+    // for convenience to the user, we provide the property "editor" as an Aurelia-Slickgrid editor complex object
     // however "editor" is used internally by SlickGrid for it's own Editor Factory
     // so in our lib we will swap "editor" and copy it into a new property called "internalColumnEditor"
     // then take back "editor.model" and make it the new "editor" so that SlickGrid Editor Factory still works
@@ -153,18 +155,8 @@ export class AureliaSlickgridCustomElement {
     // and allow slickgrid to pass its arguments to the editors constructor last
     // when slickgrid creates the editor
     // https://github.com/aurelia/dependency-injection/blob/master/src/resolvers.js
-    this._columnDefinitions = this.columnDefinitions.map((column: Column | any) => {
-      // on every Editor which have a "collection" or a "collectionAsync"
-      if (column.editor && column.editor.collectionAsync) {
-        this.loadEditorCollectionAsync(column);
-      }
+    this._columnDefinitions = this.swapInternalEditorToSlickGridFactoryEditor(this._columnDefinitions);
 
-      return {
-        ...column,
-        editor: column.editor && Factory.of(column.editor.model).get(this.container),
-        internalColumnEditor: { ...column.editor }
-      };
-    });
 
     // save reference for all columns before they optionally become hidden/visible
     this.sharedService.allColumns = this._columnDefinitions;
@@ -176,7 +168,7 @@ export class AureliaSlickgridCustomElement {
 
     this.sharedService.dataView = this.dataview;
     this.sharedService.grid = this.grid;
-    this.extensionService.attachDifferentExtensions();
+    this.extensionService.bindDifferentExtensions();
 
     this.attachDifferentHooks(this.grid, this.gridOptions, this.dataview);
 
@@ -187,10 +179,15 @@ export class AureliaSlickgridCustomElement {
       this.dataview.setItems(this._dataset, this.gridOptions.datasetIdPropertyName);
       this.dataview.endUpdate();
 
-      // if you don't want the items that are not visible (due to being filtered out
-      // or being on a different page) to stay selected, pass 'false' to the second arg
+      // if you don't want the items that are not visible (due to being filtered out or being on a different page)
+      // to stay selected, pass 'false' to the second arg
       if (this.gridOptions && this.gridOptions.dataView && this.gridOptions.dataView.hasOwnProperty('syncGridSelection')) {
-        this.dataview.syncGridSelection(this.grid, this.gridOptions.dataView.syncGridSelection);
+        const syncGridSelection = this.gridOptions.dataView.syncGridSelection;
+        if (typeof syncGridSelection === 'boolean') {
+          this.dataview.syncGridSelection(this.grid, this.gridOptions.dataView.syncGridSelection);
+        } else if (typeof syncGridSelection === 'object') {
+          this.dataview.syncGridSelection(this.grid, syncGridSelection.preserveHidden, syncGridSelection.preserveHiddenOnSelectionChange);
+        }
       }
     }
 
@@ -207,8 +204,6 @@ export class AureliaSlickgridCustomElement {
     // after the DataView is created & updated execute some processes & dispatch some events
     if (!this.customDataView) {
       this.executeAfterDataviewCreated(this.grid, this.gridOptions, this.dataview);
-      this.ea.publish('onDataviewCreated', this.dataview);
-      this.dispatchCustomEvent(`${DEFAULT_AURELIA_EVENT_PREFIX}-on-dataview-created`, this.dataview);
     }
 
     // attach resize ONLY after the dataView is ready
@@ -270,7 +265,7 @@ export class AureliaSlickgridCustomElement {
   detached(emptyDomElementContainer = false) {
     this.ea.publish('onBeforeGridDestroy', this.grid);
     this.dispatchCustomEvent(`${DEFAULT_AURELIA_EVENT_PREFIX}-on-before-grid-destroy`, this.grid);
-    this.dataview = [];
+    this.dataview = undefined;
     this._eventHandler.unsubscribeAll();
     this.grid.destroy();
     if (emptyDomElementContainer && this.gridId) {
@@ -420,7 +415,7 @@ export class AureliaSlickgridCustomElement {
 
     // attach external sorting (backend) when available or default onSort (dataView)
     if (gridOptions.enableSorting && !this.customDataView) {
-      gridOptions.backendServiceApi ? this.sortService.attachBackendOnSort(grid, dataView) : this.sortService.attachLocalOnSort(grid, dataView);
+      gridOptions.backendServiceApi ? this.sortService.bindBackendOnSort(grid, dataView) : this.sortService.bindLocalOnSort(grid, dataView);
     }
 
     // attach external filter (backend) when available or default onFilter (dataView)
@@ -472,8 +467,8 @@ export class AureliaSlickgridCustomElement {
     );
 
     // on cell click, mainly used with the columnDef.action callback
-    this.gridEventService.attachOnCellChange(grid, dataView);
-    this.gridEventService.attachOnClick(grid, dataView);
+    this.gridEventService.bindOnCellChange(grid, dataView);
+    this.gridEventService.bindOnClick(grid, dataView);
 
     if (dataView && grid) {
       this._eventHandler.subscribe(dataView.onRowCountChanged, (e: any, args: any) => {
@@ -608,7 +603,7 @@ export class AureliaSlickgridCustomElement {
     // if user entered some Sort "presets", we need to reflect them all in the DOM
     if (gridOptions.enableSorting) {
       if (gridOptions.presets && Array.isArray(gridOptions.presets.sorters) && gridOptions.presets.sorters.length > 0) {
-        this.sortService.loadLocalPresets(grid, dataView);
+        this.sortService.loadLocalGridPresets(grid, dataView);
       }
     }
   }
@@ -718,15 +713,20 @@ export class AureliaSlickgridCustomElement {
    * We will re-render the grid so that the new header and data shows up correctly.
    * If using i18n, we also need to trigger a re-translate of the column headers
    */
-  updateColumnDefinitionsList(newColumnDefinitions?: Column[]) {
-    if (this.gridOptions.enableTranslate) {
-      this.extensionService.translateColumnHeaders(false, newColumnDefinitions);
-    } else {
-      this.extensionService.renderColumnHeaders(newColumnDefinitions);
-    }
+  updateColumnDefinitionsList(newColumnDefinitions: Column[]) {
+    if (newColumnDefinitions) {
+      // map/swap the internal library Editor to the SlickGrid Editor factory
+      newColumnDefinitions = this.swapInternalEditorToSlickGridFactoryEditor(newColumnDefinitions);
 
-    if (this.gridOptions && this.gridOptions.enableAutoSizeColumns) {
-      this.grid.autosizeColumns();
+      if (this.gridOptions.enableTranslate) {
+        this.extensionService.translateColumnHeaders(false, newColumnDefinitions);
+      } else {
+        this.extensionService.renderColumnHeaders(newColumnDefinitions);
+      }
+
+      if (this.gridOptions && this.gridOptions.enableAutoSizeColumns) {
+        this.grid.autosizeColumns();
+      }
     }
   }
 
@@ -767,6 +767,27 @@ export class AureliaSlickgridCustomElement {
       });
     }
     return [];
+  }
+
+  /**
+   * For convenience to the user, we provide the property "editor" as an Angular-Slickgrid editor complex object
+   * however "editor" is used internally by SlickGrid for it's own Editor Factory
+   * so in our lib we will swap "editor" and copy it into a new property called "internalColumnEditor"
+   * then take back "editor.model" and make it the new "editor" so that SlickGrid Editor Factory still works
+   */
+  private swapInternalEditorToSlickGridFactoryEditor(columnDefinitions: Column[]) {
+    return columnDefinitions.map((column: Column | any) => {
+      // on every Editor which have a "collection" or a "collectionAsync"
+      if (column.editor && column.editor.collectionAsync) {
+        this.loadEditorCollectionAsync(column);
+      }
+
+      return {
+        ...column,
+        editor: column.editor && Factory.of(column.editor.model).get(this.container),
+        internalColumnEditor: { ...column.editor }
+      };
+    });
   }
 
   /**

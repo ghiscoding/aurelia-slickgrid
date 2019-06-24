@@ -1,5 +1,5 @@
 import { singleton, inject } from 'aurelia-framework';
-import { CellArgs, Extension, ExtensionName } from '../models/index';
+import { CellArgs, Extension, ExtensionName, SlickEventHandler } from '../models/index';
 import { ExtensionUtility } from './extensionUtility';
 import { SharedService } from '../services/shared.service';
 
@@ -9,23 +9,29 @@ declare var Slick: any;
 @singleton(true)
 @inject(ExtensionUtility, SharedService)
 export class RowMoveManagerExtension implements Extension {
-  private _eventHandler: any = new Slick.EventHandler();
-  private _extension: any;
+  private _addon: any;
+  private _eventHandler: SlickEventHandler;
 
-  constructor(private extensionUtility: ExtensionUtility, private sharedService: SharedService) { }
+  constructor(private extensionUtility: ExtensionUtility, private sharedService: SharedService) {
+    this._eventHandler = new Slick.EventHandler();
+  }
+
+  get eventHandler(): SlickEventHandler {
+    return this._eventHandler;
+  }
 
   dispose() {
     // unsubscribe all SlickGrid events
     this._eventHandler.unsubscribeAll();
 
-    if (this._extension && this._extension.destroy) {
-      this._extension.destroy();
+    if (this._addon && this._addon.destroy) {
+      this._addon.destroy();
     }
   }
 
   register(rowSelectionPlugin?: any): any {
     if (this.sharedService && this.sharedService.grid && this.sharedService.gridOptions) {
-      // dynamically import the SlickGrid plugin with requireJS
+      // dynamically import the SlickGrid plugin (addon) with RequireJS
       this.extensionUtility.loadExtensionDynamically(ExtensionName.rowMoveManager);
 
       // this also requires the Row Selection Model to be registered as well
@@ -35,26 +41,26 @@ export class RowMoveManagerExtension implements Extension {
         this.sharedService.grid.setSelectionModel(rowSelectionPlugin);
       }
 
-      this._extension = new Slick.RowMoveManager(this.sharedService.gridOptions.rowMoveManager || { cancelEditOnDrag: true });
-      this.sharedService.grid.registerPlugin(this._extension);
+      this._addon = new Slick.RowMoveManager(this.sharedService.gridOptions.rowMoveManager || { cancelEditOnDrag: true });
+      this.sharedService.grid.registerPlugin(this._addon);
 
       // hook all events
       if (this.sharedService.grid && this.sharedService.gridOptions.rowMoveManager) {
         if (this.sharedService.gridOptions.rowMoveManager.onExtensionRegistered) {
-          this.sharedService.gridOptions.rowMoveManager.onExtensionRegistered(this._extension);
+          this.sharedService.gridOptions.rowMoveManager.onExtensionRegistered(this._addon);
         }
-        this._eventHandler.subscribe(this._extension.onBeforeMoveRows, (e: any, args: CellArgs) => {
+        this._eventHandler.subscribe(this._addon.onBeforeMoveRows, (e: any, args: CellArgs) => {
           if (this.sharedService.gridOptions.rowMoveManager && typeof this.sharedService.gridOptions.rowMoveManager.onBeforeMoveRows === 'function') {
             this.sharedService.gridOptions.rowMoveManager.onBeforeMoveRows(e, args);
           }
         });
-        this._eventHandler.subscribe(this._extension.onMoveRows, (e: any, args: CellArgs) => {
+        this._eventHandler.subscribe(this._addon.onMoveRows, (e: any, args: CellArgs) => {
           if (this.sharedService.gridOptions.rowMoveManager && typeof this.sharedService.gridOptions.rowMoveManager.onMoveRows === 'function') {
             this.sharedService.gridOptions.rowMoveManager.onMoveRows(e, args);
           }
         });
       }
-      return this._extension;
+      return this._addon;
     }
     return null;
   }

@@ -1,9 +1,17 @@
 import { singleton, inject } from 'aurelia-framework';
-import { Column, Extension, ExtensionName } from '../models/index';
+import {
+  Column,
+  EditCommand,
+  EditUndoRedoBuffer,
+  ExcelCopyBufferOption,
+  Extension,
+  ExtensionName,
+  SelectedRange,
+  SlickEventHandler,
+} from '../models/index';
+import { ExtensionUtility } from './extensionUtility';
 import { sanitizeHtmlToText } from '../services/utilities';
 import { SharedService } from '../services/shared.service';
-import { ExtensionUtility } from './extensionUtility';
-import * as $ from 'jquery';
 
 // using external non-typed js libraries
 declare var Slick: any;
@@ -11,99 +19,107 @@ declare var Slick: any;
 @singleton(true)
 @inject(ExtensionUtility, SharedService)
 export class CellExternalCopyManagerExtension implements Extension {
-  private _extension: any;
-  undoRedoBuffer: any;
+  private _addon: any;
+  private _addonOptions: ExcelCopyBufferOption;
+  private _eventHandler: SlickEventHandler;
+  private _commandQueue: EditCommand[];
+  private _undoRedoBuffer: EditUndoRedoBuffer;
 
-  constructor(private extensionUtility: ExtensionUtility, private sharedService: SharedService) { }
+  constructor(private extensionUtility: ExtensionUtility, private sharedService: SharedService) {
+    this._eventHandler = new Slick.EventHandler();
+  }
 
+  get addonOptions(): ExcelCopyBufferOption {
+    return this._addonOptions;
+  }
+
+  get eventHandler(): SlickEventHandler {
+    return this._eventHandler;
+  }
+
+  get commandQueue(): EditCommand[] {
+    return this._commandQueue;
+  }
+
+  get undoRedoBuffer(): EditUndoRedoBuffer {
+    return this._undoRedoBuffer;
+  }
+
+  /** Dispose of the 3rd party addon (plugin) */
   dispose() {
-    if (this._extension && this._extension.destroy) {
-      this._extension.destroy();
+    // unsubscribe all SlickGrid events
+    this._eventHandler.unsubscribeAll();
+    if (this._addon && this._addon.destroy) {
+      this._addon.destroy();
     }
   }
 
+  /** Register the 3rd party addon (plugin) */
   register(): any {
     if (this.sharedService && this.sharedService.grid && this.sharedService.gridOptions) {
-      // dynamically import the SlickGrid plugin with requireJS
+      // dynamically import the SlickGrid plugin (addon) with RequireJS
       this.extensionUtility.loadExtensionDynamically(ExtensionName.cellExternalCopyManager);
 
       this.createUndoRedoBuffer();
       this.hookUndoShortcutKey();
 
-      let newRowIds = 0;
-      const pluginOptions = {
-        clipboardCommandHandler: (editCommand: any) => {
-          this.undoRedoBuffer.queueAndExecuteCommand.call(this.undoRedoBuffer, editCommand);
-        },
-        dataItemColumnValueExtractor: (item: any, columnDef: Column) => {
-          // when grid or cell is not editable, we will possibly evaluate the Formatter if it was passed
-          // to decide if we evaluate the Formatter, we will use the same flag from Export which is "exportWithFormatter"
-          if (!this.sharedService.gridOptions.editable || !columnDef.editor) {
-            const isEvaluatingFormatter = (columnDef.exportWithFormatter !== undefined) ? columnDef.exportWithFormatter : (this.sharedService.gridOptions.exportOptions && this.sharedService.gridOptions.exportOptions.exportWithFormatter);
-            if (columnDef.formatter && isEvaluatingFormatter) {
-              const formattedOutput = columnDef.formatter(0, 0, item[columnDef.field], columnDef, item, this.sharedService.grid);
-              if (columnDef.sanitizeDataExport || (this.sharedService.gridOptions.exportOptions && this.sharedService.gridOptions.exportOptions.sanitizeDataExport)) {
-                let outputString = formattedOutput as string;
-                if (formattedOutput && typeof formattedOutput === 'object' && formattedOutput.hasOwnProperty('text')) {
-                  outputString = formattedOutput.text;
-                }
-                if (outputString === null) {
-                  outputString = '';
-                }
-                return sanitizeHtmlToText(outputString);
-              }
-              return formattedOutput;
-            }
-          }
-
-          // else use the default "dataItemColumnValueExtractor" from the plugin itself
-          // we can do that by setting back the getter with null
-          return null;
-        },
-        readOnlyMode: false,
-        includeHeaderWhenCopying: false,
-        newRowCreator: (count: number) => {
-          for (let i = 0; i < count; i++) {
-            const item = {
-              id: 'newRow_' + newRowIds++
-            };
-            this.sharedService.grid.getData().addItem(item);
-          }
-        }
-      };
-
+      this._addonOptions = { ...this.getDefaultOptions(), ...this.sharedService.gridOptions.excelCopyBufferOptions } as ExcelCopyBufferOption;
       this.sharedService.grid.setSelectionModel(new Slick.CellSelectionModel());
-      this._extension = new Slick.CellExternalCopyManager(pluginOptions);
-      this.sharedService.grid.registerPlugin(this._extension);
+      this._addon = new Slick.CellExternalCopyManager(this._addonOptions);
+      this.sharedService.grid.registerPlugin(this._addon);
 
-      return this._extension;
+      // hook to all possible events
+      if (this.sharedService.grid && this.sharedService.gridOptions.excelCopyBufferOptions) {
+        if (this.sharedService.gridOptions.excelCopyBufferOptions.onExtensionRegistered) {
+          this.sharedService.gridOptions.excelCopyBufferOptions.onExtensionRegistered(this._addon);
+        }
+        this._eventHandler.subscribe(this._addon.onCopyCells, (e: any, args: { ranges: SelectedRange[] }) => {
+          if (this.sharedService.gridOptions.excelCopyBufferOptions && typeof this.sharedService.gridOptions.excelCopyBufferOptions.onCopyCells === 'function') {
+            this.sharedService.gridOptions.excelCopyBufferOptions.onCopyCells(e, args);
+          }
+        });
+        this._eventHandler.subscribe(this._addon.onCopyCancelled, (e: any, args: { ranges: SelectedRange[] }) => {
+          if (this.sharedService.gridOptions.excelCopyBufferOptions && typeof this.sharedService.gridOptions.excelCopyBufferOptions.onCopyCancelled === 'function') {
+            this.sharedService.gridOptions.excelCopyBufferOptions.onCopyCancelled(e, args);
+          }
+        });
+        this._eventHandler.subscribe(this._addon.onPasteCells, (e: any, args: { ranges: SelectedRange[] }) => {
+          if (this.sharedService.gridOptions.excelCopyBufferOptions && typeof this.sharedService.gridOptions.excelCopyBufferOptions.onPasteCells === 'function') {
+            this.sharedService.gridOptions.excelCopyBufferOptions.onPasteCells(e, args);
+          }
+        });
+      }
+      return this._addon;
     }
-
     return null;
   }
 
   /** Create an undo redo buffer used by the Excel like copy */
   private createUndoRedoBuffer() {
-    const commandQueue: any[] = [];
     let commandCtr = 0;
+    this._commandQueue = [];
 
-    this.undoRedoBuffer = {
-      queueAndExecuteCommand: (editCommand: any) => {
-        commandQueue[commandCtr] = editCommand;
+    this._undoRedoBuffer = {
+      queueAndExecuteCommand: (editCommand: EditCommand) => {
+        this._commandQueue[commandCtr] = editCommand;
         commandCtr++;
         editCommand.execute();
       },
       undo: () => {
-        if (commandCtr === 0) { return; }
+        if (commandCtr === 0) {
+          return;
+        }
         commandCtr--;
-        const command = commandQueue[commandCtr];
+        const command = this._commandQueue[commandCtr];
         if (command && Slick.GlobalEditorLock.cancelCurrentEdit()) {
           command.undo();
         }
       },
       redo: () => {
-        if (commandCtr >= commandQueue.length) { return; }
-        const command = commandQueue[commandCtr];
+        if (commandCtr >= this._commandQueue.length) {
+          return;
+        }
+        const command = this._commandQueue[commandCtr];
         commandCtr++;
         if (command && Slick.GlobalEditorLock.cancelCurrentEdit()) {
           command.execute();
@@ -112,15 +128,61 @@ export class CellExternalCopyManagerExtension implements Extension {
     };
   }
 
-  /** Attach an undo shortcut key hook that will redo/undo the copy buffer */
+  /** @return default plugin (addon) options */
+  private getDefaultOptions(): ExcelCopyBufferOption {
+    let newRowIds = 0;
+
+    return {
+      clipboardCommandHandler: (editCommand: any) => {
+        this._undoRedoBuffer.queueAndExecuteCommand.call(this._undoRedoBuffer, editCommand);
+      },
+      dataItemColumnValueExtractor: (item: any, columnDef: Column) => {
+        // when grid or cell is not editable, we will possibly evaluate the Formatter if it was passed
+        // to decide if we evaluate the Formatter, we will use the same flag from Export which is "exportWithFormatter"
+        if (!this.sharedService.gridOptions.editable || !columnDef.editor) {
+          const isEvaluatingFormatter = (columnDef.exportWithFormatter !== undefined) ? columnDef.exportWithFormatter : (this.sharedService.gridOptions.exportOptions && this.sharedService.gridOptions.exportOptions.exportWithFormatter);
+          if (columnDef.formatter && isEvaluatingFormatter) {
+            const formattedOutput = columnDef.formatter(0, 0, item[columnDef.field], columnDef, item, this.sharedService.grid);
+            if (columnDef.sanitizeDataExport || (this.sharedService.gridOptions.exportOptions && this.sharedService.gridOptions.exportOptions.sanitizeDataExport)) {
+              let outputString = formattedOutput as string;
+              if (formattedOutput && typeof formattedOutput === 'object' && formattedOutput.hasOwnProperty('text')) {
+                outputString = formattedOutput.text;
+              }
+              if (outputString === null) {
+                outputString = '';
+              }
+              return sanitizeHtmlToText(outputString);
+            }
+            return formattedOutput;
+          }
+        }
+
+        // else use the default "dataItemColumnValueExtractor" from the plugin itself
+        // we can do that by setting back the getter with null
+        return null;
+      },
+      readOnlyMode: false,
+      includeHeaderWhenCopying: false,
+      newRowCreator: (count: number) => {
+        for (let i = 0; i < count; i++) {
+          const item = {
+            id: 'newRow_' + newRowIds++
+          };
+          this.sharedService.grid.getData().addItem(item);
+        }
+      }
+    };
+  }
+
+  /** Attach an undo shortcut key hook that will redo/undo the copy buffer using Ctrl+(Shift)+Z keyboard events */
   private hookUndoShortcutKey() {
-    // undo shortcut
-    $(document).keydown((e: any) => {
-      if (e.which === 90 && (e.ctrlKey || e.metaKey)) {    // CTRL + (shift) + Z
+    document.addEventListener('keydown', (e: KeyboardEvent) => {
+      const keyCode = e.keyCode || e.code;
+      if (keyCode === 90 && (e.ctrlKey || e.metaKey)) {
         if (e.shiftKey) {
-          this.undoRedoBuffer.redo();
+          this._undoRedoBuffer.redo(); // Ctrl + Shift + Z
         } else {
-          this.undoRedoBuffer.undo();
+          this._undoRedoBuffer.undo(); // Ctrl + Z
         }
       }
     });

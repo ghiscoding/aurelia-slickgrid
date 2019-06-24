@@ -1,0 +1,54 @@
+<template>
+  <h2>${title}</h2>
+  <div class="subtitle"
+       innerhtml.bind="subTitle"></div>
+
+  <div>
+
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs"
+        role="tablist">
+      <li role="presentation"
+          class="active">
+        <a href="#javascript"
+           aria-controls="javascript"
+           role="tab"
+           data-toggle="tab">Javascript</a>
+      </li>
+      <li role="presentation">
+        <a href="#httpFetch"
+           aria-controls="httpFetch"
+           role="tab"
+           click.delegate="resizeGrid2()"
+           data-toggle="tab">Http-Fetch</a>
+      </li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+      <div role="tabpanel"
+           class="tab-pane active"
+           id="javascript">
+        <h4>Grid 1 - Load Local Data</h4>
+        <aurelia-slickgrid grid-id="grid1"
+                           column-definitions.bind="columnDefinitions1"
+                           grid-options.bind="gridOptions1"
+                           dataset.bind="dataset1">
+        </aurelia-slickgrid>
+      </div>
+      <div role="tabpanel"
+           class="tab-pane"
+           id="httpFetch">
+        <h4>Grid 2 - Load a JSON dataset through Fetch-Client</h4>
+        <aurelia-slickgrid grid-id="grid2"
+                           column-definitions.bind="columnDefinitions2"
+                           grid-options.bind="gridOptions2"
+                           dataset.bind="dataset2"
+                           asg-on-aurelia-grid-created.delegate="aureliaGrid2Ready($event.detail)">
+        </aurelia-slickgrid>
+      </div>
+    </div>
+
+  </div>
+
+</template>

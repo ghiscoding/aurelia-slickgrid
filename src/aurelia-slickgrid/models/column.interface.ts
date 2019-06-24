@@ -38,13 +38,19 @@ export interface Column {
   /** Any inline editor function that implements Editor for the cell value or ColumnEditor */
   editor?: any | ColumnEditor;
 
-  /** Default to false, which leads to exclude the column from the export? */
+  /** Default to false, which leads to exclude the column title from the Column Picker. */
+  excludeFromColumnPicker?: boolean;
+
+  /** Default to false, which leads to exclude the column from the export. */
   excludeFromExport?: boolean;
+
+  /** Default to false, which leads to exclude the column title from the Grid Menu. */
+  excludeFromGridMenu?: boolean;
 
   /** Defaults to false, which leads to exclude the column from getting a header menu. For example, the checkbox row selection should not have a header menu. */
   excludeFromHeaderMenu?: boolean;
 
-  /** Defaults to false, which leads to exclude the field from the query (mostly a backend service query) */
+  /** Defaults to false, which leads to exclude the field from the query (typically a backend service query) */
   excludeFromQuery?: boolean;
 
   /**
@@ -151,13 +157,22 @@ export interface Column {
   /** The previous column width in pixels (number only) */
   previousWidth?: number;
 
-  /** A query field which, when specified, will be used to query filterBy/orderBy and has precedence over field property to query. */
+  /**
+   * Useful when you want to display a certain field to the UI, but you want to use another field to query when Filtering/Sorting.
+   * Please note that it has higher precendence over the "field" property.
+   */
   queryField?: string;
 
-  /** Similar to "queryField" but only used with Filtering. Useful when you want to display a certain field to the UI, but you want to use another field to query for Filtering. */
+  /**
+   * Similar to "queryField" but only used when Filtering (please note that it has higher precendence over "queryField").
+   * Useful when you want to display a certain field to the UI, but you want to use another field to query for Filtering.
+   */
   queryFieldFilter?: string;
 
-  /** Similar to "queryField" but only used with Sorting. Useful when you want to display a certain field to the UI, but you want to use another field to query for Sorting. */
+  /**
+   * Similar to "queryField" but only used when Sorting (please note that it has higher precendence over "queryField").
+   * Useful when you want to display a certain field to the UI, but you want to use another field to query for Sorting.
+   */
   queryFieldSorter?: string;
 
   /** Is the column resizable, can we make it wider/thinner? A resize cursor will show on the right side of the column when enabled. */

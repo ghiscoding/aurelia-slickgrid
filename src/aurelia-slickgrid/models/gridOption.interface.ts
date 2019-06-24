@@ -7,7 +7,9 @@ import {
   CheckboxSelector,
   DraggableGrouping,
   EditCommand,
+  ExcelCopyBufferOption,
   ExportOption,
+  FormatterOption,
   GridMenu,
   GridState,
   HeaderButton,
@@ -96,12 +98,13 @@ export interface GridOption {
   /** Unique property name on the dataset used by Slick.Data.DataView */
   datasetIdPropertyName?: string;
 
+  /** Some of the SlickGrid DataView options */
   dataView?: {
     /**
-     * if you don't want the items that are not visible (due to being filtered out
-     * or being on a different page) to stay selected, the set this property as 'false'
+     * If you don't want the items that are not visible (due to being filtered out or being on a different page)
+     * to stay selected, the set this property as 'false'. You can also set any of the preserve options instead of a boolean value.
      */
-    syncGridSelection?: boolean;
+    syncGridSelection?: boolean | { preserveHidden: boolean; preserveHiddenOnSelectionChange: boolean; };
   };
 
   /** Default prefix for Aurelia Event names */
@@ -224,6 +227,9 @@ export interface GridOption {
   /** Do we want to enable localization translation (i18n)? */
   enableTranslate?: boolean;
 
+  /** Options for the ExcelCopyBuffer Extension */
+  excelCopyBufferOptions?: ExcelCopyBufferOption;
+
   /** Do we want explicit grid initialization? */
   explicitInitialization?: boolean;
 
@@ -241,6 +247,9 @@ export interface GridOption {
 
   /** Formatter classes factory */
   formatterFactory?: any;
+
+  /** Formatter commonly used options defined for the entire grid */
+  formatterOptions?: FormatterOption;
 
   /** Defaults to false, do we want to freeze (pin) the bottom portion instead of the top */
   frozenBottom?: boolean;

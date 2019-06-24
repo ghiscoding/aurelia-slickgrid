@@ -9,10 +9,7 @@ module.exports = {
       jest: {
         default: 'jest',
         accept: 'jest -u',
-        coverage: series(
-          rimraf('test/coverage-jest'),
-          'jest --coverage'
-        ),
+        coverage: 'jest --coverage',
         watch: 'jest --watch',
       },
       lint: {

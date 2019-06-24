@@ -2,11 +2,11 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg)](http://www.typescriptlang.org/)
 [![npm version](https://badge.fury.io/js/aurelia-slickgrid.svg)](https://badge.fury.io/js/aurelia-slickgrid)
-[![NPM downloads](https://img.shields.io/npm/dt/aurelia-slickgrid.svg)](https://npmjs.org/package/aurelia-slickgrid)
+[![NPM downloads](https://img.shields.io/npm/dy/aurelia-slickgrid.svg)](https://npmjs.org/package/aurelia-slickgrid)
 [![CircleCI](https://circleci.com/gh/ghiscoding/aurelia-slickgrid/tree/master.svg?style=shield)](https://circleci.com/gh/ghiscoding/workflows/aurelia-slickgrid/tree/master)
 [![codecov](https://codecov.io/gh/ghiscoding/aurelia-slickgrid/branch/master/graph/badge.svg)](https://codecov.io/gh/ghiscoding/aurelia-slickgrid)
 
-One of the best javascript datagrid [SlickGrid](https://github.com/mleibman/SlickGrid) which was originally developed by @mleibman is now available to Aurelia. I have tried and used a few datagrids and SlickGrid beats most of them in terms of functionalities and performance (it can easily deal with even a million row). We will be using [6pac SlickGrid fork](https://github.com/6pac/SlickGrid/), this the most active fork since the original @mleibman fork was closed some time ago by his author personal reasons. Also worth to know, I also contributed a lot to that fork to benefit Aurelia-Slickgrid.
+One of the best javascript datagrid [SlickGrid](https://github.com/mleibman/SlickGrid) which was originally developed by @mleibman is now available to Aurelia. I have used a few datagrids and SlickGrid beats most of them in terms of functionalities and performance (it can easily deal with even a million row). We will be using the [6pac/SlickGrid](https://github.com/6pac/SlickGrid/) fork, this is the most active fork since the original @mleibman fork was closed some time ago by his author for personal reasons. Also worth to know, I also contributed a lot to the 6pac/SlickGrid fork for the benefit of Aurelia-Slickgrid.
 
 ### NPM Package
 [Aurelia-Slickgrid on NPM](https://www.npmjs.com/package/aurelia-slickgrid)
@@ -20,7 +20,7 @@ One of the best javascript datagrid [SlickGrid](https://github.com/mleibman/Slic
 - [Bootstrap 4 demo](https://ghiscoding.github.io/aurelia-slickgrid-bs4-demo) / [examples repo](https://github.com/ghiscoding/aurelia-slickgrid-bs4-demo/tree/master/src/examples/slickgrid)
 
 #### Working Demos
-For complete working local demos, you can clone the [Aurelia-Slickgrid Demos](https://github.com/ghiscoding/aurelia-slickgrid-demos) repository (instruction are provided in that repository). The 2 WebPacks demos are updated frequently and they are the actual [Bootstrap 3 demo](https://ghiscoding.github.io/aurelia-slickgrid) / [Bootstrap 4 demo](https://ghiscoding.github.io/aurelia-slickgrid-bs4-demo/#/slickgrid).
+For complete working local demos, you can clone the [Aurelia-Slickgrid Demos](https://github.com/ghiscoding/aurelia-slickgrid-demos) repository (instruction are provided in the repo). The 2 WebPacks demos are updated frequently and they are the actual [Bootstrap 3 demo](https://ghiscoding.github.io/aurelia-slickgrid) / [Bootstrap 4 demo](https://ghiscoding.github.io/aurelia-slickgrid-bs4-demo/#/slickgrid).
 
 ## Installation
 Refer to the [Wiki - HOWTO Step by Step](https://github.com/ghiscoding/aurelia-slickgrid/wiki/HOWTO--Step-by-Step)
@@ -29,10 +29,10 @@ Refer to the [Wiki - HOWTO Step by Step](https://github.com/ghiscoding/aurelia-s
 The Wiki is where all the documentation and instructions will go, so please consult the [Aurelia-Slickgrid - Wiki](https://github.com/ghiscoding/aurelia-slickgrid/wiki) before opening any issues. The [Wiki - HOWTO](https://github.com/ghiscoding/aurelia-slickgrid/wiki/HOWTO--Step-by-Step) is a great place to start with.
 
 ## Main features
-You can see some screenshots below and the instructions down below and if that is not enough for you to decide, head over to the [Wiki - Main Features](https://github.com/ghiscoding/aurelia-slickgrid/wiki).
+You can see some screenshots below as well as instructions underneat them and if that is not enough for you to decide, head over to the [Wiki - Main Features](https://github.com/ghiscoding/aurelia-slickgrid/wiki).
 
 ## Contributions/Comments
-Contributions are welcome, this is what the community is for. If you wish to suggest something and/or want to make a PR (Pull Request), please feel free to do so.
+Contributions are very welcome, this is what the community is for. If you wish to suggest something and/or want to make a PR (Pull Request), please feel free to do so.
 
 ## Use it, like it?
 You like and use this great library `Aurelia-Slickgrid`? You can always upvote :star: and/or contribute :)

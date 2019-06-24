@@ -16,13 +16,13 @@ export class MaxAggregator implements Aggregator {
     const val = (item && item.hasOwnProperty(this._field)) ? item[this._field] : null;
     if (val != null && val !== '' && !isNaN(val)) {
       if (this._max == null || val > this._max) {
-        this._max = val;
+        this._max = parseFloat(val);
       }
     }
   }
 
   storeResult(groupTotals: any) {
-    if (!groupTotals.max) {
+    if (!groupTotals || groupTotals.max === undefined) {
       groupTotals.max = {};
     }
     groupTotals.max[this._field] = this._max;

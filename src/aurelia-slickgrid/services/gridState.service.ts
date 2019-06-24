@@ -1,4 +1,4 @@
-import { inject } from 'aurelia-framework';
+import { inject, singleton } from 'aurelia-framework';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
 import {
   Column,
@@ -19,6 +19,7 @@ import { SortService } from './sort.service';
 // using external non-typed js libraries
 declare var Slick: any;
 
+@singleton(true)
 @inject(EventAggregator)
 export class GridStateService {
   private _eventHandler = new Slick.EventHandler();
@@ -54,6 +55,9 @@ export class GridStateService {
 
   /** Dispose of all the SlickGrid & Aurelia subscriptions */
   dispose() {
+    this._currentColumns = [];
+    this._columns = [];
+
     // unsubscribe all SlickGrid events
     this._eventHandler.unsubscribeAll();
 
@@ -84,7 +88,7 @@ export class GridStateService {
    * @return current columns
    */
   getColumns(): Column[] {
-    return this._columns || this._grid.getColumns();
+    return this._columns;
   }
 
   /**
@@ -199,38 +203,6 @@ export class GridStateService {
     return null;
   }
 
-  /**
-   * Hook a SlickGrid Extension Event to a Grid State change event
-   * @param extension name
-   * @param event name
-   */
-  hookExtensionEventToGridStateChange(extensionName: ExtensionName, eventName: string) {
-    const extension = this.extensionService && this.extensionService.getExtensionByName(extensionName);
-
-    if (extension && extension.class && extension.class[eventName] && extension.class[eventName].subscribe) {
-      this._eventHandler.subscribe(extension.class[eventName], (e: Event, args: any) => {
-        const columns: Column[] = args && args.columns;
-        const currentColumns: CurrentColumn[] = this.getAssociatedCurrentColumns(columns);
-        this.ea.publish('gridStateService:changed', { change: { newValues: currentColumns, type: GridStateType.columns }, gridState: this.getCurrentGridState() });
-      });
-    }
-  }
-
-  /**
-   * Hook a Grid Event to a Grid State change event
-   * @param event name
-   * @param grid
-   */
-  hookSlickGridEventToGridStateChange(eventName: string, grid: any) {
-    if (grid && grid[eventName] && grid[eventName].subscribe) {
-      this._eventHandler.subscribe(grid[eventName], (e: Event, args: any) => {
-        const columns: Column[] = grid.getColumns();
-        const currentColumns: CurrentColumn[] = this.getAssociatedCurrentColumns(columns);
-        this.ea.publish('gridStateService:changed', { change: { newValues: currentColumns, type: GridStateType.columns }, gridState: this.getCurrentGridState() });
-      });
-    }
-  }
-
   resetColumns(columnDefinitions?: Column[]) {
     const columns: Column[] = columnDefinitions || this._columns;
     const currentColumns: CurrentColumn[] = this.getAssociatedCurrentColumns(columns);
@@ -242,7 +214,7 @@ export class GridStateService {
     if (this._gridOptions.enableRowSelection || this._gridOptions.enableCheckboxSelector) {
       // this also requires the Row Selection Model to be registered as well
       const rowSelectionExtension = this.extensionService && this.extensionService.getExtensionByName && this.extensionService.getExtensionByName(ExtensionName.rowSelection);
-      if (rowSelectionExtension && rowSelectionExtension.addon) {
+      if (rowSelectionExtension && rowSelectionExtension.instance) {
         this._grid.setSelectedRows([]);
       }
     }
@@ -262,9 +234,9 @@ export class GridStateService {
     );
     // Subscribe to Event Emitter of Filter cleared
     this.subscriptions.push(
-      this.ea.subscribe('filterService:filterCleared', (currentFilters: CurrentFilter[]) => {
+      this.ea.subscribe('filterService:filterCleared', () => {
         this.resetRowSelection();
-        this.ea.publish('gridStateService:changed', { change: { newValues: currentFilters, type: GridStateType.filter }, gridState: this.getCurrentGridState() });
+        this.ea.publish('gridStateService:changed', { change: { newValues: [], type: GridStateType.filter }, gridState: this.getCurrentGridState() });
       })
     );
 
@@ -277,18 +249,57 @@ export class GridStateService {
     );
     // Subscribe to Event Emitter of Sort cleared
     this.subscriptions.push(
-      this.ea.subscribe('sortService:sortCleared', (currentSorters: CurrentSorter[]) => {
+      this.ea.subscribe('sortService:sortCleared', () => {
         this.resetRowSelection();
-        this.ea.publish('gridStateService:changed', { change: { newValues: currentSorters, type: GridStateType.sorter }, gridState: this.getCurrentGridState() });
+        this.ea.publish('gridStateService:changed', { change: { newValues: [], type: GridStateType.sorter }, gridState: this.getCurrentGridState() });
       })
     );
 
     // Subscribe to ColumnPicker and/or GridMenu for show/hide Columns visibility changes
-    this.hookExtensionEventToGridStateChange(ExtensionName.columnPicker, 'onColumnsChanged');
-    this.hookExtensionEventToGridStateChange(ExtensionName.gridMenu, 'onColumnsChanged');
+    this.bindExtensionAddonEventToGridStateChange(ExtensionName.columnPicker, 'onColumnsChanged');
+    this.bindExtensionAddonEventToGridStateChange(ExtensionName.gridMenu, 'onColumnsChanged');
 
     // subscribe to Column Resize & Reordering
-    this.hookSlickGridEventToGridStateChange('onColumnsReordered', grid);
-    this.hookSlickGridEventToGridStateChange('onColumnsResized', grid);
+    this.bindSlickGridEventToGridStateChange('onColumnsReordered', grid);
+    this.bindSlickGridEventToGridStateChange('onColumnsResized', grid);
+  }
+
+  // --
+  // private methods
+  // ------------------
+
+  /**
+   * Bind a SlickGrid Extension Event to a Grid State change event
+   * @param extension name
+   * @param event name
+   */
+  bindExtensionAddonEventToGridStateChange(extensionName: ExtensionName, eventName: string) {
+    const extension = this.extensionService && this.extensionService.getExtensionByName && this.extensionService.getExtensionByName(extensionName);
+    const slickEvent = extension && extension.instance && extension.instance[eventName];
+
+    if (slickEvent && typeof slickEvent.subscribe === 'function') {
+      this._eventHandler.subscribe(slickEvent, (e: Event, args: any) => {
+        const columns: Column[] = args && args.columns;
+        const currentColumns: CurrentColumn[] = this.getAssociatedCurrentColumns(columns);
+        this.ea.publish('gridStateService:changed', { change: { newValues: currentColumns, type: GridStateType.columns }, gridState: this.getCurrentGridState() });
+      });
+    }
+  }
+
+  /**
+   * Bind a Grid Event to a Grid State change event
+   * @param event name
+   * @param grid
+   */
+  bindSlickGridEventToGridStateChange(eventName: string, grid: any) {
+    const slickGridEvent = grid && grid[eventName];
+
+    if (slickGridEvent && typeof slickGridEvent.subscribe === 'function') {
+      this._eventHandler.subscribe(slickGridEvent, (e: Event, args: any) => {
+        const columns: Column[] = grid.getColumns();
+        const currentColumns: CurrentColumn[] = this.getAssociatedCurrentColumns(columns);
+        this.ea.publish('gridStateService:changed', { change: { newValues: currentColumns, type: GridStateType.columns }, gridState: this.getCurrentGridState() });
+      });
+    }
   }
 }

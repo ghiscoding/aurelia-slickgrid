@@ -86,6 +86,7 @@ export class Example3 {
   isAutoEdit: boolean = true;
   alertWarning: any;
   selectedLanguage: string;
+  duplicateTitleHeaderCount = 1;
 
   constructor(private http: HttpClient, private httpFetch: FetchClient, private i18n: I18N) {
     // define the grid options & columns and then create the grid itself
@@ -560,6 +561,22 @@ export class Example3 {
       autoCommitEdit: this.gridOptions.autoCommitEdit
     });
     return true;
+  }
+
+  dynamicallyAddTitleHeader() {
+    const newCol = {
+      id: `title${this.duplicateTitleHeaderCount++}`,
+      name: 'Title',
+      field: 'title',
+      editor: {
+        model: Editors.text,
+        required: true,
+        validator: myCustomTitleValidator, // use a custom validator
+      },
+      sortable: true, minWidth: 100, filterable: true, params: { useFormatterOuputToFilter: true }
+    };
+    this.columnDefinitions.push(newCol);
+    this.columnDefinitions = this.columnDefinitions.slice();
   }
 
   setAutoEdit(isAutoEdit) {

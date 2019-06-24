@@ -22,7 +22,7 @@ export class Example18 {
   <li>This example shows 3 ways of grouping</li>
   <ol>
   <li>Drag any Column Header on the top placeholder to group by that column (support moti-columns grouping by adding more columns to the drop area).</li>
-  <li>Use buttons and defined functions to group by wichever field you want</li>
+  <li>Use buttons and defined functions to group by whichever field you want</li>
   <li>Use the Select dropdown to group, the position of the Selects represent the grouping level</li>
   </ol>
   <li>Fully dynamic and interactive multi-level grouping with filtering and aggregates ovor 50'000 items</li>

@@ -11,6 +11,7 @@ import {
   HeaderMenuItem,
   HeaderMenuOnCommandArgs,
   HeaderMenuOnBeforeMenuShowArgs,
+  SlickEventHandler,
 } from '../models/index';
 import { FilterService } from '../services/filter.service';
 import { SortService } from '../services/sort.service';
@@ -29,8 +30,8 @@ declare var Slick: any;
   SortService,
 )
 export class HeaderMenuExtension implements Extension {
-  private _eventHandler: any = new Slick.EventHandler();
-  private _extension: any;
+  private _addon: any;
+  private _eventHandler: SlickEventHandler;
 
   constructor(
     private extensionUtility: ExtensionUtility,
@@ -38,14 +39,20 @@ export class HeaderMenuExtension implements Extension {
     private i18n: I18N,
     private sharedService: SharedService,
     private sortService: SortService,
-  ) { }
+  ) {
+    this._eventHandler = new Slick.EventHandler();
+  }
+
+  get eventHandler(): SlickEventHandler {
+    return this._eventHandler;
+  }
 
   dispose() {
     // unsubscribe all SlickGrid events
     this._eventHandler.unsubscribeAll();
 
-    if (this._extension && this._extension.destroy) {
-      this._extension.destroy();
+    if (this._addon && this._addon.destroy) {
+      this._addon.destroy();
     }
   }
 
@@ -57,34 +64,34 @@ export class HeaderMenuExtension implements Extension {
    */
   register(): any {
     if (this.sharedService && this.sharedService.grid && this.sharedService.gridOptions) {
-      // dynamically import the SlickGrid plugin with requireJS
+      // dynamically import the SlickGrid plugin (addon) with RequireJS
       this.extensionUtility.loadExtensionDynamically(ExtensionName.headerMenu);
 
       this.sharedService.gridOptions.headerMenu = { ...this.getDefaultHeaderMenuOptions(), ...this.sharedService.gridOptions.headerMenu };
       if (this.sharedService.gridOptions.enableHeaderMenu) {
         this.sharedService.gridOptions.headerMenu = this.addHeaderMenuCustomCommands(this.sharedService.gridOptions, this.sharedService.columnDefinitions);
       }
-      this._extension = new Slick.Plugins.HeaderMenu(this.sharedService.gridOptions.headerMenu);
-      this.sharedService.grid.registerPlugin(this._extension);
+      this._addon = new Slick.Plugins.HeaderMenu(this.sharedService.gridOptions.headerMenu);
+      this.sharedService.grid.registerPlugin(this._addon);
 
       // hook all events
       if (this.sharedService.grid && this.sharedService.gridOptions.headerMenu) {
         if (this.sharedService.gridOptions.headerMenu.onExtensionRegistered) {
-          this.sharedService.gridOptions.headerMenu.onExtensionRegistered(this._extension);
+          this.sharedService.gridOptions.headerMenu.onExtensionRegistered(this._addon);
         }
-        this._eventHandler.subscribe(this._extension.onCommand, (event: Event, args: HeaderMenuOnCommandArgs) => {
+        this._eventHandler.subscribe(this._addon.onCommand, (event: Event, args: HeaderMenuOnCommandArgs) => {
           this.executeHeaderMenuInternalCommands(event, args);
           if (this.sharedService.gridOptions.headerMenu && typeof this.sharedService.gridOptions.headerMenu.onCommand === 'function') {
             this.sharedService.gridOptions.headerMenu.onCommand(event, args);
           }
         });
-        this._eventHandler.subscribe(this._extension.onBeforeMenuShow, (event: Event, args: HeaderMenuOnBeforeMenuShowArgs) => {
+        this._eventHandler.subscribe(this._addon.onBeforeMenuShow, (event: Event, args: HeaderMenuOnBeforeMenuShowArgs) => {
           if (this.sharedService.gridOptions.headerMenu && typeof this.sharedService.gridOptions.headerMenu.onBeforeMenuShow === 'function') {
             this.sharedService.gridOptions.headerMenu.onBeforeMenuShow(event, args);
           }
         });
       }
-      return this._extension;
+      return this._addon;
     }
     return null;
   }
@@ -130,7 +137,7 @@ export class HeaderMenuExtension implements Extension {
             }
 
             // add a divider (separator) between the top sort commands and the other clear commands
-            if (!headerMenuOptions.hideSortCommandsDivider) {
+            if (columnHeaderMenuItems.filter((item: HeaderMenuItem) => item.positionOrder === 52).length === 0) {
               columnHeaderMenuItems.push({ divider: true, command: '', positionOrder: 52 });
             }
 
@@ -139,7 +146,7 @@ export class HeaderMenuExtension implements Extension {
                 iconCssClass: headerMenuOptions.iconClearSortCommand || 'fa fa-unsorted',
                 title: options.enableTranslate ? this.i18n.tr('REMOVE_SORT') : Constants.TEXT_REMOVE_SORT,
                 command: 'clear-sort',
-                positionOrder: 53
+                positionOrder: 54
               });
             }
           }
@@ -151,7 +158,7 @@ export class HeaderMenuExtension implements Extension {
                 iconCssClass: headerMenuOptions.iconClearFilterCommand || 'fa fa-filter',
                 title: options.enableTranslate ? this.i18n.tr('REMOVE_FILTER') : Constants.TEXT_REMOVE_FILTER,
                 command: 'clear-filter',
-                positionOrder: 52
+                positionOrder: 53
               });
             }
           }
@@ -162,19 +169,12 @@ export class HeaderMenuExtension implements Extension {
               iconCssClass: headerMenuOptions.iconColumnHideCommand || 'fa fa-times',
               title: options.enableTranslate ? this.i18n.tr('HIDE_COLUMN') : Constants.TEXT_HIDE_COLUMN,
               command: 'hide',
-              positionOrder: 54
+              positionOrder: 55
             });
           }
 
           this.extensionUtility.translateItems(columnHeaderMenuItems, 'titleKey', 'title');
-
-          // sort the custom items by their position in the list
-          columnHeaderMenuItems.sort((itemA: any, itemB: any) => {
-            if (itemA && itemB && itemA.hasOwnProperty('positionOrder') && itemB.hasOwnProperty('positionOrder')) {
-              return itemA.positionOrder - itemB.positionOrder;
-            }
-            return 0;
-          });
+          this.extensionUtility.sortItems(columnHeaderMenuItems, 'positionOrder');
         }
       });
 
@@ -183,47 +183,42 @@ export class HeaderMenuExtension implements Extension {
     return headerMenuOptions;
   }
 
-  /** Execute the Header Menu Commands that was triggered by the onCommand subscribe */
-  executeHeaderMenuInternalCommands(event: Event, args: HeaderMenuOnCommandArgs) {
-    if (args && args.command) {
-      switch (args.command) {
-        case 'hide':
-          this.hideColumn(args.column);
-          if (this.sharedService.gridOptions && this.sharedService.gridOptions.enableAutoSizeColumns) {
-            this.sharedService.grid.autosizeColumns();
-          }
-          break;
-        case 'clear-filter':
-          this.clearColumnFilter(event, args);
-          break;
-        case 'clear-sort':
-          this.clearColumnSort(event, args);
-          break;
-        case 'sort-asc':
-        case 'sort-desc':
-          const isSortingAsc = (args.command === 'sort-asc');
-          this.sortColumn(event, args, isSortingAsc);
-          break;
-        default:
-          break;
-      }
+  /** Hide a column from the grid */
+  hideColumn(column: Column) {
+    if (this.sharedService.grid && this.sharedService.grid.getColumns && this.sharedService.grid.setColumns && this.sharedService.grid.getColumnIndex) {
+      const columnIndex = this.sharedService.grid.getColumnIndex(column.id);
+      const currentColumns = this.sharedService.grid.getColumns();
+      const visibleColumns = this.extensionUtility.arrayRemoveItemByIndex(currentColumns, columnIndex);
+      this.sharedService.visibleColumns = visibleColumns;
+      this.sharedService.grid.setColumns(visibleColumns);
     }
   }
 
-  /** Hide a column from the grid */
-  hideColumn(column: Column) {
-    if (this.sharedService.grid && this.sharedService.grid.getColumns && this.sharedService.grid.setColumns) {
-      const columnIndex = this.sharedService.grid.getColumnIndex(column.id);
-      this.sharedService.visibleColumns = this.extensionUtility.arrayRemoveItemByIndex(this.sharedService.grid.getColumns(), columnIndex);
-      this.sharedService.grid.setColumns(this.sharedService.visibleColumns);
+  /** Translate the Header Menu titles, we need to loop through all column definition to re-translate them */
+  translateHeaderMenu() {
+    if (this.sharedService.gridOptions && this.sharedService.gridOptions.headerMenu) {
+      this.resetHeaderMenuTranslations(this.sharedService.visibleColumns);
     }
+  }
+
+  /**
+   * @return default Header Menu options
+   */
+  private getDefaultHeaderMenuOptions(): HeaderMenu {
+    return {
+      autoAlignOffset: 12,
+      minWidth: 140,
+      hideColumnHideCommand: false,
+      hideSortCommands: false,
+      title: ''
+    };
   }
 
   /**
    * Reset all the Grid Menu options which have text to translate
    * @param grid menu object
    */
-  resetHeaderMenuTranslations(columnDefinitions: Column[]) {
+  private resetHeaderMenuTranslations(columnDefinitions: Column[]) {
     columnDefinitions.forEach((columnDef: Column) => {
       if (columnDef && columnDef.header && columnDef.header && columnDef.header.menu && columnDef.header.menu.items) {
         if (!columnDef.excludeFromHeaderMenu) {
@@ -258,33 +253,81 @@ export class HeaderMenuExtension implements Extension {
     });
   }
 
-  /**
-   * Translate the Header Menu titles, we need to loop through all column definition to re-translate them
-   */
-  translateHeaderMenu() {
-    if (this.sharedService.gridOptions && this.sharedService.gridOptions.headerMenu) {
-      this.resetHeaderMenuTranslations(this.sharedService.visibleColumns);
+  // --
+  // private functions
+  // ------------------
+
+  /** Clear the Filter on the current column (if it's actually filtered) */
+  private clearColumnFilter(event: Event, args: HeaderMenuOnCommandArgs) {
+    if (args && args.column) {
+      this.filterService.clearFilterByColumnId(event, args.column.id);
     }
   }
 
-  /**
-   * @return default Header Menu options
-   */
-  private getDefaultHeaderMenuOptions(): HeaderMenu {
-    return {
-      autoAlignOffset: 12,
-      minWidth: 140,
-      hideColumnHideCommand: false,
-      hideSortCommands: false,
-      title: ''
-    };
+  /** Clear the Sort on the current column (if it's actually sorted) */
+  private clearColumnSort(e: Event, args: HeaderMenuOnCommandArgs) {
+    if (args && args.column && this.sharedService) {
+      // get previously sorted columns
+      const allSortedCols: ColumnSort[] = this.sortService.getCurrentColumnSorts();
+      const sortedColsWithoutCurrent: ColumnSort[] = this.sortService.getCurrentColumnSorts(args.column.id + '');
+
+      if (Array.isArray(allSortedCols) && Array.isArray(sortedColsWithoutCurrent) && allSortedCols.length !== sortedColsWithoutCurrent.length) {
+        if (this.sharedService.gridOptions.backendServiceApi) {
+          this.sortService.onBackendSortChanged(e, { multiColumnSort: true, sortCols: sortedColsWithoutCurrent, grid: this.sharedService.grid });
+        } else if (this.sharedService.dataView) {
+          this.sortService.onLocalSortChanged(this.sharedService.grid, this.sharedService.dataView, sortedColsWithoutCurrent, true);
+        } else {
+          // when using customDataView, we will simply send it as a onSort event with notify
+          const isMultiSort = this.sharedService && this.sharedService.gridOptions && this.sharedService.gridOptions.multiColumnSort || false;
+          const sortOutput = isMultiSort ? sortedColsWithoutCurrent : sortedColsWithoutCurrent[0];
+          args.grid.onSort.notify(sortOutput);
+        }
+
+        // update the this.sharedService.gridObj sortColumns array which will at the same add the visual sort icon(s) on the UI
+        const updatedSortColumns: ColumnSort[] = sortedColsWithoutCurrent.map((col) => {
+          return {
+            columnId: col && col.sortCol && col.sortCol.id,
+            sortAsc: col && col.sortAsc,
+            sortCol: col && col.sortCol,
+          };
+        });
+        this.sharedService.grid.setSortColumns(updatedSortColumns); // add sort icon in UI
+      }
+    }
+  }
+
+  /** Execute the Header Menu Commands that was triggered by the onCommand subscribe */
+  private executeHeaderMenuInternalCommands(event: Event, args: HeaderMenuOnCommandArgs) {
+    if (args && args.command) {
+      switch (args.command) {
+        case 'hide':
+          this.hideColumn(args.column);
+          if (this.sharedService.gridOptions && this.sharedService.gridOptions.enableAutoSizeColumns) {
+            this.sharedService.grid.autosizeColumns();
+          }
+          break;
+        case 'clear-filter':
+          this.clearColumnFilter(event, args);
+          break;
+        case 'clear-sort':
+          this.clearColumnSort(event, args);
+          break;
+        case 'sort-asc':
+        case 'sort-desc':
+          const isSortingAsc = (args.command === 'sort-asc');
+          this.sortColumn(event, args, isSortingAsc);
+          break;
+        default:
+          break;
+      }
+    }
   }
 
   /** Sort the current column */
   private sortColumn(event: Event, args: HeaderMenuOnCommandArgs, isSortingAsc = true) {
     if (args && args.column) {
       // get previously sorted columns
-      const sortedColsWithoutCurrent: ColumnSort[] = this.sortService.getPreviousColumnSorts(args.column.id + '');
+      const sortedColsWithoutCurrent: ColumnSort[] = this.sortService.getCurrentColumnSorts(args.column.id + '');
 
       // add to the column array, the column sorted by the header menu
       sortedColsWithoutCurrent.push({ sortCol: args.column, sortAsc: isSortingAsc });
@@ -303,48 +346,11 @@ export class HeaderMenuExtension implements Extension {
       const newSortColumns: ColumnSort[] = sortedColsWithoutCurrent.map((col) => {
         return {
           columnId: col && col.sortCol && col.sortCol.id,
-          sortAsc: col && col.sortAsc
+          sortAsc: col && col.sortAsc,
+          sortCol: col && col.sortCol,
         };
       });
       this.sharedService.grid.setSortColumns(newSortColumns); // add sort icon in UI
-    }
-  }
-
-  /** Clear the Filter on the current column (if it's actually filtered) */
-  private clearColumnFilter(e: Event, args: HeaderMenuOnCommandArgs) {
-    if (args && args.column) {
-      this.filterService.clearFilterByColumnId(args.column.id);
-    }
-  }
-
-  /** Clear the Sort on the current column (if it's actually sorted) */
-  private clearColumnSort(e: Event, args: HeaderMenuOnCommandArgs) {
-    if (args && args.column && this.sharedService) {
-      // get previously sorted columns
-      const allSortedCols: ColumnSort[] = this.sortService.getPreviousColumnSorts();
-      const sortedColsWithoutCurrent: ColumnSort[] = this.sortService.getPreviousColumnSorts(args.column.id + '');
-
-      if (allSortedCols.length !== sortedColsWithoutCurrent.length) {
-        if (this.sharedService.gridOptions.backendServiceApi) {
-          this.sortService.onBackendSortChanged(e, { multiColumnSort: true, sortCols: sortedColsWithoutCurrent, grid: this.sharedService.grid });
-        } else if (this.sharedService.dataView) {
-          this.sortService.onLocalSortChanged(this.sharedService.grid, this.sharedService.dataView, sortedColsWithoutCurrent, true);
-        } else {
-          // when using customDataView, we will simply send it as a onSort event with notify
-          const isMultiSort = this.sharedService && this.sharedService.gridOptions && this.sharedService.gridOptions.multiColumnSort || false;
-          const sortOutput = isMultiSort ? sortedColsWithoutCurrent : sortedColsWithoutCurrent[0];
-          args.grid.onSort.notify(sortOutput);
-        }
-
-        // update the this.sharedService.gridObj sortColumns array which will at the same add the visual sort icon(s) on the UI
-        const updatedSortColumns: ColumnSort[] = sortedColsWithoutCurrent.map((col) => {
-          return {
-            columnId: col && col.sortCol && col.sortCol.id,
-            sortAsc: col && col.sortAsc
-          };
-        });
-        this.sharedService.grid.setSortColumns(updatedSortColumns); // add sort icon in UI
-      }
     }
   }
 }

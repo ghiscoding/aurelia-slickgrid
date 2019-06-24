@@ -2,12 +2,14 @@ import {
   inject,
   Container,
   createOverrideContext,
+  singleton,
   ViewCompiler,
   ViewResources,
   ViewSlot,
 } from 'aurelia-framework';
 import { AureliaViewOutput } from './../models/aureliaViewOutput.interface';
 
+@singleton(true)
 @inject(
   Container,
   ViewCompiler,

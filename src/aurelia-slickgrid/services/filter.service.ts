@@ -178,7 +178,7 @@ export class FilterService {
     });
   }
 
-  clearFilterByColumnId(columnId: number | string) {
+  clearFilterByColumnId(event: Event, columnId: number | string) {
     const colFilter: Filter = this._filters.find((filter: Filter) => filter.columnDef.id === columnId);
     if (colFilter && colFilter.clear) {
       colFilter.clear(true);
@@ -235,7 +235,7 @@ export class FilterService {
     }
 
     // emit an event when filters are all cleared
-    this.ea.publish('filterService:filterCleared', this._columnFilters);
+    this.ea.publish('filterService:filterCleared', true);
   }
 
   /** Local Grid Filter search */
@@ -257,7 +257,7 @@ export class FilterService {
       }
 
       const dataKey = columnDef.dataKey;
-      const fieldName = columnDef.queryField || columnDef.queryFieldFilter || columnDef.field || '';
+      const fieldName = columnDef.queryFieldFilter || columnDef.queryField || columnDef.field || '';
       const fieldType = columnDef.type || FieldType.string;
       const filterSearchType = (columnDef.filterSearchType) ? columnDef.filterSearchType : null;
       let cellValue = item[fieldName];
