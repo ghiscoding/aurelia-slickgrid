@@ -4,7 +4,7 @@ import { compareObjects } from './filterUtilities';
 export const objectFilterCondition: FilterCondition = (options: FilterConditionOption) => {
   const searchTerm = (Array.isArray(options.searchTerms) && options.searchTerms[0] || '');
 
-  if (!searchTerm && (!options.operator || options.operator === '')) {
+  if (!searchTerm && !options.operator) {
     return true;
   }
 
