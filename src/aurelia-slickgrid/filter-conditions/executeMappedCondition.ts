@@ -31,10 +31,8 @@ export const executeMappedCondition: FilterCondition = (options: FilterCondition
       return dateUtcFilterCondition(options);
     // all Euro Formats (date/month/year)
     case FieldType.dateEuro:
-    case FieldType.dateTimeEuro:
       return dateEuroFilterCondition(options);
     case FieldType.dateEuroShort:
-    case FieldType.dateTimeEuroShort:
       return dateEuroShortFilterCondition(options);
     // all US Formats (month/date/year)
     case FieldType.dateUs:
