@@ -329,7 +329,7 @@ export class FilterService {
         fieldType,
         searchTerms: searchValues,
         cellValue,
-        operator,
+        operator: operator as OperatorString,
         cellValueLastChar: lastValueChar,
         filterSearchType
       };
