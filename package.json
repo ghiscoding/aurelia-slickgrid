@@ -155,7 +155,7 @@
     "ts-node": "^8.0.3",
     "tslint": "^5.16.0",
     "typedoc": "^0.14.2",
-    "typescript": "^3.1.1",
+    "typescript": "^3.5.2",
     "uglify-js": "^3.0.19",
     "url-loader": "0.5.8",
     "vinyl-fs": "^2.4.3",
