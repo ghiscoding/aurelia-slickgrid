@@ -7,5 +7,16 @@ export const objectFilterCondition: FilterCondition = (options: FilterConditionO
   if (!searchTerm && (!options.operator || options.operator === '')) {
     return true;
   }
-  return compareObjects(options.cellValue, searchTerm, options.dataKey);
+
+  switch (options.operator) {
+    case '!=':
+    case '<>':
+    case 'NE':
+      return !compareObjects(options.cellValue, searchTerm, options.dataKey);
+    case '=':
+    case '==':
+    case 'EQ':
+    default:
+      return compareObjects(options.cellValue, searchTerm, options.dataKey);
+  }
 };
