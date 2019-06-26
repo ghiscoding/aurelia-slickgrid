@@ -245,7 +245,7 @@ export class ExtensionService {
   }
 
   /**
-   * Attach/Create certain plugins before the Grid creation, else they might behave oddly.
+   * Bind/Create certain plugins before the Grid creation, else they might behave oddly.
    * Mostly because the column definitions might change after the grid creation
    * @param columnDefinitions
    * @param options

@@ -170,7 +170,7 @@ export class AureliaSlickgridCustomElement {
     this.sharedService.grid = this.grid;
     this.extensionService.bindDifferentExtensions();
 
-    this.attachDifferentHooks(this.grid, this.gridOptions, this.dataview);
+    this.bindDifferentHooks(this.grid, this.gridOptions, this.dataview);
 
     this.grid.init();
 
@@ -206,10 +206,10 @@ export class AureliaSlickgridCustomElement {
       this.executeAfterDataviewCreated(this.grid, this.gridOptions, this.dataview);
     }
 
-    // attach resize ONLY after the dataView is ready
-    this.attachResizeHook(this.grid, this.gridOptions);
+    // bind resize ONLY after the dataView is ready
+    this.bindResizeHook(this.grid, this.gridOptions);
 
-    // attach grouping and header grouping colspan service
+    // bind grouping and header grouping colspan service
     if (this.gridOptions.createPreHeaderPanel && !this.gridOptions.enableDraggableGrouping) {
       this.groupingAndColspanService.init(this.grid, this.dataview);
     }
@@ -217,7 +217,7 @@ export class AureliaSlickgridCustomElement {
     // initialize grid service
     this.gridService.init(this.grid, this.dataview);
 
-    // when user enables translation, we need to translate Headers on first pass & subsequently in the attachDifferentHooks
+    // when user enables translation, we need to translate Headers on first pass & subsequently in the bindDifferentHooks
     if (this.gridOptions.enableTranslate) {
       this.extensionService.translateColumnHeaders();
     }
@@ -227,10 +227,10 @@ export class AureliaSlickgridCustomElement {
       this.exportService.init(this.grid, this.dataview);
     }
 
-    // attach the Backend Service API callback functions only after the grid is initialized
+    // bind the Backend Service API callback functions only after the grid is initialized
     // because the preProcess() and onInit() might get triggered
     if (this.gridOptions && this.gridOptions.backendServiceApi) {
-      this.attachBackendCallbackFunctions(this.gridOptions);
+      this.bindBackendCallbackFunctions(this.gridOptions);
     }
 
     this.gridStateService.init(this.grid, this.extensionService, this.filterService, this.sortService);
@@ -383,7 +383,7 @@ export class AureliaSlickgridCustomElement {
     }
   }
 
-  attachDifferentHooks(grid: any, gridOptions: GridOption, dataView: any) {
+  bindDifferentHooks(grid: any, gridOptions: GridOption, dataView: any) {
     // on locale change, we have to manually translate the Headers, GridMenu
     this.subscriptions.push(
       this.ea.subscribe('i18n:locale:changed', (payload: any) => {
@@ -413,12 +413,12 @@ export class AureliaSlickgridCustomElement {
       }
     }
 
-    // attach external sorting (backend) when available or default onSort (dataView)
+    // bind external sorting (backend) when available or default onSort (dataView)
     if (gridOptions.enableSorting && !this.customDataView) {
       gridOptions.backendServiceApi ? this.sortService.bindBackendOnSort(grid, dataView) : this.sortService.bindLocalOnSort(grid, dataView);
     }
 
-    // attach external filter (backend) when available or default onFilter (dataView)
+    // bind external filter (backend) when available or default onFilter (dataView)
     if (gridOptions.enableFiltering && !this.customDataView) {
       this.filterService.init(grid);
 
@@ -426,7 +426,7 @@ export class AureliaSlickgridCustomElement {
       if (gridOptions.presets && Array.isArray(gridOptions.presets.filters) && gridOptions.presets.filters.length > 0) {
         this.filterService.populateColumnFilterSearchTerms();
       }
-      gridOptions.backendServiceApi ? this.filterService.attachBackendOnFilter(grid, this.dataview) : this.filterService.attachLocalOnFilter(grid, this.dataview);
+      gridOptions.backendServiceApi ? this.filterService.bindBackendOnFilter(grid, this.dataview) : this.filterService.bindLocalOnFilter(grid, this.dataview);
     }
 
     // if user set an onInit Backend, we'll run it right away (and if so, we also need to run preProcess, internalPostProcess & postProcess)
@@ -500,7 +500,7 @@ export class AureliaSlickgridCustomElement {
     }
   }
 
-  attachBackendCallbackFunctions(gridOptions: GridOption) {
+  bindBackendCallbackFunctions(gridOptions: GridOption) {
     const backendApi = gridOptions.backendServiceApi;
     const serviceOptions: BackendServiceOption = (backendApi && backendApi.service && backendApi.service.options) ? backendApi.service.options : {};
     const isExecuteCommandOnInit = (!serviceOptions) ? false : ((serviceOptions && serviceOptions.hasOwnProperty('executeProcessCommandOnInit')) ? serviceOptions['executeProcessCommandOnInit'] : true);
@@ -576,7 +576,7 @@ export class AureliaSlickgridCustomElement {
     }
   }
 
-  attachResizeHook(grid: any, options: GridOption) {
+  bindResizeHook(grid: any, options: GridOption) {
     // expand/autofit columns on first page load
     if (grid && options.autoFitColumnsOnFirstLoad && options.enableAutoSizeColumns && typeof grid.autosizeColumns === 'function') {
       this.grid.autosizeColumns();

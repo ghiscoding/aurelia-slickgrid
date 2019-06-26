@@ -67,10 +67,10 @@ export class FilterService {
   }
 
   /**
-   * Attach a backend filter hook to the grid
+   * Bind a backend filter hook to the grid
    * @param grid SlickGrid Grid object
    */
-  attachBackendOnFilter(grid: any, dataView: any) {
+  bindBackendOnFilter(grid: any, dataView: any) {
     this._dataView = dataView;
     this._filters = [];
     this._slickSubscriber = new Slick.Event();
@@ -93,11 +93,11 @@ export class FilterService {
 
   onBackendFilterChange(event: KeyboardEvent, args: any) {
     if (!args || !args.grid) {
-      throw new Error('Something went wrong when trying to attach the "attachBackendOnFilterSubscribe(event, args)" function, it seems that "args" is not populated correctly');
+      throw new Error('Something went wrong when trying to bind the "onBackendFilterChange" method, it seems that "args" is not populated correctly');
     }
     const backendApi = this._gridOptions.backendServiceApi;
     if (!backendApi || !backendApi.process || !backendApi.service) {
-      throw new Error(`BackendServiceApi requires at least a "process" function and a "service" defined`);
+      throw new Error(`BackendServiceApi requires at least a "process" method and a "service" defined`);
     }
     try {
       // keep start time & end timestamps & return it after process execution
@@ -147,12 +147,12 @@ export class FilterService {
   }
 
   /**
-   * Attach a local filter hook to the grid
+   * Bind a local filter hook to the grid
    * @param grid SlickGrid Grid object
    * @param gridOptions Grid Options object
    * @param dataView
    */
-  attachLocalOnFilter(grid: any, dataView: any) {
+  bindLocalOnFilter(grid: any, dataView: any) {
     this._filters = [];
     this._dataView = dataView;
     this._slickSubscriber = new Slick.Event();
