@@ -506,7 +506,7 @@ describe('rowDetailViewExtension', () => {
 
     it('should run the internal "onProcessing" and call "notifyTemplate" with a Promise when "process" method is defined and executed', (done) => {
       const mockItem = { id: 2, firstName: 'John', lastName: 'Doe' };
-      gridOptionsMock.rowDetailView.process = () => new Promise((resolve) => resolve(mockItem));
+      gridOptionsMock.rowDetailView.process = (mockItem) => new Promise((resolve) => resolve(mockItem));
       const instance = extension.create(columnsMock, gridOptionsMock);
 
       instance.onAsyncResponse.subscribe((e, response) => {
@@ -514,7 +514,7 @@ describe('rowDetailViewExtension', () => {
         done();
       });
 
-      gridOptionsMock.rowDetailView.process({ id: 'field1', field: 'field1' });
+      gridOptionsMock.rowDetailView.process(mockItem);
     });
 
     // this one here
@@ -525,7 +525,7 @@ describe('rowDetailViewExtension', () => {
       http.returnKey = 'date';
       http.returnValue = '6/24/1984';
       http.responseHeaders = { accept: 'json' };
-      gridOptionsMock.rowDetailView.process = () => http.fetch('/api', { method: 'GET' });
+      gridOptionsMock.rowDetailView.process = (item) => http.fetch('/api', { method: 'GET' });
       const instance = extension.create(columnsMock, gridOptionsMock);
 
       instance.onAsyncResponse.subscribe((e, response) => {
@@ -533,12 +533,12 @@ describe('rowDetailViewExtension', () => {
         done();
       });
 
-      gridOptionsMock.rowDetailView.process({ id: 'field1', field: 'field1' });
+      gridOptionsMock.rowDetailView.process(mockItem);
     });
 
     it('should run the internal "onProcessing" and call "notifyTemplate" with a Promise when "process" method is defined and executed', (done) => {
       const mockItem = { id: 2, firstName: 'John', lastName: 'Doe' };
-      gridOptionsMock.rowDetailView.process = () => new Promise((resolve) => resolve({ content: mockItem }));
+      gridOptionsMock.rowDetailView.process = (item) => new Promise((resolve) => resolve({ content: item }));
       const instance = extension.create(columnsMock, gridOptionsMock);
 
       instance.onAsyncResponse.subscribe((e, response) => {
@@ -546,16 +546,16 @@ describe('rowDetailViewExtension', () => {
         done();
       });
 
-      gridOptionsMock.rowDetailView.process({ id: 'field1', field: 'field1' });
+      gridOptionsMock.rowDetailView.process(mockItem);
     });
 
     it('should throw an error when running the "process" that does not return an object with an "id" property', async () => {
       const mockItem = { firstName: 'John', lastName: 'Doe' };
-      gridOptionsMock.rowDetailView.process = () => new Promise((resolve) => resolve(mockItem));
+      gridOptionsMock.rowDetailView.process = (item) => new Promise((resolve) => resolve(item));
       extension.create(columnsMock, gridOptionsMock);
 
       try {
-        await gridOptionsMock.rowDetailView.process({ id: 'field1', field: 'field1' });
+        await gridOptionsMock.rowDetailView.process(mockItem);
       } catch (e) {
         expect(e.toString()).toContain(`[Aurelia-Slickgrid] could not process the Row Detail, you must make sure that your "process" callback`);
       }
