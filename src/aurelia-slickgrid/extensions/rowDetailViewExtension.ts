@@ -1,10 +1,9 @@
-import { AureliaViewOutput } from './../models/aureliaViewOutput.interface';
 import { inject, singleton } from 'aurelia-framework';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
-import { Column, Extension, ExtensionName, GridOption, SlickEventHandler } from '../models/index';
+import { AureliaViewOutput, Column, Extension, ExtensionName, GridOption, SlickEventHandler } from '../models/index';
 import { ExtensionUtility } from './extensionUtility';
 import { SharedService } from '../services/shared.service';
-import { AureliaUtilService } from './../services/aureliaUtilService';
+import { AureliaUtilService } from '../services/aureliaUtil.service';
 import { addToArrayWhenNotExists, disposeAllSubscriptions } from '../services/utilities';
 import * as DOMPurify from 'dompurify';
 

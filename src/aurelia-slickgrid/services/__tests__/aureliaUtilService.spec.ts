@@ -1,5 +1,5 @@
-import { AureliaUtilService } from '..';
 import { BindingLanguage, Container, ViewCompiler, ViewResources } from 'aurelia-framework';
+import { AureliaUtilService } from '../aureliaUtil.service';
 
 const DOM_ELEMENT_ID = 'row-detail123';
 jest.mock('flatpickr', () => { });

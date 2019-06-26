@@ -7,7 +7,7 @@ import {
   ViewResources,
   ViewSlot,
 } from 'aurelia-framework';
-import { AureliaViewOutput } from './../models/aureliaViewOutput.interface';
+import { AureliaViewOutput } from '../models/aureliaViewOutput.interface';
 
 @singleton(true)
 @inject(

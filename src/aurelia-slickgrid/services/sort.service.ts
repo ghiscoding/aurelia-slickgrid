@@ -201,7 +201,9 @@ export class SortService {
 
   dispose() {
     // unsubscribe all SlickGrid events
-    this._eventHandler.unsubscribeAll();
+    if (this._eventHandler && this._eventHandler.unsubscribeAll) {
+      this._eventHandler.unsubscribeAll();
+    }
   }
 
   onBackendSortChanged(event: Event | undefined, args: any) {

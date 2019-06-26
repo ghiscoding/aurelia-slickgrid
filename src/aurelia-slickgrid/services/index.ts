@@ -1,4 +1,4 @@
-export * from './aureliaUtilService';
+export * from './aureliaUtil.service';
 export * from './backend-utilities';
 export * from './collection.service';
 export * from './export.service';
