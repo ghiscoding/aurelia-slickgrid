@@ -9,10 +9,10 @@ import {
   ColumnFilters,
   CurrentFilter,
   EmitterType,
+  FieldType,
   Filter,
   FilterArguments,
   FilterCallbackArg,
-  FieldType,
   GraphqlResult,
   GridOption,
   KeyCode,
@@ -40,7 +40,7 @@ export class FilterService {
   private _eventHandler: SlickEventHandler;
   private _isFilterFirstRender = true;
   private _firstColumnIdRendered = '';
-  private _filters: any[] = [];
+  private _filtersMetadata: any[] = [];
   private _columnFilters: ColumnFilters = {};
   private _dataView: any;
   private _grid: any;
@@ -54,6 +54,11 @@ export class FilterService {
   /** Getter of the SlickGrid Event Handler */
   get eventHandler(): SlickEventHandler {
     return this._eventHandler;
+  }
+
+  /** Getter to know if the filter was already rendered or if it was its first time render */
+  get isFilterFirstRender(): boolean {
+    return this._isFilterFirstRender;
   }
 
   /** Getter of the SlickGrid Event Handler */
@@ -103,8 +108,8 @@ export class FilterService {
     }
 
     // also destroy each Filter instances
-    if (Array.isArray(this._filters)) {
-      this._filters.forEach((filter, index) => {
+    if (Array.isArray(this._filtersMetadata)) {
+      this._filtersMetadata.forEach((filter, index) => {
         if (filter && filter.destroy) {
           filter.destroy(true);
         }
@@ -118,12 +123,12 @@ export class FilterService {
    */
   bindBackendOnFilter(grid: any, dataView: any) {
     this._dataView = dataView;
-    this._filters = [];
+    this._filtersMetadata = [];
 
     // subscribe to SlickGrid onHeaderRowCellRendered event to create filter template
     this._eventHandler.subscribe(grid.onHeaderRowCellRendered, (e: KeyboardEvent, args: any) => {
       // firstColumnIdRendered is null at first, so if it changes to being filled and equal, then we would know that it was already rendered
-      // this is to avoid rendering the filter twice, rendering it again also clears the filter which has unwanted side effect
+      // this is to avoid rendering the filter twice (only the Select Filter for now), rendering it again also clears the filter which has unwanted side effect
       if (args.column.id === this._firstColumnIdRendered) {
         this._isFilterFirstRender = false;
       }
@@ -144,7 +149,7 @@ export class FilterService {
    * @param dataView
    */
   bindLocalOnFilter(grid: any, dataView: any) {
-    this._filters = [];
+    this._filtersMetadata = [];
     this._dataView = dataView;
 
     dataView.setFilterArgs({ columnFilters: this._columnFilters, grid: this._grid });
@@ -216,7 +221,7 @@ export class FilterService {
   }
 
   clearFilterByColumnId(event: Event, columnId: number | string) {
-    const colFilter: Filter = this._filters.find((filter: Filter) => filter.columnDef.id === columnId);
+    const colFilter: Filter = this._filtersMetadata.find((filter: Filter) => filter.columnDef.id === columnId);
     if (colFilter && colFilter.clear) {
       colFilter.clear(true);
     }
@@ -244,7 +249,7 @@ export class FilterService {
 
   /** Clear the search filters (below the column titles) */
   clearFilters() {
-    this._filters.forEach((filter: Filter) => {
+    this._filtersMetadata.forEach((filter: Filter) => {
       if (filter && filter.clear) {
         // clear element and trigger a change
         filter.clear(false);
@@ -398,6 +403,10 @@ export class FilterService {
     return this._columnFilters;
   }
 
+  getFiltersMetadata() {
+    return this._filtersMetadata;
+  }
+
   getCurrentLocalFilters(): CurrentFilter[] {
     const currentFilters: CurrentFilter[] = [];
     if (this._columnFilters) {
@@ -523,15 +532,15 @@ export class FilterService {
     if (columnDef && columnId !== 'selector' && columnDef.filterable) {
       let searchTerms: SearchTerm[] | undefined;
       let operator: OperatorString | OperatorType | undefined;
-      const filter: Filter | undefined = this.filterFactory.createFilter(args.column.filter);
-      operator = (columnDef && columnDef.filter && columnDef.filter.operator) || (filter && filter.operator);
+      const newFilter: Filter | undefined = this.filterFactory.createFilter(args.column.filter);
+      operator = (columnDef && columnDef.filter && columnDef.filter.operator) || (newFilter && newFilter.operator);
 
       if (this._columnFilters[columnDef.id]) {
         searchTerms = this._columnFilters[columnDef.id].searchTerms || undefined;
         operator = this._columnFilters[columnDef.id].operator || undefined;
       } else if (columnDef.filter) {
         // when hiding/showing (with Column Picker or Grid Menu), it will try to re-create yet again the filters (since SlickGrid does a re-render)
-        // because of that we need to first get searchTerm(s) from the columnFilters (that is what the user last entered)
+        // because of that we need to first get searchTerm(s) from the columnFilters (that is what the user last typed in a filter search input)
         searchTerms = columnDef.filter.searchTerms || undefined;
         this.updateColumnFilters(searchTerms, columnDef, operator);
       }
@@ -544,21 +553,21 @@ export class FilterService {
         callback: this.callbackSearchEvent.bind(this)
       };
 
-      if (filter) {
-        filter.init(filterArguments, isFilterFirstRender);
-        const filterExistIndex = this._filters.findIndex((filt) => filter.columnDef.name === filt.columnDef.name);
+      if (newFilter) {
+        newFilter.init(filterArguments, isFilterFirstRender);
+        const filterExistIndex = this._filtersMetadata.findIndex((filter) => newFilter.columnDef.name === filter.columnDef.name);
 
         // add to the filters arrays or replace it when found
         if (filterExistIndex === -1) {
-          this._filters.push(filter);
+          this._filtersMetadata.push(newFilter);
         } else {
-          this._filters[filterExistIndex] = filter;
+          this._filtersMetadata[filterExistIndex] = newFilter;
         }
 
         // when hiding/showing (with Column Picker or Grid Menu), it will try to re-create yet again the filters (since SlickGrid does a re-render)
         // we need to also set again the values in the DOM elements if the values were set by a searchTerm(s)
-        if (searchTerms && filter.setValues) {
-          filter.setValues(searchTerms);
+        if (searchTerms && newFilter.setValues) {
+          newFilter.setValues(searchTerms);
         }
       }
     }
