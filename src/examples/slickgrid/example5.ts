@@ -7,6 +7,7 @@ import {
   Filters,
   GridOdataService,
   GridOption,
+  GridStateChange,
   OperatorType,
   SortDirection,
   Statistic,
@@ -24,6 +25,7 @@ export class Example5 {
     <br/>
     <ul class="small">
       <li>Only "Name" field is sortable for the demo (because we use JSON files), however "multiColumnSort: true" is also supported</li>
+      <li>This example also demos the Grid State feature, open the console log to see the changes</li>
       <li>String column also support operator (>, >=, <, <=, <>, !=, =, ==, *)
       <ul>
         <li>The (*) can be used as startsWith (ex.: "abc*" => startsWith "abc") / endsWith (ex.: "*xyz" => endsWith "xyz")</li>
@@ -62,7 +64,7 @@ export class Example5 {
         }
       },
       {
-        id: 'gender', name: 'Gender', field: 'gender', filterable: true, sortable: true,
+        id: 'gender', name: 'Gender', field: 'gender', filterable: true,
         filter: {
           model: Filters.singleSelect,
           collection: [{ value: '', label: '' }, { value: 'male', label: 'male' }, { value: 'female', label: 'female' }]
@@ -99,7 +101,6 @@ export class Example5 {
         sorters: [
           // direction can be written as 'asc' (uppercase or lowercase) and/or use the SortDirection type
           { columnId: 'name', direction: 'asc' },
-          { columnId: 'gender', direction: SortDirection.DESC }
         ],
         pagination: { pageNumber: 2, pageSize: 20 }
       },
@@ -264,5 +265,10 @@ export class Example5 {
           }, 500);
         });
     });
+  }
+
+  /** Dispatched event of a Grid State Changed event */
+  gridStateChanged(gridStateChanges: GridStateChange) {
+    console.log('OData sample, Grid State changed:: ', gridStateChanges);
   }
 }

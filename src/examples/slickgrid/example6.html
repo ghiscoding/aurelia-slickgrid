@@ -45,6 +45,7 @@
                      dataset.bind="dataset"
                      grid-height="200"
                      grid-width="800"
-                     asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
+                     asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)"
+                     asg-on-grid-state-changed.delegate="gridStateChanged($event)">
   </aurelia-slickgrid>
 </template>
