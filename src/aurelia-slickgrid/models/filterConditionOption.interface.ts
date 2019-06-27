@@ -1,11 +1,10 @@
 import { FieldType } from './fieldType.enum';
 import { OperatorString } from './operatorString';
-import { OperatorType } from './operatorType.enum';
 import { SearchTerm } from './searchTerm.type';
 
 export interface FilterConditionOption {
   dataKey?: string;
-  operator: OperatorString | OperatorType;
+  operator: OperatorString;
   cellValue: any;
   cellValueLastChar?: string;
   fieldType: FieldType;
