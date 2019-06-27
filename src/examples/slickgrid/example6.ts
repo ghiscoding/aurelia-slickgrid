@@ -14,7 +14,8 @@ import {
   GridOption,
   OperatorType,
   SortDirection,
-  Statistic
+  Statistic,
+  GridStateChange
 } from '../../aurelia-slickgrid';
 
 const defaultPageSize = 20;
@@ -217,6 +218,11 @@ export class Example6 {
         resolve(mockedResult);
       }, 500);
     });
+  }
+
+  /** Dispatched event of a Grid State Changed event */
+  gridStateChanged(gridStateChanges: GridStateChange) {
+    console.log('GraphQL sample, Grid State changed:: ', gridStateChanges);
   }
 
   saveCurrentGridState() {

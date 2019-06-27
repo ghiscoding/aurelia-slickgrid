@@ -1,17 +1,20 @@
 <template>
   <h2>${title}</h2>
-  <div class="subtitle" innerhtml.bind="subTitle"></div>
+  <div class="subtitle"
+       innerhtml.bind="subTitle"></div>
 
   <div class="row">
     <div class="col-sm-4">
-      <div class.bind="status.class" role="alert">
+      <div class.bind="status.class"
+           role="alert">
         <strong>Status: </strong> ${status.text}
         <span hidden.bind="!processing">
           <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
         </span>
       </div>
       <span if.bind="statistics">
-        <b>Statistics:</b> ${statistics.endTime | dateFormat: 'DD MMM, h:mm:ss a'} | ${statistics.executionTime}ms | ${statistics.totalItemCount}
+        <b>Statistics:</b> ${statistics.endTime | dateFormat: 'DD MMM, h:mm:ss a'} | ${statistics.executionTime}ms |
+        ${statistics.totalItemCount}
         items
       </span>
     </div>
@@ -22,7 +25,11 @@
     </div>
   </div>
 
-  <aurelia-slickgrid grid-id="grid1" column-definitions.bind="columnDefinitions" grid-options.bind="gridOptions" dataset.bind="dataset"
-    asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
+  <aurelia-slickgrid grid-id="grid1"
+                     column-definitions.bind="columnDefinitions"
+                     grid-options.bind="gridOptions"
+                     dataset.bind="dataset"
+                     asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)"
+                     asg-on-grid-state-changed.delegate="gridStateChanged($event)">
   </aurelia-slickgrid>
 </template>

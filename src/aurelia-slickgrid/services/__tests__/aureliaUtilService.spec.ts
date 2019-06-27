@@ -1,8 +1,8 @@
 import { BindingLanguage, Container, ViewCompiler, ViewResources } from 'aurelia-framework';
 import { AureliaUtilService } from '../aureliaUtil.service';
 
-const DOM_ELEMENT_ID = 'row-detail123';
 jest.mock('flatpickr', () => { });
+const DOM_ELEMENT_ID = 'row-detail123';
 
 describe('aureliaUtilService', () => {
   let service: AureliaUtilService;
@@ -16,7 +16,7 @@ describe('aureliaUtilService', () => {
     div.innerHTML = `<div id="${DOM_ELEMENT_ID}">some text</div>`;
     document.body.appendChild(div);
 
-    container = new Container({});
+    container = new Container();
     viewResources = new ViewResources();
     viewCompiler = new ViewCompiler(new BindingLanguage(), viewResources);
     service = new AureliaUtilService(container, viewCompiler, viewResources);
