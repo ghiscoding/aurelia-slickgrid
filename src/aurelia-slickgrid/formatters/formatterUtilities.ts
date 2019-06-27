@@ -1,6 +1,6 @@
 import { Column, FieldType, Formatter, GridOption } from '../models/index';
 import { mapMomentDateFormatWithFieldType } from '../services/utilities';
-import * as moment from 'moment';
+import * as moment from 'moment-mini';
 
 /**
  * Find the option value from the following (in order of execution)

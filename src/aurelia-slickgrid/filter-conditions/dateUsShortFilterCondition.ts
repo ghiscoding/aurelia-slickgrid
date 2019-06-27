@@ -1,6 +1,6 @@
 import { FieldType, FilterCondition, FilterConditionOption } from '../models/index';
 import { testFilterCondition } from './filterUtilities';
-import * as moment from 'moment';
+import * as moment from 'moment-mini';
 import { mapMomentDateFormatWithFieldType } from './../services/utilities';
 const FORMAT = mapMomentDateFormatWithFieldType(FieldType.dateUsShort);
 

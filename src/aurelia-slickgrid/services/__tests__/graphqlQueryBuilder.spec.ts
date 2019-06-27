@@ -1,5 +1,5 @@
 import GraphqlQueryBuilder from '../graphqlQueryBuilder';
-import * as moment from 'moment';
+import * as moment from 'moment-mini';
 
 function removeSpaces(textS) {
   return `${textS}`.replace(/\s+/g, '');

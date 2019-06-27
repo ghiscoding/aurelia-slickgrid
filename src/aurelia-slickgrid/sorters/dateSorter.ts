@@ -1,4 +1,4 @@
-import * as moment from 'moment';
+import * as moment from 'moment-mini';
 import { Sorter } from './../models/sorter.interface';
 import { compareDates } from './compareDateUtility';
 

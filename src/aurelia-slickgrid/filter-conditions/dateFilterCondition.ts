@@ -1,7 +1,7 @@
 import { FieldType, FilterCondition, FilterConditionOption } from '../models/index';
 import { mapMomentDateFormatWithFieldType } from './../services/utilities';
 import { testFilterCondition } from './filterUtilities';
-import * as moment from 'moment';
+import * as moment from 'moment-mini';
 
 export const dateFilterCondition: FilterCondition = (options: FilterConditionOption) => {
   const searchTerm = (Array.isArray(options.searchTerms) && options.searchTerms[0] || '') as string;

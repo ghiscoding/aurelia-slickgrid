@@ -1,6 +1,6 @@
 import { Subscription } from 'aurelia-event-aggregator';
 import { FieldType, OperatorType } from '../models/index';
-import * as moment from 'moment';
+import * as moment from 'moment-mini';
 import * as $ from 'jquery';
 
 /**

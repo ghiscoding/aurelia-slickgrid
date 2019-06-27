@@ -4,7 +4,7 @@ import { Column, ColumnEditor, Editor, EditorValidator, EditorValidatorOutput, F
 import { I18N } from 'aurelia-i18n';
 import { inject } from 'aurelia-framework';
 import * as flatpickr from 'flatpickr';
-import * as moment from 'moment';
+import * as moment from 'moment-mini';
 import * as $ from 'jquery';
 
 declare function require(name: string): any;
