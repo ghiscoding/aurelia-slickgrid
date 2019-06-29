@@ -3,7 +3,7 @@ import { configure, SlickgridConfig } from './index';
 
 jest.mock('flatpickr', () => { });
 
-describe('Testing library entry ppoint and aurelia configure routine', () => {
+describe('Testing library entry point and aurelia configure routine', () => {
   const frameworkConfig = {
     globalResources: () => { /**/ },
     container: {

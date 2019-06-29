@@ -94,6 +94,7 @@ export class Example13 {
         filterable: true,
         filter: { model: Filters.compoundSlider },
         sortable: true,
+        type: FieldType.number,
         groupTotalsFormatter: GroupTotalFormatters.avgTotalsPercentage,
         params: { groupFormatterPrefix: '<i>Avg</i>: ' }
       },

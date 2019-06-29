@@ -1,4 +1,3 @@
-import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
 import {
   BackendServiceOption,
   ColumnFilters,

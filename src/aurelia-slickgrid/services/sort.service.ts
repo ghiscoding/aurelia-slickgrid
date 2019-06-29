@@ -11,11 +11,10 @@ import {
   SlickEventHandler,
   SortDirectionNumber,
   SortDirectionString,
-  GraphqlResult,
 } from './../models/index';
+import { executeBackendCallback } from './backend-utilities';
 import { getDescendantProperty } from './utilities';
 import { sortByFieldType } from '../sorters/sorterUtilities';
-import { executeBackendProcessesCallback, onBackendError } from './backend-utilities';
 
 // using external non-typed js libraries
 declare var Slick: any;
@@ -225,15 +224,7 @@ export class SortService {
     }
 
     const query = backendApi.service.processOnSortChanged(event, args);
-    this.emitSortChanged(EmitterType.remote);
-
-    // await for the Promise to resolve the data
-    // the processes can be Observables (like HttpClient) or Promises
-    const process = backendApi.process(query);
-    if (process instanceof Promise && process.then) {
-      process.then((processResult: GraphqlResult | any) => executeBackendProcessesCallback(startTime, processResult, backendApi, this._gridOptions))
-        .catch((error: any) => onBackendError(error, backendApi));
-    }
+    executeBackendCallback(query, args, startTime, gridOptions, this.emitSortChanged.bind(this));
   }
 
   /** When a Sort Changes on a Local grid (JSON dataset) */
