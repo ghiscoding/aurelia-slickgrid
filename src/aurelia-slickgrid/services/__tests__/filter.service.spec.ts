@@ -1,10 +1,12 @@
 // import 3rd party lib multiple-select for the tests
 import '../../../assets/lib/multiple-select/multiple-select';
+import 'jest-extended';
 
 import {
   BackendService,
   Column,
   CurrentFilter,
+  FieldType,
   FilterChangedArgs,
   GridOption,
   SlickEventHandler,
@@ -362,6 +364,7 @@ describe('FilterService', () => {
         service: backendServiceStub,
         process: () => new Promise((resolve) => resolve(jest.fn())),
       };
+      // we must use 2 separate Filters because we aren't loading Aurelia and so our Filters are not transient (as defined in lib config)
       mockColumn1 = { id: 'firstName', field: 'firstName', filterable: true, filter: { model: Filters.input } } as Column;
       mockColumn2 = { id: 'lastName', field: 'lastName', filterable: true, filter: { model: Filters.compoundInput } } as Column;
       const mockArgs1 = { grid: gridStub, column: mockColumn1, node: document.getElementById(DOM_ELEMENT_ID) };
@@ -436,6 +439,7 @@ describe('FilterService', () => {
     let mockColumn2: Column;
 
     beforeEach(() => {
+      // we must use 2 separate Filters because we aren't loading Aurelia and so our Filters are not transient (as defined in lib config)
       gridOptionMock.backendServiceApi = undefined;
       mockColumn1 = { id: 'firstName', field: 'firstName', filterable: true, filter: { model: Filters.input } } as Column;
       mockColumn2 = { id: 'lastName', field: 'lastName', filterable: true, filter: { model: Filters.compoundInput } } as Column;
@@ -535,6 +539,18 @@ describe('FilterService', () => {
       expect(output).toBe(true);
     });
 
+    it('should return True when input value from datacontext is a number, "filterSearchType" is a FieldType number and finally searchTerms is also a number', () => {
+      const searchValue = 26;
+      const mockColumn1 = { id: 'age', field: 'age', filterable: true, filterSearchType: FieldType.number } as Column;
+      jest.spyOn(gridStub, 'getColumns').mockReturnValue([mockColumn1]);
+
+      service.init(gridStub);
+      const columnFilters = { age: { columnDef: mockColumn1, columnId: 'age', operator: 'EQ', searchTerms: [searchValue] } };
+      const output = service.customLocalFilter(mockItem1, { dataView: dataViewStub, grid: gridStub, columnFilters });
+
+      expect(output).toBe(true);
+    });
+
     it('should return True when input value from datacontext is equal to startsWith substring', () => {
       const searchValue = 'Jo*';
       const mockColumn1 = { id: 'firstName', field: 'firstName', filterable: true } as Column;
@@ -555,6 +571,18 @@ describe('FilterService', () => {
 
       service.init(gridStub);
       const columnFilters = { firstName: { columnDef: mockColumn1, columnId: 'firstName', operator, searchTerms: [searchValue] } };
+      const output = service.customLocalFilter(mockItem1, { dataView: dataViewStub, grid: gridStub, columnFilters });
+
+      expect(output).toBe(true);
+    });
+
+    it('should return True when input value from datacontext is equal to startsWith substring when having (*) as the last character in the searchTerms', () => {
+      const searchValue = 'Jo*';
+      const mockColumn1 = { id: 'firstName', field: 'firstName', filterable: true } as Column;
+      jest.spyOn(gridStub, 'getColumns').mockReturnValue([mockColumn1]);
+
+      service.init(gridStub);
+      const columnFilters = { firstName: { columnDef: mockColumn1, columnId: 'firstName', searchTerms: [searchValue] } };
       const output = service.customLocalFilter(mockItem1, { dataView: dataViewStub, grid: gridStub, columnFilters });
 
       expect(output).toBe(true);
@@ -622,6 +650,160 @@ describe('FilterService', () => {
       const output = service.customLocalFilter(mockItem2, { dataView: dataViewStub, grid: gridStub, columnFilters });
 
       expect(output).toBe(true);
+    });
+
+    it('should return True when using row detail custom "keyPrefix" and the item is found in its parent', () => {
+      // @ts-ignore
+      gridOptionMock.rowDetailView = { keyPrefix: 'prefix_' };
+      gridOptionMock.enableRowDetailView = true;
+      const mockColumn1 = { id: 'zip', field: 'zip', filterable: true, queryFieldFilter: 'address.zip' } as Column;
+      const mockItem2 = { prefix_isPadding: true, prefix_parent: mockItem1 };
+      jest.spyOn(gridStub, 'getColumns').mockReturnValue([mockColumn1]);
+      jest.spyOn(dataViewStub, 'getIdxById').mockReturnValue(0);
+
+      service.init(gridStub);
+      const columnFilters = { zip: { columnDef: mockColumn1, columnId: 'zip', operator: 'EQ', searchTerms: [123456] } };
+      const output = service.customLocalFilter(mockItem2, { dataView: dataViewStub, grid: gridStub, columnFilters });
+
+      expect(output).toBe(true);
+    });
+  });
+
+  describe('onBackendFilterChange method', () => {
+    beforeEach(() => {
+      gridOptionMock.backendServiceApi = {
+        service: backendServiceStub,
+        preProcess: jest.fn(),
+        process: jest.fn(),
+        postProcess: jest.fn(),
+      };
+    });
+
+    it('should throw an error when grid argument is undefined', (done) => {
+      service.onBackendFilterChange(undefined, undefined).catch((error) => {
+        expect(error.message).toContain(`Something went wrong when trying to bind the "onBackendFilterChange(event, args)" function`);
+        done();
+      });
+    });
+
+    it('should throw an error when grid argument is an empty object', (done) => {
+      service.onBackendFilterChange(undefined, {}).catch((error) => {
+        expect(error.message).toContain(`Something went wrong when trying to bind the "onBackendFilterChange(event, args)" function`);
+        done();
+      });
+    });
+
+    it('should throw an error when backendServiceApi is undefined', (done) => {
+      gridOptionMock.backendServiceApi = undefined;
+
+      service.onBackendFilterChange(undefined, { grid: gridStub }).catch((error) => {
+        expect(error.message).toContain(`BackendServiceApi requires at least a "process" function and a "service" defined`);
+        done();
+      });
+    });
+
+    it('should execute "preProcess" method when it is defined', () => {
+      const spy = jest.spyOn(gridOptionMock.backendServiceApi, 'preProcess');
+
+      service.init(gridStub);
+      service.onBackendFilterChange(undefined, { grid: gridStub });
+
+      expect(spy).toHaveBeenCalled();
+    });
+
+    it('should execute "processOnFilterChanged" method when "shouldTriggerQuery" is set to True and "debounceTypingDelay" is bigger than 0', (done) => {
+      gridOptionMock.backendServiceApi.filterTypingDebounce = 1;
+      const spy = jest.spyOn(gridOptionMock.backendServiceApi.service, 'processOnFilterChanged').mockReturnValue('backend query');
+
+      service.init(gridStub);
+      const mockEvent = DOM.createCustomEvent(`keyup`);
+      Object.defineProperty(mockEvent, 'target', { writable: true, configurable: true, value: { value: 'John' } });
+
+      // @ts-ignore
+      service.onBackendFilterChange(mockEvent, { grid: gridStub, shouldTriggerQuery: true });
+
+      setTimeout(() => {
+        expect(spy).toHaveBeenCalled();
+        done();
+      }, 1);
+    });
+  });
+
+  describe('populateColumnFilterSearchTerms method', () => {
+    beforeEach(() => {
+      gridStub.getColumns = jest.fn();
+      gridOptionMock.presets = {
+        filters: [{ columnId: 'gender', searchTerms: ['male'], operator: 'EQ' }],
+        sorters: [{ columnId: 'name', direction: 'asc' }],
+        pagination: { pageNumber: 2, pageSize: 20 }
+      };
+    });
+
+    it('should return an empty array when column definitions returns nothing as well', () => {
+      gridStub.getColumns = undefined;
+
+      service.init(gridStub);
+      const output = service.populateColumnFilterSearchTerms();
+
+      expect(output).toEqual([]);
+    });
+
+    it('should populate presets and remove column definitions searchTerms to be replaced by the presets values', () => {
+      const spy = jest.spyOn(gridStub, 'getColumns').mockReturnValue([
+        { id: 'name', field: 'name', filter: { model: Filters.input, operator: 'EQ', searchTerms: ['John'] } },
+        { id: 'gender', field: 'gender' }
+      ]);
+
+      service.init(gridStub);
+      const output = service.populateColumnFilterSearchTerms();
+
+      expect(spy).toHaveBeenCalled();
+      expect(output).toEqual([
+        { id: 'name', field: 'name', filter: { model: Filters.input, operator: 'EQ' } },
+        { id: 'gender', field: 'gender', filter: { operator: 'EQ', searchTerms: ['male'] } },
+      ]);
+    });
+
+    it('should use the column definition operator when not provided in the presets filter', () => {
+      gridOptionMock.presets = {
+        filters: [{ columnId: 'gender', searchTerms: ['male'] }],
+        sorters: [{ columnId: 'name', direction: 'asc' }],
+        pagination: { pageNumber: 2, pageSize: 20 }
+      };
+      const spy = jest.spyOn(gridStub, 'getColumns').mockReturnValue([
+        { id: 'name', field: 'name' },
+        { id: 'gender', field: 'gender', filter: { model: Filters.input, operator: 'EQ', searchTerms: ['male'] } }
+      ]);
+
+      service.init(gridStub);
+      const output = service.populateColumnFilterSearchTerms();
+
+      expect(spy).toHaveBeenCalled();
+      expect(output).toEqual([
+        { id: 'name', field: 'name' },
+        { id: 'gender', field: 'gender', filter: { model: Filters.input, operator: 'EQ', searchTerms: ['male'] } },
+      ]);
+    });
+
+    it('should have an operator with empty string when it is not provided in the presets filter neither in its column definition', () => {
+      gridOptionMock.presets = {
+        filters: [{ columnId: 'gender', searchTerms: ['male'] }],
+        sorters: [{ columnId: 'name', direction: 'asc' }],
+        pagination: { pageNumber: 2, pageSize: 20 }
+      };
+      const spy = jest.spyOn(gridStub, 'getColumns').mockReturnValue([
+        { id: 'name', field: 'name' },
+        { id: 'gender', field: 'gender' }
+      ]);
+
+      service.init(gridStub);
+      const output = service.populateColumnFilterSearchTerms();
+
+      expect(spy).toHaveBeenCalled();
+      expect(output).toEqual([
+        { id: 'name', field: 'name' },
+        { id: 'gender', field: 'gender', filter: { operator: '', searchTerms: ['male'] } },
+      ]);
     });
   });
 });
