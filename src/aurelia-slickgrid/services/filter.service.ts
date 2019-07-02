@@ -208,7 +208,7 @@ export class FilterService {
     // when using backend service, we need to query only once so it's better to do it here
     if (this._gridOptions && this._gridOptions.backendServiceApi) {
       const callbackArgs = { clearFilterTriggered: true, shouldTriggerQuery: true, grid: this._grid, columnFilters: this._columnFilters };
-      executeBackendCallback(undefined, callbackArgs, new Date(), this._gridOptions, this.emitFilterChanged.bind(this));
+      executeBackendCallback('', callbackArgs, new Date(), this._gridOptions, this.emitFilterChanged.bind(this));
     }
 
     // emit an event when filters are all cleared
@@ -392,7 +392,7 @@ export class FilterService {
     const isTriggeredByClearFilter = args && args.clearFilterTriggered; // was it trigger by a "Clear Filter" command?
 
     if (!isTriggeredByClearFilter && event && event.keyCode !== KeyCode.ENTER && (event.type === 'input' || event.type === 'keyup' || event.type === 'keydown')) {
-      debounceTypingDelay = backendApi.hasOwnProperty('filterTypingDebounce') ? backendApi.filterTypingDebounce : DEFAULT_FILTER_TYPING_DEBOUNCE;
+      debounceTypingDelay = backendApi.hasOwnProperty('filterTypingDebounce') ? backendApi.filterTypingDebounce as number : DEFAULT_FILTER_TYPING_DEBOUNCE;
     }
 
     // query backend, except when it's called by a ClearFilters then we won't
@@ -507,7 +507,7 @@ export class FilterService {
       const columnId = columnDef && columnDef.id || '';
       const operator = args.operator || undefined;
       const hasSearchTerms = searchTerms && Array.isArray(searchTerms);
-      const termsCount = hasSearchTerms && searchTerms.length;
+      const termsCount = hasSearchTerms && searchTerms && searchTerms.length;
       const oldColumnFilters = { ...this._columnFilters };
 
       if (columnDef && columnId) {
