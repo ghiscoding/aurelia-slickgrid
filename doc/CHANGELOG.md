@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.12.0"></a>
+# [2.12.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.11.3...v2.12.0) (2019-07-02)
+
+
+### Bug Fixes
+
+* **backend:** regression in both backend service with gridstate ([b77c15e](https://github.com/ghiscoding/aurelia-slickgrid/commit/b77c15e))
+* **filter:** regression, small issue detected when using compound filter ([d32e0a0](https://github.com/ghiscoding/aurelia-slickgrid/commit/d32e0a0))
+
+
+### Features
+
+* **build:** replace moment with moment-mini for smaller build ([3a0b2a9](https://github.com/ghiscoding/aurelia-slickgrid/commit/3a0b2a9))
+* **tests:** add AureliaUtilService full test suite ([#195](https://github.com/ghiscoding/aurelia-slickgrid/issues/195)) ([a7fca15](https://github.com/ghiscoding/aurelia-slickgrid/commit/a7fca15))
+* **tests:** add more unit tests to FilterService ([#199](https://github.com/ghiscoding/aurelia-slickgrid/issues/199)) ([7bf603f](https://github.com/ghiscoding/aurelia-slickgrid/commit/7bf603f))
+* **tests:** add some unit tests for FilterService ([#198](https://github.com/ghiscoding/aurelia-slickgrid/issues/198)) ([6097a8d](https://github.com/ghiscoding/aurelia-slickgrid/commit/6097a8d))
+
+
+
 <a name="2.11.3"></a>
 ## [2.11.3](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.11.2...v2.11.3) (2019-06-18)
 
