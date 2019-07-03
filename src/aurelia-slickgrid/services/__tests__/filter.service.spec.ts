@@ -400,7 +400,8 @@ describe('FilterService', () => {
     });
 
     describe('clearFilters method', () => {
-      it('should clear the filter by passing a column id as argument on a backend grid', () => {
+      it('should clear all the Filters when the query response is a string', () => {
+        gridOptionMock.backendServiceApi.service.processOnFilterChanged = () => 'filter query string';
         const spyClear = jest.spyOn(service.getFiltersMetadata()[0], 'clear');
         const spyFilterChange = jest.spyOn(service, 'onBackendFilterChange');
         const spyEmitter = jest.spyOn(service, 'emitFilterChanged');
@@ -413,6 +414,25 @@ describe('FilterService', () => {
         expect(filterCountBefore).toBe(2);
         expect(service.getColumnFilters()).toEqual({});
         expect(spyEmitter).not.toHaveBeenCalled();
+      });
+
+      it('should clear all the Filters when the query response is a Promise', (done) => {
+        gridOptionMock.backendServiceApi.service.processOnFilterChanged = () => Promise.resolve('filter query from Promise');
+        const spyClear = jest.spyOn(service.getFiltersMetadata()[0], 'clear');
+        const spyFilterChange = jest.spyOn(service, 'onBackendFilterChange');
+        const spyEmitter = jest.spyOn(service, 'emitFilterChanged');
+
+        const filterCountBefore = Object.keys(service.getColumnFilters()).length;
+        service.clearFilters();
+
+        setTimeout(() => {
+          expect(spyClear).toHaveBeenCalled();
+          expect(spyFilterChange).not.toHaveBeenCalled();
+          expect(filterCountBefore).toBe(2);
+          expect(service.getColumnFilters()).toEqual({});
+          expect(spyEmitter).not.toHaveBeenCalled();
+          done();
+        });
       });
 
       it('should execute the "onError" method when the Promise throws an error', (done) => {

@@ -12,6 +12,7 @@ import {
   Filter,
   FilterArguments,
   FilterCallbackArg,
+  FilterChangedArgs,
   GridOption,
   KeyCode,
   OperatorType,
@@ -206,9 +207,19 @@ export class FilterService {
     }
 
     // when using backend service, we need to query only once so it's better to do it here
-    if (this._gridOptions && this._gridOptions.backendServiceApi) {
+    const backendApi = this._gridOptions && this._gridOptions.backendServiceApi;
+    if (backendApi) {
       const callbackArgs = { clearFilterTriggered: true, shouldTriggerQuery: true, grid: this._grid, columnFilters: this._columnFilters };
-      executeBackendCallback('', callbackArgs, new Date(), this._gridOptions, this.emitFilterChanged.bind(this));
+      const QueryResponse = backendApi.service.processOnFilterChanged(undefined, callbackArgs as FilterChangedArgs);
+      // @deprecated, processOnFilterChanged in the future should be return a query not a Promise
+      if (QueryResponse instanceof Promise && QueryResponse.then) {
+        QueryResponse.then((query: string) => {
+          executeBackendCallback(query, callbackArgs, new Date(), this._gridOptions, this.emitFilterChanged.bind(this));
+        });
+      } else {
+        const query = QueryResponse as string;
+        executeBackendCallback(query, callbackArgs, new Date(), this._gridOptions, this.emitFilterChanged.bind(this));
+      }
     }
 
     // emit an event when filters are all cleared
