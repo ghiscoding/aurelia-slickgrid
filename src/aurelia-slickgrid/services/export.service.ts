@@ -222,7 +222,7 @@ export class ExportService {
         if (formattedData && typeof formattedData === 'object' && formattedData.hasOwnProperty('text')) {
           itemData = formattedData.text;
         }
-        if (itemData === null) {
+        if (itemData === null || itemData === undefined) {
           itemData = '';
         }
       } else if (isEvaluatingFormatter && columnDef.formatter !== undefined && columnDef.formatter !== null) {
@@ -231,12 +231,12 @@ export class ExportService {
         if (formattedData && typeof formattedData === 'object' && formattedData.hasOwnProperty('text')) {
           itemData = formattedData.text;
         }
-        if (itemData === null) {
+        if (itemData === null || itemData === undefined) {
           itemData = '';
         }
       } else {
         itemData = (itemObj[fieldId] === null || itemObj[fieldId] === undefined) ? '' : itemObj[fieldId];
-        if (itemData === null) {
+        if (itemData === null || itemData === undefined) {
           itemData = '';
         }
       }
