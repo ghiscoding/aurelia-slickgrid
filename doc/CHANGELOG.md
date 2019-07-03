@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.12.1"></a>
+## [2.12.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.12.0...v2.12.1) (2019-07-03)
+
+
+### Bug Fixes
+
+* **filterService:** regression introduced in "clearFilters" last commit ([0a0cd8e](https://github.com/ghiscoding/aurelia-slickgrid/commit/0a0cd8e))
+
+
+
 <a name="2.12.0"></a>
 # [2.12.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.11.3...v2.12.0) (2019-07-02)
 
