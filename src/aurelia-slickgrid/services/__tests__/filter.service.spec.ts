@@ -405,14 +405,16 @@ describe('FilterService', () => {
         const spyClear = jest.spyOn(service.getFiltersMetadata()[0], 'clear');
         const spyFilterChange = jest.spyOn(service, 'onBackendFilterChange');
         const spyEmitter = jest.spyOn(service, 'emitFilterChanged');
+        const spyProcess = jest.spyOn(gridOptionMock.backendServiceApi, 'process');
 
         const filterCountBefore = Object.keys(service.getColumnFilters()).length;
         service.clearFilters();
 
         expect(spyClear).toHaveBeenCalled();
-        expect(spyFilterChange).not.toHaveBeenCalled();
         expect(filterCountBefore).toBe(2);
+        expect(spyProcess).toHaveBeenCalledWith('filter query string');
         expect(service.getColumnFilters()).toEqual({});
+        expect(spyFilterChange).not.toHaveBeenCalled();
         expect(spyEmitter).not.toHaveBeenCalled();
       });
 
@@ -421,15 +423,17 @@ describe('FilterService', () => {
         const spyClear = jest.spyOn(service.getFiltersMetadata()[0], 'clear');
         const spyFilterChange = jest.spyOn(service, 'onBackendFilterChange');
         const spyEmitter = jest.spyOn(service, 'emitFilterChanged');
+        const spyProcess = jest.spyOn(gridOptionMock.backendServiceApi, 'process');
 
         const filterCountBefore = Object.keys(service.getColumnFilters()).length;
         service.clearFilters();
 
         setTimeout(() => {
           expect(spyClear).toHaveBeenCalled();
-          expect(spyFilterChange).not.toHaveBeenCalled();
           expect(filterCountBefore).toBe(2);
+          expect(spyProcess).toHaveBeenCalledWith('filter query from Promise');
           expect(service.getColumnFilters()).toEqual({});
+          expect(spyFilterChange).not.toHaveBeenCalled();
           expect(spyEmitter).not.toHaveBeenCalled();
           done();
         });

@@ -210,14 +210,14 @@ export class FilterService {
     const backendApi = this._gridOptions && this._gridOptions.backendServiceApi;
     if (backendApi) {
       const callbackArgs = { clearFilterTriggered: true, shouldTriggerQuery: true, grid: this._grid, columnFilters: this._columnFilters };
-      const QueryResponse = backendApi.service.processOnFilterChanged(undefined, callbackArgs as FilterChangedArgs);
-      // @deprecated, processOnFilterChanged in the future should be return a query not a Promise
-      if (QueryResponse instanceof Promise && QueryResponse.then) {
-        QueryResponse.then((query: string) => {
+      const queryResponse = backendApi.service.processOnFilterChanged(undefined, callbackArgs as FilterChangedArgs);
+      // @deprecated, processOnFilterChanged in the future should be return as a query string NOT a Promise
+      if (queryResponse instanceof Promise && queryResponse.then) {
+        queryResponse.then((query: string) => {
           executeBackendCallback(query, callbackArgs, new Date(), this._gridOptions, this.emitFilterChanged.bind(this));
         });
       } else {
-        const query = QueryResponse as string;
+        const query = queryResponse as string;
         executeBackendCallback(query, callbackArgs, new Date(), this._gridOptions, this.emitFilterChanged.bind(this));
       }
     }
