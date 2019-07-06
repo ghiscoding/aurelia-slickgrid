@@ -110,6 +110,8 @@ export class Example3 {
       {
         id: 'edit',
         field: 'id',
+        excludeFromColumnPicker: true,
+        excludeFromGridMenu: true,
         excludeFromHeaderMenu: true,
         formatter: Formatters.editIcon,
         minWidth: 30,
@@ -124,6 +126,8 @@ export class Example3 {
       }, {
         id: 'delete',
         field: 'id',
+        excludeFromColumnPicker: true,
+        excludeFromGridMenu: true,
         excludeFromHeaderMenu: true,
         formatter: Formatters.deleteIcon,
         minWidth: 30,
