@@ -34,9 +34,9 @@ declare var Slick: any;
 )
 export class GridMenuExtension implements Extension {
   private _addon: any;
+  private _areVisibleColumnDifferent = false;
   private _eventHandler: SlickEventHandler;
-  areVisibleColumnDifferent = false;
-  userOriginalGridMenu: GridMenu;
+  private _userOriginalGridMenu: GridMenu;
 
   constructor(
     private exportService: ExportService,
@@ -54,11 +54,15 @@ export class GridMenuExtension implements Extension {
   }
 
   dispose() {
-    // unsubscribe all SlickGrid events
+    // unsubscribe all SlickGrid events & dispose of the plugin
     this._eventHandler.unsubscribeAll();
-
     if (this._addon && this._addon.destroy) {
       this._addon.destroy();
+    }
+
+    this._userOriginalGridMenu = undefined;
+    if (this.sharedService.gridOptions && this.sharedService.gridOptions.gridMenu && this.sharedService.gridOptions.gridMenu.customItems) {
+      this.sharedService.gridOptions.gridMenu.customItems = [];
     }
   }
 
@@ -70,7 +74,7 @@ export class GridMenuExtension implements Extension {
   /** Create the Header Menu and expose all the available hooks that user can subscribe (onCommand, onBeforeMenuShow, ...) */
   register(): any {
     // keep original user grid menu, useful when switching locale to translate
-    this.userOriginalGridMenu = { ...this.sharedService.gridOptions.gridMenu };
+    this._userOriginalGridMenu = { ...this.sharedService.gridOptions.gridMenu };
 
     if (this.sharedService.gridOptions && this.sharedService.gridOptions.gridMenu) {
       // dynamically import the SlickGrid plugin (addon) with RequireJS
@@ -80,7 +84,7 @@ export class GridMenuExtension implements Extension {
 
       // merge original user grid menu items with internal items
       // then sort all Grid Menu Custom Items (sorted by pointer, no need to use the return)
-      this.sharedService.gridOptions.gridMenu.customItems = [...this.userOriginalGridMenu.customItems || [], ...this.addGridMenuCustomCommands()];
+      this.sharedService.gridOptions.gridMenu.customItems = [...this._userOriginalGridMenu.customItems || [], ...this.addGridMenuCustomCommands()];
       this.extensionUtility.translateItems(this.sharedService.gridOptions.gridMenu.customItems, 'titleKey', 'title');
       this.extensionUtility.sortItems(this.sharedService.gridOptions.gridMenu.customItems, 'positionOrder');
 
@@ -97,7 +101,7 @@ export class GridMenuExtension implements Extension {
           }
         });
         this._eventHandler.subscribe(this._addon.onColumnsChanged, (e: any, args: CellArgs) => {
-          this.areVisibleColumnDifferent = true;
+          this._areVisibleColumnDifferent = true;
           if (this.sharedService.gridOptions.gridMenu && typeof this.sharedService.gridOptions.gridMenu.onColumnsChanged === 'function') {
             this.sharedService.gridOptions.gridMenu.onColumnsChanged(e, args);
           }
@@ -117,11 +121,11 @@ export class GridMenuExtension implements Extension {
           if (this.sharedService.grid && typeof this.sharedService.grid.autosizeColumns === 'function') {
             // make sure that the grid still exist (by looking if the Grid UID is found in the DOM tree)
             const gridUid = this.sharedService.grid.getUID();
-            if (this.areVisibleColumnDifferent && gridUid && $(`.${gridUid}`).length > 0) {
+            if (this._areVisibleColumnDifferent && gridUid && $(`.${gridUid}`).length > 0) {
               if (this.sharedService.gridOptions && this.sharedService.gridOptions.enableAutoSizeColumns) {
                 this.sharedService.grid.autosizeColumns();
               }
-              this.areVisibleColumnDifferent = false;
+              this._areVisibleColumnDifferent = false;
             }
           }
         });
@@ -195,7 +199,7 @@ export class GridMenuExtension implements Extension {
 
       // merge original user grid menu items with internal items
       // then sort all Grid Menu Custom Items (sorted by pointer, no need to use the return)
-      this.sharedService.gridOptions.gridMenu.customItems = [...this.userOriginalGridMenu.customItems || [], ...this.addGridMenuCustomCommands()];
+      this.sharedService.gridOptions.gridMenu.customItems = [...this._userOriginalGridMenu.customItems || [], ...this.addGridMenuCustomCommands()];
       this.extensionUtility.translateItems(this.sharedService.gridOptions.gridMenu.customItems, 'titleKey', 'title');
       this.extensionUtility.sortItems(this.sharedService.gridOptions.gridMenu.customItems, 'positionOrder');
 
