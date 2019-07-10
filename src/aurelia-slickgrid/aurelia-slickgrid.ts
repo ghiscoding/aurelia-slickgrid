@@ -157,7 +157,6 @@ export class AureliaSlickgridCustomElement {
     // https://github.com/aurelia/dependency-injection/blob/master/src/resolvers.js
     this._columnDefinitions = this.swapInternalEditorToSlickGridFactoryEditor(this._columnDefinitions);
 
-
     // save reference for all columns before they optionally become hidden/visible
     this.sharedService.allColumns = this._columnDefinitions;
     this.sharedService.visibleColumns = this._columnDefinitions;

@@ -78,12 +78,13 @@ export class ExportService {
         try {
           const downloadOptions = {
             filename: `${this._exportOptions.filename}.${this._exportOptions.format}`,
-            content: dataOutput,
             format: this._exportOptions.format || FileType.csv,
             useUtf8WithBom: this._exportOptions.hasOwnProperty('useUtf8WithBom') ? this._exportOptions.useUtf8WithBom : true
           };
-          this.startDownloadFile(downloadOptions);
-          this.ea.publish(`${this._aureliaEventPrefix}:onAfterExportToFile`, { ...downloadOptions, content: null });
+
+          // start downloading but add the content property only on the start download not on the event itself
+          this.startDownloadFile({ ...downloadOptions, content: dataOutput }); // add content property
+          this.ea.publish(`${this._aureliaEventPrefix}:onAfterExportToFile`, downloadOptions);
           resolve(true);
         } catch (error) {
           reject(error);
@@ -157,6 +158,10 @@ export class ExportService {
     const columns = this._grid.getColumns() || [];
     const delimiter = this._exportOptions.delimiter || '';
     const format = this._exportOptions.format || '';
+    let groupByColumnHeader = this._exportOptions.groupingColumnHeaderTitle;
+    if (!groupByColumnHeader && this._gridOptions.enableTranslate && this.i18n && this.i18n.tr) {
+      groupByColumnHeader = this.i18n.tr('GROUP_BY');
+    }
 
     // a CSV needs double quotes wrapper, the other types do not need any wrapper
     this._exportQuoteWrapper = (format === FileType.csv) ? '"' : '';
@@ -168,7 +173,7 @@ export class ExportService {
     const grouping = this._dataView.getGrouping();
     if (grouping && Array.isArray(grouping) && grouping.length > 0) {
       this._hasGroupedItems = true;
-      outputDataString += `${this.i18n.tr('GROUP_BY')}` + delimiter;
+      outputDataString += `${groupByColumnHeader}` + delimiter;
     } else {
       this._hasGroupedItems = false;
     }
@@ -230,14 +235,19 @@ export class ExportService {
 
     // Populate the Column Header, pull the name defined
     columns.forEach((columnDef) => {
-      const fieldName = (columnDef.headerKey) ? this.i18n.tr(columnDef.headerKey) : columnDef.name || titleCase(columnDef.field);
+      let headerTitle = '';
+      if (columnDef.headerKey && this._gridOptions.enableTranslate && this.i18n && this.i18n.tr) {
+        headerTitle = this.i18n.tr(columnDef.headerKey);
+      } else {
+        headerTitle = columnDef.name || titleCase(columnDef.field);
+      }
       const skippedField = columnDef.excludeFromExport || false;
 
       // if column width is 0, then we consider that field as a hidden field and should not be part of the export
       if ((columnDef.width === undefined || columnDef.width > 0) && !skippedField) {
         columnHeaders.push({
           key: columnDef.field || columnDef.id,
-          title: fieldName || ''
+          title: headerTitle || ''
         });
       }
     });
@@ -280,7 +290,7 @@ export class ExportService {
       let itemData = '';
 
       // did the user provide a Custom Formatter for the export
-      if (itemObj && itemObj[fieldId] && exportCustomFormatter !== undefined && exportCustomFormatter !== null) {
+      if (itemObj && itemObj.hasOwnProperty(fieldId) && exportCustomFormatter !== undefined && exportCustomFormatter !== undefined) {
         const formattedData = exportCustomFormatter(row, col, itemObj[fieldId], columnDef, itemObj, this._grid);
         itemData = formattedData as string;
         if (formattedData && typeof formattedData === 'object' && formattedData.hasOwnProperty('text')) {
@@ -289,7 +299,7 @@ export class ExportService {
         if (itemData === null || itemData === undefined) {
           itemData = '';
         }
-      } else if (isEvaluatingFormatter && columnDef.formatter !== undefined && columnDef.formatter !== null) {
+      } else if (isEvaluatingFormatter && itemObj.hasOwnProperty(fieldId) && columnDef.formatter) {
         const formattedData = columnDef.formatter(row, col, itemObj[fieldId], columnDef, itemObj, this._grid);
         itemData = formattedData as string;
         if (formattedData && typeof formattedData === 'object' && formattedData.hasOwnProperty('text')) {
@@ -299,7 +309,7 @@ export class ExportService {
           itemData = '';
         }
       } else {
-        itemData = (itemObj[fieldId] === null || itemObj[fieldId] === undefined) ? '' : itemObj[fieldId];
+        itemData = (!itemObj.hasOwnProperty(fieldId)) ? '' : itemObj[fieldId];
         if (itemData === null || itemData === undefined) {
           itemData = '';
         }
