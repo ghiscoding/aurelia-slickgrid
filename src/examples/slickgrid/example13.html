@@ -14,15 +14,19 @@
     </button>
     <button class="btn btn-default btn-xs"
             click.delegate="clearGrouping()">
-      Clear grouping
+      <i class="fa fa-times"></i> Clear grouping
     </button>
     <button class="btn btn-default btn-xs"
             click.delegate="collapseAllGroups()">
-      Collapse all groups
+      <i class="fa fa-compress"></i> Collapse all groups
     </button>
     <button class="btn btn-default btn-xs"
             click.delegate="expandAllGroups()">
-      Expand all groups
+      <i class="fa fa-expand"></i> Expand all groups
+    </button>
+    <button class="btn btn-default btn-xs"
+            click.delegate="exportToCsv('csv')">
+      <i class="fa fa-download"></i> Export to CSV
     </button>
   </div>
 
