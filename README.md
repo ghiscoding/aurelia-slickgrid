@@ -56,7 +56,7 @@ Screenshots from the demo app with the `Bootstrap` theme (that is the only avail
 
 ### Filter and Sort (clientside with DataView)
 
-![Slickgrid Server Side](/screenshots/filter_and_sort.png)
+![Filter and Sort](/screenshots/filter_and_sort.png)
 
 ### Editors and/or onCellClick
 
@@ -64,7 +64,11 @@ Screenshots from the demo app with the `Bootstrap` theme (that is the only avail
 
 ### Pinned (aka frozen) Columns/Rows
 
-![Slickgrid Server Side](/screenshots/frozen.png)
+![Pinned Columns/Rows](/screenshots/frozen.png)
+
+### Draggable Grouping & Aggregators
+
+![Draggable Grouping](/screenshots/draggable-grouping.png)
 
 ### Slickgrid Example with Server Side (Filter/Sort/Pagination)
 #### Comes with OData & GraphQL support (you can implement custom too)
