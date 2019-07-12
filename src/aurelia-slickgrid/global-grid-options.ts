@@ -48,6 +48,7 @@ export const GlobalGridOptions: GridOption = {
     exportWithFormatter: false,
     filename: 'export',
     format: FileType.csv,
+    groupingColumnHeaderTitle: 'Group By',
     groupingAggregatorRowText: '',
     sanitizeDataExport: false,
     useUtf8WithBom: true
