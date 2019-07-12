@@ -1,5 +1,6 @@
 import 'aurelia-polyfills';
 import 'isomorphic-fetch';
+import 'jsdom-global/register';
 import { globalize } from 'aurelia-pal-nodejs';
 globalize();
 

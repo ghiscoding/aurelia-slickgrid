@@ -19,6 +19,9 @@ One of the best javascript datagrid [SlickGrid](https://github.com/mleibman/Slic
 - [Bootstrap 3 demo](https://ghiscoding.github.io/aurelia-slickgrid) / [examples repo](https://github.com/ghiscoding/aurelia-slickgrid/tree/master/aurelia-slickgrid/src/examples/slickgrid)
 - [Bootstrap 4 demo](https://ghiscoding.github.io/aurelia-slickgrid-bs4-demo) / [examples repo](https://github.com/ghiscoding/aurelia-slickgrid-bs4-demo/tree/master/src/examples/slickgrid)
 
+#### How to load data with `Fetch-Client` or `Http-Client`?
+You might notice that all demos are made with mocked dataset that are embedded in each examples, that is mainly for demo purposes, but you might be wondering how to connect this with an `FetchClient`? Easy... just replace the mocked data, assigned to the `dataset` property, by your `FetchClient` call and that's it. The `dataset` property can be changed at any time, which is why you can use local data and/or connect it to a `Promise` or an async call with `FetchClient` (internally it's just a SETTER that refreshes the grid). See [Example 22](https://ghiscoding.github.io/aurelia-slickgrid/#/slickgrid/example22) for a demo showing how to load a JSON file with `FetchClient`.
+
 #### Working Demos
 For complete working local demos, you can clone the [Aurelia-Slickgrid Demos](https://github.com/ghiscoding/aurelia-slickgrid-demos) repository (instruction are provided in the repo). The 2 WebPacks demos are updated frequently and they are the actual [Bootstrap 3 demo](https://ghiscoding.github.io/aurelia-slickgrid) / [Bootstrap 4 demo](https://ghiscoding.github.io/aurelia-slickgrid-bs4-demo/#/slickgrid).
 
