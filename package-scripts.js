@@ -7,10 +7,10 @@ module.exports = {
     test: {
       default: 'nps test.jest',
       jest: {
-        default: 'jest',
-        accept: 'jest -u',
-        coverage: 'jest --coverage',
-        watch: 'jest --watch',
+        default: 'jest --config test/jest.config.js',
+        accept: 'jest --config test/jest.config.js -u',
+        coverage: 'jest --config test/jest.config.js --coverage',
+        watch: 'jest --config test/jest.config.js --watch',
       },
       lint: {
         default: 'eslint src',

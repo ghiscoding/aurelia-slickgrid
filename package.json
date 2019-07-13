@@ -4,6 +4,8 @@
   "description": "Slickgrid components made available in Aurelia",
   "keywords": [
     "aurelia",
+    "datagrid",
+    "datatable",
     "plugin",
     "slickgrid"
   ],
@@ -65,7 +67,7 @@
     "e2e:ci": "nps e2e.ci",
     "cypress:ci:mochawesome": "node test/cypress-mochawesome.js",
     "cypress:ci:xml": "node node_modules/cypress/bin/cypress run --reporter xunit --reporter-options output=testresult.xml",
-    "test:jest": "node_modules/.bin/jest"
+    "test:jest": "node_modules/.bin/jest --config test/jest.config.js"
   },
   "dependencies": {
     "aurelia-event-aggregator": ">=1.0.1",
@@ -133,7 +135,7 @@
     "jest-cli": "^24.8.0",
     "jest-environment-jsdom": "^24.8.0",
     "jsdom": "^15.1.1",
-    "jest-extended": "^0.11.1",
+    "jest-extended": "^0.11.2",
     "jsdom-global": "^3.0.2",
     "json-loader": "0.5.7",
     "minimatch": "^3.0.4",

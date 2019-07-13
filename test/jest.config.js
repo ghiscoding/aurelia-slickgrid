@@ -1,8 +1,9 @@
 module.exports = {
+  rootDir: '../',
   globals: {
     'ts-jest': {
       diagnostics: false,
-      tsConfig: './tsconfig.spec.json'
+      tsConfig: '<rootDir>/test/tsconfig.spec.json'
     },
   },
   collectCoverage: false,
@@ -14,7 +15,7 @@ module.exports = {
     '!**/test/**',
     '!src/examples/**',
   ],
-  coverageDirectory: '<rootDir>/test/coverage-jest',
+  coverageDirectory: '<rootDir>/test/jest-coverage',
   coveragePathIgnorePatterns: [
     'example-data.js',
     '\\.d\\.ts$',
