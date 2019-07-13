@@ -60,7 +60,7 @@ export class GridMenuExtension implements Extension {
       this._addon.destroy();
     }
 
-    this._userOriginalGridMenu = undefined;
+    this._userOriginalGridMenu = null as unknown as GridMenu;
     if (this.sharedService.gridOptions && this.sharedService.gridOptions.gridMenu && this.sharedService.gridOptions.gridMenu.customItems) {
       this.sharedService.gridOptions.gridMenu.customItems = [];
     }
@@ -74,7 +74,7 @@ export class GridMenuExtension implements Extension {
   /** Create the Header Menu and expose all the available hooks that user can subscribe (onCommand, onBeforeMenuShow, ...) */
   register(): any {
     // keep original user grid menu, useful when switching locale to translate
-    this._userOriginalGridMenu = { ...this.sharedService.gridOptions.gridMenu };
+    this._userOriginalGridMenu = { ...this.sharedService.gridOptions.gridMenu } as GridMenu;
 
     if (this.sharedService.gridOptions && this.sharedService.gridOptions.gridMenu) {
       // dynamically import the SlickGrid plugin (addon) with RequireJS

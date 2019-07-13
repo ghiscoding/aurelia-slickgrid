@@ -19,8 +19,8 @@ export interface GridDimension {
 @singleton(true)
 @inject(EventAggregator)
 export class ResizerService {
-  private _fixedHeight: number | null;
-  private _fixedWidth: number | null;
+  private _fixedHeight: number | null | undefined;
+  private _fixedWidth: number | null | undefined;
   private _grid: any;
   private _lastDimensions: GridDimension;
   private _resizePaused = false;

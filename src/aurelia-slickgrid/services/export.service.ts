@@ -79,7 +79,7 @@ export class ExportService {
           const downloadOptions = {
             filename: `${this._exportOptions.filename}.${this._exportOptions.format}`,
             format: this._exportOptions.format || FileType.csv,
-            useUtf8WithBom: this._exportOptions.hasOwnProperty('useUtf8WithBom') ? this._exportOptions.useUtf8WithBom : true
+            useUtf8WithBom: (this._exportOptions && this._exportOptions.hasOwnProperty('useUtf8WithBom')) ? this._exportOptions.useUtf8WithBom : true
           };
 
           // start downloading but add the content property only on the start download not on the event itself
@@ -99,7 +99,7 @@ export class ExportService {
    * All other browsers will use plain javascript on client side to produce a file download.
    * @param options
    */
-  startDownloadFile(options: { filename: string, content: string, format: FileType | string, useUtf8WithBom: boolean }): void {
+  startDownloadFile(options: { filename: string, content: string, format: FileType | string, useUtf8WithBom?: boolean }): void {
     // IE(6-10) don't support javascript download and our service doesn't support either so throw an error, we have to make a round trip to the Web Server for exporting
     if (navigator.appName === 'Microsoft Internet Explorer') {
       throw new Error('Microsoft Internet Explorer 6 to 10 do not support javascript export to CSV. Please upgrade your browser.');
