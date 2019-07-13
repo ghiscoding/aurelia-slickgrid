@@ -84,8 +84,10 @@ describe('columnPickerExtension', () => {
     it('should register the addon', () => {
       const onRegisteredSpy = jest.spyOn(SharedService.prototype.gridOptions.columnPicker, 'onExtensionRegistered');
       const instance = extension.register();
+      const addonInstance = extension.getAddonInstance();
 
-      expect(instance).not.toBeNull();
+      expect(instance).toBeTruthy();
+      expect(instance).toEqual(addonInstance);
       expect(onRegisteredSpy).toHaveBeenCalledWith(instance);
       expect(mockAddon).toHaveBeenCalledWith(columnsMock, gridStub, gridOptionsMock);
     });
