@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.12.2"></a>
+## [2.12.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.12.1...v2.12.2) (2019-07-13)
+
+
+### Bug Fixes
+
+* **export:** exporting null or undefined should replace by empty string ([06f9e00](https://github.com/ghiscoding/aurelia-slickgrid/commit/06f9e00))
+* **menu:** Column Picker & Grid Menu not updated dynamically ([#200](https://github.com/ghiscoding/aurelia-slickgrid/issues/200)) ([5b88df0](https://github.com/ghiscoding/aurelia-slickgrid/commit/5b88df0))
+* **slickgrid:** use previous version of Slickgrid to fix column autosize ([9d90cb6](https://github.com/ghiscoding/aurelia-slickgrid/commit/9d90cb6))
+
+
+### Features
+
+* **tests:** add ExportService full test suite ([#201](https://github.com/ghiscoding/aurelia-slickgrid/issues/201)) ([01fbb6b](https://github.com/ghiscoding/aurelia-slickgrid/commit/01fbb6b))
+* **tests:** add more ResizerService tests ([#203](https://github.com/ghiscoding/aurelia-slickgrid/issues/203)) ([ad6f698](https://github.com/ghiscoding/aurelia-slickgrid/commit/ad6f698))
+
+
+
 <a name="2.12.1"></a>
 ## [2.12.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.12.0...v2.12.1) (2019-07-03)
 
