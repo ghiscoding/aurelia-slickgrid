@@ -11,13 +11,16 @@ One of the best javascript datagrid [SlickGrid](https://github.com/mleibman/Slic
 ### NPM Package
 [Aurelia-Slickgrid on NPM](https://www.npmjs.com/package/aurelia-slickgrid)
 
-## License
+### License
 [MIT License](LICENSE)
 
 ### Demo page
 `Aurelia-Slickgrid` supports both `Bootstrap 3` and `Bootstrap 4`, you can see a demo of each one below.
 - [Bootstrap 3 demo](https://ghiscoding.github.io/aurelia-slickgrid) / [examples repo](https://github.com/ghiscoding/aurelia-slickgrid/tree/master/aurelia-slickgrid/src/examples/slickgrid)
 - [Bootstrap 4 demo](https://ghiscoding.github.io/aurelia-slickgrid-bs4-demo) / [examples repo](https://github.com/ghiscoding/aurelia-slickgrid-bs4-demo/tree/master/src/examples/slickgrid)
+
+### Use it, like it?
+You like and use this great library `Aurelia-Slickgrid`? You can always upvote :star: and/or contribute :)
 
 #### How to load data with `Fetch-Client` or `Http-Client`?
 You might notice that all demos are made with mocked dataset that are embedded in each examples, that is mainly for demo purposes, but you might be wondering how to connect this with an `FetchClient`? Easy... just replace the mocked data, assigned to the `dataset` property, by your `FetchClient` call and that's it. The `dataset` property can be changed at any time, which is why you can use local data and/or connect it to a `Promise` or an async call with `FetchClient` (internally it's just a SETTER that refreshes the grid). See [Example 22](https://ghiscoding.github.io/aurelia-slickgrid/#/slickgrid/example22) for a demo showing how to load a JSON file with `FetchClient`.
@@ -36,9 +39,6 @@ You can see some screenshots below as well as instructions underneat them and if
 
 ## Contributions/Comments
 Contributions are very welcome, this is what the community is for. If you wish to suggest something and/or want to make a PR (Pull Request), please feel free to do so.
-
-## Use it, like it?
-You like and use this great library `Aurelia-Slickgrid`? You can always upvote :star: and/or contribute :)
 
 ## Like my work?
 If you like my work, you can also support me with caffeine :smile:
