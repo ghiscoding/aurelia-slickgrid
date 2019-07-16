@@ -242,7 +242,10 @@ describe('rowDetailViewExtension', () => {
 
       const instance = extension.create(columnsMock, gridOptionsMock);
       extension.register();
+      const addonInstance = extension.getAddonInstance();
 
+      expect(instance).toBeTruthy();
+      expect(instance).toEqual(addonInstance);
       expect(onRegisteredSpy).toHaveBeenCalledWith(instance);
       expect(mockSelectionModel).toHaveBeenCalledWith({ selectActiveRow: true });
       expect(pluginSpy).toHaveBeenCalledWith(instance);

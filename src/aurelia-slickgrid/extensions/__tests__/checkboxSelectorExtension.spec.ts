@@ -70,7 +70,10 @@ describe('checkboxSelectorExtension', () => {
 
       const instance = extension.create(columnsMock, gridOptionsMock);
       const selectionModel = extension.register();
+      const addonInstance = extension.getAddonInstance();
 
+      expect(instance).toBeTruthy();
+      expect(instance).toEqual(addonInstance);
       expect(selectionModel).not.toBeNull();
       expect(mockAddon).toHaveBeenCalledWith({});
       expect(mockSelectionModel).toHaveBeenCalledWith({});

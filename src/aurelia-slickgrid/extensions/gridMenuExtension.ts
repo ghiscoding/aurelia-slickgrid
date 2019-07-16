@@ -66,6 +66,11 @@ export class GridMenuExtension implements Extension {
     }
   }
 
+  /** Get the instance of the SlickGrid addon (control or plugin). */
+  getAddonInstance() {
+    return this._addon;
+  }
+
   /** Show the Grid Menu typically from a button click since we need to know the event */
   showGridMenu(e: Event) {
     this._addon.showGridMenu(e);

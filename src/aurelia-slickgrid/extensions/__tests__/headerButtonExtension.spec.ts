@@ -67,7 +67,10 @@ describe('headerButtonExtension', () => {
       const pluginSpy = jest.spyOn(SharedService.prototype.grid, 'registerPlugin');
 
       const instance = extension.register();
+      const addonInstance = extension.getAddonInstance();
 
+      expect(instance).toBeTruthy();
+      expect(instance).toEqual(addonInstance);
       expect(mockAddon).toHaveBeenCalledWith({
         onCommand: expect.anything(),
         onExtensionRegistered: expect.anything(),
