@@ -27,6 +27,9 @@ import {
 } from '../extensions/index';
 import { SharedService } from './shared.service';
 
+// using external non-typed js libraries
+declare var Slick: any;
+
 @singleton(true)
 @inject(
   AutoTooltipExtension,
@@ -347,8 +350,12 @@ export class ExtensionService {
       collection = this.sharedService.columnDefinitions;
     }
     if (Array.isArray(collection) && this.sharedService.grid && this.sharedService.grid.setColumns) {
-      this.sharedService.allColumns = collection;
-      this.sharedService.grid.setColumns(collection);
+      if (collection.length > this.sharedService.allColumns.length) {
+        this.sharedService.allColumns = collection;
+        this.sharedService.grid.setColumns(collection);
+      } else {
+        this.sharedService.grid.setColumns(this.sharedService.allColumns);
+      }
     }
 
     if (this.sharedService.gridOptions.enableColumnPicker) {

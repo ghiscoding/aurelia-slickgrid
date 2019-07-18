@@ -81,7 +81,7 @@
     "jquery-ui-dist": "^1.12.1",
     "lodash.isequal": "^4.5.0",
     "moment-mini": "^2.22.1",
-    "slickgrid": "2.4.9",
+    "slickgrid": "github:6pac/SlickGrid",
     "text-encoding-utf-8": "^1.0.2"
   },
   "devDependencies": {
