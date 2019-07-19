@@ -9,6 +9,7 @@ import {
   Column,
   ExtensionModel,
   ExtensionName,
+  GridAutosizeColsMode,
   GridOption,
 } from '../models/index';
 import {
@@ -26,9 +27,6 @@ import {
   RowSelectionExtension,
 } from '../extensions/index';
 import { SharedService } from './shared.service';
-
-// using external non-typed js libraries
-declare var Slick: any;
 
 @singleton(true)
 @inject(
@@ -122,7 +120,7 @@ export class ExtensionService {
 
   /** Auto-resize all the column in the grid to fit the grid width */
   autoResizeColumns() {
-    this.sharedService.grid.autosizeColumns();
+    this.sharedService.grid.autosizeColumns(GridAutosizeColsMode.Legacy);
   }
 
   /** Bind/Create different 3rd party Controls/Plugins to the core lib right after the Grid is created */

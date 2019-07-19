@@ -15,12 +15,13 @@ import {
   AureliaGridInstance,
   BackendServiceOption,
   Column,
+  ExtensionName,
   GraphqlResult,
+  GridAutosizeColsMode,
   GridOption,
   GridStateChange,
   GridStateType,
   Pagination,
-  ExtensionName,
 } from './models/index';
 import {
   disposeAllSubscriptions,
@@ -353,7 +354,7 @@ export class AureliaSlickgridCustomElement {
     // we can assume that if the oldValue was empty then we are on first load
     if (!oldValue || oldValue.length < 1) {
       if (this.gridOptions.autoFitColumnsOnFirstLoad) {
-        this.grid.autosizeColumns();
+        this.grid.autosizeColumns(GridAutosizeColsMode.Legacy);
       }
     }
   }
@@ -578,7 +579,7 @@ export class AureliaSlickgridCustomElement {
   bindResizeHook(grid: any, options: GridOption) {
     // expand/autofit columns on first page load
     if (grid && options.autoFitColumnsOnFirstLoad && options.enableAutoSizeColumns && typeof grid.autosizeColumns === 'function') {
-      this.grid.autosizeColumns();
+      this.grid.autosizeColumns(GridAutosizeColsMode.Legacy);
 
       // compensate anytime SlickGrid measureScrollbar is incorrect (only seems to happen in Chrome 1/5 computers)
       this.resizerService.compensateHorizontalScroll(this.grid, this.gridOptions);
@@ -593,7 +594,7 @@ export class AureliaSlickgridCustomElement {
     if (grid && options && options.enableAutoResize) {
       this.resizerService.bindAutoResizeDataGrid();
       if (options.autoFitColumnsOnFirstLoad && options.enableAutoSizeColumns && typeof grid.autosizeColumns === 'function') {
-        grid.autosizeColumns();
+        grid.autosizeColumns(GridAutosizeColsMode.Legacy);
       }
     }
   }
@@ -724,7 +725,7 @@ export class AureliaSlickgridCustomElement {
       }
 
       if (this.gridOptions && this.gridOptions.enableAutoSizeColumns) {
-        this.grid.autosizeColumns();
+        this.grid.autosizeColumns(GridAutosizeColsMode.Legacy);
       }
     }
   }

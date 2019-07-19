@@ -6,6 +6,7 @@ import {
   ColumnSort,
   Extension,
   ExtensionName,
+  GridAutosizeColsMode,
   GridOption,
   HeaderMenu,
   HeaderMenuItem,
@@ -308,7 +309,7 @@ export class HeaderMenuExtension implements Extension {
         case 'hide':
           this.hideColumn(args.column);
           if (this.sharedService.gridOptions && this.sharedService.gridOptions.enableAutoSizeColumns) {
-            this.sharedService.grid.autosizeColumns();
+            this.sharedService.grid.autosizeColumns(GridAutosizeColsMode.Legacy);
           }
           break;
         case 'clear-filter':

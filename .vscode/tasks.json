@@ -14,7 +14,7 @@
       "problemMatcher": []
     },
     {
-      "label": "Cypress Open Tool",
+      "label": "Cypress Open GUI",
       "type": "shell",
       "command": "yarn run cypress open",
       "problemMatcher": []

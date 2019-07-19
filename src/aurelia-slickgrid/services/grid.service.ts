@@ -1,6 +1,15 @@
 import { singleton, inject } from 'aurelia-framework';
 import { EventAggregator } from 'aurelia-event-aggregator';
-import { CellArgs, Column, GridOption, GridServiceDeleteOption, GridServiceInsertOption, GridServiceUpdateOption, OnEventArgs } from './../models/index';
+import {
+  CellArgs,
+  Column,
+  GridAutosizeColsMode,
+  GridOption,
+  GridServiceDeleteOption,
+  GridServiceInsertOption,
+  GridServiceUpdateOption,
+  OnEventArgs,
+} from './../models/index';
 import { ExtensionService } from './extension.service';
 import { FilterService } from './filter.service';
 import { GridStateService } from './gridState.service';
@@ -243,7 +252,7 @@ export class GridService {
         // set the grid columns to it's original column definitions
         this._grid.setColumns(originalColumns);
         if (this._gridOptions && this._gridOptions.enableAutoSizeColumns) {
-          this._grid.autosizeColumns();
+          this._grid.autosizeColumns(GridAutosizeColsMode.Legacy);
         }
         this.gridStateService.resetColumns(columnDefinitions);
       }
