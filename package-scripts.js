@@ -49,7 +49,7 @@ module.exports = {
     webpack: {
       default: 'nps webpack.server',
       build: {
-        before: rimraf('/'),
+        before: rimraf('dist'),
         default: 'nps webpack.build.production',
         development: {
           default: series(
