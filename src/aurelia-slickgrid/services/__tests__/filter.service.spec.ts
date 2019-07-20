@@ -357,6 +357,7 @@ describe('FilterService', () => {
   describe('clearFilter methods on backend grid', () => {
     let mockColumn1: Column;
     let mockColumn2: Column;
+    let mockColumn3: Column;
 
     beforeEach(() => {
       gridOptionMock.backendServiceApi = {
@@ -364,16 +365,21 @@ describe('FilterService', () => {
         service: backendServiceStub,
         process: () => new Promise((resolve) => resolve(jest.fn())),
       };
-      // we must use 2 separate Filters because we aren't loading Aurelia and so our Filters are not transient (as defined in lib config)
+      // we must use 3 separate Filters because we aren't loading Aurelia and so our Filters are not transient (as defined in lib config)
       mockColumn1 = { id: 'firstName', field: 'firstName', filterable: true, filter: { model: Filters.input } } as Column;
       mockColumn2 = { id: 'lastName', field: 'lastName', filterable: true, filter: { model: Filters.compoundInput } } as Column;
+      mockColumn3 = { id: 'age', field: 'age', filterable: true, filter: { model: Filters.inputNumber } } as Column;
+
       const mockArgs1 = { grid: gridStub, column: mockColumn1, node: document.getElementById(DOM_ELEMENT_ID) };
       const mockArgs2 = { grid: gridStub, column: mockColumn2, node: document.getElementById(DOM_ELEMENT_ID) };
+      const mockArgs3 = { grid: gridStub, column: mockColumn3, node: document.getElementById(DOM_ELEMENT_ID) };
 
       service.init(gridStub);
       service.bindBackendOnFilter(gridStub, dataViewStub);
       gridStub.onHeaderRowCellRendered.notify(mockArgs1, new Slick.EventData(), gridStub);
       gridStub.onHeaderRowCellRendered.notify(mockArgs2, new Slick.EventData(), gridStub);
+      gridStub.onHeaderRowCellRendered.notify(mockArgs3, new Slick.EventData(), gridStub);
+      service.getFiltersMetadata()[1].callback(DOM.createCustomEvent(`keyup`), { columnDef: mockColumn3 });
       service.getFiltersMetadata()[0].callback(DOM.createCustomEvent(`keyup`), { columnDef: mockColumn1, operator: 'EQ', searchTerms: ['John'], shouldTriggerQuery: true });
       service.getFiltersMetadata()[1].callback(DOM.createCustomEvent(`keyup`), { columnDef: mockColumn2, operator: 'NE', searchTerms: ['Doe'], shouldTriggerQuery: true });
     });
@@ -395,6 +401,28 @@ describe('FilterService', () => {
         expect(filterCountBefore).toBe(2);
         expect(filterCountAfter).toBe(1);
         expect(service.getColumnFilters()).toEqual({ lastName: filterExpectation });
+        expect(spyEmitter).toHaveBeenCalledWith('remote');
+      });
+
+      it('should not call "onBackendFilterChange" method when the filter is previously empty', () => {
+
+
+        const filterFirstExpectation = { columnDef: mockColumn1, columnId: 'firstName', operator: 'EQ', searchTerms: ['John'] };
+        const filterLastExpectation = { columnDef: mockColumn2, columnId: 'lastName', operator: 'NE', searchTerms: ['Doe'] };
+        const newEvent = new Event('mouseup');
+        const spyClear = jest.spyOn(service.getFiltersMetadata()[2], 'clear');
+        const spyFilterChange = jest.spyOn(service, 'onBackendFilterChange');
+        const spyEmitter = jest.spyOn(service, 'emitFilterChanged');
+
+        const filterCountBefore = Object.keys(service.getColumnFilters()).length;
+        service.clearFilterByColumnId(newEvent, 'age');
+        const filterCountAfter = Object.keys(service.getColumnFilters()).length;
+
+        expect(spyClear).toHaveBeenCalled();
+        expect(spyFilterChange).not.toHaveBeenCalled();
+        expect(filterCountBefore).toBe(2);
+        expect(filterCountAfter).toBe(2);
+        expect(service.getColumnFilters()).toEqual({ firstName: filterFirstExpectation, lastName: filterLastExpectation });
         expect(spyEmitter).toHaveBeenCalledWith('remote');
       });
     });
