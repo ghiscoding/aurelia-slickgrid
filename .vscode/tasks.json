@@ -14,15 +14,15 @@
       "problemMatcher": []
     },
     {
-      "label": "Cypress Open UI",
+      "label": "Cypress Open Tool",
       "type": "shell",
-      "command": "yarn run cypress:open",
+      "command": "yarn run cypress open",
       "problemMatcher": []
     },
     {
-      "label": "Cypress CI (mochawesome)",
+      "label": "Cypress CI",
       "type": "shell",
-      "command": "yarn run cypress:ci:mochawesome",
+      "command": "yarn nps e2e.ci",
       "problemMatcher": []
     },
     {

@@ -18,15 +18,10 @@ test
 yarn.lock
 yarn-error.log
 
-# Tests, Report & Coverage
-*.spec.ts
+# Tests & Coverage
 test/
-**/node_modules
-**/coverage
-**/jest-coverage
-**/mochawesome-report
-**/dist
-**/*.tgz
-**/junit.xml
-**/test-report.xml
-**/testresult.xml
+*.spec.ts
+coverage
+junit.xml
+mochawesome-report
+testresult.xml
