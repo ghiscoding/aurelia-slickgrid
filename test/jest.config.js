@@ -52,7 +52,7 @@ module.exports = {
   ],
   testEnvironment: 'node',
   testPathIgnorePatterns: [
-    'cypress/',
-    '/node_modules/',
+    '<rootDir>/test/cypress/',
+    '<rootDir>/node_modules/',
   ],
 };
