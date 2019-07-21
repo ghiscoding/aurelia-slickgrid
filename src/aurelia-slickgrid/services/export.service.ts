@@ -1,5 +1,5 @@
 import { EventAggregator } from 'aurelia-event-aggregator';
-import { singleton, inject, Optional } from 'aurelia-framework';
+import { singleton, inject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import { Constants } from './../constants';
 import {
@@ -21,7 +21,7 @@ export interface ExportColumnHeader {
 }
 
 @singleton(true)
-@inject(Optional.of(I18N), EventAggregator)
+@inject(I18N, EventAggregator)
 export class ExportService {
   private _lineCarriageReturn = '\n';
   private _dataView: any;
