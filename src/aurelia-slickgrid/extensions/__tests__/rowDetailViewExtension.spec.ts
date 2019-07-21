@@ -51,7 +51,6 @@ Slick.Plugins = {
 jest.mock('slickgrid/plugins/slick.rowselectionmodel', () => mockSelectionModel);
 Slick.RowSelectionModel = mockSelectionModel;
 
-
 class HttpStub extends HttpClient {
   status: number;
   statusText: string;
@@ -134,8 +133,8 @@ describe('rowDetailViewExtension', () => {
 
   beforeEach(() => {
     ea = new EventAggregator();
-    extensionUtility = new ExtensionUtility({} as I18N, sharedService);
     sharedService = new SharedService();
+    extensionUtility = new ExtensionUtility({ tr: jest.fn() } as unknown as I18N, sharedService);
     extension = new RowDetailViewExtension(aureliaUtilServiceStub, ea, extensionUtility, sharedService);
   });
 

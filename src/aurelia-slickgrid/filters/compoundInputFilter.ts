@@ -1,5 +1,6 @@
-import { inject } from 'aurelia-framework';
+import { inject, Optional } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
+import { Constants } from '../constants';
 import {
   Column,
   ColumnFilter,
@@ -14,7 +15,7 @@ import {
 } from './../models/index';
 import * as $ from 'jquery';
 
-@inject(I18N)
+@inject(Optional.of(I18N))
 export class CompoundInputFilter implements Filter {
   private _clearFilterTriggered = false;
   private _shouldTriggerQuery = true;
@@ -151,25 +152,25 @@ export class CompoundInputFilter implements Filter {
     switch (type) {
       case FieldType.string:
         optionValues = [
-          { operator: '' as OperatorString, description: this.i18n.tr('CONTAINS') },
-          { operator: '=' as OperatorString, description: this.i18n.tr('EQUALS') },
-          { operator: 'a*' as OperatorString, description: this.i18n.tr('STARTS_WITH') },
-          { operator: '*z' as OperatorString, description: this.i18n.tr('ENDS_WITH') },
+          { operator: '' as OperatorString, description: this.i18n && this.i18n.tr && this.i18n.tr('CONTAINS') || Constants.TEXT_CONTAINS },
+          { operator: '=' as OperatorString, description: this.i18n && this.i18n.tr && this.i18n.tr('EQUALS') || Constants.TEXT_EQUALS },
+          { operator: 'a*' as OperatorString, description: this.i18n && this.i18n.tr && this.i18n.tr('STARTS_WITH') || Constants.TEXT_STARTS_WITH },
+          { operator: '*z' as OperatorString, description: this.i18n && this.i18n.tr && this.i18n.tr('ENDS_WITH') || Constants.TEXT_ENDS_WITH },
           /*
-          { operator:  as OperatorString'IN', description: this.i18n.tr('IN_COLLECTION_SEPERATED_BY_COMMA') },
-          { operator:  as OperatorString'NIN', description: this.i18n.tr('NOT_IN_COLLECTION_SEPERATED_BY_COMMA') },
+          { operator:  as OperatorString'IN', description: this.i18n && this.i18n.tr && this.i18n.tr('IN_COLLECTION_SEPERATED_BY_COMMA') || Constants.TEXT_ALL_SELECTED },
+          { operator:  as OperatorString'NIN', description: this.i18n && this.i18n.tr && this.i18n.tr('NOT_IN_COLLECTION_SEPERATED_BY_COMMA') || Constants.TEXT_ALL_SELECTED },
           */
         ];
         break;
       default:
         optionValues = [
-          { operator: '' as OperatorString, description: this.i18n.tr('CONTAINS') },
-          { operator: '=' as OperatorString, description: '' },
-          { operator: '<' as OperatorString, description: '' },
-          { operator: '<=' as OperatorString, description: '' },
-          { operator: '>' as OperatorString, description: '' },
-          { operator: '>=' as OperatorString, description: '' },
-          { operator: '<>' as OperatorString, description: '' }];
+          { operator: '' as OperatorString, description: this.i18n && this.i18n.tr && this.i18n.tr('CONTAINS') || Constants.TEXT_CONTAINS },
+          { operator: '=' as OperatorString, description: '=' },
+          { operator: '<' as OperatorString, description: '<' },
+          { operator: '<=' as OperatorString, description: '<=' },
+          { operator: '>' as OperatorString, description: '>' },
+          { operator: '>=' as OperatorString, description: '>=' },
+          { operator: '<>' as OperatorString, description: '<>' }];
         break;
     }
 

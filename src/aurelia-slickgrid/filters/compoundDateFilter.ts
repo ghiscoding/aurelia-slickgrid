@@ -1,4 +1,4 @@
-import { inject } from 'aurelia-framework';
+import { inject, Optional } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import { mapFlatpickrDateFormatWithFieldType } from '../services/utilities';
 import {
@@ -19,7 +19,7 @@ import * as $ from 'jquery';
 declare function require(name: string): any;
 declare function require(name: string[], loadedFile: any): any;
 
-@inject(I18N)
+@inject(Optional.of(I18N))
 export class CompoundDateFilter implements Filter {
   private _clearFilterTriggered = false;
   private _shouldTriggerQuery = true;
@@ -120,7 +120,7 @@ export class CompoundDateFilter implements Filter {
   private buildDatePickerInput(searchTerm?: SearchTerm) {
     const inputFormat = mapFlatpickrDateFormatWithFieldType(this.columnDef.type || FieldType.dateIso);
     const outputFormat = mapFlatpickrDateFormatWithFieldType(this.columnDef.outputType || this.columnDef.type || FieldType.dateUtc);
-    let currentLocale = this.i18n.getLocale() || 'en';
+    let currentLocale = this.i18n && this.i18n.getLocale && this.i18n.getLocale() || 'en';
     if (currentLocale.length > 2) {
       currentLocale = currentLocale.substring(0, 2);
     }
@@ -176,12 +176,12 @@ export class CompoundDateFilter implements Filter {
   private getOptionValues(): { operator: OperatorString, description: string }[] {
     return [
       { operator: '', description: '' },
-      { operator: '=', description: '' },
-      { operator: '<', description: '' },
-      { operator: '<=', description: '' },
-      { operator: '>', description: '' },
-      { operator: '>=', description: '' },
-      { operator: '<>', description: '' }
+      { operator: '=', description: '=' },
+      { operator: '<', description: '<' },
+      { operator: '<=', description: '<=' },
+      { operator: '>', description: '>' },
+      { operator: '>=', description: '>=' },
+      { operator: '<>', description: '<>' }
     ];
   }
 

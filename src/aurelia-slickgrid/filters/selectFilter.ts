@@ -1,6 +1,7 @@
 import { I18N } from 'aurelia-i18n';
 import { Subscription } from 'aurelia-event-aggregator';
-import { BindingEngine } from 'aurelia-framework';
+import { BindingEngine, inject, Optional } from 'aurelia-framework';
+import { Constants } from '../constants';
 import {
   CollectionCustomStructure,
   CollectionOption,
@@ -21,6 +22,7 @@ import { disposeAllSubscriptions, getDescendantProperty, htmlEncode } from '../s
 import * as DOMPurify from 'dompurify';
 import * as $ from 'jquery';
 
+@inject(BindingEngine, CollectionService, Optional.of(I18N))
 export class SelectFilter implements Filter {
   private _isFilterFirstRender = true;
   private _shouldTriggerQuery = true;
@@ -86,9 +88,9 @@ export class SelectFilter implements Filter {
       options.single = false;
       options.okButton = true;
       options.addTitle = true; // show tooltip of all selected items while hovering the filter
-      options.countSelected = this.i18n.tr('X_OF_Y_SELECTED');
-      options.allSelected = this.i18n.tr('ALL_SELECTED');
-      options.selectAllText = this.i18n.tr('SELECT_ALL');
+      options.countSelected = this.i18n && this.i18n.tr && this.i18n.tr('X_OF_Y_SELECTED') || Constants.TEXT_X_OF_Y_SELECTED;
+      options.allSelected = this.i18n && this.i18n.tr && this.i18n.tr('ALL_SELECTED') || Constants.TEXT_ALL_SELECTED;
+      options.selectAllText = this.i18n && this.i18n.tr && this.i18n.tr('SELECT_ALL') || Constants.TEXT_SELECT_ALL;
       options.selectAllDelimiter = ['', '']; // remove default square brackets of default text "[Select All]" => "Select All"
     }
     this.defaultOptions = options;
@@ -349,55 +351,57 @@ export class SelectFilter implements Filter {
     const sanitizedOptions = this.gridOptions && this.gridOptions.sanitizeHtmlOptions || {};
 
     // collection could be an Array of Strings OR Objects
-    if (optionCollection.every((x: any) => typeof x === 'string')) {
-      optionCollection.forEach((option: string) => {
-        const selected = (searchTerms.findIndex((term) => term === option) >= 0) ? 'selected' : '';
-        options += `<option value="${option}" label="${option}" ${selected}>${option}</option>`;
+    if (Array.isArray(optionCollection)) {
+      if (optionCollection.every((x: any) => typeof x === 'string')) {
+        optionCollection.forEach((option: string) => {
+          const selected = (searchTerms.findIndex((term) => term === option) >= 0) ? 'selected' : '';
+          options += `<option value="${option}" label="${option}" ${selected}>${option}</option>`;
 
-        // if there's at least 1 search term found, we will add the "filled" class for styling purposes
-        if (selected) {
-          this.isFilled = true;
-        }
-      });
-    } else {
-      // array of objects will require a label/value pair unless a customStructure is passed
-      optionCollection.forEach((option: SelectOption) => {
-        if (!option || (option[this.labelName] === undefined && option.labelKey === undefined)) {
-          throw new Error(`[select-filter] A collection with value/label (or value/labelKey when using Locale) is required to populate the Select list, for example:: { filter: model: Filters.multipleSelect, collection: [ { value: '1', label: 'One' } ]')`);
-        }
-        const labelKey = (option.labelKey || option[this.labelName]) as string;
-        const selected = (searchTerms.findIndex((term) => term === option[this.valueName]) >= 0) ? 'selected' : '';
-        const labelText = ((option.labelKey || this.enableTranslateLabel) && labelKey) ? this.i18n.tr(labelKey || ' ') : labelKey;
-        let prefixText = option[this.labelPrefixName] || '';
-        let suffixText = option[this.labelSuffixName] || '';
-        let optionLabel = option[this.optionLabel] || '';
-        optionLabel = optionLabel.toString().replace(/\"/g, '\''); // replace double quotes by single quotes to avoid interfering with regular html
+          // if there's at least 1 search term found, we will add the "filled" class for styling purposes
+          if (selected) {
+            this.isFilled = true;
+          }
+        });
+      } else {
+        // array of objects will require a label/value pair unless a customStructure is passed
+        optionCollection.forEach((option: SelectOption) => {
+          if (!option || (option[this.labelName] === undefined && option.labelKey === undefined)) {
+            throw new Error(`[select-filter] A collection with value/label (or value/labelKey when using Locale) is required to populate the Select list, for example:: { filter: model: Filters.multipleSelect, collection: [ { value: '1', label: 'One' } ]')`);
+          }
+          const labelKey = (option.labelKey || option[this.labelName]) as string;
+          const selected = (searchTerms.findIndex((term) => term === option[this.valueName]) >= 0) ? 'selected' : '';
+          const labelText = ((option.labelKey || this.enableTranslateLabel) && labelKey && this.i18n && this.i18n.tr) ? this.i18n.tr(labelKey || ' ') : labelKey;
+          let prefixText = option[this.labelPrefixName] || '';
+          let suffixText = option[this.labelSuffixName] || '';
+          let optionLabel = option[this.optionLabel] || '';
+          optionLabel = optionLabel.toString().replace(/\"/g, '\''); // replace double quotes by single quotes to avoid interfering with regular html
 
-        // also translate prefix/suffix if enableTranslateLabel is true and text is a string
-        prefixText = (this.enableTranslateLabel && prefixText && typeof prefixText === 'string') ? this.i18n.tr(prefixText || ' ') : prefixText;
-        suffixText = (this.enableTranslateLabel && suffixText && typeof suffixText === 'string') ? this.i18n.tr(suffixText || ' ') : suffixText;
-        optionLabel = (this.enableTranslateLabel && optionLabel && typeof optionLabel === 'string') ? this.i18n.tr(optionLabel || ' ') : optionLabel;
-        // add to a temp array for joining purpose and filter out empty text
-        const tmpOptionArray = [prefixText, labelText, suffixText].filter((text) => text);
-        let optionText = tmpOptionArray.join(separatorBetweenLabels);
+          // also translate prefix/suffix if enableTranslateLabel is true and text is a string
+          prefixText = (this.enableTranslateLabel && prefixText && typeof prefixText === 'string' && this.i18n && this.i18n.tr) ? this.i18n.tr(prefixText || ' ') : prefixText;
+          suffixText = (this.enableTranslateLabel && suffixText && typeof suffixText === 'string' && this.i18n && this.i18n.tr) ? this.i18n.tr(suffixText || ' ') : suffixText;
+          optionLabel = (this.enableTranslateLabel && optionLabel && typeof optionLabel === 'string' && this.i18n && this.i18n.tr) ? this.i18n.tr(optionLabel || ' ') : optionLabel;
+          // add to a temp array for joining purpose and filter out empty text
+          const tmpOptionArray = [prefixText, labelText, suffixText].filter((text) => text);
+          let optionText = tmpOptionArray.join(separatorBetweenLabels);
 
-        // if user specifically wants to render html text, he needs to opt-in else it will stripped out by default
-        // also, the 3rd party lib will saninitze any html code unless it's encoded, so we'll do that
-        if (isRenderHtmlEnabled) {
-          // sanitize any unauthorized html tags like script and others
-          // for the remaining allowed tags we'll permit all attributes
-          const sanitizedText = DOMPurify.sanitize(optionText, sanitizedOptions);
-          optionText = htmlEncode(sanitizedText);
-        }
+          // if user specifically wants to render html text, he needs to opt-in else it will stripped out by default
+          // also, the 3rd party lib will saninitze any html code unless it's encoded, so we'll do that
+          if (isRenderHtmlEnabled) {
+            // sanitize any unauthorized html tags like script and others
+            // for the remaining allowed tags we'll permit all attributes
+            const sanitizedText = DOMPurify.sanitize(optionText, sanitizedOptions);
+            optionText = htmlEncode(sanitizedText);
+          }
 
-        // html text of each select option
-        options += `<option value="${option[this.valueName]}" label="${optionLabel}" ${selected}>${optionText}</option>`;
+          // html text of each select option
+          options += `<option value="${option[this.valueName]}" label="${optionLabel}" ${selected}>${optionText}</option>`;
 
-        // if there's a search term, we will add the "filled" class for styling purposes
-        if (selected) {
-          this.isFilled = true;
-        }
-      });
+          // if there's a search term, we will add the "filled" class for styling purposes
+          if (selected) {
+            this.isFilled = true;
+          }
+        });
+      }
     }
 
     return `<select class="ms-filter search-filter filter-${columnId}" multiple="multiple">${options}</select>`;

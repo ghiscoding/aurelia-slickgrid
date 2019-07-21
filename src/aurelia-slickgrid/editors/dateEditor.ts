@@ -1,8 +1,8 @@
+import { I18N } from 'aurelia-i18n';
 import { Constants } from './../constants';
 import { mapFlatpickrDateFormatWithFieldType, mapMomentDateFormatWithFieldType } from './../services/utilities';
-import { Column, ColumnEditor, Editor, EditorValidator, EditorValidatorOutput, FieldType, KeyCode, GridOption } from './../models/index';
-import { I18N } from 'aurelia-i18n';
-import { inject } from 'aurelia-framework';
+import { Column, ColumnEditor, Editor, EditorValidator, EditorValidatorOutput, FieldType, GridOption } from './../models/index';
+import { inject, Optional } from 'aurelia-framework';
 import * as flatpickr from 'flatpickr';
 import * as moment from 'moment-mini';
 import * as $ from 'jquery';
@@ -13,7 +13,7 @@ declare function require(name: string): any;
  * An example of a date picker editor using Flatpickr
  * https://chmln.github.io/flatpickr
  */
-@inject(I18N)
+@inject(Optional.of(I18N))
 export class DateEditor implements Editor {
   private _$inputWithData: any;
   $input: any;
@@ -53,7 +53,7 @@ export class DateEditor implements Editor {
       this.defaultDate = (this.args.item) ? this.args.item[this.args.column.field] : null;
       const inputFormat = mapFlatpickrDateFormatWithFieldType(this.columnDef.type || FieldType.dateIso);
       const outputFormat = mapFlatpickrDateFormatWithFieldType(this.columnDef.outputType || FieldType.dateUtc);
-      let currentLocale = this.i18n.getLocale() || 'en';
+      let currentLocale = this.i18n && this.i18n.getLocale && this.i18n.getLocale() || 'en';
       if (currentLocale.length > 2) {
         currentLocale = currentLocale.substring(0, 2);
       }

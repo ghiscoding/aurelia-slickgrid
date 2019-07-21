@@ -1,5 +1,4 @@
 import { inject } from 'aurelia-framework';
-import { I18N } from 'aurelia-i18n';
 import {
   Column,
   ColumnFilter,
@@ -17,7 +16,6 @@ const DEFAULT_MIN_VALUE = 0;
 const DEFAULT_MAX_VALUE = 100;
 const DEFAULT_STEP = 1;
 
-@inject(I18N)
 export class CompoundSliderFilter implements Filter {
   private _clearFilterTriggered = false;
   private _shouldTriggerQuery = true;
@@ -32,13 +30,6 @@ export class CompoundSliderFilter implements Filter {
   searchTerms: SearchTerm[];
   columnDef: Column;
   callback: FilterCallback;
-
-  constructor(private i18n: I18N) { }
-
-  /** Getter for the Grid Options pulled through the Grid Object */
-  private get gridOptions(): GridOption {
-    return (this.grid && this.grid.getOptions) ? this.grid.getOptions() : {};
-  }
 
   /** Getter for the Filter Generic Params */
   private get filterParams(): any {

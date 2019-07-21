@@ -1,4 +1,4 @@
-import { inject } from 'aurelia-framework';
+import { inject, Optional } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import { Constants } from './../constants';
 import {
@@ -17,7 +17,7 @@ import * as $ from 'jquery';
  * The UI is added onto document BODY and .position(), .show() and .hide() are implemented.
  * KeyDown events are also handled to provide handling for Tab, Shift-Tab, Esc and Ctrl-Enter.
  */
-@inject(I18N)
+@inject(Optional.of(I18N))
 export class LongTextEditor implements Editor {
   $textarea: any;
   $wrapper: any;
@@ -48,8 +48,8 @@ export class LongTextEditor implements Editor {
 
   init(): void {
     const columnId = this.columnDef && this.columnDef.id;
-    const cancelText = this.i18n.tr('CANCEL') || Constants.TEXT_CANCEL;
-    const saveText = this.i18n.tr('SAVE') || Constants.TEXT_SAVE;
+    const cancelText = this.i18n && this.i18n.tr && this.i18n.tr('CANCEL') || Constants.TEXT_CANCEL;
+    const saveText = this.i18n && this.i18n.tr && this.i18n.tr('SAVE') || Constants.TEXT_SAVE;
     const placeholder = this.columnEditor && this.columnEditor.placeholder || '';
     const title = this.columnEditor && this.columnEditor.title || '';
     const $container = $('body');

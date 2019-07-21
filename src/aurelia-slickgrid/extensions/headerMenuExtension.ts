@@ -1,4 +1,4 @@
-import { singleton, inject } from 'aurelia-framework';
+import { inject, Optional, singleton } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import { Constants } from '../constants';
 import {
@@ -25,7 +25,7 @@ declare var Slick: any;
 @inject(
   ExtensionUtility,
   FilterService,
-  I18N,
+  Optional.of(I18N),
   SharedService,
   SortService,
 )
@@ -40,6 +40,9 @@ export class HeaderMenuExtension implements Extension {
     private sharedService: SharedService,
     private sortService: SortService,
   ) {
+    if (this.sharedService.gridOptions && this.sharedService.gridOptions.enableTranslate && (!this.i18n || !this.i18n.tr)) {
+      throw new Error('[Aurelia-Slickgrid] requires "I18N" to be installed and configured when the grid option "enableTranslate" is enabled.');
+    }
     this._eventHandler = new Slick.EventHandler();
   }
 

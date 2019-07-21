@@ -1,5 +1,5 @@
 import { I18N } from 'aurelia-i18n';
-import { inject } from 'aurelia-framework';
+import { inject, Optional } from 'aurelia-framework';
 import {
   Column,
   Filter,
@@ -11,7 +11,7 @@ import {
 } from './../models/index';
 import * as $ from 'jquery';
 
-@inject(I18N)
+@inject(Optional.of(I18N))
 export class NativeSelectFilter implements Filter {
   private _clearFilterTriggered = false;
   private _shouldTriggerQuery = true;
@@ -127,7 +127,7 @@ export class NativeSelectFilter implements Filter {
           throw new Error(`A collection with value/label (or value/labelKey when using Locale) is required to populate the Select list, for example:: { filter: model: Filters.select, collection: [ { value: '1', label: 'One' } ]')`);
         }
         const labelKey = option.labelKey || option[labelName];
-        const textLabel = ((option.labelKey || isEnabledTranslate) && this.i18n && typeof this.i18n.tr === 'function') ? this.i18n.tr(labelKey || ' ') : labelKey;
+        const textLabel = ((option.labelKey || isEnabledTranslate) && this.i18n && this.i18n.tr) ? this.i18n.tr(labelKey || ' ') : labelKey;
         options += `<option value="${option[valueName]}">${textLabel}</option>`;
       });
     }

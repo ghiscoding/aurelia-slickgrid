@@ -1,5 +1,5 @@
 import { EventAggregator } from 'aurelia-event-aggregator';
-import { singleton, inject } from 'aurelia-framework';
+import { inject, Optional, singleton } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import { Constants } from './../constants';
 import {
@@ -21,7 +21,7 @@ export interface ExportColumnHeader {
 }
 
 @singleton(true)
-@inject(I18N, EventAggregator)
+@inject(Optional.of(I18N), EventAggregator)
 export class ExportService {
   private _lineCarriageReturn = '\n';
   private _dataView: any;
@@ -53,6 +53,10 @@ export class ExportService {
     this._grid = grid;
     this._dataView = dataView;
     this._aureliaEventPrefix = (this._gridOptions && this._gridOptions.defaultAureliaEventPrefix) ? this._gridOptions.defaultAureliaEventPrefix : DEFAULT_AURELIA_EVENT_PREFIX;
+
+    if (this._gridOptions.enableTranslate && (!this.i18n || !this.i18n.tr)) {
+      throw new Error('[Aurelia-Slickgrid] requires "I18N" to be installed and configured when the grid option "enableTranslate" is enabled.');
+    }
   }
 
   /**

@@ -3,7 +3,7 @@ import 'slickgrid/plugins/slick.cellrangedecorator';
 import 'slickgrid/plugins/slick.cellrangeselector';
 import 'slickgrid/plugins/slick.cellselectionmodel';
 
-import { singleton, inject } from 'aurelia-framework';
+import { inject, Optional, singleton } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import {
   Column,
@@ -36,7 +36,7 @@ import { SharedService } from './shared.service';
   DraggableGroupingExtension,
   GridMenuExtension,
   GroupItemMetaProviderExtension,
-  I18N,
+  Optional.of(I18N),
   HeaderButtonExtension,
   HeaderMenuExtension,
   RowDetailViewExtension,
@@ -62,7 +62,11 @@ export class ExtensionService {
     private rowMoveManagerExtension: RowMoveManagerExtension,
     private rowSelectionExtension: RowSelectionExtension,
     private sharedService: SharedService,
-  ) { }
+  ) {
+    if (this.sharedService.gridOptions && this.sharedService.gridOptions.enableTranslate && (!this.i18n || !this.i18n.tr)) {
+      throw new Error('[Aurelia-Slickgrid] requires "I18N" to be installed and configured when the grid option "enableTranslate" is enabled.');
+    }
+  }
 
   /** Dispose of all the controls & plugins */
   dispose() {
@@ -320,7 +324,7 @@ export class ExtensionService {
    * @param new column definitions (optional)
    */
   translateColumnHeaders(locale?: boolean | string, newColumnDefinitions?: Column[]) {
-    if (locale) {
+    if (locale && this.i18n && this.i18n.setLocale) {
       this.i18n.setLocale(locale as string);
     }
 
@@ -367,7 +371,7 @@ export class ExtensionService {
     if (Array.isArray(items)) {
       for (const item of items) {
         if (item[inputKey]) {
-          item[outputKey] = this.i18n.tr(item[inputKey]);
+          item[outputKey] = this.i18n && this.i18n.tr && this.i18n.tr(item[inputKey]);
         }
       }
     }
