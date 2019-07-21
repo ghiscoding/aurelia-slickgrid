@@ -26,7 +26,7 @@ jobs:
           command: bash <(curl -s https://codecov.io/bash) -t ${CODECOV_TOKEN}
       - run:
           name: Start Dev WebServer
-          command: yarn start
+          command: yarn start:webpack:dev
           background: true
       - restore_cache:
           name: Restoring Cache for Cypress
