@@ -9,6 +9,7 @@ import {
   FilterArguments,
   FilterCallback,
   GridOption,
+  Locale,
   OperatorString,
   OperatorType,
   SearchTerm,
@@ -20,6 +21,7 @@ export class CompoundInputFilter implements Filter {
   private _clearFilterTriggered = false;
   private _shouldTriggerQuery = true;
   private _inputType = 'text';
+  private _locales: Locale;
   private $filterElm: any;
   private $filterInputElm: any;
   private $selectOperatorElm: any;
@@ -71,6 +73,9 @@ export class CompoundInputFilter implements Filter {
       this.columnDef = args.columnDef;
       this.operator = args.operator || '';
       this.searchTerms = args.searchTerms || [];
+
+      // get locales provided by user in forRoot or else use default English locales via the Constants
+      this._locales = this.gridOptions && this.gridOptions.locales || Constants.locales;
 
       // filter input can only have 1 search term, so we will use the 1st array index if it exist
       const searchTerm = (Array.isArray(this.searchTerms) && this.searchTerms[0]) || '';
@@ -152,19 +157,19 @@ export class CompoundInputFilter implements Filter {
     switch (type) {
       case FieldType.string:
         optionValues = [
-          { operator: '' as OperatorString, description: this.i18n && this.i18n.tr && this.i18n.tr('CONTAINS') || Constants.TEXT_CONTAINS },
-          { operator: '=' as OperatorString, description: this.i18n && this.i18n.tr && this.i18n.tr('EQUALS') || Constants.TEXT_EQUALS },
-          { operator: 'a*' as OperatorString, description: this.i18n && this.i18n.tr && this.i18n.tr('STARTS_WITH') || Constants.TEXT_STARTS_WITH },
-          { operator: '*z' as OperatorString, description: this.i18n && this.i18n.tr && this.i18n.tr('ENDS_WITH') || Constants.TEXT_ENDS_WITH },
+          { operator: '' as OperatorString, description: this.i18n && this.i18n.tr && this.i18n.tr('CONTAINS') || this._locales && this._locales.TEXT_CONTAINS },
+          { operator: '=' as OperatorString, description: this.i18n && this.i18n.tr && this.i18n.tr('EQUALS') || this._locales && this._locales.TEXT_EQUALS },
+          { operator: 'a*' as OperatorString, description: this.i18n && this.i18n.tr && this.i18n.tr('STARTS_WITH') || this._locales && this._locales.TEXT_STARTS_WITH },
+          { operator: '*z' as OperatorString, description: this.i18n && this.i18n.tr && this.i18n.tr('ENDS_WITH') || this._locales && this._locales.TEXT_ENDS_WITH },
           /*
-          { operator:  as OperatorString'IN', description: this.i18n && this.i18n.tr && this.i18n.tr('IN_COLLECTION_SEPERATED_BY_COMMA') || Constants.TEXT_ALL_SELECTED },
-          { operator:  as OperatorString'NIN', description: this.i18n && this.i18n.tr && this.i18n.tr('NOT_IN_COLLECTION_SEPERATED_BY_COMMA') || Constants.TEXT_ALL_SELECTED },
+          { operator:  as OperatorString'IN', description: this.i18n && this.i18n.tr && this.i18n.tr('IN_COLLECTION_SEPERATED_BY_COMMA') || this._locales && this._locales.TEXT_ALL_SELECTED },
+          { operator:  as OperatorString'NIN', description: this.i18n && this.i18n.tr && this.i18n.tr('NOT_IN_COLLECTION_SEPERATED_BY_COMMA') || this._locales && this._locales.TEXT_ALL_SELECTED },
           */
         ];
         break;
       default:
         optionValues = [
-          { operator: '' as OperatorString, description: this.i18n && this.i18n.tr && this.i18n.tr('CONTAINS') || Constants.TEXT_CONTAINS },
+          { operator: '' as OperatorString, description: this.i18n && this.i18n.tr && this.i18n.tr('CONTAINS') || this._locales && this._locales.TEXT_CONTAINS },
           { operator: '=' as OperatorString, description: '=' },
           { operator: '<' as OperatorString, description: '<' },
           { operator: '<=' as OperatorString, description: '<=' },

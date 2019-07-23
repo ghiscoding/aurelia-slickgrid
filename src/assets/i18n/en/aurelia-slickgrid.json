@@ -20,6 +20,7 @@
   "ITEMS_PER_PAGE": "items per page",
   "NOT_IN_COLLECTION_SEPERATED_BY_COMMA": "Search items not in a collection, must be separated by a comma (a,b)",
   "OF": "of",
+  "OK": "OK",
   "PAGE": "Page",
   "PAGE_X_OF_Y": "page {{x}} of {{y}}",
   "REFRESH_DATASET": "Refresh Dataset",

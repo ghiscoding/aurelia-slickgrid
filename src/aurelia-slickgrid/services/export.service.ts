@@ -8,6 +8,7 @@ import {
   FileType,
   Formatter,
   GridOption,
+  Locale,
 } from './../models/index';
 import { TextEncoder } from 'text-encoding-utf-8';
 import { addWhiteSpaces, htmlEntityDecode, sanitizeHtmlToText, titleCase } from './../services/utilities';
@@ -23,15 +24,16 @@ export interface ExportColumnHeader {
 @singleton(true)
 @inject(Optional.of(I18N), EventAggregator)
 export class ExportService {
+  private _aureliaEventPrefix: string;
+  private _exportQuoteWrapper = '';
+  private _exportOptions: ExportOption;
   private _lineCarriageReturn = '\n';
   private _dataView: any;
   private _grid: any;
-  private _exportQuoteWrapper = '';
   private _columnHeaders: ExportColumnHeader[];
   private _groupedHeaders: ExportColumnHeader[];
   private _hasGroupedItems = false;
-  private _exportOptions: ExportOption;
-  private _aureliaEventPrefix: string;
+  private _locales: Locale;
 
   constructor(private i18n: I18N, private ea: EventAggregator) { }
 
@@ -53,6 +55,9 @@ export class ExportService {
     this._grid = grid;
     this._dataView = dataView;
     this._aureliaEventPrefix = (this._gridOptions && this._gridOptions.defaultAureliaEventPrefix) ? this._gridOptions.defaultAureliaEventPrefix : DEFAULT_AURELIA_EVENT_PREFIX;
+
+    // get locales provided by user in forRoot or else use default English locales via the Constants
+    this._locales = this._gridOptions && this._gridOptions.locales || Constants.locales;
 
     if (this._gridOptions.enableTranslate && (!this.i18n || !this.i18n.tr)) {
       throw new Error('[Aurelia-Slickgrid] requires "I18N" to be installed and configured when the grid option "enableTranslate" is enabled.');
@@ -168,7 +173,7 @@ export class ExportService {
     if (!groupByColumnHeader && this._gridOptions.enableTranslate && this.i18n && this.i18n.tr) {
       groupByColumnHeader = this.i18n.tr('GROUP_BY');
     } else if (!groupByColumnHeader) {
-      groupByColumnHeader = Constants.TEXT_GROUP_BY;
+      groupByColumnHeader = this._locales && this._locales.TEXT_GROUP_BY;
     }
 
     // a CSV needs double quotes wrapper, the other types do not need any wrapper

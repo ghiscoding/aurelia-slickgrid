@@ -11,6 +11,7 @@ import {
   HeaderMenuItem,
   HeaderMenuOnCommandArgs,
   HeaderMenuOnBeforeMenuShowArgs,
+  Locale,
   SlickEventHandler,
 } from '../models/index';
 import { FilterService } from '../services/filter.service';
@@ -32,6 +33,7 @@ declare var Slick: any;
 export class HeaderMenuExtension implements Extension {
   private _addon: any;
   private _eventHandler: SlickEventHandler;
+  private _locales: Locale;
 
   constructor(
     private extensionUtility: ExtensionUtility,
@@ -72,6 +74,9 @@ export class HeaderMenuExtension implements Extension {
    */
   register(): any {
     if (this.sharedService && this.sharedService.grid && this.sharedService.gridOptions) {
+      // get locales provided by user in forRoot or else use default English locales via the Constants
+      this._locales = this.sharedService.gridOptions && this.sharedService.gridOptions.locales || Constants.locales;
+
       // dynamically import the SlickGrid plugin (addon) with RequireJS
       this.extensionUtility.loadExtensionDynamically(ExtensionName.headerMenu);
 
@@ -130,7 +135,7 @@ export class HeaderMenuExtension implements Extension {
             if (columnHeaderMenuItems.filter((item: HeaderMenuItem) => item.command === 'sort-asc').length === 0) {
               columnHeaderMenuItems.push({
                 iconCssClass: headerMenuOptions.iconSortAscCommand || 'fa fa-sort-asc',
-                title: options.enableTranslate ? this.i18n.tr('SORT_ASCENDING') : Constants.TEXT_SORT_ASCENDING,
+                title: options.enableTranslate ? this.i18n.tr('SORT_ASCENDING') : this._locales && this._locales.TEXT_SORT_ASCENDING,
                 command: 'sort-asc',
                 positionOrder: 50
               });
@@ -138,7 +143,7 @@ export class HeaderMenuExtension implements Extension {
             if (columnHeaderMenuItems.filter((item: HeaderMenuItem) => item.command === 'sort-desc').length === 0) {
               columnHeaderMenuItems.push({
                 iconCssClass: headerMenuOptions.iconSortDescCommand || 'fa fa-sort-desc',
-                title: options.enableTranslate ? this.i18n.tr('SORT_DESCENDING') : Constants.TEXT_SORT_DESCENDING,
+                title: options.enableTranslate ? this.i18n.tr('SORT_DESCENDING') : this._locales && this._locales.TEXT_SORT_DESCENDING,
                 command: 'sort-desc',
                 positionOrder: 51
               });
@@ -152,7 +157,7 @@ export class HeaderMenuExtension implements Extension {
             if (!headerMenuOptions.hideClearSortCommand && columnHeaderMenuItems.filter((item: HeaderMenuItem) => item.command === 'clear-sort').length === 0) {
               columnHeaderMenuItems.push({
                 iconCssClass: headerMenuOptions.iconClearSortCommand || 'fa fa-unsorted',
-                title: options.enableTranslate ? this.i18n.tr('REMOVE_SORT') : Constants.TEXT_REMOVE_SORT,
+                title: options.enableTranslate ? this.i18n.tr('REMOVE_SORT') : this._locales && this._locales.TEXT_REMOVE_SORT,
                 command: 'clear-sort',
                 positionOrder: 54
               });
@@ -164,7 +169,7 @@ export class HeaderMenuExtension implements Extension {
             if (!headerMenuOptions.hideClearFilterCommand && columnHeaderMenuItems.filter((item: HeaderMenuItem) => item.command === 'clear-filter').length === 0) {
               columnHeaderMenuItems.push({
                 iconCssClass: headerMenuOptions.iconClearFilterCommand || 'fa fa-filter',
-                title: options.enableTranslate ? this.i18n.tr('REMOVE_FILTER') : Constants.TEXT_REMOVE_FILTER,
+                title: options.enableTranslate ? this.i18n.tr('REMOVE_FILTER') : this._locales && this._locales.TEXT_REMOVE_FILTER,
                 command: 'clear-filter',
                 positionOrder: 53
               });
@@ -175,7 +180,7 @@ export class HeaderMenuExtension implements Extension {
           if (headerMenuOptions && !headerMenuOptions.hideColumnHideCommand && columnHeaderMenuItems.filter((item: HeaderMenuItem) => item.command === 'hide').length === 0) {
             columnHeaderMenuItems.push({
               iconCssClass: headerMenuOptions.iconColumnHideCommand || 'fa fa-times',
-              title: options.enableTranslate ? this.i18n.tr('HIDE_COLUMN') : Constants.TEXT_HIDE_COLUMN,
+              title: options.enableTranslate ? this.i18n.tr('HIDE_COLUMN') : this._locales && this._locales.TEXT_HIDE_COLUMN,
               command: 'hide',
               positionOrder: 55
             });
@@ -235,19 +240,19 @@ export class HeaderMenuExtension implements Extension {
           columnHeaderMenuItems.forEach((item) => {
             switch (item.command) {
               case 'clear-filter':
-                item.title = this.i18n.tr('REMOVE_FILTER') || Constants.TEXT_REMOVE_FILTER;
+                item.title = this.i18n.tr('REMOVE_FILTER') || this._locales && this._locales.TEXT_REMOVE_FILTER;
                 break;
               case 'clear-sort':
-                item.title = this.i18n.tr('REMOVE_SORT') || Constants.TEXT_REMOVE_SORT;
+                item.title = this.i18n.tr('REMOVE_SORT') || this._locales && this._locales.TEXT_REMOVE_SORT;
                 break;
               case 'sort-asc':
-                item.title = this.i18n.tr('SORT_ASCENDING') || Constants.TEXT_SORT_ASCENDING;
+                item.title = this.i18n.tr('SORT_ASCENDING') || this._locales && this._locales.TEXT_SORT_ASCENDING;
                 break;
               case 'sort-desc':
-                item.title = this.i18n.tr('SORT_DESCENDING') || Constants.TEXT_SORT_DESCENDING;
+                item.title = this.i18n.tr('SORT_DESCENDING') || this._locales && this._locales.TEXT_SORT_DESCENDING;
                 break;
               case 'hide':
-                item.title = this.i18n.tr('HIDE_COLUMN') || Constants.TEXT_HIDE_COLUMN;
+                item.title = this.i18n.tr('HIDE_COLUMN') || this._locales && this._locales.TEXT_HIDE_COLUMN;
                 break;
             }
 
