@@ -1,6 +1,8 @@
 import { bindable, inject } from 'aurelia-framework';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
-import { GridOption } from './models/index';
+import { I18N } from 'aurelia-i18n';
+import { Constants } from './constants';
+import { GridOption, Locale } from './models/index';
 
 const DEFAULT_AURELIA_EVENT_PREFIX = 'asg';
 
@@ -16,6 +18,7 @@ export class SlickPaginationCustomElement {
   private _filterSubscriber: Subscription;
   private _gridPaginationOptions: GridOption;
   private _isFirstRender = true;
+  private _locales: Locale;
 
   dataFrom = 1;
   dataTo = 1;
@@ -26,7 +29,17 @@ export class SlickPaginationCustomElement {
   paginationCallback: () => void;
   paginationPageSizes = [25, 75, 100];
 
-  constructor(private elm: Element, private ea: EventAggregator) { }
+  // text translations (handled by ngx-translate or by custom locale)
+  textItemsPerPage: string;
+  textItems: string;
+  textOf: string;
+  textPage: string;
+
+  constructor(private elm: Element, private ea: EventAggregator, private i18n: I18N) {
+    if (this._gridPaginationOptions && this._gridPaginationOptions.enableTranslate && (!this.i18n || !this.i18n.tr)) {
+      throw new Error('[Aurelia-Slickgrid] requires "I18N" to be installed and configured when the grid option "enableTranslate" is enabled.');
+    }
+  }
 
   bind(binding: any, contexts: any) {
     this._gridPaginationOptions = binding.gridPaginationOptions;
@@ -119,6 +132,12 @@ export class SlickPaginationCustomElement {
     if (!backendApi || !backendApi.service || !backendApi.process) {
       throw new Error(`BackendServiceApi requires at least a "process" function and a "service" defined`);
     }
+
+    // get locales provided by user in forRoot or else use default English locales via the Constants
+    this._locales = this._gridPaginationOptions && this._gridPaginationOptions.locales || Constants.locales;
+
+    // translate all the text using ngx-translate or custom locales
+    this.translateAllUiTexts(this._locales);
 
     if (this._gridPaginationOptions && this._gridPaginationOptions.pagination) {
       const pagination = this._gridPaginationOptions.pagination;
@@ -230,6 +249,25 @@ export class SlickPaginationCustomElement {
     } else {
       this.dataFrom = (this.pageNumber * this.itemsPerPage) - this.itemsPerPage + 1;
       this.dataTo = (this.totalItems < this.itemsPerPage) ? this.totalItems : (this.pageNumber * this.itemsPerPage);
+    }
+  }
+
+  // --
+  // private functions
+  // --------------------
+
+  /** Translate all the texts shown in the UI, use I18N service when available or custom locales when service is null */
+  private translateAllUiTexts(locales: Locale) {
+    if (this.i18n && this.i18n.tr) {
+      this.textItemsPerPage = this.i18n.tr('ITEMS_PER_PAGE');
+      this.textItems = this.i18n.tr('ITEMS');
+      this.textOf = this.i18n.tr('OF');
+      this.textPage = this.i18n.tr('PAGE');
+    } else if (locales) {
+      this.textItemsPerPage = locales.TEXT_ITEMS_PER_PAGE || 'TEXT_ITEMS_PER_PAGE';
+      this.textItems = locales.TEXT_ITEMS || 'TEXT_ITEMS';
+      this.textOf = locales.TEXT_OF || 'TEXT_OF';
+      this.textPage = locales.TEXT_PAGE || 'TEXT_PAGE';
     }
   }
 

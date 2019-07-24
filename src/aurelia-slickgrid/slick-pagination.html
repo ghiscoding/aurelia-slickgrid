@@ -25,14 +25,14 @@
         </nav>
 
         <div class="slick-page-number">
-          <span t="PAGE"></span>
+          <span>${textPage}</span>
           <input type="text"
                  class="form-control"
                  value.bind="pageNumber | asgNumber"
                  size="1"
                  readonly.bind="totalItems === 0"
                  change.delegate="changeToCurrentPage($event)">
-          <span t="OF"></span>
+          <span>${textOf}</span>
           <span> ${pageCount}</span>
         </div>
 
@@ -65,11 +65,9 @@
                   repeat.for="pageSize of paginationPageSizes"
                   model.bind="pageSize">${pageSize}</option>
         </select>
-        <span t="ITEMS_PER_PAGE">items per page</span>,
+        <span>${textItemsPerPage}</span>,
         <span class="slick-pagination-count">
-          <span t="FROM_TO_OF_TOTAL_ITEMS"
-                t-params.bind="{ from: dataFrom, to: dataTo, totalItems: totalItems }">${dataFrom}-${dataTo} of
-            ${totalItems} items</span>
+          <span>${dataFrom}-${dataTo} ${textOf} ${totalItems} ${textItems}</span>
         </span>
       </span>
     </div>
