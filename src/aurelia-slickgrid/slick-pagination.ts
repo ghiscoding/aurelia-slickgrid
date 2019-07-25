@@ -3,13 +3,14 @@ import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
 import { I18N } from 'aurelia-i18n';
 import { Constants } from './constants';
 import { GridOption, Locale } from './models/index';
+import { disposeAllSubscriptions } from './services/utilities';
 
 const DEFAULT_AURELIA_EVENT_PREFIX = 'asg';
 
 // using external non-typed js libraries
 declare var Slick: any;
 
-@inject(Element, EventAggregator)
+@inject(Element, EventAggregator, I18N)
 export class SlickPaginationCustomElement {
   @bindable() dataview: any;
   @bindable() gridPaginationOptions: GridOption;
@@ -28,6 +29,7 @@ export class SlickPaginationCustomElement {
   totalItems = 0;
   paginationCallback: () => void;
   paginationPageSizes = [25, 75, 100];
+  subscriptions: Subscription[] = [];
 
   // text translations (handled by ngx-translate or by custom locale)
   textItemsPerPage: string;
@@ -39,6 +41,10 @@ export class SlickPaginationCustomElement {
     if (this._gridPaginationOptions && this._gridPaginationOptions.enableTranslate && (!this.i18n || !this.i18n.tr)) {
       throw new Error('[Aurelia-Slickgrid] requires "I18N" to be installed and configured when the grid option "enableTranslate" is enabled.');
     }
+    // when using I18N, we'll translate necessary texts in the UI
+    this.subscriptions.push(
+      this.ea.subscribe('i18n:locale:changed', () => this.translateAllUiTexts(this._locales))
+    );
   }
 
   bind(binding: any, contexts: any) {
@@ -117,6 +123,9 @@ export class SlickPaginationCustomElement {
     }
     // unsubscribe all SlickGrid events
     this._eventHandler.unsubscribeAll();
+
+    // also dispose of all Subscriptions
+    this.subscriptions = disposeAllSubscriptions(this.subscriptions);
   }
 
   onChangeItemPerPage(event: any) {

@@ -16,7 +16,7 @@
   "HIDE_COLUMN": "Hide Column",
   "IN_COLLECTION_SEPERATED_BY_COMMA": "Search items in a collection, must be separated by a comma (a,b)",
   "INVALID_FLOAT": "The number must be valid and have a maximum of {{maxDecimal}} decimals.",
-  "ITEMS": "Items",
+  "ITEMS": "items",
   "ITEMS_PER_PAGE": "items per page",
   "NOT_IN_COLLECTION_SEPERATED_BY_COMMA": "Search items not in a collection, must be separated by a comma (a,b)",
   "OF": "of",
