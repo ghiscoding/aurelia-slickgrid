@@ -9,15 +9,7 @@ declare function require(name: string): any;
 @singleton(true)
 @inject(Optional.of(I18N), SharedService)
 export class ExtensionUtility {
-  private _locales: Locale;
-
-  constructor(private i18n: I18N, private sharedService: SharedService) {
-    if (this.sharedService.gridOptions && this.sharedService.gridOptions.enableTranslate && (!this.i18n || !this.i18n.tr)) {
-      throw new Error('[Aurelia-Slickgrid] requires "I18N" to be installed and configured when the grid option "enableTranslate" is enabled.');
-    }
-    // get locales provided by user in forRoot or else use default English locales via the Constants
-    this._locales = this.sharedService && this.sharedService.gridOptions && this.sharedService.gridOptions.locales || Constants.locales;
-  }
+  constructor(private i18n: I18N, private sharedService: SharedService) { }
 
   /**
    * Remove a column from the grid by it's index in the grid
@@ -86,9 +78,16 @@ export class ExtensionUtility {
    * 3- else if nothing is provided use
    */
   getPickerTitleOutputString(propName: string, pickerName: 'gridMenu' | 'columnPicker') {
+    if (this.sharedService.gridOptions && this.sharedService.gridOptions.enableTranslate && (!this.i18n || !this.i18n.tr)) {
+      throw new Error('[Aurelia-Slickgrid] requires "I18N" to be installed and configured when the grid option "enableTranslate" is enabled.');
+    }
+
     let output = '';
     const picker = this.sharedService.gridOptions && this.sharedService.gridOptions[pickerName] || {};
     const enableTranslate = this.sharedService.gridOptions && this.sharedService.gridOptions.enableTranslate || false;
+
+    // get locales provided by user in forRoot or else use default English locales via the Constants
+    const locales = this.sharedService && this.sharedService.gridOptions && this.sharedService.gridOptions.locales || Constants.locales;
 
     const title = picker && picker[propName];
     const titleKey = picker && picker[`${propName}Key`];
@@ -98,16 +97,16 @@ export class ExtensionUtility {
     } else {
       switch (propName) {
         case 'customTitle':
-          output = title || (enableTranslate ? this.i18n.tr('COMMANDS') : this._locales && this._locales.TEXT_COMMANDS);
+          output = title || enableTranslate && this.i18n && this.i18n.tr && this.i18n.tr('COMMANDS') || locales && locales.TEXT_COMMANDS;
           break;
         case 'columnTitle':
-          output = title || (enableTranslate ? this.i18n.tr('COLUMNS') : this._locales && this._locales.TEXT_COLUMNS);
+          output = title || enableTranslate && this.i18n && this.i18n.tr && this.i18n.tr('COLUMNS') || locales && locales.TEXT_COLUMNS;
           break;
         case 'forceFitTitle':
-          output = title || (enableTranslate ? this.i18n.tr('FORCE_FIT_COLUMNS') : this._locales && this._locales.TEXT_FORCE_FIT_COLUMNS);
+          output = title || enableTranslate && this.i18n && this.i18n.tr && this.i18n.tr('FORCE_FIT_COLUMNS') || locales && locales.TEXT_FORCE_FIT_COLUMNS;
           break;
         case 'syncResizeTitle':
-          output = title || (enableTranslate ? this.i18n.tr('SYNCHRONOUS_RESIZE') : this._locales && this._locales.TEXT_SYNCHRONOUS_RESIZE);
+          output = title || enableTranslate && this.i18n && this.i18n.tr && this.i18n.tr('SYNCHRONOUS_RESIZE') || locales && locales.TEXT_SYNCHRONOUS_RESIZE;
           break;
         default:
           output = title;
