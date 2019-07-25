@@ -16,7 +16,6 @@ export class SlickPaginationCustomElement {
   @bindable() gridPaginationOptions: GridOption;
   private _aureliaEventPrefix = DEFAULT_AURELIA_EVENT_PREFIX;
   private _eventHandler = new Slick.EventHandler();
-  private _filterSubscriber: Subscription;
   private _gridPaginationOptions: GridOption;
   private _isFirstRender = true;
   private _locales: Locale;
@@ -58,13 +57,13 @@ export class SlickPaginationCustomElement {
     }
 
     // Subscribe to Filter Clear & Changed and go back to page 1 when that happen
-    this._filterSubscriber = this.ea.subscribe('filterService:filterChanged', () => this.refreshPagination(true));
-    this._filterSubscriber = this.ea.subscribe('filterService:filterCleared', () => this.refreshPagination(true));
+    this.subscriptions.push(this.ea.subscribe('filterService:filterChanged', () => this.refreshPagination(true)));
+    this.subscriptions.push(this.ea.subscribe('filterService:filterCleared', () => this.refreshPagination(true)));
 
     // Subscribe to any dataview row count changed so that when Adding/Deleting item(s) through the DataView
     // that would trigger a refresh of the pagination numbers
-    this.ea.subscribe(`${this._aureliaEventPrefix}:on-item-added`, (items: any | any[]) => this.onItemAddedOrRemoved(items, true));
-    this.ea.subscribe(`${this._aureliaEventPrefix}:on-item-deleted`, (items: any | any[]) => this.onItemAddedOrRemoved(items, false));
+    this.subscriptions.push(this.ea.subscribe(`${this._aureliaEventPrefix}:on-item-added`, (items: any | any[]) => this.onItemAddedOrRemoved(items, true)));
+    this.subscriptions.push(this.ea.subscribe(`${this._aureliaEventPrefix}:on-item-deleted`, (items: any | any[]) => this.onItemAddedOrRemoved(items, false)));
   }
 
   gridPaginationOptionsChanged(newGridOptions: GridOption) {
@@ -118,9 +117,6 @@ export class SlickPaginationCustomElement {
   }
 
   dispose() {
-    if (this._filterSubscriber) {
-      this._filterSubscriber.dispose();
-    }
     // unsubscribe all SlickGrid events
     this._eventHandler.unsubscribeAll();
 
