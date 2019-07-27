@@ -48,9 +48,6 @@ export class GridMenuExtension implements Extension {
     private sharedService: SharedService,
     private sortService: SortService,
   ) {
-    if (this.sharedService.gridOptions && this.sharedService.gridOptions.enableTranslate && (!this.i18n || !this.i18n.tr)) {
-      throw new Error('[Aurelia-Slickgrid] requires "I18N" to be installed and configured when the grid option "enableTranslate" is enabled.');
-    }
     this._eventHandler = new Slick.EventHandler();
   }
 
@@ -82,6 +79,10 @@ export class GridMenuExtension implements Extension {
 
   /** Create the Header Menu and expose all the available hooks that user can subscribe (onCommand, onBeforeMenuShow, ...) */
   register(): any {
+    if (this.sharedService.gridOptions && this.sharedService.gridOptions.enableTranslate && (!this.i18n || !this.i18n.tr)) {
+      throw new Error('[Aurelia-Slickgrid] requires "I18N" to be installed and configured when the grid option "enableTranslate" is enabled.');
+    }
+
     // keep original user grid menu, useful when switching locale to translate
     this._userOriginalGridMenu = { ...this.sharedService.gridOptions.gridMenu } as GridMenu;
 

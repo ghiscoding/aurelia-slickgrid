@@ -42,9 +42,6 @@ export class HeaderMenuExtension implements Extension {
     private sharedService: SharedService,
     private sortService: SortService,
   ) {
-    if (this.sharedService.gridOptions && this.sharedService.gridOptions.enableTranslate && (!this.i18n || !this.i18n.tr)) {
-      throw new Error('[Aurelia-Slickgrid] requires "I18N" to be installed and configured when the grid option "enableTranslate" is enabled.');
-    }
     this._eventHandler = new Slick.EventHandler();
   }
 
@@ -73,6 +70,10 @@ export class HeaderMenuExtension implements Extension {
    * @param columnDefinitions
    */
   register(): any {
+    if (this.sharedService.gridOptions && this.sharedService.gridOptions.enableTranslate && (!this.i18n || !this.i18n.tr)) {
+      throw new Error('[Aurelia-Slickgrid] requires "I18N" to be installed and configured when the grid option "enableTranslate" is enabled.');
+    }
+
     if (this.sharedService && this.sharedService.grid && this.sharedService.gridOptions) {
       // get locales provided by user in forRoot or else use default English locales via the Constants
       this._locales = this.sharedService.gridOptions && this.sharedService.gridOptions.locales || Constants.locales;

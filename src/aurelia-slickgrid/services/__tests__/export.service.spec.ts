@@ -66,228 +66,204 @@ describe('ExportService', () => {
   let mockCsvBlob: Blob;
   let mockTxtBlob: Blob;
 
-  beforeEach(() => {
-    ea = new EventAggregator();
-    i18n = new I18N(ea, new BindingSignaler());
+  describe('with I18N Service', () => {
+    beforeEach(() => {
+      ea = new EventAggregator();
+      i18n = new I18N(ea, new BindingSignaler());
 
-    // @ts-ignore
-    navigator.__defineGetter__('appName', () => 'Netscape');
-    navigator.msSaveOrOpenBlob = undefined;
-    mockCsvBlob = new Blob(['', ''], { type: `text/csv;charset=utf-8;` });
-    mockTxtBlob = new Blob(['\uFEFF', ''], { type: `text/plain;charset=utf-8;` });
+      // @ts-ignore
+      navigator.__defineGetter__('appName', () => 'Netscape');
+      navigator.msSaveOrOpenBlob = undefined;
+      mockCsvBlob = new Blob(['', ''], { type: `text/csv;charset=utf-8;` });
+      mockTxtBlob = new Blob(['\uFEFF', ''], { type: `text/plain;charset=utf-8;` });
 
-    mockExportCsvOptions = {
-      delimiter: DelimiterType.comma,
-      filename: 'export',
-      format: FileType.csv,
-      useUtf8WithBom: false,
-    };
+      mockExportCsvOptions = {
+        delimiter: DelimiterType.comma,
+        filename: 'export',
+        format: FileType.csv,
+        useUtf8WithBom: false,
+      };
 
-    mockExportTxtOptions = {
-      delimiter: DelimiterType.semicolon,
-      filename: 'export',
-      format: FileType.txt
-    };
+      mockExportTxtOptions = {
+        delimiter: DelimiterType.semicolon,
+        filename: 'export',
+        format: FileType.txt
+      };
 
-    i18n.setup({
-      resources: {
-        en: {
-          translation: {
-            FIRST_NAME: 'First Name',
-            LAST_NAME: 'Last Name',
-            GROUP_BY: 'Grouped By',
-            SALES_REP: 'Sales Rep.',
-            FINANCE_MANAGER: 'Finance Manager',
-            HUMAN_RESOURCES: 'Human Resources',
-            IT_ADMIN: 'IT Admin',
-            DEVELOPER: 'Developer',
+      i18n.setup({
+        resources: {
+          en: {
+            translation: {
+              FIRST_NAME: 'First Name',
+              LAST_NAME: 'Last Name',
+              GROUP_BY: 'Grouped By',
+              SALES_REP: 'Sales Rep.',
+              FINANCE_MANAGER: 'Finance Manager',
+              HUMAN_RESOURCES: 'Human Resources',
+              IT_ADMIN: 'IT Admin',
+              DEVELOPER: 'Developer',
+            }
+          },
+          fr: {
+            translation:
+            {
+              FIRST_NAME: 'Prénom',
+              LAST_NAME: 'Nom de famille',
+              GROUP_BY: 'Groupé par',
+              SALES_REP: 'Représentant des ventes',
+              FINANCE_MANAGER: 'Responsable des finances',
+              HUMAN_RESOURCES: 'Ressources humaines',
+              IT_ADMIN: 'Administrateur IT',
+              DEVELOPER: 'Développeur',
+            }
           }
         },
-        fr: {
-          translation:
-          {
-            FIRST_NAME: 'Prénom',
-            LAST_NAME: 'Nom de famille',
-            GROUP_BY: 'Groupé par',
-            SALES_REP: 'Représentant des ventes',
-            FINANCE_MANAGER: 'Responsable des finances',
-            HUMAN_RESOURCES: 'Ressources humaines',
-            IT_ADMIN: 'Administrateur IT',
-            DEVELOPER: 'Développeur',
-          }
-        }
-      },
-      lng: '0',
-      fallbackLng: 'en',
-      debug: false
-    });
-    service = new ExportService(i18n, ea);
-  });
-
-  afterEach(() => {
-    delete mockGridOptions.backendServiceApi;
-    jest.clearAllMocks();
-  });
-
-  it('should create the service', () => {
-    expect(service).toBeTruthy();
-  });
-
-  it('should not have any output since there are no column definitions provided', (done) => {
-    const eaSpy = jest.spyOn(ea, 'publish');
-    const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
-    const spyDownload = jest.spyOn(service, 'startDownloadFile');
-
-    const optionExpectation = { filename: 'export.csv', format: 'csv', useUtf8WithBom: false };
-    const contentExpectation = '';
-
-    service.init(gridStub, dataViewStub);
-    service.exportToFile(mockExportCsvOptions);
-
-    setTimeout(() => {
-      expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, expect.anything());
-      expect(spyUrlCreate).toHaveBeenCalledWith(mockCsvBlob);
-      expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
-      done();
-    });
-  });
-
-  describe('exportToFile method', () => {
-    beforeEach(() => {
-      mockColumns = [
-        { id: 'id', field: 'id', excludeFromExport: true },
-        { id: 'userId', field: 'userId', name: 'User Id', width: 100, exportCsvForceToKeepAsString: true },
-        { id: 'firstName', field: 'firstName', width: 100, formatter: myBoldHtmlFormatter },
-        { id: 'lastName', field: 'lastName', width: 100, formatter: myBoldHtmlFormatter, exportCustomFormatter: myUppercaseFormatter, sanitizeDataExport: true, exportWithFormatter: true },
-        { id: 'position', field: 'position', width: 100 },
-        { id: 'order', field: 'order', width: 100, exportWithFormatter: true, formatter: Formatters.multiple, params: { formatters: [myBoldHtmlFormatter, myCustomObjectFormatter] } },
-      ] as Column[];
-
-      jest.spyOn(gridStub, 'getColumns').mockReturnValue(mockColumns);
-    });
-
-    it('should trigger an event before exporting the file', () => {
-      const eaSpy = jest.spyOn(ea, 'publish');
-
-      service.init(gridStub, dataViewStub);
-      service.exportToFile(mockExportTxtOptions);
-
-      expect(eaSpy).toHaveBeenCalledWith(`${DEFAULT_AURELIA_EVENT_PREFIX}:onBeforeExportToFile`, true);
-    });
-
-    it('should trigger an event after exporting the file', (done) => {
-      const eaSpy = jest.spyOn(ea, 'publish');
-
-      service.init(gridStub, dataViewStub);
-      service.exportToFile(mockExportTxtOptions);
-
-      setTimeout(() => {
-        expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, expect.anything());
-        done();
+        lng: '0',
+        fallbackLng: 'en',
+        debug: false
       });
+      service = new ExportService(i18n, ea);
     });
 
-    it('should call "URL.createObjectURL" with a Blob and CSV file when browser is not IE11 (basically any other browser) when exporting as CSV', (done) => {
-      const optionExpectation = { filename: 'export.csv', format: 'csv', useUtf8WithBom: false };
-      const eaSpy = jest.spyOn(ea, 'publish');
-      const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
-
-      service.init(gridStub, dataViewStub);
-      service.exportToFile(mockExportCsvOptions);
-
-      setTimeout(() => {
-        expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
-        expect(spyUrlCreate).toHaveBeenCalledWith(mockCsvBlob);
-        done();
-      });
+    afterEach(() => {
+      delete mockGridOptions.backendServiceApi;
+      jest.clearAllMocks();
     });
 
-    it('should call "msSaveOrOpenBlob" with a Blob and CSV file when browser is IE11 when exporting as CSV', (done) => {
-      navigator.msSaveOrOpenBlob = jest.fn();
-      const eaSpy = jest.spyOn(ea, 'publish');
-      const spyMsSave = jest.spyOn(navigator, 'msSaveOrOpenBlob');
-
-      service.init(gridStub, dataViewStub);
-      service.exportToFile(mockExportCsvOptions);
-
-      setTimeout(() => {
-        expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, expect.anything());
-        expect(spyMsSave).toHaveBeenCalledWith(mockCsvBlob, 'export.csv');
-        done();
-      });
+    it('should create the service', () => {
+      expect(service).toBeTruthy();
     });
 
-    it('should call "URL.createObjectURL" with a Blob and TXT file when browser is not IE11 (basically any other browser) when exporting as TXT', (done) => {
-      const eaSpy = jest.spyOn(ea, 'publish');
-      const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
-
-      service.init(gridStub, dataViewStub);
-      service.exportToFile(mockExportTxtOptions);
-
-      setTimeout(() => {
-        expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, expect.anything());
-        expect(spyUrlCreate).toHaveBeenCalledWith(mockTxtBlob);
-        done();
-      });
-    });
-
-    it('should call "msSaveOrOpenBlob" with a Blob and TXT file when browser is IE11 when exporting as TXT', (done) => {
-      navigator.msSaveOrOpenBlob = jest.fn();
-      const eaSpy = jest.spyOn(ea, 'publish');
-      const spyMsSave = jest.spyOn(navigator, 'msSaveOrOpenBlob');
-
-      service.init(gridStub, dataViewStub);
-      service.exportToFile(mockExportTxtOptions);
-
-      setTimeout(() => {
-        expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, expect.anything());
-        expect(spyMsSave).toHaveBeenCalledWith(mockTxtBlob, 'export.txt');
-        done();
-      });
-    });
-
-    it('should throw an error when browser is IE10 or lower', (done) => {
-      // @ts-ignore
-      navigator.__defineGetter__('appName', () => 'Microsoft Internet Explorer');
-
-      service.init(gridStub, dataViewStub);
-      service.exportToFile(mockExportTxtOptions)
-        .catch((e) => {
-          expect(e.toString()).toContain('Microsoft Internet Explorer 6 to 10 do not support javascript export to CSV');
-          done();
-        });
-    });
-  });
-
-  describe('startDownloadFile call after all private methods ran ', () => {
-    let mockCollection: any[];
-
-    it(`should have the Order exported correctly with multiple formatters which have 1 of them returning an object with a text property (instead of simple string)`, (done) => {
-      mockCollection = [{ id: 0, userId: '1E06', firstName: 'John', lastName: 'Z', position: 'SALES_REP', order: 10 }];
-      jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
-      jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
+    it('should not have any output since there are no column definitions provided', (done) => {
       const eaSpy = jest.spyOn(ea, 'publish');
       const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
       const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
       const optionExpectation = { filename: 'export.csv', format: 'csv', useUtf8WithBom: false };
-      const contentExpectation =
-        `"User Id","FirstName","LastName","Position","Order"
-          ="1E06","John","Z","SALES_REP","<b>10</b>"`;
+      const contentExpectation = '';
 
       service.init(gridStub, dataViewStub);
       service.exportToFile(mockExportCsvOptions);
 
       setTimeout(() => {
-        expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
+        expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, expect.anything());
         expect(spyUrlCreate).toHaveBeenCalledWith(mockCsvBlob);
         expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
         done();
       });
     });
 
-    it(`should have the UserId escape with equal sign showing as prefix, to avoid Excel casting the value 1E06 to 1 exponential 6,
-        when "exportCsvForceToKeepAsString" is enable in its column definition`, (done) => {
+    describe('exportToFile method', () => {
+      beforeEach(() => {
+        mockColumns = [
+          { id: 'id', field: 'id', excludeFromExport: true },
+          { id: 'userId', field: 'userId', name: 'User Id', width: 100, exportCsvForceToKeepAsString: true },
+          { id: 'firstName', field: 'firstName', width: 100, formatter: myBoldHtmlFormatter },
+          { id: 'lastName', field: 'lastName', width: 100, formatter: myBoldHtmlFormatter, exportCustomFormatter: myUppercaseFormatter, sanitizeDataExport: true, exportWithFormatter: true },
+          { id: 'position', field: 'position', width: 100 },
+          { id: 'order', field: 'order', width: 100, exportWithFormatter: true, formatter: Formatters.multiple, params: { formatters: [myBoldHtmlFormatter, myCustomObjectFormatter] } },
+        ] as Column[];
+
+        jest.spyOn(gridStub, 'getColumns').mockReturnValue(mockColumns);
+      });
+
+      it('should trigger an event before exporting the file', () => {
+        const eaSpy = jest.spyOn(ea, 'publish');
+
+        service.init(gridStub, dataViewStub);
+        service.exportToFile(mockExportTxtOptions);
+
+        expect(eaSpy).toHaveBeenCalledWith(`${DEFAULT_AURELIA_EVENT_PREFIX}:onBeforeExportToFile`, true);
+      });
+
+      it('should trigger an event after exporting the file', (done) => {
+        const eaSpy = jest.spyOn(ea, 'publish');
+
+        service.init(gridStub, dataViewStub);
+        service.exportToFile(mockExportTxtOptions);
+
+        setTimeout(() => {
+          expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, expect.anything());
+          done();
+        });
+      });
+
+      it('should call "URL.createObjectURL" with a Blob and CSV file when browser is not IE11 (basically any other browser) when exporting as CSV', (done) => {
+        const optionExpectation = { filename: 'export.csv', format: 'csv', useUtf8WithBom: false };
+        const eaSpy = jest.spyOn(ea, 'publish');
+        const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
+
+        service.init(gridStub, dataViewStub);
+        service.exportToFile(mockExportCsvOptions);
+
+        setTimeout(() => {
+          expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
+          expect(spyUrlCreate).toHaveBeenCalledWith(mockCsvBlob);
+          done();
+        });
+      });
+
+      it('should call "msSaveOrOpenBlob" with a Blob and CSV file when browser is IE11 when exporting as CSV', (done) => {
+        navigator.msSaveOrOpenBlob = jest.fn();
+        const eaSpy = jest.spyOn(ea, 'publish');
+        const spyMsSave = jest.spyOn(navigator, 'msSaveOrOpenBlob');
+
+        service.init(gridStub, dataViewStub);
+        service.exportToFile(mockExportCsvOptions);
+
+        setTimeout(() => {
+          expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, expect.anything());
+          expect(spyMsSave).toHaveBeenCalledWith(mockCsvBlob, 'export.csv');
+          done();
+        });
+      });
+
+      it('should call "URL.createObjectURL" with a Blob and TXT file when browser is not IE11 (basically any other browser) when exporting as TXT', (done) => {
+        const eaSpy = jest.spyOn(ea, 'publish');
+        const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
+
+        service.init(gridStub, dataViewStub);
+        service.exportToFile(mockExportTxtOptions);
+
+        setTimeout(() => {
+          expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, expect.anything());
+          expect(spyUrlCreate).toHaveBeenCalledWith(mockTxtBlob);
+          done();
+        });
+      });
+
+      it('should call "msSaveOrOpenBlob" with a Blob and TXT file when browser is IE11 when exporting as TXT', (done) => {
+        navigator.msSaveOrOpenBlob = jest.fn();
+        const eaSpy = jest.spyOn(ea, 'publish');
+        const spyMsSave = jest.spyOn(navigator, 'msSaveOrOpenBlob');
+
+        service.init(gridStub, dataViewStub);
+        service.exportToFile(mockExportTxtOptions);
+
+        setTimeout(() => {
+          expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, expect.anything());
+          expect(spyMsSave).toHaveBeenCalledWith(mockTxtBlob, 'export.txt');
+          done();
+        });
+      });
+
+      it('should throw an error when browser is IE10 or lower', (done) => {
+        // @ts-ignore
+        navigator.__defineGetter__('appName', () => 'Microsoft Internet Explorer');
+
+        service.init(gridStub, dataViewStub);
+        service.exportToFile(mockExportTxtOptions)
+          .catch((e) => {
+            expect(e.toString()).toContain('Microsoft Internet Explorer 6 to 10 do not support javascript export to CSV');
+            done();
+          });
+      });
+    });
+
+    describe('startDownloadFile call after all private methods ran ', () => {
+      let mockCollection: any[];
+
+      it(`should have the Order exported correctly with multiple formatters which have 1 of them returning an object with a text property (instead of simple string)`, (done) => {
         mockCollection = [{ id: 0, userId: '1E06', firstName: 'John', lastName: 'Z', position: 'SALES_REP', order: 10 }];
         jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
         jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
@@ -311,557 +287,582 @@ describe('ExportService', () => {
         });
       });
 
-    it(`should have the LastName in uppercase when "formatter" is defined but also has "exportCustomFormatter" which will be used`, (done) => {
-      mockCollection = [{ id: 1, userId: '2B02', firstName: 'Jane', lastName: 'Doe', position: 'FINANCE_MANAGER', order: 1 }];
-      jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
-      jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
-      const eaSpy = jest.spyOn(ea, 'publish');
-      const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
-      const spyDownload = jest.spyOn(service, 'startDownloadFile');
+      it(`should have the UserId escape with equal sign showing as prefix, to avoid Excel casting the value 1E06 to 1 exponential 6,
+        when "exportCsvForceToKeepAsString" is enable in its column definition`, (done) => {
+          mockCollection = [{ id: 0, userId: '1E06', firstName: 'John', lastName: 'Z', position: 'SALES_REP', order: 10 }];
+          jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
+          jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
+          const eaSpy = jest.spyOn(ea, 'publish');
+          const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
+          const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
-      const optionExpectation = { filename: 'export.csv', format: 'csv', useUtf8WithBom: false };
-      const contentExpectation =
-        `"User Id","FirstName","LastName","Position","Order"
+          const optionExpectation = { filename: 'export.csv', format: 'csv', useUtf8WithBom: false };
+          const contentExpectation =
+            `"User Id","FirstName","LastName","Position","Order"
+          ="1E06","John","Z","SALES_REP","<b>10</b>"`;
+
+          service.init(gridStub, dataViewStub);
+          service.exportToFile(mockExportCsvOptions);
+
+          setTimeout(() => {
+            expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
+            expect(spyUrlCreate).toHaveBeenCalledWith(mockCsvBlob);
+            expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
+            done();
+          });
+        });
+
+      it(`should have the LastName in uppercase when "formatter" is defined but also has "exportCustomFormatter" which will be used`, (done) => {
+        mockCollection = [{ id: 1, userId: '2B02', firstName: 'Jane', lastName: 'Doe', position: 'FINANCE_MANAGER', order: 1 }];
+        jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
+        jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
+        const eaSpy = jest.spyOn(ea, 'publish');
+        const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
+        const spyDownload = jest.spyOn(service, 'startDownloadFile');
+
+        const optionExpectation = { filename: 'export.csv', format: 'csv', useUtf8WithBom: false };
+        const contentExpectation =
+          `"User Id","FirstName","LastName","Position","Order"
           ="2B02","Jane","DOE","FINANCE_MANAGER","<b>1</b>"`;
 
-      service.init(gridStub, dataViewStub);
-      service.exportToFile(mockExportCsvOptions);
+        service.init(gridStub, dataViewStub);
+        service.exportToFile(mockExportCsvOptions);
 
-      setTimeout(() => {
-        expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
-        expect(spyUrlCreate).toHaveBeenCalledWith(mockCsvBlob);
-        expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
-        done();
+        setTimeout(() => {
+          expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
+          expect(spyUrlCreate).toHaveBeenCalledWith(mockCsvBlob);
+          expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
+          done();
+        });
       });
-    });
 
-    it(`should have the LastName as empty string when item LastName is NULL and column definition "formatter" is defined but also has "exportCustomFormatter" which will be used`, (done) => {
-      mockCollection = [{ id: 2, userId: '3C2', firstName: 'Ava Luna', lastName: null, position: 'HUMAN_RESOURCES', order: 3 }];
-      jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
-      jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
-      const eaSpy = jest.spyOn(ea, 'publish');
-      const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
-      const spyDownload = jest.spyOn(service, 'startDownloadFile');
+      it(`should have the LastName as empty string when item LastName is NULL and column definition "formatter" is defined but also has "exportCustomFormatter" which will be used`, (done) => {
+        mockCollection = [{ id: 2, userId: '3C2', firstName: 'Ava Luna', lastName: null, position: 'HUMAN_RESOURCES', order: 3 }];
+        jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
+        jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
+        const eaSpy = jest.spyOn(ea, 'publish');
+        const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
+        const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
-      const optionExpectation = { filename: 'export.csv', format: 'csv', useUtf8WithBom: false };
-      const contentExpectation =
-        `"User Id","FirstName","LastName","Position","Order"
+        const optionExpectation = { filename: 'export.csv', format: 'csv', useUtf8WithBom: false };
+        const contentExpectation =
+          `"User Id","FirstName","LastName","Position","Order"
           ="3C2","Ava Luna","","HUMAN_RESOURCES","<b>3</b>"`;
 
-      service.init(gridStub, dataViewStub);
-      service.exportToFile(mockExportCsvOptions);
+        service.init(gridStub, dataViewStub);
+        service.exportToFile(mockExportCsvOptions);
 
-      setTimeout(() => {
-        expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
-        expect(spyUrlCreate).toHaveBeenCalledWith(mockCsvBlob);
-        expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
-        done();
+        setTimeout(() => {
+          expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
+          expect(spyUrlCreate).toHaveBeenCalledWith(mockCsvBlob);
+          expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
+          done();
+        });
       });
-    });
 
-    it(`should have the UserId as empty string even when UserId property is not found in the item object`, (done) => {
-      mockCollection = [{ id: 2, firstName: 'Ava', lastName: 'Luna', position: 'HUMAN_RESOURCES', order: 3 }];
-      jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
-      jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
-      const eaSpy = jest.spyOn(ea, 'publish');
-      const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
-      const spyDownload = jest.spyOn(service, 'startDownloadFile');
+      it(`should have the UserId as empty string even when UserId property is not found in the item object`, (done) => {
+        mockCollection = [{ id: 2, firstName: 'Ava', lastName: 'Luna', position: 'HUMAN_RESOURCES', order: 3 }];
+        jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
+        jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
+        const eaSpy = jest.spyOn(ea, 'publish');
+        const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
+        const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
-      const optionExpectation = { filename: 'export.csv', format: 'csv', useUtf8WithBom: false };
-      const contentExpectation =
-        `"User Id","FirstName","LastName","Position","Order"
+        const optionExpectation = { filename: 'export.csv', format: 'csv', useUtf8WithBom: false };
+        const contentExpectation =
+          `"User Id","FirstName","LastName","Position","Order"
           ="","Ava","LUNA","HUMAN_RESOURCES","<b>3</b>"`;
 
-      service.init(gridStub, dataViewStub);
-      service.exportToFile(mockExportCsvOptions);
+        service.init(gridStub, dataViewStub);
+        service.exportToFile(mockExportCsvOptions);
 
-      setTimeout(() => {
-        expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
-        expect(spyUrlCreate).toHaveBeenCalledWith(mockCsvBlob);
-        expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
-        done();
+        setTimeout(() => {
+          expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
+          expect(spyUrlCreate).toHaveBeenCalledWith(mockCsvBlob);
+          expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
+          done();
+        });
       });
-    });
 
-    it(`should have the Order as empty string when using multiple formatters and last one result in a null output because its value is bigger than 10`, (done) => {
-      mockCollection = [{ id: 2, userId: '3C2', firstName: 'Ava', lastName: 'Luna', position: 'HUMAN_RESOURCES', order: 13 }];
-      jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
-      jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
-      const eaSpy = jest.spyOn(ea, 'publish');
-      const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
-      const spyDownload = jest.spyOn(service, 'startDownloadFile');
+      it(`should have the Order as empty string when using multiple formatters and last one result in a null output because its value is bigger than 10`, (done) => {
+        mockCollection = [{ id: 2, userId: '3C2', firstName: 'Ava', lastName: 'Luna', position: 'HUMAN_RESOURCES', order: 13 }];
+        jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
+        jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
+        const eaSpy = jest.spyOn(ea, 'publish');
+        const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
+        const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
-      const optionExpectation = { filename: 'export.csv', format: 'csv', useUtf8WithBom: false };
-      const contentExpectation =
-        `"User Id","FirstName","LastName","Position","Order"
+        const optionExpectation = { filename: 'export.csv', format: 'csv', useUtf8WithBom: false };
+        const contentExpectation =
+          `"User Id","FirstName","LastName","Position","Order"
           ="3C2","Ava","LUNA","HUMAN_RESOURCES",""`;
 
-      service.init(gridStub, dataViewStub);
-      service.exportToFile(mockExportCsvOptions);
+        service.init(gridStub, dataViewStub);
+        service.exportToFile(mockExportCsvOptions);
 
-      setTimeout(() => {
-        expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
-        expect(spyUrlCreate).toHaveBeenCalledWith(mockCsvBlob);
-        expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
-        done();
+        setTimeout(() => {
+          expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
+          expect(spyUrlCreate).toHaveBeenCalledWith(mockCsvBlob);
+          expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
+          done();
+        });
       });
-    });
 
-    it(`should have the UserId as empty string when its input value is null`, (done) => {
-      mockCollection = [{ id: 3, userId: undefined, firstName: '', lastName: 'Cash', position: 'SALES_REP', order: 3 },];
-      jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
-      jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
-      const eaSpy = jest.spyOn(ea, 'publish');
-      const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
-      const spyDownload = jest.spyOn(service, 'startDownloadFile');
+      it(`should have the UserId as empty string when its input value is null`, (done) => {
+        mockCollection = [{ id: 3, userId: undefined, firstName: '', lastName: 'Cash', position: 'SALES_REP', order: 3 },];
+        jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
+        jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
+        const eaSpy = jest.spyOn(ea, 'publish');
+        const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
+        const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
-      const optionExpectation = { filename: 'export.csv', format: 'csv', useUtf8WithBom: false };
-      const contentExpectation =
-        `"User Id","FirstName","LastName","Position","Order"
+        const optionExpectation = { filename: 'export.csv', format: 'csv', useUtf8WithBom: false };
+        const contentExpectation =
+          `"User Id","FirstName","LastName","Position","Order"
           ="","","CASH","SALES_REP","<b>3</b>"`;
 
-      service.init(gridStub, dataViewStub);
-      service.exportToFile(mockExportCsvOptions);
+        service.init(gridStub, dataViewStub);
+        service.exportToFile(mockExportCsvOptions);
 
-      setTimeout(() => {
-        expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
-        expect(spyUrlCreate).toHaveBeenCalledWith(mockCsvBlob);
-        expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
-        done();
+        setTimeout(() => {
+          expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
+          expect(spyUrlCreate).toHaveBeenCalledWith(mockCsvBlob);
+          expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
+          done();
+        });
       });
-    });
 
-    it(`should have the Order without html tags when the grid option has "sanitizeDataExport" enabled`, (done) => {
-      mockGridOptions.exportOptions = { sanitizeDataExport: true };
-      mockCollection = [{ id: 1, userId: '2B02', firstName: 'Jane', lastName: 'Doe', position: 'FINANCE_MANAGER', order: 1 }];
-      jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
-      jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
-      const eaSpy = jest.spyOn(ea, 'publish');
-      const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
-      const spyDownload = jest.spyOn(service, 'startDownloadFile');
+      it(`should have the Order without html tags when the grid option has "sanitizeDataExport" enabled`, (done) => {
+        mockGridOptions.exportOptions = { sanitizeDataExport: true };
+        mockCollection = [{ id: 1, userId: '2B02', firstName: 'Jane', lastName: 'Doe', position: 'FINANCE_MANAGER', order: 1 }];
+        jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
+        jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
+        const eaSpy = jest.spyOn(ea, 'publish');
+        const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
+        const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
-      const optionExpectation = { filename: 'export.csv', format: 'csv', useUtf8WithBom: false };
-      const contentExpectation =
-        `"User Id","FirstName","LastName","Position","Order"
+        const optionExpectation = { filename: 'export.csv', format: 'csv', useUtf8WithBom: false };
+        const contentExpectation =
+          `"User Id","FirstName","LastName","Position","Order"
           ="2B02","Jane","DOE","FINANCE_MANAGER","1"`;
 
-      service.init(gridStub, dataViewStub);
-      service.exportToFile(mockExportCsvOptions);
+        service.init(gridStub, dataViewStub);
+        service.exportToFile(mockExportCsvOptions);
 
-      setTimeout(() => {
-        expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
-        expect(spyUrlCreate).toHaveBeenCalledWith(mockCsvBlob);
-        expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
-        done();
+        setTimeout(() => {
+          expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
+          expect(spyUrlCreate).toHaveBeenCalledWith(mockCsvBlob);
+          expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
+          done();
+        });
       });
-    });
 
-    it(`should export as CSV even when the grid option format was not defined`, (done) => {
-      mockGridOptions.exportOptions.format = undefined;
-      mockCollection = [{ id: 1, userId: '2B02', firstName: 'Jane', lastName: 'Doe', position: 'FINANCE_MANAGER', order: 1 }];
-      jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
-      jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
-      const eaSpy = jest.spyOn(ea, 'publish');
-      const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
-      const spyDownload = jest.spyOn(service, 'startDownloadFile');
+      it(`should export as CSV even when the grid option format was not defined`, (done) => {
+        mockGridOptions.exportOptions.format = undefined;
+        mockCollection = [{ id: 1, userId: '2B02', firstName: 'Jane', lastName: 'Doe', position: 'FINANCE_MANAGER', order: 1 }];
+        jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
+        jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
+        const eaSpy = jest.spyOn(ea, 'publish');
+        const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
+        const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
-      const optionExpectation = { filename: 'export.csv', format: 'csv', useUtf8WithBom: false };
-      const contentExpectation =
-        `"User Id","FirstName","LastName","Position","Order"
+        const optionExpectation = { filename: 'export.csv', format: 'csv', useUtf8WithBom: false };
+        const contentExpectation =
+          `"User Id","FirstName","LastName","Position","Order"
           ="2B02","Jane","DOE","FINANCE_MANAGER","1"`;
 
-      service.init(gridStub, dataViewStub);
-      service.exportToFile(mockExportCsvOptions);
+        service.init(gridStub, dataViewStub);
+        service.exportToFile(mockExportCsvOptions);
 
-      setTimeout(() => {
-        expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
-        expect(spyUrlCreate).toHaveBeenCalledWith(mockCsvBlob);
-        expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
-        done();
+        setTimeout(() => {
+          expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
+          expect(spyUrlCreate).toHaveBeenCalledWith(mockCsvBlob);
+          expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
+          done();
+        });
       });
     });
-  });
 
-  describe('with Translation', () => {
-    let mockCollection: any[];
+    describe('with Translation', () => {
+      let mockCollection: any[];
 
-    beforeEach(() => {
-      mockGridOptions.defaultAureliaEventPrefix = 'asg-prefix';
-      mockGridOptions.enableTranslate = true;
-      mockGridOptions.i18n = i18n;
+      beforeEach(() => {
+        mockGridOptions.defaultAureliaEventPrefix = 'asg-prefix';
+        mockGridOptions.enableTranslate = true;
+        mockGridOptions.i18n = i18n;
 
-      mockColumns = [
-        { id: 'id', field: 'id', excludeFromExport: true },
-        { id: 'userId', field: 'userId', name: 'User Id', width: 100, exportCsvForceToKeepAsString: true },
-        { id: 'firstName', headerKey: 'FIRST_NAME', width: 100, formatter: myBoldHtmlFormatter },
-        { id: 'lastName', field: 'lastName', headerKey: 'LAST_NAME', width: 100, formatter: myBoldHtmlFormatter, exportCustomFormatter: myUppercaseFormatter, sanitizeDataExport: true, exportWithFormatter: true },
-        { id: 'position', field: 'position', name: 'Position', width: 100, formatter: Formatters.translate, exportWithFormatter: true },
-        { id: 'order', field: 'order', width: 100, exportWithFormatter: true, formatter: Formatters.multiple, params: { formatters: [myBoldHtmlFormatter, myCustomObjectFormatter] } },
-      ] as Column[];
+        mockColumns = [
+          { id: 'id', field: 'id', excludeFromExport: true },
+          { id: 'userId', field: 'userId', name: 'User Id', width: 100, exportCsvForceToKeepAsString: true },
+          { id: 'firstName', headerKey: 'FIRST_NAME', width: 100, formatter: myBoldHtmlFormatter },
+          { id: 'lastName', field: 'lastName', headerKey: 'LAST_NAME', width: 100, formatter: myBoldHtmlFormatter, exportCustomFormatter: myUppercaseFormatter, sanitizeDataExport: true, exportWithFormatter: true },
+          { id: 'position', field: 'position', name: 'Position', width: 100, formatter: Formatters.translate, exportWithFormatter: true },
+          { id: 'order', field: 'order', width: 100, exportWithFormatter: true, formatter: Formatters.multiple, params: { formatters: [myBoldHtmlFormatter, myCustomObjectFormatter] } },
+        ] as Column[];
 
-      jest.spyOn(gridStub, 'getColumns').mockReturnValue(mockColumns);
-    });
+        jest.spyOn(gridStub, 'getColumns').mockReturnValue(mockColumns);
+      });
 
-    it(`should have the LastName header title translated when defined as a "headerKey" and "i18n" is set in grid option`, (done) => {
-      mockCollection = [{ id: 0, userId: '1E06', firstName: 'John', lastName: 'Z', position: 'SALES_REP', order: 10 }];
-      jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
-      jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
-      const eaSpy = jest.spyOn(ea, 'publish');
-      const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
-      const spyDownload = jest.spyOn(service, 'startDownloadFile');
+      it(`should have the LastName header title translated when defined as a "headerKey" and "i18n" is set in grid option`, (done) => {
+        mockCollection = [{ id: 0, userId: '1E06', firstName: 'John', lastName: 'Z', position: 'SALES_REP', order: 10 }];
+        jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
+        jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
+        const eaSpy = jest.spyOn(ea, 'publish');
+        const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
+        const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
-      const optionExpectation = { filename: 'export.csv', format: 'csv', useUtf8WithBom: false };
-      const contentExpectation =
-        `"User Id","First Name","Last Name","Position","Order"
+        const optionExpectation = { filename: 'export.csv', format: 'csv', useUtf8WithBom: false };
+        const contentExpectation =
+          `"User Id","First Name","Last Name","Position","Order"
       ="1E06","John","Z","Sales Rep.","10"`;
 
-      service.init(gridStub, dataViewStub);
-      service.exportToFile(mockExportCsvOptions);
+        service.init(gridStub, dataViewStub);
+        service.exportToFile(mockExportCsvOptions);
 
-      setTimeout(() => {
-        expect(eaSpy).toHaveBeenNthCalledWith(2, `asg-prefix:onAfterExportToFile`, optionExpectation);
-        expect(spyUrlCreate).toHaveBeenCalledWith(mockCsvBlob);
-        expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
-        done();
+        setTimeout(() => {
+          expect(eaSpy).toHaveBeenNthCalledWith(2, `asg-prefix:onAfterExportToFile`, optionExpectation);
+          expect(spyUrlCreate).toHaveBeenCalledWith(mockCsvBlob);
+          expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
+          done();
+        });
       });
     });
-  });
 
-  describe('with Grouping', () => {
-    let mockCollection: any[];
-    let mockOrderGrouping;
-    let mockItem1;
-    let mockItem2;
-    let mockGroup1;
+    describe('with Grouping', () => {
+      let mockCollection: any[];
+      let mockOrderGrouping;
+      let mockItem1;
+      let mockItem2;
+      let mockGroup1;
 
-    beforeEach(() => {
-      mockGridOptions.defaultAureliaEventPrefix = 'asg';
-      mockGridOptions.enableGrouping = true;
-      mockGridOptions.enableTranslate = false;
-      mockGridOptions.exportOptions = { sanitizeDataExport: true };
+      beforeEach(() => {
+        mockGridOptions.defaultAureliaEventPrefix = 'asg';
+        mockGridOptions.enableGrouping = true;
+        mockGridOptions.enableTranslate = false;
+        mockGridOptions.exportOptions = { sanitizeDataExport: true };
 
-      mockColumns = [
-        { id: 'id', field: 'id', excludeFromExport: true },
-        { id: 'userId', field: 'userId', name: 'User Id', width: 100, exportCsvForceToKeepAsString: true },
-        { id: 'firstName', field: 'firstName', width: 100, formatter: myBoldHtmlFormatter },
-        { id: 'lastName', field: 'lastName', width: 100, formatter: myBoldHtmlFormatter, exportCustomFormatter: myUppercaseFormatter, sanitizeDataExport: true, exportWithFormatter: true },
-        { id: 'position', field: 'position', width: 100 },
-        {
-          id: 'order', field: 'order', type: FieldType.number,
-          exportWithFormatter: true,
-          formatter: Formatters.multiple, params: { formatters: [myBoldHtmlFormatter, myCustomObjectFormatter] },
-          groupTotalsFormatter: GroupTotalFormatters.sumTotals,
-        },
-      ] as Column[];
+        mockColumns = [
+          { id: 'id', field: 'id', excludeFromExport: true },
+          { id: 'userId', field: 'userId', name: 'User Id', width: 100, exportCsvForceToKeepAsString: true },
+          { id: 'firstName', field: 'firstName', width: 100, formatter: myBoldHtmlFormatter },
+          { id: 'lastName', field: 'lastName', width: 100, formatter: myBoldHtmlFormatter, exportCustomFormatter: myUppercaseFormatter, sanitizeDataExport: true, exportWithFormatter: true },
+          { id: 'position', field: 'position', width: 100 },
+          {
+            id: 'order', field: 'order', type: FieldType.number,
+            exportWithFormatter: true,
+            formatter: Formatters.multiple, params: { formatters: [myBoldHtmlFormatter, myCustomObjectFormatter] },
+            groupTotalsFormatter: GroupTotalFormatters.sumTotals,
+          },
+        ] as Column[];
 
-      mockOrderGrouping = {
-        aggregateChildGroups: false,
-        aggregateCollapsed: false,
-        aggregateEmpty: false,
-        aggregators: [{ _count: 2, _field: 'order', _nonNullCount: 2, _sum: 4, }],
-        collapsed: false,
-        comparer: (a, b) => Sorters.numeric(a.value, b.value, SortDirectionNumber.asc),
-        compiledAccumulators: [jest.fn(), jest.fn()],
-        displayTotalsRow: true,
-        formatter: (g) => `Order:  ${g.value} <span style="color:green">(${g.count} items)</span>`,
-        getter: 'order',
-        getterIsAFn: false,
-        lazyTotalsCalculation: true,
-        predefinedValues: [],
-      };
+        mockOrderGrouping = {
+          aggregateChildGroups: false,
+          aggregateCollapsed: false,
+          aggregateEmpty: false,
+          aggregators: [{ _count: 2, _field: 'order', _nonNullCount: 2, _sum: 4, }],
+          collapsed: false,
+          comparer: (a, b) => Sorters.numeric(a.value, b.value, SortDirectionNumber.asc),
+          compiledAccumulators: [jest.fn(), jest.fn()],
+          displayTotalsRow: true,
+          formatter: (g) => `Order:  ${g.value} <span style="color:green">(${g.count} items)</span>`,
+          getter: 'order',
+          getterIsAFn: false,
+          lazyTotalsCalculation: true,
+          predefinedValues: [],
+        };
 
-      mockItem1 = { id: 0, userId: '1E06', firstName: 'John', lastName: 'Z', position: 'SALES_REP', order: 10 };
-      mockItem2 = { id: 1, userId: '2B02', firstName: 'Jane', lastName: 'Doe', position: 'FINANCE_MANAGER', order: 10 };
-      mockGroup1 = {
-        collapsed: 0, count: 2, groupingKey: '10', groups: null, level: 0, selectChecked: false,
-        rows: [mockItem1, mockItem2],
-        title: `Order: 20 <span style="color:green">(2 items)</span>`,
-        totals: { value: '10', __group: true, __groupTotals: true, group: {}, initialized: true, sum: { order: 20 } },
-      };
+        mockItem1 = { id: 0, userId: '1E06', firstName: 'John', lastName: 'Z', position: 'SALES_REP', order: 10 };
+        mockItem2 = { id: 1, userId: '2B02', firstName: 'Jane', lastName: 'Doe', position: 'FINANCE_MANAGER', order: 10 };
+        mockGroup1 = {
+          collapsed: 0, count: 2, groupingKey: '10', groups: null, level: 0, selectChecked: false,
+          rows: [mockItem1, mockItem2],
+          title: `Order: 20 <span style="color:green">(2 items)</span>`,
+          totals: { value: '10', __group: true, __groupTotals: true, group: {}, initialized: true, sum: { order: 20 } },
+        };
 
-      jest.spyOn(gridStub, 'getColumns').mockReturnValue(mockColumns);
-      mockCollection = [mockGroup1, mockItem1, mockItem2, { __groupTotals: true, initialized: true, sum: { order: 20 }, group: mockGroup1 }];
-      jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
-      jest.spyOn(dataViewStub, 'getItem')
-        .mockReturnValue(null)
-        .mockReturnValueOnce(mockCollection[0])
-        .mockReturnValueOnce(mockCollection[1])
-        .mockReturnValueOnce(mockCollection[2])
-        .mockReturnValueOnce(mockCollection[3]);
-      jest.spyOn(dataViewStub, 'getGrouping').mockReturnValue([mockOrderGrouping]);
-    });
+        jest.spyOn(gridStub, 'getColumns').mockReturnValue(mockColumns);
+        mockCollection = [mockGroup1, mockItem1, mockItem2, { __groupTotals: true, initialized: true, sum: { order: 20 }, group: mockGroup1 }];
+        jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
+        jest.spyOn(dataViewStub, 'getItem')
+          .mockReturnValue(null)
+          .mockReturnValueOnce(mockCollection[0])
+          .mockReturnValueOnce(mockCollection[1])
+          .mockReturnValueOnce(mockCollection[2])
+          .mockReturnValueOnce(mockCollection[3]);
+        jest.spyOn(dataViewStub, 'getGrouping').mockReturnValue([mockOrderGrouping]);
+      });
 
-    it(`should have a CSV export with grouping (same as the grid, WYSIWYG) when "enableGrouping" is set in the grid options and grouping are defined`, (done) => {
-      const eaSpy = jest.spyOn(ea, 'publish');
-      const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
-      const spyDownload = jest.spyOn(service, 'startDownloadFile');
+      it(`should have a CSV export with grouping (same as the grid, WYSIWYG) when "enableGrouping" is set in the grid options and grouping are defined`, (done) => {
+        const eaSpy = jest.spyOn(ea, 'publish');
+        const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
+        const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
-      const optionExpectation = { filename: 'export.csv', format: 'csv', useUtf8WithBom: false };
-      const contentExpectation =
-        `"Group By","User Id","FirstName","LastName","Position","Order"
+        const optionExpectation = { filename: 'export.csv', format: 'csv', useUtf8WithBom: false };
+        const contentExpectation =
+          `"Group By","User Id","FirstName","LastName","Position","Order"
           "Order: 20 (2 items)"
              "",="1E06","John","Z","SALES_REP","10"
              "",="2B02","Jane","DOE","FINANCE_MANAGER","10"
              "","","","","","20"`;
 
-      service.init(gridStub, dataViewStub);
-      service.exportToFile(mockExportCsvOptions);
+        service.init(gridStub, dataViewStub);
+        service.exportToFile(mockExportCsvOptions);
 
-      setTimeout(() => {
-        expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
-        expect(spyUrlCreate).toHaveBeenCalledWith(mockCsvBlob);
-        expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
-        done();
+        setTimeout(() => {
+          expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
+          expect(spyUrlCreate).toHaveBeenCalledWith(mockCsvBlob);
+          expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
+          done();
+        });
       });
-    });
 
-    it(`should have a TXT export with grouping (same as the grid, WYSIWYG) when "enableGrouping" is set in the grid options and grouping are defined`, (done) => {
-      const eaSpy = jest.spyOn(ea, 'publish');
-      const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
-      const spyDownload = jest.spyOn(service, 'startDownloadFile');
+      it(`should have a TXT export with grouping (same as the grid, WYSIWYG) when "enableGrouping" is set in the grid options and grouping are defined`, (done) => {
+        const eaSpy = jest.spyOn(ea, 'publish');
+        const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
+        const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
-      const optionExpectation = { filename: 'export.txt', format: 'txt', useUtf8WithBom: true };
-      const contentExpectation =
-        `Group By;User Id;FirstName;LastName;Position;Order
+        const optionExpectation = { filename: 'export.txt', format: 'txt', useUtf8WithBom: true };
+        const contentExpectation =
+          `Group By;User Id;FirstName;LastName;Position;Order
           Order: 20 (2 items)
              ;=1E06;John;Z;SALES_REP;10
              ;=2B02;Jane;DOE;FINANCE_MANAGER;10
              ;;;;;20`;
 
-      service.init(gridStub, dataViewStub);
-      service.exportToFile(mockExportTxtOptions);
+        service.init(gridStub, dataViewStub);
+        service.exportToFile(mockExportTxtOptions);
 
-      setTimeout(() => {
-        expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
-        expect(spyUrlCreate).toHaveBeenCalledWith(mockTxtBlob);
-        expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
-        done();
+        setTimeout(() => {
+          expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
+          expect(spyUrlCreate).toHaveBeenCalledWith(mockTxtBlob);
+          expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
+          done();
+        });
       });
     });
-  });
 
-  describe('with Grouping and Translation', () => {
-    let mockCollection: any[];
-    let mockOrderGrouping;
-    let mockItem1;
-    let mockItem2;
-    let mockGroup1;
+    describe('with Grouping and Translation', () => {
+      let mockCollection: any[];
+      let mockOrderGrouping;
+      let mockItem1;
+      let mockItem2;
+      let mockGroup1;
 
-    beforeEach(() => {
-      mockGridOptions.defaultAureliaEventPrefix = 'asg';
-      mockGridOptions.enableGrouping = true;
-      mockGridOptions.enableTranslate = true;
-      mockGridOptions.exportOptions = { sanitizeDataExport: true };
+      beforeEach(() => {
+        mockGridOptions.defaultAureliaEventPrefix = 'asg';
+        mockGridOptions.enableGrouping = true;
+        mockGridOptions.enableTranslate = true;
+        mockGridOptions.exportOptions = { sanitizeDataExport: true };
 
-      mockColumns = [
-        { id: 'id', field: 'id', excludeFromExport: true },
-        { id: 'userId', field: 'userId', name: 'User Id', width: 100, exportCsvForceToKeepAsString: true },
-        { id: 'firstName', field: 'firstName', headerKey: 'FIRST_NAME', width: 100, formatter: myBoldHtmlFormatter },
-        { id: 'lastName', field: 'lastName', headerKey: 'LAST_NAME', width: 100, formatter: myBoldHtmlFormatter, exportCustomFormatter: myUppercaseFormatter, sanitizeDataExport: true, exportWithFormatter: true },
-        { id: 'position', field: 'position', name: 'Position', width: 100, formatter: Formatters.translate, exportWithFormatter: true },
-        {
-          id: 'order', field: 'order', type: FieldType.number,
-          exportWithFormatter: true,
-          formatter: Formatters.multiple, params: { formatters: [myBoldHtmlFormatter, myCustomObjectFormatter] },
-          groupTotalsFormatter: GroupTotalFormatters.sumTotals,
-        },
-      ] as Column[];
+        mockColumns = [
+          { id: 'id', field: 'id', excludeFromExport: true },
+          { id: 'userId', field: 'userId', name: 'User Id', width: 100, exportCsvForceToKeepAsString: true },
+          { id: 'firstName', field: 'firstName', headerKey: 'FIRST_NAME', width: 100, formatter: myBoldHtmlFormatter },
+          { id: 'lastName', field: 'lastName', headerKey: 'LAST_NAME', width: 100, formatter: myBoldHtmlFormatter, exportCustomFormatter: myUppercaseFormatter, sanitizeDataExport: true, exportWithFormatter: true },
+          { id: 'position', field: 'position', name: 'Position', width: 100, formatter: Formatters.translate, exportWithFormatter: true },
+          {
+            id: 'order', field: 'order', type: FieldType.number,
+            exportWithFormatter: true,
+            formatter: Formatters.multiple, params: { formatters: [myBoldHtmlFormatter, myCustomObjectFormatter] },
+            groupTotalsFormatter: GroupTotalFormatters.sumTotals,
+          },
+        ] as Column[];
 
-      mockOrderGrouping = {
-        aggregateChildGroups: false,
-        aggregateCollapsed: false,
-        aggregateEmpty: false,
-        aggregators: [{ _count: 2, _field: 'order', _nonNullCount: 2, _sum: 4, }],
-        collapsed: false,
-        comparer: (a, b) => Sorters.numeric(a.value, b.value, SortDirectionNumber.asc),
-        compiledAccumulators: [jest.fn(), jest.fn()],
-        displayTotalsRow: true,
-        formatter: (g) => `Order:  ${g.value} <span style="color:green">(${g.count} items)</span>`,
-        getter: 'order',
-        getterIsAFn: false,
-        lazyTotalsCalculation: true,
-        predefinedValues: [],
-      };
+        mockOrderGrouping = {
+          aggregateChildGroups: false,
+          aggregateCollapsed: false,
+          aggregateEmpty: false,
+          aggregators: [{ _count: 2, _field: 'order', _nonNullCount: 2, _sum: 4, }],
+          collapsed: false,
+          comparer: (a, b) => Sorters.numeric(a.value, b.value, SortDirectionNumber.asc),
+          compiledAccumulators: [jest.fn(), jest.fn()],
+          displayTotalsRow: true,
+          formatter: (g) => `Order:  ${g.value} <span style="color:green">(${g.count} items)</span>`,
+          getter: 'order',
+          getterIsAFn: false,
+          lazyTotalsCalculation: true,
+          predefinedValues: [],
+        };
 
-      mockItem1 = { id: 0, userId: '1E06', firstName: 'John', lastName: 'Z', position: 'SALES_REP', order: 10 };
-      mockItem2 = { id: 1, userId: '2B02', firstName: 'Jane', lastName: 'Doe', position: 'FINANCE_MANAGER', order: 10 };
-      mockGroup1 = {
-        collapsed: 0, count: 2, groupingKey: '10', groups: null, level: 0, selectChecked: false,
-        rows: [mockItem1, mockItem2],
-        title: `Order: 20 <span style="color:green">(2 items)</span>`,
-        totals: { value: '10', __group: true, __groupTotals: true, group: {}, initialized: true, sum: { order: 20 } },
-      };
+        mockItem1 = { id: 0, userId: '1E06', firstName: 'John', lastName: 'Z', position: 'SALES_REP', order: 10 };
+        mockItem2 = { id: 1, userId: '2B02', firstName: 'Jane', lastName: 'Doe', position: 'FINANCE_MANAGER', order: 10 };
+        mockGroup1 = {
+          collapsed: 0, count: 2, groupingKey: '10', groups: null, level: 0, selectChecked: false,
+          rows: [mockItem1, mockItem2],
+          title: `Order: 20 <span style="color:green">(2 items)</span>`,
+          totals: { value: '10', __group: true, __groupTotals: true, group: {}, initialized: true, sum: { order: 20 } },
+        };
 
-      jest.spyOn(gridStub, 'getColumns').mockReturnValue(mockColumns);
-      mockCollection = [mockGroup1, mockItem1, mockItem2, { __groupTotals: true, initialized: true, sum: { order: 20 }, group: mockGroup1 }];
-      jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
-      jest.spyOn(dataViewStub, 'getItem')
-        .mockReturnValue(null)
-        .mockReturnValueOnce(mockCollection[0])
-        .mockReturnValueOnce(mockCollection[1])
-        .mockReturnValueOnce(mockCollection[2])
-        .mockReturnValueOnce(mockCollection[3]);
-      jest.spyOn(dataViewStub, 'getGrouping').mockReturnValue([mockOrderGrouping]);
-    });
+        jest.spyOn(gridStub, 'getColumns').mockReturnValue(mockColumns);
+        mockCollection = [mockGroup1, mockItem1, mockItem2, { __groupTotals: true, initialized: true, sum: { order: 20 }, group: mockGroup1 }];
+        jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
+        jest.spyOn(dataViewStub, 'getItem')
+          .mockReturnValue(null)
+          .mockReturnValueOnce(mockCollection[0])
+          .mockReturnValueOnce(mockCollection[1])
+          .mockReturnValueOnce(mockCollection[2])
+          .mockReturnValueOnce(mockCollection[3]);
+        jest.spyOn(dataViewStub, 'getGrouping').mockReturnValue([mockOrderGrouping]);
+      });
 
-    it(`should have a CSV export with grouping (same as the grid, WYSIWYG) when "enableGrouping" is set in the grid options and grouping are defined`, (done) => {
-      const eaSpy = jest.spyOn(ea, 'publish');
-      const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
-      const spyDownload = jest.spyOn(service, 'startDownloadFile');
+      it(`should have a CSV export with grouping (same as the grid, WYSIWYG) when "enableGrouping" is set in the grid options and grouping are defined`, (done) => {
+        const eaSpy = jest.spyOn(ea, 'publish');
+        const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
+        const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
-      const optionExpectation = { filename: 'export.csv', format: 'csv', useUtf8WithBom: false };
-      const contentExpectation =
-        `"Grouped By","User Id","First Name","Last Name","Position","Order"
+        const optionExpectation = { filename: 'export.csv', format: 'csv', useUtf8WithBom: false };
+        const contentExpectation =
+          `"Grouped By","User Id","First Name","Last Name","Position","Order"
           "Order: 20 (2 items)"
              "",="1E06","John","Z","Sales Rep.","10"
              "",="2B02","Jane","DOE","Finance Manager","10"
              "","","","","","20"`;
 
-      service.init(gridStub, dataViewStub);
-      service.exportToFile(mockExportCsvOptions);
+        service.init(gridStub, dataViewStub);
+        service.exportToFile(mockExportCsvOptions);
 
-      setTimeout(() => {
-        expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
-        expect(spyUrlCreate).toHaveBeenCalledWith(mockCsvBlob);
-        expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
-        done();
+        setTimeout(() => {
+          expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
+          expect(spyUrlCreate).toHaveBeenCalledWith(mockCsvBlob);
+          expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
+          done();
+        });
       });
-    });
 
-    it(`should have a TXT export with grouping (same as the grid, WYSIWYG) when "enableGrouping" is set in the grid options and grouping are defined`, (done) => {
-      const eaSpy = jest.spyOn(ea, 'publish');
-      const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
-      const spyDownload = jest.spyOn(service, 'startDownloadFile');
+      it(`should have a TXT export with grouping (same as the grid, WYSIWYG) when "enableGrouping" is set in the grid options and grouping are defined`, (done) => {
+        const eaSpy = jest.spyOn(ea, 'publish');
+        const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
+        const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
-      const optionExpectation = { filename: 'export.txt', format: 'txt', useUtf8WithBom: true };
-      const contentExpectation =
-        `Grouped By;User Id;First Name;Last Name;Position;Order
+        const optionExpectation = { filename: 'export.txt', format: 'txt', useUtf8WithBom: true };
+        const contentExpectation =
+          `Grouped By;User Id;First Name;Last Name;Position;Order
           Order: 20 (2 items)
              ;=1E06;John;Z;Sales Rep.;10
              ;=2B02;Jane;DOE;Finance Manager;10
              ;;;;;20`;
 
-      service.init(gridStub, dataViewStub);
-      service.exportToFile(mockExportTxtOptions);
+        service.init(gridStub, dataViewStub);
+        service.exportToFile(mockExportTxtOptions);
 
-      setTimeout(() => {
-        expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
-        expect(spyUrlCreate).toHaveBeenCalledWith(mockTxtBlob);
-        expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
-        done();
+        setTimeout(() => {
+          expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
+          expect(spyUrlCreate).toHaveBeenCalledWith(mockTxtBlob);
+          expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
+          done();
+        });
       });
     });
-  });
 
-  describe('with Multiple Columns Grouping (by Order then by LastName) and Translation', () => {
-    let mockCollection: any[];
-    let mockOrderGrouping;
-    let mockLastNameGrouping;
-    let mockItem1;
-    let mockItem2;
-    let mockGroup1;
-    let mockGroup2;
-    let mockGroup3;
+    describe('with Multiple Columns Grouping (by Order then by LastName) and Translation', () => {
+      let mockCollection: any[];
+      let mockOrderGrouping;
+      let mockLastNameGrouping;
+      let mockItem1;
+      let mockItem2;
+      let mockGroup1;
+      let mockGroup2;
+      let mockGroup3;
 
-    beforeEach(() => {
-      mockGridOptions.enableGrouping = true;
-      mockGridOptions.enableTranslate = true;
-      mockGridOptions.exportOptions = { sanitizeDataExport: true };
+      beforeEach(() => {
+        mockGridOptions.enableGrouping = true;
+        mockGridOptions.enableTranslate = true;
+        mockGridOptions.exportOptions = { sanitizeDataExport: true };
 
-      mockColumns = [
-        { id: 'id', field: 'id', excludeFromExport: true },
-        { id: 'userId', field: 'userId', name: 'User Id', width: 100, exportCsvForceToKeepAsString: true },
-        { id: 'firstName', field: 'firstName', headerKey: 'FIRST_NAME', width: 100, formatter: myBoldHtmlFormatter },
-        { id: 'lastName', field: 'lastName', headerKey: 'LAST_NAME', width: 100, formatter: myBoldHtmlFormatter, exportCustomFormatter: myUppercaseFormatter, sanitizeDataExport: true, exportWithFormatter: true },
-        { id: 'position', field: 'position', name: 'Position', width: 100, formatter: Formatters.translate, exportWithFormatter: true },
-        {
-          id: 'order', field: 'order', type: FieldType.number,
-          exportWithFormatter: true,
-          formatter: Formatters.multiple, params: { formatters: [myBoldHtmlFormatter, myCustomObjectFormatter] },
-          groupTotalsFormatter: GroupTotalFormatters.sumTotals,
-        },
-      ] as Column[];
+        mockColumns = [
+          { id: 'id', field: 'id', excludeFromExport: true },
+          { id: 'userId', field: 'userId', name: 'User Id', width: 100, exportCsvForceToKeepAsString: true },
+          { id: 'firstName', field: 'firstName', headerKey: 'FIRST_NAME', width: 100, formatter: myBoldHtmlFormatter },
+          { id: 'lastName', field: 'lastName', headerKey: 'LAST_NAME', width: 100, formatter: myBoldHtmlFormatter, exportCustomFormatter: myUppercaseFormatter, sanitizeDataExport: true, exportWithFormatter: true },
+          { id: 'position', field: 'position', name: 'Position', width: 100, formatter: Formatters.translate, exportWithFormatter: true },
+          {
+            id: 'order', field: 'order', type: FieldType.number,
+            exportWithFormatter: true,
+            formatter: Formatters.multiple, params: { formatters: [myBoldHtmlFormatter, myCustomObjectFormatter] },
+            groupTotalsFormatter: GroupTotalFormatters.sumTotals,
+          },
+        ] as Column[];
 
-      mockOrderGrouping = {
-        aggregateChildGroups: false,
-        aggregateCollapsed: false,
-        aggregateEmpty: false,
-        aggregators: [{ _count: 2, _field: 'order', _nonNullCount: 2, _sum: 4, }],
-        collapsed: false,
-        comparer: (a, b) => Sorters.numeric(a.value, b.value, SortDirectionNumber.asc),
-        compiledAccumulators: [jest.fn(), jest.fn()],
-        displayTotalsRow: true,
-        formatter: (g) => `Order:  ${g.value} <span style="color:green">(${g.count} items)</span>`,
-        getter: 'order',
-        getterIsAFn: false,
-        lazyTotalsCalculation: true,
-        predefinedValues: [],
-      };
+        mockOrderGrouping = {
+          aggregateChildGroups: false,
+          aggregateCollapsed: false,
+          aggregateEmpty: false,
+          aggregators: [{ _count: 2, _field: 'order', _nonNullCount: 2, _sum: 4, }],
+          collapsed: false,
+          comparer: (a, b) => Sorters.numeric(a.value, b.value, SortDirectionNumber.asc),
+          compiledAccumulators: [jest.fn(), jest.fn()],
+          displayTotalsRow: true,
+          formatter: (g) => `Order:  ${g.value} <span style="color:green">(${g.count} items)</span>`,
+          getter: 'order',
+          getterIsAFn: false,
+          lazyTotalsCalculation: true,
+          predefinedValues: [],
+        };
 
-      mockLastNameGrouping = {
-        aggregateChildGroups: false,
-        aggregateCollapsed: false,
-        aggregateEmpty: false,
-        aggregators: [{ _count: 1, _field: 'lastName', _nonNullCount: 2, _sum: 4, }],
-        collapsed: false,
-        comparer: (a, b) => Sorters.numeric(a.value, b.value, SortDirectionNumber.asc),
-        compiledAccumulators: [jest.fn(), jest.fn()],
-        displayTotalsRow: true,
-        formatter: (g) => `Last Name:  ${g.value} <span style="color:green">(${g.count} items)</span>`,
-        getter: 'lastName',
-        getterIsAFn: false,
-        lazyTotalsCalculation: true,
-        predefinedValues: [],
-      };
+        mockLastNameGrouping = {
+          aggregateChildGroups: false,
+          aggregateCollapsed: false,
+          aggregateEmpty: false,
+          aggregators: [{ _count: 1, _field: 'lastName', _nonNullCount: 2, _sum: 4, }],
+          collapsed: false,
+          comparer: (a, b) => Sorters.numeric(a.value, b.value, SortDirectionNumber.asc),
+          compiledAccumulators: [jest.fn(), jest.fn()],
+          displayTotalsRow: true,
+          formatter: (g) => `Last Name:  ${g.value} <span style="color:green">(${g.count} items)</span>`,
+          getter: 'lastName',
+          getterIsAFn: false,
+          lazyTotalsCalculation: true,
+          predefinedValues: [],
+        };
 
-      mockItem1 = { id: 0, userId: '1E06', firstName: 'John', lastName: 'Z', position: 'SALES_REP', order: 10 };
-      mockItem2 = { id: 1, userId: '2B02', firstName: 'Jane', lastName: 'Doe', position: 'FINANCE_MANAGER', order: 10 };
-      mockGroup1 = {
-        collapsed: 0, count: 2, groupingKey: '10', groups: null, level: 0, selectChecked: false,
-        rows: [mockItem1, mockItem2],
-        title: `Order: 20 <span style="color:green">(2 items)</span>`,
-        totals: { value: '10', __group: true, __groupTotals: true, group: {}, initialized: true, sum: { order: 20 } },
-      };
-      mockGroup2 = {
-        collapsed: 0, count: 2, groupingKey: '10:|:Z', groups: null, level: 0, selectChecked: false,
-        rows: [mockItem1, mockItem2],
-        title: `Last Name: Z <span style="color:green">(1 items)</span>`,
-        totals: { value: '10', __group: true, __groupTotals: true, group: {}, initialized: true, sum: { order: 10 } },
-      };
-      mockGroup3 = {
-        collapsed: 0, count: 2, groupingKey: '10:|:Doe', groups: null, level: 0, selectChecked: false,
-        rows: [mockItem1, mockItem2],
-        title: `Last Name: Doe <span style="color:green">(1 items)</span>`,
-        totals: { value: '10', __group: true, __groupTotals: true, group: {}, initialized: true, sum: { order: 10 } },
-      };
+        mockItem1 = { id: 0, userId: '1E06', firstName: 'John', lastName: 'Z', position: 'SALES_REP', order: 10 };
+        mockItem2 = { id: 1, userId: '2B02', firstName: 'Jane', lastName: 'Doe', position: 'FINANCE_MANAGER', order: 10 };
+        mockGroup1 = {
+          collapsed: 0, count: 2, groupingKey: '10', groups: null, level: 0, selectChecked: false,
+          rows: [mockItem1, mockItem2],
+          title: `Order: 20 <span style="color:green">(2 items)</span>`,
+          totals: { value: '10', __group: true, __groupTotals: true, group: {}, initialized: true, sum: { order: 20 } },
+        };
+        mockGroup2 = {
+          collapsed: 0, count: 2, groupingKey: '10:|:Z', groups: null, level: 0, selectChecked: false,
+          rows: [mockItem1, mockItem2],
+          title: `Last Name: Z <span style="color:green">(1 items)</span>`,
+          totals: { value: '10', __group: true, __groupTotals: true, group: {}, initialized: true, sum: { order: 10 } },
+        };
+        mockGroup3 = {
+          collapsed: 0, count: 2, groupingKey: '10:|:Doe', groups: null, level: 0, selectChecked: false,
+          rows: [mockItem1, mockItem2],
+          title: `Last Name: Doe <span style="color:green">(1 items)</span>`,
+          totals: { value: '10', __group: true, __groupTotals: true, group: {}, initialized: true, sum: { order: 10 } },
+        };
 
-      jest.spyOn(gridStub, 'getColumns').mockReturnValue(mockColumns);
-      mockCollection = [
-        mockGroup1, mockGroup2, mockItem1, mockGroup3, mockItem2,
-        { __groupTotals: true, initialized: true, sum: { order: 20 }, group: mockGroup1 },
-        { __groupTotals: true, initialized: true, sum: { order: 10 }, group: mockGroup2 },
-      ];
-      jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
-      jest.spyOn(dataViewStub, 'getItem')
-        .mockReturnValue(null)
-        .mockReturnValueOnce(mockCollection[0])
-        .mockReturnValueOnce(mockCollection[1])
-        .mockReturnValueOnce(mockCollection[2])
-        .mockReturnValueOnce(mockCollection[3])
-        .mockReturnValueOnce(mockCollection[4])
-        .mockReturnValueOnce(mockCollection[5])
-        .mockReturnValueOnce(mockCollection[6]);
-      jest.spyOn(dataViewStub, 'getGrouping').mockReturnValue([mockOrderGrouping]);
-    });
+        jest.spyOn(gridStub, 'getColumns').mockReturnValue(mockColumns);
+        mockCollection = [
+          mockGroup1, mockGroup2, mockItem1, mockGroup3, mockItem2,
+          { __groupTotals: true, initialized: true, sum: { order: 20 }, group: mockGroup1 },
+          { __groupTotals: true, initialized: true, sum: { order: 10 }, group: mockGroup2 },
+        ];
+        jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
+        jest.spyOn(dataViewStub, 'getItem')
+          .mockReturnValue(null)
+          .mockReturnValueOnce(mockCollection[0])
+          .mockReturnValueOnce(mockCollection[1])
+          .mockReturnValueOnce(mockCollection[2])
+          .mockReturnValueOnce(mockCollection[3])
+          .mockReturnValueOnce(mockCollection[4])
+          .mockReturnValueOnce(mockCollection[5])
+          .mockReturnValueOnce(mockCollection[6]);
+        jest.spyOn(dataViewStub, 'getGrouping').mockReturnValue([mockOrderGrouping]);
+      });
 
-    it(`should have a CSV export with grouping (same as the grid, WYSIWYG) when "enableGrouping" is set in the grid options and grouping are defined`, (done) => {
-      const eaSpy = jest.spyOn(ea, 'publish');
-      const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
-      const spyDownload = jest.spyOn(service, 'startDownloadFile');
+      it(`should have a CSV export with grouping (same as the grid, WYSIWYG) when "enableGrouping" is set in the grid options and grouping are defined`, (done) => {
+        const eaSpy = jest.spyOn(ea, 'publish');
+        const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
+        const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
-      const optionExpectation = { filename: 'export.csv', format: 'csv', useUtf8WithBom: false };
-      const contentExpectation =
-        `"Grouped By","User Id","First Name","Last Name","Position","Order"
+        const optionExpectation = { filename: 'export.csv', format: 'csv', useUtf8WithBom: false };
+        const contentExpectation =
+          `"Grouped By","User Id","First Name","Last Name","Position","Order"
           "Order: 20 (2 items)"
           "     Last Name: Z (1 items)"
              "",="1E06","John","Z","Sales Rep.","10"
@@ -870,25 +871,25 @@ describe('ExportService', () => {
              "","","","","","20"
              "","","","","","10"`;
 
-      service.init(gridStub, dataViewStub);
-      service.exportToFile(mockExportCsvOptions);
+        service.init(gridStub, dataViewStub);
+        service.exportToFile(mockExportCsvOptions);
 
-      setTimeout(() => {
-        expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
-        expect(spyUrlCreate).toHaveBeenCalledWith(mockCsvBlob);
-        expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
-        done();
+        setTimeout(() => {
+          expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
+          expect(spyUrlCreate).toHaveBeenCalledWith(mockCsvBlob);
+          expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
+          done();
+        });
       });
-    });
 
-    it(`should have a TXT export with grouping (same as the grid, WYSIWYG) when "enableGrouping" is set in the grid options and grouping are defined`, (done) => {
-      const eaSpy = jest.spyOn(ea, 'publish');
-      const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
-      const spyDownload = jest.spyOn(service, 'startDownloadFile');
+      it(`should have a TXT export with grouping (same as the grid, WYSIWYG) when "enableGrouping" is set in the grid options and grouping are defined`, (done) => {
+        const eaSpy = jest.spyOn(ea, 'publish');
+        const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
+        const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
-      const optionExpectation = { filename: 'export.txt', format: 'txt', useUtf8WithBom: true };
-      const contentExpectation =
-        `Grouped By;User Id;First Name;Last Name;Position;Order
+        const optionExpectation = { filename: 'export.txt', format: 'txt', useUtf8WithBom: true };
+        const contentExpectation =
+          `Grouped By;User Id;First Name;Last Name;Position;Order
           Order: 20 (2 items)
             Last Name: Z (1 items)
             ;=1E06;John;Z;Sales Rep.;10
@@ -897,15 +898,30 @@ describe('ExportService', () => {
              ;;;;;20
              ;;;;;10`;
 
-      service.init(gridStub, dataViewStub);
-      service.exportToFile(mockExportTxtOptions);
+        service.init(gridStub, dataViewStub);
+        service.exportToFile(mockExportTxtOptions);
 
-      setTimeout(() => {
-        expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
-        expect(spyUrlCreate).toHaveBeenCalledWith(mockTxtBlob);
-        expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
-        done();
+        setTimeout(() => {
+          expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
+          expect(spyUrlCreate).toHaveBeenCalledWith(mockTxtBlob);
+          expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
+          done();
+        });
       });
+    });
+  });
+
+  describe('without I18N Service', () => {
+    beforeEach(() => {
+      i18n = null;
+      service = new ExportService(i18n, ea);
+    });
+
+    it('should throw an error if "enableTranslate" is set but the I18N Service is null', () => {
+      const gridOptionsMock = { enableTranslate: true, enableGridMenu: true, gridMenu: { hideForceFitButton: false, hideSyncResizeButton: true, columnTitleKey: 'TITLE' } } as GridOption;
+      jest.spyOn(gridStub, 'getOptions').mockReturnValue(gridOptionsMock);
+
+      expect(() => service.init(gridStub, dataViewStub)).toThrowError('[Aurelia-Slickgrid] requires "I18N" to be installed and configured');
     });
   });
 });

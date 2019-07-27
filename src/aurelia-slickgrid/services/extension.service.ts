@@ -62,11 +62,7 @@ export class ExtensionService {
     private rowMoveManagerExtension: RowMoveManagerExtension,
     private rowSelectionExtension: RowSelectionExtension,
     private sharedService: SharedService,
-  ) {
-    if (this.sharedService.gridOptions && this.sharedService.gridOptions.enableTranslate && (!this.i18n || !this.i18n.tr)) {
-      throw new Error('[Aurelia-Slickgrid] requires "I18N" to be installed and configured when the grid option "enableTranslate" is enabled.');
-    }
-  }
+  ) { }
 
   /** Dispose of all the controls & plugins */
   dispose() {
@@ -138,7 +134,7 @@ export class ExtensionService {
       // Auto Tooltip Plugin
       if (this.sharedService.gridOptions.enableAutoTooltip) {
         if (this.autoTooltipExtension && this.autoTooltipExtension.register) {
-          const instance = this.autoTooltipExtension.register()
+          const instance = this.autoTooltipExtension.register();
           this._extensionList.push({ name: ExtensionName.autoTooltip, class: this.autoTooltipExtension, addon: instance, instance });
         }
       }
@@ -324,6 +320,10 @@ export class ExtensionService {
    * @param new column definitions (optional)
    */
   translateColumnHeaders(locale?: boolean | string, newColumnDefinitions?: Column[]) {
+    if (this.sharedService.gridOptions && this.sharedService.gridOptions.enableTranslate && (!this.i18n || !this.i18n.tr)) {
+      throw new Error('[Aurelia-Slickgrid] requires "I18N" to be installed and configured when the grid option "enableTranslate" is enabled.');
+    }
+
     if (locale && this.i18n && this.i18n.setLocale) {
       this.i18n.setLocale(locale as string);
     }
@@ -368,6 +368,10 @@ export class ExtensionService {
 
   /** Translate an array of items from an input key and assign translated value to the output key */
   private translateItems(items: any[], inputKey: string, outputKey: string) {
+    if (this.sharedService.gridOptions && this.sharedService.gridOptions.enableTranslate && (!this.i18n || !this.i18n.tr)) {
+      throw new Error('[Aurelia-Slickgrid] requires "I18N" to be installed and configured when the grid option "enableTranslate" is enabled.');
+    }
+
     if (Array.isArray(items)) {
       for (const item of items) {
         if (item[inputKey]) {
