@@ -37,9 +37,6 @@ export class SlickPaginationCustomElement {
   textPage: string;
 
   constructor(private elm: Element, private ea: EventAggregator, private i18n: I18N) {
-    if (this._gridPaginationOptions && this._gridPaginationOptions.enableTranslate && (!this.i18n || !this.i18n.tr)) {
-      throw new Error('[Aurelia-Slickgrid] requires "I18N" to be installed and configured when the grid option "enableTranslate" is enabled.');
-    }
     // when using I18N, we'll translate necessary texts in the UI
     this.subscriptions.push(
       this.ea.subscribe('i18n:locale:changed', () => this.translateAllUiTexts(this._locales))
@@ -48,6 +45,9 @@ export class SlickPaginationCustomElement {
 
   bind(binding: any, contexts: any) {
     this._gridPaginationOptions = binding.gridPaginationOptions;
+    if (this._gridPaginationOptions && this._gridPaginationOptions.enableTranslate && (!this.i18n || !this.i18n.tr)) {
+      throw new Error('[Aurelia-Slickgrid] requires "I18N" to be installed and configured when the grid option "enableTranslate" is enabled.');
+    }
     this._aureliaEventPrefix = (this._gridPaginationOptions && this._gridPaginationOptions.defaultAureliaEventPrefix) ? this._gridPaginationOptions.defaultAureliaEventPrefix : DEFAULT_AURELIA_EVENT_PREFIX;
 
     if (!binding.gridPaginationOptions || (binding.gridPaginationOptions.pagination && binding.gridPaginationOptions.pagination.totalItems !== this.totalItems)) {
