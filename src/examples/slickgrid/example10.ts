@@ -3,7 +3,7 @@ import { Column, FieldType, Filters, Formatters, GridOption } from '../../aureli
 
 @autoinject()
 export class Example2 {
-  title = 'Example 10: Grid with Row Selection';
+  title = 'Example 10: Multiple Grids with Row Selection';
   subTitle = `
     Row selection, single or multi-select (<a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Row-Selection" target="_blank">Wiki docs</a>).
     <ul>
