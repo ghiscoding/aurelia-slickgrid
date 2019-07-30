@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: ~/aurelia-slickgrid
     docker:
-      - image: circleci/node:10-browsers
+      - image: cypress/browsers:latest
     steps:
       - checkout
       - restore_cache:
