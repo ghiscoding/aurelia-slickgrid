@@ -16,13 +16,13 @@
     {
       "label": "Cypress Open GUI",
       "type": "shell",
-      "command": "yarn run cypress open",
+      "command": "yarn run cypress:open",
       "problemMatcher": []
     },
     {
-      "label": "Cypress CI",
+      "label": "Cypress CI (mochawesome)",
       "type": "shell",
-      "command": "yarn nps e2e.ci",
+      "command": "yarn run cypress:ci:mochawesome",
       "problemMatcher": []
     },
     {

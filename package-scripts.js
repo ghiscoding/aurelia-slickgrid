@@ -23,16 +23,16 @@ module.exports = {
     },
     e2e: {
       default: concurrent({
-        webpack: `webpack-dev-server -d --port=${WEB_UI_PORT}`,
+        // webpack: `webpack-dev-server -d --port=${WEB_UI_PORT}`,
         cypress: 'nps e2e.whenReady',
       }) + ' --kill-others --success first',
       ci: concurrent({
-        webpack: `webpack-dev-server -d --port=${WEB_UI_PORT}`,
+        // webpack: `webpack-dev-server -d --port=${WEB_UI_PORT}`,
         cypress: 'nps e2e.whenReady.ci',
       }) + ' --kill-others --success first',
       cypress: {
         default: 'cypress open',
-        ci: `node test/cypress-mochawesome.js`,
+        ci: `node test/cypress/cypress-mochawesome.js`,
       },
       whenReady: {
         default: series(
@@ -49,7 +49,7 @@ module.exports = {
     webpack: {
       default: 'nps webpack.server',
       build: {
-        before: rimraf('/'),
+        before: rimraf('dist'),
         default: 'nps webpack.build.production',
         development: {
           default: series(
