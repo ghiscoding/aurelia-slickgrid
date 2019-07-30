@@ -175,7 +175,7 @@ export class FilterService {
   clearFilterByColumnId(event: Event, columnId: number | string) {
     // get current column filter before clearing, this allow us to know if the filter was empty prior to calling the clear filter
     const currentColumnFilters = Object.keys(this._columnFilters) as ColumnFilter[];
-    let currentColFilter: ColumnFilter;
+    let currentColFilter: ColumnFilter | undefined;
     if (Array.isArray(currentColumnFilters)) {
       currentColFilter = currentColumnFilters.find((name) => name === columnId);
     }

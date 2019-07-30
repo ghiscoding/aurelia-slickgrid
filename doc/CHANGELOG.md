@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.12.3"></a>
+## [2.12.3](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.12.2...v2.12.3) (2019-07-25)
+
+
+### Bug Fixes
+
+* **backend:** clear empty filter by header menu not stopping spinner ([#206](https://github.com/ghiscoding/aurelia-slickgrid/issues/206)) ([1537315](https://github.com/ghiscoding/aurelia-slickgrid/commit/1537315))
+* **gridMenu:** adding user customItems in GridMenu was no longer showing ([#209](https://github.com/ghiscoding/aurelia-slickgrid/issues/209)) ([38c1c4c](https://github.com/ghiscoding/aurelia-slickgrid/commit/38c1c4c))
+* **gridMenu:** external grid menu was not triggering ([#204](https://github.com/ghiscoding/aurelia-slickgrid/issues/204)) ([2f83774](https://github.com/ghiscoding/aurelia-slickgrid/commit/2f83774))
+
+
+### Features
+
+* **cypress:** add Cypress E2E testing to CircleCI build ([5d9d5fb](https://github.com/ghiscoding/aurelia-slickgrid/commit/5d9d5fb))
+
+
+
 <a name="2.12.2"></a>
 ## [2.12.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.12.1...v2.12.2) (2019-07-13)
 
