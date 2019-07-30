@@ -24,10 +24,15 @@ webpack.config.js
 yarn.lock
 yarn-error.log
 
-# Tests & Coverage
-test/
+# Tests, Report & Coverage
 *.spec.ts
-coverage
-junit.xml
-mochawesome-report
-testresult.xml
+test/
+**/node_modules
+**/coverage
+**/jest-coverage
+**/mochawesome-report
+**/dist
+**/*.tgz
+**/junit.xml
+**/test-report.xml
+**/testresult.xml
