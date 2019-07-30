@@ -64,7 +64,7 @@
     "sass:dev": "npm-run-all -p sass:*",
     "start": "nps",
     "start:dev": "nps",
-    "start:webpack:dev": "node node_modules/webpack-dev-server/bin/webpack-dev-server -d --port=9000 --devtool '#source-map' --inline --env.server",
+    "start:webpack:dev": "node node_modules/webpack-dev-server/bin/webpack-dev-server -d --port=9000 --devtool '#source-map' --inline --env.server --config webpack.config.js",
     "e2e:ci": "nps e2e.ci",
     "cypress:ci:mochawesome": "cd test/cypress && npm run cypress:ci:mochawesome",
     "cypress:ci:xml": "cd test/cypress && node node_modules/cypress/bin/cypress run --reporter xunit --reporter-options output=testresult.xml",
