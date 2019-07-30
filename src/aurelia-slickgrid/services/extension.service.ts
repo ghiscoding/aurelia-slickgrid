@@ -99,7 +99,10 @@ export class ExtensionService {
    *  @param name
    */
   getExtensionByName(name: ExtensionName): ExtensionModel | undefined {
-    return Array.isArray(this._extensionList) && this._extensionList.find((p) => p.name === name);
+    if (Array.isArray(this._extensionList)) {
+      return this._extensionList.find((p) => p.name === name);
+    }
+    return undefined;
   }
 
   /**
@@ -390,7 +393,10 @@ export class ExtensionService {
    *  @param name
    */
   private getCreatedExtensionByName(name: ExtensionName): ExtensionModel | undefined {
-    return Array.isArray(this._extensionCreatedList) && this._extensionCreatedList.find((p) => p.name === name);
+    if (Array.isArray(this._extensionCreatedList)) {
+      return this._extensionCreatedList.find((p) => p.name === name);
+    }
+    return undefined;
   }
 
   /** Translate an array of items from an input key and assign translated value to the output key */
