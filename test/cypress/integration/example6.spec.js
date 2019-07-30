@@ -105,7 +105,7 @@ describe('Example 6 - GraphQL Grid', () => {
       .should('be.visible')
       .children('.slick-header-menuitem:nth-child(4)')
       .children('.slick-header-menucontent')
-      .should('contain', 'Remove Filter')
+      // .should('contain', 'Remove Filter')
       .click();
 
     // wait for the query to finish
