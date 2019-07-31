@@ -15,10 +15,10 @@ const when = (condition, config, negativeConfig) =>
 // primary config:
 const title = 'Aurelia Navigation Skeleton';
 // const outDir = path.resolve(__dirname, project.platform.output);
-const outDir = path.resolve(__dirname, 'dist-demo');
+const outDir = path.resolve(__dirname);
 const srcDir = path.resolve(__dirname, 'src');
 const nodeModulesDir = path.resolve(__dirname, 'node_modules');
-const baseUrl = '';
+const baseUrl = '/';
 
 const cssRules = [
   { loader: 'css-loader' },
@@ -116,6 +116,10 @@ module.exports = ({ production, server, extractCss, coverage } = {}) => ({
         title, server, baseUrl
       }
     }),
+    new CopyWebpackPlugin([
+      { from: 'assets/', to: 'assets/' },
+      { from: 'favicon.ico', to: 'favicon.ico' }
+    ]),
     ...when(extractCss, new ExtractTextPlugin({
       filename: production ? '[contenthash].css' : '[id].css',
       allChunks: true
