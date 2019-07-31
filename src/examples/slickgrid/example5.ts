@@ -14,7 +14,7 @@ import {
 } from '../../aurelia-slickgrid';
 
 const defaultPageSize = 20;
-const sampleDataRoot = 'src/examples/slickgrid/sample-data';
+const sampleDataRoot = 'assets/data';
 
 @autoinject()
 export class Example5 {

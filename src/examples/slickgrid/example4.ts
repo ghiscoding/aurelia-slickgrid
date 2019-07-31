@@ -8,7 +8,7 @@ function randomBetween(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 const NB_ITEMS = 500;
-const URL_SAMPLE_COLLECTION_DATA = 'src/examples/slickgrid/sample-data/collection_500_numbers.json';
+const URL_SAMPLE_COLLECTION_DATA = 'assets/data/collection_500_numbers.json';
 
 @autoinject()
 export class Example4 {
