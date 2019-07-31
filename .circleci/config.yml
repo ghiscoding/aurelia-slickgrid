@@ -24,6 +24,9 @@ jobs:
       - run:
           name: Upload Jest coverage to Codecov
           command: bash <(curl -s https://codecov.io/bash) -t ${CODECOV_TOKEN}
+      - run
+          name: Build Demo Site
+          command: yarn start webpack.build.production
       - run:
           name: Start Dev WebServer
           # command: yarn start:webpack:dev
