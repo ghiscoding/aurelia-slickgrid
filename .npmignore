@@ -14,6 +14,8 @@ package-scripts.js
 screenshots
 test
 
+**/dist-demo
+
 # Lock & error files
 yarn.lock
 yarn-error.log
