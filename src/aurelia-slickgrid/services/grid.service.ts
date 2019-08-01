@@ -3,7 +3,6 @@ import { EventAggregator } from 'aurelia-event-aggregator';
 import {
   CellArgs,
   Column,
-  GridAutosizeColsMode,
   GridOption,
   GridServiceDeleteOption,
   GridServiceInsertOption,
@@ -252,7 +251,7 @@ export class GridService {
         // set the grid columns to it's original column definitions
         this._grid.setColumns(originalColumns);
         if (this._gridOptions && this._gridOptions.enableAutoSizeColumns) {
-          this._grid.autosizeColumns(GridAutosizeColsMode.Legacy);
+          this._grid.autosizeColumns();
         }
         this.gridStateService.resetColumns(columnDefinitions);
       }

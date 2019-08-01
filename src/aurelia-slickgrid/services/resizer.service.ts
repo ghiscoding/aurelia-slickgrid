@@ -1,6 +1,6 @@
 import { singleton, inject } from 'aurelia-framework';
 import { EventAggregator } from 'aurelia-event-aggregator';
-import { GridAutosizeColsMode, GridOption } from './../models/index';
+import { GridOption } from './../models/index';
 import { getScrollBarWidth } from './utilities';
 import * as $ from 'jquery';
 
@@ -237,7 +237,7 @@ export class ResizerService {
       if (this._gridOptions && this._gridOptions.enableAutoSizeColumns && typeof this._grid.autosizeColumns) {
         // make sure that the grid still exist (by looking if the Grid UID is found in the DOM tree) to avoid SlickGrid error "missing stylesheet"
         if (this._gridUid && $(`.${this._gridUid}`).length > 0) {
-          this._grid.autosizeColumns(GridAutosizeColsMode.Legacy);
+          this._grid.autosizeColumns();
         }
         // compensate anytime SlickGrid measureScrollbar is incorrect
         this.compensateHorizontalScroll(this._grid, this._gridOptions);

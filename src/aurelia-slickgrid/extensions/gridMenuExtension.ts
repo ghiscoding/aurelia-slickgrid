@@ -8,7 +8,6 @@ import {
   Extension,
   FileType,
   GraphqlResult,
-  GridAutosizeColsMode,
   GridMenu,
   GridMenuItem,
   GridOption,
@@ -132,7 +131,7 @@ export class GridMenuExtension implements Extension {
             const gridUid = this.sharedService.grid.getUID();
             if (this._areVisibleColumnDifferent && gridUid && $(`.${gridUid}`).length > 0) {
               if (this.sharedService.gridOptions && this.sharedService.gridOptions.enableAutoSizeColumns) {
-                this.sharedService.grid.autosizeColumns(GridAutosizeColsMode.Legacy);
+                this.sharedService.grid.autosizeColumns();
               }
               this._areVisibleColumnDifferent = false;
             }
