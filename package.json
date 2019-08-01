@@ -62,7 +62,7 @@
     "sass:copy": "cross-env copyfiles -f src/aurelia-slickgrid/styles/*.scss dist/styles/sass",
     "sass:watch": "node-sass 'src/aurelia-slickgrid/styles/**/*.scss' -c 'npm run sass:build'",
     "sass:dev": "npm-run-all -p sass:*",
-    "serve": "http-server dist-demo -p 9000 --cors",
+    "serve": "http-server dist-demo -p 9000 -a localhost",
     "start": "nps",
     "start:dev": "nps",
     "start:webpack:dev": "node node_modules/webpack-dev-server/bin/webpack-dev-server -d --port=9000 --devtool '#source-map' --inline --env.server --config webpack.config.js",
