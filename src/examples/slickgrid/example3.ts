@@ -24,9 +24,9 @@ import * as $ from 'jquery';
 declare var Slick: any;
 
 const NB_ITEMS = 100;
-const URL_SAMPLE_COLLECTION_DATA = 'src/examples/slickgrid/sample-data/collection_100_numbers.json';
-const URL_COUNTRIES_COLLECTION = 'src/examples/slickgrid/sample-data/countries.json';
-const URL_COUNTRY_NAMES = 'src/examples/slickgrid/sample-data/country_names.json';
+const URL_SAMPLE_COLLECTION_DATA = 'assets/data/collection_100_numbers.json';
+const URL_COUNTRIES_COLLECTION = 'assets/data/countries.json';
+const URL_COUNTRY_NAMES = 'assets/data/country_names.json';
 
 // you can create custom validator to pass to an inline editor
 const myCustomTitleValidator: EditorValidator = (value: any, args: EditorArgs) => {
