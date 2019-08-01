@@ -57,9 +57,12 @@ export class ColumnPickerExtension implements Extension {
         if (this.sharedService.gridOptions.columnPicker.onExtensionRegistered) {
           this.sharedService.gridOptions.columnPicker.onExtensionRegistered(this._addon);
         }
-        this._eventHandler.subscribe(this._addon.onColumnsChanged, (e: any, args: CellArgs) => {
+        this._eventHandler.subscribe(this._addon.onColumnsChanged, (e: any, args: { columns: any, grid: any }) => {
           if (this.sharedService.gridOptions.columnPicker && typeof this.sharedService.gridOptions.columnPicker.onColumnsChanged === 'function') {
             this.sharedService.gridOptions.columnPicker.onColumnsChanged(e, args);
+          }
+          if (args && Array.isArray(args.columns) && args.columns.length > this.sharedService.visibleColumns.length) {
+            this.sharedService.visibleColumns = args.columns;
           }
         });
       }
@@ -80,15 +83,11 @@ export class ColumnPickerExtension implements Extension {
         this.sharedService.gridOptions.columnPicker.forceFitTitle = this.extensionUtility.getPickerTitleOutputString('forceFitTitle', 'columnPicker');
         this.sharedService.gridOptions.columnPicker.syncResizeTitle = this.extensionUtility.getPickerTitleOutputString('syncResizeTitle', 'columnPicker');
       }
-
       // translate all columns (including hidden columns)
       this.extensionUtility.translateItems(this.sharedService.allColumns, 'headerKey', 'name');
 
-      // re-initialize the Column Picker, that will recreate all the list
-      // doing an "init()" won't drop any existing command attached
-      if (this._addon.init) {
-        this._addon.init(this.sharedService.grid);
-      }
+      // update the Titles of each sections (command, customTitle, ...)
+      this._addon.updateAllTitles(this.sharedService.gridOptions.columnPicker);
     }
   }
 

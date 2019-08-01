@@ -2,7 +2,7 @@ import { autoinject } from 'aurelia-framework';
 import { HttpClient } from 'aurelia-fetch-client';
 import { AureliaGridInstance, Column, Filters, GridOption } from '../../aurelia-slickgrid';
 
-const URL_CUSTOMERS = 'src/examples/slickgrid/sample-data/customers_100.json';
+const URL_CUSTOMERS = 'assets/data/customers_100.json';
 
 @autoinject()
 export class Example22 {

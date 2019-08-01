@@ -49,7 +49,7 @@ module.exports = {
     webpack: {
       default: 'nps webpack.server',
       build: {
-        before: rimraf('dist'),
+        before: rimraf('dist-demo'),
         default: 'nps webpack.build.production',
         development: {
           default: series(
@@ -86,6 +86,6 @@ module.exports = {
         hmr: `webpack-dev-server -d --port=${WEB_UI_PORT} --devtool '#source-map' --inline --hot --env.server`
       },
     },
-    serve: 'http-server --cors',
+    serve: 'http-server ./dist-demo --cors',
   },
 }

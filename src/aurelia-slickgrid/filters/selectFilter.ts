@@ -119,6 +119,9 @@ export class SelectFilter implements Filter {
     // create the multiple select element
     this.initMultipleSelectTemplate();
 
+    // add placeholder when found
+    this.defaultOptions.placeholder = this.columnDef && this.columnDef.filter && this.columnDef.filter.placeholder || '';
+
     // always render the Select (dropdown) DOM element, even if user passed a "collectionAsync",
     // if that is the case, the Select will simply be without any options but we still have to render it (else SlickGrid would throw an error)
     let newCollection = this.columnFilter.collection || [];

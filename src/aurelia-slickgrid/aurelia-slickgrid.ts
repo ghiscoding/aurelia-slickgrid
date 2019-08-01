@@ -15,12 +15,12 @@ import {
   AureliaGridInstance,
   BackendServiceOption,
   Column,
+  ExtensionName,
   GraphqlResult,
   GridOption,
   GridStateChange,
   GridStateType,
   Pagination,
-  ExtensionName,
 } from './models/index';
 import {
   disposeAllSubscriptions,

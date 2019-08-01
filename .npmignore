@@ -20,6 +20,8 @@ screenshots
 test
 webpack.config.js
 
+**/dist-demo
+
 # Lock & error files
 yarn.lock
 yarn-error.log

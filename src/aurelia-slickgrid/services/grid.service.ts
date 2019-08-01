@@ -1,6 +1,14 @@
 import { singleton, inject } from 'aurelia-framework';
 import { EventAggregator } from 'aurelia-event-aggregator';
-import { CellArgs, Column, GridOption, GridServiceDeleteOption, GridServiceInsertOption, GridServiceUpdateOption, OnEventArgs } from './../models/index';
+import {
+  CellArgs,
+  Column,
+  GridOption,
+  GridServiceDeleteOption,
+  GridServiceInsertOption,
+  GridServiceUpdateOption,
+  OnEventArgs,
+} from './../models/index';
 import { ExtensionService } from './extension.service';
 import { FilterService } from './filter.service';
 import { GridStateService } from './gridState.service';
