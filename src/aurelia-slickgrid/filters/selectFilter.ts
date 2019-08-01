@@ -150,6 +150,9 @@ export class SelectFilter implements Filter {
       throw new Error(`[select-filter] The i18n Service is required for the Select Filter to work correctly`);
     }
 
+    // add placeholder when found
+    this.defaultOptions.placeholder = this.columnDef && this.columnDef.filter && this.columnDef.filter.placeholder || '';
+
     // always render the Select (dropdown) DOM element, even if user passed a "collectionAsync",
     // if that is the case, the Select will simply be without any options but we still have to render it (else SlickGrid would throw an error)
     let newCollection = this.columnFilter.collection || [];
