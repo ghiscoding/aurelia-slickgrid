@@ -28,31 +28,31 @@ jobs:
           name: Build Demo Site
           command: yarn start webpack.build.production
       # Cypress E2E & Http-Server installation & tests
-      - run:
-          name: Start Dev WebServer
-          command: yarn start:webpack:dev
-          # command: yarn serve
-          background: true
-      - restore_cache:
-          name: Restoring Cache for Cypress
-          keys:
-            - e2e-tests-{{ .Branch }}-{{ checksum "package.json" }}
-      - run:
-          name: Installing Cypress dependencies with yarn
-          command: |
-            cd test/cypress
-            yarn install --frozen-lockfile
-      - save_cache:
-          name: Saving Cache for Cypress
-          key: e2e-tests-{{ .Branch }}-{{ checksum "package.json" }}
-          paths:
-            - "test/cypress/node_modules"
-      - run:
-          name: Running Cypress E2E tests with JUnit reporter
-          command: |
-            cd test/cypress
-            yarn cypress:ci:mochawesome
-      - store_test_results:
-          path: reports/junit
-      - store_artifacts:
-          path: reports/junit
+      # - run:
+      #     name: Start Dev WebServer
+      #     # command: yarn start:webpack:dev
+      #     command: yarn serve
+      #     background: true
+      # - restore_cache:
+      #     name: Restoring Cache for Cypress
+      #     keys:
+      #       - e2e-tests-{{ .Branch }}-{{ checksum "package.json" }}
+      # - run:
+      #     name: Installing Cypress dependencies with yarn
+      #     command: |
+      #       cd test/cypress
+      #       yarn install --frozen-lockfile
+      # - save_cache:
+      #     name: Saving Cache for Cypress
+      #     key: e2e-tests-{{ .Branch }}-{{ checksum "package.json" }}
+      #     paths:
+      #       - "test/cypress/node_modules"
+      # - run:
+      #     name: Running Cypress E2E tests with JUnit reporter
+      #     command: |
+      #       cd test/cypress
+      #       yarn cypress:ci:mochawesome
+      # - store_test_results:
+      #     path: reports/junit
+      # - store_artifacts:
+      #     path: reports/junit
