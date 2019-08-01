@@ -248,7 +248,7 @@ export class SelectEditor implements Editor {
     this.valueName = this.customStructure && this.customStructure.value || 'value';
 
     if (this.enableTranslateLabel && (!this.i18n || typeof this.i18n.tr !== 'function')) {
-      throw new Error(`[select-editor] The i18n Service is required for the Select Editor to work correctly`);
+      throw new Error('[Aurelia-Slickgrid] requires "I18N" to be installed and configured when the grid option "enableTranslate" is enabled.');
     }
 
     // always render the Select (dropdown) DOM element, even if user passed a "collectionAsync",

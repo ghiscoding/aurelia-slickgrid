@@ -47,8 +47,8 @@ describe('headerButtonExtension', () => {
   } as GridOption;
 
   beforeEach(() => {
-    extensionUtility = new ExtensionUtility({} as I18N, sharedService);
     sharedService = new SharedService();
+    extensionUtility = new ExtensionUtility({ tr: jest.fn() } as unknown as I18N, sharedService);
     extension = new HeaderButtonExtension(extensionUtility, sharedService);
   });
 

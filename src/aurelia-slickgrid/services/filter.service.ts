@@ -192,7 +192,7 @@ export class FilterService {
     // when using a backend service, we need to manually trigger a filter change but only if the filter was previously filled
     if (isBackendApi) {
       emitter = EmitterType.remote;
-      if (currentColFilter) {
+      if (currentColFilter !== undefined) {
         this.onBackendFilterChange(event as KeyboardEvent, { grid: this._grid, columnFilters: this._columnFilters });
       }
     }

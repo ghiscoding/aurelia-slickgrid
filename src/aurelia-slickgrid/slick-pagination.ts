@@ -1,21 +1,24 @@
 import { bindable, inject } from 'aurelia-framework';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
-import { GridOption } from './models/index';
+import { I18N } from 'aurelia-i18n';
+import { Constants } from './constants';
+import { GridOption, Locale } from './models/index';
+import { disposeAllSubscriptions } from './services/utilities';
 
 const DEFAULT_AURELIA_EVENT_PREFIX = 'asg';
 
 // using external non-typed js libraries
 declare var Slick: any;
 
-@inject(Element, EventAggregator)
+@inject(Element, EventAggregator, I18N)
 export class SlickPaginationCustomElement {
   @bindable() dataview: any;
   @bindable() gridPaginationOptions: GridOption;
   private _aureliaEventPrefix = DEFAULT_AURELIA_EVENT_PREFIX;
   private _eventHandler = new Slick.EventHandler();
-  private _filterSubscriber: Subscription;
   private _gridPaginationOptions: GridOption;
   private _isFirstRender = true;
+  private _locales: Locale;
 
   dataFrom = 1;
   dataTo = 1;
@@ -25,11 +28,26 @@ export class SlickPaginationCustomElement {
   totalItems = 0;
   paginationCallback: () => void;
   paginationPageSizes = [25, 75, 100];
+  subscriptions: Subscription[] = [];
 
-  constructor(private elm: Element, private ea: EventAggregator) { }
+  // text translations (handled by ngx-translate or by custom locale)
+  textItemsPerPage: string;
+  textItems: string;
+  textOf: string;
+  textPage: string;
+
+  constructor(private elm: Element, private ea: EventAggregator, private i18n: I18N) {
+    // when using I18N, we'll translate necessary texts in the UI
+    this.subscriptions.push(
+      this.ea.subscribe('i18n:locale:changed', () => this.translateAllUiTexts(this._locales))
+    );
+  }
 
   bind(binding: any, contexts: any) {
     this._gridPaginationOptions = binding.gridPaginationOptions;
+    if (this._gridPaginationOptions && this._gridPaginationOptions.enableTranslate && (!this.i18n || !this.i18n.tr)) {
+      throw new Error('[Aurelia-Slickgrid] requires "I18N" to be installed and configured when the grid option "enableTranslate" is enabled.');
+    }
     this._aureliaEventPrefix = (this._gridPaginationOptions && this._gridPaginationOptions.defaultAureliaEventPrefix) ? this._gridPaginationOptions.defaultAureliaEventPrefix : DEFAULT_AURELIA_EVENT_PREFIX;
 
     if (!binding.gridPaginationOptions || (binding.gridPaginationOptions.pagination && binding.gridPaginationOptions.pagination.totalItems !== this.totalItems)) {
@@ -39,13 +57,13 @@ export class SlickPaginationCustomElement {
     }
 
     // Subscribe to Filter Clear & Changed and go back to page 1 when that happen
-    this._filterSubscriber = this.ea.subscribe('filterService:filterChanged', () => this.refreshPagination(true));
-    this._filterSubscriber = this.ea.subscribe('filterService:filterCleared', () => this.refreshPagination(true));
+    this.subscriptions.push(this.ea.subscribe('filterService:filterChanged', () => this.refreshPagination(true)));
+    this.subscriptions.push(this.ea.subscribe('filterService:filterCleared', () => this.refreshPagination(true)));
 
     // Subscribe to any dataview row count changed so that when Adding/Deleting item(s) through the DataView
     // that would trigger a refresh of the pagination numbers
-    this.ea.subscribe(`${this._aureliaEventPrefix}:on-item-added`, (items: any | any[]) => this.onItemAddedOrRemoved(items, true));
-    this.ea.subscribe(`${this._aureliaEventPrefix}:on-item-deleted`, (items: any | any[]) => this.onItemAddedOrRemoved(items, false));
+    this.subscriptions.push(this.ea.subscribe(`${this._aureliaEventPrefix}:on-item-added`, (items: any | any[]) => this.onItemAddedOrRemoved(items, true)));
+    this.subscriptions.push(this.ea.subscribe(`${this._aureliaEventPrefix}:on-item-deleted`, (items: any | any[]) => this.onItemAddedOrRemoved(items, false)));
   }
 
   gridPaginationOptionsChanged(newGridOptions: GridOption) {
@@ -99,11 +117,11 @@ export class SlickPaginationCustomElement {
   }
 
   dispose() {
-    if (this._filterSubscriber) {
-      this._filterSubscriber.dispose();
-    }
     // unsubscribe all SlickGrid events
     this._eventHandler.unsubscribeAll();
+
+    // also dispose of all Subscriptions
+    this.subscriptions = disposeAllSubscriptions(this.subscriptions);
   }
 
   onChangeItemPerPage(event: any) {
@@ -119,6 +137,12 @@ export class SlickPaginationCustomElement {
     if (!backendApi || !backendApi.service || !backendApi.process) {
       throw new Error(`BackendServiceApi requires at least a "process" function and a "service" defined`);
     }
+
+    // get locales provided by user in forRoot or else use default English locales via the Constants
+    this._locales = this._gridPaginationOptions && this._gridPaginationOptions.locales || Constants.locales;
+
+    // translate all the text using ngx-translate or custom locales
+    this.translateAllUiTexts(this._locales);
 
     if (this._gridPaginationOptions && this._gridPaginationOptions.pagination) {
       const pagination = this._gridPaginationOptions.pagination;
@@ -230,6 +254,25 @@ export class SlickPaginationCustomElement {
     } else {
       this.dataFrom = (this.pageNumber * this.itemsPerPage) - this.itemsPerPage + 1;
       this.dataTo = (this.totalItems < this.itemsPerPage) ? this.totalItems : (this.pageNumber * this.itemsPerPage);
+    }
+  }
+
+  // --
+  // private functions
+  // --------------------
+
+  /** Translate all the texts shown in the UI, use I18N service when available or custom locales when service is null */
+  private translateAllUiTexts(locales: Locale) {
+    if (this.i18n && this.i18n.tr) {
+      this.textItemsPerPage = this.i18n.tr('ITEMS_PER_PAGE');
+      this.textItems = this.i18n.tr('ITEMS');
+      this.textOf = this.i18n.tr('OF');
+      this.textPage = this.i18n.tr('PAGE');
+    } else if (locales) {
+      this.textItemsPerPage = locales.TEXT_ITEMS_PER_PAGE || 'TEXT_ITEMS_PER_PAGE';
+      this.textItems = locales.TEXT_ITEMS || 'TEXT_ITEMS';
+      this.textOf = locales.TEXT_OF || 'TEXT_OF';
+      this.textPage = locales.TEXT_PAGE || 'TEXT_PAGE';
     }
   }
 

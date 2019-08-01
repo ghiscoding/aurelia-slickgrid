@@ -26,8 +26,8 @@ describe('autoTooltipExtension', () => {
   const gridOptionsMock = { enableAutoTooltip: true } as GridOption;
 
   beforeEach(() => {
-    extensionUtility = new ExtensionUtility({} as I18N, sharedService);
     sharedService = new SharedService();
+    extensionUtility = new ExtensionUtility({ tr: jest.fn() } as unknown as I18N, sharedService);
     extension = new AutoTooltipExtension(extensionUtility, sharedService);
   });
 

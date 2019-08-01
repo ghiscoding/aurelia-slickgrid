@@ -769,7 +769,7 @@ export class AureliaSlickgridCustomElement {
   }
 
   /**
-   * For convenience to the user, we provide the property "editor" as an Angular-Slickgrid editor complex object
+   * For convenience to the user, we provide the property "editor" as an Aurelia-Slickgrid editor complex object
    * however "editor" is used internally by SlickGrid for it's own Editor Factory
    * so in our lib we will swap "editor" and copy it into a new property called "internalColumnEditor"
    * then take back "editor.model" and make it the new "editor" so that SlickGrid Editor Factory still works

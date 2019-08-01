@@ -1,6 +1,7 @@
 import { I18N } from 'aurelia-i18n';
 import { Subscription } from 'aurelia-event-aggregator';
-import { BindingEngine } from 'aurelia-framework';
+import { BindingEngine, inject, Optional } from 'aurelia-framework';
+import { Constants } from '../constants';
 import {
   CollectionCustomStructure,
   CollectionOption,
@@ -10,6 +11,7 @@ import {
   FilterArguments,
   FilterCallback,
   GridOption,
+  Locale,
   MultipleSelectOption,
   OperatorType,
   OperatorString,
@@ -21,8 +23,10 @@ import { disposeAllSubscriptions, getDescendantProperty, htmlEncode } from '../s
 import * as DOMPurify from 'dompurify';
 import * as $ from 'jquery';
 
+@inject(BindingEngine, CollectionService, Optional.of(I18N))
 export class SelectFilter implements Filter {
   private _isFilterFirstRender = true;
+  private _locales: Locale;
   private _shouldTriggerQuery = true;
 
   /** DOM Element Name, useful for auto-detecting positioning (dropup / dropdown) */
@@ -51,48 +55,7 @@ export class SelectFilter implements Filter {
   /**
    * Initialize the Filter
    */
-  constructor(protected bindingEngine: BindingEngine, protected collectionService: CollectionService, protected i18n: I18N, protected isMultipleSelect = true) {
-    // default options used by this Filter, user can overwrite any of these by passing "otions"
-    const options: MultipleSelectOption = {
-      autoAdjustDropHeight: true,
-      autoAdjustDropPosition: true,
-      autoAdjustDropWidthByTextSize: true,
-      container: 'body',
-      filter: false,  // input search term on top of the select option list
-      maxHeight: 275,
-      single: true,
-      textTemplate: ($elm) => {
-        // render HTML code or not, by default it is sanitized and won't be rendered
-        const isRenderHtmlEnabled = this.columnDef && this.columnDef.filter && this.columnDef.filter.enableRenderHtml || false;
-        return isRenderHtmlEnabled ? $elm.text() : $elm.html();
-      },
-      onClose: () => {
-        // we will subscribe to the onClose event for triggering our callback
-        // also add/remove "filled" class for styling purposes
-        const selectedItems = this.$filterElm.multipleSelect('getSelects');
-
-        if (Array.isArray(selectedItems) && selectedItems.length > 1 || (selectedItems.length === 1 && selectedItems[0] !== '')) {
-          this.isFilled = true;
-          this.$filterElm.addClass('filled').siblings('div .search-filter').addClass('filled');
-        } else {
-          this.isFilled = false;
-          this.$filterElm.removeClass('filled').siblings('div .search-filter').removeClass('filled');
-        }
-        this.callback(undefined, { columnDef: this.columnDef, operator: this.operator, searchTerms: selectedItems, shouldTriggerQuery: this._shouldTriggerQuery });
-        this._shouldTriggerQuery = true; // reset flag for next use
-      }
-    };
-    if (this.isMultipleSelect) {
-      options.single = false;
-      options.okButton = true;
-      options.addTitle = true; // show tooltip of all selected items while hovering the filter
-      options.countSelected = this.i18n.tr('X_OF_Y_SELECTED');
-      options.allSelected = this.i18n.tr('ALL_SELECTED');
-      options.selectAllText = this.i18n.tr('SELECT_ALL');
-      options.selectAllDelimiter = ['', '']; // remove default square brackets of default text "[Select All]" => "Select All"
-    }
-    this.defaultOptions = options;
-  }
+  constructor(protected bindingEngine: BindingEngine, protected collectionService: CollectionService, protected i18n: I18N, protected isMultipleSelect = true) { }
 
   /** Getter for the Collection Options */
   protected get collectionOptions(): CollectionOption {
@@ -149,6 +112,12 @@ export class SelectFilter implements Filter {
     if (this.enableTranslateLabel && (!this.i18n || typeof this.i18n.tr !== 'function')) {
       throw new Error(`[select-filter] The i18n Service is required for the Select Filter to work correctly`);
     }
+
+    // get locales provided by user in forRoot or else use default English locales via the Constants
+    this._locales = this.gridOptions && this.gridOptions.locales || Constants.locales;
+
+    // create the multiple select element
+    this.initMultipleSelectTemplate();
 
     // add placeholder when found
     this.defaultOptions.placeholder = this.columnDef && this.columnDef.filter && this.columnDef.filter.placeholder || '';
@@ -343,6 +312,9 @@ export class SelectFilter implements Filter {
 
   /**
    * Create the HTML template as a string
+   * @param optionCollection array
+   * @param searchTerms array
+   * @return html template string
    */
   protected buildTemplateHtmlString(optionCollection: any[], searchTerms: SearchTerm[]): string {
     let options = '';
@@ -352,55 +324,57 @@ export class SelectFilter implements Filter {
     const sanitizedOptions = this.gridOptions && this.gridOptions.sanitizeHtmlOptions || {};
 
     // collection could be an Array of Strings OR Objects
-    if (optionCollection.every((x: any) => typeof x === 'string')) {
-      optionCollection.forEach((option: string) => {
-        const selected = (searchTerms.findIndex((term) => term === option) >= 0) ? 'selected' : '';
-        options += `<option value="${option}" label="${option}" ${selected}>${option}</option>`;
+    if (Array.isArray(optionCollection)) {
+      if (optionCollection.every((x: any) => typeof x === 'string')) {
+        optionCollection.forEach((option: string) => {
+          const selected = (searchTerms.findIndex((term) => term === option) >= 0) ? 'selected' : '';
+          options += `<option value="${option}" label="${option}" ${selected}>${option}</option>`;
 
-        // if there's at least 1 search term found, we will add the "filled" class for styling purposes
-        if (selected) {
-          this.isFilled = true;
-        }
-      });
-    } else {
-      // array of objects will require a label/value pair unless a customStructure is passed
-      optionCollection.forEach((option: SelectOption) => {
-        if (!option || (option[this.labelName] === undefined && option.labelKey === undefined)) {
-          throw new Error(`[select-filter] A collection with value/label (or value/labelKey when using Locale) is required to populate the Select list, for example:: { filter: model: Filters.multipleSelect, collection: [ { value: '1', label: 'One' } ]')`);
-        }
-        const labelKey = (option.labelKey || option[this.labelName]) as string;
-        const selected = (searchTerms.findIndex((term) => term === option[this.valueName]) >= 0) ? 'selected' : '';
-        const labelText = ((option.labelKey || this.enableTranslateLabel) && labelKey) ? this.i18n.tr(labelKey || ' ') : labelKey;
-        let prefixText = option[this.labelPrefixName] || '';
-        let suffixText = option[this.labelSuffixName] || '';
-        let optionLabel = option[this.optionLabel] || '';
-        optionLabel = optionLabel.toString().replace(/\"/g, '\''); // replace double quotes by single quotes to avoid interfering with regular html
+          // if there's at least 1 search term found, we will add the "filled" class for styling purposes
+          if (selected) {
+            this.isFilled = true;
+          }
+        });
+      } else {
+        // array of objects will require a label/value pair unless a customStructure is passed
+        optionCollection.forEach((option: SelectOption) => {
+          if (!option || (option[this.labelName] === undefined && option.labelKey === undefined)) {
+            throw new Error(`[select-filter] A collection with value/label (or value/labelKey when using Locale) is required to populate the Select list, for example:: { filter: model: Filters.multipleSelect, collection: [ { value: '1', label: 'One' } ]')`);
+          }
+          const labelKey = (option.labelKey || option[this.labelName]) as string;
+          const selected = (searchTerms.findIndex((term) => term === option[this.valueName]) >= 0) ? 'selected' : '';
+          const labelText = ((option.labelKey || this.enableTranslateLabel) && labelKey && this.gridOptions && this.gridOptions.enableTranslate) ? (this.i18n && this.i18n.tr && this.i18n.tr(labelKey) || '') : labelKey;
+          let prefixText = option[this.labelPrefixName] || '';
+          let suffixText = option[this.labelSuffixName] || '';
+          let optionLabel = option.hasOwnProperty(this.optionLabel) ? option[this.optionLabel] : '';
+          optionLabel = optionLabel.toString().replace(/\"/g, '\''); // replace double quotes by single quotes to avoid interfering with regular html
 
-        // also translate prefix/suffix if enableTranslateLabel is true and text is a string
-        prefixText = (this.enableTranslateLabel && prefixText && typeof prefixText === 'string') ? this.i18n.tr(prefixText || ' ') : prefixText;
-        suffixText = (this.enableTranslateLabel && suffixText && typeof suffixText === 'string') ? this.i18n.tr(suffixText || ' ') : suffixText;
-        optionLabel = (this.enableTranslateLabel && optionLabel && typeof optionLabel === 'string') ? this.i18n.tr(optionLabel || ' ') : optionLabel;
-        // add to a temp array for joining purpose and filter out empty text
-        const tmpOptionArray = [prefixText, labelText, suffixText].filter((text) => text);
-        let optionText = tmpOptionArray.join(separatorBetweenLabels);
+          // also translate prefix/suffix if enableTranslateLabel is true and text is a string
+          prefixText = (this.enableTranslateLabel && this.gridOptions && this.gridOptions.enableTranslate && prefixText && typeof prefixText === 'string') ? this.i18n && this.i18n.tr && this.i18n.tr(prefixText || ' ') : prefixText;
+          suffixText = (this.enableTranslateLabel && this.gridOptions && this.gridOptions.enableTranslate && suffixText && typeof suffixText === 'string') ? this.i18n && this.i18n.tr && this.i18n.tr(suffixText || ' ') : suffixText;
+          optionLabel = (this.enableTranslateLabel && this.gridOptions && this.gridOptions.enableTranslate && optionLabel && typeof optionLabel === 'string') ? this.i18n && this.i18n.tr && this.i18n.tr(optionLabel || ' ') : optionLabel;
+          // add to a temp array for joining purpose and filter out empty text
+          const tmpOptionArray = [prefixText, labelText !== undefined ? labelText.toString() : labelText, suffixText].filter((text) => text);
+          let optionText = tmpOptionArray.join(separatorBetweenLabels);
 
-        // if user specifically wants to render html text, he needs to opt-in else it will stripped out by default
-        // also, the 3rd party lib will saninitze any html code unless it's encoded, so we'll do that
-        if (isRenderHtmlEnabled) {
-          // sanitize any unauthorized html tags like script and others
-          // for the remaining allowed tags we'll permit all attributes
-          const sanitizedText = DOMPurify.sanitize(optionText, sanitizedOptions);
-          optionText = htmlEncode(sanitizedText);
-        }
+          // if user specifically wants to render html text, he needs to opt-in else it will stripped out by default
+          // also, the 3rd party lib will saninitze any html code unless it's encoded, so we'll do that
+          if (isRenderHtmlEnabled) {
+            // sanitize any unauthorized html tags like script and others
+            // for the remaining allowed tags we'll permit all attributes
+            const sanitizedText = DOMPurify.sanitize(optionText, sanitizedOptions);
+            optionText = htmlEncode(sanitizedText);
+          }
 
-        // html text of each select option
-        options += `<option value="${option[this.valueName]}" label="${optionLabel}" ${selected}>${optionText}</option>`;
+          // html text of each select option
+          options += `<option value="${option[this.valueName]}" label="${optionLabel}" ${selected}>${optionText}</option>`;
 
-        // if there's a search term, we will add the "filled" class for styling purposes
-        if (selected) {
-          this.isFilled = true;
-        }
-      });
+          // if there's a search term, we will add the "filled" class for styling purposes
+          if (selected) {
+            this.isFilled = true;
+          }
+        });
+      }
     }
 
     return `<select class="ms-filter search-filter filter-${columnId}" multiple="multiple">${options}</select>`;
@@ -458,5 +432,49 @@ export class SelectFilter implements Filter {
     const filterOptions = (this.columnFilter) ? this.columnFilter.filterOptions : {};
     this.filterElmOptions = { ...this.defaultOptions, ...filterOptions };
     this.$filterElm = this.$filterElm.multipleSelect(this.filterElmOptions);
+  }
+
+  protected initMultipleSelectTemplate() {
+    // default options used by this Filter, user can overwrite any of these by passing "otions"
+    const options: MultipleSelectOption = {
+      autoAdjustDropHeight: true,
+      autoAdjustDropPosition: true,
+      autoAdjustDropWidthByTextSize: true,
+      container: 'body',
+      filter: false,  // input search term on top of the select option list
+      maxHeight: 275,
+      single: true,
+      textTemplate: ($elm) => {
+        // render HTML code or not, by default it is sanitized and won't be rendered
+        const isRenderHtmlEnabled = this.columnDef && this.columnDef.filter && this.columnDef.filter.enableRenderHtml || false;
+        return isRenderHtmlEnabled ? $elm.text() : $elm.html();
+      },
+      onClose: () => {
+        // we will subscribe to the onClose event for triggering our callback
+        // also add/remove "filled" class for styling purposes
+        const selectedItems = this.$filterElm.multipleSelect('getSelects');
+
+        if (Array.isArray(selectedItems) && selectedItems.length > 1 || (selectedItems.length === 1 && selectedItems[0] !== '')) {
+          this.isFilled = true;
+          this.$filterElm.addClass('filled').siblings('div .search-filter').addClass('filled');
+        } else {
+          this.isFilled = false;
+          this.$filterElm.removeClass('filled').siblings('div .search-filter').removeClass('filled');
+        }
+        this.callback(undefined, { columnDef: this.columnDef, operator: this.operator, searchTerms: selectedItems, shouldTriggerQuery: this._shouldTriggerQuery });
+        this._shouldTriggerQuery = true; // reset flag for next use
+      }
+    };
+    if (this.isMultipleSelect) {
+      options.single = false;
+      options.okButton = true;
+      options.addTitle = true; // show tooltip of all selected items while hovering the filter
+      options.countSelected = this.i18n && this.i18n.tr && this.i18n.tr('X_OF_Y_SELECTED') || this._locales && this._locales.TEXT_X_OF_Y_SELECTED;
+      options.allSelected = this.i18n && this.i18n.tr && this.i18n.tr('ALL_SELECTED') || this._locales && this._locales.TEXT_ALL_SELECTED;
+      options.okButtonText = this.i18n && this.i18n.tr && this.i18n.tr('OK') || this._locales && this._locales.TEXT_OK;
+      options.selectAllText = this.i18n && this.i18n.tr && this.i18n.tr('SELECT_ALL') || this._locales && this._locales.TEXT_SELECT_ALL;
+      options.selectAllDelimiter = ['', '']; // remove default square brackets of default text "[Select All]" => "Select All"
+    }
+    this.defaultOptions = options;
   }
 }

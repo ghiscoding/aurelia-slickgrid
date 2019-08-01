@@ -1,7 +1,12 @@
 .chrome
+.circleci
+.github
 .idea
 .vscode
+.codecov.yml
+aurelia-project
 CONTRIBUTING.md
+cypress
 cypress.json
 cypress-mochawesome.js
 doc
@@ -13,6 +18,7 @@ npm-debug.log
 package-scripts.js
 screenshots
 test
+webpack.config.js
 
 **/dist-demo
 

@@ -14,6 +14,7 @@ import {
   GridState,
   HeaderButton,
   HeaderMenu,
+  Locale,
   Pagination,
   RowDetailView,
   RowMoveManager,
@@ -286,6 +287,9 @@ export interface GridOption {
 
   /** Do we leave space for new rows in the DOM visible buffer */
   leaveSpaceForNewRows?: boolean;
+
+  /** Locale translations used by the library */
+  locales?: Locale;
 
   /** What is the minimum row buffer to use? */
   minRowBuffer?: number;

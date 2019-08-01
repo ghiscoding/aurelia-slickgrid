@@ -1,4 +1,4 @@
-import { inject, singleton } from 'aurelia-framework';
+import { inject, Optional, singleton } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import {
   CollectionFilterBy,
@@ -14,7 +14,7 @@ import { sortByFieldType } from '../sorters/sorterUtilities';
 import { uniqueArray } from './utilities';
 
 @singleton(true)
-@inject(I18N)
+@inject(Optional.of(I18N))
 export class CollectionService {
   constructor(private i18n: I18N) { }
 
@@ -86,6 +86,10 @@ export class CollectionService {
    * @param enableTranslateLabel
    */
   sortCollection(columnDef: Column, collection: any[], sortByOptions: CollectionSortBy | CollectionSortBy[], enableTranslateLabel?: boolean): any[] {
+    if (enableTranslateLabel && (!this.i18n || !this.i18n.tr)) {
+      throw new Error('[Aurelia-Slickgrid] requires "I18N" to be installed and configured when the grid option "enableTranslate" is enabled.');
+    }
+
     let sortedCollection: any[] = [];
 
     if (sortByOptions) {
@@ -99,8 +103,8 @@ export class CollectionService {
               const sortDirection = sortBy.sortDesc ? SortDirectionNumber.desc : SortDirectionNumber.asc;
               const propertyName = sortBy.property;
               const fieldType = sortBy.fieldType || FieldType.string;
-              const value1 = (enableTranslateLabel) ? this.i18n.tr(dataRow1[propertyName] || ' ') : dataRow1[propertyName];
-              const value2 = (enableTranslateLabel) ? this.i18n.tr(dataRow2[propertyName] || ' ') : dataRow2[propertyName];
+              const value1 = (enableTranslateLabel) ? this.i18n && this.i18n.tr && this.i18n.tr(dataRow1[propertyName] || ' ') : dataRow1[propertyName];
+              const value2 = (enableTranslateLabel) ? this.i18n && this.i18n.tr && this.i18n.tr(dataRow2[propertyName] || ' ') : dataRow2[propertyName];
 
               const sortResult = sortByFieldType(value1, value2, fieldType, sortDirection, columnDef);
               if (sortResult !== SortDirectionNumber.neutral) {
@@ -117,8 +121,8 @@ export class CollectionService {
         const fieldType = sortByOptions.fieldType || FieldType.string;
 
         sortedCollection = collection.sort((dataRow1: any, dataRow2: any) => {
-          const value1 = (enableTranslateLabel) ? this.i18n.tr(dataRow1[propertyName] || ' ') : dataRow1[propertyName];
-          const value2 = (enableTranslateLabel) ? this.i18n.tr(dataRow2[propertyName] || ' ') : dataRow2[propertyName];
+          const value1 = (enableTranslateLabel) ? this.i18n && this.i18n.tr && this.i18n.tr(dataRow1[propertyName] || ' ') : dataRow1[propertyName];
+          const value2 = (enableTranslateLabel) ? this.i18n && this.i18n.tr && this.i18n.tr(dataRow2[propertyName] || ' ') : dataRow2[propertyName];
           const sortResult = sortByFieldType(value1, value2, fieldType, sortDirection, columnDef);
           if (sortResult !== SortDirectionNumber.neutral) {
             return sortResult;
@@ -130,8 +134,8 @@ export class CollectionService {
         const fieldType = sortByOptions.fieldType || FieldType.string;
 
         sortedCollection = collection.sort((dataRow1: any, dataRow2: any) => {
-          const value1 = (enableTranslateLabel) ? this.i18n.tr(dataRow1 || ' ') : dataRow1;
-          const value2 = (enableTranslateLabel) ? this.i18n.tr(dataRow2 || ' ') : dataRow2;
+          const value1 = (enableTranslateLabel) ? this.i18n && this.i18n.tr && this.i18n.tr(dataRow1 || ' ') : dataRow1;
+          const value2 = (enableTranslateLabel) ? this.i18n && this.i18n.tr && this.i18n.tr(dataRow2 || ' ') : dataRow2;
           const sortResult = sortByFieldType(value1, value2, fieldType, sortDirection, columnDef);
           if (sortResult !== SortDirectionNumber.neutral) {
             return sortResult;

@@ -1,9 +1,9 @@
 import { I18N } from 'aurelia-i18n';
-import { inject, BindingEngine } from 'aurelia-framework';
+import { BindingEngine, inject, Optional } from 'aurelia-framework';
 import { SelectFilter } from './selectFilter';
 import { CollectionService } from '../services/collection.service';
 
-@inject(BindingEngine, CollectionService, I18N)
+@inject(BindingEngine, CollectionService, Optional.of(I18N))
 export class MultipleSelectFilter extends SelectFilter {
   /**
    * Initialize the Filter
