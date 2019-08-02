@@ -38,7 +38,11 @@ export class Example9 {
   constructor(private i18n: I18N) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
-    this.selectedLanguage = this.i18n.getLocale();
+
+    // always start with English for Cypress E2E tests to be consistent
+    const defaultLang = 'en';
+    this.i18n.setLocale(defaultLang);
+    this.selectedLanguage = defaultLang;
   }
 
   attached() {
@@ -169,8 +173,8 @@ export class Example9 {
   }
 
   switchLanguage() {
-    this.selectedLanguage = (this.selectedLanguage === 'en') ? 'fr' : 'en';
-    this.i18n.setLocale(this.selectedLanguage);
+    const nextLocale = (this.selectedLanguage === 'en') ? 'fr' : 'en';
+    this.i18n.setLocale(nextLocale).then(() => this.selectedLanguage = nextLocale);
   }
 
   toggleGridMenu(e) {
