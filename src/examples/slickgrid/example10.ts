@@ -98,6 +98,7 @@ export class Example2 {
     this.gridOptions1 = {
       enableAutoResize: false,
       enableCellNavigation: true,
+      enableRowSelection: true,
       enableCheckboxSelector: true,
       checkboxSelector: {
         // remove the unnecessary "Select All" checkbox in header when in single selection mode
@@ -112,7 +113,12 @@ export class Example2 {
         // True (Single Selection), False (Multiple Selections)
         selectActiveRow: true,
       },
-      enableRowSelection: true
+      columnPicker: {
+        hideForceFitButton: true
+      },
+      gridMenu: {
+        hideForceFitButton: true
+      },
     };
     this.gridOptions2 = {
       enableAutoResize: false,

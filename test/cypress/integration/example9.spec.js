@@ -1,11 +1,8 @@
-/// <reference types="Cypress" />
-
 describe('Example 9 - Grid Menu', () => {
   const fullEnglishTitles = ['Title', 'Duration', '% Complete', 'Start', 'Finish', 'Completed'];
   const fullFrenchTitles = ['Titre', 'Durée', '% Complete', 'Début', 'Fin', 'Terminé'];
 
   describe('use English locale', () => {
-
     it('should display Example 9 title', () => {
       cy.visit(`${Cypress.config('baseExampleUrl')}/example9`);
       cy.get('h2').should('contain', 'Example 9: Grid Menu Control');
@@ -19,6 +16,8 @@ describe('Example 9 - Grid Menu', () => {
     });
 
     it('should hover over the Title column and click on "Hide Column" command and remove 1st column from grid', () => {
+      const smallerTitleList = fullEnglishTitles.slice(1);
+
       cy.get('#grid9')
         .find('.slick-header-column')
         .first()
@@ -35,7 +34,6 @@ describe('Example 9 - Grid Menu', () => {
         .should('contain', 'Hide Column')
         .click();
 
-      const smallerTitleList = fullEnglishTitles.slice(1);
       cy.get('#grid9')
         .find('.slick-header-columns')
         .children()
@@ -69,6 +67,8 @@ describe('Example 9 - Grid Menu', () => {
     });
 
     it('should hover over the Title column and click on "Hide Column" command and remove 1st column from grid', () => {
+      const smallerTitleList = fullEnglishTitles.slice(1);
+
       cy.get('#grid9')
         .find('.slick-header-column')
         .first()
@@ -85,7 +85,6 @@ describe('Example 9 - Grid Menu', () => {
         .should('contain', 'Hide Column')
         .click();
 
-      const smallerTitleList = fullEnglishTitles.slice(1);
       cy.get('#grid9')
         .find('.slick-header-columns')
         .children()
@@ -115,6 +114,12 @@ describe('Example 9 - Grid Menu', () => {
         .find('.slick-header-columns')
         .children()
         .each(($child, index) => expect($child.text()).to.eq(fullEnglishTitles[index]));
+
+      cy.get('#grid9')
+        .get('.slick-gridmenu:visible')
+        .find('span.close')
+        .trigger('click')
+        .click();
     });
   });
 
@@ -123,6 +128,9 @@ describe('Example 9 - Grid Menu', () => {
       cy.get('[data-test=language]')
         .click();
 
+      cy.get('[data-test=selected-locale]')
+        .should('contain', 'fr.json');
+
       cy.get('#grid9')
         .find('.slick-header-columns')
         .children()
@@ -130,6 +138,8 @@ describe('Example 9 - Grid Menu', () => {
     });
 
     it('should hover over the Title column and click on "Cacher la colonne" command and remove 1st column from grid', () => {
+      const smallerTitleList = fullFrenchTitles.slice(1);
+
       cy.get('#grid9')
         .find('.slick-header-column')
         .first()
@@ -146,7 +156,6 @@ describe('Example 9 - Grid Menu', () => {
         .should('contain', 'Cacher la colonne')
         .click();
 
-      const smallerTitleList = fullFrenchTitles.slice(1);
       cy.get('#grid9')
         .find('.slick-header-columns')
         .children()
@@ -174,6 +183,8 @@ describe('Example 9 - Grid Menu', () => {
     });
 
     it('should hover over the Title column and click on "Hide Column" command and remove 1st column from grid', () => {
+      const smallerTitleList = fullFrenchTitles.slice(1);
+
       cy.get('#grid9')
         .find('.slick-header-column')
         .first()
@@ -190,7 +201,6 @@ describe('Example 9 - Grid Menu', () => {
         .should('contain', 'Cacher la colonne')
         .click();
 
-      const smallerTitleList = fullFrenchTitles.slice(1);
       cy.get('#grid9')
         .find('.slick-header-columns')
         .children()
@@ -214,6 +224,12 @@ describe('Example 9 - Grid Menu', () => {
         .find('.slick-header-columns')
         .children()
         .each(($child, index) => expect($child.text()).to.eq(fullFrenchTitles[index]));
+
+      cy.get('#grid9')
+        .get('.slick-gridmenu:visible')
+        .find('span.close')
+        .trigger('click')
+        .click();
     });
   });
 });
