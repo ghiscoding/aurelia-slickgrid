@@ -28,15 +28,19 @@ export class Example15 {
   gridOptions: GridOption;
   dataset: any[];
   selectedLanguage: string;
+  processing = true;
 
   constructor(private i18n: I18N) {
     const presets = JSON.parse(localStorage[LOCAL_STORAGE_KEY] || null);
 
-    // use some Grid State preset defaults if you wish
+    // use some Grid State preset defaults if you wish or just restore from Locale Storage
     // presets = presets || this.useDefaultPresets();
-
     this.defineGrid(presets);
-    this.selectedLanguage = this.i18n.getLocale();
+
+    // always start with English for Cypress E2E tests to be consistent
+    const defaultLang = 'en';
+    this.i18n.setLocale(defaultLang);
+    this.selectedLanguage = defaultLang;
   }
 
   attached() {
@@ -50,6 +54,7 @@ export class Example15 {
 
   aureliaGridReady(aureliaGrid: AureliaGridInstance) {
     this.aureliaGrid = aureliaGrid;
+    this.processing = true;
   }
 
   /** Clear the Grid State from Local Storage and reset the grid to it's original state */
@@ -131,7 +136,13 @@ export class Example15 {
       enableCheckboxSelector: true,
       enableFiltering: true,
       enableTranslate: true,
-      i18n: this.i18n
+      i18n: this.i18n,
+      columnPicker: {
+        hideForceFitButton: true
+      },
+      gridMenu: {
+        hideForceFitButton: true
+      },
     };
 
     // reload the Grid State with the grid options presets
@@ -184,8 +195,8 @@ export class Example15 {
   }
 
   switchLanguage() {
-    this.selectedLanguage = (this.selectedLanguage === 'en') ? 'fr' : 'en';
-    this.i18n.setLocale(this.selectedLanguage);
+    const nextLocale = (this.selectedLanguage === 'en') ? 'fr' : 'en';
+    this.i18n.setLocale(nextLocale).then(() => this.selectedLanguage = nextLocale);
   }
 
   useDefaultPresets() {
@@ -212,5 +223,10 @@ export class Example15 {
         { columnId: 'complete', direction: 'ASC' }
       ],
     };
+  }
+
+  onRowCountChanged(event, args) {
+    console.log(args)
+    this.processing = false;
   }
 }

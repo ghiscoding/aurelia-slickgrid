@@ -2,12 +2,12 @@ describe('Example 9 - Grid Menu', () => {
   const fullEnglishTitles = ['Title', 'Duration', '% Complete', 'Start', 'Finish', 'Completed'];
   const fullFrenchTitles = ['Titre', 'Durée', '% Complete', 'Début', 'Fin', 'Terminé'];
 
-  describe('use English locale', () => {
-    it('should display Example 9 title', () => {
-      cy.visit(`${Cypress.config('baseExampleUrl')}/example9`);
-      cy.get('h2').should('contain', 'Example 9: Grid Menu Control');
-    });
+  it('should display Example 9 title', () => {
+    cy.visit(`${Cypress.config('baseExampleUrl')}/example9`);
+    cy.get('h2').should('contain', 'Example 9: Grid Menu Control');
+  });
 
+  describe('use English locale', () => {
     it('should have exact Column Titles in the grid', () => {
       cy.get('#grid9')
         .find('.slick-header-columns')
