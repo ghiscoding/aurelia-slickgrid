@@ -17,6 +17,7 @@ const filterServiceStub = {
 
 const sortServiceStub = {
   clearSorting: jest.fn(),
+  emitSortChanged: jest.fn(),
   getCurrentColumnSorts: jest.fn(),
   onBackendSortChanged: jest.fn(),
   onLocalSortChanged: jest.fn(),
@@ -56,6 +57,7 @@ Slick.Plugins = {
 describe('headerMenuExtension', () => {
   const columnsMock: Column[] = [{ id: 'field1', field: 'field1', width: 100, headerKey: 'TITLE' }, { id: 'field2', field: 'field2', width: 75 }];
   let extensionUtility: ExtensionUtility;
+  let ea: EventAggregator;
   let i18n: I18N;
   let extension: HeaderMenuExtension;
   let sharedService: SharedService;
@@ -91,10 +93,11 @@ describe('headerMenuExtension', () => {
 
   describe('with I18N Service', () => {
     beforeEach(() => {
+      ea = new EventAggregator();
       sharedService = new SharedService();
-      i18n = new I18N(new EventAggregator(), new BindingSignaler());
+      i18n = new I18N(ea, new BindingSignaler());
       extensionUtility = new ExtensionUtility(i18n, sharedService);
-      extension = new HeaderMenuExtension(extensionUtility, filterServiceStub, i18n, sharedService, sortServiceStub);
+      extension = new HeaderMenuExtension(ea, extensionUtility, filterServiceStub, i18n, sharedService, sortServiceStub);
       i18n.setup({
         resources: {
           en: {
@@ -510,7 +513,7 @@ describe('headerMenuExtension', () => {
   describe('without I18N Service', () => {
     beforeEach(() => {
       i18n = null;
-      extension = new HeaderMenuExtension({} as ExtensionUtility, {} as FilterService, i18n, { gridOptions: { enableTranslate: true } } as SharedService, {} as SortService);
+      extension = new HeaderMenuExtension(ea, {} as ExtensionUtility, {} as FilterService, i18n, { gridOptions: { enableTranslate: true } } as SharedService, {} as SortService);
     });
 
     it('should throw an error if "enableTranslate" is set but the I18N Service is null', () => {
