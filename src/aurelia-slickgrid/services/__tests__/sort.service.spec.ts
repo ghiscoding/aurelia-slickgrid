@@ -8,6 +8,7 @@ import {
   SlickEventHandler,
   SortChangedArgs,
   FieldType,
+  EmitterType,
 } from '../../models';
 import { Sorters } from '../../sorters';
 import { SortService } from '../sort.service';
@@ -247,6 +248,19 @@ describe('SortService', () => {
       expect(spyBackendProcessSort).toHaveBeenCalled();
       expect(spyPreProcess).toHaveBeenCalled();
       expect(eaSpy).toHaveBeenCalledWith(`sortService:sortChanged`, expectedSortCols);
+    });
+  });
+
+  describe('emitSortChanged method', () => {
+    it('should have same current sort changed when it is passed as argument to the emitSortChanged method', () => {
+      const localSorterMock = { columnId: 'field1', direction: 'DESC' } as CurrentSorter;
+      const eaSpy = jest.spyOn(ea, 'publish');
+
+      service.emitSortChanged(EmitterType.local, [localSorterMock]);
+      const currentLocalSorters = service.getCurrentLocalSorters();
+
+      expect(currentLocalSorters).toEqual(localSorterMock);
+      expect(eaSpy).toHaveBeenCalledWith(`sortService:sortChanged`, currentLocalSorters);
     });
   });
 
