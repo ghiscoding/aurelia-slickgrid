@@ -28,7 +28,6 @@ export class Example15 {
   gridOptions: GridOption;
   dataset: any[];
   selectedLanguage: string;
-  processing = true;
 
   constructor(private i18n: I18N) {
     const presets = JSON.parse(localStorage[LOCAL_STORAGE_KEY] || null);
@@ -54,7 +53,6 @@ export class Example15 {
 
   aureliaGridReady(aureliaGrid: AureliaGridInstance) {
     this.aureliaGrid = aureliaGrid;
-    this.processing = true;
   }
 
   /** Clear the Grid State from Local Storage and reset the grid to it's original state */
@@ -100,7 +98,6 @@ export class Example15 {
         filter: {
           collection: multiSelectFilterArray,
           model: Filters.multipleSelect,
-          searchTerms: [1, 33, 44, 50, 66], // default selection
           // we could add certain option(s) to the "multiple-select" plugin
           filterOptions: {
             maxHeight: 250,
@@ -223,10 +220,5 @@ export class Example15 {
         { columnId: 'complete', direction: 'ASC' }
       ],
     };
-  }
-
-  onRowCountChanged(event, args) {
-    console.log(args)
-    this.processing = false;
   }
 }

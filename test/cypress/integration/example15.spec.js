@@ -14,6 +14,7 @@ describe('Example 15: Grid State & Presets using Local Storage', () => {
     cy.visit(`${Cypress.config('baseExampleUrl')}/example15`);
     cy.get('h2').should('contain', 'Example 15: Grid State & Presets using Local Storage');
 
+    cy.clearLocalStorage();
     cy.get('[data-test=reset-button]').click();
   });
 
@@ -102,11 +103,41 @@ describe('Example 15: Grid State & Presets using Local Storage', () => {
       .click();
   });
 
-  it('should hover over the "Start" column and click on "Hide Column" remove the column from grid', () => {
-    const expectedTitles = ['', 'Description', 'Duration', 'Title', '% Complete', 'Completed'];
+  it('should filter certain tasks', () => {
+    cy.get('.grid-canvas')
+      .find('.slick-row')
+      .should('be.visible');
+
+    cy.get('.filter-title input')
+      .type('Task 1')
+  });
+
+  it('should click on "Title" column to sort it Ascending', () => {
+    const tasks = ['Task 1', 'Task 10', 'Task 100', 'Task 101'];
 
     cy.get('.slick-header-columns')
-      .children('.slick-header-column:nth(5)')
+      .children('.slick-header-column:nth(3)')
+      .click();
+
+    cy.get('.slick-header-columns')
+      .children('.slick-header-column:nth(3)')
+      .find('.slick-sort-indicator.slick-sort-indicator-asc')
+      .should('be.visible');
+
+    cy.get('#grid15')
+      .find('.slick-row')
+      .each(($row, index) => {
+        if (index > tasks.length - 1) {
+          return;
+        }
+        cy.wrap($row).children('.slick-cell:nth(3)')
+          .should('contain', tasks[index]);
+      });
+  });
+
+  it('should hover over the "Duration" column click on "Sort Descending" command', () => {
+    cy.get('.slick-header-columns')
+      .children('.slick-header-column:nth(2)')
       .trigger('mouseover')
       .children('.slick-header-menubutton')
       .should('be.hidden')
@@ -115,15 +146,27 @@ describe('Example 15: Grid State & Presets using Local Storage', () => {
 
     cy.get('.slick-header-menu')
       .should('be.visible')
-      .children('.slick-header-menuitem:nth-child(6)')
+      .children('.slick-header-menuitem:nth-child(2)')
       .children('.slick-header-menucontent')
-      .should('contain', 'Hide Column')
+      .should('contain', 'Sort Descending')
       .click();
 
-    cy.get('#grid15')
-      .find('.slick-header-columns')
-      .children()
-      .each(($child, index) => expect($child.text()).to.eq(expectedTitles[index]));
+    cy.get('.slick-header-columns')
+      .children('.slick-header-column:nth(2)')
+      .find('.slick-sort-indicator.slick-sort-indicator-desc')
+      .should('be.visible');
+
+    cy.get('.slick-header-columns')
+      .children('.slick-header-column:nth(2)')
+      .find('.slick-sort-indicator-numbered')
+      .should('be.visible')
+      .should('contain', '2');
+
+    cy.get('.slick-header-columns')
+      .children('.slick-header-column:nth(3)')
+      .find('.slick-sort-indicator-numbered')
+      .should('be.visible')
+      .should('contain', '1');
 
     cy.reload();
   });
@@ -131,30 +174,15 @@ describe('Example 15: Grid State & Presets using Local Storage', () => {
   it('should expect the same Grid State to persist after the page got reloaded', () => {
     const expectedTitles = ['', 'Description', 'Duration', 'Title', '% Complete', 'Completed'];
 
-    // switch the language button and forth just to make sure that our page and grid finished loading
-    // I couldn't find any other ways of detecting that the grid finished loading other than that
-    cy.get('[data-test=language-button]')
-      .click();
-
-    cy.get('[data-test=selected-locale]')
-      .should('contain', 'fr.json');
-
-    cy.get('[data-test=language-button]')
-      .click();
-
-    cy.get('[data-test=selected-locale]')
-      .should('contain', 'en.json');
-
-    cy.get('[data-test=processing]')
-      .should('be.hidden');
-
     cy.get('#grid15')
+      .find('.grid-canvas')
+      .find('.slick-row')
       .should('be.visible');
 
     cy.get('#grid15')
       .find('.slick-header-columns')
       .children()
-      .each(($child, index) => expect($child.text()).to.eq(expectedTitles[index]));
+      .each(($child, index) => expect($child.find('.slick-column-name').text()).to.eq(expectedTitles[index]));
   });
 
   it('should have French titles in Column Picker after switching to Language', () => {
@@ -217,5 +245,62 @@ describe('Example 15: Grid State & Presets using Local Storage', () => {
       .find('span.close')
       .trigger('click')
       .click();
+  });
+
+  it('should hover over the "Terminé" column and click on "Cacher la colonne" remove the column from grid', () => {
+    const expectedTitles = ['', 'Description', 'Durée', 'Titre', '% Complete'];
+
+    cy.get('.slick-header-columns')
+      .children('.slick-header-column:nth(5)')
+      .trigger('mouseover')
+      .children('.slick-header-menubutton')
+      .should('be.hidden')
+      .invoke('show')
+      .click();
+
+    cy.get('.slick-header-menu')
+      .should('be.visible')
+      .children('.slick-header-menuitem:nth-child(6)')
+      .children('.slick-header-menucontent')
+      .should('contain', 'Cacher la colonne')
+      .click();
+
+    cy.get('#grid15')
+      .find('.slick-header-columns')
+      .children()
+      .each(($child, index) => expect($child.find('.slick-column-name').text()).to.eq(expectedTitles[index]));
+
+    cy.reload();
+  });
+
+  it('should expect the same Grid State to persist after the page got reloaded, however we always load in English', () => {
+    const expectedTitles = ['', 'Description', 'Duration', 'Title', '% Complete'];
+
+    cy.get('#grid15')
+      .find('.grid-canvas')
+      .find('.slick-row')
+      .should('be.visible');
+
+    cy.get('.slick-header-columns')
+      .children('.slick-header-column:nth(2)')
+      .find('.slick-sort-indicator-numbered')
+      .should('be.visible')
+      .should('contain', '2');
+
+    cy.get('.slick-header-columns')
+      .children('.slick-header-column:nth(3)')
+      .find('.slick-sort-indicator.slick-sort-indicator-asc')
+      .should('be.visible');
+
+    cy.get('.slick-header-columns')
+      .children('.slick-header-column:nth(3)')
+      .find('.slick-sort-indicator-numbered')
+      .should('be.visible')
+      .should('contain', '1');
+
+    cy.get('#grid15')
+      .find('.slick-header-columns')
+      .children()
+      .each(($child, index) => expect($child.find('.slick-column-name').text()).to.eq(expectedTitles[index]));
   });
 });

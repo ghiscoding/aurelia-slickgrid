@@ -1,35 +1,20 @@
 <template>
   <h2>${title}</h2>
-  <div class="subtitle"
-    innerhtml.bind="subTitle"></div>
+  <div class="subtitle" innerhtml.bind="subTitle"></div>
 
-  <button class="btn btn-default btn-sm"
-    data-test="reset-button"
-    click.delegate="clearGridStateFromLocalStorage()">
+  <button class="btn btn-default btn-sm" data-test="reset-button" click.delegate="clearGridStateFromLocalStorage()">
     <i class="fa fa-times"></i>
     Clear Grid State from Local Storage &amp; Reset Grid
   </button>
-  <button class="btn btn-default btn-sm"
-    data-test="language-button"
-    click.delegate="switchLanguage()">
+  <button class="btn btn-default btn-sm" data-test="language-button" click.delegate="switchLanguage()">
     <i class="fa fa-language"></i>
     Switch Language
   </button>
-  <b>Locale:</b> <span style="font-style: italic"
-    data-test="selected-locale">${selectedLanguage + '.json'}</span>
-  <span hidden.bind="!processing"
-    class.bind="status.class"
-    data-test="processing">
-    <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
-  </span>
+  <b>Locale:</b> <span style="font-style: italic" data-test="selected-locale">${selectedLanguage + '.json'}</span>
 
 
-  <aurelia-slickgrid grid-id="grid15"
-    column-definitions.bind="columnDefinitions"
-    grid-options.bind="gridOptions"
-    dataset.bind="dataset"
-    asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)"
-    asg-on-grid-state-changed.delegate="gridStateChanged($event.detail)"
-    sg-on-row-count-changed.delegate="onRowCountChanged($event.detail, $event.detail.args)">
+  <aurelia-slickgrid grid-id="grid15" column-definitions.bind="columnDefinitions" grid-options.bind="gridOptions"
+    dataset.bind="dataset" asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)"
+    asg-on-grid-state-changed.delegate="gridStateChanged($event.detail)">
   </aurelia-slickgrid>
 </template>

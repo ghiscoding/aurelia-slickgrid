@@ -262,6 +262,14 @@ export class GridStateService {
     // subscribe to Column Resize & Reordering
     this.bindSlickGridEventToGridStateChange('onColumnsReordered', grid);
     this.bindSlickGridEventToGridStateChange('onColumnsResized', grid);
+
+    // subscribe to HeaderMenu (hide column)
+    this.subscriptions.push(
+      this.ea.subscribe('headerMenu:columnHide', (visibleColumns: Column[]) => {
+        const currentColumns: CurrentColumn[] = this.getAssociatedCurrentColumns(visibleColumns);
+        this.ea.publish('gridStateService:changed', { change: { newValues: currentColumns, type: GridStateType.columns }, gridState: this.getCurrentGridState() });
+      })
+    );
   }
 
   // --

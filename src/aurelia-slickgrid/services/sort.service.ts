@@ -134,6 +134,27 @@ export class SortService {
     this.ea.publish('sortService:sortCleared', true);
   }
 
+  /**
+   * A simple function that will be called to emit a change when a sort changes.
+   * Other services, like Pagination, can then subscribe to it.
+   * @param sender
+   */
+  emitSortChanged(sender: EmitterType, currentLocalSorters?: CurrentSorter[]) {
+    if (sender === EmitterType.remote && this._gridOptions && this._gridOptions.backendServiceApi) {
+      let currentSorters: CurrentSorter[] = [];
+      const backendService = this._gridOptions.backendServiceApi.service;
+      if (backendService && backendService.getCurrentSorters) {
+        currentSorters = backendService.getCurrentSorters() as CurrentSorter[];
+      }
+      this.ea.publish('sortService:sortChanged', currentSorters);
+    } else if (sender === EmitterType.local) {
+      if (currentLocalSorters) {
+        this._currentLocalSorters = currentLocalSorters;
+      }
+      this.ea.publish('sortService:sortChanged', this.getCurrentLocalSorters());
+    }
+  }
+
   getCurrentLocalSorters(): CurrentSorter[] {
     return this._currentLocalSorters;
   }
@@ -275,27 +296,5 @@ export class SortService {
       }
     }
     return SortDirectionNumber.neutral;
-  }
-
-  // --
-  // private functions
-  // -------------------
-
-  /**
-   * A simple function that will be called to emit a change when a sort changes.
-   * Other services, like Pagination, can then subscribe to it.
-   * @param sender
-   */
-  private emitSortChanged(sender: EmitterType) {
-    if (sender === EmitterType.remote && this._gridOptions && this._gridOptions.backendServiceApi) {
-      let currentSorters: CurrentSorter[] = [];
-      const backendService = this._gridOptions.backendServiceApi.service;
-      if (backendService && backendService.getCurrentSorters) {
-        currentSorters = backendService.getCurrentSorters() as CurrentSorter[];
-      }
-      this.ea.publish('sortService:sortChanged', currentSorters);
-    } else if (sender === EmitterType.local) {
-      this.ea.publish('sortService:sortChanged', this.getCurrentLocalSorters());
-    }
   }
 }
