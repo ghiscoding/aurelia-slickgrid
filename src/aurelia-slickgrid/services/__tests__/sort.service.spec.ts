@@ -259,7 +259,7 @@ describe('SortService', () => {
       service.emitSortChanged(EmitterType.local, [localSorterMock]);
       const currentLocalSorters = service.getCurrentLocalSorters();
 
-      expect(currentLocalSorters).toEqual(localSorterMock);
+      expect(currentLocalSorters).toEqual([localSorterMock]);
       expect(eaSpy).toHaveBeenCalledWith(`sortService:sortChanged`, currentLocalSorters);
     });
   });
