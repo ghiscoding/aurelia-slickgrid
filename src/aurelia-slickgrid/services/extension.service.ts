@@ -36,13 +36,13 @@ import { SharedService } from './shared.service';
   DraggableGroupingExtension,
   GridMenuExtension,
   GroupItemMetaProviderExtension,
-  Optional.of(I18N),
   HeaderButtonExtension,
   HeaderMenuExtension,
   RowDetailViewExtension,
   RowMoveManagerExtension,
   RowSelectionExtension,
   SharedService,
+  Optional.of(I18N),
 )
 export class ExtensionService {
   private _extensionCreatedList: any[] = [];
@@ -56,13 +56,13 @@ export class ExtensionService {
     private draggableGroupingExtension: DraggableGroupingExtension,
     private gridMenuExtension: GridMenuExtension,
     private groupItemMetaExtension: GroupItemMetaProviderExtension,
-    private i18n: I18N,
     private headerButtonExtension: HeaderButtonExtension,
     private headerMenuExtension: HeaderMenuExtension,
     private rowDetailViewExtension: RowDetailViewExtension,
     private rowMoveManagerExtension: RowMoveManagerExtension,
     private rowSelectionExtension: RowSelectionExtension,
     private sharedService: SharedService,
+    private i18n: I18N,
   ) { }
 
   /** Dispose of all the controls & plugins */
@@ -371,20 +371,30 @@ export class ExtensionService {
     if (Array.isArray(collection) && this.sharedService.grid && this.sharedService.grid.setColumns) {
       if (collection.length > this.sharedService.allColumns.length) {
         this.sharedService.allColumns = collection;
-        this.sharedService.grid.setColumns(collection);
-      } else {
-        this.sharedService.grid.setColumns(this.sharedService.allColumns);
+      }
+      this.sharedService.grid.setColumns(collection);
+    }
+
+    // dispose of previous Column Picker instance, then re-register it and don't forget to overwrite previous instance ref
+    if (this.sharedService.gridOptions.enableColumnPicker) {
+      this.columnPickerExtension.dispose();
+      const instance = this.columnPickerExtension.register();
+      const extension = this.getExtensionByName(ExtensionName.columnPicker);
+      if (extension) {
+        extension.addon = instance;
+        extension.instance = instance;
       }
     }
 
-    if (this.sharedService.gridOptions.enableColumnPicker) {
-      this.columnPickerExtension.dispose();
-      this.columnPickerExtension.register();
-    }
-
+    // dispose of previous Grid Menu instance, then re-register it and don't forget to overwrite previous instance ref
     if (this.sharedService.gridOptions.enableGridMenu) {
       this.gridMenuExtension.dispose();
-      this.gridMenuExtension.register();
+      const instance = this.gridMenuExtension.register();
+      const extension = this.getExtensionByName(ExtensionName.gridMenu);
+      if (extension) {
+        extension.addon = instance;
+        extension.instance = instance;
+      }
     }
   }
 
