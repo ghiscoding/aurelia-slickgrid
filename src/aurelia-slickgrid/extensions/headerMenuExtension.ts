@@ -210,7 +210,7 @@ export class HeaderMenuExtension implements Extension {
       const visibleColumns = this.extensionUtility.arrayRemoveItemByIndex(currentColumns, columnIndex);
       this.sharedService.visibleColumns = visibleColumns;
       this.sharedService.grid.setColumns(visibleColumns);
-      this.ea.publish('headerMenu:columnHide', { columns: visibleColumns });
+      this.ea.publish('headerMenu:onColumnsChanged', { columns: visibleColumns });
     }
   }
 

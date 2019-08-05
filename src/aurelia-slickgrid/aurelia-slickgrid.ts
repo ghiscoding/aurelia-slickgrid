@@ -232,7 +232,7 @@ export class AureliaSlickgridCustomElement {
       this.bindBackendCallbackFunctions(this.gridOptions);
     }
 
-    this.gridStateService.init(this.grid, this.extensionService, this.filterService, this.sortService);
+    this.gridStateService.init(this.grid);
 
     // create the Aurelia Grid Instance with reference to all Services
     const aureliaElementInstance: AureliaGridInstance = {

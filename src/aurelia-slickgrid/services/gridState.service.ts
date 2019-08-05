@@ -20,18 +20,20 @@ import { SortService } from './sort.service';
 declare var Slick: any;
 
 @singleton(true)
-@inject(EventAggregator)
+@inject(EventAggregator, ExtensionService, FilterService, SortService)
 export class GridStateService {
   private _eventHandler = new Slick.EventHandler();
   private _columns: Column[] = [];
   private _currentColumns: CurrentColumn[] = [];
   private _grid: any;
-  private extensionService: ExtensionService;
-  private filterService: FilterService;
-  private sortService: SortService;
   private subscriptions: Subscription[] = [];
 
-  constructor(private ea: EventAggregator) { }
+  constructor(
+    private ea: EventAggregator,
+    private extensionService: ExtensionService,
+    private filterService: FilterService,
+    private sortService: SortService
+  ) { }
 
   /** Getter for the Grid Options pulled through the Grid Object */
   private get _gridOptions(): GridOption {
@@ -41,15 +43,9 @@ export class GridStateService {
   /**
    * Initialize the Service
    * @param grid
-   * @param filterService
-   * @param sortService
    */
-  init(grid: any, extensionService: ExtensionService, filterService: FilterService, sortService: SortService): void {
+  init(grid: any): void {
     this._grid = grid;
-    this.extensionService = extensionService;
-    this.filterService = filterService;
-    this.sortService = sortService;
-
     this.subscribeToAllGridChanges(grid);
   }
 
@@ -265,7 +261,7 @@ export class GridStateService {
 
     // subscribe to HeaderMenu (hide column)
     this.subscriptions.push(
-      this.ea.subscribe('headerMenu:columnHide', (visibleColumns: Column[]) => {
+      this.ea.subscribe('headerMenu:onColumnsChanged', (visibleColumns: Column[]) => {
         const currentColumns: CurrentColumn[] = this.getAssociatedCurrentColumns(visibleColumns);
         this.ea.publish('gridStateService:changed', { change: { newValues: currentColumns, type: GridStateType.columns }, gridState: this.getCurrentGridState() });
       })
