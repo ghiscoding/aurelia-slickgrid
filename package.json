@@ -77,7 +77,7 @@
     "aurelia-framework": ">=1.1.0",
     "aurelia-pal": ">=1.4.0",
     "dompurify": "^1.0.10",
-    "flatpickr": ">=4.2.4",
+    "flatpickr": ">=4.5.0",
     "jquery": ">=3.2.1",
     "jquery-ui-dist": "^1.12.1",
     "lodash.isequal": "^4.5.0",
