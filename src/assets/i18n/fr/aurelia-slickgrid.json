@@ -53,6 +53,7 @@
   "HELP": "Aide",
   "MALE": "Masculin",
   "NAME": "Nom",
+  "PERCENT_COMPLETE": "% Achevée",
   "START": "Début",
   "TASK_X": "Tâche {{x}}",
   "TITLE": "Titre",

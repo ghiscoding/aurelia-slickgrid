@@ -1,6 +1,6 @@
 describe('Example 9 - Grid Menu', () => {
   const fullEnglishTitles = ['Title', 'Duration', '% Complete', 'Start', 'Finish', 'Completed'];
-  const fullFrenchTitles = ['Titre', 'Durée', '% Complete', 'Début', 'Fin', 'Terminé'];
+  const fullFrenchTitles = ['Titre', 'Durée', '% Achevée', 'Début', 'Fin', 'Terminé'];
 
   it('should display Example 9 title', () => {
     cy.visit(`${Cypress.config('baseExampleUrl')}/example9`);

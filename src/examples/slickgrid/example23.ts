@@ -1,16 +1,22 @@
 import { autoinject } from 'aurelia-framework';
-import { HttpClient as FetchClient } from 'aurelia-fetch-client';
-import { HttpClient } from 'aurelia-http-client';
 import { I18N } from 'aurelia-i18n';
 import { CustomInputFilter } from './custom-inputFilter';
-import { AureliaGridInstance, Column, FieldType, Filters, Formatters, GridOption, OperatorType, Statistic } from '../../aurelia-slickgrid';
+import { AureliaGridInstance, Column, FieldType, Filters, Formatter, Formatters, GridOption, OperatorType, Statistic } from '../../aurelia-slickgrid';
 import * as moment from 'moment-mini';
+
+const NB_ITEMS = 500;
 
 function randomBetween(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
-const NB_ITEMS = 500;
-const URL_SAMPLE_COLLECTION_DATA = 'assets/data/collection_500_numbers.json';
+
+// create a custom translate Formatter (typically you would move that a separate file, for separation of concerns)
+const taskTranslateFormatter: Formatter = (row: number, cell: number, value: any, columnDef: any, dataContext: any, grid: any) => {
+  const gridOptions = (grid && typeof grid.getOptions === 'function') ? grid.getOptions() : {};
+  const i18n = gridOptions.i18n;
+
+  return i18n && i18n.tr && i18n.tr('TASK_X', { x: value });
+};
 
 @autoinject()
 export class Example23 {
@@ -19,7 +25,7 @@ export class Example23 {
     This demo shows how to use Filters with Range of Search Values (for example, shown below, filters by duration of 1 to 5 days)
     <br/>
     <ul class="small">
-      <li>All input filters support the following operators: (>, >=, <, <=, <>, !=, =, ==, *)
+      <li>All input filters support the following operators: (>, >=, <, <=, <>, !=, =, ==, a*, *z)
       <li>All Filters supporting range will be using the 2 dots (..) to represent a range, even for dates to be consistent when using the "presets"</li>
       <ul>
         <li>For the range in a text input filters, you can use 2 dots (..) to represent a range</li>
@@ -40,7 +46,8 @@ export class Example23 {
   selectedLanguage: string;
   statistics: Statistic;
 
-  constructor(private http: HttpClient, private httpFetch: FetchClient, private i18n: I18N) {
+  constructor(private i18n: I18N) {
+    // define the grid options & columns and then create the grid itself
     this.defineGrid();
 
     // always start with English for Cypress E2E tests to be consistent
@@ -66,8 +73,11 @@ export class Example23 {
   defineGrid() {
     this.columnDefinitions = [
       {
-        id: 'title', name: 'Title', field: 'title', sortable: true, minWidth: 55,
-        type: FieldType.string, filterable: true, filter: { model: Filters.compoundInputText }
+        id: 'title', name: 'Title', field: 'id', headerKey: 'TITLE', minWidth: 100,
+        formatter: taskTranslateFormatter,
+        sortable: true,
+        filterable: true,
+        params: { useFormatterOuputToFilter: true }
       },
       {
         id: 'description', name: 'Description', field: 'description', filterable: true, sortable: true, minWidth: 80,
@@ -78,47 +88,24 @@ export class Example23 {
         }
       },
       {
-        id: 'duration', name: 'Duration (days)', field: 'duration', sortable: true, type: FieldType.number, exportCsvForceToKeepAsString: true,
-        minWidth: 55,
+        id: 'duration', field: 'duration', headerKey: 'DURATION', sortable: true,
+        formatter: Formatters.percentCompleteBar, minWidth: 100,
         filterable: true,
-        filter: {
-          collectionAsync: this.httpFetch.fetch(URL_SAMPLE_COLLECTION_DATA),
-          customStructure: {
-            value: 'value',
-            label: 'label',
-            optionLabel: 'value', // if selected text is too long, we can use option labels instead
-            labelSuffix: 'text',
-          },
-          collectionOptions: {
-            separatorBetweenTextLabels: ' ',
-            filterResultAfterEachPass: 'chain' // options are "merge" or "chain" (defaults to "chain")
-          },
-          model: Filters.multipleSelect,
-
-          // we could add certain option(s) to the "multiple-select" plugin
-          filterOptions: {
-            maxHeight: 250,
-            width: 175,
-
-            // if we want to display shorter text as the selected text (on the select filter itself, parent element)
-            // we can use "useSelectOptionLabel" or "useSelectOptionLabelToHtml" the latter will parse html
-            useSelectOptionLabelToHtml: true
-          }
-        }
+        filter: { model: Filters.slider, /* operator: '>=',*/ }
       },
       {
-        id: 'complete', name: '% Complete', field: 'percentComplete', minWidth: 70, type: FieldType.number, sortable: true,
+        id: 'complete', name: '% Complete', field: 'percentComplete', headerKey: 'PERCENT_COMPLETE', minWidth: 70, type: FieldType.number, sortable: true,
         filterable: true, filter: {
           model: Filters.input,
           operator: OperatorType.rangeExclusive // defaults to exclusive
         }
       },
       {
-        id: 'start', name: 'Start', field: 'start', formatter: Formatters.dateIso, sortable: true, minWidth: 75, exportWithFormatter: true,
+        id: 'start', name: 'Start', field: 'start', headerKey: 'START', formatter: Formatters.dateIso, sortable: true, minWidth: 75, exportWithFormatter: true,
         type: FieldType.date, filterable: true, filter: { model: Filters.compoundDate }
       },
       {
-        id: 'finish', name: 'Finish', field: 'finish', formatter: Formatters.dateIso, sortable: true, minWidth: 75, exportWithFormatter: true,
+        id: 'finish', name: 'Finish', field: 'finish', headerKey: 'FINISH', formatter: Formatters.dateIso, sortable: true, minWidth: 75, exportWithFormatter: true,
         type: FieldType.date,
         filterable: true,
         filter: {
@@ -126,11 +113,12 @@ export class Example23 {
         }
       },
       {
-        id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven.isEffort', minWidth: 85, maxWidth: 85,
+        id: 'completed', name: 'Completed', field: 'completed', headerKey: 'COMPLETED', minWidth: 85, maxWidth: 85,
+        formatter: Formatters.checkmark,
         exportWithFormatter: true, // you can set this property in the column definition OR in the grid options, column def has priority over grid options
         filterable: true,
         filter: {
-          collection: [{ value: '', label: '' }, { value: true, label: 'TRUE' }, { value: false, labelKey: 'False' }],
+          collection: [{ value: '', label: '' }, { value: true, label: 'True' }, { value: false, label: 'False' }],
           model: Filters.singleSelect,
           filterOptions: {
             autoDropWidth: true
@@ -146,6 +134,7 @@ export class Example23 {
       },
       enableExcelCopyBuffer: true,
       enableFiltering: true,
+      enableTranslate: true,
       i18n: this.i18n,
 
       // use columnDef searchTerms OR use presets as shown below
@@ -161,7 +150,7 @@ export class Example23 {
           { columnId: 'complete', direction: 'ASC' }
         ],
       }
-    }
+    };
   }
 
   mockData(itemCount, startingIndex = 0): any[] {
