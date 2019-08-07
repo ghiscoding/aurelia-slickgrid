@@ -12,7 +12,7 @@ import {
   OperatorString,
   OperatorType,
   SearchTerm,
-} from './../models/index';
+} from '../models/index';
 import * as flatpickr from 'flatpickr';
 import * as $ from 'jquery';
 import * as moment from 'moment-mini';
@@ -21,7 +21,7 @@ declare function require(name: string): any;
 declare function require(name: string[], loadedFile: any): any;
 
 @inject(Optional.of(I18N))
-export class RangeDateFilter implements Filter {
+export class DateRangeFilter implements Filter {
   private _clearFilterTriggered = false;
   private _flatpickrOptions: any;
   private _shouldTriggerQuery = true;
@@ -59,7 +59,7 @@ export class RangeDateFilter implements Filter {
 
   /** Getter for the Filter Operator */
   get operator(): OperatorType | OperatorString {
-    return this._operator || OperatorType.rangeInclusive;
+    return this._operator || OperatorType.rangeExclusive;
   }
 
   /**
