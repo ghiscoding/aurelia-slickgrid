@@ -106,7 +106,8 @@ export class Example23 {
           minValue: 0,
           maxValue: 100,
           operator: OperatorType.rangeInclusive, // defaults to exclusive
-          params: { valueStep: 5 } // you can provide an optional value step, 1 is the default
+          // searchTerms: ['10..90'],
+          params: { valueStep: 5, hideSliderNumbers: false } // you can provide an optional value step, 1 is the default
         }
       },
       {
@@ -155,7 +156,6 @@ export class Example23 {
           { columnId: 'duration', searchTerms: ['15..75'] },
           { columnId: 'complete', searchTerms: ['15..75'] },
           { columnId: 'finish', operator: 'RangeInclusive', searchTerms: [`${presetLowestDay}..${presetHighestDay}`] },
-          // { columnId: 'effort-driven', searchTerms: [true] }
         ],
         sorters: [
           { columnId: 'complete', direction: 'ASC' },

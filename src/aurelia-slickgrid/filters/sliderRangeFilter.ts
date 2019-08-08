@@ -16,6 +16,13 @@ const DEFAULT_MIN_VALUE = 0;
 const DEFAULT_MAX_VALUE = 100;
 const DEFAULT_STEP = 1;
 
+export interface SliderUiResponse {
+  handle: HTMLElement;
+  handleIndex: number;
+  value: number;
+  values: number[];
+}
+
 /** A Slider Range Filter which uses jQuery UI, this is only meant to be used as a range filter (with 2 handles lowest & highest values) */
 export class SliderRangeFilter implements Filter {
   private _clearFilterTriggered = false;
@@ -103,9 +110,7 @@ export class SliderRangeFilter implements Filter {
       const lowestValue = this.filterParams.hasOwnProperty('sliderStartValue') ? this.filterParams.sliderStartValue : DEFAULT_MIN_VALUE;
       const highestValue = this.filterParams.hasOwnProperty('sliderEndValue') ? this.filterParams.sliderEndValue : DEFAULT_MAX_VALUE;
       this.$filterElm.slider('values', [lowestValue, highestValue]);
-      // this.$filterElm.children('input').val(clearedValue);
-      // this.$filterElm.children('div.input-group-addon.input-group-append').children().html(clearedValue);
-      // this.$filterElm.trigger('change');
+      this.renderSliderValues(lowestValue, highestValue);
       this.callback(null, { columnDef: this.columnDef, clearFilterTriggered: true, shouldTriggerQuery });
       this.$filterElm.removeClass('filled');
     }
@@ -129,6 +134,7 @@ export class SliderRangeFilter implements Filter {
       const sliderValues = ((searchTerm as string).indexOf('..') >= 0) ? (searchTerm as string).split('..') : searchTerm;
       if (Array.isArray(sliderValues) && sliderValues.length === 2) {
         this.$filterElm.slider('values', [sliderValues[0], sliderValues[1]]);
+        this.renderSliderValues(sliderValues[0], sliderValues[1]);
       } else {
         this.clear(true);
       }
@@ -141,24 +147,41 @@ export class SliderRangeFilter implements Filter {
 
   /**
    * From the html template string, create a DOM element
+   * @param filterTemplate string
    * @param searchTerm optional preset search terms
    */
   private createDomElement(searchTerm?: SearchTerm) {
     const fieldId = this.columnDef && this.columnDef.id;
     const $headerElm = this.grid.getHeaderRowColumn(fieldId);
-    $($headerElm).empty();
-
-    // create the DOM element & add an ID and filter class
-    const $filterElm = $(`<div class="search-filter filter-${fieldId}"></div>`);
-    const $filterContainerElm = $(`<div class="slider-range-container form-control">`);
-    $filterElm.appendTo($filterContainerElm);
-    const searchTermInput = (searchTerm || '0') as string;
-
     const minValue = this.filterProperties.hasOwnProperty('minValue') ? this.filterProperties.minValue : DEFAULT_MIN_VALUE;
     const maxValue = this.filterProperties.hasOwnProperty('maxValue') ? this.filterProperties.maxValue : DEFAULT_MAX_VALUE;
     const defaultStartValue = this.filterParams.hasOwnProperty('sliderStartValue') ? this.filterParams.sliderStartValue : minValue;
     const defaultEndValue = this.filterParams.hasOwnProperty('sliderEndValue') ? this.filterParams.sliderEndValue : maxValue;
     const step = this.filterProperties.hasOwnProperty('valueStep') ? this.filterProperties.valueStep : DEFAULT_STEP;
+
+    $($headerElm).empty();
+
+    // create the DOM element & add an ID and filter class
+    const $lowestSliderValueElm = $(`
+    <div class="input-group-addon input-group-prepend slider-range-value">
+      <span class="input-group-text" id="lowest">${defaultStartValue}</span>
+    </div>`);
+    const $highestSliderValueElm = $(`
+    <div class="input-group-addon input-group-append slider-range-value">
+      <span class="input-group-text" id="highest">${defaultEndValue}</span>
+    </div>`);
+    const $filterElm = $(`<div class="filter-${fieldId}"></div>`);
+    const $filterContainerElm = $(`<div class="input-group search-filter slider-range-container slider-values form-control">`);
+
+    if (this.filterParams.hideSliderNumbers) {
+      $filterContainerElm.append($filterElm);
+    } else {
+      $filterContainerElm.append($lowestSliderValueElm);
+      $filterContainerElm.append($filterElm);
+      $filterContainerElm.append($highestSliderValueElm);
+    }
+
+    const searchTermInput = (searchTerm || '0') as string;
 
     $filterElm.slider({
       range: true,
@@ -166,8 +189,9 @@ export class SliderRangeFilter implements Filter {
       max: maxValue,
       step,
       values: [defaultStartValue, defaultEndValue],
-      slide: (e: any, ui: { handle: HTMLElement; handleIndex: number; value: number; values: number[]; }) => {
-        const value = ui.values.join('..');
+      change: (e: Event, ui: SliderUiResponse) => {
+        const values = ui.values;
+        const value = values.join('..');
 
         if (this._clearFilterTriggered) {
           this.callback(e, { columnDef: this.columnDef, clearFilterTriggered: this._clearFilterTriggered, shouldTriggerQuery: this._shouldTriggerQuery });
@@ -179,16 +203,25 @@ export class SliderRangeFilter implements Filter {
         // reset both flags for next use
         this._clearFilterTriggered = false;
         this._shouldTriggerQuery = true;
+      },
+      slide: (e: Event, ui: SliderUiResponse) => {
+        const values = ui.values;
+        this.renderSliderValues(values[0], values[1]);
       }
     });
 
     // $filterElm.children('input').val(searchTermInput);
     // $filterElm.children('div.input-group-addon.input-group-append').children().html(searchTermInput);
     // $filterElm.attr('id', `filter-${fieldId}`);
-    // $filterElm.data('columnId', fieldId);
+    $filterElm.data('columnId', fieldId);
 
     // if there's a search term, we will add the "filled" class for styling purposes
     if (searchTerm) {
+      // const sliderValues = ((searchTerm as string).indexOf('..') >= 0) ? (searchTerm as string).split('..') : searchTerm;
+      // if (Array.isArray(sliderValues) && sliderValues.length === 2) {
+      //   this.$filterElm.slider('values', [sliderValues[0], sliderValues[1]]);
+      //   this.renderSliderValues(sliderValues[0], sliderValues[1]);
+      // }
       $filterContainerElm.addClass('filled');
     }
 
@@ -198,5 +231,16 @@ export class SliderRangeFilter implements Filter {
     }
 
     return $filterElm;
+  }
+
+  private renderSliderValues(lowestValue: number | string, highestValue: number | string) {
+    const lowerElm = document.getElementById('lowest');
+    const highestElm = document.getElementById('highest');
+    if (lowerElm && lowerElm.innerHTML) {
+      lowerElm.innerHTML = lowestValue.toString();
+    }
+    if (highestElm && highestElm.innerHTML) {
+      highestElm.innerHTML = highestValue.toString();
+    }
   }
 }

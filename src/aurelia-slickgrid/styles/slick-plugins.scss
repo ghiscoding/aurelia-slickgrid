@@ -239,7 +239,11 @@
 
   span {
     font-size: $multiselect-input-filter-font-size;
-    font-family: $multiselect-input-filter-font-family
+    font-family: $multiselect-input-filter-font-family;
+  }
+  .placeholder {
+    font-family: $multiselect-placeholder-font-family;
+    font-size: ($multiselect-input-filter-font-size + 2px);
   }
 }
 .ms-filter.search-filter {
@@ -392,7 +396,6 @@ input.search-filter {
     }
   }
 }
-
 input.flatpickr.form-control {
   cursor: pointer;
   font-family: $filter-placeholder-font-family;
@@ -519,7 +522,7 @@ input.slider-filter-input[type=range] {
     border: none;
     height: $slider-filter-thumb-size;
     width: $slider-filter-thumb-size;
-    border-radius: 50%;
+    border-radius: $slider-filter-thumb-border-radius;
     border: $slider-filter-thumb-border;
     background: $slider-filter-thumb-color;
     margin-top: -4px;
@@ -541,7 +544,7 @@ input.slider-filter-input[type=range] {
     cursor: $slider-filter-thumb-cursor;
     height: $slider-filter-thumb-size - 2px;
     width: $slider-filter-thumb-size - 2px;
-    border-radius: 50%;
+    border-radius: $slider-filter-thumb-border-radius;
     border: $slider-filter-thumb-border;
     background: $slider-filter-thumb-color;
   }
@@ -579,7 +582,7 @@ input.slider-filter-input[type=range] {
     cursor: $slider-filter-thumb-cursor;
     height: $slider-filter-thumb-size - 2px;
     width: $slider-filter-thumb-size - 2px;
-    border-radius: 50%;
+    border-radius: $slider-filter-thumb-border-radius;
     border: $slider-filter-thumb-border;
     background: $slider-filter-thumb-color;
     margin-top: 1px;
@@ -651,6 +654,29 @@ input.slider-editor-input[type=range] {
     top: $slider-range-filter-runnable-track-top;
     height: $slider-range-filter-runnable-track-height;
     background-color: $slider-range-filter-bgcolor;
+  }
+
+}
+.slider-range-container.slider-values {
+  padding: 0;
+  .ui-slider-horizontal {
+    width: $slider-range-filter-values-slider-width;
+    top: $slider-range-filter-values-slider-top;
+    margin-left: $slider-range-filter-values-slider-ml;
+  }
+  .slider-range-value {
+    padding: 0;
+    border: 0;
+    .input-group-text {
+      padding: $slider-filter-number-padding;
+      font-size: $slider-filter-number-font-size;
+    }
+  }
+  .input-group-prepend.slider-range-value {
+    border-right: $slider-range-filter-border;
+  }
+  .input-group-append.slider-range-value {
+    border-left: $slider-range-filter-border;
   }
 }
 
