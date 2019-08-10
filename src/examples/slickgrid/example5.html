@@ -1,13 +1,13 @@
 <template>
   <h2>${title}</h2>
   <div class="subtitle"
-       innerhtml.bind="subTitle"></div>
+    innerhtml.bind="subTitle"></div>
 
   <div class="row">
     <div class="col-sm-4">
       <div class.bind="status.class"
-           role="alert"
-           data-test="status">
+        role="alert"
+        data-test="status">
         <strong>Status: </strong> ${status.text}
         <span hidden.bind="!processing">
           <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
@@ -21,17 +21,39 @@
     </div>
     <div class="col-sm-8">
       <div class="alert alert-info"
-           data-test="alert-odata-query">
+        data-test="alert-odata-query">
         <strong>OData Query:</strong> <span data-test="odata-query-result">${odataQuery}</span>
       </div>
+      <label>OData Version: </label>
+      <span data-test="radioVersion">
+        <label class="radio-inline control-label"
+          for="radio2">
+          <input type="radio"
+            name="inlineRadioOptions"
+            data-test="version2"
+            id="radio2"
+            checked
+            value.bind="2"
+            click.delegate="setOdataVersion(2)"> 2
+        </label>
+        <label class="radio-inline control-label"
+          for="radio4">
+          <input type="radio"
+            name="inlineRadioOptions"
+            data-test="version4"
+            id="radio4"
+            value.bind="4"
+            click.delegate="setOdataVersion(4)"> 4
+        </label>
+      </span>
     </div>
   </div>
 
   <aurelia-slickgrid grid-id="grid5"
-                     column-definitions.bind="columnDefinitions"
-                     grid-options.bind="gridOptions"
-                     dataset.bind="dataset"
-                     asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)"
-                     asg-on-grid-state-changed.delegate="gridStateChanged($event)">
+    column-definitions.bind="columnDefinitions"
+    grid-options.bind="gridOptions"
+    dataset.bind="dataset"
+    asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)"
+    asg-on-grid-state-changed.delegate="gridStateChanged($event)">
   </aurelia-slickgrid>
 </template>
