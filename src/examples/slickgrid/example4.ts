@@ -2,7 +2,18 @@ import { HttpClient as FetchClient } from 'aurelia-fetch-client';
 import { HttpClient } from 'aurelia-http-client';
 import { autoinject } from 'aurelia-framework';
 import { CustomInputFilter } from './custom-inputFilter';
-import { AureliaGridInstance, Column, FieldType, Filters, Formatters, GridOption, OperatorType, Statistic } from '../../aurelia-slickgrid';
+import {
+  AureliaGridInstance,
+  Column,
+  FieldType,
+  Filters,
+  FlatpickrOption,
+  Formatters,
+  GridOption,
+  MultipleSelectOption,
+  OperatorType,
+  Statistic,
+} from '../../aurelia-slickgrid';
 
 function randomBetween(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -129,7 +140,7 @@ export class Example4 {
             // if we want to display shorter text as the selected text (on the select filter itself, parent element)
             // we can use "useSelectOptionLabel" or "useSelectOptionLabelToHtml" the latter will parse html
             useSelectOptionLabelToHtml: true
-          }
+          } as MultipleSelectOption
         }
       },
       {
@@ -152,9 +163,7 @@ export class Example4 {
           model: Filters.compoundDate,
           // override any of the Flatpickr options through "filterOptions"
           // please note that there's no TSlint on this property since it's generic for any filter, so make sure you entered the correct filter option(s)
-          filterOptions: {
-            minDate: 'today'
-          }
+          filterOptions: { minDate: 'today' } as FlatpickrOption
         }
       },
       {
@@ -180,7 +189,7 @@ export class Example4 {
           // we could add certain option(s) to the "multiple-select" plugin
           filterOptions: {
             maxHeight: 250
-          },
+          } as MultipleSelectOption,
         }
       }
     ];

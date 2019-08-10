@@ -4,6 +4,7 @@ import { HttpClient } from 'aurelia-http-client';
 import { I18N } from 'aurelia-i18n';
 import {
   AureliaGridInstance,
+  AutocompleteOption,
   Column,
   Editors,
   EditorArgs,
@@ -15,6 +16,7 @@ import {
   OnEventArgs,
   OperatorType,
   Sorters,
+  FlatpickrOption,
 } from '../../aurelia-slickgrid';
 import { CustomInputEditor } from './custom-inputEditor';
 import { CustomInputFilter } from './custom-inputFilter';
@@ -259,9 +261,7 @@ export class Example3 {
           model: Editors.date,
           // override any of the Flatpickr options through "filterOptions"
           // please note that there's no TSlint on this property since it's generic for any filter, so make sure you entered the correct filter option(s)
-          editorOptions: {
-            minDate: 'today'
-          }
+          editorOptions: { minDate: 'today' } as FlatpickrOption
         },
       }, {
         id: 'cityOfOrigin', name: 'City of Origin', field: 'cityOfOrigin',
@@ -290,7 +290,7 @@ export class Example3 {
                 }
               });
             }
-          },
+          } as AutocompleteOption,
         },
         filter: {
           model: Filters.autoComplete,
@@ -315,7 +315,7 @@ export class Example3 {
                 }
               });
             }
-          },
+          } as AutocompleteOption,
         }
       }, {
         id: 'countryOfOrigin', name: 'Country of Origin', field: 'countryOfOrigin',

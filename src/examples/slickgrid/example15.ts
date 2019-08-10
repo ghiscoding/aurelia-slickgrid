@@ -1,6 +1,16 @@
 import { I18N } from 'aurelia-i18n';
 import { autoinject } from 'aurelia-framework';
-import { AureliaGridInstance, Column, FieldType, Filters, Formatters, GridOption, GridState, GridStateChange } from '../../aurelia-slickgrid';
+import {
+  AureliaGridInstance,
+  Column,
+  FieldType,
+  Filters,
+  Formatters,
+  GridOption,
+  GridState,
+  GridStateChange,
+  MultipleSelectOption
+} from '../../aurelia-slickgrid';
 
 function randomBetween(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -102,7 +112,7 @@ export class Example15 {
           filterOptions: {
             maxHeight: 250,
             width: 175
-          }
+          } as MultipleSelectOption
         }
       },
       {
