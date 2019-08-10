@@ -41,6 +41,7 @@ export class Example5 {
   dataset = [];
   statistics: Statistic;
 
+  odataVersion = 2;
   odataQuery = '';
   processing = false;
   status = { text: '', class: '' };
@@ -106,6 +107,7 @@ export class Example5 {
       },
       backendServiceApi: {
         service: new GridOdataService(),
+        options: { version: this.odataVersion }, // defaults to 2, the query string is slightly different between OData 2 and 4
         preProcess: () => this.displaySpinner(true),
         process: (query) => this.getCustomerApiCall(query),
         postProcess: (response) => {
@@ -159,55 +161,48 @@ export class Example5 {
       const columnFilters = {};
 
       for (const param of queryParams) {
-        if (param.indexOf('$top=') > -1) {
+        if (param.includes('$top=')) {
           top = +(param.substring('$top='.length));
         }
-        if (param.indexOf('$skip=') > -1) {
+        if (param.includes('$skip=')) {
           skip = +(param.substring('$skip='.length));
         }
-        if (param.indexOf('$orderby=') > -1) {
+        if (param.includes('$orderby=')) {
           orderBy = param.substring('$orderby='.length);
         }
-        if (param.indexOf('$filter=') > -1) {
+        if (param.includes('$filter=')) {
           const filterBy = param.substring('$filter='.length).replace('%20', ' ');
-          if (filterBy.indexOf('substringof') > -1) {
+          if (filterBy.includes('contains')) {
+            const filterMatch = filterBy.match(/contains\(([a-zA-Z\/]+),\s?'(.*?)'/);
+            const fieldName = filterMatch[1].trim();
+            columnFilters[fieldName] = { type: 'substring', term: filterMatch[2].trim() };
+          }
+          if (filterBy.includes('substringof')) {
             const filterMatch = filterBy.match(/substringof\('(.*?)',([a-zA-Z ]*)/);
             const fieldName = filterMatch[2].trim();
-            columnFilters[fieldName] = {
-              type: 'substring',
-              term: filterMatch[1].trim()
-            };
+            columnFilters[fieldName] = { type: 'substring', term: filterMatch[1].trim() };
           }
-          if (filterBy.indexOf('eq') > -1) {
+          if (filterBy.includes('eq')) {
             const filterMatch = filterBy.match(/([a-zA-Z ]*) eq '(.*?)'/);
             const fieldName = filterMatch[1].trim();
-            columnFilters[fieldName] = {
-              type: 'equal',
-              term: filterMatch[2].trim()
-            };
+            columnFilters[fieldName] = { type: 'equal', term: filterMatch[2].trim() };
           }
-          if (filterBy.indexOf('startswith') > -1) {
+          if (filterBy.includes('startswith')) {
             const filterMatch = filterBy.match(/startswith\(([a-zA-Z ]*),\s?'(.*?)'/);
             const fieldName = filterMatch[1].trim();
-            columnFilters[fieldName] = {
-              type: 'starts',
-              term: filterMatch[2].trim()
-            };
+            columnFilters[fieldName] = { type: 'starts', term: filterMatch[2].trim() };
           }
-          if (filterBy.indexOf('endswith') > -1) {
+          if (filterBy.includes('endswith')) {
             const filterMatch = filterBy.match(/endswith\(([a-zA-Z ]*),\s?'(.*?)'/);
             const fieldName = filterMatch[1].trim();
-            columnFilters[fieldName] = {
-              type: 'ends',
-              term: filterMatch[2].trim()
-            };
+            columnFilters[fieldName] = { type: 'ends', term: filterMatch[2].trim() };
           }
         }
       }
 
-      const sort = (orderBy.indexOf('asc') > -1)
+      const sort = orderBy.includes('asc')
         ? 'ASC'
-        : (orderBy.indexOf('desc') > -1)
+        : orderBy.includes('desc')
           ? 'DESC'
           : '';
 
@@ -250,7 +245,7 @@ export class Example5 {
                       case 'equal': return filterTerm.toLowerCase() === searchTerm;
                       case 'ends': return filterTerm.toLowerCase().endsWith(searchTerm);
                       case 'starts': return filterTerm.toLowerCase().startsWith(searchTerm);
-                      case 'substring': return (filterTerm.toLowerCase().indexOf(searchTerm) > -1);
+                      case 'substring': return filterTerm.toLowerCase().includes(searchTerm);
                     }
                   }
                 });
@@ -269,6 +264,17 @@ export class Example5 {
 
   /** Dispatched event of a Grid State Changed event */
   gridStateChanged(gridStateChanges: GridStateChange) {
-    console.log('OData sample, Grid State changed:: ', gridStateChanges);
+    console.log('Client sample, Grid State changed:: ', gridStateChanges);
+  }
+
+  // THIS IS ONLY FOR DEMO PURPOSES DO NOT USE THIS CODE
+  setOdataVersion(version: number) {
+    this.odataVersion = version;
+    const odataService = this.gridOptions.backendServiceApi.service;
+    // @ts-ignore
+    odataService.updateOptions({ version: this.odataVersion });
+    odataService.clearFilters();
+    this.aureliaGrid.filterService.clearFilters();
+    return true;
   }
 }
