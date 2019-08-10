@@ -20,7 +20,7 @@ export interface ColumnFilter {
   /** Column Definition */
   columnDef?: Column;
 
-  /** Search terms (collection) */
+  /** Search terms to preload (collection), please note it is better to use the "presets" grid option which is more powerful. */
   searchTerms?: SearchTerm[] | undefined;
 
   /** Operator to use when filtering (>, >=, EQ, IN, ...) */

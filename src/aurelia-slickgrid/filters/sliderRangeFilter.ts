@@ -4,6 +4,8 @@ import {
   Filter,
   FilterArguments,
   FilterCallback,
+  JQueryUiSliderOption,
+  JQueryUiSliderResponse,
   OperatorType,
   OperatorString,
   SearchTerm,
@@ -27,9 +29,9 @@ export interface SliderUiResponse {
 export class SliderRangeFilter implements Filter {
   private _clearFilterTriggered = false;
   private _shouldTriggerQuery = true;
-  private _elementRangeInputId: string;
-  private _elementRangeOutputId: string;
+  private _sliderOptions: JQueryUiSliderOption;
   private $filterElm: any;
+  private $filterContainerElm: any;
   grid: any;
   searchTerms: SearchTerm[];
   columnDef: Column;
@@ -43,6 +45,16 @@ export class SliderRangeFilter implements Filter {
   /** Getter for the `filter` properties */
   private get filterProperties(): ColumnFilter {
     return this.columnDef && this.columnDef.filter;
+  }
+
+  /** Getter for the Column Filter */
+  get columnFilter(): ColumnFilter {
+    return this.columnDef && this.columnDef.filter || {};
+  }
+
+  /** Getter for the JQuery UI Slider Options */
+  get sliderOptions(): JQueryUiSliderOption {
+    return this._sliderOptions || {};
   }
 
   get operator(): OperatorType | OperatorString {
@@ -61,42 +73,8 @@ export class SliderRangeFilter implements Filter {
     this.columnDef = args.columnDef;
     this.searchTerms = args.searchTerms || [];
 
-    // define the input & slider number IDs
-    this._elementRangeInputId = `rangeInput_${this.columnDef.field}`;
-    this._elementRangeOutputId = `rangeOutput_${this.columnDef.field}`;
-
-    // filter input can only have 1 search term, so we will use the 1st array index if it exist
-    const searchTerm = (Array.isArray(this.searchTerms) && this.searchTerms[0]) || '';
-
     // step 1, create the DOM Element of the filter & initialize it if searchTerm is filled
-    this.$filterElm = this.createDomElement(searchTerm);
-
-    // step 3, subscribe to the change event and run the callback when that happens
-    // also add/remove "filled" class for styling purposes
-    this.$filterElm.change((e: any) => {
-      const value = e && e.target && e.target.value || '';
-      if (this._clearFilterTriggered) {
-        this.callback(e, { columnDef: this.columnDef, clearFilterTriggered: this._clearFilterTriggered, shouldTriggerQuery: this._shouldTriggerQuery });
-        this.$filterElm.removeClass('filled');
-      } else {
-        value === '' ? this.$filterElm.removeClass('filled') : this.$filterElm.addClass('filled');
-        this.callback(e, { columnDef: this.columnDef, operator: this.operator, searchTerms: [value], shouldTriggerQuery: this._shouldTriggerQuery });
-      }
-      // reset both flags for next use
-      this._clearFilterTriggered = false;
-      this._shouldTriggerQuery = true;
-    });
-
-    // if user chose to display the slider number on the right side, then update it every time it changes
-    // we need to use both "input" and "change" event to be all cross-browser
-    if (!this.filterParams.hideSliderNumber) {
-      this.$filterElm.on('input change', (e: { target: HTMLInputElement }) => {
-        const value = e && e.target && e.target.value || '';
-        if (value) {
-          document.getElementById(this._elementRangeOutputId).innerHTML = value;
-        }
-      });
-    }
+    this.$filterElm = this.createDomElement(this.searchTerms);
   }
 
   /**
@@ -110,9 +88,11 @@ export class SliderRangeFilter implements Filter {
       const lowestValue = this.filterParams.hasOwnProperty('sliderStartValue') ? this.filterParams.sliderStartValue : DEFAULT_MIN_VALUE;
       const highestValue = this.filterParams.hasOwnProperty('sliderEndValue') ? this.filterParams.sliderEndValue : DEFAULT_MAX_VALUE;
       this.$filterElm.slider('values', [lowestValue, highestValue]);
-      this.renderSliderValues(lowestValue, highestValue);
+      if (!this.filterParams.hideSliderNumbers) {
+        this.renderSliderValues(lowestValue, highestValue);
+      }
       this.callback(null, { columnDef: this.columnDef, clearFilterTriggered: true, shouldTriggerQuery });
-      this.$filterElm.removeClass('filled');
+      this.$filterContainerElm.removeClass('filled');
     }
   }
 
@@ -127,14 +107,24 @@ export class SliderRangeFilter implements Filter {
 
   /**
    * Set value(s) on the DOM element
+   * @params searchTerms
    */
-  setValues(values: SearchTerm) {
-    if (values) {
-      const searchTerm = (Array.isArray(values) && typeof values[0] === 'string') ? values[0] : '';
-      const sliderValues = ((searchTerm as string).indexOf('..') >= 0) ? (searchTerm as string).split('..') : searchTerm;
+  setValues(searchTerms: SearchTerm | SearchTerm[]) {
+    if (searchTerms) {
+      let sliderValues = [];
+
+      // get the slider values, if it's a string with the "..", we'll do the split else we'll use the array of search terms
+      if (typeof searchTerms === 'string' || (Array.isArray(searchTerms) && typeof searchTerms[0] === 'string') && (searchTerms[0] as string).indexOf('..') > 0) {
+        sliderValues = (typeof searchTerms === 'string') ? [(searchTerms as string)] : (searchTerms[0] as string).split('..');
+      } else if (Array.isArray(searchTerms)) {
+        sliderValues = searchTerms;
+      }
+
       if (Array.isArray(sliderValues) && sliderValues.length === 2) {
         this.$filterElm.slider('values', [sliderValues[0], sliderValues[1]]);
-        this.renderSliderValues(sliderValues[0], sliderValues[1]);
+        if (!this.filterParams.hideSliderNumbers) {
+          this.renderSliderValues(sliderValues[0], sliderValues[1]);
+        }
       } else {
         this.clear(true);
       }
@@ -147,10 +137,13 @@ export class SliderRangeFilter implements Filter {
 
   /**
    * From the html template string, create a DOM element
-   * @param filterTemplate string
    * @param searchTerm optional preset search terms
    */
-  private createDomElement(searchTerm?: SearchTerm) {
+  private createDomElement(searchTerms?: SearchTerm | SearchTerm[]) {
+    if (this.columnFilter.filterOptions && this.columnFilter.filterOptions.change || this.columnFilter.filterOptions.slide) {
+      throw new Error(`[Angular-Slickgrid] You cannot override the "change" and/or the "slide" callback methods
+        since they are used in SliderRange Filter itself, however any other methods can be used for example the "create", "start", "stop" methods.`);
+    }
     const fieldId = this.columnDef && this.columnDef.id;
     const $headerElm = this.grid.getHeaderRowColumn(fieldId);
     const minValue = this.filterProperties.hasOwnProperty('minValue') ? this.filterProperties.minValue : DEFAULT_MIN_VALUE;
@@ -170,69 +163,72 @@ export class SliderRangeFilter implements Filter {
     <div class="input-group-addon input-group-append slider-range-value">
       <span class="input-group-text" id="highest">${defaultEndValue}</span>
     </div>`);
-    const $filterElm = $(`<div class="filter-${fieldId}"></div>`);
-    const $filterContainerElm = $(`<div class="input-group search-filter slider-range-container slider-values form-control">`);
+    this.$filterElm = $(`<div class="filter-${fieldId}"></div>`);
+    this.$filterContainerElm = $(`<div class="input-group search-filter slider-range-container slider-values form-control">`);
 
     if (this.filterParams.hideSliderNumbers) {
-      $filterContainerElm.append($filterElm);
+      this.$filterContainerElm.append(this.$filterElm);
     } else {
-      $filterContainerElm.append($lowestSliderValueElm);
-      $filterContainerElm.append($filterElm);
-      $filterContainerElm.append($highestSliderValueElm);
+      this.$filterContainerElm.append($lowestSliderValueElm);
+      this.$filterContainerElm.append(this.$filterElm);
+      this.$filterContainerElm.append($highestSliderValueElm);
     }
 
-    const searchTermInput = (searchTerm || '0') as string;
-
-    $filterElm.slider({
+    const definedOptions: JQueryUiSliderOption = {
       range: true,
-      min: minValue,
-      max: maxValue,
-      step,
+      min: +minValue,
+      max: +maxValue,
+      step: +step,
       values: [defaultStartValue, defaultEndValue],
-      change: (e: Event, ui: SliderUiResponse) => {
+      change: (e: Event, ui: JQueryUiSliderResponse) => this.onValueChanged(e, ui),
+      slide: (e: Event, ui: JQueryUiSliderResponse) => {
         const values = ui.values;
-        const value = values.join('..');
-
-        if (this._clearFilterTriggered) {
-          this.callback(e, { columnDef: this.columnDef, clearFilterTriggered: this._clearFilterTriggered, shouldTriggerQuery: this._shouldTriggerQuery });
-          this.$filterElm.removeClass('filled');
-        } else {
-          value === '' ? this.$filterElm.removeClass('filled') : this.$filterElm.addClass('filled');
-          this.callback(e, { columnDef: this.columnDef, operator: this.operator, searchTerms: [value], shouldTriggerQuery: this._shouldTriggerQuery });
+        if (!this.filterParams.hideSliderNumbers && Array.isArray(values)) {
+          this.renderSliderValues(values[0], values[1]);
         }
-        // reset both flags for next use
-        this._clearFilterTriggered = false;
-        this._shouldTriggerQuery = true;
-      },
-      slide: (e: Event, ui: SliderUiResponse) => {
-        const values = ui.values;
-        this.renderSliderValues(values[0], values[1]);
       }
-    });
+    };
 
-    // $filterElm.children('input').val(searchTermInput);
-    // $filterElm.children('div.input-group-addon.input-group-append').children().html(searchTermInput);
-    // $filterElm.attr('id', `filter-${fieldId}`);
-    $filterElm.data('columnId', fieldId);
+    // merge options with optional user's custom options
+    this._sliderOptions = { ...definedOptions, ...(this.columnFilter.filterOptions as JQueryUiSliderOption) };
+    this.$filterElm.slider(this._sliderOptions);
+
 
     // if there's a search term, we will add the "filled" class for styling purposes
-    if (searchTerm) {
-      // const sliderValues = ((searchTerm as string).indexOf('..') >= 0) ? (searchTerm as string).split('..') : searchTerm;
-      // if (Array.isArray(sliderValues) && sliderValues.length === 2) {
-      //   this.$filterElm.slider('values', [sliderValues[0], sliderValues[1]]);
-      //   this.renderSliderValues(sliderValues[0], sliderValues[1]);
-      // }
-      $filterContainerElm.addClass('filled');
+    if (Array.isArray(searchTerms) && searchTerms.length > 0 && searchTerms[0] !== '') {
+      this.$filterContainerElm.addClass('filled');
     }
 
     // append the new DOM element to the header row
-    if ($filterContainerElm && typeof $filterContainerElm.appendTo === 'function') {
-      $filterContainerElm.appendTo($headerElm);
+    if (this.$filterContainerElm && typeof this.$filterContainerElm.appendTo === 'function') {
+      this.$filterContainerElm.appendTo($headerElm);
     }
 
-    return $filterElm;
+    return this.$filterElm;
   }
 
+  /** On a value change event triggered */
+  private onValueChanged(e: Event, ui: JQueryUiSliderResponse) {
+    const values = ui.values;
+    const value = values.join('..');
+
+    if (this._clearFilterTriggered) {
+      this.callback(e, { columnDef: this.columnDef, clearFilterTriggered: this._clearFilterTriggered, shouldTriggerQuery: this._shouldTriggerQuery });
+      this.$filterContainerElm.removeClass('filled');
+    } else {
+      value === '' ? this.$filterContainerElm.removeClass('filled') : this.$filterContainerElm.addClass('filled');
+      this.callback(e, { columnDef: this.columnDef, operator: this.operator, searchTerms: [value], shouldTriggerQuery: this._shouldTriggerQuery });
+    }
+    // reset both flags for next use
+    this._clearFilterTriggered = false;
+    this._shouldTriggerQuery = true;
+  }
+
+  /**
+   * Render both slider values (low/high) on screen
+   * @param lowestValue number
+   * @param highestValue number
+   */
   private renderSliderValues(lowestValue: number | string, highestValue: number | string) {
     const lowerElm = document.getElementById('lowest');
     const highestElm = document.getElementById('highest');
