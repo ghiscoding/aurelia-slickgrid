@@ -7,8 +7,9 @@ import { OperatorString } from '../models/index';
  * @param o1
  * @param o2
  * @param compareKey optional
+ * @return boolean are objects equals?
  */
-export const compareObjects = (o1: any, o2: any, compareKey?: string) => {
+export function compareObjects(o1: any, o2: any, compareKey?: string): boolean {
   // if user provided an object compare key then compare directly both objects by that key
   if (compareKey && (o1.hasOwnProperty(compareKey) || o2.hasOwnProperty(compareKey))) {
     return o1[compareKey] === o2 || o1 === o2[compareKey] || o1[compareKey] === o2[compareKey];
@@ -24,7 +25,7 @@ export const compareObjects = (o1: any, o2: any, compareKey?: string) => {
     }
   }
   return true;
-};
+}
 
 export const testFilterCondition = (operator: OperatorString, value1: any, value2: any): boolean => {
   switch (operator) {
