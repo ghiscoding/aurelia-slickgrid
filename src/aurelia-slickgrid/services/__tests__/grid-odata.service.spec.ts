@@ -727,8 +727,8 @@ describe('GridOdataService', () => {
       serviceOptions.columnDefinitions = [{ id: 'company', field: 'company' }, { id: 'gender', field: 'gender' }, { id: 'name', field: 'name' }];
     });
 
-    it('should return a query with a date showing as DateTime as per OData requirement', () => {
-      const expectation = `$top=10&$filter=(contains(Company, 'abc') and UpdatedDate eq DateTime'2001-02-28T00:00:00Z')`;
+    it('should return a query with a date showing as Date as per OData 4 requirement', () => {
+      const expectation = `$top=10&$filter=(contains(Company, 'abc') and UpdatedDate eq 2001-02-28T00:00:00Z)`;
       const mockColumnCompany = { id: 'company', field: 'company' } as Column;
       const mockColumnUpdated = { id: 'updatedDate', field: 'updatedDate', type: FieldType.date } as Column;
       const mockColumnFilters = {
