@@ -1,3 +1,5 @@
+import { Locale } from 'flatpickr/dist/types/locale';
+
 export interface FlatpickrOption {
   /** defaults to "F j, Y",	exactly the same as date format, but for the altInput field */
   altFormat?: string;
@@ -31,7 +33,7 @@ export interface FlatpickrOption {
    * If you're using mode?: "multiple" or a range calendar supply an Array of Date objects or an Array of date strings which follow your dateFormat.
    * Otherwise, you can supply a single Date object or a date string.
    */
-  defaultDate?: Date | string | Date[] | string[];
+  defaultDate?: string | string[];
 
   /** defaults to 12, initial value of the hour element. */
   defaultHour?: number;
@@ -62,7 +64,7 @@ export interface FlatpickrOption {
   enableTime?: boolean;
 
   /** Allows using a custom date formatting function instead of the built-in handling for date formats using dateFormat, altFormat, etc. */
-  formatDate?: (dateObj?: Date, format?: string, locale?: any) => string | Date;
+  formatDate?: (dateObj: Date, format: string, locale: Locale) => string;
 
   /** defaults to 1, adjusts the step for the hour input (incl. scrolling) */
   hourIncrement?: number;
@@ -95,7 +97,7 @@ export interface FlatpickrOption {
   noCalendar?: boolean;
 
   /** defaults to false, function that expects a date string and must return a Date object */
-  parseDate?: (date?: Date, format?: string) => void;
+  parseDate?: (date: Date, format: string) => void;
 
   /** Provide external flatpickr plugin(s) */
   plugins?: any | any[];
@@ -129,32 +131,32 @@ export interface FlatpickrOption {
   // -----------------
 
   /** Function(s) to trigger on every date selection. See Events API */
-  onChange?: (selectedDates?: Date[] | Date, dateStr?: string, instance?: any) => void;
+  onChange?: (selectedDates: Date[] | Date, dateStr: string, instance: any) => void;
 
   /** Function(s) to trigger on every time the calendar is closed. See Events API */
-  onClose?: (selectedDates?: Date[] | Date, dateStr?: string, instance?: any) => void;
+  onClose?: (selectedDates: Date[] | Date, dateStr: string, instance: any) => void;
 
   /** Function(s) to trigger on every time the calendar gets created. See Events API */
-  onDayCreate?: (day?: Date) => void;
+  onDayCreate?: (date: Date | Date[]) => void;
 
   /** Function(s) to trigger when the date picker gets drestroyed. See Events API */
-  onDestroy?: (day?: Date) => void;
+  onDestroy?: (day: Date) => void;
 
   /** Function(s) to trigger when the date picker gets drestroyed. See Events API */
-  onKeyDown?: (selectedDates?: Date[] | Date, dateStr?: string, instance?: any) => void;
+  onKeyDown?: (selectedDates: Date[] | Date, dateStr: string, instance: any) => void;
 
   /** Function(s) to trigger on every time the month changes. See Events API */
-  onMonthChange?: (selectedDates?: Date[] | Date, dateStr?: string, instance?: any) => void;
+  onMonthChange?: (selectedDates: Date[] | Date, dateStr: string, instance: any) => void;
 
   /** Function(s) to trigger on every time the calendar is opened. See Events API */
-  onOpen?: (selectedDates?: Date[] | Date, dateStr?: string, instance?: any) => void;
+  onOpen?: (selectedDates: Date[] | Date, dateStr: string, instance: any) => void;
 
   /** Function to trigger when the calendar is ready. See Events API */
   onReady?: () => void;
 
   /** Function(s) to trigger on every time the year changes. See Events API */
-  onValueUpdate?: (selectedDates?: Date[] | Date, dateStr?: string, instance?: any) => void;
+  onValueUpdate?: (selectedDates: Date[] | Date, dateStr: string, instance: any) => void;
 
   /** Function(s) to trigger on every time the year changes. See Events API */
-  onYearChange?: (selectedDates?: Date[] | Date, dateStr?: string, instance?: any) => void;
+  onYearChange?: (selectedDates: Date[] | Date, dateStr: string, instance: any) => void;
 }

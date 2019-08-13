@@ -42,7 +42,12 @@ export interface ColumnEditor {
    */
   enableCollectionWatch?: boolean;
 
-  /** Options that could be provided to the Editor, example: { container: 'body', maxHeight: 250} */
+  /**
+   * Options that could be provided to the Editor, example: { container: 'body', maxHeight: 250}
+   *
+   * Please note that if you use options that have existed model interfaces, you should cast with "as X",
+   * for example { editorOptions: {maxHeight: 250} as MultipleSelectOption }
+   */
   editorOptions?: MultipleSelectOption | any;
 
   /**

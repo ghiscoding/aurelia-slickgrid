@@ -9,6 +9,7 @@ import {
   GridOdataService,
   GridOption,
   GridStateChange,
+  JQueryUiSliderOption,
   OperatorType,
   Statistic,
 } from '../../aurelia-slickgrid';
@@ -100,7 +101,7 @@ export class Example5 {
           maxValue: 100, // or you can use the filterOptions as well
           operator: OperatorType.rangeInclusive, // defaults to exclusive
           params: { hideSliderNumbers: false }, // you can hide/show the slider numbers on both side
-          filterOptions: { min: 0, step: 5 } // you can also optionally pass any option of the jQuery UI Slider
+          filterOptions: { min: 0, step: 5 } as JQueryUiSliderOption // you can also optionally pass any option of the jQuery UI Slider
         }
       },
     ];

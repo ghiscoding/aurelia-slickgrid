@@ -1,8 +1,8 @@
+import { inject, Optional } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import { Constants } from './../constants';
 import { mapFlatpickrDateFormatWithFieldType, mapMomentDateFormatWithFieldType } from './../services/utilities';
 import { Column, ColumnEditor, Editor, EditorValidator, EditorValidatorOutput, FieldType, FlatpickrOption, GridOption } from './../models/index';
-import { inject, Optional } from 'aurelia-framework';
 import * as flatpickr from 'flatpickr';
 import * as moment from 'moment-mini';
 import * as $ from 'jquery';
@@ -59,7 +59,7 @@ export class DateEditor implements Editor {
       }
 
       const pickerOptions: FlatpickrOption = {
-        defaultDate: this.defaultDate,
+        defaultDate: this.defaultDate as string,
         altInput: true,
         altInputClass: 'flatpickr-alt-input',
         altFormat: inputFormat,
@@ -72,7 +72,7 @@ export class DateEditor implements Editor {
       };
 
       // merge options with optional user's custom options
-      const pickerMergedOptions = { ...pickerOptions, ...(this.editorOptions as FlatpickrOption) };
+      const pickerMergedOptions: FlatpickrOption = { ...pickerOptions, ...(this.editorOptions as FlatpickrOption) };
       const inputCssClasses = `.editor-text.editor-${columnId}.flatpickr`;
 
       this.$input = $(`<input type="text" data-defaultDate="${this.defaultDate}" class="${inputCssClasses.replace(/\./g, ' ')}" placeholder="${placeholder}" title="${title}" />`);

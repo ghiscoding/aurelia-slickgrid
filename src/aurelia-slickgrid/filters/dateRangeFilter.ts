@@ -24,7 +24,7 @@ declare function require(name: string[], loadedFile: any): any;
 @inject(Optional.of(I18N))
 export class DateRangeFilter implements Filter {
   private _clearFilterTriggered = false;
-  private _flatpickrOptions: any;
+  private _flatpickrOptions: FlatpickrOption;
   private _shouldTriggerQuery = true;
   private $filterElm: any;
   private $filterInputElm: any;
@@ -49,7 +49,7 @@ export class DateRangeFilter implements Filter {
   }
 
   /** Getter for the Flatpickr Options */
-  get flatpickrOptions(): any {
+  get flatpickrOptions(): FlatpickrOption {
     return this._flatpickrOptions || {};
   }
 
@@ -154,7 +154,7 @@ export class DateRangeFilter implements Filter {
       wrap: true,
       closeOnSelect: true,
       locale: (currentLocale !== 'en') ? this.loadFlatpickrLocale(currentLocale) : 'en',
-      onChange: (selectedDates: any[] | any, dateStr: string, instance: any) => {
+      onChange: (selectedDates: Date[] | Date, dateStr: string, instance: any) => {
         if (Array.isArray(selectedDates)) {
           const outFormat = mapMomentDateFormatWithFieldType(this.columnDef.type || FieldType.dateIso);
           const selectedDateRanges = selectedDates.map(date => moment(date).format(outFormat));
@@ -179,7 +179,7 @@ export class DateRangeFilter implements Filter {
     }
 
     // merge options with optional user's custom options
-    this._flatpickrOptions = { ...pickerOptions, ...this.columnFilter.filterOptions };
+    this._flatpickrOptions = { ...pickerOptions, ...(this.columnFilter.filterOptions as FlatpickrOption) };
 
     let placeholder = (this.gridOptions) ? (this.gridOptions.defaultFilterPlaceholder || '') : '';
     if (this.columnFilter && this.columnFilter.placeholder) {

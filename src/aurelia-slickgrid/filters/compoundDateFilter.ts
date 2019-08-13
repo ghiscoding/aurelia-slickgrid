@@ -127,7 +127,7 @@ export class CompoundDateFilter implements Filter {
     }
 
     const pickerOptions: FlatpickrOption = {
-      defaultDate: (searchTerm as string | Date) || '',
+      defaultDate: (searchTerm as string) || '',
       altInput: true,
       altFormat: outputFormat,
       dateFormat: inputFormat,
@@ -153,7 +153,7 @@ export class CompoundDateFilter implements Filter {
     }
 
     // merge options with optional user's custom options
-    const pickerMergedOptions = { ...pickerOptions, ...this.columnFilter.filterOptions };
+    const pickerMergedOptions: FlatpickrOption = { ...pickerOptions, ...(this.columnFilter.filterOptions as FlatpickrOption) };
 
     let placeholder = (this.gridOptions) ? (this.gridOptions.defaultFilterPlaceholder || '') : '';
     if (this.columnFilter && this.columnFilter.placeholder) {
