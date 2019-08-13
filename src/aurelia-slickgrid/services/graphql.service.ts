@@ -19,8 +19,11 @@ import {
   GraphqlSortingOption,
   GridOption,
   MultiColumnSort,
+  OperatorString,
+  OperatorType,
   Pagination,
   PaginationChangedArgs,
+  SearchTerm,
   SortChangedArgs,
   SortDirection,
   SortDirectionString
@@ -367,7 +370,7 @@ export class GraphqlService implements BackendService {
         }
 
         const fieldName = columnDef.queryFieldFilter || columnDef.queryField || columnDef.field || columnDef.name || '';
-        const searchTerms = columnFilter && columnFilter.searchTerms || [];
+        let searchTerms = columnFilter && columnFilter.searchTerms || [];
         let fieldSearchValue = (Array.isArray(searchTerms) && searchTerms.length === 1) ? searchTerms[0] : '';
         if (typeof fieldSearchValue === 'undefined') {
           fieldSearchValue = '';
@@ -388,10 +391,14 @@ export class GraphqlService implements BackendService {
           continue;
         }
 
-        // when having more than 1 search term (we need to create a CSV string for GraphQL "IN" or "NOT IN" filter search)
-        if (searchTerms && searchTerms.length > 1) {
-          searchValue = searchTerms.join(',');
-        } else if (typeof searchValue === 'string') {
+        if (Array.isArray(searchTerms) && searchTerms.length === 1 && typeof searchTerms[0] === 'string' && searchTerms[0].indexOf('..') > 0) {
+          searchTerms = searchTerms[0].split('..');
+          if (!operator) {
+            operator = OperatorType.rangeExclusive;
+          }
+        }
+
+        if (typeof searchValue === 'string') {
           // escaping the search value
           searchValue = searchValue.replace(`'`, `''`); // escape single quotes by doubling them
           if (operator === '*' || operator === 'a*' || operator === '*z' || lastValueChar === '*') {
@@ -410,12 +417,20 @@ export class GraphqlService implements BackendService {
           operator = mapOperatorByFieldType(columnDef.type || FieldType.string);
         }
 
+        // when having more than 1 search term (we need to create a CSV string for GraphQL "IN" or "NOT IN" filter search)
+        if (searchTerms && searchTerms.length > 1 && (operator === 'IN' || operator === 'NIN' || operator === 'NOTIN' || operator === 'NOT IN' || operator === 'NOT_IN')) {
+          searchValue = searchTerms.join(',');
+        } else if (searchTerms && searchTerms.length === 2 && (!operator || operator === OperatorType.rangeExclusive || operator === OperatorType.rangeInclusive)) {
+          if (!operator) {
+            operator = OperatorType.rangeExclusive;
+          }
+          searchByArray.push({ field: fieldName, operator: (operator === OperatorType.rangeInclusive ? 'GE' : 'GT'), value: searchTerms[0] });
+          searchByArray.push({ field: fieldName, operator: (operator === OperatorType.rangeInclusive ? 'LE' : 'LT'), value: searchTerms[1] });
+          continue;
+        }
+
         // build the search array
-        searchByArray.push({
-          field: fieldName,
-          operator: mapOperatorType(operator),
-          value: searchValue
-        });
+        searchByArray.push({ field: fieldName, operator: mapOperatorType(operator), value: searchValue });
       }
     }
 
@@ -575,5 +590,30 @@ export class GraphqlService implements BackendService {
       }
       return tmpFilter;
     });
+  }
+
+  /**
+   * Filter by a range of searchTerms (2 searchTerms OR 1 string separated by 2 dots "value1..value2")
+   */
+  private filterBySearchTermRange(fieldName: string, operator: OperatorType | OperatorString, searchTerms: SearchTerm[]) {
+    let query = '';
+    let searchValues: SearchTerm[];
+    if (Array.isArray(searchTerms) && searchTerms.length === 1 && typeof searchTerms[0] === 'string' && (searchTerms[0] as string).indexOf('..') > 0) {
+      searchValues = (searchTerms[0] as string).split('..');
+    } else if (Array.isArray(searchTerms)) {
+      searchValues = searchTerms;
+    }
+
+    if (Array.isArray(searchValues) && searchValues.length === 2) {
+      if (operator === OperatorType.rangeInclusive) {
+        // example:: (Duration >= 5 and Duration <= 10)
+        // {field:"billing.address.zip",operator:LE,value:"1235"}
+        query = `(${fieldName} GE ${searchValues[0]} and ${fieldName} LE ${searchValues[1]})`;
+      } else if (operator === OperatorType.rangeExclusive) {
+        // example:: (Duration > 5 and Duration < 10)
+        query = `(${fieldName} GT ${searchValues[0]} and ${fieldName} LT ${searchValues[1]})`;
+      }
+    }
+    return query;
   }
 }
