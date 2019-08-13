@@ -5,11 +5,9 @@ import {
   Column,
   FieldType,
   Filters,
-  Formatters,
   GridOdataService,
   GridOption,
   GridStateChange,
-  JQueryUiSliderOption,
   OperatorType,
   Statistic,
 } from '../../aurelia-slickgrid';
