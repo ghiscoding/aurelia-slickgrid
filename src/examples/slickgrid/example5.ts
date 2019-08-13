@@ -73,37 +73,6 @@ export class Example5 {
         }
       },
       { id: 'company', name: 'Company', field: 'company' },
-      {
-        id: 'duration', field: 'duration', name: 'Duration', maxWidth: 90,
-        type: FieldType.number,
-        sortable: true,
-        filterable: true, filter: {
-          model: Filters.input,
-          operator: OperatorType.rangeInclusive // defaults to exclusive
-        }
-      },
-      {
-        id: 'finish', name: 'Finish', field: 'finish', headerKey: 'FINISH', formatter: Formatters.dateIso, sortable: true, minWidth: 75, width: 120, exportWithFormatter: true,
-        type: FieldType.date,
-        filterable: true,
-        filter: {
-          model: Filters.dateRange,
-        }
-      },
-      {
-        id: 'complete', name: '% Complete', field: 'percentComplete', headerKey: 'PERCENT_COMPLETE', minWidth: 120,
-        sortable: true,
-        formatter: Formatters.progressBar,
-        type: FieldType.number,
-        filterable: true,
-        filter: {
-          model: Filters.sliderRange,
-          maxValue: 100, // or you can use the filterOptions as well
-          operator: OperatorType.rangeInclusive, // defaults to exclusive
-          params: { hideSliderNumbers: false }, // you can hide/show the slider numbers on both side
-          filterOptions: { min: 0, step: 5 } as JQueryUiSliderOption // you can also optionally pass any option of the jQuery UI Slider
-        }
-      },
     ];
 
     this.gridOptions = {
@@ -216,8 +185,10 @@ export class Example5 {
           }
           if (filterBy.includes('eq')) {
             const filterMatch = filterBy.match(/([a-zA-Z ]*) eq '(.*?)'/);
-            const fieldName = filterMatch[1].trim();
-            columnFilters[fieldName] = { type: 'equal', term: filterMatch[2].trim() };
+            if (Array.isArray(filterMatch)) {
+              const fieldName = filterMatch[1].trim();
+              columnFilters[fieldName] = { type: 'equal', term: filterMatch[2].trim() };
+            }
           }
           if (filterBy.includes('startswith')) {
             const filterMatch = filterBy.match(/startswith\(([a-zA-Z ]*),\s?'(.*?)'/);
