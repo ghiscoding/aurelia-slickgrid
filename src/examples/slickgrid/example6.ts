@@ -104,34 +104,11 @@ export class Example6 {
         formatter: Formatters.multiple, params: { formatters: [Formatters.complexObject, Formatters.translate] }
       },
       {
-        id: 'duration', field: 'duration', name: 'Duration', maxWidth: 90,
-        type: FieldType.number,
-        sortable: true,
-        filterable: true, filter: {
-          model: Filters.input,
-          operator: OperatorType.rangeInclusive // defaults to exclusive
-        }
-      },
-      {
-        id: 'finish', name: 'Finish', field: 'finish', headerKey: 'FINISH', formatter: Formatters.dateIso, sortable: true, minWidth: 75, width: 120, exportWithFormatter: true,
+        id: 'finish', field: 'finish', name: 'Date', formatter: Formatters.dateIso, sortable: true, minWidth: 90, width: 120, exportWithFormatter: true,
         type: FieldType.date,
         filterable: true,
         filter: {
           model: Filters.dateRange,
-        }
-      },
-      {
-        id: 'complete', name: '% Complete', field: 'complete', headerKey: 'PERCENT_COMPLETE', minWidth: 120,
-        sortable: true,
-        formatter: Formatters.progressBar,
-        type: FieldType.number,
-        filterable: true,
-        filter: {
-          model: Filters.sliderRange,
-          maxValue: 100, // or you can use the filterOptions as well
-          operator: OperatorType.rangeInclusive, // defaults to exclusive
-          params: { hideSliderNumbers: false }, // you can hide/show the slider numbers on both side
-          filterOptions: { min: 0, step: 5 } as JQueryUiSliderOption // you can also optionally pass any option of the jQuery UI Slider
         }
       },
     ];
@@ -142,8 +119,6 @@ export class Example6 {
     this.gridOptions = {
       enableFiltering: true,
       enableCellNavigation: true,
-      enableCheckboxSelector: true,
-      enableRowSelection: true,
       enableTranslate: true,
       i18n: this.i18n,
       gridMenu: {
@@ -154,28 +129,23 @@ export class Example6 {
         pageSize: defaultPageSize,
         totalItems: 0
       },
-
       presets: {
         columns: [
-          { columnId: 'name', width: 120 },
+          { columnId: 'name', width: 100 },
           { columnId: 'gender', width: 55 },
           { columnId: 'company' },
           { columnId: 'billing.address.zip' }, // flip column position of Street/Zip to Zip/Street
           { columnId: 'billing.address.street', width: 120 },
-          { columnId: 'duration', width: 100 },
-          { columnId: 'finish', width: 100 },
-          { columnId: 'complete', width: 100 },
+          { columnId: 'finish', width: 130 },
         ],
-        // you can also type operator as string, e.g.: operator: 'EQ'
         filters: [
-          // { columnId: 'gender', searchTerms: ['male'], operator: OperatorType.equal },
-          // { columnId: 'name', searchTerms: ['John Doe'], operator: OperatorType.contains },
-          // { columnId: 'company', searchTerms: ['xyz'], operator: 'IN' }
+          // you can use OperatorType or type them as string, e.g.: operator: 'EQ'
+          { columnId: 'gender', searchTerms: ['male'], operator: OperatorType.equal },
+          { columnId: 'name', searchTerms: ['John Doe'], operator: OperatorType.contains },
+          { columnId: 'company', searchTerms: ['xyz'], operator: 'IN' },
 
-          // or you could also use 2 searchTerms values, instead of using the 2 dots (only works with SliderRange & DateRange Filters)
-          // { columnId: 'duration', searchTerms: ['4..88'] },
-          { columnId: 'complete', searchTerms: [5, 80], operator: 'RangeInclusive' }, // same result with searchTerms: ['5..80']
-          // { columnId: 'finish', operator: 'RangeInclusive', searchTerms: [presetLowestDay, presetHighestDay] },
+          // use a date range with 2 searchTerms values
+          { columnId: 'finish', searchTerms: [presetLowestDay, presetHighestDay], operator: OperatorType.rangeInclusive },
         ],
         sorters: [
           // direction can written as 'asc' (uppercase or lowercase) and/or use the SortDirection type
@@ -184,11 +154,9 @@ export class Example6 {
         ],
         pagination: { pageNumber: 2, pageSize: 20 }
       },
-
       backendServiceApi: {
         service: new GraphqlService(),
         options: this.getBackendOptions(this.isWithCursor),
-        onError: (e) => console.log(e),
         // you can define the onInit callback OR enable the "executeProcessCommandOnInit" flag in the service init
         // onInit: (query) => this.getCustomerApiCall(query)
         preProcess: () => this.displaySpinner(true),
@@ -197,7 +165,7 @@ export class Example6 {
           this.statistics = result.statistics;
           this.displaySpinner(false);
         }
-      },
+      }
     };
   }
 

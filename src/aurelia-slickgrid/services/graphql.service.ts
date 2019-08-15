@@ -19,11 +19,9 @@ import {
   GraphqlSortingOption,
   GridOption,
   MultiColumnSort,
-  OperatorString,
   OperatorType,
   Pagination,
   PaginationChangedArgs,
-  SearchTerm,
   SortChangedArgs,
   SortDirection,
   SortDirectionString
@@ -412,11 +410,6 @@ export class GraphqlService implements BackendService {
           operator = columnDef.filter.operator;
         }
 
-        // if we still don't have an operator find the proper Operator to use by it's field type
-        if (!operator) {
-          operator = mapOperatorByFieldType(columnDef.type || FieldType.string);
-        }
-
         // when having more than 1 search term (we need to create a CSV string for GraphQL "IN" or "NOT IN" filter search)
         if (searchTerms && searchTerms.length > 1 && (operator === 'IN' || operator === 'NIN' || operator === 'NOTIN' || operator === 'NOT IN' || operator === 'NOT_IN')) {
           searchValue = searchTerms.join(',');
@@ -427,6 +420,11 @@ export class GraphqlService implements BackendService {
           searchByArray.push({ field: fieldName, operator: (operator === OperatorType.rangeInclusive ? 'GE' : 'GT'), value: searchTerms[0] });
           searchByArray.push({ field: fieldName, operator: (operator === OperatorType.rangeInclusive ? 'LE' : 'LT'), value: searchTerms[1] });
           continue;
+        }
+
+        // if we still don't have an operator find the proper Operator to use by it's field type
+        if (!operator) {
+          operator = mapOperatorByFieldType(columnDef.type || FieldType.string);
         }
 
         // build the search array
@@ -590,30 +588,5 @@ export class GraphqlService implements BackendService {
       }
       return tmpFilter;
     });
-  }
-
-  /**
-   * Filter by a range of searchTerms (2 searchTerms OR 1 string separated by 2 dots "value1..value2")
-   */
-  private filterBySearchTermRange(fieldName: string, operator: OperatorType | OperatorString, searchTerms: SearchTerm[]) {
-    let query = '';
-    let searchValues: SearchTerm[];
-    if (Array.isArray(searchTerms) && searchTerms.length === 1 && typeof searchTerms[0] === 'string' && (searchTerms[0] as string).indexOf('..') > 0) {
-      searchValues = (searchTerms[0] as string).split('..');
-    } else if (Array.isArray(searchTerms)) {
-      searchValues = searchTerms;
-    }
-
-    if (Array.isArray(searchValues) && searchValues.length === 2) {
-      if (operator === OperatorType.rangeInclusive) {
-        // example:: (Duration >= 5 and Duration <= 10)
-        // {field:"billing.address.zip",operator:LE,value:"1235"}
-        query = `(${fieldName} GE ${searchValues[0]} and ${fieldName} LE ${searchValues[1]})`;
-      } else if (operator === OperatorType.rangeExclusive) {
-        // example:: (Duration > 5 and Duration < 10)
-        query = `(${fieldName} GT ${searchValues[0]} and ${fieldName} LT ${searchValues[1]})`;
-      }
-    }
-    return query;
   }
 }
