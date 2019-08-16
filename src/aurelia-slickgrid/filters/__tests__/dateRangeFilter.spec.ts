@@ -168,7 +168,7 @@ describe('DateRangeFilter', () => {
   });
 
   it('should create the input filter with a default search term when passed as a filter argument', () => {
-    filterArguments.searchTerms = ['2000-01-01', '2000-01-31'];
+    filterArguments.searchTerms = ['2000-01-01T05:00:00.000Z', '2000-01-31T05:00:00.000Z'];
     mockColumn.filter.operator = 'RangeInclusive';
     const spyCallback = jest.spyOn(filterArguments, 'callback');
 
@@ -185,7 +185,7 @@ describe('DateRangeFilter', () => {
   });
 
   it('should create the input filter with a default search term when passed as a filter argument with 2 dots (..) notation', () => {
-    filterArguments.searchTerms = ['2000-01-01..2000-01-31'];
+    filterArguments.searchTerms = ['2000-01-01T05:00:00.000Z..2000-01-31T05:00:00.000Z'];
     mockColumn.filter.operator = 'RangeInclusive';
     const spyCallback = jest.spyOn(filterArguments, 'callback');
 
@@ -203,7 +203,7 @@ describe('DateRangeFilter', () => {
 
   it('should work with different locale when locale is changed', () => {
     i18n.setLocale('fr-CA');
-    filterArguments.searchTerms = ['2000-01-01', '2000-01-31'];
+    filterArguments.searchTerms = ['2000-01-01T05:00:00.000Z', '2000-01-31T05:00:00.000Z'];
     mockColumn.filter.operator = 'RangeInclusive';
     const spyCallback = jest.spyOn(filterArguments, 'callback');
 
