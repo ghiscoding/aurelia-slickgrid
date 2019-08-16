@@ -4,6 +4,7 @@ import { EventAggregator } from 'aurelia-event-aggregator';
 import { BindingSignaler } from 'aurelia-templating-resources';
 import { Column, FilterArguments, FieldType, GridOption } from '../../models';
 import { Filters } from '..';
+import * as flatpickr from 'flatpickr';
 import { DateRangeFilter } from '../dateRangeFilter';
 
 const containerId = 'demo-container';
@@ -51,7 +52,7 @@ describe('DateRangeFilter', () => {
 
     i18n.setup({
       resources: {
-        en: {
+        'en': {
           translation: {
             CONTAINS: 'Contains',
             EQUALS: 'Equals',
