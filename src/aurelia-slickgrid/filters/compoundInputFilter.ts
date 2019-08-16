@@ -67,32 +67,34 @@ export class CompoundInputFilter implements Filter {
    * Initialize the Filter
    */
   init(args: FilterArguments) {
-    if (args) {
-      this.grid = args.grid;
-      this.callback = args.callback;
-      this.columnDef = args.columnDef;
-      this.operator = args.operator || '';
-      this.searchTerms = args.searchTerms || [];
-
-      // get locales provided by user in forRoot or else use default English locales via the Constants
-      this._locales = this.gridOptions && this.gridOptions.locales || Constants.locales;
-
-      // filter input can only have 1 search term, so we will use the 1st array index if it exist
-      const searchTerm = (Array.isArray(this.searchTerms) && this.searchTerms[0]) || '';
-
-      // step 1, create the DOM Element of the filter which contain the compound Operator+Input
-      // and initialize it if searchTerm is filled
-      this.$filterElm = this.createDomElement(searchTerm);
-
-      // step 3, subscribe to the keyup event and run the callback when that happens
-      // also add/remove "filled" class for styling purposes
-      this.$filterInputElm.on('keyup input change', (e: any) => {
-        this.onTriggerEvent(e);
-      });
-      this.$selectOperatorElm.on('change', (e: any) => {
-        this.onTriggerEvent(e);
-      });
+    if (!args) {
+      throw new Error('[Aurelia-SlickGrid] A filter must always have an "init()" with valid arguments.');
     }
+
+    this.grid = args.grid;
+    this.callback = args.callback;
+    this.columnDef = args.columnDef;
+    this.operator = args.operator || '';
+    this.searchTerms = args.searchTerms || [];
+
+    // get locales provided by user in forRoot or else use default English locales via the Constants
+    this._locales = this.gridOptions && this.gridOptions.locales || Constants.locales;
+
+    // filter input can only have 1 search term, so we will use the 1st array index if it exist
+    const searchTerm = (Array.isArray(this.searchTerms) && this.searchTerms[0]) || '';
+
+    // step 1, create the DOM Element of the filter which contain the compound Operator+Input
+    // and initialize it if searchTerm is filled
+    this.$filterElm = this.createDomElement(searchTerm);
+
+    // step 3, subscribe to the keyup event and run the callback when that happens
+    // also add/remove "filled" class for styling purposes
+    this.$filterInputElm.on('keyup input change', (e: any) => {
+      this.onTriggerEvent(e);
+    });
+    this.$selectOperatorElm.on('change', (e: any) => {
+      this.onTriggerEvent(e);
+    });
   }
 
   /**
@@ -124,7 +126,7 @@ export class CompoundInputFilter implements Filter {
    */
   setValues(values: SearchTerm[]) {
     if (values && Array.isArray(values)) {
-      this.$filterElm.val(values[0]);
+      this.$filterInputElm.val(values[0]);
     }
   }
 
@@ -169,7 +171,7 @@ export class CompoundInputFilter implements Filter {
         break;
       default:
         optionValues = [
-          { operator: '' as OperatorString, description: this.i18n && this.i18n.tr && this.i18n.tr('CONTAINS') || this._locales && this._locales.TEXT_CONTAINS },
+          { operator: '' as OperatorString, description: '' },
           { operator: '=' as OperatorString, description: '=' },
           { operator: '<' as OperatorString, description: '<' },
           { operator: '<=' as OperatorString, description: '<=' },

@@ -33,7 +33,7 @@ describe('InputFilter', () => {
     document.body.appendChild(divContainer);
     spyGetHeaderRow = jest.spyOn(gridStub, 'getHeaderRowColumn').mockReturnValue(divContainer);
 
-    mockColumn = { id: 'isActive', field: 'isActive', filterable: true, filter: { model: Filters.input, operator: 'EQ' } };
+    mockColumn = { id: 'duration', field: 'duration', filterable: true, filter: { model: Filters.input, operator: 'EQ' } };
     filterArguments = {
       grid: gridStub,
       columnDef: mockColumn,
@@ -53,7 +53,7 @@ describe('InputFilter', () => {
 
   it('should initialize the filter', () => {
     filter.init(filterArguments);
-    const filterCount = divContainer.querySelectorAll('input.filter-isActive').length;
+    const filterCount = divContainer.querySelectorAll('input.filter-duration').length;
 
     expect(spyGetHeaderRow).toHaveBeenCalled();
     expect(filterCount).toBe(1);
@@ -65,7 +65,7 @@ describe('InputFilter', () => {
     mockColumn.filter.placeholder = testValue;
 
     filter.init(filterArguments);
-    const filterElm = divContainer.querySelector<HTMLInputElement>('input.filter-isActive');
+    const filterElm = divContainer.querySelector<HTMLInputElement>('input.filter-duration');
 
     expect(filterElm.placeholder).toBe(testValue);
   });
@@ -75,7 +75,7 @@ describe('InputFilter', () => {
 
     filter.init(filterArguments);
     filter.setValues('abc');
-    const filterElm = divContainer.querySelector<HTMLInputElement>('input.filter-isActive');
+    const filterElm = divContainer.querySelector<HTMLInputElement>('input.filter-duration');
 
     filterElm.focus();
     filterElm.dispatchEvent(new (window.window as any).KeyboardEvent('keyup', {
@@ -83,7 +83,50 @@ describe('InputFilter', () => {
       bubbles: true,
       cancelable: true
     }));
+    const filterFilledElms = divContainer.querySelectorAll<HTMLInputElement>('input.filter-duration.filled');
 
+    expect(filterFilledElms.length).toBe(1);
+    expect(spyCallback).toHaveBeenCalledWith(expect.anything(), { columnDef: mockColumn, operator: 'EQ', searchTerms: ['abc'], shouldTriggerQuery: true });
+  });
+
+  it('should call "setValues" with extra spaces at the beginning of the searchTerms and trim value when "enableFilterTrimWhiteSpace" is enabled in grid options', () => {
+    gridOptionMock.enableFilterTrimWhiteSpace = true;
+    const spyCallback = jest.spyOn(filterArguments, 'callback');
+
+    filter.init(filterArguments);
+    filter.setValues('    abc ');
+    const filterElm = divContainer.querySelector<HTMLInputElement>('input.filter-duration');
+
+    filterElm.focus();
+    filterElm.dispatchEvent(new (window.window as any).KeyboardEvent('keyup', {
+      keyCode: 97,
+      bubbles: true,
+      cancelable: true
+    }));
+    const filterFilledElms = divContainer.querySelectorAll<HTMLInputElement>('input.filter-duration.filled');
+
+    expect(filterFilledElms.length).toBe(1);
+    expect(spyCallback).toHaveBeenCalledWith(expect.anything(), { columnDef: mockColumn, operator: 'EQ', searchTerms: ['abc'], shouldTriggerQuery: true });
+  });
+
+  it('should call "setValues" with extra spaces at the beginning of the searchTerms and trim value when "enableTrimWhiteSpace" is enabled in the column filter', () => {
+    gridOptionMock.enableFilterTrimWhiteSpace = false;
+    mockColumn.filter.enableTrimWhiteSpace = true;
+    const spyCallback = jest.spyOn(filterArguments, 'callback');
+
+    filter.init(filterArguments);
+    filter.setValues('    abc ');
+    const filterElm = divContainer.querySelector<HTMLInputElement>('input.filter-duration');
+
+    filterElm.focus();
+    filterElm.dispatchEvent(new (window.window as any).KeyboardEvent('keyup', {
+      keyCode: 97,
+      bubbles: true,
+      cancelable: true
+    }));
+    const filterFilledElms = divContainer.querySelectorAll<HTMLInputElement>('input.filter-duration.filled');
+
+    expect(filterFilledElms.length).toBe(1);
     expect(spyCallback).toHaveBeenCalledWith(expect.anything(), { columnDef: mockColumn, operator: 'EQ', searchTerms: ['abc'], shouldTriggerQuery: true });
   });
 
@@ -91,7 +134,7 @@ describe('InputFilter', () => {
     const spyCallback = jest.spyOn(filterArguments, 'callback');
 
     filter.init(filterArguments);
-    const filterElm = divContainer.querySelector<HTMLInputElement>('input.filter-isActive');
+    const filterElm = divContainer.querySelector<HTMLInputElement>('input.filter-duration');
 
     filterElm.focus();
     filterElm.value = 'a';
@@ -108,7 +151,7 @@ describe('InputFilter', () => {
     filterArguments.searchTerms = ['xyz'];
 
     filter.init(filterArguments);
-    const filterElm = divContainer.querySelector<HTMLInputElement>('input.filter-isActive');
+    const filterElm = divContainer.querySelector<HTMLInputElement>('input.filter-duration');
 
     expect(filterElm.value).toBe('xyz');
   });
@@ -119,9 +162,12 @@ describe('InputFilter', () => {
 
     filter.init(filterArguments);
     filter.clear();
-    const filterElm = divContainer.querySelector<HTMLInputElement>('input.filter-isActive');
+    const filterElm = divContainer.querySelector<HTMLInputElement>('input.filter-duration');
+    const filterFilledElms = divContainer.querySelectorAll<HTMLInputElement>('input.filter-duration.filled');
+
 
     expect(filterElm.value).toBe('');
+    expect(filterFilledElms.length).toBe(0);
     expect(spyCallback).toHaveBeenCalledWith(expect.anything(), { columnDef: mockColumn, clearFilterTriggered: true, shouldTriggerQuery: true });
   });
 
@@ -131,9 +177,12 @@ describe('InputFilter', () => {
 
     filter.init(filterArguments);
     filter.clear(false);
-    const filterElm = divContainer.querySelector<HTMLInputElement>('input.filter-isActive');
+    const filterElm = divContainer.querySelector<HTMLInputElement>('input.filter-duration');
+    const filterFilledElms = divContainer.querySelectorAll<HTMLInputElement>('input.filter-duration.filled');
+
 
     expect(filterElm.value).toBe('');
+    expect(filterFilledElms.length).toBe(0);
     expect(spyCallback).toHaveBeenCalledWith(expect.anything(), { columnDef: mockColumn, clearFilterTriggered: true, shouldTriggerQuery: false });
   });
 });

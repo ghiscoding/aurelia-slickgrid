@@ -73,7 +73,7 @@ export class SliderRangeFilter implements Filter {
    */
   init(args: FilterArguments) {
     if (!args) {
-      throw new Error('[Angular-SlickGrid] A filter must always have an "init()" with valid arguments.');
+      throw new Error('[Aurelia-SlickGrid] A filter must always have an "init()" with valid arguments.');
     }
     this.grid = args.grid;
     this.callback = args.callback;
@@ -148,7 +148,7 @@ export class SliderRangeFilter implements Filter {
    */
   private createDomElement(searchTerms?: SearchTerm | SearchTerm[]) {
     if (this.columnFilter.filterOptions && this.columnFilter.filterOptions.change || this.columnFilter.filterOptions.slide) {
-      throw new Error(`[Angular-Slickgrid] You cannot override the "change" and/or the "slide" callback methods
+      throw new Error(`[Aurelia-SlickGrid] You cannot override the "change" and/or the "slide" callback methods
         since they are used in SliderRange Filter itself, however any other methods can be used for example the "create", "start", "stop" methods.`);
     }
     const fieldId = this.columnDef && this.columnDef.id;
