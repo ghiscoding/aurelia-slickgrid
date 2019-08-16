@@ -142,7 +142,7 @@ describe('gridMenuExtension', () => {
             }
           }
         },
-        lng: '0',
+        lng: 'en',
         fallbackLng: 'en',
         debug: false
       });
@@ -204,27 +204,27 @@ describe('gridMenuExtension', () => {
 
       it(`should call internal event handler subscribe and expect the "onColumnsChanged" option to be called
     and it should override "visibleColumns" when array passed as arguments is bigger than previous visible columns`, () => {
-          const handlerSpy = jest.spyOn(extension.eventHandler, 'subscribe');
-          const onColumnSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onColumnsChanged');
-          const onBeforeSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onBeforeMenuShow');
-          const onCloseSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onMenuClose');
-          const onCommandSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onCommand');
-          const visibleColsSpy = jest.spyOn(SharedService.prototype, 'visibleColumns', 'set');
+        const handlerSpy = jest.spyOn(extension.eventHandler, 'subscribe');
+        const onColumnSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onColumnsChanged');
+        const onBeforeSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onBeforeMenuShow');
+        const onCloseSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onMenuClose');
+        const onCommandSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onCommand');
+        const visibleColsSpy = jest.spyOn(SharedService.prototype, 'visibleColumns', 'set');
 
-          const instance = extension.register();
-          instance.onColumnsChanged.notify({ columns: columnsMock, grid: gridStub }, new Slick.EventData(), gridStub);
+        const instance = extension.register();
+        instance.onColumnsChanged.notify({ columns: columnsMock, grid: gridStub }, new Slick.EventData(), gridStub);
 
-          expect(handlerSpy).toHaveBeenCalledTimes(4);
-          expect(handlerSpy).toHaveBeenCalledWith(
-            { notify: expect.anything(), subscribe: expect.anything(), unsubscribe: expect.anything(), },
-            expect.anything()
-          );
-          expect(onColumnSpy).toHaveBeenCalledWith(expect.anything(), { columns: columnsMock, grid: gridStub });
-          expect(onBeforeSpy).not.toHaveBeenCalled();
-          expect(onCloseSpy).not.toHaveBeenCalled();
-          expect(onCommandSpy).not.toHaveBeenCalled();
-          expect(visibleColsSpy).toHaveBeenCalledWith(columnsMock);
-        });
+        expect(handlerSpy).toHaveBeenCalledTimes(4);
+        expect(handlerSpy).toHaveBeenCalledWith(
+          { notify: expect.anything(), subscribe: expect.anything(), unsubscribe: expect.anything(), },
+          expect.anything()
+        );
+        expect(onColumnSpy).toHaveBeenCalledWith(expect.anything(), { columns: columnsMock, grid: gridStub });
+        expect(onBeforeSpy).not.toHaveBeenCalled();
+        expect(onCloseSpy).not.toHaveBeenCalled();
+        expect(onCommandSpy).not.toHaveBeenCalled();
+        expect(visibleColsSpy).toHaveBeenCalledWith(columnsMock);
+      });
 
       it('should call internal event handler subscribe and expect the "onBeforeMenuShow" option to be called when addon notify is called', () => {
         const handlerSpy = jest.spyOn(extension.eventHandler, 'subscribe');

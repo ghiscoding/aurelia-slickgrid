@@ -16,7 +16,7 @@ describe('the Translate Boolean Formatter', () => {
     i18n = new I18N(new EventAggregator(), new BindingSignaler());
     i18n.setup({
       resources: { en: { translation: { TRUE: 'True', FALSE: 'False' } }, fr: { translation: { TRUE: 'Vrai', FALSE: 'Faux' } } },
-      lng: '0',
+      lng: 'en',
       fallbackLng: 'en',
       debug: false
     });

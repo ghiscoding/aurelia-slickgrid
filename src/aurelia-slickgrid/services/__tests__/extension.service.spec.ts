@@ -71,8 +71,8 @@ describe('ExtensionService', () => {
       i18n = new I18N(ea, new BindingSignaler());
       i18n.setup({
         resources: { en: { translation: { HELLO: 'Hello', WORLD: 'World' } }, fr: { translation: { HELLO: 'Bonjour', WORLD: 'Monde' } } },
-        lng: '0',
-        fallbackLng: 'fr',
+        lng: 'fr',
+        fallbackLng: 'en',
         debug: false
       });
 
@@ -574,18 +574,18 @@ describe('ExtensionService', () => {
 
       it(`should call "setColumns" with the collection provided as argument but NOT override "allColumns" on the Shared Service
     when collection provided is smaller than "allColumns" that already exists`, () => {
-          const columnsMock = [
-            { id: 'field1', field: 'field1', headerKey: 'HELLO' }
-          ] as Column[];
-          jest.spyOn(SharedService.prototype, 'grid', 'get').mockReturnValue(gridStub);
-          const spyAllCols = jest.spyOn(SharedService.prototype, 'allColumns', 'set');
-          const setColumnsSpy = jest.spyOn(gridStub, 'setColumns');
+        const columnsMock = [
+          { id: 'field1', field: 'field1', headerKey: 'HELLO' }
+        ] as Column[];
+        jest.spyOn(SharedService.prototype, 'grid', 'get').mockReturnValue(gridStub);
+        const spyAllCols = jest.spyOn(SharedService.prototype, 'allColumns', 'set');
+        const setColumnsSpy = jest.spyOn(gridStub, 'setColumns');
 
-          service.renderColumnHeaders(columnsMock);
+        service.renderColumnHeaders(columnsMock);
 
-          expect(setColumnsSpy).toHaveBeenCalledWith(columnsMock);
-          expect(spyAllCols).not.toHaveBeenCalled();
-        });
+        expect(setColumnsSpy).toHaveBeenCalledWith(columnsMock);
+        expect(spyAllCols).not.toHaveBeenCalled();
+      });
 
       it('should re-register the Column Picker when enable and method is called with new column definition collection provided as argument', () => {
         const instanceMock = { onColumnsChanged: jest.fn() };

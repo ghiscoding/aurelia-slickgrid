@@ -30,7 +30,7 @@ describe('extensionUtility', () => {
       utility = new ExtensionUtility(i18n, sharedService);
       i18n.setup({
         resources: { en: { translation: { TITLE: 'Title' } }, fr: { translation: { TITLE: 'Titre' } } },
-        lng: '0',
+        lng: 'en',
         fallbackLng: 'en',
         debug: false
       });

@@ -118,7 +118,7 @@ describe('ExportService', () => {
             }
           }
         },
-        lng: '0',
+        lng: 'en',
         fallbackLng: 'en',
         debug: false
       });
@@ -289,28 +289,28 @@ describe('ExportService', () => {
 
       it(`should have the UserId escape with equal sign showing as prefix, to avoid Excel casting the value 1E06 to 1 exponential 6,
         when "exportCsvForceToKeepAsString" is enable in its column definition`, (done) => {
-          mockCollection = [{ id: 0, userId: '1E06', firstName: 'John', lastName: 'Z', position: 'SALES_REP', order: 10 }];
-          jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
-          jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
-          const eaSpy = jest.spyOn(ea, 'publish');
-          const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
-          const spyDownload = jest.spyOn(service, 'startDownloadFile');
+        mockCollection = [{ id: 0, userId: '1E06', firstName: 'John', lastName: 'Z', position: 'SALES_REP', order: 10 }];
+        jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
+        jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
+        const eaSpy = jest.spyOn(ea, 'publish');
+        const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
+        const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
-          const optionExpectation = { filename: 'export.csv', format: 'csv', useUtf8WithBom: false };
-          const contentExpectation =
-            `"User Id","FirstName","LastName","Position","Order"
+        const optionExpectation = { filename: 'export.csv', format: 'csv', useUtf8WithBom: false };
+        const contentExpectation =
+          `"User Id","FirstName","LastName","Position","Order"
           ="1E06","John","Z","SALES_REP","<b>10</b>"`;
 
-          service.init(gridStub, dataViewStub);
-          service.exportToFile(mockExportCsvOptions);
+        service.init(gridStub, dataViewStub);
+        service.exportToFile(mockExportCsvOptions);
 
-          setTimeout(() => {
-            expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
-            expect(spyUrlCreate).toHaveBeenCalledWith(mockCsvBlob);
-            expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
-            done();
-          });
+        setTimeout(() => {
+          expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
+          expect(spyUrlCreate).toHaveBeenCalledWith(mockCsvBlob);
+          expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
+          done();
         });
+      });
 
       it(`should have the LastName in uppercase when "formatter" is defined but also has "exportCustomFormatter" which will be used`, (done) => {
         mockCollection = [{ id: 1, userId: '2B02', firstName: 'Jane', lastName: 'Doe', position: 'FINANCE_MANAGER', order: 1 }];

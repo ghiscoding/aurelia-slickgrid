@@ -1,10 +1,10 @@
+import { I18N } from 'aurelia-i18n';
+import { DOM } from 'aurelia-pal';
+import { EventAggregator } from 'aurelia-event-aggregator';
+import { BindingSignaler } from 'aurelia-templating-resources';
 import { Column, FilterArguments, FieldType, GridOption } from '../../models';
 import { Filters } from '..';
 import { CompoundInputFilter } from '../compoundInputFilter';
-import { I18N } from 'aurelia-i18n';
-import { EventAggregator } from 'aurelia-event-aggregator';
-import { BindingSignaler } from 'aurelia-templating-resources';
-import { DOM } from 'aurelia-pal';
 
 const containerId = 'demo-container';
 
@@ -68,7 +68,7 @@ describe('CompoundInputFilter', () => {
           }
         }
       },
-      lng: '0',
+      lng: 'en',
       fallbackLng: 'en',
       debug: false
     });
