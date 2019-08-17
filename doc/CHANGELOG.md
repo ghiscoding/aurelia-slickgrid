@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.13.4"></a>
+## [2.13.4](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.13.3...v2.13.4) (2019-08-17)
+
+
+### Bug Fixes
+
+* **i18n:** aurelia-i18n needs to stay a dependency even if optional ([6920fbf](https://github.com/ghiscoding/aurelia-slickgrid/commit/6920fbf))
+
+
+
+<a name="2.13.3"></a>
+## 2.13.3 (2019-08-17)
+
+
+### Bug Fixes
+
+* **bs4:** fix another Bootstrap 4 styling ([8a949a6](https://github.com/ghiscoding/aurelia-slickgrid/commit/8a949a6))
+
+
+
 <a name="2.13.3"></a>
 ## [2.13.3](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.13.2...v2.13.3) (2019-08-17)
 
