@@ -10,12 +10,13 @@ describe('Example 15: Grid State & Presets using Local Storage', () => {
     cy.saveLocalStorage();
   });
 
-  it('should display Example 15 title', () => {
+  it('should display Example title', () => {
     cy.visit(`${Cypress.config('baseExampleUrl')}/example15`);
     cy.get('h2').should('contain', 'Example 15: Grid State & Presets using Local Storage');
 
     cy.clearLocalStorage();
     cy.get('[data-test=reset-button]').click();
+    cy.reload()
   });
 
   it('should have exact Column Titles in the grid', () => {

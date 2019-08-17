@@ -258,7 +258,7 @@ export class Example5 {
 
           setTimeout(() => {
             resolve({ items: updatedData, totalRecordCount: countTotalItems, query });
-          }, 500);
+          }, 250);
         });
     });
   }
