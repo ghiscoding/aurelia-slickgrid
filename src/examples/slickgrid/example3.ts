@@ -11,12 +11,12 @@ import {
   EditorValidator,
   FieldType,
   Filters,
+  FlatpickrOption,
   Formatters,
   GridOption,
   OnEventArgs,
   OperatorType,
   Sorters,
-  FlatpickrOption,
 } from '../../aurelia-slickgrid';
 import { CustomInputEditor } from './custom-inputEditor';
 import { CustomInputFilter } from './custom-inputFilter';
