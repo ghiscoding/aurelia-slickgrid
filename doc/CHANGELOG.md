@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.13.0"></a>
+# [2.13.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.12.3...v2.13.0) (2019-08-17)
+
+
+### Bug Fixes
+
+* **dom:** ColumnPicker & GridMenu were creating multiple DOM elements ([#205](https://github.com/ghiscoding/aurelia-slickgrid/issues/205)) ([901da5e](https://github.com/ghiscoding/aurelia-slickgrid/commit/901da5e))
+* **editor:** fix negative number in floatEditor ([c02379b](https://github.com/ghiscoding/aurelia-slickgrid/commit/c02379b))
+* **odata:** use contains with OData version 4 ([#215](https://github.com/ghiscoding/aurelia-slickgrid/issues/215)) ([2ff9a91](https://github.com/ghiscoding/aurelia-slickgrid/commit/2ff9a91)), closes [#263](https://github.com/ghiscoding/aurelia-slickgrid/issues/263)
+* **presets:** Grid State & Presets stopped working for columns ([#213](https://github.com/ghiscoding/aurelia-slickgrid/issues/213)) ([d1949aa](https://github.com/ghiscoding/aurelia-slickgrid/commit/d1949aa))
+* **selection:** selected row should be none after filtering ([#210](https://github.com/ghiscoding/aurelia-slickgrid/issues/210)) ([315a8b8](https://github.com/ghiscoding/aurelia-slickgrid/commit/315a8b8))
+
+
+### Features
+
+* **cypress:** add Cypress E2E testing to CircleCI build ([#207](https://github.com/ghiscoding/aurelia-slickgrid/issues/207)) ([1d3e341](https://github.com/ghiscoding/aurelia-slickgrid/commit/1d3e341))
+* **filter:** add filter search range functionality ([#214](https://github.com/ghiscoding/aurelia-slickgrid/issues/214)) ([e9298ed](https://github.com/ghiscoding/aurelia-slickgrid/commit/e9298ed))
+* **filter:** add optional placeholder to multiple select ([dc6a2f6](https://github.com/ghiscoding/aurelia-slickgrid/commit/dc6a2f6))
+* **registry:** add npm package info for github package registry ([7727c3c](https://github.com/ghiscoding/aurelia-slickgrid/commit/7727c3c))
+* **tests:** add Cypress E2E tests to cover hidden columns ([#211](https://github.com/ghiscoding/aurelia-slickgrid/issues/211)) ([c76ca3e](https://github.com/ghiscoding/aurelia-slickgrid/commit/c76ca3e))
+* **translate:** make I18N an optional dependency ([#208](https://github.com/ghiscoding/aurelia-slickgrid/issues/208)) ([6bb9056](https://github.com/ghiscoding/aurelia-slickgrid/commit/6bb9056))
+
+
+
 <a name="2.12.3"></a>
 ## [2.12.3](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.12.2...v2.12.3) (2019-07-25)
 
