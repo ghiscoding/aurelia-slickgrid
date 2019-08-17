@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.13.3"></a>
+## [2.13.3](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.13.2...v2.13.3) (2019-08-17)
+
+
+### Bug Fixes
+
+* **bs4:** fix some Bootstrap 4 styling ([432bad0](https://github.com/ghiscoding/aurelia-slickgrid/commit/432bad0))
+
+
+
 <a name="2.13.2"></a>
 ## [2.13.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.13.1...v2.13.2) (2019-08-17)
 
