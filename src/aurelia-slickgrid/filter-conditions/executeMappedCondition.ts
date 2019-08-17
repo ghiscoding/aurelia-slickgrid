@@ -67,8 +67,8 @@ function executeAssociatedDateCondition(options: FilterConditionOption): boolean
   const searchTerms = Array.isArray(options.searchTerms) && options.searchTerms || [];
 
   let isRangeSearch = false;
-  let dateSearch1: moment.Moment;
-  let dateSearch2: moment.Moment;
+  let dateSearch1: moment.Moment = moment();
+  let dateSearch2: moment.Moment = moment();
 
   // return when cell value is not a valid date
   if (searchTerms.length === 0 || searchTerms[0] === '' || searchTerms[0] === null || !moment(options.cellValue, FORMAT, true).isValid()) {

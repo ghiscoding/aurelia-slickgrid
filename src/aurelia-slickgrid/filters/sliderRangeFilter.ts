@@ -39,7 +39,7 @@ export class SliderRangeFilter implements Filter {
 
   /** Getter for the `filter` properties */
   private get filterProperties(): ColumnFilter {
-    return this.columnDef && this.columnDef.filter;
+    return this.columnDef && this.columnDef.filter || {};
   }
 
   /** Getter for the Column Filter */
@@ -97,7 +97,7 @@ export class SliderRangeFilter implements Filter {
       if (!this.filterParams.hideSliderNumbers) {
         this.renderSliderValues(lowestValue, highestValue);
       }
-      this.callback(null, { columnDef: this.columnDef, clearFilterTriggered: true, shouldTriggerQuery });
+      this.callback(undefined, { columnDef: this.columnDef, clearFilterTriggered: true, shouldTriggerQuery });
       this.$filterContainerElm.removeClass('filled');
     }
   }
@@ -117,13 +117,13 @@ export class SliderRangeFilter implements Filter {
    */
   setValues(searchTerms: SearchTerm | SearchTerm[]) {
     if (searchTerms) {
-      let sliderValues = [];
+      let sliderValues: number[] | string[] = [];
 
       // get the slider values, if it's a string with the "..", we'll do the split else we'll use the array of search terms
       if (typeof searchTerms === 'string' || (Array.isArray(searchTerms) && typeof searchTerms[0] === 'string') && (searchTerms[0] as string).indexOf('..') > 0) {
         sliderValues = (typeof searchTerms === 'string') ? [(searchTerms as string)] : (searchTerms[0] as string).split('..');
       } else if (Array.isArray(searchTerms)) {
-        sliderValues = searchTerms;
+        sliderValues = searchTerms as string[];
       }
 
       if (Array.isArray(sliderValues) && sliderValues.length === 2) {
@@ -191,9 +191,9 @@ export class SliderRangeFilter implements Filter {
 
     const definedOptions: JQueryUiSliderOption = {
       range: true,
-      min: +minValue,
-      max: +maxValue,
-      step: +step,
+      min: +(minValue || 0),
+      max: +(maxValue || DEFAULT_MAX_VALUE),
+      step: +(step || 1),
       values: [defaultStartValue, defaultEndValue],
       change: (e: Event, ui: JQueryUiSliderResponse) => this.onValueChanged(e, ui),
       slide: (e: Event, ui: JQueryUiSliderResponse) => {

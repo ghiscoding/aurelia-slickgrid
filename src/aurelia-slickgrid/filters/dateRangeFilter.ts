@@ -114,7 +114,7 @@ export class DateRangeFilter implements Filter {
    * @params searchTerms
    */
   setValues(searchTerms: SearchTerm[]) {
-    let pickerValues = [];
+    let pickerValues: any[] = [];
 
     // get the slider values, if it's a string with the "..", we'll do the split else we'll use the array of search terms
     if (typeof searchTerms === 'string' || (Array.isArray(searchTerms) && typeof searchTerms[0] === 'string') && (searchTerms[0] as string).indexOf('..') > 0) {
@@ -141,7 +141,7 @@ export class DateRangeFilter implements Filter {
       currentLocale = currentLocale.substring(0, 2);
     }
 
-    let pickerValues = [];
+    let pickerValues: any[] = [];
 
     // get the slider values, if it's a string with the "..", we'll do the split else we'll use the array of search terms
     if (typeof searchTerms === 'string' || (Array.isArray(searchTerms) && typeof searchTerms[0] === 'string') && (searchTerms[0] as string).indexOf('..') > 0) {
@@ -152,13 +152,13 @@ export class DateRangeFilter implements Filter {
 
     // if we are preloading searchTerms, we'll keep them for reference
     if (pickerValues) {
-      this._currentDates = pickerValues;
+      this._currentDates = pickerValues as Date[];
       const outFormat = mapMomentDateFormatWithFieldType(this.columnDef.type || FieldType.dateIso);
       this._currentDateStrings = pickerValues.map(date => moment(date).format(outFormat));
     }
 
     const pickerOptions: FlatpickrOption = {
-      defaultDate: pickerValues || '',
+      defaultDate: (pickerValues || '') as string | string[],
       altInput: true,
       altFormat: outputFormat,
       dateFormat: inputFormat,

@@ -12,8 +12,8 @@ export const numberFilterCondition: FilterCondition = (options: FilterConditionO
   if (searchTerms.length === 2 || (typeof searchTerms[0] === 'string' && (searchTerms[0] as string).indexOf('..') > 0)) {
     isRangeSearch = true;
     const searchValues = (searchTerms.length === 2) ? searchTerms : (searchTerms[0] as string).split('..');
-    searchValue1 = parseFloat(Array.isArray(searchValues) && searchValues[0] + '');
-    searchValue2 = parseFloat(Array.isArray(searchValues) && searchValues[1] + '');
+    searchValue1 = parseFloat(Array.isArray(searchValues) ? (searchValues[0] + '') : '');
+    searchValue2 = parseFloat(Array.isArray(searchValues) ? (searchValues[1] + '') : '');
   } else {
     searchValue1 = searchTerms[0];
   }
