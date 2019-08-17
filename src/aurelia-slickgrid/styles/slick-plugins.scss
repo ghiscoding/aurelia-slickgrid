@@ -621,6 +621,7 @@ input.slider-editor-input[type=range] {
 .slider-editor {
   .slider-value {
     padding: 0;
+    height: $header-input-height;
     .input-group-text {
       padding: $slider-editor-number-padding;
       font-size: $slider-filter-number-font-size;
