@@ -1,5 +1,5 @@
 {
-  "name": "@ghiscoding/aurelia-slickgrid",
+  "name": "aurelia-slickgrid",
   "version": "2.13.1",
   "description": "Slickgrid components made available in Aurelia",
   "keywords": [
@@ -19,7 +19,7 @@
   "typings": "dist/aurelia-slickgrid.d.ts",
   "repository": {
     "type": "git",
-    "url": "git://github.com/ghiscoding/aurelia-slickgrid.git"
+    "url": "http://github.com/ghiscoding/aurelia-slickgrid"
   },
   "scripts": {
     "lint": "cross-env tslint --project tsconfig.json",
