@@ -41,7 +41,7 @@ You can see some screenshots below as well as instructions underneat them and if
 Contributions are very welcome, this is what the community is for. If you wish to suggest something and/or want to make a PR (Pull Request), please feel free to do so.
 
 ## Like my work?
-If you like my work, you can also support me with caffeine :smile:
+If you like my work, you can also support me with caffeine :coffee:
 [Buy Me a Coffee](https://ko-fi.com/N4N679OT)
 
 ## Screenshots

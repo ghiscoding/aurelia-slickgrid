@@ -2,7 +2,18 @@ import { HttpClient as FetchClient } from 'aurelia-fetch-client';
 import { HttpClient } from 'aurelia-http-client';
 import { autoinject } from 'aurelia-framework';
 import { CustomInputFilter } from './custom-inputFilter';
-import { AureliaGridInstance, Column, FieldType, Filters, Formatters, GridOption, OperatorType, Statistic } from '../../aurelia-slickgrid';
+import {
+  AureliaGridInstance,
+  Column,
+  FieldType,
+  Filters,
+  FlatpickrOption,
+  Formatters,
+  GridOption,
+  MultipleSelectOption,
+  OperatorType,
+  Statistic,
+} from '../../aurelia-slickgrid';
 
 function randomBetween(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -25,7 +36,10 @@ export class Example4 {
     </ul>
     <li>Date Filters</li>
     <ul>
-      <li>FieldType of dateUtc/date (from dataset) can use an extra option of "filterSearchType" to let user filter more easily. For example, in the "UTC Date" field below, you can type "&gt;02/28/2017", also when dealing with UTC you have to take the time difference in consideration.</li>
+      <li>
+        FieldType of dateUtc/date (from dataset) can use an extra option of "filterSearchType" to let user filter more easily.
+        For example, in the "UTC Date" field below, you can type "&gt;02/28/2017", also when dealing with UTC you have to take the time difference in consideration.
+      </li>
     </ul>
     <li>On String filters, (*) can be used as startsWith (Hello* => matches "Hello Word") ... endsWith (*Doe => matches: "John Doe")</li>
     <li>Custom Filter are now possible, "Description" column below, is a customized InputFilter with different placeholder. See <a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Custom-Filter" target="_blank">Wiki - Custom Filter</a></li>
@@ -129,7 +143,7 @@ export class Example4 {
             // if we want to display shorter text as the selected text (on the select filter itself, parent element)
             // we can use "useSelectOptionLabel" or "useSelectOptionLabelToHtml" the latter will parse html
             useSelectOptionLabelToHtml: true
-          }
+          } as MultipleSelectOption
         }
       },
       {
@@ -152,9 +166,7 @@ export class Example4 {
           model: Filters.compoundDate,
           // override any of the Flatpickr options through "filterOptions"
           // please note that there's no TSlint on this property since it's generic for any filter, so make sure you entered the correct filter option(s)
-          filterOptions: {
-            minDate: 'today'
-          }
+          filterOptions: { minDate: 'today' } as FlatpickrOption
         }
       },
       {
@@ -180,7 +192,7 @@ export class Example4 {
           // we could add certain option(s) to the "multiple-select" plugin
           filterOptions: {
             maxHeight: 250
-          },
+          } as MultipleSelectOption,
         }
       }
     ];

@@ -423,7 +423,7 @@ export class AureliaSlickgridCustomElement {
 
       // if user entered some Filter "presets", we need to reflect them all in the DOM
       if (gridOptions.presets && Array.isArray(gridOptions.presets.filters) && gridOptions.presets.filters.length > 0) {
-        this.filterService.populateColumnFilterSearchTerms();
+        this.filterService.populateColumnFilterSearchTermPresets(gridOptions.presets.filters);
       }
       gridOptions.backendServiceApi ? this.filterService.bindBackendOnFilter(grid, this.dataview) : this.filterService.bindLocalOnFilter(grid, this.dataview);
     }

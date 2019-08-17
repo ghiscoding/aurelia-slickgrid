@@ -20,7 +20,7 @@ export interface ColumnFilter {
   /** Column Definition */
   columnDef?: Column;
 
-  /** Search terms (collection) */
+  /** Search terms to preload (collection), please note it is better to use the "presets" grid option which is more powerful. */
   searchTerms?: SearchTerm[] | undefined;
 
   /** Operator to use when filtering (>, >=, EQ, IN, ...) */
@@ -75,7 +75,12 @@ export interface ColumnFilter {
   /** Defaults to false, do we want to trim white spaces from the filter value typed by the user? */
   enableTrimWhiteSpace?: boolean;
 
-  /** Options that could be provided to the Filter, example: { container: 'body', maxHeight: 250} */
+  /**
+   * Options that could be provided to the Filter, example: { container: 'body', maxHeight: 250}
+   *
+   * Please note that if you use options that have existed model interfaces, you should cast with "as X",
+   * for example { filterOptions: {maxHeight: 250} as MultipleSelectOption }
+   */
   filterOptions?: MultipleSelectOption | any;
 
   /**

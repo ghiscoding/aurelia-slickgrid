@@ -55,7 +55,7 @@ export class Example8 {
     this.columnDefinitions = [
       { id: 'title', name: 'Title', field: 'title', headerKey: 'TITLE' },
       { id: 'duration', name: 'Duration', field: 'duration', headerKey: 'DURATION', sortable: true },
-      { id: '%', name: '% Complete', field: 'percentComplete', sortable: true },
+      { id: '%', name: '% Complete', field: 'percentComplete', headerKey: 'PERCENT_COMPLETE', sortable: true },
       { id: 'start', name: 'Start', field: 'start', headerKey: 'START' },
       { id: 'finish', name: 'Finish', field: 'finish', headerKey: 'FINISH' },
       { id: 'completed', name: 'Completed', field: 'completed', headerKey: 'COMPLETED', formatter: Formatters.checkmark }

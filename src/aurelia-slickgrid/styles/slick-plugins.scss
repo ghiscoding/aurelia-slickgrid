@@ -239,7 +239,11 @@
 
   span {
     font-size: $multiselect-input-filter-font-size;
-    font-family: $multiselect-input-filter-font-family
+    font-family: $multiselect-input-filter-font-family;
+  }
+  .placeholder {
+    font-family: $multiselect-placeholder-font-family;
+    font-size: ($multiselect-input-filter-font-size + 2px);
   }
 }
 .ms-filter.search-filter {
@@ -376,16 +380,33 @@ input.search-filter {
 // Date Picker Filter
 // ----------------------------------------------
 
-.input-group.flatpickr {
+.search-filter.flatpickr {
   .flatpickr {
     flex: 1;
+    cursor: pointer;
 
     .flatpickr-input.form-control {
         background-color: $flatpickr-bgcolor;
         font-family: $filter-placeholder-font-family;
         font-size: $font-size-base;
         border-radius: $compound-filter-border-radius;
+        &[readonly] {
+          background-color: $flatpickr-bgcolor;
+        }
     }
+    .flatpickr.form-control[readonly] {
+      background-color: $flatpickr-bgcolor;
+    }
+  }
+}
+input.flatpickr-input.form-control,
+input.flatpickr.form-control {
+  cursor: pointer;
+  font-family: $filter-placeholder-font-family;
+  font-size: $font-size-base;
+  border-radius: $date-range-filter-border-radius;
+  &[readonly] {
+    background-color: $flatpickr-bgcolor;
   }
 }
 
@@ -464,7 +485,7 @@ input.search-filter {
 }
 
 // ----------------------------------------------
-// Input Range Filter (Slider)
+// Input Slider Filter (with vanilla html)
 // ----------------------------------------------
 input.slider-editor-input[type=range],
 input.slider-filter-input[type=range] {
@@ -500,11 +521,12 @@ input.slider-filter-input[type=range] {
     border-radius: 3px;
   }
   &::-webkit-slider-thumb {
+    cursor: $slider-filter-thumb-cursor;
     -webkit-appearance: none;
     border: none;
     height: $slider-filter-thumb-size;
     width: $slider-filter-thumb-size;
-    border-radius: 50%;
+    border-radius: $slider-filter-thumb-border-radius;
     border: $slider-filter-thumb-border;
     background: $slider-filter-thumb-color;
     margin-top: -4px;
@@ -523,9 +545,10 @@ input.slider-filter-input[type=range] {
   }
   &::-moz-range-thumb {
     border: none;
+    cursor: $slider-filter-thumb-cursor;
     height: $slider-filter-thumb-size - 2px;
     width: $slider-filter-thumb-size - 2px;
-    border-radius: 50%;
+    border-radius: $slider-filter-thumb-border-radius;
     border: $slider-filter-thumb-border;
     background: $slider-filter-thumb-color;
   }
@@ -560,9 +583,10 @@ input.slider-filter-input[type=range] {
   }
   &::-ms-thumb {
     border: none;
+    cursor: $slider-filter-thumb-cursor;
     height: $slider-filter-thumb-size - 2px;
     width: $slider-filter-thumb-size - 2px;
-    border-radius: 50%;
+    border-radius: $slider-filter-thumb-border-radius;
     border: $slider-filter-thumb-border;
     background: $slider-filter-thumb-color;
     margin-top: 1px;
@@ -599,6 +623,64 @@ input.slider-editor-input[type=range] {
       font-size: $slider-filter-number-font-size;
       height: $slider-editor-height;
     }
+  }
+}
+
+// ----------------------------------------------
+// Input Slider Range Filter (using jQuery UI)
+// ----------------------------------------------
+.slider-range-container {
+  height: $slider-range-filter-height;
+  border: $slider-range-filter-border;
+  padding: $slider-range-filter-padding;
+
+  .ui-slider {
+    position: relative;
+
+    .ui-slider-handle {
+      position: absolute;
+      top: $slider-range-filter-thumb-top;
+      margin-left: $slider-range-filter-thumb-margin-left;
+      border-radius: $slider-range-filter-thumb-border-radius;
+      cursor: $slider-range-filter-thumb-cursor;
+      border: $slider-range-filter-thumb-border;
+      height: $slider-range-filter-thumb-size;
+      width: $slider-range-filter-thumb-size;
+      background-color: $slider-range-filter-thumb-color;
+
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+
+  .ui-slider-horizontal {
+    top: $slider-range-filter-runnable-track-top;
+    height: $slider-range-filter-runnable-track-height;
+    background-color: $slider-range-filter-bgcolor;
+  }
+
+}
+.slider-range-container.slider-values {
+  padding: 0;
+  .ui-slider-horizontal {
+    width: $slider-range-filter-values-slider-width;
+    top: $slider-range-filter-values-slider-top;
+    margin-left: $slider-range-filter-values-slider-ml;
+  }
+  .slider-range-value {
+    padding: 0;
+    border: 0;
+    .input-group-text {
+      padding: $slider-filter-number-padding;
+      font-size: $slider-filter-number-font-size;
+    }
+  }
+  .input-group-prepend.slider-range-value {
+    border-right: $slider-range-filter-border;
+  }
+  .input-group-append.slider-range-value {
+    border-left: $slider-range-filter-border;
   }
 }
 

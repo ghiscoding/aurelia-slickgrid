@@ -1,0 +1,27 @@
+<template>
+  <h2>${title}</h2>
+  <div class="subtitle" innerhtml.bind="subTitle"></div>
+
+  <br />
+  <span if.bind="statistics">
+    <b>Statistics:</b> ${statistics.endTime | dateFormat: 'DD MMM, h:mm:ss a'} | ${statistics.itemCount} of
+    ${statistics.totalItemCount}
+    items
+  </span>
+  <button class="btn btn-default btn-sm" data-test="language" click.delegate="switchLanguage()">
+    <i class="fa fa-language"></i>
+    Switch Language
+  </button>
+  <b>Locale:</b> <span style="font-style: italic" data-test="selected-locale">${selectedLanguage + '.json'}</span>
+
+  <button class="btn btn-default btn-sm" click.delegate="aureliaGrid.filterService.clearFilters()"
+    data-test="clear-filter-button">Clear
+    Filters</button>
+  <button class="btn btn-default btn-sm" click.delegate="aureliaGrid.sortService.clearSorting()">Clear Sorting</button>
+
+  <aurelia-slickgrid grid-id="grid23" column-definitions.bind="columnDefinitions" grid-options.bind="gridOptions"
+    dataset.bind="dataset" asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)"
+    asg-on-grid-state-changed.delegate="gridStateChanged($event.detail)"
+    sg-on-row-count-changed.delegate="refreshStatistics($event.detail.eventData, $event.detail.args)">
+  </aurelia-slickgrid>
+</template>

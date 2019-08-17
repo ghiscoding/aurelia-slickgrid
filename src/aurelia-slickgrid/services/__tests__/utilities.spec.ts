@@ -815,8 +815,8 @@ describe('Service/Utilies', () => {
       const output1 = parseUtcDate(input1);
       const output2 = parseUtcDate(input2);
 
-      expect(output1).toBeNull();
-      expect(output2).toBeNull();
+      expect(output1).toBe('');
+      expect(output2).toBe('');
     });
 
     it('should return a date parsed as UTC when input is a date (without time) of ISO format', () => {

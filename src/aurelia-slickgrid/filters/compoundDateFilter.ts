@@ -8,6 +8,7 @@ import {
   Filter,
   FilterArguments,
   FilterCallback,
+  FlatpickrOption,
   GridOption,
   OperatorString,
   OperatorType,
@@ -125,15 +126,15 @@ export class CompoundDateFilter implements Filter {
       currentLocale = currentLocale.substring(0, 2);
     }
 
-    const pickerOptions: any = {
-      defaultDate: searchTerm || '',
+    const pickerOptions: FlatpickrOption = {
+      defaultDate: (searchTerm as string) || '',
       altInput: true,
       altFormat: outputFormat,
       dateFormat: inputFormat,
       wrap: true,
       closeOnSelect: true,
       locale: (currentLocale !== 'en') ? this.loadFlatpickrLocale(currentLocale) : 'en',
-      onChange: (selectedDates: any[] | any, dateStr: string, instance: any) => {
+      onChange: (selectedDates: Date[] | Date, dateStr: string, instance: any) => {
         this._currentValue = dateStr;
 
         // when using the time picker, we can simulate a keyup event to avoid multiple backend request
@@ -152,7 +153,7 @@ export class CompoundDateFilter implements Filter {
     }
 
     // merge options with optional user's custom options
-    const pickerMergedOptions = { ...pickerOptions, ...this.columnFilter.filterOptions };
+    const pickerMergedOptions: FlatpickrOption = { ...pickerOptions, ...(this.columnFilter.filterOptions as FlatpickrOption) };
 
     let placeholder = (this.gridOptions) ? (this.gridOptions.defaultFilterPlaceholder || '') : '';
     if (this.columnFilter && this.columnFilter.placeholder) {

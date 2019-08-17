@@ -349,7 +349,7 @@ export class HeaderMenuExtension implements Extension {
       // get previously sorted columns
       const sortedColsWithoutCurrent: ColumnSort[] = this.sortService.getCurrentColumnSorts(args.column.id + '');
 
-      let emitterType: EmitterType;
+      let emitterType: EmitterType = EmitterType.local;
 
       // add to the column array, the column sorted by the header menu
       sortedColsWithoutCurrent.push({ sortCol: args.column, sortAsc: isSortingAsc });

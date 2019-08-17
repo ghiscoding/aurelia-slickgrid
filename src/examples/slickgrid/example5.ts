@@ -9,7 +9,6 @@ import {
   GridOption,
   GridStateChange,
   OperatorType,
-  SortDirection,
   Statistic,
 } from '../../aurelia-slickgrid';
 
@@ -71,7 +70,7 @@ export class Example5 {
           collection: [{ value: '', label: '' }, { value: 'male', label: 'male' }, { value: 'female', label: 'female' }]
         }
       },
-      { id: 'company', name: 'Company', field: 'company' }
+      { id: 'company', name: 'Company', field: 'company' },
     ];
 
     this.gridOptions = {
@@ -184,8 +183,10 @@ export class Example5 {
           }
           if (filterBy.includes('eq')) {
             const filterMatch = filterBy.match(/([a-zA-Z ]*) eq '(.*?)'/);
-            const fieldName = filterMatch[1].trim();
-            columnFilters[fieldName] = { type: 'equal', term: filterMatch[2].trim() };
+            if (Array.isArray(filterMatch)) {
+              const fieldName = filterMatch[1].trim();
+              columnFilters[fieldName] = { type: 'equal', term: filterMatch[2].trim() };
+            }
           }
           if (filterBy.includes('startswith')) {
             const filterMatch = filterBy.match(/startswith\(([a-zA-Z ]*),\s?'(.*?)'/);
@@ -257,7 +258,7 @@ export class Example5 {
 
           setTimeout(() => {
             resolve({ items: updatedData, totalRecordCount: countTotalItems, query });
-          }, 500);
+          }, 250);
         });
     });
   }

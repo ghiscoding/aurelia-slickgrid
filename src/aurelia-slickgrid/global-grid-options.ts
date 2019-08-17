@@ -1,5 +1,5 @@
 import { Filters } from './filters/index';
-import { DelimiterType, FileType, GridOption } from './models/index';
+import { DelimiterType, FileType, GridOption, OperatorType } from './models/index';
 
 /**
  * Default Options that can be passed to the Aurelia-Slickgrid
@@ -29,6 +29,7 @@ export const GlobalGridOptions: GridOption = {
   defaultSlickgridEventPrefix: 'sg',
   defaultFilter: Filters.input,
   defaultFilterPlaceholder: '&#128269;', // magnifying glass icon
+  defaultFilterRangeOperator: OperatorType.rangeExclusive,
   enableAutoResize: true,
   enableAutoSizeColumns: true,
   enableHeaderMenu: true,

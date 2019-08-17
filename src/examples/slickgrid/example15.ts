@@ -1,6 +1,16 @@
 import { I18N } from 'aurelia-i18n';
 import { autoinject } from 'aurelia-framework';
-import { AureliaGridInstance, Column, FieldType, Filters, Formatters, GridOption, GridState, GridStateChange } from '../../aurelia-slickgrid';
+import {
+  AureliaGridInstance,
+  Column,
+  FieldType,
+  Filters,
+  Formatters,
+  GridOption,
+  GridState,
+  GridStateChange,
+  MultipleSelectOption
+} from '../../aurelia-slickgrid';
 
 function randomBetween(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -102,11 +112,11 @@ export class Example15 {
           filterOptions: {
             maxHeight: 250,
             width: 175
-          }
+          } as MultipleSelectOption
         }
       },
       {
-        id: 'complete', name: '% Complete', field: 'percentComplete', minWidth: 70, type: FieldType.number, sortable: true, width: 100,
+        id: 'complete', name: '% Complete', field: 'percentComplete', headerKey: 'PERCENT_COMPLETE', minWidth: 70, type: FieldType.number, sortable: true, width: 100,
         formatter: Formatters.percentCompleteBar, filterable: true, filter: { model: Filters.slider, operator: '>' }
       },
       {

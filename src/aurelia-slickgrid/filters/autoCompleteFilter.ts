@@ -1,6 +1,7 @@
 import { Subscription } from 'aurelia-event-aggregator';
 import { BindingEngine, inject } from 'aurelia-framework';
 import {
+  AutocompleteOption,
   CollectionCustomStructure,
   CollectionOption,
   Column,
@@ -11,7 +12,7 @@ import {
   GridOption,
   OperatorType,
   OperatorString,
-  SearchTerm
+  SearchTerm,
 } from './../models/index';
 import { CollectionService } from '../services/collection.service';
 import { getDescendantProperty } from '../services/utilities';
@@ -331,7 +332,7 @@ export class AutoCompleteFilter implements Filter {
     }
 
     // user might pass his own autocomplete options
-    const autoCompleteOptions = this.columnFilter.filterOptions;
+    const autoCompleteOptions: AutocompleteOption = this.columnFilter.filterOptions;
 
     // when user passes it's own autocomplete options
     // we still need to provide our own "select" callback implementation

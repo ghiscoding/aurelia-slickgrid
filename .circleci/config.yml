@@ -9,9 +9,6 @@ jobs:
       - restore_cache:
           key: aurelia-slickgrid-build-{{ .Branch }}-{{ checksum "package.json" }}
       - run: yarn install
-      - run:
-          name: Install Jest JUnit coverage reporter
-          command: yarn add --dev jest-junit
       - save_cache:
           key: aurelia-slickgrid-build-{{ .Branch }}-{{ checksum "package.json" }}
           paths:

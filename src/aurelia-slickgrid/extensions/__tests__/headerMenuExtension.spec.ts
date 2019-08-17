@@ -129,7 +129,7 @@ describe('headerMenuExtension', () => {
             }
           }
         },
-        lng: '0',
+        lng: 'en',
         fallbackLng: 'en',
         debug: false
       });

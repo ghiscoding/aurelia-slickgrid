@@ -2,6 +2,7 @@ import { Subscription, EventAggregator } from 'aurelia-event-aggregator';
 import { autoinject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import { HttpClient } from 'aurelia-http-client';
+import * as moment from 'moment-mini';
 import {
   AureliaGridInstance,
   Column,
@@ -13,6 +14,8 @@ import {
   GraphqlServiceOption,
   GridOption,
   GridStateChange,
+  JQueryUiSliderOption,
+  MultipleSelectOption,
   OperatorType,
   SortDirection,
   Statistic,
@@ -87,7 +90,7 @@ export class Example6 {
           collection: [{ value: 'acme', label: 'Acme' }, { value: 'abc', label: 'Company ABC' }, { value: 'xyz', label: 'Company XYZ' }],
           filterOptions: {
             filter: true // adds a filter on top of the multi-select dropdown
-          }
+          } as MultipleSelectOption
         }
       },
       { id: 'billing.address.street', field: 'billing.address.street', headerKey: 'BILLING.ADDRESS.STREET', width: 60, filterable: true, sortable: true },
@@ -100,13 +103,22 @@ export class Example6 {
         },
         formatter: Formatters.multiple, params: { formatters: [Formatters.complexObject, Formatters.translate] }
       },
+      {
+        id: 'finish', field: 'finish', name: 'Date', formatter: Formatters.dateIso, sortable: true, minWidth: 90, width: 120, exportWithFormatter: true,
+        type: FieldType.date,
+        filterable: true,
+        filter: {
+          model: Filters.dateRange,
+        }
+      },
     ];
+
+    const presetLowestDay = moment().add(-2, 'days').format('YYYY-MM-DD');
+    const presetHighestDay = moment().add(20, 'days').format('YYYY-MM-DD');
 
     this.gridOptions = {
       enableFiltering: true,
       enableCellNavigation: true,
-      enableCheckboxSelector: true,
-      enableRowSelection: true,
       enableTranslate: true,
       i18n: this.i18n,
       gridMenu: {
@@ -117,20 +129,23 @@ export class Example6 {
         pageSize: defaultPageSize,
         totalItems: 0
       },
-
       presets: {
         columns: [
-          { columnId: 'name', width: 120 },
+          { columnId: 'name', width: 100 },
           { columnId: 'gender', width: 55 },
           { columnId: 'company' },
           { columnId: 'billing.address.zip' }, // flip column position of Street/Zip to Zip/Street
           { columnId: 'billing.address.street', width: 120 },
+          { columnId: 'finish', width: 130 },
         ],
-        // you can also type operator as string, e.g.: operator: 'EQ'
         filters: [
+          // you can use OperatorType or type them as string, e.g.: operator: 'EQ'
           { columnId: 'gender', searchTerms: ['male'], operator: OperatorType.equal },
           { columnId: 'name', searchTerms: ['John Doe'], operator: OperatorType.contains },
-          { columnId: 'company', searchTerms: ['xyz'], operator: 'IN' }
+          { columnId: 'company', searchTerms: ['xyz'], operator: 'IN' },
+
+          // use a date range with 2 searchTerms values
+          { columnId: 'finish', searchTerms: [presetLowestDay, presetHighestDay], operator: OperatorType.rangeInclusive },
         ],
         sorters: [
           // direction can written as 'asc' (uppercase or lowercase) and/or use the SortDirection type
@@ -139,11 +154,9 @@ export class Example6 {
         ],
         pagination: { pageNumber: 2, pageSize: 20 }
       },
-
       backendServiceApi: {
         service: new GraphqlService(),
         options: this.getBackendOptions(this.isWithCursor),
-        onError: (e) => console.log(e),
         // you can define the onInit callback OR enable the "executeProcessCommandOnInit" flag in the service init
         // onInit: (query) => this.getCustomerApiCall(query)
         preProcess: () => this.displaySpinner(true),
@@ -152,7 +165,7 @@ export class Example6 {
           this.statistics = result.statistics;
           this.displaySpinner(false);
         }
-      },
+      }
     };
   }
 
@@ -215,7 +228,7 @@ export class Example6 {
       setTimeout(() => {
         this.graphqlQuery = this.aureliaGrid.backendService.buildQuery();
         resolve(mockedResult);
-      }, 500);
+      }, 250);
     });
   }
 

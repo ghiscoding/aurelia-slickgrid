@@ -477,7 +477,7 @@ export function mapOperatorByFieldType(fieldType: FieldType | string): OperatorT
 }
 
 /** Parse any input (bool, number, string) and return a boolean or False when not possible */
-export function parseBoolean(input: boolean | number | string): boolean {
+export function parseBoolean(input: any): boolean {
   return /(true|1)/i.test(input + '');
 }
 
@@ -486,10 +486,10 @@ export function parseBoolean(input: boolean | number | string): boolean {
  * @param inputDateString
  * @returns string date formatted
  */
-export function parseUtcDate(inputDateString: string, useUtc?: boolean): string | null {
-  let date = null;
+export function parseUtcDate(inputDateString: any, useUtc?: boolean): string {
+  let date = '';
 
-  if (/^[0-9\-\/]*$/.test(inputDateString)) {
+  if (typeof inputDateString === 'string' && /^[0-9\-\/]*$/.test(inputDateString)) {
     // get the UTC datetime with moment.js but we need to decode the value so that it's valid text
     const dateString = decodeURIComponent(inputDateString);
     const dateMoment = moment(new Date(dateString));

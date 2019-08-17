@@ -16,7 +16,7 @@ describe('the Translate Formatter', () => {
     i18n = new I18N(new EventAggregator(), new BindingSignaler());
     i18n.setup({
       resources: { en: { translation: { HELLO: 'Hello' } }, fr: { translation: { HELLO: 'Bonjour' } } },
-      lng: '0',
+      lng: 'en',
       fallbackLng: 'en',
       debug: false
     });
