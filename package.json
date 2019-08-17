@@ -75,6 +75,7 @@
   "dependencies": {
     "aurelia-event-aggregator": ">=1.0.1",
     "aurelia-framework": ">=1.1.0",
+    "aurelia-i18n": ">=2.1.0",
     "aurelia-pal": ">=1.4.0",
     "dompurify": "^1.0.10",
     "flatpickr": ">=4.5.0",
@@ -101,7 +102,6 @@
     "aurelia-cli": "^0.31.3",
     "aurelia-fetch-client": "^1.8.2",
     "aurelia-http-client": "^1.2.1",
-    "aurelia-i18n": ">=2.1.0",
     "aurelia-loader-nodejs": "^1.0.1",
     "aurelia-pal-nodejs": "^1.2.0",
     "aurelia-polyfills": "latest",
