@@ -106,7 +106,7 @@ export class CollectionService {
               const value1 = (enableTranslateLabel) ? this.i18n && this.i18n.tr && this.i18n.tr(dataRow1[propertyName] || ' ') : dataRow1[propertyName];
               const value2 = (enableTranslateLabel) ? this.i18n && this.i18n.tr && this.i18n.tr(dataRow2[propertyName] || ' ') : dataRow2[propertyName];
 
-              const sortResult = sortByFieldType(value1, value2, fieldType, sortDirection, columnDef);
+              const sortResult = sortByFieldType(fieldType, value1, value2, sortDirection, columnDef);
               if (sortResult !== SortDirectionNumber.neutral) {
                 return sortResult;
               }
@@ -123,7 +123,7 @@ export class CollectionService {
         sortedCollection = collection.sort((dataRow1: any, dataRow2: any) => {
           const value1 = (enableTranslateLabel) ? this.i18n && this.i18n.tr && this.i18n.tr(dataRow1[propertyName] || ' ') : dataRow1[propertyName];
           const value2 = (enableTranslateLabel) ? this.i18n && this.i18n.tr && this.i18n.tr(dataRow2[propertyName] || ' ') : dataRow2[propertyName];
-          const sortResult = sortByFieldType(value1, value2, fieldType, sortDirection, columnDef);
+          const sortResult = sortByFieldType(fieldType, value1, value2, sortDirection, columnDef);
           if (sortResult !== SortDirectionNumber.neutral) {
             return sortResult;
           }
@@ -136,7 +136,7 @@ export class CollectionService {
         sortedCollection = collection.sort((dataRow1: any, dataRow2: any) => {
           const value1 = (enableTranslateLabel) ? this.i18n && this.i18n.tr && this.i18n.tr(dataRow1 || ' ') : dataRow1;
           const value2 = (enableTranslateLabel) ? this.i18n && this.i18n.tr && this.i18n.tr(dataRow2 || ' ') : dataRow2;
-          const sortResult = sortByFieldType(value1, value2, fieldType, sortDirection, columnDef);
+          const sortResult = sortByFieldType(fieldType, value1, value2, sortDirection, columnDef);
           if (sortResult !== SortDirectionNumber.neutral) {
             return sortResult;
           }
