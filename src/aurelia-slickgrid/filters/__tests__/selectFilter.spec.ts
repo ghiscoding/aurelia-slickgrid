@@ -501,7 +501,7 @@ describe('SelectFilter', () => {
     jest.spyOn(bindingEngineStub, 'propertyObserver').mockReturnValue({ subscribe: jest.fn() });
     const mockDataResponse = { deep: { myCollection: [{ value: 'other', description: 'other' }, { value: 'male', description: 'male' }, { value: 'female', description: 'female' }] } };
     mockColumn.filter = {
-      collectionAsync: new Promise((resolve) => setTimeout(() => resolve(mockDataResponse))),
+      collectionAsync: new Promise((resolve) => setTimeout(() => resolve(mockDataResponse), 1)),
       collectionOptions: {
         collectionInsideObjectProperty: 'deep.myCollection'
       },
@@ -523,7 +523,7 @@ describe('SelectFilter', () => {
       expect(filterListElm[1].textContent).toBe('male');
       expect(filterListElm[2].textContent).toBe('female');
       done();
-    });
+    }, 2);
   });
 
   it('should create the multi-select filter with a default search term when using "collectionAsync" as a Promise', (done) => {
