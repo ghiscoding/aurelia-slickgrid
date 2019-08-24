@@ -4,7 +4,6 @@ import { CompoundInputNumberFilter } from '../compoundInputNumberFilter';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { I18N } from 'aurelia-i18n';
 import { BindingSignaler } from 'aurelia-templating-resources';
-import { CompoundInputFilter } from '../compoundInputFilter';
 
 const containerId = 'demo-container';
 

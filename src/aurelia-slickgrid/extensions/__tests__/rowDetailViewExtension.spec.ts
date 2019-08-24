@@ -1,6 +1,6 @@
 import { I18N } from 'aurelia-i18n';
 import { EventAggregator } from 'aurelia-event-aggregator';
-import { HttpClient, json } from 'aurelia-fetch-client';
+import { HttpClient } from 'aurelia-fetch-client';
 import { GridOption } from '../../models/gridOption.interface';
 import { RowDetailViewExtension } from '../rowDetailViewExtension';
 import { ExtensionUtility } from '../extensionUtility';
@@ -387,8 +387,8 @@ describe('rowDetailViewExtension', () => {
       expect(onBeforeRowSpy).not.toHaveBeenCalled();
       expect(onRowOutViewSpy).toHaveBeenCalledWith(
         expect.anything(), {
-          item: columnsMock[0], rowId: 0, rowIndex: 0, expandedRows: [columnsMock[0]], rowIdsOutOfViewport: [], grid: gridStub
-        });
+        item: columnsMock[0], rowId: 0, rowIndex: 0, expandedRows: [columnsMock[0]], rowIdsOutOfViewport: [], grid: gridStub
+      });
       expect(onRowBackViewSpy).not.toHaveBeenCalled();
     });
 
@@ -422,8 +422,8 @@ describe('rowDetailViewExtension', () => {
       expect(onRowOutViewSpy).not.toHaveBeenCalled();
       expect(onRowBackViewSpy).toHaveBeenCalledWith(
         expect.anything(), {
-          item: columnsMock[0], rowId: 0, rowIndex: 0, expandedRows: [columnsMock[0]], rowIdsOutOfViewport: [], grid: gridStub
-        });
+        item: columnsMock[0], rowId: 0, rowIndex: 0, expandedRows: [columnsMock[0]], rowIdsOutOfViewport: [], grid: gridStub
+      });
     });
 
     it('should call Aurelia Util "createAureliaViewModelAddToSlot" when grid "onColumnsReordered" is triggered', (done) => {
@@ -520,7 +520,7 @@ describe('rowDetailViewExtension', () => {
     });
 
     // this one here
-    it('should run the internal "onProcessing" and call "notifyTemplate" with a Promise when "process" method is defined and executed', (done) => {
+    it('should run the internal "onProcessing" and call "notifyTemplate" with a Promise when "process" is a Fetch Promise', (done) => {
       const mockItem = { id: 2, firstName: 'John', lastName: 'Doe' };
       http.status = 200;
       http.object = mockItem;
@@ -538,7 +538,7 @@ describe('rowDetailViewExtension', () => {
       gridOptionsMock.rowDetailView.process(mockItem);
     });
 
-    it('should run the internal "onProcessing" and call "notifyTemplate" with a Promise when "process" method is defined and executed', (done) => {
+    it('should run the internal "onProcessing" and call "notifyTemplate" with a Promise when "process" as a Promise with content to simulate http-client', (done) => {
       const mockItem = { id: 2, firstName: 'John', lastName: 'Doe' };
       gridOptionsMock.rowDetailView.process = (item) => new Promise((resolve) => resolve({ content: item }));
       const instance = extension.create(columnsMock, gridOptionsMock);
