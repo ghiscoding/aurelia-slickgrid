@@ -15,7 +15,7 @@ export class Example19 {
   @bindable detailViewRowCount = 10;
   title = 'Example 19: Row Detail View';
   subTitle = `
-    Add functionality to show extra information with a Row Detail View
+    Add functionality to show extra information with a Row Detail View, (<a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Row-Detail" target="_blank">Wiki docs</a>)
     <ul>
       <li>Click on the row "+" icon or anywhere on the row to open it (the latter can be changed via property "useRowClick: false")</li>
       <li>Pass a View/Model as a Template to the Row Detail</li>
@@ -36,6 +36,10 @@ export class Example19 {
 
   aureliaGridReady(aureliaGrid: AureliaGridInstance) {
     this.aureliaGrid = aureliaGrid;
+  }
+
+  get rowDetailInstance(): any {
+    return this.aureliaGrid && this.aureliaGrid.extensionService.getSlickgridAddonInstance(ExtensionName.rowDetailView) || {};
   }
 
   attached() {
@@ -76,7 +80,7 @@ export class Example19 {
       rowDetailView: {
         // We can load the "process" asynchronously in 3 different ways (aurelia-http-client, aurelia-fetch-client OR even Promise)
         process: (item) => this.simulateServerAsyncCall(item),
-        // process: this.httpFetch.fetch(`api/item/${item.id}`),
+        // process: (item) => this.http.get(`api/item/${item.id}`),
 
         // load only once and reuse the same item detail without calling process method
         loadOnce: true,
@@ -131,12 +135,15 @@ export class Example19 {
   }
 
   changeDetailViewRowCount() {
-    if (this.aureliaGrid && this.aureliaGrid.extensionService) {
-      const rowDetailInstance = this.aureliaGrid.extensionService.getSlickgridAddonInstance(ExtensionName.rowDetailView);
-      const options = rowDetailInstance.getOptions();
+    const options = this.rowDetailInstance.getOptions();
+    if (options && options.panelRows) {
       options.panelRows = this.detailViewRowCount; // change number of rows dynamically
-      rowDetailInstance.setOptions(options);
+      this.rowDetailInstance.setOptions(options);
     }
+  }
+
+  closeAllRowDetail() {
+    this.rowDetailInstance.collapseAll();
   }
 
   /** Just for demo purposes, we will simulate an async server call and return more details on the selected row item */

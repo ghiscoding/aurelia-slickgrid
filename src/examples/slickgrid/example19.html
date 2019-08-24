@@ -1,24 +1,23 @@
 <template>
   <h2>${title}</h2>
-  <div class="subtitle"
-    innerhtml.bind="subTitle"></div>
+  <div class="subtitle" innerhtml.bind="subTitle"></div>
 
   <span>
+    <button class="btn btn-default btn-sm" click.delegate="closeAllRowDetail()">
+      Close All Row Details
+    </button>
+    &nbsp;&nbsp;
+
     <label for="">Detail View Rows Shown: </label>
-    <input type="number"
-      value.bind="detailViewRowCount">
-    <button class="btn btn-default btn-xs"
-      click.delegate="changeDetailViewRowCount()">
+    <input type="number" value.bind="detailViewRowCount">
+    <button class="btn btn-default btn-xs" click.delegate="changeDetailViewRowCount()">
       Set
     </button>
   </span>
 
   <hr />
 
-  <aurelia-slickgrid grid-id="grid16"
-    column-definitions.bind="columnDefinitions"
-    grid-options.bind="gridOptions"
-    dataset.bind="dataset"
-    asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
+  <aurelia-slickgrid grid-id="grid16" column-definitions.bind="columnDefinitions" grid-options.bind="gridOptions"
+    dataset.bind="dataset" asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
   </aurelia-slickgrid>
 </template>
