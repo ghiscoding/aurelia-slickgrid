@@ -55,10 +55,10 @@ describe('Example 9 - Grid Menu', () => {
         .click();
 
       cy.get('#grid9')
-        .get('.slick-gridmenu:visible')
+        .get('.slick-gridmenu')
         .find('span.close')
-        .trigger('click')
-        .click();
+        .trigger('click', { force: true })
+        .click({ force: true });
 
       cy.get('#grid9')
         .find('.slick-header-columns')
@@ -105,10 +105,10 @@ describe('Example 9 - Grid Menu', () => {
         .click();
 
       cy.get('#grid9')
-        .get('.slick-gridmenu:visible')
+        .get('.slick-gridmenu')
         .find('span.close')
-        .trigger('click')
-        .click();
+        .trigger('click', { force: true })
+        .click({ force: true });
 
       cy.get('#grid9')
         .find('.slick-header-columns')
@@ -215,10 +215,10 @@ describe('Example 9 - Grid Menu', () => {
         .click();
 
       cy.get('#grid9')
-        .get('.slick-gridmenu:visible')
+        .get('.slick-gridmenu')
         .find('span.close')
-        .trigger('click')
-        .click();
+        .trigger('click', { force: true })
+        .click({ force: true });
 
       cy.get('#grid9')
         .find('.slick-header-columns')
