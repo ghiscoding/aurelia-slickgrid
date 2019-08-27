@@ -249,7 +249,10 @@ export class GraphqlService implements BackendService {
       pageSize: paginationOptions.first || DEFAULT_PAGE_SIZE
     };
 
-    this.updateOptions({ paginationOptions });
+    // unless user specifically set "enablePagination" to False, we'll update pagination options in every other cases
+    if (this._gridOptions && (this._gridOptions.enablePagination || !this._gridOptions.hasOwnProperty('enablePagination'))) {
+      this.updateOptions({ paginationOptions });
+    }
   }
 
   updateOptions(serviceOptions?: GraphqlServiceOption) {
