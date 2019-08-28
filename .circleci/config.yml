@@ -22,6 +22,9 @@ jobs:
           name: Upload Jest coverage to Codecov
           command: bash <(curl -s https://codecov.io/bash) -t ${CODECOV_TOKEN}
       - run:
+          name: Install nps package
+          command: yarn add --dev nps nps-utils
+      - run:
           name: Build Demo Site
           command: yarn start webpack.build.production
       # Cypress E2E & Http-Server installation & tests
