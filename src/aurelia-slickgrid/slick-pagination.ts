@@ -30,7 +30,7 @@ export class SlickPaginationCustomElement {
   paginationPageSizes = [25, 75, 100];
   subscriptions: Subscription[] = [];
 
-  // text translations (handled by ngx-translate or by custom locale)
+  // text translations (handled by i18n or by custom locale)
   textItemsPerPage: string;
   textItems: string;
   textOf: string;
@@ -141,7 +141,7 @@ export class SlickPaginationCustomElement {
     // get locales provided by user in forRoot or else use default English locales via the Constants
     this._locales = this._gridPaginationOptions && this._gridPaginationOptions.locales || Constants.locales;
 
-    // translate all the text using ngx-translate or custom locales
+    // translate all the text using i18n or custom locales
     this.translateAllUiTexts(this._locales);
 
     if (this._gridPaginationOptions && this._gridPaginationOptions.pagination) {

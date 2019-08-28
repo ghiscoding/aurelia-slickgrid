@@ -344,7 +344,7 @@ describe('CollectionService', () => {
         });
       });
     }); // Collection of strings/numbers
-  }); // with ngx-translate
+  }); // with i18n
 
   describe('without I18N Service', () => {
     beforeEach(() => {
