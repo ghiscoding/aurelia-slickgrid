@@ -235,12 +235,12 @@ export class HeaderMenuExtension implements Extension {
   }
 
   /**
-   * Reset all the Grid Menu options which have text to translate
+   * Reset all the Header Menu options which have text to translate
    * @param grid menu object
    */
   private resetHeaderMenuTranslations(columnDefinitions: Column[]) {
     columnDefinitions.forEach((columnDef: Column) => {
-      if (columnDef && columnDef.header && columnDef.header && columnDef.header.menu && columnDef.header.menu.items) {
+      if (columnDef && columnDef.header && columnDef.header.menu && columnDef.header.menu.items) {
         if (!columnDef.excludeFromHeaderMenu) {
           const columnHeaderMenuItems: HeaderMenuItem[] = columnDef.header.menu.items || [];
 
