@@ -427,7 +427,7 @@ export class GridService {
       this.deleteItem(items, options);
       return [items.id];
     }
-    const itemIds: number[] | string[] = [];
+    const itemIds: string[] = [];
     items.forEach((item: any) => {
       if (item && item.id !== undefined) {
         itemIds.push(item.id);

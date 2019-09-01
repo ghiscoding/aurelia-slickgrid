@@ -105,7 +105,7 @@ export class SelectFilter implements Filter {
     this.grid = args.grid;
     this.callback = args.callback;
     this.columnDef = args.columnDef;
-    this.searchTerms = args.searchTerms || [];
+    this.searchTerms = (args.hasOwnProperty('searchTerms') ? args.searchTerms : []) || [];
 
     if (!this.grid || !this.columnDef || !this.columnFilter || (!this.columnFilter.collection && !this.columnFilter.collectionAsync)) {
       throw new Error(`[Aurelia-SlickGrid] You need to pass a "collection" (or "collectionAsync") for the MultipleSelect/SingleSelect Filter to work correctly. Also each option should include a value/label pair (or value/labelKey when using Locale). For example:: { filter: model: Filters.multipleSelect, collection: [{ value: true, label: 'True' }, { value: false, label: 'False'}] }`);
@@ -363,7 +363,8 @@ export class SelectFilter implements Filter {
           options += `<option value="${option}" label="${option}" ${selected}>${option}</option>`;
 
           // if there's at least 1 search term found, we will add the "filled" class for styling purposes
-          if (selected) {
+          // on a single select, we'll also make sure the single value is not an empty string to consider this being filled
+          if ((selected && this.isMultipleSelect) || (selected && !this.isMultipleSelect && option !== '')) {
             this.isFilled = true;
           }
         });
@@ -402,7 +403,8 @@ export class SelectFilter implements Filter {
           options += `<option value="${option[this.valueName]}" label="${optionLabel}" ${selected}>${optionText}</option>`;
 
           // if there's a search term, we will add the "filled" class for styling purposes
-          if (selected) {
+          // on a single select, we'll also make sure the single value is not an empty string to consider this being filled
+          if ((selected && this.isMultipleSelect) || (selected && !this.isMultipleSelect && option[this.valueName] !== '')) {
             this.isFilled = true;
           }
         });
