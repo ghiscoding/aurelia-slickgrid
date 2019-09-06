@@ -34,7 +34,7 @@ const DEFAULT_PAGE_SIZE = 20;
 @singleton(true)
 export class GraphqlService implements BackendService {
   private _currentFilters: ColumnFilters | CurrentFilter[] = [];
-  private _currentPagination: CurrentPagination;
+  private _currentPagination: CurrentPagination | null;
   private _currentSorters: CurrentSorter[] = [];
   private _columnDefinitions: Column[];
   private _grid: any;
@@ -215,7 +215,7 @@ export class GraphqlService implements BackendService {
   }
 
   /** Get the Pagination that is currently used by the grid */
-  getCurrentPagination(): CurrentPagination {
+  getCurrentPagination(): CurrentPagination | null {
     return this._currentPagination;
   }
 

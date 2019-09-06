@@ -169,7 +169,10 @@ export function disposeAllSubscriptions(subscriptions: Subscription[]) {
 
 /** From a dot (.) notation find and return a property within an object given a path */
 export function getDescendantProperty(obj: any, path: string): any {
-  return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+  if (obj && path) {
+    return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+  }
+  return obj;
 }
 
 /**

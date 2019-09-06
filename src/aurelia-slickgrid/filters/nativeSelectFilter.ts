@@ -28,7 +28,7 @@ export class NativeSelectFilter implements Filter {
 
   /** Getter for the Column Filter itself */
   protected get columnFilter(): ColumnFilter {
-    return this.columnDef && this.columnDef.filter;
+    return this.columnDef && this.columnDef.filter || {};
   }
 
   /** Getter for the Grid Options pulled through the Grid Object */
@@ -147,9 +147,9 @@ export class NativeSelectFilter implements Filter {
     }
 
     const columnId = this.columnDef && this.columnDef.id;
-    const labelName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.label : 'label';
-    const valueName = (this.columnDef.filter.customStructure) ? this.columnDef.filter.customStructure.value : 'value';
-    const isEnabledTranslate = (this.columnDef.filter.enableTranslateLabel) ? this.columnDef.filter.enableTranslateLabel : false;
+    const labelName = (this.columnFilter.customStructure) ? this.columnFilter.customStructure.label : 'label';
+    const valueName = (this.columnFilter.customStructure) ? this.columnFilter.customStructure.value : 'value';
+    const isEnabledTranslate = (this.columnFilter.enableTranslateLabel) ? this.columnFilter.enableTranslateLabel : false;
 
     let options = '';
 

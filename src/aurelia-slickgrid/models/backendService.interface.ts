@@ -34,7 +34,7 @@ export interface BackendService {
   getCurrentFilters?: () => ColumnFilters | CurrentFilter[];
 
   /** Get the Pagination that is currently used by the grid */
-  getCurrentPagination?: () => CurrentPagination;
+  getCurrentPagination?: () => CurrentPagination | null;
 
   /** Get the Sorters that are currently used by the grid */
   getCurrentSorters?: () => CurrentSorter[];

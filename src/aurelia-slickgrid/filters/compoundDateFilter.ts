@@ -23,7 +23,7 @@ declare function require(name: string[], loadedFile: any): any;
 @inject(Optional.of(I18N))
 export class CompoundDateFilter implements Filter {
   private _clearFilterTriggered = false;
-  private _currentDate: Date;
+  private _currentDate: Date | undefined;
   private _flatpickrOptions: FlatpickrOption;
   private _shouldTriggerQuery = true;
   private $filterElm: any;
@@ -50,7 +50,7 @@ export class CompoundDateFilter implements Filter {
   }
 
   /** Getter for the Current Dates selected */
-  get currentDate(): Date {
+  get currentDate(): Date | undefined {
     return this._currentDate;
   }
 
@@ -158,7 +158,7 @@ export class CompoundDateFilter implements Filter {
       locale: (currentLocale !== 'en') ? this.loadFlatpickrLocale(currentLocale) : 'en',
       onChange: (selectedDates: Date[] | Date, dateStr: string, instance: any) => {
         this._currentValue = dateStr;
-        this._currentDate = Array.isArray(selectedDates) && selectedDates[0];
+        this._currentDate = Array.isArray(selectedDates) && selectedDates[0] || undefined;
 
         // when using the time picker, we can simulate a keyup event to avoid multiple backend request
         // since backend request are only executed after user start typing, changing the time should be treated the same way

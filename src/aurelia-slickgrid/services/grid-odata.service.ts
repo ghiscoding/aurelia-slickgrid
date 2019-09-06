@@ -32,7 +32,7 @@ const DEFAULT_PAGE_SIZE = 20;
 @singleton(true)
 export class GridOdataService implements BackendService {
   private _currentFilters: CurrentFilter[] = [];
-  private _currentPagination: CurrentPagination;
+  private _currentPagination: CurrentPagination | null;
   private _currentSorters: CurrentSorter[] = [];
   private _columnDefinitions: Column[];
   private _grid: any;
@@ -71,7 +71,7 @@ export class GridOdataService implements BackendService {
     // unless user specifically set "enablePagination" to False, we'll add "top" property for the pagination in every other cases
     if (this._gridOptions && !this._gridOptions.enablePagination) {
       // save current pagination as Page 1 and page size as "top"
-      this._odataService.options = { ...mergedOptions, top: null };
+      this._odataService.options = { ...mergedOptions, top: undefined };
       this._currentPagination = null;
     } else {
       const topOption = (pagination && pagination.pageSize) ? pagination.pageSize : this.defaultOptions.top;
@@ -120,7 +120,7 @@ export class GridOdataService implements BackendService {
   }
 
   /** Get the Pagination that is currently used by the grid */
-  getCurrentPagination(): CurrentPagination {
+  getCurrentPagination(): CurrentPagination | null {
     return this._currentPagination;
   }
 

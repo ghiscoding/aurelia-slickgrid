@@ -262,7 +262,7 @@ export class SelectFilter implements Filter {
       if (!Array.isArray(awaitedCollection) && this.collectionOptions && (this.collectionOptions.collectionInsideObjectProperty || this.collectionOptions.collectionInObjectProperty)) {
         const collection = awaitedCollection || response;
         const collectionInsideObjectProperty = this.collectionOptions.collectionInsideObjectProperty || this.collectionOptions.collectionInObjectProperty;
-        awaitedCollection = getDescendantProperty(collection, collectionInsideObjectProperty);
+        awaitedCollection = getDescendantProperty(collection, collectionInsideObjectProperty || '');
       }
 
       if (!Array.isArray(awaitedCollection)) {
@@ -315,7 +315,7 @@ export class SelectFilter implements Filter {
   protected renderDomElement(collection: any[]) {
     if (!Array.isArray(collection) && this.collectionOptions && (this.collectionOptions.collectionInsideObjectProperty || this.collectionOptions.collectionInObjectProperty)) {
       const collectionInsideObjectProperty = this.collectionOptions.collectionInsideObjectProperty || this.collectionOptions.collectionInObjectProperty;
-      collection = getDescendantProperty(collection, collectionInsideObjectProperty);
+      collection = getDescendantProperty(collection, collectionInsideObjectProperty || '');
     }
     if (!Array.isArray(collection)) {
       throw new Error('The "collection" passed to the Select Filter is not a valid array.');

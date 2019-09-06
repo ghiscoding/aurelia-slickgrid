@@ -202,8 +202,8 @@ export class CompoundSliderFilter implements Filter {
    */
   private createDomElement(searchTerm?: SearchTerm) {
     const columnId = this.columnDef && this.columnDef.id;
-    const minValue = this.filterProperties.hasOwnProperty('minValue') ? this.filterProperties.minValue : DEFAULT_MIN_VALUE;
-    const startValue = this.filterParams.hasOwnProperty('sliderStartValue') ? this.filterParams.sliderStartValue : minValue;
+    const minValue = (this.filterProperties.hasOwnProperty('minValue') && this.filterProperties.minValue) ? this.filterProperties.minValue : DEFAULT_MIN_VALUE;
+    const startValue = +(this.filterParams.hasOwnProperty('sliderStartValue') ? this.filterParams.sliderStartValue : minValue);
     const $headerElm = this.grid.getHeaderRowColumn(this.columnDef.id);
     $($headerElm).empty();
 

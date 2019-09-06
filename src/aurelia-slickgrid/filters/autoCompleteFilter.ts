@@ -250,7 +250,7 @@ export class AutoCompleteFilter implements Filter {
   protected renderDomElement(collection: any[]) {
     if (!Array.isArray(collection) && this.collectionOptions && (this.collectionOptions.collectionInsideObjectProperty || this.collectionOptions.collectionInObjectProperty)) {
       const collectionInsideObjectProperty = this.collectionOptions.collectionInsideObjectProperty || this.collectionOptions.collectionInObjectProperty;
-      collection = getDescendantProperty(collection, collectionInsideObjectProperty);
+      collection = getDescendantProperty(collection, collectionInsideObjectProperty || '');
     }
     if (!Array.isArray(collection)) {
       throw new Error('The "collection" passed to the Autocomplete Filter is not a valid array');

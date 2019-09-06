@@ -188,8 +188,8 @@ export class SliderFilter implements Filter {
    */
   private createDomElement(filterTemplate: string, searchTerm?: SearchTerm) {
     const columnId = this.columnDef && this.columnDef.id;
-    const minValue = this.filterProperties.hasOwnProperty('minValue') ? this.filterProperties.minValue : DEFAULT_MIN_VALUE;
-    const startValue = this.filterParams.hasOwnProperty('sliderStartValue') ? this.filterParams.sliderStartValue : minValue;
+    const minValue = (this.filterProperties.hasOwnProperty('minValue') && this.filterProperties.minValue !== undefined) ? this.filterProperties.minValue : DEFAULT_MIN_VALUE;
+    const startValue = +(this.filterParams.hasOwnProperty('sliderStartValue') ? this.filterParams.sliderStartValue : minValue);
     const $headerElm = this.grid.getHeaderRowColumn(columnId);
     $($headerElm).empty();
 
