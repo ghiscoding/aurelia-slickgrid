@@ -113,5 +113,3 @@ describe('Aurelia-Slickgrid Custom Component', () => {
       });
   });
 });
-
-
