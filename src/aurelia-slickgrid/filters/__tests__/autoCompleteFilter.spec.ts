@@ -1,4 +1,5 @@
 import { BindingEngine } from 'aurelia-binding';
+import { HttpClient } from 'aurelia-fetch-client';
 import { I18N } from 'aurelia-i18n';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { BindingSignaler } from 'aurelia-templating-resources';
@@ -33,6 +34,54 @@ const gridStub = {
   render: jest.fn(),
 };
 
+class HttpStub extends HttpClient {
+  status: number;
+  statusText: string;
+  object: any = {};
+  returnKey: string;
+  returnValue: any;
+  responseHeaders: any;
+
+  fetch(input, init) {
+    let request;
+    const responseInit: any = {};
+    responseInit.headers = new Headers()
+
+    for (const name in this.responseHeaders || {}) {
+      if (name) {
+        responseInit.headers.set(name, this.responseHeaders[name]);
+      }
+    }
+
+    responseInit.status = this.status || 200;
+
+    if (Request.prototype.isPrototypeOf(input)) {
+      request = input;
+    } else {
+      request = new Request(input, init || {});
+    }
+    if (request.body && request.body.type) {
+      request.headers.set('Content-Type', request.body.type);
+    }
+
+    const promise = Promise.resolve().then(() => {
+      if (request.headers.get('Content-Type') === 'application/json' && request.method !== 'GET') {
+        return request.json().then((object) => {
+          object[this.returnKey] = this.returnValue;
+          const data = JSON.stringify(object);
+          const response = new Response(data, responseInit);
+          return this.status >= 200 && this.status < 300 ? Promise.resolve(response) : Promise.reject(response);
+        });
+      } else {
+        const data = JSON.stringify(this.object);
+        const response = new Response(data, responseInit);
+        return this.status >= 200 && this.status < 300 ? Promise.resolve(response) : Promise.reject(response);
+      }
+    });
+    return promise;
+  }
+}
+
 describe('AutoCompleteFilter', () => {
   let ea: EventAggregator;
   let i18n: I18N;
@@ -42,6 +91,7 @@ describe('AutoCompleteFilter', () => {
   let spyGetHeaderRow;
   let mockColumn: Column;
   let collectionService: CollectionService;
+  const http = new HttpStub();
 
   beforeEach(() => {
     ea = new EventAggregator();
@@ -290,6 +340,64 @@ describe('AutoCompleteFilter', () => {
     const spyCallback = jest.spyOn(filterArguments, 'callback');
     const mockCollection = ['male', 'female'];
     mockColumn.filter.collectionAsync = new Promise((resolve) => setTimeout(() => resolve(mockCollection)));
+
+    filterArguments.searchTerms = ['female'];
+    filter.init(filterArguments);
+
+    setTimeout(() => {
+      const filterElm = divContainer.querySelector<HTMLInputElement>('input.filter-gender');
+      const autocompleteUlElms = document.body.querySelectorAll<HTMLUListElement>('ul.ui-autocomplete');
+      filter.setValues('male');
+
+      filterElm.focus();
+      filterElm.dispatchEvent(new (window.window as any).KeyboardEvent('keyup', { keyCode: 97, bubbles: true, cancelable: true }));
+      const filterFilledElms = divContainer.querySelectorAll<HTMLInputElement>('input.filter-gender.filled');
+
+      expect(autocompleteUlElms.length).toBe(1);
+      expect(filterFilledElms.length).toBe(1);
+      expect(spyCallback).toHaveBeenCalledWith(expect.anything(), { columnDef: mockColumn, operator: 'EQ', searchTerms: ['male'], shouldTriggerQuery: true });
+      done();
+    });
+  });
+
+  it('should create the filter with a default search term when using "collectionAsync" as a Promise with content to simulate http-client', (done) => {
+    jest.spyOn(bindingEngineStub, 'collectionObserver').mockReturnValue({ subscribe: jest.fn() });
+    jest.spyOn(bindingEngineStub, 'propertyObserver').mockReturnValue({ subscribe: jest.fn() });
+    const spyCallback = jest.spyOn(filterArguments, 'callback');
+    const mockCollection = ['male', 'female'];
+    mockColumn.filter.collectionAsync = new Promise((resolve) => setTimeout(() => resolve({ content: mockCollection })));
+
+    filterArguments.searchTerms = ['female'];
+    filter.init(filterArguments);
+
+    setTimeout(() => {
+      const filterElm = divContainer.querySelector<HTMLInputElement>('input.filter-gender');
+      const autocompleteUlElms = document.body.querySelectorAll<HTMLUListElement>('ul.ui-autocomplete');
+      filter.setValues('male');
+
+      filterElm.focus();
+      filterElm.dispatchEvent(new (window.window as any).KeyboardEvent('keyup', { keyCode: 97, bubbles: true, cancelable: true }));
+      const filterFilledElms = divContainer.querySelectorAll<HTMLInputElement>('input.filter-gender.filled');
+
+      expect(autocompleteUlElms.length).toBe(1);
+      expect(filterFilledElms.length).toBe(1);
+      expect(spyCallback).toHaveBeenCalledWith(expect.anything(), { columnDef: mockColumn, operator: 'EQ', searchTerms: ['male'], shouldTriggerQuery: true });
+      done();
+    });
+  });
+
+  it('should create the filter with a default search term when using "collectionAsync" is a Fetch Promise', (done) => {
+    jest.spyOn(bindingEngineStub, 'collectionObserver').mockReturnValue({ subscribe: jest.fn() });
+    jest.spyOn(bindingEngineStub, 'propertyObserver').mockReturnValue({ subscribe: jest.fn() });
+    const spyCallback = jest.spyOn(filterArguments, 'callback');
+    const mockCollection = ['male', 'female'];
+
+    http.status = 200;
+    http.object = mockCollection;
+    http.returnKey = 'date';
+    http.returnValue = '6/24/1984';
+    http.responseHeaders = { accept: 'json' };
+    mockColumn.filter.collectionAsync = http.fetch('/api', { method: 'GET' });
 
     filterArguments.searchTerms = ['female'];
     filter.init(filterArguments);
