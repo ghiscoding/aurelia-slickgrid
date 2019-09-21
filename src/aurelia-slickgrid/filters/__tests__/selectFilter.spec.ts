@@ -447,10 +447,7 @@ describe('SelectFilter', () => {
   it('should create the multi-select filter and filter the string collection when "collectionFilterBy" is set', () => {
     mockColumn.filter = {
       collection: ['other', 'male', 'female'],
-      collectionFilterBy: {
-        operator: OperatorType.equal,
-        value: 'other'
-      }
+      collectionFilterBy: { operator: OperatorType.equal, value: 'other' }
     };
 
     filter.init(filterArguments, true);
@@ -469,10 +466,7 @@ describe('SelectFilter', () => {
         { property: 'value', operator: OperatorType.notEqual, value: 'other' },
         { property: 'value', operator: OperatorType.notEqual, value: 'male' }
       ],
-      customStructure: {
-        value: 'value',
-        label: 'description',
-      },
+      customStructure: { value: 'value', label: 'description', },
     };
 
     filter.init(filterArguments, true);
@@ -491,13 +485,8 @@ describe('SelectFilter', () => {
         { property: 'value', operator: OperatorType.equal, value: 'other' },
         { property: 'value', operator: OperatorType.equal, value: 'male' }
       ],
-      collectionOptions: {
-        filterResultAfterEachPass: 'merge'
-      },
-      customStructure: {
-        value: 'value',
-        label: 'description',
-      },
+      collectionOptions: { filterResultAfterEachPass: 'merge' },
+      customStructure: { value: 'value', label: 'description', },
     };
 
     filter.init(filterArguments, true);
@@ -514,13 +503,8 @@ describe('SelectFilter', () => {
     mockColumn.filter = {
       // @ts-ignore
       collection: { deep: { myCollection: [{ value: 'other', description: 'other' }, { value: 'male', description: 'male' }, { value: 'female', description: 'female' }] } },
-      collectionOptions: {
-        collectionInsideObjectProperty: 'deep.myCollection'
-      },
-      customStructure: {
-        value: 'value',
-        label: 'description',
-      },
+      collectionOptions: { collectionInsideObjectProperty: 'deep.myCollection' },
+      customStructure: { value: 'value', label: 'description', },
     };
 
     filter.init(filterArguments, true);
@@ -540,13 +524,8 @@ describe('SelectFilter', () => {
     const mockDataResponse = { deep: { myCollection: [{ value: 'other', description: 'other' }, { value: 'male', description: 'male' }, { value: 'female', description: 'female' }] } };
     mockColumn.filter = {
       collectionAsync: new Promise((resolve) => setTimeout(() => resolve(mockDataResponse), 1)),
-      collectionOptions: {
-        collectionInsideObjectProperty: 'deep.myCollection'
-      },
-      customStructure: {
-        value: 'value',
-        label: 'description',
-      },
+      collectionOptions: { collectionInsideObjectProperty: 'deep.myCollection' },
+      customStructure: { value: 'value', label: 'description', },
     };
 
     filter.init(filterArguments, true);

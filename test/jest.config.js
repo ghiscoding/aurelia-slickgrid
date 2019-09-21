@@ -3,6 +3,7 @@ module.exports = {
   globals: {
     'ts-jest': {
       diagnostics: false,
+      isolatedModules: true,
       tsConfig: '<rootDir>/test/tsconfig.spec.json'
     },
   },
