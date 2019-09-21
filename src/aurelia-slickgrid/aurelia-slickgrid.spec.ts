@@ -14,7 +14,7 @@ jest.mock('aurelia-event-aggregator', () => ({
 
 const aureliaGridReady = jest.fn();
 
-xdescribe('Aurelia-Slickgrid Custom Component', () => {
+describe('Aurelia-Slickgrid Custom Component', () => {
   let component;
   const view = `<aurelia-slickgrid
     grid-id="grid1"
@@ -113,5 +113,3 @@ xdescribe('Aurelia-Slickgrid Custom Component', () => {
       });
   });
 });
-
-

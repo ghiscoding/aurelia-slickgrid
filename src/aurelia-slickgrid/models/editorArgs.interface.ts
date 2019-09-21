@@ -3,7 +3,7 @@ import { ElementPosition } from './elementPosition.interface';
 
 export interface EditorArgs {
   column: Column;
-  container: any;
+  container: HTMLDivElement;
   grid: any;
   gridPosition: ElementPosition;
   item: any;
