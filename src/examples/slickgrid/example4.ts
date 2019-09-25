@@ -12,7 +12,7 @@ import {
   GridOption,
   MultipleSelectOption,
   OperatorType,
-  Statistic,
+  Metrics,
 } from '../../aurelia-slickgrid';
 
 function randomBetween(min, max) {
@@ -50,7 +50,7 @@ export class Example4 {
   columnDefinitions: Column[];
   gridOptions: GridOption;
   dataset: any[];
-  statistics: Statistic;
+  metrics: Metrics;
 
   constructor(private http: HttpClient, private httpFetch: FetchClient) {
     this.defineGrid();
@@ -267,10 +267,10 @@ export class Example4 {
     console.log('Client sample, current Grid State:: ', this.aureliaGrid.gridStateService.getCurrentGridState());
   }
 
-  refreshStatistics(e, args) {
+  refreshMetrics(e, args) {
     if (args && args.current > 0) {
       setTimeout(() => {
-        this.statistics = {
+        this.metrics = {
           startTime: new Date(),
           itemCount: args && args.current,
           totalItemCount: this.dataset.length

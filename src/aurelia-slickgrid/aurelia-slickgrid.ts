@@ -556,13 +556,15 @@ export class AureliaSlickgridCustomElement {
 
           // send the response process to the postProcess callback
           if (backendApi.postProcess) {
-            processResult.statistics = {
+            processResult.metrics = {
               startTime,
               endTime,
               executionTime: endTime.valueOf() - startTime.valueOf(),
               totalItemCount: this.gridOptions && this.gridOptions.pagination && this.gridOptions.pagination.totalItems
             };
             backendApi.postProcess(processResult);
+            // @deprecated, use metrics instead
+            processResult.statistics = processResult.metrics;
           }
         } catch (e) {
           if (backendApi && backendApi.onError) {
