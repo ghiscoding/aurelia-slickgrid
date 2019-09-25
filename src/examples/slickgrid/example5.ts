@@ -9,8 +9,8 @@ import {
   GridOption,
   GridStateChange,
   OdataOption,
+  Metrics,
   OperatorType,
-  Statistic,
 } from '../../aurelia-slickgrid';
 
 const defaultPageSize = 20;
@@ -39,7 +39,7 @@ export class Example5 {
   columnDefinitions: Column[];
   gridOptions: GridOption;
   dataset = [];
-  statistics: Statistic;
+  metrics: Metrics;
 
   isCountEnabled = true;
   odataVersion = 2;
@@ -115,7 +115,7 @@ export class Example5 {
         preProcess: () => this.displaySpinner(true),
         process: (query) => this.getCustomerApiCall(query),
         postProcess: (response) => {
-          this.statistics = response.statistics;
+          this.metrics = response.metrics;
           this.displaySpinner(false);
           this.getCustomerCallback(response);
         }
@@ -139,8 +139,8 @@ export class Example5 {
     }
     this.gridOptions.pagination.totalItems = data[countPropName];
     this.gridOptions = { ...{}, ...this.gridOptions };
-    if (this.statistics) {
-      this.statistics.totalItemCount = data[countPropName];
+    if (this.metrics) {
+      this.metrics.totalItemCount = data[countPropName];
     }
 
     // once pagination totalItems is filled, we can update the dataset

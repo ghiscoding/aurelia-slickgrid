@@ -507,7 +507,7 @@ describe('gridMenuExtension', () => {
         const query = `query { users (first:20,offset:0) { totalCount, nodes { id,name,gender,company } } }`;
         const processResult = {
           data: { users: { nodes: [] }, pageInfo: { hasNextPage: true }, totalCount: 0 },
-          statistics: { startTime: now, endTime: now, executionTime: 0, totalItemCount: 0 }
+          metrics: { startTime: now, endTime: now, executionTime: 0, totalItemCount: 0 }
         };
         const preSpy = jest.spyOn(gridOptionsMock.backendServiceApi, 'preProcess');
         const postSpy = jest.spyOn(gridOptionsMock.backendServiceApi, 'postProcess');

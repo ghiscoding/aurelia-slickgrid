@@ -24,18 +24,26 @@ describe('backend-utilities', () => {
       expect(spy).toHaveBeenCalled();
     });
 
-    it('should execute the "postProcess" when it is defined and add some statistics to the object', () => {
+    it('should execute the "postProcess" when it is defined and add some metrics to the object', () => {
       const now = new Date();
       const mockResult = { data: { users: [{ firstName: 'John', lastName: 'Doe' }] } };
       const expectaction = {
         data: { users: [{ firstName: 'John', lastName: 'Doe' }], },
+        metrics: {
+          startTime: now,
+          endTime: expect.any(Date),
+          executionTime: expect.any(Number),
+          itemCount: 1,
+          totalItemCount: 1
+        },
+        // @deprecated, should be removed when Statistic is removed from the lib
         statistics: {
           startTime: now,
           endTime: expect.any(Date),
           executionTime: expect.any(Number),
           itemCount: 1,
           totalItemCount: 1
-        }
+        },
       };
       gridOptionMock.backendServiceApi.postProcess = jest.fn();
       gridOptionMock.pagination = { totalItems: 1, pageSizes: [10, 25], pageSize: 10 };
