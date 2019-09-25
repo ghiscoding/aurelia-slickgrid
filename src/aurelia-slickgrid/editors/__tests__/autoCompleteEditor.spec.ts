@@ -1,6 +1,6 @@
 import { Editors } from '../index';
 import { AutoCompleteEditor } from '../autoCompleteEditor';
-import { AutocompleteOption, Column, EditorArguments, GridOption, KeyCode, EditorArgs } from '../../models';
+import { AutocompleteOption, Column, EditorArgs, EditorArguments, FieldType, GridOption, KeyCode } from '../../models';
 
 const KEY_CHAR_A = 97;
 const containerId = 'demo-container';
@@ -13,8 +13,8 @@ const dataViewStub = {
 };
 
 const gridOptionMock = {
-  enableeditoring: true,
-  enableeditorTrimWhiteSpace: true,
+  autoCommitEdit: false,
+  editable: true,
 } as GridOption;
 
 const getEditorLockMock = {
@@ -332,6 +332,18 @@ describe('AutoCompleteEditor', () => {
       expect(output).toBe('Female');
     });
 
+    it('should return an object output when calling "serializeValue" with its column definition set to "FieldType.object"', () => {
+      mockColumn.type = FieldType.object;
+      mockColumn.internalColumnEditor.collection = [{ value: 'm', label: 'Male' }, { value: 'f', label: 'Female' }];
+      mockItemData = { id: 123, gender: { value: 'f', label: 'Female' }, isActive: true };
+
+      editor = new AutoCompleteEditor(editorArguments);
+      editor.loadValue(mockItemData);
+      const output = editor.serializeValue();
+
+      expect(output).toEqual({ value: 'f', label: 'Female' });
+    });
+
     it('should call "getEditorLock" when "hasAutoCommitEdit" is enabled after calling "save()" method', async () => {
       gridOptionMock.autoCommitEdit = true;
       const spy = jest.spyOn(gridStub, 'getEditorLock');
@@ -366,6 +378,66 @@ describe('AutoCompleteEditor', () => {
       const validation = editor.validate(mockItemData);
 
       expect(validation).toEqual({ valid: true, msg: null });
+    });
+
+    describe('onSelect method', () => {
+      beforeEach(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should expect "setValue" to have been called but not "getEditorLock" when "autoCommitEdit" is disabled', () => {
+        const spyCommitEdit = jest.spyOn(gridStub, 'getEditorLock');
+        gridOptionMock.autoCommitEdit = false;
+        mockColumn.internalColumnEditor.collection = ['male', 'female'];
+        mockItemData = { id: 123, gender: 'female', isActive: true };
+
+        editor = new AutoCompleteEditor(editorArguments);
+        const spySetValue = jest.spyOn(editor, 'setValue');
+        const output = editor.onSelect(null, { item: mockItemData.gender });
+
+        expect(output).toBe(false);
+        expect(spyCommitEdit).not.toHaveBeenCalled();
+        expect(spySetValue).toHaveBeenCalledWith('female');
+      });
+
+      it('should expect "setValue" and "autoCommitEdit" to have been called with a string when item provided is a string', (done) => {
+        const spyCommitEdit = jest.spyOn(gridStub, 'getEditorLock');
+        gridOptionMock.autoCommitEdit = true;
+        mockColumn.internalColumnEditor.collection = ['male', 'female'];
+        mockItemData = { id: 123, gender: 'female', isActive: true };
+
+        editor = new AutoCompleteEditor(editorArguments);
+        const spySetValue = jest.spyOn(editor, 'setValue');
+        const output = editor.onSelect(null, { item: mockItemData.gender });
+
+        // HOW DO WE TRIGGER the jQuery UI autocomplete select event? The following works only on "autocompleteselect"
+        // but that doesn't trigger the "select" (onSelect) directly
+        // const editorElm = editor.editorDomElement;
+        // editorElm.on('autocompleteselect', (event, ui) => console.log(ui));
+        // editorElm[0].dispatchEvent(new (window.window as any).CustomEvent('autocompleteselect', { detail: { item: 'female' }, bubbles: true, cancelable: true }));
+
+        setTimeout(() => {
+          expect(output).toBe(false);
+          expect(spyCommitEdit).toHaveBeenCalled();
+          expect(spySetValue).toHaveBeenCalledWith('female');
+          done();
+        });
+      });
+
+      it('should expect "setValue" and "autoCommitEdit" to have been called with the string label when item provided is an object', () => {
+        const spyCommitEdit = jest.spyOn(gridStub, 'getEditorLock');
+        gridOptionMock.autoCommitEdit = true;
+        mockColumn.internalColumnEditor.collection = [{ value: 'm', label: 'Male' }, { value: 'f', label: 'Female' }];
+        mockItemData = { id: 123, gender: { value: 'f', label: 'Female' }, isActive: true };
+
+        editor = new AutoCompleteEditor(editorArguments);
+        const spySetValue = jest.spyOn(editor, 'setValue');
+        const output = editor.onSelect(null, { item: mockItemData.gender });
+
+        expect(output).toBe(false);
+        expect(spyCommitEdit).toHaveBeenCalled();
+        expect(spySetValue).toHaveBeenCalledWith('Female');
+      });
     });
   });
 });

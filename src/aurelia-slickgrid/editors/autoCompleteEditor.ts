@@ -219,7 +219,9 @@ export class AutoCompleteEditor implements Editor {
   // private functions
   // ------------------
 
-  private onSelect(event: Event, ui: any): boolean {
+  // this function should be PRIVATE but for unit tests purposes we'll make it public until a better solution is found
+  // a better solution would be to get the autocomplete DOM element to work with selection but I couldn't find how to do that in Jest
+  onSelect(event: Event, ui: any): boolean {
     if (ui && ui.item) {
       this._currentValue = ui && ui.item;
       const itemLabel = typeof ui.item === 'string' ? ui.item : ui.item.label;
