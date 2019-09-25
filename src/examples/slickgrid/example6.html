@@ -20,9 +20,9 @@
       </button>
       <span><label>Locale</label>: ${selectedLanguage + '.json'}</span>
       <br />
-      <span if.bind="statistics">
-        <b>Statistics:</b> ${statistics.endTime | dateFormat: 'DD MMM, h:mm:ss a'} | ${statistics.executionTime}ms |
-        ${statistics.totalItemCount}
+      <span if.bind="metrics">
+        <b>Metrics:</b> ${metrics.endTime | dateFormat: 'DD MMM, h:mm:ss a'} | ${metrics.executionTime}ms |
+        ${metrics.totalItemCount}
         items
       </span>
     </div>

@@ -3,9 +3,9 @@
   <div class="subtitle" innerhtml.bind="subTitle"></div>
 
   <br />
-  <span if.bind="statistics">
-    <b>Statistics:</b> ${statistics.endTime | dateFormat: 'DD MMM, h:mm:ss a'} | ${statistics.itemCount} of
-    ${statistics.totalItemCount}
+  <span if.bind="metrics">
+    <b>Metrics:</b> ${metrics.endTime | dateFormat: 'DD MMM, h:mm:ss a'} | ${metrics.itemCount} of
+    ${metrics.totalItemCount}
     items
   </span>
   <button class="btn btn-default btn-sm" data-test="language" click.delegate="switchLanguage()">
@@ -22,6 +22,6 @@
   <aurelia-slickgrid grid-id="grid23" column-definitions.bind="columnDefinitions" grid-options.bind="gridOptions"
     dataset.bind="dataset" asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)"
     asg-on-grid-state-changed.delegate="gridStateChanged($event.detail)"
-    sg-on-row-count-changed.delegate="refreshStatistics($event.detail.eventData, $event.detail.args)">
+    sg-on-row-count-changed.delegate="refreshMetrics($event.detail.eventData, $event.detail.args)">
   </aurelia-slickgrid>
 </template>

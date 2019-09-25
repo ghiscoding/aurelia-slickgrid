@@ -213,7 +213,7 @@ export class SlickPaginationCustomElement {
         // send the response process to the postProcess callback
         if (backendApi.postProcess) {
           if (processResult instanceof Object) {
-            processResult.statistics = {
+            processResult.metrics = {
               startTime,
               endTime,
               executionTime: endTime.valueOf() - startTime.valueOf(),
