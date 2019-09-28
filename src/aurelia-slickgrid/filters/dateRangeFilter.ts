@@ -107,6 +107,21 @@ export class DateRangeFilter implements Filter {
     if (this.$filterElm) {
       this.$filterElm.off('keyup').remove();
     }
+    if (this.flatInstance && typeof this.flatInstance.destroy === 'function') {
+      this.flatInstance.destroy();
+    }
+  }
+
+  hide() {
+    if (this.flatInstance && typeof this.flatInstance.close === 'function') {
+      this.flatInstance.close();
+    }
+  }
+
+  show() {
+    if (this.flatInstance && typeof this.flatInstance.open === 'function') {
+      this.flatInstance.open();
+    }
   }
 
   /**
@@ -206,8 +221,8 @@ export class DateRangeFilter implements Filter {
    * @params searchTerms
    */
   private createDomElement(searchTerms?: SearchTerm[]) {
-    const fieldId = this.columnDef && this.columnDef.id;
-    const $headerElm = this.grid.getHeaderRowColumn(fieldId);
+    const columnId = this.columnDef && this.columnDef.id;
+    const $headerElm = this.grid.getHeaderRowColumn(columnId);
     $($headerElm).empty();
 
     // create the DOM Select dropdown for the Operator
@@ -220,8 +235,8 @@ export class DateRangeFilter implements Filter {
     */
 
     // create the DOM element & add an ID and filter class
-    this.$filterInputElm.attr('id', `filter-${fieldId}`);
-    this.$filterInputElm.data('columnId', fieldId);
+    this.$filterInputElm.attr('id', `filter-${columnId}`);
+    this.$filterInputElm.data('columnId', columnId);
 
     // if there's a search term, we will add the "filled" class for styling purposes
     if (Array.isArray(searchTerms) && searchTerms.length > 0 && searchTerms[0] !== '') {

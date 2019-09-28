@@ -167,7 +167,7 @@ export function disposeAllSubscriptions(subscriptions: Subscription[]) {
   return subscriptions = [];
 }
 
-/** From a dot (.) notation find and return a property within an object given a path */
+/** From a dot (.) notation path, find and return a property within an object given a path */
 export function getDescendantProperty(obj: any, path: string): any {
   if (obj && path) {
     return path.split('.').reduce((acc, part) => acc && acc[part], obj);
@@ -514,6 +514,24 @@ export function sanitizeHtmlToText(htmlString: string): string {
   const temp = document.createElement('div');
   temp.innerHTML = htmlString;
   return temp.textContent || temp.innerText || '';
+}
+
+/** Set the object value of deeper node from a given dot (.) notation path (e.g.: "user.firstName") */
+export function setDeepValue(obj: any, path: string | string[], value: any) {
+  if (typeof path === 'string') {
+    path = path.split('.');
+  }
+
+  if (path.length > 1) {
+    const e = path.shift();
+    setDeepValue(
+      obj[e] = Object.prototype.toString.call(obj[e]) === '[object Object]' ? obj[e] : {},
+      path,
+      value
+    );
+  } else {
+    obj[path[0]] = value;
+  }
 }
 
 /**

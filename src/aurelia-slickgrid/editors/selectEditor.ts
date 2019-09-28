@@ -8,6 +8,7 @@ import {
   Column,
   ColumnEditor,
   Editor,
+  EditorArguments,
   EditorValidator,
   EditorValidatorOutput,
   FieldType,
@@ -21,7 +22,7 @@ import * as DOMPurify from 'dompurify';
 import * as $ from 'jquery';
 
 /**
- * Slickgrid editor class for multiple select lists
+ * Slickgrid editor class for multiple/single select lists
  */
 export class SelectEditor implements Editor {
   /** The JQuery DOM element */
@@ -61,14 +62,21 @@ export class SelectEditor implements Editor {
   enableTranslateLabel: boolean;
 
   /** Event Subscriptions */
-  subscriptions: Subscription[] = [];
+  _subscriptions: Subscription[] = [];
 
   // flag to signal that the editor is destroying itself, helps prevent
   // commit changes from being called twice and erroring
-  _destroying = false;
+  protected _destroying = false;
 
-  constructor(protected bindingEngine: BindingEngine, protected collectionService: CollectionService, protected i18n: I18N, protected args: any, protected isMultipleSelect = true) {
-    this.gridOptions = this.args.grid.getOptions() as GridOption;
+  /** SlickGrid Grid object */
+  grid: any;
+
+  constructor(protected bindingEngine: BindingEngine, protected collectionService: CollectionService, protected i18n: I18N, protected args: EditorArguments, protected isMultipleSelect = true) {
+    if (!args) {
+      throw new Error('[Aurelia-Slickgrid] Something is wrong with this grid, an Editor must always have valid arguments.');
+    }
+    this.grid = args.grid;
+    this.gridOptions = this.grid.getOptions() as GridOption;
 
     // provide the name attribute to the DOM element which will be needed to auto-adjust drop position (dropup / dropdown)
     const columnId = this.columnDef && this.columnDef.id;
@@ -89,16 +97,7 @@ export class SelectEditor implements Editor {
         return isRenderHtmlEnabled ? $elm.text() : $elm.html();
       },
       onBlur: () => this.destroy(),
-      onClose: () => {
-        if (!this._destroying && this.hasAutoCommitEdit) {
-          // do not use args.commitChanges() as this sets the focus to the next
-          // row. Also the select list will stay shown when clicking off the grid
-          const validation = this.validate();
-          if (validation && validation.valid) {
-            args.grid.getEditorLock().commitCurrentEdit();
-          }
-        }
-      }
+      onClose: () => this.save(),
     };
 
     if (isMultipleSelect) {
@@ -121,7 +120,7 @@ export class SelectEditor implements Editor {
 
   /** Get the Collection */
   get collection(): SelectOption[] {
-    return this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.collection || [];
+    return this.columnDef && this.columnDef.internalColumnEditor.collection || [];
   }
 
   /** Getter for the Collection Options */
@@ -130,13 +129,18 @@ export class SelectEditor implements Editor {
   }
 
   /** Get Column Definition object */
-  get columnDef(): Column {
-    return this.args && this.args.column || {};
+  get columnDef(): Column | undefined {
+    return this.args && this.args.column;
   }
 
   /** Get Column Editor object */
-  get columnEditor(): ColumnEditor {
-    return this.columnDef && this.columnDef.internalColumnEditor || {};
+  get columnEditor(): ColumnEditor | undefined {
+    return this.columnDef && this.columnDef.internalColumnEditor;
+  }
+
+  /** Get the Editor DOM Element */
+  get editorDomElement(): any {
+    return this.$editorElm;
   }
 
   /** Getter for the Custom Structure if exist */
@@ -145,7 +149,7 @@ export class SelectEditor implements Editor {
   }
 
   get hasAutoCommitEdit() {
-    return this.args.grid.getOptions().autoCommitEdit;
+    return this.grid.getOptions().autoCommitEdit;
   }
 
   /**
@@ -208,6 +212,7 @@ export class SelectEditor implements Editor {
       return itemFound;
     } else if (itemFound) {
       const labelText = itemFound[this.valueName];
+
       if (isIncludingPrefixSuffix) {
         let prefixText = itemFound[this.labelPrefixName] || '';
         let suffixText = itemFound[this.labelSuffixName] || '';
@@ -215,6 +220,7 @@ export class SelectEditor implements Editor {
         // also translate prefix/suffix if enableTranslateLabel is true and text is a string
         prefixText = (this.enableTranslateLabel && prefixText && typeof prefixText === 'string') ? this.i18n.tr(prefixText || ' ') : prefixText;
         suffixText = (this.enableTranslateLabel && suffixText && typeof suffixText === 'string') ? this.i18n.tr(suffixText || ' ') : suffixText;
+
         // add to a temp array for joining purpose and filter out empty text
         const tmpOptionArray = [prefixText, labelText, suffixText].filter((text) => text);
         return tmpOptionArray.join(separatorBetweenLabels);
@@ -230,12 +236,8 @@ export class SelectEditor implements Editor {
   }
 
   init() {
-    if (!this.args) {
-      throw new Error('[Aurelia-SlickGrid] An editor must always have an "init()" with valid arguments.');
-    }
-
-    if (!this.columnDef || !this.columnEditor || (!this.columnEditor.collection && !this.columnEditor.collectionAsync)) {
-      throw new Error(`[Aurelia-SlickGrid] You need to pass a "collection" (or "collectionAsync") inside Column Definition Editor for the MultipleSelect/SingleSelect Editor to work correctly.
+    if (!this.columnDef || !this.columnDef.internalColumnEditor || (!this.columnDef.internalColumnEditor.collection && !this.columnDef.internalColumnEditor.collectionAsync)) {
+      throw new Error(`[Aurelia-Slickgrid] You need to pass a "collection" (or "collectionAsync") inside Column Definition Editor for the MultipleSelect/SingleSelect Editor to work correctly.
       Also each option should include a value/label pair (or value/labelKey when using Locale).
       For example: { editor: { collection: [{ value: true, label: 'True' },{ value: false, label: 'False'}] } }`);
     }
@@ -288,7 +290,7 @@ export class SelectEditor implements Editor {
     } else if (this.$editorElm && typeof this.$editorElm.remove === 'function') {
       this.$editorElm.remove();
     }
-    this.subscriptions = disposeAllSubscriptions(this.subscriptions);
+    this._subscriptions = disposeAllSubscriptions(this._subscriptions);
   }
 
   loadValue(item: any): void {
@@ -332,6 +334,18 @@ export class SelectEditor implements Editor {
       // check equality after converting defaultValue to string since the DOM value will always be of type string
       $e.selected = (currentValue.toString() === $e.value);
     });
+  }
+
+  save() {
+    // autocommit will not focus the next editor
+    const validation = this.validate();
+    if (validation && validation.valid) {
+      if (!this._destroying && this.hasAutoCommitEdit) {
+        // do not use args.commitChanges() as this sets the focus to the next
+        // row. Also the select list will stay shown when clicking off the grid
+        this.grid.getEditorLock().commitCurrentEdit();
+      }
+    }
   }
 
   serializeValue(): any {
@@ -420,7 +434,7 @@ export class SelectEditor implements Editor {
       collection = getDescendantProperty(collection, collectionInsideObjectProperty || '');
     }
     if (!Array.isArray(collection)) {
-      throw new Error('The "collection" passed to the Select Editor is not a valid array');
+      throw new Error('The "collection" passed to the Select Editor is not a valid array.');
     }
 
     // user can optionally add a blank entry at the beginning of the collection
@@ -437,6 +451,7 @@ export class SelectEditor implements Editor {
 
     // step 1, create HTML string template
     const editorTemplate = this.buildTemplateHtmlString(newCollection);
+
     // step 2, create the DOM Element of the editor
     // also subscribe to the onClose event
     this.createDomElement(editorTemplate);
@@ -447,7 +462,7 @@ export class SelectEditor implements Editor {
     let options = '';
     const columnId = this.columnDef && this.columnDef.id;
     const separatorBetweenLabels = this.collectionOptions && this.collectionOptions.separatorBetweenTextLabels || '';
-    const isRenderHtmlEnabled = this.columnEditor.enableRenderHtml || false;
+    const isRenderHtmlEnabled = this.columnDef.internalColumnEditor.enableRenderHtml || false;
     const sanitizedOptions = this.gridOptions && this.gridOptions.sanitizeHtmlOptions || {};
 
     // collection could be an Array of Strings OR Objects
@@ -474,6 +489,7 @@ export class SelectEditor implements Editor {
         prefixText = (this.enableTranslateLabel && prefixText && typeof prefixText === 'string') ? this.i18n.tr(prefixText || ' ') : prefixText;
         suffixText = (this.enableTranslateLabel && suffixText && typeof suffixText === 'string') ? this.i18n.tr(suffixText || ' ') : suffixText;
         optionLabel = (this.enableTranslateLabel && optionLabel && typeof optionLabel === 'string') ? this.i18n.tr(optionLabel || ' ') : optionLabel;
+
         // add to a temp array for joining purpose and filter out empty text
         const tmpOptionArray = [prefixText, labelText, suffixText].filter((text) => text);
         let optionText = tmpOptionArray.join(separatorBetweenLabels);
@@ -516,6 +532,10 @@ export class SelectEditor implements Editor {
     if (this.$editorElm && typeof this.$editorElm.appendTo === 'function') {
       this.$editorElm.appendTo(this.args.container);
     }
+
+    // add placeholder when found
+    const placeholder = this.columnEditor && this.columnEditor.placeholder || '';
+    this.defaultOptions.placeholder = placeholder || '';
 
     if (typeof this.$editorElm.multipleSelect !== 'function') {
       // fallback to bootstrap

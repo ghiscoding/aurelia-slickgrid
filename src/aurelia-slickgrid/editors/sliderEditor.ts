@@ -128,7 +128,7 @@ export class SliderEditor implements Editor {
     item[fieldNameFromComplexObject || fieldName] = (validation && validation.valid) ? state : '';
   }
 
-  isValueChanged() {
+  isValueChanged(): boolean {
     const elmValue = this.$input.val();
     const lastEvent = this._lastInputEvent && this._lastInputEvent.keyCode;
     if (this.columnEditor && this.columnEditor.alwaysSaveOnEnterKey && lastEvent === KeyCode.ENTER) {

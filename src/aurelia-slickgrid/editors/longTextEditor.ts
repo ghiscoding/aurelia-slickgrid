@@ -5,6 +5,7 @@ import {
   Column,
   ColumnEditor,
   Editor,
+  EditorArguments,
   EditorValidator,
   EditorValidatorOutput,
   GridOption,
@@ -12,6 +13,7 @@ import {
   KeyCode,
   Locale,
 } from './../models/index';
+import { getDescendantProperty, setDeepValue } from '../services/utilities';
 import * as $ from 'jquery';
 
 /*
@@ -22,15 +24,23 @@ import * as $ from 'jquery';
 @inject(Optional.of(I18N))
 export class LongTextEditor implements Editor {
   private _locales: Locale;
-  $textarea: any;
-  $wrapper: any;
+  private _$textarea: any;
+  private _$wrapper: any;
   defaultValue: any;
+
+  /** SlickGrid Grid object */
+  grid: any;
 
   /** Grid options */
   gridOptions: GridOption;
 
-  constructor(private i18n: I18N, private args: any) {
-    this.gridOptions = this.args.grid.getOptions() as GridOption;
+  constructor(private i18n: I18N, private args: EditorArguments) {
+    if (!args) {
+      throw new Error('[Aurelia-Slickgrid] Something is wrong with this grid, an Editor must always have valid arguments.');
+    }
+    this.grid = args.grid;
+    this.gridOptions = args.grid && args.grid.getOptions() as GridOption;
+
     // get locales provided by user in forRoot or else use default English locales via the Constants
     this._locales = this.gridOptions && this.gridOptions.locales || Constants.locales;
 
@@ -38,8 +48,8 @@ export class LongTextEditor implements Editor {
   }
 
   /** Get Column Definition object */
-  get columnDef(): Column {
-    return this.args && this.args.column || {};
+  get columnDef(): Column | undefined {
+    return this.args && this.args.column;
   }
 
   /** Get Column Editor object */
@@ -47,13 +57,18 @@ export class LongTextEditor implements Editor {
     return this.columnDef && this.columnDef.internalColumnEditor || {};
   }
 
-  /** Get the Validator function, can be passed in Editor property or Column Definition */
-  get validator(): EditorValidator | undefined {
-    return this.columnEditor.validator || this.columnDef.validator;
+  /** Get the Editor DOM Element */
+  get editorDomElement(): any {
+    return this._$textarea;
   }
 
   get hasAutoCommitEdit() {
-    return this.args.grid.getOptions().autoCommitEdit;
+    return this.grid.getOptions().autoCommitEdit;
+  }
+
+  /** Get the Validator function, can be passed in Editor property or Column Definition */
+  get validator(): EditorValidator | undefined {
+    return this.columnEditor.validator || this.columnDef.validator;
   }
 
   init(): void {
@@ -64,119 +79,106 @@ export class LongTextEditor implements Editor {
     const title = this.columnEditor && this.columnEditor.title || '';
     const $container = $('body');
 
-    this.$wrapper = $(`<div class="slick-large-editor-text editor-${columnId}" />`).appendTo($container);
-    this.$textarea = $(`<textarea hidefocus rows="5" placeholder="${placeholder}" title="${title}">`).appendTo(this.$wrapper);
+    this._$wrapper = $(`<div class="slick-large-editor-text editor-${columnId}" />`).appendTo($container);
+    this._$textarea = $(`<textarea hidefocus rows="5" placeholder="${placeholder}" title="${title}">`).appendTo(this._$wrapper);
 
-    // aurelia-slickgrid does not get the focus out event for some reason
+    // the lib does not get the focus out event for some reason
     // so register it here
     if (this.hasAutoCommitEdit) {
-      this.$textarea.on('focusout', () => this.save());
+      this._$textarea.on('focusout', () => this.save());
     }
 
     $(`<div class="editor-footer">
-        <button class="btn btn-primary btn-xs">${saveText}</button>
-        <button class="btn btn-default btn-xs">${cancelText}</button>
-      </div>`).appendTo(this.$wrapper);
+          <button class="btn btn-save btn-primary btn-xs">${saveText}</button>
+          <button class="btn btn-cancel btn-default btn-xs">${cancelText}</button>
+      </div>`).appendTo(this._$wrapper);
 
-    this.$wrapper.find('button:first').on('click', () => this.save());
-    this.$wrapper.find('button:last').on('click', () => this.cancel());
-    this.$textarea.on('keydown', this.handleKeyDown.bind(this));
+    this._$wrapper.find('.btn-save').on('click', () => this.save());
+    this._$wrapper.find('.btn-cancel').on('click', () => this.cancel());
+    this._$textarea.on('keydown', this.handleKeyDown.bind(this));
 
     this.position(this.args && this.args.position);
-    this.$textarea.focus().select();
-  }
-
-  handleKeyDown(event: KeyboardEvent) {
-    if (event.which === KeyCode.ENTER && event.ctrlKey) {
-      this.save();
-    } else if (event.which === KeyCode.ESCAPE) {
-      event.preventDefault();
-      this.cancel();
-    } else if (event.which === KeyCode.TAB && event.shiftKey) {
-      event.preventDefault();
-      if (this.args && this.args.grid) {
-        this.args.grid.navigatePrev();
-      }
-    } else if (event.which === KeyCode.TAB) {
-      event.preventDefault();
-      if (this.args && this.args.grid) {
-        this.args.grid.navigateNext();
-      }
-    }
+    this._$textarea.focus().select();
   }
 
   cancel() {
-    this.$textarea.val(this.defaultValue);
+    this._$textarea.val(this.defaultValue);
     if (this.args && this.args.cancelChanges) {
       this.args.cancelChanges();
     }
   }
 
   hide() {
-    this.$wrapper.hide();
+    this._$wrapper.hide();
   }
 
   show() {
-    this.$wrapper.show();
-  }
-
-  position(position: HtmlElementPosition) {
-    this.$wrapper
-      .css('top', (position.top || 0) - 5)
-      .css('left', (position.left || 0) - 5);
+    this._$wrapper.show();
   }
 
   destroy() {
-    this.$textarea.off('keydown focusout');
-    this.$wrapper.remove();
+    this._$wrapper.off('keydown focusout').remove();
+    this._$wrapper.remove();
   }
 
   focus() {
-    this.$textarea.focus();
+    this._$textarea.focus();
   }
 
-  getValue() {
-    return this.$textarea.val();
+  getValue(): string {
+    return this._$textarea.val();
   }
 
   setValue(val: string) {
-    this.$textarea.val(val);
+    this._$textarea.val(val);
+  }
+
+  applyValue(item: any, state: any) {
+    const fieldName = this.columnDef && this.columnDef.field;
+    const isComplexObject = fieldName.indexOf('.') > 0; // is the field a complex object, "address.streetNumber"
+
+    // validate the value before applying it (if not valid we'll set an empty string)
+    const validation = this.validate(state);
+    const newValue = (validation && validation.valid) ? state : '';
+
+    // set the new value to the item datacontext
+    if (isComplexObject) {
+      setDeepValue(item, fieldName, newValue);
+    } else {
+      item[fieldName] = newValue;
+    }
+  }
+
+  isValueChanged(): boolean {
+    return (!(this._$textarea.val() === '' && this.defaultValue === null)) && (this._$textarea.val() !== this.defaultValue);
   }
 
   loadValue(item: any) {
     const fieldName = this.columnDef && this.columnDef.field;
 
-    // when it's a complex object, then pull the object name only, e.g.: "user.firstName" => "user"
-    const fieldNameFromComplexObject = fieldName.indexOf('.') ? fieldName.substring(0, fieldName.indexOf('.')) : '';
+    // is the field a complex object, "address.streetNumber"
+    const isComplexObject = fieldName.indexOf('.') > 0;
 
-    if (item && this.columnDef && (item.hasOwnProperty(fieldName) || item.hasOwnProperty(fieldNameFromComplexObject))) {
-      this.defaultValue = item[fieldNameFromComplexObject || fieldName];
-      this.$textarea.val(this.defaultValue);
-      this.$textarea.select();
+    if (item && this.columnDef && (item.hasOwnProperty(fieldName) || isComplexObject)) {
+      const value = (isComplexObject) ? getDescendantProperty(item, fieldName) : item[fieldName];
+      this.defaultValue = value;
+      this._$textarea.val(this.defaultValue);
+      this._$textarea[0].defaultValue = this.defaultValue;
+      this._$textarea.select();
     }
   }
 
-  serializeValue() {
-    return this.$textarea.val();
-  }
-
-  applyValue(item: any, state: any) {
-    const fieldName = this.columnDef && this.columnDef.field;
-    // when it's a complex object, then pull the object name only, e.g.: "user.firstName" => "user"
-    const fieldNameFromComplexObject = fieldName.indexOf('.') ? fieldName.substring(0, fieldName.indexOf('.')) : '';
-    const validation = this.validate(state);
-    item[fieldNameFromComplexObject || fieldName] = (validation && validation.valid) ? state : '';
-  }
-
-  isValueChanged() {
-    return (!(this.$textarea.val() === '' && this.defaultValue === null)) && (this.$textarea.val() !== this.defaultValue);
+  position(position: HtmlElementPosition) {
+    this._$wrapper
+      .css('top', (position.top || 0) - 5)
+      .css('left', (position.left || 0) - 5);
   }
 
   save() {
     const validation = this.validate();
     if (validation && validation.valid) {
       if (this.hasAutoCommitEdit) {
-        this.args.grid.getEditorLock().commitCurrentEdit();
+        this.grid.getEditorLock().commitCurrentEdit();
       } else {
         this.args.commitChanges();
       }
@@ -185,9 +187,13 @@ export class LongTextEditor implements Editor {
     }
   }
 
+  serializeValue() {
+    return this._$textarea.val();
+  }
+
   validate(inputValue?: any): EditorValidatorOutput {
     const isRequired = this.columnEditor.required;
-    const elmValue = (inputValue !== undefined) ? inputValue : this.$textarea && this.$textarea.val && this.$textarea.val();
+    const elmValue = (inputValue !== undefined) ? inputValue : this._$textarea && this._$textarea.val && this._$textarea.val();
     const errorMsg = this.columnEditor.errorMessage;
 
     if (this.validator) {
@@ -206,5 +212,29 @@ export class LongTextEditor implements Editor {
       valid: true,
       msg: null
     };
+  }
+
+  // --
+  // private functions
+  // ------------------
+
+  private handleKeyDown(event: KeyboardEvent) {
+    const keyCode = event.keyCode || event.code;
+    if (keyCode === KeyCode.ENTER && event.ctrlKey) {
+      this.save();
+    } else if (keyCode === KeyCode.ESCAPE) {
+      event.preventDefault();
+      this.cancel();
+    } else if (keyCode === KeyCode.TAB && event.shiftKey) {
+      event.preventDefault();
+      if (this.args && this.grid) {
+        this.grid.navigatePrev();
+      }
+    } else if (keyCode === KeyCode.TAB) {
+      event.preventDefault();
+      if (this.args && this.grid) {
+        this.grid.navigateNext();
+      }
+    }
   }
 }

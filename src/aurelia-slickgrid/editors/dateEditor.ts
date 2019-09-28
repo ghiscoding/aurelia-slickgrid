@@ -1,8 +1,18 @@
 import { inject, Optional } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import { Constants } from './../constants';
-import { mapFlatpickrDateFormatWithFieldType, mapMomentDateFormatWithFieldType } from './../services/utilities';
-import { Column, ColumnEditor, Editor, EditorValidator, EditorValidatorOutput, FieldType, FlatpickrOption, GridOption } from './../models/index';
+import { mapFlatpickrDateFormatWithFieldType, mapMomentDateFormatWithFieldType, setDeepValue, getDescendantProperty } from './../services/utilities';
+import {
+  Column,
+  ColumnEditor,
+  Editor,
+  EditorArguments,
+  EditorValidator,
+  EditorValidatorOutput,
+  FieldType,
+  FlatpickrOption,
+  GridOption,
+} from './../models/index';
 import * as flatpickr from 'flatpickr';
 import * as moment from 'moment-mini';
 import * as $ from 'jquery';
@@ -16,17 +26,28 @@ declare function require(name: string): any;
 @inject(Optional.of(I18N))
 export class DateEditor implements Editor {
   private _$inputWithData: any;
-  $input: any;
+  private _$input: any;
+
   flatInstance: any;
   defaultDate: string;
 
-  constructor(private i18n: I18N, private args: any) {
+  /** SlickGrid Grid object */
+  grid: any;
+
+  /** Grid options */
+  gridOptions: GridOption;
+
+  constructor(private i18n: I18N, private args: EditorArguments) {
+    if (!args) {
+      throw new Error('[Aurelia-Slickgrid] Something is wrong with this grid, an Editor must always have valid arguments.');
+    }
+    this.grid = args.grid;
     this.init();
   }
 
   /** Get Column Definition object */
-  get columnDef(): Column {
-    return this.args && this.args.column || {};
+  get columnDef(): Column | undefined {
+    return this.args && this.args.column;
   }
 
   /** Get Column Editor object */
@@ -34,9 +55,18 @@ export class DateEditor implements Editor {
     return this.columnDef && this.columnDef.internalColumnEditor || {};
   }
 
+  /** Get the Editor DOM Element */
+  get editorDomElement(): any {
+    return this._$input;
+  }
+
   /** Get Flatpickr options passed to the editor by the user */
   get editorOptions(): any {
     return this.columnEditor.editorOptions || {};
+  }
+
+  get hasAutoCommitEdit() {
+    return this.grid.getOptions().autoCommitEdit;
   }
 
   /** Get the Validator function, can be passed in Editor property or Column Definition */
@@ -45,12 +75,12 @@ export class DateEditor implements Editor {
   }
 
   init(): void {
-    if (this.args && this.args.column) {
+    if (this.args && this.columnDef) {
       const columnId = this.columnDef && this.columnDef.id;
       const placeholder = this.columnEditor && this.columnEditor.placeholder || '';
       const title = this.columnEditor && this.columnEditor.title || '';
       const gridOptions = this.args.grid.getOptions() as GridOption;
-      this.defaultDate = (this.args.item) ? this.args.item[this.args.column.field] : null;
+      this.defaultDate = (this.args.item) ? this.args.item[this.columnDef.field] : null;
       const inputFormat = mapFlatpickrDateFormatWithFieldType(this.columnDef.type || FieldType.dateIso);
       const outputFormat = mapFlatpickrDateFormatWithFieldType(this.columnDef.outputType || FieldType.dateUtc);
       let currentLocale = this.i18n && this.i18n.getLocale && this.i18n.getLocale() || 'en';
@@ -61,7 +91,6 @@ export class DateEditor implements Editor {
       const pickerOptions: FlatpickrOption = {
         defaultDate: this.defaultDate as string,
         altInput: true,
-        altInputClass: 'flatpickr-alt-input',
         altFormat: inputFormat,
         dateFormat: outputFormat,
         closeOnSelect: false,
@@ -74,40 +103,36 @@ export class DateEditor implements Editor {
       // merge options with optional user's custom options
       const pickerMergedOptions: FlatpickrOption = { ...pickerOptions, ...(this.editorOptions as FlatpickrOption) };
       const inputCssClasses = `.editor-text.editor-${columnId}.flatpickr`;
+      if (pickerMergedOptions.altInput) {
+        pickerMergedOptions.altInputClass = 'flatpickr-alt-input editor-text';
+      }
 
-      this.$input = $(`<input type="text" data-defaultDate="${this.defaultDate}" class="${inputCssClasses.replace(/\./g, ' ')}" placeholder="${placeholder}" title="${title}" />`);
-      this.$input.appendTo(this.args.container);
-      this.flatInstance = (flatpickr && this.$input[0] && typeof this.$input[0].flatpickr === 'function') ? this.$input[0].flatpickr(pickerMergedOptions) : null;
+      this._$input = $(`<input type="text" data-defaultDate="${this.defaultDate}" class="${inputCssClasses.replace(/\./g, ' ')}" placeholder="${placeholder}" title="${title}" />`);
+      this._$input.appendTo(this.args.container);
+      this.flatInstance = (flatpickr && this._$input[0] && typeof this._$input[0].flatpickr === 'function') ? this._$input[0].flatpickr(pickerMergedOptions) : null;
 
       // when we're using an alternate input to display data, we'll consider this input as the one to do the focus later on
       // else just use the top one
-      this._$inputWithData = (pickerMergedOptions && pickerMergedOptions.altInput) ? $(`${inputCssClasses}.flatpickr-alt-input`) : this.$input;
+      this._$inputWithData = (pickerMergedOptions && pickerMergedOptions.altInput) ? $(`${inputCssClasses}.flatpickr-alt-input`) : this._$input;
     }
-  }
-
-  loadFlatpickrLocale(locale: string) {
-    // change locale if needed, Flatpickr reference: https://chmln.github.io/flatpickr/localization/
-    const gridOptions = this.args && this.args.grid && this.args.grid.getOptions();
-    if (gridOptions && gridOptions.params && gridOptions.params.flapickrLocale) {
-      return gridOptions.params.flapickrLocale;
-    } else if (locale !== 'en') {
-      const localeDefault: any = require(`flatpickr/dist/l10n/${locale}.js`).default;
-      return (localeDefault && localeDefault[locale]) ? localeDefault[locale] : 'en';
-    }
-    return 'en';
   }
 
   destroy() {
     this.hide();
-    this.$input.remove();
+    this._$input.remove();
     if (this._$inputWithData && typeof this._$inputWithData.remove === 'function') {
       this._$inputWithData.remove();
     }
+    if (this.flatInstance && typeof this.flatInstance.destroy === 'function') {
+      this.flatInstance.destroy();
+    }
   }
 
-  show() {
-    if (this.flatInstance && typeof this.flatInstance.open === 'function') {
-      this.flatInstance.open();
+  focus() {
+    if (this._$inputWithData && typeof this._$inputWithData.focus === 'function') {
+      this._$inputWithData.focus().select();
+    } else if (this._$input && typeof this._$input.focus === 'function') {
+      this._$input.focus().select();
     }
   }
 
@@ -117,11 +142,53 @@ export class DateEditor implements Editor {
     }
   }
 
-  focus() {
-    if (this._$inputWithData && this._$inputWithData.focus) {
-      this._$inputWithData.focus().select();
-    } else if (this.$input && this.$input.focus) {
-      this.$input.focus().select();
+  show() {
+    if (this.flatInstance && typeof this.flatInstance.open === 'function') {
+      this.flatInstance.open();
+    }
+  }
+
+  getValue(): string {
+    return this._$input.val();
+  }
+
+  setValue(val: string) {
+    this.flatInstance.setDate(val);
+  }
+
+  applyValue(item: any, state: any) {
+    const fieldName = this.columnDef && this.columnDef.field;
+    const outputFormat = mapMomentDateFormatWithFieldType(this.columnDef.type || FieldType.dateIso);
+    const isComplexObject = fieldName.indexOf('.') > 0; // is the field a complex object, "address.streetNumber"
+
+    // validate the value before applying it (if not valid we'll set an empty string)
+    const validation = this.validate(state);
+    const newValue = (validation && validation.valid) ? moment(state, outputFormat).toDate() : '';
+
+    // set the new value to the item datacontext
+    if (isComplexObject) {
+      setDeepValue(item, fieldName, newValue);
+    } else {
+      item[fieldName] = newValue;
+    }
+  }
+
+  isValueChanged(): boolean {
+    return (!(this._$input.val() === '' && this.defaultDate == null)) && (this._$input.val() !== this.defaultDate);
+  }
+
+  loadValue(item: any) {
+    const fieldName = this.columnDef && this.columnDef.field;
+
+    // is the field a complex object, "address.streetNumber"
+    const isComplexObject = fieldName.indexOf('.') > 0;
+
+    if (item && this.columnDef && (item.hasOwnProperty(fieldName) || isComplexObject)) {
+      const value = (isComplexObject) ? getDescendantProperty(item, fieldName) : item[fieldName];
+      this.defaultDate = value;
+      this.flatInstance.setDate(value);
+      this.show();
+      this.focus();
     }
   }
 
@@ -129,58 +196,30 @@ export class DateEditor implements Editor {
     // autocommit will not focus the next editor
     const validation = this.validate();
     if (validation && validation.valid) {
-      if (this.args.grid.getOptions().autoCommitEdit) {
-        this.args.grid.getEditorLock().commitCurrentEdit();
+      if (this.hasAutoCommitEdit) {
+        this.grid.getEditorLock().commitCurrentEdit();
       } else {
         this.args.commitChanges();
       }
     }
   }
 
-  loadValue(item: any) {
-    const fieldName = this.columnDef && this.columnDef.field;
-
-    // when it's a complex object, then pull the object name only, e.g.: "user.firstName" => "user"
-    const fieldNameFromComplexObject = fieldName.indexOf('.') ? fieldName.substring(0, fieldName.indexOf('.')) : '';
-
-    if (item && this.columnDef && (item.hasOwnProperty(fieldName) || item.hasOwnProperty(fieldNameFromComplexObject))) {
-      this.defaultDate = item[fieldNameFromComplexObject || fieldName];
-      this.flatInstance.setDate(item[this.args.column.field]);
-      this.focus();
-    }
-  }
-
   serializeValue() {
-    const domValue: string = this.$input.val();
+    const domValue: string = this._$input.val();
 
     if (!domValue) {
       return '';
     }
 
-    const outputFormat = mapMomentDateFormatWithFieldType(this.args.column.type || FieldType.dateIso);
+    const outputFormat = mapMomentDateFormatWithFieldType(this.columnDef.type || FieldType.dateIso);
     const value = moment(domValue).format(outputFormat);
 
     return value;
   }
 
-  applyValue(item: any, state: any) {
-    const fieldName = this.columnDef && this.columnDef.field;
-    const outputFormat = mapMomentDateFormatWithFieldType(this.args.column.type || FieldType.dateIso);
-
-    // when it's a complex object, then pull the object name only, e.g.: "user.firstName" => "user"
-    const fieldNameFromComplexObject = fieldName.indexOf('.') ? fieldName.substring(0, fieldName.indexOf('.')) : '';
-    const newValue = state ? moment(state, outputFormat).toDate() : '';
-    const validation = this.validate(newValue);
-    item[fieldNameFromComplexObject || fieldName] = (validation && validation.valid) ? newValue : '';
-  }
-
-  isValueChanged() {
-    return (!(this.$input.val() === '' && this.defaultDate == null)) && (this.$input.val() !== this.defaultDate);
-  }
-
   validate(inputValue?: any): EditorValidatorOutput {
     const isRequired = this.columnEditor.required;
-    const elmValue = (inputValue !== undefined) ? inputValue : this.$input && this.$input.val && this.$input.val();
+    const elmValue = (inputValue !== undefined) ? inputValue : this._$input && this._$input.val && this._$input.val();
     const errorMsg = this.columnEditor.errorMessage;
 
     if (this.validator) {
@@ -199,5 +238,21 @@ export class DateEditor implements Editor {
       valid: true,
       msg: null
     };
+  }
+
+  //
+  // private functions
+  // ------------------
+
+  /** Load a different set of locales for Flatpickr to be localized */
+  private loadFlatpickrLocale(language: string) {
+    let locales = 'en';
+
+    if (language !== 'en') {
+      // change locale if needed, Flatpickr reference: https://chmln.github.io/flatpickr/localization/
+      const localeDefault: any = require(`flatpickr/dist/l10n/${language}.js`).default;
+      locales = (localeDefault && localeDefault[language]) ? localeDefault[language] : 'en';
+    }
+    return locales;
   }
 }

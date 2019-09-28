@@ -102,6 +102,26 @@ describe('DateRangeFilter', () => {
     expect(filterElm.placeholder).toBe(testValue);
   });
 
+  it('should hide the DOM element when the "hide" method is called', () => {
+    filter.init(filterArguments);
+    const spy = jest.spyOn(filter.flatInstance, 'close');
+    const calendarElm = document.body.querySelector<HTMLDivElement>('.flatpickr-calendar');
+    filter.hide();
+
+    expect(calendarElm).toBeTruthy();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should show the DOM element when the "show" method is called', () => {
+    filter.init(filterArguments);
+    const spy = jest.spyOn(filter.flatInstance, 'open');
+    const calendarElm = document.body.querySelector<HTMLDivElement>('.flatpickr-calendar');
+    filter.show();
+
+    expect(calendarElm).toBeTruthy();
+    expect(spy).toHaveBeenCalled();
+  });
+
   it('should be able to retrieve default flatpickr options through the Getter', () => {
     filter.init(filterArguments);
 
@@ -201,13 +221,17 @@ describe('DateRangeFilter', () => {
   });
 
   it('should work with different locale when locale is changed', () => {
-    i18n.setLocale('fr-CA');
+    i18n.setLocale('fr-CA'); // will be trimmed to "fr"
     filterArguments.searchTerms = ['2000-01-01T05:00:00.000Z', '2000-01-31T05:00:00.000Z'];
     mockColumn.filter.operator = 'RangeInclusive';
     const spyCallback = jest.spyOn(filterArguments, 'callback');
 
     filter.init(filterArguments);
     const filterInputElm = divContainer.querySelector<HTMLInputElement>('input.flatpickr.search-filter.filter-finish');
+    const calendarElm = document.body.querySelector<HTMLDivElement>('.flatpickr-calendar');
+    const selectonOptionElms = calendarElm.querySelectorAll<HTMLSelectElement>(' .flatpickr-monthDropdown-months option');
+
+    filter.show();
 
     filterInputElm.focus();
     filterInputElm.dispatchEvent(new (window.window as any).KeyboardEvent('keyup', { keyCode: 97, bubbles: true, cancelable: true }));
@@ -216,6 +240,9 @@ describe('DateRangeFilter', () => {
     expect(filterFilledElms.length).toBe(1);
     expect(filterInputElm.value).toBe('2000-01-01T05:00:00.000Z au 2000-01-31T05:00:00.000Z');
     expect(spyCallback).toHaveBeenCalledWith(expect.anything(), { columnDef: mockColumn, operator: 'RangeInclusive', searchTerms: ['2000-01-01', '2000-01-31'], shouldTriggerQuery: true });
+    expect(calendarElm).toBeTruthy();
+    expect(selectonOptionElms.length).toBe(12);
+    expect(selectonOptionElms[0].textContent).toBe('janvier');
   });
 
   it('should trigger a callback with the clear filter set when calling the "clear" method', () => {

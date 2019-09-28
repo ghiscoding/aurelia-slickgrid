@@ -148,8 +148,8 @@ export class SliderRangeFilter implements Filter {
       throw new Error(`[Aurelia-Slickgrid] You cannot override the "change" and/or the "slide" callback methods
         since they are used in SliderRange Filter itself, however any other methods can be used for example the "create", "start", "stop" methods.`);
     }
-    const fieldId = this.columnDef && this.columnDef.id;
-    const $headerElm = this.grid.getHeaderRowColumn(fieldId);
+    const columnId = this.columnDef && this.columnDef.id;
+    const $headerElm = this.grid.getHeaderRowColumn(columnId);
     const minValue = this.filterProperties.hasOwnProperty('minValue') ? this.filterProperties.minValue : DEFAULT_MIN_VALUE;
     const maxValue = this.filterProperties.hasOwnProperty('maxValue') ? this.filterProperties.maxValue : DEFAULT_MAX_VALUE;
     const step = this.filterProperties.hasOwnProperty('valueStep') ? this.filterProperties.valueStep : DEFAULT_STEP;
@@ -169,14 +169,14 @@ export class SliderRangeFilter implements Filter {
     // create the DOM element & add an ID and filter class
     const $lowestSliderValueElm = $(`
     <div class="input-group-addon input-group-prepend slider-range-value">
-      <span class="input-group-text lowest-range-${fieldId}">${defaultStartValue}</span>
+      <span class="input-group-text lowest-range-${columnId}">${defaultStartValue}</span>
     </div>`);
     const $highestSliderValueElm = $(`
     <div class="input-group-addon input-group-append slider-range-value">
-      <span class="input-group-text highest-range-${fieldId}">${defaultEndValue}</span>
+      <span class="input-group-text highest-range-${columnId}">${defaultEndValue}</span>
     </div>`);
-    this.$filterElm = $(`<div class="filter-input filter-${fieldId}"></div>`);
-    this.$filterContainerElm = $(`<div class="input-group form-control search-filter slider-range-container slider-values filter-${fieldId}">`);
+    this.$filterElm = $(`<div class="filter-input filter-${columnId}"></div>`);
+    this.$filterContainerElm = $(`<div class="input-group form-control search-filter slider-range-container slider-values filter-${columnId}">`);
 
     if (this.filterParams.hideSliderNumbers) {
       this.$filterContainerElm.append(this.$filterElm);
@@ -244,9 +244,9 @@ export class SliderRangeFilter implements Filter {
    * @param highestValue number
    */
   private renderSliderValues(lowestValue: number | string, highestValue: number | string) {
-    const fieldId = this.columnDef && this.columnDef.id;
-    const lowerElm = document.querySelector(`.lowest-range-${fieldId}`);
-    const highestElm = document.querySelector(`.highest-range-${fieldId}`);
+    const columnId = this.columnDef && this.columnDef.id;
+    const lowerElm = document.querySelector(`.lowest-range-${columnId}`);
+    const highestElm = document.querySelector(`.highest-range-${columnId}`);
     if (lowerElm && lowerElm.innerHTML) {
       lowerElm.innerHTML = lowestValue.toString();
     }
