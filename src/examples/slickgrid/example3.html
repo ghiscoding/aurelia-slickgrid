@@ -1,7 +1,6 @@
 <template>
   <h2>${title}</h2>
-  <div class="subtitle"
-    innerhtml.bind="subTitle"></div>
+  <div class="subtitle" innerhtml.bind="subTitle"></div>
 
   <div class="col-sm-6">
     <label>autoEdit setting</label>
@@ -9,57 +8,40 @@
     <span id="radioAutoEdit">
       <div class="row">
 
-        <label class="radio-inline control-label"
-          for="radioTrue">
-          <input type="radio"
-            name="inlineRadioOptions"
-            id="radioTrue"
-            checked
-            value.bind="isAutoEdit"
+        <label class="radio-inline control-label" for="radioTrue">
+          <input type="radio" name="inlineRadioOptions" id="radioTrue" checked value.bind="isAutoEdit"
             click.delegate="setAutoEdit(true)"> ON
           (single-click)
         </label>
-        <label class="radio-inline control-label"
-          for="radioFalse">
-          <input type="radio"
-            name="inlineRadioOptions"
-            id="radioFalse"
-            value.bind="isAutoEdit"
+        <label class="radio-inline control-label" for="radioFalse">
+          <input type="radio" name="inlineRadioOptions" id="radioFalse" value.bind="isAutoEdit"
             click.delegate="setAutoEdit(false)"> OFF
           (double-click)
         </label>
       </div>
       <div class="row">
-        <button class="btn btn-default btn-sm"
-          click.delegate="undo()">
+        <button class="btn btn-default btn-sm" click.delegate="undo()">
           <i class="fa fa-undo"></i>
           Undo last edit(s)
         </button>
-        <label class="checkbox-inline control-label"
-          for="autoCommitEdit">
-          <input type="checkbox"
-            id="autoCommitEdit"
-            value.bind="gridOptions.autoCommitEdit"
+        <label class="checkbox-inline control-label" for="autoCommitEdit">
+          <input type="checkbox" id="autoCommitEdit" checked.bind="gridOptions.autoCommitEdit"
             click.delegate="changeAutoCommit()">
           Auto Commit Edit
         </label>
       </div>
     </span>
-    <div class="row"
-      style="margin-top: 5px">
-      <button class="btn btn-default btn-sm"
-        click.delegate="aureliaGrid.filterService.clearFilters()">Clear Filters</button>
-      <button class="btn btn-default btn-sm"
-        click.delegate="aureliaGrid.sortService.clearSorting()">Clear Sorting</button>
-      <button class="btn btn-default btn-sm btn-info"
-        click.delegate="addItem()"
+    <div class="row" style="margin-top: 5px">
+      <button class="btn btn-default btn-sm" click.delegate="aureliaGrid.filterService.clearFilters()">Clear
+        Filters</button>
+      <button class="btn btn-default btn-sm" click.delegate="aureliaGrid.sortService.clearSorting()">Clear
+        Sorting</button>
+      <button class="btn btn-default btn-sm btn-info" click.delegate="addItem()"
         title="Clear Filters &amp; Sorting to see it better">
         Add item
       </button>
-      <button class="btn btn-default btn-sm btn-danger"
-        click.delegate="deleteItem()">Delete item</button>
-      <button class="btn btn-default btn-sm"
-        click.delegate="dynamicallyAddTitleHeader()">
+      <button class="btn btn-default btn-sm btn-danger" click.delegate="deleteItem()">Delete item</button>
+      <button class="btn btn-default btn-sm" click.delegate="dynamicallyAddTitleHeader()">
         <i class="fa fa-plus"></i>
         Dynamically Duplicate Title Column
       </button>
@@ -67,23 +49,17 @@
   </div>
 
   <div class="col-sm-6">
-    <div class="alert alert-info"
-      show.bind="updatedObject">
+    <div class="alert alert-info" show.bind="updatedObject">
       <strong>Updated Item:</strong> ${updatedObject | stringify}
     </div>
-    <div class="alert alert-warning"
-      show.bind="alertWarning">
+    <div class="alert alert-warning" show.bind="alertWarning">
       ${alertWarning}
     </div>
   </div>
 
-  <div id="grid-container"
-    class="col-sm-12">
-    <aurelia-slickgrid grid-id="grid1"
-      column-definitions.bind="columnDefinitions"
-      grid-options.bind="gridOptions"
-      dataset.bind="dataset"
-      sg-on-cell-change.delegate="onCellChanged($event.detail.eventData, $event.detail.args)"
+  <div id="grid-container" class="col-sm-12">
+    <aurelia-slickgrid grid-id="grid1" column-definitions.bind="columnDefinitions" grid-options.bind="gridOptions"
+      dataset.bind="dataset" sg-on-cell-change.delegate="onCellChanged($event.detail.eventData, $event.detail.args)"
       sg-on-click.delegate="onCellClicked($event.detail.eventData, $event.detail.args)"
       sg-on-validation-error.delegate="onCellValidation($event.detail.eventData, $event.detail.args)"
       asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">

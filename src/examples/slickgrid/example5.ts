@@ -8,6 +8,7 @@ import {
   GridOdataService,
   GridOption,
   GridStateChange,
+  OdataOption,
   Metrics,
   OperatorType,
 } from '../../aurelia-slickgrid';
@@ -40,6 +41,7 @@ export class Example5 {
   dataset = [];
   metrics: Metrics;
 
+  isCountEnabled = true;
   odataVersion = 2;
   odataQuery = '';
   processing = false;
@@ -106,7 +108,10 @@ export class Example5 {
       },
       backendServiceApi: {
         service: new GridOdataService(),
-        options: { version: this.odataVersion }, // defaults to 2, the query string is slightly different between OData 2 and 4
+        options: {
+          enableCount: this.isCountEnabled, // add the count in the OData query, which will return a property named "odata.count" (v2) or "@odata.count" (v4)
+          version: this.odataVersion        // defaults to 2, the query string is slightly different between OData 2 and 4
+        } as OdataOption,
         preProcess: () => this.displaySpinner(true),
         process: (query) => this.getCustomerApiCall(query),
         postProcess: (response) => {
@@ -128,10 +133,14 @@ export class Example5 {
   getCustomerCallback(data) {
     // totalItems property needs to be filled for pagination to work correctly
     // however we need to force Aurelia to do a dirty check, doing a clone object will do just that
-    this.gridOptions.pagination.totalItems = data['totalRecordCount'];
+    let countPropName = 'totalRecordCount'; // you can use "totalRecordCount" or any name or "odata.count" when "enableCount" is set
+    if (this.isCountEnabled) {
+      countPropName = (this.odataVersion === 4) ? '@odata.count' : 'odata.count';
+    }
+    this.gridOptions.pagination.totalItems = data[countPropName];
     this.gridOptions = { ...{}, ...this.gridOptions };
     if (this.metrics) {
-      this.metrics.totalItemCount = data['totalRecordCount'];
+      this.metrics.totalItemCount = data[countPropName];
     }
 
     // once pagination totalItems is filled, we can update the dataset
@@ -257,7 +266,13 @@ export class Example5 {
           const updatedData = filteredData.slice(firstRow, firstRow + top);
 
           setTimeout(() => {
-            resolve({ items: updatedData, totalRecordCount: countTotalItems, query });
+            let countPropName = 'totalRecordCount';
+            if (this.isCountEnabled) {
+              countPropName = (this.odataVersion === 4) ? '@odata.count' : 'odata.count';
+            }
+            const backendResult = { items: updatedData, [countPropName]: countTotalItems, query };
+            console.log('Backend Result', backendResult);
+            resolve(backendResult);
           }, 250);
         });
     });
@@ -268,12 +283,25 @@ export class Example5 {
     console.log('Client sample, Grid State changed:: ', gridStateChanges);
   }
 
-  // THIS IS ONLY FOR DEMO PURPOSES DO NOT USE THIS CODE
+  // THE FOLLOWING METHODS ARE ONLY FOR DEMO PURPOSES DO NOT USE THIS CODE
+  // ---
+
+  changeCountEnableFlag() {
+    this.isCountEnabled = !this.isCountEnabled;
+    const odataService = this.gridOptions.backendServiceApi.service;
+
+    // @ts-ignore
+    odataService.updateOptions({ enableCount: this.isCountEnabled } as OdataOption);
+    odataService.clearFilters();
+    this.aureliaGrid.filterService.clearFilters();
+    return true;
+  }
+
   setOdataVersion(version: number) {
     this.odataVersion = version;
     const odataService = this.gridOptions.backendServiceApi.service;
     // @ts-ignore
-    odataService.updateOptions({ version: this.odataVersion });
+    odataService.updateOptions({ version: this.odataVersion } as OdataOption);
     odataService.clearFilters();
     this.aureliaGrid.filterService.clearFilters();
     return true;
