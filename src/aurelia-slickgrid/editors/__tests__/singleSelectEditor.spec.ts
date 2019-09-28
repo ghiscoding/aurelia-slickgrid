@@ -8,7 +8,7 @@ import { HttpClient } from 'aurelia-fetch-client';
 import { I18N } from 'aurelia-i18n';
 import { BindingSignaler } from 'aurelia-templating-resources';
 import { Editors } from '../index';
-import { SingleSelectEditor } from '../singleselectEditor';
+import { SingleSelectEditor } from '../singleSelectEditor';
 import { CollectionService } from '../../services/collection.service';
 import { AutocompleteOption, Column, EditorArgs, EditorArguments, GridOption, KeyCode } from '../../models';
 
