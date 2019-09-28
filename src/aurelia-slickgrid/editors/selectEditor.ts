@@ -17,7 +17,7 @@ import {
   SelectOption,
 } from './../models/index';
 import { CollectionService, findOrDefault, disposeAllSubscriptions } from '../services/index';
-import { charArraysEqual, getDescendantProperty, htmlEncode } from '../services/utilities';
+import { charArraysEqual, getDescendantProperty, htmlEncode, setDeepValue } from '../services/utilities';
 import * as DOMPurify from 'dompurify';
 import * as $ from 'jquery';
 
@@ -174,8 +174,10 @@ export class SelectEditor implements Editor {
 
         // when it's a complex object, then pull the object name only, e.g.: "user.firstName" => "user"
         const fieldName = this.columnDef && this.columnDef.field;
-        const fieldNameFromComplexObject = fieldName.indexOf('.') ? fieldName.substring(0, fieldName.indexOf('.')) : '';
-        if (fieldNameFromComplexObject && typeof c === 'object') {
+
+        // is the field a complex object, "address.streetNumber"
+        const isComplexObject = fieldName.indexOf('.') > 0;
+        if (isComplexObject && typeof c === 'object') {
           return c;
         }
 
@@ -205,10 +207,11 @@ export class SelectEditor implements Editor {
     const isIncludingPrefixSuffix = this.collectionOptions && this.collectionOptions.includePrefixSuffixToSelectedValues || false;
     const itemFound = findOrDefault(this.collection, (c: any) => c[this.valueName].toString() === this.$editorElm.val());
 
-    // when it's a complex object, then pull the object name only, e.g.: "user.firstName" => "user"
+    // is the field a complex object, "address.streetNumber"
     const fieldName = this.columnDef && this.columnDef.field;
-    const fieldNameFromComplexObject = fieldName.indexOf('.') ? fieldName.substring(0, fieldName.indexOf('.')) : '';
-    if (fieldNameFromComplexObject && typeof itemFound === 'object') {
+    const isComplexObject = fieldName.indexOf('.') > 0;
+
+    if (isComplexObject && typeof itemFound === 'object') {
       return itemFound;
     } else if (itemFound) {
       const labelText = itemFound[this.valueName];
@@ -258,6 +261,30 @@ export class SelectEditor implements Editor {
     this.renderDomElement(this.collection);
   }
 
+  getValue(): any | any[] {
+    return (this.isMultipleSelect) ? this.currentValues : this.currentValue;
+  }
+
+  setValue(value: any | any[]) {
+    if (this.isMultipleSelect && Array.isArray(value)) {
+      this.loadMultipleValues(value);
+    } else {
+      this.loadSingleValue(value);
+    }
+  }
+
+  hide() {
+    if (this.$editorElm && typeof this.$editorElm.multipleSelect === 'function') {
+      this.$editorElm.multipleSelect('close');
+    }
+  }
+
+  show() {
+    if (this.$editorElm && typeof this.$editorElm.multipleSelect === 'function') {
+      this.$editorElm.multipleSelect('open');
+    }
+  }
+
   applyValue(item: any, state: any): void {
     const fieldName = this.columnDef && this.columnDef.field;
     const fieldType = this.columnDef && this.columnDef.type;
@@ -274,10 +301,19 @@ export class SelectEditor implements Editor {
       newValue = state.split(',');
     }
 
-    // when it's a complex object, then pull the object name only, e.g.: "user.firstName" => "user"
-    const fieldNameFromComplexObject = fieldName.indexOf('.') ? fieldName.substring(0, fieldName.indexOf('.')) : '';
+    // is the field a complex object, "address.streetNumber"
+    const isComplexObject = fieldName.indexOf('.') > 0;
+
+    // validate the value before applying it (if not valid we'll set an empty string)
     const validation = this.validate(newValue);
-    item[fieldNameFromComplexObject || fieldName] = (validation && validation.valid) ? newValue : '';
+    newValue = (validation && validation.valid) ? newValue : '';
+
+    // set the new value to the item datacontext
+    if (isComplexObject) {
+      setDeepValue(item, fieldName, newValue);
+    } else {
+      item[fieldName] = newValue;
+    }
   }
 
   destroy() {
@@ -296,16 +332,15 @@ export class SelectEditor implements Editor {
   loadValue(item: any): void {
     const fieldName = this.columnDef && this.columnDef.field;
 
-    // when it's a complex object, then pull the object name only, e.g.: "user.firstName" => "user"
-    const fieldNameFromComplexObject = fieldName.indexOf('.') ? fieldName.substring(0, fieldName.indexOf('.')) : '';
+    // is the field a complex object, "address.streetNumber"
+    const isComplexObject = fieldName.indexOf('.') > 0;
 
-    if (item && this.columnDef && (item.hasOwnProperty(fieldName) || item.hasOwnProperty(fieldNameFromComplexObject))) {
-      const currentValue = item[fieldNameFromComplexObject || fieldName];
-      const loadValue = fieldNameFromComplexObject && currentValue.hasOwnProperty(this.valueName) ? currentValue[this.valueName] : currentValue;
-      if (this.isMultipleSelect && Array.isArray(loadValue)) {
-        this.loadMultipleValues(loadValue);
+    if (item && this.columnDef && (item.hasOwnProperty(fieldName) || isComplexObject)) {
+      const value = (isComplexObject) ? getDescendantProperty(item, fieldName) : item[fieldName];
+      if (this.isMultipleSelect && Array.isArray(value)) {
+        this.loadMultipleValues(value);
       } else {
-        this.loadSingleValue(loadValue);
+        this.loadSingleValue(value);
       }
       this.refresh();
     }
@@ -328,11 +363,13 @@ export class SelectEditor implements Editor {
   loadSingleValue(currentValue: any) {
     // keep the default value in memory for references
     this.defaultValue = currentValue;
+    this.$editorElm.val(currentValue);
 
     // make sure the prop exists first
     this.$editorElm.find('option').each((i: number, $e: any) => {
       // check equality after converting defaultValue to string since the DOM value will always be of type string
-      $e.selected = (currentValue.toString() === $e.value);
+      const strValue = currentValue && currentValue.toString && currentValue.toString();
+      $e.selected = (strValue === $e.value);
     });
   }
 
@@ -348,7 +385,7 @@ export class SelectEditor implements Editor {
     }
   }
 
-  serializeValue(): any {
+  serializeValue(): any | any[] {
     return (this.isMultipleSelect) ? this.currentValues : this.currentValue;
   }
 
@@ -544,11 +581,7 @@ export class SelectEditor implements Editor {
       const elementOptions = (this.columnEditor) ? this.columnEditor.elementOptions : {};
       this.editorElmOptions = { ...this.defaultOptions, ...elementOptions };
       this.$editorElm = this.$editorElm.multipleSelect(this.editorElmOptions);
-      setTimeout(() => {
-        if (this.$editorElm && typeof this.$editorElm.multipleSelect === 'function') {
-          this.$editorElm.multipleSelect('open');
-        }
-      });
+      setTimeout(() => this.show());
     }
   }
 
