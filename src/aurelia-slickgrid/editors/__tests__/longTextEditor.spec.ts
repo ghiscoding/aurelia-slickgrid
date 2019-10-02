@@ -1,10 +1,10 @@
-import { DOM } from 'aurelia-pal';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { I18N } from 'aurelia-i18n';
 import { BindingSignaler } from 'aurelia-templating-resources';
 import { Editors } from '../index';
 import { LongTextEditor } from '../longTextEditor';
 import { AutocompleteOption, Column, EditorArgs, EditorArguments, GridOption, KeyCode } from '../../models';
+import { DOM } from 'aurelia-pal';
 
 const KEY_CHAR_A = 97;
 const containerId = 'demo-container';
@@ -217,7 +217,7 @@ describe('LongTextEditor', () => {
     });
 
     describe('isValueChanged method', () => {
-      it('should return True when previously dispatched keyboard event being char "a"', () => {
+      it('should return True when previously dispatched keyboard event is a new char "a"', () => {
         const event = new (window.window as any).KeyboardEvent('keydown', { keyCode: KEY_CHAR_A, bubbles: true, cancelable: true });
 
         editor = new LongTextEditor(i18n, editorArguments);
@@ -348,6 +348,7 @@ describe('LongTextEditor', () => {
 
         editor = new LongTextEditor(i18n, editorArguments);
         editor.loadValue(mockItemData);
+        editor.setValue('task 1');
         editor.save();
 
         expect(spy).toHaveBeenCalled();
@@ -360,6 +361,7 @@ describe('LongTextEditor', () => {
 
         editor = new LongTextEditor(i18n, editorArguments);
         editor.loadValue(mockItemData);
+        editor.setValue('task 1');
         editor.save();
 
         expect(spy).toHaveBeenCalled();
@@ -373,6 +375,7 @@ describe('LongTextEditor', () => {
 
         editor = new LongTextEditor(i18n, editorArguments);
         editor.loadValue(mockItemData);
+        editor.setValue('');
         editor.save();
 
         expect(spy).not.toHaveBeenCalled();
@@ -385,6 +388,7 @@ describe('LongTextEditor', () => {
 
         editor = new LongTextEditor(i18n, editorArguments);
         editor.loadValue(mockItemData);
+        editor.setValue('task 1');
         const spySave = jest.spyOn(editor, 'save');
         const editorElm = editor.editorDomElement;
 
@@ -411,6 +415,7 @@ describe('LongTextEditor', () => {
 
         editor = new LongTextEditor(i18n, editorArguments);
         editor.loadValue(mockItemData);
+        editor.setValue('task 2');
         const spySave = jest.spyOn(editor, 'save');
         const editorElm = editor.editorDomElement;
 

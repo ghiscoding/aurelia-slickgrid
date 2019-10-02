@@ -1,7 +1,6 @@
 // import 3rd party lib multiple-select for the tests
 import '../../../assets/lib/multiple-select/multiple-select';
 
-import { DOM } from 'aurelia-pal';
 import { BindingEngine } from 'aurelia-binding';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { HttpClient } from 'aurelia-fetch-client';
@@ -10,9 +9,8 @@ import { BindingSignaler } from 'aurelia-templating-resources';
 import { Editors } from '../index';
 import { MultipleSelectEditor } from '../multipleSelectEditor';
 import { CollectionService } from '../../services/collection.service';
-import { AutocompleteOption, Column, EditorArgs, EditorArguments, GridOption, KeyCode } from '../../models';
+import { Column, EditorArguments, GridOption } from '../../models';
 
-const KEY_CHAR_A = 97;
 const containerId = 'demo-container';
 
 // define a <div> container to simulate the grid container

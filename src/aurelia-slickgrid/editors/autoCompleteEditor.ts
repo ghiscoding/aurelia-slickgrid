@@ -167,14 +167,13 @@ export class AutoCompleteEditor implements Editor {
       this._currentValue = data;
       this._defaultTextValue = typeof data === 'string' ? data : data[this.labelName];
       this._$editorElm.val(this._defaultTextValue);
-      this._$editorElm[0].defaultValue = this._defaultTextValue;
       this._$editorElm.select();
     }
   }
 
   save() {
     const validation = this.validate();
-    if (validation && validation.valid) {
+    if (validation && validation.valid && this.isValueChanged()) {
       if (this.hasAutoCommitEdit) {
         this.grid.getEditorLock().commitCurrentEdit();
       } else {
@@ -258,7 +257,7 @@ export class AutoCompleteEditor implements Editor {
     const placeholder = this.columnEditor && this.columnEditor.placeholder || '';
     const title = this.columnEditor && this.columnEditor.title || '';
 
-    this._$editorElm = $(`<input type="text" class="autocomplete editor-text editor-${columnId}" role="presentation" autocomplete="off" placeholder="${placeholder}" title="${title}" />`)
+    this._$editorElm = $(`<input type="text" role="presentation" autocomplete="off" class="autocomplete editor-text editor-${columnId}" placeholder="${placeholder}" title="${title}" />`)
       .appendTo(this.args.container)
       .on('keydown.nav', (event: JQueryEventObject) => {
         this._lastInputEvent = event;

@@ -10,9 +10,8 @@ import { BindingSignaler } from 'aurelia-templating-resources';
 import { Editors } from '../index';
 import { SingleSelectEditor } from '../singleSelectEditor';
 import { CollectionService } from '../../services/collection.service';
-import { AutocompleteOption, Column, EditorArgs, EditorArguments, GridOption, KeyCode } from '../../models';
+import { Column, EditorArguments, GridOption } from '../../models';
 
-const KEY_CHAR_A = 97;
 const containerId = 'demo-container';
 
 // define a <div> container to simulate the grid container
@@ -295,6 +294,57 @@ describe('SingleSelectEditor', () => {
         const output = editor.serializeValue();
 
         expect(output).toEqual('male');
+      });
+    });
+
+    describe('enableRenderHtml property', () => {
+      it('should create the multi-select filter with a default search term and have the HTML rendered when "enableRenderHtml" is set', () => {
+        mockColumn.internalColumnEditor = {
+          enableRenderHtml: true,
+          collection: [{ value: true, label: 'True', labelPrefix: `<i class="fa fa-check"></i> ` }, { value: false, label: 'False' }],
+          customStructure: {
+            value: 'isEffort',
+            label: 'label',
+            labelPrefix: 'labelPrefix',
+          },
+        };
+
+        editor = new SingleSelectEditor(bindingEngineStub, collectionService, i18n, editorArguments);
+        editor.setValue(false);
+        const editorBtnElm = divContainer.querySelector<HTMLButtonElement>('.ms-parent.ms-filter.editor-gender button.ms-choice');
+        const editorListElm = divContainer.querySelectorAll<HTMLInputElement>(`[name=editor-gender].ms-drop ul>li span`);
+        editorBtnElm.click();
+
+        expect(editor.getValue()).toEqual(undefined);
+        expect(editorListElm.length).toBe(2);
+        expect(editorListElm[0].innerHTML).toBe('<i class="fa fa-check"></i> True');
+      });
+
+      it('should create the multi-select filter with a default search term and have the HTML rendered and sanitized when "enableRenderHtml" is set and has <script> tag', () => {
+        mockColumn.internalColumnEditor = {
+          enableRenderHtml: true,
+          collection: [{ isEffort: true, label: 'True', labelPrefix: `<script>alert('test')></script><i class="fa fa-check"></i> ` }, { isEffort: false, label: 'False' }],
+          collectionOptions: {
+            separatorBetweenTextLabels: ': ',
+            includePrefixSuffixToSelectedValues: true,
+          },
+          customStructure: {
+            value: 'isEffort',
+            label: 'label',
+            labelPrefix: 'labelPrefix',
+          },
+        };
+        mockItemData = { id: 1, gender: 'male', isEffort: false };
+
+        editor = new SingleSelectEditor(bindingEngineStub, collectionService, i18n, editorArguments);
+        editor.loadValue(mockItemData);
+        const editorBtnElm = divContainer.querySelector<HTMLButtonElement>('.ms-parent.ms-filter.editor-gender button.ms-choice');
+        const editorListElm = divContainer.querySelectorAll<HTMLInputElement>(`[name=editor-gender].ms-drop ul>li span`);
+        editorBtnElm.click();
+
+        expect(editor.getValue()).toEqual(`<script>alert('test')></script><i class="fa fa-check"></i> : true`);
+        expect(editorListElm.length).toBe(2);
+        expect(editorListElm[0].innerHTML).toBe('<i class="fa fa-check"></i> : True');
       });
     });
   });

@@ -164,7 +164,8 @@ export class SliderFilter implements Filter {
       <div class="search-filter slider-container filter-${columnId}">
         <input type="range" id="${this._elementRangeInputId}"
           name="${this._elementRangeInputId}"
-          defaultValue="${defaultValue}" min="${minValue}" max="${maxValue}" step="${step}"
+          defaultValue="${defaultValue}" value="${defaultValue}"
+          min="${minValue}" max="${maxValue}" step="${step}"
           class="form-control slider-filter-input range" />
       </div>`;
     }
@@ -173,7 +174,8 @@ export class SliderFilter implements Filter {
       <div class="input-group slider-container search-filter filter-${columnId}">
         <input type="range" id="${this._elementRangeInputId}"
           name="${this._elementRangeInputId}"
-          defaultValue="${defaultValue}" min="${minValue}" max="${maxValue}" step="${step}"
+          defaultValue="${defaultValue}" value="${defaultValue}"
+          min="${minValue}" max="${maxValue}" step="${step}"
           class="form-control slider-filter-input range" />
         <div class="input-group-addon input-group-append slider-value">
           <span class="input-group-text" id="${this._elementRangeOutputId}">${defaultValue}</span>

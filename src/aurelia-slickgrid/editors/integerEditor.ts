@@ -10,7 +10,7 @@ import * as $ from 'jquery';
 export class IntegerEditor implements Editor {
   private _lastInputEvent: JQueryEventObject;
   private _$input: any;
-  defaultValue: string;
+  originalValue: number | string;
 
   /** SlickGrid Grid object */
   grid: any;
@@ -67,7 +67,7 @@ export class IntegerEditor implements Editor {
       this._$input.on('focusout', () => this.save());
     }
 
-    setTimeout(() => this._$input.focus().select(), 50);
+    setTimeout(() => this.focus(), 50);
   }
 
   destroy() {
@@ -108,7 +108,7 @@ export class IntegerEditor implements Editor {
     if (this.columnEditor && this.columnEditor.alwaysSaveOnEnterKey && lastEvent === KeyCode.ENTER) {
       return true;
     }
-    return (!(elmValue === '' && this.defaultValue === null)) && (elmValue !== this.defaultValue);
+    return (!(elmValue === '' && this.originalValue === null)) && (elmValue !== this.originalValue);
   }
 
   loadValue(item: any) {
@@ -119,16 +119,15 @@ export class IntegerEditor implements Editor {
 
     if (item && this.columnDef && (item.hasOwnProperty(fieldName) || isComplexObject)) {
       const value = (isComplexObject) ? getDescendantProperty(item, fieldName) : item[fieldName];
-      this.defaultValue = (isNaN(value) || value === null || value === undefined) ? value : `${value}`;
-      this._$input.val(this.defaultValue);
-      this._$input[0].defaultValue = this.defaultValue;
+      this.originalValue = (isNaN(value) || value === null || value === undefined) ? value : `${value}`;
+      this._$input.val(this.originalValue);
       this._$input.select();
     }
   }
 
   save() {
     const validation = this.validate();
-    if (validation && validation.valid) {
+    if (validation && validation.valid && this.isValueChanged()) {
       if (this.hasAutoCommitEdit) {
         this.grid.getEditorLock().commitCurrentEdit();
       } else {
