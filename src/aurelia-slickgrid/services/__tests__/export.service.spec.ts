@@ -483,6 +483,45 @@ describe('ExportService', () => {
       });
     });
 
+    describe('startDownloadFile with some columns having complex object', () => {
+      beforeEach(() => {
+        mockColumns = [
+          { id: 'id', field: 'id', excludeFromExport: true },
+          { id: 'firstName', field: 'user.firstName', name: 'First Name', width: 100, formatter: Formatters.complexObject, exportWithFormatter: true },
+          { id: 'lastName', field: 'user.lastName', name: 'Last Name', width: 100, formatter: Formatters.complexObject, exportWithFormatter: true },
+          { id: 'position', field: 'position', width: 100 },
+        ] as Column[];
+
+        jest.spyOn(gridStub, 'getColumns').mockReturnValue(mockColumns);
+      });
+
+      let mockCollection: any[];
+
+      it(`should export correctly with complex object formatters`, (done) => {
+        mockCollection = [{ id: 0, user: { firstName: 'John', lastName: 'Z' }, position: 'SALES_REP', order: 10 }];
+        jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
+        jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
+        const eaSpy = jest.spyOn(ea, 'publish');
+        const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
+        const spyDownload = jest.spyOn(service, 'startDownloadFile');
+
+        const optionExpectation = { filename: 'export.csv', format: 'csv', useUtf8WithBom: false };
+        const contentExpectation =
+          `"First Name","Last Name","Position"
+              "John","Z","SALES_REP"`;
+
+        service.init(gridStub, dataViewStub);
+        service.exportToFile(mockExportCsvOptions);
+
+        setTimeout(() => {
+          expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
+          expect(spyUrlCreate).toHaveBeenCalledWith(mockCsvBlob);
+          expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
+          done();
+        });
+      });
+    });
+
     describe('with Translation', () => {
       let mockCollection: any[];
 

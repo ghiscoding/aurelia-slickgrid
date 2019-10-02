@@ -32,7 +32,7 @@ export class CustomInputEditor implements Editor {
   }
 
   /** Get the Validator function, can be passed in Editor property or Column Definition */
-  get validator(): EditorValidator {
+  get validator(): EditorValidator | undefined {
     return this.columnEditor.validator || this.columnDef.validator;
   }
 
@@ -90,7 +90,7 @@ export class CustomInputEditor implements Editor {
     item[this.args.column.field] = (validation && validation.valid) ? state : '';
   }
 
-  isValueChanged() {
+  isValueChanged(): boolean {
     const lastEvent = this._lastInputEvent && this._lastInputEvent.keyCode;
     if (this.columnEditor && this.columnEditor.alwaysSaveOnEnterKey && lastEvent === KeyCode.ENTER) {
       return true;

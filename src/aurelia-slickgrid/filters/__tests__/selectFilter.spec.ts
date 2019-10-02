@@ -4,13 +4,13 @@ import '../../../assets/lib/multiple-select/multiple-select';
 import { DOM } from 'aurelia-pal';
 import { BindingEngine } from 'aurelia-binding';
 import { EventAggregator } from 'aurelia-event-aggregator';
+import { HttpClient } from 'aurelia-fetch-client';
 import { I18N } from 'aurelia-i18n';
 import { BindingSignaler } from 'aurelia-templating-resources';
 import { Column, FilterArguments, GridOption, FieldType, OperatorType } from '../../models';
 import { CollectionService } from './../../services/collection.service';
 import { Filters } from '..';
 import { SelectFilter } from '../selectFilter';
-import { HttpClient } from 'aurelia-fetch-client';
 
 const containerId = 'demo-container';
 

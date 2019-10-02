@@ -46,7 +46,7 @@ describe('Aurelia-Slickgrid Custom Component', () => {
 
   it('should create a grid and expect multiple Event Aggregator being called', async () => {
     await component.create(bootstrap);
-    expect(eventAggregator.publish).toHaveBeenCalledTimes(3);
+    expect(eventAggregator.publish).toHaveBeenCalled();
     expect(eventAggregator.publish).toHaveBeenNthCalledWith(1, 'onBeforeGridCreate', true);
     expect(eventAggregator.publish).toHaveBeenNthCalledWith(2, 'onDataviewCreated', expect.any(Object));
     expect(eventAggregator.publish).toHaveBeenNthCalledWith(3, 'onGridCreated', expect.any(Object));

@@ -73,7 +73,13 @@ export interface Column {
    */
   exportCsvForceToKeepAsString?: boolean;
 
-  /** Field property name to use from the dataset that is used to display the column data.  */
+  /**
+   * Field property name to use from the dataset that is used to display the column data.
+   * For example: { id: 'firstName', field: 'firstName' }
+   *
+   * NOTE: a field with dot notation (.) will be considered a complex object.
+   * For example: { id: 'Users', field: 'user.firstName' }
+   */
   field: string;
 
   /**
