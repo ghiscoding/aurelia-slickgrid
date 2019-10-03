@@ -13,7 +13,7 @@
    .slick-header-columns,
    .slick-header-column {
      background: $grid-header-background;
-     // background-color: #EBECEE;
+     box-sizing: content-box !important; /* this here only for Firefox! */
    }
 
    .slick-header-columns {
