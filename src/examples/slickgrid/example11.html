@@ -4,12 +4,24 @@
 
   <div class="col-sm-12">
     <span>
-      <button class="btn btn-sm btn-default" click.delegate="addNewItem()">Add New Mocked Item</button>
-      <button class="btn btn-sm btn-default" click.delegate="updateSecondItem()">Update 2nd Row Item with Random
-        Duration</button>
+      <label>Scroll: </label>
+      <div class="btn-group" role="group" aria-label="...">
+        <button class="btn btn-sm btn-default" click.delegate="scrollGridTop()">
+          <i class="fa fa-arrow-up"></i>
+        </button>
+        <button class="btn btn-sm btn-default" click.delegate="scrollGridBottom()">
+          <i class="fa fa-arrow-down"></i>
+        </button>
+      </div>
+      <button class="btn btn-sm btn-default" click.delegate="addNewItem()">Add New Mocked Item (top)</button>
+      <button class="btn btn-sm btn-default" click.delegate="addNewItem('bottom')">Add New Mocked Item (bottom)</button>
+      <button class="btn btn-sm btn-default" click.delegate="updateSecondItem()">
+        Update 2nd Row Item with Random Duration
+      </button>
       <button class="btn btn-sm btn-default" click.delegate="highlighFifthRow()">Highlight 5th Row</button>
-      <button class="btn btn-sm btn-default" click.delegate="changeDurationBackgroundColor()">Highlight Rows with
-        Duration over 50</button>
+      <button class="btn btn-sm btn-default" click.delegate="changeDurationBackgroundColor()">
+        Highlight Rows with Duration over 50
+      </button>
     </span>
     <hr />
   </div>

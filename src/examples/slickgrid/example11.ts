@@ -174,7 +174,7 @@ export class Example11 {
     this.dataset = mockedDataset;
   }
 
-  addNewItem() {
+  addNewItem(insertPosition?: 'top' | 'bottom') {
     const newId = this.dataset.length;
     const randomYear = 2000 + Math.floor(Math.random() * 10);
     const randomMonth = Math.floor(Math.random() * 11);
@@ -191,7 +191,7 @@ export class Example11 {
       finish: new Date(randomYear, (randomMonth + 2), randomDay),
       effortDriven: true
     };
-    this.aureliaGrid.gridService.addItemToDatagrid(newItem, true, true);
+    this.aureliaGrid.gridService.addItem(newItem, { position: insertPosition });
   }
 
   /** Change the Duration Rows Background Color */
@@ -206,6 +206,7 @@ export class Example11 {
 
   /** Highlight the 5th row using the Aurelia-Slickgrid GridService */
   highlighFifthRow() {
+    this.scrollGridTop();
     this.aureliaGrid.gridService.highlightRow(4, 1500);
   }
 
@@ -234,6 +235,7 @@ export class Example11 {
   }
 
   updateSecondItem() {
+    this.scrollGridTop();
     const updatedItem = this.aureliaGrid.gridService.getDataItemByRowNumber(1);
     updatedItem.duration = Math.round(Math.random() * 100);
     this.aureliaGrid.gridService.updateItem(updatedItem);
@@ -249,5 +251,13 @@ export class Example11 {
     updatedItem2.duration = Math.round(Math.random() * 100);
     this.aureliaGrid.gridService.updateItems([updatedItem1, updatedItem2], true);
     */
+  }
+
+  scrollGridBottom() {
+    this.aureliaGrid.slickGrid.navigateBottom();
+  }
+
+  scrollGridTop() {
+    this.aureliaGrid.slickGrid.navigateTop();
   }
 }
