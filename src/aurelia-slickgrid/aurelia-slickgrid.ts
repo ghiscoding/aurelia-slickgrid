@@ -32,6 +32,7 @@ import {
   GridService,
   GridStateService,
   GroupingAndColspanService,
+  PaginationService,
   ResizerService,
   SortService,
   toKebabCase,
@@ -59,6 +60,7 @@ const DEFAULT_SLICKGRID_EVENT_PREFIX = 'sg';
   GridService,
   GridStateService,
   GroupingAndColspanService,
+  PaginationService,
   ResizerService,
   SharedService,
   SortService,
@@ -102,6 +104,7 @@ export class AureliaSlickgridCustomElement {
     private gridService: GridService,
     private gridStateService: GridStateService,
     private groupingAndColspanService: GroupingAndColspanService,
+    private paginationService: PaginationService,
     private resizerService: ResizerService,
     private sharedService: SharedService,
     private sortService: SortService,
@@ -114,6 +117,7 @@ export class AureliaSlickgridCustomElement {
       gridService,
       gridStateService,
       groupingAndColspanService,
+      paginationService,
       resizerService,
       sortService
     ];
@@ -252,6 +256,7 @@ export class AureliaSlickgridCustomElement {
       gridService: this.gridService,
       groupingService: this.groupingAndColspanService,
       extensionService: this.extensionService,
+      paginationService: this.paginationService,
 
       /** @deprecated please use "extensionService" instead */
       pluginService: this.extensionService,

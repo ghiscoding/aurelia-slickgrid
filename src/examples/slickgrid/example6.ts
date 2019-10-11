@@ -14,7 +14,6 @@ import {
   GraphqlServiceOption,
   GridOption,
   GridStateChange,
-  JQueryUiSliderOption,
   MultipleSelectOption,
   OperatorType,
   SortDirection,
@@ -230,6 +229,14 @@ export class Example6 {
         resolve(mockedResult);
       }, 250);
     });
+  }
+
+  goToFirstPage() {
+    this.aureliaGrid.paginationService.goToFirstPage();
+  }
+
+  goToLastPage() {
+    this.aureliaGrid.paginationService.goToLastPage();
   }
 
   /** Dispatched event of a Grid State Changed event */

@@ -7,6 +7,7 @@ import {
   GridEventService,
   GridStateService,
   GroupingAndColspanService,
+  PaginationService,
   ResizerService,
   SortService
 } from '../services/index';
@@ -52,6 +53,9 @@ export interface AureliaGridInstance {
 
   /** Grouping (and colspan) Service */
   groupingService: GroupingAndColspanService;
+
+  /** Pagination Service (allows you to programmatically go to first/last page, etc...) */
+  paginationService: PaginationService;
 
   /** Resizer Service (including auto-resize) */
   resizerService: ResizerService;

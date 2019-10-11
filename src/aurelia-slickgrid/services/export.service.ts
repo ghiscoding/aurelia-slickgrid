@@ -56,7 +56,7 @@ export class ExportService {
     this._dataView = dataView;
     this._aureliaEventPrefix = (this._gridOptions && this._gridOptions.defaultAureliaEventPrefix) ? this._gridOptions.defaultAureliaEventPrefix : DEFAULT_AURELIA_EVENT_PREFIX;
 
-    // get locales provided by user in forRoot or else use default English locales via the Constants
+    // get locales provided by user in main file or else use default English locales via the Constants
     this._locales = this._gridOptions && this._gridOptions.locales || Constants.locales;
 
     if (this._gridOptions.enableTranslate && (!this.i18n || !this.i18n.tr)) {
