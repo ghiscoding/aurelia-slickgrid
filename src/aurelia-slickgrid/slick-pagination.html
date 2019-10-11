@@ -1,6 +1,6 @@
 <template>
   <div id="pager" style="width:100%;">
-    <div class="slick-pagination" if.bind="pager">
+    <div class="slick-pagination" if.bind="pager && options">
       <div class="slick-pagination-nav">
         <nav aria-label="Page navigation">
           <ul class="pagination">
@@ -45,7 +45,7 @@
       <span class="slick-pagination-settings">
         <select id="items-per-page-label" value.bind="pager.itemsPerPage | asgNumber"
           change.delegate="changeItemPerPage($event)">
-          <option value="${pageSize}" repeat.for="pageSize of pager.availablePageSizes" model.bind="pageSize">
+          <option value="${pageSize}" repeat.for="pageSize of options.pageSizes" model.bind="pageSize">
             ${pageSize}</option>
         </select>
         <span>${textItemsPerPage}</span>,

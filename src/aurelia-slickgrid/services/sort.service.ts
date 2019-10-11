@@ -245,7 +245,8 @@ export class SortService {
     }
 
     const query = backendApi.service.processOnSortChanged(event, args);
-    executeBackendCallback(query, args, startTime, gridOptions, this.emitSortChanged.bind(this));
+    const totalItems = gridOptions && gridOptions.pagination && gridOptions.pagination.totalItems;
+    executeBackendCallback(backendApi, query, args, startTime, totalItems, this.emitSortChanged.bind(this));
   }
 
   /** When a Sort Changes on a Local grid (JSON dataset) */

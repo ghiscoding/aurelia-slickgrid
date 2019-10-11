@@ -10,9 +10,12 @@ import 'slickgrid/slick.grid';
 import { bindable, BindingEngine, bindingMode, Container, Factory, inject } from 'aurelia-framework';
 import { DOM } from 'aurelia-pal';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
+
+import { Constants } from './constants';
 import { GlobalGridOptions } from './global-grid-options';
 import {
   AureliaGridInstance,
+  BackendServiceApi,
   BackendServiceOption,
   Column,
   ExtensionName,
@@ -20,6 +23,7 @@ import {
   GridOption,
   GridStateChange,
   GridStateType,
+  Locale,
   Pagination,
 } from './models/index';
 import {
@@ -37,6 +41,7 @@ import {
   SortService,
   toKebabCase,
 } from './services/index';
+import { executeBackendProcessesCallback, onBackendError } from './services/backend-utilities'
 import { ExtensionUtility } from './extensions/extensionUtility';
 import { SharedService } from './services/shared.service';
 
@@ -73,6 +78,8 @@ export class AureliaSlickgridCustomElement {
   private _fixedWidth: number | null;
   private _hideHeaderRowAfterPageLoad = false;
   groupItemMetadataProvider: any;
+  backendServiceApi: BackendServiceApi;
+  locales: Locale;
   isGridInitialized = false;
   showPagination = false;
   serviceList: any[] = [];
@@ -80,9 +87,10 @@ export class AureliaSlickgridCustomElement {
 
   @bindable({ defaultBindingMode: bindingMode.twoWay }) columnDefinitions: Column[] = [];
   @bindable({ defaultBindingMode: bindingMode.twoWay }) element: Element;
-  @bindable({ defaultBindingMode: bindingMode.twoWay }) gridPaginationOptions: GridOption;
   @bindable({ defaultBindingMode: bindingMode.twoWay }) dataview: any;
   @bindable({ defaultBindingMode: bindingMode.twoWay }) grid: any;
+  @bindable({ defaultBindingMode: bindingMode.twoWay }) paginationOptions: Pagination;
+  @bindable({ defaultBindingMode: bindingMode.twoWay }) totalItems: number;
   @bindable() customDataView: any;
   @bindable() dataset: any[];
   @bindable() gridId: string;
@@ -135,6 +143,10 @@ export class AureliaSlickgridCustomElement {
     // make sure the dataset is initialized (if not it will throw an error that it cannot getLength of null)
     this._dataset = this._dataset || this.dataset || [];
     this.gridOptions = this.mergeGridOptions(this.gridOptions);
+    this.paginationOptions = this.gridOptions.pagination;
+    this.locales = this.gridOptions && this.gridOptions.locales || Constants.locales;
+    this.backendServiceApi = this.gridOptions && this.gridOptions.backendServiceApi;
+
     this.createBackendApiInternalPostProcessCallback(this.gridOptions);
 
     if (!this.customDataView) {
@@ -537,46 +549,25 @@ export class AureliaSlickgridCustomElement {
 
     if (backendApi && backendApi.service && (backendApi.onInit || isExecuteCommandOnInit)) {
       const query = (typeof backendApi.service.buildQuery === 'function') ? backendApi.service.buildQuery() : '';
-      const onInitPromise = (isExecuteCommandOnInit) ? (backendApi && backendApi.process) ? backendApi.process(query) : undefined : (backendApi && backendApi.onInit) ? backendApi.onInit(query) : null;
+      const process = (isExecuteCommandOnInit) ? backendApi.process(query) : backendApi.onInit(query);
 
       // wrap this inside a setTimeout to avoid timing issue since the gridOptions needs to be ready before running this onInit
       setTimeout(async () => {
         // keep start time & end timestamps & return it after process execution
         const startTime = new Date();
 
+        // run any pre-process, if defined, for example a spinner
         if (backendApi.preProcess) {
           backendApi.preProcess();
         }
 
         try {
-          // await for the Promise to resolve the data
-          const processResult: GraphqlResult | any = await onInitPromise;
-          const endTime = new Date();
-
-          // define what our internal Post Process callback, only available for GraphQL Service for now
-          // it will basically refresh the Dataset & Pagination without having the user to create his own PostProcess every time
-          if (processResult && backendApi && backendApi.service instanceof GraphqlService && backendApi.internalPostProcess) {
-            backendApi.internalPostProcess(processResult);
+          // the processes can be a Promise (like Http)
+          if (process instanceof Promise && process.then) {
+            process.then((processResult: GraphqlResult | any) => executeBackendProcessesCallback(startTime, processResult, backendApi, this.gridOptions.pagination.totalItems));
           }
-
-          // send the response process to the postProcess callback
-          if (backendApi.postProcess) {
-            processResult.metrics = {
-              startTime,
-              endTime,
-              executionTime: endTime.valueOf() - startTime.valueOf(),
-              totalItemCount: this.gridOptions && this.gridOptions.pagination && this.gridOptions.pagination.totalItems
-            };
-            backendApi.postProcess(processResult);
-            // @deprecated, use metrics instead
-            processResult.statistics = processResult.metrics;
-          }
-        } catch (e) {
-          if (backendApi && backendApi.onError) {
-            backendApi.onError(e);
-          } else {
-            throw e;
-          }
+        } catch (error) {
+          onBackendError(error, backendApi);
         }
       });
     }
@@ -669,31 +660,31 @@ export class AureliaSlickgridCustomElement {
         this.grid.invalidate();
         this.grid.render();
       }
-
-      if (this.gridOptions.backendServiceApi) {
+      if (this.gridOptions && this.gridOptions.backendServiceApi && this.gridOptions.pagination) {
         // do we want to show pagination?
         // if we have a backendServiceApi and the enablePagination is undefined, we'll assume that we do want to see it, else get that defined value
         this.showPagination = ((this.gridOptions.backendServiceApi && this.gridOptions.enablePagination === undefined) ? true : this.gridOptions.enablePagination) || false;
 
-        // before merging the grid options, make sure that it has the totalItems count
-        // once we have that, we can merge and pass all these options to the pagination component
-        if (!this.gridOptions.pagination) {
-          this.gridOptions.pagination = (this.gridOptions.pagination) ? this.gridOptions.pagination : undefined;
-        }
-        if (this.gridOptions.pagination && totalCount !== undefined) {
-          this.gridOptions.pagination.totalItems = totalCount;
-        }
         if (this.gridOptions.presets && this.gridOptions.presets.pagination && this.gridOptions.pagination) {
-          this.gridOptions.pagination.pageSize = this.gridOptions.presets.pagination.pageSize;
-          this.gridOptions.pagination.pageNumber = this.gridOptions.presets.pagination.pageNumber;
+          this.paginationOptions.pageSize = this.gridOptions.presets.pagination.pageSize;
+          this.paginationOptions.pageNumber = this.gridOptions.presets.pagination.pageNumber;
         }
-        this.gridPaginationOptions = this.mergeGridOptions(this.gridOptions);
+
+        // when we have a totalCount use it, else we'll take it from the pagination object
+        // only update the total items if it's different to avoid refreshing the UI
+        const totalRecords = totalCount !== undefined ? totalCount : this.gridOptions.pagination.totalItems;
+        if (totalRecords !== this.totalItems) {
+          this.totalItems = totalRecords;
+        }
+      } else {
+        // without backend service, we'll assume the total of items is the dataset size
+        this.totalItems = dataset.length;
       }
 
       // resize the grid inside a slight timeout, in case other DOM element changed prior to the resize (like a filter/pagination changed)
-      if (this.gridOptions && this.gridOptions.enableAutoResize) {
-        const delay = this.gridOptions.autoResize && this.gridOptions.autoResize.delay || 10;
-        this.resizerService.resizeGrid(delay);
+      if (this.grid && this.gridOptions.enableAutoResize) {
+        const delay = this.gridOptions.autoResize && this.gridOptions.autoResize.delay;
+        this.resizerService.resizeGrid(delay || 10);
       }
     }
   }

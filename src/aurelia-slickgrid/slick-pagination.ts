@@ -2,8 +2,7 @@ import { bindable, inject, Optional } from 'aurelia-framework';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
 import { I18N } from 'aurelia-i18n';
 
-import { Constants } from './constants';
-import { GridOption, Locale, Pager } from './models/index';
+import { BackendServiceApi, Locale, Pager, Pagination } from './models/index';
 import { PaginationService } from './services/pagination.service';
 import { disposeAllSubscriptions } from './services/utilities';
 
@@ -13,12 +12,14 @@ const DEFAULT_AURELIA_EVENT_PREFIX = 'asg';
 export class SlickPaginationCustomElement {
   @bindable() dataview: any;
   @bindable() grid: any;
-  @bindable() gridPaginationOptions: GridOption;
+  @bindable() backendServiceApi: BackendServiceApi;
+  @bindable() enableTranslate: boolean;
+  @bindable() options: Pagination;
+  @bindable() locales: Locale;
+  @bindable() totalItems: number;
 
   private _aureliaEventPrefix = DEFAULT_AURELIA_EVENT_PREFIX;
-  private _gridPaginationOptions: GridOption;
   private _isFirstRender = true;
-  private _locales: Locale;
   private _pager: Pager;
   private _subscriptions: Subscription[] = [];
 
@@ -31,12 +32,12 @@ export class SlickPaginationCustomElement {
   constructor(private elm: Element, private ea: EventAggregator, private paginationService: PaginationService, private i18n: I18N) {
     // when using I18N, we'll translate necessary texts in the UI
     this._subscriptions.push(
-      this.ea.subscribe('i18n:locale:changed', () => this.translateAllUiTexts(this._locales))
+      this.ea.subscribe('i18n:locale:changed', () => this.translateAllUiTexts(this.locales))
     );
 
     // translate all the text using I18N or custom locales
     this._subscriptions.push(
-      this.ea.subscribe(`paginationService:on-pagination-refreshed`, () => this.translateAllUiTexts(this._locales))
+      this.ea.subscribe(`paginationService:on-pagination-refreshed`, () => this.translateAllUiTexts(this.locales))
     );
 
     this._subscriptions.push(
@@ -65,27 +66,22 @@ export class SlickPaginationCustomElement {
   }
 
   bind(binding: any, contexts: any) {
-    this._gridPaginationOptions = binding.gridPaginationOptions;
-    if (this._gridPaginationOptions && this._gridPaginationOptions.enableTranslate && (!this.i18n || !this.i18n.tr)) {
+    if (this.enableTranslate && (!this.i18n || !this.i18n.tr)) {
       throw new Error('[Aurelia-Slickgrid] requires "I18N" to be installed and configured when the grid option "enableTranslate" is enabled.');
     }
 
-    if (!binding.gridPaginationOptions || (binding.gridPaginationOptions.pagination && binding.gridPaginationOptions.pagination.totalItems !== this.pager.totalItems)) {
-      this.refreshPagination();
+    if (this.paginationService) {
+      this.paginationService.totalItems = binding.totalItems;
     }
 
-    // get locales provided by user in main file or else use default English locales via the Constants
-    this._locales = this._gridPaginationOptions && this._gridPaginationOptions.locales || Constants.locales;
-    this._aureliaEventPrefix = (this._gridPaginationOptions && this._gridPaginationOptions.defaultAureliaEventPrefix) ? this._gridPaginationOptions.defaultAureliaEventPrefix : DEFAULT_AURELIA_EVENT_PREFIX;
-
-    this.paginationService.init(this.grid, this.dataview, this._gridPaginationOptions);
+    this.paginationService.init(this.grid, this.dataview, this.options, this.backendServiceApi);
+    this._isFirstRender = false;
   }
 
-  gridPaginationOptionsChanged(newGridOptions: GridOption) {
-    this._gridPaginationOptions = newGridOptions;
-    if (newGridOptions) {
-      this.refreshPagination();
-      this._isFirstRender = false;
+  totalItemsChanged(newTotal: number) {
+    this._isFirstRender = false;
+    if (this.paginationService) {
+      this.paginationService.totalItems = newTotal;
     }
   }
 
@@ -130,13 +126,6 @@ export class SlickPaginationCustomElement {
 
     // also dispose of all Subscriptions
     this._subscriptions = disposeAllSubscriptions(this._subscriptions);
-  }
-
-  refreshPagination() {
-    if (this.paginationService) {
-      this.paginationService.gridPaginationOptions = this._gridPaginationOptions;
-      this.paginationService.refreshPagination();
-    }
   }
 
   // --
