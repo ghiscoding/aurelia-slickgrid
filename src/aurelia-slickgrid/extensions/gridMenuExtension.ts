@@ -87,7 +87,7 @@ export class GridMenuExtension implements Extension {
     this._userOriginalGridMenu = { ...this.sharedService.gridOptions.gridMenu } as GridMenu;
 
     if (this.sharedService.gridOptions && this.sharedService.gridOptions.gridMenu) {
-      // get locales provided by user in forRoot or else use default English locales via the Constants
+      // get locales provided by user in main file or else use default English locales via the Constants
       this._locales = this.sharedService.gridOptions && this.sharedService.gridOptions.locales || Constants.locales;
 
       // dynamically import the SlickGrid plugin (addon) with RequireJS

@@ -77,7 +77,7 @@ export class CompoundInputFilter implements Filter {
     this.operator = args.operator || '';
     this.searchTerms = (args.hasOwnProperty('searchTerms') ? args.searchTerms : []) || [];
 
-    // get locales provided by user in forRoot or else use default English locales via the Constants
+    // get locales provided by user in main file or else use default English locales via the Constants
     this._locales = this.gridOptions && this.gridOptions.locales || Constants.locales;
 
     // filter input can only have 1 search term, so we will use the 1st array index if it exist

@@ -278,6 +278,14 @@ export class Example5 {
     });
   }
 
+  goToFirstPage() {
+    this.aureliaGrid.paginationService.goToFirstPage();
+  }
+
+  goToLastPage() {
+    this.aureliaGrid.paginationService.goToLastPage();
+  }
+
   /** Dispatched event of a Grid State Changed event */
   gridStateChanged(gridStateChanges: GridStateChange) {
     console.log('Client sample, Grid State changed:: ', gridStateChanges);

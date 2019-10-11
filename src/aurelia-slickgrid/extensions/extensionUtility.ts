@@ -86,7 +86,7 @@ export class ExtensionUtility {
     const picker = this.sharedService.gridOptions && this.sharedService.gridOptions[pickerName] || {};
     const enableTranslate = this.sharedService.gridOptions && this.sharedService.gridOptions.enableTranslate || false;
 
-    // get locales provided by user in forRoot or else use default English locales via the Constants
+    // get locales provided by user in main file or else use default English locales via the Constants
     const locales = this.sharedService && this.sharedService.gridOptions && this.sharedService.gridOptions.locales || Constants.locales;
 
     const title = picker && picker[propName];

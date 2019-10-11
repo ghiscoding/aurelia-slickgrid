@@ -6,26 +6,24 @@ import { GridOption, EmitterType } from '../models/index';
  * Execute the backend callback, which are mainly the "process" & "postProcess" methods.
  * Also note that "preProcess" was executed prior to this callback
  */
-export async function executeBackendCallback(query: string, args: any, startTime: Date, gridOptions: GridOption, emitActionChangedCallback: (type: EmitterType) => void) {
-  const backendApi = gridOptions && gridOptions.backendServiceApi;
-
-  if (backendApi) {
+export async function executeBackendCallback(backendServiceApi: BackendServiceApi, query: string, args: any, startTime: Date, totalItems: number, emitActionChangedCallback: (type: EmitterType) => void) {
+  if (backendServiceApi) {
     // emit an onFilterChanged event when it's not called by a clear filter
     if (args && !args.clearFilterTriggered) {
       emitActionChangedCallback(EmitterType.remote);
     }
 
     // the processes can be Observables (like HttpClient) or Promises
-    const process = backendApi.process(query);
+    const process = backendServiceApi.process(query);
     if (process instanceof Promise && process.then) {
-      process.then((processResult: GraphqlResult | any) => executeBackendProcessesCallback(startTime, processResult, backendApi, gridOptions))
-        .catch((error: any) => onBackendError(error, backendApi));
+      process.then((processResult: GraphqlResult | any) => executeBackendProcessesCallback(startTime, processResult, backendServiceApi, totalItems))
+        .catch((error: any) => onBackendError(error, backendServiceApi));
     }
   }
 }
 
 /** Execute the Backend Processes Callback, that could come from an Observable or a Promise callback */
-export function executeBackendProcessesCallback(startTime: Date, processResult: GraphqlResult | any, backendApi: BackendServiceApi, gridOptions: GridOption): GraphqlResult | any {
+export function executeBackendProcessesCallback(startTime: Date, processResult: GraphqlResult | any, backendApi: BackendServiceApi, totalItems: number): GraphqlResult | any {
   const endTime = new Date();
 
   // define what our internal Post Process callback, only available for GraphQL Service for now
@@ -41,8 +39,8 @@ export function executeBackendProcessesCallback(startTime: Date, processResult: 
         startTime,
         endTime,
         executionTime: endTime.valueOf() - startTime.valueOf(),
-        itemCount: gridOptions && gridOptions.pagination && gridOptions.pagination.totalItems,
-        totalItemCount: gridOptions && gridOptions.pagination && gridOptions.pagination.totalItems
+        itemCount: totalItems,
+        totalItemCount: totalItems,
       };
       // @deprecated
       processResult.statistics = processResult.metrics;

@@ -80,7 +80,7 @@ export class HeaderMenuExtension implements Extension {
     }
 
     if (this.sharedService && this.sharedService.grid && this.sharedService.gridOptions) {
-      // get locales provided by user in forRoot or else use default English locales via the Constants
+      // get locales provided by user in main file or else use default English locales via the Constants
       this._locales = this.sharedService.gridOptions && this.sharedService.gridOptions.locales || Constants.locales;
 
       // dynamically import the SlickGrid plugin (addon) with RequireJS

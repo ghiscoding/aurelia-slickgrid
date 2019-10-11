@@ -41,7 +41,7 @@ export class LongTextEditor implements Editor {
     this.grid = args.grid;
     this.gridOptions = args.grid && args.grid.getOptions() as GridOption;
 
-    // get locales provided by user in forRoot or else use default English locales via the Constants
+    // get locales provided by user in main file or else use default English locales via the Constants
     this._locales = this.gridOptions && this.gridOptions.locales || Constants.locales;
 
     this.init();

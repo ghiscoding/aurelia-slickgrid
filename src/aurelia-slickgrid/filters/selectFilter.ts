@@ -122,7 +122,7 @@ export class SelectFilter implements Filter {
       throw new Error(`[select-filter] The i18n Service is required for the Select Filter to work correctly when "enableTranslateLabel" is set.`);
     }
 
-    // get locales provided by user in forRoot or else use default English locales via the Constants
+    // get locales provided by user in main file or else use default English locales via the Constants
     this._locales = this.gridOptions && this.gridOptions.locales || Constants.locales;
 
     // create the multiple select element
