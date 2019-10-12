@@ -38,12 +38,22 @@ export const GlobalGridOptions: GridOption = {
   enableCheckboxSelector: false,
   enableColumnPicker: true,
   enableColumnReorder: true,
-  enableExport: true,
+  enableExcelExport: false,
+  enableExport: true, // CSV by default (could export to CSV)
   enableFilterTrimWhiteSpace: false, // do we want to trim white spaces on all Filters?
   enableGridMenu: true,
   enableSorting: true,
   enableTextSelectionOnCells: true,
   explicitInitialization: true,
+  excelExportOptions: {
+    exportWithFormatter: false,
+    filename: 'export',
+    format: FileType.xlsx,
+    groupingColumnHeaderTitle: 'Group By',
+    groupingAggregatorRowText: '',
+    sanitizeDataExport: false,
+    useUtf8WithBom: true
+  },
   exportOptions: {
     delimiter: DelimiterType.comma,
     exportWithFormatter: false,
@@ -59,6 +69,7 @@ export const GlobalGridOptions: GridOption = {
     hideClearAllFiltersCommand: false,
     hideClearAllSortingCommand: false,
     hideExportCsvCommand: false,
+    hideExportExcelCommand: true,
     hideExportTextDelimitedCommand: true,
     hideForceFitButton: false,
     hideRefreshDatasetCommand: false,
@@ -69,6 +80,7 @@ export const GlobalGridOptions: GridOption = {
     iconClearAllFiltersCommand: 'fa fa-filter text-danger',
     iconClearAllSortingCommand: 'fa fa-unsorted text-danger',
     iconExportCsvCommand: 'fa fa-download',
+    iconExportExcelCommand: 'fa fa-file-excel-o text-success',
     iconExportTextDelimitedCommand: 'fa fa-download',
     iconRefreshDatasetCommand: 'fa fa-refresh',
     iconToggleFilterCommand: 'fa fa-random',

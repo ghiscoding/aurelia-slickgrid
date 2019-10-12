@@ -2,7 +2,7 @@
   <h2>${title}</h2>
   <div class="subtitle" innerhtml.bind="subTitle"></div>
 
-  <hr/>
+  <hr />
 
   <div class="row">
     <button class="btn btn-default btn-sm" click.delegate="switchLanguage()">
@@ -20,17 +20,19 @@
         <i class="fa fa-download"></i>
         Download to Text
       </button>
+      <button class="btn btn-default btn-sm" click.delegate="exportToExcel()">
+        <i class="fa fa-file-excel-o text-success"></i>
+        Download to Excel
+      </button>
+    </span>
+    <span style="margin-left: 10px">
       <button class="btn btn-default btn-sm" click.delegate="dynamicallyAddTitleHeader()">
         <i class="fa fa-plus"></i>
         Dynamically Duplicate Title Column
       </button>
     </span>
   </div>
-  <aurelia-slickgrid
-    grid-id="grid12"
-    column-definitions.bind="columnDefinitions"
-    grid-options.bind="gridOptions"
-    dataset.bind="dataset"
-    asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
+  <aurelia-slickgrid grid-id="grid12" column-definitions.bind="columnDefinitions" grid-options.bind="gridOptions"
+    dataset.bind="dataset" asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
   </aurelia-slickgrid>
 </template>

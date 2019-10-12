@@ -86,7 +86,9 @@ export class Example12 {
       {
         id: 'duration', name: 'Duration (days)', field: 'duration', headerKey: 'DURATION', sortable: true,
         formatter: Formatters.percentCompleteBar, minWidth: 100,
+        exportWithFormatter: false,
         filterable: true,
+        type: FieldType.number,
         filter: { model: Filters.slider, /* operator: '>=',*/ params: { hideSliderNumber: true } }
       },
       { id: 'start', name: 'Start', field: 'start', headerKey: 'START', formatter: Formatters.dateIso, outputType: FieldType.dateIso, type: FieldType.date, minWidth: 100, filterable: true, filter: { model: Filters.compoundDate } },
@@ -129,6 +131,8 @@ export class Example12 {
       },
       enableAutoResize: true,
       enableExcelCopyBuffer: true,
+      enableExcelExport: true,
+      enableExport: true,
       enableFiltering: true,
       enableTranslate: true,
       i18n: this.i18n,
@@ -168,6 +172,13 @@ export class Example12 {
   dynamicallyAddTitleHeader() {
     const newCol = { id: `title${this.duplicateTitleHeaderCount++}`, field: 'id', headerKey: 'TITLE', formatter: taskTranslateFormatter, sortable: true, minWidth: 100, filterable: true, params: { useFormatterOuputToFilter: true } };
     this.columnDefinitions.push(newCol);
+  }
+
+  exportToExcel() {
+    this.aureliaGrid.excelExportService.exportToExcel({
+      filename: 'Export',
+      format: FileType.xlsx
+    });
   }
 
   exportToFile(type = 'csv') {
