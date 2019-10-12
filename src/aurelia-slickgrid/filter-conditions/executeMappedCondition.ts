@@ -47,6 +47,8 @@ export const executeMappedCondition: FilterCondition = (options: FilterCondition
     case FieldType.dateTimeUsShortAmPm:
     case FieldType.dateTimeUsShortAM_PM:
       return executeAssociatedDateCondition(options);
+    case FieldType.integer:
+    case FieldType.float:
     case FieldType.number:
       return numberFilterCondition(options);
     case FieldType.object:
