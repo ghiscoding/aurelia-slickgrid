@@ -8,8 +8,8 @@ import {
   GridOdataService,
   GridOption,
   GridStateChange,
-  OdataOption,
   Metrics,
+  OdataOption,
   OperatorType,
 } from '../../aurelia-slickgrid';
 

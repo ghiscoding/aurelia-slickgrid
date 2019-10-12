@@ -14,10 +14,10 @@ import {
   GraphqlServiceOption,
   GridOption,
   GridStateChange,
+  Metrics,
   MultipleSelectOption,
   OperatorType,
   SortDirection,
-  Metrics,
 } from '../../aurelia-slickgrid';
 
 const defaultPageSize = 20;
