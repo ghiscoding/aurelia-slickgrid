@@ -263,6 +263,10 @@ describe('ExportService', () => {
     describe('startDownloadFile call after all private methods ran ', () => {
       let mockCollection: any[];
 
+      beforeEach(() => {
+        mockGridOptions.exportOptions = { delimiterOverride: '' };
+      });
+
       it(`should have the Order exported correctly with multiple formatters which have 1 of them returning an object with a text property (instead of simple string)`, (done) => {
         mockCollection = [{ id: 0, userId: '1E06', firstName: 'John', lastName: 'Z', position: 'SALES_REP', order: 10 }];
         jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
@@ -275,6 +279,31 @@ describe('ExportService', () => {
         const contentExpectation =
           `"User Id","FirstName","LastName","Position","Order"
           ="1E06","John","Z","SALES_REP","<b>10</b>"`;
+
+        service.init(gridStub, dataViewStub);
+        service.exportToFile(mockExportCsvOptions);
+
+        setTimeout(() => {
+          expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
+          expect(spyUrlCreate).toHaveBeenCalledWith(mockCsvBlob);
+          expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
+          done();
+        });
+      });
+
+      it(`should have the Order exported correctly with multiple formatters and use a different delimiter when "delimiterOverride" is provided`, (done) => {
+        mockGridOptions.exportOptions = { delimiterOverride: DelimiterType.doubleSemicolon };
+        mockCollection = [{ id: 0, userId: '1E06', firstName: 'John', lastName: 'Z', position: 'SALES_REP', order: 10 }];
+        jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
+        jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
+        const eaSpy = jest.spyOn(ea, 'publish');
+        const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
+        const spyDownload = jest.spyOn(service, 'startDownloadFile');
+
+        const optionExpectation = { filename: 'export.csv', format: 'csv', useUtf8WithBom: false };
+        const contentExpectation =
+          `"User Id";;"FirstName";;"LastName";;"Position";;"Order"
+              ="1E06";;"John";;"Z";;"SALES_REP";;"<b>10</b>"`;
 
         service.init(gridStub, dataViewStub);
         service.exportToFile(mockExportCsvOptions);
@@ -459,6 +488,7 @@ describe('ExportService', () => {
 
       it(`should export as CSV even when the grid option format was not defined`, (done) => {
         mockGridOptions.exportOptions.format = undefined;
+        mockGridOptions.exportOptions.sanitizeDataExport = false;
         mockCollection = [{ id: 1, userId: '2B02', firstName: 'Jane', lastName: 'Doe', position: 'FINANCE_MANAGER', order: 1 }];
         jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
         jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
@@ -469,7 +499,7 @@ describe('ExportService', () => {
         const optionExpectation = { filename: 'export.csv', format: 'csv', useUtf8WithBom: false };
         const contentExpectation =
           `"User Id","FirstName","LastName","Position","Order"
-          ="2B02","Jane","DOE","FINANCE_MANAGER","1"`;
+          ="2B02","Jane","DOE","FINANCE_MANAGER","<b>1</b>"`;
 
         service.init(gridStub, dataViewStub);
         service.exportToFile(mockExportCsvOptions);
@@ -542,7 +572,12 @@ describe('ExportService', () => {
         jest.spyOn(gridStub, 'getColumns').mockReturnValue(mockColumns);
       });
 
+      afterEach(() => {
+        jest.clearAllMocks();
+      });
+
       it(`should have the LastName header title translated when defined as a "headerKey" and "i18n" is set in grid option`, (done) => {
+        mockGridOptions.exportOptions.sanitizeDataExport = false;
         mockCollection = [{ id: 0, userId: '1E06', firstName: 'John', lastName: 'Z', position: 'SALES_REP', order: 10 }];
         jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
         jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
@@ -553,7 +588,7 @@ describe('ExportService', () => {
         const optionExpectation = { filename: 'export.csv', format: 'csv', useUtf8WithBom: false };
         const contentExpectation =
           `"User Id","First Name","Last Name","Position","Order"
-      ="1E06","John","Z","Sales Rep.","10"`;
+          ="1E06","John","Z","Sales Rep.","<b>10</b>"`;
 
         service.init(gridStub, dataViewStub);
         service.exportToFile(mockExportCsvOptions);
