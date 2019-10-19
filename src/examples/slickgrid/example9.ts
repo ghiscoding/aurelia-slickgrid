@@ -33,7 +33,6 @@ export class Example9 {
   dataView: any;
   gridObj: any;
   selectedLanguage: string;
-  visibleColumns;
 
   constructor(private i18n: I18N) {
     // define the grid options & columns and then create the grid itself
