@@ -10,8 +10,9 @@ import './styles.scss';
 import { PLATFORM } from 'aurelia-pal';
 import { Aurelia } from 'aurelia-framework';
 import environment from './environment';
+import { TCustomAttribute } from 'aurelia-i18n';
+import Backend from 'i18next-xhr-backend';
 import * as Bluebird from 'bluebird';
-import * as Backend from 'i18next-xhr-backend';
 import 'bootstrap';
 
 /** Disable long stack traces for IE11 */
@@ -35,6 +36,10 @@ export function configure(aurelia: Aurelia) {
 
   // aurelia i18n to handle multiple locales
   aurelia.use.plugin(PLATFORM.moduleName('aurelia-i18n'), (instance) => {
+    const aliases = ['t', 'i18n'];
+    // add aliases for 't' attribute
+    TCustomAttribute.configureAliases(aliases);
+
     // register backend plugin
     instance.i18next.use(Backend);
 
@@ -45,7 +50,7 @@ export function configure(aurelia: Aurelia) {
       lng: 'en',
       ns: ['aurelia-slickgrid'],
       defaultNS: 'aurelia-slickgrid',
-      attributes: ['t', 'i18n'],
+      attributes: aliases,
       fallbackLng: 'en',
       debug: false
     });
