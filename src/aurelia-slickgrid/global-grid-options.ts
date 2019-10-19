@@ -38,21 +38,23 @@ export const GlobalGridOptions: GridOption = {
   enableCheckboxSelector: false,
   enableColumnPicker: true,
   enableColumnReorder: true,
-  enableExcelExport: false,
-  enableExport: true, // CSV by default (could export to CSV)
+  enableExcelExport: true, // Excel Export is the new default,
+  enableExport: false, // CSV/Text with Tab Delimited
   enableFilterTrimWhiteSpace: false, // do we want to trim white spaces on all Filters?
   enableGridMenu: true,
   enableSorting: true,
   enableTextSelectionOnCells: true,
   explicitInitialization: true,
   excelExportOptions: {
+    addGroupIndentation: true,
     exportWithFormatter: false,
     filename: 'export',
     format: FileType.xlsx,
     groupingColumnHeaderTitle: 'Group By',
+    groupCollapsedSymbol: '\u25B9',
+    groupExpandedSymbol: '\u25BF',
     groupingAggregatorRowText: '',
     sanitizeDataExport: false,
-    useUtf8WithBom: true
   },
   exportOptions: {
     delimiter: DelimiterType.comma,
@@ -69,7 +71,7 @@ export const GlobalGridOptions: GridOption = {
     hideClearAllFiltersCommand: false,
     hideClearAllSortingCommand: false,
     hideExportCsvCommand: false,
-    hideExportExcelCommand: true,
+    hideExportExcelCommand: false,
     hideExportTextDelimitedCommand: true,
     hideForceFitButton: false,
     hideRefreshDatasetCommand: false,

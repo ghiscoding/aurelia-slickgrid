@@ -157,8 +157,12 @@ export class Example13 {
         containerId: 'demo-container',
         sidePadding: 15
       },
+      enableExcelExport: true,
       enableFiltering: true,
       enableGrouping: true,
+      excelExportOptions: {
+        sanitizeDataExport: true
+      },
       exportOptions: {
         sanitizeDataExport: true
       }
@@ -199,6 +203,13 @@ export class Example13 {
 
   expandAllGroups() {
     this.dataviewObj.expandAllGroups();
+  }
+
+  exportToExcel() {
+    this.aureliaGrid.excelExportService.exportToExcel({
+      filename: 'Export',
+      format: FileType.xlsx
+    });
   }
 
   exportToCsv(type = 'csv') {

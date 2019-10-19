@@ -8,6 +8,7 @@
       "name": "Chrome Debugger",
       "type": "chrome",
       "request": "launch",
+      "breakOnLoad": false,
       "url": "http://localhost:9000",
       "webRoot": "${workspaceRoot}/src",
       "userDataDir": "${workspaceRoot}/.chrome",

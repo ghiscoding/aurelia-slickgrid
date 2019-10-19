@@ -27,7 +27,7 @@ declare var Slick: any;
 
 @singleton(true)
 @inject(
-  Optional.of(ExcelExportService),
+  ExcelExportService,
   ExportService,
   ExtensionUtility,
   FilterService,
@@ -290,7 +290,7 @@ export class GridMenuExtension implements Extension {
               title: this.sharedService.gridOptions.enableTranslate ? this.i18n.tr('REFRESH_DATASET') : this._locales && this._locales.TEXT_REFRESH_DATASET,
               disabled: false,
               command: commandName,
-              positionOrder: 54
+              positionOrder: 56
             }
           );
         }
@@ -333,7 +333,7 @@ export class GridMenuExtension implements Extension {
       }
     }
 
-    // show grid menu: Export to file
+    // show grid menu: Export to CSV
     if (this.sharedService.gridOptions && this.sharedService.gridOptions.enableExport && this.sharedService.gridOptions.gridMenu && !this.sharedService.gridOptions.gridMenu.hideExportCsvCommand) {
       const commandName = 'export-csv';
       if (!originalCustomItems.find((item) => item.command === commandName)) {
@@ -350,7 +350,7 @@ export class GridMenuExtension implements Extension {
     }
 
     // show grid menu: Export to Excel
-    if (this.sharedService.gridOptions && this.sharedService.gridOptions.enableExport && this.sharedService.gridOptions.gridMenu && !this.sharedService.gridOptions.gridMenu.hideExportExcelCommand) {
+    if (this.sharedService.gridOptions && this.sharedService.gridOptions.enableExcelExport && this.sharedService.gridOptions.gridMenu && !this.sharedService.gridOptions.gridMenu.hideExportExcelCommand) {
       const commandName = 'export-excel';
       if (!originalCustomItems.find((item) => item.command === commandName)) {
         gridMenuCustomItems.push(
@@ -359,7 +359,7 @@ export class GridMenuExtension implements Extension {
             title: this.sharedService.gridOptions.enableTranslate ? this.i18n.tr('EXPORT_TO_EXCEL') : this._locales && this._locales.TEXT_EXPORT_TO_EXCEL,
             disabled: false,
             command: commandName,
-            positionOrder: 53
+            positionOrder: 54
           }
         );
       }
@@ -375,7 +375,7 @@ export class GridMenuExtension implements Extension {
             title: this.sharedService.gridOptions.enableTranslate ? this.i18n.tr('EXPORT_TO_TAB_DELIMITED') : this._locales && this._locales.TEXT_EXPORT_IN_TEXT_FORMAT,
             disabled: false,
             command: commandName,
-            positionOrder: 54
+            positionOrder: 55
           }
         );
       }

@@ -277,6 +277,13 @@ export class Example18 {
     this.dataviewObj.expandAllGroups();
   }
 
+  exportToExcel() {
+    this.aureliaGrid.excelExportService.exportToExcel({
+      filename: 'Export',
+      format: FileType.xlsx
+    });
+  }
+
   exportToCsv(type = 'csv') {
     this.aureliaGrid.exportService.exportToFile({
       delimiter: (type === 'csv') ? DelimiterType.comma : DelimiterType.tab,
