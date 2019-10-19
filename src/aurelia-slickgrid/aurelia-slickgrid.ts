@@ -80,7 +80,7 @@ export class AureliaSlickgridCustomElement {
   private _fixedWidth: number | null;
   private _hideHeaderRowAfterPageLoad = false;
   groupItemMetadataProvider: any;
-  backendServiceApi: BackendServiceApi;
+  backendServiceApi: BackendServiceApi | undefined;
   locales: Locale;
   isGridInitialized = false;
   showPagination = false;
@@ -91,7 +91,7 @@ export class AureliaSlickgridCustomElement {
   @bindable({ defaultBindingMode: bindingMode.twoWay }) element: Element;
   @bindable({ defaultBindingMode: bindingMode.twoWay }) dataview: any;
   @bindable({ defaultBindingMode: bindingMode.twoWay }) grid: any;
-  @bindable({ defaultBindingMode: bindingMode.twoWay }) paginationOptions: Pagination;
+  @bindable({ defaultBindingMode: bindingMode.twoWay }) paginationOptions: Pagination | undefined;
   @bindable({ defaultBindingMode: bindingMode.twoWay }) totalItems: number;
   @bindable() customDataView: any;
   @bindable() dataset: any[];
@@ -146,7 +146,7 @@ export class AureliaSlickgridCustomElement {
     // make sure the dataset is initialized (if not it will throw an error that it cannot getLength of null)
     this._dataset = this._dataset || this.dataset || [];
     this.gridOptions = this.mergeGridOptions(this.gridOptions);
-    this.paginationOptions = this.gridOptions.pagination;
+    this.paginationOptions = this.gridOptions && this.gridOptions.pagination;
     this.locales = this.gridOptions && this.gridOptions.locales || Constants.locales;
     this.backendServiceApi = this.gridOptions && this.gridOptions.backendServiceApi;
 
@@ -558,7 +558,7 @@ export class AureliaSlickgridCustomElement {
 
     if (backendApi && backendApi.service && (backendApi.onInit || isExecuteCommandOnInit)) {
       const query = (typeof backendApi.service.buildQuery === 'function') ? backendApi.service.buildQuery() : '';
-      const process = (isExecuteCommandOnInit) ? backendApi.process(query) : backendApi.onInit(query);
+      const process = (isExecuteCommandOnInit) ? backendApi.process(query) : (backendApi.onInit && backendApi.onInit(query));
 
       // wrap this inside a setTimeout to avoid timing issue since the gridOptions needs to be ready before running this onInit
       setTimeout(async () => {
@@ -573,7 +573,8 @@ export class AureliaSlickgridCustomElement {
         try {
           // the processes can be a Promise (like Http)
           if (process instanceof Promise && process.then) {
-            process.then((processResult: GraphqlResult | any) => executeBackendProcessesCallback(startTime, processResult, backendApi, this.gridOptions.pagination.totalItems));
+            const totalItems = this.gridOptions && this.gridOptions.pagination && this.gridOptions.pagination.totalItems || 0;
+            process.then((processResult: GraphqlResult | any) => executeBackendProcessesCallback(startTime, processResult, backendApi, totalItems));
           }
         } catch (error) {
           onBackendError(error, backendApi);
@@ -674,14 +675,14 @@ export class AureliaSlickgridCustomElement {
         // if we have a backendServiceApi and the enablePagination is undefined, we'll assume that we do want to see it, else get that defined value
         this.showPagination = ((this.gridOptions.backendServiceApi && this.gridOptions.enablePagination === undefined) ? true : this.gridOptions.enablePagination) || false;
 
-        if (this.gridOptions.presets && this.gridOptions.presets.pagination && this.gridOptions.pagination) {
+        if (this.gridOptions.presets && this.gridOptions.presets.pagination && this.gridOptions.pagination && this.paginationOptions) {
           this.paginationOptions.pageSize = this.gridOptions.presets.pagination.pageSize;
           this.paginationOptions.pageNumber = this.gridOptions.presets.pagination.pageNumber;
         }
 
         // when we have a totalCount use it, else we'll take it from the pagination object
         // only update the total items if it's different to avoid refreshing the UI
-        const totalRecords = totalCount !== undefined ? totalCount : this.gridOptions.pagination.totalItems;
+        const totalRecords = totalCount !== undefined ? totalCount : this.gridOptions.pagination.totalItems || 0;
         if (totalRecords !== this.totalItems) {
           this.totalItems = totalRecords;
         }

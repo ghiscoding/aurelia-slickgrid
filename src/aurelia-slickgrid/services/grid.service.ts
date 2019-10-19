@@ -617,7 +617,7 @@ export class GridService {
    * @param item object which must contain a unique "id" property and any other suitable properties
    * @param options: provide the possibility to do certain actions after or during the upsert (highlightRow, resortGrid, selectRow, triggerEvent)
    */
-  upsertItem(item: any, options?: GridServiceInsertOption): { added: number, updated: number } {
+  upsertItem(item: any, options?: GridServiceInsertOption): { added: number | undefined, updated: number | undefined } {
     options = { ...GridServiceInsertOptionDefaults, ...options };
     const itemId = (!item || !item.hasOwnProperty('id')) ? undefined : item.id;
 
@@ -634,19 +634,19 @@ export class GridService {
    * @param options: provide the possibility to do certain actions after or during the upsert (highlightRow, resortGrid, selectRow, triggerEvent)
    * @return row numbers in the grid
    */
-  upsertItems(items: any | any[], options?: GridServiceInsertOption): { added: number, updated: number }[] {
+  upsertItems(items: any | any[], options?: GridServiceInsertOption): { added: number | undefined, updated: number | undefined }[] {
     options = { ...GridServiceInsertOptionDefaults, ...options };
     // when it's not an array, we can call directly the single item update
     if (!Array.isArray(items)) {
       return [this.upsertItem(items, options)];
     }
 
-    const upsertedRows: { added: number, updated: number }[] = [];
+    const upsertedRows: { added: number | undefined, updated: number | undefined }[] = [];
     items.forEach((item: any) => {
       upsertedRows.push(this.upsertItem(item, { ...options, highlightRow: false, resortGrid: false, selectRow: false, triggerEvent: false }));
     });
 
-    const rowNumbers = upsertedRows.map((upsertRow) => upsertRow.added !== undefined ? upsertRow.added : upsertRow.updated);
+    const rowNumbers = upsertedRows.map((upsertRow) => upsertRow.added !== undefined ? upsertRow.added : upsertRow.updated) as number[];
 
     // only highlight at the end, all at once
     // we have to do this because doing highlight 1 by 1 would only re-select the last highlighted row which is wrong behavior
@@ -681,15 +681,15 @@ export class GridService {
    * @param options: provide the possibility to do certain actions after or during the upsert (highlightRow, resortGrid, selectRow, triggerEvent)
    * @return grid row number in the grid
    */
-  upsertItemById(itemId: number | string, item: any, options?: GridServiceInsertOption): { added: number, updated: number } {
+  upsertItemById(itemId: number | string, item: any, options?: GridServiceInsertOption): { added: number | undefined, updated: number | undefined } {
     let isItemAdded = false;
     options = { ...GridServiceInsertOptionDefaults, ...options };
     if (itemId === undefined) {
       throw new Error(`Calling Upsert of an item requires the item to include a valid and unique "id" property`);
     }
 
-    let rowNumberAdded: number;
-    let rowNumberUpdated: number;
+    let rowNumberAdded: number | undefined;
+    let rowNumberUpdated: number | undefined;
     if (this._dataView.getRowById(itemId) === undefined) {
       rowNumberAdded = this.addItem(item, options);
       isItemAdded = true;

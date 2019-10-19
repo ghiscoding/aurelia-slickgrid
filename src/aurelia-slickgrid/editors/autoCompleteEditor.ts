@@ -84,7 +84,7 @@ export class AutoCompleteEditor implements Editor {
 
   /** Get the Validator function, can be passed in Editor property or Column Definition */
   get validator(): EditorValidator | undefined {
-    return this.columnEditor.validator || this.columnDef.validator;
+    return (this.columnEditor && this.columnEditor.validator) || (this.columnDef && this.columnDef.validator);
   }
 
   /** Get the Editor DOM Element */
@@ -121,30 +121,32 @@ export class AutoCompleteEditor implements Editor {
     let newValue = state;
     const fieldName = this.columnDef && this.columnDef.field;
 
-    // if we have a collection defined, we will try to find the string within the collection and return it
-    if (Array.isArray(this.editorCollection) && this.editorCollection.length > 0) {
-      newValue = findOrDefault(this.editorCollection, (collectionItem: any) => {
-        if (collectionItem && typeof state === 'object' && collectionItem.hasOwnProperty(this.labelName)) {
-          return (collectionItem.hasOwnProperty(this.labelName) && collectionItem[this.labelName].toString()) === (state.hasOwnProperty(this.labelName) && state[this.labelName].toString());
-        } else if (collectionItem && typeof state === 'string' && collectionItem.hasOwnProperty(this.labelName)) {
-          return (collectionItem.hasOwnProperty(this.labelName) && collectionItem[this.labelName].toString()) === state;
-        }
-        return collectionItem && collectionItem.toString() === state;
-      });
-    }
+    if (fieldName !== undefined) {
+      // if we have a collection defined, we will try to find the string within the collection and return it
+      if (Array.isArray(this.editorCollection) && this.editorCollection.length > 0) {
+        newValue = findOrDefault(this.editorCollection, (collectionItem: any) => {
+          if (collectionItem && typeof state === 'object' && collectionItem.hasOwnProperty(this.labelName)) {
+            return (collectionItem.hasOwnProperty(this.labelName) && collectionItem[this.labelName].toString()) === (state.hasOwnProperty(this.labelName) && state[this.labelName].toString());
+          } else if (collectionItem && typeof state === 'string' && collectionItem.hasOwnProperty(this.labelName)) {
+            return (collectionItem.hasOwnProperty(this.labelName) && collectionItem[this.labelName].toString()) === state;
+          }
+          return collectionItem && collectionItem.toString() === state;
+        });
+      }
 
-    // is the field a complex object, "address.streetNumber"
-    const isComplexObject = fieldName.indexOf('.') > 0;
+      // is the field a complex object, "address.streetNumber"
+      const isComplexObject = fieldName.indexOf('.') > 0;
 
-    // validate the value before applying it (if not valid we'll set an empty string)
-    const validation = this.validate(newValue);
-    newValue = (validation && validation.valid) ? newValue : '';
+      // validate the value before applying it (if not valid we'll set an empty string)
+      const validation = this.validate(newValue);
+      newValue = (validation && validation.valid) ? newValue : '';
 
-    // set the new value to the item datacontext
-    if (isComplexObject) {
-      setDeepValue(item, fieldName, newValue);
-    } else {
-      item[fieldName] = newValue;
+      // set the new value to the item datacontext
+      if (isComplexObject) {
+        setDeepValue(item, fieldName, newValue);
+      } else {
+        item[fieldName] = newValue;
+      }
     }
   }
 
@@ -159,15 +161,17 @@ export class AutoCompleteEditor implements Editor {
   loadValue(item: any) {
     const fieldName = this.columnDef && this.columnDef.field;
 
-    // is the field a complex object, "address.streetNumber"
-    const isComplexObject = fieldName.indexOf('.') > 0;
+    if (fieldName !== undefined) {
+      // is the field a complex object, "address.streetNumber"
+      const isComplexObject = fieldName.indexOf('.') > 0;
 
-    if (item && this.columnDef && (item.hasOwnProperty(fieldName) || isComplexObject)) {
-      const data = (isComplexObject) ? getDescendantProperty(item, fieldName) : item[fieldName];
-      this._currentValue = data;
-      this._defaultTextValue = typeof data === 'string' ? data : data[this.labelName];
-      this._$editorElm.val(this._defaultTextValue);
-      this._$editorElm.select();
+      if (item && this.columnDef && (item.hasOwnProperty(fieldName) || isComplexObject)) {
+        const data = (isComplexObject) ? getDescendantProperty(item, fieldName) : item[fieldName];
+        this._currentValue = data;
+        this._defaultTextValue = typeof data === 'string' ? data : data[this.labelName];
+        this._$editorElm.val(this._defaultTextValue);
+        this._$editorElm.select();
+      }
     }
   }
 
@@ -192,7 +196,7 @@ export class AutoCompleteEditor implements Editor {
     if (this.customStructure && this._currentValue && this._currentValue.hasOwnProperty(this.labelName)) {
       return this._currentValue[this.labelName];
     } else if (this._currentValue && this._currentValue.label) {
-      if (this.columnDef.type === FieldType.object) {
+      if (this.columnDef && this.columnDef.type === FieldType.object) {
         return {
           [this.labelName]: this._currentValue.label,
           [this.valueName]: this._currentValue.value

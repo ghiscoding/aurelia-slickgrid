@@ -119,12 +119,12 @@ export class SelectEditor implements Editor {
 
   /** Get the Collection */
   get collection(): SelectOption[] {
-    return this.columnDef && this.columnDef.internalColumnEditor.collection || [];
+    return this.columnEditor && this.columnEditor.collection || [];
   }
 
   /** Getter for the Collection Options */
   get collectionOptions(): CollectionOption | undefined {
-    return this.columnDef && this.columnDef.internalColumnEditor && this.columnDef.internalColumnEditor.collectionOptions;
+    return this.columnEditor && this.columnEditor.collectionOptions;
   }
 
   /** Get Column Definition object */
@@ -134,7 +134,7 @@ export class SelectEditor implements Editor {
 
   /** Get Column Editor object */
   get columnEditor(): ColumnEditor | undefined {
-    return this.columnDef && this.columnDef.internalColumnEditor;
+    return this.columnDef && this.columnDef.internalColumnEditor || {};
   }
 
   /** Get the Editor DOM Element */
@@ -154,44 +154,45 @@ export class SelectEditor implements Editor {
   /**
    * The current selected values (multiple select) from the collection
    */
-  get currentValues(): any[] {
+  get currentValues(): any[] | null {
     const elmValue = this.$editorElm.val();
+    const fieldName = this.columnDef && this.columnDef.field;
 
-    // collection of strings, just return the filtered string that are equals
-    if (this.collection.every(x => typeof x === 'string')) {
-      return this.collection.filter(c => elmValue.indexOf(c.toString()) !== -1);
+    if (fieldName !== undefined) {
+      // collection of strings, just return the filtered string that are equals
+      if (this.collection.every(x => typeof x === 'string')) {
+        return this.collection.filter(c => elmValue.indexOf(c.toString()) !== -1);
+      }
+
+      // collection of label/value pair
+      const separatorBetweenLabels = this.collectionOptions && this.collectionOptions.separatorBetweenTextLabels || '';
+      const isIncludingPrefixSuffix = this.collectionOptions && this.collectionOptions.includePrefixSuffixToSelectedValues || false;
+
+      return this.collection
+        .filter(c => elmValue.indexOf(c.hasOwnProperty(this.valueName) && c[this.valueName].toString()) !== -1)
+        .map(c => {
+          const labelText = c[this.valueName];
+          let prefixText = c[this.labelPrefixName] || '';
+          let suffixText = c[this.labelSuffixName] || '';
+
+          // is the field a complex object, "address.streetNumber"
+          const isComplexObject = fieldName.indexOf('.') > 0;
+          if (isComplexObject && typeof c === 'object') {
+            return c;
+          }
+
+          // also translate prefix/suffix if enableTranslateLabel is true and text is a string
+          prefixText = (this.enableTranslateLabel && prefixText && typeof prefixText === 'string') ? this.i18n.tr(prefixText || ' ') : prefixText;
+          suffixText = (this.enableTranslateLabel && suffixText && typeof suffixText === 'string') ? this.i18n.tr(suffixText || ' ') : suffixText;
+
+          if (isIncludingPrefixSuffix) {
+            const tmpOptionArray = [prefixText, labelText, suffixText].filter((text) => text); // add to a temp array for joining purpose and filter out empty text
+            return tmpOptionArray.join(separatorBetweenLabels);
+          }
+          return labelText;
+        });
     }
-
-    // collection of label/value pair
-    const separatorBetweenLabels = this.collectionOptions && this.collectionOptions.separatorBetweenTextLabels || '';
-    const isIncludingPrefixSuffix = this.collectionOptions && this.collectionOptions.includePrefixSuffixToSelectedValues || false;
-
-    return this.collection
-      .filter(c => elmValue.indexOf(c.hasOwnProperty(this.valueName) && c[this.valueName].toString()) !== -1)
-      .map(c => {
-        const labelText = c[this.valueName];
-        let prefixText = c[this.labelPrefixName] || '';
-        let suffixText = c[this.labelSuffixName] || '';
-
-        // when it's a complex object, then pull the object name only, e.g.: "user.firstName" => "user"
-        const fieldName = this.columnDef && this.columnDef.field;
-
-        // is the field a complex object, "address.streetNumber"
-        const isComplexObject = fieldName.indexOf('.') > 0;
-        if (isComplexObject && typeof c === 'object') {
-          return c;
-        }
-
-        // also translate prefix/suffix if enableTranslateLabel is true and text is a string
-        prefixText = (this.enableTranslateLabel && prefixText && typeof prefixText === 'string') ? this.i18n.tr(prefixText || ' ') : prefixText;
-        suffixText = (this.enableTranslateLabel && suffixText && typeof suffixText === 'string') ? this.i18n.tr(suffixText || ' ') : suffixText;
-
-        if (isIncludingPrefixSuffix) {
-          const tmpOptionArray = [prefixText, labelText, suffixText].filter((text) => text); // add to a temp array for joining purpose and filter out empty text
-          return tmpOptionArray.join(separatorBetweenLabels);
-        }
-        return labelText;
-      });
+    return null;
   }
 
   /**
@@ -199,46 +200,48 @@ export class SelectEditor implements Editor {
    */
   get currentValue(): number | string {
     const elmValue = this.$editorElm.val();
-
-    // collection of strings, just return the filtered string that are equals
-    if (this.collection.every(x => typeof x === 'string')) {
-      return findOrDefault(this.collection, (c: any) => c.toString() === elmValue);
-    }
-
-    // collection of label/value pair
-    const separatorBetweenLabels = this.collectionOptions && this.collectionOptions.separatorBetweenTextLabels || '';
-    const isIncludingPrefixSuffix = this.collectionOptions && this.collectionOptions.includePrefixSuffixToSelectedValues || false;
-    const itemFound = findOrDefault(this.collection, (c: any) => c.hasOwnProperty(this.valueName) && c[this.valueName].toString() === elmValue);
-
-    // is the field a complex object, "address.streetNumber"
     const fieldName = this.columnDef && this.columnDef.field;
-    const isComplexObject = fieldName.indexOf('.') > 0;
 
-    if (isComplexObject && typeof itemFound === 'object') {
-      return itemFound;
-    } else if (itemFound) {
-      const labelText = itemFound[this.valueName];
-
-      if (isIncludingPrefixSuffix) {
-        let prefixText = itemFound[this.labelPrefixName] || '';
-        let suffixText = itemFound[this.labelSuffixName] || '';
-
-        // also translate prefix/suffix if enableTranslateLabel is true and text is a string
-        prefixText = (this.enableTranslateLabel && prefixText && typeof prefixText === 'string') ? this.i18n.tr(prefixText || ' ') : prefixText;
-        suffixText = (this.enableTranslateLabel && suffixText && typeof suffixText === 'string') ? this.i18n.tr(suffixText || ' ') : suffixText;
-
-        // add to a temp array for joining purpose and filter out empty text
-        const tmpOptionArray = [prefixText, labelText, suffixText].filter((text) => text);
-        return tmpOptionArray.join(separatorBetweenLabels);
+    if (fieldName !== undefined) {
+      // collection of strings, just return the filtered string that are equals
+      if (this.collection.every(x => typeof x === 'string')) {
+        return findOrDefault(this.collection, (c: any) => c.toString() === elmValue);
       }
-      return labelText;
+
+      // collection of label/value pair
+      const separatorBetweenLabels = this.collectionOptions && this.collectionOptions.separatorBetweenTextLabels || '';
+      const isIncludingPrefixSuffix = this.collectionOptions && this.collectionOptions.includePrefixSuffixToSelectedValues || false;
+      const itemFound = findOrDefault(this.collection, (c: any) => c.hasOwnProperty(this.valueName) && c[this.valueName].toString() === elmValue);
+
+      // is the field a complex object, "address.streetNumber"
+      const isComplexObject = fieldName.indexOf('.') > 0;
+
+      if (isComplexObject && typeof itemFound === 'object') {
+        return itemFound;
+      } else if (itemFound) {
+        const labelText = itemFound[this.valueName];
+
+        if (isIncludingPrefixSuffix) {
+          let prefixText = itemFound[this.labelPrefixName] || '';
+          let suffixText = itemFound[this.labelSuffixName] || '';
+
+          // also translate prefix/suffix if enableTranslateLabel is true and text is a string
+          prefixText = (this.enableTranslateLabel && prefixText && typeof prefixText === 'string') ? this.i18n.tr(prefixText || ' ') : prefixText;
+          suffixText = (this.enableTranslateLabel && suffixText && typeof suffixText === 'string') ? this.i18n.tr(suffixText || ' ') : suffixText;
+
+          // add to a temp array for joining purpose and filter out empty text
+          const tmpOptionArray = [prefixText, labelText, suffixText].filter((text) => text);
+          return tmpOptionArray.join(separatorBetweenLabels);
+        }
+        return labelText;
+      }
     }
     return '';
   }
 
   /** Get the Validator function, can be passed in Editor property or Column Definition */
   get validator(): EditorValidator | undefined {
-    return this.columnEditor.validator || this.columnDef.validator;
+    return (this.columnEditor && this.columnEditor.validator) || (this.columnDef && this.columnDef.validator);
   }
 
   init() {
@@ -293,32 +296,34 @@ export class SelectEditor implements Editor {
     const fieldType = this.columnDef && this.columnDef.type;
     let newValue = state;
 
-    // when the provided user defined the column field type as a possible number then try parsing the state value as that
-    if (fieldType === FieldType.number || fieldType === FieldType.integer || fieldType === FieldType.boolean) {
-      newValue = parseFloat(state);
-    }
+    if (fieldName !== undefined) {
+      // when the provided user defined the column field type as a possible number then try parsing the state value as that
+      if (fieldType === FieldType.number || fieldType === FieldType.integer || fieldType === FieldType.boolean) {
+        newValue = parseFloat(state);
+      }
 
-    // when set as a multiple selection, we can assume that the 3rd party lib multiple-select will return a CSV string
-    // we need to re-split that into an array to be the same as the original column
-    if (this.isMultipleSelect && typeof state === 'string' && state.indexOf(',') >= 0) {
-      newValue = state.split(',');
-    }
+      // when set as a multiple selection, we can assume that the 3rd party lib multiple-select will return a CSV string
+      // we need to re-split that into an array to be the same as the original column
+      if (this.isMultipleSelect && typeof state === 'string' && state.indexOf(',') >= 0) {
+        newValue = state.split(',');
+      }
 
-    // is the field a complex object, "user.address.streetNumber"
-    const isComplexObject = fieldName.indexOf('.') > 0;
+      // is the field a complex object, "user.address.streetNumber"
+      const isComplexObject = fieldName !== undefined && fieldName.indexOf('.') > 0;
 
-    // validate the value before applying it (if not valid we'll set an empty string)
-    const validation = this.validate(newValue);
-    newValue = (validation && validation.valid) ? newValue : '';
+      // validate the value before applying it (if not valid we'll set an empty string)
+      const validation = this.validate(newValue);
+      newValue = (validation && validation.valid) ? newValue : '';
 
-    // set the new value to the item datacontext
-    if (isComplexObject) {
-      // when it's a complex object, user could override the object path (where the editable object is located)
-      // else we use the path provided in the Field Column Definition
-      const objectPath = this.columnEditor && this.columnEditor.complexObjectPath || fieldName;
-      setDeepValue(item, objectPath, newValue);
-    } else {
-      item[fieldName] = newValue;
+      // set the new value to the item datacontext
+      if (isComplexObject) {
+        // when it's a complex object, user could override the object path (where the editable object is located)
+        // else we use the path provided in the Field Column Definition
+        const objectPath = this.columnEditor && this.columnEditor.complexObjectPath || fieldName || '';
+        setDeepValue(item, objectPath, newValue);
+      } else if (fieldName !== undefined) {
+        item[fieldName] = newValue;
+      }
     }
   }
 
@@ -339,13 +344,13 @@ export class SelectEditor implements Editor {
     const fieldName = this.columnDef && this.columnDef.field;
 
     // is the field a complex object, "address.streetNumber"
-    const isComplexObject = fieldName.indexOf('.') > 0;
+    const isComplexObject = fieldName !== undefined && fieldName.indexOf('.') > 0;
 
-    if (item && this.columnDef && (item.hasOwnProperty(fieldName) || isComplexObject)) {
+    if (item && this.columnDef && fieldName !== undefined && (item.hasOwnProperty(fieldName) || isComplexObject)) {
       // when it's a complex object, user could override the object path (where the editable object is located)
       // else we use the path provided in the Field Column Definition
       const objectPath = this.columnEditor && this.columnEditor.complexObjectPath || fieldName;
-      const currentValue = (isComplexObject) ? getDescendantProperty(item, objectPath) : item[fieldName];
+      const currentValue = (isComplexObject) ? getDescendantProperty(item, objectPath as string) : (item.hasOwnProperty(fieldName) && item[fieldName]);
       const value = (isComplexObject && currentValue.hasOwnProperty(this.valueName)) ? currentValue[this.valueName] : currentValue;
 
       if (this.isMultipleSelect && Array.isArray(value)) {
@@ -414,9 +419,9 @@ export class SelectEditor implements Editor {
   }
 
   validate(inputValue?: any): EditorValidatorOutput {
-    const isRequired = this.columnEditor.required;
+    const isRequired = this.columnEditor && this.columnEditor.required;
     const elmValue = (inputValue !== undefined) ? inputValue : this.$editorElm && this.$editorElm.val && this.$editorElm.val();
-    const errorMsg = this.columnEditor.errorMessage;
+    const errorMsg = this.columnEditor && this.columnEditor.errorMessage;
 
     if (this.validator) {
       const value = (inputValue !== undefined) ? inputValue : (this.isMultipleSelect ? this.currentValues : this.currentValue);
@@ -468,7 +473,7 @@ export class SelectEditor implements Editor {
     let outputCollection = inputCollection;
 
     // user might want to sort the collection
-    if (this.columnEditor && this.columnEditor.collectionSortBy) {
+    if (this.columnDef && this.columnEditor && this.columnEditor.collectionSortBy) {
       const sortBy = this.columnEditor.collectionSortBy;
       outputCollection = this.collectionService.sortCollection(this.columnDef, outputCollection, sortBy, this.enableTranslateLabel);
     }
@@ -508,54 +513,57 @@ export class SelectEditor implements Editor {
   /** Build the template HTML string */
   protected buildTemplateHtmlString(collection: any[]): string {
     let options = '';
-    const columnId = this.columnDef && this.columnDef.id;
-    const separatorBetweenLabels = this.collectionOptions && this.collectionOptions.separatorBetweenTextLabels || '';
-    const isRenderHtmlEnabled = this.columnDef.internalColumnEditor.enableRenderHtml || false;
-    const sanitizedOptions = this.gridOptions && this.gridOptions.sanitizeHtmlOptions || {};
+    if (this.columnDef && this.columnDef.hasOwnProperty('id') && this.columnDef.internalColumnEditor) {
+      const columnId = this.columnDef && this.columnDef.id;
 
-    // collection could be an Array of Strings OR Objects
-    if (collection.every((x: any) => typeof x === 'string')) {
-      collection.forEach((option: string) => {
-        options += `<option value="${option}" label="${option}">${option}</option>`;
-      });
-    } else {
-      // array of objects will require a label/value pair unless a customStructure is passed
-      collection.forEach((option: SelectOption) => {
-        if (!option || (option[this.labelName] === undefined && option.labelKey === undefined)) {
-          throw new Error('[select-editor] A collection with value/label (or value/labelKey when using ' +
-            'Locale) is required to populate the Select list, for example: ' +
-            '{ collection: [ { value: \'1\', label: \'One\' } ])');
-        }
-        const labelKey = (option.labelKey || option[this.labelName]) as string;
-        const labelText = ((option.labelKey || this.enableTranslateLabel) && labelKey) ? this.i18n.tr(labelKey || ' ') : labelKey;
-        let prefixText = option[this.labelPrefixName] || '';
-        let suffixText = option[this.labelSuffixName] || '';
-        let optionLabel = option[this.optionLabel] || '';
-        optionLabel = optionLabel.toString().replace(/\"/g, '\''); // replace double quotes by single quotes to avoid interfering with regular html
+      const separatorBetweenLabels = this.collectionOptions && this.collectionOptions.separatorBetweenTextLabels || '';
+      const isRenderHtmlEnabled = this.columnDef.internalColumnEditor.enableRenderHtml || false;
+      const sanitizedOptions = this.gridOptions && this.gridOptions.sanitizeHtmlOptions || {};
 
-        // also translate prefix/suffix if enableTranslateLabel is true and text is a string
-        prefixText = (this.enableTranslateLabel && prefixText && typeof prefixText === 'string') ? this.i18n.tr(prefixText || ' ') : prefixText;
-        suffixText = (this.enableTranslateLabel && suffixText && typeof suffixText === 'string') ? this.i18n.tr(suffixText || ' ') : suffixText;
-        optionLabel = (this.enableTranslateLabel && optionLabel && typeof optionLabel === 'string') ? this.i18n.tr(optionLabel || ' ') : optionLabel;
+      // collection could be an Array of Strings OR Objects
+      if (collection.every((x: any) => typeof x === 'string')) {
+        collection.forEach((option: string) => {
+          options += `<option value="${option}" label="${option}">${option}</option>`;
+        });
+      } else {
+        // array of objects will require a label/value pair unless a customStructure is passed
+        collection.forEach((option: SelectOption) => {
+          if (!option || (option[this.labelName] === undefined && option.labelKey === undefined)) {
+            throw new Error('[select-editor] A collection with value/label (or value/labelKey when using ' +
+              'Locale) is required to populate the Select list, for example: ' +
+              '{ collection: [ { value: \'1\', label: \'One\' } ])');
+          }
+          const labelKey = (option.labelKey || option[this.labelName]) as string;
+          const labelText = ((option.labelKey || this.enableTranslateLabel) && labelKey) ? this.i18n.tr(labelKey || ' ') : labelKey;
+          let prefixText = option[this.labelPrefixName] || '';
+          let suffixText = option[this.labelSuffixName] || '';
+          let optionLabel = option[this.optionLabel] || '';
+          optionLabel = optionLabel.toString().replace(/\"/g, '\''); // replace double quotes by single quotes to avoid interfering with regular html
 
-        // add to a temp array for joining purpose and filter out empty text
-        const tmpOptionArray = [prefixText, labelText, suffixText].filter((text) => text);
-        let optionText = tmpOptionArray.join(separatorBetweenLabels);
+          // also translate prefix/suffix if enableTranslateLabel is true and text is a string
+          prefixText = (this.enableTranslateLabel && prefixText && typeof prefixText === 'string') ? this.i18n.tr(prefixText || ' ') : prefixText;
+          suffixText = (this.enableTranslateLabel && suffixText && typeof suffixText === 'string') ? this.i18n.tr(suffixText || ' ') : suffixText;
+          optionLabel = (this.enableTranslateLabel && optionLabel && typeof optionLabel === 'string') ? this.i18n.tr(optionLabel || ' ') : optionLabel;
 
-        // if user specifically wants to render html text, he needs to opt-in else it will stripped out by default
-        // also, the 3rd party lib will saninitze any html code unless it's encoded, so we'll do that
-        if (isRenderHtmlEnabled) {
-          // sanitize any unauthorized html tags like script and others
-          // for the remaining allowed tags we'll permit all attributes
-          const sanitizedText = DOMPurify.sanitize(optionText, sanitizedOptions);
-          optionText = htmlEncode(sanitizedText);
-        }
+          // add to a temp array for joining purpose and filter out empty text
+          const tmpOptionArray = [prefixText, labelText, suffixText].filter((text) => text);
+          let optionText = tmpOptionArray.join(separatorBetweenLabels);
 
-        options += `<option value="${option[this.valueName]}" label="${optionLabel}">${optionText}</option>`;
-      });
+          // if user specifically wants to render html text, he needs to opt-in else it will stripped out by default
+          // also, the 3rd party lib will saninitze any html code unless it's encoded, so we'll do that
+          if (isRenderHtmlEnabled) {
+            // sanitize any unauthorized html tags like script and others
+            // for the remaining allowed tags we'll permit all attributes
+            const sanitizedText = DOMPurify.sanitize(optionText, sanitizedOptions);
+            optionText = htmlEncode(sanitizedText);
+          }
+
+          options += `<option value="${option[this.valueName]}" label="${optionLabel}">${optionText}</option>`;
+        });
+      }
+      return `<select id="${this.elementName}" class="ms-filter search-filter editor-${columnId}" ${this.isMultipleSelect ? 'multiple="multiple"' : ''}>${options}</select>`;
     }
-
-    return `<select id="${this.elementName}" class="ms-filter search-filter editor-${columnId}" ${this.isMultipleSelect ? 'multiple="multiple"' : ''}>${options}</select>`;
+    return '';
   }
 
   /** Create a blank entry that can be added to the collection. It will also reuse the same collection structure provided by the user */

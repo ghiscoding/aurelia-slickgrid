@@ -168,7 +168,7 @@ export function disposeAllSubscriptions(subscriptions: Subscription[]) {
 }
 
 /** From a dot (.) notation path, find and return a property within an object given a path */
-export function getDescendantProperty(obj: any, path: string): any {
+export function getDescendantProperty(obj: any, path: string | undefined): any {
   if (obj && path) {
     return path.split('.').reduce((acc, part) => acc && acc[part], obj);
   }
@@ -524,12 +524,14 @@ export function setDeepValue(obj: any, path: string | string[], value: any) {
 
   if (path.length > 1) {
     const e = path.shift();
-    setDeepValue(
-      obj[e] = Object.prototype.toString.call(obj[e]) === '[object Object]' ? obj[e] : {},
-      path,
-      value
-    );
-  } else {
+    if (obj && e !== undefined && obj.hasOwnProperty(e)) {
+      setDeepValue(
+        obj[e] = Object.prototype.toString.call(obj[e]) === '[object Object]' ? obj[e] : {},
+        path,
+        value
+      );
+    }
+  } else if (obj && path[0] && obj.hasOwnProperty(path[0])) {
     obj[path[0]] = value;
   }
 }

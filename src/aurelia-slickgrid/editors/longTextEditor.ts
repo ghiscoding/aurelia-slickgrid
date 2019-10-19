@@ -68,7 +68,7 @@ export class LongTextEditor implements Editor {
 
   /** Get the Validator function, can be passed in Editor property or Column Definition */
   get validator(): EditorValidator | undefined {
-    return this.columnEditor.validator || this.columnDef.validator;
+    return (this.columnEditor && this.columnEditor.validator) || (this.columnDef && this.columnDef.validator);
   }
 
   init(): void {
@@ -134,17 +134,19 @@ export class LongTextEditor implements Editor {
 
   applyValue(item: any, state: any) {
     const fieldName = this.columnDef && this.columnDef.field;
-    const isComplexObject = fieldName.indexOf('.') > 0; // is the field a complex object, "address.streetNumber"
+    if (fieldName !== undefined) {
+      const isComplexObject = fieldName.indexOf('.') > 0; // is the field a complex object, "address.streetNumber"
 
-    // validate the value before applying it (if not valid we'll set an empty string)
-    const validation = this.validate(state);
-    const newValue = (validation && validation.valid) ? state : '';
+      // validate the value before applying it (if not valid we'll set an empty string)
+      const validation = this.validate(state);
+      const newValue = (validation && validation.valid) ? state : '';
 
-    // set the new value to the item datacontext
-    if (isComplexObject) {
-      setDeepValue(item, fieldName, newValue);
-    } else {
-      item[fieldName] = newValue;
+      // set the new value to the item datacontext
+      if (isComplexObject) {
+        setDeepValue(item, fieldName, newValue);
+      } else {
+        item[fieldName] = newValue;
+      }
     }
   }
 
@@ -155,15 +157,17 @@ export class LongTextEditor implements Editor {
   loadValue(item: any) {
     const fieldName = this.columnDef && this.columnDef.field;
 
-    // is the field a complex object, "address.streetNumber"
-    const isComplexObject = fieldName.indexOf('.') > 0;
+    if (fieldName !== undefined) {
+      // is the field a complex object, "address.streetNumber"
+      const isComplexObject = fieldName.indexOf('.') > 0;
 
-    if (item && this.columnDef && (item.hasOwnProperty(fieldName) || isComplexObject)) {
-      const value = (isComplexObject) ? getDescendantProperty(item, fieldName) : item[fieldName];
-      this.defaultValue = value;
-      this._$textarea.val(this.defaultValue);
-      this._$textarea[0].defaultValue = this.defaultValue;
-      this._$textarea.select();
+      if (item && fieldName !== undefined && this.columnDef && (item.hasOwnProperty(fieldName) || isComplexObject)) {
+        const value = (isComplexObject) ? getDescendantProperty(item, fieldName) : item[fieldName];
+        this.defaultValue = value;
+        this._$textarea.val(this.defaultValue);
+        this._$textarea[0].defaultValue = this.defaultValue;
+        this._$textarea.select();
+      }
     }
   }
 

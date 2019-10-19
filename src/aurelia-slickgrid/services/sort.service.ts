@@ -245,7 +245,7 @@ export class SortService {
     }
 
     const query = backendApi.service.processOnSortChanged(event, args);
-    const totalItems = gridOptions && gridOptions.pagination && gridOptions.pagination.totalItems;
+    const totalItems = gridOptions && gridOptions.pagination && gridOptions.pagination.totalItems || 0;
     executeBackendCallback(backendApi, query, args, startTime, totalItems, this.emitSortChanged.bind(this));
   }
 

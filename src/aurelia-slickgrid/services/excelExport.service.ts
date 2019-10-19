@@ -1,6 +1,7 @@
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { inject, Optional, singleton } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
+// @ts-ignore
 import * as ExcelBuilder from 'excel-builder-webpack';
 import * as $ from 'jquery';
 import * as moment from 'moment-mini';
@@ -186,14 +187,15 @@ export class ExcelExportService {
   // Private functions
   // -----------------------
 
-  private getDataOutput(): string[][] | ExcelCellFormat[][] {
+  private getDataOutput(): Array<string[] | ExcelCellFormat[]> {
     const columns = this._grid && this._grid.getColumns && this._grid.getColumns() || [];
 
     // data variable which will hold all the fields data of a row
-    const outputData = [];
+    const outputData: Array<string[] | ExcelCellFormat[]> = [];
 
     // get all column headers (it might include a "Group by" title at A1 cell)
-    outputData.push(this.getColumnHeaderData(columns, { style: this._stylesheetFormats.boldFormatter.id }));
+    const headers = this.getColumnHeaderData(columns, { style: this._stylesheetFormats.boldFormatter.id });
+    outputData.push(headers);
 
     // Populate the rest of the Grid Data
     this.pushAllGridRowDataToArray(outputData, columns);
@@ -202,8 +204,8 @@ export class ExcelExportService {
   }
 
   /** Get all column headers and format them in Bold */
-  private getColumnHeaderData(columns: Column[], metadata: ExcelMetadata): string[] | ExcelCellFormat[] {
-    let outputHeaderTitles: ExcelCellFormat[] = [];
+  private getColumnHeaderData(columns: Column[], metadata: ExcelMetadata): Array<ExcelCellFormat> {
+    let outputHeaderTitles: Array<ExcelCellFormat> = [];
 
     this._columnHeaders = this.getColumnHeaders(columns) || [];
     if (this._columnHeaders && Array.isArray(this._columnHeaders) && this._columnHeaders.length > 0) {
@@ -245,11 +247,11 @@ export class ExcelExportService {
    * Get all header titles and their keys, translate the title when required.
    * @param columns of the grid
    */
-  private getColumnHeaders(columns: Column[]): KeyTitlePair[] {
+  private getColumnHeaders(columns: Column[]): KeyTitlePair[] | null {
     if (!columns || !Array.isArray(columns) || columns.length === 0) {
       return null;
     }
-    const columnHeaders = [];
+    const columnHeaders: KeyTitlePair[] = [];
 
     // Populate the Column Header, pull the name defined
     columns.forEach((columnDef) => {
@@ -264,7 +266,7 @@ export class ExcelExportService {
       // if column width is 0, then we consider that field as a hidden field and should not be part of the export
       if ((columnDef.width === undefined || columnDef.width > 0) && !skippedField) {
         columnHeaders.push({
-          key: columnDef.field || columnDef.id,
+          key: (columnDef.field || columnDef.id) + '',
           title: headerTitle
         });
       }
@@ -276,7 +278,7 @@ export class ExcelExportService {
   /**
    * Get all the grid row data and return that as an output string
    */
-  private pushAllGridRowDataToArray(originalDaraArray: string[][], columns: Column[]): string[][] | ExcelCellFormat[][] {
+  private pushAllGridRowDataToArray(originalDaraArray: Array<string[] | ExcelCellFormat[]>, columns: Column[]): Array<string[] | ExcelCellFormat[]> {
     const lineCount = this._dataView && this._dataView.getLength && this._dataView.getLength();
 
     // loop through all the grid rows of data
@@ -289,10 +291,10 @@ export class ExcelExportService {
           originalDaraArray.push(this.readRegularRowData(columns, rowNumber, itemObj));
         } else if (this._hasGroupedItems && itemObj.__groupTotals === undefined) {
           // get the group row
-          originalDaraArray.push([this.readGroupedTitleRow(itemObj)]);
+          originalDaraArray.push([this.readGroupedRowTitle(itemObj)]);
         } else if (itemObj.__groupTotals) {
           // else if the row is a Group By and we have agreggators, then a property of '__groupTotals' would exist under that object
-          originalDaraArray.push(this.readGroupedTotalRow(columns, itemObj));
+          originalDaraArray.push(this.readGroupedTotalRows(columns, itemObj));
         }
       }
     }
@@ -306,7 +308,7 @@ export class ExcelExportService {
    */
   private readRegularRowData(columns: Column[], row: number, itemObj: any): string[] {
     let idx = 0;
-    const rowOutputStrings = [];
+    const rowOutputStrings: string[] = [];
 
     for (let col = 0, ln = columns.length; col < ln; col++) {
       const columnDef = columns[col];
@@ -373,7 +375,7 @@ export class ExcelExportService {
         itemData = this.useCellFormatByFieldType(itemData as string, fieldType);
       }
 
-      rowOutputStrings.push(itemData);
+      rowOutputStrings.push(itemData as string);
       idx++;
     }
 
@@ -384,7 +386,7 @@ export class ExcelExportService {
    * Get the grouped title(s) and its group title formatter, for example if we grouped by salesRep, the returned result would be:: 'Sales Rep: John Dow (2 items)'
    * @param itemObj
    */
-  private readGroupedTitleRow(itemObj: any): string {
+  private readGroupedRowTitle(itemObj: any): string {
     const groupName = sanitizeHtmlToText(itemObj.title);
 
     if (this._excelExportOptions && this._excelExportOptions.addGroupIndentation) {
@@ -401,7 +403,7 @@ export class ExcelExportService {
    * For example if we grouped by "salesRep" and we have a Sum Aggregator on "sales", then the returned output would be:: ["Sum 123$"]
    * @param itemObj
    */
-  private readGroupedTotalRow(columns: Column[], itemObj: any): string[] {
+  private readGroupedTotalRows(columns: Column[], itemObj: any): string[] {
     const groupingAggregatorRowText = this._excelExportOptions.groupingAggregatorRowText || '';
     const outputStrings = [groupingAggregatorRowText];
 

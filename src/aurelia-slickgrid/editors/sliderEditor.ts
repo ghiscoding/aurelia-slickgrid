@@ -58,42 +58,44 @@ export class SliderEditor implements Editor {
 
   /** Get the Validator function, can be passed in Editor property or Column Definition */
   get validator(): EditorValidator | undefined {
-    return this.columnEditor.validator || this.columnDef.validator;
+    return (this.columnEditor && this.columnEditor.validator) || (this.columnDef && this.columnDef.validator);
   }
 
   init(): void {
     const container = this.args && this.args.container;
 
-    // define the input & slider number IDs
-    const itemId = this.args && this.args.item && this.args.item.id;
-    this._elementRangeInputId = `rangeInput_${this.columnDef.field}_${itemId}`;
-    this._elementRangeOutputId = `rangeOutput_${this.columnDef.field}_${itemId}`;
+    if (container && this.columnDef) {
+      // define the input & slider number IDs
+      const itemId = this.args && this.args.item && this.args.item.id;
+      this._elementRangeInputId = `rangeInput_${this.columnDef.field}_${itemId}`;
+      this._elementRangeOutputId = `rangeOutput_${this.columnDef.field}_${itemId}`;
 
-    // create HTML string template
-    const editorTemplate = this.buildTemplateHtmlString();
-    this._$editorElm = $(editorTemplate);
-    this._$input = this._$editorElm.children('input');
-    this.$sliderNumber = this._$editorElm.children('div.input-group-addon.input-group-append').children();
-    this.focus();
+      // create HTML string template
+      const editorTemplate = this.buildTemplateHtmlString();
+      this._$editorElm = $(editorTemplate);
+      this._$input = this._$editorElm.children('input');
+      this.$sliderNumber = this._$editorElm.children('div.input-group-addon.input-group-append').children();
+      this.focus();
 
-    // watch on change event
-    this._$editorElm
-      .appendTo(container)
-      .on('mouseup', () => this.save());
+      // watch on change event
+      this._$editorElm
+        .appendTo(container)
+        .on('mouseup', () => this.save());
 
-    // if user chose to display the slider number on the right side, then update it every time it changes
-    // we need to use both "input" and "change" event to be all cross-browser
-    if (!this.editorParams.hideSliderNumber) {
-      this._$editorElm.on('input change', (event: JQueryEventObject & { target: HTMLInputElement }) => {
-        this._lastInputEvent = event;
-        const value = event && event.target && event.target.value || '';
-        if (value && document) {
-          const elm = document.getElementById(this._elementRangeOutputId || '');
-          if (elm && elm.innerHTML) {
-            elm.innerHTML = event.target.value;
+      // if user chose to display the slider number on the right side, then update it every time it changes
+      // we need to use both "input" and "change" event to be all cross-browser
+      if (!this.editorParams.hideSliderNumber) {
+        this._$editorElm.on('input change', (event: JQueryEventObject & { target: HTMLInputElement }) => {
+          this._lastInputEvent = event;
+          const value = event && event.target && event.target.value || '';
+          if (value && document) {
+            const elm = document.getElementById(this._elementRangeOutputId || '');
+            if (elm && elm.innerHTML) {
+              elm.innerHTML = event.target.value;
+            }
           }
-        }
-      });
+        });
+      }
     }
   }
 
@@ -120,16 +122,18 @@ export class SliderEditor implements Editor {
 
   applyValue(item: any, state: any) {
     const fieldName = this.columnDef && this.columnDef.field;
-    const isComplexObject = fieldName.indexOf('.') > 0; // is the field a complex object, "address.streetNumber"
+    if (fieldName !== undefined) {
+      const isComplexObject = fieldName.indexOf('.') > 0; // is the field a complex object, "address.streetNumber"
 
-    const validation = this.validate(state);
-    const newValue = (validation && validation.valid) ? state : '';
+      const validation = this.validate(state);
+      const newValue = (validation && validation.valid) ? state : '';
 
-    // set the new value to the item datacontext
-    if (isComplexObject) {
-      setDeepValue(item, fieldName, newValue);
-    } else {
-      item[fieldName] = newValue;
+      // set the new value to the item datacontext
+      if (isComplexObject) {
+        setDeepValue(item, fieldName, newValue);
+      } else if (item) {
+        item[fieldName] = newValue;
+      }
     }
   }
 
@@ -142,10 +146,10 @@ export class SliderEditor implements Editor {
     const fieldName = this.columnDef && this.columnDef.field;
 
     // is the field a complex object, "address.streetNumber"
-    const isComplexObject = fieldName.indexOf('.') > 0;
+    const isComplexObject = fieldName && fieldName.indexOf('.') > 0;
 
-    if (item && this.columnDef && (item.hasOwnProperty(fieldName) || isComplexObject)) {
-      let value = (isComplexObject) ? getDescendantProperty(item, fieldName) : item[fieldName];
+    if (item && fieldName && this.columnDef && (item.hasOwnProperty(fieldName) || isComplexObject)) {
+      let value = (isComplexObject) ? getDescendantProperty(item, fieldName) : (item.hasOwnProperty(fieldName) && item[fieldName]);
       if (value === '' || value === null || value === undefined) {
         value = this.defaultValue; // load default value when item doesn't have any value
       }

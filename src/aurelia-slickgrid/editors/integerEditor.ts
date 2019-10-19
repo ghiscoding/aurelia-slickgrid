@@ -44,7 +44,7 @@ export class IntegerEditor implements Editor {
 
   /** Get the Validator function, can be passed in Editor property or Column Definition */
   get validator(): EditorValidator | undefined {
-    return this.columnEditor.validator || this.columnDef.validator;
+    return (this.columnEditor && this.columnEditor.validator) || (this.columnDef && this.columnDef.validator);
   }
 
   init() {
@@ -88,17 +88,19 @@ export class IntegerEditor implements Editor {
 
   applyValue(item: any, state: any) {
     const fieldName = this.columnDef && this.columnDef.field;
-    const isComplexObject = fieldName.indexOf('.') > 0; // is the field a complex object, "address.streetNumber"
+    if (fieldName !== undefined) {
+      const isComplexObject = fieldName.indexOf('.') > 0; // is the field a complex object, "address.streetNumber"
 
-    // validate the value before applying it (if not valid we'll set an empty string)
-    const validation = this.validate(state);
-    const newValue = (validation && validation.valid) ? state : '';
+      // validate the value before applying it (if not valid we'll set an empty string)
+      const validation = this.validate(state);
+      const newValue = (validation && validation.valid) ? state : '';
 
-    // set the new value to the item datacontext
-    if (isComplexObject) {
-      setDeepValue(item, fieldName, newValue);
-    } else {
-      item[fieldName] = newValue;
+      // set the new value to the item datacontext
+      if (isComplexObject) {
+        setDeepValue(item, fieldName, newValue);
+      } else {
+        item[fieldName] = newValue;
+      }
     }
   }
 
@@ -114,14 +116,16 @@ export class IntegerEditor implements Editor {
   loadValue(item: any) {
     const fieldName = this.columnDef && this.columnDef.field;
 
-    // is the field a complex object, "address.streetNumber"
-    const isComplexObject = fieldName.indexOf('.') > 0;
+    if (fieldName !== undefined) {
+      // is the field a complex object, "address.streetNumber"
+      const isComplexObject = fieldName.indexOf('.') > 0;
 
-    if (item && this.columnDef && (item.hasOwnProperty(fieldName) || isComplexObject)) {
-      const value = (isComplexObject) ? getDescendantProperty(item, fieldName) : item[fieldName];
-      this.originalValue = (isNaN(value) || value === null || value === undefined) ? value : `${value}`;
-      this._$input.val(this.originalValue);
-      this._$input.select();
+      if (item && this.columnDef && (item.hasOwnProperty(fieldName) || isComplexObject)) {
+        const value = (isComplexObject) ? getDescendantProperty(item, fieldName) : item[fieldName];
+        this.originalValue = (isNaN(value) || value === null || value === undefined) ? value : `${value}`;
+        this._$input.val(this.originalValue);
+        this._$input.select();
+      }
     }
   }
 
@@ -148,7 +152,7 @@ export class IntegerEditor implements Editor {
   validate(inputValue?: any): EditorValidatorOutput {
     const elmValue = (inputValue !== undefined) ? inputValue : this.getValue();
     let intNumber = !isNaN(elmValue as number) ? parseInt(elmValue, 10) : null;
-    if (isNaN(intNumber)) {
+    if (intNumber !== null && isNaN(intNumber)) {
       intNumber = null;
     }
     const errorMsg = this.columnEditor.errorMessage;

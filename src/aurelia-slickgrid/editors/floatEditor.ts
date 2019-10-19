@@ -46,7 +46,7 @@ export class FloatEditor implements Editor {
 
   /** Get the Validator function, can be passed in Editor property or Column Definition */
   get validator(): EditorValidator | undefined {
-    return this.columnEditor.validator || this.columnDef.validator;
+    return (this.columnEditor && this.columnEditor.validator) || (this.columnDef && this.columnDef.validator);
   }
 
   init() {
@@ -115,16 +115,18 @@ export class FloatEditor implements Editor {
 
   applyValue(item: any, state: any) {
     const fieldName = this.columnDef && this.columnDef.field;
-    const isComplexObject = fieldName.indexOf('.') > 0; // is the field a complex object, "address.streetNumber"
+    if (fieldName !== undefined) {
+      const isComplexObject = fieldName.indexOf('.') > 0; // is the field a complex object, "address.streetNumber"
 
-    const validation = this.validate(state);
-    const newValue = (validation && validation.valid) ? state : '';
+      const validation = this.validate(state);
+      const newValue = (validation && validation.valid) ? state : '';
 
-    // set the new value to the item datacontext
-    if (isComplexObject) {
-      setDeepValue(item, fieldName, newValue);
-    } else {
-      item[fieldName] = newValue;
+      // set the new value to the item datacontext
+      if (isComplexObject) {
+        setDeepValue(item, fieldName, newValue);
+      } else {
+        item[fieldName] = newValue;
+      }
     }
   }
 
@@ -140,18 +142,20 @@ export class FloatEditor implements Editor {
   loadValue(item: any) {
     const fieldName = this.columnDef && this.columnDef.field;
 
-    // is the field a complex object, "address.streetNumber"
-    const isComplexObject = fieldName.indexOf('.') > 0;
+    if (fieldName !== undefined) {
+      // is the field a complex object, "address.streetNumber"
+      const isComplexObject = fieldName.indexOf('.') > 0;
 
-    if (item && this.columnDef && (item.hasOwnProperty(fieldName) || isComplexObject)) {
-      const value = (isComplexObject) ? getDescendantProperty(item, fieldName) : item[fieldName];
-      this.originalValue = value;
-      const decPlaces = this.getDecimalPlaces();
-      if (decPlaces !== null && (this.originalValue || this.originalValue === 0) && (+this.originalValue).toFixed) {
-        this.originalValue = (+this.originalValue).toFixed(decPlaces);
+      if (item && this.columnDef && (item.hasOwnProperty(fieldName) || isComplexObject)) {
+        const value = (isComplexObject) ? getDescendantProperty(item, fieldName) : item[fieldName];
+        this.originalValue = value;
+        const decPlaces = this.getDecimalPlaces();
+        if (decPlaces !== null && (this.originalValue || this.originalValue === 0) && (+this.originalValue).toFixed) {
+          this.originalValue = (+this.originalValue).toFixed(decPlaces);
+        }
+        this._$input.val(this.originalValue);
+        this._$input.select();
       }
-      this._$input.val(this.originalValue);
-      this._$input.select();
     }
   }
 
