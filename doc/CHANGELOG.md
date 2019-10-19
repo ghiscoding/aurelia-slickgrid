@@ -2,6 +2,40 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.14.0"></a>
+# [2.14.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.13.5...v2.14.0) (2019-10-19)
+
+
+### Bug Fixes
+
+* **backend:** query should not include pagination option when disabled ([#220](https://github.com/ghiscoding/aurelia-slickgrid/issues/220)) ([e9731d9](https://github.com/ghiscoding/aurelia-slickgrid/commit/e9731d9))
+* **editor:** autocommit should not save if value is the same as before ([#238](https://github.com/ghiscoding/aurelia-slickgrid/issues/238)) ([78d1d81](https://github.com/ghiscoding/aurelia-slickgrid/commit/78d1d81))
+* **editor:** provide complex object override path for select editor ([#237](https://github.com/ghiscoding/aurelia-slickgrid/issues/237)) ([bb467cd](https://github.com/ghiscoding/aurelia-slickgrid/commit/bb467cd))
+* **editors:** complex objects should work with all editors ([#226](https://github.com/ghiscoding/aurelia-slickgrid/issues/226)) ([b792863](https://github.com/ghiscoding/aurelia-slickgrid/commit/b792863))
+* **filter:** should be able to filter even on hidden columns ([#236](https://github.com/ghiscoding/aurelia-slickgrid/issues/236)) ([390fe8a](https://github.com/ghiscoding/aurelia-slickgrid/commit/390fe8a))
+* **gridService:** addItem/updatedItemById pass array to setSelectedRows ([#234](https://github.com/ghiscoding/aurelia-slickgrid/issues/234)) ([96d04cc](https://github.com/ghiscoding/aurelia-slickgrid/commit/96d04cc))
+* **gridService:** refactor the code and add more unit tests ([8a4d438](https://github.com/ghiscoding/aurelia-slickgrid/commit/8a4d438))
+* **gridService:** upsertItem(s) should trigger onItemAdded/Updated event ([#231](https://github.com/ghiscoding/aurelia-slickgrid/issues/231)) ([11c3c52](https://github.com/ghiscoding/aurelia-slickgrid/commit/11c3c52))
+* **styling:** styling issue in Firefox after col reordering ([#228](https://github.com/ghiscoding/aurelia-slickgrid/issues/228)) ([a737cdf](https://github.com/ghiscoding/aurelia-slickgrid/commit/a737cdf))
+
+
+### Features
+
+* **backend:** extract Pagination into its own Service to expose methods ([#230](https://github.com/ghiscoding/aurelia-slickgrid/issues/230)) ([9af863d](https://github.com/ghiscoding/aurelia-slickgrid/commit/9af863d))
+* **conditions:** add field type float/integer to sorters/filters util ([#233](https://github.com/ghiscoding/aurelia-slickgrid/issues/233)) ([017f93d](https://github.com/ghiscoding/aurelia-slickgrid/commit/017f93d))
+* **export:** add delimiter/listSeparator override to use with GraphQL ([#232](https://github.com/ghiscoding/aurelia-slickgrid/issues/232)) ([c4ae19d](https://github.com/ghiscoding/aurelia-slickgrid/commit/c4ae19d))
+* **export:** add Export to Excel feature ([#235](https://github.com/ghiscoding/aurelia-slickgrid/issues/235)) ([feeb6ad](https://github.com/ghiscoding/aurelia-slickgrid/commit/feeb6ad))
+* **filter:** add unit test suite for multiple Filters ([#221](https://github.com/ghiscoding/aurelia-slickgrid/issues/221)) ([f0a526d](https://github.com/ghiscoding/aurelia-slickgrid/commit/f0a526d))
+* **insert:** add option to insert item at bottom of grid ([#229](https://github.com/ghiscoding/aurelia-slickgrid/issues/229)) ([ed759e8](https://github.com/ghiscoding/aurelia-slickgrid/commit/ed759e8))
+* **metrics:** deprecated Statistic and renamed to Metrics ([#225](https://github.com/ghiscoding/aurelia-slickgrid/issues/225)) ([147c894](https://github.com/ghiscoding/aurelia-slickgrid/commit/147c894))
+* **odata:** add "enableCount" flag to add to OData query ([#224](https://github.com/ghiscoding/aurelia-slickgrid/issues/224)) ([5018ca8](https://github.com/ghiscoding/aurelia-slickgrid/commit/5018ca8))
+* **sorters:** consolidate & provide all date sorters ([#218](https://github.com/ghiscoding/aurelia-slickgrid/issues/218)) ([f8e2127](https://github.com/ghiscoding/aurelia-slickgrid/commit/f8e2127))
+* **tests:** add AutoComplete Filter & Editor Unit Tests ([#222](https://github.com/ghiscoding/aurelia-slickgrid/issues/222)) ([77bb18b](https://github.com/ghiscoding/aurelia-slickgrid/commit/77bb18b))
+* **tests:** add missing AutoComplete unit tests ([dd04d4e](https://github.com/ghiscoding/aurelia-slickgrid/commit/dd04d4e))
+* **tests:** add unit tests for SingleSelect & MultipleSelect Filters ([#219](https://github.com/ghiscoding/aurelia-slickgrid/issues/219)) ([42e38a6](https://github.com/ghiscoding/aurelia-slickgrid/commit/42e38a6))
+
+
+
 <a name="2.13.5"></a>
 ## [2.13.5](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.13.4...v2.13.5) (2019-08-17)
 
