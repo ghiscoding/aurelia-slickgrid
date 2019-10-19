@@ -18,6 +18,7 @@ export class SliderEditor implements Editor {
   private _$editorElm: any;
   private _$input: any;
   $sliderNumber: any;
+  defaultValue: any;
   originalValue: any;
 
   /** SlickGrid Grid object */
@@ -132,9 +133,9 @@ export class SliderEditor implements Editor {
     }
   }
 
-  isValueChanged() {
+  isValueChanged(): boolean {
     const elmValue = this._$input.val();
-    return (!(elmValue === '' && this.originalValue === null)) && (+elmValue !== this.originalValue);
+    return (!(elmValue === '' && this.originalValue === undefined)) && (+elmValue !== this.originalValue);
   }
 
   loadValue(item: any) {
@@ -146,8 +147,9 @@ export class SliderEditor implements Editor {
     if (item && this.columnDef && (item.hasOwnProperty(fieldName) || isComplexObject)) {
       let value = (isComplexObject) ? getDescendantProperty(item, fieldName) : item[fieldName];
       if (value === '' || value === null || value === undefined) {
-        value = this.originalValue; // load default value when item doesn't have any value
+        value = this.defaultValue; // load default value when item doesn't have any value
       }
+      this.originalValue = +value;
       this._$input.val(value);
       this.$sliderNumber.html(value);
     }
@@ -218,7 +220,7 @@ export class SliderEditor implements Editor {
     const maxValue = this.columnEditor.hasOwnProperty('maxValue') ? this.columnEditor.maxValue : DEFAULT_MAX_VALUE;
     const defaultValue = this.editorParams.hasOwnProperty('sliderStartValue') ? this.editorParams.sliderStartValue : minValue;
     const step = this.columnEditor.hasOwnProperty('valueStep') ? this.columnEditor.valueStep : DEFAULT_STEP;
-    this.originalValue = defaultValue;
+    this.defaultValue = defaultValue;
 
     if (this.editorParams.hideSliderNumber) {
       return `
