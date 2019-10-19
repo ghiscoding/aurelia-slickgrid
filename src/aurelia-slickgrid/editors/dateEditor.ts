@@ -30,6 +30,7 @@ export class DateEditor implements Editor {
 
   flatInstance: any;
   defaultDate: string;
+  originalDate: string;
 
   /** SlickGrid Grid object */
   grid: any;
@@ -174,7 +175,12 @@ export class DateEditor implements Editor {
   }
 
   isValueChanged(): boolean {
-    return (!(this._$input.val() === '' && this.defaultDate == null)) && (this._$input.val() !== this.defaultDate);
+    const elmValue = this._$input.val();
+    const outputFormat = mapMomentDateFormatWithFieldType(this.columnDef.type || FieldType.dateIso);
+    const elmDateStr = elmValue ? moment(elmValue).format(outputFormat) : '';
+    const orgDateStr = this.originalDate ? moment(this.originalDate).format(outputFormat) : '';
+
+    return (!(elmDateStr === '' && orgDateStr === '')) && (elmDateStr !== orgDateStr);
   }
 
   loadValue(item: any) {
@@ -185,7 +191,7 @@ export class DateEditor implements Editor {
 
     if (item && this.columnDef && (item.hasOwnProperty(fieldName) || isComplexObject)) {
       const value = (isComplexObject) ? getDescendantProperty(item, fieldName) : item[fieldName];
-      this.defaultDate = value;
+      this.originalDate = value;
       this.flatInstance.setDate(value);
       this.show();
       this.focus();
