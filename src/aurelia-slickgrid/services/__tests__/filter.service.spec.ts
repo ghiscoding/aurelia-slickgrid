@@ -1,5 +1,8 @@
 // import 3rd party lib multiple-select for the tests
 import '../../../assets/lib/multiple-select/multiple-select';
+
+import { EventAggregator } from 'aurelia-event-aggregator';
+import { Container, DOM } from 'aurelia-framework';
 import 'jest-extended';
 
 import {
@@ -15,8 +18,7 @@ import { Filters } from '../../filters';
 import { FilterService } from '../filter.service';
 import { FilterFactory } from '../../filters/filterFactory';
 import { SlickgridConfig } from '../../slickgrid-config';
-import { EventAggregator } from 'aurelia-event-aggregator';
-import { Container, DOM } from 'aurelia-framework';
+import { SharedService } from '../shared.service';
 
 jest.mock('flatpickr', () => { });
 declare var Slick: any;
@@ -68,6 +70,7 @@ describe('FilterService', () => {
   let ea: EventAggregator;
   let container: Container;
   let service: FilterService;
+  let sharedService: SharedService;
   let slickgridEventHandler: SlickEventHandler;
 
   beforeEach(() => {
@@ -77,9 +80,10 @@ describe('FilterService', () => {
     document.body.appendChild(div);
 
     ea = new EventAggregator();
+    sharedService = new SharedService();
     container = new Container();
     const filterFactory = new FilterFactory(container, new SlickgridConfig());
-    service = new FilterService(ea, filterFactory);
+    service = new FilterService(ea, filterFactory, sharedService);
     slickgridEventHandler = service.eventHandler;
   });
 
@@ -532,7 +536,7 @@ describe('FilterService', () => {
       mockItem1 = { firstName: 'John', lastName: 'Doe', fullName: 'John Doe', age: 26, address: { zip: 123456 } };
     });
 
-    it('should return False when there are no column definition found', () => {
+    it('should return True (nothing to filter, all rows will be returned) when there are no column definition found', () => {
       const searchValue = 'John';
       const mockColumn1 = { id: 'firstName', field: 'firstName', filterable: true } as Column;
       jest.spyOn(gridStub, 'getColumns').mockReturnValue([]);
@@ -541,13 +545,26 @@ describe('FilterService', () => {
       const columnFilters = { firstName: { columnDef: mockColumn1, columnId: 'firstName', operator: 'EQ', searchTerms: [searchValue] } };
       const output = service.customLocalFilter(mockItem1, { dataView: dataViewStub, grid: gridStub, columnFilters });
 
-      expect(output).toBe(false);
+      expect(output).toBe(true);
     });
 
     it('should return True when input value from datacontext is the same as the searchTerms', () => {
       const searchValue = 'John';
       const mockColumn1 = { id: 'firstName', field: 'firstName', filterable: true } as Column;
       jest.spyOn(gridStub, 'getColumns').mockReturnValue([mockColumn1]);
+
+      service.init(gridStub);
+      const columnFilters = { firstName: { columnDef: mockColumn1, columnId: 'firstName', operator: 'EQ', searchTerms: [searchValue] } };
+      const output = service.customLocalFilter(mockItem1, { dataView: dataViewStub, grid: gridStub, columnFilters });
+
+      expect(output).toBe(true);
+    });
+
+    it('should work on a hidden column by using the sharedService "allColumns" and return True when input value the same as the searchTerms', () => {
+      const searchValue = 'John';
+      const mockColumn1 = { id: 'firstName', field: 'firstName', filterable: true } as Column;
+      sharedService.allColumns = [mockColumn1];
+      jest.spyOn(gridStub, 'getColumns').mockReturnValue([]);
 
       service.init(gridStub);
       const columnFilters = { firstName: { columnDef: mockColumn1, columnId: 'firstName', operator: 'EQ', searchTerms: [searchValue] } };
@@ -571,6 +588,19 @@ describe('FilterService', () => {
       const searchValue = 'Johnny';
       const mockColumn1 = { id: 'firstName', field: 'firstName', filterable: true } as Column;
       jest.spyOn(gridStub, 'getColumns').mockReturnValue([mockColumn1]);
+
+      service.init(gridStub);
+      const columnFilters = { firstName: { columnDef: mockColumn1, columnId: 'firstName', operator: 'EQ', searchTerms: [searchValue] } };
+      const output = service.customLocalFilter(mockItem1, { dataView: dataViewStub, grid: gridStub, columnFilters });
+
+      expect(output).toBe(false);
+    });
+
+    it('should work on a hidden column by using the sharedService "allColumns" and return return False when input value is not equal to the searchTerms', () => {
+      const searchValue = 'Johnny';
+      const mockColumn1 = { id: 'firstName', field: 'firstName', filterable: true } as Column;
+      sharedService.allColumns = [mockColumn1];
+      jest.spyOn(gridStub, 'getColumns').mockReturnValue([]);
 
       service.init(gridStub);
       const columnFilters = { firstName: { columnDef: mockColumn1, columnId: 'firstName', operator: 'EQ', searchTerms: [searchValue] } };

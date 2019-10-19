@@ -23,6 +23,7 @@ import {
 } from './../models/index';
 import { executeBackendCallback } from './backend-utilities';
 import { getDescendantProperty } from './utilities';
+import { SharedService } from './shared.service';
 import * as $ from 'jquery';
 import * as isequal from 'lodash.isequal';
 
@@ -34,7 +35,7 @@ let timer: any;
 const DEFAULT_FILTER_TYPING_DEBOUNCE = 500;
 
 @singleton(true)
-@inject(EventAggregator, FilterFactory)
+@inject(EventAggregator, FilterFactory, SharedService)
 export class FilterService {
   private _eventHandler: SlickEventHandler;
   private _isFilterFirstRender = true;
@@ -45,7 +46,7 @@ export class FilterService {
   private _grid: any;
   private _onSearchChange: SlickEvent;
 
-  constructor(private ea: EventAggregator, private filterFactory: FilterFactory) {
+  constructor(private ea: EventAggregator, private filterFactory: FilterFactory, private sharedService: SharedService) {
     this._onSearchChange = new Slick.Event();
     this._eventHandler = new Slick.EventHandler();
   }
@@ -243,10 +244,19 @@ export class FilterService {
     const dataView = args && args.dataView;
     for (const columnId of Object.keys(args.columnFilters)) {
       const columnFilter: ColumnFilter = args.columnFilters[columnId];
-      const columnIndex = args.grid.getColumnIndex(columnId);
-      const columnDef = args.grid.getColumns()[columnIndex];
+      let columnIndex = args.grid.getColumnIndex(columnId);
+      let columnDef = args.grid.getColumns()[columnIndex];
+
+      // it might be a hidden column, if so it won't be part of the getColumns (because it we hide a column via setColumns)
+      // when that happens we can try to get the column definition from all defined columns
+      if (!columnDef && this.sharedService && Array.isArray(this.sharedService.allColumns)) {
+        columnIndex = this.sharedService.allColumns.findIndex((col) => col.field === columnId);
+        columnDef = this.sharedService.allColumns[columnIndex];
+      }
+
+      // if we still don't have a column definition then we should return then row anyway (true)
       if (!columnDef) {
-        return false;
+        return true;
       }
 
       // Row Detail View plugin, if the row is padding we just get the value we're filtering on from it's parent
