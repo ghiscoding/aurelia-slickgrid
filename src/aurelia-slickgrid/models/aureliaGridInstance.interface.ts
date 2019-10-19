@@ -1,5 +1,6 @@
-import { BackendService } from './../models/index';
+import { BackendService } from './index';
 import {
+  ExcelExportService,
   ExportService,
   ExtensionService,
   FilterService,
@@ -35,6 +36,9 @@ export interface AureliaGridInstance {
 
   /** @deprecated, use `extensionService` instead. Plugin and Control Service */
   pluginService: ExtensionService;
+
+  /** Excel Export Service */
+  excelExportService?: ExcelExportService;
 
   /** Export Service */
   exportService: ExportService;

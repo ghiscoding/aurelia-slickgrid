@@ -1,58 +1,46 @@
 <template>
   <h2>${title}</h2>
-  <div class="subtitle"
-       innerhtml.bind="subTitle"></div>
+  <div class="subtitle" innerhtml.bind="subTitle"></div>
 
   <div class="row col-sm-12">
-    <button class="btn btn-default btn-xs"
-            click.delegate="loadData(500)">
+    <button class="btn btn-default btn-xs" click.delegate="loadData(500)">
       500 rows
     </button>
-    <button class="btn btn-default btn-xs"
-            click.delegate="loadData(50000)">
+    <button class="btn btn-default btn-xs" click.delegate="loadData(50000)">
       50k rows
     </button>
-    <button class="btn btn-default btn-xs"
-            click.delegate="clearGrouping()">
+    <button class="btn btn-default btn-xs" click.delegate="clearGrouping()">
       <i class="fa fa-times"></i> Clear grouping
     </button>
-    <button class="btn btn-default btn-xs"
-            click.delegate="collapseAllGroups()">
+    <button class="btn btn-default btn-xs" click.delegate="collapseAllGroups()">
       <i class="fa fa-compress"></i> Collapse all groups
     </button>
-    <button class="btn btn-default btn-xs"
-            click.delegate="expandAllGroups()">
+    <button class="btn btn-default btn-xs" click.delegate="expandAllGroups()">
       <i class="fa fa-expand"></i> Expand all groups
     </button>
-    <button class="btn btn-default btn-xs"
-            click.delegate="exportToCsv('csv')">
-      <i class="fa fa-download"></i> Export to CSV
+    <button class="btn btn-default btn-xs" click.delegate="exportToExcel()">
+      <i class="fa fa-file-excel-o text-success"></i> Export to Excel
     </button>
   </div>
 
   <hr />
 
   <div class="row col-sm-12">
-    <button class="btn btn-default btn-xs"
-            click.delegate="groupByDuration()">
+    <button class="btn btn-default btn-xs" click.delegate="groupByDuration()">
       Group by Duration &amp; sort groups by value
     </button>
-    <button class="btn btn-default btn-xs"
-            click.delegate="groupByDurationOrderByCount(false)">
+    <button class="btn btn-default btn-xs" click.delegate="groupByDurationOrderByCount(false)">
       Group by Duration &amp; sort groups by count
     </button>
   </div>
   <div class="row col-sm-12">
-    <button class="btn btn-default btn-xs"
-            click.delegate="groupByDurationOrderByCount(true)">
+    <button class="btn btn-default btn-xs" click.delegate="groupByDurationOrderByCount(true)">
       Group by Duration &amp; sort groups by count, aggregate collapsed
     </button>
-    <button class="btn btn-default btn-xs"
-            click.delegate="groupByDurationEffortDriven()">
+    <button class="btn btn-default btn-xs" click.delegate="groupByDurationEffortDriven()">
       Group by Duration then Effort-Driven
     </button>
-    <button class="btn btn-default btn-xs"
-            click.delegate="groupByDurationEffortDrivenPercent()">
+    <button class="btn btn-default btn-xs" click.delegate="groupByDurationEffortDrivenPercent()">
       Group by Duration then Effort-Driven then Percent.
     </button>
     <span hidden.bind="!processing">
@@ -60,10 +48,7 @@
     </span>
   </div>
 
-  <aurelia-slickgrid grid-id="grid1"
-                     column-definitions.bind="columnDefinitions"
-                     grid-options.bind="gridOptions"
-                     dataset.bind="dataset"
-                     asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
+  <aurelia-slickgrid grid-id="grid1" column-definitions.bind="columnDefinitions" grid-options.bind="gridOptions"
+    dataset.bind="dataset" asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
   </aurelia-slickgrid>
 </template>

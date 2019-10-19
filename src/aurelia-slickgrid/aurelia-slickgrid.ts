@@ -28,6 +28,7 @@ import {
 } from './models/index';
 import {
   disposeAllSubscriptions,
+  ExcelExportService,
   ExportService,
   ExtensionService,
   FilterService,
@@ -55,6 +56,7 @@ const DEFAULT_SLICKGRID_EVENT_PREFIX = 'sg';
 @inject(
   BindingEngine,
   Container,
+  ExcelExportService,
   ExportService,
   Element,
   EventAggregator,
@@ -102,6 +104,7 @@ export class AureliaSlickgridCustomElement {
   constructor(
     private bindingEngine: BindingEngine,
     private container: Container,
+    private excelExportService: ExcelExportService,
     private exportService: ExportService,
     private elm: Element,
     private ea: EventAggregator,
@@ -242,6 +245,11 @@ export class AureliaSlickgridCustomElement {
       this.exportService.init(this.grid, this.dataview);
     }
 
+    // if Excel Export is enabled, initialize the service with the necessary grid and other objects
+    if (this.gridOptions.enableExcelExport) {
+      this.excelExportService.init(this.grid, this.dataview);
+    }
+
     // bind the Backend Service API callback functions only after the grid is initialized
     // because the preProcess() and onInit() might get triggered
     if (this.gridOptions && this.gridOptions.backendServiceApi) {
@@ -261,6 +269,7 @@ export class AureliaSlickgridCustomElement {
 
       // return all available Services (non-singleton)
       backendService: this.gridOptions && this.gridOptions.backendServiceApi && this.gridOptions.backendServiceApi.service,
+      excelExportService: this.excelExportService,
       exportService: this.exportService,
       filterService: this.filterService,
       gridEventService: this.gridEventService,

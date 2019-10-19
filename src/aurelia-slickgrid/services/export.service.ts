@@ -11,16 +11,12 @@ import {
   FileType,
   Formatter,
   GridOption,
+  KeyTitlePair,
   Locale,
 } from './../models/index';
 import { addWhiteSpaces, htmlEntityDecode, sanitizeHtmlToText, titleCase } from './../services/utilities';
 
 const DEFAULT_AURELIA_EVENT_PREFIX = 'asg';
-
-export interface ExportColumnHeader {
-  key: string | number;
-  title: string;
-}
 
 @singleton(true)
 @inject(Optional.of(I18N), EventAggregator)
@@ -33,8 +29,8 @@ export class ExportService {
   private _lineCarriageReturn = '\n';
   private _dataView: any;
   private _grid: any;
-  private _columnHeaders: ExportColumnHeader[];
-  private _groupedHeaders: ExportColumnHeader[];
+  private _columnHeaders: KeyTitlePair[];
+  private _groupedHeaders: KeyTitlePair[];
   private _hasGroupedItems = false;
   private _locales: Locale;
 
@@ -77,6 +73,10 @@ export class ExportService {
    * Example: exportToFile({ format: FileType.csv, delimiter: DelimiterType.comma })
    */
   exportToFile(options: ExportOption): Promise<boolean> {
+    if (!this._grid || !this._dataView) {
+      throw new Error('[Aurelia-Slickgrid] it seems that the SlickGrid & DataView objects are not initialized did you forget to enable the grid option flag "enableExcelExport"?');
+    }
+
     return new Promise((resolve, reject) => {
       this.ea.publish(`${this._aureliaEventPrefix}:onBeforeExportToFile`, true);
       this._exportOptions = $.extend(true, {}, this._gridOptions.exportOptions, options);
@@ -244,11 +244,11 @@ export class ExportService {
    * Get all header titles and their keys, translate the title when required.
    * @param columns of the grid
    */
-  private getColumnHeaders(columns: Column[]): ExportColumnHeader[] {
+  private getColumnHeaders(columns: Column[]): KeyTitlePair[] {
     if (!columns || !Array.isArray(columns) || columns.length === 0) {
       return [];
     }
-    const columnHeaders: ExportColumnHeader[] = [];
+    const columnHeaders: KeyTitlePair[] = [];
 
     // Populate the Column Header, pull the name defined
     columns.forEach((columnDef) => {
@@ -263,7 +263,7 @@ export class ExportService {
       // if column width is 0, then we consider that field as a hidden field and should not be part of the export
       if ((columnDef.width === undefined || columnDef.width > 0) && !skippedField) {
         columnHeaders.push({
-          key: columnDef.field || columnDef.id,
+          key: (columnDef.field || columnDef.id) as string,
           title: headerTitle || ''
         });
       }
