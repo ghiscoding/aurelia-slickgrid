@@ -208,6 +208,53 @@ export class RowDetailViewExtension implements Extension {
     return null;
   }
 
+  /** Redraw (re-render) all the expanded row detail View Slots */
+  redrawAllViewSlots() {
+    this._slots.forEach((slot) => {
+      this.redrawViewSlot(slot);
+    });
+  }
+
+  /** Render all the expanded row detail View Slots */
+  renderAllViewModels() {
+    this._slots.forEach((slot) => {
+      if (slot && slot.dataContext) {
+        this.renderViewModel(slot.dataContext);
+      }
+    });
+  }
+
+  /** Redraw the necessary View Slot */
+  redrawViewSlot(slot: CreatedView) {
+    const containerElement = document.getElementsByClassName(`${ROW_DETAIL_CONTAINER_PREFIX}${slot.id}`);
+    if (containerElement && containerElement.length) {
+      this.renderViewModel(slot.dataContext);
+    }
+  }
+
+  /** Render (or rerender) the View Slot (Row Detail) */
+  renderPreloadView() {
+    const containerElements = document.getElementsByClassName(`${PRELOAD_CONTAINER_PREFIX}`);
+    if (containerElements && containerElements.length) {
+      this.aureliaUtilService.createAureliaViewAddToSlot(this._preloadView, containerElements[0], true);
+    }
+  }
+
+  /** Render (or rerender) the View Slot (Row Detail) */
+  renderViewModel(item: any) {
+    const containerElements = document.getElementsByClassName(`${ROW_DETAIL_CONTAINER_PREFIX}${item.id}`);
+    if (containerElements && containerElements.length) {
+      const aureliaComp = this.aureliaUtilService.createAureliaViewModelAddToSlot(this._viewModel, item, containerElements[0], true);
+
+      const slotObj = this._slots.find((obj) => obj.id === item.id);
+
+      if (slotObj && aureliaComp) {
+        slotObj.view = aureliaComp.view;
+        slotObj.viewSlot = aureliaComp.viewSlot;
+      }
+    }
+  }
+
   // --
   // private functions
   // ------------------
@@ -302,53 +349,6 @@ export class RowDetailViewExtension implements Extension {
           this.redrawViewSlot(slot);
         }
       });
-    }
-  }
-
-  /** Redraw (re-render) all the expanded row detail View Slots */
-  private redrawAllViewSlots() {
-    this._slots.forEach((slot) => {
-      this.redrawViewSlot(slot);
-    });
-  }
-
-  /** Render all the expanded row detail View Slots */
-  private renderAllViewModels() {
-    this._slots.forEach((slot) => {
-      if (slot && slot.dataContext) {
-        this.renderViewModel(slot.dataContext);
-      }
-    });
-  }
-
-  /** Redraw the necessary View Slot */
-  private redrawViewSlot(slot: CreatedView) {
-    const containerElement = document.getElementsByClassName(`${ROW_DETAIL_CONTAINER_PREFIX}${slot.id}`);
-    if (containerElement && containerElement.length) {
-      this.renderViewModel(slot.dataContext);
-    }
-  }
-
-  /** Render (or rerender) the View Slot (Row Detail) */
-  private renderPreloadView() {
-    const containerElements = document.getElementsByClassName(`${PRELOAD_CONTAINER_PREFIX}`);
-    if (containerElements && containerElements.length) {
-      this.aureliaUtilService.createAureliaViewAddToSlot(this._preloadView, containerElements[0], true);
-    }
-  }
-
-  /** Render (or rerender) the View Slot (Row Detail) */
-  private renderViewModel(item: any) {
-    const containerElements = document.getElementsByClassName(`${ROW_DETAIL_CONTAINER_PREFIX}${item.id}`);
-    if (containerElements && containerElements.length) {
-      const aureliaComp = this.aureliaUtilService.createAureliaViewModelAddToSlot(this._viewModel, item, containerElements[0], true);
-
-      const slotObj = this._slots.find((obj) => obj.id === item.id);
-
-      if (slotObj && aureliaComp) {
-        slotObj.view = aureliaComp.view;
-        slotObj.viewSlot = aureliaComp.viewSlot;
-      }
     }
   }
 }
