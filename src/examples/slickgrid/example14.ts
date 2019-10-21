@@ -1,4 +1,5 @@
 import { Column, FieldType, GridOption } from '../../aurelia-slickgrid';
+import './example14.scss'; // provide custom CSS/SASS styling
 
 export class Example14 {
   title = 'Example 14: Column Span & Header Grouping';
@@ -6,7 +7,7 @@ export class Example14 {
   This example demonstrates how to easily span a row over multiple columns & how to group header titles.
   <ul>
     <li>
-      Row Colspan - (<a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Row-Colspan" target="_blank">Wiki docs</a>) |
+      Row Colspan - (<a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Row-Colspan" target="_blank">Wiki docs</a>) /
       Header Grouping - (<a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Header-Title-Grouping" target="_blank">Wiki docs</a>)
     </li>
     <li>Note that you can add Sort but remember that it will sort by the data that the row contains, even if the data is visually hidden by colspan it will still sort it</li>
@@ -16,22 +17,27 @@ export class Example14 {
     </li>
   </ul>
   `;
-  columnDefinitions: Column[];
-  gridOptions: GridOption;
-  dataset = [];
+
+  columnDefinitions1: Column[];
+  columnDefinitions2: Column[];
+  gridOptions1: GridOption;
+  gridOptions2: GridOption;
+  dataset1 = [];
+  dataset2 = [];
 
   constructor() {
-    // define the grid options & columns and then create the grid itself
-    this.defineGrid();
+    this.definedGrid1();
+    this.definedGrid2();
   }
 
   attached() {
     // populate the dataset once the grid is ready
-    this.getData();
+    this.dataset1 = this.getData(500);
+    this.dataset2 = this.getData(500);
   }
 
-  defineGrid() {
-    this.columnDefinitions = [
+  definedGrid1() {
+    this.columnDefinitions1 = [
       { id: 'title', name: 'Title', field: 'title', sortable: true, columnGroup: 'Common Factor' },
       { id: 'duration', name: 'Duration', field: 'duration', columnGroup: 'Common Factor' },
       { id: 'start', name: 'Start', field: 'start', columnGroup: 'Period' },
@@ -40,7 +46,7 @@ export class Example14 {
       { id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', type: FieldType.boolean, columnGroup: 'Analysis' }
     ];
 
-    this.gridOptions = {
+    this.gridOptions1 = {
       enableAutoResize: false,
       enableCellNavigation: true,
       enableColumnReorder: false,
@@ -53,12 +59,35 @@ export class Example14 {
     };
   }
 
-  getData() {
+  definedGrid2() {
+    this.columnDefinitions2 = [
+      { id: 'title', name: 'Title', field: 'title', sortable: true, columnGroup: 'Common Factor' },
+      { id: 'duration', name: 'Duration', field: 'duration', columnGroup: 'Common Factor' },
+      { id: 'start', name: 'Start', field: 'start', columnGroup: 'Period' },
+      { id: 'finish', name: 'Finish', field: 'finish', columnGroup: 'Period' },
+      { id: '%', name: '% Complete', field: 'percentComplete', selectable: false, columnGroup: 'Analysis' },
+      { id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', type: FieldType.boolean, columnGroup: 'Analysis' }
+    ];
+
+    this.gridOptions2 = {
+      alwaysShowVerticalScroll: false, // disable scroll since we don't want it to show on the left pinned columns
+      enableCellNavigation: true,
+      enableColumnReorder: false,
+      createPreHeaderPanel: true,
+      showPreHeaderPanel: true,
+      preHeaderPanelHeight: 25,
+      explicitInitialization: true,
+      frozenColumn: 1,
+    };
+  }
+
+  getData(count: number) {
     // Set up some test columns.
-    this.dataset = [];
-    for (let i = 0; i < 500; i++) {
-      this.dataset[i] = {
+    const mockDataset = [];
+    for (let i = 0; i < count; i++) {
+      mockDataset[i] = {
         id: i,
+        num: i,
         title: 'Task ' + i,
         duration: '5 days',
         percentComplete: Math.round(Math.random() * 100),
@@ -67,6 +96,7 @@ export class Example14 {
         effortDriven: (i % 5 === 0)
       };
     }
+    return mockDataset;
   }
 
   /**
