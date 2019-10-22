@@ -71,7 +71,7 @@ export class Example8 {
             // if you want yours at the bottom then start with 61, below 50 will make your command(s) on top
             {
               iconCssClass: 'fa fa-question-circle',
-              disabled: (columnDef.id === 'effort-driven'), // you can disable a command with certain logic
+              disabled: (columnDef.id === 'completed'), // you can disable a command with certain logic
               titleKey: 'HELP', // use "title" as plain string OR "titleKey" when using a translation key
               command: 'help',
               positionOrder: 99
