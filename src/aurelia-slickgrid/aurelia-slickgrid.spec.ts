@@ -92,7 +92,7 @@ describe('Aurelia-Slickgrid Custom Component', () => {
     expect(gridElement.id).toBe('slickGridContainer-grid1');
   });
 
-  it('should dispose & detache the grid when disposing of the element', async () => {
+  it('should dispose & detached the grid when disposing of the element', async () => {
     await component.create(bootstrap);
     const spy = jest.spyOn(component.viewModel, 'detached');
 

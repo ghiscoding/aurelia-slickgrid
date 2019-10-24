@@ -2,8 +2,6 @@ import { inject } from 'aurelia-framework';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
 
 import { BackendServiceApi, GraphqlResult, Pager, Pagination } from '../models/index';
-import { FilterService } from './filter.service';
-import { GridService } from './grid.service';
 import { executeBackendProcessesCallback, onBackendError } from './backend-utilities';
 import { disposeAllSubscriptions } from './utilities';
 
@@ -12,7 +10,7 @@ const DEFAULT_AURELIA_EVENT_PREFIX = 'asg';
 // using external non-typed js libraries
 declare var Slick: any;
 
-@inject(EventAggregator, FilterService, GridService)
+@inject(EventAggregator)
 export class PaginationService {
   set paginationOptions(paginationOptions: Pagination) {
     this._paginationOptions = paginationOptions;
@@ -49,7 +47,7 @@ export class PaginationService {
   grid: any;
 
   /** Constructor */
-  constructor(private ea: EventAggregator, private filterService: FilterService, private gridService: GridService) { }
+  constructor(private ea: EventAggregator) { }
 
   get pager(): Pager {
     return {
