@@ -75,7 +75,7 @@ describe('Slick-Pagination Component without I18N', () => {
   grid-pagination-options.bind="gridPaginationOptions">
 </slick-pagination>`;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     ea = new EventAggregator();
     mockPager = {
       from: 5,
@@ -107,7 +107,6 @@ describe('Slick-Pagination Component without I18N', () => {
       aurelia.container.registerInstance(PaginationService, paginationServiceStub);
     });
 
-    // await component.create(bootstrap);
     ea.publish(`paginationService:on-pagination-changed`, mockPager);
     ea.publish(`paginationService:on-pagination-refreshed`, true);
   });
