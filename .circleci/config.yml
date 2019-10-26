@@ -21,10 +21,6 @@ jobs:
       - run:
           name: Upload Jest coverage to Codecov
           command: bash <(curl -s https://codecov.io/bash) -t ${CODECOV_TOKEN}
-      # - run:
-      #     name: Build Demo Site
-      #     command: NODE_ENV=production npx webpack --progress -p --env.production --env.extractCss
-      # Cypress E2E & Http-Server installation & tests
       - run:
           name: Start Dev WebServer
           command: npx nps webpack.server
@@ -52,3 +48,7 @@ jobs:
           path: reports/junit
       - store_artifacts:
           path: reports/junit
+      - run:
+          name: Build Demo Site
+          command: NODE_ENV=production npx webpack --progress -p --env.production --env.extractCss
+      Cypress E2E & Http-Server installation & tests

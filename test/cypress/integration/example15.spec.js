@@ -274,7 +274,7 @@ describe('Example 15: Grid State & Presets using Local Storage', () => {
     cy.reload();
   });
 
-  it('should expect the same Grid State to persist after the page got reloaded, however we always load in English', () => {
+  xit('should expect the same Grid State to persist after the page got reloaded, however we always load in English', () => {
     const expectedTitles = ['', 'Description', 'Duration', 'Title', '% Complete'];
 
     cy.get('#grid15')
