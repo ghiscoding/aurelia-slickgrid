@@ -27,8 +27,7 @@ jobs:
       # Cypress E2E & Http-Server installation & tests
       - run:
           name: Start Dev WebServer
-          command: yarn start:webpack:dev
-          # command: yarn serve
+          command: npx nps webpack.server
           background: true
       - restore_cache:
           name: Restoring Cache for Cypress
