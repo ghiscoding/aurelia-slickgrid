@@ -167,12 +167,12 @@ describe('ExportService', () => {
         jest.spyOn(gridStub, 'getColumns').mockReturnValue(mockColumns);
       });
 
-      it('should throw an error when trying call exportToExcel" without a grid and/or dataview object initialized', (done) => {
+      it('should throw an error when trying call exportToFile" without a grid and/or dataview object initialized', (done) => {
         try {
           service.init(null, null);
           service.exportToFile(mockExportTxtOptions);
         } catch (e) {
-          expect(e.toString()).toContain('[Aurelia-Slickgrid] it seems that the SlickGrid & DataView objects are not initialized did you forget to enable the grid option flag "enableExcelExport"?');
+          expect(e.toString()).toContain('[Aurelia-Slickgrid] it seems that the SlickGrid & DataView objects are not initialized did you forget to enable the grid option flag "enableExport"?');
           done();
         }
       });

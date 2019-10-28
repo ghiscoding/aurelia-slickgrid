@@ -13,13 +13,13 @@ import {
   ExcelMetadata,
   ExcelStylesheet,
   ExcelWorkbook,
+  ExcelWorksheet,
   FileType,
   Formatter,
   GridOption,
   KeyTitlePair,
   Locale,
   FieldType,
-  ExcelWorksheet,
 } from '../models/index';
 import { Constants } from '../constants';
 import { addWhiteSpaces, sanitizeHtmlToText, titleCase, mapMomentDateFormatWithFieldType } from './utilities';
@@ -93,8 +93,10 @@ export class ExcelExportService {
       this._fileFormat = this._excelExportOptions.format || FileType.xlsx;
 
       // prepare the Excel Workbook & Sheet
-      this._workbook = new ExcelBuilder.Workbook();
-      this._sheet = new ExcelBuilder.Worksheet({ name: this._excelExportOptions.sheetName || 'Sheet1' });
+      // we can use ExcelBuilder constructor with WebPack but we need to use function calls with RequireJS/SystemJS
+      const worksheetOptions = { name: this._excelExportOptions.sheetName || 'Sheet1' };
+      this._workbook = ExcelBuilder.Workbook ? new ExcelBuilder.Workbook() : ExcelBuilder.createWorkbook();
+      this._sheet = ExcelBuilder.Worksheet ? new ExcelBuilder.Worksheet(worksheetOptions) : this._workbook.createWorksheet(worksheetOptions);
 
       // add any Excel Format/Stylesheet to current Workbook
       this._stylesheet = this._workbook.getStyleSheet();
@@ -129,7 +131,9 @@ export class ExcelExportService {
           this._sheet.setData(finalOutput);
           this._workbook.addWorksheet(this._sheet);
 
-          const excelBlob = await ExcelBuilder.Builder.createFile(this._workbook, { type: 'blob' });
+          // using ExcelBuilder.Builder.createFile with WebPack but ExcelBuilder.createFile with RequireJS/SystemJS
+          const createFileFn = ExcelBuilder.Builder && ExcelBuilder.Builder.createFile ? ExcelBuilder.Builder.createFile : ExcelBuilder.createFile;
+          const excelBlob = await createFileFn(this._workbook, { type: 'blob' });
           const downloadOptions = {
             filename: `${this._excelExportOptions.filename}.${this._fileFormat}`,
             format: this._fileFormat

@@ -74,7 +74,7 @@ export class ExportService {
    */
   exportToFile(options: ExportOption): Promise<boolean> {
     if (!this._grid || !this._dataView) {
-      throw new Error('[Aurelia-Slickgrid] it seems that the SlickGrid & DataView objects are not initialized did you forget to enable the grid option flag "enableExcelExport"?');
+      throw new Error('[Aurelia-Slickgrid] it seems that the SlickGrid & DataView objects are not initialized did you forget to enable the grid option flag "enableExport"?');
     }
 
     return new Promise((resolve, reject) => {
