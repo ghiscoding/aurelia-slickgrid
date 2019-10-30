@@ -243,21 +243,23 @@ describe('Slick-Pagination Component', () => {
       expect(spy).toHaveBeenCalledWith(newItemsPerPage, mockEvent);
     });
   });
+});
 
-  describe('Slick-Pagination constructor', () => {
-    let div;
+describe('Slick-Pagination constructor', () => {
+  let div;
+  const ea = new EventAggregator();
+  const i18n = new I18N(new EventAggregator(), new BindingSignaler());
 
-    beforeEach(() => {
-      const template = `<slick-pagination id="slickPagingContainer-grid1"></slick-pagination>`;
-      div = document.createElement('div');
-      div.innerHTML = template;
-      document.body.appendChild(div);
-    });
+  beforeEach(() => {
+    const template = `<slick-pagination id="slickPagingContainer-grid1"></slick-pagination>`;
+    div = document.createElement('div');
+    div.innerHTML = template;
+    document.body.appendChild(div);
+  });
 
-    it('should be able to change the total items', () => {
-      const customElement = new SlickPaginationCustomElement(div, ea, paginationServiceStub, i18n);
-      customElement.totalItemsChanged(120);
-      expect(paginationServiceStub.totalItems).toBe(120);
-    });
+  it('should be able to change the total items', () => {
+    const customElement = new SlickPaginationCustomElement(div, ea, paginationServiceStub, i18n);
+    customElement.totalItemsChanged(120);
+    expect(paginationServiceStub.totalItems).toBe(120);
   });
 });
