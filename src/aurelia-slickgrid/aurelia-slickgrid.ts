@@ -56,10 +56,10 @@ const DEFAULT_SLICKGRID_EVENT_PREFIX = 'sg';
 @inject(
   BindingEngine,
   Container,
-  ExcelExportService,
-  ExportService,
   Element,
   EventAggregator,
+  ExcelExportService,
+  ExportService,
   ExtensionService,
   ExtensionUtility,
   FilterService,
@@ -104,10 +104,10 @@ export class AureliaSlickgridCustomElement {
   constructor(
     private bindingEngine: BindingEngine,
     private container: Container,
-    private excelExportService: ExcelExportService,
-    private exportService: ExportService,
     private elm: Element,
     private ea: EventAggregator,
+    private excelExportService: ExcelExportService,
+    private exportService: ExportService,
     private extensionService: ExtensionService,
     private extensionUtility: ExtensionUtility,
     private filterService: FilterService,
@@ -287,15 +287,16 @@ export class AureliaSlickgridCustomElement {
     this.dispatchCustomEvent(`${DEFAULT_AURELIA_EVENT_PREFIX}-on-aurelia-grid-created`, aureliaElementInstance);
   }
 
-  detached(emptyDomElementContainer = false) {
+  detached(shouldEmptyDomElementContainer = false) {
     this.ea.publish('onBeforeGridDestroy', this.grid);
     this.dispatchCustomEvent(`${DEFAULT_AURELIA_EVENT_PREFIX}-on-before-grid-destroy`, this.grid);
     this.dataview = undefined;
     this._eventHandler.unsubscribeAll();
     this.grid.destroy();
-    if (emptyDomElementContainer && this.gridId) {
-      const containerId = this.gridOptions && this.gridOptions.gridContainerId || `slickGridContainer-${this.gridId}`;
-      $(containerId).empty();
+
+    // we could optionally also empty the content of the grid container DOM element
+    if (shouldEmptyDomElementContainer) {
+      this.destroyGridContainerElm();
     }
 
     this.ea.publish('onAfterGridDestroyed', true);
@@ -313,15 +314,20 @@ export class AureliaSlickgridCustomElement {
     this.subscriptions = disposeAllSubscriptions(this.subscriptions);
   }
 
-  dispose(emptyDomElementContainer = false) {
-    this.detached(emptyDomElementContainer);
+  destroyGridContainerElm() {
+    const gridContainerId = this.gridOptions && this.gridOptions.gridContainerId;
+    $(gridContainerId).empty();
+  }
+
+  dispose(shouldEmptyDomElementContainer = false) {
+    this.detached(shouldEmptyDomElementContainer);
   }
 
   bind() {
     this._fixedHeight = this.gridHeight ? +this.gridHeight : null;
     this._fixedWidth = this.gridWidth ? +this.gridWidth : null;
 
-    // get the grid options (priority is Global Options first, then user option which could overwrite the Global options)
+    // get the grid options (order of precedence is Global Options first, then user option which could overwrite the Global options)
     this.gridOptions = { ...GlobalGridOptions, ...this.gridOptions };
     this._columnDefinitions = this.columnDefinitions;
 
@@ -377,10 +383,8 @@ export class AureliaSlickgridCustomElement {
 
     // expand/autofit columns on first page load
     // we can assume that if the oldValue was empty then we are on first load
-    if (!oldValue || oldValue.length < 1) {
-      if (this.gridOptions.autoFitColumnsOnFirstLoad) {
-        this.grid.autosizeColumns();
-      }
+    if (this.gridOptions.autoFitColumnsOnFirstLoad && (!oldValue || oldValue.length < 1)) {
+      this.grid.autosizeColumns();
     }
   }
 
@@ -390,13 +394,15 @@ export class AureliaSlickgridCustomElement {
    * refresh the Dataset & Pagination without having the user to create his own PostProcess every time
    */
   createBackendApiInternalPostProcessCallback(gridOptions: GridOption) {
-    if (gridOptions && gridOptions.backendServiceApi) {
-      const backendApi = gridOptions.backendServiceApi;
+    const backendApi = gridOptions && gridOptions.backendServiceApi;
 
-      // internalPostProcess only works with a GraphQL Service, so make sure it is that type
-      if (backendApi && backendApi.service && backendApi.service instanceof GraphqlService) {
+    if (backendApi && backendApi.service) {
+      const backendApiService = backendApi.service;
+
+      // internalPostProcess only works (for now) with a GraphQL Service, so make sure it is of that type
+      if (backendApiService instanceof GraphqlService || typeof backendApiService.getDatasetName === 'function') {
         backendApi.internalPostProcess = (processResult: any) => {
-          const datasetName = (backendApi && backendApi.service && typeof backendApi.service.getDatasetName === 'function') ? backendApi.service.getDatasetName() : '';
+          const datasetName = (backendApi && backendApiService && typeof backendApiService.getDatasetName === 'function') ? backendApiService.getDatasetName() : '';
           if (processResult && processResult.data && processResult.data[datasetName]) {
             this._dataset = processResult.data[datasetName].nodes;
             this.refreshGridData(this._dataset, processResult.data[datasetName].totalCount);
@@ -527,11 +533,12 @@ export class AureliaSlickgridCustomElement {
 
   bindBackendCallbackFunctions(gridOptions: GridOption) {
     const backendApi = gridOptions.backendServiceApi;
-    const serviceOptions: BackendServiceOption = (backendApi && backendApi.service && backendApi.service.options) ? backendApi.service.options : {};
+    const backendApiService = backendApi && backendApi.service;
+    const serviceOptions: BackendServiceOption = backendApiService && backendApiService.options;
     const isExecuteCommandOnInit = (!serviceOptions) ? false : ((serviceOptions && serviceOptions.hasOwnProperty('executeProcessCommandOnInit')) ? serviceOptions['executeProcessCommandOnInit'] : true);
 
-    // update backend filters (if need be) before the query runs
-    if (backendApi) {
+    if (backendApiService) {
+      // update backend filters (if need be) BEFORE the query runs (via the onInit command a few lines below)
       const backendService = backendApi.service;
 
       // if user entered some any "presets", we need to reflect them all in the grid
@@ -546,7 +553,8 @@ export class AureliaSlickgridCustomElement {
         }
         // Pagination "presets"
         if (backendService && backendService.updatePagination && gridOptions.presets.pagination) {
-          backendService.updatePagination(gridOptions.presets.pagination.pageNumber, gridOptions.presets.pagination.pageSize);
+          const { pageNumber, pageSize } = gridOptions.presets.pagination;
+          backendService.updatePagination(pageNumber, pageSize);
         }
       } else {
         const columnFilters = this.filterService.getColumnFilters();
@@ -554,32 +562,33 @@ export class AureliaSlickgridCustomElement {
           backendService.updateFilters(columnFilters, false);
         }
       }
-    }
 
-    if (backendApi && backendApi.service && (backendApi.onInit || isExecuteCommandOnInit)) {
-      const query = (typeof backendApi.service.buildQuery === 'function') ? backendApi.service.buildQuery() : '';
-      const process = (isExecuteCommandOnInit) ? backendApi.process(query) : (backendApi.onInit && backendApi.onInit(query));
+      // execute onInit command when necessary
+      if (backendApi && backendService && (backendApi.onInit || isExecuteCommandOnInit)) {
+        const query = (typeof backendService.buildQuery === 'function') ? backendService.buildQuery() : '';
+        const process = (isExecuteCommandOnInit) ? backendApi.process(query) : backendApi.onInit(query);
 
-      // wrap this inside a setTimeout to avoid timing issue since the gridOptions needs to be ready before running this onInit
-      setTimeout(async () => {
-        // keep start time & end timestamps & return it after process execution
-        const startTime = new Date();
+        // wrap this inside a setTimeout to avoid timing issue since the gridOptions needs to be ready before running this onInit
+        setTimeout(() => {
+          // keep start time & end timestamps & return it after process execution
+          const startTime = new Date();
 
-        // run any pre-process, if defined, for example a spinner
-        if (backendApi.preProcess) {
-          backendApi.preProcess();
-        }
-
-        try {
-          // the processes can be a Promise (like Http)
-          if (process instanceof Promise && process.then) {
-            const totalItems = this.gridOptions && this.gridOptions.pagination && this.gridOptions.pagination.totalItems || 0;
-            process.then((processResult: GraphqlResult | any) => executeBackendProcessesCallback(startTime, processResult, backendApi, totalItems));
+          // run any pre-process, if defined, for example a spinner
+          if (backendApi.preProcess) {
+            backendApi.preProcess();
           }
-        } catch (error) {
-          onBackendError(error, backendApi);
-        }
-      });
+
+          try {
+            // the processes can be a Promise (like Http)
+            if (process instanceof Promise && process.then) {
+              const totalItems = this.gridOptions && this.gridOptions.pagination && this.gridOptions.pagination.totalItems || 0;
+              process.then((processResult: GraphqlResult | any) => executeBackendProcessesCallback(startTime, processResult, backendApi, totalItems));
+            }
+          } catch (error) {
+            onBackendError(error, backendApi);
+          }
+        });
+      }
     }
   }
 
