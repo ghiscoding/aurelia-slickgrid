@@ -5,6 +5,7 @@ import { StageComponent } from 'aurelia-testing';
 import { I18N } from 'aurelia-i18n';
 import { PLATFORM, DOM } from 'aurelia-pal';
 
+import { SlickPaginationCustomElement } from './slick-pagination';
 import { Column, GridOption, Pager } from './models';
 import { PaginationService } from './services';
 
@@ -240,6 +241,23 @@ describe('Slick-Pagination Component', () => {
       select.dispatchEvent(mockEvent);
 
       expect(spy).toHaveBeenCalledWith(newItemsPerPage, mockEvent);
+    });
+  });
+
+  describe('Slick-Pagination constructor', () => {
+    let div;
+
+    beforeEach(() => {
+      const template = `<slick-pagination id="slickPagingContainer-grid1"></slick-pagination>`;
+      div = document.createElement('div');
+      div.innerHTML = template;
+      document.body.appendChild(div);
+    });
+
+    it('should be able to change the total items', () => {
+      const customElement = new SlickPaginationCustomElement(div, ea, paginationServiceStub, i18n);
+      customElement.totalItemsChanged(120);
+      expect(paginationServiceStub.totalItems).toBe(120);
     });
   });
 });

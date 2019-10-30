@@ -383,10 +383,8 @@ export class AureliaSlickgridCustomElement {
 
     // expand/autofit columns on first page load
     // we can assume that if the oldValue was empty then we are on first load
-    if (!oldValue || oldValue.length < 1) {
-      if (this.gridOptions.autoFitColumnsOnFirstLoad) {
-        this.grid.autosizeColumns();
-      }
+    if (this.gridOptions.autoFitColumnsOnFirstLoad && (!oldValue || oldValue.length < 1)) {
+      this.grid.autosizeColumns();
     }
   }
 
