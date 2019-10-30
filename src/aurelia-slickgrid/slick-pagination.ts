@@ -31,6 +31,7 @@ export class SlickPaginationCustomElement {
 
   constructor(private elm: Element, private ea: EventAggregator, private paginationService: PaginationService, private i18n: I18N) {
     // when using I18N, we'll translate necessary texts in the UI
+    this.translateAllUiTexts(this.locales);
     this._subscriptions.push(
       this.ea.subscribe('i18n:locale:changed', () => this.translateAllUiTexts(this.locales))
     );
