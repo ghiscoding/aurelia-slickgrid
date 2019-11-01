@@ -417,7 +417,7 @@ export class AureliaSlickgridCustomElement {
   bindDifferentHooks(grid: any, gridOptions: GridOption, dataView: any) {
     // on locale change, we have to manually translate the Headers, GridMenu
     this.subscriptions.push(
-      this.ea.subscribe('i18n:locale:changed', (payload: any) => {
+      this.ea.subscribe('i18n:locale:changed', () => {
         if (gridOptions.enableTranslate) {
           this.extensionService.translateColumnHeaders();
           this.extensionService.translateColumnPicker();
@@ -502,9 +502,7 @@ export class AureliaSlickgridCustomElement {
     this.gridEventService.bindOnClick(grid, dataView);
 
     if (dataView && grid) {
-      this._eventHandler.subscribe(dataView.onRowCountChanged, (e: any, args: any) => {
-        grid.invalidate();
-      });
+      this._eventHandler.subscribe(dataView.onRowCountChanged, () => grid.invalidate());
 
       // without this, filtering data with local dataset will not always show correctly
       // also don't use "invalidateRows" since it destroys the entire row and as bad user experience when updating a row

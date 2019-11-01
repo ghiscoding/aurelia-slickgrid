@@ -97,6 +97,8 @@ const filterServiceStub = {
   init: jest.fn(),
   bindBackendOnFilter: jest.fn(),
   bindLocalOnFilter: jest.fn(),
+  bindLocalOnSort: jest.fn(),
+  bindBackendOnSort: jest.fn(),
   populateColumnFilterSearchTermPresets: jest.fn(),
   getColumnFilters: jest.fn(),
 } as unknown as FilterService;
@@ -116,6 +118,7 @@ const gridServiceStub = {
 const gridStateServiceStub = {
   init: jest.fn(),
   dispose: jest.fn(),
+  getAssociatedGridColumns: jest.fn(),
 } as unknown as GridStateService;
 
 const paginationServiceStub = {
@@ -172,14 +175,23 @@ const mockSlickCore = {
   unsubscribeAll: jest.fn(),
 };
 
+const mockGetEditorLock = {
+  isActive: () => true,
+  commitCurrentEdit: jest.fn(),
+};
+
 const mockGrid = {
   autosizeColumns: jest.fn(),
   destroy: jest.fn(),
   init: jest.fn(),
   invalidate: jest.fn(),
+  getActiveCellNode: jest.fn(),
+  getEditorLock: () => mockGetEditorLock,
+  getOptions: jest.fn(),
   getScrollbarDimensions: jest.fn(),
   render: jest.fn(),
   resizeCanvas: jest.fn(),
+  setColumns: jest.fn(),
   setHeaderRowVisibility: jest.fn(),
   onRendered: new Slick.Event(),
   onScroll: new Slick.Event(),
@@ -213,6 +225,8 @@ const aureliaGridReady = jest.fn();
 describe('Aurelia-Slickgrid Custom Component instatiated via Constructor', () => {
   let container: Container;
   let customElement: AureliaSlickgridCustomElement;
+  let divContainer: HTMLDivElement;
+  let cellDiv: HTMLDivElement;
 
   const template = `<aurelia-slickgrid
     grid-id="grid1"
@@ -222,9 +236,11 @@ describe('Aurelia-Slickgrid Custom Component instatiated via Constructor', () =>
   </aurelia-slickgrid>`;
 
   beforeEach(() => {
-    const div = document.createElement('div');
-    div.innerHTML = template;
-    document.body.appendChild(div);
+    divContainer = document.createElement('div');
+    cellDiv = document.createElement('div');
+    divContainer.innerHTML = template;
+    divContainer.appendChild(cellDiv);
+    document.body.appendChild(divContainer);
 
     // ea = new EventAggregator();
     // bindingEngine = new BindingEngine();
@@ -232,7 +248,7 @@ describe('Aurelia-Slickgrid Custom Component instatiated via Constructor', () =>
     customElement = new AureliaSlickgridCustomElement(
       bindingEngineStub,
       container,
-      div,
+      divContainer,
       eventAggregatorStub,
       excelExportServiceStub,
       exportServiceStub,
@@ -276,10 +292,6 @@ describe('Aurelia-Slickgrid Custom Component instatiated via Constructor', () =>
   });
 
   describe('initialization method', () => {
-    beforeEach(() => {
-      // customElement.dispose();
-    });
-
     describe('columns definitions changed', () => {
       it('should expect "translateColumnHeaders" being called when "enableTranslate" is set', () => {
         const translateSpy = jest.spyOn(extensionServiceStub, 'translateColumnHeaders');
@@ -542,7 +554,6 @@ describe('Aurelia-Slickgrid Custom Component instatiated via Constructor', () =>
 
       afterEach(() => {
         jest.clearAllMocks();
-        // customElement.dispose();
       });
 
       it('should call the "createBackendApiInternalPostProcessCallback" method when Backend Service API is defined with a Graphql Service', () => {
@@ -553,6 +564,30 @@ describe('Aurelia-Slickgrid Custom Component instatiated via Constructor', () =>
 
         expect(spy).toHaveBeenCalled();
         expect(customElement.gridOptions.backendServiceApi.internalPostProcess).toEqual(expect.any(Function));
+      });
+
+      it('should execute the "internalPostProcess" callback method that was created by "createBackendApiInternalPostProcessCallback"', () => {
+        jest.spyOn(customElement.gridOptions.backendServiceApi.service, 'getDatasetName').mockReturnValue('users');
+        const spy = jest.spyOn(customElement, 'refreshGridData');
+
+        customElement.bind();
+        customElement.attached();
+        customElement.gridOptions.backendServiceApi.internalPostProcess({ data: { users: { nodes: [{ firstName: 'John' }], pageInfo: { hasNextPage: false }, totalCount: 2 } } });
+
+        expect(spy).toHaveBeenCalled();
+        expect(customElement.gridOptions.backendServiceApi.internalPostProcess).toEqual(expect.any(Function));
+      });
+
+      it('should execute the "internalPostProcess" callback method but return an empty dataset when dataset name does not match "getDatasetName"', () => {
+        jest.spyOn(customElement.gridOptions.backendServiceApi.service, 'getDatasetName').mockReturnValue('users');
+        const spy = jest.spyOn(customElement, 'refreshGridData');
+
+        customElement.bind();
+        customElement.attached();
+        customElement.gridOptions.backendServiceApi.internalPostProcess({ data: { notUsers: { nodes: [{ firstName: 'John' }], pageInfo: { hasNextPage: false }, totalCount: 2 } } });
+
+        expect(spy).not.toHaveBeenCalled();
+        expect(customElement.dataset).toEqual([]);
       });
 
       it('should invoke "updateFilters" method with filters returned from "getColumnFilters" of the Filter Service when there is no Presets defined', () => {
@@ -596,6 +631,160 @@ describe('Aurelia-Slickgrid Custom Component instatiated via Constructor', () =>
         customElement.attached();
 
         expect(spy).toHaveBeenCalledWith(2, 20);
+      });
+    });
+
+    describe('commitEdit method', () => {
+      it('should commit current edit when we focus out of current cell', (done) => {
+        jest.spyOn(mockGrid, 'getOptions').mockReturnValue({ autoCommitEdit: true });
+        jest.spyOn(mockGrid, 'getActiveCellNode').mockReturnValue(divContainer);
+        const spy = jest.spyOn(mockGrid, 'getEditorLock');
+
+        customElement.bind();
+        customElement.attached();
+        customElement.commitEdit(cellDiv);
+
+        setTimeout(() => {
+          expect(spy).toHaveBeenCalled();
+          done();
+        });
+      });
+    });
+
+    describe('bindDifferentHooks method', () => {
+      beforeEach(() => {
+        customElement.columnDefinitions = [{ id: 'firstName', field: 'firstName' }];
+      });
+
+      it('should reflect columns in the grid', () => {
+        const mockColsPresets = [{ columnId: 'firstName', width: 100 }];
+        const mockCols = [{ id: 'firstName', field: 'firstName' }];
+        const getAssocColSpy = jest.spyOn(gridStateServiceStub, 'getAssociatedGridColumns').mockReturnValue(mockCols);
+        const setColSpy = jest.spyOn(mockGrid, 'setColumns');
+
+        customElement.gridOptions = { presets: { columns: mockColsPresets } } as GridOption;
+        customElement.bind();
+        customElement.attached();
+        customElement.bindDifferentHooks(mockGrid, customElement.gridOptions, mockDataView);
+
+        expect(getAssocColSpy).toHaveBeenCalledWith(mockGrid, mockColsPresets);
+        expect(setColSpy).toHaveBeenCalledWith(mockCols);
+      });
+
+      it('should reflect columns with an extra checkbox selection column in the grid when "enableCheckboxSelector" is set', () => {
+        const mockColsPresets = [{ columnId: 'firstName', width: 100 }];
+        const mockCol = { id: 'firstName', field: 'firstName' };
+        const mockCols = [{ id: '_checkbox_selector', field: '_checkbox_selector', editor: undefined, internalColumnEditor: {} }, mockCol];
+        const getAssocColSpy = jest.spyOn(gridStateServiceStub, 'getAssociatedGridColumns').mockReturnValue([mockCol]);
+        const setColSpy = jest.spyOn(mockGrid, 'setColumns');
+
+        customElement.columnDefinitions = mockCols;
+        customElement.gridOptions = { enableCheckboxSelector: true, presets: { columns: mockColsPresets } } as GridOption;
+        customElement.bind();
+        customElement.attached();
+        customElement.bindDifferentHooks(mockGrid, customElement.gridOptions, mockDataView);
+
+        expect(getAssocColSpy).toHaveBeenCalledWith(mockGrid, mockColsPresets);
+        expect(setColSpy).toHaveBeenCalledWith(mockCols);
+      });
+
+      it('should execute backend service "init" method when set', () => {
+        const mockPagination = { pageNumber: 1, pageSizes: [10, 25, 50], pageSize: 10, totalItems: 100 };
+        const mockGraphqlOptions = { extraQueryArguments: [{ field: 'userId', value: 123 }] };
+        const bindBackendSpy = jest.spyOn(sortServiceStub, 'bindBackendOnSort');
+        const mockGraphqlService2 = { ...mockGraphqlService, init: jest.fn() } as unknown as GraphqlService;
+        const initSpy = jest.spyOn(mockGraphqlService2, 'init');
+
+        customElement.gridOptions = {
+          enableSorting: true,
+          backendServiceApi: {
+            service: mockGraphqlService2,
+            options: mockGraphqlOptions,
+            preProcess: () => jest.fn(),
+            process: (query) => new Promise((resolve) => resolve('process resolved')),
+          },
+          pagination: mockPagination,
+        } as GridOption;
+        customElement.bind();
+        customElement.attached();
+
+        expect(bindBackendSpy).toHaveBeenCalledWith(mockGrid, mockDataView);
+        expect(initSpy).toHaveBeenCalledWith(mockGraphqlOptions, mockPagination, mockGrid);
+      });
+
+      it('should bind local sort when "enableSorting" is set', () => {
+        const bindLocalSpy = jest.spyOn(sortServiceStub, 'bindLocalOnSort');
+
+        customElement.gridOptions = { enableSorting: true } as GridOption;
+        customElement.bind();
+        customElement.attached();
+
+        expect(bindLocalSpy).toHaveBeenCalledWith(mockGrid, mockDataView);
+      });
+
+      it('should reflect column filters when "enableSorting" is set', () => {
+        const bindBackendSpy = jest.spyOn(sortServiceStub, 'bindBackendOnSort');
+
+        customElement.gridOptions = {
+          enableSorting: true,
+          backendServiceApi: {
+            service: mockGraphqlService,
+            preProcess: () => jest.fn(),
+            process: (query) => new Promise((resolve) => resolve('process resolved')),
+          }
+        } as GridOption;
+        customElement.bind();
+        customElement.attached();
+
+        expect(bindBackendSpy).toHaveBeenCalledWith(mockGrid, mockDataView);
+      });
+
+      it('should reflect column filters when "enableFiltering" is set', () => {
+        const initSpy = jest.spyOn(filterServiceStub, 'init');
+        const bindLocalSpy = jest.spyOn(filterServiceStub, 'bindLocalOnFilter');
+        const populateSpy = jest.spyOn(filterServiceStub, 'populateColumnFilterSearchTermPresets');
+
+        customElement.gridOptions = { enableFiltering: true } as GridOption;
+        customElement.bind();
+        customElement.attached();
+
+        expect(initSpy).toHaveBeenCalledWith(mockGrid);
+        expect(bindLocalSpy).toHaveBeenCalledWith(mockGrid, mockDataView);
+        expect(populateSpy).not.toHaveBeenCalled();
+      });
+
+      it('should reflect column filters when "enableFiltering" is set', () => {
+        const initSpy = jest.spyOn(filterServiceStub, 'init');
+        const bindBackendSpy = jest.spyOn(filterServiceStub, 'bindBackendOnFilter');
+        const populateSpy = jest.spyOn(filterServiceStub, 'populateColumnFilterSearchTermPresets');
+
+        customElement.gridOptions = {
+          enableFiltering: true,
+          backendServiceApi: {
+            service: mockGraphqlService,
+            preProcess: () => jest.fn(),
+            process: (query) => new Promise((resolve) => resolve('process resolved')),
+          }
+        } as GridOption;
+        customElement.bind();
+        customElement.attached();
+
+        expect(initSpy).toHaveBeenCalledWith(mockGrid);
+        expect(bindBackendSpy).toHaveBeenCalledWith(mockGrid, mockDataView);
+        expect(populateSpy).not.toHaveBeenCalled();
+      });
+
+      it('should reflect column filters and populate filter search terms when "enableFiltering" is set and preset filters are defined', () => {
+        const mockPresetFilters = [{ columnId: 'firstName', operator: 'IN', searchTerms: ['John', 'Jane'] }] as CurrentFilter[];
+        const initSpy = jest.spyOn(filterServiceStub, 'init');
+        const populateSpy = jest.spyOn(filterServiceStub, 'populateColumnFilterSearchTermPresets');
+
+        customElement.gridOptions = { enableFiltering: true, presets: { filters: mockPresetFilters } } as GridOption;
+        customElement.bind();
+        customElement.attached();
+
+        expect(initSpy).toHaveBeenCalledWith(mockGrid);
+        expect(populateSpy).toHaveBeenCalledWith(mockPresetFilters);
       });
     });
   });
