@@ -579,9 +579,7 @@ export class AureliaSlickgridCustomElement {
           if (process instanceof Promise && process.then) {
             const totalItems = this.gridOptions && this.gridOptions.pagination && this.gridOptions.pagination.totalItems || 0;
             process.then((processResult: GraphqlResult | any) => executeBackendProcessesCallback(startTime, processResult, backendApi, totalItems))
-              .catch((error) => {
-                onBackendError(error, backendApi);
-              });
+              .catch((error) => onBackendError(error, backendApi));
           }
         });
       }

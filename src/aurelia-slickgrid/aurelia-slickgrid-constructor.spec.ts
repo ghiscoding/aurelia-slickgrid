@@ -786,7 +786,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
         setTimeout(() => {
           expect(mockExecuteBackendProcess).toHaveBeenCalledWith(expect.toBeDate(), processResult, customElement.gridOptions.backendServiceApi, 0);
           done();
-        }, 2);
+        }, 5);
       });
 
       xit('should throw an error when the process method on initialization when "executeProcessCommandOnInit" is set as a backend service options', (done) => {

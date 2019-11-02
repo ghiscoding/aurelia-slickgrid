@@ -566,7 +566,7 @@ describe('SelectFilter', () => {
       expect(filterListElm[1].checked).toBe(true);
       expect(spyCallback).toHaveBeenCalledWith(undefined, { columnDef: mockColumn, operator: 'IN', searchTerms: ['female'], shouldTriggerQuery: true });
       done();
-    });
+    }, 2);
   });
 
   it('should create the multi-select filter with a default search term when using "collectionAsync" as a Promise with content to simulate http-client', (done) => {
@@ -592,7 +592,7 @@ describe('SelectFilter', () => {
       expect(filterListElm[1].checked).toBe(true);
       expect(spyCallback).toHaveBeenCalledWith(undefined, { columnDef: mockColumn, operator: 'IN', searchTerms: ['female'], shouldTriggerQuery: true });
       done();
-    });
+    }, 1);
   });
 
   it('should create the multi-select filter with a default search term when using "collectionAsync" is a Fetch Promise', (done) => {
