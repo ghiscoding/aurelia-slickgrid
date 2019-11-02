@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.14.1"></a>
+## [2.14.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.14.0...v2.14.1) (2019-11-02)
+
+
+### Bug Fixes
+
+* **bundler:** add Excel Builder support for RequireJS/SystemJS ([b992187](https://github.com/ghiscoding/aurelia-slickgrid/commit/b992187))
+* **editor:** use editorOptions only  ([#246](https://github.com/ghiscoding/aurelia-slickgrid/issues/246)) ([a0604b5](https://github.com/ghiscoding/aurelia-slickgrid/commit/a0604b5))
+* **graphql:** pagination offset should never be below zero ([#250](https://github.com/ghiscoding/aurelia-slickgrid/issues/250)) ([199ae83](https://github.com/ghiscoding/aurelia-slickgrid/commit/199ae83))
+* **odata:** filter with single quote should be escaped ([#251](https://github.com/ghiscoding/aurelia-slickgrid/issues/251)) ([46bb0c7](https://github.com/ghiscoding/aurelia-slickgrid/commit/46bb0c7)), closes [#328](https://github.com/ghiscoding/aurelia-slickgrid/issues/328)
+* **styling:** hidden menu visible in BS4 for Picker/Grid Menu ([9e06f2c](https://github.com/ghiscoding/aurelia-slickgrid/commit/9e06f2c)), closes [#321](https://github.com/ghiscoding/aurelia-slickgrid/issues/321)
+* **tests:** fix a Jest async unit test not resolving ([#252](https://github.com/ghiscoding/aurelia-slickgrid/issues/252)) ([c1c64f3](https://github.com/ghiscoding/aurelia-slickgrid/commit/c1c64f3))
+
+
+### Features
+
+* **cypress:** add Pagination Service Cypress E2E tests ([#245](https://github.com/ghiscoding/aurelia-slickgrid/issues/245)) ([9ad8bf6](https://github.com/ghiscoding/aurelia-slickgrid/commit/9ad8bf6))
+* **frozen:** fix header grouping grid with frozen columns ([#239](https://github.com/ghiscoding/aurelia-slickgrid/issues/239)) ([30cb09d](https://github.com/ghiscoding/aurelia-slickgrid/commit/30cb09d))
+* **rowDetail:** expose public all render/redraw methods of Row Detail ([25acddf](https://github.com/ghiscoding/aurelia-slickgrid/commit/25acddf))
+* **styling:** improve header menu styling ([511ce3b](https://github.com/ghiscoding/aurelia-slickgrid/commit/511ce3b))
+* **tests:** add Aurelia-Slickgrid custom element tests ([#247](https://github.com/ghiscoding/aurelia-slickgrid/issues/247)) ([2400dd1](https://github.com/ghiscoding/aurelia-slickgrid/commit/2400dd1))
+* **tests:** add more Aurelia-Slickgrid unit tests ([#253](https://github.com/ghiscoding/aurelia-slickgrid/issues/253)) ([9b6d25f](https://github.com/ghiscoding/aurelia-slickgrid/commit/9b6d25f))
+* **tests:** add Slick-Pagination Component unit tests ([#242](https://github.com/ghiscoding/aurelia-slickgrid/issues/242)) ([fdf440c](https://github.com/ghiscoding/aurelia-slickgrid/commit/fdf440c))
+
+
+
 <a name="2.14.0"></a>
 # [2.14.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.13.5...v2.14.0) (2019-10-19)
 
