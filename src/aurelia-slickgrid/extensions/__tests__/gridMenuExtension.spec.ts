@@ -533,7 +533,9 @@ describe('gridMenuExtension', () => {
         const promise = new Promise((resolve) => setTimeout(() => resolve(processResult), 1));
         const processSpy = jest.spyOn(gridOptionsMock.backendServiceApi, 'process').mockReturnValue(promise);
         jest.spyOn(gridOptionsMock.backendServiceApi.service, 'buildQuery').mockReturnValue(query);
+
         extension.refreshBackendDataset({ enableAddRow: true });
+
         expect(preSpy).toHaveBeenCalled();
         expect(processSpy).toHaveBeenCalled();
         promise.then(() => {
