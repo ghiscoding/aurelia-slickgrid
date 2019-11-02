@@ -1,30 +1,15 @@
-import { bootstrap } from 'aurelia-bootstrapper';
+import 'jest-extended';
 import { EventAggregator } from 'aurelia-event-aggregator';
+import { HttpClient } from 'aurelia-fetch-client';
 import { BindingEngine, Container } from 'aurelia-framework';
-import { StageComponent } from 'aurelia-testing';
-import { PLATFORM } from 'aurelia-pal';
+import { DOM } from 'aurelia-pal';
 
 import { AureliaSlickgridCustomElement } from './aurelia-slickgrid';
-import { SlickgridConfig } from './slickgrid-config';
 
 import {
   ExtensionUtility,
-  AutoTooltipExtension,
-  CellExternalCopyManagerExtension,
-  CheckboxSelectorExtension,
-  ColumnPickerExtension,
-  DraggableGroupingExtension,
-  GridMenuExtension,
-  GroupItemMetaProviderExtension,
-  HeaderButtonExtension,
-  HeaderMenuExtension,
-  RowDetailViewExtension,
-  RowMoveManagerExtension,
-  RowSelectionExtension,
 } from './extensions';
 import {
-  AureliaUtilService,
-  CollectionService,
   ExcelExportService,
   ExportService,
   ExtensionService,
@@ -39,8 +24,19 @@ import {
   SharedService,
   SortService,
 } from './services';
-import { GridOption, CurrentFilter, CurrentSorter } from './models';
+import { GridOption, CurrentFilter, CurrentSorter, GridStateType, Pagination, GridState, Column } from './models';
 import { Filters } from './filters';
+import { Editors } from './editors';
+import * as utilities from './services/backend-utilities';
+
+
+const mockExecuteBackendProcess = jest.fn();
+// @ts-ignore
+utilities.executeBackendProcessesCallback = mockExecuteBackendProcess;
+
+const mockBackendError = jest.fn();
+// @ts-ignore
+utilities.onBackendError = mockBackendError;
 
 declare var Slick: any;
 jest.mock('flatpickr', () => { });
@@ -87,6 +83,8 @@ const groupingAndColspanServiceStub = {
 
 const mockGraphqlService = {
   getDatasetName: jest.fn(),
+  buildQuery: jest.fn(),
+  init: jest.fn(),
   updateFilters: jest.fn(),
   updateSorters: jest.fn(),
   updatePagination: jest.fn(),
@@ -97,6 +95,8 @@ const filterServiceStub = {
   init: jest.fn(),
   bindBackendOnFilter: jest.fn(),
   bindLocalOnFilter: jest.fn(),
+  bindLocalOnSort: jest.fn(),
+  bindBackendOnSort: jest.fn(),
   populateColumnFilterSearchTermPresets: jest.fn(),
   getColumnFilters: jest.fn(),
 } as unknown as FilterService;
@@ -116,6 +116,8 @@ const gridServiceStub = {
 const gridStateServiceStub = {
   init: jest.fn(),
   dispose: jest.fn(),
+  getAssociatedGridColumns: jest.fn(),
+  getCurrentGridState: jest.fn(),
 } as unknown as GridStateService;
 
 const paginationServiceStub = {
@@ -155,6 +157,8 @@ const mockDataView = {
   destroy: jest.fn(),
   beginUpdate: jest.fn(),
   endUpdate: jest.fn(),
+  getItem: jest.fn(),
+  getItemMetadata: jest.fn(),
   reSort: jest.fn(),
   setItems: jest.fn(),
   syncGridSelection: jest.fn(),
@@ -167,9 +171,15 @@ const mockDraggableGrouping = {
 }
 
 const mockSlickCore = {
+  handlers: [],
   subscribe: jest.fn(),
   unsubscribe: jest.fn(),
   unsubscribeAll: jest.fn(),
+};
+
+const mockGetEditorLock = {
+  isActive: () => true,
+  commitCurrentEdit: jest.fn(),
 };
 
 const mockGrid = {
@@ -177,12 +187,18 @@ const mockGrid = {
   destroy: jest.fn(),
   init: jest.fn(),
   invalidate: jest.fn(),
+  getActiveCellNode: jest.fn(),
+  getColumns: jest.fn(),
+  getEditorLock: () => mockGetEditorLock,
+  getOptions: jest.fn(),
   getScrollbarDimensions: jest.fn(),
   render: jest.fn(),
   resizeCanvas: jest.fn(),
+  setColumns: jest.fn(),
   setHeaderRowVisibility: jest.fn(),
-  onRendered: new Slick.Event(),
-  onScroll: new Slick.Event(),
+  setSelectedRows: jest.fn(),
+  onRendered: jest.fn(),
+  onScroll: jest.fn(),
   onDataviewCreated: new Slick.Event(),
 };
 
@@ -200,21 +216,68 @@ Slick.EventHandler = mockSlickCoreImplementation;
 Slick.Data = { DataView: mockDataViewImplementation, GroupItemMetadataProvider: mockGroupItemMetaProviderImplementation };
 Slick.DraggableGrouping = mockDraggableGroupingImplementation;
 
-const eventAggregatorStub = {
-  publish: jest.fn(),
-  subscribe: jest.fn()
-} as unknown as EventAggregator;
-// jest.mock('aurelia-event-aggregator', () => ({
-//   EventAggregator: eventAggregator
-// }));
+class HttpStub extends HttpClient {
+  status: number;
+  statusText: string;
+  object: any = {};
+  returnKey: string;
+  returnValue: any;
+  responseHeaders: any;
 
-const aureliaGridReady = jest.fn();
+  fetch(input, init) {
+    let request;
+    const responseInit: any = {};
+    responseInit.headers = new Headers()
 
-describe('Aurelia-Slickgrid Custom Component instatiated via Constructor', () => {
+    for (const name in this.responseHeaders || {}) {
+      if (name) {
+        responseInit.headers.set(name, this.responseHeaders[name]);
+      }
+    }
+
+    responseInit.status = this.status || 200;
+
+    if (Request.prototype.isPrototypeOf(input)) {
+      request = input;
+    } else {
+      request = new Request(input, init || {});
+    }
+    if (request.body && request.body.type) {
+      request.headers.set('Content-Type', request.body.type);
+    }
+
+    const promise = Promise.resolve().then(() => {
+      if (request.headers.get('Content-Type') === 'application/json' && request.method !== 'GET') {
+        return request.json().then((object) => {
+          object[this.returnKey] = this.returnValue;
+          const data = JSON.stringify(object);
+          const response = new Response(data, responseInit);
+          return this.status >= 200 && this.status < 300 ? Promise.resolve(response) : Promise.reject(response);
+        });
+      } else {
+        const data = JSON.stringify(this.object);
+        const response = new Response(data, responseInit);
+        return this.status >= 200 && this.status < 300 ? Promise.resolve(response) : Promise.reject(response);
+      }
+    });
+    return promise;
+  }
+}
+
+describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () => {
   let container: Container;
   let customElement: AureliaSlickgridCustomElement;
+  let divContainer: HTMLDivElement;
+  let cellDiv: HTMLDivElement;
+  let ea: EventAggregator;
+  const http = new HttpStub();
 
-  const template = `<aurelia-slickgrid
+  const template = `
+  <div id="grid1" style="height: 800px; width: 600px;">
+      <div id="slickGridContainer-grid1" class="gridPane" style="width: 100%;">
+      </div>
+    </div>
+  <aurelia-slickgrid
     grid-id="grid1"
     column-definitions.bind="columnDefinitions"
     grid-options.bind="gridOptions"
@@ -222,18 +285,19 @@ describe('Aurelia-Slickgrid Custom Component instatiated via Constructor', () =>
   </aurelia-slickgrid>`;
 
   beforeEach(() => {
-    const div = document.createElement('div');
-    div.innerHTML = template;
-    document.body.appendChild(div);
+    divContainer = document.createElement('div');
+    cellDiv = document.createElement('div');
+    divContainer.innerHTML = template;
+    divContainer.appendChild(cellDiv);
+    document.body.appendChild(divContainer);
 
-    // ea = new EventAggregator();
-    // bindingEngine = new BindingEngine();
+    ea = new EventAggregator();
     container = new Container();
     customElement = new AureliaSlickgridCustomElement(
       bindingEngineStub,
       container,
-      div,
-      eventAggregatorStub,
+      divContainer,
+      ea,
       excelExportServiceStub,
       exportServiceStub,
       extensionServiceStub,
@@ -262,7 +326,7 @@ describe('Aurelia-Slickgrid Custom Component instatiated via Constructor', () =>
   });
 
   it('should create a grid and expect multiple Event Aggregator being called', () => {
-    const spy = jest.spyOn(eventAggregatorStub, 'publish');
+    const spy = jest.spyOn(ea, 'publish');
 
     customElement.attached();
     expect(spy).toHaveBeenCalled();
@@ -276,10 +340,6 @@ describe('Aurelia-Slickgrid Custom Component instatiated via Constructor', () =>
   });
 
   describe('initialization method', () => {
-    beforeEach(() => {
-      // customElement.dispose();
-    });
-
     describe('columns definitions changed', () => {
       it('should expect "translateColumnHeaders" being called when "enableTranslate" is set', () => {
         const translateSpy = jest.spyOn(extensionServiceStub, 'translateColumnHeaders');
@@ -363,6 +423,71 @@ describe('Aurelia-Slickgrid Custom Component instatiated via Constructor', () =>
       });
     });
 
+    describe('with editors', () => {
+      it('should be able to load async editors with a regular Promise', (done) => {
+        const mockCollection = ['male', 'female'];
+        const promise = new Promise((resolve) => resolve(mockCollection));
+        const mockColDefs = [{ id: 'gender', field: 'gender', editor: { model: Editors.text, collectionAsync: promise } }] as Column[];
+        const getColSpy = jest.spyOn(mockGrid, 'getColumns').mockReturnValue(mockColDefs);
+
+        customElement.columnDefinitions = mockColDefs;
+        customElement.bind();
+        customElement.attached();
+
+        setTimeout(() => {
+          expect(getColSpy).toHaveBeenCalled();
+          expect(customElement.columnDefinitions[0].editor.collection).toEqual(mockCollection);
+          expect(customElement.columnDefinitions[0].internalColumnEditor.collection).toEqual(mockCollection);
+          expect(customElement.columnDefinitions[0].internalColumnEditor.model).toEqual(Editors.text);
+          done();
+        });
+      });
+
+      it('should be able to load async editors with as a Promise with content to simulate http-client', (done) => {
+        const mockCollection = ['male', 'female'];
+        const promise = new Promise((resolve) => resolve({ content: mockCollection }));
+        const mockColDefs = [{ id: 'gender', field: 'gender', editor: { model: Editors.text, collectionAsync: promise } }] as Column[];
+        const getColSpy = jest.spyOn(mockGrid, 'getColumns').mockReturnValue(mockColDefs);
+
+        customElement.columnDefinitions = mockColDefs;
+        customElement.bind();
+        customElement.attached();
+
+        setTimeout(() => {
+          expect(getColSpy).toHaveBeenCalled();
+          expect(customElement.columnDefinitions[0].editor.collection).toEqual(mockCollection);
+          expect(customElement.columnDefinitions[0].internalColumnEditor.collection).toEqual(mockCollection);
+          expect(customElement.columnDefinitions[0].internalColumnEditor.model).toEqual(Editors.text);
+          done();
+        });
+      });
+
+      it('should be able to load async editors with a Fetch Promise', (done) => {
+        const mockCollection = ['male', 'female'];
+        http.status = 200;
+        http.object = mockCollection;
+        http.returnKey = 'date';
+        http.returnValue = '6/24/1984';
+        http.responseHeaders = { accept: 'json' };
+        const collectionAsync = http.fetch('/api', { method: 'GET' });
+        const mockColDefs = [{ id: 'gender', field: 'gender', editor: { model: Editors.text, collectionAsync } }] as Column[];
+        const getColSpy = jest.spyOn(mockGrid, 'getColumns').mockReturnValue(mockColDefs);
+
+
+        customElement.columnDefinitions = mockColDefs;
+        customElement.bind();
+        customElement.attached();
+
+        setTimeout(() => {
+          expect(getColSpy).toHaveBeenCalled();
+          expect(customElement.columnDefinitions[0].editor.collection).toEqual(mockCollection);
+          expect(customElement.columnDefinitions[0].internalColumnEditor.collection).toEqual(mockCollection);
+          expect(customElement.columnDefinitions[0].internalColumnEditor.model).toEqual(Editors.text);
+          done();
+        });
+      });
+    });
+
     describe('use grouping', () => {
       it('should load groupItemMetaProvider to the DataView when using "draggableGrouping" feature', () => {
         const extensionSpy = jest.spyOn(mockExtensionUtility, 'loadExtensionDynamically');
@@ -408,7 +533,7 @@ describe('Aurelia-Slickgrid Custom Component instatiated via Constructor', () =>
       });
 
       it('should call the onDataviewCreated emitter', () => {
-        const spy = jest.spyOn(eventAggregatorStub, 'publish');
+        const spy = jest.spyOn(ea, 'publish');
 
         customElement.bind();
         customElement.attached();
@@ -417,7 +542,7 @@ describe('Aurelia-Slickgrid Custom Component instatiated via Constructor', () =>
       });
 
       it('should call the "executeAfterDataviewCreated" and "loadLocalGridPresets" methods and Sorter Presets are provided in the Grid Options', () => {
-        const eaSpy = jest.spyOn(eventAggregatorStub, 'publish');
+        const eaSpy = jest.spyOn(ea, 'publish');
         const sortSpy = jest.spyOn(sortServiceStub, 'loadLocalGridPresets');
 
         customElement.gridOptions = { presets: { sorters: [{ columnId: 'field1', direction: 'DESC' }] } } as GridOption;
@@ -533,16 +658,17 @@ describe('Aurelia-Slickgrid Custom Component instatiated via Constructor', () =>
       beforeEach(() => {
         customElement.gridOptions = {
           backendServiceApi: {
+            onInit: jest.fn(),
             service: mockGraphqlService,
-            preProcess: () => jest.fn(),
-            process: (query) => new Promise((resolve) => resolve('process resolved')),
+            preProcess: jest.fn(),
+            postProcess: jest.fn(),
+            process: jest.fn(),
           }
         };
       });
 
       afterEach(() => {
         jest.clearAllMocks();
-        // customElement.dispose();
       });
 
       it('should call the "createBackendApiInternalPostProcessCallback" method when Backend Service API is defined with a Graphql Service', () => {
@@ -553,6 +679,30 @@ describe('Aurelia-Slickgrid Custom Component instatiated via Constructor', () =>
 
         expect(spy).toHaveBeenCalled();
         expect(customElement.gridOptions.backendServiceApi.internalPostProcess).toEqual(expect.any(Function));
+      });
+
+      it('should execute the "internalPostProcess" callback method that was created by "createBackendApiInternalPostProcessCallback"', () => {
+        jest.spyOn(customElement.gridOptions.backendServiceApi.service, 'getDatasetName').mockReturnValue('users');
+        const spy = jest.spyOn(customElement, 'refreshGridData');
+
+        customElement.bind();
+        customElement.attached();
+        customElement.gridOptions.backendServiceApi.internalPostProcess({ data: { users: { nodes: [{ firstName: 'John' }], pageInfo: { hasNextPage: false }, totalCount: 2 } } });
+
+        expect(spy).toHaveBeenCalled();
+        expect(customElement.gridOptions.backendServiceApi.internalPostProcess).toEqual(expect.any(Function));
+      });
+
+      it('should execute the "internalPostProcess" callback method but return an empty dataset when dataset name does not match "getDatasetName"', () => {
+        jest.spyOn(customElement.gridOptions.backendServiceApi.service, 'getDatasetName').mockReturnValue('users');
+        const spy = jest.spyOn(customElement, 'refreshGridData');
+
+        customElement.bind();
+        customElement.attached();
+        customElement.gridOptions.backendServiceApi.internalPostProcess({ data: { notUsers: { nodes: [{ firstName: 'John' }], pageInfo: { hasNextPage: false }, totalCount: 2 } } });
+
+        expect(spy).not.toHaveBeenCalled();
+        expect(customElement.dataset).toEqual([]);
       });
 
       it('should invoke "updateFilters" method with filters returned from "getColumnFilters" of the Filter Service when there is no Presets defined', () => {
@@ -596,6 +746,387 @@ describe('Aurelia-Slickgrid Custom Component instatiated via Constructor', () =>
         customElement.attached();
 
         expect(spy).toHaveBeenCalledWith(2, 20);
+      });
+
+      it('should refresh the grid and change pagination options pagination when a preset for it is defined in grid options', () => {
+        const expectedPageNumber = 3;
+        const refreshSpy = jest.spyOn(customElement, 'refreshGridData');
+
+        const mockData = [{ firstName: 'John', lastName: 'Doe' }, { firstName: 'Jane', lastName: 'Smith' }];
+        customElement.gridOptions.enablePagination = true;
+        customElement.gridOptions.presets = { pagination: { pageSize: 10, pageNumber: expectedPageNumber } };
+        customElement.paginationOptions = { pageSize: 10, pageNumber: 1, pageSizes: [10, 25, 50], totalItems: 100 };
+
+        customElement.bind();
+        customElement.attached();
+        customElement.datasetChanged(mockData, null);
+
+        expect(customElement.paginationOptions.pageSize).toBe(10);
+        expect(customElement.paginationOptions.pageNumber).toBe(expectedPageNumber);
+        expect(refreshSpy).toHaveBeenCalledWith(mockData);
+      });
+
+      it('should execute the process method on initialization when "executeProcessCommandOnInit" is set as a backend service options', (done) => {
+        const now = new Date();
+        const query = `query { users (first:20,offset:0) { totalCount, nodes { id,name,gender,company } } }`;
+        const processResult = {
+          data: { users: { nodes: [] }, pageInfo: { hasNextPage: true }, totalCount: 0 },
+          metrics: { startTime: now, endTime: now, executionTime: 0, totalItemCount: 0 }
+        };
+        const promise = new Promise((resolve) => setTimeout(() => resolve(processResult), 1));
+        const processSpy = jest.spyOn(customElement.gridOptions.backendServiceApi, 'process').mockReturnValue(promise);
+        jest.spyOn(customElement.gridOptions.backendServiceApi.service, 'buildQuery').mockReturnValue(query);
+
+        customElement.gridOptions.backendServiceApi.service.options = { executeProcessCommandOnInit: true };
+        customElement.bind();
+        customElement.attached();
+
+        expect(processSpy).toHaveBeenCalled();
+
+        setTimeout(() => {
+          expect(mockExecuteBackendProcess).toHaveBeenCalledWith(expect.toBeDate(), processResult, customElement.gridOptions.backendServiceApi, 0);
+          done();
+        }, 5);
+      });
+
+      xit('should throw an error when the process method on initialization when "executeProcessCommandOnInit" is set as a backend service options', (done) => {
+        const mockError = { error: '404' };
+        const query = `query { users (first:20,offset:0) { totalCount, nodes { id,name,gender,company } } }`;
+        const promise = new Promise((resolve, reject) => setTimeout(() => reject(mockError), 1));
+        const processSpy = jest.spyOn(customElement.gridOptions.backendServiceApi, 'process').mockReturnValue(promise);
+        jest.spyOn(customElement.gridOptions.backendServiceApi.service, 'buildQuery').mockReturnValue(query);
+
+        customElement.gridOptions.backendServiceApi.service.options = { executeProcessCommandOnInit: true };
+        customElement.bind();
+        customElement.attached();
+
+        expect(processSpy).toHaveBeenCalled();
+
+        setTimeout(() => {
+          expect(mockBackendError).toHaveBeenCalledWith(mockError, customElement.gridOptions.backendServiceApi);
+          done();
+        }, 10);
+      });
+    });
+
+    describe('commitEdit method', () => {
+      it('should commit current edit when we focus out of current cell', (done) => {
+        jest.spyOn(mockGrid, 'getOptions').mockReturnValue({ autoCommitEdit: true });
+        jest.spyOn(mockGrid, 'getActiveCellNode').mockReturnValue(divContainer);
+        const spy = jest.spyOn(mockGrid, 'getEditorLock');
+
+        customElement.bind();
+        customElement.attached();
+        customElement.commitEdit(cellDiv);
+
+        setTimeout(() => {
+          expect(spy).toHaveBeenCalled();
+          done();
+        });
+      });
+    });
+
+    describe('bindDifferentHooks private method called by "attached"', () => {
+      beforeEach(() => {
+        customElement.columnDefinitions = [{ id: 'firstName', field: 'firstName' }];
+      });
+
+      afterEach(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call multiple translate methods when locale changes', (done) => {
+        const transColHeaderSpy = jest.spyOn(extensionServiceStub, 'translateColumnHeaders');
+        const transColPickerSpy = jest.spyOn(extensionServiceStub, 'translateColumnPicker');
+        const transGridMenuSpy = jest.spyOn(extensionServiceStub, 'translateGridMenu');
+        const transHeaderMenuSpy = jest.spyOn(extensionServiceStub, 'translateHeaderMenu');
+
+        customElement.gridOptions = { enableTranslate: true } as GridOption;
+        customElement.bind();
+        customElement.attached();
+
+        ea.publish('i18n:locale:changed', {});
+
+        setTimeout(() => {
+          expect(transColHeaderSpy).toHaveBeenCalled();
+          expect(transColPickerSpy).toHaveBeenCalled();
+          expect(transGridMenuSpy).toHaveBeenCalled();
+          expect(transHeaderMenuSpy).toHaveBeenCalled();
+          done();
+        });
+      });
+
+      // it('should trigger a DOM element dispatch event when a SlickGrid onX event is triggered', () => {
+      //   const handlerSpy = jest.spyOn(customElement.eventHandler, 'subscribe');
+      //   const eventSpy = jest.spyOn(divContainer, 'dispatchEvent');
+      //   const mockEvent = jest.fn();
+
+      //   customElement.bind();
+      //   customElement.attached();
+      //   mockGrid.onRendered.notify(undefined, { onRendered: true });
+      //   jest.spyOn(mockSlickCore, 'subscribe').mockReturnValue('onRendered');
+      //   mockSlickCore.subscribe('onRendered', mockEvent);
+
+      //   console.log(DOM.createCustomEvent('onRendered', {}).type)
+      //   expect(eventSpy).toHaveBeenCalledWith(DOM.createCustomEvent('onRendered', expect.anything()));
+      //   expect(handlerSpy).toHaveBeenCalledWith('onRendered', expect.anything);
+      // });
+
+      it('should trigger a DOM element dispatch event when a SlickGrid onX event is triggered', () => {
+        const eventSpy = jest.spyOn(divContainer, 'dispatchEvent');
+        const gridElm = divContainer.querySelector('div#grid1');
+        const mockEvent = () => 'blah';
+
+        customElement.bind();
+        customElement.attached();
+        // jest.spyOn(mockSlickCore, 'subscribe').mockReturnValue('onRendered');
+        // @ts-ignore
+        const handlerSpy = jest.spyOn(customElement.eventHandler, 'subscribe').mockReturnValueOnce('onRendered', mockEvent);
+        mockEvent();
+        mockGrid.onRendered();
+        mockGrid.onScroll();
+        // const evSpy = jest.spyOn(mockGrid, 'onRendered');
+        // mockSlickCore.subscribe('onRendered', mockEvent);
+
+        // console.log(DOM.createCustomEvent('onRendered', {}).type, gridElm)
+        gridElm.dispatchEvent(DOM.createCustomEvent('onRendered'));
+        expect(eventSpy).toHaveBeenCalledWith(DOM.createCustomEvent('onRendered', expect.anything()));
+        // expect(handlerSpy).toHaveBeenCalled();
+        // expect(evSpy).toHaveBeenCalled();
+      });
+
+      it('should reflect columns in the grid', () => {
+        const mockColsPresets = [{ columnId: 'firstName', width: 100 }];
+        const mockCols = [{ id: 'firstName', field: 'firstName' }];
+        const getAssocColSpy = jest.spyOn(gridStateServiceStub, 'getAssociatedGridColumns').mockReturnValue(mockCols);
+        const setColSpy = jest.spyOn(mockGrid, 'setColumns');
+
+        customElement.gridOptions = { presets: { columns: mockColsPresets } } as GridOption;
+        customElement.bind();
+        customElement.attached();
+
+        expect(getAssocColSpy).toHaveBeenCalledWith(mockGrid, mockColsPresets);
+        expect(setColSpy).toHaveBeenCalledWith(mockCols);
+      });
+
+      it('should reflect columns with an extra checkbox selection column in the grid when "enableCheckboxSelector" is set', () => {
+        const mockColsPresets = [{ columnId: 'firstName', width: 100 }];
+        const mockCol = { id: 'firstName', field: 'firstName' };
+        const mockCols = [{ id: '_checkbox_selector', field: '_checkbox_selector', editor: undefined, internalColumnEditor: {} }, mockCol];
+        const getAssocColSpy = jest.spyOn(gridStateServiceStub, 'getAssociatedGridColumns').mockReturnValue([mockCol]);
+        const setColSpy = jest.spyOn(mockGrid, 'setColumns');
+
+        customElement.columnDefinitions = mockCols;
+        customElement.gridOptions = { enableCheckboxSelector: true, presets: { columns: mockColsPresets } } as GridOption;
+        customElement.bind();
+        customElement.attached();
+
+        expect(getAssocColSpy).toHaveBeenCalledWith(mockGrid, mockColsPresets);
+        expect(setColSpy).toHaveBeenCalledWith(mockCols);
+      });
+
+      it('should execute backend service "init" method when set', () => {
+        const mockPagination = { pageNumber: 1, pageSizes: [10, 25, 50], pageSize: 10, totalItems: 100 };
+        const mockGraphqlOptions = { extraQueryArguments: [{ field: 'userId', value: 123 }] };
+        const bindBackendSpy = jest.spyOn(sortServiceStub, 'bindBackendOnSort');
+        const mockGraphqlService2 = { ...mockGraphqlService, init: jest.fn() } as unknown as GraphqlService;
+        const initSpy = jest.spyOn(mockGraphqlService2, 'init');
+
+        customElement.gridOptions = {
+          enableSorting: true,
+          backendServiceApi: {
+            service: mockGraphqlService2,
+            options: mockGraphqlOptions,
+            preProcess: () => jest.fn(),
+            process: (query) => new Promise((resolve) => resolve('process resolved')),
+          },
+          pagination: mockPagination,
+        } as GridOption;
+        customElement.bind();
+        customElement.attached();
+
+        expect(bindBackendSpy).toHaveBeenCalledWith(mockGrid, mockDataView);
+        expect(initSpy).toHaveBeenCalledWith(mockGraphqlOptions, mockPagination, mockGrid);
+      });
+
+      it('should bind local sort when "enableSorting" is set', () => {
+        const bindLocalSpy = jest.spyOn(sortServiceStub, 'bindLocalOnSort');
+
+        customElement.gridOptions = { enableSorting: true } as GridOption;
+        customElement.bind();
+        customElement.attached();
+
+        expect(bindLocalSpy).toHaveBeenCalledWith(mockGrid, mockDataView);
+      });
+
+      it('should reflect column filters when "enableSorting" is set', () => {
+        const bindBackendSpy = jest.spyOn(sortServiceStub, 'bindBackendOnSort');
+
+        customElement.gridOptions = {
+          enableSorting: true,
+          backendServiceApi: {
+            service: mockGraphqlService,
+            preProcess: () => jest.fn(),
+            process: (query) => new Promise((resolve) => resolve('process resolved')),
+          }
+        } as GridOption;
+        customElement.bind();
+        customElement.attached();
+
+        expect(bindBackendSpy).toHaveBeenCalledWith(mockGrid, mockDataView);
+      });
+
+      it('should reflect column filters when "enableFiltering" is set', () => {
+        const initSpy = jest.spyOn(filterServiceStub, 'init');
+        const bindLocalSpy = jest.spyOn(filterServiceStub, 'bindLocalOnFilter');
+        const populateSpy = jest.spyOn(filterServiceStub, 'populateColumnFilterSearchTermPresets');
+
+        customElement.gridOptions = { enableFiltering: true } as GridOption;
+        customElement.bind();
+        customElement.attached();
+
+        expect(initSpy).toHaveBeenCalledWith(mockGrid);
+        expect(bindLocalSpy).toHaveBeenCalledWith(mockGrid, mockDataView);
+        expect(populateSpy).not.toHaveBeenCalled();
+      });
+
+      it('should reflect column filters when "enableFiltering" is set', () => {
+        const initSpy = jest.spyOn(filterServiceStub, 'init');
+        const bindBackendSpy = jest.spyOn(filterServiceStub, 'bindBackendOnFilter');
+        const populateSpy = jest.spyOn(filterServiceStub, 'populateColumnFilterSearchTermPresets');
+
+        customElement.gridOptions = {
+          enableFiltering: true,
+          backendServiceApi: {
+            service: mockGraphqlService,
+            preProcess: () => jest.fn(),
+            process: (query) => new Promise((resolve) => resolve('process resolved')),
+          }
+        } as GridOption;
+        customElement.bind();
+        customElement.attached();
+
+        expect(initSpy).toHaveBeenCalledWith(mockGrid);
+        expect(bindBackendSpy).toHaveBeenCalledWith(mockGrid, mockDataView);
+        expect(populateSpy).not.toHaveBeenCalled();
+      });
+
+      it('should reflect column filters and populate filter search terms when "enableFiltering" is set and preset filters are defined', () => {
+        const mockPresetFilters = [{ columnId: 'firstName', operator: 'IN', searchTerms: ['John', 'Jane'] }] as CurrentFilter[];
+        const initSpy = jest.spyOn(filterServiceStub, 'init');
+        const populateSpy = jest.spyOn(filterServiceStub, 'populateColumnFilterSearchTermPresets');
+
+        customElement.gridOptions = { enableFiltering: true, presets: { filters: mockPresetFilters } } as GridOption;
+        customElement.bind();
+        customElement.attached();
+
+        expect(initSpy).toHaveBeenCalledWith(mockGrid);
+        expect(populateSpy).toHaveBeenCalledWith(mockPresetFilters);
+      });
+
+      it('should return null when "getItemMetadata" is called without a colspan callback defined', () => {
+        const itemSpy = jest.spyOn(mockDataView, 'getItem');
+
+        customElement.gridOptions = { colspanCallback: undefined } as GridOption;
+        customElement.bind();
+        customElement.attached();
+        mockDataView.getItemMetadata(2);
+
+        expect(itemSpy).not.toHaveBeenCalled();
+      });
+
+      it('should execute colspan callback when defined in the grid options and "getItemMetadata" is called', () => {
+        const mockCallback = jest.fn();
+        const mockItem = { firstName: 'John', lastName: 'Doe' };
+        const itemSpy = jest.spyOn(mockDataView, 'getItem').mockReturnValue(mockItem);
+
+        customElement.gridOptions = { colspanCallback: mockCallback } as GridOption;
+        customElement.bind();
+        customElement.attached();
+        mockDataView.getItemMetadata(2);
+
+        expect(itemSpy).toHaveBeenCalledWith(2);
+        expect(mockCallback).toHaveBeenCalledWith(mockItem);
+      });
+
+    });
+
+    describe('setHeaderRowVisibility grid method', () => {
+      it('should show the header row when "showHeaderRow" is called with argument True', () => {
+        const spy = jest.spyOn(mockGrid, 'setHeaderRowVisibility');
+
+        customElement.bind();
+        customElement.attached();
+        customElement.showHeaderRow(true);
+
+        expect(spy).toHaveBeenCalledWith(true);
+      });
+
+      it('should show the header row when "showHeaderRow" is called with argument False', () => {
+        const spy = jest.spyOn(mockGrid, 'setHeaderRowVisibility');
+
+        customElement.bind();
+        customElement.attached();
+        customElement.showHeaderRow(false);
+
+        expect(spy).toHaveBeenCalledWith(false);
+      });
+    });
+
+    describe('paginationChanged method', () => {
+      beforeEach(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should call trigger a gridStage change event when pagination change is triggered', () => {
+        const mockPagination = { pageNumber: 2, pageSize: 20 } as Pagination;
+        const eaSpy = jest.spyOn(ea, 'publish');
+        jest.spyOn(gridStateServiceStub, 'getCurrentGridState').mockReturnValue({ columns: [], pagination: mockPagination } as GridState);
+
+        customElement.bind();
+        customElement.attached();
+        customElement.paginationChanged(mockPagination);
+
+        expect(eaSpy).toHaveBeenCalledWith('gridStateService:changed', {
+          change: { newValues: mockPagination, type: GridStateType.pagination },
+          gridState: { columns: [], pagination: mockPagination }
+        });
+      });
+
+      it('should call trigger a gridStage change and reset selected rows when pagination change is triggered and "enableRowSelection" is set', () => {
+        const mockPagination = { pageNumber: 2, pageSize: 20 } as Pagination;
+        const eaSpy = jest.spyOn(ea, 'publish');
+        const setRowSpy = jest.spyOn(mockGrid, 'setSelectedRows');
+        jest.spyOn(gridStateServiceStub, 'getCurrentGridState').mockReturnValue({ columns: [], pagination: mockPagination } as GridState);
+
+        customElement.gridOptions = { enableRowSelection: true } as GridOption;
+        customElement.bind();
+        customElement.attached();
+        customElement.paginationChanged(mockPagination);
+
+        expect(setRowSpy).toHaveBeenCalledWith([]);
+        expect(eaSpy).toHaveBeenCalledWith('gridStateService:changed', {
+          change: { newValues: mockPagination, type: GridStateType.pagination },
+          gridState: { columns: [], pagination: mockPagination }
+        });
+      });
+
+      it('should call trigger a gridStage change and reset selected rows when pagination change is triggered and "enableCheckboxSelector" is set', () => {
+        const mockPagination = { pageNumber: 2, pageSize: 20 } as Pagination;
+        const eaSpy = jest.spyOn(ea, 'publish');
+        const setRowSpy = jest.spyOn(mockGrid, 'setSelectedRows');
+        jest.spyOn(gridStateServiceStub, 'getCurrentGridState').mockReturnValue({ columns: [], pagination: mockPagination } as GridState);
+
+        customElement.gridOptions = { enableCheckboxSelector: true } as GridOption;
+        customElement.bind();
+        customElement.attached();
+        customElement.paginationChanged(mockPagination);
+
+        expect(setRowSpy).toHaveBeenCalledWith([]);
+        expect(eaSpy).toHaveBeenCalledWith('gridStateService:changed', {
+          change: { newValues: mockPagination, type: GridStateType.pagination },
+          gridState: { columns: [], pagination: mockPagination }
+        });
       });
     });
   });

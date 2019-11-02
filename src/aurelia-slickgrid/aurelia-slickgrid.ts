@@ -25,6 +25,7 @@ import {
   GridStateType,
   Locale,
   Pagination,
+  SlickEventHandler,
 } from './models/index';
 import {
   disposeAllSubscriptions,
@@ -75,7 +76,7 @@ const DEFAULT_SLICKGRID_EVENT_PREFIX = 'sg';
 export class AureliaSlickgridCustomElement {
   private _columnDefinitions: Column[] = [];
   private _dataset: any[];
-  private _eventHandler: any = new Slick.EventHandler();
+  private _eventHandler: SlickEventHandler = new Slick.EventHandler();
   private _fixedHeight: number | null;
   private _fixedWidth: number | null;
   private _hideHeaderRowAfterPageLoad = false;
@@ -132,6 +133,10 @@ export class AureliaSlickgridCustomElement {
       resizerService,
       sortService
     ];
+  }
+
+  get eventHandler(): SlickEventHandler {
+    return this._eventHandler;
   }
 
   attached() {
@@ -417,7 +422,7 @@ export class AureliaSlickgridCustomElement {
   bindDifferentHooks(grid: any, gridOptions: GridOption, dataView: any) {
     // on locale change, we have to manually translate the Headers, GridMenu
     this.subscriptions.push(
-      this.ea.subscribe('i18n:locale:changed', (payload: any) => {
+      this.ea.subscribe('i18n:locale:changed', () => {
         if (gridOptions.enableTranslate) {
           this.extensionService.translateColumnHeaders();
           this.extensionService.translateColumnPicker();
@@ -472,8 +477,8 @@ export class AureliaSlickgridCustomElement {
     // expose all Slick Grid Events through dispatch
     for (const prop in grid) {
       if (grid.hasOwnProperty(prop) && prop.startsWith('on')) {
-        this._eventHandler.subscribe(grid[prop], (e: any, args: any) => {
-          return this.dispatchCustomEvent(`${DEFAULT_SLICKGRID_EVENT_PREFIX}-${toKebabCase(prop)}`, { eventData: e, args });
+        this._eventHandler.subscribe(grid[prop], (event: Event, args: any) => {
+          return this.dispatchCustomEvent(`${DEFAULT_SLICKGRID_EVENT_PREFIX}-${toKebabCase(prop)}`, { eventData: event, args });
         });
       }
     }
@@ -481,8 +486,8 @@ export class AureliaSlickgridCustomElement {
     // expose all Slick DataView Events through dispatch
     for (const prop in dataView) {
       if (dataView.hasOwnProperty(prop) && prop.startsWith('on')) {
-        this._eventHandler.subscribe(dataView[prop], (e: any, args: any) => {
-          return this.dispatchCustomEvent(`${DEFAULT_SLICKGRID_EVENT_PREFIX}-${toKebabCase(prop)}`, { eventData: e, args });
+        this._eventHandler.subscribe(dataView[prop], (event: Event, args: any) => {
+          return this.dispatchCustomEvent(`${DEFAULT_SLICKGRID_EVENT_PREFIX}-${toKebabCase(prop)}`, { eventData: event, args });
         });
       }
     }
@@ -502,9 +507,7 @@ export class AureliaSlickgridCustomElement {
     this.gridEventService.bindOnClick(grid, dataView);
 
     if (dataView && grid) {
-      this._eventHandler.subscribe(dataView.onRowCountChanged, (e: any, args: any) => {
-        grid.invalidate();
-      });
+      this._eventHandler.subscribe(dataView.onRowCountChanged, () => grid.invalidate());
 
       // without this, filtering data with local dataset will not always show correctly
       // also don't use "invalidateRows" since it destroys the entire row and as bad user experience when updating a row
@@ -520,14 +523,8 @@ export class AureliaSlickgridCustomElement {
     }
 
     // does the user have a colspan callback?
-    if (gridOptions.colspanCallback) {
-      dataView.getItemMetadata = (rowNumber: number) => {
-        const item = dataView.getItem(rowNumber);
-        if (gridOptions && gridOptions.colspanCallback) {
-          return gridOptions.colspanCallback(item);
-        }
-        return null;
-      };
+    if (gridOptions && gridOptions.colspanCallback && dataView && dataView.getItem && dataView.getItemMetadata) {
+      dataView.getItemMetadata = (rowNumber: number) => gridOptions.colspanCallback(dataView.getItem(rowNumber));
     }
   }
 
@@ -578,14 +575,11 @@ export class AureliaSlickgridCustomElement {
             backendApi.preProcess();
           }
 
-          try {
-            // the processes can be a Promise (like Http)
-            if (process instanceof Promise && process.then) {
-              const totalItems = this.gridOptions && this.gridOptions.pagination && this.gridOptions.pagination.totalItems || 0;
-              process.then((processResult: GraphqlResult | any) => executeBackendProcessesCallback(startTime, processResult, backendApi, totalItems));
-            }
-          } catch (error) {
-            onBackendError(error, backendApi);
+          // the processes can be a Promise (like Http)
+          if (process instanceof Promise && process.then) {
+            const totalItems = this.gridOptions && this.gridOptions.pagination && this.gridOptions.pagination.totalItems || 0;
+            process.then((processResult: GraphqlResult | any) => executeBackendProcessesCallback(startTime, processResult, backendApi, totalItems))
+              .catch((error) => onBackendError(error, backendApi));
           }
         });
       }
@@ -709,19 +703,12 @@ export class AureliaSlickgridCustomElement {
   }
 
   /**
-   * Toggle the filter row displayed on first row
-   * @param isShowing
+   * Show the filter row displayed on first row, we can optionally pass false to hide it.
+   * @param showing
    */
-  showHeaderRow(isShowing: boolean) {
-    this.grid.setHeaderRowVisibility(isShowing);
-    return isShowing;
-  }
-
-  /** Toggle the filter row displayed on first row */
-  toggleHeaderRow() {
-    const isShowing = !this.grid.getOptions().showHeaderRow;
-    this.grid.setHeaderRowVisibility(isShowing);
-    return isShowing;
+  showHeaderRow(showing = true) {
+    this.grid.setHeaderRowVisibility(showing);
+    return showing;
   }
 
   /**
@@ -765,7 +752,6 @@ export class AureliaSlickgridCustomElement {
     if (collectionAsync) {
       // wait for the "collectionAsync", once resolved we will save it into the "collection"
       // the collectionAsync can be of 3 types HttpClient, HttpFetch or a Promise
-      //
       collectionAsync.then((response: any | any[]) => {
         if (Array.isArray(response)) {
           this.updateEditorCollection(column, response); // from Promise
