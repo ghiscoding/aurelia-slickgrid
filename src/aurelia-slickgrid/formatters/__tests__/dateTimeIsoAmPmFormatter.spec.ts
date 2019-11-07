@@ -1,8 +1,6 @@
 import { Column } from '../../models';
 import { Formatters } from '../index';
 
-jest.mock('flatpickr', () => { });
-
 describe('the DateTimeIsoAmPm Formatter', () => {
   it('should return null when no value is provided', () => {
     const value = null;
