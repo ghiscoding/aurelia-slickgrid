@@ -13,12 +13,10 @@ export const maskFormatter: Formatter = (row: number, cell: number, value: any, 
     throw new Error(`You must provide a "mask" via the generic "params" options (e.g.: { formatter: Formatters.mask, params: { mask: '000-000' }}`);
   }
 
-  if (value && mask) {
+  if (value) {
     let i = 0;
     const v = value.toString();
-    return mask.replace(/[09A]/gi, (match: string) => {
-      return v[i++] || '';
-    });
+    return mask.replace(/[09A]/gi, () => v[i++] || '');
   }
   return value;
 };
