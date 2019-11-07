@@ -159,6 +159,8 @@ const mockDataView = {
   endUpdate: jest.fn(),
   getItem: jest.fn(),
   getItemMetadata: jest.fn(),
+  onSetItemsCalled: jest.fn(),
+  onRowsChanged: jest.fn(),
   reSort: jest.fn(),
   setItems: jest.fn(),
   syncGridSelection: jest.fn(),
@@ -856,22 +858,6 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
         });
       });
 
-      // it('should trigger a DOM element dispatch event when a SlickGrid onX event is triggered', () => {
-      //   const handlerSpy = jest.spyOn(customElement.eventHandler, 'subscribe');
-      //   const eventSpy = jest.spyOn(divContainer, 'dispatchEvent');
-      //   const mockEvent = jest.fn();
-
-      //   customElement.bind();
-      //   customElement.attached();
-      //   mockGrid.onRendered.notify(undefined, { onRendered: true });
-      //   jest.spyOn(mockSlickCore, 'subscribe').mockReturnValue('onRendered');
-      //   mockSlickCore.subscribe('onRendered', mockEvent);
-
-      //   console.log(DOM.createCustomEvent('onRendered', {}).type)
-      //   expect(eventSpy).toHaveBeenCalledWith(DOM.createCustomEvent('onRendered', expect.anything()));
-      //   expect(handlerSpy).toHaveBeenCalledWith('onRendered', expect.anything);
-      // });
-
       it('should trigger a DOM element dispatch event when a SlickGrid onX event is triggered', () => {
         const eventSpy = jest.spyOn(divContainer, 'dispatchEvent');
         const gridElm = divContainer.querySelector('div#grid1');
@@ -879,20 +865,15 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
 
         customElement.bind();
         customElement.attached();
-        // jest.spyOn(mockSlickCore, 'subscribe').mockReturnValue('onRendered');
         // @ts-ignore
         const handlerSpy = jest.spyOn(customElement.eventHandler, 'subscribe').mockReturnValueOnce('onRendered', mockEvent);
         mockEvent();
         mockGrid.onRendered();
         mockGrid.onScroll();
-        // const evSpy = jest.spyOn(mockGrid, 'onRendered');
-        // mockSlickCore.subscribe('onRendered', mockEvent);
 
-        // console.log(DOM.createCustomEvent('onRendered', {}).type, gridElm)
         gridElm.dispatchEvent(DOM.createCustomEvent('onRendered'));
         expect(eventSpy).toHaveBeenCalledWith(DOM.createCustomEvent('onRendered', expect.anything()));
-        // expect(handlerSpy).toHaveBeenCalled();
-        // expect(evSpy).toHaveBeenCalled();
+        expect(handlerSpy).toHaveBeenCalled();
       });
 
       it('should reflect columns in the grid', () => {
