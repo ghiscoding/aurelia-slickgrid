@@ -1237,7 +1237,7 @@ describe('ExcelExportService', () => {
         expect(output).toEqual({ metadata: { style: 5 }, value: expectedDate });
       });
 
-      it('should return a date time format when using FieldType.dateUtc', async () => {
+      xit('should return a date time format when using FieldType.dateUtc', async () => {
         const input = moment('2013-05-23T17:55:00.325').utcOffset(420); // timezone that is +7 UTC hours
         const expectedDate = '2013-05-24T04:55:00.325+07:00';
 
