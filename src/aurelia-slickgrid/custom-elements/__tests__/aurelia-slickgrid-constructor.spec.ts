@@ -4,11 +4,11 @@ import { HttpClient } from 'aurelia-fetch-client';
 import { BindingEngine, Container } from 'aurelia-framework';
 import { DOM } from 'aurelia-pal';
 
-import { AureliaSlickgridCustomElement } from './aurelia-slickgrid';
+import { AureliaSlickgridCustomElement } from '../aurelia-slickgrid';
 
 import {
   ExtensionUtility,
-} from './extensions';
+} from '../../extensions';
 import {
   ExcelExportService,
   ExportService,
@@ -23,11 +23,11 @@ import {
   ResizerService,
   SharedService,
   SortService,
-} from './services';
-import { GridOption, CurrentFilter, CurrentSorter, GridStateType, Pagination, GridState, Column } from './models';
-import { Filters } from './filters';
-import { Editors } from './editors';
-import * as utilities from './services/backend-utilities';
+} from '../../services';
+import { GridOption, CurrentFilter, CurrentSorter, GridStateType, Pagination, GridState, Column } from '../../models';
+import { Filters } from '../../filters';
+import { Editors } from '../../editors';
+import * as utilities from '../../services/backend-utilities';
 
 
 const mockExecuteBackendProcess = jest.fn();

@@ -3,8 +3,8 @@ import { EventAggregator } from 'aurelia-event-aggregator';
 import { StageComponent } from 'aurelia-testing';
 import { PLATFORM } from 'aurelia-pal';
 
-import { Column, GridOption, Pager, Locale } from './models';
-import { PaginationService } from './services';
+import { Column, GridOption, Pager, Locale } from '../../models';
+import { PaginationService } from '../../services';
 
 function removeExtraSpaces(textS: string) {
   return `${textS}`.replace(/\s{2,}/g, '');
@@ -93,8 +93,8 @@ describe('Slick-Pagination Component without I18N', () => {
 
     component = StageComponent
       .withResources([
-        PLATFORM.moduleName('./slick-pagination'),
-        PLATFORM.moduleName('./value-converters/asgNumber')
+        PLATFORM.moduleName('../slick-pagination'),
+        PLATFORM.moduleName('../../value-converters/asgNumber')
       ])
       .inView(view)
       .boundTo({

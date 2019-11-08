@@ -1,26 +1,25 @@
 import { FrameworkConfiguration } from 'aurelia-framework';
 import { PLATFORM } from 'aurelia-pal';
-import { AureliaSlickgridCustomElement } from './aurelia-slickgrid';
-import { SlickPaginationCustomElement } from './slick-pagination';
+import { AureliaSlickgridCustomElement } from './custom-elements/aurelia-slickgrid';
+import { SlickPaginationCustomElement } from './custom-elements/slick-pagination';
 import { SlickgridConfig } from './slickgrid-config';
 import { Filters } from './filters/index';
 
 // expose all public classes
 // aggregators, editors, formatters, services...
-export * from './models/index';
-export * from './formatters/index';
-export * from './grouping-formatters/index';
-export * from './sorters/index';
-
 export * from './aggregators/index';
 export * from './editors/index';
-export * from './filter-conditions/index';
 export * from './filters/index';
+export * from './filter-conditions/index';
+export * from './formatters/index';
+export * from './grouping-formatters/index';
+export * from './models/index';
 export * from './services/index';
+export * from './sorters/index';
 
 export function configure(aurelia: FrameworkConfiguration, callback: (instance: SlickgridConfig) => void) {
-  aurelia.globalResources(PLATFORM.moduleName('./aurelia-slickgrid'));
-  aurelia.globalResources(PLATFORM.moduleName('./slick-pagination'));
+  aurelia.globalResources(PLATFORM.moduleName('./custom-elements/aurelia-slickgrid'));
+  aurelia.globalResources(PLATFORM.moduleName('./custom-elements/slick-pagination'));
   aurelia.globalResources(PLATFORM.moduleName('./value-converters/asgNumber'));
 
   // must register a transient so the container will get a new instance everytime
