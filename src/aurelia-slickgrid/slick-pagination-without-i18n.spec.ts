@@ -6,6 +6,10 @@ import { PLATFORM } from 'aurelia-pal';
 import { Column, GridOption, Pager, Locale } from './models';
 import { PaginationService } from './services';
 
+function removeExtraSpaces(textS: string) {
+  return `${textS}`.replace(/\s{2,}/g, '');
+}
+
 const dataviewStub = {
   onRowCountChanged: jest.fn(),
   onRowsChanged: jest.fn(),
@@ -163,8 +167,11 @@ describe('Slick-Pagination Component without I18N', () => {
       ea.publish(`paginationService:on-pagination-changed`, mockPager);
       ea.publish(`paginationService:on-pagination-refreshed`, true);
 
-      const elm = await component.waitForElement('.slick-pagination-count');
-      expect(elm.innerHTML).toContain('<span>5-10 of 100 items</span>');
+      const pageInfoFromTo = await component.waitForElement('.page-info-from-to');
+      const pageInfoTotalItems = await component.waitForElement('.page-info-total-items');
+      expect(removeExtraSpaces(pageInfoFromTo.innerHTML)).toBe('<span data-test="item-from">5</span>-<span data-test="item-to">10</span>of');
+      expect(removeExtraSpaces(pageInfoTotalItems.innerHTML)).toBe('<span data-test="total-items">100</span> items');
+
       component.dispose();
     });
   });
