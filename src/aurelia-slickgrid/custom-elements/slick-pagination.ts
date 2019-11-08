@@ -2,9 +2,9 @@ import { bindable, inject, Optional } from 'aurelia-framework';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
 import { I18N } from 'aurelia-i18n';
 
-import { BackendServiceApi, Locale, Pager, Pagination } from './models/index';
-import { PaginationService } from './services/pagination.service';
-import { disposeAllSubscriptions } from './services/utilities';
+import { BackendServiceApi, Locale, Pager, Pagination } from '../models/index';
+import { PaginationService } from '../services/pagination.service';
+import { disposeAllSubscriptions } from '../services/utilities';
 
 const DEFAULT_AURELIA_EVENT_PREFIX = 'asg';
 

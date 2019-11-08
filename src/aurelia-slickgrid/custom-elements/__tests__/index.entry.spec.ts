@@ -1,5 +1,5 @@
 import { FrameworkConfiguration } from 'aurelia-framework';
-import { configure, SlickgridConfig } from './index';
+import { configure, SlickgridConfig } from '../../index';
 
 jest.mock('flatpickr', () => { });
 

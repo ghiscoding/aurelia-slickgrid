@@ -11,8 +11,8 @@ import { bindable, BindingEngine, bindingMode, Container, Factory, inject } from
 import { DOM } from 'aurelia-pal';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
 
-import { Constants } from './constants';
-import { GlobalGridOptions } from './global-grid-options';
+import { Constants } from '../constants';
+import { GlobalGridOptions } from '../global-grid-options';
 import {
   AureliaGridInstance,
   BackendServiceApi,
@@ -26,7 +26,7 @@ import {
   Locale,
   Pagination,
   SlickEventHandler,
-} from './models/index';
+} from '../models/index';
 import {
   disposeAllSubscriptions,
   ExcelExportService,
@@ -42,10 +42,10 @@ import {
   ResizerService,
   SortService,
   toKebabCase,
-} from './services/index';
-import { executeBackendProcessesCallback, onBackendError } from './services/backend-utilities'
-import { ExtensionUtility } from './extensions/extensionUtility';
-import { SharedService } from './services/shared.service';
+} from '../services/index';
+import { executeBackendProcessesCallback, onBackendError } from '../services/backend-utilities';
+import { ExtensionUtility } from '../extensions/extensionUtility';
+import { SharedService } from '../services/shared.service';
 
 // using external non-typed js libraries
 declare var Slick: any;

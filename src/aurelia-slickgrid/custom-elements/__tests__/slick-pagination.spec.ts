@@ -5,9 +5,9 @@ import { StageComponent } from 'aurelia-testing';
 import { I18N } from 'aurelia-i18n';
 import { PLATFORM, DOM } from 'aurelia-pal';
 
-import { SlickPaginationCustomElement } from './slick-pagination';
-import { Column, GridOption, Pager } from './models';
-import { PaginationService } from './services';
+import { SlickPaginationCustomElement } from '../slick-pagination';
+import { Column, GridOption, Pager } from '../../models';
+import { PaginationService } from '../../services';
 
 function removeExtraSpaces(textS: string) {
   return `${textS}`.replace(/\s{2,}/g, '');
@@ -124,8 +124,8 @@ describe('Slick-Pagination Component', () => {
 
     component = StageComponent
       .withResources([
-        PLATFORM.moduleName('./slick-pagination'),
-        PLATFORM.moduleName('./value-converters/asgNumber')
+        PLATFORM.moduleName('../slick-pagination'),
+        PLATFORM.moduleName('../../value-converters/asgNumber')
       ])
       .inView(view)
       .boundTo({

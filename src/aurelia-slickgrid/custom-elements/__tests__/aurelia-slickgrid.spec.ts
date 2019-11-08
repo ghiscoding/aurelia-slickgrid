@@ -1,7 +1,7 @@
 import { StageComponent } from 'aurelia-testing';
 import { bootstrap } from 'aurelia-bootstrapper';
 import { PLATFORM } from 'aurelia-pal';
-import { SlickgridConfig } from './slickgrid-config';
+import { SlickgridConfig } from '../../slickgrid-config';
 
 const eventAggregator = {
   publish: jest.fn(),
@@ -26,9 +26,9 @@ describe('Aurelia-Slickgrid Custom Component', () => {
   beforeEach(() => {
     customElement = StageComponent
       .withResources([
-        PLATFORM.moduleName('./aurelia-slickgrid'),
-        PLATFORM.moduleName('./slick-pagination'),
-        PLATFORM.moduleName('./value-converters/asgNumber')
+        PLATFORM.moduleName('../aurelia-slickgrid'),
+        PLATFORM.moduleName('../slick-pagination'),
+        PLATFORM.moduleName('../../value-converters/asgNumber')
       ])
       .inView(view)
       .boundTo({ gridId: 'grid1', columnDefinitions: [], dataset: [], gridOptions: { enableFiltering: true }, aureliaGridReady });
