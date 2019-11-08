@@ -172,7 +172,7 @@ describe('Example 15: Grid State & Presets using Local Storage', () => {
     cy.reload();
   });
 
-  xit('should expect the same Grid State to persist after the page got reloaded', () => {
+  it('should expect the same Grid State to persist after the page got reloaded', () => {
     const expectedTitles = ['', 'Description', 'Duration', 'Title', '% Complete', 'Completed'];
 
     cy.get('#grid15')
@@ -186,7 +186,7 @@ describe('Example 15: Grid State & Presets using Local Storage', () => {
       .each(($child, index) => expect($child.find('.slick-column-name').text()).to.eq(expectedTitles[index]));
   });
 
-  xit('should have French titles in Column Picker after switching to Language', () => {
+  it('should have French titles in Column Picker after switching to Language', () => {
     const expectedTitles = ['', 'Description', 'Durée', 'Titre', '% Achevée', 'Début', 'Terminé'];
 
     cy.get('[data-test=language-button]')
@@ -221,7 +221,7 @@ describe('Example 15: Grid State & Presets using Local Storage', () => {
       .click();
   });
 
-  xit('should have French titles in Grid Menu after switching to Language', () => {
+  it('should have French titles in Grid Menu after switching to Language', () => {
     const expectedTitles = ['', 'Description', 'Durée', 'Titre', '% Achevée', 'Début', 'Terminé'];
 
     cy.get('#grid15')
@@ -248,7 +248,7 @@ describe('Example 15: Grid State & Presets using Local Storage', () => {
       .click();
   });
 
-  xit('should hover over the "Terminé" column and click on "Cacher la colonne" remove the column from grid', () => {
+  it('should hover over the "Terminé" column and click on "Cacher la colonne" remove the column from grid', () => {
     const expectedTitles = ['', 'Description', 'Durée', 'Titre', '% Achevée'];
 
     cy.get('.slick-header-columns')
@@ -274,7 +274,7 @@ describe('Example 15: Grid State & Presets using Local Storage', () => {
     cy.reload();
   });
 
-  xit('should expect the same Grid State to persist after the page got reloaded, however we always load in English', () => {
+  it('should expect the same Grid State to persist after the page got reloaded, however we always load in English', () => {
     const expectedTitles = ['', 'Description', 'Duration', 'Title', '% Complete'];
 
     cy.get('#grid15')
