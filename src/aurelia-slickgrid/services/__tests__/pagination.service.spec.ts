@@ -71,7 +71,7 @@ describe('PaginationService', () => {
   const ea = new EventAggregator();
 
   beforeEach(() => {
-    service = new PaginationService(ea, filterServiceStub, gridServiceStub);
+    service = new PaginationService(ea);
   });
 
   afterEach(() => {
@@ -133,12 +133,12 @@ describe('PaginationService', () => {
   });
 
   describe('changeItemPerPage method', () => {
-    it('should be on page 0 when total items is 0', () => {
+    it('should be on page 1 when total items is 0', () => {
       mockGridOption.pagination.totalItems = 0;
       service.init(gridStub, dataviewStub, mockGridOption.pagination, mockGridOption.backendServiceApi);
       service.changeItemPerPage(30);
 
-      expect(service.getCurrentPageNumber()).toBe(0);
+      expect(service.getCurrentPageNumber()).toBe(1);
       expect(service.getCurrentItemPerPageCount()).toBe(30);
     });
 
@@ -374,7 +374,7 @@ describe('PaginationService', () => {
   });
 
   describe('recalculateFromToIndexes method', () => {
-    it('should recalculate the From/To as 0 when total items is 0', () => {
+    it('should recalculate the From/To as 1 when total items is 0', () => {
       mockGridOption.pagination.pageSize = 25;
       mockGridOption.pagination.pageNumber = 2;
       mockGridOption.pagination.totalItems = 0;
@@ -382,8 +382,8 @@ describe('PaginationService', () => {
       service.init(gridStub, dataviewStub, mockGridOption.pagination, mockGridOption.backendServiceApi);
       service.recalculateFromToIndexes();
 
-      expect(service.pager.from).toBe(0);
-      expect(service.pager.to).toBe(0);
+      expect(service.pager.from).toBe(1);
+      expect(service.pager.to).toBe(1);
     });
 
     it('should recalculate the From/To within range', () => {

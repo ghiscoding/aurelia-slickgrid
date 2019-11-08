@@ -9,6 +9,10 @@ import { SlickPaginationCustomElement } from './slick-pagination';
 import { Column, GridOption, Pager } from './models';
 import { PaginationService } from './services';
 
+function removeExtraSpaces(textS: string) {
+  return `${textS}`.replace(/\s{2,}/g, '');
+}
+
 const dataviewStub = {
   onRowCountChanged: jest.fn(),
   onRowsChanged: jest.fn(),
@@ -169,16 +173,23 @@ describe('Slick-Pagination Component', () => {
     });
 
     it('should create a the Slick-Pagination component in the DOM', async () => {
-      const elm = await component.waitForElement('.slick-pagination-count');
-      expect(elm.innerHTML).toContain('<span>5-10 de 100 éléments</span>');
+      const pageInfoFromTo = await component.waitForElement('.page-info-from-to');
+      const pageInfoTotalItems = await component.waitForElement('.page-info-total-items');
+
+      expect(removeExtraSpaces(pageInfoFromTo.innerHTML)).toBe('<span data-test="item-from">5</span>-<span data-test="item-to">10</span>de');
+      expect(removeExtraSpaces(pageInfoTotalItems.innerHTML)).toBe('<span data-test="total-items">100</span> éléments');
     });
 
     it('should create a the Slick-Pagination component in the DOM', async () => {
       i18n.setLocale('en');
       ea.publish('i18n:locale:changed', 'en');
       expect(i18n.getLocale()).toBe('en');
-      const elm = await component.waitForElement('.slick-pagination-count');
-      expect(elm.innerHTML).toContain('<span>5-10 of 100 items</span>');
+
+      const pageInfoFromTo = await component.waitForElement('.page-info-from-to');
+      const pageInfoTotalItems = await component.waitForElement('.page-info-total-items');
+
+      expect(removeExtraSpaces(pageInfoFromTo.innerHTML)).toBe(`<span data-test="item-from">5</span>-<span data-test="item-to">10</span>of`;
+      expect(removeExtraSpaces(pageInfoTotalItems.innerHTML)).toBe('<span data-test="total-items">100</span> items');
     });
 
     it('should call changeToFirstPage() from the View and expect the pagination service to be called with correct method', async () => {
