@@ -180,7 +180,7 @@ describe('Slick-Pagination Component', () => {
       expect(removeExtraSpaces(pageInfoTotalItems.innerHTML)).toBe('<span data-test="total-items">100</span> éléments');
     });
 
-    it('should create a the Slick-Pagination component in the DOM', async () => {
+    it('should create a the Slick-Pagination component in the DOM and expect different locale when changed', async () => {
       i18n.setLocale('en');
       ea.publish('i18n:locale:changed', 'en');
       expect(i18n.getLocale()).toBe('en');
@@ -188,8 +188,8 @@ describe('Slick-Pagination Component', () => {
       const pageInfoFromTo = await component.waitForElement('.page-info-from-to');
       const pageInfoTotalItems = await component.waitForElement('.page-info-total-items');
 
-      expect(removeExtraSpaces(pageInfoFromTo.innerHTML)).toBe(`<span data-test="item-from">5</span>-<span data-test="item-to">10</span>of`;
-      expect(removeExtraSpaces(pageInfoTotalItems.innerHTML)).toBe('<span data-test="total-items">100</span> items');
+      expect(removeExtraSpaces(pageInfoFromTo.innerHTML)).toBe(`<span data-test="item-from">5</span>-<span data-test="item-to">10</span>of`);
+      expect(removeExtraSpaces(pageInfoTotalItems.innerHTML)).toBe(`<span data-test="total-items">100</span> items`);
     });
 
     it('should call changeToFirstPage() from the View and expect the pagination service to be called with correct method', async () => {
