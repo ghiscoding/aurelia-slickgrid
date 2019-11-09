@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.14.2"></a>
+## [2.14.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.14.1...v2.14.2) (2019-11-09)
+
+
+### Bug Fixes
+
+* **pagination:** never display page 0, minimum should be page 1 ([#256](https://github.com/ghiscoding/aurelia-slickgrid/issues/256)) ([8ce753c](https://github.com/ghiscoding/aurelia-slickgrid/commit/8ce753c))
+
+
+### Features
+
+* **build:** reorganized lib into its own "custom-elements" folder ([#257](https://github.com/ghiscoding/aurelia-slickgrid/issues/257)) ([dc99f51](https://github.com/ghiscoding/aurelia-slickgrid/commit/dc99f51))
+* **formatterOptions:** add decimal,thousand separator to all Formatters ([#255](https://github.com/ghiscoding/aurelia-slickgrid/issues/255)) ([fd67f26](https://github.com/ghiscoding/aurelia-slickgrid/commit/fd67f26))
+* **tests:** add missing unit tests for Excel Export Service ([#254](https://github.com/ghiscoding/aurelia-slickgrid/issues/254)) ([9ede722](https://github.com/ghiscoding/aurelia-slickgrid/commit/9ede722))
+
+
+
 <a name="2.14.1"></a>
 ## [2.14.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.14.0...v2.14.1) (2019-11-02)
 
