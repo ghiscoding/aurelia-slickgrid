@@ -1,6 +1,4 @@
-import { GraphqlResult } from '../models/graphqlResult.interface';
-import { BackendServiceApi } from '../models/backendServiceApi.interface';
-import { GridOption, EmitterType } from '../models/index';
+import { BackendServiceApi, EmitterType, GraphqlResult, GridOption } from '../models/index';
 
 /**
  * Execute the backend callback, which are mainly the "process" & "postProcess" methods.
@@ -55,5 +53,35 @@ export function onBackendError(e: any, backendApi: BackendServiceApi) {
     backendApi.onError(e);
   } else {
     throw e;
+  }
+}
+
+/** Refresh the dataset through the Backend Service */
+export function refreshBackendDataset(backendApi: BackendServiceApi, gridOptions: GridOption) {
+  let query = '';
+
+  if (!backendApi || !backendApi.service || !backendApi.process) {
+    throw new Error(`BackendServiceApi requires at least a "process" function and a "service" defined`);
+  }
+
+  if (backendApi.service) {
+    query = backendApi.service.buildQuery();
+  }
+
+  if (query && query !== '') {
+    // keep start time & end timestamps & return it after process execution
+    const startTime = new Date();
+
+    if (backendApi.preProcess) {
+      backendApi.preProcess();
+    }
+
+    // the process could be an Observable (like HttpClient) or a Promise
+    // in any case, we need to have a Promise so that we can await on it (if an Observable, convert it to Promise)
+    const processPromise = backendApi.process(query);
+    if (processPromise instanceof Promise && processPromise.then) {
+      processPromise.then((processResult: GraphqlResult | any) => executeBackendProcessesCallback(startTime, processResult, backendApi, gridOptions.pagination.totalItems))
+        .catch((error: any) => onBackendError(error, backendApi));
+    }
   }
 }

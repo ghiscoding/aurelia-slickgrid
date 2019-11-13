@@ -18,7 +18,7 @@ import {
 function randomBetween(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
-const NB_ITEMS = 500;
+const NB_ITEMS = 1000;
 const URL_SAMPLE_COLLECTION_DATA = 'assets/data/collection_500_numbers.json';
 
 @autoinject()
@@ -228,8 +228,8 @@ export class Example4 {
     const tempDataset = [];
     for (let i = startingIndex; i < (startingIndex + itemCount); i++) {
       const randomDuration = Math.round(Math.random() * 100);
-      const randomYear = randomBetween(2000, 2025);
-      const randomYearShort = randomBetween(10, 25);
+      const randomYear = randomBetween(2000, 2035);
+      const randomYearShort = randomBetween(10, 35);
       const randomMonth = randomBetween(1, 12);
       const randomMonthStr = (randomMonth < 10) ? `0${randomMonth}` : randomMonth;
       const randomDay = randomBetween(10, 28);
@@ -267,6 +267,14 @@ export class Example4 {
   /** Save current Filters, Sorters in LocaleStorage or DB */
   saveCurrentGridState() {
     console.log('Client sample, current Grid State:: ', this.aureliaGrid.gridStateService.getCurrentGridState());
+  }
+
+  setFiltersDynamically() {
+    // we can Set Filters Dynamically (or different filters) afterward through the FilterService
+    this.aureliaGrid.filterService.updateFilters([
+      { columnId: 'duration', searchTerms: [10, 220] },
+      { columnId: 'usDateShort', operator: '<', searchTerms: ['4/20/25'] },
+    ]);
   }
 
   refreshMetrics(e, args) {

@@ -59,7 +59,8 @@ export class Example5 {
   defineGrid() {
     this.columnDefinitions = [
       {
-        id: 'name', name: 'Name', field: 'name', sortable: true, type: FieldType.string,
+        id: 'name', name: 'Name', field: 'name', sortable: true,
+        type: FieldType.string,
         filterable: true,
         filter: {
           model: Filters.compoundInput
@@ -128,6 +129,14 @@ export class Example5 {
     this.status = (isProcessing)
       ? { text: 'processing...', class: 'alert alert-danger' }
       : { text: 'done', class: 'alert alert-success' };
+  }
+
+  setFiltersDynamically() {
+    // we can Set Filters Dynamically (or different filters) afterward through the FilterService
+    this.aureliaGrid.filterService.updateFilters([
+      // { columnId: 'gender', searchTerms: ['male'], operator: OperatorType.equal },
+      { columnId: 'name', searchTerms: ['A'], operator: 'a*' },
+    ]);
   }
 
   getCustomerCallback(data) {

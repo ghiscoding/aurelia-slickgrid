@@ -1,5 +1,7 @@
 import { inject, Optional, singleton } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
+import * as $ from 'jquery';
+
 import { Constants } from '../constants';
 import {
   CellArgs,
@@ -14,13 +16,13 @@ import {
   Locale,
   SlickEventHandler,
 } from '../models/index';
+import { ExtensionUtility } from './extensionUtility';
+import { refreshBackendDataset } from '../services/backend-utilities';
 import { ExcelExportService } from '../services/excelExport.service';
 import { ExportService } from '../services/export.service';
-import { ExtensionUtility } from './extensionUtility';
 import { FilterService } from '../services/filter.service';
-import { SortService } from '../services/sort.service';
 import { SharedService } from '../services/shared.service';
-import * as $ from 'jquery';
+import { SortService } from '../services/sort.service';
 
 // using external non-typed js libraries
 declare var Slick: any;
@@ -157,58 +159,13 @@ export class GridMenuExtension implements Extension {
 
   /** Refresh the dataset through the Backend Service */
   refreshBackendDataset(gridOptions?: GridOption) {
-    let query = '';
-
     // user can pass new set of grid options which will override current ones
     if (gridOptions) {
       this.sharedService.gridOptions = { ...this.sharedService.gridOptions, ...gridOptions };
     }
 
     const backendApi = this.sharedService.gridOptions.backendServiceApi;
-    if (!backendApi || !backendApi.service || !backendApi.process) {
-      throw new Error(`BackendServiceApi requires at least a "process" function and a "service" defined`);
-    }
-
-    if (backendApi.service) {
-      query = backendApi.service.buildQuery();
-    }
-
-    if (query && query !== '') {
-      // keep start time & end timestamps & return it after process execution
-      const startTime = new Date();
-
-      if (backendApi.preProcess) {
-        backendApi.preProcess();
-      }
-
-      // the process could be an Observable (like HttpClient) or a Promise
-      // in any case, we need to have a Promise so that we can await on it (if an Observable, convert it to Promise)
-      const processPromise = backendApi.process(query);
-
-      processPromise.then((processResult: GraphqlResult | any) => {
-        const endTime = new Date();
-
-        // from the result, call our internal post process to update the Dataset and Pagination info
-        if (processResult && backendApi && backendApi.internalPostProcess) {
-          backendApi.internalPostProcess(processResult);
-        }
-
-        // send the response process to the postProcess callback
-        if (backendApi && backendApi.postProcess) {
-          if (processResult instanceof Object) {
-            processResult.metrics = {
-              startTime,
-              endTime,
-              executionTime: endTime.valueOf() - startTime.valueOf(),
-              totalItemCount: this.sharedService.gridOptions && this.sharedService.gridOptions.pagination && this.sharedService.gridOptions.pagination.totalItems
-            };
-            // @deprecated, use metrics instead
-            processResult.statistics = processResult.metrics;
-          }
-          backendApi.postProcess(processResult);
-        }
-      });
-    }
+    refreshBackendDataset(backendApi, this.sharedService.gridOptions);
   }
 
   /** Translate the Grid Menu titles and column picker */

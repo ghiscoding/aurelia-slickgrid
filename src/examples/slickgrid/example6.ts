@@ -72,7 +72,15 @@ export class Example6 {
 
   defineGrid() {
     this.columnDefinitions = [
-      { id: 'name', field: 'name', headerKey: 'NAME', filterable: true, sortable: true, type: FieldType.string, width: 60 },
+      {
+        id: 'name', field: 'name', headerKey: 'NAME', width: 60,
+        type: FieldType.string,
+        sortable: true,
+        filterable: true,
+        filter: {
+          model: Filters.compoundInput
+        }
+      },
       {
         id: 'gender', field: 'gender', headerKey: 'GENDER', filterable: true, sortable: true, width: 60,
         filter: {
@@ -246,6 +254,20 @@ export class Example6 {
 
   saveCurrentGridState() {
     console.log('GraphQL current grid state', this.aureliaGrid.gridStateService.getCurrentGridState());
+  }
+
+  setFiltersDynamically() {
+    const presetLowestDay = moment().add(-2, 'days').format('YYYY-MM-DD');
+    const presetHighestDay = moment().add(20, 'days').format('YYYY-MM-DD');
+
+    // we can Set Filters Dynamically (or different filters) afterward through the FilterService
+    this.aureliaGrid.filterService.updateFilters([
+      { columnId: 'gender', searchTerms: ['female'], operator: OperatorType.equal },
+      { columnId: 'name', searchTerms: ['Jane'], operator: OperatorType.startsWith },
+      { columnId: 'company', searchTerms: ['acme'], operator: 'IN' },
+      { columnId: 'billing.address.zip', searchTerms: ['11'], operator: OperatorType.greaterThanOrEqual },
+      { columnId: 'finish', searchTerms: [presetLowestDay, presetHighestDay], operator: OperatorType.rangeInclusive },
+    ]);
   }
 
   switchLanguage() {

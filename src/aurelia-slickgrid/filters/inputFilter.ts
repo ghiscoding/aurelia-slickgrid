@@ -26,6 +26,11 @@ export class InputFilter implements Filter {
     return this.columnDef && this.columnDef.filter || {};
   }
 
+  /** Getter to know what would be the default operator when none is specified */
+  get defaultOperator(): OperatorType | OperatorString {
+    return OperatorType.equal;
+  }
+
   /** Getter of input type (text, number, password) */
   get inputType() {
     return this._inputType;
@@ -38,7 +43,14 @@ export class InputFilter implements Filter {
 
   /** Getter of the Operator to use when doing the filter comparing */
   get operator(): OperatorType | OperatorString {
-    return this.columnDef && this.columnDef.filter && this.columnDef.filter.operator || '';
+    return this.columnFilter && this.columnFilter.operator || this.defaultOperator;
+  }
+
+  /** Setter for the filter operator */
+  set operator(operator: OperatorType | OperatorString) {
+    if (this.columnFilter) {
+      this.columnFilter.operator = operator;
+    }
   }
 
   /** Getter for the Grid Options pulled through the Grid Object */
@@ -111,13 +123,14 @@ export class InputFilter implements Filter {
     }
   }
 
-  /**
-   * Set value(s) on the DOM element
-   */
-  setValues(values: SearchTerm) {
+  /** Set value(s) on the DOM element */
+  setValues(values: SearchTerm, operator?: OperatorType | OperatorString) {
     if (values) {
       this.$filterElm.val(values);
     }
+
+    // set the operator when defined
+    this.operator = operator || this.defaultOperator;
   }
 
   //
