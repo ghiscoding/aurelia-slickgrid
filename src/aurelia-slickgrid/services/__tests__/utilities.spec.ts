@@ -9,7 +9,6 @@ import {
   findOrDefault,
   formatNumber,
   getDescendantProperty,
-  htmlDecode,
   htmlEncode,
   htmlEntityDecode,
   htmlEntityEncode,
@@ -66,25 +65,6 @@ describe('Service/Utilies', () => {
 
     it('should return the a simple string with x spaces only where x is the number of spaces provided as argument', () => {
       expect(addWhiteSpaces(5)).toBe('     ');
-    });
-  });
-
-  // skip it for now since there is no DOMParser in node, this might work later when using Jest with JSDOM instead of node type
-  xdescribe('htmlDecode method', () => {
-    it('should return a decoded HTML string', () => {
-      const result = htmlDecode(`&lt;div class=&quot;color: blue&quot;&gt;Something&lt;/div&gt;`);
-      expect(result).toBe(`<div class="color: blue">Something</div>`);
-    });
-
-    it('should return a decoded HTML string with single quotes encoded as well', () => {
-      const result = htmlDecode(`&lt;div class=&#39;color: blue&#39;&gt;Something&lt;/div&gt;`);
-      expect(result).toBe(`<div class='color: blue'>Something</div>`);
-    });
-
-    it('should use jQuery and return a decoded HTML string with single quotes encoded as well when DOMParser is not available in older browser', () => {
-      DOMParser = undefined;
-      const result = htmlDecode(`&lt;div class=&#39;color: blue&#39;&gt;Something&lt;/div&gt;`);
-      expect(result).toBe(`<div class='color: blue'>Something</div>`);
     });
   });
 

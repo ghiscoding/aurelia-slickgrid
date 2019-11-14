@@ -37,26 +37,6 @@ export function addWhiteSpaces(nbSpaces: number): string {
 }
 
 /**
- * HTML decode using jQuery with a <div>
- * Create a in-memory div, set it's inner text(which jQuery automatically encodes)
- * then grab the encoded contents back out.  The div never exists on the page.
- */
-export function htmlDecode(encodedStr: string): string {
-  // tslint:disable-next-line new-parens
-  const parser = DOMParser && new DOMParser();
-
-  if (parser && parser.parseFromString) {
-    const dom = parser.parseFromString(
-      '<!doctype html><body>' + encodedStr,
-      'text/html');
-    return dom && dom.body && dom.body.textContent || '';
-  } else {
-    // for some browsers that might not support DOMParser, use jQuery instead
-    return $('<div/>').html(encodedStr).text();
-  }
-}
-
-/**
  * HTML encode using jQuery with a <div>
  * Create a in-memory div, set it's inner text(which jQuery automatically encodes)
  * then grab the encoded contents back out.  The div never exists on the page.
