@@ -2,7 +2,7 @@ import { I18N } from 'aurelia-i18n';
 import { DOM } from 'aurelia-pal';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { BindingSignaler } from 'aurelia-templating-resources';
-import { Column, FilterArguments, FieldType, GridOption } from '../../models';
+import { Column, FieldType, FilterArguments, GridOption, OperatorType } from '../../models';
 import { Filters } from '..';
 import { CompoundInputFilter } from '../compoundInputFilter';
 
@@ -130,6 +130,20 @@ describe('CompoundInputFilter', () => {
     filterInputElm.dispatchEvent(new (window.window as any).KeyboardEvent('keyup', { keyCode: 97, bubbles: true, cancelable: true }));
 
     expect(spyCallback).toHaveBeenCalledWith(expect.anything(), { columnDef: mockColumn, operator: '>', searchTerms: ['9'], shouldTriggerQuery: true });
+  });
+
+  it('should be able to call "setValues" with a value and an extra operator and expect it to be set as new operator', () => {
+    mockColumn.type = FieldType.number;
+    const spyCallback = jest.spyOn(filterArguments, 'callback');
+
+    filter.init(filterArguments);
+    filter.setValues(['9'], OperatorType.greaterThanOrEqual);
+
+    const filterSelectElm = divContainer.querySelector<HTMLInputElement>('.search-filter.filter-duration select');
+    filterSelectElm.dispatchEvent(DOM.createCustomEvent('change'));
+
+    expect(spyCallback).toHaveBeenCalledWith(expect.anything(), { columnDef: mockColumn, operator: '>=', searchTerms: ['9'], shouldTriggerQuery: true });
+    expect(filterSelectElm.value).toBe('>=');
   });
 
   it('should trigger an operator change event and expect the callback to be called with the searchTerms and operator defined', () => {

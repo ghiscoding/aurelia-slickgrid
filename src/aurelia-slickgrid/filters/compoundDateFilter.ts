@@ -3,7 +3,7 @@ import { I18N } from 'aurelia-i18n';
 import * as flatpickr from 'flatpickr';
 import * as $ from 'jquery';
 
-import { mapFlatpickrDateFormatWithFieldType, mapOperatorToShortDesignation } from '../services/utilities';
+import { mapFlatpickrDateFormatWithFieldType, mapOperatorToShorthandDesignation } from '../services/utilities';
 import {
   Column,
   ColumnFilter,
@@ -151,9 +151,10 @@ export class CompoundDateFilter implements Filter {
     }
 
     // set the operator, in the DOM as well, when defined
-    this.operator = mapOperatorToShortDesignation(operator || this.defaultOperator);
+    this.operator = operator || this.defaultOperator;
     if (operator && this.$selectOperatorElm) {
-      this.$selectOperatorElm.val(this.operator);
+      const operatorShorthand = mapOperatorToShorthandDesignation(this.operator);
+      this.$selectOperatorElm.val(operatorShorthand);
     }
   }
 

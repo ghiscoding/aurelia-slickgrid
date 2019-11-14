@@ -10,7 +10,7 @@ import {
   OperatorType,
   SearchTerm
 } from './../models/index';
-import { mapOperatorToShortDesignation } from '../services/utilities';
+import { mapOperatorToShorthandDesignation } from '../services/utilities';
 
 const DEFAULT_MIN_VALUE = 0;
 const DEFAULT_MAX_VALUE = 100;
@@ -148,9 +148,10 @@ export class CompoundSliderFilter implements Filter {
     this.$containerInputGroupElm.children('div.input-group-addon.input-group-append').children().last().html(newValue);
 
     // set the operator, in the DOM as well, when defined
-    this.operator = mapOperatorToShortDesignation(operator || this.defaultOperator);
+    this.operator = operator || this.defaultOperator;
     if (operator && this.$selectOperatorElm) {
-      this.$selectOperatorElm.val(this.operator);
+      const operatorShorthand = mapOperatorToShorthandDesignation(this.operator);
+      this.$selectOperatorElm.val(operatorShorthand);
     }
   }
 

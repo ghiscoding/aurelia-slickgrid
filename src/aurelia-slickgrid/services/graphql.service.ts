@@ -19,12 +19,13 @@ import {
   GraphqlSortingOption,
   GridOption,
   MultiColumnSort,
+  OperatorString,
   OperatorType,
   Pagination,
   PaginationChangedArgs,
   SortChangedArgs,
   SortDirection,
-  SortDirectionString
+  SortDirectionString,
 } from './../models/index';
 import QueryBuilder from './graphqlQueryBuilder';
 
@@ -350,12 +351,12 @@ export class GraphqlService implements BackendService {
    * loop through all columns to inspect filters & update backend service filteringOptions
    * @param columnFilters
    */
-  updateFilters(columnFilters: ColumnFilters | CurrentFilter[], isUpdatedByPreset: boolean) {
+  updateFilters(columnFilters: ColumnFilters | CurrentFilter[], isUpdatedByPresetOrDynamically: boolean) {
     const searchByArray: GraphqlFilteringOption[] = [];
     let searchValue: string | string[];
 
     // on filter preset load, we need to keep current filters
-    if (isUpdatedByPreset) {
+    if (isUpdatedByPresetOrDynamically) {
       this._currentFilters = this.castFilterToColumnFilters(columnFilters);
     }
 
@@ -365,7 +366,7 @@ export class GraphqlService implements BackendService {
 
         // if user defined some "presets", then we need to find the filters from the column definitions instead
         let columnDef: Column | undefined;
-        if (isUpdatedByPreset && Array.isArray(this._columnDefinitions)) {
+        if (isUpdatedByPresetOrDynamically && Array.isArray(this._columnDefinitions)) {
           columnDef = this._columnDefinitions.find((column: Column) => column.id === columnFilter.columnId);
         } else {
           columnDef = columnFilter.columnDef;
@@ -387,7 +388,7 @@ export class GraphqlService implements BackendService {
 
         fieldSearchValue = '' + fieldSearchValue; // make sure it's a string
         const matches = fieldSearchValue.match(/^([<>!=\*]{0,2})(.*[^<>!=\*])([\*]?)$/); // group 1: Operator, 2: searchValue, 3: last char is '*' (meaning starts with, ex.: abc*)
-        let operator = columnFilter.operator || ((matches) ? matches[1] : '');
+        let operator: OperatorString = columnFilter.operator || ((matches) ? matches[1] : '');
         searchValue = (!!matches) ? matches[2] : '';
         const lastValueChar = (!!matches) ? matches[3] : (operator === '*z' ? '*' : '');
 
@@ -407,7 +408,7 @@ export class GraphqlService implements BackendService {
           // escaping the search value
           searchValue = searchValue.replace(`'`, `''`); // escape single quotes by doubling them
           if (operator === '*' || operator === 'a*' || operator === '*z' || lastValueChar === '*') {
-            operator = (operator === '*' || operator === '*z') ? 'endsWith' : 'startsWith';
+            operator = ((operator === '*' || operator === '*z') ? 'EndsWith' : 'StartsWith') as OperatorString;
           }
         }
 
@@ -418,7 +419,7 @@ export class GraphqlService implements BackendService {
         }
 
         // when having more than 1 search term (we need to create a CSV string for GraphQL "IN" or "NOT IN" filter search)
-        if (searchTerms && searchTerms.length > 1 && (operator === 'IN' || operator === 'NIN' || operator === 'NOTIN' || operator === 'NOT IN' || operator === 'NOT_IN')) {
+        if (searchTerms && searchTerms.length > 1 && (operator === 'IN' || operator === 'NIN' || operator === 'NOT_IN')) {
           searchValue = searchTerms.join(',');
         } else if (searchTerms && searchTerms.length === 2 && (!operator || operator === OperatorType.rangeExclusive || operator === OperatorType.rangeInclusive)) {
           if (!operator) {
@@ -574,7 +575,7 @@ export class GraphqlService implements BackendService {
   // private functions
   // -------------------
   /**
-   * Cast provided filters (could be in multiple formats) into an array of ColumnFilter
+   * Cast provided filters (could be in multiple formats) into an array of CurrentFilter
    * @param columnFilters
    */
   private castFilterToColumnFilters(columnFilters: ColumnFilters | CurrentFilter[]): CurrentFilter[] {

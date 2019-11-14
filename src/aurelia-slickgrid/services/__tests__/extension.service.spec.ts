@@ -173,6 +173,12 @@ describe('ExtensionService', () => {
     describe('bindDifferentExtensions method', () => {
       const instanceMock = { onColumnsChanged: jest.fn() };
 
+      it('should return undefined when calling "getExtensionByName" method without anything set yet', () => {
+        service.bindDifferentExtensions();
+        const output = service.getExtensionByName(ExtensionName.autoTooltip);
+        expect(output).toEqual(undefined);
+      });
+
       it('should call "translateItems" method is "enableTranslate" is set to true in the grid options, then column name property should be translated', () => {
         const gridOptionsMock = { enableTranslate: true } as GridOption;
         const columnBeforeTranslate = { id: 'field1', field: 'field1', name: 'Hello', headerKey: 'HELLO' };

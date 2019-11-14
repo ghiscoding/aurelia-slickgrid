@@ -2,7 +2,7 @@ import { DOM } from 'aurelia-pal';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { I18N } from 'aurelia-i18n';
 import { BindingSignaler } from 'aurelia-templating-resources';
-import { Column, FilterArguments, GridOption, FieldType } from '../../models';
+import { Column, FieldType, FilterArguments, GridOption, OperatorType } from '../../models';
 import { Filters } from '..';
 import { CompoundDateFilter } from '../compoundDateFilter';
 
@@ -151,6 +151,17 @@ describe('CompoundDateFilter', () => {
     filter.init(filterArguments);
     filter.setValues([mockDate]);
     expect(filter.currentDate).toEqual(mockDate);
+  });
+
+  it('should be able to call "setValues" with a value and an extra operator and expect it to be set as new operator', () => {
+    const mockDate = '2001-01-02T16:02:02.239Z';
+    filter.init(filterArguments);
+    filter.setValues([mockDate], OperatorType.greaterThanOrEqual);
+
+    const filterOperatorElm = divContainer.querySelector<HTMLInputElement>('.input-group-prepend.operator select');
+
+    expect(filter.currentDate).toEqual(mockDate);
+    expect(filterOperatorElm.value).toBe('>=');
   });
 
   it('should trigger input change event and expect the callback to be called with the date provided in the input', () => {

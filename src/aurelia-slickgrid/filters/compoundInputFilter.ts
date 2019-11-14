@@ -16,7 +16,7 @@ import {
   OperatorType,
   SearchTerm,
 } from './../models/index';
-import { mapOperatorToShortDesignation } from '../services/utilities';
+import { mapOperatorToShorthandDesignation } from '../services/utilities';
 
 @inject(Optional.of(I18N))
 export class CompoundInputFilter implements Filter {
@@ -135,9 +135,11 @@ export class CompoundInputFilter implements Filter {
       this.$filterInputElm.val(newValue);
     }
 
-    this.operator = mapOperatorToShortDesignation(operator || this.defaultOperator);
+    // set the operator, in the DOM as well, when defined
+    this.operator = operator || this.defaultOperator;
     if (operator && this.$selectOperatorElm) {
-      this.$selectOperatorElm.val(this.operator);
+      const operatorShorthand = mapOperatorToShorthandDesignation(this.operator);
+      this.$selectOperatorElm.val(operatorShorthand);
     }
   }
 

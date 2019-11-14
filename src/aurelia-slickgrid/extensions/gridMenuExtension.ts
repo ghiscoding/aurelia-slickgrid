@@ -9,7 +9,6 @@ import {
   ExtensionName,
   Extension,
   FileType,
-  GraphqlResult,
   GridMenu,
   GridMenuItem,
   GridOption,
@@ -163,9 +162,7 @@ export class GridMenuExtension implements Extension {
     if (gridOptions) {
       this.sharedService.gridOptions = { ...this.sharedService.gridOptions, ...gridOptions };
     }
-
-    const backendApi = this.sharedService.gridOptions.backendServiceApi;
-    refreshBackendDataset(backendApi, this.sharedService.gridOptions);
+    refreshBackendDataset(this.sharedService.gridOptions);
   }
 
   /** Translate the Grid Menu titles and column picker */
