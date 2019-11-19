@@ -791,7 +791,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
         }, 5);
       });
 
-      xit('should throw an error when the process method on initialization when "executeProcessCommandOnInit" is set as a backend service options', (done) => {
+      it('should throw an error when the process method on initialization when "executeProcessCommandOnInit" is set as a backend service options', (done) => {
         const mockError = { error: '404' };
         const query = `query { users (first:20,offset:0) { totalCount, nodes { id,name,gender,company } } }`;
         const promise = new Promise((resolve, reject) => setTimeout(() => reject(mockError), 1));
@@ -804,10 +804,10 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
 
         expect(processSpy).toHaveBeenCalled();
 
-        setTimeout(() => {
-          expect(mockBackendError).toHaveBeenCalledWith(mockError, customElement.gridOptions.backendServiceApi);
+        promise.catch((e) => {
+          expect(e).toBe(mockError);
           done();
-        }, 10);
+        });
       });
     });
 

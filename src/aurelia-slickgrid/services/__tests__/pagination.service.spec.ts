@@ -3,7 +3,7 @@ import { EventAggregator } from 'aurelia-event-aggregator';
 
 import { PaginationService } from './../pagination.service';
 import { FilterService, GridService } from '../index';
-import { Column, GridOption, CurrentFilter } from '../../models';
+import { Column, GridOption } from '../../models';
 import * as utilities from '../backend-utilities';
 
 const DEFAULT_AURELIA_EVENT_PREFIX = 'asg';
@@ -587,6 +587,22 @@ describe('PaginationService', () => {
         });
         expect(service.pager.from).toBe(26);
         expect(service.pager.to).toBe(50);
+        done();
+      });
+    });
+
+    it('should call "processOnItemAddedOrRemoved" and expect the (To) to equal the total items when it is lower than the total itemsPerPage count', (done) => {
+      mockGridOption.pagination.pageNumber = 4;
+      mockGridOption.pagination.totalItems = 100;
+      const mockItems = { name: 'John' };
+
+      service.init(gridStub, dataviewStub, mockGridOption.pagination, mockGridOption.backendServiceApi);
+      ea.publish(`${DEFAULT_AURELIA_EVENT_PREFIX}:on-item-added`, mockItems);
+      service.changeItemPerPage(200);
+
+      setTimeout(() => {
+        expect(service.pager.from).toBe(1);
+        expect(service.pager.to).toBe(101);
         done();
       });
     });

@@ -1,7 +1,8 @@
 import { Subscription } from 'aurelia-event-aggregator';
-import { FieldType, OperatorType } from '../models/index';
 import * as moment from 'moment-mini';
 import * as $ from 'jquery';
+
+import { FieldType, OperatorString, OperatorType } from '../models/index';
 
 /**
  * Add an item to an array only when the item does not exists, when the item is an object we will be using their "id" to compare
@@ -36,26 +37,6 @@ export function addWhiteSpaces(nbSpaces: number): string {
 }
 
 /**
- * HTML decode using jQuery with a <div>
- * Create a in-memory div, set it's inner text(which jQuery automatically encodes)
- * then grab the encoded contents back out.  The div never exists on the page.
- */
-export function htmlDecode(encodedStr: string): string {
-  // tslint:disable-next-line new-parens
-  const parser = DOMParser && new DOMParser();
-
-  if (parser && parser.parseFromString) {
-    const dom = parser.parseFromString(
-      '<!doctype html><body>' + encodedStr,
-      'text/html');
-    return dom && dom.body && dom.body.textContent || '';
-  } else {
-    // for some browsers that might not support DOMParser, use jQuery instead
-    return $('<div/>').html(encodedStr).text();
-  }
-}
-
-/**
  * HTML encode using jQuery with a <div>
  * Create a in-memory div, set it's inner text(which jQuery automatically encodes)
  * then grab the encoded contents back out.  The div never exists on the page.
@@ -66,15 +47,9 @@ export function htmlEncode(inputValue: string): string {
     '<': '&lt;',
     '>': '&gt;',
     '"': '&quot;',
-    '\'': '&#39;',
-    // '/': '&#x2F;',
-    // '`': '&#x60;',
-    // '=': '&#x3D;'
+    '\'': '&#39;'
   };
-  // all symbols::  /[&<>"'`=\/]/g
-  return inputValue.replace(/[&<>"']/g, (s) => {
-    return entityMap[s];
-  });
+  return inputValue.replace(/[&<>"']/g, (s) => entityMap[s]);
 }
 
 /**
@@ -185,10 +160,10 @@ export function disposeAllSubscriptions(subscriptions: Subscription[]) {
 
 /** From a dot (.) notation path, find and return a property within an object given a path */
 export function getDescendantProperty(obj: any, path: string | undefined): any {
-  if (obj && path) {
-    return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+  if (!obj || !path) {
+    return obj;
   }
-  return obj;
+  return path.split('.').reduce((acc, part) => acc && acc[part], obj);
 }
 
 /**
@@ -382,60 +357,53 @@ export function mapFlatpickrDateFormatWithFieldType(fieldType: FieldType): strin
  * @param string operator
  * @returns string map
  */
-export function mapOperatorType(operator: string): OperatorType {
+export function mapOperatorType(operator: OperatorType | OperatorString): OperatorType {
   let map: OperatorType;
 
   switch (operator) {
     case '<':
+    case 'LT':
       map = OperatorType.lessThan;
       break;
     case '<=':
+    case 'LE':
       map = OperatorType.lessThanOrEqual;
       break;
     case '>':
+    case 'GT':
       map = OperatorType.greaterThan;
       break;
     case '>=':
+    case 'GE':
       map = OperatorType.greaterThanOrEqual;
       break;
     case '<>':
     case '!=':
-    case 'neq':
-    case 'NEQ':
+    case 'NE':
       map = OperatorType.notEqual;
       break;
     case '*':
-    case '.*':
     case 'a*':
-    case 'startsWith':
     case 'StartsWith':
       map = OperatorType.startsWith;
       break;
-    case '*.':
     case '*z':
-    case 'endsWith':
     case 'EndsWith':
       map = OperatorType.endsWith;
       break;
     case '=':
     case '==':
-    case 'eq':
     case 'EQ':
       map = OperatorType.equal;
       break;
-    case 'in':
     case 'IN':
       map = OperatorType.in;
       break;
-    case 'notIn':
     case 'NIN':
     case 'NOT_IN':
       map = OperatorType.notIn;
       break;
-    case 'not_contains':
     case 'Not_Contains':
-    case 'notContains':
-    case 'NotContains':
     case 'NOT_CONTAINS':
       map = OperatorType.notContains;
       break;
@@ -447,6 +415,59 @@ export function mapOperatorType(operator: string): OperatorType {
   }
 
   return map;
+}
+
+/**
+ * Find equivalent short designation of an Operator Type or Operator String.
+ * When using a Compound Filter, we use the short designation and so we need the mapped value.
+ * For example OperatorType.startsWith short designation is "a*", while OperatorType.greaterThanOrEqual is ">="
+ */
+export function mapOperatorToShorthandDesignation(operator: OperatorType | OperatorString): OperatorString {
+  let shortOperator: OperatorString = '';
+
+  switch (operator) {
+    case OperatorType.greaterThan:
+    case '>':
+      shortOperator = '>';
+      break;
+    case OperatorType.greaterThanOrEqual:
+    case '>=':
+      shortOperator = '>=';
+      break;
+    case OperatorType.lessThan:
+    case '<':
+      shortOperator = '<';
+      break;
+    case OperatorType.lessThanOrEqual:
+    case '<=':
+      shortOperator = '<=';
+      break;
+    case OperatorType.notEqual:
+    case '<>':
+      shortOperator = '<>';
+      break;
+    case OperatorType.equal:
+    case '=':
+    case '==':
+    case 'EQ':
+      shortOperator = '=';
+      break;
+    case OperatorType.startsWith:
+    case 'a*':
+    case '*':
+      shortOperator = 'a*';
+      break;
+    case OperatorType.endsWith:
+    case '*z':
+      shortOperator = '*z';
+      break;
+    default:
+      // any other operator will be considered as already a short expression, so we can return same input operator
+      shortOperator = operator;
+      break;
+  }
+
+  return shortOperator;
 }
 
 /**

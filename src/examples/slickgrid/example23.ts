@@ -220,15 +220,27 @@ export class Example23 {
   }
 
   refreshMetrics(e, args) {
-    if (args && args.current > 0) {
+    if (args && args.current >= 0) {
       setTimeout(() => {
         this.metrics = {
           startTime: new Date(),
-          itemCount: args && args.current,
-          totalItemCount: this.dataset.length
+          itemCount: args && args.current || 0,
+          totalItemCount: this.dataset.length || 0
         };
       });
     }
+  }
+
+  setFiltersDynamically() {
+    const presetLowestDay = moment().add(-5, 'days').format('YYYY-MM-DD');
+    const presetHighestDay = moment().add(25, 'days').format('YYYY-MM-DD');
+
+    // we can Set Filters Dynamically (or different filters) afterward through the FilterService
+    this.aureliaGrid.filterService.updateFilters([
+      { columnId: 'duration', searchTerms: ['14..78'], operator: 'RangeInclusive' },
+      { columnId: 'complete', operator: 'RangeExclusive', searchTerms: [12, 82] },
+      { columnId: 'finish', operator: 'RangeInclusive', searchTerms: [presetLowestDay, presetHighestDay] },
+    ]);
   }
 
   switchLanguage() {

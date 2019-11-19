@@ -54,6 +54,11 @@ export class DateRangeFilter implements Filter {
     return this._currentDates;
   }
 
+  /** Getter to know what would be the default operator when none is specified */
+  get defaultOperator(): OperatorType | OperatorString {
+    return this.gridOptions.defaultFilterRangeOperator || OperatorType.rangeExclusive;
+  }
+
   /** Getter for the Flatpickr Options */
   get flatpickrOptions(): FlatpickrOption {
     return this._flatpickrOptions || {};
@@ -61,7 +66,14 @@ export class DateRangeFilter implements Filter {
 
   /** Getter of the Operator to use when doing the filter comparing */
   get operator(): OperatorType | OperatorString {
-    return this.columnFilter.operator || this.gridOptions.defaultFilterRangeOperator || OperatorType.rangeExclusive;
+    return this.columnFilter && this.columnFilter.operator || this.defaultOperator;
+  }
+
+  /** Setter for the filter operator */
+  set operator(operator: OperatorType | OperatorString) {
+    if (this.columnFilter) {
+      this.columnFilter.operator = operator;
+    }
   }
 
   /**
@@ -128,7 +140,7 @@ export class DateRangeFilter implements Filter {
    * Set value(s) on the DOM element
    * @params searchTerms
    */
-  setValues(searchTerms: SearchTerm[]) {
+  setValues(searchTerms: SearchTerm[], operator?: OperatorType | OperatorString) {
     let pickerValues: any[] = [];
 
     // get the picker values, if it's a string with the "..", we'll do the split else we'll use the array of search terms
@@ -142,6 +154,9 @@ export class DateRangeFilter implements Filter {
       this._currentDates = pickerValues;
       this.flatInstance.setDate(pickerValues);
     }
+
+    // set the operator when defined
+    this.operator = operator || this.defaultOperator;
   }
 
   //
@@ -191,11 +206,8 @@ export class DateRangeFilter implements Filter {
 
         // when using the time picker, we can simulate a keyup event to avoid multiple backend request
         // since backend request are only executed after user start typing, changing the time should be treated the same way
-        if (pickerOptions.enableTime) {
-          this.onTriggerEvent(new CustomEvent('keyup'));
-        } else {
-          this.onTriggerEvent(undefined);
-        }
+        const newEvent = pickerOptions.enableTime ? new CustomEvent('keyup') : undefined;
+        this.onTriggerEvent(newEvent);
       }
     };
 

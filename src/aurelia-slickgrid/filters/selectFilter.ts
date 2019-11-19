@@ -1,6 +1,9 @@
-import { I18N } from 'aurelia-i18n';
 import { Subscription } from 'aurelia-event-aggregator';
 import { BindingEngine, inject, Optional } from 'aurelia-framework';
+import { I18N } from 'aurelia-i18n';
+import * as DOMPurify from 'dompurify';
+import * as $ from 'jquery';
+
 import { Constants } from '../constants';
 import {
   CollectionCustomStructure,
@@ -20,8 +23,6 @@ import {
 } from './../models/index';
 import { CollectionService } from '../services/collection.service';
 import { disposeAllSubscriptions, getDescendantProperty, htmlEncode } from '../services/utilities';
-import * as DOMPurify from 'dompurify';
-import * as $ from 'jquery';
 
 @inject(BindingEngine, CollectionService, Optional.of(I18N))
 export class SelectFilter implements Filter {
@@ -80,6 +81,11 @@ export class SelectFilter implements Filter {
     return (this.grid && this.grid.getOptions) ? this.grid.getOptions() : {};
   }
 
+  /** Getter to know what would be the default operator when none is specified */
+  get defaultOperator(): OperatorType | OperatorString {
+    return this.isMultipleSelect ? OperatorType.in : OperatorType.equal;
+  }
+
   /** Getter to know if the current filter is a multiple-select (false means it's a single select) */
   get isMultipleSelect(): boolean {
     return this._isMultipleSelect;
@@ -87,10 +93,14 @@ export class SelectFilter implements Filter {
 
   /** Getter for the Filter Operator */
   get operator(): OperatorType | OperatorString {
-    if (this.columnDef && this.columnDef.filter && this.columnDef.filter.operator) {
-      return this.columnDef.filter.operator;
+    return this.columnFilter && this.columnFilter.operator || this.defaultOperator;
+  }
+
+  /** Setter for the filter operator */
+  set operator(operator: OperatorType | OperatorString) {
+    if (this.columnFilter) {
+      this.columnFilter.operator = operator;
     }
-    return this._isMultipleSelect ? OperatorType.in : OperatorType.equal;
   }
 
   /**
@@ -195,14 +205,15 @@ export class SelectFilter implements Filter {
     return [];
   }
 
-  /**
-   * Set value(s) on the DOM element
-   */
-  setValues(values: SearchTerm | SearchTerm[]) {
+  /** Set value(s) on the DOM element */
+  setValues(values: SearchTerm | SearchTerm[], operator?: OperatorType | OperatorString) {
     if (values && this.$filterElm && typeof this.$filterElm.multipleSelect === 'function') {
       values = Array.isArray(values) ? values : [values];
       this.$filterElm.multipleSelect('setSelects', values);
     }
+
+    // set the operator when defined
+    this.operator = operator || this.defaultOperator;
   }
 
   //
@@ -483,23 +494,9 @@ export class SelectFilter implements Filter {
         const isRenderHtmlEnabled = this.columnDef && this.columnDef.filter && this.columnDef.filter.enableRenderHtml || false;
         return isRenderHtmlEnabled ? $elm.text() : $elm.html();
       },
-      onClose: () => {
-        // we will subscribe to the onClose event for triggering our callback
-        // also add/remove "filled" class for styling purposes
-        const selectedItems = this.getValues();
-
-        if (Array.isArray(selectedItems) && selectedItems.length > 1 || (selectedItems.length === 1 && selectedItems[0] !== '')) {
-          this.isFilled = true;
-          this.$filterElm.addClass('filled').siblings('div .search-filter').addClass('filled');
-        } else {
-          this.isFilled = false;
-          this.$filterElm.removeClass('filled').siblings('div .search-filter').removeClass('filled');
-        }
-
-        this.searchTerms = selectedItems;
-        this.callback(undefined, { columnDef: this.columnDef, operator: this.operator, searchTerms: selectedItems, shouldTriggerQuery: this._shouldTriggerQuery });
-        this._shouldTriggerQuery = true; // reset flag for next use
-      }
+      // we will subscribe to the onClose event for triggering our callback
+      // also add/remove "filled" class for styling purposes
+      onClose: () => this.onTriggerEvent(undefined)
     };
     if (this._isMultipleSelect) {
       options.single = false;
@@ -512,5 +509,23 @@ export class SelectFilter implements Filter {
       options.selectAllDelimiter = ['', '']; // remove default square brackets of default text "[Select All]" => "Select All"
     }
     this.defaultOptions = options;
+  }
+
+  private onTriggerEvent(e: Event | undefined) {
+    const selectedItems = this.getValues();
+
+    if (Array.isArray(selectedItems) && selectedItems.length > 1 || (selectedItems.length === 1 && selectedItems[0] !== '')) {
+      this.isFilled = true;
+      this.$filterElm.addClass('filled').siblings('div .search-filter').addClass('filled');
+    } else {
+      this.isFilled = false;
+      this.$filterElm.removeClass('filled');
+      this.$filterElm.siblings('div .search-filter').removeClass('filled');
+    }
+
+    this.searchTerms = selectedItems;
+    this.callback(undefined, { columnDef: this.columnDef, operator: this.operator, searchTerms: selectedItems, shouldTriggerQuery: this._shouldTriggerQuery });
+    // reset flag for next use
+    this._shouldTriggerQuery = true;
   }
 }

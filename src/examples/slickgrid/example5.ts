@@ -59,7 +59,8 @@ export class Example5 {
   defineGrid() {
     this.columnDefinitions = [
       {
-        id: 'name', name: 'Name', field: 'name', sortable: true, type: FieldType.string,
+        id: 'name', name: 'Name', field: 'name', sortable: true,
+        type: FieldType.string,
         filterable: true,
         filter: {
           model: Filters.compoundInput
@@ -284,6 +285,14 @@ export class Example5 {
 
   goToLastPage() {
     this.aureliaGrid.paginationService.goToLastPage();
+  }
+
+  setFiltersDynamically() {
+    // we can Set Filters Dynamically (or different filters) afterward through the FilterService
+    this.aureliaGrid.filterService.updateFilters([
+      // { columnId: 'gender', searchTerms: ['male'], operator: OperatorType.equal },
+      { columnId: 'name', searchTerms: ['A'], operator: 'a*' },
+    ]);
   }
 
   /** Dispatched event of a Grid State Changed event */

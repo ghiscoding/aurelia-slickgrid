@@ -1,5 +1,5 @@
 import { DOM } from 'aurelia-pal';
-import { GridOption, FilterArguments, Column } from '../../models';
+import { Column, FilterArguments, GridOption, OperatorType } from '../../models';
 import { Filters } from '..';
 import { CompoundSliderFilter } from '../compoundSliderFilter';
 
@@ -96,6 +96,18 @@ describe('CompoundSliderFilter', () => {
     filterSelectElm.dispatchEvent(DOM.createCustomEvent('change'));
 
     expect(spyCallback).toHaveBeenCalledWith(expect.anything(), { columnDef: mockColumn, operator: '<=', searchTerms: ['9'], shouldTriggerQuery: true });
+  });
+
+  it('should be able to call "setValues" with a value and an extra operator and expect it to be set as new operator', () => {
+    const spyCallback = jest.spyOn(filterArguments, 'callback');
+
+    filter.init(filterArguments);
+    filter.setValues(['9'], OperatorType.greaterThanOrEqual);
+
+    const filterSelectElm = divContainer.querySelector<HTMLInputElement>('.search-filter.filter-duration select');
+    filterSelectElm.dispatchEvent(DOM.createCustomEvent('change'));
+
+    expect(spyCallback).toHaveBeenCalledWith(expect.anything(), { columnDef: mockColumn, operator: '>=', searchTerms: ['9'], shouldTriggerQuery: true });
   });
 
   it('should create the input filter with default search terms range when passed as a filter argument', () => {
