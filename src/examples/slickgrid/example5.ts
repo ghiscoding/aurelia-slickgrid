@@ -131,14 +131,6 @@ export class Example5 {
       : { text: 'done', class: 'alert alert-success' };
   }
 
-  setFiltersDynamically() {
-    // we can Set Filters Dynamically (or different filters) afterward through the FilterService
-    this.aureliaGrid.filterService.updateFilters([
-      // { columnId: 'gender', searchTerms: ['male'], operator: OperatorType.equal },
-      { columnId: 'name', searchTerms: ['A'], operator: 'a*' },
-    ]);
-  }
-
   getCustomerCallback(data) {
     // totalItems property needs to be filled for pagination to work correctly
     // however we need to force Aurelia to do a dirty check, doing a clone object will do just that
@@ -293,6 +285,14 @@ export class Example5 {
 
   goToLastPage() {
     this.aureliaGrid.paginationService.goToLastPage();
+  }
+
+  setFiltersDynamically() {
+    // we can Set Filters Dynamically (or different filters) afterward through the FilterService
+    this.aureliaGrid.filterService.updateFilters([
+      // { columnId: 'gender', searchTerms: ['male'], operator: OperatorType.equal },
+      { columnId: 'name', searchTerms: ['A'], operator: 'a*' },
+    ]);
   }
 
   /** Dispatched event of a Grid State Changed event */

@@ -355,7 +355,8 @@ export class Example18 {
   setFiltersDynamically() {
     // we can Set Filters Dynamically (or different filters) afterward through the FilterService
     this.aureliaGrid.filterService.updateFilters([
-      { columnId: 'percentComplete', operator: '>=', searchTerms: ['75'] },
+      { columnId: 'percentComplete', operator: '>=', searchTerms: ['55'] },
+      { columnId: 'cost', operator: '<', searchTerms: ['80'] },
     ]);
   }
 

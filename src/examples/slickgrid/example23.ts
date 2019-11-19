@@ -232,14 +232,13 @@ export class Example23 {
   }
 
   setFiltersDynamically() {
-    const presetLowestDay = moment().add(-2, 'days').format('YYYY-MM-DD');
-    const presetHighestDay = moment().add(20, 'days').format('YYYY-MM-DD');
+    const presetLowestDay = moment().add(-5, 'days').format('YYYY-MM-DD');
+    const presetHighestDay = moment().add(25, 'days').format('YYYY-MM-DD');
 
     // we can Set Filters Dynamically (or different filters) afterward through the FilterService
     this.aureliaGrid.filterService.updateFilters([
-      { columnId: 'duration', searchTerms: ['14..78'] },
-      { columnId: 'complete', searchTerms: ['13..73'] }, // without operator will default to 'RangeExclusive'
-      { columnId: 'complete', operator: 'RangeInclusive', searchTerms: [12, 82] }, // same result with searchTerms: ['5..80']
+      { columnId: 'duration', searchTerms: ['14..78'], operator: 'RangeInclusive' },
+      { columnId: 'complete', operator: 'RangeExclusive', searchTerms: [12, 82] },
       { columnId: 'finish', operator: 'RangeInclusive', searchTerms: [presetLowestDay, presetHighestDay] },
     ]);
   }
