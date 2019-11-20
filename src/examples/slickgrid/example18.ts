@@ -360,6 +360,13 @@ export class Example18 {
     ]);
   }
 
+  setSortingDynamically() {
+    this.aureliaGrid.sortService.updateSorting([
+      // orders matter, whichever is first in array will be the first sorted column
+      { columnId: 'percentComplete', direction: 'ASC' },
+    ]);
+  }
+
   toggleDraggableGroupingRow() {
     this.clearGroupsAndSelects();
     this.gridObj.setPreHeaderPanelVisibility(!this.gridObj.getOptions().showPreHeaderPanel);

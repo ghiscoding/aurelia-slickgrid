@@ -918,7 +918,7 @@ describe('FilterService', () => {
         service.bindLocalOnFilter(gridStub, dataViewStub);
         service.updateFilters([{ columnId: 'firstName', searchTerms: ['John'] }]);
       } catch (e) {
-        expect(e.toString()).toContain('[Aurelia-Slickgrid] in order to use "updateFilters" method, you need to have Filters defined in your grid');
+        expect(e.toString()).toContain('[Aurelia-Slickgrid] in order to use "updateFilters" method, you need to have Filterable Columns defined in your grid');
         done();
       }
     });

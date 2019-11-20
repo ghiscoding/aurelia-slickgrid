@@ -1,5 +1,6 @@
 import { inject, singleton } from 'aurelia-framework';
 import { EventAggregator } from 'aurelia-event-aggregator';
+
 import {
   Column,
   ColumnSort,
@@ -12,7 +13,7 @@ import {
   SortDirectionNumber,
   SortDirectionString,
 } from './../models/index';
-import { executeBackendCallback } from './backend-utilities';
+import { executeBackendCallback, refreshBackendDataset } from './backend-utilities';
 import { getDescendantProperty } from './utilities';
 import { sortByFieldType } from '../sorters/sorterUtilities';
 
@@ -182,40 +183,11 @@ export class SortService {
     return [];
   }
 
-  /**
-   * Load any presets, if there are any, that are defined in the Grid Options
-   * @param grid
-   * @param gridOptions
-   * @param dataView
-   * @param columnDefinitions
-   */
-  loadLocalGridPresets(grid: any, dataView: any) {
-    const sortCols: ColumnSort[] = [];
-    this._currentLocalSorters = []; // reset current local sorters
-    if (this._gridOptions && this._gridOptions.presets && this._gridOptions.presets.sorters) {
-      const sorters = this._gridOptions.presets.sorters;
-
-      sorters.forEach((presetSorting: CurrentSorter) => {
-        const gridColumn = this._columnDefinitions.find((col: Column) => col.id === presetSorting.columnId);
-        if (gridColumn) {
-          sortCols.push({
-            columnId: gridColumn.id,
-            sortAsc: ((presetSorting.direction.toUpperCase() === SortDirection.ASC) ? true : false),
-            sortCol: gridColumn
-          });
-
-          // keep current sorters
-          this._currentLocalSorters.push({
-            columnId: gridColumn.id + '',
-            direction: presetSorting.direction.toUpperCase() as SortDirectionString
-          });
-        }
-      });
-
-      if (sortCols.length > 0) {
-        this.onLocalSortChanged(grid, dataView, sortCols);
-        grid.setSortColumns(sortCols); // use this to add sort icon(s) in UI
-      }
+  /** Load any presets, if there are any, that are defined in the Grid Options */
+  loadLocalGridPresets() {
+    const sorters = this._gridOptions && this._gridOptions.presets && this._gridOptions.presets.sorters;
+    if (Array.isArray(sorters)) {
+      this.loadGridSorting(sorters);
     }
   }
 
@@ -297,5 +269,62 @@ export class SortService {
       }
     }
     return SortDirectionNumber.neutral;
+  }
+
+  /** Update any sorting(s) dynamically */
+  updateSorting(sorters: CurrentSorter[]) {
+    if (!this._gridOptions || !this._gridOptions.enableSorting) {
+      throw new Error('[Aurelia-Slickgrid] in order to use "updateSorting" method, you need to have Sortable Columns defined in your grid and "enableSorting" set in your Grid Options');
+    }
+
+    const backendApi = this._gridOptions && this._gridOptions.backendServiceApi;
+
+    if (backendApi) {
+      const backendApiService = backendApi && backendApi.service;
+      if (backendApiService) {
+        backendApiService.updateSorters(undefined, sorters);
+        refreshBackendDataset(this._gridOptions);
+        this.emitSortChanged(EmitterType.remote);
+      }
+    } else {
+      this.loadGridSorting(sorters);
+      this.emitSortChanged(EmitterType.local);
+    }
+  }
+
+  // --
+  // private functions
+  // -------------------
+
+  /** Load a defined Sort into the grid */
+  private loadGridSorting(sorters: CurrentSorter[]): ColumnSort[] {
+    this._currentLocalSorters = []; // reset current local sorters
+    const sortCols: ColumnSort[] = [];
+
+    if (Array.isArray(sorters)) {
+      sorters.forEach((presetSorting: CurrentSorter) => {
+        const gridColumn = this._columnDefinitions.find((col: Column) => col.id === presetSorting.columnId);
+        if (gridColumn) {
+          sortCols.push({
+            columnId: gridColumn.id,
+            sortAsc: ((presetSorting.direction.toUpperCase() === SortDirection.ASC) ? true : false),
+            sortCol: gridColumn
+          });
+
+          // keep current sorters
+          this._currentLocalSorters.push({
+            columnId: gridColumn.id + '',
+            direction: presetSorting.direction.toUpperCase() as SortDirectionString
+          });
+        }
+      });
+
+      if (sortCols.length > 0) {
+        this.onLocalSortChanged(this._grid, this._dataView, sortCols);
+        this._grid.setSortColumns(sortCols); // use this to add sort icon(s) in UI
+      }
+
+      return sortCols;
+    }
   }
 }

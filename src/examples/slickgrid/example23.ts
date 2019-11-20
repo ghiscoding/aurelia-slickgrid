@@ -243,6 +243,14 @@ export class Example23 {
     ]);
   }
 
+  setSortingDynamically() {
+    this.aureliaGrid.sortService.updateSorting([
+      // orders matter, whichever is first in array will be the first sorted column
+      { columnId: 'finish', direction: 'DESC' },
+      { columnId: 'complete', direction: 'ASC' },
+    ]);
+  }
+
   switchLanguage() {
     const nextLocale = (this.selectedLanguage === 'en') ? 'fr' : 'en';
     this.i18n.setLocale(nextLocale).then(() => this.selectedLanguage = nextLocale);
