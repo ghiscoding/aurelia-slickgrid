@@ -164,8 +164,8 @@ describe('Example 23 - Range Filters', () => {
   });
 
   describe('Set Dymamic Filters', () => {
-    const dynamicMinComplete = 10;
-    const dynamicMaxComplete = 80;
+    const dynamicMinComplete = 15;
+    const dynamicMaxComplete = 85;
     const dynamicMinDuration = 14;
     const dynamicMaxDuration = 78;
     const dynamicLowestDay = moment().add(-5, 'days').format('YYYY-MM-DD');
