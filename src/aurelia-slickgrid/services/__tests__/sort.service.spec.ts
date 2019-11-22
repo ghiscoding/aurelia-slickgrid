@@ -586,7 +586,7 @@ describe('SortService', () => {
       jest.spyOn(gridStub, 'getColumns').mockReturnValue([mockColumn1, mockColumn2]);
     });
 
-    it('should throw an error when there are no filters defined in the column definitions', (done) => {
+    it('should throw an error when there are no sorters defined in the column definitions', (done) => {
       try {
         gridOptionMock.enableSorting = false;
         service.bindLocalOnSort(gridStub, dataViewStub);
@@ -597,7 +597,7 @@ describe('SortService', () => {
       }
     });
 
-    it('should trigger an "emitSortChanged" local when using "bindLocalOnSort" and also expect sorters to be set in ColumnFilters', () => {
+    it('should trigger an "emitSortChanged" local when using "bindLocalOnSort" and also expect sorters to be set in CurrentLocalSorter', () => {
       const emitSpy = jest.spyOn(service, 'emitSortChanged');
 
       service.bindLocalOnSort(gridStub, dataViewStub);
@@ -610,7 +610,20 @@ describe('SortService', () => {
       ]);
     });
 
-    it('should trigger an "emitSortChanged" remote when using "bindLocalOnSort" and also expect sorters to be set in ColumnFilters', () => {
+    it('should expect sorters to be set in CurrentLocalSorter when using "bindLocalOnSort" without triggering a sort changed event when 2nd flag argument is set to false', () => {
+      const emitSpy = jest.spyOn(service, 'emitSortChanged');
+
+      service.bindLocalOnSort(gridStub, dataViewStub);
+      service.updateSorting(mockNewSorters, false);
+
+      expect(emitSpy).not.toHaveBeenCalled();
+      expect(service.getCurrentLocalSorters()).toEqual([
+        { columnId: 'firstName', direction: 'ASC' },
+        { columnId: 'isActive', direction: 'DESC' }
+      ]);
+    });
+
+    it('should trigger an "emitSortChanged" remote when using "bindBackendOnSort" and also expect sorters to be sent to the backend when using "bindBackendOnSort"', () => {
       gridOptionMock.backendServiceApi = {
         service: backendServiceStub,
         process: () => new Promise((resolve) => resolve(jest.fn())),
@@ -625,6 +638,22 @@ describe('SortService', () => {
       expect(service.getCurrentLocalSorters()).toEqual([]);
       expect(backendUpdateSpy).toHaveBeenCalledWith(undefined, mockNewSorters);
       expect(mockRefreshBackendDataset).toHaveBeenCalledWith(gridOptionMock);
+    });
+
+    it('should expect sorters to be sent to the backend when using "bindBackendOnSort" without triggering a sort changed event neither a backend query when both flag arguments are set to false', () => {
+      gridOptionMock.backendServiceApi = {
+        service: backendServiceStub,
+        process: () => new Promise((resolve) => resolve(jest.fn())),
+      };
+      const emitSpy = jest.spyOn(service, 'emitSortChanged');
+      const backendUpdateSpy = jest.spyOn(backendServiceStub, 'updateSorters');
+
+      service.bindBackendOnSort(gridStub, dataViewStub);
+      service.updateSorting(mockNewSorters, false, false);
+
+      expect(emitSpy).not.toHaveBeenCalled();
+      expect(backendUpdateSpy).toHaveBeenCalledWith(undefined, mockNewSorters);
+      expect(mockRefreshBackendDataset).not.toHaveBeenCalled();
     });
   });
 });
