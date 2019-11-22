@@ -270,6 +270,14 @@ export class Example6 {
     ]);
   }
 
+  setSortingDynamically() {
+    this.aureliaGrid.sortService.updateSorting([
+      // orders matter, whichever is first in array will be the first sorted column
+      { columnId: 'billingAddressZip', direction: 'DESC' },
+      { columnId: 'company', direction: 'ASC' },
+    ]);
+  }
+
   switchLanguage() {
     this.selectedLanguage = (this.selectedLanguage === 'en') ? 'fr' : 'en';
     this.i18n.setLocale(this.selectedLanguage);

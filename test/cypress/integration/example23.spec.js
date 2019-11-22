@@ -14,6 +14,22 @@ describe('Example 23 - Range Filters', () => {
     cy.get('h2').should('contain', 'Example 23: Filtering from Range of Search Values');
   });
 
+  it('should expect the grid to be sorted by "% Complete" descending and then by "Duration" ascending', () => {
+    cy.get('#grid23')
+      .get('.slick-header-column:nth(2)')
+      .find('.slick-sort-indicator-desc')
+      .should('have.length', 1)
+      .siblings('.slick-sort-indicator-numbered')
+      .contains('1');
+
+    cy.get('#grid23')
+      .get('.slick-header-column:nth(5)')
+      .find('.slick-sort-indicator-asc')
+      .should('have.length', 1)
+      .siblings('.slick-sort-indicator-numbered')
+      .contains('2');
+  });
+
   it('should have "% Complete" fields within the range (inclusive) of the filters presets', () => {
     cy.get('#grid23')
       .find('.slick-row')
@@ -95,7 +111,7 @@ describe('Example 23 - Range Filters', () => {
     const newMin = 10;
     const newMax = 40;
 
-    cy.get('[data-test=clear-filter-button]')
+    cy.get('[data-test=clear-filters]')
       .click({ force: true });
 
     cy.get('.search-filter.filter-duration')
@@ -148,8 +164,8 @@ describe('Example 23 - Range Filters', () => {
   });
 
   describe('Set Dymamic Filters', () => {
-    const dynamicMinComplete = 12;
-    const dynamicMaxComplete = 82;
+    const dynamicMinComplete = 10;
+    const dynamicMaxComplete = 80;
     const dynamicMinDuration = 14;
     const dynamicMaxDuration = 78;
     const dynamicLowestDay = moment().add(-5, 'days').format('YYYY-MM-DD');
@@ -208,6 +224,32 @@ describe('Example 23 - Range Filters', () => {
               expect(isDateBetween).to.eq(true);
             });
         });
+    });
+  });
+
+  describe('Set Dynamic Sorting', () => {
+    it('should click on "Clear Filters" then "Set Dynamic Sorting" buttons', () => {
+      cy.get('[data-test=clear-filters]')
+        .click();
+
+      cy.get('[data-test=set-dynamic-sorting]')
+        .click();
+    });
+
+    it('should expect the grid to be sorted by "Duration" ascending and "Start" descending', () => {
+      cy.get('#grid23')
+        .get('.slick-header-column:nth(2)')
+        .find('.slick-sort-indicator-asc')
+        .should('have.length', 1)
+        .siblings('.slick-sort-indicator-numbered')
+        .contains('2');
+
+      cy.get('#grid23')
+        .get('.slick-header-column:nth(4)')
+        .find('.slick-sort-indicator-desc')
+        .should('have.length', 1)
+        .siblings('.slick-sort-indicator-numbered')
+        .contains('1');
     });
   });
 });

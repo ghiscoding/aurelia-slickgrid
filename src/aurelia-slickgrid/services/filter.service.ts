@@ -1,5 +1,8 @@
 import { singleton, inject } from 'aurelia-framework';
 import { EventAggregator } from 'aurelia-event-aggregator';
+import * as $ from 'jquery';
+import * as isequal from 'lodash.isequal';
+
 import { FilterConditions } from './../filter-conditions/index';
 import { FilterFactory } from './../filters/index';
 import {
@@ -24,8 +27,6 @@ import {
 import { executeBackendCallback, refreshBackendDataset } from './backend-utilities';
 import { getDescendantProperty } from './utilities';
 import { SharedService } from './shared.service';
-import * as $ from 'jquery';
-import * as isequal from 'lodash.isequal';
 
 // using external non-typed js libraries
 declare var Slick: any;
@@ -482,7 +483,7 @@ export class FilterService {
   /** Update any filter(s) dynamically */
   updateFilters(filters: CurrentFilter[]) {
     if (!this._filtersMetadata || this._filtersMetadata.length === 0 || !this._gridOptions || !this._gridOptions.enableFiltering) {
-      throw new Error('[Aurelia-Slickgrid] in order to use "updateFilters" method, you need to have Filters defined in your grid and "enableFiltering" set in your Grid Options');
+      throw new Error('[Aurelia-Slickgrid] in order to use "updateFilters" method, you need to have Filterable Columns defined in your grid and "enableFiltering" set in your Grid Options');
     }
 
     if (Array.isArray(filters)) {

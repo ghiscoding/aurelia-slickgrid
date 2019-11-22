@@ -287,6 +287,11 @@ export class Example5 {
     this.aureliaGrid.paginationService.goToLastPage();
   }
 
+  /** Dispatched event of a Grid State Changed event */
+  gridStateChanged(gridStateChanges: GridStateChange) {
+    console.log('Client sample, Grid State changed:: ', gridStateChanges);
+  }
+
   setFiltersDynamically() {
     // we can Set Filters Dynamically (or different filters) afterward through the FilterService
     this.aureliaGrid.filterService.updateFilters([
@@ -295,9 +300,10 @@ export class Example5 {
     ]);
   }
 
-  /** Dispatched event of a Grid State Changed event */
-  gridStateChanged(gridStateChanges: GridStateChange) {
-    console.log('Client sample, Grid State changed:: ', gridStateChanges);
+  setSortingDynamically() {
+    this.aureliaGrid.sortService.updateSorting([
+      { columnId: 'name', direction: 'DESC' },
+    ]);
   }
 
   // THE FOLLOWING METHODS ARE ONLY FOR DEMO PURPOSES DO NOT USE THIS CODE

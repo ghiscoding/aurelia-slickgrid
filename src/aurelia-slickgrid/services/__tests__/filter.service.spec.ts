@@ -1,9 +1,9 @@
 // import 3rd party lib multiple-select for the tests
 import '../../../assets/lib/multiple-select/multiple-select';
 
+import 'jest-extended';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { Container, DOM } from 'aurelia-framework';
-import 'jest-extended';
 
 import {
   BackendService,
@@ -19,6 +19,11 @@ import { FilterService } from '../filter.service';
 import { FilterFactory } from '../../filters/filterFactory';
 import { SlickgridConfig } from '../../slickgrid-config';
 import { SharedService } from '../shared.service';
+import * as utilities from '../../services/backend-utilities';
+
+const mockRefreshBackendDataset = jest.fn();
+// @ts-ignore
+utilities.refreshBackendDataset = mockRefreshBackendDataset;
 
 jest.mock('flatpickr', () => { });
 declare var Slick: any;
@@ -918,7 +923,7 @@ describe('FilterService', () => {
         service.bindLocalOnFilter(gridStub, dataViewStub);
         service.updateFilters([{ columnId: 'firstName', searchTerms: ['John'] }]);
       } catch (e) {
-        expect(e.toString()).toContain('[Aurelia-Slickgrid] in order to use "updateFilters" method, you need to have Filters defined in your grid');
+        expect(e.toString()).toContain('[Aurelia-Slickgrid] in order to use "updateFilters" method, you need to have Filterable Columns defined in your grid');
         done();
       }
     });
@@ -964,6 +969,8 @@ describe('FilterService', () => {
         firstName: { columnId: 'firstName', columnDef: mockColumn1, searchTerms: ['Jane'], operator: 'StartsWith' },
         isActive: { columnId: 'isActive', columnDef: mockColumn2, searchTerms: [false], operator: 'EQ' }
       });
+      expect(clearSpy).toHaveBeenCalledWith(false);
+      expect(mockRefreshBackendDataset).toHaveBeenCalledWith(gridOptionMock);
     });
   });
 });
