@@ -10,19 +10,28 @@
           <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
         </span>
       </div>
-      <button class="btn btn-default btn-sm" data-test="clear-filters-sorting"
-              click.delegate="clearAllFiltersAndSorts()">
-        <i class="fa fa-filter text-danger"></i>
-        Clear all Filter & Sorts
-      </button>
-      <button class="btn btn-default btn-sm" data-test="set-dynamic-filter" click.delegate="setFiltersDynamically()">
-        Set Filters Dynamically
-      </button>
-      <button class="btn btn-default btn-sm" click.delegate="switchLanguage()">
-        <i class="fa fa-language"></i>
-        Switch Language
-      </button>
-      <span><label>Locale</label>: ${selectedLanguage + '.json'}</span>
+
+      <div class="row col-md-12">
+        <button class="btn btn-default btn-sm" data-test="clear-filters-sorting"
+          click.delegate="clearAllFiltersAndSorts()" title="Clear all Filters & Sorts">
+          <i class="fa fa-filter text-danger"></i>
+          Clear all Filter & Sorts
+        </button>
+        <button class="btn btn-default btn-sm" data-test="set-dynamic-filter" click.delegate="setFiltersDynamically()">
+          Set Filters Dynamically
+        </button>
+        <button class="btn btn-default btn-sm" data-test="set-dynamic-sorting" click.delegate="setSortingDynamically()">
+          Set Sorting Dynamically
+        </button>
+      </div>
+      <div class="row col-md-12">
+        <button class="btn btn-default btn-sm" click.delegate="switchLanguage()">
+          <i class="fa fa-language"></i>
+          Switch Language
+        </button>
+        <b>Locale:</b>
+        <span style="font-style: italic">${selectedLanguage + '.json'}</span>
+      </div>
       <br />
       <span if.bind="metrics">
         <b>Metrics:</b> ${metrics.endTime | dateFormat: 'DD MMM, h:mm:ss a'} | ${metrics.executionTime}ms |
@@ -37,9 +46,6 @@
         <button class="btn btn-default btn-xs" data-test="goto-last-page" click.delegate="goToLastPage()">
           <i class="fa fa-caret-right fa-lg"></i>
         </button>
-        <button class="btn btn-default btn-sm" data-test="set-dynamic-sorting" click.delegate="setSortingDynamically()">
-          Set Sorting Dynamically
-        </button>
       </div>
     </div>
     <div class="col-sm-7">
@@ -50,8 +56,8 @@
   </div>
 
   <aurelia-slickgrid grid-id="grid6" column-definitions.bind="columnDefinitions" grid-options.bind="gridOptions"
-                     dataset.bind="dataset" grid-height="200" grid-width="900"
-                     asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)"
-                     asg-on-grid-state-changed.delegate="gridStateChanged($event)">
+    dataset.bind="dataset" grid-height="200" grid-width="900"
+    asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)"
+    asg-on-grid-state-changed.delegate="gridStateChanged($event)">
   </aurelia-slickgrid>
 </template>

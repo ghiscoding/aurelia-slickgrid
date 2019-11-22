@@ -10,17 +10,18 @@
           <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
         </span>
       </div>
-      <span if.bind="metrics">
-        <b>Metrics:</b> ${metrics.endTime | dateFormat: 'DD MMM, h:mm:ss a'} | ${metrics.executionTime}ms |
-        ${metrics.totalItemCount}
-        items
-      </span>
       <button class="btn btn-default btn-sm" data-test="set-dynamic-filter" click.delegate="setFiltersDynamically()">
         Set Filters Dynamically
       </button>
       <button class="btn btn-default btn-sm" data-test="set-dynamic-sorting" click.delegate="setSortingDynamically()">
         Set Sorting Dynamically
       </button>
+      <br>
+      <span if.bind="metrics">
+        <b>Metrics:</b> ${metrics.endTime | dateFormat: 'DD MMM, h:mm:ss a'} | ${metrics.executionTime}ms |
+        ${metrics.totalItemCount}
+        items
+      </span>
     </div>
     <div class="col-sm-8">
       <div class="alert alert-info" data-test="alert-odata-query">
@@ -30,16 +31,16 @@
       <span data-test="radioVersion">
         <label class="radio-inline control-label" for="radio2">
           <input type="radio" name="inlineRadioOptions" data-test="version2" id="radio2" checked value.bind="2"
-                 click.delegate="setOdataVersion(2)"> 2
+            click.delegate="setOdataVersion(2)"> 2
         </label>
         <label class="radio-inline control-label" for="radio4">
           <input type="radio" name="inlineRadioOptions" data-test="version4" id="radio4" value.bind="4"
-                 click.delegate="setOdataVersion(4)"> 4
+            click.delegate="setOdataVersion(4)"> 4
         </label>
       </span>
       <label class="checkbox-inline control-label" for="enableCount" style="margin-left: 20px">
         <input type="checkbox" id="enableCount" data-test="enable-count" checked.bind="isCountEnabled"
-               click.delegate="changeCountEnableFlag()">
+          click.delegate="changeCountEnableFlag()">
         <span style="font-weight: bold">Enable Count</span> (add to OData query)
       </label>
     </div>
@@ -55,7 +56,7 @@
   </div>
 
   <aurelia-slickgrid grid-id="grid5" column-definitions.bind="columnDefinitions" grid-options.bind="gridOptions"
-                     dataset.bind="dataset" asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)"
-                     asg-on-grid-state-changed.delegate="gridStateChanged($event)">
+    dataset.bind="dataset" asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)"
+    asg-on-grid-state-changed.delegate="gridStateChanged($event)">
   </aurelia-slickgrid>
 </template>
