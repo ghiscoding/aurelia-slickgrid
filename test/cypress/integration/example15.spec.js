@@ -16,7 +16,7 @@ describe('Example 15: Grid State & Presets using Local Storage', () => {
 
     cy.clearLocalStorage();
     cy.get('[data-test=reset-button]').click();
-    cy.reload().wait(50);
+    cy.reload();
   });
 
   it('should have exact Column Titles in the grid', () => {
