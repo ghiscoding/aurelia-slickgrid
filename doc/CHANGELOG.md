@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.15.0"></a>
+# [2.15.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.14.3...v2.15.0) (2019-11-24)
+
+
+### Bug Fixes
+
+* **odata:** no quote escape required for IN operator w/non-string column ([#262](https://github.com/ghiscoding/aurelia-slickgrid/issues/262)) ([8027922](https://github.com/ghiscoding/aurelia-slickgrid/commit/8027922))
+* **picker:** make sure picker addon is available before translating ([78a7a56](https://github.com/ghiscoding/aurelia-slickgrid/commit/78a7a56))
+
+
+### Features
+
+* **events:** allow to bypass changed events when calling updateFilters/Sorting ([#263](https://github.com/ghiscoding/aurelia-slickgrid/issues/263)) ([055fb95](https://github.com/ghiscoding/aurelia-slickgrid/commit/055fb95))
+* **examples:** add Dynamic Filters demo set by select dropdown ([706bb4e](https://github.com/ghiscoding/aurelia-slickgrid/commit/706bb4e))
+* **filters:** provide method to apply grid filters dynamically ([#258](https://github.com/ghiscoding/aurelia-slickgrid/issues/258)) ([3433686](https://github.com/ghiscoding/aurelia-slickgrid/commit/3433686))
+* **sorting:** provide method to apply grid sorting dynamically ([#261](https://github.com/ghiscoding/aurelia-slickgrid/issues/261)) ([7782767](https://github.com/ghiscoding/aurelia-slickgrid/commit/7782767))
+
+
+
 <a name="2.14.3"></a>
 ## [2.14.3](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.14.2...v2.14.3) (2019-11-14)
 
