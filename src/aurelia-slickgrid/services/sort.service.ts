@@ -211,8 +211,8 @@ export class SortService {
         this._grid.setSortColumns(sortCols); // use this to add sort icon(s) in UI
       }
 
-      return sortCols;
     }
+    return sortCols;
   }
 
   dispose() {
@@ -316,7 +316,7 @@ export class SortService {
 
       if (backendApi) {
         const backendApiService = backendApi && backendApi.service;
-        if (backendApiService) {
+        if (backendApiService && backendApiService.updateSorters) {
           backendApiService.updateSorters(undefined, sorters);
           if (triggerBackendQuery) {
             refreshBackendDataset(this._gridOptions);

@@ -518,7 +518,7 @@ export class FilterService {
 
       if (backendApi) {
         const backendApiService = backendApi && backendApi.service;
-        if (backendApiService) {
+        if (backendApiService && backendApiService.updateFilters) {
           backendApiService.updateFilters(filters, true);
           if (triggerBackendQuery) {
             refreshBackendDataset(this._gridOptions);
