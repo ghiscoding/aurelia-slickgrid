@@ -95,7 +95,7 @@ export class PaginationService {
     // unsubscribe all SlickGrid events
     this._eventHandler.unsubscribeAll();
 
-    // also unsubscribe all Angular Subscriptions
+    // also unsubscribe all Subscriptions
     this._subscriptions = disposeAllSubscriptions(this._subscriptions);
   }
 

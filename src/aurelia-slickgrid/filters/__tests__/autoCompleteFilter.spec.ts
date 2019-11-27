@@ -7,6 +7,7 @@ import { Filters } from '..';
 import { AutoCompleteFilter } from '../autoCompleteFilter';
 import { AutocompleteOption, Column, FieldType, FilterArguments, GridOption, OperatorType } from '../../models';
 import { CollectionService } from './../../services/collection.service';
+import { DOM } from 'aurelia-pal';
 
 const containerId = 'demo-container';
 
@@ -573,6 +574,29 @@ describe('AutoCompleteFilter', () => {
       expect(output).toBe(false);
       expect(spySetValue).toHaveBeenCalledWith('Female');
       expect(spyCallback).toHaveBeenCalledWith(null, { columnDef: mockColumn, operator: 'EQ', searchTerms: ['f'], shouldTriggerQuery: true });
+    });
+
+    it('should expect the "onSelect" method to be called when the callback method is triggered', () => {
+      const spy = jest.spyOn(filter, 'onSelect');
+      const event = DOM.createCustomEvent('change');
+
+      mockColumn.filter.collection = [{ value: 'male', label: 'male' }, { value: 'female', label: 'female' }];
+      filter.init(filterArguments);
+      filter.autoCompleteOptions.select(event, { item: 'fem' });
+
+      expect(spy).toHaveBeenCalledWith(event, { item: 'fem' });
+    });
+
+    it('should initialize the filter with filterOptions and expect the "onSelect" method to be called when the callback method is triggered', () => {
+      const spy = jest.spyOn(filter, 'onSelect');
+      const event = DOM.createCustomEvent('change');
+
+      mockColumn.filter.collection = [{ value: 'male', label: 'male' }, { value: 'female', label: 'female' }];
+      mockColumn.filter.filterOptions = { minLength: 3 } as AutocompleteOption;
+      filter.init(filterArguments);
+      filter.autoCompleteOptions.select(event, { item: 'fem' });
+
+      expect(spy).toHaveBeenCalledWith(event, { item: 'fem' });
     });
   });
 });
