@@ -10,7 +10,6 @@ import {
   Column,
   CurrentFilter,
   FieldType,
-  FilterChangedArgs,
   GridOption,
   SlickEventHandler,
 } from '../../models';
@@ -416,8 +415,6 @@ describe('FilterService', () => {
       });
 
       it('should not call "onBackendFilterChange" method when the filter is previously empty', () => {
-
-
         const filterFirstExpectation = { columnDef: mockColumn1, columnId: 'firstName', operator: 'EQ', searchTerms: ['John'] };
         const filterLastExpectation = { columnDef: mockColumn2, columnId: 'lastName', operator: 'NE', searchTerms: ['Doe'] };
         const newEvent = new Event('mouseup');
@@ -973,6 +970,7 @@ describe('FilterService', () => {
       const clearSpy = jest.spyOn(service, 'clearFilters');
       const emitSpy = jest.spyOn(service, 'emitFilterChanged');
       const backendUpdateSpy = jest.spyOn(backendServiceStub, 'updateFilters');
+      const backendProcessSpy = jest.spyOn(backendServiceStub, 'processOnFilterChanged');
 
       service.init(gridStub);
       service.bindBackendOnFilter(gridStub, dataViewStub);
@@ -981,6 +979,7 @@ describe('FilterService', () => {
       service.updateFilters(mockNewFilters);
 
       expect(emitSpy).toHaveBeenCalledWith('remote');
+      expect(backendProcessSpy).not.toHaveBeenCalled();
       expect(clearSpy).toHaveBeenCalledWith(false);
       expect(backendUpdateSpy).toHaveBeenCalledWith(mockNewFilters, true);
       expect(service.getColumnFilters()).toEqual({
@@ -1000,6 +999,7 @@ describe('FilterService', () => {
       const clearSpy = jest.spyOn(service, 'clearFilters');
       const emitSpy = jest.spyOn(service, 'emitFilterChanged');
       const backendUpdateSpy = jest.spyOn(backendServiceStub, 'updateFilters');
+      const backendProcessSpy = jest.spyOn(backendServiceStub, 'processOnFilterChanged');
 
       service.init(gridStub);
       service.bindBackendOnFilter(gridStub, dataViewStub);
@@ -1007,6 +1007,7 @@ describe('FilterService', () => {
       gridStub.onHeaderRowCellRendered.notify(mockArgs2, new Slick.EventData(), gridStub);
       service.updateFilters(mockNewFilters, false, false);
 
+      expect(backendProcessSpy).not.toHaveBeenCalled();
       expect(emitSpy).not.toHaveBeenCalled();
       expect(mockRefreshBackendDataset).not.toHaveBeenCalled();
       expect(backendUpdateSpy).toHaveBeenCalledWith(mockNewFilters, true);
