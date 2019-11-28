@@ -229,7 +229,7 @@ export class SelectEditor implements Editor {
           suffixText = (this.enableTranslateLabel && suffixText && typeof suffixText === 'string') ? this.i18n.tr(suffixText || ' ') : suffixText;
 
           // add to a temp array for joining purpose and filter out empty text
-          const tmpOptionArray = [prefixText, labelText, suffixText].filter(text => (text !== undefined && text !== ''));
+          const tmpOptionArray = [prefixText, labelText, suffixText].filter((text) => text);
           return tmpOptionArray.join(separatorBetweenLabels);
         }
         return labelText;
@@ -543,7 +543,7 @@ export class SelectEditor implements Editor {
         optionLabel = (this.enableTranslateLabel && optionLabel && typeof optionLabel === 'string') ? this.i18n.tr(optionLabel || ' ') : optionLabel;
 
         // add to a temp array for joining purpose and filter out empty text
-        const tmpOptionArray = [prefixText, labelText, suffixText].filter((text) => text);
+        const tmpOptionArray = [prefixText, labelText, suffixText].filter(text => (text !== undefined && text !== ''));
         let optionText = tmpOptionArray.join(separatorBetweenLabels);
 
         // if user specifically wants to render html text, he needs to opt-in else it will stripped out by default
