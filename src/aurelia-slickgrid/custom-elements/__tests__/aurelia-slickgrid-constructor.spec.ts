@@ -5,10 +5,7 @@ import { BindingEngine, Container } from 'aurelia-framework';
 import { DOM } from 'aurelia-pal';
 
 import { AureliaSlickgridCustomElement } from '../aurelia-slickgrid';
-
-import {
-  ExtensionUtility,
-} from '../../extensions';
+import { ExtensionUtility } from '../../extensions';
 import {
   ExcelExportService,
   ExportService,
@@ -28,7 +25,6 @@ import { GridOption, CurrentFilter, CurrentSorter, GridStateType, Pagination, Gr
 import { Filters } from '../../filters';
 import { Editors } from '../../editors';
 import * as utilities from '../../services/backend-utilities';
-
 
 const mockExecuteBackendProcess = jest.fn();
 // @ts-ignore
@@ -229,7 +225,7 @@ class HttpStub extends HttpClient {
   fetch(input, init) {
     let request;
     const responseInit: any = {};
-    responseInit.headers = new Headers()
+    responseInit.headers = new Headers();
 
     for (const name in this.responseHeaders || {}) {
       if (name) {
@@ -259,6 +255,9 @@ class HttpStub extends HttpClient {
       } else {
         const data = JSON.stringify(this.object);
         const response = new Response(data, responseInit);
+        if (input === 'invalid-url') {
+          Object.defineProperty(response, 'bodyUsed', { writable: true, configurable: true, value: true });
+        }
         return this.status >= 200 && this.status < 300 ? Promise.resolve(response) : Promise.reject(response);
       }
     });
@@ -475,7 +474,6 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
         const mockColDefs = [{ id: 'gender', field: 'gender', editor: { model: Editors.text, collectionAsync } }] as Column[];
         const getColSpy = jest.spyOn(mockGrid, 'getColumns').mockReturnValue(mockColDefs);
 
-
         customElement.columnDefinitions = mockColDefs;
         customElement.bind();
         customElement.attached();
@@ -487,6 +485,27 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
           expect(customElement.columnDefinitions[0].internalColumnEditor.model).toEqual(Editors.text);
           done();
         });
+      });
+
+      xit('should throw an error when Fetch Promise response bodyUsed is true', (done) => {
+        const mockCollection = ['male', 'female'];
+        http.status = 200;
+        http.object = mockCollection;
+        http.returnKey = 'date';
+        http.returnValue = '6/24/1984';
+        http.responseHeaders = { accept: 'json' };
+        const collectionAsync = http.fetch('invalid-url', { method: 'GET' });
+        const mockColDefs = [{ id: 'gender', field: 'gender', editor: { model: Editors.text, collectionAsync } }] as Column[];
+        jest.spyOn(mockGrid, 'getColumns').mockReturnValue(mockColDefs);
+        customElement.columnDefinitions = mockColDefs;
+
+        try {
+          customElement.bind();
+          customElement.attached();
+        } catch (e) {
+          expect(e.toString()).toContain('[Aurelia-SlickGrid] The response body passed to collectionAsync was already read.');
+          done();
+        }
       });
     });
 

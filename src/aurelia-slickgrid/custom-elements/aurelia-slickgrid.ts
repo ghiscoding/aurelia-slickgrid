@@ -751,7 +751,7 @@ export class AureliaSlickgridCustomElement {
   }
 
   /** Load the Editor Collection asynchronously and replace the "collection" property when Promise resolves */
-  private loadEditorCollectionAsync(column: Column): any[] {
+  private loadEditorCollectionAsync(column: Column) {
     const collectionAsync = column && column.editor && column.editor.collectionAsync;
     if (collectionAsync) {
       // wait for the "collectionAsync", once resolved we will save it into the "collection"
@@ -761,9 +761,8 @@ export class AureliaSlickgridCustomElement {
           this.updateEditorCollection(column, response); // from Promise
         } else if (response instanceof Response && typeof response.json === 'function') {
           if (response.bodyUsed) {
-            throw new Error('[Aurelia-SlickGrid] The response body passed to collectionAsync was ' +
-              'already read. Either pass the dataset from the Response ' +
-              'or clone the response first using response.clone()');
+            throw new Error(`[Aurelia-SlickGrid] The response body passed to collectionAsync was already read.
+              Either pass the dataset from the Response or clone the response first using response.clone()`);
           }
           // from Fetch
           (response as Response).json().then(data => this.updateEditorCollection(column, data));
@@ -772,7 +771,6 @@ export class AureliaSlickgridCustomElement {
         }
       });
     }
-    return [];
   }
 
   /**

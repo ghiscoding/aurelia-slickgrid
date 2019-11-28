@@ -426,8 +426,10 @@ describe('SelectEditor', () => {
         editor = new SelectEditor(bindingEngineStub, collectionService, i18n, editorArguments, true);
         editor.loadValue(mockItemData);
         const output = editor.serializeValue();
+        const currentValue = editor.currentValue;
 
         expect(output).toEqual([]);
+        expect(currentValue).toEqual('');
       });
 
       it('should return value as a string when using a dot (.) notation for complex object with a collection of string values', () => {
@@ -448,8 +450,10 @@ describe('SelectEditor', () => {
         editor = new SelectEditor(bindingEngineStub, collectionService, i18n, editorArguments, true);
         editor.loadValue(mockItemData);
         const output = editor.serializeValue();
+        const currentValue = editor.currentValue;
 
         expect(output).toEqual([{ label: 'male', value: 'male' }, { label: 'other', value: 'other' }]);
+        expect(currentValue).toEqual({});
       });
 
       it('should return object value when using a dot (.) notation and we override the object path using "complexObjectPath" to find correct values', () => {

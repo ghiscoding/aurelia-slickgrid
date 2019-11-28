@@ -20,6 +20,7 @@ import * as $ from 'jquery';
 
 @inject(BindingEngine, CollectionService)
 export class AutoCompleteFilter implements Filter {
+  private _autoCompleteOptions: AutocompleteOption;
   private _clearFilterTriggered = false;
   private _collection: any[];
   private _shouldTriggerQuery = true;
@@ -52,6 +53,11 @@ export class AutoCompleteFilter implements Filter {
    * Initialize the Filter
    */
   constructor(protected bindingEngine: BindingEngine, protected collectionService: CollectionService) { }
+
+  /** Getter for the Autocomplete Option */
+  get autoCompleteOptions(): Partial<AutocompleteOption> {
+    return this._autoCompleteOptions || {};
+  }
 
   /** Getter for the Collection Options */
   protected get collectionOptions(): CollectionOption {
@@ -98,7 +104,7 @@ export class AutoCompleteFilter implements Filter {
   /**
    * Initialize the filter template
    */
-  init(args: FilterArguments) {
+  init(args: FilterArguments): Promise<any[]> {
     if (!args) {
       throw new Error('[Aurelia-SlickGrid] A filter must always have an "init()" with valid arguments.');
     }
@@ -120,18 +126,21 @@ export class AutoCompleteFilter implements Filter {
     this._collection = newCollection;
     this.renderDomElement(newCollection);
 
-    const collectionAsync = this.columnFilter.collectionAsync;
-    if (collectionAsync && !this.columnFilter.collection) {
-      // only read the collectionAsync once (on the 1st load),
-      // we do this because Http Fetch will throw an error saying body was already read and is streaming is locked
-      this.renderOptionsAsync(collectionAsync);
-    }
+    return new Promise(resolve => {
+      const collectionAsync = this.columnFilter.collectionAsync;
+      if (collectionAsync && !this.columnFilter.collection) {
+        // only read the collectionAsync once (on the 1st load),
+        // we do this because Http Fetch will throw an error saying body was already read and is streaming is locked
+        resolve(this.renderOptionsAsync(collectionAsync));
+      }
 
-    // subscribe to both CollectionObserver and PropertyObserver
-    // any collection changes will trigger a re-render of the DOM element filter
-    if (collectionAsync || (this.columnFilter.enableCollectionWatch)) {
-      this.watchCollectionChanges();
-    }
+      // subscribe to both CollectionObserver and PropertyObserver
+      // any collection changes will trigger a re-render of the DOM element filter
+      if (collectionAsync || (this.columnFilter.enableCollectionWatch)) {
+        this.watchCollectionChanges();
+      }
+      resolve(newCollection);
+    });
   }
 
   /**
@@ -227,7 +236,7 @@ export class AutoCompleteFilter implements Filter {
       }
 
       if (!Array.isArray(awaitedCollection)) {
-        throw new Error('Something went wrong while trying to pull the collection from the "collectionAsync" call.');
+        throw new Error('Something went wrong while trying to pull the collection from the "collectionAsync" call in the AutoComplete Filter, the collection is not a valid array.');
       }
 
       // copy over the array received from the async call to the "collection" as the new collection to use
@@ -363,13 +372,16 @@ export class AutoCompleteFilter implements Filter {
     // we still need to provide our own "select" callback implementation
     if (autoCompleteOptions) {
       autoCompleteOptions.select = (event: Event, ui: any) => this.onSelect(event, ui);
+      this._autoCompleteOptions = { ...autoCompleteOptions };
       $filterElm.autocomplete(autoCompleteOptions);
     } else {
-      $filterElm.autocomplete({
+      const definedOptions: AutocompleteOption = {
         minLength: 0,
         source: collection,
         select: (event: Event, ui: any) => this.onSelect(event, ui),
-      });
+      };
+      this._autoCompleteOptions = { ...definedOptions, ...(this.columnFilter.filterOptions as AutocompleteOption) };
+      $filterElm.autocomplete(this._autoCompleteOptions);
     }
 
     $filterElm.val(searchTermInput);
