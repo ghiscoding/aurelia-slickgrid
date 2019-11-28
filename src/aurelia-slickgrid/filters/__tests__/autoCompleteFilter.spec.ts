@@ -179,6 +179,14 @@ describe('AutoCompleteFilter', () => {
     }
   });
 
+  it('should throw an error when "collectionAsync" Promise does not return a valid array', (done) => {
+    mockColumn.filter.collectionAsync = new Promise(resolve => resolve({ hello: 'world' }));
+    filter.init(filterArguments).catch((e) => {
+      expect(e.toString()).toContain(`Something went wrong while trying to pull the collection from the "collectionAsync" call in the AutoComplete Filter, the collection is not a valid array.`);
+      done();
+    });
+  });
+
   it('should initialize the filter', () => {
     mockColumn.filter.collection = [{ value: 'male', label: 'male' }, { value: 'female', label: 'female' }];
     filter.init(filterArguments);
@@ -590,6 +598,29 @@ describe('AutoCompleteFilter', () => {
     it('should initialize the filter with filterOptions and expect the "onSelect" method to be called when the callback method is triggered', () => {
       const spy = jest.spyOn(filter, 'onSelect');
       const event = DOM.createCustomEvent('change');
+
+      mockColumn.filter.collection = [{ value: 'male', label: 'male' }, { value: 'female', label: 'female' }];
+      mockColumn.filter.filterOptions = { minLength: 3 } as AutocompleteOption;
+      filter.init(filterArguments);
+      filter.autoCompleteOptions.select(event, { item: 'fem' });
+
+      expect(spy).toHaveBeenCalledWith(event, { item: 'fem' });
+    });
+
+    it('should expect the "onSelect" method to be called when the callback method is triggered', () => {
+      const spy = jest.spyOn(filter, 'onSelect');
+      const event = new CustomEvent('change');
+
+      mockColumn.filter.collection = [{ value: 'male', label: 'male' }, { value: 'female', label: 'female' }];
+      filter.init(filterArguments);
+      filter.autoCompleteOptions.select(event, { item: 'fem' });
+
+      expect(spy).toHaveBeenCalledWith(event, { item: 'fem' });
+    });
+
+    it('should initialize the filter with filterOptions and expect the "onSelect" method to be called when the callback method is triggered', () => {
+      const spy = jest.spyOn(filter, 'onSelect');
+      const event = new CustomEvent('change');
 
       mockColumn.filter.collection = [{ value: 'male', label: 'male' }, { value: 'female', label: 'female' }];
       mockColumn.filter.filterOptions = { minLength: 3 } as AutocompleteOption;

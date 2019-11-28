@@ -104,7 +104,7 @@ export class AutoCompleteFilter implements Filter {
   /**
    * Initialize the filter template
    */
-  init(args: FilterArguments) {
+  init(args: FilterArguments): Promise<any[]> {
     if (!args) {
       throw new Error('[Aurelia-SlickGrid] A filter must always have an "init()" with valid arguments.');
     }
@@ -126,18 +126,21 @@ export class AutoCompleteFilter implements Filter {
     this._collection = newCollection;
     this.renderDomElement(newCollection);
 
-    const collectionAsync = this.columnFilter.collectionAsync;
-    if (collectionAsync && !this.columnFilter.collection) {
-      // only read the collectionAsync once (on the 1st load),
-      // we do this because Http Fetch will throw an error saying body was already read and is streaming is locked
-      this.renderOptionsAsync(collectionAsync);
-    }
+    return new Promise(resolve => {
+      const collectionAsync = this.columnFilter.collectionAsync;
+      if (collectionAsync && !this.columnFilter.collection) {
+        // only read the collectionAsync once (on the 1st load),
+        // we do this because Http Fetch will throw an error saying body was already read and is streaming is locked
+        resolve(this.renderOptionsAsync(collectionAsync));
+      }
 
-    // subscribe to both CollectionObserver and PropertyObserver
-    // any collection changes will trigger a re-render of the DOM element filter
-    if (collectionAsync || (this.columnFilter.enableCollectionWatch)) {
-      this.watchCollectionChanges();
-    }
+      // subscribe to both CollectionObserver and PropertyObserver
+      // any collection changes will trigger a re-render of the DOM element filter
+      if (collectionAsync || (this.columnFilter.enableCollectionWatch)) {
+        this.watchCollectionChanges();
+      }
+      resolve(newCollection);
+    });
   }
 
   /**
@@ -233,7 +236,7 @@ export class AutoCompleteFilter implements Filter {
       }
 
       if (!Array.isArray(awaitedCollection)) {
-        throw new Error('Something went wrong while trying to pull the collection from the "collectionAsync" call.');
+        throw new Error('Something went wrong while trying to pull the collection from the "collectionAsync" call in the AutoComplete Filter, the collection is not a valid array.');
       }
 
       // copy over the array received from the async call to the "collection" as the new collection to use
