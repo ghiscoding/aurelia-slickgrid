@@ -88,18 +88,18 @@ describe('InputMaskFilter', () => {
     expect(spyCallback).toHaveBeenCalledWith(expect.anything(), { columnDef: mockColumn, operator: '', searchTerms: ['1234567890'], shouldTriggerQuery: true });
   });
 
-  it('should call "setValues" with 10 digits and expect input value to be formatted as a phone as the mask format specifies', () => {
+  it('should call "setValues" with an operator and with 10 digits and expect input value to be formatted as a phone as the mask format specifies', () => {
     mockColumn.filter.params = { mask: '(000) 000-0000' };
     const spyCallback = jest.spyOn(filterArguments, 'callback');
 
     filter.init(filterArguments);
-    filter.setValues('1234567890');
+    filter.setValues('1234567890', 'EQ');
     const filterElm = divContainer.querySelector<HTMLInputElement>('input.filter-mask');
     filterElm.focus();
     filterElm.dispatchEvent(new (window.window as any).KeyboardEvent('keyup', { keyCode: 97, bubbles: true, cancelable: true }));
 
     expect(filterElm.value).toBe('(123) 456-7890');
-    expect(spyCallback).toHaveBeenCalledWith(expect.anything(), { columnDef: mockColumn, operator: '', searchTerms: ['1234567890'], shouldTriggerQuery: true });
+    expect(spyCallback).toHaveBeenCalledWith(expect.anything(), { columnDef: mockColumn, operator: 'EQ', searchTerms: ['1234567890'], shouldTriggerQuery: true });
   });
 
   it('should call "setValues" with 10 digits and other extra characters but still expect the value to be formatted as a phone as the mask format specifies', () => {

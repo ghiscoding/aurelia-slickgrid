@@ -84,12 +84,12 @@ describe('InputFilter', () => {
     expect(spyCallback).toHaveBeenCalledWith(expect.anything(), { columnDef: mockColumn, operator: '', searchTerms: ['abc'], shouldTriggerQuery: true });
   });
 
-  it('should call "setValues" with extra spaces at the beginning of the searchTerms and trim value when "enableFilterTrimWhiteSpace" is enabled in grid options', () => {
+  it('should call "setValues" with an operator and with extra spaces at the beginning of the searchTerms and trim value when "enableFilterTrimWhiteSpace" is enabled in grid options', () => {
     gridOptionMock.enableFilterTrimWhiteSpace = true;
     const spyCallback = jest.spyOn(filterArguments, 'callback');
 
     filter.init(filterArguments);
-    filter.setValues('    abc ');
+    filter.setValues('    abc ', 'EQ');
     const filterElm = divContainer.querySelector<HTMLInputElement>('input.filter-duration');
 
     filterElm.focus();
@@ -97,7 +97,7 @@ describe('InputFilter', () => {
     const filterFilledElms = divContainer.querySelectorAll<HTMLInputElement>('input.filter-duration.filled');
 
     expect(filterFilledElms.length).toBe(1);
-    expect(spyCallback).toHaveBeenCalledWith(expect.anything(), { columnDef: mockColumn, operator: '', searchTerms: ['abc'], shouldTriggerQuery: true });
+    expect(spyCallback).toHaveBeenCalledWith(expect.anything(), { columnDef: mockColumn, operator: 'EQ', searchTerms: ['abc'], shouldTriggerQuery: true });
   });
 
   it('should call "setValues" with extra spaces at the beginning of the searchTerms and trim value when "enableTrimWhiteSpace" is enabled in the column filter', () => {
