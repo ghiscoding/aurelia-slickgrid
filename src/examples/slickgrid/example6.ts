@@ -52,18 +52,22 @@ export class Example6 {
   processing = false;
   selectedLanguage: string;
   status = { text: '', class: '' };
-  Subscription: Subscription;
+  subscription: Subscription;
 
   constructor(private ea: EventAggregator, private http: HttpClient, private i18n: I18N) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
-    this.selectedLanguage = this.i18n.getLocale();
-    this.Subscription = this.ea.subscribe('gridStateService:changed', (data) => console.log(data));
+
+    // always start with English for Cypress E2E tests to be consistent
+    const defaultLang = 'en';
+    this.i18n.setLocale(defaultLang);
+    this.selectedLanguage = defaultLang;
+    this.subscription = this.ea.subscribe('gridStateService:changed', (data) => console.log(data));
   }
 
   detached() {
     this.saveCurrentGridState();
-    this.Subscription.dispose();
+    this.subscription.dispose();
   }
 
   aureliaGridReady(aureliaGrid: AureliaGridInstance) {

@@ -5,11 +5,14 @@
   <hr />
 
   <div class="row">
-    <button class="btn btn-default btn-sm" click.delegate="switchLanguage()">
+    <button class="btn btn-default btn-sm" click.delegate="switchLanguage()" data-test="language-button">
       <i class="fa fa-language"></i>
       Switch Language
     </button>
-    <label>Locale</label>: ${selectedLanguage + '.json'}
+    <label>Locale:</label>
+    <span style="font-style: italic" data-test="selected-locale">
+      ${selectedLanguage + '.json'}
+    </span>
 
     <span style="margin-left: 20px">
       <button class="btn btn-default btn-sm" click.delegate="exportToFile('csv')">
