@@ -1,3 +1,4 @@
+import 'jest-extended';
 import { DOM } from 'aurelia-pal';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { I18N } from 'aurelia-i18n';
@@ -254,6 +255,28 @@ describe('CompoundDateFilter', () => {
     expect(calendarElm).toBeTruthy();
     expect(selectonOptionElms.length).toBe(12);
     expect(selectonOptionElms[0].textContent).toBe('janvier');
+  });
+
+  it('should throw an error and use English locale when user tries to load an unsupported Flatpickr locale', () => {
+    i18n.setLocale('zx');
+    const consoleSpy = jest.spyOn(global.console, 'warn').mockReturnValue();
+
+    filterArguments.searchTerms = ['2000-01-01T05:00:00.000Z'];
+    mockColumn.filter.operator = '<=';
+
+    filter.init(filterArguments);
+    const filterInputElm = divContainer.querySelector<HTMLInputElement>('.search-filter.filter-finish .flatpickr input.flatpickr');
+    const calendarElm = document.body.querySelector<HTMLDivElement>('.flatpickr-calendar');
+    const selectonOptionElms = calendarElm.querySelectorAll<HTMLSelectElement>(' .flatpickr-monthDropdown-months option');
+
+    filter.show();
+
+    filterInputElm.focus();
+    filterInputElm.dispatchEvent(new (window.window as any).KeyboardEvent('keyup', { keyCode: 97, bubbles: true, cancelable: true }));
+
+    expect(consoleSpy).toHaveBeenCalledWith(expect.toInclude('[Aurelia-Slickgrid - CompoundDate Filter] It seems that "zx" is not a locale supported by Flatpickr'));
+    expect(selectonOptionElms.length).toBe(12);
+    expect(selectonOptionElms[0].textContent).toBe('January');
   });
 
   it('should trigger a callback with the clear filter set when calling the "clear" method', () => {
