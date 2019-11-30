@@ -166,7 +166,10 @@ export class DateRangeFilter implements Filter {
     const columnId = this.columnDef && this.columnDef.id;
     const inputFormat = mapFlatpickrDateFormatWithFieldType(this.columnDef.type || FieldType.dateIso);
     const outputFormat = mapFlatpickrDateFormatWithFieldType(this.columnDef.outputType || this.columnDef.type || FieldType.dateUtc);
-    let currentLocale = this.i18n && this.i18n.getLocale && this.i18n.getLocale() || 'en';
+    const userFilterOptions = (this.columnFilter && this.columnFilter.filterOptions || {}) as FlatpickrOption;
+
+    // get current locale, if user defined a custom locale just use or get it the Translate Service if it exist else just use English
+    let currentLocale = (userFilterOptions && userFilterOptions.locale) || (this.i18n && this.i18n.getLocale && this.i18n.getLocale()) || 'en';
     if (currentLocale.length > 2) {
       currentLocale = currentLocale.substring(0, 2);
     }
@@ -217,7 +220,7 @@ export class DateRangeFilter implements Filter {
     }
 
     // merge options with optional user's custom options
-    this._flatpickrOptions = { ...pickerOptions, ...(this.columnFilter.filterOptions as FlatpickrOption) };
+    this._flatpickrOptions = { ...pickerOptions, ...userFilterOptions };
 
     let placeholder = (this.gridOptions) ? (this.gridOptions.defaultFilterPlaceholder || '') : '';
     if (this.columnFilter && this.columnFilter.placeholder) {
@@ -269,10 +272,16 @@ export class DateRangeFilter implements Filter {
   private loadFlatpickrLocale(language: string) {
     let locales = 'en';
 
-    if (language !== 'en') {
-      // change locale if needed, Flatpickr reference: https://chmln.github.io/flatpickr/localization/
-      const localeDefault: any = require(`flatpickr/dist/l10n/${language}.js`).default;
-      locales = (localeDefault && localeDefault[language]) ? localeDefault[language] : 'en';
+    try {
+      if (language !== 'en') {
+        // change locale if needed, Flatpickr reference: https://chmln.github.io/flatpickr/localization/
+        const localeDefault: any = require(`flatpickr/dist/l10n/${language}.js`).default;
+        locales = (localeDefault && localeDefault[language]) ? localeDefault[language] : 'en';
+      }
+    } catch (e) {
+      console.warn(`[Aurelia-Slickgrid - DateRange Filter] It seems that "${language}" is not a locale supported by Flatpickr, we will use "en" instead. `
+        + `To avoid seeing this message, you can specifically set "filter: { filterOptions: { locale: 'en' } }" in your column definition.`);
+      return 'en';
     }
     return locales;
   }

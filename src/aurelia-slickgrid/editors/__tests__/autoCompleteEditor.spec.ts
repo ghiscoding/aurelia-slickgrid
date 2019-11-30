@@ -485,7 +485,7 @@ describe('AutoCompleteEditor', () => {
         setTimeout(() => {
           expect(focusSpy).toHaveBeenCalled();
           done();
-        }, 51);
+        }, 52);
       });
     });
   });

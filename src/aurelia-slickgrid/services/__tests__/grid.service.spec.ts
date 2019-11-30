@@ -1029,11 +1029,14 @@ describe('Grid Service', () => {
   // ----------------------
 
   describe('deprecated methods', () => {
+    const consoleSpy = jest.spyOn(global.console, 'warn').mockReturnValue();
+
     it('should call "addItem" when "addItemToDatagrid" is originally called', () => {
       const mockItem = { id: 0 };
       const spy = jest.spyOn(service, 'addItem');
       service.addItemToDatagrid(mockItem);
       expect(spy).toHaveBeenCalled();
+      expect(consoleSpy).toHaveBeenCalledWith('[Aurelia-Slickgrid - GridService] please consider using the new "addItem" method since "addItemToDatagrid" will be deprecated in the future.');
     });
 
     it('should call "addItem" when "addItemsToDatagrid" is originally called', () => {
@@ -1041,6 +1044,7 @@ describe('Grid Service', () => {
       const spy = jest.spyOn(service, 'addItems');
       service.addItemsToDatagrid(mockItems);
       expect(spy).toHaveBeenCalled();
+      expect(consoleSpy).toHaveBeenCalledWith('[Aurelia-Slickgrid - GridService] please consider using the new "addItems" method since "addItemsToDatagrid" will be deprecated in the future.');
     });
 
     it('should call "updateItem" when "updateDataGridItem" is originally called', () => {
@@ -1052,6 +1056,7 @@ describe('Grid Service', () => {
       service.updateDataGridItem(mockItem);
 
       expect(spy).toHaveBeenCalled();
+      expect(consoleSpy).toHaveBeenCalledWith('[Aurelia-Slickgrid - GridService] please consider using the new "updateItem" method since "updateDataGridItem" will be deprecated in the future.');
     });
 
     it('should call "updateItems" when "updateDataGridItems" is originally called', () => {
@@ -1063,6 +1068,7 @@ describe('Grid Service', () => {
       service.updateDataGridItems([mockItem]);
 
       expect(spy).toHaveBeenCalled();
+      expect(consoleSpy).toHaveBeenCalledWith('[Aurelia-Slickgrid - GridService] please consider using the new "updateItems" method since "updateDataGridItems" will be deprecated in the future.');
     });
 
     it('should call "updateItemById" when "updateDataGridItemById" is originally called', () => {
@@ -1074,30 +1080,39 @@ describe('Grid Service', () => {
       service.updateDataGridItemById(0, mockItem);
 
       expect(spy).toHaveBeenCalled();
+      expect(consoleSpy).toHaveBeenCalledWith('[Aurelia-Slickgrid - GridService] please consider using the new "updateItemById" method since "updateDataGridItemById" will be deprecated in the future.');
     });
 
     it('should call "deleteItem" when "deleteDataGridItem" is originally called', () => {
       const spy = jest.spyOn(service, 'deleteItem');
       service.deleteDataGridItem({ id: 0 });
+
       expect(spy).toHaveBeenCalled();
+      expect(consoleSpy).toHaveBeenCalledWith('[Aurelia-Slickgrid - GridService] please consider using the new "deleteItem" method since "deleteDataGridItem" will be deprecated in the future.');
     });
 
     it('should call "deleteItems" when "deleteDataGridItems" is originally called', () => {
       const spy = jest.spyOn(service, 'deleteItems');
       service.deleteDataGridItems([{ id: 0 }]);
+
       expect(spy).toHaveBeenCalled();
+      expect(consoleSpy).toHaveBeenCalledWith('[Aurelia-Slickgrid - GridService] please consider using the new "deleteItems" method since "deleteDataGridItems" will be deprecated in the future.');
     });
 
     it('should call "deleteItemById" when "deleteDataGridItemById" is originally called', () => {
       const spy = jest.spyOn(service, 'deleteItemById');
       service.deleteDataGridItemById(5);
+
       expect(spy).toHaveBeenCalled();
+      expect(consoleSpy).toHaveBeenCalledWith('[Aurelia-Slickgrid - GridService] please consider using the new "deleteItemById" method since "deleteDataGridItemById" will be deprecated in the future.');
     });
 
     it('should call "deleteItemByIds" when "deleteDataGridItemByIds" is originally called', () => {
       const spy = jest.spyOn(service, 'deleteItemByIds');
       service.deleteDataGridItemByIds([5]);
+
       expect(spy).toHaveBeenCalled();
+      expect(consoleSpy).toHaveBeenCalledWith('[Aurelia-Slickgrid - GridService] please consider using the new "deleteItemByIds" method since "deleteDataGridItemByIds" will be deprecated in the future.');
     });
   });
 });
