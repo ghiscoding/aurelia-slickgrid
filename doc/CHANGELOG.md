@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.15.1"></a>
+## [2.15.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.15.0...v2.15.1) (2019-11-30)
+
+
+### Bug Fixes
+
+* **editor:** Select Editor with option "0" were incorrectly filtered out ([3a4258b](https://github.com/ghiscoding/aurelia-slickgrid/commit/3a4258b))
+* **editor:** Select Editor with option "0" were incorrectly filtered out ([a22e300](https://github.com/ghiscoding/aurelia-slickgrid/commit/a22e300))
+* **filter:** Date Filters using Flatpickr throw error w/invalid locale ([2e6a7cc](https://github.com/ghiscoding/aurelia-slickgrid/commit/2e6a7cc))
+* **filter:** default operator of input filter should be empty ([37f031a](https://github.com/ghiscoding/aurelia-slickgrid/commit/37f031a))
+* **filter:** number filter condition, parse number before comparing ([1c4ed2d](https://github.com/ghiscoding/aurelia-slickgrid/commit/1c4ed2d))
+* **filter:** updateFilters w/BackendService should call query only once ([bd6749e](https://github.com/ghiscoding/aurelia-slickgrid/commit/bd6749e))
+* **filter:** updateFilters w/BackendService should call query only once ([#265](https://github.com/ghiscoding/aurelia-slickgrid/issues/265)) ([0a5e43a](https://github.com/ghiscoding/aurelia-slickgrid/commit/0a5e43a))
+
+
+### Features
+
+* **tests:** add Cypress E2E test to cover i18n grid and text filter ([97be0ad](https://github.com/ghiscoding/aurelia-slickgrid/commit/97be0ad))
+* **tests:** add more unit tests & cleanup some code ([74cd00d](https://github.com/ghiscoding/aurelia-slickgrid/commit/74cd00d))
+
+
+
 <a name="2.15.0"></a>
 # [2.15.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.14.3...v2.15.0) (2019-11-24)
 
