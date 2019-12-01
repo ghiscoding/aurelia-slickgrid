@@ -18,7 +18,7 @@ const mpnFormatter: Formatter = (row: number, cell: number, value: any, columnDe
 };
 
 export class Example17 {
-  @bindable({ defaultBindingMode: bindingMode.twoWay }) search = 'switch';
+  @bindable({ defaultBindingMode: bindingMode.twoWay }) search: string;
   private _eventHandler: any = new Slick.EventHandler();
 
   title = 'Example 17: Octopart Catalog Search - Remote Model Plugin';
@@ -59,7 +59,10 @@ export class Example17 {
 
   attached() {
     this.hookAllLoaderEvents();
-    this.loaderDataView.setSearch(this.search);
+
+    // set default search
+    // this.search = 'switch';
+    // this.loaderDataView.setSearch(this.search);
   }
 
   detached() {
