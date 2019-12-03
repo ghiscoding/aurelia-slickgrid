@@ -30,6 +30,9 @@ For complete working local demos, you can clone the [Aurelia-Slickgrid Demos](ht
 #### How to load data with `Fetch-Client` or `Http-Client`?
 You might notice that all demos are made with mocked dataset that are embedded in each examples, that is mainly for demo purposes, but you might be wondering how to connect this with an `FetchClient`? Easy... just replace the mocked data, assigned to the `dataset` property, by your `FetchClient` call and that's it. The `dataset` property can be changed at any time, which is why you can use local data and/or connect it to a `Promise` or an async call with `FetchClient` (internally it's just a SETTER that refreshes the grid). See [Example 22](https://ghiscoding.github.io/aurelia-slickgrid/#/slickgrid/example22) for a demo showing how to load a JSON file with `FetchClient`.
 
+### Fully Tested
+Aurelia-Slickgrid recently reached **100%** Test Coverage, we are talking about ~8300 lines of code that are now fully tested with [Jest](https://jestjs.io/).
+
 ## Installation
 Refer to the [Wiki - HOWTO Step by Step](https://github.com/ghiscoding/aurelia-slickgrid/wiki/HOWTO--Step-by-Step)
 
