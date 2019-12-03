@@ -257,13 +257,11 @@ export class AutoCompleteFilter implements Filter {
    */
   protected watchCollectionChanges(): void {
     // subscribe to the "collection" changes (array replace)
+    // then simply recreate/re-render the DOM Element
     this.subscriptions.push(
       this.bindingEngine
         .propertyObserver(this.columnFilter, 'collection')
-        .subscribe((newVal) => {
-          // simply recreate/re-render the DOM Element
-          this.renderDomElement(newVal);
-        })
+        .subscribe((newCollection: any[]) => this.renderDomElement(newCollection))
     );
 
     // subscribe to the "collection" changes (array `push`, `unshift`, `splice`, ...)
@@ -282,7 +280,7 @@ export class AutoCompleteFilter implements Filter {
     }
   }
 
-  protected renderDomElement(collection: any[]) {
+  renderDomElement(collection: any[]) {
     if (!Array.isArray(collection) && this.collectionOptions && (this.collectionOptions.collectionInsideObjectProperty || this.collectionOptions.collectionInObjectProperty)) {
       const collectionInsideObjectProperty = this.collectionOptions.collectionInsideObjectProperty || this.collectionOptions.collectionInObjectProperty;
       collection = getDescendantProperty(collection, collectionInsideObjectProperty || '');

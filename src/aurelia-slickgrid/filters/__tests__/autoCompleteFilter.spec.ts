@@ -1,27 +1,20 @@
+import { TaskQueue, EventManager, ObserverLocator, Parser } from 'aurelia-framework';
 import { BindingEngine } from 'aurelia-binding';
+import { EventAggregator } from 'aurelia-event-aggregator';
 import { HttpClient } from 'aurelia-fetch-client';
 import { I18N } from 'aurelia-i18n';
-import { EventAggregator } from 'aurelia-event-aggregator';
+import { DOM } from 'aurelia-pal';
 import { BindingSignaler } from 'aurelia-templating-resources';
+
 import { Filters } from '..';
 import { AutoCompleteFilter } from '../autoCompleteFilter';
 import { AutocompleteOption, Column, FieldType, FilterArguments, GridOption, OperatorType } from '../../models';
-import { CollectionService } from './../../services/collection.service';
-import { DOM } from 'aurelia-pal';
+import { CollectionService } from '../../services/collection.service';
 
 const containerId = 'demo-container';
 
 // define a <div> container to simulate the grid container
 const template = `<div id="${containerId}"></div>`;
-
-const bindingEngineStub = {
-  createBindingExpression: jest.fn(),
-  collectionObserver: jest.fn(),
-  expressionObserver: jest.fn(),
-  propertyObserver: jest.fn(),
-  parseExpression: jest.fn(),
-  registerAdapter: jest.fn(),
-} as unknown as BindingEngine;
 
 const gridOptionMock = {
   enableFiltering: true,
@@ -93,8 +86,17 @@ describe('AutoCompleteFilter', () => {
   let mockColumn: Column;
   let collectionService: CollectionService;
   const http = new HttpStub();
+  let bindingEngine: BindingEngine;
 
   beforeEach(() => {
+    const taskQueue = new TaskQueue();
+    const eventManager = new EventManager();
+    const parser = new Parser();
+    // @ts-ignore
+    const observerLocator = new ObserverLocator(taskQueue, eventManager, {});
+    // @ts-ignore
+    bindingEngine = new BindingEngine(observerLocator, parser);
+
     ea = new EventAggregator();
     i18n = new I18N(ea, new BindingSignaler());
     collectionService = new CollectionService(i18n);
@@ -147,11 +149,12 @@ describe('AutoCompleteFilter', () => {
       debug: false
     });
 
-    filter = new AutoCompleteFilter(bindingEngineStub, collectionService);
+    filter = new AutoCompleteFilter(bindingEngine, collectionService);
   });
 
   afterEach(() => {
     filter.destroy();
+    jest.clearAllMocks();
   });
 
   it('should throw an error when trying to call init without any arguments', () => {
@@ -344,8 +347,8 @@ describe('AutoCompleteFilter', () => {
   });
 
   it('should create the filter with a default search term when using "collectionAsync" as a Promise', (done) => {
-    jest.spyOn(bindingEngineStub, 'collectionObserver').mockReturnValue({ subscribe: jest.fn() });
-    jest.spyOn(bindingEngineStub, 'propertyObserver').mockReturnValue({ subscribe: jest.fn() });
+    jest.spyOn(bindingEngine, 'collectionObserver').mockReturnValue({ subscribe: jest.fn() });
+    jest.spyOn(bindingEngine, 'propertyObserver').mockReturnValue({ subscribe: jest.fn() });
     const spyCallback = jest.spyOn(filterArguments, 'callback');
     const mockCollection = ['male', 'female'];
     mockColumn.filter.collectionAsync = new Promise((resolve) => setTimeout(() => resolve(mockCollection)));
@@ -370,8 +373,8 @@ describe('AutoCompleteFilter', () => {
   });
 
   it('should create the filter with a default search term when using "collectionAsync" as a Promise with content to simulate http-client', (done) => {
-    jest.spyOn(bindingEngineStub, 'collectionObserver').mockReturnValue({ subscribe: jest.fn() });
-    jest.spyOn(bindingEngineStub, 'propertyObserver').mockReturnValue({ subscribe: jest.fn() });
+    jest.spyOn(bindingEngine, 'collectionObserver').mockReturnValue({ subscribe: jest.fn() });
+    jest.spyOn(bindingEngine, 'propertyObserver').mockReturnValue({ subscribe: jest.fn() });
     const spyCallback = jest.spyOn(filterArguments, 'callback');
     const mockCollection = ['male', 'female'];
     mockColumn.filter.collectionAsync = new Promise((resolve) => setTimeout(() => resolve({ content: mockCollection })));
@@ -396,8 +399,8 @@ describe('AutoCompleteFilter', () => {
   });
 
   it('should create the filter with a default search term when using "collectionAsync" is a Fetch Promise', (done) => {
-    jest.spyOn(bindingEngineStub, 'collectionObserver').mockReturnValue({ subscribe: jest.fn() });
-    jest.spyOn(bindingEngineStub, 'propertyObserver').mockReturnValue({ subscribe: jest.fn() });
+    jest.spyOn(bindingEngine, 'collectionObserver').mockReturnValue({ subscribe: jest.fn() });
+    jest.spyOn(bindingEngine, 'propertyObserver').mockReturnValue({ subscribe: jest.fn() });
     const spyCallback = jest.spyOn(filterArguments, 'callback');
     const mockCollection = ['male', 'female'];
 
@@ -494,8 +497,8 @@ describe('AutoCompleteFilter', () => {
   });
 
   it('should create the filter with a value/label pair collectionAsync that is inside an object when "collectionInsideObjectProperty" is defined with a dot notation', (done) => {
-    jest.spyOn(bindingEngineStub, 'collectionObserver').mockReturnValue({ subscribe: jest.fn() });
-    jest.spyOn(bindingEngineStub, 'propertyObserver').mockReturnValue({ subscribe: jest.fn() });
+    jest.spyOn(bindingEngine, 'collectionObserver').mockReturnValue({ subscribe: jest.fn() });
+    jest.spyOn(bindingEngine, 'propertyObserver').mockReturnValue({ subscribe: jest.fn() });
     const mockCollection = { deep: { myCollection: [{ value: 'other', description: 'other' }, { value: 'male', description: 'male' }, { value: 'female', description: 'female' }] } };
     mockColumn.filter = {
       collectionAsync: new Promise((resolve) => setTimeout(() => resolve(mockCollection), 1)),
@@ -629,5 +632,46 @@ describe('AutoCompleteFilter', () => {
 
       expect(spy).toHaveBeenCalledWith(event, { item: 'fem' });
     });
+  });
+
+  it('should trigger a re-render of the DOM element when collection is replaced by new collection', async (done) => {
+    const renderSpy = jest.spyOn(filter, 'renderDomElement');
+    const newCollection = [{ value: 'val1', label: 'label1' }, { value: 'val2', label: 'label2' }];
+    const mockDataResponse = [{ value: 'female', label: 'Female' }, { value: 'male', label: 'Male' }];
+
+    mockColumn.filter = {
+      collection: [],
+      collectionAsync: new Promise((resolve) => resolve(mockDataResponse)),
+      enableCollectionWatch: true,
+    };
+
+    await filter.init(filterArguments);
+    mockColumn.filter.collection = newCollection;
+
+    setTimeout(() => {
+      expect(renderSpy).toHaveBeenCalledTimes(2);
+      expect(renderSpy).toHaveBeenCalledWith(newCollection);
+      done();
+    }, 25);
+  });
+
+  it('should trigger a re-render of the DOM element when collection changes', async (done) => {
+    const renderSpy = jest.spyOn(filter, 'renderDomElement');
+    const mockDataResponse = [{ value: 'female', label: 'Female' }, { value: 'male', label: 'Male' }];
+
+    mockColumn.filter = {
+      collection: [],
+      collectionAsync: new Promise((resolve) => resolve(mockDataResponse)),
+      enableCollectionWatch: true,
+    };
+
+    await filter.init(filterArguments);
+    mockColumn.filter.collection.push({ value: 'other', label: 'other' });
+
+    setTimeout(() => {
+      expect(renderSpy).toHaveBeenCalledTimes(2);
+      expect(renderSpy).toHaveBeenCalledWith(mockColumn.filter.collection);
+      done();
+    }, 25);
   });
 });

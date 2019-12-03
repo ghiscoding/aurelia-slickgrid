@@ -339,8 +339,8 @@ export class AureliaSlickgridCustomElement {
     // user must provide a "gridHeight" or use "autoResize: true" in the grid options
     if (!this._fixedHeight && !this.gridOptions.enableAutoResize) {
       throw new Error(
-        `[Aurelia-Slickgrid] requires a "grid-height" or the "enableAutoResize" grid option to be enabled.
-        Without that the grid will seem empty while in fact it just does not have any height define.`
+        `[Aurelia-Slickgrid] requires a "grid-height" or the "enableAutoResize" grid option to be enabled.`
+        + `Without that the grid will seem empty while in fact it just does not have any height define.`
       );
     }
 
@@ -761,11 +761,12 @@ export class AureliaSlickgridCustomElement {
           this.updateEditorCollection(column, response); // from Promise
         } else if (response instanceof Response && typeof response.json === 'function') {
           if (response.bodyUsed) {
-            throw new Error(`[Aurelia-SlickGrid] The response body passed to collectionAsync was already read.
-              Either pass the dataset from the Response or clone the response first using response.clone()`);
+            console.warn(`[Aurelia-SlickGrid] The response body passed to collectionAsync was already read.`
+              + `Either pass the dataset from the Response or clone the response first using response.clone()`);
+          } else {
+            // from Fetch
+            (response as Response).json().then(data => this.updateEditorCollection(column, data));
           }
-          // from Fetch
-          (response as Response).json().then(data => this.updateEditorCollection(column, data));
         } else if (response && response['content']) {
           this.updateEditorCollection(column, response['content']); // from aurelia-http-client
         }
