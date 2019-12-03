@@ -652,7 +652,7 @@ describe('AutoCompleteFilter', () => {
       expect(renderSpy).toHaveBeenCalledTimes(2);
       expect(renderSpy).toHaveBeenCalledWith(newCollection);
       done();
-    }, 25);
+    }, 40);
   });
 
   it('should trigger a re-render of the DOM element when collection changes', async (done) => {
@@ -672,6 +672,6 @@ describe('AutoCompleteFilter', () => {
       expect(renderSpy).toHaveBeenCalledTimes(2);
       expect(renderSpy).toHaveBeenCalledWith(mockColumn.filter.collection);
       done();
-    }, 25);
+    }, 40);
   });
 });
