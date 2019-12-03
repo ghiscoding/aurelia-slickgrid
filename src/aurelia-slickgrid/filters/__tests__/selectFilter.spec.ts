@@ -1,14 +1,16 @@
 // import 3rd party lib multiple-select for the tests
 import '../../../assets/lib/multiple-select/multiple-select';
 
-import { DOM } from 'aurelia-pal';
+import { TaskQueue, EventManager, ObserverLocator, Parser } from 'aurelia-framework';
 import { BindingEngine } from 'aurelia-binding';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { HttpClient } from 'aurelia-fetch-client';
 import { I18N } from 'aurelia-i18n';
+import { DOM } from 'aurelia-pal';
 import { BindingSignaler } from 'aurelia-templating-resources';
+
 import { Column, FilterArguments, GridOption, FieldType, OperatorType } from '../../models';
-import { CollectionService } from './../../services/collection.service';
+import { CollectionService } from '../../services/collection.service';
 import { Filters } from '..';
 import { SelectFilter } from '../selectFilter';
 
@@ -16,15 +18,6 @@ const containerId = 'demo-container';
 
 // define a <div> container to simulate the grid container
 const template = `<div id="${containerId}"></div>`;
-
-const bindingEngineStub = {
-  createBindingExpression: jest.fn(),
-  collectionObserver: jest.fn(),
-  expressionObserver: jest.fn(),
-  propertyObserver: jest.fn(),
-  parseExpression: jest.fn(),
-  registerAdapter: jest.fn(),
-} as unknown as BindingEngine;
 
 const gridOptionMock = {
   enableFiltering: true,
@@ -96,8 +89,17 @@ describe('SelectFilter', () => {
   let mockColumn: Column;
   let collectionService: CollectionService;
   const http = new HttpStub();
+  let bindingEngine: BindingEngine;
 
   beforeEach(() => {
+    const taskQueue = new TaskQueue();
+    const eventManager = new EventManager();
+    const parser = new Parser();
+    // @ts-ignore
+    const observerLocator = new ObserverLocator(taskQueue, eventManager, {});
+    // @ts-ignore
+    bindingEngine = new BindingEngine(observerLocator, parser);
+
     ea = new EventAggregator();
     i18n = new I18N(ea, new BindingSignaler());
     collectionService = new CollectionService(i18n);
@@ -151,12 +153,13 @@ describe('SelectFilter', () => {
       debug: false
     });
 
-    filter = new SelectFilter(bindingEngineStub, collectionService, i18n);
+    filter = new SelectFilter(bindingEngine, collectionService, i18n);
   });
 
   afterEach(() => {
     mockColumn.filter = undefined;
     filter.destroy();
+    jest.clearAllMocks();
   });
 
   it('should throw an error when trying to call init without any arguments', () => {
@@ -198,7 +201,7 @@ describe('SelectFilter', () => {
       i18n = undefined;
       mockColumn.filter.enableTranslateLabel = true;
       mockColumn.filter.collection = [{ value: 'male', label: 'male' }, { value: 'female', label: 'female' }];
-      filter = new SelectFilter(bindingEngineStub, collectionService, i18n);
+      filter = new SelectFilter(bindingEngine, collectionService, i18n);
       filter.init(filterArguments, true);
     } catch (e) {
       expect(e.toString()).toContain(`[select-filter] The i18n Service is required for the Select Filter to work correctly when "enableTranslateLabel" is set.`);
@@ -217,7 +220,7 @@ describe('SelectFilter', () => {
 
   it('should be a multiple-select filter by default when it is not specified in the constructor', () => {
     mockColumn.filter.collection = [{ value: 'male', label: 'male' }, { value: 'female', label: 'female' }];
-    filter = new SelectFilter(bindingEngineStub, collectionService, i18n);
+    filter = new SelectFilter(bindingEngine, collectionService, i18n);
     filter.init(filterArguments, true);
     const filterCount = divContainer.querySelectorAll('select.ms-filter.search-filter.filter-gender').length;
 
@@ -519,8 +522,6 @@ describe('SelectFilter', () => {
   });
 
   it('should create the multi-select filter with a value/label pair collectionAsync that is inside an object when "collectionInsideObjectProperty" is defined with a dot notation', (done) => {
-    jest.spyOn(bindingEngineStub, 'collectionObserver').mockReturnValue({ subscribe: jest.fn() });
-    jest.spyOn(bindingEngineStub, 'propertyObserver').mockReturnValue({ subscribe: jest.fn() });
     const mockDataResponse = { deep: { myCollection: [{ value: 'other', description: 'other' }, { value: 'male', description: 'male' }, { value: 'female', description: 'female' }] } };
     mockColumn.filter = {
       collectionAsync: new Promise((resolve) => setTimeout(() => resolve(mockDataResponse), 1)),
@@ -544,8 +545,6 @@ describe('SelectFilter', () => {
   });
 
   it('should create the multi-select filter with a default search term when using "collectionAsync" as a Promise', (done) => {
-    jest.spyOn(bindingEngineStub, 'collectionObserver').mockReturnValue({ subscribe: jest.fn() });
-    jest.spyOn(bindingEngineStub, 'propertyObserver').mockReturnValue({ subscribe: jest.fn() });
     const spyCallback = jest.spyOn(filterArguments, 'callback');
     const mockCollection = ['male', 'female'];
     mockColumn.filter.collectionAsync = new Promise((resolve) => setTimeout(() => resolve(mockCollection)));
@@ -570,8 +569,6 @@ describe('SelectFilter', () => {
   });
 
   it('should create the multi-select filter with a default search term when using "collectionAsync" as a Promise with content to simulate http-client', (done) => {
-    jest.spyOn(bindingEngineStub, 'collectionObserver').mockReturnValue({ subscribe: jest.fn() });
-    jest.spyOn(bindingEngineStub, 'propertyObserver').mockReturnValue({ subscribe: jest.fn() });
     const spyCallback = jest.spyOn(filterArguments, 'callback');
     const mockCollection = ['male', 'female'];
     mockColumn.filter.collectionAsync = new Promise((resolve) => setTimeout(() => resolve({ content: mockCollection })));
@@ -596,8 +593,6 @@ describe('SelectFilter', () => {
   });
 
   it('should create the multi-select filter with a default search term when using "collectionAsync" is a Fetch Promise', (done) => {
-    jest.spyOn(bindingEngineStub, 'collectionObserver').mockReturnValue({ subscribe: jest.fn() });
-    jest.spyOn(bindingEngineStub, 'propertyObserver').mockReturnValue({ subscribe: jest.fn() });
     const spyCallback = jest.spyOn(filterArguments, 'callback');
     const mockCollection = ['male', 'female'];
 
@@ -623,36 +618,6 @@ describe('SelectFilter', () => {
       expect(filterFilledElms.length).toBe(1);
       expect(filterListElm[1].checked).toBe(true);
       expect(spyCallback).toHaveBeenCalledWith(undefined, { columnDef: mockColumn, operator: 'IN', searchTerms: ['female'], shouldTriggerQuery: true });
-      done();
-    });
-  });
-
-  xit('should create the multi-select filter with a "collectionAsync" as a Promise and expect the collectionObserver to trigger "renderDomElement" call', (done) => {
-    const mockSubscribe = jest.fn();
-    jest.spyOn(bindingEngineStub, 'collectionObserver').mockReturnValue({ subscribe: mockSubscribe });
-    jest.spyOn(bindingEngineStub, 'propertyObserver').mockReturnValue({ subscribe: jest.fn() });
-    const mockCollection = ['male', 'female'];
-    const promise = new Promise((resolve) => setTimeout(() => resolve(mockCollection)));
-    mockColumn.filter.collectionAsync = promise;
-
-    filterArguments.searchTerms = ['female'];
-    filter.init(filterArguments, true);
-    const filterBtnElm = divContainer.querySelector<HTMLButtonElement>('.ms-parent.ms-filter.search-filter.filter-gender button.ms-choice');
-    const filterListElm = divContainer.querySelectorAll<HTMLInputElement>(`[name=filter-gender].ms-drop ul>li input[type=checkbox]`);
-    filterBtnElm.click();
-
-    mockCollection.push('other');
-
-    // before await
-    expect(filterListElm.length).toBe(2);
-    expect(filterListElm[1].checked).toBe(true);
-
-    mockSubscribe.mockReturnValue([{ changes: { index: 2, addedCount: 1, removed: [] } }]);
-
-    setTimeout(() => {
-      // after await
-      const filterUpdatedListElm = divContainer.querySelectorAll<HTMLInputElement>(`[name=filter-gender].ms-drop ul>li input[type=checkbox]`);
-      expect(filterUpdatedListElm.length).toBe(3);
       done();
     });
   });
@@ -821,5 +786,46 @@ describe('SelectFilter', () => {
       expect(filterParentElm.textContent).toBe('2 de 3 sélectionnés');
       done();
     });
+  });
+
+  it('should trigger a re-render of the DOM element when collection is replaced by new collection', async (done) => {
+    const renderSpy = jest.spyOn(filter, 'renderDomElement');
+    const newCollection = [{ value: 'val1', label: 'label1' }, { value: 'val2', label: 'label2' }];
+    const mockDataResponse = [{ value: 'female', label: 'Female' }, { value: 'male', label: 'Male' }];
+
+    mockColumn.filter = {
+      collection: [],
+      collectionAsync: new Promise((resolve) => resolve(mockDataResponse)),
+      enableCollectionWatch: true,
+    };
+
+    await filter.init(filterArguments, true);
+    mockColumn.filter.collection = newCollection;
+
+    setTimeout(() => {
+      expect(renderSpy).toHaveBeenCalledTimes(2);
+      expect(renderSpy).toHaveBeenCalledWith(newCollection);
+      done();
+    }, 25);
+  });
+
+  it('should trigger a re-render of the DOM element when collection changes', async (done) => {
+    const renderSpy = jest.spyOn(filter, 'renderDomElement');
+    const mockDataResponse = [{ value: 'female', label: 'Female' }, { value: 'male', label: 'Male' }];
+
+    mockColumn.filter = {
+      collection: [],
+      collectionAsync: new Promise((resolve) => resolve(mockDataResponse)),
+      enableCollectionWatch: true,
+    };
+
+    await filter.init(filterArguments, true);
+    mockColumn.filter.collection.push({ value: 'other', label: 'other' });
+
+    setTimeout(() => {
+      expect(renderSpy).toHaveBeenCalledTimes(2);
+      expect(renderSpy).toHaveBeenCalledWith(mockColumn.filter.collection);
+      done();
+    }, 25);
   });
 });

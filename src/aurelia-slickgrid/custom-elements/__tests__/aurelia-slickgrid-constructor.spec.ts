@@ -487,7 +487,8 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
         });
       });
 
-      xit('should throw an error when Fetch Promise response bodyUsed is true', (done) => {
+      it('should throw an error when Fetch Promise response bodyUsed is true', (done) => {
+        const consoleSpy = jest.spyOn(global.console, 'warn').mockReturnValue();
         const mockCollection = ['male', 'female'];
         http.status = 200;
         http.object = mockCollection;
@@ -499,13 +500,13 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
         jest.spyOn(mockGrid, 'getColumns').mockReturnValue(mockColDefs);
         customElement.columnDefinitions = mockColDefs;
 
-        try {
-          customElement.bind();
-          customElement.attached();
-        } catch (e) {
-          expect(e.toString()).toContain('[Aurelia-SlickGrid] The response body passed to collectionAsync was already read.');
+        customElement.bind();
+        customElement.attached();
+
+        setTimeout(() => {
+          expect(consoleSpy).toHaveBeenCalledWith(expect.toInclude('[Aurelia-SlickGrid] The response body passed to collectionAsync was already read.'));
           done();
-        }
+        });
       });
     });
 
