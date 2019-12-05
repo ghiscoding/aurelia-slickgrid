@@ -4,6 +4,7 @@ import {
   Column,
   Editors,
   FieldType,
+  FileType,
   Formatter,
   Formatters,
   GridOption,
@@ -11,12 +12,16 @@ import {
   OnEventArgs
 } from '../../aurelia-slickgrid';
 import './example11.scss';
+import { I18N } from 'aurelia-i18n';
 
 // custom formatter to display priority (from 1 to 3) loop through that count and display them as x number of icon(s)
 const customPriorityFormatter: Formatter = (row, cell, value, columnDef, dataContext) => {
+  if (!value) {
+    return '';
+  }
   let output = '';
   const count = +(value >= 3 ? 3 : value);
-  const color = count === 3 ? 'red' : (count === 1 ? 'grey' : 'orange');
+  const color = count === 3 ? 'red' : (count === 2 ? 'orange' : 'grey');
   const icon = `<i class="fa fa-fire ${color}" aria-hidden="true"></i>`;
 
   for (let i = 1; i <= count; i++) {
@@ -44,7 +49,7 @@ export class Example11 {
     <ul>
       <li>Example, click on button "Highlight Rows with Duration over 50" to see row styling changing. <a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Dynamically-Add-CSS-Classes-to-Item-Rows" target="_blank">Wiki doc</a></li>
     </ul>
-    <li>Context Menu... Right+Click on any row to show a Context Menu allowing you to change the "Priority" field</li>
+    <li><b>Context Menu</b> Mouse Right+Click over any row to open a Context Menu with certain commands or over the Priority column to optionally change the "Priority" field from the Context Menu</li>
   </ul>
   `;
 
@@ -57,10 +62,11 @@ export class Example11 {
   dataset: any[];
   updatedObject: any;
 
-  constructor() {
+  constructor(private i18n: I18N) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
     this.mockData(1000);
+    // this.i18n.setLocale('en');
   }
 
   aureliaGridReady(aureliaGrid: AureliaGridInstance) {
@@ -76,25 +82,103 @@ export class Example11 {
     this.grid.render();
     */
 
-    const data = aureliaGrid.dataView.getItems();
-    const contextMenuTitle = 'Set priority';
-    const contextMenuList = [
-      { option: 1, label: 'Low' },
-      { option: 2, label: 'Medium' },
-      { option: 3, label: 'High' },
-    ];
+    const contextMenu = {
+      // all titles optionally support translation keys, if you wish to use that feature then use the title properties with the 'Key' suffix (e.g: titleKey)
+      // example "commandTitle" for a plain string OR "commandTitleKey" to use a translation key
+      optionTitle: 'Change Priority',
+      commandTitleKey: 'COMMANDS',
+      optionItems: [
+        { option: 0, positionOrder: 0, title: 'none', cssClass: 'italic' },
+        // { option: '', divider: true, positionOrder: 1 },
+        { option: 1, positionOrder: 2, iconCssClass: 'fa fa-fire grey', titleKey: 'LOW' },
+        { option: 3, positionOrder: 4, iconCssClass: 'fa fa-fire red', titleKey: 'HIGH' },
+        { option: 2, positionOrder: 2, iconCssClass: 'fa fa-fire orange', titleKey: 'MEDIUM' },
+        { option: 4, positionOrder: 5, iconCssClass: 'fa fa-fire', title: 'Extreme', disabled: true },
+      ],
+      commandItems: [
+        { command: 'export-excel', titleKey: 'EXPORT_TO_EXCEL', iconCssClass: 'fa fa-file-excel-o text-success', positionOrder: 1, cssClass: '' },
+        { command: 'delete-row', title: 'Delete Row', positionOrder: 4, cssClass: 'red' },
+        { command: 'help', titleKey: 'HELP', iconCssClass: 'fa fa-question-circle', positionOrder: 2 },
+        { divider: true, command: '', positionOrder: 3 },
+      ],
+    };
 
-    let liOptions = '';
-    for (let i = 0; i < contextMenuList.length; i++) {
-      if (contextMenuList.hasOwnProperty(i)) {
-        const contextItem = contextMenuList[i];
-        liOptions += `<li data="${contextItem.option}">${contextItem.label}</li>`;
+    let editorOptions = '';
+    const contextMenuOptionList = contextMenu.optionItems.sort((item1, item2) => item1.positionOrder - item2.positionOrder);
+    for (let i = 0; i < contextMenuOptionList.length; i++) {
+      if (contextMenuOptionList.hasOwnProperty(i)) {
+        let cssClasses = '';
+        const contextItem = contextMenuOptionList[i];
+        if (contextItem) {
+          cssClasses += contextItem.hasOwnProperty('cssClass') ? contextItem.cssClass : '';
+          cssClasses += contextItem.hasOwnProperty('disabled') ? ' slick-context-menuitem-disabled' : '';
+          const titleLabel = contextItem.hasOwnProperty('titleKey') ? this.i18n.tr(contextItem.titleKey) : contextItem.title;
+
+          if (contextItem.hasOwnProperty('iconCssClass')) {
+            editorOptions += `<li class="slick-context-menu-optionitem ${cssClasses}" data-option="${contextItem.option}">
+                <div class="slick-context-menu-icon ${contextItem.iconCssClass}"></div>
+                ${titleLabel}
+              </li>`;
+          } else if (contextItem.hasOwnProperty('divider')) {
+            editorOptions += `<li class="slick-context-menu-optionitem slick-context-menuitem-divider"></li>`;
+          } else {
+            editorOptions += `<li class="slick-context-menu-optionitem ${cssClasses}" data-option="${contextItem.option}">${titleLabel}</li>`;
+          }
+        }
       }
     }
 
-    const htmlString = `<ul class="slick-context-menu slickgrid_782264">
-     <span class="title">${contextMenuTitle}</span>
-     ${liOptions}
+    let commandOptions = '';
+    const contextMenuCommandList = contextMenu.commandItems.sort((item1, item2) => item1.positionOrder - item2.positionOrder);
+    for (let i = 0; i < contextMenuCommandList.length; i++) {
+      if (contextMenuCommandList.hasOwnProperty(i)) {
+        let cssClasses = '';
+        const contextItem = contextMenuCommandList[i];
+
+        if (contextItem) {
+          cssClasses += contextItem.hasOwnProperty('cssClass') ? contextItem.cssClass : '';
+          cssClasses += contextItem.hasOwnProperty('disabled') ? ' slick-context-menuitem-disabled' : '';
+          const titleLabel = contextItem.hasOwnProperty('titleKey') ? this.i18n.tr(contextItem.titleKey) : contextItem.title;
+
+          if (contextItem.hasOwnProperty('iconCssClass')) {
+            commandOptions += `<li class="slick-context-menu-commanditem ${cssClasses}" data-command="${contextItem.command}">
+                <div class="slick-context-menu-icon ${contextItem.iconCssClass}"></div>
+                ${titleLabel}
+              </li>`;
+          } else if (contextItem.hasOwnProperty('divider')) {
+            commandOptions += `<li class="slick-context-menu-commanditem slick-context-menuitem-divider"></li>`;
+          } else if (contextItem.hasOwnProperty('disabled')) {
+            commandOptions += `<li class="slick-context-menu-commanditem ${cssClasses}" data-option="${contextItem.command}">${titleLabel}</li>`;
+          } else {
+            commandOptions += `<li class="slick-context-menu-commanditem ${cssClasses}" data-command="${contextItem.command}">${titleLabel}</li>`;
+          }
+        }
+      }
+    }
+
+    let editorOptionHtmlString = '';
+    if (contextMenuOptionList.length > 0) {
+      // @ts-ignore
+      const titleLabel = contextMenu.hasOwnProperty('optionTitleKey') ? this.i18n.tr(contextMenu.optionTitleKey) : contextMenu.optionTitle;
+      editorOptionHtmlString = `<div class="slick-context-menu-option-list">
+        <span class="title">${titleLabel}</span>
+        ${editorOptions}
+      </div>`;
+    }
+
+    let commandOptionHtmlString = '';
+    if (contextMenuCommandList.length > 0) {
+      // @ts-ignore
+      const titleLabel = contextMenu.hasOwnProperty('commandTitleKey') ? this.i18n.tr(contextMenu.commandTitleKey) : contextMenu.commandTitle;
+      commandOptionHtmlString = `<div class="slick-context-menu-custom">
+          <span class="title">${titleLabel}</span>
+          ${commandOptions}
+        </div>`;
+    }
+
+    const htmlString = `<ul class="slick-context-menu">
+      ${editorOptionHtmlString}
+      ${commandOptionHtmlString}
    </ul>`;
 
     // create context menu, hide it & append it to the body
@@ -110,9 +194,39 @@ export class Example11 {
         return;
       }
       const row = contextElm.data('row');
-      data[row].priority = $(e.target).attr('data');
-      this.grid.updateRow(row);
-      this.aureliaGrid.gridService.setSelectedRows([row]);
+      const cell = contextElm.data('cell');
+
+      const grid = this.aureliaGrid.slickGrid;
+      const columnDef = grid.getColumns()[cell];
+      const dataContext = grid.getDataItem(row);
+
+      console.log(cell, columnDef, dataContext);
+
+      const targetElm = $(e.target);
+      const dataCommand = targetElm.attr('data-command');
+      const dataOption = targetElm.attr('data-option');
+      // data[row].priority = $(e.target).attr('data');
+      if (dataCommand) {
+        switch (dataCommand) {
+          case 'export-excel':
+            this.aureliaGrid.excelExportService.exportToExcel({
+              filename: 'Export',
+              format: FileType.xlsx
+            });
+            break;
+          case 'delete-row':
+            if (confirm('Are you sure?')) {
+              this.aureliaGrid.gridService.deleteDataGridItemById(dataContext.id);
+            }
+            break;
+          case 'help':
+            alert('Please Help!');
+            break;
+        }
+      } else if (dataOption) {
+        dataContext.priority = dataOption;
+        this.grid.updateRow(row);
+      }
 
       // callback, user might want to do something else
     });
@@ -326,17 +440,34 @@ export class Example11 {
 
   onContextMenu(e) {
     e.preventDefault();
-    const cell = this.aureliaGrid.slickGrid.getCellFromEvent(e);
-    const contextElm = $('.slick-context-menu');
+    const grid = this.aureliaGrid.slickGrid;
+    const cell = grid.getCellFromEvent(e);
+    const columnDef = grid.getColumns()[cell.cell];
+    const columnId = columnDef && columnDef.id;
 
+    // select & highlight the row that the user requested the Context Menu from
+    this.aureliaGrid.gridService.setSelectedRows([cell.row]);
+
+    // we can decide to show the Context Menu only when originated cell is Priority or from any other cell
+    // display Context Menu editable option list only on Priority field
+    const editableOptionListElm = $('.slick-context-menu-option-list');
+    if (columnId === 'priority') {
+      editableOptionListElm.show();
+    } else {
+      editableOptionListElm.hide();
+    }
+
+
+    const contextElm = $('.slick-context-menu');
     // reposition the context menu where we right+clicked
     contextElm
+      .data('cell', cell.cell)
       .data('row', cell.row)
       .css('top', e.pageY)
       .css('left', e.pageX)
       .show();
 
-    // hide the context menu once user choose an option
+    // hide the context menu once user choose an option or click elsewhere
     $('body').one('click', () => contextElm.hide());
   }
 }
