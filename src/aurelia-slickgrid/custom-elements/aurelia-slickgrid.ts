@@ -689,7 +689,7 @@ export class AureliaSlickgridCustomElement {
 
         // when we have a totalCount use it, else we'll take it from the pagination object
         // only update the total items if it's different to avoid refreshing the UI
-        const totalRecords = totalCount !== undefined ? totalCount : this.gridOptions.pagination.totalItems || 0;
+        const totalRecords = totalCount !== undefined ? totalCount : (this.gridOptions && this.gridOptions.pagination && this.gridOptions.pagination.totalItems);
         if (totalRecords !== this.totalItems) {
           this.totalItems = totalRecords;
         }
