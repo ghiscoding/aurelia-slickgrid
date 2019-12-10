@@ -302,10 +302,14 @@ export class Example18 {
     }
   }
 
-  groupByDurationOrderByCount(isOrderingByCount = false) {
-    this.durationOrderByCount = isOrderingByCount;
+  groupByDurationOrderByCount(sortedByCount = false) {
+    this.durationOrderByCount = sortedByCount;
     this.clearGrouping();
     this.groupByDuration();
+
+    // you need to manually add the sort icon(s) in UI
+    const sortColumns = sortedByCount ? [] : [{ columnId: 'duration', sortAsc: true }];
+    this.aureliaGrid.filterService.setSortColumnIcons(sortColumns);
   }
 
   groupByDurationEffortDriven() {

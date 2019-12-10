@@ -234,9 +234,13 @@ export class Example13 {
       aggregateCollapsed: false,
       lazyTotalsCalculation: true
     } as Grouping);
+
+    // you need to manually add the sort icon(s) in UI
+    this.aureliaGrid.filterService.setSortColumnIcons([{ columnId: 'duration', sortAsc: true }]);
   }
 
   groupByDurationOrderByCount(aggregateCollapsed) {
+    this.aureliaGrid.filterService.setSortColumnIcons([]);
     this.dataviewObj.setGrouping({
       getter: 'duration',
       formatter: (g) => `Duration:  ${g.value} <span style="color:green">(${g.count} items)</span>`,
@@ -253,6 +257,7 @@ export class Example13 {
   }
 
   groupByDurationEffortDriven() {
+    this.aureliaGrid.filterService.setSortColumnIcons([]);
     this.dataviewObj.setGrouping([
       {
         getter: 'duration',
@@ -278,6 +283,7 @@ export class Example13 {
   }
 
   groupByDurationEffortDrivenPercent() {
+    this.aureliaGrid.filterService.setSortColumnIcons([]);
     this.dataviewObj.setGrouping([
       {
         getter: 'duration',
