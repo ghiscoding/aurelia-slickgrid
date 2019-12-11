@@ -424,6 +424,7 @@ export class AureliaSlickgridCustomElement {
     this.subscriptions.push(
       this.ea.subscribe('i18n:locale:changed', () => {
         if (gridOptions.enableTranslate) {
+          this.extensionService.translateCellMenu();
           this.extensionService.translateColumnHeaders();
           this.extensionService.translateColumnPicker();
           this.extensionService.translateGridMenu();

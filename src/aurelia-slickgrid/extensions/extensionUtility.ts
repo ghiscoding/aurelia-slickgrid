@@ -34,11 +34,17 @@ export class ExtensionUtility {
         case ExtensionName.cellExternalCopyManager:
           require('slickgrid/plugins/slick.cellexternalcopymanager');
           break;
+        case ExtensionName.cellMenu:
+          require('slickgrid/plugins/slick.cellmenu');
+          break;
         case ExtensionName.checkboxSelector:
           require('slickgrid/plugins/slick.checkboxselectcolumn');
           break;
         case ExtensionName.columnPicker:
           require('slickgrid/controls/slick.columnpicker');
+          break;
+        case ExtensionName.contextMenu:
+          require('slickgrid/plugins/slick.contextmenu');
           break;
         case ExtensionName.draggableGrouping:
           require('slickgrid/plugins/slick.draggablegrouping');

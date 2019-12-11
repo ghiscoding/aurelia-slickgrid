@@ -14,6 +14,7 @@ import {
 import {
   AutoTooltipExtension,
   CellExternalCopyManagerExtension,
+  CellMenuExtension,
   CheckboxSelectorExtension,
   ColumnPickerExtension,
   DraggableGroupingExtension,
@@ -31,6 +32,7 @@ import { SharedService } from './shared.service';
 @inject(
   AutoTooltipExtension,
   CellExternalCopyManagerExtension,
+  CellMenuExtension,
   CheckboxSelectorExtension,
   ColumnPickerExtension,
   DraggableGroupingExtension,
@@ -51,6 +53,7 @@ export class ExtensionService {
   constructor(
     private autoTooltipExtension: AutoTooltipExtension,
     private cellExternalCopyExtension: CellExternalCopyManagerExtension,
+    private cellMenuExtension: CellMenuExtension,
     private checkboxSelectorExtension: CheckboxSelectorExtension,
     private columnPickerExtension: ColumnPickerExtension,
     private draggableGroupingExtension: DraggableGroupingExtension,
@@ -148,6 +151,14 @@ export class ExtensionService {
         if (this.cellExternalCopyExtension && this.cellExternalCopyExtension.register) {
           const instance = this.cellExternalCopyExtension.register();
           this._extensionList.push({ name: ExtensionName.cellExternalCopyManager, class: this.cellExternalCopyExtension, addon: instance, instance });
+        }
+      }
+
+      // (Action) Cell Menu Plugin
+      if (this.sharedService.gridOptions.enableCellMenu) {
+        if (this.cellMenuExtension && this.cellMenuExtension.register) {
+          const instance = this.cellMenuExtension.register();
+          this._extensionList.push({ name: ExtensionName.cellMenu, class: this.cellMenuExtension, addon: instance, instance });
         }
       }
 
@@ -308,6 +319,13 @@ export class ExtensionService {
       return columns.filter((el: Column, i: number) => index !== i);
     }
     return columns;
+  }
+
+  /** Translate the Cell Menu titles, we need to loop through all column definition to re-translate them */
+  translateCellMenu() {
+    if (this.cellMenuExtension && this.cellMenuExtension.translateCellMenu) {
+      this.cellMenuExtension.translateCellMenu();
+    }
   }
 
   /** Translate the Column Picker and it's last 2 checkboxes */

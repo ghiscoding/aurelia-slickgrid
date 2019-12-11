@@ -30,6 +30,7 @@ export class Index {
       { route: 'example21', moduleId: PLATFORM.moduleName('./example21'), name: 'example21', nav: true, title: '21- Grid AutoHeight (full height)' },
       { route: 'example22', moduleId: PLATFORM.moduleName('./example22'), name: 'example22', nav: true, title: '22- with Bootstrap Tabs' },
       { route: 'example23', moduleId: PLATFORM.moduleName('./example23'), name: 'example23', nav: true, title: '23- Filter by Range of Values' },
+      { route: 'example24', moduleId: PLATFORM.moduleName('./example24'), name: 'example24', nav: true, title: '24- Cell & Context Menu' },
     ];
 
     config.map(mapping);

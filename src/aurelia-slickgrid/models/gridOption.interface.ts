@@ -2,6 +2,7 @@ import { I18N } from 'aurelia-i18n';
 import {
   AutoResizeOption,
   BackendServiceApi,
+  CellMenu,
   Column,
   ColumnPicker,
   CheckboxSelector,
@@ -77,6 +78,9 @@ export interface GridOption {
 
   /** CSS class name used when highlighting a cell value. Useful to change background color of the activated cell */
   cellHighlightCssClass?: string | null;
+
+  /** Cell menu options (Action menu) */
+  cellMenu?: CellMenu;
 
   /** Checkbox Select Plugin options (columnId, cssClass, toolTip, width) */
   checkboxSelector?: CheckboxSelector;
@@ -174,11 +178,17 @@ export interface GridOption {
   /** Defaults to false, when enabled it will add a column for checkbox selection at the 1st column position. A selection will trigger the "onSelectedRowsChanged" event. */
   enableCheckboxSelector?: boolean;
 
+  /** Do we want to enable Cell Menu? (Action menu cell click) */
+  enableCellMenu?: boolean;
+
   /** Defaults to true, when enabled will give the possibility to do a right+click on any header title which will open the list of column. User can show/hide a column by using the checkbox from that picker list. */
   enableColumnPicker?: boolean;
 
   /** Defaults to true, which permits the user to move an entire column from a position to another. */
   enableColumnReorder?: boolean;
+
+  /** Do we want to enable Context Menu? (mouse right+click) */
+  enableContextMenu?: boolean;
 
   /** Defaults to false, do we want to enable the Draggable Grouping Plugin? */
   enableDraggableGrouping?: boolean;

@@ -1,0 +1,23 @@
+<template>
+  <h2>${title}</h2>
+  <div class="subtitle"
+       innerhtml.bind="subTitle"></div>
+
+  <div class="row">
+    <button class="btn btn-default btn-sm" click.delegate="switchLanguage()" data-test="language-button">
+      <i class="fa fa-language"></i>
+      Switch Language
+    </button>
+    <label>Locale:</label>
+    <span style="font-style: italic" data-test="selected-locale">
+      ${selectedLanguage + '.json'}
+    </span>
+  </div>
+
+  <aurelia-slickgrid grid-id="grid24"
+                     column-definitions.bind="columnDefinitions"
+                     grid-options.bind="gridOptions"
+                     dataset.bind="dataset"
+                     asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
+  </aurelia-slickgrid>
+</template>
