@@ -96,8 +96,6 @@ export * from './locale.interface';
 export * from './menuCommandItem.interface';
 export * from './menuItem.interface';
 export * from './menuItemCallbackArgs.interface';
-export * from './menuItemCommandCallbackArgs.interface';
-export * from './menuItemOptionCallbackArgs.interface';
 export * from './menuOptionItem.interface';
 export * from './metrics.interface';
 export * from './multiColumnSort.interface';

@@ -1,5 +1,5 @@
 import { singleton, inject } from 'aurelia-framework';
-import { CellArgs, Extension, ExtensionName, SlickEventHandler } from '../models/index';
+import { Extension, ExtensionName, SlickEventHandler } from '../models/index';
 import { ExtensionUtility } from './extensionUtility';
 import { SharedService } from '../services/shared.service';
 

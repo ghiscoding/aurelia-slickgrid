@@ -97,8 +97,8 @@ export interface CellMenu {
   onBeforeMenuClose?: (e: Event, args: any) => void;
 
   /** SlickGrid Event fired on menu option clicked from the Command items list */
-  onCommand?: (e: Event, args: any) => void;
+  onCommand?: (e: Event, args: MenuItemCallbackArgs<MenuCommandItem>) => void;
 
   /** SlickGrid Event fired on menu option selected from the Option items list. */
-  onOptionSelected?: (e: Event, args: MenuItemCallbackArgs) => void;
+  onOptionSelected?: (e: Event, args: MenuItemCallbackArgs<MenuOptionItem>) => void;
 }

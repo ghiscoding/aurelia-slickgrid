@@ -17,24 +17,38 @@ const actionFormatter: Formatter = (row, cell, value, columnDef, dataContext) =>
   return `<div class="disabled">Action <i class="fa fa-caret-down"></i></div>`;
 };
 
-const priorityFormatter: Formatter = (row, cell, value, columnDef, dataContext) => {
+const priorityFormatter: Formatter = (row, cell, value, columnDef, dataContext, grid) => {
   if (!value) {
     return '';
   }
+  const gridOptions = (grid && typeof grid.getOptions === 'function') ? grid.getOptions() : {};
+  const i18n = gridOptions.i18n;
   const count = +(value >= 3 ? 3 : value);
-  return count === 3 ? 'High' : (count === 2 ? 'Medium' : 'Low');
+  const key = count === 3 ? 'HIGH' : (count === 2 ? 'MEDIUM' : 'LOW');
+  return i18n && i18n.tr && i18n.tr(key);
+};
+
+// create a custom translate Formatter (typically you would move that a separate file, for separation of concerns)
+const taskTranslateFormatter: Formatter = (row: number, cell: number, value: any, columnDef: any, dataContext: any, grid: any) => {
+  const gridOptions = (grid && typeof grid.getOptions === 'function') ? grid.getOptions() : {};
+  const i18n = gridOptions.i18n;
+
+  return i18n && i18n.tr && i18n.tr('TASK_X', { x: value });
 };
 
 @autoinject()
 export class Example24 {
   title = 'Example 24: Cell Menu / Context Menu';
-  subTitle = `
-    Add Cell Menu and Context Menu
+  subTitle = `Add Cell Menu and Context Menu
     <ul>
       <li><b>Cell Menu</b> can be used by a cell menu click, like an 'Action' cell click.</li>
       <li><b>Context Menu</b> shown after a mouse right+click.</li>
-    </ul>
-  `;
+      <li>There 2 ways to execute a Command/Option</li>
+      <ol>
+        <li>via onCommand/onOptionSelected (use a switch/case to parse command/option and do something with it)</li>
+        <li>via action callback (must be defined on each command/option)</li>
+      </ol>
+    </ul>`;
 
   aureliaGrid: AureliaGridInstance;
   gridOptions: GridOption;
@@ -64,12 +78,16 @@ export class Example24 {
   /* Define grid Options and Columns */
   defineGrid() {
     this.columnDefinitions = [
-      { id: 'title', name: 'Title', field: 'title', sortable: true, type: FieldType.string, width: 70 },
-      { id: 'percentComplete', name: '% Complete', field: 'percentComplete', formatter: Formatters.percentCompleteBar, type: FieldType.number, sortable: true, minWidth: 100 },
-      { id: 'start', name: 'Start', field: 'start', formatter: Formatters.dateIso, sortable: true, type: FieldType.date, minWidth: 90, exportWithFormatter: true },
-      { id: 'finish', name: 'Finish', field: 'finish', formatter: Formatters.dateIso, sortable: true, type: FieldType.date, minWidth: 90, exportWithFormatter: true },
-      { id: 'priority', name: 'Priority', field: 'priority', formatter: priorityFormatter },
-      { id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', formatter: Formatters.checkmark },
+      {
+        id: 'title', name: 'Title', field: 'id', headerKey: 'TITLE', minWidth: 100,
+        formatter: taskTranslateFormatter,
+        sortable: true, type: FieldType.string
+      },
+      { id: 'percentComplete', headerKey: 'PERCENT_COMPLETE', field: 'percentComplete', formatter: Formatters.percentCompleteBar, type: FieldType.number, sortable: true, minWidth: 100 },
+      { id: 'start', headerKey: 'START', field: 'start', formatter: Formatters.dateIso, sortable: true, type: FieldType.date, minWidth: 90, exportWithFormatter: true },
+      { id: 'finish', headerKey: 'FINISH', field: 'finish', formatter: Formatters.dateIso, sortable: true, type: FieldType.date, minWidth: 90, exportWithFormatter: true },
+      { id: 'priority', headerKey: 'PRIORITY', field: 'priority', formatter: priorityFormatter },
+      { id: 'completed', headerKey: 'COMPLETED', field: 'completed', formatter: Formatters.checkmark },
       {
         id: 'action', name: 'Action', field: 'action',
         formatter: actionFormatter,
@@ -80,29 +98,29 @@ export class Example24 {
           // if you wish to change the cell text (or hide it)
           // then you SHOULD use it in combination with a custom formatter (actionFormatter) and use the same logic in that formatter
           menuUsabilityOverride: (row, dataContext, grid) => {
-            return (dataContext.priority === 3); // option 3 is High
+            return dataContext.priority === 3; // option 3 is High
           },
-          commandTitle: 'Commands',
+          commandTitleKey: 'COMMANDS',
           commandItems: [
             { command: 'command1', title: 'Command 1', cssClass: 'orange' },
             {
               command: 'command2', title: 'Command 2',
-              // you can subscribe to the 'onCommand' event and/or simply use the 'action' callback, they both have the same arguments
+              // you can use the "action" callback and/or use "onCallback" callback from the grid options, they both have the same arguments
               action: (e, args) => {
                 console.log(args.dataContext, args.columnDef);
                 // action callback.. do something
               },
-              // only enable command when there's no Effort Driven
+              // only enable command when the task is not completed
               itemUsabilityOverride: (row, dataContext, grid) => {
-                return (!dataContext.effortDriven);
+                return !dataContext.completed;
               }
             },
             {
-              command: 'delete-row', title: 'Delete Row',
+              command: 'delete-row', titleKey: 'DELETE_ROW',
               iconCssClass: 'fa fa-times', cssClass: 'red', textCssClass: 'bold',
-              // only show command to 'Delete Row' when there's no Effort Driven
+              // only show command to 'Delete Row' when the task is not completed
               itemVisibilityOverride: (row, dataContext, grid) => {
-                return (!dataContext.effortDriven);
+                return !dataContext.completed;
               }
             },
             // you can pass divider as a string or an object with a boolean
@@ -111,28 +129,28 @@ export class Example24 {
 
             {
               command: 'help',
-              titleKey: 'HELP', // use "titleKey" with I18N or just "title" without translation
+              titleKey: 'HELP', // use "title" without translation and "titleKey" with I18N
               iconCssClass: 'fa fa-question-circle'
             },
-            { command: 'something', title: 'Disabled Command', disabled: true }
+            { command: 'something', titleKey: 'DISABLED_COMMAND', disabled: true }
           ],
-          optionTitle: 'Change Effort Driven',
+          optionTitleKey: 'CHANGE_COMPLETED_FLAG',
           optionItems: [
-            { option: true, title: 'True', iconCssClass: 'checkmark' },
-            { option: false, title: 'False' },
+            { option: true, titleKey: 'TRUE', iconCssClass: 'fa fa-check-square-o' },
+            { option: false, titleKey: 'FALSE', iconCssClass: 'fa fa-square-o' },
             {
               option: null, title: 'null', cssClass: 'italic',
-              // you can subscribe to the 'onOptionSelected' event and/or simply use the 'action' callback, they both have the same arguments
+              // you can use the "action" callback and/or use "onCallback" callback from the grid options, they both have the same arguments
               action: (e, args) => {
                 // action callback.. do something
               },
-              // only enable command when there's no Effort Driven
+              // only enable Action menu when the Priority is set to High
               itemUsabilityOverride: (row, dataContext, grid) => {
-                return (dataContext.priority === 3);
+                return dataContext.priority === 3;
               },
-              // only show command to 'Delete Row' when there's no Effort Driven
+              // only show command to 'Delete Row' when the task is not completed
               itemVisibilityOverride: (row, dataContext, grid) => {
-                return (!dataContext.effortDriven);
+                return !dataContext.completed;
               }
             },
           ]
@@ -147,12 +165,21 @@ export class Example24 {
       },
       enableCellNavigation: true,
       enableTranslate: true,
+      i18n: this.i18n,
 
       // when using the cellMenu, you can change some of the default options and all use some of the callback methods
       enableCellMenu: true,
       cellMenu: {
-        minWidth: 200,
+        // minWidth: 200,
         onCommand: (e, args) => this.executeCommand(e, args),
+        onOptionSelected: (e, args) => {
+          // change Completed flag
+          const dataContext = args && args.dataContext;
+          if (dataContext && dataContext.hasOwnProperty('completed')) {
+            dataContext.completed = args.item.option;
+            this.aureliaGrid.gridService.updateItem(dataContext);
+          }
+        },
         onBeforeMenuShow: ((e, args) => {
           // for example, you could select the row it was clicked by calling
           // this.aureliaGrid.gridService.setSelectedRows([args.row]);
@@ -217,13 +244,12 @@ export class Example24 {
 
       this.dataset[i] = {
         id: i,
-        title: 'Task ' + i,
         duration: Math.floor(Math.random() * 25) + ' days',
         percentComplete: Math.floor(Math.random() * 100),
         start: new Date(randomYear, randomMonth, randomDay),
         finish: new Date(randomYear, (randomMonth + 1), randomDay),
         priority: i % 3 ? 2 : (i % 5 ? 3 : 1),
-        effortDriven: (i % 4 === 0),
+        completed: (i % 4 === 0),
       };
     }
   }

@@ -8,8 +8,8 @@ import {
   Extension,
   ExtensionName,
   MenuCommandItem,
-  MenuItemCommandCallbackArgs,
-  MenuItemOptionCallbackArgs,
+  MenuItemCallbackArgs,
+  MenuOptionItem,
   Locale,
   SlickEventHandler,
 } from '../models/index';
@@ -25,10 +25,8 @@ declare var Slick: any;
 @inject(
   EventAggregator,
   ExtensionUtility,
-  FilterService,
   Optional.of(I18N),
   SharedService,
-  SortService,
 )
 export class CellMenuExtension implements Extension {
   private _addon: any;
@@ -38,10 +36,8 @@ export class CellMenuExtension implements Extension {
   constructor(
     private ea: EventAggregator,
     private extensionUtility: ExtensionUtility,
-    private filterService: FilterService,
     private i18n: I18N,
     private sharedService: SharedService,
-    private sortService: SortService,
   ) {
     this._eventHandler = new Slick.EventHandler();
   }
@@ -100,12 +96,12 @@ export class CellMenuExtension implements Extension {
         if (this.sharedService.gridOptions.cellMenu.onExtensionRegistered) {
           this.sharedService.gridOptions.cellMenu.onExtensionRegistered(this._addon);
         }
-        this._eventHandler.subscribe(this._addon.onCommand, (event: Event, args: MenuItemCommandCallbackArgs) => {
+        this._eventHandler.subscribe(this._addon.onCommand, (event: Event, args: MenuItemCallbackArgs<MenuCommandItem>) => {
           if (this.sharedService.gridOptions.cellMenu && typeof this.sharedService.gridOptions.cellMenu.onCommand === 'function') {
             this.sharedService.gridOptions.cellMenu.onCommand(event, args);
           }
         });
-        this._eventHandler.subscribe(this._addon.onOptionSelected, (event: Event, args: MenuItemOptionCallbackArgs) => {
+        this._eventHandler.subscribe(this._addon.onOptionSelected, (event: Event, args: MenuItemCallbackArgs<MenuOptionItem>) => {
           if (this.sharedService.gridOptions.cellMenu && typeof this.sharedService.gridOptions.cellMenu.onOptionSelected === 'function') {
             this.sharedService.gridOptions.cellMenu.onOptionSelected(event, args);
           }
@@ -149,19 +145,35 @@ export class CellMenuExtension implements Extension {
   private resetMenuTranslations(columnDefinitions: Column[]) {
     columnDefinitions.forEach((columnDef: Column) => {
       if (columnDef && columnDef.cellMenu && columnDef.cellMenu.commandItems) {
-        const columncellMenuItems: MenuCommandItem[] | Array<'divider'> = columnDef.cellMenu.commandItems || [];
+        const columnCellMenuCommandItems: Array<MenuCommandItem> | Array<'divider'> = columnDef.cellMenu.commandItems || [];
+        const columnCellMenuOptionItems: Array<MenuOptionItem> | Array<'divider'> = columnDef.cellMenu.optionItems || [];
+        columnDef.cellMenu.commandTitle = this.i18n && this.i18n.tr && this.i18n.tr(columnDef.cellMenu.commandTitleKey) || this._locales && this._locales.TEXT_COMMANDS || columnDef.cellMenu.commandTitle;
+        columnDef.cellMenu.optionTitle = this.i18n && this.i18n.tr && this.i18n.tr(columnDef.cellMenu.optionTitleKey) || columnDef.cellMenu.optionTitle;
 
-        columncellMenuItems.forEach((item) => {
+        columnCellMenuCommandItems.forEach((item) => {
           switch (item.command) {
+            case 'export-csv':
+              item.title = this.i18n.tr('EXPORT_TO_CSV') || this._locales && this._locales.TEXT_EXPORT_IN_CSV_FORMAT;
+              break;
             case 'export-excel':
               item.title = this.i18n.tr('EXPORT_TO_EXCEL') || this._locales && this._locales.TEXT_EXPORT_TO_EXCEL;
+              break;
+            case 'export-text-delimited':
+              item.title = this.i18n.tr('EXPORT_TO_TAB_DELIMITED') || this._locales && this._locales.TEXT_EXPORT_IN_TEXT_FORMAT;
+              break;
+            default:
+              item.title = this.i18n && this.i18n.tr && this.i18n.tr(item.titleKey) || item.title;
               break;
           }
 
           // re-translate if there's a "titleKey"
           if (this.sharedService.gridOptions && this.sharedService.gridOptions.enableTranslate) {
-            this.extensionUtility.translateItems(columncellMenuItems, 'titleKey', 'title');
+            this.extensionUtility.translateItems(columnCellMenuCommandItems, 'titleKey', 'title');
           }
+        });
+
+        columnCellMenuOptionItems.forEach(item => {
+          item.title = this.i18n && this.i18n.tr && this.i18n.tr(item.titleKey) || item.title;
         });
       }
     });

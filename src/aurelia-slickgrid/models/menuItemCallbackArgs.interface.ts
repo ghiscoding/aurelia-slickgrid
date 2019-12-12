@@ -1,7 +1,6 @@
 import { Column } from './column.interface';
-import { MenuItem } from './menuItem.interface';
 
-export interface MenuItemCallbackArgs {
+export interface MenuItemCallbackArgs<T> {
   /** Cell or column index */
   cell: number;
 
@@ -12,7 +11,7 @@ export interface MenuItemCallbackArgs {
   grid: number;
 
   /** Menu item selected */
-  item: MenuItem;
+  item: T;
 
   /** Cell Column definition */
   columnDef: Column;
