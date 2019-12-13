@@ -41,7 +41,7 @@ export class Example24 {
   title = 'Example 24: Cell Menu / Context Menu';
   subTitle = `Add Cell Menu and Context Menu
     <ul>
-      <li><b>Cell Menu</b> can be used by a cell menu click, like an 'Action' cell click.</li>
+      <li><b>Cell Menu</b> triggered by a cell menu click, often used for an Action Menu.</li>
       <li><b>Context Menu</b> shown after a mouse right+click.</li>
       <li>There 2 ways to execute a Command/Option</li>
       <ol>
@@ -72,7 +72,7 @@ export class Example24 {
 
   attached() {
     // populate the dataset once the grid is ready
-    this.getData();
+    this.dataset = this.getData(1000);
   }
 
   /* Define grid Options and Columns */
@@ -89,17 +89,21 @@ export class Example24 {
       { id: 'priority', headerKey: 'PRIORITY', field: 'priority', formatter: priorityFormatter },
       { id: 'completed', headerKey: 'COMPLETED', field: 'completed', formatter: Formatters.checkmark },
       {
-        id: 'action', name: 'Action', field: 'action',
+        id: 'action', name: 'Action', field: 'action', width: 110, maxWidth: 200,
         formatter: actionFormatter,
         cellMenu: {
+          width: 200,
           // you can override the logic of when the menu is usable
           // for example say that we want to show a menu only when then Priority is set to 'High'.
           // Note that this ONLY overrides the usability itself NOT the text displayed in the cell,
           // if you wish to change the cell text (or hide it)
           // then you SHOULD use it in combination with a custom formatter (actionFormatter) and use the same logic in that formatter
           menuUsabilityOverride: (row, dataContext, grid) => {
-            return dataContext.priority === 3; // option 3 is High
+            return (dataContext.priority === 3); // option 3 is High
           },
+
+          // when using Translate Service, every translation will have the suffix "Key"
+          // else use title without the suffix, for example "commandTitle" (no translations) or "commandTitleKey" (with translations)
           commandTitleKey: 'COMMANDS',
           commandItems: [
             { command: 'command1', title: 'Command 1', cssClass: 'orange' },
@@ -129,7 +133,7 @@ export class Example24 {
 
             {
               command: 'help',
-              titleKey: 'HELP', // use "title" without translation and "titleKey" with I18N
+              titleKey: 'HELP', // use "title" without translation and "titleKey" with TranslateService
               iconCssClass: 'fa fa-question-circle'
             },
             { command: 'something', titleKey: 'DISABLED_COMMAND', disabled: true }
@@ -146,7 +150,7 @@ export class Example24 {
               },
               // only enable Action menu when the Priority is set to High
               itemUsabilityOverride: (row, dataContext, grid) => {
-                return dataContext.priority === 3;
+                return (dataContext.priority === 3);
               },
               // only show command to 'Delete Row' when the task is not completed
               itemVisibilityOverride: (row, dataContext, grid) => {
@@ -170,10 +174,11 @@ export class Example24 {
       // when using the cellMenu, you can change some of the default options and all use some of the callback methods
       enableCellMenu: true,
       cellMenu: {
-        // minWidth: 200,
+        // all the Cell Menu callback methods (except the action callback)
+        // are available under the grid options as shown below
         onCommand: (e, args) => this.executeCommand(e, args),
         onOptionSelected: (e, args) => {
-          // change Completed flag
+          // change "Completed" property with new option selected from the Cell Menu
           const dataContext = args && args.dataContext;
           if (dataContext && dataContext.hasOwnProperty('completed')) {
             dataContext.completed = args.item.option;
@@ -181,8 +186,8 @@ export class Example24 {
           }
         },
         onBeforeMenuShow: ((e, args) => {
-          // for example, you could select the row it was clicked by calling
-          // this.aureliaGrid.gridService.setSelectedRows([args.row]);
+          // for example, you could select the row that the click originated
+          // this.angularGrid.gridService.setSelectedRows([args.row]);
           console.log('Before the Cell Menu is shown', args);
         }),
         onBeforeMenuClose: ((e, args) => console.log('Cell Menu is closing', args)),
@@ -234,15 +239,15 @@ export class Example24 {
     } catch (e) { }
   }
 
-  getData() {
+  getData(count: number): any[] {
     // mock a dataset
-    this.dataset = [];
-    for (let i = 0; i < 1000; i++) {
+    const tmpData = [];
+    for (let i = 0; i < count; i++) {
       const randomYear = 2000 + Math.floor(Math.random() * 10);
       const randomMonth = Math.floor(Math.random() * 11);
       const randomDay = Math.floor((Math.random() * 29));
 
-      this.dataset[i] = {
+      tmpData[i] = {
         id: i,
         duration: Math.floor(Math.random() * 25) + ' days',
         percentComplete: Math.floor(Math.random() * 100),
@@ -252,6 +257,7 @@ export class Example24 {
         completed: (i % 4 === 0),
       };
     }
+    return tmpData;
   }
 
   switchLanguage() {

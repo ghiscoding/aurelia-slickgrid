@@ -13,8 +13,6 @@ import {
   Locale,
   SlickEventHandler,
 } from '../models/index';
-import { FilterService } from '../services/filter.service';
-import { SortService } from '../services/sort.service';
 import { SharedService } from '../services/shared.service';
 import { ExtensionUtility } from './extensionUtility';
 
@@ -77,11 +75,7 @@ export class CellMenuExtension implements Extension {
 
       // dynamically import the SlickGrid plugin (addon) with RequireJS
       this.extensionUtility.loadExtensionDynamically(ExtensionName.cellMenu);
-
       this.sharedService.gridOptions.cellMenu = { ...this.getDefaultCellMenuOptions(), ...this.sharedService.gridOptions.cellMenu };
-      // if (this.sharedService.gridOptions.enableCellMenu) {
-      //   this.sharedService.gridOptions.cellMenu = this.addcellMenuCustomCommands(this.sharedService.gridOptions, this.sharedService.columnDefinitions);
-      // }
 
       // translate the item keys when necessary
       if (this.sharedService.gridOptions.enableTranslate) {
@@ -134,7 +128,7 @@ export class CellMenuExtension implements Extension {
    */
   private getDefaultCellMenuOptions(): CellMenu {
     return {
-      minWidth: 140,
+      width: 180,
     };
   }
 
@@ -145,11 +139,20 @@ export class CellMenuExtension implements Extension {
   private resetMenuTranslations(columnDefinitions: Column[]) {
     columnDefinitions.forEach((columnDef: Column) => {
       if (columnDef && columnDef.cellMenu && columnDef.cellMenu.commandItems) {
+        // get both items list
         const columnCellMenuCommandItems: Array<MenuCommandItem> | Array<'divider'> = columnDef.cellMenu.commandItems || [];
         const columnCellMenuOptionItems: Array<MenuOptionItem> | Array<'divider'> = columnDef.cellMenu.optionItems || [];
-        columnDef.cellMenu.commandTitle = this.i18n && this.i18n.tr && this.i18n.tr(columnDef.cellMenu.commandTitleKey) || this._locales && this._locales.TEXT_COMMANDS || columnDef.cellMenu.commandTitle;
-        columnDef.cellMenu.optionTitle = this.i18n && this.i18n.tr && this.i18n.tr(columnDef.cellMenu.optionTitleKey) || columnDef.cellMenu.optionTitle;
 
+        // translate their titles only if they have a titleKey defined
+        if (columnDef.cellMenu.commandTitleKey) {
+          columnDef.cellMenu.commandTitle = this.i18n && this.i18n.tr && this.i18n.tr(columnDef.cellMenu.commandTitleKey) || this._locales && this._locales.TEXT_COMMANDS || columnDef.cellMenu.commandTitle;
+        }
+        if (columnDef.cellMenu.optionTitleKey) {
+          columnDef.cellMenu.optionTitle = this.i18n && this.i18n.tr && this.i18n.tr(columnDef.cellMenu.optionTitleKey) || columnDef.cellMenu.optionTitle;
+        }
+
+        // loop through each commands and translate them
+        // for the built-in item commands, we'll use translations when using TranslateService or Locales when not
         columnCellMenuCommandItems.forEach((item) => {
           switch (item.command) {
             case 'export-csv':
@@ -162,7 +165,9 @@ export class CellMenuExtension implements Extension {
               item.title = this.i18n.tr('EXPORT_TO_TAB_DELIMITED') || this._locales && this._locales.TEXT_EXPORT_IN_TEXT_FORMAT;
               break;
             default:
-              item.title = this.i18n && this.i18n.tr && this.i18n.tr(item.titleKey) || item.title;
+              if (item && item.titleKey) {
+                item.title = this.i18n && this.i18n.tr && this.i18n.tr(item.titleKey);
+              }
               break;
           }
 
@@ -172,15 +177,13 @@ export class CellMenuExtension implements Extension {
           }
         });
 
+        // also loop through all Option items list and translate them as well
         columnCellMenuOptionItems.forEach(item => {
-          item.title = this.i18n && this.i18n.tr && this.i18n.tr(item.titleKey) || item.title;
+          if (item && item.titleKey) {
+            item.title = this.i18n && this.i18n.tr && this.i18n.tr(item.titleKey) || item.title;
+          }
         });
       }
     });
   }
-
-  // --
-  // private functions
-  // ------------------
-
 }
