@@ -59,6 +59,7 @@ const extensionServiceStub = {
   createExtensionsBeforeGridCreation: jest.fn(),
   dispose: jest.fn(),
   renderColumnHeaders: jest.fn(),
+  translateCellMenu: jest.fn(),
   translateColumnHeaders: jest.fn(),
   translateColumnPicker: jest.fn(),
   translateGridMenu: jest.fn(),
@@ -858,6 +859,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
       });
 
       it('should call multiple translate methods when locale changes', (done) => {
+        const transCellMenuSpy = jest.spyOn(extensionServiceStub, 'translateCellMenu');
         const transColHeaderSpy = jest.spyOn(extensionServiceStub, 'translateColumnHeaders');
         const transColPickerSpy = jest.spyOn(extensionServiceStub, 'translateColumnPicker');
         const transGridMenuSpy = jest.spyOn(extensionServiceStub, 'translateGridMenu');
@@ -870,6 +872,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
         ea.publish('i18n:locale:changed', {});
 
         setTimeout(() => {
+          expect(transCellMenuSpy).toHaveBeenCalled();
           expect(transColHeaderSpy).toHaveBeenCalled();
           expect(transColPickerSpy).toHaveBeenCalled();
           expect(transGridMenuSpy).toHaveBeenCalled();

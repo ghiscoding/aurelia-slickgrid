@@ -11,6 +11,7 @@ import {
 import {
   AutoTooltipExtension,
   CellExternalCopyManagerExtension,
+  CellMenuExtension,
   CheckboxSelectorExtension,
   ColumnPickerExtension,
   DraggableGroupingExtension,
@@ -80,6 +81,7 @@ describe('ExtensionService', () => {
         // extensions
         extensionStub as unknown as AutoTooltipExtension,
         extensionStub as unknown as CellExternalCopyManagerExtension,
+        extensionStub as unknown as CellMenuExtension,
         extensionStub as unknown as CheckboxSelectorExtension,
         extensionColumnPickerStub as unknown as ColumnPickerExtension,
         extensionStub as unknown as DraggableGroupingExtension,
@@ -657,6 +659,7 @@ describe('ExtensionService', () => {
         // extensions
         extensionStub as unknown as AutoTooltipExtension,
         extensionStub as unknown as CellExternalCopyManagerExtension,
+        extensionStub as unknown as CellMenuExtension,
         extensionStub as unknown as CheckboxSelectorExtension,
         extensionColumnPickerStub as unknown as ColumnPickerExtension,
         extensionStub as unknown as DraggableGroupingExtension,
