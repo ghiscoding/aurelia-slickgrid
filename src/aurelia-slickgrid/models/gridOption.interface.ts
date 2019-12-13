@@ -22,6 +22,7 @@ import {
   Pagination,
   RowDetailView,
   RowMoveManager,
+  ContextMenu,
 } from './index';
 
 export interface GridOption {
@@ -90,6 +91,9 @@ export interface GridOption {
 
   /** Column Picker Plugin options (columnTitle, forceFitTitle, syncResizeTitle) */
   columnPicker?: ColumnPicker;
+
+  /** Context menu options (mouse right+click) */
+  contextMenu?: ContextMenu;
 
   /** Defaults to false, which leads to create the footer row of the grid */
   createFooterRow?: boolean;

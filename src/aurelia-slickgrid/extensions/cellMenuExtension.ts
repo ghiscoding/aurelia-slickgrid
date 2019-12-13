@@ -140,8 +140,8 @@ export class CellMenuExtension implements Extension {
     columnDefinitions.forEach((columnDef: Column) => {
       if (columnDef && columnDef.cellMenu && columnDef.cellMenu.commandItems) {
         // get both items list
-        const columnCellMenuCommandItems: Array<MenuCommandItem> | Array<'divider'> = columnDef.cellMenu.commandItems || [];
-        const columnCellMenuOptionItems: Array<MenuOptionItem> | Array<'divider'> = columnDef.cellMenu.optionItems || [];
+        const columnCellMenuCommandItems: Array<MenuCommandItem | 'divider'> = columnDef.cellMenu.commandItems || [];
+        const columnCellMenuOptionItems: Array<MenuOptionItem | 'divider'> = columnDef.cellMenu.optionItems || [];
 
         // translate their titles only if they have a titleKey defined
         if (columnDef.cellMenu.commandTitleKey) {
@@ -153,22 +153,24 @@ export class CellMenuExtension implements Extension {
 
         // loop through each commands and translate them
         // for the built-in item commands, we'll use translations when using TranslateService or Locales when not
-        columnCellMenuCommandItems.forEach((item) => {
-          switch (item.command) {
-            case 'export-csv':
-              item.title = this.i18n.tr('EXPORT_TO_CSV') || this._locales && this._locales.TEXT_EXPORT_IN_CSV_FORMAT;
-              break;
-            case 'export-excel':
-              item.title = this.i18n.tr('EXPORT_TO_EXCEL') || this._locales && this._locales.TEXT_EXPORT_TO_EXCEL;
-              break;
-            case 'export-text-delimited':
-              item.title = this.i18n.tr('EXPORT_TO_TAB_DELIMITED') || this._locales && this._locales.TEXT_EXPORT_IN_TEXT_FORMAT;
-              break;
-            default:
-              if (item && item.titleKey) {
-                item.title = this.i18n && this.i18n.tr && this.i18n.tr(item.titleKey);
-              }
-              break;
+        columnCellMenuCommandItems.forEach((item: MenuCommandItem) => {
+          if (item.hasOwnProperty('command')) {
+            switch (item.command) {
+              case 'export-csv':
+                item.title = this.i18n.tr('EXPORT_TO_CSV') || this._locales && this._locales.TEXT_EXPORT_IN_CSV_FORMAT;
+                break;
+              case 'export-excel':
+                item.title = this.i18n.tr('EXPORT_TO_EXCEL') || this._locales && this._locales.TEXT_EXPORT_TO_EXCEL;
+                break;
+              case 'export-text-delimited':
+                item.title = this.i18n.tr('EXPORT_TO_TAB_DELIMITED') || this._locales && this._locales.TEXT_EXPORT_IN_TEXT_FORMAT;
+                break;
+              default:
+                if (item && item.titleKey) {
+                  item.title = this.i18n && this.i18n.tr && this.i18n.tr(item.titleKey);
+                }
+                break;
+            }
           }
 
           // re-translate if there's a "titleKey"
@@ -178,7 +180,7 @@ export class CellMenuExtension implements Extension {
         });
 
         // also loop through all Option items list and translate them as well
-        columnCellMenuOptionItems.forEach(item => {
+        columnCellMenuOptionItems.forEach((item: MenuOptionItem) => {
           if (item && item.titleKey) {
             item.title = this.i18n && this.i18n.tr && this.i18n.tr(item.titleKey) || item.title;
           }

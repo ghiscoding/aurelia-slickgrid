@@ -427,6 +427,7 @@ export class AureliaSlickgridCustomElement {
           this.extensionService.translateCellMenu();
           this.extensionService.translateColumnHeaders();
           this.extensionService.translateColumnPicker();
+          this.extensionService.translateContextMenu();
           this.extensionService.translateGridMenu();
           this.extensionService.translateHeaderMenu();
         }

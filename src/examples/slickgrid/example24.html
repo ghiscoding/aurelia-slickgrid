@@ -4,7 +4,29 @@
        innerhtml.bind="subTitle"></div>
 
   <div class="row">
-    <button class="btn btn-default btn-sm" click.delegate="switchLanguage()" data-test="language-button">
+    <span class="context-menu">
+      <strong>Context Menu:</strong>
+      <button class="btn btn-default btn-xs" click.delegate="showContextCommandsAndOptions(false)">
+        Show Priority Options Only
+      </button>
+      <button class="btn btn-default btn-xs" click.delegate="showContextCommandsAndOptions(true)">
+        Show Commands & Priority Options
+      </button>
+    </span>
+
+    <span class="cell-menu">
+      <strong>Cell Menu:</strong>
+      <button class="btn btn-default btn-xs" click.delegate="showCellMenuCommandsAndOptions(false)">
+        Show Action Commands Only
+      </button>
+      <button class="btn btn-default btn-xs" click.delegate="showCellMenuCommandsAndOptions(true)">
+        Show Actions Commands & Effort Options
+      </button>
+    </span>
+  </div>
+
+  <div class="row locale">
+    <button class="btn btn-default btn-xs" click.delegate="switchLanguage()" data-test="language-button">
       <i class="fa fa-language"></i>
       Switch Language
     </button>
@@ -12,6 +34,7 @@
     <span style="font-style: italic" data-test="selected-locale">
       ${selectedLanguage + '.json'}
     </span>
+
   </div>
 
   <aurelia-slickgrid grid-id="grid24"

@@ -17,6 +17,7 @@ import {
   CellMenuExtension,
   CheckboxSelectorExtension,
   ColumnPickerExtension,
+  ContextMenuExtension,
   DraggableGroupingExtension,
   GridMenuExtension,
   GroupItemMetaProviderExtension,
@@ -35,6 +36,7 @@ import { SharedService } from './shared.service';
   CellMenuExtension,
   CheckboxSelectorExtension,
   ColumnPickerExtension,
+  ContextMenuExtension,
   DraggableGroupingExtension,
   GridMenuExtension,
   GroupItemMetaProviderExtension,
@@ -56,6 +58,7 @@ export class ExtensionService {
     private cellMenuExtension: CellMenuExtension,
     private checkboxSelectorExtension: CheckboxSelectorExtension,
     private columnPickerExtension: ColumnPickerExtension,
+    private contextMenuExtension: ContextMenuExtension,
     private draggableGroupingExtension: DraggableGroupingExtension,
     private gridMenuExtension: GridMenuExtension,
     private groupItemMetaExtension: GroupItemMetaProviderExtension,
@@ -187,6 +190,14 @@ export class ExtensionService {
         if (this.columnPickerExtension && this.columnPickerExtension.register) {
           const instance = this.columnPickerExtension.register();
           this._extensionList.push({ name: ExtensionName.columnPicker, class: this.columnPickerExtension, addon: instance, instance });
+        }
+      }
+
+      // Context Menu Control
+      if (this.sharedService.gridOptions.enableContextMenu) {
+        if (this.contextMenuExtension && this.contextMenuExtension.register) {
+          const instance = this.contextMenuExtension.register();
+          this._extensionList.push({ name: ExtensionName.contextMenu, class: this.contextMenuExtension, addon: instance, instance });
         }
       }
 
@@ -332,6 +343,13 @@ export class ExtensionService {
   translateColumnPicker() {
     if (this.columnPickerExtension && this.columnPickerExtension.translateColumnPicker) {
       this.columnPickerExtension.translateColumnPicker();
+    }
+  }
+
+  /** Translate the Context Menu titles, we need to loop through all column definition to re-translate them */
+  translateContextMenu() {
+    if (this.contextMenuExtension && this.contextMenuExtension.translateContextMenu) {
+      this.contextMenuExtension.translateContextMenu();
     }
   }
 
