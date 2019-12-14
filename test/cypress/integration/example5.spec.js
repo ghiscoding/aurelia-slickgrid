@@ -173,7 +173,7 @@ describe('Example 5 - OData Grid', () => {
         .find('.slick-gridmenu-item')
         .first()
         .find('span')
-        .contains('Clear All Filters')
+        .contains('Clear all Filters')
         .click();
 
       // wait for the query to finish
@@ -298,7 +298,7 @@ describe('Example 5 - OData Grid', () => {
         .find('.slick-gridmenu-item')
         .first()
         .find('span')
-        .contains('Clear All Filters')
+        .contains('Clear all Filters')
         .click();
 
       cy.get('#items-per-page-label').select('20');

@@ -5,7 +5,7 @@ export interface Locale {
   /** Text "Cancel" shown in the Long Text Editor dialog */
   TEXT_CANCEL: string;
 
-  /** Text "Clear All Filters" shown in Header Menu */
+  /** Text "Clear all Filters" shown in Header Menu */
   TEXT_CLEAR_ALL_FILTERS: string;
 
   /** Text "Clear all Grouping" displayed in the Context Menu when Grouping is enabled */
