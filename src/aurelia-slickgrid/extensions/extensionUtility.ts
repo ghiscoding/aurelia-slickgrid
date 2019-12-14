@@ -130,12 +130,14 @@ export class ExtensionUtility {
    */
   sortItems(items: any[], propertyName: string) {
     // sort the custom items by their position in the list
-    items.sort((itemA, itemB) => {
-      if (itemA && itemB && itemA.hasOwnProperty(propertyName) && itemB.hasOwnProperty(propertyName)) {
-        return itemA[propertyName] - itemB[propertyName];
-      }
-      return 0;
-    });
+    if (Array.isArray(items)) {
+      items.sort((itemA, itemB) => {
+        if (itemA && itemB && itemA.hasOwnProperty(propertyName) && itemB.hasOwnProperty(propertyName)) {
+          return itemA[propertyName] - itemB[propertyName];
+        }
+        return 0;
+      });
+    }
   }
 
   /** Translate the an array of items from an input key and assign to the output key */
@@ -147,5 +149,28 @@ export class ExtensionUtility {
         }
       }
     }
+  }
+
+  /**
+   * When "enabledTranslate" is set to True, we will try to translate if the Translate Service exist or use the Locales when not
+   * @param translationKey
+   * @param localeKey
+   */
+  translateWhenEnabledAndServiceExist(translationKey: string, localeKey: string): string {
+    let text = '';
+
+    // get locales provided by user in main file or else use default English locales via the Constants
+    const locales = this.sharedService.gridOptions && this.sharedService.gridOptions.locales || Constants.locales;
+
+    if (this.sharedService.gridOptions.enableTranslate) {
+      if (this.i18n && this.i18n.tr) {
+        text = this.i18n.tr(translationKey || ' ');
+      }
+    } else if (locales && locales.hasOwnProperty(localeKey)) {
+      text = locales[localeKey];
+    } else {
+      text = localeKey;
+    }
+    return text;
   }
 }

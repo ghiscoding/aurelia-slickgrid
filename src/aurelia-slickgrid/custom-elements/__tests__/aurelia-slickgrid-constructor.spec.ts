@@ -62,6 +62,7 @@ const extensionServiceStub = {
   translateCellMenu: jest.fn(),
   translateColumnHeaders: jest.fn(),
   translateColumnPicker: jest.fn(),
+  translateContextMenu: jest.fn(),
   translateGridMenu: jest.fn(),
   translateHeaderMenu: jest.fn(),
 } as unknown as ExtensionService;
@@ -862,6 +863,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
         const transCellMenuSpy = jest.spyOn(extensionServiceStub, 'translateCellMenu');
         const transColHeaderSpy = jest.spyOn(extensionServiceStub, 'translateColumnHeaders');
         const transColPickerSpy = jest.spyOn(extensionServiceStub, 'translateColumnPicker');
+        const transContextMenuSpy = jest.spyOn(extensionServiceStub, 'translateContextMenu');
         const transGridMenuSpy = jest.spyOn(extensionServiceStub, 'translateGridMenu');
         const transHeaderMenuSpy = jest.spyOn(extensionServiceStub, 'translateHeaderMenu');
 
@@ -875,6 +877,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
           expect(transCellMenuSpy).toHaveBeenCalled();
           expect(transColHeaderSpy).toHaveBeenCalled();
           expect(transColPickerSpy).toHaveBeenCalled();
+          expect(transContextMenuSpy).toHaveBeenCalled();
           expect(transGridMenuSpy).toHaveBeenCalled();
           expect(transHeaderMenuSpy).toHaveBeenCalled();
           done();
