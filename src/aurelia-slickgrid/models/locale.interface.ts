@@ -14,7 +14,7 @@ export interface Locale {
   /** Text "Collapse all Grouping" displayed in the Context Menu when Grouping is enabled */
   TEXT_COLLAPSE_ALL_GROUPS: string;
 
-  /** Text "Clear All Sorting" shown in Header Menu */
+  /** Text "Clear all Sorting" shown in Header Menu */
   TEXT_CLEAR_ALL_SORTING: string;
 
   /** Text "Columns" title displayed in the Column Picker & Grid Menu (when enabled) */
