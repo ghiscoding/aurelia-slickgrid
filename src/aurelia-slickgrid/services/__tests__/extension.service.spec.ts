@@ -22,7 +22,7 @@ import {
   HeaderMenuExtension,
   RowDetailViewExtension,
   RowMoveManagerExtension,
-  RowSelectionExtension
+  RowSelectionExtension,
 } from '../../extensions';
 import { ExtensionService, SharedService } from '..';
 
