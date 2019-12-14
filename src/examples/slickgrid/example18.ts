@@ -310,7 +310,6 @@ export class Example18 {
 
   groupByDurationEffortDriven() {
     this.clearGrouping();
-    this.aureliaGrid.slickGrid.sortColumns([]);
     if (this.draggableGroupingPlugin && this.draggableGroupingPlugin.setDroppedGroups) {
       this.showPreHeader();
       this.draggableGroupingPlugin.setDroppedGroups(['duration', 'effortDriven']);
