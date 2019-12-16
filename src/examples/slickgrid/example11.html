@@ -27,8 +27,6 @@
   </div>
 
   <aurelia-slickgrid grid-id="grid1" column-definitions.bind="columnDefinitions" grid-options.bind="gridOptions"
-                     dataset.bind="dataset"
-                     sg-on-context-menu.delegate="onContextMenu($event.detail.eventData, $event.detail.args)"
-                     asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
+    dataset.bind="dataset" asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
   </aurelia-slickgrid>
 </template>
