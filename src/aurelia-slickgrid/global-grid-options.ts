@@ -38,7 +38,7 @@ export const GlobalGridOptions: GridOption = {
   enableCheckboxSelector: false,
   enableColumnPicker: true,
   enableColumnReorder: true,
-  enableContextMenu: false,
+  enableContextMenu: true,
   enableExcelExport: true, // Excel Export is the new default,
   enableExport: false, // CSV/Text with Tab Delimited
   enableFilterTrimWhiteSpace: false, // do we want to trim white spaces on all Filters?
@@ -71,7 +71,7 @@ export const GlobalGridOptions: GridOption = {
     autoAdjustDrop: true,
     autoAlignSide: true,
     hideCloseButton: false,
-    hideClearGrouping: false,
+    hideClearAllGrouping: false,
     hideCollapseAllGroups: false,
     hideCommandSection: false,
     hideCopyCellValueCommand: false,

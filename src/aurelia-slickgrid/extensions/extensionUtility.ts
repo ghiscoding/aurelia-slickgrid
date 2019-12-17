@@ -158,14 +158,13 @@ export class ExtensionUtility {
    */
   translateWhenEnabledAndServiceExist(translationKey: string, localeKey: string): string {
     let text = '';
+    const gridOptions = this.sharedService && this.sharedService.gridOptions;
 
     // get locales provided by user in main file or else use default English locales via the Constants
-    const locales = this.sharedService.gridOptions && this.sharedService.gridOptions.locales || Constants.locales;
+    const locales = gridOptions && gridOptions.locales || Constants.locales;
 
-    if (this.sharedService.gridOptions.enableTranslate) {
-      if (this.i18n && this.i18n.tr) {
-        text = this.i18n.tr(translationKey || ' ');
-      }
+    if (gridOptions.enableTranslate && this.i18n && this.i18n.tr) {
+      text = this.i18n.tr(translationKey || ' ');
     } else if (locales && locales.hasOwnProperty(localeKey)) {
       text = locales[localeKey];
     } else {

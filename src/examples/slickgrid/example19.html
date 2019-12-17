@@ -4,7 +4,7 @@
 
   <span>
     <button class="btn btn-default btn-sm" click.delegate="closeAllRowDetail()">
-      Close All Row Details
+      Close all Row Details
     </button>
     &nbsp;&nbsp;
 
@@ -18,6 +18,6 @@
   <hr />
 
   <aurelia-slickgrid grid-id="grid16" column-definitions.bind="columnDefinitions" grid-options.bind="gridOptions"
-    dataset.bind="dataset" asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
+                     dataset.bind="dataset" asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
   </aurelia-slickgrid>
 </template>

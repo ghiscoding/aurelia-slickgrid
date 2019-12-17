@@ -70,7 +70,8 @@ describe('Aurelia-Slickgrid Custom Component', () => {
         expect(spy).toHaveBeenNthCalledWith(2, 'asg-on-dataview-created', expect.any(Object));
         expect(spy).toHaveBeenNthCalledWith(3, 'sg-on-scroll', expect.any(Object));
         expect(spy).toHaveBeenNthCalledWith(4, 'sg-on-rendered', expect.any(Object));
-        expect(spy).toHaveBeenNthCalledWith(5, 'asg-on-grid-created', expect.any(Object));
+        expect(spy).toHaveBeenNthCalledWith(5, 'sg-on-set-items-called', expect.any(Object));
+        expect(spy).toHaveBeenNthCalledWith(6, 'asg-on-grid-created', expect.any(Object));
         expect(spy).toHaveBeenLastCalledWith('asg-on-aurelia-grid-created', expect.any(Object));
       })
       .then(() => customElement.detached(true))

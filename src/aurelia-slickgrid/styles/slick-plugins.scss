@@ -33,6 +33,7 @@
 
   .title {
     font-size: $cell-menu-title-font-size;
+    font-weight: $cell-menu-title-font-weight;
     width: $cell-menu-title-width;
     border-bottom: $cell-menu-title-border-bottom;
     margin-bottom: $cell-menu-title-margin-bottom;
@@ -134,6 +135,7 @@
 
   .title {
     font-size: $context-menu-title-font-size;
+    font-weight: $context-menu-title-font-weight;
     width: $context-menu-title-width;
     border-bottom: $context-menu-title-border-bottom;
     margin-bottom: $context-menu-title-margin-bottom;

@@ -144,7 +144,6 @@ describe('gridMenuExtension', () => {
               TOGGLE_FILTER_ROW: 'Basculer la ligne des filtres',
               REFRESH_DATASET: 'Rafraîchir les données',
               TOGGLE_PRE_HEADER_ROW: 'Basculer la ligne de pré-en-tête',
-
             }
           }
         },
@@ -572,7 +571,7 @@ describe('gridMenuExtension', () => {
         expect(refreshSpy).toHaveBeenCalled();
       });
 
-      it('should call "exportToExcel" set when the command triggered is "export-csv"', () => {
+      it('should call "exportToExcel" set when the command triggered is "export-excel"', () => {
         const excelExportSpy = jest.spyOn(excelExportServiceStub, 'exportToExcel');
         const onCommandSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onCommand');
 
