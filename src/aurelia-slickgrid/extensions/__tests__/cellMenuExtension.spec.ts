@@ -5,7 +5,7 @@ import { BindingSignaler } from 'aurelia-templating-resources';
 import { CellMenuExtension } from '../cellMenuExtension';
 import { ExtensionUtility } from '../extensionUtility';
 import { SharedService } from '../../services/shared.service';
-import { Column, ColumnSort, GridOption, MenuOptionItemCallbackArgs, MenuCommandItemCallbackArgs } from '../../models';
+import { Column, GridOption, MenuCommandItemCallbackArgs, MenuOptionItemCallbackArgs } from '../../models';
 
 declare var Slick: any;
 
@@ -99,9 +99,7 @@ describe('CellMenuExtension', () => {
             translation: {
               TITLE: 'Title',
               COMMANDS: 'Commands',
-              COLUMNS: 'Columns',
-              FORCE_FIT_COLUMNS: 'Force fit columns',
-              SYNCHRONOUS_RESIZE: 'Synchronous resize',
+              COLUMNS: 'Columns', \
               HIDE_COLUMN: 'Hide Column',
               REMOVE_FILTER: 'Remove Filter',
               REMOVE_SORT: 'Remove Sort',
@@ -115,8 +113,6 @@ describe('CellMenuExtension', () => {
               TITLE: 'Titre',
               COMMANDS: 'Commandes',
               COLUMNS: 'Colonnes',
-              FORCE_FIT_COLUMNS: 'Ajustement forcé des colonnes',
-              SYNCHRONOUS_RESIZE: 'Redimension synchrone',
               HIDE_COLUMN: 'Cacher la colonne',
               REMOVE_FILTER: 'Supprimer le filtre',
               REMOVE_SORT: 'Supprimer le tri',

@@ -18,6 +18,7 @@ import {
   SlickEventHandler,
 } from '../models/index';
 import { ExtensionUtility } from './extensionUtility';
+import { exportWithFormatterWhenDefined } from '../services/export-utilities';
 import { ExportService } from '../services/export.service';
 import { ExcelExportService } from '../services/excelExport.service';
 import { SharedService } from '../services/shared.service';
@@ -95,8 +96,7 @@ export class ContextMenuExtension implements Extension {
       this.sharedService.gridOptions.contextMenu = { ...this.sharedService.gridOptions.contextMenu };
 
       // sort all menu items by their position order when defined
-      const originalCommandItems = this._userOriginalContextMenu && Array.isArray(this._userOriginalContextMenu.commandItems) ? this._userOriginalContextMenu.commandItems : [];
-      this.sharedService.gridOptions.contextMenu.commandItems = [...originalCommandItems, ...this.addMenuCustomCommands(originalCommandItems)];
+      this.sharedService.gridOptions.contextMenu.commandItems = this.addMenuCustomCommands([]);
       this.extensionUtility.sortItems(this.sharedService.gridOptions.contextMenu.commandItems, 'positionOrder');
       this.extensionUtility.sortItems(this.sharedService.gridOptions.contextMenu.optionItems, 'positionOrder');
 
@@ -141,15 +141,17 @@ export class ContextMenuExtension implements Extension {
 
   /** Translate the Cell Menu titles, we need to loop through all column definition to re-translate them */
   translateContextMenu() {
-    if (this.sharedService.gridOptions && this.sharedService.gridOptions.contextMenu) {
+    if (this.sharedService && this.sharedService.gridOptions && this.sharedService.gridOptions.contextMenu) {
       const contextMenu = this.sharedService.gridOptions.contextMenu;
       const menuOptions: Partial<ContextMenu> = {};
 
       if (contextMenu.commandTitleKey) {
-        menuOptions.commandTitle = this.i18n && this.i18n.tr && this.i18n.tr(contextMenu.commandTitleKey) || this._locales && this._locales.TEXT_COMMANDS || contextMenu.commandTitle;
+        contextMenu.commandTitle = this.i18n && this.i18n.tr && this.i18n.tr(contextMenu.commandTitleKey) || this._locales && this._locales.TEXT_COMMANDS || contextMenu.commandTitle;
+        menuOptions.commandTitle = contextMenu.commandTitle;
       }
       if (contextMenu.optionTitleKey) {
-        menuOptions.optionTitle = this.i18n && this.i18n.tr && this.i18n.tr(contextMenu.optionTitleKey) || contextMenu.optionTitle;
+        contextMenu.optionTitle = this.i18n && this.i18n.tr && this.i18n.tr(contextMenu.optionTitleKey) || contextMenu.optionTitle;
+        menuOptions.optionTitle = contextMenu.optionTitle;
       }
       const originalCommandItems = this._userOriginalContextMenu && Array.isArray(this._userOriginalContextMenu.commandItems) ? this._userOriginalContextMenu.commandItems : [];
       contextMenu.commandItems = [...originalCommandItems, ...this.addMenuCustomCommands(originalCommandItems)];
@@ -190,7 +192,7 @@ export class ContextMenuExtension implements Extension {
             disabled: false,
             command: commandName,
             positionOrder: 50,
-            action: (e, args) => {
+            action: (e: Event, args: MenuCommandItemCallbackArgs) => {
               if (args && args.hasOwnProperty('cell') && args.hasOwnProperty('row')) {
                 this.sharedService.grid.setActiveCell(args.row, args.cell, false); // select the cell that the click originated
                 this.copyToClipboard(args);
@@ -201,7 +203,7 @@ export class ContextMenuExtension implements Extension {
               const columnDef = args && args.column as Column;
               const dataContext = args && args.dataContext;
               if (columnDef && dataContext.hasOwnProperty(columnDef.field)) {
-                return dataContext[columnDef.field] !== null && dataContext[columnDef.field] !== undefined;
+                return dataContext[columnDef.field] !== '' && dataContext[columnDef.field] !== null && dataContext[columnDef.field] !== undefined;
               }
               return false;
             }
@@ -370,43 +372,20 @@ export class ContextMenuExtension implements Extension {
     try {
       if (args && args.grid && args.command) {
         // get the value, if "exportWithFormatter" is set then we'll use the formatter output
-        const columnDef = (args && args.column || {}) as Column;
-        const dataContext = args && args.dataContext;
         const gridOptions = this.sharedService && this.sharedService.gridOptions || {};
-        const exportWithFormatter = gridOptions.exportOptions.exportWithFormatter || gridOptions.excelExportOptions.exportWithFormatter;
-        const isEvaluatingFormatter = exportWithFormatter || columnDef.exportWithFormatter;
-        let textToCopy = args.value;
-
-        if (isEvaluatingFormatter && dataContext.hasOwnProperty(columnDef.field) && (columnDef.formatter || columnDef.exportCustomFormatter)) {
-          if (typeof columnDef.exportCustomFormatter === 'function') {
-            const formattedData = columnDef.exportCustomFormatter(args.row, args.cell, dataContext[columnDef.field], columnDef, dataContext, args.grid);
-            textToCopy = formattedData as string;
-            if (formattedData && typeof formattedData === 'object' && formattedData.hasOwnProperty('text')) {
-              textToCopy = formattedData.text;
-            }
-          } else {
-            const formattedData = columnDef.formatter(args.row, args.cell, dataContext[columnDef.field], columnDef, dataContext, args.grid);
-            textToCopy = formattedData as string;
-            if (formattedData && typeof formattedData === 'object' && formattedData.hasOwnProperty('text')) {
-              textToCopy = formattedData.text;
-            }
-          }
-          if (textToCopy === null || textToCopy === undefined) {
-            textToCopy = '';
-          }
-        }
+        const grid = this.sharedService && this.sharedService.grid;
+        const exportOptions = gridOptions && (gridOptions.excelExportOptions || gridOptions.exportOptions);
+        const textToCopy = exportWithFormatterWhenDefined(args.row, args.cell, args.dataContext, args.column, grid, exportOptions);
 
         // create fake <div> to copy into clipboard & delete it from the DOM once we're done
         const range = document.createRange();
-        const tmpElem = $('<div>')
-          .css({ position: 'absolute', left: '-1000px', top: '-1000px' })
-          .text(textToCopy);
+        const tmpElem = $('<div>').css({ position: 'absolute', left: '-1000px', top: '-1000px' }).text(textToCopy);
         $('body').append(tmpElem);
         range.selectNodeContents(tmpElem.get(0));
         const selection = window.getSelection();
         selection.removeAllRanges();
         selection.addRange(range);
-        const success = document.execCommand('copy', false, null);
+        const success = document.execCommand('copy', false, textToCopy);
         if (success) {
           tmpElem.remove();
         }
