@@ -170,6 +170,7 @@ export class Example24 {
         excludeFromExport: true,
         formatter: actionFormatter,
         cellMenu: {
+          hideCloseButton: false,
           width: 200,
           // you can override the logic of when the menu is usable
           // for example say that we want to show a menu only when then Priority is set to 'High'.
@@ -182,7 +183,7 @@ export class Example24 {
 
           // when using Translate Service, every translation will have the suffix "Key"
           // else use title without the suffix, for example "commandTitle" (no translations) or "commandTitleKey" (with translations)
-          commandTitleKey: 'COMMANDS',
+          commandTitleKey: 'COMMANDS', // optional title, use "commandTitle" when not using I18N
           commandItems: [
             // array of command item objects, you can also use the "positionOrder" that will be used to sort the items in the list
             {
@@ -332,6 +333,7 @@ export class Example24 {
 
   getContextMenuOptions(): ContextMenu {
     return {
+      hideCloseButton: false,
       width: 200,
       // optionally and conditionally define when the the menu is usable,
       // this should be used with a custom formatter to show/hide/disable the menu
@@ -339,9 +341,9 @@ export class Example24 {
         const dataContext = args && args.dataContext;
         return (dataContext.id < 21); // say we want to display the menu only from Task 0 to 20
       },
-      commandTitleKey: 'COMMANDS',
       // which column to show the command list? when not defined it will be shown over all columns
       commandShownOverColumnIds: ['id', 'title', 'percentComplete', 'start', 'finish', 'effortDriven' /*, 'priority'*/],
+      commandTitleKey: 'COMMANDS', // this title is optional, you could also use "commandTitle" when not using I18N
       commandItems: [
         { divider: true, command: '', positionOrder: 61 },
         { command: 'delete-row', titleKey: 'DELETE_ROW', iconCssClass: 'fa fa-times', cssClass: 'red', textCssClass: 'bold', positionOrder: 62 },

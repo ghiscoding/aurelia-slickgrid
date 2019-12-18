@@ -70,7 +70,7 @@ export const GlobalGridOptions: GridOption = {
   contextMenu: {
     autoAdjustDrop: true,
     autoAlignSide: true,
-    hideCloseButton: false,
+    hideCloseButton: true,
     hideClearAllGrouping: false,
     hideCollapseAllGroups: false,
     hideCommandSection: false,
