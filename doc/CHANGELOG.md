@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 * **backend:** make sure pagination object exist before using it ([3123597](https://github.com/ghiscoding/aurelia-slickgrid/commit/3123597))
 * **sort:** add sort icons to grouping examples ([8bb6dec](https://github.com/ghiscoding/aurelia-slickgrid/commit/8bb6dec))
+* **typing:** gulp dependency and typings fix ([80db485](https://github.com/ghiscoding/aurelia-slickgrid/commit/80db485))
 
 
 ### Features
