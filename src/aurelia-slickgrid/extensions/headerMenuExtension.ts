@@ -156,7 +156,7 @@ export class HeaderMenuExtension implements Extension {
             }
 
             // add a divider (separator) between the top sort commands and the other clear commands
-            if (columnHeaderMenuItems.filter((item: HeaderMenuItem) => item.positionOrder === 52).length === 0) {
+            if (columnHeaderMenuItems.filter((item: MenuCommandItem) => item.positionOrder === 52).length === 0) {
               columnHeaderMenuItems.push({ divider: true, command: '', positionOrder: 52 });
             }
 
