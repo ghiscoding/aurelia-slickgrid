@@ -57,7 +57,7 @@ const taskTranslateFormatter: Formatter = (row: number, cell: number, value: any
 
 @autoinject()
 export class Example24 {
-  title = 'Example 24: Cell Menu / Context Menu';
+  title = 'Example 24: Cell Menu & Context Menu Plugins';
   subTitle = `Add Cell Menu and Context Menu
     <ul>
       <li>This example demonstrates 2 SlickGrid plugins
@@ -342,7 +342,7 @@ export class Example24 {
         return (dataContext.id < 21); // say we want to display the menu only from Task 0 to 20
       },
       // which column to show the command list? when not defined it will be shown over all columns
-      commandShownOverColumnIds: ['id', 'title', 'percentComplete', 'start', 'finish', 'effortDriven' /*, 'priority'*/],
+      commandShownOverColumnIds: ['id', 'title', 'percentComplete', 'start', 'finish', 'completed' /*, 'priority', 'action' */],
       commandTitleKey: 'COMMANDS', // this title is optional, you could also use "commandTitle" when not using I18N
       commandItems: [
         { divider: true, command: '', positionOrder: 61 },
@@ -357,10 +357,10 @@ export class Example24 {
           action: (e, args) => {
             // action callback.. do something
           },
-          // only show command to 'Help' when there's no Effort Driven
+          // only show command to 'Help' when the task is Not Completed
           itemVisibilityOverride: (args) => {
             const dataContext = args && args.dataContext;
-            return (!dataContext.effortDriven);
+            return (!dataContext.completed);
           }
         },
         { command: 'something', titleKey: 'DISABLED_COMMAND', disabled: true, positionOrder: 65 },
@@ -374,10 +374,10 @@ export class Example24 {
       optionItems: [
         {
           option: 0, title: 'n/a', textCssClass: 'italic',
-          // only enable this option when there's no Effort Driven
+          // only enable this option when the task is Not Completed
           itemUsabilityOverride: (args) => {
             const dataContext = args && args.dataContext;
-            return (!dataContext.effortDriven);
+            return (!dataContext.completed);
           },
           // you can use the 'action' callback and/or subscribe to the 'onCallback' event, they both have the same arguments
           action: (e, args) => {
@@ -393,10 +393,10 @@ export class Example24 {
         // { divider: true, option: '', positionOrder: 3 },
         {
           option: 4, title: 'Extreme', iconCssClass: 'fa fa-fire', disabled: true,
-          // only shown when there's no Effort Driven
+          // only shown when the task is Not Completed
           itemVisibilityOverride: (args) => {
             const dataContext = args && args.dataContext;
-            return (!dataContext.effortDriven);
+            return (!dataContext.completed);
           }
         },
       ],
@@ -427,7 +427,7 @@ export class Example24 {
   showContextCommandsAndOptions(showBothList: boolean) {
     // when showing both Commands/Options, we can just pass an empty array to show over all columns
     // else show on all columns except Priority
-    const showOverColumnIds = showBothList ? [] : ['id', 'title', 'complete', 'start', 'finish', 'completed'];
+    const showOverColumnIds = showBothList ? [] : ['id', 'title', 'complete', 'start', 'finish', 'completed', 'action'];
     this.contextMenuInstance.setOptions({
       commandShownOverColumnIds: showOverColumnIds,
       // hideCommandSection: !showBothList
