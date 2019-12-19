@@ -8,8 +8,8 @@ import {
   Filters,
   Formatters,
   GridOption,
-  OperatorType
 } from '../../aurelia-slickgrid';
+import './example9.scss'; // provide custom CSS/SASS styling
 
 @autoinject()
 export class Example9 {
@@ -22,6 +22,7 @@ export class Example9 {
     <li>By default the Grid Menu shows all columns which you can show/hide them</li>
     <li>You can configure multiple custom "commands" to show up in the Grid Menu and use the "onGridMenuCommand()" callback</li>
     <li>Doing a "right+click" over any column header will also provide a way to show/hide a column (via the Column Picker Plugin)</li>
+    <li>You can change the icons of both picker via SASS variables as shown in this demo (check all SASS variables)</li>
     <li><i class="fa fa-arrow-down"></i> You can also show the Grid Menu anywhere on your page</li>
     </ul>
   `;

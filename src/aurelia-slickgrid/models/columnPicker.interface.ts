@@ -2,6 +2,9 @@ export interface ColumnPicker {
   /** Defaults to "Columns" which is the title that shows up over the columns */
   columnTitle?: string;
 
+  /** Animation fade speed when opening/closing the column picker */
+  fadeSpeed?: number;
+
   /** Defaults to "Force fit columns" which is 1 of the last 2 checkbox title shown at the end of the picker list */
   forceFitTitle?: string;
 
