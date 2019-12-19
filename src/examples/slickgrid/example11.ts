@@ -9,7 +9,7 @@ import {
   GridService,
   OnEventArgs
 } from '../../aurelia-slickgrid';
-import './custom-styles.scss';
+import './example11.scss';
 
 @autoinject()
 export class Example11 {
@@ -45,11 +45,7 @@ export class Example11 {
   constructor() {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
-  }
-
-  attached() {
-    // populate the dataset once the grid is ready
-    this.getData();
+    this.mockData(1000);
   }
 
   aureliaGridReady(aureliaGrid: AureliaGridInstance) {
@@ -151,10 +147,10 @@ export class Example11 {
     };
   }
 
-  getData() {
+  mockData(itemCount: number) {
     // mock a dataset
     const mockedDataset = [];
-    for (let i = 0; i < 1000; i++) {
+    for (let i = 0; i < itemCount; i++) {
       const randomYear = 2000 + Math.floor(Math.random() * 10);
       const randomMonth = Math.floor(Math.random() * 11);
       const randomDay = Math.floor((Math.random() * 29));

@@ -1,8 +1,9 @@
 import { inject, Optional, singleton } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
+
 import { Constants } from '../constants';
 import { SharedService } from '../services/shared.service';
-import { ExtensionName, Locale } from '../models/index';
+import { ExtensionName } from '../models/index';
 
 declare function require(name: string): any;
 
@@ -34,11 +35,17 @@ export class ExtensionUtility {
         case ExtensionName.cellExternalCopyManager:
           require('slickgrid/plugins/slick.cellexternalcopymanager');
           break;
+        case ExtensionName.cellMenu:
+          require('slickgrid/plugins/slick.cellmenu');
+          break;
         case ExtensionName.checkboxSelector:
           require('slickgrid/plugins/slick.checkboxselectcolumn');
           break;
         case ExtensionName.columnPicker:
           require('slickgrid/controls/slick.columnpicker');
+          break;
+        case ExtensionName.contextMenu:
+          require('slickgrid/plugins/slick.contextmenu');
           break;
         case ExtensionName.draggableGrouping:
           require('slickgrid/plugins/slick.draggablegrouping');
@@ -75,7 +82,7 @@ export class ExtensionUtility {
    * From a Grid Menu object property name, we will return the correct title output string following this order
    * 1- if user provided a title, use it as the output title
    * 2- else if user provided a title key, use it to translate the output title
-   * 3- else if nothing is provided use
+   * 3- else if nothing is provided use text defined as constants
    */
   getPickerTitleOutputString(propName: string, pickerName: 'gridMenu' | 'columnPicker') {
     if (this.sharedService.gridOptions && this.sharedService.gridOptions.enableTranslate && (!this.i18n || !this.i18n.tr)) {
@@ -123,12 +130,14 @@ export class ExtensionUtility {
    */
   sortItems(items: any[], propertyName: string) {
     // sort the custom items by their position in the list
-    items.sort((itemA, itemB) => {
-      if (itemA && itemB && itemA.hasOwnProperty(propertyName) && itemB.hasOwnProperty(propertyName)) {
-        return itemA[propertyName] - itemB[propertyName];
-      }
-      return 0;
-    });
+    if (Array.isArray(items)) {
+      items.sort((itemA, itemB) => {
+        if (itemA && itemB && itemA.hasOwnProperty(propertyName) && itemB.hasOwnProperty(propertyName)) {
+          return itemA[propertyName] - itemB[propertyName];
+        }
+        return 0;
+      });
+    }
   }
 
   /** Translate the an array of items from an input key and assign to the output key */
@@ -140,5 +149,27 @@ export class ExtensionUtility {
         }
       }
     }
+  }
+
+  /**
+   * When "enabledTranslate" is set to True, we will try to translate if the Translate Service exist or use the Locales when not
+   * @param translationKey
+   * @param localeKey
+   */
+  translateWhenEnabledAndServiceExist(translationKey: string, localeKey: string): string {
+    let text = '';
+    const gridOptions = this.sharedService && this.sharedService.gridOptions;
+
+    // get locales provided by user in main file or else use default English locales via the Constants
+    const locales = gridOptions && gridOptions.locales || Constants.locales;
+
+    if (gridOptions.enableTranslate && this.i18n && this.i18n.tr) {
+      text = this.i18n.tr(translationKey || ' ');
+    } else if (locales && locales.hasOwnProperty(localeKey)) {
+      text = locales[localeKey];
+    } else {
+      text = localeKey;
+    }
+    return text;
   }
 }

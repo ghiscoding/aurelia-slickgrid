@@ -235,8 +235,8 @@ export class HeaderMenuExtension implements Extension {
   }
 
   /**
-   * Reset all the Header Menu options which have text to translate
-   * @param grid menu object
+   * Reset all the internal Menu options which have text to translate
+   * @param header menu object
    */
   private resetHeaderMenuTranslations(columnDefinitions: Column[]) {
     columnDefinitions.forEach((columnDef: Column) => {

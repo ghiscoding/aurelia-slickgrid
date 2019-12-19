@@ -330,7 +330,7 @@ describe('Example 6 - GraphQL Grid', () => {
   });
 
   describe('Set Dynamic Sorting', () => {
-    it('should click on "Clear All Filters & Sorting" then "Set Dynamic Sorting" buttons', () => {
+    it('should click on "Clear all Filters & Sorting" then "Set Dynamic Sorting" buttons', () => {
       cy.get('[data-test=clear-filters-sorting]')
         .click();
 
