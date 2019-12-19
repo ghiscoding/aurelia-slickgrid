@@ -10,6 +10,7 @@ import {
   Locale,
   MenuCommandItem,
   MenuCommandItemCallbackArgs,
+  MenuOnBeforeMenuShowArgs,
   MenuOptionItem,
   MenuOptionItemCallbackArgs,
   SlickEventHandler,
@@ -104,7 +105,7 @@ export class CellMenuExtension implements Extension {
             this.sharedService.gridOptions.cellMenu.onOptionSelected(event, args);
           }
         });
-        this._eventHandler.subscribe(this._addon.onBeforeMenuShow, (event: Event, args: { cell: number; row: number; grid: any; }) => {
+        this._eventHandler.subscribe(this._addon.onBeforeMenuShow, (event: Event, args: MenuOnBeforeMenuShowArgs) => {
           if (this.sharedService.gridOptions.cellMenu && typeof this.sharedService.gridOptions.cellMenu.onBeforeMenuShow === 'function') {
             this.sharedService.gridOptions.cellMenu.onBeforeMenuShow(event, args);
           }
