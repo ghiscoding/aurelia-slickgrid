@@ -1,4 +1,4 @@
-import { autoinject, bindable } from 'aurelia-framework';
+import { autoinject } from 'aurelia-framework';
 import {
   Aggregators,
   AureliaGridInstance,
@@ -302,10 +302,14 @@ export class Example18 {
     }
   }
 
-  groupByDurationOrderByCount(isOrderingByCount = false) {
-    this.durationOrderByCount = isOrderingByCount;
+  groupByDurationOrderByCount(sortedByCount = false) {
+    this.durationOrderByCount = sortedByCount;
     this.clearGrouping();
     this.groupByDuration();
+
+    // you need to manually add the sort icon(s) in UI
+    const sortColumns = sortedByCount ? [] : [{ columnId: 'duration', sortAsc: true }];
+    this.aureliaGrid.filterService.setSortColumnIcons(sortColumns);
   }
 
   groupByDurationEffortDriven() {
@@ -315,6 +319,10 @@ export class Example18 {
       this.draggableGroupingPlugin.setDroppedGroups(['duration', 'effortDriven']);
       this.gridObj.invalidate();
       this.gridObj.render();
+
+      // you need to manually add the sort icon(s) in UI
+      const sortColumns = [{ columnId: 'duration', sortAsc: true }];
+      this.aureliaGrid.filterService.setSortColumnIcons(sortColumns);
     }
   }
 

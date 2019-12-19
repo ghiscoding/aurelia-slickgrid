@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.15.2"></a>
+## [2.15.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.15.1...v2.15.2) (2019-12-19)
+
+
+### Bug Fixes
+
+* **backend:** make sure pagination object exist before using it ([3123597](https://github.com/ghiscoding/aurelia-slickgrid/commit/3123597))
+* **sort:** add sort icons to grouping examples ([8bb6dec](https://github.com/ghiscoding/aurelia-slickgrid/commit/8bb6dec))
+* **typing:** gulp dependency and typings fix ([80db485](https://github.com/ghiscoding/aurelia-slickgrid/commit/80db485))
+
+
+### Features
+
+* **tests:** add missing tests for full coverage ([b8cd451](https://github.com/ghiscoding/aurelia-slickgrid/commit/b8cd451))
+
+
+
 <a name="2.15.1"></a>
 ## [2.15.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.15.0...v2.15.1) (2019-11-30)
 
