@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.16.0"></a>
+# [2.16.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.15.2...v2.16.0) (2019-12-21)
+
+
+### Bug Fixes
+
+* **example:** show sort icon correctly after grouping ([116bc78](https://github.com/ghiscoding/aurelia-slickgrid/commit/116bc78))
+
+
+### Features
+
+* **cellMenu:** starting adding new CellMenu Extension ([d7ed48a](https://github.com/ghiscoding/aurelia-slickgrid/commit/d7ed48a))
+* **menu:** add action & override callbacks to all Menu plugins ([d59b341](https://github.com/ghiscoding/aurelia-slickgrid/commit/d59b341))
+* **menu:** add Context Menu feature POC ([866969d](https://github.com/ghiscoding/aurelia-slickgrid/commit/866969d))
+* **menu:** starting adding new ContextMenu Extension ([a60d5ae](https://github.com/ghiscoding/aurelia-slickgrid/commit/a60d5ae))
+* **styling:** change Column Picker & Grid Menu styling ([8465191](https://github.com/ghiscoding/aurelia-slickgrid/commit/8465191))
+
+
+
 <a name="2.15.2"></a>
 ## [2.15.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.15.1...v2.15.2) (2019-12-19)
 
