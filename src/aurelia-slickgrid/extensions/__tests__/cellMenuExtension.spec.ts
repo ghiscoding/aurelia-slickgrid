@@ -92,14 +92,14 @@ describe('CellMenuExtension', () => {
       sharedService = new SharedService();
       i18n = new I18N(ea, new BindingSignaler());
       extensionUtility = new ExtensionUtility(i18n, sharedService);
-      extension = new CellMenuExtension(ea, extensionUtility, i18n, sharedService);
+      extension = new CellMenuExtension(extensionUtility, i18n, sharedService);
       i18n.setup({
         resources: {
           en: {
             translation: {
               TITLE: 'Title',
               COMMANDS: 'Commands',
-              COLUMNS: 'Columns', \
+              COLUMNS: 'Columns',
               HIDE_COLUMN: 'Hide Column',
               REMOVE_FILTER: 'Remove Filter',
               REMOVE_SORT: 'Remove Sort',
@@ -401,7 +401,7 @@ describe('CellMenuExtension', () => {
     describe('without I18N Service', () => {
       beforeEach(() => {
         i18n = null;
-        extension = new CellMenuExtension(ea, {} as ExtensionUtility, i18n, { gridOptions: { enableTranslate: true } } as SharedService);
+        extension = new CellMenuExtension({} as ExtensionUtility, i18n, { gridOptions: { enableTranslate: true } } as SharedService);
       });
 
       it('should throw an error if "enableTranslate" is set but the I18N Service is null', () => {

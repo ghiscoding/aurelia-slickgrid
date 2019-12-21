@@ -62,14 +62,6 @@ Slick.Plugins = {
   ContextMenu: mockAddon
 };
 
-// define a <div> container to simulate the grid container
-const template =
-  `<div id="${containerId}" style="height: 800px; width: 600px;">
-    <div id="slickGridContainer-${gridId}" class="gridPane" style="width: 100%;">
-    <div id="${gridId}" class="${gridUid}" style="width: 100%"></div>
-    </div>
-  </div>`;
-
 describe('contextMenuExtension', () => {
   const columnsMock: Column[] = [{ id: 'field1', field: 'field1', width: 100, headerKey: 'TITLE' }, { id: 'field2', field: 'field2', width: 75 }];
   let extensionUtility: ExtensionUtility;
@@ -126,7 +118,7 @@ describe('contextMenuExtension', () => {
       sharedService = new SharedService();
       i18n = new I18N(ea, new BindingSignaler());
       extensionUtility = new ExtensionUtility(i18n, sharedService);
-      extension = new ContextMenuExtension(ea, excelExportServiceStub, exportServiceStub, extensionUtility, i18n, sharedService);
+      extension = new ContextMenuExtension(excelExportServiceStub, exportServiceStub, extensionUtility, i18n, sharedService);
       i18n.setup({
         resources: {
           en: {
@@ -903,11 +895,10 @@ describe('contextMenuExtension', () => {
     });
     // });
 
-
     describe('without I18N Service', () => {
       beforeEach(() => {
         i18n = null;
-        extension = new ContextMenuExtension(ea, {} as ExcelExportService, {} as ExportService, {} as ExtensionUtility, i18n, { gridOptions: { enableTranslate: true } } as SharedService);
+        extension = new ContextMenuExtension({} as ExcelExportService, {} as ExportService, {} as ExtensionUtility, i18n, { gridOptions: { enableTranslate: true } } as SharedService);
       });
 
       it('should throw an error if "enableTranslate" is set but the I18N Service is null', () => {
