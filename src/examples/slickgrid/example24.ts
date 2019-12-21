@@ -303,7 +303,7 @@ export class Example24 {
         alert('Please help!');
         break;
       case 'delete-row':
-        if (confirm(`Do you really want to delete row ${args.row + 1} with ${dataContext.title}?`)) {
+        if (confirm(`Do you really want to delete row ${args.row + 1} with ${this.i18n.tr('TASK_X', { x: dataContext.id })}`)) {
           this.aureliaGrid.dataView.deleteItem(dataContext.id);
         }
         break;
