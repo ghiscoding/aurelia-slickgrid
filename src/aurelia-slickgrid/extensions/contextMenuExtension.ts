@@ -1,8 +1,6 @@
 import { inject, Optional, singleton } from 'aurelia-framework';
-import { EventAggregator } from 'aurelia-event-aggregator';
 import { I18N } from 'aurelia-i18n';
 
-import { Constants } from '../constants';
 import {
   Column,
   ContextMenu,
@@ -29,7 +27,6 @@ declare var Slick: any;
 
 @singleton(true)
 @inject(
-  EventAggregator,
   ExcelExportService,
   ExportService,
   ExtensionUtility,
@@ -39,11 +36,9 @@ declare var Slick: any;
 export class ContextMenuExtension implements Extension {
   private _addon: any;
   private _eventHandler: SlickEventHandler;
-  private _locales: Locale;
   private _userOriginalContextMenu: ContextMenu;
 
   constructor(
-    private ea: EventAggregator,
     private excelExportService: ExcelExportService,
     private exportService: ExportService,
     private extensionUtility: ExtensionUtility,
@@ -89,9 +84,6 @@ export class ContextMenuExtension implements Extension {
       const contextMenu = this.sharedService.gridOptions.contextMenu;
       // keep original user context menu, useful when switching locale to translate
       this._userOriginalContextMenu = { ...contextMenu };
-
-      // get locales provided by user in main file or else use default English locales via the Constants
-      this._locales = this.sharedService.gridOptions && this.sharedService.gridOptions.locales || Constants.locales;
 
       // dynamically import the SlickGrid plugin (addon) with RequireJS
       this.extensionUtility.loadExtensionDynamically(ExtensionName.contextMenu);
@@ -221,7 +213,7 @@ export class ContextMenuExtension implements Extension {
         menuCustomItems.push(
           {
             iconCssClass: contextMenu.iconExportCsvCommand || 'fa fa-download',
-            title: this.extensionUtility.translateWhenEnabledAndServiceExist('EXPORT_TO_CSV', 'TEXT_EXPORT_IN_CSV_FORMAT'),
+            title: this.extensionUtility.translateWhenEnabledAndServiceExist('EXPORT_TO_CSV', 'TEXT_EXPORT_TO_CSV'),
             disabled: false,
             command: commandName,
             positionOrder: 51,
@@ -263,7 +255,7 @@ export class ContextMenuExtension implements Extension {
         menuCustomItems.push(
           {
             iconCssClass: contextMenu.iconExportTextDelimitedCommand || 'fa fa-download',
-            title: this.extensionUtility.translateWhenEnabledAndServiceExist('EXPORT_TO_TAB_DELIMITED', 'TEXT_EXPORT_IN_TEXT_FORMAT'),
+            title: this.extensionUtility.translateWhenEnabledAndServiceExist('EXPORT_TO_TAB_DELIMITED', 'TEXT_EXPORT_TO_TAB_DELIMITED'),
             disabled: false,
             command: commandName,
             positionOrder: 53,

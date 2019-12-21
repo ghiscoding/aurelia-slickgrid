@@ -1,5 +1,4 @@
 import { inject, Optional, singleton } from 'aurelia-framework';
-import { EventAggregator } from 'aurelia-event-aggregator';
 import { I18N } from 'aurelia-i18n';
 import { Constants } from '../constants';
 import {
@@ -23,7 +22,6 @@ declare var Slick: any;
 
 @singleton(true)
 @inject(
-  EventAggregator,
   ExtensionUtility,
   Optional.of(I18N),
   SharedService,
@@ -34,7 +32,6 @@ export class CellMenuExtension implements Extension {
   private _locales: Locale;
 
   constructor(
-    private ea: EventAggregator,
     private extensionUtility: ExtensionUtility,
     private i18n: I18N,
     private sharedService: SharedService,
