@@ -30,7 +30,6 @@ export const localeFrench = {
   TEXT_X_OF_Y_SELECTED: '# de % sélectionné',
 
   // optional
-  TEXT_EXPORT_TO_TEXT_FORMAT: 'Exporter en format texte (tabulation)',
   TEXT_ITEMS: 'éléments',
   TEXT_ITEMS_PER_PAGE: 'éléments par page',
   TEXT_OF: 'de',
