@@ -9,7 +9,7 @@ import {
   FieldType,
   Filters,
   Formatters,
-  GraphqlResult,
+  GraphqlPaginatedResult,
   GraphqlService,
   GraphqlServiceOption,
   GridOption,
@@ -172,7 +172,7 @@ export class Example6 {
         // onInit: (query) => this.getCustomerApiCall(query)
         preProcess: () => this.displaySpinner(true),
         process: (query) => this.getCustomerApiCall(query),
-        postProcess: (result: GraphqlResult) => {
+        postProcess: (result: GraphqlPaginatedResult) => {
           this.metrics = result.metrics;
           this.displaySpinner(false);
         }
@@ -213,12 +213,12 @@ export class Example6 {
   }
 
   /**
-   * Calling your GraphQL backend server should always return a Promise of type GraphqlResult
+   * Calling your GraphQL backend server should always return a Promise of type GraphqlPaginatedResult
    *
    * @param query
-   * @return Promise<GraphqlResult>
+   * @return Promise<GraphqlPaginatedResult>
    */
-  getCustomerApiCall(query: string): Promise<GraphqlResult> {
+  getCustomerApiCall(query: string): Promise<GraphqlPaginatedResult> {
     // in your case, you will call your WebAPI function (wich needs to return a Promise)
     // for the demo purpose, we will call a mock WebAPI function
     const mockedResult = {

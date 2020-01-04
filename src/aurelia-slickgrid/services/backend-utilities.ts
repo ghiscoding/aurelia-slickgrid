@@ -1,10 +1,10 @@
-import { BackendServiceApi, EmitterType, GraphqlResult, GridOption } from '../models/index';
+import { BackendServiceApi, EmitterType, GraphqlResult, GraphqlPaginatedResult, GridOption } from '../models/index';
 
 // construct a main object that will be exported and used by unit tests
 const main: any = {};
 
 /** Execute the Backend Processes Callback, that could come from an Observable or a Promise callback */
-main.executeBackendProcessesCallback = function exeBackendProcessesCallback(startTime: Date, processResult: GraphqlResult | any, backendApi: BackendServiceApi, totalItems: number): GraphqlResult | any {
+main.executeBackendProcessesCallback = function exeBackendProcessesCallback(startTime: Date, processResult: GraphqlResult | GraphqlPaginatedResult | any, backendApi: BackendServiceApi, totalItems: number): GraphqlResult | GraphqlPaginatedResult | any {
   const endTime = new Date();
 
   // define what our internal Post Process callback, only available for GraphQL Service for now
@@ -53,7 +53,7 @@ main.executeBackendCallback = function exeBackendCallback(backendServiceApi: Bac
     // the processes can be Observables (like HttpClient) or Promises
     const process = backendServiceApi.process(query);
     if (process instanceof Promise && process.then) {
-      process.then((processResult: GraphqlResult | any) => main.executeBackendProcessesCallback(startTime, processResult, backendServiceApi, totalItems))
+      process.then((processResult: GraphqlResult | GraphqlPaginatedResult | any) => main.executeBackendProcessesCallback(startTime, processResult, backendServiceApi, totalItems))
         .catch((error: any) => main.onBackendError(error, backendServiceApi));
     }
   }

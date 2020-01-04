@@ -122,7 +122,18 @@ describe('GraphqlService', () => {
       expect(removeSpaces(query)).toBe(removeSpaces(expectation));
     });
 
+    it('should return a simple query without pagination (when disabled) set and nodes that includes "id" and the other 2 fields properties', () => {
+      gridOptionMock.enablePagination = false;
+      const expectation = `query{ users{ id, field1, field2 }}`;
+
+      service.init(serviceOptions, paginationOptions, gridStub);
+      const query = service.buildQuery();
+
+      expect(removeSpaces(query)).toBe(removeSpaces(expectation));
+    });
+
     it('should use "columnDefinitions" from the "serviceOptions" when private member is undefined and then return a simple query as usual', () => {
+      gridOptionMock.enablePagination = true;
       const expectation = `query{ users(first:10, offset:0){ totalCount, nodes{ id, field1 }}}`;
 
       service.init({ datasetName: 'users', columnDefinitions: undefined }, paginationOptions, gridStub);
