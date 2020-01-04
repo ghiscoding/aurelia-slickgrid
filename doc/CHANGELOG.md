@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.16.2"></a>
+## [2.16.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.16.1...v2.16.2) (2020-01-04)
+
+
+### Bug Fixes
+
+* **graphql:** disable pagination should remove any page info from query ([d91f74c](https://github.com/ghiscoding/aurelia-slickgrid/commit/d91f74c))
+
+
+
 <a name="2.16.1"></a>
 ## [2.16.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.16.0...v2.16.1) (2019-12-21)
 
