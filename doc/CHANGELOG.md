@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.16.3"></a>
+## [2.16.3](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.16.2...v2.16.3) (2020-01-04)
+
+
+### Bug Fixes
+
+* **graphql:** add missing updated GraphqlResult interface ([5db9538](https://github.com/ghiscoding/aurelia-slickgrid/commit/5db9538))
+
+
+
 <a name="2.16.2"></a>
 ## [2.16.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.16.1...v2.16.2) (2020-01-04)
 
