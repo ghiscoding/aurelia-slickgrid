@@ -20,6 +20,7 @@ import {
   Column,
   ExtensionName,
   GraphqlResult,
+  GraphqlPaginatedResult,
   GridOption,
   GridStateChange,
   GridStateType,
@@ -409,8 +410,9 @@ export class AureliaSlickgridCustomElement {
         backendApi.internalPostProcess = (processResult: any) => {
           const datasetName = (backendApi && backendApiService && typeof backendApiService.getDatasetName === 'function') ? backendApiService.getDatasetName() : '';
           if (processResult && processResult.data && processResult.data[datasetName]) {
-            this._dataset = processResult.data[datasetName].nodes;
-            this.refreshGridData(this._dataset, processResult.data[datasetName].totalCount);
+            this._dataset = processResult.data[datasetName].hasOwnProperty('nodes') ? processResult.data[datasetName].nodes : processResult.data[datasetName];
+            const totalCount = processResult.data[datasetName].hasOwnProperty('totalCount') ? processResult.data[datasetName].totalCount : processResult.data[datasetName].length;
+            this.refreshGridData(this._dataset, totalCount || 0);
           } else {
             this._dataset = [];
           }
@@ -584,7 +586,7 @@ export class AureliaSlickgridCustomElement {
           // the processes can be a Promise (like Http)
           if (process instanceof Promise && process.then) {
             const totalItems = this.gridOptions && this.gridOptions.pagination && this.gridOptions.pagination.totalItems || 0;
-            process.then((processResult: GraphqlResult | any) => executeBackendProcessesCallback(startTime, processResult, backendApi, totalItems))
+            process.then((processResult: GraphqlResult | GraphqlPaginatedResult | any) => executeBackendProcessesCallback(startTime, processResult, backendApi, totalItems))
               .catch((error) => onBackendError(error, backendApi));
           }
         });

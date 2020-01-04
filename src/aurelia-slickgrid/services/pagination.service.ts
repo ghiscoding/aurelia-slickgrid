@@ -1,7 +1,7 @@
 import { inject } from 'aurelia-framework';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
 
-import { BackendServiceApi, GraphqlResult, Pager, Pagination } from '../models/index';
+import { BackendServiceApi, GraphqlResult, GraphqlPaginatedResult, Pager, Pagination } from '../models/index';
 import { executeBackendProcessesCallback, onBackendError } from './backend-utilities';
 import { disposeAllSubscriptions } from './utilities';
 
@@ -223,7 +223,7 @@ export class PaginationService {
         const process = this._backendServiceApi.process(query);
         if (process instanceof Promise) {
           process
-            .then((processResult: GraphqlResult | any) => {
+            .then((processResult: GraphqlResult | GraphqlPaginatedResult | any) => {
               executeBackendProcessesCallback(startTime, processResult, this._backendServiceApi, this._totalItems);
               resolve(true);
             })

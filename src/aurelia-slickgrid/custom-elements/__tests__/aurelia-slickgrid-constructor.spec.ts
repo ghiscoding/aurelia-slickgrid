@@ -705,7 +705,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
         expect(customElement.gridOptions.backendServiceApi.internalPostProcess).toEqual(expect.any(Function));
       });
 
-      it('should execute the "internalPostProcess" callback method that was created by "createBackendApiInternalPostProcessCallback"', () => {
+      it('should execute the "internalPostProcess" callback method that was created by "createBackendApiInternalPostProcessCallback" with Pagination', () => {
         jest.spyOn(customElement.gridOptions.backendServiceApi.service, 'getDatasetName').mockReturnValue('users');
         const spy = jest.spyOn(customElement, 'refreshGridData');
 
@@ -717,7 +717,21 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
         expect(customElement.gridOptions.backendServiceApi.internalPostProcess).toEqual(expect.any(Function));
       });
 
+      it('should execute the "internalPostProcess" callback method that was created by "createBackendApiInternalPostProcessCallback" without Pagination (when disabled)', () => {
+        customElement.gridOptions.enablePagination = false;
+        jest.spyOn(customElement.gridOptions.backendServiceApi.service, 'getDatasetName').mockReturnValue('users');
+        const spy = jest.spyOn(customElement, 'refreshGridData');
+
+        customElement.bind();
+        customElement.attached();
+        customElement.gridOptions.backendServiceApi.internalPostProcess({ data: { users: [{ firstName: 'John' }] } });
+
+        expect(spy).toHaveBeenCalled();
+        expect(customElement.gridOptions.backendServiceApi.internalPostProcess).toEqual(expect.any(Function));
+      });
+
       it('should execute the "internalPostProcess" callback method but return an empty dataset when dataset name does not match "getDatasetName"', () => {
+        customElement.gridOptions.enablePagination = true;
         jest.spyOn(customElement.gridOptions.backendServiceApi.service, 'getDatasetName').mockReturnValue('users');
         const spy = jest.spyOn(customElement, 'refreshGridData');
 
@@ -790,11 +804,34 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
         expect(refreshSpy).toHaveBeenCalledWith(mockData);
       });
 
-      it('should execute the process method on initialization when "executeProcessCommandOnInit" is set as a backend service options', (done) => {
+      it('should execute the process method on initialization when "executeProcessCommandOnInit" is set as a backend service options with Pagination enabled', (done) => {
         const now = new Date();
         const query = `query { users (first:20,offset:0) { totalCount, nodes { id,name,gender,company } } }`;
         const processResult = {
           data: { users: { nodes: [] }, pageInfo: { hasNextPage: true }, totalCount: 0 },
+          metrics: { startTime: now, endTime: now, executionTime: 0, totalItemCount: 0 }
+        };
+        const promise = new Promise((resolve) => setTimeout(() => resolve(processResult), 1));
+        const processSpy = jest.spyOn(customElement.gridOptions.backendServiceApi, 'process').mockReturnValue(promise);
+        jest.spyOn(customElement.gridOptions.backendServiceApi.service, 'buildQuery').mockReturnValue(query);
+
+        customElement.gridOptions.backendServiceApi.service.options = { executeProcessCommandOnInit: true };
+        customElement.bind();
+        customElement.attached();
+
+        expect(processSpy).toHaveBeenCalled();
+
+        setTimeout(() => {
+          expect(mockExecuteBackendProcess).toHaveBeenCalledWith(expect.toBeDate(), processResult, customElement.gridOptions.backendServiceApi, 0);
+          done();
+        }, 5);
+      });
+
+      it('should execute the process method on initialization when "executeProcessCommandOnInit" is set as a backend service options without Pagination (when disabled)', (done) => {
+        const now = new Date();
+        const query = `query { users { id,name,gender,company } }`;
+        const processResult = {
+          data: { users: [] },
           metrics: { startTime: now, endTime: now, executionTime: 0, totalItemCount: 0 }
         };
         const promise = new Promise((resolve) => setTimeout(() => resolve(processResult), 1));
