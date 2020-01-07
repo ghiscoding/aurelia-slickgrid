@@ -12,6 +12,7 @@ export interface GraphqlPaginatedResult {
     }
   };
 
+  /** Some metrics of the last executed query (startTime, endTime, executionTime, itemCount, totalItemCount) */
   metrics?: Metrics;
 
   /** @deprecated please use "metrics" instead */

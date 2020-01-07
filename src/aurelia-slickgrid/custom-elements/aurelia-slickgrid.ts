@@ -404,17 +404,15 @@ export class AureliaSlickgridCustomElement {
 
     if (backendApi && backendApi.service) {
       const backendApiService = backendApi.service;
-
       // internalPostProcess only works (for now) with a GraphQL Service, so make sure it is of that type
       if (backendApiService instanceof GraphqlService || typeof backendApiService.getDatasetName === 'function') {
-        backendApi.internalPostProcess = (processResult: any) => {
+        backendApi.internalPostProcess = (processResult: GraphqlResult | GraphqlPaginatedResult) => {
+          this._dataset = [];
           const datasetName = (backendApi && backendApiService && typeof backendApiService.getDatasetName === 'function') ? backendApiService.getDatasetName() : '';
           if (processResult && processResult.data && processResult.data[datasetName]) {
-            this._dataset = processResult.data[datasetName].hasOwnProperty('nodes') ? processResult.data[datasetName].nodes : processResult.data[datasetName];
-            const totalCount = processResult.data[datasetName].hasOwnProperty('totalCount') ? processResult.data[datasetName].totalCount : processResult.data[datasetName].length;
+            this._dataset = processResult.data[datasetName].hasOwnProperty('nodes') ? (processResult as GraphqlPaginatedResult).data[datasetName].nodes : (processResult as GraphqlResult).data[datasetName];
+            const totalCount = processResult.data[datasetName].hasOwnProperty('totalCount') ? (processResult as GraphqlPaginatedResult).data[datasetName].totalCount : (processResult as GraphqlResult).data[datasetName].length;
             this.refreshGridData(this._dataset, totalCount || 0);
-          } else {
-            this._dataset = [];
           }
         };
       }
