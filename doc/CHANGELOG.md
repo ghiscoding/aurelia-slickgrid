@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.16.4"></a>
+## [2.16.4](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.16.3...v2.16.4) (2020-01-07)
+
+
+### Features
+
+* **styling:** add more SASS variables to header menu ([70afcd8](https://github.com/ghiscoding/aurelia-slickgrid/commit/70afcd8))
+
+
+
 <a name="2.16.3"></a>
 ## [2.16.3](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.16.2...v2.16.3) (2020-01-04)
 
