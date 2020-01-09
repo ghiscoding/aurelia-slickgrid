@@ -227,9 +227,6 @@ export class Example6 {
       data: {
         [GRAPHQL_QUERY_DATASET_NAME]: {
           nodes: [],
-          pageInfo: {
-            hasNextPage: true
-          },
           totalCount: 100
         }
       }
