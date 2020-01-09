@@ -41,7 +41,7 @@ export function addWhiteSpaces(nbSpaces: number): string {
  * Create a in-memory div, set it's inner text(which jQuery automatically encodes)
  * then grab the encoded contents back out.  The div never exists on the page.
  */
-export function htmlEncode(inputValue: string): string {
+export function htmlEncode(inputValue: string | TrustedHTML): string {
   const entityMap = {
     '&': '&amp;',
     '<': '&lt;',
@@ -49,7 +49,7 @@ export function htmlEncode(inputValue: string): string {
     '"': '&quot;',
     '\'': '&#39;'
   };
-  return inputValue.replace(/[&<>"']/g, (s) => entityMap[s]);
+  return inputValue.toString().replace(/[&<>"']/g, (s) => entityMap[s]);
 }
 
 /**

@@ -1,6 +1,9 @@
 import { BindingEngine } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import { Subscription } from 'aurelia-event-aggregator';
+import * as DOMPurify from 'dompurify';
+import * as $ from 'jquery';
+
 import { Constants } from '../constants';
 import {
   CollectionCustomStructure,
@@ -18,8 +21,6 @@ import {
 } from './../models/index';
 import { CollectionService, findOrDefault, disposeAllSubscriptions } from '../services/index';
 import { charArraysEqual, getDescendantProperty, htmlEncode, setDeepValue } from '../services/utilities';
-import * as DOMPurify from 'dompurify';
-import * as $ from 'jquery';
 
 /**
  * Slickgrid editor class for multiple/single select lists

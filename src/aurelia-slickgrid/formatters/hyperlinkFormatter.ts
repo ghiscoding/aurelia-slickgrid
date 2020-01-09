@@ -1,7 +1,7 @@
+import * as DOMPurify from 'dompurify';
+
 import { Column } from './../models/column.interface';
 import { Formatter } from './../models/formatter.interface';
-import * as DOMPurify_ from 'dompurify';
-const DOMPurify = DOMPurify_; // patch to fix rollup to work
 
 /**
  * Takes an hyperlink cell value and transforms it into a real hyperlink, given that the value starts with 1 of these (http|ftp|https).

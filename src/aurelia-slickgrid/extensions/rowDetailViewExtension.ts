@@ -1,11 +1,12 @@
 import { inject, singleton } from 'aurelia-framework';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
+import * as DOMPurify from 'dompurify';
+
 import { AureliaViewOutput, Column, Extension, ExtensionName, GridOption, SlickEventHandler } from '../models/index';
 import { ExtensionUtility } from './extensionUtility';
 import { SharedService } from '../services/shared.service';
 import { AureliaUtilService } from '../services/aureliaUtil.service';
 import { addToArrayWhenNotExists, disposeAllSubscriptions } from '../services/utilities';
-import * as DOMPurify from 'dompurify';
 
 // using external non-typed js libraries
 declare var Slick: any;
