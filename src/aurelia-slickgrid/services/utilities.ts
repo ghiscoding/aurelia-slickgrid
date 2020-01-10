@@ -49,11 +49,11 @@ export function htmlEncode(inputValue: string | TrustedHTML): string {
     '"': '&quot;',
     '\'': '&#39;'
   };
-  return inputValue.toString().replace(/[&<>"']/g, (s) => entityMap[s]);
+  return (inputValue || '').toString().replace(/[&<>"']/g, (s) => entityMap[s]);
 }
 
 /**
- * decode text into html entity
+ * Decode text into html entity
  * @param string text: input text
  * @param string text: output text
  */
@@ -64,7 +64,7 @@ export function htmlEntityDecode(input: string): string {
 }
 
 /**
- * decode text into html entity
+ * Decode text into html entity
  * @param string text: input text
  * @param string text: output text
  */
@@ -113,6 +113,17 @@ export function decimalFormatted(input: number | string, minDecimal?: number, ma
   return amount;
 }
 
+/**
+ * Format a number following options passed as arguments (decimals, separator, ...)
+ * @param input
+ * @param minDecimal
+ * @param maxDecimal
+ * @param displayNegativeNumberWithParentheses
+ * @param symbolPrefix
+ * @param symbolSuffix
+ * @param decimalSeparator
+ * @param thousandSeparator
+ */
 export function formatNumber(input: number | string, minDecimal?: number, maxDecimal?: number, displayNegativeNumberWithParentheses?: boolean, symbolPrefix = '', symbolSuffix = '', decimalSeparator: '.' | ',' = '.', thousandSeparator: ',' | '_' | '.' | ' ' | '' = ''): string {
   if (isNaN(+input)) {
     return input as string;
