@@ -134,12 +134,13 @@ export class Example9 {
             command: 'command1',
             positionOrder: 91,
             cssClass: 'orange',
+            iconCssClass: 'fa fa-warning',
             // you can use the "action" callback and/or use "onCallback" callback from the grid options, they both have the same arguments
             action: (e, args) => alert(args.command),
             itemUsabilityOverride: (args) => {
-              // for example disable the command if there's any filter entered
-              if (this.aureliaGrid) {
-                return this.isObjectEmpty(this.aureliaGrid.filterService.getColumnFilters());
+              // for example disable the command if there's any hidden column(s)
+              if (args && Array.isArray(args.columns)) {
+                return args.columns.length === args.visibleColumns.length;
               }
               return true;
             },
