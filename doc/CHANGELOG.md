@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.16.5"></a>
+## [2.16.5](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.16.4...v2.16.5) (2020-01-11)
+
+
+### Bug Fixes
+
+* **build:** warning on a missing DOMpurify TS Type ([4436b2b](https://github.com/ghiscoding/aurelia-slickgrid/commit/4436b2b))
+* **styling:** use latest SlickGrid version and fix some styling issues ([52308eb](https://github.com/ghiscoding/aurelia-slickgrid/commit/52308eb))
+
+
+
 <a name="2.16.4"></a>
 ## [2.16.4](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.16.3...v2.16.4) (2020-01-07)
 
