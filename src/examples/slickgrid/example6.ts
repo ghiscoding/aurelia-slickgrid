@@ -11,7 +11,7 @@ import {
   Formatters,
   GraphqlPaginatedResult,
   GraphqlService,
-  GraphqlServiceOption,
+  GraphqlServiceApi,
   GridOption,
   GridStateChange,
   Metrics,
@@ -167,7 +167,17 @@ export class Example6 {
       },
       backendServiceApi: {
         service: new GraphqlService(),
-        options: this.getBackendOptions(this.isWithCursor),
+        options: {
+          datasetName: GRAPHQL_QUERY_DATASET_NAME, // the only REQUIRED property
+          addLocaleIntoQuery: true,   // optionally add current locale into the query
+          extraQueryArguments: [{     // optionally add some extra query arguments as input query arguments
+            field: 'userId',
+            value: 123
+          }],
+          // when dealing with complex objects, we want to keep our field name with double quotes
+          // example with gender: query { users (orderBy:[{field:"gender",direction:ASC}]) {}
+          keepArgumentFieldDoubleQuotes: true
+        },
         // you can define the onInit callback OR enable the "executeProcessCommandOnInit" flag in the service init
         // onInit: (query) => this.getCustomerApiCall(query)
         preProcess: () => this.displaySpinner(true),
@@ -176,7 +186,7 @@ export class Example6 {
           this.metrics = result.metrics;
           this.displaySpinner(false);
         }
-      }
+      } as GraphqlServiceApi
     };
   }
 
@@ -191,25 +201,6 @@ export class Example6 {
     this.status = (isProcessing)
       ? { text: 'processing...', class: 'alert alert-danger' }
       : { text: 'done', class: 'alert alert-success' };
-  }
-
-  getBackendOptions(withCursor: boolean): GraphqlServiceOption {
-    // with cursor, paginationOptions can be: { first, last, after, before }
-    // without cursor, paginationOptions can be: { first, last, offset }
-    return {
-      columnDefinitions: this.columnDefinitions,
-      datasetName: GRAPHQL_QUERY_DATASET_NAME,
-      isWithCursor: withCursor,
-      addLocaleIntoQuery: true,
-      extraQueryArguments: [{
-        field: 'userId',
-        value: 123
-      }],
-
-      // when dealing with complex objects, we want to keep our field name with double quotes
-      // example with gender: query { users (orderBy:[{field:"gender",direction:ASC}]) {}
-      keepArgumentFieldDoubleQuotes: true
-    };
   }
 
   /**

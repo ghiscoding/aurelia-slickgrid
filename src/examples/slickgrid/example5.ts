@@ -10,6 +10,7 @@ import {
   GridStateChange,
   Metrics,
   OdataOption,
+  OdataServiceApi,
   OperatorType,
 } from '../../aurelia-slickgrid';
 
@@ -120,7 +121,7 @@ export class Example5 {
           this.displaySpinner(false);
           this.getCustomerCallback(response);
         }
-      }
+      } as OdataServiceApi
     };
   }
 
