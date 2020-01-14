@@ -2,11 +2,34 @@ import { GraphqlResult } from './graphqlResult.interface';
 import { BackendService } from './backendService.interface';
 
 export interface BackendServiceApi {
+  /** How long to wait until we start querying backend to avoid sending too many requests to backend server. Default to 750ms */
+  filterTypingDebounce?: number;
+
   /** Backend Service Options */
   options?: any;
 
   /** Backend Service instance (could be OData, GraphQL or any other Backend Service) */
   service: BackendService;
+
+  /**
+   * Do we want to optionally use the local (in memory) filtering strategy?
+   * This could be useful if user wishes to load the entire dataset only once with a OData/GraphQL Backend Service
+   * and then use local filter strategy (with SlickGrid DataView) with only current local dataset (only what got loaded in memory).
+   * This option could be used alone and/or with the "useLocalSorting" property.
+   */
+  useLocalFiltering?: boolean;
+
+  /**
+   * Do we want to optionally use the local (in memory) sorting strategy?
+   * This could be useful if user wishes to load the entire dataset only once with a OData/GraphQL Backend Service
+   * and then use local sorting strategy (with SlickGrid DataView) with only current local dataset (only what got loaded in memory).
+   * This option could be used alone and/or with the "useLocalFiltering" property.
+   */
+  useLocalSorting?: boolean;
+
+  // --
+  // available methods
+  // ------------------
 
   /** On error callback, when an error is thrown by the process execution */
   onError?: (e: any) => void;
@@ -22,9 +45,6 @@ export interface BackendServiceApi {
 
   /** After executing the query, what action to perform? For example, stop the spinner */
   postProcess?: (response: any) => void;
-
-  /** How long to wait until we start querying backend to avoid sending too many requests to backend server. Default to 750ms */
-  filterTypingDebounce?: number;
 
   /**
    * INTERNAL USAGE ONLY by Aurelia-Slickgrid
