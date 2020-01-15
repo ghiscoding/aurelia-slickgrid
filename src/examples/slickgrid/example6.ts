@@ -135,6 +135,7 @@ export class Example6 {
       gridMenu: {
         resizeOnShowHeaderRow: true,
       },
+      enablePagination: true, // you could optionally disable the Pagination
       pagination: {
         pageSizes: [10, 15, 20, 25, 30, 40, 50, 75, 100],
         pageSize: defaultPageSize,

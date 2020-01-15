@@ -638,6 +638,10 @@ export class AureliaSlickgridCustomElement {
     gridOptions.gridId = this.gridId;
     gridOptions.gridContainerId = `slickGridContainer-${this.gridId}`;
 
+    // if we have a backendServiceApi and the enablePagination is undefined, we'll assume that we do want to see it, else get that defined value
+    // @deprecated TODO remove this check in the future, user should explicitely enable the Pagination since this feature is now optional (you can now call OData/GraphQL without Pagination which is a new feature)
+    gridOptions.enablePagination = ((gridOptions.backendServiceApi && gridOptions.enablePagination === undefined) ? true : gridOptions.enablePagination) || false;
+
     // use jquery extend to deep merge & copy to avoid immutable properties being changed in GlobalGridOptions after a route change
     const options = $.extend(true, {}, GlobalGridOptions, gridOptions);
 
@@ -689,11 +693,11 @@ export class AureliaSlickgridCustomElement {
         this.grid.invalidate();
         this.grid.render();
       }
-      if (this.gridOptions && this.gridOptions.backendServiceApi && this.gridOptions.pagination) {
-        // do we want to show pagination?
-        // if we have a backendServiceApi and the enablePagination is undefined, we'll assume that we do want to see it, else get that defined value
-        this.showPagination = ((this.gridOptions.backendServiceApi && this.gridOptions.enablePagination === undefined) ? true : this.gridOptions.enablePagination) || false;
 
+      // display the Pagination component only after calling this refresh data first, we call it here so that if we preset pagination page number it will be shown correctly
+      this.showPagination = ((this.gridOptions && this.gridOptions.enablePagination && (this.gridOptions.backendServiceApi && this.gridOptions.enablePagination === undefined)) ? true : this.gridOptions.enablePagination) || false;
+
+      if (this.gridOptions && this.gridOptions.backendServiceApi && this.gridOptions.pagination) {
         if (this.gridOptions.presets && this.gridOptions.presets.pagination && this.gridOptions.pagination && this.paginationOptions) {
           this.paginationOptions.pageSize = this.gridOptions.presets.pagination.pageSize;
           this.paginationOptions.pageNumber = this.gridOptions.presets.pagination.pageNumber;
