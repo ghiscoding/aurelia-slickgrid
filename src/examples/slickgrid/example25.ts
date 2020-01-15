@@ -131,6 +131,10 @@ export class Example25 {
     ];
 
     this.gridOptions = {
+      autoResize: {
+        containerId: 'demo-container',
+        sidePadding: 15
+      },
       enableFiltering: true,
       enableCellNavigation: true,
       enablePagination: false,
