@@ -1,3 +1,4 @@
+import { EventAggregator } from 'aurelia-event-aggregator';
 import { GroupingAndColspanService } from '../groupingAndColspan.service';
 import { GridOption, SlickEventHandler, Column } from '../../models';
 
@@ -5,8 +6,10 @@ declare var Slick: any;
 const gridId = 'grid1';
 const gridUid = 'slickgrid_124343';
 const containerId = 'demo-container';
+const aureliaEventPrefix = 'asg';
 
 const gridOptionMock = {
+  defaultAureliaEventPrefix: aureliaEventPrefix,
   enablePagination: true,
   createPreHeaderPanel: true,
 } as GridOption;
@@ -54,13 +57,15 @@ const template =
 describe('GroupingAndColspanService', () => {
   let service: GroupingAndColspanService;
   let slickgridEventHandler: SlickEventHandler;
+  let ea: EventAggregator;
 
   beforeEach(() => {
     const div = document.createElement('div');
     div.innerHTML = template;
     document.body.appendChild(div);
+    ea = new EventAggregator();
 
-    service = new GroupingAndColspanService();
+    service = new GroupingAndColspanService(ea);
     slickgridEventHandler = service.eventHandler;
   });
 
@@ -143,6 +148,18 @@ describe('GroupingAndColspanService', () => {
 
       service.init(gridStub, dataViewStub);
       dataViewStub.onRowCountChanged.notify({ previous: 1, current: 2, dataView: dataViewStub, callingOnRowsChanged: 1 }, new Slick.EventData(), gridStub);
+      jest.runAllTimers(); // fast-forward timer
+
+      expect(spy).toHaveBeenCalledTimes(2);
+      expect(setTimeout).toHaveBeenCalledTimes(1);
+      expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 75);
+    });
+
+    it('should call the "renderPreHeaderRowGroupingTitles" after triggering a grid resize', () => {
+      const spy = jest.spyOn(service, 'renderPreHeaderRowGroupingTitles');
+
+      service.init(gridStub, dataViewStub);
+      ea.publish('asg:onAfterResize', {});
       jest.runAllTimers(); // fast-forward timer
 
       expect(spy).toHaveBeenCalledTimes(2);
