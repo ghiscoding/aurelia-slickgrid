@@ -34,7 +34,7 @@ const taskTranslateFormatter: Formatter = (row: number, cell: number, value: any
 export class Example23 {
   title = 'Example 23: Filtering from Range of Search Values';
   subTitle = `
-    This demo shows how to use Filters with Range of Search Values
+    This demo shows how to use Filters with Range of Search Values (<a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Range-Filters" target="_blank">Wiki docs</a>)
     <br/>
     <ul class="small">
       <li>All input filters support the following operators: (>, >=, <, <=, <>, !=, =, ==, *) and now also the (..) for an input range
