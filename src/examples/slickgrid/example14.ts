@@ -49,7 +49,7 @@ export class Example14 {
       enableSorting: true,
       createPreHeaderPanel: true,
       showPreHeaderPanel: true,
-      preHeaderPanelHeight: 25,
+      preHeaderPanelHeight: 28,
       explicitInitialization: true,
       colspanCallback: this.renderDifferentColspan
     };
