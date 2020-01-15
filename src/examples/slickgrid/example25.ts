@@ -117,6 +117,14 @@ export class Example25 {
             // the data is not at the root of the array, so we must tell the Select Filter where to pull the data
             collectionInsideObjectProperty: 'data.languages'
           },
+          collectionFilterBy: [
+            // filter out any empty values
+            { property: 'name', value: '', operator: 'NE' },
+            { property: 'name', value: null, operator: 'NE' },
+          ],
+          collectionSortBy: {
+            property: 'name'
+          },
           customStructure: {
             value: 'name',
             label: 'name',
