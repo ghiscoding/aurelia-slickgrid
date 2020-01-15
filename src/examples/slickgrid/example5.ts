@@ -10,6 +10,7 @@ import {
   GridStateChange,
   Metrics,
   OdataOption,
+  OdataServiceApi,
   OperatorType,
 } from '../../aurelia-slickgrid';
 
@@ -91,6 +92,7 @@ export class Example5 {
       enableFiltering: true,
       enableCheckboxSelector: true,
       enableRowSelection: true,
+      enablePagination: true, // you could optionally disable the Pagination
       pagination: {
         pageSizes: [10, 20, 50, 100, 500],
         pageSize: defaultPageSize,
@@ -112,7 +114,7 @@ export class Example5 {
         options: {
           enableCount: this.isCountEnabled, // add the count in the OData query, which will return a property named "odata.count" (v2) or "@odata.count" (v4)
           version: this.odataVersion        // defaults to 2, the query string is slightly different between OData 2 and 4
-        } as OdataOption,
+        },
         preProcess: () => this.displaySpinner(true),
         process: (query) => this.getCustomerApiCall(query),
         postProcess: (response) => {
@@ -120,7 +122,7 @@ export class Example5 {
           this.displaySpinner(false);
           this.getCustomerCallback(response);
         }
-      }
+      } as OdataServiceApi
     };
   }
 

@@ -1,26 +1,21 @@
-import { BackendEventChanged } from './backendEventChanged.interface';
-import { QueryArgument } from './queryArgument.interface';
+import { Column } from './column.interface';
 
 export interface BackendServiceOption {
-  /** What is the dataset name, this is required for the GraphQL query to be built */
-  datasetName?: string;
+  /**
+   * @deprecated (no longer required since the service is always initialized with the grid object and we can get the column definitions from there)
+   * Column definitions, used by the Backend Service to build the query according to the columns defined in the grid
+   */
+  columnDefinitions?: Column[];
 
-  /** Pagination options (itemsPerPage, pageSize, pageSizes) */
+  /** What are the pagination options? ex.: (first, last, offset) */
   paginationOptions?: any;
 
   /** array of Filtering Options, ex.: [{ field: 'firstName', operator: 'EQ', value: 'John' }] */
   filteringOptions?: any[];
 
-  /** array of Sorting Options, ex.: [{ field: 'firstName', direction: 'DESC' }] */
+  /** array of Filtering Options, ex.: [{ field: 'firstName', direction: 'DESC' }] */
   sortingOptions?: any[];
 
   /** Execute the process callback command on component init (page load) */
   executeProcessCommandOnInit?: boolean;
-
-  /**
-   * Extra query arguments that be passed in addition to the default query arguments
-   * For example in GraphQL, if we want to pass "userId" and we want the query to look like
-   * users (first: 20, offset: 10, userId: 123) { ... }
-   */
-  extraQueryArguments?: QueryArgument[];
 }

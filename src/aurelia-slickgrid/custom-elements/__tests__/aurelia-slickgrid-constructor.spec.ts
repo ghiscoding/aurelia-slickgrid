@@ -21,7 +21,7 @@ import {
   SharedService,
   SortService,
 } from '../../services';
-import { GridOption, CurrentFilter, CurrentSorter, GridStateType, Pagination, GridState, Column } from '../../models';
+import { Column, CurrentFilter, CurrentSorter, GraphqlServiceApi, GraphqlServiceOption, GridOption, GridState, GridStateType, Pagination } from '../../models';
 import { Filters } from '../../filters';
 import { Editors } from '../../editors';
 import * as utilities from '../../services/backend-utilities';
@@ -599,6 +599,26 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
 
         expect(syncSpy).toHaveBeenCalledWith(customElement.grid, true, false);
       });
+
+      it('should bind local filter when "enableFiltering" is set', () => {
+        const bindLocalSpy = jest.spyOn(filterServiceStub, 'bindLocalOnFilter');
+
+        customElement.gridOptions = { enableFiltering: true } as GridOption;
+        customElement.bind();
+        customElement.attached();
+
+        expect(bindLocalSpy).toHaveBeenCalledWith(mockGrid, mockDataView);
+      });
+
+      it('should bind local sort when "enableSorting" is set', () => {
+        const bindLocalSpy = jest.spyOn(sortServiceStub, 'bindLocalOnSort');
+
+        customElement.gridOptions = { enableSorting: true } as GridOption;
+        customElement.bind();
+        customElement.attached();
+
+        expect(bindLocalSpy).toHaveBeenCalledWith(mockGrid, mockDataView);
+      });
     });
 
     describe('flag checks', () => {
@@ -971,7 +991,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
 
       it('should execute backend service "init" method when set', () => {
         const mockPagination = { pageNumber: 1, pageSizes: [10, 25, 50], pageSize: 10, totalItems: 100 };
-        const mockGraphqlOptions = { extraQueryArguments: [{ field: 'userId', value: 123 }] };
+        const mockGraphqlOptions = { datasetName: 'users', extraQueryArguments: [{ field: 'userId', value: 123 }] } as GraphqlServiceOption;
         const bindBackendSpy = jest.spyOn(sortServiceStub, 'bindBackendOnSort');
         const mockGraphqlService2 = { ...mockGraphqlService, init: jest.fn() } as unknown as GraphqlService;
         const initSpy = jest.spyOn(mockGraphqlService2, 'init');
@@ -982,8 +1002,8 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
             service: mockGraphqlService2,
             options: mockGraphqlOptions,
             preProcess: () => jest.fn(),
-            process: (query) => new Promise((resolve) => resolve('process resolved')),
-          },
+            process: (query) => new Promise((resolve) => resolve({ data: { users: { nodes: [], totalCount: 100 } } })),
+          } as GraphqlServiceApi,
           pagination: mockPagination,
         } as GridOption;
         customElement.bind();
@@ -993,17 +1013,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
         expect(initSpy).toHaveBeenCalledWith(mockGraphqlOptions, mockPagination, mockGrid);
       });
 
-      it('should bind local sort when "enableSorting" is set', () => {
-        const bindLocalSpy = jest.spyOn(sortServiceStub, 'bindLocalOnSort');
-
-        customElement.gridOptions = { enableSorting: true } as GridOption;
-        customElement.bind();
-        customElement.attached();
-
-        expect(bindLocalSpy).toHaveBeenCalledWith(mockGrid, mockDataView);
-      });
-
-      it('should reflect column filters when "enableSorting" is set', () => {
+      it('should call bind backend sorting when "enableSorting" is set', () => {
         const bindBackendSpy = jest.spyOn(sortServiceStub, 'bindBackendOnSort');
 
         customElement.gridOptions = {
@@ -1020,7 +1030,25 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
         expect(bindBackendSpy).toHaveBeenCalledWith(mockGrid, mockDataView);
       });
 
-      it('should reflect column filters when "enableFiltering" is set', () => {
+      it('should call bind local sorting when "enableSorting" is set and "useLocalSorting" is set as well', () => {
+        const bindLocalSpy = jest.spyOn(sortServiceStub, 'bindLocalOnSort');
+
+        customElement.gridOptions = {
+          enableSorting: true,
+          backendServiceApi: {
+            service: mockGraphqlService,
+            useLocalSorting: true,
+            preProcess: () => jest.fn(),
+            process: (query) => new Promise((resolve) => resolve('process resolved')),
+          }
+        } as GridOption;
+        customElement.bind();
+        customElement.attached();
+
+        expect(bindLocalSpy).toHaveBeenCalledWith(mockGrid, mockDataView);
+      });
+
+      it('should call bind backend filtering when "enableFiltering" is set', () => {
         const initSpy = jest.spyOn(filterServiceStub, 'init');
         const bindLocalSpy = jest.spyOn(filterServiceStub, 'bindLocalOnFilter');
         const populateSpy = jest.spyOn(filterServiceStub, 'populateColumnFilterSearchTermPresets');
@@ -1032,6 +1060,24 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
         expect(initSpy).toHaveBeenCalledWith(mockGrid);
         expect(bindLocalSpy).toHaveBeenCalledWith(mockGrid, mockDataView);
         expect(populateSpy).not.toHaveBeenCalled();
+      });
+
+      it('should call bind local filtering when "enableFiltering" is set and "useLocalFiltering" is set as well', () => {
+        const bindLocalSpy = jest.spyOn(filterServiceStub, 'bindLocalOnFilter');
+
+        customElement.gridOptions = {
+          enableFiltering: true,
+          backendServiceApi: {
+            service: mockGraphqlService,
+            useLocalFiltering: true,
+            preProcess: () => jest.fn(),
+            process: (query) => new Promise((resolve) => resolve('process resolved')),
+          }
+        } as GridOption;
+        customElement.bind();
+        customElement.attached();
+
+        expect(bindLocalSpy).toHaveBeenCalledWith(mockGrid, mockDataView);
       });
 
       it('should reflect column filters when "enableFiltering" is set', () => {

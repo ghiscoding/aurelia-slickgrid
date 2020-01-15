@@ -15,8 +15,9 @@ declare var Slick: any;
 export class GroupingAndColspanService {
   private _eventHandler: SlickEventHandler;
   private _grid: any;
+  private _aureliaEventPrefix: string;
 
-  constructor() {
+  constructor(private ea: EventAggregator) {
     this._eventHandler = new Slick.EventHandler();
   }
 
@@ -42,6 +43,7 @@ export class GroupingAndColspanService {
    */
   init(grid: any, dataView: any) {
     this._grid = grid;
+    this._aureliaEventPrefix = (this._gridOptions && this._gridOptions.defaultAureliaEventPrefix) ? this._gridOptions.defaultAureliaEventPrefix : 'asg';
 
     if (grid && this._gridOptions) {
       // When dealing with Pre-Header Grouping colspan, we need to re-create the pre-header in multiple occasions
@@ -50,6 +52,7 @@ export class GroupingAndColspanService {
         this._eventHandler.subscribe(grid.onSort, () => this.renderPreHeaderRowGroupingTitles());
         this._eventHandler.subscribe(grid.onColumnsResized, () => this.renderPreHeaderRowGroupingTitles());
         this._eventHandler.subscribe(dataView.onRowCountChanged, () => this.renderPreHeaderRowGroupingTitles());
+        this.ea.subscribe(`${this._aureliaEventPrefix}:onAfterResize`, () => this.renderPreHeaderRowGroupingTitles());
 
         // also not sure why at this point, but it seems that I need to call the 1st create in a delayed execution
         // probably some kind of timing issues and delaying it until the grid is fully ready does help
