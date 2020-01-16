@@ -23,7 +23,7 @@ const customEnableButtonFormatter: Formatter = (row: number, cell: number, value
 };
 
 export class Example2 {
-  title = 'Example 2: Formatters';
+  title = 'Example 2: Grid with Formatters';
   subTitle = `
     Grid with Custom and/or included Slickgrid Formatters (<a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Formatters" target="_blank">Wiki docs</a>).
     <ul>
@@ -83,6 +83,13 @@ export class Example2 {
         sidePadding: 15
       },
       enableCellNavigation: true,
+      showCustomFooter: true, // display some metrics in the bottom custom footer
+      customFooterOptions: {
+        // optionally display some text on the left footer container
+        leftFooterText: 'custom footer text',
+        hideTotalItemCount: true,
+        hideLastUpdateTimestamp: true
+      },
 
       // you customize all formatter at once certain options through "formatterOptions" in the Grid Options
       // or independently through the column definition "params", the option names are the same
@@ -110,7 +117,7 @@ export class Example2 {
   getData() {
     // mock a dataset
     this.dataset = [];
-    for (let i = 0; i < 1000; i++) {
+    for (let i = 0; i < 500; i++) {
       const randomYear = 2000 + Math.floor(Math.random() * 10);
       const randomMonth = Math.floor(Math.random() * 11);
       const randomDay = Math.floor((Math.random() * 29));

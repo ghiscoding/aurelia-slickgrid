@@ -206,6 +206,7 @@ export class Example4 {
       enableExcelCopyBuffer: true,
       enableFiltering: true,
       // enableFilterTrimWhiteSpace: true,
+      showCustomFooter: true, // display some metrics in the bottom custom footer
 
       // use columnDef searchTerms OR use presets as shown below
       presets: {
@@ -292,6 +293,7 @@ export class Example4 {
       setTimeout(() => {
         this.metrics = {
           startTime: new Date(),
+          endTime: new Date(),
           itemCount: args && args.current || 0,
           totalItemCount: this.dataset.length || 0
         };

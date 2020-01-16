@@ -11,11 +11,11 @@
 
   <form class="form-inline">
     <button class="btn btn-default btn-sm" data-test="clear-filters"
-      click.delegate="aureliaGrid.filterService.clearFilters()">
+            click.delegate="aureliaGrid.filterService.clearFilters()">
       Clear Filters
     </button>
     <button class="btn btn-default btn-sm" data-test="clear-sorting"
-      click.delegate="aureliaGrid.sortService.clearSorting()">
+            click.delegate="aureliaGrid.sortService.clearSorting()">
       Clear Sorting
     </button>
     <button class="btn btn-default btn-sm" data-test="set-dynamic-filter" click.delegate="setFiltersDynamically()">
@@ -27,7 +27,7 @@
 
     <label for="selectedFilter" style="margin-left: 10px">Predefined Filters</label>
     <select name="selectedFilter" class="form-control" data-test="select-dynamic-filter"
-      value.bind="selectedPredefinedFilter" change.delegate="predefinedFilterChangedChanged(selectedPredefinedFilter)">
+            value.bind="selectedPredefinedFilter" change.delegate="predefinedFilterChanged(selectedPredefinedFilter)">
       <option model.bind="filter.value" repeat.for="filter of filterList">${filter.label}</option>
     </select>
   </form>
@@ -41,8 +41,8 @@
   </div>
 
   <aurelia-slickgrid grid-id="grid23" column-definitions.bind="columnDefinitions" grid-options.bind="gridOptions"
-    dataset.bind="dataset" asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)"
-    asg-on-grid-state-changed.delegate="gridStateChanged($event.detail)"
-    sg-on-row-count-changed.delegate="refreshMetrics($event.detail.eventData, $event.detail.args)">
+                     dataset.bind="dataset" asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)"
+                     asg-on-grid-state-changed.delegate="gridStateChanged($event.detail)"
+                     sg-on-row-count-changed.delegate="refreshMetrics($event.detail.eventData, $event.detail.args)">
   </aurelia-slickgrid>
 </template>
