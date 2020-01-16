@@ -6,6 +6,7 @@ import { ResizerService } from '../resizer.service';
 const DATAGRID_MIN_HEIGHT = 180;
 const DATAGRID_MIN_WIDTH = 300;
 const DATAGRID_BOTTOM_PADDING = 20;
+const DATAGRID_FOOTER_HEIGHT = 20;
 const DATAGRID_PAGINATION_HEIGHT = 35;
 const aureliaEventPrefix = 'asg';
 const gridId = 'grid1';
@@ -87,6 +88,10 @@ describe('Resizer Service', () => {
       gridOptionMock.gridId = 'grid1';
     });
 
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
     it('should return null when calling "bindAutoResizeDataGrid" method with a gridId that is not found in the DOM', () => {
       gridOptionMock.gridId = 'unknown';
       const output = service.bindAutoResizeDataGrid();
@@ -159,6 +164,39 @@ describe('Resizer Service', () => {
 
       // same comment as previous test, the height dimension will work because calculateGridNewDimensions() uses "window.innerHeight"
       expect(serviceCalculateSpy).toReturnWith({ height: (newHeight - DATAGRID_BOTTOM_PADDING), width: fixedWidth });
+    });
+
+    it('should calculate new dimensions, minus the custom footer height, when calculateGridNewDimensions is called', () => {
+      const newHeight = 440;
+      const fixedWidth = 800;
+      const newOptions = { ...gridOptionMock, enablePagination: false, showCustomFooter: true } as GridOption;
+      const newGridStub = { ...gridStub, getOptions: () => newOptions };
+      service.init(newGridStub, { width: fixedWidth });
+      const serviceCalculateSpy = jest.spyOn(service, 'calculateGridNewDimensions');
+
+      Object.defineProperty(window, 'innerHeight', { writable: true, configurable: true, value: newHeight });
+      window.dispatchEvent(DOM.createCustomEvent('resize', { bubbles: true }));
+      service.calculateGridNewDimensions(newOptions);
+
+      // same comment as previous test, the height dimension will work because calculateGridNewDimensions() uses "window.innerHeight"
+      expect(serviceCalculateSpy).toReturnWith({ height: (newHeight - DATAGRID_BOTTOM_PADDING - DATAGRID_FOOTER_HEIGHT), width: fixedWidth });
+    });
+
+    it('should calculate new dimensions, minus the custom footer height passed in grid options, when calculateGridNewDimensions is called', () => {
+      const newHeight = 440;
+      const fixedWidth = 800;
+      const footerHeight = 25;
+      const newOptions = { ...gridOptionMock, enablePagination: false, showCustomFooter: true, customFooterOptions: { footerHeight } } as GridOption;
+      const newGridStub = { ...gridStub, getOptions: () => newOptions };
+      service.init(newGridStub, { width: fixedWidth });
+      const serviceCalculateSpy = jest.spyOn(service, 'calculateGridNewDimensions');
+
+      Object.defineProperty(window, 'innerHeight', { writable: true, configurable: true, value: newHeight });
+      window.dispatchEvent(DOM.createCustomEvent('resize', { bubbles: true }));
+      service.calculateGridNewDimensions(newOptions);
+
+      // same comment as previous test, the height dimension will work because calculateGridNewDimensions() uses "window.innerHeight"
+      expect(serviceCalculateSpy).toReturnWith({ height: (newHeight - DATAGRID_BOTTOM_PADDING - footerHeight), width: fixedWidth });
     });
 
     it('should use maxHeight when new dimensions are higher than maximum defined', () => {

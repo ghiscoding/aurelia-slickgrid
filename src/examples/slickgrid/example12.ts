@@ -142,6 +142,21 @@ export class Example12 {
       enableFiltering: true,
       enableTranslate: true,
       i18n: this.i18n,
+      showCustomFooter: true, // display some metrics in the bottom custom footer
+      customFooterOptions: {
+        metricTexts: {
+          // default text displayed in the metrics section on the right
+          // all texts optionally support translation keys,
+          // if you wish to use that feature then use the text properties with the 'Key' suffix (e.g: itemsKey, ofKey, lastUpdateKey)
+          // example "items" for a plain string OR "itemsKey" to use a translation key
+          itemsKey: 'ITEMS',
+          ofKey: 'OF',
+          lastUpdateKey: 'LAST_UPDATE',
+        },
+        dateFormat: 'YYYY-MM-DD hh:mm a',
+        hideTotalItemCount: false,
+        hideLastUpdateTimestamp: false,
+      },
       exportOptions: {
         // set at the grid option level, meaning all column will evaluate the Formatter (when it has a Formatter defined)
         exportWithFormatter: true,

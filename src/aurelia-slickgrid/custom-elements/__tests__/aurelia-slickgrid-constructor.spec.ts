@@ -1,8 +1,10 @@
 import 'jest-extended';
+import { BindingEngine, Container } from 'aurelia-framework';
+import { BindingSignaler } from 'aurelia-templating-resources';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { HttpClient } from 'aurelia-fetch-client';
-import { BindingEngine, Container } from 'aurelia-framework';
 import { DOM } from 'aurelia-pal';
+import { I18N } from 'aurelia-i18n';
 
 import { AureliaSlickgridCustomElement } from '../aurelia-slickgrid';
 import { ExtensionUtility } from '../../extensions';
@@ -21,7 +23,18 @@ import {
   SharedService,
   SortService,
 } from '../../services';
-import { Column, CurrentFilter, CurrentSorter, GraphqlServiceApi, GraphqlServiceOption, GridOption, GridState, GridStateType, Pagination } from '../../models';
+import {
+  Column,
+  CurrentFilter,
+  CurrentSorter,
+  GraphqlPaginatedResult,
+  GraphqlServiceApi,
+  GraphqlServiceOption,
+  GridOption,
+  GridState,
+  GridStateType,
+  Pagination
+} from '../../models';
 import { Filters } from '../../filters';
 import { Editors } from '../../editors';
 import * as utilities from '../../services/backend-utilities';
@@ -168,7 +181,7 @@ const mockDraggableGrouping = {
   constructor: jest.fn(),
   init: jest.fn(),
   destroy: jest.fn(),
-}
+};
 
 const mockSlickCore = {
   handlers: [],
@@ -273,6 +286,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
   let divContainer: HTMLDivElement;
   let cellDiv: HTMLDivElement;
   let ea: EventAggregator;
+  let i18n: I18N;
   const http = new HttpStub();
 
   const template = `
@@ -295,6 +309,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
     document.body.appendChild(divContainer);
 
     ea = new EventAggregator();
+    i18n = new I18N(ea, new BindingSignaler());
     container = new Container();
     customElement = new AureliaSlickgridCustomElement(
       bindingEngineStub,
@@ -310,11 +325,22 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
       gridServiceStub,
       gridStateServiceStub,
       groupingAndColspanServiceStub,
+      i18n,
       paginationServiceStub,
       resizerServiceStub,
       sharedService,
       sortServiceStub
     );
+
+    i18n.setup({
+      resources: {
+        en: { translation: { ITEMS: 'items', OF: 'of', } },
+        fr: { translation: { ITEMS: 'éléments', OF: 'de', } }
+      },
+      lng: 'fr',
+      fallbackLng: 'en',
+      debug: false
+    });
 
     customElement.gridId = 'grid1';
     customElement.columnDefinitions = [{ id: 'name', field: 'name' }];
@@ -731,7 +757,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
 
         customElement.bind();
         customElement.attached();
-        customElement.gridOptions.backendServiceApi.internalPostProcess({ data: { users: { nodes: [{ firstName: 'John' }], pageInfo: { hasNextPage: false }, totalCount: 2 } } });
+        customElement.gridOptions.backendServiceApi.internalPostProcess({ data: { users: { nodes: [{ firstName: 'John' }], totalCount: 2 } } } as GraphqlPaginatedResult);
 
         expect(spy).toHaveBeenCalled();
         expect(customElement.gridOptions.backendServiceApi.internalPostProcess).toEqual(expect.any(Function));
@@ -757,7 +783,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
 
         customElement.bind();
         customElement.attached();
-        customElement.gridOptions.backendServiceApi.internalPostProcess({ data: { notUsers: { nodes: [{ firstName: 'John' }], pageInfo: { hasNextPage: false }, totalCount: 2 } } });
+        customElement.gridOptions.backendServiceApi.internalPostProcess({ data: { notUsers: { nodes: [{ firstName: 'John' }], totalCount: 2 } } } as GraphqlPaginatedResult);
 
         expect(spy).not.toHaveBeenCalled();
         expect(customElement.dataset).toEqual([]);
@@ -1217,6 +1243,55 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
           change: { newValues: mockPagination, type: GridStateType.pagination },
           gridState: { columns: [], pagination: mockPagination }
         });
+      });
+    });
+
+    describe('Custom Footer', () => {
+      it('should have a Custom Footer when "showCustomFooter" is enabled and there are no Pagination used', (done) => {
+        const mockColDefs = [{ id: 'name', field: 'name', editor: undefined, internalColumnEditor: {} }];
+
+        customElement.gridOptions.enableTranslate = true;
+        customElement.gridOptions.showCustomFooter = true;
+        customElement.bind();
+        customElement.attached();
+        customElement.columnDefinitions = mockColDefs;
+
+        setTimeout(() => {
+          expect(customElement.columnDefinitions).toEqual(mockColDefs);
+          expect(customElement.showCustomFooter).toBeTrue();
+          expect(customElement.customFooterOptions).toEqual({
+            dateFormat: 'YYYY-DD-MM h:mm:ss a',
+            hideLastUpdateTimestamp: true,
+            hideTotalItemCount: false,
+            footerHeight: 20,
+            leftContainerClass: 'col-xs-12 col-sm-5',
+            metricSeparator: '|',
+            metricTexts: {
+              items: 'éléments',
+              itemsKey: 'ITEMS',
+              of: 'de',
+              ofKey: 'OF',
+            },
+            rightContainerClass: 'col-xs-6 col-sm-7',
+          });
+          done();
+        }, 1);
+      });
+
+      it('should NOT have a Custom Footer when "showCustomFooter" is enabled WITH Pagination in use', (done) => {
+        const mockColDefs = [{ id: 'name', field: 'name', editor: undefined, internalColumnEditor: {} }];
+
+        customElement.gridOptions.enablePagination = true;
+        customElement.gridOptions.showCustomFooter = true;
+        customElement.bind();
+        customElement.attached();
+        customElement.columnDefinitions = mockColDefs;
+
+        setTimeout(() => {
+          expect(customElement.columnDefinitions).toEqual(mockColDefs);
+          expect(customElement.showCustomFooter).toBeFalse();
+          done();
+        }, 1);
       });
     });
   });

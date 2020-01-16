@@ -10,9 +10,9 @@ import {
   Formatters,
   GridOption,
   JQueryUiSliderOption,
+  Metrics,
   MultipleSelectOption,
   OperatorType,
-  Metrics,
 } from '../../aurelia-slickgrid';
 import * as moment from 'moment-mini';
 
@@ -267,7 +267,7 @@ export class Example23 {
     this.i18n.setLocale(nextLocale).then(() => this.selectedLanguage = nextLocale);
   }
 
-  predefinedFilterChangedChanged(newPredefinedFilter) {
+  predefinedFilterChanged(newPredefinedFilter) {
     let filters = [];
     const currentYear = moment().year();
 

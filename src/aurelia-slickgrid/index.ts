@@ -20,6 +20,7 @@ export * from './sorters/index';
 export function configure(aurelia: FrameworkConfiguration, callback: (instance: SlickgridConfig) => void) {
   aurelia.globalResources(PLATFORM.moduleName('./custom-elements/aurelia-slickgrid'));
   aurelia.globalResources(PLATFORM.moduleName('./custom-elements/slick-pagination'));
+  aurelia.globalResources(PLATFORM.moduleName('./value-converters/asgDateFormat'));
   aurelia.globalResources(PLATFORM.moduleName('./value-converters/asgNumber'));
 
   // must register a transient so the container will get a new instance everytime

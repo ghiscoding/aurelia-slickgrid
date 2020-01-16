@@ -65,6 +65,9 @@ export interface Locale {
   /** Text "items per page" displayed in the Pagination (when enabled) */
   TEXT_ITEMS_PER_PAGE?: string;
 
+  /** Text "Last Update" displayed in the Footer (when enabled) */
+  TEXT_LAST_UPDATE?: string;
+
   /** Text "of" displayed in the Pagination (when enabled) */
   TEXT_OF?: string;
 
