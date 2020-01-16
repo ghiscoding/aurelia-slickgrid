@@ -7,7 +7,7 @@ import {
   ViewResources,
   ViewSlot,
 } from 'aurelia-framework';
-import { AureliaViewOutput } from '../models/aureliaViewOutput.interface';
+import { AureliaViewOutput, ViewModelBindableData, ViewModelBindableInputData } from '../models/index';
 
 @singleton(true)
 @inject(
@@ -22,7 +22,7 @@ export class AureliaUtilService {
     private viewResources: ViewResources,
   ) { }
 
-  createAureliaViewModelAddToSlot(template: string, item: any, targetElement?: HTMLElement | Element, clearTargetContent = false): AureliaViewOutput | null {
+  createAureliaViewModelAddToSlot(template: string, bindableData: ViewModelBindableInputData, targetElement?: HTMLElement | Element, clearTargetContent = false): AureliaViewOutput | null {
     const viewFactory = this.viewCompiler.compile('<template><compose view-model.bind="template"></compose></template>', this.viewResources);
 
     if (targetElement) {
@@ -32,7 +32,8 @@ export class AureliaUtilService {
 
       // Creates a view
       const view = viewFactory.create(this.container);
-      const viewModel = { template: template || '', model: item };
+      const { item, addon, dataView, grid, parent } = bindableData;
+      const viewModel: ViewModelBindableData = { template: template || '', model: item, addon, dataView, grid, parent };
 
       view.bind(viewModel, createOverrideContext(viewModel));
 

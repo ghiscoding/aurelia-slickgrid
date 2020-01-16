@@ -2,7 +2,7 @@
   <h2>${title}</h2>
   <div class="subtitle" innerhtml.bind="subTitle"></div>
 
-  <span>
+  <div class="col-sm-6">
     <button class="btn btn-default btn-sm" click.delegate="closeAllRowDetail()">
       Close all Row Details
     </button>
@@ -13,7 +13,8 @@
     <button class="btn btn-default btn-xs" click.delegate="changeDetailViewRowCount()">
       Set
     </button>
-  </span>
+  </div>
+  <div class="alert alert-${flashAlertType} col-sm-6" if.bind="message">${message}</div>
 
   <hr />
 
