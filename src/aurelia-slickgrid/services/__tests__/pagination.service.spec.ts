@@ -2,6 +2,7 @@ import 'jest-extended';
 import { EventAggregator } from 'aurelia-event-aggregator';
 
 import { PaginationService } from './../pagination.service';
+import { SharedService } from '../shared.service';
 import { FilterService, GridService } from '../index';
 import { Column, GridOption } from '../../models';
 import * as utilities from '../backend-utilities';
@@ -17,6 +18,7 @@ const mockBackendError = jest.fn();
 utilities.onBackendError = mockBackendError;
 
 const dataviewStub = {
+  onPagingInfoChanged: jest.fn(),
   onRowCountChanged: jest.fn(),
   onRowsChanged: jest.fn(),
 };
@@ -68,10 +70,12 @@ const gridServiceStub = {
 
 describe('PaginationService', () => {
   let service: PaginationService;
+  let sharedService: SharedService;
   const ea = new EventAggregator();
 
   beforeEach(() => {
-    service = new PaginationService(ea);
+    sharedService = new SharedService();
+    service = new PaginationService(ea, sharedService);
   });
 
   afterEach(() => {
@@ -427,9 +431,10 @@ describe('PaginationService', () => {
       jest.clearAllMocks();
     });
 
-    it('should throw an error when no backendServiceApi is provided', (done) => {
+    it('should throw an error when backendServiceApi is defined without a "process" method', (done) => {
       try {
-        mockGridOption.backendServiceApi = null;
+        // @ts-ignore
+        mockGridOption.backendServiceApi = {};
         service.init(gridStub, dataviewStub, mockGridOption.pagination, mockGridOption.backendServiceApi);
         service.refreshPagination();
       } catch (e) {

@@ -665,7 +665,7 @@ export class AureliaSlickgridCustomElement {
     gridOptions.enablePagination = ((gridOptions.backendServiceApi && gridOptions.enablePagination === undefined) ? true : gridOptions.enablePagination) || false;
 
     // use jquery extend to deep merge & copy to avoid immutable properties being changed in GlobalGridOptions after a route change
-    const options = $.extend(true, {}, GlobalGridOptions, gridOptions);
+    const options = $.extend(true, {}, GlobalGridOptions, gridOptions) as GridOption;
 
     // using jQuery extend to do a deep clone has an unwanted side on objects and pageSizes but ES6 spread has other worst side effects
     // so we will just overwrite the pageSizes when needed, this is the only one causing issues so far.
@@ -682,6 +682,13 @@ export class AureliaSlickgridCustomElement {
       options.showHeaderRow = options.enableFiltering;
     }
 
+    // when we use Pagination on Local Grid, it doesn't seem to work without enableFiltering
+    // so we'll enable the filtering but we'll keep the header row hidden
+    if (!options.enableFiltering && options.enablePagination && !options.backendServiceApi) {
+      options.enableFiltering = true;
+      options.showHeaderRow = false;
+    }
+
     return options;
   }
 
@@ -693,7 +700,12 @@ export class AureliaSlickgridCustomElement {
     if (this.gridOptions.enableRowSelection || this.gridOptions.enableCheckboxSelector) {
       this.grid.setSelectedRows([]);
     }
-
+    if (this.sharedService) {
+      const { pageNumber, pageSize } = pagination;
+      if (pageSize) {
+        this.sharedService.currentPagination = { pageNumber, pageSize };
+      }
+    }
     this.ea.publish('gridStateService:changed', {
       change: { newValues: pagination, type: GridStateType.pagination },
       gridState: this.gridStateService.getCurrentGridState()
@@ -705,6 +717,13 @@ export class AureliaSlickgridCustomElement {
    * @param dataset
    */
   refreshGridData(dataset: any[], totalCount?: number) {
+    // local grid
+    if (this.gridOptions && this.gridOptions.enablePagination && !this.gridOptions.backendServiceApi) {
+      this.totalItems = dataset.length;
+      this.showPagination = true;
+      this.setPaginationOptionsWhenPresetDefined();
+    }
+
     if (Array.isArray(dataset) && this.grid && this.dataview && typeof this.dataview.setItems === 'function') {
       this.dataview.setItems(dataset, this.gridOptions.datasetIdPropertyName);
       if (!this.gridOptions.backendServiceApi) {
@@ -717,13 +736,10 @@ export class AureliaSlickgridCustomElement {
       }
 
       // display the Pagination component only after calling this refresh data first, we call it here so that if we preset pagination page number it will be shown correctly
-      this.showPagination = ((this.gridOptions && this.gridOptions.enablePagination && (this.gridOptions.backendServiceApi && this.gridOptions.enablePagination === undefined)) ? true : this.gridOptions.enablePagination) || false;
+      this.showPagination = (this.gridOptions && (this.gridOptions.enablePagination || (this.gridOptions.backendServiceApi && this.gridOptions.enablePagination === undefined))) ? true : false;
 
       if (this.gridOptions && this.gridOptions.backendServiceApi && this.gridOptions.pagination) {
-        if (this.gridOptions.presets && this.gridOptions.presets.pagination && this.gridOptions.pagination && this.paginationOptions) {
-          this.paginationOptions.pageSize = this.gridOptions.presets.pagination.pageSize;
-          this.paginationOptions.pageNumber = this.gridOptions.presets.pagination.pageNumber;
-        }
+        this.setPaginationOptionsWhenPresetDefined();
 
         // when we have a totalCount use it, else we'll take it from the pagination object
         // only update the total items if it's different to avoid refreshing the UI
@@ -751,6 +767,13 @@ export class AureliaSlickgridCustomElement {
   showHeaderRow(showing = true) {
     this.grid.setHeaderRowVisibility(showing);
     return showing;
+  }
+
+  setPaginationOptionsWhenPresetDefined() {
+    if (this.gridOptions.presets && this.gridOptions.presets.pagination && this.gridOptions.pagination) {
+      this.paginationOptions.pageSize = this.gridOptions.presets.pagination.pageSize;
+      this.paginationOptions.pageNumber = this.gridOptions.presets.pagination.pageNumber;
+    }
   }
 
   /**
@@ -818,13 +841,11 @@ export class AureliaSlickgridCustomElement {
    */
   private optionallyShowCustomFooterWithMetrics() {
     if (this.gridOptions) {
-      setTimeout(() => {
-        // we will display the custom footer only when there's no Pagination
-        if (!(this.gridOptions.backendServiceApi || this.gridOptions.enablePagination)) {
-          this.showCustomFooter = this.gridOptions.hasOwnProperty('showCustomFooter') ? this.gridOptions.showCustomFooter : false;
-          this.customFooterOptions = this.gridOptions.customFooterOptions || {};
-        }
-      });
+      // we will display the custom footer only when there's no Pagination
+      if (!(this.gridOptions.backendServiceApi || this.gridOptions.enablePagination)) {
+        this.showCustomFooter = this.gridOptions.hasOwnProperty('showCustomFooter') ? this.gridOptions.showCustomFooter : false;
+        this.customFooterOptions = this.gridOptions.customFooterOptions || {};
+      }
 
       if ((this.gridOptions.enableTranslate || this.gridOptions.i18n)) {
         this.translateCustomFooterTexts();

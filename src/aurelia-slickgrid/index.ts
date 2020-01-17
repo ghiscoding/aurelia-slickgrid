@@ -4,6 +4,7 @@ import { AureliaSlickgridCustomElement } from './custom-elements/aurelia-slickgr
 import { SlickPaginationCustomElement } from './custom-elements/slick-pagination';
 import { SlickgridConfig } from './slickgrid-config';
 import { Filters } from './filters/index';
+import { PaginationService } from './services';
 
 // expose all public classes
 // aggregators, editors, formatters, services...
@@ -33,6 +34,8 @@ export function configure(aurelia: FrameworkConfiguration, callback: (instance: 
   aurelia.container.registerTransient(Filters.singleSelect);
   aurelia.container.registerTransient(Filters.select);
   aurelia.container.registerTransient(Filters.slider);
+
+  aurelia.container.registerTransient(PaginationService);
 
   const config = new SlickgridConfig();
 

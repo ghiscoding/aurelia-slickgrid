@@ -4,13 +4,14 @@ import { StageComponent } from 'aurelia-testing';
 import { PLATFORM } from 'aurelia-pal';
 
 import { Column, GridOption, Pager, Locale } from '../../models';
-import { PaginationService } from '../../services';
+import { PaginationService, SharedService } from '../../services';
 
 function removeExtraSpaces(textS: string) {
   return `${textS}`.replace(/\s{2,}/g, '');
 }
 
 const dataviewStub = {
+  onPagingInfoChanged: jest.fn(),
   onRowCountChanged: jest.fn(),
   onRowsChanged: jest.fn(),
 };
@@ -34,6 +35,7 @@ const mockGridOption = {
       datasetName: 'user',
     }
   },
+  enablePagination: true,
   pagination: {
     pageSizes: [10, 15, 20, 25, 30, 40, 50, 75, 100],
     pageSize: 25,
@@ -67,6 +69,7 @@ describe('Slick-Pagination Component without I18N', () => {
   let component;
   let mockPager: Pager;
   let ea: EventAggregator;
+  let sharedService: SharedService;
 
   const view = `<slick-pagination id="slickPagingContainer-grid1"
   dataview.bind="dataview"
@@ -81,6 +84,7 @@ describe('Slick-Pagination Component without I18N', () => {
 
   beforeEach(() => {
     ea = new EventAggregator();
+    sharedService = new SharedService();
     mockPager = {
       from: 5,
       to: 10,
@@ -109,6 +113,7 @@ describe('Slick-Pagination Component without I18N', () => {
       aurelia.use.standardConfiguration();
       aurelia.container.registerInstance(EventAggregator, ea);
       aurelia.container.registerInstance(PaginationService, paginationServiceStub);
+      aurelia.container.registerInstance(SharedService, sharedService);
     });
 
     ea.publish(`paginationService:on-pagination-changed`, mockPager);

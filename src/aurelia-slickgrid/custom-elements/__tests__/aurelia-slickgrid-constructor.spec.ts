@@ -722,6 +722,29 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
 
         expect(spy).toHaveBeenCalledWith();
       });
+
+      it('should refresh a local grid and change pagination options pagination when a preset for it is defined in grid options', (done) => {
+        const expectedPageNumber = 3;
+        const refreshSpy = jest.spyOn(customElement, 'refreshGridData');
+
+        const mockData = [{ firstName: 'John', lastName: 'Doe' }, { firstName: 'Jane', lastName: 'Smith' }];
+        customElement.gridOptions = {
+          enablePagination: true,
+          presets: { pagination: { pageSize: 10, pageNumber: expectedPageNumber } }
+        };
+        customElement.paginationOptions = { pageSize: 10, pageNumber: 2, pageSizes: [10, 25, 50], totalItems: 100 };
+
+        customElement.bind();
+        customElement.attached();
+        customElement.datasetChanged(mockData, null);
+
+        setTimeout(() => {
+          expect(customElement.paginationOptions.pageSize).toBe(10);
+          expect(customElement.paginationOptions.pageNumber).toBe(expectedPageNumber);
+          expect(refreshSpy).toHaveBeenCalledWith(mockData);
+          done();
+        });
+      });
     });
 
     describe('Backend Service API', () => {

@@ -1,5 +1,6 @@
 import { inject, singleton } from 'aurelia-framework';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
+
 import {
   Column,
   CurrentColumn,
@@ -14,13 +15,14 @@ import {
 import { disposeAllSubscriptions } from './utilities';
 import { ExtensionService } from './extension.service';
 import { FilterService } from './filter.service';
+import { SharedService } from './shared.service';
 import { SortService } from './sort.service';
 
 // using external non-typed js libraries
 declare var Slick: any;
 
 @singleton(true)
-@inject(EventAggregator, ExtensionService, FilterService, SortService)
+@inject(EventAggregator, ExtensionService, FilterService, SharedService, SortService)
 export class GridStateService {
   private _eventHandler = new Slick.EventHandler();
   private _columns: Column[] = [];
@@ -32,6 +34,7 @@ export class GridStateService {
     private ea: EventAggregator,
     private extensionService: ExtensionService,
     private filterService: FilterService,
+    private sharedService: SharedService,
     private sortService: SortService
   ) { }
 
@@ -172,13 +175,15 @@ export class GridStateService {
    * @return current pagination state
    */
   getCurrentPagination(): CurrentPagination | null {
-    if (this._gridOptions && this._gridOptions.backendServiceApi) {
-      const backendService = this._gridOptions.backendServiceApi.service;
-      if (backendService && backendService.getCurrentPagination) {
-        return backendService.getCurrentPagination();
+    if (this._gridOptions.enablePagination) {
+      if (this._gridOptions && this._gridOptions.backendServiceApi) {
+        const backendService = this._gridOptions.backendServiceApi.service;
+        if (backendService && backendService.getCurrentPagination) {
+          return backendService.getCurrentPagination();
+        }
+      } else {
+        return this.sharedService.currentPagination;
       }
-    } else {
-      // TODO implement this whenever local pagination gets implemented
     }
     return null;
   }
