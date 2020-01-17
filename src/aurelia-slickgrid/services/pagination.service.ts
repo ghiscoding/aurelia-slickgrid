@@ -237,7 +237,7 @@ export class PaginationService {
         this._dataTo = this._totalItems;
       }
 
-      if (this._isLocalGrid) {
+      if (this._isLocalGrid && this.dataView) {
         this.dataView.setPagingOptions({ pageSize: this._itemsPerPage, pageNum: (pageNumber - 1) }); // dataView page starts at 0 instead of 1
         this.ea.publish(`paginationService:on-pagination-changed`, this.pager);
       } else {

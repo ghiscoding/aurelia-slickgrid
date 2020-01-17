@@ -35,7 +35,7 @@ export function configure(aurelia: FrameworkConfiguration, callback: (instance: 
   aurelia.container.registerTransient(Filters.select);
   aurelia.container.registerTransient(Filters.slider);
 
-  aurelia.container.registerTransient(PaginationService);
+  // aurelia.container.registerTransient(PaginationService);
 
   const config = new SlickgridConfig();
 
