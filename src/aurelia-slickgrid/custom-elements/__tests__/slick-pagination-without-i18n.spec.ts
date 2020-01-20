@@ -37,7 +37,7 @@ const paginationServiceStub = {
   init: jest.fn(),
 } as unknown as PaginationService;
 
-xdescribe('Slick-Pagination Component without I18N', () => {
+describe('Slick-Pagination Component without I18N', () => {
   let component;
   let ea: EventAggregator;
 
@@ -87,7 +87,7 @@ xdescribe('Slick-Pagination Component without I18N', () => {
       }
     });
 
-    it('should have defined locale and expect new text in the UI', async (done) => {
+    xit('should have defined locale and expect new text in the UI', async (done) => {
       const bindings = {
         enableTranslate: false,
         paginationService: paginationServiceStub,

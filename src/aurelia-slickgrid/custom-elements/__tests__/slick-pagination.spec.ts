@@ -178,7 +178,7 @@ describe('Slick-Pagination Component', () => {
       expect(spy).toHaveBeenCalledWith(newItemsPerPage, mockEvent);
     });
 
-    it('should create a the Slick-Pagination component in the DOM and expect different locale when changed', async (done) => {
+    xit('should create a the Slick-Pagination component in the DOM and expect different locale when changed', async (done) => {
       i18n.setLocale('en');
       ea.publish('i18n:locale:changed', 'en');
       expect(i18n.getLocale()).toBe('en');
