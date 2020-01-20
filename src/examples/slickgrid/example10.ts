@@ -1,5 +1,6 @@
 import { autoinject } from 'aurelia-framework';
-import { Column, FieldType, Filters, Formatters, GridOption } from '../../aurelia-slickgrid';
+import { AureliaGridInstance, Column, FieldType, Filters, Formatters, GridOption } from '../../aurelia-slickgrid';
+import './example10.scss'; // provide custom CSS/SASS styling
 
 @autoinject()
 export class Example2 {
@@ -9,8 +10,7 @@ export class Example2 {
     <ul>
       <li>Single Select, you can click on any cell to make the row active</li>
       <li>Multiple Selections, you need to specifically click on the checkbox to make 1 or more selections</li>
-      <li>Note that "enableExcelCopyBuffer" cannot be used at the same time as Row Selection because there can exist only 1 SelectionModel at a time</li>
-      <li>You can use "selectableOverride()" callback to override logic to display checkbox on every row (for example only show it every 2nd row)</li>
+      <li>NOTE: Any Row Selection(s) will be reset when using Pagination and changing Page (you will need to set it back manually if you want it back)</li>
     </ul>
   `;
 
@@ -22,6 +22,8 @@ export class Example2 {
   dataset2: any[];
   selectedTitles: any[];
   selectedTitle = '';
+  aureliaGrid1: AureliaGridInstance;
+  aureliaGrid2: AureliaGridInstance;
 
   constructor() {
     // define the grid options & columns and then create the grid itself
@@ -30,64 +32,63 @@ export class Example2 {
 
   attached() {
     // populate the dataset once the grid is ready
-    this.dataset1 = this.prepareData();
-    this.dataset2 = this.prepareData();
+    this.dataset1 = this.prepareData(495);
+    this.dataset2 = this.prepareData(525);
+  }
+
+  aureliaGrid1Ready(aureliaGrid: AureliaGridInstance) {
+    this.aureliaGrid1 = aureliaGrid;
+  }
+
+  aureliaGrid2Ready(aureliaGrid: AureliaGridInstance) {
+    this.aureliaGrid2 = aureliaGrid;
   }
 
   /* Define grid Options and Columns */
   defineGrids() {
     this.columnDefinitions1 = [
-      { id: 'title', name: 'Title', field: 'title', sortable: true, type: FieldType.string },
-      { id: 'duration', name: 'Duration (days)', field: 'duration', sortable: true, type: FieldType.number },
-      { id: 'complete', name: '% Complete', field: 'percentComplete', formatter: Formatters.percentCompleteBar, type: FieldType.number, sortable: true },
-      { id: 'start', name: 'Start', field: 'start', formatter: Formatters.dateIso, sortable: true, type: FieldType.dateIso, exportWithFormatter: true },
-      { id: 'finish', name: 'Finish', field: 'finish', formatter: Formatters.dateIso, sortable: true, type: FieldType.date, exportWithFormatter: true },
-      { id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', formatter: Formatters.checkmark, type: FieldType.number, sortable: true }
-    ];
-    this.columnDefinitions2 = [
-      {
-        id: 'title', name: 'Title', field: 'title',
-        sortable: true,
-        type: FieldType.string,
-        filterable: true
-      },
-      {
-        id: 'duration', name: 'Duration (days)', field: 'duration',
-        sortable: true,
-        type: FieldType.number,
-        filterable: true
-      },
-      {
-        id: 'complete', name: '% Complete', field: 'percentComplete',
-        formatter: Formatters.percentCompleteBar,
-        type: FieldType.number,
-        filterable: true,
-        sortable: true
-      },
+      { id: 'title', name: 'Title', field: 'title', sortable: true, type: FieldType.string, filterable: true },
+      { id: 'duration', name: 'Duration (days)', field: 'duration', sortable: true, type: FieldType.number, filterable: true },
+      { id: 'complete', name: '% Complete', field: 'percentComplete', formatter: Formatters.percentCompleteBar, type: FieldType.number, filterable: true, sortable: true },
       {
         id: 'start', name: 'Start', field: 'start',
-        filterable: true,
-        sortable: true,
-        formatter: Formatters.dateIso,
-        exportWithFormatter: true,
-        type: FieldType.date,
-        filter: { model: Filters.compoundDate },
+        formatter: Formatters.dateIso, exportWithFormatter: true, type: FieldType.date,
+        filterable: true, sortable: true, filter: { model: Filters.compoundDate },
       },
       {
         id: 'finish', name: 'Finish', field: 'finish',
-        filterable: true,
-        sortable: true,
-        formatter: Formatters.dateIso,
-        exportWithFormatter: true,
-        type: FieldType.date,
-        filter: { model: Filters.compoundDate },
+        formatter: Formatters.dateIso, exportWithFormatter: true, type: FieldType.date,
+        filterable: true, sortable: true, filter: { model: Filters.compoundDate },
       },
       {
         id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven',
-        formatter: Formatters.checkmark,
-        type: FieldType.boolean,
-        sortable: true,
-        filterable: true,
+        formatter: Formatters.checkmark, type: FieldType.boolean,
+        sortable: true, filterable: true,
+        filter: {
+          collection: [{ value: '', label: '' }, { value: true, label: 'true' }, { value: false, label: 'false' }],
+          model: Filters.singleSelect,
+        }
+      }
+    ];
+
+    this.columnDefinitions2 = [
+      { id: 'title', name: 'Title', field: 'title', sortable: true, type: FieldType.string, filterable: true },
+      { id: 'duration', name: 'Duration (days)', field: 'duration', sortable: true, type: FieldType.number, filterable: true },
+      { id: 'complete', name: '% Complete', field: 'percentComplete', formatter: Formatters.percentCompleteBar, type: FieldType.number, filterable: true, sortable: true },
+      {
+        id: 'start', name: 'Start', field: 'start',
+        formatter: Formatters.dateIso, exportWithFormatter: true, type: FieldType.date,
+        filterable: true, sortable: true, filter: { model: Filters.compoundDate },
+      },
+      {
+        id: 'finish', name: 'Finish', field: 'finish',
+        formatter: Formatters.dateIso, exportWithFormatter: true, type: FieldType.date,
+        filterable: true, sortable: true, filter: { model: Filters.compoundDate },
+      },
+      {
+        id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven',
+        formatter: Formatters.checkmark, type: FieldType.boolean,
+        sortable: true, filterable: true,
         filter: {
           collection: [{ value: '', label: '' }, { value: true, label: 'true' }, { value: false, label: 'false' }],
           model: Filters.singleSelect,
@@ -100,6 +101,7 @@ export class Example2 {
       enableCellNavigation: true,
       enableRowSelection: true,
       enableCheckboxSelector: true,
+      enableFiltering: true,
       checkboxSelector: {
         // remove the unnecessary "Select All" checkbox in header when in single selection mode
         hideSelectAllCheckbox: true,
@@ -119,7 +121,13 @@ export class Example2 {
       gridMenu: {
         hideForceFitButton: true
       },
+      enablePagination: true,
+      pagination: {
+        pageSizes: [5, 10, 15, 20, 25, 50, 75, 100],
+        pageSize: 5
+      },
     };
+
     this.gridOptions2 = {
       enableAutoResize: false,
       enableCellNavigation: true,
@@ -133,16 +141,21 @@ export class Example2 {
         // True (Single Selection), False (Multiple Selections)
         selectActiveRow: false
       },
+      preselectedRows: [0, 2],
       enableCheckboxSelector: true,
       enableRowSelection: true,
-      preselectedRows: [0, 2]
+      enablePagination: true,
+      pagination: {
+        pageSizes: [5, 10, 15, 20, 25, 50, 75, 100],
+        pageSize: 5
+      },
     };
   }
 
-  prepareData() {
+  prepareData(count: number) {
     // mock a dataset
     const mockDataset = [];
-    for (let i = 0; i < 500; i++) {
+    for (let i = 0; i < count; i++) {
       const randomYear = 2000 + Math.floor(Math.random() * 10);
       const randomMonth = Math.floor(Math.random() * 11);
       const randomDay = Math.floor((Math.random() * 29));
@@ -160,6 +173,22 @@ export class Example2 {
       };
     }
     return mockDataset;
+  }
+
+  goToGrid1FirstPage() {
+    this.aureliaGrid1.paginationService.goToFirstPage();
+  }
+
+  goToGrid1LastPage() {
+    this.aureliaGrid1.paginationService.goToLastPage();
+  }
+
+  goToGrid2FirstPage() {
+    this.aureliaGrid2.paginationService.goToFirstPage();
+  }
+
+  goToGrid2LastPage() {
+    this.aureliaGrid2.paginationService.goToLastPage();
   }
 
   onGrid1SelectedRowsChanged(e, args) {

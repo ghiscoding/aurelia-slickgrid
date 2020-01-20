@@ -85,16 +85,22 @@ export class AureliaSlickgridCustomElement {
   private _fixedHeight: number | null;
   private _fixedWidth: number | null;
   private _hideHeaderRowAfterPageLoad = false;
+  private _isGridInitialized = false;
+  private _isPaginationInitialized = false;
   groupItemMetadataProvider: any;
   backendServiceApi: BackendServiceApi | undefined;
   customFooterOptions: CustomFooterOption;
   locales: Locale;
   metrics: Metrics;
-  isGridInitialized = false;
   showCustomFooter = false;
   showPagination = false;
   serviceList: any[] = [];
   subscriptions: Subscription[] = [];
+  paginationData: {
+    enableTranslate: boolean;
+    locales: Locale;
+    paginationService: PaginationService;
+  };
 
   @bindable({ defaultBindingMode: bindingMode.twoWay }) columnDefinitions: Column[] = [];
   @bindable({ defaultBindingMode: bindingMode.twoWay }) element: Element;
@@ -150,7 +156,21 @@ export class AureliaSlickgridCustomElement {
 
   attached() {
     this.initialization();
-    this.isGridInitialized = true;
+    this._isGridInitialized = true;
+  }
+
+  private initializePaginationService(paginationOptions: Pagination) {
+    if (this.gridOptions) {
+      this.paginationData = {
+        enableTranslate: this.gridOptions.enableTranslate,
+        locales: this.locales,
+        paginationService: this.paginationService,
+      };
+      this.paginationService.totalItems = this.totalItems;
+      this.paginationService.onPaginationChangedCallback = this.paginationChanged.bind(this);
+      this.paginationService.init(this.grid, this.dataview, paginationOptions, this.backendServiceApi);
+      this._isPaginationInitialized = true;
+    }
   }
 
   initialization() {
@@ -368,7 +388,7 @@ export class AureliaSlickgridCustomElement {
 
   columnDefinitionsChanged() {
     this._columnDefinitions = this.columnDefinitions;
-    if (this.isGridInitialized) {
+    if (this._isGridInitialized) {
       this.updateColumnDefinitionsList(this.columnDefinitions);
     }
   }
@@ -539,7 +559,7 @@ export class AureliaSlickgridCustomElement {
           startTime: new Date(),
           endTime: new Date(),
           itemCount: args && args.current || 0,
-          totalItemCount: this.dataset.length || 0
+          totalItemCount: Array.isArray(this.dataset) ? this.dataset.length : 0
         };
       });
 
@@ -717,11 +737,12 @@ export class AureliaSlickgridCustomElement {
    * @param dataset
    */
   refreshGridData(dataset: any[], totalCount?: number) {
-    // local grid
+    // local grid, check if we need to show the Pagination
+    // if so then also check if there's any presets and finally initialize the PaginationService
+    // a local grid with Pagination presets will potentially have a different total of items, we'll need to get it from the DataView and update our total
     if (this.gridOptions && this.gridOptions.enablePagination && !this.gridOptions.backendServiceApi) {
-      this.totalItems = dataset.length;
       this.showPagination = true;
-      this.setPaginationOptionsWhenPresetDefined();
+      this.loadLocalGridPagination(dataset);
     }
 
     if (Array.isArray(dataset) && this.grid && this.dataview && typeof this.dataview.setItems === 'function') {
@@ -739,7 +760,7 @@ export class AureliaSlickgridCustomElement {
       this.showPagination = (this.gridOptions && (this.gridOptions.enablePagination || (this.gridOptions.backendServiceApi && this.gridOptions.enablePagination === undefined))) ? true : false;
 
       if (this.gridOptions && this.gridOptions.backendServiceApi && this.gridOptions.pagination) {
-        this.setPaginationOptionsWhenPresetDefined();
+        const paginationOptions = this.setPaginationOptionsWhenPresetDefined(this.gridOptions, this.paginationOptions);
 
         // when we have a totalCount use it, else we'll take it from the pagination object
         // only update the total items if it's different to avoid refreshing the UI
@@ -747,9 +768,13 @@ export class AureliaSlickgridCustomElement {
         if (totalRecords !== undefined && totalRecords !== this.totalItems) {
           this.totalItems = +totalRecords;
         }
-      } else {
-        // without backend service, we'll assume the total of items is the dataset size
-        this.totalItems = dataset.length;
+        // initialize the Pagination Service with new pagination options (which might have presets)
+        if (!this._isPaginationInitialized) {
+          this.initializePaginationService(paginationOptions);
+        } else {
+          // update the pagination service with the new total
+          this.paginationService.totalItems = this.totalItems;
+        }
       }
 
       // resize the grid inside a slight timeout, in case other DOM element changed prior to the resize (like a filter/pagination changed)
@@ -769,11 +794,16 @@ export class AureliaSlickgridCustomElement {
     return showing;
   }
 
-  setPaginationOptionsWhenPresetDefined() {
-    if (this.gridOptions.presets && this.gridOptions.presets.pagination && this.gridOptions.pagination) {
-      this.paginationOptions.pageSize = this.gridOptions.presets.pagination.pageSize;
-      this.paginationOptions.pageNumber = this.gridOptions.presets.pagination.pageNumber;
+  /**
+   * Check if there's any Pagination Presets defined in the Grid Options,
+   * if there are then load them in the paginationOptions object
+   */
+  setPaginationOptionsWhenPresetDefined(gridOptions: GridOption, paginationOptions: Pagination): Pagination {
+    if (gridOptions.presets && gridOptions.presets.pagination && gridOptions.pagination) {
+      paginationOptions.pageSize = gridOptions.presets.pagination.pageSize;
+      paginationOptions.pageNumber = gridOptions.presets.pagination.pageNumber;
     }
+    return paginationOptions;
   }
 
   /**
@@ -836,17 +866,31 @@ export class AureliaSlickgridCustomElement {
   }
 
   /**
+   * local grid, check if we need to show the Pagination
+   * if so then also check if there's any presets and finally initialize the PaginationService
+   * a local grid with Pagination presets will potentially have a different total of items, we'll need to get it from the DataView and update our total
+   */
+  private loadLocalGridPagination(dataset?: any[]) {
+    if (this.gridOptions) {
+      this.totalItems = Array.isArray(dataset) ? dataset.length : 0;
+      if (this.paginationOptions && this.dataview && this.dataview.getPagingInfo) {
+        const slickPagingInfo = this.dataview.getPagingInfo() || {};
+        if (slickPagingInfo.hasOwnProperty('totalRows') && this.paginationOptions.totalItems !== slickPagingInfo.totalRows) {
+          this.totalItems = slickPagingInfo.totalRows;
+        }
+      }
+      this.paginationOptions.totalItems = this.totalItems;
+      const paginationOptions = this.setPaginationOptionsWhenPresetDefined(this.gridOptions, this.paginationOptions);
+      this.initializePaginationService(paginationOptions);
+    }
+  }
+
+  /**
    * We could optionally display a custom footer below the grid to show some metrics (last update, item count with/without filters)
    * It's an opt-in, user has to enable "showCustomFooter" and it cannot be used when there's already a Pagination since they display the same kind of info
    */
   private optionallyShowCustomFooterWithMetrics() {
     if (this.gridOptions) {
-      // we will display the custom footer only when there's no Pagination
-      if (!(this.gridOptions.backendServiceApi || this.gridOptions.enablePagination)) {
-        this.showCustomFooter = this.gridOptions.hasOwnProperty('showCustomFooter') ? this.gridOptions.showCustomFooter : false;
-        this.customFooterOptions = this.gridOptions.customFooterOptions || {};
-      }
-
       if ((this.gridOptions.enableTranslate || this.gridOptions.i18n)) {
         this.translateCustomFooterTexts();
       } else if (this.gridOptions.customFooterOptions) {
@@ -855,6 +899,12 @@ export class AureliaSlickgridCustomElement {
         customFooterOptions.metricTexts.lastUpdate = this.locales && this.locales.TEXT_LAST_UPDATE || 'TEXT_LAST_UPDATE';
         customFooterOptions.metricTexts.items = this.locales && this.locales.TEXT_ITEMS || 'TEXT_ITEMS';
         customFooterOptions.metricTexts.of = this.locales && this.locales.TEXT_OF || 'TEXT_OF';
+      }
+
+      // we will display the custom footer only when there's no Pagination
+      if (!(this.gridOptions.backendServiceApi || this.gridOptions.enablePagination)) {
+        this.showCustomFooter = this.gridOptions.hasOwnProperty('showCustomFooter') ? this.gridOptions.showCustomFooter : false;
+        this.customFooterOptions = this.gridOptions.customFooterOptions || {};
       }
     }
   }

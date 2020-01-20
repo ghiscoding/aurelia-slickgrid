@@ -28,7 +28,7 @@ main.executeBackendProcessesCallback = function exeBackendProcessesCallback(star
     }
     backendApi.postProcess(processResult);
   }
-}
+};
 
 /** On a backend service api error, we will run the "onError" if there is 1 provided or just throw back the error when nothing is provided */
 main.onBackendError = function backendError(e: any, backendApi: BackendServiceApi) {
@@ -37,7 +37,7 @@ main.onBackendError = function backendError(e: any, backendApi: BackendServiceAp
   } else {
     throw e;
   }
-}
+};
 
 /**
  * Execute the backend callback, which are mainly the "process" & "postProcess" methods.
@@ -57,7 +57,7 @@ main.executeBackendCallback = function exeBackendCallback(backendServiceApi: Bac
         .catch((error: any) => main.onBackendError(error, backendServiceApi));
     }
   }
-}
+};
 
 /** Refresh the dataset through the Backend Service */
 main.refreshBackendDataset = function refreshBackend(gridOptions: GridOption) {

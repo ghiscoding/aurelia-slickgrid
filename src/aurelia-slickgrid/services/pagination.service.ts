@@ -1,7 +1,7 @@
 import { inject, singleton } from 'aurelia-framework';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
 
-import { BackendServiceApi, CurrentPagination, GraphqlResult, GraphqlPaginatedResult, Pager, Pagination } from '../models/index';
+import { BackendServiceApi, CurrentPagination, GraphqlResult, GraphqlPaginatedResult, Pagination } from '../models/index';
 import { executeBackendProcessesCallback, onBackendError } from './backend-utilities';
 import { SharedService } from './shared.service';
 import { disposeAllSubscriptions } from './utilities';
@@ -11,7 +11,7 @@ const DEFAULT_AURELIA_EVENT_PREFIX = 'asg';
 // using external non-typed js libraries
 declare var Slick: any;
 
-// @singleton(true)
+@singleton(true)
 @inject(EventAggregator, SharedService)
 export class PaginationService {
   private _initialized = false;
@@ -28,9 +28,11 @@ export class PaginationService {
   private _eventHandler = new Slick.EventHandler();
   private _paginationOptions: Pagination;
   private _subscriptions: Subscription[] = [];
+  onPaginationChangedCallback: (changes: any) => void;
 
   dataView: any;
   grid: any;
+  serviceId: number;
 
   /** Constructor */
   constructor(private ea: EventAggregator, private sharedService: SharedService) { }
@@ -42,26 +44,40 @@ export class PaginationService {
     return this._paginationOptions;
   }
 
-  get pager(): Pager {
-    return {
-      from: this._dataFrom,
-      to: this._dataTo || 1,
-      itemsPerPage: this._itemsPerPage,
-      pageCount: this._pageCount || 1,
-      pageNumber: this._pageNumber || 1,
-      availablePageSizes: this._availablePageSizes,
-      totalItems: this._totalItems,
-    };
+  get availablePageSizes(): number[] {
+    return this._availablePageSizes;
+  }
+
+  get dataFrom(): number {
+    return this._dataFrom;
+  }
+
+  get dataTo(): number {
+    return this._dataTo;
+  }
+
+  get itemsPerPage(): number {
+    return this._itemsPerPage;
+  }
+
+  get pageCount(): number {
+    return this._pageCount;
+  }
+
+  get pageNumber(): number {
+    return this._pageNumber;
+  }
+
+  get totalItems(): number {
+    return this._totalItems;
   }
 
   set totalItems(totalItems: number) {
     this._totalItems = totalItems;
+
     if (this._initialized) {
       this.refreshPagination();
     }
-  }
-  get totalItems(): number {
-    return this._totalItems;
   }
 
   init(grid: any, dataView: any, paginationOptions: Pagination, backendServiceApi?: BackendServiceApi) {
@@ -71,6 +87,8 @@ export class PaginationService {
     this._backendServiceApi = backendServiceApi;
     this._paginationOptions = paginationOptions;
     this._isLocalGrid = !backendServiceApi;
+    this._pageNumber = paginationOptions.pageNumber || 1;
+    this.serviceId = Math.ceil(Math.random() * 10);
 
     if (backendServiceApi && (!backendServiceApi.service || !backendServiceApi.process)) {
       throw new Error(`BackendServiceApi requires the following 2 properties "process" and "service" to be defined.`);
@@ -80,15 +98,18 @@ export class PaginationService {
       this.dataView.onPagingInfoChanged.subscribe((e, pagingInfo) => {
         if (this._totalItems !== pagingInfo.totalRows) {
           this._totalItems = pagingInfo.totalRows;
+          this.refreshPagination(false, false);
         }
       });
-      dataView.setRefreshHints({ isFilterUnchanged: true });
-      dataView.setPagingOptions({ pageSize: this.paginationOptions.pageSize, pageNum: 0 }); // dataView page starts at 0 instead of 1
+      setTimeout(() => {
+        this.dataView.setRefreshHints({ isFilterUnchanged: true });
+        this.dataView.setPagingOptions({ pageSize: this.paginationOptions.pageSize, pageNum: (this._pageNumber - 1) }); // dataView page starts at 0 instead of 1
+      });
     }
 
     // Subscribe to Filter Clear & Changed and go back to page 1 when that happen
-    this._subscriptions.push(this.ea.subscribe('filterService:filterChanged', () => this.refreshPagination(true)));
-    this._subscriptions.push(this.ea.subscribe('filterService:filterCleared', () => this.refreshPagination(true)));
+    this._subscriptions.push(this.ea.subscribe('filterService:filterChanged', () => this.resetPagination()));
+    this._subscriptions.push(this.ea.subscribe('filterService:filterCleared', () => this.resetPagination()));
 
     // Subscribe to any dataview row count changed so that when Adding/Deleting item(s) through the DataView
     // that would trigger a refresh of the pagination numbers
@@ -97,9 +118,10 @@ export class PaginationService {
       this._subscriptions.push(this.ea.subscribe(`${this._aureliaEventPrefix}:on-item-deleted`, (items: any | any[]) => this.processOnItemAddedOrRemoved(items, false)));
     }
 
-    if (!this._paginationOptions || (this._paginationOptions.totalItems !== this._totalItems)) {
-      this.refreshPagination();
-    }
+    // if (!this._paginationOptions || (this._paginationOptions.totalItems !== this._totalItems) || this._pageNumber > 1) {
+    //   this.refreshPagination(false, false);
+    // }
+    this.refreshPagination(false, false);
     this._initialized = true;
   }
 
@@ -117,6 +139,18 @@ export class PaginationService {
     return {
       pageNumber: this._pageNumber,
       pageSize: this._itemsPerPage
+    };
+  }
+
+  getFullPagination(): Pagination {
+    return {
+      pageCount: this._pageCount,
+      pageNumber: this._pageNumber,
+      pageSize: this._itemsPerPage,
+      pageSizes: this._availablePageSizes,
+      totalItems: this._totalItems,
+      dataFrom: this._dataFrom,
+      dataTo: this._dataTo,
     };
   }
 
@@ -142,7 +176,7 @@ export class PaginationService {
 
   goToLastPage(event?: any): Promise<any> {
     this._pageNumber = this._pageCount || 1;
-    return this.processOnPageChanged(this._pageNumber, event);
+    return this.processOnPageChanged(this._pageNumber || 1, event);
   }
 
   goToNextPage(event?: any): Promise<any> {
@@ -181,7 +215,7 @@ export class PaginationService {
     }
   }
 
-  refreshPagination(isPageNumberReset: boolean = false) {
+  refreshPagination(isPageNumberReset: boolean = false, triggerChangedEvent = true) {
     // trigger an event to inform subscribers
     this.ea.publish(`paginationService:on-pagination-refreshed`, true);
 
@@ -191,9 +225,9 @@ export class PaginationService {
       // set the number of items per page if not already set
       if (!this._itemsPerPage) {
         if (this._isLocalGrid) {
-          this._itemsPerPage = this._paginationOptions.pageSize;
+          this._itemsPerPage = pagination.pageSize;
         } else {
-          this._itemsPerPage = +((this._backendServiceApi && this._backendServiceApi.options && this._backendServiceApi.options.paginationOptions && this._backendServiceApi.options.paginationOptions.first) ? this._backendServiceApi.options.paginationOptions.first : this._paginationOptions.pageSize);
+          this._itemsPerPage = +((this._backendServiceApi && this._backendServiceApi.options && this._backendServiceApi.options.paginationOptions && this._backendServiceApi.options.paginationOptions.first) ? this._backendServiceApi.options.paginationOptions.first : pagination.pageSize);
         }
       }
 
@@ -201,6 +235,7 @@ export class PaginationService {
       if (isPageNumberReset || this._totalItems !== pagination.totalItems) {
         if (isPageNumberReset) {
           this._pageNumber = 1;
+          this.paginationOptions.pageNumber = 1;
         } else if (!this._initialized && pagination.pageNumber && pagination.pageNumber > 1) {
           this._pageNumber = pagination.pageNumber || 1;
         }
@@ -212,34 +247,40 @@ export class PaginationService {
       }
 
       // calculate and refresh the multiple properties of the pagination UI
-      this._availablePageSizes = this._paginationOptions.pageSizes;
-      if (!this._totalItems && this._paginationOptions.totalItems) {
-        this._totalItems = this._paginationOptions.totalItems;
+      this._availablePageSizes = pagination.pageSizes;
+      if (!this._totalItems && pagination.totalItems) {
+        this._totalItems = pagination.totalItems;
       }
       this.recalculateFromToIndexes();
     }
     this._pageCount = Math.ceil(this._totalItems / this._itemsPerPage);
-    this.ea.publish(`paginationService:on-pagination-changed`, this.pager);
+    if (triggerChangedEvent) {
+      if (this.onPaginationChangedCallback) {
+        this.onPaginationChangedCallback(this.getFullPagination());
+      }
+    }
     this.sharedService.currentPagination = this.getCurrentPagination();
   }
 
-  resetPagination() {
-    this.refreshPagination(true);
+  /** Reset the Pagination to first page and recalculate necessary numbers */
+  resetPagination(triggerChangedEvent = true) {
+    this.refreshPagination(true, triggerChangedEvent);
   }
 
   processOnPageChanged(pageNumber: number, event?: Event | undefined): Promise<any> {
     return new Promise((resolve, reject) => {
       this.recalculateFromToIndexes();
-
       if (this._dataTo > this._totalItems) {
         this._dataTo = this._totalItems;
       } else if (this._totalItems < this._itemsPerPage) {
         this._dataTo = this._totalItems;
       }
 
-      if (this._isLocalGrid && this.dataView) {
+      if (this._isLocalGrid) {
         this.dataView.setPagingOptions({ pageSize: this._itemsPerPage, pageNum: (pageNumber - 1) }); // dataView page starts at 0 instead of 1
-        this.ea.publish(`paginationService:on-pagination-changed`, this.pager);
+        if (this.onPaginationChangedCallback) {
+          this.onPaginationChangedCallback(this.getFullPagination());
+        }
       } else {
         const itemsPerPage = +this._itemsPerPage;
 
@@ -247,7 +288,7 @@ export class PaginationService {
         const startTime = new Date();
 
         // run any pre-process, if defined, for example a spinner
-        if (this._backendServiceApi.preProcess) {
+        if (this._backendServiceApi && this._backendServiceApi.preProcess) {
           this._backendServiceApi.preProcess();
         }
 
@@ -259,14 +300,16 @@ export class PaginationService {
           process
             .then((processResult: GraphqlResult | GraphqlPaginatedResult | any) => {
               executeBackendProcessesCallback(startTime, processResult, this._backendServiceApi, this._totalItems);
-              resolve(true);
+              resolve(this.getFullPagination());
             })
             .catch((error) => {
               onBackendError(error, this._backendServiceApi);
               reject(process);
             });
         }
-        this.ea.publish(`paginationService:on-pagination-changed`, this.pager);
+        if (this.onPaginationChangedCallback) {
+          this.onPaginationChangedCallback(this.getFullPagination());
+        }
       }
     });
   }
@@ -309,7 +352,9 @@ export class PaginationService {
       // finally refresh the "To" count and we know it might be different than the "items per page" count
       // but this is necessary since we don't want an actual backend refresh
       this._dataTo = previousDataTo + itemCountWithDirection;
-      this.ea.publish(`paginationService:on-pagination-changed`, this.pager);
+      if (this.onPaginationChangedCallback) {
+        this.onPaginationChangedCallback(this.getFullPagination());
+      }
     }
   }
 }

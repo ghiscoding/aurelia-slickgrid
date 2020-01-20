@@ -15,6 +15,7 @@ import {
 function randomBetween(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
+const DEFAULT_PAGE_SIZE = 25;
 const LOCAL_STORAGE_KEY = 'gridState';
 const NB_ITEMS = 500;
 
@@ -69,6 +70,7 @@ export class Example15 {
   clearGridStateFromLocalStorage() {
     localStorage[LOCAL_STORAGE_KEY] = null;
     this.aureliaGrid.gridService.resetGrid(this.columnDefinitions);
+    this.aureliaGrid.paginationService.changeItemPerPage(DEFAULT_PAGE_SIZE);
   }
 
   /* Define grid Options and Columns */
@@ -153,7 +155,7 @@ export class Example15 {
       enablePagination: true,
       pagination: {
         pageSizes: [5, 10, 15, 20, 25, 30, 40, 50, 75, 100],
-        pageSize: 25
+        pageSize: DEFAULT_PAGE_SIZE
       },
     };
 
