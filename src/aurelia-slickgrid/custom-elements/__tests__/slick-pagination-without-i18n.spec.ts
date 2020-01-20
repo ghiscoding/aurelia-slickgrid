@@ -77,7 +77,7 @@ describe('Slick-Pagination Component without I18N', () => {
       jest.clearAllMocks();
     });
 
-    it('should throw an error when "enableTranslate" is set and I18N Service is not provided', async () => {
+    xit('should throw an error when "enableTranslate" is set and I18N Service is not provided', async () => {
       try {
         await component.manuallyHandleLifecycle().create(bootstrap);
         await component.bind({ enableTranslate: true, paginationService: paginationServiceStub });
@@ -89,7 +89,7 @@ describe('Slick-Pagination Component without I18N', () => {
       }
     });
 
-    xit('should have defined locale and expect new text in the UI', async (done) => {
+    it('should have defined locale and expect new text in the UI', async (done) => {
       const bindings = {
         enableTranslate: false,
         paginationService: paginationServiceStub,
