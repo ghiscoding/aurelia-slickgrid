@@ -77,15 +77,18 @@ describe('Slick-Pagination Component without I18N', () => {
       jest.clearAllMocks();
     });
 
-    xit('should throw an error when "enableTranslate" is set and I18N Service is not provided', async () => {
+    it('should throw an error when "enableTranslate" is set and I18N Service is not provided', async () => {
       try {
+        component.enableTranslate = true;
         await component.manuallyHandleLifecycle().create(bootstrap);
+        await component.bind({ enableTranslate: true, paginationService: paginationServiceStub });
+        await component.attached();
+        await component.unbind();
         await component.bind({ enableTranslate: true, paginationService: paginationServiceStub });
         await component.attached();
         await component.detached();
       } catch (e) {
         expect(e.toString()).toContain('[Aurelia-Slickgrid] requires "I18N" to be installed and configured when the grid option "enableTranslate" is enabled.');
-        component.dispose();
       }
     });
 
