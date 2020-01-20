@@ -37,7 +37,7 @@ const paginationServiceStub = {
   init: jest.fn(),
 } as unknown as PaginationService;
 
-xdescribe('Slick-Pagination Component without I18N', () => {
+describe('Slick-Pagination Component without I18N', () => {
   let component;
   let ea: EventAggregator;
 
