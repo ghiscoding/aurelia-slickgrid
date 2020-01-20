@@ -89,6 +89,9 @@ describe('Slick-Pagination Component', () => {
       aurelia.container.registerInstance(I18N, i18n);
       aurelia.container.registerInstance(PaginationService, paginationServiceStub);
     });
+
+    await component.create(bootstrap);
+    ea.publish(`paginationService:on-pagination-refreshed`, true);
   });
 
   describe('Integration Tests', () => {
@@ -99,15 +102,12 @@ describe('Slick-Pagination Component', () => {
     });
 
     it('should make sure Slick-Pagination is defined', async () => {
-      await component.create(bootstrap);
       ea.publish(`paginationService:on-pagination-refreshed`, true);
       expect(component).toBeTruthy();
       expect(component.constructor).toBeDefined();
     });
 
     it('should create a the Slick-Pagination component in the DOM', async () => {
-      await component.create(bootstrap);
-      ea.publish(`paginationService:on-pagination-refreshed`, true);
       const pageInfoFromTo = await component.waitForElement('.page-info-from-to');
       const pageInfoTotalItems = await component.waitForElement('.page-info-total-items');
 
@@ -116,7 +116,6 @@ describe('Slick-Pagination Component', () => {
     });
 
     it('should call changeToFirstPage() from the View and expect the pagination service to be called with correct method', async () => {
-      await component.create(bootstrap);
       ea.publish(`paginationService:on-pagination-refreshed`, true);
       const spy = jest.spyOn(paginationServiceStub, 'goToFirstPage');
 
@@ -129,7 +128,6 @@ describe('Slick-Pagination Component', () => {
     });
 
     it('should call changeToPreviousPage() from the View and expect the pagination service to be called with correct method', async () => {
-      await component.create(bootstrap);
       const spy = jest.spyOn(paginationServiceStub, 'goToPreviousPage');
 
       const button = await component.waitForElement('.icon-seek-prev.fa-angle-left');
@@ -139,7 +137,6 @@ describe('Slick-Pagination Component', () => {
     });
 
     it('should call changeToNextPage() from the View and expect the pagination service to be called with correct method', async () => {
-      await component.create(bootstrap);
       const spy = jest.spyOn(paginationServiceStub, 'goToNextPage');
 
       const button = await component.waitForElement('.icon-seek-next.fa-angle-right');
@@ -149,7 +146,6 @@ describe('Slick-Pagination Component', () => {
     });
 
     it('should call changeToLastPage() from the View and expect the pagination service to be called with correct method', async () => {
-      await component.create(bootstrap);
       const spy = jest.spyOn(paginationServiceStub, 'goToLastPage');
 
       const button = await component.waitForElement('.icon-seek-end.fa-angle-double-right');
@@ -159,7 +155,6 @@ describe('Slick-Pagination Component', () => {
     });
 
     it('should change the page number and expect the pagination service to go to that page', async () => {
-      await component.create(bootstrap);
       const spy = jest.spyOn(paginationServiceStub, 'goToPageNumber');
 
       const newPageNumber = 3;
@@ -183,8 +178,7 @@ describe('Slick-Pagination Component', () => {
       expect(spy).toHaveBeenCalledWith(newItemsPerPage, mockEvent);
     });
 
-    xit('should create a the Slick-Pagination component in the DOM and expect different locale when changed', async (done) => {
-      await component.create(bootstrap);
+    it('should create a the Slick-Pagination component in the DOM and expect different locale when changed', async (done) => {
       i18n.setLocale('en');
       ea.publish('i18n:locale:changed', 'en');
       expect(i18n.getLocale()).toBe('en');
