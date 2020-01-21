@@ -132,9 +132,15 @@ const gridStateServiceStub = {
 } as unknown as GridStateService;
 
 const paginationServiceStub = {
+  totalItems: 0,
   init: jest.fn(),
   dispose: jest.fn(),
 } as unknown as PaginationService;
+
+Object.defineProperty(paginationServiceStub, 'totalItems', {
+  get: jest.fn(() => 0),
+  set: jest.fn()
+});
 
 const resizerServiceStub = {
   init: jest.fn(),
@@ -170,6 +176,7 @@ const mockDataView = {
   endUpdate: jest.fn(),
   getItem: jest.fn(),
   getItemMetadata: jest.fn(),
+  getPagingInfo: jest.fn(),
   onSetItemsCalled: jest.fn(),
   onRowsChanged: jest.fn(),
   reSort: jest.fn(),
@@ -722,6 +729,59 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
 
         expect(spy).toHaveBeenCalledWith();
       });
+
+      it('should refresh a local grid and change pagination options pagination when a preset for it is defined in grid options', (done) => {
+        const expectedPageNumber = 2;
+        const expectedTotalItems = 2;
+        const refreshSpy = jest.spyOn(customElement, 'refreshGridData');
+
+        const mockData = [{ firstName: 'John', lastName: 'Doe' }, { firstName: 'Jane', lastName: 'Smith' }];
+        customElement.gridOptions = {
+          enablePagination: true,
+          presets: { pagination: { pageSize: 2, pageNumber: expectedPageNumber } }
+        };
+        customElement.paginationOptions = { pageSize: 2, pageNumber: 2, pageSizes: [2, 10, 25, 50], totalItems: 100 };
+
+        customElement.bind();
+        customElement.attached();
+        customElement.datasetChanged(mockData, null);
+
+        setTimeout(() => {
+          expect(customElement.paginationOptions.pageSize).toBe(2);
+          expect(customElement.paginationOptions.pageNumber).toBe(expectedPageNumber);
+          expect(customElement.paginationOptions.totalItems).toBe(expectedTotalItems);
+          expect(refreshSpy).toHaveBeenCalledWith(mockData);
+          done();
+        });
+      });
+
+      it('should refresh a local grid defined and change pagination options pagination when a preset is defined in grid options and total rows is different when Filters are applied', (done) => {
+        const expectedPageNumber = 3;
+        const expectedTotalItems = 15;
+        const refreshSpy = jest.spyOn(customElement, 'refreshGridData');
+        const getPagingSpy = jest.spyOn(mockDataView, 'getPagingInfo').mockReturnValue({ pageNum: 1, totalRows: expectedTotalItems });
+
+        const mockData = [{ firstName: 'John', lastName: 'Doe' }, { firstName: 'Jane', lastName: 'Smith' }];
+        customElement.gridOptions = {
+          enableFiltering: true,
+          enablePagination: true,
+          presets: { pagination: { pageSize: 10, pageNumber: expectedPageNumber } }
+        };
+        customElement.paginationOptions = { pageSize: 10, pageNumber: 2, pageSizes: [10, 25, 50], totalItems: 100 };
+
+        customElement.bind();
+        customElement.attached();
+        customElement.datasetChanged(mockData, null);
+
+        setTimeout(() => {
+          expect(getPagingSpy).toHaveBeenCalled();
+          expect(customElement.paginationOptions.pageSize).toBe(10);
+          expect(customElement.paginationOptions.pageNumber).toBe(expectedPageNumber);
+          expect(customElement.paginationOptions.totalItems).toBe(expectedTotalItems);
+          expect(refreshSpy).toHaveBeenCalledWith(mockData);
+          done();
+        });
+      });
     });
 
     describe('Backend Service API', () => {
@@ -760,6 +820,23 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
         customElement.gridOptions.backendServiceApi.internalPostProcess({ data: { users: { nodes: [{ firstName: 'John' }], totalCount: 2 } } } as GraphqlPaginatedResult);
 
         expect(spy).toHaveBeenCalled();
+        expect(customElement.gridOptions.backendServiceApi.internalPostProcess).toEqual(expect.any(Function));
+      });
+
+      it('should execute the "internalPostProcess" callback and expect totalItems to be updated in the PaginationService when "refreshGridData" is called on the 2nd time', () => {
+        jest.spyOn(customElement.gridOptions.backendServiceApi.service, 'getDatasetName').mockReturnValue('users');
+        const refreshSpy = jest.spyOn(customElement, 'refreshGridData');
+        const paginationSpy = jest.spyOn(paginationServiceStub, 'totalItems', 'set');
+        const mockDataset = [{ firstName: 'John' }, { firstName: 'Jane' }];
+
+        customElement.bind();
+        customElement.attached();
+        customElement.gridOptions.backendServiceApi.internalPostProcess({ data: { users: { nodes: mockDataset, totalCount: mockDataset.length } } } as GraphqlPaginatedResult);
+        customElement.refreshGridData(mockDataset, 1);
+        customElement.refreshGridData(mockDataset, 1);
+
+        expect(refreshSpy).toHaveBeenCalledTimes(3);
+        expect(paginationSpy).toHaveBeenCalledWith(2);
         expect(customElement.gridOptions.backendServiceApi.internalPostProcess).toEqual(expect.any(Function));
       });
 

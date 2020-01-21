@@ -13,7 +13,7 @@
 
       <div class="row col-md-12">
         <button class="btn btn-default btn-sm" data-test="clear-filters-sorting"
-          click.delegate="clearAllFiltersAndSorts()" title="Clear all Filters & Sorts">
+                click.delegate="clearAllFiltersAndSorts()" title="Clear all Filters & Sorts">
           <i class="fa fa-filter text-danger"></i>
           Clear all Filter & Sorts
         </button>
@@ -56,8 +56,8 @@
   </div>
 
   <aurelia-slickgrid grid-id="grid6" column-definitions.bind="columnDefinitions" grid-options.bind="gridOptions"
-    dataset.bind="dataset" grid-height="200" grid-width="900"
-    asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)"
-    asg-on-grid-state-changed.delegate="gridStateChanged($event)">
+                     dataset.bind="dataset" grid-height="200" grid-width="900"
+                     asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)"
+                     asg-on-grid-state-changed.delegate="gridStateChanged($event.detail)">
   </aurelia-slickgrid>
 </template>

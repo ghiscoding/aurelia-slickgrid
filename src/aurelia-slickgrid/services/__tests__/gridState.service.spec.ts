@@ -16,6 +16,7 @@ import {
   GridState,
   ExtensionName
 } from '../../models';
+import { SharedService } from '../shared.service';
 
 declare var Slick: any;
 
@@ -52,10 +53,12 @@ const sortServiceStub = {
 describe('GridStateService', () => {
   let service: GridStateService;
   let ea: EventAggregator;
+  let sharedService: SharedService;
 
   beforeEach(() => {
     ea = new EventAggregator();
-    service = new GridStateService(ea, extensionServiceStub, filterServiceStub, sortServiceStub);
+    sharedService = new SharedService();
+    service = new GridStateService(ea, extensionServiceStub, filterServiceStub, sharedService, sortServiceStub);
     service.init(gridStub);
   });
 
@@ -226,8 +229,21 @@ describe('GridStateService', () => {
       expect(output).toBeNull();
     });
 
+    it('should call "getCurrentPagination" and return Pagination when using a Local Grid', () => {
+      const gridOptionsMock = { enablePagination: true } as GridOption;
+      const paginationMock = { pageNumber: 2, pageSize: 50 } as CurrentPagination;
+      const gridSpy = jest.spyOn(gridStub, 'getOptions').mockReturnValue(gridOptionsMock);
+      const sharedSpy = jest.spyOn(SharedService.prototype, 'currentPagination', 'get').mockReturnValue(paginationMock);
+
+      const output = service.getCurrentPagination();
+
+      expect(gridSpy).toHaveBeenCalled();
+      expect(sharedSpy).toHaveBeenCalled();
+      expect(output).toBe(paginationMock);
+    });
+
     it('should call "getCurrentPagination" and return Pagination when a BackendService is used', () => {
-      const gridOptionsMock = { backendServiceApi: { service: backendServiceStub } } as GridOption;
+      const gridOptionsMock = { backendServiceApi: { service: backendServiceStub }, enablePagination: true } as GridOption;
       const paginationMock = { pageNumber: 2, pageSize: 50 } as CurrentPagination;
       const gridSpy = jest.spyOn(gridStub, 'getOptions').mockReturnValue(gridOptionsMock);
       const backendSpy = jest.spyOn(backendServiceStub, 'getCurrentPagination').mockReturnValue(paginationMock);
@@ -369,18 +385,18 @@ describe('GridStateService', () => {
 
     it(`should call the method with column definitions and expect "gridStateService:changed" to be triggered
       with "newValues" property being the columns and still empty "gridState" property`, () => {
-        const columnsMock = [{ id: 'field1', field: 'field1', width: 100, cssClass: 'red' }] as Column[];
-        const currentColumnsMock = [{ columnId: 'field1', cssClass: 'red', headerCssClass: '', width: 100 }] as CurrentColumn[];
-        const gridStateMock = { columns: [], filters: [], sorters: [] } as GridState;
-        const stateChangeMock = { change: { newValues: currentColumnsMock, type: GridStateType.columns }, gridState: gridStateMock } as GridStateChange;
-        const eaSpy = jest.spyOn(ea, 'publish');
-        const serviceSpy = jest.spyOn(service, 'getCurrentGridState').mockReturnValue(gridStateMock);
+      const columnsMock = [{ id: 'field1', field: 'field1', width: 100, cssClass: 'red' }] as Column[];
+      const currentColumnsMock = [{ columnId: 'field1', cssClass: 'red', headerCssClass: '', width: 100 }] as CurrentColumn[];
+      const gridStateMock = { columns: [], filters: [], sorters: [] } as GridState;
+      const stateChangeMock = { change: { newValues: currentColumnsMock, type: GridStateType.columns }, gridState: gridStateMock } as GridStateChange;
+      const eaSpy = jest.spyOn(ea, 'publish');
+      const serviceSpy = jest.spyOn(service, 'getCurrentGridState').mockReturnValue(gridStateMock);
 
-        service.resetColumns(columnsMock);
+      service.resetColumns(columnsMock);
 
-        expect(serviceSpy).toHaveBeenCalled();
-        expect(eaSpy).toHaveBeenLastCalledWith(`gridStateService:changed`, stateChangeMock);
-      });
+      expect(serviceSpy).toHaveBeenCalled();
+      expect(eaSpy).toHaveBeenLastCalledWith(`gridStateService:changed`, stateChangeMock);
+    });
   });
 
   describe('resetRowSelection method', () => {

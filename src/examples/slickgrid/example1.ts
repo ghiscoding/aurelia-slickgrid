@@ -1,5 +1,7 @@
 import { Column, FieldType, GridOption } from '../../aurelia-slickgrid';
 
+const NB_ITEMS = 995;
+
 export class Example1 {
   title = 'Example 1: Basic Grid';
   subTitle = `Simple Grid with Fixed Sizes (800 x 400) using "grid-height" &amp; "grid-width"`;
@@ -18,8 +20,8 @@ export class Example1 {
 
   attached() {
     // mock some data (different in each dataset)
-    this.dataset1 = this.mockData();
-    this.dataset2 = this.mockData();
+    this.dataset1 = this.mockData(NB_ITEMS);
+    this.dataset2 = this.mockData(NB_ITEMS);
   }
 
   /* Define grid Options and Columns */
@@ -38,14 +40,24 @@ export class Example1 {
     };
 
     // copy the same Grid Options and Column Definitions to 2nd grid
+    // but also add Pagination in this grid
     this.columnDefinitions2 = this.columnDefinitions1;
-    this.gridOptions2 = this.gridOptions1;
+    this.gridOptions2 = {
+      ...this.gridOptions1,
+      ...{
+        enablePagination: true,
+        pagination: {
+          pageSizes: [5, 10, 15, 20, 25, 50, 75, 100],
+          pageSize: 5
+        },
+      }
+    };
   }
 
-  mockData() {
+  mockData(count: number) {
     // mock a dataset
     const mockDataset = [];
-    for (let i = 0; i < 1000; i++) {
+    for (let i = 0; i < count; i++) {
       const randomYear = 2000 + Math.floor(Math.random() * 10);
       const randomMonth = Math.floor(Math.random() * 11);
       const randomDay = Math.floor((Math.random() * 29));

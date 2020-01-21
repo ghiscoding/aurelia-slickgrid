@@ -18,7 +18,10 @@ describe('Example 15: Grid State & Presets using Local Storage', () => {
 
     cy.clearLocalStorage();
     cy.get('[data-test=reset-button]').click();
-    cy.reload();
+  });
+
+  it('should reload the page', () => {
+    cy.reload().wait(50);
   });
 
   it('should have exact Column Titles in the grid', () => {
@@ -26,6 +29,32 @@ describe('Example 15: Grid State & Presets using Local Storage', () => {
       .find('.slick-header-columns')
       .children()
       .each(($child, index) => expect($child.text()).to.eq(fullEnglishTitles[index]));
+  });
+
+  it('should have Pagination displayed with default values', () => {
+    cy.get('#slickGridContainer-grid15').as('grid15');
+
+    // 1st Grid
+    cy.get('@grid15')
+      .find('[data-test=page-number-input]')
+      .invoke('val')
+      .then(pageNumber => expect(pageNumber).to.eq('1'));
+
+    cy.get('@grid15')
+      .find('[data-test=page-count]')
+      .contains('20');
+
+    cy.get('@grid15')
+      .find('[data-test=item-from]')
+      .contains('1');
+
+    cy.get('@grid15')
+      .find('[data-test=item-to]')
+      .contains('25');
+
+    cy.get('@grid15')
+      .find('[data-test=total-items]')
+      .contains('500');
   });
 
   it('should drag "Title" column to 3rd position in the grid', () => {
@@ -116,7 +145,7 @@ describe('Example 15: Grid State & Presets using Local Storage', () => {
   });
 
   it('should click on "Title" column to sort it Ascending', () => {
-    const tasks = ['Task 1', 'Task 10', 'Task 100', 'Task 101'];
+    const expectedTasks = ['Task 1', 'Task 10', 'Task 100', 'Task 101'];
 
     cy.get('.slick-header-columns')
       .children('.slick-header-column:nth(3)')
@@ -130,11 +159,11 @@ describe('Example 15: Grid State & Presets using Local Storage', () => {
     cy.get('#grid15')
       .find('.slick-row')
       .each(($row, index) => {
-        if (index > tasks.length - 1) {
+        if (index > expectedTasks.length - 1) {
           return;
         }
         cy.wrap($row).children('.slick-cell:nth(3)')
-          .should('contain', tasks[index]);
+          .should('contain', expectedTasks[index]);
       });
   });
 
@@ -170,7 +199,54 @@ describe('Example 15: Grid State & Presets using Local Storage', () => {
       .find('.slick-sort-indicator-numbered')
       .should('be.visible')
       .should('contain', '1');
+  });
 
+  it('should change Page Size and Page Number then expect the Pagination to have correct values', () => {
+    const expectedTasks = ['Task 135', 'Task 136', 'Task 137', 'Task 138', 'Task 139', 'Task 14'];
+
+    cy.get('#slickGridContainer-grid15').as('grid15');
+
+    cy.get('@grid15')
+      .find('#items-per-page-label').select('20');
+
+    cy.get('@grid15')
+    cy.get('.icon-seek-next').click().click();
+
+    cy.wait(100);
+
+    cy.get('@grid15')
+      .find('[data-test=page-number-input]')
+      .invoke('val')
+      .then(pageNumber => expect(pageNumber).to.eq('3'));
+
+    cy.get('@grid15')
+      .find('[data-test=page-count]')
+      .contains('6');
+
+    cy.get('@grid15')
+      .find('[data-test=item-from]')
+      .contains('41');
+
+    cy.get('@grid15')
+      .find('[data-test=item-to]')
+      .contains('60');
+
+    cy.get('@grid15')
+      .find('[data-test=total-items]')
+      .contains('111');
+
+    cy.get('@grid15')
+      .find('.slick-row')
+      .each(($row, index) => {
+        if (index > expectedTasks.length - 1) {
+          return;
+        }
+        cy.wrap($row).children('.slick-cell:nth(3)')
+          .should('contain', expectedTasks[index]);
+      });
+  });
+
+  it('should reload the page', () => {
     cy.reload().wait(50);
   });
 
@@ -186,6 +262,43 @@ describe('Example 15: Grid State & Presets using Local Storage', () => {
       .find('.slick-header-columns')
       .children()
       .each(($child, index) => expect($child.find('.slick-column-name').text()).to.eq(expectedTitles[index]));
+  });
+
+  it('should expect the same Pagination to persist after reload', () => {
+    const expectedTasks = ['Task 135', 'Task 136', 'Task 137', 'Task 138', 'Task 139', 'Task 14'];
+
+    cy.get('#slickGridContainer-grid15').as('grid15');
+
+    cy.get('@grid15')
+      .find('[data-test=page-number-input]')
+      .invoke('val')
+      .then(pageNumber => expect(pageNumber).to.eq('3'));
+
+    cy.get('@grid15')
+      .find('[data-test=page-count]')
+      .contains('6');
+
+    cy.get('@grid15')
+      .find('[data-test=item-from]')
+      .contains('41');
+
+    cy.get('@grid15')
+      .find('[data-test=item-to]')
+      .contains('60');
+
+    cy.get('@grid15')
+      .find('[data-test=total-items]')
+      .contains('111');
+
+    cy.get('@grid15')
+      .find('.slick-row')
+      .each(($row, index) => {
+        if (index > expectedTasks.length - 1) {
+          return;
+        }
+        cy.wrap($row).children('.slick-cell:nth(3)')
+          .should('contain', expectedTasks[index]);
+      });
   });
 
   it('should have French titles in Column Picker after switching to Language', () => {
@@ -272,7 +385,9 @@ describe('Example 15: Grid State & Presets using Local Storage', () => {
       .find('.slick-header-columns')
       .children()
       .each(($child, index) => expect($child.find('.slick-column-name').text()).to.eq(expectedTitles[index]));
+  });
 
+  it('should reload the page', () => {
     cy.reload().wait(50);
   });
 

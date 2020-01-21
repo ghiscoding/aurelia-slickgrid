@@ -59,7 +59,7 @@ export interface AureliaGridInstance {
   groupingService: GroupingAndColspanService;
 
   /** Pagination Service (allows you to programmatically go to first/last page, etc...) */
-  paginationService: PaginationService;
+  paginationService?: PaginationService;
 
   /** Resizer Service (including auto-resize) */
   resizerService: ResizerService;

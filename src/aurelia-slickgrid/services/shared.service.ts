@@ -1,9 +1,10 @@
 import { singleton } from 'aurelia-framework';
-import { Column, GridOption } from '../models/index';
+import { Column, CurrentPagination, GridOption } from '../models/index';
 
 @singleton(true)
 export class SharedService {
   private _allColumns: Column[];
+  private _currentPagination: CurrentPagination;
   private _dataView: any;
   private _groupItemMetadataProvider: any;
   private _grid: any;
@@ -25,6 +26,16 @@ export class SharedService {
   /** Getter for the Column Definitions pulled through the Grid Object */
   get columnDefinitions(): Column[] {
     return (this._grid && this._grid.getColumns) ? this._grid.getColumns() : [];
+  }
+
+  /** Getter for the Current Pagination (when Pagination is enabled) */
+  get currentPagination(): CurrentPagination | undefined {
+    return this._currentPagination;
+  }
+
+  /** Setter for the Current Pagination (when Pagination is enabled) */
+  set currentPagination(currentPagination: CurrentPagination) {
+    this._currentPagination = currentPagination;
   }
 
   /** Getter for SlickGrid DataView object */
