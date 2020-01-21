@@ -132,9 +132,15 @@ const gridStateServiceStub = {
 } as unknown as GridStateService;
 
 const paginationServiceStub = {
+  totalItems: 0,
   init: jest.fn(),
   dispose: jest.fn(),
 } as unknown as PaginationService;
+
+Object.defineProperty(paginationServiceStub, 'totalItems', {
+  get: jest.fn(() => 0),
+  set: jest.fn()
+});
 
 const resizerServiceStub = {
   init: jest.fn(),
@@ -814,6 +820,23 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
         customElement.gridOptions.backendServiceApi.internalPostProcess({ data: { users: { nodes: [{ firstName: 'John' }], totalCount: 2 } } } as GraphqlPaginatedResult);
 
         expect(spy).toHaveBeenCalled();
+        expect(customElement.gridOptions.backendServiceApi.internalPostProcess).toEqual(expect.any(Function));
+      });
+
+      it('should execute the "internalPostProcess" callback and expect totalItems to be updated in the PaginationService when "refreshGridData" is called on the 2nd time', () => {
+        jest.spyOn(customElement.gridOptions.backendServiceApi.service, 'getDatasetName').mockReturnValue('users');
+        const refreshSpy = jest.spyOn(customElement, 'refreshGridData');
+        const paginationSpy = jest.spyOn(paginationServiceStub, 'totalItems', 'set');
+        const mockDataset = [{ firstName: 'John' }, { firstName: 'Jane' }];
+
+        customElement.bind();
+        customElement.attached();
+        customElement.gridOptions.backendServiceApi.internalPostProcess({ data: { users: { nodes: mockDataset, totalCount: mockDataset.length } } } as GraphqlPaginatedResult);
+        customElement.refreshGridData(mockDataset, 1);
+        customElement.refreshGridData(mockDataset, 1);
+
+        expect(refreshSpy).toHaveBeenCalledTimes(3);
+        expect(paginationSpy).toHaveBeenCalledWith(2);
         expect(customElement.gridOptions.backendServiceApi.internalPostProcess).toEqual(expect.any(Function));
       });
 

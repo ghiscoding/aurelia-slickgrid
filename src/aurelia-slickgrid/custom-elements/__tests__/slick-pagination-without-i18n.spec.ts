@@ -86,6 +86,7 @@ describe('Slick-Pagination Component without I18N', () => {
         await component.detached();
       } catch (e) {
         expect(e.toString()).toContain('[Aurelia-Slickgrid] requires "I18N" to be installed and configured when the grid option "enableTranslate" is enabled.');
+        component.dispose();
         done();
       }
     });
