@@ -3,7 +3,6 @@ import { EventAggregator } from 'aurelia-event-aggregator';
 
 import { PaginationService } from './../pagination.service';
 import { SharedService } from '../shared.service';
-import { FilterService, GridService } from '../index';
 import { Column, GridOption } from '../../models';
 import * as utilities from '../backend-utilities';
 
@@ -63,14 +62,6 @@ const gridStub = {
   onColumnsResized: jest.fn(),
   registerPlugin: jest.fn(),
 };
-
-const filterServiceStub = {
-  clearFilters: jest.fn(),
-} as unknown as FilterService;
-
-const gridServiceStub = {
-  resetColumns: jest.fn(),
-} as unknown as GridService;
 
 describe('PaginationService', () => {
   let service: PaginationService;
@@ -133,13 +124,38 @@ describe('PaginationService', () => {
     expect(spy).toHaveBeenCalledTimes(2); // called 2x times inside the init() and SETTER
   });
 
+  describe('Getters and Setters', () => {
+    it('should get the availablePageSizes and equal the one defined in the grid options pagination', () => {
+      mockGridOption.pagination.pageSizes = [5, 10, 15, 20];
+      service.init(gridStub, dataviewStub, mockGridOption.pagination);
+      expect(service.availablePageSizes).toEqual(mockGridOption.pagination.pageSizes);
+    });
+
+    it('should get the itemsPerPage and equal the one defined in the grid options pagination', () => {
+      mockGridOption.pagination.pageSize = 20;
+      service.init(gridStub, dataviewStub, mockGridOption.pagination);
+      expect(service.itemsPerPage).toEqual(mockGridOption.pagination.pageSize);
+    });
+
+    it('should get the pageCount and equal the one defined in the grid options pagination', () => {
+      service.init(gridStub, dataviewStub, mockGridOption.pagination);
+      expect(service.pageCount).toEqual(4); // since totalItems is 85 and our pageSize is 20/page
+    });
+
+    it('should get the pageNumber and equal the one defined in the grid options pagination', () => {
+      mockGridOption.pagination.pageNumber = 3;
+      service.init(gridStub, dataviewStub, mockGridOption.pagination);
+      expect(service.pageNumber).toEqual(mockGridOption.pagination.pageNumber);
+    });
+  });
+
   describe('changeItemPerPage method', () => {
-    it('should be on page 1 when total items is 0', () => {
+    it('should be on page 0 when total items is 0', () => {
       mockGridOption.pagination.totalItems = 0;
       service.init(gridStub, dataviewStub, mockGridOption.pagination, mockGridOption.backendServiceApi);
       service.changeItemPerPage(30);
 
-      expect(service.getCurrentPageNumber()).toBe(1);
+      expect(service.getCurrentPageNumber()).toBe(0);
       expect(service.getCurrentItemPerPageCount()).toBe(30);
     });
 
@@ -390,7 +406,7 @@ describe('PaginationService', () => {
   });
 
   describe('recalculateFromToIndexes method', () => {
-    it('should recalculate the From/To as 1 when total items is 0', () => {
+    it('should recalculate the From/To as 0 when total items is 0', () => {
       mockGridOption.pagination.pageSize = 25;
       mockGridOption.pagination.pageNumber = 2;
       mockGridOption.pagination.totalItems = 0;
@@ -398,8 +414,8 @@ describe('PaginationService', () => {
       service.init(gridStub, dataviewStub, mockGridOption.pagination, mockGridOption.backendServiceApi);
       service.recalculateFromToIndexes();
 
-      expect(service.dataFrom).toBe(1);
-      expect(service.dataTo).toBe(1);
+      expect(service.dataFrom).toBe(0);
+      expect(service.dataTo).toBe(0);
     });
 
     it('should recalculate the From/To within range', () => {
@@ -639,6 +655,22 @@ describe('PaginationService', () => {
       setTimeout(() => {
         expect(service.dataFrom).toBe(1);
         expect(service.dataTo).toBe(101);
+        done();
+      });
+    });
+
+    it('should call "processOnItemAddedOrRemoved" and expect the (To) to equal the total items when it is higher than the total pageSize count', (done) => {
+      mockGridOption.pagination.pageNumber = 4;
+      mockGridOption.pagination.totalItems = 99;
+      const mockItems = { name: 'John' };
+
+      service.init(gridStub, dataviewStub, mockGridOption.pagination, mockGridOption.backendServiceApi);
+      ea.publish(`${DEFAULT_AURELIA_EVENT_PREFIX}:on-item-added`, mockItems);
+      service.changeItemPerPage(100);
+
+      setTimeout(() => {
+        expect(service.dataFrom).toBe(1);
+        expect(service.dataTo).toBe(100);
         done();
       });
     });

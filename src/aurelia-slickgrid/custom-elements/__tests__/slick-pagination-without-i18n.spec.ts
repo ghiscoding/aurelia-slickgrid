@@ -38,7 +38,7 @@ const paginationServiceStub = {
 } as unknown as PaginationService;
 
 describe('Slick-Pagination Component without I18N', () => {
-  let component;
+  let customElement: any;
   let ea: EventAggregator;
 
   const view = `<slick-pagination id="slickPagingContainer-grid1"
@@ -50,7 +50,7 @@ describe('Slick-Pagination Component without I18N', () => {
   beforeEach(() => {
     ea = new EventAggregator();
 
-    component = StageComponent
+    customElement = StageComponent
       .withResources([
         PLATFORM.moduleName('../slick-pagination'),
         PLATFORM.moduleName('../../value-converters/asgNumber')
@@ -62,7 +62,7 @@ describe('Slick-Pagination Component without I18N', () => {
         locales: mockLocales,
       });
 
-    component.bootstrap((aurelia) => {
+    customElement.bootstrap((aurelia) => {
       aurelia.use.standardConfiguration();
       aurelia.container.registerInstance(EventAggregator, ea);
       aurelia.container.registerInstance(PaginationService, paginationServiceStub);
@@ -79,14 +79,14 @@ describe('Slick-Pagination Component without I18N', () => {
 
     it('should throw an error when "enableTranslate" is set and I18N Service is not provided', async (done) => {
       try {
-        component.enableTranslate = true;
-        await component.manuallyHandleLifecycle().create(bootstrap);
-        await component.bind({ enableTranslate: true, paginationService: paginationServiceStub });
-        await component.attached();
-        await component.detached();
+        customElement.enableTranslate = true;
+        await customElement.manuallyHandleLifecycle().create(bootstrap);
+        await customElement.bind({ enableTranslate: true, paginationService: paginationServiceStub });
+        await customElement.attached();
+        await customElement.detached();
       } catch (e) {
         expect(e.toString()).toContain('[Aurelia-Slickgrid] requires "I18N" to be installed and configured when the grid option "enableTranslate" is enabled.');
-        component.dispose();
+        customElement.dispose();
         done();
       }
     });
@@ -98,23 +98,23 @@ describe('Slick-Pagination Component without I18N', () => {
         locales: mockLocales
       };
 
-      component.enableTranslate = false;
-      component.locales = mockLocales;
-      await component.manuallyHandleLifecycle().create(bootstrap);
-      await component.bind(bindings);
-      await component.attached();
-      await component.unbind();
-      await component.bind(bindings);
-      await component.attached();
+      customElement.enableTranslate = false;
+      customElement.locales = mockLocales;
+      await customElement.manuallyHandleLifecycle().create(bootstrap);
+      await customElement.bind(bindings);
+      await customElement.attached();
+      await customElement.unbind();
+      await customElement.bind(bindings);
+      await customElement.attached();
       ea.publish(`paginationService:on-pagination-refreshed`, true);
 
       setTimeout(async () => {
-        const pageInfoFromTo = await component.waitForElement('.page-info-from-to');
-        const pageInfoTotalItems = await component.waitForElement('.page-info-total-items');
+        const pageInfoFromTo = await customElement.waitForElement('.page-info-from-to');
+        const pageInfoTotalItems = await customElement.waitForElement('.page-info-total-items');
         expect(removeExtraSpaces(pageInfoFromTo.innerHTML)).toBe('<span data-test="item-from">5</span>-<span data-test="item-to">10</span>of');
         expect(removeExtraSpaces(pageInfoTotalItems.innerHTML)).toBe('<span data-test="total-items">100</span> items');
 
-        component.dispose();
+        customElement.dispose();
         done();
       }, 50);
     });

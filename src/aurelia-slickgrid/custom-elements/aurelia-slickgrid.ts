@@ -29,6 +29,7 @@ import {
   Locale,
   Metrics,
   Pagination,
+  ServicePagination,
   SlickEventHandler,
 } from '../models/index';
 import {
@@ -716,7 +717,7 @@ export class AureliaSlickgridCustomElement {
    * On a Pagination changed, we will trigger a Grid State changed with the new pagination info
    * Also if we use Row Selection or the Checkbox Selector, we need to reset any selection
    */
-  paginationChanged(pagination: Pagination) {
+  paginationChanged(pagination: ServicePagination) {
     if (this.gridOptions.enableRowSelection || this.gridOptions.enableCheckboxSelector) {
       this.grid.setSelectedRows([]);
     }

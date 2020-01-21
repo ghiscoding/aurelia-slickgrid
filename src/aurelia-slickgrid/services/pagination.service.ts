@@ -1,7 +1,7 @@
 import { inject, singleton } from 'aurelia-framework';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
 
-import { BackendServiceApi, CurrentPagination, GraphqlResult, GraphqlPaginatedResult, Pagination } from '../models/index';
+import { BackendServiceApi, CurrentPagination, GraphqlResult, GraphqlPaginatedResult, Pagination, ServicePagination } from '../models/index';
 import { executeBackendProcessesCallback, onBackendError } from './backend-utilities';
 import { SharedService } from './shared.service';
 import { disposeAllSubscriptions } from './utilities';
@@ -98,6 +98,7 @@ export class PaginationService {
       this.dataView.onPagingInfoChanged.subscribe((e, pagingInfo) => {
         if (this._totalItems !== pagingInfo.totalRows) {
           this._totalItems = pagingInfo.totalRows;
+          this._paginationOptions.totalItems = this._totalItems;
           this.refreshPagination(false, false);
         }
       });
@@ -142,7 +143,7 @@ export class PaginationService {
     };
   }
 
-  getFullPagination(): Pagination {
+  getFullPagination(): ServicePagination {
     return {
       pageCount: this._pageCount,
       pageNumber: this._pageNumber,
@@ -270,11 +271,6 @@ export class PaginationService {
   processOnPageChanged(pageNumber: number, event?: Event | undefined): Promise<any> {
     return new Promise((resolve, reject) => {
       this.recalculateFromToIndexes();
-      if (this._dataTo > this._totalItems) {
-        this._dataTo = this._totalItems;
-      } else if (this._totalItems < this._itemsPerPage) {
-        this._dataTo = this._totalItems;
-      }
 
       if (this._isLocalGrid) {
         this.dataView.setPagingOptions({ pageSize: this._itemsPerPage, pageNum: (pageNumber - 1) }); // dataView page starts at 0 instead of 1
@@ -316,15 +312,22 @@ export class PaginationService {
 
   recalculateFromToIndexes() {
     if (this._totalItems === 0) {
-      this._dataFrom = 1;
+      this._dataFrom = 0;
       this._dataTo = 1;
-      this._pageNumber = 1;
+      this._pageNumber = 0;
     } else {
       this._dataFrom = this._pageNumber > 1 ? ((this._pageNumber * this._itemsPerPage) - this._itemsPerPage + 1) : 1;
       this._dataTo = (this._totalItems < this._itemsPerPage) ? this._totalItems : (this._pageNumber * this._itemsPerPage);
       if (this._dataTo > this._totalItems) {
         this._dataTo = this._totalItems;
       }
+    }
+
+    // do a final check on the From/To and make sure they are not over or below min/max acceptable values
+    if (this._dataTo > this._totalItems) {
+      this._dataTo = this._totalItems;
+    } else if (this._totalItems < this._itemsPerPage) {
+      this._dataTo = this._totalItems;
     }
   }
 
