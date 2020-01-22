@@ -1,3 +1,4 @@
+import 'jest-extended';
 import { I18N } from 'aurelia-i18n';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { BindingSignaler } from 'aurelia-templating-resources';
@@ -10,10 +11,6 @@ import { Column, DelimiterType, FileType, GridOption, MenuCommandItemCallbackArg
 import { ExcelExportService, ExportService } from '../../services';
 
 declare var Slick: any;
-
-const gridId = 'grid1';
-const gridUid = 'slickgrid_124343';
-const containerId = 'demo-container';
 
 const excelExportServiceStub = {
   exportToExcel: jest.fn(),
@@ -36,7 +33,6 @@ const gridStub = {
   getColumnIndex: jest.fn(),
   getColumns: jest.fn(),
   getOptions: jest.fn(),
-  getUID: () => gridUid,
   registerPlugin: jest.fn(),
   setColumns: jest.fn(),
   setActiveCell: jest.fn(),
@@ -553,7 +549,6 @@ describe('contextMenuExtension', () => {
       });
 
       it('should call "copyToClipboard", without export formatter, when the command triggered is "copy"', () => {
-        const setActiveCellSpy = jest.spyOn(SharedService.prototype.grid, 'setActiveCell');
         const copyGridOptionsMock = { ...gridOptionsMock, enableExcelExport: false, enableExport: false, contextMenu: { hideCopyCellValueCommand: false } } as GridOption;
         const columnMock = { id: 'firstName', name: 'First Name', field: 'firstName' } as Column;
         const dataContextMock = { id: 123, firstName: 'John', lastName: 'Doe', age: 50 };
@@ -574,12 +569,10 @@ describe('contextMenuExtension', () => {
           value: 'John'
         });
 
-        expect(setActiveCellSpy).toHaveBeenCalledWith(5, 2, false);
         expect(execSpy).toHaveBeenCalledWith('copy', false, 'John');
       });
 
       it('should call "copyToClipboard", WITH export formatter, when the command triggered is "copy"', () => {
-        const setActiveCellSpy = jest.spyOn(SharedService.prototype.grid, 'setActiveCell');
         const copyGridOptionsMock = { ...gridOptionsMock, enableExcelExport: false, enableExport: false, exportOptions: { exportWithFormatter: true } } as GridOption;
         const columnMock = { id: 'firstName', name: 'First Name', field: 'firstName', formatter: Formatters.uppercase } as Column;
         const dataContextMock = { id: 123, firstName: 'John', lastName: 'Doe', age: 50 };
@@ -599,7 +592,6 @@ describe('contextMenuExtension', () => {
           value: 'John'
         });
 
-        expect(setActiveCellSpy).toHaveBeenCalledWith(5, 2, false);
         expect(execSpy).toHaveBeenCalledWith('copy', false, 'JOHN');
       });
 
