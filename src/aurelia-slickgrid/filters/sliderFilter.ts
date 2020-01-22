@@ -195,7 +195,7 @@ export class SliderFilter implements Filter {
           min="${minValue}" max="${maxValue}" step="${step}"
           class="form-control slider-filter-input range ${this._elementRangeInputId}" />
         <div class="input-group-addon input-group-append slider-value">
-          <span class="input-group-text" id="${this._elementRangeOutputId}">${defaultValue}</span>
+          <span class="input-group-text ${this._elementRangeOutputId}">${defaultValue}</span>
         </div>
       </div>`;
   }
