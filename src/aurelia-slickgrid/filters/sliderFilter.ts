@@ -107,9 +107,9 @@ export class SliderFilter implements Filter {
       this.$filterElm.on('input change', (e: { target: HTMLInputElement }) => {
         const value = e && e.target && e.target.value;
         if (value !== undefined && value !== null && document) {
-          const elm = document.getElementById(this._elementRangeOutputId || '');
-          if (elm && elm.innerHTML) {
-            elm.innerHTML = value;
+          const elements = document.getElementsByClassName(this._elementRangeOutputId || '');
+          if (elements && elements.length > 0 && elements[0].innerHTML) {
+            elements[0].innerHTML = value;
           }
         }
       });
@@ -181,23 +181,21 @@ export class SliderFilter implements Filter {
     if (this.filterParams.hideSliderNumber) {
       return `
       <div class="search-filter slider-container filter-${columnId}">
-        <input type="range" id="${this._elementRangeInputId}"
-          name="${this._elementRangeInputId}"
+        <input type="range" name="${this._elementRangeInputId}"
           defaultValue="${defaultValue}" value="${defaultValue}"
           min="${minValue}" max="${maxValue}" step="${step}"
-          class="form-control slider-filter-input range" />
+          class="form-control slider-filter-input range ${this._elementRangeInputId}" />
       </div>`;
     }
 
     return `
       <div class="input-group slider-container search-filter filter-${columnId}">
-        <input type="range" id="${this._elementRangeInputId}"
-          name="${this._elementRangeInputId}"
+        <input type="range" name="${this._elementRangeInputId}"
           defaultValue="${defaultValue}" value="${defaultValue}"
           min="${minValue}" max="${maxValue}" step="${step}"
-          class="form-control slider-filter-input range" />
+          class="form-control slider-filter-input range ${this._elementRangeInputId}" />
         <div class="input-group-addon input-group-append slider-value">
-          <span class="input-group-text" id="${this._elementRangeOutputId}">${defaultValue}</span>
+          <span class="input-group-text ${this._elementRangeOutputId}">${defaultValue}</span>
         </div>
       </div>`;
   }
@@ -227,7 +225,6 @@ export class SliderFilter implements Filter {
 
     $filterElm.children('input').val(searchTermInput);
     $filterElm.children('div.input-group-addon.input-group-append').children().html(searchTermInput);
-    $filterElm.attr('id', `filter-${columnId}`);
     $filterElm.data('columnId', columnId);
 
     // if there's a search term, we will add the "filled" class for styling purposes

@@ -127,7 +127,6 @@ export class CustomInputFilter implements Filter {
     const searchTermInput = searchTerm as string;
 
     $filterElm.val(searchTermInput);
-    $filterElm.attr('id', `filter-${this.columnDef.id}`);
     $filterElm.data('columnId', this.columnDef.id);
 
     // append the new DOM element to the header row

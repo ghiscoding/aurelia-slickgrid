@@ -250,7 +250,6 @@ export class DateRangeFilter implements Filter {
     */
 
     // create the DOM element & add an ID and filter class
-    this.$filterInputElm.attr('id', `filter-${columnId}`);
     this.$filterInputElm.data('columnId', columnId);
 
     // if there's a search term, we will add the "filled" class for styling purposes
