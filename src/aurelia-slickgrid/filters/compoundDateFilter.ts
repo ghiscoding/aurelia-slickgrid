@@ -163,6 +163,7 @@ export class CompoundDateFilter implements Filter {
   // ------------------
 
   private buildDatePickerInput(searchTerm?: SearchTerm) {
+    const columnId = this.columnDef && this.columnDef.id;
     const inputFormat = mapFlatpickrDateFormatWithFieldType(this.columnDef.type || FieldType.dateIso);
     const outputFormat = mapFlatpickrDateFormatWithFieldType(this.columnDef.outputType || this.columnDef.type || FieldType.dateUtc);
     const userFilterOptions = (this.columnFilter && this.columnFilter.filterOptions || {}) as FlatpickrOption;
@@ -212,7 +213,7 @@ export class CompoundDateFilter implements Filter {
     if (this.columnFilter && this.columnFilter.placeholder) {
       placeholder = this.columnFilter.placeholder;
     }
-    const $filterInputElm: any = $(`<div class="flatpickr"><input type="text" class="form-control" data-input placeholder="${placeholder}"></div>`);
+    const $filterInputElm: any = $(`<div class="flatpickr filter-${columnId}"><input type="text" class="form-control" data-input placeholder="${placeholder}"></div>`);
     this.flatInstance = (flatpickr && $filterInputElm[0] && typeof $filterInputElm[0].flatpickr === 'function') ? $filterInputElm[0].flatpickr(this._flatpickrOptions) : null;
     return $filterInputElm;
   }
@@ -270,7 +271,6 @@ export class CompoundDateFilter implements Filter {
 
     // create the DOM element & add an ID and filter class
     $filterContainerElm.append($containerInputGroup);
-    $filterContainerElm.attr('id', `filter-${columnId}`);
     this.$filterInputElm.data('columnId', columnId);
 
     if (this.operator) {

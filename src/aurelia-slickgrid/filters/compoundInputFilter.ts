@@ -148,11 +148,12 @@ export class CompoundInputFilter implements Filter {
   // ------------------
 
   private buildInputHtmlString() {
+    const columnId = this.columnDef && this.columnDef.id;
     let placeholder = (this.gridOptions) ? (this.gridOptions.defaultFilterPlaceholder || '') : '';
     if (this.columnFilter && this.columnFilter.placeholder) {
       placeholder = this.columnFilter.placeholder;
     }
-    return `<input type="${this._inputType || 'text'}" class="form-control compound-input" role="presentation" autocomplete="off" placeholder="${placeholder}" /><span></span>`;
+    return `<input type="${this._inputType || 'text'}" class="form-control compound-input filter-${columnId}" role="presentation" autocomplete="off" placeholder="${placeholder}" /><span></span>`;
   }
 
   private buildSelectOperatorHtmlString() {
@@ -227,7 +228,6 @@ export class CompoundInputFilter implements Filter {
 
     // create the DOM element & add an ID and filter class
     $filterContainerElm.append($containerInputGroup);
-    $filterContainerElm.attr('id', `filter-${columnId}`);
 
     this.$filterInputElm.val(searchTerm);
     this.$filterInputElm.data('columnId', columnId);
