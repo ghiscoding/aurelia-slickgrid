@@ -461,7 +461,6 @@ export class SelectFilter implements Filter {
     if (typeof this.$filterElm.multipleSelect !== 'function') {
       throw new Error(`multiple-select.js was not found, make sure to read the HOWTO Wiki on how to install it.`);
     }
-    this.$filterElm.attr('id', this.elementName);
     this.$filterElm.data('columnId', columnId);
 
     // if there's a search term, we will add the "filled" class for styling purposes
