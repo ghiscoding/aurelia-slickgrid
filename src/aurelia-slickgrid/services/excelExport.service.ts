@@ -2,7 +2,7 @@ import { EventAggregator } from 'aurelia-event-aggregator';
 import { inject, Optional, singleton } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 // @ts-ignore
-import * as ExcelBuilder from 'excel-builder-webpack';
+import * as ExcelBuilder from 'excel-builder-webpacker';
 import * as $ from 'jquery';
 import * as moment from 'moment-mini';
 
