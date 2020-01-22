@@ -4,7 +4,7 @@ const NB_ITEMS = 995;
 
 export class Example1 {
   title = 'Example 1: Basic Grid';
-  subTitle = `Simple Grid with Fixed Sizes (800 x 400) using "grid-height" &amp; "grid-width"`;
+  subTitle = `Simple Grid with Fixed Sizes (800 x 225) using "grid-height" &amp; "grid-width"`;
 
   gridOptions1: GridOption;
   gridOptions2: GridOption;

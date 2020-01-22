@@ -12,7 +12,7 @@ import {
 
 @autoinject()
 export class Example19 {
-  @bindable detailViewRowCount = 10;
+  @bindable detailViewRowCount = 9;
   title = 'Example 19: Row Detail View';
   subTitle = `
     Add functionality to show extra information with a Row Detail View, (<a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Row-Detail" target="_blank">Wiki docs</a>)
@@ -27,6 +27,8 @@ export class Example19 {
   gridOptions: GridOption;
   columnDefinitions: Column[];
   dataset: any[];
+  flashAlertType = 'info';
+  message: string;
   subscriptions: Subscription[];
 
   constructor() {
@@ -107,6 +109,9 @@ export class Example19 {
 
         // ViewModel Template to load when row detail data is ready
         viewModel: PLATFORM.moduleName('examples/slickgrid/example19-detail-view'),
+
+        // Optionally pass your Parent Component reference to your Child Component (row detail component)
+        parent: this
       }
     };
   }
@@ -144,6 +149,11 @@ export class Example19 {
 
   closeAllRowDetail() {
     this.rowDetailInstance.collapseAll();
+  }
+
+  showFlashMessage(message: string, alertType = 'info') {
+    this.message = message;
+    this.flashAlertType = alertType;
   }
 
   /** Just for demo purposes, we will simulate an async server call and return more details on the selected row item */

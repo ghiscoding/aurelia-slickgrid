@@ -128,3 +128,5 @@ export * from './sortDirectionNumber.enum';
 export * from './sortDirectionString';
 export * from './sorter.interface';
 export * from './statistic.interface';
+export * from './viewModelBindableInputData.interface';
+export * from './viewModelBindableData.interface';
