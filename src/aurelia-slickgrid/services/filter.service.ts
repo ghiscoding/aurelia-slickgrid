@@ -226,8 +226,8 @@ export class FilterService {
       const queryResponse = backendApi.service.processOnFilterChanged(undefined, callbackArgs as FilterChangedArgs);
       if (queryResponse instanceof Promise && queryResponse.then) {
         // @deprecated, processOnFilterChanged in the future should be returned as a query string NOT as a Promise
-        console.warn(`[Aurelia-Slickgrid] please note that the "processOnFilterChanged" method signature, from Backend Service,
-          should return a string instead of a Promise, returning a Promise will be deprecated in the future.`);
+        console.warn(`[Aurelia-Slickgrid] please note that the "processOnFilterChanged" from your Backend Service, should now return a string instead of a Promise.
+          Returning a Promise will be deprecated in the future.`);
         queryResponse.then((query: string) => {
           const totalItems = this._gridOptions && this._gridOptions.pagination && this._gridOptions.pagination.totalItems || 0;
           executeBackendCallback(backendApi, query, callbackArgs, new Date(), totalItems, this.emitFilterChanged.bind(this));
@@ -429,14 +429,16 @@ export class FilterService {
     let debounceTypingDelay = 0;
     const isTriggeredByClearFilter = args && args.clearFilterTriggered; // was it trigger by a "Clear Filter" command?
 
-    if (!isTriggeredByClearFilter && event && event.keyCode !== KeyCode.ENTER && (event.type === 'input' || event.type === 'keyup' || event.type === 'keydown')) {
+    const eventType = event && event.type;
+    const eventKeyCode = event && event.keyCode;
+    if (!isTriggeredByClearFilter && eventKeyCode !== KeyCode.ENTER && (eventType === 'input' || eventType === 'keyup' || eventType === 'keydown')) {
       debounceTypingDelay = backendApi.hasOwnProperty('filterTypingDebounce') ? backendApi.filterTypingDebounce as number : DEFAULT_FILTER_TYPING_DEBOUNCE;
     }
 
     // query backend, except when it's called by a ClearFilters then we won't
     if (args && args.shouldTriggerQuery) {
       // call the service to get a query back
-      // TODO: remove async/await on next major change, refer to processOnFilterChanged in BackendService interface (with @deprecated)
+      // @deprecated TODO: remove async/await on next major change, refer to processOnFilterChanged in BackendService interface (with @deprecated)
       if (debounceTypingDelay > 0) {
         clearTimeout(timer);
         timer = setTimeout(async () => {
