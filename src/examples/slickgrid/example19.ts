@@ -12,7 +12,7 @@ import {
 
 @autoinject()
 export class Example19 {
-  @bindable detailViewRowCount = 10;
+  @bindable detailViewRowCount = 9;
   title = 'Example 19: Row Detail View';
   subTitle = `
     Add functionality to show extra information with a Row Detail View, (<a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Row-Detail" target="_blank">Wiki docs</a>)
