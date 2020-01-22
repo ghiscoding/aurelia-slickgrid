@@ -10,14 +10,14 @@
     </div>
 
     <!-- Custom Footer section under the grid -->
-    <div if.bind="showCustomFooter && customFooterOptions" class="slick-custom-footer" style="width: 100%;"
+    <div if.bind="showCustomFooter && customFooterOptions" class="slick-custom-footer row" style="width: 100%;"
          css="height: ${customFooterOptions.footerHeight || 20}px">
-      <span class="left-footer ${customFooterOptions.leftContainerClass}">
+      <div class="left-footer ${customFooterOptions.leftContainerClass}">
         ${customFooterOptions.leftFooterText}
-      </span>
+      </div>
 
-      <span class="right-footer metrics ${customFooterOptions.rightContainerClass}"
-            if.bind="metrics && !customFooterOptions.hideMetrics">
+      <div class="right-footer metrics ${customFooterOptions.rightContainerClass}"
+           if.bind="metrics && !customFooterOptions.hideMetrics">
         <span if.bind="!customFooterOptions.hideLastUpdateTimestamp">
           <span>${customFooterOptions.metricTexts.lastUpdate}</span>
 
@@ -30,7 +30,7 @@
           ${metrics.totalItemCount}
         </span>
         ${customFooterOptions.metricTexts.items}
-      </span>
+      </div>
     </div>
   </div>
 </template>
