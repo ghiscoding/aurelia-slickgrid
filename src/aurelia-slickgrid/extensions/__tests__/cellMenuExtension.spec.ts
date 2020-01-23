@@ -43,7 +43,7 @@ Slick.Plugins = {
 };
 
 describe('CellMenuExtension', () => {
-  const columnsMock: Column[] = [{ id: 'field1', field: 'field1', width: 100, headerKey: 'TITLE' }, { id: 'field2', field: 'field2', width: 75 }];
+  const columnsMock: Column[] = [{ id: 'field1', field: 'field1', width: 100, nameKey: 'TITLE' }, { id: 'field2', field: 'field2', width: 75 }];
   let extensionUtility: ExtensionUtility;
   let ea: EventAggregator;
   let i18n: I18N;

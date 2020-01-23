@@ -31,7 +31,7 @@ export class Example12 {
       <li>You first need to "enableTranslate" in the Grid Options</li>
       <li>In the Column Definitions, you have following options</li>
       <ul>
-        <li>To translate a header title, use "headerKey" with a translate key (headerKey: 'TITLE')</li>
+        <li>To translate a header title, use "nameKey" with a translate key (nameKey: 'TITLE')</li>
         <li>For the cell values, you need to use a Formatter, there's 2 ways of doing it</li>
         <ul>
           <li>formatter: myCustomTranslateFormatter <b>&lt;= "Title" column uses it</b></li>
@@ -82,7 +82,7 @@ export class Example12 {
   defineGrid() {
     this.columnDefinitions = [
       {
-        id: 'title', name: 'Title', field: 'id', headerKey: 'TITLE', minWidth: 100,
+        id: 'title', name: 'Title', field: 'id', nameKey: 'TITLE', minWidth: 100,
         formatter: taskTranslateFormatter,
         sortable: true,
         filterable: true,
@@ -90,17 +90,17 @@ export class Example12 {
       },
       { id: 'description', name: 'Description', field: 'description', filterable: true, sortable: true, minWidth: 80 },
       {
-        id: 'duration', name: 'Duration (days)', field: 'duration', headerKey: 'DURATION', sortable: true,
+        id: 'duration', name: 'Duration (days)', field: 'duration', nameKey: 'DURATION', sortable: true,
         formatter: Formatters.percentCompleteBar, minWidth: 100,
         exportWithFormatter: false,
         filterable: true,
         type: FieldType.number,
         filter: { model: Filters.slider, /* operator: '>=',*/ params: { hideSliderNumber: true } }
       },
-      { id: 'start', name: 'Start', field: 'start', headerKey: 'START', formatter: Formatters.dateIso, outputType: FieldType.dateIso, type: FieldType.date, minWidth: 100, filterable: true, filter: { model: Filters.compoundDate } },
-      { id: 'finish', name: 'Finish', field: 'finish', headerKey: 'FINISH', formatter: Formatters.dateIso, outputType: FieldType.dateIso, type: FieldType.date, minWidth: 100, filterable: true, filter: { model: Filters.compoundDate } },
+      { id: 'start', name: 'Start', field: 'start', nameKey: 'START', formatter: Formatters.dateIso, outputType: FieldType.dateIso, type: FieldType.date, minWidth: 100, filterable: true, filter: { model: Filters.compoundDate } },
+      { id: 'finish', name: 'Finish', field: 'finish', nameKey: 'FINISH', formatter: Formatters.dateIso, outputType: FieldType.dateIso, type: FieldType.date, minWidth: 100, filterable: true, filter: { model: Filters.compoundDate } },
       {
-        id: 'completedBool', name: 'Completed', field: 'completedBool', headerKey: 'COMPLETED', minWidth: 100,
+        id: 'completedBool', name: 'Completed', field: 'completedBool', nameKey: 'COMPLETED', minWidth: 100,
         sortable: true,
         formatter: Formatters.checkmark,
         exportCustomFormatter: Formatters.translateBoolean,
@@ -112,7 +112,7 @@ export class Example12 {
         }
       },
       {
-        id: 'completed', name: 'Completed', field: 'completed', headerKey: 'COMPLETED', formatter: Formatters.translate, sortable: true,
+        id: 'completed', name: 'Completed', field: 'completed', nameKey: 'COMPLETED', formatter: Formatters.translate, sortable: true,
         minWidth: 100,
         exportWithFormatter: true, // you can set this property in the column definition OR in the grid options, column def has priority over grid options
         filterable: true,
@@ -127,7 +127,7 @@ export class Example12 {
         }
       }
       // OR via your own custom translate formatter
-      // { id: 'completed', name: 'Completed', field: 'completed', headerKey: 'COMPLETED', formatter: translateFormatter, sortable: true, minWidth: 100 }
+      // { id: 'completed', name: 'Completed', field: 'completed', nameKey: 'COMPLETED', formatter: translateFormatter, sortable: true, minWidth: 100 }
     ];
 
     this.gridOptions = {
@@ -191,7 +191,7 @@ export class Example12 {
   }
 
   dynamicallyAddTitleHeader() {
-    const newCol = { id: `title${this.duplicateTitleHeaderCount++}`, field: 'id', headerKey: 'TITLE', formatter: taskTranslateFormatter, sortable: true, minWidth: 100, filterable: true, params: { useFormatterOuputToFilter: true } };
+    const newCol = { id: `title${this.duplicateTitleHeaderCount++}`, field: 'id', nameKey: 'TITLE', formatter: taskTranslateFormatter, sortable: true, minWidth: 100, filterable: true, params: { useFormatterOuputToFilter: true } };
     this.columnDefinitions.push(newCol);
   }
 
@@ -210,8 +210,9 @@ export class Example12 {
     });
   }
 
-  switchLanguage() {
-    this.selectedLanguage = (this.selectedLanguage === 'en') ? 'fr' : 'en';
-    this.i18n.setLocale(this.selectedLanguage);
+  async switchLanguage() {
+    const nextLanguage = (this.selectedLanguage === 'en') ? 'fr' : 'en';
+    await this.i18n.setLocale(nextLanguage);
+    this.selectedLanguage = nextLanguage;
   }
 }

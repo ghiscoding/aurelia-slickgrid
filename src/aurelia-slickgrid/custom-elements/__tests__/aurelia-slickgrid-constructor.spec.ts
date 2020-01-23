@@ -81,11 +81,9 @@ const extensionServiceStub = {
 } as unknown as ExtensionService;
 
 const mockExtensionUtility = {
-  loadExtensionDynamically: jest.fn()
+  loadExtensionDynamically: jest.fn(),
+  translateItems: jest.fn(),
 } as unknown as ExtensionUtility;
-export class ExtensionUtilityStub {
-  loadExtensionDynamically() { }
-}
 
 const groupingAndColspanServiceStub = {
   init: jest.fn(),

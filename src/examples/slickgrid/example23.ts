@@ -92,7 +92,7 @@ export class Example23 {
   defineGrid() {
     this.columnDefinitions = [
       {
-        id: 'title', name: 'Title', field: 'id', headerKey: 'TITLE', minWidth: 100,
+        id: 'title', name: 'Title', field: 'id', nameKey: 'TITLE', minWidth: 100,
         formatter: taskTranslateFormatter,
         sortable: true,
         filterable: true,
@@ -107,7 +107,7 @@ export class Example23 {
         }
       },
       {
-        id: 'percentComplete', name: '% Complete', field: 'percentComplete', headerKey: 'PERCENT_COMPLETE', minWidth: 120,
+        id: 'percentComplete', name: '% Complete', field: 'percentComplete', nameKey: 'PERCENT_COMPLETE', minWidth: 120,
         sortable: true,
         formatter: Formatters.progressBar,
         type: FieldType.number,
@@ -121,11 +121,11 @@ export class Example23 {
         }
       },
       {
-        id: 'start', name: 'Start', field: 'start', headerKey: 'START', formatter: Formatters.dateIso, sortable: true, minWidth: 75, width: 100, exportWithFormatter: true,
+        id: 'start', name: 'Start', field: 'start', nameKey: 'START', formatter: Formatters.dateIso, sortable: true, minWidth: 75, width: 100, exportWithFormatter: true,
         type: FieldType.date, filterable: true, filter: { model: Filters.compoundDate }
       },
       {
-        id: 'finish', name: 'Finish', field: 'finish', headerKey: 'FINISH', formatter: Formatters.dateIso, sortable: true, minWidth: 75, width: 120, exportWithFormatter: true,
+        id: 'finish', name: 'Finish', field: 'finish', nameKey: 'FINISH', formatter: Formatters.dateIso, sortable: true, minWidth: 75, width: 120, exportWithFormatter: true,
         type: FieldType.date,
         filterable: true,
         filter: {
@@ -133,7 +133,7 @@ export class Example23 {
         }
       },
       {
-        id: 'duration', field: 'duration', headerKey: 'DURATION', maxWidth: 90,
+        id: 'duration', field: 'duration', nameKey: 'DURATION', maxWidth: 90,
         type: FieldType.number,
         sortable: true,
         filterable: true, filter: {
@@ -142,7 +142,7 @@ export class Example23 {
         }
       },
       {
-        id: 'completed', name: 'Completed', field: 'completed', headerKey: 'COMPLETED', minWidth: 85, maxWidth: 90,
+        id: 'completed', name: 'Completed', field: 'completed', nameKey: 'COMPLETED', minWidth: 85, maxWidth: 90,
         formatter: Formatters.checkmark,
         exportWithFormatter: true, // you can set this property in the column definition OR in the grid options, column def has priority over grid options
         filterable: true,
@@ -262,9 +262,10 @@ export class Example23 {
     ]);
   }
 
-  switchLanguage() {
-    const nextLocale = (this.selectedLanguage === 'en') ? 'fr' : 'en';
-    this.i18n.setLocale(nextLocale).then(() => this.selectedLanguage = nextLocale);
+  async switchLanguage() {
+    const nextLanguage = (this.selectedLanguage === 'en') ? 'fr' : 'en';
+    await this.i18n.setLocale(nextLanguage);
+    this.selectedLanguage = nextLanguage;
   }
 
   predefinedFilterChanged(newPredefinedFilter) {

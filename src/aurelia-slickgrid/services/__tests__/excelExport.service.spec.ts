@@ -597,8 +597,8 @@ describe('ExcelExportService', () => {
         mockColumns = [
           { id: 'id', field: 'id', excludeFromExport: true },
           { id: 'userId', field: 'userId', name: 'User Id', width: 100 },
-          { id: 'firstName', headerKey: 'FIRST_NAME', width: 100, formatter: myBoldHtmlFormatter },
-          { id: 'lastName', field: 'lastName', headerKey: 'LAST_NAME', width: 100, formatter: myBoldHtmlFormatter, exportCustomFormatter: myUppercaseFormatter, sanitizeDataExport: true, exportWithFormatter: true },
+          { id: 'firstName', nameKey: 'FIRST_NAME', width: 100, formatter: myBoldHtmlFormatter },
+          { id: 'lastName', field: 'lastName', nameKey: 'LAST_NAME', width: 100, formatter: myBoldHtmlFormatter, exportCustomFormatter: myUppercaseFormatter, sanitizeDataExport: true, exportWithFormatter: true },
           { id: 'position', field: 'position', name: 'Position', width: 100, formatter: Formatters.translate, exportWithFormatter: true },
           { id: 'order', field: 'order', width: 100, exportWithFormatter: true, formatter: Formatters.multiple, params: { formatters: [myBoldHtmlFormatter, myCustomObjectFormatter] } },
         ] as Column[];
@@ -606,7 +606,7 @@ describe('ExcelExportService', () => {
         jest.spyOn(gridStub, 'getColumns').mockReturnValue(mockColumns);
       });
 
-      it(`should have the LastName header title translated when defined as a "headerKey" and "i18n" is set in grid option`, async () => {
+      it(`should have the LastName header title translated when defined as a "nameKey" and "i18n" is set in grid option`, async () => {
         mockCollection = [{ id: 0, userId: '1E06', firstName: 'John', lastName: 'Z', position: 'SALES_REP', order: 10 }];
         jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
         jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
@@ -745,8 +745,8 @@ describe('ExcelExportService', () => {
         mockColumns = [
           { id: 'id', field: 'id', excludeFromExport: true },
           { id: 'userId', field: 'userId', name: 'User Id', width: 100 },
-          { id: 'firstName', field: 'firstName', headerKey: 'FIRST_NAME', width: 100, formatter: myBoldHtmlFormatter },
-          { id: 'lastName', field: 'lastName', headerKey: 'LAST_NAME', width: 100, formatter: myBoldHtmlFormatter, exportCustomFormatter: myUppercaseFormatter, sanitizeDataExport: true, exportWithFormatter: true },
+          { id: 'firstName', field: 'firstName', nameKey: 'FIRST_NAME', width: 100, formatter: myBoldHtmlFormatter },
+          { id: 'lastName', field: 'lastName', nameKey: 'LAST_NAME', width: 100, formatter: myBoldHtmlFormatter, exportCustomFormatter: myUppercaseFormatter, sanitizeDataExport: true, exportWithFormatter: true },
           { id: 'position', field: 'position', name: 'Position', width: 100, formatter: Formatters.translate, exportWithFormatter: true },
           {
             id: 'order', field: 'order', type: FieldType.number,
@@ -843,8 +843,8 @@ describe('ExcelExportService', () => {
         mockColumns = [
           { id: 'id', field: 'id', excludeFromExport: true },
           { id: 'userId', field: 'userId', name: 'User Id', width: 100 },
-          { id: 'firstName', field: 'firstName', headerKey: 'FIRST_NAME', width: 100, formatter: myBoldHtmlFormatter },
-          { id: 'lastName', field: 'lastName', headerKey: 'LAST_NAME', width: 100, formatter: myBoldHtmlFormatter, exportCustomFormatter: myUppercaseFormatter, sanitizeDataExport: true, exportWithFormatter: true },
+          { id: 'firstName', field: 'firstName', nameKey: 'FIRST_NAME', width: 100, formatter: myBoldHtmlFormatter },
+          { id: 'lastName', field: 'lastName', nameKey: 'LAST_NAME', width: 100, formatter: myBoldHtmlFormatter, exportCustomFormatter: myUppercaseFormatter, sanitizeDataExport: true, exportWithFormatter: true },
           { id: 'position', field: 'position', name: 'Position', width: 100, formatter: Formatters.translate },
           {
             id: 'order', field: 'order', type: FieldType.number,

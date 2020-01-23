@@ -60,12 +60,12 @@ export class Example8 {
 
   defineGrid() {
     this.columnDefinitions = [
-      { id: 'title', name: 'Title', field: 'title', headerKey: 'TITLE' },
-      { id: 'duration', name: 'Duration', field: 'duration', headerKey: 'DURATION', sortable: true },
-      { id: 'percentComplete', name: '% Complete', field: 'percentComplete', headerKey: 'PERCENT_COMPLETE', sortable: true },
-      { id: 'start', name: 'Start', field: 'start', headerKey: 'START' },
-      { id: 'finish', name: 'Finish', field: 'finish', headerKey: 'FINISH' },
-      { id: 'completed', name: 'Completed', field: 'completed', headerKey: 'COMPLETED', formatter: Formatters.checkmark }
+      { id: 'title', name: 'Title', field: 'title', nameKey: 'TITLE' },
+      { id: 'duration', name: 'Duration', field: 'duration', nameKey: 'DURATION', sortable: true },
+      { id: 'percentComplete', name: '% Complete', field: 'percentComplete', nameKey: 'PERCENT_COMPLETE', sortable: true },
+      { id: 'start', name: 'Start', field: 'start', nameKey: 'START' },
+      { id: 'finish', name: 'Finish', field: 'finish', nameKey: 'FINISH' },
+      { id: 'completed', name: 'Completed', field: 'completed', nameKey: 'COMPLETED', formatter: Formatters.checkmark }
     ];
 
     this.columnDefinitions.forEach((columnDef) => {
@@ -154,8 +154,9 @@ export class Example8 {
     this.dataset = mockDataset;
   }
 
-  switchLanguage() {
-    this.selectedLanguage = (this.selectedLanguage === 'en') ? 'fr' : 'en';
-    this.i18n.setLocale(this.selectedLanguage);
+  async switchLanguage() {
+    const nextLanguage = (this.selectedLanguage === 'en') ? 'fr' : 'en';
+    await this.i18n.setLocale(nextLanguage);
+    this.selectedLanguage = nextLanguage;
   }
 }
