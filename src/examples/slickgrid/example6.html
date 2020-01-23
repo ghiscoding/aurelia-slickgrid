@@ -25,20 +25,22 @@
         </button>
       </div>
       <div class="row col-md-12">
-        <button class="btn btn-default btn-sm" click.delegate="switchLanguage()">
+        <button class="btn btn-default btn-sm" click.delegate="switchLanguage()" data-test="language-button">
           <i class="fa fa-language"></i>
           Switch Language
         </button>
         <b>Locale:</b>
-        <span style="font-style: italic">${selectedLanguage + '.json'}</span>
+        <span style="font-style: italic" data-test="selected-locale">
+          ${selectedLanguage + '.json'}
+        </span>
       </div>
       <br />
-      <span if.bind="metrics">
+      <div if.bind="metrics" style="margin: 10px 0px">
         <b>Metrics:</b> ${metrics.endTime | dateFormat: 'DD MMM, h:mm:ss a'} | ${metrics.executionTime}ms |
         ${metrics.totalItemCount}
         items
-      </span>
-      <div class="row col-md-12">
+      </div>
+      <div class="row col-md-12" style="margin-bottom: 5px">
         <label>Programmatically go to first/last page:</label>
         <button class="btn btn-default btn-xs" data-test="goto-first-page" click.delegate="goToFirstPage()">
           <i class="fa fa-caret-left fa-lg"></i>
@@ -54,6 +56,8 @@
       </div>
     </div>
   </div>
+
+  <hr />
 
   <aurelia-slickgrid grid-id="grid6" column-definitions.bind="columnDefinitions" grid-options.bind="gridOptions"
                      dataset.bind="dataset" grid-height="200" grid-width="900"

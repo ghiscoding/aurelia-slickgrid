@@ -1,23 +1,25 @@
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { inject, singleton } from 'aurelia-framework';
+import * as $ from 'jquery';
+
 import {
   Column,
   GridOption,
   SlickEventHandler,
 } from './../models/index';
-import * as $ from 'jquery';
+import { ExtensionUtility } from '../extensions/extensionUtility';
 
 // using external non-typed js libraries
 declare var Slick: any;
 
 @singleton(true)
-@inject(EventAggregator)
+@inject(ExtensionUtility, EventAggregator)
 export class GroupingAndColspanService {
   private _eventHandler: SlickEventHandler;
   private _grid: any;
   private _aureliaEventPrefix: string;
 
-  constructor(private ea: EventAggregator) {
+  constructor(private extensionUtility: ExtensionUtility, private ea: EventAggregator) {
     this._eventHandler = new Slick.EventHandler();
   }
 
@@ -51,8 +53,19 @@ export class GroupingAndColspanService {
       if (this._gridOptions.createPreHeaderPanel) {
         this._eventHandler.subscribe(grid.onSort, () => this.renderPreHeaderRowGroupingTitles());
         this._eventHandler.subscribe(grid.onColumnsResized, () => this.renderPreHeaderRowGroupingTitles());
+        this._eventHandler.subscribe(grid.onColumnsReordered, () => this.renderPreHeaderRowGroupingTitles());
         this._eventHandler.subscribe(dataView.onRowCountChanged, () => this.renderPreHeaderRowGroupingTitles());
         this.ea.subscribe(`${this._aureliaEventPrefix}:onAfterResize`, () => this.renderPreHeaderRowGroupingTitles());
+
+        // if we use Translation, we need to re-translate the keys after a language change
+        if (this._gridOptions.enableTranslate) {
+          this.ea.subscribe('i18n:locale:changed', () => {
+            const currentColumnDefinitions = this._grid.getColumns();
+            this.extensionUtility.translateItems(currentColumnDefinitions, 'columnGroupKey', 'columnGroup');
+            this._grid.setColumns(currentColumnDefinitions);
+            this.renderPreHeaderRowGroupingTitles();
+          });
+        }
 
         // also not sure why at this point, but it seems that I need to call the 1st create in a delayed execution
         // probably some kind of timing issues and delaying it until the grid is fully ready does help
