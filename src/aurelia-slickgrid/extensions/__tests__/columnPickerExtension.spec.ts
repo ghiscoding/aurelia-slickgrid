@@ -27,7 +27,7 @@ Slick.Controls = {
 };
 
 describe('columnPickerExtension', () => {
-  const columnsMock: Column[] = [{ id: 'field1', field: 'field1', width: 100, headerKey: 'TITLE' }, { id: 'field2', field: 'field2', width: 75 }];
+  const columnsMock: Column[] = [{ id: 'field1', field: 'field1', width: 100, nameKey: 'TITLE' }, { id: 'field2', field: 'field2', width: 75 }];
   let extensionUtility: ExtensionUtility;
   let i18n: I18N;
   let extension: ColumnPickerExtension;
@@ -155,7 +155,7 @@ describe('columnPickerExtension', () => {
       expect(SharedService.prototype.gridOptions.columnPicker.forceFitTitle).toBe('Ajustement forcé des colonnes');
       expect(SharedService.prototype.gridOptions.columnPicker.syncResizeTitle).toBe('Redimension synchrone');
       expect(columnsMock).toEqual([
-        { id: 'field1', field: 'field1', width: 100, name: 'Titre', headerKey: 'TITLE' },
+        { id: 'field1', field: 'field1', width: 100, name: 'Titre', nameKey: 'TITLE' },
         { id: 'field2', field: 'field2', width: 75 }
       ]);
     });

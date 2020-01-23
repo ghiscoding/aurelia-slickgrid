@@ -464,6 +464,7 @@ export class AureliaSlickgridCustomElement {
           this.extensionService.translateGridMenu();
           this.extensionService.translateHeaderMenu();
           this.translateCustomFooterTexts();
+          this.translateColumnHeaderTitleKeys();
         }
       })
     );
@@ -943,6 +944,13 @@ export class AureliaSlickgridCustomElement {
         }
       }
     }
+  }
+
+  /** translate all columns (including hidden columns) */
+  private translateColumnHeaderTitleKeys() {
+    // eventually deprecate the "headerKey" and use only the "nameKey"
+    this.extensionUtility.translateItems(this.sharedService.allColumns, 'headerKey', 'name');
+    this.extensionUtility.translateItems(this.sharedService.allColumns, 'nameKey', 'name');
   }
 
   /**

@@ -84,7 +84,9 @@ export class ColumnPickerExtension implements Extension {
         this.sharedService.gridOptions.columnPicker.syncResizeTitle = this.extensionUtility.getPickerTitleOutputString('syncResizeTitle', 'columnPicker');
       }
       // translate all columns (including hidden columns)
+      // eventually deprecate the "headerKey" and use only the "nameKey"
       this.extensionUtility.translateItems(this.sharedService.allColumns, 'headerKey', 'name');
+      this.extensionUtility.translateItems(this.sharedService.allColumns, 'nameKey', 'name');
 
       // update the Titles of each sections (command, customTitle, ...)
       if (this._addon && this._addon.updateAllTitles) {

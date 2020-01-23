@@ -307,8 +307,8 @@ export class ExcelExportService {
     // Populate the Column Header, pull the name defined
     columns.forEach((columnDef) => {
       let headerTitle = '';
-      if (columnDef.headerKey && this._gridOptions.enableTranslate && this.i18n && this.i18n.tr) {
-        headerTitle = this.i18n.tr(columnDef.headerKey);
+      if ((columnDef.headerKey || columnDef.nameKey) && this._gridOptions.enableTranslate && this.i18n && this.i18n.tr) {
+        headerTitle = this.i18n.tr((columnDef.headerKey || columnDef.nameKey));
       } else {
         headerTitle = columnDef.name || titleCase(columnDef.field);
       }

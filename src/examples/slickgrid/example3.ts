@@ -593,9 +593,10 @@ export class Example3 {
     return true;
   }
 
-  switchLanguage() {
-    this.selectedLanguage = (this.selectedLanguage === 'en') ? 'fr' : 'en';
-    this.i18n.setLocale(this.selectedLanguage);
+  async switchLanguage() {
+    const nextLanguage = (this.selectedLanguage === 'en') ? 'fr' : 'en';
+    await this.i18n.setLocale(nextLanguage);
+    this.selectedLanguage = nextLanguage;
   }
 
   undo() {
