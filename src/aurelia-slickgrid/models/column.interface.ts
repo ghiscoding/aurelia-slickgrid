@@ -27,6 +27,9 @@ export interface Column {
   /** Column group name for grouping of column headers spanning accross multiple columns */
   columnGroup?: string;
 
+  /** Column group name translation key that can be used by the Translate Service (i18n) for grouping of column headers spanning accross multiple columns */
+  columnGroupKey?: string;
+
   /** Column span in pixels or `*`, only input the number value */
   colspan?: number | '*';
 

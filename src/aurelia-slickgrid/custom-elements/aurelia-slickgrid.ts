@@ -453,6 +453,13 @@ export class AureliaSlickgridCustomElement {
   }
 
   bindDifferentHooks(grid: any, gridOptions: GridOption, dataView: any) {
+    // translate some of them on first load, then on each language change
+    if (gridOptions.enableTranslate) {
+      this.translateColumnHeaderTitleKeys();
+      this.translateColumnGroupKeys();
+      this.translateCustomFooterTexts();
+    }
+
     // on locale change, we have to manually translate the Headers, GridMenu
     this.subscriptions.push(
       this.ea.subscribe('i18n:locale:changed', () => {
@@ -465,6 +472,7 @@ export class AureliaSlickgridCustomElement {
           this.extensionService.translateHeaderMenu();
           this.translateCustomFooterTexts();
           this.translateColumnHeaderTitleKeys();
+          this.translateColumnGroupKeys();
         }
       })
     );
@@ -951,6 +959,11 @@ export class AureliaSlickgridCustomElement {
     // eventually deprecate the "headerKey" and use only the "nameKey"
     this.extensionUtility.translateItems(this.sharedService.allColumns, 'headerKey', 'name');
     this.extensionUtility.translateItems(this.sharedService.allColumns, 'nameKey', 'name');
+  }
+
+  /** translate all column groups (including hidden columns) */
+  private translateColumnGroupKeys() {
+    this.extensionUtility.translateItems(this.sharedService.allColumns, 'columnGroupKey', 'columnGroup');
   }
 
   /**

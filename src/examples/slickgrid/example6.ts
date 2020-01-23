@@ -77,7 +77,7 @@ export class Example6 {
   defineGrid() {
     this.columnDefinitions = [
       {
-        id: 'name', field: 'name', nameKey: 'NAME', width: 60,
+        id: 'name', field: 'name', nameKey: 'NAME', width: 60, columnGroupKey: 'CUSTOMER_INFORMATION',
         type: FieldType.string,
         sortable: true,
         filterable: true,
@@ -86,14 +86,14 @@ export class Example6 {
         }
       },
       {
-        id: 'gender', field: 'gender', nameKey: 'GENDER', filterable: true, sortable: true, width: 60,
+        id: 'gender', field: 'gender', nameKey: 'GENDER', filterable: true, sortable: true, width: 60, columnGroupKey: 'CUSTOMER_INFORMATION',
         filter: {
           model: Filters.singleSelect,
           collection: [{ value: '', label: '' }, { value: 'male', label: 'male', labelKey: 'MALE' }, { value: 'female', label: 'female', labelKey: 'FEMALE' }]
         }
       },
       {
-        id: 'company', field: 'company', nameKey: 'COMPANY', width: 60,
+        id: 'company', field: 'company', nameKey: 'COMPANY', width: 60, columnGroupKey: 'CUSTOMER_INFORMATION',
         sortable: true,
         filterable: true,
         filter: {
@@ -104,10 +104,14 @@ export class Example6 {
           } as MultipleSelectOption
         }
       },
-      { id: 'billingAddressStreet', field: 'billing.address.street', nameKey: 'BILLING.ADDRESS.STREET', width: 60, filterable: true, sortable: true },
+      {
+        id: 'billingAddressStreet', field: 'billing.address.street', nameKey: 'BILLING.ADDRESS.STREET',
+        width: 60, filterable: true, sortable: true, columnGroupKey: 'BILLING.INFORMATION',
+      },
       {
         id: 'billingAddressZip', field: 'billing.address.zip', nameKey: 'BILLING.ADDRESS.ZIP', width: 60,
         type: FieldType.number,
+        columnGroupKey: 'BILLING.INFORMATION',
         filterable: true, sortable: true,
         filter: {
           model: Filters.compoundInput
@@ -116,6 +120,7 @@ export class Example6 {
       },
       {
         id: 'finish', field: 'finish', name: 'Date', formatter: Formatters.dateIso, sortable: true, minWidth: 90, width: 120, exportWithFormatter: true,
+        columnGroupKey: 'BILLING.INFORMATION',
         type: FieldType.date,
         filterable: true,
         filter: {
@@ -131,6 +136,9 @@ export class Example6 {
       enableFiltering: true,
       enableCellNavigation: true,
       enableTranslate: true,
+      createPreHeaderPanel: true,
+      showPreHeaderPanel: true,
+      preHeaderPanelHeight: 28,
       i18n: this.i18n,
       gridMenu: {
         resizeOnShowHeaderRow: true,

@@ -1,6 +1,9 @@
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { GroupingAndColspanService } from '../groupingAndColspan.service';
 import { GridOption, SlickEventHandler, Column } from '../../models';
+import { ExtensionUtility } from '../../extensions/extensionUtility';
+import { I18N } from 'aurelia-i18n';
+import { BindingSignaler } from 'aurelia-templating-resources';
 
 declare var Slick: any;
 const gridId = 'grid1';
@@ -33,11 +36,18 @@ const gridStub = {
   getPreHeaderPanelRight: jest.fn(),
   getSortColumns: jest.fn(),
   invalidate: jest.fn(),
+  onColumnsReordered: new Slick.Event(),
   onColumnsResized: new Slick.Event(),
   onSort: new Slick.Event(),
   render: jest.fn(),
+  setColumns: jest.fn(),
   setSortColumns: jest.fn(),
 };
+
+const mockExtensionUtility = {
+  loadExtensionDynamically: jest.fn(),
+  translateItems: jest.fn(),
+} as unknown as ExtensionUtility;
 
 jest.useFakeTimers();
 
@@ -58,14 +68,43 @@ describe('GroupingAndColspanService', () => {
   let service: GroupingAndColspanService;
   let slickgridEventHandler: SlickEventHandler;
   let ea: EventAggregator;
+  let i18n: I18N;
 
   beforeEach(() => {
     const div = document.createElement('div');
     div.innerHTML = template;
     document.body.appendChild(div);
     ea = new EventAggregator();
+    i18n = new I18N(ea, new BindingSignaler());
 
-    service = new GroupingAndColspanService(ea);
+    i18n.setup({
+      resources: {
+        en: {
+          translation: {
+            ALL_SELECTED: 'All Selected',
+            FEMALE: 'Female',
+            MALE: 'Male',
+            OK: 'OK',
+            OTHER: 'Other',
+          }
+        },
+        fr: {
+          translation:
+          {
+            ALL_SELECTED: 'Tout sélectionnés',
+            FEMALE: 'Femme',
+            MALE: 'Mâle',
+            OK: 'Terminé',
+            OTHER: 'Autre',
+          }
+        }
+      },
+      lng: 'en',
+      fallbackLng: 'en',
+      debug: false
+    });
+
+    service = new GroupingAndColspanService(mockExtensionUtility, ea);
     slickgridEventHandler = service.eventHandler;
   });
 
@@ -143,6 +182,18 @@ describe('GroupingAndColspanService', () => {
       expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 75);
     });
 
+    it('should call the "renderPreHeaderRowGroupingTitles" after triggering a grid "onColumnsReordered"', () => {
+      const spy = jest.spyOn(service, 'renderPreHeaderRowGroupingTitles');
+
+      service.init(gridStub, dataViewStub);
+      gridStub.onColumnsReordered.notify({}, new Slick.EventData(), gridStub);
+      jest.runAllTimers(); // fast-forward timer
+
+      expect(spy).toHaveBeenCalledTimes(2);
+      expect(setTimeout).toHaveBeenCalledTimes(1);
+      expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 75);
+    });
+
     it('should call the "renderPreHeaderRowGroupingTitles" after triggering a dataView "onColumnsResized"', () => {
       const spy = jest.spyOn(service, 'renderPreHeaderRowGroupingTitles');
 
@@ -165,6 +216,22 @@ describe('GroupingAndColspanService', () => {
       expect(spy).toHaveBeenCalledTimes(2);
       expect(setTimeout).toHaveBeenCalledTimes(1);
       expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 75);
+    });
+
+    it('should call the "renderPreHeaderRowGroupingTitles" after triggering a translate language change', () => {
+      gridOptionMock.enableTranslate = true;
+      const renderSpy = jest.spyOn(service, 'renderPreHeaderRowGroupingTitles');
+      const translateSpy = jest.spyOn(mockExtensionUtility, 'translateItems');
+      const getColSpy = jest.spyOn(gridStub, 'getColumns');
+      const setColSpy = jest.spyOn(gridStub, 'setColumns');
+
+      service.init(gridStub, dataViewStub);
+      ea.publish('i18n:locale:changed', 'en');
+
+      expect(getColSpy).toHaveBeenCalled();
+      expect(setColSpy).toHaveBeenCalled();
+      expect(translateSpy).toHaveBeenCalled();
+      expect(renderSpy).toHaveBeenCalled();
     });
 
     it('should render the pre-header row grouping title DOM element', () => {
