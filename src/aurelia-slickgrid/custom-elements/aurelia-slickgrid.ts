@@ -170,7 +170,9 @@ export class AureliaSlickgridCustomElement {
         paginationService: this.paginationService,
       };
       this.paginationService.totalItems = this.totalItems;
-      this.localEa.subscribe('paginationService:on-pagination-changed', (paginationChanges: ServicePagination) => this.paginationChanged(paginationChanges));
+      this.subscriptions.push(
+        this.localEa.subscribe('paginationService:on-pagination-changed', (paginationChanges: ServicePagination) => this.paginationChanged(paginationChanges)),
+      );
       this.paginationService.init(this.grid, this.dataview, paginationOptions, this.backendServiceApi);
       this._isPaginationInitialized = true;
     }

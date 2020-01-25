@@ -334,10 +334,12 @@ describe('Example 6 - GraphQL Grid', () => {
       cy.get('[data-test=clear-filters-sorting]')
         .click();
 
+      cy.get('[data-test=status]').should('contain', 'processing');
+      cy.get('[data-test=status]').should('contain', 'done');
+
       cy.get('[data-test=set-dynamic-sorting]')
         .click();
 
-      // wait for the query to finish
       cy.get('[data-test=status]').should('contain', 'processing');
       cy.get('[data-test=status]').should('contain', 'done');
     });
