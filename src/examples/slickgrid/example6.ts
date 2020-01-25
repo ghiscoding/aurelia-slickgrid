@@ -236,7 +236,7 @@ export class Example6 {
       setTimeout(() => {
         this.graphqlQuery = this.aureliaGrid.backendService.buildQuery();
         resolve(mockedResult);
-      }, 100);
+      }, 150);
     });
   }
 

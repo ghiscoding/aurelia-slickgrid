@@ -276,7 +276,7 @@ export class Example5 {
             const backendResult = { items: updatedData, [countPropName]: countTotalItems, query };
             // console.log('Backend Result', backendResult);
             resolve(backendResult);
-          }, 100);
+          }, 150);
         });
     });
   }
