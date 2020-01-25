@@ -562,6 +562,8 @@ describe('Example 5 - OData Grid', () => {
     });
 
     it('should display page 1 of 1 with 2 items after erasing part of the filter to be "x" which should return 1 page', () => {
+      cy.wait(50);
+
       cy.get('[data-test=page-number-input]')
         .invoke('val')
         .then(pageNumber => expect(pageNumber).to.eq('1'));
