@@ -218,7 +218,7 @@ describe('GroupingAndColspanService', () => {
       expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 75);
     });
 
-    it('should call the "renderPreHeaderRowGroupingTitles" after triggering a translate language change', () => {
+    it('should call the "renderPreHeaderRowGroupingTitles" after calling the "translateGroupingAndColSpan" method', () => {
       gridOptionMock.enableTranslate = true;
       const renderSpy = jest.spyOn(service, 'renderPreHeaderRowGroupingTitles');
       const translateSpy = jest.spyOn(mockExtensionUtility, 'translateItems');
@@ -226,7 +226,7 @@ describe('GroupingAndColspanService', () => {
       const setColSpy = jest.spyOn(gridStub, 'setColumns');
 
       service.init(gridStub, dataViewStub);
-      ea.publish('i18n:locale:changed', 'en');
+      service.translateGroupingAndColSpan();
 
       expect(getColSpy).toHaveBeenCalled();
       expect(setColSpy).toHaveBeenCalled();
