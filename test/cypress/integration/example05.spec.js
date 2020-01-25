@@ -519,10 +519,6 @@ describe('Example 5 - OData Grid', () => {
     });
 
     it('should display page 0 of 0 but hide pagination from/to numbers when filtered data "xy" returns an empty dataset', () => {
-      cy.get('[data-test=page-number-input]')
-        .invoke('val')
-        .then(pageNumber => expect(pageNumber).to.eq('0'));
-
       cy.get('[data-test=page-count]')
         .contains('0');
 
@@ -539,6 +535,10 @@ describe('Example 5 - OData Grid', () => {
         .should(($span) => {
           expect($span.text()).to.eq(`$top=10&$filter=(contains(Name, 'xy'))`);
         });
+
+      cy.get('[data-test=page-number-input]')
+        .invoke('val')
+        .then(pageNumber => expect(pageNumber).to.eq('0'));
     });
 
     it('should erase part of the filter so that it filters with "x"', () => {
@@ -564,10 +564,6 @@ describe('Example 5 - OData Grid', () => {
     it('should display page 1 of 1 with 2 items after erasing part of the filter to be "x" which should return 1 page', () => {
       cy.wait(50);
 
-      cy.get('[data-test=page-number-input]')
-        .invoke('val')
-        .then(pageNumber => expect(pageNumber).to.eq('1'));
-
       cy.get('[data-test=page-count]')
         .contains('1');
 
@@ -579,6 +575,10 @@ describe('Example 5 - OData Grid', () => {
 
       cy.get('[data-test=total-items]')
         .contains('2');
+
+      cy.get('[data-test=page-number-input]')
+        .invoke('val')
+        .then(pageNumber => expect(pageNumber).to.eq('1'));
     });
   });
 
