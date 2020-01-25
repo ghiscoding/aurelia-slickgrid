@@ -274,9 +274,9 @@ export class Example5 {
               countPropName = (this.odataVersion === 4) ? '@odata.count' : 'odata.count';
             }
             const backendResult = { items: updatedData, [countPropName]: countTotalItems, query };
-            console.log('Backend Result', backendResult);
+            // console.log('Backend Result', backendResult);
             resolve(backendResult);
-          }, 250);
+          }, 150);
         });
     });
   }
@@ -291,7 +291,8 @@ export class Example5 {
 
   /** Dispatched event of a Grid State Changed event */
   gridStateChanged(gridStateChanges: GridStateChange) {
-    console.log('Client sample, Grid State changed:: ', gridStateChanges);
+    // console.log('Client sample, Grid State changed:: ', gridStateChanges);
+    console.log('Client sample, Grid State changed:: ', gridStateChanges.change);
   }
 
   setFiltersDynamically() {

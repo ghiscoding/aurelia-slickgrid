@@ -71,7 +71,6 @@ describe('PaginationService', () => {
   beforeEach(() => {
     sharedService = new SharedService();
     service = new PaginationService(ea, sharedService);
-    service.onPaginationChangedCallback = jest.fn();
   });
 
   afterEach(() => {
@@ -156,7 +155,7 @@ describe('PaginationService', () => {
       service.changeItemPerPage(30);
 
       expect(service.getCurrentPageNumber()).toBe(0);
-      expect(service.getCurrentItemPerPageCount()).toBe(30);
+      expect(service.getCurrentItemPerPage()).toBe(30);
     });
 
     it('should be on page 1 with 2 pages when total items is 51 and we set 50 per page', () => {
@@ -168,7 +167,7 @@ describe('PaginationService', () => {
       service.changeItemPerPage(50);
 
       expect(service.getCurrentPageNumber()).toBe(1);
-      expect(service.getCurrentItemPerPageCount()).toBe(50);
+      expect(service.getCurrentItemPerPage()).toBe(50);
     });
 
     it('should be on page 1 with 2 pages when total items is 100 and we set 50 per page', () => {
@@ -180,7 +179,7 @@ describe('PaginationService', () => {
       service.changeItemPerPage(50);
 
       expect(service.getCurrentPageNumber()).toBe(1);
-      expect(service.getCurrentItemPerPageCount()).toBe(50);
+      expect(service.getCurrentItemPerPage()).toBe(50);
     });
   });
 
@@ -392,14 +391,13 @@ describe('PaginationService', () => {
     it('should call "setPagingOptions" from the DataView and trigger "onPaginationChanged" when using a Local Grid', () => {
       const eaSpy = jest.spyOn(ea, 'publish');
       const setPagingSpy = jest.spyOn(dataviewStub, 'setPagingOptions');
-      const changedSpy = jest.spyOn(service, 'onPaginationChangedCallback');
 
       mockGridOption.backendServiceApi = null;
       service.init(gridStub, dataviewStub, mockGridOption.pagination, mockGridOption.backendServiceApi);
       service.processOnPageChanged(1);
 
       expect(setPagingSpy).toHaveBeenCalledWith({ pageSize: 25, pageNum: 0 });
-      expect(changedSpy).toHaveBeenCalledWith({
+      expect(eaSpy).toHaveBeenCalledWith(`paginationService:on-pagination-changed`, {
         dataFrom: 26, dataTo: 50, pageSize: 25, pageCount: 4, pageNumber: 2, totalItems: 85, pageSizes: mockGridOption.pagination.pageSizes,
       });
     });
@@ -490,7 +488,9 @@ describe('PaginationService', () => {
       service.init(gridStub, dataviewStub, mockGridOption.pagination, mockGridOption.backendServiceApi);
       ea.publish(`filterService:filterChanged`, { columnId: 'field1', operator: '=', searchTerms: [] });
 
-      expect(eaSpy).toHaveBeenCalledWith(`paginationService:on-pagination-refreshed`, true);
+      expect(eaSpy).toHaveBeenCalledWith('paginationService:on-pagination-changed', {
+        dataFrom: 1, dataTo: 25, pageCount: 4, pageNumber: 1, pageSize: 25, pageSizes: [5, 10, 15, 20], totalItems: 85
+      });
       expect(resetSpy).toHaveBeenCalled();
       expect(refreshSpy).toHaveBeenCalledWith(true, true);
     });
@@ -527,15 +527,14 @@ describe('PaginationService', () => {
       const mockItems = { name: 'John' };
       const eaSpy = jest.spyOn(ea, 'publish');
       const recalculateSpy = jest.spyOn(service, 'recalculateFromToIndexes');
-      const changedSpy = jest.spyOn(service, 'onPaginationChangedCallback');
 
       service.init(gridStub, dataviewStub, mockGridOption.pagination, mockGridOption.backendServiceApi);
       ea.publish(`${DEFAULT_AURELIA_EVENT_PREFIX}:on-item-added`, mockItems);
 
       setTimeout(() => {
         expect(recalculateSpy).toHaveBeenCalledTimes(2);
-        expect(eaSpy).toHaveBeenCalledTimes(2); // 2x times (1x for onItemAdded then 1x for onPaginationRefreshed)
-        expect(changedSpy).toHaveBeenCalledWith({
+        expect(eaSpy).toHaveBeenCalledTimes(2); // 2x times (1x for onItemAdded then 1x for onPaginationChanged)
+        expect(eaSpy).toHaveBeenNthCalledWith(2, `paginationService:on-pagination-changed`, {
           dataFrom: 26, dataTo: (50 + 1), pageSize: 25, pageCount: 4, pageNumber: 2, totalItems: (85 + 1), pageSizes: mockGridOption.pagination.pageSizes
         });
         expect(service.dataFrom).toBe(26);
@@ -548,15 +547,14 @@ describe('PaginationService', () => {
       const mockItems = [{ name: 'John' }, { name: 'Jane' }];
       const eaSpy = jest.spyOn(ea, 'publish');
       const recalculateSpy = jest.spyOn(service, 'recalculateFromToIndexes');
-      const changedSpy = jest.spyOn(service, 'onPaginationChangedCallback');
 
       service.init(gridStub, dataviewStub, mockGridOption.pagination, mockGridOption.backendServiceApi);
       ea.publish(`${DEFAULT_AURELIA_EVENT_PREFIX}:on-item-added`, mockItems);
 
       setTimeout(() => {
         expect(recalculateSpy).toHaveBeenCalledTimes(2);
-        expect(eaSpy).toHaveBeenCalledTimes(2); // 2x times (1x for onItemAdded then 1x for onPaginationRefreshed)
-        expect(changedSpy).toHaveBeenCalledWith({
+        expect(eaSpy).toHaveBeenCalledTimes(2); // 2x times (1x for onItemAdded then 1x for onPaginationChanged)
+        expect(eaSpy).toHaveBeenNthCalledWith(2, `paginationService:on-pagination-changed`, {
           dataFrom: 26, dataTo: (50 + mockItems.length), pageSize: 25, pageCount: 4, pageNumber: 2, totalItems: (85 + mockItems.length), pageSizes: mockGridOption.pagination.pageSizes
         });
         expect(service.dataFrom).toBe(26);
@@ -565,18 +563,16 @@ describe('PaginationService', () => {
       });
     });
 
-    it('should call "processOnItemAddedOrRemoved" and expect not onPaginationChangedCallback to be triggered and the (To) to remain the same when "onItemAdded" is triggered without any items', (done) => {
+    it('should call "processOnItemAddedOrRemoved" and expect not onPaginationChanged to be triggered and the (To) to remain the same when "onItemAdded" is triggered without any items', (done) => {
       const eaSpy = jest.spyOn(ea, 'publish');
       const recalculateSpy = jest.spyOn(service, 'recalculateFromToIndexes');
-      const changedSpy = jest.spyOn(service, 'onPaginationChangedCallback');
 
       service.init(gridStub, dataviewStub, mockGridOption.pagination, mockGridOption.backendServiceApi);
       ea.publish(`${DEFAULT_AURELIA_EVENT_PREFIX}:on-item-added`, null);
 
       setTimeout(() => {
         expect(recalculateSpy).toHaveBeenCalledTimes(1);
-        expect(eaSpy).toHaveBeenCalledTimes(2); // 2x times (1x for onItemAdded then 1x for onPaginationRefreshed)
-        expect(changedSpy).not.toHaveBeenCalled();
+        expect(eaSpy).toHaveBeenCalledTimes(1);
         expect(service.dataFrom).toBe(26);
         expect(service.dataTo).toBe(50);
         done();
@@ -587,7 +583,6 @@ describe('PaginationService', () => {
       const mockItems = { name: 'John' };
       const eaSpy = jest.spyOn(ea, 'publish');
       const recalculateSpy = jest.spyOn(service, 'recalculateFromToIndexes');
-      const changedSpy = jest.spyOn(service, 'onPaginationChangedCallback');
 
       service.init(gridStub, dataviewStub, mockGridOption.pagination, mockGridOption.backendServiceApi);
       ea.publish(`${DEFAULT_AURELIA_EVENT_PREFIX}:on-item-deleted`, mockItems);
@@ -595,8 +590,8 @@ describe('PaginationService', () => {
       setTimeout(() => {
         // called 2x times by init() then by processOnItemAddedOrRemoved()
         expect(recalculateSpy).toHaveBeenCalledTimes(2);
-        expect(eaSpy).toHaveBeenCalledTimes(2); // 2x times (1x for onItemDeleted then 1x for onPaginationRefreshed)
-        expect(changedSpy).toHaveBeenCalledWith({
+        expect(eaSpy).toHaveBeenCalledTimes(2); // 2x times (1x for onItemDeleted then 1x for onPaginationChanged)
+        expect(eaSpy).toHaveBeenNthCalledWith(2, `paginationService:on-pagination-changed`, {
           dataFrom: 26, dataTo: (50 - 1), pageSize: 25, pageCount: 4, pageNumber: 2, totalItems: (85 - 1), pageSizes: mockGridOption.pagination.pageSizes
         });
         expect(service.dataFrom).toBe(26);
@@ -609,16 +604,14 @@ describe('PaginationService', () => {
       const mockItems = [{ name: 'John' }, { name: 'Jane' }];
       const eaSpy = jest.spyOn(ea, 'publish');
       const recalculateSpy = jest.spyOn(service, 'recalculateFromToIndexes');
-      const changedSpy = jest.spyOn(service, 'onPaginationChangedCallback');
 
       service.init(gridStub, dataviewStub, mockGridOption.pagination, mockGridOption.backendServiceApi);
       ea.publish(`${DEFAULT_AURELIA_EVENT_PREFIX}:on-item-deleted`, mockItems);
 
       setTimeout(() => {
-        // called 2x times by init() then by processOnItemAddedOrRemoved()
-        expect(recalculateSpy).toHaveBeenCalledTimes(2);
-        expect(eaSpy).toHaveBeenCalledTimes(2); // 2x times (1x for onItemDeleted then 1x for onPaginationRefreshed)
-        expect(changedSpy).toHaveBeenCalledWith({
+        expect(recalculateSpy).toHaveBeenCalledTimes(2); // called 2x times by init() then by processOnItemAddedOrRemoved()
+        expect(eaSpy).toHaveBeenCalledTimes(2); // 2x times (1x for onItemDeleted then 1x for onPaginationChanged)
+        expect(eaSpy).toHaveBeenNthCalledWith(2, `paginationService:on-pagination-changed`, {
           dataFrom: 26, dataTo: (50 - mockItems.length), pageSize: 25, pageCount: 4, pageNumber: 2, totalItems: (85 - mockItems.length), pageSizes: mockGridOption.pagination.pageSizes
         });
         done();
@@ -636,9 +629,10 @@ describe('PaginationService', () => {
       setTimeout(() => {
         // called 1x time by init() only
         expect(recalculateSpy).toHaveBeenCalledTimes(1);
-        expect(eaSpy).toHaveBeenCalledTimes(2); // 2x times (1x for onItemDeleted then 2x for onPaginationRefreshed)
+        expect(eaSpy).toHaveBeenCalledTimes(1);
         expect(service.dataFrom).toBe(26);
         expect(service.dataTo).toBe(50);
+        expect(eaSpy).toHaveBeenCalledWith('asg:on-item-deleted', null);
         done();
       });
     });

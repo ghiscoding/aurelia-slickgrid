@@ -109,11 +109,6 @@ describe('Slick-Pagination Component', () => {
       expect(customElement.constructor).toBeDefined();
     });
 
-    it('should call the "activate" method and expect it to set the pagination service instance', () => {
-      customElement.viewModel.activate({ paginationService: paginationServiceStub });
-      expect(customElement.viewModel.paginationService).toBeTruthy();
-    });
-
     it('should create a the Slick-Pagination component in the DOM', async () => {
       const pageInfoFromTo = await customElement.waitForElement('.page-info-from-to');
       const pageInfoTotalItems = await customElement.waitForElement('.page-info-total-items');

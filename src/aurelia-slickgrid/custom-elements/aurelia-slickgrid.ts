@@ -7,7 +7,7 @@ import 'slickgrid/slick.core';
 import 'slickgrid/slick.dataview';
 import 'slickgrid/slick.grid';
 
-import { bindable, BindingEngine, bindingMode, Container, Factory, inject } from 'aurelia-framework';
+import { bindable, BindingEngine, bindingMode, Container, Factory, inject, NewInstance } from 'aurelia-framework';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
 import { DOM } from 'aurelia-pal';
 import { I18N } from 'aurelia-i18n';
@@ -58,12 +58,13 @@ declare var Slick: any;
 const DEFAULT_AURELIA_EVENT_PREFIX = 'asg';
 const DEFAULT_SLICKGRID_EVENT_PREFIX = 'sg';
 
-// Aurelia doesn't support well TypeScript @autoinject in a Plugin so we'll do it the old fashion way
+// Aurelia doesn't support well TypeScript @autoinject in a Plugin so we'll do it the manual way
 @inject(
   BindingEngine,
   Container,
   Element,
   EventAggregator,
+  NewInstance.of(EventAggregator),
   ExcelExportService,
   ExportService,
   ExtensionService,
@@ -121,7 +122,8 @@ export class AureliaSlickgridCustomElement {
     private bindingEngine: BindingEngine,
     private container: Container,
     private elm: Element,
-    private ea: EventAggregator,
+    private globalEa: EventAggregator,
+    private localEa: EventAggregator,
     private excelExportService: ExcelExportService,
     private exportService: ExportService,
     private extensionService: ExtensionService,
@@ -168,7 +170,9 @@ export class AureliaSlickgridCustomElement {
         paginationService: this.paginationService,
       };
       this.paginationService.totalItems = this.totalItems;
-      this.paginationService.onPaginationChangedCallback = this.paginationChanged.bind(this);
+      this.subscriptions.push(
+        this.localEa.subscribe('paginationService:on-pagination-changed', (paginationChanges: ServicePagination) => this.paginationChanged(paginationChanges)),
+      );
       this.paginationService.init(this.grid, this.dataview, paginationOptions, this.backendServiceApi);
       this._isPaginationInitialized = true;
     }
@@ -176,7 +180,7 @@ export class AureliaSlickgridCustomElement {
 
   initialization() {
     this.dispatchCustomEvent(`${DEFAULT_AURELIA_EVENT_PREFIX}-on-before-grid-create`);
-    this.ea.publish('onBeforeGridCreate', true);
+    this.globalEa.publish('onBeforeGridCreate', true);
 
     // make sure the dataset is initialized (if not it will throw an error that it cannot getLength of null)
     this._dataset = this._dataset || this.dataset || [];
@@ -196,7 +200,7 @@ export class AureliaSlickgridCustomElement {
       } else {
         this.dataview = new Slick.Data.DataView();
       }
-      this.ea.publish('onDataviewCreated', this.dataview);
+      this.globalEa.publish('onDataviewCreated', this.dataview);
       this.dispatchCustomEvent(`${DEFAULT_AURELIA_EVENT_PREFIX}-on-dataview-created`, this.dataview);
     }
 
@@ -251,7 +255,7 @@ export class AureliaSlickgridCustomElement {
     }
 
     // publish & dispatch certain events
-    this.ea.publish('onGridCreated', this.grid);
+    this.globalEa.publish('onGridCreated', this.grid);
     this.dispatchCustomEvent(`${DEFAULT_AURELIA_EVENT_PREFIX}-on-grid-created`, this.grid);
 
     // after the DataView is created & updated execute some processes & dispatch some events
@@ -327,7 +331,7 @@ export class AureliaSlickgridCustomElement {
   }
 
   detached(shouldEmptyDomElementContainer = false) {
-    this.ea.publish('onBeforeGridDestroy', this.grid);
+    this.globalEa.publish('onBeforeGridDestroy', this.grid);
     this.dispatchCustomEvent(`${DEFAULT_AURELIA_EVENT_PREFIX}-on-before-grid-destroy`, this.grid);
     this.dataview = undefined;
     this._eventHandler.unsubscribeAll();
@@ -338,7 +342,7 @@ export class AureliaSlickgridCustomElement {
       this.destroyGridContainerElm();
     }
 
-    this.ea.publish('onAfterGridDestroyed', true);
+    this.globalEa.publish('onAfterGridDestroyed', true);
     this.dispatchCustomEvent(`${DEFAULT_AURELIA_EVENT_PREFIX}-on-after-grid-destroyed`, this.grid);
 
     // dispose of all Services
@@ -462,7 +466,7 @@ export class AureliaSlickgridCustomElement {
 
     // on locale change, we have to manually translate the Headers, GridMenu
     this.subscriptions.push(
-      this.ea.subscribe('i18n:locale:changed', () => {
+      this.globalEa.subscribe('i18n:locale:changed', () => {
         if (gridOptions.enableTranslate) {
           this.extensionService.translateCellMenu();
           this.extensionService.translateColumnHeaders();
@@ -473,6 +477,9 @@ export class AureliaSlickgridCustomElement {
           this.translateCustomFooterTexts();
           this.translateColumnHeaderTitleKeys();
           this.translateColumnGroupKeys();
+          if (gridOptions.createPreHeaderPanel && !gridOptions.enableDraggableGrouping) {
+            this.groupingAndColspanService.translateGroupingAndColSpan();
+          }
         }
       })
     );
@@ -549,7 +556,7 @@ export class AureliaSlickgridCustomElement {
 
     // expose GridState Service changes event through dispatch
     this.subscriptions.push(
-      this.ea.subscribe('gridStateService:changed', (gridStateChange: GridStateChange) => {
+      this.localEa.subscribe('gridStateService:changed', (gridStateChange: GridStateChange) => {
         this.elm.dispatchEvent(DOM.createCustomEvent(`${DEFAULT_AURELIA_EVENT_PREFIX}-on-grid-state-changed`, {
           bubbles: true,
           detail: gridStateChange
@@ -730,14 +737,14 @@ export class AureliaSlickgridCustomElement {
     if (this.gridOptions.enableRowSelection || this.gridOptions.enableCheckboxSelector) {
       this.grid.setSelectedRows([]);
     }
+    const { pageNumber, pageSize } = pagination;
     if (this.sharedService) {
-      const { pageNumber, pageSize } = pagination;
       if (pageSize) {
         this.sharedService.currentPagination = { pageNumber, pageSize };
       }
     }
-    this.ea.publish('gridStateService:changed', {
-      change: { newValues: pagination, type: GridStateType.pagination },
+    this.localEa.publish('gridStateService:changed', {
+      change: { newValues: { pageNumber, pageSize }, type: GridStateType.pagination },
       gridState: this.gridStateService.getCurrentGridState()
     });
   }

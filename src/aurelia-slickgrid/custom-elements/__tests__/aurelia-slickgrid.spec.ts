@@ -7,10 +7,10 @@ const eventAggregator = {
   publish: jest.fn(),
   subscribe: jest.fn()
 };
-jest.mock('flatpickr', () => { });
 jest.mock('aurelia-event-aggregator', () => ({
-  EventAggregator: eventAggregator
+  EventAggregator: () => eventAggregator
 }));
+jest.mock('flatpickr', () => { });
 
 const aureliaGridReady = jest.fn();
 
@@ -46,6 +46,7 @@ describe('Aurelia-Slickgrid Custom Component', () => {
 
   it('should create a grid and expect multiple Event Aggregator being called', async () => {
     await customElement.create(bootstrap);
+
     expect(eventAggregator.publish).toHaveBeenCalled();
     expect(eventAggregator.publish).toHaveBeenNthCalledWith(1, 'onBeforeGridCreate', true);
     expect(eventAggregator.publish).toHaveBeenNthCalledWith(2, 'onDataviewCreated', expect.any(Object));

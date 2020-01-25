@@ -57,16 +57,6 @@ export class GroupingAndColspanService {
         this._eventHandler.subscribe(dataView.onRowCountChanged, () => this.renderPreHeaderRowGroupingTitles());
         this.ea.subscribe(`${this._aureliaEventPrefix}:onAfterResize`, () => this.renderPreHeaderRowGroupingTitles());
 
-        // if we use Translation, we need to re-translate the keys after a language change
-        if (this._gridOptions.enableTranslate) {
-          this.ea.subscribe('i18n:locale:changed', () => {
-            const currentColumnDefinitions = this._grid.getColumns();
-            this.extensionUtility.translateItems(currentColumnDefinitions, 'columnGroupKey', 'columnGroup');
-            this._grid.setColumns(currentColumnDefinitions);
-            this.renderPreHeaderRowGroupingTitles();
-          });
-        }
-
         // also not sure why at this point, but it seems that I need to call the 1st create in a delayed execution
         // probably some kind of timing issues and delaying it until the grid is fully ready does help
         setTimeout(() => this.renderPreHeaderRowGroupingTitles(), 75);
@@ -128,5 +118,13 @@ export class GroupingAndColspanService {
         lastColumnGroup = colDef.columnGroup || '';
       }
     }
+  }
+
+  /** Translate Column Group texts and re-render them afterward. */
+  translateGroupingAndColSpan() {
+    const currentColumnDefinitions = this._grid.getColumns();
+    this.extensionUtility.translateItems(currentColumnDefinitions, 'columnGroupKey', 'columnGroup');
+    this._grid.setColumns(currentColumnDefinitions);
+    this.renderPreHeaderRowGroupingTitles();
   }
 }

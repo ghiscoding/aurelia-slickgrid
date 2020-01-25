@@ -1,12 +1,12 @@
 import { bindable, inject, Optional } from 'aurelia-framework';
-import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
+import { Subscription } from 'aurelia-event-aggregator';
 import { I18N } from 'aurelia-i18n';
 
 import { Locale } from '../models/index';
 import { PaginationService } from '../services/pagination.service';
 import { disposeAllSubscriptions } from '../services/utilities';
 
-@inject(EventAggregator, Optional.of(I18N))
+@inject(Optional.of(I18N))
 export class SlickPaginationCustomElement {
   // we need to pass this service as a binding because it's transient and it must be created (then passed through the binding) in the Aurelia-Slickgrid custom element
   @bindable() paginationService: PaginationService;
@@ -21,17 +21,9 @@ export class SlickPaginationCustomElement {
   textOf: string;
   textPage: string;
 
-  constructor(private ea: EventAggregator, private i18n: I18N) {
+  constructor(private i18n: I18N) {
     // when using I18N, we'll translate necessary texts in the UI
-    this.translateAllUiTexts(this.locales);
-    this._subscriptions.push(
-      this.ea.subscribe('i18n:locale:changed', () => this.translateAllUiTexts(this.locales))
-    );
-
-    // translate all the text using I18N or custom locales
-    this._subscriptions.push(
-      this.ea.subscribe(`paginationService:on-pagination-refreshed`, () => this.translateAllUiTexts(this.locales))
-    );
+    this.translatePaginationTexts(this.locales);
   }
 
   get availablePageSizes(): number[] {
@@ -68,13 +60,16 @@ export class SlickPaginationCustomElement {
     return this.paginationService.totalItems;
   }
 
-  activate(model: any) {
-    this.paginationService = model.paginationService;
-  }
-
   bind() {
     if (this.enableTranslate && (!this.i18n || !this.i18n.tr)) {
       throw new Error('[Aurelia-Slickgrid] requires "I18N" to be installed and configured when the grid option "enableTranslate" is enabled.');
+    }
+    this.translatePaginationTexts(this.locales);
+
+    if (this.enableTranslate && this.i18n && this.i18n.ea && this.i18n.ea.subscribe) {
+      this._subscriptions.push(
+        this.i18n.ea.subscribe('i18n:locale:changed', () => this.translatePaginationTexts(this.locales))
+      );
     }
   }
 
@@ -113,12 +108,8 @@ export class SlickPaginationCustomElement {
     this._subscriptions = disposeAllSubscriptions(this._subscriptions);
   }
 
-  // --
-  // private functions
-  // --------------------
-
   /** Translate all the texts shown in the UI, use I18N service when available or custom locales when service is null */
-  private translateAllUiTexts(locales: Locale) {
+  private translatePaginationTexts(locales: Locale) {
     if (this.i18n && this.i18n.tr) {
       this.textItemsPerPage = this.i18n.tr('ITEMS_PER_PAGE');
       this.textItems = this.i18n.tr('ITEMS');
