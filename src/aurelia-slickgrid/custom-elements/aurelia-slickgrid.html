@@ -5,9 +5,12 @@
     </div>
 
     <!-- Pagination section under the grid -->
-    <div if.bind="showPagination">
-      <compose view-model="./slick-pagination" model.bind="paginationData"></compose>
-    </div>
+    <slick-pagination id="slickPagingContainer-${gridId}" if.bind="showPagination"
+                      asg-on-pagination-changed.delegate="paginationChanged($event.detail)"
+                      pagination-service.bind="paginationService"
+                      enable-translate.bind="gridOptions.enableTranslate"
+                      locales.bind="locales">
+    </slick-pagination>
 
     <!-- Custom Footer section under the grid -->
     <div if.bind="showCustomFooter && customFooterOptions" class="slick-custom-footer row" style="width: 100%;"

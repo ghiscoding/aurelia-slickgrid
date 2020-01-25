@@ -1,6 +1,13 @@
 /// <reference types="cypress" />
 
 describe('Example 5 - OData Grid', () => {
+  beforeEach(() => {
+    // create a console.log spy for later use
+    cy.window().then((win) => {
+      cy.spy(win.console, 'log');
+    });
+  });
+
   it('should display Example title', () => {
     cy.visit(`${Cypress.config('baseExampleUrl')}/example5`);
     cy.get('h2').should('contain', 'Example 5: Grid with Backend OData Service');
@@ -46,6 +53,11 @@ describe('Example 5 - OData Grid', () => {
         .should(($span) => {
           expect($span.text()).to.eq(`$inlinecount=allpages&$top=20&$skip=40&$orderby=Name asc&$filter=(Gender eq 'male')`);
         });
+
+      cy.window().then((win) => {
+        expect(win.console.log).to.have.callCount(1);
+        expect(win.console.log).to.be.calledWith("Client sample, Grid State changed:: ", { newValues: { pageNumber: 3, pageSize: 20 }, type: 'pagination' });
+      });
     });
 
     it('should change Pagination to first page with 10 items', () => {
@@ -75,6 +87,11 @@ describe('Example 5 - OData Grid', () => {
         .should(($span) => {
           expect($span.text()).to.eq(`$inlinecount=allpages&$top=10&$orderby=Name asc&$filter=(Gender eq 'male')`);
         });
+
+      cy.window().then((win) => {
+        expect(win.console.log).to.have.callCount(1);
+        expect(win.console.log).to.be.calledWith("Client sample, Grid State changed:: ", { newValues: { pageNumber: 1, pageSize: 10 }, type: 'pagination' });
+      });
     });
 
     it('should change Pagination to last page', () => {
@@ -103,6 +120,11 @@ describe('Example 5 - OData Grid', () => {
         .should(($span) => {
           expect($span.text()).to.eq(`$inlinecount=allpages&$top=10&$skip=40&$orderby=Name asc&$filter=(Gender eq 'male')`);
         });
+
+      cy.window().then((win) => {
+        expect(win.console.log).to.have.callCount(1);
+        expect(win.console.log).to.be.calledWith("Client sample, Grid State changed:: ", { newValues: { pageNumber: 5, pageSize: 10 }, type: 'pagination' });
+      });
     });
 
     it('should change Pagination to first page using the external button', () => {
@@ -132,6 +154,11 @@ describe('Example 5 - OData Grid', () => {
         .should(($span) => {
           expect($span.text()).to.eq(`$inlinecount=allpages&$top=10&$orderby=Name asc&$filter=(Gender eq 'male')`);
         });
+
+      cy.window().then((win) => {
+        expect(win.console.log).to.have.callCount(1);
+        expect(win.console.log).to.be.calledWith("Client sample, Grid State changed:: ", { newValues: { pageNumber: 1, pageSize: 10 }, type: 'pagination' });
+      });
     });
 
     it('should change Pagination to last page using the external button', () => {
@@ -161,9 +188,14 @@ describe('Example 5 - OData Grid', () => {
         .should(($span) => {
           expect($span.text()).to.eq(`$inlinecount=allpages&$top=10&$skip=40&$orderby=Name asc&$filter=(Gender eq 'male')`);
         });
+
+      cy.window().then((win) => {
+        expect(win.console.log).to.have.callCount(1);
+        expect(win.console.log).to.be.calledWith("Client sample, Grid State changed:: ", { newValues: { pageNumber: 5, pageSize: 10 }, type: 'pagination' });
+      });
     });
 
-    it('should clear all Filters and expect to go back to first page', () => {
+    it('should Clear all Filters and expect to go back to first page', () => {
       cy.get('#grid5')
         .find('button.slick-gridmenu-button')
         .trigger('click')
@@ -199,9 +231,15 @@ describe('Example 5 - OData Grid', () => {
         .should(($span) => {
           expect($span.text()).to.eq(`$inlinecount=allpages&$top=10&$orderby=Name asc`);
         });
+
+      cy.window().then((win) => {
+        expect(win.console.log).to.have.callCount(2);
+        expect(win.console.log).to.be.calledWith("Client sample, Grid State changed:: ", { newValues: [], type: 'filter' });
+        expect(win.console.log).to.be.calledWith("Client sample, Grid State changed:: ", { newValues: { pageNumber: 1, pageSize: 10 }, type: 'pagination' });
+      });
     });
 
-    it('should clear all Sorting', () => {
+    it('should Clear all Sorting', () => {
       cy.get('#grid5')
         .find('button.slick-gridmenu-button')
         .trigger('click')
@@ -220,6 +258,11 @@ describe('Example 5 - OData Grid', () => {
         .should(($span) => {
           expect($span.text()).to.eq(`$inlinecount=allpages&$top=10`);
         });
+
+      cy.window().then((win) => {
+        expect(win.console.log).to.have.callCount(1);
+        expect(win.console.log).to.be.calledWith("Client sample, Grid State changed:: ", { newValues: [], type: 'sorter' });
+      });
     });
 
     it('should use "substringof" when OData version is set to 2', () => {
@@ -288,7 +331,7 @@ describe('Example 5 - OData Grid', () => {
   });
 
   describe('when "enableCount" is unchecked (not set)', () => {
-    it('should clear all Filters, set 20 items per page & uncheck "enableCount"', () => {
+    it('should Clear all Filters, set 20 items per page & uncheck "enableCount"', () => {
       cy.get('#grid5')
         .find('button.slick-gridmenu-button')
         .trigger('click')
@@ -370,7 +413,7 @@ describe('Example 5 - OData Grid', () => {
         });
     });
 
-    it('should clear all Sorting', () => {
+    it('should Clear all Sorting', () => {
       cy.get('#grid5')
         .find('button.slick-gridmenu-button')
         .trigger('click')
@@ -460,18 +503,28 @@ describe('Example 5 - OData Grid', () => {
   });
 
   describe('General Pagination Behaviors', () => {
-    it('should display page 1 of 1 but hide pagination from/to numbers when filtered data returns an empty dataset', () => {
+    it('should type a filter which returns an empty dataset', () => {
       cy.get('.search-filter.filter-name')
         .find('input')
         .clear()
-        .type('xyz');
+        .type('xy');
 
+      cy.get('[data-test=odata-query-result]')
+        .should(($span) => {
+          expect($span.text()).to.eq(`$top=10&$filter=(contains(Name, 'xy'))`);
+        });
+
+      // wait for the query to finish
+      cy.get('[data-test=status]').should('contain', 'done');
+    });
+
+    it('should display page 0 of 0 but hide pagination from/to numbers when filtered data "xy" returns an empty dataset', () => {
       cy.get('[data-test=page-number-input]')
         .invoke('val')
-        .then(pageNumber => expect(pageNumber).to.eq('1'));
+        .then(pageNumber => expect(pageNumber).to.eq('0'));
 
       cy.get('[data-test=page-count]')
-        .contains('1');
+        .contains('0');
 
       cy.get('[data-test=item-from]')
         .should('not.exist');
@@ -484,8 +537,46 @@ describe('Example 5 - OData Grid', () => {
 
       cy.get('[data-test=odata-query-result]')
         .should(($span) => {
-          expect($span.text()).to.eq(`$top=10&$filter=(contains(Name, 'xyz'))`);
+          expect($span.text()).to.eq(`$top=10&$filter=(contains(Name, 'xy'))`);
         });
+    });
+
+    it('should erase part of the filter so that it filters with "x"', () => {
+      cy.get('.search-filter.filter-name')
+        .find('input')
+        .type('{backspace}');
+
+      cy.get('[data-test=odata-query-result]')
+        .should(($span) => {
+          expect($span.text()).to.eq(`$top=10&$filter=(contains(Name, 'x'))`);
+        });
+
+      // wait for the query to finish
+      cy.get('[data-test=status]').should('contain', 'done');
+
+      cy.window().then((win) => {
+        expect(win.console.log).to.have.callCount(2);
+        expect(win.console.log).to.be.calledWith("Client sample, Grid State changed:: ", { newValues: [{ columnId: 'name', searchTerms: ['x'] }], type: 'filter' });
+        expect(win.console.log).to.be.calledWith("Client sample, Grid State changed:: ", { newValues: { pageNumber: 1, pageSize: 10 }, type: 'pagination' });
+      });
+    });
+
+    it('should display page 1 of 1 with 2 items after erasing part of the filter to be "x" which should return 1 page', () => {
+      cy.get('[data-test=page-number-input]')
+        .invoke('val')
+        .then(pageNumber => expect(pageNumber).to.eq('1'));
+
+      cy.get('[data-test=page-count]')
+        .contains('1');
+
+      cy.get('[data-test=item-from]')
+        .contains('1');
+
+      cy.get('[data-test=item-to]')
+        .contains('2');
+
+      cy.get('[data-test=total-items]')
+        .contains('2');
     });
   });
 
@@ -520,8 +611,6 @@ describe('Example 5 - OData Grid', () => {
         .last()
         .children('.slick-cell:nth(1)')
         .should('contain', 'Alexander Foley');
-
-
 
       cy.get('[data-test=odata-query-result]')
         .should(($span) => {

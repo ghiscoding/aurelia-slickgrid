@@ -33,7 +33,9 @@ import {
   GridOption,
   GridState,
   GridStateType,
-  Pagination
+  Pagination,
+  ServicePagination,
+  CurrentPagination
 } from '../../models';
 import { Filters } from '../../filters';
 import { Editors } from '../../editors';
@@ -1277,6 +1279,30 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
         customElement.bind();
         customElement.attached();
         customElement.paginationChanged(mockPagination);
+
+        expect(eaSpy).toHaveBeenCalledWith('gridStateService:changed', {
+          change: { newValues: mockPagination, type: GridStateType.pagination },
+          gridState: { columns: [], pagination: mockPagination }
+        });
+      });
+
+      it('should call trigger a gridStage change event when "onPaginationChanged" from the Pagination Service is triggered', () => {
+        const mockPagination = { pageNumber: 2, pageSize: 20 } as CurrentPagination;
+        const mockServicePagination = {
+          ...mockPagination,
+          dataFrom: 5,
+          dataTo: 10,
+          pageCount: 1,
+          pageSizes: [5, 10, 15, 20],
+        } as ServicePagination;
+        const eaSpy = jest.spyOn(ea, 'publish');
+        jest.spyOn(gridStateServiceStub, 'getCurrentGridState').mockReturnValue({ columns: [], pagination: mockPagination } as GridState);
+
+        customElement.gridOptions.enablePagination = true;
+        customElement.bind();
+        customElement.attached();
+        customElement.refreshGridData([{ firstName: 'John', lastName: 'Doe' }]);
+        ea.publish('paginationService:on-pagination-changed', mockServicePagination);
 
         expect(eaSpy).toHaveBeenCalledWith('gridStateService:changed', {
           change: { newValues: mockPagination, type: GridStateType.pagination },

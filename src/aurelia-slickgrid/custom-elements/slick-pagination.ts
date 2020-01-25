@@ -27,11 +27,6 @@ export class SlickPaginationCustomElement {
     this._subscriptions.push(
       this.ea.subscribe('i18n:locale:changed', () => this.translateAllUiTexts(this.locales))
     );
-
-    // translate all the text using I18N or custom locales
-    this._subscriptions.push(
-      this.ea.subscribe(`paginationService:on-pagination-refreshed`, () => this.translateAllUiTexts(this.locales))
-    );
   }
 
   get availablePageSizes(): number[] {
@@ -68,14 +63,11 @@ export class SlickPaginationCustomElement {
     return this.paginationService.totalItems;
   }
 
-  activate(model: any) {
-    this.paginationService = model.paginationService;
-  }
-
   bind() {
     if (this.enableTranslate && (!this.i18n || !this.i18n.tr)) {
       throw new Error('[Aurelia-Slickgrid] requires "I18N" to be installed and configured when the grid option "enableTranslate" is enabled.');
     }
+    this.translateAllUiTexts(this.locales);
   }
 
   detached() {

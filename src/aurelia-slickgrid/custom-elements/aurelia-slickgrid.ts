@@ -7,7 +7,7 @@ import 'slickgrid/slick.core';
 import 'slickgrid/slick.dataview';
 import 'slickgrid/slick.grid';
 
-import { bindable, BindingEngine, bindingMode, Container, Factory, inject } from 'aurelia-framework';
+import { bindable, BindingEngine, bindingMode, Container, Factory, inject, NewInstance } from 'aurelia-framework';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
 import { DOM } from 'aurelia-pal';
 import { I18N } from 'aurelia-i18n';
@@ -63,7 +63,7 @@ const DEFAULT_SLICKGRID_EVENT_PREFIX = 'sg';
   BindingEngine,
   Container,
   Element,
-  EventAggregator,
+  NewInstance.of(EventAggregator),
   ExcelExportService,
   ExportService,
   ExtensionService,
@@ -168,7 +168,7 @@ export class AureliaSlickgridCustomElement {
         paginationService: this.paginationService,
       };
       this.paginationService.totalItems = this.totalItems;
-      this.paginationService.onPaginationChangedCallback = this.paginationChanged.bind(this);
+      this.ea.subscribe('paginationService:on-pagination-changed', (paginationChanges: ServicePagination) => this.paginationChanged(paginationChanges));
       this.paginationService.init(this.grid, this.dataview, paginationOptions, this.backendServiceApi);
       this._isPaginationInitialized = true;
     }
@@ -730,14 +730,14 @@ export class AureliaSlickgridCustomElement {
     if (this.gridOptions.enableRowSelection || this.gridOptions.enableCheckboxSelector) {
       this.grid.setSelectedRows([]);
     }
+    const { pageNumber, pageSize } = pagination;
     if (this.sharedService) {
-      const { pageNumber, pageSize } = pagination;
       if (pageSize) {
         this.sharedService.currentPagination = { pageNumber, pageSize };
       }
     }
     this.ea.publish('gridStateService:changed', {
-      change: { newValues: pagination, type: GridStateType.pagination },
+      change: { newValues: { pageNumber, pageSize }, type: GridStateType.pagination },
       gridState: this.gridStateService.getCurrentGridState()
     });
   }
