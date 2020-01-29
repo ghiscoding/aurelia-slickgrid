@@ -1,7 +1,8 @@
 import { Locale } from './models/locale.interface';
 
 export class Constants {
-  static locales: Locale = {
+  // English Locale texts when using only 1 Locale instead of I18N
+  static readonly locales: Locale = {
     TEXT_ALL_SELECTED: 'All Selected',
     TEXT_CANCEL: 'Cancel',
     TEXT_CLEAR_ALL_FILTERS: 'Clear all Filters',
@@ -40,14 +41,32 @@ export class Constants {
     TEXT_TOGGLE_PRE_HEADER_ROW: 'Toggle Pre-Header Row',
     TEXT_X_OF_Y_SELECTED: '# of % selected',
   };
-  static VALIDATION_REQUIRED_FIELD = 'Field is required';
-  static VALIDATION_EDITOR_VALID_NUMBER = 'Please enter a valid number';
-  static VALIDATION_EDITOR_VALID_INTEGER = 'Please enter a valid integer number';
-  static VALIDATION_EDITOR_INTEGER_BETWEEN = 'Please enter a valid integer number between {{minValue}} and {{maxValue}}';
-  static VALIDATION_EDITOR_INTEGER_MAX = 'Please enter a valid integer number that is lower than {{maxValue}}';
-  static VALIDATION_EDITOR_INTEGER_MIN = 'Please enter a valid integer number that is greater than {{minValue}}';
-  static VALIDATION_EDITOR_NUMBER_BETWEEN = 'Please enter a valid number between {{minValue}} and {{maxValue}}';
-  static VALIDATION_EDITOR_NUMBER_MAX = 'Please enter a valid number that is lower than {{maxValue}}';
-  static VALIDATION_EDITOR_NUMBER_MIN = 'Please enter a valid number that is greater than {{minValue}}';
-  static VALIDATION_EDITOR_DECIMAL_BETWEEN = 'Please enter a valid number with a maximum of {{maxDecimal}} decimals';
+
+  // some Validation default texts
+  static readonly VALIDATION_REQUIRED_FIELD = 'Field is required';
+  static readonly VALIDATION_EDITOR_VALID_NUMBER = 'Please enter a valid number';
+  static readonly VALIDATION_EDITOR_VALID_INTEGER = 'Please enter a valid integer number';
+  static readonly VALIDATION_EDITOR_INTEGER_BETWEEN = 'Please enter a valid integer number between {{minValue}} and {{maxValue}}';
+  static readonly VALIDATION_EDITOR_INTEGER_MAX = 'Please enter a valid integer number that is lower than {{maxValue}}';
+  static readonly VALIDATION_EDITOR_INTEGER_MIN = 'Please enter a valid integer number that is greater than {{minValue}}';
+  static readonly VALIDATION_EDITOR_NUMBER_BETWEEN = 'Please enter a valid number between {{minValue}} and {{maxValue}}';
+  static readonly VALIDATION_EDITOR_NUMBER_MAX = 'Please enter a valid number that is lower than {{maxValue}}';
+  static readonly VALIDATION_EDITOR_NUMBER_MIN = 'Please enter a valid number that is greater than {{minValue}}';
+  static readonly VALIDATION_EDITOR_DECIMAL_BETWEEN = 'Please enter a valid number with a maximum of {{maxDecimal}} decimals';
+
+  // some of the Events from the Event Aggregator that are exposed to the outside as dispatch events
+  // we define the internal name of the events and their alias used as dispatch events
+  static readonly exposedEvents: { name: string; alias: string; }[] = [
+    { name: 'excelExportService:onBeforeExportToExcel', alias: 'asg-on-before-export-to-excel' },
+    { name: 'excelExportService:onAfterExportToExcel', alias: 'asg-on-after-export-to-excel' },
+    { name: 'exportService:onBeforeExportToFile', alias: 'asg-on-before-export-to-file' },
+    { name: 'exportService:onAfterExportToFile', alias: 'asg-on-after-export-to-file' },
+    { name: 'gridStateService:changed', alias: 'asg-on-grid-state-changed' },
+    { name: 'gridService:onItemAdded', alias: 'asg-on-item-added' },
+    { name: 'gridService:onItemDeleted', alias: 'asg-on-item-deleted' },
+    { name: 'gridService:onItemUpdated', alias: 'asg-on-item-updated' },
+    { name: 'gridService:onItemUpserted', alias: 'asg-on-item-upserted' },
+    { name: 'resizerService:onBeforeResize', alias: 'asg-on-before-resize' },
+    { name: 'resizerService:onAfterResize', alias: 'asg-on-after-resize' },
+  ];
 }

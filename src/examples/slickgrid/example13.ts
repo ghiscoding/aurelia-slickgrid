@@ -45,14 +45,6 @@ export class Example13 {
   attached() {
     // populate the dataset once the grid is ready
     this.loadData(500);
-
-    this.subOnBeforeExport = this.ea.subscribe('asg:onBeforeExportToFile', () => this.processing = true);
-    this.subOnAfterExport = this.ea.subscribe('asg:onAfterExportToFile', () => this.processing = false);
-  }
-
-  detached() {
-    this.subOnAfterExport.dispose();
-    this.subOnBeforeExport.dispose();
   }
 
   aureliaGridReady(aureliaGrid: AureliaGridInstance) {

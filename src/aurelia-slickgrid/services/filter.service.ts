@@ -1,5 +1,4 @@
 import { singleton, inject } from 'aurelia-framework';
-import { EventAggregator } from 'aurelia-event-aggregator';
 import * as $ from 'jquery';
 import * as isequal from 'lodash.isequal';
 
@@ -27,6 +26,7 @@ import {
 import { executeBackendCallback, refreshBackendDataset } from './backend-utilities';
 import { getDescendantProperty } from './utilities';
 import { SharedService } from './shared.service';
+import { SlickgridEventAggregator } from '../custom-elements/slickgridEventAggregator';
 
 // using external non-typed js libraries
 declare var Slick: any;
@@ -36,7 +36,7 @@ let timer: any;
 const DEFAULT_FILTER_TYPING_DEBOUNCE = 500;
 
 @singleton(true)
-@inject(EventAggregator, FilterFactory, SharedService)
+@inject(SlickgridEventAggregator, FilterFactory, SharedService)
 export class FilterService {
   private _eventHandler: SlickEventHandler;
   private _isFilterFirstRender = true;
@@ -47,7 +47,7 @@ export class FilterService {
   private _grid: any;
   private _onSearchChange: SlickEvent;
 
-  constructor(private ea: EventAggregator, private filterFactory: FilterFactory, private sharedService: SharedService) {
+  constructor(private pluginEa: SlickgridEventAggregator, private filterFactory: FilterFactory, private sharedService: SharedService) {
     this._onSearchChange = new Slick.Event();
     this._eventHandler = new Slick.EventHandler();
   }
@@ -241,7 +241,7 @@ export class FilterService {
 
     // emit an event when filters are all cleared
     if (triggerChange) {
-      this.ea.publish('filterService:filterCleared', true);
+      this.pluginEa.publish('filterService:filterCleared', true);
     }
   }
 
@@ -400,9 +400,9 @@ export class FilterService {
       if (backendService && backendService.getCurrentFilters) {
         currentFilters = backendService.getCurrentFilters() as CurrentFilter[];
       }
-      this.ea.publish('filterService:filterChanged', currentFilters);
+      this.pluginEa.publish('filterService:filterChanged', currentFilters);
     } else if (caller === EmitterType.local) {
-      this.ea.publish('filterService:filterChanged', this.getCurrentLocalFilters());
+      this.pluginEa.publish('filterService:filterChanged', this.getCurrentLocalFilters());
     }
   }
 

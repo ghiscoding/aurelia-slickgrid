@@ -1,5 +1,4 @@
 import { inject, singleton } from 'aurelia-framework';
-import { EventAggregator } from 'aurelia-event-aggregator';
 
 import {
   Column,
@@ -16,12 +15,13 @@ import {
 import { executeBackendCallback, refreshBackendDataset } from './backend-utilities';
 import { getDescendantProperty } from './utilities';
 import { sortByFieldType } from '../sorters/sorterUtilities';
+import { SlickgridEventAggregator } from '../custom-elements/slickgridEventAggregator';
 
 // using external non-typed js libraries
 declare var Slick: any;
 
 @singleton(true)
-@inject(EventAggregator)
+@inject(SlickgridEventAggregator)
 export class SortService {
   private _currentLocalSorters: CurrentSorter[] = [];
   private _eventHandler: SlickEventHandler;
@@ -29,7 +29,7 @@ export class SortService {
   private _grid: any;
   private _isBackendGrid = false;
 
-  constructor(private ea: EventAggregator) {
+  constructor(private pluginEa: SlickgridEventAggregator) {
     this._eventHandler = new Slick.EventHandler();
   }
 
@@ -132,7 +132,7 @@ export class SortService {
     this._currentLocalSorters = [];
 
     // emit an event when sorts are all cleared
-    this.ea.publish('sortService:sortCleared', true);
+    this.pluginEa.publish('sortService:sortCleared', true);
   }
 
   /**
@@ -147,12 +147,12 @@ export class SortService {
       if (backendService && backendService.getCurrentSorters) {
         currentSorters = backendService.getCurrentSorters() as CurrentSorter[];
       }
-      this.ea.publish('sortService:sortChanged', currentSorters);
+      this.pluginEa.publish('sortService:sortChanged', currentSorters);
     } else if (sender === EmitterType.local) {
       if (currentLocalSorters) {
         this._currentLocalSorters = currentLocalSorters;
       }
-      this.ea.publish('sortService:sortChanged', this.getCurrentLocalSorters());
+      this.pluginEa.publish('sortService:sortChanged', this.getCurrentLocalSorters());
     }
   }
 

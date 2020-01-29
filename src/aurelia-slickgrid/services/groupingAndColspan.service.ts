@@ -1,4 +1,3 @@
-import { EventAggregator } from 'aurelia-event-aggregator';
 import { inject, singleton } from 'aurelia-framework';
 import * as $ from 'jquery';
 
@@ -8,18 +7,19 @@ import {
   SlickEventHandler,
 } from './../models/index';
 import { ExtensionUtility } from '../extensions/extensionUtility';
+import { SlickgridEventAggregator } from '../custom-elements/slickgridEventAggregator';
 
 // using external non-typed js libraries
 declare var Slick: any;
 
 @singleton(true)
-@inject(ExtensionUtility, EventAggregator)
+@inject(ExtensionUtility, SlickgridEventAggregator)
 export class GroupingAndColspanService {
   private _eventHandler: SlickEventHandler;
   private _grid: any;
   private _aureliaEventPrefix: string;
 
-  constructor(private extensionUtility: ExtensionUtility, private ea: EventAggregator) {
+  constructor(private extensionUtility: ExtensionUtility, private pluginEa: SlickgridEventAggregator) {
     this._eventHandler = new Slick.EventHandler();
   }
 
@@ -55,7 +55,7 @@ export class GroupingAndColspanService {
         this._eventHandler.subscribe(grid.onColumnsResized, () => this.renderPreHeaderRowGroupingTitles());
         this._eventHandler.subscribe(grid.onColumnsReordered, () => this.renderPreHeaderRowGroupingTitles());
         this._eventHandler.subscribe(dataView.onRowCountChanged, () => this.renderPreHeaderRowGroupingTitles());
-        this.ea.subscribe(`${this._aureliaEventPrefix}:onAfterResize`, () => this.renderPreHeaderRowGroupingTitles());
+        this.pluginEa.subscribe(`resizerService:onAfterResize`, () => this.renderPreHeaderRowGroupingTitles());
 
         // also not sure why at this point, but it seems that I need to call the 1st create in a delayed execution
         // probably some kind of timing issues and delaying it until the grid is fully ready does help

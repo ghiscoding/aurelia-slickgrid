@@ -1,12 +1,12 @@
 import { bindable, inject, Optional } from 'aurelia-framework';
-import { Subscription } from 'aurelia-event-aggregator';
+import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
 import { I18N } from 'aurelia-i18n';
 
 import { Locale } from '../models/index';
 import { PaginationService } from '../services/pagination.service';
 import { disposeAllSubscriptions } from '../services/utilities';
 
-@inject(Optional.of(I18N))
+@inject(EventAggregator, Optional.of(I18N))
 export class SlickPaginationCustomElement {
   // we need to pass this service as a binding because it's transient and it must be created (then passed through the binding) in the Aurelia-Slickgrid custom element
   @bindable() paginationService: PaginationService;
@@ -21,7 +21,7 @@ export class SlickPaginationCustomElement {
   textOf: string;
   textPage: string;
 
-  constructor(private i18n: I18N) {
+  constructor(private globalEa: EventAggregator, private i18n: I18N) {
     // when using I18N, we'll translate necessary texts in the UI
     this.translatePaginationTexts(this.locales);
   }
@@ -66,9 +66,9 @@ export class SlickPaginationCustomElement {
     }
     this.translatePaginationTexts(this.locales);
 
-    if (this.enableTranslate && this.i18n && this.i18n.ea && this.i18n.ea.subscribe) {
+    if (this.enableTranslate && this.globalEa && this.globalEa.subscribe) {
       this._subscriptions.push(
-        this.i18n.ea.subscribe('i18n:locale:changed', () => this.translatePaginationTexts(this.locales))
+        this.globalEa.subscribe('i18n:locale:changed', () => this.translatePaginationTexts(this.locales))
       );
     }
   }

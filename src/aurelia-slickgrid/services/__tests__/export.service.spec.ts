@@ -57,7 +57,8 @@ const gridStub = {
 };
 
 describe('ExportService', () => {
-  let ea: EventAggregator;
+  let globalEa: EventAggregator;
+  let pluginEa: EventAggregator;
   let service: ExportService;
   let i18n: I18N;
   let mockColumns: Column[];
@@ -68,8 +69,9 @@ describe('ExportService', () => {
 
   describe('with I18N Service', () => {
     beforeEach(() => {
-      ea = new EventAggregator();
-      i18n = new I18N(ea, new BindingSignaler());
+      globalEa = new EventAggregator();
+      pluginEa = new EventAggregator();
+      i18n = new I18N(globalEa, new BindingSignaler());
 
       // @ts-ignore
       navigator.__defineGetter__('appName', () => 'Netscape');
@@ -122,7 +124,7 @@ describe('ExportService', () => {
         fallbackLng: 'en',
         debug: false
       });
-      service = new ExportService(i18n, ea);
+      service = new ExportService(globalEa, pluginEa, i18n);
     });
 
     afterEach(() => {
@@ -135,7 +137,8 @@ describe('ExportService', () => {
     });
 
     it('should not have any output since there are no column definitions provided', (done) => {
-      const eaSpy = jest.spyOn(ea, 'publish');
+      const globalEaSpy = jest.spyOn(globalEa, 'publish');
+      const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
       const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
       const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
@@ -146,7 +149,8 @@ describe('ExportService', () => {
       service.exportToFile(mockExportCsvOptions);
 
       setTimeout(() => {
-        expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, expect.anything());
+        expect(pluginEaSpy).toHaveBeenNthCalledWith(2, `exportService:onAfterExportToFile`, expect.anything());
+        expect(globalEaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, expect.anything());
         expect(spyUrlCreate).toHaveBeenCalledWith(mockCsvBlob);
         expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
         done();
@@ -178,36 +182,42 @@ describe('ExportService', () => {
       });
 
       it('should trigger an event before exporting the file', () => {
-        const eaSpy = jest.spyOn(ea, 'publish');
+        const globalEaSpy = jest.spyOn(globalEa, 'publish');
+        const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
 
         service.init(gridStub, dataViewStub);
         service.exportToFile(mockExportTxtOptions);
 
-        expect(eaSpy).toHaveBeenCalledWith(`${DEFAULT_AURELIA_EVENT_PREFIX}:onBeforeExportToFile`, true);
+        expect(pluginEaSpy).toHaveBeenCalledWith(`exportService:onBeforeExportToFile`, true);
+        expect(globalEaSpy).toHaveBeenCalledWith(`${DEFAULT_AURELIA_EVENT_PREFIX}:onBeforeExportToFile`, true);
       });
 
       it('should trigger an event after exporting the file', (done) => {
-        const eaSpy = jest.spyOn(ea, 'publish');
+        const globalEaSpy = jest.spyOn(globalEa, 'publish');
+        const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
 
         service.init(gridStub, dataViewStub);
         service.exportToFile(mockExportTxtOptions);
 
         setTimeout(() => {
-          expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, expect.anything());
+          expect(pluginEaSpy).toHaveBeenNthCalledWith(2, `exportService:onAfterExportToFile`, expect.anything());
+          expect(globalEaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, expect.anything());
           done();
         });
       });
 
       it('should call "URL.createObjectURL" with a Blob and CSV file when browser is not IE11 (basically any other browser) when exporting as CSV', (done) => {
         const optionExpectation = { filename: 'export.csv', format: 'csv', useUtf8WithBom: false };
-        const eaSpy = jest.spyOn(ea, 'publish');
+        const globalEaSpy = jest.spyOn(globalEa, 'publish');
+        const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
         const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
 
         service.init(gridStub, dataViewStub);
         service.exportToFile(mockExportCsvOptions);
 
         setTimeout(() => {
-          expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
+          expect(pluginEaSpy).toHaveBeenNthCalledWith(2, `exportService:onAfterExportToFile`, optionExpectation);
+          expect(globalEaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
           expect(spyUrlCreate).toHaveBeenCalledWith(mockCsvBlob);
           done();
         });
@@ -215,28 +225,32 @@ describe('ExportService', () => {
 
       it('should call "msSaveOrOpenBlob" with a Blob and CSV file when browser is IE11 when exporting as CSV', (done) => {
         navigator.msSaveOrOpenBlob = jest.fn();
-        const eaSpy = jest.spyOn(ea, 'publish');
+        const globalEaSpy = jest.spyOn(globalEa, 'publish');
+        const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
         const spyMsSave = jest.spyOn(navigator, 'msSaveOrOpenBlob');
 
         service.init(gridStub, dataViewStub);
         service.exportToFile(mockExportCsvOptions);
 
         setTimeout(() => {
-          expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, expect.anything());
+          expect(pluginEaSpy).toHaveBeenNthCalledWith(2, `exportService:onAfterExportToFile`, expect.anything());
+          expect(globalEaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, expect.anything());
           expect(spyMsSave).toHaveBeenCalledWith(mockCsvBlob, 'export.csv');
           done();
         });
       });
 
       it('should call "URL.createObjectURL" with a Blob and TXT file when browser is not IE11 (basically any other browser) when exporting as TXT', (done) => {
-        const eaSpy = jest.spyOn(ea, 'publish');
+        const globalEaSpy = jest.spyOn(globalEa, 'publish');
+        const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
         const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
 
         service.init(gridStub, dataViewStub);
         service.exportToFile(mockExportTxtOptions);
 
         setTimeout(() => {
-          expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, expect.anything());
+          expect(pluginEaSpy).toHaveBeenNthCalledWith(2, `exportService:onAfterExportToFile`, expect.anything());
+          expect(globalEaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, expect.anything());
           expect(spyUrlCreate).toHaveBeenCalledWith(mockTxtBlob);
           done();
         });
@@ -244,14 +258,16 @@ describe('ExportService', () => {
 
       it('should call "msSaveOrOpenBlob" with a Blob and TXT file when browser is IE11 when exporting as TXT', (done) => {
         navigator.msSaveOrOpenBlob = jest.fn();
-        const eaSpy = jest.spyOn(ea, 'publish');
+        const globalEaSpy = jest.spyOn(globalEa, 'publish');
+        const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
         const spyMsSave = jest.spyOn(navigator, 'msSaveOrOpenBlob');
 
         service.init(gridStub, dataViewStub);
         service.exportToFile(mockExportTxtOptions);
 
         setTimeout(() => {
-          expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, expect.anything());
+          expect(pluginEaSpy).toHaveBeenNthCalledWith(2, `exportService:onAfterExportToFile`, expect.anything());
+          expect(globalEaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, expect.anything());
           expect(spyMsSave).toHaveBeenCalledWith(mockTxtBlob, 'export.txt');
           done();
         });
@@ -281,7 +297,8 @@ describe('ExportService', () => {
         mockCollection = [{ id: 0, userId: '1E06', firstName: 'John', lastName: 'Z', position: 'SALES_REP', order: 10 }];
         jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
         jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
-        const eaSpy = jest.spyOn(ea, 'publish');
+        const globalEaSpy = jest.spyOn(globalEa, 'publish');
+        const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
         const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
         const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
@@ -294,7 +311,8 @@ describe('ExportService', () => {
         service.exportToFile(mockExportCsvOptions);
 
         setTimeout(() => {
-          expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
+          expect(pluginEaSpy).toHaveBeenNthCalledWith(2, `exportService:onAfterExportToFile`, optionExpectation);
+          expect(globalEaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
           expect(spyUrlCreate).toHaveBeenCalledWith(mockCsvBlob);
           expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
           done();
@@ -306,7 +324,8 @@ describe('ExportService', () => {
         mockCollection = [{ id: 0, userId: '1E06', firstName: 'John', lastName: 'Z', position: 'SALES_REP', order: 10 }];
         jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
         jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
-        const eaSpy = jest.spyOn(ea, 'publish');
+        const globalEaSpy = jest.spyOn(globalEa, 'publish');
+        const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
         const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
         const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
@@ -319,7 +338,8 @@ describe('ExportService', () => {
         service.exportToFile(mockExportCsvOptions);
 
         setTimeout(() => {
-          expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
+          expect(pluginEaSpy).toHaveBeenNthCalledWith(2, `exportService:onAfterExportToFile`, optionExpectation);
+          expect(globalEaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
           expect(spyUrlCreate).toHaveBeenCalledWith(mockCsvBlob);
           expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
           done();
@@ -331,7 +351,8 @@ describe('ExportService', () => {
         mockCollection = [{ id: 0, userId: '1E06', firstName: 'John', lastName: 'Z', position: 'SALES_REP', order: 10 }];
         jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
         jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
-        const eaSpy = jest.spyOn(ea, 'publish');
+        const globalEaSpy = jest.spyOn(globalEa, 'publish');
+        const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
         const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
         const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
@@ -344,7 +365,8 @@ describe('ExportService', () => {
         service.exportToFile(mockExportCsvOptions);
 
         setTimeout(() => {
-          expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
+          expect(pluginEaSpy).toHaveBeenNthCalledWith(2, `exportService:onAfterExportToFile`, optionExpectation);
+          expect(globalEaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
           expect(spyUrlCreate).toHaveBeenCalledWith(mockCsvBlob);
           expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
           done();
@@ -355,7 +377,8 @@ describe('ExportService', () => {
         mockCollection = [{ id: 1, userId: '2B02', firstName: 'Jane', lastName: 'Doe', position: 'FINANCE_MANAGER', order: 1 }];
         jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
         jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
-        const eaSpy = jest.spyOn(ea, 'publish');
+        const globalEaSpy = jest.spyOn(globalEa, 'publish');
+        const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
         const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
         const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
@@ -368,7 +391,8 @@ describe('ExportService', () => {
         service.exportToFile(mockExportCsvOptions);
 
         setTimeout(() => {
-          expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
+          expect(pluginEaSpy).toHaveBeenNthCalledWith(2, `exportService:onAfterExportToFile`, optionExpectation);
+          expect(globalEaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
           expect(spyUrlCreate).toHaveBeenCalledWith(mockCsvBlob);
           expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
           done();
@@ -379,7 +403,8 @@ describe('ExportService', () => {
         mockCollection = [{ id: 2, userId: '3C2', firstName: 'Ava Luna', lastName: null, position: 'HUMAN_RESOURCES', order: 3 }];
         jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
         jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
-        const eaSpy = jest.spyOn(ea, 'publish');
+        const globalEaSpy = jest.spyOn(globalEa, 'publish');
+        const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
         const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
         const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
@@ -392,7 +417,8 @@ describe('ExportService', () => {
         service.exportToFile(mockExportCsvOptions);
 
         setTimeout(() => {
-          expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
+          expect(pluginEaSpy).toHaveBeenNthCalledWith(2, `exportService:onAfterExportToFile`, optionExpectation);
+          expect(globalEaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
           expect(spyUrlCreate).toHaveBeenCalledWith(mockCsvBlob);
           expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
           done();
@@ -403,7 +429,8 @@ describe('ExportService', () => {
         mockCollection = [{ id: 2, firstName: 'Ava', lastName: 'Luna', position: 'HUMAN_RESOURCES', order: 3 }];
         jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
         jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
-        const eaSpy = jest.spyOn(ea, 'publish');
+        const globalEaSpy = jest.spyOn(globalEa, 'publish');
+        const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
         const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
         const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
@@ -416,7 +443,8 @@ describe('ExportService', () => {
         service.exportToFile(mockExportCsvOptions);
 
         setTimeout(() => {
-          expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
+          expect(pluginEaSpy).toHaveBeenNthCalledWith(2, `exportService:onAfterExportToFile`, optionExpectation);
+          expect(globalEaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
           expect(spyUrlCreate).toHaveBeenCalledWith(mockCsvBlob);
           expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
           done();
@@ -427,7 +455,8 @@ describe('ExportService', () => {
         mockCollection = [{ id: 2, userId: '3C2', firstName: 'Ava', lastName: 'Luna', position: 'HUMAN_RESOURCES', order: 13 }];
         jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
         jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
-        const eaSpy = jest.spyOn(ea, 'publish');
+        const globalEaSpy = jest.spyOn(globalEa, 'publish');
+        const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
         const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
         const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
@@ -440,7 +469,8 @@ describe('ExportService', () => {
         service.exportToFile(mockExportCsvOptions);
 
         setTimeout(() => {
-          expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
+          expect(pluginEaSpy).toHaveBeenNthCalledWith(2, `exportService:onAfterExportToFile`, optionExpectation);
+          expect(globalEaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
           expect(spyUrlCreate).toHaveBeenCalledWith(mockCsvBlob);
           expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
           done();
@@ -451,7 +481,8 @@ describe('ExportService', () => {
         mockCollection = [{ id: 3, userId: undefined, firstName: '', lastName: 'Cash', position: 'SALES_REP', order: 3 },];
         jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
         jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
-        const eaSpy = jest.spyOn(ea, 'publish');
+        const globalEaSpy = jest.spyOn(globalEa, 'publish');
+        const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
         const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
         const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
@@ -464,7 +495,8 @@ describe('ExportService', () => {
         service.exportToFile(mockExportCsvOptions);
 
         setTimeout(() => {
-          expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
+          expect(pluginEaSpy).toHaveBeenNthCalledWith(2, `exportService:onAfterExportToFile`, optionExpectation);
+          expect(globalEaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
           expect(spyUrlCreate).toHaveBeenCalledWith(mockCsvBlob);
           expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
           done();
@@ -476,7 +508,8 @@ describe('ExportService', () => {
         mockCollection = [{ id: 1, userId: '2B02', firstName: 'Jane', lastName: 'Doe', position: 'FINANCE_MANAGER', order: 1 }];
         jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
         jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
-        const eaSpy = jest.spyOn(ea, 'publish');
+        const globalEaSpy = jest.spyOn(globalEa, 'publish');
+        const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
         const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
         const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
@@ -489,7 +522,8 @@ describe('ExportService', () => {
         service.exportToFile(mockExportCsvOptions);
 
         setTimeout(() => {
-          expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
+          expect(pluginEaSpy).toHaveBeenNthCalledWith(2, `exportService:onAfterExportToFile`, optionExpectation);
+          expect(globalEaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
           expect(spyUrlCreate).toHaveBeenCalledWith(mockCsvBlob);
           expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
           done();
@@ -502,7 +536,8 @@ describe('ExportService', () => {
         mockCollection = [{ id: 1, userId: '2B02', firstName: 'Jane', lastName: 'Doe', position: 'FINANCE_MANAGER', order: 1 }];
         jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
         jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
-        const eaSpy = jest.spyOn(ea, 'publish');
+        const globalEaSpy = jest.spyOn(globalEa, 'publish');
+        const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
         const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
         const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
@@ -515,7 +550,8 @@ describe('ExportService', () => {
         service.exportToFile(mockExportCsvOptions);
 
         setTimeout(() => {
-          expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
+          expect(pluginEaSpy).toHaveBeenNthCalledWith(2, `exportService:onAfterExportToFile`, optionExpectation);
+          expect(globalEaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
           expect(spyUrlCreate).toHaveBeenCalledWith(mockCsvBlob);
           expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
           done();
@@ -541,7 +577,8 @@ describe('ExportService', () => {
         mockCollection = [{ id: 0, user: { firstName: 'John', lastName: 'Z' }, position: 'SALES_REP', order: 10 }];
         jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
         jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
-        const eaSpy = jest.spyOn(ea, 'publish');
+        const globalEaSpy = jest.spyOn(globalEa, 'publish');
+        const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
         const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
         const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
@@ -554,7 +591,8 @@ describe('ExportService', () => {
         service.exportToFile(mockExportCsvOptions);
 
         setTimeout(() => {
-          expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
+          expect(pluginEaSpy).toHaveBeenNthCalledWith(2, `exportService:onAfterExportToFile`, optionExpectation);
+          expect(globalEaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
           expect(spyUrlCreate).toHaveBeenCalledWith(mockCsvBlob);
           expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
           done();
@@ -591,7 +629,8 @@ describe('ExportService', () => {
         mockCollection = [{ id: 0, userId: '1E06', firstName: 'John', lastName: 'Z', position: 'SALES_REP', order: 10 }];
         jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
         jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
-        const eaSpy = jest.spyOn(ea, 'publish');
+        const globalEaSpy = jest.spyOn(globalEa, 'publish');
+        const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
         const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
         const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
@@ -604,7 +643,8 @@ describe('ExportService', () => {
         service.exportToFile(mockExportCsvOptions);
 
         setTimeout(() => {
-          expect(eaSpy).toHaveBeenNthCalledWith(2, `asg-prefix:onAfterExportToFile`, optionExpectation);
+          expect(pluginEaSpy).toHaveBeenNthCalledWith(2, `exportService:onAfterExportToFile`, optionExpectation);
+          expect(globalEaSpy).toHaveBeenNthCalledWith(2, `asg-prefix:onAfterExportToFile`, optionExpectation);
           expect(spyUrlCreate).toHaveBeenCalledWith(mockCsvBlob);
           expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
           done();
@@ -677,7 +717,8 @@ describe('ExportService', () => {
       });
 
       it(`should have a CSV export with grouping (same as the grid, WYSIWYG) when "enableGrouping" is set in the grid options and grouping are defined`, (done) => {
-        const eaSpy = jest.spyOn(ea, 'publish');
+        const globalEaSpy = jest.spyOn(globalEa, 'publish');
+        const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
         const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
         const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
@@ -693,7 +734,8 @@ describe('ExportService', () => {
         service.exportToFile(mockExportCsvOptions);
 
         setTimeout(() => {
-          expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
+          expect(pluginEaSpy).toHaveBeenNthCalledWith(2, `exportService:onAfterExportToFile`, optionExpectation);
+          expect(globalEaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
           expect(spyUrlCreate).toHaveBeenCalledWith(mockCsvBlob);
           expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
           done();
@@ -701,7 +743,8 @@ describe('ExportService', () => {
       });
 
       it(`should have a TXT export with grouping (same as the grid, WYSIWYG) when "enableGrouping" is set in the grid options and grouping are defined`, (done) => {
-        const eaSpy = jest.spyOn(ea, 'publish');
+        const globalEaSpy = jest.spyOn(globalEa, 'publish');
+        const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
         const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
         const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
@@ -717,7 +760,8 @@ describe('ExportService', () => {
         service.exportToFile(mockExportTxtOptions);
 
         setTimeout(() => {
-          expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
+          expect(pluginEaSpy).toHaveBeenNthCalledWith(2, `exportService:onAfterExportToFile`, optionExpectation);
+          expect(globalEaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
           expect(spyUrlCreate).toHaveBeenCalledWith(mockTxtBlob);
           expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
           done();
@@ -790,7 +834,8 @@ describe('ExportService', () => {
       });
 
       it(`should have a CSV export with grouping (same as the grid, WYSIWYG) when "enableGrouping" is set in the grid options and grouping are defined`, (done) => {
-        const eaSpy = jest.spyOn(ea, 'publish');
+        const globalEaSpy = jest.spyOn(globalEa, 'publish');
+        const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
         const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
         const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
@@ -806,7 +851,8 @@ describe('ExportService', () => {
         service.exportToFile(mockExportCsvOptions);
 
         setTimeout(() => {
-          expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
+          expect(pluginEaSpy).toHaveBeenNthCalledWith(2, `exportService:onAfterExportToFile`, optionExpectation);
+          expect(globalEaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
           expect(spyUrlCreate).toHaveBeenCalledWith(mockCsvBlob);
           expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
           done();
@@ -814,7 +860,8 @@ describe('ExportService', () => {
       });
 
       it(`should have a TXT export with grouping (same as the grid, WYSIWYG) when "enableGrouping" is set in the grid options and grouping are defined`, (done) => {
-        const eaSpy = jest.spyOn(ea, 'publish');
+        const globalEaSpy = jest.spyOn(globalEa, 'publish');
+        const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
         const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
         const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
@@ -830,7 +877,8 @@ describe('ExportService', () => {
         service.exportToFile(mockExportTxtOptions);
 
         setTimeout(() => {
-          expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
+          expect(pluginEaSpy).toHaveBeenNthCalledWith(2, `exportService:onAfterExportToFile`, optionExpectation);
+          expect(globalEaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
           expect(spyUrlCreate).toHaveBeenCalledWith(mockTxtBlob);
           expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
           done();
@@ -940,7 +988,8 @@ describe('ExportService', () => {
       });
 
       it(`should have a CSV export with grouping (same as the grid, WYSIWYG) when "enableGrouping" is set in the grid options and grouping are defined`, (done) => {
-        const eaSpy = jest.spyOn(ea, 'publish');
+        const globalEaSpy = jest.spyOn(globalEa, 'publish');
+        const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
         const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
         const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
@@ -959,7 +1008,8 @@ describe('ExportService', () => {
         service.exportToFile(mockExportCsvOptions);
 
         setTimeout(() => {
-          expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
+          expect(pluginEaSpy).toHaveBeenNthCalledWith(2, `exportService:onAfterExportToFile`, optionExpectation);
+          expect(globalEaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
           expect(spyUrlCreate).toHaveBeenCalledWith(mockCsvBlob);
           expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
           done();
@@ -967,7 +1017,8 @@ describe('ExportService', () => {
       });
 
       it(`should have a TXT export with grouping (same as the grid, WYSIWYG) when "enableGrouping" is set in the grid options and grouping are defined`, (done) => {
-        const eaSpy = jest.spyOn(ea, 'publish');
+        const globalEaSpy = jest.spyOn(globalEa, 'publish');
+        const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
         const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
         const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
@@ -986,7 +1037,8 @@ describe('ExportService', () => {
         service.exportToFile(mockExportTxtOptions);
 
         setTimeout(() => {
-          expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
+          expect(pluginEaSpy).toHaveBeenNthCalledWith(2, `exportService:onAfterExportToFile`, optionExpectation);
+          expect(globalEaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToFile`, optionExpectation);
           expect(spyUrlCreate).toHaveBeenCalledWith(mockTxtBlob);
           expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, content: removeMultipleSpaces(contentExpectation) });
           done();
@@ -998,7 +1050,7 @@ describe('ExportService', () => {
   describe('without I18N Service', () => {
     beforeEach(() => {
       i18n = null;
-      service = new ExportService(i18n, ea);
+      service = new ExportService(globalEa, pluginEa, i18n);
     });
 
     it('should throw an error if "enableTranslate" is set but the I18N Service is null', () => {

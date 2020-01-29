@@ -10,17 +10,17 @@ import {
   Column,
   ExportOption,
   FileType,
-  Formatter,
   GridOption,
   KeyTitlePair,
   Locale,
 } from './../models/index';
 import { addWhiteSpaces, htmlEntityDecode, sanitizeHtmlToText, titleCase } from './../services/utilities';
+import { SlickgridEventAggregator } from '../custom-elements/slickgridEventAggregator';
 
 const DEFAULT_AURELIA_EVENT_PREFIX = 'asg';
 
 @singleton(true)
-@inject(Optional.of(I18N), EventAggregator)
+@inject(EventAggregator, SlickgridEventAggregator, Optional.of(I18N))
 export class ExportService {
   private _aureliaEventPrefix: string;
   private _delimiter = ',';
@@ -35,7 +35,7 @@ export class ExportService {
   private _hasGroupedItems = false;
   private _locales: Locale;
 
-  constructor(private i18n: I18N, private ea: EventAggregator) { }
+  constructor(private globalEa: EventAggregator, private pluginEa: SlickgridEventAggregator, private i18n: I18N) { }
 
   private get datasetIdName(): string {
     return this._gridOptions && this._gridOptions.datasetIdPropertyName || 'id';
@@ -79,7 +79,8 @@ export class ExportService {
     }
 
     return new Promise((resolve, reject) => {
-      this.ea.publish(`${this._aureliaEventPrefix}:onBeforeExportToFile`, true);
+      this.pluginEa.publish(`exportService:onBeforeExportToFile`, true);
+      this.globalEa.publish(`${this._aureliaEventPrefix}:onBeforeExportToFile`, true); // @deprecated, should remove it in the future
       this._exportOptions = $.extend(true, {}, this._gridOptions.exportOptions, options);
       this._delimiter = this._exportOptions.delimiterOverride || this._exportOptions.delimiter || '';
       this._fileFormat = this._exportOptions.format || FileType.csv;
@@ -99,7 +100,8 @@ export class ExportService {
 
           // start downloading but add the content property only on the start download not on the event itself
           this.startDownloadFile({ ...downloadOptions, content: dataOutput }); // add content property
-          this.ea.publish(`${this._aureliaEventPrefix}:onAfterExportToFile`, downloadOptions);
+          this.pluginEa.publish(`exportService:onAfterExportToFile`, downloadOptions);
+          this.globalEa.publish(`${this._aureliaEventPrefix}:onAfterExportToFile`, downloadOptions); // @deprecated, should remove it in the future
           resolve(true);
         } catch (error) {
           reject(error);

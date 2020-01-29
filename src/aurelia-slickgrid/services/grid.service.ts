@@ -13,6 +13,8 @@ import { ExtensionService } from './extension.service';
 import { FilterService } from './filter.service';
 import { GridStateService } from './gridState.service';
 import { SortService } from './sort.service';
+import { SlickgridEventAggregator } from '../custom-elements/slickgridEventAggregator';
+import { toKebabCase } from './utilities';
 
 // using external non-typed js libraries
 declare var Slick: any;
@@ -23,14 +25,15 @@ const GridServiceInsertOptionDefaults: GridServiceInsertOption = { highlightRow:
 const GridServiceUpdateOptionDefaults: GridServiceUpdateOption = { highlightRow: true, selectRow: false, scrollRowIntoView: false, triggerEvent: true };
 
 @singleton(true)
-@inject(EventAggregator, ExtensionService, FilterService, GridStateService, SortService)
+@inject(EventAggregator, SlickgridEventAggregator, ExtensionService, FilterService, GridStateService, SortService)
 export class GridService {
   private _aureliaEventPrefix = DEFAULT_AURELIA_EVENT_PREFIX;
   private _dataView: any;
   private _grid: any;
 
   constructor(
-    private ea: EventAggregator,
+    private globalEa: EventAggregator,
+    private pluginEa: SlickgridEventAggregator,
     private extensionService: ExtensionService,
     private filterService: FilterService,
     private gridStateService: GridStateService,
@@ -329,7 +332,8 @@ export class GridService {
 
     // do we want to trigger an event after adding the item
     if (options.triggerEvent) {
-      this.ea.publish(`${this._aureliaEventPrefix}:on-item-added`, item);
+      this.pluginEa.publish(`gridService:onItemAdded`, item);
+      this.globalEa.publish(`${this._aureliaEventPrefix}:on-item-added`, item); // @deprecated, should remove it in the future
     }
 
     return rowNumber;
@@ -375,7 +379,8 @@ export class GridService {
 
     // do we want to trigger an event after adding the item
     if (options.triggerEvent) {
-      this.ea.publish(`${this._aureliaEventPrefix}:on-item-added`, items);
+      this.pluginEa.publish(`gridService:onItemAdded`, items);
+      this.globalEa.publish(`${this._aureliaEventPrefix}:on-item-added`, items); // @deprecated, should remove it in the future
     }
 
     return rowNumbers;
@@ -444,7 +449,8 @@ export class GridService {
 
     // do we want to trigger an event after deleting the item
     if (options.triggerEvent) {
-      this.ea.publish(`${this._aureliaEventPrefix}:on-item-deleted`, items);
+      this.pluginEa.publish(`gridService:onItemDeleted`, items);
+      this.globalEa.publish(`${this._aureliaEventPrefix}:on-item-deleted`, items); // @deprecated, should remove it in the future
     }
     return itemIds;
   }
@@ -472,7 +478,8 @@ export class GridService {
 
     // do we want to trigger an event after deleting the item
     if (options.triggerEvent) {
-      this.ea.publish(`${this._aureliaEventPrefix}:on-item-deleted`, itemId);
+      this.pluginEa.publish(`gridService:onItemDeleted`, itemId);
+      this.globalEa.publish(`${this._aureliaEventPrefix}:on-item-deleted`, itemId); // @deprecated, should remove it in the future
     }
     return itemId;
   }
@@ -495,7 +502,8 @@ export class GridService {
 
       // do we want to trigger an event after deleting the item
       if (options.triggerEvent) {
-        this.ea.publish(`${this._aureliaEventPrefix}:on-item-deleted`, itemIds);
+        this.pluginEa.publish(`gridService:onItemDeleted`, itemIds);
+        this.globalEa.publish(`${this._aureliaEventPrefix}:on-item-deleted`, itemIds); // @deprecated, should remove it in the future
       }
       return itemIds;
     }
@@ -569,7 +577,8 @@ export class GridService {
 
     // do we want to trigger an event after updating the item
     if (options.triggerEvent) {
-      this.ea.publish(`${this._aureliaEventPrefix}:on-item-updated`, items);
+      this.pluginEa.publish(`gridService:onItemUpdated`, items);
+      this.globalEa.publish(`${this._aureliaEventPrefix}:on-item-updated`, items); // @deprecated, should remove it in the future
     }
 
     return gridRowNumbers;
@@ -615,7 +624,8 @@ export class GridService {
 
       // do we want to trigger an event after updating the item
       if (options.triggerEvent) {
-        this.ea.publish(`${this._aureliaEventPrefix}:on-item-updated`, item);
+        this.pluginEa.publish(`gridService:onItemUpdated`, item);
+        this.globalEa.publish(`${this._aureliaEventPrefix}:on-item-updated`, item); // @deprecated, should remove it in the future
       }
     }
     return rowNumber;
@@ -670,14 +680,18 @@ export class GridService {
 
     // do we want to trigger an event after updating the item
     if (options.triggerEvent) {
-      this.ea.publish(`${this._aureliaEventPrefix}:on-item-upserted`, items);
+      this.pluginEa.publish(`gridService:onItemUpserted`, items);
+      this.globalEa.publish(`${this._aureliaEventPrefix}:on-item-upserted`, items); // @deprecated, should remove it in the future
+
       const addedItems = upsertedRows.filter((upsertRow) => upsertRow.added !== undefined);
       if (Array.isArray(addedItems) && addedItems.length > 0) {
-        this.ea.publish(`${this._aureliaEventPrefix}:on-item-added`, addedItems);
+        this.pluginEa.publish(`gridService:onItemAdded`, addedItems);
+        this.globalEa.publish(`${this._aureliaEventPrefix}:on-item-added`, addedItems); // @deprecated, should remove it in the future
       }
       const updatedItems = upsertedRows.filter((upsertRow) => upsertRow.updated !== undefined);
       if (Array.isArray(updatedItems) && updatedItems.length > 0) {
-        this.ea.publish(`${this._aureliaEventPrefix}:on-item-updated`, updatedItems);
+        this.pluginEa.publish(`gridService:onItemUpdated`, updatedItems);
+        this.globalEa.publish(`${this._aureliaEventPrefix}:on-item-updated`, updatedItems); // @deprecated, should remove it in the future
       }
     }
     return upsertedRows;
@@ -709,9 +723,14 @@ export class GridService {
 
     // do we want to trigger an event after updating the item
     if (options.triggerEvent) {
-      const crudEventName = isItemAdded ? 'on-item-added' : 'on-item-updated';
-      this.ea.publish(`${this._aureliaEventPrefix}:${crudEventName}`, item);
-      this.ea.publish(`${this._aureliaEventPrefix}:on-item-upserted`, item);
+      const crudEventName = isItemAdded ? 'onItemAdded' : 'onItemUpdated';
+
+      this.pluginEa.publish(`gridService:${crudEventName}`, item);
+      this.pluginEa.publish(`gridService:onItemUpserted`, item);
+
+      // @deprecated, should remove it in the future
+      this.globalEa.publish(`${this._aureliaEventPrefix}:${toKebabCase(crudEventName)}`, item);
+      this.globalEa.publish(`${this._aureliaEventPrefix}:on-item-upserted`, item);
     }
     return { added: rowNumberAdded, updated: rowNumberUpdated };
   }

@@ -1,8 +1,10 @@
 import { singleton, inject } from 'aurelia-framework';
 import { EventAggregator } from 'aurelia-event-aggregator';
+import * as $ from 'jquery';
+
 import { GridOption } from './../models/index';
 import { getScrollBarWidth } from './utilities';
-import * as $ from 'jquery';
+import { SlickgridEventAggregator } from '../custom-elements/slickgridEventAggregator';
 
 // global constants, height/width are in pixels
 const DATAGRID_MIN_HEIGHT = 180;
@@ -18,7 +20,7 @@ export interface GridDimension {
 }
 
 @singleton(true)
-@inject(EventAggregator)
+@inject(EventAggregator, SlickgridEventAggregator)
 export class ResizerService {
   private _fixedHeight: number | null | undefined;
   private _fixedWidth: number | null | undefined;
@@ -28,7 +30,7 @@ export class ResizerService {
   private _timer: any;
   aureliaEventPrefix: string;
 
-  constructor(private ea: EventAggregator) { }
+  constructor(private globalEa: EventAggregator, private pluginEa: SlickgridEventAggregator) { }
 
   /** Getter for the Grid Options pulled through the Grid Object */
   private get _gridOptions(): GridOption {
@@ -67,7 +69,9 @@ export class ResizerService {
     // -- 2nd bind a trigger on the Window DOM element, so that it happens also when resizing after first load
     // -- bind auto-resize to Window object only if it exist
     $(window).on(`resize.grid.${this._gridUid}`, (event: Event) => {
-      this.ea.publish(`${this.aureliaEventPrefix}:onBeforeResize`, event);
+      this.pluginEa.publish(`resizerService:onBeforeResize`, event);
+      this.globalEa.publish(`${this.aureliaEventPrefix}:onBeforeResize`, event); // @deprecated, should remove it in the future
+
       if (!this._resizePaused) {
         this.resizeGrid(0, newSizes);
       }
@@ -207,7 +211,8 @@ export class ResizerService {
 
   resizeGridCallback(newSizes: GridDimension | undefined) {
     const lastDimensions = this.resizeGridWithDimensions(newSizes);
-    this.ea.publish(`${this.aureliaEventPrefix}:onAfterResize`, lastDimensions);
+    this.pluginEa.publish(`resizerService:onAfterResize`, lastDimensions);
+    this.globalEa.publish(`${this.aureliaEventPrefix}:onAfterResize`, lastDimensions); // @deprecated, should remove it in the future
     return lastDimensions;
   }
 

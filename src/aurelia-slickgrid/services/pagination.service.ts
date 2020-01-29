@@ -1,24 +1,22 @@
 import { inject, singleton } from 'aurelia-framework';
-import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
+import { Subscription } from 'aurelia-event-aggregator';
 import * as isequal from 'lodash.isequal';
 
 import { BackendServiceApi, CurrentPagination, GraphqlResult, GraphqlPaginatedResult, Pagination, ServicePagination } from '../models/index';
 import { executeBackendProcessesCallback, onBackendError } from './backend-utilities';
 import { SharedService } from './shared.service';
 import { disposeAllSubscriptions } from './utilities';
-
-const DEFAULT_AURELIA_EVENT_PREFIX = 'asg';
+import { SlickgridEventAggregator } from '../custom-elements/slickgridEventAggregator';
 
 // using external non-typed js libraries
 declare var Slick: any;
 
 @singleton(true)
-@inject(EventAggregator, SharedService)
+@inject(SlickgridEventAggregator, SharedService)
 export class PaginationService {
   private _initialized = false;
   private _isLocalGrid = true;
   private _backendServiceApi: BackendServiceApi;
-  private _aureliaEventPrefix = DEFAULT_AURELIA_EVENT_PREFIX;
   private _dataFrom = 1;
   private _dataTo = 1;
   private _itemsPerPage: number;
@@ -34,7 +32,7 @@ export class PaginationService {
   grid: any;
 
   /** Constructor */
-  constructor(private ea: EventAggregator, private sharedService: SharedService) { }
+  constructor(private pluginEa: SlickgridEventAggregator, private sharedService: SharedService) { }
 
   set paginationOptions(paginationOptions: Pagination) {
     this._paginationOptions = paginationOptions;
@@ -107,14 +105,14 @@ export class PaginationService {
     }
 
     // Subscribe to Filter Clear & Changed and go back to page 1 when that happen
-    this._subscriptions.push(this.ea.subscribe('filterService:filterChanged', () => this.resetPagination()));
-    this._subscriptions.push(this.ea.subscribe('filterService:filterCleared', () => this.resetPagination()));
+    this._subscriptions.push(this.pluginEa.subscribe('filterService:filterChanged', () => this.resetPagination()));
+    this._subscriptions.push(this.pluginEa.subscribe('filterService:filterCleared', () => this.resetPagination()));
 
     // Subscribe to any dataview row count changed so that when Adding/Deleting item(s) through the DataView
     // that would trigger a refresh of the pagination numbers
     if (this.dataView) {
-      this._subscriptions.push(this.ea.subscribe(`${this._aureliaEventPrefix}:on-item-added`, (items: any | any[]) => this.processOnItemAddedOrRemoved(items, true)));
-      this._subscriptions.push(this.ea.subscribe(`${this._aureliaEventPrefix}:on-item-deleted`, (items: any | any[]) => this.processOnItemAddedOrRemoved(items, false)));
+      this._subscriptions.push(this.pluginEa.subscribe(`gridService:onItemAdded`, (items: any | any[]) => this.processOnItemAddedOrRemoved(items, true)));
+      this._subscriptions.push(this.pluginEa.subscribe(`gridService:onItemDeleted`, (items: any | any[]) => this.processOnItemAddedOrRemoved(items, false)));
     }
 
     this.refreshPagination(false, false);
@@ -254,7 +252,7 @@ export class PaginationService {
     this.sharedService.currentPagination = currentPagination;
 
     if (triggerChangedEvent && !isequal(previousPagination, currentPagination)) {
-      this.ea.publish(`paginationService:on-pagination-changed`, this.getFullPagination());
+      this.pluginEa.publish(`paginationService:onPaginationChanged`, this.getFullPagination());
     }
     this.sharedService.currentPagination = this.getCurrentPagination();
   }
@@ -270,7 +268,7 @@ export class PaginationService {
 
       if (this._isLocalGrid) {
         this.dataView.setPagingOptions({ pageSize: this._itemsPerPage, pageNum: (pageNumber - 1) }); // dataView page starts at 0 instead of 1
-        this.ea.publish(`paginationService:on-pagination-changed`, this.getFullPagination());
+        this.pluginEa.publish(`paginationService:onPaginationChanged`, this.getFullPagination());
       } else {
         const itemsPerPage = +this._itemsPerPage;
 
@@ -297,7 +295,7 @@ export class PaginationService {
               reject(process);
             });
         }
-        this.ea.publish(`paginationService:on-pagination-changed`, this.getFullPagination());
+        this.pluginEa.publish(`paginationService:onPaginationChanged`, this.getFullPagination());
       }
     });
   }
@@ -350,7 +348,7 @@ export class PaginationService {
       // finally refresh the "To" count and we know it might be different than the "items per page" count
       // but this is necessary since we don't want an actual backend refresh
       this._dataTo = previousDataTo + itemCountWithDirection;
-      this.ea.publish(`paginationService:on-pagination-changed`, this.getFullPagination());
+      this.pluginEa.publish(`paginationService:onPaginationChanged`, this.getFullPagination());
     }
   }
 }

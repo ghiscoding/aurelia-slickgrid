@@ -52,7 +52,6 @@ export class Example6 {
   processing = false;
   selectedLanguage: string;
   status = { text: '', class: '' };
-  subscription: Subscription;
 
   constructor(private ea: EventAggregator, private http: HttpClient, private i18n: I18N) {
     // define the grid options & columns and then create the grid itself
@@ -62,12 +61,10 @@ export class Example6 {
     const defaultLang = 'en';
     this.i18n.setLocale(defaultLang);
     this.selectedLanguage = defaultLang;
-    this.subscription = this.ea.subscribe('gridStateService:changed', (data) => console.log(data));
   }
 
   detached() {
     this.saveCurrentGridState();
-    this.subscription.dispose();
   }
 
   aureliaGridReady(aureliaGrid: AureliaGridInstance) {

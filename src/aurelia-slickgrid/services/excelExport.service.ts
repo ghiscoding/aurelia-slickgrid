@@ -23,11 +23,12 @@ import {
 import { Constants } from '../constants';
 import { exportWithFormatterWhenDefined } from './export-utilities';
 import { addWhiteSpaces, sanitizeHtmlToText, titleCase, mapMomentDateFormatWithFieldType } from './utilities';
+import { SlickgridEventAggregator } from '../custom-elements/slickgridEventAggregator';
 
 const DEFAULT_AURELIA_EVENT_PREFIX = 'asg';
 
 @singleton(true)
-@inject(Optional.of(I18N), EventAggregator)
+@inject(EventAggregator, SlickgridEventAggregator, Optional.of(I18N))
 export class ExcelExportService {
   private _aureliaEventPrefix: string;
   private _fileFormat = FileType.xlsx;
@@ -43,7 +44,7 @@ export class ExcelExportService {
   private _stylesheetFormats: any;
   private _workbook: ExcelWorkbook;
 
-  constructor(private i18n: I18N, private ea: EventAggregator) { }
+  constructor(private globalEa: EventAggregator, private pluginEa: SlickgridEventAggregator, private i18n: I18N) { }
 
   private get datasetIdName(): string {
     return this._gridOptions && this._gridOptions.datasetIdPropertyName || 'id';
@@ -88,7 +89,8 @@ export class ExcelExportService {
     }
 
     return new Promise((resolve, reject) => {
-      this.ea.publish(`${this._aureliaEventPrefix}:onBeforeExportToExcel`, true);
+      this.pluginEa.publish(`excelExportService:onBeforeExportToExcel`, true);
+      this.globalEa.publish(`${this._aureliaEventPrefix}:onBeforeExportToExcel`, true); // @deprecated, should remove it in the future
       this._excelExportOptions = $.extend(true, {}, this._gridOptions.excelExportOptions, options);
       this._fileFormat = this._excelExportOptions.format || FileType.xlsx;
 
@@ -141,7 +143,8 @@ export class ExcelExportService {
 
           // start downloading but add the Blob property only on the start download not on the event itself
           this.startDownloadFile({ ...downloadOptions, blob: excelBlob, data: this._sheet.data });
-          this.ea.publish(`${this._aureliaEventPrefix}:onAfterExportToExcel`, downloadOptions);
+          this.pluginEa.publish(`excelExportService:onAfterExportToExcel`, downloadOptions);
+          this.globalEa.publish(`${this._aureliaEventPrefix}:onAfterExportToExcel`, downloadOptions); // @deprecated, should remove it in the future
           resolve(true);
         } catch (error) {
           reject(error);

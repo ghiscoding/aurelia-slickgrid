@@ -1,5 +1,5 @@
 import { inject, singleton } from 'aurelia-framework';
-import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
+import { Subscription } from 'aurelia-event-aggregator';
 
 import {
   Column,
@@ -17,12 +17,13 @@ import { ExtensionService } from './extension.service';
 import { FilterService } from './filter.service';
 import { SharedService } from './shared.service';
 import { SortService } from './sort.service';
+import { SlickgridEventAggregator } from '../custom-elements/slickgridEventAggregator';
 
 // using external non-typed js libraries
 declare var Slick: any;
 
 @singleton(true)
-@inject(EventAggregator, ExtensionService, FilterService, SharedService, SortService)
+@inject(SlickgridEventAggregator, ExtensionService, FilterService, SharedService, SortService)
 export class GridStateService {
   private _eventHandler = new Slick.EventHandler();
   private _columns: Column[] = [];
@@ -31,7 +32,7 @@ export class GridStateService {
   private subscriptions: Subscription[] = [];
 
   constructor(
-    private ea: EventAggregator,
+    private pluginEa: SlickgridEventAggregator,
     private extensionService: ExtensionService,
     private filterService: FilterService,
     private sharedService: SharedService,
@@ -207,7 +208,7 @@ export class GridStateService {
   resetColumns(columnDefinitions?: Column[]) {
     const columns: Column[] = columnDefinitions || this._columns;
     const currentColumns: CurrentColumn[] = this.getAssociatedCurrentColumns(columns);
-    this.ea.publish('gridStateService:changed', { change: { newValues: currentColumns, type: GridStateType.columns }, gridState: this.getCurrentGridState() });
+    this.pluginEa.publish('gridStateService:changed', { change: { newValues: currentColumns, type: GridStateType.columns }, gridState: this.getCurrentGridState() });
   }
 
   /** if we use Row Selection or the Checkbox Selector, we need to reset any selection */
@@ -228,31 +229,31 @@ export class GridStateService {
   subscribeToAllGridChanges(grid: any) {
     // Subscribe to Event Emitter of Filter changed
     this.subscriptions.push(
-      this.ea.subscribe('filterService:filterChanged', (currentFilters: CurrentFilter[]) => {
+      this.pluginEa.subscribe('filterService:filterChanged', (currentFilters: CurrentFilter[]) => {
         this.resetRowSelection();
-        this.ea.publish('gridStateService:changed', { change: { newValues: currentFilters, type: GridStateType.filter }, gridState: this.getCurrentGridState() });
+        this.pluginEa.publish('gridStateService:changed', { change: { newValues: currentFilters, type: GridStateType.filter }, gridState: this.getCurrentGridState() });
       })
     );
     // Subscribe to Event Emitter of Filter cleared
     this.subscriptions.push(
-      this.ea.subscribe('filterService:filterCleared', () => {
+      this.pluginEa.subscribe('filterService:filterCleared', () => {
         this.resetRowSelection();
-        this.ea.publish('gridStateService:changed', { change: { newValues: [], type: GridStateType.filter }, gridState: this.getCurrentGridState() });
+        this.pluginEa.publish('gridStateService:changed', { change: { newValues: [], type: GridStateType.filter }, gridState: this.getCurrentGridState() });
       })
     );
 
     // Subscribe to Event Emitter of Sort changed
     this.subscriptions.push(
-      this.ea.subscribe('sortService:sortChanged', (currentSorters: CurrentSorter[]) => {
+      this.pluginEa.subscribe('sortService:sortChanged', (currentSorters: CurrentSorter[]) => {
         this.resetRowSelection();
-        this.ea.publish('gridStateService:changed', { change: { newValues: currentSorters, type: GridStateType.sorter }, gridState: this.getCurrentGridState() });
+        this.pluginEa.publish('gridStateService:changed', { change: { newValues: currentSorters, type: GridStateType.sorter }, gridState: this.getCurrentGridState() });
       })
     );
     // Subscribe to Event Emitter of Sort cleared
     this.subscriptions.push(
-      this.ea.subscribe('sortService:sortCleared', () => {
+      this.pluginEa.subscribe('sortService:sortCleared', () => {
         this.resetRowSelection();
-        this.ea.publish('gridStateService:changed', { change: { newValues: [], type: GridStateType.sorter }, gridState: this.getCurrentGridState() });
+        this.pluginEa.publish('gridStateService:changed', { change: { newValues: [], type: GridStateType.sorter }, gridState: this.getCurrentGridState() });
       })
     );
 
@@ -266,9 +267,9 @@ export class GridStateService {
 
     // subscribe to HeaderMenu (hide column)
     this.subscriptions.push(
-      this.ea.subscribe('headerMenu:onColumnsChanged', (visibleColumns: Column[]) => {
+      this.pluginEa.subscribe('headerMenu:onColumnsChanged', (visibleColumns: Column[]) => {
         const currentColumns: CurrentColumn[] = this.getAssociatedCurrentColumns(visibleColumns);
-        this.ea.publish('gridStateService:changed', { change: { newValues: currentColumns, type: GridStateType.columns }, gridState: this.getCurrentGridState() });
+        this.pluginEa.publish('gridStateService:changed', { change: { newValues: currentColumns, type: GridStateType.columns }, gridState: this.getCurrentGridState() });
       })
     );
   }
@@ -290,7 +291,7 @@ export class GridStateService {
       this._eventHandler.subscribe(slickEvent, (e: Event, args: any) => {
         const columns: Column[] = args && args.columns;
         const currentColumns: CurrentColumn[] = this.getAssociatedCurrentColumns(columns);
-        this.ea.publish('gridStateService:changed', { change: { newValues: currentColumns, type: GridStateType.columns }, gridState: this.getCurrentGridState() });
+        this.pluginEa.publish('gridStateService:changed', { change: { newValues: currentColumns, type: GridStateType.columns }, gridState: this.getCurrentGridState() });
       });
     }
   }
@@ -307,7 +308,7 @@ export class GridStateService {
       this._eventHandler.subscribe(slickGridEvent, (e: Event, args: any) => {
         const columns: Column[] = grid.getColumns();
         const currentColumns: CurrentColumn[] = this.getAssociatedCurrentColumns(columns);
-        this.ea.publish('gridStateService:changed', { change: { newValues: currentColumns, type: GridStateType.columns }, gridState: this.getCurrentGridState() });
+        this.pluginEa.publish('gridStateService:changed', { change: { newValues: currentColumns, type: GridStateType.columns }, gridState: this.getCurrentGridState() });
       });
     }
   }

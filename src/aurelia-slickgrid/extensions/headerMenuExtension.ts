@@ -1,6 +1,6 @@
 import { inject, Optional, singleton } from 'aurelia-framework';
-import { EventAggregator } from 'aurelia-event-aggregator';
 import { I18N } from 'aurelia-i18n';
+
 import { Constants } from '../constants';
 import {
   Column,
@@ -21,13 +21,14 @@ import { FilterService } from '../services/filter.service';
 import { SortService } from '../services/sort.service';
 import { SharedService } from '../services/shared.service';
 import { ExtensionUtility } from './extensionUtility';
+import { SlickgridEventAggregator } from '../custom-elements/slickgridEventAggregator';
 
 // using external non-typed js libraries
 declare var Slick: any;
 
 @singleton(true)
 @inject(
-  EventAggregator,
+  SlickgridEventAggregator,
   ExtensionUtility,
   FilterService,
   Optional.of(I18N),
@@ -40,7 +41,7 @@ export class HeaderMenuExtension implements Extension {
   private _locales: Locale;
 
   constructor(
-    private ea: EventAggregator,
+    private pluginEa: SlickgridEventAggregator,
     private extensionUtility: ExtensionUtility,
     private filterService: FilterService,
     private i18n: I18N,
@@ -210,7 +211,7 @@ export class HeaderMenuExtension implements Extension {
       const visibleColumns = this.extensionUtility.arrayRemoveItemByIndex(currentColumns, columnIndex);
       this.sharedService.visibleColumns = visibleColumns;
       this.sharedService.grid.setColumns(visibleColumns);
-      this.ea.publish('headerMenu:onColumnsChanged', { columns: visibleColumns });
+      this.pluginEa.publish('headerMenu:onColumnsChanged', { columns: visibleColumns });
     }
   }
 
