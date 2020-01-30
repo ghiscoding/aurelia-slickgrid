@@ -51,6 +51,7 @@ import {
 import { executeBackendProcessesCallback, onBackendError } from '../services/backend-utilities';
 import { ExtensionUtility } from '../extensions/extensionUtility';
 import { SharedService } from '../services/shared.service';
+import { SlickgridEventAggregator } from './slickgridEventAggregator';
 
 // using external non-typed js libraries
 declare var Slick: any;
@@ -64,7 +65,7 @@ const DEFAULT_SLICKGRID_EVENT_PREFIX = 'sg';
   Container,
   Element,
   EventAggregator,
-  NewInstance.of(EventAggregator),
+  NewInstance.of(EventAggregator).as(SlickgridEventAggregator),
   ExcelExportService,
   ExportService,
   ExtensionService,
@@ -123,7 +124,7 @@ export class AureliaSlickgridCustomElement {
     private container: Container,
     private elm: Element,
     private globalEa: EventAggregator,
-    private localEa: EventAggregator,
+    private pluginEa: SlickgridEventAggregator,
     private excelExportService: ExcelExportService,
     private exportService: ExportService,
     private extensionService: ExtensionService,
@@ -171,7 +172,7 @@ export class AureliaSlickgridCustomElement {
       };
       this.paginationService.totalItems = this.totalItems;
       this.subscriptions.push(
-        this.localEa.subscribe('paginationService:on-pagination-changed', (paginationChanges: ServicePagination) => this.paginationChanged(paginationChanges)),
+        this.pluginEa.subscribe('paginationService:onPaginationChanged', (paginationChanges: ServicePagination) => this.paginationChanged(paginationChanges)),
       );
       this.paginationService.init(this.grid, this.dataview, paginationOptions, this.backendServiceApi);
       this._isPaginationInitialized = true;
@@ -323,6 +324,18 @@ export class AureliaSlickgridCustomElement {
       resizerService: this.resizerService,
       sortService: this.sortService,
     };
+
+    // expose all necessary Plugin Events through dispatch event to the custom element
+    // for example, expose the event "gridStateService:changed" with dispatch as kebab "asg-on-grid-state-changed"
+    for (const event of Constants.exposedEvents) {
+      if (event && event.name && event.alias) {
+        this.subscriptions.push(
+          this.pluginEa.subscribe(event.name, (data: any) => {
+            return this.dispatchCustomEvent(event.alias, data);
+          })
+        );
+      }
+    }
 
     // user could show a custom footer with the data metrics (dataset length and last updated timestamp)
     this.optionallyShowCustomFooterWithMetrics();
@@ -554,16 +567,6 @@ export class AureliaSlickgridCustomElement {
       }
     }
 
-    // expose GridState Service changes event through dispatch
-    this.subscriptions.push(
-      this.localEa.subscribe('gridStateService:changed', (gridStateChange: GridStateChange) => {
-        this.elm.dispatchEvent(DOM.createCustomEvent(`${DEFAULT_AURELIA_EVENT_PREFIX}-on-grid-state-changed`, {
-          bubbles: true,
-          detail: gridStateChange
-        }));
-      })
-    );
-
     // on cell click, mainly used with the columnDef.action callback
     this.gridEventService.bindOnCellChange(grid, dataView);
     this.gridEventService.bindOnClick(grid, dataView);
@@ -743,7 +746,7 @@ export class AureliaSlickgridCustomElement {
         this.sharedService.currentPagination = { pageNumber, pageSize };
       }
     }
-    this.localEa.publish('gridStateService:changed', {
+    this.pluginEa.publish('gridStateService:changed', {
       change: { newValues: { pageNumber, pageSize }, type: GridStateType.pagination },
       gridState: this.gridStateService.getCurrentGridState()
     });

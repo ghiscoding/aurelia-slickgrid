@@ -93,7 +93,6 @@ describe('Slick-Pagination Component', () => {
     });
 
     await customElement.create(bootstrap);
-    ea.publish(`paginationService:on-pagination-refreshed`, true);
   });
 
   describe('Integration Tests', () => {
@@ -103,8 +102,7 @@ describe('Slick-Pagination Component', () => {
       customElement.dispose();
     });
 
-    it('should make sure Slick-Pagination is defined', async () => {
-      ea.publish(`paginationService:on-pagination-refreshed`, true);
+    it('should make sure Slick-Pagination is defined', () => {
       expect(customElement).toBeTruthy();
       expect(customElement.constructor).toBeDefined();
     });
@@ -118,7 +116,6 @@ describe('Slick-Pagination Component', () => {
     });
 
     it('should call changeToFirstPage() from the View and expect the pagination service to be called with correct method', async () => {
-      ea.publish(`paginationService:on-pagination-refreshed`, true);
       const spy = jest.spyOn(paginationServiceStub, 'goToFirstPage');
 
       // const input = fixture.debugElement.nativeElement.querySelector('input.form-control');

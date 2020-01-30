@@ -59,7 +59,8 @@ const gridStub = {
 };
 
 describe('ExcelExportService', () => {
-  let ea: EventAggregator;
+  let globalEa: EventAggregator;
+  let pluginEa: EventAggregator;
   let service: ExcelExportService;
   let i18n: I18N;
   let mockColumns: Column[];
@@ -68,8 +69,9 @@ describe('ExcelExportService', () => {
 
   describe('with I18N Service', () => {
     beforeEach(() => {
-      ea = new EventAggregator();
-      i18n = new I18N(ea, new BindingSignaler());
+      globalEa = new EventAggregator();
+      pluginEa = new EventAggregator();
+      i18n = new I18N(globalEa, new BindingSignaler());
 
       // @ts-ignore
       navigator.__defineGetter__('appName', () => 'Netscape');
@@ -113,7 +115,7 @@ describe('ExcelExportService', () => {
         fallbackLng: 'en',
         debug: false
       });
-      service = new ExcelExportService(i18n, ea);
+      service = new ExcelExportService(globalEa, pluginEa, i18n);
     });
 
     afterEach(() => {
@@ -127,7 +129,8 @@ describe('ExcelExportService', () => {
     });
 
     it('should not have any output since there are no column definitions provided', async () => {
-      const eaSpy = jest.spyOn(ea, 'publish');
+      const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
+      const globalEaSpy = jest.spyOn(globalEa, 'publish');
       const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
       const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
@@ -137,8 +140,10 @@ describe('ExcelExportService', () => {
       const result = await service.exportToExcel(mockExportExcelOptions);
 
       expect(result).toBeTruthy();
-      expect(eaSpy).toHaveBeenNthCalledWith(1, `${DEFAULT_AURELIA_EVENT_PREFIX}:onBeforeExportToExcel`, true);
-      expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToExcel`, optionExpectation);
+      expect(pluginEaSpy).toHaveBeenNthCalledWith(1, `excelExportService:onBeforeExportToExcel`, true);
+      expect(pluginEaSpy).toHaveBeenNthCalledWith(2, `excelExportService:onAfterExportToExcel`, optionExpectation);
+      expect(globalEaSpy).toHaveBeenNthCalledWith(1, `${DEFAULT_AURELIA_EVENT_PREFIX}:onBeforeExportToExcel`, true);
+      expect(globalEaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToExcel`, optionExpectation);
       expect(spyUrlCreate).toHaveBeenCalledWith(mockExcelBlob);
       expect(spyDownload).toHaveBeenCalledWith({ ...optionExpectation, blob: new Blob(), data: [[]] });
     });
@@ -167,36 +172,42 @@ describe('ExcelExportService', () => {
       });
 
       it('should trigger an event before exporting the file', async () => {
-        const eaSpy = jest.spyOn(ea, 'publish');
+        const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
+        const globalEaSpy = jest.spyOn(globalEa, 'publish');
 
         service.init(gridStub, dataViewStub);
         const result = await service.exportToExcel(mockExportExcelOptions);
 
         expect(result).toBeTruthy();
-        expect(eaSpy).toHaveBeenNthCalledWith(1, `${DEFAULT_AURELIA_EVENT_PREFIX}:onBeforeExportToExcel`, true);
+        expect(pluginEaSpy).toHaveBeenNthCalledWith(1, `excelExportService:onBeforeExportToExcel`, true);
+        expect(globalEaSpy).toHaveBeenNthCalledWith(1, `${DEFAULT_AURELIA_EVENT_PREFIX}:onBeforeExportToExcel`, true);
       });
 
       it('should trigger an event after exporting the file', async () => {
-        const eaSpy = jest.spyOn(ea, 'publish');
+        const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
+        const globalEaSpy = jest.spyOn(globalEa, 'publish');
 
         service.init(gridStub, dataViewStub);
         const result = await service.exportToExcel(mockExportExcelOptions);
 
         expect(result).toBeTruthy();
-        expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToExcel`, expect.anything());
+        expect(pluginEaSpy).toHaveBeenNthCalledWith(2, `excelExportService:onAfterExportToExcel`, expect.anything());
+        expect(globalEaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToExcel`, expect.anything());
 
       });
 
       it('should call "URL.createObjectURL" with a Blob and xlsx file when browser is not IE11 (basically any other browser) when exporting as xlsx', async () => {
         const optionExpectation = { filename: 'export.xlsx', format: FileType.xlsx };
-        const eaSpy = jest.spyOn(ea, 'publish');
+        const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
+        const globalEaSpy = jest.spyOn(globalEa, 'publish');
         const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
 
         service.init(gridStub, dataViewStub);
         const result = await service.exportToExcel(mockExportExcelOptions);
 
         expect(result).toBeTruthy();
-        expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToExcel`, optionExpectation);
+        expect(pluginEaSpy).toHaveBeenNthCalledWith(2, `excelExportService:onAfterExportToExcel`, optionExpectation);
+        expect(globalEaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToExcel`, optionExpectation);
         expect(spyUrlCreate).toHaveBeenCalledWith(mockExcelBlob);
       });
 
@@ -204,14 +215,16 @@ describe('ExcelExportService', () => {
       it('should call "msSaveOrOpenBlob" with a Blob and xlsx file when browser is IE11 when exporting as xlsx', async () => {
         const optionExpectation = { filename: 'export.xlsx', format: FileType.xlsx };
         navigator.msSaveOrOpenBlob = jest.fn();
-        const eaSpy = jest.spyOn(ea, 'publish');
+        const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
+        const globalEaSpy = jest.spyOn(globalEa, 'publish');
         const spyMsSave = jest.spyOn(navigator, 'msSaveOrOpenBlob');
 
         service.init(gridStub, dataViewStub);
         const result = await service.exportToExcel(mockExportExcelOptions);
 
         expect(result).toBeTruthy();
-        expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToExcel`, optionExpectation);
+        expect(pluginEaSpy).toHaveBeenNthCalledWith(2, `excelExportService:onAfterExportToExcel`, optionExpectation);
+        expect(globalEaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToExcel`, optionExpectation);
         expect(spyMsSave).toHaveBeenCalledWith(mockExcelBlob, 'export.xlsx');
       });
 
@@ -235,7 +248,8 @@ describe('ExcelExportService', () => {
         mockCollection = [{ id: 0, userId: '1E06', firstName: 'John', lastName: 'Z', position: 'SALES_REP', order: 10 }];
         jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
         jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
-        const eaSpy = jest.spyOn(ea, 'publish');
+        const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
+        const globalEaSpy = jest.spyOn(globalEa, 'publish');
         const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
         const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
@@ -244,7 +258,8 @@ describe('ExcelExportService', () => {
         service.init(gridStub, dataViewStub);
         await service.exportToExcel(mockExportExcelOptions);
 
-        expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToExcel`, optionExpectation);
+        expect(pluginEaSpy).toHaveBeenNthCalledWith(2, `excelExportService:onAfterExportToExcel`, optionExpectation);
+        expect(globalEaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToExcel`, optionExpectation);
         expect(spyUrlCreate).toHaveBeenCalledWith(mockExcelBlob);
         expect(spyDownload).toHaveBeenCalledWith({
           ...optionExpectation, blob: new Blob(), data: [
@@ -264,7 +279,8 @@ describe('ExcelExportService', () => {
         mockCollection = [{ id: 1, userId: '2B02', firstName: 'Jane', lastName: 'Doe', position: 'FINANCE_MANAGER', order: 1 }];
         jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
         jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
-        const eaSpy = jest.spyOn(ea, 'publish');
+        const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
+        const globalEaSpy = jest.spyOn(globalEa, 'publish');
         const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
         const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
@@ -273,7 +289,8 @@ describe('ExcelExportService', () => {
         service.init(gridStub, dataViewStub);
         await service.exportToExcel(mockExportExcelOptions);
 
-        expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToExcel`, optionExpectation);
+        expect(pluginEaSpy).toHaveBeenNthCalledWith(2, `excelExportService:onAfterExportToExcel`, optionExpectation);
+        expect(globalEaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToExcel`, optionExpectation);
         expect(spyUrlCreate).toHaveBeenCalledWith(mockExcelBlob);
         expect(spyDownload).toHaveBeenCalledWith({
           ...optionExpectation, blob: new Blob(), data: [
@@ -293,7 +310,8 @@ describe('ExcelExportService', () => {
         mockCollection = [{ id: 2, userId: '3C2', firstName: 'Ava Luna', lastName: null, position: 'HUMAN_RESOURCES', order: 3 }];
         jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
         jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
-        const eaSpy = jest.spyOn(ea, 'publish');
+        const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
+        const globalEaSpy = jest.spyOn(globalEa, 'publish');
         const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
         const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
@@ -302,7 +320,8 @@ describe('ExcelExportService', () => {
         service.init(gridStub, dataViewStub);
         await service.exportToExcel(mockExportExcelOptions);
 
-        expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToExcel`, optionExpectation);
+        expect(pluginEaSpy).toHaveBeenNthCalledWith(2, `excelExportService:onAfterExportToExcel`, optionExpectation);
+        expect(globalEaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToExcel`, optionExpectation);
         expect(spyUrlCreate).toHaveBeenCalledWith(mockExcelBlob);
         expect(spyDownload).toHaveBeenCalledWith({
           ...optionExpectation, blob: new Blob(), data: [
@@ -322,7 +341,8 @@ describe('ExcelExportService', () => {
         mockCollection = [{ id: 2, firstName: 'Ava', lastName: 'Luna', position: 'HUMAN_RESOURCES', order: 3 }];
         jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
         jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
-        const eaSpy = jest.spyOn(ea, 'publish');
+        const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
+        const globalEaSpy = jest.spyOn(globalEa, 'publish');
         const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
         const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
@@ -331,7 +351,8 @@ describe('ExcelExportService', () => {
         service.init(gridStub, dataViewStub);
         await service.exportToExcel(mockExportExcelOptions);
 
-        expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToExcel`, optionExpectation);
+        expect(pluginEaSpy).toHaveBeenNthCalledWith(2, `excelExportService:onAfterExportToExcel`, optionExpectation);
+        expect(globalEaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToExcel`, optionExpectation);
         expect(spyUrlCreate).toHaveBeenCalledWith(mockExcelBlob);
         expect(spyDownload).toHaveBeenCalledWith({
           ...optionExpectation, blob: new Blob(), data: [
@@ -351,7 +372,8 @@ describe('ExcelExportService', () => {
         mockCollection = [{ id: 2, userId: '3C2', firstName: 'Ava', lastName: 'Luna', position: 'HUMAN_RESOURCES', order: 13 }];
         jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
         jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
-        const eaSpy = jest.spyOn(ea, 'publish');
+        const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
+        const globalEaSpy = jest.spyOn(globalEa, 'publish');
         const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
         const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
@@ -360,7 +382,8 @@ describe('ExcelExportService', () => {
         service.init(gridStub, dataViewStub);
         await service.exportToExcel(mockExportExcelOptions);
 
-        expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToExcel`, optionExpectation);
+        expect(pluginEaSpy).toHaveBeenNthCalledWith(2, `excelExportService:onAfterExportToExcel`, optionExpectation);
+        expect(globalEaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToExcel`, optionExpectation);
         expect(spyUrlCreate).toHaveBeenCalledWith(mockExcelBlob);
         expect(spyDownload).toHaveBeenCalledWith({
           ...optionExpectation, blob: new Blob(), data: [
@@ -380,7 +403,8 @@ describe('ExcelExportService', () => {
         mockCollection = [{ id: 3, userId: undefined, firstName: '', lastName: 'Cash', position: 'SALES_REP', order: 3 },];
         jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
         jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
-        const eaSpy = jest.spyOn(ea, 'publish');
+        const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
+        const globalEaSpy = jest.spyOn(globalEa, 'publish');
         const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
         const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
@@ -389,7 +413,8 @@ describe('ExcelExportService', () => {
         service.init(gridStub, dataViewStub);
         await service.exportToExcel(mockExportExcelOptions);
 
-        expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToExcel`, optionExpectation);
+        expect(pluginEaSpy).toHaveBeenNthCalledWith(2, `excelExportService:onAfterExportToExcel`, optionExpectation);
+        expect(globalEaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToExcel`, optionExpectation);
         expect(spyUrlCreate).toHaveBeenCalledWith(mockExcelBlob);
         expect(spyDownload).toHaveBeenCalledWith({
           ...optionExpectation, blob: new Blob(), data: [
@@ -410,7 +435,8 @@ describe('ExcelExportService', () => {
         mockCollection = [{ id: 1, userId: '2B02', firstName: 'Jane', lastName: 'Doe', position: 'FINANCE_MANAGER', order: 1 }];
         jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
         jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
-        const eaSpy = jest.spyOn(ea, 'publish');
+        const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
+        const globalEaSpy = jest.spyOn(globalEa, 'publish');
         const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
         const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
@@ -419,7 +445,8 @@ describe('ExcelExportService', () => {
         service.init(gridStub, dataViewStub);
         await service.exportToExcel(mockExportExcelOptions);
 
-        expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToExcel`, optionExpectation);
+        expect(pluginEaSpy).toHaveBeenNthCalledWith(2, `excelExportService:onAfterExportToExcel`, optionExpectation);
+        expect(globalEaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToExcel`, optionExpectation);
         expect(spyUrlCreate).toHaveBeenCalledWith(mockExcelBlob);
         expect(spyDownload).toHaveBeenCalledWith({
           ...optionExpectation, blob: new Blob(), data: [
@@ -460,7 +487,8 @@ describe('ExcelExportService', () => {
         mockCollection = [{ id: 1, userId: '2B02', firstName: 'Jane', lastName: 'Doe', position: 'FINANCE_MANAGER', order: 1 }];
         jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
         jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
-        const eaSpy = jest.spyOn(ea, 'publish');
+        const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
+        const globalEaSpy = jest.spyOn(globalEa, 'publish');
         const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
         const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
@@ -469,7 +497,8 @@ describe('ExcelExportService', () => {
         service.init(gridStub, dataViewStub);
         await service.exportToExcel(mockExportExcelOptions);
 
-        expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToExcel`, optionExpectation);
+        expect(pluginEaSpy).toHaveBeenNthCalledWith(2, `excelExportService:onAfterExportToExcel`, optionExpectation);
+        expect(globalEaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToExcel`, optionExpectation);
         expect(spyUrlCreate).toHaveBeenCalledWith(mockExcelBlob);
         expect(spyDownload).toHaveBeenCalledWith({
           ...optionExpectation, blob: new Blob(), data: [
@@ -516,7 +545,8 @@ describe('ExcelExportService', () => {
         ];
         jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
         jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]).mockReturnValueOnce(mockCollection[1]);
-        const eaSpy = jest.spyOn(ea, 'publish');
+        const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
+        const globalEaSpy = jest.spyOn(globalEa, 'publish');
         const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
         const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
@@ -525,7 +555,8 @@ describe('ExcelExportService', () => {
         service.init(gridStub, dataViewStub);
         await service.exportToExcel(mockExportExcelOptions);
 
-        expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToExcel`, optionExpectation);
+        expect(pluginEaSpy).toHaveBeenNthCalledWith(2, `excelExportService:onAfterExportToExcel`, optionExpectation);
+        expect(globalEaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToExcel`, optionExpectation);
         expect(spyUrlCreate).toHaveBeenCalledWith(mockExcelBlob);
         expect(spyDownload).toHaveBeenCalledWith({
           ...optionExpectation, blob: new Blob(), data: [
@@ -563,7 +594,8 @@ describe('ExcelExportService', () => {
         mockCollection = [{ id: 0, user: { firstName: 'John', lastName: 'Z' }, position: 'SALES_REP', order: 10 }];
         jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
         jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
-        const eaSpy = jest.spyOn(ea, 'publish');
+        const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
+        const globalEaSpy = jest.spyOn(globalEa, 'publish');
         const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
         const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
@@ -572,7 +604,8 @@ describe('ExcelExportService', () => {
         service.init(gridStub, dataViewStub);
         await service.exportToExcel(mockExportExcelOptions);
 
-        expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToExcel`, optionExpectation);
+        expect(pluginEaSpy).toHaveBeenNthCalledWith(2, `excelExportService:onAfterExportToExcel`, optionExpectation);
+        expect(globalEaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToExcel`, optionExpectation);
         expect(spyUrlCreate).toHaveBeenCalledWith(mockExcelBlob);
         expect(spyDownload).toHaveBeenCalledWith({
           ...optionExpectation, blob: new Blob(), data: [
@@ -610,7 +643,8 @@ describe('ExcelExportService', () => {
         mockCollection = [{ id: 0, userId: '1E06', firstName: 'John', lastName: 'Z', position: 'SALES_REP', order: 10 }];
         jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
         jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
-        const eaSpy = jest.spyOn(ea, 'publish');
+        const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
+        const globalEaSpy = jest.spyOn(globalEa, 'publish');
         const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
         const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
@@ -619,7 +653,8 @@ describe('ExcelExportService', () => {
         service.init(gridStub, dataViewStub);
         await service.exportToExcel(mockExportExcelOptions);
 
-        expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToExcel`, optionExpectation);
+        expect(pluginEaSpy).toHaveBeenNthCalledWith(2, `excelExportService:onAfterExportToExcel`, optionExpectation);
+        expect(globalEaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToExcel`, optionExpectation);
         expect(spyUrlCreate).toHaveBeenCalledWith(mockExcelBlob);
         expect(spyDownload).toHaveBeenCalledWith({
           ...optionExpectation, blob: new Blob(), data: [
@@ -700,7 +735,8 @@ describe('ExcelExportService', () => {
       });
 
       it(`should have a xlsx export with grouping (same as the grid, WYSIWYG) when "enableGrouping" is set in the grid options and grouping are defined`, async () => {
-        const eaSpy = jest.spyOn(ea, 'publish');
+        const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
+        const globalEaSpy = jest.spyOn(globalEa, 'publish');
         const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
         const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
@@ -709,7 +745,8 @@ describe('ExcelExportService', () => {
         service.init(gridStub, dataViewStub);
         await service.exportToExcel(mockExportExcelOptions);
 
-        expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToExcel`, optionExpectation);
+        expect(pluginEaSpy).toHaveBeenNthCalledWith(2, `excelExportService:onAfterExportToExcel`, optionExpectation);
+        expect(globalEaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToExcel`, optionExpectation);
         expect(spyUrlCreate).toHaveBeenCalledWith(mockExcelBlob);
         expect(spyDownload).toHaveBeenCalledWith({
           ...optionExpectation, blob: new Blob(), data: [
@@ -794,7 +831,8 @@ describe('ExcelExportService', () => {
       });
 
       it(`should have a xlsx export with grouping (same as the grid, WYSIWYG) when "enableGrouping" is set in the grid options and grouping are defined`, async () => {
-        const eaSpy = jest.spyOn(ea, 'publish');
+        const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
+        const globalEaSpy = jest.spyOn(globalEa, 'publish');
         const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
         const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
@@ -803,7 +841,8 @@ describe('ExcelExportService', () => {
         service.init(gridStub, dataViewStub);
         await service.exportToExcel(mockExportExcelOptions);
 
-        expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToExcel`, optionExpectation);
+        expect(pluginEaSpy).toHaveBeenNthCalledWith(2, `excelExportService:onAfterExportToExcel`, optionExpectation);
+        expect(globalEaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToExcel`, optionExpectation);
         expect(spyUrlCreate).toHaveBeenCalledWith(mockExcelBlob);
         expect(spyDownload).toHaveBeenCalledWith({
           ...optionExpectation, blob: new Blob(), data: [
@@ -934,7 +973,8 @@ describe('ExcelExportService', () => {
       });
 
       it(`should have a xlsx export with grouping (same as the grid, WYSIWYG) when "enableGrouping" is set in the grid options and grouping are defined`, async () => {
-        const eaSpy = jest.spyOn(ea, 'publish');
+        const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
+        const globalEaSpy = jest.spyOn(globalEa, 'publish');
         const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
         const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
@@ -943,7 +983,8 @@ describe('ExcelExportService', () => {
         service.init(gridStub, dataViewStub);
         await service.exportToExcel(mockExportExcelOptions);
 
-        expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToExcel`, optionExpectation);
+        expect(pluginEaSpy).toHaveBeenNthCalledWith(2, `excelExportService:onAfterExportToExcel`, optionExpectation);
+        expect(globalEaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToExcel`, optionExpectation);
         expect(spyUrlCreate).toHaveBeenCalledWith(mockExcelBlob);
         expect(spyDownload).toHaveBeenCalledWith({
           ...optionExpectation, blob: new Blob(), data: [
@@ -971,7 +1012,8 @@ describe('ExcelExportService', () => {
       and field should be exported as metadata when "exportWithFormatter" is false and the field type is number`, async () => {
         mockColumns[5].exportWithFormatter = false; // "order" field that is of type number will be exported as a number cell format metadata
         mockGridOptions.excelExportOptions.addGroupIndentation = false;
-        const eaSpy = jest.spyOn(ea, 'publish');
+        const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
+        const globalEaSpy = jest.spyOn(globalEa, 'publish');
         const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
         const spyDownload = jest.spyOn(service, 'startDownloadFile');
 
@@ -980,7 +1022,8 @@ describe('ExcelExportService', () => {
         service.init(gridStub, dataViewStub);
         await service.exportToExcel(mockExportExcelOptions);
 
-        expect(eaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToExcel`, optionExpectation);
+        expect(pluginEaSpy).toHaveBeenNthCalledWith(2, `excelExportService:onAfterExportToExcel`, optionExpectation);
+        expect(globalEaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToExcel`, optionExpectation);
         expect(spyUrlCreate).toHaveBeenCalledWith(mockExcelBlob);
         expect(spyDownload).toHaveBeenCalledWith({
           ...optionExpectation, blob: new Blob(), data: [
@@ -1264,7 +1307,7 @@ describe('ExcelExportService', () => {
   describe('without I18N Service', () => {
     beforeEach(() => {
       i18n = null;
-      service = new ExcelExportService(i18n, ea);
+      service = new ExcelExportService(globalEa, pluginEa, i18n);
     });
 
     it('should throw an error if "enableTranslate" is set but the I18N Service is null', () => {

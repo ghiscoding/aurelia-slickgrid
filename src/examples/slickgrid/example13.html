@@ -49,6 +49,9 @@
   </div>
 
   <aurelia-slickgrid grid-id="grid1" column-definitions.bind="columnDefinitions" grid-options.bind="gridOptions"
-    dataset.bind="dataset" asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
+                     dataset.bind="dataset"
+                     asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)"
+                     asg-on-before-export-to-excel.delegate="processing = true"
+                     asg-on-after-export-to-excel.delegate="processing = false">
   </aurelia-slickgrid>
 </template>

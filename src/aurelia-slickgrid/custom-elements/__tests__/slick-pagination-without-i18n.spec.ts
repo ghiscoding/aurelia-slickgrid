@@ -67,8 +67,6 @@ describe('Slick-Pagination Component without I18N', () => {
       aurelia.container.registerInstance(EventAggregator, ea);
       aurelia.container.registerInstance(PaginationService, paginationServiceStub);
     });
-
-    ea.publish(`paginationService:on-pagination-refreshed`, true);
   });
 
   describe('Integration Tests', () => {
@@ -106,7 +104,6 @@ describe('Slick-Pagination Component without I18N', () => {
       await customElement.unbind();
       await customElement.bind(bindings);
       await customElement.attached();
-      ea.publish(`paginationService:on-pagination-refreshed`, true);
 
       setTimeout(async () => {
         const pageInfoFromTo = await customElement.waitForElement('.page-info-from-to');

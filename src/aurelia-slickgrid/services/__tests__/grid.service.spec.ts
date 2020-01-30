@@ -63,12 +63,14 @@ const gridStub = {
 
 describe('Grid Service', () => {
   let service: GridService;
-  let ea: EventAggregator;
-  const gridSpy = jest.spyOn(gridStub, 'getOptions').mockReturnValue({ enableAutoResize: true, defaultAureliaEventPrefix: 'asg' } as GridOption);
+  let globalEa: EventAggregator;
+  let pluginEa: EventAggregator;
+  jest.spyOn(gridStub, 'getOptions').mockReturnValue({ enableAutoResize: true, defaultAureliaEventPrefix: 'asg' } as GridOption);
 
   beforeEach(() => {
-    ea = new EventAggregator();
-    service = new GridService(ea, extensionServiceStub, filterServiceStub, gridStateServiceStub, sortServiceStub);
+    globalEa = new EventAggregator();
+    pluginEa = new EventAggregator();
+    service = new GridService(globalEa, pluginEa, extensionServiceStub, filterServiceStub, gridStateServiceStub, sortServiceStub);
     service.init(gridStub, dataviewStub);
   });
 
@@ -93,7 +95,8 @@ describe('Grid Service', () => {
       const mockItem = { id: 0, user: { firstName: 'John', lastName: 'Doe' } };
       const dataviewSpy = jest.spyOn(dataviewStub, 'getRowById').mockReturnValue(undefined);
       const serviceSpy = jest.spyOn(service, 'addItem');
-      const eaSpy = jest.spyOn(ea, 'publish');
+      const globalEaSpy = jest.spyOn(globalEa, 'publish');
+      const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
 
       const upsertRow = service.upsertItem(mockItem);
 
@@ -101,7 +104,8 @@ describe('Grid Service', () => {
       expect(serviceSpy).toHaveBeenCalledTimes(1);
       expect(dataviewSpy).toHaveBeenCalledWith(0);
       expect(serviceSpy).toHaveBeenCalledWith(mockItem, { highlightRow: true, position: 'top', resortGrid: false, selectRow: false, triggerEvent: true });
-      expect(eaSpy).toHaveBeenLastCalledWith(`asg:on-item-upserted`, mockItem);
+      expect(pluginEaSpy).toHaveBeenLastCalledWith(`gridService:onItemUpserted`, mockItem);
+      expect(globalEaSpy).toHaveBeenLastCalledWith(`asg:on-item-upserted`, mockItem);
     });
 
     it('should expect the service to call the DataView "addItem" when calling "upsertItem" with an item and the option "position" set to "bottom"', () => {
@@ -110,7 +114,8 @@ describe('Grid Service', () => {
       jest.spyOn(dataviewStub, 'getRowById').mockReturnValueOnce(undefined).mockReturnValueOnce(expectationNewRowPosition);
       const addSpy = jest.spyOn(dataviewStub, 'addItem');
       const scrollSpy = jest.spyOn(gridStub, 'scrollRowIntoView');
-      const eaSpy = jest.spyOn(ea, 'publish');
+      const globalEaSpy = jest.spyOn(globalEa, 'publish');
+      const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
 
       const upsertRow = service.upsertItem(mockItem, { position: 'bottom' });
 
@@ -118,7 +123,8 @@ describe('Grid Service', () => {
       expect(addSpy).toHaveBeenCalledTimes(1);
       expect(addSpy).toHaveBeenCalledWith(mockItem);
       expect(scrollSpy).toHaveBeenCalledWith(expectationNewRowPosition);
-      expect(eaSpy).toHaveBeenLastCalledWith(`asg:on-item-upserted`, mockItem);
+      expect(pluginEaSpy).toHaveBeenLastCalledWith(`gridService:onItemUpserted`, mockItem);
+      expect(globalEaSpy).toHaveBeenLastCalledWith(`asg:on-item-upserted`, mockItem);
     });
 
     it('should expect the service to call the "updateItem" multiple times when calling "upsertItems" with the items found in the grid', () => {
@@ -126,7 +132,8 @@ describe('Grid Service', () => {
       const dataviewSpy = jest.spyOn(dataviewStub, 'getRowById').mockReturnValue(0).mockReturnValueOnce(0).mockReturnValueOnce(0).mockReturnValueOnce(1).mockReturnValueOnce(1);
       const serviceUpsertSpy = jest.spyOn(service, 'upsertItem');
       const serviceHighlightSpy = jest.spyOn(service, 'highlightRow');
-      const eaSpy = jest.spyOn(ea, 'publish');
+      const globalEaSpy = jest.spyOn(globalEa, 'publish');
+      const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
 
       const upsertRows = service.upsertItems(mockItems);
 
@@ -136,8 +143,10 @@ describe('Grid Service', () => {
       expect(serviceUpsertSpy).toHaveBeenNthCalledWith(1, mockItems[0], { highlightRow: false, position: 'top', resortGrid: false, selectRow: false, triggerEvent: false });
       expect(serviceUpsertSpy).toHaveBeenNthCalledWith(2, mockItems[1], { highlightRow: false, position: 'top', resortGrid: false, selectRow: false, triggerEvent: false });
       expect(serviceHighlightSpy).toHaveBeenCalledWith([0, 1]);
-      expect(eaSpy).toHaveBeenNthCalledWith(1, `asg:on-item-upserted`, mockItems);
-      expect(eaSpy).toHaveBeenNthCalledWith(2, `asg:on-item-updated`, [{ added: undefined, updated: 0 }, { added: undefined, updated: 1 }]);
+      expect(pluginEaSpy).toHaveBeenNthCalledWith(1, `gridService:onItemUpserted`, mockItems);
+      expect(pluginEaSpy).toHaveBeenNthCalledWith(2, `gridService:onItemUpdated`, [{ added: undefined, updated: 0 }, { added: undefined, updated: 1 }]);
+      expect(globalEaSpy).toHaveBeenNthCalledWith(1, `asg:on-item-upserted`, mockItems);
+      expect(globalEaSpy).toHaveBeenNthCalledWith(2, `asg:on-item-updated`, [{ added: undefined, updated: 0 }, { added: undefined, updated: 1 }]);
     });
 
     it('should expect the service to call both "addItem" and "updateItem" when calling "upsertItems" with first item found but second not found', () => {
@@ -146,7 +155,8 @@ describe('Grid Service', () => {
       const dataviewSpy = jest.spyOn(dataviewStub, 'getRowById').mockReturnValue(undefined).mockReturnValueOnce(undefined).mockReturnValueOnce(15).mockReturnValueOnce(15);
       const serviceUpsertSpy = jest.spyOn(service, 'upsertItem');
       const serviceHighlightSpy = jest.spyOn(service, 'highlightRow');
-      const eaSpy = jest.spyOn(ea, 'publish');
+      const globalEaSpy = jest.spyOn(globalEa, 'publish');
+      const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
       const selectSpy = jest.spyOn(service, 'setSelectedRows');
 
       const upsertRows = service.upsertItems(mockItems, { selectRow: true });
@@ -157,9 +167,12 @@ describe('Grid Service', () => {
       expect(serviceUpsertSpy).toHaveBeenNthCalledWith(1, mockItems[0], { highlightRow: false, position: 'top', resortGrid: false, selectRow: false, triggerEvent: false });
       expect(serviceUpsertSpy).toHaveBeenNthCalledWith(2, mockItems[1], { highlightRow: false, position: 'top', resortGrid: false, selectRow: false, triggerEvent: false });
       expect(serviceHighlightSpy).toHaveBeenCalledWith([0, 15]);
-      expect(eaSpy).toHaveBeenNthCalledWith(1, `asg:on-item-upserted`, mockItems);
-      expect(eaSpy).toHaveBeenNthCalledWith(2, `asg:on-item-added`, [{ added: 0, updated: undefined }]);
-      expect(eaSpy).toHaveBeenNthCalledWith(3, `asg:on-item-updated`, [{ added: undefined, updated: 15 }]);
+      expect(pluginEaSpy).toHaveBeenNthCalledWith(1, `gridService:onItemUpserted`, mockItems);
+      expect(pluginEaSpy).toHaveBeenNthCalledWith(2, `gridService:onItemAdded`, [{ added: 0, updated: undefined }]);
+      expect(pluginEaSpy).toHaveBeenNthCalledWith(3, `gridService:onItemUpdated`, [{ added: undefined, updated: 15 }]);
+      expect(globalEaSpy).toHaveBeenNthCalledWith(1, `asg:on-item-upserted`, mockItems);
+      expect(globalEaSpy).toHaveBeenNthCalledWith(2, `asg:on-item-added`, [{ added: 0, updated: undefined }]);
+      expect(globalEaSpy).toHaveBeenNthCalledWith(3, `asg:on-item-updated`, [{ added: undefined, updated: 15 }]);
       expect(selectSpy).toHaveBeenCalledWith([0, 15]);
     });
 
@@ -168,7 +181,8 @@ describe('Grid Service', () => {
       const dataviewSpy = jest.spyOn(dataviewStub, 'getRowById').mockReturnValue(0).mockReturnValueOnce(0).mockReturnValueOnce(0).mockReturnValueOnce(1).mockReturnValueOnce(1);
       const serviceUpsertSpy = jest.spyOn(service, 'upsertItem');
       const serviceHighlightSpy = jest.spyOn(service, 'highlightRow');
-      const eaSpy = jest.spyOn(ea, 'publish');
+      const globalEaSpy = jest.spyOn(globalEa, 'publish');
+      const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
       const selectSpy = jest.spyOn(service, 'setSelectedRow');
 
       const upsertRows = service.upsertItems(mockItem, { highlightRow: false, resortGrid: true, selectRow: false, triggerEvent: false });
@@ -178,8 +192,10 @@ describe('Grid Service', () => {
       expect(serviceUpsertSpy).toHaveBeenCalledTimes(1);
       expect(serviceUpsertSpy).toHaveBeenCalledWith(mockItem, { highlightRow: false, position: 'top', resortGrid: true, selectRow: false, triggerEvent: false });
       expect(serviceHighlightSpy).not.toHaveBeenCalled();
-      expect(eaSpy).toHaveBeenCalledTimes(0);
-      expect(eaSpy).not.toHaveBeenLastCalledWith(`asg:on-item-upserted`, mockItem);
+      expect(pluginEaSpy).toHaveBeenCalledTimes(0);
+      expect(pluginEaSpy).not.toHaveBeenLastCalledWith(`gridService:onItemUpserted`, mockItem);
+      expect(globalEaSpy).toHaveBeenCalledTimes(0);
+      expect(globalEaSpy).not.toHaveBeenLastCalledWith(`asg:on-item-upserted`, mockItem);
       expect(selectSpy).not.toHaveBeenCalled();
     });
 
@@ -210,7 +226,8 @@ describe('Grid Service', () => {
       const dataviewSpy = jest.spyOn(dataviewStub, 'getRowById').mockReturnValue(undefined);
       const serviceAddItemSpy = jest.spyOn(service, 'addItem');
       const serviceHighlightSpy = jest.spyOn(service, 'highlightRow');
-      const eaSpy = jest.spyOn(ea, 'publish');
+      const globalEaSpy = jest.spyOn(globalEa, 'publish');
+      const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
 
       service.upsertItemById(0, mockItem);
 
@@ -218,7 +235,8 @@ describe('Grid Service', () => {
       expect(serviceAddItemSpy).toHaveBeenCalled();
       expect(serviceAddItemSpy).toHaveBeenCalledWith(mockItem, { highlightRow: true, position: 'top', resortGrid: false, selectRow: false, triggerEvent: true });
       expect(serviceHighlightSpy).toHaveBeenCalledWith(0);
-      expect(eaSpy).toHaveBeenLastCalledWith(`asg:on-item-upserted`, mockItem);
+      expect(pluginEaSpy).toHaveBeenLastCalledWith(`gridService:onItemUpserted`, mockItem);
+      expect(globalEaSpy).toHaveBeenLastCalledWith(`asg:on-item-upserted`, mockItem);
     });
 
     it('should call the "upsertItemById" method and expect it to call the "addItem" with different boolean flags provided as arguments', () => {
@@ -226,7 +244,8 @@ describe('Grid Service', () => {
       const dataviewSpy = jest.spyOn(dataviewStub, 'getRowById').mockReturnValue(undefined);
       const serviceAddItemSpy = jest.spyOn(service, 'addItem');
       const serviceHighlightSpy = jest.spyOn(service, 'highlightRow');
-      const eaSpy = jest.spyOn(ea, 'publish');
+      const globalEaSpy = jest.spyOn(globalEa, 'publish');
+      const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
 
       service.upsertItemById(0, mockItem, { highlightRow: false, resortGrid: true, selectRow: true, triggerEvent: false });
 
@@ -234,7 +253,8 @@ describe('Grid Service', () => {
       expect(serviceAddItemSpy).toHaveBeenCalled();
       expect(serviceAddItemSpy).toHaveBeenCalledWith(mockItem, { highlightRow: false, position: 'top', resortGrid: true, selectRow: true, triggerEvent: false });
       expect(serviceHighlightSpy).not.toHaveBeenCalled();
-      expect(eaSpy).not.toHaveBeenLastCalledWith(`asg:on-item-upserted`, mockItem);
+      expect(pluginEaSpy).not.toHaveBeenLastCalledWith(`gridService:onItemUpserted`, mockItem);
+      expect(globalEaSpy).not.toHaveBeenLastCalledWith(`asg:on-item-upserted`, mockItem);
     });
 
     it('should call the "upsertItemById" method and expect it to call the "updateItem" when the item already exist in the grid', () => {
@@ -243,7 +263,8 @@ describe('Grid Service', () => {
       const serviceAddItemSpy = jest.spyOn(service, 'addItem');
       const serviceUpdateSpy = jest.spyOn(service, 'updateItem');
       const serviceHighlightSpy = jest.spyOn(service, 'highlightRow');
-      const eaSpy = jest.spyOn(ea, 'publish');
+      const globalEaSpy = jest.spyOn(globalEa, 'publish');
+      const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
 
       service.upsertItemById(0, mockItem);
 
@@ -252,7 +273,8 @@ describe('Grid Service', () => {
       expect(serviceUpdateSpy).toHaveBeenCalled();
       expect(serviceUpdateSpy).toHaveBeenCalledWith(mockItem, { highlightRow: true, selectRow: false, triggerEvent: true });
       expect(serviceHighlightSpy).not.toHaveBeenCalled();
-      expect(eaSpy).toHaveBeenCalled();
+      expect(pluginEaSpy).toHaveBeenCalled();
+      expect(globalEaSpy).toHaveBeenCalled();
     });
   });
 
@@ -266,7 +288,8 @@ describe('Grid Service', () => {
       const getRowIdSpy = jest.spyOn(dataviewStub, 'getRowById').mockReturnValue(mockItem.id);
       const getRowIndexSpy = jest.spyOn(dataviewStub, 'getIdxById').mockReturnValue(mockItem.id);
       const updateSpy = jest.spyOn(service, 'updateItemById');
-      const eaSpy = jest.spyOn(ea, 'publish');
+      const globalEaSpy = jest.spyOn(globalEa, 'publish');
+      const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
 
       service.updateItem(mockItem);
 
@@ -274,7 +297,8 @@ describe('Grid Service', () => {
       expect(getRowIdSpy).toHaveBeenCalledWith(0);
       expect(getRowIndexSpy).toHaveBeenCalledWith(0);
       expect(updateSpy).toHaveBeenCalledWith(mockItem.id, mockItem, { highlightRow: true, selectRow: false, scrollRowIntoView: false, triggerEvent: true });
-      expect(eaSpy).toHaveBeenLastCalledWith(`asg:on-item-updated`, mockItem);
+      expect(pluginEaSpy).toHaveBeenLastCalledWith(`gridService:onItemUpdated`, mockItem);
+      expect(globalEaSpy).toHaveBeenLastCalledWith(`asg:on-item-updated`, mockItem);
     });
 
     it('should expect the service to call the "updateItemById" when calling "updateItem" and setting the "selecRow" flag and the grid option "enableRowSelection" is set', () => {
@@ -282,14 +306,16 @@ describe('Grid Service', () => {
       const getRowIdSpy = jest.spyOn(dataviewStub, 'getRowById').mockReturnValue(mockItem.id);
       const getRowIndexSpy = jest.spyOn(dataviewStub, 'getIdxById').mockReturnValue(mockItem.id);
       const serviceHighlightSpy = jest.spyOn(service, 'highlightRow');
-      const eaSpy = jest.spyOn(ea, 'publish');
+      const globalEaSpy = jest.spyOn(globalEa, 'publish');
+      const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
 
       service.updateItemById(0, mockItem, { selectRow: true });
 
       expect(getRowIdSpy).toHaveBeenCalledWith(0);
       expect(getRowIndexSpy).toHaveBeenCalledWith(0);
       expect(serviceHighlightSpy).toHaveBeenCalledWith(0);
-      expect(eaSpy).toHaveBeenLastCalledWith(`asg:on-item-updated`, mockItem);
+      expect(pluginEaSpy).toHaveBeenLastCalledWith(`gridService:onItemUpdated`, mockItem);
+      expect(globalEaSpy).toHaveBeenLastCalledWith(`asg:on-item-updated`, mockItem);
     });
 
     it('should expect the service to call the "updateItemById" multiple times when calling "updateItems" with an array of items', () => {
@@ -298,7 +324,8 @@ describe('Grid Service', () => {
       const getRowIndexSpy = jest.spyOn(dataviewStub, 'getIdxById').mockReturnValue(0).mockReturnValueOnce(0).mockReturnValueOnce(1);
       const serviceUpdateSpy = jest.spyOn(service, 'updateItemById');
       const serviceHighlightSpy = jest.spyOn(service, 'highlightRow');
-      const eaSpy = jest.spyOn(ea, 'publish');
+      const globalEaSpy = jest.spyOn(globalEa, 'publish');
+      const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
 
       service.updateItems(mockItems);
 
@@ -308,7 +335,8 @@ describe('Grid Service', () => {
       expect(serviceUpdateSpy).toHaveBeenNthCalledWith(1, mockItems[0].id, mockItems[0], { highlightRow: false, selectRow: false, scrollRowIntoView: false, triggerEvent: false });
       expect(serviceUpdateSpy).toHaveBeenNthCalledWith(2, mockItems[1].id, mockItems[1], { highlightRow: false, selectRow: false, scrollRowIntoView: false, triggerEvent: false });
       expect(serviceHighlightSpy).toHaveBeenCalledWith([0, 1]);
-      expect(eaSpy).toHaveBeenLastCalledWith(`asg:on-item-updated`, mockItems);
+      expect(pluginEaSpy).toHaveBeenLastCalledWith(`gridService:onItemUpdated`, mockItems);
+      expect(globalEaSpy).toHaveBeenLastCalledWith(`asg:on-item-updated`, mockItems);
     });
 
     it('should expect the service to call the "updateItem" when calling "updateItems" with a single item which is not an array', () => {
@@ -317,7 +345,8 @@ describe('Grid Service', () => {
       const getRowIndexSpy = jest.spyOn(dataviewStub, 'getIdxById');
       const serviceUpdateSpy = jest.spyOn(service, 'updateItem');
       const serviceHighlightSpy = jest.spyOn(service, 'highlightRow');
-      const eaSpy = jest.spyOn(ea, 'publish');
+      const globalEaSpy = jest.spyOn(globalEa, 'publish');
+      const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
 
       service.updateItems(mockItem, { highlightRow: false, selectRow: false, triggerEvent: true });
 
@@ -326,7 +355,8 @@ describe('Grid Service', () => {
       expect(serviceUpdateSpy).toHaveBeenCalledTimes(1);
       expect(serviceUpdateSpy).toHaveBeenCalledWith(mockItem, { highlightRow: false, selectRow: false, scrollRowIntoView: false, triggerEvent: true });
       expect(serviceHighlightSpy).not.toHaveBeenCalled();
-      expect(eaSpy).toHaveBeenLastCalledWith(`asg:on-item-updated`, mockItem);
+      expect(pluginEaSpy).toHaveBeenLastCalledWith(`gridService:onItemUpdated`, mockItem);
+      expect(globalEaSpy).toHaveBeenLastCalledWith(`asg:on-item-updated`, mockItem);
     });
 
     it('should expect the row to be selected when calling "updateItems" with an item when setting the "selecRow" flag and the grid option "enableRowSelection" is set', () => {
@@ -334,14 +364,16 @@ describe('Grid Service', () => {
       jest.spyOn(gridStub, 'getOptions').mockReturnValue({ enableAutoResize: true, enableRowSelection: true } as GridOption);
       const updateSpy = jest.spyOn(service, 'updateItem');
       const selectSpy = jest.spyOn(service, 'setSelectedRows');
-      const eaSpy = jest.spyOn(ea, 'publish');
+      const globalEaSpy = jest.spyOn(globalEa, 'publish');
+      const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
 
       service.updateItems([mockItem], { selectRow: true });
 
       expect(updateSpy).toHaveBeenCalledTimes(1);
       expect(updateSpy).toHaveBeenCalledWith(mockItem, { highlightRow: false, selectRow: false, scrollRowIntoView: false, triggerEvent: false });
       expect(selectSpy).toHaveBeenCalledWith([0]);
-      expect(eaSpy).toHaveBeenCalledWith(`asg:on-item-updated`, [mockItem]);
+      expect(pluginEaSpy).toHaveBeenCalledWith(`gridService:onItemUpdated`, [mockItem]);
+      expect(globalEaSpy).toHaveBeenCalledWith(`asg:on-item-updated`, [mockItem]);
     });
 
     it('should call the "updateItem" method and expect it to call the "updateItemById" with different boolean flags provided as arguments', () => {
@@ -353,7 +385,8 @@ describe('Grid Service', () => {
       const scrollSpy = jest.spyOn(gridStub, 'scrollRowIntoView');
       const updateByIdSpy = jest.spyOn(service, 'updateItemById');
       const serviceHighlightSpy = jest.spyOn(service, 'highlightRow');
-      const eaSpy = jest.spyOn(ea, 'publish');
+      const globalEaSpy = jest.spyOn(globalEa, 'publish');
+      const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
 
       service.updateItem(mockItem, { highlightRow: false, selectRow: true, scrollRowIntoView: true, triggerEvent: true });
 
@@ -363,7 +396,8 @@ describe('Grid Service', () => {
       expect(updateByIdSpy).toHaveBeenCalled();
       expect(updateByIdSpy).toHaveBeenCalledWith(mockItem.id, mockItem, { highlightRow: false, selectRow: true, scrollRowIntoView: true, triggerEvent: true });
       expect(serviceHighlightSpy).not.toHaveBeenCalled();
-      expect(eaSpy).toHaveBeenLastCalledWith(`asg:on-item-updated`, mockItem);
+      expect(pluginEaSpy).toHaveBeenLastCalledWith(`gridService:onItemUpdated`, mockItem);
+      expect(globalEaSpy).toHaveBeenLastCalledWith(`asg:on-item-updated`, mockItem);
     });
 
     it('should throw an error when calling "updateItemById" without a valid "id"', () => {
@@ -399,7 +433,8 @@ describe('Grid Service', () => {
       const addSpy = jest.spyOn(dataviewStub, 'insertItem');
       const selectSpy = jest.spyOn(gridStub, 'setSelectedRows');
       const scrollSpy = jest.spyOn(gridStub, 'scrollRowIntoView');
-      const eaSpy = jest.spyOn(ea, 'publish');
+      const globalEaSpy = jest.spyOn(globalEa, 'publish');
+      const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
 
       service.addItem(mockItem);
 
@@ -407,7 +442,8 @@ describe('Grid Service', () => {
       expect(addSpy).toHaveBeenCalledWith(0, mockItem);
       expect(selectSpy).not.toHaveBeenCalled();
       expect(scrollSpy).toHaveBeenCalledWith(0);
-      expect(eaSpy).toHaveBeenLastCalledWith(`asg:on-item-added`, mockItem);
+      expect(pluginEaSpy).toHaveBeenLastCalledWith(`gridService:onItemAdded`, mockItem);
+      expect(globalEaSpy).toHaveBeenLastCalledWith(`asg:on-item-added`, mockItem);
     });
 
     it('should expect the row to be selected when calling "addItem" with an item when setting the "selecRow" flag and the grid option "enableRowSelection" is set', () => {
@@ -416,14 +452,16 @@ describe('Grid Service', () => {
       jest.spyOn(gridStub, 'getOptions').mockReturnValue({ enableAutoResize: true, enableRowSelection: true } as GridOption);
       const addSpy = jest.spyOn(dataviewStub, 'insertItem');
       const selectSpy = jest.spyOn(gridStub, 'setSelectedRows');
-      const eaSpy = jest.spyOn(ea, 'publish');
+      const globalEaSpy = jest.spyOn(globalEa, 'publish');
+      const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
 
       service.addItem(mockItem, { selectRow: true });
 
       expect(addSpy).toHaveBeenCalledTimes(1);
       expect(addSpy).toHaveBeenCalledWith(0, mockItem);
       expect(selectSpy).toHaveBeenCalledWith([0]);
-      expect(eaSpy).toHaveBeenLastCalledWith(`asg:on-item-added`, mockItem);
+      expect(pluginEaSpy).toHaveBeenLastCalledWith(`gridService:onItemAdded`, mockItem);
+      expect(globalEaSpy).toHaveBeenLastCalledWith(`asg:on-item-added`, mockItem);
     });
 
     it('should expect the service to call the DataView "addItem" when calling "addItem" with an item and the option "position" set to "bottom"', () => {
@@ -432,14 +470,16 @@ describe('Grid Service', () => {
       jest.spyOn(dataviewStub, 'getRowById').mockReturnValue(expectationNewRowPosition);
       const addSpy = jest.spyOn(dataviewStub, 'addItem');
       const scrollSpy = jest.spyOn(gridStub, 'scrollRowIntoView');
-      const eaSpy = jest.spyOn(ea, 'publish');
+      const globalEaSpy = jest.spyOn(globalEa, 'publish');
+      const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
 
       service.addItem(mockItem, { position: 'bottom' });
 
       expect(addSpy).toHaveBeenCalledTimes(1);
       expect(addSpy).toHaveBeenCalledWith(mockItem);
       expect(scrollSpy).toHaveBeenCalledWith(expectationNewRowPosition);
-      expect(eaSpy).toHaveBeenLastCalledWith(`asg:on-item-added`, mockItem);
+      expect(pluginEaSpy).toHaveBeenLastCalledWith(`gridService:onItemAdded`, mockItem);
+      expect(globalEaSpy).toHaveBeenLastCalledWith(`asg:on-item-added`, mockItem);
     });
 
     it('should expect the service to call the "addItem" multiple times when calling "addItems" with an array of items', () => {
@@ -447,7 +487,8 @@ describe('Grid Service', () => {
       jest.spyOn(dataviewStub, 'getRowById').mockReturnValue(0).mockReturnValueOnce(0).mockReturnValueOnce(1).mockReturnValueOnce(1);
       const serviceAddSpy = jest.spyOn(service, 'addItem');
       const serviceHighlightSpy = jest.spyOn(service, 'highlightRow');
-      const eaSpy = jest.spyOn(ea, 'publish');
+      const globalEaSpy = jest.spyOn(globalEa, 'publish');
+      const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
 
       service.addItems(mockItems);
 
@@ -456,7 +497,8 @@ describe('Grid Service', () => {
       expect(serviceAddSpy).toHaveBeenNthCalledWith(2, mockItems[1], { highlightRow: false, position: 'top', resortGrid: false, selectRow: false, triggerEvent: false });
       expect(serviceHighlightSpy).toHaveBeenCalledTimes(1);
       expect(serviceHighlightSpy).toHaveBeenCalledWith([0, 1]);
-      expect(eaSpy).toHaveBeenLastCalledWith(`asg:on-item-added`, mockItems);
+      expect(pluginEaSpy).toHaveBeenLastCalledWith(`gridService:onItemAdded`, mockItems);
+      expect(globalEaSpy).toHaveBeenLastCalledWith(`asg:on-item-added`, mockItems);
     });
 
     it('should expect the service to call the "addItem" multiple times when calling "addItems" with an array of items and the option "position" set to "bottom"', () => {
@@ -468,7 +510,8 @@ describe('Grid Service', () => {
         .mockReturnValueOnce(expectationNewRowPosition2).mockReturnValueOnce(expectationNewRowPosition2);
       const serviceAddSpy = jest.spyOn(service, 'addItem');
       const serviceHighlightSpy = jest.spyOn(service, 'highlightRow');
-      const eaSpy = jest.spyOn(ea, 'publish');
+      const globalEaSpy = jest.spyOn(globalEa, 'publish');
+      const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
 
       service.addItems(mockItems, { position: 'bottom' });
 
@@ -477,21 +520,24 @@ describe('Grid Service', () => {
       expect(serviceAddSpy).toHaveBeenNthCalledWith(2, mockItems[1], { highlightRow: false, position: 'bottom', resortGrid: false, selectRow: false, triggerEvent: false });
       expect(serviceHighlightSpy).toHaveBeenCalledTimes(1);
       expect(serviceHighlightSpy).toHaveBeenCalledWith([expectationNewRowPosition1, expectationNewRowPosition2]);
-      expect(eaSpy).toHaveBeenLastCalledWith(`asg:on-item-added`, mockItems);
+      expect(pluginEaSpy).toHaveBeenLastCalledWith(`gridService:onItemAdded`, mockItems);
+      expect(globalEaSpy).toHaveBeenLastCalledWith(`asg:on-item-added`, mockItems);
     });
 
     it('should expect the service to call the "addItem" when calling "addItems" with a single item which is not an array', () => {
       const mockItem = { id: 0, user: { firstName: 'John', lastName: 'Doe' } };
       const serviceAddSpy = jest.spyOn(service, 'addItem');
       const serviceHighlightSpy = jest.spyOn(service, 'highlightRow');
-      const eaSpy = jest.spyOn(ea, 'publish');
+      const globalEaSpy = jest.spyOn(globalEa, 'publish');
+      const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
 
       service.addItems(mockItem);
 
       expect(serviceAddSpy).toHaveBeenCalledTimes(1);
       expect(serviceAddSpy).toHaveBeenCalledWith(mockItem, { highlightRow: true, position: 'top', selectRow: false, resortGrid: false, triggerEvent: true });
       expect(serviceHighlightSpy).toHaveBeenCalledTimes(1);
-      expect(eaSpy).toHaveBeenLastCalledWith(`asg:on-item-added`, mockItem);
+      expect(pluginEaSpy).toHaveBeenLastCalledWith(`gridService:onItemAdded`, mockItem);
+      expect(globalEaSpy).toHaveBeenLastCalledWith(`asg:on-item-added`, mockItem);
     });
 
     it('should add a single item by calling "addItems" method and expect to call a grid resort but without highlighting neither triggering an event', () => {
@@ -499,7 +545,8 @@ describe('Grid Service', () => {
       const serviceAddSpy = jest.spyOn(service, 'addItem');
       const serviceHighlightSpy = jest.spyOn(service, 'highlightRow');
       const resortSpy = jest.spyOn(dataviewStub, 'reSort');
-      const eaSpy = jest.spyOn(ea, 'publish');
+      const globalEaSpy = jest.spyOn(globalEa, 'publish');
+      const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
 
       service.addItems(mockItem, { highlightRow: false, selectRow: false, resortGrid: true, triggerEvent: false });
 
@@ -507,7 +554,8 @@ describe('Grid Service', () => {
       expect(resortSpy).toHaveBeenCalled();
       expect(serviceAddSpy).toHaveBeenCalledWith(mockItem, { highlightRow: false, position: 'top', resortGrid: true, selectRow: false, triggerEvent: false });
       expect(serviceHighlightSpy).not.toHaveBeenCalled();
-      expect(eaSpy).not.toHaveBeenLastCalledWith(`asg:on-item-added`);
+      expect(pluginEaSpy).not.toHaveBeenLastCalledWith(`gridService:onItemAdded`);
+      expect(globalEaSpy).not.toHaveBeenLastCalledWith(`asg:on-item-added`);
     });
 
     it('should add a single item by calling "addItems" method and expect to call a grid resort & highlight but without triggering an event', () => {
@@ -516,7 +564,8 @@ describe('Grid Service', () => {
       const serviceHighlightSpy = jest.spyOn(service, 'highlightRow');
       const resortSpy = jest.spyOn(dataviewStub, 'reSort');
       const getRowByIdSpy = jest.spyOn(dataviewStub, 'getRowById');
-      const eaSpy = jest.spyOn(ea, 'publish');
+      const globalEaSpy = jest.spyOn(globalEa, 'publish');
+      const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
 
       service.addItems(mockItems, { highlightRow: true, selectRow: false, resortGrid: true, triggerEvent: false });
 
@@ -526,7 +575,8 @@ describe('Grid Service', () => {
       expect(serviceAddSpy).toHaveBeenNthCalledWith(2, mockItems[1], { highlightRow: false, position: 'top', resortGrid: false, selectRow: false, triggerEvent: false });
       expect(serviceHighlightSpy).toHaveBeenCalledTimes(1);
       expect(getRowByIdSpy).toHaveBeenCalledTimes(2);
-      expect(eaSpy).not.toHaveBeenLastCalledWith(`asg:on-item-added`);
+      expect(pluginEaSpy).not.toHaveBeenLastCalledWith(`gridService:onItemAdded`);
+      expect(globalEaSpy).not.toHaveBeenLastCalledWith(`asg:on-item-added`);
     });
 
     it('should expect the row to be selected when calling "addItems" with an item when setting the "selecRow" flag and the grid option "enableRowSelection" is set', () => {
@@ -535,14 +585,16 @@ describe('Grid Service', () => {
       jest.spyOn(gridStub, 'getOptions').mockReturnValue({ enableAutoResize: true, enableRowSelection: true } as GridOption);
       const addSpy = jest.spyOn(dataviewStub, 'insertItem');
       const selectSpy = jest.spyOn(service, 'setSelectedRows');
-      const eaSpy = jest.spyOn(ea, 'publish');
+      const globalEaSpy = jest.spyOn(globalEa, 'publish');
+      const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
 
       service.addItems([mockItem], { selectRow: true });
 
       expect(addSpy).toHaveBeenCalledTimes(1);
       expect(addSpy).toHaveBeenCalledWith(0, mockItem);
       expect(selectSpy).toHaveBeenCalledWith([0]);
-      expect(eaSpy).toHaveBeenLastCalledWith(`asg:on-item-added`, [mockItem]);
+      expect(pluginEaSpy).toHaveBeenLastCalledWith(`gridService:onItemAdded`, [mockItem]);
+      expect(globalEaSpy).toHaveBeenLastCalledWith(`asg:on-item-added`, [mockItem]);
     });
 
     it('should expect the row to be selected when calling "addItems" with an item wich is not an array when setting the "selecRow" flag and the grid option "enableRowSelection" is set', () => {
@@ -554,14 +606,16 @@ describe('Grid Service', () => {
       } as GridOption);
       const addSpy = jest.spyOn(dataviewStub, 'insertItem');
       const selectSpy = jest.spyOn(service, 'setSelectedRow');
-      const eaSpy = jest.spyOn(ea, 'publish');
+      const globalEaSpy = jest.spyOn(globalEa, 'publish');
+      const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
 
       service.addItems(mockItem, { selectRow: true });
 
       expect(addSpy).toHaveBeenCalledTimes(1);
       expect(addSpy).toHaveBeenCalledWith(0, mockItem);
       expect(selectSpy).toHaveBeenCalledWith(0);
-      expect(eaSpy).toHaveBeenLastCalledWith(`asg:on-item-added`, mockItem);
+      expect(pluginEaSpy).toHaveBeenLastCalledWith(`gridService:onItemAdded`, mockItem);
+      expect(globalEaSpy).toHaveBeenLastCalledWith(`asg:on-item-added`, mockItem);
     });
   });
 
@@ -589,14 +643,16 @@ describe('Grid Service', () => {
     it('should expect the service to call the DataView "deleteItem" when calling "deleteItem" with an item', () => {
       const mockItem = { id: 4, user: { firstName: 'John', lastName: 'Doe' } };
       const deleteSpy = jest.spyOn(dataviewStub, 'deleteItem');
-      const eaSpy = jest.spyOn(ea, 'publish');
+      const globalEaSpy = jest.spyOn(globalEa, 'publish');
+      const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
 
       const output = service.deleteItemById(mockItem.id);
 
       expect(output).toEqual(4);
       expect(deleteSpy).toHaveBeenCalledTimes(1);
       expect(deleteSpy).toHaveBeenCalledWith(mockItem.id);
-      expect(eaSpy).toHaveBeenLastCalledWith(`asg:on-item-deleted`, mockItem.id);
+      expect(pluginEaSpy).toHaveBeenLastCalledWith(`gridService:onItemDeleted`, mockItem.id);
+      expect(globalEaSpy).toHaveBeenLastCalledWith(`asg:on-item-deleted`, mockItem.id);
     });
 
     it('should remove any row selection when the grid option "enableCheckboxSelector" is enabled', () => {
@@ -622,7 +678,8 @@ describe('Grid Service', () => {
     it('should expect the service to call the "deleteItem" multiple times when calling "deleteItems" with an array of items', () => {
       const mockItems = [{ id: 0, user: { firstName: 'John', lastName: 'Doe' } }, { id: 5, user: { firstName: 'Jane', lastName: 'Doe' } }];
       const serviceDeleteSpy = jest.spyOn(service, 'deleteItem');
-      const eaSpy = jest.spyOn(ea, 'publish');
+      const globalEaSpy = jest.spyOn(globalEa, 'publish');
+      const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
 
       const output = service.deleteItems(mockItems);
 
@@ -630,40 +687,46 @@ describe('Grid Service', () => {
       expect(serviceDeleteSpy).toHaveBeenCalledTimes(2);
       expect(serviceDeleteSpy).toHaveBeenNthCalledWith(1, mockItems[0], { triggerEvent: false });
       expect(serviceDeleteSpy).toHaveBeenNthCalledWith(2, mockItems[1], { triggerEvent: false });
-      expect(eaSpy).toHaveBeenLastCalledWith(`asg:on-item-deleted`, mockItems);
+      expect(pluginEaSpy).toHaveBeenLastCalledWith(`gridService:onItemDeleted`, mockItems);
+      expect(globalEaSpy).toHaveBeenLastCalledWith(`asg:on-item-deleted`, mockItems);
     });
 
     it('should expect the service to call the "deleteItem" when calling "deleteItems" with a single item which is not an array', () => {
       const mockItem = { id: 4, user: { firstName: 'John', lastName: 'Doe' } };
       const serviceDeleteSpy = jest.spyOn(service, 'deleteItem');
-      const eaSpy = jest.spyOn(ea, 'publish');
+      const globalEaSpy = jest.spyOn(globalEa, 'publish');
+      const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
 
       const output = service.deleteItems(mockItem);
 
       expect(output).toEqual([4]);
       expect(serviceDeleteSpy).toHaveBeenCalledTimes(1);
       expect(serviceDeleteSpy).toHaveBeenCalledWith(mockItem, { triggerEvent: true });
-      expect(eaSpy).toHaveBeenLastCalledWith(`asg:on-item-deleted`, mockItem.id);
+      expect(pluginEaSpy).toHaveBeenLastCalledWith(`gridService:onItemDeleted`, mockItem.id);
+      expect(globalEaSpy).toHaveBeenLastCalledWith(`asg:on-item-deleted`, mockItem.id);
     });
 
     it('should delete a single item by calling "deleteItems" method without triggering an event', () => {
       const mockItem = { id: 0, user: { firstName: 'John', lastName: 'Doe' } };
       const serviceDeleteSpy = jest.spyOn(service, 'deleteItem');
-      const eaSpy = jest.spyOn(ea, 'publish');
+      const globalEaSpy = jest.spyOn(globalEa, 'publish');
+      const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
 
       const output = service.deleteItems(mockItem, { triggerEvent: false });
 
       expect(output).toEqual([0]);
       expect(serviceDeleteSpy).toHaveBeenCalled();
       expect(serviceDeleteSpy).toHaveBeenCalledWith(mockItem, { triggerEvent: false });
-      expect(eaSpy).not.toHaveBeenLastCalledWith(`asg:on-item-deleted`);
+      expect(pluginEaSpy).not.toHaveBeenLastCalledWith(`gridService:onItemDeleted`);
+      expect(globalEaSpy).not.toHaveBeenLastCalledWith(`asg:on-item-deleted`);
     });
 
     it('should delete a single item by calling "deleteItems" method and expect to trigger a single an event', () => {
       const mockItems = [{ id: 0, user: { firstName: 'John', lastName: 'Doe' } }, { id: 5, user: { firstName: 'Jane', lastName: 'Doe' } }];
       const serviceDeleteSpy = jest.spyOn(service, 'deleteItem');
       const dataviewDeleteSpy = jest.spyOn(dataviewStub, 'deleteItem');
-      const eaSpy = jest.spyOn(ea, 'publish');
+      const globalEaSpy = jest.spyOn(globalEa, 'publish');
+      const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
 
       const output = service.deleteItems(mockItems, { triggerEvent: true });
 
@@ -672,25 +735,29 @@ describe('Grid Service', () => {
       expect(serviceDeleteSpy).toHaveBeenNthCalledWith(1, mockItems[0], { triggerEvent: false });
       expect(serviceDeleteSpy).toHaveBeenNthCalledWith(2, mockItems[1], { triggerEvent: false });
       expect(dataviewDeleteSpy).toHaveBeenCalledTimes(2);
-      expect(eaSpy).toHaveBeenCalledTimes(1);
+      expect(pluginEaSpy).toHaveBeenCalledTimes(1);
+      expect(globalEaSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should delete a single item by calling "deleteItemByIds" method without triggering an event', () => {
       const serviceDeleteSpy = jest.spyOn(service, 'deleteItemById');
-      const eaSpy = jest.spyOn(ea, 'publish');
+      const globalEaSpy = jest.spyOn(globalEa, 'publish');
+      const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
 
       const output = service.deleteItemByIds([3], { triggerEvent: false });
 
       expect(output).toEqual([3]);
       expect(serviceDeleteSpy).toHaveBeenCalled();
       expect(serviceDeleteSpy).toHaveBeenCalledWith(3, { triggerEvent: false });
-      expect(eaSpy).not.toHaveBeenLastCalledWith(`asg:on-item-deleted`);
+      expect(pluginEaSpy).not.toHaveBeenLastCalledWith(`gridService:onItemDeleted`);
+      expect(globalEaSpy).not.toHaveBeenLastCalledWith(`asg:on-item-deleted`);
     });
 
     it('should delete a single item by calling "deleteItemByIds" method and expect to trigger a single an event', () => {
       const serviceDeleteSpy = jest.spyOn(service, 'deleteItemById');
       const dataviewDeleteSpy = jest.spyOn(dataviewStub, 'deleteItem');
-      const eaSpy = jest.spyOn(ea, 'publish');
+      const globalEaSpy = jest.spyOn(globalEa, 'publish');
+      const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
 
       const output = service.deleteItemByIds([0, 5], { triggerEvent: true });
 
@@ -699,7 +766,8 @@ describe('Grid Service', () => {
       expect(serviceDeleteSpy).toHaveBeenNthCalledWith(1, 0, { triggerEvent: false });
       expect(serviceDeleteSpy).toHaveBeenNthCalledWith(2, 5, { triggerEvent: false });
       expect(dataviewDeleteSpy).toHaveBeenCalledTimes(2);
-      expect(eaSpy).toHaveBeenCalledTimes(1);
+      expect(pluginEaSpy).toHaveBeenCalledTimes(1);
+      expect(globalEaSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should return an empty array when argument is not an array of IDs to delete', () => {

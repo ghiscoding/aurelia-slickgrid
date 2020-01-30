@@ -49,14 +49,15 @@ const template =
 
 describe('Resizer Service', () => {
   let service: ResizerService;
-  const ea = new EventAggregator();
+  const globalEa = new EventAggregator();
+  const pluginEa = new EventAggregator();
 
   beforeEach(() => {
     const div = document.createElement('div');
     div.innerHTML = template;
     document.body.appendChild(div);
 
-    service = new ResizerService(ea);
+    service = new ResizerService(globalEa, pluginEa);
     service.init(gridStub);
   });
 
@@ -70,13 +71,13 @@ describe('Resizer Service', () => {
   });
 
   it('should throw an error when there is no grid object defined', () => {
-    service = new ResizerService(new EventAggregator());
+    service = new ResizerService(new EventAggregator(), new EventAggregator());
     service.init(null);
     expect(() => service.resizeGrid()).toThrowError('Aurelia-Slickgrid resizer requires a valid Grid object and Grid Options defined');
   });
 
   it('should throw an error when there is no grid options defined', () => {
-    service = new ResizerService(new EventAggregator());
+    service = new ResizerService(new EventAggregator(), new EventAggregator());
     service.init({ getOptions: () => null });
     expect(() => service.resizeGrid()).toThrowError('Aurelia-Slickgrid resizer requires a valid Grid object and Grid Options defined');
   });
@@ -110,7 +111,8 @@ describe('Resizer Service', () => {
       const fixedWidth = 800;
       service.init(gridStub, { width: fixedWidth });
       const previousHeight = window.innerHeight;
-      const eaSpy = jest.spyOn(ea, 'publish');
+      const globalEaSpy = jest.spyOn(globalEa, 'publish');
+      const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
       const gridSpy = jest.spyOn(gridStub, 'getOptions');
       const serviceCalculateSpy = jest.spyOn(service, 'calculateGridNewDimensions');
       const serviceResizeSpy = jest.spyOn(service, 'resizeGrid');
@@ -132,9 +134,12 @@ describe('Resizer Service', () => {
       expect(window.innerHeight).not.toEqual(previousHeight);
       expect(serviceCalculateSpy).toReturnWith(dimensionResult);
       expect(lastDimensions).toEqual(dimensionResult);
-      expect(eaSpy).toHaveBeenCalledTimes(2);
-      expect(eaSpy).toHaveBeenNthCalledWith(1, `${aureliaEventPrefix}:onBeforeResize`, expect.any(Object));
-      expect(eaSpy).toHaveBeenNthCalledWith(2, `${aureliaEventPrefix}:onAfterResize`, dimensionResult);
+      expect(globalEaSpy).toHaveBeenCalledTimes(2);
+      expect(globalEaSpy).toHaveBeenNthCalledWith(1, `${aureliaEventPrefix}:onBeforeResize`, expect.any(Object));
+      expect(globalEaSpy).toHaveBeenNthCalledWith(2, `${aureliaEventPrefix}:onAfterResize`, dimensionResult);
+      expect(pluginEaSpy).toHaveBeenCalledTimes(2);
+      expect(pluginEaSpy).toHaveBeenNthCalledWith(1, `resizerService:onBeforeResize`, expect.any(Object));
+      expect(pluginEaSpy).toHaveBeenNthCalledWith(2, `resizerService:onAfterResize`, dimensionResult);
     });
 
     it('should resize grid to a defined height and width when fixed dimensions are provided to the init method', () => {
@@ -287,7 +292,8 @@ describe('Resizer Service', () => {
       const newOptions = { ...gridOptionMock, enablePagination: true };
       const newGridStub = { ...gridStub, getOptions: () => newOptions };
       service.init(newGridStub, { width: fixedWidth });
-      const eaSpy = jest.spyOn(ea, 'publish');
+      const globalEaSpy = jest.spyOn(globalEa, 'publish');
+      const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
       const serviceCalculateSpy = jest.spyOn(service, 'calculateGridNewDimensions');
 
       Object.defineProperty(window, 'innerHeight', { writable: true, configurable: true, value: newHeight });
@@ -297,7 +303,8 @@ describe('Resizer Service', () => {
         const calculatedDimensions = { height: (newHeight - DATAGRID_BOTTOM_PADDING - DATAGRID_PAGINATION_HEIGHT), width: fixedWidth };
         expect(serviceCalculateSpy).toReturnWith(calculatedDimensions);
         expect(newGridDimensions).toEqual({ ...calculatedDimensions, heightWithPagination: (calculatedDimensions.height + DATAGRID_PAGINATION_HEIGHT) });
-        expect(eaSpy).toHaveBeenCalledWith(`${aureliaEventPrefix}:onAfterResize`, newGridDimensions);
+        expect(globalEaSpy).toHaveBeenCalledWith(`${aureliaEventPrefix}:onAfterResize`, newGridDimensions);
+        expect(pluginEaSpy).toHaveBeenCalledWith(`resizerService:onAfterResize`, newGridDimensions);
         done();
       });
     });

@@ -67,15 +67,15 @@ const template =
 describe('GroupingAndColspanService', () => {
   let service: GroupingAndColspanService;
   let slickgridEventHandler: SlickEventHandler;
-  let ea: EventAggregator;
+  let pluginEa: EventAggregator;
   let i18n: I18N;
 
   beforeEach(() => {
     const div = document.createElement('div');
     div.innerHTML = template;
     document.body.appendChild(div);
-    ea = new EventAggregator();
-    i18n = new I18N(ea, new BindingSignaler());
+    pluginEa = new EventAggregator();
+    i18n = new I18N(pluginEa, new BindingSignaler());
 
     i18n.setup({
       resources: {
@@ -104,7 +104,7 @@ describe('GroupingAndColspanService', () => {
       debug: false
     });
 
-    service = new GroupingAndColspanService(mockExtensionUtility, ea);
+    service = new GroupingAndColspanService(mockExtensionUtility, pluginEa);
     slickgridEventHandler = service.eventHandler;
   });
 
@@ -210,7 +210,7 @@ describe('GroupingAndColspanService', () => {
       const spy = jest.spyOn(service, 'renderPreHeaderRowGroupingTitles');
 
       service.init(gridStub, dataViewStub);
-      ea.publish('asg:onAfterResize', {});
+      pluginEa.publish('resizerService:onAfterResize', {});
       jest.runAllTimers(); // fast-forward timer
 
       expect(spy).toHaveBeenCalledTimes(2);

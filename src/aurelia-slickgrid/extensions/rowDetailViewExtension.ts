@@ -1,5 +1,5 @@
 import { inject, singleton } from 'aurelia-framework';
-import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
+import { Subscription } from 'aurelia-event-aggregator';
 import * as DOMPurify from 'dompurify';
 
 import { AureliaViewOutput, Column, Extension, ExtensionName, GridOption, RowDetailView, SlickEventHandler } from '../models/index';
@@ -7,6 +7,7 @@ import { ExtensionUtility } from './extensionUtility';
 import { SharedService } from '../services/shared.service';
 import { AureliaUtilService } from '../services/aureliaUtil.service';
 import { addToArrayWhenNotExists, disposeAllSubscriptions } from '../services/utilities';
+import { SlickgridEventAggregator } from '../custom-elements/slickgridEventAggregator';
 
 // using external non-typed js libraries
 declare var Slick: any;
@@ -22,7 +23,7 @@ export interface CreatedView extends AureliaViewOutput {
 @singleton(true)
 @inject(
   AureliaUtilService,
-  EventAggregator,
+  SlickgridEventAggregator,
   ExtensionUtility,
   SharedService,
 )
@@ -37,7 +38,7 @@ export class RowDetailViewExtension implements Extension {
 
   constructor(
     private aureliaUtilService: AureliaUtilService,
-    private ea: EventAggregator,
+    private pluginEa: SlickgridEventAggregator,
     private extensionUtility: ExtensionUtility,
     private sharedService: SharedService,
   ) {
@@ -209,7 +210,7 @@ export class RowDetailViewExtension implements Extension {
 
         // on filter changed, we need to re-render all Views
         this._subscriptions.push(
-          this.ea.subscribe('filterService:filterChanged', () => this.redrawAllViewSlots())
+          this.pluginEa.subscribe('filterService:filterChanged', () => this.redrawAllViewSlots())
         );
       }
       return this._addon;
