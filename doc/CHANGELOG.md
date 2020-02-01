@@ -2,6 +2,42 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.17.0"></a>
+# [2.17.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.16.5...v2.17.0) (2020-02-01)
+
+
+### Bug Fixes
+
+* **build:** create & use separate excel-builder package to fix security ([#290](https://github.com/ghiscoding/aurelia-slickgrid/issues/290)) ([06bc52a](https://github.com/ghiscoding/aurelia-slickgrid/commit/06bc52a))
+* **filter:** creating blank entry should only be entered once ([8f6533f](https://github.com/ghiscoding/aurelia-slickgrid/commit/8f6533f))
+* **filters:** remove filter DOM element IDs to avoid duplicate IDs ([#288](https://github.com/ghiscoding/aurelia-slickgrid/issues/288)) ([35dd3d7](https://github.com/ghiscoding/aurelia-slickgrid/commit/35dd3d7))
+* **footer:** fix Custom Footer styling issues with Bootstrap 4 ([#289](https://github.com/ghiscoding/aurelia-slickgrid/issues/289)) ([9d8f3f3](https://github.com/ghiscoding/aurelia-slickgrid/commit/9d8f3f3))
+* **formatter:** refine condition to display a checkmark icon ([e6edfd5](https://github.com/ghiscoding/aurelia-slickgrid/commit/e6edfd5))
+* **graphql:** the query could use a different dataset "id" property ([60a9c45](https://github.com/ghiscoding/aurelia-slickgrid/commit/60a9c45))
+* **header:** column header grouping should be re-render after a resize ([2ef9ea4](https://github.com/ghiscoding/aurelia-slickgrid/commit/2ef9ea4))
+* **menu:** remove unused code in Context Menu to select cell ([b746b5c](https://github.com/ghiscoding/aurelia-slickgrid/commit/b746b5c))
+* **paginations:** fix Grid State dbl event and some Pagination issues ([#294](https://github.com/ghiscoding/aurelia-slickgrid/issues/294)) ([efe5748](https://github.com/ghiscoding/aurelia-slickgrid/commit/efe5748))
+* **resizer:** grid size fix for backend service with pagination disabled ([77aa5eb](https://github.com/ghiscoding/aurelia-slickgrid/commit/77aa5eb))
+* **rowDetail:** add datasetIdPropertyName option in Row Detail ([#299](https://github.com/ghiscoding/aurelia-slickgrid/issues/299)) ([e8ce045](https://github.com/ghiscoding/aurelia-slickgrid/commit/e8ce045))
+* **test:** fix failing Cypress E2E test after GraphQL changes ([b4d780f](https://github.com/ghiscoding/aurelia-slickgrid/commit/b4d780f))
+* **tests:** add and fix Jest unit test ([f6e20f6](https://github.com/ghiscoding/aurelia-slickgrid/commit/f6e20f6))
+
+
+### Features
+
+* **backend:** add OData & GraphQL Service API interfaces ([6995f64](https://github.com/ghiscoding/aurelia-slickgrid/commit/6995f64))
+* **backend:** add option to use local filtering/sorting strategy ([df96b3e](https://github.com/ghiscoding/aurelia-slickgrid/commit/df96b3e))
+* **columnGroup:** add columnGroupKey property in order to use translate ([#292](https://github.com/ghiscoding/aurelia-slickgrid/issues/292)) ([9d225ae](https://github.com/ghiscoding/aurelia-slickgrid/commit/9d225ae))
+* **examples:** add new GraphQL without Pagination Example ([b667dbe](https://github.com/ghiscoding/aurelia-slickgrid/commit/b667dbe))
+* **footer:** add custom footer to show metrics ([92b4c8d](https://github.com/ghiscoding/aurelia-slickgrid/commit/92b4c8d))
+* **menus:** add "onAfterMenuShow" event to all possible menu plugins ([#297](https://github.com/ghiscoding/aurelia-slickgrid/issues/297)) ([c7f2e7a](https://github.com/ghiscoding/aurelia-slickgrid/commit/c7f2e7a))
+* **pagination:** add Pagination to local grid ([#286](https://github.com/ghiscoding/aurelia-slickgrid/issues/286)) ([d655040](https://github.com/ghiscoding/aurelia-slickgrid/commit/d655040))
+* **rowDetail:** add few object instances that can be used in child comp ([#285](https://github.com/ghiscoding/aurelia-slickgrid/issues/285)) ([e1a389a](https://github.com/ghiscoding/aurelia-slickgrid/commit/e1a389a)), closes [1#comment105578997_59661868](https://github.com/1/issues/comment105578997_59661868)
+* **selection:** add flag to disable syncGridSelection w/BackendService ([#298](https://github.com/ghiscoding/aurelia-slickgrid/issues/298)) ([6a8cc4f](https://github.com/ghiscoding/aurelia-slickgrid/commit/6a8cc4f))
+* **selection:** preserve row selection & add it to Grid State & Presets ([#296](https://github.com/ghiscoding/aurelia-slickgrid/issues/296)) ([af9deea](https://github.com/ghiscoding/aurelia-slickgrid/commit/af9deea))
+
+
+
 <a name="2.16.5"></a>
 ## [2.16.5](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.16.4...v2.16.5) (2020-01-11)
 
