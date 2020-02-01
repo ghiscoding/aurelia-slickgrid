@@ -153,11 +153,11 @@ export class ContextMenuExtension implements Extension {
       const menuOptions: Partial<ContextMenu> = {};
 
       if (contextMenu.commandTitleKey) {
-        contextMenu.commandTitle = this.i18n && this.i18n.tr && this.i18n.tr(contextMenu.commandTitleKey) || contextMenu.commandTitle;
+        contextMenu.commandTitle = this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale() && this.i18n.tr(contextMenu.commandTitleKey) || contextMenu.commandTitle;
         menuOptions.commandTitle = contextMenu.commandTitle;
       }
       if (contextMenu.optionTitleKey) {
-        contextMenu.optionTitle = this.i18n && this.i18n.tr && this.i18n.tr(contextMenu.optionTitleKey) || contextMenu.optionTitle;
+        contextMenu.optionTitle = this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale() && this.i18n.tr(contextMenu.optionTitleKey) || contextMenu.optionTitle;
         menuOptions.optionTitle = contextMenu.optionTitle;
       }
       const originalCommandItems = this._userOriginalContextMenu && Array.isArray(this._userOriginalContextMenu.commandItems) ? this._userOriginalContextMenu.commandItems : [];

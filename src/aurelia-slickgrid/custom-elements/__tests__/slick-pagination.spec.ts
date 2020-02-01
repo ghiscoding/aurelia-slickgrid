@@ -80,7 +80,7 @@ describe('Slick-Pagination Component', () => {
       ])
       .inView(view)
       .boundTo({
-        enableTranslate: true,
+        gridOptions: { enableTranslate: true },
         paginationService: paginationServiceStub,
       });
 
@@ -91,7 +91,6 @@ describe('Slick-Pagination Component', () => {
       aurelia.container.registerInstance(PaginationService, paginationServiceStub);
       return aurelia;
     });
-
     await customElement.create(bootstrap);
   });
 
@@ -111,6 +110,7 @@ describe('Slick-Pagination Component', () => {
       const pageInfoFromTo = await customElement.waitForElement('.page-info-from-to');
       const pageInfoTotalItems = await customElement.waitForElement('.page-info-total-items');
 
+      expect(i18n.getLocale()).toBe('fr');
       expect(removeExtraSpaces(pageInfoFromTo.innerHTML)).toBe('<span data-test="item-from">5</span>-<span data-test="item-to">10</span>de');
       expect(removeExtraSpaces(pageInfoTotalItems.innerHTML)).toBe('<span data-test="total-items">100</span> éléments');
     });
@@ -180,11 +180,11 @@ describe('Slick-Pagination Component', () => {
     it('should create a the Slick-Pagination component in the DOM and expect different locale when changed', async (done) => {
       i18n.setLocale('en');
       ea.publish('i18n:locale:changed', 'en');
-      expect(i18n.getLocale()).toBe('en');
 
       setTimeout(async () => {
         const pageInfoFromTo = await customElement.waitForElement('.page-info-from-to');
         const pageInfoTotalItems = await customElement.waitForElement('.page-info-total-items');
+        expect(i18n.getLocale()).toBe('en');
         expect(removeExtraSpaces(pageInfoFromTo.innerHTML)).toBe(`<span data-test="item-from">5</span>-<span data-test="item-to">10</span>of`);
         expect(removeExtraSpaces(pageInfoTotalItems.innerHTML)).toBe(`<span data-test="total-items">100</span> items`);
         done();

@@ -101,8 +101,7 @@ export class AureliaSlickgridCustomElement {
   serviceList: any[] = [];
   subscriptions: Subscription[] = [];
   paginationData: {
-    enableTranslate: boolean;
-    locales: Locale;
+    gridOptions: GridOption;
     paginationService: PaginationService;
   };
 
@@ -167,8 +166,7 @@ export class AureliaSlickgridCustomElement {
   private initializePaginationService(paginationOptions: Pagination) {
     if (this.gridOptions) {
       this.paginationData = {
-        enableTranslate: this.gridOptions.enableTranslate || false,
-        locales: this.locales,
+        gridOptions: this.gridOptions,
         paginationService: this.paginationService,
       };
       this.paginationService.totalItems = this.totalItems;
@@ -1015,7 +1013,7 @@ export class AureliaSlickgridCustomElement {
 
   /** Translate all Custom Footer Texts (footer with metrics) */
   private translateCustomFooterTexts() {
-    if (this.i18n && this.i18n.tr) {
+    if (this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale()) {
       const customFooterOptions = this.gridOptions && this.gridOptions.customFooterOptions || {};
       customFooterOptions.metricTexts = customFooterOptions.metricTexts || {};
       for (const propName of Object.keys(customFooterOptions.metricTexts)) {

@@ -16,6 +16,7 @@ import {
   EditorValidatorOutput,
   FieldType,
   GridOption,
+  Locale,
   MultipleSelectOption,
   SelectOption,
 } from './../models/index';
@@ -62,8 +63,11 @@ export class SelectEditor implements Editor {
   /** Do we translate the label? */
   enableTranslateLabel: boolean;
 
+  /** Locales */
+  private _locales: Locale;
+
   /** Event Subscriptions */
-  _subscriptions: Subscription[] = [];
+  private _subscriptions: Subscription[] = [];
 
   // flag to signal that the editor is destroying itself, helps prevent
   // commit changes from being called twice and erroring
@@ -77,7 +81,10 @@ export class SelectEditor implements Editor {
       throw new Error('[Aurelia-Slickgrid] Something is wrong with this grid, an Editor must always have valid arguments.');
     }
     this.grid = args.grid;
-    this.gridOptions = this.grid.getOptions() as GridOption;
+    this.gridOptions = (this.grid.getOptions() || {}) as GridOption;
+
+    // get locales provided by user in main file or else use default English locales via the Constants
+    this._locales = this.gridOptions.locales || Constants.locales;
 
     // provide the name attribute to the DOM element which will be needed to auto-adjust drop position (dropup / dropdown)
     const columnId = this.columnDef && this.columnDef.id;
@@ -106,10 +113,16 @@ export class SelectEditor implements Editor {
       libOptions.okButton = true;
       libOptions.selectAllDelimiter = ['', ''];
 
-      if (this.i18n && this.i18n.tr) {
+      if (this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale()) {
         libOptions.countSelected = this.i18n.tr('X_OF_Y_SELECTED');
         libOptions.allSelected = this.i18n.tr('ALL_SELECTED');
         libOptions.selectAllText = this.i18n.tr('SELECT_ALL');
+        libOptions.okButtonText = this.i18n.tr('OK');
+      } else {
+        libOptions.countSelected = this._locales && this._locales.TEXT_X_OF_Y_SELECTED;
+        libOptions.allSelected = this._locales && this._locales.TEXT_ALL_SELECTED;
+        libOptions.selectAllText = this._locales && this._locales.TEXT_SELECT_ALL;
+        libOptions.okButtonText = this._locales && this._locales.TEXT_OK;
       }
     }
 

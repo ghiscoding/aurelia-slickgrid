@@ -72,9 +72,17 @@ export class LongTextEditor implements Editor {
   }
 
   init(): void {
+    let cancelText = '';
+    let saveText = '';
+    if (this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale()) {
+      cancelText = this.i18n.tr('CANCEL');
+      saveText = this.i18n.tr('SAVE');
+    } else {
+      cancelText = this._locales && this._locales.TEXT_CANCEL;
+      saveText = this._locales && this._locales.TEXT_SAVE;
+    }
+
     const columnId = this.columnDef && this.columnDef.id;
-    const cancelText = this.i18n && this.i18n.tr && this.i18n.tr('CANCEL') || this._locales && this._locales.TEXT_CANCEL;
-    const saveText = this.i18n && this.i18n.tr && this.i18n.tr('SAVE') || this._locales && this._locales.TEXT_SAVE;
     const placeholder = this.columnEditor && this.columnEditor.placeholder || '';
     const title = this.columnEditor && this.columnEditor.title || '';
     const $container = $('body');

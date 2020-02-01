@@ -3,7 +3,7 @@ import { EventAggregator } from 'aurelia-event-aggregator';
 import { StageComponent } from 'aurelia-testing';
 import { PLATFORM } from 'aurelia-pal';
 
-import { Locale } from '../../models';
+import { GridOption, Locale } from '../../models';
 import { PaginationService } from '../../services';
 
 function removeExtraSpaces(textS: string) {
@@ -57,9 +57,8 @@ describe('Slick-Pagination Component without I18N', () => {
       ])
       .inView(view)
       .boundTo({
-        enableTranslate: true,
+        gridOptions: { enableTranslate: true },
         paginationService: paginationServiceStub,
-        locales: mockLocales,
       });
 
     customElement.bootstrap((aurelia) => {
@@ -77,9 +76,8 @@ describe('Slick-Pagination Component without I18N', () => {
 
     it('should throw an error when "enableTranslate" is set and I18N Service is not provided', async (done) => {
       try {
-        customElement.enableTranslate = true;
         await customElement.manuallyHandleLifecycle().create(bootstrap);
-        await customElement.bind({ enableTranslate: true, paginationService: paginationServiceStub });
+        await customElement.bind({ gridOptions: { enableTranslate: true } as GridOption, paginationService: paginationServiceStub });
         await customElement.attached();
         await customElement.detached();
       } catch (e) {
