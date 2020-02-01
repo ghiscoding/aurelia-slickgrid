@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.17.1"></a>
+## [2.17.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.17.0...v2.17.1) (2020-02-01)
+
+
+### Bug Fixes
+
+* **backend:** updateOptions can be use with partial options - TS type ([2a8a0a4](https://github.com/ghiscoding/aurelia-slickgrid/commit/2a8a0a4))
+* **locales:** fix some Locales not showing up when not using I18N ([#300](https://github.com/ghiscoding/aurelia-slickgrid/issues/300)) ([a07bf23](https://github.com/ghiscoding/aurelia-slickgrid/commit/a07bf23))
+
+
+
 <a name="2.17.0"></a>
 # [2.17.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.16.5...v2.17.0) (2020-02-01)
 
