@@ -388,16 +388,16 @@ export class SelectFilter implements Filter {
           }
           const labelKey = (option.labelKey || option[this.labelName]) as string;
           const selected = (searchTerms.findIndex((term) => term === option[this.valueName]) >= 0) ? 'selected' : '';
-          const labelText = ((option.labelKey || this.enableTranslateLabel) && labelKey && isEnableTranslate) ? (this.i18n && this.i18n.tr && this.i18n.tr(labelKey) || '') : labelKey;
+          const labelText = ((option.labelKey || this.enableTranslateLabel) && labelKey && isEnableTranslate) ? (this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale() && this.i18n.tr(labelKey) || '') : labelKey;
           let prefixText = option[this.labelPrefixName] || '';
           let suffixText = option[this.labelSuffixName] || '';
           let optionLabel = option.hasOwnProperty(this.optionLabel) ? option[this.optionLabel] : '';
           optionLabel = optionLabel.toString().replace(/\"/g, '\''); // replace double quotes by single quotes to avoid interfering with regular html
 
           // also translate prefix/suffix if enableTranslateLabel is true and text is a string
-          prefixText = (this.enableTranslateLabel && isEnableTranslate && prefixText && typeof prefixText === 'string') ? this.i18n && this.i18n.tr && this.i18n.tr(prefixText || ' ') : prefixText;
-          suffixText = (this.enableTranslateLabel && isEnableTranslate && suffixText && typeof suffixText === 'string') ? this.i18n && this.i18n.tr && this.i18n.tr(suffixText || ' ') : suffixText;
-          optionLabel = (this.enableTranslateLabel && isEnableTranslate && optionLabel && typeof optionLabel === 'string') ? this.i18n && this.i18n.tr && this.i18n.tr(optionLabel || ' ') : optionLabel;
+          prefixText = (this.enableTranslateLabel && isEnableTranslate && prefixText && typeof prefixText === 'string') ? this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale() && this.i18n.tr(prefixText || ' ') : prefixText;
+          suffixText = (this.enableTranslateLabel && isEnableTranslate && suffixText && typeof suffixText === 'string') ? this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale() && this.i18n.tr(suffixText || ' ') : suffixText;
+          optionLabel = (this.enableTranslateLabel && isEnableTranslate && optionLabel && typeof optionLabel === 'string') ? this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale() && this.i18n.tr(optionLabel || ' ') : optionLabel;
           // add to a temp array for joining purpose and filter out empty text
           const tmpOptionArray = [prefixText, (typeof labelText === 'string' || typeof labelText === 'number') ? labelText.toString() : labelText, suffixText].filter((text) => text);
           let optionText = tmpOptionArray.join(separatorBetweenLabels);
@@ -502,10 +502,10 @@ export class SelectFilter implements Filter {
       options.single = false;
       options.okButton = true;
       options.addTitle = true; // show tooltip of all selected items while hovering the filter
-      options.countSelected = this.i18n && this.i18n.tr && this.i18n.tr('X_OF_Y_SELECTED') || this._locales && this._locales.TEXT_X_OF_Y_SELECTED;
-      options.allSelected = this.i18n && this.i18n.tr && this.i18n.tr('ALL_SELECTED') || this._locales && this._locales.TEXT_ALL_SELECTED;
-      options.okButtonText = this.i18n && this.i18n.tr && this.i18n.tr('OK') || this._locales && this._locales.TEXT_OK;
-      options.selectAllText = this.i18n && this.i18n.tr && this.i18n.tr('SELECT_ALL') || this._locales && this._locales.TEXT_SELECT_ALL;
+      options.countSelected = this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale() && this.i18n.tr('X_OF_Y_SELECTED') || this._locales && this._locales.TEXT_X_OF_Y_SELECTED;
+      options.allSelected = this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale() && this.i18n.tr('ALL_SELECTED') || this._locales && this._locales.TEXT_ALL_SELECTED;
+      options.okButtonText = this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale() && this.i18n.tr('OK') || this._locales && this._locales.TEXT_OK;
+      options.selectAllText = this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale() && this.i18n.tr('SELECT_ALL') || this._locales && this._locales.TEXT_SELECT_ALL;
       options.selectAllDelimiter = ['', '']; // remove default square brackets of default text "[Select All]" => "Select All"
     }
     this.defaultOptions = options;

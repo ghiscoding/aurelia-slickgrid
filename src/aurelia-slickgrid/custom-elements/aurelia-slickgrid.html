@@ -6,9 +6,8 @@
 
     <!-- Pagination section under the grid -->
     <slick-pagination id="slickPagingContainer-${gridId}" if.bind="showPagination"
-                      pagination-service.bind="paginationService"
-                      enable-translate.bind="gridOptions.enableTranslate"
-                      locales.bind="locales">
+                      grid-options.bind="gridOptions"
+                      pagination-service.bind="paginationService">
     </slick-pagination>
 
     <!-- Custom Footer section under the grid -->

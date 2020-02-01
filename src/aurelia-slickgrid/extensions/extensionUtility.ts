@@ -99,21 +99,21 @@ export class ExtensionUtility {
     const title = picker && picker[propName];
     const titleKey = picker && picker[`${propName}Key`];
 
-    if (titleKey && this.i18n && this.i18n.tr) {
+    if (titleKey && this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale()) {
       output = this.i18n.tr(titleKey || ' ');
     } else {
       switch (propName) {
         case 'customTitle':
-          output = title || enableTranslate && this.i18n && this.i18n.tr && this.i18n.tr('COMMANDS') || locales && locales.TEXT_COMMANDS;
+          output = title || enableTranslate && this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale() && this.i18n.tr('COMMANDS') || locales && locales.TEXT_COMMANDS;
           break;
         case 'columnTitle':
-          output = title || enableTranslate && this.i18n && this.i18n.tr && this.i18n.tr('COLUMNS') || locales && locales.TEXT_COLUMNS;
+          output = title || enableTranslate && this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale() && this.i18n.tr('COLUMNS') || locales && locales.TEXT_COLUMNS;
           break;
         case 'forceFitTitle':
-          output = title || enableTranslate && this.i18n && this.i18n.tr && this.i18n.tr('FORCE_FIT_COLUMNS') || locales && locales.TEXT_FORCE_FIT_COLUMNS;
+          output = title || enableTranslate && this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale() && this.i18n.tr('FORCE_FIT_COLUMNS') || locales && locales.TEXT_FORCE_FIT_COLUMNS;
           break;
         case 'syncResizeTitle':
-          output = title || enableTranslate && this.i18n && this.i18n.tr && this.i18n.tr('SYNCHRONOUS_RESIZE') || locales && locales.TEXT_SYNCHRONOUS_RESIZE;
+          output = title || enableTranslate && this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale() && this.i18n.tr('SYNCHRONOUS_RESIZE') || locales && locales.TEXT_SYNCHRONOUS_RESIZE;
           break;
         default:
           output = title;
@@ -145,7 +145,7 @@ export class ExtensionUtility {
     if (Array.isArray(items)) {
       for (const item of items) {
         if (item[inputKey]) {
-          item[outputKey] = this.i18n && this.i18n.tr && this.i18n.tr(item[inputKey]);
+          item[outputKey] = this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale() && this.i18n.tr(item[inputKey]);
         }
       }
     }
@@ -163,7 +163,7 @@ export class ExtensionUtility {
     // get locales provided by user in main file or else use default English locales via the Constants
     const locales = gridOptions && gridOptions.locales || Constants.locales;
 
-    if (gridOptions.enableTranslate && this.i18n && this.i18n.tr) {
+    if (gridOptions.enableTranslate && this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale()) {
       text = this.i18n.tr(translationKey || ' ');
     } else if (locales && locales.hasOwnProperty(localeKey)) {
       text = locales[localeKey];

@@ -176,7 +176,7 @@ export class ExportService {
 
     // Group By text, it could be set in the export options or from translation or if nothing is found then use the English constant text
     let groupByColumnHeader = this._exportOptions.groupingColumnHeaderTitle;
-    if (!groupByColumnHeader && this._gridOptions.enableTranslate && this.i18n && this.i18n.tr) {
+    if (!groupByColumnHeader && this._gridOptions.enableTranslate && this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale()) {
       groupByColumnHeader = this.i18n.tr('GROUP_BY');
     } else if (!groupByColumnHeader) {
       groupByColumnHeader = this._locales && this._locales.TEXT_GROUP_BY;
@@ -256,7 +256,7 @@ export class ExportService {
     // Populate the Column Header, pull the name defined
     columns.forEach((columnDef) => {
       let headerTitle = '';
-      if ((columnDef.headerKey || columnDef.nameKey) && this._gridOptions.enableTranslate && this.i18n && this.i18n.tr) {
+      if ((columnDef.headerKey || columnDef.nameKey) && this._gridOptions.enableTranslate && this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale()) {
         headerTitle = this.i18n.tr((columnDef.headerKey || columnDef.nameKey));
       } else {
         headerTitle = columnDef.name || titleCase(columnDef.field);

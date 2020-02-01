@@ -463,7 +463,7 @@ export class ExtensionService {
     if (Array.isArray(items)) {
       for (const item of items) {
         if (item[inputKey]) {
-          item[outputKey] = this.i18n && this.i18n.tr && this.i18n.tr(item[inputKey]);
+          item[outputKey] = this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale() && this.i18n.tr(item[inputKey]);
         }
       }
     }

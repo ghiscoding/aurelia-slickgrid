@@ -1,5 +1,4 @@
 import { autoinject } from 'aurelia-framework';
-import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
 import {
   Aggregators,
   AureliaGridInstance,
@@ -34,10 +33,8 @@ export class Example13 {
   dataset: any[];
   dataviewObj: any;
   processing = false;
-  subOnBeforeExport: Subscription;
-  subOnAfterExport: Subscription;
 
-  constructor(private ea: EventAggregator) {
+  constructor() {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
   }

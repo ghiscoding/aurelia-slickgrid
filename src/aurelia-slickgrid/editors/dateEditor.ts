@@ -80,11 +80,11 @@ export class DateEditor implements Editor {
       const columnId = this.columnDef && this.columnDef.id;
       const placeholder = this.columnEditor && this.columnEditor.placeholder || '';
       const title = this.columnEditor && this.columnEditor.title || '';
-      const gridOptions = this.args.grid.getOptions() as GridOption;
+      const gridOptions = (this.args.grid.getOptions() || {}) as GridOption;
       this.defaultDate = (this.args.item) ? this.args.item[this.columnDef.field] : null;
       const inputFormat = mapFlatpickrDateFormatWithFieldType(this.columnDef.type || FieldType.dateIso);
       const outputFormat = mapFlatpickrDateFormatWithFieldType(this.columnDef.outputType || FieldType.dateUtc);
-      let currentLocale = this.i18n && this.i18n.getLocale && this.i18n.getLocale() || 'en';
+      let currentLocale = this.i18n && this.i18n.getLocale && this.i18n.getLocale() || gridOptions.locale || 'en';
       if (currentLocale.length > 2) {
         currentLocale = currentLocale.substring(0, 2);
       }
