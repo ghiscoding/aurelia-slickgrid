@@ -156,6 +156,7 @@ describe('rowDetailViewExtension', () => {
     let columnsMock: Column[];
 
     beforeEach(() => {
+      gridOptionsMock.datasetIdPropertyName = 'id';
       columnsMock = [{ id: 'field1', field: 'field1', width: 100, cssClass: 'red' }];
       jest.spyOn(SharedService.prototype, 'grid', 'get').mockReturnValue(gridStub);
       jest.spyOn(SharedService.prototype, 'dataView', 'get').mockReturnValue(dataViewStub);
@@ -206,6 +207,13 @@ describe('rowDetailViewExtension', () => {
       expect(output).toEqual(`<div class="${ROW_DETAIL_CONTAINER_PREFIX}field1"></div>`);
     });
 
+    it('should define "datasetIdPropertyName" with different "id" and provide a sanitized "postTemplate" when only a "viewComponent" is provided (meaning no "postTemplate" is originally provided)', async () => {
+      gridOptionsMock.rowDetailView.viewModel = 'some-view-model';
+      gridOptionsMock.datasetIdPropertyName = 'rowId';
+      const output = await gridOptionsMock.rowDetailView.postTemplate({ rowId: 'field1', field: 'field1' });
+      expect(output).toEqual(`<div class="${ROW_DETAIL_CONTAINER_PREFIX}field1"></div>`);
+    });
+
     it('should add a reserved column for icons in 1st column index', () => {
       const instance = extension.create(columnsMock, gridOptionsMock);
       const spy = jest.spyOn(instance, 'getColumnDefinition').mockReturnValue({ id: '_detail_selector', field: 'sel' });
@@ -232,6 +240,7 @@ describe('rowDetailViewExtension', () => {
     const http = new HttpStub();
 
     beforeEach(() => {
+      gridOptionsMock.datasetIdPropertyName = 'id';
       gridOptionsMock.rowDetailView.preloadView = 'some-preload-view';
       gridOptionsMock.rowDetailView.viewModel = 'some-view';
       columnsMock = [{ id: 'field1', field: 'field1', width: 100, cssClass: 'red' }];
@@ -546,7 +555,6 @@ describe('rowDetailViewExtension', () => {
       gridOptionsMock.rowDetailView.process(mockItem);
     });
 
-    // this one here
     it('should run the internal "onProcessing" and call "notifyTemplate" with a Promise when "process" is a Fetch Promise', (done) => {
       const mockItem = { id: 2, firstName: 'John', lastName: 'Doe' };
       http.status = 200;
@@ -555,6 +563,20 @@ describe('rowDetailViewExtension', () => {
       http.returnValue = '6/24/1984';
       http.responseHeaders = { accept: 'json' };
       gridOptionsMock.rowDetailView.process = (item) => http.fetch('/api', { method: 'GET' });
+      const instance = extension.create(columnsMock, gridOptionsMock);
+
+      instance.onAsyncResponse.subscribe((e, response) => {
+        expect(response).toEqual(expect.objectContaining({ item: mockItem }));
+        done();
+      });
+
+      gridOptionsMock.rowDetailView.process(mockItem);
+    });
+
+    it('should define "datasetIdPropertyName" with different "id" and run the internal "onProcessing" and call "notifyTemplate" with a Promise when "process" as a Promise with content to simulate http - client', (done) => {
+      const mockItem = { rowId: 2, firstName: 'John', lastName: 'Doe' };
+      gridOptionsMock.datasetIdPropertyName = 'rowId';
+      gridOptionsMock.rowDetailView.process = (item) => new Promise((resolve) => resolve({ content: item }));
       const instance = extension.create(columnsMock, gridOptionsMock);
 
       instance.onAsyncResponse.subscribe((e, response) => {

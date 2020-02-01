@@ -53,7 +53,7 @@ export class DetailViewCustomElement {
       this.addon.collapseAll();
 
       // then you can delete the item from the dataView
-      this.dataView.deleteItem(model.id);
+      this.dataView.deleteItem(model.rowId);
 
       this.parent.showFlashMessage(`Deleted row with ${model.title}`, 'danger');
     }
