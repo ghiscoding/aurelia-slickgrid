@@ -262,6 +262,34 @@ export class PaginationService {
     this.refreshPagination(true, triggerChangedEvent);
   }
 
+  /**
+   * Toggle the Pagination (show/hide), it will use the visible if defined else it will automatically inverse when called without argument
+   *
+   * IMPORTANT NOTE:
+   * The Pagination must be created on initial page load, then only after can you toggle it.
+   * Basically this method WILL NOT WORK to show the Pagination if it was not there from the start.
+   */
+  togglePaginationVisibility(visible?: boolean) {
+    if (this.grid && this.sharedService && this.sharedService.gridOptions) {
+      const isVisible = visible !== undefined ? visible : !this.sharedService.gridOptions.enablePagination;
+      this.sharedService.gridOptions.enablePagination = isVisible;
+      this.pluginEa.publish(`paginationService:onPaginationVisibilityChanged`, { visible: isVisible });
+
+      // make sure to reset the Pagination and go back to first page to avoid any issues with Pagination being offset
+      if (isVisible) {
+        this.goToFirstPage();
+      }
+
+      // when using a local grid, we can reset the DataView pagination by changing its page size
+      // page size of 0 would show all, hence cancel the pagination
+      if (this._isLocalGrid) {
+        const pageSize = visible ? this._itemsPerPage : 0;
+        this.dataView.setPagingOptions({ pageSize, pageNum: 0 });
+      }
+    }
+  }
+
+
   processOnPageChanged(pageNumber: number, event?: Event | undefined): Promise<any> {
     return new Promise((resolve, reject) => {
       this.recalculateFromToIndexes();

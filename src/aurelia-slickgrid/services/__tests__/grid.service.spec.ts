@@ -24,6 +24,7 @@ const filterServiceStub = {
 } as unknown as FilterService;
 
 const gridStateServiceStub = {
+  needToPreserveRowSelection: jest.fn(),
   resetColumns: jest.fn(),
 } as unknown as GridStateService;
 

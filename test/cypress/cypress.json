@@ -3,7 +3,7 @@
   "baseExampleUrl": "http://localhost:9000/#/slickgrid",
   "video": false,
   "viewportWidth": 1200,
-  "viewportHeight": 800,
+  "viewportHeight": 950,
   "fixturesFolder": "fixtures",
   "integrationFolder": "integration",
   "pluginsFile": "plugins/index.js",
