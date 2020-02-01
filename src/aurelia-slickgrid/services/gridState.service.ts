@@ -33,7 +33,7 @@ export class GridStateService {
   private _dataView: any;
   private _grid: any;
   private _subscriptions: Subscription[] = [];
-  private _selectedRowDataContextIds: Array<number | string> = []; // used with row selection
+  private _selectedRowDataContextIds: Array<number | string> | undefined = []; // used with row selection
   private _wasRecheckedAfterPageChange = true; // used with row selection & pagination
 
   constructor(
@@ -50,12 +50,12 @@ export class GridStateService {
   }
 
   /** Getter of the selected data context object IDs */
-  get selectedRowDataContextIds(): Array<number | string> {
+  get selectedRowDataContextIds(): Array<number | string> | undefined {
     return this._selectedRowDataContextIds;
   }
 
   /** Setter of the selected data context object IDs */
-  set selectedRowDataContextIds(dataContextIds: Array<number | string>) {
+  set selectedRowDataContextIds(dataContextIds: Array<number | string> | undefined) {
     this._selectedRowDataContextIds = dataContextIds;
   }
 
@@ -221,8 +221,8 @@ export class GridStateService {
       const isRowSelectionEnabled = this._gridOptions.enableRowSelection || this._gridOptions.enableCheckboxSelector;
 
       if (isRowSelectionEnabled && selectionModel && this._grid.getSelectedRows && this._dataView.mapRowsToIds) {
-        let gridRowIndexes: number[] = [];
-        let dataContextIds: Array<number | string> = [];
+        let gridRowIndexes: number[] | undefined = [];
+        let dataContextIds: Array<number | string> | undefined = [];
 
         if (this._gridOptions.enablePagination) {
           gridRowIndexes = this._dataView.mapIdsToRows(this._selectedRowDataContextIds || []); // note that this will return only what is visible in current page
@@ -260,14 +260,14 @@ export class GridStateService {
       const syncGridSelection = this._gridOptions.dataView.syncGridSelection;
       if (typeof syncGridSelection === 'boolean') {
         preservedRowSelection = this._gridOptions.dataView.syncGridSelection as boolean;
-      } else {
+      } else if (typeof syncGridSelection === 'object') {
         preservedRowSelection = syncGridSelection.preserveHidden;
       }
 
       // if the result is True but the grid is using a Backend Service, we will do an extra flag check the reason is because it might have some unintended behaviors
       // with the BackendServiceApi because technically the data in the page changes the DataView on every page.
       if (preservedRowSelection && this._gridOptions.backendServiceApi && this._gridOptions.dataView.hasOwnProperty('syncGridSelectionWithBackendService')) {
-        preservedRowSelection = this._gridOptions.dataView.syncGridSelectionWithBackendService;
+        preservedRowSelection = this._gridOptions.dataView.syncGridSelectionWithBackendService as boolean;
       }
     }
     return preservedRowSelection;
@@ -432,7 +432,7 @@ export class GridStateService {
         });
       });
 
-      this._eventHandler.subscribe(this._grid.onSelectedRowsChanged, (e, args) => {
+      this._eventHandler.subscribe(this._grid.onSelectedRowsChanged, (e: Event, args: { rows: any[]; previousSelectedRows: any[]; }) => {
         if (Array.isArray(args.rows) && Array.isArray(args.previousSelectedRows)) {
           const newSelectedRows = args.rows as number[];
           const prevSelectedRows = args.previousSelectedRows as number[];
@@ -445,7 +445,9 @@ export class GridStateService {
           if (this._wasRecheckedAfterPageChange && newSelectedDeletions.length > 0) {
             const toDeleteDataIds: Array<number | string> = this._dataView.mapRowsToIds(newSelectedDeletions) || [];
             toDeleteDataIds.forEach((removeId: number | string) => {
-              this._selectedRowDataContextIds.splice((this._selectedRowDataContextIds as Array<number | string>).indexOf(removeId), 1);
+              if (Array.isArray(this._selectedRowDataContextIds)) {
+                this._selectedRowDataContextIds.splice((this._selectedRowDataContextIds as Array<number | string>).indexOf(removeId), 1);
+              }
             });
           }
 

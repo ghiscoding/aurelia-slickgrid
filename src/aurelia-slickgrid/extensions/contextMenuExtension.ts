@@ -107,27 +107,37 @@ export class ContextMenuExtension implements Extension {
         }
         if (contextMenu && typeof contextMenu.onCommand === 'function') {
           this._eventHandler.subscribe(this._addon.onCommand, (event: Event, args: MenuCommandItemCallbackArgs) => {
-            contextMenu.onCommand(event, args);
+            if (contextMenu.onCommand) {
+              contextMenu.onCommand(event, args);
+            }
           });
         }
         if (contextMenu && typeof contextMenu.onOptionSelected === 'function') {
           this._eventHandler.subscribe(this._addon.onOptionSelected, (event: Event, args: MenuOptionItemCallbackArgs) => {
-            contextMenu.onOptionSelected(event, args);
+            if (contextMenu.onOptionSelected) {
+              contextMenu.onOptionSelected(event, args);
+            }
           });
         }
         if (contextMenu && typeof contextMenu.onBeforeMenuShow === 'function') {
           this._eventHandler.subscribe(this._addon.onBeforeMenuShow, (event: Event, args: { cell: number; row: number; grid: any; }) => {
-            contextMenu.onBeforeMenuShow(event, args);
+            if (contextMenu.onBeforeMenuShow) {
+              contextMenu.onBeforeMenuShow(event, args);
+            }
           });
         }
         if (contextMenu && typeof contextMenu.onBeforeMenuClose === 'function') {
           this._eventHandler.subscribe(this._addon.onBeforeMenuClose, (event: Event, args: { cell: number; row: number; grid: any; menu: any; }) => {
-            contextMenu.onBeforeMenuClose(event, args);
+            if (contextMenu.onBeforeMenuClose) {
+              contextMenu.onBeforeMenuClose(event, args);
+            }
           });
         }
         if (contextMenu && typeof contextMenu.onAfterMenuShow === 'function') {
           this._eventHandler.subscribe(this._addon.onAfterMenuShow, (event: Event, args: { cell: number; row: number; grid: any; }) => {
-            contextMenu.onAfterMenuShow(event, args);
+            if (contextMenu.onAfterMenuShow) {
+              contextMenu.onAfterMenuShow(event, args);
+            }
           });
         }
       }

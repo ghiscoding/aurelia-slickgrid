@@ -4,7 +4,7 @@ import { Column, CurrentPagination, GridOption } from '../models/index';
 @singleton(true)
 export class SharedService {
   private _allColumns: Column[];
-  private _currentPagination: CurrentPagination;
+  private _currentPagination: CurrentPagination | null;
   private _dataView: any;
   private _groupItemMetadataProvider: any;
   private _grid: any;
@@ -29,12 +29,12 @@ export class SharedService {
   }
 
   /** Getter for the Current Pagination (when Pagination is enabled) */
-  get currentPagination(): CurrentPagination | undefined {
+  get currentPagination(): CurrentPagination | null {
     return this._currentPagination;
   }
 
   /** Setter for the Current Pagination (when Pagination is enabled) */
-  set currentPagination(currentPagination: CurrentPagination) {
+  set currentPagination(currentPagination: CurrentPagination | null) {
     this._currentPagination = currentPagination;
   }
 

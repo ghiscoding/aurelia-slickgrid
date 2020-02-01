@@ -16,7 +16,7 @@ declare var Slick: any;
 export class PaginationService {
   private _initialized = false;
   private _isLocalGrid = true;
-  private _backendServiceApi: BackendServiceApi;
+  private _backendServiceApi: BackendServiceApi | undefined;
   private _dataFrom = 1;
   private _dataTo = 1;
   private _itemsPerPage: number;
@@ -91,7 +91,7 @@ export class PaginationService {
     }
 
     if (this._isLocalGrid && this.dataView) {
-      this.dataView.onPagingInfoChanged.subscribe((e, pagingInfo) => {
+      this.dataView.onPagingInfoChanged.subscribe((e: Event, pagingInfo: { totalRows: number; pageNum: number; }) => {
         if (this._totalItems !== pagingInfo.totalRows) {
           this._totalItems = pagingInfo.totalRows;
           this._paginationOptions.totalItems = this._totalItems;
@@ -289,7 +289,6 @@ export class PaginationService {
     }
   }
 
-
   processOnPageChanged(pageNumber: number, event?: Event | undefined): Promise<any> {
     return new Promise((resolve, reject) => {
       this.recalculateFromToIndexes();
@@ -308,20 +307,22 @@ export class PaginationService {
           this._backendServiceApi.preProcess();
         }
 
-        const query = this._backendServiceApi.service.processOnPaginationChanged(event, { newPage: pageNumber, pageSize: itemsPerPage });
+        if (this._backendServiceApi && this._backendServiceApi.process) {
+          const query = this._backendServiceApi.service.processOnPaginationChanged(event, { newPage: pageNumber, pageSize: itemsPerPage });
 
-        // the processes can be Promises or an Observables (like HttpClient)
-        const process = this._backendServiceApi.process(query);
-        if (process instanceof Promise) {
-          process
-            .then((processResult: GraphqlResult | GraphqlPaginatedResult | any) => {
-              executeBackendProcessesCallback(startTime, processResult, this._backendServiceApi, this._totalItems);
-              resolve(this.getFullPagination());
-            })
-            .catch((error) => {
-              onBackendError(error, this._backendServiceApi);
-              reject(process);
-            });
+          // the processes can be Promises
+          const process = this._backendServiceApi.process(query);
+          if (process instanceof Promise) {
+            process
+              .then((processResult: GraphqlResult | GraphqlPaginatedResult | any) => {
+                executeBackendProcessesCallback(startTime, processResult, this._backendServiceApi, this._totalItems);
+                resolve(this.getFullPagination());
+              })
+              .catch((error) => {
+                onBackendError(error, this._backendServiceApi);
+                reject(process);
+              });
+          }
         }
         this.pluginEa.publish(`paginationService:onPaginationChanged`, this.getFullPagination());
       }

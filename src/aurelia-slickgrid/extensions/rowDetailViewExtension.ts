@@ -57,7 +57,7 @@ export class RowDetailViewExtension implements Extension {
     return this.sharedService && this.sharedService.gridOptions || {};
   }
 
-  get rowDetailViewOptions(): RowDetailView {
+  get rowDetailViewOptions(): RowDetailView | undefined {
     return this.gridOptions.rowDetailView;
   }
 

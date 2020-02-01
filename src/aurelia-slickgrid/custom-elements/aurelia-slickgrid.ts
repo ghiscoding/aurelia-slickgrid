@@ -167,7 +167,7 @@ export class AureliaSlickgridCustomElement {
   private initializePaginationService(paginationOptions: Pagination) {
     if (this.gridOptions) {
       this.paginationData = {
-        enableTranslate: this.gridOptions.enableTranslate,
+        enableTranslate: this.gridOptions.enableTranslate || false,
         locales: this.locales,
         paginationService: this.paginationService,
       };
@@ -253,7 +253,7 @@ export class AureliaSlickgridCustomElement {
         // with the BackendServiceApi because technically the data in the page changes the DataView on every page change.
         let preservedRowSelectionWithBackend = false;
         if (this.gridOptions.backendServiceApi && this.gridOptions.dataView.hasOwnProperty('syncGridSelectionWithBackendService')) {
-          preservedRowSelectionWithBackend = this.gridOptions.dataView.syncGridSelectionWithBackendService;
+          preservedRowSelectionWithBackend = this.gridOptions.dataView.syncGridSelectionWithBackendService as boolean;
         }
 
         const syncGridSelection = this.gridOptions.dataView.syncGridSelection;
@@ -771,7 +771,7 @@ export class AureliaSlickgridCustomElement {
     }
     const { pageNumber, pageSize } = pagination;
     if (this.sharedService) {
-      if (pageSize) {
+      if (pageSize !== undefined && pageNumber !== undefined) {
         this.sharedService.currentPagination = { pageNumber, pageSize };
       }
     }
@@ -815,7 +815,7 @@ export class AureliaSlickgridCustomElement {
       // display the Pagination component only after calling this refresh data first, we call it here so that if we preset pagination page number it will be shown correctly
       this.showPagination = (this.gridOptions && (this.gridOptions.enablePagination || (this.gridOptions.backendServiceApi && this.gridOptions.enablePagination === undefined))) ? true : false;
 
-      if (this.gridOptions && this.gridOptions.backendServiceApi && this.gridOptions.pagination) {
+      if (this.gridOptions && this.gridOptions.backendServiceApi && this.gridOptions.pagination && this.paginationOptions) {
         const paginationOptions = this.setPaginationOptionsWhenPresetDefined(this.gridOptions, this.paginationOptions);
 
         // when we have a totalCount use it, else we'll take it from the pagination object
@@ -927,7 +927,7 @@ export class AureliaSlickgridCustomElement {
    * a local grid with Pagination presets will potentially have a different total of items, we'll need to get it from the DataView and update our total
    */
   private loadLocalGridPagination(dataset?: any[]) {
-    if (this.gridOptions) {
+    if (this.gridOptions && this.paginationOptions) {
       this.totalItems = Array.isArray(dataset) ? dataset.length : 0;
       if (this.paginationOptions && this.dataview && this.dataview.getPagingInfo) {
         const slickPagingInfo = this.dataview.getPagingInfo() || {};
@@ -986,7 +986,7 @@ export class AureliaSlickgridCustomElement {
 
       // we will display the custom footer only when there's no Pagination
       if (!(this.gridOptions.backendServiceApi || this.gridOptions.enablePagination)) {
-        this.showCustomFooter = this.gridOptions.hasOwnProperty('showCustomFooter') ? this.gridOptions.showCustomFooter : false;
+        this.showCustomFooter = this.gridOptions.hasOwnProperty('showCustomFooter') ? (this.gridOptions.showCustomFooter as boolean) : false;
         this.customFooterOptions = this.gridOptions.customFooterOptions || {};
       }
     }

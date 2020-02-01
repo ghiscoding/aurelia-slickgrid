@@ -116,12 +116,16 @@ export class GridMenuExtension implements Extension {
         }
         if (this.sharedService.gridOptions.gridMenu && typeof this.sharedService.gridOptions.gridMenu.onBeforeMenuShow === 'function') {
           this._eventHandler.subscribe(this._addon.onBeforeMenuShow, (e: any, args: { grid: any; menu: any; columns: Column[] }) => {
-            this.sharedService.gridOptions.gridMenu.onBeforeMenuShow(e, args);
+            if (this.sharedService.gridOptions.gridMenu && this.sharedService.gridOptions.gridMenu.onBeforeMenuShow) {
+              this.sharedService.gridOptions.gridMenu.onBeforeMenuShow(e, args);
+            }
           });
         }
         if (this.sharedService.gridOptions.gridMenu && typeof this.sharedService.gridOptions.gridMenu.onAfterMenuShow === 'function') {
           this._eventHandler.subscribe(this._addon.onAfterMenuShow, (e: any, args: { grid: any; menu: any; columns: Column[] }) => {
-            this.sharedService.gridOptions.gridMenu.onAfterMenuShow(e, args);
+            if (this.sharedService.gridOptions.gridMenu && this.sharedService.gridOptions.gridMenu.onAfterMenuShow) {
+              this.sharedService.gridOptions.gridMenu.onAfterMenuShow(e, args);
+            }
           });
         }
         this._eventHandler.subscribe(this._addon.onColumnsChanged, (e: any, args: { grid: any; allColumns: Column[]; columns: Column[]; }) => {
