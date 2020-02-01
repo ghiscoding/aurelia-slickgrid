@@ -1,5 +1,6 @@
 import { inject, Optional, singleton } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
+
 import { Constants } from '../constants';
 import {
   CellMenu,
@@ -9,13 +10,12 @@ import {
   Locale,
   MenuCommandItem,
   MenuCommandItemCallbackArgs,
-  MenuOnBeforeMenuShowArgs,
   MenuOptionItem,
   MenuOptionItemCallbackArgs,
   SlickEventHandler,
 } from '../models/index';
-import { SharedService } from '../services/shared.service';
 import { ExtensionUtility } from './extensionUtility';
+import { SharedService } from '../services/shared.service';
 
 // using external non-typed js libraries
 declare var Slick: any;
@@ -69,12 +69,13 @@ export class CellMenuExtension implements Extension {
     }
 
     if (this.sharedService && this.sharedService.grid && this.sharedService.gridOptions) {
+      const cellMenu = this.sharedService.gridOptions.cellMenu;
       // get locales provided by user in main file or else use default English locales via the Constants
       this._locales = this.sharedService.gridOptions && this.sharedService.gridOptions.locales || Constants.locales;
 
       // dynamically import the SlickGrid plugin (addon) with RequireJS
       this.extensionUtility.loadExtensionDynamically(ExtensionName.cellMenu);
-      this.sharedService.gridOptions.cellMenu = { ...this.getDefaultCellMenuOptions(), ...this.sharedService.gridOptions.cellMenu };
+      this.sharedService.gridOptions.cellMenu = { ...this.getDefaultCellMenuOptions(), ...cellMenu };
 
       // translate the item keys when necessary
       if (this.sharedService.gridOptions.enableTranslate) {
@@ -84,34 +85,39 @@ export class CellMenuExtension implements Extension {
       // sort all menu items by their position order when defined
       this.sortMenuItems(this.sharedService.allColumns);
 
-      this._addon = new Slick.Plugins.CellMenu(this.sharedService.gridOptions.cellMenu);
+      this._addon = new Slick.Plugins.CellMenu(cellMenu);
       this.sharedService.grid.registerPlugin(this._addon);
 
       // hook all events
-      if (this.sharedService.grid && this.sharedService.gridOptions.cellMenu) {
-        if (this.sharedService.gridOptions.cellMenu.onExtensionRegistered) {
-          this.sharedService.gridOptions.cellMenu.onExtensionRegistered(this._addon);
+      if (this.sharedService.grid && cellMenu) {
+        if (cellMenu.onExtensionRegistered) {
+          cellMenu.onExtensionRegistered(this._addon);
         }
-        this._eventHandler.subscribe(this._addon.onCommand, (event: Event, args: MenuCommandItemCallbackArgs) => {
-          if (this.sharedService.gridOptions.cellMenu && typeof this.sharedService.gridOptions.cellMenu.onCommand === 'function') {
-            this.sharedService.gridOptions.cellMenu.onCommand(event, args);
-          }
-        });
-        this._eventHandler.subscribe(this._addon.onOptionSelected, (event: Event, args: MenuOptionItemCallbackArgs) => {
-          if (this.sharedService.gridOptions.cellMenu && typeof this.sharedService.gridOptions.cellMenu.onOptionSelected === 'function') {
-            this.sharedService.gridOptions.cellMenu.onOptionSelected(event, args);
-          }
-        });
-        this._eventHandler.subscribe(this._addon.onBeforeMenuShow, (event: Event, args: MenuOnBeforeMenuShowArgs) => {
-          if (this.sharedService.gridOptions.cellMenu && typeof this.sharedService.gridOptions.cellMenu.onBeforeMenuShow === 'function') {
-            this.sharedService.gridOptions.cellMenu.onBeforeMenuShow(event, args);
-          }
-        });
-        this._eventHandler.subscribe(this._addon.onBeforeMenuClose, (event: Event, args: { cell: number; row: number; grid: any; menu: any; }) => {
-          if (this.sharedService.gridOptions.cellMenu && typeof this.sharedService.gridOptions.cellMenu.onBeforeMenuClose === 'function') {
-            this.sharedService.gridOptions.cellMenu.onBeforeMenuClose(event, args);
-          }
-        });
+        if (cellMenu && typeof cellMenu.onCommand === 'function') {
+          this._eventHandler.subscribe(this._addon.onCommand, (event: Event, args: MenuCommandItemCallbackArgs) => {
+            cellMenu.onCommand(event, args);
+          });
+        }
+        if (cellMenu && typeof cellMenu.onOptionSelected === 'function') {
+          this._eventHandler.subscribe(this._addon.onOptionSelected, (event: Event, args: MenuOptionItemCallbackArgs) => {
+            cellMenu.onOptionSelected(event, args);
+          });
+        }
+        if (cellMenu && typeof cellMenu.onBeforeMenuShow === 'function') {
+          this._eventHandler.subscribe(this._addon.onBeforeMenuShow, (event: Event, args: { cell: number; row: number; grid: any; }) => {
+            cellMenu.onBeforeMenuShow(event, args);
+          });
+        }
+        if (cellMenu && typeof cellMenu.onBeforeMenuClose === 'function') {
+          this._eventHandler.subscribe(this._addon.onBeforeMenuClose, (event: Event, args: { cell: number; row: number; grid: any; menu: any; }) => {
+            cellMenu.onBeforeMenuClose(event, args);
+          });
+        }
+        if (cellMenu && typeof cellMenu.onAfterMenuShow === 'function') {
+          this._eventHandler.subscribe(this._addon.onAfterMenuShow, (event: Event, args: { cell: number; row: number; grid: any; }) => {
+            cellMenu.onAfterMenuShow(event, args);
+          });
+        }
       }
       return this._addon;
     }

@@ -13,7 +13,6 @@ import {
   HeaderMenu,
   MenuCommandItem,
   MenuCommandItemCallbackArgs,
-  MenuOnBeforeMenuShowArgs,
   Locale,
   SlickEventHandler,
 } from '../models/index';
@@ -105,11 +104,16 @@ export class HeaderMenuExtension implements Extension {
             this.sharedService.gridOptions.headerMenu.onCommand(event, args);
           }
         });
-        this._eventHandler.subscribe(this._addon.onBeforeMenuShow, (event: Event, args: MenuOnBeforeMenuShowArgs) => {
-          if (this.sharedService.gridOptions.headerMenu && typeof this.sharedService.gridOptions.headerMenu.onBeforeMenuShow === 'function') {
+        if (this.sharedService.gridOptions.headerMenu && typeof this.sharedService.gridOptions.headerMenu.onBeforeMenuShow === 'function') {
+          this._eventHandler.subscribe(this._addon.onBeforeMenuShow, (event: Event, args: { grid: any; column: Column; menu: any; }) => {
             this.sharedService.gridOptions.headerMenu.onBeforeMenuShow(event, args);
-          }
-        });
+          });
+        }
+        if (this.sharedService.gridOptions.headerMenu && typeof this.sharedService.gridOptions.headerMenu.onAfterMenuShow === 'function') {
+          this._eventHandler.subscribe(this._addon.onAfterMenuShow, (event: Event, args: { grid: any; column: Column; menu: any; }) => {
+            this.sharedService.gridOptions.headerMenu.onAfterMenuShow(event, args);
+          });
+        }
       }
       return this._addon;
     }
