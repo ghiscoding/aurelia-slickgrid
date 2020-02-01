@@ -1,4 +1,4 @@
-import { Subscription, EventAggregator } from 'aurelia-event-aggregator';
+import { EventAggregator } from 'aurelia-event-aggregator';
 import { autoinject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import { HttpClient } from 'aurelia-http-client';
