@@ -315,8 +315,6 @@ export class Example5 {
   changeCountEnableFlag() {
     this.isCountEnabled = !this.isCountEnabled;
     const odataService = this.gridOptions.backendServiceApi.service;
-
-    // @ts-ignore
     odataService.updateOptions({ enableCount: this.isCountEnabled } as OdataOption);
     odataService.clearFilters();
     this.aureliaGrid.filterService.clearFilters();
@@ -326,7 +324,6 @@ export class Example5 {
   setOdataVersion(version: number) {
     this.odataVersion = version;
     const odataService = this.gridOptions.backendServiceApi.service;
-    // @ts-ignore
     odataService.updateOptions({ version: this.odataVersion } as OdataOption);
     odataService.clearFilters();
     this.aureliaGrid.filterService.clearFilters();
