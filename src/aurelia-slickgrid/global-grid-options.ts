@@ -4,7 +4,7 @@ import { DelimiterType, FileType, GridOption, OperatorType } from './models/inde
 /**
  * Default Options that can be passed to the Aurelia-Slickgrid
  */
-export const GlobalGridOptions: GridOption = {
+export const GlobalGridOptions: Partial<GridOption> = {
   alwaysShowVerticalScroll: true,
   autoEdit: false,
   asyncEditorLoading: false,
@@ -162,6 +162,7 @@ export const GlobalGridOptions: GridOption = {
     totalItems: 0
   },
   // @ts-ignore
+  // technically speaking the Row Detail requires the process & viewComponent but we'll ignore it just to set certain options
   rowDetailView: {
     cssClass: 'detail-view-toggle',
     panelRows: 1,
