@@ -64,10 +64,10 @@ export class SelectEditor implements Editor {
   enableTranslateLabel: boolean;
 
   /** Locales */
-  private _locales: Locale;
+  protected _locales: Locale;
 
   /** Event Subscriptions */
-  private _subscriptions: Subscription[] = [];
+  protected _subscriptions: Subscription[] = [];
 
   // flag to signal that the editor is destroying itself, helps prevent
   // commit changes from being called twice and erroring
