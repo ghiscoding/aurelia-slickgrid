@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.17.2"></a>
+## [2.17.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.17.1...v2.17.2) (2020-02-04)
+
+
+### Bug Fixes
+
+* **footer:** custom footer should work anytime pagination is disabled ([ebd4aec](https://github.com/ghiscoding/aurelia-slickgrid/commit/ebd4aec))
+
+
+
 <a name="2.17.1"></a>
 ## [2.17.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.17.0...v2.17.1) (2020-02-01)
 
