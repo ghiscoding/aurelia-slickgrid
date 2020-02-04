@@ -154,6 +154,7 @@ export class Example25 {
       preHeaderPanelHeight: 28,
       i18n: this.i18n,
       datasetIdPropertyName: 'code',
+      showCustomFooter: true, // display some metrics in the bottom custom footer
       backendServiceApi: {
         // use the GraphQL Service to build the query but use local (in memory) Filtering/Sorting strategies
         // the useLocalFiltering/useLocalSorting flags can be enabled independently

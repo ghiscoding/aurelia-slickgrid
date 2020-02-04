@@ -605,7 +605,7 @@ export class AureliaSlickgridCustomElement {
           startTime: new Date(),
           endTime: new Date(),
           itemCount: args && args.current || 0,
-          totalItemCount: Array.isArray(this.dataset) ? this.dataset.length : 0
+          totalItemCount: Array.isArray(this._dataset) ? this._dataset.length : 0
         };
       });
 
@@ -983,7 +983,7 @@ export class AureliaSlickgridCustomElement {
       }
 
       // we will display the custom footer only when there's no Pagination
-      if (!(this.gridOptions.backendServiceApi || this.gridOptions.enablePagination)) {
+      if (!this.gridOptions.enablePagination) {
         this.showCustomFooter = this.gridOptions.hasOwnProperty('showCustomFooter') ? (this.gridOptions.showCustomFooter as boolean) : false;
         this.customFooterOptions = this.gridOptions.customFooterOptions || {};
       }
