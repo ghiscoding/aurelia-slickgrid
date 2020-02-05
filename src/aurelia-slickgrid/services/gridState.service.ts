@@ -513,7 +513,7 @@ export class GridStateService {
 
   private reEvaluateRowSelectionAfterFilterChange() {
     const currentSelectedRowIndexes = this._grid.getSelectedRows();
-    const previousSelectedFilteredRowDataContextIds = this._selectedFilteredRowDataContextIds.slice();
+    const previousSelectedFilteredRowDataContextIds = (this._selectedFilteredRowDataContextIds || []).slice();
     const filteredDataContextIds = this.refreshFilteredRowSelections();
 
     // when selection changed, we'll send a Grid State event with the selection changes
@@ -524,8 +524,8 @@ export class GridStateService {
   }
 
   /** When a Filter is triggered or when user request it, we will refresh the filtered selection array and return it */
-  private refreshFilteredRowSelections(): Array<number | string> | undefined {
-    let tmpFilteredArray = [];
+  private refreshFilteredRowSelections(): Array<number | string> {
+    let tmpFilteredArray: Array<number | string> = [];
     const filteredDataset = this._dataView.getFilteredItems() || [];
     if (Array.isArray(this._selectedRowDataContextIds)) {
       const selectedFilteredRowDataContextIds = [...this._selectedRowDataContextIds]; // take a fresh copy of all selections before filtering the row ids
