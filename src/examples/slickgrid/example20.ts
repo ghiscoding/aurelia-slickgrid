@@ -34,6 +34,19 @@ export class Example20 {
   aureliaGridReady(aureliaGrid: AureliaGridInstance) {
     this.aureliaGrid = aureliaGrid;
     this.gridObj = aureliaGrid && aureliaGrid.slickGrid;
+
+    // with frozen (pinned) grid, in order to see the entire row being highlighted when hovering
+    // we need to do some extra tricks (that is because frozen grids use 2 separate div containers)
+    // the trick is to use row selection to highlight when hovering current row and remove selection once we're not
+    this.gridObj.onMouseEnter.subscribe(event => {
+      const cell = this.gridObj.getCellFromEvent(event);
+      this.gridObj.setSelectedRows([cell.row]); // highlight current row
+      event.preventDefault();
+    });
+    this.gridObj.onMouseLeave.subscribe(event => {
+      this.gridObj.setSelectedRows([]); // remove highlight
+      event.preventDefault();
+    });
   }
 
   attached() {
