@@ -221,7 +221,7 @@ export class Example2 {
     console.log('Grid State changed:: ', gridStateChanges.change);
 
     if (gridStateChanges.gridState.rowSelection) {
-      this.selectedGrid2IDs = (gridStateChanges.gridState.rowSelection.dataContextIds || []) as number[];
+      this.selectedGrid2IDs = (gridStateChanges.gridState.rowSelection.filteredDataContextIds || []) as number[];
       this.selectedGrid2IDs = this.selectedGrid2IDs.sort((a, b) => a - b); // sort by ID
       this.selectedTitles = this.selectedGrid2IDs.map(dataContextId => `Task ${dataContextId}`);
     }
