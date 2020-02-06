@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.17.3"></a>
+## [2.17.3](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.17.2...v2.17.3) (2020-02-06)
+
+
+### Bug Fixes
+
+* **pagination:** on filter change pagination should reset to 1st page ([#304](https://github.com/ghiscoding/aurelia-slickgrid/issues/304)) ([c633413](https://github.com/ghiscoding/aurelia-slickgrid/commit/c633413))
+* **selection:** filter data should work with row selection ([#303](https://github.com/ghiscoding/aurelia-slickgrid/issues/303)) ([7bab709](https://github.com/ghiscoding/aurelia-slickgrid/commit/7bab709))
+
+
+
 <a name="2.17.2"></a>
 ## [2.17.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.17.1...v2.17.2) (2020-02-04)
 
