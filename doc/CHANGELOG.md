@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.17.4"></a>
+## [2.17.4](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.17.3...v2.17.4) (2020-02-07)
+
+
+### Bug Fixes
+
+* **selection:** row selection always be kept ([#306](https://github.com/ghiscoding/aurelia-slickgrid/issues/306)) ([b7e62e8](https://github.com/ghiscoding/aurelia-slickgrid/commit/b7e62e8))
+
+
+
 <a name="2.17.3"></a>
 ## [2.17.3](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.17.2...v2.17.3) (2020-02-06)
 
