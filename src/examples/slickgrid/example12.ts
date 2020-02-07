@@ -9,7 +9,8 @@ import {
   Filters,
   Formatter,
   Formatters,
-  GridOption
+  GridOption,
+  GridStateChange,
 } from '../../aurelia-slickgrid';
 
 const NB_ITEMS = 1500;
@@ -142,6 +143,13 @@ export class Example12 {
       enableFiltering: true,
       enableTranslate: true,
       i18n: this.i18n,
+      checkboxSelector: {
+        // you can toggle these 2 properties to show the "select all" checkbox in different location
+        hideInFilterHeaderRow: false,
+        hideInColumnTitleRow: true
+      },
+      enableCheckboxSelector: true,
+      enableRowSelection: true,
       showCustomFooter: true, // display some metrics in the bottom custom footer
       customFooterOptions: {
         metricTexts: {
@@ -208,6 +216,12 @@ export class Example12 {
       filename: 'myExport',
       format: (type === 'csv') ? FileType.csv : FileType.txt
     });
+  }
+
+  /** Dispatched event of a Grid State Changed event */
+  gridStateChanged(gridStateChanges: GridStateChange) {
+    console.log('Grid State changed:: ', gridStateChanges);
+    console.log('Grid State changed:: ', gridStateChanges.change);
   }
 
   async switchLanguage() {
