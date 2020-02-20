@@ -7,7 +7,7 @@ import {
   ViewResources,
   ViewSlot,
 } from 'aurelia-framework';
-import { AureliaViewOutput, ViewModelBindableData, ViewModelBindableInputData } from '../models/index';
+import { AureliaViewOutput } from '../models/index';
 
 @singleton(true)
 @inject(
@@ -22,7 +22,7 @@ export class AureliaUtilService {
     private viewResources: ViewResources,
   ) { }
 
-  createAureliaViewModelAddToSlot(template: string, bindableData: ViewModelBindableInputData, targetElement?: HTMLElement | Element, clearTargetContent = false): AureliaViewOutput | null {
+  createAureliaViewModelAddToSlot(templateUrl: string, bindableData: any, targetElement?: HTMLElement | Element, clearTargetContent = false): AureliaViewOutput | null {
     const viewFactory = this.viewCompiler.compile('<template><compose view-model.bind="template"></compose></template>', this.viewResources);
 
     if (targetElement) {
@@ -32,23 +32,21 @@ export class AureliaUtilService {
 
       // Creates a view
       const view = viewFactory.create(this.container);
-      const { item, addon, dataView, grid, parent } = bindableData;
-      const viewModel: ViewModelBindableData = { template: template || '', model: item, addon, dataView, grid, parent };
+      const bindings: any = { template: (templateUrl || ''), ...bindableData };
 
-      view.bind(viewModel, createOverrideContext(viewModel));
+      view.bind(bindings, createOverrideContext(bindings));
 
       // Add the view to the slot
       const viewSlot = new ViewSlot(targetElement, true);
       if (viewSlot && viewSlot.add) {
         viewSlot.add(view);
       }
-
       return { view, viewSlot };
     }
     return null;
   }
 
-  createAureliaViewAddToSlot(template: string, targetElement?: HTMLElement | Element, clearTargetContent = false): AureliaViewOutput | null {
+  createAureliaViewAddToSlot(templateUrl: string, targetElement?: HTMLElement | Element, clearTargetContent = false): AureliaViewOutput | null {
     const viewFactory = this.viewCompiler.compile('<template><compose view.bind="template"></compose></template>', this.viewResources);
 
     if (targetElement) {
@@ -58,7 +56,7 @@ export class AureliaUtilService {
 
       // Creates a view
       const view = viewFactory.create(this.container);
-      const viewModel = { template: template || '' };
+      const viewModel = { template: (templateUrl || '') };
 
       view.bind(viewModel, createOverrideContext(viewModel));
 
@@ -67,7 +65,6 @@ export class AureliaUtilService {
       if (viewSlot && viewSlot.add) {
         viewSlot.add(view);
       }
-
       return { view, viewSlot };
     }
     return null;

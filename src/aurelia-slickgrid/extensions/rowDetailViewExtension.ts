@@ -2,7 +2,7 @@ import { inject, singleton } from 'aurelia-framework';
 import { Subscription } from 'aurelia-event-aggregator';
 import * as DOMPurify from 'dompurify';
 
-import { AureliaViewOutput, Column, Extension, ExtensionName, GridOption, RowDetailView, SlickEventHandler } from '../models/index';
+import { AureliaViewOutput, Column, Extension, ExtensionName, GridOption, RowDetailView, SlickEventHandler, ViewModelBindableInputData } from '../models/index';
 import { ExtensionUtility } from './extensionUtility';
 import { SharedService } from '../services/shared.service';
 import { AureliaUtilService } from '../services/aureliaUtil.service';
@@ -259,12 +259,12 @@ export class RowDetailViewExtension implements Extension {
     const containerElements = document.getElementsByClassName(`${ROW_DETAIL_CONTAINER_PREFIX}${item[this.datasetIdPropName]}`);
     if (containerElements && containerElements.length) {
       const bindableData = {
-        item,
+        model: item,
         addon: this._addon,
         grid: this.sharedService.grid,
         dataView: this.sharedService.dataView,
         parent: this.rowDetailViewOptions && this.rowDetailViewOptions.parent,
-      };
+      } as ViewModelBindableInputData;
       const aureliaComp = this.aureliaUtilService.createAureliaViewModelAddToSlot(this._viewModel, bindableData, containerElements[0], true);
 
       const slotObj = this._slots.find((obj) => obj[this.datasetIdPropName] === item[this.datasetIdPropName]);
