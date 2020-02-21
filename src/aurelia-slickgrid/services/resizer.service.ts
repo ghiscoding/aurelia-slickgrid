@@ -85,6 +85,9 @@ export class ResizerService {
       this.globalEa.publish(`${this.aureliaEventPrefix}:onBeforeResize`, event); // @deprecated, should remove it in the future
 
       if (!this._resizePaused) {
+        // for some yet unknown reason, calling the resize twice removes any stuttering/flickering
+        // when changing the height and makes it much smoother experience
+        this.resizeGrid(0, newSizes);
         this.resizeGrid(0, newSizes);
       }
     });
