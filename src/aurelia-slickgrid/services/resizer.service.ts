@@ -25,6 +25,8 @@ export class ResizerService {
   private _fixedHeight: number | null | undefined;
   private _fixedWidth: number | null | undefined;
   private _grid: any;
+  private _gridDomElm: any;
+  private _gridContainerElm: any;
   private _lastDimensions: GridDimension;
   private _resizePaused = false;
   private _timer: any;
@@ -43,7 +45,18 @@ export class ResizerService {
   }
 
   init(grid: any, fixedDimensions?: GridDimension): void {
+    if (!grid || !this._gridOptions) {
+      throw new Error(`
+      Aurelia-Slickgrid resizer requires a valid Grid object and Grid Options defined.
+      You can fix this by setting your gridOption to use "enableAutoResize" or create an instance of the ResizerService by calling bindAutoResizeDataGrid()`);
+    }
+
     this._grid = grid;
+    const containerNode = grid && grid.getContainerNode && grid.getContainerNode() || '';
+    this._gridDomElm = $(containerNode);
+    const autoResizeOptions = this._gridOptions && this._gridOptions.autoResize || {};
+    this._gridContainerElm = (autoResizeOptions && autoResizeOptions.containerId) ? $(`#${autoResizeOptions.containerId}`) : $(`#${this._gridOptions.gridContainerId}`);
+
     this.aureliaEventPrefix = (this._gridOptions && this._gridOptions.defaultAureliaEventPrefix) ? this._gridOptions.defaultAureliaEventPrefix : 'asg';
     if (fixedDimensions) {
       this._fixedHeight = fixedDimensions.height;
@@ -57,8 +70,7 @@ export class ResizerService {
    */
   bindAutoResizeDataGrid(newSizes?: GridDimension): any | void {
     // if we can't find the grid to resize, return without binding anything
-    const gridDomElm = $(`#${this._gridOptions && this._gridOptions.gridId ? this._gridOptions.gridId : 'grid1'}`);
-    if (gridDomElm === undefined || gridDomElm.offset() === undefined) {
+    if (this._gridDomElm === undefined || this._gridDomElm.offset() === undefined) {
       return null;
     }
 
@@ -83,10 +95,8 @@ export class ResizerService {
    * object gridOptions
    */
   calculateGridNewDimensions(gridOptions: GridOption): GridDimension | null {
-    const gridDomElm = $(`#${gridOptions.gridId}`);
     const autoResizeOptions = gridOptions && gridOptions.autoResize || {};
-    const containerElm = (autoResizeOptions && autoResizeOptions.containerId) ? $(`#${autoResizeOptions.containerId}`) : $(`#${gridOptions.gridContainerId}`);
-    if (!window || containerElm === undefined || gridDomElm === undefined || gridDomElm.offset() === undefined) {
+    if (!window || this._gridContainerElm === undefined || this._gridDomElm.offset() === undefined) {
       return null;
     }
 
@@ -108,16 +118,16 @@ export class ResizerService {
     // which DOM element are we using to calculate the available size for the grid?
     if (autoResizeOptions.calculateAvailableSizeBy === 'container') {
       // uses the container's height to calculate grid height without any top offset
-      gridHeight = containerElm.height() || 0;
+      gridHeight = this._gridContainerElm.height() || 0;
     } else {
       // uses the browser's window height with its top offset to calculate grid height
       gridHeight = window.innerHeight || 0;
-      const coordOffsetTop = gridDomElm.offset();
+      const coordOffsetTop = this._gridDomElm.offset();
       gridOffsetTop = (coordOffsetTop !== undefined) ? coordOffsetTop.top : 0;
     }
 
     const availableHeight = gridHeight - gridOffsetTop - bottomPadding;
-    const availableWidth = containerElm.width() || window.innerWidth || 0;
+    const availableWidth = this._gridContainerElm.width() || window.innerWidth || 0;
     const maxHeight = autoResizeOptions && autoResizeOptions.maxHeight || undefined;
     const minHeight = autoResizeOptions && autoResizeOptions.minHeight || DATAGRID_MIN_HEIGHT;
     const maxWidth = autoResizeOptions && autoResizeOptions.maxWidth || undefined;
@@ -169,17 +179,15 @@ export class ResizerService {
    * GitHub issue reference: https://github.com/6pac/SlickGrid/issues/275
    */
   compensateHorizontalScroll(grid: any, gridOptions: GridOption) {
-    const gridElm = $(`#${gridOptions.gridId}`);
-
     const scrollbarDimensions = grid && grid.getScrollbarDimensions();
     const slickGridScrollbarWidth = scrollbarDimensions && scrollbarDimensions.width;
     const calculatedScrollbarWidth = getScrollBarWidth();
 
     // if scrollbar width is different from SlickGrid calculation to our custom calculation
     // then resize the grid with the missing pixels to remove scroll (usually only 3px)
-    if (slickGridScrollbarWidth < calculatedScrollbarWidth && gridElm && gridElm.width) {
-      const oldWidth = gridElm && gridElm.width && gridElm.width() || 0;
-      gridElm.width(oldWidth + (calculatedScrollbarWidth - slickGridScrollbarWidth));
+    if (slickGridScrollbarWidth < calculatedScrollbarWidth && this._gridDomElm && this._gridDomElm.width) {
+      const oldWidth = this._gridDomElm && this._gridDomElm.width && this._gridDomElm.width() || 0;
+      this._gridDomElm.width(oldWidth + (calculatedScrollbarWidth - slickGridScrollbarWidth));
     }
   }
 
@@ -190,12 +198,6 @@ export class ResizerService {
 
   /** Resize the datagrid to fit the browser height & width */
   resizeGrid(delay = 10, newSizes?: GridDimension): Promise<GridDimension> {
-    if (!this._grid || !this._gridOptions) {
-      throw new Error(`
-      Aurelia-Slickgrid resizer requires a valid Grid object and Grid Options defined.
-      You can fix this by setting your gridOption to use "enableAutoResize" or create an instance of the ResizerService by calling bindAutoResizeDataGrid()`);
-    }
-
     return new Promise((resolve) => {
       // because of the javascript async nature, we might want to delay the resize a little bit
       delay = delay || 0;
@@ -219,10 +221,9 @@ export class ResizerService {
   resizeGridWithDimensions(newSizes?: GridDimension): GridDimension {
     // calculate the available sizes with minimum height defined as a constant
     const availableDimensions = this.calculateGridNewDimensions(this._gridOptions);
-    const gridElm = $(`#${this._gridOptions.gridId}`);
     const gridContainerElm = $(`#${this._gridOptions.gridContainerId}`);
 
-    if ((newSizes || availableDimensions) && gridElm.length > 0) {
+    if ((newSizes || availableDimensions) && this._gridDomElm.length > 0) {
       // get the new sizes, if new sizes are passed (not 0), we will use them else use available space
       // basically if user passes 1 of the dimension, let say he passes just the height,
       // we will use the height as a fixed height but the width will be resized by it's available space
@@ -231,10 +232,10 @@ export class ResizerService {
 
       // apply these new height/width to the datagrid
       if (!this._gridOptions.autoHeight) {
-        gridElm.height(newHeight);
+        this._gridDomElm.height(newHeight);
         gridContainerElm.height(newHeight);
       }
-      gridElm.width(newWidth);
+      this._gridDomElm.width(newWidth);
       gridContainerElm.width(newWidth);
 
       // resize the slickgrid canvas on all browser except some IE versions
