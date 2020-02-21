@@ -67,8 +67,8 @@ describe('Slick-Pagination Component', () => {
           }
         }
       },
-      lng: 'en',
-      fallbackLng: 'en',
+      lng: 'fr',
+      fallbackLng: 'fr',
       debug: false
     });
     i18n.setLocale('fr');
