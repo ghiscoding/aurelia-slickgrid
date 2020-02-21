@@ -82,7 +82,7 @@ export class CustomAureliaViewModelFilter implements Filter {
 
         setTimeout(() => {
           this.aureliaCustomElementInstance = this.aureliaViewModel.view.children[0].children[0].container.viewModel;
-          this.aureliaViewModel.view.children[0].children[0].container.viewModel.selectedItemChanged = ((item) => {
+          this.aureliaCustomElementInstance.selectedItemChanged = ((item) => {
             this.callback(undefined, { columnDef: this.columnDef, operator: this.operator, searchTerms: [item.id], shouldTriggerQuery: this._shouldTriggerQuery });
             // reset flag for next use
             this._shouldTriggerQuery = true;

@@ -107,8 +107,8 @@ export class CustomAureliaViewModelEditor implements Editor {
   }
 
   cancel() {
-    this.aureliaViewModel.view.children[0].children[0].container.viewModel.selectedId = this.defaultId;
-    this.aureliaViewModel.view.children[0].children[0].container.viewModel.selectedItem = this.defaultItem;
+    this.aureliaCustomElementInstance.selectedId = this.defaultId;
+    this.aureliaCustomElementInstance.selectedItem = this.defaultItem;
     if (this.args && this.args.cancelChanges) {
       this.args.cancelChanges();
     }
@@ -148,26 +148,21 @@ export class CustomAureliaViewModelEditor implements Editor {
   }
 
   getValue() {
-    return this.aureliaViewModel.view.children[0].children[0].container.viewModel.selectedId;
+    return this.aureliaCustomElementInstance.selectedId;
   }
 
   loadValue(item: any) {
     const itemObject = item && item[this.columnDef.field];
     this.selectedItem = itemObject;
-    console.log(this.aureliaViewModel.viewSlot.children[0].children[0].children)
     setTimeout(() => {
-      // this.aureliaViewModel.view.children[0].children[0].container.viewModel.selectedId = itemObject && itemObject.id || '';
-      this.aureliaViewModel.view.children[0].children[0].container.viewModel.selectedItem = itemObject && itemObject;
-      // this.aureliaViewModel.view.children[0].children[0].container.elm.onselectchanged.delegate = ((newItem) => console.log(newItem))
       this.aureliaCustomElementInstance = this.aureliaViewModel.view.children[0].children[0].container.viewModel;
-      this.aureliaViewModel.view.children[0].children[0].container.viewModel.selectedItemChanged = ((newItem) => {
-        console.log('from editor', newItem)
+      this.aureliaCustomElementInstance.selectedItem = itemObject;
+      this.aureliaCustomElementInstance.selectedItemChanged = ((newItem) => {
         this.selectedItem = newItem;
         if (newItem !== itemObject) {
           this.save();
         }
       });
-      console.log(this.aureliaViewModel, this.aureliaViewModel.view.children[0].children[0].container)
     });
   }
 
