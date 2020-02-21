@@ -454,7 +454,7 @@ describe('rowDetailViewExtension', () => {
         gridStub.onColumnsReordered.notify({ impactedColumns: mockColumn }, new Slick.EventData(), gridStub);
         expect(appendSpy).toHaveBeenCalledWith(
           undefined,
-          expect.objectContaining({ item: mockColumn, addon: expect.anything(), grid: gridStub, dataView: dataViewStub }),
+          expect.objectContaining({ model: mockColumn, addon: expect.anything(), grid: gridStub, dataView: dataViewStub }),
           expect.objectContaining({ className: 'container_field1' }),
           true
         );
@@ -478,7 +478,7 @@ describe('rowDetailViewExtension', () => {
         ea.publish('filterService:filterChanged', { columnId: 'field1', operator: '=', searchTerms: [] });
         expect(appendSpy).toHaveBeenCalledWith(
           undefined,
-          expect.objectContaining({ item: mockColumn, addon: expect.anything(), grid: gridStub, dataView: dataViewStub }),
+          expect.objectContaining({ model: mockColumn, addon: expect.anything(), grid: gridStub, dataView: dataViewStub }),
           expect.objectContaining({ className: 'container_field1' }),
           true
         );
@@ -504,7 +504,7 @@ describe('rowDetailViewExtension', () => {
         expect(getElementSpy).toHaveBeenCalledWith('container_field1');
         expect(appendSpy).toHaveBeenCalledWith(
           undefined,
-          expect.objectContaining({ item: mockColumn, addon: expect.anything(), grid: gridStub, dataView: dataViewStub }),
+          expect.objectContaining({ model: mockColumn, addon: expect.anything(), grid: gridStub, dataView: dataViewStub }),
           expect.objectContaining({ className: 'container_field1' }),
           true
         );
@@ -530,7 +530,7 @@ describe('rowDetailViewExtension', () => {
         expect(getElementSpy).toHaveBeenCalledWith('container_field1');
         expect(appendSpy).toHaveBeenCalledWith(
           undefined,
-          expect.objectContaining({ item: mockColumn, addon: expect.anything(), grid: gridStub, dataView: dataViewStub }),
+          expect.objectContaining({ model: mockColumn, addon: expect.anything(), grid: gridStub, dataView: dataViewStub }),
           expect.objectContaining({ className: 'container_field1' }),
           true
         );

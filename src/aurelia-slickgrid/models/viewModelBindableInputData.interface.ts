@@ -1,5 +1,5 @@
 export interface ViewModelBindableInputData {
-  item: any;
+  model: any;
   addon: any;
   grid: any;
   dataView: any;
