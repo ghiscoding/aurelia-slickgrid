@@ -12,7 +12,7 @@ import {
 } from '../../aurelia-slickgrid';
 import * as $ from 'jquery';
 
-import { CreatedView } from '../../aurelia-slickgrid/extensions';
+import { View, ViewSlot } from 'aurelia-framework';
 
 export class CustomAureliaViewModelFilter implements Filter {
   private _clearFilterTriggered = false;
@@ -117,7 +117,7 @@ export class CustomAureliaViewModelFilter implements Filter {
     }
   }
 
-  disposeViewSlot(createdView: CreatedView) {
+  disposeViewSlot(createdView: { view?: View; viewSlot?: ViewSlot; }) {
     if (createdView && createdView.view && createdView.viewSlot && createdView.view.unbind && createdView.viewSlot.remove) {
       if (this.container && this.container.length > 0) {
         createdView.viewSlot.remove(createdView.view);

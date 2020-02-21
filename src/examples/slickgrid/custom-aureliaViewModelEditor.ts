@@ -6,7 +6,7 @@ import {
   EditorValidatorOutput,
   GridOption,
 } from '../../aurelia-slickgrid';
-import { CreatedView } from '../../aurelia-slickgrid/extensions';
+import { View, ViewSlot } from 'aurelia-framework';
 
 /*
  * An example of a 'detached' editor.
@@ -82,7 +82,7 @@ export class CustomAureliaViewModelEditor implements Editor {
     }
   }
 
-  disposeViewSlot(createdView: CreatedView) {
+  disposeViewSlot(createdView: { view?: View; viewSlot?: ViewSlot; }) {
     if (createdView && createdView.view && createdView.viewSlot && createdView.view.unbind && createdView.viewSlot.remove) {
       const container = this.args.container;
       if (container && container.length > 0) {
