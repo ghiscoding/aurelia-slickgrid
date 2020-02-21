@@ -67,11 +67,11 @@ describe('Slick-Pagination Component', () => {
           }
         }
       },
-      lng: 'fr',
-      fallbackLng: 'fr',
+      lng: 'en',
+      fallbackLng: 'en',
       debug: false
     });
-    i18n.setLocale('fr');
+    i18n.setLocale('en');
 
     customElement = StageComponent
       .withResources([
@@ -110,9 +110,9 @@ describe('Slick-Pagination Component', () => {
       const pageInfoFromTo = await customElement.waitForElement('.page-info-from-to');
       const pageInfoTotalItems = await customElement.waitForElement('.page-info-total-items');
 
-      expect(i18n.getLocale()).toBe('fr');
-      expect(removeExtraSpaces(pageInfoFromTo.innerHTML)).toBe('<span data-test="item-from">5</span>-<span data-test="item-to">10</span>de');
-      expect(removeExtraSpaces(pageInfoTotalItems.innerHTML)).toBe('<span data-test="total-items">100</span> éléments');
+      expect(i18n.getLocale()).toBe('en');
+      expect(removeExtraSpaces(pageInfoFromTo.innerHTML)).toBe('<span data-test="item-from">5</span>-<span data-test="item-to">10</span>of');
+      expect(removeExtraSpaces(pageInfoTotalItems.innerHTML)).toBe('<span data-test="total-items">100</span> items');
     });
 
     it('should call changeToFirstPage() from the View and expect the pagination service to be called with correct method', async () => {
@@ -178,15 +178,15 @@ describe('Slick-Pagination Component', () => {
     });
 
     it('should create a the Slick-Pagination component in the DOM and expect different locale when changed', async (done) => {
-      i18n.setLocale('en');
-      ea.publish('i18n:locale:changed', 'en');
+      i18n.setLocale('fr');
+      ea.publish('i18n:locale:changed', 'fr');
 
       setTimeout(async () => {
         const pageInfoFromTo = await customElement.waitForElement('.page-info-from-to');
         const pageInfoTotalItems = await customElement.waitForElement('.page-info-total-items');
-        expect(i18n.getLocale()).toBe('en');
-        expect(removeExtraSpaces(pageInfoFromTo.innerHTML)).toBe(`<span data-test="item-from">5</span>-<span data-test="item-to">10</span>of`);
-        expect(removeExtraSpaces(pageInfoTotalItems.innerHTML)).toBe(`<span data-test="total-items">100</span> items`);
+        expect(i18n.getLocale()).toBe('fr');
+        expect(removeExtraSpaces(pageInfoFromTo.innerHTML)).toBe(`<span data-test="item-from">5</span>-<span data-test="item-to">10</span>de`);
+        expect(removeExtraSpaces(pageInfoTotalItems.innerHTML)).toBe(`<span data-test="total-items">100</span> éléments`);
         done();
       }, 50);
     });
