@@ -137,10 +137,10 @@ describe('Resizer Service', () => {
       expect(window.innerHeight).not.toEqual(previousHeight);
       expect(serviceCalculateSpy).toReturnWith(dimensionResult);
       expect(lastDimensions).toEqual(dimensionResult);
-      expect(globalEaSpy).toHaveBeenCalledTimes(2);
+      expect(globalEaSpy).toHaveBeenCalledTimes(3); // 3x times because we called resizeGrid() twice to remove shuttering
       expect(globalEaSpy).toHaveBeenNthCalledWith(1, `${aureliaEventPrefix}:onBeforeResize`, expect.any(Object));
       expect(globalEaSpy).toHaveBeenNthCalledWith(2, `${aureliaEventPrefix}:onAfterResize`, dimensionResult);
-      expect(pluginEaSpy).toHaveBeenCalledTimes(2);
+      expect(pluginEaSpy).toHaveBeenCalledTimes(3);
       expect(pluginEaSpy).toHaveBeenNthCalledWith(1, `resizerService:onBeforeResize`, expect.any(Object));
       expect(pluginEaSpy).toHaveBeenNthCalledWith(2, `resizerService:onAfterResize`, dimensionResult);
     });
