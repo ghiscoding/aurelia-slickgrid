@@ -3,12 +3,13 @@ import { EventAggregator } from 'aurelia-event-aggregator';
 import { BindingSignaler } from 'aurelia-templating-resources';
 import { ExcelExportService } from '../excelExport.service';
 import {
+  Column,
   ExcelExportOption,
+  FieldType,
   FileType,
   Formatter,
   GridOption,
-  Column,
-  FieldType,
+  GroupTotalsFormatter,
   SortDirectionNumber,
 } from '../../models';
 import { GroupTotalFormatters } from '../..';
@@ -27,6 +28,14 @@ const DEFAULT_AURELIA_EVENT_PREFIX = 'asg';
 
 const myBoldHtmlFormatter: Formatter = (row, cell, value, columnDef, dataContext) => value !== null ? { text: `<b>${value}</b>` } : null;
 const myUppercaseFormatter: Formatter = (row, cell, value, columnDef, dataContext) => value ? { text: value.toUpperCase() } : null;
+const myUppercaseGroupTotalFormatter: GroupTotalsFormatter = (totals: any, columnDef: Column) => {
+  const field = columnDef.field || '';
+  const val = totals.sum && totals.sum[field];
+  if (val != null && !isNaN(+val)) {
+    return `Custom: ${val}`;
+  }
+  return '';
+};
 const myCustomObjectFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid: any) => {
   let textValue = value && value.hasOwnProperty('text') ? value.text : value;
   const toolTip = value && value.hasOwnProperty('toolTip') ? value.toolTip : '';
@@ -430,7 +439,7 @@ describe('ExcelExportService', () => {
         });
       });
 
-      it(`should have the Order without html tags when the grid option has "sanitizeDataExport" enabled`, async () => {
+      it(`should have the Order without html tags when the grid option has "sanitizeDataExport" is enabled`, async () => {
         mockGridOptions.excelExportOptions = { sanitizeDataExport: true };
         mockCollection = [{ id: 1, userId: '2B02', firstName: 'Jane', lastName: 'Doe', position: 'FINANCE_MANAGER', order: 1 }];
         jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
@@ -458,6 +467,38 @@ describe('ExcelExportService', () => {
               { metadata: { style: 1, }, value: 'Order', },
             ],
             ['2B02', 'Jane', 'DOE', 'FINANCE_MANAGER', '1'],
+          ]
+        });
+      });
+
+      it(`should have different styling for header titles when the grid option has "columnHeaderStyle" provided with custom styles`, async () => {
+        mockGridOptions.excelExportOptions = { columnHeaderStyle: { font: { bold: true, italic: true } } };
+        mockCollection = [{ id: 1, userId: '2B02', firstName: 'Jane', lastName: 'Doe', position: 'FINANCE_MANAGER', order: 1 }];
+        jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
+        jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
+        const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
+        const globalEaSpy = jest.spyOn(globalEa, 'publish');
+        const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
+        const spyDownload = jest.spyOn(service, 'startDownloadFile');
+
+        const optionExpectation = { filename: 'export.xlsx', format: 'xlsx' };
+
+        service.init(gridStub, dataViewStub);
+        await service.exportToExcel(mockExportExcelOptions);
+
+        expect(pluginEaSpy).toHaveBeenNthCalledWith(2, `excelExportService:onAfterExportToExcel`, optionExpectation);
+        expect(globalEaSpy).toHaveBeenNthCalledWith(2, `${DEFAULT_AURELIA_EVENT_PREFIX}:onAfterExportToExcel`, optionExpectation);
+        expect(spyUrlCreate).toHaveBeenCalledWith(mockExcelBlob);
+        expect(spyDownload).toHaveBeenCalledWith({
+          ...optionExpectation, blob: new Blob(), data: [
+            [
+              { metadata: { style: 5, }, value: 'User Id', },
+              { metadata: { style: 5, }, value: 'FirstName', },
+              { metadata: { style: 5, }, value: 'LastName', },
+              { metadata: { style: 5, }, value: 'Position', },
+              { metadata: { style: 5, }, value: 'Order', },
+            ],
+            ['2B02', 'Jane', 'DOE', 'FINANCE_MANAGER', '<b>1</b>'],
           ]
         });
       });
@@ -538,7 +579,7 @@ describe('ExcelExportService', () => {
       });
 
 
-      it(`should Date exported correctly when Field Type is provided and we use "exportWithFormatter" set to True & False`, async () => {
+      it(`should expect Date exported correctly when Field Type is provided and we use "exportWithFormatter" set to True & False`, async () => {
         mockCollection = [
           { id: 0, userId: '1E06', firstName: 'John', lastName: 'Z', position: 'SALES_REP', startDate: '2005-12-20T18:19:19.992Z', endDate: null },
           { id: 1, userId: '1E09', firstName: 'Jane', lastName: 'Doe', position: 'HUMAN_RESOURCES', startDate: '2010-10-09T18:19:19.992Z', endDate: '2024-01-02T16:02:02.000Z' },
@@ -694,6 +735,7 @@ describe('ExcelExportService', () => {
             exportWithFormatter: true,
             formatter: Formatters.multiple, params: { formatters: [myBoldHtmlFormatter, myCustomObjectFormatter] },
             groupTotalsFormatter: GroupTotalFormatters.sumTotals,
+            exportCustomGroupTotalsFormatter: myUppercaseGroupTotalFormatter,
           },
         ] as Column[];
 
@@ -761,7 +803,7 @@ describe('ExcelExportService', () => {
             ['▿ Order: 20 (2 items)'],
             ['', '1E06', 'John', 'Z', 'SALES_REP', '10'],
             ['', '2B02', 'Jane', 'DOE', 'FINANCE_MANAGER', '10'],
-            ['', '', '', '', '', '20'],
+            ['', '', '', '', '', 'Custom: 20'],
           ]
         });
       });
@@ -1292,7 +1334,7 @@ describe('ExcelExportService', () => {
       });
 
       it('should return a date time format when using FieldType.date', async () => {
-        const input = new Date('2012-02-28T23:01:52.103Z');
+        const input = new Date(Date.UTC(2012, 1, 28, 23, 1, 52, 103));
         const expectedDate = '2012-02-28';
 
         service.init(gridStub, dataViewStub);

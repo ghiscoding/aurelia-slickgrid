@@ -60,11 +60,20 @@ export interface Column {
   /** Defaults to false, which leads to exclude the field from the query (typically a backend service query) */
   excludeFromQuery?: boolean;
 
+  /** If defined this will be set as column width in Excel */
+  exportColumnWidth?: number;
+
   /**
    * Export with a Custom Formatter, useful when we want to use a different Formatter for the export.
    * For example, we might have a boolean field with "Formatters.checkmark" but we would like see a translated value for (True/False).
    */
   exportCustomFormatter?: Formatter;
+
+  /**
+   * Export with a Custom Group Total Formatter, useful when we want to use a different Formatter for the export.
+   * For example, we might have a boolean field with "Formatters.checkmark" but we would like see a translated value for (True/False).
+   */
+  exportCustomGroupTotalsFormatter?: GroupTotalsFormatter;
 
   /**
    * Defaults to false, which leads to Formatters being evaluated on export.
