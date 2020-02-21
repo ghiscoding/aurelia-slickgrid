@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.17.5"></a>
+## [2.17.5](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.17.4...v2.17.5) (2020-02-21)
+
+
+### Features
+
+* **aurelia:** add Custom Editor/Filter with Aurelia Custom Elements ([#307](https://github.com/ghiscoding/aurelia-slickgrid/issues/307)) ([afe110a](https://github.com/ghiscoding/aurelia-slickgrid/commit/afe110a))
+* **excel:** add some extra styling & width options for Excel export ([#308](https://github.com/ghiscoding/aurelia-slickgrid/issues/308)) ([a070d60](https://github.com/ghiscoding/aurelia-slickgrid/commit/a070d60))
+
+
+
 <a name="2.17.4"></a>
 ## [2.17.4](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.17.3...v2.17.4) (2020-02-07)
 
