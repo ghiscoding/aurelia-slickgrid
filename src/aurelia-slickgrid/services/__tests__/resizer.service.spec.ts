@@ -28,6 +28,7 @@ const gridOptionMock = {
 
 const gridStub = {
   autosizeColumns: jest.fn(),
+  getContainerNode: jest.fn(),
   getScrollbarDimensions: jest.fn(),
   resizeCanvas: jest.fn(),
   getOptions: () => gridOptionMock,
@@ -51,12 +52,14 @@ describe('Resizer Service', () => {
   let service: ResizerService;
   const globalEa = new EventAggregator();
   const pluginEa = new EventAggregator();
+  let div;
 
   beforeEach(() => {
-    const div = document.createElement('div');
+    div = document.createElement('div');
     div.innerHTML = template;
     document.body.appendChild(div);
 
+    jest.spyOn(gridStub, 'getContainerNode').mockReturnValue(div.querySelector(`#${gridId}`));
     service = new ResizerService(globalEa, pluginEa);
     service.init(gridStub);
   });
@@ -72,14 +75,12 @@ describe('Resizer Service', () => {
 
   it('should throw an error when there is no grid object defined', () => {
     service = new ResizerService(new EventAggregator(), new EventAggregator());
-    service.init(null);
-    expect(() => service.resizeGrid()).toThrowError('Aurelia-Slickgrid resizer requires a valid Grid object and Grid Options defined');
+    expect(() => service.init(null)).toThrowError('Aurelia-Slickgrid resizer requires a valid Grid object and Grid Options defined');
   });
 
-  it('should throw an error when there is no grid options defined', () => {
+  xit('should throw an error when there is no grid options defined', () => {
     service = new ResizerService(new EventAggregator(), new EventAggregator());
-    service.init({ getOptions: () => null });
-    expect(() => service.resizeGrid()).toThrowError('Aurelia-Slickgrid resizer requires a valid Grid object and Grid Options defined');
+    expect(() => service.init({ getOptions: () => null })).toThrowError('Aurelia-Slickgrid resizer requires a valid Grid object and Grid Options defined');
   });
 
   describe('resizeGrid method', () => {
@@ -94,13 +95,15 @@ describe('Resizer Service', () => {
     });
 
     it('should return null when calling "bindAutoResizeDataGrid" method with a gridId that is not found in the DOM', () => {
-      gridOptionMock.gridId = 'unknown';
+      jest.spyOn(gridStub, 'getContainerNode').mockReturnValue(null);
+      service.init(gridStub);
       const output = service.bindAutoResizeDataGrid();
       expect(output).toBe(null);
     });
 
     it('should return null when calling "calculateGridNewDimensions" method with a gridId that is not found in the DOM', () => {
-      gridOptionMock.gridId = 'unknown';
+      jest.spyOn(gridStub, 'getContainerNode').mockReturnValue(null);
+      service.init(gridStub);
       const output = service.calculateGridNewDimensions(gridOptionMock);
       expect(output).toBe(null);
     });
@@ -134,10 +137,10 @@ describe('Resizer Service', () => {
       expect(window.innerHeight).not.toEqual(previousHeight);
       expect(serviceCalculateSpy).toReturnWith(dimensionResult);
       expect(lastDimensions).toEqual(dimensionResult);
-      expect(globalEaSpy).toHaveBeenCalledTimes(2);
+      expect(globalEaSpy).toHaveBeenCalledTimes(3); // 3x times because we called resizeGrid() twice to remove shuttering
       expect(globalEaSpy).toHaveBeenNthCalledWith(1, `${aureliaEventPrefix}:onBeforeResize`, expect.any(Object));
       expect(globalEaSpy).toHaveBeenNthCalledWith(2, `${aureliaEventPrefix}:onAfterResize`, dimensionResult);
-      expect(pluginEaSpy).toHaveBeenCalledTimes(2);
+      expect(pluginEaSpy).toHaveBeenCalledTimes(3);
       expect(pluginEaSpy).toHaveBeenNthCalledWith(1, `resizerService:onBeforeResize`, expect.any(Object));
       expect(pluginEaSpy).toHaveBeenNthCalledWith(2, `resizerService:onAfterResize`, dimensionResult);
     });
@@ -312,6 +315,7 @@ describe('Resizer Service', () => {
     it('should calculate new dimensions by using the container dimensions (instead of the window dimensions) when calculateAvailableSizeBy is set to container', () => {
       const newHeight = 500;
       const fixedWidth = 800;
+
       const spy = jest.spyOn(service, 'calculateGridNewDimensions');
       service.init(gridStub, { width: fixedWidth });
       Object.defineProperty(window, 'innerHeight', { writable: true, configurable: true, value: newHeight });
