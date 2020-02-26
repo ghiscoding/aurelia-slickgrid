@@ -81,7 +81,7 @@ export class CustomAureliaViewModelFilter implements Filter {
         this.aureliaViewModel = (this.columnFilter.params.aureliaUtilService as AureliaUtilService).createAureliaViewModelAddToSlot(this.columnFilter.params.templateUrl, { collection: this.collection }, this.container, true);
 
         setTimeout(() => {
-          this.aureliaCustomElementInstance = this.aureliaViewModel.view.children[0].children[0].container.viewModel;
+          this.aureliaCustomElementInstance = this.aureliaViewModel.bindings.viewModelRef.currentViewModel;
           this.aureliaCustomElementInstance.selectedItemChanged = ((item) => {
             this.callback(undefined, { columnDef: this.columnDef, operator: this.operator, searchTerms: [item.id], shouldTriggerQuery: this._shouldTriggerQuery });
             // reset flag for next use

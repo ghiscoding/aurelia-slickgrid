@@ -114,20 +114,6 @@ export class CustomAureliaViewModelEditor implements Editor {
     }
   }
 
-  /** optional, implement a hide method on your Aurelia ViewModel */
-  hide() {
-    if (this.aureliaViewModel && this.aureliaViewModel.view.children[0].children[0].container && typeof this.aureliaViewModel.view.children[0].children[0].container.hide === 'function') {
-      this.aureliaViewModel.view.children[0].children[0].container.hide();
-    }
-  }
-
-  /** optional, implement a show method on your Aurelia ViewModel */
-  show() {
-    if (this.aureliaViewModel && this.aureliaViewModel.view.children[0].children[0].container && typeof this.aureliaViewModel.view.children[0].children[0].container.show === 'function') {
-      this.aureliaViewModel.view.children[0].children[0].container.show();
-    }
-  }
-
   /** destroy the Aurelia ViewModel & Subscription */
   destroy() {
     if (this.aureliaViewModel && this.aureliaViewModel.dispose) {
@@ -136,10 +122,24 @@ export class CustomAureliaViewModelEditor implements Editor {
     }
   }
 
+  /** optional, implement a hide method on your Aurelia ViewModel */
+  hide() {
+    if (this.aureliaViewModel && this.aureliaViewModel.bindings.viewModelRef.currentViewModel && typeof this.aureliaViewModel.bindings.viewModelRef.currentViewModel.hide === 'function') {
+      this.aureliaViewModel.bindings.viewModelRef.currentViewModel.hide();
+    }
+  }
+
+  /** optional, implement a show method on your Aurelia ViewModel */
+  show() {
+    if (this.aureliaViewModel && this.aureliaViewModel.bindings.viewModelRef.currentViewModel && typeof this.aureliaViewModel.bindings.viewModelRef.currentViewModel.show === 'function') {
+      this.aureliaViewModel.bindings.viewModelRef.currentViewModel.show();
+    }
+  }
+
   /** optional, implement a focus method on your Aurelia ViewModel */
   focus() {
-    if (this.aureliaViewModel && this.aureliaViewModel.view.children[0].children[0].container && typeof this.aureliaViewModel.view.children[0].children[0].container.focus === 'function') {
-      this.aureliaViewModel.view.children[0].children[0].container.focus();
+    if (this.aureliaViewModel && this.aureliaViewModel.bindings.viewModelRef.currentViewModel && typeof this.aureliaViewModel.bindings.viewModelRef.currentViewModel.focus === 'function') {
+      this.aureliaViewModel.bindings.viewModelRef.currentViewModel.focus();
     }
   }
 
@@ -155,7 +155,7 @@ export class CustomAureliaViewModelEditor implements Editor {
     const itemObject = item && item[this.columnDef.field];
     this.selectedItem = itemObject;
     setTimeout(() => {
-      this.aureliaCustomElementInstance = this.aureliaViewModel.view.children[0].children[0].container.viewModel;
+      this.aureliaCustomElementInstance = this.aureliaViewModel.bindings.viewModelRef.currentViewModel;
       this.aureliaCustomElementInstance.selectedItem = itemObject;
       this.aureliaCustomElementInstance.selectedItemChanged = ((newItem) => {
         this.selectedItem = newItem;
