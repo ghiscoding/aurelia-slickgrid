@@ -54,7 +54,7 @@ describe('aureliaUtilService', () => {
       expect(spyCompiler).toHaveBeenCalled();
       expect(spyView).toHaveBeenCalled();
       expect(domElm.innerHTML).toBe('');
-      expect(output).toEqual({ view: mockCompilerCreate, viewSlot: expect.anything() });
+      expect(output).toEqual({ bindings: { template: './template/path', firstName: 'John', viewModelRef: {} }, view: mockCompilerCreate, viewSlot: expect.anything() });
     });
 
     it('should create an Aurelia ViewModel and add it to a View Slot even when template is not provided', () => {
@@ -69,7 +69,7 @@ describe('aureliaUtilService', () => {
       expect(spyCompiler).toHaveBeenCalled();
       expect(spyView).toHaveBeenCalled();
       expect(domElm.innerHTML).toBe('');
-      expect(output).toEqual({ view: mockCompilerCreate, viewSlot: expect.anything() });
+      expect(output).toEqual({ bindings: { template: '', firstName: 'John', viewModelRef: {} }, view: mockCompilerCreate, viewSlot: expect.anything() });
     });
   });
 
@@ -96,7 +96,7 @@ describe('aureliaUtilService', () => {
       expect(spyCompiler).toHaveBeenCalled();
       expect(spyView).toHaveBeenCalled();
       expect(domElm.innerHTML).toBe('');
-      expect(output).toEqual({ view: mockCompilerCreate, viewSlot: expect.anything() });
+      expect(output).toEqual({ bindings: { template: './template/path', viewModelRef: {} }, view: mockCompilerCreate, viewSlot: expect.anything() });
     });
 
     it('should create an Aurelia ViewModel and add it to a View Slot even when template is not provided', () => {
@@ -111,7 +111,7 @@ describe('aureliaUtilService', () => {
       expect(spyCompiler).toHaveBeenCalled();
       expect(spyView).toHaveBeenCalled();
       expect(domElm.innerHTML).toBe('');
-      expect(output).toEqual({ view: mockCompilerCreate, viewSlot: expect.anything() });
+      expect(output).toEqual({ bindings: { template: '', viewModelRef: {} }, view: mockCompilerCreate, viewSlot: expect.anything() });
     });
   });
 });
