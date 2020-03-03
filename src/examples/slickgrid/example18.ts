@@ -267,6 +267,7 @@ export class Example18 {
     if (this.draggableGroupingPlugin && this.draggableGroupingPlugin.setDroppedGroups) {
       this.draggableGroupingPlugin.clearDroppedGroups();
     }
+    this.gridObj.invalidate(); // invalidate all rows and re-render
   }
 
   collapseAllGroups() {
@@ -297,8 +298,7 @@ export class Example18 {
     if (this.draggableGroupingPlugin && this.draggableGroupingPlugin.setDroppedGroups) {
       this.showPreHeader();
       this.draggableGroupingPlugin.setDroppedGroups('duration');
-      this.gridObj.invalidate();
-      this.gridObj.render();
+      this.gridObj.invalidate(); // invalidate all rows and re-render
     }
   }
 
@@ -317,8 +317,7 @@ export class Example18 {
     if (this.draggableGroupingPlugin && this.draggableGroupingPlugin.setDroppedGroups) {
       this.showPreHeader();
       this.draggableGroupingPlugin.setDroppedGroups(['duration', 'effortDriven']);
-      this.gridObj.invalidate();
-      this.gridObj.render();
+      this.gridObj.invalidate(); // invalidate all rows and re-render
 
       // you need to manually add the sort icon(s) in UI
       const sortColumns = [{ columnId: 'duration', sortAsc: true }];
@@ -338,8 +337,7 @@ export class Example18 {
       } else {
         this.draggableGroupingPlugin.setDroppedGroups(groupedFields);
       }
-      this.gridObj.invalidate();
-      this.gridObj.render();
+      this.gridObj.invalidate(); // invalidate all rows and re-render
     }
   }
 
