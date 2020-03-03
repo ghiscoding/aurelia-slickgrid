@@ -561,7 +561,7 @@ describe('ExtensionService', () => {
         service.translateColumnHeaders();
 
         expect(columnSpy).toHaveBeenCalled();
-        expect(renderSpy).toHaveBeenCalledWith(columnsAfterTranslateMock);
+        expect(renderSpy).toHaveBeenCalledWith(columnsAfterTranslateMock, false);
         expect(columnsBeforeTranslateMock).toEqual(columnsAfterTranslateMock);
       });
 
@@ -575,7 +575,7 @@ describe('ExtensionService', () => {
         service.translateColumnHeaders('en');
 
         expect(columnSpy).toHaveBeenCalled();
-        expect(renderSpy).toHaveBeenCalledWith(columnsAfterTranslateMock);
+        expect(renderSpy).toHaveBeenCalledWith(columnsAfterTranslateMock, false);
         expect(columnsBeforeTranslateMock).toEqual(columnsAfterTranslateMock);
       });
 
@@ -590,7 +590,7 @@ describe('ExtensionService', () => {
 
         expect(columnSpy).toHaveBeenCalled();
         expect(colDefSpy).not.toHaveBeenCalled();
-        expect(renderSpy).toHaveBeenCalledWith(columnsAfterTranslateMock);
+        expect(renderSpy).toHaveBeenCalledWith(columnsAfterTranslateMock, true);
         expect(columnsBeforeTranslateMock).toEqual(columnsAfterTranslateMock);
       });
     });
