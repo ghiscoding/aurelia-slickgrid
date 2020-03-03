@@ -1,14 +1,17 @@
-# Changelog
+# Change Log
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-### [2.17.6](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.17.5...v2.17.6) (2020-02-28)
+<a name="2.17.7"></a>
+## [2.17.7](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.17.6...v2.17.7) (2020-03-03)
 
 
 ### Bug Fixes
 
-* **editor:** LongText Editor save button that was not working properly ([80d749f](https://github.com/ghiscoding/aurelia-slickgrid/commit/80d749fa63b11b7d6c5e476d53e83798729297b3))
-* **mousewheel:** add jquery mousewheel lib to fix scroll in frozen grid ([615ecaf](https://github.com/ghiscoding/aurelia-slickgrid/commit/615ecafb72aec875618b01bd61e2c248d94fa794))
+* **columns:** add/remove columns dynamically ([a0fba0d](https://github.com/ghiscoding/aurelia-slickgrid/commit/a0fba0d))
+* **example:** should re-render after clearing groups ([ee591f8](https://github.com/ghiscoding/aurelia-slickgrid/commit/ee591f8))
+
+
 
 <a name="2.17.5"></a>
 ## [2.17.5](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.17.4...v2.17.5) (2020-02-21)
