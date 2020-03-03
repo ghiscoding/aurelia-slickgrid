@@ -31,7 +31,7 @@ export class CustomAureliaViewModelFilter implements Filter {
 
   constructor() { }
 
-  /** Angular Util Service (could be inside the Grid Options Params or the Filter Params ) */
+  /** Aurelia Util Service (could be inside the Grid Options Params or the Filter Params ) */
   get aureliaUtilService(): AureliaUtilService {
     let aureliaUtilService = this.gridOptions && this.gridOptions.params && this.gridOptions.params.aureliaUtilService;
     if (!aureliaUtilService || !(aureliaUtilService instanceof AureliaUtilService)) {
@@ -102,7 +102,7 @@ export class CustomAureliaViewModelFilter implements Filter {
     }
   }
 
-  /** destroy the Angular Component & Subscription */
+  /** destroy the Aurelia Custom Element & Subscription */
   destroy() {
     if (this.aureliaViewModel && this.aureliaViewModel.dispose) {
       this.aureliaViewModel.dispose();

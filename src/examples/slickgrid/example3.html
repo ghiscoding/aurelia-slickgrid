@@ -41,9 +41,15 @@
         Add item
       </button>
       <button class="btn btn-default btn-sm btn-danger" click.delegate="deleteItem()">Delete item</button>
+    </div>
+    <div class="row" style="margin-top: 5px">
       <button class="btn btn-default btn-sm" click.delegate="dynamicallyAddTitleHeader()">
         <i class="fa fa-plus"></i>
         Dynamically Duplicate Title Column
+      </button>
+      <button class="btn btn-default btn-sm" click.delegate="dynamicallyRemoveLastColumn()">
+        <i class="fa fa-minus"></i>
+        Dynamically Remove Last Column
       </button>
     </div>
   </div>
