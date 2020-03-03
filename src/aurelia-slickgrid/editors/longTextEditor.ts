@@ -13,7 +13,7 @@ import {
   KeyCode,
   Locale,
 } from './../models/index';
-import { getDescendantProperty, setDeepValue } from '../services/utilities';
+import { getDescendantProperty, getHtmlElementOffset, setDeepValue } from '../services/utilities';
 import * as $ from 'jquery';
 
 /*
@@ -173,10 +173,12 @@ export class LongTextEditor implements Editor {
     }
   }
 
-  position(position: HtmlElementPosition) {
+  position(parentPosition: HtmlElementPosition) {
+    const containerOffset = getHtmlElementOffset(this.args.container);
+
     this._$wrapper
-      .css('top', (position.top || 0) - 5)
-      .css('left', (position.left || 0) - 5);
+      .css('top', (containerOffset.top || parentPosition.top || 0))
+      .css('left', (containerOffset.left || parentPosition.left || 0));
   }
 
   save() {

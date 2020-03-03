@@ -697,6 +697,19 @@ export function findOrDefault(array: any[], logic: (item: any) => boolean, defau
   return array;
 }
 
+/** Get HTML Element position offset (without jQuery) */
+export function getHtmlElementOffset(element: HTMLElement): { top: number; left: number; } {
+  const rect = element.getBoundingClientRect();
+  let top = 0;
+  let left = 0;
+
+  if (rect && rect.top !== undefined && rect.left !== undefined) {
+    top = rect.top + window.pageYOffset;
+    left = rect.left + window.pageXOffset;
+  }
+  return { top, left };
+}
+
 /** Get the browser's scrollbar width, this is different to each browser */
 export function getScrollBarWidth(): number {
   const $outer = $('<div>').css({ visibility: 'hidden', width: 100, overflow: 'scroll' }).appendTo('body');
