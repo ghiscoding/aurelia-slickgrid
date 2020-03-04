@@ -208,10 +208,10 @@ export class Example12 {
     this.columnDefinitions = this.columnDefinitions.slice(); // or use spread operator [...cols]
 
     // NOTE if you use an Extensions (Checkbox Selector, Row Detail, ...) that modifies the column definitions in any way
-    // you MUST use "getColumns()" instead to get ALL columns including the 1st column that is created internally
-    // for example if you use the Checkbox Selector (row selection), you need to use the code below
+    // you MUST use "getAllColumnDefinitions()" from the GridService, using this will be ALL columns including the 1st column that is created internally
+    // for example if you use the Checkbox Selector (row selection), you MUST use the code below
     /*
-    const allColumns = this.gridObj.getColumns();
+    const allColumns = this.aureliaGrid.gridService.getAllColumnDefinitions();
     allColumns.push(newCol);
     this.columnDefinitions = [...allColumns]; // (or use slice) reassign to column definitions for Aurelia to do dirty checking
     */
