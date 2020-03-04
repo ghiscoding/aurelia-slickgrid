@@ -1,7 +1,7 @@
 import 'jest-extended';
 import { EventAggregator } from 'aurelia-event-aggregator';
 
-import { GridService, ExtensionService, FilterService, GridStateService, SortService } from '../index';
+import { GridService, ExtensionService, FilterService, GridStateService, SharedService, SortService } from '../index';
 import { GridOption, CellArgs, Column, OnEventArgs } from '../../models';
 
 declare var Slick: any;
@@ -64,6 +64,7 @@ const gridStub = {
 
 describe('Grid Service', () => {
   let service: GridService;
+  let sharedService = new SharedService();
   let globalEa: EventAggregator;
   let pluginEa: EventAggregator;
   jest.spyOn(gridStub, 'getOptions').mockReturnValue({ enableAutoResize: true, defaultAureliaEventPrefix: 'asg' } as GridOption);
@@ -71,7 +72,7 @@ describe('Grid Service', () => {
   beforeEach(() => {
     globalEa = new EventAggregator();
     pluginEa = new EventAggregator();
-    service = new GridService(globalEa, pluginEa, extensionServiceStub, filterServiceStub, gridStateServiceStub, sortServiceStub);
+    service = new GridService(globalEa, pluginEa, extensionServiceStub, filterServiceStub, gridStateServiceStub, sharedService, sortServiceStub);
     service.init(gridStub, dataviewStub);
   });
 
@@ -81,6 +82,30 @@ describe('Grid Service', () => {
 
   it('should create the service', () => {
     expect(service).toBeTruthy();
+  });
+
+  describe('getAllColumnDefinitions method', () => {
+    it('should call "allColumns" GETTER ', () => {
+      const mockColumns = [{ id: 'field1', field: 'field1', width: 100 }, { id: 'field2', field: 'field2', width: 100 }];
+      const getSpy = jest.spyOn(SharedService.prototype, 'allColumns', 'get').mockReturnValue(mockColumns);
+
+      const output = service.getAllColumnDefinitions();
+
+      expect(getSpy).toHaveBeenCalled();
+      expect(output).toEqual(mockColumns);
+    });
+  });
+
+  describe('getVisibleColumnDefinitions method', () => {
+    it('should call "visibleColumns" GETTER ', () => {
+      const mockColumns = [{ id: 'field1', field: 'field1', width: 100 }, { id: 'field2', field: 'field2', width: 100 }];
+      const getSpy = jest.spyOn(SharedService.prototype, 'visibleColumns', 'get').mockReturnValue(mockColumns);
+
+      const output = service.getVisibleColumnDefinitions();
+
+      expect(getSpy).toHaveBeenCalled();
+      expect(output).toEqual(mockColumns);
+    });
   });
 
   describe('upsertItem methods', () => {
