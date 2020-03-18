@@ -1,4 +1,4 @@
-import { Column, GridOption } from '../../aurelia-slickgrid';
+import { Column, GridOption, Formatters } from '../../aurelia-slickgrid';
 
 const NB_ITEMS = 995;
 
@@ -30,8 +30,8 @@ export class Example1 {
       { id: 'title', name: 'Title', field: 'title', sortable: true, minWidth: 100 },
       { id: 'duration', name: 'Duration (days)', field: 'duration', sortable: true, minWidth: 100 },
       { id: '%', name: '% Complete', field: 'percentComplete', sortable: true, minWidth: 100 },
-      { id: 'start', name: 'Start', field: 'start', minWidth: 100 },
-      { id: 'finish', name: 'Finish', field: 'finish', minWidth: 100 },
+      { id: 'start', name: 'Start', field: 'start', formatter: Formatters.dateIso },
+      { id: 'finish', name: 'Finish', field: 'finish', formatter: Formatters.dateIso },
       { id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', sortable: true, minWidth: 100 }
     ];
     this.gridOptions1 = {
@@ -68,8 +68,8 @@ export class Example1 {
         title: 'Task ' + i,
         duration: Math.round(Math.random() * 100) + '',
         percentComplete: randomPercent,
-        start: `${randomMonth}/${randomDay}/${randomYear}`,
-        finish: `${randomMonth}/${randomDay}/${randomYear}`,
+        start: new Date(randomYear, randomMonth + 1, randomDay),
+        finish: new Date(randomYear + 1, randomMonth + 1, randomDay),
         effortDriven: (i % 5 === 0)
       };
     }
