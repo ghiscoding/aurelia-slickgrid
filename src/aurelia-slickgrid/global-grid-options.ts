@@ -72,6 +72,7 @@ export const GlobalGridOptions: Partial<GridOption> = {
     syncGridSelectionWithBackendService: false, // but disable it when using backend services
   },
   datasetIdPropertyName: 'id',
+  defaultColumnSortFieldId: 'id',
   defaultAureliaEventPrefix: 'asg',
   defaultSlickgridEventPrefix: 'sg',
   defaultFilter: Filters.input,
