@@ -43,7 +43,8 @@ module.exports = ({ production, server, extractCss, coverage } = {}) => ({
   devServer: {
     contentBase: outDir,
     // serve index.html for all 404 (required for push-state)
-    historyApiFallback: true
+    historyApiFallback: true,
+    open: true,
   },
   devtool: production ? 'nosources-source-map' : 'cheap-module-eval-source-map',
   module: {

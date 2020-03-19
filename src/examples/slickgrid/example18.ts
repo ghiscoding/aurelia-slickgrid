@@ -310,6 +310,7 @@ export class Example18 {
     // you need to manually add the sort icon(s) in UI
     const sortColumns = sortedByCount ? [] : [{ columnId: 'duration', sortAsc: true }];
     this.aureliaGrid.filterService.setSortColumnIcons(sortColumns);
+    this.gridObj.invalidate(); // invalidate all rows and re-render
   }
 
   groupByDurationEffortDriven() {

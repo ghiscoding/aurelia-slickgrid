@@ -32,6 +32,7 @@ export class Example13 {
   gridOptions: GridOption;
   dataset: any[];
   dataviewObj: any;
+  gridObj: any;
   processing = false;
 
   constructor() {
@@ -47,6 +48,7 @@ export class Example13 {
   aureliaGridReady(aureliaGrid: AureliaGridInstance) {
     this.aureliaGrid = aureliaGrid;
     this.dataviewObj = aureliaGrid.dataView;
+    this.gridObj = aureliaGrid.slickGrid;
   }
 
   /* Define grid Options and Columns */
@@ -226,6 +228,7 @@ export class Example13 {
 
     // you need to manually add the sort icon(s) in UI
     this.aureliaGrid.filterService.setSortColumnIcons([{ columnId: 'duration', sortAsc: true }]);
+    this.gridObj.invalidate(); // invalidate all rows and re-render
   }
 
   groupByDurationOrderByCount(aggregateCollapsed) {
@@ -243,6 +246,7 @@ export class Example13 {
       aggregateCollapsed,
       lazyTotalsCalculation: true
     } as Grouping);
+    this.gridObj.invalidate(); // invalidate all rows and re-render
   }
 
   groupByDurationEffortDriven() {
@@ -273,6 +277,7 @@ export class Example13 {
     // you need to manually add the sort icon(s) in UI
     const sortColumns = [{ columnId: 'duration', sortAsc: true }, { columnId: 'effortDriven', sortAsc: true }];
     this.aureliaGrid.filterService.setSortColumnIcons(sortColumns);
+    this.gridObj.invalidate(); // invalidate all rows and re-render
   }
 
   groupByDurationEffortDrivenPercent() {
@@ -316,5 +321,6 @@ export class Example13 {
       { columnId: 'percentComplete', sortAsc: true }
     ];
     this.aureliaGrid.filterService.setSortColumnIcons(sortColumns);
+    this.gridObj.invalidate(); // invalidate all rows and re-render
   }
 }
