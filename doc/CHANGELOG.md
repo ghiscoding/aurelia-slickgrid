@@ -1,6 +1,18 @@
-# Change Log
+# Changelog
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+### [2.17.9](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.17.8...v2.17.9) (2020-03-19)
+
+
+### Features
+
+* **sort:** add default sort field as grid option ([5886b24](https://github.com/ghiscoding/aurelia-slickgrid/commit/5886b24b2f5439170564fc0b262b677f326a82ea))
+
+
+### Bug Fixes
+
+* **formatters:** decimalSeparator & thousandSeparator work tgt ([c46ef46](https://github.com/ghiscoding/aurelia-slickgrid/commit/c46ef46f7c999b57ded70454edefa57181a781d6))
 
 <a name="2.17.8"></a>
 ## [2.17.8](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.17.7...v2.17.8) (2020-03-04)
