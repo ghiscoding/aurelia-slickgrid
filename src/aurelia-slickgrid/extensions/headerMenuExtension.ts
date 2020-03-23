@@ -214,9 +214,9 @@ export class HeaderMenuExtension implements Extension {
   /** Hide a column from the grid */
   hideColumn(column: Column) {
     if (this.sharedService.grid && this.sharedService.grid.getColumns && this.sharedService.grid.setColumns && this.sharedService.grid.getColumnIndex) {
-      const columnIndex = this.sharedService.grid.getColumnIndex(column.id);
-      const currentColumns = this.sharedService.grid.getColumns();
-      const visibleColumns = this.extensionUtility.arrayRemoveItemByIndex(currentColumns, columnIndex);
+      const columnIndex = this.sharedService.grid.getColumnIndex(column.id) as number;
+      const currentColumns = this.sharedService.grid.getColumns() as Column[];
+      const visibleColumns = this.extensionUtility.arrayRemoveItemByIndex<Column>(currentColumns, columnIndex);
       this.sharedService.visibleColumns = visibleColumns;
       this.sharedService.grid.setColumns(visibleColumns);
       this.pluginEa.publish('headerMenu:onColumnsChanged', { columns: visibleColumns });
