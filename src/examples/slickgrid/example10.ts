@@ -139,6 +139,9 @@ export class Example2 {
       enableCellNavigation: true,
       enableFiltering: true,
       checkboxSelector: {
+        // optionally change the column index position of the icon (defaults to 0)
+        // columnIndexPosition: 1,
+
         // you can toggle these 2 properties to show the "select all" checkbox in different location
         hideInFilterHeaderRow: false,
         hideInColumnTitleRow: true
