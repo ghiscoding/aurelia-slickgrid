@@ -256,7 +256,7 @@ export class Example26 {
       autoCommitEdit: false,
       autoResize: {
         containerId: 'demo-container',
-        sidePadding: 15
+        sidePadding: 10
       },
       rowHeight: 45, // increase row height so that the custom elements fits in the cell
       editable: true,
