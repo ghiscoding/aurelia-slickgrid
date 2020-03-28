@@ -3,7 +3,6 @@ import { EventAggregator } from 'aurelia-event-aggregator';
 import * as $ from 'jquery';
 
 import { GridOption } from './../models/index';
-import { getScrollBarWidth } from './utilities';
 import { SlickgridEventAggregator } from '../custom-elements/slickgridEventAggregator';
 
 // global constants, height/width are in pixels

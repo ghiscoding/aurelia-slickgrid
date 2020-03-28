@@ -722,14 +722,6 @@ export function getHtmlElementOffset(element: HTMLElement): { top: number; left:
   return { top, left };
 }
 
-/** Get the browser's scrollbar width, this is different to each browser */
-export function getScrollBarWidth(): number {
-  const $outer = $('<div>').css({ visibility: 'hidden', width: 100, overflow: 'scroll' }).appendTo('body');
-  const widthWithScroll = $('<div>').css({ width: '100%' }).appendTo($outer).outerWidth() || 0;
-  $outer.remove();
-  return Math.ceil(100 - widthWithScroll);
-}
-
 /**
  * Converts a string from camelCase to snake_case (underscore) case
  * @param str the string to convert
