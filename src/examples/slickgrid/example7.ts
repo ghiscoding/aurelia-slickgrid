@@ -63,7 +63,7 @@ export class Example7 {
       enableHeaderMenu: false,
       autoResize: {
         containerId: 'demo-container',
-        sidePadding: 15
+        sidePadding: 10
       },
       enableFiltering: false,
       enableCellNavigation: true,

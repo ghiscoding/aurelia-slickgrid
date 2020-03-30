@@ -80,7 +80,7 @@ export class Example2 {
     this.gridOptions = {
       autoResize: {
         containerId: 'demo-container',
-        sidePadding: 15
+        sidePadding: 10
       },
       enableCellNavigation: true,
       showCustomFooter: true, // display some metrics in the bottom custom footer

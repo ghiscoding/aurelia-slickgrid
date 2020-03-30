@@ -3,7 +3,6 @@ import { EventAggregator } from 'aurelia-event-aggregator';
 import * as $ from 'jquery';
 
 import { GridOption } from './../models/index';
-import { getScrollBarWidth } from './utilities';
 import { SlickgridEventAggregator } from '../custom-elements/slickgridEventAggregator';
 
 // global constants, height/width are in pixels
@@ -175,25 +174,6 @@ export class ResizerService {
     return this._lastDimensions;
   }
 
-  /**
-   * For some reason this only seems to happen in Chrome and is sometime miscalculated by SlickGrid measureSrollbar() method
-   * When that happens we will compensate and resize the Grid Viewport to avoid seeing horizontal scrollbar
-   * Most of the time it happens, it's a tiny offset calculation of usually 3px (enough to show scrollbar)
-   * GitHub issue reference: https://github.com/6pac/SlickGrid/issues/275
-   */
-  compensateHorizontalScroll(grid: any, gridOptions: GridOption) {
-    const scrollbarDimensions = grid && grid.getScrollbarDimensions();
-    const slickGridScrollbarWidth = scrollbarDimensions && scrollbarDimensions.width;
-    const calculatedScrollbarWidth = getScrollBarWidth();
-
-    // if scrollbar width is different from SlickGrid calculation to our custom calculation
-    // then resize the grid with the missing pixels to remove scroll (usually only 3px)
-    if (slickGridScrollbarWidth < calculatedScrollbarWidth && this._gridDomElm && this._gridDomElm.width) {
-      const oldWidth = this._gridDomElm && this._gridDomElm.width && this._gridDomElm.width() || 0;
-      this._gridDomElm.width(oldWidth + (calculatedScrollbarWidth - slickGridScrollbarWidth));
-    }
-  }
-
   /** Provide the possibility to pause the resizer for some time, until user decides to re-enabled it later if he wish to. */
   pauseResizer(isResizePaused: boolean) {
     this._resizePaused = isResizePaused;
@@ -254,8 +234,6 @@ export class ResizerService {
         if (this._gridUid && $(`.${this._gridUid}`).length > 0) {
           this._grid.autosizeColumns();
         }
-        // compensate anytime SlickGrid measureScrollbar is incorrect
-        this.compensateHorizontalScroll(this._grid, this._gridOptions);
       }
 
       // keep last resized dimensions & resolve them to the Promise

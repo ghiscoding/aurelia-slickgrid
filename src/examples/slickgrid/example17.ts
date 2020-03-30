@@ -91,7 +91,7 @@ export class Example17 {
       enableAutoResize: true,
       autoResize: {
         containerId: 'demo-container',
-        sidePadding: 15
+        sidePadding: 10
       },
       enableCellNavigation: true,
       enableColumnReorder: false,
