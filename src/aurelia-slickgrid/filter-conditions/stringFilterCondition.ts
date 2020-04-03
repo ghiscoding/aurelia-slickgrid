@@ -1,4 +1,4 @@
-import { FilterCondition, FilterConditionOption } from '../models/index';
+import { FilterCondition, FilterConditionOption, OperatorType } from '../models/index';
 import { testFilterCondition } from './filterUtilities';
 
 export const stringFilterCondition: FilterCondition = (options: FilterConditionOption) => {
@@ -12,11 +12,11 @@ export const stringFilterCondition: FilterCondition = (options: FilterConditionO
     searchTerm = searchTerm.toLowerCase();
   }
 
-  if (options.operator === '*' || options.operator === 'EndsWith') {
+  if (options.operator === '*' || options.operator === OperatorType.endsWith) {
     return cellValue.endsWith(searchTerm);
-  } else if ((options.operator === '' && options.cellValueLastChar === '*') || options.operator === 'StartsWith') {
+  } else if ((options.operator === '' && options.cellValueLastChar === '*') || options.operator === OperatorType.startsWith) {
     return cellValue.startsWith(searchTerm);
-  } else if (options.operator === '') {
+  } else if (options.operator === '' || options.operator === OperatorType.contains) {
     return (cellValue.indexOf(searchTerm) > -1);
   }
   return testFilterCondition(options.operator || '==', cellValue, searchTerm);
