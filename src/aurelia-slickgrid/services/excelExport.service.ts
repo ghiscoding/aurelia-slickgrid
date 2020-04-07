@@ -58,7 +58,6 @@ export class ExcelExportService {
   /**
    * Initialize the Export Service
    * @param grid
-   * @param gridOptions
    * @param dataView
    */
   init(grid: any, dataView: any): void {
