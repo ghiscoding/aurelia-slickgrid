@@ -158,7 +158,6 @@ export class RowDetailViewExtension implements Extension {
         this.sharedService.grid.setSelectionModel(rowSelectionPlugin);
       }
 
-      // this._extension = this.create(this.sharedService.allColumns, this.sharedService.gridOptions);
       this.sharedService.grid.registerPlugin(this._addon);
 
       // hook all events

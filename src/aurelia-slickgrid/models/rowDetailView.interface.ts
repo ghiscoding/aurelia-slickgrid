@@ -1,7 +1,4 @@
 export interface RowDetailView {
-  /** A CSS class to be added to the row detail */
-  cssClass?: string;
-
   /** Defaults to true, which will collapse all row detail views when user calls a sort. Unless user implements a sort to deal with padding */
   collapseAllOnSort?: boolean;
 
@@ -14,6 +11,9 @@ export interface RowDetailView {
    * it will add an offset to take into consideration (1.CheckboxSelector, 2.RowDetail, 3.RowMove)
    */
   columnIndexPosition?: number;
+
+  /** A CSS class to be added to the row detail */
+  cssClass?: string;
 
   /** Extra classes to be added to the expanded Toggle */
   expandedClass?: string;
