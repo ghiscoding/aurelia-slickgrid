@@ -52,7 +52,7 @@ export class RowMoveManagerExtension implements Extension {
       // only add the new column if it doesn't already exist
       if (!rowMoveColDef) {
         // column index position in the grid
-        const columnPosition = gridOptions?.rowMoveManager?.columnIndexPosition || 0;
+        const columnPosition = gridOptions && gridOptions.rowMoveManager && gridOptions.rowMoveManager.columnIndexPosition || 0;
         if (columnPosition > 0) {
           columnDefinitions.splice(columnPosition, 0, finalRowMoveColumn);
         } else {
@@ -69,7 +69,7 @@ export class RowMoveManagerExtension implements Extension {
       // dynamically import the SlickGrid plugin (addon) with RequireJS
       this.extensionUtility.loadExtensionDynamically(ExtensionName.rowMoveManager);
       if (!this._addon) {
-        this._addon = new Slick.RowMoveManager(gridOptions?.rowMoveManager || { cancelEditOnDrag: true });
+        this._addon = new Slick.RowMoveManager((gridOptions && gridOptions.rowMoveManager) || { cancelEditOnDrag: true });
       }
       return this._addon;
     }
