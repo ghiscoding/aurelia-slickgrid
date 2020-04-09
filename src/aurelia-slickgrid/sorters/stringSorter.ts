@@ -1,4 +1,4 @@
-import { Sorter, SortDirectionNumber } from './../models/index';
+import { Column, Sorter, SortDirectionNumber } from './../models/index';
 
 export const stringSorter: Sorter = (value1: any, value2: any, sortDirection: number | SortDirectionNumber, sortColumn?: Column) => {
   if (sortDirection === undefined || sortDirection === null) {
