@@ -9,6 +9,7 @@ import {
   Filters,
   Formatters,
   GridOption,
+  GroupingGetterFunction,
   GroupTotalFormatters,
   Sorters,
   SortDirectionNumber,
@@ -42,7 +43,7 @@ export class Example18 {
   gridObj: any;
   gridOptions: GridOption;
   processing = false;
-  selectedGroupingFields: string[] = ['', '', ''];
+  selectedGroupingFields: Array<string | GroupingGetterFunction> = ['', '', ''];
 
   constructor() {
     // define the grid options & columns and then create the grid itself
