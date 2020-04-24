@@ -53,7 +53,7 @@ body {
 /** Sidebar (left) and Content (right) */
 @media (min-width: 1200px) {
   .panel-wm-content .container {
-    width: calc(1170px - $side-menu-width);
+    width: calc(1170px - #{$side-menu-width});
   }
 }
 
