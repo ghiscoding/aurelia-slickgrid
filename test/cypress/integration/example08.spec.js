@@ -30,7 +30,7 @@ describe('Example 8 - Header Menu Plugin', () => {
       .children('.slick-header-menubutton')
       .should('be.hidden')
       .invoke('show')
-      .click();
+      .click({ force: true });
 
     cy.get('.slick-header-menuitem.slick-header-menuitem-disabled')
       .contains('Help')
@@ -51,12 +51,12 @@ describe('Example 8 - Header Menu Plugin', () => {
       .children('.slick-header-menubutton')
       .should('be.hidden')
       .invoke('show')
-      .click();
+      .click({ force: true });
 
     cy.get('.slick-header-menuitem.bold')
       .find('.slick-header-menucontent.blue')
       .contains('Help')
-      .click()
+      .click({ force: true })
       .then(() => expect(alertStub.getCall(0)).to.be.calledWith('Please help!!!'))
 
     cy.window().then((win) => {
@@ -71,11 +71,11 @@ describe('Example 8 - Header Menu Plugin', () => {
       .trigger('mouseover')
       .children('.slick-header-menubutton')
       .invoke('show')
-      .click();
+      .click({ force: true });
 
     cy.get('.slick-header-menuitem .slick-header-menucontent')
       .contains('Sort Ascending')
-      .click();
+      .click({ force: true });
 
     cy.get('.slick-header-column:nth(1).slick-header-sortable.slick-header-column-sorted')
       .find('.slick-sort-indicator.slick-sort-indicator-asc')
@@ -89,7 +89,7 @@ describe('Example 8 - Header Menu Plugin', () => {
       .children('.slick-header-menubutton')
       .should('be.hidden')
       .invoke('show')
-      .click();
+      .click({ force: true });
 
     cy.get('.slick-header-menu')
       .should('exist');
@@ -105,7 +105,7 @@ describe('Example 8 - Header Menu Plugin', () => {
 
     cy.get('.slick-header-menuitem .slick-header-menucontent')
       .contains('Sort Descending')
-      .click()
+      .click({ force: true })
       .wait(10);
 
     cy.get('.slick-header-column:nth(1).slick-header-sortable.slick-header-column-sorted')
@@ -134,7 +134,7 @@ describe('Example 8 - Header Menu Plugin', () => {
       .children('.slick-header-menubutton')
       .should('be.hidden')
       .invoke('show')
-      .click();
+      .click({ force: true });
 
     cy.get('.slick-header-menuitem.slick-header-menuitem-disabled')
       .contains('Help')
@@ -146,7 +146,7 @@ describe('Example 8 - Header Menu Plugin', () => {
 
     cy.get('.slick-header-menuitem.slick-header-menuitem')
       .contains('Hide Column')
-      .click();
+      .click({ force: true });
 
     cy.get('#grid8')
       .find('.slick-header-columns')
