@@ -65,7 +65,7 @@ describe('Example 8 - Header Menu Plugin', () => {
     });
   });
 
-  it('should hover over "Duration" and execute "Sort Ascending" command and expect a sort icon', () => {
+  xit('should hover over "Duration" and execute "Sort Ascending" command and expect a sort icon', () => {
     cy.get('#grid8')
       .find('.slick-header-column:nth(1)')
       .trigger('mouseover')
@@ -82,7 +82,7 @@ describe('Example 8 - Header Menu Plugin', () => {
       .should('exist');
   });
 
-  it('should hover over "% Complete" and not expect to find the Help menu', () => {
+  xit('should hover over "% Complete" and not expect to find the Help menu', () => {
     cy.get('#grid8')
       .find('.slick-header-column:nth(2)')
       .trigger('mouseover')
@@ -99,7 +99,7 @@ describe('Example 8 - Header Menu Plugin', () => {
       .should('not.exist');
   });
 
-  it('should execute "Sort Descending" command from the menu left open and expect 2 sort icons afterward and "% Completed" to be descending with >80', () => {
+  xit('should execute "Sort Descending" command from the menu left open and expect 2 sort icons afterward and "% Completed" to be descending with >80', () => {
     cy.get('.slick-header-menu')
       .should('exist');
 
@@ -127,7 +127,7 @@ describe('Example 8 - Header Menu Plugin', () => {
       });
   });
 
-  it('should hover over the "Completed" column and expect Help commands to be disabled', () => {
+  xit('should hover over the "Completed" column and expect Help commands to be disabled', () => {
     cy.get('#grid8')
       .find('.slick-header-column:nth(5)')
       .trigger('mouseover')
@@ -141,7 +141,7 @@ describe('Example 8 - Header Menu Plugin', () => {
       .should('exist');
   });
 
-  it('should remain in the "Completed" column and execute "Hide Column" command and expect it gone from the grid', () => {
+  xit('should remain in the "Completed" column and execute "Hide Column" command and expect it gone from the grid', () => {
     const titles = ['Title', 'Duration', '% Complete', 'Start', 'Finish'];
 
     cy.get('.slick-header-menuitem.slick-header-menuitem')
