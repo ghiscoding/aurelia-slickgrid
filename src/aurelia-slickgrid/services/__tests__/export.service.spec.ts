@@ -1053,7 +1053,7 @@ describe('ExportService', () => {
     });
 
     describe('Grouped Column Header Titles', () => {
-      let mockCollection: any[];
+      let mockCollection2: any[];
 
       beforeEach(() => {
         mockGridOptions.createPreHeaderPanel = true;
@@ -1073,9 +1073,9 @@ describe('ExportService', () => {
       });
 
       it('should export with grouped header titles showing up on first row', (done) => {
-        mockCollection = [{ id: 0, userId: '1E06', firstName: 'John', lastName: 'Z', position: 'SALES_REP', order: 10 }];
-        jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
-        jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
+        mockCollection2 = [{ id: 0, userId: '1E06', firstName: 'John', lastName: 'Z', position: 'SALES_REP', order: 10 }];
+        jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection2.length);
+        jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection2[0]);
 
         const globalEaSpy = jest.spyOn(globalEa, 'publish');
         const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
@@ -1101,7 +1101,7 @@ describe('ExportService', () => {
       });
 
       describe('with Translation', () => {
-        let mockCollection: any[];
+        let mockCollection2: any[];
 
         beforeEach(() => {
           mockGridOptions.enableTranslate = true;
@@ -1124,9 +1124,9 @@ describe('ExportService', () => {
 
         it(`should have the LastName header title translated when defined as a "headerKey" and "i18n" is set in grid option`, (done) => {
           mockGridOptions.exportOptions.sanitizeDataExport = false;
-          mockCollection = [{ id: 0, userId: '1E06', firstName: 'John', lastName: 'Z', position: 'SALES_REP', order: 10 }];
-          jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection.length);
-          jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection[0]);
+          mockCollection2 = [{ id: 0, userId: '1E06', firstName: 'John', lastName: 'Z', position: 'SALES_REP', order: 10 }];
+          jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection2.length);
+          jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection2[0]);
           const globalEaSpy = jest.spyOn(globalEa, 'publish');
           const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
           const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');

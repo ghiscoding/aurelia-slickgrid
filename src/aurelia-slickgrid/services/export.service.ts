@@ -277,9 +277,8 @@ export class ExportService {
           });
         }
       });
-
-      return groupedColumnHeaders;
     }
+    return groupedColumnHeaders;
   }
 
   /**
@@ -288,6 +287,7 @@ export class ExportService {
    */
   private getColumnHeaders(columns: Column[]): KeyTitlePair[] {
     const columnHeaders: KeyTitlePair[] = [];
+
     if (columns && Array.isArray(columns)) {
       // Populate the Column Header, pull the name defined
       columns.forEach((columnDef) => {
@@ -307,9 +307,8 @@ export class ExportService {
           });
         }
       });
-
-      return columnHeaders;
     }
+    return columnHeaders;
   }
 
   /**
