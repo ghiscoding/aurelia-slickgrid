@@ -31,7 +31,7 @@ export class ExportService {
   private _dataView: any;
   private _grid: any;
   private _columnHeaders: KeyTitlePair[];
-  private _groupedHeaders: KeyTitlePair[];
+  private _groupedColumnHeaders: KeyTitlePair[];
   private _hasGroupedItems = false;
   private _locales: Locale;
 
@@ -198,13 +198,21 @@ export class ExportService {
       this._hasGroupedItems = false;
     }
 
-    // get all column headers
+    // get all Grouped Column Header Titles when defined (from pre-header row)
+    if (this._gridOptions.createPreHeaderPanel && this._gridOptions.showPreHeaderPanel && !this._gridOptions.enableDraggableGrouping) {
+      this._groupedColumnHeaders = this.getColumnGroupedHeaderTitles(columns) || [];
+      if (this._groupedColumnHeaders && Array.isArray(this._groupedColumnHeaders) && this._groupedColumnHeaders.length > 0) {
+        // add the header row + add a new line at the end of the row
+        const outputGroupedHeaderTitles = this._groupedColumnHeaders.map((header) => `${this._exportQuoteWrapper}${header.title}${this._exportQuoteWrapper}`);
+        outputDataString += (outputGroupedHeaderTitles.join(this._delimiter) + this._lineCarriageReturn);
+      }
+    }
+
+    // get all Column Header Titles
     this._columnHeaders = this.getColumnHeaders(columns) || [];
     if (this._columnHeaders && Array.isArray(this._columnHeaders) && this._columnHeaders.length > 0) {
       // add the header row + add a new line at the end of the row
-      const outputHeaderTitles = this._columnHeaders.map((header) => {
-        return this._exportQuoteWrapper + header.title + this._exportQuoteWrapper;
-      });
+      const outputHeaderTitles = this._columnHeaders.map((header) => `${this._exportQuoteWrapper}${header.title}${this._exportQuoteWrapper}`);
       outputDataString += (outputHeaderTitles.join(this._delimiter) + this._lineCarriageReturn);
     }
 
@@ -244,35 +252,64 @@ export class ExportService {
   }
 
   /**
+   * Get all Grouped Header Titles and their keys, translate the title when required.
+   * @param {Array<object>} columns of the grid
+   */
+  private getColumnGroupedHeaderTitles(columns: Column[]): KeyTitlePair[] {
+    const groupedColumnHeaders: KeyTitlePair[] = [];
+
+    if (columns && Array.isArray(columns)) {
+      // Populate the Grouped Column Header, pull the columnGroup(Key) defined
+      columns.forEach((columnDef) => {
+        let groupedHeaderTitle = '';
+        if ((columnDef.columnGroupKey || columnDef.columnGroupKey) && this._gridOptions.enableTranslate && this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale()) {
+          groupedHeaderTitle = this.i18n.tr((columnDef.columnGroupKey || columnDef.columnGroupKey));
+        } else {
+          groupedHeaderTitle = columnDef.columnGroup || '';
+        }
+        const skippedField = columnDef.excludeFromExport || false;
+
+        // if column width is 0px, then we consider that field as a hidden field and should not be part of the export
+        if ((columnDef.width === undefined || columnDef.width > 0) && !skippedField) {
+          groupedColumnHeaders.push({
+            key: (columnDef.field || columnDef.id) as string,
+            title: groupedHeaderTitle || ''
+          });
+        }
+      });
+
+      return groupedColumnHeaders;
+    }
+  }
+
+  /**
    * Get all header titles and their keys, translate the title when required.
-   * @param columns of the grid
+   * @param {Array<object>} columns of the grid
    */
   private getColumnHeaders(columns: Column[]): KeyTitlePair[] {
-    if (!columns || !Array.isArray(columns) || columns.length === 0) {
-      return [];
-    }
     const columnHeaders: KeyTitlePair[] = [];
+    if (columns && Array.isArray(columns)) {
+      // Populate the Column Header, pull the name defined
+      columns.forEach((columnDef) => {
+        let headerTitle = '';
+        if ((columnDef.headerKey || columnDef.nameKey) && this._gridOptions.enableTranslate && this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale()) {
+          headerTitle = this.i18n.tr((columnDef.headerKey || columnDef.nameKey));
+        } else {
+          headerTitle = columnDef.name || titleCase(columnDef.field);
+        }
+        const skippedField = columnDef.excludeFromExport || false;
 
-    // Populate the Column Header, pull the name defined
-    columns.forEach((columnDef) => {
-      let headerTitle = '';
-      if ((columnDef.headerKey || columnDef.nameKey) && this._gridOptions.enableTranslate && this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale()) {
-        headerTitle = this.i18n.tr((columnDef.headerKey || columnDef.nameKey));
-      } else {
-        headerTitle = columnDef.name || titleCase(columnDef.field);
-      }
-      const skippedField = columnDef.excludeFromExport || false;
+        // if column width is 0px, then we consider that field as a hidden field and should not be part of the export
+        if ((columnDef.width === undefined || columnDef.width > 0) && !skippedField) {
+          columnHeaders.push({
+            key: (columnDef.field || columnDef.id) as string,
+            title: headerTitle || ''
+          });
+        }
+      });
 
-      // if column width is 0, then we consider that field as a hidden field and should not be part of the export
-      if ((columnDef.width === undefined || columnDef.width > 0) && !skippedField) {
-        columnHeaders.push({
-          key: (columnDef.field || columnDef.id) as string,
-          title: headerTitle || ''
-        });
-      }
-    });
-
-    return columnHeaders;
+      return columnHeaders;
+    }
   }
 
   /**
