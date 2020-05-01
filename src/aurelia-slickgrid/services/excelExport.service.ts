@@ -399,7 +399,7 @@ export class ExcelExportService {
         if (columnDef.columnGroupKey && this._gridOptions.enableTranslate && this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale()) {
           groupedHeaderTitle = this.i18n.tr(columnDef.columnGroupKey);
         } else {
-          groupedHeaderTitle = columnDef.columnGroup;
+          groupedHeaderTitle = columnDef.columnGroup || '';
         }
         const skippedField = columnDef.excludeFromExport || false;
 
