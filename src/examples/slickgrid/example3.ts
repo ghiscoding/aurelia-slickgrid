@@ -520,7 +520,7 @@ export class Example3 {
         percentComplete: randomPercent,
         percentCompleteNumber: randomPercent,
         start: new Date(randomYear, randomMonth, randomDay),
-        finish: randomFinish < new Date() ? '' : randomFinish, // make sure the random date is earlier than today
+        finish: randomFinish, // make sure the random date is earlier than today
         effortDriven: (i % 5 === 0),
         prerequisites: (i % 2 === 0) && i !== 0 && i < 12 ? [i, i - 1] : [],
         countryOfOrigin: (i % 2) ? { code: 'CA', name: 'Canada' } : { code: 'US', name: 'United States' },

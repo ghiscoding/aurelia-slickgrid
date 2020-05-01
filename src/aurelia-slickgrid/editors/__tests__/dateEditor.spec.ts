@@ -350,6 +350,25 @@ describe('DateEditor', () => {
 
         expect(spy).not.toHaveBeenCalled();
       });
+
+      it('should not throw any error when date is invalid when lower than required "minDate" defined in the "editorOptions" and "autoCommitEdit" is enabled', () => {
+        // change to allow input value only for testing purposes & use the regular flatpickr input to test that one too
+        mockColumn.internalColumnEditor.editorOptions = { minDate: 'today', altInput: true };
+        mockItemData = { id: 1, startDate: '2001-01-02T11:02:02.000Z', isActive: true };
+        gridOptionMock.autoCommitEdit = true;
+        gridOptionMock.autoEdit = true;
+        gridOptionMock.editable = true;
+
+        editor = new DateEditor(i18n, editorArguments);
+        editor.loadValue(mockItemData);
+        editor.flatInstance.toggle();
+        const editorInputElm = divContainer.querySelector<HTMLInputElement>('input.flatpickr');
+        editorInputElm.value = '2014-04-02T16:02:02.239Z';
+        editorInputElm.dispatchEvent(new (window.window as any).KeyboardEvent('keydown', { keyCode: 13, bubbles: true, cancelable: false }));
+
+        expect(editor.pickerOptions).toBeTruthy();
+        expect(editor.isValueChanged()).toBe(true);
+      });
     });
 
     describe('validate method', () => {
