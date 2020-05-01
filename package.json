@@ -63,7 +63,7 @@
     "cypress:ci:mochawesome": "cd test/cypress && npm run cypress:ci:mochawesome",
     "cypress:ci:xml": "cd test/cypress && node node_modules/cypress/bin/cypress run --reporter xunit --reporter-options output=testresult.xml",
     "cypress:open": "cd test/cypress && node node_modules/cypress/bin/cypress open",
-    "test:jest": "node_modules/.bin/jest --runInBand --coverage --config test/jest.config.js"
+    "test:jest": "node_modules/.bin/jest --coverage --config test/jest.config.js"
   },
   "dependencies": {
     "aurelia-event-aggregator": "^1.0.3",
