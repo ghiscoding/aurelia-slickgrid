@@ -254,13 +254,11 @@ export class ExcelExportService {
       columnHeaderStyleId = this._stylesheet.createFormat(columnHeaderStyle).id;
     }
 
-    // when having Grouped Header Titles (in the pre-header), then make the cell Bold & Aligned Center
-    const boldCenterAlign = this._stylesheet.createFormat({ alignment: { horizontal: 'center' }, font: { bold: true } });
-    const boldCenterAlignId = boldCenterAlign && boldCenterAlign.id;
-
     // get all Grouped Column Header Titles when defined (from pre-header row)
     if (this._gridOptions.createPreHeaderPanel && this._gridOptions.showPreHeaderPanel && !this._gridOptions.enableDraggableGrouping) {
-      outputData.push(this.getColumnGroupedHeaderTitlesData(columns, { style: boldCenterAlignId }));
+      // when having Grouped Header Titles (in the pre-header), then make the cell Bold & Aligned Center
+      const boldCenterAlign = this._stylesheet.createFormat({ alignment: { horizontal: 'center' }, font: { bold: true } });
+      outputData.push(this.getColumnGroupedHeaderTitlesData(columns, { style: boldCenterAlign && boldCenterAlign.id }));
     }
 
     // get all Column Header Titles (it might include a "Group by" title at A1 cell)
@@ -401,7 +399,7 @@ export class ExcelExportService {
         if (columnDef.columnGroupKey && this._gridOptions.enableTranslate && this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale()) {
           groupedHeaderTitle = this.i18n.tr(columnDef.columnGroupKey);
         } else {
-          groupedHeaderTitle = columnDef.columnGroup;
+          groupedHeaderTitle = columnDef.columnGroup || '';
         }
         const skippedField = columnDef.excludeFromExport || false;
 
