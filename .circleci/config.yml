@@ -15,7 +15,7 @@ jobs:
             - "node_modules"
       - run:
           name: Run Jest tests with JUnit as reporter
-          command: ./node_modules/.bin/jest --no-cache --config test/jest.config.js --ci --runInBand --collectCoverage=true --reporters=default --reporters=jest-junit
+          command: ./node_modules/.bin/jest --no-cache --config test/jest.config.js --ci --collectCoverage=true --reporters=default --reporters=jest-junit
           environment:
             JEST_JUNIT_OUTPUT: "reports/junit/js-test-results.xml"
       - run:
