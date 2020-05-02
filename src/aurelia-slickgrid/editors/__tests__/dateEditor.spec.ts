@@ -237,7 +237,7 @@ describe('DateEditor', () => {
         mockColumn.internalColumnEditor.validator = null;
         mockColumn.type = FieldType.dateTimeIsoAmPm;
         mockColumn.field = 'employee.startDate';
-        mockItemData = { id: 1, employee: { startDate: '2001-04-05T11:33:42.000Z' }, isActive: true };
+        mockItemData = { id: 1, employee: { startDate: new Date(Date.UTC(2001, 0, 2, 16, 2, 2, 0)) }, isActive: true };
 
         const newDate = '2001-01-02T16:02:02.000+05:00';
         editor = new DateEditor(i18n, editorArguments);
@@ -354,7 +354,7 @@ describe('DateEditor', () => {
       it('should not throw any error when date is invalid when lower than required "minDate" defined in the "editorOptions" and "autoCommitEdit" is enabled', () => {
         // change to allow input value only for testing purposes & use the regular flatpickr input to test that one too
         mockColumn.internalColumnEditor.editorOptions = { minDate: 'today', altInput: true };
-        mockItemData = { id: 1, startDate: '2001-01-02T11:02:02.000Z', isActive: true };
+        mockItemData = { id: 1, startDate: '500-01-02T11:02:02.000Z', isActive: true };
         gridOptionMock.autoCommitEdit = true;
         gridOptionMock.autoEdit = true;
         gridOptionMock.editable = true;
@@ -363,11 +363,10 @@ describe('DateEditor', () => {
         editor.loadValue(mockItemData);
         editor.flatInstance.toggle();
         const editorInputElm = divContainer.querySelector<HTMLInputElement>('input.flatpickr');
-        editorInputElm.value = '2014-04-02T16:02:02.239Z';
-        editorInputElm.dispatchEvent(new (window.window as any).KeyboardEvent('keydown', { keyCode: 13, bubbles: true, cancelable: false }));
 
         expect(editor.pickerOptions).toBeTruthy();
-        expect(editor.isValueChanged()).toBe(true);
+        expect(editorInputElm.value).toBe('');
+        expect(editor.serializeValue()).toBe('');
       });
     });
 
