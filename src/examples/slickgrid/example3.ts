@@ -556,7 +556,7 @@ export class Example3 {
     }
   }
 
-  onCellValidation(e, args) {
+  onValidationError(e, args) {
     alert(args.validationResults.msg);
   }
 

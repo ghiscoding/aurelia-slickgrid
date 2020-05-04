@@ -10,8 +10,8 @@ import {
   FieldType,
   KeyCode,
 } from './../models/index';
-import { Constants } from './../constants';
 import { findOrDefault, getDescendantProperty, setDeepValue } from '../services/utilities';
+import { textValidator } from '../editorValidators/textValidator';
 import * as $ from 'jquery';
 
 // minimum length of chars to type before starting to start querying
@@ -214,26 +214,13 @@ export class AutoCompleteEditor implements Editor {
   }
 
   validate(inputValue?: any): EditorValidatorOutput {
-    const isRequired = this.columnEditor.required;
-    const elmValue = (inputValue !== undefined) ? inputValue : this._$editorElm && this._$editorElm.val && this._$editorElm.val();
-    const errorMsg = this.columnEditor.errorMessage;
-
-    if (this.validator) {
-      return this.validator(elmValue, this.args);
-    }
-
-    // by default the editor is almost always valid (except when it's required but not provided)
-    if (isRequired && elmValue === '') {
-      return {
-        valid: false,
-        msg: errorMsg || Constants.VALIDATION_REQUIRED_FIELD
-      };
-    }
-
-    return {
-      valid: true,
-      msg: null
-    };
+    const val = (inputValue !== undefined) ? inputValue : this._$editorElm && this._$editorElm.val && this._$editorElm.val();
+    return textValidator(val, {
+      editorArgs: this.args,
+      errorMessage: this.columnEditor.errorMessage,
+      required: this.columnEditor.required,
+      validator: this.validator,
+    });
   }
 
   //
