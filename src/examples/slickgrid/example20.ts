@@ -1,6 +1,6 @@
 import { autoinject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
-import { AureliaGridInstance, Column, Formatters, GridOption, Filters, FieldType } from '../../aurelia-slickgrid';
+import { AureliaGridInstance, ColumnEditorDualInput, Column, Formatters, GridOption, Filters, FieldType, formatNumber, Editors } from '../../aurelia-slickgrid';
 import './example20.scss'; // provide custom CSS/SASS styling
 
 @autoinject()
@@ -71,12 +71,6 @@ export class Example20 {
         sortable: true
       },
       {
-        id: 'duration', name: 'Duration', field: 'duration',
-        minWidth: 100, width: 120,
-        filterable: true,
-        sortable: true
-      },
-      {
         id: 'percentComplete', name: '% Complete', field: 'percentComplete',
         resizable: false,
         minWidth: 130, width: 140,
@@ -97,6 +91,78 @@ export class Example20 {
         minWidth: 100, width: 120,
         filterable: true,
         sortable: true
+      },
+      {
+        id: 'cost', name: 'Cost | Duration', field: 'cost',
+        formatter: this.costDurationFormatter.bind(this),
+        minWidth: 150, width: 170,
+        sortable: true,
+        // filterable: true,
+        filter: {
+          model: Filters.compoundSlider,
+        },
+        editor: {
+          model: Editors.dualInput,
+          // the DualInputEditor is of Type ColumnEditorDualInput and MUST include (leftInput/rightInput) in its params object
+          // in each of these 2 properties, you can pass any regular properties of a column editor
+          // and they will be executed following the options defined in each
+          params: {
+            leftInput: {
+              field: 'cost',
+              type: 'float',
+              decimal: 2,
+              minValue: 0,
+              maxValue: 50000,
+              placeholder: '< 50K',
+              errorMessage: 'Cost must be positive and below $50K.',
+            },
+            rightInput: {
+              field: 'duration',
+              type: 'float', // you could have 2 different input type as well
+              minValue: 0,
+              maxValue: 100,
+              title: 'make sure Duration is withing its range of 0 to 100',
+              errorMessage: 'Duration must be between 0 and 100.',
+
+              // Validator Option #1
+              // You could also optionally define a custom validator in 1 or both inputs
+              /*
+              validator: (value, args) => {
+                let isValid = true;
+                let errorMsg = '';
+                if (value < 0 || value > 120) {
+                  isValid = false;
+                  errorMsg = 'Duration MUST be between 0 and 120.';
+                }
+                return { valid: isValid, msg: errorMsg };
+              }
+              */
+            },
+          } as ColumnEditorDualInput,
+
+          // Validator Option #2 (shared Validator) - this is the last alternative, option #1 (independent Validators) is still the recommended way
+          // You can also optionally use a common Validator (if you do then you cannot use the leftInput/rightInput validators at same time)
+          // to compare both values at the same time.
+          /*
+          validator: (values, args) => {
+            let isValid = true;
+            let errorMsg = '';
+            if (values.cost < 0 || values.cost > 50000) {
+              isValid = false;
+              errorMsg = 'Cost MUST be between 0 and 50k.';
+            }
+            if (values.duration < 0 || values.duration > 120) {
+              isValid = false;
+              errorMsg = 'Duration MUST be between 0 and 120.';
+            }
+            if (values.cost < values.duration) {
+              isValid = false;
+              errorMsg = 'Cost can never be lower than its Duration.';
+            }
+            return { valid: isValid, msg: errorMsg };
+          }
+          */
+        }
       },
       {
         id: 'effortDriven', name: 'Effort Driven', field: 'effortDriven',
@@ -142,6 +208,8 @@ export class Example20 {
       },
       alwaysShowVerticalScroll: false, // disable scroll since we don't want it to show on the left pinned columns
       enableCellNavigation: true,
+      editable: true,
+      autoEdit: true,
       enableExcelCopyBuffer: true,
       frozenColumn: this.frozenColumnCount,
       frozenRow: this.frozenRowCount,
@@ -153,18 +221,23 @@ export class Example20 {
     // Set up some test columns.
     const mockDataset = [];
     for (let i = 0; i < 500; i++) {
+      const randomYear = 2000 + Math.floor(Math.random() * 10);
+      const randomMonth = Math.floor(Math.random() * 11);
+      const randomDay = Math.floor((Math.random() * 29));
+
       mockDataset[i] = {
         id: i,
         title: 'Task ' + i,
-        duration: Math.round(Math.random() * 25) + ' days',
+        cost: (i % 33 === 0) ? null : Math.random() * 10000,
+        duration: i % 8 ? (Math.round(Math.random() * 100) + '') : null,
         percentComplete: Math.round(Math.random() * 100),
-        start: '01/01/2009',
-        finish: '01/05/2009',
+        start: new Date(randomYear, randomMonth, randomDay),
+        finish: new Date(randomYear, (randomMonth + 1), randomDay),
         effortDriven: (i % 5 === 0),
-        title1: Math.round(Math.random() * 25),
-        title2: Math.round(Math.random() * 25),
-        title3: Math.round(Math.random() * 25),
-        title4: Math.round(Math.random() * 25),
+        title1: `Some Text ${Math.round(Math.random() * 25)}`,
+        title2: `Some Text ${Math.round(Math.random() * 25)}`,
+        title3: `Some Text ${Math.round(Math.random() * 25)}`,
+        title4: `Some Text ${Math.round(Math.random() * 25)}`,
       };
     }
     this.dataset = mockDataset;
@@ -186,6 +259,23 @@ export class Example20 {
         frozenRow: this.frozenRowCount
       });
     }
+  }
+
+  costDurationFormatter(row, cell, value, columnDef, dataContext) {
+    const costText = this.isNullUndefinedOrEmpty(dataContext.cost) ? 'n/a' : formatNumber(dataContext.cost, 0, 2, false, '$', '', '.', ',');
+    let durationText = 'n/a';
+    if (!this.isNullUndefinedOrEmpty(dataContext.duration) && dataContext.duration >= 0) {
+      durationText = `${dataContext.duration} ${dataContext.duration > 1 ? 'days' : 'day'}`;
+    }
+    return `<b>${costText}</b> | ${durationText}`;
+  }
+
+  isNullUndefinedOrEmpty(data: any) {
+    return (data === '' || data === null || data === undefined);
+  }
+
+  onValidationError(e, args) {
+    alert(args.validationResults.msg);
   }
 
   /** toggle dynamically, through slickgrid "setOptions()" the top/bottom pinned location */
