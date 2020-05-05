@@ -237,7 +237,7 @@ describe('DateEditor', () => {
         mockColumn.internalColumnEditor.validator = null;
         mockColumn.type = FieldType.dateTimeIsoAmPm;
         mockColumn.field = 'employee.startDate';
-        mockItemData = { id: 1, employee: { startDate: new Date(Date.UTC(2001, 0, 2, 16, 2, 2, 0)) }, isActive: true };
+        mockItemData = { id: 1, employee: { startDate: new Date(Date.UTC(2001, 3, 5, 16, 11, 33, 0)) }, isActive: true };
 
         const newDate = '2001-01-02T16:02:02.000+05:00';
         editor = new DateEditor(i18n, editorArguments);
