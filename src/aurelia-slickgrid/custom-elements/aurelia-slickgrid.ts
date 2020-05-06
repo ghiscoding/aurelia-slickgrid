@@ -757,6 +757,8 @@ export class AureliaSlickgridCustomElement {
     if (!options.enableFiltering && options.enablePagination && this._isLocalGrid) {
       options.enableFiltering = true;
       options.showHeaderRow = false;
+      this._hideHeaderRowAfterPageLoad = true;
+      this.sharedService.hideHeaderRowAfterPageLoad = true;
     }
 
     return options;
