@@ -9,6 +9,7 @@ export class SharedService {
   private _groupItemMetadataProvider: any;
   private _grid: any;
   private _gridOptions: GridOption;
+  private _hideHeaderRowAfterPageLoad = false;
   private _visibleColumns: Column[];
 
   // --
@@ -73,6 +74,15 @@ export class SharedService {
   /** Setter for the Grid Options */
   set groupItemMetadataProvider(groupItemMetadataProvider: any) {
     this._groupItemMetadataProvider = groupItemMetadataProvider;
+  }
+
+  /** Getter to know if user want to hide header row after 1st page load */
+  get hideHeaderRowAfterPageLoad(): boolean {
+    return this._hideHeaderRowAfterPageLoad;
+  }
+  /** Setter for knowing if user want to hide header row after 1st page load */
+  set hideHeaderRowAfterPageLoad(hideHeaderRowAfterPageLoad: boolean) {
+    this._hideHeaderRowAfterPageLoad = hideHeaderRowAfterPageLoad;
   }
 
   /** Getter for the Visible Columns in the grid */
