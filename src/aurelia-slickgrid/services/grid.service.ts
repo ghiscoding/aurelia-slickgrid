@@ -308,8 +308,10 @@ export class GridService {
     if (!this._grid || !this._gridOptions || !this._dataView) {
       throw new Error('We could not find SlickGrid Grid, DataView objects');
     }
-    if (!item || !item.hasOwnProperty('id')) {
-      throw new Error(`Adding an item requires the item to include an "id" property`);
+
+    const idPropName = this._gridOptions.datasetIdPropertyName || 'id';
+    if (!item || !item.hasOwnProperty(idPropName)) {
+      throw new Error(`Adding an item requires the item to include an "${idPropName}" property`);
     }
 
     // insert position top/bottom, defaults to top
@@ -434,9 +436,10 @@ export class GridService {
    */
   deleteItem(item: any, options?: GridServiceDeleteOption): number | string {
     options = { ...GridServiceDeleteOptionDefaults, ...options };
+    const idPropName = this._gridOptions.datasetIdPropertyName || 'id';
 
-    if (!item || !item.hasOwnProperty('id')) {
-      throw new Error(`Deleting an item requires the item to include an "id" property`);
+    if (!item || !item.hasOwnProperty(idPropName)) {
+      throw new Error(`Deleting an item requires the item to include an "${idPropName}" property`);
     }
     return this.deleteItemById(item.id, options);
   }
@@ -553,10 +556,11 @@ export class GridService {
    */
   updateItem(item: any, options?: GridServiceUpdateOption): number {
     options = { ...GridServiceUpdateOptionDefaults, ...options };
-    const itemId = (!item || !item.hasOwnProperty('id')) ? undefined : item.id;
+    const idPropName = this._gridOptions.datasetIdPropertyName || 'id';
+    const itemId = (!item || !item.hasOwnProperty(idPropName)) ? undefined : item[idPropName];
 
     if (itemId === undefined) {
-      throw new Error(`Calling Update of an item requires the item to include an "id" property`);
+      throw new Error(`Calling Update of an item requires the item to include an "${idPropName}" property`);
     }
 
     return this.updateItemById(itemId, item, options);
@@ -655,10 +659,11 @@ export class GridService {
    */
   upsertItem(item: any, options?: GridServiceInsertOption): { added: number | undefined, updated: number | undefined } {
     options = { ...GridServiceInsertOptionDefaults, ...options };
-    const itemId = (!item || !item.hasOwnProperty('id')) ? undefined : item.id;
+    const idPropName = this._gridOptions.datasetIdPropertyName || 'id';
+    const itemId = (!item || !item.hasOwnProperty(idPropName)) ? undefined : item[idPropName];
 
     if (itemId === undefined) {
-      throw new Error(`Calling Upsert of an item requires the item to include an "id" property`);
+      throw new Error(`Calling Upsert of an item requires the item to include an "${idPropName}" property`);
     }
 
     return this.upsertItemById(itemId, item, options);
