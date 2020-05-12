@@ -308,6 +308,7 @@ export class GridService {
     if (!this._grid || !this._gridOptions || !this._dataView) {
       throw new Error('We could not find SlickGrid Grid, DataView objects');
     }
+
     const idPropName = this._gridOptions.datasetIdPropertyName || 'id';
     if (!item || !item.hasOwnProperty(idPropName)) {
       throw new Error(`Adding an item requires the item to include an "${idPropName}" property`);
@@ -435,9 +436,9 @@ export class GridService {
    */
   deleteItem(item: any, options?: GridServiceDeleteOption): number | string {
     options = { ...GridServiceDeleteOptionDefaults, ...options };
-
     const idPropName = this._gridOptions.datasetIdPropertyName || 'id';
-    if (!item || !item.hasOwnProperty('id')) {
+
+    if (!item || !item.hasOwnProperty(idPropName)) {
       throw new Error(`Deleting an item requires the item to include an "${idPropName}" property`);
     }
     return this.deleteItemById(item.id, options);
@@ -555,9 +556,9 @@ export class GridService {
    */
   updateItem(item: any, options?: GridServiceUpdateOption): number {
     options = { ...GridServiceUpdateOptionDefaults, ...options };
-
     const idPropName = this._gridOptions.datasetIdPropertyName || 'id';
     const itemId = (!item || !item.hasOwnProperty(idPropName)) ? undefined : item[idPropName];
+
     if (itemId === undefined) {
       throw new Error(`Calling Update of an item requires the item to include an "${idPropName}" property`);
     }
@@ -660,6 +661,7 @@ export class GridService {
     options = { ...GridServiceInsertOptionDefaults, ...options };
     const idPropName = this._gridOptions.datasetIdPropertyName || 'id';
     const itemId = (!item || !item.hasOwnProperty(idPropName)) ? undefined : item[idPropName];
+
     if (itemId === undefined) {
       throw new Error(`Calling Upsert of an item requires the item to include an "${idPropName}" property`);
     }
