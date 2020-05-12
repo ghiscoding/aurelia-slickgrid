@@ -74,7 +74,6 @@ describe('Example 12: Localization (i18n)', () => {
     it('should reset filters and switch locale to French', () => {
       cy.get('#grid12')
         .find('button.slick-gridmenu-button')
-        .trigger('click')
         .click();
 
       cy.get(`.slick-gridmenu:visible`)
@@ -134,7 +133,6 @@ describe('Example 12: Localization (i18n)', () => {
     it('should reset filters before filtering duration', () => {
       cy.get('#grid12')
         .find('button.slick-gridmenu-button')
-        .trigger('click')
         .click();
 
       cy.get(`.slick-gridmenu:visible`)
@@ -190,7 +188,6 @@ describe('Example 12: Localization (i18n)', () => {
 
       cy.get('#grid12')
         .find('button.slick-gridmenu-button')
-        .trigger('click')
         .click();
 
       cy.get(`.slick-gridmenu:visible`)
