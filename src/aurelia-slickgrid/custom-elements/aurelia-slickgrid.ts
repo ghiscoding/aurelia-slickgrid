@@ -31,6 +31,7 @@ import {
   Pagination,
   ServicePagination,
   SlickEventHandler,
+  TreeDataOption,
 } from '../models/index';
 import {
   disposeAllSubscriptions,
@@ -47,6 +48,7 @@ import {
   ResizerService,
   SortService,
   toKebabCase,
+  convertParentChildArrayToHierarchicalView,
 } from '../services/index';
 import { executeBackendProcessesCallback, onBackendError, refreshBackendDataset } from '../services/backend-utilities';
 import { ExtensionUtility } from '../extensions/extensionUtility';
@@ -84,6 +86,7 @@ const DEFAULT_SLICKGRID_EVENT_PREFIX = 'sg';
 export class AureliaSlickgridCustomElement {
   private _columnDefinitions: Column[] = [];
   private _dataset: any[];
+  private _datasetHierarchical: any[];
   private _eventHandler: SlickEventHandler = new Slick.EventHandler();
   private _fixedHeight: number | null;
   private _fixedWidth: number | null;
@@ -114,6 +117,7 @@ export class AureliaSlickgridCustomElement {
   @bindable({ defaultBindingMode: bindingMode.twoWay }) totalItems: number;
   @bindable() customDataView: any;
   @bindable() dataset: any[];
+  @bindable() datasetHierarchical: any[];
   @bindable() gridId: string;
   @bindable() gridOptions: GridOption;
   @bindable() gridHeight: number;
@@ -239,6 +243,26 @@ export class AureliaSlickgridCustomElement {
 
     this.grid.init();
 
+    // load the data in the DataView (unless it's a hierarchical dataset, if so it will be loaded after the initial tree sort)
+    if (Array.isArray(this.dataset) && !this._datasetHierarchical) {
+      this.dataview.setItems(this.dataset, this.gridOptions.datasetIdPropertyName);
+    }
+
+    if (this.gridOptions && this.gridOptions.enableTreeData) {
+      if (!this.gridOptions.treeDataOptions || !this.gridOptions.treeDataOptions.columnId) {
+        throw new Error('[Aurelia-Slickgrid] When enabling tree data, you must also provide the "treeDataOption" property in your Grid Options with "childrenPropName" or "parentPropName" (depending if your array is hierarchical or flat) for the Tree Data to work properly');
+      }
+
+      // anytime the flat dataset changes, we need to update our hierarchical dataset
+      // this could be triggered by a DataView setItems or updateItem
+      this._eventHandler.subscribe(this.dataview.onRowsChanged, () => {
+        const items = this.dataview.getItems();
+        if (items.length > 0 && !this._isDatasetInitialized) {
+          this.sharedService.hierarchicalDataset = this.SortComparer(items);
+        }
+      });
+    }
+
     if (!this.customDataView && (this.dataview && this.dataview.beginUpdate && this.dataview.setItems && this.dataview.endUpdate)) {
       this.dataview.beginUpdate();
       this.dataview.setItems(this._dataset, this.gridOptions.datasetIdPropertyName);
@@ -346,6 +370,7 @@ export class AureliaSlickgridCustomElement {
       groupingService: this.groupingAndColspanService,
       extensionService: this.extensionService,
       paginationService: this.paginationService,
+      extensionUtility: this.extensionUtility,
 
       /** @deprecated please use "extensionService" instead */
       pluginService: this.extensionService,
@@ -469,6 +494,21 @@ export class AureliaSlickgridCustomElement {
     // we can assume that if the oldValue was empty then we are on first load
     if (this.gridOptions.autoFitColumnsOnFirstLoad && (!oldValue || oldValue.length < 1)) {
       this.grid.autosizeColumns();
+    }
+  }
+
+  datasetHierarchicalChanged(hierarchicalDataset: any[]) {
+    this._datasetHierarchical = hierarchicalDataset;
+    this.sharedService.hierarchicalDataset = hierarchicalDataset;
+
+    if (this.filterService && this.filterService.clearFilters) {
+      this.filterService.clearFilters();
+    }
+
+    // when a hierarchical dataset is set afterward, we can reset the flat dataset and call a tree data sort that will overwrite the flat dataset
+    if (this.sortService && this.sortService.processTreeDataInitialSort) {
+      this.dataview.setItems([], this.gridOptions.datasetIdPropertyName);
+      this.sortService.processTreeDataInitialSort();
     }
   }
 
@@ -809,6 +849,11 @@ export class AureliaSlickgridCustomElement {
           this.loadRowSelectionPresetWhenExists();
         }
         this._isDatasetInitialized = true;
+
+        // also update the hierarchical dataset
+        if (dataset.length > 0 && this.gridOptions.treeDataOptions) {
+          this.sharedService.hierarchicalDataset = this.SortComparer(dataset);
+        }
       }
 
       if (dataset) {
@@ -994,6 +1039,13 @@ export class AureliaSlickgridCustomElement {
         this.customFooterOptions = this.gridOptions.customFooterOptions || {};
       }
     }
+  }
+
+  private SortComparer(flatDataset: any[]): any[] {
+    const dataViewIdIdentifier = this.gridOptions && this.gridOptions.datasetIdPropertyName || 'id';
+    const treeDataOpt: TreeDataOption = this.gridOptions && this.gridOptions.treeDataOptions || { columnId: '' };
+    const treeDataOptions = { ...treeDataOpt, identifierPropName: treeDataOpt.identifierPropName || dataViewIdIdentifier };
+    return convertParentChildArrayToHierarchicalView(flatDataset, treeDataOptions);
   }
 
   /**

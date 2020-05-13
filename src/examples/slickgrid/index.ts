@@ -33,6 +33,7 @@ export class Index {
       { route: 'example24', moduleId: PLATFORM.moduleName('./example24'), name: 'example24', nav: true, title: '24- Cell & Context Menu' },
       { route: 'example25', moduleId: PLATFORM.moduleName('./example25'), name: 'example25', nav: true, title: '25- GraphQL without Pagination' },
       { route: 'example26', moduleId: PLATFORM.moduleName('./example26'), name: 'example26', nav: true, title: '26- Use of Aurelia Components' },
+      { route: 'example27', moduleId: PLATFORM.moduleName('./example27'), name: 'example27', nav: true, title: '27- Tree Data with Parent/Child' },
     ];
 
     config.map(mapping);

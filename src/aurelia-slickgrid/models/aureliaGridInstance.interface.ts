@@ -12,6 +12,7 @@ import {
   ResizerService,
   SortService
 } from '../services/index';
+import { ExtensionUtility } from '../extensions/extensionUtility';
 
 export interface AureliaGridInstance {
   /** Slick DataView object */
@@ -33,6 +34,9 @@ export interface AureliaGridInstance {
 
   /** Extension (Plugins & Controls) Service */
   extensionService: ExtensionService;
+
+  /** Extension Utility */
+  extensionUtility: ExtensionUtility;
 
   /** @deprecated, use `extensionService` instead. Plugin and Control Service */
   pluginService: ExtensionService;
