@@ -7,15 +7,23 @@ import {
   Formatters,
   GridOption,
 } from '../../aurelia-slickgrid';
+import './example27.scss'; // provide custom CSS/SASS styling
 
 const NB_ITEMS = 200;
 
 @autoinject()
 export class Example27 {
-  title = 'Example 27: Tree Data <small>(from a flat dataset with <code>parentId</code> references)</small>';
-  subTitle = `
-    Tree Data View with Parent/Child references and defined Tree Level "indent" property.
-  `;
+  title = 'Example 27: Tree Data <small>(from a flat dataset with <code>parentId</code> references) - Material Design Styling Theme</small>';
+  subTitle = `<ul>
+    <li>Styling - Material Theme - (you might need to refresh to see correct styling because of the browser cache)</li>
+    <li>It is assumed that your dataset will have Parent/Child references AND also Tree Level (indent) property.</li>
+    <li>Styling - Salesforce Theme</li>
+    <ul>
+      <li>The Material Design Theme was created with SASS and compiled in CSS (slickgrid-theme-material.scss)</li>
+      <li>We use a small subset of <a href="https://materialdesignicons.com/" target="_blank">Material Design Icons</a></li>
+      <li>you might need to refresh the page to clear the browser cache and see the correct theme</li>
+    </ul>
+  </ul>`;
   aureliaGrid: AureliaGridInstance;
   dataViewObj: any;
   gridObj: any;
@@ -23,7 +31,6 @@ export class Example27 {
   columnDefinitions: Column[];
   dataset: any[];
   datasetHierarchical: any[] = [];
-  durationOrderByCount = false;
 
   constructor() {
     // define the grid options & columns and then create the grid itself
@@ -93,6 +100,29 @@ export class Example27 {
         columnId: 'title',
         levelPropName: 'indent',
         parentPropName: 'parentId'
+      },
+      // change header/cell row height for material design theme
+      headerRowHeight: 45,
+      rowHeight: 40,
+
+      // use Material Design SVG icons
+      gridMenu: {
+        iconCssClass: 'mdi mdi-menu',
+        iconClearAllFiltersCommand: 'mdi mdi-filter-remove-outline',
+        iconClearAllSortingCommand: 'mdi mdi-swap-vertical text-danger',
+        iconExportCsvCommand: 'mdi mdi-download',
+        iconExportExcelCommand: 'mdi mdi-file-excel-outline text-success has-text-success',
+        iconExportTextDelimitedCommand: 'mdi mdi-download',
+        iconRefreshDatasetCommand: 'mdi mdi-sync',
+        iconToggleFilterCommand: 'mdi mdi-flip-vertical',
+        iconTogglePreHeaderCommand: 'mdi mdi-flip-vertical',
+      },
+      headerMenu: {
+        iconClearFilterCommand: 'mdi mdi mdi-filter-remove-outline text-danger',
+        iconClearSortCommand: 'mdi mdi-swap-vertical',
+        iconSortAscCommand: 'mdi mdi-sort-ascending',
+        iconSortDescCommand: 'mdi mdi-flip-v mdi-sort-descending',
+        iconColumnHideCommand: 'mdi mdi-close',
       }
     };
   }
@@ -125,16 +155,18 @@ export class Example27 {
     this.dataViewObj.addItem(newItem);
     this.dataset = this.dataViewObj.getItems();
 
-    // force a resort
+    // force a resort because of the tree data structure
     const titleColumn = this.columnDefinitions.find((col) => col.id === 'title');
     this.aureliaGrid.sortService.onLocalSortChanged(this.gridObj, this.dataViewObj, [{ columnId: 'title', sortCol: titleColumn, sortAsc: true }]);
 
     // update dataset and re-render (invalidate) the grid
     this.gridObj.invalidate();
 
-    // scroll to the new row
-    const rowIndex = this.dataViewObj.getIdxById(newItem.id);
-    this.gridObj.scrollRowIntoView(rowIndex, false);
+    // scroll into the position, after insertion cycle, where the item was added
+    setTimeout(() => {
+      const rowIndex = this.dataViewObj.getRowById(newItem.id);
+      this.gridObj.scrollRowIntoView(rowIndex + 3);
+    }, 0);
   }
 
   collapseAll() {
