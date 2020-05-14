@@ -22,6 +22,7 @@ import {
   ResizerService,
   SharedService,
   SortService,
+  TreeDataService,
 } from '../../services';
 import {
   Column,
@@ -160,6 +161,13 @@ const sortServiceStub = {
   dispose: jest.fn(),
   loadGridSorters: jest.fn(),
 } as unknown as SortService;
+
+const treeDataServiceStub = {
+  init: jest.fn(),
+  dispose: jest.fn(),
+  handleOnCellClick: jest.fn(),
+  toggleTreeDataCollapse: jest.fn(),
+} as unknown as TreeDataService;
 
 const mockGroupItemMetaProvider = {
   init: jest.fn(),
@@ -346,7 +354,8 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
       paginationServiceStub,
       resizerServiceStub,
       sharedService,
-      sortServiceStub
+      sortServiceStub,
+      treeDataServiceStub,
     );
 
     i18n.setup({

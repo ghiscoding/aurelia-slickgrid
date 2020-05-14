@@ -10,9 +10,9 @@ import {
   GroupingAndColspanService,
   PaginationService,
   ResizerService,
-  SortService
+  SortService,
+  TreeDataService,
 } from '../services/index';
-import { ExtensionUtility } from '../extensions/extensionUtility';
 
 export interface AureliaGridInstance {
   /** Slick DataView object */
@@ -34,9 +34,6 @@ export interface AureliaGridInstance {
 
   /** Extension (Plugins & Controls) Service */
   extensionService: ExtensionService;
-
-  /** Extension Utility */
-  extensionUtility: ExtensionUtility;
 
   /** @deprecated, use `extensionService` instead. Plugin and Control Service */
   pluginService: ExtensionService;
@@ -70,4 +67,7 @@ export interface AureliaGridInstance {
 
   /** Sort Service */
   sortService: SortService;
+
+  /** Tree Data View Service */
+  treeDataService: TreeDataService;
 }

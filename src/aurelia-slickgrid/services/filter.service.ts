@@ -643,8 +643,9 @@ export class FilterService {
    * @param filters array
    * @param triggerEvent defaults to True, do we want to emit a filter changed event?
    * @param triggerBackendQuery defaults to True, which will query the backend.
+   * @param triggerOnSearchChangeEvent defaults to False, which will execute onSearch callback
    */
-  updateFilters(filters: CurrentFilter[], emitChangedEvent = true, triggerBackendQuery = true) {
+  updateFilters(filters: CurrentFilter[], emitChangedEvent = true, triggerBackendQuery = true, triggerOnSearchChangeEvent = false) {
     if (!this._filtersMetadata || this._filtersMetadata.length === 0 || !this._gridOptions || !this._gridOptions.enableFiltering) {
       throw new Error('[Aurelia-Slickgrid] in order to use "updateFilters" method, you need to have Filterable Columns defined in your grid and "enableFiltering" set in your Grid Options');
     }
@@ -662,6 +663,10 @@ export class FilterService {
           const newOperator = newFilter.operator || uiFilter.defaultOperator;
           this.updateColumnFilters(newFilter.searchTerms, uiFilter.columnDef, newOperator);
           uiFilter.setValues(newFilter.searchTerms, newOperator);
+
+          if (triggerOnSearchChangeEvent) {
+            this.callbackSearchEvent(null, { columnDef: uiFilter.columnDef, operator: newOperator, searchTerms: newFilter.searchTerms, shouldTriggerQuery: true });
+          }
         }
       });
 

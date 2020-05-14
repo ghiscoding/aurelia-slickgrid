@@ -18,6 +18,7 @@ import { ExtensionUtility } from './extensionUtility';
 import { exportWithFormatterWhenDefined } from '../services/export-utilities';
 import { ExportService } from '../services/export.service';
 import { ExcelExportService } from '../services/excelExport.service';
+import { TreeDataService } from '../services/treeData.service';
 import { SharedService } from '../services/shared.service';
 
 // using external non-typed js libraries
@@ -30,6 +31,7 @@ declare var Slick: any;
   ExtensionUtility,
   Optional.of(I18N),
   SharedService,
+  TreeDataService,
 )
 export class ContextMenuExtension implements Extension {
   private _addon: any;
@@ -42,6 +44,7 @@ export class ContextMenuExtension implements Extension {
     private extensionUtility: ExtensionUtility,
     private i18n: I18N,
     private sharedService: SharedService,
+    private treeDataService: TreeDataService,
   ) {
     this._eventHandler = new Slick.EventHandler();
   }
@@ -283,10 +286,12 @@ export class ContextMenuExtension implements Extension {
     // -- Grouping Commands
     if (gridOptions && (gridOptions.enableGrouping || gridOptions.enableDraggableGrouping || gridOptions.enableTreeData)) {
       // add a divider (separator) between the top sort commands and the other clear commands
-      menuCustomItems.push({ divider: true, command: '', positionOrder: 54 });
+      if (contextMenu && !contextMenu.hideCopyCellValueCommand) {
+        menuCustomItems.push({ divider: true, command: '', positionOrder: 54 });
+      }
 
       // show context menu: Clear Grouping
-      if (gridOptions && contextMenu && !contextMenu.hideClearAllGrouping) {
+      if (gridOptions && !gridOptions.enableTreeData && contextMenu && !contextMenu.hideClearAllGrouping) {
         const commandName = 'clear-grouping';
         if (!originalCustomItems.find((item: MenuCommandItem) => item.hasOwnProperty('command') && item.command === commandName)) {
           menuCustomItems.push(
@@ -320,7 +325,7 @@ export class ContextMenuExtension implements Extension {
               positionOrder: 56,
               action: () => {
                 if (gridOptions.enableTreeData) {
-                  this.extensionUtility.toggleTreeDataCollapse(true);
+                  this.treeDataService.toggleTreeDataCollapse(true);
                 } else {
                   dataView.collapseAllGroups();
                 }
@@ -351,7 +356,7 @@ export class ContextMenuExtension implements Extension {
               positionOrder: 57,
               action: () => {
                 if (gridOptions.enableTreeData) {
-                  this.extensionUtility.toggleTreeDataCollapse(false);
+                  this.treeDataService.toggleTreeDataCollapse(false);
                 } else {
                   dataView.expandAllGroups();
                 }

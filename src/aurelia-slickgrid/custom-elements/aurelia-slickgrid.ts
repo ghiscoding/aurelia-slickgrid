@@ -34,6 +34,7 @@ import {
   TreeDataOption,
 } from '../models/index';
 import {
+  convertParentChildArrayToHierarchicalView,
   disposeAllSubscriptions,
   ExcelExportService,
   ExportService,
@@ -48,7 +49,7 @@ import {
   ResizerService,
   SortService,
   toKebabCase,
-  convertParentChildArrayToHierarchicalView,
+  TreeDataService,
 } from '../services/index';
 import { executeBackendProcessesCallback, onBackendError, refreshBackendDataset } from '../services/backend-utilities';
 import { ExtensionUtility } from '../extensions/extensionUtility';
@@ -82,6 +83,7 @@ const DEFAULT_SLICKGRID_EVENT_PREFIX = 'sg';
   ResizerService,
   SharedService,
   SortService,
+  TreeDataService,
 )
 export class AureliaSlickgridCustomElement {
   private _columnDefinitions: Column[] = [];
@@ -144,6 +146,7 @@ export class AureliaSlickgridCustomElement {
     private resizerService: ResizerService,
     private sharedService: SharedService,
     private sortService: SortService,
+    private treeDataService: TreeDataService,
   ) {
     this.serviceList = [
       exportService,
@@ -155,7 +158,8 @@ export class AureliaSlickgridCustomElement {
       groupingAndColspanService,
       paginationService,
       resizerService,
-      sortService
+      sortService,
+      treeDataService,
     ];
   }
 
@@ -243,30 +247,26 @@ export class AureliaSlickgridCustomElement {
 
     this.grid.init();
 
-    // load the data in the DataView (unless it's a hierarchical dataset, if so it will be loaded after the initial tree sort)
-    if (Array.isArray(this.dataset) && !this._datasetHierarchical) {
-      this.dataview.setItems(this.dataset, this.gridOptions.datasetIdPropertyName);
-    }
-
-    if (this.gridOptions && this.gridOptions.enableTreeData) {
-      if (!this.gridOptions.treeDataOptions || !this.gridOptions.treeDataOptions.columnId) {
-        throw new Error('[Aurelia-Slickgrid] When enabling tree data, you must also provide the "treeDataOption" property in your Grid Options with "childrenPropName" or "parentPropName" (depending if your array is hierarchical or flat) for the Tree Data to work properly');
-      }
-
-      // anytime the flat dataset changes, we need to update our hierarchical dataset
-      // this could be triggered by a DataView setItems or updateItem
-      this._eventHandler.subscribe(this.dataview.onRowsChanged, () => {
-        const items = this.dataview.getItems();
-        if (items.length > 0 && !this._isDatasetInitialized) {
-          this.sharedService.hierarchicalDataset = this.SortComparer(items);
-        }
-      });
-    }
-
     if (!this.customDataView && (this.dataview && this.dataview.beginUpdate && this.dataview.setItems && this.dataview.endUpdate)) {
       this.dataview.beginUpdate();
       this.dataview.setItems(this._dataset, this.gridOptions.datasetIdPropertyName);
       this.dataview.endUpdate();
+
+      // when dealing with Tree Data View
+      if (this.gridOptions && this.gridOptions.enableTreeData) {
+        if (!this.gridOptions.treeDataOptions || !this.gridOptions.treeDataOptions.columnId) {
+          throw new Error('[Aurelia-Slickgrid] When enabling tree data, you must also provide the "treeDataOption" property in your Grid Options with "childrenPropName" or "parentPropName" (depending if your array is hierarchical or flat) for the Tree Data to work properly');
+        }
+
+        // anytime the flat dataset changes, we need to update our hierarchical dataset
+        // this could be triggered by a DataView setItems or updateItem
+        this._eventHandler.subscribe(this.dataview.onRowsChanged, () => {
+          const items = this.dataview.getItems();
+          if (items.length > 0 && !this._isDatasetInitialized) {
+            this.sharedService.hierarchicalDataset = this.treeDataSortComparer(items);
+          }
+        });
+      }
 
       // if you don't want the items that are not visible (due to being filtered out or being on a different page)
       // to stay selected, pass 'false' to the second arg
@@ -342,6 +342,11 @@ export class AureliaSlickgridCustomElement {
       this.excelExportService.init(this.grid, this.dataview);
     }
 
+    // when using Tree Data View
+    if (this.gridOptions.enableTreeData) {
+      this.treeDataService.init(this.grid);
+    }
+
     // bind the Backend Service API callback functions only after the grid is initialized
     // because the preProcess() and onInit() might get triggered
     if (this.gridOptions && this.gridOptions.backendServiceApi) {
@@ -370,12 +375,12 @@ export class AureliaSlickgridCustomElement {
       groupingService: this.groupingAndColspanService,
       extensionService: this.extensionService,
       paginationService: this.paginationService,
-      extensionUtility: this.extensionUtility,
 
       /** @deprecated please use "extensionService" instead */
       pluginService: this.extensionService,
       resizerService: this.resizerService,
       sortService: this.sortService,
+      treeDataService: this.treeDataService,
     };
 
     // expose all necessary Plugin Events through dispatch event to the custom element
@@ -506,7 +511,7 @@ export class AureliaSlickgridCustomElement {
     }
 
     // when a hierarchical dataset is set afterward, we can reset the flat dataset and call a tree data sort that will overwrite the flat dataset
-    if (this.sortService && this.sortService.processTreeDataInitialSort) {
+    if (this.sortService && this.sortService.processTreeDataInitialSort && this.gridOptions && this.gridOptions.enableTreeData) {
       this.dataview.setItems([], this.gridOptions.datasetIdPropertyName);
       this.sortService.processTreeDataInitialSort();
     }
@@ -852,7 +857,7 @@ export class AureliaSlickgridCustomElement {
 
         // also update the hierarchical dataset
         if (dataset.length > 0 && this.gridOptions.treeDataOptions) {
-          this.sharedService.hierarchicalDataset = this.SortComparer(dataset);
+          this.sharedService.hierarchicalDataset = this.treeDataSortComparer(dataset);
         }
       }
 
@@ -1041,7 +1046,7 @@ export class AureliaSlickgridCustomElement {
     }
   }
 
-  private SortComparer(flatDataset: any[]): any[] {
+  private treeDataSortComparer(flatDataset: any[]): any[] {
     const dataViewIdIdentifier = this.gridOptions && this.gridOptions.datasetIdPropertyName || 'id';
     const treeDataOpt: TreeDataOption = this.gridOptions && this.gridOptions.treeDataOptions || { columnId: '' };
     const treeDataOptions = { ...treeDataOpt, identifierPropName: treeDataOpt.identifierPropName || dataViewIdIdentifier };

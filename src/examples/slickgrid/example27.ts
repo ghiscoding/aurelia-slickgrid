@@ -138,27 +138,11 @@ export class Example27 {
   }
 
   collapseAll() {
-    this.aureliaGrid.extensionUtility.toggleTreeDataCollapse(true);
+    this.aureliaGrid.treeDataService.toggleTreeDataCollapse(true);
   }
 
   expandAll() {
-    this.aureliaGrid.extensionUtility.toggleTreeDataCollapse(false);
-  }
-
-  handleOnClick(event: any, args) {
-    if (event && args) {
-      const targetElm = event.target || {};
-      const hasToggleClass = targetElm.className.indexOf('toggle') >= 0 || false;
-      if (hasToggleClass) {
-        const item = this.dataViewObj.getItem(args.row);
-        if (item) {
-          item.__collapsed = !item.__collapsed ? true : false;
-          this.dataViewObj.updateItem(item.id, item);
-          this.gridObj.invalidate();
-        }
-        event.stopImmediatePropagation();
-      }
-    }
+    this.aureliaGrid.treeDataService.toggleTreeDataCollapse(false);
   }
 
   logExpandedStructure() {
