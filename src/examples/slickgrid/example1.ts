@@ -47,7 +47,7 @@ export class Example1 {
       ...{
         enablePagination: true,
         pagination: {
-          pageSizes: [5, 10, 15, 20, 25, 50, 75, 100],
+          pageSizes: [5, 10, 20, 25, 50],
           pageSize: 5
         },
       }
