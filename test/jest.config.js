@@ -19,6 +19,7 @@ module.exports = {
   coverageDirectory: '<rootDir>/test/jest-coverage',
   coveragePathIgnorePatterns: [
     'example-data.js',
+    'global-grid-options.ts',
     '\\.d\\.ts$',
     '<rootDir>/node_modules/'
   ],
