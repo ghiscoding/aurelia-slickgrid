@@ -16,9 +16,9 @@ export class Example28 {
   title = 'Example 28: Tree Data <small>(from a Hierarchical Dataset) - Salesforce Styling Theme</small>';
   subTitle = `<ul>
     <li><b>NOTE:</b> The grid will automatically sort Ascending with the column that has the Tree Data, you could add a "sortByFieldId" in your column "treeData" option if you wish to sort on a different column</li>
-    <li>Styling - Salesforce Theme</li>
+    <li><b>Styling - Salesforce Theme</b></li>
     <ul>
-      <li>The Salesforce Theme was created with SASS and compiled in CSS (slickgrid-theme-salesforce.scss)</li>
+      <li>The Salesforce Theme was created with SASS and compiled in CSS (<a href="https://github.com/ghiscoding/aurelia-slickgrid/blob/master/src/aurelia-slickgrid/styles/slickgrid-theme-salesforce.scss" target="_blank">slickgrid-theme-salesforce.scss</a>), you can override any of its SASS variables</li>
       <li>We use a small subset of <a href="https://materialdesignicons.com/" target="_blank">Material Design Icons</a></li>
       <li>you might need to refresh the page to clear the browser cache and see the correct theme</li>
     </ul>

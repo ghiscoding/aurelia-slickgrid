@@ -15,11 +15,14 @@ const NB_ITEMS = 200;
 export class Example27 {
   title = 'Example 27: Tree Data <small>(from a flat dataset with <code>parentId</code> references) - Material Design Styling Theme</small>';
   subTitle = `<ul>
-    <li>Styling - Material Theme - (you might need to refresh to see correct styling because of the browser cache)</li>
     <li>It is assumed that your dataset will have Parent/Child references AND also Tree Level (indent) property.</li>
-    <li>Styling - Salesforce Theme</li>
     <ul>
-      <li>The Material Design Theme was created with SASS and compiled in CSS (slickgrid-theme-material.scss)</li>
+      <li>If you do not have the Tree Level (indent), you could call "convertParentChildArrayToHierarchicalView()" then call "convertHierarchicalViewToParentChildArray()"</li>
+      <li>You could also pass the result of "convertParentChildArrayToHierarchicalView()" to "dataset-hierarchical.bind" as defined in the next Hierarchical Example</li>
+    </ul>
+    <li><b>Styling - Material Theme</b></li>
+    <ul>
+      <li>The Material Theme was created with SASS and compiled in CSS (<a href="https://github.com/ghiscoding/aurelia-slickgrid/blob/master/src/aurelia-slickgrid/styles/slickgrid-theme-material.scss" target="_blank">slickgrid-theme-material.scss</a>), you can override any of its SASS variables</li>
       <li>We use a small subset of <a href="https://materialdesignicons.com/" target="_blank">Material Design Icons</a></li>
       <li>you might need to refresh the page to clear the browser cache and see the correct theme</li>
     </ul>
