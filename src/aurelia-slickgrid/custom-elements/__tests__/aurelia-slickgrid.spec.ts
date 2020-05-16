@@ -2,6 +2,13 @@ import { StageComponent } from 'aurelia-testing';
 import { bootstrap } from 'aurelia-bootstrapper';
 import { PLATFORM } from 'aurelia-pal';
 import { SlickgridConfig } from '../../slickgrid-config';
+import { SharedService } from '../../services/shared.service';
+import { GridOption } from '../../models';
+import * as utilities from '../../services/utilities';
+
+const mockConvertParentChildArray = jest.fn();
+// @ts-ignore
+utilities.convertParentChildArrayToHierarchicalView = mockConvertParentChildArray;
 
 const eventAggregator = {
   publish: jest.fn(),
@@ -114,6 +121,26 @@ describe('Aurelia-Slickgrid Custom Component', () => {
 
     expect(gridElement.innerHTML).toContain('grid1');
     expect(gridElement.id).toBe('slickGridContainer-grid1');
+  });
+
+  it('should convert parent/child dataset to hierarchical dataset when Tree Data is enabled and "onRowsChanged" was triggered', async (done) => {
+    const mockFlatDataset = [{ id: 0, file: 'documents' }, { id: 1, file: 'vacation.txt', parentId: 0 }];
+    const hierarchicalSpy = jest.spyOn(SharedService.prototype, 'hierarchicalDataset', 'set');
+
+    await customElement.manuallyHandleLifecycle().create(bootstrap);
+    await customElement.bind({ columnDefinitions: [], gridOptions: { enableTreeData: true, treeDataOptions: { columnId: 'file' } } as GridOption });
+    await customElement.attached();
+    const gridElement = customElement.element.querySelector('.gridPane');
+    customElement.viewModel.dataset = mockFlatDataset;
+
+    expect(gridElement.innerHTML).toContain('grid1');
+    expect(gridElement.id).toBe('slickGridContainer-grid1');
+
+    setTimeout(() => {
+      expect(hierarchicalSpy).toHaveBeenCalled();
+      expect(mockConvertParentChildArray).toHaveBeenCalled();
+      done();
+    }, 51)
   });
 
   it('should dispose & detached the grid when disposing of the element', async () => {

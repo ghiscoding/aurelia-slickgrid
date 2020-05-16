@@ -1,4 +1,4 @@
-import { autoinject } from 'aurelia-framework';
+import { autoinject, bindable } from 'aurelia-framework';
 import {
   AureliaGridInstance,
   Column,
@@ -29,7 +29,7 @@ export class Example28 {
   gridOptions: GridOption;
   columnDefinitions: Column[];
   datasetHierarchical: any[] = [];
-  searchString = '';
+  @bindable() searchString = '';
 
   constructor() {
     // define the grid options & columns and then create the grid itself
@@ -93,6 +93,15 @@ export class Example28 {
       rowHeight: 33,
 
       // use Material Design SVG icons
+      contextMenu: {
+        iconCollapseAllGroupsCommand: 'mdi mdi-arrow-collapse',
+        iconExpandAllGroupsCommand: 'mdi mdi-arrow-expand',
+        iconClearGroupingCommand: 'mdi mdi-close',
+        iconCopyCellValueCommand: 'mdi mdi-content-copy',
+        iconExportCsvCommand: 'mdi mdi-download',
+        iconExportExcelCommand: 'mdi mdi-file-excel-outline text-success has-text-success',
+        iconExportTextDelimitedCommand: 'mdi mdi-download',
+      },
       gridMenu: {
         iconCssClass: 'mdi mdi-menu',
         iconClearAllFiltersCommand: 'mdi mdi-filter-remove-outline',
@@ -115,12 +124,10 @@ export class Example28 {
   }
 
   clearSearch() {
-    this.searchFile(new KeyboardEvent('keyup', { code: '', bubbles: true, cancelable: true }));
-    document.querySelector<HTMLInputElement>('input.search').value = '';
+    this.searchString = '';
   }
 
-  searchFile(event: KeyboardEvent) {
-    this.searchString = (event.target as HTMLInputElement)?.value || '';
+  searchStringChanged() {
     this.updateFilter();
   }
 
@@ -208,11 +215,11 @@ export class Example28 {
   }
 
   logExpandedStructure() {
-    console.log('exploded array', this.datasetHierarchical /* , JSON.stringify(explodedArray, null, 2) */);
+    console.log('exploded array', this.aureliaGrid.treeDataService.datasetHierarchical /* , JSON.stringify(explodedArray, null, 2) */);
   }
 
   logFlatStructure() {
-    console.log('flat array', this.dataViewObj.getItems() /* , JSON.stringify(outputFlatArray, null, 2) */);
+    console.log('flat array', this.aureliaGrid.treeDataService.dataset /* , JSON.stringify(outputFlatArray, null, 2) */);
   }
 
   mockDataset() {

@@ -3,7 +3,7 @@
   <div class="subtitle" innerhtml.bind="subTitle"></div>
 
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-7">
       <button click.delegate="addNewFile()" class="btn btn-sm btn-info">
         <span class="icon mdi mdi-plus"></span>
         <span>Add New Pop Song</span>
@@ -22,6 +22,17 @@
       <button click.delegate="logExpandedStructure()" class="btn btn-default btn-sm">
         <span>Log Expanded Structure</span>
       </button>
+    </div>
+
+    <div class="col-md-5">
+      <div class="input-group">
+        <input type="text" class="form-control" value.bind="searchString">
+        <div class="input-group-btn">
+          <button class="btn btn-default" click.delegate="clearSearch()">
+            <span class="icon mdi mdi-close-thick"></span>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 

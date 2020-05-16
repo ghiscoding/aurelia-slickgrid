@@ -106,6 +106,15 @@ export class Example27 {
       rowHeight: 40,
 
       // use Material Design SVG icons
+      contextMenu: {
+        iconCollapseAllGroupsCommand: 'mdi mdi-arrow-collapse',
+        iconExpandAllGroupsCommand: 'mdi mdi-arrow-expand',
+        iconClearGroupingCommand: 'mdi mdi-close',
+        iconCopyCellValueCommand: 'mdi mdi-content-copy',
+        iconExportCsvCommand: 'mdi mdi-download',
+        iconExportExcelCommand: 'mdi mdi-file-excel-outline text-success has-text-success',
+        iconExportTextDelimitedCommand: 'mdi mdi-download',
+      },
       gridMenu: {
         iconCssClass: 'mdi mdi-menu',
         iconClearAllFiltersCommand: 'mdi mdi-filter-remove-outline',
@@ -147,23 +156,22 @@ export class Example27 {
       parentId: parentItemFound.id,
       title: `Task ${newId}`,
       duration: '1 day',
-      percentComplete: 0,
+      percentComplete: Math.round(Math.random() * 100),
       start: new Date(),
       finish: new Date(),
       effortDriven: false
     };
     this.dataViewObj.addItem(newItem);
-    this.dataset = this.dataViewObj.getItems();
+    const dataset = this.dataViewObj.getItems();
+    this.dataset = [...dataset]; // make a copy to trigger a dataset refresh
 
+    // add setTimeout to wait a full cycle because datasetChanged needs a full cycle
     // force a resort because of the tree data structure
-    const titleColumn = this.columnDefinitions.find((col) => col.id === 'title');
-    this.aureliaGrid.sortService.onLocalSortChanged(this.gridObj, this.dataViewObj, [{ columnId: 'title', sortCol: titleColumn, sortAsc: true }]);
-
-    // update dataset and re-render (invalidate) the grid
-    this.gridObj.invalidate();
-
-    // scroll into the position, after insertion cycle, where the item was added
     setTimeout(() => {
+      const titleColumn = this.columnDefinitions.find(col => col.id === 'title');
+      this.aureliaGrid.sortService.onLocalSortChanged(this.gridObj, this.dataViewObj, [{ columnId: 'title', sortCol: titleColumn, sortAsc: true }]);
+
+      // scroll into the position, after insertion cycle, where the item was added
       const rowIndex = this.dataViewObj.getRowById(newItem.id);
       this.gridObj.scrollRowIntoView(rowIndex + 3);
     }, 0);
@@ -178,11 +186,11 @@ export class Example27 {
   }
 
   logExpandedStructure() {
-    console.log('exploded array', this.datasetHierarchical /* , JSON.stringify(explodedArray, null, 2) */);
+    console.log('exploded array', this.aureliaGrid.treeDataService.datasetHierarchical /* , JSON.stringify(explodedArray, null, 2) */);
   }
 
   logFlatStructure() {
-    console.log('flat array', this.dataViewObj.getItems() /* , JSON.stringify(outputFlatArray, null, 2) */);
+    console.log('flat array', this.aureliaGrid.treeDataService.dataset /* , JSON.stringify(outputFlatArray, null, 2) */);
   }
 
   mockData(count: number) {

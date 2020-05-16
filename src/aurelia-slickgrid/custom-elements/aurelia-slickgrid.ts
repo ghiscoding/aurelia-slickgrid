@@ -88,7 +88,6 @@ const DEFAULT_SLICKGRID_EVENT_PREFIX = 'sg';
 export class AureliaSlickgridCustomElement {
   private _columnDefinitions: Column[] = [];
   private _dataset: any[];
-  private _datasetHierarchical: any[];
   private _eventHandler: SlickEventHandler = new Slick.EventHandler();
   private _fixedHeight: number | null;
   private _fixedWidth: number | null;
@@ -251,22 +250,6 @@ export class AureliaSlickgridCustomElement {
       this.dataview.beginUpdate();
       this.dataview.setItems(this._dataset, this.gridOptions.datasetIdPropertyName);
       this.dataview.endUpdate();
-
-      // when dealing with Tree Data View
-      if (this.gridOptions && this.gridOptions.enableTreeData) {
-        if (!this.gridOptions.treeDataOptions || !this.gridOptions.treeDataOptions.columnId) {
-          throw new Error('[Aurelia-Slickgrid] When enabling tree data, you must also provide the "treeDataOption" property in your Grid Options with "childrenPropName" or "parentPropName" (depending if your array is hierarchical or flat) for the Tree Data to work properly');
-        }
-
-        // anytime the flat dataset changes, we need to update our hierarchical dataset
-        // this could be triggered by a DataView setItems or updateItem
-        this._eventHandler.subscribe(this.dataview.onRowsChanged, () => {
-          const items = this.dataview.getItems();
-          if (items.length > 0 && !this._isDatasetInitialized) {
-            this.sharedService.hierarchicalDataset = this.treeDataSortComparer(items);
-          }
-        });
-      }
 
       // if you don't want the items that are not visible (due to being filtered out or being on a different page)
       // to stay selected, pass 'false' to the second arg
@@ -491,9 +474,9 @@ export class AureliaSlickgridCustomElement {
     }
   }
 
-  datasetChanged(newValue: any[], oldValue: any[]) {
-    this._dataset = newValue;
-    this.refreshGridData(newValue);
+  datasetChanged(newDataset: any[], oldValue: any[]) {
+    this._dataset = newDataset;
+    this.refreshGridData(newDataset);
 
     // expand/autofit columns on first page load
     // we can assume that if the oldValue was empty then we are on first load
@@ -502,9 +485,8 @@ export class AureliaSlickgridCustomElement {
     }
   }
 
-  datasetHierarchicalChanged(hierarchicalDataset: any[]) {
-    this._datasetHierarchical = hierarchicalDataset;
-    this.sharedService.hierarchicalDataset = hierarchicalDataset;
+  datasetHierarchicalChanged(newHierarchicalDataset: any[]) {
+    this.sharedService.hierarchicalDataset = newHierarchicalDataset;
 
     if (this.filterService && this.filterService.clearFilters) {
       this.filterService.clearFilters();
@@ -661,17 +643,31 @@ export class AureliaSlickgridCustomElement {
         };
       });
 
-      // without this, filtering data with local dataset will not always show correctly
-      // also don't use "invalidateRows" since it destroys the entire row and as bad user experience when updating a row
-      // see commit: https://github.com/ghiscoding/aurelia-slickgrid/commit/8c503a4d45fba11cbd8d8cc467fae8d177cc4f60
-      if (gridOptions && gridOptions.enableFiltering && !gridOptions.enableRowDetailView) {
-        this._eventHandler.subscribe(dataView.onRowsChanged, (e: any, args: any) => {
+      // when dealing with Tree Data View, make sure we have necessary tree data options
+      if (this.gridOptions && this.gridOptions.enableTreeData && (!this.gridOptions.treeDataOptions || !this.gridOptions.treeDataOptions.columnId)) {
+        throw new Error('[Aurelia-Slickgrid] When enabling tree data, you must also provide the "treeDataOption" property in your Grid Options with "childrenPropName" or "parentPropName" (depending if your array is hierarchical or flat) for the Tree Data to work properly');
+      }
+
+      this._eventHandler.subscribe(dataView.onRowsChanged, (e: any, args: any) => {
+        // when dealing with Tree Data, anytime the flat dataset changes, we need to update our hierarchical dataset
+        // this could be triggered by a DataView setItems or updateItem
+        if (this.gridOptions && this.gridOptions.enableTreeData) {
+          const items = this.dataview.getItems();
+          if (Array.isArray(items) && items.length > 0 && !this._isDatasetInitialized) {
+            this.sharedService.hierarchicalDataset = this.treeDataSortComparer(items);
+          }
+        }
+
+        // filtering data with local dataset will not always show correctly unless we call this updateRow/render
+        // also don't use "invalidateRows" since it destroys the entire row and as bad user experience when updating a row
+        // see commit: https://github.com/ghiscoding/aurelia-slickgrid/commit/8c503a4d45fba11cbd8d8cc467fae8d177cc4f60
+        if (gridOptions && gridOptions.enableFiltering && !gridOptions.enableRowDetailView) {
           if (args && args.rows && Array.isArray(args.rows)) {
             args.rows.forEach((row: any) => grid.updateRow(row));
             grid.render();
           }
-        });
-      }
+        }
+      });
     }
 
     // does the user have a colspan callback?
@@ -900,7 +896,7 @@ export class AureliaSlickgridCustomElement {
    * @param showing
    */
   showHeaderRow(showing = true) {
-    this.grid.setHeaderRowVisibility(showing);
+    this.grid.setHeaderRowVisibility(showing, false);
     return showing;
   }
 

@@ -1,28 +1,39 @@
 import { GridOption, SlickEventHandler } from '../models/index';
-import { inject } from 'aurelia-framework';
+import { inject, singleton } from 'aurelia-framework';
+import { SharedService } from './shared.service';
 
 // using external non-typed js libraries
 declare const Slick: any;
 
+@singleton(true)
+@inject(SharedService)
 export class TreeDataService {
   private _grid: any;
   private _eventHandler: SlickEventHandler;
 
-  constructor() {
+  constructor(private sharedService: SharedService) {
     this._eventHandler = new Slick.EventHandler();
+  }
+
+  get dataset(): any[] {
+    return this.dataView && this.dataView.getItems && this.dataView.getItems();
+  }
+
+  get datasetHierarchical(): any[] | undefined {
+    return this.sharedService.hierarchicalDataset;
   }
 
   get dataView(): any {
     return this._grid && this._grid.getData && this._grid.getData();
   }
 
-  get gridOptions(): GridOption {
-    return this._grid && this._grid.getOptions && this._grid.getOptions() || {};
-  }
-
   /** Getter of the SlickGrid Event Handler */
   get eventHandler(): SlickEventHandler {
     return this._eventHandler;
+  }
+
+  get gridOptions(): GridOption {
+    return this._grid && this._grid.getOptions && this._grid.getOptions() || {};
   }
 
   dispose() {
