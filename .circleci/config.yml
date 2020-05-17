@@ -63,5 +63,5 @@ workflows:
     jobs:
       - build
       - cypress:
-        requires:
-          - build
+          requires:
+            - build
