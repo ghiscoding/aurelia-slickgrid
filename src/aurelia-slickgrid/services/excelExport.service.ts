@@ -368,8 +368,8 @@ export class ExcelExportService {
     // Group By text, it could be set in the export options or from translation or if nothing is found then use the English constant text
     let groupByColumnHeader = this._excelExportOptions.groupingColumnHeaderTitle;
     if (!groupByColumnHeader && this._gridOptions.enableTranslate && this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale()) {
-      const i18nNamespacePrefix = this._gridOptions.translationNamespace ? (this._gridOptions.translationNamespace + this._gridOptions.translationNamespaceSeparator) : '';
-      groupByColumnHeader = this.i18n.tr(`${i18nNamespacePrefix}GROUP_BY`);
+      const translationPrefix = this._gridOptions.translationNamespace ? (this._gridOptions.translationNamespace + this._gridOptions.translationNamespaceSeparator) : '';
+      groupByColumnHeader = this.i18n.tr(`${translationPrefix}GROUP_BY`);
     } else if (!groupByColumnHeader) {
       groupByColumnHeader = this._locales && this._locales.TEXT_GROUP_BY;
     }

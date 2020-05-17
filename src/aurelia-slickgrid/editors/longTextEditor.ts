@@ -75,11 +75,11 @@ export class LongTextEditor implements Editor {
   init(): void {
     let cancelText = '';
     let saveText = '';
-    const i18nNamespacePrefix = this.gridOptions.translationNamespace ? (this.gridOptions.translationNamespace + this.gridOptions.translationNamespaceSeparator) : '';
+    const translationPrefix = this.gridOptions.translationNamespace ? (this.gridOptions.translationNamespace + this.gridOptions.translationNamespaceSeparator) : '';
 
     if (this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale()) {
-      cancelText = this.i18n.tr(`${i18nNamespacePrefix}CANCEL`);
-      saveText = this.i18n.tr(`${i18nNamespacePrefix}SAVE`);
+      cancelText = this.i18n.tr(`${translationPrefix}CANCEL`);
+      saveText = this.i18n.tr(`${translationPrefix}SAVE`);
     } else {
       cancelText = this._locales && this._locales.TEXT_CANCEL;
       saveText = this._locales && this._locales.TEXT_SAVE;

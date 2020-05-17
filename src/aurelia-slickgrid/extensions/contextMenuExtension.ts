@@ -185,7 +185,7 @@ export class ContextMenuExtension implements Extension {
   private addMenuCustomCommands(originalCustomItems: Array<MenuCommandItem | 'divider'>) {
     const menuCustomItems: Array<MenuCommandItem | 'divider'> = [];
     const gridOptions = this.sharedService && this.sharedService.gridOptions || {};
-    const i18nNamespacePrefix = gridOptions.translationNamespace ? (gridOptions.translationNamespace + gridOptions.translationNamespaceSeparator) : '';
+    const translationPrefix = gridOptions.translationNamespace ? (gridOptions.translationNamespace + gridOptions.translationNamespaceSeparator) : '';
     const contextMenu = gridOptions && gridOptions.contextMenu;
     const dataView = this.sharedService && this.sharedService.dataView;
 
@@ -196,7 +196,7 @@ export class ContextMenuExtension implements Extension {
         menuCustomItems.push(
           {
             iconCssClass: contextMenu.iconCopyCellValueCommand || 'fa fa-clone',
-            title: this.extensionUtility.translateWhenEnabledAndServiceExist(`${i18nNamespacePrefix}COPY`, 'TEXT_COPY'),
+            title: this.extensionUtility.translateWhenEnabledAndServiceExist(`${translationPrefix}COPY`, 'TEXT_COPY'),
             disabled: false,
             command: commandName,
             positionOrder: 50,
@@ -224,7 +224,7 @@ export class ContextMenuExtension implements Extension {
         menuCustomItems.push(
           {
             iconCssClass: contextMenu.iconExportCsvCommand || 'fa fa-download',
-            title: this.extensionUtility.translateWhenEnabledAndServiceExist(`${i18nNamespacePrefix}EXPORT_TO_CSV`, 'TEXT_EXPORT_TO_CSV'),
+            title: this.extensionUtility.translateWhenEnabledAndServiceExist(`${translationPrefix}EXPORT_TO_CSV`, 'TEXT_EXPORT_TO_CSV'),
             disabled: false,
             command: commandName,
             positionOrder: 51,
@@ -246,7 +246,7 @@ export class ContextMenuExtension implements Extension {
         menuCustomItems.push(
           {
             iconCssClass: contextMenu.iconExportExcelCommand || 'fa fa-file-excel-o text-success',
-            title: this.extensionUtility.translateWhenEnabledAndServiceExist(`${i18nNamespacePrefix}EXPORT_TO_EXCEL`, 'TEXT_EXPORT_TO_EXCEL'),
+            title: this.extensionUtility.translateWhenEnabledAndServiceExist(`${translationPrefix}EXPORT_TO_EXCEL`, 'TEXT_EXPORT_TO_EXCEL'),
             disabled: false,
             command: commandName,
             positionOrder: 52,
@@ -266,7 +266,7 @@ export class ContextMenuExtension implements Extension {
         menuCustomItems.push(
           {
             iconCssClass: contextMenu.iconExportTextDelimitedCommand || 'fa fa-download',
-            title: this.extensionUtility.translateWhenEnabledAndServiceExist(`${i18nNamespacePrefix}EXPORT_TO_TAB_DELIMITED`, 'TEXT_EXPORT_TO_TAB_DELIMITED'),
+            title: this.extensionUtility.translateWhenEnabledAndServiceExist(`${translationPrefix}EXPORT_TO_TAB_DELIMITED`, 'TEXT_EXPORT_TO_TAB_DELIMITED'),
             disabled: false,
             command: commandName,
             positionOrder: 53,
@@ -293,7 +293,7 @@ export class ContextMenuExtension implements Extension {
           menuCustomItems.push(
             {
               iconCssClass: contextMenu.iconClearGroupingCommand || 'fa fa-times',
-              title: this.extensionUtility.translateWhenEnabledAndServiceExist(`${i18nNamespacePrefix}CLEAR_ALL_GROUPING`, 'TEXT_CLEAR_ALL_GROUPING'),
+              title: this.extensionUtility.translateWhenEnabledAndServiceExist(`${translationPrefix}CLEAR_ALL_GROUPING`, 'TEXT_CLEAR_ALL_GROUPING'),
               disabled: false,
               command: commandName,
               positionOrder: 55,
@@ -315,7 +315,7 @@ export class ContextMenuExtension implements Extension {
           menuCustomItems.push(
             {
               iconCssClass: contextMenu.iconCollapseAllGroupsCommand || 'fa fa-compress',
-              title: this.extensionUtility.translateWhenEnabledAndServiceExist(`${i18nNamespacePrefix}COLLAPSE_ALL_GROUPS`, 'TEXT_COLLAPSE_ALL_GROUPS'),
+              title: this.extensionUtility.translateWhenEnabledAndServiceExist(`${translationPrefix}COLLAPSE_ALL_GROUPS`, 'TEXT_COLLAPSE_ALL_GROUPS'),
               disabled: false,
               command: commandName,
               positionOrder: 56,
@@ -337,7 +337,7 @@ export class ContextMenuExtension implements Extension {
           menuCustomItems.push(
             {
               iconCssClass: contextMenu.iconExpandAllGroupsCommand || 'fa fa-expand',
-              title: this.extensionUtility.translateWhenEnabledAndServiceExist(`${i18nNamespacePrefix}EXPAND_ALL_GROUPS`, 'TEXT_EXPAND_ALL_GROUPS'),
+              title: this.extensionUtility.translateWhenEnabledAndServiceExist(`${translationPrefix}EXPAND_ALL_GROUPS`, 'TEXT_EXPAND_ALL_GROUPS'),
               disabled: false,
               command: commandName,
               positionOrder: 57,
