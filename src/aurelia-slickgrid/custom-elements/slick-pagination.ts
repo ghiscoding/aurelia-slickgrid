@@ -4,7 +4,7 @@ import { I18N } from 'aurelia-i18n';
 
 import { GridOption, Locale } from '../models/index';
 import { PaginationService } from '../services/pagination.service';
-import { disposeAllSubscriptions } from '../services/utilities';
+import { disposeAllSubscriptions, getTranslationPrefix } from '../services/utilities';
 import { Constants } from '../constants';
 
 @inject(EventAggregator, Optional.of(I18N))
@@ -115,7 +115,7 @@ export class SlickPaginationCustomElement {
   /** Translate all the texts shown in the UI, use I18N service when available or custom locales when service is null */
   private translatePaginationTexts(locales: Locale) {
     if (this._enableTranslate && this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale()) {
-      const translationPrefix = (this._gridOptions && this._gridOptions.translationNamespace) ? (this._gridOptions.translationNamespace + this._gridOptions.translationNamespaceSeparator) : '';
+      const translationPrefix = getTranslationPrefix(this._gridOptions);
       this.textItemsPerPage = this.i18n.tr(`${translationPrefix}ITEMS_PER_PAGE`);
       this.textItems = this.i18n.tr(`${translationPrefix}ITEMS`);
       this.textOf = this.i18n.tr(`${translationPrefix}OF`);

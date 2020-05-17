@@ -19,6 +19,7 @@ import {
 import { FilterService } from '../services/filter.service';
 import { SortService } from '../services/sort.service';
 import { SharedService } from '../services/shared.service';
+import { getTranslationPrefix } from '../services/utilities';
 import { ExtensionUtility } from './extensionUtility';
 import { SlickgridEventAggregator } from '../custom-elements/slickgridEventAggregator';
 
@@ -133,7 +134,7 @@ export class HeaderMenuExtension implements Extension {
   private addHeaderMenuCustomCommands(options: GridOption, columnDefinitions: Column[]): HeaderMenu {
     const headerMenuOptions = options.headerMenu || {};
     const gridOptions = this.sharedService.gridOptions;
-    const translationPrefix = gridOptions.translationNamespace ? (gridOptions.translationNamespace + gridOptions.translationNamespaceSeparator) : '';
+    const translationPrefix = getTranslationPrefix(gridOptions);
 
     if (columnDefinitions && Array.isArray(columnDefinitions) && options.enableHeaderMenu) {
       columnDefinitions.forEach((columnDef: Column) => {
@@ -251,7 +252,7 @@ export class HeaderMenuExtension implements Extension {
    */
   private resetHeaderMenuTranslations(columnDefinitions: Column[]) {
     const gridOptions = this.sharedService.gridOptions;
-    const translationPrefix = gridOptions.translationNamespace ? (gridOptions.translationNamespace + gridOptions.translationNamespaceSeparator) : '';
+    const translationPrefix = getTranslationPrefix(gridOptions);
 
     columnDefinitions.forEach((columnDef: Column) => {
       if (columnDef && columnDef.header && columnDef.header.menu && columnDef.header.menu.items) {

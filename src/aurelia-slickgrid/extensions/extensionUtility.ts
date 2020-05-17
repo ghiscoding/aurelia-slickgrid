@@ -4,6 +4,7 @@ import { I18N } from 'aurelia-i18n';
 import { Constants } from '../constants';
 import { SharedService } from '../services/shared.service';
 import { ExtensionName } from '../models/index';
+import { getTranslationPrefix } from '../services/utilities';
 
 declare function require(name: string): any;
 
@@ -99,7 +100,7 @@ export class ExtensionUtility {
     const title = picker && picker[propName];
     const titleKey = picker && picker[`${propName}Key`];
     const gridOptions = this.sharedService.gridOptions;
-    const translationPrefix = gridOptions.translationNamespace ? (gridOptions.translationNamespace + gridOptions.translationNamespaceSeparator) : '';
+    const translationPrefix = getTranslationPrefix(gridOptions);
 
     if (titleKey && this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale()) {
       output = this.i18n.tr(titleKey || ' ');

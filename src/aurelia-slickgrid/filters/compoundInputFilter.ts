@@ -16,7 +16,7 @@ import {
   OperatorType,
   SearchTerm,
 } from './../models/index';
-import { mapOperatorToShorthandDesignation } from '../services/utilities';
+import { getTranslationPrefix, mapOperatorToShorthandDesignation } from '../services/utilities';
 
 @inject(Optional.of(I18N))
 export class CompoundInputFilter implements Filter {
@@ -167,7 +167,7 @@ export class CompoundInputFilter implements Filter {
   }
 
   private getOptionValues(): { operator: OperatorString, description: string }[] {
-    const translationPrefix = this.gridOptions.translationNamespace ? (this.gridOptions.translationNamespace + this.gridOptions.translationNamespaceSeparator) : '';
+    const translationPrefix = getTranslationPrefix(this.gridOptions);
     const type = (this.columnDef.type && this.columnDef.type) ? this.columnDef.type : FieldType.string;
     let optionValues = [];
 

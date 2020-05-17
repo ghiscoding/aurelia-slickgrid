@@ -23,6 +23,7 @@ import { ExportService } from '../services/export.service';
 import { FilterService } from '../services/filter.service';
 import { SharedService } from '../services/shared.service';
 import { SortService } from '../services/sort.service';
+import { getTranslationPrefix } from '../services/utilities';
 
 // using external non-typed js libraries
 declare var Slick: any;
@@ -215,7 +216,7 @@ export class GridMenuExtension implements Extension {
     const backendApi = this.sharedService.gridOptions.backendServiceApi || null;
     const gridMenuCustomItems: Array<GridMenuItem | 'divider'> = [];
     const gridOptions = this.sharedService.gridOptions;
-    const translationPrefix = gridOptions.translationNamespace ? (gridOptions.translationNamespace + gridOptions.translationNamespaceSeparator) : '';
+    const translationPrefix = getTranslationPrefix(gridOptions);
 
     if (this.sharedService.gridOptions && (this.sharedService.gridOptions.enableFiltering && !this.sharedService.hideHeaderRowAfterPageLoad)) {
       // show grid menu: clear all filters

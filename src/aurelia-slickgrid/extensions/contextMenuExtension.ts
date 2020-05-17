@@ -19,6 +19,7 @@ import { exportWithFormatterWhenDefined } from '../services/export-utilities';
 import { ExportService } from '../services/export.service';
 import { ExcelExportService } from '../services/excelExport.service';
 import { SharedService } from '../services/shared.service';
+import { getTranslationPrefix } from '../services/utilities';
 
 // using external non-typed js libraries
 declare var Slick: any;
@@ -185,9 +186,9 @@ export class ContextMenuExtension implements Extension {
   private addMenuCustomCommands(originalCustomItems: Array<MenuCommandItem | 'divider'>) {
     const menuCustomItems: Array<MenuCommandItem | 'divider'> = [];
     const gridOptions = this.sharedService && this.sharedService.gridOptions || {};
-    const translationPrefix = gridOptions.translationNamespace ? (gridOptions.translationNamespace + gridOptions.translationNamespaceSeparator) : '';
     const contextMenu = gridOptions && gridOptions.contextMenu;
     const dataView = this.sharedService && this.sharedService.dataView;
+    const translationPrefix = getTranslationPrefix(gridOptions);
 
     // show context menu: Copy (cell value)
     if (contextMenu && !contextMenu.hideCopyCellValueCommand) {
