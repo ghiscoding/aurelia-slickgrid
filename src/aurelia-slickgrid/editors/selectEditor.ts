@@ -114,10 +114,11 @@ export class SelectEditor implements Editor {
       libOptions.selectAllDelimiter = ['', ''];
 
       if (this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale()) {
-        libOptions.countSelected = this.i18n.tr('X_OF_Y_SELECTED');
-        libOptions.allSelected = this.i18n.tr('ALL_SELECTED');
-        libOptions.selectAllText = this.i18n.tr('SELECT_ALL');
-        libOptions.okButtonText = this.i18n.tr('OK');
+        const i18nNamespacePrefix = this.gridOptions.translationNamespace ? (this.gridOptions.translationNamespace + this.gridOptions.translationNamespaceSeparator) : '';
+        libOptions.countSelected = this.i18n.tr(`${i18nNamespacePrefix}X_OF_Y_SELECTED`);
+        libOptions.allSelected = this.i18n.tr(`${i18nNamespacePrefix}ALL_SELECTED`);
+        libOptions.selectAllText = this.i18n.tr(`${i18nNamespacePrefix}SELECT_ALL`);
+        libOptions.okButtonText = this.i18n.tr(`${i18nNamespacePrefix}OK`);
       } else {
         libOptions.countSelected = this._locales && this._locales.TEXT_X_OF_Y_SELECTED;
         libOptions.allSelected = this._locales && this._locales.TEXT_ALL_SELECTED;

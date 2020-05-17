@@ -114,10 +114,11 @@ export class SlickPaginationCustomElement {
   /** Translate all the texts shown in the UI, use I18N service when available or custom locales when service is null */
   private translatePaginationTexts(locales: Locale) {
     if (this._enableTranslate && this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale()) {
-      this.textItemsPerPage = this.i18n.tr('ITEMS_PER_PAGE');
-      this.textItems = this.i18n.tr('ITEMS');
-      this.textOf = this.i18n.tr('OF');
-      this.textPage = this.i18n.tr('PAGE');
+      const i18nNamespacePrefix = this.gridOptions.translationNamespace ? (this.gridOptions.translationNamespace + this.gridOptions.translationNamespaceSeparator) : '';
+      this.textItemsPerPage = this.i18n.tr(`${i18nNamespacePrefix}ITEMS_PER_PAGE`);
+      this.textItems = this.i18n.tr(`${i18nNamespacePrefix}ITEMS`);
+      this.textOf = this.i18n.tr(`${i18nNamespacePrefix}OF`);
+      this.textPage = this.i18n.tr(`${i18nNamespacePrefix}PAGE`);
     } else if (locales) {
       this.textItemsPerPage = locales.TEXT_ITEMS_PER_PAGE || 'TEXT_ITEMS_PER_PAGE';
       this.textItems = locales.TEXT_ITEMS || 'TEXT_ITEMS';
