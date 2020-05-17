@@ -62,6 +62,6 @@ workflows:
   build-and-test:
     jobs:
       - build
-      - cypress
+      - cypress:
         requires:
           - build
