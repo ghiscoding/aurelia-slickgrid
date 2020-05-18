@@ -18,7 +18,7 @@ One of the best javascript datagrid [SlickGrid](https://github.com/mleibman/Slic
 ### Like it? :star: it
 You like and use this great library `Aurelia-Slickgrid`? Be sure to upvote :star: and/or possibly contribute :)
 
-#### Like my work?
+### Like my work?
 If you like my work, you can also support me with caffeine
 [Buy Me a Coffee](https://ko-fi.com/N4N679OT) :coffee:
 
