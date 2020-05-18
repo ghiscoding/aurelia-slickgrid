@@ -18,6 +18,13 @@ One of the best javascript datagrid [SlickGrid](https://github.com/mleibman/Slic
 ### Like it? :star: it
 You like and use this great library `Aurelia-Slickgrid`? Be sure to upvote :star: and/or possibly contribute :)
 
+#### Like my work?
+If you like my work, you can also support me with caffeine
+[Buy Me a Coffee](https://ko-fi.com/N4N679OT) :coffee:
+
+## Fully Tested with [Jest](https://jestjs.io/)
+Aurelia-Slickgrid recently reached **100%** Test Coverage, we are talking about ~8300 lines of code (~2600 unit tests) that are now fully tested with [Jest](https://jestjs.io/).
+
 ## Installation
 Refer to the **[Wiki - HOWTO Step by Step](https://github.com/ghiscoding/aurelia-slickgrid/wiki/HOWTO--Step-by-Step)** and/or the [Aurelia-Slickgrid Demos](https://github.com/ghiscoding/aurelia-slickgrid-demos) repository. Please don't open any issue unless you have followed these steps (from the Wiki), and if any of the steps are incorrect or confusing, then please let me know.
 
@@ -30,24 +37,19 @@ Refer to the **[Wiki - HOWTO Step by Step](https://github.com/ghiscoding/aurelia
 #### Working Demos
 For complete working local demos, you can clone the [Aurelia-Slickgrid Demos](https://github.com/ghiscoding/aurelia-slickgrid-demos) repository (instruction are provided in the repo). This repo provides multiple samples (RequireJS, WebPack, CLI, ...) and also worth to know that the 2 WebPacks demos are updated frequently since they are the actual [Bootstrap 3 demo](https://ghiscoding.github.io/aurelia-slickgrid) / [Bootstrap 4 demo](https://ghiscoding.github.io/aurelia-slickgrid-demos/#/slickgrid).
 
-#### How to load data with `Fetch-Client` or `Http-Client`?
-You might notice that all demos are made with mocked dataset that are embedded in each examples, that is mainly for demo purposes, but you might be wondering how to connect this with an `FetchClient`? Easy... just replace the mocked data, assigned to the `dataset` property, by your `FetchClient` call and that's it. The `dataset` property can be changed at any time, which is why you can use local data and/or connect it to a `Promise` or an async call with `FetchClient` (internally it's just a SETTER that refreshes the grid). See [Example 22](https://ghiscoding.github.io/aurelia-slickgrid/#/slickgrid/example22) for a demo showing how to load a JSON file with `FetchClient`.
-
-### Fully Tested with Jest
-Aurelia-Slickgrid recently reached **100%** Test Coverage, we are talking about ~8300 lines of code (~2400 unit tests) that are now fully tested with [Jest](https://jestjs.io/).
-
 ## Wiki / Documentation
 The Wiki is where all the documentation and instructions will go, so please consult the [Aurelia-Slickgrid - Wiki](https://github.com/ghiscoding/aurelia-slickgrid/wiki) before opening any issues. The [Wiki - HOWTO](https://github.com/ghiscoding/aurelia-slickgrid/wiki/HOWTO--Step-by-Step) is a great place to start with.
 
+## Contributions / Comments
+Contributions are very welcome, this is what the community is for. If you wish to make a PR (Pull Request), please feel free to do so.
+
+## Usage
+
+#### How to load data with `Fetch-Client` or `Http-Client`?
+You might notice that all demos are made with mocked dataset that are embedded in each examples, that is mainly for demo purposes, but you might be wondering how to connect this with an `FetchClient`? Easy... just replace the mocked data, assigned to the `dataset` property, by your `FetchClient` call and that's it. The `dataset` property can be changed at any time, which is why you can use local data and/or connect it to a `Promise` or an async call with `FetchClient` (internally it's just a SETTER that refreshes the grid). See [Example 22](https://ghiscoding.github.io/aurelia-slickgrid/#/slickgrid/example22) for a demo showing how to load a JSON file with `FetchClient`.
+
 ## Main features
 You can see some screenshots below as well as instructions underneat them and if that is not enough for you to decide, head over to the [Wiki - Main Features](https://github.com/ghiscoding/aurelia-slickgrid/wiki).
-
-## Contributions / Comments
-Contributions are very welcome, this is what the community is for. If you wish to suggest something and/or want to make a PR (Pull Request), please feel free to do so.
-
-## Like my work?
-If you like my work, you can also support me with caffeine
-[Buy Me a Coffee](https://ko-fi.com/N4N679OT) :coffee:
 
 ## Screenshots
 
