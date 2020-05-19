@@ -13,7 +13,7 @@ const NB_ITEMS = 200;
 
 @autoinject()
 export class Example27 {
-  title = 'Example 27: Tree Data <small>(from a flat dataset with <code>parentId</code> references) - Material Design Styling Theme</small>';
+  title = 'Example 27: Tree Data <small>(from a flat dataset with <code>parentId</code> references)</small>';
   subTitle = `<ul>
     <li>It is assumed that your dataset will have Parent/Child references AND also Tree Level (indent) property.</li>
     <ul>

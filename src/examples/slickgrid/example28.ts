@@ -13,7 +13,7 @@ import './example28.scss'; // provide custom CSS/SASS styling
 
 @autoinject()
 export class Example28 {
-  title = 'Example 28: Tree Data <small>(from a Hierarchical Dataset) - Salesforce Styling Theme</small>';
+  title = 'Example 28: Tree Data <small>(from a Hierarchical Dataset)</small>';
   subTitle = `<ul>
     <li><b>NOTE:</b> The grid will automatically sort Ascending with the column that has the Tree Data, you could add a "sortByFieldId" in your column "treeData" option if you wish to sort on a different column</li>
     <li><b>Styling - Salesforce Theme</b></li>
