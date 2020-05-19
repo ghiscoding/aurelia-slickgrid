@@ -35,7 +35,7 @@ export function configure(aurelia: Aurelia) {
   });
 
   // aurelia i18n to handle multiple locales
-  aurelia.use.plugin(PLATFORM.moduleName('aurelia-i18n'), (instance) => {
+  aurelia.use.plugin(PLATFORM.moduleName('aurelia-i18n'), instance => {
     const aliases = ['t', 'i18n'];
     // add aliases for 't' attribute
     TCustomAttribute.configureAliases(aliases);

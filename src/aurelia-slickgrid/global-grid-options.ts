@@ -186,5 +186,6 @@ export const GlobalGridOptions: Partial<GridOption> = {
   rowHeight: 35,
   sortColNumberInSeparateSpan: true,
   suppressActiveCellChangeOnEdit: true,
-  topPanelHeight: 35
+  topPanelHeight: 35,
+  translationNamespaceSeparator: ':',
 };

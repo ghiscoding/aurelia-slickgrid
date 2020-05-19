@@ -4,7 +4,7 @@ import { I18N } from 'aurelia-i18n';
 
 import { GridOption, Locale } from '../models/index';
 import { PaginationService } from '../services/pagination.service';
-import { disposeAllSubscriptions } from '../services/utilities';
+import { disposeAllSubscriptions, getTranslationPrefix } from '../services/utilities';
 import { Constants } from '../constants';
 
 @inject(EventAggregator, Optional.of(I18N))
@@ -15,6 +15,7 @@ export class SlickPaginationCustomElement {
 
   private _enableTranslate = false;
   private _locales: Locale;
+  private _gridOptions: GridOption;
   private _subscriptions: Subscription[] = [];
 
   // text translations (handled by i18n or by custom locale)
@@ -60,9 +61,9 @@ export class SlickPaginationCustomElement {
   }
 
   bind(bindings: { gridOptions: GridOption; paginationService: PaginationService; }) {
-    const gridOptions: GridOption = this.gridOptions || bindings && bindings.gridOptions || {};
-    this._enableTranslate = gridOptions && gridOptions.enableTranslate || false;
-    this._locales = gridOptions && gridOptions.locales || Constants.locales;
+    this._gridOptions = this.gridOptions || bindings && bindings.gridOptions || {};
+    this._enableTranslate = this._gridOptions && this._gridOptions.enableTranslate || false;
+    this._locales = this._gridOptions && this._gridOptions.locales || Constants.locales;
 
     if (this._enableTranslate && (!this.i18n || !this.i18n.tr)) {
       throw new Error('[Aurelia-Slickgrid] requires "I18N" to be installed and configured when the grid option "enableTranslate" is enabled.');
@@ -114,10 +115,11 @@ export class SlickPaginationCustomElement {
   /** Translate all the texts shown in the UI, use I18N service when available or custom locales when service is null */
   private translatePaginationTexts(locales: Locale) {
     if (this._enableTranslate && this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale()) {
-      this.textItemsPerPage = this.i18n.tr('ITEMS_PER_PAGE');
-      this.textItems = this.i18n.tr('ITEMS');
-      this.textOf = this.i18n.tr('OF');
-      this.textPage = this.i18n.tr('PAGE');
+      const translationPrefix = getTranslationPrefix(this._gridOptions);
+      this.textItemsPerPage = this.i18n.tr(`${translationPrefix}ITEMS_PER_PAGE`);
+      this.textItems = this.i18n.tr(`${translationPrefix}ITEMS`);
+      this.textOf = this.i18n.tr(`${translationPrefix}OF`);
+      this.textPage = this.i18n.tr(`${translationPrefix}PAGE`);
     } else if (locales) {
       this.textItemsPerPage = locales.TEXT_ITEMS_PER_PAGE || 'TEXT_ITEMS_PER_PAGE';
       this.textItems = locales.TEXT_ITEMS || 'TEXT_ITEMS';

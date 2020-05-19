@@ -13,7 +13,7 @@ import {
   KeyCode,
   Locale,
 } from './../models/index';
-import { getDescendantProperty, getHtmlElementOffset, setDeepValue } from '../services/utilities';
+import { getDescendantProperty, getHtmlElementOffset, getTranslationPrefix, setDeepValue } from '../services/utilities';
 import { textValidator } from '../editorValidators/textValidator';
 import * as $ from 'jquery';
 
@@ -75,9 +75,11 @@ export class LongTextEditor implements Editor {
   init(): void {
     let cancelText = '';
     let saveText = '';
+
     if (this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale()) {
-      cancelText = this.i18n.tr('CANCEL');
-      saveText = this.i18n.tr('SAVE');
+      const translationPrefix = getTranslationPrefix(this.gridOptions);
+      cancelText = this.i18n.tr(`${translationPrefix}CANCEL`);
+      saveText = this.i18n.tr(`${translationPrefix}SAVE`);
     } else {
       cancelText = this._locales && this._locales.TEXT_CANCEL;
       saveText = this._locales && this._locales.TEXT_SAVE;
