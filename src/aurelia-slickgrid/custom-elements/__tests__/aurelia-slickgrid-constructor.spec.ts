@@ -22,6 +22,7 @@ import {
   ResizerService,
   SharedService,
   SortService,
+  TreeDataService,
 } from '../../services';
 import {
   Column,
@@ -106,6 +107,7 @@ const mockGraphqlService = {
 } as unknown as GraphqlService;
 
 const filterServiceStub = {
+  clearFilters: jest.fn(),
   dispose: jest.fn(),
   init: jest.fn(),
   bindBackendOnFilter: jest.fn(),
@@ -159,7 +161,15 @@ const sortServiceStub = {
   bindLocalOnSort: jest.fn(),
   dispose: jest.fn(),
   loadGridSorters: jest.fn(),
+  processTreeDataInitialSort: jest.fn(),
 } as unknown as SortService;
+
+const treeDataServiceStub = {
+  init: jest.fn(),
+  dispose: jest.fn(),
+  handleOnCellClick: jest.fn(),
+  toggleTreeDataCollapse: jest.fn(),
+} as unknown as TreeDataService;
 
 const mockGroupItemMetaProvider = {
   init: jest.fn(),
@@ -179,12 +189,13 @@ const mockDataView = {
   beginUpdate: jest.fn(),
   endUpdate: jest.fn(),
   getItem: jest.fn(),
+  getItems: jest.fn(),
   getItemMetadata: jest.fn(),
   getPagingInfo: jest.fn(),
   mapIdsToRows: jest.fn(),
   mapRowsToIds: jest.fn(),
   onSetItemsCalled: jest.fn(),
-  onRowsChanged: jest.fn(),
+  onRowsChanged: new Slick.Event(),
   reSort: jest.fn(),
   setItems: jest.fn(),
   syncGridSelection: jest.fn(),
@@ -346,7 +357,8 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
       paginationServiceStub,
       resizerServiceStub,
       sharedService,
-      sortServiceStub
+      sortServiceStub,
+      treeDataServiceStub,
     );
 
     i18n.setup({
@@ -748,7 +760,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
         customElement.bind();
         customElement.attached();
 
-        expect(gridSpy).toHaveBeenCalledWith(false);
+        expect(gridSpy).toHaveBeenCalledWith(false, false);
       });
 
       it('should initialize groupingAndColspanService when "createPreHeaderPanel" grid option is enabled and "enableDraggableGrouping" is disabled', () => {
@@ -1349,7 +1361,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
         customElement.attached();
         customElement.showHeaderRow(true);
 
-        expect(spy).toHaveBeenCalledWith(true);
+        expect(spy).toHaveBeenCalledWith(true, false);
       });
 
       it('should show the header row when "showHeaderRow" is called with argument False', () => {
@@ -1359,7 +1371,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
         customElement.attached();
         customElement.showHeaderRow(false);
 
-        expect(spy).toHaveBeenCalledWith(false);
+        expect(spy).toHaveBeenCalledWith(false, false);
       });
     });
 
@@ -1595,6 +1607,52 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
           expect(customElement.showPagination).toBeFalsy();
           done();
         });
+      });
+    });
+
+    describe('Tree Data View', () => {
+      it('should throw an error when enableTreeData is enabled without passing a "columnId"', (done) => {
+        try {
+          customElement.gridOptions = { enableTreeData: true, treeDataOptions: {} } as GridOption;
+          customElement.bind();
+          customElement.attached();
+
+        } catch (e) {
+          expect(e.toString()).toContain('[Aurelia-Slickgrid] When enabling tree data, you must also provide the "treeDataOption" property in your Grid Options with "childrenPropName" or "parentPropName"');
+          customElement.dispose();
+          done();
+        }
+      });
+
+      it('should change flat dataset and expect  being called with other methods', () => {
+        const mockFlatDataset = [{ id: 0, file: 'documents' }, { id: 1, file: 'vacation.txt', parentId: 0 }];
+        const mockHierarchical = [{ id: 0, file: 'documents', files: [{ id: 1, file: 'vacation.txt' }] }];
+        const hierarchicalSpy = jest.spyOn(SharedService.prototype, 'hierarchicalDataset', 'set');
+
+        customElement.gridOptions = { enableTreeData: true, treeDataOptions: { columnId: 'file', parentPropName: 'parentId', childrenPropName: 'files' } } as GridOption;
+        customElement.bind();
+        customElement.attached();
+        customElement.datasetChanged(mockFlatDataset, null);
+
+        expect(hierarchicalSpy).toHaveBeenCalledWith(mockHierarchical);
+      });
+
+      it('should change hierarchical dataset and expect processTreeDataInitialSort being called with other methods', () => {
+        const mockHierarchical = [{ file: 'documents', files: [{ file: 'vacation.txt' }] }];
+        const hierarchicalSpy = jest.spyOn(SharedService.prototype, 'hierarchicalDataset', 'set');
+        const clearFilterSpy = jest.spyOn(filterServiceStub, 'clearFilters');
+        const setItemsSpy = jest.spyOn(mockDataView, 'setItems');
+        const processSpy = jest.spyOn(sortServiceStub, 'processTreeDataInitialSort');
+
+        customElement.gridOptions = { enableTreeData: true, treeDataOptions: { columnId: 'file' } } as GridOption;
+        customElement.bind();
+        customElement.attached();
+        customElement.datasetHierarchicalChanged(mockHierarchical);
+
+        expect(hierarchicalSpy).toHaveBeenCalledWith(mockHierarchical);
+        expect(clearFilterSpy).toHaveBeenCalled();
+        expect(processSpy).toHaveBeenCalled();
+        expect(setItemsSpy).toHaveBeenCalledWith([], 'id');
       });
     });
   });

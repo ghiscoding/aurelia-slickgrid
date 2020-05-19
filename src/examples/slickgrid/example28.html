@@ -1,0 +1,47 @@
+<template>
+  <h2 innerhtml.bind="title"></h2>
+  <div class="subtitle" innerhtml.bind="subTitle"></div>
+
+  <div class="row">
+    <div class="col-md-7">
+      <button click.delegate="addNewFile()" class="btn btn-sm btn-info">
+        <span class="icon mdi mdi-plus"></span>
+        <span>Add New Pop Song</span>
+      </button>
+      <button click.delegate="collapseAll()" class="btn btn-default btn-sm">
+        <span class="icon mdi mdi-arrow-collapse"></span>
+        <span>Collapse All</span>
+      </button>
+      <button click.delegate="expandAll()" class="btn btn-default btn-sm">
+        <span class="icon mdi mdi-arrow-expand"></span>
+        <span>Expand All</span>
+      </button>
+      <button click.delegate="logFlatStructure()" class="btn btn-default btn-sm">
+        <span>Log Flag Structure</span>
+      </button>
+      <button click.delegate="logExpandedStructure()" class="btn btn-default btn-sm">
+        <span>Log Expanded Structure</span>
+      </button>
+    </div>
+
+    <div class="col-md-5">
+      <div class="input-group">
+        <input type="text" class="form-control search-string" data-test="search-string" value.bind="searchString">
+        <div class="input-group-btn">
+          <button class="btn btn-default" data-test="clear-search-string" click.delegate="clearSearch()">
+            <span class="icon mdi mdi-close-thick"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <br />
+
+  <div id="grid-container" class="col-sm-12">
+    <aurelia-slickgrid grid-id="grid28" column-definitions.bind="columnDefinitions" grid-options.bind="gridOptions"
+                       dataset-hierarchical.bind="datasetHierarchical"
+                       asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
+    </aurelia-slickgrid>
+  </div>
+</template>

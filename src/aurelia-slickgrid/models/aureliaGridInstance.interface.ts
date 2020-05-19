@@ -10,7 +10,8 @@ import {
   GroupingAndColspanService,
   PaginationService,
   ResizerService,
-  SortService
+  SortService,
+  TreeDataService,
 } from '../services/index';
 
 export interface AureliaGridInstance {
@@ -66,4 +67,7 @@ export interface AureliaGridInstance {
 
   /** Sort Service */
   sortService: SortService;
+
+  /** Tree Data View Service */
+  treeDataService: TreeDataService;
 }

@@ -131,5 +131,6 @@ export * from './sortDirectionNumber.enum';
 export * from './sortDirectionString';
 export * from './sorter.interface';
 export * from './statistic.interface';
+export * from './treeDataOption.interface';
 export * from './viewModelBindableData.interface';
 export * from './viewModelBindableInputData.interface';
