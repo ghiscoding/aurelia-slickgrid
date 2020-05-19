@@ -16,7 +16,7 @@ import {
   OperatorType,
   SearchTerm,
 } from './../models/index';
-import { mapOperatorToShorthandDesignation } from '../services/utilities';
+import { getTranslationPrefix, mapOperatorToShorthandDesignation } from '../services/utilities';
 
 @inject(Optional.of(I18N))
 export class CompoundInputFilter implements Filter {
@@ -167,19 +167,20 @@ export class CompoundInputFilter implements Filter {
   }
 
   private getOptionValues(): { operator: OperatorString, description: string }[] {
+    const translationPrefix = getTranslationPrefix(this.gridOptions);
     const type = (this.columnDef.type && this.columnDef.type) ? this.columnDef.type : FieldType.string;
     let optionValues = [];
 
     switch (type) {
       case FieldType.string:
         optionValues = [
-          { operator: '' as OperatorString, description: this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale() && this.i18n.tr('CONTAINS') || this._locales && this._locales.TEXT_CONTAINS },
-          { operator: '=' as OperatorString, description: this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale() && this.i18n.tr('EQUALS') || this._locales && this._locales.TEXT_EQUALS },
-          { operator: 'a*' as OperatorString, description: this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale() && this.i18n.tr('STARTS_WITH') || this._locales && this._locales.TEXT_STARTS_WITH },
-          { operator: '*z' as OperatorString, description: this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale() && this.i18n.tr('ENDS_WITH') || this._locales && this._locales.TEXT_ENDS_WITH },
+          { operator: '' as OperatorString, description: this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale() && this.i18n.tr(`${translationPrefix}CONTAINS`) || this._locales && this._locales.TEXT_CONTAINS },
+          { operator: '=' as OperatorString, description: this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale() && this.i18n.tr(`${translationPrefix}EQUALS`) || this._locales && this._locales.TEXT_EQUALS },
+          { operator: 'a*' as OperatorString, description: this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale() && this.i18n.tr(`${translationPrefix}STARTS_WITH`) || this._locales && this._locales.TEXT_STARTS_WITH },
+          { operator: '*z' as OperatorString, description: this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale() && this.i18n.tr(`${translationPrefix}ENDS_WITH`) || this._locales && this._locales.TEXT_ENDS_WITH },
           /*
-          { operator:  as OperatorString'IN', description: this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale() && this.i18n.tr('IN_COLLECTION_SEPERATED_BY_COMMA') || this._locales && this._locales.TEXT_ALL_SELECTED },
-          { operator:  as OperatorString'NIN', description: this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale() && this.i18n.tr('NOT_IN_COLLECTION_SEPERATED_BY_COMMA') || this._locales && this._locales.TEXT_ALL_SELECTED },
+          { operator:  as OperatorString'IN', description: this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale() && this.i18n.tr(`${translationPrefix}IN_COLLECTION_SEPERATED_BY_COMMA`) || this._locales && this._locales.TEXT_ALL_SELECTED },
+          { operator:  as OperatorString'NIN', description: this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale() && this.i18n.tr(`${translationPrefix}NOT_IN_COLLECTION_SEPERATED_BY_COMMA`) || this._locales && this._locales.TEXT_ALL_SELECTED },
           */
         ];
         break;

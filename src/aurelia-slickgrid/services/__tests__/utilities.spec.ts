@@ -1,5 +1,5 @@
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
-import { FieldType, OperatorType } from '../../models';
+import { FieldType, GridOption, OperatorType } from '../../models';
 import {
   addToArrayWhenNotExists,
   addWhiteSpaces,
@@ -14,6 +14,7 @@ import {
   formatNumber,
   getDescendantProperty,
   getHtmlElementOffset,
+  getTranslationPrefix,
   htmlEncode,
   htmlEntityDecode,
   htmlEntityEncode,
@@ -608,6 +609,25 @@ describe('Service/Utilies', () => {
     it('should return the object descendant when using multiple levels of dot notation', () => {
       const output = getDescendantProperty(obj, 'user.address.street');
       expect(output).toEqual('Broadway');
+    });
+  });
+
+  describe('getTranslationPrefix method', () => {
+    it('should return empty Translation Prefix when no Grid Options are provided', () => {
+      const output = getTranslationPrefix(null);
+      expect(output).toBe('');
+    });
+
+    it('should return Translation Prefix without separator when only namespace defined in the Grid Options', () => {
+      const gridOptions = { translationNamespace: 'App1' } as GridOption;
+      const output = getTranslationPrefix(gridOptions);
+      expect(output).toBe('App1');
+    });
+
+    it('should return Translation Prefix with separator when defined in the Grid Options', () => {
+      const gridOptions = { translationNamespace: 'App1', translationNamespaceSeparator: ':' } as GridOption;
+      const output = getTranslationPrefix(gridOptions);
+      expect(output).toBe('App1:');
     });
   });
 

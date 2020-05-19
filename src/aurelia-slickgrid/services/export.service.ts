@@ -14,7 +14,7 @@ import {
   KeyTitlePair,
   Locale,
 } from './../models/index';
-import { addWhiteSpaces, htmlEntityDecode, sanitizeHtmlToText, titleCase } from './../services/utilities';
+import { addWhiteSpaces, getTranslationPrefix, htmlEntityDecode, sanitizeHtmlToText, titleCase } from './../services/utilities';
 import { SlickgridEventAggregator } from '../custom-elements/slickgridEventAggregator';
 
 const DEFAULT_AURELIA_EVENT_PREFIX = 'asg';
@@ -177,7 +177,7 @@ export class ExportService {
     // Group By text, it could be set in the export options or from translation or if nothing is found then use the English constant text
     let groupByColumnHeader = this._exportOptions.groupingColumnHeaderTitle;
     if (!groupByColumnHeader && this._gridOptions.enableTranslate && this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale()) {
-      groupByColumnHeader = this.i18n.tr('GROUP_BY');
+      groupByColumnHeader = this.i18n.tr(`${getTranslationPrefix(this._gridOptions)}GROUP_BY`);
     } else if (!groupByColumnHeader) {
       groupByColumnHeader = this._locales && this._locales.TEXT_GROUP_BY;
     }

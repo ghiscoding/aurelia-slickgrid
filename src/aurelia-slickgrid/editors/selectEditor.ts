@@ -21,7 +21,7 @@ import {
   SelectOption,
 } from './../models/index';
 import { CollectionService, findOrDefault, disposeAllSubscriptions } from '../services/index';
-import { charArraysEqual, getDescendantProperty, htmlEncode, setDeepValue } from '../services/utilities';
+import { charArraysEqual, getDescendantProperty, getTranslationPrefix, htmlEncode, setDeepValue } from '../services/utilities';
 
 /**
  * Slickgrid editor class for multiple/single select lists
@@ -114,10 +114,11 @@ export class SelectEditor implements Editor {
       libOptions.selectAllDelimiter = ['', ''];
 
       if (this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale()) {
-        libOptions.countSelected = this.i18n.tr('X_OF_Y_SELECTED');
-        libOptions.allSelected = this.i18n.tr('ALL_SELECTED');
-        libOptions.selectAllText = this.i18n.tr('SELECT_ALL');
-        libOptions.okButtonText = this.i18n.tr('OK');
+        const translationPrefix = getTranslationPrefix(this.gridOptions);
+        libOptions.countSelected = this.i18n.tr(`${translationPrefix}X_OF_Y_SELECTED`);
+        libOptions.allSelected = this.i18n.tr(`${translationPrefix}ALL_SELECTED`);
+        libOptions.selectAllText = this.i18n.tr(`${translationPrefix}SELECT_ALL`);
+        libOptions.okButtonText = this.i18n.tr(`${translationPrefix}OK`);
       } else {
         libOptions.countSelected = this._locales && this._locales.TEXT_X_OF_Y_SELECTED;
         libOptions.allSelected = this._locales && this._locales.TEXT_ALL_SELECTED;

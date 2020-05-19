@@ -1,5 +1,5 @@
 import { Filters } from './filters/index';
-import { DelimiterType, FileType, GridOption, OperatorType } from './models/index';
+import { Column, DelimiterType, FileType, GridOption, OperatorType } from './models/index';
 
 /**
  * Default Options that can be passed to the Aurelia-Slickgrid
@@ -138,6 +138,15 @@ export const GlobalGridOptions: Partial<GridOption> = {
     iconTogglePreHeaderCommand: 'fa fa-random',
     menuWidth: 16,
     resizeOnShowHeaderRow: true,
+    useClickToRepositionMenu: false, // use icon location to reposition instead
+    headerColumnValueExtractor: (column: Column) => {
+      const headerGroup = column && column.columnGroup || '';
+      if (headerGroup) {
+        // when using Column Header Grouping, we'll prefix the column group title
+        return headerGroup + ' - ' + column.name;
+      }
+      return column && column.name || '';
+    }
   },
   headerMenu: {
     autoAlign: true,
@@ -177,5 +186,6 @@ export const GlobalGridOptions: Partial<GridOption> = {
   rowHeight: 35,
   sortColNumberInSeparateSpan: true,
   suppressActiveCellChangeOnEdit: true,
-  topPanelHeight: 35
+  topPanelHeight: 35,
+  translationNamespaceSeparator: ':',
 };

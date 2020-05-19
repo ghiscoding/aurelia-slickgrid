@@ -1,8 +1,7 @@
 import { Subscription } from 'aurelia-event-aggregator';
 import * as moment from 'moment-mini';
-import * as $ from 'jquery';
 
-import { FieldType, OperatorString, OperatorType } from '../models/index';
+import { FieldType, GridOption, OperatorString, OperatorType } from '../models/index';
 
 /**
  * Add an item to an array only when the item does not exists, when the item is an object we will be using their "id" to compare
@@ -357,6 +356,14 @@ export function getDescendantProperty(obj: any, path: string | undefined): any {
     return obj;
   }
   return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+}
+
+/** Get I18N Translation Prefix, defaults to an empty string */
+export function getTranslationPrefix(gridOptions?: GridOption): string {
+  if (gridOptions && gridOptions.translationNamespace) {
+    return gridOptions.translationNamespace + (gridOptions.translationNamespaceSeparator || '');
+  }
+  return '';
 }
 
 /**

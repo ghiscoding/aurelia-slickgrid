@@ -326,7 +326,7 @@ export interface GridOption {
   /** Header menu options */
   headerMenu?: HeaderMenu;
 
-  /** i18n translation service instance */
+  /** I18N translation service instance */
   i18n?: I18N;
 
   /** Do we leave space for new rows in the DOM visible buffer */
@@ -439,6 +439,12 @@ export interface GridOption {
 
   /** What is the top panel height in pixels (only type the number) */
   topPanelHeight?: number;
+
+  /** I18N Namespace Translation Prefix, you can also optionally change the separator by setting "translationNamespaceSeparator" (defaults to ":") */
+  translationNamespace?: string;
+
+  /** Defaults to ":", Separator to use between the I18N Namespace Prefix */
+  translationNamespaceSeparator?: string;
 
   /** Tree Data options to define how the tree data is structure */
   treeDataOptions?: TreeDataOption;

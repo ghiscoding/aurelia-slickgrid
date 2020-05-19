@@ -22,7 +22,7 @@ import {
   SelectOption
 } from './../models/index';
 import { CollectionService } from '../services/collection.service';
-import { disposeAllSubscriptions, getDescendantProperty, htmlEncode } from '../services/utilities';
+import { disposeAllSubscriptions, getDescendantProperty, getTranslationPrefix, htmlEncode } from '../services/utilities';
 
 @inject(BindingEngine, CollectionService, Optional.of(I18N))
 export class SelectFilter implements Filter {
@@ -502,10 +502,11 @@ export class SelectFilter implements Filter {
       options.single = false;
       options.okButton = true;
       options.addTitle = true; // show tooltip of all selected items while hovering the filter
-      options.countSelected = this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale() && this.i18n.tr('X_OF_Y_SELECTED') || this._locales && this._locales.TEXT_X_OF_Y_SELECTED;
-      options.allSelected = this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale() && this.i18n.tr('ALL_SELECTED') || this._locales && this._locales.TEXT_ALL_SELECTED;
-      options.okButtonText = this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale() && this.i18n.tr('OK') || this._locales && this._locales.TEXT_OK;
-      options.selectAllText = this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale() && this.i18n.tr('SELECT_ALL') || this._locales && this._locales.TEXT_SELECT_ALL;
+      const translationPrefix = getTranslationPrefix(this.gridOptions);
+      options.countSelected = this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale() && this.i18n.tr(`${translationPrefix}X_OF_Y_SELECTED`) || this._locales && this._locales.TEXT_X_OF_Y_SELECTED;
+      options.allSelected = this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale() && this.i18n.tr(`${translationPrefix}ALL_SELECTED`) || this._locales && this._locales.TEXT_ALL_SELECTED;
+      options.okButtonText = this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale() && this.i18n.tr(`${translationPrefix}OK`) || this._locales && this._locales.TEXT_OK;
+      options.selectAllText = this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale() && this.i18n.tr(`${translationPrefix}SELECT_ALL`) || this._locales && this._locales.TEXT_SELECT_ALL;
       options.selectAllDelimiter = ['', '']; // remove default square brackets of default text "[Select All]" => "Select All"
     }
     this.defaultOptions = options;
