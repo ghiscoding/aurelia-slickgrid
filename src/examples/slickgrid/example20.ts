@@ -274,7 +274,7 @@ export class Example20 {
     return (data === '' || data === null || data === undefined);
   }
 
-  onValidationError(e, args) {
+  onCellValidationError(e, args) {
     alert(args.validationResults.msg);
   }
 

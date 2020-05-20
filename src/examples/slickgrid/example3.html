@@ -68,7 +68,7 @@
                        dataset.bind="dataset"
                        sg-on-cell-change.delegate="onCellChanged($event.detail.eventData, $event.detail.args)"
                        sg-on-click.delegate="onCellClicked($event.detail.eventData, $event.detail.args)"
-                       sg-on-validation-error.delegate="onValidationError($event.detail.eventData, $event.detail.args)"
+                       sg-on-validation-error.delegate="onCellValidationError($event.detail.eventData, $event.detail.args)"
                        asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
     </aurelia-slickgrid>
   </div>

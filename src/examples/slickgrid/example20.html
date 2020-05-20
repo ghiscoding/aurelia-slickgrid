@@ -41,7 +41,7 @@
                      column-definitions.bind="columnDefinitions"
                      grid-options.bind="gridOptions"
                      dataset.bind="dataset"
-                     sg-on-validation-error.delegate="onValidationError($event.detail.eventData, $event.detail.args)"
+                     sg-on-validation-error.delegate="onCellValidationError($event.detail.eventData, $event.detail.args)"
                      asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
   </aurelia-slickgrid>
 </template>
