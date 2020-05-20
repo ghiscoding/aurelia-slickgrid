@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.18.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.18.0...v2.18.1) (2020-05-20)
+
+
+### Bug Fixes
+
+* **excel:** update excel builder dependency ([86fce02](https://github.com/ghiscoding/aurelia-slickgrid/commit/86fce0243b25e3fe039e197f8885c00390909edf))
+
 ## [2.18.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.17.9...v2.18.0) (2020-05-20)
 
 
