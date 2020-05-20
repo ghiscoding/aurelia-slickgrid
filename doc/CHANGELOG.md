@@ -2,6 +2,40 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.18.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.17.9...v2.18.0) (2020-05-20)
+
+
+### Features
+
+* **core:** update to latest TypeScript version ([330f8ad](https://github.com/ghiscoding/aurelia-slickgrid/commit/330f8ad8628e550d3eb85d9954e58e44b2c3d52f))
+* **editor:** add new Dual Input Editor & extract all Editor Validators ([#333](https://github.com/ghiscoding/aurelia-slickgrid/issues/333)) ([25ff639](https://github.com/ghiscoding/aurelia-slickgrid/commit/25ff6394df3681f1980fc0cf58f2d7aa0486f492))
+* **extension:** add column position option for checkbox row selector ([#317](https://github.com/ghiscoding/aurelia-slickgrid/issues/317)) ([1de66f4](https://github.com/ghiscoding/aurelia-slickgrid/commit/1de66f45e00895532c3a77b02eb7d38e907ea61c))
+* **extension:** add column position option for Row Detail icon ([5e496fe](https://github.com/ghiscoding/aurelia-slickgrid/commit/5e496fe16566f9fa151e1f3ee7147b062d1b55b9))
+* **extension:** add latest slickgrid with RowMove improvements ([#321](https://github.com/ghiscoding/aurelia-slickgrid/issues/321)) ([bf767c5](https://github.com/ghiscoding/aurelia-slickgrid/commit/bf767c5a488dfa57b32a3cd85ed46cd09750f48f))
+* **grouping:** add missing Grouping interface properties ([#325](https://github.com/ghiscoding/aurelia-slickgrid/issues/325)) ([35e2c67](https://github.com/ghiscoding/aurelia-slickgrid/commit/35e2c676c786f086134a2caab215d6fe660a7971))
+* **i18n:** add namespace prefix + separator grid option, closes [#338](https://github.com/ghiscoding/aurelia-slickgrid/issues/338) ([#344](https://github.com/ghiscoding/aurelia-slickgrid/issues/344)) ([115989d](https://github.com/ghiscoding/aurelia-slickgrid/commit/115989de00e5b5c280c96871c1b0d1c1e64cd3ac))
+* **query:** add queryFieldNameGetterFn callback know which field to use ([#326](https://github.com/ghiscoding/aurelia-slickgrid/issues/326)) ([2d7ebbc](https://github.com/ghiscoding/aurelia-slickgrid/commit/2d7ebbca5b86f0aadb8381ed7017ef752ccad116))
+* **sort:** add valueCouldBeUndefined column flag to help sorting ([#323](https://github.com/ghiscoding/aurelia-slickgrid/issues/323)) ([9c5996c](https://github.com/ghiscoding/aurelia-slickgrid/commit/9c5996c27a65f90bdf3fd3e618cd52951af5026e))
+* **style:** add Sort icon hint on hover when column is sortable ([#327](https://github.com/ghiscoding/aurelia-slickgrid/issues/327)) ([357fabd](https://github.com/ghiscoding/aurelia-slickgrid/commit/357fabd75255ef291a3ec5eca1efae3c0816a79f))
+* **styling:** add CSS/SASS Material Design & Salesforce styling themes ([#337](https://github.com/ghiscoding/aurelia-slickgrid/issues/337)) ([6c57616](https://github.com/ghiscoding/aurelia-slickgrid/commit/6c5761686e2f62bef591a6cdf850ab80c895b0d4))
+* **treeData:** add new Tree Data View feature ([#339](https://github.com/ghiscoding/aurelia-slickgrid/issues/339)) ([1526b87](https://github.com/ghiscoding/aurelia-slickgrid/commit/1526b879b6cd73cf7aa8290fda5f3b269095db4e))
+
+
+### Bug Fixes
+
+* **editor:** disregard Date Editor Flatpickr error and fix output format ([#332](https://github.com/ghiscoding/aurelia-slickgrid/issues/332)) ([c60a51c](https://github.com/ghiscoding/aurelia-slickgrid/commit/c60a51cbfb2b4d36812e316c36e771e91a19b02f))
+* **export:** remove unsupported file type ([#341](https://github.com/ghiscoding/aurelia-slickgrid/issues/341)) ([ffa66fd](https://github.com/ghiscoding/aurelia-slickgrid/commit/ffa66fdceba6a8c1316cbe8e59b6fe3fb3e99c5c))
+* **filter:** string filter should also work when using Contains ([#320](https://github.com/ghiscoding/aurelia-slickgrid/issues/320)) ([90a752b](https://github.com/ghiscoding/aurelia-slickgrid/commit/90a752b70ee1de46311b4fe3c1f124969deed024))
+* **filter:** when entering filter operator it shouldn't do any filtering ([#324](https://github.com/ghiscoding/aurelia-slickgrid/issues/324)) ([0f3bab6](https://github.com/ghiscoding/aurelia-slickgrid/commit/0f3bab6019ad35d86c1b1c56e87e6b5039deae63))
+* **formatter:** exportWithFormatter should work with undefined item prop ([#340](https://github.com/ghiscoding/aurelia-slickgrid/issues/340)) ([5e12d80](https://github.com/ghiscoding/aurelia-slickgrid/commit/5e12d80aa9c5f28a74f139cef238c9994c020a11))
+* **gridMenu:** column picker list should include grouped header titles ([#343](https://github.com/ghiscoding/aurelia-slickgrid/issues/343)) ([ae08a87](https://github.com/ghiscoding/aurelia-slickgrid/commit/ae08a87e8707cd82768144a502966ee395c03a3f))
+* **gridMenu:** the command "Toggle Filter Row" disappeared ([#334](https://github.com/ghiscoding/aurelia-slickgrid/issues/334)) ([23c94f2](https://github.com/ghiscoding/aurelia-slickgrid/commit/23c94f2bfcd76f909d06894e3b279aedab2ffe6b))
+* **gridService:** crud methods should support custom dataset id ([#336](https://github.com/ghiscoding/aurelia-slickgrid/issues/336)) ([c942929](https://github.com/ghiscoding/aurelia-slickgrid/commit/c9429296fe5af3df395d36ee1f04e7e1d8b84d44))
+* **pagination:** passing custom pagination sizes should work ([#342](https://github.com/ghiscoding/aurelia-slickgrid/issues/342)) ([1ca62a4](https://github.com/ghiscoding/aurelia-slickgrid/commit/1ca62a423eabadc0622628776dd7092acca33e26))
+* **resizer:** remove scrollbar measure compensate patch ([#319](https://github.com/ghiscoding/aurelia-slickgrid/issues/319)) ([2527589](https://github.com/ghiscoding/aurelia-slickgrid/commit/25275897f72e0e08b98ae635b768ae45464a99d9))
+* **rowDetail:** use latest SlickGrid version to fix issue with id ([#335](https://github.com/ghiscoding/aurelia-slickgrid/issues/335)) ([d89e707](https://github.com/ghiscoding/aurelia-slickgrid/commit/d89e707b4fc8d81e374f2e40530b10b2a026990d))
+* **sort:** header menu sorting should include columnId property ([d0cdfbe](https://github.com/ghiscoding/aurelia-slickgrid/commit/d0cdfbec67bbc5541788fa3957e85b59224327e2))
+
 ### [2.17.9](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.17.8...v2.17.9) (2020-03-19)
 
 
