@@ -195,7 +195,7 @@
       "aurelia-i18n": ">=2.1.0",
       "aurelia-pal": ">=1.4.0",
       "dompurify": "^2.0.11",
-      "excel-builder-webpacker": "^1.0.5",
+      "excel-builder-webpacker": "^1.0.6",
       "flatpickr": ">=4.5.0",
       "i18next-xhr-backend": ">=1.5.0",
       "jquery": "^3.4.1",
