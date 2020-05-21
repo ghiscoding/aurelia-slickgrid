@@ -16,11 +16,16 @@ One of the best javascript datagrid [SlickGrid](https://github.com/mleibman/Slic
 [MIT License](LICENSE)
 
 ### Like it? :star: it
-You like and use this great library `Aurelia-Slickgrid`? Be sure to upvote :star: and/or possibly contribute :)
+You like and use this great library `Aurelia-Slickgrid`? Be sure to upvote :star: and feel free to contribute :construction_worker:
 
 ### Like my work?
 If you like my work, you can also support me with caffeine
 [Buy Me a Coffee](https://ko-fi.com/N4N679OT) :coffee:
+
+I certainly drank many coffees to build and keep adding features for this great library.
+
+### Latest News & Releases
+Check out the [Releases](https://github.com/ghiscoding/aurelia-slickgrid/releases) section for all latest News & Releases.
 
 ## Fully Tested with [Jest](https://jestjs.io/)
 Aurelia-Slickgrid recently reached **100%** Test Coverage, we are talking about ~8300 lines of code (~2600 unit tests) that are now fully tested with [Jest](https://jestjs.io/).
@@ -34,14 +39,13 @@ Refer to the **[Wiki - HOWTO Step by Step](https://github.com/ghiscoding/aurelia
 - [Bootstrap 3 demo](https://ghiscoding.github.io/aurelia-slickgrid) / [examples repo](https://github.com/ghiscoding/aurelia-slickgrid/tree/master/aurelia-slickgrid/src/examples/slickgrid)
 - [Bootstrap 4 demo](https://ghiscoding.github.io/aurelia-slickgrid-demos) / [examples repo](https://github.com/ghiscoding/aurelia-slickgrid-demos/tree/master/webpack-bs4-demo)
 
+There are also 2 new Themes, Material & Salesforce that are available as well and if you wish to use SVG then take a look at the [Wiki - SVG Icons](https://github.com/ghiscoding/aurelia-slickgrid/wiki/SVG--Icons).
+
 #### Working Demos
 For complete working local demos, you can clone the [Aurelia-Slickgrid Demos](https://github.com/ghiscoding/aurelia-slickgrid-demos) repository (instruction are provided in the repo). This repo provides multiple samples (RequireJS, WebPack, CLI, ...) and also worth to know that the 2 WebPacks demos are updated frequently since they are the actual [Bootstrap 3 demo](https://ghiscoding.github.io/aurelia-slickgrid) / [Bootstrap 4 demo](https://ghiscoding.github.io/aurelia-slickgrid-demos/#/slickgrid).
 
 ## Wiki / Documentation
 The Wiki is where all the documentation and instructions will go, so please consult the [Aurelia-Slickgrid - Wiki](https://github.com/ghiscoding/aurelia-slickgrid/wiki) before opening any issues. The [Wiki - HOWTO](https://github.com/ghiscoding/aurelia-slickgrid/wiki/HOWTO--Step-by-Step) is a great place to start with.
-
-## Contributions / Comments
-Contributions are very welcome, this is what the community is for. If you wish to make a PR (Pull Request), please feel free to do so.
 
 ## Usage
 
@@ -53,7 +57,7 @@ You can see some screenshots below as well as instructions underneat them and if
 
 ## Screenshots
 
-Screenshots from the demo app with the `Bootstrap` theme (that is the only available theme, but there is a lot of SASS variables to make it look like Material, or other theme if you wish to. If you create a new theme, please submit a PR).
+Screenshots from the demo app with the `Bootstrap` theme.
 
 ### Slickgrid example with Formatters (last column shown is a custom Formatter)
 
