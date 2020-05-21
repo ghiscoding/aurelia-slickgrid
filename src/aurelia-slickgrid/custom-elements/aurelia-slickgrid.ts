@@ -93,6 +93,7 @@ export class AureliaSlickgridCustomElement {
   private _fixedWidth: number | null;
   private _hideHeaderRowAfterPageLoad = false;
   private _isGridInitialized = false;
+  private _isGridHavingFilters = false;
   private _isDatasetInitialized = false;
   private _isPaginationInitialized = false;
   private _isLocalGrid = true;
@@ -168,28 +169,10 @@ export class AureliaSlickgridCustomElement {
 
   attached() {
     this.initialization();
-    this._isGridInitialized = true;
-  }
-
-  private initializePaginationService(paginationOptions: Pagination) {
-    if (this.gridOptions) {
-      this.paginationData = {
-        gridOptions: this.gridOptions,
-        paginationService: this.paginationService,
-      };
-      this.paginationService.totalItems = this.totalItems;
-      this.paginationService.init(this.grid, this.dataview, paginationOptions, this.backendServiceApi);
-      this.subscriptions.push(
-        this.pluginEa.subscribe('paginationService:onPaginationChanged', (paginationChanges: ServicePagination) => this.paginationChanged(paginationChanges)),
-        this.pluginEa.subscribe('paginationService:onPaginationVisibilityChanged', (visibility: { visible: boolean }) => {
-          this.showPagination = visibility && visibility.visible || false;
-          if (this.gridOptions && this.gridOptions.backendServiceApi) {
-            refreshBackendDataset();
-          }
-        })
-      );
-      this._isPaginationInitialized = true;
+    if (this.columnDefinitions.findIndex((col) => col.filterable) > -1) {
+      this._isGridHavingFilters = true;
     }
+    this._isGridInitialized = true;
   }
 
   initialization() {
@@ -536,7 +519,7 @@ export class AureliaSlickgridCustomElement {
     this.subscriptions.push(
       this.globalEa.subscribe('i18n:locale:changed', () => {
         if (gridOptions.enableTranslate) {
-          if (!this._hideHeaderRowAfterPageLoad) {
+          if (!this._hideHeaderRowAfterPageLoad && this._isGridHavingFilters) {
             // before translating, make sure the filter row is visible to avoid having other problems,
             // because if it's not shown prior to translating then the filters won't be recreated after translating
             this.grid.setHeaderRowVisibility(true);
@@ -943,6 +926,28 @@ export class AureliaSlickgridCustomElement {
       eventInit.detail = data;
     }
     return this.elm.dispatchEvent(DOM.createCustomEvent(eventName, eventInit));
+  }
+
+  /** Initialize the Pagination Service once */
+  private initializePaginationService(paginationOptions: Pagination) {
+    if (this.gridOptions) {
+      this.paginationData = {
+        gridOptions: this.gridOptions,
+        paginationService: this.paginationService,
+      };
+      this.paginationService.totalItems = this.totalItems;
+      this.paginationService.init(this.grid, this.dataview, paginationOptions, this.backendServiceApi);
+      this.subscriptions.push(
+        this.pluginEa.subscribe('paginationService:onPaginationChanged', (paginationChanges: ServicePagination) => this.paginationChanged(paginationChanges)),
+        this.pluginEa.subscribe('paginationService:onPaginationVisibilityChanged', (visibility: { visible: boolean }) => {
+          this.showPagination = visibility && visibility.visible || false;
+          if (this.gridOptions && this.gridOptions.backendServiceApi) {
+            refreshBackendDataset();
+          }
+        })
+      );
+      this._isPaginationInitialized = true;
+    }
   }
 
   /** Load the Editor Collection asynchronously and replace the "collection" property when Promise resolves */
