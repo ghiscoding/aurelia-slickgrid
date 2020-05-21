@@ -27,12 +27,21 @@ export function configure(aurelia: FrameworkConfiguration, callback: (instance: 
   aurelia.container.registerTransient(Filters.autoComplete);
   aurelia.container.registerTransient(Filters.compoundDate);
   aurelia.container.registerTransient(Filters.compoundInput);
+  aurelia.container.registerTransient(Filters.compoundInputNumber);
+  aurelia.container.registerTransient(Filters.compoundInputPassword);
+  aurelia.container.registerTransient(Filters.compoundInputText);
   aurelia.container.registerTransient(Filters.compoundSlider);
+  aurelia.container.registerTransient(Filters.dateRange);
   aurelia.container.registerTransient(Filters.input);
+  aurelia.container.registerTransient(Filters.inputMask);
+  aurelia.container.registerTransient(Filters.inputNumber);
+  aurelia.container.registerTransient(Filters.inputPassword);
+  aurelia.container.registerTransient(Filters.inputText);
   aurelia.container.registerTransient(Filters.multipleSelect);
   aurelia.container.registerTransient(Filters.singleSelect);
   aurelia.container.registerTransient(Filters.select);
   aurelia.container.registerTransient(Filters.slider);
+  aurelia.container.registerTransient(Filters.sliderRange);
 
   const config = new SlickgridConfig();
 
