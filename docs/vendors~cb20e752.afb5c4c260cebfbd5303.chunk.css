@@ -52,7 +52,8 @@
   overflow: hidden;
   outline: 0;
   position: relative;
-  box-sizing: content-box; }
+  -webkit-box-sizing: content-box;
+          box-sizing: content-box; }
   .slickgrid-container .slick-group-header-columns {
     position: relative;
     white-space: nowrap;
@@ -65,7 +66,8 @@
   .slickgrid-container .slick-group-header-column.ui-state-default {
     position: relative;
     display: inline-block;
-    box-sizing: content-box !important;
+    -webkit-box-sizing: content-box !important;
+            box-sizing: content-box !important;
     /* this here only for Firefox! */
     overflow: hidden;
     text-overflow: ellipsis;
@@ -153,7 +155,8 @@
   .slickgrid-container .slick-header-column.ui-state-default {
     position: relative;
     display: inline-block;
-    box-sizing: content-box !important;
+    -webkit-box-sizing: content-box !important;
+            box-sizing: content-box !important;
     overflow: hidden;
     text-overflow: ellipsis;
     height: 16px;
@@ -166,7 +169,8 @@
     border-bottom: 0px !important;
     float: left; }
   .slickgrid-container .slick-cell {
-    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
     border-style: solid;
     padding: 1px 2px 1px 2px; }
   .slickgrid-container .slick-header-column {
@@ -195,7 +199,8 @@
   .slickgrid-container .slick-header-sortable .slick-column-name {
     margin-left: 10px; }
   .slickgrid-container .slick-header.ui-state-default {
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); }
+    -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); }
   .slickgrid-container .slick-column-name {
     text-overflow: ellipsis; }
   .slickgrid-container .slick-resizable-handle {
@@ -216,6 +221,7 @@
   .slickgrid-container .slick-cell.highlighted {
     background: lightskyblue;
     background: rgba(0, 0, 255, 0.2);
+    -webkit-transition: all 0.5s;
     transition: all 0.5s; }
   .slickgrid-container .slick-cell.flashing {
     border: 1px solid red !important; }
@@ -254,10 +260,12 @@
   background: red !important;
   display: inline-block;
   float: left;
-  transform: translate(0px, -100%); }
+  -webkit-transform: translate(0px, -100%);
+          transform: translate(0px, -100%); }
 
 .interact-drop-active {
-  box-shadow: inset 0 0 8px rgba(7, 67, 128, 0.5); }
+  -webkit-box-shadow: inset 0 0 8px rgba(7, 67, 128, 0.5);
+          box-shadow: inset 0 0 8px rgba(7, 67, 128, 0.5); }
 
 .interact-can-drop {
   opacity: .9; }
@@ -314,6 +322,7 @@
   border: 1px solid #b8b8b8;
   border-radius: 2px;
   padding: 6px;
+  -webkit-box-shadow: 2px 2px 2px silver;
   box-shadow: 1px 1px 1px silver;
   min-width: 150px;
   cursor: default;
@@ -405,7 +414,8 @@
   border: 1px solid #b8b8b8;
   border-radius: 2px;
   padding: 6px;
-  box-shadow: 1px 1px 1px silver;
+  -webkit-box-shadow: 1px 1px 1px silver;
+          box-shadow: 1px 1px 1px silver;
   min-width: 200px;
   cursor: default;
   position: absolute;
@@ -1053,6 +1063,7 @@
 .slick-header-button-hidden {
   width: 0;
   margin-right: -8px;
+  -webkit-transition: 0.2s width;
   transition: 0.2s width; }
 
 .slick-header-column:hover > .slick-header-button {
@@ -1143,9 +1154,11 @@
   width: 16px;
   /* Font Awesome sorting icons are not aligned in middle, let's align them ourselves */ }
   .slick-header-menuicon.fa-sort-asc {
-    transform: translateY(3px); }
+    -webkit-transform: translateY(3px);
+            transform: translateY(3px); }
   .slick-header-menuicon.fa-sort-desc {
-    transform: translateY(-2px); }
+    -webkit-transform: translateY(-2px);
+            transform: translateY(-2px); }
 
 .slick-header-menucontent {
   display: inline-block;
@@ -1332,7 +1345,9 @@ input.search-filter {
     border-radius: 0 4px 4px 0 !important; }
 
 .search-filter .flatpickr .flatpickr {
-  flex: 1;
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
   cursor: pointer; }
   .search-filter .flatpickr .flatpickr input.flatpickr.form-control,
   .search-filter .flatpickr .flatpickr .flatpickr-input.form-control {
@@ -1385,6 +1400,8 @@ input.flatpickr.form-control {
     cursor: move; }
   .slick-preheader-panel .ui-droppable .slick-groupby-remove, .slick-preheader-panel .ui-droppable-hover .slick-groupby-remove {
     cursor: pointer;
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
     display: inline-flex;
     color: pink;
     padding-left: 5px;
@@ -1412,7 +1429,9 @@ input.slider-filter-input[type=range] {
   /*removes default webkit styles*/
   -webkit-appearance: none;
   height: 27px;
-  flex: 1;
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
   padding: 0 6px;
   /* change runnable track color while in focus on all browsers */
   /* WebKit specific (Opera/Chrome/Safari) */
@@ -1553,7 +1572,9 @@ input.slider-editor-input[type=range] {
 .slider-range-container.slider-values {
   padding: 0; }
   .slider-range-container.slider-values .ui-slider-horizontal {
-    flex: 1;
+    -webkit-box-flex: 1;
+        -ms-flex: 1;
+            flex: 1;
     width: calc(98% - 16px);
     top: 12px;
     margin: 0 10px; }
@@ -1658,11 +1679,13 @@ input.slider-editor-input[type=range] {
 .slickgrid-container .slick-header-columns,
 .slickgrid-container .slick-header-column {
   background: rgba(255, 255, 255, 0.6);
-  box-sizing: content-box !important;
+  -webkit-box-sizing: content-box !important;
+          box-sizing: content-box !important;
   /* this here only for Firefox! */ }
 
 .slickgrid-container .slick-header-columns {
   /*border-bottom: 1px solid $grid-border-color;*/
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(60%, rgba(0, 0, 0, 0)), to(rgba(0, 0, 0, 0.1)));
   background: linear-gradient(rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 0.1)); }
 
 .slickgrid-container .slick-header-column {
@@ -1695,7 +1718,8 @@ input.slider-editor-input[type=range] {
     padding-bottom: 4px;
     padding-left: 4px;
     padding-right: 4px;
-    box-sizing: border-box; }
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box; }
     .slickgrid-container .slick-row .slick-cell.invalid {
       border-color: red;
       -moz-animation-duration: 0.2s;
@@ -1717,7 +1741,8 @@ input.slider-editor-input[type=range] {
         width: 100%;
         height: 100%;
         outline: 0;
-        transform: translate(0, -2px); }
+        -webkit-transform: translate(0, -2px);
+                transform: translate(0, -2px); }
   .slickgrid-container .slick-row.odd .slick-cell {
     background: #f7f7f7; }
     .slickgrid-container .slick-row.odd .slick-cell.selected {
@@ -1756,15 +1781,19 @@ input.slider-editor-input[type=range] {
 
 @-webkit-keyframes slickgrid-invalid-hilite {
   from {
-    box-shadow: 0 0 6px red; }
+    -webkit-box-shadow: 0 0 6px red;
+            box-shadow: 0 0 6px red; }
   to {
-    box-shadow: none; } }
+    -webkit-box-shadow: none;
+            box-shadow: none; } }
 
 @keyframes slickgrid-invalid-hilite {
   from {
-    box-shadow: 0 0 6px red; }
+    -webkit-box-shadow: 0 0 6px red;
+            box-shadow: 0 0 6px red; }
   to {
-    box-shadow: none; } }
+    -webkit-box-shadow: none;
+            box-shadow: none; } }
 
 .slickgrid-container .header-overlay,
 .slickgrid-container .cell-overlay,
@@ -2089,6 +2118,7 @@ input.editor-checkbox {
               animation: highlight-start 1.5s ease 1; }
       .slickgrid-container .grid-canvas .slick-row.highlight .slick-cell.copied {
         background: rgba(0, 0, 255, 0.2);
+        -webkit-transition: 0.5s background;
         transition: 0.5s background; }
       .slickgrid-container .grid-canvas .slick-row.highlight.odd {
         background-color: #c8ddea;
@@ -2096,6 +2126,7 @@ input.editor-checkbox {
                 animation: highlight-start 1.5s ease 1; }
       .slickgrid-container .grid-canvas .slick-row.highlight.odd .slick-cell.copied {
         background: rgba(0, 0, 255, 0.2);
+        -webkit-transition: 0.5s background;
         transition: 0.5s background; }
     .slickgrid-container .grid-canvas .slick-row.highlight-end {
       background-color: #c8ddea;
@@ -2107,11 +2138,15 @@ input.editor-checkbox {
                 animation: highlight-end 1.5s ease 1; }
     .slickgrid-container .grid-canvas .slick-row.highlighter {
       background: orange !important;
+      -webkit-transition-property: background;
       transition-property: background;
-      transition-duration: 3s;
-      transition-timing-function: ease-in; }
+      -webkit-transition-duration: 3s;
+              transition-duration: 3s;
+      -webkit-transition-timing-function: ease-in;
+              transition-timing-function: ease-in; }
     .slickgrid-container .grid-canvas .slick-row.copied {
       background: rgba(0, 0, 255, 0.2);
+      -webkit-transition: 0.5s background;
       transition: 0.5s background; }
     .slickgrid-container .grid-canvas .slick-row.odd {
       background: #f7f7f7; }
@@ -2123,6 +2158,7 @@ input.editor-checkbox {
         background-color: #dae8f1; }
       .slickgrid-container .grid-canvas .slick-row.odd .slick-cell.copied {
         background: rgba(0, 0, 255, 0.2);
+        -webkit-transition: 0.5s background;
         transition: 0.5s background; }
     .slickgrid-container .grid-canvas .slick-row.odd .slick-cell {
       background: inherit; }
@@ -2130,6 +2166,7 @@ input.editor-checkbox {
         background-color: #dae8f1; }
       .slickgrid-container .grid-canvas .slick-row.odd .slick-cell.copied {
         background: rgba(0, 0, 255, 0.2);
+        -webkit-transition: 0.5s background;
         transition: 0.5s background; }
     .slickgrid-container .grid-canvas .slick-row.slick-group-totals {
       color: gray;
@@ -2169,6 +2206,7 @@ input.editor-checkbox {
       background-color: #dae8f1; }
     .slickgrid-container .grid-canvas .slick-cell.copied {
       background: rgba(0, 0, 255, 0.2);
+      -webkit-transition: 0.5s background;
       transition: 0.5s background; }
     .slickgrid-container .grid-canvas .slick-cell select:not([multiple]).form-control {
       height: 100%;
@@ -2194,7 +2232,8 @@ input.editor-checkbox {
     border-bottom: 0 none;
     border-left: 0 none;
     width: 100%;
-    box-shadow: none !important; }
+    -webkit-box-shadow: none !important;
+            box-shadow: none !important; }
   .slickgrid-container .slick-headerrow {
     border-bottom: 0 none;
     border-top: 0 none;
@@ -2211,6 +2250,7 @@ input.editor-checkbox {
       padding: 0 6px;
       width: none;
       height: 27px;
+      -webkit-box-sizing: border-box;
       box-sizing: border-box; }
   .slickgrid-container .slick-header-columns {
     background: transparent;
@@ -2361,7 +2401,8 @@ input.editor-checkbox {
   background-color: #ffffff;
   border: 1px solid rgba(0, 0, 0, 0.15);
   border-radius: 4px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+          box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
   background-clip: padding-box;
   max-height: 25vh;
   min-height: 75px;
@@ -2394,4 +2435,4 @@ input.editor-checkbox {
   padding: 0;
   width: 1px; }
 
-/*# sourceMappingURL=vendors~cb20e752.28b2f8f2642d3a2ac0d1.bundle.map*/
+/*# sourceMappingURL=vendors~cb20e752.744176b3d4e84e9747ff.bundle.map*/

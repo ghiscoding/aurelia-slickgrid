@@ -47,12 +47,12 @@
 /* Row Move Manager Plugin */
 /* selector plugin */
 /* Viewport */
-/* Custom Footer */
 .slickgrid-container {
   overflow: hidden;
   outline: 0;
   position: relative;
-  box-sizing: content-box; }
+  -webkit-box-sizing: content-box;
+          box-sizing: content-box; }
   .slickgrid-container .slick-group-header-columns {
     position: relative;
     white-space: nowrap;
@@ -65,7 +65,8 @@
   .slickgrid-container .slick-group-header-column.ui-state-default {
     position: relative;
     display: inline-block;
-    box-sizing: content-box !important;
+    -webkit-box-sizing: content-box !important;
+            box-sizing: content-box !important;
     /* this here only for Firefox! */
     overflow: hidden;
     text-overflow: ellipsis;
@@ -153,7 +154,8 @@
   .slickgrid-container .slick-header-column.ui-state-default {
     position: relative;
     display: inline-block;
-    box-sizing: content-box !important;
+    -webkit-box-sizing: content-box !important;
+            box-sizing: content-box !important;
     overflow: hidden;
     text-overflow: ellipsis;
     height: 16px;
@@ -166,7 +168,8 @@
     border-bottom: 0px !important;
     float: left; }
   .slickgrid-container .slick-cell {
-    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
     border-style: solid;
     padding: 1px 2px 1px 2px; }
   .slickgrid-container .slick-header-column {
@@ -195,7 +198,8 @@
   .slickgrid-container .slick-header-sortable .slick-column-name {
     margin-left: 10px; }
   .slickgrid-container .slick-header.ui-state-default {
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); }
+    -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); }
   .slickgrid-container .slick-column-name {
     text-overflow: ellipsis; }
   .slickgrid-container .slick-resizable-handle {
@@ -216,6 +220,7 @@
   .slickgrid-container .slick-cell.highlighted {
     background: lightskyblue;
     background: rgba(0, 0, 255, 0.2);
+    -webkit-transition: all 0.5s;
     transition: all 0.5s; }
   .slickgrid-container .slick-cell.flashing {
     border: 1px solid red !important; }
@@ -254,10 +259,12 @@
   background: red !important;
   display: inline-block;
   float: left;
-  transform: translate(0px, -100%); }
+  -webkit-transform: translate(0px, -100%);
+          transform: translate(0px, -100%); }
 
 .interact-drop-active {
-  box-shadow: inset 0 0 8px rgba(7, 67, 128, 0.5); }
+  -webkit-box-shadow: inset 0 0 8px rgba(7, 67, 128, 0.5);
+          box-shadow: inset 0 0 8px rgba(7, 67, 128, 0.5); }
 
 .interact-can-drop {
   opacity: .9; }
@@ -308,12 +315,12 @@
 /* Row Move Manager Plugin */
 /* selector plugin */
 /* Viewport */
-/* Custom Footer */
 .slick-columnpicker {
   background-color: #ffffff;
   border: 1px solid #b8b8b8;
   border-radius: 2px;
   padding: 6px;
+  -webkit-box-shadow: 2px 2px 2px silver;
   box-shadow: 1px 1px 1px silver;
   min-width: 150px;
   cursor: default;
@@ -348,8 +355,7 @@
         margin: 4px; }
   .slick-columnpicker .title {
     font-size: 16px;
-    font-weight: normal;
-    width: calc(100% - 15px - 10px);
+    width: 60%;
     border-bottom: solid 1px #d6d6d6;
     margin-bottom: 10px; }
 
@@ -405,7 +411,8 @@
   border: 1px solid #b8b8b8;
   border-radius: 2px;
   padding: 6px;
-  box-shadow: 1px 1px 1px silver;
+  -webkit-box-shadow: 1px 1px 1px silver;
+          box-shadow: 1px 1px 1px silver;
   min-width: 200px;
   cursor: default;
   position: absolute;
@@ -424,10 +431,9 @@
       opacity: 0.9; }
   .slick-gridmenu .title {
     font-size: 16px;
-    font-weight: normal;
-    width: calc(100% - 15px - 10px);
+    width: calc(100% - 30px);
     border-bottom: solid 1px #d6d6d6;
-    margin-bottom: 10px; }
+    margin-bottom: 5px; }
   .slick-gridmenu li {
     list-style: none;
     margin: 0;
@@ -472,29 +478,24 @@
   .slick-gridmenu-item:hover {
     border: 1px solid #BFBDBD;
     background-color: #fafafa; }
-  .slick-gridmenu-item.slick-gridmenu-item-divider {
+  .slick-gridmenu-item.slick-header-menuitem-divider {
     cursor: default;
     border: none;
     overflow: hidden;
     padding: 0;
     height: 1px;
-    margin: 8px 5px;
-    background-color: #e7e7e7;
-    width: calc(100% - 40px); }
-    .slick-gridmenu-item.slick-gridmenu-item-divider:hover {
+    margin: 8px 3px;
+    background-color: #d8d8d8; }
+    .slick-gridmenu-item.slick-header-menuitem-divider:hover {
       border: none;
       background-color: silver; }
 
 .slick-gridmenu-item-divider.slick-gridmenu-item:hover {
-  background-color: #e7e7e7; }
+  background-color: #d8d8d8; }
 
 .slick-gridmenu-item-disabled {
-  cursor: inherit;
   border-color: transparent !important;
-  background: inherit !important;
-  color: silver; }
-  .slick-gridmenu-item-disabled .slick-gridmenu-icon, .slick-gridmenu-item-disabled .slick-gridmenu-content {
-    color: silver; }
+  background: inherit !important; }
 
 .slick-gridmenu-icon {
   display: inline-block;
@@ -556,6 +557,10 @@
     /* checked icon */
     width: 13px; }
 
+/* Disabled */
+.slick-gridmenu-item-disabled {
+  color: silver; }
+
 /*!
  * SlickGrid custom styling for Bootstrap (https://github.com/ghiscoding/aurelia-slickgrid)
  * Licensed under MIT (https://github.com/ghiscoding/aurelia-slickgrid/blob/master/LICENSE)
@@ -598,7 +603,6 @@
 /* Row Move Manager Plugin */
 /* selector plugin */
 /* Viewport */
-/* Custom Footer */
 .slick-cell.active input.editor-text {
   border: initial;
   background: #ffffff;
@@ -676,7 +680,6 @@
 /* Row Move Manager Plugin */
 /* selector plugin */
 /* Viewport */
-/* Custom Footer */
 /* Pagination styling */
 .slick-pagination {
   border-top: 0 none;
@@ -711,7 +714,7 @@
       .slick-pagination .slick-pagination-nav .slick-page-number input {
         background-color: #fafbed;
         height: 26px;
-        width: 50px;
+        width: 44px;
         padding: 2px;
         display: inline-block; }
     .slick-pagination .slick-pagination-nav .pagination {
@@ -760,72 +763,6 @@
     .slick-pagination .slick-pagination-settings .slick-pagination-count {
       margin-left: 2px; }
 
-/*!
- * SlickGrid custom styling for Bootstrap (https://github.com/ghiscoding/aurelia-slickgrid)
- * Licensed under MIT (https://github.com/ghiscoding/aurelia-slickgrid/blob/master/LICENSE)
- * @author: Ghislain B. (ghiscoding)
- */
-/*!
-
-/* SlickGrid Bootstrap variables */
-/* Used by slick-bootstrap.scss */
-/* Slickgrid container, including headers but excluding pagination */
-/* grid */
-/* cell */
-/* row */
-/* Pre-Header - Header Grouping colspan */
-/* header */
-/* Frozen pinned rows/columns */
-/* icon font is using Font-Awesome by default but could be changed to any other icon package like Glyphicons, ... */
-/* AutoComplete */
-/* Sorting */
-/* Grouping Totals Formatter */
-/* Column picker */
-/** Detail View Plugin */
-/* Excel copy plugin */
-/* Grid Menu - hamburger menu */
-/* (Action) Cell Menu Plugin */
-/* Context Menu Plugin */
-/* Header Menu Plugin */
-/* Checkbox Selector / Row Selection */
-/* Editors */
-/* negative number to cancel inside padding */
-/* Compound Filters */
-/** Date Range Filters */
-/* Draggable Grouping Plugin */
-/* Input Slider Filter (vanilla html) */
-/* ms only */
-/* ms only */
-/* Input Range Slider Filter (with jQuery UI) */
-/* Multiple-Select Filter */
-/* pagination variables */
-/* Row Move Manager Plugin */
-/* selector plugin */
-/* Viewport */
-/* Custom Footer */
-.slick-custom-footer {
-  color: #808080;
-  padding: 5px;
-  background-color: transparent;
-  font-style: italic;
-  font-weight: normal;
-  height: 30px; }
-  .slick-custom-footer .left-footer {
-    color: #808080;
-    font-style: italic;
-    font-weight: normal;
-    text-align: left;
-    padding: 0px; }
-  .slick-custom-footer .right-footer.metrics {
-    color: #808080;
-    text-align: right;
-    font-style: italic;
-    font-weight: normal;
-    text-align: right;
-    padding: 0px; }
-    .slick-custom-footer .right-footer.metrics .separator {
-      margin: 2px; }
-
 /* plugin variables */
 /*!
  * SlickGrid custom styling for Bootstrap (https://github.com/ghiscoding/aurelia-slickgrid)
@@ -869,7 +806,6 @@
 /* Row Move Manager Plugin */
 /* selector plugin */
 /* Viewport */
-/* Custom Footer */
 .slick-cell-menu {
   position: absolute;
   background: #ffffff;
@@ -918,12 +854,11 @@
       overflow: hidden;
       padding: 0;
       height: 1px;
-      margin: 8px 5px;
-      background-color: #e7e7e7;
-      width: calc(100% - 40px); }
+      margin: 8px 3px;
+      background-color: #e5e5e5; }
       .slick-cell-menu .slick-cell-menu-item.slick-cell-menu-item-divider:hover {
         border: none;
-        background-color: #e7e7e7; }
+        background-color: #e5e5e5; }
     .slick-cell-menu .slick-cell-menu-item .slick-cell-menu-icon {
       background-position: center center;
       background-repeat: no-repeat;
@@ -940,8 +875,6 @@
       background: inherit !important;
       color: silver;
       cursor: inherit; }
-      .slick-cell-menu .slick-cell-menu-item.slick-cell-menu-item-disabled .slick-cell-menu-icon, .slick-cell-menu .slick-cell-menu-item.slick-cell-menu-item-disabled .slick-cell-menu-content {
-        color: silver; }
   .slick-cell-menu .slick-cell-menu-option-list {
     margin-bottom: 10px; }
   .slick-cell-menu button + .slick-cell-menu-command-list .slick-cell-menu-item:first-child,
@@ -996,12 +929,11 @@
       overflow: hidden;
       padding: 0;
       height: 1px;
-      margin: 8px 5px;
-      background-color: #e7e7e7;
-      width: calc(100% - 40px); }
+      margin: 8px 3px;
+      background-color: #e5e5e5; }
       .slick-context-menu .slick-context-menu-item.slick-context-menu-item-divider:hover {
         border: none;
-        background-color: #e7e7e7; }
+        background-color: #e5e5e5; }
     .slick-context-menu .slick-context-menu-item .slick-context-menu-icon {
       background-position: center center;
       background-repeat: no-repeat;
@@ -1018,8 +950,6 @@
       background: inherit !important;
       color: silver;
       cursor: inherit; }
-      .slick-context-menu .slick-context-menu-item.slick-context-menu-item-disabled .slick-context-menu-icon, .slick-context-menu .slick-context-menu-item.slick-context-menu-item-disabled .slick-context-menu-content {
-        color: silver; }
   .slick-context-menu .slick-context-menu-option-list {
     margin-bottom: 10px; }
   .slick-context-menu button + .slick-context-menu-command-list .slick-context-menu-item:first-child,
@@ -1053,6 +983,7 @@
 .slick-header-button-hidden {
   width: 0;
   margin-right: -8px;
+  -webkit-transition: 0.2s width;
   transition: 0.2s width; }
 
 .slick-header-column:hover > .slick-header-button {
@@ -1064,9 +995,6 @@
   cursor: pointer;
   display: none;
   position: absolute;
-  border: 1px solid #BFBDBD;
-  border-width: 0px;
-  padding: 0px;
   bottom: 0;
   right: 3px;
   top: 0;
@@ -1091,6 +1019,12 @@
   z-index: 100000;
   cursor: default;
   display: inline-block; }
+  .slick-header-menu button {
+    border: 1px solid #BFBDBD;
+    background-color: #ffffff;
+    width: 45px;
+    padding: 4px;
+    margin: 4px 4px 4px 0; }
   .slick-header-menu .filter {
     border: 1px solid #BFBDBD;
     font-size: 8pt;
@@ -1124,14 +1058,13 @@
     padding: 0;
     height: 1px;
     margin: 8px 3px;
-    background-color: #e7e7e7;
-    width: 95%; }
+    background-color: #e5e5e5; }
     .slick-header-menuitem.slick-header-menuitem-divider:hover {
       border: none;
       background-color: silver; }
 
 .slick-header-menuitem-divider.slick-header-menuitem:hover {
-  background-color: #e7e7e7; }
+  background-color: #e5e5e5; }
 
 .slick-header-menuicon {
   background-position: center center;
@@ -1143,9 +1076,11 @@
   width: 16px;
   /* Font Awesome sorting icons are not aligned in middle, let's align them ourselves */ }
   .slick-header-menuicon.fa-sort-asc {
-    transform: translateY(3px); }
+    -webkit-transform: translateY(3px);
+            transform: translateY(3px); }
   .slick-header-menuicon.fa-sort-desc {
-    transform: translateY(-2px); }
+    -webkit-transform: translateY(-2px);
+            transform: translateY(-2px); }
 
 .slick-header-menucontent {
   display: inline-block;
@@ -1157,8 +1092,6 @@
   background: inherit !important;
   color: silver;
   cursor: inherit; }
-  .slick-header-menuitem-disabled .slick-header-menuicon, .slick-header-menuitem-disabled .slick-header-menucontent {
-    color: silver; }
 
 .slick-cell.cell-reorder:before {
   font-family: "FontAwesome";
@@ -1332,7 +1265,9 @@ input.search-filter {
     border-radius: 0 4px 4px 0 !important; }
 
 .search-filter .flatpickr .flatpickr {
-  flex: 1;
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
   cursor: pointer; }
   .search-filter .flatpickr .flatpickr input.flatpickr.form-control,
   .search-filter .flatpickr .flatpickr .flatpickr-input.form-control {
@@ -1385,6 +1320,8 @@ input.flatpickr.form-control {
     cursor: move; }
   .slick-preheader-panel .ui-droppable .slick-groupby-remove, .slick-preheader-panel .ui-droppable-hover .slick-groupby-remove {
     cursor: pointer;
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
     display: inline-flex;
     color: pink;
     padding-left: 5px;
@@ -1412,7 +1349,9 @@ input.slider-filter-input[type=range] {
   /*removes default webkit styles*/
   -webkit-appearance: none;
   height: 27px;
-  flex: 1;
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
   padding: 0 6px;
   /* change runnable track color while in focus on all browsers */
   /* WebKit specific (Opera/Chrome/Safari) */
@@ -1553,7 +1492,9 @@ input.slider-editor-input[type=range] {
 .slider-range-container.slider-values {
   padding: 0; }
   .slider-range-container.slider-values .ui-slider-horizontal {
-    flex: 1;
+    -webkit-box-flex: 1;
+        -ms-flex: 1;
+            flex: 1;
     width: calc(98% - 16px);
     top: 12px;
     margin: 0 10px; }
@@ -1651,18 +1592,19 @@ input.slider-editor-input[type=range] {
 /* Row Move Manager Plugin */
 /* selector plugin */
 /* Viewport */
-/* Custom Footer */
 .pointer {
   cursor: pointer; }
 
 .slickgrid-container .slick-header-columns,
 .slickgrid-container .slick-header-column {
   background: rgba(255, 255, 255, 0.6);
-  box-sizing: content-box !important;
+  -webkit-box-sizing: content-box !important;
+          box-sizing: content-box !important;
   /* this here only for Firefox! */ }
 
 .slickgrid-container .slick-header-columns {
   /*border-bottom: 1px solid $grid-border-color;*/
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(60%, rgba(0, 0, 0, 0)), to(rgba(0, 0, 0, 0.1)));
   background: linear-gradient(rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 0.1)); }
 
 .slickgrid-container .slick-header-column {
@@ -1695,7 +1637,8 @@ input.slider-editor-input[type=range] {
     padding-bottom: 4px;
     padding-left: 4px;
     padding-right: 4px;
-    box-sizing: border-box; }
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box; }
     .slickgrid-container .slick-row .slick-cell.invalid {
       border-color: red;
       -moz-animation-duration: 0.2s;
@@ -1706,9 +1649,6 @@ input.slider-editor-input[type=range] {
       animation-name: slickgrid-invalid-hilite; }
     .slickgrid-container .slick-row .slick-cell.selected {
       background-color: #e7e7c3; }
-      .slickgrid-container .slick-row .slick-cell.selected .cell-selection {
-        background-color: transparent;
-        /* show default selected row background */ }
     .slickgrid-container .slick-row .slick-cell.active {
       border: 1px solid #aaaaaa;
       padding-top: 5px;
@@ -1717,7 +1657,8 @@ input.slider-editor-input[type=range] {
         width: 100%;
         height: 100%;
         outline: 0;
-        transform: translate(0, -2px); }
+        -webkit-transform: translate(0, -2px);
+                transform: translate(0, -2px); }
   .slickgrid-container .slick-row.odd .slick-cell {
     background: #f7f7f7; }
     .slickgrid-container .slick-row.odd .slick-cell.selected {
@@ -1756,15 +1697,19 @@ input.slider-editor-input[type=range] {
 
 @-webkit-keyframes slickgrid-invalid-hilite {
   from {
-    box-shadow: 0 0 6px red; }
+    -webkit-box-shadow: 0 0 6px red;
+            box-shadow: 0 0 6px red; }
   to {
-    box-shadow: none; } }
+    -webkit-box-shadow: none;
+            box-shadow: none; } }
 
 @keyframes slickgrid-invalid-hilite {
   from {
-    box-shadow: 0 0 6px red; }
+    -webkit-box-shadow: 0 0 6px red;
+            box-shadow: 0 0 6px red; }
   to {
-    box-shadow: none; } }
+    -webkit-box-shadow: none;
+            box-shadow: none; } }
 
 .slickgrid-container .header-overlay,
 .slickgrid-container .cell-overlay,
@@ -1833,7 +1778,6 @@ input.slider-editor-input[type=range] {
 /* Row Move Manager Plugin */
 /* selector plugin */
 /* Viewport */
-/* Custom Footer */
 .full-height {
   height: 100%; }
 
@@ -2035,7 +1979,6 @@ input.editor-checkbox {
 /* Row Move Manager Plugin */
 /* selector plugin */
 /* Viewport */
-/* Custom Footer */
 @-webkit-keyframes highlight-start {
   to {
     background: #c8ddea; }
@@ -2066,7 +2009,6 @@ input.editor-checkbox {
   border-left: 0 none;
   border-right: 0 none;
   position: relative;
-  /** Header Grouping **/
   /** Frozen/Pinned styling */ }
   .slickgrid-container input[type="checkbox"] {
     vertical-align: baseline;
@@ -2089,6 +2031,7 @@ input.editor-checkbox {
               animation: highlight-start 1.5s ease 1; }
       .slickgrid-container .grid-canvas .slick-row.highlight .slick-cell.copied {
         background: rgba(0, 0, 255, 0.2);
+        -webkit-transition: 0.5s background;
         transition: 0.5s background; }
       .slickgrid-container .grid-canvas .slick-row.highlight.odd {
         background-color: #c8ddea;
@@ -2096,6 +2039,7 @@ input.editor-checkbox {
                 animation: highlight-start 1.5s ease 1; }
       .slickgrid-container .grid-canvas .slick-row.highlight.odd .slick-cell.copied {
         background: rgba(0, 0, 255, 0.2);
+        -webkit-transition: 0.5s background;
         transition: 0.5s background; }
     .slickgrid-container .grid-canvas .slick-row.highlight-end {
       background-color: #c8ddea;
@@ -2107,11 +2051,15 @@ input.editor-checkbox {
                 animation: highlight-end 1.5s ease 1; }
     .slickgrid-container .grid-canvas .slick-row.highlighter {
       background: orange !important;
+      -webkit-transition-property: background;
       transition-property: background;
-      transition-duration: 3s;
-      transition-timing-function: ease-in; }
+      -webkit-transition-duration: 3s;
+              transition-duration: 3s;
+      -webkit-transition-timing-function: ease-in;
+              transition-timing-function: ease-in; }
     .slickgrid-container .grid-canvas .slick-row.copied {
       background: rgba(0, 0, 255, 0.2);
+      -webkit-transition: 0.5s background;
       transition: 0.5s background; }
     .slickgrid-container .grid-canvas .slick-row.odd {
       background: #f7f7f7; }
@@ -2123,6 +2071,7 @@ input.editor-checkbox {
         background-color: #dae8f1; }
       .slickgrid-container .grid-canvas .slick-row.odd .slick-cell.copied {
         background: rgba(0, 0, 255, 0.2);
+        -webkit-transition: 0.5s background;
         transition: 0.5s background; }
     .slickgrid-container .grid-canvas .slick-row.odd .slick-cell {
       background: inherit; }
@@ -2130,6 +2079,7 @@ input.editor-checkbox {
         background-color: #dae8f1; }
       .slickgrid-container .grid-canvas .slick-row.odd .slick-cell.copied {
         background: rgba(0, 0, 255, 0.2);
+        -webkit-transition: 0.5s background;
         transition: 0.5s background; }
     .slickgrid-container .grid-canvas .slick-row.slick-group-totals {
       color: gray;
@@ -2169,6 +2119,7 @@ input.editor-checkbox {
       background-color: #dae8f1; }
     .slickgrid-container .grid-canvas .slick-cell.copied {
       background: rgba(0, 0, 255, 0.2);
+      -webkit-transition: 0.5s background;
       transition: 0.5s background; }
     .slickgrid-container .grid-canvas .slick-cell select:not([multiple]).form-control {
       height: 100%;
@@ -2194,7 +2145,8 @@ input.editor-checkbox {
     border-bottom: 0 none;
     border-left: 0 none;
     width: 100%;
-    box-shadow: none !important; }
+    -webkit-box-shadow: none !important;
+            box-shadow: none !important; }
   .slickgrid-container .slick-headerrow {
     border-bottom: 0 none;
     border-top: 0 none;
@@ -2211,7 +2163,11 @@ input.editor-checkbox {
       padding: 0 6px;
       width: none;
       height: 27px;
+      -webkit-box-sizing: border-box;
       box-sizing: border-box; }
+  .slickgrid-container .slick-preheader-panel.ui-state-default .slick-header-column {
+    border-left: none !important;
+    font-size: 16px !important; }
   .slickgrid-container .slick-header-columns {
     background: transparent;
     width: calc(100% - 16px); }
@@ -2290,16 +2246,6 @@ input.editor-checkbox {
       .slickgrid-container .slick-header-columns .slick-header-column .slick-resizable-handle:hover {
         border-right: 1px solid #d0d0d0;
         right: 0; }
-  .slickgrid-container .slick-preheader-panel.ui-state-default .slick-header-column {
-    border-left: none;
-    border-right: none;
-    border-bottom: none;
-    border-top: none;
-    font-size: 17px; }
-  .slickgrid-container .slick-preheader-panel.ui-state-default .slick-header-column:first-child {
-    border-left: none; }
-  .slickgrid-container .slick-preheader-panel.ui-state-default .slick-header-column:last-child {
-    border-right: none; }
   .slickgrid-container .slick-row .slick-cell.frozen:last-child,
   .slickgrid-container .slick-headerrow-column.frozen:last-child,
   .slickgrid-container .slick-footerrow-column.frozen:last-child {
@@ -2351,7 +2297,6 @@ input.editor-checkbox {
 /* Row Move Manager Plugin */
 /* selector plugin */
 /* Viewport */
-/* Custom Footer */
 .ui-autocomplete {
   position: absolute;
   z-index: 1000;
@@ -2361,7 +2306,8 @@ input.editor-checkbox {
   background-color: #ffffff;
   border: 1px solid rgba(0, 0, 0, 0.15);
   border-radius: 4px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+          box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
   background-clip: padding-box;
   max-height: 25vh;
   min-height: 75px;
@@ -2394,4 +2340,4 @@ input.editor-checkbox {
   padding: 0;
   width: 1px; }
 
-/*# sourceMappingURL=vendors~cb20e752.28b2f8f2642d3a2ac0d1.bundle.map*/
+/*# sourceMappingURL=vendors~cb20e752.6b09490dd44d945c2367.bundle.map*/
