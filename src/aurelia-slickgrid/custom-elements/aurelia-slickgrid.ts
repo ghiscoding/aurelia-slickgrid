@@ -1027,7 +1027,7 @@ export class AureliaSlickgridCustomElement {
    */
   private optionallyShowCustomFooterWithMetrics() {
     if (this.gridOptions) {
-      if ((this.gridOptions.enableTranslate)) {
+      if (this.gridOptions.enableTranslate) {
         this.translateCustomFooterTexts();
       } else if (this.gridOptions.customFooterOptions) {
         const customFooterOptions = this.gridOptions.customFooterOptions;
