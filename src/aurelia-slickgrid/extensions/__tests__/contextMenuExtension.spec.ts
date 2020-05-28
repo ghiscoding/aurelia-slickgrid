@@ -10,7 +10,7 @@ import { SharedService } from '../../services/shared.service';
 import { Column, DelimiterType, FileType, GridOption, MenuCommandItem } from '../../models';
 import { ExcelExportService, ExportService, TreeDataService } from '../../services';
 
-declare var Slick: any;
+declare const Slick: any;
 
 const excelExportServiceStub = {
   exportToExcel: jest.fn(),

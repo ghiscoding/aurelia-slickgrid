@@ -3,7 +3,7 @@ import 'slickgrid/slick.remotemodel'; // SlickGrid Remote Plugin
 import { bindable, bindingMode } from 'aurelia-framework';
 import { AureliaGridInstance, Column, Formatter, GridOption } from '../../aurelia-slickgrid';
 
-declare var Slick: any;
+declare const Slick: any;
 
 const brandFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any) => {
   return dataContext && dataContext.brand && dataContext.brand.name || '';

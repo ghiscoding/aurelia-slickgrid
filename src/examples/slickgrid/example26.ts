@@ -19,7 +19,7 @@ import { CustomAureliaViewModelEditor } from './custom-aureliaViewModelEditor';
 import { CustomAureliaViewModelFilter } from './custom-aureliaViewModelFilter';
 
 // using external non-typed js libraries
-declare var Slick: any;
+declare const Slick: any;
 
 const NB_ITEMS = 100;
 

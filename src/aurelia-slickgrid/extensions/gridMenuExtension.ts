@@ -26,7 +26,7 @@ import { SortService } from '../services/sort.service';
 import { getTranslationPrefix } from '../services/utilities';
 
 // using external non-typed js libraries
-declare var Slick: any;
+declare const Slick: any;
 
 @singleton(true)
 @inject(

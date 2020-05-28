@@ -22,7 +22,7 @@ import { SortService } from './sort.service';
 import { SlickgridEventAggregator } from '../custom-elements/slickgridEventAggregator';
 
 // using external non-typed js libraries
-declare var Slick: any;
+declare const Slick: any;
 
 @singleton(true)
 @inject(SlickgridEventAggregator, ExtensionService, FilterService, SharedService, SortService)

@@ -5,7 +5,7 @@ import { ExtensionUtility } from '../../extensions/extensionUtility';
 import { I18N } from 'aurelia-i18n';
 import { BindingSignaler } from 'aurelia-templating-resources';
 
-declare var Slick: any;
+declare const Slick: any;
 const gridId = 'grid1';
 const gridUid = 'slickgrid_124343';
 const containerId = 'demo-container';

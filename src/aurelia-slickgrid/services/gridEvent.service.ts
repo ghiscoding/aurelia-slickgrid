@@ -2,7 +2,7 @@ import { singleton } from 'aurelia-framework';
 import { CellArgs, Column, GridOption, OnEventArgs, SlickEventHandler } from './../models/index';
 
 // using external non-typed js libraries
-declare var Slick: any;
+declare const Slick: any;
 
 @singleton(true)
 export class GridEventService {

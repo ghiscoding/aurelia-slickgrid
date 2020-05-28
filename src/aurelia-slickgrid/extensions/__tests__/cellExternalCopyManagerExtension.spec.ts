@@ -6,7 +6,7 @@ import { SharedService } from '../../services/shared.service';
 import { SelectedRange, EditCommand, Formatter } from '../../models';
 import { Formatters } from '../../formatters';
 
-declare var Slick: any;
+declare const Slick: any;
 jest.mock('flatpickr', () => { });
 
 const gridStub = {

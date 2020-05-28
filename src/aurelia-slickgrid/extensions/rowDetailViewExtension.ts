@@ -10,7 +10,7 @@ import { addToArrayWhenNotExists, disposeAllSubscriptions } from '../services/ut
 import { SlickgridEventAggregator } from '../custom-elements/slickgridEventAggregator';
 
 // using external non-typed js libraries
-declare var Slick: any;
+declare const Slick: any;
 
 const ROW_DETAIL_CONTAINER_PREFIX = 'container_';
 const PRELOAD_CONTAINER_PREFIX = 'container_loading';

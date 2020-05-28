@@ -24,7 +24,7 @@ import { ExtensionUtility } from './extensionUtility';
 import { SlickgridEventAggregator } from '../custom-elements/slickgridEventAggregator';
 
 // using external non-typed js libraries
-declare var Slick: any;
+declare const Slick: any;
 
 @singleton(true)
 @inject(

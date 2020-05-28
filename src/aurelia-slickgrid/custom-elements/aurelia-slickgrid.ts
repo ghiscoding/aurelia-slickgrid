@@ -57,7 +57,7 @@ import { SharedService } from '../services/shared.service';
 import { SlickgridEventAggregator } from './slickgridEventAggregator';
 
 // using external non-typed js libraries
-declare var Slick: any;
+declare const Slick: any;
 
 const DEFAULT_AURELIA_EVENT_PREFIX = 'asg';
 const DEFAULT_SLICKGRID_EVENT_PREFIX = 'sg';

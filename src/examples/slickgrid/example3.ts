@@ -23,7 +23,7 @@ import { CustomInputFilter } from './custom-inputFilter';
 import * as $ from 'jquery';
 
 // using external non-typed js libraries
-declare var Slick: any;
+declare const Slick: any;
 
 const NB_ITEMS = 100;
 const URL_SAMPLE_COLLECTION_DATA = 'assets/data/collection_100_numbers.json';

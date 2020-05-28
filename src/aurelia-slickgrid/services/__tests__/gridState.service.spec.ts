@@ -20,7 +20,7 @@ import {
 } from '../../models';
 import { SharedService } from '../shared.service';
 
-declare var Slick: any;
+declare const Slick: any;
 
 const gridOptionMock = {
   enableAutoResize: true

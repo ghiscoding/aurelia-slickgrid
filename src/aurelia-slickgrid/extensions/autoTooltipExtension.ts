@@ -4,7 +4,7 @@ import { Extension, ExtensionName } from '../models/index';
 import { ExtensionUtility } from './extensionUtility';
 
 // using external non-typed js libraries
-declare var Slick: any;
+declare const Slick: any;
 
 @singleton(true)
 @inject(ExtensionUtility, SharedService)

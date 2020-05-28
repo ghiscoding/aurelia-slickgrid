@@ -4,7 +4,7 @@ import { EventAggregator } from 'aurelia-event-aggregator';
 import { GridService, ExtensionService, FilterService, GridStateService, SharedService, SortService } from '../index';
 import { GridOption, CellArgs, Column, OnEventArgs } from '../../models';
 
-declare var Slick: any;
+declare const Slick: any;
 
 const mockSelectionModel = jest.fn().mockImplementation(() => ({
   init: jest.fn(),

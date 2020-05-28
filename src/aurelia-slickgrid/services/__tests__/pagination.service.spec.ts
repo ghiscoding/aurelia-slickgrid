@@ -6,7 +6,7 @@ import { SharedService } from '../shared.service';
 import { Column, GridOption } from '../../models';
 import * as utilities from '../backend-utilities';
 
-declare var Slick: any;
+declare const Slick: any;
 
 const mockExecuteBackendProcess = jest.fn();
 // @ts-ignore
