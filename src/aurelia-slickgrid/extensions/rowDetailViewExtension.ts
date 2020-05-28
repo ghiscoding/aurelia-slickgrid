@@ -355,7 +355,8 @@ export class RowDetailViewExtension implements Extension {
           id: args.item[this.datasetIdPropName],
           dataContext: args.item
         };
-        addToArrayWhenNotExists(this._slots, viewInfo);
+        const idPropName = this.gridOptions.datasetIdPropertyName || 'id';
+        addToArrayWhenNotExists(this._slots, viewInfo, idPropName);
       }
     } else {
       // collapsing, so dispose of the View/ViewSlot
