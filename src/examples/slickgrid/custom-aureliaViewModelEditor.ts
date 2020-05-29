@@ -171,7 +171,7 @@ export class CustomAureliaViewModelEditor implements Editor {
   }
 
   isValueChanged() {
-    return (!(this.selectedItem.id === '' && this.defaultId == null)) && (this.selectedItem.id !== this.defaultId);
+    return (!(this.selectedItem.id === '' && (this.defaultId === null || this.defaultId === undefined))) && (this.selectedItem.id !== this.defaultId);
   }
 
   validate(): EditorValidatorOutput {
