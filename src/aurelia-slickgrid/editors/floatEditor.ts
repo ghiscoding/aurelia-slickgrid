@@ -1,5 +1,4 @@
-import { Constants } from '../constants';
-import { Column, ColumnEditor, Editor, EditorArguments, EditorValidator, EditorValidatorOutput, KeyCode } from './../models/index';
+import { Column, ColumnEditor, Editor, EditorArguments, EditorValidator, EditorValidatorOutput, KeyCode, SlickGrid } from './../models/index';
 import { setDeepValue, getDescendantProperty } from '../services/utilities';
 import * as $ from 'jquery';
 import { floatValidator } from '../editorValidators/floatValidator';
@@ -16,7 +15,7 @@ export class FloatEditor implements Editor {
   originalValue: number | string;
 
   /** SlickGrid Grid object */
-  grid: any;
+  grid: SlickGrid;
 
   constructor(private args: EditorArguments) {
     if (!args) {

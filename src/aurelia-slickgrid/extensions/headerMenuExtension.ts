@@ -15,6 +15,7 @@ import {
   MenuCommandItemCallbackArgs,
   Locale,
   SlickEventHandler,
+  SlickGrid,
 } from '../models/index';
 import { FilterService } from '../services/filter.service';
 import { SortService } from '../services/sort.service';
@@ -106,14 +107,14 @@ export class HeaderMenuExtension implements Extension {
           }
         });
         if (this.sharedService.gridOptions.headerMenu && typeof this.sharedService.gridOptions.headerMenu.onBeforeMenuShow === 'function') {
-          this._eventHandler.subscribe(this._addon.onBeforeMenuShow, (event: Event, args: { grid: any; column: Column; menu: any; }) => {
+          this._eventHandler.subscribe(this._addon.onBeforeMenuShow, (event: Event, args: { grid: SlickGrid; column: Column; menu: any; }) => {
             if (this.sharedService.gridOptions.headerMenu && this.sharedService.gridOptions.headerMenu.onBeforeMenuShow) {
               this.sharedService.gridOptions.headerMenu.onBeforeMenuShow(event, args);
             }
           });
         }
         if (this.sharedService.gridOptions.headerMenu && typeof this.sharedService.gridOptions.headerMenu.onAfterMenuShow === 'function') {
-          this._eventHandler.subscribe(this._addon.onAfterMenuShow, (event: Event, args: { grid: any; column: Column; menu: any; }) => {
+          this._eventHandler.subscribe(this._addon.onAfterMenuShow, (event: Event, args: { grid: SlickGrid; column: Column; menu: any; }) => {
             if (this.sharedService.gridOptions.headerMenu && this.sharedService.gridOptions.headerMenu.onAfterMenuShow) {
               this.sharedService.gridOptions.headerMenu.onAfterMenuShow(event, args);
             }

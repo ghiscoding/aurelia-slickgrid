@@ -22,7 +22,8 @@ import {
   OperatorType,
   OdataSortingOption,
   OperatorString,
-  SearchTerm
+  SearchTerm,
+  SlickGrid
 } from './../models/index';
 import { OdataQueryBuilderService } from './odataQueryBuilder.service';
 
@@ -35,7 +36,7 @@ export class GridOdataService implements BackendService {
   private _currentPagination: CurrentPagination | null;
   private _currentSorters: CurrentSorter[] = [];
   private _columnDefinitions: Column[];
-  private _grid: any;
+  private _grid: SlickGrid;
   private _odataService: OdataQueryBuilderService;
   options: Partial<OdataOption>;
   pagination: Pagination | undefined;

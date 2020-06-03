@@ -2,8 +2,9 @@ import { Column } from './../models/column.interface';
 import { Formatter } from './../models/formatter.interface';
 import { formatNumber } from './../services/utilities';
 import { getValueFromParamsOrFormatterOptions } from './formatterUtilities';
+import { SlickGrid } from '../models/slickGrid.interface';
 
-export const percentSymbolFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid: any): string => {
+export const percentSymbolFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid: SlickGrid): string => {
   const isNumber = (value === null || value === undefined || value === '') ? false : !isNaN(+value);
   const minDecimal = getValueFromParamsOrFormatterOptions('minDecimal', columnDef, grid);
   const maxDecimal = getValueFromParamsOrFormatterOptions('maxDecimal', columnDef, grid);

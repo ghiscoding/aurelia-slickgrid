@@ -15,6 +15,7 @@ import {
   OperatorString,
   OperatorType,
   SearchTerm,
+  SlickGrid,
 } from './../models/index';
 import { getTranslationPrefix, mapOperatorToShorthandDesignation } from '../services/utilities';
 
@@ -28,7 +29,7 @@ export class CompoundInputFilter implements Filter {
   private $filterInputElm: any;
   private $selectOperatorElm: any;
   private _operator: OperatorType | OperatorString;
-  grid: any;
+  grid: SlickGrid;
   searchTerms: SearchTerm[];
   columnDef: Column;
   callback: FilterCallback;

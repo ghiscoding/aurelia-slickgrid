@@ -6,7 +6,7 @@ import { RowDetailViewExtension } from '../rowDetailViewExtension';
 import { ExtensionUtility } from '../extensionUtility';
 import { SharedService } from '../../services/shared.service';
 import { AureliaUtilService } from '../../services';
-import { Column } from '../../models';
+import { Column, DataView, SlickGrid } from '../../models';
 
 declare const Slick: any;
 const ROW_DETAIL_CONTAINER_PREFIX = 'container_';
@@ -19,7 +19,7 @@ const aureliaUtilServiceStub = {
 
 const dataViewStub = {
   refresh: jest.fn(),
-};
+} as unknown as DataView;
 
 const gridStub = {
   getOptions: jest.fn(),
@@ -28,7 +28,7 @@ const gridStub = {
   setSelectionModel: jest.fn(),
   onColumnsReordered: new Slick.Event(),
   onSort: new Slick.Event(),
-};
+} as unknown as SlickGrid;
 
 const mockAddon = jest.fn().mockImplementation(() => ({
   init: jest.fn(),
@@ -127,11 +127,11 @@ describe('rowDetailViewExtension', () => {
       viewModel: '',
       onExtensionRegistered: jest.fn(),
       onAsyncResponse: (e: Event, args: { item: any; detailView?: any }) => { },
-      onAsyncEndUpdate: (e: Event, args: { item: any; grid: any; }) => { },
-      onAfterRowDetailToggle: (e: Event, args: { item: any; expandedRows: any[]; grid: any; }) => { },
-      onBeforeRowDetailToggle: (e: Event, args: { item: any; grid: any; }) => { },
-      onRowOutOfViewportRange: (e: Event, args: { item: any; rowId: number; rowIndex: number; expandedRows: any[]; rowIdsOutOfViewport: number[]; grid: any; }) => { },
-      onRowBackToViewportRange: (e: Event, args: { item: any; rowId: number; rowIndex: number; expandedRows: any[]; rowIdsOutOfViewport: number[]; grid: any; }) => { },
+      onAsyncEndUpdate: (e: Event, args: { item: any; grid: SlickGrid; }) => { },
+      onAfterRowDetailToggle: (e: Event, args: { item: any; expandedRows: any[]; grid: SlickGrid; }) => { },
+      onBeforeRowDetailToggle: (e: Event, args: { item: any; grid: SlickGrid; }) => { },
+      onRowOutOfViewportRange: (e: Event, args: { item: any; rowId: number; rowIndex: number; expandedRows: any[]; rowIdsOutOfViewport: number[]; grid: SlickGrid; }) => { },
+      onRowBackToViewportRange: (e: Event, args: { item: any; rowId: number; rowIndex: number; expandedRows: any[]; rowIdsOutOfViewport: number[]; grid: SlickGrid; }) => { },
     }
   } as GridOption;
 

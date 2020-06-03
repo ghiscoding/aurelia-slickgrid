@@ -9,7 +9,8 @@ import {
   GridOption,
   OperatorString,
   OperatorType,
-  SearchTerm
+  SearchTerm,
+  SlickGrid
 } from './../models/index';
 import * as $ from 'jquery';
 
@@ -19,7 +20,7 @@ export class NativeSelectFilter implements Filter {
   private _currentValues: any | any[] = [];
   private _shouldTriggerQuery = true;
   $filterElm: any;
-  grid: any;
+  grid: SlickGrid;
   searchTerms: SearchTerm[];
   columnDef: Column;
   callback: FilterCallback;

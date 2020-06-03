@@ -16,6 +16,7 @@ import {
   OperatorString,
   OperatorType,
   SearchTerm,
+  SlickGrid,
 } from './../models/index';
 
 declare function require(name: string): any;
@@ -33,7 +34,7 @@ export class CompoundDateFilter implements Filter {
   private _currentValue: string;
   private _operator: OperatorType | OperatorString;
   flatInstance: any;
-  grid: any;
+  grid: SlickGrid;
   searchTerms: SearchTerm[];
   columnDef: Column;
   callback: FilterCallback;

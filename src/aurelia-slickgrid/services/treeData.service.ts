@@ -1,4 +1,4 @@
-import { GridOption, SlickEventHandler } from '../models/index';
+import { GridOption, SlickEventHandler, SlickGrid } from '../models/index';
 import { inject, singleton } from 'aurelia-framework';
 import { SharedService } from './shared.service';
 
@@ -8,7 +8,7 @@ declare const Slick: any;
 @singleton(true)
 @inject(SharedService)
 export class TreeDataService {
-  private _grid: any;
+  private _grid: SlickGrid;
   private _eventHandler: SlickEventHandler;
 
   constructor(private sharedService: SharedService) {
@@ -43,7 +43,7 @@ export class TreeDataService {
     }
   }
 
-  init(grid: any) {
+  init(grid: SlickGrid) {
     this._grid = grid;
 
     // subscribe to the SlickGrid event and call the backend execution

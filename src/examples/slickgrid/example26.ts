@@ -14,6 +14,7 @@ import {
   GridOption,
   OnEventArgs,
   OperatorType,
+  SlickGrid,
 } from '../../aurelia-slickgrid';
 import { CustomAureliaViewModelEditor } from './custom-aureliaViewModelEditor';
 import { CustomAureliaViewModelFilter } from './custom-aureliaViewModelFilter';
@@ -48,7 +49,7 @@ export class Example26 {
   `;
   private _commandQueue = [];
   aureliaGrid: AureliaGridInstance;
-  gridObj: any;
+  gridObj: SlickGrid;
   gridOptions: GridOption;
   columnDefinitions: Column[];
   dataset: any[];

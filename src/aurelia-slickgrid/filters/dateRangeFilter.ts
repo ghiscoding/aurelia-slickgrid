@@ -13,6 +13,7 @@ import {
   OperatorString,
   OperatorType,
   SearchTerm,
+  SlickGrid,
 } from '../models/index';
 import * as flatpickr from 'flatpickr';
 import * as $ from 'jquery';
@@ -32,7 +33,7 @@ export class DateRangeFilter implements Filter {
   private $filterElm: any;
   private $filterInputElm: any;
   flatInstance: any;
-  grid: any;
+  grid: SlickGrid;
   searchTerms: SearchTerm[];
   columnDef: Column;
   callback: FilterCallback;

@@ -19,6 +19,7 @@ import {
   Locale,
   MultipleSelectOption,
   SelectOption,
+  SlickGrid,
 } from './../models/index';
 import { CollectionService, findOrDefault, disposeAllSubscriptions } from '../services/index';
 import { charArraysEqual, getDescendantProperty, getTranslationPrefix, htmlEncode, setDeepValue } from '../services/utilities';
@@ -74,7 +75,7 @@ export class SelectEditor implements Editor {
   protected _destroying = false;
 
   /** SlickGrid Grid object */
-  grid: any;
+  grid: SlickGrid;
 
   constructor(protected bindingEngine: BindingEngine, protected collectionService: CollectionService, protected i18n: I18N, protected args: EditorArguments, protected isMultipleSelect = true) {
     if (!args) {

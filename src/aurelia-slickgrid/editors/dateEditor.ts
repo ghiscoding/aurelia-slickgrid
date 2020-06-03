@@ -12,6 +12,7 @@ import {
   FieldType,
   FlatpickrOption,
   GridOption,
+  SlickGrid,
 } from './../models/index';
 import * as flatpickr from 'flatpickr';
 import * as moment from 'moment-mini';
@@ -34,7 +35,7 @@ export class DateEditor implements Editor {
   originalDate: string;
 
   /** SlickGrid Grid object */
-  grid: any;
+  grid: SlickGrid;
 
   /** Grid options */
   gridOptions: GridOption;

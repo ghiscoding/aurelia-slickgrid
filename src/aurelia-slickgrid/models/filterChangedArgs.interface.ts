@@ -3,6 +3,7 @@ import { Column } from './column.interface';
 import { ColumnFilters } from './columnFilters.interface';
 import { OperatorType } from './operatorType.enum';
 import { OperatorString } from './operatorString';
+import { SlickGrid } from './slickGrid.interface';
 
 export interface FilterChangedArgs {
   /** Was a clear filter triggered? */
@@ -15,7 +16,7 @@ export interface FilterChangedArgs {
   columnFilters: ColumnFilters;
 
   /** SlickGrid Grid object */
-  grid: any;
+  grid: SlickGrid;
 
   /** Operator to use when filtering */
   operator: OperatorType | OperatorString;

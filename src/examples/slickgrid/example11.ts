@@ -2,12 +2,14 @@ import { autoinject } from 'aurelia-framework';
 import {
   AureliaGridInstance,
   Column,
+  DataView,
   Editors,
   FieldType,
   Formatters,
   GridOption,
   GridService,
-  OnEventArgs
+  OnEventArgs,
+  SlickGrid
 } from '../../aurelia-slickgrid';
 import './example11.scss';
 
@@ -34,9 +36,9 @@ export class Example11 {
   `;
 
   aureliaGrid: AureliaGridInstance;
-  grid: any;
+  grid: SlickGrid;
   gridService: GridService;
-  dataView: any;
+  dataView: DataView;
   columnDefinitions: Column[];
   gridOptions: GridOption;
   dataset: any[];

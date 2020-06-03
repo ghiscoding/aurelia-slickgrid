@@ -1,4 +1,4 @@
-import { Column, FieldType, Formatter, GridOption } from '../models/index';
+import { Column, FieldType, Formatter, GridOption, SlickGrid } from '../models/index';
 import { mapMomentDateFormatWithFieldType } from '../services/utilities';
 import * as moment from 'moment-mini';
 
@@ -8,7 +8,7 @@ import * as moment from 'moment-mini';
  * 2- Grid Options "formatterOptions"
  * 3- nothing found, return default value provided
  */
-export function getValueFromParamsOrFormatterOptions(optionName: string, columnDef: Column, grid: any, defaultValue?: any) {
+export function getValueFromParamsOrFormatterOptions(optionName: string, columnDef: Column, grid: SlickGrid, defaultValue?: any) {
   const gridOptions = ((grid && typeof grid.getOptions === 'function') ? grid.getOptions() : {}) as GridOption;
   const params = columnDef && columnDef.params;
 
@@ -24,7 +24,7 @@ export function getValueFromParamsOrFormatterOptions(optionName: string, columnD
 export function getAssociatedDateFormatter(fieldType: FieldType, defaultSeparator: string): Formatter {
   const defaultDateFormat = mapMomentDateFormatWithFieldType(fieldType);
 
-  return (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid: any) => {
+  return (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid: SlickGrid) => {
     const gridOptions = ((grid && typeof grid.getOptions === 'function') ? grid.getOptions() : {}) as GridOption;
     const customSeparator = gridOptions && gridOptions.formatterOptions && gridOptions.formatterOptions.dateSeparator || defaultSeparator;
 

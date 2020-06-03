@@ -9,10 +9,12 @@ import {
   CurrentPagination,
   CurrentRowSelection,
   CurrentSorter,
+  DataView,
   ExtensionName,
   GridOption,
   GridState,
   GridStateType,
+  SlickGrid,
 } from './../models/index';
 import { disposeAllSubscriptions } from './utilities';
 import { ExtensionService } from './extension.service';
@@ -30,8 +32,8 @@ export class GridStateService {
   private _eventHandler = new Slick.EventHandler();
   private _columns: Column[] = [];
   private _currentColumns: CurrentColumn[] = [];
-  private _dataView: any;
-  private _grid: any;
+  private _dataView: DataView;
+  private _grid: SlickGrid;
   private _subscriptions: Subscription[] = [];
   private _selectedRowDataContextIds: Array<number | string> | undefined = []; // used with row selection
   private _selectedFilteredRowDataContextIds: Array<number | string> | undefined = []; // used with row selection
@@ -71,7 +73,7 @@ export class GridStateService {
    * Initialize the Service
    * @param grid
    */
-  init(grid: any, dataView: any): void {
+  init(grid: SlickGrid, dataView: DataView): void {
     this._grid = grid;
     this._dataView = dataView;
     this.subscribeToAllGridChanges(grid);
@@ -151,7 +153,7 @@ export class GridStateService {
    * @param grid
    * @param currentColumns
    */
-  getAssociatedGridColumns(grid: any, currentColumns: CurrentColumn[]): Column[] {
+  getAssociatedGridColumns(grid: SlickGrid, currentColumns: CurrentColumn[]): Column[] {
     const columns: Column[] = [];
     const gridColumns: Column[] = grid.getColumns();
 
@@ -303,7 +305,7 @@ export class GridStateService {
    * Subscribe to all necessary SlickGrid or Service Events that deals with a Grid change,
    * when triggered, we will publish a Grid State Event with current Grid State
    */
-  subscribeToAllGridChanges(grid: any) {
+  subscribeToAllGridChanges(grid: SlickGrid) {
     // Subscribe to Event Emitter of Filter changed
     this._subscriptions.push(
       this.pluginEa.subscribe('filterService:filterChanged', (currentFilters: CurrentFilter[]) => {
@@ -388,7 +390,7 @@ export class GridStateService {
    * @param event name
    * @param grid
    */
-  bindSlickGridColumnChangeEventToGridStateChange(eventName: string, grid: any) {
+  bindSlickGridColumnChangeEventToGridStateChange(eventName: string, grid: SlickGrid) {
     const slickGridEvent = grid && grid[eventName];
 
     if (slickGridEvent && typeof slickGridEvent.subscribe === 'function') {

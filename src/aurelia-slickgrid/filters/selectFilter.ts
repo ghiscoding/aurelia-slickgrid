@@ -19,7 +19,8 @@ import {
   OperatorType,
   OperatorString,
   SearchTerm,
-  SelectOption
+  SelectOption,
+  SlickGrid
 } from './../models/index';
 import { CollectionService } from '../services/collection.service';
 import { disposeAllSubscriptions, getDescendantProperty, getTranslationPrefix, htmlEncode } from '../services/utilities';
@@ -39,7 +40,7 @@ export class SelectFilter implements Filter {
   /** The JQuery DOM element */
   $filterElm: any;
 
-  grid: any;
+  grid: SlickGrid;
   searchTerms: SearchTerm[];
   columnDef: Column;
   callback: FilterCallback;

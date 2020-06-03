@@ -8,6 +8,7 @@ import {
   OperatorType,
   OperatorString,
   SearchTerm,
+  SlickGrid,
 } from './../models/index';
 import * as $ from 'jquery';
 
@@ -16,7 +17,7 @@ export class InputFilter implements Filter {
   protected _shouldTriggerQuery = true;
   protected _inputType = 'text';
   protected $filterElm: any;
-  grid: any;
+  grid: SlickGrid;
   searchTerms: SearchTerm[];
   columnDef: Column;
   callback: FilterCallback;

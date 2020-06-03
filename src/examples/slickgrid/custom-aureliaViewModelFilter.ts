@@ -9,6 +9,7 @@ import {
   OperatorType,
   OperatorString,
   SearchTerm,
+  SlickGrid,
 } from '../../aurelia-slickgrid';
 import * as $ from 'jquery';
 
@@ -19,7 +20,7 @@ export class CustomAureliaViewModelFilter implements Filter {
   private _shouldTriggerQuery = true;
   private $filterElm: any;
   container;
-  grid: any;
+  grid: SlickGrid;
   searchTerms: SearchTerm[];
   columnDef: Column;
   callback: FilterCallback;

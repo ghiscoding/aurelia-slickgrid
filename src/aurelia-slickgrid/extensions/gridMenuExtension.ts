@@ -15,6 +15,7 @@ import {
   Locale,
   MenuCommandItemCallbackArgs,
   SlickEventHandler,
+  SlickGrid,
 } from '../models/index';
 import { ExtensionUtility } from './extensionUtility';
 import { refreshBackendDataset } from '../services/backend-utilities';
@@ -116,20 +117,20 @@ export class GridMenuExtension implements Extension {
           this.sharedService.gridOptions.gridMenu.onExtensionRegistered(this._addon);
         }
         if (this.sharedService.gridOptions.gridMenu && typeof this.sharedService.gridOptions.gridMenu.onBeforeMenuShow === 'function') {
-          this._eventHandler.subscribe(this._addon.onBeforeMenuShow, (e: any, args: { grid: any; menu: any; columns: Column[] }) => {
+          this._eventHandler.subscribe(this._addon.onBeforeMenuShow, (e: any, args: { grid: SlickGrid; menu: any; columns: Column[] }) => {
             if (this.sharedService.gridOptions.gridMenu && this.sharedService.gridOptions.gridMenu.onBeforeMenuShow) {
               this.sharedService.gridOptions.gridMenu.onBeforeMenuShow(e, args);
             }
           });
         }
         if (this.sharedService.gridOptions.gridMenu && typeof this.sharedService.gridOptions.gridMenu.onAfterMenuShow === 'function') {
-          this._eventHandler.subscribe(this._addon.onAfterMenuShow, (e: any, args: { grid: any; menu: any; columns: Column[] }) => {
+          this._eventHandler.subscribe(this._addon.onAfterMenuShow, (e: any, args: { grid: SlickGrid; menu: any; columns: Column[] }) => {
             if (this.sharedService.gridOptions.gridMenu && this.sharedService.gridOptions.gridMenu.onAfterMenuShow) {
               this.sharedService.gridOptions.gridMenu.onAfterMenuShow(e, args);
             }
           });
         }
-        this._eventHandler.subscribe(this._addon.onColumnsChanged, (e: any, args: { grid: any; allColumns: Column[]; columns: Column[]; }) => {
+        this._eventHandler.subscribe(this._addon.onColumnsChanged, (e: any, args: { grid: SlickGrid; allColumns: Column[]; columns: Column[]; }) => {
           this._areVisibleColumnDifferent = true;
           if (this.sharedService.gridOptions.gridMenu && typeof this.sharedService.gridOptions.gridMenu.onColumnsChanged === 'function') {
             this.sharedService.gridOptions.gridMenu.onColumnsChanged(e, args);
@@ -144,7 +145,7 @@ export class GridMenuExtension implements Extension {
             this.sharedService.gridOptions.gridMenu.onCommand(e, args);
           }
         });
-        this._eventHandler.subscribe(this._addon.onMenuClose, (e: any, args: { grid: any; menu: any; allColumns: Column[], visibleColumns: Column[] }) => {
+        this._eventHandler.subscribe(this._addon.onMenuClose, (e: any, args: { grid: SlickGrid; menu: any; allColumns: Column[], visibleColumns: Column[] }) => {
           if (this.sharedService.gridOptions.gridMenu && typeof this.sharedService.gridOptions.gridMenu.onMenuClose === 'function') {
             this.sharedService.gridOptions.gridMenu.onMenuClose(e, args);
           }

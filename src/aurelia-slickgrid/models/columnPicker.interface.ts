@@ -1,4 +1,5 @@
 import { Column } from './column.interface';
+import { SlickGrid } from './slickGrid.interface';
 
 export interface ColumnPicker {
   /** Defaults to "Columns" which is the title that shows up over the columns */
@@ -26,5 +27,5 @@ export interface ColumnPicker {
   onExtensionRegistered?: (addon: any) => void;
 
   /** SlickGrid Event fired when any of the columns checkbox selection changes. */
-  onColumnsChanged?: (e: Event, args: { columns: Column[]; grid: any; }) => void;
+  onColumnsChanged?: (e: Event, args: { columns: Column[]; grid: SlickGrid; }) => void;
 }

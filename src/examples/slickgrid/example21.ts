@@ -2,11 +2,13 @@ import { bindable } from 'aurelia-framework';
 import {
   AureliaGridInstance,
   Column,
+  DataView,
   FieldType,
   FilterCallbackArg,
   Formatters,
   GridOption,
   OperatorString,
+  SlickGrid,
 } from '../../aurelia-slickgrid';
 
 
@@ -25,8 +27,8 @@ export class Example21 {
   `;
 
   aureliaGrid: AureliaGridInstance;
-  grid: any;
-  dataView: any;
+  grid: SlickGrid;
+  dataView: DataView;
   columnDefinitions: Column[];
   gridOptions: GridOption;
   dataset: any[];

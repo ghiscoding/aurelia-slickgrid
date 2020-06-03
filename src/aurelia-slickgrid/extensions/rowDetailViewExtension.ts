@@ -2,7 +2,7 @@ import { inject, singleton } from 'aurelia-framework';
 import { Subscription } from 'aurelia-event-aggregator';
 import * as DOMPurify from 'dompurify';
 
-import { AureliaViewOutput, Column, Extension, ExtensionName, GridOption, RowDetailView, SlickEventHandler, ViewModelBindableInputData } from '../models/index';
+import { AureliaViewOutput, Column, Extension, ExtensionName, GridOption, RowDetailView, SlickEventHandler, SlickGrid, ViewModelBindableInputData } from '../models/index';
 import { ExtensionUtility } from './extensionUtility';
 import { SharedService } from '../services/shared.service';
 import { AureliaUtilService } from '../services/aureliaUtil.service';
@@ -170,7 +170,7 @@ export class RowDetailViewExtension implements Extension {
             this.rowDetailViewOptions.onAsyncResponse(e, args);
           }
         });
-        this._eventHandler.subscribe(this._addon.onAsyncEndUpdate, (e: any, args: { grid: any; item: any; }) => {
+        this._eventHandler.subscribe(this._addon.onAsyncEndUpdate, (e: any, args: { grid: SlickGrid; item: any; }) => {
           // triggers after backend called "onAsyncResponse.notify()"
           this.renderViewModel(args && args.item);
 
@@ -178,7 +178,7 @@ export class RowDetailViewExtension implements Extension {
             this.rowDetailViewOptions.onAsyncEndUpdate(e, args);
           }
         });
-        this._eventHandler.subscribe(this._addon.onAfterRowDetailToggle, (e: any, args: { grid: any; item: any; expandedRows: any[]; }) => {
+        this._eventHandler.subscribe(this._addon.onAfterRowDetailToggle, (e: any, args: { grid: SlickGrid; item: any; expandedRows: any[]; }) => {
           // display preload template & re-render all the other Detail Views after toggling
           // the preload View will eventually go away once the data gets loaded after the "onAsyncEndUpdate" event
           this.renderPreloadView();
@@ -188,7 +188,7 @@ export class RowDetailViewExtension implements Extension {
             this.rowDetailViewOptions.onAfterRowDetailToggle(e, args);
           }
         });
-        this._eventHandler.subscribe(this._addon.onBeforeRowDetailToggle, (e: any, args: { grid: any; item: any; }) => {
+        this._eventHandler.subscribe(this._addon.onBeforeRowDetailToggle, (e: any, args: { grid: SlickGrid; item: any; }) => {
           // before toggling row detail, we need to create View Slot if it doesn't exist
           this.onBeforeRowDetailToggle(e, args);
 
@@ -196,7 +196,7 @@ export class RowDetailViewExtension implements Extension {
             this.rowDetailViewOptions.onBeforeRowDetailToggle(e, args);
           }
         });
-        this._eventHandler.subscribe(this._addon.onRowBackToViewportRange, (e: any, args: { grid: any; item: any; rowId: number; rowIndex: number; expandedRows: any[]; rowIdsOutOfViewport: number[]; }) => {
+        this._eventHandler.subscribe(this._addon.onRowBackToViewportRange, (e: any, args: { grid: SlickGrid; item: any; rowId: number; rowIndex: number; expandedRows: any[]; rowIdsOutOfViewport: number[]; }) => {
           // when row is back to viewport range, we will re-render the View Slot(s)
           this.onRowBackToViewportRange(e, args);
 
@@ -204,7 +204,7 @@ export class RowDetailViewExtension implements Extension {
             this.rowDetailViewOptions.onRowBackToViewportRange(e, args);
           }
         });
-        this._eventHandler.subscribe(this._addon.onRowOutOfViewportRange, (e: any, args: { grid: any; item: any; rowId: number; rowIndex: number; expandedRows: any[]; rowIdsOutOfViewport: number[]; }) => {
+        this._eventHandler.subscribe(this._addon.onRowOutOfViewportRange, (e: any, args: { grid: SlickGrid; item: any; rowId: number; rowIndex: number; expandedRows: any[]; rowIdsOutOfViewport: number[]; }) => {
           if (this.rowDetailViewOptions && typeof this.rowDetailViewOptions.onRowOutOfViewportRange === 'function') {
             this.rowDetailViewOptions.onRowOutOfViewportRange(e, args);
           }
@@ -346,7 +346,7 @@ export class RowDetailViewExtension implements Extension {
    * if it's expanding we will add it to our View Slots reference array if we don't already have it
    * or if it's collapsing we will remove it from our View Slots reference array
    */
-  private onBeforeRowDetailToggle(e: Event, args: { grid: any; item: any; }) {
+  private onBeforeRowDetailToggle(e: Event, args: { grid: SlickGrid; item: any; }) {
     // expanding
     if (args && args.item && args.item.__collapsed) {
       // expanding row detail
@@ -370,7 +370,7 @@ export class RowDetailViewExtension implements Extension {
   }
 
   /** When Row comes back to Viewport Range, we need to redraw the View */
-  private onRowBackToViewportRange(e: Event, args: { grid: any; item: any; rowId: number; rowIndex: number; expandedRows: any[]; rowIdsOutOfViewport: number[]; }) {
+  private onRowBackToViewportRange(e: Event, args: { grid: SlickGrid; item: any; rowId: number; rowIndex: number; expandedRows: any[]; rowIdsOutOfViewport: number[]; }) {
     if (args && args.item) {
       this._slots.forEach((slot) => {
         if (slot[this.datasetIdPropName] === args.item[this.datasetIdPropName]) {

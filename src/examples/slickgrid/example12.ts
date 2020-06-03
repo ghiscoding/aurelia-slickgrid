@@ -11,12 +11,13 @@ import {
   Formatters,
   GridOption,
   GridStateChange,
+  SlickGrid,
 } from '../../aurelia-slickgrid';
 
 const NB_ITEMS = 1500;
 
 // create a custom translate Formatter (typically you would move that a separate file, for separation of concerns)
-const taskTranslateFormatter: Formatter = (row: number, cell: number, value: any, columnDef: any, dataContext: any, grid: any) => {
+const taskTranslateFormatter: Formatter = (row: number, cell: number, value: any, columnDef: any, dataContext: any, grid: SlickGrid) => {
   const gridOptions = (grid && typeof grid.getOptions === 'function') ? grid.getOptions() : {};
   const i18n = gridOptions.i18n;
 
@@ -59,7 +60,7 @@ export class Example12 {
   dataset: any[];
   selectedLanguage: string;
   duplicateTitleHeaderCount = 1;
-  gridObj: any;
+  gridObj: SlickGrid;
 
   constructor(private i18n: I18N) {
     // define the grid options & columns and then create the grid itself

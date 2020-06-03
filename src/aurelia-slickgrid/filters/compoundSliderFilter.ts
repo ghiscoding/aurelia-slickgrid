@@ -8,7 +8,8 @@ import {
   FilterCallback,
   OperatorString,
   OperatorType,
-  SearchTerm
+  SearchTerm,
+  SlickGrid
 } from './../models/index';
 import { mapOperatorToShorthandDesignation } from '../services/utilities';
 
@@ -27,7 +28,7 @@ export class CompoundSliderFilter implements Filter {
   private $filterElm: any;
   private $filterInputElm: any;
   private $selectOperatorElm: any;
-  grid: any;
+  grid: SlickGrid;
   searchTerms: SearchTerm[];
   columnDef: Column;
   callback: FilterCallback;

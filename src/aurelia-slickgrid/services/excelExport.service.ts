@@ -8,6 +8,7 @@ import * as moment from 'moment-mini';
 
 import {
   Column,
+  DataView,
   ExcelCellFormat,
   ExcelExportOption,
   ExcelMetadata,
@@ -19,6 +20,7 @@ import {
   KeyTitlePair,
   Locale,
   FieldType,
+  SlickGrid,
 } from '../models/index';
 import { Constants } from '../constants';
 import { exportWithFormatterWhenDefined } from './export-utilities';
@@ -32,8 +34,8 @@ const DEFAULT_AURELIA_EVENT_PREFIX = 'asg';
 export class ExcelExportService {
   private _aureliaEventPrefix: string;
   private _fileFormat = FileType.xlsx;
-  private _dataView: any;
-  private _grid: any;
+  private _dataView: DataView;
+  private _grid: SlickGrid;
   private _locales: Locale;
   private _columnHeaders: Array<KeyTitlePair>;
   private _groupedColumnHeaders: Array<KeyTitlePair>;
@@ -60,7 +62,7 @@ export class ExcelExportService {
    * @param grid
    * @param dataView
    */
-  init(grid: any, dataView: any): void {
+  init(grid: SlickGrid, dataView: DataView): void {
     this._grid = grid;
     this._dataView = dataView;
     this._aureliaEventPrefix = (this._gridOptions && this._gridOptions.defaultAureliaEventPrefix) ? this._gridOptions.defaultAureliaEventPrefix : DEFAULT_AURELIA_EVENT_PREFIX;

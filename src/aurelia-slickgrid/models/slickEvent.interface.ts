@@ -25,5 +25,5 @@ export interface SlickEvent {
    * Removes an event handler added with <code>subscribe(fn).
    * @param fn {Function} Event handler to be removed.
    */
-  unsubscribe: (fn: any) => void;
+  unsubscribe: (fn?: any) => void;
 }
