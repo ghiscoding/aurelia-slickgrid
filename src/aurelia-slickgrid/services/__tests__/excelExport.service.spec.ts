@@ -4,6 +4,7 @@ import { BindingSignaler } from 'aurelia-templating-resources';
 import { ExcelExportService } from '../excelExport.service';
 import {
   Column,
+  DataView,
   ExcelExportOption,
   FieldType,
   FileType,
@@ -11,6 +12,7 @@ import {
   GridOption,
   GroupTotalsFormatter,
   SortDirectionNumber,
+  SlickGrid,
 } from '../../models';
 import { GroupTotalFormatters } from '../..';
 import { Formatters } from '../../formatters';
@@ -36,7 +38,7 @@ const myUppercaseGroupTotalFormatter: GroupTotalsFormatter = (totals: any, colum
   }
   return '';
 };
-const myCustomObjectFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid: any) => {
+const myCustomObjectFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any) => {
   let textValue = value && value.hasOwnProperty('text') ? value.text : value;
   const toolTip = value && value.hasOwnProperty('toolTip') ? value.toolTip : '';
   const cssClasses = value && value.hasOwnProperty('addClasses') ? [value.addClasses] : [''];
@@ -52,7 +54,7 @@ const dataViewStub = {
   getItem: jest.fn(),
   getLength: jest.fn(),
   setGrouping: jest.fn(),
-};
+} as unknown as DataView;
 
 const mockGridOptions = {
   enableExcelExport: true,
@@ -65,7 +67,7 @@ const gridStub = {
   getOptions: () => mockGridOptions,
   getColumns: jest.fn(),
   getGrouping: jest.fn(),
-};
+} as unknown as SlickGrid;
 
 describe('ExcelExportService', () => {
   let globalEa: EventAggregator;

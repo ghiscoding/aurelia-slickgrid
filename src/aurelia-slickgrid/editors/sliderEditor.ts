@@ -1,4 +1,4 @@
-import { Column, ColumnEditor, Editor, EditorArguments, EditorValidator, EditorValidatorOutput } from './../models/index';
+import { Column, ColumnEditor, Editor, EditorArguments, EditorValidator, EditorValidatorOutput, SlickGrid } from './../models/index';
 import { getDescendantProperty, setDeepValue } from '../services/utilities';
 import { sliderValidator } from '../editorValidators/sliderValidator';
 import * as $ from 'jquery';
@@ -22,7 +22,7 @@ export class SliderEditor implements Editor {
   originalValue: any;
 
   /** SlickGrid Grid object */
-  grid: any;
+  grid: SlickGrid;
 
   constructor(private args: EditorArguments) {
     if (!args) {

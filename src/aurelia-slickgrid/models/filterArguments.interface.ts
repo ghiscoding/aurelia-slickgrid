@@ -4,11 +4,12 @@ import {
   FilterCallback,
   OperatorString,
   OperatorType,
-  SearchTerm
+  SearchTerm,
+  SlickGrid
 } from './../models/index';
 
 export interface FilterArguments {
-  grid: any;
+  grid: SlickGrid;
   columnDef: Column;
   callback: FilterCallback;
   operator?: OperatorType | OperatorString;

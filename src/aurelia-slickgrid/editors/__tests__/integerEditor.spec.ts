@@ -1,6 +1,6 @@
 import { Editors } from '../index';
 import { IntegerEditor } from '../integerEditor';
-import { AutocompleteOption, Column, EditorArgs, EditorArguments, GridOption, KeyCode } from '../../models';
+import { Column, DataView, EditorArgs, EditorArguments, GridOption, KeyCode, SlickGrid } from '../../models';
 
 const KEY_CHAR_0 = 48;
 const containerId = 'demo-container';
@@ -10,7 +10,7 @@ const template = `<div id="${containerId}"></div>`;
 
 const dataViewStub = {
   refresh: jest.fn(),
-};
+} as unknown as DataView;
 
 const gridOptionMock = {
   autoCommitEdit: false,
@@ -27,7 +27,7 @@ const gridStub = {
   getEditorLock: () => getEditorLockMock,
   getHeaderRowColumn: jest.fn(),
   render: jest.fn(),
-};
+} as unknown as SlickGrid;
 
 describe('IntegerEditor', () => {
   let divContainer: HTMLDivElement;

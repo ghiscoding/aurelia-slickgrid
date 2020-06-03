@@ -1,5 +1,5 @@
 import { singleton } from 'aurelia-framework';
-import { CellArgs, Column, GridOption, OnEventArgs, SlickEventHandler } from './../models/index';
+import { CellArgs, Column, DataView, GridOption, OnEventArgs, SlickEventHandler, SlickGrid } from './../models/index';
 
 // using external non-typed js libraries
 declare const Slick: any;
@@ -17,7 +17,7 @@ export class GridEventService {
   }
 
   /* OnCellChange Event */
-  bindOnCellChange(grid: any, dataView: any) {
+  bindOnCellChange(grid: SlickGrid, dataView: DataView) {
     // subscribe to this Slickgrid event of onCellChange
     this._eventHandler.subscribe(grid.onCellChange, (e: KeyboardEvent | MouseEvent, args: CellArgs) => {
       if (!e || !args || !grid || args.cell === undefined || !grid.getColumns || !grid.getDataItem) {
@@ -44,7 +44,7 @@ export class GridEventService {
   }
 
   /* OnClick Event */
-  bindOnClick(grid: any, dataView: any) {
+  bindOnClick(grid: SlickGrid, dataView: DataView) {
     this._eventHandler.subscribe(grid.onClick, (e: KeyboardEvent | MouseEvent, args: CellArgs) => {
       if (!e || !args || !grid || args.cell === undefined || !grid.getColumns || !grid.getDataItem) {
         return;

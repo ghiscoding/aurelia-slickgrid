@@ -3,6 +3,7 @@ import {
   Aggregators,
   AureliaGridInstance,
   Column,
+  DataView,
   DelimiterType,
   FieldType,
   FileType,
@@ -13,6 +14,7 @@ import {
   GroupTotalFormatters,
   SortDirectionNumber,
   Sorters,
+  SlickGrid,
 } from '../../aurelia-slickgrid';
 
 @autoinject()
@@ -31,8 +33,8 @@ export class Example13 {
   columnDefinitions: Column[];
   gridOptions: GridOption;
   dataset: any[];
-  dataviewObj: any;
-  gridObj: any;
+  dataviewObj: DataView;
+  gridObj: SlickGrid;
   processing = false;
 
   constructor() {

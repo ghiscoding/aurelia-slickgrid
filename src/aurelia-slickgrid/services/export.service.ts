@@ -8,11 +8,13 @@ import { Constants } from './../constants';
 import { exportWithFormatterWhenDefined } from './export-utilities';
 import {
   Column,
+  DataView,
   ExportOption,
   FileType,
   GridOption,
   KeyTitlePair,
   Locale,
+  SlickGrid,
 } from './../models/index';
 import { addWhiteSpaces, getTranslationPrefix, htmlEntityDecode, sanitizeHtmlToText, titleCase } from './../services/utilities';
 import { SlickgridEventAggregator } from '../custom-elements/slickgridEventAggregator';
@@ -28,8 +30,8 @@ export class ExportService {
   private _exportOptions: ExportOption;
   private _fileFormat = FileType.csv;
   private _lineCarriageReturn = '\n';
-  private _dataView: any;
-  private _grid: any;
+  private _dataView: DataView;
+  private _grid: SlickGrid;
   private _columnHeaders: KeyTitlePair[];
   private _groupedColumnHeaders: KeyTitlePair[];
   private _hasGroupedItems = false;
@@ -51,7 +53,7 @@ export class ExportService {
    * @param grid
    * @param dataView
    */
-  init(grid: any, dataView: any): void {
+  init(grid: SlickGrid, dataView: DataView): void {
     this._grid = grid;
     this._dataView = dataView;
     this._aureliaEventPrefix = (this._gridOptions && this._gridOptions.defaultAureliaEventPrefix) ? this._gridOptions.defaultAureliaEventPrefix : DEFAULT_AURELIA_EVENT_PREFIX;

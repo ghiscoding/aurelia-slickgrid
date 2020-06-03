@@ -17,6 +17,7 @@ import {
   OnEventArgs,
   OperatorType,
   Sorters,
+  SlickGrid,
 } from '../../aurelia-slickgrid';
 import { CustomInputEditor } from './custom-inputEditor';
 import { CustomInputFilter } from './custom-inputFilter';
@@ -79,7 +80,7 @@ export class Example3 {
   `;
   private _commandQueue = [];
   aureliaGrid: AureliaGridInstance;
-  gridObj: any;
+  gridObj: SlickGrid;
   gridOptions: GridOption;
   columnDefinitions: Column[];
   dataset: any[];

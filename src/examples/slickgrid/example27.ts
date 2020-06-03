@@ -2,10 +2,12 @@ import { autoinject } from 'aurelia-framework';
 import {
   AureliaGridInstance,
   Column,
+  DataView,
   FieldType,
   Filters,
   Formatters,
   GridOption,
+  SlickGrid,
 } from '../../aurelia-slickgrid';
 import './example27.scss'; // provide custom CSS/SASS styling
 
@@ -28,8 +30,8 @@ export class Example27 {
     </ul>
   </ul>`;
   aureliaGrid: AureliaGridInstance;
-  dataViewObj: any;
-  gridObj: any;
+  dataViewObj: DataView;
+  gridObj: SlickGrid;
   gridOptions: GridOption;
   columnDefinitions: Column[];
   dataset: any[];

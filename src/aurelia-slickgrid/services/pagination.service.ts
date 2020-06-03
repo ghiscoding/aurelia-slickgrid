@@ -2,7 +2,7 @@ import { inject, singleton } from 'aurelia-framework';
 import { Subscription } from 'aurelia-event-aggregator';
 import * as isequal from 'lodash.isequal';
 
-import { BackendServiceApi, CurrentPagination, GraphqlResult, GraphqlPaginatedResult, Pagination, ServicePagination } from '../models/index';
+import { BackendServiceApi, CurrentPagination, DataView, GraphqlResult, GraphqlPaginatedResult, Pagination, ServicePagination, SlickGrid } from '../models/index';
 import { executeBackendProcessesCallback, onBackendError } from './backend-utilities';
 import { SharedService } from './shared.service';
 import { disposeAllSubscriptions } from './utilities';
@@ -28,8 +28,8 @@ export class PaginationService {
   private _paginationOptions: Pagination;
   private _subscriptions: Subscription[] = [];
 
-  dataView: any;
-  grid: any;
+  dataView: DataView;
+  grid: SlickGrid;
 
   /** Constructor */
   constructor(private pluginEa: SlickgridEventAggregator, private sharedService: SharedService) { }
@@ -77,7 +77,7 @@ export class PaginationService {
     }
   }
 
-  init(grid: any, dataView: any, paginationOptions: Pagination, backendServiceApi?: BackendServiceApi) {
+  init(grid: SlickGrid, dataView: DataView, paginationOptions: Pagination, backendServiceApi?: BackendServiceApi) {
     this._availablePageSizes = paginationOptions.pageSizes;
     this.dataView = dataView;
     this.grid = grid;

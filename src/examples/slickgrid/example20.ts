@@ -1,6 +1,6 @@
 import { autoinject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
-import { AureliaGridInstance, ColumnEditorDualInput, Column, Formatters, GridOption, Filters, FieldType, formatNumber, Editors } from '../../aurelia-slickgrid';
+import { AureliaGridInstance, ColumnEditorDualInput, Column, Formatters, GridOption, Filters, FieldType, formatNumber, Editors, SlickGrid } from '../../aurelia-slickgrid';
 import './example20.scss'; // provide custom CSS/SASS styling
 
 @autoinject()
@@ -18,7 +18,7 @@ export class Example20 {
 
   aureliaGrid: AureliaGridInstance;
   columnDefinitions: Column[];
-  gridObj: any;
+  gridObj: SlickGrid;
   gridOptions: GridOption;
   frozenColumnCount = 2;
   frozenRowCount = 3;

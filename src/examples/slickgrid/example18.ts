@@ -3,6 +3,7 @@ import {
   Aggregators,
   AureliaGridInstance,
   Column,
+  DataView,
   DelimiterType,
   FieldType,
   FileType,
@@ -14,6 +15,7 @@ import {
   Sorters,
   SortDirectionNumber,
   Grouping,
+  SlickGrid,
 } from '../../aurelia-slickgrid';
 
 @autoinject()
@@ -37,10 +39,10 @@ export class Example18 {
   aureliaGrid: AureliaGridInstance;
   columnDefinitions: Column[];
   dataset: any[];
-  dataviewObj: any;
+  dataviewObj: DataView;
   draggableGroupingPlugin: any;
   durationOrderByCount = false;
-  gridObj: any;
+  gridObj: SlickGrid;
   gridOptions: GridOption;
   processing = false;
   selectedGroupingFields: Array<string | GroupingGetterFunction> = ['', '', ''];

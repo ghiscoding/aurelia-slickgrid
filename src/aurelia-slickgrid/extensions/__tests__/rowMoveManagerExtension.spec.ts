@@ -1,5 +1,5 @@
 import { I18N } from 'aurelia-i18n';
-import { Column, GridOption } from '../../models';
+import { Column, GridOption, SlickGrid } from '../../models';
 import { RowMoveManagerExtension } from '../rowMoveManagerExtension';
 import { ExtensionUtility } from '../extensionUtility';
 import { SharedService } from '../../services/shared.service';
@@ -11,7 +11,7 @@ const gridStub = {
   getSelectionModel: jest.fn(),
   registerPlugin: jest.fn(),
   setSelectionModel: jest.fn(),
-};
+} as unknown as SlickGrid;
 
 const mockAddon = jest.fn().mockImplementation(() => ({
   init: jest.fn(),

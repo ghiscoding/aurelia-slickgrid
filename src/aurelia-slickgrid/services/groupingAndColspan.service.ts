@@ -3,8 +3,10 @@ import * as $ from 'jquery';
 
 import {
   Column,
+  DataView,
   GridOption,
   SlickEventHandler,
+  SlickGrid,
 } from './../models/index';
 import { ExtensionUtility } from '../extensions/extensionUtility';
 import { SlickgridEventAggregator } from '../custom-elements/slickgridEventAggregator';
@@ -16,7 +18,7 @@ declare const Slick: any;
 @inject(ExtensionUtility, SlickgridEventAggregator)
 export class GroupingAndColspanService {
   private _eventHandler: SlickEventHandler;
-  private _grid: any;
+  private _grid: SlickGrid;
   private _aureliaEventPrefix: string;
 
   constructor(private extensionUtility: ExtensionUtility, private pluginEa: SlickgridEventAggregator) {
@@ -43,7 +45,7 @@ export class GroupingAndColspanService {
    * @param grid
    * @param dataView
    */
-  init(grid: any, dataView: any) {
+  init(grid: SlickGrid, dataView: DataView) {
     this._grid = grid;
     this._aureliaEventPrefix = (this._gridOptions && this._gridOptions.defaultAureliaEventPrefix) ? this._gridOptions.defaultAureliaEventPrefix : 'asg';
 

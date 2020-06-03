@@ -2,12 +2,14 @@ import { autoinject, bindable } from 'aurelia-framework';
 import {
   AureliaGridInstance,
   Column,
+  DataView,
   FieldType,
   Filters,
   Formatters,
   GridOption,
   findItemInHierarchicalStructure,
   Formatter,
+  SlickGrid,
 } from '../../aurelia-slickgrid';
 import './example28.scss'; // provide custom CSS/SASS styling
 
@@ -24,8 +26,8 @@ export class Example28 {
     </ul>
   `;
   aureliaGrid: AureliaGridInstance;
-  dataViewObj: any;
-  gridObj: any;
+  dataViewObj: DataView;
+  gridObj: SlickGrid;
   gridOptions: GridOption;
   columnDefinitions: Column[];
   datasetHierarchical: any[] = [];

@@ -2,7 +2,7 @@ import { DOM } from 'aurelia-pal';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { I18N } from 'aurelia-i18n';
 import { BindingSignaler } from 'aurelia-templating-resources';
-import { Column, FilterArguments, GridOption } from '../../models';
+import { Column, FilterArguments, GridOption, SlickGrid } from '../../models';
 import { Filters } from '..';
 import { NativeSelectFilter } from '../nativeSelectFilter';
 
@@ -21,7 +21,7 @@ const gridStub = {
   getColumns: jest.fn(),
   getHeaderRowColumn: jest.fn(),
   render: jest.fn(),
-};
+} as unknown as SlickGrid;
 
 describe('NativeSelectFilter', () => {
   let ea: EventAggregator;

@@ -21,6 +21,7 @@ import {
   BackendServiceOption,
   Column,
   CustomFooterOption,
+  DataView,
   ExtensionName,
   GraphqlResult,
   GraphqlPaginatedResult,
@@ -31,6 +32,7 @@ import {
   Pagination,
   ServicePagination,
   SlickEventHandler,
+  SlickGrid,
   TreeDataOption,
 } from '../models/index';
 import {
@@ -113,8 +115,8 @@ export class AureliaSlickgridCustomElement {
 
   @bindable({ defaultBindingMode: bindingMode.twoWay }) columnDefinitions: Column[] = [];
   @bindable({ defaultBindingMode: bindingMode.twoWay }) element: Element;
-  @bindable({ defaultBindingMode: bindingMode.twoWay }) dataview: any;
-  @bindable({ defaultBindingMode: bindingMode.twoWay }) grid: any;
+  @bindable({ defaultBindingMode: bindingMode.twoWay }) dataview: DataView;
+  @bindable({ defaultBindingMode: bindingMode.twoWay }) grid: SlickGrid;
   @bindable({ defaultBindingMode: bindingMode.twoWay }) paginationOptions: Pagination | undefined;
   @bindable({ defaultBindingMode: bindingMode.twoWay }) totalItems: number;
   @bindable() customDataView: any;
@@ -507,7 +509,7 @@ export class AureliaSlickgridCustomElement {
     }
   }
 
-  bindDifferentHooks(grid: any, gridOptions: GridOption, dataView: any) {
+  bindDifferentHooks(grid: SlickGrid, gridOptions: GridOption, dataView: DataView) {
     // translate some of them on first load, then on each language change
     if (gridOptions.enableTranslate) {
       this.translateColumnHeaderTitleKeys();
@@ -721,7 +723,7 @@ export class AureliaSlickgridCustomElement {
     }
   }
 
-  bindResizeHook(grid: any, options: GridOption) {
+  bindResizeHook(grid: SlickGrid, options: GridOption) {
     // expand/autofit columns on first page load
     if (grid && options.autoFitColumnsOnFirstLoad && options.enableAutoSizeColumns && typeof grid.autosizeColumns === 'function') {
       this.grid.autosizeColumns();
@@ -741,7 +743,7 @@ export class AureliaSlickgridCustomElement {
     }
   }
 
-  executeAfterDataviewCreated(grid: any, gridOptions: GridOption, dataView: any) {
+  executeAfterDataviewCreated(grid: SlickGrid, gridOptions: GridOption, dataView: DataView) {
     // if user entered some Sort "presets", we need to reflect them all in the DOM
     if (gridOptions.enableSorting) {
       if (gridOptions.presets && Array.isArray(gridOptions.presets.sorters) && gridOptions.presets.sorters.length > 0) {
@@ -983,9 +985,10 @@ export class AureliaSlickgridCustomElement {
     if (this.gridOptions && this.paginationOptions) {
       this.totalItems = Array.isArray(dataset) ? dataset.length : 0;
       if (this.paginationOptions && this.dataview && this.dataview.getPagingInfo) {
-        const slickPagingInfo = this.dataview.getPagingInfo() || {};
-        if (slickPagingInfo.hasOwnProperty('totalRows') && this.paginationOptions.totalItems !== slickPagingInfo.totalRows) {
-          this.totalItems = slickPagingInfo.totalRows;
+        const slickPagingInfo = this.dataview.getPagingInfo();
+        const pagingTotalRows = slickPagingInfo && slickPagingInfo.totalRows;
+        if (slickPagingInfo && slickPagingInfo.hasOwnProperty('totalRows') && this.paginationOptions.totalItems !== pagingTotalRows) {
+          this.totalItems = pagingTotalRows;
         }
       }
       this.paginationOptions.totalItems = this.totalItems;

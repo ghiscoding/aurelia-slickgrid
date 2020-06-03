@@ -3,13 +3,14 @@ import { GridOption } from '../../models/gridOption.interface';
 import { AutoTooltipExtension } from '../autoTooltipExtension';
 import { ExtensionUtility } from '../extensionUtility';
 import { SharedService } from '../../services/shared.service';
+import { SlickGrid } from '../../models';
 
 declare const Slick: any;
 
 const gridStub = {
   getOptions: jest.fn(),
   registerPlugin: jest.fn(),
-};
+} as unknown as SlickGrid;
 
 const mockAddon = jest.fn().mockImplementation(() => ({
   init: jest.fn(),

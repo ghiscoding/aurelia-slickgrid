@@ -8,7 +8,7 @@ import { BindingSignaler } from 'aurelia-templating-resources';
 
 import { Filters } from '..';
 import { AutoCompleteFilter } from '../autoCompleteFilter';
-import { AutocompleteOption, Column, FieldType, FilterArguments, GridOption, OperatorType } from '../../models';
+import { AutocompleteOption, Column, FieldType, FilterArguments, GridOption, OperatorType, SlickGrid } from '../../models';
 import { CollectionService } from '../../services/collection.service';
 
 const containerId = 'demo-container';
@@ -26,7 +26,7 @@ const gridStub = {
   getColumns: jest.fn(),
   getHeaderRowColumn: jest.fn(),
   render: jest.fn(),
-};
+} as unknown as SlickGrid;
 
 class HttpStub extends HttpClient {
   status: number;

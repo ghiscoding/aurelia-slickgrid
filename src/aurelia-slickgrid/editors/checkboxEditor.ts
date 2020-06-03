@@ -5,7 +5,8 @@ import {
   Editor,
   EditorArguments,
   EditorValidator,
-  EditorValidatorOutput
+  EditorValidatorOutput,
+  SlickGrid
 } from './../models/index';
 import { getDescendantProperty, setDeepValue } from '../services/utilities';
 import * as $ from 'jquery';
@@ -19,7 +20,7 @@ export class CheckboxEditor implements Editor {
   originalValue: boolean;
 
   /** SlickGrid Grid object */
-  grid: any;
+  grid: SlickGrid;
 
   constructor(private args: EditorArguments) {
     if (!args) {

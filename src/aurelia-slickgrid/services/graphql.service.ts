@@ -23,6 +23,7 @@ import {
   OperatorType,
   Pagination,
   PaginationChangedArgs,
+  SlickGrid,
   SortChangedArgs,
   SortDirection,
   SortDirectionString,
@@ -38,7 +39,7 @@ export class GraphqlService implements BackendService {
   private _currentPagination: CurrentPagination | null;
   private _currentSorters: CurrentSorter[] = [];
   private _columnDefinitions: Column[];
-  private _grid: any;
+  private _grid: SlickGrid;
   private _datasetIdPropName = 'id';
   options: GraphqlServiceOption;
   pagination: Pagination | undefined;

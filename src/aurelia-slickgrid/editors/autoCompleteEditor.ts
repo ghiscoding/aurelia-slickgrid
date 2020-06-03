@@ -9,6 +9,7 @@ import {
   EditorValidatorOutput,
   FieldType,
   KeyCode,
+  SlickGrid,
 } from './../models/index';
 import { findOrDefault, getDescendantProperty, setDeepValue } from '../services/utilities';
 import { textValidator } from '../editorValidators/textValidator';
@@ -32,7 +33,7 @@ export class AutoCompleteEditor implements Editor {
   private _$editorElm: any;
 
   /** SlickGrid Grid object */
-  grid: any;
+  grid: SlickGrid;
 
   /** The property name for labels in the collection */
   labelName: string;

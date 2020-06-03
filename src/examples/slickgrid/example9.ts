@@ -3,11 +3,13 @@ import { autoinject } from 'aurelia-framework';
 import {
   AureliaGridInstance,
   Column,
+  DataView,
   ExtensionName,
   FieldType,
   Filters,
   Formatters,
   GridOption,
+  SlickGrid,
 } from '../../aurelia-slickgrid';
 import './example9.scss'; // provide custom CSS/SASS styling
 
@@ -31,8 +33,8 @@ export class Example9 {
   columnDefinitions: Column[];
   gridOptions: GridOption;
   dataset = [];
-  dataView: any;
-  gridObj: any;
+  dataView: DataView;
+  gridObj: SlickGrid;
   selectedLanguage: string;
 
   constructor(private i18n: I18N) {

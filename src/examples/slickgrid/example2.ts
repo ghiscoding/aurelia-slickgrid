@@ -6,6 +6,7 @@ import {
   Formatters,
   GridOption,
   SelectedRange,
+  SlickGrid,
 } from '../../aurelia-slickgrid';
 
 // create my custom Formatter with the Formatter type
@@ -14,7 +15,7 @@ const myCustomCheckmarkFormatter: Formatter = (row, cell, value, columnDef, data
   return value ? `<i class="fa fa-fire red" aria-hidden="true"></i>` : { text: '<i class="fa fa-snowflake-o" aria-hidden="true"></i>', addClasses: 'lightblue', toolTip: 'Freezing' };
 };
 
-const customEnableButtonFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid: any) => {
+const customEnableButtonFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid: SlickGrid) => {
   return `<span style="margin-left: 5px">
       <button class="btn btn-xs btn-default">
         <i class="fa ${value ? 'fa-check-circle' : 'fa-circle-thin'} fa-lg" style="color: ${value ? 'black' : 'lavender'}"></i>

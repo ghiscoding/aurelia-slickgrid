@@ -9,6 +9,7 @@ import {
   Formatter,
   Formatters,
   GridOption,
+  SlickGrid,
 } from '../../aurelia-slickgrid';
 import './example24.scss'; // provide custom CSS/SASS styling
 import { autoinject } from 'aurelia-framework';
@@ -48,7 +49,7 @@ const priorityExportFormatter: Formatter = (row, cell, value, columnDef, dataCon
 };
 
 // create a custom translate Formatter (typically you would move that a separate file, for separation of concerns)
-const taskTranslateFormatter: Formatter = (row: number, cell: number, value: any, columnDef: any, dataContext: any, grid: any) => {
+const taskTranslateFormatter: Formatter = (row: number, cell: number, value: any, columnDef: any, dataContext: any, grid: SlickGrid) => {
   const gridOptions = (grid && typeof grid.getOptions === 'function') ? grid.getOptions() : {};
   const i18n = gridOptions.i18n;
 

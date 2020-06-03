@@ -1,5 +1,5 @@
 import { DOM } from 'aurelia-pal';
-import { Column, FilterArguments, GridOption, OperatorType } from '../../models';
+import { Column, FilterArguments, GridOption, OperatorType, SlickGrid } from '../../models';
 import { Filters } from '..';
 import { CompoundSliderFilter } from '../compoundSliderFilter';
 
@@ -18,7 +18,7 @@ const gridStub = {
   getColumns: jest.fn(),
   getHeaderRowColumn: jest.fn(),
   render: jest.fn(),
-};
+} as unknown as SlickGrid;
 
 describe('CompoundSliderFilter', () => {
   let divContainer: HTMLDivElement;

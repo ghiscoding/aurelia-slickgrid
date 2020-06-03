@@ -1,3 +1,5 @@
+import { SlickGrid } from './slickGrid.interface';
+
 export interface RowDetailView {
   /** Defaults to true, which will collapse all row detail views when user calls a sort. Unless user implements a sort to deal with padding */
   collapseAllOnSort?: boolean;
@@ -79,7 +81,7 @@ export interface RowDetailView {
   process: (item: any) => Promise<any>;
 
   /** Override the logic for showing (or not) the expand icon (use case example: only every 2nd row is expandable) */
-  expandableOverride?: (row: number, dataContext: any, grid: any) => boolean;
+  expandableOverride?: (row: number, dataContext: any, grid: SlickGrid) => boolean;
 
   // --
   // SlickGrid Events
@@ -91,17 +93,17 @@ export interface RowDetailView {
   onAsyncResponse?: (e: Event, args: { item: any; detailView?: any }) => void;
 
   /** Fired when the async response finished */
-  onAsyncEndUpdate?: (e: Event, args: { grid: any; item: any }) => void;
+  onAsyncEndUpdate?: (e: Event, args: { grid: SlickGrid; item: any }) => void;
 
   /** Fired after the row detail gets toggled */
-  onAfterRowDetailToggle?: (e: Event, args: { grid: any; item: any; expandedRows: any[] }) => void;
+  onAfterRowDetailToggle?: (e: Event, args: { grid: SlickGrid; item: any; expandedRows: any[] }) => void;
 
   /** Fired before the row detail gets toggled */
-  onBeforeRowDetailToggle?: (e: Event, args: { grid: any; item: any }) => void;
+  onBeforeRowDetailToggle?: (e: Event, args: { grid: SlickGrid; item: any }) => void;
 
   /** Fired after the row detail gets toggled */
-  onRowBackToViewportRange?: (e: Event, args: { grid: any; item: any; rowId: number; rowIndex: number; expandedRows: any[]; rowIdsOutOfViewport: number[]; }) => void;
+  onRowBackToViewportRange?: (e: Event, args: { grid: SlickGrid; item: any; rowId: number; rowIndex: number; expandedRows: any[]; rowIdsOutOfViewport: number[]; }) => void;
 
   /** Fired after a row becomes out of viewport range (user can't see the row anymore) */
-  onRowOutOfViewportRange?: (e: Event, args: { grid: any; item: any; rowId: number; rowIndex: number; expandedRows: any[]; rowIdsOutOfViewport: number[]; }) => void;
+  onRowOutOfViewportRange?: (e: Event, args: { grid: SlickGrid; item: any; rowId: number; rowIndex: number; expandedRows: any[]; rowIdsOutOfViewport: number[]; }) => void;
 }

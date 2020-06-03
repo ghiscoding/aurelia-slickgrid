@@ -9,7 +9,7 @@ import { I18N } from 'aurelia-i18n';
 import { DOM } from 'aurelia-pal';
 import { BindingSignaler } from 'aurelia-templating-resources';
 
-import { Column, FilterArguments, GridOption, FieldType, OperatorType } from '../../models';
+import { Column, FilterArguments, GridOption, FieldType, OperatorType, SlickGrid } from '../../models';
 import { CollectionService } from '../../services/collection.service';
 import { Filters } from '..';
 import { SelectFilter } from '../selectFilter';
@@ -29,7 +29,7 @@ const gridStub = {
   getColumns: jest.fn(),
   getHeaderRowColumn: jest.fn(),
   render: jest.fn(),
-};
+} as unknown as SlickGrid;
 
 class HttpStub extends HttpClient {
   status: number;

@@ -5,6 +5,7 @@ import {
   EditorValidator,
   EditorValidatorOutput,
   GridOption,
+  SlickGrid,
 } from '../../aurelia-slickgrid';
 import { View, ViewSlot } from 'aurelia-framework';
 
@@ -27,7 +28,7 @@ export class CustomAureliaViewModelEditor implements Editor {
   selectedItem: any;
 
   /** SlickGrid grid object */
-  grid: any;
+  grid: SlickGrid;
 
   constructor(private args: any) {
     this.grid = args && args.grid;

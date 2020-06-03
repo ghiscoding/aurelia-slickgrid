@@ -3,7 +3,7 @@ import { GridOption } from '../../models/gridOption.interface';
 import { CellExternalCopyManagerExtension } from '../cellExternalCopyManagerExtension';
 import { ExtensionUtility } from '../extensionUtility';
 import { SharedService } from '../../services/shared.service';
-import { SelectedRange, EditCommand, Formatter } from '../../models';
+import { SelectedRange, EditCommand, Formatter, SlickGrid } from '../../models';
 import { Formatters } from '../../formatters';
 
 declare const Slick: any;
@@ -14,7 +14,7 @@ const gridStub = {
   getOptions: jest.fn(),
   registerPlugin: jest.fn(),
   setSelectionModel: jest.fn(),
-};
+} as unknown as SlickGrid;
 
 const addonStub = {
   init: jest.fn(),

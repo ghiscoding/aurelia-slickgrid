@@ -1,6 +1,6 @@
 import { Editors } from '../index';
 import { AutoCompleteEditor } from '../autoCompleteEditor';
-import { AutocompleteOption, Column, EditorArgs, EditorArguments, GridOption, KeyCode, FieldType } from '../../models';
+import { AutocompleteOption, Column, DataView, EditorArgs, EditorArguments, GridOption, KeyCode, FieldType, SlickGrid } from '../../models';
 import { DOM } from 'aurelia-pal';
 
 const KEY_CHAR_A = 97;
@@ -11,7 +11,7 @@ const template = `<div id="${containerId}"></div>`;
 
 const dataViewStub = {
   refresh: jest.fn(),
-};
+} as unknown as DataView;
 
 const gridOptionMock = {
   autoCommitEdit: false,
@@ -28,7 +28,7 @@ const gridStub = {
   getEditorLock: () => getEditorLockMock,
   getHeaderRowColumn: jest.fn(),
   render: jest.fn(),
-};
+} as unknown as SlickGrid;
 
 describe('AutoCompleteEditor', () => {
   let divContainer: HTMLDivElement;

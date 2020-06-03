@@ -13,6 +13,7 @@ import {
   OperatorType,
   OperatorString,
   SearchTerm,
+  SlickGrid,
 } from './../models/index';
 import { CollectionService } from '../services/collection.service';
 import { getDescendantProperty } from '../services/utilities';
@@ -31,7 +32,7 @@ export class AutoCompleteFilter implements Filter {
   /** The JQuery DOM element */
   $filterElm: any;
 
-  grid: any;
+  grid: SlickGrid;
   searchTerms: SearchTerm[];
   columnDef: Column;
   callback: FilterCallback;

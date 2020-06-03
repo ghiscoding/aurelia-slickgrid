@@ -3,7 +3,7 @@ import { I18N } from 'aurelia-i18n';
 import { BindingSignaler } from 'aurelia-templating-resources';
 import { Editors } from '../index';
 import { LongTextEditor } from '../longTextEditor';
-import { AutocompleteOption, Column, EditorArgs, EditorArguments, GridOption, KeyCode } from '../../models';
+import { AutocompleteOption, Column, DataView, EditorArgs, EditorArguments, GridOption, KeyCode, SlickGrid } from '../../models';
 import { DOM } from 'aurelia-pal';
 
 const KEY_CHAR_A = 97;
@@ -14,7 +14,7 @@ const template = `<div id="${containerId}"></div>`;
 
 const dataViewStub = {
   refresh: jest.fn(),
-};
+} as unknown as DataView;
 
 const gridOptionMock = {
   autoCommitEdit: false,
@@ -34,7 +34,7 @@ const gridStub = {
   navigateNext: jest.fn(),
   navigatePrev: jest.fn(),
   render: jest.fn(),
-};
+} as unknown as SlickGrid;
 
 describe('LongTextEditor', () => {
   let ea: EventAggregator;
