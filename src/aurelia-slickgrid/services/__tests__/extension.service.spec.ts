@@ -33,6 +33,7 @@ const gridStub = {
   autosizeColumns: jest.fn(),
   getColumnIndex: jest.fn(),
   getOptions: jest.fn(),
+  getPluginByName: jest.fn(),
   getColumns: jest.fn(),
   setColumns: jest.fn(),
   onColumnsReordered: jest.fn(),
@@ -420,7 +421,8 @@ describe('ExtensionService', () => {
         const gridOptionsMock = { registerPlugins: [pluginMock] } as GridOption;
         const gridSpy = jest.spyOn(SharedService.prototype, 'grid', 'get').mockReturnValue(gridStub);
         const optionSpy = jest.spyOn(SharedService.prototype, 'gridOptions', 'get').mockReturnValue(gridOptionsMock);
-        const pluginSpy = jest.spyOn(SharedService.prototype.grid, 'registerPlugin').mockReturnValue(instanceMock);
+        const pluginSpy = jest.spyOn(SharedService.prototype.grid, 'registerPlugin');
+        jest.spyOn(SharedService.prototype.grid, 'getPluginByName').mockReturnValue(instanceMock);
 
         service.bindDifferentExtensions();
         const output = service.getExtensionByName(ExtensionName.noname);
@@ -437,7 +439,8 @@ describe('ExtensionService', () => {
         const gridOptionsMock = { registerPlugins: pluginMock } as GridOption;
         const gridSpy = jest.spyOn(SharedService.prototype, 'grid', 'get').mockReturnValue(gridStub);
         const optionSpy = jest.spyOn(SharedService.prototype, 'gridOptions', 'get').mockReturnValue(gridOptionsMock);
-        const pluginSpy = jest.spyOn(SharedService.prototype.grid, 'registerPlugin').mockReturnValue(instanceMock);
+        const pluginSpy = jest.spyOn(SharedService.prototype.grid, 'registerPlugin');
+        jest.spyOn(SharedService.prototype.grid, 'getPluginByName').mockReturnValue(instanceMock);
 
         service.bindDifferentExtensions();
         const output = service.getExtensionByName(ExtensionName.noname);
