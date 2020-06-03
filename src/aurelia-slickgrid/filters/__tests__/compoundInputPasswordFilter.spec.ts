@@ -1,4 +1,4 @@
-import { Column, FilterArguments, GridOption } from '../../models';
+import { Column, FilterArguments, GridOption, SlickGrid } from '../../models';
 import { Filters } from '..';
 import { CompoundInputPasswordFilter } from '../compoundInputPasswordFilter';
 import { BindingSignaler } from 'aurelia-templating-resources';
@@ -20,7 +20,7 @@ const gridStub = {
   getColumns: jest.fn(),
   getHeaderRowColumn: jest.fn(),
   render: jest.fn(),
-};
+} as unknown as SlickGrid;
 
 describe('CompoundInputPasswordFilter', () => {
   let ea: EventAggregator;

@@ -9,7 +9,7 @@ import { BindingSignaler } from 'aurelia-templating-resources';
 import { Editors } from '../index';
 import { SelectEditor } from '../selectEditor';
 import { CollectionService } from './../../services/collection.service';
-import { AutocompleteOption, Column, EditorArgs, EditorArguments, FieldType, GridOption, OperatorType } from '../../models';
+import { AutocompleteOption, Column, DataView, EditorArgs, EditorArguments, FieldType, GridOption, OperatorType, SlickGrid } from '../../models';
 import { BindingEngine } from 'aurelia-binding';
 
 const containerId = 'demo-container';
@@ -28,7 +28,7 @@ const bindingEngineStub = {
 
 const dataViewStub = {
   refresh: jest.fn(),
-};
+} as unknown as DataView;
 
 const gridOptionMock = {
   autoCommitEdit: false,
@@ -48,7 +48,7 @@ const gridStub = {
   navigateNext: jest.fn(),
   navigatePrev: jest.fn(),
   render: jest.fn(),
-};
+} as unknown as SlickGrid;
 
 class HttpStub extends HttpClient {
   status: number;

@@ -5,7 +5,7 @@ import { GridOption } from '../../models/gridOption.interface';
 import { HeaderMenuExtension } from '../headerMenuExtension';
 import { ExtensionUtility } from '../extensionUtility';
 import { SharedService } from '../../services/shared.service';
-import { Column, ColumnSort } from '../../models';
+import { Column, ColumnSort, DataView, SlickGrid } from '../../models';
 import { FilterService, SortService } from '../../services';
 
 declare const Slick: any;
@@ -25,7 +25,7 @@ const sortServiceStub = {
 
 const dataViewStub = {
   refresh: jest.fn(),
-};
+} as unknown as DataView;
 
 const gridStub = {
   autosizeColumns: jest.fn(),
@@ -39,7 +39,7 @@ const gridStub = {
   setPreHeaderPanelVisibility: jest.fn(),
   setSortColumns: jest.fn(),
   onSort: new Slick.Event(),
-};
+} as unknown as SlickGrid;
 
 const mockAddon = jest.fn().mockImplementation(() => ({
   init: jest.fn(),

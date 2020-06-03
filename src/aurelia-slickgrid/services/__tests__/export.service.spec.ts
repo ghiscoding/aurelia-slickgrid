@@ -4,11 +4,13 @@ import { BindingSignaler } from 'aurelia-templating-resources';
 import { ExportService } from '../export.service';
 import {
   Column,
+  DataView,
   DelimiterType,
   FieldType,
   FileType,
   Formatter,
   GridOption,
+  SlickGrid,
   SortDirectionNumber,
 } from '../../models';
 import { GroupTotalFormatters } from '../..';
@@ -42,7 +44,7 @@ const dataViewStub = {
   getItem: jest.fn(),
   getLength: jest.fn(),
   setGrouping: jest.fn(),
-};
+} as unknown as DataView;
 
 const mockGridOptions = {
   enablePagination: true,
@@ -54,7 +56,7 @@ const gridStub = {
   getOptions: () => mockGridOptions,
   getColumns: jest.fn(),
   getGrouping: jest.fn(),
-};
+} as unknown as SlickGrid;
 
 describe('ExportService', () => {
   let globalEa: EventAggregator;

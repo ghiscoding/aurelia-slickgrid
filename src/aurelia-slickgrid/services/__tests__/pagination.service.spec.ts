@@ -3,7 +3,7 @@ import { EventAggregator } from 'aurelia-event-aggregator';
 
 import { PaginationService } from './../pagination.service';
 import { SharedService } from '../shared.service';
-import { Column, GridOption } from '../../models';
+import { Column, DataView, GridOption, SlickGrid } from '../../models';
 import * as utilities from '../backend-utilities';
 
 declare const Slick: any;
@@ -22,7 +22,7 @@ const dataviewStub = {
   onRowsChanged: new Slick.Event(),
   setPagingOptions: jest.fn(),
   setRefreshHints: jest.fn(),
-};
+} as unknown as DataView;
 
 const mockBackendService = {
   resetPaginationOptions: jest.fn(),
@@ -61,7 +61,7 @@ const gridStub = {
   onColumnsReordered: jest.fn(),
   onColumnsResized: jest.fn(),
   registerPlugin: jest.fn(),
-};
+} as unknown as SlickGrid;
 
 describe('PaginationService', () => {
   let service: PaginationService;

@@ -1,6 +1,6 @@
 import { Editors } from '../index';
 import { DualInputEditor } from '../dualInputEditor';
-import { Column, ColumnEditorDualInput, EditorArgs, EditorArguments, GridOption, KeyCode } from '../../models';
+import { Column, ColumnEditorDualInput, DataView, EditorArgs, EditorArguments, GridOption, KeyCode, SlickGrid } from '../../models';
 
 declare const Slick: any;
 const KEY_CHAR_0 = 48;
@@ -12,7 +12,7 @@ const template = `<div id="${containerId}"></div>`;
 
 const dataViewStub = {
   refresh: jest.fn(),
-};
+} as unknown as DataView;
 
 const gridOptionMock = {
   autoCommitEdit: false,
@@ -30,7 +30,7 @@ const gridStub = {
   getHeaderRowColumn: jest.fn(),
   onValidationError: new Slick.Event(),
   render: jest.fn(),
-};
+} as unknown as SlickGrid;
 
 describe('DualInputEditor', () => {
   let divContainer: HTMLDivElement;

@@ -987,7 +987,7 @@ export class AureliaSlickgridCustomElement {
       if (this.paginationOptions && this.dataview && this.dataview.getPagingInfo) {
         const slickPagingInfo = this.dataview.getPagingInfo();
         const pagingTotalRows = slickPagingInfo && slickPagingInfo.totalRows;
-        if (slickPagingInfo.hasOwnProperty('totalRows') && this.paginationOptions.totalItems !== pagingTotalRows) {
+        if (slickPagingInfo && slickPagingInfo.hasOwnProperty('totalRows') && this.paginationOptions.totalItems !== pagingTotalRows) {
           this.totalItems = pagingTotalRows;
         }
       }

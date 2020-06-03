@@ -1,7 +1,7 @@
 import { DOM } from 'aurelia-pal';
 import { Editors } from '../index';
 import { SliderEditor } from '../sliderEditor';
-import { Column, EditorArgs, EditorArguments, GridOption } from '../../models';
+import { Column, DataView, EditorArgs, EditorArguments, GridOption, SlickGrid } from '../../models';
 
 const containerId = 'demo-container';
 
@@ -10,7 +10,7 @@ const template = `<div id="${containerId}"></div>`;
 
 const dataViewStub = {
   refresh: jest.fn(),
-};
+} as unknown as DataView;
 
 const gridOptionMock = {
   autoCommitEdit: false,
@@ -27,7 +27,7 @@ const gridStub = {
   getEditorLock: () => getEditorLockMock,
   getHeaderRowColumn: jest.fn(),
   render: jest.fn(),
-};
+} as unknown as SlickGrid;
 
 describe('SliderEditor', () => {
   let divContainer: HTMLDivElement;

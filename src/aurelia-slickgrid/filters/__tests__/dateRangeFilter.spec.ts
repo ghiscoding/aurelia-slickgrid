@@ -3,7 +3,7 @@ import { I18N } from 'aurelia-i18n';
 import { DOM } from 'aurelia-pal';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { BindingSignaler } from 'aurelia-templating-resources';
-import { Column, FilterArguments, FieldType, GridOption } from '../../models';
+import { Column, FilterArguments, FieldType, GridOption, SlickGrid } from '../../models';
 import { Filters } from '..';
 import { DateRangeFilter } from '../dateRangeFilter';
 
@@ -22,7 +22,7 @@ const gridStub = {
   getColumns: jest.fn(),
   getHeaderRowColumn: jest.fn(),
   render: jest.fn(),
-};
+} as unknown as SlickGrid;
 
 describe('DateRangeFilter', () => {
   let ea: EventAggregator;

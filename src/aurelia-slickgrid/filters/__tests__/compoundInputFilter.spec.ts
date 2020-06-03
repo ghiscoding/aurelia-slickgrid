@@ -2,7 +2,7 @@ import { I18N } from 'aurelia-i18n';
 import { DOM } from 'aurelia-pal';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { BindingSignaler } from 'aurelia-templating-resources';
-import { Column, FieldType, FilterArguments, GridOption, OperatorType } from '../../models';
+import { Column, FieldType, FilterArguments, GridOption, OperatorType, SlickGrid } from '../../models';
 import { Filters } from '..';
 import { CompoundInputFilter } from '../compoundInputFilter';
 
@@ -20,7 +20,7 @@ const gridStub = {
   getColumns: jest.fn(),
   getHeaderRowColumn: jest.fn(),
   render: jest.fn(),
-};
+} as unknown as SlickGrid;
 
 describe('CompoundInputFilter', () => {
   let ea: EventAggregator;

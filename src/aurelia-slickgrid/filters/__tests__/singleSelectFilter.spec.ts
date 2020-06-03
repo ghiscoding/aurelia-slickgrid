@@ -6,7 +6,7 @@ import { BindingEngine } from 'aurelia-binding';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { I18N } from 'aurelia-i18n';
 import { BindingSignaler } from 'aurelia-templating-resources';
-import { Column, FilterArguments, GridOption } from '../../models';
+import { Column, FilterArguments, GridOption, SlickGrid } from '../../models';
 import { CollectionService } from '../../services/collection.service';
 import { Filters } from '..';
 import { SingleSelectFilter } from '../singleSelectFilter';
@@ -26,7 +26,7 @@ const gridStub = {
   getColumns: jest.fn(),
   getHeaderRowColumn: jest.fn(),
   render: jest.fn(),
-};
+} as unknown as SlickGrid;
 
 describe('SelectFilter', () => {
   let ea: EventAggregator;

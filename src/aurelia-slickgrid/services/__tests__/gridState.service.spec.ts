@@ -6,17 +6,19 @@ import { GridStateService } from '../gridState.service';
 import { SortService } from '../sort.service';
 import {
   BackendService,
-  GridOption,
   CurrentPagination,
   CurrentRowSelection,
   CurrentSorter,
   CurrentFilter,
   Column,
   CurrentColumn,
+  DataView,
+  ExtensionName,
+  GridOption,
+  GridState,
   GridStateChange,
   GridStateType,
-  GridState,
-  ExtensionName
+  SlickGrid,
 } from '../../models';
 import { SharedService } from '../shared.service';
 
@@ -38,7 +40,7 @@ const dataViewStub = {
   mapRowsToIds: jest.fn(),
   onBeforePagingInfoChanged: new Slick.Event(),
   onPagingInfoChanged: new Slick.Event(),
-};
+} as unknown as DataView;
 
 const gridStub = {
   autosizeColumns: jest.fn(),
@@ -51,7 +53,7 @@ const gridStub = {
   onColumnsReordered: new Slick.Event(),
   onColumnsResized: new Slick.Event(),
   onSelectedRowsChanged: new Slick.Event(),
-};
+} as unknown as SlickGrid;
 
 const extensionServiceStub = {
   getExtensionByName: (name: string) => { }

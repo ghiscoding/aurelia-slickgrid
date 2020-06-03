@@ -27,7 +27,9 @@ import {
 import {
   Column,
   CurrentFilter,
+  CurrentPagination,
   CurrentSorter,
+  DataView,
   GraphqlPaginatedResult,
   GraphqlServiceApi,
   GraphqlServiceOption,
@@ -36,7 +38,7 @@ import {
   GridStateType,
   Pagination,
   ServicePagination,
-  CurrentPagination
+  SlickGrid,
 } from '../../models';
 import { Filters } from '../../filters';
 import { Editors } from '../../editors';
@@ -199,7 +201,7 @@ const mockDataView = {
   reSort: jest.fn(),
   setItems: jest.fn(),
   syncGridSelection: jest.fn(),
-};
+} as unknown as DataView;
 
 const mockDraggableGrouping = {
   constructor: jest.fn(),
@@ -238,7 +240,7 @@ const mockGrid = {
   onRendered: jest.fn(),
   onScroll: jest.fn(),
   onDataviewCreated: new Slick.Event(),
-};
+} as unknown as SlickGrid
 
 const mockSlickCoreImplementation = jest.fn().mockImplementation(() => (mockSlickCore));
 const mockDataViewImplementation = jest.fn().mockImplementation(() => (mockDataView));
@@ -852,7 +854,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
         const expectedPageNumber = 3;
         const expectedTotalItems = 15;
         const refreshSpy = jest.spyOn(customElement, 'refreshGridData');
-        const getPagingSpy = jest.spyOn(mockDataView, 'getPagingInfo').mockReturnValue({ pageNum: 1, totalRows: expectedTotalItems });
+        const getPagingSpy = jest.spyOn(mockDataView, 'getPagingInfo').mockReturnValue({ pageNum: 1, pageSize: 10, totalRows: expectedTotalItems });
 
         const mockData = [{ firstName: 'John', lastName: 'Doe' }, { firstName: 'Jane', lastName: 'Smith' }];
         customElement.gridOptions = {

@@ -2,6 +2,7 @@ import { DOM } from 'aurelia-pal';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { GridOption } from '../../models/gridOption.interface';
 import { ResizerService } from '../resizer.service';
+import { SlickGrid } from '../..';
 
 const DATAGRID_MIN_HEIGHT = 180;
 const DATAGRID_MIN_WIDTH = 300;
@@ -33,7 +34,7 @@ const gridStub = {
   resizeCanvas: jest.fn(),
   getOptions: () => gridOptionMock,
   getUID: () => gridUid,
-};
+} as unknown as SlickGrid;
 
 // define a <div> container to simulate the grid container
 const template =
@@ -80,6 +81,7 @@ describe('Resizer Service', () => {
 
   xit('should throw an error when there is no grid options defined', () => {
     service = new ResizerService(new EventAggregator(), new EventAggregator());
+    // @ts-ignore
     expect(() => service.init({ getOptions: () => null })).toThrowError('Aurelia-Slickgrid resizer requires a valid Grid object and Grid Options defined');
   });
 
