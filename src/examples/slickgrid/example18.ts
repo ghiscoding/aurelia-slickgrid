@@ -3,7 +3,7 @@ import {
   Aggregators,
   AureliaGridInstance,
   Column,
-  DataView,
+  SlickDataView,
   DelimiterType,
   FieldType,
   FileType,
@@ -39,7 +39,7 @@ export class Example18 {
   aureliaGrid: AureliaGridInstance;
   columnDefinitions: Column[];
   dataset: any[];
-  dataviewObj: DataView;
+  dataviewObj: SlickDataView;
   draggableGroupingPlugin: any;
   durationOrderByCount = false;
   gridObj: SlickGrid;

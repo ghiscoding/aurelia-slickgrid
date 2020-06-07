@@ -8,7 +8,7 @@ import { Constants } from './../constants';
 import { exportWithFormatterWhenDefined } from './export-utilities';
 import {
   Column,
-  DataView,
+  SlickDataView,
   ExportOption,
   FileType,
   GridOption,
@@ -30,7 +30,7 @@ export class ExportService {
   private _exportOptions: ExportOption;
   private _fileFormat = FileType.csv;
   private _lineCarriageReturn = '\n';
-  private _dataView: DataView;
+  private _dataView: SlickDataView;
   private _grid: SlickGrid;
   private _columnHeaders: KeyTitlePair[];
   private _groupedColumnHeaders: KeyTitlePair[];
@@ -53,7 +53,7 @@ export class ExportService {
    * @param grid
    * @param dataView
    */
-  init(grid: SlickGrid, dataView: DataView): void {
+  init(grid: SlickGrid, dataView: SlickDataView): void {
     this._grid = grid;
     this._dataView = dataView;
     this._aureliaEventPrefix = (this._gridOptions && this._gridOptions.defaultAureliaEventPrefix) ? this._gridOptions.defaultAureliaEventPrefix : DEFAULT_AURELIA_EVENT_PREFIX;

@@ -4,7 +4,7 @@ import { EventAggregator } from 'aurelia-event-aggregator';
 import {
   CellArgs,
   Column,
-  DataView,
+  SlickDataView,
   GridOption,
   GridServiceDeleteOption,
   GridServiceInsertOption,
@@ -32,7 +32,7 @@ const GridServiceUpdateOptionDefaults: GridServiceUpdateOption = { highlightRow:
 @inject(EventAggregator, SlickgridEventAggregator, ExtensionService, FilterService, GridStateService, SharedService, SortService)
 export class GridService {
   private _aureliaEventPrefix = DEFAULT_AURELIA_EVENT_PREFIX;
-  private _dataView: DataView;
+  private _dataView: SlickDataView;
   private _grid: SlickGrid;
 
   constructor(
@@ -55,7 +55,7 @@ export class GridService {
    * @param grid
    * @param dataView
    */
-  init(grid: SlickGrid, dataView: DataView): void {
+  init(grid: SlickGrid, dataView: SlickDataView): void {
     this._grid = grid;
     this._dataView = dataView;
     this._aureliaEventPrefix = (this._gridOptions && this._gridOptions.defaultAureliaEventPrefix) ? this._gridOptions.defaultAureliaEventPrefix : DEFAULT_AURELIA_EVENT_PREFIX;

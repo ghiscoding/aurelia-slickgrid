@@ -3,7 +3,7 @@ import { autoinject } from 'aurelia-framework';
 import {
   AureliaGridInstance,
   Column,
-  DataView,
+  SlickDataView,
   ExtensionName,
   FieldType,
   Filters,
@@ -33,7 +33,7 @@ export class Example9 {
   columnDefinitions: Column[];
   gridOptions: GridOption;
   dataset = [];
-  dataView: DataView;
+  dataView: SlickDataView;
   gridObj: SlickGrid;
   selectedLanguage: string;
 

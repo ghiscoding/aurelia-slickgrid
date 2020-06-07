@@ -1,4 +1,4 @@
-import { DataView } from './dataView.interface';
+import { SlickDataView } from './slickDataView.interface';
 import { SlickGrid } from './slickGrid.interface';
 
 export interface ViewModelBindableData {
@@ -6,6 +6,6 @@ export interface ViewModelBindableData {
   model: any;
   addon: any;
   grid: SlickGrid;
-  dataView: DataView;
+  dataView: SlickDataView;
   parent?: any;
 }

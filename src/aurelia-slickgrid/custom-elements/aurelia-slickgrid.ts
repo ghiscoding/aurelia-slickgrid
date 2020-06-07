@@ -21,7 +21,7 @@ import {
   BackendServiceOption,
   Column,
   CustomFooterOption,
-  DataView,
+  SlickDataView,
   ExtensionName,
   GraphqlResult,
   GraphqlPaginatedResult,
@@ -115,7 +115,7 @@ export class AureliaSlickgridCustomElement {
 
   @bindable({ defaultBindingMode: bindingMode.twoWay }) columnDefinitions: Column[] = [];
   @bindable({ defaultBindingMode: bindingMode.twoWay }) element: Element;
-  @bindable({ defaultBindingMode: bindingMode.twoWay }) dataview: DataView;
+  @bindable({ defaultBindingMode: bindingMode.twoWay }) dataview: SlickDataView;
   @bindable({ defaultBindingMode: bindingMode.twoWay }) grid: SlickGrid;
   @bindable({ defaultBindingMode: bindingMode.twoWay }) paginationOptions: Pagination | undefined;
   @bindable({ defaultBindingMode: bindingMode.twoWay }) totalItems: number;
@@ -509,7 +509,7 @@ export class AureliaSlickgridCustomElement {
     }
   }
 
-  bindDifferentHooks(grid: SlickGrid, gridOptions: GridOption, dataView: DataView) {
+  bindDifferentHooks(grid: SlickGrid, gridOptions: GridOption, dataView: SlickDataView) {
     // translate some of them on first load, then on each language change
     if (gridOptions.enableTranslate) {
       this.translateColumnHeaderTitleKeys();
@@ -743,7 +743,7 @@ export class AureliaSlickgridCustomElement {
     }
   }
 
-  executeAfterDataviewCreated(grid: SlickGrid, gridOptions: GridOption, dataView: DataView) {
+  executeAfterDataviewCreated(grid: SlickGrid, gridOptions: GridOption, dataView: SlickDataView) {
     // if user entered some Sort "presets", we need to reflect them all in the DOM
     if (gridOptions.enableSorting) {
       if (gridOptions.presets && Array.isArray(gridOptions.presets.sorters) && gridOptions.presets.sorters.length > 0) {

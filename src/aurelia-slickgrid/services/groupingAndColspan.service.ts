@@ -3,7 +3,7 @@ import * as $ from 'jquery';
 
 import {
   Column,
-  DataView,
+  SlickDataView,
   GridOption,
   SlickEventHandler,
   SlickGrid,
@@ -45,7 +45,7 @@ export class GroupingAndColspanService {
    * @param grid
    * @param dataView
    */
-  init(grid: SlickGrid, dataView: DataView) {
+  init(grid: SlickGrid, dataView: SlickDataView) {
     this._grid = grid;
     this._aureliaEventPrefix = (this._gridOptions && this._gridOptions.defaultAureliaEventPrefix) ? this._gridOptions.defaultAureliaEventPrefix : 'asg';
 

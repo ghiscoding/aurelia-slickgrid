@@ -1,11 +1,11 @@
 import { singleton } from 'aurelia-framework';
-import { Column, CurrentPagination, DataView, GridOption, SlickGrid } from '../models/index';
+import { Column, CurrentPagination, SlickDataView, GridOption, SlickGrid } from '../models/index';
 
 @singleton(true)
 export class SharedService {
   private _allColumns: Column[];
   private _currentPagination: CurrentPagination | null;
-  private _dataView: DataView;
+  private _dataView: SlickDataView;
   private _groupItemMetadataProvider: any;
   private _grid: SlickGrid;
   private _gridOptions: GridOption;
@@ -41,11 +41,11 @@ export class SharedService {
   }
 
   /** Getter for SlickGrid DataView object */
-  get dataView(): DataView {
+  get dataView(): SlickDataView {
     return this._dataView;
   }
   /** Setter for SlickGrid DataView object */
-  set dataView(dataView: DataView) {
+  set dataView(dataView: SlickDataView) {
     this._dataView = dataView;
   }
 

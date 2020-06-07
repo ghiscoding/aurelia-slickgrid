@@ -2,7 +2,7 @@ import { autoinject, bindable } from 'aurelia-framework';
 import {
   AureliaGridInstance,
   Column,
-  DataView,
+  SlickDataView,
   FieldType,
   Filters,
   Formatters,
@@ -26,7 +26,7 @@ export class Example28 {
     </ul>
   `;
   aureliaGrid: AureliaGridInstance;
-  dataViewObj: DataView;
+  dataViewObj: SlickDataView;
   gridObj: SlickGrid;
   gridOptions: GridOption;
   columnDefinitions: Column[];
