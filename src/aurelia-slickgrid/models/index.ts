@@ -29,7 +29,7 @@ export * from './currentPagination.interface';
 export * from './currentRowSelection.interface';
 export * from './currentSorter.interface';
 export * from './customFooterOption.interface';
-export * from './dataView.interface';
+export * from './slickDataView.interface';
 export * from './delimiterType.enum';
 export * from './draggableGrouping.interface';
 export * from './editCommand.interface';
