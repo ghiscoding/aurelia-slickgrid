@@ -24,6 +24,7 @@ import { FilterService } from '../services/filter.service';
 import { SharedService } from '../services/shared.service';
 import { SortService } from '../services/sort.service';
 import { getTranslationPrefix } from '../services/utilities';
+import { SlickgridEventAggregator } from '../custom-elements/slickgridEventAggregator';
 
 // using external non-typed js libraries
 declare const Slick: any;
@@ -35,6 +36,7 @@ declare const Slick: any;
   ExtensionUtility,
   FilterService,
   Optional.of(I18N),
+  SlickgridEventAggregator,
   SharedService,
   SortService,
 )
@@ -51,10 +53,12 @@ export class GridMenuExtension implements Extension {
     private extensionUtility: ExtensionUtility,
     private filterService: FilterService,
     private i18n: I18N,
+    private pluginEa: SlickgridEventAggregator,
     private sharedService: SharedService,
     private sortService: SortService,
   ) {
     this._eventHandler = new Slick.EventHandler();
+    this.bindOnHeaderMenuFrozenColumnsChanged();
   }
 
   get eventHandler(): SlickEventHandler {
@@ -78,9 +82,31 @@ export class GridMenuExtension implements Extension {
     return this._addon;
   }
 
+  /**
+   * Anytime the header menu calls a freeze columns changes,
+   * we need to verify if we change from a regular grid to a frozen grid
+   * and when that happens, we need to destroy & re-create the grid menu because
+   * it must change location from the left container to the right container
+   */
+  bindOnHeaderMenuFrozenColumnsChanged() {
+    this.pluginEa.subscribe('headerMenu:onFreezeColumnsChanged', (changes: { frozenColumnBefore: number, frozenColumnAfter: number }) => {
+      if (changes.frozenColumnBefore === -1 && changes.frozenColumnAfter >= 0) {
+        this.recreateGridMenu();
+      }
+    });
+  }
+
   /** Show the Grid Menu typically from a button click since we need to know the event */
   showGridMenu(e: Event) {
     this._addon.showGridMenu(e);
+  }
+
+  /** Destroy & Recreate Grid Menu, this could be used for example when we change from a regular grid to a frozen grid (or vice versa) */
+  recreateGridMenu() {
+    if (this._addon && this._addon.init && this._addon.destroy) {
+      this._addon.destroy();
+      this._addon.init(this.sharedService.grid);
+    }
   }
 
   /** Create the Header Menu and expose all the available hooks that user can subscribe (onCommand, onBeforeMenuShow, ...) */
@@ -217,6 +243,22 @@ export class GridMenuExtension implements Extension {
     const gridMenuCustomItems: Array<GridMenuItem | 'divider'> = [];
     const gridOptions = this.sharedService.gridOptions;
     const translationPrefix = getTranslationPrefix(gridOptions);
+
+    // show grid menu: Clear Frozen Columns
+    if (this.sharedService.gridOptions && this.sharedService.gridOptions.gridMenu && !this.sharedService.gridOptions.gridMenu.hideClearFrozenColumnsCommand) {
+      const commandName = 'clear-frozen-columns';
+      if (!originalCustomItems.find((item: GridMenuItem) => item.hasOwnProperty('command') && item.command === commandName)) {
+        gridMenuCustomItems.push(
+          {
+            iconCssClass: this.sharedService.gridOptions.gridMenu.iconClearFrozenColumnsCommand || 'fa fa-times',
+            title: this.sharedService.gridOptions.enableTranslate ? this.i18n.tr(`${translationPrefix}CLEAR_FROZEN_COLUMNS`) : this._locales && this._locales.TEXT_CLEAR_FROZEN_COLUMNS,
+            disabled: false,
+            command: commandName,
+            positionOrder: 49
+          }
+        );
+      }
+    }
 
     if (this.sharedService.gridOptions && (this.sharedService.gridOptions.enableFiltering && !this.sharedService.hideHeaderRowAfterPageLoad)) {
       // show grid menu: clear all filters
@@ -369,6 +411,17 @@ export class GridMenuExtension implements Extension {
   private executeGridMenuInternalCustomCommands(e: Event, args: GridMenuItem) {
     if (args && args.command) {
       switch (args.command) {
+        case 'clear-frozen-columns':
+          const visibleColumns = [...this.sharedService.visibleColumns];
+          this.sharedService.grid.setOptions({ frozenColumn: -1 });
+          if (Array.isArray(visibleColumns) && Array.isArray(this.sharedService.allColumns) && visibleColumns.length !== this.sharedService.allColumns.length) {
+            this.sharedService.grid.setColumns(visibleColumns);
+          }
+          // we need to re-create the grid menu because its position changes from the right container to the left container
+          if (this._addon && this._addon.init) {
+            this._addon.init(this.sharedService.grid);
+          }
+          break;
         case 'clear-filter':
           this.filterService.clearFilters();
           this.sharedService.dataView.refresh();

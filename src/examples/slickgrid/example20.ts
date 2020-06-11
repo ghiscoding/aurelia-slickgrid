@@ -214,6 +214,14 @@ export class Example20 {
       frozenColumn: this.frozenColumnCount,
       frozenRow: this.frozenRowCount,
       // frozenBottom: true, // if you want to freeze the bottom instead of the top, you can enable this property
+
+      // show both Frozen Columns in HeaderMenu & GridMenu, these are opt-in commands so they're disabled by default
+      gridMenu: {
+        hideClearFrozenColumnsCommand: false
+      },
+      headerMenu: {
+        hideFreezeColumnsCommand: false
+      }
     };
   }
 
