@@ -391,10 +391,6 @@ export class GridMenuExtension implements Extension {
           if (Array.isArray(visibleColumns) && Array.isArray(this.sharedService.allColumns) && visibleColumns.length !== this.sharedService.allColumns.length) {
             this.sharedService.grid.setColumns(visibleColumns);
           }
-          // we need to re-create the grid menu because its position changes from the right container to the left container
-          if (this._addon && this._addon.init) {
-            this._addon.init(this.sharedService.grid);
-          }
           break;
         case 'clear-filter':
           this.filterService.clearFilters();

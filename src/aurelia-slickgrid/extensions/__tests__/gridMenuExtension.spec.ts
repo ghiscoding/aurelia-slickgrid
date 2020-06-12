@@ -600,7 +600,6 @@ describe('gridMenuExtension', () => {
       it('should call "clearFrozenColumns" when the command triggered is "clear-frozen-columns"', () => {
         const setOptionsSpy = jest.spyOn(gridStub, 'setOptions');
         const setColumnsSpy = jest.spyOn(gridStub, 'setColumns');
-        const initSpy = jest.spyOn(mockGridMenuAddon, 'init');
         const onCommandSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onCommand');
         jest.spyOn(SharedService.prototype, 'allColumns', 'get').mockReturnValue(columnsMock);
         jest.spyOn(SharedService.prototype, 'visibleColumns', 'get').mockReturnValue(columnsMock.slice(0, 1));
@@ -609,7 +608,6 @@ describe('gridMenuExtension', () => {
         instance.onCommand.notify({ grid: gridStub, command: 'clear-frozen-columns' }, new Slick.EventData(), gridStub);
 
         expect(onCommandSpy).toHaveBeenCalled();
-        expect(initSpy).toHaveBeenCalled();
         expect(setColumnsSpy).toHaveBeenCalled();
         expect(setOptionsSpy).toHaveBeenCalledWith({ frozenColumn: -1 });
       });
