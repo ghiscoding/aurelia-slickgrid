@@ -74,6 +74,12 @@ export class Example14 {
       preHeaderPanelHeight: 25,
       explicitInitialization: true,
       frozenColumn: 1,
+      gridMenu: {
+        hideClearFrozenColumnsCommand: false
+      },
+      headerMenu: {
+        hideFreezeColumnsCommand: false
+      }
     };
   }
 

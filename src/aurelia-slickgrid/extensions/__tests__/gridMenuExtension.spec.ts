@@ -43,12 +43,13 @@ const gridStub = {
   getUID: () => gridUid,
   registerPlugin: jest.fn(),
   setColumns: jest.fn(),
+  setOptions: jest.fn(),
   setHeaderRowVisibility: jest.fn(),
   setTopPanelVisibility: jest.fn(),
   setPreHeaderPanelVisibility: jest.fn(),
 };
 
-const mockAddon = jest.fn().mockImplementation(() => ({
+const mockGridMenuAddon = {
   init: jest.fn(),
   destroy: jest.fn(),
   showGridMenu: jest.fn(),
@@ -58,7 +59,8 @@ const mockAddon = jest.fn().mockImplementation(() => ({
   onAfterMenuShow: new Slick.Event(),
   onBeforeMenuShow: new Slick.Event(),
   onMenuClose: new Slick.Event(),
-}));
+};
+const mockAddon = jest.fn().mockImplementation(() => mockGridMenuAddon);
 
 jest.mock('slickgrid/controls/slick.gridmenu', () => mockAddon);
 Slick.Controls = {
@@ -125,7 +127,7 @@ describe('gridMenuExtension', () => {
       ea = new EventAggregator();
       i18n = new I18N(new EventAggregator(), new BindingSignaler());
       extensionUtility = new ExtensionUtility(i18n, sharedService);
-      extension = new GridMenuExtension(excelExportServiceStub, exportServiceStub, extensionUtility, filterServiceStub, i18n, ea, sharedService, sortServiceStub);
+      extension = new GridMenuExtension(excelExportServiceStub, exportServiceStub, extensionUtility, filterServiceStub, i18n, sharedService, sortServiceStub);
       i18n.setup({
         resources: {
           en: {
@@ -138,6 +140,7 @@ describe('gridMenuExtension', () => {
               TITLE: 'Titre',
               CLEAR_ALL_FILTERS: 'Supprimer tous les filtres',
               CLEAR_ALL_SORTING: 'Supprimer tous les tris',
+              CLEAR_FROZEN_COLUMNS: 'Libérer les colonnes gelées',
               EXPORT_TO_CSV: 'Exporter en format CSV',
               EXPORT_TO_EXCEL: 'Exporter vers Excel',
               EXPORT_TO_TAB_DELIMITED: 'Exporter en format texte (délimité par tabulation)',
@@ -368,6 +371,16 @@ describe('gridMenuExtension', () => {
         expect(SharedService.prototype.gridOptions.gridMenu.customItems).toEqual([]);
       });
 
+      it('should expect menu related to "Clear Frozen Columns"', () => {
+        const copyGridOptionsMock = { ...gridOptionsMock, gridMenu: { hideClearFrozenColumnsCommand: false, } } as unknown as GridOption;
+        jest.spyOn(SharedService.prototype, 'gridOptions', 'get').mockReturnValue(copyGridOptionsMock);
+        extension.register();
+        extension.register(); // calling 2x register to make sure it doesn't duplicate commands
+        expect(SharedService.prototype.gridOptions.gridMenu.customItems).toEqual([
+          { iconCssClass: 'fa fa-times', title: 'Libérer les colonnes gelées', disabled: false, command: 'clear-frozen-columns', positionOrder: 49 },
+        ]);
+      });
+
       it('should expect all menu related to Filter when "enableFilering" is set', () => {
         const copyGridOptionsMock = { ...gridOptionsMock, enableFiltering: true, showHeaderRow: true, } as unknown as GridOption;
         jest.spyOn(SharedService.prototype, 'gridOptions', 'get').mockReturnValue(copyGridOptionsMock);
@@ -584,6 +597,23 @@ describe('gridMenuExtension', () => {
     });
 
     describe('executeGridMenuInternalCustomCommands method', () => {
+      it('should call "clearFrozenColumns" when the command triggered is "clear-frozen-columns"', () => {
+        const setOptionsSpy = jest.spyOn(gridStub, 'setOptions');
+        const setColumnsSpy = jest.spyOn(gridStub, 'setColumns');
+        const initSpy = jest.spyOn(mockGridMenuAddon, 'init');
+        const onCommandSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onCommand');
+        jest.spyOn(SharedService.prototype, 'allColumns', 'get').mockReturnValue(columnsMock);
+        jest.spyOn(SharedService.prototype, 'visibleColumns', 'get').mockReturnValue(columnsMock.slice(0, 1));
+
+        const instance = extension.register();
+        instance.onCommand.notify({ grid: gridStub, command: 'clear-frozen-columns' }, new Slick.EventData(), gridStub);
+
+        expect(onCommandSpy).toHaveBeenCalled();
+        expect(initSpy).toHaveBeenCalled();
+        expect(setColumnsSpy).toHaveBeenCalled();
+        expect(setOptionsSpy).toHaveBeenCalledWith({ frozenColumn: -1 });
+      });
+
       it('should call "clearFilters" and dataview refresh when the command triggered is "clear-filter"', () => {
         const filterSpy = jest.spyOn(filterServiceStub, 'clearFilters');
         const refreshSpy = jest.spyOn(SharedService.prototype.dataView, 'refresh');
@@ -759,7 +789,7 @@ describe('gridMenuExtension', () => {
   describe('without I18N Service', () => {
     beforeEach(() => {
       i18n = null;
-      extension = new GridMenuExtension({} as ExcelExportService, {} as ExportService, {} as ExtensionUtility, {} as FilterService, i18n, ea, { gridOptions: { enableTranslate: true } } as SharedService, {} as SortService);
+      extension = new GridMenuExtension({} as ExcelExportService, {} as ExportService, {} as ExtensionUtility, {} as FilterService, i18n, { gridOptions: { enableTranslate: true } } as SharedService, {} as SortService);
     });
 
     it('should throw an error if "enableTranslate" is set but the I18N Service is null', () => {
