@@ -200,7 +200,7 @@ export class HeaderMenuExtension implements Extension {
           }
 
           // Filtering Commands
-          if (options.enableFiltering && columnDef.filterable && headerMenuOptions && !headerMenuOptions.hideFilterCommand) {
+          if (options.enableFiltering && columnDef.filterable && headerMenuOptions && !headerMenuOptions.hideFilterCommands) {
             if (!headerMenuOptions.hideClearFilterCommand && columnHeaderMenuItems.filter((item: MenuCommandItem) => item.hasOwnProperty('command') && item.command === 'clear-filter').length === 0) {
               columnHeaderMenuItems.push({
                 iconCssClass: headerMenuOptions.iconClearFilterCommand || 'fa fa-filter',
@@ -371,7 +371,7 @@ export class HeaderMenuExtension implements Extension {
         case 'freeze-columns':
           const visibleColumns = [...this.sharedService.visibleColumns];
           const columnPosition = visibleColumns.findIndex((col) => col.id === args.column.id);
-          this.sharedService.grid.setOptions({ frozenColumn: columnPosition });
+          this.sharedService.grid.setOptions({ frozenColumn: columnPosition, alwaysShowVerticalScroll: false } as GridOption);
 
           // to freeze columns, we need to take only the visible columns and we also need to use setColumns() when some of them are hidden
           // to make sure that we only use the visible columns, not doing this would show back some of the hidden columns

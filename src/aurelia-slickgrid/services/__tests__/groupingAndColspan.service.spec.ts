@@ -42,7 +42,7 @@ const gridStub = {
   onSort: new Slick.Event(),
   render: jest.fn(),
   setColumns: jest.fn(),
-  setOptions: new Slick.Event(),
+  setOptions: jest.fn(),
   setSortColumns: jest.fn(),
 };
 

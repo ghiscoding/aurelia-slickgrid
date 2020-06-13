@@ -27,7 +27,7 @@ export interface HeaderMenu {
   hideClearSortCommand?: boolean;
 
   /** Defaults to false, which will hide the Clear Filter command in the Header Menu (Grid Option "enableHeaderMenu: true" has to be enabled) */
-  hideFilterCommand?: boolean;
+  hideFilterCommands?: boolean;
 
   /** Defaults to true (opt-in feature), which will hide the "Freeze Columns" command in the Header Menu */
   hideFreezeColumnsCommand?: boolean;

@@ -24,6 +24,16 @@
         Set
       </button>
     </span>
+  </div>
+
+  <div class="row col-sm-12">
+    <button class="btn btn-default btn-sm" click.delegate="setFrozenColumns(-1)"
+            data-test="remove-frozen-column-button">
+      <i class="fa fa-times fa-lg"></i> Remove Frozen Columns
+    </button>
+    <button class="btn btn-default btn-sm" click.delegate="setFrozenColumns(2)" data-test="set-3frozen-columns">
+      <i class="fa fa-thumb-tack fa-lg"></i> Set 3 Frozen Columns
+    </button>
     <span style="margin-left: 15px">
       <button class="btn btn-default btn-sm" click.delegate="toggleFrozenBottomRows()">
         <i class="fa fa-random fa-lg"></i> Toggle Pinned Rows
@@ -36,7 +46,7 @@
     <hr>
   </div>
 
-  <aurelia-slickgrid grid-id="grid16"
+  <aurelia-slickgrid grid-id="grid20"
                      grid-width="875"
                      column-definitions.bind="columnDefinitions"
                      grid-options.bind="gridOptions"
