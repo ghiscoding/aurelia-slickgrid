@@ -48,7 +48,7 @@ const gridStub = {
   setPreHeaderPanelVisibility: jest.fn(),
 };
 
-const mockAddon = jest.fn().mockImplementation(() => ({
+const mockGridMenuAddon = {
   init: jest.fn(),
   destroy: jest.fn(),
   showGridMenu: jest.fn(),
@@ -58,7 +58,8 @@ const mockAddon = jest.fn().mockImplementation(() => ({
   onAfterMenuShow: new Slick.Event(),
   onBeforeMenuShow: new Slick.Event(),
   onMenuClose: new Slick.Event(),
-}));
+};
+const mockAddon = jest.fn().mockImplementation(() => mockGridMenuAddon);
 
 jest.mock('slickgrid/controls/slick.gridmenu', () => mockAddon);
 Slick.Controls = {
@@ -580,6 +581,12 @@ describe('gridMenuExtension', () => {
     });
 
     describe('executeGridMenuInternalCustomCommands method', () => {
+      afterEach(() => {
+        jest.clearAllMocks();
+        extension.eventHandler.unsubscribeAll();
+        mockGridMenuAddon.onCommand = new Slick.Event();
+      });
+
       it('should call "clearFilters" and dataview refresh when the command triggered is "clear-filter"', () => {
         const filterSpy = jest.spyOn(filterServiceStub, 'clearFilters');
         const refreshSpy = jest.spyOn(SharedService.prototype.dataView, 'refresh');
@@ -656,18 +663,21 @@ describe('gridMenuExtension', () => {
         gridOptionsMock.showHeaderRow = false;
         const gridSpy = jest.spyOn(SharedService.prototype.grid, 'setHeaderRowVisibility');
         const onCommandSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onCommand');
+        const setColumnSpy = jest.spyOn(SharedService.prototype.grid, 'setColumns');
 
         const instance = extension.register();
         instance.onCommand.notify({ grid: gridStub, command: 'toggle-filter' }, new Slick.EventData(), gridStub);
 
         expect(onCommandSpy).toHaveBeenCalled();
         expect(gridSpy).toHaveBeenCalledWith(true);
+        expect(setColumnSpy).toHaveBeenCalledTimes(1);
 
         gridOptionsMock.showHeaderRow = true;
         instance.onCommand.notify({ grid: gridStub, command: 'toggle-filter' }, new Slick.EventData(), gridStub);
 
         expect(onCommandSpy).toHaveBeenCalled();
         expect(gridSpy).toHaveBeenCalledWith(false);
+        expect(setColumnSpy).toHaveBeenCalledTimes(1); // same as before, so count won't increase
       });
 
       it('should call the grid "setTopPanelVisibility" method when the command triggered is "toggle-toppanel"', () => {
