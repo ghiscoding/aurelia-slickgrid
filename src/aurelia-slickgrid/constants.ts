@@ -48,10 +48,14 @@ export class Constants {
   static readonly VALIDATION_EDITOR_VALID_INTEGER = 'Please enter a valid integer number';
   static readonly VALIDATION_EDITOR_INTEGER_BETWEEN = 'Please enter a valid integer number between {{minValue}} and {{maxValue}}';
   static readonly VALIDATION_EDITOR_INTEGER_MAX = 'Please enter a valid integer number that is lower than {{maxValue}}';
+  static readonly VALIDATION_EDITOR_INTEGER_MAX_INCLUSIVE = 'Please enter a valid integer number that is lower than or equal to {{maxValue}}';
   static readonly VALIDATION_EDITOR_INTEGER_MIN = 'Please enter a valid integer number that is greater than {{minValue}}';
+  static readonly VALIDATION_EDITOR_INTEGER_MIN_INCLUSIVE = 'Please enter a valid integer number that is greater than or equal to {{minValue}}';
   static readonly VALIDATION_EDITOR_NUMBER_BETWEEN = 'Please enter a valid number between {{minValue}} and {{maxValue}}';
   static readonly VALIDATION_EDITOR_NUMBER_MAX = 'Please enter a valid number that is lower than {{maxValue}}';
+  static readonly VALIDATION_EDITOR_NUMBER_MAX_INCLUSIVE = 'Please enter a valid number that is lower than or equal to {{maxValue}}';
   static readonly VALIDATION_EDITOR_NUMBER_MIN = 'Please enter a valid number that is greater than {{minValue}}';
+  static readonly VALIDATION_EDITOR_NUMBER_MIN_INCLUSIVE = 'Please enter a valid number that is greater than or equal to {{minValue}}';
   static readonly VALIDATION_EDITOR_DECIMAL_BETWEEN = 'Please enter a valid number with a maximum of {{maxDecimal}} decimals';
 
   // some of the Events from the Event Aggregator that are exposed to the outside as dispatch events
