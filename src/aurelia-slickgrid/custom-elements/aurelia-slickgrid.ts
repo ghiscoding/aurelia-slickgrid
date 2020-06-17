@@ -519,11 +519,6 @@ export class AureliaSlickgridCustomElement {
     this.subscriptions.push(
       this.globalEa.subscribe('i18n:locale:changed', () => {
         if (gridOptions.enableTranslate) {
-          if (!this._hideHeaderRowAfterPageLoad && this._isGridHavingFilters) {
-            // before translating, make sure the filter row is visible to avoid having other problems,
-            // because if it's not shown prior to translating then the filters won't be recreated after translating
-            this.grid.setHeaderRowVisibility(true);
-          }
           this.extensionService.translateCellMenu();
           this.extensionService.translateColumnHeaders();
           this.extensionService.translateColumnPicker();
@@ -878,6 +873,9 @@ export class AureliaSlickgridCustomElement {
    */
   showHeaderRow(showing = true) {
     this.grid.setHeaderRowVisibility(showing, false);
+    if (showing === true && this._isGridInitialized) {
+      this.grid.setColumns(this.columnDefinitions);
+    }
     return showing;
   }
 
