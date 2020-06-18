@@ -1,9 +1,11 @@
 import { EventAggregator } from 'aurelia-event-aggregator';
-import { GroupingAndColspanService } from '../groupingAndColspan.service';
-import { GridOption, SlickEventHandler, Column } from '../../models';
-import { ExtensionUtility } from '../../extensions/extensionUtility';
-import { I18N } from 'aurelia-i18n';
 import { BindingSignaler } from 'aurelia-templating-resources';
+import { I18N } from 'aurelia-i18n';
+
+import { GroupingAndColspanService } from '../groupingAndColspan.service';
+import { Column, ExtensionName, GridOption, SlickEventHandler } from '../../models';
+import { ExtensionUtility } from '../../extensions/extensionUtility';
+import { ExtensionService } from '../extension.service';
 
 declare const Slick: any;
 const gridId = 'grid1';
@@ -43,6 +45,10 @@ const gridStub = {
   setColumns: jest.fn(),
   setSortColumns: jest.fn(),
 };
+
+const extensionServiceStub = {
+  getExtensionByName: jest.fn()
+} as unknown as ExtensionService;
 
 const mockExtensionUtility = {
   loadExtensionDynamically: jest.fn(),
@@ -104,7 +110,7 @@ describe('GroupingAndColspanService', () => {
       debug: false
     });
 
-    service = new GroupingAndColspanService(mockExtensionUtility, pluginEa);
+    service = new GroupingAndColspanService(mockExtensionUtility, extensionServiceStub, pluginEa);
     slickgridEventHandler = service.eventHandler;
   });
 
@@ -211,6 +217,60 @@ describe('GroupingAndColspanService', () => {
 
       service.init(gridStub, dataViewStub);
       pluginEa.publish('resizerService:onAfterResize', {});
+      jest.runAllTimers(); // fast-forward timer
+
+      expect(spy).toHaveBeenCalledTimes(2);
+      expect(setTimeout).toHaveBeenCalledTimes(1);
+      expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 75);
+    });
+
+    it('should call the "renderPreHeaderRowGroupingTitles" after changing column visibility from column picker', () => {
+      const spy = jest.spyOn(service, 'renderPreHeaderRowGroupingTitles');
+      const slickEvent1 = new Slick.Event();
+      const slickEvent2 = new Slick.Event();
+      const instanceMock = { onColumnsChanged: slickEvent1, onMenuClose: slickEvent2 };
+      const columnsMock = [{ id: 'field1', field: 'field1', width: 100, cssClass: 'red' }] as Column[];
+      const extensionMock = { name: ExtensionName.columnPicker, addon: instanceMock, instance: instanceMock, class: null };
+      jest.spyOn(extensionServiceStub, 'getExtensionByName').mockReturnValue(extensionMock);
+      service.init(gridStub, dataViewStub);
+
+      slickEvent1.notify({ columns: columnsMock }, new Slick.EventData(), gridStub);
+      jest.runAllTimers(); // fast-forward timer
+
+      expect(spy).toHaveBeenCalledTimes(3);
+      expect(setTimeout).toHaveBeenCalledTimes(1);
+      expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 75);
+    });
+
+    it('should call the "renderPreHeaderRowGroupingTitles" after changing column visibility from grid menu', () => {
+      const spy = jest.spyOn(service, 'renderPreHeaderRowGroupingTitles');
+      const slickEvent1 = new Slick.Event();
+      const slickEvent2 = new Slick.Event();
+      const instanceMock = { onColumnsChanged: slickEvent1, onMenuClose: slickEvent2 };
+      const columnsMock = [{ id: 'field1', field: 'field1', width: 100, cssClass: 'red' }] as Column[];
+      const extensionMock = { name: ExtensionName.columnPicker, addon: instanceMock, instance: instanceMock, class: null };
+      jest.spyOn(extensionServiceStub, 'getExtensionByName').mockReturnValue(extensionMock);
+      service.init(gridStub, dataViewStub);
+
+      slickEvent1.notify({ columns: columnsMock }, new Slick.EventData(), gridStub);
+      jest.runAllTimers(); // fast-forward timer
+
+      expect(spy).toHaveBeenCalledTimes(3);
+      expect(setTimeout).toHaveBeenCalledTimes(1);
+      expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 75);
+    });
+
+    it('should call the "renderPreHeaderRowGroupingTitles" after changing column visibility & closing the grid menu', () => {
+      const spy = jest.spyOn(service, 'renderPreHeaderRowGroupingTitles');
+      const slickEvent1 = new Slick.Event();
+      const slickEvent2 = new Slick.Event();
+      const instanceMock = { onColumnsChanged: slickEvent1, onMenuClose: slickEvent2 };
+      const columnsMock = [{ id: 'field1', field: 'field1', width: 100, cssClass: 'red' }] as Column[];
+      const extensionMock = { name: ExtensionName.columnPicker, addon: instanceMock, instance: instanceMock, class: null };
+      jest.spyOn(extensionServiceStub, 'getExtensionByName').mockReturnValue(extensionMock);
+      service.init(gridStub, dataViewStub);
+
+      slickEvent2.notify({ allColumns: columnsMock }, new Slick.EventData(), gridStub);
       jest.runAllTimers(); // fast-forward timer
 
       expect(spy).toHaveBeenCalledTimes(2);

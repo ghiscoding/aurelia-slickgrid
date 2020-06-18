@@ -3,23 +3,25 @@ import * as $ from 'jquery';
 
 import {
   Column,
+  ExtensionName,
   GridOption,
   SlickEventHandler,
 } from './../models/index';
 import { ExtensionUtility } from '../extensions/extensionUtility';
+import { ExtensionService } from './extension.service';
 import { SlickgridEventAggregator } from '../custom-elements/slickgridEventAggregator';
 
 // using external non-typed js libraries
 declare const Slick: any;
 
 @singleton(true)
-@inject(ExtensionUtility, SlickgridEventAggregator)
+@inject(ExtensionUtility, ExtensionService, SlickgridEventAggregator)
 export class GroupingAndColspanService {
   private _eventHandler: SlickEventHandler;
   private _grid: any;
   private _aureliaEventPrefix: string;
 
-  constructor(private extensionUtility: ExtensionUtility, private pluginEa: SlickgridEventAggregator) {
+  constructor(private extensionUtility: ExtensionUtility, private extensionService: ExtensionService, private pluginEa: SlickgridEventAggregator) {
     this._eventHandler = new Slick.EventHandler();
   }
 
@@ -56,6 +58,18 @@ export class GroupingAndColspanService {
         this._eventHandler.subscribe(grid.onColumnsReordered, () => this.renderPreHeaderRowGroupingTitles());
         this._eventHandler.subscribe(dataView.onRowCountChanged, () => this.renderPreHeaderRowGroupingTitles());
         this.pluginEa.subscribe(`resizerService:onAfterResize`, () => this.renderPreHeaderRowGroupingTitles());
+
+        // for both picker (columnPicker/gridMenu) we also need to re-create after hiding/showing columns & closing grid menu
+        const columnPickerExtension = this.extensionService.getExtensionByName(ExtensionName.columnPicker);
+        if (columnPickerExtension && columnPickerExtension.instance && columnPickerExtension.instance.onColumnsChanged) {
+          this._eventHandler.subscribe(columnPickerExtension.instance.onColumnsChanged, () => this.renderPreHeaderRowGroupingTitles());
+        }
+
+        const gridMenuExtension = this.extensionService.getExtensionByName(ExtensionName.gridMenu);
+        if (gridMenuExtension && gridMenuExtension.instance && gridMenuExtension.instance.onColumnsChanged && gridMenuExtension.instance.onMenuClose) {
+          this._eventHandler.subscribe(gridMenuExtension.instance.onColumnsChanged, () => this.renderPreHeaderRowGroupingTitles());
+          this._eventHandler.subscribe(gridMenuExtension.instance.onMenuClose, () => this.renderPreHeaderRowGroupingTitles());
+        }
 
         // also not sure why at this point, but it seems that I need to call the 1st create in a delayed execution
         // probably some kind of timing issues and delaying it until the grid is fully ready does help
