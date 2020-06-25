@@ -93,7 +93,6 @@ export class AureliaSlickgridCustomElement {
   private _fixedWidth: number | null;
   private _hideHeaderRowAfterPageLoad = false;
   private _isGridInitialized = false;
-  private _isGridHavingFilters = false;
   private _isDatasetInitialized = false;
   private _isPaginationInitialized = false;
   private _isLocalGrid = true;
@@ -169,9 +168,6 @@ export class AureliaSlickgridCustomElement {
 
   attached() {
     this.initialization();
-    if (this.columnDefinitions.findIndex((col) => col.filterable) > -1) {
-      this._isGridHavingFilters = true;
-    }
     this._isGridInitialized = true;
   }
 
