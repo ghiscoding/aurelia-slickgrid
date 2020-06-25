@@ -339,7 +339,7 @@ export class SortService {
         this.emitSortChanged(EmitterType.local, sortColumns.map(col => {
           return {
             columnId: col.sortCol && col.sortCol.id || 'id',
-            direction: col.sortAsc ? 'ASC' : 'DESC'
+            direction: col.sortAsc ? SortDirection.ASC : SortDirection.DESC
           };
         }));
       }
