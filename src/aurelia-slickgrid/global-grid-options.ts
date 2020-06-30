@@ -120,6 +120,7 @@ export const GlobalGridOptions: Partial<GridOption> = {
   gridMenu: {
     hideClearAllFiltersCommand: false,
     hideClearAllSortingCommand: false,
+    hideClearFrozenColumnsCommand: true, // opt-in command
     hideExportCsvCommand: false,
     hideExportExcelCommand: false,
     hideExportTextDelimitedCommand: true,
@@ -131,6 +132,7 @@ export const GlobalGridOptions: Partial<GridOption> = {
     iconCssClass: 'fa fa-bars',
     iconClearAllFiltersCommand: 'fa fa-filter text-danger',
     iconClearAllSortingCommand: 'fa fa-unsorted text-danger',
+    iconClearFrozenColumnsCommand: 'fa fa-times',
     iconExportCsvCommand: 'fa fa-download',
     iconExportExcelCommand: 'fa fa-file-excel-o text-success',
     iconExportTextDelimitedCommand: 'fa fa-download',
@@ -148,12 +150,14 @@ export const GlobalGridOptions: Partial<GridOption> = {
     minWidth: 140,
     iconClearFilterCommand: 'fa fa-filter text-danger',
     iconClearSortCommand: 'fa fa-unsorted',
+    iconFreezeColumns: 'fa fa-thumb-tack',
     iconSortAscCommand: 'fa fa-sort-amount-asc',
     iconSortDescCommand: 'fa fa-sort-amount-desc',
     iconColumnHideCommand: 'fa fa-times',
     hideColumnHideCommand: false,
     hideClearFilterCommand: false,
     hideClearSortCommand: false,
+    hideFreezeColumnsCommand: true, // opt-in command
     hideSortCommands: false,
     hideSortCommandsDivider: false
   },

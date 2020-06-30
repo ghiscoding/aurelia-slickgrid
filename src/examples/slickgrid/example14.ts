@@ -1,4 +1,4 @@
-import { Column, FieldType, GridOption } from '../../aurelia-slickgrid';
+import { Column, FieldType, GridOption, AureliaGridInstance } from '../../aurelia-slickgrid';
 import './example14.scss'; // provide custom CSS/SASS styling
 
 export class Example14 {
@@ -14,6 +14,8 @@ export class Example14 {
   </ul>
   `;
 
+  angularGrid2: AureliaGridInstance;
+  gridObj2: any;
   columnDefinitions1: Column[];
   columnDefinitions2: Column[];
   gridOptions1: GridOption;
@@ -30,6 +32,11 @@ export class Example14 {
     // populate the dataset once the grid is ready
     this.dataset1 = this.getData(500);
     this.dataset2 = this.getData(500);
+  }
+
+  aureliaGridReady2(aureliaGrid: AureliaGridInstance) {
+    this.angularGrid2 = aureliaGrid;
+    this.gridObj2 = aureliaGrid.slickGrid;
   }
 
   definedGrid1() {
@@ -57,6 +64,7 @@ export class Example14 {
 
   definedGrid2() {
     this.columnDefinitions2 = [
+      { id: 'sel', name: '#', field: 'num', behavior: 'select', cssClass: 'cell-selection', width: 40, resizable: false, selectable: false },
       { id: 'title', name: 'Title', field: 'title', sortable: true, columnGroup: 'Common Factor' },
       { id: 'duration', name: 'Duration', field: 'duration', columnGroup: 'Common Factor' },
       { id: 'start', name: 'Start', field: 'start', columnGroup: 'Period' },
@@ -73,7 +81,9 @@ export class Example14 {
       showPreHeaderPanel: true,
       preHeaderPanelHeight: 25,
       explicitInitialization: true,
-      frozenColumn: 1,
+      frozenColumn: 2,
+      gridMenu: { hideClearFrozenColumnsCommand: false },
+      headerMenu: { hideFreezeColumnsCommand: false }
     };
   }
 
@@ -93,6 +103,11 @@ export class Example14 {
       };
     }
     return mockDataset;
+  }
+
+  setFrozenColumns2(frozenCols: number) {
+    this.gridObj2.setOptions({ frozenColumn: frozenCols, alwaysShowVerticalScroll: false });
+    this.gridOptions2 = this.gridObj2.getOptions();
   }
 
   /**

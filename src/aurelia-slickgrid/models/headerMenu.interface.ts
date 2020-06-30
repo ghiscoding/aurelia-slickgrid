@@ -29,6 +29,9 @@ export interface HeaderMenu {
   /** Defaults to false, which will hide the Clear Filter command in the Header Menu (Grid Option "enableHeaderMenu: true" has to be enabled) */
   hideFilterCommands?: boolean;
 
+  /** Defaults to true (opt-in feature), which will hide the "Freeze Columns" command in the Header Menu */
+  hideFreezeColumnsCommand?: boolean;
+
   /** Defaults to false, which will hide Sort (Asc/Desc & Clear Sort) commands in the Header Menu (Grid Option "enableHeaderMenu: true" has to be enabled) */
   hideSortCommands?: boolean;
 
@@ -55,6 +58,9 @@ export interface HeaderMenu {
 
   /** icon for the "Hide Column" command */
   iconColumnHideCommand?: string;
+
+  /** icon for the "Freeze Columns" command */
+  iconFreezeColumns?: string;
 
   /** icon for the "Sort Ascending" command */
   iconSortAscCommand?: string;
