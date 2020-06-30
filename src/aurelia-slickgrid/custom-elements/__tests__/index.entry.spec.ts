@@ -22,7 +22,7 @@ describe('Testing library entry point and aurelia configure routine', () => {
   it('should export a few functions', () => {
     expect(entry.AureliaSlickgridCustomElement).toBeTruthy();
     expect(entry.SlickPaginationCustomElement).toBeTruthy();
-    expect(entry.SlickPaginationCustomElement).toBeTruthy();
+    expect(entry.SlickgridConfig).toBeTruthy();
   });
 
   it('should accept a setup callback passing back the instance', (done) => {
