@@ -2,6 +2,38 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.19.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.18.2...v2.19.0) (2020-06-30)
+
+
+### Features
+
+* **editor:** use better error message for inclusive values ([#368](https://github.com/ghiscoding/aurelia-slickgrid/issues/368)) ([130e5dd](https://github.com/ghiscoding/aurelia-slickgrid/commit/130e5dd4768e6bdf2813faaf957ac5bce840b33d))
+* **pinning:** add "Frozen Columns" to header menu ([#363](https://github.com/ghiscoding/aurelia-slickgrid/issues/363)) ([e518eef](https://github.com/ghiscoding/aurelia-slickgrid/commit/e518eefa3a0c4d5ab9cbecfd7b1133bf7f5984fb))
+* **sorting:** header menu clear sort, reset sorting when nothing left ([#374](https://github.com/ghiscoding/aurelia-slickgrid/issues/374)) ([3f09823](https://github.com/ghiscoding/aurelia-slickgrid/commit/3f098232efc645ce5934581bf51b127c0f6ba241))
+* **typing:** add SlickGrid and DataView interfaces ([#360](https://github.com/ghiscoding/aurelia-slickgrid/issues/360)) ([28003c1](https://github.com/ghiscoding/aurelia-slickgrid/commit/28003c100ccd27a19431b691b0a430d387b28b04))
+* **typings:** add more TS Generic Types ([#378](https://github.com/ghiscoding/aurelia-slickgrid/issues/378)) ([9f7adb8](https://github.com/ghiscoding/aurelia-slickgrid/commit/9f7adb84efdb5f6f4d9fb61616d9331ecceb4762))
+
+
+### Bug Fixes
+
+* **core:** add missing use of custom datasetIdPropertyName ([#354](https://github.com/ghiscoding/aurelia-slickgrid/issues/354)) ([c083853](https://github.com/ghiscoding/aurelia-slickgrid/commit/c083853f40828157f9957090de2c18ff82e88f16))
+* **editor:** float validator should accept decimal even without 0 suffix ([#375](https://github.com/ghiscoding/aurelia-slickgrid/issues/375)) ([0e32c3f](https://github.com/ghiscoding/aurelia-slickgrid/commit/0e32c3f9adb309ef645dbd9024b8cb813278e513))
+* **editor:** shouldn't call cell changed when cell value is undefined ([#377](https://github.com/ghiscoding/aurelia-slickgrid/issues/377)) ([0397719](https://github.com/ghiscoding/aurelia-slickgrid/commit/03977197dbcb74e899aee38891a8c08b195fe02a))
+* **example:** use highest id as new id in addItem example ([#366](https://github.com/ghiscoding/aurelia-slickgrid/issues/366)) ([7ed0c31](https://github.com/ghiscoding/aurelia-slickgrid/commit/7ed0c31eec005468980af2ffc02015c5b1598259))
+* **excel:** Excel Export add mime type to work in Firefox ([#369](https://github.com/ghiscoding/aurelia-slickgrid/issues/369)) ([2a7b0ba](https://github.com/ghiscoding/aurelia-slickgrid/commit/2a7b0ba91aeb944e53bf145e2687d340c3ff642e))
+* **extension:** registerPlugin not implemented correctly ([#359](https://github.com/ghiscoding/aurelia-slickgrid/issues/359)) ([bc3d0a9](https://github.com/ghiscoding/aurelia-slickgrid/commit/bc3d0a9c0ecdb09ba2bba3e95747349b91a627f1))
+* **filter:** recreate filters when toggling header row ([#365](https://github.com/ghiscoding/aurelia-slickgrid/issues/365)) ([554ce32](https://github.com/ghiscoding/aurelia-slickgrid/commit/554ce3250e57f773fe310b180e6e13e97faec60b))
+* **filter:** Select Filter should use default locale without translation ([#371](https://github.com/ghiscoding/aurelia-slickgrid/issues/371)) ([35d4a01](https://github.com/ghiscoding/aurelia-slickgrid/commit/35d4a0106b9dc7377571a7380fa0448d3ee0d1b6))
+* **formatter:** add possibility to parse a date formatter as a UTC date ([#376](https://github.com/ghiscoding/aurelia-slickgrid/issues/376)) ([881f234](https://github.com/ghiscoding/aurelia-slickgrid/commit/881f234a1150b11cf65d5bb296a5c404e57b3254))
+* **header:** re-create header grouping title after changing picker cols ([#370](https://github.com/ghiscoding/aurelia-slickgrid/issues/370)) ([3c2248d](https://github.com/ghiscoding/aurelia-slickgrid/commit/3c2248d6693f12440bd4e250e8ccfbc91f10aaeb))
+* **lint:** adhere to strict triple equality check ([#355](https://github.com/ghiscoding/aurelia-slickgrid/issues/355)) ([adccd1b](https://github.com/ghiscoding/aurelia-slickgrid/commit/adccd1bee09b0d2d72c2bfa81b676f05daccc842))
+* **pagination:** disabled page buttons should not be clickable ([#372](https://github.com/ghiscoding/aurelia-slickgrid/issues/372)) ([5909dea](https://github.com/ghiscoding/aurelia-slickgrid/commit/5909deae2a8f1ece5a5d2a0a19eb1f75195106cc))
+* **picker:** add missing pre-header title grouping extractor ([#367](https://github.com/ghiscoding/aurelia-slickgrid/issues/367)) ([b6a171d](https://github.com/ghiscoding/aurelia-slickgrid/commit/b6a171d2eaeda6b42346e5c653cc5978cc62fdb6))
+* **presets:** compound filters operator not working correctly w/presets ([#373](https://github.com/ghiscoding/aurelia-slickgrid/issues/373)) ([27b8c21](https://github.com/ghiscoding/aurelia-slickgrid/commit/27b8c21f5210120350b7f4354af5f7c305f11457))
+* **styling:** cell/context menus get re-position below the grid ([#356](https://github.com/ghiscoding/aurelia-slickgrid/issues/356)) ([8079e65](https://github.com/ghiscoding/aurelia-slickgrid/commit/8079e653dba96af623ac1f66160aff8624355e9a))
+* **treeData:** should support use of custom datasetIdPropertyName ([#353](https://github.com/ghiscoding/aurelia-slickgrid/issues/353)) ([6a0b0b3](https://github.com/ghiscoding/aurelia-slickgrid/commit/6a0b0b3f47f2781ca8a3ef8f7a81c53ed0c867ec))
+* **types:** add missing option flags in grouping interface ([#357](https://github.com/ghiscoding/aurelia-slickgrid/issues/357)) ([46273bf](https://github.com/ghiscoding/aurelia-slickgrid/commit/46273bf2c96f0065ee3872f6108562afcc947b80))
+
 ### [2.18.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.18.1...v2.18.2) (2020-05-26)
 
 
