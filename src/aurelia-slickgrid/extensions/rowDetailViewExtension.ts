@@ -370,7 +370,7 @@ export class RowDetailViewExtension implements Extension {
   }
 
   /** When Row comes back to Viewport Range, we need to redraw the View */
-  private onRowBackToViewportRange(e: Event, args: { grid: any; item: any; rowId: number; rowIndex: number; expandedRows: any[]; rowIdsOutOfViewport: number[]; }) {
+  private onRowBackToViewportRange(e: Event, args: { grid: any; item: any; rowId: number; rowIndex: number; expandedRows: number[]; rowIdsOutOfViewport: number[]; }) {
     if (args && args.item) {
       this._slots.forEach((slot) => {
         if (slot[this.datasetIdPropName] === args.item[this.datasetIdPropName]) {
