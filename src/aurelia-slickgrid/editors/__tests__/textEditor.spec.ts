@@ -1,6 +1,6 @@
 import { Editors } from '../index';
 import { TextEditor } from '../textEditor';
-import { Column, EditorArgs, EditorArguments, GridOption, KeyCode } from '../../models';
+import { AutocompleteOption, Column, EditorArgs, EditorArguments, GridOption, KeyCode } from '../../models';
 
 const KEY_CHAR_A = 97;
 const containerId = 'demo-container';
@@ -186,6 +186,7 @@ describe('TextEditor', () => {
         const event = new (window.window as any).KeyboardEvent('keydown', { keyCode: KEY_CHAR_A, bubbles: true, cancelable: true });
 
         editor = new TextEditor(editorArguments);
+        editor.setValue('z');
         const editorElm = divContainer.querySelector<HTMLInputElement>('input.editor-title');
 
         editor.focus();

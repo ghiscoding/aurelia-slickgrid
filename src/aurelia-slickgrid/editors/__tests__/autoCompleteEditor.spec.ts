@@ -201,6 +201,7 @@ describe('AutoCompleteEditor', () => {
       const event = new (window.window as any).KeyboardEvent('keydown', { keyCode: KEY_CHAR_A, bubbles: true, cancelable: true });
 
       editor = new AutoCompleteEditor(editorArguments);
+      editor.setValue('z');
       const editorElm = divContainer.querySelector<HTMLInputElement>('input.editor-gender');
 
       editorElm.focus();
@@ -363,6 +364,7 @@ describe('AutoCompleteEditor', () => {
         const spy = jest.spyOn(gridStub.getEditorLock(), 'commitCurrentEdit');
 
         editor = new AutoCompleteEditor(editorArguments);
+        editor.setValue('a');
         editor.save();
 
         expect(spy).toHaveBeenCalled();
@@ -373,6 +375,7 @@ describe('AutoCompleteEditor', () => {
         const spy = jest.spyOn(editorArguments, 'commitChanges');
 
         editor = new AutoCompleteEditor(editorArguments);
+        editor.setValue('a');
         editor.save();
 
         expect(spy).toHaveBeenCalled();

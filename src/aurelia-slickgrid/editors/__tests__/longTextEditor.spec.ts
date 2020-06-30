@@ -221,6 +221,7 @@ describe('LongTextEditor', () => {
         const event = new (window.window as any).KeyboardEvent('keydown', { keyCode: KEY_CHAR_A, bubbles: true, cancelable: true });
 
         editor = new LongTextEditor(i18n, editorArguments);
+        editor.setValue('z');
         const editorElm = document.body.querySelector<HTMLTextAreaElement>('.editor-title textarea');
 
         editor.focus();
@@ -246,6 +247,7 @@ describe('LongTextEditor', () => {
         const event = new (window.window as any).KeyboardEvent('keydown', { keyCode: KeyCode.ENTER, bubbles: true, cancelable: true });
 
         editor = new LongTextEditor(i18n, editorArguments);
+        editor.setValue('a');
         const editorElm = document.body.querySelector<HTMLTextAreaElement>('.editor-title textarea');
 
         editor.focus();
