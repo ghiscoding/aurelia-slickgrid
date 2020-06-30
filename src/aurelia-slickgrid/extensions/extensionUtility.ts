@@ -127,14 +127,14 @@ export class ExtensionUtility {
   }
 
   /**
-   * Sort items (by pointers) in an array by a property name
+   * Sort items (by reference) in an array by a property name
    * @params items array
    * @param property name to sort with
    */
   sortItems(items: any[], propertyName: string) {
     // sort the custom items by their position in the list
     if (Array.isArray(items)) {
-      items.sort((itemA, itemB) => {
+      items.sort((itemA: any, itemB: any) => {
         if (itemA && itemB && itemA.hasOwnProperty(propertyName) && itemB.hasOwnProperty(propertyName)) {
           return itemA[propertyName] - itemB[propertyName];
         }
@@ -144,7 +144,7 @@ export class ExtensionUtility {
   }
 
   /** Translate the an array of items from an input key and assign to the output key */
-  translateItems(items: any[], inputKey: string, outputKey: string) {
+  translateItems<T = any>(items: T[], inputKey: string, outputKey: string) {
     if (Array.isArray(items)) {
       for (const item of items) {
         if (item[inputKey]) {

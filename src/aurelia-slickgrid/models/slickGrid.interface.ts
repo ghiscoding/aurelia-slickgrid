@@ -141,7 +141,7 @@ export interface SlickGrid {
    */
   getColumnIndex(id: string | number): number;
 
-  /** Returns an array of column definitions, containing the option settings for each individual column.*/
+  /** Returns an array of column definitions, containing the option settings for each individual column. */
   getColumns(): Column[];
 
   /** Get Grid Canvas Node DOM Element */
@@ -154,7 +154,7 @@ export interface SlickGrid {
    * Returns the databinding item at a given position.
    * @param index Item index.
    */
-  getDataItem(index: number): any;
+  getDataItem<T = any>(index: number): T;
 
   /** Returns the size of the databinding source. */
   getDataLength(): number;

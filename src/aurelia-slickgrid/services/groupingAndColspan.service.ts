@@ -59,7 +59,7 @@ export class GroupingAndColspanService {
         this._eventHandler.subscribe(dataView.onRowCountChanged, () => this.renderPreHeaderRowGroupingTitles());
         this.pluginEa.subscribe(`resizerService:onAfterResize`, () => this.renderPreHeaderRowGroupingTitles());
 
-        this._eventHandler.subscribe(grid.onSetOptions, (_e, args) => {
+        this._eventHandler.subscribe(grid.onSetOptions, (_e: Event, args: { grid: any; optionsBefore: GridOption; optionsAfter: GridOption; }) => {
           // when user changes frozen columns dynamically (e.g. from header menu), we need to re-render the pre-header of the grouping titles
           if (args && args.optionsBefore && args.optionsAfter && args.optionsBefore.frozenColumn !== args.optionsAfter.frozenColumn) {
             setTimeout(() => this.renderPreHeaderRowGroupingTitles(), 0);
