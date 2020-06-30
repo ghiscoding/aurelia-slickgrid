@@ -1151,7 +1151,6 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
         const transGridMenuSpy = jest.spyOn(extensionServiceStub, 'translateGridMenu');
         const transHeaderMenuSpy = jest.spyOn(extensionServiceStub, 'translateHeaderMenu');
         const transGroupingColSpanSpy = jest.spyOn(groupingAndColspanServiceStub, 'translateGroupingAndColSpan');
-        const setHeaderRowSpy = jest.spyOn(mockGrid, 'setHeaderRowVisibility');
 
         customElement.gridOptions = { enableTranslate: true, createPreHeaderPanel: true, enableDraggableGrouping: false } as GridOption;
         customElement.bind();
@@ -1160,7 +1159,6 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
         globalEa.publish('i18n:locale:changed', {});
 
         setTimeout(() => {
-          expect(setHeaderRowSpy).toHaveBeenCalledWith(true);
           expect(transGroupingColSpanSpy).toHaveBeenCalled();
           expect(transCellMenuSpy).toHaveBeenCalled();
           expect(transColHeaderSpy).toHaveBeenCalled();
@@ -1388,24 +1386,32 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
     });
 
     describe('setHeaderRowVisibility grid method', () => {
+      beforeEach(() => {
+        jest.clearAllMocks();
+      });
+
       it('should show the header row when "showHeaderRow" is called with argument True', () => {
-        const spy = jest.spyOn(mockGrid, 'setHeaderRowVisibility');
+        const setHeaderRowSpy = jest.spyOn(mockGrid, 'setHeaderRowVisibility');
+        const setColumnSpy = jest.spyOn(mockGrid, 'setColumns');
 
         customElement.bind();
         customElement.attached();
         customElement.showHeaderRow(true);
 
-        expect(spy).toHaveBeenCalledWith(true, false);
+        expect(setHeaderRowSpy).toHaveBeenCalledWith(true, false);
+        expect(setColumnSpy).toHaveBeenCalledTimes(1);
       });
 
       it('should show the header row when "showHeaderRow" is called with argument False', () => {
-        const spy = jest.spyOn(mockGrid, 'setHeaderRowVisibility');
+        const setHeaderRowSpy = jest.spyOn(mockGrid, 'setHeaderRowVisibility');
+        const setColumnSpy = jest.spyOn(mockGrid, 'setColumns');
 
         customElement.bind();
         customElement.attached();
         customElement.showHeaderRow(false);
 
-        expect(spy).toHaveBeenCalledWith(false, false);
+        expect(setHeaderRowSpy).toHaveBeenCalledWith(false, false);
+        expect(setColumnSpy).not.toHaveBeenCalled();
       });
     });
 
