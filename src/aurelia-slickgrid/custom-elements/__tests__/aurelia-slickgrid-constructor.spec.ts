@@ -1510,7 +1510,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
           expect(customElement.columnDefinitions).toEqual(mockColDefs);
           expect(customElement.showCustomFooter).toBeTrue();
           expect(customElement.customFooterOptions).toEqual({
-            dateFormat: 'YYYY-MM-DD - h:mm:ssa',
+            dateFormat: 'YYYY-MM-DD, hh:mm a',
             hideLastUpdateTimestamp: true,
             hideTotalItemCount: false,
             footerHeight: 20,
@@ -1548,7 +1548,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
           expect(customElement.columnDefinitions).toEqual(mockColDefs);
           expect(customElement.showCustomFooter).toBeTrue();
           expect(customElement.customFooterOptions).toEqual({
-            dateFormat: 'YYYY-MM-DD - h:mm:ssa',
+            dateFormat: 'YYYY-MM-DD, hh:mm a',
             hideLastUpdateTimestamp: true,
             hideTotalItemCount: false,
             footerHeight: 20,
