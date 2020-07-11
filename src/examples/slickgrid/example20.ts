@@ -1,5 +1,4 @@
 import { autoinject } from 'aurelia-framework';
-import { I18N } from 'aurelia-i18n';
 import { AureliaGridInstance, ColumnEditorDualInput, Column, Formatters, GridOption, Filters, FieldType, formatNumber, Editors } from '../../aurelia-slickgrid';
 import './example20.scss'; // provide custom CSS/SASS styling
 
@@ -24,10 +23,8 @@ export class Example20 {
   frozenRowCount = 3;
   isFrozenBottom = false;
   dataset: any[];
-  selectedLanguage: string;
 
-  constructor(private i18n: I18N) {
-    this.selectedLanguage = this.i18n.getLocale();
+  constructor() {
     this.defineGrid();
   }
 
