@@ -226,6 +226,7 @@ const mockGrid = {
   invalidate: jest.fn(),
   getActiveCellNode: jest.fn(),
   getColumns: jest.fn(),
+  getData: () => mockDataView,
   getEditorLock: () => mockGetEditorLock,
   getOptions: jest.fn(),
   getSelectionModel: jest.fn(),
@@ -733,7 +734,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
         customElement.bind();
         customElement.attached();
 
-        expect(bindLocalSpy).toHaveBeenCalledWith(mockGrid, mockDataView);
+        expect(bindLocalSpy).toHaveBeenCalledWith(mockGrid);
       });
 
       it('should bind local sort when "enableSorting" is set', () => {
@@ -743,7 +744,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
         customElement.bind();
         customElement.attached();
 
-        expect(bindLocalSpy).toHaveBeenCalledWith(mockGrid, mockDataView);
+        expect(bindLocalSpy).toHaveBeenCalledWith(mockGrid);
       });
     });
 
@@ -1253,7 +1254,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
         customElement.bind();
         customElement.attached();
 
-        expect(bindBackendSpy).toHaveBeenCalledWith(mockGrid, mockDataView);
+        expect(bindBackendSpy).toHaveBeenCalledWith(mockGrid);
         expect(initSpy).toHaveBeenCalledWith(mockGraphqlOptions, mockPagination, mockGrid);
       });
 
@@ -1271,7 +1272,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
         customElement.bind();
         customElement.attached();
 
-        expect(bindBackendSpy).toHaveBeenCalledWith(mockGrid, mockDataView);
+        expect(bindBackendSpy).toHaveBeenCalledWith(mockGrid);
       });
 
       it('should call bind local sorting when "enableSorting" is set and "useLocalSorting" is set as well', () => {
@@ -1289,7 +1290,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
         customElement.bind();
         customElement.attached();
 
-        expect(bindLocalSpy).toHaveBeenCalledWith(mockGrid, mockDataView);
+        expect(bindLocalSpy).toHaveBeenCalledWith(mockGrid);
       });
 
       it('should call bind backend filtering when "enableFiltering" is set', () => {
@@ -1302,7 +1303,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
         customElement.attached();
 
         expect(initSpy).toHaveBeenCalledWith(mockGrid);
-        expect(bindLocalSpy).toHaveBeenCalledWith(mockGrid, mockDataView);
+        expect(bindLocalSpy).toHaveBeenCalledWith(mockGrid);
         expect(populateSpy).not.toHaveBeenCalled();
       });
 
@@ -1321,7 +1322,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
         customElement.bind();
         customElement.attached();
 
-        expect(bindLocalSpy).toHaveBeenCalledWith(mockGrid, mockDataView);
+        expect(bindLocalSpy).toHaveBeenCalledWith(mockGrid);
       });
 
       it('should reflect column filters when "enableFiltering" is set', () => {
@@ -1341,7 +1342,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
         customElement.attached();
 
         expect(initSpy).toHaveBeenCalledWith(mockGrid);
-        expect(bindBackendSpy).toHaveBeenCalledWith(mockGrid, mockDataView);
+        expect(bindBackendSpy).toHaveBeenCalledWith(mockGrid);
         expect(populateSpy).not.toHaveBeenCalled();
       });
 
