@@ -8,11 +8,11 @@
         <span class="icon mdi mdi-plus"></span>
         <span>Add New Item (in 1st group)</span>
       </button>
-      <button click.delegate="collapseAll()" class="btn btn-default btn-sm">
+      <button click.delegate="collapseAll()" data-test="collapse-all" class="btn btn-default btn-sm">
         <span class="icon mdi mdi-arrow-collapse"></span>
         <span>Collapse All</span>
       </button>
-      <button click.delegate="expandAll()" class="btn btn-default btn-sm">
+      <button click.delegate="expandAll()" data-test="expand-all" class="btn btn-default btn-sm">
         <span class="icon mdi mdi-arrow-expand"></span>
         <span>Expand All</span>
       </button>
@@ -29,8 +29,8 @@
 
   <div id="grid-container" class="col-sm-12">
     <aurelia-slickgrid grid-id="grid27" column-definitions.bind="columnDefinitions" grid-options.bind="gridOptions"
-                       dataset.bind="dataset"
-                       asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
+      dataset.bind="dataset"
+      asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
     </aurelia-slickgrid>
   </div>
 </template>
