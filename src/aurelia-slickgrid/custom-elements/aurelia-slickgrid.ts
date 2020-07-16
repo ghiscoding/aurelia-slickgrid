@@ -819,7 +819,6 @@ export class AureliaSlickgridCustomElement {
 
       if (dataset) {
         this.grid.invalidate();
-        this.grid.render();
       }
 
       // display the Pagination component only after calling this refresh data first, we call it here so that if we preset pagination page number it will be shown correctly
