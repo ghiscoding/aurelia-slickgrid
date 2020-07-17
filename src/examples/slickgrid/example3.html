@@ -25,7 +25,7 @@
           Undo last edit(s)
         </button>
         <label class="checkbox-inline control-label" for="autoCommitEdit">
-          <input type="checkbox" id="autoCommitEdit" checked.bind="gridOptions.autoCommitEdit"
+          <input type="checkbox" id="autoCommitEdit" data-test="auto-commit" checked.bind="gridOptions.autoCommitEdit"
                  click.delegate="changeAutoCommit()">
           Auto Commit Edit
         </label>
@@ -43,11 +43,12 @@
       <button class="btn btn-default btn-sm btn-danger" click.delegate="deleteItem()">Delete item</button>
     </div>
     <div class="row" style="margin-top: 5px">
-      <button class="btn btn-default btn-sm" click.delegate="dynamicallyAddTitleHeader()">
+      <button class="btn btn-default btn-sm" data-test="add-title-column" click.delegate="dynamicallyAddTitleHeader()">
         <i class="fa fa-plus"></i>
         Dynamically Duplicate Title Column
       </button>
-      <button class="btn btn-default btn-sm" click.delegate="dynamicallyRemoveLastColumn()">
+      <button class="btn btn-default btn-sm" data-test="remove-title-column"
+              click.delegate="dynamicallyRemoveLastColumn()">
         <i class="fa fa-minus"></i>
         Dynamically Remove Last Column
       </button>
@@ -64,7 +65,7 @@
   </div>
 
   <div id="grid-container" class="col-sm-12">
-    <aurelia-slickgrid grid-id="grid1" column-definitions.bind="columnDefinitions" grid-options.bind="gridOptions"
+    <aurelia-slickgrid grid-id="grid3" column-definitions.bind="columnDefinitions" grid-options.bind="gridOptions"
                        dataset.bind="dataset"
                        sg-on-cell-change.delegate="onCellChanged($event.detail.eventData, $event.detail.args)"
                        sg-on-click.delegate="onCellClicked($event.detail.eventData, $event.detail.args)"
