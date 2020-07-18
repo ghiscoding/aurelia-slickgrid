@@ -255,7 +255,9 @@ export class Example3 {
         formatter: Formatters.dateIso,
         sortable: true,
         minWidth: 100,
-        type: FieldType.date,
+        type: FieldType.date,              // dataset cell input format
+        // outputType: FieldType.dateUs,   // date picker format
+        saveOutputType: FieldType.dateUtc, // save output date format
         editor: {
           model: Editors.date,
           // override any of the Flatpickr options through "filterOptions"
