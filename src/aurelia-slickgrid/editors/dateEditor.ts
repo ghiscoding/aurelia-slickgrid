@@ -184,7 +184,7 @@ export class DateEditor implements Editor {
 
   isValueChanged(): boolean {
     const elmValue = this._$input.val();
-    const inputFormat = mapMomentDateFormatWithFieldType(this.columnDef?.type || FieldType.dateIso);
+    const inputFormat = mapMomentDateFormatWithFieldType(this.columnDef && this.columnDef.type || FieldType.dateIso);
     const outputTypeFormat = mapMomentDateFormatWithFieldType((this.columnDef && (this.columnDef.outputType || this.columnDef.type)) || FieldType.dateUtc);
     const elmDateStr = elmValue ? moment(elmValue, inputFormat, false).format(outputTypeFormat) : '';
     const orgDateStr = this.originalDate ? moment(this.originalDate, inputFormat, false).format(outputTypeFormat) : '';
@@ -231,7 +231,7 @@ export class DateEditor implements Editor {
       return '';
     }
 
-    const inputFormat = mapMomentDateFormatWithFieldType(this.columnDef?.type || FieldType.dateIso);
+    const inputFormat = mapMomentDateFormatWithFieldType(this.columnDef && this.columnDef.type || FieldType.dateIso);
     const outputTypeFormat = mapMomentDateFormatWithFieldType((this.columnDef && (this.columnDef.outputType || this.columnDef.type)) || FieldType.dateIso);
     const value = moment(domValue, inputFormat, false).format(outputTypeFormat);
 
