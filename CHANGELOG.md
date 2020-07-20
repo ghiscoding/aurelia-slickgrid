@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.19.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.19.0...v2.19.1) (2020-07-20)
+
+
+### Features
+
+* **core:** use DataView transactions with multiple item changes ([62e2026](https://github.com/ghiscoding/aurelia-slickgrid/commit/62e2026a2de7abd5601941c2f0500a48815e1d48))
+* **styling:** add custom footer font-size SASS variable ([#380](https://github.com/ghiscoding/aurelia-slickgrid/issues/380)) ([858ec2d](https://github.com/ghiscoding/aurelia-slickgrid/commit/858ec2ded26d9469b6d7b9b5d37aa6e4dd791f38))
+* **tests:** add more Cypress E2E tests for grid with Editors ([#384](https://github.com/ghiscoding/aurelia-slickgrid/issues/384)) ([4881aa3](https://github.com/ghiscoding/aurelia-slickgrid/commit/4881aa3b998baaa5e1e5c038c1d890f29f4a5d4a))
+* **tests:** add more Cypress E2E tests for Tree Data ([#383](https://github.com/ghiscoding/aurelia-slickgrid/issues/383)) ([2867137](https://github.com/ghiscoding/aurelia-slickgrid/commit/2867137cef32f7f470f022a31a3ced8553a32478))
+
+
+### Bug Fixes
+
+* **editors:** add saveOutputType to finally have proper save format ([#386](https://github.com/ghiscoding/aurelia-slickgrid/issues/386)) ([0bf11cd](https://github.com/ghiscoding/aurelia-slickgrid/commit/0bf11cd009fde030c991424361d869b5d19d6943))
+* **filter:** Grid Preset Filters should work with Tree Data View ([#382](https://github.com/ghiscoding/aurelia-slickgrid/issues/382)) ([5d8fc85](https://github.com/ghiscoding/aurelia-slickgrid/commit/5d8fc85ac83bbcda42f4e23e26824d25b5909f00))
+* **footer:** incorrect date format in custom footer ([#379](https://github.com/ghiscoding/aurelia-slickgrid/issues/379)) ([5297b7c](https://github.com/ghiscoding/aurelia-slickgrid/commit/5297b7c086995d730c433d7fd482e16a52fb6443))
+* **menu:** context menu to copy cell with queryFieldNameGetterFn ([#388](https://github.com/ghiscoding/aurelia-slickgrid/issues/388)) ([d5a5d63](https://github.com/ghiscoding/aurelia-slickgrid/commit/d5a5d6392345da3ed157008597d5f5c3020ca821))
+* **styling:** sass variable should be interpolate before using calc ([#387](https://github.com/ghiscoding/aurelia-slickgrid/issues/387)) ([c5c3c9f](https://github.com/ghiscoding/aurelia-slickgrid/commit/c5c3c9f0b3e6e49952b84d0f05a6e81aad20158f)), closes [#385](https://github.com/ghiscoding/aurelia-slickgrid/issues/385)
+
 ## [2.19.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.18.2...v2.19.0) (2020-06-30)
 
 
