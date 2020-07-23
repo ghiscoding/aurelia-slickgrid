@@ -143,20 +143,18 @@ export class FloatEditor implements Editor {
   loadValue(item: any) {
     const fieldName = this.columnDef && this.columnDef.field;
 
-    if (fieldName !== undefined) {
+    if (item && fieldName !== undefined) {
       // is the field a complex object, "address.streetNumber"
       const isComplexObject = fieldName.indexOf('.') > 0;
+      const value = (isComplexObject) ? getDescendantProperty(item, fieldName) : item[fieldName];
 
-      if (item && this.columnDef && (item.hasOwnProperty(fieldName) || isComplexObject)) {
-        const value = (isComplexObject) ? getDescendantProperty(item, fieldName) : item[fieldName];
-        this.originalValue = value;
-        const decPlaces = this.getDecimalPlaces();
-        if (decPlaces !== null && (this.originalValue || this.originalValue === 0) && (+this.originalValue).toFixed) {
-          this.originalValue = (+this.originalValue).toFixed(decPlaces);
-        }
-        this._$input.val(this.originalValue);
-        this._$input.select();
+      this.originalValue = value;
+      const decPlaces = this.getDecimalPlaces();
+      if (decPlaces !== null && (this.originalValue || this.originalValue === 0) && (+this.originalValue).toFixed) {
+        this.originalValue = (+this.originalValue).toFixed(decPlaces);
       }
+      this._$input.val(this.originalValue);
+      this._$input.select();
     }
   }
 

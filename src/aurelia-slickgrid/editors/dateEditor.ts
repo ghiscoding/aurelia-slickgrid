@@ -198,17 +198,15 @@ export class DateEditor implements Editor {
   loadValue(item: any) {
     const fieldName = this.columnDef && this.columnDef.field;
 
-    if (fieldName !== undefined) {
+    if (item && fieldName !== undefined) {
       // is the field a complex object, "address.streetNumber"
       const isComplexObject = fieldName.indexOf('.') > 0;
+      const value = (isComplexObject) ? getDescendantProperty(item, fieldName) : item[fieldName];
 
-      if (item && this.columnDef && (item.hasOwnProperty(fieldName) || isComplexObject)) {
-        const value = (isComplexObject) ? getDescendantProperty(item, fieldName) : item[fieldName];
-        this.originalDate = value;
-        this.flatInstance.setDate(value);
-        this.show();
-        this.focus();
-      }
+      this.originalDate = value;
+      this.flatInstance.setDate(value);
+      this.show();
+      this.focus();
     }
   }
 

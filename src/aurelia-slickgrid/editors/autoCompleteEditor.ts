@@ -168,17 +168,15 @@ export class AutoCompleteEditor implements Editor {
   loadValue(item: any) {
     const fieldName = this.columnDef && this.columnDef.field;
 
-    if (fieldName !== undefined) {
+    if (item && fieldName !== undefined) {
       // is the field a complex object, "address.streetNumber"
       const isComplexObject = fieldName.indexOf('.') > 0;
+      const data = (isComplexObject) ? getDescendantProperty(item, fieldName) : item[fieldName];
 
-      if (item && this.columnDef && (item.hasOwnProperty(fieldName) || isComplexObject)) {
-        const data = (isComplexObject) ? getDescendantProperty(item, fieldName) : item[fieldName];
-        this._currentValue = data;
-        this._defaultTextValue = typeof data === 'string' ? data : data[this.labelName];
-        this._$editorElm.val(this._defaultTextValue);
-        this._$editorElm.select();
-      }
+      this._currentValue = data;
+      this._defaultTextValue = typeof data === 'string' ? data : data[this.labelName];
+      this._$editorElm.val(this._defaultTextValue);
+      this._$editorElm.select();
     }
   }
 
