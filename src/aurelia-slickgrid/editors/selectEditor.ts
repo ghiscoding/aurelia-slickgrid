@@ -192,7 +192,7 @@ export class SelectEditor implements Editor {
         const fieldName = this.columnDef && this.columnDef.field || '';
 
         // is the field a complex object, "address.streetNumber"
-        const isComplexObject = fieldName.indexOf('.') > 0;
+        const isComplexObject = fieldName && fieldName.indexOf('.') > 0;
         if (isComplexObject && typeof c === 'object') {
           return c;
         }
@@ -228,7 +228,7 @@ export class SelectEditor implements Editor {
       const itemFound = findOrDefault(this.collection, (c: any) => c.hasOwnProperty(this.valueName) && c[this.valueName].toString() === elmValue);
 
       // is the field a complex object, "address.streetNumber"
-      const isComplexObject = fieldName.indexOf('.') > 0;
+      const isComplexObject = fieldName && fieldName.indexOf('.') > 0;
 
       if (isComplexObject && typeof itemFound === 'object') {
         return itemFound;
@@ -357,10 +357,10 @@ export class SelectEditor implements Editor {
   loadValue(item: any): void {
     const fieldName = this.columnDef && this.columnDef.field;
 
-    // is the field a complex object, "address.streetNumber"
-    const isComplexObject = fieldName !== undefined && fieldName.indexOf('.') > 0;
+    if (item && fieldName !== undefined) {
+      // is the field a complex object, "address.streetNumber"
+      const isComplexObject = fieldName && fieldName.indexOf('.') > 0;
 
-    if (item && this.columnDef && fieldName !== undefined && (item.hasOwnProperty(fieldName) || isComplexObject)) {
       // when it's a complex object, user could override the object path (where the editable object is located)
       // else we use the path provided in the Field Column Definition
       const objectPath = this.columnEditor && this.columnEditor.complexObjectPath || fieldName;
