@@ -39,9 +39,11 @@
   <br />
 
   <div id="grid-container" class="col-sm-12">
-    <aurelia-slickgrid grid-id="grid28" column-definitions.bind="columnDefinitions" grid-options.bind="gridOptions"
+    <aurelia-slickgrid grid-id="grid28"
+                       column-definitions.bind="columnDefinitions"
+                       grid-options.bind="gridOptions"
                        dataset-hierarchical.bind="datasetHierarchical"
-                       asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
+                       instances.bind="aureliaGrid">
     </aurelia-slickgrid>
   </div>
 </template>

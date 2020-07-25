@@ -28,8 +28,6 @@ export class Example27 {
     </ul>
   </ul>`;
   aureliaGrid: AureliaGridInstance;
-  dataViewObj: any;
-  gridObj: any;
   gridOptions: GridOption;
   columnDefinitions: Column[];
   dataset: any[];
@@ -43,12 +41,6 @@ export class Example27 {
   attached() {
     // populate the dataset once the grid is ready
     this.dataset = this.mockData(NB_ITEMS);
-  }
-
-  aureliaGridReady(aureliaGrid: AureliaGridInstance) {
-    this.aureliaGrid = aureliaGrid;
-    this.gridObj = aureliaGrid && aureliaGrid.slickGrid;
-    this.dataViewObj = aureliaGrid && aureliaGrid.dataView;
   }
 
   /* Define grid Options and Columns */
@@ -154,7 +146,7 @@ export class Example27 {
 
     // find first parent object and add the new item as a child
     const childItemFound = this.dataset.find((item) => item[treeLevelPropName] === newTreeLevel);
-    const parentItemFound = this.dataViewObj.getItemByIdx(childItemFound[parentPropName]);
+    const parentItemFound = this.aureliaGrid.dataView.getItemByIdx(childItemFound[parentPropName]);
 
     const newItem = {
       id: newId,
@@ -167,19 +159,19 @@ export class Example27 {
       finish: new Date(),
       effortDriven: false
     };
-    this.dataViewObj.addItem(newItem);
-    const dataset = this.dataViewObj.getItems();
+    this.aureliaGrid.dataView.addItem(newItem);
+    const dataset = this.aureliaGrid.dataView.getItems();
     this.dataset = [...dataset]; // make a copy to trigger a dataset refresh
 
     // add setTimeout to wait a full cycle because datasetChanged needs a full cycle
     // force a resort because of the tree data structure
     setTimeout(() => {
       const titleColumn = this.columnDefinitions.find(col => col.id === 'title');
-      this.aureliaGrid.sortService.onLocalSortChanged(this.gridObj, [{ columnId: 'title', sortCol: titleColumn, sortAsc: true }]);
+      this.aureliaGrid.sortService.onLocalSortChanged(this.aureliaGrid.slickGrid, [{ columnId: 'title', sortCol: titleColumn, sortAsc: true }]);
 
       // scroll into the position, after insertion cycle, where the item was added
-      const rowIndex = this.dataViewObj.getRowById(newItem.id);
-      this.gridObj.scrollRowIntoView(rowIndex + 3);
+      const rowIndex = this.aureliaGrid.dataView.getRowById(newItem.id);
+      this.aureliaGrid.slickGrid.scrollRowIntoView(rowIndex + 3);
     }, 0);
   }
 

@@ -108,10 +108,6 @@ export class Example24 {
     return this.aureliaGrid && this.aureliaGrid.extensionService.getSlickgridAddonInstance(ExtensionName.contextMenu) || {};
   }
 
-  aureliaGridReady(aureliaGrid: AureliaGridInstance) {
-    this.aureliaGrid = aureliaGrid;
-  }
-
   attached() {
     // populate the dataset once the grid is ready
     this.dataset = this.getData(1000);

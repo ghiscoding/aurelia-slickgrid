@@ -25,8 +25,6 @@ export class Example21 {
   `;
 
   aureliaGrid: AureliaGridInstance;
-  grid: any;
-  dataView: any;
   columnDefinitions: Column[];
   gridOptions: GridOption;
   dataset: any[];
@@ -40,10 +38,6 @@ export class Example21 {
   attached() {
     // populate the dataset once the grid is ready
     this.getData();
-  }
-
-  aureliaGridReady(aureliaGrid: AureliaGridInstance) {
-    this.aureliaGrid = aureliaGrid;
   }
 
   /* Define grid Options and Columns */

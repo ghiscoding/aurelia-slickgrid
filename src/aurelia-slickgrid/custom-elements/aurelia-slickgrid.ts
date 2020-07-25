@@ -117,6 +117,7 @@ export class AureliaSlickgridCustomElement {
   @bindable({ defaultBindingMode: bindingMode.twoWay }) grid: any;
   @bindable({ defaultBindingMode: bindingMode.twoWay }) paginationOptions: Pagination | undefined;
   @bindable({ defaultBindingMode: bindingMode.twoWay }) totalItems: number;
+  @bindable({ defaultBindingMode: bindingMode.fromView }) instances: AureliaGridInstance;
   @bindable() customDataView: any;
   @bindable() dataset: any[];
   @bindable() datasetHierarchical: any[];
@@ -362,6 +363,7 @@ export class AureliaSlickgridCustomElement {
     // user could show a custom footer with the data metrics (dataset length and last updated timestamp)
     this.optionallyShowCustomFooterWithMetrics();
 
+    this.instances = aureliaElementInstance;
     this.dispatchCustomEvent(`${DEFAULT_AURELIA_EVENT_PREFIX}-on-aurelia-grid-created`, aureliaElementInstance);
   }
 
