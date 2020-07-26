@@ -7,6 +7,7 @@ import { inject, Optional, singleton } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import {
   Column,
+  ExtensionList,
   ExtensionModel,
   ExtensionName,
   GridOption,
@@ -49,8 +50,12 @@ import { SharedService } from './shared.service';
   Optional.of(I18N),
 )
 export class ExtensionService {
-  private _extensionCreatedList: any[] = [];
-  private _extensionList: ExtensionModel[] = [];
+  private _extensionCreatedList: ExtensionList = {} as ExtensionList;
+  private _extensionList: ExtensionList = {} as ExtensionList;
+
+  get extensionList() {
+    return this._extensionList;
+  }
 
   constructor(
     private autoTooltipExtension: AutoTooltipExtension,
@@ -77,12 +82,15 @@ export class ExtensionService {
     this.sharedService.visibleColumns = [];
 
     // dispose of each control/plugin & reset the list
-    this._extensionList.forEach((item) => {
-      if (item && item.class && item.class.dispose) {
-        item.class.dispose();
+    for (const extensionName of Object.keys(this._extensionList)) {
+      if (this._extensionList.hasOwnProperty(extensionName)) {
+        const extension = this._extensionList[extensionName] as ExtensionModel;
+        if (extension && extension.class && extension.class.dispose) {
+          extension.class.dispose();
+        }
       }
-    });
-    this._extensionList = [];
+    }
+    this._extensionList = {} as ExtensionList;
   }
 
   /** Get all columns (includes visible and non-visible) */
@@ -95,20 +103,14 @@ export class ExtensionService {
     return this.sharedService.visibleColumns || [];
   }
 
-  /** Get all Extensions */
-  getAllExtensions(): ExtensionModel[] {
-    return this._extensionList;
-  }
-
   /**
    * Get an Extension by it's name
    *  @param name
    */
   getExtensionByName(name: ExtensionName): ExtensionModel | undefined {
-    if (!Array.isArray(this._extensionList) || this._extensionList.length === 0) {
-      return undefined;
+    if (this._extensionList && this._extensionList[name]) {
+      return this._extensionList[name];
     }
-    return this._extensionList.find((p) => p.name === name);
   }
 
   /**
@@ -147,7 +149,7 @@ export class ExtensionService {
       if (this.sharedService.gridOptions.enableAutoTooltip) {
         if (this.autoTooltipExtension && this.autoTooltipExtension.register) {
           const instance = this.autoTooltipExtension.register();
-          this._extensionList.push({ name: ExtensionName.autoTooltip, class: this.autoTooltipExtension, addon: instance, instance });
+          this._extensionList[ExtensionName.autoTooltip] = { name: ExtensionName.autoTooltip, class: this.autoTooltipExtension, addon: instance, instance };
         }
       }
 
@@ -155,7 +157,7 @@ export class ExtensionService {
       if (this.sharedService.gridOptions.enableExcelCopyBuffer) {
         if (this.cellExternalCopyExtension && this.cellExternalCopyExtension.register) {
           const instance = this.cellExternalCopyExtension.register();
-          this._extensionList.push({ name: ExtensionName.cellExternalCopyManager, class: this.cellExternalCopyExtension, addon: instance, instance });
+          this._extensionList[ExtensionName.cellExternalCopyManager] = { name: ExtensionName.cellExternalCopyManager, class: this.cellExternalCopyExtension, addon: instance, instance };
         }
       }
 
@@ -163,7 +165,7 @@ export class ExtensionService {
       if (this.sharedService.gridOptions.enableCellMenu) {
         if (this.cellMenuExtension && this.cellMenuExtension.register) {
           const instance = this.cellMenuExtension.register();
-          this._extensionList.push({ name: ExtensionName.cellMenu, class: this.cellMenuExtension, addon: instance, instance });
+          this._extensionList[ExtensionName.cellMenu] = { name: ExtensionName.cellMenu, class: this.cellMenuExtension, addon: instance, instance };
         }
       }
 
@@ -172,7 +174,7 @@ export class ExtensionService {
       if (!this.getExtensionByName(ExtensionName.rowSelection) && (this.sharedService.gridOptions.enableRowSelection || this.sharedService.gridOptions.enableCheckboxSelector || this.sharedService.gridOptions.enableRowDetailView || this.sharedService.gridOptions.enableRowMoveManager)) {
         if (this.rowSelectionExtension && this.rowSelectionExtension.register) {
           const instance = this.rowSelectionExtension.register();
-          this._extensionList.push({ name: ExtensionName.rowSelection, class: this.rowSelectionExtension, addon: instance, instance });
+          this._extensionList[ExtensionName.rowSelection] = { name: ExtensionName.rowSelection, class: this.rowSelectionExtension, addon: instance, instance };
         }
       }
 
@@ -183,7 +185,7 @@ export class ExtensionService {
           this.checkboxSelectorExtension.register(rowSelectionExtension);
           const createdExtension = this.getCreatedExtensionByName(ExtensionName.checkboxSelector); // get the instance from when it was really created earlier
           const instance = createdExtension && createdExtension.instance;
-          this._extensionList.push({ name: ExtensionName.checkboxSelector, class: this.checkboxSelectorExtension, addon: instance, instance });
+          this._extensionList[ExtensionName.checkboxSelector] = { name: ExtensionName.checkboxSelector, class: this.checkboxSelectorExtension, addon: instance, instance };
         }
       }
 
@@ -191,7 +193,7 @@ export class ExtensionService {
       if (this.sharedService.gridOptions.enableColumnPicker) {
         if (this.columnPickerExtension && this.columnPickerExtension.register) {
           const instance = this.columnPickerExtension.register();
-          this._extensionList.push({ name: ExtensionName.columnPicker, class: this.columnPickerExtension, addon: instance, instance });
+          this._extensionList[ExtensionName.columnPicker] = { name: ExtensionName.columnPicker, class: this.columnPickerExtension, addon: instance, instance };
         }
       }
 
@@ -199,7 +201,7 @@ export class ExtensionService {
       if (this.sharedService.gridOptions.enableContextMenu) {
         if (this.contextMenuExtension && this.contextMenuExtension.register) {
           const instance = this.contextMenuExtension.register();
-          this._extensionList.push({ name: ExtensionName.contextMenu, class: this.contextMenuExtension, addon: instance, instance });
+          this._extensionList[ExtensionName.contextMenu] = { name: ExtensionName.contextMenu, class: this.contextMenuExtension, addon: instance, instance };
         }
       }
 
@@ -207,7 +209,7 @@ export class ExtensionService {
       if (this.sharedService.gridOptions.enableDraggableGrouping) {
         if (this.draggableGroupingExtension && this.draggableGroupingExtension.register) {
           const instance = this.draggableGroupingExtension.register();
-          this._extensionList.push({ name: ExtensionName.draggableGrouping, class: this.draggableGroupingExtension, addon: instance, instance });
+          this._extensionList[ExtensionName.draggableGrouping] = { name: ExtensionName.draggableGrouping, class: this.draggableGroupingExtension, addon: instance, instance };
         }
       }
 
@@ -215,7 +217,7 @@ export class ExtensionService {
       if (this.sharedService.gridOptions.enableGridMenu) {
         if (this.gridMenuExtension && this.gridMenuExtension.register) {
           const instance = this.gridMenuExtension.register();
-          this._extensionList.push({ name: ExtensionName.gridMenu, class: this.gridMenuExtension, addon: instance, instance });
+          this._extensionList[ExtensionName.gridMenu] = { name: ExtensionName.gridMenu, class: this.gridMenuExtension, addon: instance, instance };
         }
       }
 
@@ -224,7 +226,7 @@ export class ExtensionService {
       if (this.sharedService.gridOptions.enableDraggableGrouping || this.sharedService.gridOptions.enableGrouping) {
         if (this.groupItemMetaExtension && this.groupItemMetaExtension.register) {
           const instance = this.groupItemMetaExtension.register();
-          this._extensionList.push({ name: ExtensionName.groupItemMetaProvider, class: this.groupItemMetaExtension, addon: instance, instance });
+          this._extensionList[ExtensionName.groupItemMetaProvider] = { name: ExtensionName.groupItemMetaProvider, class: this.groupItemMetaExtension, addon: instance, instance };
         }
       }
 
@@ -232,7 +234,7 @@ export class ExtensionService {
       if (this.sharedService.gridOptions.enableHeaderButton) {
         if (this.headerButtonExtension && this.headerButtonExtension.register) {
           const instance = this.headerButtonExtension.register();
-          this._extensionList.push({ name: ExtensionName.headerButton, class: this.headerButtonExtension, addon: instance, instance });
+          this._extensionList[ExtensionName.headerButton] = { name: ExtensionName.headerButton, class: this.headerButtonExtension, addon: instance, instance };
         }
       }
 
@@ -240,7 +242,7 @@ export class ExtensionService {
       if (this.sharedService.gridOptions.enableHeaderMenu) {
         if (this.headerMenuExtension && this.headerMenuExtension.register) {
           const instance = this.headerMenuExtension.register();
-          this._extensionList.push({ name: ExtensionName.headerMenu, class: this.headerMenuExtension, addon: instance, instance });
+          this._extensionList[ExtensionName.headerMenu] = { name: ExtensionName.headerMenu, class: this.headerMenuExtension, addon: instance, instance };
         }
       }
 
@@ -251,7 +253,7 @@ export class ExtensionService {
           this.rowDetailViewExtension.register(rowSelectionExtension);
           const createdExtension = this.getCreatedExtensionByName(ExtensionName.rowDetailView); // get the plugin from when it was really created earlier
           const instance = createdExtension && createdExtension.instance;
-          this._extensionList.push({ name: ExtensionName.rowDetailView, class: this.rowDetailViewExtension, addon: instance, instance });
+          this._extensionList[ExtensionName.rowDetailView] = { name: ExtensionName.rowDetailView, class: this.rowDetailViewExtension, addon: instance, instance };
         }
       }
 
@@ -261,7 +263,7 @@ export class ExtensionService {
         this.rowMoveManagerExtension.register(rowSelectionExtension);
         const createdExtension = this.getCreatedExtensionByName(ExtensionName.rowMoveManager); // get the instance from when it was really created earlier
         const instance = createdExtension && createdExtension.instance;
-        this._extensionList.push({ name: ExtensionName.rowMoveManager, class: this.rowMoveManagerExtension, addon: instance, instance });
+        this._extensionList[ExtensionName.rowMoveManager] = { name: ExtensionName.rowMoveManager, class: this.rowMoveManagerExtension, addon: instance, instance };
       }
 
       // manually register other plugins
@@ -273,13 +275,13 @@ export class ExtensionService {
           gridOptions.registerPlugins.forEach((plugin: any) => {
             grid.registerPlugin(plugin);
             const instance = grid.getPluginByName(plugin.name);
-            this._extensionList.push({ name: ExtensionName.noname, class: null, addon: instance, instance });
+            this._extensionList[ExtensionName.noname] = { name: ExtensionName.noname, class: null, addon: instance, instance };
           });
         } else {
           const plugin = gridOptions.registerPlugins;
           grid.registerPlugin(plugin);
           const instance = grid.getPluginByName(plugin.name);
-          this._extensionList.push({ name: ExtensionName.noname, class: null, addon: instance, instance });
+          this._extensionList[ExtensionName.noname] = { name: ExtensionName.noname, class: null, addon: instance, instance };
         }
       }
     }
@@ -295,26 +297,26 @@ export class ExtensionService {
     if (options.enableCheckboxSelector) {
       if (!this.getCreatedExtensionByName(ExtensionName.checkboxSelector)) {
         const checkboxInstance = this.checkboxSelectorExtension.create(columnDefinitions, options);
-        this._extensionCreatedList.push({ name: ExtensionName.checkboxSelector, instance: checkboxInstance });
+        this._extensionCreatedList[ExtensionName.checkboxSelector] = { name: ExtensionName.checkboxSelector, addon: checkboxInstance, instance: checkboxInstance, class: this.checkboxSelectorExtension };
       }
     }
     if (options.enableRowMoveManager) {
       if (!this.getCreatedExtensionByName(ExtensionName.rowMoveManager)) {
         const rowMoveInstance = this.rowMoveManagerExtension.create(columnDefinitions, options);
-        this._extensionCreatedList.push({ name: ExtensionName.rowMoveManager, instance: rowMoveInstance });
+        this._extensionCreatedList[ExtensionName.rowMoveManager] = { name: ExtensionName.rowMoveManager, addon: rowMoveInstance, instance: rowMoveInstance, class: this.rowMoveManagerExtension };
       }
     }
     if (options.enableRowDetailView) {
       if (!this.getCreatedExtensionByName(ExtensionName.rowDetailView)) {
         const rowDetailInstance = this.rowDetailViewExtension.create(columnDefinitions, options);
-        this._extensionCreatedList.push({ name: ExtensionName.rowDetailView, instance: rowDetailInstance });
+        this._extensionCreatedList[ExtensionName.rowDetailView] = { name: ExtensionName.rowDetailView, addon: rowDetailInstance, instance: rowDetailInstance, class: this.rowDetailViewExtension };
       }
     }
     if (options.enableDraggableGrouping) {
       if (!this.getCreatedExtensionByName(ExtensionName.draggableGrouping)) {
         const draggableInstance = this.draggableGroupingExtension.create(options);
         options.enableColumnReorder = draggableInstance.getSetupColumnReorder;
-        this._extensionCreatedList.push({ name: ExtensionName.draggableGrouping, instance: draggableInstance });
+        this._extensionCreatedList[ExtensionName.draggableGrouping] = { name: ExtensionName.draggableGrouping, addon: draggableInstance, instance: draggableInstance, class: this.draggableGroupingExtension };
       }
     }
   }
@@ -459,10 +461,9 @@ export class ExtensionService {
    *  @param name
    */
   private getCreatedExtensionByName(name: ExtensionName): ExtensionModel | undefined {
-    if (!Array.isArray(this._extensionCreatedList) || this._extensionCreatedList.length === 0) {
-      return undefined;
+    if (this._extensionCreatedList && this._extensionCreatedList.hasOwnProperty(name)) {
+      return this._extensionCreatedList[name];
     }
-    return this._extensionCreatedList.find((p) => p.name === name);
   }
 
   /** Translate an array of items from an input key and assign translated value to the output key */

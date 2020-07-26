@@ -19,6 +19,8 @@
   <hr />
 
   <aurelia-slickgrid grid-id="grid19" column-definitions.bind="columnDefinitions" grid-options.bind="gridOptions"
-                     dataset.bind="dataset" asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
+    dataset.bind="dataset"
+    extensions.bind="extensions"
+    instances.bind="aureliaGrid">
   </aurelia-slickgrid>
 </template>
