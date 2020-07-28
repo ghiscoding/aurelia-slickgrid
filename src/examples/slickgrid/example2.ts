@@ -48,10 +48,6 @@ export class Example2 {
     this.defineGrid();
   }
 
-  aureliaGridReady(aureliaGrid: AureliaGridInstance) {
-    this.aureliaGrid = aureliaGrid;
-  }
-
   attached() {
     // populate the dataset once the grid is ready
     this.getData();

@@ -84,10 +84,6 @@ export class Example23 {
     this.saveCurrentGridState();
   }
 
-  aureliaGridReady(aureliaGrid: AureliaGridInstance) {
-    this.aureliaGrid = aureliaGrid;
-  }
-
   /* Define grid Options and Columns */
   defineGrid() {
     this.columnDefinitions = [

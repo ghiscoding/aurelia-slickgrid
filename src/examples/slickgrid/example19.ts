@@ -3,7 +3,7 @@ import { Subscription } from 'aurelia-event-aggregator';
 import {
   AureliaGridInstance,
   Column,
-  ExtensionName,
+  ExtensionList,
   FieldType,
   Filters,
   Formatters,
@@ -27,6 +27,7 @@ export class Example19 {
   gridOptions: GridOption;
   columnDefinitions: Column[];
   dataset: any[];
+  extensions: ExtensionList;
   flashAlertType = 'info';
   message: string;
   subscriptions: Subscription[];
@@ -36,12 +37,14 @@ export class Example19 {
     this.defineGrid();
   }
 
-  aureliaGridReady(aureliaGrid: AureliaGridInstance) {
-    this.aureliaGrid = aureliaGrid;
-  }
-
   get rowDetailInstance(): any {
-    return this.aureliaGrid && this.aureliaGrid.extensionService.getSlickgridAddonInstance(ExtensionName.rowDetailView) || {};
+    // you can get the SlickGrid RowDetail plugin (addon) instance via 2 ways
+
+    // option 1
+    return this.extensions.rowDetailView.instance || {};
+
+    // OR options 2
+    // return this.aureliaGrid && this.aureliaGrid.extensionService.getSlickgridAddonInstance(ExtensionName.rowDetailView) || {};
   }
 
   attached() {

@@ -79,7 +79,6 @@ export class Example3 {
   `;
   private _commandQueue = [];
   aureliaGrid: AureliaGridInstance;
-  gridObj: any;
   gridOptions: GridOption;
   columnDefinitions: Column[];
   dataset: any[];
@@ -98,11 +97,6 @@ export class Example3 {
   attached() {
     // populate the dataset once the grid is ready
     this.dataset = this.mockData(NB_ITEMS);
-  }
-
-  aureliaGridReady(aureliaGrid: AureliaGridInstance) {
-    this.aureliaGrid = aureliaGrid;
-    this.gridObj = aureliaGrid && aureliaGrid.slickGrid;
   }
 
   /* Define grid Options and Columns */
@@ -564,7 +558,7 @@ export class Example3 {
 
   changeAutoCommit() {
     this.gridOptions.autoCommitEdit = !this.gridOptions.autoCommitEdit;
-    this.gridObj.setOptions({
+    this.aureliaGrid.slickGrid.setOptions({
       autoCommitEdit: this.gridOptions.autoCommitEdit
     });
     return true;
@@ -620,7 +614,7 @@ export class Example3 {
 
   setAutoEdit(isAutoEdit) {
     this.isAutoEdit = isAutoEdit;
-    this.gridObj.setOptions({
+    this.aureliaGrid.slickGrid.setOptions({
       autoEdit: isAutoEdit
     });
     return true;
@@ -636,7 +630,7 @@ export class Example3 {
     const command = this._commandQueue.pop();
     if (command && Slick.GlobalEditorLock.cancelCurrentEdit()) {
       command.undo();
-      this.gridObj.gotoCell(command.row, command.cell, false);
+      this.aureliaGrid.slickGrid.gotoCell(command.row, command.cell, false);
     }
   }
 }

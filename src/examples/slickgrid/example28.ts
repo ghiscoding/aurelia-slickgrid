@@ -24,8 +24,6 @@ export class Example28 {
     </ul>
   `;
   aureliaGrid: AureliaGridInstance;
-  dataViewObj: any;
-  gridObj: any;
   gridOptions: GridOption;
   columnDefinitions: Column[];
   datasetHierarchical: any[] = [];
@@ -39,12 +37,6 @@ export class Example28 {
   attached() {
     // populate the dataset once the grid is ready
     this.datasetHierarchical = this.mockDataset();
-  }
-
-  aureliaGridReady(aureliaGrid: AureliaGridInstance) {
-    this.aureliaGrid = aureliaGrid;
-    this.gridObj = aureliaGrid && aureliaGrid.slickGrid;
-    this.dataViewObj = aureliaGrid && aureliaGrid.dataView;
   }
 
   /* Define grid Options and Columns */
@@ -181,7 +173,7 @@ export class Example28 {
    * After adding the item, it will sort by parent/child recursively
    */
   addNewFile() {
-    const newId = this.dataViewObj.getLength() + 100;
+    const newId = this.aureliaGrid.dataView.getLength() + 100;
 
     // find first parent object and add the new item as a child
     const tmpDatasetHierarchical = [...this.datasetHierarchical];
@@ -200,8 +192,8 @@ export class Example28 {
 
       // scroll into the position, after insertion cycle, where the item was added
       setTimeout(() => {
-        const rowIndex = this.dataViewObj.getRowById(popItem.id);
-        this.gridObj.scrollRowIntoView(rowIndex + 3);
+        const rowIndex = this.aureliaGrid.dataView.getRowById(popItem.id);
+        this.aureliaGrid.slickGrid.scrollRowIntoView(rowIndex + 3);
       }, 0);
     }
   }

@@ -65,10 +65,6 @@ export class Example25 {
     this.defineGrid();
   }
 
-  aureliaGridReady(aureliaGrid: AureliaGridInstance) {
-    this.aureliaGrid = aureliaGrid;
-  }
-
   defineGrid() {
     this.columnDefinitions = [
       { id: 'countryCode', field: 'code', name: 'Code', maxWidth: 90, sortable: true, filterable: true, columnGroup: 'Country' },
