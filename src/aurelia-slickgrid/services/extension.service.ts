@@ -53,7 +53,7 @@ export class ExtensionService {
   private _extensionCreatedList: ExtensionList = {} as ExtensionList;
   private _extensionList: ExtensionList = {} as ExtensionList;
 
-  get extensionList() {
+  get extensionList(): ExtensionList {
     return this._extensionList;
   }
 
