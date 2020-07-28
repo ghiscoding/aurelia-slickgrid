@@ -111,6 +111,7 @@ export class ExtensionService {
     if (this._extensionList && this._extensionList[name]) {
       return this._extensionList[name];
     }
+    return undefined;
   }
 
   /**
@@ -464,6 +465,7 @@ export class ExtensionService {
     if (this._extensionCreatedList && this._extensionCreatedList.hasOwnProperty(name)) {
       return this._extensionCreatedList[name];
     }
+    return undefined;
   }
 
   /** Translate an array of items from an input key and assign translated value to the output key */
