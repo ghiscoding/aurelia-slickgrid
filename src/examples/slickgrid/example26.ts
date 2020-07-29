@@ -86,7 +86,9 @@ export class Example26 {
         sortable: true,
         type: FieldType.string,
         editor: {
-          model: Editors.longText
+          model: Editors.longText,
+          minLength: 5,
+          maxLength: 255,
         },
         minWidth: 100,
         onCellChange: (e: Event, args: OnEventArgs) => {

@@ -26,7 +26,7 @@ export interface ColumnEditor {
   /** Options to change the behavior of the "collection" */
   collectionOptions?: CollectionOption;
 
-  /** We could filter some 1 or more items from the collection */
+  /** We could filter 1 or more items from the collection */
   collectionFilterBy?: CollectionFilterBy | CollectionFilterBy[];
 
   /** We could sort the collection by 1 or more properties, or by translated value(s) when enableTranslateLabel is True */
@@ -46,7 +46,7 @@ export interface ColumnEditor {
   decimal?: number;
 
   /**
-   * Defaults to false, when enable it will add collection observers and re-render the Filter DOM element
+   * Defaults to false, when enable it will add collection observers and re-render the editor DOM element
    * with the new collection when changes are detected. Also note that using "collectionAsync" automatically watch for changes,
    * in consequence, there's no need to enable this flag in that particular case.
    */
@@ -68,7 +68,7 @@ export interface ColumnEditor {
 
   /**
    * Defaults to false, when set it will render any HTML code instead of removing it (sanitized)
-   * Only used so far in the MultipleSelect & SingleSelect Filters will support it
+   * Only used so far in the MultipleSelect & SingleSelect Editors will support it
    */
   enableRenderHtml?: boolean;
 
@@ -78,10 +78,16 @@ export interface ColumnEditor {
   /** Error message to display when validation fails */
   errorMessage?: string;
 
-  /** Maximum value of the filter, works only with Filters supporting it (text, number, float, slider) */
+  /** Maximum length of the text value, works only with Editors supporting it (autoComplete, text, longText) */
+  maxLength?: number;
+
+  /** Maximum value of the editor, works only with Editors supporting it (number, float, slider) */
   maxValue?: number | string;
 
-  /** Minimum value of the filter, works only with Filters supporting it (text, number, float, slider) */
+  /** Minimum length of the text value, works only with Editors supporting it (autoComplete, text, longText) */
+  minLength?: number;
+
+  /** Minimum value of the editor, works only with Editors supporting it (number, float, slider) */
   minValue?: number | string;
 
   /** Any inline editor function that implements Editor for the cell */
@@ -114,13 +120,13 @@ export interface ColumnEditor {
   /** Editor Validator */
   validator?: EditorValidator;
 
-  /** Step value of the filter, works only with Filters supporting it (input text, number, float, range, slider) */
+  /** Step value of the editor, works only with Editors supporting it (input text, number, float, range, slider) */
   valueStep?: number | string;
 
   /**
    * Use "params" to pass any type of arguments to your Custom Editor
    * or regular Editor like the Editors.float
-   * for example, to pass the option collection to a select Filter we can type this:
+   * for example, to pass the option collection to a select Editor we can type this:
    * params: { decimalPlaces: 2 }
    */
   params?: any;
