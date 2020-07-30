@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.20.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.19.1...v2.20.0) (2020-07-30)
+
+
+### Features
+
+* **core:** expose all services, slickgrid, dataview instances ([#392](https://github.com/ghiscoding/aurelia-slickgrid/issues/392)) ([6b7603f](https://github.com/ghiscoding/aurelia-slickgrid/commit/6b7603f338a3f8c70c1f2aa4e59b529ee2d3415b))
+* **editors:** add min/max length options to text editors ([#395](https://github.com/ghiscoding/aurelia-slickgrid/issues/395)) ([99ff929](https://github.com/ghiscoding/aurelia-slickgrid/commit/99ff929fe1c3df53505d29d67024f8a6c7f0e506))
+
+
+### Bug Fixes
+
+* **editors:** Editors should work with undefined item properties ([#390](https://github.com/ghiscoding/aurelia-slickgrid/issues/390)) ([e2d94ad](https://github.com/ghiscoding/aurelia-slickgrid/commit/e2d94ad80512dc0a82f3a46484301b5dc7f8feb9))
+* **extensions:** draggable grouping called wrong check ([#389](https://github.com/ghiscoding/aurelia-slickgrid/issues/389)) ([1107d90](https://github.com/ghiscoding/aurelia-slickgrid/commit/1107d90a24000c21f84476f166c889575abe8094))
+* **footer:** remove unnecessary row class to avoid negative margins ([#391](https://github.com/ghiscoding/aurelia-slickgrid/issues/391)) ([9b4020c](https://github.com/ghiscoding/aurelia-slickgrid/commit/9b4020c1b629db33abbec39885ff8bfff2b49365))
+* **interfaces:** grid option enableColumnReorder can also be a function ([#394](https://github.com/ghiscoding/aurelia-slickgrid/issues/394)) ([d6266ea](https://github.com/ghiscoding/aurelia-slickgrid/commit/d6266ea4e75b940aa2a6b92b6ad9b1fca8fa6c3d))
+* **styling:** tweak styling so that we won't need to use css !important ([#393](https://github.com/ghiscoding/aurelia-slickgrid/issues/393)) ([6f73bc6](https://github.com/ghiscoding/aurelia-slickgrid/commit/6f73bc6581f03e34eae3ff449954e4de8c49b56c))
+
 ### [2.19.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.19.0...v2.19.1) (2020-07-20)
 
 
