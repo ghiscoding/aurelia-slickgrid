@@ -84,15 +84,19 @@ export class ContextMenuExtension implements Extension {
 
     if (this.sharedService && this.sharedService.grid && this.sharedService.gridOptions && this.sharedService.gridOptions.contextMenu) {
       const contextMenu = this.sharedService.gridOptions.contextMenu;
+
       // keep original user context menu, useful when switching locale to translate
       this._userOriginalContextMenu = { ...contextMenu };
 
       // dynamically import the SlickGrid plugin (addon) with RequireJS
       this.extensionUtility.loadExtensionDynamically(ExtensionName.contextMenu);
+
+      // merge the original commands with the built-in internal commands
+      const originalCommandItems = this._userOriginalContextMenu && Array.isArray(this._userOriginalContextMenu.commandItems) ? this._userOriginalContextMenu.commandItems : [];
+      contextMenu.commandItems = [...originalCommandItems, ...this.addMenuCustomCommands(originalCommandItems)];
       this.sharedService.gridOptions.contextMenu = { ...contextMenu };
 
       // sort all menu items by their position order when defined
-      contextMenu.commandItems = this.addMenuCustomCommands([]);
       this.extensionUtility.sortItems(contextMenu.commandItems || [], 'positionOrder');
       this.extensionUtility.sortItems(contextMenu.optionItems || [], 'positionOrder');
 
