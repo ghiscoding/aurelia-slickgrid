@@ -22,6 +22,7 @@ import {
   Column,
   ColumnEditor,
   CustomFooterOption,
+  DataViewOption,
   ExtensionList,
   ExtensionName,
   GraphqlResult,
@@ -190,14 +191,16 @@ export class AureliaSlickgridCustomElement {
     this.createBackendApiInternalPostProcessCallback(this.gridOptions);
 
     if (!this.customDataView) {
+      const dataviewInlineFilters = this.gridOptions.dataView && this.gridOptions.dataView.inlineFilters || false;
+      let dataViewOptions: DataViewOption = { inlineFilters: dataviewInlineFilters };
+
       if (this.gridOptions.draggableGrouping || this.gridOptions.enableGrouping) {
         this.extensionUtility.loadExtensionDynamically(ExtensionName.groupItemMetaProvider);
         this.groupItemMetadataProvider = new Slick.Data.GroupItemMetadataProvider();
         this.sharedService.groupItemMetadataProvider = this.groupItemMetadataProvider;
-        this.dataview = new Slick.Data.DataView({ groupItemMetadataProvider: this.groupItemMetadataProvider });
-      } else {
-        this.dataview = new Slick.Data.DataView();
+        dataViewOptions = { ...dataViewOptions, groupItemMetadataProvider: this.groupItemMetadataProvider };
       }
+      this.dataview = new Slick.Data.DataView(dataViewOptions);
       this.globalEa.publish('onDataviewCreated', this.dataview);
       this.dispatchCustomEvent(`${DEFAULT_AURELIA_EVENT_PREFIX}-on-dataview-created`, this.dataview);
     }
