@@ -274,6 +274,13 @@ export class Example3 {
             minLength: 3,
             forceUserInput: true,
             source: (request, response) => {
+              /** with FETCH, note this demo won't work because of CORS */
+              // this.httpFetch.fetch(`http://gd.geobytes.com/AutoCompleteCity?q=${request.term}`)
+              //   .then(response => response.json())
+              //   .then(data => response(data))
+              //   .catch(error => console.log('fetch error:', error));
+
+              /** with jQuery AJAX will work locally but not on the GitHub demo because of CORS */
               $.ajax({
                 url: 'http://gd.geobytes.com/AutoCompleteCity',
                 dataType: 'jsonp',
