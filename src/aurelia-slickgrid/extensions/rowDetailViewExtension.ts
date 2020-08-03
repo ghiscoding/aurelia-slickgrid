@@ -246,7 +246,7 @@ export class RowDetailViewExtension implements Extension {
 
   /** Redraw the necessary View Slot */
   redrawViewSlot(slot: CreatedView) {
-    const containerElement = document.getElementsByClassName(`${ROW_DETAIL_CONTAINER_PREFIX}${slot[this.datasetIdPropName]}`);
+    const containerElement = document.getElementsByClassName(`${ROW_DETAIL_CONTAINER_PREFIX}${slot.id}`);
     if (containerElement && containerElement.length) {
       this.renderViewModel(slot.dataContext);
     }
@@ -273,7 +273,7 @@ export class RowDetailViewExtension implements Extension {
       } as ViewModelBindableInputData;
       const aureliaComp = this.aureliaUtilService.createAureliaViewModelAddToSlot(this._viewModel, bindableData, containerElements[0], true);
 
-      const slotObj = this._slots.find((obj) => obj[this.datasetIdPropName] === item[this.datasetIdPropName]);
+      const slotObj = this._slots.find(obj => obj.id === item[this.datasetIdPropName]);
 
       if (slotObj && aureliaComp) {
         slotObj.view = aureliaComp.view;
@@ -288,7 +288,7 @@ export class RowDetailViewExtension implements Extension {
 
   private disposeViewSlot(expandedView: CreatedView) {
     if (expandedView && expandedView.view && expandedView.viewSlot && expandedView.view.unbind && expandedView.viewSlot.remove) {
-      const container = document.getElementsByClassName(`${ROW_DETAIL_CONTAINER_PREFIX}${this._slots[0][this.datasetIdPropName]}`);
+      const container = document.getElementsByClassName(`${ROW_DETAIL_CONTAINER_PREFIX}${this._slots[0].id}`);
       if (container && container.length > 0) {
         expandedView.viewSlot.remove(expandedView.view);
         expandedView.view.unbind();
@@ -360,7 +360,7 @@ export class RowDetailViewExtension implements Extension {
       }
     } else {
       // collapsing, so dispose of the View/ViewSlot
-      const foundSlotIndex = this._slots.findIndex((slot: CreatedView) => slot[this.datasetIdPropName] === args.item[this.datasetIdPropName]);
+      const foundSlotIndex = this._slots.findIndex((slot: CreatedView) => slot.id === args.item[this.datasetIdPropName]);
       if (foundSlotIndex >= 0) {
         if (this.disposeViewSlot(this._slots[foundSlotIndex])) {
           this._slots.splice(foundSlotIndex, 1);
@@ -373,7 +373,7 @@ export class RowDetailViewExtension implements Extension {
   private onRowBackToViewportRange(e: Event, args: { grid: any; item: any; rowId: number; rowIndex: number; expandedRows: number[]; rowIdsOutOfViewport: number[]; }) {
     if (args && args.item) {
       this._slots.forEach((slot) => {
-        if (slot[this.datasetIdPropName] === args.item[this.datasetIdPropName]) {
+        if (slot.id === args.item[this.datasetIdPropName]) {
           this.redrawViewSlot(slot);
         }
       });
