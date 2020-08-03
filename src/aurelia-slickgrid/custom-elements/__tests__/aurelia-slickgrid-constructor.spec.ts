@@ -584,7 +584,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
         customElement.attached();
 
         expect(extensionSpy).toHaveBeenCalledWith('groupItemMetaProvider');
-        expect(dataviewSpy).toHaveBeenCalledWith({ groupItemMetadataProvider: expect.anything() });
+        expect(dataviewSpy).toHaveBeenCalledWith({ groupItemMetadataProvider: expect.anything(), inlineFilters: false });
         expect(groupMetaSpy).toHaveBeenCalledWith();
         expect(sharedMetaSpy).toHaveBeenCalledWith(mockGroupItemMetaProvider);
 
@@ -602,7 +602,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
         customElement.attached();
 
         expect(extensionSpy).toHaveBeenCalledWith('groupItemMetaProvider');
-        expect(dataviewSpy).toHaveBeenCalledWith({ groupItemMetadataProvider: expect.anything() });
+        expect(dataviewSpy).toHaveBeenCalledWith({ groupItemMetadataProvider: expect.anything(), inlineFilters: false });
         expect(groupMetaSpy).toHaveBeenCalledWith();
         expect(sharedMetaSpy).toHaveBeenCalledWith(mockGroupItemMetaProvider);
 
