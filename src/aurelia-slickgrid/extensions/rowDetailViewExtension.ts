@@ -247,23 +247,23 @@ export class RowDetailViewExtension implements Extension {
   /** Redraw the necessary View Slot */
   redrawViewSlot(slot: CreatedView) {
     const containerElement = document.getElementsByClassName(`${ROW_DETAIL_CONTAINER_PREFIX}${slot.id}`);
-    if (containerElement && containerElement.length) {
+    if (containerElement && containerElement.length >= 0) {
       this.renderViewModel(slot.dataContext);
     }
   }
 
-  /** Render (or rerender) the View Slot (Row Detail) */
+  /** Render (or re-render) the View Slot (Row Detail) */
   renderPreloadView() {
     const containerElements = document.getElementsByClassName(`${PRELOAD_CONTAINER_PREFIX}`);
-    if (containerElements && containerElements.length) {
-      this.aureliaUtilService.createAureliaViewAddToSlot(this._preloadView, containerElements[0], true);
+    if (containerElements && containerElements.length >= 0) {
+      this.aureliaUtilService.createAureliaViewAddToSlot(this._preloadView, containerElements[containerElements.length - 1], true);
     }
   }
 
-  /** Render (or rerender) the View Slot (Row Detail) */
+  /** Render (or re-render) the View Slot (Row Detail) */
   renderViewModel(item: any) {
     const containerElements = document.getElementsByClassName(`${ROW_DETAIL_CONTAINER_PREFIX}${item[this.datasetIdPropName]}`);
-    if (containerElements && containerElements.length) {
+    if (containerElements && containerElements.length > 0) {
       const bindableData = {
         model: item,
         addon: this._addon,
@@ -271,7 +271,7 @@ export class RowDetailViewExtension implements Extension {
         dataView: this.sharedService.dataView,
         parent: this.rowDetailViewOptions && this.rowDetailViewOptions.parent,
       } as ViewModelBindableInputData;
-      const aureliaComp = this.aureliaUtilService.createAureliaViewModelAddToSlot(this._viewModel, bindableData, containerElements[0], true);
+      const aureliaComp = this.aureliaUtilService.createAureliaViewModelAddToSlot(this._viewModel, bindableData, containerElements[containerElements.length - 1], true);
 
       const slotObj = this._slots.find(obj => obj.id === item[this.datasetIdPropName]);
 
