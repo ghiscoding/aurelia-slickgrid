@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.20.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.20.0...v2.20.1) (2020-08-04)
+
+
+### Features
+
+* **examples:** add fetch to autoComplete sample ([#397](https://github.com/ghiscoding/aurelia-slickgrid/issues/397)) ([70edd27](https://github.com/ghiscoding/aurelia-slickgrid/commit/70edd27ca0a1c1a77d88979712eac2018535bf51))
+
+
+### Bug Fixes
+
+* **core:** add missing `inlineFilters` DataView optional flag ([#398](https://github.com/ghiscoding/aurelia-slickgrid/issues/398)) ([cde443b](https://github.com/ghiscoding/aurelia-slickgrid/commit/cde443ba400927f0c489a6e127658374c3920d2b))
+* **extension:** Row Detail gets blanked out for no reason ([#400](https://github.com/ghiscoding/aurelia-slickgrid/issues/400)) ([f4591de](https://github.com/ghiscoding/aurelia-slickgrid/commit/f4591defd67bef09be66b5d996ef8e79a5640612))
+* **extensions:** adding Context Menu custom commands was not working ([#396](https://github.com/ghiscoding/aurelia-slickgrid/issues/396)) ([097c558](https://github.com/ghiscoding/aurelia-slickgrid/commit/097c55865631ba107441471a8294c3a9a7719b3d))
+* **extensions:** Row Detail not always refreshing with customId ([#399](https://github.com/ghiscoding/aurelia-slickgrid/issues/399)) ([b6d746d](https://github.com/ghiscoding/aurelia-slickgrid/commit/b6d746d374551a6c0684c2a44fb7b77a4f6d1e8e)), closes [#546](https://github.com/ghiscoding/aurelia-slickgrid/issues/546)
+
 ## [2.20.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.19.1...v2.20.0) (2020-07-30)
 
 
