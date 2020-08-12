@@ -17,10 +17,11 @@
     <div class="collapse navbar-collapse" id="skeleton-navigation-navbar-collapse">
       <ul class="nav navbar-nav">
         <li>
-          <span style="position: relative; top: 15px">
-            <iframe src="https://ghbtns.com/github-btn.html?user=ghiscoding&repo=aurelia-slickgrid&type=star&count=true"
-                    allowtransparency="true" scrolling="no" frameborder="0" width="170px" height="20px"></iframe>
-          </span>
+          <div class="github-button-container">
+            <a href="https://github.com/ghiscoding/aurelia-slickgrid">
+              <img src="https://img.shields.io/github/stars/ghiscoding/aurelia-slickgrid?style=social">
+            </a>
+          </div>
         </li>
         <li repeat.for="row of router.navigation" class="${row.isActive ? 'active' : ''}">
           <a data-toggle="collapse" data-target="#skeleton-navigation-navbar-collapse.in" href.bind="row.href">

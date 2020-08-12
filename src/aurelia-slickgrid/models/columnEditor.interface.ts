@@ -4,8 +4,9 @@ import {
   CollectionOption,
   CollectionSortBy,
   EditorValidator,
+  FieldType,
   MultipleSelectOption,
-} from './../models/index';
+} from './index';
 
 export interface ColumnEditor {
   /**
@@ -13,6 +14,15 @@ export interface ColumnEditor {
    * it will always call a Save regardless if the current value is null and/or previous value was null
    */
   alwaysSaveOnEnterKey?: boolean;
+
+  /**
+   * Some Editor could support callbacks from their jQuery instance (for now only AutoComplete supports this), for example:
+   * editor: { model:{ Editors.autoComplete }, callbacks: { _renderItem: (ul, item) => { ... } }}
+   *
+   * will be interpreted as $(#element).autocomplete("instance")._renderItem = (ul, item) => { ... }
+   * from jQuery UI doc: https://jqueryui.com/autocomplete/#custom-data
+   */
+  callbacks?: any;
 
   /**
    * A collection of items/options (commonly used with a Select/Multi-Select Editor)
@@ -68,7 +78,7 @@ export interface ColumnEditor {
 
   /**
    * Defaults to false, when set it will render any HTML code instead of removing it (sanitized)
-   * Only used so far in the MultipleSelect & SingleSelect Editors will support it
+   * Currently only supported by the following Editors: AutoComplete, MultipleSelect & SingleSelect
    */
   enableRenderHtml?: boolean;
 
@@ -103,6 +113,18 @@ export interface ColumnEditor {
   operatorConditionalType?: 'inclusive' | 'exclusive';
 
   /**
+   * Useful when you want to display a certain field to the UI, but you want to use another field to query when Filtering/Sorting.
+   * Please note that it has higher precendence over the "field" property.
+   */
+  queryField?: string;
+
+  /**
+   * Defaults to false, is the field required to be valid?
+   * Only on Editors that supports it.
+   */
+  required?: boolean;
+
+  /**
    * Title attribute that can be used in some Editors as tooltip (usually the "input" editors).
    *
    * To use this as a Tooltip, Aurelia-Slickgrid doesn't (and will never) use any Aurelia 3rd party lib to display a real Tooltip,
@@ -111,11 +133,8 @@ export interface ColumnEditor {
    */
   title?: string;
 
-  /**
-   * Defaults to false, is the field required to be valid?
-   * Only on Editors that supports it.
-   */
-  required?: boolean;
+  /** What is the Field Type that can be used by the Editor (as precedence over the "type" set the column definition) */
+  type?: FieldType;
 
   /** Editor Validator */
   validator?: EditorValidator;

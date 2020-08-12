@@ -173,6 +173,9 @@ export class CompoundInputFilter implements Filter {
 
     switch (type) {
       case FieldType.string:
+      case FieldType.text:
+      case FieldType.readonly:
+      case FieldType.password:
         optionValues = [
           { operator: '' as OperatorString, description: this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale() && this.i18n.tr(`${translationPrefix}CONTAINS`) || this._locales && this._locales.TEXT_CONTAINS },
           { operator: '=' as OperatorString, description: this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale() && this.i18n.tr(`${translationPrefix}EQUALS`) || this._locales && this._locales.TEXT_EQUALS },
