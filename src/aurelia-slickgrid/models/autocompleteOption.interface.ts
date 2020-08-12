@@ -57,5 +57,5 @@ export interface AutocompleteOption {
   search?: (e: Event, ui: { item: any; }) => boolean;
 
   /** Triggered when a value is selected from the autocomplete list */
-  select?: (e: Event, ui: { item: any; }) => void;
+  select?: (e: Event, ui: { item: any; }) => boolean;
 }
