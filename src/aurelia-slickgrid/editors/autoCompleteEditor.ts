@@ -112,7 +112,7 @@ export class AutoCompleteEditor implements Editor {
   }
 
   get hasAutoCommitEdit() {
-    return this.grid.getOptions().autoCommitEdit;
+    return this.gridOptions.autoCommitEdit;
   }
 
   /** Get the Validator function, can be passed in Editor property or Column Definition */
