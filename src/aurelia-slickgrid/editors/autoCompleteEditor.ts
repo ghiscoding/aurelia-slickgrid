@@ -270,7 +270,7 @@ export class AutoCompleteEditor implements Editor {
       this._currentValue = item;
       // when the user defines a "renderItem" (or "_renderItem") template, then we assume the user defines his own custom structure of label/value pair
       // otherwise we know that jQueryUI always require a label/value pair, we can pull them directly
-      const hasCustomRenderItemCallback = this.columnEditor?.callbacks?.hasOwnProperty('_renderItem') ?? this.columnEditor?.editorOptions?.renderItem ?? false;
+      const hasCustomRenderItemCallback = this.columnEditor && this.columnEditor.callbacks && this.columnEditor.callbacks.hasOwnProperty('_renderItem') || (this.columnEditor && this.columnEditor.editorOptions && this.columnEditor.editorOptions.renderItem) || false;
 
       const itemValue = typeof item === 'string' ? item : (hasCustomRenderItemCallback ? item[this.valueName] : item.value);
       this.setValue(itemValue);

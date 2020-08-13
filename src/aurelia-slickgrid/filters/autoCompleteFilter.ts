@@ -478,7 +478,7 @@ export class AutoCompleteFilter implements Filter {
       const item = ui.item;
       // when the user defines a "renderItem" (or "_renderItem") template, then we assume the user defines his own custom structure of label/value pair
       // otherwise we know that jQueryUI always require a label/value pair, we can pull them directly
-      const hasCustomRenderItemCallback = this.columnFilter?.callbacks?.hasOwnProperty('_renderItem') ?? this.columnFilter?.filterOptions?.renderItem ?? false;
+      const hasCustomRenderItemCallback = this.columnFilter && this.columnFilter.callbacks && this.columnFilter.callbacks.hasOwnProperty('_renderItem') || (this.columnFilter && this.columnFilter.filterOptions && this.columnFilter.filterOptions.renderItem) || false;
 
       const itemLabel = typeof item === 'string' ? item : (hasCustomRenderItemCallback ? item[this.labelName] : item.label);
       const itemValue = typeof item === 'string' ? item : (hasCustomRenderItemCallback ? item[this.valueName] : item.value);
