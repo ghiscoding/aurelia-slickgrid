@@ -143,7 +143,7 @@ export class Example28 {
     const spacer = `<span style="display:inline-block; width:${(15 * dataContext[treeLevelPropName])}px;"></span>`;
 
     if (data[idx + 1] && data[idx + 1][treeLevelPropName] > data[idx][treeLevelPropName]) {
-      const folderPrefix = `<span class="mdi icon ${dataContext.__collapsed ? 'mdi-folder' : 'mdi-folder-open'}"></span>`;
+      const folderPrefix = `<span class="mdi icon color-alt-warning ${dataContext.__collapsed ? 'mdi-folder' : 'mdi-folder-open'}"></span>`;
       if (dataContext.__collapsed) {
         return `${spacer} <span class="slick-group-toggle collapsed" level="${dataContext[treeLevelPropName]}"></span>${folderPrefix} ${prefix}&nbsp;${value}`;
       } else {
@@ -157,13 +157,13 @@ export class Example28 {
   getFileIcon(value: string) {
     let prefix = '';
     if (value.includes('.pdf')) {
-      prefix = '<span class="mdi icon mdi-file-pdf-outline"></span>';
+      prefix = '<span class="mdi icon mdi-file-pdf-outline color-danger"></span>';
     } else if (value.includes('.txt')) {
-      prefix = '<span class="mdi icon mdi-file-document-outline"></span>';
+      prefix = '<span class="mdi icon mdi-file-document-outline color-muted-light"></span>';
     } else if (value.includes('.xls')) {
-      prefix = '<span class="mdi icon mdi-file-excel-outline"></span>';
+      prefix = '<span class="mdi icon mdi-file-excel-outline color-succes"></span>';
     } else if (value.includes('.mp3')) {
-      prefix = '<span class="mdi icon mdi-file-music-outline"></span>';
+      prefix = '<span class="mdi icon mdi-file-music-outline color-info"></span>';
     }
     return prefix;
   }
