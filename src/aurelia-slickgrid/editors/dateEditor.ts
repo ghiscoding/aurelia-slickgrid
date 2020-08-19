@@ -99,7 +99,7 @@ export class DateEditor implements Editor {
         altInput: true,
         altFormat: outputFormat,
         dateFormat: inputFormat,
-        closeOnSelect: false,
+        closeOnSelect: true,
         locale: (currentLocale !== 'en') ? this.loadFlatpickrLocale(currentLocale) : 'en',
         onChange: () => this.save(),
         errorHandler: () => {
