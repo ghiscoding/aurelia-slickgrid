@@ -105,7 +105,7 @@ export class SelectFilter implements Filter {
   /**
    * Initialize the filter template
    */
-  init(args: FilterArguments, isFilterFirstRender: boolean): Promise<any[]> {
+  init(args: FilterArguments): Promise<any[]> {
     if (!args) {
       throw new Error('[Aurelia-SlickGrid] A filter must always have an "init()" with valid arguments.');
     }
