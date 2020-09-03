@@ -948,9 +948,13 @@ input.slider-filter-input[type=range] {
 .search-filter {
   .slider-value {
     padding: 0;
+    height: $slider-filter-height;
+
     .input-group-text {
       padding: $slider-filter-number-padding;
       font-size: $slider-filter-number-font-size;
+      height: calc(#{$slider-filter-height} - 2px);
+      border: 0;
     }
   }
 }
