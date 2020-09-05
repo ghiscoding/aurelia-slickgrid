@@ -3,11 +3,14 @@
  * Lib Website (https://github.com/ghiscoding/aurelia-slickgrid)
  * Licensed under MIT (https://github.com/ghiscoding/aurelia-slickgrid/blob/master/LICENSE)
  */
+
  $border-color:                                  #dddddd !default;
  $font-size-base-value:                          14 !default;
- $font-size-base:          			                $font-size-base-value + 0px !default;
+ $font-size-base:          			                  $font-size-base-value + 0px !default;
  $font-family:                                   -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !default;
  $primary-color:                                 #31708F !default;
+ $button-primary-bg-color:                       $primary-color !default;
+ $button-primary-color:                          inherit !default;
  $flatpickr-bgcolor:                             #ffffff !default;
  $filter-placeholder-font-family:                'Segoe UI Symbol' !default;
  $focus-color:                                   rgb(115, 179, 229) !default;
@@ -36,7 +39,7 @@
  $cell-border-right:                             1px transparent !default;
  $cell-border-bottom:                            1px transparent !default;
  $cell-border-left:                              1px transparent !default;
- $cell-even-background-color: 			              #ffffff !default;
+ $cell-even-background-color: 			             #ffffff !default;
  $cell-odd-background-color:                     darken($grid-cell-color, 3%) !default; // for striping every second row
  $cell-odd-active-background-color:              darken($grid-cell-color, 5%) !default;
  $cell-padding-top-bottom:                       5px !default;
@@ -129,34 +132,34 @@
  $icon-group-height:                             20px !default;
  $icon-group-width:                              14px !default;
  $table-background:                              transparent !default;
- $link-color:        				                    #08c !default;
+ $link-color:        				                     #08c !default;
  $link-color-hover:                              darker($link-color, 15%) !default;
- $gray-dark:              			                  #333 !default;
- $text-color:             			                  $gray-dark !default;
- $navbar-default-link-hover-color:	              $gray-dark !default;
+ $gray-dark:              			                 #333 !default;
+ $text-color:             			                 $gray-dark !default;
+ $navbar-default-link-hover-color:	             $gray-dark !default;
 
  /* AutoComplete */
- $autocomplete-bg-color:	                        #ffffff !default;
- $autocomplete-border:	                          1px solid rgba(0, 0, 0, 0.15) !default;
- $autocomplete-border-radius:	                  4px !default;
- $autocomplete-box-shadow:	                      0 6px 12px rgba(0, 0, 0, 0.175) !default;
- $autocomplete-hover-color:	                    #262626 !default;
- $autocomplete-hover-bg-color:	                  darken($row-mouse-hover-color, 3%) !default;
+ $autocomplete-bg-color:	                       #ffffff !default;
+ $autocomplete-border:	                         1px solid rgba(0, 0, 0, 0.15) !default;
+ $autocomplete-border-radius:	                   4px !default;
+ $autocomplete-box-shadow:	                     0 6px 12px rgba(0, 0, 0, 0.175) !default;
+ $autocomplete-hover-color:	                     #262626 !default;
+ $autocomplete-hover-bg-color:	                 darken($row-mouse-hover-color, 3%) !default;
  $autocomplete-loading-icon:                     "\f021" !default;
  $autocomplete-loading-icon-color:               $icon-color !default;
  $autocomplete-loading-icon-width:               inherit !default;
  $autocomplete-loading-icon-margin-left:         -16px !default;
  $autocomplete-loading-icon-line-height:         0px !default;
  $autocomplete-loading-icon-vertical-align:      inherit !default;
- $autocomplete-max-height:	                      25vh !default;
- $autocomplete-min-height:	                      75px !default;
- $autocomplete-min-width:	                      50px !default;
- $autocomplete-overflow-x:	                      hidden !default;
- $autocomplete-overflow-y:	                      auto !default;
- $autocomplete-text-color:	                      #333333 !default;
- $autocomplete-text-overflow:	                  ellipsis !default;
- $autocomplete-text-padding:	                    3px 15px !default;
- $autocomplete-z-index:	                        9999 !default;
+ $autocomplete-max-height:	                     25vh !default;
+ $autocomplete-min-height:	                     75px !default;
+ $autocomplete-min-width:	                       50px !default;
+ $autocomplete-overflow-x:	                     hidden !default;
+ $autocomplete-overflow-y:	                     auto !default;
+ $autocomplete-text-color:	                     #333333 !default;
+ $autocomplete-text-overflow:	                   ellipsis !default;
+ $autocomplete-text-padding:	                   3px 15px !default;
+ $autocomplete-z-index:	                         9999 !default;
 
  /** AutoComplte with Custom Styling (2 rows) */
  $autocomplete-tpl2-font-size:                   12px !default;
