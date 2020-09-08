@@ -222,6 +222,12 @@ export class Example3 {
             operator: OperatorType.notEqual
           },
           model: Editors.singleSelect,
+          // validator: (value, args) => {
+          //   if (value < 50) {
+          //     return { valid: false, msg: 'Please use at least 50%' };
+          //   }
+          //   return { valid: true, msg: '' };
+          // }
         },
         minWidth: 100,
         params: {
@@ -560,7 +566,9 @@ export class Example3 {
   }
 
   onCellValidationError(e, args) {
-    alert(args.validationResults.msg);
+    if (args.validationResults) {
+      alert(args.validationResults.msg);
+    }
   }
 
   changeAutoCommit() {
