@@ -501,15 +501,13 @@ describe('SelectEditor', () => {
         mockItemData = { id: 1, gender: '', isActive: true };
         mockColumn.internalColumnEditor.required = true;
         gridOptionMock.autoCommitEdit = true;
-        const commitEditSpy = jest.spyOn(gridStub.getEditorLock(), 'commitCurrentEdit');
-        const commitChangeSpy = jest.spyOn(editorArguments, 'commitChanges');
+        const spy = jest.spyOn(gridStub.getEditorLock(), 'commitCurrentEdit');
 
         editor = new SelectEditor(bindingEngineStub, collectionService, i18n, editorArguments, true);
         editor.loadValue(mockItemData);
         editor.save();
 
-        expect(commitEditSpy).not.toHaveBeenCalled();
-        expect(commitChangeSpy).not.toHaveBeenCalled();
+        expect(spy).not.toHaveBeenCalled();
       });
     });
 
