@@ -99,7 +99,7 @@ describe('CompoundDateFilter', () => {
     mockColumn.filter.placeholder = testValue;
 
     filter.init(filterArguments);
-    const filterElm = divContainer.querySelector<HTMLInputElement>('.search-filter.filter-finish .flatpickr input.flatpickr');
+    const filterElm = divContainer.querySelector<HTMLInputElement>('.search-filter.filter-finish .flatpickr input.input');
 
     expect(filterElm.placeholder).toBe(testValue);
   });
@@ -171,7 +171,7 @@ describe('CompoundDateFilter', () => {
     const spyCallback = jest.spyOn(filterArguments, 'callback');
 
     filter.init(filterArguments);
-    const filterInputElm = divContainer.querySelector<HTMLInputElement>('.search-filter.filter-finish .flatpickr input.flatpickr');
+    const filterInputElm = divContainer.querySelector<HTMLInputElement>('.search-filter.filter-finish .flatpickr input.input');
     filterInputElm.value = '2001-01-02T16:02:02.239Z';
     filterInputElm.dispatchEvent(new (window.window as any).KeyboardEvent('keydown', { keyCode: 13, bubbles: true, cancelable: true }));
     const filterFilledElms = divContainer.querySelectorAll<HTMLInputElement>('.form-group.search-filter.filter-finish.filled');
@@ -188,7 +188,7 @@ describe('CompoundDateFilter', () => {
     const spyCallback = jest.spyOn(filterArguments, 'callback');
 
     filter.init(filterArguments);
-    const filterInputElm = divContainer.querySelector<HTMLInputElement>('.search-filter.filter-finish .flatpickr input.flatpickr');
+    const filterInputElm = divContainer.querySelector<HTMLInputElement>('.search-filter.filter-finish .flatpickr input.input');
     filterInputElm.value = '2001-01-02T16:02:02.239Z';
     filterInputElm.dispatchEvent(new (window.window as any).KeyboardEvent('keydown', { keyCode: 13, bubbles: true, cancelable: true }));
     const filterFilledElms = divContainer.querySelectorAll<HTMLInputElement>('.form-group.search-filter.filter-finish.filled');
@@ -203,7 +203,7 @@ describe('CompoundDateFilter', () => {
     const spyCallback = jest.spyOn(filterArguments, 'callback');
 
     filter.init(filterArguments);
-    const filterInputElm = divContainer.querySelector<HTMLInputElement>('.search-filter.filter-finish .flatpickr input.flatpickr');
+    const filterInputElm = divContainer.querySelector<HTMLInputElement>('.search-filter.filter-finish .flatpickr input.input');
 
     filterInputElm.focus();
     filterInputElm.dispatchEvent(new (window.window as any).KeyboardEvent('keyup', { keyCode: 97, bubbles: true, cancelable: true }));
@@ -238,7 +238,7 @@ describe('CompoundDateFilter', () => {
     const spyCallback = jest.spyOn(filterArguments, 'callback');
 
     filter.init(filterArguments);
-    const filterInputElm = divContainer.querySelector<HTMLInputElement>('.search-filter.filter-finish .flatpickr input.flatpickr');
+    const filterInputElm = divContainer.querySelector<HTMLInputElement>('.search-filter.filter-finish .flatpickr input.input');
     const calendarElm = document.body.querySelector<HTMLDivElement>('.flatpickr-calendar');
     const selectonOptionElms = calendarElm.querySelectorAll<HTMLSelectElement>(' .flatpickr-monthDropdown-months option');
 
@@ -265,7 +265,7 @@ describe('CompoundDateFilter', () => {
     mockColumn.filter.operator = '<=';
 
     filter.init(filterArguments);
-    const filterInputElm = divContainer.querySelector<HTMLInputElement>('.search-filter.filter-finish .flatpickr input.flatpickr');
+    const filterInputElm = divContainer.querySelector<HTMLInputElement>('.search-filter.filter-finish .flatpickr input.input');
     const calendarElm = document.body.querySelector<HTMLDivElement>('.flatpickr-calendar');
     const selectonOptionElms = calendarElm.querySelectorAll<HTMLSelectElement>(' .flatpickr-monthDropdown-months option');
 
@@ -285,7 +285,7 @@ describe('CompoundDateFilter', () => {
 
     filter.init(filterArguments);
     filter.clear();
-    const filterInputElm = divContainer.querySelector<HTMLInputElement>('.search-filter.filter-finish .flatpickr input.flatpickr');
+    const filterInputElm = divContainer.querySelector<HTMLInputElement>('.search-filter.filter-finish .flatpickr input.input');
     const filterFilledElms = divContainer.querySelectorAll<HTMLInputElement>('.form-group.search-filter.filter-finish.filled');
 
     expect(filterInputElm.value).toBe('');
@@ -299,7 +299,7 @@ describe('CompoundDateFilter', () => {
 
     filter.init(filterArguments);
     filter.clear(false);
-    const filterInputElm = divContainer.querySelector<HTMLInputElement>('.search-filter.filter-finish .flatpickr input.flatpickr');
+    const filterInputElm = divContainer.querySelector<HTMLInputElement>('.search-filter.filter-finish .flatpickr input.input');
     const filterFilledElms = divContainer.querySelectorAll<HTMLInputElement>('.form-group.search-filter.filter-finish.filled');
 
     expect(filterInputElm.value).toBe('');
@@ -314,7 +314,7 @@ describe('CompoundDateFilter', () => {
     const spyCallback = jest.spyOn(filterArguments, 'callback');
 
     filter.init(filterArguments);
-    const filterInputElm = divContainer.querySelector<HTMLInputElement>('.search-filter.filter-finish .flatpickr input.flatpickr');
+    const filterInputElm = divContainer.querySelector<HTMLInputElement>('.search-filter.filter-finish .flatpickr input.input');
     filterInputElm.value = '2001-01-02T16:02:02.000+05:00';
     filterInputElm.dispatchEvent(new (window.window as any).KeyboardEvent('keydown', { keyCode: 13, bubbles: true, cancelable: true }));
     const filterFilledElms = divContainer.querySelectorAll<HTMLInputElement>('.form-group.search-filter.filter-finish.filled');
@@ -334,7 +334,7 @@ describe('CompoundDateFilter', () => {
     const spyCallback = jest.spyOn(filterArguments, 'callback');
 
     filter.init(filterArguments);
-    const filterInputElm = divContainer.querySelector<HTMLInputElement>('.search-filter.filter-finish .flatpickr input.flatpickr');
+    const filterInputElm = divContainer.querySelector<HTMLInputElement>('.search-filter.filter-finish .flatpickr input.input');
 
     filterInputElm.focus();
     filterInputElm.dispatchEvent(new (window.window as any).KeyboardEvent('keyup', { keyCode: 97, bubbles: true, cancelable: true }));
