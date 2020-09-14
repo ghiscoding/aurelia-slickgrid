@@ -47,7 +47,8 @@
       .btn {
         border-left: 0 !important;
         background-color: #eeeeee;
-        padding: 6px;
+        border: 1px solid #cccccc;
+        padding: $date-editor-clear-button-icon-padding;
         border-top-right-radius: $text-editor-border-radius;
         border-bottom-right-radius: $text-editor-border-radius;
         cursor: pointer;

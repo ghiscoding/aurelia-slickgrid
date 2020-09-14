@@ -493,9 +493,10 @@
  $date-editor-focus-box-shadow:                  $editor-focus-box-shadow !default;
  $date-editor-height:                            $editor-input-height !default;
  $date-editor-clear-button-icon:                 "\f00d" !default;
- $date-editor-clear-button-icon-size:            inherit !default;
- $date-editor-clear-button-icon-height:          initial !default;
  $date-editor-clear-button-icon-margin-top:      -14px !default;
+ $date-editor-clear-button-icon-height:          initial !default;
+ $date-editor-clear-button-icon-padding:         6px !default;
+ $date-editor-clear-button-icon-size:            inherit !default;
  $date-editor-clear-button-icon-width:           initial !default;
  $date-editor-clear-button-icon-vertical-align:  middle !default;
  $large-editor-background-color:                 #ffffff !default;
