@@ -92,7 +92,7 @@
     "aurelia-pal": "^1.8.2",
     "aurelia-templating-resources": "^1.13.0",
     "dompurify": "^2.0.12",
-    "excel-builder-webpacker": "^1.0.6",
+    "excel-builder-webpacker": "^2.0.0",
     "flatpickr": "^4.6.6",
     "jquery": "^3.4.1",
     "jquery-ui-dist": "^1.12.1",
