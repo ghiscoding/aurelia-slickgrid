@@ -1,5 +1,12 @@
 import { inject, Optional } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
+import * as moment from 'moment-mini';
+import * as _flatpickr from 'flatpickr';
+import * as $ from 'jquery';
+import { BaseOptions as FlatpickrBaseOptions } from 'flatpickr/dist/types/options';
+import { FlatpickrFn } from 'flatpickr/dist/types/instance';
+const flatpickr: FlatpickrFn = _flatpickr as any; // patch for rollup
+
 import { Constants } from './../constants';
 import { mapFlatpickrDateFormatWithFieldType, mapMomentDateFormatWithFieldType, setDeepValue, getDescendantProperty } from './../services/utilities';
 import {
@@ -13,9 +20,6 @@ import {
   FlatpickrOption,
   GridOption,
 } from './../models/index';
-import * as flatpickr from 'flatpickr';
-import * as moment from 'moment-mini';
-import * as $ from 'jquery';
 
 declare function require(name: string): any;
 
@@ -100,6 +104,7 @@ export class DateEditor implements Editor {
         altFormat: outputFormat,
         dateFormat: inputFormat,
         closeOnSelect: true,
+        wrap: true,
         locale: (currentLocale !== 'en') ? this.loadFlatpickrLocale(currentLocale) : 'en',
         onChange: () => this.save(),
         errorHandler: () => {
@@ -114,9 +119,20 @@ export class DateEditor implements Editor {
         this._pickerMergedOptions.altInputClass = 'flatpickr-alt-input editor-text';
       }
 
-      this._$input = $(`<input type="text" data-defaultDate="${this.defaultDate}" class="${inputCssClasses.replace(/\./g, ' ')}" placeholder="${placeholder}" title="${title}" />`);
-      this._$input.appendTo(this.args.container);
-      this.flatInstance = (flatpickr && this._$input[0] && typeof this._$input[0].flatpickr === 'function') ? this._$input[0].flatpickr(this._pickerMergedOptions) : null;
+      const $editorInputElm: any = $(`<div class="flatpickr input-group"></div>`);
+      const closeButtonElm = $(`<span class="input-group-btn" data-clear>
+      this.flatInstance = (this._$input[0] && typeof this._$input[0].flatpickr === 'function') ? this._$input[0].flatpickr(this._pickerMergedOptions) : flatpickr(this._$input, this._pickerMergedOptions as unknown as Partial<FlatpickrBaseOptions>);	          <button class="btn btn-default icon-close" type="button"></button>
+        </span>`);
+      this._$input = $(`<input type="text" data-input data-defaultDate="${this.defaultDate}" class="${inputCssClasses.replace(/\./g, ' ')}" placeholder="${placeholder}" title="${title}" />`);
+      this._$input.appendTo($editorInputElm);
+
+      // show clear date button (unless user specifically doesn't want it)
+      if (!this.columnEditor?.params?.hideClearButton) {
+        closeButtonElm.appendTo($editorInputElm);
+      }
+
+      $editorInputElm.appendTo(this.args.container);
+      this.flatInstance = (flatpickr && $editorInputElm[0] && typeof $editorInputElm[0].flatpickr === 'function') ? $editorInputElm[0].flatpickr(this._pickerMergedOptions) : flatpickr($editorInputElm, this._pickerMergedOptions as unknown as Partial<FlatpickrBaseOptions>);
 
       // when we're using an alternate input to display data, we'll consider this input as the one to do the focus later on
       // else just use the top one
