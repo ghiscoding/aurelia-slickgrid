@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.21.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.20.1...v2.21.0) (2020-09-15)
+
+
+### Features
+
+* **autocomplete:** add much more functionalities to the AutoComplete ([#405](https://github.com/ghiscoding/aurelia-slickgrid/issues/405)) ([40db84e](https://github.com/ghiscoding/aurelia-slickgrid/commit/40db84e2e604af112f4d4b8195a8fcffa9ec0f8a))
+* **core:** add loading spinner to AutoComplete Editor/Filter ([#402](https://github.com/ghiscoding/aurelia-slickgrid/issues/402)) ([30bfec5](https://github.com/ghiscoding/aurelia-slickgrid/commit/30bfec5d364ab4186e71cbd043bc9ab3b2364810))
+* **editors:** add Clear Date button to Date Editor ([#418](https://github.com/ghiscoding/aurelia-slickgrid/issues/418)) ([659304d](https://github.com/ghiscoding/aurelia-slickgrid/commit/659304dde27a9fad9d099ac19c8d2e727faf98e0))
+* **styling:** add extra SASS utilities and icon colors ([#408](https://github.com/ghiscoding/aurelia-slickgrid/issues/408)) ([897f4df](https://github.com/ghiscoding/aurelia-slickgrid/commit/897f4dfc38cb53846e8a9c3526fb54c87bf9794a))
+* **styling:** find way to add colors to SVGs used by the lib ([#404](https://github.com/ghiscoding/aurelia-slickgrid/issues/404)) ([482711b](https://github.com/ghiscoding/aurelia-slickgrid/commit/482711b5df2b2c8cc7f09a4d23a4f9e13a530a5a))
+* **tests:** add more Cypress E2E tests for Language change ([fd904e3](https://github.com/ghiscoding/aurelia-slickgrid/commit/fd904e3d8fb715176fc4eed80eac6274dc226fd4))
+* **tests:** add more Cypress E2E tests for Pagination Lang change ([dc19c30](https://github.com/ghiscoding/aurelia-slickgrid/commit/dc19c30a802d0b6ca34a7f203cb745c933881ce2))
+
+
+### Bug Fixes
+
+* **core:** latest Flatpickr breaks Date Filters/Editors ([#403](https://github.com/ghiscoding/aurelia-slickgrid/issues/403)) ([d969afc](https://github.com/ghiscoding/aurelia-slickgrid/commit/d969afc25041cce112aab3b2c4315a6b4c06a05e))
+* **core:** use latest excel-builder-webpacker to fix CLI 2.0 ([#419](https://github.com/ghiscoding/aurelia-slickgrid/issues/419)) ([b902782](https://github.com/ghiscoding/aurelia-slickgrid/commit/b902782f99b5244b6d2e78c947413ad04156abac))
+* **editor:** SingleSelect Editor should show pick false value ([#407](https://github.com/ghiscoding/aurelia-slickgrid/issues/407)) ([0dce0d2](https://github.com/ghiscoding/aurelia-slickgrid/commit/0dce0d2371de044b535524868e3d1734b3b34a96))
+* **editors:** all Editors should call commitChanges even when invalid ([#416](https://github.com/ghiscoding/aurelia-slickgrid/issues/416)) ([9fc066a](https://github.com/ghiscoding/aurelia-slickgrid/commit/9fc066a78cc94a662c365a710251882aebd7a892))
+* **editors:** AutoComplete Editor might have undefined object label ([#401](https://github.com/ghiscoding/aurelia-slickgrid/issues/401)) ([c0b6224](https://github.com/ghiscoding/aurelia-slickgrid/commit/c0b62242b296463b4352ab27cc240637dea1034f))
+* **editors:** fix couple of small editor bugs found ([#409](https://github.com/ghiscoding/aurelia-slickgrid/issues/409)) ([f59dcbe](https://github.com/ghiscoding/aurelia-slickgrid/commit/f59dcbec931ce38563e68cef8c4cd6874f247fe3))
+* **editors:** update to latest Flatpickr version ([#417](https://github.com/ghiscoding/aurelia-slickgrid/issues/417)) ([3447549](https://github.com/ghiscoding/aurelia-slickgrid/commit/3447549133fe232ceb693adc4e4fd9db834c5301))
+* **styling:** extra styling shouldn't override default bootstrap style ([#415](https://github.com/ghiscoding/aurelia-slickgrid/issues/415)) ([db5ad2f](https://github.com/ghiscoding/aurelia-slickgrid/commit/db5ad2fb1dd2877d594271654ede1b0126e00274))
+* **styling:** remove unwanted source map from css output files ([#411](https://github.com/ghiscoding/aurelia-slickgrid/issues/411)) ([514bab1](https://github.com/ghiscoding/aurelia-slickgrid/commit/514bab1068ac980a4a07f98210446f20216b70e3))
+
 ### [2.20.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.20.0...v2.20.1) (2020-08-04)
 
 
