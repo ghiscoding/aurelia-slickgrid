@@ -68,7 +68,7 @@ export class Example18 {
         sortable: true,
         grouping: {
           getter: 'title',
-          formatter: (g) => `Title:  ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          formatter: (g) => `Title: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
           aggregators: [
             new Aggregators.Sum('cost')
           ],
@@ -86,7 +86,7 @@ export class Example18 {
         groupTotalsFormatter: GroupTotalFormatters.sumTotals,
         grouping: {
           getter: 'duration',
-          formatter: (g) => `Duration:  ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          formatter: (g) => `Duration: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
           comparer: (a, b) => {
             return this.durationOrderByCount ? (a.count - b.count) : Sorters.numeric(a.value, b.value, SortDirectionNumber.asc);
           },
@@ -108,7 +108,7 @@ export class Example18 {
         groupTotalsFormatter: GroupTotalFormatters.avgTotalsPercentage,
         grouping: {
           getter: 'percentComplete',
-          formatter: (g) => `% Complete:  ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          formatter: (g) => `% Complete: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
           aggregators: [
             new Aggregators.Sum('cost')
           ],

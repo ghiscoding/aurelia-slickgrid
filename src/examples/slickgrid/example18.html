@@ -4,19 +4,19 @@
 
   <form>
     <div class="row col-sm-12">
-      <button class="btn btn-default btn-xs" click.delegate="loadData(500)">
+      <button class="btn btn-default btn-xs" data-test="add-500-rows-btn" click.delegate="loadData(500)">
         500 rows
       </button>
-      <button class="btn btn-default btn-xs" click.delegate="loadData(50000)">
+      <button class="btn btn-default btn-xs" data-test="add-50k-rows-btn" click.delegate="loadData(50000)">
         50k rows
       </button>
-      <button class="btn btn-default btn-xs" click.delegate="clearGroupsAndSelects()">
+      <button class="btn btn-default btn-xs" data-test="clear-grouping-btn" click.delegate="clearGroupsAndSelects()">
         <i class="fa fa-times"></i> Clear grouping
       </button>
-      <button class="btn btn-default btn-xs" click.delegate="collapseAllGroups()">
+      <button class="btn btn-default btn-xs" data-test="collapse-all-btn" click.delegate="collapseAllGroups()">
         <i class="fa fa-compress"></i> Collapse all groups
       </button>
-      <button class="btn btn-default btn-xs" click.delegate="expandAllGroups()">
+      <button class="btn btn-default btn-xs" data-test="expand-all-btn" click.delegate="expandAllGroups()">
         <i class="fa fa-expand"></i> Expand all groups
       </button>
       <button class="btn btn-default btn-xs" click.delegate="toggleDraggableGroupingRow()">
@@ -28,13 +28,16 @@
     </div>
 
     <div class="row col-sm-12">
-      <button class="btn btn-default btn-xs" click.delegate="groupByDurationOrderByCount(false)">
+      <button class="btn btn-default btn-xs" data-test="group-duration-sort-value-btn"
+              click.delegate="groupByDurationOrderByCount(false)">
         Group by duration &amp; sort groups by value
       </button>
-      <button class="btn btn-default btn-xs" click.delegate="groupByDurationOrderByCount(true)">
+      <button class="btn btn-default btn-xs" data-test="group-duration-sort-count-btn"
+              click.delegate="groupByDurationOrderByCount(true)">
         Group by duration &amp; sort groups by count
       </button>
-      <button class="btn btn-default btn-xs" click.delegate="groupByDurationEffortDriven()">
+      <button class="btn btn-default btn-xs" data-test="group-duration-effort-btn"
+              click.delegate="groupByDurationEffortDriven()">
         Group by Duration then Effort-Driven
       </button>
       <button class="btn btn-default btn-xs" data-test="set-dynamic-filter" click.delegate="setFiltersDynamically()">
@@ -66,7 +69,7 @@
     <hr>
   </div>
 
-  <aurelia-slickgrid grid-id="grid1" column-definitions.bind="columnDefinitions" grid-options.bind="gridOptions"
+  <aurelia-slickgrid grid-id="grid18" column-definitions.bind="columnDefinitions" grid-options.bind="gridOptions"
                      dataset.bind="dataset" asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
   </aurelia-slickgrid>
 </template>

@@ -214,7 +214,7 @@ export class Example13 {
   groupByDuration() {
     this.dataviewObj.setGrouping({
       getter: 'duration',
-      formatter: (g) => `Duration:  ${g.value} <span style="color:green">(${g.count} items)</span>`,
+      formatter: (g) => `Duration: ${g.value} <span style="color:green">(${g.count} items)</span>`,
       comparer: (a, b) => {
         return Sorters.numeric(a.value, b.value, SortDirectionNumber.asc);
       },
@@ -235,7 +235,7 @@ export class Example13 {
     this.aureliaGrid.filterService.setSortColumnIcons([]);
     this.dataviewObj.setGrouping({
       getter: 'duration',
-      formatter: (g) => `Duration:  ${g.value} <span style="color:green">(${g.count} items)</span>`,
+      formatter: (g) => `Duration: ${g.value} <span style="color:green">(${g.count} items)</span>`,
       comparer: (a, b) => {
         return a.count - b.count;
       },
@@ -254,7 +254,7 @@ export class Example13 {
     this.dataviewObj.setGrouping([
       {
         getter: 'duration',
-        formatter: (g) => `Duration:  ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+        formatter: (g) => `Duration: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
         aggregators: [
           new Aggregators.Sum('duration'),
           new Aggregators.Sum('cost')
@@ -264,7 +264,7 @@ export class Example13 {
       },
       {
         getter: 'effortDriven',
-        formatter: (g) => `Effort-Driven:  ${(g.value ? 'True' : 'False')} <span style="color:green">(${g.count} items)</span>`,
+        formatter: (g) => `Effort-Driven: ${(g.value ? 'True' : 'False')} <span style="color:green">(${g.count} items)</span>`,
         aggregators: [
           new Aggregators.Avg('percentComplete'),
           new Aggregators.Sum('cost')
@@ -285,7 +285,7 @@ export class Example13 {
     this.dataviewObj.setGrouping([
       {
         getter: 'duration',
-        formatter: (g) => `Duration:  ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+        formatter: (g) => `Duration: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
         aggregators: [
           new Aggregators.Sum('duration'),
           new Aggregators.Sum('cost')
@@ -295,7 +295,7 @@ export class Example13 {
       },
       {
         getter: 'effortDriven',
-        formatter: (g) => `Effort-Driven:  ${(g.value ? 'True' : 'False')}  <span style="color:green">(${g.count} items)</span>`,
+        formatter: (g) => `Effort-Driven: ${(g.value ? 'True' : 'False')}  <span style="color:green">(${g.count} items)</span>`,
         aggregators: [
           new Aggregators.Sum('duration'),
           new Aggregators.Sum('cost')
@@ -304,7 +304,7 @@ export class Example13 {
       },
       {
         getter: 'percentComplete',
-        formatter: (g) => `% Complete:  ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+        formatter: (g) => `% Complete: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
         aggregators: [
           new Aggregators.Avg('percentComplete')
         ],
