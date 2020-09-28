@@ -1,5 +1,9 @@
+import { I18N } from 'aurelia-i18n';
 import { DOM } from 'aurelia-pal';
-import { Column, FilterArguments, GridOption, OperatorType } from '../../models';
+import { EventAggregator } from 'aurelia-event-aggregator';
+import { BindingSignaler } from 'aurelia-templating-resources';
+
+import { Column, FieldType, FilterArguments, GridOption, OperatorType } from '../../models';
 import { Filters } from '..';
 import { CompoundSliderFilter } from '../compoundSliderFilter';
 
@@ -7,6 +11,10 @@ const containerId = 'demo-container';
 
 // define a <div> container to simulate the grid container
 const template = `<div id="${containerId}"></div>`;
+
+function removeExtraSpaces(textS: string) {
+  return `${textS}`.replace(/\s+/g, ' ');
+}
 
 const gridOptionMock = {
   enableFiltering: true,
@@ -21,6 +29,8 @@ const gridStub = {
 };
 
 describe('CompoundSliderFilter', () => {
+  let ea: EventAggregator;
+  let i18n: I18N;
   let divContainer: HTMLDivElement;
   let filter: CompoundSliderFilter;
   let filterArguments: FilterArguments;
@@ -28,6 +38,9 @@ describe('CompoundSliderFilter', () => {
   let mockColumn: Column;
 
   beforeEach(() => {
+    ea = new EventAggregator();
+    i18n = new I18N(ea, new BindingSignaler());
+
     divContainer = document.createElement('div');
     divContainer.innerHTML = template;
     document.body.appendChild(divContainer);
@@ -40,7 +53,44 @@ describe('CompoundSliderFilter', () => {
       callback: jest.fn()
     };
 
-    filter = new CompoundSliderFilter();
+    i18n.setup({
+      resources: {
+        en: {
+          translation: {
+            CONTAINS: 'Contains',
+            EQUALS: 'Equals',
+            ENDS_WITH: 'Ends With',
+            STARTS_WITH: 'Starts With',
+            EQUAL_TO: 'Equal to',
+            LESS_THAN: 'Less than',
+            LESS_THAN_OR_EQUAL_TO: 'Less than or equal to',
+            GREATER_THAN: 'Greater than',
+            GREATER_THAN_OR_EQUAL_TO: 'Greater than or equal to',
+            NOT_EQUAL_TO: 'Not equal to',
+          }
+        },
+        fr: {
+          translation:
+          {
+            CONTAINS: 'Contient',
+            EQUALS: 'Égale',
+            ENDS_WITH: 'Se termine par',
+            STARTS_WITH: 'Commence par',
+            EQUAL_TO: 'Égal à',
+            LESS_THAN: 'Plus petit que',
+            LESS_THAN_OR_EQUAL_TO: 'Plus petit ou égal à',
+            GREATER_THAN: 'Plus grand que',
+            GREATER_THAN_OR_EQUAL_TO: 'Plus grand ou égal à',
+            NOT_EQUAL_TO: 'Non égal à',
+          }
+        }
+      },
+      lng: 'en',
+      fallbackLng: 'en',
+      debug: false
+    });
+
+    filter = new CompoundSliderFilter(i18n);
   });
 
   afterEach(() => {
@@ -221,15 +271,38 @@ describe('CompoundSliderFilter', () => {
 
     filter.init(filterArguments);
     const filterInputElm = divContainer.querySelector<HTMLInputElement>('.input-group.search-filter.filter-duration input');
-    const filterSelectElm = divContainer.querySelectorAll<HTMLSelectElement>('.search-filter.filter-duration select');
+    const filterOperatorElm = divContainer.querySelectorAll<HTMLSelectElement>('.search-filter.filter-duration select');
 
     expect(filterInputElm.value).toBe('9');
-    expect(filterSelectElm[0][1].title).toBe('=');
-    expect(filterSelectElm[0][1].textContent).toBe('=');
-    expect(filterSelectElm[0][2].textContent).toBe('<');
-    expect(filterSelectElm[0][3].textContent).toBe('<=');
-    expect(filterSelectElm[0][4].textContent).toBe('>');
-    expect(filterSelectElm[0][5].textContent).toBe('>=');
-    expect(filterSelectElm[0][6].textContent).toBe('<>');
+    expect(removeExtraSpaces(filterOperatorElm[0][1].textContent)).toBe('= Equal to');
+    expect(removeExtraSpaces(filterOperatorElm[0][2].textContent)).toBe('< Less than');
+    expect(removeExtraSpaces(filterOperatorElm[0][3].textContent)).toBe('<= Less than or equal to');
+    expect(removeExtraSpaces(filterOperatorElm[0][4].textContent)).toBe('> Greater than');
+    expect(removeExtraSpaces(filterOperatorElm[0][5].textContent)).toBe('>= Greater than or equal to');
+    expect(removeExtraSpaces(filterOperatorElm[0][6].textContent)).toBe('<> Not equal to');
+  });
+
+  describe('with French I18N translations', () => {
+    beforeEach(() => {
+      gridOptionMock.enableTranslate = true;
+      i18n.setLocale('fr');
+    });
+
+    it('should have French text translated with operator dropdown options related to numbers when column definition type is FieldType.number', () => {
+      mockColumn.type = FieldType.number;
+      filterArguments.searchTerms = [9];
+
+      filter.init(filterArguments);
+      const filterInputElm = divContainer.querySelector<HTMLInputElement>('.input-group.search-filter.filter-duration input');
+      const filterOperatorElm = divContainer.querySelectorAll<HTMLSelectElement>('.search-filter.filter-duration select');
+
+      expect(filterInputElm.value).toBe('9');
+      expect(removeExtraSpaces(filterOperatorElm[0][1].textContent)).toBe('= Égal à');
+      expect(removeExtraSpaces(filterOperatorElm[0][2].textContent)).toBe('< Plus petit que');
+      expect(removeExtraSpaces(filterOperatorElm[0][3].textContent)).toBe('<= Plus petit ou égal à');
+      expect(removeExtraSpaces(filterOperatorElm[0][4].textContent)).toBe('> Plus grand que');
+      expect(removeExtraSpaces(filterOperatorElm[0][5].textContent)).toBe('>= Plus grand ou égal à');
+      expect(removeExtraSpaces(filterOperatorElm[0][6].textContent)).toBe('<> Non égal à');
+    });
   });
 });

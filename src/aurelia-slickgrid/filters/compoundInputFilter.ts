@@ -3,6 +3,7 @@ import { I18N } from 'aurelia-i18n';
 import * as $ from 'jquery';
 
 import { Constants } from '../constants';
+import { buildSelectOperatorHtmlString } from './filterUtilities';
 import {
   Column,
   ColumnFilter,
@@ -23,7 +24,6 @@ export class CompoundInputFilter implements Filter {
   private _clearFilterTriggered = false;
   private _shouldTriggerQuery = true;
   private _inputType = 'text';
-  private _locales: Locale;
   private $filterElm: any;
   private $filterInputElm: any;
   private $selectOperatorElm: any;
@@ -35,11 +35,6 @@ export class CompoundInputFilter implements Filter {
 
   constructor(protected i18n: I18N) { }
 
-  /** Getter for the Grid Options pulled through the Grid Object */
-  private get gridOptions(): GridOption {
-    return (this.grid && this.grid.getOptions) ? this.grid.getOptions() : {};
-  }
-
   /** Getter for the Filter Operator */
   get columnFilter(): ColumnFilter {
     return this.columnDef && this.columnDef.filter || {};
@@ -50,6 +45,11 @@ export class CompoundInputFilter implements Filter {
     return OperatorType.empty;
   }
 
+  /** Getter for the Grid Options pulled through the Grid Object */
+  private get gridOptions(): GridOption {
+    return (this.grid && this.grid.getOptions) ? this.grid.getOptions() : {};
+  }
+
   /** Getter of input type (text, number, password) */
   get inputType() {
     return this._inputType;
@@ -58,6 +58,11 @@ export class CompoundInputFilter implements Filter {
   /** Setter of input type (text, number, password) */
   set inputType(type: string) {
     this._inputType = type;
+  }
+
+  /** Getter for the single Locale texts provided by the user in main file or else use default English locales via the Constants */
+  get locales(): Locale {
+    return this.gridOptions.locales || Constants.locales;
   }
 
   /** Getter of the Operator to use when doing the filter comparing */
@@ -83,9 +88,6 @@ export class CompoundInputFilter implements Filter {
     this.columnDef = args.columnDef;
     this.operator = args.operator || '';
     this.searchTerms = (args.hasOwnProperty('searchTerms') ? args.searchTerms : []) || [];
-
-    // get locales provided by user in main file or else use default English locales via the Constants
-    this._locales = this.gridOptions && this.gridOptions.locales || Constants.locales;
 
     // filter input can only have 1 search term, so we will use the 1st array index if it exist
     const searchTerm = (Array.isArray(this.searchTerms) && this.searchTerms.length >= 0) ? this.searchTerms[0] : '';
@@ -156,18 +158,7 @@ export class CompoundInputFilter implements Filter {
     return `<input type="${this._inputType || 'text'}" class="form-control compound-input filter-${columnId}" role="presentation" autocomplete="off" placeholder="${placeholder}" /><span></span>`;
   }
 
-  private buildSelectOperatorHtmlString() {
-    const optionValues = this.getOptionValues();
-    let optionValueString = '';
-    optionValues.forEach((option) => {
-      optionValueString += `<option value="${option.operator}" title="${option.description}">${option.operator}</option>`;
-    });
-
-    return `<select class="form-control">${optionValueString}</select>`;
-  }
-
   private getOptionValues(): { operator: OperatorString, description: string }[] {
-    const translationPrefix = getTranslationPrefix(this.gridOptions);
     const type = (this.columnDef.type && this.columnDef.type) ? this.columnDef.type : FieldType.string;
     let optionValues = [];
 
@@ -177,30 +168,35 @@ export class CompoundInputFilter implements Filter {
       case FieldType.readonly:
       case FieldType.password:
         optionValues = [
-          { operator: '' as OperatorString, description: this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale() && this.i18n.tr(`${translationPrefix}CONTAINS`) || this._locales && this._locales.TEXT_CONTAINS },
-          { operator: '=' as OperatorString, description: this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale() && this.i18n.tr(`${translationPrefix}EQUALS`) || this._locales && this._locales.TEXT_EQUALS },
-          { operator: 'a*' as OperatorString, description: this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale() && this.i18n.tr(`${translationPrefix}STARTS_WITH`) || this._locales && this._locales.TEXT_STARTS_WITH },
-          { operator: '*z' as OperatorString, description: this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale() && this.i18n.tr(`${translationPrefix}ENDS_WITH`) || this._locales && this._locales.TEXT_ENDS_WITH },
-          /*
-          { operator:  as OperatorString'IN', description: this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale() && this.i18n.tr(`${translationPrefix}IN_COLLECTION_SEPERATED_BY_COMMA`) || this._locales && this._locales.TEXT_ALL_SELECTED },
-          { operator:  as OperatorString'NIN', description: this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale() && this.i18n.tr(`${translationPrefix}NOT_IN_COLLECTION_SEPERATED_BY_COMMA`) || this._locales && this._locales.TEXT_ALL_SELECTED },
-          */
+          { operator: '' as OperatorString, description: this.getOutputText('CONTAINS', 'TEXT_CONTAINS', 'Contains') },
+          { operator: '=' as OperatorString, description: this.getOutputText('EQUALS', 'TEXT_EQUALS', 'Equals') },
+          { operator: 'a*' as OperatorString, description: this.getOutputText('STARTS_WITH', 'TEXT_STARTS_WITH', 'Starts with') },
+          { operator: '*z' as OperatorString, description: this.getOutputText('ENDS_WITH', 'TEXT_ENDS_WITH', 'Ends with') },
         ];
         break;
       default:
         optionValues = [
           { operator: '' as OperatorString, description: '' },
-          { operator: '=' as OperatorString, description: '=' },
-          { operator: '<' as OperatorString, description: '<' },
-          { operator: '<=' as OperatorString, description: '<=' },
-          { operator: '>' as OperatorString, description: '>' },
-          { operator: '>=' as OperatorString, description: '>=' },
-          { operator: '<>' as OperatorString, description: '<>' }
+          { operator: '=' as OperatorString, description: this.getOutputText('EQUAL_TO', 'TEXT_EQUAL_TO', 'Equal to') },
+          { operator: '<' as OperatorString, description: this.getOutputText('LESS_THAN', 'TEXT_LESS_THAN', 'Less than') },
+          { operator: '<=' as OperatorString, description: this.getOutputText('LESS_THAN_OR_EQUAL_TO', 'TEXT_LESS_THAN_OR_EQUAL_TO', 'Less than or equal to') },
+          { operator: '>' as OperatorString, description: this.getOutputText('GREATER_THAN', 'TEXT_GREATER_THAN', 'Greater than') },
+          { operator: '>=' as OperatorString, description: this.getOutputText('GREATER_THAN_OR_EQUAL_TO', 'TEXT_GREATER_THAN_OR_EQUAL_TO', 'Greater than or equal to') },
+          { operator: '<>' as OperatorString, description: this.getOutputText('NOT_EQUAL_TO', 'TEXT_NOT_EQUAL_TO', 'Not equal to') }
         ];
         break;
     }
 
     return optionValues;
+  }
+
+  /** Get Locale, Translated or a Default Text if first two aren't detected */
+  private getOutputText(translationKey: string, localeText: string, defaultText: string): string {
+    if (this.gridOptions && this.gridOptions.enableTranslate && this.i18n && this.i18n.tr) {
+      const translationPrefix = getTranslationPrefix(this.gridOptions);
+      return this.i18n.tr(`${translationPrefix}${translationKey}`);
+    }
+    return this.locales && this.locales[localeText] || defaultText;
   }
 
   /**
@@ -212,7 +208,8 @@ export class CompoundInputFilter implements Filter {
     $($headerElm).empty();
 
     // create the DOM Select dropdown for the Operator
-    this.$selectOperatorElm = $(this.buildSelectOperatorHtmlString());
+    const selectOperatorHtmlString = buildSelectOperatorHtmlString(this.getOptionValues());
+    this.$selectOperatorElm = $(selectOperatorHtmlString);
     this.$filterInputElm = $(this.buildInputHtmlString());
     const $filterContainerElm = $(`<div class="form-group search-filter filter-${columnId}"></div>`);
     const $containerInputGroup = $(`<div class="input-group"></div>`);
@@ -260,7 +257,7 @@ export class CompoundInputFilter implements Filter {
       this.callback(e, { columnDef: this.columnDef, clearFilterTriggered: this._clearFilterTriggered, shouldTriggerQuery: this._shouldTriggerQuery });
       this.$filterElm.removeClass('filled');
     } else {
-      const selectedOperator = this.$selectOperatorElm.find('option:selected').text();
+      const selectedOperator = this.$selectOperatorElm.find('option:selected').val();
       let value = this.$filterInputElm.val() as string;
       const enableWhiteSpaceTrim = this.gridOptions.enableFilterTrimWhiteSpace || this.columnFilter.enableTrimWhiteSpace;
       if (typeof value === 'string' && enableWhiteSpaceTrim) {
