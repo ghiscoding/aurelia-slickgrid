@@ -1,6 +1,6 @@
 import { autoinject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
-import { AureliaGridInstance, Column, Formatters, GridOption, ExtensionName } from '../../aurelia-slickgrid';
+import { AureliaGridInstance, Column, ExtensionName, Filters, Formatters, GridOption } from '../../aurelia-slickgrid';
 
 @autoinject()
 export class Example16 {
@@ -49,12 +49,27 @@ export class Example16 {
   /* Define grid Options and Columns */
   defineGrid() {
     this.columnDefinitions = [
-      { id: 'title', name: 'Title', field: 'title' },
-      { id: 'duration', name: 'Duration', field: 'duration', sortable: true },
-      { id: '%', name: '% Complete', field: 'percentComplete', sortable: true },
-      { id: 'start', name: 'Start', field: 'start' },
-      { id: 'finish', name: 'Finish', field: 'finish' },
-      { id: 'effort-driven', name: 'Completed', field: 'effortDriven', formatter: Formatters.checkmark }
+      { id: 'title', name: 'Title', field: 'title', filterable: true, },
+      { id: 'duration', name: 'Duration', field: 'duration', filterable: true, sortable: true },
+      { id: '%', name: '% Complete', field: 'percentComplete', filterable: true, sortable: true },
+      {
+        id: 'start', name: 'Start', field: 'start', filterable: true, sortable: true,
+        filter: { model: Filters.compoundDate },
+      },
+      {
+        id: 'finish', name: 'Finish', field: 'finish',
+        filterable: true, sortable: true,
+        filter: { model: Filters.compoundDate },
+      },
+      {
+        id: 'effort-driven', name: 'Completed', field: 'effortDriven',
+        formatter: Formatters.checkmark,
+        filterable: true, sortable: true,
+        filter: {
+          collection: [{ value: '', label: '' }, { value: true, label: 'True' }, { value: false, label: 'False' }],
+          model: Filters.singleSelect
+        },
+      }
     ];
 
     this.gridOptions = {
@@ -63,7 +78,13 @@ export class Example16 {
         containerId: 'demo-container',
         sidePadding: 10
       },
+      enableFiltering: true,
       enableCheckboxSelector: true,
+      checkboxSelector: {
+        // you can toggle these 2 properties to show the "select all" checkbox in different location
+        hideInFilterHeaderRow: false,
+        hideInColumnTitleRow: true
+      },
       enableRowSelection: true,
       rowSelectionOptions: {
         // True (Single Selection), False (Multiple Selections)
@@ -78,6 +99,7 @@ export class Example16 {
         singleRowMove: true,
         disableRowSelection: true,
         cancelEditOnDrag: true,
+        width: 30,
         onBeforeMoveRows: (e, args) => this.onBeforeMoveRow(e, args),
         onMoveRows: (e, args) => this.onMoveRows(e, args),
 
@@ -149,5 +171,34 @@ export class Example16 {
 
     this.aureliaGrid.slickGrid.resetActiveCell();
     this.dataset = tmpDataset;
+  }
+
+  hideDurationColumnDynamically() {
+    const columnIndex = this.aureliaGrid.slickGrid.getColumns().findIndex(col => col.id === 'duration');
+    if (columnIndex >= 0) {
+      this.aureliaGrid.gridService.hideColumnByIndex(columnIndex);
+    }
+  }
+
+  // Disable/Enable Filtering/Sorting functionalities
+  // --------------------------------------------------
+
+  disableFilters() {
+    this.aureliaGrid.filterService.disableFilterFunctionality(true);
+  }
+
+  disableSorting() {
+    this.aureliaGrid.sortService.disableSortFunctionality(true);
+  }
+
+  // or Toggle Filtering/Sorting functionalities
+  // ---------------------------------------------
+
+  toggleFilter() {
+    this.aureliaGrid.filterService.toggleFilterFunctionality();
+  }
+
+  toggleSorting() {
+    this.aureliaGrid.sortService.toggleSortFunctionality();
   }
 }
