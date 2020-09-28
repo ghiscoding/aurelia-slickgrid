@@ -10,11 +10,11 @@ export interface GridMenuItem {
   /** Defaults to false, whether the item/command is disabled. */
   disabled?: boolean;
 
-  /** Defaults to false, whether the item/command is hidden. */
-  hidden?: boolean;
-
   /** Defaults to false, whether the command is actually a divider (separator). */
   divider?: boolean;
+
+  /** Defaults to false, whether the item/command is hidden. */
+  hidden?: boolean;
 
   /** CSS class to be added to the menu item icon. */
   iconCssClass?: string;

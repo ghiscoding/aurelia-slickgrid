@@ -532,7 +532,7 @@ export class SortService {
       if (typeof col.sortable !== undefined) {
         col.sortable = !isDisabling;
       }
-      if (col?.header?.menu) {
+      if (col && col.header && col.header.menu) {
         col.header.menu.items.forEach(menuItem => {
           if (menuItem && typeof menuItem !== 'string') {
             const menuCommand = menuItem.command;

@@ -672,7 +672,7 @@ export class FilterService {
    * Toggle the Header Row filter bar (this does not disable the Filtering itself, you can use "toggleFilterFunctionality()" instead, however this will reset any column positions)
    */
   toggleHeaderFilterRow() {
-    let showHeaderRow = this._gridOptions?.showHeaderRow ?? false;
+    let showHeaderRow = this._gridOptions && this._gridOptions.showHeaderRow || false;
     showHeaderRow = !showHeaderRow; // inverse show header flag
     this._grid.setHeaderRowVisibility(showHeaderRow);
 
