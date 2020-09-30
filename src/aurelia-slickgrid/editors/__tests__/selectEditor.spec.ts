@@ -278,7 +278,7 @@ describe('SelectEditor', () => {
       expect(editorElm[0].value).toEqual('male');
     });
 
-    it('should create the multi-select filter with a blank entry at the beginning of the collection when "addBlankEntry" is set in the "collectionOptions" property', () => {
+    it('should create the multi-select editor with a blank entry at the beginning of the collection when "addBlankEntry" is set in the "collectionOptions" property', () => {
       mockColumn.internalColumnEditor.collection = [{ value: 'male', label: 'male' }, { value: 'female', label: 'female' }];
       mockColumn.internalColumnEditor.collectionOptions = { addBlankEntry: true };
 
@@ -290,7 +290,40 @@ describe('SelectEditor', () => {
       editorOkElm.click();
 
       expect(editorListElm.length).toBe(3);
+      expect(editorListElm[0].value).toBe('');
       expect(editorListElm[1].textContent).toBe('');
+    });
+
+    it('should create the multi-select editor with a custom entry at the beginning of the collection when "addCustomFirstEntry" is provided in the "collectionOptions" property', () => {
+      mockColumn.internalColumnEditor.collection = [{ value: 'male', label: 'male' }, { value: 'female', label: 'female' }];
+      mockColumn.internalColumnEditor.collectionOptions = { addCustomFirstEntry: { value: null, label: '' } };
+
+      editor = new SelectEditor(bindingEngineStub, collectionService, i18n, editorArguments, true);
+      const editorBtnElm = divContainer.querySelector<HTMLButtonElement>('.ms-parent.ms-filter.editor-gender button.ms-choice');
+      const editorListElm = divContainer.querySelectorAll<HTMLInputElement>(`[name=editor-gender].ms-drop ul>li input[type=checkbox]`);
+      const editorOkElm = divContainer.querySelector<HTMLButtonElement>(`[name=editor-gender].ms-drop .ms-ok-button`);
+      editorBtnElm.click();
+      editorOkElm.click();
+
+      expect(editorListElm.length).toBe(3);
+      expect(editorListElm[0].value).toBe('');
+      expect(editorListElm[1].textContent).toBe('');
+    });
+
+    it('should create the multi-select editor with a custom entry at the end of the collection when "addCustomFirstEntry" is provided in the "collectionOptions" property', () => {
+      mockColumn.internalColumnEditor.collection = [{ value: 'male', label: 'male' }, { value: 'female', label: 'female' }];
+      mockColumn.internalColumnEditor.collectionOptions = { addCustomLastEntry: { value: null, label: '' } };
+
+      editor = new SelectEditor(bindingEngineStub, collectionService, i18n, editorArguments, true);
+      const editorBtnElm = divContainer.querySelector<HTMLButtonElement>('.ms-parent.ms-filter.editor-gender button.ms-choice');
+      const editorListElm = divContainer.querySelectorAll<HTMLInputElement>(`[name=editor-gender].ms-drop ul>li input[type=checkbox]`);
+      const editorOkElm = divContainer.querySelector<HTMLButtonElement>(`[name=editor-gender].ms-drop .ms-ok-button`);
+      editorBtnElm.click();
+      editorOkElm.click();
+
+      expect(editorListElm.length).toBe(3);
+      expect(editorListElm[2].value).toBe('');
+      expect(editorListElm[1].textContent).toBe(''); expect(editorListElm[1].textContent).toBe('');
     });
 
     describe('isValueChanged method', () => {
@@ -530,7 +563,7 @@ describe('SelectEditor', () => {
     });
 
     describe('initialize with collection', () => {
-      it('should create the multi-select filter with a default search term when passed as a filter argument even with collection an array of strings', () => {
+      it('should create the multi-select editor with a default search term when passed as a filter argument even with collection an array of strings', () => {
         mockColumn.internalColumnEditor.collection = ['male', 'female'];
 
         editor = new SelectEditor(bindingEngineStub, collectionService, i18n, editorArguments, true);
@@ -547,7 +580,7 @@ describe('SelectEditor', () => {
     });
 
     describe('collectionSortBy setting', () => {
-      it('should create the multi-select filter and sort the string collection when "collectionSortBy" is set', () => {
+      it('should create the multi-select editor and sort the string collection when "collectionSortBy" is set', () => {
         mockColumn.internalColumnEditor = {
           collection: ['other', 'male', 'female'],
           collectionSortBy: {
@@ -567,7 +600,7 @@ describe('SelectEditor', () => {
         expect(editorListElm[2].value).toBe('female');
       });
 
-      it('should create the multi-select filter and sort the value/label pair collection when "collectionSortBy" is set', () => {
+      it('should create the multi-select editor and sort the value/label pair collection when "collectionSortBy" is set', () => {
         mockColumn.internalColumnEditor = {
           collection: [{ value: 'other', description: 'other' }, { value: 'male', description: 'male' }, { value: 'female', description: 'female' }],
           collectionSortBy: {
@@ -594,7 +627,7 @@ describe('SelectEditor', () => {
     });
 
     describe('collectionFilterBy setting', () => {
-      it('should create the multi-select filter and filter the string collection when "collectionFilterBy" is set', () => {
+      it('should create the multi-select editor and filter the string collection when "collectionFilterBy" is set', () => {
         mockColumn.internalColumnEditor = {
           collection: ['other', 'male', 'female'],
           collectionFilterBy: {
@@ -612,7 +645,7 @@ describe('SelectEditor', () => {
         expect(editorListElm[0].value).toBe('other');
       });
 
-      it('should create the multi-select filter and filter the value/label pair collection when "collectionFilterBy" is set', () => {
+      it('should create the multi-select editor and filter the value/label pair collection when "collectionFilterBy" is set', () => {
         mockColumn.internalColumnEditor = {
           collection: [{ value: 'other', description: 'other' }, { value: 'male', description: 'male' }, { value: 'female', description: 'female' }],
           collectionFilterBy: [
@@ -634,7 +667,7 @@ describe('SelectEditor', () => {
         expect(editorListElm[0].value).toBe('female');
       });
 
-      it('should create the multi-select filter and filter the value/label pair collection when "collectionFilterBy" is set and "filterResultAfterEachPass" is set to "merge"', () => {
+      it('should create the multi-select editor and filter the value/label pair collection when "collectionFilterBy" is set and "filterResultAfterEachPass" is set to "merge"', () => {
         mockColumn.internalColumnEditor = {
           collection: [{ value: 'other', description: 'other' }, { value: 'male', description: 'male' }, { value: 'female', description: 'female' }],
           collectionFilterBy: [
@@ -688,7 +721,7 @@ describe('SelectEditor', () => {
     });
 
     describe('enableRenderHtml property', () => {
-      it('should create the multi-select filter with a default search term and have the HTML rendered when "enableRenderHtml" is set', () => {
+      it('should create the multi-select editor with a default search term and have the HTML rendered when "enableRenderHtml" is set', () => {
         mockColumn.internalColumnEditor = {
           enableRenderHtml: true,
           collection: [{ value: true, label: 'True', labelPrefix: `<i class="fa fa-check"></i> ` }, { value: false, label: 'False' }],
@@ -708,7 +741,7 @@ describe('SelectEditor', () => {
         expect(editorListElm[0].innerHTML).toBe('<i class="fa fa-check"></i> True');
       });
 
-      it('should create the multi-select filter with a default search term and have the HTML rendered and sanitized when "enableRenderHtml" is set and has <script> tag', () => {
+      it('should create the multi-select editor with a default search term and have the HTML rendered and sanitized when "enableRenderHtml" is set and has <script> tag', () => {
         mockColumn.internalColumnEditor = {
           enableRenderHtml: true,
           collection: [{ isEffort: true, label: 'True', labelPrefix: `<script>alert('test')></script><i class="fa fa-check"></i> ` }, { isEffort: false, label: 'False' }],
