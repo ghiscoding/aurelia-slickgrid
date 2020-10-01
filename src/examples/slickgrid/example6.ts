@@ -210,8 +210,7 @@ export class Example6 {
   }
 
   /**
-   * Calling your GraphQL backend server should always return a Promise of type GraphqlPaginatedResult
-   *
+   * Calling your GraphQL backend server should always return a Promise or Observable of type GraphqlPaginatedResult (or GraphqlResult without Pagination)
    * @param query
    * @return Promise<GraphqlPaginatedResult>
    */
