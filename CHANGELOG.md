@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.22.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.21.0...v2.22.0) (2020-10-02)
+
+
+### Features
+
+* **core:** add custom entry to Select Editor/Filter collections ([#430](https://github.com/ghiscoding/aurelia-slickgrid/issues/430)) ([0e49313](https://github.com/ghiscoding/aurelia-slickgrid/commit/0e493136b5c2d16bb11d9bb2273475af82ffe334))
+* **services:** add Toggle Filtering/Sorting & Hide Column methods ([#426](https://github.com/ghiscoding/aurelia-slickgrid/issues/426)) ([1ae2f6a](https://github.com/ghiscoding/aurelia-slickgrid/commit/1ae2f6a76f42c93e592d134632eff995ca738f08))
+* **styling:** add description to Compound Filter Operators ([#427](https://github.com/ghiscoding/aurelia-slickgrid/issues/427)) ([deaca78](https://github.com/ghiscoding/aurelia-slickgrid/commit/deaca78571b3d444ad51a8213c759fa272786622))
+* **styling:** add Pagination button height sass variable ([#433](https://github.com/ghiscoding/aurelia-slickgrid/issues/433)) ([cba49ba](https://github.com/ghiscoding/aurelia-slickgrid/commit/cba49ba3cdca4cacbd1b213176d00e4af6615e34))
+* **tests:** add more Cypress E2E tests for grouping ([#423](https://github.com/ghiscoding/aurelia-slickgrid/issues/423)) ([e58b0cd](https://github.com/ghiscoding/aurelia-slickgrid/commit/e58b0cd2bcc12dd5d404497a93e8ddafc69a93d8))
+
+
+### Bug Fixes
+
+* **editors:** add blank entry on Select Editor should happen once ([#429](https://github.com/ghiscoding/aurelia-slickgrid/issues/429)) ([b6ce803](https://github.com/ghiscoding/aurelia-slickgrid/commit/b6ce8037f165c7dd0e6ccf403b43aa821e904714))
+* **filters:** disregard time when filtering date only format ([#431](https://github.com/ghiscoding/aurelia-slickgrid/issues/431)) ([b61e902](https://github.com/ghiscoding/aurelia-slickgrid/commit/b61e902f5c1f87ff7e0a521d12b12e3e8d4d431f))
+* **filters:** tree data presets caused regression in any grid w/presets ([#435](https://github.com/ghiscoding/aurelia-slickgrid/issues/435)) ([e91af6d](https://github.com/ghiscoding/aurelia-slickgrid/commit/e91af6daabf837e9b60c1dba02cc181b41f3ef21))
+* **pinning:** put back vertical scroll on grid after removing freezing ([#421](https://github.com/ghiscoding/aurelia-slickgrid/issues/421)) ([06da37b](https://github.com/ghiscoding/aurelia-slickgrid/commit/06da37bd03eaa5cb7ed48d5ba3a24a5eb2d4921c))
+* **select:** make a collection array copy to avoid change by ref ([#432](https://github.com/ghiscoding/aurelia-slickgrid/issues/432)) ([5fb5285](https://github.com/ghiscoding/aurelia-slickgrid/commit/5fb5285e3b89570df64a9dcdf1b2847296cd66a0))
+* **styling:** Compound Filter Operator dropdown too wide in BS4 ([#436](https://github.com/ghiscoding/aurelia-slickgrid/issues/436)) ([f5750e6](https://github.com/ghiscoding/aurelia-slickgrid/commit/f5750e6ad82e557cefed142c8d2c40f1fd210e7d))
+* **styling:** grouping with checkbox should be aligned left ([#422](https://github.com/ghiscoding/aurelia-slickgrid/issues/422)) ([ea613d0](https://github.com/ghiscoding/aurelia-slickgrid/commit/ea613d0b08be75e8225691d835c20e84f447b4de))
+* **styling:** support other unit of measure in SASS, fixes [#420](https://github.com/ghiscoding/aurelia-slickgrid/issues/420) ([#428](https://github.com/ghiscoding/aurelia-slickgrid/issues/428)) ([3fc3bdd](https://github.com/ghiscoding/aurelia-slickgrid/commit/3fc3bdd3c7c1c529f165a1f8e358d5e58b78a48b))
+
 ## [2.21.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.20.1...v2.21.0) (2020-09-15)
 
 
