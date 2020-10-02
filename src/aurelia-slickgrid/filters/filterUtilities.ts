@@ -1,4 +1,4 @@
-import { OperatorString } from 'aurelia-slickgrid/models/operatorString';
+import { OperatorString } from '../models/operatorString';
 import { htmlEncodedStringWithPadding } from '../services/utilities';
 
 export function buildSelectOperatorHtmlString(optionValues: Array<{ operator: OperatorString, description: string }>) {

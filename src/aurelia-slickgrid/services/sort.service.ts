@@ -526,7 +526,7 @@ export class SortService {
    * @param {boolean} isDisabling - are we disabling the sort functionality? Defaults to true
    */
   private disableSortingOnAllColumns(isDisabling = true): Column[] {
-    const columnDefinitions = this._grid.getColumns();
+    const columnDefinitions = this._grid.getColumns() as Column[];
 
     columnDefinitions.forEach((col) => {
       if (typeof col.sortable !== undefined) {
