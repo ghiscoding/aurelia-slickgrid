@@ -203,7 +203,6 @@ export class Example20 {
         containerId: 'demo-container',
         sidePadding: 10
       },
-      alwaysShowVerticalScroll: false, // disable scroll since we don't want it to show on the left pinned columns
       enableCellNavigation: true,
       editable: true,
       autoEdit: true,
@@ -276,7 +275,7 @@ export class Example20 {
   }
 
   setFrozenColumns(frozenCols: number) {
-    this.gridObj.setOptions({ frozenColumn: frozenCols, alwaysShowVerticalScroll: false });
+    this.gridObj.setOptions({ frozenColumn: frozenCols });
     this.gridOptions = this.gridObj.getOptions();
   }
 
