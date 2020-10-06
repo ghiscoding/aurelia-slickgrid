@@ -298,6 +298,9 @@ export interface GridOption {
   /** Formatter commonly used options defined for the entire grid */
   formatterOptions?: FormatterOption;
 
+  /** Optional frozen border in pixel (must match SASS variable `$frozen-preheader-row-border-right`) */
+  frozenBorderWidth?: number;
+
   /** Defaults to false, do we want to freeze (pin) the bottom portion instead of the top */
   frozenBottom?: boolean;
 
