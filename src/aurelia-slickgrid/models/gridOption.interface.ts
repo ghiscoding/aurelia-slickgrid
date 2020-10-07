@@ -328,6 +328,8 @@ export interface GridOption {
   /** Header menu options */
   headerMenu?: HeaderMenu;
 
+  hideHeaderFilterRow?: boolean;
+
   /** I18N translation service instance */
   i18n?: I18N;
 

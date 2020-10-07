@@ -277,6 +277,10 @@ export class AureliaSlickgridCustomElement {
       this.sharedService.hideHeaderRowAfterPageLoad = this._hideHeaderRowAfterPageLoad;
     }
 
+    if (this.gridOptions.hideHeaderFilterRow) {
+      this.filterService.toggleHeaderFilterRow();
+    }
+
     // publish & dispatch certain events
     this.globalEa.publish('onGridCreated', this.grid);
     this.dispatchCustomEvent(`${DEFAULT_AURELIA_EVENT_PREFIX}-on-grid-created`, this.grid);

@@ -162,6 +162,7 @@ export const GlobalGridOptions: Partial<GridOption> = {
     hideSortCommandsDivider: false
   },
   headerRowHeight: 35,
+  hideHeaderFilterRow: false,
   multiColumnSort: true,
   numberedMultiColumnSort: true,
   tristateMultiColumnSort: false,

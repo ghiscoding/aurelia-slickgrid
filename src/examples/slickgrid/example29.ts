@@ -32,7 +32,9 @@ export class Example29 {
     ];
     this.gridOptions = {
       enableAutoResize: false,
-      enableSorting: true
+      enableSorting: true,
+      enableFiltering: true,
+      hideHeaderFilterRow: true
     };
   }
 
