@@ -418,7 +418,9 @@ export interface GridOption {
   /** Do we want to show the footer row? */
   showFooterRow?: boolean;
 
-  /** Do we want to show header row? */
+  /**
+   * Do we want to show header row (row showing the filters)?
+   */
   showHeaderRow?: boolean;
 
   /** Do we want to show metrics in custom footer? (dataset length, data filtered, last update timestamp) */
