@@ -11,6 +11,16 @@ import { MenuCommandItem } from './menuCommandItem.interface';
 import { OnEventArgs } from './onEventArgs.interface';
 import { Sorter } from './sorter.interface';
 
+type PathsToStringProps<T> = T extends string | number | boolean | Date ? [] : {
+  [K in Extract<keyof T, string>]: [K, ...PathsToStringProps<T[K]>]
+}[Extract<keyof T, string>];
+
+type Join<T extends any[], D extends string> =
+  T extends [] ? never :
+  T extends [infer F] ? F :
+  T extends [infer F, ...infer R] ?
+  F extends string ? string extends F ? string : `${F}${D}${Join<R, D>}` : never : string;
+
 export interface Column<T = any> {
   /** async background post-rendering formatter */
   asyncPostRender?: (domCellNode: any, row: number, dataContext: T, columnDef: Column) => void;
@@ -67,7 +77,7 @@ export interface Column<T = any> {
    * Export with a Custom Formatter, useful when we want to use a different Formatter for the export.
    * For example, we might have a boolean field with "Formatters.checkmark" but we would like see a translated value for (True/False).
    */
-  exportCustomFormatter?: Formatter;
+  exportCustomFormatter?: Formatter<T>;
 
   /**
    * Export with a Custom Group Total Formatter, useful when we want to use a different Formatter for the export.
@@ -96,7 +106,7 @@ export interface Column<T = any> {
    * NOTE: a field with dot notation (.) will be considered a complex object.
    * For example: { id: 'Users', field: 'user.firstName' }
    */
-  field: string;
+  field: Join<PathsToStringProps<T>, '.'>;
 
   /**
    * Only used by Backend Services since the query is built using the column definitions, this is a way to pass extra properties to the backend query.
@@ -121,7 +131,7 @@ export interface Column<T = any> {
   focusable?: boolean;
 
   /** Formatter function that can be used to change and format certain column(s) in the grid */
-  formatter?: Formatter;
+  formatter?: Formatter<T>;
 
   /** Grouping option used by a Draggable Grouping Column */
   grouping?: Grouping;
