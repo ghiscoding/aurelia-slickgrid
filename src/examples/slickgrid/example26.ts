@@ -133,7 +133,7 @@ export class Example26 {
         id: 'assignee2',
         name: 'Assignee with Aurelia Component',
         field: 'assignee',
-        minWidth: 100,
+        minWidth: 125,
         filterable: true,
         sortable: true,
         filter: {
