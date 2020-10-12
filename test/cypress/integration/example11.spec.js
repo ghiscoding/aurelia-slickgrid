@@ -29,11 +29,14 @@ describe('Example 11 - Add / Update / Highlight a Datagrid Item', () => {
       });
   });
 
-  it('should add 2 rows on the top of the grid', () => {
-    const expectedTasks = ['Task 1001', 'Task 1000', 'Task 0', 'Task 1', 'Task 2', 'Task 3', 'Task 4'];
+  it('should delete first row Task 0 from the grid', () => {
+    const expectedTasks = ['Task 1', 'Task 2', 'Task 3', 'Task 4'];
 
-    cy.get('[data-test="add-new-item-top-btn"]')
-      .click().click();
+    cy.get('#grid11')
+      .find('.slick-row')
+      .first()
+      .children('.slick-cell:nth(0)')
+      .click();
 
     cy.get('#grid11')
       .find('.slick-row')
@@ -46,18 +49,11 @@ describe('Example 11 - Add / Update / Highlight a Datagrid Item', () => {
       });
   });
 
-  it('should delete Task 0-1 on row 3-4', () => {
-    const expectedTasks = ['Task 1001', 'Task 1000', 'Task 2', 'Task 3', 'Task 4'];
+  it('should add 2 rows on the top of the grid', () => {
+    const expectedTasks = ['Task 1001', 'Task 1000', 'Task 1', 'Task 2', 'Task 3', 'Task 4'];
 
-    cy.get('#grid11')
-      .find('.slick-row:nth(2)')
-      .children('.slick-cell:nth(0)')
-      .click();
-
-    cy.get('#grid11')
-      .find('.slick-row:nth(2)')
-      .children('.slick-cell:nth(0)')
-      .click();
+    cy.get('[data-test="add-new-item-top-btn"]')
+      .click().click();
 
     cy.get('#grid11')
       .find('.slick-row')
@@ -80,26 +76,6 @@ describe('Example 11 - Add / Update / Highlight a Datagrid Item', () => {
       .should('contain.text', 'Task 1002');
   });
 
-  it('should highlight 2nd row', () => {
-    const expectedTasks = ['Task 1001', 'Task 1000', 'Task 2', 'Task 3', 'Task 4'];
-
-    cy.get('[data-test="update-second-item-btn"]')
-      .click();
-
-    cy.get('.ui-widget-content.active')
-      .should('have.length', 1);
-
-    cy.get('#grid11')
-      .find('.slick-row')
-      .each(($row, index) => {
-        if (index > expectedTasks.length - 1) {
-          return;
-        }
-        cy.wrap($row).children('.slick-cell:nth(1)')
-          .should('contain', expectedTasks[index]);
-      });
-  });
-
   it('should click on highlight "Duration over 40" and expect few rows being highlighted in purple', () => {
     cy.get('[data-test="highlight-duration40-btn"]').click();
 
@@ -119,8 +95,8 @@ describe('Example 11 - Add / Update / Highlight a Datagrid Item', () => {
   it('should scroll to top and expect certain rows on top', () => {
     cy.get('[data-test="scroll-top-btn"]').click();
 
-    cy.get('#grid11').find('.slick-row:nth(0)').should('contain.text', 'Task 1001');
-    cy.get('#grid11').find('.slick-row:nth(1)').should('contain.text', 'Task 1000');
-    cy.get('#grid11').find('.slick-row:nth(2)').should('contain.text', 'Task 2');
+    cy.get('#grid11').find('.slick-row:nth(0) .slick-cell:nth(1)').should('contain.text', 'Task 1001');
+    cy.get('#grid11').find('.slick-row:nth(1) .slick-cell:nth(1)').should('contain.text', 'Task 1000');
+    cy.get('#grid11').find('.slick-row:nth(2) .slick-cell:nth(1)').should('contain.text', 'Task 1');
   });
 });
