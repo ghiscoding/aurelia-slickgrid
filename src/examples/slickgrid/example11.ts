@@ -209,7 +209,7 @@ export class Example11 {
 
   /** Change the Duration Rows Background Color */
   changeDurationBackgroundColor() {
-    this.dataView.getItemMetadata = this.updateItemMetadataForDurationOver50(this.dataView.getItemMetadata);
+    this.dataView.getItemMetadata = this.updateItemMetadataForDurationOver40(this.dataView.getItemMetadata);
     // also re-render the grid for the styling to be applied right away
     this.grid.invalidate();
     this.grid.render();
@@ -224,10 +224,10 @@ export class Example11 {
   }
 
   /**
-   * Change the SlickGrid Item Metadata, we will add a CSS class on all rows with a Duration over 50
+   * Change the SlickGrid Item Metadata, we will add a CSS class on all rows with a Duration over 40
    * For more info, you can see this SO https://stackoverflow.com/a/19985148/1212166
    */
-  updateItemMetadataForDurationOver50(previousItemMetadata: any) {
+  updateItemMetadataForDurationOver40(previousItemMetadata: any) {
     const newCssClass = 'duration-bg';
     return (rowNumber: number) => {
       const item = this.dataView.getItem(rowNumber);
@@ -239,7 +239,7 @@ export class Example11 {
       }
       if (meta && item && item.duration) {
         const duration = +item.duration; // convert to number
-        if (duration > 50) {
+        if (duration > 40) {
           meta.cssClasses = (meta.cssClasses || '') + ' ' + newCssClass;
         }
       }

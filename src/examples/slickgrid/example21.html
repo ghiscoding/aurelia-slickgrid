@@ -6,9 +6,9 @@
   <form class="form-inline">
     <div class="form-group">
       <label>
-        Single Search:<br>
+        Single Search:
       </label>
-      <select value.bind="selectedColumn"
+      <select data-test="search-column-list" value.bind="selectedColumn"
               class="form-control">
         <option repeat.for="column of columnDefinitions"
                 model.bind="column">
@@ -16,16 +16,15 @@
         </option>
       </select>
     </div>
-    <select value.bind="selectedOperator"
+    <select data-test="search-operator-list" value.bind="selectedOperator"
             class="form-control">
       <option repeat.for="operator of operatorList"
               model.bind="operator">
         ${operator}
       </option>
     </select>
-    <input type="text"
-           class="form-control"
-           placeholder="search value"
+    <input type="text" class="form-control"
+           placeholder="search value" data-test="search-value-input"
            value.bind="searchValue">
   </form>
   <hr />
