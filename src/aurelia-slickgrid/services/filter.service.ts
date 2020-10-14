@@ -871,10 +871,10 @@ export class FilterService {
    * @param {boolean} isDisabling - are we disabling the filter functionality? Defaults to true
    */
   private disableAllFilteringCommands(isDisabling = true): Column[] {
-    const columnDefinitions = this._grid.getColumns();
+    const columnDefinitions = this._grid.getColumns() as Column[];
 
     // loop through column definition to hide/show header menu commands
-    columnDefinitions.forEach((col) => {
+    columnDefinitions.forEach((col: Column) => {
       if (col && col.header && col.header.menu) {
         col.header.menu.items.forEach(menuItem => {
           if (menuItem && typeof menuItem !== 'string') {
