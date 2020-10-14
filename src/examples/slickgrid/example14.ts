@@ -74,7 +74,6 @@ export class Example14 {
     ];
 
     this.gridOptions2 = {
-      alwaysShowVerticalScroll: false, // disable scroll since we don't want it to show on the left pinned columns
       enableCellNavigation: true,
       enableColumnReorder: false,
       createPreHeaderPanel: true,
@@ -106,7 +105,7 @@ export class Example14 {
   }
 
   setFrozenColumns2(frozenCols: number) {
-    this.gridObj2.setOptions({ frozenColumn: frozenCols, alwaysShowVerticalScroll: false });
+    this.gridObj2.setOptions({ frozenColumn: frozenCols });
     this.gridOptions2 = this.gridObj2.getOptions();
   }
 
