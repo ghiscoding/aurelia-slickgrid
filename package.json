@@ -1,6 +1,6 @@
 {
   "name": "aurelia-slickgrid",
-  "version": "2.22.0",
+  "version": "2.22.1",
   "description": "Slickgrid components made available in Aurelia",
   "keywords": [
     "aurelia",
@@ -36,7 +36,7 @@
     "postbuild:native-modules": "cross-env copyfiles --up 2 src/aurelia-slickgrid/**/*.html dist/native-modules",
     "build:system": "cross-env tsc --project src/aurelia-slickgrid/tsconfig.build.json --outDir dist/system --module system",
     "postbuild:system": "cross-env copyfiles --up 2 src/aurelia-slickgrid/**/*.html dist/system",
-    "prebuild": "npm-run-all delete:dist test:jest",
+    "prebuild": "npm-run-all delete:dist",
     "build": "npm-run-all build:amd build:commonjs build:es2015 build:es2017 build:native-modules build:system",
     "postbuild": "npm-run-all sass:build sass:copy copy-i18n:dist copy-asset-lib",
     "build:with-e2e": "npm-run-all build cypress:ci:mochawesome",

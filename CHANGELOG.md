@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.22.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.22.0...v2.22.1) (2020-10-14)
+
+
+### Features
+
+* **styling:** add frozen on all possible elements with SASS variables ([#437](https://github.com/ghiscoding/aurelia-slickgrid/issues/437)) ([5a1af0d](https://github.com/ghiscoding/aurelia-slickgrid/commit/5a1af0db72c3a6913cbe5d2fa57ec5bd1a696867))
+
+
+### Bug Fixes
+
+* **core:** don't override alwaysShowVerticalScroll flag ([#438](https://github.com/ghiscoding/aurelia-slickgrid/issues/438)) ([07687e0](https://github.com/ghiscoding/aurelia-slickgrid/commit/07687e0ee7fb71883e421d2454338ee9a2d5d2fe)), closes [#537](https://github.com/ghiscoding/aurelia-slickgrid/issues/537) [6pac/SlickGrid#537](https://github.com/6pac/SlickGrid/issues/537)
+* **core:** hide Grid Menu Filter/Sort cmd when disabling functionality ([#444](https://github.com/ghiscoding/aurelia-slickgrid/issues/444)) ([735baf2](https://github.com/ghiscoding/aurelia-slickgrid/commit/735baf2b980623d02ba30a3e458b4c5a1c953318))
+
 ## [2.22.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.21.0...v2.22.0) (2020-10-02)
 
 
