@@ -1,23 +1,6 @@
-import { Column, GridOption, Formatters, Formatter } from '../../aurelia-slickgrid';
+import { Column, GridOption, Formatters } from '../../aurelia-slickgrid';
 
 const NB_ITEMS = 995;
-
-interface DataItem {
-  id: number;
-  title: string;
-  duration: string;
-  percentComplete: number;
-  start: Date;
-  finish: Date;
-  effortDriven: boolean;
-  foo: {
-    bar: string;
-  }
-}
-
-const upperCaseFormatter: Formatter<DataItem> = (_, __, value, col, item) => {
-  return `${col.field}, ${item.title}`;
-}
 
 export class Example1 {
   title = 'Example 1: Basic Grids';
@@ -25,7 +8,7 @@ export class Example1 {
 
   gridOptions1: GridOption;
   gridOptions2: GridOption;
-  columnDefinitions1: Column<DataItem>[];
+  columnDefinitions1: Column[];
   columnDefinitions2: Column[];
   dataset1: any[];
   dataset2: any[];
@@ -44,22 +27,12 @@ export class Example1 {
   /* Define grid Options and Columns */
   defineGrids() {
     this.columnDefinitions1 = [
-      { id: 'title', name: 'Title', field: 'title', sortable: true, minWidth: 100, formatter: upperCaseFormatter },
+      { id: 'title', name: 'Title', field: 'title', sortable: true, minWidth: 100 },
       { id: 'duration', name: 'Duration (days)', field: 'duration', sortable: true, minWidth: 100 },
       { id: '%', name: '% Complete', field: 'percentComplete', sortable: true, minWidth: 100 },
       { id: 'start', name: 'Start', field: 'start', formatter: Formatters.dateIso },
       { id: 'finish', name: 'Finish', field: 'finish', formatter: Formatters.dateIso },
-      {
-        id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', sortable: true, minWidth: 100,
-        formatter: (row: number, cell: number, value: any, columnDef: Column, dataContext, grid) => {
-          return `<span style="margin-left: 5px">
-              ${dataContext.effortDriven} ->
-              <button class="btn btn-xs btn-default">
-                <i class="fa ${value ? 'fa-check-circle' : 'fa-circle-thin'} fa-lg" style="color: ${value ? 'black' : 'lavender'}"></i>
-              </button>
-            </span>`;
-        }
-      }
+      { id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', sortable: true, minWidth: 100 }
     ];
     this.gridOptions1 = {
       enableAutoResize: false,
