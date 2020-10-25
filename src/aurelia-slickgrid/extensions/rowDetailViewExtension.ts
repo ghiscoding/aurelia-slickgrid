@@ -69,8 +69,8 @@ export class RowDetailViewExtension implements Extension {
     if (this._addon && this._addon.destroy) {
       this._addon.destroy();
     }
-    disposeAllSubscriptions(this._subscriptions);
     this.disposeAllViewSlot();
+    disposeAllSubscriptions(this._subscriptions);
   }
 
   /** Dispose of all the opened Row Detail Panels Aurelia View Slots */
