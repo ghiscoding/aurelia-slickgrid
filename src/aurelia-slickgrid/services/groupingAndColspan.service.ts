@@ -1,4 +1,5 @@
 import { inject, singleton } from 'aurelia-framework';
+import { Subscription } from 'aurelia-event-aggregator';
 import * as $ from 'jquery';
 
 import {
@@ -20,6 +21,7 @@ export class GroupingAndColspanService {
   private _eventHandler: SlickEventHandler;
   private _grid: any;
   private _aureliaEventPrefix: string;
+  private _subscriptions: Subscription[] = [];
 
   constructor(private extensionUtility: ExtensionUtility, private extensionService: ExtensionService, private pluginEa: SlickgridEventAggregator) {
     this._eventHandler = new Slick.EventHandler();
@@ -57,7 +59,9 @@ export class GroupingAndColspanService {
         this._eventHandler.subscribe(grid.onColumnsResized, () => this.renderPreHeaderRowGroupingTitles());
         this._eventHandler.subscribe(grid.onColumnsReordered, () => this.renderPreHeaderRowGroupingTitles());
         this._eventHandler.subscribe(dataView.onRowCountChanged, () => this.renderPreHeaderRowGroupingTitles());
-        this.pluginEa.subscribe(`resizerService:onAfterResize`, () => this.renderPreHeaderRowGroupingTitles());
+        this._subscriptions.push(
+          this.pluginEa.subscribe(`resizerService:onAfterResize`, () => this.renderPreHeaderRowGroupingTitles())
+        );
 
         this._eventHandler.subscribe(grid.onSetOptions, (_e: Event, args: { grid: any; optionsBefore: GridOption; optionsAfter: GridOption; }) => {
           // when user changes frozen columns dynamically (e.g. from header menu), we need to re-render the pre-header of the grouping titles
