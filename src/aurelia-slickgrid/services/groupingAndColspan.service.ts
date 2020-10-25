@@ -11,6 +11,7 @@ import {
 import { ExtensionUtility } from '../extensions/extensionUtility';
 import { ExtensionService } from './extension.service';
 import { SlickgridEventAggregator } from '../custom-elements/slickgridEventAggregator';
+import { disposeAllSubscriptions } from './utilities';
 
 // using external non-typed js libraries
 declare const Slick: any;
@@ -92,6 +93,7 @@ export class GroupingAndColspanService {
   dispose() {
     // unsubscribe all SlickGrid events
     this._eventHandler.unsubscribeAll();
+    disposeAllSubscriptions(this._subscriptions);
   }
 
   /** Create or Render the Pre-Header Row Grouping Titles */
