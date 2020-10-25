@@ -273,6 +273,8 @@ describe('rowDetailViewExtension', () => {
       jest.spyOn(SharedService.prototype, 'grid', 'get').mockReturnValue(gridStub);
       jest.spyOn(SharedService.prototype, 'gridOptions', 'get').mockReturnValue(gridOptionsMock);
       jest.clearAllMocks();
+      gridStub.onColumnsReordered = new Slick.Event();
+      gridStub.onSort = new Slick.Event();
     });
 
     it('should register the addon', () => {
@@ -492,8 +494,6 @@ describe('rowDetailViewExtension', () => {
     });
 
     it('should call "redrawAllViewSlots" when event "filterChanged" is triggered', (done) => {
-      gridStub.onColumnsReordered = new Slick.Event();
-      gridStub.onSort = new Slick.Event();
       const mockColumn = { id: 'field1', field: 'field1', width: 100, cssClass: 'red', __collapsed: true };
       const handlerSpy = jest.spyOn(extension.eventHandler, 'subscribe');
       // @ts-ignore:2345
@@ -519,8 +519,6 @@ describe('rowDetailViewExtension', () => {
     });
 
     it('should call "renderAllViewModels" when grid event "onAfterRowDetailToggle" is triggered', (done) => {
-      gridStub.onColumnsReordered = new Slick.Event();
-      gridStub.onSort = new Slick.Event();
       const mockColumn = { id: 'field1', field: 'field1', width: 100, cssClass: 'red', __collapsed: true };
       const handlerSpy = jest.spyOn(extension.eventHandler, 'subscribe');
       const getElementSpy = jest.spyOn(document, 'getElementsByClassName');
@@ -547,8 +545,6 @@ describe('rowDetailViewExtension', () => {
     });
 
     it('should call "redrawViewSlot" when grid event "onRowBackToViewportRange" is triggered', (done) => {
-      gridStub.onColumnsReordered = new Slick.Event();
-      gridStub.onSort = new Slick.Event();
       const mockColumn = { id: 'field1', field: 'field1', width: 100, cssClass: 'red', __collapsed: true };
       const handlerSpy = jest.spyOn(extension.eventHandler, 'subscribe');
       const getElementSpy = jest.spyOn(document, 'getElementsByClassName');
@@ -645,8 +641,6 @@ describe('rowDetailViewExtension', () => {
     });
 
     it('should call Aurelia Util "disposeAllViewSlot" when grid "onSort" is triggered', (done) => {
-      gridStub.onColumnsReordered = new Slick.Event();
-      gridStub.onSort = new Slick.Event();
       const mockColumn = { id: 'field1', field: 'field1', width: 100, cssClass: 'red', __collapsed: true };
       jest.spyOn(aureliaUtilServiceStub, 'createAureliaViewModelAddToSlot').mockReturnValue({ componentRef: { instance: {} } } as any);
       const handlerSpy = jest.spyOn(extension.eventHandler, 'subscribe');
@@ -665,8 +659,6 @@ describe('rowDetailViewExtension', () => {
     });
 
     it('should dispose of the addon', () => {
-      gridStub.onColumnsReordered = new Slick.Event();
-      gridStub.onSort = new Slick.Event();
       const instance = extension.create(columnsMock, gridOptionsMock);
       extension.register();
       const destroySpy = jest.spyOn(instance, 'destroy');
