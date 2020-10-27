@@ -104,7 +104,7 @@ class HttpStub extends HttpClient {
 }
 
 describe('rowDetailViewExtension', () => {
-  let ea: EventAggregator;
+  let pluginEa: EventAggregator;
   let extensionUtility: ExtensionUtility;
   let extension: RowDetailViewExtension;
   let sharedService: SharedService;
@@ -136,10 +136,10 @@ describe('rowDetailViewExtension', () => {
   } as GridOption;
 
   beforeEach(() => {
-    ea = new EventAggregator();
+    pluginEa = new EventAggregator();
     sharedService = new SharedService();
     extensionUtility = new ExtensionUtility({ tr: jest.fn() } as unknown as I18N, sharedService);
-    extension = new RowDetailViewExtension(aureliaUtilServiceStub, ea, extensionUtility, sharedService);
+    extension = new RowDetailViewExtension(aureliaUtilServiceStub, pluginEa, extensionUtility, sharedService);
   });
 
   it('should return null after calling "create" method when either the column definitions or the grid options is missing', () => {
@@ -273,6 +273,8 @@ describe('rowDetailViewExtension', () => {
       jest.spyOn(SharedService.prototype, 'grid', 'get').mockReturnValue(gridStub);
       jest.spyOn(SharedService.prototype, 'gridOptions', 'get').mockReturnValue(gridOptionsMock);
       jest.clearAllMocks();
+      gridStub.onColumnsReordered = new Slick.Event();
+      gridStub.onSort = new Slick.Event();
     });
 
     it('should register the addon', () => {
@@ -501,7 +503,7 @@ describe('rowDetailViewExtension', () => {
 
       extension.register();
       instance.onBeforeRowDetailToggle.subscribe(() => {
-        ea.publish('filterService:filterChanged', { columnId: 'field1', operator: '=', searchTerms: [] });
+        pluginEa.publish('filterService:filterChanged', { columnId: 'field1', operator: '=', searchTerms: [] });
         expect(appendSpy).toHaveBeenCalledWith(
           undefined,
           expect.objectContaining({ model: mockColumn, addon: expect.anything(), grid: gridStub, dataView: dataViewStub }),

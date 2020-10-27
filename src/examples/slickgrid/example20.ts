@@ -51,6 +51,12 @@ export class Example20 {
     this.getData();
   }
 
+  detached() {
+    // unsubscribe every SlickGrid subscribed event (or use the Slick.EventHandler)
+    this.gridObj.onMouseEnter.unsubscribe();
+    this.gridObj.onMouseLeave.unsubscribe();
+  }
+
   /* Define grid Options and Columns */
   defineGrid() {
     this.columnDefinitions = [
