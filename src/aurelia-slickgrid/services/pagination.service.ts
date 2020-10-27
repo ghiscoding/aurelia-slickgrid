@@ -91,7 +91,7 @@ export class PaginationService {
     }
 
     if (this._isLocalGrid && this.dataView) {
-      this.dataView.onPagingInfoChanged.subscribe((e: Event, pagingInfo: { totalRows: number; pageNum: number; }) => {
+      this._eventHandler.subscribe(this.dataView.onPagingInfoChanged, (_e: Event, pagingInfo: { totalRows: number; pageNum: number; }) => {
         if (this._totalItems !== pagingInfo.totalRows) {
           this._totalItems = pagingInfo.totalRows;
           this._paginationOptions.totalItems = this._totalItems;

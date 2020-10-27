@@ -81,9 +81,9 @@ module.exports = {
         }
       },
       server: {
-        default: `webpack-dev-server -d --port=${WEB_UI_PORT} --devtool '#source-map' --inline --env.server`,
-        extractCss: `webpack-dev-server -d --port=${WEB_UI_PORT} --devtool '#source-map' --inline --env.server --env.extractCss`,
-        hmr: `webpack-dev-server -d --port=${WEB_UI_PORT} --devtool '#source-map' --inline --hot --env.server`
+        default: `webpack-dev-server -d --port=${WEB_UI_PORT} --env.development --config webpack.config.js`,
+        extractCss: `webpack-dev-server -d --port=${WEB_UI_PORT} --inline --env.development --env.extractCss`,
+        hmr: `webpack-dev-server -d --port=${WEB_UI_PORT} --inline --hot --env.development`
       },
     },
     serve: 'http-server ./dist-demo --cors',
