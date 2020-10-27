@@ -4,7 +4,7 @@
   "description": "The Cypress integration tests.",
   "main": "index.js",
   "scripts": {
-    "cypress:ci": "node cypress-mochawesome.js --reporter mochawesome --record",
+    "cypress:ci": "cypress run --config-file test/cypress.json --reporter mochawesome --record",
     "cypress": "node node_modules/cypress/bin/cypress open"
   },
   "author": "Ghislain B.",
