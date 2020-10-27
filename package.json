@@ -80,8 +80,8 @@
     "start:prod": "nps webpack.server.production",
     "start:webpack:dev": "node node_modules/webpack-dev-server/bin/webpack-dev-server -d --port=9000 --env.server --config webpack.config.js",
     "e2e:ci": "nps e2e.ci",
-    "cypress:ci": "cd test/cypress && npm run cypress:ci",
     "cypress": "cd test/cypress && node node_modules/cypress/bin/cypress open",
+    "cypress:ci": "npx cypress run --config-file test/cypress.json --reporter mochawesome --record",
     "test:jest": "node_modules/.bin/jest --runInBand --coverage --config test/jest.config.js"
   },
   "dependencies": {
