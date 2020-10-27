@@ -119,7 +119,7 @@
     "aurelia-fetch-client": "^1.8.2",
     "aurelia-http-client": "^1.3.1",
     "aurelia-loader-nodejs": "^1.1.0",
-    "aurelia-pal-nodejs": "^2.0.0",
+    "aurelia-pal-nodejs": "^1.2.0",
     "aurelia-polyfills": "latest",
     "aurelia-router": "^1.7.1",
     "aurelia-testing": "^1.0.0",
