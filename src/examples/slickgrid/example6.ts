@@ -1,7 +1,5 @@
-import { EventAggregator } from 'aurelia-event-aggregator';
 import { autoinject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
-import { HttpClient } from 'aurelia-http-client';
 import * as moment from 'moment-mini';
 import {
   AureliaGridInstance,
@@ -53,7 +51,7 @@ export class Example6 {
   selectedLanguage: string;
   status = { text: '', class: '' };
 
-  constructor(private ea: EventAggregator, private http: HttpClient, private i18n: I18N) {
+  constructor(private i18n: I18N) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
 

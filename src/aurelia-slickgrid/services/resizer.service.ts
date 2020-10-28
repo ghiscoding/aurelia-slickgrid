@@ -79,17 +79,19 @@ export class ResizerService {
 
     // -- 2nd bind a trigger on the Window DOM element, so that it happens also when resizing after first load
     // -- bind auto-resize to Window object only if it exist
-    $(window).on(`resize.grid.${this._gridUid}`, (event: Event) => {
-      this.pluginEa.publish(`resizerService:onBeforeResize`, event);
-      this.globalEa.publish(`${this.aureliaEventPrefix}:onBeforeResize`, event); // @deprecated, should remove it in the future
+    $(window).on(`resize.grid.${this._gridUid}`, this.handleResizeGrid.bind(this, newSizes));
+  }
 
-      if (!this._resizePaused) {
-        // for some yet unknown reason, calling the resize twice removes any stuttering/flickering
-        // when changing the height and makes it much smoother experience
-        this.resizeGrid(0, newSizes);
-        this.resizeGrid(0, newSizes);
-      }
-    });
+  handleResizeGrid(newSizes: GridDimension, event: Event) {
+    this.pluginEa.publish(`resizerService:onBeforeResize`, event);
+    this.globalEa.publish(`${this.aureliaEventPrefix}:onBeforeResize`, event); // @deprecated, should remove it in the future
+
+    if (!this._resizePaused) {
+      // for some yet unknown reason, calling the resize twice removes any stuttering/flickering
+      // when changing the height and makes it much smoother experience
+      this.resizeGrid(0, newSizes);
+      this.resizeGrid(0, newSizes);
+    }
   }
 
   /**
