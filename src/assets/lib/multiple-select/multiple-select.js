@@ -60,8 +60,9 @@
       return false;
     }
 
-    for (var key of aKeys) {
-      if (bKeys.includes(key) && objectA[key] !== objectB[key]) {
+    for (var i = 0; i < aKeys.length; i++) {
+      var key = aKeys[i];
+      if (bKeys.indexOf(key) >= 0 && objectA[key] !== objectB[key]) {
         return false;
       }
     }
