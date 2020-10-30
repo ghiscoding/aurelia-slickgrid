@@ -14,7 +14,8 @@ const when = (condition, config, negativeConfig) =>
 
 // primary config:
 const title = 'Aurelia Navigation Skeleton';
-const outDir = path.resolve(__dirname, 'dist');
+const outDevDir = path.resolve(__dirname, 'dist');
+const outProdDir = path.resolve(__dirname, 'docs');
 const srcDir = path.resolve(__dirname, 'src');
 const baseUrl = '';
 const platform = {
@@ -48,7 +49,7 @@ module.exports = ({ production } = {}, { extractCss, analyze, server, tests, hmr
   },
   mode: production ? 'production' : 'development',
   output: {
-    path: outDir,
+    path: production ? outProdDir : outDevDir,
     publicPath: baseUrl,
     filename: production ? '[name].[chunkhash].bundle.js' : '[name].[hash].bundle.js',
     sourceMapFilename: production ? '[name].[chunkhash].bundle.map' : '[name].[hash].bundle.map',
@@ -56,7 +57,7 @@ module.exports = ({ production } = {}, { extractCss, analyze, server, tests, hmr
   },
   performance: { hints: false },
   devServer: {
-    contentBase: outDir,
+    contentBase: production ? outProdDir : outDevDir,
     // serve index.html for all 404 (required for push-state)
     historyApiFallback: true,
     hot: hmr || platform.hmr,

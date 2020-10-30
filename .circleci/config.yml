@@ -24,8 +24,11 @@ jobs:
           name: Upload Jest coverage to Codecov
           command: bash <(curl -s https://codecov.io/bash) -t ${CODECOV_TOKEN}
       - run:
-          name: Start Dev WebServer
-          command: yarn start:dev
+          name: Website Prod Build (GitHub demo site)
+          command: yarn run build:demo
+      - run:
+          name: Run Web Server
+          command: yarn run serve:demo
           background: true
       - restore_cache:
           name: Restoring Cache for Cypress
@@ -50,6 +53,3 @@ jobs:
           path: reports/junit
       - store_artifacts:
           path: reports/junit
-      - run:
-          name: Build Demo Site
-          command: NODE_ENV=production npx webpack --progress -p --env.production --env.extractCss
