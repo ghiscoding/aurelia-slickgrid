@@ -398,6 +398,15 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
     expect(spy).toHaveBeenNthCalledWith(5, 'onAfterGridDestroyed', true);
   });
 
+  it('should load jQuery mousewheel when using a frozen grid', () => {
+    const loadSpy = jest.spyOn(customElement, 'loadJqueryMousewheelDynamically');
+    customElement.gridOptions.frozenRow = 3;
+
+    customElement.attached();
+
+    expect(loadSpy).toHaveBeenCalled();
+  });
+
   describe('initialization method', () => {
     describe('columns definitions changed', () => {
       it('should expect "translateColumnHeaders" being called when "enableTranslate" is set', () => {
