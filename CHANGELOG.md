@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.22.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.22.1...v2.22.2) (2020-10-31)
+
+
+### Bug Fixes
+
+* **core:** unsubscribe all subscriptions on compose dispose ([#446](https://github.com/ghiscoding/aurelia-slickgrid/issues/446)) ([9b20b61](https://github.com/ghiscoding/aurelia-slickgrid/commit/9b20b619456a9d2095e6f95f451fa11baf99313f))
+* **core:** unsubscribe every possible events ([#448](https://github.com/ghiscoding/aurelia-slickgrid/issues/448)) ([09f596e](https://github.com/ghiscoding/aurelia-slickgrid/commit/09f596e7f20fcb3cc52232fb4697474cad427a11))
+* **extensions:** import jQuery mousewheel only with frozen ([#450](https://github.com/ghiscoding/aurelia-slickgrid/issues/450)) ([c327833](https://github.com/ghiscoding/aurelia-slickgrid/commit/c327833fb44922120764c9802f291e58e74e4b7b)), closes [#618](https://github.com/ghiscoding/aurelia-slickgrid/issues/618)
+* **filters:** slider filter setValues really change input value ([#451](https://github.com/ghiscoding/aurelia-slickgrid/issues/451)) ([cc4417b](https://github.com/ghiscoding/aurelia-slickgrid/commit/cc4417b40a2ac0b4f1978b42b628bc2c4954f6b0))
+* **interfaces:** column types in GridStateChange ([#445](https://github.com/ghiscoding/aurelia-slickgrid/issues/445)) ([91d81c8](https://github.com/ghiscoding/aurelia-slickgrid/commit/91d81c82b09171fbfb2a1c9e27284798f6bc95cb))
+* **styling:** flatpickr bg-color should be using SASS variable ([#449](https://github.com/ghiscoding/aurelia-slickgrid/issues/449)) ([33dc40d](https://github.com/ghiscoding/aurelia-slickgrid/commit/33dc40dc4411d33e5ce6be51b7585f8e0f34cdd3))
+
 ### [2.22.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.22.0...v2.22.1) (2020-10-14)
 
 
