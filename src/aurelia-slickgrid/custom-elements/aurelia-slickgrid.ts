@@ -3,7 +3,6 @@
 import * as $ from 'jquery';
 import 'jquery-ui-dist/jquery-ui';
 import 'slickgrid/lib/jquery.event.drag-2.3.0';
-import 'slickgrid/lib/jquery.mousewheel';
 import 'slickgrid/slick.core';
 import 'slickgrid/slick.dataview';
 import 'slickgrid/slick.grid';
@@ -61,6 +60,7 @@ import { SlickgridEventAggregator } from './slickgridEventAggregator';
 
 // using external non-typed js libraries
 declare const Slick: any;
+declare function require(name: string);
 
 const DEFAULT_AURELIA_EVENT_PREFIX = 'asg';
 const DEFAULT_SLICKGRID_EVENT_PREFIX = 'sg';
@@ -177,6 +177,10 @@ export class AureliaSlickgridCustomElement {
   }
 
   initialization() {
+    if (this.gridOptions && this.gridOptions.frozenRow >= 0) {
+      this.loadJqueryMousewheelDynamically();
+    }
+
     this.dispatchCustomEvent(`${DEFAULT_AURELIA_EVENT_PREFIX}-on-before-grid-create`);
     this.globalEa.publish('onBeforeGridCreate', true);
 
@@ -773,6 +777,15 @@ export class AureliaSlickgridCustomElement {
     }
 
     return options;
+  }
+
+
+  /**
+   *  load jQuery mousewheel only when using a frozen grid (this will make the mousewheel work on any side of the frozen container).
+   * DO NOT USE with Row Detail
+   */
+  loadJqueryMousewheelDynamically() {
+    require('slickgrid/lib/jquery.mousewheel');
   }
 
   /**
