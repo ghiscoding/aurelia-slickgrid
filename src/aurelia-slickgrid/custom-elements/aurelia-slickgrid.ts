@@ -60,7 +60,7 @@ import { SlickgridEventAggregator } from './slickgridEventAggregator';
 
 // using external non-typed js libraries
 declare const Slick: any;
-declare function require(name: string);
+declare function require(name: string): any;
 
 const DEFAULT_AURELIA_EVENT_PREFIX = 'asg';
 const DEFAULT_SLICKGRID_EVENT_PREFIX = 'sg';
@@ -177,7 +177,7 @@ export class AureliaSlickgridCustomElement {
   }
 
   initialization() {
-    if (this.gridOptions && this.gridOptions.frozenRow >= 0) {
+    if (this.gridOptions && this.gridOptions.frozenRow !== undefined && this.gridOptions.frozenRow >= 0) {
       this.loadJqueryMousewheelDynamically();
     }
 
