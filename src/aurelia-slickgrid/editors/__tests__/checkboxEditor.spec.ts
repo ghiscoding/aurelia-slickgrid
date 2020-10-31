@@ -1,3 +1,4 @@
+import { DOM } from 'aurelia-pal';
 import { Editors } from '../index';
 import { CheckboxEditor } from '../checkboxEditor';
 import { AutocompleteOption, Column, EditorArgs, EditorArguments, GridOption } from '../../models';
@@ -150,14 +151,15 @@ describe('CheckboxEditor', () => {
       it('should return True when previous event is a click event', () => {
         gridOptionMock.autoCommitEdit = true;
         editor = new CheckboxEditor(editorArguments);
-        const spy = jest.spyOn(editor, 'save');
+        const saveSpy = jest.spyOn(editor, 'save');
         editor.loadValue({ id: 2, title: 'task 1', isActive: true });
 
         const editorElm = divContainer.querySelector<HTMLInputElement>('input.editor-isActive');
-        editorElm.dispatchEvent(new (window.window as any).CustomEvent('click'));
+        // editorElm.checked = false;
+        editorElm.dispatchEvent(DOM.createCustomEvent('click'));
 
         expect(editor.isValueChanged()).toBe(true);
-        expect(spy).toHaveBeenCalled();
+        expect(saveSpy).toHaveBeenCalledTimes(1);
       });
 
       it('should return False when previous event is not a click event', () => {

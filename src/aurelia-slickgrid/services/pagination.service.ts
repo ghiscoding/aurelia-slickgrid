@@ -91,7 +91,7 @@ export class PaginationService {
     }
 
     if (this._isLocalGrid && this.dataView) {
-      this.dataView.onPagingInfoChanged.subscribe((e: Event, pagingInfo: { totalRows: number; pageNum: number; }) => {
+      this._eventHandler.subscribe(this.dataView.onPagingInfoChanged, (_e: Event, pagingInfo: { totalRows: number; pageNum: number; }) => {
         if (this._totalItems !== pagingInfo.totalRows) {
           this._totalItems = pagingInfo.totalRows;
           this._paginationOptions.totalItems = this._totalItems;
@@ -345,9 +345,7 @@ export class PaginationService {
         this._dataTo = this._totalItems;
       }
     }
-    if (this._totalItems > 0 && this._pageNumber === 0) {
-      this._pageNumber = 1;
-    }
+    this._pageNumber = (this._totalItems > 0 && this._pageNumber === 0) ? 1 : this._pageNumber;
 
     // do a final check on the From/To and make sure they are not over or below min/max acceptable values
     if (this._dataTo > this._totalItems) {

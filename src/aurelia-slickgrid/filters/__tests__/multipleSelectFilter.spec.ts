@@ -108,7 +108,7 @@ describe('SelectFilter', () => {
   it('should be a multiple-select filter', () => {
     mockColumn.filter.collection = [{ value: 'male', label: 'male' }, { value: 'female', label: 'female' }];
     filter = new MultipleSelectFilter(bindingEngine, collectionService, i18n);
-    filter.init(filterArguments, true);
+    filter.init(filterArguments);
     const filterCount = divContainer.querySelectorAll('select.ms-filter.search-filter.filter-gender').length;
 
     expect(spyGetHeaderRow).toHaveBeenCalled();

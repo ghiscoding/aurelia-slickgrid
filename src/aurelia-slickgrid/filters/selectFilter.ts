@@ -323,7 +323,7 @@ export class SelectFilter implements Filter {
     }
   }
 
-  protected renderDomElement(inputCollection: any[]) {
+  renderDomElement(inputCollection: any[]) {
     if (!Array.isArray(inputCollection) && this.collectionOptions && (this.collectionOptions.collectionInsideObjectProperty || this.collectionOptions.collectionInObjectProperty)) {
       const collectionInsideObjectProperty = this.collectionOptions.collectionInsideObjectProperty || this.collectionOptions.collectionInObjectProperty;
       inputCollection = getDescendantProperty(inputCollection, collectionInsideObjectProperty);

@@ -3,9 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <title>
-    <%- htmlWebpackPlugin.options.metadata.title %>
-  </title>
+  <title><%- htmlWebpackPlugin.options.metadata.title %></title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <base href="<%- htmlWebpackPlugin.options.metadata.baseUrl %>">
   <!-- imported CSS are concatenated and added automatically -->
@@ -13,14 +11,8 @@
 
 <body aurelia-app="main">
   <script async defer src="https://buttons.github.io/buttons.js"></script>
-
-  <% if (htmlWebpackPlugin.options.metadata.server) { %>
-  <!-- Webpack Dev Server reload -->
-  <script src="/webpack-dev-server.js"></script>
-  <% } %>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/6.26.0/polyfill.js"
-          integrity="sha256-qyG2LBYZavhW0RXdL7CQGGv2dX4WP30uIFPguGoOLjE="
-          crossorigin="anonymous"></script>
+          integrity="sha256-qyG2LBYZavhW0RXdL7CQGGv2dX4WP30uIFPguGoOLjE=" crossorigin="anonymous"></script>
 </body>
 
 </html>
