@@ -16,7 +16,6 @@
     "_": true
   },
   "parserOptions": {
-    "project": "tsconfig.json",
     "sourceType": "module"
   },
   "plugins": [
@@ -59,7 +58,9 @@
     "@typescript-eslint/no-misused-new": "error",
     "@typescript-eslint/no-namespace": "error",
     "@typescript-eslint/no-parameter-properties": "off",
-    "@typescript-eslint/no-shadow": ["error"],
+    "@typescript-eslint/no-shadow": [
+      "error"
+    ],
     "@typescript-eslint/no-this-alias": "error",
     "@typescript-eslint/no-use-before-define": "off",
     "@typescript-eslint/no-var-requires": "off",

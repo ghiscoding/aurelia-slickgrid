@@ -25,7 +25,7 @@
     "dist",
     "jspm_packages",
     "node_modules",
-    "**/*.{html,scss}"
+    "**/*.spec.ts"
   ],
   "filesGlob": [
     "./src/**/*.ts",
