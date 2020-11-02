@@ -3,7 +3,6 @@ import { GridOption } from '../../models/gridOption.interface';
 import { DraggableGroupingExtension } from '../draggableGroupingExtension';
 import { ExtensionUtility } from '../extensionUtility';
 import { SharedService } from '../../services/shared.service';
-import { Grouping } from '../../models';
 
 declare const Slick: any;
 
@@ -32,7 +31,7 @@ describe('draggableGroupingExtension', () => {
       dropPlaceHolderText: 'test',
       groupIconCssClass: 'group-class',
       onExtensionRegistered: jest.fn(),
-      onGroupChanged: (e: Event, args: { caller?: string; groupColumns: Grouping[] }) => { },
+      onGroupChanged: () => { },
     }
   } as GridOption;
 

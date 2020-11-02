@@ -208,7 +208,7 @@ export class ContextMenuExtension implements Extension {
             disabled: false,
             command: commandName,
             positionOrder: 50,
-            action: (e: Event, args: MenuCommandItemCallbackArgs) => {
+            action: (_e: Event, args: MenuCommandItemCallbackArgs) => {
               this.copyToClipboard(args);
             },
             itemUsabilityOverride: (args: MenuCallbackArgs) => {
@@ -427,7 +427,9 @@ export class ContextMenuExtension implements Extension {
           }
         }
       }
-    } catch (e) { }
+    } catch (e) {
+      /* do nothing */
+    }
   }
 
   /**

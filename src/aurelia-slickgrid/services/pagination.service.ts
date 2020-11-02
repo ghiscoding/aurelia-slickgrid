@@ -210,7 +210,7 @@ export class PaginationService {
     }
   }
 
-  refreshPagination(isPageNumberReset: boolean = false, triggerChangedEvent = true) {
+  refreshPagination(isPageNumberReset = false, triggerChangedEvent = true) {
     const previousPagination = { ...this.getCurrentPagination() };
 
     if (this._paginationOptions) {

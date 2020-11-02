@@ -346,7 +346,7 @@ export class RowDetailViewExtension implements Extension {
    * if it's expanding we will add it to our View Slots reference array if we don't already have it
    * or if it's collapsing we will remove it from our View Slots reference array
    */
-  private onBeforeRowDetailToggle(e: Event, args: { grid: any; item: any; }) {
+  private onBeforeRowDetailToggle(_e: Event, args: { grid: any; item: any; }) {
     // expanding
     if (args && args.item && args.item.__collapsed) {
       // expanding row detail
@@ -370,7 +370,7 @@ export class RowDetailViewExtension implements Extension {
   }
 
   /** When Row comes back to Viewport Range, we need to redraw the View */
-  private onRowBackToViewportRange(e: Event, args: { grid: any; item: any; rowId: number; rowIndex: number; expandedRows: number[]; rowIdsOutOfViewport: number[]; }) {
+  private onRowBackToViewportRange(_e: Event, args: { grid: any; item: any; rowId: number; rowIndex: number; expandedRows: number[]; rowIdsOutOfViewport: number[]; }) {
     if (args && args.item) {
       this._slots.forEach((slot) => {
         if (slot.id === args.item[this.datasetIdPropName]) {

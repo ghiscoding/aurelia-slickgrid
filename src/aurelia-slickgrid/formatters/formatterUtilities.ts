@@ -24,7 +24,7 @@ export function getValueFromParamsOrFormatterOptions(optionName: string, columnD
 export function getAssociatedDateFormatter(fieldType: FieldType, defaultSeparator: string): Formatter {
   const defaultDateFormat = mapMomentDateFormatWithFieldType(fieldType);
 
-  return (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid: any) => {
+  return (_row: number, _cell: number, value: any, columnDef: Column, _dataContext: any, grid: any) => {
     const gridOptions = ((grid && typeof grid.getOptions === 'function') ? grid.getOptions() : {}) as GridOption;
     const customSeparator = gridOptions && gridOptions.formatterOptions && gridOptions.formatterOptions.dateSeparator || defaultSeparator;
     const isParsingAsUtc = columnDef && columnDef.params && columnDef.params.parseDateAsUtc || false;

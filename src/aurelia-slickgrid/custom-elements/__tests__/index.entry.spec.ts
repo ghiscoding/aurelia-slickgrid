@@ -1,6 +1,5 @@
 import { FrameworkConfiguration } from 'aurelia-framework';
-import { configure, SlickgridConfig } from '../../index';
-import * as entry from '../../index';
+import { AureliaSlickgridCustomElement, configure, SlickgridConfig, SlickPaginationCustomElement } from '../../index';
 
 jest.mock('flatpickr', () => { });
 
@@ -20,9 +19,9 @@ describe('Testing library entry point and aurelia configure routine', () => {
   });
 
   it('should export a few functions', () => {
-    expect(entry.AureliaSlickgridCustomElement).toBeTruthy();
-    expect(entry.SlickPaginationCustomElement).toBeTruthy();
-    expect(entry.SlickgridConfig).toBeTruthy();
+    expect(AureliaSlickgridCustomElement).toBeTruthy();
+    expect(SlickPaginationCustomElement).toBeTruthy();
+    expect(SlickgridConfig).toBeTruthy();
   });
 
   it('should accept a setup callback passing back the instance', (done) => {

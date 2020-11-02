@@ -120,7 +120,7 @@ export class FilterService {
 
     // also destroy each Filter instances
     if (Array.isArray(this._filtersMetadata)) {
-      this._filtersMetadata.forEach((filter, index) => {
+      this._filtersMetadata.forEach((filter) => {
         if (filter && filter.destroy) {
           filter.destroy(true);
         }
@@ -200,7 +200,7 @@ export class FilterService {
     });
 
     // subscribe to SlickGrid onHeaderRowCellRendered event to create filter template
-    this._eventHandler.subscribe(grid.onHeaderRowCellRendered, (e: KeyboardEvent, args: any) => {
+    this._eventHandler.subscribe(grid.onHeaderRowCellRendered, (_e: KeyboardEvent, args: any) => {
       this.addFilterTemplateToHeaderRow(args);
     });
   }

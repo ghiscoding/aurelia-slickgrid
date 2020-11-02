@@ -21,9 +21,6 @@ import {
   SearchTerm,
 } from './../models/index';
 
-declare function require(name: string): any;
-declare function require(name: string[], loadedFile: any): any;
-
 @inject(Optional.of(I18N))
 export class CompoundDateFilter implements Filter {
   private _clearFilterTriggered = false;

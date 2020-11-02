@@ -17,7 +17,7 @@ export class FilterFactory {
    * @param {Container} container the Aurelia container
    * @param {SlickgridConfig} config the slickgrid configuration settings
    */
-  constructor(private container: Container, private config: SlickgridConfig) {
+  constructor(private container: Container, config: SlickgridConfig) {
     this._options = config.options;
   }
 

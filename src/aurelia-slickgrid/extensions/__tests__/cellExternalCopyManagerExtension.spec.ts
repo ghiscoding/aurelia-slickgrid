@@ -37,7 +37,7 @@ Slick.CellSelectionModel = mockSelectionModel;
 
 describe('cellExternalCopyManagerExtension', () => {
   let queueCallback: EditCommand;
-  const mockEventCallback = (e, args: { ranges: SelectedRange[] }) => { };
+  const mockEventCallback = () => { };
   const mockSelectRange = [{ fromCell: 1, fromRow: 1, toCell: 1, toRow: 1 }] as SelectedRange[];
   const mockSelectRangeEvent = { ranges: mockSelectRange };
 
@@ -313,7 +313,7 @@ describe('cellExternalCopyManagerExtension', () => {
 
     it('should expect a sanitized formatted and empty output after calling "dataItemColumnValueExtractor" callback', () => {
       gridOptionsMock.exportOptions = { sanitizeDataExport: true };
-      const myBoldFormatter: Formatter = (row, cell, value, columnDef, dataContext) => value ? { text: `<b>${value}</b>` } : null;
+      const myBoldFormatter: Formatter = (_row, _cell, value) => value ? { text: `<b>${value}</b>` } : null;
       jest.spyOn(SharedService.prototype, 'gridOptions', 'get').mockReturnValue(gridOptionsMock);
       extension.register();
 
@@ -333,7 +333,7 @@ describe('cellExternalCopyManagerExtension', () => {
     });
 
     it('should expect a sanitized formatted output, from a Custom Formatter, after calling "dataItemColumnValueExtractor" callback', () => {
-      const myBoldFormatter: Formatter = (row, cell, value, columnDef, dataContext) => value ? { text: `<b>${value}</b>` } : '';
+      const myBoldFormatter: Formatter = (_row, _cell, value) => value ? { text: `<b>${value}</b>` } : '';
       gridOptionsMock.exportOptions = { sanitizeDataExport: true };
       jest.spyOn(SharedService.prototype, 'gridOptions', 'get').mockReturnValue(gridOptionsMock);
       extension.register();

@@ -1,6 +1,6 @@
 import { Editors } from '../index';
 import { AutoCompleteEditor } from '../autoCompleteEditor';
-import { AutocompleteOption, Column, EditorArgs, EditorArguments, GridOption, KeyCode, FieldType } from '../../models';
+import { AutocompleteOption, Column, EditorArguments, GridOption, KeyCode, FieldType } from '../../models';
 import { DOM } from 'aurelia-pal';
 
 const KEY_CHAR_A = 97;
@@ -280,7 +280,7 @@ describe('AutoCompleteEditor', () => {
       });
 
       it('should return item data with an empty string in its value when calling "applyValue" which fails the custom validation', () => {
-        mockColumn.internalColumnEditor.validator = (value: any, args: EditorArgs) => {
+        mockColumn.internalColumnEditor.validator = (value: any) => {
           if (value.label.length < 10) {
             return { valid: false, msg: 'Must be at least 10 chars long.' };
           }
@@ -696,7 +696,7 @@ describe('AutoCompleteEditor', () => {
 
       it('should provide "renderItem" in the "filterOptions" and expect the jQueryUI "_renderItem" to be overriden', () => {
         const mockTemplateString = `<div>Hello World</div>`;
-        const mockTemplateCallback = (item) => mockTemplateString;
+        const mockTemplateCallback = () => mockTemplateString;
         mockColumn.internalColumnEditor = {
           editorOptions: {
             source: [],

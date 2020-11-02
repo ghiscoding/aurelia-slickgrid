@@ -18,9 +18,6 @@ import * as flatpickr from 'flatpickr';
 import * as $ from 'jquery';
 import * as moment from 'moment-mini';
 
-declare function require(name: string): any;
-declare function require(name: string[], loadedFile: any): any;
-
 @inject(Optional.of(I18N))
 export class DateRangeFilter implements Filter {
   private _clearFilterTriggered = false;
@@ -199,7 +196,7 @@ export class DateRangeFilter implements Filter {
       wrap: true,
       closeOnSelect: true,
       locale: (currentLocale !== 'en') ? this.loadFlatpickrLocale(currentLocale) : 'en',
-      onChange: (selectedDates: Date[] | Date, dateStr: string, instance: any) => {
+      onChange: (selectedDates: Date[] | Date) => {
         if (Array.isArray(selectedDates)) {
           this._currentDates = selectedDates;
           const outFormat = mapMomentDateFormatWithFieldType(this.columnDef.outputType || this.columnFilter.type || this.columnDef.type || FieldType.dateIso);

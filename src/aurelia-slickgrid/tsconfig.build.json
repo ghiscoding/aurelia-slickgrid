@@ -32,7 +32,8 @@
     "src/examples",
     "src/resources",
     "src/test",
-    "**/*.spec.ts"
+    "**/*.spec.ts",
+    "**/*.scss"
   ],
   "include": [
     "../typings",

@@ -878,7 +878,7 @@ export function toKebabCase(inputStr: string): string {
  * @param [orderMatters=false] flag if the order matters, if not arrays will be sorted before comparison
  * @return boolean true if equal, else false
  */
-export function charArraysEqual<T = any>(a: T[], b: T[], orderMatters: boolean = false): boolean {
+export function charArraysEqual<T = any>(a: T[], b: T[], orderMatters = false): boolean {
   if (!a || !b || !Array.isArray(a) || !Array.isArray(a)) {
     return false;
   }
@@ -909,7 +909,7 @@ export function charArraysEqual<T = any>(a: T[], b: T[], orderMatters: boolean =
  * @param any [defaultVal={}] the default value to return
  * @return object the found object or default value
  */
-export function findOrDefault<T = any>(array: any[], logic: (item: any) => boolean, defaultVal = {}): any {
+export function findOrDefault<T = any>(array: any[], logic: (item: T) => boolean, defaultVal = {}): T {
   if (Array.isArray(array)) {
     return array.find(logic) || defaultVal;
   }

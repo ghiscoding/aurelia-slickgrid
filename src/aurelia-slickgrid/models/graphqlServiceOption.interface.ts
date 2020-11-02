@@ -1,5 +1,4 @@
 import { BackendServiceOption } from './backendServiceOption.interface';
-import { Column } from './column.interface';
 import { GraphqlFilteringOption } from './graphqlFilteringOption.interface';
 import { GraphqlSortingOption } from './graphqlSortingOption.interface';
 import { GraphqlCursorPaginationOption } from './graphqlCursorPaginationOption.interface';

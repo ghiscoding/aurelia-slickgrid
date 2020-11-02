@@ -1,7 +1,7 @@
 import { DOM } from 'aurelia-pal';
 import { Editors } from '../index';
 import { SliderEditor } from '../sliderEditor';
-import { Column, EditorArgs, EditorArguments, GridOption } from '../../models';
+import { Column, EditorArguments, GridOption } from '../../models';
 
 const containerId = 'demo-container';
 
@@ -278,7 +278,7 @@ describe('SliderEditor', () => {
       });
 
       it('should return item data with an empty string in its value when it fails the custom validation', () => {
-        mockColumn.internalColumnEditor.validator = (value: any, args: EditorArgs) => {
+        mockColumn.internalColumnEditor.validator = (value: any) => {
           if (+value < 10) {
             return { valid: false, msg: 'Value must be over 10.' };
           }

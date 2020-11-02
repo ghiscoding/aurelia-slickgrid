@@ -523,7 +523,7 @@ export class SelectFilter implements Filter {
       },
       // we will subscribe to the onClose event for triggering our callback
       // also add/remove "filled" class for styling purposes
-      onClose: () => this.onTriggerEvent(undefined)
+      onClose: () => this.onTriggerEvent()
     };
     if (this._isMultipleSelect) {
       options.single = false;
@@ -539,7 +539,7 @@ export class SelectFilter implements Filter {
     this.defaultOptions = options;
   }
 
-  private onTriggerEvent(e: Event | undefined) {
+  private onTriggerEvent() {
     const selectedItems = this.getValues();
 
     if (Array.isArray(selectedItems) && selectedItems.length > 1 || (selectedItems.length === 1 && selectedItems[0] !== '')) {

@@ -96,7 +96,6 @@ describe('PaginationService', () => {
   });
 
   it('should initialize the service and be able to change the grid options by the SETTER and expect the GETTER to have updated options', () => {
-    const mockGridOptionCopy = { ...mockGridOption, options: null };
     service.init(gridStub, dataviewStub, mockGridOption.pagination, mockGridOption.backendServiceApi);
     service.paginationOptions = mockGridOption.pagination;
 
@@ -359,7 +358,7 @@ describe('PaginationService', () => {
       const postSpy = jest.fn();
       mockGridOption.backendServiceApi.process = postSpy;
       jest.spyOn(mockBackendService, 'processOnPaginationChanged').mockReturnValue('backend query');
-      const promise = new Promise((resolve, reject) => setTimeout(() => reject(mockError), 1));
+      const promise = new Promise((_resolve, reject) => setTimeout(() => reject(mockError), 1));
       jest.spyOn(mockGridOption.backendServiceApi, 'process').mockReturnValue(promise);
 
       try {

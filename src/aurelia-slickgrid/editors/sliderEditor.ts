@@ -13,8 +13,8 @@ const DEFAULT_STEP = 1;
  */
 export class SliderEditor implements Editor {
   private _lastInputEvent: JQueryEventObject;
-  private _elementRangeInputId: string = '';
-  private _elementRangeOutputId: string = '';
+  private _elementRangeInputId = '';
+  private _elementRangeOutputId = '';
   private _$editorElm: any;
   private _$input: any;
   $sliderNumber: any;

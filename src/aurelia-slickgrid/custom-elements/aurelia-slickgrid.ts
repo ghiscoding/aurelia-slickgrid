@@ -287,7 +287,7 @@ export class AureliaSlickgridCustomElement {
 
     // after the DataView is created & updated execute some processes & dispatch some events
     if (!this.customDataView) {
-      this.executeAfterDataviewCreated(this.grid, this.gridOptions, this.dataview);
+      this.executeAfterDataviewCreated(this.grid, this.gridOptions);
     }
 
     // bind resize ONLY after the dataView is ready
@@ -608,7 +608,7 @@ export class AureliaSlickgridCustomElement {
     this.gridEventService.bindOnClick(grid, dataView);
 
     if (dataView && grid) {
-      this._eventHandler.subscribe(dataView.onRowCountChanged, (e: Event, args: any) => {
+      this._eventHandler.subscribe(dataView.onRowCountChanged, (_e: Event, args: any) => {
         grid.invalidate();
 
         this.metrics = {
@@ -624,7 +624,7 @@ export class AureliaSlickgridCustomElement {
         throw new Error('[Aurelia-Slickgrid] When enabling tree data, you must also provide the "treeDataOption" property in your Grid Options with "childrenPropName" or "parentPropName" (depending if your array is hierarchical or flat) for the Tree Data to work properly');
       }
 
-      this._eventHandler.subscribe(dataView.onRowsChanged, (e: any, args: any) => {
+      this._eventHandler.subscribe(dataView.onRowsChanged, (_e: Event, args: any) => {
         // when dealing with Tree Data, anytime the flat dataset changes, we need to update our hierarchical dataset
         // this could be triggered by a DataView setItems or updateItem
         if (this.gridOptions && this.gridOptions.enableTreeData) {
@@ -734,7 +734,7 @@ export class AureliaSlickgridCustomElement {
     }
   }
 
-  executeAfterDataviewCreated(grid: any, gridOptions: GridOption, dataView: any) {
+  executeAfterDataviewCreated(_grid: any, gridOptions: GridOption) {
     // if user entered some Sort "presets", we need to reflect them all in the DOM
     if (gridOptions.enableSorting) {
       if (gridOptions.presets && Array.isArray(gridOptions.presets.sorters) && gridOptions.presets.sorters.length > 0) {
@@ -928,7 +928,7 @@ export class AureliaSlickgridCustomElement {
   // ------------------
 
   /** Dispatch of Custom Event, which by default will bubble & is cancelable */
-  private dispatchCustomEvent(eventName: string, data?: any, isBubbling: boolean = true, isCancelable = true): boolean {
+  private dispatchCustomEvent(eventName: string, data?: any, isBubbling = true, isCancelable = true): boolean {
     const eventInit: CustomEventInit = { bubbles: isBubbling, cancelable: isCancelable };
     if (data) {
       eventInit.detail = data;

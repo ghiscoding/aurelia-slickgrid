@@ -1,7 +1,7 @@
 import { DOM } from 'aurelia-pal';
 import { Editors } from '../index';
 import { CheckboxEditor } from '../checkboxEditor';
-import { AutocompleteOption, Column, EditorArgs, EditorArguments, GridOption } from '../../models';
+import { AutocompleteOption, Column, EditorArguments, GridOption } from '../../models';
 
 const KEY_CHAR_SPACE = 32;
 const containerId = 'demo-container';
@@ -322,7 +322,7 @@ describe('CheckboxEditor', () => {
       });
 
       it('should not save when custom validation fails', () => {
-        mockColumn.internalColumnEditor.validator = (value: any, args: EditorArgs) => {
+        mockColumn.internalColumnEditor.validator = (value: any) => {
           if (!value) {
             return { valid: false, msg: 'This must be accepted' };
           }

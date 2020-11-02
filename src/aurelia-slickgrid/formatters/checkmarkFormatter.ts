@@ -1,7 +1,6 @@
-import { Column } from './../models/column.interface';
 import { Formatter } from './../models/formatter.interface';
 
-export const checkmarkFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any) => {
+export const checkmarkFormatter: Formatter = (_row: number, _cell: number, value: any) => {
   let isChecked = false;
   const isNumber = (value === null || value === undefined || value === '') ? false : !isNaN(+value);
 

@@ -69,6 +69,6 @@ describe('SelectFilter', () => {
   });
 
   it('should throw an error when multiple-select.js is not provided or imported', () => {
-    expect(() => filter.init(filterArguments, true)).toThrowError(`multiple-select.js was not found, make sure to read the HOWTO Wiki on how to install it.`);
+    expect(() => filter.init(filterArguments)).toThrowError(`multiple-select.js was not found, make sure to read the HOWTO Wiki on how to install it.`);
   });
 });
