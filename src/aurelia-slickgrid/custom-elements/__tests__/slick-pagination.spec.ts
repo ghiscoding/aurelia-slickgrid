@@ -1,12 +1,11 @@
 import { bootstrap } from 'aurelia-bootstrapper';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { BindingSignaler } from 'aurelia-templating-resources';
-import { ComponentTester, StageComponent } from 'aurelia-testing';
+import { StageComponent } from 'aurelia-testing';
 import { I18N } from 'aurelia-i18n';
 import { PLATFORM, DOM } from 'aurelia-pal';
 
 import { PaginationService } from '../../services';
-import { SlickPaginationCustomElement } from '../slick-pagination';
 
 function removeExtraSpaces(textS: string) {
   return `${textS}`.replace(/\s{2,}/g, '');

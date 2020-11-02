@@ -5,7 +5,7 @@ import { BindingSignaler } from 'aurelia-templating-resources';
 import { CellMenuExtension } from '../cellMenuExtension';
 import { ExtensionUtility } from '../extensionUtility';
 import { SharedService } from '../../services/shared.service';
-import { Column, GridOption, MenuCommandItemCallbackArgs, MenuOptionItemCallbackArgs } from '../../models';
+import { Column, GridOption } from '../../models';
 
 declare const Slick: any;
 

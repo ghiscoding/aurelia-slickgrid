@@ -119,4 +119,4 @@ function executeAssociatedDateCondition(options: FilterConditionOption): boolean
 
   const dateSearchTimestamp1 = FORMAT.toLowerCase().includes('h') ? parseInt(dateSearch1.format('X'), 10) : parseInt(dateSearch1.clone().startOf('day').format('X'), 10);
   return testFilterCondition(options.operator || '==', dateCellTimestamp, dateSearchTimestamp1);
-};
+}

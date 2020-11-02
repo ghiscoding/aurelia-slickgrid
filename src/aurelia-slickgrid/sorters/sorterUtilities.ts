@@ -1,4 +1,4 @@
-import { Column, FieldType, SortDirectionNumber, Sorter } from './../models/index';
+import { Column, FieldType, SortDirectionNumber } from './../models/index';
 import { Sorters } from './index';
 import { getAssociatedDateSorter } from './dateUtilities';
 

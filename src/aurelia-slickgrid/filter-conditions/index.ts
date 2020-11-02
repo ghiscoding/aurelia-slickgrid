@@ -1,4 +1,3 @@
-import { FilterConditionOption } from './../models/filterConditionOption.interface';
 import { booleanFilterCondition } from './booleanFilterCondition';
 import { executeMappedCondition } from './executeMappedCondition';
 import { collectionSearchFilterCondition } from './collectionSearchFilterCondition';

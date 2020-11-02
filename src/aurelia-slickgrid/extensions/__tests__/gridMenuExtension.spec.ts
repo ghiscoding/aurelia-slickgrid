@@ -78,7 +78,6 @@ const template =
 describe('gridMenuExtension', () => {
   const columnsMock: Column[] = [{ id: 'field1', field: 'field1', width: 100, nameKey: 'TITLE' }, { id: 'field2', field: 'field2', width: 75 }];
   let extensionUtility: ExtensionUtility;
-  let ea: EventAggregator;
   let i18n: I18N;
   let extension: GridMenuExtension;
   let sharedService: SharedService;
@@ -124,7 +123,6 @@ describe('gridMenuExtension', () => {
       document.body.appendChild(div);
 
       sharedService = new SharedService();
-      ea = new EventAggregator();
       i18n = new I18N(new EventAggregator(), new BindingSignaler());
       extensionUtility = new ExtensionUtility(i18n, sharedService);
       extension = new GridMenuExtension(excelExportServiceStub, exportServiceStub, extensionUtility, filterServiceStub, i18n, sharedService, sortServiceStub);

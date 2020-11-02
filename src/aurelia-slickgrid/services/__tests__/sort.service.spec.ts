@@ -56,7 +56,7 @@ const backendServiceStub = {
   getCurrentPagination: jest.fn(),
   getCurrentSorters: jest.fn(),
   updateSorters: jest.fn(),
-  processOnSortChanged: (event: Event, args: any) => 'backend query',
+  processOnSortChanged: () => 'backend query',
 } as unknown as BackendService;
 
 const gridStub = {
@@ -413,7 +413,6 @@ describe('SortService', () => {
   });
 
   describe('onBackendSortChanged method', () => {
-    const spyProcess = jest.fn();
     const spyPreProcess = jest.fn();
     const spyPostProcess = jest.fn();
 
@@ -453,7 +452,7 @@ describe('SortService', () => {
     it('should execute the "onError" method when the Promise throws an error', (done) => {
       const errorExpected = 'promise error';
       gridOptionMock.backendServiceApi.process = () => Promise.reject(errorExpected);
-      gridOptionMock.backendServiceApi.onError = (e) => jest.fn();
+      gridOptionMock.backendServiceApi.onError = () => jest.fn();
       const spyOnError = jest.spyOn(gridOptionMock.backendServiceApi, 'onError');
 
       jest.spyOn(gridOptionMock.backendServiceApi, 'process');
@@ -469,11 +468,9 @@ describe('SortService', () => {
   });
 
   describe('getCurrentColumnSorts method', () => {
-    let mockSortedCol: ColumnSort;
     const mockColumns = [{ id: 'firstName', field: 'firstName' }, { id: 'lastName', field: 'lastName' }] as Column[];
 
     beforeEach(() => {
-      mockSortedCol = { sortCol: { id: 'lastName', field: 'lastName', width: 100 }, sortAsc: true, grid: gridStub };
       gridStub.getColumns = jest.fn();
       jest.spyOn(gridStub, 'getColumns').mockReturnValue(mockColumns);
     });
@@ -778,7 +775,7 @@ describe('SortService', () => {
     it('should sort the data with 2 sorters which the second is by executing the "queryFieldNameGetterFn()" callback and sort by the field returned by it', () => {
       const mockSortedCols = [
         { sortCol: { id: 'address', field: 'address', queryField: 'lastName' }, sortAsc: true },
-        { sortCol: { id: 'random', field: 'random', queryFieldNameGetterFn: (dataContext) => 'zip' }, sortAsc: false },
+        { sortCol: { id: 'random', field: 'random', queryFieldNameGetterFn: () => 'zip' }, sortAsc: false },
       ] as ColumnSort[];
 
       dataset.sort((row1, row2) => service.sortComparers(mockSortedCols, row1, row2));
@@ -922,7 +919,6 @@ describe('SortService', () => {
   });
 
   describe('Tree Data View', () => {
-    let mockSortedCol: ColumnSort;
     const mockColumns = [
       { id: 'firstName', field: 'firstName' },
       { id: 'lastName', field: 'lastName' },
@@ -931,7 +927,6 @@ describe('SortService', () => {
 
     beforeEach(() => {
       gridOptionMock.enableSorting = true;
-      mockSortedCol = { sortCol: { id: 'lastName', field: 'lastName', width: 100 }, sortAsc: true, grid: gridStub };
       jest.spyOn(gridStub, 'getColumns').mockReturnValue(mockColumns);
     });
 

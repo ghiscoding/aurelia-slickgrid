@@ -343,7 +343,7 @@ export class ExtensionService {
    */
   removeColumnByIndex(columns: Column[], index: number): Column[] {
     if (Array.isArray(columns)) {
-      return columns.filter((el: Column, i: number) => index !== i);
+      return columns.filter((_el: Column, i: number) => index !== i);
     }
     return columns;
   }

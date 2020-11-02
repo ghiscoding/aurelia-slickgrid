@@ -384,7 +384,7 @@ export class SelectEditor implements Editor {
 
       // compare all the array values but as string type since multiple-select always return string
       const currentStringValues = currentValues.map((i: any) => i.toString());
-      this.$editorElm.find('option').each((i: number, $e: any) => {
+      this.$editorElm.find('option').each((_i: number, $e: any) => {
         $e.selected = (currentStringValues.indexOf($e.value) !== -1);
       });
     }
@@ -396,7 +396,7 @@ export class SelectEditor implements Editor {
     this.$editorElm.val(currentValue);
 
     // make sure the prop exists first
-    this.$editorElm.find('option').each((i: number, $e: any) => {
+    this.$editorElm.find('option').each((_i: number, $e: any) => {
       // check equality after converting originalValue to string since the DOM value will always be of type string
       $e.selected = (`${currentValue}` === $e.value);
     });

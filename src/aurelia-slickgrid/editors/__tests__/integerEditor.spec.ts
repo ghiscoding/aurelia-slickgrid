@@ -1,6 +1,6 @@
 import { Editors } from '../index';
 import { IntegerEditor } from '../integerEditor';
-import { AutocompleteOption, Column, EditorArgs, EditorArguments, GridOption, KeyCode } from '../../models';
+import { Column, EditorArguments, GridOption, KeyCode } from '../../models';
 
 const KEY_CHAR_0 = 48;
 const containerId = 'demo-container';
@@ -142,7 +142,6 @@ describe('IntegerEditor', () => {
     it('should define an item datacontext containing a string as cell value and expect this value to be loaded in the editor when calling "loadValue"', () => {
       editor = new IntegerEditor(editorArguments);
       editor.loadValue(mockItemData);
-      const editorElm = editor.editorDomElement;
 
       expect(editor.getValue()).toBe('213');
     });
@@ -250,7 +249,7 @@ describe('IntegerEditor', () => {
       });
 
       it('should return item data with an empty string in its value when it fails the custom validation', () => {
-        mockColumn.internalColumnEditor.validator = (value: any, args: EditorArgs) => {
+        mockColumn.internalColumnEditor.validator = (value: any) => {
           if (+value < 10) {
             return { valid: false, msg: 'Value must be over 10.' };
           }

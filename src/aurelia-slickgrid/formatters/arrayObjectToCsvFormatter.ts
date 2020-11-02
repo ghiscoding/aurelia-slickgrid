@@ -1,7 +1,7 @@
 import { Column } from './../models/column.interface';
 import { Formatter } from './../models/formatter.interface';
 
-export const arrayObjectToCsvFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any) => {
+export const arrayObjectToCsvFormatter: Formatter = (_row: number, _cell: number, value: any, columnDef: Column, dataContext: any) => {
   const columnParams = columnDef && columnDef.params || {};
   const propertyNames = columnParams.propertyNames;
   let parentObjectKeyName: string = columnParams.dataContextProperty;

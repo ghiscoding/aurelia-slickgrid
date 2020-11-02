@@ -13,7 +13,7 @@ import { Formatter } from './../models/formatter.interface';
  * You can also optionally provide the hyperlink URL by using the generic params "hyperlinkUrl" in the column definition
  * For example: { id: 'link', field: 'link', params: {  hyperlinkText: 'Company Website', hyperlinkUrl: 'http://www.somewhere.com' } } will display "<a href="http://www.somewhere.com">Company Website</a>"
  */
-export const hyperlinkFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any) => {
+export const hyperlinkFormatter: Formatter = (_row: number, _cell: number, value: any, columnDef: Column) => {
   const columnParams = columnDef && columnDef.params || {};
 
   let displayedText = columnParams.hyperlinkText ? columnParams.hyperlinkText : value;

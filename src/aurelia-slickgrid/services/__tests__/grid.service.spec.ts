@@ -1260,7 +1260,6 @@ describe('Grid Service', () => {
     });
 
     it('should return selected row indexes', () => {
-      const mockColumns = [{ id: 'field1', width: 100 }, { id: 'field2', width: 150 }, { id: 'field3', field: 'field3' }] as Column[];
       const mockSelectedColumns = [{ id: 'field1', width: 100 }, { id: 'field3', field: 'field3' }] as Column[];
       const gridSpy = jest.spyOn(gridStub, 'getSelectedRows').mockReturnValue([0, 2]);
       const serviceSpy = jest.spyOn(service, 'getDataItemByRowIndexes').mockReturnValue(mockSelectedColumns);

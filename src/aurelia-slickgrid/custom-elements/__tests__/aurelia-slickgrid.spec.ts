@@ -1,7 +1,6 @@
 import { StageComponent } from 'aurelia-testing';
 import { bootstrap } from 'aurelia-bootstrapper';
 import { PLATFORM } from 'aurelia-pal';
-import { SlickgridConfig } from '../../slickgrid-config';
 import { SharedService } from '../../services/shared.service';
 import { GridOption } from '../../models';
 import * as utilities from '../../services/utilities';
@@ -140,7 +139,7 @@ describe('Aurelia-Slickgrid Custom Component', () => {
       expect(hierarchicalSpy).toHaveBeenCalled();
       expect(mockConvertParentChildArray).toHaveBeenCalled();
       done();
-    }, 51)
+    }, 51);
   });
 
   it('should dispose & detached the grid when disposing of the element', async () => {
@@ -158,7 +157,7 @@ describe('Aurelia-Slickgrid Custom Component', () => {
       .create(bootstrap)
       .then(() => customElement.bind({ gridHeight: null, gridOptions: { enableAutoResize: false } }))
       .catch((error) => {
-        expect(error.message).toContain('[Aurelia-Slickgrid] requires a "grid-height" or the "enableAutoResize" grid option to be enabled.')
+        expect(error.message).toContain('[Aurelia-Slickgrid] requires a "grid-height" or the "enableAutoResize" grid option to be enabled.');
         done();
         customElement.dispose(true);
       });

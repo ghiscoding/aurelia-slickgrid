@@ -42,7 +42,7 @@ class HttpStub extends HttpClient {
   fetch(input, init) {
     let request;
     const responseInit: any = {};
-    responseInit.headers = new Headers()
+    responseInit.headers = new Headers();
 
     for (const name in this.responseHeaders || {}) {
       if (name) {

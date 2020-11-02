@@ -1,10 +1,9 @@
 import { Editors } from '../index';
 import { DualInputEditor } from '../dualInputEditor';
-import { Column, ColumnEditorDualInput, EditorArgs, EditorArguments, GridOption, KeyCode } from '../../models';
+import { Column, ColumnEditorDualInput, EditorArguments, GridOption, KeyCode } from '../../models';
 
 declare const Slick: any;
 const KEY_CHAR_0 = 48;
-const KEY_CHAR_A = 97;
 const containerId = 'demo-container';
 
 // define a <div> container to simulate the grid container
@@ -311,7 +310,7 @@ describe('DualInputEditor', () => {
       });
 
       it('should return item data with an empty string in its left input value when it fails the custom validation', () => {
-        mockColumn.internalColumnEditor.params.leftInput.validator = (value: any, args: EditorArgs) => {
+        mockColumn.internalColumnEditor.params.leftInput.validator = (value: any) => {
           if (+value < 10) {
             return { valid: false, msg: 'From value must be over 10.' };
           }
@@ -326,7 +325,7 @@ describe('DualInputEditor', () => {
       });
 
       it('should return item data with an empty string in its right input value when it fails the custom validation', () => {
-        mockColumn.internalColumnEditor.params.rightInput.validator = (value: any, args: EditorArgs) => {
+        mockColumn.internalColumnEditor.params.rightInput.validator = (value: any) => {
           if (+value > 150) {
             return { valid: false, msg: 'To value must be below 150.' };
           }
@@ -341,7 +340,7 @@ describe('DualInputEditor', () => {
       });
 
       it('should return item data with an empty strings when the shared validator fails the custom validation', () => {
-        mockColumn.internalColumnEditor.validator = (values: any, args: EditorArgs) => {
+        mockColumn.internalColumnEditor.validator = (values: any) => {
           if (values.from < 10 || values.to > 200) {
             return { valid: false, msg: '"From" value must be over 10 and "To" value below 200.' };
           }

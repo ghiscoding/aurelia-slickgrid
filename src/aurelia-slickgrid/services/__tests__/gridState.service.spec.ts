@@ -54,8 +54,8 @@ const gridStub = {
 };
 
 const extensionServiceStub = {
-  getExtensionByName: (name: string) => { }
-} as ExtensionService;
+  getExtensionByName: () => { }
+} as unknown as ExtensionService;
 
 const filterServiceStub = {
 } as FilterService;
@@ -583,7 +583,6 @@ describe('GridStateService', () => {
 
         const mockFilteredRowItems = [{ id: 333 }, { id: 555 }];
         const mockFilterSearchTerms = [333, 555];
-        const mockPreviousRowIndexes = [3, 33];
         const mockRowIndexes = [3, 44];
         const columnMock = [{ columnId: 'field1', cssClass: 'red', headerCssClass: '', width: 100 }] as CurrentColumn[];
         const filterMock = [{ columnId: 'field1', operator: 'EQ', searchTerms: [] }] as CurrentFilter[];
@@ -922,8 +921,6 @@ describe('GridStateService', () => {
     });
 
     it('should trigger a "gridStateService:changed" event when "headerMenu:onColumnsChanged" is triggered', () => {
-      const columnsMock = [{ id: 'field1', field: 'field1', width: 100, cssClass: 'red' }] as Column[];
-      const currentColumnsMock = [{ columnId: 'field1', cssClass: 'red', headerCssClass: '', width: 100 }] as CurrentColumn[];
       const gridStateMock = { columns: currentColumnsMock, filters: [], sorters: [] } as GridState;
       const stateChangeMock = { change: { newValues: currentColumnsMock, type: GridStateType.columns }, gridState: gridStateMock } as GridStateChange;
       const eaSpy = jest.spyOn(ea, 'publish');

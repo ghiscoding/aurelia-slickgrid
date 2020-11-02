@@ -43,9 +43,9 @@ describe('the ArrayObjectToCsv Formatter', () => {
 
   it(`should return csv string in a span when multiple input values are passed
     and user provide a different "dataContextProperty" to pull the data from a different field of the dataContext object`, () => {
-      const params = { dataContextProperty: 'roles', propertyNames: ['name'] };
-      const expectedOutput = 'Administrator, Regular User';
-      const result = arrayObjectToCsvFormatter(0, 0, 'anything', { field: 'email', params } as Column, dataset[0]);
-      expect(result).toBe(`<span title="${expectedOutput}">${expectedOutput}</span>`);
-    });
+    const params = { dataContextProperty: 'roles', propertyNames: ['name'] };
+    const expectedOutput = 'Administrator, Regular User';
+    const result = arrayObjectToCsvFormatter(0, 0, 'anything', { field: 'email', params } as Column, dataset[0]);
+    expect(result).toBe(`<span title="${expectedOutput}">${expectedOutput}</span>`);
+  });
 });

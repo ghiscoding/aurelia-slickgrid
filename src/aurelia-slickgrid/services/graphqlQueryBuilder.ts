@@ -7,11 +7,13 @@
  * https://github.com/codemeasandwich/graphql-query-builder
  */
 export default class GraphqlQueryBuilder {
+  // eslint-disable-next-line @typescript-eslint/ban-types
   alias: string | Function;
   head: any[] = [];
   body: any;
 
   /* Constructor, query/mutator you wish to use, and an alias or filter arguments. */
+  // eslint-disable-next-line @typescript-eslint/ban-types
   constructor(private queryFnName: string, aliasOrFilter?: string | object) {
     if (typeof aliasOrFilter === 'string') {
       this.alias = aliasOrFilter;
@@ -82,7 +84,7 @@ export default class GraphqlQueryBuilder {
   // -----------------
 
   private parceFind(_levelA: any[]) {
-    const propsA = _levelA.map((currentValue, index) => {
+    const propsA = _levelA.map((_currentValue, index) => {
       const itemX = _levelA[index];
 
       if (itemX instanceof GraphqlQueryBuilder) {

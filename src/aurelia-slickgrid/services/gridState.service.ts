@@ -131,7 +131,7 @@ export class GridStateService {
     const currentColumns: CurrentColumn[] = [];
 
     if (gridColumns && Array.isArray(gridColumns)) {
-      gridColumns.forEach((column: Column, index: number) => {
+      gridColumns.forEach((column: Column) => {
         if (column && column.id) {
           currentColumns.push({
             columnId: column.id as string,
@@ -156,7 +156,7 @@ export class GridStateService {
     const gridColumns: Column[] = grid.getColumns();
 
     if (currentColumns && Array.isArray(currentColumns)) {
-      currentColumns.forEach((currentColumn: CurrentColumn, index: number) => {
+      currentColumns.forEach((currentColumn: CurrentColumn) => {
         const gridColumn: Column | undefined = gridColumns.find((c: Column) => c.id === currentColumn.columnId);
         if (gridColumn && gridColumn.id) {
           columns.push({
@@ -375,7 +375,7 @@ export class GridStateService {
     const slickEvent = extension && extension.instance && extension.instance[eventName];
 
     if (slickEvent && typeof slickEvent.subscribe === 'function') {
-      this._eventHandler.subscribe(slickEvent, (e: Event, args: any) => {
+      this._eventHandler.subscribe(slickEvent, (_e: Event, args: any) => {
         const columns: Column[] = args && args.columns;
         const currentColumns: CurrentColumn[] = this.getAssociatedCurrentColumns(columns);
         this.pluginEa.publish('gridStateService:changed', { change: { newValues: currentColumns, type: GridStateType.columns }, gridState: this.getCurrentGridState() });
@@ -427,7 +427,7 @@ export class GridStateService {
         });
       });
 
-      this._eventHandler.subscribe(this._grid.onSelectedRowsChanged, (e: Event, args: { rows: any[]; previousSelectedRows: any[]; }) => {
+      this._eventHandler.subscribe(this._grid.onSelectedRowsChanged, (_e: Event, args: { rows: any[]; previousSelectedRows: any[]; }) => {
         if (Array.isArray(args.rows) && Array.isArray(args.previousSelectedRows)) {
           const newSelectedRows = args.rows as number[];
           const prevSelectedRows = args.previousSelectedRows as number[];

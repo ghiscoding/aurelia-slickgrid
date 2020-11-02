@@ -1,4 +1,3 @@
-import { Constants } from '../constants';
 import { Column, ColumnEditor, Editor, EditorArguments, EditorValidator, EditorValidatorOutput, KeyCode } from './../models/index';
 import { setDeepValue, getDescendantProperty } from '../services/utilities';
 import * as $ from 'jquery';

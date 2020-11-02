@@ -3,13 +3,12 @@ import '../../../assets/lib/multiple-select/multiple-select';
 
 import { DOM } from 'aurelia-pal';
 import { EventAggregator } from 'aurelia-event-aggregator';
-import { HttpClient } from 'aurelia-fetch-client';
 import { I18N } from 'aurelia-i18n';
 import { BindingSignaler } from 'aurelia-templating-resources';
 import { Editors } from '../index';
 import { SelectEditor } from '../selectEditor';
 import { CollectionService } from './../../services/collection.service';
-import { AutocompleteOption, Column, EditorArgs, EditorArguments, FieldType, GridOption, OperatorType } from '../../models';
+import { AutocompleteOption, Column, EditorArguments, FieldType, GridOption, OperatorType } from '../../models';
 import { BindingEngine } from 'aurelia-binding';
 
 const containerId = 'demo-container';
@@ -50,54 +49,6 @@ const gridStub = {
   render: jest.fn(),
 };
 
-class HttpStub extends HttpClient {
-  status: number;
-  statusText: string;
-  object: any = {};
-  returnKey: string;
-  returnValue: any;
-  responseHeaders: any;
-
-  fetch(input, init) {
-    let request;
-    const responseInit: any = {};
-    responseInit.headers = new Headers()
-
-    for (const name in this.responseHeaders || {}) {
-      if (name) {
-        responseInit.headers.set(name, this.responseHeaders[name]);
-      }
-    }
-
-    responseInit.status = this.status || 200;
-
-    if (Request.prototype.isPrototypeOf(input)) {
-      request = input;
-    } else {
-      request = new Request(input, init || {});
-    }
-    if (request.body && request.body.type) {
-      request.headers.set('Content-Type', request.body.type);
-    }
-
-    const promise = Promise.resolve().then(() => {
-      if (request.headers.get('Content-Type') === 'application/json' && request.method !== 'GET') {
-        return request.json().then((object) => {
-          object[this.returnKey] = this.returnValue;
-          const data = JSON.stringify(object);
-          const response = new Response(data, responseInit);
-          return this.status >= 200 && this.status < 300 ? Promise.resolve(response) : Promise.reject(response);
-        });
-      } else {
-        const data = JSON.stringify(this.object);
-        const response = new Response(data, responseInit);
-        return this.status >= 200 && this.status < 300 ? Promise.resolve(response) : Promise.reject(response);
-      }
-    });
-    return promise;
-  }
-}
-
 describe('SelectEditor', () => {
   let ea: EventAggregator;
   let i18n: I18N;
@@ -107,7 +58,6 @@ describe('SelectEditor', () => {
   let mockColumn: Column;
   let mockItemData: any;
   let collectionService: CollectionService;
-  const http = new HttpStub();
 
   beforeEach(() => {
     ea = new EventAggregator();
@@ -395,7 +345,7 @@ describe('SelectEditor', () => {
       });
 
       it('should return item data with an empty string in its value when it fails the custom validation', () => {
-        mockColumn.internalColumnEditor.validator = (value: any, args: EditorArgs) => {
+        mockColumn.internalColumnEditor.validator = (value: any) => {
           if (value.length < 10) {
             return { valid: false, msg: 'Must be at least 10 chars long.' };
           }

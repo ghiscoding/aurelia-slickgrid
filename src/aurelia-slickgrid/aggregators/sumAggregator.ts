@@ -1,7 +1,7 @@
 import { Aggregator } from './../models/aggregator.interface';
 
 export class SumAggregator implements Aggregator {
-  private _sum: number = 0;
+  private _sum = 0;
   private _field: number | string;
 
   constructor(field: number | string) {

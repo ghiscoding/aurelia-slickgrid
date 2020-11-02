@@ -382,7 +382,7 @@ export class GridMenuExtension implements Extension {
    * @param event
    * @param GridMenuItem args
    */
-  private executeGridMenuInternalCustomCommands(e: Event, args: GridMenuItem) {
+  private executeGridMenuInternalCustomCommands(_e: Event, args: GridMenuItem) {
     if (args && args.command) {
       switch (args.command) {
         case 'clear-frozen-columns':

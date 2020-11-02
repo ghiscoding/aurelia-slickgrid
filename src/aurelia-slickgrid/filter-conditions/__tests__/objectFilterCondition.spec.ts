@@ -1,4 +1,4 @@
-import { FieldType, FilterConditionOption, OperatorType } from '../../models/index';
+import { FieldType, FilterConditionOption } from '../../models/index';
 import { objectFilterCondition } from '../objectFilterCondition';
 import { executeMappedCondition } from '../executeMappedCondition';
 

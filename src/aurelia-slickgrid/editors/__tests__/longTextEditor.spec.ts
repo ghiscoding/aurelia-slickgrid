@@ -3,8 +3,7 @@ import { I18N } from 'aurelia-i18n';
 import { BindingSignaler } from 'aurelia-templating-resources';
 import { Editors } from '../index';
 import { LongTextEditor } from '../longTextEditor';
-import { AutocompleteOption, Column, EditorArgs, EditorArguments, GridOption, KeyCode } from '../../models';
-import { DOM } from 'aurelia-pal';
+import { AutocompleteOption, Column, EditorArguments, GridOption, KeyCode } from '../../models';
 
 const KEY_CHAR_A = 97;
 const containerId = 'demo-container';
@@ -296,7 +295,7 @@ describe('LongTextEditor', () => {
       });
 
       it('should return item data with an empty string in its value when it fails the custom validation', () => {
-        mockColumn.internalColumnEditor.validator = (value: any, args: EditorArgs) => {
+        mockColumn.internalColumnEditor.validator = (value: any) => {
           if (value.length < 10) {
             return { valid: false, msg: 'Must be at least 10 chars long.' };
           }
@@ -375,7 +374,7 @@ describe('LongTextEditor', () => {
       it('should call "commitChanges" method when "hasAutoCommitEdit" is enabled but value is invalid', () => {
         mockItemData = { id: 1, title: 'task', isActive: true };
         gridOptionMock.autoCommitEdit = true;
-        mockColumn.internalColumnEditor.validator = (value: any, args: EditorArgs) => {
+        mockColumn.internalColumnEditor.validator = (value: any) => {
           if (value.length < 10) {
             return { valid: false, msg: 'Must be at least 10 chars long.' };
           }

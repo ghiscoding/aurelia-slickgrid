@@ -3,7 +3,7 @@ import { I18N } from 'aurelia-i18n';
 import { BindingSignaler } from 'aurelia-templating-resources';
 import { Editors } from '../index';
 import { DateEditor } from '../dateEditor';
-import { Column, EditorArgs, EditorArguments, GridOption, FieldType } from '../../models';
+import { Column, EditorArguments, GridOption, FieldType } from '../../models';
 import * as moment from 'moment-mini';
 
 const containerId = 'demo-container';

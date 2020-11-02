@@ -1,7 +1,7 @@
 import { Column, Formatter, GridOption } from './../models/index';
 import { getDescendantProperty, htmlEncode } from '../services/utilities';
 
-export const treeFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid: any) => {
+export const treeFormatter: Formatter = (_row: number, _cell: number, value: any, columnDef: Column, dataContext: any, grid: any) => {
   const dataView = grid && grid.getData();
   const gridOptions = grid && grid.getOptions() as GridOption;
   const treeDataOptions = gridOptions && gridOptions.treeDataOptions;

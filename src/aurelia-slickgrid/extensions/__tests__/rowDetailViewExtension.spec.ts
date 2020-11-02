@@ -66,7 +66,7 @@ class HttpStub extends HttpClient {
   fetch(input, init) {
     let request;
     const responseInit: any = {};
-    responseInit.headers = new Headers()
+    responseInit.headers = new Headers();
 
     for (const name in this.responseHeaders || {}) {
       if (name) {
@@ -126,12 +126,12 @@ describe('rowDetailViewExtension', () => {
       viewComponent: null,
       viewModel: '',
       onExtensionRegistered: jest.fn(),
-      onAsyncResponse: (e: Event, args: { item: any; detailView?: any }) => { },
-      onAsyncEndUpdate: (e: Event, args: { item: any; grid: any; }) => { },
-      onAfterRowDetailToggle: (e: Event, args: { item: any; expandedRows: any[]; grid: any; }) => { },
-      onBeforeRowDetailToggle: (e: Event, args: { item: any; grid: any; }) => { },
-      onRowOutOfViewportRange: (e: Event, args: { item: any; rowId: number; rowIndex: number; expandedRows: any[]; rowIdsOutOfViewport: number[]; grid: any; }) => { },
-      onRowBackToViewportRange: (e: Event, args: { item: any; rowId: number; rowIndex: number; expandedRows: any[]; rowIdsOutOfViewport: number[]; grid: any; }) => { },
+      onAsyncResponse: () => { },
+      onAsyncEndUpdate: () => { },
+      onAfterRowDetailToggle: () => { },
+      onBeforeRowDetailToggle: () => { },
+      onRowOutOfViewportRange: () => { },
+      onRowBackToViewportRange: () => { },
     }
   } as GridOption;
 
@@ -429,10 +429,7 @@ describe('rowDetailViewExtension', () => {
       expect(onAsyncEndSpy).not.toHaveBeenCalled();
       expect(onAfterRowSpy).not.toHaveBeenCalled();
       expect(onBeforeRowSpy).not.toHaveBeenCalled();
-      expect(onRowOutViewSpy).toHaveBeenCalledWith(
-        expect.anything(), {
-        item: columnsMock[0], rowId: 0, rowIndex: 0, expandedRows: [columnsMock[0]], rowIdsOutOfViewport: [], grid: gridStub
-      });
+      expect(onRowOutViewSpy).toHaveBeenCalledWith(expect.anything(), { item: columnsMock[0], rowId: 0, rowIndex: 0, expandedRows: [columnsMock[0]], rowIdsOutOfViewport: [], grid: gridStub });
       expect(onRowBackViewSpy).not.toHaveBeenCalled();
     });
 
@@ -464,10 +461,7 @@ describe('rowDetailViewExtension', () => {
       expect(onAfterRowSpy).not.toHaveBeenCalled();
       expect(onBeforeRowSpy).not.toHaveBeenCalled();
       expect(onRowOutViewSpy).not.toHaveBeenCalled();
-      expect(onRowBackViewSpy).toHaveBeenCalledWith(
-        expect.anything(), {
-        item: columnsMock[0], rowId: 0, rowIndex: 0, expandedRows: [columnsMock[0]], rowIdsOutOfViewport: [], grid: gridStub
-      });
+      expect(onRowBackViewSpy).toHaveBeenCalledWith(expect.anything(), { item: columnsMock[0], rowId: 0, rowIndex: 0, expandedRows: [columnsMock[0]], rowIdsOutOfViewport: [], grid: gridStub });
     });
 
     it('should call Aurelia Util "createAureliaViewModelAddToSlot" when grid "onColumnsReordered" is triggered', (done) => {
@@ -572,10 +566,10 @@ describe('rowDetailViewExtension', () => {
 
     it('should run the internal "onProcessing" and call "notifyTemplate" with a Promise when "process" method is defined and executed', (done) => {
       const mockItem = { id: 2, firstName: 'John', lastName: 'Doe' };
-      gridOptionsMock.rowDetailView.process = (mockItem) => new Promise((resolve) => resolve(mockItem));
+      gridOptionsMock.rowDetailView.process = () => new Promise((resolve) => resolve(mockItem));
       const instance = extension.create(columnsMock, gridOptionsMock);
 
-      instance.onAsyncResponse.subscribe((e, response) => {
+      instance.onAsyncResponse.subscribe((_e, response) => {
         expect(response).toEqual(expect.objectContaining({ item: mockItem }));
         done();
       });
@@ -590,10 +584,10 @@ describe('rowDetailViewExtension', () => {
       http.returnKey = 'date';
       http.returnValue = '6/24/1984';
       http.responseHeaders = { accept: 'json' };
-      gridOptionsMock.rowDetailView.process = (item) => http.fetch('/api', { method: 'GET' });
+      gridOptionsMock.rowDetailView.process = () => http.fetch('/api', { method: 'GET' });
       const instance = extension.create(columnsMock, gridOptionsMock);
 
-      instance.onAsyncResponse.subscribe((e, response) => {
+      instance.onAsyncResponse.subscribe((_e, response) => {
         expect(response).toEqual(expect.objectContaining({ item: mockItem }));
         done();
       });
@@ -607,7 +601,7 @@ describe('rowDetailViewExtension', () => {
       gridOptionsMock.rowDetailView.process = (item) => new Promise((resolve) => resolve({ content: item }));
       const instance = extension.create(columnsMock, gridOptionsMock);
 
-      instance.onAsyncResponse.subscribe((e, response) => {
+      instance.onAsyncResponse.subscribe((_e, response) => {
         expect(response).toEqual(expect.objectContaining({ item: mockItem }));
         done();
       });
@@ -620,7 +614,7 @@ describe('rowDetailViewExtension', () => {
       gridOptionsMock.rowDetailView.process = (item) => new Promise((resolve) => resolve({ content: item }));
       const instance = extension.create(columnsMock, gridOptionsMock);
 
-      instance.onAsyncResponse.subscribe((e, response) => {
+      instance.onAsyncResponse.subscribe((_e, response) => {
         expect(response).toEqual(expect.objectContaining({ item: mockItem }));
         done();
       });

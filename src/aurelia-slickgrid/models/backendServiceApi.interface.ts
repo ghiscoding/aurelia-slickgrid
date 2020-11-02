@@ -1,4 +1,3 @@
-import { GraphqlResult } from './graphqlResult.interface';
 import { BackendService } from './backendService.interface';
 
 export interface BackendServiceApi {

@@ -1080,7 +1080,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
       it('should throw an error when the process method on initialization when "executeProcessCommandOnInit" is set as a backend service options', (done) => {
         const mockError = { error: '404' };
         const query = `query { users (first:20,offset:0) { totalCount, nodes { id,name,gender,company } } }`;
-        const promise = new Promise((resolve, reject) => setTimeout(() => reject(mockError), 1));
+        const promise = new Promise((_resolve, reject) => setTimeout(() => reject(mockError), 1));
         const processSpy = jest.spyOn(customElement.gridOptions.backendServiceApi, 'process').mockReturnValue(promise);
         jest.spyOn(customElement.gridOptions.backendServiceApi.service, 'buildQuery').mockReturnValue(query);
 
@@ -1256,7 +1256,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
             service: mockGraphqlService2,
             options: mockGraphqlOptions,
             preProcess: () => jest.fn(),
-            process: (query) => new Promise((resolve) => resolve({ data: { users: { nodes: [], totalCount: 100 } } })),
+            process: () => new Promise((resolve) => resolve({ data: { users: { nodes: [], totalCount: 100 } } })),
           } as GraphqlServiceApi,
           pagination: mockPagination,
         } as GridOption;
@@ -1275,7 +1275,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
           backendServiceApi: {
             service: mockGraphqlService,
             preProcess: () => jest.fn(),
-            process: (query) => new Promise((resolve) => resolve('process resolved')),
+            process: () => new Promise((resolve) => resolve('process resolved')),
           }
         } as GridOption;
         customElement.bind();
@@ -1293,7 +1293,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
             service: mockGraphqlService,
             useLocalSorting: true,
             preProcess: () => jest.fn(),
-            process: (query) => new Promise((resolve) => resolve('process resolved')),
+            process: () => new Promise((resolve) => resolve('process resolved')),
           }
         } as GridOption;
         customElement.bind();
@@ -1325,7 +1325,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
             service: mockGraphqlService,
             useLocalFiltering: true,
             preProcess: () => jest.fn(),
-            process: (query) => new Promise((resolve) => resolve('process resolved')),
+            process: () => new Promise((resolve) => resolve('process resolved')),
           }
         } as GridOption;
         customElement.bind();
@@ -1344,7 +1344,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
           backendServiceApi: {
             service: mockGraphqlService,
             preProcess: () => jest.fn(),
-            process: (query) => new Promise((resolve) => resolve('process resolved')),
+            process: () => new Promise((resolve) => resolve('process resolved')),
           }
         } as GridOption;
         customElement.bind();
@@ -1549,7 +1549,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
             lastUpdate: 'some last update',
             of: 'some of'
           }
-        }
+        };
         customElement.bind();
         customElement.attached();
         customElement.columnDefinitions = mockColDefs;
@@ -1684,7 +1684,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
         customElement.gridOptions.backendServiceApi = {
           service: mockGraphqlService,
           process: jest.fn(),
-        }
+        };
 
         customElement.bind();
         customElement.attached();
