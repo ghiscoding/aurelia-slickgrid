@@ -22,8 +22,8 @@
     "url": "http://github.com/ghiscoding/aurelia-slickgrid"
   },
   "scripts": {
-    "eslint": "eslint src/aurelia-slickgrid/** --ext .ts",
     "delete:dist": "cross-env rimraf dist",
+    "lint": "eslint src/aurelia-slickgrid/** --ext .ts",
     "build:amd": "cross-env tsc --project src/aurelia-slickgrid/tsconfig.build.json --outDir dist/amd --module amd",
     "postbuild:amd": "cross-env copyfiles --up 2 src/aurelia-slickgrid/**/*.html dist/amd",
     "build:commonjs": "cross-env tsc --project src/aurelia-slickgrid/tsconfig.build.json --outDir dist/commonjs --module commonjs",
@@ -36,8 +36,8 @@
     "postbuild:native-modules": "cross-env copyfiles --up 2 src/aurelia-slickgrid/**/*.html dist/native-modules",
     "build:system": "cross-env tsc --project src/aurelia-slickgrid/tsconfig.build.json --outDir dist/system --module system",
     "postbuild:system": "cross-env copyfiles --up 2 src/aurelia-slickgrid/**/*.html dist/system",
-    "prebuild": "npm-run-all delete:dist eslint",
-    "build": "npm-run-all build:amd build:commonjs build:es2015 build:es2017 build:native-modules build:system",
+    "prebuild": "run-p delete:dist lint",
+    "build": "run-p build:amd build:commonjs build:es2015 build:es2017 build:native-modules build:system",
     "postbuild": "npm-run-all sass:build sass:copy copy-i18n:dist copy-asset-lib",
     "build:with-e2e": "npm-run-all build cypress:ci",
     "copy-asset-lib": "cross-env copyfiles --up 2 src/assets/lib/** dist",
