@@ -155,7 +155,7 @@ describe('CheckboxEditor', () => {
         editor.loadValue({ id: 2, title: 'task 1', isActive: true });
 
         const editorElm = divContainer.querySelector<HTMLInputElement>('input.editor-isActive');
-        // editorElm.checked = false;
+        editorElm.checked = false;
         editorElm.dispatchEvent(DOM.createCustomEvent('click'));
 
         expect(editor.isValueChanged()).toBe(true);

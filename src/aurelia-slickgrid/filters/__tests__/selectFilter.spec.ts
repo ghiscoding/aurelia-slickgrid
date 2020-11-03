@@ -251,7 +251,7 @@ describe('SelectFilter', () => {
     filterBtnElm.click();
 
     // we can use property "checked" or dispatch an event
-    // filterListElm[0].checked = true;
+    filterListElm[0].checked = true;
     filterListElm[0].dispatchEvent(DOM.createCustomEvent('click'));
     filterOkElm.click();
 

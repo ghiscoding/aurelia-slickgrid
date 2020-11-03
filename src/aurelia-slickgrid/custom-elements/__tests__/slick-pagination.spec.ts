@@ -3,7 +3,7 @@ import { EventAggregator } from 'aurelia-event-aggregator';
 import { BindingSignaler } from 'aurelia-templating-resources';
 import { StageComponent } from 'aurelia-testing';
 import { I18N } from 'aurelia-i18n';
-import { PLATFORM, DOM } from 'aurelia-pal';
+import { DOM, PLATFORM } from 'aurelia-pal';
 
 import { PaginationService } from '../../services';
 
@@ -32,6 +32,8 @@ const paginationServiceStub = {
 } as unknown as PaginationService;
 
 describe('Slick-Pagination Component', () => {
+  // patch to get aurelia-pal-nodejs latest version to work (only works if I put it here instead of jest-pretest)
+  global.document = PLATFORM.global.document;
   let customElement: any;
   let ea: EventAggregator;
   let i18n: I18N;
@@ -74,8 +76,8 @@ describe('Slick-Pagination Component', () => {
 
     customElement = StageComponent
       .withResources([
-        PLATFORM.moduleName('../slick-pagination'),
-        PLATFORM.moduleName('../../value-converters/asgNumber')
+        '../slick-pagination',
+        '../../value-converters/asgNumber'
       ])
       .inView(view)
       .boundTo({
@@ -87,7 +89,6 @@ describe('Slick-Pagination Component', () => {
       aurelia.use.standardConfiguration();
       aurelia.container.registerInstance(EventAggregator, ea);
       aurelia.container.registerInstance(I18N, i18n);
-      aurelia.container.registerInstance(PaginationService, paginationServiceStub);
       return aurelia;
     });
     await customElement.create(bootstrap);
