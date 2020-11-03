@@ -104,19 +104,9 @@ export class FilterService {
     }
   }
 
-  /**
-   * Dispose of the filters, since it's a singleton, we don't want to affect other grids with same columns
-   */
+  /** Dispose of the filters, since it's a singleton, we don't want to affect other grids with same columns */
   disposeColumnFilters() {
-    // we need to loop through all columnFilters and delete them 1 by 1
-    // only trying to make columnFilter an empty (without looping) would not trigger a dataset change
-    if (typeof this._columnFilters === 'object') {
-      for (const columnId in this._columnFilters) {
-        if (columnId && this._columnFilters[columnId]) {
-          delete this._columnFilters[columnId];
-        }
-      }
-    }
+    this.resetColumnFilters();
 
     // also destroy each Filter instances
     if (Array.isArray(this._filtersMetadata)) {

@@ -1,7 +1,6 @@
 import { bootstrap } from 'aurelia-bootstrapper';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { StageComponent } from 'aurelia-testing';
-import { PLATFORM } from 'aurelia-pal';
 
 import { GridOption, Locale } from '../../models';
 import { PaginationService } from '../../services';
@@ -52,8 +51,8 @@ describe('Slick-Pagination Component without I18N', () => {
 
     customElement = StageComponent
       .withResources([
-        PLATFORM.moduleName('../slick-pagination'),
-        PLATFORM.moduleName('../../value-converters/asgNumber')
+        '../slick-pagination',
+        '../../value-converters/asgNumber'
       ])
       .inView(view)
       .boundTo({
