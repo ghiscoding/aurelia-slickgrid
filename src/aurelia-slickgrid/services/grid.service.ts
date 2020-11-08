@@ -32,6 +32,7 @@ export class GridService {
   private _aureliaEventPrefix = DEFAULT_AURELIA_EVENT_PREFIX;
   private _dataView: any;
   private _grid: any;
+  private _rowSelectionPlugin: any;
 
   constructor(
     private globalEa: EventAggregator,
@@ -46,6 +47,12 @@ export class GridService {
   /** Getter for the Grid Options pulled through the Grid Object */
   private get _gridOptions(): GridOption {
     return (this._grid && this._grid.getOptions) ? this._grid.getOptions() : {};
+  }
+
+  dispose() {
+    if (this._rowSelectionPlugin && this._rowSelectionPlugin.destroy) {
+      this._rowSelectionPlugin.destroy();
+    }
   }
 
   /**
@@ -223,8 +230,8 @@ export class GridService {
   highlightRow(rowNumber: number | number[], fadeDelay = 1500, fadeOutDelay = 300) {
     // create a SelectionModel if there's not one yet
     if (!this._grid.getSelectionModel() && Slick && Slick.RowSelectionModel) {
-      const rowSelectionPlugin = new Slick.RowSelectionModel(this._gridOptions.rowSelectionOptions || {});
-      this._grid.setSelectionModel(rowSelectionPlugin);
+      this._rowSelectionPlugin = new Slick.RowSelectionModel(this._gridOptions.rowSelectionOptions || {});
+      this._grid.setSelectionModel(this._rowSelectionPlugin);
     }
 
     if (Array.isArray(rowNumber)) {

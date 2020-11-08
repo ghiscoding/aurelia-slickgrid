@@ -194,7 +194,9 @@ export class AutoCompleteFilter implements Filter {
    */
   destroy() {
     if (this.$filterElm) {
+      this.$filterElm.autocomplete('destroy');
       this.$filterElm.off('keyup').remove();
+      this.$filterElm = null;
     }
     // also dispose of all Subscriptions
     this.subscriptions = disposeAllSubscriptions(this.subscriptions);

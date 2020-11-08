@@ -824,7 +824,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
       });
 
       it('should destroy customElement and its DOM element when requested', () => {
-        const spy = jest.spyOn(customElement, 'destroyGridContainerElm');
+        const spy = jest.spyOn(customElement, 'emptyGridContainerElm');
 
         customElement.bind();
         customElement.attached();

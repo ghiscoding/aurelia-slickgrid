@@ -1,6 +1,6 @@
 /**
  * @author zhixin wen <wenzhixin2010@gmail.com>
- * @version 1.3.6
+ * @version 1.3.7
  *
  * http://wenzhixin.net.cn/p/multiple-select/
  *
@@ -939,9 +939,16 @@
     },
 
     destroy: function () {
-      $('body').off('click', handleBodyOnClick.bind(this, this.$el));
+      $('body').off('click');
       this.$el.before(this.$parent).show();
       this.$parent.remove();
+      this.$choice = null;
+      this.$el = null;
+      this.$selectItems = null;
+      this.$selectGroups = null;
+      this.$noResults = null;
+      this.options = null;
+      this.$parent = null;
     },
 
     checkAll: function () {
