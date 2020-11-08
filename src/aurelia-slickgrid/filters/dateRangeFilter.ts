@@ -1,6 +1,6 @@
 import { inject, Optional } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
-import { mapFlatpickrDateFormatWithFieldType, mapMomentDateFormatWithFieldType } from '../services/utilities';
+import { destroyObjectDomElementProps, mapFlatpickrDateFormatWithFieldType, mapMomentDateFormatWithFieldType } from '../services/utilities';
 import {
   Column,
   ColumnFilter,
@@ -113,11 +113,16 @@ export class DateRangeFilter implements Filter {
    * destroy the filter
    */
   destroy() {
-    if (this.$filterElm) {
-      this.$filterElm.off('keyup').remove();
-    }
     if (this.flatInstance && typeof this.flatInstance.destroy === 'function') {
       this.flatInstance.destroy();
+      if (this.flatInstance.element) {
+        destroyObjectDomElementProps(this.flatInstance);
+      }
+      this.flatInstance = null;
+    }
+    if (this.$filterElm) {
+      this.$filterElm.off('keyup').remove();
+      this.$filterElm = null;
     }
   }
 
