@@ -12,7 +12,6 @@ const DEFAULT_STEP = 1;
  * KeyDown events are also handled to provide handling for Tab, Shift-Tab, Esc and Ctrl-Enter.
  */
 export class SliderEditor implements Editor {
-  private _lastInputEvent: JQuery.Event;
   private _elementRangeInputId = '';
   private _elementRangeOutputId = '';
   private _$editorElm: any;
@@ -86,7 +85,6 @@ export class SliderEditor implements Editor {
       // we need to use both "input" and "change" event to be all cross-browser
       if (!this.editorParams.hideSliderNumber) {
         this._$editorElm.on('input change', (event: JQuery.Event & { target: HTMLInputElement }) => {
-          this._lastInputEvent = event;
           const value = event && event.target && event.target.value || '';
           if (value && document) {
             const elements = document.getElementsByClassName(this._elementRangeOutputId || '');
