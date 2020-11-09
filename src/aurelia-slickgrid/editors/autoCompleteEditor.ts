@@ -29,7 +29,7 @@ export class AutoCompleteEditor implements Editor {
   private _currentValue: any;
   private _defaultTextValue: string;
   private _elementCollection: any[];
-  private _lastInputEvent: JQueryEventObject;
+  private _lastInputEvent: JQuery.Event;
 
   /** The JQuery DOM element */
   private _$editorElm: any;
@@ -137,11 +137,17 @@ export class AutoCompleteEditor implements Editor {
   }
 
   destroy() {
-    this._$editorElm.off('keydown.nav').remove();
+    if (this._$editorElm) {
+      this._$editorElm.autocomplete('destroy');
+      this._$editorElm.off('keydown.nav').remove();
+      this._$editorElm = null;
+    }
   }
 
   focus() {
-    this._$editorElm.focus().select();
+    if (this._$editorElm) {
+      this._$editorElm.focus().select();
+    }
   }
 
   getValue() {
@@ -322,7 +328,7 @@ export class AutoCompleteEditor implements Editor {
 
     this._$editorElm = $(`<input type="text" role="presentation" autocomplete="off" class="autocomplete editor-text editor-${columnId}" placeholder="${placeholder}" title="${title}" />`)
       .appendTo(this.args.container)
-      .on('keydown.nav', (event: JQueryEventObject) => {
+      .on('keydown.nav', (event: JQuery.Event) => {
         this._lastInputEvent = event;
         if (event.keyCode === KeyCode.LEFT || event.keyCode === KeyCode.RIGHT) {
           event.stopImmediatePropagation();

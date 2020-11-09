@@ -120,7 +120,11 @@ export class SliderRangeFilter implements Filter {
    */
   destroy() {
     if (this.$filterElm) {
+      this.$filterElm.slider('destroy');
       this.$filterElm.off('change').remove();
+      this.$filterElm = null;
+      this.$filterContainerElm.remove();
+      this.$filterContainerElm = null;
     }
   }
 

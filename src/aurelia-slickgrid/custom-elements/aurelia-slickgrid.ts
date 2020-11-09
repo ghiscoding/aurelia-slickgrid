@@ -383,13 +383,18 @@ export class AureliaSlickgridCustomElement {
   detached(shouldEmptyDomElementContainer = false) {
     this.globalEa.publish('onBeforeGridDestroy', this.grid);
     this.dispatchCustomEvent(`${DEFAULT_AURELIA_EVENT_PREFIX}-on-before-grid-destroy`, this.grid);
-    this.dataview = undefined;
     this._eventHandler.unsubscribeAll();
     this.grid.destroy();
+    if (this.dataview && this.dataview.setItems) {
+      this.dataview.setItems([]);
+    }
+    if (this.grid && this.grid.destroy) {
+      this.grid.destroy();
+    }
 
     // we could optionally also empty the content of the grid container DOM element
     if (shouldEmptyDomElementContainer) {
-      this.destroyGridContainerElm();
+      this.emptyGridContainerElm();
     }
 
     this.globalEa.publish('onAfterGridDestroyed', true);
@@ -407,7 +412,7 @@ export class AureliaSlickgridCustomElement {
     this.subscriptions = disposeAllSubscriptions(this.subscriptions);
   }
 
-  destroyGridContainerElm() {
+  emptyGridContainerElm() {
     const gridContainerId = this.gridOptions && this.gridOptions.gridContainerId || 'grid1';
     $(gridContainerId).empty();
   }

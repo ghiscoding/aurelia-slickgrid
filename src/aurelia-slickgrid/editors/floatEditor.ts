@@ -10,7 +10,7 @@ const defaultDecimalPlaces = 0;
  * KeyDown events are also handled to provide handling for Tab, Shift-Tab, Esc and Ctrl-Enter.
  */
 export class FloatEditor implements Editor {
-  private _lastInputEvent: JQueryEventObject;
+  private _lastInputEvent: JQuery.Event;
   private _$input: any;
   originalValue: number | string;
 
@@ -56,7 +56,7 @@ export class FloatEditor implements Editor {
 
     this._$input = $(`<input type="number" role="presentation" autocomplete="off" class="editor-text editor-${columnId}" placeholder="${placeholder}" title="${title}" step="${this.getInputDecimalSteps()}" />`)
       .appendTo(this.args.container)
-      .on('keydown.nav', (event: JQueryEventObject) => {
+      .on('keydown.nav', (event: JQuery.Event) => {
         this._lastInputEvent = event;
         if (event.keyCode === KeyCode.LEFT || event.keyCode === KeyCode.RIGHT) {
           event.stopImmediatePropagation();
@@ -75,11 +75,14 @@ export class FloatEditor implements Editor {
   destroy() {
     if (this._$input) {
       this._$input.off('keydown.nav').remove();
+      this._$input = null;
     }
   }
 
   focus() {
-    this._$input.focus();
+    if (this._$input) {
+      this._$input.focus();
+    }
   }
 
   getDecimalPlaces(): number {

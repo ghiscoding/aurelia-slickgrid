@@ -45,6 +45,7 @@ describe('checkboxSelectorExtension', () => {
   });
 
   it('should return null after calling "create" method when either the column definitions or the grid options is missing', () => {
+    // @ts-ignore
     const output = extension.create([] as Column[], null);
     expect(output).toBeNull();
   });
@@ -101,11 +102,14 @@ describe('checkboxSelectorExtension', () => {
 
     it('should dispose of the addon', () => {
       const instance = extension.create(columnsMock, gridOptionsMock);
-      const destroySpy = jest.spyOn(instance, 'destroy');
+      const selectionModel = extension.register();
+      const addonDestroySpy = jest.spyOn(instance, 'destroy');
+      const smDestroySpy = jest.spyOn(selectionModel, 'destroy');
 
       extension.dispose();
 
-      expect(destroySpy).toHaveBeenCalled();
+      expect(addonDestroySpy).toHaveBeenCalled();
+      expect(smDestroySpy).toHaveBeenCalled();
     });
 
     it('should provide addon options and expect them to be called in the addon constructor', () => {

@@ -139,7 +139,9 @@ export class SliderFilter implements Filter {
    */
   destroy() {
     if (this.$filterInputElm) {
-      this.$filterInputElm.off('change').remove();
+      this.$filterInputElm.off('input change').remove();
+      this.$filterInputElm = null;
+      this.$filterElm = null;
     }
   }
 

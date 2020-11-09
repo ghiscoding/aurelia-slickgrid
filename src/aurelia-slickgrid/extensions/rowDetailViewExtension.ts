@@ -68,6 +68,7 @@ export class RowDetailViewExtension implements Extension {
 
     if (this._addon && this._addon.destroy) {
       this._addon.destroy();
+      this._addon = null;
     }
     this.disposeAllViewSlot();
     disposeAllSubscriptions(this._subscriptions);
