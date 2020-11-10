@@ -90,7 +90,7 @@ const DEFAULT_SLICKGRID_EVENT_PREFIX = 'sg';
 )
 export class AureliaSlickgridCustomElement {
   private _columnDefinitions: Column[] = [];
-  private _dataset: any[];
+  private _dataset: any[] | null;
   private _eventHandler: SlickEventHandler = new Slick.EventHandler();
   private _fixedHeight: number | null;
   private _fixedWidth: number | null;
@@ -120,10 +120,10 @@ export class AureliaSlickgridCustomElement {
   @bindable({ defaultBindingMode: bindingMode.twoWay }) paginationOptions: Pagination | undefined;
   @bindable({ defaultBindingMode: bindingMode.twoWay }) totalItems: number;
   @bindable({ defaultBindingMode: bindingMode.fromView }) extensions: ExtensionList;
-  @bindable({ defaultBindingMode: bindingMode.fromView }) instances: AureliaGridInstance;
+  @bindable({ defaultBindingMode: bindingMode.fromView }) instances: AureliaGridInstance | null;
   @bindable() customDataView: any;
   @bindable() dataset: any[];
-  @bindable() datasetHierarchical: any[];
+  @bindable() datasetHierarchical: any[] | null;
   @bindable() gridId: string;
   @bindable() gridOptions: GridOption;
   @bindable() gridHeight: number;
@@ -407,6 +407,11 @@ export class AureliaSlickgridCustomElement {
       }
     });
     this.serviceList = [];
+
+    this._dataset = null;
+    this.datasetHierarchical = null;
+    this._columnDefinitions = [];
+    this.instances = null;
 
     // also dispose of all Subscriptions
     this.subscriptions = disposeAllSubscriptions(this.subscriptions);
