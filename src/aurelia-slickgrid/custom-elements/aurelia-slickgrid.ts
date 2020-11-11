@@ -408,13 +408,25 @@ export class AureliaSlickgridCustomElement {
     });
     this.serviceList = [];
 
+    // also dispose of all Subscriptions
+    this.subscriptions = disposeAllSubscriptions(this.subscriptions);
+
+    if (this.backendServiceApi) {
+      for (const prop of Object.keys(this.backendServiceApi)) {
+        this.backendServiceApi[prop] = null;
+      }
+      this.backendServiceApi = undefined;
+    }
+    for (const prop of Object.keys(this.columnDefinitions)) {
+      this.columnDefinitions[prop] = null;
+    }
+    for (const prop of Object.keys(this.sharedService)) {
+      this.sharedService[prop] = null;
+    }
     this._dataset = null;
     this.datasetHierarchical = null;
     this._columnDefinitions = [];
     this.instances = null;
-
-    // also dispose of all Subscriptions
-    this.subscriptions = disposeAllSubscriptions(this.subscriptions);
   }
 
   emptyGridContainerElm() {
@@ -491,15 +503,15 @@ export class AureliaSlickgridCustomElement {
     }
   }
 
-  datasetHierarchicalChanged(newHierarchicalDataset: any[]) {
+  datasetHierarchicalChanged(newHierarchicalDataset: any[] | null) {
     this.sharedService.hierarchicalDataset = newHierarchicalDataset;
 
-    if (this.filterService && this.filterService.clearFilters) {
+    if (newHierarchicalDataset && this.columnDefinitions && this.filterService && this.filterService.clearFilters) {
       this.filterService.clearFilters();
     }
 
     // when a hierarchical dataset is set afterward, we can reset the flat dataset and call a tree data sort that will overwrite the flat dataset
-    if (this.sortService && this.sortService.processTreeDataInitialSort && this.gridOptions && this.gridOptions.enableTreeData) {
+    if (newHierarchicalDataset && this.sortService && this.sortService.processTreeDataInitialSort && this.gridOptions && this.gridOptions.enableTreeData) {
       this.dataview.setItems([], this.gridOptions.datasetIdPropertyName);
       this.sortService.processTreeDataInitialSort();
     }

@@ -120,8 +120,8 @@ export class InputFilter implements Filter {
   destroy() {
     if (this.$filterElm) {
       this.$filterElm.off('keyup input change').remove();
-      this.$filterElm = null;
     }
+    this.$filterElm = null;
   }
 
   /** Set value(s) on the DOM element */

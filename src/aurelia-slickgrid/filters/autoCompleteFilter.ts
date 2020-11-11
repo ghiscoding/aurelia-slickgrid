@@ -25,7 +25,7 @@ import { disposeAllSubscriptions, getDescendantProperty, toKebabCase } from '../
 export class AutoCompleteFilter implements Filter {
   private _autoCompleteOptions: AutocompleteOption;
   private _clearFilterTriggered = false;
-  private _collection: any[];
+  private _collection: any[] | null;
   private _shouldTriggerQuery = true;
 
   /** DOM Element Name, useful for auto-detecting positioning (dropup / dropdown) */
@@ -74,7 +74,7 @@ export class AutoCompleteFilter implements Filter {
   }
 
   /** Getter for the Collection Used by the Filter */
-  get collection(): any[] {
+  get collection(): any[] | null {
     return this._collection;
   }
 
@@ -200,6 +200,7 @@ export class AutoCompleteFilter implements Filter {
       this.$filterElm.off('keyup').remove();
     }
     this.$filterElm = null;
+    this._collection = null;
   }
 
   /** Set value(s) on the DOM element  */

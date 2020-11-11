@@ -16,6 +16,10 @@ export class GridEventService {
     this._eventHandler = new Slick.EventHandler();
   }
 
+  dispose() {
+    this._eventHandler.unsubscribeAll();
+  }
+
   /* OnCellChange Event */
   bindOnCellChange(grid: any, dataView: any) {
     // subscribe to this Slickgrid event of onCellChange
@@ -74,9 +78,5 @@ export class GridEventService {
         column.onCellClick(e, returnedArgs);
       }
     });
-  }
-
-  dispose() {
-    this._eventHandler.unsubscribeAll();
   }
 }

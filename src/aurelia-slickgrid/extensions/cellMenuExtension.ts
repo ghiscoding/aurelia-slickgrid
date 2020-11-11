@@ -28,6 +28,7 @@ declare const Slick: any;
 )
 export class CellMenuExtension implements Extension {
   private _addon: any;
+  private _cellMenuOptions: CellMenu | null;
   private _eventHandler: SlickEventHandler;
   private _locales: Locale;
 
@@ -49,8 +50,10 @@ export class CellMenuExtension implements Extension {
 
     if (this._addon && this._addon.destroy) {
       this._addon.destroy();
-      this._addon = null;
     }
+    this.extensionUtility.nullifyFunctionNameStartingWithOn(this._cellMenuOptions);
+    this._addon = null;
+    this._cellMenuOptions = null;
   }
 
   /** Get the instance of the SlickGrid addon (control or plugin). */
@@ -76,7 +79,8 @@ export class CellMenuExtension implements Extension {
 
       // dynamically import the SlickGrid plugin (addon) with RequireJS
       this.extensionUtility.loadExtensionDynamically(ExtensionName.cellMenu);
-      this.sharedService.gridOptions.cellMenu = { ...this.getDefaultCellMenuOptions(), ...cellMenu };
+      this._cellMenuOptions = { ...this.getDefaultCellMenuOptions(), ...this.sharedService.gridOptions.cellMenu };
+      this.sharedService.gridOptions.cellMenu = this._cellMenuOptions;
 
       // translate the item keys when necessary
       if (this.sharedService.gridOptions.enableTranslate) {
@@ -86,13 +90,13 @@ export class CellMenuExtension implements Extension {
       // sort all menu items by their position order when defined
       this.sortMenuItems(this.sharedService.allColumns);
 
-      this._addon = new Slick.Plugins.CellMenu(cellMenu);
+      this._addon = new Slick.Plugins.CellMenu(this._cellMenuOptions);
       this.sharedService.grid.registerPlugin(this._addon);
 
       // hook all events
-      if (this.sharedService.grid && cellMenu) {
-        if (cellMenu.onExtensionRegistered) {
-          cellMenu.onExtensionRegistered(this._addon);
+      if (this.sharedService.grid && this._cellMenuOptions) {
+        if (this._addon && this._cellMenuOptions.onExtensionRegistered) {
+          this._cellMenuOptions.onExtensionRegistered(this._addon);
         }
         if (cellMenu && typeof cellMenu.onCommand === 'function') {
           this._eventHandler.subscribe(this._addon.onCommand, (event: Event, args: MenuCommandItemCallbackArgs) => {

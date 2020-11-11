@@ -73,7 +73,7 @@ export class Example11 {
         minWidth: 30,
         maxWidth: 30,
         // use onCellClick OR grid.onClick.subscribe which you can see down below
-        onCellClick: (e: Event, args: OnEventArgs) => {
+        onCellClick: (_e: Event, args: OnEventArgs) => {
           console.log(args);
           if (confirm('Are you sure?')) {
             this.aureliaGrid.gridService.deleteDataGridItemById(args.dataContext.id);

@@ -127,9 +127,9 @@ export class CompoundInputFilter implements Filter {
     if (this.$filterElm && this.$selectOperatorElm) {
       this.$filterElm.off('keyup input change').remove();
       this.$selectOperatorElm.off('change');
-      this.$filterElm = null;
-      this.$selectOperatorElm = null;
     }
+    this.$filterElm = null;
+    this.$selectOperatorElm = null;
   }
 
   /** Set value(s) on the DOM element  */

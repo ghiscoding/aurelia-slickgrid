@@ -191,6 +191,7 @@ const mockDataView = {
   getItem: jest.fn(),
   getItems: jest.fn(),
   getItemMetadata: jest.fn(),
+  getLength: jest.fn(),
   getPagingInfo: jest.fn(),
   mapIdsToRows: jest.fn(),
   mapRowsToIds: jest.fn(),

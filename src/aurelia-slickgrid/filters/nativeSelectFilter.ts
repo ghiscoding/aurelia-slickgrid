@@ -124,8 +124,8 @@ export class NativeSelectFilter implements Filter {
   destroy() {
     if (this.$filterElm) {
       this.$filterElm.off('change').remove();
-      this.$filterElm = null;
     }
+    this.$filterElm = null;
   }
 
   /**

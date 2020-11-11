@@ -96,12 +96,11 @@ export class FilterService {
   }
 
   dispose() {
-    this.disposeColumnFilters();
-
     // unsubscribe all SlickGrid events
     if (this._eventHandler && this._eventHandler.unsubscribeAll) {
       this._eventHandler.unsubscribeAll();
     }
+    this.disposeColumnFilters();
   }
 
   /** Dispose of the filters, since it's a singleton, we don't want to affect other grids with same columns */
