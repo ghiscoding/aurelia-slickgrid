@@ -250,7 +250,7 @@ export class CompoundInputFilter implements Filter {
   }
 
   /** Event trigger, could be called by the Operator dropdown or the input itself */
-  private onTriggerEvent(e: Event | undefined) {
+  private onTriggerEvent(e: KeyboardEvent | undefined) {
     // we'll use the "input" event for everything (keyup, change, mousewheel & spinner)
     // with 1 small exception, we need to use the keyup event to handle ENTER key, everything will be processed by the "input" event
     if (e && e.type === 'keyup' && e.key !== 'Enter') {
