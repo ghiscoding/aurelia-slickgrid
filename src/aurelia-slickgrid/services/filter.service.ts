@@ -45,7 +45,7 @@ export class FilterService {
   private _filtersMetadata: any[] = [];
   private _columnFilters: ColumnFilters = {};
   private _grid: any;
-  private _onSearchChange: SlickEvent;
+  private _onSearchChange: SlickEvent | null;
   private _tmpPreFilteredData: number[];
 
   constructor(private pluginEa: SlickgridEventAggregator, private filterFactory: FilterFactory, private sharedService: SharedService) {
@@ -64,7 +64,7 @@ export class FilterService {
   }
 
   /** Getter of the SlickGrid Event Handler */
-  get onSearchChange(): SlickEvent {
+  get onSearchChange(): SlickEvent | null {
     return this._onSearchChange;
   }
 
@@ -101,6 +101,7 @@ export class FilterService {
       this._eventHandler.unsubscribeAll();
     }
     this.disposeColumnFilters();
+    this._onSearchChange = null;
   }
 
   /** Dispose of the filters, since it's a singleton, we don't want to affect other grids with same columns */
@@ -152,7 +153,9 @@ export class FilterService {
     });
 
     // subscribe to the SlickGrid event and call the backend execution
-    this._eventHandler.subscribe(this._onSearchChange, this.onBackendFilterChange.bind(this));
+    if (this._onSearchChange) {
+      this._eventHandler.subscribe(this._onSearchChange, this.onBackendFilterChange.bind(this));
+    }
   }
 
   /**
@@ -167,26 +170,29 @@ export class FilterService {
     this._dataView.setFilterArgs({ columnFilters: this._columnFilters, grid: this._grid, dataView: this._dataView });
     this._dataView.setFilter(this.customLocalFilter.bind(this));
 
-    this._eventHandler.subscribe(this._onSearchChange, (_e: KeyboardEvent, args: any) => {
-      const isGridWithTreeData = this._gridOptions && this._gridOptions.enableTreeData || false;
+    // bind any search filter change (e.g. input filter input change event)
+    if (this._onSearchChange) {
+      this._eventHandler.subscribe(this._onSearchChange, (_e: KeyboardEvent, args: any) => {
+        const isGridWithTreeData = this._gridOptions && this._gridOptions.enableTreeData || false;
 
-      // When using Tree Data, we need to do it in 2 steps
-      // step 1. we need to prefilter (search) the data prior, the result will be an array of IDs which are the node(s) and their parent nodes when necessary.
-      // step 2. calling the DataView.refresh() is what triggers the final filtering, with "customLocalFilter()" which will decide which rows should persist
-      if (isGridWithTreeData) {
-        this._tmpPreFilteredData = this.preFilterTreeData(this._dataView.getItems(), this._columnFilters);
-      }
+        // When using Tree Data, we need to do it in 2 steps
+        // step 1. we need to prefilter (search) the data prior, the result will be an array of IDs which are the node(s) and their parent nodes when necessary.
+        // step 2. calling the DataView.refresh() is what triggers the final filtering, with "customLocalFilter()" which will decide which rows should persist
+        if (isGridWithTreeData) {
+          this._tmpPreFilteredData = this.preFilterTreeData(this._dataView.getItems(), this._columnFilters);
+        }
 
-      const columnId = args.columnId;
-      if (columnId !== null) {
-        this._dataView.refresh();
-      }
+        const columnId = args.columnId;
+        if (columnId !== null) {
+          this._dataView.refresh();
+        }
 
-      // emit an onFilterChanged event when it's not called by a clear filter
-      if (args && !args.clearFilterTriggered) {
-        this.emitFilterChanged(EmitterType.local);
-      }
-    });
+        // emit an onFilterChanged event when it's not called by a clear filter
+        if (args && !args.clearFilterTriggered) {
+          this.emitFilterChanged(EmitterType.local);
+        }
+      });
+    }
 
     // subscribe to SlickGrid onHeaderRowCellRendered event to create filter template
     this._eventHandler.subscribe(grid.onHeaderRowCellRendered, (_e: KeyboardEvent, args: any) => {
@@ -799,7 +805,7 @@ export class FilterService {
 
   /**
    * Callback method that is called and executed by the individual Filter (DOM element),
-   * for example when user type in a word to search (which uses InputFilter), this Filter will execute the callback from a keyup event.
+   * for example when user type in a word to search (which uses InputFilter), this Filter will execute the callback from an input change event.
    */
   private callbackSearchEvent(event: any, args: FilterCallbackArg) {
     if (args) {
@@ -836,8 +842,9 @@ export class FilterService {
       const eventData = (event && typeof event.isPropagationStopped !== 'function') ? $.extend({}, new Slick.EventData(), event) : event;
 
       // trigger an event only if Filters changed or if ENTER key was pressed
+      const eventKey = event && event.key;
       const eventKeyCode = event && event.keyCode;
-      if (eventKeyCode === KeyCode.ENTER || !isequal(oldColumnFilters, this._columnFilters)) {
+      if (this._onSearchChange && (eventKey === 'Enter' || eventKeyCode === KeyCode.ENTER || !isequal(oldColumnFilters, this._columnFilters))) {
         this._onSearchChange.notify({
           clearFilterTriggered: args.clearFilterTriggered,
           shouldTriggerQuery: args.shouldTriggerQuery,

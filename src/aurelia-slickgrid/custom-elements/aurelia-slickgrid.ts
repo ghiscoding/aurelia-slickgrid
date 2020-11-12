@@ -384,12 +384,16 @@ export class AureliaSlickgridCustomElement {
     this.globalEa.publish('onBeforeGridDestroy', this.grid);
     this.dispatchCustomEvent(`${DEFAULT_AURELIA_EVENT_PREFIX}-on-before-grid-destroy`, this.grid);
     this._eventHandler.unsubscribeAll();
-    this.grid.destroy();
-    if (this.dataview && this.dataview.setItems) {
-      this.dataview.setItems([]);
+    if (this.dataview) {
+      if (this.dataview.setItems) {
+        this.dataview.setItems([]);
+      }
+      if (this.dataview.destroy) {
+        this.dataview.destroy();
+      }
     }
     if (this.grid && this.grid.destroy) {
-      this.grid.destroy();
+      this.grid.destroy(shouldEmptyDomElementContainer);
     }
 
     // we could optionally also empty the content of the grid container DOM element
@@ -426,7 +430,7 @@ export class AureliaSlickgridCustomElement {
     this._dataset = null;
     this.datasetHierarchical = null;
     this._columnDefinitions = [];
-    this.instances = null;
+    // this.instances = null;
   }
 
   emptyGridContainerElm() {

@@ -149,8 +149,8 @@ describe('Aurelia-Slickgrid Custom Component', () => {
     await customElement.create(bootstrap);
     const spy = jest.spyOn(customElement.viewModel, 'detached');
 
-    customElement.viewModel.dispose(true);
-    expect(spy).toHaveBeenCalledWith(true);
+    customElement.viewModel.dispose(false);
+    expect(spy).toHaveBeenCalledWith(false);
     customElement.dispose(true);
   });
 
