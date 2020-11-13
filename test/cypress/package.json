@@ -10,7 +10,7 @@
   "author": "Ghislain B.",
   "license": "MIT",
   "devDependencies": {
-    "cypress": "^5.5.0",
+    "cypress": "^5.6.0",
     "mocha": "^8.2.1",
     "mochawesome": "^6.2.1"
   }

@@ -392,7 +392,7 @@ export function disposeAllSubscriptions(subscriptions: Subscription[]) {
       subscription.dispose();
     }
   });
-  return subscriptions = [];
+  return [];
 }
 
 /** From a dot (.) notation path, find and return a property within an object given a path */

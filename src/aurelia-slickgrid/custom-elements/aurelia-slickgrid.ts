@@ -90,7 +90,7 @@ const DEFAULT_SLICKGRID_EVENT_PREFIX = 'sg';
 )
 export class AureliaSlickgridCustomElement {
   private _columnDefinitions: Column[] = [];
-  private _dataset: any[];
+  private _dataset: any[] | null;
   private _eventHandler: SlickEventHandler = new Slick.EventHandler();
   private _fixedHeight: number | null;
   private _fixedWidth: number | null;
@@ -120,10 +120,10 @@ export class AureliaSlickgridCustomElement {
   @bindable({ defaultBindingMode: bindingMode.twoWay }) paginationOptions: Pagination | undefined;
   @bindable({ defaultBindingMode: bindingMode.twoWay }) totalItems: number;
   @bindable({ defaultBindingMode: bindingMode.fromView }) extensions: ExtensionList;
-  @bindable({ defaultBindingMode: bindingMode.fromView }) instances: AureliaGridInstance;
+  @bindable({ defaultBindingMode: bindingMode.fromView }) instances: AureliaGridInstance | null;
   @bindable() customDataView: any;
   @bindable() dataset: any[];
-  @bindable() datasetHierarchical: any[];
+  @bindable() datasetHierarchical: any[] | null;
   @bindable() gridId: string;
   @bindable() gridOptions: GridOption;
   @bindable() gridHeight: number;
@@ -384,12 +384,16 @@ export class AureliaSlickgridCustomElement {
     this.globalEa.publish('onBeforeGridDestroy', this.grid);
     this.dispatchCustomEvent(`${DEFAULT_AURELIA_EVENT_PREFIX}-on-before-grid-destroy`, this.grid);
     this._eventHandler.unsubscribeAll();
-    this.grid.destroy();
-    if (this.dataview && this.dataview.setItems) {
-      this.dataview.setItems([]);
+    if (this.dataview) {
+      if (this.dataview.setItems) {
+        this.dataview.setItems([]);
+      }
+      if (this.dataview.destroy) {
+        this.dataview.destroy();
+      }
     }
     if (this.grid && this.grid.destroy) {
-      this.grid.destroy();
+      this.grid.destroy(shouldEmptyDomElementContainer);
     }
 
     // we could optionally also empty the content of the grid container DOM element
@@ -410,6 +414,23 @@ export class AureliaSlickgridCustomElement {
 
     // also dispose of all Subscriptions
     this.subscriptions = disposeAllSubscriptions(this.subscriptions);
+
+    if (this.backendServiceApi) {
+      for (const prop of Object.keys(this.backendServiceApi)) {
+        this.backendServiceApi[prop] = null;
+      }
+      this.backendServiceApi = undefined;
+    }
+    for (const prop of Object.keys(this.columnDefinitions)) {
+      this.columnDefinitions[prop] = null;
+    }
+    for (const prop of Object.keys(this.sharedService)) {
+      this.sharedService[prop] = null;
+    }
+    this._dataset = null;
+    this.datasetHierarchical = null;
+    this._columnDefinitions = [];
+    // this.instances = null;
   }
 
   emptyGridContainerElm() {
@@ -486,15 +507,15 @@ export class AureliaSlickgridCustomElement {
     }
   }
 
-  datasetHierarchicalChanged(newHierarchicalDataset: any[]) {
+  datasetHierarchicalChanged(newHierarchicalDataset: any[] | null) {
     this.sharedService.hierarchicalDataset = newHierarchicalDataset;
 
-    if (this.filterService && this.filterService.clearFilters) {
+    if (newHierarchicalDataset && this.columnDefinitions && this.filterService && this.filterService.clearFilters) {
       this.filterService.clearFilters();
     }
 
     // when a hierarchical dataset is set afterward, we can reset the flat dataset and call a tree data sort that will overwrite the flat dataset
-    if (this.sortService && this.sortService.processTreeDataInitialSort && this.gridOptions && this.gridOptions.enableTreeData) {
+    if (newHierarchicalDataset && this.sortService && this.sortService.processTreeDataInitialSort && this.gridOptions && this.gridOptions.enableTreeData) {
       this.dataview.setItems([], this.gridOptions.datasetIdPropertyName);
       this.sortService.processTreeDataInitialSort();
     }
