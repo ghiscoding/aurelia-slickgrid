@@ -5,16 +5,15 @@ import {
   Formatter,
   Formatters,
   GridOption,
-  SelectedRange,
 } from '../../aurelia-slickgrid';
 
 // create my custom Formatter with the Formatter type
-const myCustomCheckmarkFormatter: Formatter = (row, cell, value, columnDef, dataContext) => {
+const myCustomCheckmarkFormatter: Formatter = (_row, _cell, value) => {
   // you can return a string of a object (of type FormatterResultObject), the 2 types are shown below
   return value ? `<i class="fa fa-fire red" aria-hidden="true"></i>` : { text: '<i class="fa fa-snowflake-o" aria-hidden="true"></i>', addClasses: 'lightblue', toolTip: 'Freezing' };
 };
 
-const customEnableButtonFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid: any) => {
+const customEnableButtonFormatter: Formatter = (_row: number, _cell: number, value: any) => {
   return `<span style="margin-left: 5px">
       <button class="btn btn-xs btn-default">
         <i class="fa ${value ? 'fa-check-circle' : 'fa-circle-thin'} fa-lg" style="color: ${value ? 'black' : 'lavender'}"></i>
@@ -67,7 +66,7 @@ export class Example2 {
       {
         id: 'completed', name: 'Completed', field: 'completed', type: FieldType.number, sortable: true, minWidth: 100,
         formatter: customEnableButtonFormatter,
-        onCellClick: (e, args) => {
+        onCellClick: (_e, args) => {
           this.toggleCompletedProperty(args && args.dataContext);
         }
       }

@@ -2,7 +2,7 @@ import { I18N } from 'aurelia-i18n';
 import { DOM } from 'aurelia-pal';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { BindingSignaler } from 'aurelia-templating-resources';
-import { Column, FieldType, FilterArguments, GridOption, OperatorType } from '../../models';
+import { Column, ColumnFilter, FieldType, FilterArguments, GridOption, OperatorType } from '../../models';
 import { Filters } from '..';
 import { CompoundInputFilter } from '../compoundInputFilter';
 
@@ -96,6 +96,7 @@ describe('CompoundInputFilter', () => {
   });
 
   it('should throw an error when trying to call init without any arguments', () => {
+    // @ts-ignore
     expect(() => filter.init(null)).toThrowError('[Aurelia-SlickGrid] A filter must always have an "init()" with valid arguments.');
   });
 
@@ -110,10 +111,10 @@ describe('CompoundInputFilter', () => {
 
   it('should have a placeholder when defined in its column definition', () => {
     const testValue = 'test placeholder';
-    mockColumn.filter.placeholder = testValue;
+    (mockColumn.filter as ColumnFilter).placeholder = testValue;
 
     filter.init(filterArguments);
-    const filterInputElm = divContainer.querySelector<HTMLInputElement>('.search-filter.filter-duration input');
+    const filterInputElm = divContainer.querySelector('.search-filter.filter-duration input') as HTMLInputElement;
 
     expect(filterInputElm.placeholder).toBe(testValue);
   });
@@ -123,7 +124,7 @@ describe('CompoundInputFilter', () => {
 
     filter.init(filterArguments);
     filter.setValues(['abc']);
-    const filterInputElm = divContainer.querySelector<HTMLInputElement>('.search-filter.filter-duration input');
+    const filterInputElm = divContainer.querySelector('.search-filter.filter-duration input') as HTMLInputElement;
 
     filterInputElm.focus();
     filterInputElm.dispatchEvent(new (window.window as any).Event('input', { keyCode: 97, bubbles: true, cancelable: true }));
@@ -138,7 +139,7 @@ describe('CompoundInputFilter', () => {
 
     filter.init(filterArguments);
     filter.setValues(['abc']);
-    const filterInputElm = divContainer.querySelector<HTMLInputElement>('.search-filter.filter-duration input');
+    const filterInputElm = divContainer.querySelector('.search-filter.filter-duration input') as HTMLInputElement;
 
     filterInputElm.focus();
     const event = new (window.window as any).Event('keyup', { bubbles: true, cancelable: true });
@@ -155,7 +156,7 @@ describe('CompoundInputFilter', () => {
 
     filter.init(filterArguments);
     filter.setValues(['abc']);
-    const filterInputElm = divContainer.querySelector<HTMLInputElement>('.search-filter.filter-duration input');
+    const filterInputElm = divContainer.querySelector('.search-filter.filter-duration input') as HTMLInputElement;
 
     filterInputElm.focus();
     const event = new (window.window as any).Event('keyup', { bubbles: true, cancelable: true });
@@ -174,7 +175,7 @@ describe('CompoundInputFilter', () => {
 
     filter.init(filterArgs);
     filter.setValues(['9']);
-    const filterInputElm = divContainer.querySelector<HTMLInputElement>('.search-filter.filter-duration input');
+    const filterInputElm = divContainer.querySelector('.search-filter.filter-duration input') as HTMLInputElement;
 
     filterInputElm.focus();
     filterInputElm.dispatchEvent(new (window.window as any).Event('input', { keyCode: 97, bubbles: true, cancelable: true }));
@@ -189,7 +190,7 @@ describe('CompoundInputFilter', () => {
     filter.init(filterArguments);
     filter.setValues(['9'], OperatorType.greaterThanOrEqual);
 
-    const filterSelectElm = divContainer.querySelector<HTMLInputElement>('.search-filter.filter-duration select');
+    const filterSelectElm = divContainer.querySelector('.search-filter.filter-duration select') as HTMLInputElement;
     filterSelectElm.dispatchEvent(DOM.createCustomEvent('change'));
 
     expect(spyCallback).toHaveBeenCalledWith(expect.anything(), { columnDef: mockColumn, operator: '>=', searchTerms: ['9'], shouldTriggerQuery: true });
@@ -202,7 +203,7 @@ describe('CompoundInputFilter', () => {
 
     filter.init(filterArguments);
     filter.setValues(['9']);
-    const filterSelectElm = divContainer.querySelector<HTMLInputElement>('.search-filter.filter-duration select');
+    const filterSelectElm = divContainer.querySelector('.search-filter.filter-duration select') as HTMLInputElement;
 
     filterSelectElm.value = '<=';
     filterSelectElm.dispatchEvent(DOM.createCustomEvent('change'));
@@ -218,7 +219,7 @@ describe('CompoundInputFilter', () => {
 
     filter.init(filterArgs);
     filter.setValues(['   987 ']);
-    const filterInputElm = divContainer.querySelector<HTMLInputElement>('.search-filter.filter-duration input');
+    const filterInputElm = divContainer.querySelector('.search-filter.filter-duration input') as HTMLInputElement;
 
     filterInputElm.focus();
     filterInputElm.dispatchEvent(new (window.window as any).Event('input', { keyCode: 97, bubbles: true, cancelable: true }));
@@ -228,14 +229,14 @@ describe('CompoundInputFilter', () => {
 
   it('should call "setValues" with extra spaces at the beginning of the searchTerms and trim value when "enableTrimWhiteSpace" is enabled in the column filter', () => {
     gridOptionMock.enableFilterTrimWhiteSpace = false;
-    mockColumn.filter.enableTrimWhiteSpace = true;
+    (mockColumn.filter as ColumnFilter).enableTrimWhiteSpace = true;
     mockColumn.type = FieldType.number;
     const filterArgs = { ...filterArguments, operator: '>' } as FilterArguments;
     const spyCallback = jest.spyOn(filterArguments, 'callback');
 
     filter.init(filterArgs);
     filter.setValues(['   987 ']);
-    const filterInputElm = divContainer.querySelector<HTMLInputElement>('.search-filter.filter-duration input');
+    const filterInputElm = divContainer.querySelector('.search-filter.filter-duration input') as HTMLInputElement;
 
     filterInputElm.focus();
     filterInputElm.dispatchEvent(new (window.window as any).Event('input', { keyCode: 97, bubbles: true, cancelable: true }));
@@ -247,7 +248,7 @@ describe('CompoundInputFilter', () => {
     const spyCallback = jest.spyOn(filterArguments, 'callback');
 
     filter.init(filterArguments);
-    const filterInputElm = divContainer.querySelector<HTMLInputElement>('.search-filter.filter-duration input');
+    const filterInputElm = divContainer.querySelector('.search-filter.filter-duration input') as HTMLInputElement;
 
     filterInputElm.focus();
     filterInputElm.value = 'a';
@@ -260,7 +261,7 @@ describe('CompoundInputFilter', () => {
     filterArguments.searchTerms = ['xyz'];
 
     filter.init(filterArguments);
-    const filterInputElm = divContainer.querySelector<HTMLInputElement>('.search-filter.filter-duration input');
+    const filterInputElm = divContainer.querySelector('.search-filter.filter-duration input') as HTMLInputElement;
 
     expect(filterInputElm.value).toBe('xyz');
   });
@@ -269,7 +270,7 @@ describe('CompoundInputFilter', () => {
     filterArguments.searchTerms = [''];
 
     filter.init(filterArguments);
-    const filterInputElm = divContainer.querySelector<HTMLInputElement>('.search-filter.filter-duration input');
+    const filterInputElm = divContainer.querySelector('.search-filter.filter-duration input') as HTMLInputElement;
     const filterFilledElms = divContainer.querySelectorAll<HTMLInputElement>('.search-filter.filter-duration.filled');
 
     expect(filterInputElm.value).toBe('');
@@ -281,7 +282,7 @@ describe('CompoundInputFilter', () => {
     filterArguments.searchTerms = ['9'];
 
     filter.init(filterArguments);
-    const filterInputElm = divContainer.querySelector<HTMLInputElement>('.search-filter.filter-duration input');
+    const filterInputElm = divContainer.querySelector('.search-filter.filter-duration input') as HTMLInputElement;
     const filterOperatorElm = divContainer.querySelectorAll<HTMLSelectElement>('.search-filter.filter-duration select');
 
     expect(filterInputElm.value).toBe('9');
@@ -298,7 +299,7 @@ describe('CompoundInputFilter', () => {
     filterArguments.searchTerms = ['xyz'];
 
     filter.init(filterArguments);
-    const filterInputElm = divContainer.querySelector<HTMLInputElement>('.search-filter.filter-duration input');
+    const filterInputElm = divContainer.querySelector('.search-filter.filter-duration input') as HTMLInputElement;
     const filterOperatorElm = divContainer.querySelectorAll<HTMLSelectElement>('.search-filter.filter-duration select');
 
     expect(filterInputElm.value).toBe('xyz');
@@ -314,7 +315,7 @@ describe('CompoundInputFilter', () => {
 
     filter.init(filterArguments);
     filter.clear();
-    const filterInputElm = divContainer.querySelector<HTMLInputElement>('.search-filter.filter-duration input');
+    const filterInputElm = divContainer.querySelector('.search-filter.filter-duration input') as HTMLInputElement;
     const filterFilledElms = divContainer.querySelectorAll<HTMLInputElement>('.search-filter.filter-duration.filled');
 
 
@@ -329,7 +330,7 @@ describe('CompoundInputFilter', () => {
 
     filter.init(filterArguments);
     filter.clear(false);
-    const filterInputElm = divContainer.querySelector<HTMLInputElement>('.search-filter.filter-duration input');
+    const filterInputElm = divContainer.querySelector('.search-filter.filter-duration input') as HTMLInputElement;
     const filterFilledElms = divContainer.querySelectorAll<HTMLInputElement>('.search-filter.filter-duration.filled');
 
 
@@ -349,7 +350,7 @@ describe('CompoundInputFilter', () => {
       filterArguments.searchTerms = ['9'];
 
       filter.init(filterArguments);
-      const filterInputElm = divContainer.querySelector<HTMLInputElement>('.search-filter.filter-duration input');
+      const filterInputElm = divContainer.querySelector('.search-filter.filter-duration input') as HTMLInputElement;
       const filterOperatorElm = divContainer.querySelectorAll<HTMLSelectElement>('.search-filter.filter-duration select');
 
       expect(filterInputElm.value).toBe('9');
@@ -366,7 +367,7 @@ describe('CompoundInputFilter', () => {
       filterArguments.searchTerms = ['xyz'];
 
       filter.init(filterArguments);
-      const filterInputElm = divContainer.querySelector<HTMLInputElement>('.search-filter.filter-duration input');
+      const filterInputElm = divContainer.querySelector('.search-filter.filter-duration input') as HTMLInputElement;
       const filterOperatorElm = divContainer.querySelectorAll<HTMLSelectElement>('.search-filter.filter-duration select');
 
       expect(filterInputElm.value).toBe('xyz');
