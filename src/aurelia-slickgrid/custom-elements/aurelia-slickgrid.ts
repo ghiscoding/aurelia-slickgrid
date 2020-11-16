@@ -57,6 +57,7 @@ import { executeBackendProcessesCallback, onBackendError, refreshBackendDataset 
 import { ExtensionUtility } from '../extensions/extensionUtility';
 import { SharedService } from '../services/shared.service';
 import { SlickgridEventAggregator } from './slickgridEventAggregator';
+import { SlickEmptyWarningComponent } from './slick-empty-warning.component';
 
 // using external non-typed js libraries
 declare const Slick: any;
@@ -85,6 +86,7 @@ const DEFAULT_SLICKGRID_EVENT_PREFIX = 'sg';
   PaginationService,
   ResizerService,
   SharedService,
+  SlickEmptyWarningComponent,
   SortService,
   TreeDataService,
 )
@@ -149,6 +151,7 @@ export class AureliaSlickgridCustomElement {
     private paginationService: PaginationService,
     private resizerService: ResizerService,
     private sharedService: SharedService,
+    private slickEmptyWarning: SlickEmptyWarningComponent,
     private sortService: SortService,
     private treeDataService: TreeDataService,
   ) {
@@ -177,7 +180,7 @@ export class AureliaSlickgridCustomElement {
   }
 
   initialization() {
-    if (this.gridOptions && this.gridOptions.frozenRow !== undefined && this.gridOptions.frozenRow >= 0) {
+    if (this.gridOptions && (this.gridOptions.frozenColumn !== undefined && this.gridOptions.frozenColumn >= 0) || (this.gridOptions.frozenRow !== undefined && this.gridOptions.frozenRow >= 0)) {
       this.loadJqueryMousewheelDynamically();
     }
 
@@ -412,6 +415,9 @@ export class AureliaSlickgridCustomElement {
     });
     this.serviceList = [];
 
+    // dispose the Components
+    this.slickEmptyWarning.dispose();
+
     // also dispose of all Subscriptions
     this.subscriptions = disposeAllSubscriptions(this.subscriptions);
 
@@ -643,6 +649,11 @@ export class AureliaSlickgridCustomElement {
           itemCount: args && args.current || 0,
           totalItemCount: Array.isArray(this._dataset) ? this._dataset.length : 0
         };
+
+        // when using local (in-memory) dataset, we'll display a warning message when filtered data is empty
+        if (this._isLocalGrid && this.gridOptions && this.gridOptions.enableEmptyDataWarningMessage) {
+          this.displayEmptyDataWarning(args.current === 0);
+        }
       });
 
       // when dealing with Tree Data View, make sure we have necessary tree data options
@@ -848,6 +859,11 @@ export class AureliaSlickgridCustomElement {
       this.loadLocalGridPagination(dataset);
     }
 
+    if (this.gridOptions && this.gridOptions.enableEmptyDataWarningMessage && Array.isArray(dataset)) {
+      const finalTotalCount = totalCount || dataset.length;
+      this.displayEmptyDataWarning(finalTotalCount < 1);
+    }
+
     if (Array.isArray(dataset) && this.grid && this.dataview && typeof this.dataview.setItems === 'function') {
       this.dataview.setItems(dataset, this.gridOptions.datasetIdPropertyName);
       if (!this.gridOptions.backendServiceApi) {
@@ -952,6 +968,11 @@ export class AureliaSlickgridCustomElement {
   //
   // private functions
   // ------------------
+
+  private displayEmptyDataWarning(showWarning = true) {
+    this.slickEmptyWarning.grid = this.grid;
+    this.slickEmptyWarning && this.slickEmptyWarning.showEmptyDataMessage(showWarning);
+  }
 
   /** Dispatch of Custom Event, which by default will bubble & is cancelable */
   private dispatchCustomEvent(eventName: string, data?: any, isBubbling = true, isCancelable = true): boolean {
