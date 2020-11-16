@@ -36,6 +36,9 @@ export class SlickEmptyWarningComponent {
    * @param options - any styling options you'd like to pass like the text color
    */
   showEmptyDataMessage(isShowing = true, options?: EmptyWarning): boolean {
+    if (!this._grid) {
+      return false;
+    }
     const gridUid = this._grid.getUID();
     const defaultMessage = 'No data to display.';
     const mergedOptions: EmptyWarning = { message: defaultMessage, ...this.gridOptions.emptyDataWarning, ...options };

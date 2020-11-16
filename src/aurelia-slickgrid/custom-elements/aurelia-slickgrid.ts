@@ -99,7 +99,6 @@ export class AureliaSlickgridCustomElement {
   private _hideHeaderRowAfterPageLoad = false;
   private _isGridInitialized = false;
   private _isDatasetInitialized = false;
-  private _isDatasetProvided = false;
   private _isPaginationInitialized = false;
   private _isLocalGrid = true;
   groupItemMetadataProvider: any;
@@ -512,7 +511,6 @@ export class AureliaSlickgridCustomElement {
     if (this.gridOptions.autoFitColumnsOnFirstLoad && (!oldValue || oldValue.length < 1)) {
       this.grid.autosizeColumns();
     }
-    this._isDatasetProvided = true;
   }
 
   datasetHierarchicalChanged(newHierarchicalDataset: any[] | null) {
@@ -527,7 +525,6 @@ export class AureliaSlickgridCustomElement {
       this.dataview.setItems([], this.gridOptions.datasetIdPropertyName);
       this.sortService.processTreeDataInitialSort();
     }
-    this._isDatasetProvided = true;
   }
 
   /**
@@ -548,7 +545,6 @@ export class AureliaSlickgridCustomElement {
           if (processResult && processResult.data && processResult.data[datasetName]) {
             this._dataset = processResult.data[datasetName].hasOwnProperty('nodes') ? (processResult as GraphqlPaginatedResult).data[datasetName].nodes : (processResult as GraphqlResult).data[datasetName];
             const totalCount = processResult.data[datasetName].hasOwnProperty('totalCount') ? (processResult as GraphqlPaginatedResult).data[datasetName].totalCount : (processResult as GraphqlResult).data[datasetName].length;
-            this._isDatasetProvided = true;
             this.refreshGridData(this._dataset, totalCount || 0);
           }
         };
@@ -863,7 +859,7 @@ export class AureliaSlickgridCustomElement {
       this.loadLocalGridPagination(dataset);
     }
 
-    if (this.gridOptions.enableEmptyDataWarningMessage && Array.isArray(dataset) && this._isDatasetProvided) {
+    if (this.gridOptions && this.gridOptions.enableEmptyDataWarningMessage && Array.isArray(dataset)) {
       const finalTotalCount = totalCount || dataset.length;
       this.displayEmptyDataWarning(finalTotalCount < 1);
     }
