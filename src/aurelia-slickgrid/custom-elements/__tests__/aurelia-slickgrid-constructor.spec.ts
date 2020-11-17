@@ -145,6 +145,7 @@ const paginationServiceStub = {
   totalItems: 0,
   init: jest.fn(),
   dispose: jest.fn(),
+  updateTotalItems: jest.fn(),
 } as unknown as PaginationService;
 
 Object.defineProperty(paginationServiceStub, 'totalItems', {
@@ -163,7 +164,7 @@ const slickEmptyWarningStub = {
   init: jest.fn(),
   dispose: jest.fn(),
   showEmptyDataMessage: jest.fn(),
-} as SlickEmptyWarningComponent;
+} as unknown as SlickEmptyWarningComponent;
 
 const sortServiceStub = {
   bindBackendOnSort: jest.fn(),
@@ -870,9 +871,9 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
         customElement.datasetChanged(mockData, null);
 
         setTimeout(() => {
-          expect(customElement.paginationOptions?.pageSize).toBe(2);
-          expect(customElement.paginationOptions?.pageNumber).toBe(expectedPageNumber);
-          expect(customElement.paginationOptions?.totalItems).toBe(expectedTotalItems);
+          expect(customElement.gridOptions?.pagination?.pageSize).toBe(2);
+          expect(customElement.gridOptions?.pagination?.pageNumber).toBe(expectedPageNumber);
+          expect(customElement.gridOptions?.pagination?.totalItems).toBe(expectedTotalItems);
           expect(refreshSpy).toHaveBeenCalledWith(mockData);
           done();
         });
@@ -899,9 +900,9 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
 
         setTimeout(() => {
           expect(getPagingSpy).toHaveBeenCalled();
-          expect(customElement.paginationOptions?.pageSize).toBe(10);
-          expect(customElement.paginationOptions?.pageNumber).toBe(expectedPageNumber);
-          expect(customElement.paginationOptions?.totalItems).toBe(expectedTotalItems);
+          expect(customElement.gridOptions?.pagination?.pageSize).toBe(10);
+          expect(customElement.gridOptions?.pagination?.pageNumber).toBe(expectedPageNumber);
+          expect(customElement.gridOptions?.pagination?.totalItems).toBe(expectedTotalItems);
           expect(refreshSpy).toHaveBeenCalledWith(mockData);
           done();
         });
@@ -1052,8 +1053,8 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
         // @ts-ignore
         customElement.datasetChanged(mockData, null);
 
-        expect(customElement.paginationOptions.pageSize).toBe(10);
-        expect(customElement.paginationOptions.pageNumber).toBe(expectedPageNumber);
+        expect(customElement.gridOptions?.pagination?.pageSize).toBe(10);
+        expect(customElement.gridOptions?.pagination?.pageNumber).toBe(expectedPageNumber);
         expect(refreshSpy).toHaveBeenCalledWith(mockData);
       });
 
@@ -1454,6 +1455,32 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
     describe('pagination events', () => {
       beforeEach(() => {
         jest.clearAllMocks();
+      });
+
+      it('should merge paginationOptions when some already exist', () => {
+        const mockPagination = { pageSize: 2, pageSizes: [] };
+        const paginationSrvSpy = jest.spyOn(paginationServiceStub, 'updateTotalItems');
+
+        customElement.bind();
+        customElement.attached();
+        customElement.paginationOptionsChanged(mockPagination);
+
+        expect(customElement.gridOptions?.pagination).toEqual({ ...mockPagination, totalItems: 0 });
+        expect(paginationSrvSpy).toHaveBeenCalledWith(0, true);
+      });
+
+      it('should set brand new paginationOptions when none previously exist', () => {
+        const mockPagination = { pageSize: 2, pageSizes: [], totalItems: 1 };
+        const paginationSrvSpy = jest.spyOn(paginationServiceStub, 'updateTotalItems');
+
+        customElement.bind();
+        customElement.attached();
+        // @ts-ignore
+        customElement.paginationOptionsChanged(undefined);
+        customElement.paginationOptionsChanged(mockPagination);
+
+        expect(customElement.gridOptions?.pagination).toEqual(mockPagination);
+        expect(paginationSrvSpy).toHaveBeenNthCalledWith(2, 1, true);
       });
 
       it('should call trigger a gridStage change event when pagination change is triggered', () => {

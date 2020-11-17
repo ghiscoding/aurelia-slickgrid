@@ -12,6 +12,7 @@ import {
   OdataOption,
   OdataServiceApi,
   OperatorType,
+  Pagination,
 } from '../../aurelia-slickgrid';
 
 const defaultPageSize = 20;
@@ -41,6 +42,7 @@ export class Example5 {
   gridOptions: GridOption;
   dataset = [];
   metrics: Metrics;
+  paginationOptions: Pagination;
 
   isCountEnabled = true;
   odataVersion = 2;
@@ -140,8 +142,7 @@ export class Example5 {
     if (this.isCountEnabled) {
       countPropName = (this.odataVersion === 4) ? '@odata.count' : 'odata.count';
     }
-    this.gridOptions.pagination.totalItems = data[countPropName];
-    this.gridOptions = { ...{}, ...this.gridOptions };
+    this.paginationOptions = { ...this.gridOptions.pagination, totalItems: data[countPropName] };
     if (this.metrics) {
       this.metrics.totalItemCount = data[countPropName];
     }
@@ -163,7 +164,7 @@ export class Example5 {
    */
   getCustomerDataApiMock(query) {
     // the mock is returning a Promise, just like a WebAPI typically does
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
       const queryParams = query.toLowerCase().split('&');
       let top: number;
       let skip = 0;

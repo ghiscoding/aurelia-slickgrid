@@ -101,6 +101,7 @@ export class AureliaSlickgridCustomElement {
   private _isDatasetInitialized = false;
   private _isPaginationInitialized = false;
   private _isLocalGrid = true;
+  private _paginationOptions: Pagination | undefined;
   groupItemMetadataProvider: any;
   backendServiceApi: BackendServiceApi | undefined;
   customFooterOptions: CustomFooterOption;
@@ -190,7 +191,7 @@ export class AureliaSlickgridCustomElement {
     // make sure the dataset is initialized (if not it will throw an error that it cannot getLength of null)
     this._dataset = this._dataset || this.dataset || [];
     this.gridOptions = this.mergeGridOptions(this.gridOptions);
-    this.paginationOptions = this.gridOptions && this.gridOptions.pagination;
+    this._paginationOptions = this.gridOptions && this.gridOptions.pagination;
     this.locales = this.gridOptions && this.gridOptions.locales || Constants.locales;
     this.backendServiceApi = this.gridOptions && this.gridOptions.backendServiceApi;
     this._isLocalGrid = !this.backendServiceApi; // considered a local grid if it doesn't have a backend service set
@@ -846,6 +847,16 @@ export class AureliaSlickgridCustomElement {
     });
   }
 
+  paginationOptionsChanged(newOptions: Pagination) {
+    if (newOptions && this._paginationOptions) {
+      this._paginationOptions = { ...this._paginationOptions, ...newOptions };
+    } else {
+      this._paginationOptions = newOptions;
+    }
+    this.gridOptions.pagination = this._paginationOptions;
+    this.paginationService.updateTotalItems(newOptions && newOptions.totalItems || 0, true);
+  }
+
   /**
    * When dataset changes, we need to refresh the entire grid UI & possibly resize it as well
    * @param dataset
@@ -893,8 +904,8 @@ export class AureliaSlickgridCustomElement {
       // display the Pagination component only after calling this refresh data first, we call it here so that if we preset pagination page number it will be shown correctly
       this.showPagination = (this.gridOptions && (this.gridOptions.enablePagination || (this.gridOptions.backendServiceApi && this.gridOptions.enablePagination === undefined))) ? true : false;
 
-      if (this.gridOptions && this.gridOptions.backendServiceApi && this.gridOptions.pagination && this.paginationOptions) {
-        const paginationOptions = this.setPaginationOptionsWhenPresetDefined(this.gridOptions, this.paginationOptions);
+      if (this.gridOptions && this.gridOptions.backendServiceApi && this.gridOptions.pagination && this._paginationOptions) {
+        const paginationOptions = this.setPaginationOptionsWhenPresetDefined(this.gridOptions, this._paginationOptions);
 
         // when we have a totalCount use it, else we'll take it from the pagination object
         // only update the total items if it's different to avoid refreshing the UI
@@ -1062,16 +1073,16 @@ export class AureliaSlickgridCustomElement {
    * a local grid with Pagination presets will potentially have a different total of items, we'll need to get it from the DataView and update our total
    */
   private loadLocalGridPagination(dataset?: any[]) {
-    if (this.gridOptions && this.paginationOptions) {
+    if (this.gridOptions && this._paginationOptions) {
       this.totalItems = Array.isArray(dataset) ? dataset.length : 0;
-      if (this.paginationOptions && this.dataview && this.dataview.getPagingInfo) {
+      if (this._paginationOptions && this.dataview && this.dataview.getPagingInfo) {
         const slickPagingInfo = this.dataview.getPagingInfo() || {};
-        if (slickPagingInfo.hasOwnProperty('totalRows') && this.paginationOptions.totalItems !== slickPagingInfo.totalRows) {
+        if (slickPagingInfo.hasOwnProperty('totalRows') && this._paginationOptions.totalItems !== slickPagingInfo.totalRows) {
           this.totalItems = slickPagingInfo.totalRows;
         }
       }
-      this.paginationOptions.totalItems = this.totalItems;
-      const paginationOptions = this.setPaginationOptionsWhenPresetDefined(this.gridOptions, this.paginationOptions);
+      this._paginationOptions.totalItems = this.totalItems;
+      const paginationOptions = this.setPaginationOptionsWhenPresetDefined(this.gridOptions, this._paginationOptions);
       this.initializePaginationService(paginationOptions);
     }
   }
