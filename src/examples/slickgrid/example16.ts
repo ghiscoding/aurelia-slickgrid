@@ -174,10 +174,14 @@ export class Example16 {
   }
 
   hideDurationColumnDynamically() {
-    const columnIndex = this.aureliaGrid.slickGrid.getColumns().findIndex(col => col.id === 'duration');
-    if (columnIndex >= 0) {
-      this.aureliaGrid.gridService.hideColumnByIndex(columnIndex);
-    }
+    // -- you can hide by one Id or multiple Ids:
+    // hideColumnById(id, options), hideColumnByIds([ids], options)
+    // you can also provide options, defaults are: { autoResizeColumns: true, triggerEvent: true, hideFromColumnPicker: false, hideFromGridMenu: false }
+
+    this.aureliaGrid.gridService.hideColumnById('duration');
+
+    // or with multiple Ids and extra options
+    // this.aureliaGrid.gridService.hideColumnByIds(['duration', 'finish'], { hideFromColumnPicker: true, hideFromGridMenu: false });
   }
 
   // Disable/Enable Filtering/Sorting functionalities
