@@ -234,7 +234,7 @@ export class GridService {
   hideColumnById(columnId: string | number, options?: HideColumnOption): number {
     options = { ...HideColumnOptionDefaults, ...options };
     if (this._grid && this._grid.getColumns && this._grid.setColumns) {
-      const currentColumns = this._grid.getColumns();
+      const currentColumns = this._grid.getColumns() as Column[];
       const colIndexFound = currentColumns.findIndex(col => col.id === columnId);
 
       if (colIndexFound >= 0) {
