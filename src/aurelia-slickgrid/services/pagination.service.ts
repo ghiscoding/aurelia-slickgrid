@@ -93,9 +93,7 @@ export class PaginationService {
     if (this._isLocalGrid && this.dataView) {
       this._eventHandler.subscribe(this.dataView.onPagingInfoChanged, (_e: Event, pagingInfo: { totalRows: number; pageNum: number; }) => {
         if (this._totalItems !== pagingInfo.totalRows) {
-          this._totalItems = pagingInfo.totalRows;
-          this._paginationOptions.totalItems = this._totalItems;
-          this.refreshPagination(false, false);
+          this.updateTotalItems(pagingInfo.totalRows);
         }
       });
       setTimeout(() => {
@@ -358,6 +356,14 @@ export class PaginationService {
   // --
   // private functions
   // --------------------
+
+  updateTotalItems(totalItems: number, triggerChangedEvent = false) {
+    this._totalItems = totalItems;
+    if (this._paginationOptions) {
+      this._paginationOptions.totalItems = totalItems;
+      this.refreshPagination(false, triggerChangedEvent);
+    }
+  }
 
   /**
    * When item is added or removed, we will refresh the numbers on the pagination however we won't trigger a backend change
