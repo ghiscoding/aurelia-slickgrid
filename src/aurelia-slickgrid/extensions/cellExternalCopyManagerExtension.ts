@@ -51,8 +51,8 @@ export class CellExternalCopyManagerExtension implements Extension {
   dispose() {
     // unsubscribe all SlickGrid events
     this._eventHandler.unsubscribeAll();
-    if (this.sharedService && this.sharedService.grid) {
-      this.sharedService.grid.unregisterPlugin(this._addon);
+    if (this._addon && this._addon.destroy) {
+      this._addon.destroy();
     }
     if (this._cellSelectionModel && this._cellSelectionModel.destroy) {
       this._cellSelectionModel.destroy();
