@@ -21,6 +21,11 @@ declare const Slick: any;
  * KeyDown events are also handled to provide handling for Tab, Shift-Tab, Esc and Ctrl-Enter.
  */
 export class DualInputEditor implements Editor {
+  private _boundedEventListeners: {
+    element: Element;
+    eventName: string;
+    listener: EventListenerOrEventListenerObject;
+  }[] = [];
   private _eventHandler: SlickEventHandler;
   private _isValueSaveCalled = false;
   private _lastEventType: string | undefined;
@@ -105,11 +110,16 @@ export class DualInputEditor implements Editor {
 
     // the lib does not get the focus out event for some reason, so register it here
     if (this.hasAutoCommitEdit) {
-      this._leftInput.addEventListener('focusout', (event: any) => this.handleFocusOut(event, 'leftInput'));
-      this._rightInput.addEventListener('focusout', (event: any) => this.handleFocusOut(event, 'rightInput'));
+      this.addElementEventListener(this._leftInput, 'focusout', (event: any) => this.handleFocusOut(event, 'leftInput'));
+      this.addElementEventListener(this._rightInput, 'focusout', (event: any) => this.handleFocusOut(event, 'rightInput'));
     }
 
     setTimeout(() => this._leftInput.select(), 50);
+  }
+
+  addElementEventListener(element: Element, eventName: string, listener: EventListenerOrEventListenerObject) {
+    element.addEventListener(eventName, listener);
+    this._boundedEventListeners.push({ element, eventName, listener });
   }
 
   handleFocusOut(event: any, position: 'leftInput' | 'rightInput') {
@@ -134,11 +144,16 @@ export class DualInputEditor implements Editor {
   destroy() {
     // unsubscribe all SlickGrid events
     this._eventHandler.unsubscribeAll();
+    this.unbindAllEvents();
+  }
 
-    const columnId = this.columnDef && this.columnDef.id;
-    const elements = document.querySelectorAll(`.dual-editor-text.editor-${columnId}`);
-    if (elements.length > 0) {
-      elements.forEach((elm) => elm.removeEventListener('focusout', this.handleFocusOut.bind(this)));
+  /** Unbind All (remove) bounded elements with listeners */
+  unbindAllEvents() {
+    for (const boundedEvent of this._boundedEventListeners) {
+      const { element, eventName, listener } = boundedEvent;
+      if (element?.removeEventListener) {
+        element.removeEventListener(eventName, listener);
+      }
     }
   }
 

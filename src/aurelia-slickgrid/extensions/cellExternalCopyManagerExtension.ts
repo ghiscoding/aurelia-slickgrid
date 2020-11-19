@@ -25,6 +25,7 @@ export class CellExternalCopyManagerExtension implements Extension {
   private _eventHandler: SlickEventHandler;
   private _commandQueue: EditCommand[];
   private _undoRedoBuffer: EditUndoRedoBuffer;
+  private _listener: any;
 
   constructor(private extensionUtility: ExtensionUtility, private sharedService: SharedService) {
     this._eventHandler = new Slick.EventHandler();
@@ -50,15 +51,15 @@ export class CellExternalCopyManagerExtension implements Extension {
   dispose() {
     // unsubscribe all SlickGrid events
     this._eventHandler.unsubscribeAll();
-    if (this._addon && this._addon.destroy) {
-      this._addon.destroy();
+    if (this.sharedService && this.sharedService.grid) {
+      this.sharedService.grid.unregisterPlugin(this._addon);
     }
     if (this._cellSelectionModel && this._cellSelectionModel.destroy) {
       this._cellSelectionModel.destroy();
     }
     this.extensionUtility.nullifyFunctionNameStartingWithOn(this._addonOptions);
+    document.removeEventListener('keydown', this._listener);
     this._addonOptions = null;
-    document.removeEventListener('keydown', this.hookUndoShortcutKey.bind(this));
   }
 
   /** Get the instance of the SlickGrid addon (control or plugin). */
@@ -73,7 +74,9 @@ export class CellExternalCopyManagerExtension implements Extension {
       this.extensionUtility.loadExtensionDynamically(ExtensionName.cellExternalCopyManager);
 
       this.createUndoRedoBuffer();
-      this.hookUndoShortcutKey();
+
+      this._listener = this.handleKeyDown.bind(this);
+      document.addEventListener('keydown', this._listener);
 
       this._addonOptions = { ...this.getDefaultOptions(), ...this.sharedService.gridOptions.excelCopyBufferOptions } as ExcelCopyBufferOption;
       this._cellSelectionModel = new Slick.CellSelectionModel();
@@ -196,16 +199,14 @@ export class CellExternalCopyManagerExtension implements Extension {
   }
 
   /** Hook an undo shortcut key hook that will redo/undo the copy buffer using Ctrl+(Shift)+Z keyboard events */
-  private hookUndoShortcutKey() {
-    document.addEventListener('keydown', (e: KeyboardEvent) => {
-      const keyCode = e.keyCode || e.code;
-      if (keyCode === 90 && (e.ctrlKey || e.metaKey)) {
-        if (e.shiftKey) {
-          this._undoRedoBuffer.redo(); // Ctrl + Shift + Z
-        } else {
-          this._undoRedoBuffer.undo(); // Ctrl + Z
-        }
+  private handleKeyDown(e: KeyboardEvent) {
+    const keyCode = e.keyCode || e.code;
+    if (keyCode === 90 && (e.ctrlKey || e.metaKey)) {
+      if (e.shiftKey) {
+        this._undoRedoBuffer.redo(); // Ctrl + Shift + Z
+      } else {
+        this._undoRedoBuffer.undo(); // Ctrl + Z
       }
-    });
+    }
   }
 }

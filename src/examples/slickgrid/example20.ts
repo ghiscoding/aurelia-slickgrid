@@ -2,6 +2,8 @@ import { autoinject } from 'aurelia-framework';
 import { AureliaGridInstance, ColumnEditorDualInput, Column, Formatters, GridOption, Filters, FieldType, formatNumber, Editors } from '../../aurelia-slickgrid';
 import './example20.scss'; // provide custom CSS/SASS styling
 
+declare const Slick: any;
+
 @autoinject()
 export class Example20 {
   title = 'Example 20: Pinned (frozen) Columns/Rows';
@@ -23,9 +25,11 @@ export class Example20 {
   frozenRowCount = 3;
   isFrozenBottom = false;
   dataset: any[];
+  slickEventHandler: any;
 
   constructor() {
     this.defineGrid();
+    this.slickEventHandler = new Slick.EventHandler();
   }
 
   aureliaGridReady(aureliaGrid: AureliaGridInstance) {
@@ -35,15 +39,15 @@ export class Example20 {
     // with frozen (pinned) grid, in order to see the entire row being highlighted when hovering
     // we need to do some extra tricks (that is because frozen grids use 2 separate div containers)
     // the trick is to use row selection to highlight when hovering current row and remove selection once we're not
-    this.gridObj.onMouseEnter.subscribe(event => {
-      const cell = this.gridObj.getCellFromEvent(event);
-      this.gridObj.setSelectedRows([cell.row]); // highlight current row
-      event.preventDefault();
-    });
-    this.gridObj.onMouseLeave.subscribe(event => {
-      this.gridObj.setSelectedRows([]); // remove highlight
-      event.preventDefault();
-    });
+    this.slickEventHandler.subscribe(this.gridObj.onMouseEnter, event => this.highlightRow(event, true));
+    this.slickEventHandler.subscribe(this.gridObj.onMouseLeave, event => this.highlightRow(event, false));
+  }
+
+  highlightRow(event: Event, isMouseEnter: boolean) {
+    const cell = this.gridObj.getCellFromEvent(event);
+    const rows = isMouseEnter ? [cell.row] : [];
+    this.gridObj.setSelectedRows(rows); // highlight current row
+    event.preventDefault();
   }
 
   attached() {
@@ -53,8 +57,7 @@ export class Example20 {
 
   detached() {
     // unsubscribe every SlickGrid subscribed event (or use the Slick.EventHandler)
-    this.gridObj.onMouseEnter.unsubscribe();
-    this.gridObj.onMouseLeave.unsubscribe();
+    this.slickEventHandler.unsubscribeAll();
   }
 
   /* Define grid Options and Columns */
