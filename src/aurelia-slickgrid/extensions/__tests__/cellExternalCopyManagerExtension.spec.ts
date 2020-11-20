@@ -1,5 +1,5 @@
 import { I18N } from 'aurelia-i18n';
-import { GridOption } from '../../models/gridOption.interface';
+import { ExcelCopyBufferOption, GridOption } from '../../models/index';
 import { CellExternalCopyManagerExtension } from '../cellExternalCopyManagerExtension';
 import { ExtensionUtility } from '../extensionUtility';
 import { SharedService } from '../../services/shared.service';
@@ -87,7 +87,7 @@ describe('cellExternalCopyManagerExtension', () => {
 
     it('should register the addon', () => {
       const pluginSpy = jest.spyOn(SharedService.prototype.grid, 'registerPlugin');
-      const onRegisteredSpy = jest.spyOn(SharedService.prototype.gridOptions.excelCopyBufferOptions, 'onExtensionRegistered');
+      const onRegisteredSpy = jest.spyOn(SharedService.prototype.gridOptions.excelCopyBufferOptions as ExcelCopyBufferOption, 'onExtensionRegistered');
 
       const instance = extension.register();
       const addonInstance = extension.getAddonInstance();
@@ -112,9 +112,9 @@ describe('cellExternalCopyManagerExtension', () => {
 
     it('should call internal event handler subscribe and expect the "onCopyCells" option to be called when addon notify is called', () => {
       const handlerSpy = jest.spyOn(extension.eventHandler, 'subscribe');
-      const onCopySpy = jest.spyOn(SharedService.prototype.gridOptions.excelCopyBufferOptions, 'onCopyCells');
-      const onCancelSpy = jest.spyOn(SharedService.prototype.gridOptions.excelCopyBufferOptions, 'onCopyCancelled');
-      const onPasteSpy = jest.spyOn(SharedService.prototype.gridOptions.excelCopyBufferOptions, 'onPasteCells');
+      const onCopySpy = jest.spyOn(SharedService.prototype.gridOptions.excelCopyBufferOptions as ExcelCopyBufferOption, 'onCopyCells');
+      const onCancelSpy = jest.spyOn(SharedService.prototype.gridOptions.excelCopyBufferOptions as ExcelCopyBufferOption, 'onCopyCancelled');
+      const onPasteSpy = jest.spyOn(SharedService.prototype.gridOptions.excelCopyBufferOptions as ExcelCopyBufferOption, 'onPasteCells');
 
       const instance = extension.register();
       instance.onCopyCells.notify(mockSelectRangeEvent, new Slick.EventData(), gridStub);
@@ -131,9 +131,9 @@ describe('cellExternalCopyManagerExtension', () => {
 
     it('should call internal event handler subscribe and expect the "onCopyCancelled" option to be called when addon notify is called', () => {
       const handlerSpy = jest.spyOn(extension.eventHandler, 'subscribe');
-      const onCopySpy = jest.spyOn(SharedService.prototype.gridOptions.excelCopyBufferOptions, 'onCopyCells');
-      const onCancelSpy = jest.spyOn(SharedService.prototype.gridOptions.excelCopyBufferOptions, 'onCopyCancelled');
-      const onPasteSpy = jest.spyOn(SharedService.prototype.gridOptions.excelCopyBufferOptions, 'onPasteCells');
+      const onCopySpy = jest.spyOn(SharedService.prototype.gridOptions.excelCopyBufferOptions as ExcelCopyBufferOption, 'onCopyCells');
+      const onCancelSpy = jest.spyOn(SharedService.prototype.gridOptions.excelCopyBufferOptions as ExcelCopyBufferOption, 'onCopyCancelled');
+      const onPasteSpy = jest.spyOn(SharedService.prototype.gridOptions.excelCopyBufferOptions as ExcelCopyBufferOption, 'onPasteCells');
 
       const instance = extension.register();
       instance.onCopyCancelled.notify(mockSelectRangeEvent, new Slick.EventData(), gridStub);
@@ -150,9 +150,9 @@ describe('cellExternalCopyManagerExtension', () => {
 
     it('should call internal event handler subscribe and expect the "onPasteCells" option to be called when addon notify is called', () => {
       const handlerSpy = jest.spyOn(extension.eventHandler, 'subscribe');
-      const onCopySpy = jest.spyOn(SharedService.prototype.gridOptions.excelCopyBufferOptions, 'onCopyCells');
-      const onCancelSpy = jest.spyOn(SharedService.prototype.gridOptions.excelCopyBufferOptions, 'onCopyCancelled');
-      const onPasteSpy = jest.spyOn(SharedService.prototype.gridOptions.excelCopyBufferOptions, 'onPasteCells');
+      const onCopySpy = jest.spyOn(SharedService.prototype.gridOptions.excelCopyBufferOptions as ExcelCopyBufferOption, 'onCopyCells');
+      const onCancelSpy = jest.spyOn(SharedService.prototype.gridOptions.excelCopyBufferOptions as ExcelCopyBufferOption, 'onCopyCancelled');
+      const onPasteSpy = jest.spyOn(SharedService.prototype.gridOptions.excelCopyBufferOptions as ExcelCopyBufferOption, 'onPasteCells');
 
       const instance = extension.register();
       instance.onPasteCells.notify(mockSelectRangeEvent, new Slick.EventData(), gridStub);
@@ -313,6 +313,7 @@ describe('cellExternalCopyManagerExtension', () => {
 
     it('should expect a sanitized formatted and empty output after calling "dataItemColumnValueExtractor" callback', () => {
       gridOptionsMock.exportOptions = { sanitizeDataExport: true };
+      // @ts-ignore
       const myBoldFormatter: Formatter = (_row, _cell, value) => value ? { text: `<b>${value}</b>` } : null;
       jest.spyOn(SharedService.prototype, 'gridOptions', 'get').mockReturnValue(gridOptionsMock);
       extension.register();

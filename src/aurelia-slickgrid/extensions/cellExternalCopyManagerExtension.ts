@@ -10,6 +10,7 @@ import {
   SlickEventHandler,
 } from '../models/index';
 import { ExtensionUtility } from './extensionUtility';
+import { BindingEventService } from '../services/bindingEvent.service';
 import { sanitizeHtmlToText } from '../services/utilities';
 import { SharedService } from '../services/shared.service';
 
@@ -21,6 +22,7 @@ declare const Slick: any;
 export class CellExternalCopyManagerExtension implements Extension {
   private _addon: any;
   private _addonOptions: ExcelCopyBufferOption | null;
+  private _bindingEventService: BindingEventService;
   private _cellSelectionModel: any;
   private _eventHandler: SlickEventHandler;
   private _commandQueue: EditCommand[];
@@ -29,6 +31,7 @@ export class CellExternalCopyManagerExtension implements Extension {
 
   constructor(private extensionUtility: ExtensionUtility, private sharedService: SharedService) {
     this._eventHandler = new Slick.EventHandler();
+    this._bindingEventService = new BindingEventService();
   }
 
   get addonOptions(): ExcelCopyBufferOption | null {
@@ -51,14 +54,14 @@ export class CellExternalCopyManagerExtension implements Extension {
   dispose() {
     // unsubscribe all SlickGrid events
     this._eventHandler.unsubscribeAll();
-    if (this.sharedService && this.sharedService.grid) {
-      this.sharedService.grid.unregisterPlugin(this._addon);
+    this._bindingEventService.unbindAll();
+    if (this._addon && this._addon.destroy) {
+      this._addon.destroy();
     }
     if (this._cellSelectionModel && this._cellSelectionModel.destroy) {
       this._cellSelectionModel.destroy();
     }
     this.extensionUtility.nullifyFunctionNameStartingWithOn(this._addonOptions);
-    document.removeEventListener('keydown', this._listener);
     this._addonOptions = null;
   }
 
@@ -74,9 +77,7 @@ export class CellExternalCopyManagerExtension implements Extension {
       this.extensionUtility.loadExtensionDynamically(ExtensionName.cellExternalCopyManager);
 
       this.createUndoRedoBuffer();
-
-      this._listener = this.handleKeyDown.bind(this);
-      document.addEventListener('keydown', this._listener);
+      this._bindingEventService.bind(document.body, 'keydown', this.handleKeyDown.bind(this));
 
       this._addonOptions = { ...this.getDefaultOptions(), ...this.sharedService.gridOptions.excelCopyBufferOptions } as ExcelCopyBufferOption;
       this._cellSelectionModel = new Slick.CellSelectionModel();

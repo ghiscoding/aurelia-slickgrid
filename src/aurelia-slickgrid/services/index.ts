@@ -1,5 +1,6 @@
 export * from './aureliaUtil.service';
 export * from './backend-utilities';
+export * from './bindingEvent.service';
 export * from './collection.service';
 export * from './excelExport.service';
 export * from './export-utilities';
