@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.23.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.22.2...v2.23.0) (2020-11-20)
+
+
+### Features
+
+* **chore:** update all npm packages and project to WebPack 4 ([#447](https://github.com/ghiscoding/aurelia-slickgrid/issues/447)) ([1f8daac](https://github.com/ghiscoding/aurelia-slickgrid/commit/1f8daac863c4a7075886688da74d614b53899649))
+* **core:** add "Empty Data" warning message when grid is empty ([#458](https://github.com/ghiscoding/aurelia-slickgrid/issues/458)) ([5175fb6](https://github.com/ghiscoding/aurelia-slickgrid/commit/5175fb67da5ebd5d393e11753def638c55a954ca))
+* **core:** switch to ESLint since TSLint was deprecated ([#452](https://github.com/ghiscoding/aurelia-slickgrid/issues/452)) ([95f6ca9](https://github.com/ghiscoding/aurelia-slickgrid/commit/95f6ca95b4fc31ea1bf7bd6f12cd80e5323ed24f))
+* **formatters:** add a fake hyperlink formatter ([#459](https://github.com/ghiscoding/aurelia-slickgrid/issues/459)) ([94618e7](https://github.com/ghiscoding/aurelia-slickgrid/commit/94618e7a9319459b60487cc3852d6dc81c40e805))
+* **formatters:** add AlignRight and AlignCenter Formatters ([#462](https://github.com/ghiscoding/aurelia-slickgrid/issues/462)) ([a047b8c](https://github.com/ghiscoding/aurelia-slickgrid/commit/a047b8c3ca3205a9ea44f0a3753c8b68edb02b51))
+* **services:** add 2x new methods hideColumnById(s) ([#461](https://github.com/ghiscoding/aurelia-slickgrid/issues/461)) ([4cd1ecf](https://github.com/ghiscoding/aurelia-slickgrid/commit/4cd1ecf9bca629ef9efa0d022ff08f2a334e2a95))
+* **tests:** update to aurelia-pal-nodejs 2.x and few newer npm packages ([#453](https://github.com/ghiscoding/aurelia-slickgrid/issues/453)) ([0fd5b0c](https://github.com/ghiscoding/aurelia-slickgrid/commit/0fd5b0cc6279a81f8f6a8faa5c621d91acd316a4))
+
+
+### Bug Fixes
+
+* **backend:** OData/GraphQL pagination should display warning on empty ([#460](https://github.com/ghiscoding/aurelia-slickgrid/issues/460)) ([a597eca](https://github.com/ghiscoding/aurelia-slickgrid/commit/a597eca3b2968eccf13f6c712b79501c97877db3))
+* **core:** clear dataset when disposing and fix few unsubscribed events to avoid leak ([#456](https://github.com/ghiscoding/aurelia-slickgrid/issues/456)) ([7171d24](https://github.com/ghiscoding/aurelia-slickgrid/commit/7171d24bf29e00b04f8433c690963057d34e7170))
+* **core:** header columns grouping misbehave after hiding column ([#464](https://github.com/ghiscoding/aurelia-slickgrid/issues/464)) ([a8f6a3f](https://github.com/ghiscoding/aurelia-slickgrid/commit/a8f6a3f1e2e88257495d77f5195a0eb63916aa81))
+* **core:** properly dispose plugins to avoid detached DOM elements ([#455](https://github.com/ghiscoding/aurelia-slickgrid/issues/455)) ([9bb173f](https://github.com/ghiscoding/aurelia-slickgrid/commit/9bb173fb556f0afd3adb9aae0a4d2830f68e74b5))
+* **core:** properly remove event listeners when disposing ([2215b18](https://github.com/ghiscoding/aurelia-slickgrid/commit/2215b180f3b344796e0ef8616a8928c271c2599c))
+* **core:** revert to use WebPack to run Cypress E2E tests ([ef474d8](https://github.com/ghiscoding/aurelia-slickgrid/commit/ef474d8877b2b146a320534d5d7781c072f18955))
+* **extensions:** CellExternalCopyBuffer plugin onKeyDown event leaking ([8e6d325](https://github.com/ghiscoding/aurelia-slickgrid/commit/8e6d3250f380af94aede42a556a745954ee93882))
+
 ### [2.22.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.22.1...v2.22.2) (2020-10-31)
 
 
