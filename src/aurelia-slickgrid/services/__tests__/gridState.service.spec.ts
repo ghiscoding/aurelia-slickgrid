@@ -920,14 +920,14 @@ describe('GridStateService', () => {
       });
     });
 
-    it('should trigger a "gridStateService:changed" event when "headerMenu:onColumnsChanged" is triggered', () => {
+    it('should trigger a "gridStateService:changed" event when "headerMenu:onHideColumns" is triggered', () => {
       const gridStateMock = { columns: currentColumnsMock, filters: [], sorters: [] } as GridState;
       const stateChangeMock = { change: { newValues: currentColumnsMock, type: GridStateType.columns }, gridState: gridStateMock } as GridStateChange;
       const eaSpy = jest.spyOn(ea, 'publish');
       const getCurGridStateSpy = jest.spyOn(service, 'getCurrentGridState').mockReturnValue(gridStateMock);
       const getAssocCurColSpy = jest.spyOn(service, 'getAssociatedCurrentColumns').mockReturnValue(currentColumnsMock);
 
-      ea.publish('headerMenu:onColumnsChanged', columnsMock);
+      ea.publish('headerMenu:onHideColumns', columnsMock);
 
       expect(getCurGridStateSpy).toHaveBeenCalled();
       expect(getAssocCurColSpy).toHaveBeenCalled();
