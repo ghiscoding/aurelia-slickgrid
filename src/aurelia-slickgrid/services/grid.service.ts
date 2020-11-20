@@ -220,7 +220,7 @@ export class GridService {
       this.sharedService.visibleColumns = visibleColumns;
       this._grid.setColumns(visibleColumns);
       if (triggerEvent) {
-        this.pluginEa.publish('headerMenu:onColumnsChanged', { columns: visibleColumns });
+        this.pluginEa.publish('headerMenu:onHideColumns', { columns: visibleColumns });
       }
     }
   }
@@ -259,7 +259,7 @@ export class GridService {
 
         // do we want to trigger an event after hidding
         if (options?.triggerEvent) {
-          this.pluginEa.publish('headerMenu:onColumnsChanged', { columns: visibleColumns });
+          this.pluginEa.publish('headerMenu:onHideColumns', { columns: visibleColumns });
         }
         return colIndexFound;
       }
@@ -285,7 +285,7 @@ export class GridService {
       }
       // do we want to trigger an event after hidding
       if (options?.triggerEvent) {
-        this.pluginEa.publish('headerMenu:onColumnsChanged', { columns: this.sharedService.visibleColumns });
+        this.pluginEa.publish('headerMenu:onHideColumns', { columns: this.sharedService.visibleColumns });
       }
     }
   }

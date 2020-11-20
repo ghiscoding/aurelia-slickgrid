@@ -354,7 +354,7 @@ export class GridStateService {
 
     // subscribe to HeaderMenu (hide column)
     this._subscriptions.push(
-      this.pluginEa.subscribe('headerMenu:onColumnsChanged', (visibleColumns: Column[]) => {
+      this.pluginEa.subscribe('headerMenu:onHideColumns', (visibleColumns: Column[]) => {
         const currentColumns: CurrentColumn[] = this.getAssociatedCurrentColumns(visibleColumns);
         this.pluginEa.publish('gridStateService:changed', { change: { newValues: currentColumns, type: GridStateType.columns }, gridState: this.getCurrentGridState() });
       })

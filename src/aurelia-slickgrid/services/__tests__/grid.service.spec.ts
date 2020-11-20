@@ -1317,7 +1317,7 @@ describe('Grid Service', () => {
 
       expect(setVisibleSpy).toHaveBeenCalledWith(mockWithoutColumns);
       expect(setColsSpy).toHaveBeenCalledWith(mockWithoutColumns);
-      expect(pluginEaSpy).toHaveBeenCalledWith('headerMenu:onColumnsChanged', { columns: mockWithoutColumns });
+      expect(pluginEaSpy).toHaveBeenCalledWith('headerMenu:onHideColumns', { columns: mockWithoutColumns });
     });
 
     it('should set new columns minus the column to hide but without triggering an event when set to False', () => {
@@ -1360,7 +1360,7 @@ describe('Grid Service', () => {
 
       expect(setVisibleSpy).toHaveBeenCalledWith(mockWithoutColumns);
       expect(setColsSpy).toHaveBeenCalledWith(mockWithoutColumns);
-      expect(pluginEaSpy).toHaveBeenCalledWith('headerMenu:onColumnsChanged', { columns: mockWithoutColumns });
+      expect(pluginEaSpy).toHaveBeenCalledWith('headerMenu:onHideColumns', { columns: mockWithoutColumns });
     });
 
     it('should set new columns minus the column to hide but without triggering an event when set to False', () => {
@@ -1375,7 +1375,7 @@ describe('Grid Service', () => {
 
       expect(setVisibleSpy).toHaveBeenCalledWith(mockWithoutColumns);
       expect(setColsSpy).toHaveBeenCalledWith(mockWithoutColumns);
-      expect(pluginEaSpy).not.toHaveBeenLastCalledWith('headerMenu:onColumnsChanged', { columns: mockWithoutColumns });
+      expect(pluginEaSpy).not.toHaveBeenLastCalledWith('headerMenu:onHideColumns', { columns: mockWithoutColumns });
     });
   });
 
@@ -1404,7 +1404,7 @@ describe('Grid Service', () => {
       expect(autoSizeSpy).toHaveBeenCalled();
       expect(setVisibleSpy).toHaveBeenCalledWith(mockWithoutColumns);
       expect(setColsSpy).toHaveBeenCalledWith(mockWithoutColumns);
-      expect(pluginEaSpy).toHaveBeenCalledWith('headerMenu:onColumnsChanged', { columns: mockWithoutColumns });
+      expect(pluginEaSpy).toHaveBeenCalledWith('headerMenu:onHideColumns', { columns: mockWithoutColumns });
     });
 
     it('should set new columns minus the column to hide but without triggering an event when set to False', () => {
@@ -1438,7 +1438,7 @@ describe('Grid Service', () => {
       expect(autoSizeSpy).not.toHaveBeenCalled();
       expect(setVisibleSpy).toHaveBeenCalledWith(mockWithoutColumns);
       expect(setColsSpy).toHaveBeenCalledWith(mockWithoutColumns);
-      expect(pluginEaSpy).toHaveBeenCalledWith('headerMenu:onColumnsChanged', { columns: expect.toBeArray() });
+      expect(pluginEaSpy).toHaveBeenCalledWith('headerMenu:onHideColumns', { columns: expect.toBeArray() });
     });
 
     it('should set new columns minus the column to hide AND also hide the column from the column picker when "hideFromColumnPicker" is set to False', () => {
@@ -1490,7 +1490,7 @@ describe('Grid Service', () => {
       expect(hideByIdSpy).toHaveBeenNthCalledWith(1, 'field2', { autoResizeColumns: false, hideFromColumnPicker: false, hideFromGridMenu: false, triggerEvent: false });
       expect(hideByIdSpy).toHaveBeenNthCalledWith(2, 'field3', { autoResizeColumns: false, hideFromColumnPicker: false, hideFromGridMenu: false, triggerEvent: false });
       expect(autoSizeSpy).toHaveBeenCalled();
-      expect(pluginEaSpy).toHaveBeenCalledWith('headerMenu:onColumnsChanged', { columns: expect.toBeArray() });
+      expect(pluginEaSpy).toHaveBeenCalledWith('headerMenu:onHideColumns', { columns: expect.toBeArray() });
     });
 
     it('should loop through the Ids provided and call hideColumnById on each of them with same options BUT not auto size columns neither trigger when both are disabled', () => {
