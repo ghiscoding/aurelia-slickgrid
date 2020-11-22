@@ -3,7 +3,7 @@ import { GridOption } from '../../models/gridOption.interface';
 import { HeaderButtonExtension } from '../headerButtonExtension';
 import { ExtensionUtility } from '../extensionUtility';
 import { SharedService } from '../../services/shared.service';
-import { HeaderButtonOnCommandArgs } from '../../models';
+import { HeaderButton, HeaderButtonOnCommandArgs } from '../../models';
 
 declare const Slick: any;
 
@@ -80,7 +80,7 @@ describe('headerButtonExtension', () => {
 
     it('should call internal event handler subscribe and expect the "onCommand" option to be called when addon notify is called', () => {
       const handlerSpy = jest.spyOn(extension.eventHandler, 'subscribe');
-      const onCopySpy = jest.spyOn(SharedService.prototype.gridOptions.headerButton, 'onCommand');
+      const onCopySpy = jest.spyOn(SharedService.prototype.gridOptions.headerButton as HeaderButton, 'onCommand');
       const instance = extension.register();
       instance.onCommand.notify(mockOnCommandArgs, new Slick.EventData(), gridStub);
 

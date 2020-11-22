@@ -209,7 +209,7 @@ describe('extensionUtility', () => {
 
   describe('without I18N Service', () => {
     beforeEach(() => {
-      i18n = null;
+      i18n = (null as any);
       utility = new ExtensionUtility(i18n, sharedService);
     });
 

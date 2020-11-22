@@ -33,13 +33,13 @@ const URL_COUNTRY_NAMES = 'assets/data/country_names.json';
 // you can create custom validator to pass to an inline editor
 const myCustomTitleValidator: EditorValidator = (value: any, args: EditorArgs) => {
   // you can get the Editor Args which can be helpful, e.g. we can get the Translate Service from it
-  const grid = args && args.grid;
-  const gridOptions = (grid && grid.getOptions) ? grid.getOptions() : {};
-  const i18n = gridOptions.i18n;
+  // const grid = args && args.grid;
+  // const gridOptions = (grid && grid.getOptions) ? grid.getOptions() : {};
+  // const i18n = gridOptions.i18n;
 
   // to get the editor object, you'll need to use "internalColumnEditor"
   // don't use "editor" property since that one is what SlickGrid uses internally by it's editor factory
-  const columnEditor = args && args.column && args.column.internalColumnEditor;
+  // const columnEditor = args && args.column && args.column.internalColumnEditor;
 
   if (value === null || value === undefined || !value.length) {
     return { valid: false, msg: 'This is a required field' };
@@ -52,7 +52,7 @@ const myCustomTitleValidator: EditorValidator = (value: any, args: EditorArgs) =
 };
 
 // create a custom Formatter to show the Task + value
-const taskFormatter = (row, cell, value, columnDef, dataContext) => {
+const taskFormatter = (_row, _cell, value) => {
   if (value && Array.isArray(value)) {
     const taskValues = value.map((val) => `Task ${val}`);
     const values = taskValues.join(', ');
@@ -83,7 +83,7 @@ export class Example3 {
   columnDefinitions: Column[];
   dataset: any[];
   updatedObject: any;
-  isAutoEdit: boolean = true;
+  isAutoEdit = true;
   alertWarning: any;
   selectedLanguage: string;
   duplicateTitleHeaderCount = 1;
@@ -112,7 +112,7 @@ export class Example3 {
         minWidth: 30,
         maxWidth: 30,
         // use onCellClick OR grid.onClick.subscribe which you can see down below
-        onCellClick: (e: Event, args: OnEventArgs) => {
+        onCellClick: (_e: Event, args: OnEventArgs) => {
           console.log(args);
           this.alertWarning = `Editing: ${args.dataContext.title}`;
           this.aureliaGrid.gridService.highlightRow(args.row, 1500);
@@ -148,7 +148,7 @@ export class Example3 {
           validator: myCustomTitleValidator, // use a custom validator
         },
         minWidth: 100,
-        onCellChange: (e: Event, args: OnEventArgs) => {
+        onCellChange: (_e: Event, args: OnEventArgs) => {
           console.log(args);
           this.alertWarning = `Updated Title: ${args.dataContext.title}`;
         }
@@ -452,7 +452,7 @@ export class Example3 {
       enableCellNavigation: true,
       enableExcelCopyBuffer: true,
       enableFiltering: true,
-      editCommandHandler: (item, column, editCommand) => {
+      editCommandHandler: (_item, _column, editCommand) => {
         this._commandQueue.push(editCommand);
         editCommand.execute();
       },
@@ -540,12 +540,12 @@ export class Example3 {
     return tempDataset;
   }
 
-  onCellChanged(e, args) {
+  onCellChanged(_e, args) {
     console.log('onCellChange', args);
     this.updatedObject = { ...args.item };
   }
 
-  onCellClicked(e, args) {
+  onCellClicked(_e, args) {
     const metadata = this.aureliaGrid.gridService.getColumnFromEventArguments(args);
     console.log(metadata);
 
@@ -565,7 +565,7 @@ export class Example3 {
     }
   }
 
-  onCellValidationError(e, args) {
+  onCellValidationError(_e, args) {
     if (args.validationResults) {
       alert(args.validationResults.msg);
     }

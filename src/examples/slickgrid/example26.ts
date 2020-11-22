@@ -1,7 +1,4 @@
-import { EventAggregator } from 'aurelia-event-aggregator';
 import { autoinject, PLATFORM } from 'aurelia-framework';
-import { HttpClient as FetchClient } from 'aurelia-fetch-client';
-import { HttpClient } from 'aurelia-http-client';
 import { I18N } from 'aurelia-i18n';
 import {
   AureliaGridInstance,
@@ -52,7 +49,7 @@ export class Example26 {
   columnDefinitions: Column[];
   dataset: any[];
   updatedObject: any;
-  isAutoEdit: boolean = true;
+  isAutoEdit = true;
   alertWarning: any;
   selectedLanguage: string;
   assignees = [
@@ -64,7 +61,7 @@ export class Example26 {
   selectedItem: any;
   selectedId: string;
 
-  constructor(private aureliaUtilService: AureliaUtilService, private ea: EventAggregator, private http: HttpClient, private httpFetch: FetchClient, private i18n: I18N) {
+  constructor(private aureliaUtilService: AureliaUtilService, private i18n: I18N) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
     this.selectedLanguage = this.i18n.getLocale();
@@ -91,7 +88,7 @@ export class Example26 {
           maxLength: 255,
         },
         minWidth: 100,
-        onCellChange: (e: Event, args: OnEventArgs) => {
+        onCellChange: (_e: Event, args: OnEventArgs) => {
           console.log(args);
           this.alertWarning = `Updated Title: ${args.dataContext.title}`;
         }
@@ -125,7 +122,7 @@ export class Example26 {
             templateUrl: PLATFORM.moduleName('examples/slickgrid/editor-select') // EditorSelect,
           }
         },
-        onCellChange: (e: Event, args: OnEventArgs) => {
+        onCellChange: (_e: Event, args: OnEventArgs) => {
           console.log(args);
           this.alertWarning = `Updated Title: ${args.dataContext.title}`;
         }
@@ -262,7 +259,7 @@ export class Example26 {
       enableFiltering: true,
       enableAsyncPostRender: true, // for the Aurelia PostRenderer, don't forget to enable it
       asyncPostRenderDelay: 0,    // also make sure to remove any delay to render it
-      editCommandHandler: (item, column, editCommand) => {
+      editCommandHandler: (_item, _column, editCommand) => {
         this._commandQueue.push(editCommand);
         editCommand.execute();
       },
@@ -297,12 +294,12 @@ export class Example26 {
     return tempDataset;
   }
 
-  onCellChanged(e, args) {
+  onCellChanged(_e, args) {
     console.log('onCellChange', args);
     this.updatedObject = { ...args.item };
   }
 
-  onCellClicked(e, args) {
+  onCellClicked(_e, args) {
     const metadata = this.aureliaGrid.gridService.getColumnFromEventArguments(args);
     console.log(metadata);
 
@@ -322,7 +319,7 @@ export class Example26 {
     }
   }
 
-  onCellValidation(e, args) {
+  onCellValidation(_e, args) {
     alert(args.validationResults.msg);
   }
 
@@ -334,7 +331,7 @@ export class Example26 {
     return true;
   }
 
-  renderAureliaComponent(cellNode: JQuery<HTMLElement>, row: number, dataContext: any, colDef: Column) {
+  renderAureliaComponent(cellNode: JQuery<HTMLElement>, _row: number, dataContext: any, colDef: Column) {
     if (colDef.params.templateUrl && cellNode.length) {
       this.aureliaUtilService.createAureliaViewModelAddToSlot(colDef.params.templateUrl, { model: dataContext }, cellNode[0], true);
     }

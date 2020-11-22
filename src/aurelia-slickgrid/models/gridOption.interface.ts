@@ -283,7 +283,7 @@ export interface GridOption {
   enableTreeData?: boolean;
 
   /** Options for the ExcelCopyBuffer Extension */
-  excelCopyBufferOptions?: ExcelCopyBufferOption;
+  excelCopyBufferOptions?: Partial<ExcelCopyBufferOption>;
 
   /** Do we want explicit grid initialization? */
   explicitInitialization?: boolean;

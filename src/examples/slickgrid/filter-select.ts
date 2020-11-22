@@ -9,15 +9,15 @@ export class FilterSelect {
   itemMatcher = (a, b) => a && b && a.id === b.id;
 
   constructor(private elm: Element, private ea: EventAggregator) {
-    console.log(ea)
+    console.log(this.ea);
   }
 
   bind(bindingContext, overrideContext) {
-    console.log(bindingContext, overrideContext)
+    console.log(bindingContext, overrideContext);
   }
 
   selectedItemChanged(newItem) {
-    console.log(newItem)
+    console.log(newItem);
     if (newItem) {
       this.elm.dispatchEvent(DOM.createCustomEvent('on-select-changed', { detail: newItem }));
     }

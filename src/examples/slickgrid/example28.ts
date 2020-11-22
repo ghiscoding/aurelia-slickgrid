@@ -56,7 +56,7 @@ export class Example28 {
         id: 'size', name: 'Size', field: 'size', minWidth: 90,
         type: FieldType.number, exportWithFormatter: true,
         filterable: true, filter: { model: Filters.compoundInputNumber },
-        formatter: (row, cell, value) => isNaN(value) ? '' : `${value} MB`,
+        formatter: (_row, _cell, value) => isNaN(value) ? '' : `${value} MB`,
       },
     ];
 
@@ -127,7 +127,7 @@ export class Example28 {
     this.aureliaGrid.filterService.updateFilters([{ columnId: 'file', searchTerms: [this.searchString] }], true, false, true);
   }
 
-  treeFormatter: Formatter = (row, cell, value, columnDef, dataContext, grid) => {
+  treeFormatter: Formatter = (_row, _cell, value, _columnDef, dataContext, grid) => {
     const gridOptions = grid.getOptions() as GridOption;
     const treeLevelPropName = gridOptions.treeDataOptions && gridOptions.treeDataOptions.levelPropName || '__treeLevel';
     if (value === null || value === undefined || dataContext === undefined) {

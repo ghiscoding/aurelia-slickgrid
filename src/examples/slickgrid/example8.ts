@@ -91,7 +91,7 @@ export class Example8 {
                 // for example don't show Help on column "% Complete"
                 return (args.column.id !== 'percentComplete');
               },
-              action: (e, args) => {
+              action: (_e, args) => {
                 // you can use the "action" callback and/or subscribe to the "onCallback" event, they both have the same arguments
                 console.log('execute an action on Help', args);
               }
@@ -120,7 +120,7 @@ export class Example8 {
         hideSortCommands: false,
         hideColumnHideCommand: false,
         // you can use the "onCommand" (in Grid Options) and/or the "action" callback (in Column Definition)
-        onCommand: (e, args) => {
+        onCommand: (_e, args) => {
           if (args.command === 'help') {
             alert('Please help!!!');
           }

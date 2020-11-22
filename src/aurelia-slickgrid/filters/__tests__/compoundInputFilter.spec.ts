@@ -286,12 +286,12 @@ describe('CompoundInputFilter', () => {
     const filterOperatorElm = divContainer.querySelectorAll<HTMLSelectElement>('.search-filter.filter-duration select');
 
     expect(filterInputElm.value).toBe('9');
-    expect(removeExtraSpaces(filterOperatorElm[0][1].textContent)).toBe('= Equal to');
-    expect(removeExtraSpaces(filterOperatorElm[0][2].textContent)).toBe('< Less than');
-    expect(removeExtraSpaces(filterOperatorElm[0][3].textContent)).toBe('<= Less than or equal to');
-    expect(removeExtraSpaces(filterOperatorElm[0][4].textContent)).toBe('> Greater than');
-    expect(removeExtraSpaces(filterOperatorElm[0][5].textContent)).toBe('>= Greater than or equal to');
-    expect(removeExtraSpaces(filterOperatorElm[0][6].textContent)).toBe('<> Not equal to');
+    expect(removeExtraSpaces(filterOperatorElm[0][1].textContent!)).toBe('= Equal to');
+    expect(removeExtraSpaces(filterOperatorElm[0][2].textContent!)).toBe('< Less than');
+    expect(removeExtraSpaces(filterOperatorElm[0][3].textContent!)).toBe('<= Less than or equal to');
+    expect(removeExtraSpaces(filterOperatorElm[0][4].textContent!)).toBe('> Greater than');
+    expect(removeExtraSpaces(filterOperatorElm[0][5].textContent!)).toBe('>= Greater than or equal to');
+    expect(removeExtraSpaces(filterOperatorElm[0][6].textContent!)).toBe('<> Not equal to');
   });
 
   it('should create the input filter with operator dropdown options related to strings when column definition type is FieldType.string', () => {
@@ -303,10 +303,10 @@ describe('CompoundInputFilter', () => {
     const filterOperatorElm = divContainer.querySelectorAll<HTMLSelectElement>('.search-filter.filter-duration select');
 
     expect(filterInputElm.value).toBe('xyz');
-    expect(removeExtraSpaces(filterOperatorElm[0][0].textContent)).toBe(' Contains');
-    expect(removeExtraSpaces(filterOperatorElm[0][1].textContent)).toBe('= Equals');
-    expect(removeExtraSpaces(filterOperatorElm[0][2].textContent)).toBe('a* Starts With');
-    expect(removeExtraSpaces(filterOperatorElm[0][3].textContent)).toBe('*z Ends With');
+    expect(removeExtraSpaces(filterOperatorElm[0][0].textContent!)).toBe(' Contains');
+    expect(removeExtraSpaces(filterOperatorElm[0][1].textContent!)).toBe('= Equals');
+    expect(removeExtraSpaces(filterOperatorElm[0][2].textContent!)).toBe('a* Starts With');
+    expect(removeExtraSpaces(filterOperatorElm[0][3].textContent!)).toBe('*z Ends With');
   });
 
   it('should trigger a callback with the clear filter set when calling the "clear" method', () => {
@@ -354,12 +354,12 @@ describe('CompoundInputFilter', () => {
       const filterOperatorElm = divContainer.querySelectorAll<HTMLSelectElement>('.search-filter.filter-duration select');
 
       expect(filterInputElm.value).toBe('9');
-      expect(removeExtraSpaces(filterOperatorElm[0][1].textContent)).toBe('= Égal à');
-      expect(removeExtraSpaces(filterOperatorElm[0][2].textContent)).toBe('< Plus petit que');
-      expect(removeExtraSpaces(filterOperatorElm[0][3].textContent)).toBe('<= Plus petit ou égal à');
-      expect(removeExtraSpaces(filterOperatorElm[0][4].textContent)).toBe('> Plus grand que');
-      expect(removeExtraSpaces(filterOperatorElm[0][5].textContent)).toBe('>= Plus grand ou égal à');
-      expect(removeExtraSpaces(filterOperatorElm[0][6].textContent)).toBe('<> Non égal à');
+      expect(removeExtraSpaces(filterOperatorElm[0][1].textContent!)).toBe('= Égal à');
+      expect(removeExtraSpaces(filterOperatorElm[0][2].textContent!)).toBe('< Plus petit que');
+      expect(removeExtraSpaces(filterOperatorElm[0][3].textContent!)).toBe('<= Plus petit ou égal à');
+      expect(removeExtraSpaces(filterOperatorElm[0][4].textContent!)).toBe('> Plus grand que');
+      expect(removeExtraSpaces(filterOperatorElm[0][5].textContent!)).toBe('>= Plus grand ou égal à');
+      expect(removeExtraSpaces(filterOperatorElm[0][6].textContent!)).toBe('<> Non égal à');
     });
 
     it('should have French text translated with operator dropdown options related to strings when column definition type is FieldType.string', () => {
@@ -371,10 +371,10 @@ describe('CompoundInputFilter', () => {
       const filterOperatorElm = divContainer.querySelectorAll<HTMLSelectElement>('.search-filter.filter-duration select');
 
       expect(filterInputElm.value).toBe('xyz');
-      expect(removeExtraSpaces(filterOperatorElm[0][0].textContent)).toBe(' Contient');
-      expect(removeExtraSpaces(filterOperatorElm[0][1].textContent)).toBe('= Égale');
-      expect(removeExtraSpaces(filterOperatorElm[0][2].textContent)).toBe('a* Commence par');
-      expect(removeExtraSpaces(filterOperatorElm[0][3].textContent)).toBe('*z Se termine par');
+      expect(removeExtraSpaces(filterOperatorElm[0][0].textContent!)).toBe(' Contient');
+      expect(removeExtraSpaces(filterOperatorElm[0][1].textContent!)).toBe('= Égale');
+      expect(removeExtraSpaces(filterOperatorElm[0][2].textContent!)).toBe('a* Commence par');
+      expect(removeExtraSpaces(filterOperatorElm[0][3].textContent!)).toBe('*z Se termine par');
     });
   });
 });

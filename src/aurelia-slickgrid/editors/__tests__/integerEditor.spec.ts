@@ -47,7 +47,7 @@ describe('IntegerEditor', () => {
       grid: gridStub,
       column: mockColumn,
       item: mockItemData,
-      event: null,
+      event: null as any,
       cancelChanges: jest.fn(),
       commitChanges: jest.fn(),
       container: divContainer,
@@ -61,7 +61,7 @@ describe('IntegerEditor', () => {
   describe('with invalid Editor instance', () => {
     it('should throw an error when trying to call init without any arguments', (done) => {
       try {
-        editor = new IntegerEditor(null);
+        editor = new IntegerEditor(null as any);
       } catch (e) {
         expect(e.toString()).toContain(`[Aurelia-Slickgrid] Something is wrong with this grid, an Editor must always have valid arguments.`);
         done();
@@ -102,20 +102,20 @@ describe('IntegerEditor', () => {
 
     it('should have a placeholder when defined in its column definition', () => {
       const testValue = 'test placeholder';
-      mockColumn.internalColumnEditor.placeholder = testValue;
+      mockColumn.internalColumnEditor!.placeholder = testValue;
 
       editor = new IntegerEditor(editorArguments);
-      const editorElm = divContainer.querySelector<HTMLInputElement>('input.editor-text.editor-price');
+      const editorElm = divContainer.querySelector('input.editor-text.editor-price') as HTMLInputElement;
 
       expect(editorElm.placeholder).toBe(testValue);
     });
 
     it('should have a title (tooltip) when defined in its column definition', () => {
       const testValue = 'test title';
-      mockColumn.internalColumnEditor.title = testValue;
+      mockColumn.internalColumnEditor!.title = testValue;
 
       editor = new IntegerEditor(editorArguments);
-      const editorElm = divContainer.querySelector<HTMLInputElement>('input.editor-text.editor-price');
+      const editorElm = divContainer.querySelector('input.editor-text.editor-price') as HTMLInputElement;
 
       expect(editorElm.title).toBe(testValue);
     });
@@ -151,7 +151,7 @@ describe('IntegerEditor', () => {
       const spyEvent = jest.spyOn(event, 'stopImmediatePropagation');
 
       editor = new IntegerEditor(editorArguments);
-      const editorElm = divContainer.querySelector<HTMLInputElement>('input.editor-price');
+      const editorElm = divContainer.querySelector('input.editor-price') as HTMLInputElement;
 
       editor.focus();
       editorElm.dispatchEvent(event);
@@ -164,7 +164,7 @@ describe('IntegerEditor', () => {
       const spyEvent = jest.spyOn(event, 'stopImmediatePropagation');
 
       editor = new IntegerEditor(editorArguments);
-      const editorElm = divContainer.querySelector<HTMLInputElement>('input.editor-price');
+      const editorElm = divContainer.querySelector('input.editor-price') as HTMLInputElement;
 
       editor.focus();
       editorElm.dispatchEvent(event);
@@ -178,7 +178,7 @@ describe('IntegerEditor', () => {
 
         editor = new IntegerEditor(editorArguments);
         editor.setValue(9);
-        const editorElm = divContainer.querySelector<HTMLInputElement>('input.editor-price');
+        const editorElm = divContainer.querySelector('input.editor-price') as HTMLInputElement;
 
         editor.focus();
         editorElm.dispatchEvent(event);
@@ -190,7 +190,7 @@ describe('IntegerEditor', () => {
         const event = new (window.window as any).KeyboardEvent('keydown', { keyCode: KEY_CHAR_0, bubbles: true, cancelable: true });
 
         editor = new IntegerEditor(editorArguments);
-        const editorElm = divContainer.querySelector<HTMLInputElement>('input.editor-price');
+        const editorElm = divContainer.querySelector('input.editor-price') as HTMLInputElement;
 
         editor.loadValue({ id: 1, price: 0, isActive: true });
         editor.focus();
@@ -203,7 +203,7 @@ describe('IntegerEditor', () => {
         const event = new (window.window as any).KeyboardEvent('keydown', { keyCode: KEY_CHAR_0, bubbles: true, cancelable: true });
 
         editor = new IntegerEditor(editorArguments);
-        const editorElm = divContainer.querySelector<HTMLInputElement>('input.editor-price');
+        const editorElm = divContainer.querySelector('input.editor-price') as HTMLInputElement;
 
         editor.loadValue({ id: 1, price: '0', isActive: true });
         editor.focus();
@@ -214,10 +214,10 @@ describe('IntegerEditor', () => {
 
       it('should return True when previously dispatched keyboard event as ENTER and "alwaysSaveOnEnterKey" is enabled', () => {
         const event = new (window.window as any).KeyboardEvent('keydown', { keyCode: KeyCode.ENTER, bubbles: true, cancelable: true });
-        mockColumn.internalColumnEditor.alwaysSaveOnEnterKey = true;
+        mockColumn.internalColumnEditor!.alwaysSaveOnEnterKey = true;
 
         editor = new IntegerEditor(editorArguments);
-        const editorElm = divContainer.querySelector<HTMLInputElement>('input.editor-price');
+        const editorElm = divContainer.querySelector('input.editor-price') as HTMLInputElement;
 
         editor.focus();
         editorElm.dispatchEvent(event);
@@ -228,7 +228,7 @@ describe('IntegerEditor', () => {
 
     describe('applyValue method', () => {
       it('should apply the value to the price property when it passes validation', () => {
-        mockColumn.internalColumnEditor.validator = null;
+        mockColumn.internalColumnEditor!.validator = null as any;
         mockItemData = { id: 1, price: 456, isActive: true };
 
         editor = new IntegerEditor(editorArguments);
@@ -238,7 +238,7 @@ describe('IntegerEditor', () => {
       });
 
       it('should apply the value to the price property with a field having dot notation (complex object) that passes validation', () => {
-        mockColumn.internalColumnEditor.validator = null;
+        mockColumn.internalColumnEditor!.validator = null as any;
         mockColumn.field = 'part.price';
         mockItemData = { id: 1, part: { price: 456 }, isActive: true };
 
@@ -249,7 +249,7 @@ describe('IntegerEditor', () => {
       });
 
       it('should return item data with an empty string in its value when it fails the custom validation', () => {
-        mockColumn.internalColumnEditor.validator = (value: any) => {
+        mockColumn.internalColumnEditor!.validator = (value: any) => {
           if (+value < 10) {
             return { valid: false, msg: 'Value must be over 10.' };
           }
@@ -405,7 +405,7 @@ describe('IntegerEditor', () => {
 
     describe('validate method', () => {
       it('should return False when field is required and field is empty', () => {
-        mockColumn.internalColumnEditor.required = true;
+        mockColumn.internalColumnEditor!.required = true;
         editor = new IntegerEditor(editorArguments);
         const validation = editor.validate('');
 
@@ -413,7 +413,7 @@ describe('IntegerEditor', () => {
       });
 
       it('should return False when field is not a valid integer', () => {
-        mockColumn.internalColumnEditor.required = true;
+        mockColumn.internalColumnEditor!.required = true;
         editor = new IntegerEditor(editorArguments);
         const validation = editor.validate('.2');
 
@@ -421,7 +421,7 @@ describe('IntegerEditor', () => {
       });
 
       it('should return False when field is lower than a minValue defined', () => {
-        mockColumn.internalColumnEditor.minValue = 10;
+        mockColumn.internalColumnEditor!.minValue = 10;
         editor = new IntegerEditor(editorArguments);
         const validation = editor.validate(3);
 
@@ -429,8 +429,8 @@ describe('IntegerEditor', () => {
       });
 
       it('should return False when field is lower than a minValue defined using exclusive operator', () => {
-        mockColumn.internalColumnEditor.minValue = 10;
-        mockColumn.internalColumnEditor.operatorConditionalType = 'exclusive';
+        mockColumn.internalColumnEditor!.minValue = 10;
+        mockColumn.internalColumnEditor!.operatorConditionalType = 'exclusive';
         editor = new IntegerEditor(editorArguments);
         const validation = editor.validate(3);
 
@@ -438,7 +438,7 @@ describe('IntegerEditor', () => {
       });
 
       it('should return False when field is greater than a maxValue defined', () => {
-        mockColumn.internalColumnEditor.maxValue = 10;
+        mockColumn.internalColumnEditor!.maxValue = 10;
         editor = new IntegerEditor(editorArguments);
         const validation = editor.validate(33);
 
@@ -446,8 +446,8 @@ describe('IntegerEditor', () => {
       });
 
       it('should return False when field is greater than a maxValue defined using exclusive operator', () => {
-        mockColumn.internalColumnEditor.maxValue = 10;
-        mockColumn.internalColumnEditor.operatorConditionalType = 'exclusive';
+        mockColumn.internalColumnEditor!.maxValue = 10;
+        mockColumn.internalColumnEditor!.operatorConditionalType = 'exclusive';
         editor = new IntegerEditor(editorArguments);
         const validation = editor.validate(33);
 
@@ -455,8 +455,8 @@ describe('IntegerEditor', () => {
       });
 
       it('should return False when field is not between minValue & maxValue defined', () => {
-        mockColumn.internalColumnEditor.minValue = 10;
-        mockColumn.internalColumnEditor.maxValue = 99;
+        mockColumn.internalColumnEditor!.minValue = 10;
+        mockColumn.internalColumnEditor!.maxValue = 99;
         editor = new IntegerEditor(editorArguments);
         const validation = editor.validate(345);
 
@@ -464,7 +464,7 @@ describe('IntegerEditor', () => {
       });
 
       it('should return True when field is required and field is a valid input value', () => {
-        mockColumn.internalColumnEditor.required = true;
+        mockColumn.internalColumnEditor!.required = true;
         editor = new IntegerEditor(editorArguments);
         const validation = editor.validate(2);
 

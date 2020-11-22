@@ -1,10 +1,10 @@
 import { autoinject } from 'aurelia-framework';
-import { AureliaGridInstance, Column, GridOption, FieldType, Formatters } from '../../aurelia-slickgrid';
+import { AureliaGridInstance, Column, GridOption } from '../../aurelia-slickgrid';
 
 let columnsWithHighlightingById = {};
 
 // create a custom Formatter to highlight negative values in red
-const highlightingFormatter = (row, cell, value, columnDef, dataContext) => {
+const highlightingFormatter = (_row, _cell, value, columnDef) => {
   if (columnsWithHighlightingById[columnDef.id] && value < 0) {
     return `<div style="color:red; font-weight:bold;">${value}</div>`;
   } else {
@@ -69,7 +69,7 @@ export class Example7 {
       enableCellNavigation: true,
       headerButton: {
         // you can use the "onCommand" (in Grid Options) and/or the "action" callback (in Column Definition)
-        onCommand: (e, args) => {
+        onCommand: (_e, args) => {
           const column = args.column;
           const button = args.button;
           const command = args.command;
@@ -115,7 +115,7 @@ export class Example7 {
                 // for example the button usable everywhere except on last column ='J"
                 return args.column.name !== 'Column J';
               },
-              action: (e, args) => {
+              action: (_e, args) => {
                 // you can use the "action" callback and/or subscribe to the "onCallback" event, they both have the same arguments
                 // do something
                 console.log(`execute a callback action to "${args.command}" on ${args.column.name}`);
@@ -132,25 +132,25 @@ export class Example7 {
       buttons: [
         {
           cssClass: 'fa fa-tag',
-          handler: (e) => {
+          handler: () => {
             alert('Tag');
           }
         },
         {
           cssClass: 'fa fa-comment',
-          handler: (e) => {
+          handler: () => {
             alert('Comment');
           }
         },
         {
           cssClass: 'fa fa-info-circle',
-          handler: (e) => {
+          handler: () => {
             alert('Info');
           }
         },
         {
           cssClass: 'fa fa-question-circle',
-          handler: (e) => {
+          handler: () => {
             alert('Help');
           }
         }
@@ -165,7 +165,7 @@ export class Example7 {
           cssClass: 'fa fa-question-circle',
           showOnHover: true,
           tooltip: 'This button only appears on hover.',
-          handler: (e) => {
+          handler: () => {
             alert('Help');
           }
         }

@@ -318,7 +318,7 @@ describe('cellExternalCopyManagerExtension', () => {
       jest.spyOn(SharedService.prototype, 'gridOptions', 'get').mockReturnValue(gridOptionsMock);
       extension.register();
 
-      const output = extension.addonOptions.dataItemColumnValueExtractor({ firstName: '<b>John</b>', lastName: null }, { id: 'lastName', field: 'lastName', exportWithFormatter: true, formatter: myBoldFormatter });
+      const output = extension.addonOptions.dataItemColumnValueExtractor!({ firstName: '<b>John</b>', lastName: null }, { id: 'lastName', field: 'lastName', exportWithFormatter: true, formatter: myBoldFormatter });
 
       expect(output).toBe('');
     });

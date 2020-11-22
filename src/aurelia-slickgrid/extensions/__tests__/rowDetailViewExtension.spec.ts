@@ -6,7 +6,7 @@ import { RowDetailViewExtension } from '../rowDetailViewExtension';
 import { ExtensionUtility } from '../extensionUtility';
 import { SharedService } from '../../services/shared.service';
 import { AureliaUtilService } from '../../services';
-import { Column } from '../../models';
+import { Column, RowDetailView } from '../../models';
 
 declare const Slick: any;
 const ROW_DETAIL_CONTAINER_PREFIX = 'container_';
@@ -143,7 +143,7 @@ describe('rowDetailViewExtension', () => {
   });
 
   it('should return null after calling "create" method when either the column definitions or the grid options is missing', () => {
-    const output = extension.create([] as Column[], null);
+    const output = extension.create([] as Column[], null as any);
     expect(output).toBeNull();
   });
 
@@ -193,27 +193,27 @@ describe('rowDetailViewExtension', () => {
     });
 
     it('should run the "process" method when defined', async () => {
-      gridOptionsMock.rowDetailView.process = () => new Promise((resolve) => resolve('process resolved'));
-      const output = await gridOptionsMock.rowDetailView.process({ id: 'field1', field: 'field1' });
+      gridOptionsMock.rowDetailView!.process = () => new Promise((resolve) => resolve('process resolved'));
+      const output = await gridOptionsMock.rowDetailView!.process({ id: 'field1', field: 'field1' });
       expect(output).toBe('process resolved');
     });
 
     it('should provide a sanitized "preTemplate" when only a "preloadComponent" is provided (meaning no "preTemplate" is originally provided)', async () => {
-      gridOptionsMock.rowDetailView.preloadView = 'some-preload-view';
-      const output = await gridOptionsMock.rowDetailView.preTemplate();
+      gridOptionsMock.rowDetailView!.preloadView = 'some-preload-view';
+      const output = await gridOptionsMock.rowDetailView!.preTemplate!();
       expect(output).toEqual(`<div class="${PRELOAD_CONTAINER_PREFIX}"></div>`);
     });
 
     it('should provide a sanitized "postTemplate" when only a "viewComponent" is provided (meaning no "postTemplate" is originally provided)', async () => {
-      gridOptionsMock.rowDetailView.viewModel = 'some-view-model';
-      const output = await gridOptionsMock.rowDetailView.postTemplate({ id: 'field1', field: 'field1' });
+      gridOptionsMock.rowDetailView!.viewModel = 'some-view-model';
+      const output = await gridOptionsMock.rowDetailView!.postTemplate!({ id: 'field1', field: 'field1' });
       expect(output).toEqual(`<div class="${ROW_DETAIL_CONTAINER_PREFIX}field1"></div>`);
     });
 
     it('should define "datasetIdPropertyName" with different "id" and provide a sanitized "postTemplate" when only a "viewComponent" is provided (meaning no "postTemplate" is originally provided)', async () => {
-      gridOptionsMock.rowDetailView.viewModel = 'some-view-model';
+      gridOptionsMock.rowDetailView!.viewModel = 'some-view-model';
       gridOptionsMock.datasetIdPropertyName = 'rowId';
-      const output = await gridOptionsMock.rowDetailView.postTemplate({ rowId: 'field1', field: 'field1' });
+      const output = await gridOptionsMock.rowDetailView!.postTemplate!({ rowId: 'field1', field: 'field1' });
       expect(output).toEqual(`<div class="${ROW_DETAIL_CONTAINER_PREFIX}field1"></div>`);
     });
 
@@ -239,7 +239,7 @@ describe('rowDetailViewExtension', () => {
     });
 
     it('should expect the column to be at a different column index position when "columnIndexPosition" is defined', () => {
-      gridOptionsMock.rowDetailView.columnIndexPosition = 2;
+      gridOptionsMock.rowDetailView!.columnIndexPosition = 2;
       const instance = extension.create(columnsMock, gridOptionsMock);
       const spy = jest.spyOn(instance, 'getColumnDefinition').mockReturnValue({ id: '_detail_selector', field: 'sel' });
       extension.create(columnsMock, gridOptionsMock);
@@ -267,8 +267,8 @@ describe('rowDetailViewExtension', () => {
 
     beforeEach(() => {
       gridOptionsMock.datasetIdPropertyName = 'id';
-      gridOptionsMock.rowDetailView.preloadView = 'some-preload-view';
-      gridOptionsMock.rowDetailView.viewModel = 'some-view';
+      gridOptionsMock.rowDetailView!.preloadView = 'some-preload-view';
+      gridOptionsMock.rowDetailView!.viewModel = 'some-view';
       columnsMock = [{ id: 'field1', field: 'field1', width: 100, cssClass: 'red' }];
       jest.spyOn(SharedService.prototype, 'grid', 'get').mockReturnValue(gridStub);
       jest.spyOn(SharedService.prototype, 'gridOptions', 'get').mockReturnValue(gridOptionsMock);
@@ -278,7 +278,7 @@ describe('rowDetailViewExtension', () => {
     });
 
     it('should register the addon', () => {
-      const onRegisteredSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView, 'onExtensionRegistered');
+      const onRegisteredSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onExtensionRegistered');
       const pluginSpy = jest.spyOn(SharedService.prototype.grid, 'registerPlugin');
 
       const instance = extension.create(columnsMock, gridOptionsMock);
@@ -295,12 +295,12 @@ describe('rowDetailViewExtension', () => {
     it('should call internal event handler subscribe and expect the "onAsyncResponse" option to be called when addon notify is called', () => {
       const handlerSpy = jest.spyOn(extension.eventHandler, 'subscribe');
 
-      const onAsyncRespSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView, 'onAsyncResponse');
-      const onAsyncEndSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView, 'onAsyncEndUpdate');
-      const onAfterRowSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView, 'onAfterRowDetailToggle');
-      const onBeforeRowSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView, 'onBeforeRowDetailToggle');
-      const onRowOutViewSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView, 'onRowOutOfViewportRange');
-      const onRowBackViewSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView, 'onRowBackToViewportRange');
+      const onAsyncRespSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onAsyncResponse');
+      const onAsyncEndSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onAsyncEndUpdate');
+      const onAfterRowSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onAfterRowDetailToggle');
+      const onBeforeRowSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onBeforeRowDetailToggle');
+      const onRowOutViewSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onRowOutOfViewportRange');
+      const onRowBackViewSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onRowBackToViewportRange');
 
       const instance = extension.create(columnsMock, gridOptionsMock);
       extension.register();
@@ -323,12 +323,12 @@ describe('rowDetailViewExtension', () => {
       const handlerSpy = jest.spyOn(extension.eventHandler, 'subscribe');
       const renderSpy = jest.spyOn(extension, 'renderViewModel');
 
-      const onAsyncRespSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView, 'onAsyncResponse');
-      const onAsyncEndSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView, 'onAsyncEndUpdate');
-      const onAfterRowSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView, 'onAfterRowDetailToggle');
-      const onBeforeRowSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView, 'onBeforeRowDetailToggle');
-      const onRowOutViewSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView, 'onRowOutOfViewportRange');
-      const onRowBackViewSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView, 'onRowBackToViewportRange');
+      const onAsyncRespSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onAsyncResponse');
+      const onAsyncEndSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onAsyncEndUpdate');
+      const onAfterRowSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onAfterRowDetailToggle');
+      const onBeforeRowSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onBeforeRowDetailToggle');
+      const onRowOutViewSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onRowOutOfViewportRange');
+      const onRowBackViewSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onRowBackToViewportRange');
 
       const instance = extension.create(columnsMock, gridOptionsMock);
       extension.register();
@@ -351,12 +351,12 @@ describe('rowDetailViewExtension', () => {
     it('should call internal event handler subscribe and expect the "onAfterRowDetailToggle" option to be called when addon notify is called', () => {
       const handlerSpy = jest.spyOn(extension.eventHandler, 'subscribe');
 
-      const onAsyncRespSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView, 'onAsyncResponse');
-      const onAsyncEndSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView, 'onAsyncEndUpdate');
-      const onAfterRowSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView, 'onAfterRowDetailToggle');
-      const onBeforeRowSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView, 'onBeforeRowDetailToggle');
-      const onRowOutViewSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView, 'onRowOutOfViewportRange');
-      const onRowBackViewSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView, 'onRowBackToViewportRange');
+      const onAsyncRespSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onAsyncResponse');
+      const onAsyncEndSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onAsyncEndUpdate');
+      const onAfterRowSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onAfterRowDetailToggle');
+      const onBeforeRowSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onBeforeRowDetailToggle');
+      const onRowOutViewSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onRowOutOfViewportRange');
+      const onRowBackViewSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onRowBackToViewportRange');
 
       const instance = extension.create(columnsMock, gridOptionsMock);
       extension.register();
@@ -378,12 +378,12 @@ describe('rowDetailViewExtension', () => {
     it('should call internal event handler subscribe and expect the "onBeforeRowDetailToggle" option to be called when addon notify is called', () => {
       const handlerSpy = jest.spyOn(extension.eventHandler, 'subscribe');
 
-      const onAsyncRespSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView, 'onAsyncResponse');
-      const onAsyncEndSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView, 'onAsyncEndUpdate');
-      const onAfterRowSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView, 'onAfterRowDetailToggle');
-      const onBeforeRowSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView, 'onBeforeRowDetailToggle');
-      const onRowOutViewSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView, 'onRowOutOfViewportRange');
-      const onRowBackViewSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView, 'onRowBackToViewportRange');
+      const onAsyncRespSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onAsyncResponse');
+      const onAsyncEndSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onAsyncEndUpdate');
+      const onAfterRowSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onAfterRowDetailToggle');
+      const onBeforeRowSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onBeforeRowDetailToggle');
+      const onRowOutViewSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onRowOutOfViewportRange');
+      const onRowBackViewSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onRowBackToViewportRange');
 
       const instance = extension.create(columnsMock, gridOptionsMock);
       extension.register();
@@ -405,12 +405,12 @@ describe('rowDetailViewExtension', () => {
     it('should call internal event handler subscribe and expect the "onRowOutOfViewportRange" option to be called when addon notify is called', () => {
       const handlerSpy = jest.spyOn(extension.eventHandler, 'subscribe');
 
-      const onAsyncRespSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView, 'onAsyncResponse');
-      const onAsyncEndSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView, 'onAsyncEndUpdate');
-      const onAfterRowSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView, 'onAfterRowDetailToggle');
-      const onBeforeRowSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView, 'onBeforeRowDetailToggle');
-      const onRowOutViewSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView, 'onRowOutOfViewportRange');
-      const onRowBackViewSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView, 'onRowBackToViewportRange');
+      const onAsyncRespSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onAsyncResponse');
+      const onAsyncEndSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onAsyncEndUpdate');
+      const onAfterRowSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onAfterRowDetailToggle');
+      const onBeforeRowSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onBeforeRowDetailToggle');
+      const onRowOutViewSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onRowOutOfViewportRange');
+      const onRowBackViewSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onRowBackToViewportRange');
 
       const instance = extension.create(columnsMock, gridOptionsMock);
       extension.register();
@@ -436,12 +436,12 @@ describe('rowDetailViewExtension', () => {
     it('should call internal event handler subscribe and expect the "onRowBackToViewportRange" option to be called when addon notify is called', () => {
       const handlerSpy = jest.spyOn(extension.eventHandler, 'subscribe');
 
-      const onAsyncRespSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView, 'onAsyncResponse');
-      const onAsyncEndSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView, 'onAsyncEndUpdate');
-      const onAfterRowSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView, 'onAfterRowDetailToggle');
-      const onBeforeRowSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView, 'onBeforeRowDetailToggle');
-      const onRowOutViewSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView, 'onRowOutOfViewportRange');
-      const onRowBackViewSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView, 'onRowBackToViewportRange');
+      const onAsyncRespSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onAsyncResponse');
+      const onAsyncEndSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onAsyncEndUpdate');
+      const onAfterRowSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onAfterRowDetailToggle');
+      const onBeforeRowSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onBeforeRowDetailToggle');
+      const onRowOutViewSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onRowOutOfViewportRange');
+      const onRowBackViewSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onRowBackToViewportRange');
 
       const instance = extension.create(columnsMock, gridOptionsMock);
       extension.register();
@@ -566,7 +566,7 @@ describe('rowDetailViewExtension', () => {
 
     it('should run the internal "onProcessing" and call "notifyTemplate" with a Promise when "process" method is defined and executed', (done) => {
       const mockItem = { id: 2, firstName: 'John', lastName: 'Doe' };
-      gridOptionsMock.rowDetailView.process = () => new Promise((resolve) => resolve(mockItem));
+      gridOptionsMock.rowDetailView!.process = () => new Promise((resolve) => resolve(mockItem));
       const instance = extension.create(columnsMock, gridOptionsMock);
 
       instance.onAsyncResponse.subscribe((_e, response) => {
@@ -574,7 +574,7 @@ describe('rowDetailViewExtension', () => {
         done();
       });
 
-      gridOptionsMock.rowDetailView.process(mockItem);
+      gridOptionsMock.rowDetailView!.process(mockItem);
     });
 
     it('should run the internal "onProcessing" and call "notifyTemplate" with a Promise when "process" is a Fetch Promise', (done) => {
@@ -584,7 +584,7 @@ describe('rowDetailViewExtension', () => {
       http.returnKey = 'date';
       http.returnValue = '6/24/1984';
       http.responseHeaders = { accept: 'json' };
-      gridOptionsMock.rowDetailView.process = () => http.fetch('/api', { method: 'GET' });
+      gridOptionsMock.rowDetailView!.process = () => http.fetch('/api', { method: 'GET' });
       const instance = extension.create(columnsMock, gridOptionsMock);
 
       instance.onAsyncResponse.subscribe((_e, response) => {
@@ -592,13 +592,13 @@ describe('rowDetailViewExtension', () => {
         done();
       });
 
-      gridOptionsMock.rowDetailView.process(mockItem);
+      gridOptionsMock.rowDetailView!.process(mockItem);
     });
 
     it('should define "datasetIdPropertyName" with different "id" and run the internal "onProcessing" and call "notifyTemplate" with a Promise when "process" as a Promise with content to simulate http - client', (done) => {
       const mockItem = { rowId: 2, firstName: 'John', lastName: 'Doe' };
       gridOptionsMock.datasetIdPropertyName = 'rowId';
-      gridOptionsMock.rowDetailView.process = (item) => new Promise((resolve) => resolve({ content: item }));
+      gridOptionsMock.rowDetailView!.process = (item) => new Promise((resolve) => resolve({ content: item }));
       const instance = extension.create(columnsMock, gridOptionsMock);
 
       instance.onAsyncResponse.subscribe((_e, response) => {
@@ -606,12 +606,12 @@ describe('rowDetailViewExtension', () => {
         done();
       });
 
-      gridOptionsMock.rowDetailView.process(mockItem);
+      gridOptionsMock.rowDetailView!.process(mockItem);
     });
 
     it('should run the internal "onProcessing" and call "notifyTemplate" with a Promise when "process" as a Promise with content to simulate http-client', (done) => {
       const mockItem = { id: 2, firstName: 'John', lastName: 'Doe' };
-      gridOptionsMock.rowDetailView.process = (item) => new Promise((resolve) => resolve({ content: item }));
+      gridOptionsMock.rowDetailView!.process = (item) => new Promise((resolve) => resolve({ content: item }));
       const instance = extension.create(columnsMock, gridOptionsMock);
 
       instance.onAsyncResponse.subscribe((_e, response) => {
@@ -619,16 +619,16 @@ describe('rowDetailViewExtension', () => {
         done();
       });
 
-      gridOptionsMock.rowDetailView.process(mockItem);
+      gridOptionsMock.rowDetailView!.process(mockItem);
     });
 
     it('should throw an error when running the "process" that does not return an object with an "id" property', async () => {
       const mockItem = { firstName: 'John', lastName: 'Doe' };
-      gridOptionsMock.rowDetailView.process = (item) => new Promise((resolve) => resolve(item));
+      gridOptionsMock.rowDetailView!.process = (item) => new Promise((resolve) => resolve(item));
       extension.create(columnsMock, gridOptionsMock);
 
       try {
-        await gridOptionsMock.rowDetailView.process(mockItem);
+        await gridOptionsMock.rowDetailView!.process(mockItem);
       } catch (e) {
         expect(e.toString()).toContain(`[Aurelia-Slickgrid] could not process the Row Detail, you must make sure that your "process" callback`);
       }
@@ -674,7 +674,7 @@ describe('rowDetailViewExtension', () => {
 
     it('should throw an error when calling "create" method without "rowDetailView" options defined', () => {
       const copyGridOptionsMock = { ...gridOptionsMock };
-      copyGridOptionsMock.rowDetailView.process = undefined;
+      copyGridOptionsMock.rowDetailView!.process = undefined as any;
       jest.spyOn(SharedService.prototype, 'gridOptions', 'get').mockReturnValue(gridOptionsMock);
 
       expect(() => extension.create([], copyGridOptionsMock)).toThrowError(`You need to provide a "process" function for the Row Detail Extension to work properly`);

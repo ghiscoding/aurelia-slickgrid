@@ -21,20 +21,19 @@ declare const Slick: any;
 @inject(ExtensionUtility, SharedService)
 export class CellExternalCopyManagerExtension implements Extension {
   private _addon: any;
-  private _addonOptions: ExcelCopyBufferOption | null;
+  private _addonOptions: ExcelCopyBufferOption;
   private _bindingEventService: BindingEventService;
   private _cellSelectionModel: any;
   private _eventHandler: SlickEventHandler;
   private _commandQueue: EditCommand[];
   private _undoRedoBuffer: EditUndoRedoBuffer;
-  private _listener: any;
 
   constructor(private extensionUtility: ExtensionUtility, private sharedService: SharedService) {
     this._eventHandler = new Slick.EventHandler();
     this._bindingEventService = new BindingEventService();
   }
 
-  get addonOptions(): ExcelCopyBufferOption | null {
+  get addonOptions(): ExcelCopyBufferOption {
     return this._addonOptions;
   }
 
@@ -62,7 +61,6 @@ export class CellExternalCopyManagerExtension implements Extension {
       this._cellSelectionModel.destroy();
     }
     this.extensionUtility.nullifyFunctionNameStartingWithOn(this._addonOptions);
-    this._addonOptions = null;
   }
 
   /** Get the instance of the SlickGrid addon (control or plugin). */
@@ -158,7 +156,7 @@ export class CellExternalCopyManagerExtension implements Extension {
     let newRowIds = 0;
 
     return {
-      clipboardCommandHandler: (editCommand: any) => {
+      clipboardCommandHandler: (editCommand: EditCommand) => {
         this._undoRedoBuffer.queueAndExecuteCommand.call(this._undoRedoBuffer, editCommand);
       },
       dataItemColumnValueExtractor: (item: any, columnDef: Column) => {

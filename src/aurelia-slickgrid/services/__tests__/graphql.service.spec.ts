@@ -6,7 +6,6 @@ import {
   ColumnSort,
   CurrentFilter,
   FilterChangedArgs,
-  GraphqlServiceApi,
   GraphqlServiceOption,
   GridOption,
   MultiColumnSort,
@@ -15,6 +14,7 @@ import {
   OperatorType,
   FieldType,
   CurrentSorter,
+  BackendService,
 } from '../../models';
 
 const DEFAULT_ITEMS_PER_PAGE = 25;
@@ -32,8 +32,8 @@ const gridOptionMock = {
     preProcess: jest.fn(),
     process: jest.fn(),
     postProcess: jest.fn(),
-  } as GraphqlServiceApi
-} as GridOption;
+  }
+} as unknown as GridOption;
 
 const gridStub = {
   autosizeColumns: jest.fn(),
@@ -66,7 +66,7 @@ describe('GraphqlService', () => {
       pageSize: 10,
       totalItems: 100
     };
-    gridOptionMock.backendServiceApi.service = service;
+    gridOptionMock.backendServiceApi!.service = service as BackendService;
   });
 
   afterEach(() => {
@@ -106,7 +106,7 @@ describe('GraphqlService', () => {
     });
 
     it('should throw an error when no dataset is provided in the service options after service init', () => {
-      service.init({ datasetName: undefined });
+      service.init({ datasetName: undefined as any });
       expect(() => service.buildQuery()).toThrow('GraphQL Service requires the "datasetName" property to properly build the GraphQL query');
     });
 
@@ -441,7 +441,7 @@ describe('GraphqlService', () => {
     });
 
     it('should return empty string when dataset name is undefined', () => {
-      service.init({ datasetName: undefined, columnDefinitions: [] });
+      service.init({ datasetName: undefined as any, columnDefinitions: [] });
       const output = service.getDatasetName();
       expect(output).toBe('');
     });
@@ -475,14 +475,14 @@ describe('GraphqlService', () => {
     it('should throw an error when backendService is undefined', () => {
       service.init(serviceOptions, paginationOptions, undefined);
       // @ts-ignore
-      expect(() => service.processOnFilterChanged(null, { grid: gridStub })).toThrow();
+      expect(() => service.processOnFilterChanged(null as any, { grid: gridStub })).toThrow();
     });
 
     it('should throw an error when grid is undefined', () => {
       service.init(serviceOptions, paginationOptions, gridStub);
 
       // @ts-ignore
-      expect(() => service.processOnFilterChanged(null, { grid: undefined }))
+      expect(() => service.processOnFilterChanged(null as any, { grid: undefined }))
         .toThrowError('Something went wrong when trying create the GraphQL Backend Service');
     });
 
@@ -503,7 +503,7 @@ describe('GraphqlService', () => {
       } as FilterChangedArgs;
 
       service.init(serviceOptions, paginationOptions, gridStub);
-      const query = service.processOnFilterChanged(null, mockFilterChangedArgs);
+      const query = service.processOnFilterChanged(null as any, mockFilterChangedArgs);
       const currentFilters = service.getCurrentFilters();
 
       expect(removeSpaces(query)).toBe(removeSpaces(expectation));
@@ -533,7 +533,7 @@ describe('GraphqlService', () => {
       } as FilterChangedArgs;
 
       service.init(serviceOptions, paginationOptions, gridStub);
-      const query = service.processOnFilterChanged(null, mockFilterChangedArgs);
+      const query = service.processOnFilterChanged(null as any, mockFilterChangedArgs);
       const currentFilters = service.getCurrentFilters();
 
       expect(removeSpaces(query)).toBe(removeSpaces(expectation));
@@ -552,7 +552,7 @@ describe('GraphqlService', () => {
       const querySpy = jest.spyOn(service, 'buildQuery');
 
       service.init(serviceOptions, paginationOptions, gridStub);
-      const query = service.processOnPaginationChanged(null, { newPage: 3, pageSize: 20 });
+      const query = service.processOnPaginationChanged(null as any, { newPage: 3, pageSize: 20 });
       const currentPagination = service.getCurrentPagination();
 
       expect(removeSpaces(query)).toBe(removeSpaces(expectation));
@@ -566,7 +566,7 @@ describe('GraphqlService', () => {
 
       service.init(serviceOptions, paginationOptions, gridStub);
       // @ts-ignore
-      const query = service.processOnPaginationChanged(null, { newPage: 3 });
+      const query = service.processOnPaginationChanged(null as any, { newPage: 3 });
       const currentPagination = service.getCurrentPagination();
 
       expect(removeSpaces(query)).toBe(removeSpaces(expectation));
@@ -580,7 +580,7 @@ describe('GraphqlService', () => {
 
       service.init(serviceOptions, undefined, gridStub);
       // @ts-ignore
-      const query = service.processOnPaginationChanged(null, { newPage: 3 });
+      const query = service.processOnPaginationChanged(null as any, { newPage: 3 });
       const currentPagination = service.getCurrentPagination();
 
       expect(removeSpaces(query)).toBe(removeSpaces(expectation));
@@ -597,7 +597,7 @@ describe('GraphqlService', () => {
       const mockSortChangedArgs = { columnId: 'gender', sortCol: mockColumn, sortAsc: false, multiColumnSort: false } as ColumnSort;
 
       service.init(serviceOptions, paginationOptions, gridStub);
-      const query = service.processOnSortChanged(null, mockSortChangedArgs);
+      const query = service.processOnSortChanged(null as any, mockSortChangedArgs);
 
       expect(removeSpaces(query)).toBe(removeSpaces(expectation));
       expect(querySpy).toHaveBeenCalled();
@@ -615,7 +615,7 @@ describe('GraphqlService', () => {
       const mockSortChangedArgs = { sortCols: [mockColumnSort, mockColumnSortName], multiColumnSort: true, grid: gridStub } as MultiColumnSort;
 
       service.init(serviceOptions, paginationOptions, gridStub);
-      const query = service.processOnSortChanged(null, mockSortChangedArgs);
+      const query = service.processOnSortChanged(null as any, mockSortChangedArgs);
 
       expect(removeSpaces(query)).toBe(removeSpaces(expectation));
       expect(querySpy).toHaveBeenCalled();
@@ -961,7 +961,7 @@ describe('GraphqlService', () => {
       const expectation = `query{users(first:10, offset:0, filterBy:[{field:gender, operator:EQ, value:""}]) { totalCount,nodes{ id,company,gender,name } }}`;
       const mockColumn = { id: 'gender', field: 'gender' } as Column;
       const mockColumnFilters = {
-        gender: { columnId: 'gender', columnDef: mockColumn, searchTerms: [undefined], operator: 'EQ' },
+        gender: { columnId: 'gender', columnDef: mockColumn, searchTerms: [undefined as any], operator: 'EQ' },
       } as ColumnFilters;
 
       service.init(serviceOptions, paginationOptions, gridStub);

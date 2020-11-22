@@ -5,11 +5,11 @@ import { AureliaGridInstance, Column, Formatter, GridOption } from '../../aureli
 
 declare const Slick: any;
 
-const brandFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any) => {
+const brandFormatter: Formatter = (_row, _cell, _value, _columnDef, dataContext) => {
   return dataContext && dataContext.brand && dataContext.brand.name || '';
 };
 
-const mpnFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any) => {
+const mpnFormatter: Formatter = (_row, _cell, _value, _columnDef, dataContext) => {
   let link = '';
   if (dataContext && dataContext.octopart_url && dataContext.mpn) {
     link = `<a href="${dataContext.octopart_url}" target="_blank">${dataContext.mpn}</a>`;
@@ -102,11 +102,8 @@ export class Example17 {
 
   hookAllLoaderEvents() {
     if (this._eventHandler && this._eventHandler.subscribe && this.loaderDataView && this.loaderDataView.onDataLoading && this.loaderDataView.onDataLoaded) {
-      this._eventHandler.subscribe(this.loaderDataView.onDataLoading, (e: Event, args: any) => {
-        this.loading = true;
-      });
-
-      this._eventHandler.subscribe(this.loaderDataView.onDataLoaded, (e: Event, args: any) => {
+      this._eventHandler.subscribe(this.loaderDataView.onDataLoading, () => this.loading = true);
+      this._eventHandler.subscribe(this.loaderDataView.onDataLoaded, (_e: Event, args: any) => {
         if (args && this.gridObj && this.gridObj.invalidateRow && this.gridObj.updateRowCount && this.gridObj.render) {
           for (let i = args.from; i <= args.to; i++) {
             this.gridObj.invalidateRow(i);
@@ -127,7 +124,7 @@ export class Example17 {
     }
   }
 
-  onSort(e, args) {
+  onSort(_e, args) {
     if (this.gridObj && this.gridObj.getViewport && this.loaderDataView && this.loaderDataView.ensureData && this.loaderDataView.setSort) {
       const vp = this.gridObj.getViewport();
       if (args && args.sortCol && args.sortCol.field) {
@@ -137,7 +134,7 @@ export class Example17 {
     }
   }
 
-  onViewportChanged(e, args) {
+  onViewportChanged() {
     if (this.gridObj && this.gridObj.getViewport && this.loaderDataView && this.loaderDataView.ensureData) {
       const vp = this.gridObj.getViewport();
       this.loaderDataView.ensureData(vp.top, vp.bottom);

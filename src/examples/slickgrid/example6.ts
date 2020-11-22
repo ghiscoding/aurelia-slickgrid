@@ -212,7 +212,7 @@ export class Example6 {
    * @param query
    * @return Promise<GraphqlPaginatedResult>
    */
-  getCustomerApiCall(query: string): Promise<GraphqlPaginatedResult> {
+  getCustomerApiCall(_query: string): Promise<GraphqlPaginatedResult> {
     // in your case, you will call your WebAPI function (wich needs to return a Promise)
     // for the demo purpose, we will call a mock WebAPI function
     const mockedResult = {
@@ -226,7 +226,7 @@ export class Example6 {
       }
     };
 
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
       setTimeout(() => {
         this.graphqlQuery = this.aureliaGrid.backendService.buildQuery();
         resolve(mockedResult);

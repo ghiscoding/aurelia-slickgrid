@@ -170,7 +170,7 @@ describe('ExtensionService', () => {
         const gridSpy = jest.spyOn(SharedService.prototype, 'gridOptions', 'get').mockReturnValue(gridOptionsMock);
 
         service.bindDifferentExtensions();
-        const output = service.getExtensionByName(ExtensionName.gridMenu);
+        const output = service.getExtensionByName(ExtensionName.gridMenu) as ExtensionModel;
         const instance = service.getSlickgridAddonInstance(ExtensionName.gridMenu);
 
         expect(gridSpy).toHaveBeenCalled();
@@ -255,7 +255,7 @@ describe('ExtensionService', () => {
         const gridSpy = jest.spyOn(SharedService.prototype, 'gridOptions', 'get').mockReturnValue(gridOptionsMock);
 
         service.bindDifferentExtensions();
-        const output = service.getExtensionByName(ExtensionName.gridMenu);
+        const output = service.getExtensionByName(ExtensionName.gridMenu) as ExtensionModel;
         const instance = service.getSlickgridAddonInstance(ExtensionName.gridMenu);
 
         expect(gridSpy).toHaveBeenCalled();
@@ -708,7 +708,7 @@ describe('ExtensionService', () => {
 
   describe('without I18N Service', () => {
     beforeEach(() => {
-      i18n = null;
+      i18n = (null as any);
       service = new ExtensionService(
         // extensions
         extensionStub as unknown as AutoTooltipExtension,

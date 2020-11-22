@@ -33,7 +33,7 @@ const gridOptionMock = {
   autoCommitEdit: false,
   editable: true,
   i18n: null,
-} as GridOption;
+} as unknown as GridOption;
 
 const getEditorLockMock = {
   commitCurrentEdit: jest.fn(),
@@ -95,7 +95,7 @@ describe('SingleSelectEditor', () => {
       grid: gridStub,
       column: mockColumn,
       item: mockItemData,
-      event: null,
+      event: null as any,
       cancelChanges: jest.fn(),
       commitChanges: jest.fn(),
       container: divContainer,
@@ -110,7 +110,7 @@ describe('SingleSelectEditor', () => {
     beforeEach(() => {
       mockItemData = { id: 1, gender: 'male', isActive: true };
       mockColumn = { id: 'gender', field: 'gender', editable: true, editor: { model: Editors.multipleSelect }, internalColumnEditor: {} } as Column;
-      mockColumn.internalColumnEditor.collection = [{ value: '', label: '' }, { value: 'male', label: 'male' }, { value: 'female', label: 'female' }];
+      mockColumn.internalColumnEditor!.collection = [{ value: '', label: '' }, { value: 'male', label: 'male' }, { value: 'female', label: 'female' }];
 
       editorArguments.column = mockColumn;
       editorArguments.item = mockItemData;
@@ -121,7 +121,7 @@ describe('SingleSelectEditor', () => {
     });
 
     it('should initialize the editor', () => {
-      mockColumn.internalColumnEditor.collection = [{ value: 'male', label: 'male' }, { value: 'female', label: 'female' }];
+      mockColumn.internalColumnEditor!.collection = [{ value: 'male', label: 'male' }, { value: 'female', label: 'female' }];
       gridOptionMock.i18n = i18n;
       editor = new SingleSelectEditor(bindingEngineStub, collectionService, i18n, editorArguments);
       const editorCount = document.body.querySelectorAll('select.ms-filter.editor-gender').length;
@@ -131,7 +131,7 @@ describe('SingleSelectEditor', () => {
 
     it('should hide the DOM element div wrapper when the "hide" method is called', () => {
       editor = new SingleSelectEditor(bindingEngineStub, collectionService, i18n, editorArguments);
-      const editorElm = document.body.querySelector<HTMLDivElement>('[name=editor-gender].ms-drop');
+      const editorElm = document.body.querySelector('[name=editor-gender].ms-drop') as HTMLDivElement;
 
       editor.show();
       expect(editorElm.style.display).toBe('');
@@ -142,7 +142,7 @@ describe('SingleSelectEditor', () => {
 
     it('should show the DOM element div wrapper when the "show" method is called', () => {
       editor = new SingleSelectEditor(bindingEngineStub, collectionService, i18n, editorArguments);
-      const editorElm = document.body.querySelector<HTMLDivElement>('[name=editor-gender].ms-drop');
+      const editorElm = document.body.querySelector('[name=editor-gender].ms-drop') as HTMLDivElement;
 
       editor.hide();
       expect(editorElm.style.display).toBe('none');
@@ -161,7 +161,7 @@ describe('SingleSelectEditor', () => {
     describe('isValueChanged method', () => {
       it('should return True after doing a check of an option', () => {
         editor = new SingleSelectEditor(bindingEngineStub, collectionService, i18n, editorArguments);
-        const editorBtnElm = divContainer.querySelector<HTMLButtonElement>('.ms-parent.ms-filter.editor-gender button.ms-choice');
+        const editorBtnElm = divContainer.querySelector('.ms-parent.ms-filter.editor-gender button.ms-choice') as HTMLButtonElement;
         const editorListElm = divContainer.querySelectorAll<HTMLInputElement>(`[name=editor-gender].ms-drop ul>li input[type=radio]`);
         editorBtnElm.click();
 
@@ -173,13 +173,13 @@ describe('SingleSelectEditor', () => {
       });
 
       it('should return False after re-selecting the same option as the one loaded', () => {
-        mockColumn.internalColumnEditor.collection = ['male', 'female'];
+        mockColumn.internalColumnEditor!.collection = ['male', 'female'];
         mockItemData = { id: 1, gender: 'male', isActive: true };
 
         editor = new SingleSelectEditor(bindingEngineStub, collectionService, i18n, editorArguments);
         editor.loadValue(mockItemData);
 
-        const editorBtnElm = divContainer.querySelector<HTMLButtonElement>('.ms-parent.ms-filter.editor-gender button.ms-choice');
+        const editorBtnElm = divContainer.querySelector('.ms-parent.ms-filter.editor-gender button.ms-choice') as HTMLButtonElement;
         const editorListElm = divContainer.querySelectorAll<HTMLInputElement>(`[name=editor-gender].ms-drop ul>li input[type=radio]`);
         editorBtnElm.click();
 
@@ -236,7 +236,7 @@ describe('SingleSelectEditor', () => {
 
       it('should return value as a string when using a dot (.) notation for complex object', () => {
         mockColumn.field = 'employee.gender';
-        mockColumn.internalColumnEditor.collection = ['male', 'female'];
+        mockColumn.internalColumnEditor!.collection = ['male', 'female'];
         mockItemData = { id: 1, employee: { gender: 'male' }, isActive: true };
 
         editor = new SingleSelectEditor(bindingEngineStub, collectionService, i18n, editorArguments);
@@ -261,7 +261,7 @@ describe('SingleSelectEditor', () => {
 
         editor = new SingleSelectEditor(bindingEngineStub, collectionService, i18n, editorArguments);
         editor.setValue(false);
-        const editorBtnElm = divContainer.querySelector<HTMLButtonElement>('.ms-parent.ms-filter.editor-gender button.ms-choice');
+        const editorBtnElm = divContainer.querySelector('.ms-parent.ms-filter.editor-gender button.ms-choice') as HTMLButtonElement;
         const editorListElm = divContainer.querySelectorAll<HTMLInputElement>(`[name=editor-gender].ms-drop ul>li span`);
         editorBtnElm.click();
 
@@ -288,7 +288,7 @@ describe('SingleSelectEditor', () => {
 
         editor = new SingleSelectEditor(bindingEngineStub, collectionService, i18n, editorArguments);
         editor.loadValue(mockItemData);
-        const editorBtnElm = divContainer.querySelector<HTMLButtonElement>('.ms-parent.ms-filter.editor-gender button.ms-choice');
+        const editorBtnElm = divContainer.querySelector('.ms-parent.ms-filter.editor-gender button.ms-choice') as HTMLButtonElement;
         const editorListElm = divContainer.querySelectorAll<HTMLInputElement>(`[name=editor-gender].ms-drop ul>li span`);
         editorBtnElm.click();
 

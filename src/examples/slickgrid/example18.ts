@@ -213,7 +213,7 @@ export class Example18 {
         sanitizeDataExport: true
       },
       gridMenu: {
-        onCommand: (e, args) => {
+        onCommand: (_e, args) => {
           if (args.command === 'toggle-preheader') {
             // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
             this.clearGrouping();
@@ -224,7 +224,7 @@ export class Example18 {
         dropPlaceHolderText: 'Drop a column header here to group by the column',
         // groupIconCssClass: 'fa fa-outdent',
         deleteIconCssClass: 'fa fa-times',
-        onGroupChanged: (e, args) => this.onGroupChanged(args),
+        onGroupChanged: (_e, args) => this.onGroupChanged(args),
         onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
       }
     };
@@ -260,7 +260,7 @@ export class Example18 {
   }
 
   clearGroupingSelects() {
-    this.selectedGroupingFields.forEach((g, i) => this.selectedGroupingFields[i] = '');
+    this.selectedGroupingFields.forEach((_g, i) => this.selectedGroupingFields[i] = '');
     this.selectedGroupingFields = [...this.selectedGroupingFields]; // force dirty checking
   }
 
@@ -327,7 +327,7 @@ export class Example18 {
     }
   }
 
-  groupByFieldName(fieldName, index) {
+  groupByFieldName() {
     this.clearGrouping();
     if (this.draggableGroupingPlugin && this.draggableGroupingPlugin.setDroppedGroups) {
       this.showPreHeader();
@@ -349,7 +349,7 @@ export class Example18 {
 
     if (Array.isArray(this.selectedGroupingFields) && Array.isArray(groups) && groups.length > 0) {
       // update all Group By select dropdown
-      this.selectedGroupingFields.forEach((g, i) => this.selectedGroupingFields[i] = groups[i] && groups[i].getter || '');
+      this.selectedGroupingFields.forEach((_g, i) => this.selectedGroupingFields[i] = groups[i] && groups[i].getter || '');
       this.selectedGroupingFields = [...this.selectedGroupingFields]; // force dirty checking
     } else if (groups.length === 0 && caller === 'remove-group') {
       this.clearGroupingSelects();
