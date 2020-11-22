@@ -128,7 +128,7 @@ describe('SelectEditor', () => {
 
     it('should throw an error when collection is not a valid array', (done) => {
       try {
-        // @ts-ignore
+        // @ts-expect-error
         mockColumn.internalColumnEditor!.collection = { hello: 'world' };
         editor = new SelectEditor(bindingEngineStub, collectionService, i18n, editorArguments, true);
       } catch (e) {
@@ -647,8 +647,7 @@ describe('SelectEditor', () => {
     describe('collectionInsideObjectProperty setting', () => {
       it('should create the multi-select editor with a value/label pair collection that is inside an object when "collectionInsideObjectProperty" is defined with a dot notation', () => {
         mockColumn.internalColumnEditor = {
-          // @ts-ignore
-          collection: { deep: { myCollection: [{ value: 'other', description: 'other' }, { value: 'male', description: 'male' }, { value: 'female', description: 'female' }] } },
+          collection: { deep: { myCollection: [{ value: 'other', description: 'other' }, { value: 'male', description: 'male' }, { value: 'female', description: 'female' }] } } as any,
           collectionOptions: {
             collectionInsideObjectProperty: 'deep.myCollection'
           },

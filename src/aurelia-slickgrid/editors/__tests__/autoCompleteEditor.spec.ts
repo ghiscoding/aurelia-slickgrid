@@ -71,7 +71,7 @@ describe('AutoCompleteEditor', () => {
 
     it('should throw an error when collection is not a valid array', (done) => {
       try {
-        // @ts-ignore
+        // @ts-expect-error
         mockColumn.internalColumnEditor!.collection = { hello: 'world' };
         editor = new AutoCompleteEditor(editorArguments);
       } catch (e) {

@@ -16,6 +16,7 @@ import {
   SlickEventHandler,
   SlickEvent,
   BackendServiceApi,
+  RowDetailView,
 } from '../../models';
 import { Filters } from '../../filters';
 import { FilterService } from '../filter.service';
@@ -25,8 +26,7 @@ import { SharedService } from '../shared.service';
 import * as utilities from '../../services/backend-utilities';
 
 const mockRefreshBackendDataset = jest.fn();
-// @ts-ignore
-utilities.refreshBackendDataset = mockRefreshBackendDataset;
+(utilities.refreshBackendDataset as any) = mockRefreshBackendDataset;
 
 jest.mock('flatpickr', () => { });
 declare const Slick: any;
@@ -778,8 +778,7 @@ describe('FilterService', () => {
     });
 
     it('should return True when using row detail custom "keyPrefix" and the item is found in its parent', () => {
-      // @ts-ignore
-      gridOptionMock.rowDetailView = { keyPrefix: 'prefix_' };
+      gridOptionMock.rowDetailView = { keyPrefix: 'prefix_' } as unknown as RowDetailView;
       gridOptionMock.enableRowDetailView = true;
       const mockColumn1 = { id: 'zip', field: 'zip', filterable: true, queryFieldFilter: 'address.zip' } as Column;
       const mockItem2 = { prefix_isPadding: true, prefix_parent: mockItem1 };
@@ -880,7 +879,7 @@ describe('FilterService', () => {
       const mockEvent = DOM.createCustomEvent('input');
       Object.defineProperty(mockEvent, 'target', { writable: true, configurable: true, value: { value: 'John' } });
 
-      // @ts-ignore
+      // @ts-ignore:2345
       service.onBackendFilterChange(mockEvent, { grid: gridStub, shouldTriggerQuery: true });
 
       setTimeout(() => {

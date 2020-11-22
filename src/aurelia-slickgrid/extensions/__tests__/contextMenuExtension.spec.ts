@@ -625,17 +625,15 @@ describe('contextMenuExtension', () => {
             selectNodeContents: () => { },
             setStart: () => { },
             setEnd: () => { },
-            // @ts-ignore
             commonAncestorContainer: { nodeName: 'BODY', ownerDocument: document },
-          });
+          } as any);
 
           window.document.execCommand = () => (true);
 
-          // @ts-ignore
           window.getSelection = () => ({
             removeAllRanges: () => { },
             addRange: () => { },
-          });
+          } as any);
         }
       });
 

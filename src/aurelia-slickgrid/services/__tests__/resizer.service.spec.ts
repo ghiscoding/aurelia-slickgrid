@@ -85,8 +85,7 @@ describe('Resizer Service', () => {
 
   describe('resizeGrid method', () => {
     beforeEach(() => {
-      // @ts-ignore
-      navigator.__defineGetter__('userAgent', () => 'Netscape');
+      (navigator as any).__defineGetter__('userAgent', () => 'Netscape');
       gridOptionMock.gridId = 'grid1';
     });
 
@@ -218,7 +217,7 @@ describe('Resizer Service', () => {
       service.calculateGridNewDimensions(gridOptionMock);
 
       // same comment as previous test, the height dimension will work because calculateGridNewDimensions() uses "window.innerHeight"
-      expect(serviceCalculateSpy).toReturnWith({ height: gridOptionMock.autoResize.maxHeight, width: fixedWidth });
+      expect(serviceCalculateSpy).toReturnWith({ height: (gridOptionMock.autoResize!.maxHeight as number), width: fixedWidth });
     });
 
     it('should use maxWidth when new dimensions are higher than maximum defined', () => {
@@ -232,7 +231,7 @@ describe('Resizer Service', () => {
       service.calculateGridNewDimensions(gridOptionMock);
 
       // same comment as previous test, the height dimension will work because calculateGridNewDimensions() uses "window.innerHeight"
-      expect(serviceCalculateSpy).toReturnWith({ height: fixedHeight, width: gridOptionMock.autoResize.maxWidth });
+      expect(serviceCalculateSpy).toReturnWith({ height: fixedHeight, width: (gridOptionMock.autoResize!.maxWidth as number) });
     });
 
     it('should use minWidth constant when new dimensions are lower than minimum defined', () => {
@@ -260,7 +259,7 @@ describe('Resizer Service', () => {
       service.calculateGridNewDimensions(gridOptionMock);
 
       // same comment as previous test, the height dimension will work because calculateGridNewDimensions() uses "window.innerHeight"
-      expect(serviceCalculateSpy).toReturnWith({ height: fixedHeight, width: newWidth - gridOptionMock.autoResize.sidePadding });
+      expect(serviceCalculateSpy).toReturnWith({ height: fixedHeight, width: newWidth - (gridOptionMock.autoResize!.sidePadding as number) });
     });
 
     it('should calculate new dimensions minus a padding when "bottomPadding" is defined in "autoResize" and calculateGridNewDimensions is called', () => {
@@ -376,8 +375,7 @@ describe('Resizer Service', () => {
 
   describe('Tests for IE', () => {
     beforeEach(() => {
-      // @ts-ignore
-      navigator.__defineGetter__('userAgent', () => 'MSIE 8');
+      (navigator as any).__defineGetter__('userAgent', () => 'MSIE 8');
     });
 
     it('should NOT call a grid "resizeCanvas" when browser is IE6-10', () => {

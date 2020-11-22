@@ -35,7 +35,7 @@ describe('filterUtilities', () => {
 
   describe('testFilterCondition method', () => {
     it('should return true when operator is not in any of the case', () => {
-      // @ts-ignore
+      // @ts-expect-error
       const output = testFilterCondition('<==', 30, 10);
       expect(output).toBeTruthy();
     });

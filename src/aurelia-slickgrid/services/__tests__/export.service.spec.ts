@@ -73,8 +73,7 @@ describe('ExportService', () => {
       pluginEa = new EventAggregator();
       i18n = new I18N(globalEa, new BindingSignaler());
 
-      // @ts-ignore
-      navigator.__defineGetter__('appName', () => 'Netscape');
+      (navigator as any).__defineGetter__('appName', () => 'Netscape');
       navigator.msSaveOrOpenBlob = undefined as any;
       mockCsvBlob = new Blob(['', ''], { type: `text/csv;charset=utf-8;` });
       mockTxtBlob = new Blob(['\uFEFF', ''], { type: `text/plain;charset=utf-8;` });
@@ -280,8 +279,7 @@ describe('ExportService', () => {
       });
 
       it('should throw an error when browser is IE10 or lower', (done) => {
-        // @ts-ignore
-        navigator.__defineGetter__('appName', () => 'Microsoft Internet Explorer');
+        (navigator as any).__defineGetter__('appName', () => 'Microsoft Internet Explorer');
 
         service.init(gridStub, dataViewStub);
         service.exportToFile(mockExportTxtOptions)

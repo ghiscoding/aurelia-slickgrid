@@ -474,15 +474,12 @@ describe('GraphqlService', () => {
   describe('processOnFilterChanged method', () => {
     it('should throw an error when backendService is undefined', () => {
       service.init(serviceOptions, paginationOptions, undefined);
-      // @ts-ignore
-      expect(() => service.processOnFilterChanged(null as any, { grid: gridStub })).toThrow();
+      expect(() => service.processOnFilterChanged(null as any, { grid: gridStub } as any)).toThrow();
     });
 
     it('should throw an error when grid is undefined', () => {
       service.init(serviceOptions, paginationOptions, gridStub);
-
-      // @ts-ignore
-      expect(() => service.processOnFilterChanged(null as any, { grid: undefined }))
+      expect(() => service.processOnFilterChanged(null as any, { grid: undefined as any } as any))
         .toThrowError('Something went wrong when trying create the GraphQL Backend Service');
     });
 
@@ -565,8 +562,7 @@ describe('GraphqlService', () => {
       const querySpy = jest.spyOn(service, 'buildQuery');
 
       service.init(serviceOptions, paginationOptions, gridStub);
-      // @ts-ignore
-      const query = service.processOnPaginationChanged(null as any, { newPage: 3 });
+      const query = service.processOnPaginationChanged(null as any, { newPage: 3 } as any);
       const currentPagination = service.getCurrentPagination();
 
       expect(removeSpaces(query)).toBe(removeSpaces(expectation));
@@ -579,8 +575,7 @@ describe('GraphqlService', () => {
       const querySpy = jest.spyOn(service, 'buildQuery');
 
       service.init(serviceOptions, undefined, gridStub);
-      // @ts-ignore
-      const query = service.processOnPaginationChanged(null as any, { newPage: 3 });
+      const query = service.processOnPaginationChanged(null as any, { newPage: 3 } as any);
       const currentPagination = service.getCurrentPagination();
 
       expect(removeSpaces(query)).toBe(removeSpaces(expectation));
@@ -634,8 +629,7 @@ describe('GraphqlService', () => {
     });
 
     it('should throw an error when neither "field" nor "name" are being part of the column definition', () => {
-      // @ts-ignore
-      const mockColumnFilters = { gender: { columnId: 'gender', columnDef: { id: 'gender' }, searchTerms: ['female'], operator: 'EQ' }, } as ColumnFilters;
+      const mockColumnFilters = { gender: { columnId: 'gender', columnDef: { id: 'gender' }, searchTerms: ['female'], operator: 'EQ' }, } as unknown as ColumnFilters;
       service.init(serviceOptions, paginationOptions, gridStub);
       expect(() => service.updateFilters(mockColumnFilters, false)).toThrowError('GraphQL filter could not find the field name to query the search');
     });

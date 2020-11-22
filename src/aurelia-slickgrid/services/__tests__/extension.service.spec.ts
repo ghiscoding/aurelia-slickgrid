@@ -516,8 +516,7 @@ describe('ExtensionService', () => {
 
     it('should call removeColumnByIndex and return original input when it is not an array provided', () => {
       const input = { foo: 'bar' };
-      // @ts-ignore:2345
-      const output = service.removeColumnByIndex(input, 1);
+      const output = service.removeColumnByIndex(input as any, 1);
       expect(output).toEqual(input);
     });
 

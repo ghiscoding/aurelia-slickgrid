@@ -281,10 +281,11 @@ describe('Service/Utilies', () => {
   });
 
   describe('findOrDefault method', () => {
+
     it('should return original input when it is not an array provided', () => {
       const input = 'a';
-      // @ts-ignore
-      const output = findOrDefault(input, (val) => val === searchValue);
+      const searchValue = '';
+      const output = findOrDefault(input as any, (val) => val === searchValue);
       expect(output).toBe(input);
     });
 
@@ -586,8 +587,7 @@ describe('Service/Utilies', () => {
     });
 
     it('should return same top/left positions as defined in the document/window', () => {
-      // @ts-ignore
-      jest.spyOn(div, 'getBoundingClientRect').mockReturnValue({ top: 10, left: 25 });
+      jest.spyOn(div, 'getBoundingClientRect').mockReturnValue({ top: 10, left: 25 } as any);
       div.style.top = '10px';
       div.style.left = '25px';
 
@@ -603,8 +603,7 @@ describe('Service/Utilies', () => {
     });
 
     it('should return original object when no path is provided', () => {
-      // @ts-ignore
-      const output = getDescendantProperty(obj);
+      const output = getDescendantProperty(obj, undefined);
       expect(output).toBe(obj);
     });
 

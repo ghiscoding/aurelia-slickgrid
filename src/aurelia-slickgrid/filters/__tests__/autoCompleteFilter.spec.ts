@@ -92,9 +92,9 @@ describe('AutoCompleteFilter', () => {
     const taskQueue = new TaskQueue();
     const eventManager = new EventManager();
     const parser = new Parser();
-    // @ts-ignore
+    // @ts-ignore:2554
     const observerLocator = new ObserverLocator(taskQueue, eventManager, {});
-    // @ts-ignore
+    // @ts-ignore:2554
     bindingEngine = new BindingEngine(observerLocator, parser);
 
     ea = new EventAggregator();
@@ -173,8 +173,7 @@ describe('AutoCompleteFilter', () => {
 
   it('should throw an error when collection is not a valid array', (done) => {
     try {
-      // @ts-ignore
-      mockColumn.filter!.collection = { hello: 'world' };
+      mockColumn.filter!.collection = { hello: 'world' } as any;
       filter.init(filterArguments);
     } catch (e) {
       expect(e.toString()).toContain(`The "collection" passed to the Autocomplete Filter is not a valid array.`);
@@ -480,8 +479,7 @@ describe('AutoCompleteFilter', () => {
 
   it('should create the filter with a value/label pair collection that is inside an object when "collectionInsideObjectProperty" is defined with a dot notation', () => {
     mockColumn.filter = {
-      // @ts-ignore
-      collection: { deep: { myCollection: [{ value: 'other', description: 'other' }, { value: 'male', description: 'male' }, { value: 'female', description: 'female' }] } },
+      collection: { deep: { myCollection: [{ value: 'other', description: 'other' }, { value: 'male', description: 'male' }, { value: 'female', description: 'female' }] } } as any,
       collectionOptions: { collectionInsideObjectProperty: 'deep.myCollection' },
       customStructure: { value: 'value', label: 'description', },
     };
@@ -497,8 +495,7 @@ describe('AutoCompleteFilter', () => {
 
   it('should create the filter with a value/label pair collection that is inside an object when "collectionInsideObjectProperty" is defined with a dot notation', () => {
     mockColumn.filter = {
-      // @ts-ignore
-      collection: { deep: { myCollection: [{ value: 'other', description: 'other' }, { value: 'male', description: 'male' }, { value: 'female', description: 'female' }] } },
+      collection: { deep: { myCollection: [{ value: 'other', description: 'other' }, { value: 'male', description: 'male' }, { value: 'female', description: 'female' }] } } as any,
       collectionOptions: { collectionInsideObjectProperty: 'deep.myCollection' },
     };
     mockColumn.type = FieldType.object;

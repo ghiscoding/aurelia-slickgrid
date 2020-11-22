@@ -29,7 +29,7 @@ const gridStub = {
   getHeaderRowColumn: jest.fn(),
   onValidationError: new Slick.Event(),
   render: jest.fn(),
-};
+} as any;
 
 describe('DualInputEditor', () => {
   let divContainer: HTMLDivElement;
@@ -72,8 +72,7 @@ describe('DualInputEditor', () => {
 
     it('should throw an error when initialize the editor without the requires params leftInput/rightInput', (done) => {
       try {
-        // @ts-ignore
-        editor = new DualInputEditor({ grid: gridStub });
+        editor = new DualInputEditor({ grid: gridStub } as any);
       } catch (e) {
         expect(e.toString()).toContain(`[Aurelia-Slickgrid] Please make sure that your Combo Input Editor has params defined with "leftInput" and "rightInput"`);
         done();

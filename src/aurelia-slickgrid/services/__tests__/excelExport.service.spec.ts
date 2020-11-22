@@ -79,8 +79,7 @@ describe('ExcelExportService', () => {
       pluginEa = new EventAggregator();
       i18n = new I18N(globalEa, new BindingSignaler());
 
-      // @ts-ignore
-      navigator.__defineGetter__('appName', () => 'Netscape');
+      (navigator as any).__defineGetter__('appName', () => 'Netscape');
       navigator.msSaveOrOpenBlob = undefined as any;
       mockExcelBlob = new Blob(['', ''], { type: `text/xlsx;charset=utf-8;` });
 
@@ -241,8 +240,7 @@ describe('ExcelExportService', () => {
       });
 
       it('should throw an error when browser is IE10 or lower', async () => {
-        // @ts-ignore
-        navigator.__defineGetter__('appName', () => 'Microsoft Internet Explorer');
+        (navigator as any).__defineGetter__('appName', () => 'Microsoft Internet Explorer');
 
         try {
           service.init(gridStub, dataViewStub);

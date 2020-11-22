@@ -30,8 +30,7 @@ describe('Aurelia-Slickgrid Custom Component', () => {
   </aurelia-slickgrid>`;
 
   beforeEach(() => {
-    // @ts-ignore
-    navigator.__defineGetter__('userAgent', () => 'MSIE 8'); // just to skip resizerService calling grid.resizeCanvas()
+    (navigator as any).__defineGetter__('userAgent', () => 'MSIE 8'); // just to skip resizerService calling grid.resizeCanvas()
 
     customElement = StageComponent
       .withResources([
