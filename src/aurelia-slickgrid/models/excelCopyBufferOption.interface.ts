@@ -1,4 +1,5 @@
 import { Column } from './column.interface';
+import { EditCommand } from './editCommand.interface';
 import { SelectedRange } from './selectedRange.interface';
 
 export interface ExcelCopyBufferOption {
@@ -9,13 +10,13 @@ export interface ExcelCopyBufferOption {
   copiedCellStyleLayerKey?: string;
 
   /** option to specify a custom column value extractor function */
-  dataItemColumnValueExtractor?: (item: any, columnDef: Column) => any;
+  dataItemColumnValueExtractor: (item: any, columnDef: Column) => any;
 
   /** option to specify a custom column value setter function */
   dataItemColumnValueSetter?: (item: any, columnDef: Column, value: any) => any;
 
   /** option to specify a custom handler for paste actions */
-  clipboardCommandHandler?: (editCommand: any) => void;
+  clipboardCommandHandler: (editCommand: EditCommand) => void;
 
   /** set to true and the plugin will take the name property from each column (which is usually what appears in your header) and put that as the first row of the text that's copied to the clipboard */
   includeHeaderWhenCopying?: boolean;
@@ -30,10 +31,10 @@ export interface ExcelCopyBufferOption {
   onCopySuccess?: any;
 
   /** function to add rows to table if paste overflows bottom of table, if this function is not provided new rows will be ignored. */
-  newRowCreator?: (count: number) => void;
+  newRowCreator: (count: number) => void;
 
   /** suppresses paste */
-  readOnlyMode?: boolean;
+  readOnlyMode: boolean;
 
   /** option to specify a custom column header value extractor function */
   headerColumnValueExtractor?: (columnDef: Column) => any;

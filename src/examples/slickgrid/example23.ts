@@ -23,7 +23,7 @@ function randomBetween(min: number, max: number): number {
 }
 
 // create a custom translate Formatter (typically you would move that a separate file, for separation of concerns)
-const taskTranslateFormatter: Formatter = (row: number, cell: number, value: any, columnDef: any, dataContext: any, grid: any) => {
+const taskTranslateFormatter: Formatter = (_row, _cell, value, _columnDef, _dataContext, grid: any) => {
   const gridOptions = (grid && typeof grid.getOptions === 'function') ? grid.getOptions() : {};
   const i18n = gridOptions.i18n;
 
@@ -226,7 +226,7 @@ export class Example23 {
     console.log('Client sample, current Grid State:: ', this.aureliaGrid.gridStateService.getCurrentGridState());
   }
 
-  refreshMetrics(e, args) {
+  refreshMetrics(_e, args) {
     if (args && args.current >= 0) {
       setTimeout(() => {
         this.metrics = {

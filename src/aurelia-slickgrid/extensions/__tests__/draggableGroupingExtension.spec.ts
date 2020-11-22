@@ -1,5 +1,5 @@
 import { I18N } from 'aurelia-i18n';
-import { GridOption } from '../../models/gridOption.interface';
+import { DraggableGrouping, GridOption } from '../../models/index';
 import { DraggableGroupingExtension } from '../draggableGroupingExtension';
 import { ExtensionUtility } from '../extensionUtility';
 import { SharedService } from '../../services/shared.service';
@@ -42,7 +42,7 @@ describe('draggableGroupingExtension', () => {
   });
 
   it('should return null after calling "create" method when the grid options is missing', () => {
-    const output = extension.create(null);
+    const output = extension.create(null as any);
     expect(output).toBeNull();
   });
 
@@ -58,7 +58,7 @@ describe('draggableGroupingExtension', () => {
     });
 
     it('should register the addon', () => {
-      const onRegisteredSpy = jest.spyOn(SharedService.prototype.gridOptions.draggableGrouping, 'onExtensionRegistered');
+      const onRegisteredSpy = jest.spyOn(SharedService.prototype.gridOptions.draggableGrouping as DraggableGrouping, 'onExtensionRegistered');
       const pluginSpy = jest.spyOn(SharedService.prototype.grid, 'registerPlugin');
 
       const instance = extension.create(gridOptionsMock);
@@ -106,7 +106,7 @@ describe('draggableGroupingExtension', () => {
 
     it('should call internal event handler subscribe and expect the "onGroupChanged" option to be called when addon notify is called', () => {
       const handlerSpy = jest.spyOn(extension.eventHandler, 'subscribe');
-      const onColumnSpy = jest.spyOn(SharedService.prototype.gridOptions.draggableGrouping, 'onGroupChanged');
+      const onColumnSpy = jest.spyOn(SharedService.prototype.gridOptions.draggableGrouping as DraggableGrouping, 'onGroupChanged');
 
       const instance = extension.create(gridOptionsMock);
       extension.register();

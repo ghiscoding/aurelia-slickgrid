@@ -23,8 +23,8 @@ const DEFAULT_AURELIA_EVENT_PREFIX = 'asg';
 // URL object is not supported in JSDOM, we can simply mock it
 (global as any).URL.createObjectURL = jest.fn();
 
-const myBoldHtmlFormatter: Formatter = (_row, _cell, value) => value !== null ? { text: `<b>${value}</b>` } : null;
-const myUppercaseFormatter: Formatter = (_row, _cell, value) => value ? { text: value.toUpperCase() } : null;
+const myBoldHtmlFormatter: Formatter = (_row, _cell, value) => value !== null ? { text: `<b>${value}</b>` } : null as any;
+const myUppercaseFormatter: Formatter = (_row, _cell, value) => value ? { text: value.toUpperCase() } : null as any;
 const myUppercaseGroupTotalFormatter: GroupTotalsFormatter = (totals: any, columnDef: Column) => {
   const field = columnDef.field || '';
   const val = totals.sum && totals.sum[field];
@@ -33,7 +33,7 @@ const myUppercaseGroupTotalFormatter: GroupTotalsFormatter = (totals: any, colum
   }
   return '';
 };
-const myCustomObjectFormatter: Formatter = (_row: number, _cell: number, value: any, _columnDef: Column, dataContext: any) => {
+const myCustomObjectFormatter: Formatter = (_row, _cell, value, _columnDef, dataContext) => {
   let textValue = value && value.hasOwnProperty('text') ? value.text : value;
   const toolTip = value && value.hasOwnProperty('toolTip') ? value.toolTip : '';
   const cssClasses = value && value.hasOwnProperty('addClasses') ? [value.addClasses] : [''];
@@ -79,9 +79,8 @@ describe('ExcelExportService', () => {
       pluginEa = new EventAggregator();
       i18n = new I18N(globalEa, new BindingSignaler());
 
-      // @ts-ignore
-      navigator.__defineGetter__('appName', () => 'Netscape');
-      navigator.msSaveOrOpenBlob = undefined;
+      (navigator as any).__defineGetter__('appName', () => 'Netscape');
+      navigator.msSaveOrOpenBlob = undefined as any;
       mockExcelBlob = new Blob(['', ''], { type: `text/xlsx;charset=utf-8;` });
 
       mockExportExcelOptions = {
@@ -241,8 +240,7 @@ describe('ExcelExportService', () => {
       });
 
       it('should throw an error when browser is IE10 or lower', async () => {
-        // @ts-ignore
-        navigator.__defineGetter__('appName', () => 'Microsoft Internet Explorer');
+        (navigator as any).__defineGetter__('appName', () => 'Microsoft Internet Explorer');
 
         try {
           service.init(gridStub, dataViewStub);
@@ -520,7 +518,7 @@ describe('ExcelExportService', () => {
 
             // excel cells start with A1 which is upper left corner
             sheet.mergeCells('B1', 'D1');
-            const cols = [];
+            const cols: any[] = [];
             // push empty data on A1
             cols.push({ value: '' });
             // push data in B1 cell with metadata formatter
@@ -1039,7 +1037,7 @@ describe('ExcelExportService', () => {
       it(`should have a xlsx export with grouping but without indentation when "addGroupIndentation" is set to False
       and field should be exported as metadata when "exportWithFormatter" is false and the field type is number`, async () => {
         mockColumns[5].exportWithFormatter = false; // "order" field that is of type number will be exported as a number cell format metadata
-        mockGridOptions.excelExportOptions.addGroupIndentation = false;
+        mockGridOptions.excelExportOptions!.addGroupIndentation = false;
         const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
         const globalEaSpy = jest.spyOn(globalEa, 'publish');
         const spyUrlCreate = jest.spyOn(URL, 'createObjectURL');
@@ -1411,7 +1409,7 @@ describe('ExcelExportService', () => {
         });
 
         it(`should have the LastName header title translated when defined as a "headerKey" and "i18n" is set in grid option`, async () => {
-          mockGridOptions.excelExportOptions.sanitizeDataExport = false;
+          mockGridOptions.excelExportOptions!.sanitizeDataExport = false;
           mockCollection2 = [{ id: 0, userId: '1E06', firstName: 'John', lastName: 'Z', position: 'SALES_REP', order: 10 }];
           jest.spyOn(dataViewStub, 'getLength').mockReturnValue(mockCollection2.length);
           jest.spyOn(dataViewStub, 'getItem').mockReturnValue(null).mockReturnValueOnce(mockCollection2[0]);
@@ -1454,7 +1452,7 @@ describe('ExcelExportService', () => {
 
   describe('without I18N Service', () => {
     beforeEach(() => {
-      i18n = null;
+      i18n = (null as any);
       service = new ExcelExportService(globalEa, pluginEa, i18n);
     });
 

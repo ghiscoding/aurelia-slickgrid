@@ -109,7 +109,7 @@ describe('GridEventService', () => {
     });
 
     it('should execute the column "onCellClick" callback method', () => {
-      gridStub.getOptions = undefined;
+      gridStub.getOptions = undefined as any;
       const spyGetCols = jest.spyOn(gridStub, 'getColumns').mockReturnValue([mockColumn]);
       const spyGetData = jest.spyOn(gridStub, 'getDataItem').mockReturnValue(mockRowData);
       const spyOnChange = jest.spyOn(mockColumn, 'onCellClick');

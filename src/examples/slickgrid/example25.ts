@@ -29,7 +29,7 @@ export interface Country {
   languageCode: string;
   languageName: string;
   languageNative: string;
-};
+}
 
 @autoinject()
 export class Example25 {

@@ -23,7 +23,7 @@ export class DetailViewCustomElement {
   // NOTE that you MUST provide it through the "parent" property in your "rowDetail" grid options
   parent: Example19;
 
-  bind(bindingContext, overrideContext) {
+  bind(_bindingContext, overrideContext) {
     if (overrideContext && overrideContext.parentOverrideContext && overrideContext.parentOverrideContext.bindingContext && overrideContext.parentOverrideContext.bindingContext.model) {
       this.bindReferences(overrideContext.parentOverrideContext.bindingContext);
     }

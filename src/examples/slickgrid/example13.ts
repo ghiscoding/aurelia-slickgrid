@@ -126,7 +126,7 @@ export class Example13 {
         exportWithFormatter: true,
         formatter: Formatters.dollar,
         groupTotalsFormatter: GroupTotalFormatters.sumTotalsDollar,
-        params: { groupFormatterPrefix: '<b>Total</b>: ' /*, groupFormatterSuffix: ' USD'*/ }
+        params: { groupFormatterPrefix: '<b>Total</b>: ' /* , groupFormatterSuffix: ' USD' */ }
       },
       {
         id: 'effortDriven', name: 'Effort Driven',

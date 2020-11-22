@@ -288,7 +288,7 @@ export class Example4 {
     ]);
   }
 
-  refreshMetrics(e, args) {
+  refreshMetrics(_e, args) {
     if (args && args.current >= 0) {
       setTimeout(() => {
         this.metrics = {

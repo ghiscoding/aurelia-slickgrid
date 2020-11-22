@@ -32,7 +32,7 @@ const gridOptionMock = {
   autoCommitEdit: false,
   editable: true,
   i18n: null,
-} as GridOption;
+} as unknown as GridOption;
 
 const getEditorLockMock = {
   commitCurrentEdit: jest.fn(),
@@ -94,7 +94,7 @@ describe('MultipleSelectEditor', () => {
       grid: gridStub,
       column: mockColumn,
       item: mockItemData,
-      event: null,
+      event: null as any,
       cancelChanges: jest.fn(),
       commitChanges: jest.fn(),
       container: divContainer,
@@ -109,7 +109,7 @@ describe('MultipleSelectEditor', () => {
     beforeEach(() => {
       mockItemData = { id: 1, gender: 'male', isActive: true };
       mockColumn = { id: 'gender', field: 'gender', editable: true, editor: { model: Editors.multipleSelect }, internalColumnEditor: {} } as Column;
-      mockColumn.internalColumnEditor.collection = [{ value: 'male', label: 'male' }, { value: 'female', label: 'female' }];
+      mockColumn.internalColumnEditor!.collection = [{ value: 'male', label: 'male' }, { value: 'female', label: 'female' }];
 
       editorArguments.column = mockColumn;
       editorArguments.item = mockItemData;
@@ -120,7 +120,7 @@ describe('MultipleSelectEditor', () => {
     });
 
     it('should initialize the editor', (done) => {
-      mockColumn.internalColumnEditor.collection = [{ value: 'male', label: 'male' }, { value: 'female', label: 'female' }];
+      mockColumn.internalColumnEditor!.collection = [{ value: 'male', label: 'male' }, { value: 'female', label: 'female' }];
       gridOptionMock.i18n = i18n;
       editor = new MultipleSelectEditor(bindingEngineStub, collectionService, i18n, editorArguments);
       const editorCount = document.body.querySelectorAll('select.ms-filter.editor-gender').length;
@@ -142,7 +142,7 @@ describe('MultipleSelectEditor', () => {
 
     it('should hide the DOM element div wrapper when the "hide" method is called', () => {
       editor = new MultipleSelectEditor(bindingEngineStub, collectionService, i18n, editorArguments);
-      const editorElm = document.body.querySelector<HTMLDivElement>('[name=editor-gender].ms-drop');
+      const editorElm = document.body.querySelector('[name=editor-gender].ms-drop') as HTMLDivElement;
 
       editor.show();
       expect(editorElm.style.display).toBe('');
@@ -153,7 +153,7 @@ describe('MultipleSelectEditor', () => {
 
     it('should show the DOM element div wrapper when the "show" method is called', () => {
       editor = new MultipleSelectEditor(bindingEngineStub, collectionService, i18n, editorArguments);
-      const editorElm = document.body.querySelector<HTMLDivElement>('[name=editor-gender].ms-drop');
+      const editorElm = document.body.querySelector('[name=editor-gender].ms-drop') as HTMLDivElement;
 
       editor.hide();
       expect(editorElm.style.display).toBe('none');

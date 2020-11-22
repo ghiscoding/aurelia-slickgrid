@@ -133,7 +133,7 @@ describe('GroupingAndColspanService', () => {
   });
 
   it('should not call the "renderPreHeaderRowGroupingTitles" when there are no grid options', () => {
-    gridStub.getOptions = undefined;
+    gridStub.getOptions = undefined as any;
     const spy = jest.spyOn(service, 'renderPreHeaderRowGroupingTitles');
     service.init(gridStub, dataViewStub);
     expect(spy).not.toHaveBeenCalled();
@@ -156,7 +156,7 @@ describe('GroupingAndColspanService', () => {
 
     it('should call the "renderPreHeaderRowGroupingTitles" on initial load even when there are no column definitions', () => {
       const spy = jest.spyOn(service, 'renderPreHeaderRowGroupingTitles');
-      gridStub.getColumns = undefined;
+      gridStub.getColumns = undefined as any;
 
       service.init(gridStub, dataViewStub);
       jest.runAllTimers(); // fast-forward timer

@@ -23,7 +23,7 @@ describe('aureliaUtilService', () => {
   });
 
   afterEach(() => {
-    const domElm = document.getElementById(DOM_ELEMENT_ID);
+    const domElm = document.getElementById(DOM_ELEMENT_ID) as HTMLElement;
     domElm.innerHTML = 'some text';
   });
 
@@ -34,8 +34,7 @@ describe('aureliaUtilService', () => {
   describe('createAureliaViewModelAddToSlot method', () => {
     it('should return null when html dom element is not provided', () => {
       const mockCompilerCreate = { bind: jest.fn(), appendNodesTo: jest.fn() };
-      // @ts-ignore
-      const spyCompiler = jest.spyOn(viewCompiler, 'compile').mockReturnValue({ create: () => mockCompilerCreate });
+      jest.spyOn(viewCompiler, 'compile').mockReturnValue({ create: () => mockCompilerCreate as any } as any);
 
       const output = service.createAureliaViewModelAddToSlot('./template/path', { firstName: 'John' }, undefined);
 
@@ -43,10 +42,9 @@ describe('aureliaUtilService', () => {
     });
 
     it('should create an Aurelia ViewModel and add it to a View Slot', () => {
-      const domElm = document.getElementById(DOM_ELEMENT_ID);
+      const domElm = document.getElementById(DOM_ELEMENT_ID) as HTMLElement;
       const mockCompilerCreate = { bind: jest.fn(), appendNodesTo: jest.fn() };
-      // @ts-ignore
-      const spyCompiler = jest.spyOn(viewCompiler, 'compile').mockReturnValue({ create: () => mockCompilerCreate });
+      const spyCompiler = jest.spyOn(viewCompiler, 'compile').mockReturnValue({ create: () => mockCompilerCreate as any } as any);
       const spyView = jest.spyOn(mockCompilerCreate, 'bind').mockReturnValue({ create: jest.fn() });
 
       const output = service.createAureliaViewModelAddToSlot('./template/path', { firstName: 'John' }, domElm, true);
@@ -58,13 +56,12 @@ describe('aureliaUtilService', () => {
     });
 
     it('should create an Aurelia ViewModel and add it to a View Slot even when template is not provided', () => {
-      const domElm = document.getElementById(DOM_ELEMENT_ID);
+      const domElm = document.getElementById(DOM_ELEMENT_ID) as HTMLElement;
       const mockCompilerCreate = { bind: jest.fn(), appendNodesTo: jest.fn() };
-      // @ts-ignore
-      const spyCompiler = jest.spyOn(viewCompiler, 'compile').mockReturnValue({ create: () => mockCompilerCreate });
+      const spyCompiler = jest.spyOn(viewCompiler, 'compile').mockReturnValue({ create: () => mockCompilerCreate as any } as any);
       const spyView = jest.spyOn(mockCompilerCreate, 'bind').mockReturnValue({ create: jest.fn() });
 
-      const output = service.createAureliaViewModelAddToSlot(undefined, { firstName: 'John' }, domElm, true);
+      const output = service.createAureliaViewModelAddToSlot(undefined as any, { firstName: 'John' }, domElm, true);
 
       expect(spyCompiler).toHaveBeenCalled();
       expect(spyView).toHaveBeenCalled();
@@ -76,8 +73,7 @@ describe('aureliaUtilService', () => {
   describe('createAureliaViewAddToSlot method', () => {
     it('should return null when html dom element is not provided', () => {
       const mockCompilerCreate = { bind: jest.fn(), appendNodesTo: jest.fn() };
-      // @ts-ignore
-      const spyCompiler = jest.spyOn(viewCompiler, 'compile').mockReturnValue({ create: () => mockCompilerCreate });
+      jest.spyOn(viewCompiler, 'compile').mockReturnValue({ create: () => mockCompilerCreate as any } as any);
 
       const output = service.createAureliaViewAddToSlot('./template/path', undefined);
 
@@ -85,10 +81,9 @@ describe('aureliaUtilService', () => {
     });
 
     it('should create an Aurelia ViewModel and add it to a View Slot', () => {
-      const domElm = document.getElementById(DOM_ELEMENT_ID);
+      const domElm = document.getElementById(DOM_ELEMENT_ID) as HTMLElement;
       const mockCompilerCreate = { bind: jest.fn(), appendNodesTo: jest.fn() };
-      // @ts-ignore
-      const spyCompiler = jest.spyOn(viewCompiler, 'compile').mockReturnValue({ create: () => mockCompilerCreate });
+      const spyCompiler = jest.spyOn(viewCompiler, 'compile').mockReturnValue({ create: () => mockCompilerCreate as any } as any);
       const spyView = jest.spyOn(mockCompilerCreate, 'bind').mockReturnValue({ create: jest.fn() });
 
       const output = service.createAureliaViewAddToSlot('./template/path', domElm, true);
@@ -100,13 +95,12 @@ describe('aureliaUtilService', () => {
     });
 
     it('should create an Aurelia ViewModel and add it to a View Slot even when template is not provided', () => {
-      const domElm = document.getElementById(DOM_ELEMENT_ID);
+      const domElm = document.getElementById(DOM_ELEMENT_ID) as HTMLElement;
       const mockCompilerCreate = { bind: jest.fn(), appendNodesTo: jest.fn() };
-      // @ts-ignore
-      const spyCompiler = jest.spyOn(viewCompiler, 'compile').mockReturnValue({ create: () => mockCompilerCreate });
+      const spyCompiler = jest.spyOn(viewCompiler, 'compile').mockReturnValue({ create: () => mockCompilerCreate as any } as any);
       const spyView = jest.spyOn(mockCompilerCreate, 'bind').mockReturnValue({ create: jest.fn() });
 
-      const output = service.createAureliaViewAddToSlot(undefined, domElm, true);
+      const output = service.createAureliaViewAddToSlot(undefined as any, domElm, true);
 
       expect(spyCompiler).toHaveBeenCalled();
       expect(spyView).toHaveBeenCalled();

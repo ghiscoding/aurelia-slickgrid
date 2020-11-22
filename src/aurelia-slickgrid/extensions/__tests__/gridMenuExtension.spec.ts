@@ -5,7 +5,7 @@ import { GridOption } from '../../models/gridOption.interface';
 import { GridMenuExtension } from '../gridMenuExtension';
 import { ExtensionUtility } from '../extensionUtility';
 import { SharedService } from '../../services/shared.service';
-import { Column, DelimiterType, FileType } from '../../models';
+import { BackendServiceApi, Column, DelimiterType, FileType, GridMenu } from '../../models';
 import { ExcelExportService, ExportService, FilterService, SortService } from '../../services';
 
 declare const Slick: any;
@@ -180,7 +180,7 @@ describe('gridMenuExtension', () => {
       });
 
       it('should register the addon', () => {
-        const onRegisteredSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onExtensionRegistered');
+        const onRegisteredSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu as GridMenu, 'onExtensionRegistered');
         const instance = extension.register();
         const addonInstance = extension.getAddonInstance();
 
@@ -192,11 +192,11 @@ describe('gridMenuExtension', () => {
 
       it('should call internal event handler subscribe and expect the "onColumnsChanged" option to be called when addon notify is called', () => {
         const handlerSpy = jest.spyOn(extension.eventHandler, 'subscribe');
-        const onColumnSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onColumnsChanged');
-        const onBeforeSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onBeforeMenuShow');
-        const onAfterSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onAfterMenuShow');
-        const onCloseSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onMenuClose');
-        const onCommandSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onCommand');
+        const onColumnSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu as GridMenu, 'onColumnsChanged');
+        const onBeforeSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu as GridMenu, 'onBeforeMenuShow');
+        const onAfterSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu as GridMenu, 'onAfterMenuShow');
+        const onCloseSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu as GridMenu, 'onMenuClose');
+        const onCommandSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu as GridMenu, 'onCommand');
         const visibleColsSpy = jest.spyOn(SharedService.prototype, 'visibleColumns', 'set');
 
         const instance = extension.register();
@@ -218,11 +218,11 @@ describe('gridMenuExtension', () => {
       it(`should call internal event handler subscribe and expect the "onColumnsChanged" option to be called
     and it should override "visibleColumns" when array passed as arguments is bigger than previous visible columns`, () => {
         const handlerSpy = jest.spyOn(extension.eventHandler, 'subscribe');
-        const onColumnSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onColumnsChanged');
-        const onBeforeSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onBeforeMenuShow');
-        const onAfterSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onAfterMenuShow');
-        const onCloseSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onMenuClose');
-        const onCommandSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onCommand');
+        const onColumnSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu as GridMenu, 'onColumnsChanged');
+        const onBeforeSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu as GridMenu, 'onBeforeMenuShow');
+        const onAfterSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu as GridMenu, 'onAfterMenuShow');
+        const onCloseSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu as GridMenu, 'onMenuClose');
+        const onCommandSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu as GridMenu, 'onCommand');
         const visibleColsSpy = jest.spyOn(SharedService.prototype, 'visibleColumns', 'set');
 
         const instance = extension.register();
@@ -243,11 +243,11 @@ describe('gridMenuExtension', () => {
 
       it('should call internal event handler subscribe and expect the "onBeforeMenuShow" option to be called when addon notify is called', () => {
         const handlerSpy = jest.spyOn(extension.eventHandler, 'subscribe');
-        const onColumnSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onColumnsChanged');
-        const onBeforeSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onBeforeMenuShow');
-        const onAfterSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onAfterMenuShow');
-        const onCloseSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onMenuClose');
-        const onCommandSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onCommand');
+        const onColumnSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu as GridMenu, 'onColumnsChanged');
+        const onBeforeSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu as GridMenu, 'onBeforeMenuShow');
+        const onAfterSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu as GridMenu, 'onAfterMenuShow');
+        const onCloseSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu as GridMenu, 'onMenuClose');
+        const onCommandSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu as GridMenu, 'onCommand');
 
         const instance = extension.register();
         instance.onBeforeMenuShow.notify({ grid: gridStub, menu: {} }, new Slick.EventData(), gridStub);
@@ -266,11 +266,11 @@ describe('gridMenuExtension', () => {
 
       it('should call internal event handler subscribe and expect the "onMenuClose" option to be called when addon notify is called', () => {
         const handlerSpy = jest.spyOn(extension.eventHandler, 'subscribe');
-        const onColumnSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onColumnsChanged');
-        const onBeforeSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onBeforeMenuShow');
-        const onAfterSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onAfterMenuShow');
-        const onCloseSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onMenuClose');
-        const onCommandSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onCommand');
+        const onColumnSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu as GridMenu, 'onColumnsChanged');
+        const onBeforeSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu as GridMenu, 'onBeforeMenuShow');
+        const onAfterSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu as GridMenu, 'onAfterMenuShow');
+        const onCloseSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu as GridMenu, 'onMenuClose');
+        const onCommandSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu as GridMenu, 'onCommand');
 
         const instance = extension.register();
         instance.onMenuClose.notify({ grid: gridStub, menu: {} }, new Slick.EventData(), gridStub);
@@ -289,11 +289,11 @@ describe('gridMenuExtension', () => {
 
       it('should call internal event handler subscribe and expect the "onCommand" option to be called when addon notify is called', () => {
         const handlerSpy = jest.spyOn(extension.eventHandler, 'subscribe');
-        const onColumnSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onColumnsChanged');
-        const onBeforeSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onBeforeMenuShow');
-        const onAfterSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onAfterMenuShow');
-        const onCloseSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onMenuClose');
-        const onCommandSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onCommand');
+        const onColumnSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu as GridMenu, 'onColumnsChanged');
+        const onBeforeSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu as GridMenu, 'onBeforeMenuShow');
+        const onAfterSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu as GridMenu, 'onAfterMenuShow');
+        const onCloseSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu as GridMenu, 'onMenuClose');
+        const onCommandSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu as GridMenu, 'onCommand');
 
         const instance = extension.register();
         instance.onCommand.notify({ grid: gridStub, command: 'help' }, new Slick.EventData(), gridStub);
@@ -312,11 +312,11 @@ describe('gridMenuExtension', () => {
 
       it('should call internal event handler subscribe and expect the "onAfterMenuShow" option to be called when addon notify is called', () => {
         const handlerSpy = jest.spyOn(extension.eventHandler, 'subscribe');
-        const onColumnSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onColumnsChanged');
-        const onAfterSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onAfterMenuShow');
-        const onBeforeSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onBeforeMenuShow');
-        const onCloseSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onMenuClose');
-        const onCommandSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onCommand');
+        const onColumnSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu as GridMenu, 'onColumnsChanged');
+        const onAfterSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu as GridMenu, 'onAfterMenuShow');
+        const onBeforeSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu as GridMenu, 'onBeforeMenuShow');
+        const onCloseSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu as GridMenu, 'onMenuClose');
+        const onCommandSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu as GridMenu, 'onCommand');
 
         const instance = extension.register();
         instance.onAfterMenuShow.notify({ grid: gridStub, menu: {} }, new Slick.EventData(), gridStub);
@@ -335,8 +335,8 @@ describe('gridMenuExtension', () => {
 
       it('should call "autosizeColumns" method when the "onMenuClose" event was triggered and the columns are different', () => {
         const handlerSpy = jest.spyOn(extension.eventHandler, 'subscribe');
-        const onColumnSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onColumnsChanged');
-        const onCloseSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onMenuClose');
+        const onColumnSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu as GridMenu, 'onColumnsChanged');
+        const onCloseSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu as GridMenu, 'onMenuClose');
         const autoSizeSpy = jest.spyOn(gridStub, 'autosizeColumns');
 
         const instance = extension.register();
@@ -366,7 +366,7 @@ describe('gridMenuExtension', () => {
 
       it('should expect an empty "customItems" array when both Filter & Sort are disabled', () => {
         extension.register();
-        expect(SharedService.prototype.gridOptions.gridMenu.customItems).toEqual([]);
+        expect(SharedService.prototype.gridOptions.gridMenu!.customItems).toEqual([]);
       });
 
       it('should expect menu related to "Clear Frozen Columns"', () => {
@@ -374,7 +374,7 @@ describe('gridMenuExtension', () => {
         jest.spyOn(SharedService.prototype, 'gridOptions', 'get').mockReturnValue(copyGridOptionsMock);
         extension.register();
         extension.register(); // calling 2x register to make sure it doesn't duplicate commands
-        expect(SharedService.prototype.gridOptions.gridMenu.customItems).toEqual([
+        expect(SharedService.prototype.gridOptions.gridMenu!.customItems).toEqual([
           { iconCssClass: 'fa fa-times', title: 'Libérer les colonnes gelées', disabled: false, command: 'clear-frozen-columns', positionOrder: 49 },
         ]);
       });
@@ -384,7 +384,7 @@ describe('gridMenuExtension', () => {
         jest.spyOn(SharedService.prototype, 'gridOptions', 'get').mockReturnValue(copyGridOptionsMock);
         extension.register();
         extension.register(); // calling 2x register to make sure it doesn't duplicate commands
-        expect(SharedService.prototype.gridOptions.gridMenu.customItems).toEqual([
+        expect(SharedService.prototype.gridOptions.gridMenu!.customItems).toEqual([
           { iconCssClass: 'fa fa-filter text-danger', title: 'Supprimer tous les filtres', disabled: false, command: 'clear-filter', positionOrder: 50 },
           { iconCssClass: 'fa fa-random', title: 'Basculer la ligne des filtres', disabled: false, command: 'toggle-filter', positionOrder: 52 },
           { iconCssClass: 'fa fa-refresh', title: 'Rafraîchir les données', disabled: false, command: 'refresh-dataset', positionOrder: 56 }
@@ -396,7 +396,7 @@ describe('gridMenuExtension', () => {
         jest.spyOn(SharedService.prototype, 'gridOptions', 'get').mockReturnValue(copyGridOptionsMock);
         extension.register();
         extension.register(); // calling 2x register to make sure it doesn't duplicate commands
-        expect(SharedService.prototype.gridOptions.gridMenu.customItems).toEqual([
+        expect(SharedService.prototype.gridOptions.gridMenu!.customItems).toEqual([
           { iconCssClass: 'fa fa-filter text-danger', title: 'Supprimer tous les filtres', disabled: false, command: 'clear-filter', positionOrder: 50 }
         ]);
       });
@@ -406,7 +406,7 @@ describe('gridMenuExtension', () => {
         jest.spyOn(SharedService.prototype, 'gridOptions', 'get').mockReturnValue(copyGridOptionsMock);
         extension.register();
         extension.register(); // calling 2x register to make sure it doesn't duplicate commands
-        expect(SharedService.prototype.gridOptions.gridMenu.customItems).toEqual([
+        expect(SharedService.prototype.gridOptions.gridMenu!.customItems).toEqual([
           { iconCssClass: 'fa fa-random', title: 'Basculer la ligne des filtres', disabled: false, command: 'toggle-filter', positionOrder: 52 },
         ]);
       });
@@ -416,7 +416,7 @@ describe('gridMenuExtension', () => {
         jest.spyOn(SharedService.prototype, 'gridOptions', 'get').mockReturnValue(copyGridOptionsMock);
         extension.register();
         extension.register(); // calling 2x register to make sure it doesn't duplicate commands
-        expect(SharedService.prototype.gridOptions.gridMenu.customItems).toEqual([
+        expect(SharedService.prototype.gridOptions.gridMenu!.customItems).toEqual([
           { iconCssClass: 'fa fa-refresh', title: 'Rafraîchir les données', disabled: false, command: 'refresh-dataset', positionOrder: 56 }
         ]);
       });
@@ -426,7 +426,7 @@ describe('gridMenuExtension', () => {
         jest.spyOn(SharedService.prototype, 'gridOptions', 'get').mockReturnValue(copyGridOptionsMock);
         extension.register();
         extension.register(); // calling 2x register to make sure it doesn't duplicate commands
-        expect(SharedService.prototype.gridOptions.gridMenu.customItems).toEqual([
+        expect(SharedService.prototype.gridOptions.gridMenu!.customItems).toEqual([
           { iconCssClass: 'fa fa-random', title: 'Basculer la ligne de pré-en-tête', disabled: false, command: 'toggle-preheader', positionOrder: 52 }
         ]);
       });
@@ -435,7 +435,7 @@ describe('gridMenuExtension', () => {
         const copyGridOptionsMock = { ...gridOptionsMock, showPreHeaderPanel: true, gridMenu: { hideClearFrozenColumnsCommand: true, hideTogglePreHeaderCommand: true } } as unknown as GridOption;
         jest.spyOn(SharedService.prototype, 'gridOptions', 'get').mockReturnValue(copyGridOptionsMock);
         extension.register();
-        expect(SharedService.prototype.gridOptions.gridMenu.customItems).toEqual([]);
+        expect(SharedService.prototype.gridOptions.gridMenu!.customItems).toEqual([]);
       });
 
       it('should have the "clear-sorting" menu command when "enableSorting" is set', () => {
@@ -443,7 +443,7 @@ describe('gridMenuExtension', () => {
         jest.spyOn(SharedService.prototype, 'gridOptions', 'get').mockReturnValue(copyGridOptionsMock);
         extension.register();
         extension.register(); // calling 2x register to make sure it doesn't duplicate commands
-        expect(SharedService.prototype.gridOptions.gridMenu.customItems).toEqual([
+        expect(SharedService.prototype.gridOptions.gridMenu!.customItems).toEqual([
           { iconCssClass: 'fa fa-unsorted text-danger', title: 'Supprimer tous les tris', disabled: false, command: 'clear-sorting', positionOrder: 51 }
         ]);
       });
@@ -452,7 +452,7 @@ describe('gridMenuExtension', () => {
         const copyGridOptionsMock = { ...gridOptionsMock, enableSorting: true, gridMenu: { hideClearFrozenColumnsCommand: true, hideClearAllSortingCommand: true } } as unknown as GridOption;
         jest.spyOn(SharedService.prototype, 'gridOptions', 'get').mockReturnValue(copyGridOptionsMock);
         extension.register();
-        expect(SharedService.prototype.gridOptions.gridMenu.customItems).toEqual([]);
+        expect(SharedService.prototype.gridOptions.gridMenu!.customItems).toEqual([]);
       });
 
       it('should have the "export-csv" menu command when "enableExport" is set', () => {
@@ -460,7 +460,7 @@ describe('gridMenuExtension', () => {
         jest.spyOn(SharedService.prototype, 'gridOptions', 'get').mockReturnValue(copyGridOptionsMock);
         extension.register();
         extension.register(); // calling 2x register to make sure it doesn't duplicate commands
-        expect(SharedService.prototype.gridOptions.gridMenu.customItems).toEqual([
+        expect(SharedService.prototype.gridOptions.gridMenu!.customItems).toEqual([
           { iconCssClass: 'fa fa-download', title: 'Exporter en format CSV', disabled: false, command: 'export-csv', positionOrder: 53 }
         ]);
       });
@@ -469,7 +469,7 @@ describe('gridMenuExtension', () => {
         const copyGridOptionsMock = { ...gridOptionsMock, enableExport: true, gridMenu: { hideClearFrozenColumnsCommand: true, hideExportExcelCommand: true, hideExportCsvCommand: true, hideExportTextDelimitedCommand: true } } as unknown as GridOption;
         jest.spyOn(SharedService.prototype, 'gridOptions', 'get').mockReturnValue(copyGridOptionsMock);
         extension.register();
-        expect(SharedService.prototype.gridOptions.gridMenu.customItems).toEqual([]);
+        expect(SharedService.prototype.gridOptions.gridMenu!.customItems).toEqual([]);
       });
 
       it('should have the "export-excel" menu command when "enableExport" is set', () => {
@@ -477,7 +477,7 @@ describe('gridMenuExtension', () => {
         jest.spyOn(SharedService.prototype, 'gridOptions', 'get').mockReturnValue(copyGridOptionsMock);
         extension.register();
         extension.register(); // calling 2x register to make sure it doesn't duplicate commands
-        expect(SharedService.prototype.gridOptions.gridMenu.customItems).toEqual([
+        expect(SharedService.prototype.gridOptions.gridMenu!.customItems).toEqual([
           { iconCssClass: 'fa fa-file-excel-o text-success', title: 'Exporter vers Excel', disabled: false, command: 'export-excel', positionOrder: 54 }
         ]);
       });
@@ -487,7 +487,7 @@ describe('gridMenuExtension', () => {
         jest.spyOn(SharedService.prototype, 'gridOptions', 'get').mockReturnValue(copyGridOptionsMock);
         extension.register();
         extension.register(); // calling 2x register to make sure it doesn't duplicate commands
-        expect(SharedService.prototype.gridOptions.gridMenu.customItems).toEqual([
+        expect(SharedService.prototype.gridOptions.gridMenu!.customItems).toEqual([
           { iconCssClass: 'fa fa-download', title: 'Exporter en format texte (délimité par tabulation)', disabled: false, command: 'export-text-delimited', positionOrder: 55 }
         ]);
       });
@@ -496,7 +496,7 @@ describe('gridMenuExtension', () => {
         const copyGridOptionsMock = { ...gridOptionsMock, enableExport: true, gridMenu: { hideClearFrozenColumnsCommand: true, hideExportExcelCommand: true, hideExportCsvCommand: true, hideExportTextDelimitedCommand: true } } as unknown as GridOption;
         jest.spyOn(SharedService.prototype, 'gridOptions', 'get').mockReturnValue(copyGridOptionsMock);
         extension.register();
-        expect(SharedService.prototype.gridOptions.gridMenu.customItems).toEqual([]);
+        expect(SharedService.prototype.gridOptions.gridMenu!.customItems).toEqual([]);
       });
     });
 
@@ -541,7 +541,7 @@ describe('gridMenuExtension', () => {
 
       it('should have user grid menu custom items', () => {
         extension.register();
-        expect(SharedService.prototype.gridOptions.gridMenu.customItems).toEqual([
+        expect(SharedService.prototype.gridOptions.gridMenu!.customItems).toEqual([
           { command: 'export-csv', disabled: false, iconCssClass: 'fa fa-download', positionOrder: 53, title: 'Exporter en format CSV' },
           // { command: 'export-excel', disabled: false, iconCssClass: 'fa fa-file-excel-o text-success', positionOrder: 53, title: 'Exporter vers Excel' },
           { command: 'help', disabled: false, iconCssClass: 'fa fa-question-circle', positionOrder: 99, title: 'Aide', titleKey: 'HELP' },
@@ -551,7 +551,7 @@ describe('gridMenuExtension', () => {
       it('should have same user grid menu custom items even when grid menu extension is registered multiple times', () => {
         extension.register();
         extension.register();
-        expect(SharedService.prototype.gridOptions.gridMenu.customItems).toEqual([
+        expect(SharedService.prototype.gridOptions.gridMenu!.customItems).toEqual([
           { command: 'export-csv', disabled: false, iconCssClass: 'fa fa-download', positionOrder: 53, title: 'Exporter en format CSV' },
           // { command: 'export-excel', disabled: false, iconCssClass: 'fa fa-file-excel-o text-success', positionOrder: 53, title: 'Exporter vers Excel' },
           { command: 'help', disabled: false, iconCssClass: 'fa fa-question-circle', positionOrder: 99, title: 'Aide', titleKey: 'HELP' },
@@ -577,11 +577,11 @@ describe('gridMenuExtension', () => {
           data: { users: { nodes: [] }, pageInfo: { hasNextPage: true }, totalCount: 0 },
           metrics: { startTime: now, endTime: now, executionTime: 0, totalItemCount: 0 }
         };
-        const preSpy = jest.spyOn(gridOptionsMock.backendServiceApi, 'preProcess');
-        const postSpy = jest.spyOn(gridOptionsMock.backendServiceApi, 'postProcess');
+        const preSpy = jest.spyOn(gridOptionsMock.backendServiceApi as BackendServiceApi, 'preProcess');
+        const postSpy = jest.spyOn(gridOptionsMock.backendServiceApi as BackendServiceApi, 'postProcess');
         const promise = new Promise((resolve) => setTimeout(() => resolve(processResult), 1));
-        const processSpy = jest.spyOn(gridOptionsMock.backendServiceApi, 'process').mockReturnValue(promise);
-        jest.spyOn(gridOptionsMock.backendServiceApi.service, 'buildQuery').mockReturnValue(query);
+        const processSpy = jest.spyOn(gridOptionsMock.backendServiceApi as BackendServiceApi, 'process').mockReturnValue(promise);
+        jest.spyOn(gridOptionsMock.backendServiceApi!.service, 'buildQuery').mockReturnValue(query);
 
         extension.refreshBackendDataset({ enableAddRow: true });
 
@@ -604,7 +604,7 @@ describe('gridMenuExtension', () => {
       it('should call "clearFrozenColumns" when the command triggered is "clear-frozen-columns"', () => {
         const setOptionsSpy = jest.spyOn(gridStub, 'setOptions');
         const setColumnsSpy = jest.spyOn(gridStub, 'setColumns');
-        const onCommandSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onCommand');
+        const onCommandSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu as GridMenu, 'onCommand');
         jest.spyOn(SharedService.prototype, 'allColumns', 'get').mockReturnValue(columnsMock);
         jest.spyOn(SharedService.prototype, 'visibleColumns', 'get').mockReturnValue(columnsMock.slice(0, 1));
 
@@ -619,7 +619,7 @@ describe('gridMenuExtension', () => {
       it('should call "clearFilters" and dataview refresh when the command triggered is "clear-filter"', () => {
         const filterSpy = jest.spyOn(filterServiceStub, 'clearFilters');
         const refreshSpy = jest.spyOn(SharedService.prototype.dataView, 'refresh');
-        const onCommandSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onCommand');
+        const onCommandSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu as GridMenu, 'onCommand');
 
         const instance = extension.register();
         instance.onCommand.notify({ grid: gridStub, command: 'clear-filter' }, new Slick.EventData(), gridStub);
@@ -632,7 +632,7 @@ describe('gridMenuExtension', () => {
       it('should call "clearSorting" and dataview refresh when the command triggered is "clear-sorting"', () => {
         const sortSpy = jest.spyOn(sortServiceStub, 'clearSorting');
         const refreshSpy = jest.spyOn(SharedService.prototype.dataView, 'refresh');
-        const onCommandSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onCommand');
+        const onCommandSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu as GridMenu, 'onCommand');
 
         const instance = extension.register();
         instance.onCommand.notify({ grid: gridStub, command: 'clear-sorting' }, new Slick.EventData(), gridStub);
@@ -644,7 +644,7 @@ describe('gridMenuExtension', () => {
 
       it('should call "exportToExcel" set when the command triggered is "export-excel"', () => {
         const excelExportSpy = jest.spyOn(excelExportServiceStub, 'exportToExcel');
-        const onCommandSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onCommand');
+        const onCommandSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu as GridMenu, 'onCommand');
 
         const instance = extension.register();
         instance.onCommand.notify({ grid: gridStub, command: 'export-excel' }, new Slick.EventData(), gridStub);
@@ -658,7 +658,7 @@ describe('gridMenuExtension', () => {
 
       it('should call "exportToFile" with CSV set when the command triggered is "export-csv"', () => {
         const exportSpy = jest.spyOn(exportServiceStub, 'exportToFile');
-        const onCommandSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onCommand');
+        const onCommandSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu as GridMenu, 'onCommand');
 
         const instance = extension.register();
         instance.onCommand.notify({ grid: gridStub, command: 'export-csv' }, new Slick.EventData(), gridStub);
@@ -674,7 +674,7 @@ describe('gridMenuExtension', () => {
 
       it('should call "exportToFile" with CSV set when the command triggered is "export-text-delimited"', () => {
         const exportSpy = jest.spyOn(exportServiceStub, 'exportToFile');
-        const onCommandSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onCommand');
+        const onCommandSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu as GridMenu, 'onCommand');
 
         const instance = extension.register();
         instance.onCommand.notify({ grid: gridStub, command: 'export-text-delimited' }, new Slick.EventData(), gridStub);
@@ -691,7 +691,7 @@ describe('gridMenuExtension', () => {
       it('should call the grid "setHeaderRowVisibility" method when the command triggered is "toggle-filter"', () => {
         gridOptionsMock.showHeaderRow = false;
         const gridSpy = jest.spyOn(SharedService.prototype.grid, 'setHeaderRowVisibility');
-        const onCommandSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onCommand');
+        const onCommandSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu as GridMenu, 'onCommand');
         const setColumnSpy = jest.spyOn(SharedService.prototype.grid, 'setColumns');
 
         const instance = extension.register();
@@ -712,7 +712,7 @@ describe('gridMenuExtension', () => {
       it('should call the grid "setTopPanelVisibility" method when the command triggered is "toggle-toppanel"', () => {
         gridOptionsMock.showTopPanel = false;
         const gridSpy = jest.spyOn(SharedService.prototype.grid, 'setTopPanelVisibility');
-        const onCommandSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onCommand');
+        const onCommandSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu as GridMenu, 'onCommand');
 
         const instance = extension.register();
         instance.onCommand.notify({ grid: gridStub, command: 'toggle-toppanel' }, new Slick.EventData(), gridStub);
@@ -730,7 +730,7 @@ describe('gridMenuExtension', () => {
       it('should call the grid "setPreHeaderPanelVisibility" method when the command triggered is "toggle-preheader"', () => {
         gridOptionsMock.showPreHeaderPanel = false;
         const gridSpy = jest.spyOn(SharedService.prototype.grid, 'setPreHeaderPanelVisibility');
-        const onCommandSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onCommand');
+        const onCommandSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu as GridMenu, 'onCommand');
 
         const instance = extension.register();
         instance.onCommand.notify({ grid: gridStub, command: 'toggle-preheader' }, new Slick.EventData(), gridStub);
@@ -747,7 +747,7 @@ describe('gridMenuExtension', () => {
 
       it('should call "refreshBackendDataset" method when the command triggered is "refresh-dataset"', () => {
         const refreshSpy = jest.spyOn(extension, 'refreshBackendDataset');
-        const onCommandSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu, 'onCommand');
+        const onCommandSpy = jest.spyOn(SharedService.prototype.gridOptions.gridMenu as GridMenu, 'onCommand');
 
         const instance = extension.register();
         instance.onCommand.notify({ grid: gridStub, command: 'refresh-dataset' }, new Slick.EventData(), gridStub);
@@ -769,9 +769,9 @@ describe('gridMenuExtension', () => {
         expect(utilitySpy).toHaveBeenCalled();
         expect(translateSpy).toHaveBeenCalled();
         expect(updateColsSpy).toHaveBeenCalledWith(SharedService.prototype.gridOptions.gridMenu);
-        expect(SharedService.prototype.gridOptions.gridMenu.columnTitle).toBe('Colonnes');
-        expect(SharedService.prototype.gridOptions.gridMenu.forceFitTitle).toBe('Ajustement forcé des colonnes');
-        expect(SharedService.prototype.gridOptions.gridMenu.syncResizeTitle).toBe('Redimension synchrone');
+        expect(SharedService.prototype.gridOptions.gridMenu!.columnTitle).toBe('Colonnes');
+        expect(SharedService.prototype.gridOptions.gridMenu!.forceFitTitle).toBe('Ajustement forcé des colonnes');
+        expect(SharedService.prototype.gridOptions.gridMenu!.syncResizeTitle).toBe('Redimension synchrone');
         expect(columnsMock).toEqual([
           { id: 'field1', field: 'field1', width: 100, name: 'Titre', nameKey: 'TITLE' },
           { id: 'field2', field: 'field2', width: 75 }
@@ -784,7 +784,7 @@ describe('gridMenuExtension', () => {
         const instance = extension.register();
 
         const showSpy = jest.spyOn(instance, 'showGridMenu');
-        extension.showGridMenu(null);
+        extension.showGridMenu(null as any);
 
         expect(showSpy).toHaveBeenCalled();
       });
@@ -793,7 +793,7 @@ describe('gridMenuExtension', () => {
 
   describe('without I18N Service', () => {
     beforeEach(() => {
-      i18n = null;
+      i18n = (null as any);
       extension = new GridMenuExtension({} as ExcelExportService, {} as ExportService, {} as ExtensionUtility, {} as FilterService, i18n, { gridOptions: { enableTranslate: true } } as SharedService, {} as SortService);
     });
 

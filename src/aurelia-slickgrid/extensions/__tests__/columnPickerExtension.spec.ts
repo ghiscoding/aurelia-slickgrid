@@ -5,7 +5,7 @@ import { GridOption } from '../../models/gridOption.interface';
 import { ColumnPickerExtension } from '../columnPickerExtension';
 import { ExtensionUtility } from '../extensionUtility';
 import { SharedService } from '../../services/shared.service';
-import { Column } from '../../models';
+import { Column, ColumnPicker } from '../../models';
 
 declare const Slick: any;
 
@@ -84,7 +84,7 @@ describe('columnPickerExtension', () => {
     });
 
     it('should register the addon', () => {
-      const onRegisteredSpy = jest.spyOn(SharedService.prototype.gridOptions.columnPicker, 'onExtensionRegistered');
+      const onRegisteredSpy = jest.spyOn(SharedService.prototype.gridOptions.columnPicker as ColumnPicker, 'onExtensionRegistered');
       const instance = extension.register();
       const addonInstance = extension.getAddonInstance();
 
@@ -96,7 +96,7 @@ describe('columnPickerExtension', () => {
 
     it('should call internal event handler subscribe and expect the "onColumnSpy" option to be called when addon notify is called', () => {
       const handlerSpy = jest.spyOn(extension.eventHandler, 'subscribe');
-      const onColumnSpy = jest.spyOn(SharedService.prototype.gridOptions.columnPicker, 'onColumnsChanged');
+      const onColumnSpy = jest.spyOn(SharedService.prototype.gridOptions.columnPicker as ColumnPicker, 'onColumnsChanged');
       const visibleColsSpy = jest.spyOn(SharedService.prototype, 'visibleColumns', 'set');
 
       const instance = extension.register();
@@ -114,7 +114,7 @@ describe('columnPickerExtension', () => {
     it(`should call internal event handler subscribe and expect the "onColumnSpy" option to be called when addon notify is called
     and it should override "visibleColumns" when array passed as arguments is bigger than previous visible columns`, () => {
       const handlerSpy = jest.spyOn(extension.eventHandler, 'subscribe');
-      const onColumnSpy = jest.spyOn(SharedService.prototype.gridOptions.columnPicker, 'onColumnsChanged');
+      const onColumnSpy = jest.spyOn(SharedService.prototype.gridOptions.columnPicker as ColumnPicker, 'onColumnsChanged');
       const visibleColsSpy = jest.spyOn(SharedService.prototype, 'visibleColumns', 'set');
 
       const instance = extension.register();
@@ -151,9 +151,9 @@ describe('columnPickerExtension', () => {
       expect(utilitySpy).toHaveBeenCalled();
       expect(translateSpy).toHaveBeenCalled();
       expect(updateColsSpy).toHaveBeenCalledWith(SharedService.prototype.gridOptions.columnPicker);
-      expect(SharedService.prototype.gridOptions.columnPicker.columnTitle).toBe('Colonnes');
-      expect(SharedService.prototype.gridOptions.columnPicker.forceFitTitle).toBe('Ajustement forcé des colonnes');
-      expect(SharedService.prototype.gridOptions.columnPicker.syncResizeTitle).toBe('Redimension synchrone');
+      expect((SharedService.prototype.gridOptions.columnPicker as ColumnPicker).columnTitle).toBe('Colonnes');
+      expect((SharedService.prototype.gridOptions.columnPicker as ColumnPicker).forceFitTitle).toBe('Ajustement forcé des colonnes');
+      expect((SharedService.prototype.gridOptions.columnPicker as ColumnPicker).syncResizeTitle).toBe('Redimension synchrone');
       expect(columnsMock).toEqual([
         { id: 'field1', field: 'field1', width: 100, name: 'Titre', nameKey: 'TITLE' },
         { id: 'field2', field: 'field2', width: 75 }

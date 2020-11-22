@@ -266,7 +266,7 @@ export class Example20 {
     }
   }
 
-  costDurationFormatter(row, cell, value, columnDef, dataContext) {
+  costDurationFormatter(_row, _cell, _value, _columnDef, dataContext) {
     const costText = this.isNullUndefinedOrEmpty(dataContext.cost) ? 'n/a' : formatNumber(dataContext.cost, 0, 2, false, '$', '', '.', ',');
     let durationText = 'n/a';
     if (!this.isNullUndefinedOrEmpty(dataContext.duration) && dataContext.duration >= 0) {
@@ -279,7 +279,7 @@ export class Example20 {
     return (data === '' || data === null || data === undefined);
   }
 
-  onCellValidationError(e, args) {
+  onCellValidationError(_e, args) {
     alert(args.validationResults.msg);
   }
 

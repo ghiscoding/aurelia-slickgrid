@@ -680,7 +680,7 @@ describe('GridStateService', () => {
     });
 
     it('should return null when no BackendService is used and FilterService is missing the "getCurrentLocalFilters" method', () => {
-      gridStub.getOptions = undefined;
+      gridStub.getOptions = undefined as any;
       const output = service.getCurrentFilters();
       expect(output).toBeNull();
     });
@@ -732,7 +732,7 @@ describe('GridStateService', () => {
 
   describe('needToPreserveRowSelection method', () => {
     it('should return false when there are no "dataView" property defined in the grid options', () => {
-      const gridOptionsMock = { dataView: null } as GridOption;
+      const gridOptionsMock = { dataView: null } as unknown as GridOption;
       jest.spyOn(gridStub, 'getOptions').mockReturnValue(gridOptionsMock);
 
       const output = service.needToPreserveRowSelection();
@@ -741,7 +741,7 @@ describe('GridStateService', () => {
     });
 
     it('should return false when "dataView" property is defined in the grid options with "syncGridSelection" property', () => {
-      const gridOptionsMock = { dataView: null } as GridOption;
+      const gridOptionsMock = { dataView: null } as unknown as GridOption;
       jest.spyOn(gridStub, 'getOptions').mockReturnValue(gridOptionsMock);
 
       const output = service.needToPreserveRowSelection();

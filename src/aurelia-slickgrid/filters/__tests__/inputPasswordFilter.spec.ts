@@ -47,7 +47,7 @@ describe('InputPasswordFilter', () => {
   });
 
   it('should throw an error when trying to call init without any arguments', () => {
-    expect(() => filter.init(null)).toThrowError('[Aurelia-SlickGrid] A filter must always have an "init()" with valid arguments.');
+    expect(() => filter.init(null as any)).toThrowError('[Aurelia-SlickGrid] A filter must always have an "init()" with valid arguments.');
   });
 
   it('should initialize the filter and expect an input of type password', () => {

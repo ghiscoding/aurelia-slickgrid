@@ -48,7 +48,7 @@ describe('CheckboxEditor', () => {
       grid: gridStub,
       column: mockColumn,
       item: mockItemData,
-      event: null,
+      event: null as any,
       cancelChanges: jest.fn(),
       commitChanges: jest.fn(),
       container: divContainer,
@@ -62,7 +62,7 @@ describe('CheckboxEditor', () => {
   describe('with invalid Editor instance', () => {
     it('should throw an error when trying to call init without any arguments', (done) => {
       try {
-        editor = new CheckboxEditor(null);
+        editor = new CheckboxEditor(null as any);
       } catch (e) {
         expect(e.toString()).toContain(`[Aurelia-Slickgrid] Something is wrong with this grid, an Editor must always have valid arguments.`);
         done();
@@ -90,7 +90,7 @@ describe('CheckboxEditor', () => {
     });
 
     it('should initialize the editor even when user define his own editor options', () => {
-      mockColumn.internalColumnEditor.editorOptions = { minLength: 3 } as AutocompleteOption;
+      mockColumn.internalColumnEditor!.editorOptions = { minLength: 3 } as AutocompleteOption;
       editor = new CheckboxEditor(editorArguments);
       const editorCount = divContainer.querySelectorAll('input.editor-checkbox.editor-isActive').length;
 
@@ -99,11 +99,11 @@ describe('CheckboxEditor', () => {
 
     it('should have a title (tooltip) when defined in its column definition', () => {
       const testValue = 'test title';
-      mockColumn.internalColumnEditor.title = testValue;
+      mockColumn.internalColumnEditor!.title = testValue;
 
       editor = new CheckboxEditor(editorArguments);
       const editorElmJquery = editor.editorDomElement;
-      const editorElm = divContainer.querySelector<HTMLInputElement>('input.editor-checkbox.editor-isActive');
+      const editorElm = divContainer.querySelector('input.editor-checkbox.editor-isActive') as HTMLInputElement;
 
       expect(editorElm.title).toBe(testValue);
       expect(editorElmJquery[0].title).toBe(testValue);
@@ -154,7 +154,7 @@ describe('CheckboxEditor', () => {
         const saveSpy = jest.spyOn(editor, 'save');
         editor.loadValue({ id: 2, title: 'task 1', isActive: true });
 
-        const editorElm = divContainer.querySelector<HTMLInputElement>('input.editor-isActive');
+        const editorElm = divContainer.querySelector('input.editor-isActive') as HTMLInputElement;
         editorElm.checked = false;
         editorElm.dispatchEvent(DOM.createCustomEvent('click'));
 
@@ -166,7 +166,7 @@ describe('CheckboxEditor', () => {
         const event = new (window.window as any).KeyboardEvent('keydown', { keyCode: KEY_CHAR_SPACE, bubbles: true, cancelable: true });
 
         editor = new CheckboxEditor(editorArguments);
-        const editorElm = divContainer.querySelector<HTMLInputElement>('input.editor-isActive');
+        const editorElm = divContainer.querySelector('input.editor-isActive') as HTMLInputElement;
 
         editor.loadValue({ id: 1, title: 'task 1', isActive: true });
         editor.focus();
@@ -178,7 +178,7 @@ describe('CheckboxEditor', () => {
 
     describe('applyValue method', () => {
       it('should apply the value to the isActive property when it passes validation', () => {
-        mockColumn.internalColumnEditor.validator = null;
+        mockColumn.internalColumnEditor!.validator = null as any;
         mockItemData = { id: 1, title: 'task 1', isActive: true };
 
         editor = new CheckboxEditor(editorArguments);
@@ -188,7 +188,7 @@ describe('CheckboxEditor', () => {
       });
 
       it('should apply the value to the title property with a field having dot notation (complex object) that passes validation', () => {
-        mockColumn.internalColumnEditor.validator = null;
+        mockColumn.internalColumnEditor!.validator = null as any;
         mockColumn.field = 'part.isActive';
         mockItemData = { id: 1, part: { isActive: true } };
 
@@ -295,7 +295,7 @@ describe('CheckboxEditor', () => {
 
       it('should not call anything when the input value is false but is required', () => {
         mockItemData = { id: 1, title: 'task 1', isActive: false };
-        mockColumn.internalColumnEditor.required = true;
+        mockColumn.internalColumnEditor!.required = true;
         gridOptionMock.autoCommitEdit = true;
         const spy = jest.spyOn(gridStub.getEditorLock(), 'commitCurrentEdit');
 
@@ -309,7 +309,7 @@ describe('CheckboxEditor', () => {
 
       it('should not call anything when the input value is null but is required', () => {
         mockItemData = { id: 1, title: 'task 1', isActive: null };
-        mockColumn.internalColumnEditor.required = true;
+        mockColumn.internalColumnEditor!.required = true;
         gridOptionMock.autoCommitEdit = true;
         const spy = jest.spyOn(gridStub.getEditorLock(), 'commitCurrentEdit');
 
@@ -322,7 +322,7 @@ describe('CheckboxEditor', () => {
       });
 
       it('should not save when custom validation fails', () => {
-        mockColumn.internalColumnEditor.validator = (value: any) => {
+        mockColumn.internalColumnEditor!.validator = (value: any) => {
           if (!value) {
             return { valid: false, msg: 'This must be accepted' };
           }
@@ -343,7 +343,7 @@ describe('CheckboxEditor', () => {
     describe('validate method', () => {
       it('should return False when field is required and field is empty, null or false', () => {
         const expectation = { valid: false, msg: 'Field is required' };
-        mockColumn.internalColumnEditor.required = true;
+        mockColumn.internalColumnEditor!.required = true;
         editor = new CheckboxEditor(editorArguments);
         const validation1 = editor.validate('');
         const validation2 = editor.validate(null);
@@ -355,7 +355,7 @@ describe('CheckboxEditor', () => {
       });
 
       it('should return True when field is required and input is provided with True', () => {
-        mockColumn.internalColumnEditor.required = true;
+        mockColumn.internalColumnEditor!.required = true;
         editor = new CheckboxEditor(editorArguments);
         const validation = editor.validate(true);
 
@@ -363,7 +363,7 @@ describe('CheckboxEditor', () => {
       });
 
       it('should return True when field is required and input is provided with any text', () => {
-        mockColumn.internalColumnEditor.required = true;
+        mockColumn.internalColumnEditor!.required = true;
         editor = new CheckboxEditor(editorArguments);
         const validation = editor.validate('text');
 

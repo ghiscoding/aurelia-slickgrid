@@ -170,7 +170,7 @@ describe('ExtensionService', () => {
         const gridSpy = jest.spyOn(SharedService.prototype, 'gridOptions', 'get').mockReturnValue(gridOptionsMock);
 
         service.bindDifferentExtensions();
-        const output = service.getExtensionByName(ExtensionName.gridMenu);
+        const output = service.getExtensionByName(ExtensionName.gridMenu) as ExtensionModel;
         const instance = service.getSlickgridAddonInstance(ExtensionName.gridMenu);
 
         expect(gridSpy).toHaveBeenCalled();
@@ -255,7 +255,7 @@ describe('ExtensionService', () => {
         const gridSpy = jest.spyOn(SharedService.prototype, 'gridOptions', 'get').mockReturnValue(gridOptionsMock);
 
         service.bindDifferentExtensions();
-        const output = service.getExtensionByName(ExtensionName.gridMenu);
+        const output = service.getExtensionByName(ExtensionName.gridMenu) as ExtensionModel;
         const instance = service.getSlickgridAddonInstance(ExtensionName.gridMenu);
 
         expect(gridSpy).toHaveBeenCalled();
@@ -516,8 +516,7 @@ describe('ExtensionService', () => {
 
     it('should call removeColumnByIndex and return original input when it is not an array provided', () => {
       const input = { foo: 'bar' };
-      // @ts-ignore:2345
-      const output = service.removeColumnByIndex(input, 1);
+      const output = service.removeColumnByIndex(input as any, 1);
       expect(output).toEqual(input);
     });
 
@@ -708,7 +707,7 @@ describe('ExtensionService', () => {
 
   describe('without I18N Service', () => {
     beforeEach(() => {
-      i18n = null;
+      i18n = (null as any);
       service = new ExtensionService(
         // extensions
         extensionStub as unknown as AutoTooltipExtension,

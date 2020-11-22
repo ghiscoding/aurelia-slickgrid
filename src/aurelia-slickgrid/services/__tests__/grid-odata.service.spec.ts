@@ -14,6 +14,7 @@ import {
   FieldType,
   CurrentSorter,
   OdataOption,
+  BackendService,
 } from '../../models';
 
 const DEFAULT_ITEMS_PER_PAGE = 25;
@@ -28,7 +29,7 @@ const gridOptionMock = {
     process: jest.fn(),
     postProcess: jest.fn(),
   }
-} as GridOption;
+} as unknown as GridOption;
 
 const gridStub = {
   autosizeColumns: jest.fn(),
@@ -64,7 +65,7 @@ describe('GridOdataService', () => {
       totalItems: 100
     };
     gridOptionMock.enablePagination = true;
-    gridOptionMock.backendServiceApi.service = service;
+    gridOptionMock.backendServiceApi!.service = service as BackendService;
   });
 
   afterEach(() => {
@@ -258,15 +259,12 @@ describe('GridOdataService', () => {
   describe('processOnFilterChanged method', () => {
     it('should throw an error when backendService is undefined', () => {
       service.init(serviceOptions, paginationOptions, undefined);
-      // @ts-ignore
-      expect(() => service.processOnFilterChanged(null, { grid: gridStub })).toThrow();
+      expect(() => service.processOnFilterChanged(null as any, { grid: gridStub } as any)).toThrow();
     });
 
     it('should throw an error when grid is undefined', () => {
       service.init(serviceOptions, paginationOptions, gridStub);
-
-      // @ts-ignore
-      expect(() => service.processOnFilterChanged(null, { grid: undefined }))
+      expect(() => service.processOnFilterChanged(null as any, { grid: undefined } as any))
         .toThrowError('Something went wrong when trying create the GridOdataService');
     });
 
@@ -287,7 +285,7 @@ describe('GridOdataService', () => {
       } as FilterChangedArgs;
 
       service.init(serviceOptions, paginationOptions, gridStub);
-      const query = service.processOnFilterChanged(null, mockFilterChangedArgs);
+      const query = service.processOnFilterChanged(null as any, mockFilterChangedArgs);
       const currentFilters = service.getCurrentFilters();
 
       expect(query).toBe(expectation);
@@ -315,7 +313,7 @@ describe('GridOdataService', () => {
       } as FilterChangedArgs;
 
       service.init(serviceOptions, paginationOptions, gridStub);
-      const query = service.processOnFilterChanged(null, mockFilterChangedArgs);
+      const query = service.processOnFilterChanged(null as any, mockFilterChangedArgs);
       const currentFilters = service.getCurrentFilters();
 
       expect(query).toBe(expectation);
@@ -349,7 +347,7 @@ describe('GridOdataService', () => {
         } as FilterChangedArgs;
 
         service.init(serviceOptions, paginationOptions, gridStub);
-        const query = service.processOnFilterChanged(null, mockFilterChangedArgs);
+        const query = service.processOnFilterChanged(null as any, mockFilterChangedArgs);
         const currentFilters = service.getCurrentFilters();
 
         expect(query).toBe(expectation);
@@ -377,7 +375,7 @@ describe('GridOdataService', () => {
         } as FilterChangedArgs;
 
         service.init(serviceOptions, paginationOptions, gridStub);
-        const query = service.processOnFilterChanged(null, mockFilterChangedArgs);
+        const query = service.processOnFilterChanged(null as any, mockFilterChangedArgs);
         const currentFilters = service.getCurrentFilters();
 
         expect(query).toBe(expectation);
@@ -397,7 +395,7 @@ describe('GridOdataService', () => {
       const querySpy = jest.spyOn(service.odataService, 'buildQuery');
 
       service.init(serviceOptions, paginationOptions, gridStub);
-      const query = service.processOnPaginationChanged(null, { newPage: 3, pageSize: 20 });
+      const query = service.processOnPaginationChanged(null as any, { newPage: 3, pageSize: 20 });
       const currentPagination = service.getCurrentPagination();
 
       expect(query).toBe(expectation);
@@ -410,8 +408,7 @@ describe('GridOdataService', () => {
       const querySpy = jest.spyOn(service.odataService, 'buildQuery');
 
       service.init(serviceOptions, paginationOptions, gridStub);
-      // @ts-ignore
-      const query = service.processOnPaginationChanged(null, { newPage: 3 });
+      const query = service.processOnPaginationChanged(null as any, { newPage: 3 } as any);
       const currentPagination = service.getCurrentPagination();
 
       expect(query).toBe(expectation);
@@ -424,8 +421,7 @@ describe('GridOdataService', () => {
       const querySpy = jest.spyOn(service.odataService, 'buildQuery');
 
       service.init(serviceOptions, undefined, gridStub);
-      // @ts-ignore
-      const query = service.processOnPaginationChanged(null, { newPage: 3 });
+      const query = service.processOnPaginationChanged(null as any, { newPage: 3 } as any);
       const currentPagination = service.getCurrentPagination();
 
       expect(query).toBe(expectation);
@@ -439,7 +435,7 @@ describe('GridOdataService', () => {
       const querySpy = jest.spyOn(service.odataService, 'buildQuery');
 
       service.init(serviceOptions, paginationOptions, gridStub);
-      const query = service.processOnPaginationChanged(null, { newPage: 3, pageSize: 20 });
+      const query = service.processOnPaginationChanged(null as any, { newPage: 3, pageSize: 20 });
       const currentPagination = service.getCurrentPagination();
 
       expect(query).toBe(expectation);
@@ -456,7 +452,7 @@ describe('GridOdataService', () => {
       const mockSortChangedArgs = { columnId: 'gender', sortCol: mockColumn, sortAsc: false, multiColumnSort: false } as ColumnSort;
 
       service.init(serviceOptions, paginationOptions, gridStub);
-      const query = service.processOnSortChanged(null, mockSortChangedArgs);
+      const query = service.processOnSortChanged(null as any, mockSortChangedArgs);
 
       expect(query).toBe(expectation);
       expect(querySpy).toHaveBeenCalled();
@@ -472,7 +468,7 @@ describe('GridOdataService', () => {
       const mockSortChangedArgs = { sortCols: [mockColumnSort, mockColumnSortName], multiColumnSort: true, grid: gridStub } as MultiColumnSort;
 
       service.init(serviceOptions, paginationOptions, gridStub);
-      const query = service.processOnSortChanged(null, mockSortChangedArgs);
+      const query = service.processOnSortChanged(null as any, mockSortChangedArgs);
 
       expect(query).toBe(expectation);
       expect(querySpy).toHaveBeenCalled();
@@ -490,7 +486,7 @@ describe('GridOdataService', () => {
         const mockSortChangedArgs = { columnId: 'gender', sortCol: mockColumn, sortAsc: false, multiColumnSort: false } as ColumnSort;
 
         service.init(serviceOptions, paginationOptions, gridStub);
-        const query = service.processOnSortChanged(null, mockSortChangedArgs);
+        const query = service.processOnSortChanged(null as any, mockSortChangedArgs);
 
         expect(query).toBe(expectation);
         expect(querySpy).toHaveBeenCalled();
@@ -506,7 +502,7 @@ describe('GridOdataService', () => {
         const mockSortChangedArgs = { sortCols: [mockColumnSort, mockColumnSortName], multiColumnSort: true, grid: gridStub } as MultiColumnSort;
 
         service.init(serviceOptions, paginationOptions, gridStub);
-        const query = service.processOnSortChanged(null, mockSortChangedArgs);
+        const query = service.processOnSortChanged(null as any, mockSortChangedArgs);
 
         expect(query).toBe(expectation);
         expect(querySpy).toHaveBeenCalled();
@@ -526,8 +522,7 @@ describe('GridOdataService', () => {
     });
 
     it('should throw an error when neither "field" nor "name" are being part of the column definition', () => {
-      // @ts-ignore
-      const mockColumnFilters = { gender: { columnId: 'gender', columnDef: { id: 'gender' }, searchTerms: ['female'], operator: 'EQ' }, } as ColumnFilters;
+      const mockColumnFilters = { gender: { columnId: 'gender', columnDef: { id: 'gender' }, searchTerms: ['female'], operator: 'EQ' }, } as unknown as ColumnFilters;
       service.init(serviceOptions, paginationOptions, gridStub);
       expect(() => service.updateFilters(mockColumnFilters, false)).toThrowError('GridOData filter could not find the field name to query the search');
     });
@@ -826,7 +821,7 @@ describe('GridOdataService', () => {
       const expectation = `$top=10`;
       const mockColumn = { id: 'gender', field: 'gender' } as Column;
       const mockColumnFilters = {
-        gender: { columnId: 'gender', columnDef: mockColumn, searchTerms: [undefined], operator: 'EQ' },
+        gender: { columnId: 'gender', columnDef: mockColumn, searchTerms: [undefined as any], operator: 'EQ' },
       } as ColumnFilters;
 
       service.init(serviceOptions, paginationOptions, gridStub);
@@ -1342,7 +1337,7 @@ describe('GridOdataService', () => {
       ] as CurrentSorter[];
 
       service.init(serviceOptions, paginationOptions, gridStub);
-      service.updateSorters(null, mockCurrentSorter);
+      service.updateSorters(null as any, mockCurrentSorter);
       const query = service.buildQuery();
       const currentSorters = service.getCurrentSorters();
 

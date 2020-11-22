@@ -13,14 +13,14 @@ import {
 import './example24.scss'; // provide custom CSS/SASS styling
 import { autoinject } from 'aurelia-framework';
 
-const actionFormatter: Formatter = (row, cell, value, columnDef, dataContext) => {
+const actionFormatter: Formatter = (_row, _cell, _value, _columnDef, dataContext) => {
   if (dataContext.priority === 3) { // option 3 is High
     return `<div class="fake-hyperlink">Action <i class="fa fa-caret-down"></i></div>`;
   }
   return `<div class="disabled">Action <i class="fa fa-caret-down"></i></div>`;
 };
 
-const priorityFormatter: Formatter = (row, cell, value, columnDef, dataContext) => {
+const priorityFormatter: Formatter = (_row, _cell, value) => {
   if (!value) {
     return '';
   }
@@ -35,7 +35,7 @@ const priorityFormatter: Formatter = (row, cell, value, columnDef, dataContext) 
   return output;
 };
 
-const priorityExportFormatter: Formatter = (row, cell, value, columnDef, dataContext, grid) => {
+const priorityExportFormatter: Formatter = (_row, _cell, value, _columnDef, _dataContext, grid) => {
   if (!value) {
     return '';
   }
@@ -48,7 +48,7 @@ const priorityExportFormatter: Formatter = (row, cell, value, columnDef, dataCon
 };
 
 // create a custom translate Formatter (typically you would move that a separate file, for separation of concerns)
-const taskTranslateFormatter: Formatter = (row: number, cell: number, value: any, columnDef: any, dataContext: any, grid: any) => {
+const taskTranslateFormatter: Formatter = (_row, _cell, value, _columnDef, _dataContext, grid: any) => {
   const gridOptions = (grid && typeof grid.getOptions === 'function') ? grid.getOptions() : {};
   const i18n = gridOptions.i18n;
 
@@ -189,7 +189,7 @@ export class Example24 {
             {
               command: 'command2', title: 'Command 2', positionOrder: 62,
               // you can use the "action" callback and/or use "onCallback" callback from the grid options, they both have the same arguments
-              action: (e, args) => {
+              action: (_e, args) => {
                 console.log(args.dataContext, args.column);
                 // action callback.. do something
               },
@@ -227,7 +227,7 @@ export class Example24 {
             {
               option: null, title: 'null', cssClass: 'italic',
               // you can use the "action" callback and/or use "onCallback" callback from the grid options, they both have the same arguments
-              action: (e, args) => {
+              action: (_e, _args) => {
                 // action callback.. do something
               },
               // only enable Action menu when the Priority is set to High
@@ -269,8 +269,8 @@ export class Example24 {
       cellMenu: {
         // all the Cell Menu callback methods (except the action callback)
         // are available under the grid options as shown below
-        onCommand: (e, args) => this.executeCommand(e, args),
-        onOptionSelected: (e, args) => {
+        onCommand: (_e, args) => this.executeCommand(_e, args),
+        onOptionSelected: (_e, args) => {
           // change "Completed" property with new option selected from the Cell Menu
           const dataContext = args && args.dataContext;
           if (dataContext && dataContext.hasOwnProperty('completed')) {
@@ -278,12 +278,12 @@ export class Example24 {
             this.aureliaGrid.gridService.updateItem(dataContext);
           }
         },
-        onBeforeMenuShow: ((e, args) => {
+        onBeforeMenuShow: ((_e, args) => {
           // for example, you could select the row that the click originated
           // this.aureliaGrid.gridService.setSelectedRows([args.row]);
           console.log('Before the Cell Menu is shown', args);
         }),
-        onBeforeMenuClose: ((e, args) => console.log('Cell Menu is closing', args)),
+        onBeforeMenuClose: ((_e, args) => console.log('Cell Menu is closing', args)),
       },
 
       // load Context Menu structure
@@ -291,8 +291,7 @@ export class Example24 {
     };
   }
 
-  executeCommand(e, args) {
-    const columnDef = args.columnDef;
+  executeCommand(_e, args) {
     const command = args.command;
     const dataContext = args.dataContext;
 
@@ -346,7 +345,7 @@ export class Example24 {
         return (dataContext.id < 21); // say we want to display the menu only from Task 0 to 20
       },
       // which column to show the command list? when not defined it will be shown over all columns
-      commandShownOverColumnIds: ['id', 'title', 'percentComplete', 'start', 'finish', 'completed' /*, 'priority', 'action' */],
+      commandShownOverColumnIds: ['id', 'title', 'percentComplete', 'start', 'finish', 'completed' /* , 'priority', 'action' */],
       commandTitleKey: 'COMMANDS', // this title is optional, you could also use "commandTitle" when not using I18N
       commandItems: [
         { divider: true, command: '', positionOrder: 61 },
@@ -358,7 +357,7 @@ export class Example24 {
         {
           command: 'help', titleKey: 'HELP', iconCssClass: 'fa fa-question-circle', positionOrder: 64,
           // you can use the 'action' callback and/or subscribe to the 'onCallback' event, they both have the same arguments
-          action: (e, args) => {
+          action: (_e, _args) => {
             // action callback.. do something
           },
           // only show command to 'Help' when the task is Not Completed
@@ -384,7 +383,7 @@ export class Example24 {
             return (!dataContext.completed);
           },
           // you can use the 'action' callback and/or subscribe to the 'onCallback' event, they both have the same arguments
-          action: (e, args) => {
+          action: (_e, _args) => {
             // action callback.. do something
           },
         },
@@ -405,19 +404,19 @@ export class Example24 {
         },
       ],
       // subscribe to Context Menu
-      onBeforeMenuShow: ((e, args) => {
+      onBeforeMenuShow: ((_e, args) => {
         // for example, you could select the row it was clicked with
         // grid.setSelectedRows([args.row]); // select the entire row
         this.aureliaGrid.slickGrid.setActiveCell(args.row, args.cell, false); // select the cell that the click originated
         console.log('Before the global Context Menu is shown', args);
       }),
-      onBeforeMenuClose: ((e, args) => console.log('Global Context Menu is closing', args)),
+      onBeforeMenuClose: ((_e, args) => console.log('Global Context Menu is closing', args)),
 
       // subscribe to Context Menu onCommand event (or use the action callback on each command)
-      onCommand: ((e, args) => this.executeCommand(e, args)),
+      onCommand: ((_e, args) => this.executeCommand(_e, args)),
 
       // subscribe to Context Menu onOptionSelected event (or use the action callback on each option)
-      onOptionSelected: ((e, args) => {
+      onOptionSelected: ((_e, args) => {
         // change Priority
         const dataContext = args && args.dataContext;
         if (dataContext && dataContext.hasOwnProperty('priority')) {

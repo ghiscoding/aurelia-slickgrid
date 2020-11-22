@@ -85,7 +85,7 @@ export class Example9 {
       columnPicker: {
         hideForceFitButton: true,
         hideSyncResizeButton: true,
-        onColumnsChanged: (e, args) => {
+        onColumnsChanged: (_e, args) => {
           console.log('Column selection changed from Column Picker, visible columns: ', args.columns);
         }
       },
@@ -99,7 +99,7 @@ export class Example9 {
       enableCellNavigation: true,
       gridMenu: {
         // we could disable the menu entirely by returning false depending on some code logic
-        menuUsabilityOverride: (args) => true,
+        menuUsabilityOverride: (_args) => true,
 
         // use the click event position to reposition the grid menu (defaults to false)
         // basically which offset do we want to use for reposition the grid menu,
@@ -141,7 +141,7 @@ export class Example9 {
             cssClass: 'orange',
             iconCssClass: 'fa fa-warning',
             // you can use the "action" callback and/or use "onCallback" callback from the grid options, they both have the same arguments
-            action: (e, args) => alert(args.command),
+            action: (_e, args) => alert(args.command),
             itemUsabilityOverride: (args) => {
               // for example disable the command if there's any hidden column(s)
               if (args && Array.isArray(args.columns)) {
@@ -156,8 +156,8 @@ export class Example9 {
             positionOrder: 92,
             cssClass: 'red',        // container css class
             textCssClass: 'italic', // just the text css class
-            action: (e, args) => alert(args.command),
-            itemVisibilityOverride: (args) => {
+            action: (_e, args) => alert(args.command),
+            itemVisibilityOverride: (_args) => {
               // for example hide this command from the menu if there's any filter entered
               if (this.aureliaGrid) {
                 return this.isObjectEmpty(this.aureliaGrid.filterService.getColumnFilters());
@@ -173,12 +173,12 @@ export class Example9 {
           }
         ],
         // you can use the "action" callback and/or use "onCallback" callback from the grid options, they both have the same arguments
-        onCommand: (e, args) => {
+        onCommand: (_e, args) => {
           if (args.command === 'help') {
             alert('Command: ' + args.command);
           }
         },
-        onColumnsChanged: (e, args) => {
+        onColumnsChanged: (_e, args) => {
           console.log('Column selection changed from Grid Menu, visible columns: ', args.columns);
         }
       },

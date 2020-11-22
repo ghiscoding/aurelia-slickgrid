@@ -1,5 +1,5 @@
 import { Filters } from './filters/index';
-import { Column, DelimiterType, FileType, GridOption, OperatorType } from './models/index';
+import { Column, DelimiterType, FileType, GridOption, OperatorType, RowDetailView } from './models/index';
 
 /**
  * Default Options that can be passed to the Aurelia-Slickgrid
@@ -184,7 +184,6 @@ export const GlobalGridOptions: Partial<GridOption> = {
     totalItems: 0
   },
   // technically speaking the Row Detail requires the process & viewComponent but we'll ignore it just to set certain options
-  // @ts-ignore
   rowDetailView: {
     cssClass: 'detail-view-toggle',
     panelRows: 1,
@@ -193,7 +192,7 @@ export const GlobalGridOptions: Partial<GridOption> = {
     useSimpleViewportCalc: true,
     saveDetailViewOnScroll: false,
     viewModel: '',
-  },
+  } as RowDetailView,
   rowHeight: 35,
   sortColNumberInSeparateSpan: true,
   suppressActiveCellChangeOnEdit: true,
