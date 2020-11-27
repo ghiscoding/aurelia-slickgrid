@@ -1,7 +1,7 @@
-import { Column, Formatter } from './../models/index';
+import { Formatter } from '@slickgrid-universal/common';
 
 /** Takes a boolean value, cast it to upperCase string and finally translates (i18n) it */
-export const translateBooleanFormatter: Formatter = (_row: number, _cell: number, value: any, columnDef: Column, _dataContext: any, grid: any) => {
+export const translateBooleanFormatter: Formatter = (_row, _cell, value, columnDef, _dataContext, grid) => {
   const gridOptions = (grid && typeof grid.getOptions === 'function') ? grid.getOptions() : {};
   const i18n = gridOptions.i18n || (columnDef && columnDef.params && columnDef.params.i18n);
 
@@ -12,7 +12,7 @@ export const translateBooleanFormatter: Formatter = (_row: number, _cell: number
 
   // make sure the value is a string (for example a boolean value would throw an error)
   if (value !== undefined && value !== null && typeof value !== 'string') {
-    value = value + '';
+    value += '';
   }
   return value ? i18n.tr(value.toUpperCase() as string) : '';
 };

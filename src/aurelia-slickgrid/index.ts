@@ -12,10 +12,10 @@ export * from './editors/index';
 export * from './filters/index';
 export * from './filter-conditions/index';
 export * from './formatters/index';
-export * from './grouping-formatters/index';
 export * from './models/index';
 export * from './services/index';
 export * from './sorters/index';
+export { GroupTotalFormatters } from '@slickgrid-universal/common';
 
 export function configure(aurelia: FrameworkConfiguration, callback: (instance: SlickgridConfig) => void) {
   aurelia.globalResources(PLATFORM.moduleName('./custom-elements/aurelia-slickgrid'));

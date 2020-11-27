@@ -17,6 +17,7 @@ const title = 'Aurelia Navigation Skeleton';
 const outDevDir = path.resolve(__dirname, 'dist');
 const outProdDir = path.resolve(__dirname, 'docs');
 const srcDir = path.resolve(__dirname, 'src');
+const nodeModulesDir = path.resolve(__dirname, 'node_modules');
 const baseUrl = '';
 const platform = {
   hmr: false,
@@ -52,7 +53,7 @@ module.exports = ({ production } = {}, { extractCss, analyze, server, tests, hmr
     path: production ? outProdDir : outDevDir,
     publicPath: baseUrl,
     filename: production ? '[name].[chunkhash].bundle.js' : '[name].[hash].bundle.js',
-    sourceMapFilename: production ? '[name].[chunkhash].bundle.map' : '[name].[hash].bundle.map',
+    sourceMapFilename: production ? '[name].[chunkhash].bundle.js.map' : '[name].[hash].bundle.js.map',
     chunkFilename: production ? '[name].[chunkhash].chunk.js' : '[name].[hash].chunk.js'
   },
   performance: { hints: false },
@@ -93,7 +94,7 @@ module.exports = ({ production } = {}, { extractCss, analyze, server, tests, hmr
         issuer: /\.html?$/i
       },
       { test: /\.html$/i, loader: 'html-loader' },
-      { test: /\.ts$/, loader: "ts-loader" },
+      { test: /\.ts?$/, use: 'ts-loader', exclude: nodeModulesDir, },
       // use Bluebird as the global Promise implementation:
       {
         test: /[\/\\]node_modules[\/\\]bluebird[\/\\].+\.js$/, loader: 'expose-loader', options: {

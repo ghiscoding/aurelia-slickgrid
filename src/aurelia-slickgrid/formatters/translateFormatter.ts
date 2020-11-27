@@ -1,4 +1,5 @@
-import { Column, Formatter } from './../models/index';
+// import { Column } from './../models/index';
+import { Column, Formatter } from '@slickgrid-universal/common';
 
 /** Takes a cell value and translates it (i18n). Requires an instance of the I18N Service:: `i18n: this.i18n` */
 export const translateFormatter: Formatter = (_row: number, _cell: number, value: any, columnDef: Column, _dataContext: any, grid: any) => {
