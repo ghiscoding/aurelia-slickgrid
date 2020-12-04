@@ -1,5 +1,8 @@
+import { ExcelExportService } from '@slickgrid-universal/excel-export';
+import { FileExportService } from '@slickgrid-universal/file-export';
 import { autoinject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
+
 import {
   AureliaGridInstance,
   Column,
@@ -60,6 +63,8 @@ export class Example12 {
   selectedLanguage: string;
   duplicateTitleHeaderCount = 1;
   gridObj: any;
+  excelExportService = new ExcelExportService();
+  fileExportService = new FileExportService();
 
   constructor(private i18n: I18N) {
     // define the grid options & columns and then create the grid itself
@@ -135,8 +140,8 @@ export class Example12 {
 
     this.gridOptions = {
       autoResize: {
-        containerId: 'demo-container',
-        sidePadding: 10
+        container: '#demo-container',
+        rightPadding: 10
       },
       enableAutoResize: true,
       enableExcelCopyBuffer: true,
@@ -175,7 +180,8 @@ export class Example12 {
       gridMenu: {
         hideExportCsvCommand: false,           // false by default, so it's optional
         hideExportTextDelimitedCommand: false  // true by default, so if you want it, you will need to disable the flag
-      }
+      },
+      registerExternalServices: [this.excelExportService, this.fileExportService],
     };
   }
 
@@ -217,14 +223,14 @@ export class Example12 {
   }
 
   exportToExcel() {
-    this.aureliaGrid.excelExportService.exportToExcel({
+    this.excelExportService.exportToExcel({
       filename: 'Export',
       format: FileType.xlsx
     });
   }
 
   exportToFile(type = 'csv') {
-    this.aureliaGrid.exportService.exportToFile({
+    this.fileExportService.exportToFile({
       delimiter: (type === 'csv') ? DelimiterType.comma : DelimiterType.tab,
       filename: 'myExport',
       format: (type === 'csv') ? FileType.csv : FileType.txt

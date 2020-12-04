@@ -1,8 +1,9 @@
+import { EmptyWarning } from '@slickgrid-universal/common';
 import { inject, Optional, singleton } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import * as DOMPurify from 'dompurify';
 
-import { EmptyWarning, GridOption } from '../models/index';
+import { GridOption } from '../models/index';
 
 @singleton(true)
 @inject(Optional.of(I18N))

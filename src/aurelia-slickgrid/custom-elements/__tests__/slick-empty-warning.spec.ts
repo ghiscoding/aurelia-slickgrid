@@ -1,6 +1,7 @@
+import { EmptyWarning } from '@slickgrid-universal/common';
 import { I18N } from 'aurelia-i18n';
 
-import { EmptyWarning, GridOption, SlickGrid } from '../../models/index';
+import { GridOption, SlickGrid } from '../../models/index';
 import { SlickEmptyWarningComponent } from '../slick-empty-warning.component';
 import { I18NServiceStub } from '../../../../test/i18nServiceStub';
 

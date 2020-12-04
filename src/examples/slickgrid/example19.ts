@@ -27,7 +27,7 @@ export class Example19 {
   gridOptions: GridOption;
   columnDefinitions: Column[];
   dataset: any[];
-  extensions: ExtensionList;
+  extensions: ExtensionList<any, any>;
   flashAlertType = 'info';
   message: string;
   subscriptions: Subscription[];
@@ -74,8 +74,8 @@ export class Example19 {
 
     this.gridOptions = {
       autoResize: {
-        containerId: 'demo-container',
-        sidePadding: 10
+        container: '#demo-container',
+        rightPadding: 10
       },
       enableFiltering: true,
       enableRowDetailView: true,

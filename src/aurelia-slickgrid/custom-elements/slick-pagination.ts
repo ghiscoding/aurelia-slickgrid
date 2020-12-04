@@ -2,10 +2,10 @@ import { bindable, inject, Optional } from 'aurelia-framework';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
 import { I18N } from 'aurelia-i18n';
 
-import { GridOption, Locale } from '../models/index';
-import { PaginationService } from '../services/pagination.service';
-import { disposeAllSubscriptions, getTranslationPrefix } from '../services/utilities';
+import { GridOption } from '../models/index';
+import { disposeAllSubscriptions } from '../services/utilities';
 import { Constants } from '../constants';
+import { getTranslationPrefix, Locale, PaginationService } from '@slickgrid-universal/common';
 
 @inject(EventAggregator, Optional.of(I18N))
 export class SlickPaginationCustomElement {

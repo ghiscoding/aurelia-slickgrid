@@ -35,6 +35,8 @@ export class Example1 {
       { id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', sortable: true, minWidth: 100 }
     ];
     this.gridOptions1 = {
+      gridHeight: 225,
+      gridWidth: 800,
       enableAutoResize: false,
       enableSorting: true
     };

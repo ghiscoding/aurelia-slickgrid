@@ -1,9 +1,10 @@
 import 'slickgrid/lib/jquery.jsonp-2.4.min';
 import 'slickgrid/slick.remotemodel'; // SlickGrid Remote Plugin
 import { bindable, bindingMode } from 'aurelia-framework';
-import { AureliaGridInstance, Column, Formatter, GridOption } from '../../aurelia-slickgrid';
+import { AureliaGridInstance, Column, Formatter, GridOption, SlickNamespace } from '../../aurelia-slickgrid';
 
-declare const Slick: any;
+declare const Slick: SlickNamespace;
+// declare const Slick: any;
 
 const brandFormatter: Formatter = (_row, _cell, _value, _columnDef, dataContext) => {
   return dataContext && dataContext.brand && dataContext.brand.name || '';
@@ -90,8 +91,8 @@ export class Example17 {
     this.gridOptions = {
       enableAutoResize: true,
       autoResize: {
-        containerId: 'demo-container',
-        sidePadding: 10
+        container: '#demo-container',
+        rightPadding: 10
       },
       enableCellNavigation: true,
       enableColumnReorder: false,

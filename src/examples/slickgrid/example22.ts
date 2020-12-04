@@ -53,8 +53,8 @@ export class Example22 {
     this.gridOptions1 = {
       enableAutoResize: true,
       autoResize: {
-        containerId: 'demo-container',
-        sidePadding: 10
+        container: '#demo-container',
+        rightPadding: 10
       },
       enableSorting: true
     };
@@ -78,8 +78,8 @@ export class Example22 {
     this.gridOptions2 = {
       enableAutoResize: true,
       autoResize: {
-        containerId: 'demo-container',
-        sidePadding: 10
+        container: '#demo-container',
+        rightPadding: 10
       },
       enableFiltering: true,
       enableSorting: true

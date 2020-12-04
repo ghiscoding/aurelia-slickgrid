@@ -4,8 +4,7 @@ import { BindingSignaler } from 'aurelia-templating-resources';
 import { StageComponent } from 'aurelia-testing';
 import { I18N } from 'aurelia-i18n';
 import { DOM, PLATFORM } from 'aurelia-pal';
-
-import { PaginationService } from '../../services';
+import { PaginationService } from '@slickgrid-universal/common';
 
 function removeExtraSpaces(textS: string) {
   return `${textS}`.replace(/\s{2,}/g, '');

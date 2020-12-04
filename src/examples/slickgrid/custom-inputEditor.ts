@@ -3,7 +3,7 @@ import {
   ColumnEditor,
   Editor,
   EditorValidator,
-  EditorValidatorOutput,
+  EditorValidationResult,
   KeyCode
 } from '../../aurelia-slickgrid';
 import * as $ from 'jquery';
@@ -98,7 +98,7 @@ export class CustomInputEditor implements Editor {
     return (!(this.$input.val() === '' && this.defaultValue === null)) && (this.$input.val() !== this.defaultValue);
   }
 
-  validate(inputValue?: any): EditorValidatorOutput {
+  validate(inputValue?: any): EditorValidationResult {
     if (this.validator) {
       const value = (inputValue !== undefined) ? inputValue : this.$input && this.$input.val && this.$input.val();
       return this.validator(value, this.args);

@@ -1,16 +1,26 @@
+import {
+  addToArrayWhenNotExists,
+  Column,
+  ExtensionName,
+  ExtensionUtility,
+  RowDetailViewExtension as UniversalRowDetailViewExtension,
+  SharedService,
+  SlickEventHandler,
+  SlickNamespace,
+  SlickRowDetailView,
+  SlickRowSelectionModel,
+} from '@slickgrid-universal/common';
 import { inject, singleton } from 'aurelia-framework';
 import { Subscription } from 'aurelia-event-aggregator';
 import * as DOMPurify from 'dompurify';
 
-import { AureliaViewOutput, Column, Extension, ExtensionName, GridOption, RowDetailView, SlickEventHandler, ViewModelBindableInputData } from '../models/index';
-import { ExtensionUtility } from './extensionUtility';
-import { SharedService } from '../services/shared.service';
+import { AureliaViewOutput, GridOption, RowDetailView, ViewModelBindableInputData } from '../models/index';
 import { AureliaUtilService } from '../services/aureliaUtil.service';
-import { addToArrayWhenNotExists, disposeAllSubscriptions } from '../services/utilities';
-import { SlickgridEventAggregator } from '../custom-elements/slickgridEventAggregator';
+import { disposeAllSubscriptions } from '../services/utilities';
+import { UniversalPubSubService } from '../services';
 
 // using external non-typed js libraries
-declare const Slick: any;
+declare const Slick: SlickNamespace;
 
 const ROW_DETAIL_CONTAINER_PREFIX = 'container_';
 const PRELOAD_CONTAINER_PREFIX = 'container_loading';
@@ -23,12 +33,12 @@ export interface CreatedView extends AureliaViewOutput {
 @singleton(true)
 @inject(
   AureliaUtilService,
-  SlickgridEventAggregator,
+  UniversalPubSubService,
   ExtensionUtility,
   SharedService,
 )
-export class RowDetailViewExtension implements Extension {
-  private _addon: any;
+export class RowDetailViewExtension implements UniversalRowDetailViewExtension {
+  private _addon: SlickRowDetailView | null;
   private _eventHandler: SlickEventHandler;
   private _preloadView: string;
   private _slots: CreatedView[] = [];
@@ -38,7 +48,7 @@ export class RowDetailViewExtension implements Extension {
 
   constructor(
     private aureliaUtilService: AureliaUtilService,
-    private pluginEa: SlickgridEventAggregator,
+    private pubSubService: UniversalPubSubService,
     private extensionUtility: ExtensionUtility,
     private sharedService: SharedService,
   ) {
@@ -54,7 +64,7 @@ export class RowDetailViewExtension implements Extension {
   }
 
   get gridOptions(): GridOption {
-    return this.sharedService && this.sharedService.gridOptions || {};
+    return this.sharedService?.gridOptions || {};
   }
 
   get rowDetailViewOptions(): RowDetailView | undefined {
@@ -147,22 +157,22 @@ export class RowDetailViewExtension implements Extension {
     return this._addon;
   }
 
-  register(rowSelectionPlugin?: any) {
-    if (this.sharedService && this.sharedService.grid && this.sharedService.gridOptions) {
+  register(rowSelectionPlugin?: SlickRowSelectionModel): SlickRowDetailView | null {
+    if (this.sharedService && this.sharedService.slickGrid && this.sharedService.gridOptions) {
       // the plugin has to be created BEFORE the grid (else it behaves oddly), but we can only watch grid events AFTER the grid is created
-      this.sharedService.grid.registerPlugin(this._addon);
+      this.sharedService.slickGrid.registerPlugin(this._addon);
 
       // this also requires the Row Selection Model to be registered as well
-      if (!rowSelectionPlugin || !this.sharedService.grid.getSelectionModel()) {
+      if (!rowSelectionPlugin || !this.sharedService.slickGrid.getSelectionModel()) {
         this.extensionUtility.loadExtensionDynamically(ExtensionName.rowSelection);
         rowSelectionPlugin = new Slick.RowSelectionModel(this.sharedService.gridOptions.rowSelectionOptions || { selectActiveRow: true });
-        this.sharedService.grid.setSelectionModel(rowSelectionPlugin);
+        this.sharedService.slickGrid.setSelectionModel(rowSelectionPlugin);
       }
 
-      this.sharedService.grid.registerPlugin(this._addon);
+      this.sharedService.slickGrid.registerPlugin(this._addon);
 
       // hook all events
-      if (this.sharedService.grid && this.rowDetailViewOptions) {
+      if (this.sharedService.slickGrid && this.rowDetailViewOptions) {
         if (this.rowDetailViewOptions.onExtensionRegistered) {
           this.rowDetailViewOptions.onExtensionRegistered(this._addon);
         }
@@ -214,14 +224,14 @@ export class RowDetailViewExtension implements Extension {
         // --
         // hook some events needed by the Plugin itself
 
-        this._eventHandler.subscribe(this.sharedService.grid.onColumnsReordered, () => this.redrawAllViewSlots());
+        this._eventHandler.subscribe(this.sharedService.slickGrid.onColumnsReordered, () => this.redrawAllViewSlots());
 
         // on sort, all row detail are collapsed so we can dispose of all the Views as well
-        this._eventHandler.subscribe(this.sharedService.grid.onSort, () => this.disposeAllViewSlot());
+        this._eventHandler.subscribe(this.sharedService.slickGrid.onSort, () => this.disposeAllViewSlot());
 
         // on filter changed, we need to re-render all Views
         this._subscriptions.push(
-          this.pluginEa.subscribe('filterService:filterChanged', () => this.redrawAllViewSlots())
+          this.pubSubService.subscribe('onFilterChanged', () => this.redrawAllViewSlots())
         );
       }
       return this._addon;
@@ -268,7 +278,7 @@ export class RowDetailViewExtension implements Extension {
       const bindableData = {
         model: item,
         addon: this._addon,
-        grid: this.sharedService.grid,
+        grid: this.sharedService.slickGrid,
         dataView: this.sharedService.dataView,
         parent: this.rowDetailViewOptions && this.rowDetailViewOptions.parent,
       } as ViewModelBindableInputData;

@@ -1,3 +1,4 @@
+import { GraphqlService, GraphqlResult, GraphqlServiceApi, } from '@slickgrid-universal/graphql';
 import { autoinject } from 'aurelia-framework';
 import { HttpClient, json } from 'aurelia-fetch-client';
 import {
@@ -5,9 +6,6 @@ import {
   Column,
   Filters,
   Formatters,
-  GraphqlResult,
-  GraphqlService,
-  GraphqlServiceApi,
   GridOption,
   Metrics,
   MultipleSelectOption,
@@ -145,8 +143,8 @@ export class Example25 {
 
     this.gridOptions = {
       autoResize: {
-        containerId: 'demo-container',
-        sidePadding: 10
+        container: '#demo-container',
+        rightPadding: 10
       },
       enableFiltering: true,
       enableCellNavigation: true,

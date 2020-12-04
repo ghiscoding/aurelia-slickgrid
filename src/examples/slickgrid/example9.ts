@@ -92,8 +92,8 @@ export class Example9 {
       enableAutoResize: true,
       enableGridMenu: true,
       autoResize: {
-        containerId: 'demo-container',
-        sidePadding: 10
+        container: '#demo-container',
+        rightPadding: 10
       },
       enableFiltering: true,
       enableCellNavigation: true,

@@ -26,8 +26,6 @@
                      column-definitions.bind="columnDefinitions1"
                      grid-options.bind="gridOptions1"
                      dataset.bind="dataset1"
-                     grid-height="225"
-                     grid-width="800"
                      asg-on-aurelia-grid-created.delegate="aureliaGrid1Ready($event.detail)"
                      asg-on-grid-state-changed.delegate="grid1StateChanged($event.detail)"
                      sg-on-selected-rows-changed.delegate="onGrid1SelectedRowsChanged($event.detail.eventData, $event.detail.args)">
@@ -65,9 +63,10 @@
                      column-definitions.bind="columnDefinitions2"
                      grid-options.bind="gridOptions2"
                      dataset.bind="dataset2"
-                     grid-height="255"
-                     grid-width="800"
+                     on-aurelia-grid-created.delegate="aureliaGrid2Ready($event.detail)"
                      asg-on-aurelia-grid-created.delegate="aureliaGrid2Ready($event.detail)"
-                     asg-on-grid-state-changed.delegate="grid2StateChanged($event.detail)">
+                     asg-on-grid-state-changed.delegate="grid2StateChanged($event.detail)"
+                     on-grid-state-changed.delegate="grid2StateChanged($event.detail)"
+                     ongridstatechanged.delegate="grid2StateChanged($event.detail)"></aurelia-slickgrid>
   </aurelia-slickgrid>
 </template>

@@ -1,7 +1,8 @@
+import { SharedService } from '@slickgrid-universal/common';
+
 import { StageComponent } from 'aurelia-testing';
 import { bootstrap } from 'aurelia-bootstrapper';
 import { PLATFORM } from 'aurelia-pal';
-import { SharedService } from '../../services/shared.service';
 import { GridOption } from '../../models';
 import * as utilities from '../../services/utilities';
 
@@ -20,7 +21,7 @@ jest.mock('flatpickr', () => { });
 
 const aureliaGridReady = jest.fn();
 
-describe('Aurelia-Slickgrid Custom Component', () => {
+xdescribe('Aurelia-Slickgrid Custom Component', () => {
   let customElement;
   const view = `<aurelia-slickgrid
     grid-id="grid1"
@@ -118,7 +119,7 @@ describe('Aurelia-Slickgrid Custom Component', () => {
     await customElement.manuallyHandleLifecycle().create(bootstrap);
     await customElement.bind();
     await customElement.attached();
-    const gridElement = customElement.element.querySelector('.gridPane');
+    const gridElement = customElement.element.querySelector('.grid-pane');
 
     expect(gridElement.innerHTML).toContain('grid1');
     expect(gridElement.id).toBe('slickGridContainer-grid1');
@@ -131,7 +132,7 @@ describe('Aurelia-Slickgrid Custom Component', () => {
     await customElement.manuallyHandleLifecycle().create(bootstrap);
     await customElement.bind({ columnDefinitions: [], gridOptions: { enableTreeData: true, treeDataOptions: { columnId: 'file' } } as GridOption });
     await customElement.attached();
-    const gridElement = customElement.element.querySelector('.gridPane');
+    const gridElement = customElement.element.querySelector('.grid-pane');
     customElement.viewModel.dataset = mockFlatDataset;
 
     expect(gridElement.innerHTML).toContain('grid1');

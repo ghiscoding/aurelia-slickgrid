@@ -1,6 +1,7 @@
 {
   "baseUrl": "http://localhost:9000",
   "baseExampleUrl": "http://localhost:9000/#/slickgrid",
+  "runMode": 1,
   "video": false,
   "viewportWidth": 1200,
   "viewportHeight": 950,
@@ -11,6 +12,10 @@
   "screenshotsFolder": "screenshots",
   "supportFile": "support/index.js",
   "videosFolder": "videos",
-  "defaultCommandTimeout": 50000,
-  "pageLoadTimeout": 60000
+  "defaultCommandTimeout": 30000,
+  "pageLoadTimeout": 30000,
+  "retries": {
+    "runMode": 2,
+    "openMode": 0
+  }
 }

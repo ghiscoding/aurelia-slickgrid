@@ -1,5 +1,33 @@
 import 'jest-extended';
-import { BindingEngine, Container } from 'aurelia-framework';
+import { GraphqlPaginatedResult, GraphqlService, GraphqlServiceApi, GraphqlServiceOption } from '@slickgrid-universal/graphql';
+import {
+  BackendService,
+  BackendServiceApi,
+  CollectionService,
+  Column,
+  CurrentFilter,
+  CurrentPagination,
+  CurrentSorter,
+  Editors,
+  ExtensionService,
+  ExtensionUtility,
+  Filters,
+  FilterService,
+  GridEventService,
+  GridService,
+  GridState,
+  GridStateService,
+  GridStateType,
+  GroupingAndColspanService,
+  Pagination,
+  PaginationService,
+  ServicePagination,
+  SharedService,
+  SlickNamespace,
+  SortService,
+  TreeDataService,
+} from '@slickgrid-universal/common';
+import { BindingEngine, BindingLanguage, Container, ViewCompiler, ViewResources } from 'aurelia-framework';
 import { BindingSignaler } from 'aurelia-templating-resources';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { HttpClient } from 'aurelia-fetch-client';
@@ -7,42 +35,9 @@ import { DOM } from 'aurelia-pal';
 import { I18N } from 'aurelia-i18n';
 
 import { AureliaSlickgridCustomElement } from '../aurelia-slickgrid';
-import { ExtensionUtility } from '../../extensions';
-import {
-  ExcelExportService,
-  ExportService,
-  ExtensionService,
-  FilterService,
-  GraphqlService,
-  GridService,
-  GridEventService,
-  GridStateService,
-  GroupingAndColspanService,
-  PaginationService,
-  ResizerService,
-  SharedService,
-  SortService,
-  TreeDataService,
-} from '../../services';
-import {
-  BackendService,
-  BackendServiceApi,
-  Column,
-  CurrentFilter,
-  CurrentPagination,
-  GraphqlPaginatedResult,
-  GraphqlServiceApi,
-  GraphqlServiceOption,
-  CurrentSorter,
-  GridOption,
-  GridState,
-  GridStateType,
-  Pagination,
-  ServicePagination,
-} from '../../models';
-import { Filters } from '../../filters';
-import { Editors } from '../../editors';
-import * as utilities from '../../services/backend-utilities';
+import { ResizerService, UniversalTranslateService } from '../../services';
+import { GridOption } from '../../models';
+import * as utilities from '@slickgrid-universal/common/dist/commonjs/services/backend-utilities';
 import { SlickEmptyWarningComponent } from '../slick-empty-warning.component';
 
 const mockExecuteBackendProcess = jest.fn();
@@ -53,7 +48,7 @@ const mockRefreshBackendDataset = jest.fn();
 const mockBackendError = jest.fn();
 (utilities.onBackendError as any) = mockBackendError;
 
-declare const Slick: any;
+declare const Slick: SlickNamespace;
 jest.mock('flatpickr', () => { });
 const sharedService = new SharedService();
 
@@ -63,15 +58,11 @@ const bindingEngineStub = {
   })
 } as unknown as BindingEngine;
 
-const excelExportServiceStub = {
-  init: jest.fn(),
-  dispose: jest.fn(),
-} as unknown as ExcelExportService;
-
-const exportServiceStub = {
-  init: jest.fn(),
-  dispose: jest.fn(),
-} as unknown as ExportService;
+const collectionServiceStub = {
+  filterCollection: jest.fn(),
+  singleFilterCollection: jest.fn(),
+  sortCollection: jest.fn(),
+} as unknown as CollectionService;
 
 const extensionServiceStub = {
   bindDifferentExtensions: jest.fn(),
@@ -144,6 +135,13 @@ const paginationServiceStub = {
   dispose: jest.fn(),
   updateTotalItems: jest.fn(),
 } as unknown as PaginationService;
+
+const translateServiceStub = {
+  getCurrentLanguage: jest.fn(),
+  use: jest.fn(),
+  setup: jest.fn(),
+  translate: jest.fn(),
+} as unknown as UniversalTranslateService;
 
 Object.defineProperty(paginationServiceStub, 'totalItems', {
   get: jest.fn(() => 0),
@@ -260,7 +258,7 @@ jest.mock('slickgrid/slick.grid', () => mockGridImplementation);
 jest.mock('slickgrid/plugins/slick.draggablegrouping', () => mockDraggableGroupingImplementation);
 Slick.Grid = mockGridImplementation;
 Slick.EventHandler = mockSlickCoreImplementation;
-Slick.Data = { DataView: mockDataViewImplementation, GroupItemMetadataProvider: mockGroupItemMetaProviderImplementation };
+(Slick as any).Data = { DataView: mockDataViewImplementation, GroupItemMetadataProvider: mockGroupItemMetaProviderImplementation };
 Slick.DraggableGrouping = mockDraggableGroupingImplementation;
 
 class HttpStub extends HttpClient {
@@ -314,7 +312,7 @@ class HttpStub extends HttpClient {
   }
 }
 
-describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () => {
+xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () => {
   let container: Container;
   let customElement: AureliaSlickgridCustomElement;
   let divContainer: HTMLDivElement;
@@ -323,10 +321,12 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
   let pluginEa: EventAggregator;
   let i18n: I18N;
   const http = new HttpStub();
+  let viewCompiler: ViewCompiler;
+  let viewResources: ViewResources;
 
   const template = `
   <div id="grid1" style="height: 800px; width: 600px;">
-      <div id="slickGridContainer-grid1" class="gridPane" style="width: 100%;">
+      <div id="slickGridContainer-grid1" class="grid-pane" style="width: 100%;">
       </div>
     </div>
   <aurelia-slickgrid
@@ -342,6 +342,8 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
     divContainer.innerHTML = template;
     divContainer.appendChild(cellDiv);
     document.body.appendChild(divContainer);
+    viewResources = new ViewResources();
+    viewCompiler = new ViewCompiler(new BindingLanguage(), viewResources);
 
     globalEa = new EventAggregator();
     pluginEa = new EventAggregator();
@@ -353,22 +355,25 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
       divContainer,
       globalEa,
       pluginEa,
-      excelExportServiceStub,
-      exportServiceStub,
-      extensionServiceStub,
-      mockExtensionUtility,
-      filterServiceStub,
-      gridEventServiceStub,
-      gridServiceStub,
-      gridStateServiceStub,
-      groupingAndColspanServiceStub,
-      i18n,
-      paginationServiceStub,
       resizerServiceStub,
-      sharedService,
       slickEmptyWarningStub,
-      sortServiceStub,
-      treeDataServiceStub,
+      translateServiceStub,
+      viewCompiler,
+      viewResources,
+      {
+        collectionService: collectionServiceStub,
+        extensionService: extensionServiceStub,
+        extensionUtility: mockExtensionUtility,
+        filterService: filterServiceStub,
+        gridEventService: gridEventServiceStub,
+        gridService: gridServiceStub,
+        gridStateService: gridStateServiceStub,
+        groupingAndColspanService: groupingAndColspanServiceStub,
+        paginationService: paginationServiceStub,
+        sharedService,
+        sortService: sortServiceStub,
+        treeDataService: treeDataServiceStub,
+      }
     );
 
     i18n.setup({
@@ -384,9 +389,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
     customElement.gridId = 'grid1';
     customElement.columnDefinitions = [{ id: 'name', field: 'name' }];
     customElement.dataset = [];
-    customElement.gridOptions = { enableExcelExport: false, dataView: null } as unknown as GridOption;
-    customElement.gridHeight = 600;
-    customElement.gridWidth = 800;
+    customElement.gridOptions = { dataView: null, gridHeight: 600, gridWidth: 800 } as unknown as GridOption;
   });
 
   it('should make sure Aurelia-Slickgrid is defined', () => {
@@ -702,7 +705,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
           },
           dataView: { syncGridSelection: true, syncGridSelectionWithBackendService: true },
           enableRowSelection: true
-        } as GridOption;
+        } as unknown as GridOption;
         customElement.bind();
         customElement.attached();
 
@@ -720,7 +723,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
           },
           dataView: { syncGridSelection: false, syncGridSelectionWithBackendService: true },
           enableRowSelection: true
-        } as GridOption;
+        } as unknown as GridOption;
         customElement.bind();
         customElement.attached();
 
@@ -738,7 +741,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
           },
           dataView: { syncGridSelection: true, syncGridSelectionWithBackendService: false },
           enableRowSelection: true
-        } as GridOption;
+        } as unknown as GridOption;
         customElement.bind();
         customElement.attached();
 
@@ -806,26 +809,6 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
         const spy = jest.spyOn(extensionServiceStub, 'translateColumnHeaders');
 
         customElement.gridOptions = { enableTranslate: true } as GridOption;
-        customElement.bind();
-        customElement.attached();
-
-        expect(spy).toHaveBeenCalled();
-      });
-
-      it('should initialize ExportService when "enableExport" is set', () => {
-        const spy = jest.spyOn(exportServiceStub, 'init');
-
-        customElement.gridOptions = { enableExport: true } as GridOption;
-        customElement.bind();
-        customElement.attached();
-
-        expect(spy).toHaveBeenCalled();
-      });
-
-      it('should initialize excelExportService when "enableExcelExport" is set', () => {
-        const spy = jest.spyOn(excelExportServiceStub, 'init');
-
-        customElement.gridOptions = { enableExcelExport: true } as GridOption;
         customElement.bind();
         customElement.attached();
 
@@ -901,7 +884,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
         customElement.gridOptions = {
           backendServiceApi: {
             onInit: jest.fn(),
-            service: mockGraphqlService as BackendService,
+            service: mockGraphqlService as unknown as BackendService,
             preProcess: jest.fn(),
             postProcess: jest.fn(),
             process: jest.fn(),
@@ -1266,9 +1249,9 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
             options: mockGraphqlOptions,
             preProcess: () => jest.fn(),
             process: () => new Promise((resolve) => resolve({ data: { users: { nodes: [], totalCount: 100 } } })),
-          } as GraphqlServiceApi,
+          } as unknown as GraphqlServiceApi,
           pagination: mockPagination,
-        } as GridOption;
+        } as unknown as GridOption;
         customElement.bind();
         customElement.attached();
 
@@ -1286,7 +1269,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
             preProcess: () => jest.fn(),
             process: () => new Promise((resolve) => resolve('process resolved')),
           }
-        } as GridOption;
+        } as unknown as GridOption;
         customElement.bind();
         customElement.attached();
 
@@ -1304,7 +1287,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
             preProcess: () => jest.fn(),
             process: () => new Promise((resolve) => resolve('process resolved')),
           }
-        } as GridOption;
+        } as unknown as GridOption;
         customElement.bind();
         customElement.attached();
 
@@ -1336,7 +1319,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
             preProcess: () => jest.fn(),
             process: () => new Promise((resolve) => resolve('process resolved')),
           }
-        } as GridOption;
+        } as unknown as GridOption;
         customElement.bind();
         customElement.attached();
 
@@ -1355,7 +1338,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
             preProcess: () => jest.fn(),
             process: () => new Promise((resolve) => resolve('process resolved')),
           }
-        } as GridOption;
+        } as unknown as GridOption;
         customElement.bind();
         customElement.attached();
 
@@ -1716,7 +1699,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
       it('should call the backend service API to refresh the dataset', (done) => {
         customElement.gridOptions.enablePagination = true;
         customElement.gridOptions.backendServiceApi = {
-          service: mockGraphqlService as BackendService,
+          service: mockGraphqlService as unknown as BackendService,
           process: jest.fn(),
         };
 

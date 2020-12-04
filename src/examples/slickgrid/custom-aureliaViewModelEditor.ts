@@ -3,7 +3,7 @@ import {
   Column,
   Editor,
   EditorValidator,
-  EditorValidatorOutput,
+  EditorValidationResult,
   GridOption,
 } from '../../aurelia-slickgrid';
 import { View, ViewSlot } from 'aurelia-framework';
@@ -174,7 +174,7 @@ export class CustomAureliaViewModelEditor implements Editor {
     return (!(this.selectedItem.id === '' && (this.defaultId === null || this.defaultId === undefined))) && (this.selectedItem.id !== this.defaultId);
   }
 
-  validate(): EditorValidatorOutput {
+  validate(): EditorValidationResult {
     if (this.validator) {
       const value = this.selectedItem.id;
       return this.validator(value, this.args);

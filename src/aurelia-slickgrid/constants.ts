@@ -1,4 +1,4 @@
-import { Locale } from './models/locale.interface';
+import { Locale } from '@slickgrid-universal/common';
 
 export class Constants {
   // English Locale texts when using only 1 Locale instead of I18N
@@ -73,17 +73,17 @@ export class Constants {
 
   // some of the Events from the Event Aggregator that are exposed to the outside as dispatch events
   // we define the internal name of the events and their alias used as dispatch events
-  static readonly exposedEvents: { name: string; alias: string; }[] = [
-    { name: 'excelExportService:onBeforeExportToExcel', alias: 'asg-on-before-export-to-excel' },
-    { name: 'excelExportService:onAfterExportToExcel', alias: 'asg-on-after-export-to-excel' },
-    { name: 'exportService:onBeforeExportToFile', alias: 'asg-on-before-export-to-file' },
-    { name: 'exportService:onAfterExportToFile', alias: 'asg-on-after-export-to-file' },
-    { name: 'gridStateService:changed', alias: 'asg-on-grid-state-changed' },
-    { name: 'gridService:onItemAdded', alias: 'asg-on-item-added' },
-    { name: 'gridService:onItemDeleted', alias: 'asg-on-item-deleted' },
-    { name: 'gridService:onItemUpdated', alias: 'asg-on-item-updated' },
-    { name: 'gridService:onItemUpserted', alias: 'asg-on-item-upserted' },
-    { name: 'resizerService:onBeforeResize', alias: 'asg-on-before-resize' },
-    { name: 'resizerService:onAfterResize', alias: 'asg-on-after-resize' },
+  static readonly exposedEvents = [
+    'onBeforeExportToExcel',
+    'onAfterExportToExcel',
+    'onBeforeExportToFile',
+    'onAfterExportToFile',
+    'onGridStateChanged',
+    'onItemAdded',
+    'onItemDeleted',
+    'onItemUpdated',
+    'onItemUpserted',
+    'onBeforeResize',
+    'onAfterResize',
   ];
 }

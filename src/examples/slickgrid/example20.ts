@@ -1,8 +1,8 @@
 import { autoinject } from 'aurelia-framework';
-import { AureliaGridInstance, ColumnEditorDualInput, Column, Formatters, GridOption, Filters, FieldType, formatNumber, Editors } from '../../aurelia-slickgrid';
+import { AureliaGridInstance, Column, ColumnEditorDualInput, Editors, FieldType, Filters, formatNumber, Formatters, GridOption, SlickNamespace } from '../../aurelia-slickgrid';
 import './example20.scss'; // provide custom CSS/SASS styling
 
-declare const Slick: any;
+declare const Slick: SlickNamespace;
 
 @autoinject()
 export class Example20 {
@@ -209,8 +209,8 @@ export class Example20 {
 
     this.gridOptions = {
       autoResize: {
-        containerId: 'demo-container',
-        sidePadding: 10
+        container: '#demo-container',
+        rightPadding: 10
       },
       enableCellNavigation: true,
       editable: true,

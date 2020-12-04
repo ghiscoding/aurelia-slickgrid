@@ -1,5 +1,5 @@
-import { Filters } from './filters/index';
-import { Column, DelimiterType, FileType, GridOption, OperatorType, RowDetailView } from './models/index';
+import { Column, DelimiterType, EventNamingStyle, FileType, Filters, OperatorType } from '@slickgrid-universal/common';
+import { GridOption, RowDetailView } from './models/index';
 
 /**
  * Default Options that can be passed to the Aurelia-Slickgrid
@@ -10,11 +10,12 @@ export const GlobalGridOptions: Partial<GridOption> = {
   asyncEditorLoading: false,
   autoFitColumnsOnFirstLoad: true,
   autoResize: {
+    applyResizeToContainer: true,
     calculateAvailableSizeBy: 'window',
     bottomPadding: 20,
     minHeight: 180,
     minWidth: 300,
-    sidePadding: 0
+    rightPadding: 0
   },
   cellHighlightCssClass: 'slick-cell-modified',
   checkboxSelector: {
@@ -106,6 +107,7 @@ export const GlobalGridOptions: Partial<GridOption> = {
   enableGridMenu: true,
   enableSorting: true,
   enableTextSelectionOnCells: true,
+  eventNamingStyle: EventNamingStyle.kebabCase,
   explicitInitialization: true,
   excelExportOptions: {
     addGroupIndentation: true,

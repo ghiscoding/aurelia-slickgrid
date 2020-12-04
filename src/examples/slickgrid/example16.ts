@@ -75,8 +75,8 @@ export class Example16 {
     this.gridOptions = {
       enableAutoResize: true,
       autoResize: {
-        containerId: 'demo-container',
-        sidePadding: 10
+        container: '#demo-container',
+        rightPadding: 10
       },
       enableFiltering: true,
       enableCheckboxSelector: true,

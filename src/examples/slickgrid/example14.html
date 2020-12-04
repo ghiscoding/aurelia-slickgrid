@@ -4,7 +4,7 @@
 
   <h3>Grid 1 <small>(with Header Grouping &amp; Colspan)</small></h3>
   <aurelia-slickgrid grid-id="grid1" column-definitions.bind="columnDefinitions1" grid-options.bind="gridOptions1"
-                     dataset.bind="dataset1" grid-height="275" grid-width="800">
+                     dataset.bind="dataset1">
   </aurelia-slickgrid>
 
   <hr />
@@ -22,7 +22,7 @@
   </div>
 
   <aurelia-slickgrid grid-id="grid2" column-definitions.bind="columnDefinitions2" grid-options.bind="gridOptions2"
-                     dataset.bind="dataset2" grid-height="275" grid-width="800"
+                     dataset.bind="dataset2"
                      asg-on-aurelia-grid-created.delegate="aureliaGridReady2($event.detail)">
   </aurelia-slickgrid>
 </template>

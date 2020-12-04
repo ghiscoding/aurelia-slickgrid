@@ -1,3 +1,5 @@
+import { ExcelExportService } from '@slickgrid-universal/excel-export';
+import { FileExportService } from '@slickgrid-universal/file-export';
 import { autoinject } from 'aurelia-framework';
 import {
   Aggregators,
@@ -11,7 +13,7 @@ import {
   GridOption,
   GroupingGetterFunction,
   GroupTotalFormatters,
-  Sorters,
+  SortComparers,
   SortDirectionNumber,
   Grouping,
 } from '../../aurelia-slickgrid';
@@ -44,6 +46,8 @@ export class Example18 {
   gridOptions: GridOption;
   processing = false;
   selectedGroupingFields: Array<string | GroupingGetterFunction> = ['', '', ''];
+  excelExportService = new ExcelExportService();
+  fileExportService = new FileExportService();
 
   constructor() {
     // define the grid options & columns and then create the grid itself
@@ -88,7 +92,7 @@ export class Example18 {
           getter: 'duration',
           formatter: (g) => `Duration: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
           comparer: (a, b) => {
-            return this.durationOrderByCount ? (a.count - b.count) : Sorters.numeric(a.value, b.value, SortDirectionNumber.asc);
+            return this.durationOrderByCount ? (a.count - b.count) : SortComparers.numeric(a.value, b.value, SortDirectionNumber.asc);
           },
           aggregators: [
             new Aggregators.Sum('cost')
@@ -199,8 +203,8 @@ export class Example18 {
 
     this.gridOptions = {
       autoResize: {
-        containerId: 'demo-container',
-        sidePadding: 10
+        container: '#demo-container',
+        rightPadding: 10
       },
       enableDraggableGrouping: true,
       createPreHeaderPanel: true,
@@ -226,7 +230,8 @@ export class Example18 {
         deleteIconCssClass: 'fa fa-times',
         onGroupChanged: (_e, args) => this.onGroupChanged(args),
         onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
-      }
+      },
+      registerExternalServices: [this.excelExportService, this.fileExportService],
     };
   }
 
@@ -280,14 +285,14 @@ export class Example18 {
   }
 
   exportToExcel() {
-    this.aureliaGrid.excelExportService.exportToExcel({
+    this.excelExportService.exportToExcel({
       filename: 'Export',
       format: FileType.xlsx
     });
   }
 
   exportToCsv(type = 'csv') {
-    this.aureliaGrid.exportService.exportToFile({
+    this.fileExportService.exportToFile({
       delimiter: (type === 'csv') ? DelimiterType.comma : DelimiterType.tab,
       filename: 'myExport',
       format: (type === 'csv') ? FileType.csv : FileType.txt
