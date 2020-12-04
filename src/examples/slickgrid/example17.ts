@@ -54,6 +54,7 @@ export class Example17 {
   constructor() {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
+    // @ts-ignore
     this.loaderDataView = new Slick.Data.RemoteModel();
     this.customDataView = this.loaderDataView && this.loaderDataView.data;
   }
