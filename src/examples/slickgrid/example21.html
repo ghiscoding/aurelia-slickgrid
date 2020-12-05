@@ -4,29 +4,32 @@
        innerhtml.bind="subTitle"></div>
 
   <form class="form-inline">
-    <div class="form-group">
-      <label>
-        Single Search:
-      </label>
-      <select data-test="search-column-list" value.bind="selectedColumn"
-              class="form-control">
-        <option repeat.for="column of columnDefinitions"
-                model.bind="column">
-          ${column.name}
-        </option>
-      </select>
-    </div>
-    <select data-test="search-operator-list" value.bind="selectedOperator"
-            class="form-control">
+    <label class="my-1 mr-2" for="columnSelect">Single Search:</label>
+    <select value.bind="selectedColumn" id="columnSelect"
+            data-test="search-column-list"
+            class="form-control mb-2 mr-sm-2">
+      <option repeat.for="column of columnDefinitions"
+              model.bind="column">
+        ${column.name}
+      </option>
+    </select>
+
+    <select value.bind="selectedOperator"
+            class="form-control mb-2 mr-sm-2"
+            data-test="search-operator-list">
       <option repeat.for="operator of operatorList"
               model.bind="operator">
         ${operator}
       </option>
     </select>
-    <input type="text" class="form-control"
-           placeholder="search value" data-test="search-value-input"
-           value.bind="searchValue">
+
+    <input type="text"
+           class="form-control mb-2 mr-sm-2"
+           placeholder="search value"
+           data-test="search-value-input"
+           value.bind="searchValue" />
   </form>
+
   <hr />
 
   <aurelia-slickgrid grid-id="grid21"

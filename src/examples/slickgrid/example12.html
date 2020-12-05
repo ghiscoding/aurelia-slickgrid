@@ -5,7 +5,7 @@
   <hr />
 
   <div class="row">
-    <button class="btn btn-default btn-sm" click.delegate="switchLanguage()" data-test="language-button">
+    <button class="btn btn-outline-secondary btn-sm" data-test="language-button" click.delegate="switchLanguage()">
       <i class="fa fa-language"></i>
       Switch Language
     </button>
@@ -15,21 +15,21 @@
     </span>
 
     <span style="margin-left: 20px">
-      <button class="btn btn-default btn-sm" click.delegate="exportToFile('csv')">
+      <button class="btn btn-outline-secondary btn-sm" click.delegate="exportToFile('csv')">
         <i class="fa fa-download"></i>
         Download to CSV
       </button>
-      <button class="btn btn-default btn-sm" click.delegate="exportToFile('txt')">
+      <button class="btn btn-outline-secondary btn-sm" click.delegate="exportToFile('txt')">
         <i class="fa fa-download"></i>
         Download to Text
       </button>
-      <button class="btn btn-default btn-sm" click.delegate="exportToExcel()">
+      <button class="btn btn-outline-secondary btn-sm" click.delegate="exportToExcel()">
         <i class="fa fa-file-excel-o text-success"></i>
         Download to Excel
       </button>
     </span>
     <span style="margin-left: 10px">
-      <button class="btn btn-default btn-sm" click.delegate="dynamicallyAddTitleHeader()">
+      <button class="btn btn-outline-secondary btn-sm" click.delegate="dynamicallyAddTitleHeader()">
         <i class="fa fa-plus"></i>
         Dynamically Duplicate Title Column
       </button>

@@ -10,18 +10,20 @@
   </span>
 
   <form class="form-inline">
-    <button class="btn btn-default btn-sm" data-test="clear-filters"
+    <button class="btn btn-outline-secondary btn-sm" data-test="clear-filters"
             click.delegate="aureliaGrid.filterService.clearFilters()">
       Clear Filters
     </button>
-    <button class="btn btn-default btn-sm" data-test="clear-sorting"
+    <button class="btn btn-outline-secondary btn-sm" data-test="clear-sorting"
             click.delegate="aureliaGrid.sortService.clearSorting()">
       Clear Sorting
     </button>
-    <button class="btn btn-default btn-sm" data-test="set-dynamic-filter" click.delegate="setFiltersDynamically()">
+    <button class="btn btn-outline-secondary btn-sm" data-test="set-dynamic-filter"
+            click.delegate="setFiltersDynamically()">
       Set Filters Dynamically
     </button>
-    <button class="btn btn-default btn-sm" data-test="set-dynamic-sorting" click.delegate="setSortingDynamically()">
+    <button class="btn btn-outline-secondary btn-sm" data-test="set-dynamic-sorting"
+            click.delegate="setSortingDynamically()">
       Set Sorting Dynamically
     </button>
 
@@ -33,7 +35,7 @@
   </form>
 
   <div class="row">
-    <button class="btn btn-default btn-sm" data-test="language" click.delegate="switchLanguage()">
+    <button class="btn btn-outline-secondary btn-sm" data-test="language" click.delegate="switchLanguage()">
       <i class="fa fa-language"></i>
       Switch Language
     </button>

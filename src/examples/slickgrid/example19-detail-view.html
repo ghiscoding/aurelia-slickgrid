@@ -1,17 +1,17 @@
 <template>
-  <div class="container-fluid">
+  <div class="container" style="margin-top: 10px">
     <h3>${model.title}</h3>
     <div class="row">
-      <div class="col-xs-3"><label>Assignee:</label> <input class="form-control" value.bind="model.assignee" /></div>
-      <div class="col-xs-3"><label>Reporter:</label> <span>${model.reporter}</span></div>
-      <div class="col-xs-2"><label>Duration:</label> <span>${model.duration}</span></div>
-      <div class="col-xs-2"><label>% Complete:</label> <span>${model.percentComplete}</span></div>
+      <div class="col-3"><label>Assignee:</label> <input class="form-control" value.bind="model.assignee" /></div>
+      <div class="col-3"><label>Reporter:</label> <span>${model.reporter}</span></div>
+      <div class="col-2"><label>Duration:</label> <span>${model.duration}</span></div>
+      <div class="col-2"><label>% Complete:</label> <span>${model.percentComplete}</span></div>
     </div>
 
     <div class="row">
-      <div class="col-xs-3"><label>Start:</label> <span>${model.start | dateFormat: 'YYYY-MM-DD'}</span></div>
-      <div class="col-xs-3"><label>Finish:</label> <span>${model.finish | dateFormat: 'YYYY-MM-DD'}</span></div>
-      <div class="col-xs-2"><label>Effort Driven:</label> <i class.bind="model.effortDriven ? 'fa fa-check' : ''"></i>
+      <div class="col-3"><label>Start:</label> <span>${model.start | dateFormat: 'YYYY-MM-DD'}</span></div>
+      <div class="col-3"><label>Finish:</label> <span>${model.finish | dateFormat: 'YYYY-MM-DD'}</span></div>
+      <div class="col-2"><label>Effort Driven:</label> <i class.bind="model.effortDriven ? 'fa fa-check' : ''"></i>
       </div>
     </div>
 
@@ -33,7 +33,7 @@
       <button class="btn btn-primary btn-danger btn-sm" click.delegate="deleteRow(model)" data-test="delete-btn">
         Delete Row
       </button>
-      <button class="btn btn-default btn-sm" click.delegate="callParentMethod(model)" data-test="parent-btn">
+      <button class="btn btn-outline-secondary btn-sm" click.delegate="callParentMethod(model)" data-test="parent-btn">
         Call Parent Method
       </button>
     </div>

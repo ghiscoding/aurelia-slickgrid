@@ -12,8 +12,8 @@
   "screenshotsFolder": "screenshots",
   "supportFile": "support/index.js",
   "videosFolder": "videos",
-  "defaultCommandTimeout": 30000,
-  "pageLoadTimeout": 30000,
+  "defaultCommandTimeout": 10000,
+  "pageLoadTimeout": 50000,
   "retries": {
     "runMode": 2,
     "openMode": 0

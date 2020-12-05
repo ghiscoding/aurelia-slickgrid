@@ -4,31 +4,35 @@
        innerhtml.bind="subTitle"></div>
 
   <div>
-
-    <!-- Nav tabs -->
     <ul class="nav nav-tabs"
+        id="myTab"
         role="tablist">
-      <li role="presentation"
-          class="active">
-        <a href="#javascript"
+      <li class="nav-item">
+        <a class="nav-link active"
+           id="javascript-tab"
+           data-toggle="tab"
+           href="#javascript"
+           role="tab"
            aria-controls="javascript"
-           role="tab"
-           data-toggle="tab">Javascript</a>
+           aria-selected="true">Javascript</a>
       </li>
-      <li role="presentation">
-        <a href="#httpFetch"
-           aria-controls="httpFetch"
+      <li class="nav-item">
+        <a class="nav-link"
+           id="fetch-tab"
+           data-toggle="tab"
+           href="#fetch"
            role="tab"
-           click.delegate="resizeGrid2()"
-           data-toggle="tab">Http-Fetch</a>
+           aria-controls="fetch"
+           aria-selected="false">Fetch-Client</a>
       </li>
     </ul>
 
-    <!-- Tab panes -->
-    <div class="tab-content">
-      <div role="tabpanel"
-           class="tab-pane active"
-           id="javascript">
+    <div class="tab-content"
+         id="myTabContent">
+      <div class="tab-pane fade show active"
+           id="javascript"
+           role="tabpanel"
+           aria-labelledby="javascript-tab">
         <h4>Grid 1 - Load Local Data</h4>
         <aurelia-slickgrid grid-id="grid1"
                            column-definitions.bind="columnDefinitions1"
@@ -36,9 +40,10 @@
                            dataset.bind="dataset1">
         </aurelia-slickgrid>
       </div>
-      <div role="tabpanel"
-           class="tab-pane"
-           id="httpFetch">
+      <div class="tab-pane fade"
+           id="fetch"
+           role="tabpanel"
+           aria-labelledby="fetch-tab">
         <h4>Grid 2 - Load a JSON dataset through Fetch-Client</h4>
         <aurelia-slickgrid grid-id="grid2"
                            column-definitions.bind="columnDefinitions2"
@@ -48,7 +53,6 @@
         </aurelia-slickgrid>
       </div>
     </div>
-
   </div>
 
 </template>

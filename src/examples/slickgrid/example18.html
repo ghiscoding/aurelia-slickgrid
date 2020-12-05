@@ -2,48 +2,52 @@
   <h2>${title}</h2>
   <div class="subtitle" innerhtml.bind="subTitle"></div>
 
-  <form>
+  <form class="form-inline">
     <div class="row col-sm-12">
-      <button class="btn btn-default btn-xs" data-test="add-500-rows-btn" click.delegate="loadData(500)">
+      <button class="btn btn-outline-secondary btn-xs" data-test="add-500-rows-btn" click.delegate="loadData(500)">
         500 rows
       </button>
-      <button class="btn btn-default btn-xs" data-test="add-50k-rows-btn" click.delegate="loadData(50000)">
+      <button class="btn btn-outline-secondary btn-xs" data-test="add-50k-rows-btn" click.delegate="loadData(50000)">
         50k rows
       </button>
-      <button class="btn btn-default btn-xs" data-test="clear-grouping-btn" click.delegate="clearGroupsAndSelects()">
+      <button class="btn btn-outline-secondary btn-xs" data-test="clear-grouping-btn"
+              click.delegate="clearGroupsAndSelects()">
         <i class="fa fa-times"></i> Clear grouping
       </button>
-      <button class="btn btn-default btn-xs" data-test="collapse-all-btn" click.delegate="collapseAllGroups()">
+      <button class="btn btn-outline-secondary btn-xs" data-test="collapse-all-btn"
+              click.delegate="collapseAllGroups()">
         <i class="fa fa-compress"></i> Collapse all groups
       </button>
-      <button class="btn btn-default btn-xs" data-test="expand-all-btn" click.delegate="expandAllGroups()">
+      <button class="btn btn-outline-secondary btn-xs" data-test="expand-all-btn" click.delegate="expandAllGroups()">
         <i class="fa fa-expand"></i> Expand all groups
       </button>
-      <button class="btn btn-default btn-xs" click.delegate="toggleDraggableGroupingRow()">
+      <button class="btn btn-outline-secondary btn-xs" click.delegate="toggleDraggableGroupingRow()">
         Toggle Draggable Grouping Row
       </button>
-      <button class="btn btn-default btn-xs" click.delegate="exportToExcel()">
+      <button class="btn btn-outline-secondary btn-xs" click.delegate="exportToExcel()">
         <i class="fa fa-file-excel-o text-success"></i> Export to Excel
       </button>
     </div>
 
     <div class="row col-sm-12">
-      <button class="btn btn-default btn-xs" data-test="group-duration-sort-value-btn"
+      <button class="btn btn-outline-secondary btn-xs" data-test="group-duration-sort-value-btn"
               click.delegate="groupByDurationOrderByCount(false)">
         Group by duration &amp; sort groups by value
       </button>
-      <button class="btn btn-default btn-xs" data-test="group-duration-sort-count-btn"
+      <button class="btn btn-outline-secondary btn-xs" data-test="group-duration-sort-count-btn"
               click.delegate="groupByDurationOrderByCount(true)">
         Group by duration &amp; sort groups by count
       </button>
-      <button class="btn btn-default btn-xs" data-test="group-duration-effort-btn"
+      <button class="btn btn-outline-secondary btn-xs" data-test="group-duration-effort-btn"
               click.delegate="groupByDurationEffortDriven()">
         Group by Duration then Effort-Driven
       </button>
-      <button class="btn btn-default btn-xs" data-test="set-dynamic-filter" click.delegate="setFiltersDynamically()">
+      <button class="btn btn-outline-secondary btn-xs" data-test="set-dynamic-filter"
+              click.delegate="setFiltersDynamically()">
         Set Filters Dynamically
       </button>
-      <button class="btn btn-default btn-xs" data-test="set-dynamic-sorting" click.delegate="setSortingDynamically()">
+      <button class="btn btn-outline-secondary btn-xs" data-test="set-dynamic-sorting"
+              click.delegate="setSortingDynamically()">
         Set Sorting Dynamically
       </button>
     </div>
@@ -53,23 +57,29 @@
     </div>
 
     <div class="row col-sm-12">
-      <div class="form-group">
-        <label for="field1" class="col-sm-2 control-label">Group by field(s)</label>
-        <div class="col-sm-3" repeat.for="groupField of selectedGroupingFields">
-          <select class="form-control col-sm-6" change.delegate="groupByFieldName(column.id, $index)"
-                  value.bind="selectedGroupingFields[$index]">
-            <option model.bind="''">...</option>
-            <option model.bind="column.id" repeat.for="column of columnDefinitions">${column.name}</option>
-          </select>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="field1" class="col-sm-3 mb-2">Group by field(s)</label>
+          <div class="form-group col-md-3" repeat.for="groupField of selectedGroupingFields">
+            <select class="form-control" change.delegate="groupByFieldName(column.id, $index)"
+                    value.bind="selectedGroupingFields[$index]">
+              <option model.bind="''">...</option>
+              <option model.bind="column.id" repeat.for="column of columnDefinitions">${column.name}</option>
+            </select>
+          </div>
         </div>
       </div>
+    </div>
   </form>
 
   <div class="col-sm-12">
     <hr>
   </div>
 
-  <aurelia-slickgrid grid-id="grid18" column-definitions.bind="columnDefinitions" grid-options.bind="gridOptions"
-                     dataset.bind="dataset" asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
+  <aurelia-slickgrid grid-id="grid18"
+                     column-definitions.bind="columnDefinitions"
+                     grid-options.bind="gridOptions"
+                     dataset.bind="dataset"
+                     asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
   </aurelia-slickgrid>
 </template>

@@ -1,7 +1,16 @@
 /* make sure to add the @import the SlickGrid Bootstrap Theme AFTER the variables changes */
 @import 'aurelia-slickgrid/styles/slickgrid-theme-bootstrap.scss';
 
-$navbar-height: 50px;
+.btn-group-xs > .btn, .btn-xs {
+  padding  : 6px 2px;
+  font-size  : .875rem;
+  line-height  : .5;
+  border-radius : .2rem;
+  margin: 0 2px;
+  font-size: 12px;
+}
+
+$navbar-height: 56px;
 $side-menu-width: 250px;
 
 body {
@@ -16,7 +25,9 @@ body {
 .faded:hover {
   opacity: 0.5;
 }
-
+.btn {
+  padding: 5px;
+}
 .page-host {
   position: absolute;
   left: 0;
@@ -47,13 +58,13 @@ body {
   opacity: 0.5;
 }
 .btn:focus, .btn:active:focus, .btn.active:focus {
-  outline: 0 none;
+outline: 0 none;
 }
 
 /** Sidebar (left) and Content (right) */
 @media (min-width: 1200px) {
   .panel-wm-content .container {
-    width: calc(1170px - #{$side-menu-width});
+      width: calc(1170px - $side-menu-width);
   }
 }
 
@@ -62,6 +73,10 @@ body {
 
   .nav-stacked {
     padding-bottom: 30px;
+
+    .nav-item {
+      width: 100%;
+    }
   }
 
   .nav > li > a {
@@ -88,9 +103,8 @@ body {
     width: $side-menu-width;
   }
 }
-
 .github-button-container {
   position: relative;
-  top: 14px;
-  margin-left: 5px;
+  top: 6px;
+  margin: 0 5px;
 }

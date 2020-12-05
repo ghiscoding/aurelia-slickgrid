@@ -6,10 +6,11 @@
   <div class="row">
     <div class="col-sm-4" style="max-width: 170px;">
       Pagination
-      <button class="btn btn-default btn-xs" data-test="goto-first-page" click.delegate="goToGrid1FirstPage()">
+      <button class="btn btn-outline-secondary btn-xs" data-test="goto-first-page"
+              click.delegate="goToGrid1FirstPage()">
         <i class="fa fa-caret-left fa-lg"></i>
       </button>
-      <button class="btn btn-default btn-xs" data-test="goto-last-page" click.delegate="goToGrid1LastPage()">
+      <button class="btn btn-outline-secondary btn-xs" data-test="goto-last-page" click.delegate="goToGrid1LastPage()">
         <i class="fa fa-caret-right fa-lg"></i>
       </button>
     </div>
@@ -30,7 +31,7 @@
                      asg-on-grid-state-changed.delegate="grid1StateChanged($event.detail)"
                      sg-on-selected-rows-changed.delegate="onGrid1SelectedRowsChanged($event.detail.eventData, $event.detail.args)">
   </aurelia-slickgrid>
-
+  <br><br>
   <hr>
 
   <div class="row">
@@ -42,10 +43,12 @@
                data-test="toggle-pagination-grid2" />
       </label>
       <span style="margin-left: 5px" *ngIf="isGrid2WithPagination">
-        <button class="btn btn-default btn-xs" data-test="goto-first-page" click.delegate="goToGrid2FirstPage()">
+        <button class="btn btn-outline-secondary btn-xs" data-test="goto-first-page"
+                click.delegate="goToGrid2FirstPage()">
           <i class="fa fa-caret-left fa-lg"></i>
         </button>
-        <button class="btn btn-default btn-xs" data-test="goto-last-page" click.delegate="goToGrid2LastPage()">
+        <button class="btn btn-outline-secondary btn-xs" data-test="goto-last-page"
+                click.delegate="goToGrid2LastPage()">
           <i class="fa fa-caret-right fa-lg"></i>
         </button>
       </span>
