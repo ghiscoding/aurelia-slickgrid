@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.23.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.23.0...v2.23.1) (2020-12-05)
+
+
+### Features
+
+* **core:** add enableMouseWheelScrollHandler grid option ([#468](https://github.com/ghiscoding/aurelia-slickgrid/issues/468)) ([412b93d](https://github.com/ghiscoding/aurelia-slickgrid/commit/412b93db7c43a8ee5abc838874c778d4deebbd05)), closes [#618](https://github.com/ghiscoding/aurelia-slickgrid/issues/618) [#619](https://github.com/ghiscoding/aurelia-slickgrid/issues/619) [#555](https://github.com/ghiscoding/aurelia-slickgrid/issues/555)
+
+
+### Bug Fixes
+
+* **core:** showing/hiding column shouldn't affect its freezing position ([c2794cc](https://github.com/ghiscoding/aurelia-slickgrid/commit/c2794cc90296e7d160b3c6ea2548343cad5508d6))
+* **formatters:** date US Formatters should accept ISO date input ([#467](https://github.com/ghiscoding/aurelia-slickgrid/issues/467)) ([fbffe5d](https://github.com/ghiscoding/aurelia-slickgrid/commit/fbffe5d08314e8a1b8292c43a3e15cb172a1396e))
+
 ## [2.23.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v2.22.2...v2.23.0) (2020-11-20)
 
 
