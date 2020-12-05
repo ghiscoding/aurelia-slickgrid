@@ -2,37 +2,39 @@ import { TranslaterService, TranslateServiceEventName } from '@slickgrid-univers
 import { inject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 
-interface Locales {
-  [locale: string]: string;
-}
-
-interface TranslateOptions {
-  loadPath: string;
-  lang: string;
-}
-
 /**
- * This is a Translate Service Wrapper for Slickgrid-Universal,
+ * This is a Translate Service Wrapper for Slickgrid-Universal monorepo lib to work properly,
  * it must implement Slickgrid-Universal TranslaterService interface to work properly
  */
 @inject(I18N)
 export class UniversalTranslateService implements TranslaterService {
+  // TODO - remove this unused variable on the next version, but keep it for now just to make the compiler happy
   eventName = 'onLanguageChange' as TranslateServiceEventName;
 
   constructor(private i18n: I18N) { }
 
+  /**
+   * Method to return the current language used by the App
+   * @return {string} current language
+   */
   getCurrentLanguage(): string {
     return this.i18n.getLocale();
   }
 
-  async use(newLang: string): Promise<Locales> {
+  /**
+   * Method to set the language to use in the App and Translate Service
+   * @param {string} language
+   * @return {Promise} output
+   */
+  async use(newLang: string): Promise<any> {
     return this.i18n.setLocale(newLang);
   }
 
-  setup(options: TranslateOptions) {
-    this.i18n.setup(options);
-  }
-
+  /**
+   * Method which receives a translation key and returns the translated value assigned to that key
+   * @param {string} translation key
+   * @return {string} translated value
+   */
   translate(translationKey: string): string {
     return this.i18n.tr(translationKey);
   }

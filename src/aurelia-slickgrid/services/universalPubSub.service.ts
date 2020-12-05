@@ -4,7 +4,7 @@ import { Subscription } from 'aurelia-event-aggregator';
 import { SlickgridEventAggregator } from '../custom-elements/slickgridEventAggregator';
 
 /**
- * This is a Pub/Sub Service Wrapper for Slickgrid-Universal,
+ * This is a Pub/Sub Service Wrapper for Slickgrid-Universal monorepo lib to work properly,
  * it must implement Slickgrid-Universal PubSubService interface to work properly
  */
 @inject(SlickgridEventAggregator)
