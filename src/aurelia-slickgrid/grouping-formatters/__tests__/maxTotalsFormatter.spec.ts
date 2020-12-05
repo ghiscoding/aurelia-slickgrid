@@ -8,7 +8,7 @@ describe('maxTotalsFormatter', () => {
   };
 
   it('should display an empty string when no value is provided', () => {
-    const output = maxTotalsFormatter({}, {} as Column);
+    const output = maxTotalsFormatter({}, {} as Column, {});
     expect(output).toBe('');
   });
 
@@ -140,7 +140,8 @@ describe('maxTotalsFormatter', () => {
         id: 'column3',
         field: 'column3',
         params: { minDecimal: 3, displayNegativeNumberWithParentheses: true, groupFormatterPrefix: 'Max: ', groupFormatterSuffix: '/item' }
-      } as Column
+      } as Column,
+      {} as any
     );
 
     expect(output1).toBe('Max: 123.46');
@@ -157,7 +158,9 @@ describe('maxTotalsFormatter', () => {
       totals, {
         id: 'column3', field: 'column3',
         params: { minDecimal: 3, displayNegativeNumberWithParentheses: true, groupFormatterPrefix: 'Max: ', groupFormatterSuffix: '/item', decimalSeparator: ',', thousandSeparator: '_' }
-      } as Column);
+      } as Column,
+      {} as any
+    );
 
     expect(output1).toBe('Max: 12_345_678,46');
     expect(output2).toBe('345_678,2 (max)');

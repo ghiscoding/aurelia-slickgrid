@@ -8,7 +8,7 @@ describe('sumTotalsDollarBoldFormatter', () => {
   };
 
   it('should display an empty string when no value is provided', () => {
-    const output = sumTotalsDollarBoldFormatter({}, {} as Column);
+    const output = sumTotalsDollarBoldFormatter({}, {} as Column, {});
     expect(output).toBe('');
   });
 
@@ -140,7 +140,8 @@ describe('sumTotalsDollarBoldFormatter', () => {
         id: 'column3',
         field: 'column3',
         params: { minDecimal: 3, displayNegativeNumberWithParentheses: true, groupFormatterPrefix: 'sum: ', groupFormatterSuffix: '/item' }
-      } as Column
+      } as Column,
+      {} as any
     );
 
     expect(output1).toBe('<b>sum: $123.46</b>');
@@ -157,7 +158,9 @@ describe('sumTotalsDollarBoldFormatter', () => {
       totals, {
         id: 'column3', field: 'column3',
         params: { minDecimal: 3, displayNegativeNumberWithParentheses: true, groupFormatterPrefix: 'Sum: ', groupFormatterSuffix: '/item', decimalSeparator: ',', thousandSeparator: '_' }
-      } as Column);
+      } as Column,
+      {} as any
+    );
 
     expect(output1).toBe('<b>Sum: $12_345_678,46</b>');
     expect(output2).toBe('<b>$345_678,2 (sum)</b>');

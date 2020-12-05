@@ -54,7 +54,7 @@ describe('the Translate Formatter', () => {
 
   it('should return the translated value when value passed is a string and i18n service is passed as a ColumnDef Params without any Grid object', async () => {
     await i18n.setLocale('fr');
-    const output = translateFormatter(1, 1, 'HELLO', { params: { i18n } } as Column, {});
+    const output = translateFormatter(1, 1, 'HELLO', { params: { i18n } } as Column, {}, {});
     expect(output).toBe('Bonjour');
   });
 
