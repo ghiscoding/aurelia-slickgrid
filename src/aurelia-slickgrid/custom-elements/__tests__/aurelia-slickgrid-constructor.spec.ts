@@ -30,7 +30,6 @@ import {
 import { BindingEngine, BindingLanguage, Container, ViewCompiler, ViewResources } from 'aurelia-framework';
 import { BindingSignaler } from 'aurelia-templating-resources';
 import { EventAggregator } from 'aurelia-event-aggregator';
-import { HttpClient } from 'aurelia-fetch-client';
 import { DOM } from 'aurelia-pal';
 import { I18N } from 'aurelia-i18n';
 
@@ -39,6 +38,7 @@ import { ResizerService, UniversalTranslateService } from '../../services';
 import { GridOption } from '../../models';
 import * as utilities from '@slickgrid-universal/common/dist/commonjs/services/backend-utilities';
 import { SlickEmptyWarningComponent } from '../slick-empty-warning.component';
+import { HttpStub } from '../../../../test/httpClientStub';
 
 const mockExecuteBackendProcess = jest.fn();
 const mockRefreshBackendDataset = jest.fn();
@@ -112,6 +112,7 @@ const filterServiceStub = {
 const gridEventServiceStub = {
   init: jest.fn(),
   dispose: jest.fn(),
+  bindOnBeforeEditCell: jest.fn(),
   bindOnCellChange: jest.fn(),
   bindOnClick: jest.fn(),
 } as unknown as GridEventService;
@@ -149,9 +150,8 @@ Object.defineProperty(paginationServiceStub, 'totalItems', {
 });
 
 const resizerServiceStub = {
-  init: jest.fn(),
   dispose: jest.fn(),
-  bindAutoResizeDataGrid: jest.fn(),
+  init: jest.fn(),
   resizeGrid: jest.fn(),
 } as unknown as ResizerService;
 
@@ -261,58 +261,7 @@ Slick.EventHandler = mockSlickCoreImplementation;
 (Slick as any).Data = { DataView: mockDataViewImplementation, GroupItemMetadataProvider: mockGroupItemMetaProviderImplementation };
 Slick.DraggableGrouping = mockDraggableGroupingImplementation;
 
-class HttpStub extends HttpClient {
-  status: number;
-  statusText: string;
-  object: any = {};
-  returnKey: string;
-  returnValue: any;
-  responseHeaders: any;
-
-  fetch(input, init) {
-    let request;
-    const responseInit: any = {};
-    responseInit.headers = new Headers();
-
-    for (const name in this.responseHeaders || {}) {
-      if (name) {
-        responseInit.headers.set(name, this.responseHeaders[name]);
-      }
-    }
-
-    responseInit.status = this.status || 200;
-
-    if (Request.prototype.isPrototypeOf(input)) {
-      request = input;
-    } else {
-      request = new Request(input, init || {});
-    }
-    if (request.body && request.body.type) {
-      request.headers.set('Content-Type', request.body.type);
-    }
-
-    const promise = Promise.resolve().then(() => {
-      if (request.headers.get('Content-Type') === 'application/json' && request.method !== 'GET') {
-        return request.json().then((object) => {
-          object[this.returnKey] = this.returnValue;
-          const data = JSON.stringify(object);
-          const response = new Response(data, responseInit);
-          return this.status >= 200 && this.status < 300 ? Promise.resolve(response) : Promise.reject(response);
-        });
-      } else {
-        const data = JSON.stringify(this.object);
-        const response = new Response(data, responseInit);
-        if (input === 'invalid-url') {
-          Object.defineProperty(response, 'bodyUsed', { writable: true, configurable: true, value: true });
-        }
-        return this.status >= 200 && this.status < 300 ? Promise.resolve(response) : Promise.reject(response);
-      }
-    });
-    return promise;
-  }
-}
-
-xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () => {
+describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () => {
   let container: Container;
   let customElement: AureliaSlickgridCustomElement;
   let divContainer: HTMLDivElement;
@@ -396,7 +345,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
     expect(customElement).toBeTruthy();
   });
 
-  it('should create a grid and expect multiple Event Aggregator being called', () => {
+  xit('should create a grid and expect multiple Event Aggregator being called', () => {
     const spy = jest.spyOn(globalEa, 'publish');
 
     customElement.attached();
@@ -410,18 +359,18 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
     expect(spy).toHaveBeenNthCalledWith(5, 'onAfterGridDestroyed', true);
   });
 
-  it('should load jQuery mousewheel when using a frozen grid', () => {
-    const loadSpy = jest.spyOn(customElement, 'loadJqueryMousewheelDynamically');
+  xit('should load enable jquery mousewheel scrolling when using a frozen grid', () => {
+    customElement.gridOptions.enableMouseWheelScrollHandler = undefined;
     customElement.gridOptions.frozenRow = 3;
+    customElement.initialization();
 
-    customElement.attached();
-
-    expect(loadSpy).toHaveBeenCalled();
+    expect(customElement.gridOptions.enableMouseWheelScrollHandler).toBeTrue();
   });
+
 
   describe('initialization method', () => {
     describe('columns definitions changed', () => {
-      it('should expect "translateColumnHeaders" being called when "enableTranslate" is set', () => {
+      xit('should expect "translateColumnHeaders" being called when "enableTranslate" is set', () => {
         const translateSpy = jest.spyOn(extensionServiceStub, 'translateColumnHeaders');
         const autosizeSpy = jest.spyOn(mockGrid, 'autosizeColumns');
         const updateSpy = jest.spyOn(customElement, 'updateColumnDefinitionsList');
@@ -440,7 +389,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         expect(renderSpy).toHaveBeenCalledWith(false, mockColDefs);
       });
 
-      it('should expect "renderColumnHeaders" being called when "enableTranslate" is disabled', () => {
+      xit('should expect "renderColumnHeaders" being called when "enableTranslate" is disabled', () => {
         const translateSpy = jest.spyOn(extensionServiceStub, 'translateColumnHeaders');
         const autosizeSpy = jest.spyOn(mockGrid, 'autosizeColumns');
         const updateSpy = jest.spyOn(customElement, 'updateColumnDefinitionsList');
@@ -464,7 +413,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         jest.clearAllMocks();
       });
 
-      it('should expect "autosizeColumns" being called when "autoFitColumnsOnFirstLoad" is set and we are on first page load', () => {
+      xit('should expect "autosizeColumns" being called when "autoFitColumnsOnFirstLoad" is set and we are on first page load', () => {
         const autosizeSpy = jest.spyOn(mockGrid, 'autosizeColumns');
         const refreshSpy = jest.spyOn(customElement, 'refreshGridData');
         const mockData = [{ firstName: 'John', lastName: 'Doe' }, { firstName: 'Jane', lastName: 'Smith' }];
@@ -478,7 +427,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         expect(refreshSpy).toHaveBeenCalledWith(mockData);
       });
 
-      it('should expect "autosizeColumns" NOT being called when "autoFitColumnsOnFirstLoad" is set but we are not on first page load', () => {
+      xit('should expect "autosizeColumns" NOT being called when "autoFitColumnsOnFirstLoad" is set but we are not on first page load', () => {
         const autosizeSpy = jest.spyOn(mockGrid, 'autosizeColumns');
         const refreshSpy = jest.spyOn(customElement, 'refreshGridData');
         const mockData = [{ firstName: 'John', lastName: 'Doe' }, { firstName: 'Jane', lastName: 'Smith' }];
@@ -492,7 +441,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         expect(refreshSpy).toHaveBeenCalledWith(mockData);
       });
 
-      it('should expect "autosizeColumns" NOT being called when "autoFitColumnsOnFirstLoad" is not set and we are on first page load', () => {
+      xit('should expect "autosizeColumns" NOT being called when "autoFitColumnsOnFirstLoad" is not set and we are on first page load', () => {
         const autosizeSpy = jest.spyOn(mockGrid, 'autosizeColumns');
         const refreshSpy = jest.spyOn(customElement, 'refreshGridData');
         const mockData = [{ firstName: 'John', lastName: 'Doe' }, { firstName: 'Jane', lastName: 'Smith' }];
@@ -508,7 +457,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
     });
 
     describe('with editors', () => {
-      it('should be able to load async editors with a regular Promise', (done) => {
+      xit('should be able to load async editors with a regular Promise', (done) => {
         const mockCollection = ['male', 'female'];
         const promise = new Promise((resolve) => resolve(mockCollection));
         const mockColDefs = [{ id: 'gender', field: 'gender', editor: { model: Editors.text, collectionAsync: promise } }] as Column[];
@@ -527,7 +476,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         });
       });
 
-      it('should be able to load async editors with as a Promise with content to simulate http-client', (done) => {
+      xit('should be able to load async editors with as a Promise with content to simulate http-client', (done) => {
         const mockCollection = ['male', 'female'];
         const promise = new Promise((resolve) => resolve({ content: mockCollection }));
         const mockColDefs = [{ id: 'gender', field: 'gender', editor: { model: Editors.text, collectionAsync: promise } }] as Column[];
@@ -546,7 +495,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         });
       });
 
-      it('should be able to load async editors with a Fetch Promise', (done) => {
+      xit('should be able to load async editors with a Fetch Promise', (done) => {
         const mockCollection = ['male', 'female'];
         http.status = 200;
         http.object = mockCollection;
@@ -570,7 +519,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         });
       });
 
-      it('should throw an error when Fetch Promise response bodyUsed is true', (done) => {
+      xit('should throw an error when Fetch Promise response bodyUsed is true', (done) => {
         const consoleSpy = jest.spyOn(global.console, 'warn').mockReturnValue();
         const mockCollection = ['male', 'female'];
         http.status = 200;
@@ -594,7 +543,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
     });
 
     describe('use grouping', () => {
-      it('should load groupItemMetaProvider to the DataView when using "draggableGrouping" feature', () => {
+      xit('should load groupItemMetaProvider to the DataView when using "draggableGrouping" feature', () => {
         const extensionSpy = jest.spyOn(mockExtensionUtility, 'loadExtensionDynamically');
         const dataviewSpy = jest.spyOn(mockDataViewImplementation.prototype, 'constructor');
         const groupMetaSpy = jest.spyOn(mockGroupItemMetaProviderImplementation.prototype, 'constructor');
@@ -612,7 +561,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         customElement.dispose();
       });
 
-      it('should load groupItemMetaProvider to the DataView when using "enableGrouping" feature', () => {
+      xit('should load groupItemMetaProvider to the DataView when using "enableGrouping" feature', () => {
         const extensionSpy = jest.spyOn(mockExtensionUtility, 'loadExtensionDynamically');
         const dataviewSpy = jest.spyOn(mockDataViewImplementation.prototype, 'constructor');
         const groupMetaSpy = jest.spyOn(mockGroupItemMetaProviderImplementation.prototype, 'constructor');
@@ -637,7 +586,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         jest.clearAllMocks();
       });
 
-      it('should call the onDataviewCreated emitter', () => {
+      xit('should call the onDataviewCreated emitter', () => {
         const spy = jest.spyOn(globalEa, 'publish');
 
         customElement.bind();
@@ -646,7 +595,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         expect(spy).toHaveBeenNthCalledWith(2, 'onDataviewCreated', expect.any(Object));
       });
 
-      it('should call the "executeAfterDataviewCreated" and "loadGridSorters" methods and Sorter Presets are provided in the Grid Options', () => {
+      xit('should call the "executeAfterDataviewCreated" and "loadGridSorters" methods and Sorter Presets are provided in the Grid Options', () => {
         const globalEaSpy = jest.spyOn(globalEa, 'publish');
         const sortSpy = jest.spyOn(sortServiceStub, 'loadGridSorters');
 
@@ -658,7 +607,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         expect(sortSpy).toHaveBeenCalled();
       });
 
-      it('should call the DataView "syncGridSelection" method with 2nd argument as True when the "dataView.syncGridSelection" grid option is enabled', () => {
+      xit('should call the DataView "syncGridSelection" method with 2nd argument as True when the "dataView.syncGridSelection" grid option is enabled', () => {
         jest.spyOn(mockGrid, 'getSelectionModel').mockReturnValue(true);
         const syncSpy = jest.spyOn(mockDataView, 'syncGridSelection');
 
@@ -669,7 +618,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         expect(syncSpy).toHaveBeenCalledWith(customElement.grid, true);
       });
 
-      it('should call the DataView "syncGridSelection" method with 2nd argument as False when the "dataView.syncGridSelection" grid option is disabled', () => {
+      xit('should call the DataView "syncGridSelection" method with 2nd argument as False when the "dataView.syncGridSelection" grid option is disabled', () => {
         jest.spyOn(mockGrid, 'getSelectionModel').mockReturnValue(true);
         const syncSpy = jest.spyOn(mockDataView, 'syncGridSelection');
 
@@ -680,7 +629,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         expect(syncSpy).toHaveBeenCalledWith(customElement.grid, false);
       });
 
-      it('should call the DataView "syncGridSelection" method with 3 arguments when the "dataView" grid option is provided as an object', () => {
+      xit('should call the DataView "syncGridSelection" method with 3 arguments when the "dataView" grid option is provided as an object', () => {
         jest.spyOn(mockGrid, 'getSelectionModel').mockReturnValue(true);
         const syncSpy = jest.spyOn(mockDataView, 'syncGridSelection');
 
@@ -694,7 +643,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         expect(syncSpy).toHaveBeenCalledWith(customElement.grid, true, false);
       });
 
-      it('should call the DataView "syncGridSelection" method when using BackendServiceApi and "syncGridSelectionWithBackendService" when the "dataView.syncGridSelection" grid option is enabled as well', () => {
+      xit('should call the DataView "syncGridSelection" method when using BackendServiceApi and "syncGridSelectionWithBackendService" when the "dataView.syncGridSelection" grid option is enabled as well', () => {
         jest.spyOn(mockGrid, 'getSelectionModel').mockReturnValue(true);
         const syncSpy = jest.spyOn(mockDataView, 'syncGridSelection');
 
@@ -712,7 +661,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         expect(syncSpy).toHaveBeenCalledWith(customElement.grid, true);
       });
 
-      it('should call the DataView "syncGridSelection" method with false as 2nd argument when using BackendServiceApi and "syncGridSelectionWithBackendService" BUT the "dataView.syncGridSelection" grid option is disabled', () => {
+      xit('should call the DataView "syncGridSelection" method with false as 2nd argument when using BackendServiceApi and "syncGridSelectionWithBackendService" BUT the "dataView.syncGridSelection" grid option is disabled', () => {
         jest.spyOn(mockGrid, 'getSelectionModel').mockReturnValue(true);
         const syncSpy = jest.spyOn(mockDataView, 'syncGridSelection');
 
@@ -730,7 +679,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         expect(syncSpy).toHaveBeenCalledWith(customElement.grid, false);
       });
 
-      it('should call the DataView "syncGridSelection" method with false as 2nd argument when using BackendServiceApi and "syncGridSelectionWithBackendService" disabled and the "dataView.syncGridSelection" grid option is enabled', () => {
+      xit('should call the DataView "syncGridSelection" method with false as 2nd argument when using BackendServiceApi and "syncGridSelectionWithBackendService" disabled and the "dataView.syncGridSelection" grid option is enabled', () => {
         jest.spyOn(mockGrid, 'getSelectionModel').mockReturnValue(true);
         const syncSpy = jest.spyOn(mockDataView, 'syncGridSelection');
 
@@ -748,7 +697,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         expect(syncSpy).toHaveBeenCalledWith(customElement.grid, false);
       });
 
-      it('should bind local filter when "enableFiltering" is set', () => {
+      xit('should bind local filter when "enableFiltering" is set', () => {
         const bindLocalSpy = jest.spyOn(filterServiceStub, 'bindLocalOnFilter');
 
         customElement.gridOptions = { enableFiltering: true } as GridOption;
@@ -758,7 +707,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         expect(bindLocalSpy).toHaveBeenCalledWith(mockGrid);
       });
 
-      it('should bind local sort when "enableSorting" is set', () => {
+      xit('should bind local sort when "enableSorting" is set', () => {
         const bindLocalSpy = jest.spyOn(sortServiceStub, 'bindLocalOnSort');
 
         customElement.gridOptions = { enableSorting: true } as GridOption;
@@ -775,7 +724,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         customElement.dispose();
       });
 
-      it('should call "showHeaderRow" method with false when its flag is disabled', () => {
+      xit('should call "showHeaderRow" method with false when its flag is disabled', () => {
         const gridSpy = jest.spyOn(mockGrid, 'setHeaderRowVisibility');
 
         customElement.gridOptions = { showHeaderRow: false } as GridOption;
@@ -785,7 +734,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         expect(gridSpy).toHaveBeenCalledWith(false, false);
       });
 
-      it('should initialize groupingAndColspanService when "createPreHeaderPanel" grid option is enabled and "enableDraggableGrouping" is disabled', () => {
+      xit('should initialize groupingAndColspanService when "createPreHeaderPanel" grid option is enabled and "enableDraggableGrouping" is disabled', () => {
         const spy = jest.spyOn(groupingAndColspanServiceStub, 'init');
 
         customElement.gridOptions = { createPreHeaderPanel: true, enableDraggableGrouping: false } as GridOption;
@@ -795,7 +744,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         expect(spy).toHaveBeenCalledWith(mockGrid, mockDataView);
       });
 
-      it('should not initialize groupingAndColspanService when "createPreHeaderPanel" grid option is enabled and "enableDraggableGrouping" is also enabled', () => {
+      xit('should not initialize groupingAndColspanService when "createPreHeaderPanel" grid option is enabled and "enableDraggableGrouping" is also enabled', () => {
         const spy = jest.spyOn(groupingAndColspanServiceStub, 'init');
 
         customElement.gridOptions = { createPreHeaderPanel: true, enableDraggableGrouping: true } as GridOption;
@@ -805,7 +754,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         expect(spy).not.toHaveBeenCalled();
       });
 
-      it('should call "translateColumnHeaders" from ExtensionService when "enableTranslate" is set', () => {
+      xit('should call "translateColumnHeaders" from ExtensionService when "enableTranslate" is set', () => {
         const spy = jest.spyOn(extensionServiceStub, 'translateColumnHeaders');
 
         customElement.gridOptions = { enableTranslate: true } as GridOption;
@@ -815,7 +764,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         expect(spy).toHaveBeenCalled();
       });
 
-      it('should destroy customElement and its DOM element when requested', () => {
+      xit('should destroy customElement and its DOM element when requested', () => {
         const spy = jest.spyOn(customElement, 'emptyGridContainerElm');
 
         customElement.bind();
@@ -825,7 +774,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         expect(spy).toHaveBeenCalledWith();
       });
 
-      it('should refresh a local grid and change pagination options pagination when a preset for it is defined in grid options', (done) => {
+      xit('should refresh a local grid and change pagination options pagination when a preset for it is defined in grid options', (done) => {
         const expectedPageNumber = 2;
         const expectedTotalItems = 2;
         const refreshSpy = jest.spyOn(customElement, 'refreshGridData');
@@ -850,7 +799,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         });
       });
 
-      it('should refresh a local grid defined and change pagination options pagination when a preset is defined in grid options and total rows is different when Filters are applied', (done) => {
+      xit('should refresh a local grid defined and change pagination options pagination when a preset is defined in grid options and total rows is different when Filters are applied', (done) => {
         const expectedPageNumber = 3;
         const expectedTotalItems = 15;
         const refreshSpy = jest.spyOn(customElement, 'refreshGridData');
@@ -896,7 +845,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         jest.clearAllMocks();
       });
 
-      it('should call the "createBackendApiInternalPostProcessCallback" method when Backend Service API is defined with a Graphql Service', () => {
+      xit('should call the "createBackendApiInternalPostProcessCallback" method when Backend Service API is defined with a Graphql Service', () => {
         const spy = jest.spyOn(customElement, 'createBackendApiInternalPostProcessCallback');
 
         customElement.bind();
@@ -906,7 +855,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         expect((customElement.gridOptions.backendServiceApi as BackendServiceApi).internalPostProcess).toEqual(expect.any(Function));
       });
 
-      it('should execute the "internalPostProcess" callback method that was created by "createBackendApiInternalPostProcessCallback" with Pagination', () => {
+      xit('should execute the "internalPostProcess" callback method that was created by "createBackendApiInternalPostProcessCallback" with Pagination', () => {
         jest.spyOn((customElement.gridOptions.backendServiceApi as BackendServiceApi).service, 'getDatasetName').mockReturnValue('users');
         const spy = jest.spyOn(customElement, 'refreshGridData');
 
@@ -918,7 +867,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         expect((customElement.gridOptions.backendServiceApi as BackendServiceApi).internalPostProcess).toEqual(expect.any(Function));
       });
 
-      it('should execute the "internalPostProcess" callback and expect totalItems to be updated in the PaginationService when "refreshGridData" is called on the 2nd time', () => {
+      xit('should execute the "internalPostProcess" callback and expect totalItems to be updated in the PaginationService when "refreshGridData" is called on the 2nd time', () => {
         jest.spyOn((customElement.gridOptions.backendServiceApi as BackendServiceApi).service, 'getDatasetName').mockReturnValue('users');
         const refreshSpy = jest.spyOn(customElement, 'refreshGridData');
         const paginationSpy = jest.spyOn(paginationServiceStub, 'totalItems', 'set');
@@ -935,7 +884,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         expect((customElement.gridOptions.backendServiceApi as BackendServiceApi).internalPostProcess).toEqual(expect.any(Function));
       });
 
-      it('should execute the "internalPostProcess" callback method that was created by "createBackendApiInternalPostProcessCallback" without Pagination (when disabled)', () => {
+      xit('should execute the "internalPostProcess" callback method that was created by "createBackendApiInternalPostProcessCallback" without Pagination (when disabled)', () => {
         customElement.gridOptions.enablePagination = false;
         jest.spyOn((customElement.gridOptions.backendServiceApi as BackendServiceApi).service, 'getDatasetName').mockReturnValue('users');
         const spy = jest.spyOn(customElement, 'refreshGridData');
@@ -948,7 +897,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         expect((customElement.gridOptions.backendServiceApi as BackendServiceApi).internalPostProcess).toEqual(expect.any(Function));
       });
 
-      it('should execute the "internalPostProcess" callback method but return an empty dataset when dataset name does not match "getDatasetName"', () => {
+      xit('should execute the "internalPostProcess" callback method but return an empty dataset when dataset name does not match "getDatasetName"', () => {
         customElement.gridOptions.enablePagination = true;
         jest.spyOn((customElement.gridOptions.backendServiceApi as BackendServiceApi).service, 'getDatasetName').mockReturnValue('users');
         const spy = jest.spyOn(customElement, 'refreshGridData');
@@ -961,7 +910,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         expect(customElement.dataset).toEqual([]);
       });
 
-      it('should invoke "updateFilters" method with filters returned from "getColumnFilters" of the Filter Service when there is no Presets defined', () => {
+      xit('should invoke "updateFilters" method with filters returned from "getColumnFilters" of the Filter Service when there is no Presets defined', () => {
         const mockColumnFilter = { name: { columnId: 'name', columnDef: { id: 'name', field: 'name', filter: { model: Filters.autoComplete } }, operator: 'EQ', searchTerms: ['john'] } };
         // @ts-expect-error
         jest.spyOn(filterServiceStub, 'getColumnFilters').mockReturnValue(mockColumnFilter);
@@ -974,7 +923,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         expect(backendSpy).toHaveBeenCalledWith(mockColumnFilter, false);
       });
 
-      it('should call the "updateFilters" method when filters are defined in the "presets" property', () => {
+      xit('should call the "updateFilters" method when filters are defined in the "presets" property', () => {
         const spy = jest.spyOn(mockGraphqlService, 'updateFilters');
         const mockFilters = [{ columnId: 'company', searchTerms: ['xyz'], operator: 'IN' }] as CurrentFilter[];
         customElement.gridOptions.presets = { filters: mockFilters };
@@ -984,7 +933,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         expect(spy).toHaveBeenCalledWith(mockFilters, true);
       });
 
-      it('should call the "updateSorters" method when filters are defined in the "presets" property', () => {
+      xit('should call the "updateSorters" method when filters are defined in the "presets" property', () => {
         jest.spyOn(mockGrid, 'getSelectionModel').mockReturnValue(true);
         const spy = jest.spyOn(mockGraphqlService, 'updateSorters');
         const mockSorters = [{ columnId: 'name', direction: 'asc' }] as CurrentSorter[];
@@ -995,7 +944,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         expect(spy).toHaveBeenCalledWith(undefined, mockSorters);
       });
 
-      it('should call the "updatePagination" method when filters are defined in the "presets" property', () => {
+      xit('should call the "updatePagination" method when filters are defined in the "presets" property', () => {
         const spy = jest.spyOn(mockGraphqlService, 'updatePagination');
 
         customElement.gridOptions.presets = { pagination: { pageNumber: 2, pageSize: 20 } };
@@ -1005,7 +954,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         expect(spy).toHaveBeenCalledWith(2, 20);
       });
 
-      it('should refresh the grid and change pagination options pagination when a preset for it is defined in grid options', () => {
+      xit('should refresh the grid and change pagination options pagination when a preset for it is defined in grid options', () => {
         const expectedPageNumber = 3;
         const refreshSpy = jest.spyOn(customElement, 'refreshGridData');
 
@@ -1023,7 +972,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         expect(refreshSpy).toHaveBeenCalledWith(mockData);
       });
 
-      it('should execute the process method on initialization when "executeProcessCommandOnInit" is set as a backend service options with Pagination enabled', (done) => {
+      xit('should execute the process method on initialization when "executeProcessCommandOnInit" is set as a backend service options with Pagination enabled', (done) => {
         const now = new Date();
         const query = `query { users (first:20,offset:0) { totalCount, nodes { id,name,gender,company } } }`;
         const processResult = {
@@ -1046,7 +995,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         }, 5);
       });
 
-      it('should execute the process method on initialization when "executeProcessCommandOnInit" is set as a backend service options without Pagination (when disabled)', (done) => {
+      xit('should execute the process method on initialization when "executeProcessCommandOnInit" is set as a backend service options without Pagination (when disabled)', (done) => {
         const now = new Date();
         const query = `query { users { id,name,gender,company } }`;
         const processResult = {
@@ -1069,7 +1018,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         }, 5);
       });
 
-      it('should throw an error when the process method on initialization when "executeProcessCommandOnInit" is set as a backend service options', (done) => {
+      xit('should throw an error when the process method on initialization when "executeProcessCommandOnInit" is set as a backend service options', (done) => {
         const mockError = { error: '404' };
         const query = `query { users (first:20,offset:0) { totalCount, nodes { id,name,gender,company } } }`;
         const promise = new Promise((_resolve, reject) => setTimeout(() => reject(mockError), 1));
@@ -1090,7 +1039,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
     });
 
     describe('commitEdit method', () => {
-      it('should commit current edit when we focus out of current cell', (done) => {
+      xit('should commit current edit when we focus out of current cell', (done) => {
         jest.spyOn(mockGrid, 'getOptions').mockReturnValue({ autoCommitEdit: true });
         jest.spyOn(mockGrid, 'getActiveCellNode').mockReturnValue(divContainer);
         const spy = jest.spyOn(mockGrid, 'getEditorLock');
@@ -1115,7 +1064,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         jest.clearAllMocks();
       });
 
-      it('should call multiple translate methods when locale changes', (done) => {
+      xit('should call multiple translate methods when locale changes', (done) => {
         const transCellMenuSpy = jest.spyOn(extensionServiceStub, 'translateCellMenu');
         const transColHeaderSpy = jest.spyOn(extensionServiceStub, 'translateColumnHeaders');
         const transColPickerSpy = jest.spyOn(extensionServiceStub, 'translateColumnPicker');
@@ -1144,7 +1093,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         });
       });
 
-      it('should call "setHeaderRowVisibility", "translateGroupingAndColSpan" and other methods when locale changes', (done) => {
+      xit('should call "setHeaderRowVisibility", "translateGroupingAndColSpan" and other methods when locale changes', (done) => {
         customElement.columnDefinitions = [{ id: 'firstName', field: 'firstName', filterable: true }];
         const transCellMenuSpy = jest.spyOn(extensionServiceStub, 'translateCellMenu');
         const transColHeaderSpy = jest.spyOn(extensionServiceStub, 'translateColumnHeaders');
@@ -1172,7 +1121,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         });
       });
 
-      it('should call "translateGroupingAndColSpan" translate methods when locale changes and Column Grouping PreHeader are enabled', (done) => {
+      xit('should call "translateGroupingAndColSpan" translate methods when locale changes and Column Grouping PreHeader are enabled', (done) => {
         const groupColSpanSpy = jest.spyOn(groupingAndColspanServiceStub, 'translateGroupingAndColSpan');
 
         customElement.gridOptions = { enableTranslate: true, createPreHeaderPanel: true, enableDraggableGrouping: false } as GridOption;
@@ -1187,7 +1136,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         });
       });
 
-      it('should trigger a DOM element dispatch event when a SlickGrid onX event is triggered', () => {
+      xit('should trigger a DOM element dispatch event when a SlickGrid onX event is triggered', () => {
         const eventSpy = jest.spyOn(divContainer, 'dispatchEvent');
         const gridElm = divContainer.querySelector('div#grid1');
         const mockEvent = () => 'blah';
@@ -1205,7 +1154,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         expect(handlerSpy).toHaveBeenCalled();
       });
 
-      it('should reflect columns in the grid', () => {
+      xit('should reflect columns in the grid', () => {
         const mockColsPresets = [{ columnId: 'firstName', width: 100 }];
         const mockCols = [{ id: 'firstName', field: 'firstName' }];
         const getAssocColSpy = jest.spyOn(gridStateServiceStub, 'getAssociatedGridColumns').mockReturnValue(mockCols);
@@ -1219,7 +1168,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         expect(setColSpy).toHaveBeenCalledWith(mockCols);
       });
 
-      it('should reflect columns with an extra checkbox selection column in the grid when "enableCheckboxSelector" is set', () => {
+      xit('should reflect columns with an extra checkbox selection column in the grid when "enableCheckboxSelector" is set', () => {
         const mockColsPresets = [{ columnId: 'firstName', width: 100 }];
         const mockCol = { id: 'firstName', field: 'firstName' };
         const mockCols = [{ id: '_checkbox_selector', field: '_checkbox_selector', editor: undefined, internalColumnEditor: {} }, mockCol];
@@ -1235,7 +1184,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         expect(setColSpy).toHaveBeenCalledWith(mockCols);
       });
 
-      it('should execute backend service "init" method when set', () => {
+      xit('should execute backend service "init" method when set', () => {
         const mockPagination = { pageNumber: 1, pageSizes: [10, 25, 50], pageSize: 10, totalItems: 100 };
         const mockGraphqlOptions = { datasetName: 'users', extraQueryArguments: [{ field: 'userId', value: 123 }] } as GraphqlServiceOption;
         const bindBackendSpy = jest.spyOn(sortServiceStub, 'bindBackendOnSort');
@@ -1259,7 +1208,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         expect(initSpy).toHaveBeenCalledWith(mockGraphqlOptions, mockPagination, mockGrid);
       });
 
-      it('should call bind backend sorting when "enableSorting" is set', () => {
+      xit('should call bind backend sorting when "enableSorting" is set', () => {
         const bindBackendSpy = jest.spyOn(sortServiceStub, 'bindBackendOnSort');
 
         customElement.gridOptions = {
@@ -1276,7 +1225,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         expect(bindBackendSpy).toHaveBeenCalledWith(mockGrid);
       });
 
-      it('should call bind local sorting when "enableSorting" is set and "useLocalSorting" is set as well', () => {
+      xit('should call bind local sorting when "enableSorting" is set and "useLocalSorting" is set as well', () => {
         const bindLocalSpy = jest.spyOn(sortServiceStub, 'bindLocalOnSort');
 
         customElement.gridOptions = {
@@ -1294,7 +1243,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         expect(bindLocalSpy).toHaveBeenCalledWith(mockGrid);
       });
 
-      it('should call bind backend filtering when "enableFiltering" is set', () => {
+      xit('should call bind backend filtering when "enableFiltering" is set', () => {
         const initSpy = jest.spyOn(filterServiceStub, 'init');
         const bindLocalSpy = jest.spyOn(filterServiceStub, 'bindLocalOnFilter');
         const populateSpy = jest.spyOn(filterServiceStub, 'populateColumnFilterSearchTermPresets');
@@ -1308,7 +1257,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         expect(populateSpy).not.toHaveBeenCalled();
       });
 
-      it('should call bind local filtering when "enableFiltering" is set and "useLocalFiltering" is set as well', () => {
+      xit('should call bind local filtering when "enableFiltering" is set and "useLocalFiltering" is set as well', () => {
         const bindLocalSpy = jest.spyOn(filterServiceStub, 'bindLocalOnFilter');
 
         customElement.gridOptions = {
@@ -1326,7 +1275,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         expect(bindLocalSpy).toHaveBeenCalledWith(mockGrid);
       });
 
-      it('should reflect column filters when "enableFiltering" is set', () => {
+      xit('should reflect column filters when "enableFiltering" is set', () => {
         const initSpy = jest.spyOn(filterServiceStub, 'init');
         const bindBackendSpy = jest.spyOn(filterServiceStub, 'bindBackendOnFilter');
         const populateSpy = jest.spyOn(filterServiceStub, 'populateColumnFilterSearchTermPresets');
@@ -1347,7 +1296,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         expect(populateSpy).not.toHaveBeenCalled();
       });
 
-      it('should reflect column filters and populate filter search terms when "enableFiltering" is set and preset filters are defined', () => {
+      xit('should reflect column filters and populate filter search terms when "enableFiltering" is set and preset filters are defined', () => {
         const mockPresetFilters = [{ columnId: 'firstName', operator: 'IN', searchTerms: ['John', 'Jane'] }] as CurrentFilter[];
         const initSpy = jest.spyOn(filterServiceStub, 'init');
         const populateSpy = jest.spyOn(filterServiceStub, 'populateColumnFilterSearchTermPresets');
@@ -1360,7 +1309,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         expect(populateSpy).toHaveBeenCalledWith(mockPresetFilters);
       });
 
-      it('should return null when "getItemMetadata" is called without a colspan callback defined', () => {
+      xit('should return null when "getItemMetadata" is called without a colspan callback defined', () => {
         const itemSpy = jest.spyOn(mockDataView, 'getItem');
 
         customElement.gridOptions = { colspanCallback: undefined } as GridOption;
@@ -1371,7 +1320,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         expect(itemSpy).not.toHaveBeenCalled();
       });
 
-      it('should execute colspan callback when defined in the grid options and "getItemMetadata" is called', () => {
+      xit('should execute colspan callback when defined in the grid options and "getItemMetadata" is called', () => {
         const mockCallback = jest.fn();
         const mockItem = { firstName: 'John', lastName: 'Doe' };
         const itemSpy = jest.spyOn(mockDataView, 'getItem').mockReturnValue(mockItem);
@@ -1392,7 +1341,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         jest.clearAllMocks();
       });
 
-      it('should show the header row when "showHeaderRow" is called with argument True', () => {
+      xit('should show the header row when "showHeaderRow" is called with argument True', () => {
         const setHeaderRowSpy = jest.spyOn(mockGrid, 'setHeaderRowVisibility');
         const setColumnSpy = jest.spyOn(mockGrid, 'setColumns');
 
@@ -1404,7 +1353,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         expect(setColumnSpy).toHaveBeenCalledTimes(1);
       });
 
-      it('should show the header row when "showHeaderRow" is called with argument False', () => {
+      xit('should show the header row when "showHeaderRow" is called with argument False', () => {
         const setHeaderRowSpy = jest.spyOn(mockGrid, 'setHeaderRowVisibility');
         const setColumnSpy = jest.spyOn(mockGrid, 'setColumns');
 
@@ -1422,7 +1371,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         jest.clearAllMocks();
       });
 
-      it('should merge paginationOptions when some already exist', () => {
+      xit('should merge paginationOptions when some already exist', () => {
         const mockPagination = { pageSize: 2, pageSizes: [] };
         const paginationSrvSpy = jest.spyOn(paginationServiceStub, 'updateTotalItems');
 
@@ -1434,7 +1383,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         expect(paginationSrvSpy).toHaveBeenCalledWith(0, true);
       });
 
-      it('should set brand new paginationOptions when none previously exist', () => {
+      xit('should set brand new paginationOptions when none previously exist', () => {
         const mockPagination = { pageSize: 2, pageSizes: [], totalItems: 1 };
         const paginationSrvSpy = jest.spyOn(paginationServiceStub, 'updateTotalItems');
 
@@ -1447,7 +1396,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         expect(paginationSrvSpy).toHaveBeenNthCalledWith(2, 1, true);
       });
 
-      it('should call trigger a gridStage change event when pagination change is triggered', () => {
+      xit('should call trigger a gridStage change event when pagination change is triggered', () => {
         const mockPagination = { pageNumber: 2, pageSize: 20 } as Pagination;
         const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
         jest.spyOn(gridStateServiceStub, 'getCurrentGridState').mockReturnValue({ columns: [], pagination: mockPagination } as GridState);
@@ -1462,7 +1411,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         });
       });
 
-      it('should call trigger a gridStage change event when "onPaginationChanged" from the Pagination Service is triggered', () => {
+      xit('should call trigger a gridStage change event when "onPaginationChanged" from the Pagination Service is triggered', () => {
         const mockPagination = { pageNumber: 2, pageSize: 20 } as CurrentPagination;
         const mockServicePagination = {
           ...mockPagination,
@@ -1486,7 +1435,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         });
       });
 
-      it('should call trigger a gridStage change and reset selected rows when pagination change is triggered and "enableRowSelection" is set', () => {
+      xit('should call trigger a gridStage change and reset selected rows when pagination change is triggered and "enableRowSelection" is set', () => {
         const mockPagination = { pageNumber: 2, pageSize: 20 } as Pagination;
         const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
         const setRowSpy = jest.spyOn(mockGrid, 'setSelectedRows');
@@ -1504,7 +1453,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         });
       });
 
-      it('should call trigger a gridStage change and reset selected rows when pagination change is triggered and "enableCheckboxSelector" is set', () => {
+      xit('should call trigger a gridStage change and reset selected rows when pagination change is triggered and "enableCheckboxSelector" is set', () => {
         const mockPagination = { pageNumber: 2, pageSize: 20 } as Pagination;
         const pluginEaSpy = jest.spyOn(pluginEa, 'publish');
         const setRowSpy = jest.spyOn(mockGrid, 'setSelectedRows');
@@ -1524,7 +1473,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
     });
 
     describe('Custom Footer', () => {
-      it('should have a Custom Footer when "showCustomFooter" is enabled and there are no Pagination used', (done) => {
+      xit('should have a Custom Footer when "showCustomFooter" is enabled and there are no Pagination used', (done) => {
         const mockColDefs = [{ id: 'name', field: 'name', editor: undefined, internalColumnEditor: {} }];
 
         customElement.gridOptions.enableTranslate = true;
@@ -1555,7 +1504,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         });
       });
 
-      it('should have a Custom Footer and custom texts when "showCustomFooter" is enabled with different metricTexts defined', (done) => {
+      xit('should have a Custom Footer and custom texts when "showCustomFooter" is enabled with different metricTexts defined', (done) => {
         const mockColDefs = [{ id: 'name', field: 'name', editor: undefined, internalColumnEditor: {} }];
 
         customElement.gridOptions.enableTranslate = false;
@@ -1594,7 +1543,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         });
       });
 
-      it('should NOT have a Custom Footer when "showCustomFooter" is enabled WITH Pagination in use', (done) => {
+      xit('should NOT have a Custom Footer when "showCustomFooter" is enabled WITH Pagination in use', (done) => {
         const mockColDefs = [{ id: 'name', field: 'name', editor: undefined, internalColumnEditor: {} }];
 
         customElement.gridOptions.enablePagination = true;
@@ -1616,7 +1565,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         jest.clearAllMocks();
       });
 
-      it('should call the "mapIdsToRows" from the DataView then "setSelectedRows" from the Grid when there are row selection presets with "dataContextIds" array set', (done) => {
+      xit('should call the "mapIdsToRows" from the DataView then "setSelectedRows" from the Grid when there are row selection presets with "dataContextIds" array set', (done) => {
         const selectedGridRows = [2];
         const selectedRowIds = [99];
         const mockData = [{ firstName: 'John', lastName: 'Doe' }, { firstName: 'Jane', lastName: 'Smith' }];
@@ -1637,7 +1586,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         });
       });
 
-      it('should call the "setSelectedRows" from the Grid when there are row selection presets with "dataContextIds" array set', (done) => {
+      xit('should call the "setSelectedRows" from the Grid when there are row selection presets with "dataContextIds" array set', (done) => {
         const selectedGridRows = [22];
         const mockData = [{ firstName: 'John', lastName: 'Doe' }, { firstName: 'Jane', lastName: 'Smith' }];
         const selectRowSpy = jest.spyOn(mockGrid, 'setSelectedRows');
@@ -1655,7 +1604,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         });
       });
 
-      it('should NOT call the "setSelectedRows" when the Grid has Local Pagination and there are row selection presets with "dataContextIds" array set', (done) => {
+      xit('should NOT call the "setSelectedRows" when the Grid has Local Pagination and there are row selection presets with "dataContextIds" array set', (done) => {
         const selectedGridRows = [22];
         const mockData = [{ firstName: 'John', lastName: 'Doe' }, { firstName: 'Jane', lastName: 'Smith' }];
         const selectRowSpy = jest.spyOn(mockGrid, 'setSelectedRows');
@@ -1681,7 +1630,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         jest.clearAllMocks();
       });
 
-      it('should change "showPagination" flag when "onPaginationVisibilityChanged" from the Pagination Service is triggered', (done) => {
+      xit('should change "showPagination" flag when "onPaginationVisibilityChanged" from the Pagination Service is triggered', (done) => {
         customElement.gridOptions.enablePagination = true;
         customElement.gridOptions.backendServiceApi = null as any;
 
@@ -1696,7 +1645,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         });
       });
 
-      it('should call the backend service API to refresh the dataset', (done) => {
+      xit('should call the backend service API to refresh the dataset', (done) => {
         customElement.gridOptions.enablePagination = true;
         customElement.gridOptions.backendServiceApi = {
           service: mockGraphqlService as unknown as BackendService,
@@ -1717,7 +1666,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
     });
 
     describe('Tree Data View', () => {
-      it('should throw an error when enableTreeData is enabled without passing a "columnId"', (done) => {
+      xit('should throw an error when enableTreeData is enabled without passing a "columnId"', (done) => {
         try {
           customElement.gridOptions = { enableTreeData: true, treeDataOptions: {} } as GridOption;
           customElement.bind();
@@ -1730,7 +1679,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         }
       });
 
-      it('should change flat dataset and expect  being called with other methods', () => {
+      xit('should change flat dataset and expect  being called with other methods', () => {
         const mockFlatDataset = [{ id: 0, file: 'documents' }, { id: 1, file: 'vacation.txt', parentId: 0 }];
         const mockHierarchical = [{ id: 0, file: 'documents', files: [{ id: 1, file: 'vacation.txt' }] }];
         const hierarchicalSpy = jest.spyOn(SharedService.prototype, 'hierarchicalDataset', 'set');
@@ -1743,7 +1692,7 @@ xdescribe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () 
         expect(hierarchicalSpy).toHaveBeenCalledWith(mockHierarchical);
       });
 
-      it('should change hierarchical dataset and expect processTreeDataInitialSort being called with other methods', () => {
+      xit('should change hierarchical dataset and expect processTreeDataInitialSort being called with other methods', () => {
         const mockHierarchical = [{ file: 'documents', files: [{ file: 'vacation.txt' }] }];
         const hierarchicalSpy = jest.spyOn(SharedService.prototype, 'hierarchicalDataset', 'set');
         const clearFilterSpy = jest.spyOn(filterServiceStub, 'clearFilters');

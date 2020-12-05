@@ -1,10 +1,10 @@
 import { Column, ExtensionUtility, SharedService, SlickDataView, SlickGrid, SlickNamespace } from '@slickgrid-universal/common';
 import { EventAggregator } from 'aurelia-event-aggregator';
-import { HttpClient } from 'aurelia-fetch-client';
 import { GridOption } from '../../models/gridOption.interface';
 import { RowDetailViewExtension } from '../rowDetailViewExtension';
 import { AureliaUtilService, UniversalPubSubService, UniversalTranslateService } from '../../services';
 import { RowDetailView } from '../../models';
+import { HttpStub } from '../../../../test/httpClientStub';
 
 declare const Slick: SlickNamespace;
 const ROW_DETAIL_CONTAINER_PREFIX = 'container_';
@@ -27,13 +27,6 @@ const gridStub = {
   onColumnsReordered: new Slick.Event(),
   onSort: new Slick.Event(),
 } as unknown as SlickGrid;
-
-const pubSubServiceStub = {
-  publish: jest.fn(),
-  subscribe: jest.fn(),
-  unsubscribe: jest.fn(),
-  unsubscribeAll: jest.fn(),
-} as unknown as UniversalPubSubService;
 
 const translateServiceStub = {
   getCurrentLanguage: jest.fn(),
@@ -67,56 +60,9 @@ Slick.Plugins = {
 jest.mock('slickgrid/plugins/slick.rowselectionmodel', () => mockSelectionModel);
 Slick.RowSelectionModel = mockSelectionModel;
 
-class HttpStub extends HttpClient {
-  status: number;
-  statusText: string;
-  object: any = {};
-  returnKey: string;
-  returnValue: any;
-  responseHeaders: any;
-
-  fetch(input, init) {
-    let request;
-    const responseInit: any = {};
-    responseInit.headers = new Headers();
-
-    for (const name in this.responseHeaders || {}) {
-      if (name) {
-        responseInit.headers.set(name, this.responseHeaders[name]);
-      }
-    }
-
-    responseInit.status = this.status || 200;
-
-    if (Request.prototype.isPrototypeOf(input)) {
-      request = input;
-    } else {
-      request = new Request(input, init || {});
-    }
-    if (request.body && request.body.type) {
-      request.headers.set('Content-Type', request.body.type);
-    }
-
-    const promise = Promise.resolve().then(() => {
-      if (request.headers.get('Content-Type') === 'application/json' && request.method !== 'GET') {
-        return request.json().then((object) => {
-          object[this.returnKey] = this.returnValue;
-          const data = JSON.stringify(object);
-          const response = new Response(data, responseInit);
-          return this.status >= 200 && this.status < 300 ? Promise.resolve(response) : Promise.reject(response);
-        });
-      } else {
-        const data = JSON.stringify(this.object);
-        const response = new Response(data, responseInit);
-        return this.status >= 200 && this.status < 300 ? Promise.resolve(response) : Promise.reject(response);
-      }
-    });
-    return promise;
-  }
-}
-
-xdescribe('rowDetailViewExtension', () => {
+describe('rowDetailViewExtension', () => {
   let pluginEa: EventAggregator;
+  let pubSubService: UniversalPubSubService;
   let extensionUtility: ExtensionUtility;
   let extension: RowDetailViewExtension;
   let sharedService: SharedService;
@@ -149,9 +95,10 @@ xdescribe('rowDetailViewExtension', () => {
 
   beforeEach(() => {
     pluginEa = new EventAggregator();
+    pubSubService = new UniversalPubSubService(pluginEa);
     sharedService = new SharedService();
     extensionUtility = new ExtensionUtility(sharedService, translateServiceStub);
-    extension = new RowDetailViewExtension(aureliaUtilServiceStub, pubSubServiceStub, extensionUtility, sharedService);
+    extension = new RowDetailViewExtension(aureliaUtilServiceStub, pubSubService, extensionUtility, sharedService);
   });
 
   it('should return null after calling "create" method when either the column definitions or the grid options is missing', () => {
@@ -509,7 +456,7 @@ xdescribe('rowDetailViewExtension', () => {
 
       extension.register();
       instance.onBeforeRowDetailToggle.subscribe(() => {
-        pluginEa.publish('filterService:filterChanged', { columnId: 'field1', operator: '=', searchTerms: [] });
+        pubSubService.publish('onFilterChanged', { columnId: 'field1', operator: '=', searchTerms: [] });
         expect(appendSpy).toHaveBeenCalledWith(
           undefined,
           expect.objectContaining({ model: mockColumn, addon: expect.anything(), grid: gridStub, dataView: dataViewStub }),
