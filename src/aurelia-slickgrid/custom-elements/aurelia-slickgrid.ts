@@ -240,6 +240,13 @@ export class AureliaSlickgridCustomElement {
 
     this.bindDifferentHooks(this.grid, this.gridOptions, this.dataview);
 
+    // when it's a frozen grid, we need to keep the frozen column id for reference if we ever show/hide column from ColumnPicker/GridMenu afterward
+    const frozenColumnIndex = this.gridOptions.frozenColumn !== undefined ? this.gridOptions.frozenColumn : -1;
+    if (frozenColumnIndex >= 0 && frozenColumnIndex <= this._columnDefinitions.length) {
+      this.sharedService.frozenVisibleColumnId = this._columnDefinitions[frozenColumnIndex].id || '';
+    }
+
+    // initialize the SlickGrid grid
     this.grid.init();
 
     if (!this.customDataView && (this.dataview && this.dataview.beginUpdate && this.dataview.setItems && this.dataview.endUpdate)) {

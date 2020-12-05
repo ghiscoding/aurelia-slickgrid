@@ -416,6 +416,16 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
     expect(customElement.gridOptions.enableMouseWheelScrollHandler).toBeTrue();
   });
 
+  it('should keep frozen column index reference (via frozenVisibleColumnId) when grid is a frozen grid', () => {
+    const sharedFrozenIndexSpy = jest.spyOn(SharedService.prototype, 'frozenVisibleColumnId', 'set');
+    customElement.gridOptions.frozenColumn = 0;
+
+    customElement.bind();
+    customElement.attached();
+
+    expect(sharedFrozenIndexSpy).toHaveBeenCalledWith('name');
+  });
+
   describe('initialization method', () => {
     describe('columns definitions changed', () => {
       it('should expect "translateColumnHeaders" being called when "enableTranslate" is set', () => {
