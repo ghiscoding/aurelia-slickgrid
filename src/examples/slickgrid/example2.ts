@@ -7,13 +7,26 @@ import {
   GridOption,
 } from '../../aurelia-slickgrid';
 
+interface DataItem {
+  id: number;
+  title: string;
+  duration: string;
+  percentComplete: number;
+  percentComplete2: number;
+  start: Date;
+  finish: Date;
+  effortDriven: boolean;
+  phone: string;
+  completed: number;
+}
+
 // create my custom Formatter with the Formatter type
-const myCustomCheckmarkFormatter: Formatter = (_row, _cell, value) => {
+const myCustomCheckmarkFormatter: Formatter<DataItem> = (_row, _cell, value) => {
   // you can return a string of a object (of type FormatterResultObject), the 2 types are shown below
   return value ? `<i class="fa fa-fire red" aria-hidden="true"></i>` : { text: '<i class="fa fa-snowflake-o" aria-hidden="true"></i>', addClasses: 'lightblue', toolTip: 'Freezing' };
 };
 
-const customEnableButtonFormatter: Formatter = (_row: number, _cell: number, value: any) => {
+const customEnableButtonFormatter: Formatter<DataItem> = (_row: number, _cell: number, value: any) => {
   return `<span style="margin-left: 5px">
       <button class="btn btn-xs btn-default">
         <i class="fa ${value ? 'fa-check-circle' : 'fa-circle-thin'} fa-lg" style="color: ${value ? 'black' : 'lavender'}"></i>
@@ -38,7 +51,7 @@ export class Example2 {
 
   aureliaGrid: AureliaGridInstance;
   gridOptions: GridOption;
-  columnDefinitions: Column[];
+  columnDefinitions: Column<DataItem>[];
   dataset: any[];
   resizerPaused = false;
 
@@ -54,6 +67,7 @@ export class Example2 {
 
   /* Define grid Options and Columns */
   defineGrid() {
+    // the columns field property is type-safe, try to add a different string not representing one of DataItems properties
     this.columnDefinitions = [
       { id: 'title', name: 'Title', field: 'title', sortable: true, type: FieldType.string, width: 70 },
       { id: 'phone', name: 'Phone Number using mask', field: 'phone', sortable: true, type: FieldType.number, minWidth: 100, formatter: Formatters.mask, params: { mask: '(000) 000-0000' } },
