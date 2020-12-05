@@ -8,7 +8,7 @@ describe('avgTotalsFormatter', () => {
   };
 
   it('should display an empty string when no value is provided', () => {
-    const output = avgTotalsFormatter({}, {} as Column);
+    const output = avgTotalsFormatter({}, {} as Column, {});
     expect(output).toBe('');
   });
 
@@ -130,7 +130,8 @@ describe('avgTotalsFormatter', () => {
         id: 'column3',
         field: 'column3',
         params: { minDecimal: 3, displayNegativeNumberWithParentheses: true, groupFormatterPrefix: 'Avg: ', groupFormatterSuffix: '/item' }
-      } as Column
+      } as Column,
+      {} as any
     );
 
     expect(output1).toBe('Avg: 123.46');
@@ -147,7 +148,8 @@ describe('avgTotalsFormatter', () => {
       totals, {
         id: 'column3', field: 'column3',
         params: { minDecimal: 3, displayNegativeNumberWithParentheses: true, groupFormatterPrefix: 'Avg: ', groupFormatterSuffix: '/item', decimalSeparator: ',', thousandSeparator: '_' }
-      } as Column);
+      } as Column,
+      {} as any);
 
     expect(output1).toBe('Avg: 12_345_678,46');
     expect(output2).toBe('345_678,2 (avg)');

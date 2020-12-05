@@ -5,7 +5,7 @@ import { findOrDefault } from '../services/index';
 /**
  * A formatter to show the label property value of a params collection
  */
-export const collectionFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any) => {
+export const collectionFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid: any) => {
   if (!value || !columnDef || !columnDef.params || !columnDef.params.collection
     || !columnDef.params.collection.length) {
     return value;
@@ -16,11 +16,14 @@ export const collectionFormatter: Formatter = (row: number, cell: number, value:
   const valueName = (params.customStructure) ? params.customStructure.value : 'value';
 
   if (Array.isArray(value)) {
-    return arrayToCsvFormatter(row,
+    return arrayToCsvFormatter(
+      row,
       cell,
       value.map((v: any) => findOrDefault(collection, (c: any) => c[valueName] === v)[labelName]),
       columnDef,
-      dataContext);
+      dataContext,
+      grid
+    );
   }
 
   return findOrDefault(collection, (c: any) => c[valueName] === value)[labelName] || '';

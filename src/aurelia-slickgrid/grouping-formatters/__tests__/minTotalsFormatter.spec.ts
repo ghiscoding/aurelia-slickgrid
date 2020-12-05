@@ -8,7 +8,7 @@ describe('minTotalsFormatter', () => {
   };
 
   it('should display an empty string when no value is provided', () => {
-    const output = minTotalsFormatter({}, {} as Column);
+    const output = minTotalsFormatter({}, {} as Column, {});
     expect(output).toBe('');
   });
 
@@ -140,7 +140,8 @@ describe('minTotalsFormatter', () => {
         id: 'column3',
         field: 'column3',
         params: { minDecimal: 3, displayNegativeNumberWithParentheses: true, groupFormatterPrefix: 'min: ', groupFormatterSuffix: '/item' }
-      } as Column
+      } as Column,
+      {} as any
     );
 
     expect(output1).toBe('min: 123.46');
@@ -157,7 +158,9 @@ describe('minTotalsFormatter', () => {
       totals, {
         id: 'column3', field: 'column3',
         params: { minDecimal: 3, displayNegativeNumberWithParentheses: true, groupFormatterPrefix: 'Min: ', groupFormatterSuffix: '/item', decimalSeparator: ',', thousandSeparator: '_' }
-      } as Column);
+      } as Column,
+      {} as any
+    );
 
     expect(output1).toBe('Min: 12_345_678,46');
     expect(output2).toBe('345_678,2 (min)');
