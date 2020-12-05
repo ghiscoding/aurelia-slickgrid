@@ -379,6 +379,7 @@ export class AureliaSlickgridCustomElement {
     }
 
     // load the resizer service
+    // @ts-ignore
     this.resizerService.init(this.grid, this.elm.querySelector('div'));
 
     // user might want to hide the header row on page load but still have `enableFiltering: true`
@@ -600,7 +601,7 @@ export class AureliaSlickgridCustomElement {
     }
   }
 
-  datasetHierarchicalChanged(newHierarchicalDataset: any[] | null) {
+  datasetHierarchicalChanged(newHierarchicalDataset: any[] | undefined) {
     this.sharedService.hierarchicalDataset = newHierarchicalDataset;
 
     if (newHierarchicalDataset && this.columnDefinitions && this.filterService && this.filterService.clearFilters) {

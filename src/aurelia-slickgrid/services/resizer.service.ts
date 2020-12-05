@@ -29,11 +29,6 @@ export class ResizerService {
     return (this._grid && this._grid.getOptions) ? this._grid.getOptions() : {};
   }
 
-  /** Getter for the grid uid */
-  get gridUid(): string {
-    return this._grid?.getUID() ?? '';
-  }
-
   constructor(private eventPubSubService: PubSubService) {
     this._eventHandler = new Slick.EventHandler();
   }

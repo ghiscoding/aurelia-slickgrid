@@ -1,3 +1,5 @@
+import { SlickGrid, SlickRowDetailView } from '@slickgrid-universal/common';
+
 export interface RowDetailView {
   /** Defaults to true, which will collapse all row detail views when user calls a sort. Unless user implements a sort to deal with padding */
   collapseAllOnSort?: boolean;
@@ -79,29 +81,92 @@ export interface RowDetailView {
   process: (item: any) => Promise<any>;
 
   /** Override the logic for showing (or not) the expand icon (use case example: only every 2nd row is expandable) */
-  expandableOverride?: (row: number, dataContext: any, grid: any) => boolean;
+  expandableOverride?: (row: number, dataContext: any, grid: SlickGrid) => boolean;
 
   // --
   // SlickGrid Events
 
   /** Fired after extension (plugin) is registered by SlickGrid */
-  onExtensionRegistered?: (plugin: any) => void;
+  onExtensionRegistered?: (plugin: SlickRowDetailView) => void;
 
   /** This event must be used with the "notify" by the end user once the Asynchronous Server call returns the item detail */
-  onAsyncResponse?: (e: Event, args: { item: any; detailView?: any }) => void;
+  onAsyncResponse?: (e: Event, args: {
+    /** Item data context object */
+    item: any;
+
+    /** An explicit view to use instead of template (Optional) */
+    detailView?: any;
+  }) => void;
 
   /** Fired when the async response finished */
-  onAsyncEndUpdate?: (e: Event, args: { grid: any; item: any }) => void;
+  onAsyncEndUpdate?: (e: Event, args: {
+    /** Reference to the Slick grid object */
+    grid: SlickGrid;
+
+    /** Item data context object */
+    item: any;
+  }) => void;
 
   /** Fired after the row detail gets toggled */
-  onAfterRowDetailToggle?: (e: Event, args: { grid: any; item: any; expandedRows: any[] }) => void;
+  onAfterRowDetailToggle?: (e: Event, args: {
+    /** Reference to the Slick grid object */
+    grid: SlickGrid;
+
+    /** Item data context object */
+    item: any;
+
+    /** Array of the Expanded Row Ids */
+    expandedRows: any[];
+  }) => void;
 
   /** Fired before the row detail gets toggled */
-  onBeforeRowDetailToggle?: (e: Event, args: { grid: any; item: any }) => void;
+  onBeforeRowDetailToggle?: (e: Event, args: {
+    /** Reference to the Slick grid object */
+    grid: SlickGrid;
+
+    /** Item data context object */
+    item: any;
+  }) => void;
 
   /** Fired after the row detail gets toggled */
-  onRowBackToViewportRange?: (e: Event, args: { grid: any; item: any; rowId: number; rowIndex: number; expandedRows: any[]; rowIdsOutOfViewport: number[]; }) => void;
+  onRowBackToViewportRange?: (e: Event, args: {
+    /** Item data context object */
+    item: any;
+
+    /** Id of the Row object (datacontext) in the Grid */
+    rowId: string | number;
+
+    /** Index of the Row in the Grid */
+    rowIndex: number;
+
+    /** Array of the Expanded Row Ids */
+    expandedRows: (string | number)[];
+
+    /** Array of the Out of viewport Range Rows */
+    rowIdsOutOfViewport: (string | number)[];
+
+    /** Reference to the Slick grid object */
+    grid: SlickGrid;
+  }) => void;
 
   /** Fired after a row becomes out of viewport range (user can't see the row anymore) */
-  onRowOutOfViewportRange?: (e: Event, args: { grid: any; item: any; rowId: number; rowIndex: number; expandedRows: any[]; rowIdsOutOfViewport: number[]; }) => void;
+  onRowOutOfViewportRange?: (e: Event, args: {
+    /** Item data context object */
+    item: any;
+
+    /** Id of the Row object (datacontext) in the Grid */
+    rowId: string | number;
+
+    /** Index of the Row in the Grid */
+    rowIndex: number;
+
+    /** Array of the Expanded Row Ids */
+    expandedRows: (string | number)[];
+
+    /** Array of the Out of viewport Range Rows */
+    rowIdsOutOfViewport: (string | number)[];
+
+    /** Reference to the Slick grid object */
+    grid: SlickGrid;
+  }) => void;
 }
