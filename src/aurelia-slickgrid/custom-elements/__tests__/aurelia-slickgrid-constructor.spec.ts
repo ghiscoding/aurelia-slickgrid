@@ -407,13 +407,13 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
     expect(spy).toHaveBeenNthCalledWith(5, 'onAfterGridDestroyed', true);
   });
 
-  it('should load jQuery mousewheel when using a frozen grid', () => {
-    const loadSpy = jest.spyOn(customElement, 'loadJqueryMousewheelDynamically');
+  it('should load enable jquery mousewheel scrolling when using a frozen grid', () => {
+    customElement.gridOptions.enableMouseWheelScrollHandler = undefined;
     customElement.gridOptions.frozenRow = 3;
 
     customElement.attached();
 
-    expect(loadSpy).toHaveBeenCalled();
+    expect(customElement.gridOptions.enableMouseWheelScrollHandler).toBeTrue();
   });
 
   describe('initialization method', () => {
@@ -702,7 +702,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
           },
           dataView: { syncGridSelection: true, syncGridSelectionWithBackendService: true },
           enableRowSelection: true
-        } as GridOption;
+        } as unknown as GridOption;
         customElement.bind();
         customElement.attached();
 
@@ -720,7 +720,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
           },
           dataView: { syncGridSelection: false, syncGridSelectionWithBackendService: true },
           enableRowSelection: true
-        } as GridOption;
+        } as unknown as GridOption;
         customElement.bind();
         customElement.attached();
 
@@ -738,7 +738,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
           },
           dataView: { syncGridSelection: true, syncGridSelectionWithBackendService: false },
           enableRowSelection: true
-        } as GridOption;
+        } as unknown as GridOption;
         customElement.bind();
         customElement.attached();
 
@@ -901,7 +901,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
         customElement.gridOptions = {
           backendServiceApi: {
             onInit: jest.fn(),
-            service: mockGraphqlService as BackendService,
+            service: mockGraphqlService as unknown as BackendService,
             preProcess: jest.fn(),
             postProcess: jest.fn(),
             process: jest.fn(),
@@ -1268,7 +1268,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
             process: () => new Promise((resolve) => resolve({ data: { users: { nodes: [], totalCount: 100 } } })),
           } as GraphqlServiceApi,
           pagination: mockPagination,
-        } as GridOption;
+        } as unknown as GridOption;
         customElement.bind();
         customElement.attached();
 
@@ -1286,7 +1286,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
             preProcess: () => jest.fn(),
             process: () => new Promise((resolve) => resolve('process resolved')),
           }
-        } as GridOption;
+        } as unknown as GridOption;
         customElement.bind();
         customElement.attached();
 
@@ -1304,7 +1304,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
             preProcess: () => jest.fn(),
             process: () => new Promise((resolve) => resolve('process resolved')),
           }
-        } as GridOption;
+        } as unknown as GridOption;
         customElement.bind();
         customElement.attached();
 
@@ -1336,7 +1336,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
             preProcess: () => jest.fn(),
             process: () => new Promise((resolve) => resolve('process resolved')),
           }
-        } as GridOption;
+        } as unknown as GridOption;
         customElement.bind();
         customElement.attached();
 
@@ -1355,7 +1355,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
             preProcess: () => jest.fn(),
             process: () => new Promise((resolve) => resolve('process resolved')),
           }
-        } as GridOption;
+        } as unknown as GridOption;
         customElement.bind();
         customElement.attached();
 
@@ -1716,7 +1716,7 @@ describe('Aurelia-Slickgrid Custom Component instantiated via Constructor', () =
       it('should call the backend service API to refresh the dataset', (done) => {
         customElement.gridOptions.enablePagination = true;
         customElement.gridOptions.backendServiceApi = {
-          service: mockGraphqlService as BackendService,
+          service: mockGraphqlService as unknown as BackendService,
           process: jest.fn(),
         };
 
