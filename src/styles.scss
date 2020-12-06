@@ -1,5 +1,5 @@
 /* make sure to add the @import the SlickGrid Bootstrap Theme AFTER the variables changes */
-@import 'aurelia-slickgrid/styles/slickgrid-theme-bootstrap.scss';
+@import '@slickgrid-universal/common/dist/styles/sass/slickgrid-theme-bootstrap.scss';
 
 .btn-group-xs > .btn, .btn-xs {
   padding  : 6px 2px;
