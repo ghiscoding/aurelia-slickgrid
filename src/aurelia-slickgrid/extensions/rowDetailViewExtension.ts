@@ -98,7 +98,7 @@ export class RowDetailViewExtension implements UniversalRowDetailViewExtension {
    * Create the plugin before the Grid creation, else it will behave oddly.
    * Mostly because the column definitions might change after the grid creation
    */
-  create(columnDefinitions: Column[], gridOptions: GridOption) {
+  create(columnDefinitions: Column[], gridOptions: GridOption): SlickRowDetailView | null {
     if (columnDefinitions && gridOptions) {
       // dynamically import the SlickGrid plugin (addon) with RequireJS
       this.extensionUtility.loadExtensionDynamically(ExtensionName.rowDetailView);
@@ -155,7 +155,7 @@ export class RowDetailViewExtension implements UniversalRowDetailViewExtension {
   }
 
   /** Get the instance of the SlickGrid addon (control or plugin). */
-  getAddonInstance(): SlickRowDetailView {
+  getAddonInstance(): SlickRowDetailView | null {
     return this._addon;
   }
 
