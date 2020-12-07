@@ -5,8 +5,8 @@ import { StageComponent } from 'aurelia-testing';
 
 import { GridOption } from '../../models';
 
-function removeExtraSpaces(textS: string) {
-  return `${textS}`.replace(/\s{2,}/g, '');
+function removeExtraSpaces(text: string) {
+  return `${text}`.replace(/\s{2,}/g, '');
 }
 
 const mockLocales = {

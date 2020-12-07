@@ -1,4 +1,4 @@
-import { TranslaterService, TranslateServiceEventName } from '@slickgrid-universal/common';
+import { TranslaterService } from '@slickgrid-universal/common';
 import { inject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 
@@ -8,9 +8,6 @@ import { I18N } from 'aurelia-i18n';
  */
 @inject(I18N)
 export class UniversalTranslateService implements TranslaterService {
-  // TODO - remove this unused variable on the next version, but keep it for now just to make the compiler happy
-  eventName = 'onLanguageChange' as TranslateServiceEventName;
-
   constructor(private i18n: I18N) { }
 
   /**

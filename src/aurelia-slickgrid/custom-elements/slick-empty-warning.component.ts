@@ -1,12 +1,12 @@
 import { EmptyWarning } from '@slickgrid-universal/common';
 import { inject, Optional, singleton } from 'aurelia-framework';
-import { I18N } from 'aurelia-i18n';
 import * as DOMPurify from 'dompurify';
 
 import { GridOption, SlickGrid } from '../models/index';
+import { UniversalTranslateService } from '../services/universalTranslate.service';
 
 @singleton(true)
-@inject(Optional.of(I18N))
+@inject(Optional.of(UniversalTranslateService))
 export class SlickEmptyWarningComponent {
   private _grid: SlickGrid;
   private _warningLeftElement: HTMLDivElement | null;
@@ -21,7 +21,7 @@ export class SlickEmptyWarningComponent {
     this._grid = slickGrid;
   }
 
-  constructor(private i18n?: I18N) { }
+  constructor(private translateService?: UniversalTranslateService) { }
 
   dispose() {
     this._warningLeftElement?.remove();
@@ -61,8 +61,8 @@ export class SlickEmptyWarningComponent {
 
     // warning message could come from a translation key or by the warning options
     let warningMessage = mergedOptions.message;
-    if (this.gridOptions.enableTranslate && this.i18n && mergedOptions?.messageKey) {
-      warningMessage = this.i18n.tr(mergedOptions.messageKey);
+    if (this.gridOptions.enableTranslate && this.translateService && mergedOptions?.messageKey) {
+      warningMessage = this.translateService.translate(mergedOptions.messageKey);
     }
 
     if (!this._warningLeftElement && gridCanvasLeftElm && gridCanvasRightElm) {
