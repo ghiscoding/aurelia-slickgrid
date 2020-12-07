@@ -3,12 +3,12 @@ import { inject, Optional, singleton } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import * as DOMPurify from 'dompurify';
 
-import { GridOption } from '../models/index';
+import { GridOption, SlickGrid } from '../models/index';
 
 @singleton(true)
 @inject(Optional.of(I18N))
 export class SlickEmptyWarningComponent {
-  private _grid: any;
+  private _grid: SlickGrid;
   private _warningLeftElement: HTMLDivElement | null;
   private _warningRightElement: HTMLDivElement | null;
 
@@ -17,7 +17,7 @@ export class SlickEmptyWarningComponent {
     return (this._grid && this._grid.getOptions) ? this._grid.getOptions() : {};
   }
 
-  set grid(slickGrid: any) {
+  set grid(slickGrid: SlickGrid) {
     this._grid = slickGrid;
   }
 

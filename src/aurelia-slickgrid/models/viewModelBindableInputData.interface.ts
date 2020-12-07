@@ -1,7 +1,9 @@
+import { SlickDataView, SlickGrid } from '@slickgrid-universal/common';
+
 export interface ViewModelBindableInputData {
   model: any;
   addon: any;
-  grid: any;
-  dataView: any;
+  grid: SlickGrid;
+  dataView: SlickDataView;
   parent?: any;
 }

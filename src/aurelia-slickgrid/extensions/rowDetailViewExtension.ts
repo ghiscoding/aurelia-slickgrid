@@ -382,7 +382,7 @@ export class RowDetailViewExtension implements UniversalRowDetailViewExtension {
    * if it's expanding we will add it to our View Slots reference array if we don't already have it
    * or if it's collapsing we will remove it from our View Slots reference array
    */
-  private onBeforeRowDetailToggle(_e: Event, args: { grid: any; item: any; }) {
+  private onBeforeRowDetailToggle(_e: Event, args: { grid: SlickGrid; item: any; }) {
     // expanding
     if (args && args.item && args.item.__collapsed) {
       // expanding row detail

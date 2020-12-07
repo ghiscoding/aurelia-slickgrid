@@ -11,6 +11,7 @@ import 'slickgrid/plugins/slick.resizer';
 
 import {
   // interfaces/types
+  AutoCompleteEditor,
   BackendServiceApi,
   BackendServiceOption,
   Column,
@@ -24,8 +25,11 @@ import {
   Locale,
   Metrics,
   Pagination,
+  SelectEditor,
   ServicePagination,
+  SlickDataView,
   SlickEventHandler,
+  SlickGrid,
   SlickNamespace,
   TreeDataOption,
 
@@ -68,7 +72,7 @@ import {
   refreshBackendDataset,
 } from '@slickgrid-universal/common';
 
-import { bindable, BindingEngine, bindingMode, Container, Factory, inject, NewInstance, ViewCompiler, ViewResources } from 'aurelia-framework';
+import { bindable, BindingEngine, bindingMode, Container, Factory, inject, NewInstance, } from 'aurelia-framework';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
 
 import { Constants } from '../constants';
@@ -87,13 +91,13 @@ import { RowDetailViewExtension } from '../extensions';
 
 // using external non-typed js libraries
 declare const Slick: SlickNamespace;
-declare function require(name: string): any;
 
 const DEFAULT_AURELIA_EVENT_PREFIX = 'asg';
 const DEFAULT_SLICKGRID_EVENT_PREFIX = 'sg';
 
 // Aurelia doesn't support well TypeScript @autoinject in a Plugin so we'll do it the manual way
 @inject(
+  AureliaUtilService,
   BindingEngine,
   Container,
   Element,
@@ -102,13 +106,12 @@ const DEFAULT_SLICKGRID_EVENT_PREFIX = 'sg';
   ResizerService,
   SlickEmptyWarningComponent,
   UniversalTranslateService,
-  ViewCompiler,
-  ViewResources,
+  UniversalPubSubService,
 )
 export class AureliaSlickgridCustomElement {
   private _columnDefinitions: Column[] = [];
   private _dataset: any[] | null;
-  private _eventHandler: SlickEventHandler = new Slick.EventHandler();
+  private _eventHandler: SlickEventHandler;
   private _hideHeaderRowAfterPageLoad = false;
   private _isGridInitialized = false;
   private _isDatasetInitialized = false;
@@ -116,7 +119,6 @@ export class AureliaSlickgridCustomElement {
   private _isLocalGrid = true;
   private _paginationOptions: Pagination | undefined;
   private _registeredServices: any[] = [];
-  private pubSubService: UniversalPubSubService;
   groupItemMetadataProvider: any;
   backendServiceApi: BackendServiceApi | undefined;
   customFooterOptions: CustomFooterOption;
@@ -149,30 +151,30 @@ export class AureliaSlickgridCustomElement {
 
   @bindable({ defaultBindingMode: bindingMode.twoWay }) columnDefinitions: Column[] = [];
   @bindable({ defaultBindingMode: bindingMode.twoWay }) element: Element;
-  @bindable({ defaultBindingMode: bindingMode.twoWay }) dataview: any;
-  @bindable({ defaultBindingMode: bindingMode.twoWay }) grid: any;
+  @bindable({ defaultBindingMode: bindingMode.twoWay }) dataview: SlickDataView;
+  @bindable({ defaultBindingMode: bindingMode.twoWay }) grid: SlickGrid;
   @bindable({ defaultBindingMode: bindingMode.twoWay }) paginationOptions: Pagination | undefined;
   @bindable({ defaultBindingMode: bindingMode.twoWay }) totalItems: number;
   @bindable({ defaultBindingMode: bindingMode.fromView }) extensions: ExtensionList<any, any>;
   @bindable({ defaultBindingMode: bindingMode.fromView }) instances: AureliaGridInstance | null;
-  @bindable() customDataView: any;
-  @bindable() dataset: any[];
+  @bindable() customDataView: SlickDataView;
+  @bindable() dataset: any[] = [];
   @bindable() datasetHierarchical: any[] | null;
   @bindable() gridId: string;
   @bindable() gridOptions: GridOption;
   @bindable() pickerOptions: any;
 
   constructor(
+    private aureliaUtilService: AureliaUtilService,
     private bindingEngine: BindingEngine,
     private container: Container,
     private elm: Element,
     private globalEa: EventAggregator,
-    private pluginEa: SlickgridEventAggregator,
+    _pluginEa: SlickgridEventAggregator,
     private resizerService: ResizerService,
-    private slickEmptyWarning: SlickEmptyWarningComponent,
+    public slickEmptyWarning: SlickEmptyWarningComponent, // TODO: see if we can put this back to private, required now for unit test of "Empty Warning Message"
     private translateService: UniversalTranslateService,
-    private viewCompiler: ViewCompiler,
-    private viewResources: ViewResources,
+    private pubSubService: UniversalPubSubService,
     externalServices: {
       collectionService?: CollectionService,
       extensionService?: ExtensionService,
@@ -189,7 +191,6 @@ export class AureliaSlickgridCustomElement {
     }
   ) {
     // initialize and assign all Service Dependencies
-    this.pubSubService = new UniversalPubSubService(this.pluginEa);
     this.pubSubService.eventNamingStyle = EventNamingStyle.kebabCase;
 
     this.gridEventService = externalServices?.gridEventService ?? new GridEventService();
@@ -199,11 +200,9 @@ export class AureliaSlickgridCustomElement {
     this.extensionUtility = externalServices?.extensionUtility ?? new ExtensionUtility(this.sharedService, this.translateService);
     const filterFactory = new FilterFactory(slickgridConfig, this.translateService, this.collectionService);
     this.filterService = externalServices?.filterService ?? new FilterService(filterFactory as any, this.pubSubService, this.sharedService);
-    this.resizerService = new ResizerService(this.pubSubService);
     this.sortService = externalServices?.sortService ?? new SortService(this.sharedService, this.pubSubService);
     this.treeDataService = externalServices?.treeDataService ?? new TreeDataService(this.sharedService);
     this.paginationService = externalServices?.paginationService ?? new PaginationService(this.pubSubService, this.sharedService);
-    const aureliaUtilService = new AureliaUtilService(this.container, this.viewCompiler, this.viewResources);
 
     // extensions
     const autoTooltipExtension = new AutoTooltipExtension(this.extensionUtility, this.sharedService);
@@ -217,7 +216,7 @@ export class AureliaSlickgridCustomElement {
     const groupItemMetaProviderExtension = new GroupItemMetaProviderExtension(this.sharedService);
     const headerButtonExtension = new HeaderButtonExtension(this.extensionUtility, this.sharedService);
     const headerMenuExtension = new HeaderMenuExtension(this.extensionUtility, this.filterService, this.pubSubService, this.sharedService, this.sortService, this.translateService);
-    const rowDetailViewExtension = new RowDetailViewExtension(aureliaUtilService, this.pubSubService, this.extensionUtility, this.sharedService);
+    const rowDetailViewExtension = new RowDetailViewExtension(this.aureliaUtilService, this.pubSubService, this.extensionUtility, this.sharedService);
     const rowMoveManagerExtension = new RowMoveManagerExtension(this.extensionUtility, this.sharedService);
     const rowSelectionExtension = new RowSelectionExtension(this.extensionUtility, this.sharedService);
 
@@ -262,13 +261,26 @@ export class AureliaSlickgridCustomElement {
     return this._eventHandler;
   }
 
+  get isDatasetInitialized(): boolean {
+    return this._isDatasetInitialized;
+  }
+  set isDatasetInitialized(isInitialized: boolean) {
+    this._isDatasetInitialized = isInitialized;
+  }
+
+  get registeredServices(): any[] {
+    return this._registeredServices;
+  }
+
   attached() {
-    this.initialization();
+    this._eventHandler = new Slick.EventHandler();
+    this.initialization(this._eventHandler);
     this._isGridInitialized = true;
   }
 
-  initialization() {
+  initialization(eventHandler: SlickEventHandler) {
     this.gridOptions.translater = this.translateService;
+    this._eventHandler = eventHandler;
 
     // when detecting a frozen grid, we'll automatically enable the mousewheel scroll handler so that we can scroll from both left/right frozen containers
     if (this.gridOptions && ((this.gridOptions.frozenRow !== undefined && this.gridOptions.frozenRow >= 0) || this.gridOptions.frozenColumn !== undefined && this.gridOptions.frozenColumn >= 0) && this.gridOptions.enableMouseWheelScrollHandler === undefined) {
@@ -279,14 +291,14 @@ export class AureliaSlickgridCustomElement {
     this.sharedService.internalPubSubService = this.pubSubService;
 
     const aureliaEventPrefix = this.gridOptions?.defaultAureliaEventPrefix ?? DEFAULT_AURELIA_EVENT_PREFIX;
-    this.pubSubService.dispatchCustomEvent(this.elm, 'onBeforeGridCreate', { beforeGridCreate: true }, aureliaEventPrefix);
+    this.pubSubService.dispatchCustomEvent(this.elm, 'onBeforeGridCreate', true, aureliaEventPrefix);
 
     // make sure the dataset is initialized (if not it will throw an error that it cannot getLength of null)
     this._dataset = this._dataset || this.dataset || [];
     this.gridOptions = this.mergeGridOptions(this.gridOptions);
-    this._paginationOptions = this.gridOptions && this.gridOptions.pagination;
-    this.locales = this.gridOptions && this.gridOptions.locales || Constants.locales;
-    this.backendServiceApi = this.gridOptions && this.gridOptions.backendServiceApi;
+    this._paginationOptions = this.gridOptions?.pagination;
+    this.locales = this.gridOptions?.locales ?? Constants.locales;
+    this.backendServiceApi = this.gridOptions?.backendServiceApi;
     this._isLocalGrid = !this.backendServiceApi; // considered a local grid if it doesn't have a backend service set
 
     this.createBackendApiInternalPostProcessCallback(this.gridOptions);
@@ -332,9 +344,9 @@ export class AureliaSlickgridCustomElement {
     this.bindDifferentHooks(this.grid, this.gridOptions, this.dataview);
 
     // when it's a frozen grid, we need to keep the frozen column id for reference if we ever show/hide column from ColumnPicker/GridMenu afterward
-    const frozenColumnIndex = this.gridOptions.frozenColumn !== undefined ? this.gridOptions.frozenColumn : -1;
-    if (frozenColumnIndex >= 0 && frozenColumnIndex <= this._columnDefinitions.length) {
-      this.sharedService.frozenVisibleColumnId = this._columnDefinitions[frozenColumnIndex].id || '';
+    const frozenColumnIndex = this.gridOptions?.frozenColumn ?? -1;
+    if (frozenColumnIndex >= 0 && frozenColumnIndex <= this._columnDefinitions.length && this._columnDefinitions.length > 0) {
+      this.sharedService.frozenVisibleColumnId = this._columnDefinitions[frozenColumnIndex]?.id ?? '';
     }
 
     // initialize the SlickGrid grid
@@ -348,7 +360,7 @@ export class AureliaSlickgridCustomElement {
       // if you don't want the items that are not visible (due to being filtered out or being on a different page)
       // to stay selected, pass 'false' to the second arg
       const selectionModel = this.grid && this.grid.getSelectionModel();
-      if (selectionModel && this.gridOptions && this.gridOptions.dataView && this.gridOptions.dataView.hasOwnProperty('syncGridSelection')) {
+      if (selectionModel && this.gridOptions?.dataView && this.gridOptions.dataView.hasOwnProperty('syncGridSelection')) {
         // if we are using a Backend Service, we will do an extra flag check, the reason is because it might have some unintended behaviors
         // with the BackendServiceApi because technically the data in the page changes the DataView on every page change.
         let preservedRowSelectionWithBackend = false;
@@ -400,27 +412,27 @@ export class AureliaSlickgridCustomElement {
     // bind resize ONLY after the dataView is ready
     this.bindResizeHook(this.grid, this.gridOptions);
 
+    // push all other Services that we want to be registered
+    this._registeredServices.push(this.gridService, this.gridStateService);
+
     // bind grouping and header grouping colspan service
     if (this.gridOptions.createPreHeaderPanel && !this.gridOptions.enableDraggableGrouping) {
-      this.groupingService.init(this.grid);
+      this._registeredServices.push(this.groupingService);
     }
 
-    // initialize grid service
-    this.gridService.init(this.grid);
+    // when using Tree Data View, register its Service
+    if (this.gridOptions.enableTreeData) {
+      this._registeredServices.push(this.treeDataService);
+    }
 
     // when user enables translation, we need to translate Headers on first pass & subsequently in the bindDifferentHooks
     if (this.gridOptions.enableTranslate) {
       this.extensionService.translateColumnHeaders();
     }
 
-    // when using Tree Data View
-    if (this.gridOptions.enableTreeData) {
-      this.treeDataService.init(this.grid);
-    }
-
     // bind the Backend Service API callback functions only after the grid is initialized
     // because the preProcess() and onInit() might get triggered
-    if (this.gridOptions && this.gridOptions.backendServiceApi) {
+    if (this.gridOptions?.backendServiceApi) {
       this.bindBackendCallbackFunctions(this.gridOptions);
     }
 
@@ -434,8 +446,6 @@ export class AureliaSlickgridCustomElement {
       }
     }
 
-    this.gridStateService.init(this.grid);
-
     // create the Aurelia Grid Instance with reference to all Services
     const aureliaElementInstance: AureliaGridInstance = {
       // Slick Grid & DataView objects
@@ -446,7 +456,7 @@ export class AureliaSlickgridCustomElement {
       dispose: this.dispose.bind(this),
 
       // return all available Services (non-singleton)
-      backendService: this.gridOptions && this.gridOptions.backendServiceApi && this.gridOptions.backendServiceApi.service,
+      backendService: this.gridOptions?.backendServiceApi?.service,
       filterService: this.filterService,
       gridEventService: this.gridEventService,
       gridStateService: this.gridStateService,
@@ -485,14 +495,14 @@ export class AureliaSlickgridCustomElement {
   detached(shouldEmptyDomElementContainer = false) {
     const aureliaEventPrefix = this.gridOptions?.defaultAureliaEventPrefix ?? DEFAULT_AURELIA_EVENT_PREFIX;
     this.pubSubService.dispatchCustomEvent(this.elm, 'onBeforeGridDestroy', this.grid, aureliaEventPrefix);
-    this._eventHandler.unsubscribeAll();
+    this._eventHandler?.unsubscribeAll();
 
     // we could optionally also empty the content of the grid container DOM element
     if (shouldEmptyDomElementContainer) {
       this.emptyGridContainerElm();
     }
 
-    this.pubSubService.dispatchCustomEvent(this.elm, 'onAfterGridDestroy', this.grid, aureliaEventPrefix);
+    this.pubSubService.dispatchCustomEvent(this.elm, 'onAfterGridDestroyed', true, aureliaEventPrefix);
 
     // dispose of all Services
     this.serviceList.forEach((service: any) => {
@@ -539,7 +549,7 @@ export class AureliaSlickgridCustomElement {
   }
 
   emptyGridContainerElm() {
-    const gridContainerId = this.gridOptions && this.gridOptions.gridContainerId || 'grid1';
+    const gridContainerId = this.gridOptions?.gridContainerId ?? 'grid1';
     $(gridContainerId).empty();
   }
 
@@ -609,7 +619,7 @@ export class AureliaSlickgridCustomElement {
     }
 
     // when a hierarchical dataset is set afterward, we can reset the flat dataset and call a tree data sort that will overwrite the flat dataset
-    if (newHierarchicalDataset && this.sortService && this.sortService.processTreeDataInitialSort && this.gridOptions && this.gridOptions.enableTreeData) {
+    if (newHierarchicalDataset && this.sortService && this.sortService.processTreeDataInitialSort && this.gridOptions?.enableTreeData) {
       this.dataview.setItems([], this.gridOptions.datasetIdPropertyName);
       this.sortService.processTreeDataInitialSort();
     }
@@ -629,7 +639,7 @@ export class AureliaSlickgridCustomElement {
       if (typeof backendApiService.getDatasetName === 'function') {
         backendApi.internalPostProcess = (processResult: any) => {
           const datasetName = (backendApi && backendApiService && typeof backendApiService.getDatasetName === 'function') ? backendApiService.getDatasetName() : '';
-          if (processResult && processResult.data && processResult.data[datasetName]) {
+          if (processResult?.data[datasetName]) {
             const data = processResult.data[datasetName].hasOwnProperty('nodes') ? (processResult as any).data[datasetName].nodes : (processResult as any).data[datasetName];
             const totalCount = processResult.data[datasetName].hasOwnProperty('totalCount') ? (processResult as any).data[datasetName].totalCount : (processResult as any).data[datasetName].length;
             this.refreshGridData(data, totalCount || 0);
@@ -639,7 +649,7 @@ export class AureliaSlickgridCustomElement {
     }
   }
 
-  bindDifferentHooks(grid: any, gridOptions: GridOption, dataView: any) {
+  bindDifferentHooks(grid: SlickGrid, gridOptions: GridOption, dataView: SlickDataView) {
     // translate some of them on first load, then on each language change
     if (gridOptions.enableTranslate) {
       this.translateColumnHeaderTitleKeys();
@@ -704,85 +714,89 @@ export class AureliaSlickgridCustomElement {
       }
     }
 
-    // expose all Slick Grid Events through dispatch
-    for (const prop in grid) {
-      if (grid.hasOwnProperty(prop) && prop.startsWith('on')) {
-        const gridEventHandler = grid[prop];
-        (this._eventHandler as SlickEventHandler<GetSlickEventType<typeof gridEventHandler>>).subscribe(gridEventHandler, (event, args) => {
-          const eventPrefix = this.gridOptions?.defaultSlickgridEventPrefix ?? DEFAULT_SLICKGRID_EVENT_PREFIX;
-          return this.pubSubService.dispatchCustomEvent(this.elm, prop, { eventData: event, args }, eventPrefix);
-        });
-      }
-    }
-
-    // expose all Slick DataView Events through dispatch
-    for (const prop in dataView) {
-      if (dataView.hasOwnProperty(prop) && prop.startsWith('on')) {
-        const gridEventHandler = dataView[prop];
-        (this._eventHandler as SlickEventHandler<GetSlickEventType<typeof gridEventHandler>>).subscribe(gridEventHandler, (event, args) => {
-          const eventPrefix = this.gridOptions?.defaultSlickgridEventPrefix ?? DEFAULT_SLICKGRID_EVENT_PREFIX;
-          return this.pubSubService.dispatchCustomEvent(this.elm, prop, { eventData: event, args }, eventPrefix);
-        });
-      }
-    }
-
-    // on cell click, mainly used with the columnDef.action callback
-    this.gridEventService.bindOnBeforeEditCell(grid);
-    this.gridEventService.bindOnCellChange(grid);
-    this.gridEventService.bindOnClick(grid);
-
-    // get any possible Services that user want to register
-    this._registeredServices = this.gridOptions.registerExternalServices || [];
-
     if (dataView && grid) {
-      this._eventHandler.subscribe(dataView.onRowCountChanged, (_e: Event, args: any) => {
-        grid.invalidate();
-
-        this.metrics = {
-          startTime: new Date(),
-          endTime: new Date(),
-          itemCount: args && args.current || 0,
-          totalItemCount: Array.isArray(this._dataset) ? this._dataset.length : 0
-        };
-
-        // when using local (in-memory) dataset, we'll display a warning message when filtered data is empty
-        if (this._isLocalGrid && this.gridOptions && this.gridOptions.enableEmptyDataWarningMessage) {
-          this.displayEmptyDataWarning(args.current === 0);
+      // expose all Slick Grid Events through dispatch
+      for (const prop in grid) {
+        if (grid.hasOwnProperty(prop) && prop.startsWith('on')) {
+          const gridEventHandler = grid[prop];
+          (this._eventHandler as SlickEventHandler<GetSlickEventType<typeof gridEventHandler>>).subscribe(gridEventHandler, (event, args) => {
+            const eventPrefix = this.gridOptions?.defaultSlickgridEventPrefix ?? DEFAULT_SLICKGRID_EVENT_PREFIX;
+            return this.pubSubService.dispatchCustomEvent(this.elm, prop, { eventData: event, args }, eventPrefix);
+          });
         }
-      });
-
-      // when dealing with Tree Data View, make sure we have necessary tree data options
-      if (this.gridOptions && this.gridOptions.enableTreeData && (!this.gridOptions.treeDataOptions || !this.gridOptions.treeDataOptions.columnId)) {
-        throw new Error('[Aurelia-Slickgrid] When enabling tree data, you must also provide the "treeDataOption" property in your Grid Options with "childrenPropName" or "parentPropName" (depending if your array is hierarchical or flat) for the Tree Data to work properly');
       }
 
-      this._eventHandler.subscribe(dataView.onRowsChanged, (_e: Event, args: any) => {
-        // when dealing with Tree Data, anytime the flat dataset changes, we need to update our hierarchical dataset
-        // this could be triggered by a DataView setItems or updateItem
-        if (this.gridOptions && this.gridOptions.enableTreeData) {
-          const items = this.dataview.getItems();
-          if (Array.isArray(items) && items.length > 0 && !this._isDatasetInitialized) {
-            this.sharedService.hierarchicalDataset = this.treeDataSortComparer(items);
+      // expose all Slick DataView Events through dispatch
+      for (const prop in dataView) {
+        if (dataView.hasOwnProperty(prop) && prop.startsWith('on')) {
+          const dataViewEventHandler = dataView[prop];
+          (this._eventHandler as SlickEventHandler<GetSlickEventType<typeof dataViewEventHandler>>).subscribe(dataViewEventHandler, (event, args) => {
+            const eventPrefix = this.gridOptions?.defaultSlickgridEventPrefix ?? DEFAULT_SLICKGRID_EVENT_PREFIX;
+            return this.pubSubService.dispatchCustomEvent(this.elm, prop, { eventData: event, args }, eventPrefix);
+          });
+        }
+      }
+
+      // on cell click, mainly used with the columnDef.action callback
+      this.gridEventService.bindOnBeforeEditCell(grid);
+      this.gridEventService.bindOnCellChange(grid);
+      this.gridEventService.bindOnClick(grid);
+
+      // get any possible Services that user want to register
+      this._registeredServices = this.gridOptions.registerExternalServices || [];
+
+      if (dataView && grid) {
+        const onRowCountChangedHandler = dataView.onRowCountChanged;
+        (this._eventHandler as SlickEventHandler<GetSlickEventType<typeof onRowCountChangedHandler>>).subscribe(onRowCountChangedHandler, (_e, args) => {
+          grid.invalidate();
+
+          this.metrics = {
+            startTime: new Date(),
+            endTime: new Date(),
+            itemCount: args && args.current || 0,
+            totalItemCount: Array.isArray(this._dataset) ? this._dataset.length : 0
+          };
+
+          // when using local (in-memory) dataset, we'll display a warning message when filtered data is empty
+          if (this._isLocalGrid && this.gridOptions?.enableEmptyDataWarningMessage) {
+            this.displayEmptyDataWarning(args.current === 0);
           }
+        });
+
+        // when dealing with Tree Data View, make sure we have necessary tree data options
+        if (this.gridOptions?.enableTreeData && (!this.gridOptions.treeDataOptions || !this.gridOptions.treeDataOptions.columnId)) {
+          throw new Error('[Aurelia-Slickgrid] When enabling tree data, you must also provide the "treeDataOption" property in your Grid Options with "childrenPropName" or "parentPropName" (depending if your array is hierarchical or flat) for the Tree Data to work properly');
         }
 
-        // filtering data with local dataset will not always show correctly unless we call this updateRow/render
-        // also don't use "invalidateRows" since it destroys the entire row and as bad user experience when updating a row
-        // see commit: https://github.com/ghiscoding/aurelia-slickgrid/commit/8c503a4d45fba11cbd8d8cc467fae8d177cc4f60
-        if (gridOptions && gridOptions.enableFiltering && !gridOptions.enableRowDetailView) {
-          if (args && args.rows && Array.isArray(args.rows)) {
-            args.rows.forEach((row: any) => grid.updateRow(row));
-            grid.render();
+        const onRowsChangedHandler = dataView.onRowsChanged;
+        (this._eventHandler as SlickEventHandler<GetSlickEventType<typeof onRowsChangedHandler>>).subscribe(onRowsChangedHandler, (_e, args) => {
+          // when dealing with Tree Data, anytime the flat dataset changes, we need to update our hierarchical dataset
+          // this could be triggered by a DataView setItems or updateItem
+          if (this.gridOptions?.enableTreeData) {
+            const items = this.dataview.getItems();
+            if (Array.isArray(items) && items.length > 0 && !this._isDatasetInitialized) {
+              this.sharedService.hierarchicalDataset = this.treeDataSortComparer(items);
+            }
           }
-        }
-      });
+
+          // filtering data with local dataset will not always show correctly unless we call this updateRow/render
+          // also don't use "invalidateRows" since it destroys the entire row and as bad user experience when updating a row
+          // see commit: https://github.com/ghiscoding/aurelia-slickgrid/commit/8c503a4d45fba11cbd8d8cc467fae8d177cc4f60
+          if (gridOptions && gridOptions.enableFiltering && !gridOptions.enableRowDetailView) {
+            if (args?.rows && Array.isArray(args.rows)) {
+              args.rows.forEach((row: number) => grid.updateRow(row));
+              grid.render();
+            }
+          }
+        });
+      }
     }
 
     // does the user have a colspan callback?
-    if (gridOptions && gridOptions.colspanCallback && dataView && dataView.getItem && dataView.getItemMetadata) {
+    if (gridOptions?.colspanCallback && dataView?.getItem && dataView?.getItemMetadata) {
       dataView.getItemMetadata = (rowNumber: number) => {
         let callbackResult = null;
-        if (gridOptions.colspanCallback && gridOptions.colspanCallback) {
+        if (gridOptions.colspanCallback) {
           callbackResult = gridOptions.colspanCallback(dataView.getItem(rowNumber));
         }
         return callbackResult;
@@ -837,7 +851,7 @@ export class AureliaSlickgridCustomElement {
 
           // the processes can be a Promise (like Http)
           if (process instanceof Promise && process.then) {
-            const totalItems = this.gridOptions && this.gridOptions.pagination && this.gridOptions.pagination.totalItems || 0;
+            const totalItems = this.gridOptions?.pagination?.totalItems ?? 0;
             process.then((processResult: any) => executeBackendProcessesCallback(startTime, processResult, backendApi, totalItems))
               .catch((error) => onBackendError(error, backendApi));
           }
@@ -846,7 +860,7 @@ export class AureliaSlickgridCustomElement {
     }
   }
 
-  bindResizeHook(grid: any, options: GridOption) {
+  bindResizeHook(grid: SlickGrid, options: GridOption) {
     // expand/autofit columns on first page load
     if (grid && options.autoFitColumnsOnFirstLoad && options.enableAutoSizeColumns && typeof grid.autosizeColumns === 'function') {
       this.grid.autosizeColumns();
@@ -865,7 +879,7 @@ export class AureliaSlickgridCustomElement {
     }
   }
 
-  executeAfterDataviewCreated(_grid: any, gridOptions: GridOption) {
+  executeAfterDataviewCreated(_grid: SlickGrid, gridOptions: GridOption) {
     // if user entered some Sort "presets", we need to reflect them all in the DOM
     if (gridOptions.enableSorting) {
       if (gridOptions.presets && Array.isArray(gridOptions.presets.sorters) && gridOptions.presets.sorters.length > 0) {
@@ -915,7 +929,7 @@ export class AureliaSlickgridCustomElement {
    * Also if we use Row Selection or the Checkbox Selector, we need to reset any selection
    */
   paginationChanged(pagination: ServicePagination) {
-    const isSyncGridSelectionEnabled = this.gridStateService && this.gridStateService.needToPreserveRowSelection() || false;
+    const isSyncGridSelectionEnabled = this.gridStateService?.needToPreserveRowSelection() ?? false;
     if (!isSyncGridSelectionEnabled && (this.gridOptions.enableRowSelection || this.gridOptions.enableCheckboxSelector)) {
       this.grid.setSelectedRows([]);
     }
@@ -931,14 +945,14 @@ export class AureliaSlickgridCustomElement {
     });
   }
 
-  paginationOptionsChanged(newOptions: Pagination) {
-    if (newOptions && this._paginationOptions) {
-      this._paginationOptions = { ...this._paginationOptions, ...newOptions };
+  paginationOptionsChanged(newPaginationOptions: Pagination) {
+    if (newPaginationOptions && this._paginationOptions) {
+      this._paginationOptions = { ...this._paginationOptions, ...newPaginationOptions };
     } else {
-      this._paginationOptions = newOptions;
+      this._paginationOptions = newPaginationOptions;
     }
     this.gridOptions.pagination = this._paginationOptions;
-    this.paginationService.updateTotalItems(newOptions && newOptions.totalItems || 0, true);
+    this.paginationService.updateTotalItems(newPaginationOptions?.totalItems ?? 0, true);
   }
 
   /**
@@ -949,12 +963,12 @@ export class AureliaSlickgridCustomElement {
     // local grid, check if we need to show the Pagination
     // if so then also check if there's any presets and finally initialize the PaginationService
     // a local grid with Pagination presets will potentially have a different total of items, we'll need to get it from the DataView and update our total
-    if (this.gridOptions && this.gridOptions.enablePagination && this._isLocalGrid) {
+    if (this.gridOptions?.enablePagination && this._isLocalGrid) {
       this.showPagination = true;
       this.loadLocalGridPagination(dataset);
     }
 
-    if (this.gridOptions && this.gridOptions.enableEmptyDataWarningMessage && Array.isArray(dataset)) {
+    if (this.gridOptions?.enableEmptyDataWarningMessage && Array.isArray(dataset)) {
       const finalTotalCount = totalCount || dataset.length;
       this.displayEmptyDataWarning(finalTotalCount < 1);
     }
@@ -988,12 +1002,12 @@ export class AureliaSlickgridCustomElement {
       // display the Pagination component only after calling this refresh data first, we call it here so that if we preset pagination page number it will be shown correctly
       this.showPagination = (this.gridOptions && (this.gridOptions.enablePagination || (this.gridOptions.backendServiceApi && this.gridOptions.enablePagination === undefined))) ? true : false;
 
-      if (this.gridOptions && this.gridOptions.backendServiceApi && this.gridOptions.pagination && this._paginationOptions) {
+      if (this._paginationOptions && this.gridOptions?.pagination && this.gridOptions?.backendServiceApi) {
         const paginationOptions = this.setPaginationOptionsWhenPresetDefined(this.gridOptions, this._paginationOptions);
 
         // when we have a totalCount use it, else we'll take it from the pagination object
         // only update the total items if it's different to avoid refreshing the UI
-        const totalRecords = (totalCount !== undefined) ? totalCount : (this.gridOptions && this.gridOptions.pagination && this.gridOptions.pagination.totalItems);
+        const totalRecords = (totalCount !== undefined) ? totalCount : (this.gridOptions?.pagination?.totalItems);
         if (totalRecords !== undefined && totalRecords !== this.totalItems) {
           this.totalItems = +totalRecords;
         }
@@ -1002,7 +1016,7 @@ export class AureliaSlickgridCustomElement {
           this.initializePaginationService(paginationOptions);
         } else {
           // update the pagination service with the new total
-          this.paginationService.totalItems = this.totalItems;
+          this.paginationService.updateTotalItems(this.totalItems);
         }
       }
 
@@ -1054,7 +1068,7 @@ export class AureliaSlickgridCustomElement {
         this.extensionService.renderColumnHeaders(newColumnDefinitions, true);
       }
 
-      if (this.gridOptions && this.gridOptions.enableAutoSizeColumns) {
+      if (this.gridOptions?.enableAutoSizeColumns) {
         this.grid.autosizeColumns();
       }
     }
@@ -1082,7 +1096,7 @@ export class AureliaSlickgridCustomElement {
         this.pubSubService.subscribe('onPaginationChanged', (paginationChanges: ServicePagination) => this.paginationChanged(paginationChanges)),
         this.pubSubService.subscribe('onPaginationVisibilityChanged', (visibility: { visible: boolean }) => {
           this.showPagination = visibility?.visible ?? false;
-          if (this.gridOptions && this.gridOptions.backendServiceApi) {
+          if (this.gridOptions?.backendServiceApi) {
             refreshBackendDataset();
           }
         })
@@ -1093,7 +1107,9 @@ export class AureliaSlickgridCustomElement {
 
   /** Load the Editor Collection asynchronously and replace the "collection" property when Promise resolves */
   private loadEditorCollectionAsync(column: Column) {
-    const collectionAsync = column && column.editor && (column.editor as ColumnEditor).collectionAsync;
+    const collectionAsync = (column?.editor as ColumnEditor).collectionAsync;
+    (column?.editor as ColumnEditor).disabled = true; // disable the Editor DOM element, we'll re-enable it after receiving the collection with "updateEditorCollection()"
+
     if (collectionAsync) {
       // wait for the "collectionAsync", once resolved we will save it into the "collection"
       // the collectionAsync can be of 3 types HttpClient, HttpFetch or a Promise
@@ -1150,10 +1166,10 @@ export class AureliaSlickgridCustomElement {
   private loadLocalGridPagination(dataset?: any[]) {
     if (this.gridOptions && this._paginationOptions) {
       this.totalItems = Array.isArray(dataset) ? dataset.length : 0;
-      if (this._paginationOptions && this.dataview && this.dataview.getPagingInfo) {
-        const slickPagingInfo = this.dataview.getPagingInfo() || {};
-        if (slickPagingInfo.hasOwnProperty('totalRows') && this._paginationOptions.totalItems !== slickPagingInfo.totalRows) {
-          this.totalItems = slickPagingInfo.totalRows;
+      if (this._paginationOptions && this.dataview?.getPagingInfo) {
+        const slickPagingInfo = this.dataview.getPagingInfo();
+        if (slickPagingInfo?.hasOwnProperty('totalRows') && this._paginationOptions.totalItems !== slickPagingInfo.totalRows) {
+          this.totalItems = slickPagingInfo.totalRows || 0;
         }
       }
       this._paginationOptions.totalItems = this.totalItems;
@@ -1165,7 +1181,7 @@ export class AureliaSlickgridCustomElement {
   /** Load any Row Selections into the DataView that were presets by the user */
   private loadRowSelectionPresetWhenExists() {
     // if user entered some Row Selections "presets"
-    const presets = this.gridOptions && this.gridOptions.presets;
+    const presets = this.gridOptions?.presets;
     const selectionModel = this.grid && this.grid.getSelectionModel();
     const enableRowSelection = this.gridOptions && (this.gridOptions.enableCheckboxSelector || this.gridOptions.enableRowSelection);
     if (enableRowSelection && selectionModel && presets && presets.rowSelection && (Array.isArray(presets.rowSelection.gridRowIndexes) || Array.isArray(presets.rowSelection.dataContextIds))) {
@@ -1184,7 +1200,11 @@ export class AureliaSlickgridCustomElement {
       // local Pagination uses the DataView and that also trigger a change/refresh
       // and we don't want to trigger 2 Grid State changes just 1
       if ((this._isLocalGrid && !this.gridOptions.enablePagination) || !this._isLocalGrid) {
-        setTimeout(() => this.grid.setSelectedRows(gridRowIndexes));
+        setTimeout(() => {
+          if (this.grid && Array.isArray(gridRowIndexes)) {
+            this.grid.setSelectedRows(gridRowIndexes);
+          }
+        });
       }
     }
   }
@@ -1214,8 +1234,8 @@ export class AureliaSlickgridCustomElement {
   }
 
   private treeDataSortComparer(flatDataset: any[]): any[] {
-    const dataViewIdIdentifier = this.gridOptions && this.gridOptions.datasetIdPropertyName || 'id';
-    const treeDataOpt: TreeDataOption = this.gridOptions && this.gridOptions.treeDataOptions || { columnId: '' };
+    const dataViewIdIdentifier = this.gridOptions?.datasetIdPropertyName ?? 'id';
+    const treeDataOpt: TreeDataOption = this.gridOptions?.treeDataOptions ?? { columnId: '' };
     const treeDataOptions = { ...treeDataOpt, identifierPropName: treeDataOpt.identifierPropName || dataViewIdIdentifier };
     return convertParentChildArrayToHierarchicalView(flatDataset, treeDataOptions);
   }
@@ -1244,7 +1264,7 @@ export class AureliaSlickgridCustomElement {
   /** Translate all Custom Footer Texts (footer with metrics) */
   private translateCustomFooterTexts() {
     if (this.translateService?.translate) {
-      const customFooterOptions = this.gridOptions && this.gridOptions.customFooterOptions || {};
+      const customFooterOptions = this.gridOptions?.customFooterOptions ?? {};
       customFooterOptions.metricTexts = customFooterOptions.metricTexts || {};
       for (const propName of Object.keys(customFooterOptions.metricTexts)) {
         if (propName.lastIndexOf('Key') > 0) {
@@ -1274,12 +1294,23 @@ export class AureliaSlickgridCustomElement {
    */
   private updateEditorCollection<T = any>(column: Column<T>, newCollection: T[]) {
     (column.editor as ColumnEditor).collection = newCollection;
+    (column.editor as ColumnEditor).disabled = false;
 
-    // find the new column reference pointer & reassign the new editor to the internalColumnEditor
+    // find the new column reference pointer & re-assign the new editor to the internalColumnEditor
     const columns = this.grid.getColumns();
     if (Array.isArray(columns)) {
-      const columnRef: Column = columns.find((col: Column) => col.id === column.id);
-      columnRef.internalColumnEditor = column.editor as ColumnEditor;
+      const columnRef = columns.find((col: Column) => col.id === column.id);
+      if (columnRef) {
+        columnRef.internalColumnEditor = column.editor as ColumnEditor;
+      }
+    }
+
+    // get current Editor, remove it from the DOm then re-enable it and re-render it with the new collection.
+    const currentEditor = this.grid.getCellEditor() as AutoCompleteEditor | SelectEditor;
+    if (currentEditor?.disable && currentEditor?.renderDomElement) {
+      currentEditor.destroy();
+      currentEditor.disable(false);
+      currentEditor.renderDomElement(newCollection);
     }
   }
 }

@@ -1,5 +1,8 @@
+import { SlickGrid } from '@slickgrid-universal/common';
 import { autoinject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
+import * as moment from 'moment-mini';
+
 import { CustomInputFilter } from './custom-inputFilter';
 import {
   AureliaGridInstance,
@@ -14,7 +17,6 @@ import {
   MultipleSelectOption,
   OperatorType,
 } from '../../aurelia-slickgrid';
-import * as moment from 'moment-mini';
 
 const NB_ITEMS = 1500;
 
@@ -23,8 +25,8 @@ function randomBetween(min: number, max: number): number {
 }
 
 // create a custom translate Formatter (typically you would move that a separate file, for separation of concerns)
-const taskTranslateFormatter: Formatter = (_row, _cell, value, _columnDef, _dataContext, grid: any) => {
-  const gridOptions = (grid && typeof grid.getOptions === 'function') ? grid.getOptions() : {};
+const taskTranslateFormatter: Formatter = (_row, _cell, value, _columnDef, _dataContext, grid: SlickGrid) => {
+  const gridOptions: GridOption = (grid && typeof grid.getOptions === 'function') ? grid.getOptions() : {};
   const i18n = gridOptions.i18n;
 
   return i18n && i18n.tr && i18n.tr('TASK_X', { x: value });

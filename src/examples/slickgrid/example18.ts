@@ -1,3 +1,4 @@
+import { SlickDataView, SlickGrid } from '@slickgrid-universal/common';
 import { ExcelExportService } from '@slickgrid-universal/excel-export';
 import { FileExportService } from '@slickgrid-universal/file-export';
 import { autoinject } from 'aurelia-framework';
@@ -39,10 +40,10 @@ export class Example18 {
   aureliaGrid: AureliaGridInstance;
   columnDefinitions: Column[];
   dataset: any[];
-  dataviewObj: any;
+  dataviewObj: SlickDataView;
   draggableGroupingPlugin: any;
   durationOrderByCount = false;
-  gridObj: any;
+  gridObj: SlickGrid;
   gridOptions: GridOption;
   processing = false;
   selectedGroupingFields: Array<string | GroupingGetterFunction> = ['', '', ''];

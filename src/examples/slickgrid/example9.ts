@@ -1,3 +1,4 @@
+import { SlickDataView, SlickGrid } from '@slickgrid-universal/common';
 import { I18N } from 'aurelia-i18n';
 import { autoinject } from 'aurelia-framework';
 import {
@@ -31,8 +32,8 @@ export class Example9 {
   columnDefinitions: Column[];
   gridOptions: GridOption;
   dataset = [];
-  dataView: any;
-  gridObj: any;
+  dataView: SlickDataView;
+  gridObj: SlickGrid;
   selectedLanguage: string;
 
   constructor(private i18n: I18N) {

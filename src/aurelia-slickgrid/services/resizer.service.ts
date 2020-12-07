@@ -2,19 +2,22 @@ import {
   GetSlickEventType,
   GridOption,
   GridSize,
-  PubSubService,
   SlickEventData,
   SlickEventHandler,
   SlickGrid,
   SlickNamespace,
   SlickResizer,
 } from '@slickgrid-universal/common';
+import { inject, singleton } from 'aurelia-framework';
+import { UniversalPubSubService } from './universalPubSub.service';
 
 // using external non-typed js libraries
 declare const Slick: SlickNamespace;
 const DATAGRID_FOOTER_HEIGHT = 25;
 const DATAGRID_PAGINATION_HEIGHT = 35;
 
+@singleton(true)
+@inject(UniversalPubSubService)
 export class ResizerService {
   private _grid: SlickGrid;
   private _addon: SlickResizer;
@@ -29,7 +32,7 @@ export class ResizerService {
     return (this._grid && this._grid.getOptions) ? this._grid.getOptions() : {};
   }
 
-  constructor(private eventPubSubService: PubSubService) {
+  constructor(private pubSubService: UniversalPubSubService) {
     this._eventHandler = new Slick.EventHandler();
   }
 
@@ -71,13 +74,13 @@ export class ResizerService {
       if (this._addon && this._addon.onGridAfterResize) {
         const onGridAfterResizeHandler = this._addon.onGridAfterResize;
         (this._eventHandler as SlickEventHandler<GetSlickEventType<typeof onGridAfterResizeHandler>>).subscribe(onGridAfterResizeHandler, (_e, args) => {
-          this.eventPubSubService.publish('onGridAfterResize', args);
+          this.pubSubService.publish('onGridAfterResize', args);
         });
       }
       if (this._addon && this._addon.onGridBeforeResize) {
         const onGridBeforeResizeHandler = this._addon.onGridBeforeResize;
         (this._eventHandler as SlickEventHandler<GetSlickEventType<typeof onGridBeforeResizeHandler>>).subscribe(onGridBeforeResizeHandler, (_e, args) => {
-          this.eventPubSubService.publish('onGridBeforeResize', args);
+          this.pubSubService.publish('onGridBeforeResize', args);
         });
       }
     }

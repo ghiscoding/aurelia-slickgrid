@@ -1,3 +1,4 @@
+import { SlickGrid } from '@slickgrid-universal/common';
 import { ExcelExportService } from '@slickgrid-universal/excel-export';
 import { FileExportService } from '@slickgrid-universal/file-export';
 import { autoinject } from 'aurelia-framework';
@@ -62,7 +63,7 @@ export class Example12 {
   dataset: any[];
   selectedLanguage: string;
   duplicateTitleHeaderCount = 1;
-  gridObj: any;
+  gridObj: SlickGrid;
   excelExportService = new ExcelExportService();
   fileExportService = new FileExportService();
 

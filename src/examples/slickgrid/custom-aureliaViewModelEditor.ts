@@ -1,3 +1,5 @@
+import { SlickGrid } from '@slickgrid-universal/common';
+import { View, ViewSlot } from 'aurelia-framework';
 import {
   AureliaUtilService,
   Column,
@@ -6,7 +8,6 @@ import {
   EditorValidationResult,
   GridOption,
 } from '../../aurelia-slickgrid';
-import { View, ViewSlot } from 'aurelia-framework';
 
 /*
  * An example of a 'detached' editor.
@@ -27,7 +28,7 @@ export class CustomAureliaViewModelEditor implements Editor {
   selectedItem: any;
 
   /** SlickGrid grid object */
-  grid: any;
+  grid: SlickGrid;
 
   constructor(private args: any) {
     this.grid = args && args.grid;

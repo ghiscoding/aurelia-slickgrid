@@ -1,3 +1,4 @@
+import { SlickDataView, SlickGrid } from '@slickgrid-universal/common';
 import { ExcelExportService } from '@slickgrid-universal/excel-export';
 import { FileExportService } from '@slickgrid-universal/file-export';
 import { autoinject } from 'aurelia-framework';
@@ -33,8 +34,8 @@ export class Example13 {
   columnDefinitions: Column[];
   gridOptions: GridOption;
   dataset: any[];
-  dataviewObj: any;
-  gridObj: any;
+  dataviewObj: SlickDataView;
+  gridObj: SlickGrid;
   processing = false;
   excelExportService = new ExcelExportService();
   fileExportService = new FileExportService();

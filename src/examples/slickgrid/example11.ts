@@ -1,3 +1,4 @@
+import { SlickDataView, SlickGrid } from '@slickgrid-universal/common';
 import { autoinject } from 'aurelia-framework';
 import {
   AureliaGridInstance,
@@ -34,9 +35,9 @@ export class Example11 {
   `;
 
   aureliaGrid: AureliaGridInstance;
-  grid: any;
+  dataView: SlickDataView;
+  grid: SlickGrid;
   gridService: GridService;
-  dataView: any;
   columnDefinitions: Column[];
   gridOptions: GridOption;
   dataset: any[];

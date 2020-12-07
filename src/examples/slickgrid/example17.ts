@@ -1,3 +1,4 @@
+import { SlickGrid } from '@slickgrid-universal/common';
 import 'slickgrid/lib/jquery.jsonp-2.4.min';
 import 'slickgrid/slick.remotemodel'; // SlickGrid Remote Plugin
 import { bindable, bindingMode } from 'aurelia-framework';
@@ -46,7 +47,7 @@ export class Example17 {
   columnDefinitions: Column[];
   customDataView: any;
   dataset = [];
-  gridObj: any;
+  gridObj: SlickGrid;
   gridOptions: GridOption;
   loaderDataView: any;
   loading = false; // spinner when loading data

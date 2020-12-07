@@ -1,3 +1,6 @@
+import { SlickGrid } from '@slickgrid-universal/common';
+import * as $ from 'jquery';
+
 import {
   AureliaUtilService,
   Column,
@@ -10,16 +13,13 @@ import {
   OperatorString,
   SearchTerm,
 } from '../../aurelia-slickgrid';
-import * as $ from 'jquery';
 
 import { View, ViewSlot } from 'aurelia-framework';
 
 export class CustomAureliaViewModelFilter implements Filter {
-  private _clearFilterTriggered = false;
   private _shouldTriggerQuery = true;
-  private $filterElm: any;
   container;
-  grid: any;
+  grid: SlickGrid;
   searchTerms: SearchTerm[];
   columnDef: Column;
   callback: FilterCallback;
@@ -119,7 +119,7 @@ export class CustomAureliaViewModelFilter implements Filter {
 
   disposeViewSlot(createdView: { view?: View; viewSlot?: ViewSlot; }) {
     if (createdView && createdView.view && createdView.viewSlot && createdView.view.unbind && createdView.viewSlot.remove) {
-      if (this.container && this.container.length > 0) {
+      if (this.container?.length > 0) {
         createdView.viewSlot.remove(createdView.view);
         createdView.view.unbind();
         this.container[0].innerHTML = '';

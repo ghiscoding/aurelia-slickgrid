@@ -1,3 +1,4 @@
+import { SlickGrid } from '@slickgrid-universal/common';
 import { autoinject } from 'aurelia-framework';
 import { AureliaGridInstance, Column, GridOption } from '../../aurelia-slickgrid';
 
@@ -36,7 +37,7 @@ export class Example7 {
   gridOptions: GridOption;
   dataset = [];
   aureliaGrid: AureliaGridInstance;
-  gridObj: any;
+  gridObj: SlickGrid;
 
   constructor() {
     // define the grid options & columns and then create the grid itself
