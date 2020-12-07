@@ -1,9 +1,4 @@
 /// <reference types="cypress" />
-
-function removeExtraSpaces(textS) {
-  return `${textS}`.replace(/\s+/g, ' ').trim();
-}
-
 describe('Example 19 - Row Detail View', () => {
   const titles = ['', 'Title', 'Duration (days)', '% Complete', 'Start', 'Finish', 'Effort Driven'];
 

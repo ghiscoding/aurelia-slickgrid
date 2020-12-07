@@ -745,6 +745,11 @@ export class AureliaSlickgridCustomElement {
       // get any possible Services that user want to register
       this._registeredServices = this.gridOptions.registerExternalServices || [];
 
+      // at this point, we consider all the registered services as external services, anything else registered afterward aren't external
+      if (Array.isArray(this._registeredServices)) {
+        this.sharedService.externalRegisteredServices = this._registeredServices;
+      }
+
       if (dataView && grid) {
         const onRowCountChangedHandler = dataView.onRowCountChanged;
         (this._eventHandler as SlickEventHandler<GetSlickEventType<typeof onRowCountChangedHandler>>).subscribe(onRowCountChangedHandler, (_e, args) => {
@@ -893,7 +898,6 @@ export class AureliaSlickgridCustomElement {
     gridOptions.gridContainerId = `slickGridContainer-${this.gridId}`;
 
     // if we have a backendServiceApi and the enablePagination is undefined, we'll assume that we do want to see it, else get that defined value
-    // @deprecated TODO remove this check in the future, user should explicitely enable the Pagination since this feature is now optional (you can now call OData/GraphQL without Pagination which is a new feature)
     gridOptions.enablePagination = ((gridOptions.backendServiceApi && gridOptions.enablePagination === undefined) ? true : gridOptions.enablePagination) || false;
 
     // use jquery extend to deep merge & copy to avoid immutable properties being changed in GlobalGridOptions after a route change
@@ -902,7 +906,7 @@ export class AureliaSlickgridCustomElement {
     // using jQuery extend to do a deep clone has an unwanted side on objects and pageSizes but ES6 spread has other worst side effects
     // so we will just overwrite the pageSizes when needed, this is the only one causing issues so far.
     // jQuery wrote this on their docs:: On a deep extend, Object and Array are extended, but object wrappers on primitive types such as String, Boolean, and Number are not.
-    if (options && options.pagination && (gridOptions.enablePagination || gridOptions.backendServiceApi) && gridOptions.pagination && Array.isArray(gridOptions.pagination.pageSizes)) {
+    if (options?.pagination && (gridOptions.enablePagination || gridOptions.backendServiceApi) && gridOptions.pagination && Array.isArray(gridOptions.pagination.pageSizes)) {
       options.pagination.pageSizes = gridOptions.pagination.pageSizes;
     }
 
@@ -914,11 +918,13 @@ export class AureliaSlickgridCustomElement {
 
     // when we use Pagination on Local Grid, it doesn't seem to work without enableFiltering
     // so we'll enable the filtering but we'll keep the header row hidden
-    if (!options.enableFiltering && options.enablePagination && this._isLocalGrid) {
+    if (options && !options.enableFiltering && options.enablePagination && this._isLocalGrid) {
       options.enableFiltering = true;
       options.showHeaderRow = false;
       this._hideHeaderRowAfterPageLoad = true;
-      this.sharedService.hideHeaderRowAfterPageLoad = true;
+      if (this.sharedService) {
+        this.sharedService.hideHeaderRowAfterPageLoad = true;
+      }
     }
 
     return options;
@@ -1080,7 +1086,7 @@ export class AureliaSlickgridCustomElement {
 
   private displayEmptyDataWarning(showWarning = true) {
     this.slickEmptyWarning.grid = this.grid;
-    this.slickEmptyWarning && this.slickEmptyWarning.showEmptyDataMessage(showWarning);
+    this.slickEmptyWarning?.showEmptyDataMessage(showWarning);
   }
 
   /** Initialize the Pagination Service once */

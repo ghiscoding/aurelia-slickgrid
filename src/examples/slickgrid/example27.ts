@@ -1,3 +1,4 @@
+import { ExcelExportService } from '@slickgrid-universal/excel-export';
 import { autoinject } from 'aurelia-framework';
 import {
   AureliaGridInstance,
@@ -88,7 +89,6 @@ export class Example27 {
       },
       enableAutoSizeColumns: true,
       enableAutoResize: true,
-      enableExport: true,
       enableFiltering: true,
       enableTreeData: true, // you must enable this flag for the filtering & sorting to work as expected
       treeDataOptions: {
@@ -102,6 +102,8 @@ export class Example27 {
       presets: {
         filters: [{ columnId: 'percentComplete', searchTerms: [25], operator: '>=' }]
       },
+      enableExcelExport: true,
+      registerExternalServices: [new ExcelExportService()],
 
       // use Material Design SVG icons
       contextMenu: {

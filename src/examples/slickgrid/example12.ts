@@ -146,8 +146,6 @@ export class Example12 {
       },
       enableAutoResize: true,
       enableExcelCopyBuffer: true,
-      enableExcelExport: true,
-      enableExport: true,
       enableFiltering: true,
       enableTranslate: true,
       i18n: this.i18n,
@@ -173,14 +171,16 @@ export class Example12 {
         hideTotalItemCount: false,
         hideLastUpdateTimestamp: false,
       },
+      gridMenu: {
+        hideExportCsvCommand: false,           // false by default, so it's optional
+        hideExportTextDelimitedCommand: false  // true by default, so if you want it, you will need to disable the flag
+      },
+      enableExcelExport: true,
+      enableExport: true,
       exportOptions: {
         // set at the grid option level, meaning all column will evaluate the Formatter (when it has a Formatter defined)
         exportWithFormatter: true,
         sanitizeDataExport: true
-      },
-      gridMenu: {
-        hideExportCsvCommand: false,           // false by default, so it's optional
-        hideExportTextDelimitedCommand: false  // true by default, so if you want it, you will need to disable the flag
       },
       registerExternalServices: [this.excelExportService, this.fileExportService],
     };

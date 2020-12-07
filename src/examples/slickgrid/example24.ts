@@ -1,5 +1,5 @@
-
 import { SlickGrid } from '@slickgrid-universal/common';
+import { ExcelExportService } from '@slickgrid-universal/excel-export';
 import { autoinject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 
@@ -263,6 +263,8 @@ export class Example24 {
         // you can customize how the header titles will be styled (defaults to Bold)
         columnHeaderStyle: { font: { bold: true, italic: true } }
       },
+      enableExcelExport: true,
+      registerExternalServices: [new ExcelExportService()],
       i18n: this.i18n,
 
       enableContextMenu: true,

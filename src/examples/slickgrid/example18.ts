@@ -232,6 +232,8 @@ export class Example18 {
         onGroupChanged: (_e, args) => this.onGroupChanged(args),
         onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
       },
+      enableExport: true,
+      enableExcelExport: true,
       registerExternalServices: [this.excelExportService, this.fileExportService],
     };
   }

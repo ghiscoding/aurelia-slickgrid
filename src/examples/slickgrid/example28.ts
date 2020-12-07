@@ -1,3 +1,4 @@
+import { ExcelExportService } from '@slickgrid-universal/excel-export';
 import { autoinject, bindable } from 'aurelia-framework';
 import {
   AureliaGridInstance,
@@ -67,7 +68,6 @@ export class Example28 {
       },
       enableAutoSizeColumns: true,
       enableAutoResize: true,
-      enableExport: true,
       enableFiltering: true,
       enableTreeData: true, // you must enable this flag for the filtering & sorting to work as expected
       multiColumnSort: false,
@@ -83,6 +83,8 @@ export class Example28 {
       // change header/cell row height for salesforce theme
       headerRowHeight: 35,
       rowHeight: 33,
+      enableExcelExport: true,
+      registerExternalServices: [new ExcelExportService()],
 
       // use Material Design SVG icons
       contextMenu: {

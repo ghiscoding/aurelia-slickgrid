@@ -153,9 +153,10 @@ export class Example13 {
         container: '#demo-container',
         rightPadding: 10
       },
-      enableExcelExport: true,
       enableFiltering: true,
       enableGrouping: true,
+      enableExcelExport: true,
+      enableExport: true,
       excelExportOptions: {
         sanitizeDataExport: true
       },

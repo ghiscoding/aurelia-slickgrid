@@ -101,8 +101,8 @@ export const GlobalGridOptions: Partial<GridOption> = {
   enableColumnPicker: true,
   enableColumnReorder: true,
   enableContextMenu: true,
-  enableExcelExport: true, // Excel Export is the new default,
-  enableExport: false, // CSV/Text with Tab Delimited
+  enableExcelExport: false, // both export are now opt-in
+  enableExport: false,
   enableFilterTrimWhiteSpace: false, // do we want to trim white spaces on all Filters?
   enableGridMenu: true,
   enableSorting: true,
