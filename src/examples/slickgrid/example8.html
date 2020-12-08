@@ -8,7 +8,10 @@
   </button>
   <b>Locale:</b> <span style="font-style: italic" data-test="selected-locale">${selectedLanguage + '.json'}</span>
 
-  <aurelia-slickgrid grid-id="grid8" column-definitions.bind="columnDefinitions" grid-options.bind="gridOptions"
-    dataset.bind="dataset" asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
+  <aurelia-slickgrid grid-id="grid8"
+                     column-definitions.bind="columnDefinitions"
+                     grid-options.bind="gridOptions"
+                     dataset.bind="dataset"
+                     on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
   </aurelia-slickgrid>
 </template>

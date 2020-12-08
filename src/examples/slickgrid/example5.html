@@ -60,9 +60,9 @@
   <aurelia-slickgrid grid-id="grid5"
                      column-definitions.bind="columnDefinitions"
                      grid-options.bind="gridOptions"
-                     pagination-options.bind="paginationOptions"
                      dataset.bind="dataset"
-                     asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)"
-                     asg-on-grid-state-changed.delegate="gridStateChanged($event.detail)">
+                     pagination-options.bind="paginationOptions"
+                     on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)"
+                     on-grid-state-changed.delegate="gridStateChanged($event.detail)">
   </aurelia-slickgrid>
 </template>

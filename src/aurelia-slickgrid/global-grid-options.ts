@@ -75,8 +75,8 @@ export const GlobalGridOptions: Partial<GridOption> = {
   },
   datasetIdPropertyName: 'id',
   defaultColumnSortFieldId: 'id',
-  defaultAureliaEventPrefix: 'asg',
-  defaultSlickgridEventPrefix: 'sg',
+  defaultAureliaEventPrefix: '',
+  defaultSlickgridEventPrefix: '',
   defaultFilter: Filters.input,
   defaultFilterPlaceholder: '&#128269;', // magnifying glass icon
   defaultFilterRangeOperator: OperatorType.rangeExclusive,
@@ -185,7 +185,6 @@ export const GlobalGridOptions: Partial<GridOption> = {
     pageSize: 25,
     totalItems: 0
   },
-  // technically speaking the Row Detail requires the process & viewComponent but we'll ignore it just to set certain options
   rowDetailView: {
     cssClass: 'detail-view-toggle',
     panelRows: 1,

@@ -3,7 +3,7 @@
   <div class="subtitle" innerhtml.bind="subTitle"></div>
 
   <button class="btn btn-outline-secondary btn-sm" data-test="external-gridmenu"
-    click.delegate="toggleGridMenu($event)">
+          click.delegate="toggleGridMenu($event)">
     <i class="fa fa-bars"></i>
     Grid Menu
   </button>
@@ -13,7 +13,10 @@
   </button>
   <b>Locale:</b> <span style="font-style: italic" data-test="selected-locale">${selectedLanguage + '.json'}</span>
 
-  <aurelia-slickgrid grid-id="grid9" column-definitions.bind="columnDefinitions" grid-options.bind="gridOptions"
-    dataset.bind="dataset" asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
+  <aurelia-slickgrid grid-id="grid9"
+                     column-definitions.bind="columnDefinitions"
+                     dataset.bind="dataset"
+                     grid-options.bind="gridOptions"
+                     on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
   </aurelia-slickgrid>
 </template>

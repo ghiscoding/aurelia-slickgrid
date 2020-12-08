@@ -47,7 +47,7 @@
                      grid-options.bind="gridOptions"
                      dataset.bind="dataset"
                      instances.bind="aureliaGrid"
-                     asg-on-grid-state-changed.delegate="gridStateChanged($event.detail)"
-                     sg-on-row-count-changed.delegate="refreshMetrics($event.detail.eventData, $event.detail.args)">
+                     on-grid-state-changed.delegate="gridStateChanged($event.detail)"
+                     on-row-count-changed.delegate="refreshMetrics($event.detail.eventData, $event.detail.args)">
   </aurelia-slickgrid>
 </template>

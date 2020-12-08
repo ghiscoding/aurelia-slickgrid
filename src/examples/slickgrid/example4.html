@@ -26,9 +26,12 @@
     Set Sorting Dynamically
   </button>
 
-  <aurelia-slickgrid grid-id="grid4" column-definitions.bind="columnDefinitions" grid-options.bind="gridOptions"
-                     dataset.bind="dataset" asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)"
-                     asg-on-grid-state-changed.delegate="gridStateChanged($event.detail)"
-                     sg-on-row-count-changed.delegate="refreshMetrics($event.detail.eventData, $event.detail.args)">
+  <aurelia-slickgrid grid-id="grid4"
+                     column-definitions.bind="columnDefinitions"
+                     grid-options.bind="gridOptions"
+                     dataset.bind="dataset"
+                     on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)"
+                     on-grid-state-changed.delegate="gridStateChanged($event.detail)"
+                     on-row-count-changed.delegate="refreshMetrics($event.detail.eventData, $event.detail.args)">
   </aurelia-slickgrid>
 </template>

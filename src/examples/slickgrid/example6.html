@@ -65,7 +65,7 @@
                      column-definitions.bind="columnDefinitions"
                      grid-options.bind="gridOptions"
                      dataset.bind="dataset"
-                     asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)"
-                     asg-on-grid-state-changed.delegate="gridStateChanged($event.detail)">
+                     on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)"
+                     on-grid-state-changed.delegate="gridStateChanged($event.detail)">
   </aurelia-slickgrid>
 </template>
