@@ -92,9 +92,6 @@ import { RowDetailViewExtension } from '../extensions';
 // using external non-typed js libraries
 declare const Slick: SlickNamespace;
 
-const DEFAULT_AURELIA_EVENT_PREFIX = 'asg';
-const DEFAULT_SLICKGRID_EVENT_PREFIX = 'sg';
-
 // Aurelia doesn't support well TypeScript @autoinject in a Plugin so we'll do it the manual way
 @inject(
   AureliaUtilService,
@@ -290,7 +287,7 @@ export class AureliaSlickgridCustomElement {
     this.pubSubService.eventNamingStyle = this.gridOptions?.eventNamingStyle ?? EventNamingStyle.camelCase;
     this.sharedService.internalPubSubService = this.pubSubService;
 
-    const aureliaEventPrefix = this.gridOptions?.defaultAureliaEventPrefix ?? DEFAULT_AURELIA_EVENT_PREFIX;
+    const aureliaEventPrefix = this.gridOptions?.defaultAureliaEventPrefix ?? '';
     this.pubSubService.dispatchCustomEvent(this.elm, 'onBeforeGridCreate', true, aureliaEventPrefix);
 
     // make sure the dataset is initialized (if not it will throw an error that it cannot getLength of null)
@@ -491,7 +488,7 @@ export class AureliaSlickgridCustomElement {
   }
 
   detached(shouldEmptyDomElementContainer = false) {
-    const aureliaEventPrefix = this.gridOptions?.defaultAureliaEventPrefix ?? DEFAULT_AURELIA_EVENT_PREFIX;
+    const aureliaEventPrefix = this.gridOptions?.defaultAureliaEventPrefix ?? '';
     this.pubSubService.dispatchCustomEvent(this.elm, 'onBeforeGridDestroy', this.grid, aureliaEventPrefix);
     this._eventHandler?.unsubscribeAll();
 
@@ -718,7 +715,7 @@ export class AureliaSlickgridCustomElement {
         if (grid.hasOwnProperty(prop) && prop.startsWith('on')) {
           const gridEventHandler = grid[prop];
           (this._eventHandler as SlickEventHandler<GetSlickEventType<typeof gridEventHandler>>).subscribe(gridEventHandler, (event, args) => {
-            const eventPrefix = this.gridOptions?.defaultSlickgridEventPrefix ?? DEFAULT_SLICKGRID_EVENT_PREFIX;
+            const eventPrefix = this.gridOptions?.defaultSlickgridEventPrefix ?? '';
             return this.pubSubService.dispatchCustomEvent(this.elm, prop, { eventData: event, args }, eventPrefix);
           });
         }
@@ -729,7 +726,7 @@ export class AureliaSlickgridCustomElement {
         if (dataView.hasOwnProperty(prop) && prop.startsWith('on')) {
           const dataViewEventHandler = dataView[prop];
           (this._eventHandler as SlickEventHandler<GetSlickEventType<typeof dataViewEventHandler>>).subscribe(dataViewEventHandler, (event, args) => {
-            const eventPrefix = this.gridOptions?.defaultSlickgridEventPrefix ?? DEFAULT_SLICKGRID_EVENT_PREFIX;
+            const eventPrefix = this.gridOptions?.defaultSlickgridEventPrefix ?? '';
             return this.pubSubService.dispatchCustomEvent(this.elm, prop, { eventData: event, args }, eventPrefix);
           });
         }

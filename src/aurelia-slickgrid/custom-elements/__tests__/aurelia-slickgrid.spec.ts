@@ -393,14 +393,14 @@ describe('Slick-Vanilla-Grid-Bundle Component instantiated via Constructor', () 
     expect(dispatchSpy).toHaveBeenCalled();
     expect(dispatchSpy).toHaveBeenCalledWith(new CustomEvent('onBeforeGridCreate', { bubbles: true, detail: { target: true } }));
     expect(pubSubSpy).toHaveBeenCalled();
-    expect(pubSubSpy).toHaveBeenNthCalledWith(1, divContainer, 'onBeforeGridCreate', true, 'asg');
-    expect(pubSubSpy).toHaveBeenNthCalledWith(2, divContainer, 'onDataviewCreated', expect.any(Object), 'asg');
-    expect(pubSubSpy).toHaveBeenNthCalledWith(3, divContainer, 'onGridCreated', expect.any(Object), 'asg');
-    expect(pubSubSpy).toHaveBeenNthCalledWith(4, divContainer, 'onAureliaGridCreated', customElement.instances, 'asg');
+    expect(pubSubSpy).toHaveBeenNthCalledWith(1, divContainer, 'onBeforeGridCreate', true, '');
+    expect(pubSubSpy).toHaveBeenNthCalledWith(2, divContainer, 'onDataviewCreated', expect.any(Object), '');
+    expect(pubSubSpy).toHaveBeenNthCalledWith(3, divContainer, 'onGridCreated', expect.any(Object), '');
+    expect(pubSubSpy).toHaveBeenNthCalledWith(4, divContainer, 'onAureliaGridCreated', customElement.instances, '');
 
     customElement.dispose();
-    expect(pubSubSpy).toHaveBeenNthCalledWith(5, divContainer, 'onBeforeGridDestroy', expect.any(Object), 'asg');
-    expect(pubSubSpy).toHaveBeenNthCalledWith(6, divContainer, 'onAfterGridDestroyed', true, 'asg');
+    expect(pubSubSpy).toHaveBeenNthCalledWith(5, divContainer, 'onBeforeGridDestroy', expect.any(Object), '');
+    expect(pubSubSpy).toHaveBeenNthCalledWith(6, divContainer, 'onAfterGridDestroyed', true, '');
   });
 
   describe('initialization method', () => {
@@ -736,7 +736,7 @@ describe('Slick-Vanilla-Grid-Bundle Component instantiated via Constructor', () 
       it('should call the onDataviewCreated emitter', () => {
         const pubSubSpy = jest.spyOn(pubSubService, 'dispatchCustomEvent');
         customElement.initialization(slickEventHandler);
-        expect(pubSubSpy).toHaveBeenNthCalledWith(2, divContainer, 'onDataviewCreated', expect.any(Object), 'asg');
+        expect(pubSubSpy).toHaveBeenNthCalledWith(2, divContainer, 'onDataviewCreated', expect.any(Object), '');
       });
 
       it('should call the "executeAfterDataviewCreated" and "loadGridSorters" methods and Sorter Presets are provided in the Grid Options', () => {
@@ -1466,7 +1466,7 @@ describe('Slick-Vanilla-Grid-Bundle Component instantiated via Constructor', () 
         customElement.eventHandler.subscribe(mockEventPubSub, callback);
         mockGrid.onClick.notify({ rows: [1, 2, 3] });
 
-        // expect(pubSubSpy).toHaveBeenCalledWith(divContainer, 'onClick', { args: { rows: [1, 2, 3] } }, 'asg');
+        // expect(pubSubSpy).toHaveBeenCalledWith(divContainer, 'onClick', { args: { rows: [1, 2, 3] } }, '');
         expect(dispatchSpy).toHaveBeenCalledWith(new CustomEvent('onClick', { bubbles: true, detail: { args: { rows: [1, 2, 3] } } }));
       });
     });
@@ -1542,7 +1542,7 @@ describe('Slick-Vanilla-Grid-Bundle Component instantiated via Constructor', () 
         expect(pubSubSpy).toHaveBeenCalledWith(divContainer, 'onGridStateChanged', {
           change: { newValues: mockPagination, type: GridStateType.pagination },
           gridState: { columns: [], pagination: mockPagination }
-        }, 'asg');
+        }, '');
       });
 
       it('should call trigger a gridStage change and reset selected rows when pagination change is triggered and "enableRowSelection" is set', () => {
