@@ -1,8 +1,7 @@
-import { SlickDataView, SlickGrid } from '@slickgrid-universal/common';
 import { bindable } from 'aurelia-framework';
 
 import { Example19 } from './example19';
-import { ViewModelBindableData } from '../../aurelia-slickgrid';
+import { SlickDataView, SlickGrid, ViewModelBindableData } from '../../aurelia-slickgrid';
 
 export class DetailViewCustomElement {
   @bindable() model: {

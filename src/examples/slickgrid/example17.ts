@@ -1,8 +1,15 @@
-import { SlickGrid } from '@slickgrid-universal/common';
 import 'slickgrid/lib/jquery.jsonp-2.4.min';
 import 'slickgrid/slick.remotemodel'; // SlickGrid Remote Plugin
 import { bindable, bindingMode } from 'aurelia-framework';
-import { AureliaGridInstance, Column, Formatter, GridOption, SlickNamespace } from '../../aurelia-slickgrid';
+
+import {
+  AureliaGridInstance,
+  Column,
+  Formatter,
+  GridOption,
+  SlickGrid,
+  SlickNamespace,
+} from '../../aurelia-slickgrid';
 
 declare const Slick: SlickNamespace;
 // declare const Slick: any;

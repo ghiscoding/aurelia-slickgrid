@@ -387,7 +387,10 @@ export class AureliaSlickgridCustomElement {
     }
 
     // load the resizer service
-    this.resizerService.init(this.grid, this.elm.querySelector('div'));
+    const gridContainerElm = this.elm.querySelector('div');
+    if (gridContainerElm) {
+      this.resizerService.init(this.grid, gridContainerElm);
+    }
 
     // user might want to hide the header row on page load but still have `enableFiltering: true`
     // if that is the case, we need to hide the headerRow ONLY AFTER all filters got created & dataView exist

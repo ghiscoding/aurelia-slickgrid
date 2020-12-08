@@ -1,4 +1,4 @@
-import { Column, FieldType, GridOption, AureliaGridInstance } from '../../aurelia-slickgrid';
+import { AureliaGridInstance, Column, FieldType, GridOption } from '../../aurelia-slickgrid';
 import './example14.scss'; // provide custom CSS/SASS styling
 
 export class Example14 {

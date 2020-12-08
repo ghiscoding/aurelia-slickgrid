@@ -1,4 +1,3 @@
-import { SlickGrid } from '@slickgrid-universal/common';
 import * as $ from 'jquery';
 
 import {
@@ -12,6 +11,7 @@ import {
   OperatorType,
   OperatorString,
   SearchTerm,
+  SlickGrid,
 } from '../../aurelia-slickgrid';
 
 import { View, ViewSlot } from 'aurelia-framework';

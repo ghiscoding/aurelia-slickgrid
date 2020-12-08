@@ -1,4 +1,3 @@
-import { SlickGrid } from '@slickgrid-universal/common';
 import { ExcelExportService } from '@slickgrid-universal/excel-export';
 import { autoinject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
@@ -13,6 +12,7 @@ import {
   Formatter,
   Formatters,
   GridOption,
+  SlickGrid,
 } from '../../aurelia-slickgrid';
 import './example24.scss'; // provide custom CSS/SASS styling
 

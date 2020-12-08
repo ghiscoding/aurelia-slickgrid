@@ -7,7 +7,6 @@ import {
   RowDetailViewExtension as UniversalRowDetailViewExtension,
   SharedService,
   SlickEventHandler,
-  SlickGrid,
   SlickNamespace,
   SlickRowDetailView,
   SlickRowSelectionModel,
@@ -16,7 +15,7 @@ import { inject, singleton } from 'aurelia-framework';
 import { Subscription } from 'aurelia-event-aggregator';
 import * as DOMPurify from 'dompurify';
 
-import { AureliaViewOutput, GridOption, RowDetailView, ViewModelBindableInputData } from '../models/index';
+import { AureliaViewOutput, GridOption, RowDetailView, SlickGrid, ViewModelBindableInputData } from '../models/index';
 import { AureliaUtilService } from '../services/aureliaUtil.service';
 import { disposeAllSubscriptions } from '../services/utilities';
 import { UniversalPubSubService } from '../services';

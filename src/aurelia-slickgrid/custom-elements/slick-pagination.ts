@@ -1,10 +1,10 @@
 import { bindable, inject, Optional } from 'aurelia-framework';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
+import { getTranslationPrefix, Locale, PaginationService } from '@slickgrid-universal/common';
 
 import { GridOption } from '../models/index';
 import { disposeAllSubscriptions } from '../services/utilities';
 import { Constants } from '../constants';
-import { getTranslationPrefix, Locale, PaginationService } from '@slickgrid-universal/common';
 import { UniversalTranslateService } from '../services/universalTranslate.service';
 
 @inject(EventAggregator, Optional.of(UniversalTranslateService))

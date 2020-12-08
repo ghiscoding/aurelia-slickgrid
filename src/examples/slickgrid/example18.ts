@@ -1,4 +1,3 @@
-import { SlickDataView, SlickGrid } from '@slickgrid-universal/common';
 import { ExcelExportService } from '@slickgrid-universal/excel-export';
 import { TextExportService } from '@slickgrid-universal/text-export';
 import { autoinject } from 'aurelia-framework';
@@ -17,6 +16,8 @@ import {
   SortComparers,
   SortDirectionNumber,
   Grouping,
+  SlickDataView,
+  SlickGrid,
 } from '../../aurelia-slickgrid';
 
 @autoinject()

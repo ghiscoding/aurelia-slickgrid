@@ -1,4 +1,3 @@
-import { SlickGrid } from '@slickgrid-universal/common';
 import { ExcelExportService } from '@slickgrid-universal/excel-export';
 import { TextExportService } from '@slickgrid-universal/text-export';
 import { autoinject } from 'aurelia-framework';
@@ -15,6 +14,7 @@ import {
   Formatters,
   GridOption,
   GridStateChange,
+  SlickGrid,
 } from '../../aurelia-slickgrid';
 
 const NB_ITEMS = 1500;

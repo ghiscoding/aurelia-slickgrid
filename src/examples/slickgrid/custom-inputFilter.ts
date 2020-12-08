@@ -1,4 +1,3 @@
-import { SlickGrid } from '@slickgrid-universal/common';
 import * as $ from 'jquery';
 
 import {
@@ -11,6 +10,7 @@ import {
   OperatorType,
   OperatorString,
   SearchTerm,
+  SlickGrid,
 } from '../../aurelia-slickgrid';
 
 export class CustomInputFilter implements Filter {

@@ -1,4 +1,5 @@
-import { SlickGrid, SlickRowDetailView } from '@slickgrid-universal/common';
+import { SlickRowDetailView } from '@slickgrid-universal/common';
+import { SlickGrid } from './slickGrid.interface';
 
 export interface RowDetailView {
   /** Defaults to true, which will collapse all row detail views when user calls a sort. Unless user implements a sort to deal with padding */

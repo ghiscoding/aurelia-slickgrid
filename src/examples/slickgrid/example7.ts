@@ -1,6 +1,5 @@
-import { SlickGrid } from '@slickgrid-universal/common';
 import { autoinject } from 'aurelia-framework';
-import { AureliaGridInstance, Column, GridOption } from '../../aurelia-slickgrid';
+import { AureliaGridInstance, Column, GridOption, SlickGrid } from '../../aurelia-slickgrid';
 
 let columnsWithHighlightingById = {};
 

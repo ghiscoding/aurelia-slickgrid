@@ -1,6 +1,7 @@
 import { EventNamingStyle, PubSubService, titleCase, toKebabCase } from '@slickgrid-universal/common';
 import { Disposable, DOM, inject, singleton } from 'aurelia-framework';
 import { Subscription } from 'aurelia-event-aggregator';
+
 import { SlickgridEventAggregator } from '../custom-elements/slickgridEventAggregator';
 
 /**

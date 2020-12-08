@@ -1,5 +1,5 @@
-import { SlickGrid } from '@slickgrid-universal/common';
 import { View, ViewSlot } from 'aurelia-framework';
+
 import {
   AureliaUtilService,
   Column,
@@ -7,6 +7,7 @@ import {
   EditorValidator,
   EditorValidationResult,
   GridOption,
+  SlickGrid,
 } from '../../aurelia-slickgrid';
 
 /*

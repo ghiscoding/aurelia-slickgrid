@@ -1,7 +1,19 @@
 
-import { SlickGrid } from '@slickgrid-universal/common';
 import { autoinject } from 'aurelia-framework';
-import { AureliaGridInstance, Column, ColumnEditorDualInput, Editors, FieldType, Filters, formatNumber, Formatters, GridOption, SlickNamespace } from '../../aurelia-slickgrid';
+
+import {
+  AureliaGridInstance,
+  Column,
+  ColumnEditorDualInput,
+  Editors,
+  FieldType,
+  Filters,
+  formatNumber,
+  Formatters,
+  GridOption,
+  SlickGrid,
+  SlickNamespace
+} from '../../aurelia-slickgrid';
 import './example20.scss'; // provide custom CSS/SASS styling
 
 declare const Slick: SlickNamespace;

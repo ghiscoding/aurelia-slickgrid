@@ -1,7 +1,6 @@
-import { SlickDataView, SlickGrid } from '@slickgrid-universal/common';
 import { I18N } from 'aurelia-i18n';
 import { autoinject } from 'aurelia-framework';
-import { AureliaGridInstance, Column, Formatters, GridOption } from '../../aurelia-slickgrid';
+import { AureliaGridInstance, Column, Formatters, GridOption, SlickDataView, SlickGrid } from '../../aurelia-slickgrid';
 import './example8.scss'; // provide custom CSS/SASS styling
 
 @autoinject()

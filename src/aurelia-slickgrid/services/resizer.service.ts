@@ -1,14 +1,14 @@
 import {
   GetSlickEventType,
-  GridOption,
   GridSize,
   SlickEventData,
   SlickEventHandler,
-  SlickGrid,
   SlickNamespace,
   SlickResizer,
 } from '@slickgrid-universal/common';
 import { inject, singleton } from 'aurelia-framework';
+
+import { GridOption, SlickGrid } from '../models/index';
 import { UniversalPubSubService } from './universalPubSub.service';
 
 // using external non-typed js libraries
@@ -47,41 +47,43 @@ export class ResizerService {
     this._eventHandler?.unsubscribeAll();
   }
 
-  init(grid: SlickGrid, gridParentContainerElm: HTMLElement) {
+  init(grid: SlickGrid, gridParentContainerElm?: HTMLElement) {
     this._grid = grid;
-    const fixedGridDimensions = (this.gridOptions?.gridHeight || this.gridOptions?.gridWidth) ? { height: this.gridOptions?.gridHeight, width: this.gridOptions?.gridWidth } : undefined;
-    const autoResizeOptions = this.gridOptions?.autoResize ?? { bottomPadding: 0 };
-    if (autoResizeOptions && autoResizeOptions.bottomPadding !== undefined && this.gridOptions?.showCustomFooter) {
-      const footerHeight: string | number = this.gridOptions?.customFooterOptions?.footerHeight ?? DATAGRID_FOOTER_HEIGHT;
-      autoResizeOptions.bottomPadding += parseInt(`${footerHeight}`, 10);
-    }
-    if (autoResizeOptions && autoResizeOptions.bottomPadding !== undefined && this.gridOptions?.enablePagination) {
-      autoResizeOptions.bottomPadding += DATAGRID_PAGINATION_HEIGHT;
-    }
-    if (fixedGridDimensions?.width && gridParentContainerElm?.style) {
-      gridParentContainerElm.style.width = `${fixedGridDimensions.width}px`;
-    }
-
-    this._addon = new Slick.Plugins.Resizer({ ...autoResizeOptions, gridContainer: gridParentContainerElm }, fixedGridDimensions);
-    this._grid.registerPlugin<SlickResizer>(this._addon);
-    if (this.gridOptions.enableAutoResize && this._addon?.resizeGrid() instanceof Promise) {
-      this._addon.resizeGrid()
-        .catch((rejection: any) => console.log('Error:', rejection));
-    }
-
-    // Events
-    if (this.gridOptions.autoResize) {
-      if (this._addon && this._addon.onGridAfterResize) {
-        const onGridAfterResizeHandler = this._addon.onGridAfterResize;
-        (this._eventHandler as SlickEventHandler<GetSlickEventType<typeof onGridAfterResizeHandler>>).subscribe(onGridAfterResizeHandler, (_e, args) => {
-          this.pubSubService.publish('onGridAfterResize', args);
-        });
+    if (gridParentContainerElm) {
+      const fixedGridDimensions = (this.gridOptions?.gridHeight || this.gridOptions?.gridWidth) ? { height: this.gridOptions?.gridHeight, width: this.gridOptions?.gridWidth } : undefined;
+      const autoResizeOptions = this.gridOptions?.autoResize ?? { bottomPadding: 0 };
+      if (autoResizeOptions && autoResizeOptions.bottomPadding !== undefined && this.gridOptions?.showCustomFooter) {
+        const footerHeight: string | number = this.gridOptions?.customFooterOptions?.footerHeight ?? DATAGRID_FOOTER_HEIGHT;
+        autoResizeOptions.bottomPadding += parseInt(`${footerHeight}`, 10);
       }
-      if (this._addon && this._addon.onGridBeforeResize) {
-        const onGridBeforeResizeHandler = this._addon.onGridBeforeResize;
-        (this._eventHandler as SlickEventHandler<GetSlickEventType<typeof onGridBeforeResizeHandler>>).subscribe(onGridBeforeResizeHandler, (_e, args) => {
-          this.pubSubService.publish('onGridBeforeResize', args);
-        });
+      if (autoResizeOptions && autoResizeOptions.bottomPadding !== undefined && this.gridOptions?.enablePagination) {
+        autoResizeOptions.bottomPadding += DATAGRID_PAGINATION_HEIGHT;
+      }
+      if (fixedGridDimensions?.width && gridParentContainerElm?.style) {
+        gridParentContainerElm.style.width = `${fixedGridDimensions.width}px`;
+      }
+
+      this._addon = new Slick.Plugins.Resizer({ ...autoResizeOptions, gridContainer: gridParentContainerElm }, fixedGridDimensions);
+      this._grid.registerPlugin<SlickResizer>(this._addon);
+      if (this.gridOptions.enableAutoResize && this._addon?.resizeGrid() instanceof Promise) {
+        this._addon.resizeGrid()
+          .catch((rejection: any) => console.log('Error:', rejection));
+      }
+
+      // Events
+      if (this.gridOptions.autoResize) {
+        if (this._addon && this._addon.onGridAfterResize) {
+          const onGridAfterResizeHandler = this._addon.onGridAfterResize;
+          (this._eventHandler as SlickEventHandler<GetSlickEventType<typeof onGridAfterResizeHandler>>).subscribe(onGridAfterResizeHandler, (_e, args) => {
+            this.pubSubService.publish('onGridAfterResize', args);
+          });
+        }
+        if (this._addon && this._addon.onGridBeforeResize) {
+          const onGridBeforeResizeHandler = this._addon.onGridBeforeResize;
+          (this._eventHandler as SlickEventHandler<GetSlickEventType<typeof onGridBeforeResizeHandler>>).subscribe(onGridBeforeResizeHandler, (_e, args) => {
+            this.pubSubService.publish('onGridBeforeResize', args);
+          });
+        }
       }
     }
   }

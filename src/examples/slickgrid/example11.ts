@@ -1,4 +1,3 @@
-import { SlickDataView, SlickGrid } from '@slickgrid-universal/common';
 import { autoinject } from 'aurelia-framework';
 import {
   AureliaGridInstance,
@@ -8,7 +7,9 @@ import {
   Formatters,
   GridOption,
   GridService,
-  OnEventArgs
+  OnEventArgs,
+  SlickDataView,
+  SlickGrid,
 } from '../../aurelia-slickgrid';
 import './example11.scss';
 
