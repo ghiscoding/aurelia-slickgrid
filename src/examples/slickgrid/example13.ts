@@ -1,6 +1,6 @@
 import { SlickDataView, SlickGrid } from '@slickgrid-universal/common';
 import { ExcelExportService } from '@slickgrid-universal/excel-export';
-import { FileExportService } from '@slickgrid-universal/file-export';
+import { TextExportService } from '@slickgrid-universal/text-export';
 import { autoinject } from 'aurelia-framework';
 import {
   Aggregators,
@@ -38,7 +38,7 @@ export class Example13 {
   gridObj: SlickGrid;
   processing = false;
   excelExportService = new ExcelExportService();
-  fileExportService = new FileExportService();
+  textExportService = new TextExportService();
 
   constructor() {
     // define the grid options & columns and then create the grid itself
@@ -156,14 +156,10 @@ export class Example13 {
       enableFiltering: true,
       enableGrouping: true,
       enableExcelExport: true,
-      enableExport: true,
-      excelExportOptions: {
-        sanitizeDataExport: true
-      },
-      exportOptions: {
-        sanitizeDataExport: true
-      },
-      registerExternalServices: [this.excelExportService, this.fileExportService],
+      enableTextExport: true,
+      excelExportOptions: { sanitizeDataExport: true },
+      textExportOptions: { sanitizeDataExport: true },
+      registerExternalServices: [this.excelExportService, this.textExportService],
     };
   }
 
@@ -211,7 +207,7 @@ export class Example13 {
   }
 
   exportToCsv(type = 'csv') {
-    this.fileExportService.exportToFile({
+    this.textExportService.exportToFile({
       delimiter: (type === 'csv') ? DelimiterType.comma : DelimiterType.tab,
       filename: 'myExport',
       format: (type === 'csv') ? FileType.csv : FileType.txt

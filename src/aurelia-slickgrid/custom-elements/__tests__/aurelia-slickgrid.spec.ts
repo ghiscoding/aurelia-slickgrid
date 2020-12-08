@@ -30,7 +30,7 @@ import {
   TreeDataService,
   BackendService,
 } from '@slickgrid-universal/common';
-import { FileExportService } from '@slickgrid-universal/file-export';
+import { TextExportService } from '@slickgrid-universal/text-export';
 import { GraphqlService, GraphqlPaginatedResult, GraphqlServiceApi, GraphqlServiceOption } from '@slickgrid-universal/graphql';
 import * as backendUtilities from '@slickgrid-universal/common/dist/commonjs/services/backend-utilities';
 import * as utilities from '@slickgrid-universal/common/dist/commonjs/services/utilities';
@@ -887,15 +887,15 @@ describe('Slick-Vanilla-Grid-Bundle Component instantiated via Constructor', () 
       //   expect(customElement.slickCompositeEditor instanceof SlickCompositeEditorComponent).toBeTrue();
       // });
 
-      it('should initialize ExportService when "enableExport" is set when using Salesforce', () => {
-        const fileExportMock = new FileExportService();
+      it('should initialize ExportService when "enableTextExport" is set when using Salesforce', () => {
+        const fileExportMock = new TextExportService();
         const fileExportSpy = jest.spyOn(fileExportMock, 'init');
-        customElement.gridOptions = { enableExport: true, registerExternalServices: [fileExportMock] } as GridOption;
+        customElement.gridOptions = { enableTextExport: true, registerExternalServices: [fileExportMock] } as GridOption;
         customElement.initialization(slickEventHandler);
 
         expect(fileExportSpy).toHaveBeenCalled();
-        expect(customElement.registeredServices.length).toBe(3); // FileExportService, GridService, GridStateService
-        expect(customElement.registeredServices[0] instanceof FileExportService).toBeTrue();
+        expect(customElement.registeredServices.length).toBe(3); // TextExportService, GridService, GridStateService
+        expect(customElement.registeredServices[0] instanceof TextExportService).toBeTrue();
       });
 
       it('should destroy customElement and its DOM element when requested', () => {

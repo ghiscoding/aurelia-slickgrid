@@ -172,7 +172,7 @@ export class AureliaSlickgridCustomElement {
     private globalEa: EventAggregator,
     _pluginEa: SlickgridEventAggregator,
     private resizerService: ResizerService,
-    public slickEmptyWarning: SlickEmptyWarningComponent, // TODO: see if we can put this back to private, required now for unit test of "Empty Warning Message"
+    public slickEmptyWarning: SlickEmptyWarningComponent,
     private translateService: UniversalTranslateService,
     private pubSubService: UniversalPubSubService,
     externalServices: {
@@ -334,7 +334,6 @@ export class AureliaSlickgridCustomElement {
     this.extensionService.createExtensionsBeforeGridCreation(this._columnDefinitions, this.gridOptions);
 
     // build SlickGrid Grid, also user might optionally pass a custom dataview (e.g. remote model)
-    // @ts-ignore (also accepts string)
     this.grid = new Slick.Grid(`#${this.gridId}`, this.customDataView || this.dataview, this._columnDefinitions, this.gridOptions);
 
     this.sharedService.dataView = this.dataview;
@@ -391,7 +390,6 @@ export class AureliaSlickgridCustomElement {
     }
 
     // load the resizer service
-    // @ts-ignore
     this.resizerService.init(this.grid, this.elm.querySelector('div'));
 
     // user might want to hide the header row on page load but still have `enableFiltering: true`
@@ -1283,8 +1281,6 @@ export class AureliaSlickgridCustomElement {
 
   /** translate all columns (including hidden columns) */
   private translateColumnHeaderTitleKeys() {
-    // eventually deprecate the "headerKey" and use only the "nameKey"
-    this.extensionUtility.translateItems(this.sharedService.allColumns, 'headerKey', 'name');
     this.extensionUtility.translateItems(this.sharedService.allColumns, 'nameKey', 'name');
   }
 

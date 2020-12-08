@@ -256,6 +256,7 @@ export class Example24 {
       enableFiltering: true,
       enableSorting: true,
       enableTranslate: true,
+      enableExcelExport: true,
       excelExportOptions: {
         exportWithFormatter: true,
         customColumnWidth: 15,
@@ -263,7 +264,6 @@ export class Example24 {
         // you can customize how the header titles will be styled (defaults to Bold)
         columnHeaderStyle: { font: { bold: true, italic: true } }
       },
-      enableExcelExport: true,
       registerExternalServices: [new ExcelExportService()],
       i18n: this.i18n,
 

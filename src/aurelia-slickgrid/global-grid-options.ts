@@ -101,8 +101,8 @@ export const GlobalGridOptions: Partial<GridOption> = {
   enableColumnPicker: true,
   enableColumnReorder: true,
   enableContextMenu: true,
-  enableExcelExport: false, // both export are now opt-in
-  enableExport: false,
+  enableExcelExport: false, // both exports are now opt-in
+  enableTextExport: false,
   enableFilterTrimWhiteSpace: false, // do we want to trim white spaces on all Filters?
   enableGridMenu: true,
   enableSorting: true,
@@ -120,7 +120,7 @@ export const GlobalGridOptions: Partial<GridOption> = {
     groupingAggregatorRowText: '',
     sanitizeDataExport: false,
   },
-  exportOptions: {
+  textExportOptions: {
     delimiter: DelimiterType.comma,
     exportWithFormatter: false,
     filename: 'export',
