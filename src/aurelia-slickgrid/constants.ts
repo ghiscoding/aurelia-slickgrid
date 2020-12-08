@@ -76,8 +76,8 @@ export class Constants {
   static readonly exposedEvents = [
     'onBeforeExportToExcel',
     'onAfterExportToExcel',
-    'onBeforeExportToFile',
-    'onAfterExportToFile',
+    'onBeforeExportToTextFile',
+    'onAfterExportToTextFile',
     'onGridStateChanged',
     'onItemAdded',
     'onItemDeleted',
