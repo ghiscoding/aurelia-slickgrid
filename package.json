@@ -87,7 +87,7 @@
     "@types/dompurify": "^2.0.4",
     "@types/flatpickr": "^3.1.2",
     "@types/i18next-xhr-backend": "^1.4.2",
-    "@types/jest": "^26.0.16",
+    "@types/jest": "^26.0.19",
     "@types/jquery": "^3.5.5",
     "@types/moment": "^2.13.0",
     "@types/node": "^14.14.10",
