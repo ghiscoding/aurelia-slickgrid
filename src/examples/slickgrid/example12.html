@@ -4,13 +4,13 @@
 
   <hr />
 
-  <div class="row">
+  <div class="row align-items-center">
     <button class="btn btn-outline-secondary btn-sm" data-test="language-button" click.delegate="switchLanguage()">
       <i class="fa fa-language"></i>
       Switch Language
     </button>
-    <label>Locale:</label>
-    <span style="font-style: italic" data-test="selected-locale">
+    <label style="margin: 0 5px">Locale:</label>
+    <span style="font-style: italic; width: 70px;" data-test="selected-locale">
       ${selectedLanguage + '.json'}
     </span>
 
