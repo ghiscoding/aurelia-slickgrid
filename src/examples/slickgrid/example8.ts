@@ -1,6 +1,6 @@
 import { I18N } from 'aurelia-i18n';
 import { autoinject } from 'aurelia-framework';
-import { AureliaGridInstance, Column, Formatters, GridOption } from '../../aurelia-slickgrid';
+import { AureliaGridInstance, Column, Formatters, GridOption, SlickDataView, SlickGrid } from '../../aurelia-slickgrid';
 import './example8.scss'; // provide custom CSS/SASS styling
 
 @autoinject()
@@ -30,8 +30,8 @@ export class Example8 {
   columnDefinitions: Column[];
   gridOptions: GridOption;
   dataset = [];
-  dataView: any;
-  gridObj: any;
+  dataView: SlickDataView;
+  gridObj: SlickGrid;
   selectedLanguage: string;
   visibleColumns;
 
@@ -111,8 +111,8 @@ export class Example8 {
       enableAutoResize: true,
       enableHeaderMenu: true,
       autoResize: {
-        containerId: 'demo-container',
-        sidePadding: 10
+        container: '#demo-container',
+        rightPadding: 10
       },
       enableFiltering: false,
       enableCellNavigation: true,

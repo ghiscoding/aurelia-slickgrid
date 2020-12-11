@@ -3,11 +3,10 @@
     <div class="panel-wm">
       <section id="panel-left"
                class="panel-wm-left au-animate">
-        <ul class="nav nav-pills nav-stacked">
+          <ul class="well nav nav-pills nav-stacked">
           <li repeat.for="row of router.navigation"
-              class="${row.isActive ? 'active' : ''}">
-            <a data-toggle="collapse"
-               data-target="#skeleton-navigation-navbar-collapse.in"
+              class="nav-item">
+            <a class="nav-link ${row.isActive ? 'active' : ''}"
                href.bind="row.href">${row.title}</a>
           </li>
         </ul>

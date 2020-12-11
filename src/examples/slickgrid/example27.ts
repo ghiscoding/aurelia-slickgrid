@@ -1,3 +1,4 @@
+import { ExcelExportService } from '@slickgrid-universal/excel-export';
 import { autoinject } from 'aurelia-framework';
 import {
   AureliaGridInstance,
@@ -22,7 +23,7 @@ export class Example27 {
     </ul>
     <li><b>Styling - Material Theme</b></li>
     <ul>
-      <li>The Material Theme was created with SASS and compiled in CSS (<a href="https://github.com/ghiscoding/aurelia-slickgrid/blob/master/src/aurelia-slickgrid/styles/slickgrid-theme-material.scss" target="_blank">slickgrid-theme-material.scss</a>), you can override any of its SASS variables</li>
+      <li>The Material Theme was created with SASS and compiled in CSS (<a href="https://github.com/ghiscoding/slickgrid-universal/blob/master/packages/common/src/styles/slickgrid-theme-material.scss" target="_blank">slickgrid-theme-material.scss</a>), you can override any of its SASS variables</li>
       <li>We use a small subset of <a href="https://materialdesignicons.com/" target="_blank">Material Design Icons</a></li>
       <li>you might need to refresh the page to clear the browser cache and see the correct theme</li>
     </ul>
@@ -83,12 +84,11 @@ export class Example27 {
 
     this.gridOptions = {
       autoResize: {
-        containerId: 'demo-container',
-        sidePadding: 10
+        container: '#demo-container',
+        rightPadding: 10
       },
       enableAutoSizeColumns: true,
       enableAutoResize: true,
-      enableExport: true,
       enableFiltering: true,
       enableTreeData: true, // you must enable this flag for the filtering & sorting to work as expected
       treeDataOptions: {
@@ -102,6 +102,8 @@ export class Example27 {
       presets: {
         filters: [{ columnId: 'percentComplete', searchTerms: [25], operator: '>=' }]
       },
+      enableExcelExport: true,
+      registerExternalServices: [new ExcelExportService()],
 
       // use Material Design SVG icons
       contextMenu: {

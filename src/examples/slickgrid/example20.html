@@ -10,7 +10,7 @@
       <label for="">Pinned Rows: </label>
       <input type="number"
              value.bind="frozenRowCount">
-      <button class="btn btn-default btn-xs"
+      <button class="btn btn-outline-secondary btn-xs"
               click.delegate="changeFrozenRowCount()">
         Set
       </button>
@@ -19,7 +19,7 @@
       <label for="">Pinned Columns: </label>
       <input type="number"
              value.bind="frozenColumnCount">
-      <button class="btn btn-default btn-xs"
+      <button class="btn btn-outline-secondary btn-xs"
               click.delegate="changeFrozenColumnCount()">
         Set
       </button>
@@ -27,15 +27,16 @@
   </div>
 
   <div class="row col-sm-12">
-    <button class="btn btn-default btn-sm" click.delegate="setFrozenColumns(-1)"
+    <button class="btn btn-outline-secondary btn-sm" click.delegate="setFrozenColumns(-1)"
             data-test="remove-frozen-column-button">
       <i class="fa fa-times fa-lg"></i> Remove Frozen Columns
     </button>
-    <button class="btn btn-default btn-sm" click.delegate="setFrozenColumns(2)" data-test="set-3frozen-columns">
+    <button class="btn btn-outline-secondary btn-sm" click.delegate="setFrozenColumns(2)"
+            data-test="set-3frozen-columns">
       <i class="fa fa-thumb-tack fa-lg"></i> Set 3 Frozen Columns
     </button>
     <span style="margin-left: 15px">
-      <button class="btn btn-default btn-sm" click.delegate="toggleFrozenBottomRows()">
+      <button class="btn btn-outline-secondary btn-sm" click.delegate="toggleFrozenBottomRows()">
         <i class="fa fa-random fa-lg"></i> Toggle Pinned Rows
       </button>
       <span style="font-weight: bold;">: ${ isFrozenBottom ? 'Bottom' : 'Top' }</span>
@@ -47,11 +48,10 @@
   </div>
 
   <aurelia-slickgrid grid-id="grid20"
-                     grid-width="875"
                      column-definitions.bind="columnDefinitions"
                      grid-options.bind="gridOptions"
                      dataset.bind="dataset"
-                     sg-on-validation-error.delegate="onCellValidationError($event.detail.eventData, $event.detail.args)"
-                     asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
+                     on-validation-error.delegate="onCellValidationError($event.detail.eventData, $event.detail.args)"
+                     on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
   </aurelia-slickgrid>
 </template>

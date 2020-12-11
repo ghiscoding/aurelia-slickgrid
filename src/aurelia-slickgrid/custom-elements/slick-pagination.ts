@@ -1,13 +1,13 @@
 import { bindable, inject, Optional } from 'aurelia-framework';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
-import { I18N } from 'aurelia-i18n';
+import { getTranslationPrefix, Locale, PaginationService } from '@slickgrid-universal/common';
 
-import { GridOption, Locale } from '../models/index';
-import { PaginationService } from '../services/pagination.service';
-import { disposeAllSubscriptions, getTranslationPrefix } from '../services/utilities';
+import { GridOption } from '../models/index';
+import { disposeAllSubscriptions } from '../services/utilities';
 import { Constants } from '../constants';
+import { UniversalTranslateService } from '../services/universalTranslate.service';
 
-@inject(EventAggregator, Optional.of(I18N))
+@inject(EventAggregator, Optional.of(UniversalTranslateService))
 export class SlickPaginationCustomElement {
   // we need to pass this service as a binding because it's transient and it must be created (then passed through the binding) in the Aurelia-Slickgrid custom element
   @bindable() paginationService: PaginationService;
@@ -24,7 +24,7 @@ export class SlickPaginationCustomElement {
   textOf = 'of';
   textPage = 'Page';
 
-  constructor(private globalEa: EventAggregator, private i18n: I18N) { }
+  constructor(private globalEa: EventAggregator, private translateService?: UniversalTranslateService) { }
 
   get availablePageSizes(): number[] {
     return this.paginationService.availablePageSizes;
@@ -75,7 +75,7 @@ export class SlickPaginationCustomElement {
     this._enableTranslate = this._gridOptions && this._gridOptions.enableTranslate || false;
     this._locales = this._gridOptions && this._gridOptions.locales || Constants.locales;
 
-    if (this._enableTranslate && (!this.i18n || !this.i18n.tr)) {
+    if (this._enableTranslate && (!this.translateService || !this.translateService.translate)) {
       throw new Error('[Aurelia-Slickgrid] requires "I18N" to be installed and configured when the grid option "enableTranslate" is enabled.');
     }
     this.translatePaginationTexts(this._locales);
@@ -132,12 +132,12 @@ export class SlickPaginationCustomElement {
 
   /** Translate all the texts shown in the UI, use I18N service when available or custom locales when service is null */
   private translatePaginationTexts(locales: Locale) {
-    if (this._enableTranslate && this.i18n && this.i18n.tr && this.i18n.getLocale && this.i18n.getLocale()) {
+    if (this._enableTranslate && this.translateService?.translate) {
       const translationPrefix = getTranslationPrefix(this._gridOptions);
-      this.textItemsPerPage = this.i18n.tr(`${translationPrefix}ITEMS_PER_PAGE`);
-      this.textItems = this.i18n.tr(`${translationPrefix}ITEMS`);
-      this.textOf = this.i18n.tr(`${translationPrefix}OF`);
-      this.textPage = this.i18n.tr(`${translationPrefix}PAGE`);
+      this.textItemsPerPage = this.translateService.translate(`${translationPrefix}ITEMS_PER_PAGE`);
+      this.textItems = this.translateService.translate(`${translationPrefix}ITEMS`);
+      this.textOf = this.translateService.translate(`${translationPrefix}OF`);
+      this.textPage = this.translateService.translate(`${translationPrefix}PAGE`);
     } else if (locales) {
       this.textItemsPerPage = locales.TEXT_ITEMS_PER_PAGE || 'TEXT_ITEMS_PER_PAGE';
       this.textItems = locales.TEXT_ITEMS || 'TEXT_ITEMS';

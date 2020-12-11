@@ -4,7 +4,7 @@ const NB_ITEMS = 995;
 
 export class Example1 {
   title = 'Example 1: Basic Grids';
-  subTitle = `Simple Grids with Fixed Sizes (800 x 225) using "grid-height" &amp; "grid-width"`;
+  subTitle = `Simple Grids with Fixed Sizes (800 x 225)`;
 
   gridOptions1: GridOption;
   gridOptions2: GridOption;
@@ -35,6 +35,8 @@ export class Example1 {
       { id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven', sortable: true, minWidth: 100 }
     ];
     this.gridOptions1 = {
+      gridHeight: 225,
+      gridWidth: 800,
       enableAutoResize: false,
       enableSorting: true
     };

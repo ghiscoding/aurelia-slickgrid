@@ -1,4 +1,4 @@
-import { Column, FieldType, GridOption, AureliaGridInstance } from '../../aurelia-slickgrid';
+import { AureliaGridInstance, Column, FieldType, GridOption } from '../../aurelia-slickgrid';
 import './example14.scss'; // provide custom CSS/SASS styling
 
 export class Example14 {
@@ -57,6 +57,8 @@ export class Example14 {
       createPreHeaderPanel: true,
       showPreHeaderPanel: true,
       preHeaderPanelHeight: 28,
+      gridHeight: 275,
+      gridWidth: 800,
       explicitInitialization: true,
       colspanCallback: this.renderDifferentColspan
     };
@@ -80,6 +82,8 @@ export class Example14 {
       showPreHeaderPanel: true,
       preHeaderPanelHeight: 25,
       explicitInitialization: true,
+      gridHeight: 275,
+      gridWidth: 800,
       frozenColumn: 2,
       gridMenu: { hideClearFrozenColumnsCommand: false },
       headerMenu: { hideFreezeColumnsCommand: false }

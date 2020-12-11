@@ -248,8 +248,8 @@ export class Example26 {
       autoEdit: this.isAutoEdit,
       autoCommitEdit: false,
       autoResize: {
-        containerId: 'demo-container',
-        sidePadding: 10
+        container: '#demo-container',
+        rightPadding: 10
       },
       rowHeight: 45, // increase row height so that the custom elements fits in the cell
       editable: true,
@@ -313,7 +313,7 @@ export class Example26 {
       // this.aureliaGrid.gridService.setSelectedRow(args.row);
     } else if (metadata.columnDef.id === 'delete') {
       if (confirm('Are you sure?')) {
-        this.aureliaGrid.gridService.deleteDataGridItemById(metadata.dataContext.id);
+        this.aureliaGrid.gridService.deleteItemById(metadata.dataContext.id);
         this.alertWarning = `Deleted: ${metadata.dataContext.title}`;
       }
     }

@@ -6,7 +6,6 @@ bower_components
 .DS_STORE
 npm-debug.log
 package-lock.json
-yarn.lock
 yarn-error.log
 
 # Distribution folder

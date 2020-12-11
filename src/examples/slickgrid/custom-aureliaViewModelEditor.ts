@@ -1,12 +1,14 @@
+import { View, ViewSlot } from 'aurelia-framework';
+
 import {
   AureliaUtilService,
   Column,
   Editor,
   EditorValidator,
-  EditorValidatorOutput,
+  EditorValidationResult,
   GridOption,
+  SlickGrid,
 } from '../../aurelia-slickgrid';
-import { View, ViewSlot } from 'aurelia-framework';
 
 /*
  * An example of a 'detached' editor.
@@ -27,7 +29,7 @@ export class CustomAureliaViewModelEditor implements Editor {
   selectedItem: any;
 
   /** SlickGrid grid object */
-  grid: any;
+  grid: SlickGrid;
 
   constructor(private args: any) {
     this.grid = args && args.grid;
@@ -174,7 +176,7 @@ export class CustomAureliaViewModelEditor implements Editor {
     return (!(this.selectedItem.id === '' && (this.defaultId === null || this.defaultId === undefined))) && (this.selectedItem.id !== this.defaultId);
   }
 
-  validate(): EditorValidatorOutput {
+  validate(): EditorValidationResult {
     if (this.validator) {
       const value = this.selectedItem.id;
       return this.validator(value, this.args);

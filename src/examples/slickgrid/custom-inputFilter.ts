@@ -1,3 +1,5 @@
+import * as $ from 'jquery';
+
 import {
   Column,
   ColumnFilter,
@@ -8,14 +10,14 @@ import {
   OperatorType,
   OperatorString,
   SearchTerm,
+  SlickGrid,
 } from '../../aurelia-slickgrid';
-import * as $ from 'jquery';
 
 export class CustomInputFilter implements Filter {
   private _clearFilterTriggered = false;
   private _shouldTriggerQuery = true;
   private $filterElm: any;
-  grid: any;
+  grid: SlickGrid;
   searchTerms: SearchTerm[];
   columnDef: Column;
   callback: FilterCallback;

@@ -1,9 +1,4 @@
 /// <reference types="cypress" />
-
-function removeExtraSpaces(textS) {
-  return `${textS}`.replace(/\s+/g, ' ').trim();
-}
-
 describe('Example 3 - Grid with Editors', () => {
   const GRID_ROW_HEIGHT = 35;
   const fullTitles = [
@@ -40,10 +35,7 @@ describe('Example 3 - Grid with Editors', () => {
 
     // change duration
     cy.get(`[style="top:${GRID_ROW_HEIGHT * 2}px"] > .slick-cell:nth(4)`).click();
-    cy.get('.slider-editor input[type=range]').as('range')
-      .invoke('val', 25)
-      .trigger('change')
-      .type('{enter}', { force: true });
+    cy.get('.slider-editor input[type=range]').as('range').invoke('val', 25).trigger('change');
     cy.get(`[style="top:${GRID_ROW_HEIGHT * 2}px"] > .slick-cell:nth(4)`).should('contain', '25');
 
     // change % Complete
@@ -114,10 +106,7 @@ describe('Example 3 - Grid with Editors', () => {
 
     // change duration
     cy.get(`[style="top:${GRID_ROW_HEIGHT * 0}px"] > .slick-cell:nth(4)`).click();
-    cy.get('.slider-editor input[type=range]').as('range')
-      .invoke('val', 50)
-      .trigger('change')
-      .type('{enter}', { force: true });
+    cy.get('.slider-editor input[type=range]').as('range').invoke('val', 50).trigger('change');
     cy.get(`[style="top:${GRID_ROW_HEIGHT * 0}px"] > .slick-cell:nth(4)`).should('contain', '50');
 
     // change % Complete
@@ -164,10 +153,7 @@ describe('Example 3 - Grid with Editors', () => {
 
     // change duration
     cy.get(`[style="top:${GRID_ROW_HEIGHT * 0}px"] > .slick-cell:nth(4)`).click();
-    cy.get('.slider-editor input[type=range]').as('range')
-      .invoke('val', 50)
-      .trigger('change')
-      .type('{enter}', { force: true });
+    cy.get('.slider-editor input[type=range]').as('range').invoke('val', 50).trigger('change');
     cy.get(`[style="top:${GRID_ROW_HEIGHT * 0}px"] > .slick-cell:nth(4)`).should('contain', '50');
 
     // change % Complete

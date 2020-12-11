@@ -1,12 +1,12 @@
+import { Locale, PaginationService } from '@slickgrid-universal/common';
 import { bootstrap } from 'aurelia-bootstrapper';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { StageComponent } from 'aurelia-testing';
 
-import { GridOption, Locale } from '../../models';
-import { PaginationService } from '../../services';
+import { GridOption } from '../../models';
 
-function removeExtraSpaces(textS: string) {
-  return `${textS}`.replace(/\s{2,}/g, '');
+function removeExtraSpaces(text: string) {
+  return `${text}`.replace(/\s{2,}/g, '');
 }
 
 const mockLocales = {

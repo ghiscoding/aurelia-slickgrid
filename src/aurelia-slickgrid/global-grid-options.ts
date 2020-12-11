@@ -1,5 +1,5 @@
-import { Filters } from './filters/index';
-import { Column, DelimiterType, FileType, GridOption, OperatorType, RowDetailView } from './models/index';
+import { Column, DelimiterType, EventNamingStyle, FileType, Filters, OperatorType } from '@slickgrid-universal/common';
+import { GridOption, RowDetailView } from './models/index';
 
 /**
  * Default Options that can be passed to the Aurelia-Slickgrid
@@ -10,11 +10,12 @@ export const GlobalGridOptions: Partial<GridOption> = {
   asyncEditorLoading: false,
   autoFitColumnsOnFirstLoad: true,
   autoResize: {
+    applyResizeToContainer: true,
     calculateAvailableSizeBy: 'window',
     bottomPadding: 20,
     minHeight: 180,
     minWidth: 300,
-    sidePadding: 0
+    rightPadding: 0
   },
   cellHighlightCssClass: 'slick-cell-modified',
   checkboxSelector: {
@@ -74,8 +75,8 @@ export const GlobalGridOptions: Partial<GridOption> = {
   },
   datasetIdPropertyName: 'id',
   defaultColumnSortFieldId: 'id',
-  defaultAureliaEventPrefix: 'asg',
-  defaultSlickgridEventPrefix: 'sg',
+  defaultAureliaEventPrefix: '',
+  defaultSlickgridEventPrefix: '',
   defaultFilter: Filters.input,
   defaultFilterPlaceholder: '&#128269;', // magnifying glass icon
   defaultFilterRangeOperator: OperatorType.rangeExclusive,
@@ -100,12 +101,13 @@ export const GlobalGridOptions: Partial<GridOption> = {
   enableColumnPicker: true,
   enableColumnReorder: true,
   enableContextMenu: true,
-  enableExcelExport: true, // Excel Export is the new default,
-  enableExport: false, // CSV/Text with Tab Delimited
+  enableExcelExport: false, // both exports are now opt-in
+  enableTextExport: false,
   enableFilterTrimWhiteSpace: false, // do we want to trim white spaces on all Filters?
   enableGridMenu: true,
   enableSorting: true,
   enableTextSelectionOnCells: true,
+  eventNamingStyle: EventNamingStyle.kebabCase,
   explicitInitialization: true,
   excelExportOptions: {
     addGroupIndentation: true,
@@ -118,7 +120,7 @@ export const GlobalGridOptions: Partial<GridOption> = {
     groupingAggregatorRowText: '',
     sanitizeDataExport: false,
   },
-  exportOptions: {
+  textExportOptions: {
     delimiter: DelimiterType.comma,
     exportWithFormatter: false,
     filename: 'export',
@@ -183,7 +185,6 @@ export const GlobalGridOptions: Partial<GridOption> = {
     pageSize: 25,
     totalItems: 0
   },
-  // technically speaking the Row Detail requires the process & viewComponent but we'll ignore it just to set certain options
   rowDetailView: {
     cssClass: 'detail-view-toggle',
     panelRows: 1,

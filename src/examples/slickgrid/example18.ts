@@ -1,3 +1,5 @@
+import { ExcelExportService } from '@slickgrid-universal/excel-export';
+import { TextExportService } from '@slickgrid-universal/text-export';
 import { autoinject } from 'aurelia-framework';
 import {
   Aggregators,
@@ -11,9 +13,11 @@ import {
   GridOption,
   GroupingGetterFunction,
   GroupTotalFormatters,
-  Sorters,
+  SortComparers,
   SortDirectionNumber,
   Grouping,
+  SlickDataView,
+  SlickGrid,
 } from '../../aurelia-slickgrid';
 
 @autoinject()
@@ -37,13 +41,15 @@ export class Example18 {
   aureliaGrid: AureliaGridInstance;
   columnDefinitions: Column[];
   dataset: any[];
-  dataviewObj: any;
+  dataviewObj: SlickDataView;
   draggableGroupingPlugin: any;
   durationOrderByCount = false;
-  gridObj: any;
+  gridObj: SlickGrid;
   gridOptions: GridOption;
   processing = false;
   selectedGroupingFields: Array<string | GroupingGetterFunction> = ['', '', ''];
+  excelExportService = new ExcelExportService();
+  textExportService = new TextExportService();
 
   constructor() {
     // define the grid options & columns and then create the grid itself
@@ -88,7 +94,7 @@ export class Example18 {
           getter: 'duration',
           formatter: (g) => `Duration: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
           comparer: (a, b) => {
-            return this.durationOrderByCount ? (a.count - b.count) : Sorters.numeric(a.value, b.value, SortDirectionNumber.asc);
+            return this.durationOrderByCount ? (a.count - b.count) : SortComparers.numeric(a.value, b.value, SortDirectionNumber.asc);
           },
           aggregators: [
             new Aggregators.Sum('cost')
@@ -199,8 +205,8 @@ export class Example18 {
 
     this.gridOptions = {
       autoResize: {
-        containerId: 'demo-container',
-        sidePadding: 10
+        container: '#demo-container',
+        rightPadding: 10
       },
       enableDraggableGrouping: true,
       createPreHeaderPanel: true,
@@ -209,9 +215,6 @@ export class Example18 {
       enableFiltering: true,
       enableSorting: true,
       enableColumnReorder: true,
-      exportOptions: {
-        sanitizeDataExport: true
-      },
       gridMenu: {
         onCommand: (_e, args) => {
           if (args.command === 'toggle-preheader') {
@@ -226,7 +229,12 @@ export class Example18 {
         deleteIconCssClass: 'fa fa-times',
         onGroupChanged: (_e, args) => this.onGroupChanged(args),
         onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
-      }
+      },
+      enableTextExport: true,
+      enableExcelExport: true,
+      excelExportOptions: { sanitizeDataExport: true },
+      textExportOptions: { sanitizeDataExport: true },
+      registerExternalServices: [this.excelExportService, this.textExportService],
     };
   }
 
@@ -280,14 +288,14 @@ export class Example18 {
   }
 
   exportToExcel() {
-    this.aureliaGrid.excelExportService.exportToExcel({
+    this.excelExportService.exportToExcel({
       filename: 'Export',
       format: FileType.xlsx
     });
   }
 
   exportToCsv(type = 'csv') {
-    this.aureliaGrid.exportService.exportToFile({
+    this.textExportService.exportToFile({
       delimiter: (type === 'csv') ? DelimiterType.comma : DelimiterType.tab,
       filename: 'myExport',
       format: (type === 'csv') ? FileType.csv : FileType.txt

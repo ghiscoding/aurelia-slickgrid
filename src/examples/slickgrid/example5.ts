@@ -1,3 +1,4 @@
+import { GridOdataService, OdataServiceApi, OdataOption } from '@slickgrid-universal/odata';
 import { autoinject } from 'aurelia-framework';
 import { HttpClient } from 'aurelia-http-client';
 import {
@@ -5,12 +6,9 @@ import {
   Column,
   FieldType,
   Filters,
-  GridOdataService,
   GridOption,
   GridStateChange,
   Metrics,
-  OdataOption,
-  OdataServiceApi,
   OperatorType,
   Pagination,
 } from '../../aurelia-slickgrid';
@@ -82,8 +80,8 @@ export class Example5 {
     this.gridOptions = {
       enableAutoResize: true,
       autoResize: {
-        containerId: 'demo-container',
-        sidePadding: 10
+        container: '#demo-container',
+        rightPadding: 10
       },
       checkboxSelector: {
         // you can toggle these 2 properties to show the "select all" checkbox in different location

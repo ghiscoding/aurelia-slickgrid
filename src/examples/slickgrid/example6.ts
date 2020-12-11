@@ -1,3 +1,4 @@
+import { GraphqlService, GraphqlPaginatedResult, GraphqlServiceApi, } from '@slickgrid-universal/graphql';
 import { autoinject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import * as moment from 'moment-mini';
@@ -7,9 +8,6 @@ import {
   FieldType,
   Filters,
   Formatters,
-  GraphqlPaginatedResult,
-  GraphqlService,
-  GraphqlServiceApi,
   GridOption,
   GridStateChange,
   Metrics,
@@ -44,6 +42,7 @@ export class Example6 {
   gridOptions: GridOption;
   dataset = [];
   metrics: Metrics;
+  graphqlService = new GraphqlService();
 
   isWithCursor = false;
   graphqlQuery = '';
@@ -135,6 +134,8 @@ export class Example6 {
       showPreHeaderPanel: true,
       preHeaderPanelHeight: 28,
       i18n: this.i18n,
+      gridHeight: 200,
+      gridWidth: 900,
       gridMenu: {
         resizeOnShowHeaderRow: true,
       },
@@ -170,7 +171,7 @@ export class Example6 {
         pagination: { pageNumber: 2, pageSize: 20 }
       },
       backendServiceApi: {
-        service: new GraphqlService(),
+        service: this.graphqlService,
         options: {
           datasetName: GRAPHQL_QUERY_DATASET_NAME, // the only REQUIRED property
           addLocaleIntoQuery: true,   // optionally add current locale into the query
@@ -228,7 +229,7 @@ export class Example6 {
 
     return new Promise(resolve => {
       setTimeout(() => {
-        this.graphqlQuery = this.aureliaGrid.backendService.buildQuery();
+        this.graphqlQuery = this.graphqlService.buildQuery();
         resolve(mockedResult);
       }, 150);
     });

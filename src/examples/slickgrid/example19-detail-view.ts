@@ -1,6 +1,7 @@
 import { bindable } from 'aurelia-framework';
+
 import { Example19 } from './example19';
-import { ViewModelBindableData } from '../../aurelia-slickgrid';
+import { SlickDataView, SlickGrid, ViewModelBindableData } from '../../aurelia-slickgrid';
 
 export class DetailViewCustomElement {
   @bindable() model: {
@@ -16,8 +17,8 @@ export class DetailViewCustomElement {
 
   // you also have access to the following objects (it must match the exact property names shown below)
   addon: any; // row detail addon instance
-  grid: any;
-  dataView: any;
+  grid: SlickGrid;
+  dataView: SlickDataView;
 
   // you can also optionally use the Parent Component reference
   // NOTE that you MUST provide it through the "parent" property in your "rowDetail" grid options

@@ -1,4 +1,4 @@
-import { GridOption } from './models/index';
+import { GridOption } from './models/gridOption.interface';
 import { GlobalGridOptions } from './global-grid-options';
 
 export class SlickgridConfig {

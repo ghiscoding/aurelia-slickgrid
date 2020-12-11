@@ -49,12 +49,14 @@
   </div>
 
   <div id="grid-container" class="col-sm-12">
-    <aurelia-slickgrid grid-id="grid26" column-definitions.bind="columnDefinitions" grid-options.bind="gridOptions"
+    <aurelia-slickgrid grid-id="grid26"
+                       column-definitions.bind="columnDefinitions"
+                       grid-options.bind="gridOptions"
                        dataset.bind="dataset"
                        instances.bind="aureliaGrid"
-                       sg-on-cell-change.delegate="onCellChanged($event.detail.eventData, $event.detail.args)"
-                       sg-on-click.delegate="onCellClicked($event.detail.eventData, $event.detail.args)"
-                       sg-on-validation-error.delegate="onCellValidation($event.detail.eventData, $event.detail.args)">
+                       on-cell-change.delegate="onCellChanged($event.detail.eventData, $event.detail.args)"
+                       on-click.delegate="onCellClicked($event.detail.eventData, $event.detail.args)"
+                       on-validation-error.delegate="onCellValidationError($event.detail.eventData, $event.detail.args)">
     </aurelia-slickgrid>
   </div>
 </template>

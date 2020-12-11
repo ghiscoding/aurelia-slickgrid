@@ -7,7 +7,6 @@ import {
   AutocompleteOption,
   Column,
   Editors,
-  EditorArgs,
   EditorValidator,
   FieldType,
   Filters,
@@ -16,14 +15,15 @@ import {
   GridOption,
   OnEventArgs,
   OperatorType,
-  Sorters,
+  SlickNamespace,
+  SortComparers,
 } from '../../aurelia-slickgrid';
 import { CustomInputEditor } from './custom-inputEditor';
 import { CustomInputFilter } from './custom-inputFilter';
 import * as $ from 'jquery';
 
 // using external non-typed js libraries
-declare const Slick: any;
+declare const Slick: SlickNamespace;
 
 const NB_ITEMS = 100;
 const URL_SAMPLE_COLLECTION_DATA = 'assets/data/collection_100_numbers.json';
@@ -31,7 +31,7 @@ const URL_COUNTRIES_COLLECTION = 'assets/data/countries.json';
 const URL_COUNTRY_NAMES = 'assets/data/country_names.json';
 
 // you can create custom validator to pass to an inline editor
-const myCustomTitleValidator: EditorValidator = (value: any, args: EditorArgs) => {
+const myCustomTitleValidator: EditorValidator = (value: any) => {
   // you can get the Editor Args which can be helpful, e.g. we can get the Translate Service from it
   // const grid = args && args.grid;
   // const gridOptions = (grid && grid.getOptions) ? grid.getOptions() : {};
@@ -72,7 +72,7 @@ export class Example3 {
     <li>Inline Editors requires "enableCellNavigation: true" (not sure why though)</li>
     <li>
         Support Excel Copy Buffer (SlickGrid Copy Manager Plugin), you can use it by simply enabling "enableExcelCopyBuffer" flag.
-        Note that it will only evaluate Formatter when the "exportWithFormatter" flag is enabled (through "ExportOptions" or the column definition)
+        Note that it will only evaluate Formatter when the "exportWithFormatter" flag is enabled (through "ExcelExportOptions" or "TextExportOptions" or the column definition)
     </li>
     <li>Support of "collectionAsync" is possible, click on "Clear Filters/Sorting" then add/delete item(s) and look at "Prerequisites" Select Filter</li>
   </ul>
@@ -331,7 +331,7 @@ export class Example3 {
         dataKey: 'code',
         labelKey: 'name',
         type: FieldType.object,
-        sorter: Sorters.objectString,
+        sortComparer: SortComparers.objectString,
         filterable: true,
         sortable: true,
         minWidth: 100,
@@ -445,8 +445,8 @@ export class Example3 {
       autoEdit: this.isAutoEdit,
       autoCommitEdit: false,
       autoResize: {
-        containerId: 'demo-container',
-        sidePadding: 10
+        container: '#demo-container',
+        rightPadding: 10
       },
       editable: true,
       enableCellNavigation: true,
@@ -475,7 +475,7 @@ export class Example3 {
 
         if (Array.isArray(collectionEditor) && Array.isArray(collectionFilter)) {
           // add the new row to the grid
-          this.aureliaGrid.gridService.addItemToDatagrid(newRows[0]);
+          this.aureliaGrid.gridService.addItem(newRows[0]);
 
           // then refresh the Editor/Filter "collection", we have 2 ways of doing it
 
@@ -502,7 +502,7 @@ export class Example3 {
         // sort collection in descending order and take out last option from the collection
         const selectCollectionObj = this.sortCollectionDescending(collectionEditor).pop();
         this.sortCollectionDescending(collectionFilter).pop();
-        this.aureliaGrid.gridService.deleteDataGridItemById(selectCollectionObj.value);
+        this.aureliaGrid.gridService.deleteItemById(selectCollectionObj.value);
       }
     }
   }
@@ -559,7 +559,7 @@ export class Example3 {
       // this.aureliaGrid.gridService.setSelectedRow(args.row);
     } else if (metadata.columnDef.id === 'delete') {
       if (confirm('Are you sure?')) {
-        this.aureliaGrid.gridService.deleteDataGridItemById(metadata.dataContext.id);
+        this.aureliaGrid.gridService.deleteItemById(metadata.dataContext.id);
         this.alertWarning = `Deleted: ${metadata.dataContext.title}`;
       }
     }

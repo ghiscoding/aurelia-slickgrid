@@ -1,27 +1,27 @@
 <template>
-  <div id="slickGridContainer-${gridId}" class="gridPane" css="width: ${gridWidth}px">
+  <div id="slickGridContainer-${gridId}" class="grid-pane">
     <!-- Header slot if you need to create a complex custom header -->
     <slot name="slickgrid-header"></slot>
 
-    <div id.bind="gridId" class="slickgrid-container" style="width: 100%" css="height: ${gridHeight}px"
-      focusout.delegate="commitEdit($event.target)">
+    <div id.bind="gridId" class="slickgrid-container" style="width: 100%"
+         focusout.delegate="commitEdit($event.target)">
     </div>
 
     <!-- Pagination section under the grid -->
     <slick-pagination id="slickPagingContainer-${gridId}" if.bind="showPagination"
-      grid-options.bind="gridOptions"
-      pagination-service.bind="paginationService">
+                      grid-options.bind="gridOptions"
+                      pagination-service.bind="paginationService">
     </slick-pagination>
 
     <!-- Custom Footer section under the grid -->
     <div if.bind="showCustomFooter && customFooterOptions" class="slick-custom-footer" style="width: 100%;"
-      css="height: ${customFooterOptions.footerHeight || 20}px">
+         css="height: ${customFooterOptions.footerHeight || 20}px">
       <div class="left-footer ${customFooterOptions.leftContainerClass}">
         ${customFooterOptions.leftFooterText}
       </div>
 
       <div class="right-footer metrics ${customFooterOptions.rightContainerClass}"
-        if.bind="metrics && !customFooterOptions.hideMetrics">
+           if.bind="metrics && !customFooterOptions.hideMetrics">
         <span if.bind="!customFooterOptions.hideLastUpdateTimestamp">
           <span>${customFooterOptions.metricTexts.lastUpdate}</span>
 

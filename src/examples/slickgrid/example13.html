@@ -3,22 +3,22 @@
   <div class="subtitle" innerhtml.bind="subTitle"></div>
 
   <div class="row col-sm-12">
-    <button class="btn btn-default btn-xs" data-test="add-500-rows-btn" click.delegate="loadData(500)">
+    <button class="btn btn-outline-secondary btn-xs" data-test="add-500-rows-btn" click.delegate="loadData(500)">
       500 rows
     </button>
-    <button class="btn btn-default btn-xs" data-test="add-50k-rows-btn" click.delegate="loadData(50000)">
+    <button class="btn btn-outline-secondary btn-xs" data-test="add-50k-rows-btn" click.delegate="loadData(50000)">
       50k rows
     </button>
-    <button class="btn btn-default btn-xs" data-test="clear-grouping-btn" click.delegate="clearGrouping()">
+    <button class="btn btn-outline-secondary btn-xs" data-test="clear-grouping-btn" click.delegate="clearGrouping()">
       <i class="fa fa-times"></i> Clear grouping
     </button>
-    <button class="btn btn-default btn-xs" data-test="collapse-all-btn" click.delegate="collapseAllGroups()">
+    <button class="btn btn-outline-secondary btn-xs" data-test="collapse-all-btn" click.delegate="collapseAllGroups()">
       <i class="fa fa-compress"></i> Collapse all groups
     </button>
-    <button class="btn btn-default btn-xs" data-test="expand-all-btn" click.delegate="expandAllGroups()">
+    <button class="btn btn-outline-secondary btn-xs" data-test="expand-all-btn" click.delegate="expandAllGroups()">
       <i class="fa fa-expand"></i> Expand all groups
     </button>
-    <button class="btn btn-default btn-xs" data-test="export-excel-btn" click.delegate="exportToExcel()">
+    <button class="btn btn-outline-secondary btn-xs" data-test="export-excel-btn" click.delegate="exportToExcel()">
       <i class="fa fa-file-excel-o text-success"></i> Export to Excel
     </button>
   </div>
@@ -26,24 +26,25 @@
   <hr />
 
   <div class="row col-sm-12">
-    <button class="btn btn-default btn-xs" data-test="group-duration-sort-value-btn" click.delegate="groupByDuration()">
+    <button class="btn btn-outline-secondary btn-xs" data-test="group-duration-sort-value-btn"
+            click.delegate="groupByDuration()">
       Group by Duration &amp; sort groups by value
     </button>
-    <button class="btn btn-default btn-xs" data-test="group-duration-sort-count-btn"
+    <button class="btn btn-outline-secondary btn-xs" data-test="group-duration-sort-count-btn"
             click.delegate="groupByDurationOrderByCount(false)">
       Group by Duration &amp; sort groups by count
     </button>
   </div>
   <div class="row col-sm-12">
-    <button class="btn btn-default btn-xs" data-test="group-duration-sort-count-collapse-btn"
+    <button class="btn btn-outline-secondary btn-xs" data-test="group-duration-sort-count-collapse-btn"
             click.delegate="groupByDurationOrderByCount(true)">
       Group by Duration &amp; sort groups by count, aggregate collapsed
     </button>
-    <button class="btn btn-default btn-xs" data-test="group-duration-effort-btn"
+    <button class="btn btn-outline-secondary btn-xs" data-test="group-duration-effort-btn"
             click.delegate="groupByDurationEffortDriven()">
       Group by Duration then Effort-Driven
     </button>
-    <button class="btn btn-default btn-xs" data-test="group-duration-effort-percent-btn"
+    <button class="btn btn-outline-secondary btn-xs" data-test="group-duration-effort-percent-btn"
             click.delegate="groupByDurationEffortDrivenPercent()">
       Group by Duration then Effort-Driven then Percent.
     </button>
@@ -52,10 +53,12 @@
     </span>
   </div>
 
-  <aurelia-slickgrid grid-id="grid13" column-definitions.bind="columnDefinitions" grid-options.bind="gridOptions"
+  <aurelia-slickgrid grid-id="grid13"
+                     column-definitions.bind="columnDefinitions"
+                     grid-options.bind="gridOptions"
                      dataset.bind="dataset"
-                     asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)"
-                     asg-on-before-export-to-excel.delegate="processing = true"
-                     asg-on-after-export-to-excel.delegate="processing = false">
+                     on-before-export-to-excel.delegate="processing = true"
+                     on-after-export-to-excel.delegate="processing = false"
+                     on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
   </aurelia-slickgrid>
 </template>

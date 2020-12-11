@@ -27,7 +27,7 @@ export class Example19 {
   gridOptions: GridOption;
   columnDefinitions: Column[];
   dataset: any[];
-  extensions: ExtensionList;
+  extensions: ExtensionList<any, any>;
   flashAlertType = 'info';
   message: string;
   subscriptions: Subscription[];
@@ -74,8 +74,8 @@ export class Example19 {
 
     this.gridOptions = {
       autoResize: {
-        containerId: 'demo-container',
-        sidePadding: 10
+        container: '#demo-container',
+        rightPadding: 10
       },
       enableFiltering: true,
       enableRowDetailView: true,
@@ -109,7 +109,7 @@ export class Example19 {
 
         // you can override the logic for showing (or not) the expand icon
         // for example, display the expand icon only on every 2nd row
-        // expandableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1),
+        // expandableOverride: (row: number, dataContext: any, grid: SlickGrid) => (dataContext.id % 2 === 1),
 
         // Preload View Template
         preloadView: PLATFORM.moduleName('examples/slickgrid/example19-preload.html'),

@@ -1,25 +1,26 @@
-import { BackendService } from './index';
 import {
-  ExcelExportService,
-  ExportService,
+  BackendService,
   ExtensionService,
   FilterService,
-  GridService,
   GridEventService,
+  GridService,
   GridStateService,
   GroupingAndColspanService,
   PaginationService,
-  ResizerService,
+  SlickDataView,
   SortService,
-  TreeDataService,
-} from '../services/index';
+  TreeDataService
+} from '@slickgrid-universal/common';
+
+import { SlickGrid } from '../models/index';
+import { ResizerService } from '../services/index';
 
 export interface AureliaGridInstance {
   /** Slick DataView object */
-  dataView: any;
+  dataView: SlickDataView;
 
   /** Slick Grid object */
-  slickGrid: any;
+  slickGrid: SlickGrid;
 
   // --
   // Methods
@@ -34,15 +35,6 @@ export interface AureliaGridInstance {
 
   /** Extension (Plugins & Controls) Service */
   extensionService: ExtensionService;
-
-  /** @deprecated, use `extensionService` instead. Plugin and Control Service */
-  pluginService: ExtensionService;
-
-  /** Excel Export Service */
-  excelExportService?: ExcelExportService;
-
-  /** Export Service */
-  exportService: ExportService;
 
   /** Filter Service */
   filterService: FilterService;

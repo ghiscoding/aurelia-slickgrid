@@ -1,5 +1,8 @@
+import { ExcelExportService } from '@slickgrid-universal/excel-export';
+import { TextExportService } from '@slickgrid-universal/text-export';
 import { autoinject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
+
 import {
   AureliaGridInstance,
   Column,
@@ -11,6 +14,7 @@ import {
   Formatters,
   GridOption,
   GridStateChange,
+  SlickGrid,
 } from '../../aurelia-slickgrid';
 
 const NB_ITEMS = 1500;
@@ -59,7 +63,9 @@ export class Example12 {
   dataset: any[];
   selectedLanguage: string;
   duplicateTitleHeaderCount = 1;
-  gridObj: any;
+  gridObj: SlickGrid;
+  excelExportService = new ExcelExportService();
+  textExportService = new TextExportService();
 
   constructor(private i18n: I18N) {
     // define the grid options & columns and then create the grid itself
@@ -135,13 +141,11 @@ export class Example12 {
 
     this.gridOptions = {
       autoResize: {
-        containerId: 'demo-container',
-        sidePadding: 10
+        container: '#demo-container',
+        rightPadding: 10
       },
       enableAutoResize: true,
       enableExcelCopyBuffer: true,
-      enableExcelExport: true,
-      enableExport: true,
       enableFiltering: true,
       enableTranslate: true,
       i18n: this.i18n,
@@ -167,15 +171,18 @@ export class Example12 {
         hideTotalItemCount: false,
         hideLastUpdateTimestamp: false,
       },
-      exportOptions: {
+      gridMenu: {
+        hideExportCsvCommand: false,           // false by default, so it's optional
+        hideExportTextDelimitedCommand: false  // true by default, so if you want it, you will need to disable the flag
+      },
+      enableExcelExport: true,
+      enableTextExport: true,
+      textExportOptions: {
         // set at the grid option level, meaning all column will evaluate the Formatter (when it has a Formatter defined)
         exportWithFormatter: true,
         sanitizeDataExport: true
       },
-      gridMenu: {
-        hideExportCsvCommand: false,           // false by default, so it's optional
-        hideExportTextDelimitedCommand: false  // true by default, so if you want it, you will need to disable the flag
-      }
+      registerExternalServices: [this.excelExportService, this.textExportService],
     };
   }
 
@@ -217,14 +224,14 @@ export class Example12 {
   }
 
   exportToExcel() {
-    this.aureliaGrid.excelExportService.exportToExcel({
+    this.excelExportService.exportToExcel({
       filename: 'Export',
       format: FileType.xlsx
     });
   }
 
   exportToFile(type = 'csv') {
-    this.aureliaGrid.exportService.exportToFile({
+    this.textExportService.exportToFile({
       delimiter: (type === 'csv') ? DelimiterType.comma : DelimiterType.tab,
       filename: 'myExport',
       format: (type === 'csv') ? FileType.csv : FileType.txt

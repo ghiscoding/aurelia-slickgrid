@@ -9,24 +9,29 @@
     items
   </span>
 
-  <button class="btn btn-default btn-sm" data-test="clear-filters"
+  <button class="btn btn-outline-secondary btn-sm" data-test="clear-filters"
           click.delegate="aureliaGrid.filterService.clearFilters()">
     Clear Filters
   </button>
-  <button class="btn btn-default btn-sm" data-test="clear-sorting"
+  <button class="btn btn-outline-secondary btn-sm" data-test="clear-sorting"
           click.delegate="aureliaGrid.sortService.clearSorting()">
     Clear Sorting
   </button>
-  <button class="btn btn-default btn-sm" data-test="set-dynamic-filter" click.delegate="setFiltersDynamically()">
+  <button class="btn btn-outline-secondary btn-sm" data-test="set-dynamic-filter"
+          click.delegate="setFiltersDynamically()">
     Set Filters Dynamically
   </button>
-  <button class="btn btn-default btn-sm" data-test="set-dynamic-sorting" click.delegate="setSortingDynamically()">
+  <button class="btn btn-outline-secondary btn-sm" data-test="set-dynamic-sorting"
+          click.delegate="setSortingDynamically()">
     Set Sorting Dynamically
   </button>
 
-  <aurelia-slickgrid grid-id="grid4" column-definitions.bind="columnDefinitions" grid-options.bind="gridOptions"
-                     dataset.bind="dataset" asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)"
-                     asg-on-grid-state-changed.delegate="gridStateChanged($event.detail)"
-                     sg-on-row-count-changed.delegate="refreshMetrics($event.detail.eventData, $event.detail.args)">
+  <aurelia-slickgrid grid-id="grid4"
+                     column-definitions.bind="columnDefinitions"
+                     grid-options.bind="gridOptions"
+                     dataset.bind="dataset"
+                     on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)"
+                     on-grid-state-changed.delegate="gridStateChanged($event.detail)"
+                     on-row-count-changed.delegate="refreshMetrics($event.detail.eventData, $event.detail.args)">
   </aurelia-slickgrid>
 </template>

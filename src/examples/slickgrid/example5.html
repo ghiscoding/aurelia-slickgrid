@@ -10,10 +10,12 @@
           <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
         </span>
       </div>
-      <button class="btn btn-default btn-sm" data-test="set-dynamic-filter" click.delegate="setFiltersDynamically()">
+      <button class="btn btn-outline-secondary btn-sm" data-test="set-dynamic-filter"
+              click.delegate="setFiltersDynamically()">
         Set Filters Dynamically
       </button>
-      <button class="btn btn-default btn-sm" data-test="set-dynamic-sorting" click.delegate="setSortingDynamically()">
+      <button class="btn btn-outline-secondary btn-sm" data-test="set-dynamic-sorting"
+              click.delegate="setSortingDynamically()">
         Set Sorting Dynamically
       </button>
       <br>
@@ -47,10 +49,10 @@
   </div>
   <div class="row col-md-12">
     <label>Programmatically go to first/last page:</label>
-    <button class="btn btn-default btn-xs" data-test="goto-first-page" click.delegate="goToFirstPage()">
+    <button class="btn btn-outline-secondary btn-xs" data-test="goto-first-page" click.delegate="goToFirstPage()">
       <i class="fa fa-caret-left fa-lg"></i>
     </button>
-    <button class="btn btn-default btn-xs" data-test="goto-last-page" click.delegate="goToLastPage()">
+    <button class="btn btn-outline-secondary btn-xs" data-test="goto-last-page" click.delegate="goToLastPage()">
       <i class="fa fa-caret-right fa-lg"></i>
     </button>
   </div>
@@ -58,9 +60,9 @@
   <aurelia-slickgrid grid-id="grid5"
                      column-definitions.bind="columnDefinitions"
                      grid-options.bind="gridOptions"
-                     pagination-options.bind="paginationOptions"
                      dataset.bind="dataset"
-                     asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)"
-                     asg-on-grid-state-changed.delegate="gridStateChanged($event.detail)">
+                     pagination-options.bind="paginationOptions"
+                     on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)"
+                     on-grid-state-changed.delegate="gridStateChanged($event.detail)">
   </aurelia-slickgrid>
 </template>

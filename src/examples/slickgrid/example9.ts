@@ -8,6 +8,8 @@ import {
   Filters,
   Formatters,
   GridOption,
+  SlickDataView,
+  SlickGrid,
 } from '../../aurelia-slickgrid';
 import './example9.scss'; // provide custom CSS/SASS styling
 
@@ -31,8 +33,8 @@ export class Example9 {
   columnDefinitions: Column[];
   gridOptions: GridOption;
   dataset = [];
-  dataView: any;
-  gridObj: any;
+  dataView: SlickDataView;
+  gridObj: SlickGrid;
   selectedLanguage: string;
 
   constructor(private i18n: I18N) {
@@ -92,8 +94,8 @@ export class Example9 {
       enableAutoResize: true,
       enableGridMenu: true,
       autoResize: {
-        containerId: 'demo-container',
-        sidePadding: 10
+        container: '#demo-container',
+        rightPadding: 10
       },
       enableFiltering: true,
       enableCellNavigation: true,

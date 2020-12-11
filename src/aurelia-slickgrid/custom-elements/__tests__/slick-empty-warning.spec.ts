@@ -1,8 +1,11 @@
+import { EmptyWarning } from '@slickgrid-universal/common';
 import { I18N } from 'aurelia-i18n';
 
-import { EmptyWarning, GridOption, SlickGrid } from '../../models/index';
+import { GridOption, SlickGrid } from '../../models/index';
 import { SlickEmptyWarningComponent } from '../slick-empty-warning.component';
+import { TranslateServiceStub } from '../../../../test/translateServiceStub';
 import { I18NServiceStub } from '../../../../test/i18nServiceStub';
+import { UniversalTranslateService } from '../../services/universalTranslate.service';
 
 const GRID_UID = 'slickgrid_123456';
 
@@ -22,10 +25,9 @@ describe('Slick-Empty-Warning Component', () => {
   let component: SlickEmptyWarningComponent;
   let div: HTMLDivElement;
   let i18n: I18N;
+  let translateService: TranslateServiceStub;
 
   beforeEach(() => {
-    i18n = new I18NServiceStub() as unknown as I18N;
-
     div = document.createElement('div');
     const canvasLeft = document.createElement('div');
     const canvasRight = document.createElement('div');
@@ -35,6 +37,8 @@ describe('Slick-Empty-Warning Component', () => {
     div.appendChild(canvasLeft);
     div.appendChild(canvasRight);
     document.body.appendChild(div);
+    i18n = new I18NServiceStub() as unknown as I18N;
+    translateService = new TranslateServiceStub(i18n);
 
     mockGridOptions.emptyDataWarning = {
       message: 'No data to display.',
@@ -271,9 +275,9 @@ describe('Slick-Empty-Warning Component', () => {
 
     it('should expect the Slick-Empty-Warning message to be translated to French when providing a Translater Service and "messageKey" property', () => {
       mockGridOptions.enableTranslate = true;
-      i18n.setLocale('fr');
+      translateService.use('fr');
 
-      component = new SlickEmptyWarningComponent(i18n);
+      component = new SlickEmptyWarningComponent(translateService as unknown as UniversalTranslateService);
       component.grid = gridStub;
       component.showEmptyDataMessage(true);
       const componentElm = document.querySelector<HTMLSelectElement>('div.slickgrid_123456 .grid-canvas .slick-empty-data-warning') as HTMLSelectElement;

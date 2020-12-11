@@ -1,14 +1,12 @@
-import { I18N } from 'aurelia-i18n';
+import { Column, ExtensionUtility, SharedService, SlickDataView, SlickGrid, SlickNamespace } from '@slickgrid-universal/common';
 import { EventAggregator } from 'aurelia-event-aggregator';
-import { HttpClient } from 'aurelia-fetch-client';
 import { GridOption } from '../../models/gridOption.interface';
 import { RowDetailViewExtension } from '../rowDetailViewExtension';
-import { ExtensionUtility } from '../extensionUtility';
-import { SharedService } from '../../services/shared.service';
-import { AureliaUtilService } from '../../services';
-import { Column, RowDetailView } from '../../models';
+import { AureliaUtilService, UniversalPubSubService, UniversalTranslateService } from '../../services';
+import { RowDetailView } from '../../models';
+import { HttpStub } from '../../../../test/httpClientStub';
 
-declare const Slick: any;
+declare const Slick: SlickNamespace;
 const ROW_DETAIL_CONTAINER_PREFIX = 'container_';
 const PRELOAD_CONTAINER_PREFIX = 'container_loading';
 
@@ -19,7 +17,7 @@ const aureliaUtilServiceStub = {
 
 const dataViewStub = {
   refresh: jest.fn(),
-};
+} as unknown as SlickDataView;
 
 const gridStub = {
   getOptions: jest.fn(),
@@ -28,7 +26,14 @@ const gridStub = {
   setSelectionModel: jest.fn(),
   onColumnsReordered: new Slick.Event(),
   onSort: new Slick.Event(),
-};
+} as unknown as SlickGrid;
+
+const translateServiceStub = {
+  getCurrentLanguage: jest.fn(),
+  use: jest.fn(),
+  setup: jest.fn(),
+  translate: jest.fn(),
+} as unknown as UniversalTranslateService;
 
 const mockAddon = jest.fn().mockImplementation(() => ({
   init: jest.fn(),
@@ -50,61 +55,14 @@ const mockSelectionModel = jest.fn().mockImplementation(() => ({
 jest.mock('slickgrid/plugins/slick.rowdetailview', () => mockAddon);
 Slick.Plugins = {
   RowDetailView: mockAddon
-};
+} as any;
 
 jest.mock('slickgrid/plugins/slick.rowselectionmodel', () => mockSelectionModel);
 Slick.RowSelectionModel = mockSelectionModel;
 
-class HttpStub extends HttpClient {
-  status: number;
-  statusText: string;
-  object: any = {};
-  returnKey: string;
-  returnValue: any;
-  responseHeaders: any;
-
-  fetch(input, init) {
-    let request;
-    const responseInit: any = {};
-    responseInit.headers = new Headers();
-
-    for (const name in this.responseHeaders || {}) {
-      if (name) {
-        responseInit.headers.set(name, this.responseHeaders[name]);
-      }
-    }
-
-    responseInit.status = this.status || 200;
-
-    if (Request.prototype.isPrototypeOf(input)) {
-      request = input;
-    } else {
-      request = new Request(input, init || {});
-    }
-    if (request.body && request.body.type) {
-      request.headers.set('Content-Type', request.body.type);
-    }
-
-    const promise = Promise.resolve().then(() => {
-      if (request.headers.get('Content-Type') === 'application/json' && request.method !== 'GET') {
-        return request.json().then((object) => {
-          object[this.returnKey] = this.returnValue;
-          const data = JSON.stringify(object);
-          const response = new Response(data, responseInit);
-          return this.status >= 200 && this.status < 300 ? Promise.resolve(response) : Promise.reject(response);
-        });
-      } else {
-        const data = JSON.stringify(this.object);
-        const response = new Response(data, responseInit);
-        return this.status >= 200 && this.status < 300 ? Promise.resolve(response) : Promise.reject(response);
-      }
-    });
-    return promise;
-  }
-}
-
 describe('rowDetailViewExtension', () => {
   let pluginEa: EventAggregator;
+  let pubSubService: UniversalPubSubService;
   let extensionUtility: ExtensionUtility;
   let extension: RowDetailViewExtension;
   let sharedService: SharedService;
@@ -137,9 +95,10 @@ describe('rowDetailViewExtension', () => {
 
   beforeEach(() => {
     pluginEa = new EventAggregator();
+    pubSubService = new UniversalPubSubService(pluginEa);
     sharedService = new SharedService();
-    extensionUtility = new ExtensionUtility({ tr: jest.fn() } as unknown as I18N, sharedService);
-    extension = new RowDetailViewExtension(aureliaUtilServiceStub, pluginEa, extensionUtility, sharedService);
+    extensionUtility = new ExtensionUtility(sharedService, translateServiceStub);
+    extension = new RowDetailViewExtension(aureliaUtilServiceStub, pubSubService, extensionUtility, sharedService);
   });
 
   it('should return null after calling "create" method when either the column definitions or the grid options is missing', () => {
@@ -161,7 +120,7 @@ describe('rowDetailViewExtension', () => {
         { id: 'field1', field: 'field1', width: 100, cssClass: 'red' },
         { id: 'field2', field: 'field2', width: 50 }
       ];
-      jest.spyOn(SharedService.prototype, 'grid', 'get').mockReturnValue(gridStub);
+      jest.spyOn(SharedService.prototype, 'slickGrid', 'get').mockReturnValue(gridStub);
       jest.spyOn(SharedService.prototype, 'dataView', 'get').mockReturnValue(dataViewStub);
       jest.spyOn(SharedService.prototype, 'gridOptions', 'get').mockReturnValue(gridOptionsMock);
       jest.clearAllMocks();
@@ -270,7 +229,7 @@ describe('rowDetailViewExtension', () => {
       gridOptionsMock.rowDetailView!.preloadView = 'some-preload-view';
       gridOptionsMock.rowDetailView!.viewModel = 'some-view';
       columnsMock = [{ id: 'field1', field: 'field1', width: 100, cssClass: 'red' }];
-      jest.spyOn(SharedService.prototype, 'grid', 'get').mockReturnValue(gridStub);
+      jest.spyOn(SharedService.prototype, 'slickGrid', 'get').mockReturnValue(gridStub);
       jest.spyOn(SharedService.prototype, 'gridOptions', 'get').mockReturnValue(gridOptionsMock);
       jest.clearAllMocks();
       gridStub.onColumnsReordered = new Slick.Event();
@@ -278,8 +237,8 @@ describe('rowDetailViewExtension', () => {
     });
 
     it('should register the addon', () => {
-      const onRegisteredSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onExtensionRegistered');
-      const pluginSpy = jest.spyOn(SharedService.prototype.grid, 'registerPlugin');
+      const onRegisteredSpy = jest.spyOn((SharedService.prototype.gridOptions as GridOption).rowDetailView as RowDetailView, 'onExtensionRegistered');
+      const pluginSpy = jest.spyOn(SharedService.prototype.slickGrid, 'registerPlugin');
 
       const instance = extension.create(columnsMock, gridOptionsMock);
       extension.register();
@@ -295,12 +254,12 @@ describe('rowDetailViewExtension', () => {
     it('should call internal event handler subscribe and expect the "onAsyncResponse" option to be called when addon notify is called', () => {
       const handlerSpy = jest.spyOn(extension.eventHandler, 'subscribe');
 
-      const onAsyncRespSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onAsyncResponse');
-      const onAsyncEndSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onAsyncEndUpdate');
-      const onAfterRowSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onAfterRowDetailToggle');
-      const onBeforeRowSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onBeforeRowDetailToggle');
-      const onRowOutViewSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onRowOutOfViewportRange');
-      const onRowBackViewSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onRowBackToViewportRange');
+      const onAsyncRespSpy = jest.spyOn((SharedService.prototype.gridOptions as GridOption).rowDetailView as RowDetailView, 'onAsyncResponse');
+      const onAsyncEndSpy = jest.spyOn((SharedService.prototype.gridOptions as GridOption).rowDetailView as RowDetailView, 'onAsyncEndUpdate');
+      const onAfterRowSpy = jest.spyOn((SharedService.prototype.gridOptions as GridOption).rowDetailView as RowDetailView, 'onAfterRowDetailToggle');
+      const onBeforeRowSpy = jest.spyOn((SharedService.prototype.gridOptions as GridOption).rowDetailView as RowDetailView, 'onBeforeRowDetailToggle');
+      const onRowOutViewSpy = jest.spyOn((SharedService.prototype.gridOptions as GridOption).rowDetailView as RowDetailView, 'onRowOutOfViewportRange');
+      const onRowBackViewSpy = jest.spyOn((SharedService.prototype.gridOptions as GridOption).rowDetailView as RowDetailView, 'onRowBackToViewportRange');
 
       const instance = extension.create(columnsMock, gridOptionsMock);
       extension.register();
@@ -323,12 +282,12 @@ describe('rowDetailViewExtension', () => {
       const handlerSpy = jest.spyOn(extension.eventHandler, 'subscribe');
       const renderSpy = jest.spyOn(extension, 'renderViewModel');
 
-      const onAsyncRespSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onAsyncResponse');
-      const onAsyncEndSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onAsyncEndUpdate');
-      const onAfterRowSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onAfterRowDetailToggle');
-      const onBeforeRowSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onBeforeRowDetailToggle');
-      const onRowOutViewSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onRowOutOfViewportRange');
-      const onRowBackViewSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onRowBackToViewportRange');
+      const onAsyncRespSpy = jest.spyOn((SharedService.prototype.gridOptions as GridOption).rowDetailView as RowDetailView, 'onAsyncResponse');
+      const onAsyncEndSpy = jest.spyOn((SharedService.prototype.gridOptions as GridOption).rowDetailView as RowDetailView, 'onAsyncEndUpdate');
+      const onAfterRowSpy = jest.spyOn((SharedService.prototype.gridOptions as GridOption).rowDetailView as RowDetailView, 'onAfterRowDetailToggle');
+      const onBeforeRowSpy = jest.spyOn((SharedService.prototype.gridOptions as GridOption).rowDetailView as RowDetailView, 'onBeforeRowDetailToggle');
+      const onRowOutViewSpy = jest.spyOn((SharedService.prototype.gridOptions as GridOption).rowDetailView as RowDetailView, 'onRowOutOfViewportRange');
+      const onRowBackViewSpy = jest.spyOn((SharedService.prototype.gridOptions as GridOption).rowDetailView as RowDetailView, 'onRowBackToViewportRange');
 
       const instance = extension.create(columnsMock, gridOptionsMock);
       extension.register();
@@ -351,16 +310,16 @@ describe('rowDetailViewExtension', () => {
     it('should call internal event handler subscribe and expect the "onAfterRowDetailToggle" option to be called when addon notify is called', () => {
       const handlerSpy = jest.spyOn(extension.eventHandler, 'subscribe');
 
-      const onAsyncRespSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onAsyncResponse');
-      const onAsyncEndSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onAsyncEndUpdate');
-      const onAfterRowSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onAfterRowDetailToggle');
-      const onBeforeRowSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onBeforeRowDetailToggle');
-      const onRowOutViewSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onRowOutOfViewportRange');
-      const onRowBackViewSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onRowBackToViewportRange');
+      const onAsyncRespSpy = jest.spyOn((SharedService.prototype.gridOptions as GridOption).rowDetailView as RowDetailView, 'onAsyncResponse');
+      const onAsyncEndSpy = jest.spyOn((SharedService.prototype.gridOptions as GridOption).rowDetailView as RowDetailView, 'onAsyncEndUpdate');
+      const onAfterRowSpy = jest.spyOn((SharedService.prototype.gridOptions as GridOption).rowDetailView as RowDetailView, 'onAfterRowDetailToggle');
+      const onBeforeRowSpy = jest.spyOn((SharedService.prototype.gridOptions as GridOption).rowDetailView as RowDetailView, 'onBeforeRowDetailToggle');
+      const onRowOutViewSpy = jest.spyOn((SharedService.prototype.gridOptions as GridOption).rowDetailView as RowDetailView, 'onRowOutOfViewportRange');
+      const onRowBackViewSpy = jest.spyOn((SharedService.prototype.gridOptions as GridOption).rowDetailView as RowDetailView, 'onRowBackToViewportRange');
 
       const instance = extension.create(columnsMock, gridOptionsMock);
       extension.register();
-      instance.onAfterRowDetailToggle.notify({ item: columnsMock[0], expandedRows: [columnsMock[0]], grid: gridStub }, new Slick.EventData(), gridStub);
+      instance.onAfterRowDetailToggle.notify({ item: columnsMock[0], expandedRows: [columnsMock[0] as any], grid: gridStub }, new Slick.EventData(), gridStub);
 
       expect(handlerSpy).toHaveBeenCalledTimes(8); // there are an extra 2x on the grid itself
       expect(handlerSpy).toHaveBeenCalledWith(
@@ -369,7 +328,7 @@ describe('rowDetailViewExtension', () => {
       );
       expect(onAsyncRespSpy).not.toHaveBeenCalled();
       expect(onAsyncEndSpy).not.toHaveBeenCalled();
-      expect(onAfterRowSpy).toHaveBeenCalledWith(expect.anything(), { item: columnsMock[0], expandedRows: [columnsMock[0]], grid: gridStub });
+      expect(onAfterRowSpy).toHaveBeenCalledWith(expect.anything(), { item: columnsMock[0], expandedRows: [columnsMock[0] as any], grid: gridStub });
       expect(onBeforeRowSpy).not.toHaveBeenCalled();
       expect(onRowOutViewSpy).not.toHaveBeenCalled();
       expect(onRowBackViewSpy).not.toHaveBeenCalled();
@@ -378,12 +337,12 @@ describe('rowDetailViewExtension', () => {
     it('should call internal event handler subscribe and expect the "onBeforeRowDetailToggle" option to be called when addon notify is called', () => {
       const handlerSpy = jest.spyOn(extension.eventHandler, 'subscribe');
 
-      const onAsyncRespSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onAsyncResponse');
-      const onAsyncEndSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onAsyncEndUpdate');
-      const onAfterRowSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onAfterRowDetailToggle');
-      const onBeforeRowSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onBeforeRowDetailToggle');
-      const onRowOutViewSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onRowOutOfViewportRange');
-      const onRowBackViewSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onRowBackToViewportRange');
+      const onAsyncRespSpy = jest.spyOn((SharedService.prototype.gridOptions as GridOption).rowDetailView as RowDetailView, 'onAsyncResponse');
+      const onAsyncEndSpy = jest.spyOn((SharedService.prototype.gridOptions as GridOption).rowDetailView as RowDetailView, 'onAsyncEndUpdate');
+      const onAfterRowSpy = jest.spyOn((SharedService.prototype.gridOptions as GridOption).rowDetailView as RowDetailView, 'onAfterRowDetailToggle');
+      const onBeforeRowSpy = jest.spyOn((SharedService.prototype.gridOptions as GridOption).rowDetailView as RowDetailView, 'onBeforeRowDetailToggle');
+      const onRowOutViewSpy = jest.spyOn((SharedService.prototype.gridOptions as GridOption).rowDetailView as RowDetailView, 'onRowOutOfViewportRange');
+      const onRowBackViewSpy = jest.spyOn((SharedService.prototype.gridOptions as GridOption).rowDetailView as RowDetailView, 'onRowBackToViewportRange');
 
       const instance = extension.create(columnsMock, gridOptionsMock);
       extension.register();
@@ -405,17 +364,17 @@ describe('rowDetailViewExtension', () => {
     it('should call internal event handler subscribe and expect the "onRowOutOfViewportRange" option to be called when addon notify is called', () => {
       const handlerSpy = jest.spyOn(extension.eventHandler, 'subscribe');
 
-      const onAsyncRespSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onAsyncResponse');
-      const onAsyncEndSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onAsyncEndUpdate');
-      const onAfterRowSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onAfterRowDetailToggle');
-      const onBeforeRowSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onBeforeRowDetailToggle');
-      const onRowOutViewSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onRowOutOfViewportRange');
-      const onRowBackViewSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onRowBackToViewportRange');
+      const onAsyncRespSpy = jest.spyOn((SharedService.prototype.gridOptions as GridOption).rowDetailView as RowDetailView, 'onAsyncResponse');
+      const onAsyncEndSpy = jest.spyOn((SharedService.prototype.gridOptions as GridOption).rowDetailView as RowDetailView, 'onAsyncEndUpdate');
+      const onAfterRowSpy = jest.spyOn((SharedService.prototype.gridOptions as GridOption).rowDetailView as RowDetailView, 'onAfterRowDetailToggle');
+      const onBeforeRowSpy = jest.spyOn((SharedService.prototype.gridOptions as GridOption).rowDetailView as RowDetailView, 'onBeforeRowDetailToggle');
+      const onRowOutViewSpy = jest.spyOn((SharedService.prototype.gridOptions as GridOption).rowDetailView as RowDetailView, 'onRowOutOfViewportRange');
+      const onRowBackViewSpy = jest.spyOn((SharedService.prototype.gridOptions as GridOption).rowDetailView as RowDetailView, 'onRowBackToViewportRange');
 
       const instance = extension.create(columnsMock, gridOptionsMock);
       extension.register();
       instance.onRowOutOfViewportRange.notify(
-        { item: columnsMock[0], rowId: 0, rowIndex: 0, expandedRows: [columnsMock[0]], rowIdsOutOfViewport: [], grid: gridStub },
+        { item: columnsMock[0], rowId: 0, rowIndex: 0, expandedRows: [columnsMock[0] as any], rowIdsOutOfViewport: [], grid: gridStub },
         new Slick.EventData(),
         gridStub
       );
@@ -429,24 +388,24 @@ describe('rowDetailViewExtension', () => {
       expect(onAsyncEndSpy).not.toHaveBeenCalled();
       expect(onAfterRowSpy).not.toHaveBeenCalled();
       expect(onBeforeRowSpy).not.toHaveBeenCalled();
-      expect(onRowOutViewSpy).toHaveBeenCalledWith(expect.anything(), { item: columnsMock[0], rowId: 0, rowIndex: 0, expandedRows: [columnsMock[0]], rowIdsOutOfViewport: [], grid: gridStub });
+      expect(onRowOutViewSpy).toHaveBeenCalledWith(expect.anything(), { item: columnsMock[0], rowId: 0, rowIndex: 0, expandedRows: [columnsMock[0] as any], rowIdsOutOfViewport: [], grid: gridStub });
       expect(onRowBackViewSpy).not.toHaveBeenCalled();
     });
 
     it('should call internal event handler subscribe and expect the "onRowBackToViewportRange" option to be called when addon notify is called', () => {
       const handlerSpy = jest.spyOn(extension.eventHandler, 'subscribe');
 
-      const onAsyncRespSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onAsyncResponse');
-      const onAsyncEndSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onAsyncEndUpdate');
-      const onAfterRowSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onAfterRowDetailToggle');
-      const onBeforeRowSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onBeforeRowDetailToggle');
-      const onRowOutViewSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onRowOutOfViewportRange');
-      const onRowBackViewSpy = jest.spyOn(SharedService.prototype.gridOptions.rowDetailView as RowDetailView, 'onRowBackToViewportRange');
+      const onAsyncRespSpy = jest.spyOn((SharedService.prototype.gridOptions as GridOption).rowDetailView as RowDetailView, 'onAsyncResponse');
+      const onAsyncEndSpy = jest.spyOn((SharedService.prototype.gridOptions as GridOption).rowDetailView as RowDetailView, 'onAsyncEndUpdate');
+      const onAfterRowSpy = jest.spyOn((SharedService.prototype.gridOptions as GridOption).rowDetailView as RowDetailView, 'onAfterRowDetailToggle');
+      const onBeforeRowSpy = jest.spyOn((SharedService.prototype.gridOptions as GridOption).rowDetailView as RowDetailView, 'onBeforeRowDetailToggle');
+      const onRowOutViewSpy = jest.spyOn((SharedService.prototype.gridOptions as GridOption).rowDetailView as RowDetailView, 'onRowOutOfViewportRange');
+      const onRowBackViewSpy = jest.spyOn((SharedService.prototype.gridOptions as GridOption).rowDetailView as RowDetailView, 'onRowBackToViewportRange');
 
       const instance = extension.create(columnsMock, gridOptionsMock);
       extension.register();
       instance.onRowBackToViewportRange.notify(
-        { item: columnsMock[0], rowId: 0, rowIndex: 0, expandedRows: [columnsMock[0]], rowIdsOutOfViewport: [], grid: gridStub },
+        { item: columnsMock[0], rowId: 0, rowIndex: 0, expandedRows: [columnsMock[0] as any], rowIdsOutOfViewport: [], grid: gridStub },
         new Slick.EventData(),
         gridStub
       );
@@ -461,7 +420,7 @@ describe('rowDetailViewExtension', () => {
       expect(onAfterRowSpy).not.toHaveBeenCalled();
       expect(onBeforeRowSpy).not.toHaveBeenCalled();
       expect(onRowOutViewSpy).not.toHaveBeenCalled();
-      expect(onRowBackViewSpy).toHaveBeenCalledWith(expect.anything(), { item: columnsMock[0], rowId: 0, rowIndex: 0, expandedRows: [columnsMock[0]], rowIdsOutOfViewport: [], grid: gridStub });
+      expect(onRowBackViewSpy).toHaveBeenCalledWith(expect.anything(), { item: columnsMock[0], rowId: 0, rowIndex: 0, expandedRows: [columnsMock[0] as any], rowIdsOutOfViewport: [], grid: gridStub });
     });
 
     it('should call Aurelia Util "createAureliaViewModelAddToSlot" when grid "onColumnsReordered" is triggered', (done) => {
@@ -473,7 +432,7 @@ describe('rowDetailViewExtension', () => {
       const instance = extension.create(columnsMock, gridOptionsMock);
       extension.register();
       instance.onBeforeRowDetailToggle.subscribe(() => {
-        gridStub.onColumnsReordered.notify({ impactedColumns: mockColumn }, new Slick.EventData(), gridStub);
+        gridStub.onColumnsReordered.notify({ impactedColumns: mockColumn } as any, new Slick.EventData(), gridStub);
         expect(appendSpy).toHaveBeenCalledWith(
           undefined,
           expect.objectContaining({ model: mockColumn, addon: expect.anything(), grid: gridStub, dataView: dataViewStub }),
@@ -497,7 +456,7 @@ describe('rowDetailViewExtension', () => {
 
       extension.register();
       instance.onBeforeRowDetailToggle.subscribe(() => {
-        pluginEa.publish('filterService:filterChanged', { columnId: 'field1', operator: '=', searchTerms: [] });
+        pubSubService.publish('onFilterChanged', { columnId: 'field1', operator: '=', searchTerms: [] });
         expect(appendSpy).toHaveBeenCalledWith(
           undefined,
           expect.objectContaining({ model: mockColumn, addon: expect.anything(), grid: gridStub, dataView: dataViewStub }),
@@ -532,8 +491,8 @@ describe('rowDetailViewExtension', () => {
         );
         done();
       });
-      instance.onBeforeRowDetailToggle.notify({ item: mockColumn, grid: gridStub }, new Slick.EventData(), gridStub);
-      instance.onAfterRowDetailToggle.notify({ item: mockColumn, grid: gridStub }, new Slick.EventData(), gridStub);
+      instance.onBeforeRowDetailToggle.notify({ item: mockColumn, grid: gridStub } as any, new Slick.EventData(), gridStub);
+      instance.onAfterRowDetailToggle.notify({ item: mockColumn, grid: gridStub } as any, new Slick.EventData(), gridStub);
 
       expect(handlerSpy).toHaveBeenCalled();
     });
@@ -558,8 +517,8 @@ describe('rowDetailViewExtension', () => {
         );
         done();
       });
-      instance.onBeforeRowDetailToggle.notify({ item: mockColumn, grid: gridStub }, new Slick.EventData(), gridStub);
-      instance.onRowBackToViewportRange.notify({ item: mockColumn, grid: gridStub }, new Slick.EventData(), gridStub);
+      instance.onBeforeRowDetailToggle.notify({ item: mockColumn, grid: gridStub } as any, new Slick.EventData(), gridStub);
+      instance.onRowBackToViewportRange.notify({ item: mockColumn, grid: gridStub } as any, new Slick.EventData(), gridStub);
 
       expect(handlerSpy).toHaveBeenCalled();
     });
@@ -643,7 +602,7 @@ describe('rowDetailViewExtension', () => {
       const instance = extension.create(columnsMock, gridOptionsMock);
       extension.register();
       instance.onBeforeRowDetailToggle.subscribe(() => {
-        gridStub.onSort.notify({ impactedColumns: mockColumn }, new Slick.EventData(), gridStub);
+        gridStub.onSort.notify({ impactedColumns: mockColumn } as any, new Slick.EventData(), gridStub);
         expect(disposeSpy).toHaveBeenCalled();
         done();
       });

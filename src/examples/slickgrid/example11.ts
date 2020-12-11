@@ -7,7 +7,9 @@ import {
   Formatters,
   GridOption,
   GridService,
-  OnEventArgs
+  OnEventArgs,
+  SlickDataView,
+  SlickGrid,
 } from '../../aurelia-slickgrid';
 import './example11.scss';
 
@@ -34,9 +36,9 @@ export class Example11 {
   `;
 
   aureliaGrid: AureliaGridInstance;
-  grid: any;
+  dataView: SlickDataView;
+  grid: SlickGrid;
   gridService: GridService;
-  dataView: any;
   columnDefinitions: Column[];
   gridOptions: GridOption;
   dataset: any[];
@@ -76,7 +78,7 @@ export class Example11 {
         onCellClick: (_e: Event, args: OnEventArgs) => {
           console.log(args);
           if (confirm('Are you sure?')) {
-            this.aureliaGrid.gridService.deleteDataGridItemById(args.dataContext.id);
+            this.aureliaGrid.gridService.deleteItemById(args.dataContext.id);
           }
         }
       },
@@ -95,7 +97,7 @@ export class Example11 {
         editor: {
           model: Editors.text
         },
-        onCellChange: (e: Event, args: OnEventArgs) => {
+        onCellChange: (_e: Event, args: OnEventArgs) => {
           alert('onCellChange directly attached to the column definition');
           console.log(args);
         }
@@ -137,8 +139,8 @@ export class Example11 {
     this.gridOptions = {
       asyncEditorLoading: false,
       autoResize: {
-        containerId: 'demo-container',
-        sidePadding: 10
+        container: '#demo-container',
+        rightPadding: 10
       },
       editable: true,
       enableColumnPicker: true,

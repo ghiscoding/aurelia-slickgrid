@@ -32,8 +32,8 @@
                      grid-options.bind="gridOptions"
                      dataset.bind="dataset"
                      custom-data-view.bind="customDataView"
-                     asg-on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)"
-                     sg-on-viewport-changed.delegate="onViewportChanged($event.detail.eventData, $event.detail.args)"
-                     sg-on-sort.delegate="onSort($event.detail.eventData, $event.detail.args)">
+                     on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)"
+                     on-viewport-changed.delegate="onViewportChanged($event.detail.eventData, $event.detail.args)"
+                     on-sort.delegate="onSort($event.detail.eventData, $event.detail.args)">
   </aurelia-slickgrid>
 </template>

@@ -2,15 +2,18 @@
   <h2>${title}</h2>
   <div class="subtitle" innerhtml.bind="subTitle"></div>
 
-  <div class="col-sm-6">
-    <button class="btn btn-default btn-sm" click.delegate="closeAllRowDetail()" data-test="close-all-btn">
+  <div class="col-sm-6 row">
+    <button class="btn btn-outline-secondary btn-sm" click.delegate="closeAllRowDetail()" data-test="close-all-btn">
       Close all Row Details
     </button>
     &nbsp;&nbsp;
 
+
     <label for="">Detail View Rows Shown: </label>
-    <input type="number" value.bind="detailViewRowCount">
-    <button class="btn btn-default btn-xs" click.delegate="changeDetailViewRowCount()" data-test="set-count-btn">
+    <input type="number" value.bind="detailViewRowCount" style="height: 26px;">
+    <button class="btn btn-outline-secondary btn-xs" style="height: 26px;"
+            click.delegate="changeDetailViewRowCount()"
+            data-test="set-count-btn">
       Set
     </button>
   </div>
@@ -18,9 +21,11 @@
 
   <hr />
 
-  <aurelia-slickgrid grid-id="grid19" column-definitions.bind="columnDefinitions" grid-options.bind="gridOptions"
-    dataset.bind="dataset"
-    extensions.bind="extensions"
-    instances.bind="aureliaGrid">
+  <aurelia-slickgrid grid-id="grid19"
+                     column-definitions.bind="columnDefinitions"
+                     grid-options.bind="gridOptions"
+                     dataset.bind="dataset"
+                     extensions.bind="extensions"
+                     instances.bind="aureliaGrid">
   </aurelia-slickgrid>
 </template>

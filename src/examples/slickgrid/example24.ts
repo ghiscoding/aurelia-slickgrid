@@ -1,4 +1,7 @@
+import { ExcelExportService } from '@slickgrid-universal/excel-export';
+import { autoinject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
+
 import {
   AureliaGridInstance,
   Column,
@@ -9,9 +12,9 @@ import {
   Formatter,
   Formatters,
   GridOption,
+  SlickGrid,
 } from '../../aurelia-slickgrid';
 import './example24.scss'; // provide custom CSS/SASS styling
-import { autoinject } from 'aurelia-framework';
 
 const actionFormatter: Formatter = (_row, _cell, _value, _columnDef, dataContext) => {
   if (dataContext.priority === 3) { // option 3 is High
@@ -48,8 +51,8 @@ const priorityExportFormatter: Formatter = (_row, _cell, value, _columnDef, _dat
 };
 
 // create a custom translate Formatter (typically you would move that a separate file, for separation of concerns)
-const taskTranslateFormatter: Formatter = (_row, _cell, value, _columnDef, _dataContext, grid: any) => {
-  const gridOptions = (grid && typeof grid.getOptions === 'function') ? grid.getOptions() : {};
+const taskTranslateFormatter: Formatter = (_row, _cell, value, _columnDef, _dataContext, grid: SlickGrid) => {
+  const gridOptions: GridOption = (grid && typeof grid.getOptions === 'function') ? grid.getOptions() : {};
   const i18n = gridOptions.i18n;
 
   return i18n && i18n.tr && i18n.tr('TASK_X', { x: value });
@@ -246,13 +249,14 @@ export class Example24 {
 
     this.gridOptions = {
       autoResize: {
-        containerId: 'demo-container',
-        sidePadding: 10
+        container: '#demo-container',
+        rightPadding: 10
       },
       enableCellNavigation: true,
       enableFiltering: true,
       enableSorting: true,
       enableTranslate: true,
+      enableExcelExport: true,
       excelExportOptions: {
         exportWithFormatter: true,
         customColumnWidth: 15,
@@ -260,6 +264,7 @@ export class Example24 {
         // you can customize how the header titles will be styled (defaults to Bold)
         columnHeaderStyle: { font: { bold: true, italic: true } }
       },
+      registerExternalServices: [new ExcelExportService()],
       i18n: this.i18n,
 
       enableContextMenu: true,

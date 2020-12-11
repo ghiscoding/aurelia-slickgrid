@@ -110,7 +110,7 @@ export class Example2 {
 
         // you can override the logic for showing (or not) the expand icon
         // for example, display the expand icon only on every 2nd row
-        // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+        // selectableOverride: (row: number, dataContext: any, grid: SlickGrid) => (dataContext.id % 2 === 1)
       },
       multiSelect: false,
       rowSelectionOptions: {
@@ -123,6 +123,8 @@ export class Example2 {
       gridMenu: {
         hideForceFitButton: true
       },
+      gridHeight: 225,
+      gridWidth: 800,
       enablePagination: true,
       pagination: {
         pageSizes: [5, 10, 15, 20, 25, 50, 75, 100],
@@ -152,6 +154,8 @@ export class Example2 {
       },
       enableCheckboxSelector: true,
       enableRowSelection: true,
+      gridHeight: 255,
+      gridWidth: 800,
       enablePagination: true,
       pagination: {
         pageSizes: [5, 10, 15, 20, 25, 50, 75, 100],
@@ -238,7 +242,7 @@ export class Example2 {
     this.aureliaGrid2.paginationService.togglePaginationVisibility(this.isGrid2WithPagination);
   }
 
-  onGrid1SelectedRowsChanged(e, args) {
+  onGrid1SelectedRowsChanged(_e, args) {
     const grid = args && args.grid;
     if (Array.isArray(args.rows)) {
       this.selectedTitle = args.rows.map(idx => {
