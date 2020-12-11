@@ -79,7 +79,7 @@
     "i18next": ">= 14.1.1"
   },
   "devDependencies": {
-    "@slickgrid-universal/excel-export": "^0.4.1",
+    "@slickgrid-universal/excel-export": "^0.5.1",
     "@slickgrid-universal/text-export": "^0.4.2",
     "@slickgrid-universal/graphql": "^0.4.0",
     "@slickgrid-universal/odata": "^0.4.0",

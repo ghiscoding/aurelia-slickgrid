@@ -657,12 +657,26 @@
     multiple-select-modified "^1.3.8"
     slickgrid "^2.4.32"
 
-"@slickgrid-universal/excel-export@^0.4.1":
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/@slickgrid-universal/excel-export/-/excel-export-0.4.1.tgz#7057c41c621b836d8c0cd1c4a2676522bf2da9f5"
-  integrity sha512-mYlcJIOjLi6uFFdBFM4PLX+F7zNuMCRmEuqspQSED3QGVS9JeXvwFPX5wPMudtMkt1hhlKB+zeb0IUMRcAYuKA==
+"@slickgrid-universal/common@^0.5.1":
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@slickgrid-universal/common/-/common-0.5.1.tgz#b888bbc4b56526081f3043dad48da2abcfa88473"
+  integrity sha512-A2Ti2N02Ew3aFFzxovxLp/mB6Waru7U6W6x/cK6jc3odUQBskwgqDUTeUBfK2NZNVKZchGLhNNy6p+LAYddMEQ==
   dependencies:
-    "@slickgrid-universal/common" "^0.4.0"
+    dompurify "^2.2.3"
+    flatpickr "^4.6.6"
+    jquery "^3.5.1"
+    jquery-ui-dist "^1.12.1"
+    lodash.isequal "^4.5.0"
+    moment-mini "^2.24.0"
+    multiple-select-modified "^1.3.10"
+    slickgrid "^2.4.32"
+
+"@slickgrid-universal/excel-export@^0.5.1":
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@slickgrid-universal/excel-export/-/excel-export-0.5.1.tgz#3a9034bf269f4a6190ad7bb5e741aefe0d259fc9"
+  integrity sha512-ksrtD5NLRyGBAq5HPeW+htwY1ENvcVjAwbotr/emM5T0i55VHGGmgOqA4tQaOPidOfrn5/09xFW6/bQwtsVRGw==
+  dependencies:
+    "@slickgrid-universal/common" "^0.5.1"
     excel-builder-webpacker "^2.0.1"
     moment-mini "^2.24.0"
 
@@ -8315,6 +8329,13 @@ multipipe@^0.1.2:
   integrity sha1-Ko8t33Du1WTf8tV/HhoTfZ8FB4s=
   dependencies:
     duplexer2 "0.0.2"
+
+multiple-select-modified@^1.3.10:
+  version "1.3.10"
+  resolved "https://registry.yarnpkg.com/multiple-select-modified/-/multiple-select-modified-1.3.10.tgz#753e8c40f2e60f91b2cc36f0d874d532aeae53c5"
+  integrity sha512-CVbw9hIYa8VyBYpk9cv2+6jTKt/zFKILlWgy7x0C/jUlNrQk8+X7RW2XUMAYX2Oguyk287tD3YOhrLmc1jXqaw==
+  dependencies:
+    jquery "^3.5.1"
 
 multiple-select-modified@^1.3.8:
   version "1.3.8"
