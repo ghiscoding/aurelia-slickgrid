@@ -71,6 +71,7 @@ import {
   onBackendError,
   refreshBackendDataset,
 } from '@slickgrid-universal/common';
+import { SlickCompositeEditorComponent } from '@slickgrid-universal/composite-editor-component';
 
 import { bindable, BindingEngine, bindingMode, Container, Factory, inject, NewInstance, } from 'aurelia-framework';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
@@ -125,6 +126,7 @@ export class AureliaSlickgridCustomElement {
   showPagination = false;
   serviceList: any[] = [];
   subscriptions: Subscription[] = [];
+  slickCompositeEditor: SlickCompositeEditorComponent;
   paginationData: {
     gridOptions: GridOption;
     paginationService: PaginationService;
@@ -442,6 +444,12 @@ export class AureliaSlickgridCustomElement {
           service.init(this.grid, this.sharedService);
         }
       }
+    }
+
+    // also initialize (render) the composite editor component
+    if (this.gridOptions.enableCompositeEditor) {
+      const slickCompositeEditor = new SlickCompositeEditorComponent(this.grid, this.gridService, this.gridStateService, this.translateService);
+      this.pubSubService.dispatchCustomEvent(this.elm, 'onCompositeEditorCreated', slickCompositeEditor, aureliaEventPrefix);
     }
 
     // create the Aurelia Grid Instance with reference to all Services

@@ -36,6 +36,7 @@ export class Index {
       { route: 'example27', moduleId: PLATFORM.moduleName('./example27'), name: 'example27', nav: true, title: '27- Tree Data (Parent/Child)' },
       { route: 'example28', moduleId: PLATFORM.moduleName('./example28'), name: 'example28', nav: true, title: '28- Tree Data (Hierarchical set)' },
       { route: 'example29', moduleId: PLATFORM.moduleName('./example29'), name: 'example29', nav: true, title: '29- Grid with header and footer slots' },
+      { route: 'example30', moduleId: PLATFORM.moduleName('./example30'), name: 'example30', nav: true, title: '30- Composite Editor Modal' },
     ];
 
     config.map(mapping);
