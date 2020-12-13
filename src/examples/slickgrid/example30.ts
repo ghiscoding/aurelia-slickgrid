@@ -257,7 +257,7 @@ export class Example30 {
       {
         id: 'action', name: 'Action', field: 'action', width: 70, minWidth: 70, maxWidth: 70,
         excludeFromExport: true,
-        formatter: () => `<div class="button-style margin-auto" style="width: 35px;"><span class="fa fa-chevron-down color-primary"></span></div>`,
+        formatter: () => `<div class="button-style margin-auto" style="width: 35px;"><span class="fa fa-chevron-down text-primary"></span></div>`,
         cellMenu: {
           hideCloseButton: false,
           width: 175,
@@ -265,7 +265,7 @@ export class Example30 {
           commandItems: [
             {
               command: 'delete-row', title: 'Delete Row', positionOrder: 64,
-              iconCssClass: 'fa fa-close color-danger', cssClass: 'red', textCssClass: 'bold',
+              iconCssClass: 'fa fa-close text-danger', cssClass: 'red', textCssClass: 'bold',
               // only show command to 'Delete Row' when the task is not completed
               itemVisibilityOverride: (args) => {
                 return !args.dataContext?.completed;
@@ -280,8 +280,8 @@ export class Example30 {
             {
               command: 'help',
               title: 'Help',
-              iconCssClass: 'fa fa-question-circle-o color-info',
-              textCssClass: 'color-info-dark',
+              iconCssClass: 'fa fa-question-circle-o text-info',
+              textCssClass: 'text-info',
               positionOrder: 66,
               action: () => alert('Please Help!'),
             },
@@ -538,7 +538,7 @@ export class Example30 {
         modalTitle = 'Inserting New Task';
         break;
       case 'edit':
-        modalTitle = 'Editing - {{title}} (<span class="color-muted">id:</span> <span class="color-primary">{{id}}</span>)'; // 'Editing - {{title}} ({{product.itemName}})'
+        modalTitle = 'Editing - {{title}} (<span class="text-muted">id:</span> <span class="text-primary">{{id}}</span>)'; // 'Editing - {{title}} ({{product.itemName}})'
         break;
       case 'mass-update':
         modalTitle = 'Mass Update All Records';

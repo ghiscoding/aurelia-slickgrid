@@ -43,6 +43,7 @@ import { HttpStub } from '../../../../test/httpClientStub';
 import { SlickEmptyWarningComponent } from '../slick-empty-warning.component';
 import { ResizerService } from '../../services/resizer.service';
 import { AureliaUtilService, UniversalTranslateService } from '../../services';
+import { SlickCompositeEditorComponent } from '@slickgrid-universal/composite-editor-component';
 
 const mockExecuteBackendProcess = jest.fn();
 const mockRefreshBackendDataset = jest.fn();
@@ -880,12 +881,14 @@ describe('Slick-Vanilla-Grid-Bundle Component instantiated via Constructor', () 
         expect(spy).toHaveBeenCalled();
       });
 
-      // xit('should initialize SlickCompositeEditorComponent when "enableCompositeEditor" is set', () => {
-      //   customElement.gridOptions = { enableCompositeEditor: true } as unknown as GridOption;
-      //   customElement.initialization(slickEventHandler);
+      it('should initialize SlickCompositeEditorComponent when "enableCompositeEditor" is set', () => {
+        const pubSubSpy = jest.spyOn(pubSubService, 'dispatchCustomEvent');
+        customElement.gridOptions = { enableCompositeEditor: true } as unknown as GridOption;
+        customElement.initialization(slickEventHandler);
 
-      //   expect(customElement.slickCompositeEditor instanceof SlickCompositeEditorComponent).toBeTrue();
-      // });
+        // expect(customElement.slickCompositeEditor instanceof SlickCompositeEditorComponent).toBeTrue();
+        expect(pubSubSpy).toHaveBeenCalledWith(divContainer, 'onCompositeEditorCreated', expect.anything(), '');
+      });
 
       it('should initialize ExportService when "enableTextExport" is set when using Salesforce', () => {
         const fileExportMock = new TextExportService();
