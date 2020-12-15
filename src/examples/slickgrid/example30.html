@@ -53,15 +53,14 @@
                      grid-options.bind="gridOptions"
                      dataset.bind="dataset"
                      on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)"
-                     on-composite-editor-created.delegate="handleOnCompositeEditorCreated($event.detail)"
-                     on-validation-error.delegate="handleValidationError($event.detail.eventData, $event.detail.args)"
-                     on-item-deleted.delegate="handleItemDeleted($event.detail.eventData, $event.detail.args)"
                      on-before-edit-cell.delegate="handleOnBeforeEditCell($event.detail.eventData, $event.detail.args)"
                      on-cell-change.delegate="handleOnCellChange($event.detail.eventData, $event.detail.args)"
                      on-click.delegate="handleOnCellClicked($event.detail.eventData, $event.detail.args)"
-                     on-grid-state-changed.delegate="handleOnGridStateChanged($event.detail)"
-                     on-dbl-click.delegate="openCompositeModal($event.detail.eventData, $event.detail.args)"
                      on-composite-editor-change.delegate="handleOnCompositeEditorChange($event.detail.eventData, $event.detail.args)"
-                     on-pagination-changed.delegate="handlePaginationChanged($event.detail.eventData, $event.detail.args)">
+                     on-dbl-click.delegate="openCompositeModal($event.detail.eventData, $event.detail.args)"
+                     on-item-deleted.delegate="handleItemDeleted($event.detail.eventData, $event.detail.args)"
+                     on-grid-state-changed.delegate="handleOnGridStateChanged($event.detail)"
+                     on-pagination-changed.delegate="handlePaginationChanged($event.detail.eventData, $event.detail.args)"
+                     on-validation-error.delegate="handleValidationError($event.detail.eventData, $event.detail.args)">
   </aurelia-slickgrid>
 </template>

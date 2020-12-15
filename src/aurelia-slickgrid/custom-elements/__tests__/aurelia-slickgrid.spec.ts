@@ -42,8 +42,7 @@ import { TranslateServiceStub } from '../../../../test/translateServiceStub';
 import { HttpStub } from '../../../../test/httpClientStub';
 import { SlickEmptyWarningComponent } from '../slick-empty-warning.component';
 import { ResizerService } from '../../services/resizer.service';
-import { AureliaUtilService, UniversalTranslateService } from '../../services';
-import { SlickCompositeEditorComponent } from '@slickgrid-universal/composite-editor-component';
+import { AureliaUtilService, UniversalContainerService, UniversalTranslateService } from '../../services';
 
 const mockExecuteBackendProcess = jest.fn();
 const mockRefreshBackendDataset = jest.fn();
@@ -296,6 +295,7 @@ describe('Slick-Vanilla-Grid-Bundle Component instantiated via Constructor', () 
   let pubSubService: UniversalPubSubService;
   let translateService: TranslateServiceStub;
   const http = new HttpStub();
+  const universalContainer = new UniversalContainerService();
 
   beforeEach(() => {
     divContainer = document.createElement('div');
@@ -332,8 +332,8 @@ describe('Slick-Vanilla-Grid-Bundle Component instantiated via Constructor', () 
       pluginEa,
       resizerServiceStub,
       slickEmptyWarningStub,
-      translateService as unknown as UniversalTranslateService,
       pubSubService,
+      translateService as unknown as UniversalTranslateService,
       {
         collectionService: collectionServiceStub,
         extensionService: extensionServiceStub,
@@ -347,6 +347,7 @@ describe('Slick-Vanilla-Grid-Bundle Component instantiated via Constructor', () 
         sharedService,
         sortService: sortServiceStub,
         treeDataService: treeDataServiceStub,
+        universalContainerService: universalContainer,
       }
     );
   });
@@ -860,7 +861,7 @@ describe('Slick-Vanilla-Grid-Bundle Component instantiated via Constructor', () 
         customElement.gridOptions = { createPreHeaderPanel: true, enableDraggableGrouping: false } as unknown as GridOption;
         customElement.initialization(slickEventHandler);
 
-        expect(spy).toHaveBeenCalledWith(mockGrid, sharedService);
+        expect(spy).toHaveBeenCalledWith(mockGrid, universalContainer);
       });
 
       it('should not initialize groupingAndColspanService when "createPreHeaderPanel" grid option is enabled and "enableDraggableGrouping" is also enabled', () => {
@@ -881,24 +882,15 @@ describe('Slick-Vanilla-Grid-Bundle Component instantiated via Constructor', () 
         expect(spy).toHaveBeenCalled();
       });
 
-      it('should initialize SlickCompositeEditorComponent when "enableCompositeEditor" is set', () => {
-        const pubSubSpy = jest.spyOn(pubSubService, 'dispatchCustomEvent');
-        customElement.gridOptions = { enableCompositeEditor: true } as unknown as GridOption;
-        customElement.initialization(slickEventHandler);
-
-        // expect(customElement.slickCompositeEditor instanceof SlickCompositeEditorComponent).toBeTrue();
-        expect(pubSubSpy).toHaveBeenCalledWith(divContainer, 'onCompositeEditorCreated', expect.anything(), '');
-      });
-
       it('should initialize ExportService when "enableTextExport" is set when using Salesforce', () => {
         const fileExportMock = new TextExportService();
         const fileExportSpy = jest.spyOn(fileExportMock, 'init');
-        customElement.gridOptions = { enableTextExport: true, registerExternalServices: [fileExportMock] } as GridOption;
+        customElement.gridOptions = { enableTextExport: true, registerExternalResources: [fileExportMock] } as GridOption;
         customElement.initialization(slickEventHandler);
 
         expect(fileExportSpy).toHaveBeenCalled();
-        expect(customElement.registeredServices.length).toBe(3); // TextExportService, GridService, GridStateService
-        expect(customElement.registeredServices[0] instanceof TextExportService).toBeTrue();
+        expect(customElement.registeredResources.length).toBe(3); // TextExportService, GridService, GridStateService
+        expect(customElement.registeredResources[0] instanceof TextExportService).toBeTrue();
       });
 
       it('should destroy customElement and its DOM element when requested', () => {

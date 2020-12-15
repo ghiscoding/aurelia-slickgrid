@@ -103,7 +103,7 @@ export class Example27 {
         filters: [{ columnId: 'percentComplete', searchTerms: [25], operator: '>=' }]
       },
       enableExcelExport: true,
-      registerExternalServices: [new ExcelExportService()],
+      registerExternalResources: [new ExcelExportService()],
 
       // use Material Design SVG icons
       contextMenu: {

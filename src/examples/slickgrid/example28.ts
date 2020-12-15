@@ -84,7 +84,7 @@ export class Example28 {
       headerRowHeight: 35,
       rowHeight: 33,
       enableExcelExport: true,
-      registerExternalServices: [new ExcelExportService()],
+      registerExternalResources: [new ExcelExportService()],
 
       // use Material Design SVG icons
       contextMenu: {
