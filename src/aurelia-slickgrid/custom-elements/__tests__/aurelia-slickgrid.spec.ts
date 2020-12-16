@@ -287,15 +287,15 @@ describe('Slick-Vanilla-Grid-Bundle Component instantiated via Constructor', () 
   let divContainer: HTMLDivElement;
   let cellDiv: HTMLDivElement;
   let columnDefinitions: Column[];
-  let container: Container;
   let gridOptions: GridOption;
   let sharedService: SharedService;
   let globalEa: EventAggregator;
   let pluginEa: EventAggregator;
   let pubSubService: UniversalPubSubService;
   let translateService: TranslateServiceStub;
+  const container = new Container();
   const http = new HttpStub();
-  const universalContainer = new UniversalContainerService();
+  const universalContainer = new UniversalContainerService(container);
 
   beforeEach(() => {
     divContainer = document.createElement('div');
@@ -320,7 +320,6 @@ describe('Slick-Vanilla-Grid-Bundle Component instantiated via Constructor', () 
     jest.spyOn(mockGrid, 'getOptions').mockReturnValue(gridOptions);
     globalEa = new EventAggregator();
     pluginEa = new EventAggregator();
-    container = new Container();
     pubSubService = new UniversalPubSubService(pluginEa);
 
     customElement = new AureliaSlickgridCustomElement(
@@ -332,6 +331,7 @@ describe('Slick-Vanilla-Grid-Bundle Component instantiated via Constructor', () 
       pluginEa,
       resizerServiceStub,
       slickEmptyWarningStub,
+      universalContainer,
       pubSubService,
       translateService as unknown as UniversalTranslateService,
       {
@@ -347,7 +347,6 @@ describe('Slick-Vanilla-Grid-Bundle Component instantiated via Constructor', () 
         sharedService,
         sortService: sortServiceStub,
         treeDataService: treeDataServiceStub,
-        universalContainerService: universalContainer,
       }
     );
   });

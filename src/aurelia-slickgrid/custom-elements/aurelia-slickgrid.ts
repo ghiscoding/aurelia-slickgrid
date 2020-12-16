@@ -20,6 +20,7 @@ import {
   DataViewOption,
   ExtensionList,
   ExtensionName,
+  ExternalResource,
   GetSlickEventType,
   GridStateType,
   Locale,
@@ -104,6 +105,7 @@ declare const Slick: SlickNamespace;
   NewInstance.of(EventAggregator).as(SlickgridEventAggregator),
   ResizerService,
   SlickEmptyWarningComponent,
+  UniversalContainerService,
   UniversalPubSubService,
   UniversalTranslateService,
 )
@@ -117,7 +119,7 @@ export class AureliaSlickgridCustomElement {
   private _isPaginationInitialized = false;
   private _isLocalGrid = true;
   private _paginationOptions: Pagination | undefined;
-  private _registeredResources: any[] = [];
+  private _registeredResources: ExternalResource[] = [];
   groupItemMetadataProvider: any;
   backendServiceApi: BackendServiceApi | undefined;
   customFooterOptions: CustomFooterOption;
@@ -148,7 +150,6 @@ export class AureliaSlickgridCustomElement {
   sharedService: SharedService;
   sortService: SortService;
   treeDataService: TreeDataService;
-  universalContainerService: UniversalContainerService;
 
   @bindable({ defaultBindingMode: bindingMode.twoWay }) columnDefinitions: Column[] = [];
   @bindable({ defaultBindingMode: bindingMode.twoWay }) element: Element;
@@ -163,7 +164,6 @@ export class AureliaSlickgridCustomElement {
   @bindable() datasetHierarchical: any[] | null;
   @bindable() gridId: string;
   @bindable() gridOptions: GridOption;
-  @bindable() pickerOptions: any;
 
   constructor(
     private aureliaUtilService: AureliaUtilService,
@@ -174,6 +174,7 @@ export class AureliaSlickgridCustomElement {
     _pluginEa: SlickgridEventAggregator,
     private resizerService: ResizerService,
     public slickEmptyWarning: SlickEmptyWarningComponent,
+    private universalContainerService: UniversalContainerService,
     private pubSubService: UniversalPubSubService,
     private translateService: UniversalTranslateService,
     externalServices: {
@@ -189,7 +190,6 @@ export class AureliaSlickgridCustomElement {
       sharedService?: SharedService,
       sortService?: SortService,
       treeDataService?: TreeDataService,
-      universalContainerService?: UniversalContainerService,
     }
   ) {
     // initialize and assign all Service Dependencies
@@ -197,7 +197,6 @@ export class AureliaSlickgridCustomElement {
 
     this.gridEventService = externalServices?.gridEventService ?? new GridEventService();
     const slickgridConfig = new SlickgridConfig();
-    this.universalContainerService = externalServices?.universalContainerService ?? new UniversalContainerService();
     this.sharedService = externalServices?.sharedService ?? new SharedService();
     this.collectionService = externalServices?.collectionService ?? new CollectionService(this.translateService);
     this.extensionUtility = externalServices?.extensionUtility ?? new ExtensionUtility(this.sharedService, this.translateService);
@@ -272,10 +271,10 @@ export class AureliaSlickgridCustomElement {
     this.universalContainerService.registerInstance('ResizerService', this.resizerService);
     this.universalContainerService.registerInstance('SharedService', this.sharedService);
     this.universalContainerService.registerInstance('SortService', this.sortService);
-    this.universalContainerService.registerInstance('PubSubService', this.pubSubService);
+    this.universalContainerService.registerInstance('PubSubService', this.pubSubService); // register also the abstract class name for slickgrid-universal to work
     this.universalContainerService.registerInstance('UniversalPubSubService', this.pubSubService);
     this.universalContainerService.registerInstance('UniversalTranslateService', this.translateService);
-    this.universalContainerService.registerInstance('TranslaterService', this.translateService);
+    this.universalContainerService.registerInstance('TranslaterService', this.translateService); // register also the abstract class name for slickgrid-universal to work
     this.universalContainerService.registerInstance('TreeDataService', this.treeDataService);
   }
 
@@ -290,7 +289,7 @@ export class AureliaSlickgridCustomElement {
     this._isDatasetInitialized = isInitialized;
   }
 
-  get registeredResources(): any[] {
+  get registeredResources(): ExternalResource[] {
     return this._registeredResources;
   }
 
