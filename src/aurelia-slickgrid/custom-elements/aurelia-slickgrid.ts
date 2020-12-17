@@ -1,7 +1,9 @@
 // import 3rd party vendor libs
-// only import the necessary core lib, each will be imported on demand when enabled (via require)
+// also only import jQueryUI necessary widget (note autocomplete & slider are imported in their respective editors/filters)
 import * as $ from 'jquery';
-import 'jquery-ui-dist/jquery-ui';
+import 'jquery-ui/ui/widgets/draggable';
+import 'jquery-ui/ui/widgets/droppable';
+import 'jquery-ui/ui/widgets/sortable';
 import 'slickgrid/lib/jquery.event.drag-2.3.0';
 import 'slickgrid/lib/jquery.mousewheel';
 import 'slickgrid/slick.core';
