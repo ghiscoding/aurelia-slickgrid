@@ -1,4 +1,9 @@
-import { EventNamingStyle, PubSubService, titleCase, toKebabCase } from '@slickgrid-universal/common';
+import {
+  EventNamingStyle,
+  PubSubService as UniversalPubSubService,
+  titleCase,
+  toKebabCase
+} from '@slickgrid-universal/common';
 import { Disposable, DOM, inject, singleton } from 'aurelia-framework';
 import { Subscription } from 'aurelia-event-aggregator';
 
@@ -10,7 +15,7 @@ import { SlickgridEventAggregator } from '../custom-elements/slickgridEventAggre
  */
 @singleton(true)
 @inject(SlickgridEventAggregator)
-export class UniversalPubSubService implements PubSubService {
+export class PubSubService implements UniversalPubSubService {
   private _subscriptions: Subscription[] = [];
 
   eventNamingStyle = EventNamingStyle.camelCase;

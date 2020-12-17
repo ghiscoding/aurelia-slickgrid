@@ -74,7 +74,7 @@ import {
 } from '@slickgrid-universal/common';
 import { SlickCompositeEditorComponent } from '@slickgrid-universal/composite-editor-component';
 
-import { bindable, BindingEngine, bindingMode, Container, Factory, inject, NewInstance, } from 'aurelia-framework';
+import { bindable, BindingEngine, bindingMode, Container, Factory, inject, } from 'aurelia-framework';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
 
 import { Constants } from '../constants';
@@ -84,11 +84,10 @@ import {
   AureliaUtilService,
   disposeAllSubscriptions,
   ResizerService,
-  UniversalContainerService,
-  UniversalPubSubService,
-  UniversalTranslateService,
+  ContainerService,
+  PubSubService,
+  TranslaterService,
 } from '../services/index';
-import { SlickgridEventAggregator } from './slickgridEventAggregator';
 import { SlickEmptyWarningComponent } from './slick-empty-warning.component';
 import { RowDetailViewExtension } from '../extensions';
 
@@ -102,12 +101,11 @@ declare const Slick: SlickNamespace;
   Container,
   Element,
   EventAggregator,
-  NewInstance.of(EventAggregator).as(SlickgridEventAggregator),
   ResizerService,
   SlickEmptyWarningComponent,
-  UniversalContainerService,
-  UniversalPubSubService,
-  UniversalTranslateService,
+  ContainerService,
+  PubSubService,
+  TranslaterService,
 )
 export class AureliaSlickgridCustomElement {
   private _columnDefinitions: Column[] = [];
@@ -171,12 +169,11 @@ export class AureliaSlickgridCustomElement {
     private container: Container,
     private elm: Element,
     private globalEa: EventAggregator,
-    _pluginEa: SlickgridEventAggregator,
     private resizerService: ResizerService,
     public slickEmptyWarning: SlickEmptyWarningComponent,
-    private universalContainerService: UniversalContainerService,
-    private pubSubService: UniversalPubSubService,
-    private translateService: UniversalTranslateService,
+    private containerService: ContainerService,
+    private pubSubService: PubSubService,
+    private translaterService: TranslaterService,
     externalServices: {
       collectionService?: CollectionService,
       extensionService?: ExtensionService,
@@ -192,15 +189,16 @@ export class AureliaSlickgridCustomElement {
       treeDataService?: TreeDataService,
     }
   ) {
+    const slickgridConfig = new SlickgridConfig();
+
     // initialize and assign all Service Dependencies
     this.pubSubService.eventNamingStyle = EventNamingStyle.kebabCase;
 
     this.gridEventService = externalServices?.gridEventService ?? new GridEventService();
-    const slickgridConfig = new SlickgridConfig();
     this.sharedService = externalServices?.sharedService ?? new SharedService();
-    this.collectionService = externalServices?.collectionService ?? new CollectionService(this.translateService);
-    this.extensionUtility = externalServices?.extensionUtility ?? new ExtensionUtility(this.sharedService, this.translateService);
-    const filterFactory = new FilterFactory(slickgridConfig, this.translateService, this.collectionService);
+    this.collectionService = externalServices?.collectionService ?? new CollectionService(this.translaterService);
+    this.extensionUtility = externalServices?.extensionUtility ?? new ExtensionUtility(this.sharedService, this.translaterService);
+    const filterFactory = new FilterFactory(slickgridConfig, this.translaterService, this.collectionService);
     this.filterService = externalServices?.filterService ?? new FilterService(filterFactory as any, this.pubSubService, this.sharedService);
     this.sortService = externalServices?.sortService ?? new SortService(this.sharedService, this.pubSubService);
     this.treeDataService = externalServices?.treeDataService ?? new TreeDataService(this.sharedService);
@@ -209,15 +207,15 @@ export class AureliaSlickgridCustomElement {
     // extensions
     const autoTooltipExtension = new AutoTooltipExtension(this.extensionUtility, this.sharedService);
     const cellExternalCopyManagerExtension = new CellExternalCopyManagerExtension(this.extensionUtility, this.sharedService);
-    const cellMenuExtension = new CellMenuExtension(this.extensionUtility, this.sharedService, this.translateService);
-    const contextMenuExtension = new ContextMenuExtension(this.extensionUtility, this.sharedService, this.treeDataService, this.translateService);
+    const cellMenuExtension = new CellMenuExtension(this.extensionUtility, this.sharedService, this.translaterService);
+    const contextMenuExtension = new ContextMenuExtension(this.extensionUtility, this.sharedService, this.treeDataService, this.translaterService);
     const columnPickerExtension = new ColumnPickerExtension(this.extensionUtility, this.sharedService);
     const checkboxExtension = new CheckboxSelectorExtension(this.extensionUtility, this.sharedService);
     const draggableGroupingExtension = new DraggableGroupingExtension(this.extensionUtility, this.sharedService);
-    const gridMenuExtension = new GridMenuExtension(this.extensionUtility, this.filterService, this.sharedService, this.sortService, this.translateService);
+    const gridMenuExtension = new GridMenuExtension(this.extensionUtility, this.filterService, this.sharedService, this.sortService, this.translaterService);
     const groupItemMetaProviderExtension = new GroupItemMetaProviderExtension(this.sharedService);
     const headerButtonExtension = new HeaderButtonExtension(this.extensionUtility, this.sharedService);
-    const headerMenuExtension = new HeaderMenuExtension(this.extensionUtility, this.filterService, this.pubSubService, this.sharedService, this.sortService, this.translateService);
+    const headerMenuExtension = new HeaderMenuExtension(this.extensionUtility, this.filterService, this.pubSubService, this.sharedService, this.sortService, this.translaterService);
     const rowDetailViewExtension = new RowDetailViewExtension(this.aureliaUtilService, this.pubSubService, this.extensionUtility, this.sharedService);
     const rowMoveManagerExtension = new RowMoveManagerExtension(this.extensionUtility, this.sharedService);
     const rowSelectionExtension = new RowSelectionExtension(this.extensionUtility, this.sharedService);
@@ -238,7 +236,7 @@ export class AureliaSlickgridCustomElement {
       rowMoveManagerExtension,
       rowSelectionExtension,
       this.sharedService,
-      this.translateService,
+      this.translaterService,
     );
 
     this.gridStateService = externalServices?.gridStateService ?? new GridStateService(this.extensionService, this.filterService, this.pubSubService, this.sharedService, this.sortService);
@@ -259,23 +257,21 @@ export class AureliaSlickgridCustomElement {
     ];
 
     // register all Service instances in the container
-    this.universalContainerService.registerInstance('ExtensionUtility', this.extensionUtility);
-    this.universalContainerService.registerInstance('FilterService', this.filterService);
-    this.universalContainerService.registerInstance('CollectionService', this.collectionService);
-    this.universalContainerService.registerInstance('ExtensionService', this.extensionService);
-    this.universalContainerService.registerInstance('GridEventService', this.gridEventService);
-    this.universalContainerService.registerInstance('GridService', this.gridService);
-    this.universalContainerService.registerInstance('GridStateService', this.gridStateService);
-    this.universalContainerService.registerInstance('GroupingAndColspanService', this.groupingService);
-    this.universalContainerService.registerInstance('PaginationService', this.paginationService);
-    this.universalContainerService.registerInstance('ResizerService', this.resizerService);
-    this.universalContainerService.registerInstance('SharedService', this.sharedService);
-    this.universalContainerService.registerInstance('SortService', this.sortService);
-    this.universalContainerService.registerInstance('PubSubService', this.pubSubService); // register also the abstract class name for slickgrid-universal to work
-    this.universalContainerService.registerInstance('UniversalPubSubService', this.pubSubService);
-    this.universalContainerService.registerInstance('UniversalTranslateService', this.translateService);
-    this.universalContainerService.registerInstance('TranslaterService', this.translateService); // register also the abstract class name for slickgrid-universal to work
-    this.universalContainerService.registerInstance('TreeDataService', this.treeDataService);
+    this.containerService.registerInstance('ExtensionUtility', this.extensionUtility);
+    this.containerService.registerInstance('FilterService', this.filterService);
+    this.containerService.registerInstance('CollectionService', this.collectionService);
+    this.containerService.registerInstance('ExtensionService', this.extensionService);
+    this.containerService.registerInstance('GridEventService', this.gridEventService);
+    this.containerService.registerInstance('GridService', this.gridService);
+    this.containerService.registerInstance('GridStateService', this.gridStateService);
+    this.containerService.registerInstance('GroupingAndColspanService', this.groupingService);
+    this.containerService.registerInstance('PaginationService', this.paginationService);
+    this.containerService.registerInstance('ResizerService', this.resizerService);
+    this.containerService.registerInstance('SharedService', this.sharedService);
+    this.containerService.registerInstance('SortService', this.sortService);
+    this.containerService.registerInstance('PubSubService', this.pubSubService);
+    this.containerService.registerInstance('TranslaterService', this.translaterService);
+    this.containerService.registerInstance('TreeDataService', this.treeDataService);
   }
 
   get eventHandler(): SlickEventHandler {
@@ -300,7 +296,7 @@ export class AureliaSlickgridCustomElement {
   }
 
   initialization(eventHandler: SlickEventHandler) {
-    this.gridOptions.translater = this.translateService;
+    this.gridOptions.translater = this.translaterService;
     this._eventHandler = eventHandler;
 
     // when detecting a frozen grid, we'll automatically enable the mousewheel scroll handler so that we can scroll from both left/right frozen containers
@@ -461,7 +457,7 @@ export class AureliaSlickgridCustomElement {
     if (Array.isArray(this._registeredResources)) {
       for (const resource of this._registeredResources) {
         if (typeof resource.init === 'function') {
-          resource.init(this.grid, this.universalContainerService);
+          resource.init(this.grid, this.containerService);
         }
       }
     }
@@ -1300,13 +1296,13 @@ export class AureliaSlickgridCustomElement {
 
   /** Translate all Custom Footer Texts (footer with metrics) */
   private translateCustomFooterTexts() {
-    if (this.translateService?.translate) {
+    if (this.translaterService?.translate) {
       const customFooterOptions = this.gridOptions?.customFooterOptions ?? {};
       customFooterOptions.metricTexts = customFooterOptions.metricTexts || {};
       for (const propName of Object.keys(customFooterOptions.metricTexts)) {
         if (propName.lastIndexOf('Key') > 0) {
           const propNameWithoutKey = propName.substring(0, propName.lastIndexOf('Key'));
-          customFooterOptions.metricTexts[propNameWithoutKey] = this.translateService.translate(customFooterOptions.metricTexts[propName] || ' ');
+          customFooterOptions.metricTexts[propNameWithoutKey] = this.translaterService.translate(customFooterOptions.metricTexts[propName] || ' ');
         }
       }
     }

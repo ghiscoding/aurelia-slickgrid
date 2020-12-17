@@ -1,4 +1,4 @@
-import { TranslaterService } from '@slickgrid-universal/common';
+import { TranslaterService as UniversalTranslateService } from '@slickgrid-universal/common';
 import { inject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 
@@ -7,7 +7,7 @@ import { I18N } from 'aurelia-i18n';
  * it must implement Slickgrid-Universal TranslaterService interface to work properly
  */
 @inject(I18N)
-export class UniversalTranslateService implements TranslaterService {
+export class TranslaterService implements UniversalTranslateService {
   constructor(private i18n: I18N) { }
 
   /**

@@ -60,6 +60,12 @@
       "type": "shell",
       "command": "yarn run release -- --release-as patch --infile ./CHANGELOG.md",
       "problemMatcher": []
+    },
+    {
+      "label": "Prepare Release as Beta (0.0.x)",
+      "type": "shell",
+      "command": "yarn run release -- --prerelease-as beta --skip.changelog --infile ./CHANGELOG.md",
+      "problemMatcher": []
     }
   ]
 }

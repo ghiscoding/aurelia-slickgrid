@@ -37,12 +37,12 @@ import * as utilities from '@slickgrid-universal/common/dist/commonjs/services/u
 
 import { MockSlickEvent, MockSlickEventHandler } from '../../../../test/mockSlickEvent';
 import { AureliaSlickgridCustomElement } from '../aurelia-slickgrid';
-import { UniversalPubSubService } from '../../services/universalPubSub.service';
-import { TranslateServiceStub } from '../../../../test/translateServiceStub';
+import { PubSubService } from '../../services/pubSub.service';
+import { TranslaterServiceStub } from '../../../../test/translaterServiceStub';
 import { HttpStub } from '../../../../test/httpClientStub';
 import { SlickEmptyWarningComponent } from '../slick-empty-warning.component';
 import { ResizerService } from '../../services/resizer.service';
-import { AureliaUtilService, UniversalContainerService, UniversalTranslateService } from '../../services';
+import { AureliaUtilService, ContainerService, TranslaterService } from '../../services';
 
 const mockExecuteBackendProcess = jest.fn();
 const mockRefreshBackendDataset = jest.fn();
@@ -291,11 +291,11 @@ describe('Slick-Vanilla-Grid-Bundle Component instantiated via Constructor', () 
   let sharedService: SharedService;
   let globalEa: EventAggregator;
   let pluginEa: EventAggregator;
-  let pubSubService: UniversalPubSubService;
-  let translateService: TranslateServiceStub;
+  let pubSubService: PubSubService;
+  let translateService: TranslaterServiceStub;
   const container = new Container();
   const http = new HttpStub();
-  const universalContainer = new UniversalContainerService(container);
+  const containerService = new ContainerService(container);
 
   beforeEach(() => {
     divContainer = document.createElement('div');
@@ -316,11 +316,11 @@ describe('Slick-Vanilla-Grid-Bundle Component instantiated via Constructor', () 
       },
     } as unknown as GridOption;
     sharedService = new SharedService();
-    translateService = new TranslateServiceStub();
+    translateService = new TranslaterServiceStub();
     jest.spyOn(mockGrid, 'getOptions').mockReturnValue(gridOptions);
     globalEa = new EventAggregator();
     pluginEa = new EventAggregator();
-    pubSubService = new UniversalPubSubService(pluginEa);
+    pubSubService = new PubSubService(pluginEa);
 
     customElement = new AureliaSlickgridCustomElement(
       aureliaUtilServiceStub,
@@ -328,12 +328,11 @@ describe('Slick-Vanilla-Grid-Bundle Component instantiated via Constructor', () 
       container,
       divContainer,
       globalEa,
-      pluginEa,
       resizerServiceStub,
       slickEmptyWarningStub,
-      universalContainer,
+      containerService,
       pubSubService,
-      translateService as unknown as UniversalTranslateService,
+      translateService as unknown as TranslaterService,
       {
         collectionService: collectionServiceStub,
         extensionService: extensionServiceStub,
@@ -860,7 +859,7 @@ describe('Slick-Vanilla-Grid-Bundle Component instantiated via Constructor', () 
         customElement.gridOptions = { createPreHeaderPanel: true, enableDraggableGrouping: false } as unknown as GridOption;
         customElement.initialization(slickEventHandler);
 
-        expect(spy).toHaveBeenCalledWith(mockGrid, universalContainer);
+        expect(spy).toHaveBeenCalledWith(mockGrid, containerService);
       });
 
       it('should not initialize groupingAndColspanService when "createPreHeaderPanel" grid option is enabled and "enableDraggableGrouping" is also enabled', () => {

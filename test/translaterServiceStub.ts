@@ -1,7 +1,7 @@
 import { TranslaterService, TranslateServiceEventName } from '@slickgrid-universal/common';
 import { I18N } from 'aurelia-i18n';
 
-export class TranslateServiceStub implements TranslaterService {
+export class TranslaterServiceStub implements TranslaterService {
   eventName = 'onLanguageChange' as TranslateServiceEventName;
   private _locale = 'en';
 

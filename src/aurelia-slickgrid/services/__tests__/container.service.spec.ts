@@ -1,14 +1,14 @@
 import { Container } from 'aurelia-framework';
 import { SharedService } from '@slickgrid-universal/common';
-import { UniversalContainerService } from '../universalContainer.service';
+import { ContainerService } from '../container.service';
 
-describe('UniversalContainer Service', () => {
+describe('Container Service', () => {
   const container = new Container();
-  let service: UniversalContainerService;
+  let service: ContainerService;
   let sharedService: SharedService;
 
   beforeEach(() => {
-    service = new UniversalContainerService(container);
+    service = new ContainerService(container);
     sharedService = new SharedService();
   });
 
