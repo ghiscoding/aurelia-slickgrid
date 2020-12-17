@@ -1280,6 +1280,10 @@ export class AureliaSlickgridCustomElement {
    * then take back "editor.model" and make it the new "editor" so that SlickGrid Editor Factory still works
    */
   private swapInternalEditorToSlickGridFactoryEditor(columnDefinitions: Column[]) {
+    if (columnDefinitions.some(col => `${col.id}`.includes('.'))) {
+      console.error('[Slickgrid-Universal] Make sure that none of your Column Definition "id" property includes a dot in its name because that will cause some problems with the Editors. For example if your column definition "field" property is "user.firstName" then use "firstName" as the column "id".');
+    }
+
     return columnDefinitions.map((column: Column | any) => {
       // on every Editor which have a "collection" or a "collectionAsync"
       if (column.editor && column.editor.collectionAsync) {
