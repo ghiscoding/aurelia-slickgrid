@@ -2,15 +2,15 @@ import 'jest-extended';
 import { EventNamingStyle } from '@slickgrid-universal/common';
 import { EventAggregator } from 'aurelia-event-aggregator';
 
-import { UniversalPubSubService } from '../universalPubSub.service';
+import { PubSubService } from '../pubSub.service';
 
-describe('UniversalPubSub Service', () => {
+describe('PubSub Service', () => {
   let ea: EventAggregator;
-  let service: UniversalPubSubService;
+  let service: PubSubService;
 
   beforeEach(() => {
     ea = new EventAggregator();
-    service = new UniversalPubSubService(ea);
+    service = new PubSubService(ea);
     service.eventNamingStyle = EventNamingStyle.camelCase;
   });
 
@@ -54,7 +54,7 @@ describe('UniversalPubSub Service', () => {
     });
 
     it('should display a not implemented when calling "unsubscribe" method', () => {
-      expect(() => UniversalPubSubService.prototype.unsubscribe('event1', () => { })).toThrow('The method "unsubscribe" is not implemented, please use "unsubscribeAll()" instead');
+      expect(() => PubSubService.prototype.unsubscribe('event1', () => { })).toThrow('The method "unsubscribe" is not implemented, please use "unsubscribeAll()" instead');
     });
   });
 

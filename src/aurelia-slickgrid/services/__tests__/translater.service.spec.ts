@@ -3,17 +3,17 @@ import { I18N } from 'aurelia-i18n';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { BindingSignaler } from 'aurelia-templating-resources';
 
-import { UniversalTranslateService } from '../universalTranslate.service';
+import { TranslaterService } from '../translater.service';
 
-describe('UniversalPubSub Service', () => {
+describe('Translater Service', () => {
   let ea: EventAggregator;
   let i18n: I18N;
-  let service: UniversalTranslateService;
+  let service: TranslaterService;
 
   beforeEach(() => {
     ea = new EventAggregator();
     i18n = new I18N(ea, new BindingSignaler());
-    service = new UniversalTranslateService(i18n);
+    service = new TranslaterService(i18n);
 
     i18n.setup({
       lng: 'en',

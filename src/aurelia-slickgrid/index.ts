@@ -1,9 +1,11 @@
 export * from '@slickgrid-universal/common';
-import { FrameworkConfiguration } from 'aurelia-framework';
+import { EventAggregator } from 'aurelia-event-aggregator';
+import { FrameworkConfiguration, NewInstance } from 'aurelia-framework';
 import { PLATFORM } from 'aurelia-pal';
 
 import { AureliaSlickgridCustomElement } from './custom-elements/aurelia-slickgrid';
 import { SlickPaginationCustomElement } from './custom-elements/slick-pagination';
+import { SlickgridEventAggregator } from './custom-elements/slickgridEventAggregator';
 import { SlickgridConfig } from './slickgrid-config';
 import {
   AureliaGridInstance,
@@ -32,8 +34,8 @@ export {
 export {
   AureliaUtilService,
   ResizerService,
-  UniversalPubSubService,
-  UniversalTranslateService,
+  PubSubService,
+  TranslaterService,
   disposeAllSubscriptions
 } from './services/index';
 
@@ -42,6 +44,9 @@ export function configure(aurelia: FrameworkConfiguration, callback: (instance: 
   aurelia.globalResources(PLATFORM.moduleName('./custom-elements/slick-pagination'));
   aurelia.globalResources(PLATFORM.moduleName('./value-converters/asgDateFormat'));
   aurelia.globalResources(PLATFORM.moduleName('./value-converters/asgNumber'));
+
+  // register a local (internal) event aggregator
+  aurelia.container.registerResolver(SlickgridEventAggregator, NewInstance.of(EventAggregator).as(SlickgridEventAggregator));
 
   const config = new SlickgridConfig();
   aurelia.container.registerInstance(SlickgridConfig, config);

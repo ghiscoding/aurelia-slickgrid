@@ -8,6 +8,7 @@ describe('Testing library entry point and aurelia configure routine', () => {
     globalResources: () => { /**/ },
     container: {
       registerInstance: () => { /**/ },
+      registerResolver: () => { /**/ },
       registerTransient: () => { /**/ },
       get: (Type: any) => new Type()
     },

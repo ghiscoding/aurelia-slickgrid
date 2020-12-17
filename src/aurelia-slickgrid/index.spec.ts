@@ -8,8 +8,8 @@ describe('Testing library entry point', () => {
   it('should have all exported object defined', () => {
     expect(typeof entry.AureliaUtilService).toBe('function');
     expect(typeof entry.ResizerService).toBe('function');
-    expect(typeof entry.UniversalPubSubService).toBe('function');
-    expect(typeof entry.UniversalTranslateService).toBe('function');
+    expect(typeof entry.PubSubService).toBe('function');
+    expect(typeof entry.TranslaterService).toBe('function');
     expect(typeof entry.disposeAllSubscriptions).toBe('function');
     expect(typeof entry.Aggregators).toBe('object');
     expect(typeof entry.Editors).toBe('object');

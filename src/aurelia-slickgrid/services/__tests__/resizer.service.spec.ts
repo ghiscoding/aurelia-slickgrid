@@ -1,4 +1,5 @@
-import { GridOption, PubSubService, SlickGrid, SlickNamespace, } from '@slickgrid-universal/common';
+import { GridOption, SlickGrid, SlickNamespace, } from '@slickgrid-universal/common';
+import { PubSubService } from '../pubSub.service';
 import { ResizerService } from '../resizer.service';
 
 declare const Slick: SlickNamespace;
@@ -29,7 +30,7 @@ const pubSubServiceStub = {
   subscribe: jest.fn(),
   unsubscribe: jest.fn(),
   unsubscribeAll: jest.fn(),
-} as PubSubService;
+} as unknown as PubSubService;
 
 const gridStub = {
   autosizeColumns: jest.fn(),

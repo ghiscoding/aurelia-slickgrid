@@ -37,12 +37,12 @@ import * as utilities from '@slickgrid-universal/common/dist/commonjs/services/u
 
 import { MockSlickEvent, MockSlickEventHandler } from '../../../../test/mockSlickEvent';
 import { AureliaSlickgridCustomElement } from '../aurelia-slickgrid';
-import { UniversalPubSubService } from '../../services/universalPubSub.service';
-import { TranslateServiceStub } from '../../../../test/translateServiceStub';
+import { PubSubService } from '../../services/pubSub.service';
+import { TranslaterServiceStub } from '../../../../test/translaterServiceStub';
 import { HttpStub } from '../../../../test/httpClientStub';
 import { SlickEmptyWarningComponent } from '../slick-empty-warning.component';
 import { ResizerService } from '../../services/resizer.service';
-import { AureliaUtilService, UniversalTranslateService } from '../../services';
+import { AureliaUtilService, ContainerService, TranslaterService } from '../../services';
 
 const mockExecuteBackendProcess = jest.fn();
 const mockRefreshBackendDataset = jest.fn();
@@ -287,14 +287,15 @@ describe('Slick-Vanilla-Grid-Bundle Component instantiated via Constructor', () 
   let divContainer: HTMLDivElement;
   let cellDiv: HTMLDivElement;
   let columnDefinitions: Column[];
-  let container: Container;
   let gridOptions: GridOption;
   let sharedService: SharedService;
   let globalEa: EventAggregator;
   let pluginEa: EventAggregator;
-  let pubSubService: UniversalPubSubService;
-  let translateService: TranslateServiceStub;
+  let pubSubService: PubSubService;
+  let translateService: TranslaterServiceStub;
+  const container = new Container();
   const http = new HttpStub();
+  const containerService = new ContainerService(container);
 
   beforeEach(() => {
     divContainer = document.createElement('div');
@@ -315,12 +316,11 @@ describe('Slick-Vanilla-Grid-Bundle Component instantiated via Constructor', () 
       },
     } as unknown as GridOption;
     sharedService = new SharedService();
-    translateService = new TranslateServiceStub();
+    translateService = new TranslaterServiceStub();
     jest.spyOn(mockGrid, 'getOptions').mockReturnValue(gridOptions);
     globalEa = new EventAggregator();
     pluginEa = new EventAggregator();
-    container = new Container();
-    pubSubService = new UniversalPubSubService(pluginEa);
+    pubSubService = new PubSubService(pluginEa);
 
     customElement = new AureliaSlickgridCustomElement(
       aureliaUtilServiceStub,
@@ -328,11 +328,11 @@ describe('Slick-Vanilla-Grid-Bundle Component instantiated via Constructor', () 
       container,
       divContainer,
       globalEa,
-      pluginEa,
       resizerServiceStub,
       slickEmptyWarningStub,
-      translateService as unknown as UniversalTranslateService,
+      containerService,
       pubSubService,
+      translateService as unknown as TranslaterService,
       {
         collectionService: collectionServiceStub,
         extensionService: extensionServiceStub,
@@ -859,7 +859,7 @@ describe('Slick-Vanilla-Grid-Bundle Component instantiated via Constructor', () 
         customElement.gridOptions = { createPreHeaderPanel: true, enableDraggableGrouping: false } as unknown as GridOption;
         customElement.initialization(slickEventHandler);
 
-        expect(spy).toHaveBeenCalledWith(mockGrid, sharedService);
+        expect(spy).toHaveBeenCalledWith(mockGrid, containerService);
       });
 
       it('should not initialize groupingAndColspanService when "createPreHeaderPanel" grid option is enabled and "enableDraggableGrouping" is also enabled', () => {
@@ -880,22 +880,15 @@ describe('Slick-Vanilla-Grid-Bundle Component instantiated via Constructor', () 
         expect(spy).toHaveBeenCalled();
       });
 
-      // xit('should initialize SlickCompositeEditorComponent when "enableCompositeEditor" is set', () => {
-      //   customElement.gridOptions = { enableCompositeEditor: true } as unknown as GridOption;
-      //   customElement.initialization(slickEventHandler);
-
-      //   expect(customElement.slickCompositeEditor instanceof SlickCompositeEditorComponent).toBeTrue();
-      // });
-
       it('should initialize ExportService when "enableTextExport" is set when using Salesforce', () => {
         const fileExportMock = new TextExportService();
         const fileExportSpy = jest.spyOn(fileExportMock, 'init');
-        customElement.gridOptions = { enableTextExport: true, registerExternalServices: [fileExportMock] } as GridOption;
+        customElement.gridOptions = { enableTextExport: true, registerExternalResources: [fileExportMock] } as GridOption;
         customElement.initialization(slickEventHandler);
 
         expect(fileExportSpy).toHaveBeenCalled();
-        expect(customElement.registeredServices.length).toBe(3); // TextExportService, GridService, GridStateService
-        expect(customElement.registeredServices[0] instanceof TextExportService).toBeTrue();
+        expect(customElement.registeredResources.length).toBe(3); // TextExportService, GridService, GridStateService
+        expect(customElement.registeredResources[0] instanceof TextExportService).toBeTrue();
       });
 
       it('should destroy customElement and its DOM element when requested', () => {

@@ -18,7 +18,7 @@ import * as DOMPurify from 'dompurify';
 import { AureliaViewOutput, GridOption, RowDetailView, SlickGrid, ViewModelBindableInputData } from '../models/index';
 import { AureliaUtilService } from '../services/aureliaUtil.service';
 import { disposeAllSubscriptions } from '../services/utilities';
-import { UniversalPubSubService } from '../services';
+import { PubSubService } from '../services';
 
 // using external non-typed js libraries
 declare const Slick: SlickNamespace;
@@ -34,7 +34,7 @@ export interface CreatedView extends AureliaViewOutput {
 @singleton(true)
 @inject(
   AureliaUtilService,
-  UniversalPubSubService,
+  PubSubService,
   ExtensionUtility,
   SharedService,
 )
@@ -49,7 +49,7 @@ export class RowDetailViewExtension implements UniversalRowDetailViewExtension {
 
   constructor(
     private aureliaUtilService: AureliaUtilService,
-    private pubSubService: UniversalPubSubService,
+    private pubSubService: PubSubService,
     private extensionUtility: ExtensionUtility,
     private sharedService: SharedService,
   ) {

@@ -2,7 +2,7 @@ import { Column, ExtensionUtility, SharedService, SlickDataView, SlickGrid, Slic
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { GridOption } from '../../models/gridOption.interface';
 import { RowDetailViewExtension } from '../rowDetailViewExtension';
-import { AureliaUtilService, UniversalPubSubService, UniversalTranslateService } from '../../services';
+import { AureliaUtilService, PubSubService, TranslaterService } from '../../services';
 import { RowDetailView } from '../../models';
 import { HttpStub } from '../../../../test/httpClientStub';
 
@@ -28,12 +28,12 @@ const gridStub = {
   onSort: new Slick.Event(),
 } as unknown as SlickGrid;
 
-const translateServiceStub = {
+const translaterServiceStub = {
   getCurrentLanguage: jest.fn(),
   use: jest.fn(),
   setup: jest.fn(),
   translate: jest.fn(),
-} as unknown as UniversalTranslateService;
+} as unknown as TranslaterService;
 
 const mockAddon = jest.fn().mockImplementation(() => ({
   init: jest.fn(),
@@ -62,7 +62,7 @@ Slick.RowSelectionModel = mockSelectionModel;
 
 describe('rowDetailViewExtension', () => {
   let pluginEa: EventAggregator;
-  let pubSubService: UniversalPubSubService;
+  let pubSubService: PubSubService;
   let extensionUtility: ExtensionUtility;
   let extension: RowDetailViewExtension;
   let sharedService: SharedService;
@@ -95,9 +95,9 @@ describe('rowDetailViewExtension', () => {
 
   beforeEach(() => {
     pluginEa = new EventAggregator();
-    pubSubService = new UniversalPubSubService(pluginEa);
+    pubSubService = new PubSubService(pluginEa);
     sharedService = new SharedService();
-    extensionUtility = new ExtensionUtility(sharedService, translateServiceStub);
+    extensionUtility = new ExtensionUtility(sharedService, translaterServiceStub);
     extension = new RowDetailViewExtension(aureliaUtilServiceStub, pubSubService, extensionUtility, sharedService);
   });
 

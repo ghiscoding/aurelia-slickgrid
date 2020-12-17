@@ -3,10 +3,10 @@ import { inject, Optional, singleton } from 'aurelia-framework';
 import * as DOMPurify from 'dompurify';
 
 import { GridOption, SlickGrid } from '../models/index';
-import { UniversalTranslateService } from '../services/universalTranslate.service';
+import { TranslaterService } from '../services/translater.service';
 
 @singleton(true)
-@inject(Optional.of(UniversalTranslateService))
+@inject(Optional.of(TranslaterService))
 export class SlickEmptyWarningComponent {
   private _grid: SlickGrid;
   private _warningLeftElement: HTMLDivElement | null;
@@ -21,7 +21,7 @@ export class SlickEmptyWarningComponent {
     this._grid = slickGrid;
   }
 
-  constructor(private translateService?: UniversalTranslateService) { }
+  constructor(private translateService?: TranslaterService) { }
 
   dispose() {
     this._warningLeftElement?.remove();

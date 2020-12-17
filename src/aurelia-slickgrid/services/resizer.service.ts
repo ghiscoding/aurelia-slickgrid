@@ -9,7 +9,7 @@ import {
 import { inject, singleton } from 'aurelia-framework';
 
 import { GridOption, SlickGrid } from '../models/index';
-import { UniversalPubSubService } from './universalPubSub.service';
+import { PubSubService } from './pubSub.service';
 
 // using external non-typed js libraries
 declare const Slick: SlickNamespace;
@@ -17,7 +17,7 @@ const DATAGRID_FOOTER_HEIGHT = 25;
 const DATAGRID_PAGINATION_HEIGHT = 35;
 
 @singleton(true)
-@inject(UniversalPubSubService)
+@inject(PubSubService)
 export class ResizerService {
   private _grid: SlickGrid;
   private _addon: SlickResizer;
@@ -32,7 +32,7 @@ export class ResizerService {
     return (this._grid && this._grid.getOptions) ? this._grid.getOptions() : {};
   }
 
-  constructor(private pubSubService: UniversalPubSubService) {
+  constructor(private pubSubService: PubSubService) {
     this._eventHandler = new Slick.EventHandler();
   }
 

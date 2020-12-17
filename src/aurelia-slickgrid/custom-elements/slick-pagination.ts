@@ -5,9 +5,9 @@ import { getTranslationPrefix, Locale, PaginationService } from '@slickgrid-univ
 import { GridOption } from '../models/index';
 import { disposeAllSubscriptions } from '../services/utilities';
 import { Constants } from '../constants';
-import { UniversalTranslateService } from '../services/universalTranslate.service';
+import { TranslaterService } from '../services/translater.service';
 
-@inject(EventAggregator, Optional.of(UniversalTranslateService))
+@inject(EventAggregator, Optional.of(TranslaterService))
 export class SlickPaginationCustomElement {
   // we need to pass this service as a binding because it's transient and it must be created (then passed through the binding) in the Aurelia-Slickgrid custom element
   @bindable() paginationService: PaginationService;
@@ -24,7 +24,7 @@ export class SlickPaginationCustomElement {
   textOf = 'of';
   textPage = 'Page';
 
-  constructor(private globalEa: EventAggregator, private translateService?: UniversalTranslateService) { }
+  constructor(private globalEa: EventAggregator, private translateService?: TranslaterService) { }
 
   get availablePageSizes(): number[] {
     return this.paginationService.availablePageSizes;

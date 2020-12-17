@@ -20,6 +20,7 @@ import {
   DataViewOption,
   ExtensionList,
   ExtensionName,
+  ExternalResource,
   GetSlickEventType,
   GridStateType,
   Locale,
@@ -71,8 +72,9 @@ import {
   onBackendError,
   refreshBackendDataset,
 } from '@slickgrid-universal/common';
+import { SlickCompositeEditorComponent } from '@slickgrid-universal/composite-editor-component';
 
-import { bindable, BindingEngine, bindingMode, Container, Factory, inject, NewInstance, } from 'aurelia-framework';
+import { bindable, BindingEngine, bindingMode, Container, Factory, inject, } from 'aurelia-framework';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
 
 import { Constants } from '../constants';
@@ -82,10 +84,10 @@ import {
   AureliaUtilService,
   disposeAllSubscriptions,
   ResizerService,
-  UniversalPubSubService,
-  UniversalTranslateService,
+  ContainerService,
+  PubSubService,
+  TranslaterService,
 } from '../services/index';
-import { SlickgridEventAggregator } from './slickgridEventAggregator';
 import { SlickEmptyWarningComponent } from './slick-empty-warning.component';
 import { RowDetailViewExtension } from '../extensions';
 
@@ -99,11 +101,11 @@ declare const Slick: SlickNamespace;
   Container,
   Element,
   EventAggregator,
-  NewInstance.of(EventAggregator).as(SlickgridEventAggregator),
   ResizerService,
   SlickEmptyWarningComponent,
-  UniversalTranslateService,
-  UniversalPubSubService,
+  ContainerService,
+  PubSubService,
+  TranslaterService,
 )
 export class AureliaSlickgridCustomElement {
   private _columnDefinitions: Column[] = [];
@@ -115,7 +117,7 @@ export class AureliaSlickgridCustomElement {
   private _isPaginationInitialized = false;
   private _isLocalGrid = true;
   private _paginationOptions: Pagination | undefined;
-  private _registeredServices: any[] = [];
+  private _registeredResources: ExternalResource[] = [];
   groupItemMetadataProvider: any;
   backendServiceApi: BackendServiceApi | undefined;
   customFooterOptions: CustomFooterOption;
@@ -125,6 +127,7 @@ export class AureliaSlickgridCustomElement {
   showPagination = false;
   serviceList: any[] = [];
   subscriptions: Subscription[] = [];
+  slickCompositeEditor: SlickCompositeEditorComponent;
   paginationData: {
     gridOptions: GridOption;
     paginationService: PaginationService;
@@ -159,7 +162,6 @@ export class AureliaSlickgridCustomElement {
   @bindable() datasetHierarchical: any[] | null;
   @bindable() gridId: string;
   @bindable() gridOptions: GridOption;
-  @bindable() pickerOptions: any;
 
   constructor(
     private aureliaUtilService: AureliaUtilService,
@@ -167,11 +169,11 @@ export class AureliaSlickgridCustomElement {
     private container: Container,
     private elm: Element,
     private globalEa: EventAggregator,
-    _pluginEa: SlickgridEventAggregator,
     private resizerService: ResizerService,
     public slickEmptyWarning: SlickEmptyWarningComponent,
-    private translateService: UniversalTranslateService,
-    private pubSubService: UniversalPubSubService,
+    private containerService: ContainerService,
+    private pubSubService: PubSubService,
+    private translaterService: TranslaterService,
     externalServices: {
       collectionService?: CollectionService,
       extensionService?: ExtensionService,
@@ -187,15 +189,16 @@ export class AureliaSlickgridCustomElement {
       treeDataService?: TreeDataService,
     }
   ) {
+    const slickgridConfig = new SlickgridConfig();
+
     // initialize and assign all Service Dependencies
     this.pubSubService.eventNamingStyle = EventNamingStyle.kebabCase;
 
     this.gridEventService = externalServices?.gridEventService ?? new GridEventService();
-    const slickgridConfig = new SlickgridConfig();
     this.sharedService = externalServices?.sharedService ?? new SharedService();
-    this.collectionService = externalServices?.collectionService ?? new CollectionService(this.translateService);
-    this.extensionUtility = externalServices?.extensionUtility ?? new ExtensionUtility(this.sharedService, this.translateService);
-    const filterFactory = new FilterFactory(slickgridConfig, this.translateService, this.collectionService);
+    this.collectionService = externalServices?.collectionService ?? new CollectionService(this.translaterService);
+    this.extensionUtility = externalServices?.extensionUtility ?? new ExtensionUtility(this.sharedService, this.translaterService);
+    const filterFactory = new FilterFactory(slickgridConfig, this.translaterService, this.collectionService);
     this.filterService = externalServices?.filterService ?? new FilterService(filterFactory as any, this.pubSubService, this.sharedService);
     this.sortService = externalServices?.sortService ?? new SortService(this.sharedService, this.pubSubService);
     this.treeDataService = externalServices?.treeDataService ?? new TreeDataService(this.sharedService);
@@ -204,15 +207,15 @@ export class AureliaSlickgridCustomElement {
     // extensions
     const autoTooltipExtension = new AutoTooltipExtension(this.extensionUtility, this.sharedService);
     const cellExternalCopyManagerExtension = new CellExternalCopyManagerExtension(this.extensionUtility, this.sharedService);
-    const cellMenuExtension = new CellMenuExtension(this.extensionUtility, this.sharedService, this.translateService);
-    const contextMenuExtension = new ContextMenuExtension(this.extensionUtility, this.sharedService, this.treeDataService, this.translateService);
+    const cellMenuExtension = new CellMenuExtension(this.extensionUtility, this.sharedService, this.translaterService);
+    const contextMenuExtension = new ContextMenuExtension(this.extensionUtility, this.sharedService, this.treeDataService, this.translaterService);
     const columnPickerExtension = new ColumnPickerExtension(this.extensionUtility, this.sharedService);
     const checkboxExtension = new CheckboxSelectorExtension(this.extensionUtility, this.sharedService);
     const draggableGroupingExtension = new DraggableGroupingExtension(this.extensionUtility, this.sharedService);
-    const gridMenuExtension = new GridMenuExtension(this.extensionUtility, this.filterService, this.sharedService, this.sortService, this.translateService);
+    const gridMenuExtension = new GridMenuExtension(this.extensionUtility, this.filterService, this.sharedService, this.sortService, this.translaterService);
     const groupItemMetaProviderExtension = new GroupItemMetaProviderExtension(this.sharedService);
     const headerButtonExtension = new HeaderButtonExtension(this.extensionUtility, this.sharedService);
-    const headerMenuExtension = new HeaderMenuExtension(this.extensionUtility, this.filterService, this.pubSubService, this.sharedService, this.sortService, this.translateService);
+    const headerMenuExtension = new HeaderMenuExtension(this.extensionUtility, this.filterService, this.pubSubService, this.sharedService, this.sortService, this.translaterService);
     const rowDetailViewExtension = new RowDetailViewExtension(this.aureliaUtilService, this.pubSubService, this.extensionUtility, this.sharedService);
     const rowMoveManagerExtension = new RowMoveManagerExtension(this.extensionUtility, this.sharedService);
     const rowSelectionExtension = new RowSelectionExtension(this.extensionUtility, this.sharedService);
@@ -233,7 +236,7 @@ export class AureliaSlickgridCustomElement {
       rowMoveManagerExtension,
       rowSelectionExtension,
       this.sharedService,
-      this.translateService,
+      this.translaterService,
     );
 
     this.gridStateService = externalServices?.gridStateService ?? new GridStateService(this.extensionService, this.filterService, this.pubSubService, this.sharedService, this.sortService);
@@ -252,6 +255,23 @@ export class AureliaSlickgridCustomElement {
       this.sortService,
       this.treeDataService,
     ];
+
+    // register all Service instances in the container
+    this.containerService.registerInstance('ExtensionUtility', this.extensionUtility);
+    this.containerService.registerInstance('FilterService', this.filterService);
+    this.containerService.registerInstance('CollectionService', this.collectionService);
+    this.containerService.registerInstance('ExtensionService', this.extensionService);
+    this.containerService.registerInstance('GridEventService', this.gridEventService);
+    this.containerService.registerInstance('GridService', this.gridService);
+    this.containerService.registerInstance('GridStateService', this.gridStateService);
+    this.containerService.registerInstance('GroupingAndColspanService', this.groupingService);
+    this.containerService.registerInstance('PaginationService', this.paginationService);
+    this.containerService.registerInstance('ResizerService', this.resizerService);
+    this.containerService.registerInstance('SharedService', this.sharedService);
+    this.containerService.registerInstance('SortService', this.sortService);
+    this.containerService.registerInstance('PubSubService', this.pubSubService);
+    this.containerService.registerInstance('TranslaterService', this.translaterService);
+    this.containerService.registerInstance('TreeDataService', this.treeDataService);
   }
 
   get eventHandler(): SlickEventHandler {
@@ -265,8 +285,8 @@ export class AureliaSlickgridCustomElement {
     this._isDatasetInitialized = isInitialized;
   }
 
-  get registeredServices(): any[] {
-    return this._registeredServices;
+  get registeredResources(): ExternalResource[] {
+    return this._registeredResources;
   }
 
   attached() {
@@ -276,7 +296,7 @@ export class AureliaSlickgridCustomElement {
   }
 
   initialization(eventHandler: SlickEventHandler) {
-    this.gridOptions.translater = this.translateService;
+    this.gridOptions.translater = this.translaterService;
     this._eventHandler = eventHandler;
 
     // when detecting a frozen grid, we'll automatically enable the mousewheel scroll handler so that we can scroll from both left/right frozen containers
@@ -285,8 +305,6 @@ export class AureliaSlickgridCustomElement {
     }
 
     this.pubSubService.eventNamingStyle = this.gridOptions?.eventNamingStyle ?? EventNamingStyle.camelCase;
-    this.sharedService.internalPubSubService = this.pubSubService;
-
     const aureliaEventPrefix = this.gridOptions?.defaultAureliaEventPrefix ?? '';
     this.pubSubService.dispatchCustomEvent(this.elm, 'onBeforeGridCreate', true, aureliaEventPrefix);
 
@@ -411,16 +429,16 @@ export class AureliaSlickgridCustomElement {
     this.bindResizeHook(this.grid, this.gridOptions);
 
     // push all other Services that we want to be registered
-    this._registeredServices.push(this.gridService, this.gridStateService);
+    this._registeredResources.push(this.gridService, this.gridStateService);
 
     // bind grouping and header grouping colspan service
     if (this.gridOptions.createPreHeaderPanel && !this.gridOptions.enableDraggableGrouping) {
-      this._registeredServices.push(this.groupingService);
+      this._registeredResources.push(this.groupingService);
     }
 
     // when using Tree Data View, register its Service
     if (this.gridOptions.enableTreeData) {
-      this._registeredServices.push(this.treeDataService);
+      this._registeredResources.push(this.treeDataService);
     }
 
     // when user enables translation, we need to translate Headers on first pass & subsequently in the bindDifferentHooks
@@ -434,12 +452,12 @@ export class AureliaSlickgridCustomElement {
       this.bindBackendCallbackFunctions(this.gridOptions);
     }
 
-    // bind & initialize all Services that were tagged as enable
+    // bind & initialize all external Components and Services that were tagged as enable
     // register all services by executing their init method and providing them with the Grid object
-    if (Array.isArray(this._registeredServices)) {
-      for (const service of this._registeredServices) {
-        if (typeof service.init === 'function') {
-          service.init(this.grid, this.sharedService);
+    if (Array.isArray(this._registeredResources)) {
+      for (const resource of this._registeredResources) {
+        if (typeof resource.init === 'function') {
+          resource.init(this.grid, this.containerService);
         }
       }
     }
@@ -509,6 +527,17 @@ export class AureliaSlickgridCustomElement {
       }
     });
     this.serviceList = [];
+
+    // dispose all registered external resources
+    if (Array.isArray(this._registeredResources)) {
+      while (this._registeredResources.length > 0) {
+        const resource = this._registeredResources.pop();
+        if (resource?.dispose) {
+          resource.dispose();
+        }
+      }
+      this._registeredResources = [];
+    }
 
     if (this.dataview) {
       if (this.dataview.setItems) {
@@ -741,11 +770,11 @@ export class AureliaSlickgridCustomElement {
       this.gridEventService.bindOnClick(grid);
 
       // get any possible Services that user want to register
-      this._registeredServices = this.gridOptions.registerExternalServices || [];
+      this._registeredResources = this.gridOptions.registerExternalResources || [];
 
       // at this point, we consider all the registered services as external services, anything else registered afterward aren't external
-      if (Array.isArray(this._registeredServices)) {
-        this.sharedService.externalRegisteredServices = this._registeredServices;
+      if (Array.isArray(this._registeredResources)) {
+        this.sharedService.externalRegisteredResources = this._registeredResources;
       }
 
       if (dataView && grid) {
@@ -1267,13 +1296,13 @@ export class AureliaSlickgridCustomElement {
 
   /** Translate all Custom Footer Texts (footer with metrics) */
   private translateCustomFooterTexts() {
-    if (this.translateService?.translate) {
+    if (this.translaterService?.translate) {
       const customFooterOptions = this.gridOptions?.customFooterOptions ?? {};
       customFooterOptions.metricTexts = customFooterOptions.metricTexts || {};
       for (const propName of Object.keys(customFooterOptions.metricTexts)) {
         if (propName.lastIndexOf('Key') > 0) {
           const propNameWithoutKey = propName.substring(0, propName.lastIndexOf('Key'));
-          customFooterOptions.metricTexts[propNameWithoutKey] = this.translateService.translate(customFooterOptions.metricTexts[propName] || ' ');
+          customFooterOptions.metricTexts[propNameWithoutKey] = this.translaterService.translate(customFooterOptions.metricTexts[propName] || ' ');
         }
       }
     }
