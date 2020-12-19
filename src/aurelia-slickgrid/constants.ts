@@ -84,7 +84,7 @@ export class Constants {
     'onItemDeleted',
     'onItemUpdated',
     'onItemUpserted',
-    'onBeforeResize',
-    'onAfterResize',
+    'onGridBeforeResize',
+    'onGridAfterResize',
   ];
 }

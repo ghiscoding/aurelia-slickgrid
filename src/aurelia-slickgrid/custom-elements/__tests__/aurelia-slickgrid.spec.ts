@@ -30,6 +30,7 @@ import {
   TreeDataService,
   BackendService,
 } from '@slickgrid-universal/common';
+import { SlickEmptyWarningComponent } from '@slickgrid-universal/empty-warning-component';
 import { TextExportService } from '@slickgrid-universal/text-export';
 import { GraphqlService, GraphqlPaginatedResult, GraphqlServiceApi, GraphqlServiceOption } from '@slickgrid-universal/graphql';
 import * as backendUtilities from '@slickgrid-universal/common/dist/commonjs/services/backend-utilities';
@@ -40,7 +41,6 @@ import { AureliaSlickgridCustomElement } from '../aurelia-slickgrid';
 import { PubSubService } from '../../services/pubSub.service';
 import { TranslaterServiceStub } from '../../../../test/translaterServiceStub';
 import { HttpStub } from '../../../../test/httpClientStub';
-import { SlickEmptyWarningComponent } from '../slick-empty-warning.component';
 import { ResizerService } from '../../services/resizer.service';
 import { AureliaUtilService, ContainerService, TranslaterService } from '../../services';
 
@@ -153,12 +153,6 @@ const resizerServiceStub = {
   init: jest.fn(),
   resizeGrid: jest.fn(),
 } as unknown as ResizerService;
-
-const slickEmptyWarningStub = {
-  init: jest.fn(),
-  dispose: jest.fn(),
-  showEmptyDataMessage: jest.fn(),
-} as unknown as SlickEmptyWarningComponent;
 
 Object.defineProperty(paginationServiceStub, 'totalItems', {
   get: jest.fn(() => 0),
@@ -329,7 +323,6 @@ describe('Slick-Vanilla-Grid-Bundle Component instantiated via Constructor', () 
       divContainer,
       globalEa,
       resizerServiceStub,
-      slickEmptyWarningStub,
       containerService,
       pubSubService,
       translateService as unknown as TranslaterService,
@@ -898,7 +891,7 @@ describe('Slick-Vanilla-Grid-Bundle Component instantiated via Constructor', () 
         customElement.initialization(slickEventHandler);
 
         expect(fileExportSpy).toHaveBeenCalled();
-        expect(customElement.registeredResources.length).toBe(3); // TextExportService, GridService, GridStateService
+        expect(customElement.registeredResources.length).toBe(4); // TextExportService, GridService, GridStateService, SlickEmptyCompositeEditorComponent
         expect(customElement.registeredResources[0] instanceof TextExportService).toBeTrue();
       });
 
@@ -1585,6 +1578,10 @@ describe('Slick-Vanilla-Grid-Bundle Component instantiated via Constructor', () 
     });
 
     describe('Empty Warning Message', () => {
+      beforeEach(() => {
+        jest.clearAllMocks();
+      });
+
       it('should display an Empty Warning Message when "enableEmptyDataWarningMessage" is enabled and the dataset is empty', (done) => {
         const mockColDefs = [{ id: 'name', field: 'name', editor: undefined, internalColumnEditor: {} }];
         const mockGridOptions = { enableTranslate: true, enableEmptyDataWarningMessage: true, };
@@ -1593,15 +1590,16 @@ describe('Slick-Vanilla-Grid-Bundle Component instantiated via Constructor', () 
 
         customElement.gridOptions = mockGridOptions;
         customElement.initialization(slickEventHandler);
-        const emptySpy = jest.spyOn(customElement.slickEmptyWarning, 'showEmptyDataMessage');
+        const slickEmptyWarning = customElement.registeredResources.find(resource => resource instanceof SlickEmptyWarningComponent);
+        const emptySpy = jest.spyOn(slickEmptyWarning as SlickEmptyWarningComponent, 'showEmptyDataMessage');
         customElement.columnDefinitions = mockColDefs;
         customElement.refreshGridData([]);
-        mockDataView.onRowCountChanged.notify({ first: 'John' });
+        mockDataView.onRowCountChanged.notify({ current: 0, item: { first: 'John' } });
 
         setTimeout(() => {
           expect(customElement.columnDefinitions).toEqual(mockColDefs);
           expect(customElement.gridOptions.enableEmptyDataWarningMessage).toBeTrue();
-          expect(customElement.slickEmptyWarning).toBeTruthy();
+          expect(slickEmptyWarning).toBeTruthy();
           expect(emptySpy).toHaveBeenCalledTimes(2);
           done();
         });
