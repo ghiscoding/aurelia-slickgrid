@@ -74,7 +74,7 @@ import {
   onBackendError,
   refreshBackendDataset,
 } from '@slickgrid-universal/common';
-import { SlickCompositeEditorComponent } from '@slickgrid-universal/composite-editor-component';
+import { SlickEmptyWarningComponent } from '@slickgrid-universal/empty-warning-component';
 
 import { bindable, BindingEngine, bindingMode, Container, Factory, inject, } from 'aurelia-framework';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
@@ -90,7 +90,6 @@ import {
   PubSubService,
   TranslaterService,
 } from '../services/index';
-import { SlickEmptyWarningComponent } from './slick-empty-warning.component';
 import { RowDetailViewExtension } from '../extensions';
 
 // using external non-typed js libraries
@@ -104,7 +103,6 @@ declare const Slick: SlickNamespace;
   Element,
   EventAggregator,
   ResizerService,
-  SlickEmptyWarningComponent,
   ContainerService,
   PubSubService,
   TranslaterService,
@@ -129,11 +127,11 @@ export class AureliaSlickgridCustomElement {
   showPagination = false;
   serviceList: any[] = [];
   subscriptions: Subscription[] = [];
-  slickCompositeEditor: SlickCompositeEditorComponent;
   paginationData: {
     gridOptions: GridOption;
     paginationService: PaginationService;
   };
+  slickEmptyWarning: SlickEmptyWarningComponent | undefined;
 
   // extensions
   extensionUtility: ExtensionUtility;
@@ -172,7 +170,6 @@ export class AureliaSlickgridCustomElement {
     private elm: Element,
     private globalEa: EventAggregator,
     private resizerService: ResizerService,
-    public slickEmptyWarning: SlickEmptyWarningComponent,
     private containerService: ContainerService,
     private pubSubService: PubSubService,
     private translaterService: TranslaterService,
@@ -448,6 +445,10 @@ export class AureliaSlickgridCustomElement {
       this.extensionService.translateColumnHeaders();
     }
 
+    // also initialize (render) the empty warning component
+    this.slickEmptyWarning = new SlickEmptyWarningComponent();
+    this._registeredResources.push(this.slickEmptyWarning);
+
     // bind the Backend Service API callback functions only after the grid is initialized
     // because the preProcess() and onInit() might get triggered
     if (this.gridOptions?.backendServiceApi) {
@@ -552,9 +553,6 @@ export class AureliaSlickgridCustomElement {
     if (this.grid && this.grid.destroy) {
       this.grid.destroy(shouldEmptyDomElementContainer);
     }
-
-    // dispose the Components
-    this.slickEmptyWarning?.dispose();
 
     // also dispose of all Subscriptions
     this.subscriptions = disposeAllSubscriptions(this.subscriptions);
@@ -1114,7 +1112,6 @@ export class AureliaSlickgridCustomElement {
   // ------------------
 
   private displayEmptyDataWarning(showWarning = true) {
-    this.slickEmptyWarning.grid = this.grid;
     this.slickEmptyWarning?.showEmptyDataMessage(showWarning);
   }
 
