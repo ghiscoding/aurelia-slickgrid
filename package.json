@@ -1,6 +1,6 @@
 {
   "name": "aurelia-slickgrid",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "Slickgrid components made available in Aurelia",
   "keywords": [
     "aurelia",
@@ -57,8 +57,8 @@
     "serve:demo": "http-server ./docs -p 9000 -a localhost"
   },
   "dependencies": {
-    "@slickgrid-universal/common": "^0.7.2",
-    "@slickgrid-universal/empty-warning-component": "^0.7.2",
+    "@slickgrid-universal/common": "^0.7.7",
+    "@slickgrid-universal/empty-warning-component": "^0.7.7",
     "aurelia-event-aggregator": "^1.0.3",
     "aurelia-framework": "^1.3.1",
     "aurelia-i18n": "^3.1.4",
@@ -80,11 +80,11 @@
     "i18next": ">= 14.1.1"
   },
   "devDependencies": {
-    "@slickgrid-universal/composite-editor-component": "^0.7.2",
-    "@slickgrid-universal/excel-export": "^0.7.2",
-    "@slickgrid-universal/graphql": "^0.7.2",
-    "@slickgrid-universal/odata": "^0.7.2",
-    "@slickgrid-universal/text-export": "^0.7.2",
+    "@slickgrid-universal/composite-editor-component": "^0.7.7",
+    "@slickgrid-universal/excel-export": "^0.7.7",
+    "@slickgrid-universal/graphql": "^0.7.7",
+    "@slickgrid-universal/odata": "^0.7.7",
+    "@slickgrid-universal/text-export": "^0.7.7",
     "@types/bluebird": "^3.5.33",
     "@types/dompurify": "^2.0.4",
     "@types/flatpickr": "^3.1.2",
