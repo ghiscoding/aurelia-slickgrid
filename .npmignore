@@ -21,6 +21,10 @@ test
 webpack.config.js
 
 **/dist-demo
+docs
+aurelia_project
+favicon.ico
+tsconfig.spec.json
 
 # Lock & error files
 yarn.lock
@@ -37,3 +41,4 @@ test/
 **/junit.xml
 **/test-report.xml
 **/testresult.xml
+
