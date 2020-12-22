@@ -1,7 +1,9 @@
+import 'slickgrid/plugins/slick.rowdetailview';
+import 'slickgrid/plugins/slick.rowselectionmodel';
+
 import {
   addToArrayWhenNotExists,
   Column,
-  ExtensionName,
   ExtensionUtility,
   GetSlickEventType,
   RowDetailViewExtension as UniversalRowDetailViewExtension,
@@ -50,7 +52,6 @@ export class RowDetailViewExtension implements UniversalRowDetailViewExtension {
   constructor(
     private aureliaUtilService: AureliaUtilService,
     private pubSubService: PubSubService,
-    private extensionUtility: ExtensionUtility,
     private sharedService: SharedService,
   ) {
     this._eventHandler = new Slick.EventHandler();
@@ -99,9 +100,6 @@ export class RowDetailViewExtension implements UniversalRowDetailViewExtension {
    */
   create(columnDefinitions: Column[], gridOptions: GridOption): SlickRowDetailView | null {
     if (columnDefinitions && gridOptions) {
-      // dynamically import the SlickGrid plugin (addon) with RequireJS
-      this.extensionUtility.loadExtensionDynamically(ExtensionName.rowDetailView);
-
       if (!gridOptions.rowDetailView) {
         throw new Error('The Row Detail View requires options to be passed via the "rowDetailView" property of the Grid Options');
       }
@@ -165,7 +163,6 @@ export class RowDetailViewExtension implements UniversalRowDetailViewExtension {
 
       // this also requires the Row Selection Model to be registered as well
       if (!rowSelectionPlugin || !this.sharedService.slickGrid.getSelectionModel()) {
-        this.extensionUtility.loadExtensionDynamically(ExtensionName.rowSelection);
         rowSelectionPlugin = new Slick.RowSelectionModel(this.sharedService.gridOptions.rowSelectionOptions || { selectActiveRow: true });
         this.sharedService.slickGrid.setSelectionModel(rowSelectionPlugin);
       }

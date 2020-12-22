@@ -82,7 +82,6 @@ const bindingEngineStub = {
 } as unknown as BindingEngine;
 
 const mockExtensionUtility = {
-  loadExtensionDynamically: jest.fn(),
   translateItems: jest.fn(),
 } as unknown as ExtensionUtility;
 
@@ -689,7 +688,6 @@ describe('Slick-Vanilla-Grid-Bundle Component instantiated via Constructor', () 
 
     describe('use grouping', () => {
       it('should load groupItemMetaProvider to the DataView when using "draggableGrouping" feature', () => {
-        const extensionSpy = jest.spyOn(mockExtensionUtility, 'loadExtensionDynamically');
         const dataviewSpy = jest.spyOn(mockDataViewImplementation.prototype, 'constructor');
         const groupMetaSpy = jest.spyOn(mockGroupItemMetaProviderImplementation.prototype, 'constructor');
         const sharedMetaSpy = jest.spyOn(SharedService.prototype, 'groupItemMetadataProvider', 'set');
@@ -700,7 +698,6 @@ describe('Slick-Vanilla-Grid-Bundle Component instantiated via Constructor', () 
         const extensions = customElement.extensions;
 
         expect(Object.keys(extensions).length).toBe(1);
-        expect(extensionSpy).toHaveBeenCalledWith('groupItemMetaProvider');
         expect(dataviewSpy).toHaveBeenCalledWith({ inlineFilters: false, groupItemMetadataProvider: expect.anything() });
         expect(groupMetaSpy).toHaveBeenCalledWith();
         expect(sharedMetaSpy).toHaveBeenCalledWith(mockGroupItemMetaProvider);
@@ -709,7 +706,6 @@ describe('Slick-Vanilla-Grid-Bundle Component instantiated via Constructor', () 
       });
 
       it('should load groupItemMetaProvider to the DataView when using "enableGrouping" feature', () => {
-        const extensionSpy = jest.spyOn(mockExtensionUtility, 'loadExtensionDynamically');
         const dataviewSpy = jest.spyOn(mockDataViewImplementation.prototype, 'constructor');
         const groupMetaSpy = jest.spyOn(mockGroupItemMetaProviderImplementation.prototype, 'constructor');
         const sharedMetaSpy = jest.spyOn(SharedService.prototype, 'groupItemMetadataProvider', 'set');
@@ -717,7 +713,6 @@ describe('Slick-Vanilla-Grid-Bundle Component instantiated via Constructor', () 
         customElement.gridOptions = { enableGrouping: true };
         customElement.initialization(slickEventHandler);
 
-        expect(extensionSpy).toHaveBeenCalledWith('groupItemMetaProvider');
         expect(dataviewSpy).toHaveBeenCalledWith({ inlineFilters: false, groupItemMetadataProvider: expect.anything() });
         expect(groupMetaSpy).toHaveBeenCalledWith();
         expect(sharedMetaSpy).toHaveBeenCalledWith(mockGroupItemMetaProvider);
