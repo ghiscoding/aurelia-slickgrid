@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.1.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v3.0.2...v3.1.0) (2020-12-22)
+
+
+### Features
+
+* **core:** add Autocomplete/Select Filters collection watch ([#488](https://github.com/ghiscoding/aurelia-slickgrid/issues/488)) ([612fb68](https://github.com/ghiscoding/aurelia-slickgrid/commit/612fb682c88c81b4c0f204a93121fc0f21105b96))
+
+
+### Bug Fixes
+
+* **core:** use regular imports instead of require to load plugins ([#489](https://github.com/ghiscoding/aurelia-slickgrid/issues/489)) ([0f6ae07](https://github.com/ghiscoding/aurelia-slickgrid/commit/0f6ae0758baa70bdb283b3473a97a393f05dd4f7))
+
 ### [3.0.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v3.0.1...v3.0.2) (2020-12-20)
 
 ### [3.0.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v3.0.0...v3.0.1) (2020-12-20)
