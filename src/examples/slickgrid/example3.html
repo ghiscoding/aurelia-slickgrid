@@ -48,11 +48,13 @@
         Filters</button>
       <button class="btn btn-outline-secondary btn-sm" click.delegate="aureliaGrid.sortService.clearSorting()">Clear
         Sorting</button>
-      <button class="btn btn-outline-info btn-sm" click.delegate="addItem()"
+      <button class="btn btn-outline-info btn-sm" data-test="add-item-btn" click.delegate="addItem()"
               title="Clear Filters &amp; Sorting to see it better">
         Add item
       </button>
-      <button class="btn btn-outline-danger btn-sm" click.delegate="deleteItem()">Delete item</button>
+      <button class="btn btn-outline-danger btn-sm" data-test="delete-item-btn" click.delegate="deleteItem()">
+        Delete item
+      </button>
     </div>
     <div class="row" style="margin-top: 5px">
       <button class="btn btn-outline-secondary btn-sm" data-test="add-title-column"

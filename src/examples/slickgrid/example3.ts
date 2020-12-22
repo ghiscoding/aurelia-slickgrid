@@ -420,6 +420,12 @@ export class Example3 {
         },
         filter: {
           collectionAsync: this.httpFetch.fetch(URL_SAMPLE_COLLECTION_DATA),
+          // collectionAsync: new Promise((resolve) => {
+          //   setTimeout(() => {
+          //     resolve(Array.from(Array(this.dataset.length).keys()).map(k => ({ value: k, label: `Task ${k}` })));
+          //   });
+          // }),
+
           // OR a regular collection load
           // collection: Array.from(Array(NB_ITEMS).keys()).map(k => ({ value: k, label: k, prefix: 'Task', suffix: 'days' })),
           collectionSortBy: {
@@ -433,7 +439,7 @@ export class Example3 {
             labelPrefix: 'prefix',
           },
           collectionOptions: {
-            separatorBetweenTextLabels: ''
+            separatorBetweenTextLabels: ' '
           },
           model: Filters.multipleSelect,
           operator: OperatorType.inContains,
@@ -475,7 +481,7 @@ export class Example3 {
 
         if (Array.isArray(collectionEditor) && Array.isArray(collectionFilter)) {
           // add the new row to the grid
-          this.aureliaGrid.gridService.addItem(newRows[0]);
+          this.aureliaGrid.gridService.addItem(newRows[0], { highlightRow: false });
 
           // then refresh the Editor/Filter "collection", we have 2 ways of doing it
 
