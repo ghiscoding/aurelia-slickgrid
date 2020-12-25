@@ -58,11 +58,12 @@ jobs:
       - name: Website Prod Build (GitHub demo site)
         run: yarn build:demo
 
+      - name: Start server in the background
+        run: yarn start:dev &
+
       - name: Run Cypress E2E tests
         uses: cypress-io/github-action@v2
         with:
-          start: yarn start:dev
           working-directory: test/cypress
-          useLockFile: false
           wait-on: 'http://localhost:9000'
           browser: chrome
