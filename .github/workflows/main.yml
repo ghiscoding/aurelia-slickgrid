@@ -62,7 +62,7 @@ jobs:
         uses: cypress-io/github-action@v2
         with:
           start: yarn start:dev
-          working-directory: test
+          working-directory: test/cypress
           useLockFile: false
           wait-on: 'http://localhost:9000'
           browser: chrome
