@@ -46,7 +46,7 @@ jobs:
       - name: Install npm/yarn dependencies
         run: yarn install
 
-      - name: Full Build (all Bundler types)
+      - name: Run Project Build
         run: yarn build
 
       - name: Run Jest unit tests
@@ -58,15 +58,10 @@ jobs:
       - name: Website Prod Build (GitHub demo site)
         run: yarn build:demo
 
-      - name: Installing Cypress dependencies with yarn
-        run: |
-            cd test/cypress
-            yarn install --frozen-lockfile
-
       - name: Run Cypress E2E tests
         uses: cypress-io/github-action@v2
         with:
           start: yarn start:dev
+          working-directory: test
           wait-on: 'http://localhost:9000'
-          config-file: test/cypress.json
           browser: chrome

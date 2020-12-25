@@ -23,7 +23,7 @@
   },
   "scripts": {
     "delete:dist": "cross-env rimraf dist",
-    "lint": "eslint src/aurelia-slickgrid/** --ext .ts",
+    "lint": "eslint src/aurelia-slickgrid/** --ext .ts --quiet",
     "build:amd": "cross-env tsc --project src/aurelia-slickgrid/tsconfig.build.json --outDir dist/amd --module amd",
     "postbuild:amd": "cross-env copyfiles --up 2 src/aurelia-slickgrid/**/*.html dist/amd",
     "build:commonjs": "cross-env tsc --project src/aurelia-slickgrid/tsconfig.build.json --outDir dist/commonjs --module commonjs",
