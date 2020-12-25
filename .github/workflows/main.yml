@@ -63,5 +63,6 @@ jobs:
         with:
           start: yarn start:dev
           working-directory: test
+          useLockFile: false
           wait-on: 'http://localhost:9000'
           browser: chrome
