@@ -46,8 +46,8 @@ jobs:
       - name: Install npm/yarn dependencies
         run: yarn install
 
-      - name: Build Full Bundle (all Bundler types)
-        run: yarn run bundle
+      - name: Full Build (all Bundler types)
+        run: yarn build
 
       - name: Run Jest unit tests
         run: yarn test:ci
@@ -56,7 +56,7 @@ jobs:
         run: bash <(curl -s https://codecov.io/bash)
 
       - name: Website Prod Build (GitHub demo site)
-        run: yarn run build:demo
+        run: yarn build:demo
 
       - name: Run Cypress E2E tests
         uses: cypress-io/github-action@v2
