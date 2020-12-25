@@ -51,6 +51,7 @@
     "start:webpack:dev": "node node_modules/webpack-dev-server/bin/webpack-dev-server -d --port=9000 --env.server --config webpack.config.js",
     "cypress": "cd test/cypress && node node_modules/cypress/bin/cypress open",
     "cypress:ci": "cd test/cypress && npm run cypress:ci",
+    "test:ci": "npx jest --runInBand --coverage=true --ci --config ./test/jest.config.js",
     "test:jest": "npx jest --watch --detectOpenHandles --config test/jest.config.js",
     "test:jest:coverage": "npx jest --detectOpenHandles --runInBand --coverage --config test/jest.config.js",
     "build:demo": "webpack --progress -p --env.production --env.extractCss",
