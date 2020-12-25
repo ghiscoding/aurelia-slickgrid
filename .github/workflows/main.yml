@@ -58,6 +58,11 @@ jobs:
       - name: Website Prod Build (GitHub demo site)
         run: yarn build:demo
 
+      - name: Installing Cypress dependencies with yarn
+        run: |
+            cd test/cypress
+            yarn install --frozen-lockfile
+
       - name: Run Cypress E2E tests
         uses: cypress-io/github-action@v2
         with:
