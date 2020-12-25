@@ -4,7 +4,7 @@
 [![npm version](https://badge.fury.io/js/aurelia-slickgrid.svg)](https://badge.fury.io/js/aurelia-slickgrid)
 [![NPM downloads](https://img.shields.io/npm/dy/aurelia-slickgrid.svg)](https://npmjs.org/package/aurelia-slickgrid)
 
-[![CircleCI](https://circleci.com/gh/ghiscoding/aurelia-slickgrid/tree/master.svg?style=shield)](https://circleci.com/gh/ghiscoding/workflows/aurelia-slickgrid/tree/master)
+[![Actions Status](https://github.com/ghiscoding/aurelia-slickgrid/workflows/GitHub%20Actions/badge.svg)](https://github.com/ghiscoding/aurelia-slickgrid/actions)
 [![Cypress.io](https://img.shields.io/badge/tested%20with-Cypress-04C38E.svg)](https://www.cypress.io/)
 [![jest](https://jestjs.io/img/jest-badge.svg)](https://github.com/facebook/jest)
 [![codecov](https://codecov.io/gh/ghiscoding/aurelia-slickgrid/branch/master/graph/badge.svg)](https://codecov.io/gh/ghiscoding/aurelia-slickgrid)
