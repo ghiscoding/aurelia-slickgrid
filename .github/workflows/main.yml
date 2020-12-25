@@ -55,9 +55,6 @@ jobs:
       - name: Upload Jest coverage to Codecov
         run: bash <(curl -s https://codecov.io/bash)
 
-      - name: Website Prod Build (GitHub demo site)
-        run: yarn build:demo
-
       - name: Start server in the background
         run: yarn start:dev &
 
