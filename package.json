@@ -152,7 +152,7 @@
     "style-loader": "2.0.0",
     "through2": "^4.0.2",
     "ts-jest": "^26.4.4",
-    "ts-loader": "^8.0.12",
+    "ts-loader": "^8.0.13",
     "ts-node": "^9.1.1",
     "typedoc": "^0.19.2",
     "uglify-js": "^3.12.4",
