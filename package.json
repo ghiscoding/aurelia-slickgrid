@@ -86,7 +86,7 @@
     "@types/i18next-xhr-backend": "^1.4.2",
     "@types/jest": "^26.0.19",
     "@types/jquery": "^3.5.5",
-    "@types/node": "^14.14.14",
+    "@types/node": "^14.14.17",
     "@types/webpack": "^4.41.25",
     "@typescript-eslint/eslint-plugin": "^4.11.0",
     "@typescript-eslint/parser": "^4.11.1",
