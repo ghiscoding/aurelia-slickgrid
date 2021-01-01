@@ -148,7 +148,7 @@
     "promise-polyfill": "^8.2.0",
     "rimraf": "^3.0.2",
     "sass-loader": "^10.1.0",
-    "standard-version": "^9.0.0",
+    "standard-version": "^9.1.0",
     "style-loader": "2.0.0",
     "through2": "^4.0.2",
     "ts-jest": "^26.4.4",
