@@ -246,8 +246,15 @@ export class RowDetailViewExtension implements UniversalRowDetailViewExtension {
         // --
         // hook some events needed by the Plugin itself
 
-        // on column sort/reorder, all row detail are collapsed so we can dispose of all the Views as well
+        // we need to redraw the open detail views if we change column position (column reorder)
         this._eventHandler.subscribe(this.sharedService.slickGrid.onColumnsReordered, this.redrawAllViewSlots.bind(this));
+
+        // on row selection changed, we also need to redraw
+        if (this.gridOptions.enableRowSelection || this.gridOptions.enableCheckboxSelector) {
+          this._eventHandler.subscribe(this.sharedService.slickGrid.onSelectedRowsChanged, this.redrawAllViewSlots.bind(this));
+        }
+
+        // on column sort/reorder, all row detail are collapsed so we can dispose of all the Views as well
         this._eventHandler.subscribe(this.sharedService.slickGrid.onSort, this.disposeAllViewSlot.bind(this));
 
         // on filter changed, we need to re-render all Views
