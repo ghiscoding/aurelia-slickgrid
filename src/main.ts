@@ -29,6 +29,9 @@ export function configure(aurelia: Aurelia) {
 
   // local aurelia-slickgrid
   aurelia.use.feature(PLATFORM.moduleName('aurelia-slickgrid/index'), config => {
+    // load necessary Flatpickr Locale(s), but make sure it's imported AFTER loading Aurelia-Slickgrid plugin
+    import('flatpickr/dist/l10n/fr');
+
     // change any of the default global options
     config.options.gridMenu.iconCssClass = 'fa fa-bars';
   });
