@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.2.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v3.1.0...v3.2.0) (2021-01-07)
+
+
+### Features
+
+* **ci:** replace CircleCI by GitHub Actions ([#492](https://github.com/ghiscoding/aurelia-slickgrid/issues/492)) ([c7600e0](https://github.com/ghiscoding/aurelia-slickgrid/commit/c7600e0a29b358f27960f0b868da8ef931c68ecd))
+
+
+### Bug Fixes
+
+* **build:** import Flatpickr Locale on demand via regular imports ([#504](https://github.com/ghiscoding/aurelia-slickgrid/issues/504)) ([78239b6](https://github.com/ghiscoding/aurelia-slickgrid/commit/78239b637e8bbd68654798fd38dbbcf838c77e6e))
+* **plugin:** Row Detail loses html content when used with Row Selection ([#503](https://github.com/ghiscoding/aurelia-slickgrid/issues/503)) ([5e3d067](https://github.com/ghiscoding/aurelia-slickgrid/commit/5e3d067237c747a618a76ff25352b39e2eef4b34))
+
 ## [3.1.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v3.0.2...v3.1.0) (2020-12-22)
 
 
