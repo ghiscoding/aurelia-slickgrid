@@ -5,15 +5,15 @@
   <div class="row">
     <div class="col-md-7">
       <button click.delegate="addNewFile()" class="btn btn-sm btn-outline-info">
-        <span class="icon mdi mdi-plus"></span>
+        <span class="mdi mdi-plus"></span>
         <span>Add New Pop Song</span>
       </button>
       <button click.delegate="collapseAll()" class="btn btn-outline-secondary btn-sm">
-        <span class="icon mdi mdi-arrow-collapse"></span>
+        <span class="mdi mdi-arrow-collapse"></span>
         <span>Collapse All</span>
       </button>
       <button click.delegate="expandAll()" class="btn btn-outline-secondary btn-sm">
-        <span class="icon mdi mdi-arrow-expand"></span>
+        <span class="mdi mdi-arrow-expand"></span>
         <span>Expand All</span>
       </button>
       <button click.delegate="logFlatStructure()" class="btn btn-outline-secondary btn-sm">
@@ -25,11 +25,12 @@
     </div>
 
     <div class="col-md-5">
-      <div class="input-group">
+      <div class="input-group input-group-sm">
         <input type="text" class="form-control search-string" data-test="search-string" value.bind="searchString">
-        <div class="input-group-btn input-group-append">
-          <button class="btn btn-outline-secondary" data-test="clear-search-string" click.delegate="clearSearch()">
-            <span class="icon mdi mdi-close-thick"></span>
+        <div class="input-group-append">
+          <button class="btn btn-sm btn-outline-secondary d-flex align-items-center" data-test="clear-search-string"
+                  click.delegate="clearSearch()">
+            <span class="mdi mdi-close-thick"></span>
           </button>
         </div>
       </div>
