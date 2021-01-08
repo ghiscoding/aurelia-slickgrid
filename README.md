@@ -39,9 +39,10 @@ Refer to the **[Wiki - HOWTO Step by Step](https://github.com/ghiscoding/aurelia
 
 ### Demo page
 
-`Aurelia-Slickgrid` supports both `Bootstrap 3` and `Bootstrap 4`, you can see a demo of each one below.
-- [Bootstrap 3 demo](https://ghiscoding.github.io/aurelia-slickgrid) / [examples repo](https://github.com/ghiscoding/aurelia-slickgrid/tree/master/aurelia-slickgrid/src/examples/slickgrid)
+`Aurelia-Slickgrid` supports both `Bootstrap 3`, `Bootstrap 4` and even `Bootstrap 5`, you can see a demo of each one below.
+- [Bootstrap 3 demo](https://ghiscoding.github.io/aurelia-slickgrid) / [examples repo](https://github.com/ghiscoding/aurelia-slickgrid-demos/tree/master/webpack-bs3-demo)
 - [Bootstrap 4 demo](https://ghiscoding.github.io/aurelia-slickgrid-demos) / [examples repo](https://github.com/ghiscoding/aurelia-slickgrid-demos/tree/master/webpack-bs4-demo)
+- [Bootstrap 5 repo (no live demo)](https://github.com/ghiscoding/aurelia-slickgrid-demos/tree/master/webpack-bs5-demo)
 
 There are also 2 new Themes, Material & Salesforce that are available as well and if you wish to use SVG then take a look at the [Wiki - SVG Icons](https://github.com/ghiscoding/aurelia-slickgrid/wiki/SVG--Icons).
 
