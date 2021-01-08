@@ -1714,6 +1714,17 @@ describe('Slick-Vanilla-Grid-Bundle Component instantiated via Constructor', () 
     });
 
     describe('Tree Data View', () => {
+      it('should throw an error when enableTreeData is enabled with Pagination since that is not supported', (done) => {
+        try {
+          customElement.gridOptions = { enableTreeData: true, enablePagination: true } as GridOption;
+          customElement.initialization(slickEventHandler);
+        } catch (e) {
+          expect(e.toString()).toContain('[Aurelia-Slickgrid] It looks like you are trying to use Tree Data with Pagination but unfortunately that is simply not supported because of its complexity.');
+          customElement.dispose();
+          done();
+        }
+      });
+
       it('should throw an error when enableTreeData is enabled without passing a "columnId"', (done) => {
         try {
           customElement.gridOptions = { enableTreeData: true, treeDataOptions: {} } as unknown as GridOption;

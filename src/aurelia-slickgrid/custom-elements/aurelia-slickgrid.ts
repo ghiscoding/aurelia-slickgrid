@@ -794,9 +794,16 @@ export class AureliaSlickgridCustomElement {
           }
         });
 
-        // when dealing with Tree Data View, make sure we have necessary tree data options
-        if (this.gridOptions?.enableTreeData && (!this.gridOptions.treeDataOptions || !this.gridOptions.treeDataOptions.columnId)) {
-          throw new Error('[Aurelia-Slickgrid] When enabling tree data, you must also provide the "treeDataOption" property in your Grid Options with "childrenPropName" or "parentPropName" (depending if your array is hierarchical or flat) for the Tree Data to work properly');
+        if (this.gridOptions?.enableTreeData) {
+          // Tree Data with Pagiantion is not supported, throw an error when user tries to do that
+          if (this.gridOptions.enablePagination) {
+            throw new Error('[Aurelia-Slickgrid] It looks like you are trying to use Tree Data with Pagination but unfortunately that is simply not supported because of its complexity.');
+          }
+
+          // when dealing with Tree Data View, make sure we have necessary tree data options
+          if ((!this.gridOptions.treeDataOptions || !this.gridOptions.treeDataOptions.columnId)) {
+            throw new Error('[Aurelia-Slickgrid] When enabling tree data, you must also provide the "treeDataOption" property in your Grid Options with "childrenPropName" or "parentPropName" (depending if your array is hierarchical or flat) for the Tree Data to work properly');
+          }
         }
 
         const onRowsChangedHandler = dataView.onRowsChanged;
