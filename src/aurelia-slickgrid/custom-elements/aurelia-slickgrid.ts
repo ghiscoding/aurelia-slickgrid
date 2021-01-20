@@ -292,6 +292,15 @@ export class AureliaSlickgridCustomElement {
     this._eventHandler = new Slick.EventHandler();
     this.initialization(this._eventHandler);
     this._isGridInitialized = true;
+
+    // recheck the empty warning message after grid is shown so that it works in every use case
+    if (this.gridOptions?.enableEmptyDataWarningMessage) {
+      const dataset = this.dataset || [];
+      if (Array.isArray(dataset)) {
+        const finalTotalCount = dataset.length;
+        this.displayEmptyDataWarning(finalTotalCount < 1);
+      }
+    }
   }
 
   initialization(eventHandler: SlickEventHandler) {
