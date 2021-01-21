@@ -1,8 +1,5 @@
-import 'jest-extended';
-import { BindingEngine, Container } from 'aurelia-framework';
-import { EventAggregator } from 'aurelia-event-aggregator';
 import {
-  CollectionService,
+  BackendService, CollectionService,
   Column,
   ColumnFilters,
   CurrentFilter,
@@ -27,22 +24,25 @@ import {
   SharedService,
   SlickGrid,
   SortService,
-  TreeDataService,
-  BackendService,
+  TreeDataService
 } from '@slickgrid-universal/common';
-import { SlickEmptyWarningComponent } from '@slickgrid-universal/empty-warning-component';
-import { TextExportService } from '@slickgrid-universal/text-export';
-import { GraphqlService, GraphqlPaginatedResult, GraphqlServiceApi, GraphqlServiceOption } from '@slickgrid-universal/graphql';
 import * as backendUtilities from '@slickgrid-universal/common/dist/commonjs/services/backend-utilities';
 import * as utilities from '@slickgrid-universal/common/dist/commonjs/services/utilities';
+import { SlickEmptyWarningComponent } from '@slickgrid-universal/empty-warning-component';
+import { GraphqlPaginatedResult, GraphqlService, GraphqlServiceApi, GraphqlServiceOption } from '@slickgrid-universal/graphql';
+import { TextExportService } from '@slickgrid-universal/text-export';
+import { EventAggregator } from 'aurelia-event-aggregator';
+import { BindingEngine, Container } from 'aurelia-framework';
+import 'jest-extended';
 
-import { MockSlickEvent, MockSlickEventHandler } from '../../../../test/mockSlickEvent';
-import { AureliaSlickgridCustomElement } from '../aurelia-slickgrid';
-import { PubSubService } from '../../services/pubSub.service';
-import { TranslaterServiceStub } from '../../../../test/translaterServiceStub';
 import { HttpStub } from '../../../../test/httpClientStub';
-import { ResizerService } from '../../services/resizer.service';
+import { MockSlickEvent, MockSlickEventHandler } from '../../../../test/mockSlickEvent';
+import { TranslaterServiceStub } from '../../../../test/translaterServiceStub';
 import { AureliaUtilService, ContainerService, TranslaterService } from '../../services';
+import { PubSubService } from '../../services/pubSub.service';
+import { ResizerService } from '../../services/resizer.service';
+import { AureliaSlickgridCustomElement } from '../aurelia-slickgrid';
+
 
 const mockExecuteBackendProcess = jest.fn();
 const mockRefreshBackendDataset = jest.fn();
@@ -197,9 +197,9 @@ const mockDataView = {
   getPagingInfo: jest.fn(),
   mapIdsToRows: jest.fn(),
   mapRowsToIds: jest.fn(),
-  onSetItemsCalled: jest.fn(),
   onRowsChanged: new MockSlickEvent(),
   onRowCountChanged: new MockSlickEvent(),
+  onSetItemsCalled: new MockSlickEvent(),
   reSort: jest.fn(),
   setItems: jest.fn(),
   syncGridSelection: jest.fn(),
@@ -1598,6 +1598,130 @@ describe('Slick-Vanilla-Grid-Bundle Component instantiated via Constructor', () 
           expect(emptySpy).toHaveBeenCalledTimes(2);
           done();
         });
+      });
+    });
+
+    describe('Custom Footer', () => {
+      it('should have a Custom Footer when "showCustomFooter" is enabled and there are no Pagination used', (done) => {
+        const mockColDefs = [{ id: 'name', field: 'name', editor: undefined, internalColumnEditor: {} }];
+        const mockGridOptions = { enableTranslate: true, showCustomFooter: true, };
+        jest.spyOn(mockGrid, 'getOptions').mockReturnValue(mockGridOptions);
+
+        translateService.use('fr');
+        customElement.gridOptions = mockGridOptions;
+        customElement.initialization(slickEventHandler);
+        customElement.columnDefinitions = mockColDefs;
+
+        setTimeout(() => {
+          expect(customElement.columnDefinitions).toEqual(mockColDefs);
+          expect(customElement.gridOptions.showCustomFooter).toBeTrue();
+          expect(customElement.gridOptions.customFooterOptions).toEqual({
+            dateFormat: 'YYYY-MM-DD, hh:mm a',
+            hideLastUpdateTimestamp: true,
+            hideTotalItemCount: false,
+            footerHeight: 25,
+            leftContainerClass: 'col-xs-12 col-sm-5',
+            metricSeparator: '|',
+            metricTexts: {
+              items: 'éléments',
+              itemsKey: 'ITEMS',
+              of: 'de',
+              ofKey: 'OF',
+            },
+            rightContainerClass: 'col-xs-6 col-sm-7',
+          });
+          done();
+        });
+      });
+
+      it('should have a Custom Footer and custom texts when "showCustomFooter" is enabled with different metricTexts defined', (done) => {
+        const mockColDefs = [{ id: 'name', field: 'name', editor: undefined, internalColumnEditor: {} }];
+
+        customElement.gridOptions = {
+          enableTranslate: false,
+          showCustomFooter: true,
+          customFooterOptions: {
+            metricTexts: {
+              items: 'some items',
+              lastUpdate: 'some last update',
+              of: 'some of'
+            }
+          }
+        };
+        customElement.columnDefinitions = mockColDefs;
+        customElement.initialization(slickEventHandler);
+        customElement.columnDefinitionsChanged();
+
+        setTimeout(() => {
+          expect(customElement.columnDefinitions).toEqual(mockColDefs);
+          expect(customElement.gridOptions.showCustomFooter).toBeTrue();
+          expect(customElement.gridOptions.customFooterOptions).toEqual({
+            dateFormat: 'YYYY-MM-DD, hh:mm a',
+            hideLastUpdateTimestamp: true,
+            hideTotalItemCount: false,
+            footerHeight: 25,
+            leftContainerClass: 'col-xs-12 col-sm-5',
+            metricSeparator: '|',
+            metricTexts: {
+              items: 'some items',
+              itemsKey: 'ITEMS',
+              lastUpdate: 'some last update',
+              of: 'some of',
+              ofKey: 'OF',
+            },
+            rightContainerClass: 'col-xs-6 col-sm-7',
+          });
+          done();
+        });
+      });
+
+      it('should NOT have a Custom Footer when "showCustomFooter" is enabled WITH Pagination in use', (done) => {
+        const mockColDefs = [{ id: 'name', field: 'name', editor: undefined, internalColumnEditor: {} }];
+
+        customElement.gridOptions = { enablePagination: true, showCustomFooter: true };
+        customElement.columnDefinitions = mockColDefs;
+        customElement.initialization(slickEventHandler);
+        customElement.columnDefinitionsChanged();
+
+        setTimeout(() => {
+          expect(customElement.columnDefinitions).toEqual(mockColDefs);
+          expect(customElement.showCustomFooter).toBeFalsy();
+          done();
+        });
+      });
+
+      it('should have custom footer with metrics when the DataView "onSetItemsCalled" event is triggered', () => {
+        const mockData = [{ firstName: 'John', lastName: 'Doe' }, { firstName: 'Jane', lastName: 'Smith' }];
+        const expectation = {
+          startTime: expect.toBeDate(),
+          endTime: expect.toBeDate(),
+          itemCount: 2,
+          totalItemCount: 2
+        };
+
+        customElement.gridOptions = { enablePagination: false, showCustomFooter: true };
+        customElement.initialization(slickEventHandler);
+        customElement.datasetChanged(mockData, null);
+        mockDataView.onSetItemsCalled.notify({ idProperty: 'id', itemCount: 2 });
+
+        expect(customElement.metrics).toEqual(expectation);
+      });
+
+      it('should have custom footer with metrics when the DataView "onRowCountChanged" event is triggered', () => {
+        const mockData = [{ firstName: 'John', lastName: 'Doe' }, { firstName: 'Jane', lastName: 'Smith' }];
+        const expectation = {
+          startTime: expect.toBeDate(),
+          endTime: expect.toBeDate(),
+          itemCount: 2,
+          totalItemCount: 2
+        };
+
+        customElement.gridOptions = { enablePagination: false, showCustomFooter: true };
+        customElement.initialization(slickEventHandler);
+        customElement.datasetChanged(mockData, null);
+        mockDataView.onRowCountChanged.notify({ first: 'John', itemCount: 2, current: 2, previous: 1 });
+
+        expect(customElement.metrics).toEqual(expectation);
       });
     });
 

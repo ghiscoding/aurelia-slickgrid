@@ -371,7 +371,7 @@ export class AureliaSlickgridCustomElement {
 
       // if you don't want the items that are not visible (due to being filtered out or being on a different page)
       // to stay selected, pass 'false' to the second arg
-      const selectionModel = this.grid && this.grid.getSelectionModel();
+      const selectionModel = this.grid?.getSelectionModel?.();
       if (selectionModel && this.gridOptions?.dataView && this.gridOptions.dataView.hasOwnProperty('syncGridSelection')) {
         // if we are using a Backend Service, we will do an extra flag check, the reason is because it might have some unintended behaviors
         // with the BackendServiceApi because technically the data in the page changes the DataView on every page change.
@@ -549,7 +549,7 @@ export class AureliaSlickgridCustomElement {
         this.dataview.destroy();
       }
     }
-    if (this.grid && this.grid.destroy) {
+    if (this.grid?.destroy) {
       this.grid.destroy(shouldEmptyDomElementContainer);
     }
 
@@ -777,21 +777,17 @@ export class AureliaSlickgridCustomElement {
       }
 
       if (dataView && grid) {
+        // When data changes in the DataView, we need to refresh the metrics and/or display a warning if the dataset is empty
+        // we will do that via the following 2 handlers (onSetItemsCalled, onRowCountChanged)
+        const onSetItemsCalledHandler = dataView.onSetItemsCalled;
+        (this._eventHandler as SlickEventHandler<GetSlickEventType<typeof onSetItemsCalledHandler>>).subscribe(onSetItemsCalledHandler, () => {
+          this.handleOnItemsChanged(this._dataset?.length ?? 0);
+        });
+
         const onRowCountChangedHandler = dataView.onRowCountChanged;
         (this._eventHandler as SlickEventHandler<GetSlickEventType<typeof onRowCountChangedHandler>>).subscribe(onRowCountChangedHandler, (_e, args) => {
           grid.invalidate();
-
-          this.metrics = {
-            startTime: new Date(),
-            endTime: new Date(),
-            itemCount: args && args.current || 0,
-            totalItemCount: Array.isArray(this._dataset) ? this._dataset.length : 0
-          };
-
-          // when using local (in-memory) dataset, we'll display a warning message when filtered data is empty
-          if (this._isLocalGrid && this.gridOptions?.enableEmptyDataWarningMessage) {
-            this.displayEmptyDataWarning(args.current === 0);
-          }
+          this.handleOnItemsChanged(args.current || 0);
         });
 
         if (this.gridOptions?.enableTreeData) {
@@ -875,7 +871,7 @@ export class AureliaSlickgridCustomElement {
       // execute onInit command when necessary
       if (backendApi && backendApiService && (backendApi.onInit || isExecuteCommandOnInit)) {
         const query = (typeof backendApiService.buildQuery === 'function') ? backendApiService.buildQuery() : '';
-        const process = (isExecuteCommandOnInit) ? (backendApi.process && backendApi.process(query) || null) : (backendApi.onInit && backendApi.onInit(query) || null);
+        const process = isExecuteCommandOnInit ? (backendApi.process?.(query) ?? null) : (backendApi.onInit?.(query) ?? null);
 
         // wrap this inside a setTimeout to avoid timing issue since the gridOptions needs to be ready before running this onInit
         setTimeout(() => {
@@ -1121,6 +1117,21 @@ export class AureliaSlickgridCustomElement {
     this.slickEmptyWarning?.showEmptyDataMessage(showWarning);
   }
 
+  /** When data changes in the DataView, we'll refresh the metrics and/or display a warning if the dataset is empty */
+  private handleOnItemsChanged(itemCount: number) {
+    this.metrics = {
+      startTime: new Date(),
+      endTime: new Date(),
+      itemCount: itemCount || 0,
+      totalItemCount: Array.isArray(this._dataset) ? this._dataset.length : 0
+    };
+
+    // when using local (in-memory) dataset, we'll display a warning message when filtered data is empty
+    if (this._isLocalGrid && this.gridOptions?.enableEmptyDataWarningMessage) {
+      this.displayEmptyDataWarning(itemCount === 0);
+    }
+  }
+
   /** Initialize the Pagination Service once */
   private initializePaginationService(paginationOptions: Pagination) {
     if (this.gridOptions) {
@@ -1220,7 +1231,7 @@ export class AureliaSlickgridCustomElement {
   private loadRowSelectionPresetWhenExists() {
     // if user entered some Row Selections "presets"
     const presets = this.gridOptions?.presets;
-    const selectionModel = this.grid && this.grid.getSelectionModel();
+    const selectionModel = this.grid?.getSelectionModel?.();
     const enableRowSelection = this.gridOptions && (this.gridOptions.enableCheckboxSelector || this.gridOptions.enableRowSelection);
     if (enableRowSelection && selectionModel && presets && presets.rowSelection && (Array.isArray(presets.rowSelection.gridRowIndexes) || Array.isArray(presets.rowSelection.dataContextIds))) {
       let dataContextIds = presets.rowSelection.dataContextIds;

@@ -5,7 +5,6 @@
     "outDir": "../out-tsc/spec",
     "baseUrl": "./",
     "types": [
-      "cypress",
       "jest",
       "jest-extended",
       "jquery",
@@ -16,5 +15,6 @@
     "**/*.spec.ts",
     "src/typings/**/*.ts",
     "**/*.d.ts"
-  ]
+  ],
+  "typeAcquisition": { "include": ["jest"] }
 }
