@@ -17,9 +17,9 @@ import { AureliaViewOutput } from '../models/index';
 )
 export class AureliaUtilService {
   constructor(
-    private container: Container,
-    private viewCompiler: ViewCompiler,
-    private viewResources: ViewResources,
+    private readonly container: Container,
+    private readonly viewCompiler: ViewCompiler,
+    private readonly viewResources: ViewResources,
   ) { }
 
   createAureliaViewModelAddToSlot(templateUrl: string, bindableData: any, targetElement?: HTMLElement | Element, clearTargetContent = false): AureliaViewOutput | null {

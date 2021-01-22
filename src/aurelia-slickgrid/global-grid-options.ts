@@ -209,7 +209,7 @@ export const GlobalGridOptions: Partial<GridOption> = {
 function pickerHeaderColumnValueExtractor(column: Column) {
   const headerGroup = column && column.columnGroup || '';
   if (headerGroup) {
-    return headerGroup + ' - ' + column.name;
+    return `${headerGroup} - ${column.name}`;
   }
-  return column && column.name || '';
+  return column?.name ?? '';
 }

@@ -24,7 +24,7 @@ export class SlickPaginationCustomElement {
   textOf = 'of';
   textPage = 'Page';
 
-  constructor(private globalEa: EventAggregator, private translateService?: TranslaterService) { }
+  constructor(private readonly globalEa: EventAggregator, private readonly translateService?: TranslaterService) { }
 
   get availablePageSizes(): number[] {
     return this.paginationService.availablePageSizes;

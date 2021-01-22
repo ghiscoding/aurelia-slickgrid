@@ -8,7 +8,7 @@ import { I18N } from 'aurelia-i18n';
  */
 @inject(I18N)
 export class TranslaterService implements UniversalTranslateService {
-  constructor(private i18n: I18N) { }
+  constructor(private readonly i18n: I18N) { }
 
   /**
    * Method to return the current language used by the App

@@ -164,15 +164,15 @@ export class AureliaSlickgridCustomElement {
   @bindable() gridOptions: GridOption;
 
   constructor(
-    private aureliaUtilService: AureliaUtilService,
-    private bindingEngine: BindingEngine,
-    private container: Container,
-    private elm: Element,
-    private globalEa: EventAggregator,
-    private resizerService: ResizerService,
-    private containerService: ContainerService,
-    private pubSubService: PubSubService,
-    private translaterService: TranslaterService,
+    private readonly aureliaUtilService: AureliaUtilService,
+    private readonly bindingEngine: BindingEngine,
+    private readonly container: Container,
+    private readonly elm: Element,
+    private readonly globalEa: EventAggregator,
+    private readonly resizerService: ResizerService,
+    private readonly containerService: ContainerService,
+    private readonly pubSubService: PubSubService,
+    private readonly translaterService: TranslaterService,
     externalServices: {
       collectionService?: CollectionService,
       extensionService?: ExtensionService,

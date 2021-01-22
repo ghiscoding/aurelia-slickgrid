@@ -50,9 +50,9 @@ export class RowDetailViewExtension implements UniversalRowDetailViewExtension {
   private _userProcessFn: (item: any) => Promise<any>;
 
   constructor(
-    private aureliaUtilService: AureliaUtilService,
-    private pubSubService: PubSubService,
-    private sharedService: SharedService,
+    private readonly aureliaUtilService: AureliaUtilService,
+    private readonly pubSubService: PubSubService,
+    private readonly sharedService: SharedService,
   ) {
     this._eventHandler = new Slick.EventHandler();
   }

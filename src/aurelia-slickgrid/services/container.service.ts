@@ -5,7 +5,7 @@ import { Container, inject } from 'aurelia-framework';
 export class ContainerService implements UniversalContainerService {
   dependencies: ContainerInstance[] = [];
 
-  constructor(private container: Container) { }
+  constructor(private readonly container: Container) { }
 
   get<T = any>(key: string): T | null {
     const dependency = this.container.get(key);
