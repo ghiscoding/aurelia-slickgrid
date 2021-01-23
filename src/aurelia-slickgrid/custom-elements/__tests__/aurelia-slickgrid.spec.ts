@@ -198,8 +198,7 @@ const mockDataView = {
   mapIdsToRows: jest.fn(),
   mapRowsToIds: jest.fn(),
   onRowsChanged: new MockSlickEvent(),
-  onRowCountChanged: new MockSlickEvent(),
-  onSetItemsCalled: new MockSlickEvent(),
+  onRowsOrCountChanged: new MockSlickEvent(),
   reSort: jest.fn(),
   setItems: jest.fn(),
   syncGridSelection: jest.fn(),
@@ -1589,7 +1588,7 @@ describe('Slick-Vanilla-Grid-Bundle Component instantiated via Constructor', () 
         const emptySpy = jest.spyOn(slickEmptyWarning as SlickEmptyWarningComponent, 'showEmptyDataMessage');
         customElement.columnDefinitions = mockColDefs;
         customElement.refreshGridData([]);
-        mockDataView.onRowCountChanged.notify({ current: 0, item: { first: 'John' } });
+        mockDataView.onRowsOrCountChanged.notify({ current: 0, item: { first: 'John' } });
 
         setTimeout(() => {
           expect(customElement.columnDefinitions).toEqual(mockColDefs);
@@ -1690,7 +1689,7 @@ describe('Slick-Vanilla-Grid-Bundle Component instantiated via Constructor', () 
         });
       });
 
-      it('should have custom footer with metrics when the DataView "onSetItemsCalled" event is triggered', () => {
+      it('should have custom footer with metrics when the DataView "onRowsOrCountChanged" event is triggered', () => {
         const mockData = [{ firstName: 'John', lastName: 'Doe' }, { firstName: 'Jane', lastName: 'Smith' }];
         const expectation = {
           startTime: expect.toBeDate(),
@@ -1702,24 +1701,7 @@ describe('Slick-Vanilla-Grid-Bundle Component instantiated via Constructor', () 
         customElement.gridOptions = { enablePagination: false, showCustomFooter: true };
         customElement.initialization(slickEventHandler);
         customElement.datasetChanged(mockData, null);
-        mockDataView.onSetItemsCalled.notify({ idProperty: 'id', itemCount: 2 });
-
-        expect(customElement.metrics).toEqual(expectation);
-      });
-
-      it('should have custom footer with metrics when the DataView "onRowCountChanged" event is triggered', () => {
-        const mockData = [{ firstName: 'John', lastName: 'Doe' }, { firstName: 'Jane', lastName: 'Smith' }];
-        const expectation = {
-          startTime: expect.toBeDate(),
-          endTime: expect.toBeDate(),
-          itemCount: 2,
-          totalItemCount: 2
-        };
-
-        customElement.gridOptions = { enablePagination: false, showCustomFooter: true };
-        customElement.initialization(slickEventHandler);
-        customElement.datasetChanged(mockData, null);
-        mockDataView.onRowCountChanged.notify({ first: 'John', itemCount: 2, current: 2, previous: 1 });
+        mockDataView.onRowsOrCountChanged.notify({ first: 'John', itemCount: 2, currentRowCount: 2, previous: 1 });
 
         expect(customElement.metrics).toEqual(expectation);
       });
