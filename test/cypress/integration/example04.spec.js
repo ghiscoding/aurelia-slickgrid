@@ -15,6 +15,16 @@ describe('Example 4 - Client Side Sort/Filter Grid', () => {
     const presetDurationValues = [98, 10];
     const presetUsDateShort = '04/20/25';
 
+    it('should have some metrics shown in the grid footer but make sure the first number is below 1500 items', () => {
+      cy.get('#slickGridContainer-grid4')
+        .find('.slick-custom-footer')
+        .find('.right-footer')
+        .should($span => {
+          const text = removeExtraSpaces($span.text()); // remove all white spaces
+          expect(text).not.to.eq('1500 of 1500 items');
+        });
+    });
+
     it('should have "Duration" fields within the inclusive range of the preset filters', () => {
       cy.get('#grid4')
         .find('.slick-row')
