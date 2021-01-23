@@ -44,7 +44,7 @@ export class PubSubService implements UniversalPubSubService {
     return subscription;
   }
 
-  unsubscribe(_eventName: string, _listener: (event: CustomEventInit) => void) {
+  unsubscribe() {
     throw new Error('The method "unsubscribe" is not implemented, please use "unsubscribeAll()" instead');
   }
 
