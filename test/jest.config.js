@@ -58,7 +58,4 @@ module.exports = {
     '<rootDir>/test/cypress/',
     '<rootDir>/node_modules/',
   ],
-  typeAcquisition: {
-    include: ['jest'],
-  },
 };
