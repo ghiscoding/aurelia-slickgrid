@@ -1,10 +1,14 @@
 {
   "ALL_SELECTED": "Tout sélectionnés",
+  "ALL_X_RECORDS_SELECTED": "Sur tous les {{x}} éléments",
+  "APPLY_MASS_UPDATE": "Mettre à jour en masse",
+  "APPLY_TO_SELECTION": "Mettre à jour la sélection",
   "CANCEL": "Annuler",
   "CLEAR_ALL_FILTERS": "Supprimer tous les filtres",
   "CLEAR_ALL_GROUPING": "Supprimer tous les groupes",
   "CLEAR_ALL_SORTING": "Supprimer tous les tris",
   "CLEAR_FROZEN_COLUMNS": "Libérer les colonnes gelées",
+  "CLONE": "Cloner",
   "COLLAPSE_ALL_GROUPS": "Réduire tous les groupes",
   "COLUMNS": "Colonnes",
   "COMMANDS": "Commandes",
@@ -51,6 +55,7 @@
   "TOGGLE_FILTER_ROW": "Basculer la ligne des filtres",
   "TOGGLE_PRE_HEADER_ROW": "Basculer la ligne de pré-en-tête",
   "X_OF_Y_SELECTED": "# de % sélectionnés",
+  "X_OF_Y_MASS_SELECTED": "{{x}} de {{y}} sélectionnés",
   "BILLING": {
     "ADDRESS": {
       "STREET": "Adresse de facturation",

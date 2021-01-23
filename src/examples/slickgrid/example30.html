@@ -31,19 +31,23 @@
     <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
       <button type="button" class="btn btn-outline-secondary" data-test="open-modal-create-btn"
               click.delegate="openCompositeModal('create')" disabled.bind="isCompositeDisabled">
-        <i class="fa fa-plus"></i> Open Item Create Modal
+        <i class="fa fa-plus"></i> Item Create
+      </button>
+      <button type="button" class="btn btn-outline-secondary" data-test="open-modal-clone-btn"
+              click.delegate="openCompositeModal('clone')" disabled.bind="isCompositeDisabled">
+        <i class="fa fa-clone"></i> Item Clone
       </button>
       <button type="button" class="btn btn-outline-secondary" data-test="open-modal-edit-btn"
               click.delegate="openCompositeModal('edit')" disabled.bind="isCompositeDisabled">
-        <i class="fa fa-pencil"></i> Open Item Edit Modal
+        <i class="fa fa-pencil"></i> Item Edit
       </button>
       <button type="button" class="btn btn-outline-secondary" data-test="open-modal-mass-update-btn"
               click.delegate="openCompositeModal('mass-update')" disabled.bind="isCompositeDisabled">
-        <i class="fa fa-pencil-square-o"></i> Open Mass Update Modal
+        <i class="fa fa-pencil-square-o"></i> Mass Update
       </button>
       <button type="button" class="btn btn-outline-secondary" data-test="open-modal-mass-selection-btn"
               click.delegate="openCompositeModal('mass-selection')" disabled.bind="isMassSelectionDisabled">
-        <i class="fa fa-check-square-o"></i> Open Mass Selection Change
+        <i class="fa fa-check-square-o"></i> Update Selected
       </button>
     </div>
   </div>
