@@ -50,4 +50,13 @@ describe('Example 21 - Grid AutoHeight', () => {
         expect(+$child.text()).to.be.lt(50);
       });
   });
+
+  it('should type a filter which returns an empty dataset', () => {
+    cy.get('[data-test="search-value-input"]')
+      .clear()
+      .type('zzz');
+
+    cy.get('.slick-empty-data-warning:visible')
+      .contains('No data to display.');
+  });
 });
