@@ -32,7 +32,7 @@ export class ResizerService {
     return (this._grid && this._grid.getOptions) ? this._grid.getOptions() : {};
   }
 
-  constructor(private pubSubService: PubSubService) {
+  constructor(private readonly pubSubService: PubSubService) {
     this._eventHandler = new Slick.EventHandler();
   }
 

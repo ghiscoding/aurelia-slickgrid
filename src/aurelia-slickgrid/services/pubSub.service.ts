@@ -20,7 +20,7 @@ export class PubSubService implements UniversalPubSubService {
 
   eventNamingStyle = EventNamingStyle.camelCase;
 
-  constructor(private pluginEa: SlickgridEventAggregator) { }
+  constructor(private readonly pluginEa: SlickgridEventAggregator) { }
 
   /** Dispatch of Custom Event, which by default will bubble & is cancelable */
   dispatchCustomEvent<T = any>(element: Element, eventName: string, data?: T, eventPrefix = '', isBubbling = true, isCancelable = true): boolean {
@@ -44,7 +44,7 @@ export class PubSubService implements UniversalPubSubService {
     return subscription;
   }
 
-  unsubscribe(_eventName: string, _listener: (event: CustomEventInit) => void) {
+  unsubscribe() {
     throw new Error('The method "unsubscribe" is not implemented, please use "unsubscribeAll()" instead');
   }
 

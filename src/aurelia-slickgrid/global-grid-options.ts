@@ -34,6 +34,17 @@ export const GlobalGridOptions: Partial<GridOption> = {
     hideSyncResizeButton: true,
     headerColumnValueExtractor: pickerHeaderColumnValueExtractor
   },
+  compositeEditorOptions: {
+    labels: {
+      cancelButtonKey: 'CANCEL',
+      cloneButtonKey: 'CLONE',
+      massSelectionButtonKey: 'APPLY_TO_SELECTION',
+      massSelectionStatusKey: 'X_OF_Y_MASS_SELECTED',
+      massUpdateButtonKey: 'APPLY_MASS_UPDATE',
+      massUpdateStatusKey: 'ALL_X_RECORDS_SELECTED',
+      saveButtonKey: 'SAVE',
+    },
+  },
   contextMenu: {
     autoAdjustDrop: true,
     autoAlignSide: true,
@@ -58,7 +69,7 @@ export const GlobalGridOptions: Partial<GridOption> = {
     dateFormat: 'YYYY-MM-DD, hh:mm a',
     hideTotalItemCount: false,
     hideLastUpdateTimestamp: true,
-    footerHeight: 20,
+    footerHeight: 25,
     leftContainerClass: 'col-xs-12 col-sm-5',
     rightContainerClass: 'col-xs-6 col-sm-7',
     metricSeparator: '|',
@@ -209,7 +220,7 @@ export const GlobalGridOptions: Partial<GridOption> = {
 function pickerHeaderColumnValueExtractor(column: Column) {
   const headerGroup = column && column.columnGroup || '';
   if (headerGroup) {
-    return headerGroup + ' - ' + column.name;
+    return `${headerGroup} - ${column.name}`;
   }
-  return column && column.name || '';
+  return column?.name ?? '';
 }

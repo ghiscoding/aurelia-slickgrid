@@ -1,0 +1,3 @@
+{
+  "typeAcquisition": { "include": ["cypress"] }
+}

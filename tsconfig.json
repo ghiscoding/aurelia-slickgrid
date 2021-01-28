@@ -21,7 +21,6 @@
   },
   "exclude": [
     "aurelia_project",
-    "cypress",
     "dist",
     "jspm_packages",
     "node_modules",
@@ -35,5 +34,6 @@
   "include": [
     "src/**/*.ts",
     "src/typings/**/*.ts"
-  ]
+  ],
+  "typeAcquisition": { "include": ["jest"] }
 }
