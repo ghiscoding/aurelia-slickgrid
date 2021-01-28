@@ -1,8 +1,26 @@
 import { SlickCompositeEditorComponent } from '@slickgrid-universal/composite-editor-component';
 import { ExcelExportService } from '@slickgrid-universal/excel-export';
-import { autoinject } from 'aurelia-framework';
 import { HttpClient as FetchClient } from 'aurelia-fetch-client';
-import { Column, GridOption, Formatters, AureliaGridInstance, Filters, FieldType, Editors, LongTextEditorOption, SlickNamespace, SortComparers, AutocompleteOption, Formatter, formatNumber, CompositeEditorModalType, GridStateChange } from '../../aurelia-slickgrid';
+import { autoinject } from 'aurelia-framework';
+
+import {
+  AureliaGridInstance,
+  AutocompleteOption,
+  Column,
+  CompositeEditorModalType,
+  Editors,
+  FieldType,
+  Filters,
+  formatNumber,
+  Formatter,
+  Formatters,
+  GridOption,
+  GridStateChange,
+  LongTextEditorOption,
+  OnCompositeEditorChangeEventArgs,
+  SlickNamespace,
+  SortComparers,
+} from '../../aurelia-slickgrid';
 import './example30.scss'; // provide custom CSS/SASS styling
 
 const NB_ITEMS = 500;
@@ -157,7 +175,7 @@ export class Example30 {
       {
         id: 'start', name: 'Start', field: 'start', sortable: true, minWidth: 100,
         formatter: Formatters.dateUs, columnGroup: 'Period', exportWithFormatter: true,
-        type: FieldType.dateIso, outputType: FieldType.dateUs,
+        type: FieldType.dateUs, outputType: FieldType.dateUs,
         filterable: true, filter: { model: Filters.compoundDate },
         editor: { model: Editors.date, massUpdate: true, params: { hideClearButton: false } },
       },
@@ -177,7 +195,7 @@ export class Example30 {
       {
         id: 'finish', name: 'Finish', field: 'finish', sortable: true, minWidth: 100,
         formatter: Formatters.dateUs, columnGroup: 'Period', exportWithFormatter: true,
-        type: FieldType.dateIso, outputType: FieldType.dateUs,
+        type: FieldType.dateUs, outputType: FieldType.dateUs,
         filterable: true, filter: { model: Filters.compoundDate },
         editor: {
           model: Editors.date,
@@ -265,8 +283,23 @@ export class Example30 {
           commandTitle: 'Commands',
           commandItems: [
             {
+              command: 'edit',
+              title: 'Edit Row',
+              iconCssClass: 'fa fa-pencil',
+              positionOrder: 66,
+              action: () => this.openCompositeModal('edit'),
+            },
+            {
+              command: 'clone',
+              title: 'Clone Row',
+              iconCssClass: 'fa fa-clone',
+              positionOrder: 66,
+              action: () => this.openCompositeModal('clone'),
+            },
+            'divider',
+            {
               command: 'delete-row', title: 'Delete Row', positionOrder: 64,
-              iconCssClass: 'fa fa-close text-danger', cssClass: 'red', textCssClass: 'bold',
+              iconCssClass: 'fa fa-times color-danger', cssClass: 'red', textCssClass: 'text-italic color-danger-light',
               // only show command to 'Delete Row' when the task is not completed
               itemVisibilityOverride: (args) => {
                 return !args.dataContext?.completed;
@@ -278,16 +311,6 @@ export class Example30 {
                 }
               }
             },
-            {
-              command: 'help',
-              title: 'Help',
-              iconCssClass: 'fa fa-question-circle-o text-info',
-              textCssClass: 'text-info',
-              positionOrder: 66,
-              action: () => alert('Please Help!'),
-            },
-            'divider',
-            { command: 'something', title: 'Disabled Command', disabled: true, positionOrder: 67, }
           ],
         }
       },
@@ -298,7 +321,7 @@ export class Example30 {
 
     this.gridOptions = {
       editable: true,
-      enableAddRow: true, // <-- this flag is required to work with these modal types (create/mass-update/mass-selection)
+      enableAddRow: true, // <-- this flag is required to work with the (create & clone) modal types
       enableCellNavigation: true,
       asyncEditorLoading: false,
       autoEdit: true,
@@ -380,19 +403,21 @@ export class Example30 {
       const randomTime = Math.floor((Math.random() * 59));
       const randomFinish = new Date(randomFinishYear, (randomMonth + 1), randomDay, randomTime, randomTime, randomTime);
       const randomPercentComplete = Math.floor(Math.random() * 100) + 15; // make it over 15 for E2E testing purposes
+      const percentCompletion = randomPercentComplete > 100 ? (i > 5 ? 100 : 88) : randomPercentComplete; // don't use 100 unless it's over index 5, for E2E testing purposes
+      const isCompleted = percentCompletion === 100;
 
       tmpArray[i] = {
         id: i,
         title: 'Task ' + i,
         duration: Math.floor(Math.random() * 100) + 10,
-        percentComplete: randomPercentComplete > 100 ? 100 : randomPercentComplete,
+        percentComplete: percentCompletion,
         analysis: {
-          percentComplete: randomPercentComplete > 100 ? 100 : randomPercentComplete,
+          percentComplete: percentCompletion,
         },
         start: new Date(randomYear, randomMonth, randomDay, randomDay, randomTime, randomTime, randomTime),
-        finish: (i % 3 === 0 && (randomFinish > new Date() && i > 3)) ? randomFinish : '', // make sure the random date is earlier than today and it's index is bigger than 3
+        finish: (isCompleted || (i % 3 === 0 && (randomFinish > new Date() && i > 3)) ? (isCompleted ? new Date() : randomFinish) : ''), // make sure the random date is earlier than today and it's index is bigger than 3
         cost: (i % 33 === 0) ? null : Math.round(Math.random() * 10000) / 100,
-        completed: (i % 3 === 0 && (randomFinish > new Date() && i > 3)),
+        completed: (isCompleted || (i % 3 === 0 && (randomFinish > new Date() && i > 3))),
         product: { id: this.mockProducts()[randomItemId]?.id, itemName: this.mockProducts()[randomItemId]?.itemName, },
         origin: (i % 2) ? { code: 'CA', name: 'Canada' } : { code: 'US', name: 'United States' },
       };
@@ -467,9 +492,17 @@ export class Example30 {
     // }
   }
 
-  handleOnCompositeEditorChange(_event, args) {
-    const columnDef = args?.column;
-    const formValues = args?.formValues;
+  handleOnCompositeEditorChange(_event, args: OnCompositeEditorChangeEventArgs) {
+    const columnDef = args.column;
+    const formValues = args.formValues;
+
+    // you can dynamically change a select dropdown collection,
+    // if you need to re-render the editor for the list to be reflected
+    // if (columnDef.id === 'duration') {
+    //   const editor = this.compositeEditorInstance.editors['percentComplete2'] as SelectEditor;
+    //   const newCollection = editor.finalCollection;
+    //   editor.renderDomElement(newCollection);
+    // }
 
     // you can change any other form input values when certain conditions are met
     if (columnDef.id === 'percentComplete' && formValues.percentComplete === 100) {
@@ -477,6 +510,9 @@ export class Example30 {
       this.compositeEditorInstance.changeFormInputValue('finish', new Date());
       // this.compositeEditorInstance.changeFormInputValue('product', { id: 0, itemName: 'Sleek Metal Computer' });
 
+      // you can even change a value that is not part of the form (but is part of the grid)
+      // but you will have to bypass the error thrown by providing `true` as the 3rd argument
+      // this.compositeEditorInstance.changeFormInputValue('cost', 9999.99, true);
     }
 
     // you can also change some editor options (not all Editors supports this functionality, so far only these Editors AutoComplete, Date MultipleSelect & SingleSelect)
@@ -534,6 +570,9 @@ export class Example30 {
       case 'create':
         modalTitle = 'Inserting New Task';
         break;
+      case 'clone':
+        modalTitle = 'Clone - {{title}}';
+        break;
       case 'edit':
         modalTitle = 'Editing - {{title}} (<span class="text-muted">id:</span> <span class="text-primary">{{id}}</span>)'; // 'Editing - {{title}} ({{product.itemName}})'
         break;
@@ -550,20 +589,31 @@ export class Example30 {
       modalType,
       // showCloseButtonOutside: true,
       // backdrop: null,
-      // viewColumnLayout: 2, // choose from 'auto', 1, 2, or 3 (defaults to 'auto')
+      // viewColumnLayout: 2, // responsive layout, choose from 'auto', 1, 2, or 3 (defaults to 'auto')
       onClose: () => Promise.resolve(confirm('You have unsaved changes, are you sure you want to close this window?')),
       onError: (error) => alert(error.message),
-      onSave: (formValues, selection, applyChangesCallback) => {
-        return new Promise((resolve, reject) => {
-          setTimeout(() => {
-            if (formValues.percentComplete > 50) {
-              applyChangesCallback(formValues, selection);
-              resolve(true);
-            } else {
-              reject('Unfortunately we only accept a minimum of 50% Completion...');
-            }
-          }, 250);
-        });
+      onSave: (formValues, _selection, dataContext) => {
+        const serverResponseDelay = 250;
+
+        // simulate a backend server call which will reject if the "% Complete" is below 50%
+        // when processing a mass update or mass selection
+        if (modalType === 'mass-update' || modalType === 'mass-selection') {
+          return new Promise((resolve, reject) => {
+            setTimeout(() => {
+              if (formValues.percentComplete >= 50) {
+                resolve(true);
+              } else {
+                reject('Unfortunately we only accept a minimum of 50% Completion...');
+              }
+            }, serverResponseDelay);
+          });
+        } else {
+          // also simulate a server cal for any other modal type (create/clone/edit)
+          // we'll just apply the change without any rejection from the server and
+          // note that we also have access to the "dataContext" which is only available for these modal
+          console.log(`${modalType} item data context`, dataContext);
+          return new Promise(resolve => setTimeout(() => resolve(true), serverResponseDelay));
+        }
       }
     });
   }

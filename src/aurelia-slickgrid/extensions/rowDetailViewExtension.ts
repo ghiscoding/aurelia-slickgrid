@@ -66,7 +66,7 @@ export class RowDetailViewExtension implements UniversalRowDetailViewExtension {
   }
 
   get gridOptions(): GridOption {
-    return this.sharedService?.gridOptions || {};
+    return this.sharedService?.gridOptions ?? {};
   }
 
   get rowDetailViewOptions(): RowDetailView | undefined {

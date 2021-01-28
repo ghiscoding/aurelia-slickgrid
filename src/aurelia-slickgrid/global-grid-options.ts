@@ -34,6 +34,17 @@ export const GlobalGridOptions: Partial<GridOption> = {
     hideSyncResizeButton: true,
     headerColumnValueExtractor: pickerHeaderColumnValueExtractor
   },
+  compositeEditorOptions: {
+    labels: {
+      cancelButtonKey: 'CANCEL',
+      cloneButtonKey: 'CLONE',
+      massSelectionButtonKey: 'APPLY_TO_SELECTION',
+      massSelectionStatusKey: 'X_OF_Y_MASS_SELECTED',
+      massUpdateButtonKey: 'APPLY_MASS_UPDATE',
+      massUpdateStatusKey: 'ALL_X_RECORDS_SELECTED',
+      saveButtonKey: 'SAVE',
+    },
+  },
   contextMenu: {
     autoAdjustDrop: true,
     autoAlignSide: true,
