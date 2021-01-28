@@ -283,8 +283,23 @@ export class Example30 {
           commandTitle: 'Commands',
           commandItems: [
             {
+              command: 'edit',
+              title: 'Edit Row',
+              iconCssClass: 'fa fa-pencil',
+              positionOrder: 66,
+              action: () => this.openCompositeModal('edit'),
+            },
+            {
+              command: 'clone',
+              title: 'Clone Row',
+              iconCssClass: 'fa fa-clone',
+              positionOrder: 66,
+              action: () => this.openCompositeModal('clone'),
+            },
+            'divider',
+            {
               command: 'delete-row', title: 'Delete Row', positionOrder: 64,
-              iconCssClass: 'fa fa-close text-danger', cssClass: 'red', textCssClass: 'bold',
+              iconCssClass: 'fa fa-times color-danger', cssClass: 'red', textCssClass: 'text-italic color-danger-light',
               // only show command to 'Delete Row' when the task is not completed
               itemVisibilityOverride: (args) => {
                 return !args.dataContext?.completed;
@@ -296,16 +311,6 @@ export class Example30 {
                 }
               }
             },
-            {
-              command: 'help',
-              title: 'Help',
-              iconCssClass: 'fa fa-question-circle-o text-info',
-              textCssClass: 'text-info',
-              positionOrder: 66,
-              action: () => alert('Please Help!'),
-            },
-            'divider',
-            { command: 'something', title: 'Disabled Command', disabled: true, positionOrder: 67, }
           ],
         }
       },
@@ -316,7 +321,7 @@ export class Example30 {
 
     this.gridOptions = {
       editable: true,
-      enableAddRow: true, // <-- this flag is required to work with these modal types (create/mass-update/mass-selection)
+      enableAddRow: true, // <-- this flag is required to work with the (create & clone) modal types
       enableCellNavigation: true,
       asyncEditorLoading: false,
       autoEdit: true,
@@ -584,7 +589,7 @@ export class Example30 {
       modalType,
       // showCloseButtonOutside: true,
       // backdrop: null,
-      // viewColumnLayout: 2, // choose from 'auto', 1, 2, or 3 (defaults to 'auto')
+      // viewColumnLayout: 2, // responsive layout, choose from 'auto', 1, 2, or 3 (defaults to 'auto')
       onClose: () => Promise.resolve(confirm('You have unsaved changes, are you sure you want to close this window?')),
       onError: (error) => alert(error.message),
       onSave: (formValues, _selection, dataContext) => {
@@ -606,7 +611,7 @@ export class Example30 {
           // also simulate a server cal for any other modal type (create/clone/edit)
           // we'll just apply the change without any rejection from the server and
           // note that we also have access to the "dataContext" which is only available for these modal
-          console.log(`new ${modalType}d item`, dataContext);
+          console.log(`${modalType} item data context`, dataContext);
           return new Promise(resolve => setTimeout(() => resolve(true), serverResponseDelay));
         }
       }
