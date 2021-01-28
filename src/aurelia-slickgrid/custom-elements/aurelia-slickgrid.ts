@@ -91,6 +91,7 @@ import {
   TranslaterService,
 } from '../services/index';
 import { RowDetailViewExtension } from '../extensions';
+import { autoAddEditorFormatterToColumnsWithEditor } from './aurelia-slickgrid-utilities';
 
 // using external non-typed js libraries
 declare const Slick: SlickNamespace;
@@ -349,6 +350,11 @@ export class AureliaSlickgridCustomElement {
     // when slickgrid creates the editor
     // https://github.com/aurelia/dependency-injection/blob/master/src/resolvers.js
     this._columnDefinitions = this.swapInternalEditorToSlickGridFactoryEditor(this._columnDefinitions);
+
+    // if the user wants to automatically add a Custom Editor Formatter, we need to call the auto add function again
+    if (this.gridOptions.autoAddCustomEditorFormatter) {
+      autoAddEditorFormatterToColumnsWithEditor(this._columnDefinitions, this.gridOptions.autoAddCustomEditorFormatter);
+    }
 
     // save reference for all columns before they optionally become hidden/visible
     this.sharedService.allColumns = this._columnDefinitions;
@@ -1099,6 +1105,11 @@ export class AureliaSlickgridCustomElement {
     if (newColumnDefinitions) {
       // map/swap the internal library Editor to the SlickGrid Editor factory
       newColumnDefinitions = this.swapInternalEditorToSlickGridFactoryEditor(newColumnDefinitions);
+
+      // if the user wants to automatically add a Custom Editor Formatter, we need to call the auto add function again
+      if (this.gridOptions.autoAddCustomEditorFormatter) {
+        autoAddEditorFormatterToColumnsWithEditor(newColumnDefinitions, this.gridOptions.autoAddCustomEditorFormatter);
+      }
 
       if (this.gridOptions.enableTranslate) {
         this.extensionService.translateColumnHeaders(false, newColumnDefinitions);
