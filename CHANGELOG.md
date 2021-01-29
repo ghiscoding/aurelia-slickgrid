@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.3.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v3.3.0...v3.3.1) (2021-01-29)
+
+
+### Bug Fixes
+
+* **components:** Composite Editor Clone was sometime throwing error ([#513](https://github.com/ghiscoding/aurelia-slickgrid/issues/513)) ([c284799](https://github.com/ghiscoding/aurelia-slickgrid/commit/c28479900b054c1979dd3afba79e436248a144ad))
+
 ## [3.3.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v3.2.1...v3.3.0) (2021-01-28)
 
 
