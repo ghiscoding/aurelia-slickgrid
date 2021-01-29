@@ -1,10 +1,9 @@
-import { ContainerInstance, ContainerService as UniversalContainerService } from '@slickgrid-universal/common';
-import { Container, inject } from 'aurelia-framework';
+import { ContainerService as UniversalContainerService } from '@slickgrid-universal/common';
+import { Container, inject, singleton } from 'aurelia-framework';
 
 @inject(Container)
+@singleton(true)
 export class ContainerService implements UniversalContainerService {
-  dependencies: ContainerInstance[] = [];
-
   constructor(private readonly container: Container) { }
 
   get<T = any>(key: string): T | null {
