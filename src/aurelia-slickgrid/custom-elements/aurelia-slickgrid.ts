@@ -1137,7 +1137,7 @@ export class AureliaSlickgridCustomElement {
       startTime: new Date(),
       endTime: new Date(),
       itemCount: itemCount || 0,
-      totalItemCount: Array.isArray(this._dataset) ? this._dataset.length : 0
+      totalItemCount: this.dataview.getItemCount() || 0
     };
 
     // when using local (in-memory) dataset, we'll display a warning message when filtered data is empty

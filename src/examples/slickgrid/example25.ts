@@ -72,36 +72,6 @@ export class Example25 {
       { id: 'countryCurrency', field: 'currency', name: 'Currency', maxWidth: 90, sortable: true, filterable: true, columnGroup: 'Country' },
       { id: 'countryEmoji', field: 'emoji', name: 'Emoji', maxWidth: 90, sortable: true, columnGroup: 'Country' },
       {
-        id: 'continentCode', field: 'continent.code', name: 'Code', maxWidth: 90,
-        sortable: true,
-        filterable: true,
-        filter: {
-          model: Filters.singleSelect,
-          collectionAsync: this.getContinents(),
-          collectionOptions: {
-            // the data is not at the root of the array, so we must tell the Select Filter where to pull the data
-            collectionInsideObjectProperty: 'data.continents',
-            addBlankEntry: true,
-            separatorBetweenTextLabels: ': ',
-          },
-          customStructure: {
-            value: 'code',
-            label: 'code',
-            labelSuffix: 'name',
-          }
-        },
-        formatter: Formatters.complexObject, columnGroup: 'Continent',
-      },
-      {
-        id: 'continentName', field: 'continent.name', name: 'Name', width: 60, sortable: true,
-        filterable: true, formatter: Formatters.complexObject, columnGroup: 'Continent'
-      },
-      {
-        id: 'languageCode', field: 'languages.code', name: 'Codes', maxWidth: 100,
-        formatter: Formatters.arrayObjectToCsv, params: { propertyNames: ['code'], useFormatterOuputToFilter: true }, columnGroup: 'Language',
-        filterable: true,
-      },
-      {
         id: 'languageName', field: 'languages.name', name: 'Names', width: 60,
         formatter: Formatters.arrayObjectToCsv, columnGroup: 'Language',
         params: { propertyNames: ['name'], useFormatterOuputToFilter: true },
@@ -137,7 +107,63 @@ export class Example25 {
       },
       {
         id: 'languageNative', field: 'languages.native', name: 'Native', width: 60,
-        formatter: Formatters.arrayObjectToCsv, params: { propertyNames: ['native'] }, columnGroup: 'Language',
+        formatter: Formatters.arrayObjectToCsv, params: { propertyNames: ['native'], useFormatterOuputToFilter: true }, columnGroup: 'Language',
+        filterable: true,
+        filter: {
+          model: Filters.multipleSelect,
+          collectionAsync: this.getLanguages(),
+          operator: OperatorType.inContains,
+          collectionOptions: {
+            addBlankEntry: true,
+            // the data is not at the root of the array, so we must tell the Select Filter where to pull the data
+            collectionInsideObjectProperty: 'data.languages'
+          },
+          collectionFilterBy: [
+            // filter out any empty values
+            { property: 'native', value: '', operator: 'NE' },
+            { property: 'native', value: null, operator: 'NE' },
+          ],
+          collectionSortBy: {
+            property: 'native'
+          },
+          customStructure: {
+            value: 'native',
+            label: 'native',
+          },
+          filterOptions: {
+            filter: true
+          } as MultipleSelectOption
+        },
+      },
+      {
+        id: 'languageCode', field: 'languages.code', name: 'Codes', maxWidth: 100,
+        formatter: Formatters.arrayObjectToCsv, params: { propertyNames: ['code'], useFormatterOuputToFilter: true }, columnGroup: 'Language',
+        filterable: true,
+      },
+      {
+        id: 'continentName', field: 'continent.name', name: 'Name', width: 60, sortable: true,
+        filterable: true, formatter: Formatters.complexObject, columnGroup: 'Continent'
+      },
+      {
+        id: 'continentCode', field: 'continent.code', name: 'Code', maxWidth: 90,
+        sortable: true,
+        filterable: true,
+        filter: {
+          model: Filters.singleSelect,
+          collectionAsync: this.getContinents(),
+          collectionOptions: {
+            // the data is not at the root of the array, so we must tell the Select Filter where to pull the data
+            collectionInsideObjectProperty: 'data.continents',
+            addBlankEntry: true,
+            separatorBetweenTextLabels: ': ',
+          },
+          customStructure: {
+            value: 'code',
+            label: 'code',
+            labelSuffix: 'name',
+          }
+        },
+        formatter: Formatters.complexObject, columnGroup: 'Continent',
       },
     ];
 
@@ -222,11 +248,11 @@ export class Example25 {
    * We also need to resolve the data in a flat array (singleSelect/multipleSelect Filters only accept data at the root of the array)
    */
   getLanguages() {
-    const continentQuery = `query { languages { code, name  }}`;
+    const languageQuery = `query { languages { code, name, native  }}`;
     return new Promise(async resolve => {
       const response = await this.http.fetch(COUNTRIES_API, {
         method: 'post',
-        body: json({ query: continentQuery })
+        body: json({ query: languageQuery })
       });
       resolve(response.json());
     });
