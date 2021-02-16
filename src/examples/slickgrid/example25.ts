@@ -202,7 +202,7 @@ export class Example25 {
     };
   }
 
-  displaySpinner(isProcessing) {
+  displaySpinner(isProcessing: boolean) {
     this.processing = isProcessing;
     this.status = (isProcessing)
       ? { text: 'processing...', class: 'alert alert-danger' }
@@ -231,7 +231,7 @@ export class Example25 {
    * So we will have to write, by hand, the query to get the continents code & name
    * We also need to resolve the data in a flat array (singleSelect/multipleSelect Filters only accept data at the root of the array)
    */
-  getContinents() {
+  getContinents(): Promise<GraphqlResult<{ code: string; name: string; }>> {
     const continentQuery = `query { continents { code, name  }}`;
     return new Promise(async resolve => {
       const response = await this.http.fetch(COUNTRIES_API, {
@@ -247,7 +247,7 @@ export class Example25 {
    * So we will have to write, by hand, the query to get the languages code & name
    * We also need to resolve the data in a flat array (singleSelect/multipleSelect Filters only accept data at the root of the array)
    */
-  getLanguages() {
+  getLanguages(): Promise<GraphqlResult<{ code: string; name: string; native: string; }>> {
     const languageQuery = `query { languages { code, name, native  }}`;
     return new Promise(async resolve => {
       const response = await this.http.fetch(COUNTRIES_API, {
