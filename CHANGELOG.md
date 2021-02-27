@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.4.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v3.3.1...v3.4.0) (2021-02-27)
+
+
+### Features
+
+* **editors:** add form/input reset to Composite Editor modal & fix touched value ([#529](https://github.com/ghiscoding/aurelia-slickgrid/issues/529)) ([9c17ba5](https://github.com/ghiscoding/aurelia-slickgrid/commit/9c17ba511f50224b984f6cf7215921a8e6be9763))
+* **filters:** add updateSingleFilter for a single external filter ([#526](https://github.com/ghiscoding/aurelia-slickgrid/issues/526)) ([9abf86d](https://github.com/ghiscoding/aurelia-slickgrid/commit/9abf86da58450697030af3c671909b1c7b5db188))
+
+
+### Bug Fixes
+
+* **backend:** incorrect item count with GraphQL and useLocalFiltering ([#524](https://github.com/ghiscoding/aurelia-slickgrid/issues/524)) ([24f5a2e](https://github.com/ghiscoding/aurelia-slickgrid/commit/24f5a2e4f34255a9c15afa80ba7ecb5d152a2f28))
+* **deps:** update typedoc to fix marked package security issue ([3c7125b](https://github.com/ghiscoding/aurelia-slickgrid/commit/3c7125b866979ba9b0e88638c845c1ef48331826))
+* **deps:** update typedoc to fix marked package security issue ([#523](https://github.com/ghiscoding/aurelia-slickgrid/issues/523)) ([2ac1780](https://github.com/ghiscoding/aurelia-slickgrid/commit/2ac1780280e2476926f1ac3cc8ea99d547dd42b8))
+* **examples:** multiple grids in tab should show be resized ([#525](https://github.com/ghiscoding/aurelia-slickgrid/issues/525)) ([daa0ea4](https://github.com/ghiscoding/aurelia-slickgrid/commit/daa0ea4a144cff00fef084fba57bda722a583860))
+* **plugin:** recreate header menu when adding column dynamically ([#522](https://github.com/ghiscoding/aurelia-slickgrid/issues/522)) ([7e82343](https://github.com/ghiscoding/aurelia-slickgrid/commit/7e82343a9d5eae70da7bd4d24f3498f1092fcf00))
+
 ### [3.3.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v3.3.0...v3.3.1) (2021-01-29)
 
 
