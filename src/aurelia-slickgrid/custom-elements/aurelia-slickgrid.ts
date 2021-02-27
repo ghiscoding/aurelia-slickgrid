@@ -379,7 +379,7 @@ export class AureliaSlickgridCustomElement {
     // initialize the SlickGrid grid
     this.grid.init();
 
-    if (!this.customDataView && (this.dataview && this.dataview.beginUpdate && this.dataview.setItems && this.dataview.endUpdate)) {
+    if (!this.customDataView && this.dataview) {
       this.dataview.beginUpdate();
       this.dataview.setItems(this._dataset, this.gridOptions.datasetIdPropertyName);
       this.dataview.endUpdate();

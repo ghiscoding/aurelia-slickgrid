@@ -1,6 +1,7 @@
 import { autoinject } from 'aurelia-framework';
 import { HttpClient } from 'aurelia-fetch-client';
 import { AureliaGridInstance, Column, Filters, GridOption } from '../../aurelia-slickgrid';
+import './example22.scss';
 
 const URL_CUSTOMERS = 'assets/data/customers_100.json';
 
@@ -20,6 +21,7 @@ export class Example22 {
   columnDefinitions2: Column[];
   dataset1: any[];
   dataset2: any[];
+  isGrid2Resize = false;
 
   constructor(private http: HttpClient) {
     // define the grid options & columns and then create the grid itself
@@ -110,7 +112,14 @@ export class Example22 {
     return mockDataset;
   }
 
+  /**
+   * When changing Tab, we need to resize the grid in the new Tab that becomes in focus.
+   * We need to do this (only once) because SlickGrid relies on the grid being visible in the DOM for it to be sized properly
+   * and if it's not (like our use case) we need to resize the grid ourselve and we just need to do that once.
+   */
   resizeGrid2() {
-    this.aureliaGrid2.resizerService.resizeGrid();
+    if (!this.isGrid2Resize) {
+      this.aureliaGrid2.resizerService.resizeGrid(150);
+    }
   }
 }
