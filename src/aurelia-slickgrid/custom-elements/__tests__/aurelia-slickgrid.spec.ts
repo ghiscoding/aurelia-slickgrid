@@ -196,6 +196,7 @@ const mockDataView = {
   endUpdate: jest.fn(),
   getItem: jest.fn(),
   getItems: jest.fn(),
+  getItemCount: jest.fn(),
   getItemMetadata: jest.fn(),
   getLength: jest.fn(),
   getPagingInfo: jest.fn(),
@@ -1721,6 +1722,7 @@ describe('Slick-Vanilla-Grid-Bundle Component instantiated via Constructor', () 
           itemCount: 2,
           totalItemCount: 2
         };
+        jest.spyOn(mockDataView, 'getItemCount').mockReturnValue(mockData.length);
 
         customElement.gridOptions = { enablePagination: false, showCustomFooter: true };
         customElement.initialization(slickEventHandler);
