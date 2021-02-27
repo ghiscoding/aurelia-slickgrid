@@ -3,7 +3,6 @@ import {
   AureliaGridInstance,
   Column,
   FieldType,
-  FilterCallbackArg,
   Formatters,
   GridOption,
   OperatorString,
@@ -28,7 +27,7 @@ export class Example21 {
   columnDefinitions: Column[];
   gridOptions: GridOption;
   dataset: any[];
-  operatorList: OperatorString[] = ['=', '<', '<=', '>', '>=', '<>'];
+  operatorList: OperatorString[] = ['=', '<', '<=', '>', '>=', '<>', 'StartsWith', 'EndsWith'];
 
   constructor() {
     // define the grid options & columns and then create the grid itself
@@ -141,6 +140,11 @@ export class Example21 {
   // -- if any of the Search form input changes, we'll call the updateFilter() method
   //
 
+  cleargridSearchInput() {
+    this.searchValue = '';
+    this.updateFilter();
+  }
+
   selectedOperatorChanged() {
     this.updateFilter();
   }
@@ -154,24 +158,10 @@ export class Example21 {
   }
 
   updateFilter() {
-    const fieldName = this.selectedColumn.field;
-    const filter = {};
-    const filterArg: FilterCallbackArg = {
-      columnDef: this.selectedColumn,
-      operator: this.selectedOperator as OperatorString, // or fix one yourself like '='
+    this.aureliaGrid.filterService.updateSingleFilter({
+      columnId: `${this.selectedColumn.id || ''}`,
+      operator: this.selectedOperator as OperatorString,
       searchTerms: [this.searchValue || '']
-    };
-
-    if (this.searchValue) {
-      // pass a columnFilter object as an object which it's property name must be a column field name (e.g.: 'duration': {...} )
-      filter[fieldName] = filterArg;
-    }
-
-    this.aureliaGrid.dataView.setFilterArgs({
-      columnFilters: filter,
-      grid: this.aureliaGrid.slickGrid
     });
-    this.aureliaGrid.dataView.refresh();
-    this.aureliaGrid.slickGrid.invalidate();
   }
 }
