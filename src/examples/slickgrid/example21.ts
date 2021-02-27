@@ -172,5 +172,6 @@ export class Example21 {
       grid: this.aureliaGrid.slickGrid
     });
     this.aureliaGrid.dataView.refresh();
+    this.aureliaGrid.slickGrid.invalidate();
   }
 }

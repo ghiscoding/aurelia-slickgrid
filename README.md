@@ -4,7 +4,7 @@
 [![npm version](https://badge.fury.io/js/aurelia-slickgrid.svg)](https://badge.fury.io/js/aurelia-slickgrid)
 [![NPM downloads](https://img.shields.io/npm/dy/aurelia-slickgrid.svg)](https://npmjs.org/package/aurelia-slickgrid)
 
-[![Actions Status](https://github.com/ghiscoding/aurelia-slickgrid/workflows/GitHub%20Actions/badge.svg)](https://github.com/ghiscoding/aurelia-slickgrid/actions)
+[![Actions Status](https://github.com/ghiscoding/aurelia-slickgrid/workflows/CI%20Build/badge.svg)](https://github.com/ghiscoding/aurelia-slickgrid/actions)
 [![Cypress.io](https://img.shields.io/badge/tested%20with-Cypress-04C38E.svg)](https://www.cypress.io/)
 [![jest](https://jestjs.io/img/jest-badge.svg)](https://github.com/facebook/jest)
 [![codecov](https://codecov.io/gh/ghiscoding/aurelia-slickgrid/branch/master/graph/badge.svg)](https://codecov.io/gh/ghiscoding/aurelia-slickgrid)
@@ -30,7 +30,7 @@ I certainly drank many coffees to build and keep adding features for this great 
 Check out the [Releases](https://github.com/ghiscoding/aurelia-slickgrid/releases) section for all latest News & Releases.
 
 ## Fully Tested with [Jest](https://jestjs.io/) (Unit Tests) - [Cypress](https://www.cypress.io/) (E2E tests)
-Aurelia-Slickgrid reached **100%** Test Coverage, we are talking about +10,000 lines of code (+2,700 unit tests) that are now fully tested with [Jest](https://jestjs.io/). There are also over +400 Cypress E2E tests to cover most UI functionalities on nearly all Examples of Aurelia-Slickgrid.
+Aurelia-Slickgrid reached **100%** Unit Test Coverage, we are talking of 10,000+ lines of code (3,000+ unit tests, now mostly all in Slickgrid-Universal) fully tested with [Jest](https://jestjs.io/). On the UI side, all Aurelia-Slickgrid Example are tested with [Cypress](https://www.cypress.io/), there are over 400+ Cypress E2E tests.
 
 ## Installation
 Refer to the **[Wiki - HOWTO Step by Step](https://github.com/ghiscoding/aurelia-slickgrid/wiki/HOWTO--Step-by-Step)** and/or the [Aurelia-Slickgrid Demos](https://github.com/ghiscoding/aurelia-slickgrid-demos) repository. Please don't open any issue unless you have followed these steps (from the Wiki), and if any of the steps are incorrect or confusing, then please let me know.
