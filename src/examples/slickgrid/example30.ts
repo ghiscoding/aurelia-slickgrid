@@ -94,6 +94,13 @@ export class Example30 {
   isGridEditable = true;
   isCompositeDisabled = false;
   isMassSelectionDisabled = true;
+  complexityLevelList = [
+    { value: 0, label: 'Very Simple' },
+    { value: 1, label: 'Simple' },
+    { value: 2, label: 'Straightforward' },
+    { value: 3, label: 'Complex' },
+    { value: 4, label: 'Very Complex' },
+  ];
 
   constructor(private httpFetch: FetchClient) {
     this.compositeEditorInstance = new SlickCompositeEditorComponent();
@@ -110,7 +117,7 @@ export class Example30 {
   defineGrids() {
     this.columnDefinitions = [
       {
-        id: 'title', name: 'Title', field: 'title', sortable: true, type: FieldType.string, minWidth: 70,
+        id: 'title', name: 'Title', field: 'title', sortable: true, type: FieldType.string, minWidth: 75,
         filterable: true, columnGroup: 'Common Factor',
         filter: { model: Filters.compoundInputText },
         formatter: Formatters.multiple, params: { formatters: [Formatters.uppercase, Formatters.bold] },
@@ -129,10 +136,10 @@ export class Example30 {
         },
       },
       {
-        id: 'duration', name: 'Duration', field: 'duration', sortable: true, filterable: true,
-        type: FieldType.number, columnGroup: 'Common Factor', minWidth: 70,
+        id: 'duration', name: 'Duration', field: 'duration', sortable: true, filterable: true, minWidth: 75,
+        type: FieldType.number, columnGroup: 'Common Factor',
         formatter: (_row, _cell, value) => {
-          if (value === null || value === undefined) {
+          if (value === null || value === undefined || value === '') {
             return '';
           }
           return value > 1 ? `${value} days` : `${value} day`;
@@ -140,7 +147,7 @@ export class Example30 {
         editor: { model: Editors.float, massUpdate: true, decimal: 2, valueStep: 1, minValue: 0, maxValue: 10000, alwaysSaveOnEnterKey: true, required: true },
       },
       {
-        id: 'cost', name: 'Cost', field: 'cost', width: 90, minWidth: 75,
+        id: 'cost', name: 'Cost', field: 'cost', width: 90, minWidth: 70,
         sortable: true, filterable: true, type: FieldType.number, columnGroup: 'Analysis',
         filter: { model: Filters.compoundInputNumber },
         formatter: Formatters.dollar,
@@ -159,7 +166,7 @@ export class Example30 {
       //   id: 'percentComplete2', name: '% Complete', field: 'analysis.percentComplete', minWidth: 100,
       //   type: FieldType.number,
       //   sortable: true, filterable: true, columnGroup: 'Analysis',
-      //   filter: { model: Filters.compoundSlider, operator: '>=' },
+      //   // filter: { model: Filters.compoundSlider, operator: '>=' },
       //   formatter: Formatters.complex,
       //   exportCustomFormatter: Formatters.complex, // without the Editing cell Formatter
       //   editor: {
@@ -169,18 +176,43 @@ export class Example30 {
       //     collectionOptions: {
       //       addCustomFirstEntry: { value: '', label: '--none--' }
       //     },
+      //     collectionOverride: (_collectionInput, args) => {
+      //       const originalCollection = args.originalCollections || [];
+      //       const duration = args?.dataContext?.duration ?? args?.compositeEditorOptions?.formValues?.duration;
+      //       if (duration === 10) {
+      //         return originalCollection.filter(itemCollection => +itemCollection.value !== 1);
+      //       }
+      //       return originalCollection;
+      //     },
       //     massUpdate: true, minValue: 0, maxValue: 100,
       //   },
       // },
       {
+        id: 'complexity', name: 'Complexity', field: 'complexity', minWidth: 100,
+        type: FieldType.number,
+        sortable: true, filterable: true, columnGroup: 'Analysis',
+        formatter: (_row, _cell, value) => this.complexityLevelList[value].label,
+        exportCustomFormatter: (_row, _cell, value) => this.complexityLevelList[value].label,
+        filter: {
+          model: Filters.multipleSelect,
+          collection: this.complexityLevelList
+        },
+        editor: {
+          model: Editors.singleSelect,
+          collection: this.complexityLevelList,
+          massUpdate: true
+        },
+      },
+      {
         id: 'start', name: 'Start', field: 'start', sortable: true, minWidth: 100,
-        formatter: Formatters.dateUs, columnGroup: 'Period', exportWithFormatter: true,
-        type: FieldType.dateUs, outputType: FieldType.dateUs,
+        formatter: Formatters.dateUs, columnGroup: 'Period',
+        exportCustomFormatter: Formatters.dateUs,
+        type: FieldType.date, outputType: FieldType.dateUs, saveOutputType: FieldType.dateUtc,
         filterable: true, filter: { model: Filters.compoundDate },
         editor: { model: Editors.date, massUpdate: true, params: { hideClearButton: false } },
       },
       {
-        id: 'completed', name: 'Completed', field: 'completed', width: 80, minWidth: 55, maxWidth: 100,
+        id: 'completed', name: 'Completed', field: 'completed', width: 80, minWidth: 75, maxWidth: 100,
         sortable: true, filterable: true, columnGroup: 'Period',
         formatter: Formatters.multiple,
         params: { formatters: [Formatters.checkmark, Formatters.center] },
@@ -194,9 +226,10 @@ export class Example30 {
       },
       {
         id: 'finish', name: 'Finish', field: 'finish', sortable: true, minWidth: 100,
-        formatter: Formatters.dateUs, columnGroup: 'Period', exportWithFormatter: true,
-        type: FieldType.dateUs, outputType: FieldType.dateUs,
+        formatter: Formatters.dateUs, columnGroup: 'Period',
+        type: FieldType.date, outputType: FieldType.dateUs, saveOutputType: FieldType.dateUtc,
         filterable: true, filter: { model: Filters.compoundDate },
+        exportCustomFormatter: Formatters.dateUs,
         editor: {
           model: Editors.date,
           editorOptions: { minDate: 'today' },
@@ -412,6 +445,7 @@ export class Example30 {
         analysis: {
           percentComplete: percentCompletion,
         },
+        complexity: i % 3 ? 0 : 2,
         start: new Date(randomYear, randomMonth, randomDay, randomDay, randomTime, randomTime, randomTime),
         finish: (isCompleted || (i % 3 === 0 && (randomFinish > new Date() && i > 3)) ? (isCompleted ? new Date() : randomFinish) : ''), // make sure the random date is earlier than today and it's index is bigger than 3
         cost: (i % 33 === 0) ? null : Math.round(Math.random() * 10000) / 100,
@@ -559,13 +593,16 @@ export class Example30 {
     this.compositeEditorInstance?.openDetails({
       headerTitle: modalTitle,
       modalType,
+      insertOptions: { highlightRow: false }, // disable highlight to avoid flaky tests in Cypress
       // showCloseButtonOutside: true,
       // backdrop: null,
       // viewColumnLayout: 2, // responsive layout, choose from 'auto', 1, 2, or 3 (defaults to 'auto')
+      showFormResetButton: true,
+      // showResetButtonOnEachEditor: true,
       onClose: () => Promise.resolve(confirm('You have unsaved changes, are you sure you want to close this window?')),
       onError: (error) => alert(error.message),
       onSave: (formValues, _selection, dataContext) => {
-        const serverResponseDelay = 250;
+        const serverResponseDelay = 50;
 
         // simulate a backend server call which will reject if the "% Complete" is below 50%
         // when processing a mass update or mass selection

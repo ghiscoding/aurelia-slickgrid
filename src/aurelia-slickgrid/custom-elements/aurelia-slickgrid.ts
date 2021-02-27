@@ -634,7 +634,7 @@ export class AureliaSlickgridCustomElement {
       setTimeout(() => {
         // make sure the target is the active editor so we do not
         // commit prematurely
-        if (activeNode && activeNode.contains(target) && this.grid.getEditorLock().isActive()) {
+        if (activeNode && activeNode.contains(target) && this.grid.getEditorLock().isActive() && !target?.classList?.contains('autocomplete')) {
           this.grid.getEditorLock().commitCurrentEdit();
         }
       });
