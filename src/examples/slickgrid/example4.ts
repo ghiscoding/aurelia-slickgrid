@@ -300,4 +300,12 @@ export class Example4 {
       });
     }
   }
+
+  scrollGridBottom() {
+    this.aureliaGrid.slickGrid.navigateBottom();
+  }
+
+  scrollGridTop() {
+    this.aureliaGrid.slickGrid.navigateTop();
+  }
 }
