@@ -155,6 +155,8 @@ export class Example13 {
         rightPadding: 10
       },
       enableFiltering: true,
+      // you could debounce/throttle the input text filter if you have lots of data
+      // filterTypingDebounce: 250,
       enableGrouping: true,
       enableExcelExport: true,
       enableTextExport: true,
