@@ -23,6 +23,7 @@
     "forceConsistentCasingInFileNames": true,
     "experimentalDecorators": true,
     "noEmitHelpers": false,
+    "strict": true,
     "stripInternal": true,
     "sourceMap": true
   },

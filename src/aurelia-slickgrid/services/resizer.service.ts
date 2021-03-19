@@ -19,8 +19,8 @@ const DATAGRID_PAGINATION_HEIGHT = 35;
 @singleton(true)
 @inject(PubSubService)
 export class ResizerService {
-  private _grid: SlickGrid;
-  private _addon: SlickResizer;
+  private _grid!: SlickGrid;
+  private _addon!: SlickResizer;
   private _eventHandler: SlickEventHandler;
 
   get eventHandler(): SlickEventHandler {
