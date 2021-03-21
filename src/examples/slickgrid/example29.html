@@ -1,6 +1,15 @@
 <template>
   <require from="./custom-footer"></require>
-  <h2>${title}</h2>
+  <h2>
+    ${title}
+    <span class="float-right">
+      <a style="font-size: 18px"
+         target="_blank"
+         href="https://github.com/ghiscoding/aurelia-slickgrid/blob/master/src/examples/slickgrid/example29.ts">
+        <span class="fa fa-link"></span> code
+      </a>
+    </span>
+  </h2>
   <div class="subtitle"
        innerhtml.bind="subTitle"></div>
 

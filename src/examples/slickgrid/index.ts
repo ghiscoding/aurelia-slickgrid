@@ -37,6 +37,7 @@ export class Index {
       { route: 'example28', moduleId: PLATFORM.moduleName('./example28'), name: 'example28', nav: true, title: '28- Tree Data (Hierarchical set)' },
       { route: 'example29', moduleId: PLATFORM.moduleName('./example29'), name: 'example29', nav: true, title: '29- Grid with header and footer slots' },
       { route: 'example30', moduleId: PLATFORM.moduleName('./example30'), name: 'example30', nav: true, title: '30- Composite Editor Modal' },
+      { route: 'example31', moduleId: PLATFORM.moduleName('./example31'), name: 'example31', nav: true, title: '31- Backend OData with RxJS' },
     ];
 
     config.map(mapping);
