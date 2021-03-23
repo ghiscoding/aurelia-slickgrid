@@ -240,7 +240,7 @@ export class AureliaSlickgridCustomElement {
     );
 
     this.gridStateService = externalServices?.gridStateService ?? new GridStateService(this.extensionService, this.filterService, this.pubSubService, this.sharedService, this.sortService);
-    this.gridService = externalServices?.gridService ?? new GridService(this.extensionService, this.gridStateService, this.filterService, this.pubSubService, this.paginationService, this.sharedService, this.sortService);
+    this.gridService = externalServices?.gridService ?? new GridService(this.gridStateService, this.filterService, this.pubSubService, this.paginationService, this.sharedService, this.sortService);
     this.groupingService = externalServices?.groupingAndColspanService ?? new GroupingAndColspanService(this.extensionUtility, this.extensionService, this.pubSubService);
 
     this.serviceList = [
@@ -360,6 +360,11 @@ export class AureliaSlickgridCustomElement {
     this.sharedService.allColumns = this._columnDefinitions;
     this.sharedService.visibleColumns = this._columnDefinitions;
     this.extensionService.createExtensionsBeforeGridCreation(this._columnDefinitions, this.gridOptions);
+
+    // if user entered some Pinning/Frozen "presets", we need to apply them in the grid options
+    if (this.gridOptions.presets?.pinning) {
+      this.gridOptions = { ...this.gridOptions, ...this.gridOptions.presets.pinning };
+    }
 
     // build SlickGrid Grid, also user might optionally pass a custom dataview (e.g. remote model)
     this.grid = new Slick.Grid(`#${this.gridId}`, this.customDataView || this.dataview, this._columnDefinitions, this.gridOptions);
