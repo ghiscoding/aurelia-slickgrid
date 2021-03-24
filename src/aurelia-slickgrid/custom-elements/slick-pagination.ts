@@ -10,12 +10,12 @@ import { TranslaterService } from '../services/translater.service';
 @inject(EventAggregator, Optional.of(TranslaterService))
 export class SlickPaginationCustomElement {
   // we need to pass this service as a binding because it's transient and it must be created (then passed through the binding) in the Aurelia-Slickgrid custom element
-  @bindable() paginationService: PaginationService;
-  @bindable() gridOptions: GridOption;
+  @bindable() paginationService!: PaginationService;
+  @bindable() gridOptions!: GridOption;
 
   private _enableTranslate = false;
-  private _locales: Locale;
-  private _gridOptions: GridOption;
+  private _locales!: Locale;
+  private _gridOptions!: GridOption;
   private _subscriptions: Subscription[] = [];
 
   // text translations (handled by i18n or by custom locale)

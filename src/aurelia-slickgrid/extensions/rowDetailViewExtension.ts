@@ -41,13 +41,13 @@ export interface CreatedView extends AureliaViewOutput {
   SharedService,
 )
 export class RowDetailViewExtension implements UniversalRowDetailViewExtension {
-  private _addon: SlickRowDetailView | null;
+  private _addon: SlickRowDetailView | null = null;
   private _eventHandler: SlickEventHandler;
-  private _preloadView: string;
+  private _preloadView = '';
   private _slots: CreatedView[] = [];
-  private _viewModel: string;
+  private _viewModel = '';
   private _subscriptions: Subscription[] = [];
-  private _userProcessFn: (item: any) => Promise<any>;
+  private _userProcessFn?: (item: any) => Promise<any>;
 
   constructor(
     private readonly aureliaUtilService: AureliaUtilService,
