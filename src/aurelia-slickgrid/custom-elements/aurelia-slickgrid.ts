@@ -793,10 +793,14 @@ export class AureliaSlickgridCustomElement {
 
       if (dataView && grid) {
         // When data changes in the DataView, we need to refresh the metrics and/or display a warning if the dataset is empty
-        const onRowsOrCountChangedHandler = dataView.onRowsOrCountChanged;
-        (this._eventHandler as SlickEventHandler<GetSlickEventType<typeof onRowsOrCountChangedHandler>>).subscribe(onRowsOrCountChangedHandler, (_e, args) => {
+        const onRowCountChangedHandler = dataView.onRowCountChanged;
+        (this._eventHandler as SlickEventHandler<GetSlickEventType<typeof onRowCountChangedHandler>>).subscribe(onRowCountChangedHandler, (_e, args) => {
           grid.invalidate();
-          this.handleOnItemCountChanged(args.currentRowCount || 0);
+          this.handleOnItemCountChanged(args.current || 0, dataView.getItemCount());
+        });
+        const onSetItemsCalledHandler = dataView.onSetItemsCalled;
+        (this._eventHandler as SlickEventHandler<GetSlickEventType<typeof onSetItemsCalledHandler>>).subscribe(onSetItemsCalledHandler, (_e, args) => {
+          this.handleOnItemCountChanged(dataView.getLength(), args.itemCount);
         });
 
         if (this.gridOptions?.enableTreeData) {
@@ -1132,17 +1136,17 @@ export class AureliaSlickgridCustomElement {
   }
 
   /** When data changes in the DataView, we'll refresh the metrics and/or display a warning if the dataset is empty */
-  private handleOnItemCountChanged(itemCount: number) {
+  private handleOnItemCountChanged(currentPageRowItemCount: number, totalItemCount: number) {
     this.metrics = {
       startTime: new Date(),
       endTime: new Date(),
-      itemCount: itemCount || 0,
-      totalItemCount: this.dataview.getItemCount() || 0
+      itemCount: currentPageRowItemCount,
+      totalItemCount
     };
 
     // when using local (in-memory) dataset, we'll display a warning message when filtered data is empty
     if (this._isLocalGrid && this.gridOptions?.enableEmptyDataWarningMessage) {
-      this.displayEmptyDataWarning(itemCount === 0);
+      this.displayEmptyDataWarning(currentPageRowItemCount === 0);
     }
   }
 
