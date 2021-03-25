@@ -109,7 +109,7 @@ export class RowDetailViewExtension implements UniversalRowDetailViewExtension {
           if (typeof gridOptions.rowDetailView.process === 'function') {
             // we need to keep the user "process" method and replace it with our own execution method
             // we do this because when we get the item detail, we need to call "onAsyncResponse.notify" for the plugin to work
-            this._userProcessFn = gridOptions.rowDetailView.process;                // keep user's process method
+            this._userProcessFn = gridOptions.rowDetailView.process as (item: any) => Promise<any>;                // keep user's process method
             gridOptions.rowDetailView.process = (item) => this.onProcessing(item);  // replace process method & run our internal one
           } else {
             throw new Error('You need to provide a "process" function for the Row Detail Extension to work properly');

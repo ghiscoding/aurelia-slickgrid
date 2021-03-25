@@ -28,10 +28,10 @@ export class Example27 {
       <li>you might need to refresh the page to clear the browser cache and see the correct theme</li>
     </ul>
   </ul>`;
-  aureliaGrid: AureliaGridInstance;
-  gridOptions: GridOption;
-  columnDefinitions: Column[];
-  dataset: any[];
+  aureliaGrid!: AureliaGridInstance;
+  gridOptions!: GridOption;
+  columnDefinitions: Column[] = [];
+  dataset: any[] = [];
   datasetHierarchical: any[] = [];
 
   constructor() {
@@ -169,11 +169,11 @@ export class Example27 {
     // add setTimeout to wait a full cycle because datasetChanged needs a full cycle
     // force a resort because of the tree data structure
     setTimeout(() => {
-      const titleColumn = this.columnDefinitions.find(col => col.id === 'title');
+      const titleColumn = this.columnDefinitions.find(col => col.id === 'title') as Column;
       this.aureliaGrid.sortService.onLocalSortChanged(this.aureliaGrid.slickGrid, [{ columnId: 'title', sortCol: titleColumn, sortAsc: true }]);
 
       // scroll into the position, after insertion cycle, where the item was added
-      const rowIndex = this.aureliaGrid.dataView.getRowById(newItem.id);
+      const rowIndex = this.aureliaGrid.dataView.getRowById(newItem.id) as number;
       this.aureliaGrid.slickGrid.scrollRowIntoView(rowIndex + 3);
     }, 0);
   }
@@ -204,7 +204,7 @@ export class Example27 {
       const randomYear = 2000 + Math.floor(Math.random() * 10);
       const randomMonth = Math.floor(Math.random() * 11);
       const randomDay = Math.floor((Math.random() * 29));
-      const d = (data[i] = {});
+      const d: any = (data[i] = {});
       let parentId;
 
       // for implementing filtering/sorting, don't go over indent of 2

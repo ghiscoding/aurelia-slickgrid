@@ -49,10 +49,10 @@ export class Example2 {
     </ul>
   `;
 
-  aureliaGrid: AureliaGridInstance;
-  gridOptions: GridOption;
-  columnDefinitions: Column<DataItem>[];
-  dataset: any[];
+  aureliaGrid!: AureliaGridInstance;
+  gridOptions!: GridOption;
+  columnDefinitions: Column<DataItem>[] = [];
+  dataset: any[] = [];
   resizerPaused = false;
 
   constructor() {
@@ -160,7 +160,7 @@ export class Example2 {
     this.aureliaGrid.resizerService.pauseResizer(this.resizerPaused);
   }
 
-  toggleCompletedProperty(item) {
+  toggleCompletedProperty(item: any) {
     // toggle property
     if (typeof item === 'object') {
       item.completed = !item.completed;

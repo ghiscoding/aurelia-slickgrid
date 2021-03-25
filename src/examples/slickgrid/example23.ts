@@ -6,11 +6,13 @@ import { CustomInputFilter } from './custom-inputFilter';
 import {
   AureliaGridInstance,
   Column,
+  CurrentFilter,
   FieldType,
   Filters,
   Formatter,
   Formatters,
   GridOption,
+  GridStateChange,
   JQueryUiSliderOption,
   Metrics,
   MultipleSelectOption,
@@ -29,7 +31,7 @@ const taskTranslateFormatter: Formatter = (_row, _cell, value, _columnDef, _data
   const gridOptions = (grid && typeof grid.getOptions === 'function') ? grid.getOptions() : {};
   const i18n = gridOptions.i18n;
 
-  return i18n && i18n.tr && i18n.tr('TASK_X', { x: value });
+  return i18n?.tr('TASK_X', { x: value }) ?? '';
 };
 
 @autoinject()
@@ -54,18 +56,18 @@ export class Example23 {
     </ul>
   `;
 
-  aureliaGrid: AureliaGridInstance;
-  columnDefinitions: Column[];
-  gridOptions: GridOption;
-  dataset: any[];
+  aureliaGrid!: AureliaGridInstance;
+  columnDefinitions: Column[] = [];
+  gridOptions!: GridOption;
+  dataset: any[] = [];
   selectedLanguage: string;
-  metrics: Metrics;
+  metrics!: Metrics;
   filterList = [
     { value: '', label: '' },
     { value: 'currentYearTasks', label: 'Current Year Completed Tasks' },
     { value: 'nextYearTasks', label: 'Next Year Active Tasks' }
   ];
-  selectedPredefinedFilter: string;
+  selectedPredefinedFilter = '';
 
   constructor(private i18n: I18N) {
     // define the grid options & columns and then create the grid itself
@@ -187,7 +189,7 @@ export class Example23 {
     };
   }
 
-  mockData(itemCount, startingIndex = 0): any[] {
+  mockData(itemCount: number, startingIndex = 0): any[] {
     // mock a dataset
     const tempDataset = [];
     for (let i = startingIndex; i < (startingIndex + itemCount); i++) {
@@ -219,7 +221,7 @@ export class Example23 {
   }
 
   /** Dispatched event of a Grid State Changed event */
-  gridStateChanged(gridState) {
+  gridStateChanged(gridState: GridStateChange) {
     console.log('Client sample, Grid State changed:: ', gridState);
   }
 
@@ -228,7 +230,7 @@ export class Example23 {
     console.log('Client sample, current Grid State:: ', this.aureliaGrid.gridStateService.getCurrentGridState());
   }
 
-  refreshMetrics(_e, args) {
+  refreshMetrics(_e: Event, args: any) {
     if (args && args.current >= 0) {
       setTimeout(() => {
         this.metrics = {
@@ -266,8 +268,8 @@ export class Example23 {
     this.selectedLanguage = nextLanguage;
   }
 
-  predefinedFilterChanged(newPredefinedFilter) {
-    let filters = [];
+  predefinedFilterChanged(newPredefinedFilter: string) {
+    let filters: CurrentFilter[] = [];
     const currentYear = moment().year();
 
     switch (newPredefinedFilter) {

@@ -426,7 +426,7 @@ describe('rowDetailViewExtension', () => {
       instance.onBeforeRowDetailToggle.subscribe(() => {
         gridStub.onColumnsReordered.notify({ impactedColumns: mockColumn } as any, new Slick.EventData(), gridStub);
         expect(appendSpy).toHaveBeenCalledWith(
-          undefined,
+          '',
           expect.objectContaining({ model: mockColumn, addon: expect.anything(), grid: gridStub, dataView: dataViewStub }),
           expect.objectContaining({ className: 'container_field1' }),
           true
@@ -452,7 +452,7 @@ describe('rowDetailViewExtension', () => {
       instance.onBeforeRowDetailToggle.subscribe(() => {
         gridStub.onSelectedRowsChanged.notify({ rows: [0], previousSelectedRows: [], grid: gridStub }, new Slick.EventData(), gridStub);
         expect(appendSpy).toHaveBeenCalledWith(
-          undefined,
+          '',
           expect.objectContaining({ model: mockColumn, addon: expect.anything(), grid: gridStub, dataView: dataViewStub }),
           expect.objectContaining({ className: 'container_field1' }),
           true
@@ -479,7 +479,7 @@ describe('rowDetailViewExtension', () => {
       instance.onBeforeRowDetailToggle.subscribe(() => {
         pubSubService.publish('onFilterChanged', { columnId: 'field1', operator: '=', searchTerms: [] });
         expect(appendSpy).toHaveBeenCalledWith(
-          undefined,
+          '',
           expect.objectContaining({ model: mockColumn, addon: expect.anything(), grid: gridStub, dataView: dataViewStub }),
           expect.objectContaining({ className: 'container_field1' }),
           true
@@ -506,7 +506,7 @@ describe('rowDetailViewExtension', () => {
       instance.onAfterRowDetailToggle.subscribe(() => {
         expect(getElementSpy).toHaveBeenCalledWith('container_field1');
         expect(appendSpy).toHaveBeenCalledWith(
-          undefined,
+          '',
           expect.objectContaining({ model: mockColumn, addon: expect.anything(), grid: gridStub, dataView: dataViewStub }),
           expect.objectContaining({ className: 'container_field1' }),
           true
@@ -532,7 +532,7 @@ describe('rowDetailViewExtension', () => {
       instance.onRowBackToViewportRange.subscribe(() => {
         expect(getElementSpy).toHaveBeenCalledWith('container_field1');
         expect(appendSpy).toHaveBeenCalledWith(
-          undefined,
+          '',
           expect.objectContaining({ model: mockColumn, addon: expect.anything(), grid: gridStub, dataView: dataViewStub }),
           expect.objectContaining({ className: 'container_field1' }),
           true

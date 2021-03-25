@@ -10,9 +10,9 @@ import {
 
 
 export class Example21 {
-  @bindable() selectedColumn: Column;
-  @bindable() selectedOperator: string;
-  @bindable() searchValue: string;
+  @bindable() selectedColumn!: Column;
+  @bindable() selectedOperator!: string;
+  @bindable() searchValue = '';
   title = 'Example 21: Grid AutoHeight';
   subTitle = `
   The SlickGrid option "autoHeight" can be used if you wish to keep the full height of the grid without any scrolling
@@ -23,10 +23,10 @@ export class Example21 {
   </ul>
   `;
 
-  aureliaGrid: AureliaGridInstance;
-  columnDefinitions: Column[];
-  gridOptions: GridOption;
-  dataset: any[];
+  aureliaGrid!: AureliaGridInstance;
+  columnDefinitions: Column[] = [];
+  gridOptions!: GridOption;
+  dataset: any[] = [];
   operatorList: OperatorString[] = ['=', '<', '<=', '>', '>=', '<>', 'StartsWith', 'EndsWith'];
 
   constructor() {

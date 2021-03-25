@@ -1,44 +1,26 @@
+import { Column, Editors, FieldType, Filters, GridOption, GridStateChange, Metrics, OperatorType, Pagination, } from '@slickgrid-universal/common';
 import { GridOdataService, OdataServiceApi, OdataOption } from '@slickgrid-universal/odata';
+import { RxJsResource } from '@slickgrid-universal/rxjs-observable';
 import { autoinject } from 'aurelia-framework';
 import { HttpClient } from 'aurelia-http-client';
-import {
-  AureliaGridInstance,
-  Column,
-  FieldType,
-  Filters,
-  GridOption,
-  GridStateChange,
-  Metrics,
-  OperatorType,
-  Pagination,
-} from '../../aurelia-slickgrid';
+import { Observable, of, Subject } from 'rxjs';
+
+import { AureliaGridInstance } from '../../aurelia-slickgrid';
 
 const defaultPageSize = 20;
 const sampleDataRoot = 'assets/data';
 
 @autoinject()
-export class Example5 {
-  title = 'Example 5: Grid with Backend OData Service';
+export class Example31 {
+  title = 'Example 31: Grid with OData Backend Service using RxJS Observables';
   subTitle = `
-    Use it when you need to support Pagination with a OData endpoint (for simple JSON, use a regular grid)<br/>
-    Take a look at the (<a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/OData" target="_blank">Wiki documentation</a>)
-    <br/>
-    <ul class="small">
-      <li>Only "Name" field is sortable for the demo (because we use JSON files), however "multiColumnSort: true" is also supported</li>
-      <li>This example also demos the Grid State feature, open the console log to see the changes</li>
-      <li>String column also support operator (>, >=, <, <=, <>, !=, =, ==, *)
-      <ul>
-        <li>The (*) can be used as startsWith (ex.: "abc*" => startsWith "abc") / endsWith (ex.: "*xyz" => endsWith "xyz")</li>
-        <li>The other operators can be used on column type number for example: ">=100" (greater than or equal to 100)</li>
-      </ul>
-      <li>OData Service could be replaced by other Service type in the future (GraphQL or whichever you provide)</li>
-      <li>You can also preload a grid with certain "presets" like Filters / Sorters / Pagination <a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Grid-State-&-Preset" target="_blank">Wiki - Grid Preset</a>
-    </ul>
+    Optionally use RxJS instead of Promises, you would typically use this with a Backend Service API (OData/GraphQL)
   `;
+
   aureliaGrid!: AureliaGridInstance;
-  columnDefinitions: Column[] = [];
+  columnDefinitions!: Column[];
   gridOptions!: GridOption;
-  dataset = [] = [];
+  dataset = [];
   metrics!: Metrics;
   paginationOptions!: Pagination;
 
@@ -47,17 +29,21 @@ export class Example5 {
   odataQuery = '';
   processing = false;
   status = { text: '', class: '' };
+  isOtherGenderAdded = false;
+  genderCollection = [{ value: 'male', label: 'male' }, { value: 'female', label: 'female' }];
 
   constructor(private http: HttpClient) {
-    // define the grid options & columns and then create the grid itself
-    this.defineGrid();
+    this.initializeGrid();
+  }
+
+  attached() {
   }
 
   aureliaGridReady(aureliaGrid: AureliaGridInstance) {
     this.aureliaGrid = aureliaGrid;
   }
 
-  defineGrid() {
+  initializeGrid() {
     this.columnDefinitions = [
       {
         id: 'name', name: 'Name', field: 'name', sortable: true,
@@ -69,9 +55,17 @@ export class Example5 {
       },
       {
         id: 'gender', name: 'Gender', field: 'gender', filterable: true,
+        editor: {
+          model: Editors.singleSelect,
+          // collection: this.genderCollection,
+          collectionAsync: of(this.genderCollection)
+        },
         filter: {
           model: Filters.singleSelect,
-          collection: [{ value: '', label: '' }, { value: 'male', label: 'male' }, { value: 'female', label: 'female' }]
+          collectionAsync: of(this.genderCollection),
+          collectionOptions: {
+            addBlankEntry: true
+          }
         }
       },
       { id: 'company', name: 'Company', field: 'company' },
@@ -88,6 +82,11 @@ export class Example5 {
         hideInFilterHeaderRow: false,
         hideInColumnTitleRow: true
       },
+      editable: true,
+      autoEdit: true,
+      autoCommitEdit: true,
+      rowHeight: 33,
+      headerRowHeight: 35,
       enableCellNavigation: true,
       enableFiltering: true,
       enableCheckboxSelector: true,
@@ -96,11 +95,11 @@ export class Example5 {
       pagination: {
         pageSizes: [10, 20, 50, 100, 500],
         pageSize: defaultPageSize,
-        totalItems: 0
       },
       presets: {
         // you can also type operator as string, e.g.: operator: 'EQ'
         filters: [
+          // { columnId: 'name', searchTerms: ['w'], operator: OperatorType.startsWith },
           { columnId: 'gender', searchTerms: ['male'], operator: OperatorType.equal },
         ],
         sorters: [
@@ -122,15 +121,46 @@ export class Example5 {
           this.displaySpinner(false);
           this.getCustomerCallback(response);
         }
-      } as OdataServiceApi
+      } as OdataServiceApi,
+      registerExternalResources: [new RxJsResource()]
     };
+  }
+
+  addOtherGender() {
+    const newGender = { value: 'other', label: 'other' };
+    const genderColumn = this.columnDefinitions.find((column: Column) => column.id === 'gender');
+
+    if (genderColumn) {
+      let editorCollection = genderColumn.editor!.collection;
+      const filterCollectionAsync = genderColumn.filter!.collectionAsync as Subject<any>;
+
+      if (Array.isArray(editorCollection)) {
+        // refresh the Editor "collection", we have 2 ways of doing it
+
+        // 1. simply Push to the Editor "collection"
+        // editorCollection.push(newGender);
+
+        // 2. or replace the entire "collection"
+        genderColumn.editor!.collection = [...this.genderCollection, newGender];
+        editorCollection = genderColumn.editor!.collection;
+
+        // However, for the Filter only, we have to trigger an RxJS/Subject change with the new collection
+        // we do this because Filter(s) are shown at all time, while on Editor it's unnecessary since they are only shown when opening them
+        if (filterCollectionAsync?.next) {
+          filterCollectionAsync.next(editorCollection);
+        }
+      }
+    }
+
+    // don't add it more than once
+    this.isOtherGenderAdded = true;
   }
 
   displaySpinner(isProcessing: boolean) {
     this.processing = isProcessing;
     this.status = (isProcessing)
-      ? { text: 'processing...', class: 'alert alert-danger' }
-      : { text: 'done', class: 'alert alert-success' };
+      ? { text: 'loading...', class: 'alert alert-warning' }
+      : { text: 'finished!!', class: 'alert alert-success' };
   }
 
   getCustomerCallback(data: any) {
@@ -150,8 +180,8 @@ export class Example5 {
     this.odataQuery = data['query'];
   }
 
-  getCustomerApiCall(query: string) {
-    // in your case, you will call your WebAPI function (wich needs to return a Promise)
+  getCustomerApiCall(query: string): Observable<any> {
+    // in your case, you will call your WebAPI function (wich needs to return an Observable)
     // for the demo purpose, we will call a mock WebAPI function
     return this.getCustomerDataApiMock(query);
   }
@@ -160,9 +190,9 @@ export class Example5 {
    * This function is only here to mock a WebAPI call (since we are using a JSON file for the demo)
    *  in your case the getCustomer() should be a WebAPI function returning a Promise
    */
-  getCustomerDataApiMock(query: string) {
-    // the mock is returning a Promise, just like a WebAPI typically does
-    return new Promise(resolve => {
+  getCustomerDataApiMock(query: string): Observable<any> {
+    // the mock is returning an Observable
+    return new Observable((observer) => {
       const queryParams = query.toLowerCase().split('&');
       let top: number;
       let skip = 0;
@@ -274,18 +304,23 @@ export class Example5 {
             }
             const backendResult = { items: updatedData, [countPropName]: countTotalItems, query };
             // console.log('Backend Result', backendResult);
-            resolve(backendResult);
+            observer.next(backendResult);
+            observer.complete();
           }, 150);
         });
     });
   }
 
+  clearAllFiltersAndSorts() {
+    this.aureliaGrid?.gridService.clearAllFiltersAndSorts();
+  }
+
   goToFirstPage() {
-    this.aureliaGrid.paginationService!.goToFirstPage();
+    this.aureliaGrid?.paginationService?.goToFirstPage();
   }
 
   goToLastPage() {
-    this.aureliaGrid.paginationService!.goToLastPage();
+    this.aureliaGrid?.paginationService?.goToLastPage();
   }
 
   /** Dispatched event of a Grid State Changed event */
@@ -296,14 +331,14 @@ export class Example5 {
 
   setFiltersDynamically() {
     // we can Set Filters Dynamically (or different filters) afterward through the FilterService
-    this.aureliaGrid.filterService.updateFilters([
+    this.aureliaGrid?.filterService.updateFilters([
       // { columnId: 'gender', searchTerms: ['male'], operator: OperatorType.equal },
       { columnId: 'name', searchTerms: ['A'], operator: 'a*' },
     ]);
   }
 
   setSortingDynamically() {
-    this.aureliaGrid.sortService.updateSorting([
+    this.aureliaGrid?.sortService.updateSorting([
       { columnId: 'name', direction: 'DESC' },
     ]);
   }
@@ -316,7 +351,7 @@ export class Example5 {
     const odataService = this.gridOptions.backendServiceApi!.service as GridOdataService;
     odataService.updateOptions({ enableCount: this.isCountEnabled } as OdataOption);
     odataService.clearFilters();
-    this.aureliaGrid.filterService.clearFilters();
+    this.aureliaGrid?.filterService.clearFilters();
     return true;
   }
 
@@ -325,7 +360,7 @@ export class Example5 {
     const odataService = this.gridOptions.backendServiceApi!.service as GridOdataService;
     odataService.updateOptions({ version: this.odataVersion } as OdataOption);
     odataService.clearFilters();
-    this.aureliaGrid.filterService.clearFilters();
+    this.aureliaGrid?.filterService.clearFilters();
     return true;
   }
 }

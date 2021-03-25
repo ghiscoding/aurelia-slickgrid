@@ -4,7 +4,7 @@ import { Router, RouterConfiguration } from 'aurelia-router';
 
 @autoinject()
 export class App {
-  router: Router;
+  router!: Router;
   title = 'Aurelia-Slickgrid';
 
   configureRouter(config: RouterConfiguration, router: Router) {
