@@ -13,7 +13,7 @@ import * as $ from 'jquery';
  * KeyDown events are also handled to provide handling for Tab, Shift-Tab, Esc and Ctrl-Enter.
  */
 export class CustomInputEditor implements Editor {
-  private _lastInputEvent: JQuery.Event;
+  private _lastInputEvent?: JQuery.Event;
   $input: any;
   defaultValue: any;
 
@@ -38,7 +38,6 @@ export class CustomInputEditor implements Editor {
 
   init(): void {
     const placeholder = this.columnEditor && this.columnEditor.placeholder || '';
-    const title = this.columnEditor && this.columnEditor.title || '';
 
     // this.$input = $(`<input type="text" class="editor-text" placeholder="${placeholder}" />`)
     //   .appendTo(this.args.container)

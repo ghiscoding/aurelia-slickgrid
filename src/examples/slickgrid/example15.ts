@@ -12,7 +12,7 @@ import {
   MultipleSelectOption
 } from '../../aurelia-slickgrid';
 
-function randomBetween(min, max) {
+function randomBetween(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 const DEFAULT_PAGE_SIZE = 25;
@@ -34,10 +34,10 @@ export class Example15 {
   </ul>
 `;
 
-  aureliaGrid: AureliaGridInstance;
-  columnDefinitions: Column[];
-  gridOptions: GridOption;
-  dataset: any[];
+  aureliaGrid!: AureliaGridInstance;
+  columnDefinitions: Column[] = [];
+  gridOptions!: GridOption;
+  dataset: any[] = [];
   selectedLanguage: string;
 
   constructor(private i18n: I18N) {
@@ -70,7 +70,7 @@ export class Example15 {
   clearGridStateFromLocalStorage() {
     localStorage[LOCAL_STORAGE_KEY] = null;
     this.aureliaGrid.gridService.resetGrid(this.columnDefinitions);
-    this.aureliaGrid.paginationService.changeItemPerPage(DEFAULT_PAGE_SIZE);
+    this.aureliaGrid.paginationService!.changeItemPerPage(DEFAULT_PAGE_SIZE);
   }
 
   /* Define grid Options and Columns */

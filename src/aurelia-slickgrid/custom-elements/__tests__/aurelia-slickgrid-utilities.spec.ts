@@ -4,7 +4,7 @@ import { autoAddEditorFormatterToColumnsWithEditor } from '../aurelia-slickgrid-
 
 describe('Aurelia-Slickgrid / Utilies', () => {
   describe('autoAddEditorFormatterToColumnsWithEditor', () => {
-    let columnDefinitions: Column[];
+    let columnDefinitions: Column[] = [];
     const customEditableInputFormatter: Formatter = (_row, _cell, value, columnDef) => {
       const isEditableLine = !!columnDef.editor;
       value = (value === null || value === undefined) ? '' : value;

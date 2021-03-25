@@ -14,13 +14,13 @@ export class Example22 {
     <li>Load dataset through Fetch-Client. Also note we need to call a "resizeGrid()" after focusing on this tab</li>
   </ol>`;
 
-  aureliaGrid2: AureliaGridInstance;
-  gridOptions1: GridOption;
-  gridOptions2: GridOption;
-  columnDefinitions1: Column[];
-  columnDefinitions2: Column[];
-  dataset1: any[];
-  dataset2: any[];
+  aureliaGrid2!: AureliaGridInstance;
+  gridOptions1!: GridOption;
+  gridOptions2!: GridOption;
+  columnDefinitions1: Column[] = [];
+  columnDefinitions2: Column[] = [];
+  dataset1: any[] = [];
+  dataset2: any[] = [];
   isGrid2Resize = false;
 
   constructor(private http: HttpClient) {

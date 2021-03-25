@@ -54,7 +54,7 @@ describe('PubSub Service', () => {
     });
 
     it('should display a not implemented when calling "unsubscribe" method', () => {
-      expect(() => PubSubService.prototype.unsubscribe('event1', () => { })).toThrow('The method "unsubscribe" is not implemented, please use "unsubscribeAll()" instead');
+      expect(() => PubSubService.prototype.unsubscribe()).toThrow('The method "unsubscribe" is not implemented, please use "unsubscribeAll()" instead');
     });
   });
 

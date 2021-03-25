@@ -31,12 +31,12 @@ export class Example13 {
     </ul>
   `;
 
-  aureliaGrid: AureliaGridInstance;
-  columnDefinitions: Column[];
-  gridOptions: GridOption;
-  dataset: any[];
-  dataviewObj: SlickDataView;
-  gridObj: SlickGrid;
+  aureliaGrid!: AureliaGridInstance;
+  columnDefinitions: Column[] = [];
+  gridOptions!: GridOption;
+  dataset: any[] = [];
+  dataviewObj!: SlickDataView;
+  gridObj!: SlickGrid;
   processing = false;
   excelExportService = new ExcelExportService();
   textExportService = new TextExportService();
@@ -235,7 +235,7 @@ export class Example13 {
     this.gridObj.invalidate(); // invalidate all rows and re-render
   }
 
-  groupByDurationOrderByCount(aggregateCollapsed) {
+  groupByDurationOrderByCount(aggregateCollapsed: boolean) {
     this.aureliaGrid.filterService.setSortColumnIcons([]);
     this.dataviewObj.setGrouping({
       getter: 'duration',

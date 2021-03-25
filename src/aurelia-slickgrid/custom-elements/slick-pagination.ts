@@ -1,6 +1,6 @@
 import { bindable, inject, Optional } from 'aurelia-framework';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
-import { getTranslationPrefix, Locale, PaginationService } from '@slickgrid-universal/common';
+import { EventSubscription, getTranslationPrefix, Locale, PaginationService } from '@slickgrid-universal/common';
 
 import { GridOption } from '../models/index';
 import { disposeAllSubscriptions } from '../services/utilities';
@@ -10,13 +10,13 @@ import { TranslaterService } from '../services/translater.service';
 @inject(EventAggregator, Optional.of(TranslaterService))
 export class SlickPaginationCustomElement {
   // we need to pass this service as a binding because it's transient and it must be created (then passed through the binding) in the Aurelia-Slickgrid custom element
-  @bindable() paginationService: PaginationService;
-  @bindable() gridOptions: GridOption;
+  @bindable() paginationService!: PaginationService;
+  @bindable() gridOptions!: GridOption;
 
   private _enableTranslate = false;
-  private _locales: Locale;
-  private _gridOptions: GridOption;
-  private _subscriptions: Subscription[] = [];
+  private _locales!: Locale;
+  private _gridOptions!: GridOption;
+  private _subscriptions: Array<EventSubscription | Subscription> = [];
 
   // text translations (handled by i18n or by custom locale)
   textItemsPerPage = 'items per page';

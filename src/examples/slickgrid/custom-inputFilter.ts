@@ -17,10 +17,10 @@ export class CustomInputFilter implements Filter {
   private _clearFilterTriggered = false;
   private _shouldTriggerQuery = true;
   private $filterElm: any;
-  grid: SlickGrid;
-  searchTerms: SearchTerm[];
-  columnDef: Column;
-  callback: FilterCallback;
+  grid!: SlickGrid;
+  searchTerms: SearchTerm[] = [];
+  columnDef!: Column;
+  callback!: FilterCallback;
   operator: OperatorType | OperatorString = OperatorType.equal;
 
   /** Getter for the Filter Operator */
@@ -95,7 +95,7 @@ export class CustomInputFilter implements Filter {
   }
 
   /** Set value(s) on the DOM element */
-  setValues(values) {
+  setValues(values: any) {
     if (values) {
       this.$filterElm.val(values);
     }

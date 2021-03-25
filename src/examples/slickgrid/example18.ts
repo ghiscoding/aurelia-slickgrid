@@ -38,14 +38,14 @@ export class Example18 {
   </ul>
   `;
 
-  aureliaGrid: AureliaGridInstance;
-  columnDefinitions: Column[];
-  dataset: any[];
-  dataviewObj: SlickDataView;
+  aureliaGrid!: AureliaGridInstance;
+  columnDefinitions: Column[] = [];
+  dataset: any[] = [];
+  dataviewObj!: SlickDataView;
   draggableGroupingPlugin: any;
   durationOrderByCount = false;
-  gridObj: SlickGrid;
-  gridOptions: GridOption;
+  gridObj!: SlickGrid;
+  gridOptions!: GridOption;
   processing = false;
   selectedGroupingFields: Array<string | GroupingGetterFunction> = ['', '', ''];
   excelExportService = new ExcelExportService();
