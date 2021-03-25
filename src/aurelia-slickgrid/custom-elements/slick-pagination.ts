@@ -1,6 +1,6 @@
 import { bindable, inject, Optional } from 'aurelia-framework';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
-import { getTranslationPrefix, Locale, PaginationService } from '@slickgrid-universal/common';
+import { EventSubscription, getTranslationPrefix, Locale, PaginationService } from '@slickgrid-universal/common';
 
 import { GridOption } from '../models/index';
 import { disposeAllSubscriptions } from '../services/utilities';
@@ -16,7 +16,7 @@ export class SlickPaginationCustomElement {
   private _enableTranslate = false;
   private _locales!: Locale;
   private _gridOptions!: GridOption;
-  private _subscriptions: Subscription[] = [];
+  private _subscriptions: Array<EventSubscription | Subscription> = [];
 
   // text translations (handled by i18n or by custom locale)
   textItemsPerPage = 'items per page';

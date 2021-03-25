@@ -21,6 +21,7 @@ import {
   ColumnEditor,
   CustomFooterOption,
   DataViewOption,
+  EventSubscription,
   ExtensionList,
   ExternalResource,
   GetSlickEventType,
@@ -53,7 +54,6 @@ import {
   SharedService,
   SlickgridConfig,
   SortService,
-  Subscription as SubscriptionRxJs,
   TreeDataService,
 
   // extensions
@@ -128,7 +128,7 @@ export class AureliaSlickgridCustomElement {
   showCustomFooter = false;
   showPagination = false;
   serviceList: any[] = [];
-  subscriptions: Array<Subscription | SubscriptionRxJs> = [];
+  subscriptions: Array<EventSubscription | Subscription> = [];
   paginationData?: {
     gridOptions: GridOption;
     paginationService: PaginationService;
@@ -247,7 +247,7 @@ export class AureliaSlickgridCustomElement {
     );
 
     this.gridStateService = externalServices?.gridStateService ?? new GridStateService(this.extensionService, this.filterService, this.pubSubService, this.sharedService, this.sortService);
-    this.gridService = externalServices?.gridService ?? new GridService(this.extensionService, this.gridStateService, this.filterService, this.pubSubService, this.paginationService, this.sharedService, this.sortService);
+    this.gridService = externalServices?.gridService ?? new GridService(this.gridStateService, this.filterService, this.pubSubService, this.paginationService, this.sharedService, this.sortService);
     this.groupingService = externalServices?.groupingAndColspanService ?? new GroupingAndColspanService(this.extensionUtility, this.extensionService, this.pubSubService);
 
     this.serviceList = [
