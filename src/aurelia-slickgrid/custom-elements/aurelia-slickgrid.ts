@@ -111,8 +111,8 @@ declare const Slick: SlickNamespace;
 )
 export class AureliaSlickgridCustomElement {
   private _columnDefinitions: Column[] = [];
-  private _dataset: any[] | null;
-  private _eventHandler: SlickEventHandler;
+  private _dataset: any[] | null = null;
+  private _eventHandler!: SlickEventHandler;
   private _hideHeaderRowAfterPageLoad = false;
   private _isGridInitialized = false;
   private _isDatasetInitialized = false;
@@ -122,14 +122,14 @@ export class AureliaSlickgridCustomElement {
   private _registeredResources: ExternalResource[] = [];
   groupItemMetadataProvider: any;
   backendServiceApi: BackendServiceApi | undefined;
-  customFooterOptions: CustomFooterOption;
-  locales: Locale;
-  metrics: Metrics;
+  customFooterOptions?: CustomFooterOption;
+  locales!: Locale;
+  metrics?: Metrics;
   showCustomFooter = false;
   showPagination = false;
   serviceList: any[] = [];
   subscriptions: Array<Subscription | SubscriptionRxJs> = [];
-  paginationData: {
+  paginationData?: {
     gridOptions: GridOption;
     paginationService: PaginationService;
   };
@@ -155,18 +155,18 @@ export class AureliaSlickgridCustomElement {
   treeDataService: TreeDataService;
 
   @bindable({ defaultBindingMode: bindingMode.twoWay }) columnDefinitions: Column[] = [];
-  @bindable({ defaultBindingMode: bindingMode.twoWay }) element: Element;
-  @bindable({ defaultBindingMode: bindingMode.twoWay }) dataview: SlickDataView;
-  @bindable({ defaultBindingMode: bindingMode.twoWay }) grid: SlickGrid;
+  @bindable({ defaultBindingMode: bindingMode.twoWay }) element!: Element;
+  @bindable({ defaultBindingMode: bindingMode.twoWay }) dataview!: SlickDataView;
+  @bindable({ defaultBindingMode: bindingMode.twoWay }) grid!: SlickGrid;
   @bindable({ defaultBindingMode: bindingMode.twoWay }) paginationOptions: Pagination | undefined;
-  @bindable({ defaultBindingMode: bindingMode.twoWay }) totalItems: number;
-  @bindable({ defaultBindingMode: bindingMode.fromView }) extensions: ExtensionList<any, any>;
-  @bindable({ defaultBindingMode: bindingMode.fromView }) instances: AureliaGridInstance | null;
-  @bindable() customDataView: SlickDataView;
+  @bindable({ defaultBindingMode: bindingMode.twoWay }) totalItems = 0;
+  @bindable({ defaultBindingMode: bindingMode.fromView }) extensions!: ExtensionList<any, any>;
+  @bindable({ defaultBindingMode: bindingMode.fromView }) instances: AureliaGridInstance | null = null;
+  @bindable() customDataView?: SlickDataView;
   @bindable() dataset: any[] = [];
-  @bindable() datasetHierarchical: any[] | null;
-  @bindable() gridId: string;
-  @bindable() gridOptions: GridOption;
+  @bindable() datasetHierarchical?: any[] | null;
+  @bindable() gridId = '';
+  @bindable() gridOptions!: GridOption;
 
   constructor(
     private readonly aureliaUtilService: AureliaUtilService,
@@ -555,15 +555,15 @@ export class AureliaSlickgridCustomElement {
 
     if (this.backendServiceApi) {
       for (const prop of Object.keys(this.backendServiceApi)) {
-        this.backendServiceApi[prop] = null;
+        (this.backendServiceApi as any)[prop] = null;
       }
       this.backendServiceApi = undefined;
     }
     for (const prop of Object.keys(this.columnDefinitions)) {
-      this.columnDefinitions[prop] = null;
+      (this.columnDefinitions as any)[prop] = null;
     }
     for (const prop of Object.keys(this.sharedService)) {
-      this.sharedService[prop] = null;
+      (this.sharedService as any)[prop] = null;
     }
     this._dataset = null;
     this.datasetHierarchical = null;
@@ -741,7 +741,7 @@ export class AureliaSlickgridCustomElement {
       // expose all Slick Grid Events through dispatch
       for (const prop in grid) {
         if (grid.hasOwnProperty(prop) && prop.startsWith('on')) {
-          const gridEventHandler = grid[prop];
+          const gridEventHandler = (grid as any)[prop];
           (this._eventHandler as SlickEventHandler<GetSlickEventType<typeof gridEventHandler>>).subscribe(gridEventHandler, (event, args) => {
             const eventPrefix = this.gridOptions?.defaultSlickgridEventPrefix ?? '';
             return this.pubSubService.dispatchCustomEvent(this.elm, prop, { eventData: event, args }, eventPrefix);
@@ -752,7 +752,7 @@ export class AureliaSlickgridCustomElement {
       // expose all Slick DataView Events through dispatch
       for (const prop in dataView) {
         if (dataView.hasOwnProperty(prop) && prop.startsWith('on')) {
-          const dataViewEventHandler = dataView[prop];
+          const dataViewEventHandler = (dataView as any)[prop];
           (this._eventHandler as SlickEventHandler<GetSlickEventType<typeof dataViewEventHandler>>).subscribe(dataViewEventHandler, (event, args) => {
             const eventPrefix = this.gridOptions?.defaultSlickgridEventPrefix ?? '';
             return this.pubSubService.dispatchCustomEvent(this.elm, prop, { eventData: event, args }, eventPrefix);
@@ -767,10 +767,14 @@ export class AureliaSlickgridCustomElement {
 
       if (dataView && grid) {
         // When data changes in the DataView, we need to refresh the metrics and/or display a warning if the dataset is empty
-        const onRowsOrCountChangedHandler = dataView.onRowsOrCountChanged;
-        (this._eventHandler as SlickEventHandler<GetSlickEventType<typeof onRowsOrCountChangedHandler>>).subscribe(onRowsOrCountChangedHandler, (_e, args) => {
+        const onRowCountChangedHandler = dataView.onRowCountChanged;
+        (this._eventHandler as SlickEventHandler<GetSlickEventType<typeof onRowCountChangedHandler>>).subscribe(onRowCountChangedHandler, (_e, args) => {
           grid.invalidate();
-          this.handleOnItemCountChanged(args.currentRowCount || 0);
+          this.handleOnItemCountChanged(args.current || 0, dataView.getItemCount());
+        });
+        const onSetItemsCalledHandler = dataView.onSetItemsCalled;
+        (this._eventHandler as SlickEventHandler<GetSlickEventType<typeof onSetItemsCalledHandler>>).subscribe(onSetItemsCalledHandler, (_e, args) => {
+          this.handleOnItemCountChanged(dataView.getLength(), args.itemCount);
         });
 
         if (this.gridOptions?.enableTreeData) {
@@ -1116,17 +1120,17 @@ export class AureliaSlickgridCustomElement {
   }
 
   /** When data changes in the DataView, we'll refresh the metrics and/or display a warning if the dataset is empty */
-  private handleOnItemCountChanged(itemCount: number) {
+  private handleOnItemCountChanged(currentPageRowItemCount: number, totalItemCount: number) {
     this.metrics = {
       startTime: new Date(),
       endTime: new Date(),
-      itemCount: itemCount || 0,
-      totalItemCount: this.dataview.getItemCount() || 0
+      itemCount: currentPageRowItemCount,
+      totalItemCount
     };
 
     // when using local (in-memory) dataset, we'll display a warning message when filtered data is empty
     if (this._isLocalGrid && this.gridOptions?.enableEmptyDataWarningMessage) {
-      this.displayEmptyDataWarning(itemCount === 0);
+      this.displayEmptyDataWarning(currentPageRowItemCount === 0);
     }
   }
 
@@ -1385,7 +1389,7 @@ export class AureliaSlickgridCustomElement {
       for (const propName of Object.keys(customFooterOptions.metricTexts)) {
         if (propName.lastIndexOf('Key') > 0) {
           const propNameWithoutKey = propName.substring(0, propName.lastIndexOf('Key'));
-          customFooterOptions.metricTexts[propNameWithoutKey] = this.translaterService.translate(customFooterOptions.metricTexts[propName] || ' ');
+          (customFooterOptions.metricTexts as any)[propNameWithoutKey] = this.translaterService.translate((customFooterOptions.metricTexts as any)[propName] || ' ');
         }
       }
     }
