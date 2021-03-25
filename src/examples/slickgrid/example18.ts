@@ -213,6 +213,8 @@ export class Example18 {
       showPreHeaderPanel: true,
       preHeaderPanelHeight: 40,
       enableFiltering: true,
+      // you could debounce/throttle the input text filter if you have lots of data
+      // filterTypingDebounce: 250,
       enableSorting: true,
       enableColumnReorder: true,
       gridMenu: {

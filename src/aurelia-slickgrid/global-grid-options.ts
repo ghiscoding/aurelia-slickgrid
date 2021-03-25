@@ -93,6 +93,7 @@ export const GlobalGridOptions: Partial<GridOption> = {
   defaultFilter: Filters.input,
   defaultFilterPlaceholder: '&#128269;', // magnifying glass icon
   defaultFilterRangeOperator: OperatorType.rangeExclusive,
+  defaultBackendServiceFilterTypingDebounce: 500,
   editable: false,
   enableAutoResize: true,
   enableAutoSizeColumns: true,
@@ -143,6 +144,7 @@ export const GlobalGridOptions: Partial<GridOption> = {
     sanitizeDataExport: false,
     useUtf8WithBom: true
   },
+  filterTypingDebounce: 0,
   forceFitColumns: false,
   frozenHeaderWidthCalcDifferential: 1,
   gridMenu: {
