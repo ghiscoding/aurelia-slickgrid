@@ -4,6 +4,7 @@ import {
   AureliaGridInstance,
   AureliaUtilService,
   Column,
+  EditCommand,
   Editors,
   FieldType,
   Filters,
@@ -43,11 +44,11 @@ export class Example26 {
     </ul>
   </ul>
   `;
-  private _commandQueue = [];
-  aureliaGrid: AureliaGridInstance;
-  gridOptions: GridOption;
-  columnDefinitions: Column[];
-  dataset: any[];
+  private _commandQueue: EditCommand[] = [];
+  aureliaGrid!: AureliaGridInstance;
+  gridOptions!: GridOption;
+  columnDefinitions: Column[] = [];
+  dataset: any[] = [];
   updatedObject: any;
   isAutoEdit = true;
   alertWarning: any;
@@ -59,7 +60,7 @@ export class Example26 {
     { id: '3', name: 'Paul' },
   ];
   selectedItem: any;
-  selectedId: string;
+  selectedId = '';
 
   constructor(private aureliaUtilService: AureliaUtilService, private i18n: I18N) {
     // define the grid options & columns and then create the grid itself
@@ -270,7 +271,7 @@ export class Example26 {
     };
   }
 
-  mockData(itemCount, startingIndex = 0) {
+  mockData(itemCount: number, startingIndex = 0) {
     // mock a dataset
     const tempDataset = [];
     for (let i = startingIndex; i < (startingIndex + itemCount); i++) {
@@ -294,12 +295,12 @@ export class Example26 {
     return tempDataset;
   }
 
-  onCellChanged(_e, args) {
+  onCellChanged(_e: Event, args: any) {
     console.log('onCellChange', args);
     this.updatedObject = { ...args.item };
   }
 
-  onCellClicked(_e, args) {
+  onCellClicked(_e: Event, args: any) {
     const metadata = this.aureliaGrid.gridService.getColumnFromEventArguments(args);
     console.log(metadata);
 
@@ -319,7 +320,7 @@ export class Example26 {
     }
   }
 
-  onCellValidation(_e, args) {
+  onCellValidation(_e: Event, args: any) {
     alert(args.validationResults.msg);
   }
 
@@ -337,7 +338,7 @@ export class Example26 {
     }
   }
 
-  setAutoEdit(isAutoEdit) {
+  setAutoEdit(isAutoEdit: boolean) {
     this.isAutoEdit = isAutoEdit;
     this.aureliaGrid.slickGrid.setOptions({
       autoEdit: isAutoEdit

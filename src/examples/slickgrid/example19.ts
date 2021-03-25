@@ -23,14 +23,14 @@ export class Example19 {
     </ul>
   `;
 
-  aureliaGrid: AureliaGridInstance;
-  gridOptions: GridOption;
-  columnDefinitions: Column[];
-  dataset: any[];
-  extensions: ExtensionList<any, any>;
+  aureliaGrid!: AureliaGridInstance;
+  gridOptions!: GridOption;
+  columnDefinitions: Column[] = [];
+  dataset: any[] = [];
+  extensions!: ExtensionList<any, any>;
   flashAlertType = 'info';
-  message: string;
-  subscriptions: Subscription[];
+  message = '';
+  subscriptions: Subscription[] = [];
 
   constructor() {
     // define the grid options & columns and then create the grid itself

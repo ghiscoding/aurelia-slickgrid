@@ -3,7 +3,7 @@ import { Router, RouterConfiguration } from 'aurelia-router';
 
 @autoinject()
 export class Index {
-  router: Router;
+  router!: Router;
 
   configureRouter(config: RouterConfiguration, router: Router) {
     const mapping: any = [

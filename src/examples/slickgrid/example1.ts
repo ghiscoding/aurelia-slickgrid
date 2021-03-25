@@ -6,12 +6,12 @@ export class Example1 {
   title = 'Example 1: Basic Grids';
   subTitle = `Simple Grids with Fixed Sizes (800 x 225)`;
 
-  gridOptions1: GridOption;
-  gridOptions2: GridOption;
-  columnDefinitions1: Column[];
-  columnDefinitions2: Column[];
-  dataset1: any[];
-  dataset2: any[];
+  gridOptions1!: GridOption;
+  gridOptions2!: GridOption;
+  columnDefinitions1: Column[] = [];
+  columnDefinitions2: Column[] = [];
+  dataset1: any[] = [];
+  dataset2: any[] = [];
 
   constructor() {
     // define the grid options & columns and then create the grid itself

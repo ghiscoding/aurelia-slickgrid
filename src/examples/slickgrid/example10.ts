@@ -15,17 +15,17 @@ export class Example2 {
   `;
   @bindable() isGrid2WithPagination = true;
 
-  aureliaGrid1: AureliaGridInstance;
-  aureliaGrid2: AureliaGridInstance;
-  columnDefinitions1: Column[];
-  columnDefinitions2: Column[];
-  gridOptions1: GridOption;
-  gridOptions2: GridOption;
-  dataset1: any[];
-  dataset2: any[];
-  selectedTitles: any[];
+  aureliaGrid1!: AureliaGridInstance;
+  aureliaGrid2!: AureliaGridInstance;
+  columnDefinitions1: Column[] = [];
+  columnDefinitions2: Column[] = [];
+  gridOptions1!: GridOption;
+  gridOptions2!: GridOption;
+  dataset1: any[] = [];
+  dataset2: any[] = [];
+  selectedTitles: any[] = [];
   selectedTitle = '';
-  selectedGrid2IDs: number[];
+  selectedGrid2IDs: number[] = [];
 
   constructor() {
     // define the grid options & columns and then create the grid itself
@@ -201,19 +201,19 @@ export class Example2 {
   }
 
   goToGrid1FirstPage() {
-    this.aureliaGrid1.paginationService.goToFirstPage();
+    this.aureliaGrid1.paginationService!.goToFirstPage();
   }
 
   goToGrid1LastPage() {
-    this.aureliaGrid1.paginationService.goToLastPage();
+    this.aureliaGrid1.paginationService!.goToLastPage();
   }
 
   goToGrid2FirstPage() {
-    this.aureliaGrid2.paginationService.goToFirstPage();
+    this.aureliaGrid2.paginationService!.goToFirstPage();
   }
 
   goToGrid2LastPage() {
-    this.aureliaGrid2.paginationService.goToLastPage();
+    this.aureliaGrid2.paginationService!.goToLastPage();
   }
 
   /** Dispatched event of a Grid State Changed event */
@@ -227,8 +227,8 @@ export class Example2 {
     console.log('Grid State changed:: ', gridStateChanges);
     console.log('Grid State changed:: ', gridStateChanges.change);
 
-    if (gridStateChanges.gridState.rowSelection) {
-      this.selectedGrid2IDs = (gridStateChanges.gridState.rowSelection.filteredDataContextIds || []) as number[];
+    if (gridStateChanges.gridState!.rowSelection) {
+      this.selectedGrid2IDs = (gridStateChanges.gridState!.rowSelection.filteredDataContextIds || []) as number[];
       this.selectedGrid2IDs = this.selectedGrid2IDs.sort((a, b) => a - b); // sort by ID
       this.selectedTitles = this.selectedGrid2IDs.map(dataContextId => `Task ${dataContextId}`);
     }
@@ -239,13 +239,13 @@ export class Example2 {
   // Basically you cannot toggle a Pagination that doesn't exist (must created at the time as the grid)
   isGrid2WithPaginationChanged() {
     // this.isGrid2WithPagination = !this.isGrid2WithPagination;
-    this.aureliaGrid2.paginationService.togglePaginationVisibility(this.isGrid2WithPagination);
+    this.aureliaGrid2.paginationService!.togglePaginationVisibility(this.isGrid2WithPagination);
   }
 
-  onGrid1SelectedRowsChanged(_e, args) {
+  onGrid1SelectedRowsChanged(_e: Event, args: any) {
     const grid = args && args.grid;
     if (Array.isArray(args.rows)) {
-      this.selectedTitle = args.rows.map(idx => {
+      this.selectedTitle = args.rows.map((idx: number) => {
         const item = grid.getDataItem(idx);
         return item && item.title || '';
       });

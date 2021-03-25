@@ -20,11 +20,11 @@ import {
 const NB_ITEMS = 1500;
 
 // create a custom translate Formatter (typically you would move that a separate file, for separation of concerns)
-const taskTranslateFormatter: Formatter = (_row, _cell, value: any, _columnDef, _dataContext, grid) => {
+const taskTranslateFormatter: Formatter = (_row, _cell, value, _columnDef, _dataContext, grid) => {
   const gridOptions = (grid && typeof grid.getOptions === 'function') ? grid.getOptions() : {};
   const i18n = gridOptions.i18n;
 
-  return i18n && i18n.tr && i18n.tr('TASK_X', { x: value });
+  return i18n?.tr('TASK_X', { x: value }) ?? '';
 };
 
 @autoinject()
@@ -57,13 +57,13 @@ export class Example12 {
       </ol>
     `;
 
-  aureliaGrid: AureliaGridInstance;
-  gridOptions: GridOption;
-  columnDefinitions: Column[];
-  dataset: any[];
+  aureliaGrid!: AureliaGridInstance;
+  gridOptions!: GridOption;
+  columnDefinitions: Column[] = [];
+  dataset: any[] = [];
   selectedLanguage: string;
   duplicateTitleHeaderCount = 1;
-  gridObj: SlickGrid;
+  gridObj!: SlickGrid;
   excelExportService = new ExcelExportService();
   textExportService = new TextExportService();
 

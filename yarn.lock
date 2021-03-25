@@ -712,6 +712,14 @@
   dependencies:
     "@slickgrid-universal/common" "^0.12.0"
 
+"@slickgrid-universal/rxjs-observable@^0.12.0":
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/@slickgrid-universal/rxjs-observable/-/rxjs-observable-0.12.0.tgz#2f991d319f46f3afd5ac2f17bf20bde8dbbd19d7"
+  integrity sha512-R610UBprOQU4QWymwYJvpLxlXlALJkbSLt4mQD3lFbNHTa9g1e0YdmX2M4q9y7xRPjMzeNuELeWjNa82XCHqtg==
+  dependencies:
+    "@slickgrid-universal/common" "^0.12.0"
+    rxjs next
+
 "@slickgrid-universal/text-export@^0.12.0":
   version "0.12.0"
   resolved "https://registry.yarnpkg.com/@slickgrid-universal/text-export/-/text-export-0.12.0.tgz#b6e15aa29dbfe8d43e3969a4c3f1bd13d4fb69db"
@@ -9777,7 +9785,7 @@ run-queue@^1.0.0, run-queue@^1.0.3:
   dependencies:
     aproba "^1.1.1"
 
-rxjs@7.0.0-beta.13:
+rxjs@7.0.0-beta.13, rxjs@next:
   version "7.0.0-beta.13"
   resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-7.0.0-beta.13.tgz#f8dd03f7aa414c9f7fde831431e54c4534ecfa39"
   integrity sha512-//ll3EfI5SgTfrS5DUjc/uEmyazS0vUDMHqa/GbPR9ubdVLtbrv2bK3y75JyZPfYl1Bq2JbR/IbByhfzfpJyvw==

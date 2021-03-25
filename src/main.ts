@@ -9,10 +9,11 @@ import './styles.scss';
 import { PLATFORM } from 'aurelia-pal';
 import { Aurelia } from 'aurelia-framework';
 import environment from './environment';
-import { TCustomAttribute } from 'aurelia-i18n';
+import { I18N, TCustomAttribute } from 'aurelia-i18n';
 import Backend from 'i18next-xhr-backend';
 import * as Bluebird from 'bluebird';
 import 'bootstrap';
+import { SlickgridConfig } from './aurelia-slickgrid';
 
 /** Disable long stack traces for IE11 */
 Bluebird.config({
@@ -28,16 +29,16 @@ export function configure(aurelia: Aurelia) {
   aurelia.use.feature(PLATFORM.moduleName('examples/resources/index'));
 
   // local aurelia-slickgrid
-  aurelia.use.feature(PLATFORM.moduleName('aurelia-slickgrid/index'), config => {
+  aurelia.use.feature(PLATFORM.moduleName('aurelia-slickgrid/index'), (config: SlickgridConfig) => {
     // load necessary Flatpickr Locale(s), but make sure it's imported AFTER loading Aurelia-Slickgrid plugin
     import('flatpickr/dist/l10n/fr');
 
     // change any of the default global options
-    config.options.gridMenu.iconCssClass = 'fa fa-bars';
+    config.options.gridMenu!.iconCssClass = 'fa fa-bars';
   });
 
   // aurelia i18n to handle multiple locales
-  aurelia.use.plugin(PLATFORM.moduleName('aurelia-i18n'), instance => {
+  aurelia.use.plugin(PLATFORM.moduleName('aurelia-i18n'), (instance: I18N) => {
     const aliases = ['t', 'i18n'];
     // add aliases for 't' attribute
     TCustomAttribute.configureAliases(aliases);

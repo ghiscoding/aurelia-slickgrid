@@ -1,10 +1,10 @@
 import { autoinject } from 'aurelia-framework';
-import { AureliaGridInstance, Column, GridOption, SlickGrid } from '../../aurelia-slickgrid';
+import { AureliaGridInstance, Column, Formatter, GridOption, SlickGrid } from '../../aurelia-slickgrid';
 
-let columnsWithHighlightingById = {};
+let columnsWithHighlightingById: any = {};
 
 // create a custom Formatter to highlight negative values in red
-const highlightingFormatter = (_row, _cell, value, columnDef) => {
+const highlightingFormatter: Formatter = (_row, _cell, value, columnDef) => {
   if (columnsWithHighlightingById[columnDef.id] && value < 0) {
     return `<div style="color:red; font-weight:bold;">${value}</div>`;
   } else {
@@ -32,11 +32,11 @@ export class Example7 {
       </ol>
     </ul>
   `;
-  columnDefinitions: Column[];
-  gridOptions: GridOption;
-  dataset = [];
-  aureliaGrid: AureliaGridInstance;
-  gridObj: SlickGrid;
+  columnDefinitions: Column[] = [];
+  gridOptions!: GridOption;
+  dataset: any[] = [];
+  aureliaGrid!: AureliaGridInstance;
+  gridObj!: SlickGrid;
 
   constructor() {
     // define the grid options & columns and then create the grid itself
@@ -176,9 +176,9 @@ export class Example7 {
     const mockDataset = [];
     for (let i = 0; i < 100; i++) {
       const d = (mockDataset[i] = {});
-      d['id'] = i;
+      (d as any)['id'] = i;
       for (let j = 0; j < this.columnDefinitions.length; j++) {
-        d[j] = Math.round(Math.random() * 10) - 5;
+        (d as any)[j] = Math.round(Math.random() * 10) - 5;
       }
     }
     this.dataset = mockDataset;

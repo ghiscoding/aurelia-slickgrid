@@ -21,7 +21,7 @@ export class CustomAureliaViewModelEditor implements Editor {
   aureliaCustomElementInstance: any;
 
   /** default item Id */
-  defaultId: string;
+  defaultId?: string;
 
   /** default item object */
   defaultItem: any;
@@ -47,7 +47,7 @@ export class CustomAureliaViewModelEditor implements Editor {
 
   /** Get the Collection */
   get collection(): any[] {
-    return this.columnDef && this.columnDef && this.columnDef.internalColumnEditor.collection || [];
+    return this.columnDef?.internalColumnEditor?.collection ?? [];
   }
 
   /** Get Column Definition object */
@@ -57,7 +57,7 @@ export class CustomAureliaViewModelEditor implements Editor {
 
   /** Get Column Editor object */
   get columnEditor(): any {
-    return this.columnDef && this.columnDef.internalColumnEditor || {};
+    return this.columnDef?.internalColumnEditor ?? {};
   }
 
   /** Getter for the Grid Options pulled through the Grid Object */
@@ -159,7 +159,7 @@ export class CustomAureliaViewModelEditor implements Editor {
     setTimeout(() => {
       this.aureliaCustomElementInstance = this.aureliaViewModel.bindings.viewModelRef.currentViewModel;
       this.aureliaCustomElementInstance.selectedItem = itemObject;
-      this.aureliaCustomElementInstance.selectedItemChanged = ((newItem) => {
+      this.aureliaCustomElementInstance.selectedItemChanged = ((newItem: any) => {
         this.selectedItem = newItem;
         if (newItem !== itemObject) {
           this.save();

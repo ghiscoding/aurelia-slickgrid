@@ -18,11 +18,11 @@ import { View, ViewSlot } from 'aurelia-framework';
 
 export class CustomAureliaViewModelFilter implements Filter {
   private _shouldTriggerQuery = true;
-  container;
-  grid: SlickGrid;
-  searchTerms: SearchTerm[];
-  columnDef: Column;
-  callback: FilterCallback;
+  container!: any;
+  grid!: SlickGrid;
+  searchTerms: SearchTerm[] = [];
+  columnDef!: Column;
+  callback!: FilterCallback;
   operator: OperatorType | OperatorString = OperatorType.equal;
 
   /** Aurelia ViewModel Reference */
@@ -82,7 +82,7 @@ export class CustomAureliaViewModelFilter implements Filter {
 
         setTimeout(() => {
           this.aureliaCustomElementInstance = this.aureliaViewModel.bindings.viewModelRef.currentViewModel;
-          this.aureliaCustomElementInstance.selectedItemChanged = ((item) => {
+          this.aureliaCustomElementInstance.selectedItemChanged = ((item: any) => {
             this.callback(undefined, { columnDef: this.columnDef, operator: this.operator, searchTerms: [item.id], shouldTriggerQuery: this._shouldTriggerQuery });
             // reset flag for next use
             this._shouldTriggerQuery = true;
@@ -111,7 +111,7 @@ export class CustomAureliaViewModelFilter implements Filter {
   }
 
   /** Set value(s) on the DOM element */
-  setValues(values) {
+  setValues(values: any) {
     if (this.aureliaCustomElementInstance && this.aureliaCustomElementInstance.hasOwnProperty('selectedId')) {
       this.aureliaCustomElementInstance.selectedId = values;
     }

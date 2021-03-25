@@ -35,12 +35,12 @@ export class Example5 {
       <li>You can also preload a grid with certain "presets" like Filters / Sorters / Pagination <a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Grid-State-&-Preset" target="_blank">Wiki - Grid Preset</a>
     </ul>
   `;
-  aureliaGrid: AureliaGridInstance;
-  columnDefinitions: Column[];
-  gridOptions: GridOption;
-  dataset = [];
-  metrics: Metrics;
-  paginationOptions: Pagination;
+  aureliaGrid!: AureliaGridInstance;
+  columnDefinitions: Column[] = [];
+  gridOptions!: GridOption;
+  dataset = [] = [];
+  metrics!: Metrics;
+  paginationOptions!: Pagination;
 
   isCountEnabled = true;
   odataVersion = 2;
@@ -126,21 +126,21 @@ export class Example5 {
     };
   }
 
-  displaySpinner(isProcessing) {
+  displaySpinner(isProcessing: boolean) {
     this.processing = isProcessing;
     this.status = (isProcessing)
       ? { text: 'processing...', class: 'alert alert-danger' }
       : { text: 'done', class: 'alert alert-success' };
   }
 
-  getCustomerCallback(data) {
+  getCustomerCallback(data: any) {
     // totalItems property needs to be filled for pagination to work correctly
     // however we need to force Aurelia to do a dirty check, doing a clone object will do just that
     let countPropName = 'totalRecordCount'; // you can use "totalRecordCount" or any name or "odata.count" when "enableCount" is set
     if (this.isCountEnabled) {
       countPropName = (this.odataVersion === 4) ? '@odata.count' : 'odata.count';
     }
-    this.paginationOptions = { ...this.gridOptions.pagination, totalItems: data[countPropName] };
+    this.paginationOptions = { ...this.gridOptions.pagination, totalItems: data[countPropName] } as Pagination;
     if (this.metrics) {
       this.metrics.totalItemCount = data[countPropName];
     }
@@ -150,7 +150,7 @@ export class Example5 {
     this.odataQuery = data['query'];
   }
 
-  getCustomerApiCall(query) {
+  getCustomerApiCall(query: string) {
     // in your case, you will call your WebAPI function (wich needs to return a Promise)
     // for the demo purpose, we will call a mock WebAPI function
     return this.getCustomerDataApiMock(query);
@@ -160,7 +160,7 @@ export class Example5 {
    * This function is only here to mock a WebAPI call (since we are using a JSON file for the demo)
    *  in your case the getCustomer() should be a WebAPI function returning a Promise
    */
-  getCustomerDataApiMock(query) {
+  getCustomerDataApiMock(query: string) {
     // the mock is returning a Promise, just like a WebAPI typically does
     return new Promise(resolve => {
       const queryParams = query.toLowerCase().split('&');
@@ -184,30 +184,30 @@ export class Example5 {
           const filterBy = param.substring('$filter='.length).replace('%20', ' ');
           if (filterBy.includes('contains')) {
             const filterMatch = filterBy.match(/contains\(([a-zA-Z\/]+),\s?'(.*?)'/);
-            const fieldName = filterMatch[1].trim();
-            columnFilters[fieldName] = { type: 'substring', term: filterMatch[2].trim() };
+            const fieldName = filterMatch![1].trim();
+            (columnFilters as any)[fieldName] = { type: 'substring', term: filterMatch![2].trim() };
           }
           if (filterBy.includes('substringof')) {
             const filterMatch = filterBy.match(/substringof\('(.*?)',([a-zA-Z ]*)/);
-            const fieldName = filterMatch[2].trim();
-            columnFilters[fieldName] = { type: 'substring', term: filterMatch[1].trim() };
+            const fieldName = filterMatch![2].trim();
+            (columnFilters as any)[fieldName] = { type: 'substring', term: filterMatch![1].trim() };
           }
           if (filterBy.includes('eq')) {
             const filterMatch = filterBy.match(/([a-zA-Z ]*) eq '(.*?)'/);
             if (Array.isArray(filterMatch)) {
-              const fieldName = filterMatch[1].trim();
-              columnFilters[fieldName] = { type: 'equal', term: filterMatch[2].trim() };
+              const fieldName = filterMatch![1].trim();
+              (columnFilters as any)[fieldName] = { type: 'equal', term: filterMatch![2].trim() };
             }
           }
           if (filterBy.includes('startswith')) {
             const filterMatch = filterBy.match(/startswith\(([a-zA-Z ]*),\s?'(.*?)'/);
-            const fieldName = filterMatch[1].trim();
-            columnFilters[fieldName] = { type: 'starts', term: filterMatch[2].trim() };
+            const fieldName = filterMatch![1].trim();
+            (columnFilters as any)[fieldName] = { type: 'starts', term: filterMatch![2].trim() };
           }
           if (filterBy.includes('endswith')) {
             const filterMatch = filterBy.match(/endswith\(([a-zA-Z ]*),\s?'(.*?)'/);
-            const fieldName = filterMatch[1].trim();
-            columnFilters[fieldName] = { type: 'ends', term: filterMatch[2].trim() };
+            const fieldName = filterMatch![1].trim();
+            (columnFilters as any)[fieldName] = { type: 'ends', term: filterMatch![2].trim() };
           }
         }
       }
@@ -244,8 +244,8 @@ export class Example5 {
             for (const columnId in columnFilters) {
               if (columnFilters.hasOwnProperty(columnId)) {
                 filteredData = filteredData.filter(column => {
-                  const filterType = columnFilters[columnId].type;
-                  const searchTerm = columnFilters[columnId].term;
+                  const filterType = (columnFilters as any)[columnId].type;
+                  const searchTerm = (columnFilters as any)[columnId].term;
                   let colId = columnId;
                   if (columnId && columnId.indexOf(' ') !== -1) {
                     const splitIds = columnId.split(' ');
@@ -281,11 +281,11 @@ export class Example5 {
   }
 
   goToFirstPage() {
-    this.aureliaGrid.paginationService.goToFirstPage();
+    this.aureliaGrid.paginationService!.goToFirstPage();
   }
 
   goToLastPage() {
-    this.aureliaGrid.paginationService.goToLastPage();
+    this.aureliaGrid.paginationService!.goToLastPage();
   }
 
   /** Dispatched event of a Grid State Changed event */
@@ -313,7 +313,7 @@ export class Example5 {
 
   changeCountEnableFlag() {
     this.isCountEnabled = !this.isCountEnabled;
-    const odataService = this.gridOptions.backendServiceApi.service;
+    const odataService = this.gridOptions.backendServiceApi!.service as GridOdataService;
     odataService.updateOptions({ enableCount: this.isCountEnabled } as OdataOption);
     odataService.clearFilters();
     this.aureliaGrid.filterService.clearFilters();
@@ -322,7 +322,7 @@ export class Example5 {
 
   setOdataVersion(version: number) {
     this.odataVersion = version;
-    const odataService = this.gridOptions.backendServiceApi.service;
+    const odataService = this.gridOptions.backendServiceApi!.service as GridOdataService;
     odataService.updateOptions({ version: this.odataVersion } as OdataOption);
     odataService.clearFilters();
     this.aureliaGrid.filterService.clearFilters();

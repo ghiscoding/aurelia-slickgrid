@@ -292,8 +292,8 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
   let customElement: AureliaSlickgridCustomElement;
   let divContainer: HTMLDivElement;
   let cellDiv: HTMLDivElement;
-  let columnDefinitions: Column[];
-  let gridOptions: GridOption;
+  let columnDefinitions: Column[] = [];
+  let gridOptions!: GridOption;
   let sharedService: SharedService;
   let globalEa: EventAggregator;
   let pluginEa: EventAggregator;
