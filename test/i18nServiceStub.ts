@@ -16,7 +16,7 @@ export class I18NServiceStub {
       case 'CLEAR_ALL_GROUPING': output = this._locale === 'en' ? 'Clear all Grouping' : 'Supprimer tous les groupes'; break;
       case 'CLEAR_ALL_FILTERS': output = this._locale === 'en' ? 'Clear all Filters' : 'Supprimer tous les filtres'; break;
       case 'CLEAR_ALL_SORTING': output = this._locale === 'en' ? 'Clear all Sorting' : 'Supprimer tous les tris'; break;
-      case 'CLEAR_FROZEN_COLUMNS': output = this._locale === 'en' ? 'Clear Frozen Columns' : 'Libérer les colonnes gelées'; break;
+      case 'CLEAR_FROZEN_COLUMNS': output = this._locale === 'en' ? 'Unfreeze Columns/Rows' : 'Dégeler les colonnes/rangées'; break;
       case 'COLUMNS': output = this._locale === 'en' ? 'Columns' : 'Colonnes'; break;
       case 'COMMANDS': output = this._locale === 'en' ? 'Commands' : 'Commandes'; break;
       case 'COLLAPSE_ALL_GROUPS': output = this._locale === 'en' ? 'Collapse all Groups' : 'Réduire tous les groupes'; break;

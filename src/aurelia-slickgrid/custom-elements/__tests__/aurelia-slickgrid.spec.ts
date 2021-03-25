@@ -8,6 +8,7 @@ import {
   ColumnFilters,
   CurrentFilter,
   CurrentPagination,
+  CurrentPinning,
   CurrentSorter,
   Editors,
   ExtensionList,
@@ -1130,6 +1131,15 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         customElement.initialization(slickEventHandler);
 
         expect(backendSpy).toHaveBeenCalledWith(mockColumnFilter, false);
+      });
+
+      it('should override frozen grid options when "pinning" is defined in the "presets" property', () => {
+        const pinningMock = { frozenBottom: false, frozenColumn: -1, frozenRow: -1 } as CurrentPinning;
+
+        customElement.gridOptions.presets = { pinning: pinningMock };
+        customElement.initialization(slickEventHandler);
+
+        expect(customElement.gridOptions).toEqual({ ...customElement.gridOptions, ...pinningMock });
       });
 
       it('should call the "updateFilters" method when filters are defined in the "presets" property', () => {
