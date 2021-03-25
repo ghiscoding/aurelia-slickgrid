@@ -4,7 +4,7 @@
     <span class="float-right">
       <a style="font-size: 18px"
          target="_blank"
-         href="https://github.com/ghiscoding/aurelia-slickgrid/blob/master/src/examples/slickgrid/example5.ts">
+         href="https://github.com/ghiscoding/aurelia-slickgrid/blob/master/src/examples/slickgrid/example31.ts">
         <span class="fa fa-link"></span> code
       </a>
     </span>
@@ -12,13 +12,12 @@
   <div class="subtitle" innerhtml.bind="subTitle"></div>
 
   <div class="row">
-    <div class="col-sm-4">
-      <div class.bind="status.class" role="alert" data-test="status">
-        <strong>Status: </strong> ${status.text}
-        <span hidden.bind="!processing">
-          <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
-        </span>
-      </div>
+    <div class="btn-group btn-group-sm" role="group" aria-label="Basic Editing Commands">
+      <button class="btn btn-outline-secondary btn-sm" data-test="clear-filters-sorting"
+              click.delegate="clearAllFiltersAndSorts()" title="Clear all Filters & Sorts">
+        <span class="icon mdi mdi-close"></span>
+        <span>Clear all Filter & Sorts</span>
+      </button>
       <button class="btn btn-outline-secondary btn-sm" data-test="set-dynamic-filter"
               click.delegate="setFiltersDynamically()">
         Set Filters Dynamically
@@ -27,17 +26,27 @@
               click.delegate="setSortingDynamically()">
         Set Sorting Dynamically
       </button>
-      <br>
-      <span if.bind="metrics">
-        <b>Metrics:</b> ${metrics.endTime | dateFormat: 'DD MMM, h:mm:ss a'} | ${metrics.executionTime}ms |
-        ${metrics.totalItemCount}
-        items
-      </span>
     </div>
-    <div class="col-sm-8">
-      <div class="alert alert-info" data-test="alert-odata-query">
-        <strong>OData Query:</strong> <span data-test="odata-query-result">${odataQuery}</span>
-      </div>
+    <button class="btn btn-outline-secondary btn-sm" style="margin-left: 10px" data-test="add-gender-button"
+            click.delegate="addOtherGender()" disabled.bind="isOtherGenderAdded">
+      Add Other Gender via RxJS
+    </button>
+  </div>
+
+  <br />
+
+  <div>
+    <span>
+      <label>Programmatically go to first/last page:</label>
+      <button class="btn btn-outline-secondary btn-xs" data-test="goto-first-page" click.delegate="goToFirstPage()">
+        <i class="fa fa-caret-left fa-lg"></i>
+      </button>
+      <button class="btn btn-outline-secondary btn-xs" data-test="goto-last-page" click.delegate="goToLastPage()">
+        <i class="fa fa-caret-right fa-lg"></i>
+      </button>
+    </span>
+
+    <span style="margin-left: 10px">
       <label>OData Version: </label>
       <span data-test="radioVersion">
         <label class="radio-inline control-label" for="radio2">
@@ -54,19 +63,20 @@
                click.delegate="changeCountEnableFlag()">
         <span style="font-weight: bold">Enable Count</span> (add to OData query)
       </label>
-    </div>
-  </div>
-  <div class="row col-md-12">
-    <label>Programmatically go to first/last page:</label>
-    <button class="btn btn-outline-secondary btn-xs" data-test="goto-first-page" click.delegate="goToFirstPage()">
-      <i class="fa fa-caret-left fa-lg"></i>
-    </button>
-    <button class="btn btn-outline-secondary btn-xs" data-test="goto-last-page" click.delegate="goToLastPage()">
-      <i class="fa fa-caret-right fa-lg"></i>
-    </button>
   </div>
 
-  <aurelia-slickgrid grid-id="grid5"
+  <div class="row" style="margin-top: 5px">
+    <div class="col">
+      <div class="alert alert-info" data-test="alert-odata-query">
+        <strong>OData Query:</strong> <span data-test="odata-query-result">${odataQuery}</span>
+      </div>
+    </div>
+    <div class.bind="status.class" role="alert" data-test="status">
+      <strong>Status: </strong> ${status.text}
+    </div>
+  </div>
+
+  <aurelia-slickgrid grid-id="grid31"
                      column-definitions.bind="columnDefinitions"
                      grid-options.bind="gridOptions"
                      dataset.bind="dataset"

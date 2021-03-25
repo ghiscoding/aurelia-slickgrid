@@ -10,12 +10,13 @@ import {
   FlatpickrOption,
   Formatters,
   GridOption,
+  GridStateChange,
   Metrics,
   MultipleSelectOption,
   OperatorType,
 } from '../../aurelia-slickgrid';
 
-function randomBetween(min, max) {
+function randomBetween(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 const NB_ITEMS = 1500;
@@ -46,11 +47,11 @@ export class Example4 {
   </ul>
 `;
 
-  aureliaGrid: AureliaGridInstance;
-  columnDefinitions: Column[];
-  gridOptions: GridOption;
-  dataset: any[];
-  metrics: Metrics;
+  aureliaGrid!: AureliaGridInstance;
+  columnDefinitions: Column[] = [];
+  gridOptions!: GridOption;
+  dataset: any[] = [];
+  metrics!: Metrics;
 
   constructor(private http: HttpClient, private httpFetch: FetchClient) {
     this.defineGrid();
@@ -224,7 +225,7 @@ export class Example4 {
     };
   }
 
-  mockData(itemCount, startingIndex = 0): any[] {
+  mockData(itemCount: number, startingIndex = 0): any[] {
     // mock a dataset
     const tempDataset = [];
     for (let i = startingIndex; i < (startingIndex + itemCount); i++) {
@@ -261,7 +262,7 @@ export class Example4 {
   }
 
   /** Dispatched event of a Grid State Changed event */
-  gridStateChanged(gridState) {
+  gridStateChanged(gridState: GridStateChange) {
     console.log('Client sample, Grid State changed:: ', gridState);
   }
 
@@ -288,7 +289,7 @@ export class Example4 {
     ]);
   }
 
-  refreshMetrics(_e, args) {
+  refreshMetrics(_e: Event, args: any) {
     if (args && args.current >= 0) {
       setTimeout(() => {
         this.metrics = {

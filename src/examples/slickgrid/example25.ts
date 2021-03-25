@@ -46,16 +46,16 @@ export class Example25 {
   </ul>
   `;
 
-  aureliaGrid: AureliaGridInstance;
-  columnDefinitions: Column[];
-  gridOptions: GridOption;
+  aureliaGrid!: AureliaGridInstance;
+  columnDefinitions: Column[] = [];
+  gridOptions!: GridOption;
   dataset = [];
-  metrics: Metrics;
+  metrics!: Metrics;
 
   isWithCursor = false;
   graphqlQuery = '';
   processing = false;
-  selectedLanguage: string;
+  selectedLanguage = '';
   status = { text: '', class: '' };
 
   constructor(private http: HttpClient) {
@@ -195,7 +195,7 @@ export class Example25 {
         preProcess: () => this.displaySpinner(true),
         process: (query) => this.getCountries(query),
         postProcess: (result: GraphqlResult<Country>) => {
-          this.metrics = result.metrics;
+          this.metrics = result.metrics as Metrics;
           this.displaySpinner(false);
         }
       } as GraphqlServiceApi

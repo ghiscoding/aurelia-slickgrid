@@ -35,13 +35,13 @@ export class Example11 {
   </ul>
   `;
 
-  aureliaGrid: AureliaGridInstance;
-  dataView: SlickDataView;
-  grid: SlickGrid;
-  gridService: GridService;
-  columnDefinitions: Column[];
-  gridOptions: GridOption;
-  dataset: any[];
+  aureliaGrid!: AureliaGridInstance;
+  dataView!: SlickDataView;
+  grid!: SlickGrid;
+  gridService!: GridService;
+  columnDefinitions: Column[] = [];
+  gridOptions!: GridOption;
+  dataset: any[] = [];
   updatedObject: any;
 
   constructor() {
@@ -174,7 +174,7 @@ export class Example11 {
 
   addNewItem(insertPosition?: 'top' | 'bottom') {
     const newItem1 = this.createNewItem(1);
-    const newItem2 = this.createNewItem(2);
+    // const newItem2 = this.createNewItem(2);
 
     // single insert
     this.aureliaGrid.gridService.addItem(newItem1, { position: insertPosition });

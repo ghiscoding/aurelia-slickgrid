@@ -6,9 +6,9 @@ export class Example29 {
   title = 'Example 29: Grid with Header and Footer slot';
   subTitle = `Simple Grids with a custom header and footer via named slots`;
 
-  gridOptions: GridOption;
-  columnDefinitions: Column[];
-  dataset: any[];
+  gridOptions!: GridOption;
+  columnDefinitions: Column[] = [];
+  dataset: any[] = [];
 
   constructor() {
     // define the grid options & columns and then create the grid itself

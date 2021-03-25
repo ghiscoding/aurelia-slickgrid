@@ -29,12 +29,12 @@ export class Example9 {
     </ul>
   `;
 
-  aureliaGrid: AureliaGridInstance;
-  columnDefinitions: Column[];
-  gridOptions: GridOption;
-  dataset = [];
-  dataView: SlickDataView;
-  gridObj: SlickGrid;
+  aureliaGrid!: AureliaGridInstance;
+  columnDefinitions: Column[] = [];
+  gridOptions!: GridOption;
+  dataset: any[] = [];
+  dataView!: SlickDataView;
+  gridObj!: SlickGrid;
   selectedLanguage: string;
 
   constructor(private i18n: I18N) {
@@ -101,7 +101,7 @@ export class Example9 {
       enableCellNavigation: true,
       gridMenu: {
         // we could disable the menu entirely by returning false depending on some code logic
-        menuUsabilityOverride: (_args) => true,
+        menuUsabilityOverride: () => true,
 
         // use the click event position to reposition the grid menu (defaults to false)
         // basically which offset do we want to use for reposition the grid menu,
@@ -159,7 +159,7 @@ export class Example9 {
             cssClass: 'red',        // container css class
             textCssClass: 'italic', // just the text css class
             action: (_e, args) => alert(args.command),
-            itemVisibilityOverride: (_args) => {
+            itemVisibilityOverride: () => {
               // for example hide this command from the menu if there's any filter entered
               if (this.aureliaGrid) {
                 return this.isObjectEmpty(this.aureliaGrid.filterService.getColumnFilters());
@@ -221,14 +221,14 @@ export class Example9 {
     this.selectedLanguage = nextLanguage;
   }
 
-  toggleGridMenu(e) {
+  toggleGridMenu(e: Event) {
     if (this.aureliaGrid && this.aureliaGrid.extensionService) {
       const gridMenuInstance = this.aureliaGrid.extensionService.getSlickgridAddonInstance(ExtensionName.gridMenu);
       gridMenuInstance.showGridMenu(e);
     }
   }
 
-  private isObjectEmpty(obj) {
+  private isObjectEmpty(obj: any) {
     for (const key in obj) {
       if (obj.hasOwnProperty(key) && obj[key] !== '') {
         return false;

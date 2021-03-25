@@ -24,9 +24,9 @@ export class Example28 {
       <li>you might need to refresh the page to clear the browser cache and see the correct theme</li>
     </ul>
   `;
-  aureliaGrid: AureliaGridInstance;
-  gridOptions: GridOption;
-  columnDefinitions: Column[];
+  aureliaGrid!: AureliaGridInstance;
+  gridOptions!: GridOption;
+  columnDefinitions: Column[] = [];
   datasetHierarchical: any[] = [];
   @bindable() searchString = '';
 
@@ -138,7 +138,7 @@ export class Example28 {
     const dataView = grid.getData();
     const data = dataView.getItems();
     const identifierPropName = dataView.getIdPropertyName() || 'id';
-    const idx = dataView.getIdxById(dataContext[identifierPropName]);
+    const idx = dataView.getIdxById(dataContext[identifierPropName]) as number;
     const prefix = this.getFileIcon(value);
 
     value = value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -194,7 +194,7 @@ export class Example28 {
 
       // scroll into the position, after insertion cycle, where the item was added
       setTimeout(() => {
-        const rowIndex = this.aureliaGrid.dataView.getRowById(popItem.id);
+        const rowIndex = this.aureliaGrid.dataView.getRowById(popItem.id) as number;
         this.aureliaGrid.slickGrid.scrollRowIntoView(rowIndex + 3);
       }, 0);
     }

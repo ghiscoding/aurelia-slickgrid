@@ -14,14 +14,14 @@ export class Example14 {
   </ul>
   `;
 
-  angularGrid2: AureliaGridInstance;
+  angularGrid2!: AureliaGridInstance;
   gridObj2: any;
-  columnDefinitions1: Column[];
-  columnDefinitions2: Column[];
-  gridOptions1: GridOption;
-  gridOptions2: GridOption;
-  dataset1 = [];
-  dataset2 = [];
+  columnDefinitions1: Column[] = [];
+  columnDefinitions2: Column[] = [];
+  gridOptions1!: GridOption;
+  gridOptions2!: GridOption;
+  dataset1: any[] = [];
+  dataset2: any[] = [];
 
   constructor() {
     this.definedGrid1();

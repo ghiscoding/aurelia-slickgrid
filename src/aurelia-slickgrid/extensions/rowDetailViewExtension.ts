@@ -41,13 +41,13 @@ export interface CreatedView extends AureliaViewOutput {
   SharedService,
 )
 export class RowDetailViewExtension implements UniversalRowDetailViewExtension {
-  private _addon: SlickRowDetailView | null;
+  private _addon: SlickRowDetailView | null = null;
   private _eventHandler: SlickEventHandler;
-  private _preloadView: string;
+  private _preloadView = '';
   private _slots: CreatedView[] = [];
-  private _viewModel: string;
+  private _viewModel = '';
   private _subscriptions: Subscription[] = [];
-  private _userProcessFn: (item: any) => Promise<any>;
+  private _userProcessFn?: (item: any) => Promise<any>;
 
   constructor(
     private readonly aureliaUtilService: AureliaUtilService,
@@ -109,7 +109,7 @@ export class RowDetailViewExtension implements UniversalRowDetailViewExtension {
           if (typeof gridOptions.rowDetailView.process === 'function') {
             // we need to keep the user "process" method and replace it with our own execution method
             // we do this because when we get the item detail, we need to call "onAsyncResponse.notify" for the plugin to work
-            this._userProcessFn = gridOptions.rowDetailView.process;                // keep user's process method
+            this._userProcessFn = gridOptions.rowDetailView.process as (item: any) => Promise<any>;                // keep user's process method
             gridOptions.rowDetailView.process = (item) => this.onProcessing(item);  // replace process method & run our internal one
           } else {
             throw new Error('You need to provide a "process" function for the Row Detail Extension to work properly');

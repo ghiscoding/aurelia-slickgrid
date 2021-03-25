@@ -6,6 +6,7 @@ import {
   AureliaGridInstance,
   AutocompleteOption,
   Column,
+  EditCommand,
   Editors,
   EditorValidator,
   FieldType,
@@ -52,7 +53,7 @@ const myCustomTitleValidator: EditorValidator = (value: any) => {
 };
 
 // create a custom Formatter to show the Task + value
-const taskFormatter = (_row, _cell, value) => {
+const taskFormatter = (_row: number, _cell: number, value: any) => {
   if (value && Array.isArray(value)) {
     const taskValues = value.map((val) => `Task ${val}`);
     const values = taskValues.join(', ');
@@ -77,11 +78,11 @@ export class Example3 {
     <li>Support of "collectionAsync" is possible, click on "Clear Filters/Sorting" then add/delete item(s) and look at "Prerequisites" Select Filter</li>
   </ul>
   `;
-  private _commandQueue = [];
-  aureliaGrid: AureliaGridInstance;
-  gridOptions: GridOption;
-  columnDefinitions: Column[];
-  dataset: any[];
+  private _commandQueue: EditCommand[] = [];
+  aureliaGrid!: AureliaGridInstance;
+  gridOptions!: GridOption;
+  columnDefinitions: Column[] = [];
+  dataset: any[] = [];
   updatedObject: any;
   isAutoEdit = true;
   alertWarning: any;
@@ -476,8 +477,8 @@ export class Example3 {
       // at any time, we can poke the "collection" property and modify it
       const requisiteColumnDef = this.columnDefinitions.find((column: Column) => column.id === 'prerequisites');
       if (requisiteColumnDef) {
-        const collectionEditor = requisiteColumnDef.editor.collection;
-        const collectionFilter = requisiteColumnDef.filter.collection;
+        const collectionEditor = requisiteColumnDef.editor!.collection;
+        const collectionFilter = requisiteColumnDef.filter!.collection;
 
         if (Array.isArray(collectionEditor) && Array.isArray(collectionFilter)) {
           // add the new row to the grid
@@ -501,8 +502,8 @@ export class Example3 {
   deleteItem() {
     const requisiteColumnDef = this.columnDefinitions.find((column: Column) => column.id === 'prerequisites');
     if (requisiteColumnDef) {
-      const collectionEditor = requisiteColumnDef.editor.collection;
-      const collectionFilter = requisiteColumnDef.filter.collection;
+      const collectionEditor = requisiteColumnDef.editor!.collection;
+      const collectionFilter = requisiteColumnDef.filter!.collection;
 
       if (Array.isArray(collectionEditor) && Array.isArray(collectionFilter)) {
         // sort collection in descending order and take out last option from the collection
@@ -513,11 +514,11 @@ export class Example3 {
     }
   }
 
-  sortCollectionDescending(collection) {
+  sortCollectionDescending(collection: any[]) {
     return collection.sort((item1, item2) => item1.value - item2.value);
   }
 
-  mockData(itemCount, startingIndex = 0) {
+  mockData(itemCount: number, startingIndex = 0) {
     // mock a dataset
     const tempDataset = [];
     for (let i = startingIndex; i < (startingIndex + itemCount); i++) {
@@ -546,12 +547,12 @@ export class Example3 {
     return tempDataset;
   }
 
-  onCellChanged(_e, args) {
+  onCellChanged(_e: Event, args: any) {
     console.log('onCellChange', args);
     this.updatedObject = { ...args.item };
   }
 
-  onCellClicked(_e, args) {
+  onCellClicked(_e: Event, args: any) {
     const metadata = this.aureliaGrid.gridService.getColumnFromEventArguments(args);
     console.log(metadata);
 
@@ -571,7 +572,7 @@ export class Example3 {
     }
   }
 
-  onCellValidationError(_e, args) {
+  onCellValidationError(_e: Event, args: any) {
     if (args.validationResults) {
       alert(args.validationResults.msg);
     }
@@ -633,7 +634,7 @@ export class Example3 {
     */
   }
 
-  setAutoEdit(isAutoEdit) {
+  setAutoEdit(isAutoEdit: boolean) {
     this.isAutoEdit = isAutoEdit;
     this.aureliaGrid.slickGrid.setOptions({
       autoEdit: isAutoEdit

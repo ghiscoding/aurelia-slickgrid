@@ -37,11 +37,11 @@ export class Example6 {
     </ul>
   `;
 
-  aureliaGrid: AureliaGridInstance;
-  columnDefinitions: Column[];
-  gridOptions: GridOption;
-  dataset = [];
-  metrics: Metrics;
+  aureliaGrid!: AureliaGridInstance;
+  columnDefinitions: Column[] = [];
+  gridOptions!: GridOption;
+  dataset = [] = [];
+  metrics!: Metrics;
   graphqlService = new GraphqlService();
 
   isWithCursor = false;
@@ -188,7 +188,7 @@ export class Example6 {
         preProcess: () => this.displaySpinner(true),
         process: (query) => this.getCustomerApiCall(query),
         postProcess: (result: GraphqlPaginatedResult) => {
-          this.metrics = result.metrics;
+          this.metrics = result.metrics as Metrics;
           this.displaySpinner(false);
         }
       } as GraphqlServiceApi
@@ -201,7 +201,7 @@ export class Example6 {
     }
   }
 
-  displaySpinner(isProcessing) {
+  displaySpinner(isProcessing: boolean) {
     this.processing = isProcessing;
     this.status = (isProcessing)
       ? { text: 'processing...', class: 'alert alert-danger' }
@@ -213,6 +213,7 @@ export class Example6 {
    * @param query
    * @return Promise<GraphqlPaginatedResult>
    */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getCustomerApiCall(_query: string): Promise<GraphqlPaginatedResult> {
     // in your case, you will call your WebAPI function (wich needs to return a Promise)
     // for the demo purpose, we will call a mock WebAPI function
@@ -236,11 +237,11 @@ export class Example6 {
   }
 
   goToFirstPage() {
-    this.aureliaGrid.paginationService.goToFirstPage();
+    this.aureliaGrid.paginationService!.goToFirstPage();
   }
 
   goToLastPage() {
-    this.aureliaGrid.paginationService.goToLastPage();
+    this.aureliaGrid.paginationService!.goToLastPage();
   }
 
   /** Dispatched event of a Grid State Changed event */

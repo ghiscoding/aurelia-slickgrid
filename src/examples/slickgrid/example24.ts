@@ -47,7 +47,7 @@ const priorityExportFormatter: Formatter = (_row, _cell, value, _columnDef, _dat
   const count = +(value >= 3 ? 3 : value);
   const key = count === 3 ? 'HIGH' : (count === 2 ? 'MEDIUM' : 'LOW');
 
-  return i18n && i18n.tr && i18n.tr(key);
+  return i18n?.tr(key) ?? '';
 };
 
 // create a custom translate Formatter (typically you would move that a separate file, for separation of concerns)
@@ -55,7 +55,7 @@ const taskTranslateFormatter: Formatter = (_row, _cell, value, _columnDef, _data
   const gridOptions: GridOption = (grid && typeof grid.getOptions === 'function') ? grid.getOptions() : {};
   const i18n = gridOptions.i18n;
 
-  return i18n && i18n.tr && i18n.tr('TASK_X', { x: value });
+  return i18n?.tr('TASK_X', { x: value }) ?? '';
 };
 
 @autoinject()
@@ -87,10 +87,10 @@ export class Example24 {
       </ol>
     </ul>`;
 
-  aureliaGrid: AureliaGridInstance;
-  gridOptions: GridOption;
-  columnDefinitions: Column[];
-  dataset: any[];
+  aureliaGrid!: AureliaGridInstance;
+  gridOptions!: GridOption;
+  columnDefinitions: Column[] = [];
+  dataset: any[] = [];
   selectedLanguage: string;
 
   constructor(private i18n: I18N) {
@@ -230,7 +230,7 @@ export class Example24 {
             {
               option: null, title: 'null', cssClass: 'italic',
               // you can use the "action" callback and/or use "onCallback" callback from the grid options, they both have the same arguments
-              action: (_e, _args) => {
+              action: () => {
                 // action callback.. do something
               },
               // only enable Action menu when the Priority is set to High
@@ -296,7 +296,7 @@ export class Example24 {
     };
   }
 
-  executeCommand(_e, args) {
+  executeCommand(_e: Event, args: any) {
     const command = args.command;
     const dataContext = args.dataContext;
 
@@ -362,7 +362,7 @@ export class Example24 {
         {
           command: 'help', titleKey: 'HELP', iconCssClass: 'fa fa-question-circle', positionOrder: 64,
           // you can use the 'action' callback and/or subscribe to the 'onCallback' event, they both have the same arguments
-          action: (_e, _args) => {
+          action: () => {
             // action callback.. do something
           },
           // only show command to 'Help' when the task is Not Completed
@@ -388,7 +388,7 @@ export class Example24 {
             return (!dataContext.completed);
           },
           // you can use the 'action' callback and/or subscribe to the 'onCallback' event, they both have the same arguments
-          action: (_e, _args) => {
+          action: () => {
             // action callback.. do something
           },
         },
@@ -442,7 +442,7 @@ export class Example24 {
     });
   }
 
-  showCellMenuCommandsAndOptions(showBothList) {
+  showCellMenuCommandsAndOptions(showBothList: boolean) {
     // change via the plugin setOptions
     this.cellMenuInstance.setOptions({
       hideOptionSection: !showBothList

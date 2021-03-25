@@ -26,14 +26,14 @@ export class Example8 {
     </ul>
   `;
 
-  aureliaGrid: AureliaGridInstance;
-  columnDefinitions: Column[];
-  gridOptions: GridOption;
-  dataset = [];
-  dataView: SlickDataView;
-  gridObj: SlickGrid;
+  aureliaGrid!: AureliaGridInstance;
+  columnDefinitions: Column[] = [];
+  gridOptions!: GridOption;
+  dataset: any[] = [];
+  dataView!: SlickDataView;
+  gridObj!: SlickGrid;
   selectedLanguage: string;
-  visibleColumns;
+  visibleColumns: Column[] = [];
 
   constructor(private i18n: I18N) {
     // define the grid options & columns and then create the grid itself
@@ -48,8 +48,8 @@ export class Example8 {
 
   aureliaGridReady(aureliaGrid: AureliaGridInstance) {
     this.aureliaGrid = aureliaGrid;
-    this.gridObj = aureliaGrid && aureliaGrid.slickGrid;
-    this.dataView = aureliaGrid && aureliaGrid.dataView;
+    this.gridObj = aureliaGrid?.slickGrid;
+    this.dataView = aureliaGrid?.dataView;
   }
 
   defineGrid() {

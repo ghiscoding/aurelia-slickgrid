@@ -22,10 +22,10 @@ export class Example16 {
     </ul>
   `;
 
-  aureliaGrid: AureliaGridInstance;
-  columnDefinitions: Column[];
-  gridOptions: GridOption;
-  dataset: any[];
+  aureliaGrid!: AureliaGridInstance;
+  columnDefinitions: Column[] = [];
+  gridOptions!: GridOption;
+  dataset: any[] = [];
   selectedLanguage: string;
 
   constructor(private i18n: I18N) {
@@ -133,7 +133,7 @@ export class Example16 {
     this.dataset = mockDataset;
   }
 
-  onBeforeMoveRow(e, data) {
+  onBeforeMoveRow(e: Event, data: any) {
     for (let i = 0; i < data.rows.length; i++) {
       // no point in moving before or after itself
       if (data.rows[i] === data.insertBefore || data.rows[i] === data.insertBefore - 1) {
@@ -144,13 +144,13 @@ export class Example16 {
     return true;
   }
 
-  onMoveRows(_e, args) {
+  onMoveRows(_e: Event, args: any) {
     const extractedRows = [];
     const rows = args.rows;
     const insertBefore = args.insertBefore;
     const left = this.dataset.slice(0, insertBefore);
     const right = this.dataset.slice(insertBefore, this.dataset.length);
-    rows.sort((a, b) => a - b);
+    rows.sort((a: number, b: number) => a - b);
     for (let i = 0; i < rows.length; i++) {
       extractedRows.push(this.dataset[rows[i]]);
     }

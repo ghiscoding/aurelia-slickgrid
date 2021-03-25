@@ -4,7 +4,7 @@ import { inlineView } from 'aurelia-framework';
 export class CustomTitleFormatter {
   item: any;
 
-  bind(bindingContext, overrideContext) {
+  bind(_bindingContext: any, overrideContext: any) {
     this.item = overrideContext.parentOverrideContext.bindingContext.model;
   }
 }

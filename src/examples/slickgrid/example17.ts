@@ -7,7 +7,6 @@ import {
   Column,
   Formatter,
   GridOption,
-  SlickGrid,
   SlickNamespace,
 } from '../../aurelia-slickgrid';
 
@@ -27,7 +26,7 @@ const mpnFormatter: Formatter = (_row, _cell, _value, _columnDef, dataContext) =
 };
 
 export class Example17 {
-  @bindable({ defaultBindingMode: bindingMode.twoWay }) search: string;
+  @bindable({ defaultBindingMode: bindingMode.twoWay }) search = '';
   private _eventHandler: any = new Slick.EventHandler();
 
   title = 'Example 17: Octopart Catalog Search - Remote Model Plugin';
@@ -50,19 +49,19 @@ export class Example17 {
       </li>
     </ul>
   `;
-  aureliaGrid: AureliaGridInstance;
-  columnDefinitions: Column[];
+  aureliaGrid!: AureliaGridInstance;
+  columnDefinitions: Column[] = [];
   customDataView: any;
   dataset = [];
-  gridObj: SlickGrid;
-  gridOptions: GridOption;
+  gridObj: any;
+  gridOptions!: GridOption;
   loaderDataView: any;
   loading = false; // spinner when loading data
 
   constructor() {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
-    this.loaderDataView = new Slick.Data.RemoteModel();
+    this.loaderDataView = new Slick.Data.RemoteModel!();
     this.customDataView = this.loaderDataView && this.loaderDataView.data;
   }
 
@@ -133,7 +132,7 @@ export class Example17 {
     }
   }
 
-  onSort(_e, args) {
+  onSort(_e: Event, args: any) {
     if (this.gridObj && this.gridObj.getViewport && this.loaderDataView && this.loaderDataView.ensureData && this.loaderDataView.setSort) {
       const vp = this.gridObj.getViewport();
       if (args && args.sortCol && args.sortCol.field) {
