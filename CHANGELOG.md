@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.5.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v3.4.0...v3.5.0) (2021-03-25)
+
+
+### Features
+
+* **build:** compile build with TSC strict mode enabled ([#539](https://github.com/ghiscoding/aurelia-slickgrid/issues/539)) ([483c4ba](https://github.com/ghiscoding/aurelia-slickgrid/commit/483c4ba57fd85edc0658aacbd7db1eb5aa83be65))
+* **filters:** add optional `filterTypingDebounce` for filters w/keyup ([#538](https://github.com/ghiscoding/aurelia-slickgrid/issues/538)) ([66e7cfc](https://github.com/ghiscoding/aurelia-slickgrid/commit/66e7cfc01c53a26ac81c1ea3be939ef637a15d15))
+* **resources:** add RxJS support via Slickgrid-Universal package ([#541](https://github.com/ghiscoding/aurelia-slickgrid/issues/541)) ([9c01edc](https://github.com/ghiscoding/aurelia-slickgrid/commit/9c01edcec5d74c43a13f1fe51ada4fb21ae63af9))
+* **state:** add Pinning (frozen) to Grid State & Presets ([#543](https://github.com/ghiscoding/aurelia-slickgrid/issues/543)) ([cbd07d2](https://github.com/ghiscoding/aurelia-slickgrid/commit/cbd07d2b6851d8b0e697cb5a122386c80c0e6d28))
+
+
+### Bug Fixes
+
+* **metrics:** use `onRowCountChanged` event to refresh metrics ([#544](https://github.com/ghiscoding/aurelia-slickgrid/issues/544)) ([2f16407](https://github.com/ghiscoding/aurelia-slickgrid/commit/2f164077de2f946313d0be9c9fa70101b3e52d1e))
+* **resizer:** allow gridHeight/Width to be passed as string, fixes [#284](https://github.com/ghiscoding/aurelia-slickgrid/issues/284) ([#535](https://github.com/ghiscoding/aurelia-slickgrid/issues/535)) ([f324071](https://github.com/ghiscoding/aurelia-slickgrid/commit/f3240717bbf5a818201655d78e27c483c6609580))
+* **tests:** add Cypress tests to cover grid presets ([#542](https://github.com/ghiscoding/aurelia-slickgrid/issues/542)) ([ec24aed](https://github.com/ghiscoding/aurelia-slickgrid/commit/ec24aed90ed7ca460cb4d0de9e79538eeb9102c5))
+
 ## [3.4.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v3.3.1...v3.4.0) (2021-02-27)
 
 
