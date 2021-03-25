@@ -95,8 +95,8 @@ describe('Example 11 - Add / Update / Highlight a Datagrid Item', () => {
   it('should scroll to top and expect certain rows on top', () => {
     cy.get('[data-test="scroll-top-btn"]').click();
 
-    cy.get('#grid11').find('.slick-row:nth(0) .slick-cell:nth(1)').should('contain.text', 'Task 1001');
-    cy.get('#grid11').find('.slick-row:nth(1) .slick-cell:nth(1)').should('contain.text', 'Task 1000');
-    cy.get('#grid11').find('.slick-row:nth(2) .slick-cell:nth(1)').should('contain.text', 'Task 1');
+    cy.get('#grid11').find('.slick-row:visible:nth(0) .slick-cell:nth(1)').should('contain.text', 'Task 1001');
+    cy.get('#grid11').find('.slick-row:visible:nth(1) .slick-cell:nth(1)').should('contain.text', 'Task 1000');
+    cy.get('#grid11').find('.slick-row:visible:nth(2) .slick-cell:nth(1)').should('contain.text', 'Task 1');
   });
 });
