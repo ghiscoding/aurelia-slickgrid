@@ -156,7 +156,7 @@
     "ts-loader": "^8.0.18",
     "ts-node": "^9.1.1",
     "typedoc": "^0.20.33",
-    "uglify-js": "^3.13.2",
+    "uglify-js": "^3.13.3",
     "url-loader": "4.1.1",
     "vinyl-fs": "^3.0.3",
     "webpack": "^4.46.0",
