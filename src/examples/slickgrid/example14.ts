@@ -1,4 +1,4 @@
-import { AureliaGridInstance, Column, FieldType, GridOption } from '../../aurelia-slickgrid';
+import { AureliaGridInstance, Column, FieldType, GridOption, ItemMetadata } from '../../aurelia-slickgrid';
 import './example14.scss'; // provide custom CSS/SASS styling
 
 export class Example14 {
@@ -118,7 +118,7 @@ export class Example14 {
    * Your callback will always have the "item" argument which you can use to decide on the colspan
    * Your return must always be in the form of:: return { columns: {}}
    */
-  renderDifferentColspan(item: any) {
+  renderDifferentColspan(item: any): ItemMetadata {
     if (item.id % 2 === 1) {
       return {
         columns: {
