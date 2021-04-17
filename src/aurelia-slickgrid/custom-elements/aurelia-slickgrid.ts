@@ -604,6 +604,9 @@ export class AureliaSlickgridCustomElement {
     if (this._isGridInitialized) {
       this.updateColumnDefinitionsList(this.columnDefinitions);
     }
+    if (this._columnDefinitions.length > 0) {
+      this.copyColumnWidthsReference(this._columnDefinitions);
+    }
   }
 
   /**
@@ -780,6 +783,13 @@ export class AureliaSlickgridCustomElement {
         const onSetItemsCalledHandler = dataView.onSetItemsCalled;
         (this._eventHandler as SlickEventHandler<GetSlickEventType<typeof onSetItemsCalledHandler>>).subscribe(onSetItemsCalledHandler, (_e, args) => {
           this.handleOnItemCountChanged(dataView.getLength(), args.itemCount);
+
+          // when user has resize by content enabled, we'll force a full width calculation since we change our entire dataset
+          if (args.itemCount > 0 && (this.gridOptions.autosizeColumnsByCellContentOnFirstLoad || this.gridOptions.enableAutoResizeColumnsByCellContent)) {
+            // add a delay so that if column positions changes by changeColumnsArrangement() when using custom Grid Views
+            // or presets.columns won't have any impact on the list of visible columns and their positions
+            setTimeout(() => this.resizerService.resizeColumnsByCellContent(true), 10);
+          }
         });
 
         if (this.gridOptions?.enableTreeData) {
@@ -897,6 +907,10 @@ export class AureliaSlickgridCustomElement {
   }
 
   bindResizeHook(grid: SlickGrid, options: GridOption) {
+    if ((options.autoFitColumnsOnFirstLoad && options.autosizeColumnsByCellContentOnFirstLoad) || (options.enableAutoSizeColumns && options.enableAutoResizeColumnsByCellContent)) {
+      throw new Error(`You cannot enable both autosize/fit viewport & resize by content, you must choose which resize technique to use. You can enable these 2 options ("autoFitColumnsOnFirstLoad" and "enableAutoSizeColumns") OR these other 2 options ("autosizeColumnsByCellContentOnFirstLoad" and "enableAutoResizeColumnsByCellContent").`);
+    }
+
     // expand/autofit columns on first page load
     if (grid && options.autoFitColumnsOnFirstLoad && options.enableAutoSizeColumns && typeof grid.autosizeColumns === 'function') {
       this.grid.autosizeColumns();
@@ -908,7 +922,8 @@ export class AureliaSlickgridCustomElement {
     } else {
       this.resizerService.resizeGrid();
     }
-    if (grid && options && options.enableAutoResize) {
+
+    if (grid && options?.enableAutoResize) {
       if (options.autoFitColumnsOnFirstLoad && options.enableAutoSizeColumns && typeof grid.autosizeColumns === 'function') {
         grid.autosizeColumns();
       }
@@ -1112,6 +1127,8 @@ export class AureliaSlickgridCustomElement {
 
       if (this.gridOptions?.enableAutoSizeColumns) {
         this.grid.autosizeColumns();
+      } else if (this.gridOptions?.enableAutoResizeColumnsByCellContent && this.resizerService?.resizeColumnsByCellContent) {
+        this.resizerService.resizeColumnsByCellContent();
       }
     }
   }
@@ -1119,6 +1136,14 @@ export class AureliaSlickgridCustomElement {
   //
   // private functions
   // ------------------
+
+  /**
+   * Loop through all column definitions and copy the original optional `width` properties optionally provided by the user.
+   * We will use this when doing a resize by cell content, if user provided a `width` it won't override it.
+   */
+  private copyColumnWidthsReference(columnDefinitions: Column[]) {
+    columnDefinitions.forEach(col => col.originalWidth = col.width);
+  }
 
   private displayEmptyDataWarning(showWarning = true) {
     this.slickEmptyWarning?.showEmptyDataMessage(showWarning);

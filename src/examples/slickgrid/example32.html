@@ -1,0 +1,66 @@
+<template>
+  <h2>
+    ${title}
+    <span class="float-right">
+      <a style="font-size: 18px"
+         target="_blank"
+         href="https://github.com/ghiscoding/aurelia-slickgrid/blob/master/src/examples/slickgrid/example31.ts">
+        <span class="fa fa-link"></span> code
+      </a>
+    </span>
+  </h2>
+  <div class="subtitle" innerhtml.bind="subTitle"></div>
+
+  <div class="mb-3">
+    The grid below uses the optional resize by cell content (with a fixed 950px for demo purposes), you can click on
+    the 2
+    buttons to see the difference. The "autosizeColumns" is really the default option used by SlickGrid-Universal, the
+    resize by cell content is optional because it requires to read the first thousand rows and do extra width
+    calculation.
+  </div>
+
+  <div class="row">
+    <h4 class="ml-3">Container Width (950px)</h4>
+
+    <div class="ml-2 mb-2 mr-2">
+      <div class="btn-group btn-group-sm" role="group" aria-label="Basic Editing Commands">
+        <button class="btn btn-outline-secondary btn-sm" data-test="set-dynamic-filter"
+                click.delegate="handleDefaultResizeColumns()">
+          <i class="fa fa-expand"></i> (default resize) by "autosizeColumns"
+        </button>
+        <button class="btn btn-outline-secondary btn-sm" data-test="set-dynamic-sorting"
+                click.delegate="handleNewResizeColumns()">
+          <i class="fa fa-expand"></i> Resize by Cell Content
+        </button>
+      </div>
+    </div>
+
+    <div class="mb-2">
+      <div class="btn-group btn-group-sm" role="group" aria-label="Basic Editing Commands">
+        <button type="button" class="btn btn-outline-secondary" data-test="toggle-readonly-btn"
+                click.delegate="toggleGridEditReadonly()">
+          <i class="fa fa-table"></i> Toggle Edit/Readonly Grid
+        </button>
+        <button type="button" class="btn btn-outline-secondary" data-test="undo-last-edit-btn"
+                click.delegate="undoLastEdit()">
+          <i class="fa fa-undo"></i> Undo Last Edit
+        </button>
+        <button type="button" class="btn btn-outline-secondary" data-test="save-all-btn"
+                click.delegate="saveAll()">
+          <i class="fa fa-save"></i> Save All
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div style="width: 950px">
+    <aurelia-slickgrid grid-id="grid32"
+                       column-definitions.bind="columnDefinitions"
+                       grid-options.bind="gridOptions"
+                       dataset.bind="dataset"
+                       pagination-options.bind="paginationOptions"
+                       on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)"
+                       on-grid-state-changed.delegate="gridStateChanged($event.detail)">
+    </aurelia-slickgrid>
+  </div>
+</template>
