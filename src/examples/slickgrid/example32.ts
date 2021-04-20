@@ -79,9 +79,7 @@ const myCustomTitleValidator = (value: any, args: any) => {
 @autoinject()
 export class Example32 {
   title = 'Example 32: Columns Resize by Content';
-  subTitle = `
-    Optionally use RxJS instead of Promises, you would typically use this with a Backend Service API (OData/GraphQL)
-  `;
+  subTitle = ``;
 
   aureliaGrid!: AureliaGridInstance;
   gridOptions!: GridOption;
@@ -119,8 +117,8 @@ export class Example32 {
         id: 'title', name: 'Title', field: 'title', sortable: true, type: FieldType.string, minWidth: 65,
         // you can adjust the resize calculation via multiple options
         resizeExtraWidthPadding: 4,
-        resizeCharWidthInPx: 8.5,
-        resizeCalcWidthRatio: 1.2,
+        resizeCharWidthInPx: 7.6,
+        resizeCalcWidthRatio: 1,
         resizeMaxWidthThreshold: 200,
         filterable: true, columnGroup: 'Common Factor',
         filter: { model: Filters.compoundInputText },
@@ -193,7 +191,7 @@ export class Example32 {
         id: 'completed', name: 'Completed', field: 'completed', width: 80, minWidth: 75, maxWidth: 100,
         sortable: true, filterable: true, columnGroup: 'Period',
         formatter: Formatters.multiple,
-        params: { formatters: [Formatters.checkmarkMaterial, Formatters.center] },
+        params: { formatters: [Formatters.checkmark, Formatters.center] },
         exportWithFormatter: false,
         filter: {
           collection: [{ value: '', label: '' }, { value: true, label: 'True' }, { value: false, label: 'False' }],
@@ -224,6 +222,7 @@ export class Example32 {
         id: 'product', name: 'Product', field: 'product',
         filterable: true, columnGroup: 'Item',
         minWidth: 100,
+        resizeCharWidthInPx: 8,
         exportWithFormatter: true,
         dataKey: 'id',
         labelKey: 'itemName',
@@ -321,8 +320,6 @@ export class Example32 {
     ];
 
     this.gridOptions = {
-      useSalesforceDefaultGridOptions: true,
-      datasetIdPropertyName: 'id',
       editable: true,
       autoAddCustomEditorFormatter: customEditableInputFormatter,
       enableCellNavigation: true,
@@ -342,6 +339,9 @@ export class Example32 {
       // then enable resize by content with these 2 flags
       autosizeColumnsByCellContentOnFirstLoad: true,
       enableAutoResizeColumnsByCellContent: true,
+
+      // optional resize calculation options
+      resizeDefaultRatioForStringType: 0.92,
       resizeFormatterPaddingWidthInPx: 8, // optional editor formatter padding for resize calculation
 
       enableExcelExport: true,
@@ -696,57 +696,81 @@ export class Example32 {
   /** List of icons that are supported in this lib Material Design Icons */
   getRandomIcon(iconIndex?: number) {
     const icons = [
-      'mdi-arrow-collapse',
-      'mdi-arrow-expand',
-      'mdi-cancel',
-      'mdi-check',
-      'mdi-checkbox-blank-outline',
-      'mdi-check-box-outline',
-      'mdi-checkbox-marked',
-      'mdi-close',
-      'mdi-close-circle',
-      'mdi-close-circle-outline',
-      'mdi-close-thick',
-      'mdi-content-copy',
-      'mdi-database-refresh',
-      'mdi-download',
-      'mdi-file-document-outline',
-      'mdi-file-excel-outline',
-      'mdi-file-music-outline',
-      'mdi-file-pdf-outline',
-      'mdi-filter-remove-outline',
-      'mdi-flip-vertical',
-      'mdi-folder',
-      'mdi-folder-open',
-      'mdi-help-circle',
-      'mdi-help-circle-outline',
-      'mdi-history',
-      'mdi-information',
-      'mdi-information-outline',
-      'mdi-link',
-      'mdi-link-variant',
-      'mdi-menu',
-      'mdi-microsoft-excel',
-      'mdi-minus',
-      'mdi-page-first',
-      'mdi-page-last',
-      'mdi-paperclip',
-      'mdi-pin-off-outline',
-      'mdi-pin-outline',
-      'mdi-playlist-plus',
-      'mdi-playlist-remove',
-      'mdi-plus',
-      'mdi-redo',
-      'mdi-refresh',
-      'mdi-shape-square-plus',
-      'mdi-sort-ascending',
-      'mdi-sort-descending',
-      'mdi-swap-horizontal',
-      'mdi-swap-vertical',
-      'mdi-sync',
-      'mdi-table-edit',
-      'mdi-table-refresh',
-      'mdi-undo',
+      'fa-500px',
+      'fa-address-book',
+      'fa-address-book-o',
+      'fa-address-card',
+      'fa-address-card-o',
+      'fa-adjust',
+      'fa-adn',
+      'fa-align-center',
+      'fa-align-justify',
+      'fa-align-left',
+      'fa-align-right',
+      'fa-amazon',
+      'fa-ambulance',
+      'fa-american-sign-language-interpreting',
+      'fa-anchor',
+      'fa-android',
+      'fa-angellist',
+      'fa-angle-double-down',
+      'fa-angle-double-left',
+      'fa-angle-double-right',
+      'fa-angle-double-up',
+      'fa-angle-down',
+      'fa-angle-left',
+      'fa-angle-right',
+      'fa-angle-up',
+      'fa-apple',
+      'fa-archive',
+      'fa-area-chart',
+      'fa-arrow-circle-down',
+      'fa-arrow-circle-left',
+      'fa-arrow-circle-o-down',
+      'fa-arrow-circle-o-left',
+      'fa-arrow-circle-o-right',
+      'fa-arrow-circle-o-up',
+      'fa-arrow-circle-right',
+      'fa-arrow-circle-up',
+      'fa-arrow-down',
+      'fa-arrow-left',
+      'fa-arrow-right',
+      'fa-arrow-up',
+      'fa-arrows',
+      'fa-arrows-alt',
+      'fa-arrows-h',
+      'fa-arrows-v',
+      'fa-assistive-listening-systems',
+      'fa-asterisk',
+      'fa-at',
+      'fa-audio-description',
+      'fa-backward',
+      'fa-balance-scale',
+      'fa-ban',
+      'fa-bandcamp',
+      'fa-bank (alias)',
+      'fa-bar-chart',
+      'fa-barcode',
+      'fa-bars',
+      'fa-bath',
+      'fa-battery-empty',
+      'fa-battery-full',
+      'fa-battery-half',
+      'fa-battery-quarter',
+      'fa-battery-three-quarters',
+      'fa-bed',
+      'fa-beer',
+      'fa-behance',
+      'fa-behance-square',
+      'fa-bell',
+      'fa-bell-o',
+      'fa-bell-slash',
+      'fa-bell-slash-o',
+      'fa-bicycle',
+      'fa-binoculars',
+      'fa-birthday-cake',
+      'fa-bitbucket',
+      'fa-bitbucket-square',
     ];
     const randomNumber = Math.floor((Math.random() * icons.length - 1));
     return icons[iconIndex ?? randomNumber];
@@ -756,11 +780,11 @@ export class Example32 {
     return `<div class="autocomplete-container-list">
       <div class="autocomplete-left">
         <!--<img src="http://i.stack.imgur.com/pC1Tv.jpg" width="50" />-->
-        <span class="mdi ${item.icon} mdi-26px"></span>
+        <span class="fa ${item.icon}"></span>
       </div>
       <div>
         <span class="autocomplete-top-left">
-          <span class="mdi ${item.itemTypeName === 'I' ? 'mdi-information-outline' : 'mdi-content-copy'} mdi-14px"></span>
+          <span class="mdfai ${item.itemTypeName === 'I' ? 'fa-info-circle' : 'fa-copy'}"></span>
           ${item.itemName}
         </span>
       <div>
@@ -774,11 +798,11 @@ export class Example32 {
     return `<div class="autocomplete-container-list">
           <div class="autocomplete-left">
             <!--<img src="http://i.stack.imgur.com/pC1Tv.jpg" width="50" />-->
-            <span class="mdi ${item.icon} mdi-26px"></span>
+            <span class="fa ${item.icon}"></span>
           </div>
           <div>
             <span class="autocomplete-top-left">
-              <span class="mdi ${item.itemTypeName === 'I' ? 'mdi-information-outline' : 'mdi-content-copy'} mdi-14px"></span>
+              <span class="fa ${item.itemTypeName === 'I' ? 'fa-info-circle' : 'fa-copy'}"></span>
               ${item.itemName}
             </span>
             <span class="autocomplete-top-right">${formatNumber(item.listPrice, 2, 2, false, '$')}</span>
