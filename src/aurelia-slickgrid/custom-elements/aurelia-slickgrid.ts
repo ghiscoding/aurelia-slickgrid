@@ -908,7 +908,7 @@ export class AureliaSlickgridCustomElement {
 
   bindResizeHook(grid: SlickGrid, options: GridOption) {
     if ((options.autoFitColumnsOnFirstLoad && options.autosizeColumnsByCellContentOnFirstLoad) || (options.enableAutoSizeColumns && options.enableAutoResizeColumnsByCellContent)) {
-      throw new Error(`You cannot enable both autosize/fit viewport & resize by content, you must choose which resize technique to use. You can enable these 2 options ("autoFitColumnsOnFirstLoad" and "enableAutoSizeColumns") OR these other 2 options ("autosizeColumnsByCellContentOnFirstLoad" and "enableAutoResizeColumnsByCellContent").`);
+      throw new Error(`[Aurelia-Slickgrid] You cannot enable both autosize/fit viewport & resize by content, you must choose which resize technique to use. You can enable these 2 options ("autoFitColumnsOnFirstLoad" and "enableAutoSizeColumns") OR these other 2 options ("autosizeColumnsByCellContentOnFirstLoad" and "enableAutoResizeColumnsByCellContent").`);
     }
 
     // expand/autofit columns on first page load
@@ -1394,7 +1394,7 @@ export class AureliaSlickgridCustomElement {
    */
   private swapInternalEditorToSlickGridFactoryEditor(columnDefinitions: Column[]) {
     if (columnDefinitions.some(col => `${col.id}`.includes('.'))) {
-      console.error('[Slickgrid-Universal] Make sure that none of your Column Definition "id" property includes a dot in its name because that will cause some problems with the Editors. For example if your column definition "field" property is "user.firstName" then use "firstName" as the column "id".');
+      console.error('[Aurelia-Slickgrid] Make sure that none of your Column Definition "id" property includes a dot in its name because that will cause some problems with the Editors. For example if your column definition "field" property is "user.firstName" then use "firstName" as the column "id".');
     }
 
     return columnDefinitions.map((column: Column | any) => {
