@@ -87,6 +87,7 @@ export class Example32 {
   dataset: any[] = [];
   editQueue: any[] = [];
   editedItems: any = {};
+  isUsingDefaultResize = false;
   isGridEditable = true;
   isCompositeDisabled = false;
   isMassSelectionDisabled = true;
@@ -489,14 +490,16 @@ export class Example32 {
 
   handleDefaultResizeColumns() {
     // just for demo purposes, set it back to its original width
-    const columns = this.aureliaGrid.slickGrid.getColumns();
+    const columns = this.aureliaGrid.slickGrid.getColumns() as Column[];
     columns.forEach(col => col.width = col.originalWidth);
     this.aureliaGrid.slickGrid.setColumns(columns);
     this.aureliaGrid.slickGrid.autosizeColumns();
+    this.isUsingDefaultResize = true;
   }
 
   handleNewResizeColumns() {
     this.aureliaGrid.resizerService.resizeColumnsByCellContent(true);
+    this.isUsingDefaultResize = false;
   }
 
   toggleGridEditReadonly() {

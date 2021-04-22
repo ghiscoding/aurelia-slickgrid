@@ -23,15 +23,21 @@
 
   <div class="row">
     <div class="ml-2 mb-2 mr-2">
-      <div class="btn-group btn-group-sm" role="group" aria-label="Basic Editing Commands">
-        <button class="btn btn-outline-secondary btn-sm" data-text="autosize-columns-btn"
-                click.delegate="handleDefaultResizeColumns()">
+      <div class="btn-group btn-group-toggle" data-toggle="buttons">
+        <label class="btn btn-sm btn-outline-secondary" class.bind="isUsingDefaultResize ? 'active' : ''"
+               data-test="autosize-columns-btn">
+          <input type="radio" name="options"
+                 checked.bind="isUsingDefaultResize"
+                 click.delegate="handleDefaultResizeColumns()">
           <i class="fa fa-expand"></i> (default resize) by "autosizeColumns"
-        </button>
-        <button class="btn btn-outline-secondary btn-sm" data-text="resize-by-content-btn"
-                click.delegate="handleNewResizeColumns()">
+        </label>
+        <label class="btn btn-sm btn-outline-secondary" class.bind="isUsingDefaultResize ? '' : 'active'"
+               data-test="resize-by-content-btn">
+          <input type="radio" name="options"
+                 checked.bind="!isUsingDefaultResize"
+                 click.delegate="handleNewResizeColumns()">
           <i class="fa fa-expand"></i> Resize by Cell Content
-        </button>
+        </label>
       </div>
     </div>
 
