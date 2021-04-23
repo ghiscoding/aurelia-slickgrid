@@ -117,9 +117,12 @@ export class AureliaSlickgridCustomElement {
   private _isGridInitialized = false;
   private _isDatasetInitialized = false;
   private _isPaginationInitialized = false;
+  private _isLeftFooterOriginallyEmpty = true;
+  private _isLeftFooterDisplayingSelectionRowCount = false;
   private _isLocalGrid = true;
   private _paginationOptions: Pagination | undefined;
   private _registeredResources: ExternalResource[] = [];
+  private _selectedRowCount = 0;
   groupItemMetadataProvider: any;
   backendServiceApi: BackendServiceApi | undefined;
   customFooterOptions?: CustomFooterOption;
@@ -331,6 +334,7 @@ export class AureliaSlickgridCustomElement {
     this.locales = this.gridOptions?.locales ?? Constants.locales;
     this.backendServiceApi = this.gridOptions?.backendServiceApi;
     this._isLocalGrid = !this.backendServiceApi; // considered a local grid if it doesn't have a backend service set
+    this._isLeftFooterOriginallyEmpty = !(this.gridOptions.customFooterOptions?.leftFooterText);
 
     this.createBackendApiInternalPostProcessCallback(this.gridOptions);
 
@@ -1278,13 +1282,16 @@ export class AureliaSlickgridCustomElement {
    */
   private optionallyShowCustomFooterWithMetrics() {
     if (this.gridOptions) {
+      const customFooterOptions = this.gridOptions.customFooterOptions;
+      this.registerOnSelectedRowsChangedWhenEnabled(customFooterOptions);
+
       if (this.gridOptions.enableTranslate) {
         this.translateCustomFooterTexts();
-      } else if (this.gridOptions.customFooterOptions) {
-        const customFooterOptions = this.gridOptions.customFooterOptions;
+      } else if (customFooterOptions) {
         customFooterOptions.metricTexts = customFooterOptions.metricTexts || {};
         customFooterOptions.metricTexts.lastUpdate = customFooterOptions.metricTexts.lastUpdate || this.locales && this.locales.TEXT_LAST_UPDATE || 'TEXT_LAST_UPDATE';
         customFooterOptions.metricTexts.items = customFooterOptions.metricTexts.items || this.locales && this.locales.TEXT_ITEMS || 'TEXT_ITEMS';
+        customFooterOptions.metricTexts.itemsSelected = customFooterOptions.metricTexts.itemsSelected || this.locales && this.locales.TEXT_ITEMS_SELECTED || 'TEXT_ITEMS_SELECTED';
         customFooterOptions.metricTexts.of = customFooterOptions.metricTexts.of || this.locales && this.locales.TEXT_OF || 'TEXT_OF';
       }
 
@@ -1397,6 +1404,11 @@ export class AureliaSlickgridCustomElement {
           (customFooterOptions.metricTexts as any)[propNameWithoutKey] = this.translaterService.translate((customFooterOptions.metricTexts as any)[propName] || ' ');
         }
       }
+
+      // when we're display row selection count on left footer, we also need to translate that text with its count
+      if (this._isLeftFooterDisplayingSelectionRowCount) {
+        customFooterOptions.leftFooterText = `${this._selectedRowCount} ${customFooterOptions.metricTexts.itemsSelected}`;
+      }
     }
   }
 
@@ -1408,6 +1420,26 @@ export class AureliaSlickgridCustomElement {
   /** translate all column groups (including hidden columns) */
   private translateColumnGroupKeys() {
     this.extensionUtility.translateItems(this.sharedService.allColumns, 'columnGroupKey', 'columnGroup');
+  }
+
+  /**
+   * When user has row selections enabled and does not have any custom text shown on the left side footer,
+   * we will show the row selection count on the bottom left side of the footer (by subscribing to the SlickGrid `onSelectedRowsChanged` event).
+   * @param customFooterOptions
+   */
+  private registerOnSelectedRowsChangedWhenEnabled(customFooterOptions?: CustomFooterOption) {
+    const isRowSelectionEnabled = this.gridOptions.enableCheckboxSelector || this.gridOptions.enableRowSelection;
+    if (isRowSelectionEnabled && customFooterOptions && (!customFooterOptions.hideRowSelectionCount && this._isLeftFooterOriginallyEmpty)) {
+      this._isLeftFooterDisplayingSelectionRowCount = true;
+      const selectedCountText = customFooterOptions.metricTexts?.itemsSelected ?? this.locales?.TEXT_ITEMS_SELECTED ?? 'TEXT_ITEMS_SELECTED';
+      customFooterOptions.leftFooterText = `0 ${selectedCountText}`;
+
+      this._eventHandler.subscribe(this.grid.onSelectedRowsChanged, (_e: any, args: { rows: number[]; previousSelectedRows: number[]; }) => {
+        this._selectedRowCount = args.rows.length;
+        const selectedCountText2 = customFooterOptions.metricTexts?.itemsSelected ?? this.locales?.TEXT_ITEMS_SELECTED ?? 'TEXT_ITEMS_SELECTED';
+        customFooterOptions.leftFooterText = `${this._selectedRowCount} ${selectedCountText2}`;
+      });
+    }
   }
 
   private treeDataSortComparer(flatDataset: any[]): any[] {

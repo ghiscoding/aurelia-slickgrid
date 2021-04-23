@@ -36,7 +36,17 @@ describe('Example 12: Localization (i18n)', () => {
         .each(($child, index) => expect($child.text()).to.eq(fullEnglishTitles[index]));
     });
 
-    it('should have some metrics shown in the grid footer', () => {
+    it('should have 0 row selection count shown in the grid left footer', () => {
+      cy.get('#slickGridContainer-grid12')
+        .find('.slick-custom-footer')
+        .find('div.left-footer')
+        .should($span => {
+          const text = removeExtraSpaces($span.text()); // remove all white spaces
+          expect(text).to.eq(`0 items selected`);
+        });
+    });
+
+    it('should have some metrics shown in the grid right footer', () => {
       cy.get('#slickGridContainer-grid12')
         .find('.slick-custom-footer')
         .find('.right-footer')
@@ -97,7 +107,17 @@ describe('Example 12: Localization (i18n)', () => {
         .each(($child, index) => expect($child.text()).to.eq(fullFrenchTitles[index]));
     });
 
-    it('should have some metrics shown in the grid footer', () => {
+    it('should have 0 row selection count shown in the grid left footer', () => {
+      cy.get('#slickGridContainer-grid12')
+        .find('.slick-custom-footer')
+        .find('div.left-footer')
+        .should($span => {
+          const text = removeExtraSpaces($span.text()); // remove all white spaces
+          expect(text).to.eq(`0 éléments sélectionnés`);
+        });
+    });
+
+    it('should have some metrics shown in the grid right footer', () => {
       cy.get('#slickGridContainer-grid12')
         .find('.slick-custom-footer')
         .find('.right-footer')
@@ -303,6 +323,16 @@ describe('Example 12: Localization (i18n)', () => {
         .children()
         .filter('.slick-cell.selected.true:nth(1)')
         .contains('Task 1497');
+    });
+
+    it('should have 2 row selection count shown in the grid left footer', () => {
+      cy.get('#slickGridContainer-grid12')
+        .find('.slick-custom-footer')
+        .find('div.left-footer')
+        .should($span => {
+          const text = removeExtraSpaces($span.text()); // remove all white spaces
+          expect(text).to.eq(`2 items selected`);
+        });
     });
   });
 });

@@ -271,6 +271,7 @@ const mockGrid = {
   onClicked: new MockSlickEvent(),
   onRendered: jest.fn(),
   onScroll: jest.fn(),
+  onSelectedRowsChanged: new MockSlickEvent(),
   onDataviewCreated: new MockSlickEvent(),
 };
 
@@ -1757,6 +1758,7 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
           expect(customElement.gridOptions.showCustomFooter).toBeTrue();
           expect(customElement.gridOptions.customFooterOptions).toEqual({
             dateFormat: 'YYYY-MM-DD, hh:mm a',
+            hideRowSelectionCount: false,
             hideLastUpdateTimestamp: true,
             hideTotalItemCount: false,
             footerHeight: 25,
@@ -1765,6 +1767,8 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
             metricTexts: {
               items: 'éléments',
               itemsKey: 'ITEMS',
+              itemsSelected: 'éléments sélectionnés',
+              itemsSelectedKey: 'ITEMS_SELECTED',
               of: 'de',
               ofKey: 'OF',
             },
@@ -1797,6 +1801,7 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
           expect(customElement.gridOptions.showCustomFooter).toBeTrue();
           expect(customElement.gridOptions.customFooterOptions).toEqual({
             dateFormat: 'YYYY-MM-DD, hh:mm a',
+            hideRowSelectionCount: false,
             hideLastUpdateTimestamp: true,
             hideTotalItemCount: false,
             footerHeight: 25,
@@ -1805,6 +1810,8 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
             metricTexts: {
               items: 'some items',
               itemsKey: 'ITEMS',
+              itemsSelected: 'items selected',
+              itemsSelectedKey: 'ITEMS_SELECTED',
               lastUpdate: 'some last update',
               of: 'some of',
               ofKey: 'OF',
@@ -1862,6 +1869,35 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         mockDataView.onSetItemsCalled.notify({ idProperty: 'id', itemCount: 0 });
 
         expect(customElement.metrics).toEqual(expectation);
+      });
+
+      it('should display row selection count on the left side footer section after triggering "onSelectedRowsChanged" event', () => {
+        customElement.gridOptions = { enablePagination: false, showCustomFooter: true, enableCheckboxSelector: true };
+        customElement.initialization(slickEventHandler);
+        mockGrid.onSelectedRowsChanged.notify({ rows: [1] });
+        expect(customElement.customFooterOptions.leftFooterText).toEqual('1 items selected');
+
+        mockGrid.onSelectedRowsChanged.notify({ rows: [1, 2, 3, 4, 5] });
+        expect(customElement.customFooterOptions.leftFooterText).toEqual('5 items selected');
+      });
+
+      it('should display row selection count in French on the left side footer section after triggering "onSelectedRowsChanged" event when using "fr" as locale', () => {
+        translateService.use('fr');
+        customElement.gridOptions = { enableTranslate: true, enablePagination: false, showCustomFooter: true, enableCheckboxSelector: true };
+        customElement.initialization(slickEventHandler);
+
+        mockGrid.onSelectedRowsChanged.notify({ rows: [1] });
+        expect(customElement.customFooterOptions.leftFooterText).toEqual('1 éléments sélectionnés');
+
+        mockGrid.onSelectedRowsChanged.notify({ rows: [1, 2, 3, 4, 5] });
+        expect(customElement.customFooterOptions.leftFooterText).toEqual('5 éléments sélectionnés');
+      });
+
+      it('should not display row selection count after triggering "onSelectedRowsChanged" event if "hideRowSelectionCount" is set to True', () => {
+        customElement.gridOptions = { enablePagination: false, showCustomFooter: true, enableCheckboxSelector: true, customFooterOptions: { hideRowSelectionCount: true } };
+        customElement.initialization(slickEventHandler);
+        mockGrid.onSelectedRowsChanged.notify({ rows: [1] });
+        expect(customElement.customFooterOptions.leftFooterText).toBeFalsy();
       });
     });
 
