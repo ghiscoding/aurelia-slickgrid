@@ -11,14 +11,6 @@
   </h2>
   <div class="subtitle" innerhtml.bind="subTitle"></div>
 
-  <div class="mb-3">
-    The grid below uses the optional resize by cell content (with a fixed 950px for demo purposes), you can click on
-    the 2
-    buttons to see the difference. The "autosizeColumns" is really the default option used by SlickGrid-Universal, the
-    resize by cell content is optional because it requires to read the first thousand rows and do extra width
-    calculation.
-  </div>
-
   <h4 class="ml-3">Container Width (950px)</h4>
 
   <div class="row">
@@ -59,7 +51,7 @@
     </div>
   </div>
 
-  <div style="width: 950px">
+  <div id="smaller-container" style="width: 950px">
     <aurelia-slickgrid grid-id="grid32"
                        column-definitions.bind="columnDefinitions"
                        grid-options.bind="gridOptions"

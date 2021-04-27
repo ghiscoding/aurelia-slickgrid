@@ -79,7 +79,7 @@ const myCustomTitleValidator = (value: any, args: any) => {
 @autoinject()
 export class Example32 {
   title = 'Example 32: Columns Resize by Content';
-  subTitle = ``;
+  subTitle = `The grid below uses the optional resize by cell content (with a fixed 950px for demo purposes), you can click on the 2 buttons to see the difference. The "autosizeColumns" is really the default option used by SlickGrid-Universal, the resize by cell content is optional because it requires to read the first thousand rows and do extra width calculation.`;
 
   aureliaGrid!: AureliaGridInstance;
   gridOptions!: GridOption;
@@ -119,7 +119,7 @@ export class Example32 {
         // you can adjust the resize calculation via multiple options
         resizeExtraWidthPadding: 4,
         resizeCharWidthInPx: 7.6,
-        resizeCalcWidthRatio: 1,
+        resizeCalcWidthRatio: 1, // default ratio is ~0.9 for string but since our text is all uppercase then a higher ratio is needed
         resizeMaxWidthThreshold: 200,
         filterable: true, columnGroup: 'Common Factor',
         filter: { model: Filters.compoundInputText },
@@ -167,7 +167,7 @@ export class Example32 {
       },
       {
         id: 'complexity', name: 'Complexity', field: 'complexity',
-        resizeCalcWidthRatio: 0.82, // default calc ratio is 1 or 0.95 for field type of string
+        resizeCalcWidthRatio: 0.9, // default calc ratio is 1 or ~0.9 for field type of string
         sortable: true, filterable: true, columnGroup: 'Analysis',
         formatter: (_row, _cell, value) => this.complexityLevelList[value].label,
         exportCustomFormatter: (_row, _cell, value) => this.complexityLevelList[value].label,
@@ -327,7 +327,7 @@ export class Example32 {
       autoEdit: true,
       autoCommitEdit: true,
       autoResize: {
-        container: '#demo-container',
+        container: '#smaller-container',
         rightPadding: 10
       },
       gridWidth: '100%',
