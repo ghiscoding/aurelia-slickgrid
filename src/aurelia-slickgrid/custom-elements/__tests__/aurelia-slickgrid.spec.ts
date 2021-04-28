@@ -163,6 +163,7 @@ const resizerServiceStub = {
   dispose: jest.fn(),
   init: jest.fn(),
   resizeGrid: jest.fn(),
+  resizeColumnsByCellContent: jest.fn(),
 } as unknown as ResizerService;
 
 Object.defineProperty(paginationServiceStub, 'totalItems', {
@@ -551,6 +552,57 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         expect(autosizeSpy).not.toHaveBeenCalled();
         expect(refreshSpy).toHaveBeenCalledWith(mockData);
       });
+
+      it('should expect "resizeColumnsByCellContent" being called when "enableAutoResizeColumnsByCellContent" is set and we changing column definitions via its SETTER', () => {
+        const resizeContentSpy = jest.spyOn(resizerServiceStub, 'resizeColumnsByCellContent');
+        const refreshSpy = jest.spyOn(customElement, 'refreshGridData');
+        const mockData = [{ firstName: 'John', lastName: 'Doe' }, { firstName: 'Jane', lastName: 'Smith' }];
+        const mockColDefs = [{ id: 'gender', field: 'gender', editor: { model: Editors.text, collection: ['male', 'female'] } }] as Column[];
+        jest.spyOn(mockDataView, 'getLength').mockReturnValueOnce(0).mockReturnValueOnce(0).mockReturnValueOnce(mockData.length);
+
+        customElement.gridOptions = { autoFitColumnsOnFirstLoad: false, enableAutoSizeColumns: false, autosizeColumnsByCellContentOnFirstLoad: true, enableAutoResizeColumnsByCellContent: true };
+        customElement.columnDefinitions = mockColDefs;
+        customElement.attached();
+        customElement.initialization(slickEventHandler);
+        customElement.columnDefinitionsChanged();
+        customElement.datasetChanged(mockData, null);
+        customElement.columnDefinitions = mockColDefs;
+
+        expect(resizeContentSpy).toHaveBeenCalledTimes(1);
+        expect(refreshSpy).toHaveBeenCalledWith(mockData);
+      });
+
+      it('should throw an error if we try to enable both auto resize type at same time with "autoFitColumnsOnFirstLoad" and "autosizeColumnsByCellContentOnFirstLoad"', (done) => {
+        const mockData = [{ firstName: 'John', lastName: 'Doe' }, { firstName: 'Jane', lastName: 'Smith' }];
+        jest.spyOn(mockDataView, 'getLength').mockReturnValueOnce(0).mockReturnValueOnce(0).mockReturnValueOnce(mockData.length);
+
+        customElement.gridOptions = { autoFitColumnsOnFirstLoad: true, autosizeColumnsByCellContentOnFirstLoad: true };
+
+        try {
+          customElement.initialization(slickEventHandler);
+          customElement.datasetChanged(mockData, null);
+        } catch (e) {
+          expect(e.toString()).toContain('[Aurelia-Slickgrid] You cannot enable both autosize/fit viewport & resize by content, you must choose which resize technique to use.');
+          customElement.dispose();
+          done();
+        }
+      });
+
+      it('should throw an error if we try to enable both auto resize type at same time with "enableAutoSizeColumns" and "enableAutoResizeColumnsByCellContent"', (done) => {
+        const mockData = [{ firstName: 'John', lastName: 'Doe' }, { firstName: 'Jane', lastName: 'Smith' }];
+        jest.spyOn(mockDataView, 'getLength').mockReturnValueOnce(0).mockReturnValueOnce(0).mockReturnValueOnce(mockData.length);
+
+        customElement.gridOptions = { enableAutoSizeColumns: true, enableAutoResizeColumnsByCellContent: true };
+
+        try {
+          customElement.initialization(slickEventHandler);
+          customElement.datasetChanged(mockData, null);
+        } catch (e) {
+          expect(e.toString()).toContain('[Aurelia-Slickgrid] You cannot enable both autosize/fit viewport & resize by content, you must choose which resize technique to use.');
+          customElement.dispose();
+          done();
+        }
+      });
     });
 
     describe('options changed', () => {
@@ -601,7 +653,7 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         customElement.columnDefinitionsChanged();
         customElement.initialization(slickEventHandler);
 
-        expect(consoleSpy).toHaveBeenCalledWith('[Slickgrid-Universal] Make sure that none of your Column Definition "id" property includes a dot in its name because that will cause some problems with the Editors. For example if your column definition "field" property is "user.firstName" then use "firstName" as the column "id".');
+        expect(consoleSpy).toHaveBeenCalledWith('[Aurelia-Slickgrid] Make sure that none of your Column Definition "id" property includes a dot in its name because that will cause some problems with the Editors. For example if your column definition "field" property is "user.firstName" then use "firstName" as the column "id".');
       });
 
       it('should be able to load async editors with a regular Promise', (done) => {
@@ -1739,6 +1791,22 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
           expect(emptySpy).toHaveBeenCalledTimes(2);
           done();
         });
+      });
+    });
+
+    describe('resizeColumnsByCellContent method', () => {
+      it('should call "resizeColumnsByCellContent" when the DataView "onSetItemsCalled" event is triggered and "enableAutoResizeColumnsByCellContent" is set', (done) => {
+        const resizeContentSpy = jest.spyOn(resizerServiceStub, 'resizeColumnsByCellContent');
+        jest.spyOn(mockDataView, 'getLength').mockReturnValue(1);
+
+        customElement.gridOptions = { enablePagination: false, showCustomFooter: true, autoFitColumnsOnFirstLoad: false, enableAutoSizeColumns: false, enableAutoResizeColumnsByCellContent: true };
+        customElement.initialization(slickEventHandler);
+        mockDataView.onSetItemsCalled.notify({ idProperty: 'id', itemCount: 1 });
+
+        setTimeout(() => {
+          expect(resizeContentSpy).toHaveBeenCalledWith(true);
+          done();
+        }, 10);
       });
     });
 

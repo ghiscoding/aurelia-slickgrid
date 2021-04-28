@@ -1,0 +1,64 @@
+<template>
+  <h2>
+    ${title}
+    <span class="float-right">
+      <a style="font-size: 18px"
+         target="_blank"
+         href="https://github.com/ghiscoding/aurelia-slickgrid/blob/master/src/examples/slickgrid/example32.ts">
+        <span class="fa fa-link"></span> code
+      </a>
+    </span>
+  </h2>
+  <div class="subtitle" innerhtml.bind="subTitle"></div>
+
+  <h4 class="ml-3">Container Width (950px)</h4>
+
+  <div class="row">
+    <div class="ml-2 mb-2 mr-2">
+      <div class="btn-group btn-group-toggle" data-toggle="buttons">
+        <label class="btn btn-sm btn-outline-secondary" class.bind="isUsingDefaultResize ? 'active' : ''"
+               data-test="autosize-columns-btn">
+          <input type="radio" name="options"
+                 checked.bind="isUsingDefaultResize"
+                 click.delegate="handleDefaultResizeColumns()">
+          <i class="fa fa-expand"></i> (default resize) by "autosizeColumns"
+        </label>
+        <label class="btn btn-sm btn-outline-secondary" class.bind="isUsingDefaultResize ? '' : 'active'"
+               data-test="resize-by-content-btn">
+          <input type="radio" name="options"
+                 checked.bind="!isUsingDefaultResize"
+                 click.delegate="handleNewResizeColumns()">
+          <i class="fa fa-expand"></i> Resize by Cell Content
+        </label>
+      </div>
+    </div>
+
+    <div class="mb-2">
+      <div class="btn-group btn-group-sm" role="group" aria-label="Basic Editing Commands">
+        <button type="button" class="btn btn-outline-secondary" data-test="toggle-readonly-btn"
+                click.delegate="toggleGridEditReadonly()">
+          <i class="fa fa-table"></i> Toggle Edit/Readonly Grid
+        </button>
+        <button type="button" class="btn btn-outline-secondary" data-test="undo-last-edit-btn"
+                click.delegate="undoLastEdit()">
+          <i class="fa fa-undo"></i> Undo Last Edit
+        </button>
+        <button type="button" class="btn btn-outline-secondary" data-test="save-all-btn"
+                click.delegate="saveAll()">
+          <i class="fa fa-save"></i> Save All
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="smaller-container" style="width: 950px">
+    <aurelia-slickgrid grid-id="grid32"
+                       column-definitions.bind="columnDefinitions"
+                       grid-options.bind="gridOptions"
+                       dataset.bind="dataset"
+                       pagination-options.bind="paginationOptions"
+                       on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)"
+                       on-grid-state-changed.delegate="gridStateChanged($event.detail)">
+    </aurelia-slickgrid>
+  </div>
+</template>

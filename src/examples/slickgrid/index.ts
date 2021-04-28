@@ -38,6 +38,7 @@ export class Index {
       { route: 'example29', moduleId: PLATFORM.moduleName('./example29'), name: 'example29', nav: true, title: '29- Grid with header and footer slots' },
       { route: 'example30', moduleId: PLATFORM.moduleName('./example30'), name: 'example30', nav: true, title: '30- Composite Editor Modal' },
       { route: 'example31', moduleId: PLATFORM.moduleName('./example31'), name: 'example31', nav: true, title: '31- Backend OData with RxJS' },
+      { route: 'example32', moduleId: PLATFORM.moduleName('./example32'), name: 'example32', nav: true, title: '32- Columns Resize by Content' },
     ];
 
     config.map(mapping);
