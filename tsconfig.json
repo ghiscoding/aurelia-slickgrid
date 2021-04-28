@@ -4,6 +4,7 @@
     "target": "es5",
     "module": "esnext",
     "sourceMap": true,
+    "downlevelIteration": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "moduleResolution": "node",
