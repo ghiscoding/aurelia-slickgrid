@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.6.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v3.5.0...v3.6.0) (2021-04-28)
+
+
+### Features
+
+* **footer:** add row selection count to the footer component ([#563](https://github.com/ghiscoding/aurelia-slickgrid/issues/563)) ([dcf61f6](https://github.com/ghiscoding/aurelia-slickgrid/commit/dcf61f6b440648891a9ded15fe568292da2cff27))
+* **resize:** add column resize by cell content ([#560](https://github.com/ghiscoding/aurelia-slickgrid/issues/560)) ([f5211c3](https://github.com/ghiscoding/aurelia-slickgrid/commit/f5211c398970ec90c47ea67f69506ac9a3985901))
+
+
+### Bug Fixes
+
+* **deps:** remove unused npm packages reported as security risk ([#562](https://github.com/ghiscoding/aurelia-slickgrid/issues/562)) ([12e420a](https://github.com/ghiscoding/aurelia-slickgrid/commit/12e420a9e582b545b5f29e33d4b95a9e8b323576))
+
 ## [3.5.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v3.4.0...v3.5.0) (2021-03-25)
 
 
