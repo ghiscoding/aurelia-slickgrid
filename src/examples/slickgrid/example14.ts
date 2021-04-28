@@ -1,3 +1,4 @@
+import { ExcelExportService } from '@slickgrid-universal/excel-export';
 import { AureliaGridInstance, Column, FieldType, GridOption, ItemMetadata } from '../../aurelia-slickgrid';
 import './example14.scss'; // provide custom CSS/SASS styling
 
@@ -59,6 +60,11 @@ export class Example14 {
       preHeaderPanelHeight: 28,
       gridHeight: 275,
       gridWidth: 800,
+      enableExcelExport: true,
+      excelExportOptions: {
+        exportWithFormatter: false
+      },
+      registerExternalResources: [new ExcelExportService()],
       explicitInitialization: true,
       colspanCallback: this.renderDifferentColspan
     };
@@ -85,6 +91,11 @@ export class Example14 {
       gridHeight: 275,
       gridWidth: 800,
       frozenColumn: 2,
+      enableExcelExport: true,
+      excelExportOptions: {
+        exportWithFormatter: false
+      },
+      registerExternalResources: [new ExcelExportService()],
       gridMenu: { hideClearFrozenColumnsCommand: false },
       headerMenu: { hideFreezeColumnsCommand: false }
     };
@@ -127,14 +138,13 @@ export class Example14 {
           }
         }
       };
-    } else {
-      return {
-        columns: {
-          0: {
-            colspan: '*' // starting at column index 0, we will span accross all column (*)
-          }
-        }
-      };
     }
+    return {
+      columns: {
+        0: {
+          colspan: '*' // starting at column index 0, we will span accross all column (*)
+        }
+      }
+    };
   }
 }
