@@ -13,7 +13,7 @@ describe('Example 32 - Columns Resize by Content', () => {
     cy.get('.slick-row').find('.slick-cell:nth(2)').invoke('width').should('equal', 67);
     cy.get('.slick-row').find('.slick-cell:nth(3)').invoke('width').should('equal', 59);
     cy.get('.slick-row').find('.slick-cell:nth(4)').invoke('width').should('equal', 102);
-    cy.get('.slick-row').find('.slick-cell:nth(5)').invoke('width').should('equal', 89);
+    cy.get('.slick-row').find('.slick-cell:nth(5)').invoke('width').should('equal', 97);
     cy.get('.slick-row').find('.slick-cell:nth(6)').invoke('width').should('equal', 72);
     cy.get('.slick-row').find('.slick-cell:nth(7)').invoke('width').should('equal', 71);
     cy.get('.slick-row').find('.slick-cell:nth(8)').invoke('width').should('equal', 72);
@@ -29,7 +29,7 @@ describe('Example 32 - Columns Resize by Content', () => {
     cy.get('.slick-row').find('.slick-cell:nth(2)').invoke('width').should('equal', 67);
     cy.get('.slick-row').find('.slick-cell:nth(3)').invoke('width').should('equal', 59);
     cy.get('.slick-row').find('.slick-cell:nth(4)').invoke('width').should('equal', 102);
-    cy.get('.slick-row').find('.slick-cell:nth(5)').invoke('width').should('equal', 89);
+    cy.get('.slick-row').find('.slick-cell:nth(5)').invoke('width').should('equal', 97);
     cy.get('.slick-row').find('.slick-cell:nth(6)').invoke('width').should('equal', 72);
     cy.get('.slick-row').find('.slick-cell:nth(7)').invoke('width').should('equal', 71);
     cy.get('.slick-row').find('.slick-cell:nth(8)').invoke('width').should('equal', 72);
