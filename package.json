@@ -66,7 +66,6 @@
     "aurelia-templating-resources": "^1.13.1",
     "dompurify": "^2.2.7",
     "jquery": "~3.5.1",
-    "slickgrid": "^2.4.33",
     "typescript": ">=4.2.3"
   },
   "peerDependencies": {
@@ -84,7 +83,7 @@
     "@types/i18next-xhr-backend": "^1.4.2",
     "@types/jest": "^26.0.22",
     "@types/jquery": "^3.5.5",
-    "@types/node": "^14.14.41",
+    "@types/node": "^15.0.1",
     "@types/webpack": "^4.41.27",
     "@typescript-eslint/eslint-plugin": "^4.22.0",
     "@typescript-eslint/parser": "^4.22.0",
@@ -112,7 +111,7 @@
     "css-loader": "5.2.4",
     "del": "^6.0.0",
     "duplicate-package-checker-webpack-plugin": "^3.0.0",
-    "eslint": "^7.24.0",
+    "eslint": "^7.25.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-prefer-arrow": "^1.2.3",
     "expose-loader": "^1.0.3",
