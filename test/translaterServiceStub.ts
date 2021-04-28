@@ -56,6 +56,7 @@ export class TranslaterServiceStub implements TranslaterService {
       case 'MALE': output = this._locale === 'en' ? 'Male' : 'Mâle'; break;
       case 'ITEMS': output = this._locale === 'en' ? 'items' : 'éléments'; break;
       case 'ITEMS_PER_PAGE': output = this._locale === 'en' ? 'items per page' : 'éléments par page'; break;
+      case 'ITEMS_SELECTED': output = this._locale === 'en' ? 'items selected' : 'éléments sélectionnés'; break;
       case 'NOT_EQUAL_TO': output = this._locale === 'en' ? 'Not equal to' : 'Non égal à'; break;
       case 'OF': output = this._locale === 'en' ? 'of' : 'de'; break;
       case 'OK': output = this._locale === 'en' ? 'OK' : 'Terminé'; break;
