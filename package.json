@@ -144,7 +144,7 @@
     "standard-version": "^9.2.0",
     "style-loader": "2.0.0",
     "ts-jest": "^26.5.5",
-    "ts-loader": "^8.1.0",
+    "ts-loader": "^9.1.1",
     "ts-node": "^9.1.1",
     "typedoc": "^0.20.36",
     "uglify-js": "^3.13.4",
