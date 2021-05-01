@@ -138,7 +138,7 @@
     "postcss-cli": "^8.3.1",
     "promise-polyfill": "^8.2.0",
     "rimraf": "^3.0.2",
-    "rxjs": "next",
+    "rxjs": "^7.0.0",
     "sass": "^1.32.11",
     "sass-loader": "^10.1.1",
     "standard-version": "^9.2.0",
