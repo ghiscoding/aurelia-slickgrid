@@ -93,8 +93,14 @@ export class Example27 {
       enableTreeData: true, // you must enable this flag for the filtering & sorting to work as expected
       treeDataOptions: {
         columnId: 'title',
-        levelPropName: 'indent',
-        parentPropName: 'parentId'
+        // levelPropName: 'treeLevel',
+        parentPropName: 'parentId',
+
+        // you can optionally sort by a different column and/or sort direction
+        initialSort: {
+          columnId: 'title',
+          direction: 'ASC'
+        }
       },
       // change header/cell row height for material design theme
       headerRowHeight: 45,
@@ -186,7 +192,7 @@ export class Example27 {
     this.aureliaGrid.treeDataService.toggleTreeDataCollapse(false);
   }
 
-  logExpandedStructure() {
+  logHierarchicalStructure() {
     console.log('exploded array', this.aureliaGrid.treeDataService.datasetHierarchical /* , JSON.stringify(explodedArray, null, 2) */);
   }
 
@@ -223,7 +229,6 @@ export class Example27 {
       }
 
       d['id'] = i;
-      d['indent'] = indent;
       d['parentId'] = parentId;
       d['title'] = 'Task ' + i;
       d['duration'] = '5 days';

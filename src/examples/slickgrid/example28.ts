@@ -208,7 +208,7 @@ export class Example28 {
     this.aureliaGrid.treeDataService.toggleTreeDataCollapse(false);
   }
 
-  logExpandedStructure() {
+  logHierarchicalStructure() {
     console.log('exploded array', this.aureliaGrid.treeDataService.datasetHierarchical /* , JSON.stringify(explodedArray, null, 2) */);
   }
 

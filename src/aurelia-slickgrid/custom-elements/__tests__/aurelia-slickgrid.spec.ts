@@ -32,7 +32,6 @@ import {
   SortService,
   TreeDataService
 } from '@slickgrid-universal/common';
-import * as utilities from '@slickgrid-universal/common/dist/commonjs/services/utilities';
 import * as aureliaSlickgridUtilities from '../aurelia-slickgrid-utilities';
 
 import { SlickEmptyWarningComponent } from '@slickgrid-universal/empty-warning-component';
@@ -49,8 +48,6 @@ import { PubSubService } from '../../services/pubSub.service';
 import { ResizerService } from '../../services/resizer.service';
 import { AureliaSlickgridCustomElement } from '../aurelia-slickgrid';
 
-
-const mockConvertParentChildArray = jest.fn();
 const mockAutoAddCustomEditorFormatter = jest.fn();
 
 (aureliaSlickgridUtilities.autoAddEditorFormatterToColumnsWithEditor as any) = mockAutoAddCustomEditorFormatter;
@@ -178,10 +175,13 @@ const sortServiceStub = {
   dispose: jest.fn(),
   loadGridSorters: jest.fn(),
   processTreeDataInitialSort: jest.fn(),
+  sortHierarchicalDataset: jest.fn(),
 } as unknown as SortService;
 
 const treeDataServiceStub = {
   init: jest.fn(),
+  convertFlatDatasetConvertToHierarhicalView: jest.fn(),
+  initializeHierarchicalDataset: jest.fn(),
   dispose: jest.fn(),
   handleOnCellClick: jest.fn(),
   toggleTreeDataCollapse: jest.fn(),
@@ -2110,6 +2110,7 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         const mockFlatDataset = [{ id: 0, file: 'documents' }, { id: 1, file: 'vacation.txt', parentId: 0 }];
         const mockHierarchical = [{ id: 0, file: 'documents', files: [{ id: 1, file: 'vacation.txt' }] }];
         const hierarchicalSpy = jest.spyOn(SharedService.prototype, 'hierarchicalDataset', 'set');
+        jest.spyOn(treeDataServiceStub, 'initializeHierarchicalDataset').mockReturnValue({ hierarchical: mockHierarchical, flat: mockFlatDataset });
 
         customElement.gridOptions = { enableTreeData: true, treeDataOptions: { columnId: 'file', parentPropName: 'parentId', childrenPropName: 'files' } } as unknown as GridOption;
         customElement.initialization(slickEventHandler);
@@ -2133,24 +2134,6 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         expect(clearFilterSpy).toHaveBeenCalled();
         expect(processSpy).toHaveBeenCalled();
         expect(setItemsSpy).toHaveBeenCalledWith([], 'id');
-      });
-
-      it('should convert parent/child dataset to hierarchical dataset when Tree Data is enabled and "onRowsChanged" was triggered', () => {
-        // @ts-ignore:2540
-        utilities.convertParentChildArrayToHierarchicalView = mockConvertParentChildArray;
-
-        const mockFlatDataset = [{ id: 0, file: 'documents' }, { id: 1, file: 'vacation.txt', parentId: 0 }];
-        const hierarchicalSpy = jest.spyOn(SharedService.prototype, 'hierarchicalDataset', 'set');
-        jest.spyOn(mockDataView, 'getItems').mockReturnValue(mockFlatDataset);
-
-        customElement.gridOptions = { enableTreeData: true, treeDataOptions: { columnId: 'file' } };
-        customElement.initialization(slickEventHandler);
-        customElement.datasetChanged(mockFlatDataset, []);
-        customElement.isDatasetInitialized = false;
-        mockDataView.onRowsChanged.notify({ rows: [1, 2, 3] });
-
-        expect(hierarchicalSpy).toHaveBeenCalled();
-        expect(mockConvertParentChildArray).toHaveBeenCalled();
       });
     });
   });
