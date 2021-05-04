@@ -279,7 +279,7 @@ export class Example30 {
         },
         filter: {
           model: Filters.inputText,
-          // placeholder: '&#128269; search city',
+          // placeholder: '🔎︎ search city',
           type: FieldType.string,
           queryField: 'product.itemName',
         }
