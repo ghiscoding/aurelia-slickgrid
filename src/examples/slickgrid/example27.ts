@@ -93,7 +93,7 @@ export class Example27 {
       enableTreeData: true, // you must enable this flag for the filtering & sorting to work as expected
       treeDataOptions: {
         columnId: 'title',
-        // levelPropName: 'treeLevel',
+        levelPropName: 'indent', // this is optional, except that in our case we just need to define it because we are adding new item in the demo
         parentPropName: 'parentId',
 
         // you can optionally sort by a different column and/or sort direction
@@ -102,6 +102,8 @@ export class Example27 {
           direction: 'ASC'
         }
       },
+      multiColumnSort: false,
+      showCustomFooter: true,
       // change header/cell row height for material design theme
       headerRowHeight: 45,
       rowHeight: 40,
@@ -163,22 +165,19 @@ export class Example27 {
       parentId: parentItemFound.id,
       title: `Task ${newId}`,
       duration: '1 day',
-      percentComplete: Math.round(Math.random() * 100),
+      percentComplete: 99,
       start: new Date(),
       finish: new Date(),
       effortDriven: false
     };
     this.aureliaGrid.dataView.addItem(newItem);
+
+    // force a refresh of the data by getting the updated list from the DataView & override our local copy as well
     const dataset = this.aureliaGrid.dataView.getItems();
     this.dataset = [...dataset]; // make a copy to trigger a dataset refresh
 
     // add setTimeout to wait a full cycle because datasetChanged needs a full cycle
-    // force a resort because of the tree data structure
     setTimeout(() => {
-      const titleColumn = this.columnDefinitions.find(col => col.id === 'title') as Column;
-      this.aureliaGrid.sortService.onLocalSortChanged(this.aureliaGrid.slickGrid, [{ columnId: 'title', sortCol: titleColumn, sortAsc: true }]);
-
-      // scroll into the position, after insertion cycle, where the item was added
       const rowIndex = this.aureliaGrid.dataView.getRowById(newItem.id) as number;
       this.aureliaGrid.slickGrid.scrollRowIntoView(rowIndex + 3);
     }, 0);
@@ -229,6 +228,7 @@ export class Example27 {
       }
 
       d['id'] = i;
+      d['indent'] = indent;
       d['parentId'] = parentId;
       d['title'] = 'Task ' + i;
       d['duration'] = '5 days';

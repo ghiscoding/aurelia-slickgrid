@@ -107,6 +107,7 @@ declare const Slick: SlickNamespace;
 )
 export class AureliaSlickgridCustomElement {
   private _columnDefinitions: Column[] = [];
+  private _currentDatasetLength = 0;
   private _dataset: any[] | null = null;
   private _eventHandler!: SlickEventHandler;
   private _hideHeaderRowAfterPageLoad = false;
@@ -325,6 +326,7 @@ export class AureliaSlickgridCustomElement {
 
     // make sure the dataset is initialized (if not it will throw an error that it cannot getLength of null)
     this._dataset = this._dataset || this.dataset || [];
+    this._currentDatasetLength = this._dataset.length;
     this.gridOptions = this.mergeGridOptions(this.gridOptions);
     this._paginationOptions = this.gridOptions?.pagination;
     this.locales = this.gridOptions?.locales ?? Constants.locales;
@@ -573,7 +575,6 @@ export class AureliaSlickgridCustomElement {
     this._dataset = null;
     this.datasetHierarchical = null;
     this._columnDefinitions = [];
-    // this.instances = null;
   }
 
   emptyGridContainerElm() {
@@ -632,16 +633,24 @@ export class AureliaSlickgridCustomElement {
   }
 
   datasetChanged(newDataset: any[], oldValue: any[]) {
+    const prevDatasetLn = this._currentDatasetLength;
     let data = [...newDataset];
+
     // when Tree Data is enabled and we don't yet have the hierarchical dataset filled, we can force a convert & sort of the array
-    if (this.gridOptions.enableTreeData && Array.isArray(newDataset) && newDataset.length > 0) {
+    if (this.gridOptions?.enableTreeData && Array.isArray(newDataset) && (newDataset.length > 0 || newDataset.length !== prevDatasetLn)) {
       const sortedDatasetResult = this.treeDataService.initializeHierarchicalDataset(data, this._columnDefinitions);
       this.sharedService.hierarchicalDataset = sortedDatasetResult.hierarchical;
       data = sortedDatasetResult.flat;
+
+      // if we add/remove item(s) from the dataset, we need to also refresh our tree data filters
+      if (newDataset.length > 0 && prevDatasetLn > 0 && newDataset.length !== prevDatasetLn) {
+        this.filterService.refreshTreeDataFilters();
+      }
     }
 
     this._dataset = data;
     this.refreshGridData(data || []);
+    this._currentDatasetLength = newDataset.length;
 
     // expand/autofit columns on first page load
     // we can assume that if the oldValue was empty then we are on first load
@@ -1145,6 +1154,7 @@ export class AureliaSlickgridCustomElement {
 
   /** When data changes in the DataView, we'll refresh the metrics and/or display a warning if the dataset is empty */
   private handleOnItemCountChanged(currentPageRowItemCount: number, totalItemCount: number) {
+    this._currentDatasetLength = totalItemCount;
     this.metrics = {
       startTime: new Date(),
       endTime: new Date(),
