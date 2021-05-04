@@ -6,15 +6,14 @@ import {
   EditorValidationResult,
   KeyCode
 } from '../../aurelia-slickgrid';
-import * as $ from 'jquery';
 
 /*
  * An example of a 'detached' editor.
  * KeyDown events are also handled to provide handling for Tab, Shift-Tab, Esc and Ctrl-Enter.
  */
 export class CustomInputEditor implements Editor {
-  private _lastInputEvent?: JQuery.Event;
-  $input: any;
+  private _lastInputEvent?: KeyboardEvent;
+  inputElm!: HTMLInputElement;
   defaultValue: any;
 
   constructor(private args: any) {
@@ -39,49 +38,52 @@ export class CustomInputEditor implements Editor {
   init(): void {
     const placeholder = this.columnEditor && this.columnEditor.placeholder || '';
 
-    // this.$input = $(`<input type="text" class="editor-text" placeholder="${placeholder}" />`)
-    //   .appendTo(this.args.container)
-    //   .on('keydown.nav',
+    this.inputElm = document.createElement('input');
+    this.inputElm.className = 'editor-text';
+    this.inputElm.placeholder = placeholder;
+    this.args.container.appendChild(this.inputElm);
 
-    this.$input = $(`<input type="text" class="editor-text" placeholder="${placeholder}" />`)
-      .appendTo(this.args.container)
-      .on('keydown.nav', (event: JQuery.Event) => {
-        this._lastInputEvent = event;
-        if (event.keyCode === KeyCode.LEFT || event.keyCode === KeyCode.RIGHT) {
-          event.stopImmediatePropagation();
-        }
-      });
+    this.inputElm.addEventListener('keydown', this.handleKeydown.bind(this));
 
     setTimeout(() => {
-      this.$input.focus().select();
+      this.inputElm.focus();
+      this.inputElm.select();
     }, 50);
   }
 
+  handleKeydown(event: KeyboardEvent) {
+    this._lastInputEvent = event;
+    if (event.keyCode === KeyCode.LEFT || event.keyCode === KeyCode.RIGHT) {
+      event.stopImmediatePropagation();
+    }
+  }
+
   destroy() {
-    this.$input.off('keydown.nav').remove();
+    this.inputElm.removeEventListener('keydown', this.handleKeydown.bind(this));
+    this.inputElm.remove();
   }
 
   focus() {
-    this.$input.focus();
+    this.inputElm.focus();
   }
 
   getValue() {
-    return this.$input.val();
+    return this.inputElm.value;
   }
 
   setValue(val: string) {
-    this.$input.val(val);
+    this.inputElm.value = val;
   }
 
   loadValue(item: any) {
     this.defaultValue = item[this.args.column.field] || '';
-    this.$input.val(this.defaultValue);
-    this.$input[0].defaultValue = this.defaultValue;
-    this.$input.select();
+    this.inputElm.value = this.defaultValue;
+    this.inputElm.defaultValue = this.defaultValue;
+    this.inputElm.select();
   }
 
   serializeValue() {
-    return this.$input.val();
+    return this.inputElm.value;
   }
 
   applyValue(item: any, state: any) {
@@ -90,16 +92,16 @@ export class CustomInputEditor implements Editor {
   }
 
   isValueChanged(): boolean {
-    const lastEvent = this._lastInputEvent && this._lastInputEvent.keyCode;
-    if (this.columnEditor && this.columnEditor.alwaysSaveOnEnterKey && lastEvent === KeyCode.ENTER) {
+    const lastEvent = this._lastInputEvent?.keyCode;
+    if (this.columnEditor?.alwaysSaveOnEnterKey && lastEvent === KeyCode.ENTER) {
       return true;
     }
-    return (!(this.$input.val() === '' && this.defaultValue === null)) && (this.$input.val() !== this.defaultValue);
+    return (!(this.inputElm.value === '' && this.defaultValue === null)) && (this.inputElm.value !== this.defaultValue);
   }
 
   validate(inputValue?: any): EditorValidationResult {
     if (this.validator) {
-      const value = (inputValue !== undefined) ? inputValue : this.$input && this.$input.val && this.$input.val();
+      const value = (inputValue !== undefined) ? inputValue : this.inputElm?.value;
       return this.validator(value, this.args);
     }
 
