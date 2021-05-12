@@ -1,9 +1,8 @@
-import * as $ from 'jquery';
-
 import {
   AureliaUtilService,
   Column,
   ColumnFilter,
+  emptyElement,
   Filter,
   FilterArguments,
   FilterCallback,
@@ -74,7 +73,7 @@ export class CustomAureliaViewModelFilter implements Filter {
       // else we get the infamous error "ExpressionChangedAfterItHasBeenCheckedError"
       setTimeout(() => {
         this.container = this.grid.getHeaderRowColumn(this.columnDef.id);
-        $(this.container).empty();
+        emptyElement(this.container);
 
         // here we override the collection object of the Aurelia Custom Element
         // but technically you can pass any values you wish as bindings
