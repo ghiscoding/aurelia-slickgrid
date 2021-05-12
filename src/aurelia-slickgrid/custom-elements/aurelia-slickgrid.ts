@@ -113,6 +113,7 @@ export class AureliaSlickgridCustomElement {
   private _hideHeaderRowAfterPageLoad = false;
   private _isGridInitialized = false;
   private _isDatasetInitialized = false;
+  private _isDatasetHierarchicalInitialized = false;
   private _isPaginationInitialized = false;
   private _isLeftFooterOriginallyEmpty = true;
   private _isLeftFooterDisplayingSelectionRowCount = false;
@@ -208,7 +209,7 @@ export class AureliaSlickgridCustomElement {
     this.filterFactory = new FilterFactory(slickgridConfig, this.translaterService, this.collectionService);
     this.filterService = externalServices?.filterService ?? new FilterService(this.filterFactory as any, this.pubSubService, this.sharedService, this.backendUtilityService);
     this.sortService = externalServices?.sortService ?? new SortService(this.sharedService, this.pubSubService, this.backendUtilityService);
-    this.treeDataService = externalServices?.treeDataService ?? new TreeDataService(this.sharedService, this.sortService);
+    this.treeDataService = externalServices?.treeDataService ?? new TreeDataService(this.pubSubService, this.sharedService, this.sortService);
     this.paginationService = externalServices?.paginationService ?? new PaginationService(this.pubSubService, this.sharedService, this.backendUtilityService);
 
     // extensions
@@ -247,7 +248,7 @@ export class AureliaSlickgridCustomElement {
     );
 
     this.gridStateService = externalServices?.gridStateService ?? new GridStateService(this.extensionService, this.filterService, this.pubSubService, this.sharedService, this.sortService);
-    this.gridService = externalServices?.gridService ?? new GridService(this.gridStateService, this.filterService, this.pubSubService, this.paginationService, this.sharedService, this.sortService);
+    this.gridService = externalServices?.gridService ?? new GridService(this.gridStateService, this.filterService, this.pubSubService, this.paginationService, this.sharedService, this.sortService, this.treeDataService);
     this.groupingService = externalServices?.groupingAndColspanService ?? new GroupingAndColspanService(this.extensionUtility, this.extensionService, this.pubSubService);
 
     this.serviceList = [
@@ -637,18 +638,11 @@ export class AureliaSlickgridCustomElement {
     let data = [...newDataset];
 
     // when Tree Data is enabled and we don't yet have the hierarchical dataset filled, we can force a convert & sort of the array
-    if (this.gridOptions?.enableTreeData && Array.isArray(newDataset) && (newDataset.length > 0 || newDataset.length !== prevDatasetLn)) {
-      const sortedDatasetResult = this.treeDataService.initializeHierarchicalDataset(data, this._columnDefinitions);
-      this.sharedService.hierarchicalDataset = sortedDatasetResult.hierarchical;
-      data = sortedDatasetResult.flat;
-
-      // if we add/remove item(s) from the dataset, we need to also refresh our tree data filters
-      if (newDataset.length > 0 && prevDatasetLn > 0 && newDataset.length !== prevDatasetLn) {
-        this.filterService.refreshTreeDataFilters();
-      }
+    if (this.grid && this.gridOptions?.enableTreeData && Array.isArray(newDataset) && (newDataset.length > 0 || newDataset.length !== prevDatasetLn)) {
+      this._isDatasetHierarchicalInitialized = false;
+      data = this.sortTreeDataset(newDataset);
     }
 
-    this._dataset = data;
     this.refreshGridData(data || []);
     this._currentDatasetLength = newDataset.length;
 
@@ -660,6 +654,7 @@ export class AureliaSlickgridCustomElement {
   }
 
   datasetHierarchicalChanged(newHierarchicalDataset: any[] | undefined) {
+    const prevFlatDatasetLn = this._currentDatasetLength;
     this.sharedService.hierarchicalDataset = newHierarchicalDataset;
 
     if (newHierarchicalDataset && this.columnDefinitions && this.filterService?.clearFilters) {
@@ -667,10 +662,21 @@ export class AureliaSlickgridCustomElement {
     }
 
     // when a hierarchical dataset is set afterward, we can reset the flat dataset and call a tree data sort that will overwrite the flat dataset
-    if (newHierarchicalDataset && this.sortService?.processTreeDataInitialSort && this.gridOptions?.enableTreeData) {
+    if (newHierarchicalDataset && this.grid && this.sortService?.processTreeDataInitialSort) {
       this.dataview.setItems([], this.gridOptions.datasetIdPropertyName);
       this.sortService.processTreeDataInitialSort();
+
+      // we also need to reset/refresh the Tree Data filters because if we inserted new item(s) then it might not show up without doing this refresh
+      // however we need 1 cpu cycle before having the DataView refreshed, so we need to wrap this check in a setTimeout
+      setTimeout(() => {
+        const flatDatasetLn = this.dataview.getItemCount();
+        if (flatDatasetLn !== prevFlatDatasetLn && flatDatasetLn > 0) {
+          this.filterService.refreshTreeDataFilters();
+        }
+      });
     }
+
+    this._isDatasetHierarchicalInitialized = true;
   }
 
   /**
@@ -808,18 +814,6 @@ export class AureliaSlickgridCustomElement {
             setTimeout(() => this.resizerService.resizeColumnsByCellContent(true), 10);
           }
         });
-
-        if (this.gridOptions?.enableTreeData) {
-          // Tree Data with Pagiantion is not supported, throw an error when user tries to do that
-          if (this.gridOptions.enablePagination) {
-            throw new Error('[Aurelia-Slickgrid] It looks like you are trying to use Tree Data with Pagination but unfortunately that is simply not supported because of its complexity.');
-          }
-
-          // when dealing with Tree Data View, make sure we have necessary tree data options
-          if ((!this.gridOptions.treeDataOptions || !this.gridOptions.treeDataOptions.columnId)) {
-            throw new Error('[Aurelia-Slickgrid] When enabling tree data, you must also provide the "treeDataOption" property in your Grid Options with "childrenPropName" or "parentPropName" (depending if your array is hierarchical or flat) for the Tree Data to work properly');
-          }
-        }
 
         const onRowsChangedHandler = dataView.onRowsChanged;
         (this._eventHandler as SlickEventHandler<GetSlickEventType<typeof onRowsChangedHandler>>).subscribe(onRowsChangedHandler, (_e, args) => {
@@ -1033,7 +1027,7 @@ export class AureliaSlickgridCustomElement {
       this.displayEmptyDataWarning(finalTotalCount < 1);
     }
 
-    if (Array.isArray(dataset) && this.grid && this.dataview && typeof this.dataview.setItems === 'function') {
+    if (Array.isArray(dataset) && this.grid && this.dataview?.setItems) {
       this.dataview.setItems(dataset, this.gridOptions.datasetIdPropertyName);
       if (!this.gridOptions.backendServiceApi && !this.gridOptions.enableTreeData) {
         this.dataview.reSort();
@@ -1391,6 +1385,41 @@ export class AureliaSlickgridCustomElement {
     this.sortService.addRxJsResource(this.rxjs);
     this.paginationService.addRxJsResource(this.rxjs);
     this.containerService.registerInstance('RxJsResource', this.rxjs);
+  }
+
+  /**
+   * Takes a flat dataset with parent/child relationship, sort it (via its tree structure) and return the sorted flat array
+   * @returns {Array<Object>} sort flat parent/child dataset
+   */
+  private sortTreeDataset<T>(flatDatasetInput: T[]): T[] {
+    const prevDatasetLn = this._currentDatasetLength;
+    let sortedDatasetResult;
+    let flatDatasetOutput: any[] = [];
+
+    // if the hierarchical dataset was already initialized then no need to re-convert it, we can use it directly from the shared service ref
+    if (this._isDatasetHierarchicalInitialized && this.datasetHierarchical) {
+      sortedDatasetResult = this.treeDataService.sortHierarchicalDataset(this.datasetHierarchical);
+      flatDatasetOutput = sortedDatasetResult.flat;
+    } else if (Array.isArray(flatDatasetInput) && flatDatasetInput.length > 0) {
+      if (this.gridOptions?.treeDataOptions?.initialSort) {
+        // else we need to first convert the flat dataset to a hierarchical dataset and then sort
+        sortedDatasetResult = this.treeDataService.convertFlatParentChildToTreeDatasetAndSort(flatDatasetInput, this._columnDefinitions, this.gridOptions);
+        this.sharedService.hierarchicalDataset = sortedDatasetResult.hierarchical;
+        flatDatasetOutput = sortedDatasetResult.flat;
+      } else {
+        // else we assume that the user provided an array that is already sorted (user's responsability)
+        // and so we can simply convert the array to a tree structure and we're done, no need to sort
+        this.sharedService.hierarchicalDataset = this.treeDataService.convertFlatParentChildToTreeDataset(flatDatasetInput, this.gridOptions);
+        flatDatasetOutput = flatDatasetInput || [];
+      }
+    }
+
+    // if we add/remove item(s) from the dataset, we need to also refresh our tree data filters
+    if (flatDatasetInput.length > 0 && flatDatasetInput.length !== prevDatasetLn) {
+      this.filterService.refreshTreeDataFilters(flatDatasetOutput);
+    }
+
+    return flatDatasetOutput;
   }
 
   /**

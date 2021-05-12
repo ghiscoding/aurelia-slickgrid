@@ -11,17 +11,34 @@
   </h2>
   <div class="subtitle" innerhtml.bind="subTitle"></div>
 
+  <div class="row" style="margin-bottom: 4px;">
+    <div class="col-md-12">
+      <button class="btn btn-outline-secondary btn-sm" data-test="add-500-rows-btn" click.delegate="loadData(500)">
+        500 rows
+      </button>
+      <button class="btn btn-outline-secondary btn-sm" data-test="add-50k-rows-btn" click.delegate="loadData(25000)">
+        25k rows
+      </button>
+      <button onclick.delegate="dynamicallyChangeFilter()" class="btn btn-outline-secondary btn-sm"
+              data-test="change-filter-dynamically">
+        <span class="mdi mdi-filter-outline"></span>
+        <span>Dynamically Change Filter (% complete &lt; 40)</span>
+      </button>
+      <div class.bind="loadingClass"></div>
+    </div>
+  </div>
+
   <div class="row">
     <div class="col-md-12">
-      <button click.delegate="addNewRow()" class="btn btn-outline-info btn-sm">
+      <button click.delegate="addNewRow()" data-test="add-item-btn" class="btn btn-info btn-sm">
         <span class="mdi mdi-plus"></span>
         <span>Add New Item (in 1st group)</span>
       </button>
-      <button click.delegate="collapseAll()" data-test="collapse-all" class="btn btn-outline-secondary btn-sm">
+      <button click.delegate="collapseAll()" data-test="collapse-all-btn" class="btn btn-outline-secondary btn-sm">
         <span class="mdi mdi-arrow-collapse"></span>
         <span>Collapse All</span>
       </button>
-      <button click.delegate="expandAll()" data-test="expand-all" class="btn btn-outline-secondary btn-sm">
+      <button click.delegate="expandAll()" data-test="expand-all-btn" class="btn btn-outline-secondary btn-sm">
         <span class="mdi mdi-arrow-expand"></span>
         <span>Expand All</span>
       </button>
@@ -41,7 +58,15 @@
                        column-definitions.bind="columnDefinitions"
                        grid-options.bind="gridOptions"
                        dataset.bind="dataset"
-                       instances.bind="aureliaGrid">
+                       instances.bind="aureliaGrid"
+                       on-before-filter-change.delegate="showSpinner()"
+                       on-filter-changed.delegate="hideSpinner()"
+                       on-before-filter-clear.delegate="showSpinner()"
+                       on-filter-cleared.delegate="hideSpinner()"
+                       on-before-sort-change.delegate="showSpinner()"
+                       on-sort-changed.delegate="hideSpinner()"
+                       on-before-toggle-tree-collapse.delegate="showSpinner()"
+                       on-toggle-tree-collapsed.delegate="hideSpinner()">
     </aurelia-slickgrid>
   </div>
 </template>
