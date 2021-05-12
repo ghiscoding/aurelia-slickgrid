@@ -130,7 +130,9 @@ export class CustomInputFilter implements Filter {
     filterElm.dataset.columnid = `${this.columnDef.id}`;
 
     // append the new DOM element to the header row
-    headerElm.appendChild(filterElm);
+    if (headerElm) {
+      headerElm.appendChild(filterElm);
+    }
 
     return filterElm;
   }
