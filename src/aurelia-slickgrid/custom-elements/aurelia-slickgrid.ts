@@ -70,6 +70,9 @@ import {
   HeaderButtonExtension,
   RowSelectionExtension,
   RowMoveManagerExtension,
+
+  // utilities
+  emptyElement,
 } from '@slickgrid-universal/common';
 import { SlickEmptyWarningComponent } from '@slickgrid-universal/empty-warning-component';
 
@@ -580,7 +583,8 @@ export class AureliaSlickgridCustomElement {
 
   emptyGridContainerElm() {
     const gridContainerId = this.gridOptions?.gridContainerId ?? 'grid1';
-    $(gridContainerId).empty();
+    const gridContainerElm = document.querySelector(gridContainerId) as HTMLDivElement;
+    emptyElement(gridContainerElm);
   }
 
   dispose(shouldEmptyDomElementContainer = false) {

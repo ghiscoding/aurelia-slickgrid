@@ -94,7 +94,7 @@ export const GlobalGridOptions: Partial<GridOption> = {
   defaultAureliaEventPrefix: '',
   defaultSlickgridEventPrefix: '',
   defaultFilter: Filters.input,
-  defaultFilterPlaceholder: '&#128269;', // magnifying glass icon
+  defaultFilterPlaceholder: '🔎︎', // magnifying glass icon
   defaultFilterRangeOperator: OperatorType.rangeExclusive,
   defaultBackendServiceFilterTypingDebounce: 500,
   editable: false,
