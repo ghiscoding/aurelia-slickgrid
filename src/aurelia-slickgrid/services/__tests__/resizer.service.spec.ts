@@ -1,4 +1,6 @@
 import { Column, Editors, FieldType, GridOption, SlickGrid, SlickNamespace, } from '@slickgrid-universal/common';
+import { EventAggregator } from 'aurelia-event-aggregator';
+
 import { PubSubService } from '../pubSub.service';
 import { ResizerService } from '../resizer.service';
 
@@ -51,19 +53,14 @@ const gridStub = {
   onSort: new Slick.Event(),
 } as unknown as SlickGrid;
 
-const pubSubServiceStub = {
-  publish: jest.fn(),
-  subscribe: jest.fn(),
-  unsubscribe: jest.fn(),
-  unsubscribeAll: jest.fn(),
-} as unknown as PubSubService;
-
 describe('Resizer Service', () => {
   let service: ResizerService;
   let divContainer: HTMLDivElement;
   let divHeaderElm: HTMLDivElement;
   let divViewportElm: HTMLDivElement;
   let mockGridOptions: GridOption;
+  let globalEa: EventAggregator;
+  let pubSubService: PubSubService;
 
   beforeEach(() => {
     divContainer = document.createElement('div');
@@ -76,7 +73,9 @@ describe('Resizer Service', () => {
     divContainer.appendChild(divViewportElm);
     document.body.appendChild(divContainer);
 
-    service = new ResizerService(pubSubServiceStub);
+    globalEa = new EventAggregator();
+    pubSubService = new PubSubService(globalEa);
+    service = new ResizerService(pubSubService);
     mockGridOptions = {
       enableAutoResize: true,
       autoResize: {
@@ -115,7 +114,7 @@ describe('Resizer Service', () => {
 
     it('should call internal event handler subscribe and expect the "onGridBeforeResize" event to be called when addon notify is called', () => {
       const handlerSpy = jest.spyOn(service.eventHandler, 'subscribe');
-      const pubSubSpy = jest.spyOn(pubSubServiceStub, 'publish');
+      const pubSubSpy = jest.spyOn(globalEa, 'publish');
 
       service.init(gridStub, divContainer);
       const instance = service.getAddonInstance();
@@ -131,7 +130,7 @@ describe('Resizer Service', () => {
 
     it('should call internal event handler subscribe and expect the "onGridAfterResize" event to be called when addon notify is called', () => {
       const handlerSpy = jest.spyOn(service.eventHandler, 'subscribe');
-      const pubSubSpy = jest.spyOn(pubSubServiceStub, 'publish');
+      const pubSubSpy = jest.spyOn(globalEa, 'publish');
 
       service.init(gridStub, divContainer);
       const instance = service.getAddonInstance();
@@ -147,7 +146,7 @@ describe('Resizer Service', () => {
 
     it('should call "onGridAfterResize" event and expect "resizeColumnsByCellContent" to be called when "enableAutoResizeColumnsByCellContent" is set', () => {
       const resizeContentSpy = jest.spyOn(service, 'resizeColumnsByCellContent');
-      const pubSubSpy = jest.spyOn(pubSubServiceStub, 'publish');
+      const pubSubSpy = jest.spyOn(globalEa, 'publish');
 
       mockGridOptions.enableAutoResizeColumnsByCellContent = true;
       service.init(gridStub, divContainer);
@@ -325,6 +324,15 @@ describe('Resizer Service', () => {
           ]));
         expect(reRenderColumnsSpy).toHaveBeenCalledWith(true);
       });
+    });
+
+    it('should call "resizeColumnsByCellContent" when "onFullResizeByContentRequested" pubsub event is triggered', () => {
+      const resizeSpy = jest.spyOn(service, 'resizeColumnsByCellContent');
+
+      service.init(gridStub, divContainer);
+      pubSubService.publish('onFullResizeByContentRequested', { caller: 'GridStateService' });
+
+      expect(resizeSpy).toHaveBeenCalledWith(true);
     });
   });
 });

@@ -384,9 +384,15 @@ export class AureliaSlickgridCustomElement {
 
     // build SlickGrid Grid, also user might optionally pass a custom dataview (e.g. remote model)
     this.grid = new Slick.Grid(`#${this.gridId}`, this.customDataView || this.dataview, this._columnDefinitions, this.gridOptions);
-
     this.sharedService.dataView = this.dataview;
     this.sharedService.slickGrid = this.grid;
+
+    // load the resizer service
+    const gridContainerElm = this.elm.querySelector('div');
+    if (gridContainerElm) {
+      this.resizerService.init(this.grid, gridContainerElm);
+    }
+
     this.extensionService.bindDifferentExtensions();
 
     this.bindDifferentHooks(this.grid, this.gridOptions, this.dataview);
@@ -439,12 +445,6 @@ export class AureliaSlickgridCustomElement {
         this.loadPresetsWhenDatasetInitialized();
         this._isDatasetInitialized = true;
       }
-    }
-
-    // load the resizer service
-    const gridContainerElm = this.elm.querySelector('div');
-    if (gridContainerElm) {
-      this.resizerService.init(this.grid, gridContainerElm);
     }
 
     // user might want to hide the header row on page load but still have `enableFiltering: true`
@@ -792,9 +792,7 @@ export class AureliaSlickgridCustomElement {
 
           // when user has resize by content enabled, we'll force a full width calculation since we change our entire dataset
           if (args.itemCount > 0 && (this.gridOptions.autosizeColumnsByCellContentOnFirstLoad || this.gridOptions.enableAutoResizeColumnsByCellContent)) {
-            // add a delay so that if column positions changes by changeColumnsArrangement() when using custom Grid Views
-            // or presets.columns won't have any impact on the list of visible columns and their positions
-            setTimeout(() => this.resizerService.resizeColumnsByCellContent(true), 10);
+            this.resizerService.resizeColumnsByCellContent(true);
           }
         });
 

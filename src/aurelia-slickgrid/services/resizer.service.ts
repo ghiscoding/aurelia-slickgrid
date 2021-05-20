@@ -104,6 +104,9 @@ export class ResizerService {
           (this._eventHandler as SlickEventHandler<GetSlickEventType<typeof onGridBeforeResizeHandler>>).subscribe(onGridBeforeResizeHandler, (_e, args) => {
             this.pubSubService.publish('onGridBeforeResize', args);
           });
+
+          // resize by content could be called from the outside by other services via pub/sub event
+          this.pubSubService.subscribe('onFullResizeByContentRequested', () => this.resizeColumnsByCellContent(true));
         }
       }
     }

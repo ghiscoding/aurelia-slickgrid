@@ -1795,7 +1795,7 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
     });
 
     describe('resizeColumnsByCellContent method', () => {
-      it('should call "resizeColumnsByCellContent" when the DataView "onSetItemsCalled" event is triggered and "enableAutoResizeColumnsByCellContent" is set', (done) => {
+      it('should call "resizeColumnsByCellContent" when the DataView "onSetItemsCalled" event is triggered and "enableAutoResizeColumnsByCellContent" is set', () => {
         const resizeContentSpy = jest.spyOn(resizerServiceStub, 'resizeColumnsByCellContent');
         jest.spyOn(mockDataView, 'getLength').mockReturnValue(1);
 
@@ -1803,11 +1803,19 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         customElement.initialization(slickEventHandler);
         mockDataView.onSetItemsCalled.notify({ idProperty: 'id', itemCount: 1 });
 
-        setTimeout(() => {
-          expect(resizeContentSpy).toHaveBeenCalledWith(true);
-          done();
-        }, 10);
+        expect(resizeContentSpy).toHaveBeenCalledWith(true);
       });
+
+      // it('should call "resizeColumnsByCellContent" when the DataView "onSetItemsCalled" event is triggered and "enableAutoResizeColumnsByCellContent" and "resizeColumnsByCellContent" are both set', () => {
+      //   const resizeContentSpy = jest.spyOn(resizerServiceStub, 'resizeColumnsByCellContent');
+      //   jest.spyOn(mockDataView, 'getLength').mockReturnValue(1);
+
+      //   customElement.gridOptions = { enablePagination: false, resizeByContentOnlyOnFirstLoad: true, showCustomFooter: true, autoFitColumnsOnFirstLoad: false, enableAutoSizeColumns: false, enableAutoResizeColumnsByCellContent: true };
+      //   customElement.initialization(divContainer, slickEventHandler);
+      //   mockDataView.onSetItemsCalled.notify({ idProperty: 'id', itemCount: 1 });
+
+      //   expect(resizeContentSpy).toHaveBeenCalledWith(false);
+      // });
     });
 
     describe('Custom Footer', () => {
