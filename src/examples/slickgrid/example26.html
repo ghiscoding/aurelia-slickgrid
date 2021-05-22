@@ -16,35 +16,40 @@
     <br />
     <span id="radioAutoEdit">
       <div class="row">
-
-        <label class="radio-inline control-label" for="radioTrue">
-          <input type="radio" name="inlineRadioOptions" id="radioTrue" checked value.bind="isAutoEdit"
-                 click.delegate="setAutoEdit(true)"> ON
-          (single-click)
-        </label>
-        <label class="radio-inline control-label" for="radioFalse">
-          <input type="radio" name="inlineRadioOptions" id="radioFalse" value.bind="isAutoEdit"
-                 click.delegate="setAutoEdit(false)"> OFF
-          (double-click)
-        </label>
+        <div class="col-12">
+          <label class="radio-inline control-label" for="radioTrue">
+            <input type="radio" name="inlineRadioOptions" id="radioTrue" checked value.bind="isAutoEdit"
+                   click.delegate="setAutoEdit(true)"> ON
+            (single-click)
+          </label>
+          <label class="radio-inline control-label" for="radioFalse">
+            <input type="radio" name="inlineRadioOptions" id="radioFalse" value.bind="isAutoEdit"
+                   click.delegate="setAutoEdit(false)"> OFF
+            (double-click)
+          </label>
+        </div>
       </div>
       <div class="row">
-        <button class="btn btn-default btn-sm" click.delegate="undo()">
-          <i class="fa fa-undo"></i>
-          Undo last edit(s)
-        </button>
-        <label class="checkbox-inline control-label" for="autoCommitEdit">
-          <input type="checkbox" id="autoCommitEdit" value.bind="gridOptions.autoCommitEdit"
-                 click.delegate="changeAutoCommit()">
-          Auto Commit Edit
-        </label>
+        <div class="col-12">
+          <button class="btn btn-outline-secondary btn-sm" click.delegate="undo()">
+            <i class="fa fa-undo"></i>
+            Undo last edit(s)
+          </button>
+          <label class="checkbox-inline control-label" for="autoCommitEdit">
+            <input type="checkbox" id="autoCommitEdit" value.bind="gridOptions.autoCommitEdit"
+                   click.delegate="changeAutoCommit()">
+            Auto Commit Edit
+          </label>
+        </div>
       </div>
     </span>
     <div class="row" style="margin-top: 5px">
-      <button class="btn btn-default btn-sm" click.delegate="aureliaGrid.filterService.clearFilters()">Clear
-        Filters</button>
-      <button class="btn btn-default btn-sm" click.delegate="aureliaGrid.sortService.clearSorting()">Clear
-        Sorting</button>
+      <div class="col-12">
+        <button class="btn btn-outline-secondary btn-sm" click.delegate="aureliaGrid.filterService.clearFilters()">Clear
+          Filters</button>
+        <button class="btn btn-outline-secondary btn-sm" click.delegate="aureliaGrid.sortService.clearSorting()">Clear
+          Sorting</button>
+      </div>
     </div>
   </div>
 

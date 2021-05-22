@@ -13,27 +13,31 @@
        innerhtml.bind="subTitle"></div>
 
   <div class="row">
-    <button class="btn btn-outline-secondary btn-sm" data-test="hide-duration-btn"
-            click.delegate="hideDurationColumnDynamically()">
-      <i class="fa fa-eye-slash"></i>
-      Dynamically Hide "Duration"
-    </button>
-    <button class="btn btn-outline-secondary btn-sm" data-test="disable-filters-btn" click.delegate="disableFilters()">
-      <i class="fa fa-times"></i>
-      Disable Filters
-    </button>
-    <button class="btn btn-outline-secondary btn-sm" data-test="disable-sorting-btn" click.delegate="disableSorting()">
-      <i class="fa fa-times"></i>
-      Disable Sorting
-    </button>
-    <button class="btn btn-outline-secondary btn-sm" data-test="toggle-filtering-btn" click.delegate="toggleFilter()">
-      <i class="fa fa-random"></i>
-      Toggle Filtering
-    </button>
-    <button class="btn btn-outline-secondary btn-sm" data-test="toggle-sorting-btn" click.delegate="toggleSorting()">
-      <i class="fa fa-random"></i>
-      Toggle Sorting
-    </button>
+    <div class="col-sm-12">
+      <button class="btn btn-outline-secondary btn-sm" data-test="hide-duration-btn"
+              click.delegate="hideDurationColumnDynamically()">
+        <i class="fa fa-eye-slash"></i>
+        Dynamically Hide "Duration"
+      </button>
+      <button class="btn btn-outline-secondary btn-sm" data-test="disable-filters-btn"
+              click.delegate="disableFilters()">
+        <i class="fa fa-times"></i>
+        Disable Filters
+      </button>
+      <button class="btn btn-outline-secondary btn-sm" data-test="disable-sorting-btn"
+              click.delegate="disableSorting()">
+        <i class="fa fa-times"></i>
+        Disable Sorting
+      </button>
+      <button class="btn btn-outline-secondary btn-sm" data-test="toggle-filtering-btn" click.delegate="toggleFilter()">
+        <i class="fa fa-random"></i>
+        Toggle Filtering
+      </button>
+      <button class="btn btn-outline-secondary btn-sm" data-test="toggle-sorting-btn" click.delegate="toggleSorting()">
+        <i class="fa fa-random"></i>
+        Toggle Sorting
+      </button>
+    </div>
   </div>
 
   <br />

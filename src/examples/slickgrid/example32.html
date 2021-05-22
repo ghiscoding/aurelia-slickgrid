@@ -18,14 +18,14 @@
       <div class="btn-group btn-group-toggle" data-toggle="buttons">
         <label class="btn btn-sm btn-outline-secondary" class.bind="isUsingDefaultResize ? 'active' : ''"
                data-test="autosize-columns-btn">
-          <input type="radio" name="options"
+          <input type="radio" class="btn-check" name="options"
                  checked.bind="isUsingDefaultResize"
                  click.delegate="handleDefaultResizeColumns()">
           <i class="fa fa-expand"></i> (default resize) by "autosizeColumns"
         </label>
         <label class="btn btn-sm btn-outline-secondary" class.bind="isUsingDefaultResize ? '' : 'active'"
                data-test="resize-by-content-btn">
-          <input type="radio" name="options"
+          <input type="radio" class="btn-check" name="options"
                  checked.bind="!isUsingDefaultResize"
                  click.delegate="handleNewResizeColumns()">
           <i class="fa fa-expand"></i> Resize by Cell Content

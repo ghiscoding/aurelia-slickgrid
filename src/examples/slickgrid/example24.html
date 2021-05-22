@@ -38,15 +38,16 @@
   </div>
 
   <div class="row locale">
-    <button class="btn btn-outline-secondary btn-xs" click.delegate="switchLanguage()" data-test="language-button">
-      <i class="fa fa-language"></i>
-      Switch Language
-    </button>
-    <label>Locale:</label>
-    <span style="font-style: italic" data-test="selected-locale">
-      ${selectedLanguage + '.json'}
-    </span>
-
+    <div class="col-12">
+      <button class="btn btn-outline-secondary btn-xs" click.delegate="switchLanguage()" data-test="language-button">
+        <i class="fa fa-language"></i>
+        Switch Language
+      </button>
+      <label>Locale:</label>
+      <span style="font-style: italic" data-test="selected-locale">
+        ${selectedLanguage + '.json'}
+      </span>
+    </div>
   </div>
 
   <aurelia-slickgrid grid-id="grid24"
