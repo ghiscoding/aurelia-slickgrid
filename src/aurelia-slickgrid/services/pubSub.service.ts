@@ -32,11 +32,29 @@ export class PubSubService implements UniversalPubSubService {
     return element.dispatchEvent(DOM.createCustomEvent(eventNameByConvention, eventInit));
   }
 
-  publish<T = any>(eventName: string, data?: T) {
+  /**
+   * Method to publish a message via the Aurelia Event Aggregator.
+   * We return the dispatched event in a Promise with a delayed cycle and we do this because
+   * most framework require a cycle before the binding is processed and binding a spinner end up showing too late
+   * for example this is used for these events: onBeforeFilterClear, onBeforeFilterChange, onBeforeToggleTreeCollapse, onBeforeSortChange
+   * @param event The event or channel to publish to.
+   * @param data The data to publish on the channel.
+   */
+  publish<T = any>(eventName: string, data?: T): Promise<boolean> {
     const eventNameByConvention = this.getEventNameByNamingConvention(eventName, '');
-    this.pluginEa.publish(eventNameByConvention, data);
+
+    return new Promise(resolve => {
+      this.pluginEa.publish(eventNameByConvention, data);
+      setTimeout(() => resolve(true), 0);
+    });
   }
 
+  /**
+   * Subscribes to a message channel or message type via the Aurelia Event Aggregator
+   * @param event The event channel or event data type.
+   * @param callback The callback to be invoked when the specified message is published.
+   * @return possibly a Subscription
+   */
   subscribe<T = any>(eventName: string, callback: (data: T) => void): Disposable {
     const eventNameByConvention = this.getEventNameByNamingConvention(eventName, '');
     const subscription = this.pluginEa.subscribe(eventNameByConvention, callback);
@@ -48,6 +66,11 @@ export class PubSubService implements UniversalPubSubService {
     throw new Error('The method "unsubscribe" is not implemented, please use "unsubscribeAll()" instead');
   }
 
+  /**
+   * Unsubscribes all subscriptions that currently exists
+   * @param subscriptions - optionally pass the array of all subscriptions that we want to unsubscribe from
+   * @returns - Subscriptions array which should be empty
+   */
   unsubscribeAll(subscriptions?: Subscription[]): Subscription[] {
     let allSubscriptions = Array.isArray(subscriptions) ? subscriptions : this._subscriptions;
 

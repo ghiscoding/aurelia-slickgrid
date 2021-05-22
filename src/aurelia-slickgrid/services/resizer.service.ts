@@ -1,8 +1,8 @@
 import {
-  exportWithFormatterWhenDefined,
   FieldType,
   GetSlickEventType,
   GridSize,
+  parseFormatterWhenExist,
   sanitizeHtmlToText,
   SlickDataView,
   SlickEventData,
@@ -104,6 +104,9 @@ export class ResizerService {
           (this._eventHandler as SlickEventHandler<GetSlickEventType<typeof onGridBeforeResizeHandler>>).subscribe(onGridBeforeResizeHandler, (_e, args) => {
             this.pubSubService.publish('onGridBeforeResize', args);
           });
+
+          // resize by content could be called from the outside by other services via pub/sub event
+          this.pubSubService.subscribe('onFullResizeByContentRequested', () => this.resizeColumnsByCellContent(true));
         }
       }
     }
@@ -177,8 +180,7 @@ export class ResizerService {
         columnDefinitions.forEach((columnDef, colIdx) => {
           if (!columnDef.originalWidth) {
             const charWidthPx = columnDef?.resizeCharWidthInPx ?? resizeCellCharWidthInPx;
-            const exportOptions = this.gridOptions.enableTextExport ? this.gridOptions.exportOptions || this.gridOptions.textExportOptions : this.gridOptions.excelExportOptions;
-            const formattedData = exportWithFormatterWhenDefined(rowIdx, colIdx, item, columnDef, this._grid, exportOptions);
+            const formattedData = parseFormatterWhenExist(columnDef?.formatter, rowIdx, colIdx, columnDef, item, this._grid);
             const formattedDataSanitized = sanitizeHtmlToText(formattedData);
             const formattedTextWidthInPx = Math.ceil(formattedDataSanitized.length * charWidthPx);
             const resizeMaxWidthThreshold = columnDef.resizeMaxWidthThreshold;
