@@ -4,7 +4,7 @@ function removeExtraSpaces(text) {
   return `${text}`.replace(/\s+/g, ' ').trim();
 }
 
-describe('Example 27 - Tree Data (from a Hierarchical Dataset)', () => {
+describe('Example 27 - Tree Data (from a Hierarchical Dataset)', { retries: 2 }, () => {
   const GRID_ROW_HEIGHT = 45;
   const titles = ['Title', 'Duration', '% Complete', 'Start', 'Finish', 'Effort Driven'];
 
