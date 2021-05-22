@@ -16,14 +16,17 @@
     <i class="fa fa-times"></i>
     Clear Grid State from Local Storage &amp; Reset Grid
   </button>
+
   <button class="btn btn-outline-secondary btn-sm" data-test="language-button" click.delegate="switchLanguage()">
     <i class="fa fa-language"></i>
     Switch Language
   </button>
-  <b>Locale:</b> <span style="font-style: italic" data-test="selected-locale">${selectedLanguage + '.json'}</span>
+  <strong>Locale:</strong>
+  <span style="font-style: italic" data-test="selected-locale">
+    ${selectedLanguage + '.json'}
+  </span>
 
-  <aurelia-slickgrid
-                     grid-id="grid15"
+  <aurelia-slickgrid grid-id="grid15"
                      column-definitions.bind="columnDefinitions"
                      grid-options.bind="gridOptions"
                      dataset.bind="dataset"

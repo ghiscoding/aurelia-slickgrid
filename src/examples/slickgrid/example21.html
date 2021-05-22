@@ -12,33 +12,37 @@
   <div class="subtitle"
        innerhtml.bind="subTitle"></div>
 
-  <div class="form-inline">
-    <label class="my-1 mr-2" for="columnSelect">Single Search:</label>
-    <select value.bind="selectedColumn" id="columnSelect"
-            data-test="search-column-list"
-            class="form-control mb-2 mr-sm-2">
-      <option repeat.for="column of columnDefinitions"
-              model.bind="column">
-        ${column.name}
-      </option>
-    </select>
+  <div class="row row-cols-lg-auto g-3 align-items-center">
+    <div class="col-12">
+      <label for="columnSelect">Single Search:</label>
+    </div>
+    <div class="col-12">
+      <select class="form-select" class="form-select" data-test="search-column-list" name="selectedColumn"
+              value.bind="selectedColumn" id="columnSelect">
+        <option repeat.for="column of columnDefinitions"
+                model.bind="column">
+          ${column.name}
+        </option>
+      </select>
+    </div>
+    <div class="col-12">
+      <select value.bind="selectedOperator"
+              class="form-select"
+              data-test="search-operator-list">
+        <option repeat.for="operator of operatorList"
+                model.bind="operator">
+          ${operator}
+        </option>
+      </select>
+    </div>
 
-    <select value.bind="selectedOperator"
-            class="form-control mb-2 mr-sm-2"
-            data-test="search-operator-list">
-      <option repeat.for="operator of operatorList"
-              model.bind="operator">
-        ${operator}
-      </option>
-    </select>
-
-    <div class="input-group mb-2 mr-sm-2">
-      <input type="text"
-             class="form-control"
-             placeholder="search value"
-             data-test="search-value-input"
-             value.bind="searchValue" />
-      <div class="input-group-append">
+    <div class="col-12">
+      <div class="input-group">
+        <input type="text"
+               class="form-control"
+               placeholder="search value"
+               data-test="search-value-input"
+               value.bind="searchValue" />
         <button class="btn btn-outline-secondary d-flex align-items-center pl-2 pr-2" data-test="clear-search-value"
                 click.delegate="cleargridSearchInput()">
           <span class="fa fa-times"></span>

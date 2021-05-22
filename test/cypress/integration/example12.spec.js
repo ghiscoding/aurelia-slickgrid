@@ -5,7 +5,7 @@ function removeExtraSpaces(text) {
   return `${text}`.replace(/\s+/g, ' ').trim();
 }
 
-describe('Example 12: Localization (i18n)', () => {
+describe('Example 12: Localization (i18n)', { retries: 2 }, () => {
   const fullEnglishTitles = ['', 'Title', 'Description', 'Duration', 'Start', 'Finish', 'Completed', 'Completed'];
   const fullFrenchTitles = ['', 'Titre', 'Description', 'Durée', 'Début', 'Fin', 'Terminé', 'Terminé'];
 

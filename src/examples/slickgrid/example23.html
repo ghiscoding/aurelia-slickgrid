@@ -18,37 +18,50 @@
     ${metrics.endTime | dateFormat: 'DD MMM, h:mm:ss a'} | ${metrics.itemCount} of ${metrics.totalItemCount} items
   </span>
 
-  <form class="form-inline">
-    <button class="btn btn-outline-secondary btn-sm" data-test="clear-filters"
-            click.delegate="aureliaGrid.filterService.clearFilters()">
-      Clear Filters
-    </button>
-    <button class="btn btn-outline-secondary btn-sm" data-test="clear-sorting"
-            click.delegate="aureliaGrid.sortService.clearSorting()">
-      Clear Sorting
-    </button>
-    <button class="btn btn-outline-secondary btn-sm" data-test="set-dynamic-filter"
-            click.delegate="setFiltersDynamically()">
-      Set Filters Dynamically
-    </button>
-    <button class="btn btn-outline-secondary btn-sm" data-test="set-dynamic-sorting"
-            click.delegate="setSortingDynamically()">
-      Set Sorting Dynamically
-    </button>
-
-    <label for="selectedFilter" style="margin-left: 10px">Predefined Filters</label>
-    <select name="selectedFilter" class="form-control" data-test="select-dynamic-filter"
-            value.bind="selectedPredefinedFilter" change.delegate="predefinedFilterChanged(selectedPredefinedFilter)">
-      <option model.bind="filter.value" repeat.for="filter of filterList">${filter.label}</option>
-    </select>
+  <form class="row row-cols-lg-auto g-3 align-items-center">
+    <div class="col-12">
+      <button class="btn btn-outline-secondary btn-sm" data-test="clear-filters"
+              click.delegate="aureliaGrid.filterService.clearFilters()">
+        Clear Filters
+      </button>
+    </div>
+    <div class="col-12">
+      <button class="btn btn-outline-secondary btn-sm" data-test="clear-sorting"
+              click.delegate="aureliaGrid.sortService.clearSorting()">
+        Clear Sorting
+      </button>
+    </div>
+    <div class="col-12">
+      <button class="btn btn-outline-secondary btn-sm" data-test="set-dynamic-filter"
+              click.delegate="setFiltersDynamically()">
+        Set Filters Dynamically
+      </button>
+    </div>
+    <div class="col-12">
+      <button class="btn btn-outline-secondary btn-sm" data-test="set-dynamic-sorting"
+              click.delegate="setSortingDynamically()">
+        Set Sorting Dynamically
+      </button>
+    </div>
+    <div class="col-12">
+      <label for="selectedFilter" style="margin-left: 10px">Predefined Filters</label>
+    </div>
+    <div class="col-12">
+      <select name="selectedFilter" class="form-select" data-test="select-dynamic-filter"
+              value.bind="selectedPredefinedFilter" change.delegate="predefinedFilterChanged(selectedPredefinedFilter)">
+        <option model.bind="filter.value" repeat.for="filter of filterList">${filter.label}</option>
+      </select>
+    </div>
   </form>
 
-  <div class="row">
-    <button class="btn btn-outline-secondary btn-sm" data-test="language" click.delegate="switchLanguage()">
-      <i class="fa fa-language"></i>
-      Switch Language
-    </button>
-    <b>Locale:</b> <span style="font-style: italic" data-test="selected-locale">${selectedLanguage + '.json'}</span>
+  <div class="row mt-2">
+    <div class="col-12">
+      <button class="btn btn-outline-secondary btn-sm" data-test="language" click.delegate="switchLanguage()">
+        <i class="fa fa-language"></i>
+        Switch Language
+      </button>
+      <b>Locale:</b> <span style="font-style: italic" data-test="selected-locale">${selectedLanguage + '.json'}</span>
+    </div>
   </div>
 
   <aurelia-slickgrid grid-id="grid23"

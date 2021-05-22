@@ -38,44 +38,52 @@
           (double-click)
         </label>
       </div>
-      <div class="row">
-        <button class="btn btn-outline-secondary btn-sm"
-                click.delegate="undo()">
-          <i class="fa fa-undo"></i>
-          Undo last edit(s)
-        </button>
-        <label class="checkbox-inline control-label"
-               for="autoCommitEdit">
-          <input type="checkbox" id="autoCommitEdit" data-test="auto-commit" checked.bind="gridOptions.autoCommitEdit"
-                 click.delegate="changeAutoCommit()">
-          Auto Commit Edit
-        </label>
+      <div class="row col-sm-12">
+        <span>
+          <button class="btn btn-outline-secondary btn-sm"
+                  click.delegate="undo()">
+            <i class="fa fa-undo"></i>
+            Undo last edit(s)
+          </button>
+          <label class="checkbox-inline control-label"
+                 for="autoCommitEdit">
+            <input type="checkbox"
+                   id="autoCommitEdit"
+                   data-test="auto-commit"
+                   value.bind="gridOptions.autoCommitEdit"
+                   click.delegate="changeAutoCommit()">
+            Auto Commit Edit
+          </label>
+        </span>
       </div>
     </span>
     <div class="row" style="margin-top: 5px">
-      <button class="btn btn-outline-secondary btn-sm" click.delegate="aureliaGrid.filterService.clearFilters()">Clear
-        Filters</button>
-      <button class="btn btn-outline-secondary btn-sm" click.delegate="aureliaGrid.sortService.clearSorting()">Clear
-        Sorting</button>
-      <button class="btn btn-outline-info btn-sm" data-test="add-item-btn" click.delegate="addItem()"
-              title="Clear Filters &amp; Sorting to see it better">
-        Add item
-      </button>
-      <button class="btn btn-outline-danger btn-sm" data-test="delete-item-btn" click.delegate="deleteItem()">
-        Delete item
-      </button>
+      <div class="col-sm-12">
+        <button class="btn btn-outline-secondary btn-sm" click.delegate="aureliaGrid.filterService.clearFilters()">Clear
+          Filters</button>
+        <button class="btn btn-outline-secondary btn-sm" click.delegate="aureliaGrid.sortService.clearSorting()">Clear
+          Sorting</button>
+        <button class="btn btn-outline-info btn-sm" data-test="add-item-btn" click.delegate="addItem()"
+                title="Clear Filters &amp; Sorting to see it better">
+          Add item
+        </button>
+        <button class="btn btn-outline-danger btn-sm" data-test="delete-item-btn" click.delegate="deleteItem()">Delete
+          item</button>
+      </div>
     </div>
     <div class="row" style="margin-top: 5px">
-      <button class="btn btn-outline-secondary btn-sm" data-test="add-title-column"
-              click.delegate="dynamicallyAddTitleHeader()">
-        <i class="fa fa-plus"></i>
-        Dynamically Duplicate Title Column
-      </button>
-      <button class="btn btn-outline-secondary btn-sm" data-test="remove-title-column"
-              click.delegate="dynamicallyRemoveLastColumn()">
-        <i class="fa fa-minus"></i>
-        Dynamically Remove Last Column
-      </button>
+      <div class="col-sm-12">
+        <button class="btn btn-outline-secondary btn-sm" data-test="add-title-column"
+                click.delegate="dynamicallyAddTitleHeader()">
+          <i class="fa fa-plus"></i>
+          Dynamically Duplicate Title Column
+        </button>
+        <button class="btn btn-outline-secondary btn-sm" data-test="remove-title-column"
+                click.delegate="dynamicallyRemoveLastColumn()">
+          <i class="fa fa-minus"></i>
+          Dynamically Remove Last Column
+        </button>
+      </div>
     </div>
   </div>
 
@@ -90,7 +98,8 @@
     </div>
   </div>
 
-  <div id="grid-container" class="col-sm-12">
+  <div id="grid-container"
+       class="col-sm-12">
     <aurelia-slickgrid grid-id="grid3"
                        column-definitions.bind="columnDefinitions"
                        grid-options.bind="gridOptions"

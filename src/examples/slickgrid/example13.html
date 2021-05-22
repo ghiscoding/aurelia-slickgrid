@@ -11,55 +11,62 @@
   </h2>
   <div class="subtitle" innerhtml.bind="subTitle"></div>
 
-  <div class="row col-sm-12">
-    <button class="btn btn-outline-secondary btn-xs" data-test="add-500-rows-btn" click.delegate="loadData(500)">
-      500 rows
-    </button>
-    <button class="btn btn-outline-secondary btn-xs" data-test="add-50k-rows-btn" click.delegate="loadData(50000)">
-      50k rows
-    </button>
-    <button class="btn btn-outline-secondary btn-xs" data-test="clear-grouping-btn" click.delegate="clearGrouping()">
-      <i class="fa fa-times"></i> Clear grouping
-    </button>
-    <button class="btn btn-outline-secondary btn-xs" data-test="collapse-all-btn" click.delegate="collapseAllGroups()">
-      <i class="fa fa-compress"></i> Collapse all groups
-    </button>
-    <button class="btn btn-outline-secondary btn-xs" data-test="expand-all-btn" click.delegate="expandAllGroups()">
-      <i class="fa fa-expand"></i> Expand all groups
-    </button>
-    <button class="btn btn-outline-secondary btn-xs" data-test="export-excel-btn" click.delegate="exportToExcel()">
-      <i class="fa fa-file-excel-o text-success"></i> Export to Excel
-    </button>
+  <div class="row">
+    <div class="col-sm-12">
+      <button class="btn btn-outline-secondary btn-xs" data-test="add-500-rows-btn" click.delegate="loadData(500)">
+        500 rows
+      </button>
+      <button class="btn btn-outline-secondary btn-xs" data-test="add-50k-rows-btn" click.delegate="loadData(50000)">
+        50k rows
+      </button>
+      <button class="btn btn-outline-secondary btn-xs" data-test="clear-grouping-btn" click.delegate="clearGrouping()">
+        <i class="fa fa-times"></i> Clear grouping
+      </button>
+      <button class="btn btn-outline-secondary btn-xs" data-test="collapse-all-btn"
+              click.delegate="collapseAllGroups()">
+        <i class="fa fa-compress"></i> Collapse all groups
+      </button>
+      <button class="btn btn-outline-secondary btn-xs" data-test="expand-all-btn" click.delegate="expandAllGroups()">
+        <i class="fa fa-expand"></i> Expand all groups
+      </button>
+      <button class="btn btn-outline-secondary btn-xs" data-test="export-excel-btn" click.delegate="exportToExcel()">
+        <i class="fa fa-file-excel-o text-success"></i> Export to Excel
+      </button>
+    </div>
   </div>
 
   <hr />
 
-  <div class="row col-sm-12">
-    <button class="btn btn-outline-secondary btn-xs" data-test="group-duration-sort-value-btn"
-            click.delegate="groupByDuration()">
-      Group by Duration &amp; sort groups by value
-    </button>
-    <button class="btn btn-outline-secondary btn-xs" data-test="group-duration-sort-count-btn"
-            click.delegate="groupByDurationOrderByCount(false)">
-      Group by Duration &amp; sort groups by count
-    </button>
-  </div>
-  <div class="row col-sm-12">
-    <button class="btn btn-outline-secondary btn-xs" data-test="group-duration-sort-count-collapse-btn"
-            click.delegate="groupByDurationOrderByCount(true)">
-      Group by Duration &amp; sort groups by count, aggregate collapsed
-    </button>
-    <button class="btn btn-outline-secondary btn-xs" data-test="group-duration-effort-btn"
-            click.delegate="groupByDurationEffortDriven()">
-      Group by Duration then Effort-Driven
-    </button>
-    <button class="btn btn-outline-secondary btn-xs" data-test="group-duration-effort-percent-btn"
-            click.delegate="groupByDurationEffortDrivenPercent()">
-      Group by Duration then Effort-Driven then Percent.
-    </button>
-    <span hidden.bind="!processing">
-      <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
-    </span>
+  <div class="row">
+    <div class="col-sm-12">
+      <button class="btn btn-outline-secondary btn-xs" data-test="group-duration-sort-value-btn"
+              click.delegate="groupByDuration()">
+        Group by Duration &amp; sort groups by value
+      </button>
+      <button class="btn btn-outline-secondary btn-xs" data-test="group-duration-sort-count-btn"
+              click.delegate="groupByDurationOrderByCount(false)">
+        Group by Duration &amp; sort groups by count
+      </button>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <button class="btn btn-outline-secondary btn-xs" data-test="group-duration-sort-count-collapse-btn"
+                click.delegate="groupByDurationOrderByCount(true)">
+          Group by Duration &amp; sort groups by count, aggregate collapsed
+        </button>
+        <button class="btn btn-outline-secondary btn-xs" data-test="group-duration-effort-btn"
+                click.delegate="groupByDurationEffortDriven()">
+          Group by Duration then Effort-Driven
+        </button>
+        <button class="btn btn-outline-secondary btn-xs" data-test="group-duration-effort-percent-btn"
+                click.delegate="groupByDurationEffortDrivenPercent()">
+          Group by Duration then Effort-Driven then Percent.
+        </button>
+        <span hidden.bind="!processing">
+          <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
+        </span>
+      </div>
+    </div>
   </div>
 
   <aurelia-slickgrid grid-id="grid13"

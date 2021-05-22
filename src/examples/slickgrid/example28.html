@@ -36,12 +36,10 @@
     <div class="col-md-5">
       <div class="input-group input-group-sm">
         <input type="text" class="form-control search-string" data-test="search-string" value.bind="searchString">
-        <div class="input-group-append">
-          <button class="btn btn-sm btn-outline-secondary d-flex align-items-center" data-test="clear-search-string"
-                  click.delegate="clearSearch()">
-            <span class="mdi mdi-close-thick"></span>
-          </button>
-        </div>
+        <button class="btn btn-sm btn-outline-secondary d-flex align-items-center" data-test="clear-search-string"
+                click.delegate="clearSearch()">
+          <span class="icon mdi mdi-close-thick"></span>
+        </button>
       </div>
     </div>
   </div>

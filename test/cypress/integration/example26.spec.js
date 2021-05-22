@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-describe('Example 26 - Use of Aurelia Custom Elements', () => {
+describe('Example 26 - Use of Aurelia Custom Elements', { retries: 2 }, () => {
   const fullTitles = ['Title', 'Assignee', 'Assignee with Aurelia Component', 'Duration (days)', '% Complete', 'Start', 'Finish'];
 
   it('should display Example title', () => {
