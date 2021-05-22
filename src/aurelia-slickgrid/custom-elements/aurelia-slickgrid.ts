@@ -388,14 +388,7 @@ export class AureliaSlickgridCustomElement {
     this.sharedService.dataView = this.dataview;
     this.sharedService.slickGrid = this.grid;
 
-    // load the resizer service
-    const gridContainerElm = this.elm.querySelector('div');
-    if (gridContainerElm) {
-      this.resizerService.init(this.grid, gridContainerElm);
-    }
-
     this.extensionService.bindDifferentExtensions();
-
     this.bindDifferentHooks(this.grid, this.gridOptions, this.dataview);
 
     // when it's a frozen grid, we need to keep the frozen column id for reference if we ever show/hide column from ColumnPicker/GridMenu afterward
@@ -409,6 +402,13 @@ export class AureliaSlickgridCustomElement {
 
     // initialize the SlickGrid grid
     this.grid.init();
+
+    // initialized the resizer service only after SlickGrid is initialized
+    // if we don't we end up binding our resize to a grid element that doesn't yet exist in the DOM and the resizer service will fail silently (because it has a try/catch that unbinds the resize without throwing back)
+    const gridContainerElm = this.elm.querySelector('div');
+    if (gridContainerElm) {
+      this.resizerService.init(this.grid, gridContainerElm);
+    }
 
     if (!this.customDataView && this.dataview) {
       const initialDataset = this.gridOptions?.enableTreeData ? this.sortTreeDataset(this.dataset) : this.dataset;
