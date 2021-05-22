@@ -385,9 +385,15 @@ export class AureliaSlickgridCustomElement {
 
     // build SlickGrid Grid, also user might optionally pass a custom dataview (e.g. remote model)
     this.grid = new Slick.Grid(`#${this.gridId}`, this.customDataView || this.dataview, this._columnDefinitions, this.gridOptions);
-
     this.sharedService.dataView = this.dataview;
     this.sharedService.slickGrid = this.grid;
+
+    // load the resizer service
+    const gridContainerElm = this.elm.querySelector('div');
+    if (gridContainerElm) {
+      this.resizerService.init(this.grid, gridContainerElm);
+    }
+
     this.extensionService.bindDifferentExtensions();
 
     this.bindDifferentHooks(this.grid, this.gridOptions, this.dataview);
@@ -437,15 +443,9 @@ export class AureliaSlickgridCustomElement {
         if (!this._isDatasetInitialized && (this.gridOptions.enableCheckboxSelector || this.gridOptions.enableRowSelection)) {
           this.loadRowSelectionPresetWhenExists();
         }
-        this.loadPresetsWhenDatasetInitialized();
+        this.loadFilterPresetsWhenDatasetInitialized();
         this._isDatasetInitialized = true;
       }
-    }
-
-    // load the resizer service
-    const gridContainerElm = this.elm.querySelector('div');
-    if (gridContainerElm) {
-      this.resizerService.init(this.grid, gridContainerElm);
     }
 
     // user might want to hide the header row on page load but still have `enableFiltering: true`
@@ -759,7 +759,8 @@ export class AureliaSlickgridCustomElement {
       }
 
       // load any presets if any (after dataset is initialized)
-      this.loadPresetsWhenDatasetInitialized();
+      this.loadColumnPresetsWhenDatasetInitialized();
+      this.loadFilterPresetsWhenDatasetInitialized();
     }
 
 
@@ -813,7 +814,7 @@ export class AureliaSlickgridCustomElement {
 
           // when user has resize by content enabled, we'll force a full width calculation since we change our entire dataset
           if (args.itemCount > 0 && (this.gridOptions.autosizeColumnsByCellContentOnFirstLoad || this.gridOptions.enableAutoResizeColumnsByCellContent)) {
-            this.resizerService.resizeColumnsByCellContent(true);
+            this.resizerService.resizeColumnsByCellContent(!this.gridOptions?.resizeByContentOnlyOnFirstLoad);
           }
         });
 
@@ -1037,7 +1038,7 @@ export class AureliaSlickgridCustomElement {
 
       if (dataset.length > 0) {
         if (!this._isDatasetInitialized) {
-          this.loadPresetsWhenDatasetInitialized();
+          this.loadFilterPresetsWhenDatasetInitialized();
 
           if (this.gridOptions.enableCheckboxSelector) {
             this.loadRowSelectionPresetWhenExists();
@@ -1219,29 +1220,36 @@ export class AureliaSlickgridCustomElement {
     }
   }
 
-  /** Load any possible Grid Presets (columns, filters) */
-  private loadPresetsWhenDatasetInitialized() {
+  /** Load any possible Columns Grid Presets */
+  private loadColumnPresetsWhenDatasetInitialized() {
+    // if user entered some Columns "presets", we need to reflect them all in the grid
+    if (this.gridOptions.presets && Array.isArray(this.gridOptions.presets.columns) && this.gridOptions.presets.columns.length > 0) {
+      const gridColumns: Column[] = this.gridStateService.getAssociatedGridColumns(this.grid, this.gridOptions.presets.columns);
+      if (gridColumns && Array.isArray(gridColumns) && gridColumns.length > 0) {
+        // make sure that the checkbox selector is also visible if it is enabled
+        if (this.gridOptions.enableCheckboxSelector) {
+          const checkboxColumn = (Array.isArray(this._columnDefinitions) && this._columnDefinitions.length > 0) ? this._columnDefinitions[0] : null;
+          if (checkboxColumn && checkboxColumn.id === '_checkbox_selector' && gridColumns[0].id !== '_checkbox_selector') {
+            gridColumns.unshift(checkboxColumn);
+          }
+        }
+
+        // keep copy the original optional `width` properties optionally provided by the user.
+        // We will use this when doing a resize by cell content, if user provided a `width` it won't override it.
+        gridColumns.forEach(col => col.originalWidth = col.width);
+
+        // finally set the new presets columns (including checkbox selector if need be)
+        this.grid.setColumns(gridColumns);
+      }
+    }
+  }
+
+  /** Load any possible Filters Grid Presets */
+  private loadFilterPresetsWhenDatasetInitialized() {
     if (this.gridOptions && !this.customDataView) {
       // if user entered some Filter "presets", we need to reflect them all in the DOM
       if (this.gridOptions.presets && Array.isArray(this.gridOptions.presets.filters)) {
         this.filterService.populateColumnFilterSearchTermPresets(this.gridOptions.presets.filters);
-      }
-
-      // if user entered some Columns "presets", we need to reflect them all in the grid
-      if (this.gridOptions.presets && Array.isArray(this.gridOptions.presets.columns) && this.gridOptions.presets.columns.length > 0) {
-        const gridColumns: Column[] = this.gridStateService.getAssociatedGridColumns(this.grid, this.gridOptions.presets.columns);
-        if (gridColumns && Array.isArray(gridColumns) && gridColumns.length > 0) {
-          // make sure that the checkbox selector is also visible if it is enabled
-          if (this.gridOptions.enableCheckboxSelector) {
-            const checkboxColumn = (Array.isArray(this._columnDefinitions) && this._columnDefinitions.length > 0) ? this._columnDefinitions[0] : null;
-            if (checkboxColumn && checkboxColumn.id === '_checkbox_selector' && gridColumns[0].id !== '_checkbox_selector') {
-              gridColumns.unshift(checkboxColumn);
-            }
-          }
-
-          // finally set the new presets columns (including checkbox selector if need be)
-          this.grid.setColumns(gridColumns);
-        }
       }
     }
   }

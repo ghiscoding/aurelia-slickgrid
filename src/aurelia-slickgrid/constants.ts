@@ -102,5 +102,13 @@ export class Constants {
     'onItemUpserted',
     'onGridBeforeResize',
     'onGridAfterResize',
+    'onBeforeFilterChange',
+    'onFilterChanged',
+    'onBeforeFilterClear',
+    'onFilterCleared',
+    'onBeforeSortChange',
+    'onSortChanged',
+    'onBeforeToggleTreeCollapse',
+    'onToggleTreeCollapsed',
   ];
 }

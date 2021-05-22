@@ -7,7 +7,7 @@ import {
   Filters,
   Formatters,
   GridOption,
-  findItemInHierarchicalStructure,
+  findItemInTreeStructure,
   Formatter,
 } from '../../aurelia-slickgrid';
 import './example28.scss'; // provide custom CSS/SASS styling
@@ -179,12 +179,12 @@ export class Example28 {
 
     // find first parent object and add the new item as a child
     const tmpDatasetHierarchical = [...this.datasetHierarchical];
-    const popItem = findItemInHierarchicalStructure(tmpDatasetHierarchical, x => x.file === 'pop', 'files');
+    const popItem = findItemInTreeStructure(tmpDatasetHierarchical, x => x.file === 'pop', 'files');
 
     if (popItem && Array.isArray(popItem.files)) {
       popItem.files.push({
         id: newId,
-        file: `pop${Math.round(Math.random() * 1000)}.mp3`,
+        file: `pop-${newId}.mp3`,
         dateModified: new Date(),
         size: Math.round(Math.random() * 100),
       });
@@ -196,7 +196,7 @@ export class Example28 {
       setTimeout(() => {
         const rowIndex = this.aureliaGrid.dataView.getRowById(popItem.id) as number;
         this.aureliaGrid.slickGrid.scrollRowIntoView(rowIndex + 3);
-      }, 0);
+      }, 10);
     }
   }
 
@@ -208,7 +208,7 @@ export class Example28 {
     this.aureliaGrid.treeDataService.toggleTreeDataCollapse(false);
   }
 
-  logExpandedStructure() {
+  logHierarchicalStructure() {
     console.log('exploded array', this.aureliaGrid.treeDataService.datasetHierarchical /* , JSON.stringify(explodedArray, null, 2) */);
   }
 

@@ -111,6 +111,9 @@ export class ResizerService {
           (this._eventHandler as SlickEventHandler<GetSlickEventType<typeof onGridBeforeResizeHandler>>).subscribe(onGridBeforeResizeHandler, (_e, args) => {
             this.pubSubService.publish('onGridBeforeResize', args);
           });
+
+          // resize by content could be called from the outside by other services via pub/sub event
+          this.pubSubService.subscribe('onFullResizeByContentRequested', () => this.resizeColumnsByCellContent(true));
         }
 
         // resize by content could be called from the outside by other services via pub/sub event
@@ -160,13 +163,13 @@ export class ResizerService {
   }
 
   /**
-   * Resize each column width by their cell text/value content (this could potentially go wider than the viewport and end up showing an horizontal scroll).
-   * This operation requires to loop through each dataset item to inspect each cell content width and has a performance cost associated to this process.
-   *
-   * NOTE: please that for performance reasons we will only inspect the first 1000 rows,
-   * however user could override it by using the grid option `resizeMaxItemToInspectCellContentWidth` to increase/decrease how many items to inspect.
-   * @param {Boolean} recalculateColumnsTotalWidth - defaults to false, do we want to recalculate the necessary total columns width even if it was already calculated?
-   */
+ * Resize each column width by their cell text/value content (this could potentially go wider than the viewport and end up showing an horizontal scroll).
+ * This operation requires to loop through each dataset item to inspect each cell content width and has a performance cost associated to this process.
+ *
+ * NOTE: please that for performance reasons we will only inspect the first 1000 rows,
+ * however user could override it by using the grid option `resizeMaxItemToInspectCellContentWidth` to increase/decrease how many items to inspect.
+ * @param {Boolean} recalculateColumnsTotalWidth - defaults to false, do we want to recalculate the necessary total columns width even if it was already calculated?
+ */
   resizeColumnsByCellContent(recalculateColumnsTotalWidth = false) {
     const columnDefinitions = this._grid.getColumns();
     const dataset = this.dataView.getItems() as any[];
@@ -228,6 +231,7 @@ export class ResizerService {
     this._totalColumnsWidthByContent > viewportWidth ? this._grid.reRenderColumns(reRender) : this._grid.autosizeColumns();
     this.pubSubService.publish('onAfterResizeByContent', { readItemCount, calculateColumnWidths });
   }
+
 
   // --
   // private functions

@@ -10,7 +10,7 @@ import {
 } from '../../aurelia-slickgrid';
 import './example27.scss'; // provide custom CSS/SASS styling
 
-const NB_ITEMS = 200;
+const NB_ITEMS = 500;
 
 @autoinject()
 export class Example27 {
@@ -33,6 +33,8 @@ export class Example27 {
   columnDefinitions: Column[] = [];
   dataset: any[] = [];
   datasetHierarchical: any[] = [];
+  isLargeDataset = false;
+  loadingClass = '';
 
   constructor() {
     // define the grid options & columns and then create the grid itself
@@ -41,7 +43,7 @@ export class Example27 {
 
   attached() {
     // populate the dataset once the grid is ready
-    this.dataset = this.mockData(NB_ITEMS);
+    this.dataset = this.loadData(NB_ITEMS);
   }
 
   /* Define grid Options and Columns */
@@ -93,9 +95,28 @@ export class Example27 {
       enableTreeData: true, // you must enable this flag for the filtering & sorting to work as expected
       treeDataOptions: {
         columnId: 'title',
-        levelPropName: 'indent',
-        parentPropName: 'parentId'
+        parentPropName: 'parentId',
+        // this is optional, you can define the tree level property name that will be used for the sorting/indentation, internally it will use "__treeLevel"
+        levelPropName: 'treeLevel',
+        indentMarginLeft: 15,
+
+        // you can optionally sort by a different column and/or sort direction
+        // this is the recommend approach, unless you are 100% that your original array is already sorted (in most cases it's not)
+        initialSort: {
+          columnId: 'title',
+          direction: 'ASC'
+        },
+        // we can also add a custom Formatter just for the title text portion
+        titleFormatter: (_row, _cell, value, _def, dataContext) => {
+          let prefix = '';
+          if (dataContext.treeLevel > 0) {
+            prefix = `<span class="mdi mdi-subdirectory-arrow-right mdi-v-align-sub color-se-secondary"></span>`;
+          }
+          return `${prefix}<span class="bold">${value}</span> <span style="font-size:11px; margin-left: 15px;">(parentId: ${dataContext.parentId})</span>`;
+        },
       },
+      multiColumnSort: false, // multi-column sorting is not supported with Tree Data, so you need to disable it
+      showCustomFooter: true,
       // change header/cell row height for material design theme
       headerRowHeight: 45,
       rowHeight: 40,
@@ -142,40 +163,31 @@ export class Example27 {
    * After adding the item, it will sort by parent/child recursively
    */
   addNewRow() {
-    const newId = this.dataset.length;
+    const newId = this.aureliaGrid.dataView.getItemCount();
     const parentPropName = 'parentId';
-    const treeLevelPropName = 'indent';
+    const treeLevelPropName = 'treeLevel'; // if undefined in your options, the default prop name is "__treeLevel"
     const newTreeLevel = 1;
 
     // find first parent object and add the new item as a child
     const childItemFound = this.dataset.find((item) => item[treeLevelPropName] === newTreeLevel);
     const parentItemFound = this.aureliaGrid.dataView.getItemByIdx(childItemFound[parentPropName]);
 
-    const newItem = {
-      id: newId,
-      indent: newTreeLevel,
-      parentId: parentItemFound.id,
-      title: `Task ${newId}`,
-      duration: '1 day',
-      percentComplete: Math.round(Math.random() * 100),
-      start: new Date(),
-      finish: new Date(),
-      effortDriven: false
-    };
-    this.aureliaGrid.dataView.addItem(newItem);
-    const dataset = this.aureliaGrid.dataView.getItems();
-    this.dataset = [...dataset]; // make a copy to trigger a dataset refresh
+    if (childItemFound && parentItemFound) {
+      const newItem = {
+        id: newId,
+        parentId: parentItemFound.id,
+        title: `Task ${newId}`,
+        duration: '1 day',
+        percentComplete: 99,
+        start: new Date(),
+        finish: new Date(),
+        effortDriven: false
+      };
 
-    // add setTimeout to wait a full cycle because datasetChanged needs a full cycle
-    // force a resort because of the tree data structure
-    setTimeout(() => {
-      const titleColumn = this.columnDefinitions.find(col => col.id === 'title') as Column;
-      this.aureliaGrid.sortService.onLocalSortChanged(this.aureliaGrid.slickGrid, [{ columnId: 'title', sortCol: titleColumn, sortAsc: true }]);
-
-      // scroll into the position, after insertion cycle, where the item was added
-      const rowIndex = this.aureliaGrid.dataView.getRowById(newItem.id) as number;
-      this.aureliaGrid.slickGrid.scrollRowIntoView(rowIndex + 3);
-    }, 0);
+      // use the Grid Service to insert the item,
+      // it will also internally take care of updating & resorting the hierarchical dataset
+      this.aureliaGrid.gridService.addItem(newItem);
+    }
   }
 
   collapseAll() {
@@ -186,7 +198,7 @@ export class Example27 {
     this.aureliaGrid.treeDataService.toggleTreeDataCollapse(false);
   }
 
-  logExpandedStructure() {
+  logHierarchicalStructure() {
     console.log('exploded array', this.aureliaGrid.treeDataService.datasetHierarchical /* , JSON.stringify(explodedArray, null, 2) */);
   }
 
@@ -194,17 +206,27 @@ export class Example27 {
     console.log('flat array', this.aureliaGrid.treeDataService.dataset /* , JSON.stringify(outputFlatArray, null, 2) */);
   }
 
-  mockData(count: number) {
+  hideSpinner() {
+    setTimeout(() => this.loadingClass = '', 200); // delay the hide spinner a bit to avoid show/hide too quickly
+  }
+
+  showSpinner() {
+    if (this.isLargeDataset) {
+      this.loadingClass = 'mdi mdi-load mdi-spin-1s mdi-24px color-alt-success';
+    }
+  }
+  loadData(rowCount: number) {
+    this.isLargeDataset = rowCount > 5000; // we'll show a spinner when it's large, else don't show show since it should be fast enough
     let indent = 0;
     const parents = [];
     const data = [];
 
     // prepare the data
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < rowCount; i++) {
       const randomYear = 2000 + Math.floor(Math.random() * 10);
       const randomMonth = Math.floor(Math.random() * 11);
       const randomDay = Math.floor((Math.random() * 29));
-      const d: any = (data[i] = {});
+      const item: any = (data[i] = {});
       let parentId;
 
       // for implementing filtering/sorting, don't go over indent of 2
@@ -222,16 +244,18 @@ export class Example27 {
         parentId = null;
       }
 
-      d['id'] = i;
-      d['indent'] = indent;
-      d['parentId'] = parentId;
-      d['title'] = 'Task ' + i;
-      d['duration'] = '5 days';
-      d['percentComplete'] = Math.round(Math.random() * 100);
-      d['start'] = new Date(randomYear, randomMonth, randomDay);
-      d['finish'] = new Date(randomYear, (randomMonth + 1), randomDay);
-      d['effortDriven'] = (i % 5 === 0);
+      item['id'] = i;
+      item['parentId'] = parentId;
+      item['title'] = `Task ${i}`;
+      item['duration'] = '5 days';
+      item['percentComplete'] = Math.round(Math.random() * 100);
+      item['start'] = new Date(randomYear, randomMonth, randomDay);
+      item['finish'] = new Date(randomYear, (randomMonth + 1), randomDay);
+      item['effortDriven'] = (i % 5 === 0);
     }
+
+    this.dataset = data;
+
     return data;
   }
 }
