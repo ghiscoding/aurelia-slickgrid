@@ -1506,8 +1506,6 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         const initSpy = jest.spyOn(mockGraphqlService2, 'init');
 
         customElement.gridOptions = {
-          // enablePagination: true,
-          enableSorting: true,
           backendServiceApi: {
             service: mockGraphqlService2,
             options: mockGraphqlOptions,

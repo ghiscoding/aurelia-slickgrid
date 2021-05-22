@@ -412,7 +412,9 @@ export class AureliaSlickgridCustomElement {
 
     if (!this.customDataView && this.dataview) {
       const initialDataset = this.gridOptions?.enableTreeData ? this.sortTreeDataset(this.dataset) : this.dataset;
-      this.dataview.setItems(initialDataset, this.gridOptions.datasetIdPropertyName);
+      if (Array.isArray(initialDataset)) {
+        this.dataview.setItems(initialDataset, this.gridOptions.datasetIdPropertyName);
+      }
 
       // if you don't want the items that are not visible (due to being filtered out or being on a different page)
       // to stay selected, pass 'false' to the second arg
