@@ -1799,23 +1799,26 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         const resizeContentSpy = jest.spyOn(resizerServiceStub, 'resizeColumnsByCellContent');
         jest.spyOn(mockDataView, 'getLength').mockReturnValue(1);
 
-        customElement.gridOptions = { enablePagination: false, showCustomFooter: true, autoFitColumnsOnFirstLoad: false, enableAutoSizeColumns: false, enableAutoResizeColumnsByCellContent: true };
+        customElement.gridOptions = { enablePagination: false, resizeByContentOnlyOnFirstLoad: false, showCustomFooter: true, autoFitColumnsOnFirstLoad: false, enableAutoSizeColumns: false, enableAutoResizeColumnsByCellContent: true };
         customElement.initialization(slickEventHandler);
         mockDataView.onSetItemsCalled.notify({ idProperty: 'id', itemCount: 1 });
 
         expect(resizeContentSpy).toHaveBeenCalledWith(true);
       });
 
-      // it('should call "resizeColumnsByCellContent" when the DataView "onSetItemsCalled" event is triggered and "enableAutoResizeColumnsByCellContent" and "resizeColumnsByCellContent" are both set', () => {
-      //   const resizeContentSpy = jest.spyOn(resizerServiceStub, 'resizeColumnsByCellContent');
-      //   jest.spyOn(mockDataView, 'getLength').mockReturnValue(1);
+      it('should call "resizeColumnsByCellContent" when the DataView "onSetItemsCalled" event is triggered and "enableAutoResizeColumnsByCellContent" and "resizeColumnsByCellContent" are both set', (done) => {
+        const resizeContentSpy = jest.spyOn(resizerServiceStub, 'resizeColumnsByCellContent');
+        jest.spyOn(mockDataView, 'getLength').mockReturnValue(1);
 
-      //   customElement.gridOptions = { enablePagination: false, resizeByContentOnlyOnFirstLoad: true, showCustomFooter: true, autoFitColumnsOnFirstLoad: false, enableAutoSizeColumns: false, enableAutoResizeColumnsByCellContent: true };
-      //   customElement.initialization(divContainer, slickEventHandler);
-      //   mockDataView.onSetItemsCalled.notify({ idProperty: 'id', itemCount: 1 });
+        customElement.gridOptions = { enablePagination: false, resizeByContentOnlyOnFirstLoad: true, showCustomFooter: true, autoFitColumnsOnFirstLoad: false, enableAutoSizeColumns: false, enableAutoResizeColumnsByCellContent: true };
+        customElement.initialization(slickEventHandler);
+        mockDataView.onSetItemsCalled.notify({ idProperty: 'id', itemCount: 1 });
 
-      //   expect(resizeContentSpy).toHaveBeenCalledWith(false);
-      // });
+        setTimeout(() => {
+          expect(resizeContentSpy).toHaveBeenCalledWith(false);
+          done();
+        }, 10);
+      });
     });
 
     describe('Custom Footer', () => {

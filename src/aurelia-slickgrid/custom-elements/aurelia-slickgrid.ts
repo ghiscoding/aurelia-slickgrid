@@ -814,7 +814,7 @@ export class AureliaSlickgridCustomElement {
 
           // when user has resize by content enabled, we'll force a full width calculation since we change our entire dataset
           if (args.itemCount > 0 && (this.gridOptions.autosizeColumnsByCellContentOnFirstLoad || this.gridOptions.enableAutoResizeColumnsByCellContent)) {
-            this.resizerService.resizeColumnsByCellContent(true);
+            this.resizerService.resizeColumnsByCellContent(!this.gridOptions?.resizeByContentOnlyOnFirstLoad);
           }
         });
 
