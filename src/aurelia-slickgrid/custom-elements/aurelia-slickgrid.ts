@@ -769,7 +769,7 @@ export class AureliaSlickgridCustomElement {
       const backendApi = gridOptions.backendServiceApi;
 
       if (backendApi && backendApi.service && backendApi.service.init) {
-        backendApi.service.init(backendApi.options, gridOptions.pagination, this.grid);
+        backendApi.service.init(backendApi.options, gridOptions.pagination, this.grid, this.sharedService);
       }
     }
 
@@ -1244,6 +1244,7 @@ export class AureliaSlickgridCustomElement {
 
         // finally set the new presets columns (including checkbox selector if need be)
         this.grid.setColumns(gridColumns);
+        this.sharedService.visibleColumns = gridColumns;
       }
     }
   }
