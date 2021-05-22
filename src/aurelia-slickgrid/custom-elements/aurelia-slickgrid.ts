@@ -411,9 +411,8 @@ export class AureliaSlickgridCustomElement {
     this.grid.init();
 
     if (!this.customDataView && this.dataview) {
-      this.dataview.beginUpdate();
-      this.dataview.setItems(this._dataset, this.gridOptions.datasetIdPropertyName);
-      this.dataview.endUpdate();
+      const initialDataset = this.gridOptions?.enableTreeData ? this.sortTreeDataset(this.dataset) : this.dataset;
+      this.dataview.setItems(initialDataset, this.gridOptions.datasetIdPropertyName);
 
       // if you don't want the items that are not visible (due to being filtered out or being on a different page)
       // to stay selected, pass 'false' to the second arg
@@ -639,7 +638,7 @@ export class AureliaSlickgridCustomElement {
 
   datasetChanged(newDataset: any[], oldValue: any[]) {
     const prevDatasetLn = this._currentDatasetLength;
-    let data = [...newDataset];
+    let data = newDataset;
 
     // when Tree Data is enabled and we don't yet have the hierarchical dataset filled, we can force a convert & sort of the array
     if (this.grid && this.gridOptions?.enableTreeData && Array.isArray(newDataset) && (newDataset.length > 0 || newDataset.length !== prevDatasetLn)) {
@@ -647,6 +646,7 @@ export class AureliaSlickgridCustomElement {
       data = this.sortTreeDataset(newDataset);
     }
 
+    this._dataset = data;
     this.refreshGridData(data || []);
     this._currentDatasetLength = newDataset.length;
 

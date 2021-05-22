@@ -168,6 +168,8 @@ describe('Example 12: Localization (i18n)', () => {
         .invoke('val', 25)
         .trigger('change');
 
+      cy.wait(50);
+
       cy.get('#grid12')
         .find('.slick-row')
         .each(($row, index) => {
