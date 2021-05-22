@@ -46,15 +46,14 @@ const mockSelectionModel = jest.fn().mockImplementation(() => ({
   destroy: jest.fn()
 }));
 
-jest.mock('slickgrid/plugins/slick.rowdetailview', () => mockAddon);
-Slick.Plugins = {
-  RowDetailView: mockAddon
-} as any;
-
-jest.mock('slickgrid/plugins/slick.rowselectionmodel', () => mockSelectionModel);
-Slick.RowSelectionModel = mockSelectionModel;
-
 describe('rowDetailViewExtension', () => {
+  jest.mock('slickgrid/plugins/slick.rowdetailview', () => mockAddon);
+  Slick.Plugins = {
+    RowDetailView: mockAddon
+  } as any;
+  jest.mock('slickgrid/plugins/slick.rowselectionmodel', () => mockSelectionModel);
+
+  Slick.RowSelectionModel = mockSelectionModel;
   let pluginEa: EventAggregator;
   let pubSubService: PubSubService;
   let extension: RowDetailViewExtension;

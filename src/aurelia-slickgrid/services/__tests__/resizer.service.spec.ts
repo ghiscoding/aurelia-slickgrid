@@ -1,4 +1,5 @@
 import { Column, Editors, FieldType, GridOption, SlickGrid, SlickNamespace, } from '@slickgrid-universal/common';
+import { EventAggregator } from 'aurelia-event-aggregator';
 import { PubSubService } from '../pubSub.service';
 import { ResizerService } from '../resizer.service';
 
@@ -38,6 +39,7 @@ const gridStub = {
   getColumnIndex: jest.fn(),
   getColumns: jest.fn(),
   getOptions: jest.fn(),
+  getViewports: jest.fn(),
   getData: () => mockDataView,
   getUID: () => GRID_UID,
   reRenderColumns: jest.fn(),
@@ -48,15 +50,9 @@ const gridStub = {
   setPreHeaderPanelVisibility: jest.fn(),
   setOptions: jest.fn(),
   setSortColumns: jest.fn(),
+  onColumnsResizeDblClick: new Slick.Event(),
   onSort: new Slick.Event(),
 } as unknown as SlickGrid;
-
-const pubSubServiceStub = {
-  publish: jest.fn(),
-  subscribe: jest.fn(),
-  unsubscribe: jest.fn(),
-  unsubscribeAll: jest.fn(),
-} as unknown as PubSubService;
 
 describe('Resizer Service', () => {
   let service: ResizerService;
@@ -64,6 +60,8 @@ describe('Resizer Service', () => {
   let divHeaderElm: HTMLDivElement;
   let divViewportElm: HTMLDivElement;
   let mockGridOptions: GridOption;
+  let pluginEa: EventAggregator;
+  let pubSubService: PubSubService;
 
   beforeEach(() => {
     divContainer = document.createElement('div');
@@ -76,7 +74,9 @@ describe('Resizer Service', () => {
     divContainer.appendChild(divViewportElm);
     document.body.appendChild(divContainer);
 
-    service = new ResizerService(pubSubServiceStub);
+    pluginEa = new EventAggregator();
+    pubSubService = new PubSubService(pluginEa);
+    service = new ResizerService(pubSubService);
     mockGridOptions = {
       enableAutoResize: true,
       autoResize: {
@@ -87,6 +87,7 @@ describe('Resizer Service', () => {
       createPreHeaderPanel: true,
       showPreHeaderPanel: true,
       preHeaderPanelHeight: 20,
+      resizeByContentOptions: {},
     } as GridOption;
     jest.spyOn(gridStub, 'getOptions').mockReturnValue(mockGridOptions);
   });
@@ -115,7 +116,7 @@ describe('Resizer Service', () => {
 
     it('should call internal event handler subscribe and expect the "onGridBeforeResize" event to be called when addon notify is called', () => {
       const handlerSpy = jest.spyOn(service.eventHandler, 'subscribe');
-      const pubSubSpy = jest.spyOn(pubSubServiceStub, 'publish');
+      const pubSubSpy = jest.spyOn(pubSubService, 'publish');
 
       service.init(gridStub, divContainer);
       const instance = service.getAddonInstance();
@@ -131,7 +132,7 @@ describe('Resizer Service', () => {
 
     it('should call internal event handler subscribe and expect the "onGridAfterResize" event to be called when addon notify is called', () => {
       const handlerSpy = jest.spyOn(service.eventHandler, 'subscribe');
-      const pubSubSpy = jest.spyOn(pubSubServiceStub, 'publish');
+      const pubSubSpy = jest.spyOn(pubSubService, 'publish');
 
       service.init(gridStub, divContainer);
       const instance = service.getAddonInstance();
@@ -147,7 +148,7 @@ describe('Resizer Service', () => {
 
     it('should call "onGridAfterResize" event and expect "resizeColumnsByCellContent" to be called when "enableAutoResizeColumnsByCellContent" is set', () => {
       const resizeContentSpy = jest.spyOn(service, 'resizeColumnsByCellContent');
-      const pubSubSpy = jest.spyOn(pubSubServiceStub, 'publish');
+      const pubSubSpy = jest.spyOn(pubSubService, 'publish');
 
       mockGridOptions.enableAutoResizeColumnsByCellContent = true;
       service.init(gridStub, divContainer);
@@ -255,12 +256,12 @@ describe('Resizer Service', () => {
       let mockData: any[];
 
       beforeEach(() => {
-        mockGridOptions.resizeCellCharWidthInPx = 7;
-        mockGridOptions.resizeCellPaddingWidthInPx = 6;
-        mockGridOptions.resizeFormatterPaddingWidthInPx = 5;
-        mockGridOptions.resizeDefaultRatioForStringType = 0.88;
-        mockGridOptions.resizeAlwaysRecalculateColumnWidth = false;
-        mockGridOptions.resizeMaxItemToInspectCellContentWidth = 4;
+        mockGridOptions.resizeByContentOptions.cellCharWidthInPx = 7;
+        mockGridOptions.resizeByContentOptions.cellPaddingWidthInPx = 6;
+        mockGridOptions.resizeByContentOptions.formatterPaddingWidthInPx = 5;
+        mockGridOptions.resizeByContentOptions.defaultRatioForStringType = 0.88;
+        mockGridOptions.resizeByContentOptions.alwaysRecalculateColumnWidth = false;
+        mockGridOptions.resizeByContentOptions.maxItemToInspectCellContentWidth = 4;
         mockColDefs = [
           // typically the `originalWidth` is set by the columnDefinitiosn setter in vanilla grid bundle but we can mock it for our test
           { id: 'userId', field: 'userId', width: 30, originalWidth: 30 },
@@ -270,23 +271,69 @@ describe('Resizer Service', () => {
           { id: 'age', field: 'age', type: FieldType.number, resizeExtraWidthPadding: 2 },
           { id: 'street', field: 'street', maxWidth: 15 },
           { id: 'country', field: 'country', maxWidth: 15, resizeMaxWidthThreshold: 14, rerenderOnResize: true },
+          { id: 'zip', field: 'zip', width: 20, type: 'number' },
         ] as Column[];
         mockData = [
-          { userId: 1, firstName: 'John', lastName: 'Doe', gender: 'male', age: 20, street: '478 Kunze Land', country: 'United States of America' },
-          { userId: 2, firstName: 'Destinee', lastName: 'Shanahan', gender: 'female', age: 25, street: '20519 Watson Lodge', country: 'Australia' },
-          { userId: 3, firstName: 'Sarai', lastName: 'Altenwerth', gender: 'female', age: 30, street: '184 Preston Pine', country: 'United States of America' },
-          { userId: 4, firstName: 'Tyshawn', lastName: 'Hyatt', gender: 'male', age: 35, street: '541 Senger Drives', country: 'Canada' },
-          { userId: 5, firstName: 'Alvina', lastName: 'Franecki', gender: 'female', age: 100, street: '20229 Tia Turnpike', country: 'United States of America' },
-          { userId: 6, firstName: 'Therese', lastName: 'Brakus', gender: 'female', age: 99, street: '34767 Lindgren Dam', country: 'Bosnia' },
+          { userId: 1, firstName: 'John', lastName: 'Doe', gender: 'male', age: 20, street: '478 Kunze Land', country: 'United States of America', zip: 123456 },
+          { userId: 2, firstName: 'Destinee', lastName: 'Shanahan', gender: 'female', age: 25, street: '20519 Watson Lodge', country: 'Australia', zip: 223344 },
+          { userId: 3, firstName: 'Sarai', lastName: 'Altenwerth', gender: 'female', age: 30, street: '184 Preston Pine', country: 'United States of America', zip: 334433 },
+          { userId: 4, firstName: 'Tyshawn', lastName: 'Hyatt', gender: 'male', age: 35, street: '541 Senger Drives', country: 'Canada', zip: 444455 },
+          { userId: 5, firstName: 'Alvina', lastName: 'Franecki', gender: 'female', age: 100, street: '20229 Tia Turnpike', country: 'United States of America', zip: 777555 },
+          { userId: 6, firstName: 'Therese', lastName: 'Brakus', gender: 'female', age: 99, street: '34767 Lindgren Dam', country: 'Bosnia', zip: 654321 },
         ];
 
         jest.spyOn(gridStub, 'getColumns').mockReturnValue(mockColDefs);
         jest.spyOn(mockDataView, 'getItems').mockReturnValue(mockData);
       });
 
+      it('should call handleSingleColumnResizeByContent when "onHeaderMenuColumnResizeByContent" gets triggered', () => {
+        const reRenderSpy = jest.spyOn(gridStub, 'reRenderColumns');
+
+        mockGridOptions.enableColumnResizeOnDoubleClick = true;
+        service.init(gridStub, divContainer);
+        pubSubService.publish('onHeaderMenuColumnResizeByContent', { columnId: 'firstName' });
+
+        expect(reRenderSpy).toHaveBeenCalledWith(false);
+        expect(mockColDefs[1].width).toBe(56); // longest word "Destinee" (length 8 * charWidth(7) * ratio(0.88)) + cellPadding(6) = 55.28 ceil to => 56
+      });
+
+      it('should call handleSingleColumnResizeByContent when "onHeaderMenuColumnResizeByContent" gets triggered', () => {
+        const reRenderSpy = jest.spyOn(gridStub, 'reRenderColumns');
+
+        mockGridOptions.enableColumnResizeOnDoubleClick = true;
+        service.init(gridStub, divContainer);
+        gridStub.onColumnsResizeDblClick.notify({ triggeredByColumn: 'zip', grid: gridStub });
+
+        expect(reRenderSpy).toHaveBeenCalledWith(false);
+        expect(mockColDefs[7].width).toBe(48); // longest number "777555" (length 6 * charWidth(7)) + cellPadding(6) = 48
+      });
+
+      it('should call handleSingleColumnResizeByContent when "onHeaderMenuColumnResizeByContent" gets triggered but expect a resized column width when left section width becomes greater than full viewport width', () => {
+        const viewportLeft = document.createElement('div');
+        viewportLeft.className = 'slick-viewport-left';
+        Object.defineProperty(viewportLeft, 'clientWidth', { writable: true, configurable: true, value: 250 });
+
+        const viewportRight = document.createElement('div');
+        viewportRight.className = 'slick-viewport-right';
+        Object.defineProperty(viewportRight, 'clientWidth', { writable: true, configurable: true, value: 27 });
+
+        jest.spyOn(gridStub, 'getViewports').mockReturnValue([viewportLeft, viewportRight]);
+        const reRenderSpy = jest.spyOn(gridStub, 'reRenderColumns');
+
+        mockGridOptions.frozenColumn = 7;
+        mockGridOptions.enableColumnResizeOnDoubleClick = true;
+        mockGridOptions.resizeByContentOptions.widthToRemoveFromExceededWidthReadjustment = 20;
+        service.init(gridStub, divContainer);
+        gridStub.onColumnsResizeDblClick.notify({ triggeredByColumn: 'zip', grid: gridStub });
+
+        expect(reRenderSpy).toHaveBeenCalledWith(false);
+        expect(mockColDefs[7].width).toBeLessThan(30);
+      });
+
       it('should call the resize and expect first column have a fixed width while other will have a calculated width when resizing by their content', () => {
         const setColumnsSpy = jest.spyOn(gridStub, 'setColumns');
         const reRenderColumnsSpy = jest.spyOn(gridStub, 'reRenderColumns');
+        const pubSubSpy = jest.spyOn(pubSubService, 'publish');
 
         service.init(gridStub, divContainer);
         service.resizeColumnsByCellContent(true);
@@ -298,15 +345,22 @@ describe('Resizer Service', () => {
             expect.objectContaining({ id: 'lastName', width: 68 }), // longest word "Altenwerth" (length 10 * charWidth(7) * ratio(0.88)) + cellPadding(6) = 67.6 ceil to => 68
             expect.objectContaining({ id: 'gender', width: 57 }), // longest word "female" (length 6 * charWidth(7) * customRatio(1.2)) + cellPadding(6) = 56.4 ceil to 57
             expect.objectContaining({ id: 'age', width: 29 }), // longest number 100 (length 3 * charWidth(7) * ratio(1)) + cellPadding(6) + extraPadding(2) = 44.96 ceil to 45
-            expect.objectContaining({ id: 'street', width: 15 }), // longest number "20229 Tia Turnpike" goes over maxWidth so we fallback to it
-            expect.objectContaining({ id: 'country', width: 14 }), // longest number "United States of America" goes over resizeMaxWidthThreshold so we fallback to it
+            expect.objectContaining({ id: 'street', width: 15 }), // longest text "20229 Tia Turnpike" goes over maxWidth so we fallback to it
+            expect.objectContaining({ id: 'country', width: 14 }), // longest text "United States of America" goes over resizeMaxWidthThreshold so we fallback to it
+            expect.objectContaining({ id: 'zip', width: 48 }), // longest number "777555"
           ]));
         expect(reRenderColumnsSpy).toHaveBeenCalledWith(true);
+        expect(pubSubSpy).toBeCalledWith('onBeforeResizeByContent');
+        expect(pubSubSpy).toBeCalledWith('onAfterResizeByContent', {
+          calculateColumnWidths: { userId: 30, firstName: 56, lastName: 68, gender: 57, age: 29, street: 15, country: 14, zip: 48 },
+          readItemCount: 5
+        });
       });
 
       it('should call the resize and expect first column have a fixed width while other will have a calculated width when resizing by their content and grid is editable', () => {
         const setColumnsSpy = jest.spyOn(gridStub, 'setColumns');
         const reRenderColumnsSpy = jest.spyOn(gridStub, 'reRenderColumns');
+        const pubSubSpy = jest.spyOn(pubSubService, 'publish');
 
         mockGridOptions.editable = true;
         service.init(gridStub, divContainer);
@@ -320,10 +374,25 @@ describe('Resizer Service', () => {
             expect.objectContaining({ id: 'lastName', width: 73 }), // longest word "Altenwerth" (length 10 * charWidth(7) * ratio(0.88)) + cellPadding(6) + editorPadding(5) = 72.6 ceil to => 73
             expect.objectContaining({ id: 'gender', width: 57 }), // longest word "female" (length 6 * charWidth(7) * customRatio(1.2)) + cellPadding(6) = 56.4 ceil to 57
             expect.objectContaining({ id: 'age', width: 29 }), // longest number 100 (length 3 * charWidth(7) * ratio(1)) + cellPadding(6) + extraPadding(2) = 44.96 ceil to 45
-            expect.objectContaining({ id: 'street', width: 15 }), // longest number "20229 Tia Turnpike" goes over maxWidth so we fallback to it
-            expect.objectContaining({ id: 'country', width: 14 }), // longest number "United States of America" goes over resizeMaxWidthThreshold so we fallback to it
+            expect.objectContaining({ id: 'street', width: 15 }), // longest text "20229 Tia Turnpike" goes over maxWidth so we fallback to it
+            expect.objectContaining({ id: 'country', width: 14 }), // longest text "United States of America" goes over resizeMaxWidthThreshold so we fallback to it
+            expect.objectContaining({ id: 'zip', width: 48 }), // longest number "777555"
           ]));
         expect(reRenderColumnsSpy).toHaveBeenCalledWith(true);
+        expect(pubSubSpy).toBeCalledWith('onBeforeResizeByContent');
+        expect(pubSubSpy).toBeCalledWith('onAfterResizeByContent', {
+          calculateColumnWidths: { userId: 30, firstName: 61, lastName: 73, gender: 57, age: 29, street: 15, country: 14, zip: 48 },
+          readItemCount: 5
+        });
+      });
+
+      it('should call "resizeColumnsByCellContent" when "onFullResizeByContentRequested" pubsub event is triggered', () => {
+        const resizeSpy = jest.spyOn(service, 'resizeColumnsByCellContent');
+
+        service.init(gridStub, divContainer);
+        pubSubService.publish('onFullResizeByContentRequested', { caller: 'GridStateService' });
+
+        expect(resizeSpy).toHaveBeenCalledWith(true);
       });
     });
   });

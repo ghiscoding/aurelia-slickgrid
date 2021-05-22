@@ -171,7 +171,7 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', () => {
   });
 
   it('should be able to toggle Sorting functionality (disable) and expect all header menu Sorting commands to be hidden and also not show Sort hint while hovering a column', () => {
-    const expectedFullHeaderMenuCommands = ['Sort Ascending', 'Sort Descending', '', 'Remove Filter', 'Remove Sort', 'Hide Column'];
+    const expectedFullHeaderMenuCommands = ['Resize by Content', '', 'Sort Ascending', 'Sort Descending', '', 'Remove Filter', 'Remove Sort', 'Hide Column'];
 
     cy.get('.slick-sort-indicator').should('have.length.greaterThan', 0); // sort icon hints
     cy.get('[data-test="toggle-sorting-btn"]').click(); // disable it
@@ -220,7 +220,7 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', () => {
   });
 
   it('should be able to toggle Sorting functionality (re-enable) and expect all Sorting header menu commands to be hidden and also not show Sort hint while hovering a column', () => {
-    const expectedFullHeaderMenuCommands = ['Sort Ascending', 'Sort Descending', '', 'Remove Filter', 'Remove Sort', 'Hide Column'];
+    const expectedFullHeaderMenuCommands = ['Resize by Content', '', 'Sort Ascending', 'Sort Descending', '', 'Remove Filter', 'Remove Sort', 'Hide Column'];
 
     cy.get('.slick-sort-indicator').should('have.length', 0); // sort icon hints
     cy.get('[data-test="toggle-sorting-btn"]').click(); // enable it back
@@ -265,7 +265,7 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', () => {
   });
 
   it('should be able to click disable Sorting functionality button and expect all Sorting commands to be hidden and also not show Sort hint while hovering a column', () => {
-    const expectedFullHeaderMenuCommands = ['Sort Ascending', 'Sort Descending', '', 'Remove Filter', 'Remove Sort', 'Hide Column'];
+    const expectedFullHeaderMenuCommands = ['Resize by Content', '', 'Sort Ascending', 'Sort Descending', '', 'Remove Filter', 'Remove Sort', 'Hide Column'];
 
     cy.get('.slick-sort-indicator').should('have.length.greaterThan', 0); // sort icon hints
     cy.get('[data-test="disable-sorting-btn"]').click().click(); // even clicking twice should have same result
@@ -293,7 +293,7 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', () => {
   });
 
   it('should be able to click disable Filter functionality button and expect all Filter commands to be hidden and also not show Sort hint while hovering a column', () => {
-    const expectedFullHeaderMenuCommands = ['Sort Ascending', 'Sort Descending', '', 'Remove Filter', 'Remove Sort', 'Hide Column'];
+    const expectedFullHeaderMenuCommands = ['Resize by Content', '', 'Sort Ascending', 'Sort Descending', '', 'Remove Filter', 'Remove Sort', 'Hide Column'];
 
     cy.get('[data-test="disable-filters-btn"]').click().click(); // even clicking twice should have same result
 
