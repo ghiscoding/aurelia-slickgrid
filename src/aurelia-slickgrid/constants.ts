@@ -94,6 +94,7 @@ export class Constants {
     'onBeforeExportToTextFile',
     'onAfterExportToTextFile',
     'onGridStateChanged',
+    'onHeaderMenuColumnResizeByContent',
     'onPaginationChanged',
     'onItemAdded',
     'onItemDeleted',

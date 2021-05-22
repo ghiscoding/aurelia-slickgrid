@@ -168,6 +168,8 @@ describe('Example 12: Localization (i18n)', () => {
         .invoke('val', 25)
         .trigger('change');
 
+      cy.wait(50);
+
       cy.get('#grid12')
         .find('.slick-row')
         .each(($row, index) => {
@@ -229,7 +231,7 @@ describe('Example 12: Localization (i18n)', () => {
 
       cy.get('.slick-header-menu')
         .should('be.visible')
-        .children('.slick-header-menuitem:nth-child(2)')
+        .children('.slick-header-menuitem:nth-child(4)')
         .children('.slick-header-menucontent')
         .should('contain', 'Sort Descending')
         .click();

@@ -198,6 +198,10 @@ export class Example27 {
     this.aureliaGrid.treeDataService.toggleTreeDataCollapse(false);
   }
 
+  dynamicallyChangeFilter() {
+    this.aureliaGrid.filterService.updateFilters([{ columnId: 'percentComplete', operator: '<', searchTerms: [40] }]);
+  }
+
   logHierarchicalStructure() {
     console.log('exploded array', this.aureliaGrid.treeDataService.datasetHierarchical /* , JSON.stringify(explodedArray, null, 2) */);
   }

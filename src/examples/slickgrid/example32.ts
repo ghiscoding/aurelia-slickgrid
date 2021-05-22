@@ -342,8 +342,10 @@ export class Example32 {
       enableAutoResizeColumnsByCellContent: true,
 
       // optional resize calculation options
-      resizeDefaultRatioForStringType: 0.92,
-      resizeFormatterPaddingWidthInPx: 8, // optional editor formatter padding for resize calculation
+      resizeByContentOptions: {
+        defaultRatioForStringType: 0.92,
+        formatterPaddingWidthInPx: 8, // optional editor formatter padding for resize calculation
+      },
 
       enableExcelExport: true,
       excelExportOptions: {

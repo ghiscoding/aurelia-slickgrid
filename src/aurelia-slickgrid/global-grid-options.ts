@@ -1,4 +1,4 @@
-import { Column, DelimiterType, EventNamingStyle, FileType, Filters, OperatorType } from '@slickgrid-universal/common';
+import { Column, DelimiterType, EventNamingStyle, FileType, Filters, GridAutosizeColsMode, OperatorType, TreeDataOption } from '@slickgrid-universal/common';
 import { GridOption, RowDetailView } from './models/index';
 
 /**
@@ -19,7 +19,8 @@ export const GlobalGridOptions: Partial<GridOption> = {
   },
   cellHighlightCssClass: 'slick-cell-modified',
   checkboxSelector: {
-    cssClass: 'slick-cell-checkboxsel'
+    cssClass: 'slick-cell-checkboxsel',
+    width: 40
   },
   cellMenu: {
     autoAdjustDrop: true,
@@ -28,6 +29,7 @@ export const GlobalGridOptions: Partial<GridOption> = {
     hideCommandSection: false,
     hideOptionSection: false,
   },
+  columnGroupSeparator: ' - ',
   columnPicker: {
     fadeSpeed: 0,
     hideForceFitButton: false,
@@ -38,6 +40,8 @@ export const GlobalGridOptions: Partial<GridOption> = {
     labels: {
       cancelButtonKey: 'CANCEL',
       cloneButtonKey: 'CLONE',
+      resetEditorButtonTooltipKey: 'RESET_INPUT_VALUE',
+      resetFormButtonKey: 'RESET_FORM',
       massSelectionButtonKey: 'APPLY_TO_SELECTION',
       massSelectionStatusKey: 'X_OF_Y_MASS_SELECTED',
       massUpdateButtonKey: 'APPLY_MASS_UPDATE',
@@ -61,6 +65,9 @@ export const GlobalGridOptions: Partial<GridOption> = {
     hideExportTextDelimitedCommand: true,
     hideMenuOnScroll: true,
     hideOptionSection: false,
+    iconCollapseAllGroupsCommand: 'fa fa-compress',
+    iconExpandAllGroupsCommand: 'fa fa-expand',
+    iconClearGroupingCommand: 'fa fa-times',
     iconCopyCellValueCommand: 'fa fa-clone',
     iconExportCsvCommand: 'fa fa-download',
     iconExportExcelCommand: 'fa fa-file-excel-o text-success',
@@ -79,10 +86,10 @@ export const GlobalGridOptions: Partial<GridOption> = {
     metricTexts: {
       items: 'items',
       itemsKey: 'ITEMS',
-      itemsSelected: 'items selected',
-      itemsSelectedKey: 'ITEMS_SELECTED',
       of: 'of',
       ofKey: 'OF',
+      itemsSelected: 'items selected',
+      itemsSelectedKey: 'ITEMS_SELECTED'
     }
   },
   dataView: {
@@ -95,12 +102,12 @@ export const GlobalGridOptions: Partial<GridOption> = {
   defaultSlickgridEventPrefix: '',
   defaultFilter: Filters.input,
   defaultFilterPlaceholder: '🔎︎', // magnifying glass icon
-  defaultFilterRangeOperator: OperatorType.rangeExclusive,
   defaultBackendServiceFilterTypingDebounce: 500,
+  enableFilterTrimWhiteSpace: false, // do we want to trim white spaces on all Filters?
+  defaultFilterRangeOperator: OperatorType.rangeInclusive,
   editable: false,
-  enableAutoResize: true,
-  enableAutoSizeColumns: true,
-  enableHeaderMenu: true,
+  editorTypingDebounce: 450,
+  filterTypingDebounce: 0,
   enableEmptyDataWarningMessage: true,
   emptyDataWarning: {
     className: 'slick-empty-data-warning',
@@ -113,15 +120,18 @@ export const GlobalGridOptions: Partial<GridOption> = {
     frozenLeftViewportMarginLeft: '0px',
     frozenRightViewportMarginLeft: '40%',
   },
+  enableAutoResize: true,
+  enableAutoSizeColumns: true,
   enableCellNavigation: false,
-  enableCheckboxSelector: false,
   enableColumnPicker: true,
   enableColumnReorder: true,
+  enableColumnResizeOnDoubleClick: true,
   enableContextMenu: true,
-  enableExcelExport: false, // both exports are now opt-in
+  enableExcelExport: false,
   enableTextExport: false,
-  enableFilterTrimWhiteSpace: false, // do we want to trim white spaces on all Filters?
   enableGridMenu: true,
+  enableHeaderMenu: true,
+  enableMouseHoverHighlightRow: true,
   enableSorting: true,
   enableTextSelectionOnCells: true,
   eventNamingStyle: EventNamingStyle.kebabCase,
@@ -132,8 +142,8 @@ export const GlobalGridOptions: Partial<GridOption> = {
     filename: 'export',
     format: FileType.xlsx,
     groupingColumnHeaderTitle: 'Group By',
-    groupCollapsedSymbol: '\u25B9',
-    groupExpandedSymbol: '\u25BF',
+    groupCollapsedSymbol: '⮞',
+    groupExpandedSymbol: '⮟',
     groupingAggregatorRowText: '',
     sanitizeDataExport: false,
   },
@@ -147,10 +157,21 @@ export const GlobalGridOptions: Partial<GridOption> = {
     sanitizeDataExport: false,
     useUtf8WithBom: true
   },
-  filterTypingDebounce: 0,
+  gridAutosizeColsMode: GridAutosizeColsMode.none,
   forceFitColumns: false,
   frozenHeaderWidthCalcDifferential: 1,
   gridMenu: {
+    commandLabels: {
+      clearAllFiltersCommandKey: 'CLEAR_ALL_FILTERS',
+      clearAllSortingCommandKey: 'CLEAR_ALL_SORTING',
+      clearFrozenColumnsCommandKey: 'CLEAR_PINNING',
+      exportCsvCommandKey: 'EXPORT_TO_CSV',
+      exportExcelCommandKey: 'EXPORT_TO_EXCEL',
+      exportTextDelimitedCommandKey: 'EXPORT_TO_TAB_DELIMITED',
+      refreshDatasetCommandKey: 'REFRESH_DATASET',
+      toggleFilterCommandKey: 'TOGGLE_FILTER_ROW',
+      togglePreHeaderCommandKey: 'TOGGLE_PRE_HEADER_ROW',
+    },
     hideClearAllFiltersCommand: false,
     hideClearAllSortingCommand: false,
     hideClearFrozenColumnsCommand: true, // opt-in command
@@ -159,15 +180,15 @@ export const GlobalGridOptions: Partial<GridOption> = {
     hideExportTextDelimitedCommand: true,
     hideForceFitButton: false,
     hideRefreshDatasetCommand: false,
+    hideSyncResizeButton: true,
     hideToggleFilterCommand: false,
     hideTogglePreHeaderCommand: false,
-    hideSyncResizeButton: true,
     iconCssClass: 'fa fa-bars',
-    iconClearAllFiltersCommand: 'fa fa-filter text-danger',
-    iconClearAllSortingCommand: 'fa fa-unsorted text-danger',
+    iconClearAllFiltersCommand: 'fa fa-filter',
+    iconClearAllSortingCommand: 'fa fa-unsorted',
     iconClearFrozenColumnsCommand: 'fa fa-times',
     iconExportCsvCommand: 'fa fa-download',
-    iconExportExcelCommand: 'fa fa-file-excel-o text-success',
+    iconExportExcelCommand: 'fa fa-file-excel-o',
     iconExportTextDelimitedCommand: 'fa fa-download',
     iconRefreshDatasetCommand: 'fa fa-refresh',
     iconToggleFilterCommand: 'fa fa-random',
@@ -181,23 +202,25 @@ export const GlobalGridOptions: Partial<GridOption> = {
     autoAlign: true,
     autoAlignOffset: 12,
     minWidth: 140,
-    iconClearFilterCommand: 'fa fa-filter text-danger',
+    iconClearFilterCommand: 'fa fa-filter',
     iconClearSortCommand: 'fa fa-unsorted',
     iconFreezeColumns: 'fa fa-thumb-tack',
     iconSortAscCommand: 'fa fa-sort-amount-asc',
     iconSortDescCommand: 'fa fa-sort-amount-desc',
     iconColumnHideCommand: 'fa fa-times',
+    iconColumnResizeByContentCommand: 'fa fa-arrows-h',
+    hideColumnResizeByContentCommand: false,
     hideColumnHideCommand: false,
     hideClearFilterCommand: false,
     hideClearSortCommand: false,
     hideFreezeColumnsCommand: true, // opt-in command
-    hideSortCommands: false,
-    hideSortCommandsDivider: false
+    hideSortCommands: false
   },
-  headerRowHeight: 35,
   multiColumnSort: true,
   numberedMultiColumnSort: true,
   tristateMultiColumnSort: false,
+  sortColNumberInSeparateSpan: true,
+  suppressActiveCellChangeOnEdit: true,
   pagination: {
     pageSizes: [10, 15, 20, 25, 30, 40, 50, 75, 100],
     pageSize: 25,
@@ -212,11 +235,25 @@ export const GlobalGridOptions: Partial<GridOption> = {
     saveDetailViewOnScroll: false,
     viewModel: '',
   } as RowDetailView,
+  headerRowHeight: 35,
   rowHeight: 35,
-  sortColNumberInSeparateSpan: true,
-  suppressActiveCellChangeOnEdit: true,
-  topPanelHeight: 35,
+  topPanelHeight: 30,
   translationNamespaceSeparator: ':',
+  resizeByContentOnlyOnFirstLoad: true,
+  resizeByContentOptions: {
+    alwaysRecalculateColumnWidth: false,
+    cellCharWidthInPx: 7.8,
+    cellPaddingWidthInPx: 14,
+    defaultRatioForStringType: 0.88,
+    formatterPaddingWidthInPx: 0,
+    maxItemToInspectCellContentWidth: 1000,
+    maxItemToInspectSingleColumnWidthByContent: 5000,
+    widthToRemoveFromExceededWidthReadjustment: 50,
+  },
+  treeDataOptions: {
+    exportIndentMarginLeft: 5,
+    exportIndentationLeadingChar: '͏͏͏͏͏͏͏͏͏·',
+  } as unknown as TreeDataOption
 };
 
 /**
@@ -224,10 +261,11 @@ export const GlobalGridOptions: Partial<GridOption> = {
  * when using Column Header Grouping, we'll prefix the column group title
  * else we'll simply return the column name title
  */
-function pickerHeaderColumnValueExtractor(column: Column) {
-  const headerGroup = column && column.columnGroup || '';
+function pickerHeaderColumnValueExtractor(column: Column, gridOptions?: GridOption) {
+  const headerGroup = column?.columnGroup || '';
+  const columnGroupSeparator = gridOptions?.columnGroupSeparator ?? ' - ';
   if (headerGroup) {
-    return `${headerGroup} - ${column.name}`;
+    return headerGroup + columnGroupSeparator + column.name;
   }
   return column?.name ?? '';
 }
