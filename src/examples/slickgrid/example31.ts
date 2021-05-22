@@ -6,6 +6,7 @@ import { HttpClient } from 'aurelia-http-client';
 import { Observable, of, Subject } from 'rxjs';
 
 import { AureliaGridInstance } from '../../aurelia-slickgrid';
+import './example31.scss'; // provide custom CSS/SASS styling
 
 const defaultPageSize = 20;
 const sampleDataRoot = 'assets/data';

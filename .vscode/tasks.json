@@ -8,9 +8,9 @@
       "problemMatcher": []
     },
     {
-      "label": "Build Library (with E2E Cypress tests)",
+      "label": "Build GitHub Demo (prod build)",
       "type": "shell",
-      "command": "yarn run build:with-e2e",
+      "command": "yarn run build:demo",
       "problemMatcher": []
     },
     {
@@ -23,12 +23,6 @@
       "label": "Cypress CI (mochawesome)",
       "type": "shell",
       "command": "yarn run cypress:ci",
-      "problemMatcher": []
-    },
-    {
-      "label": "Run Jest Tests",
-      "type": "shell",
-      "command": "yarn start test",
       "problemMatcher": []
     },
     {
