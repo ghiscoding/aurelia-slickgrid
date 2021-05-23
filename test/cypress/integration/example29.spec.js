@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-describe('Example 29 - Header and Footer slots', { retries: 2 }, () => {
+describe('Example 29 - Header and Footer slots', { retries: 1 }, () => {
   it('should display a custom header as slot', () => {
     cy.visit(`${Cypress.config('baseExampleUrl')}/example29`);
     cy.get("div[slot='slickgrid-header']")

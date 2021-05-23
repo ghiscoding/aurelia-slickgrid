@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-describe('Example 10 - Multiple Grids with Row Selection', { retries: 2 }, () => {
+describe('Example 10 - Multiple Grids with Row Selection', { retries: 1 }, () => {
   const titles = ['', 'Title', 'Duration (days)', '% Complete', 'Start', 'Finish', 'Effort Driven'];
 
   beforeEach(() => {
@@ -666,6 +666,8 @@ describe('Example 10 - Multiple Grids with Row Selection', { retries: 2 }, () =>
       cy.get('@grid2')
         .find('.slick-row')
         .should('not.have.length', 0);
+
+      cy.wait(50);
 
       cy.get('[data-test=grid2-selections]').should('contain', 'Task 3,Task 13');
 

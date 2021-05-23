@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-describe('Example 32 - Columns Resize by Content', { retries: 2 }, () => {
+describe('Example 32 - Columns Resize by Content', { retries: 1 }, () => {
   const titles = ['', 'Title', 'Duration', 'Cost', '% Complete', 'Complexity', 'Start', 'Completed', 'Finish', 'Product', 'Country of Origin', 'Action'];
 
   it('should display Example title', () => {

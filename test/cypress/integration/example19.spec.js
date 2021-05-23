@@ -1,5 +1,5 @@
 /// <reference types="cypress" />
-describe('Example 19 - Row Detail View', { retries: 2 }, () => {
+describe('Example 19 - Row Detail View', { retries: 1 }, () => {
   const titles = ['', 'Title', 'Duration (days)', '% Complete', 'Start', 'Finish', 'Effort Driven'];
 
   it('should display Example title', () => {

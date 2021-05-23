@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-describe('Example 5 - OData Grid', { retries: 2 }, () => {
+describe('Example 5 - OData Grid', { retries: 1 }, () => {
   beforeEach(() => {
     // create a console.log spy for later use
     cy.window().then((win) => {
