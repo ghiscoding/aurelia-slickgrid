@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.7.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v3.7.0...v3.7.1) (2021-05-23)
+
+
+### Bug Fixes
+
+* **build:** target es2017 instead of es2018 to fix aurelia-cli/requireJS ([7eeff02](https://github.com/ghiscoding/aurelia-slickgrid/commit/7eeff025057ae2548f1d8033132ef9265e93195a))
+
 ## [3.7.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v3.6.0...v3.7.0) (2021-05-23)
 
 
