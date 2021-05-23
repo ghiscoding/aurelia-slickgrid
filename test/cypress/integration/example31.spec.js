@@ -201,7 +201,7 @@ describe('Example 31 - OData Grid using RxJS', { retries: 1 }, () => {
       cy.get('#grid31')
         .find('button.slick-gridmenu-button')
         .trigger('click', { force: true })
-        .click();
+        .click({ force: true });
 
       cy.get(`.slick-gridmenu:visible`)
         .find('.slick-gridmenu-item')
