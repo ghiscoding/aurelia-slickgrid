@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.7.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v3.6.0...v3.7.0) (2021-05-23)
+
+
+### Features
+
+* **resizer:** add `resizeByContentOnlyOnFirstLoad` grid option ([#576](https://github.com/ghiscoding/aurelia-slickgrid/issues/576)) ([424aea4](https://github.com/ghiscoding/aurelia-slickgrid/commit/424aea469b1390b005335f5f3bc3cb5cd8ad39f7))
+* **resizer:** add single Column Resize by Content dblClick & headerMenu ([#579](https://github.com/ghiscoding/aurelia-slickgrid/issues/579)) ([631465a](https://github.com/ghiscoding/aurelia-slickgrid/commit/631465a7dbdd35f961834993982dfc831ac2f726))
+
+
+### Bug Fixes
+
+* **backend:** able to preset filters on hidden columns & all queried ([#582](https://github.com/ghiscoding/aurelia-slickgrid/issues/582)) ([9953dd9](https://github.com/ghiscoding/aurelia-slickgrid/commit/9953dd9bd7a48dc527f5cdba967b72ded9f46823))
+* **grid:** make sure dataset is an array before passing it to dataview ([bfd8344](https://github.com/ghiscoding/aurelia-slickgrid/commit/bfd8344f5651a8238c6da8f4b9386a0984998f0d))
+* **presets:** loading columns presets should only be done once ([#577](https://github.com/ghiscoding/aurelia-slickgrid/issues/577)) ([91d0ea6](https://github.com/ghiscoding/aurelia-slickgrid/commit/91d0ea6fd637224d8dce3b69d25503720fa715df)), closes [#341](https://github.com/ghiscoding/aurelia-slickgrid/issues/341)
+* **resizer:** fix a regression bug caused by previous PR ([#580](https://github.com/ghiscoding/aurelia-slickgrid/issues/580)) ([95185f0](https://github.com/ghiscoding/aurelia-slickgrid/commit/95185f06396cbf4c9130d40e5a52a6f677bff524))
+* **resizer:** remove delay to call resize by content to avoid flickering ([#578](https://github.com/ghiscoding/aurelia-slickgrid/issues/578)) ([1661c7e](https://github.com/ghiscoding/aurelia-slickgrid/commit/1661c7e32290e625d0c5ae807f1635476f555667))
+* **sorting:** multi-column sort shouldn't work when option is disabled ([#581](https://github.com/ghiscoding/aurelia-slickgrid/issues/581)) ([e752b2c](https://github.com/ghiscoding/aurelia-slickgrid/commit/e752b2ccddfac29627fb156517fff988b9b5f8ca))
+* **tree:** few issues and huge improvement found in Tree Data ([#567](https://github.com/ghiscoding/aurelia-slickgrid/issues/567)) ([0febdf0](https://github.com/ghiscoding/aurelia-slickgrid/commit/0febdf00b4a48b55b670750bfe8b68a7b36c7ef7))
+
 ## [3.6.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v3.5.0...v3.6.0) (2021-04-28)
 
 
