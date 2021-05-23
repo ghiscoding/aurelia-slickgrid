@@ -667,6 +667,8 @@ describe('Example 10 - Multiple Grids with Row Selection', { retries: 1 }, () =>
         .find('.slick-row')
         .should('not.have.length', 0);
 
+      cy.wait(50);
+
       cy.get('[data-test=grid2-selections]').should('contain', 'Task 3,Task 13');
 
       cy.get('@grid2')
