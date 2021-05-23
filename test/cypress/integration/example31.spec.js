@@ -200,7 +200,7 @@ describe('Example 31 - OData Grid using RxJS', { retries: 1 }, () => {
     it('should Clear all Filters and expect to go back to first page', () => {
       cy.get('#grid31')
         .find('button.slick-gridmenu-button')
-        .trigger('click')
+        .trigger('click', { force: true })
         .click();
 
       cy.get(`.slick-gridmenu:visible`)
@@ -245,7 +245,7 @@ describe('Example 31 - OData Grid using RxJS', { retries: 1 }, () => {
     it('should Clear all Sorting', () => {
       cy.get('#grid31')
         .find('button.slick-gridmenu-button')
-        .trigger('click')
+        .trigger('click', { force: true })
         .click();
 
       cy.get(`.slick-gridmenu:visible`)
@@ -337,7 +337,7 @@ describe('Example 31 - OData Grid using RxJS', { retries: 1 }, () => {
     it('should Clear all Filters, set 20 items per page & uncheck "enableCount"', () => {
       cy.get('#grid31')
         .find('button.slick-gridmenu-button')
-        .trigger('click')
+        .trigger('click', { force: true })
         .click();
 
       cy.get(`.slick-gridmenu:visible`)
@@ -419,7 +419,7 @@ describe('Example 31 - OData Grid using RxJS', { retries: 1 }, () => {
     it('should Clear all Sorting', () => {
       cy.get('#grid31')
         .find('button.slick-gridmenu-button')
-        .trigger('click')
+        .trigger('click', { force: true })
         .click();
 
       cy.get(`.slick-gridmenu:visible`)
