@@ -247,14 +247,12 @@ export class ResizerService {
    */
   private calculateCellWidthByReadingDataset(columnOrColumns: Column | Column[], columnWidths: { [columnId in string | number]: number; }, maxItemToInspect = 1000, columnIndexOverride?: number) {
     const columnDefinitions = Array.isArray(columnOrColumns) ? columnOrColumns : [columnOrColumns];
-
-    // const columnDefinitions = this._grid.getColumns();
     const dataset = this.dataView.getItems() as any[];
 
     let readItemCount = 0;
-    for (const [rowIdx, item] of dataset.entries()) {
+    dataset.forEach((item: any, rowIdx: number) => {
       if (rowIdx > maxItemToInspect) {
-        break;
+        return;
       }
       if (Array.isArray(columnDefinitions)) {
         if (typeof columnWidths === 'object') {
@@ -267,7 +265,7 @@ export class ResizerService {
         }
       }
       readItemCount = rowIdx + 1;
-    }
+    });
 
     return readItemCount;
   }
