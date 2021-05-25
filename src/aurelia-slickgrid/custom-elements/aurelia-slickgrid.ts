@@ -650,7 +650,7 @@ export class AureliaSlickgridCustomElement {
 
     this._dataset = data;
     this.refreshGridData(data || []);
-    this._currentDatasetLength = newDataset.length;
+    this._currentDatasetLength = (newDataset || []).length;
 
     // expand/autofit columns on first page load
     // we can assume that if the oldValue was empty then we are on first load
