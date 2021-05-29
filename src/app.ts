@@ -18,4 +18,27 @@ export class App {
 
     this.router = router;
   }
+
+  attached() {
+    this.addGitHubStarsLogo();
+  }
+
+  addGitHubStarsLogo() {
+    // GitHub logo with Stars shouldn't be created while testing in Cypress (which always wait few seconds even minutes to load the logo)
+    // <a href="https://github.com/ghiscoding/slickgrid-universal"><img src="https://img.shields.io/github/stars/ghiscoding/slickgrid-universal?style=social"></a>
+    const decodedCookie = decodeURIComponent(document.cookie);
+    if (decodedCookie !== 'serve-mode=cypress') {
+      const ghStarLinkElm = document.createElement('a');
+      ghStarLinkElm.href = 'https://github.com/ghiscoding/aurelia-slickgrid';
+
+      const imgStarElm = document.createElement('img');
+      imgStarElm.src = 'https://img.shields.io/github/stars/ghiscoding/aurelia-slickgrid?style=social';
+
+      const ghButtonContainerElm = document.querySelector('.github-button-container');
+      if (ghButtonContainerElm && !ghButtonContainerElm.querySelector('a')) {
+        ghStarLinkElm.appendChild(imgStarElm);
+        ghButtonContainerElm.appendChild(ghStarLinkElm);
+      }
+    }
+  }
 }
