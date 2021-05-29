@@ -1,8 +1,5 @@
-import { autoinject } from 'aurelia-framework';
-import { I18N } from 'aurelia-i18n';
 import { AureliaGridInstance, Column, ExtensionName, Filters, Formatters, GridOption } from '../../aurelia-slickgrid';
 
-@autoinject()
 export class Example16 {
   title = 'Example 16: Row Move & Checkbox Selector';
   subTitle = `
@@ -26,10 +23,8 @@ export class Example16 {
   columnDefinitions: Column[] = [];
   gridOptions!: GridOption;
   dataset: any[] = [];
-  selectedLanguage: string;
 
-  constructor(private i18n: I18N) {
-    this.selectedLanguage = this.i18n.getLocale();
+  constructor() {
     this.defineGrid();
   }
 
@@ -95,7 +90,7 @@ export class Example16 {
       },
       enableRowMoveManager: true,
       rowMoveManager: {
-        // when using Row Move + Row Selection, you want to enable the following 2 flags so it doesn't cancel row selection
+        // when using Row Move + Row Selection, you want to move only a single row and we will enable the following flags so it doesn't cancel row selection
         singleRowMove: true,
         disableRowSelection: true,
         cancelEditOnDrag: true,
@@ -111,8 +106,16 @@ export class Example16 {
         // you can also override the usability of the rows, for example make every 2nd row the only moveable rows,
         // usabilityOverride: (row, dataContext, grid) => dataContext.id % 2 === 1
       },
-      enableTranslate: true,
-      i18n: this.i18n
+      showCustomFooter: true,
+      presets: {
+        // you can presets row selection here as well, you can choose 1 of the following 2 ways of setting the selection
+        // by their index position in the grid (UI) or by the object IDs, the default is "dataContextIds" and if provided it will use it and disregard "gridRowIndexes"
+        // the RECOMMENDED is to use "dataContextIds" since that will always work even with Pagination, while "gridRowIndexes" is only good for 1 page
+        rowSelection: {
+          // gridRowIndexes: [2],       // the row position of what you see on the screen (UI)
+          dataContextIds: [1, 2, 6, 7]  // (recommended) select by your data object IDs
+        }
+      },
     };
   }
 
@@ -145,32 +148,51 @@ export class Example16 {
   }
 
   onMoveRows(_e: Event, args: any) {
-    const extractedRows = [];
-    const rows = args.rows;
+    // rows and insertBefore references,
+    // note that these references are assuming that the dataset isn't filtered at all
+    // which is not always the case so we will recalcualte them and we won't use these reference afterward
+    const rows = args.rows as number[];
     const insertBefore = args.insertBefore;
-    const left = this.dataset.slice(0, insertBefore);
-    const right = this.dataset.slice(insertBefore, this.dataset.length);
+    const extractedRows = [];
+
+    // when moving rows, we need to cancel any sorting that might happen
+    // we can do this by providing an undefined sort comparer
+    // which basically destroys the current sort comparer without resorting the dataset, it basically keeps the previous sorting
+    this.aureliaGrid.dataView.sort(undefined as any, true);
+
+    // the dataset might be filtered/sorted,
+    // so we need to get the same dataset as the one that the SlickGrid DataView uses
+    const tmpDataset = this.aureliaGrid.dataView.getItems();
+    const filteredItems = this.aureliaGrid.dataView.getFilteredItems();
+
+    const itemOnRight = this.aureliaGrid.dataView.getItem(insertBefore);
+    const insertBeforeFilteredIdx = this.aureliaGrid.dataView.getIdxById(itemOnRight.id) || 0;
+
+    const filteredRowItems: any[] = [];
+    rows.forEach(row => filteredRowItems.push(filteredItems[row]));
+    const filteredRows = filteredRowItems.map(item => this.aureliaGrid.dataView.getIdxById(item.id)) as number[];
+
+    const left = tmpDataset.slice(0, insertBeforeFilteredIdx);
+    const right = tmpDataset.slice(insertBeforeFilteredIdx, tmpDataset.length);
+
+    // convert into a final new dataset that has the new order
+    // we need to resort with
     rows.sort((a: number, b: number) => a - b);
-    for (let i = 0; i < rows.length; i++) {
-      extractedRows.push(this.dataset[rows[i]]);
+    for (const filteredRow of filteredRows) {
+      extractedRows.push(tmpDataset[filteredRow]);
     }
-    rows.reverse();
-    for (let i = 0; i < rows.length; i++) {
-      const row = rows[i];
-      if (row < insertBefore) {
+    filteredRows.reverse();
+    for (const row of filteredRows) {
+      if (row < insertBeforeFilteredIdx) {
         left.splice(row, 1);
       } else {
-        right.splice(row - insertBefore, 1);
+        right.splice(row - insertBeforeFilteredIdx, 1);
       }
     }
-    const tmpDataset = left.concat(extractedRows.concat(right));
-    const selectedRows = [];
-    for (let i = 0; i < rows.length; i++) {
-      selectedRows.push(left.length + i);
-    }
 
-    args.grid.resetActiveCell();
-    this.dataset = tmpDataset;
+    // final updated dataset, we need to overwrite the DataView dataset (and our local one) with this new dataset that has a new order
+    const finalDataset = left.concat(extractedRows.concat(right));
+    this.dataset = finalDataset; // update dataset and re-render the grid
   }
 
   hideDurationColumnDynamically() {
