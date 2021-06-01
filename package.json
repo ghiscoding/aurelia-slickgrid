@@ -86,7 +86,7 @@
     "@types/webpack": "^4.41.29",
     "@typescript-eslint/eslint-plugin": "^4.26.0",
     "@typescript-eslint/parser": "^4.26.0",
-    "app-settings-loader": "^1.0.6",
+    "app-settings-loader": "^2.0.0",
     "aurelia-animator-css": "^1.0.4",
     "aurelia-bootstrapper": "^2.3.3",
     "aurelia-cli": "^2.0.3",

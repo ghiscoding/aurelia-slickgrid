@@ -1616,13 +1616,13 @@ anymatch@^3.0.0, anymatch@^3.0.3, anymatch@~3.1.1:
     normalize-path "^3.0.0"
     picomatch "^2.0.4"
 
-app-settings-loader@^1.0.6:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/app-settings-loader/-/app-settings-loader-1.0.6.tgz#e8b5a9870f8560f238ff0017408f072821deda35"
-  integrity sha512-l5vd+364skVZrl5y+kD2XucC807uRaTL3GnHx4+RxVA7ZBq6xVtckrNIuUwi/tStAnXR38izV4Za6As9t8B+gA==
+app-settings-loader@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/app-settings-loader/-/app-settings-loader-2.0.0.tgz#6ef925a9e0afbdbbf65c566f96d029e74330a75c"
+  integrity sha512-RxhwY0cGPEZi7WhVd/dehZiRhnA6ycTx3HuvkU1iSVryEEZ8VQNADkFh/Inyf4Jqjb2p0xz/GnbjX4R3CY5syg==
   dependencies:
     loader-utils "^2.0.0"
-    schema-utils "^2.7.0"
+    schema-utils "^3.0.0"
 
 append-buffer@^1.0.2:
   version "1.0.2"
@@ -9770,15 +9770,6 @@ schema-utils@^1.0.0:
     ajv "^6.1.0"
     ajv-errors "^1.0.0"
     ajv-keywords "^3.1.0"
-
-schema-utils@^2.7.0:
-  version "2.7.1"
-  resolved "https://registry.yarnpkg.com/schema-utils/-/schema-utils-2.7.1.tgz#1ca4f32d1b24c590c203b8e7a50bf0ea4cd394d7"
-  integrity sha512-SHiNtMOUGWBQJwzISiVYKu82GiV4QYGePp3odlY1tuKO7gPtphAT5R/py0fA6xtbgLL/RvtJZnU9b8s0F1q0Xg==
-  dependencies:
-    "@types/json-schema" "^7.0.5"
-    ajv "^6.12.4"
-    ajv-keywords "^3.5.2"
 
 schema-utils@^3.0.0:
   version "3.0.0"
