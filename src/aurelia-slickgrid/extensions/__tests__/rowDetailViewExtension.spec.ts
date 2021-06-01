@@ -1,4 +1,4 @@
-import { Column, SharedService, SlickDataView, SlickGrid, SlickNamespace } from '@slickgrid-universal/common';
+import { Column, SharedService, SlickDataView, SlickEventHandler, SlickGrid, SlickNamespace } from '@slickgrid-universal/common';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { GridOption } from '../../models/gridOption.interface';
 import { RowDetailViewExtension } from '../rowDetailViewExtension';
@@ -58,6 +58,7 @@ describe('rowDetailViewExtension', () => {
   let pubSubService: PubSubService;
   let extension: RowDetailViewExtension;
   let sharedService: SharedService;
+  let eventHandler: SlickEventHandler;
 
   const div = document.createElement('div');
   div.innerHTML = `<div class="container_loading"></div><div class="container_field1"></div>`;
@@ -86,6 +87,7 @@ describe('rowDetailViewExtension', () => {
   } as GridOption;
 
   beforeEach(() => {
+    eventHandler = new Slick.EventHandler();
     pluginEa = new EventAggregator();
     pubSubService = new PubSubService(pluginEa);
     sharedService = new SharedService();
@@ -225,6 +227,12 @@ describe('rowDetailViewExtension', () => {
       jest.clearAllMocks();
       gridStub.onColumnsReordered = new Slick.Event();
       gridStub.onSort = new Slick.Event();
+    });
+
+    afterEach(() => {
+      extension.dispose();
+      eventHandler.unsubscribeAll();
+      jest.clearAllMocks();
     });
 
     it('should register the addon', () => {
@@ -422,7 +430,7 @@ describe('rowDetailViewExtension', () => {
 
       const instance = extension.create(columnsMock, gridOptionsMock);
       extension.register();
-      instance.onBeforeRowDetailToggle.subscribe(() => {
+      eventHandler.subscribe(instance.onBeforeRowDetailToggle, () => {
         gridStub.onColumnsReordered.notify({ impactedColumns: mockColumn } as any, new Slick.EventData(), gridStub);
         expect(appendSpy).toHaveBeenCalledWith(
           '',
@@ -437,7 +445,7 @@ describe('rowDetailViewExtension', () => {
       expect(handlerSpy).toHaveBeenCalled();
     });
 
-    it('should call "redrawAllViewSlots" when using Row Selection and the event "onSelectedRowsChanged" is triggered', (done) => {
+    it('should call "redrawAllViewSlots" when using Row Selection and the event "onSelectedRowsChanged" is triggered', () => {
       const mockColumn = { id: 'field1', field: 'field1', width: 100, cssClass: 'red', __collapsed: true };
       gridOptionsMock.enableCheckboxSelector = true;
       const handlerSpy = jest.spyOn(extension.eventHandler, 'subscribe');
@@ -448,7 +456,7 @@ describe('rowDetailViewExtension', () => {
       const instance = extension.create(columnsMock, gridOptionsMock);
 
       extension.register();
-      instance.onBeforeRowDetailToggle.subscribe(() => {
+      eventHandler.subscribe(instance.onBeforeRowDetailToggle, () => {
         gridStub.onSelectedRowsChanged.notify({ rows: [0], previousSelectedRows: [], grid: gridStub }, new Slick.EventData(), gridStub);
         expect(appendSpy).toHaveBeenCalledWith(
           '',
@@ -456,7 +464,6 @@ describe('rowDetailViewExtension', () => {
           expect.objectContaining({ className: 'container_field1' }),
           true
         );
-        done();
       });
       instance.onBeforeRowDetailToggle.notify({ item: mockColumn, grid: gridStub }, new Slick.EventData(), gridStub);
       instance.onBeforeRowDetailToggle.notify({ item: { ...mockColumn, __collapsed: false }, grid: gridStub }, new Slick.EventData(), gridStub);
@@ -465,7 +472,7 @@ describe('rowDetailViewExtension', () => {
       expect(redrawSpy).toHaveBeenCalledTimes(2);
     });
 
-    it('should call "redrawAllViewSlots" when event "filterChanged" is triggered', (done) => {
+    it('should call "redrawAllViewSlots" when event "filterChanged" is triggered', () => {
       const mockColumn = { id: 'field1', field: 'field1', width: 100, cssClass: 'red', __collapsed: true };
       const handlerSpy = jest.spyOn(extension.eventHandler, 'subscribe');
       const redrawSpy = jest.spyOn(extension, 'redrawAllViewSlots');
@@ -475,7 +482,7 @@ describe('rowDetailViewExtension', () => {
       const instance = extension.create(columnsMock, gridOptionsMock);
 
       extension.register();
-      instance.onBeforeRowDetailToggle.subscribe(() => {
+      eventHandler.subscribe(instance.onBeforeRowDetailToggle, () => {
         pubSubService.publish('onFilterChanged', { columnId: 'field1', operator: '=', searchTerms: [] });
         expect(appendSpy).toHaveBeenCalledWith(
           '',
@@ -483,7 +490,6 @@ describe('rowDetailViewExtension', () => {
           expect.objectContaining({ className: 'container_field1' }),
           true
         );
-        done();
       });
       instance.onBeforeRowDetailToggle.notify({ item: mockColumn, grid: gridStub }, new Slick.EventData(), gridStub);
       instance.onBeforeRowDetailToggle.notify({ item: { ...mockColumn, __collapsed: false }, grid: gridStub }, new Slick.EventData(), gridStub);
@@ -492,7 +498,7 @@ describe('rowDetailViewExtension', () => {
       expect(redrawSpy).toHaveBeenCalledTimes(2);
     });
 
-    it('should call "renderAllViewModels" when grid event "onAfterRowDetailToggle" is triggered', (done) => {
+    it('should call "renderAllViewModels" when grid event "onAfterRowDetailToggle" is triggered', () => {
       const mockColumn = { id: 'field1', field: 'field1', width: 100, cssClass: 'red', __collapsed: true };
       const handlerSpy = jest.spyOn(extension.eventHandler, 'subscribe');
       const getElementSpy = jest.spyOn(document, 'getElementsByClassName');
@@ -510,7 +516,6 @@ describe('rowDetailViewExtension', () => {
           expect.objectContaining({ className: 'container_field1' }),
           true
         );
-        done();
       });
       instance.onBeforeRowDetailToggle.notify({ item: mockColumn, grid: gridStub } as any, new Slick.EventData(), gridStub);
       instance.onAfterRowDetailToggle.notify({ item: mockColumn, grid: gridStub } as any, new Slick.EventData(), gridStub);
@@ -622,7 +627,7 @@ describe('rowDetailViewExtension', () => {
 
       const instance = extension.create(columnsMock, gridOptionsMock);
       extension.register();
-      instance.onBeforeRowDetailToggle.subscribe(() => {
+      eventHandler.subscribe(instance.onBeforeRowDetailToggle, () => {
         gridStub.onSort.notify({ impactedColumns: mockColumn } as any, new Slick.EventData(), gridStub);
         expect(disposeSpy).toHaveBeenCalled();
         done();
