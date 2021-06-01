@@ -154,7 +154,7 @@ describe('Slick-Pagination Component', () => {
       expect(spy).toHaveBeenCalledWith(newItemsPerPage);
     });
 
-    it('should create a the Slick-Pagination component in the DOM and expect different locale when changed', async (done) => {
+    it('should create a the Slick-Pagination component in the DOM and expect different locale when changed', async () => {
       translaterService.use('fr');
       ea.publish('i18n:locale:changed', 'fr');
 
@@ -164,7 +164,6 @@ describe('Slick-Pagination Component', () => {
         expect(translaterService.getCurrentLanguage()).toBe('fr');
         expect(removeExtraSpaces(pageInfoFromTo.innerHTML)).toBe(`<span data-test="item-from">5</span>-<span data-test="item-to">10</span>de`);
         expect(removeExtraSpaces(pageInfoTotalItems.innerHTML)).toBe(`<span data-test="total-items">100</span> éléments`);
-        done();
       }, 50);
     });
   });

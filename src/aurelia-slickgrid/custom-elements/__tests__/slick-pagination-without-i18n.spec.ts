@@ -73,7 +73,7 @@ describe('Slick-Pagination Component without I18N', () => {
       jest.clearAllMocks();
     });
 
-    it('should throw an error when "enableTranslate" is set and I18N Service is not provided', async (done) => {
+    it('should throw an error when "enableTranslate" is set and I18N Service is not provided', async () => {
       try {
         await customElement.manuallyHandleLifecycle().create(bootstrap);
         await customElement.bind({ gridOptions: { enableTranslate: true } as GridOption, paginationService: paginationServiceStub });
@@ -82,11 +82,10 @@ describe('Slick-Pagination Component without I18N', () => {
       } catch (e) {
         expect(e.toString()).toContain('[Aurelia-Slickgrid] requires "I18N" to be installed and configured when the grid option "enableTranslate" is enabled.');
         customElement.dispose();
-        done();
       }
     });
 
-    it('should have defined locale and expect new text in the UI', async (done) => {
+    it('should have defined locale and expect new text in the UI', async () => {
       const bindings = {
         enableTranslate: false,
         paginationService: paginationServiceStub,
@@ -109,7 +108,6 @@ describe('Slick-Pagination Component without I18N', () => {
         expect(removeExtraSpaces(pageInfoTotalItems.innerHTML)).toBe('<span data-test="total-items">100</span> items');
 
         customElement.dispose();
-        done();
       }, 50);
     });
   });
