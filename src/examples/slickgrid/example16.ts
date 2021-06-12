@@ -95,7 +95,7 @@ export class Example16 {
         disableRowSelection: true,
         cancelEditOnDrag: true,
         width: 30,
-        onBeforeMoveRows: this.onBeforeMoveRow,
+        onBeforeMoveRows: this.onBeforeMoveRow.bind(this),
         onMoveRows: this.onMoveRows.bind(this),
 
         // you can change the move icon position of any extension (RowMove, RowDetail or RowSelector icon)
@@ -136,10 +136,10 @@ export class Example16 {
     this.dataset = mockDataset;
   }
 
-  onBeforeMoveRow(e: Event, data: any) {
-    for (let i = 0; i < data.rows.length; i++) {
+  onBeforeMoveRow(e: Event, data: { rows: number[]; insertBefore: number; }) {
+    for (const rowIdx of data.rows) {
       // no point in moving before or after itself
-      if (data.rows[i] === data.insertBefore || data.rows[i] === data.insertBefore - 1) {
+      if (rowIdx === data.insertBefore || (rowIdx === data.insertBefore - 1 && ((data.insertBefore - 1) !== this.aureliaGrid.dataView.getItemCount()))) {
         e.stopPropagation();
         return false;
       }
@@ -166,11 +166,11 @@ export class Example16 {
     const filteredItems = this.aureliaGrid.dataView.getFilteredItems();
 
     const itemOnRight = this.aureliaGrid.dataView.getItem(insertBefore);
-    const insertBeforeFilteredIdx = this.aureliaGrid.dataView.getIdxById(itemOnRight.id) || 0;
+    const insertBeforeFilteredIdx = itemOnRight ? this.aureliaGrid.dataView.getIdxById(itemOnRight.id) : this.aureliaGrid.dataView.getItemCount();
 
     const filteredRowItems: any[] = [];
     rows.forEach(row => filteredRowItems.push(filteredItems[row]));
-    const filteredRows = filteredRowItems.map(item => this.aureliaGrid.dataView.getIdxById(item.id)) as number[];
+    const filteredRows = filteredRowItems.map(item => this.aureliaGrid.dataView.getIdxById(item.id));
 
     const left = tmpDataset.slice(0, insertBeforeFilteredIdx);
     const right = tmpDataset.slice(insertBeforeFilteredIdx, tmpDataset.length);
@@ -179,14 +179,18 @@ export class Example16 {
     // we need to resort with
     rows.sort((a: number, b: number) => a - b);
     for (const filteredRow of filteredRows) {
-      extractedRows.push(tmpDataset[filteredRow]);
+      if (filteredRow) {
+        extractedRows.push(tmpDataset[filteredRow]);
+      }
     }
     filteredRows.reverse();
     for (const row of filteredRows) {
-      if (row < insertBeforeFilteredIdx) {
-        left.splice(row, 1);
-      } else {
-        right.splice(row - insertBeforeFilteredIdx, 1);
+      if (row !== undefined && insertBeforeFilteredIdx !== undefined) {
+        if (row < insertBeforeFilteredIdx) {
+          left.splice(row, 1);
+        } else {
+          right.splice(row - insertBeforeFilteredIdx, 1);
+        }
       }
     }
 
