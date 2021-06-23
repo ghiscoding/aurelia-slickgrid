@@ -76,6 +76,8 @@ export class Example16 {
       enableFiltering: true,
       enableCheckboxSelector: true,
       checkboxSelector: {
+        hideSelectAllCheckbox: false, // hide the "Select All" from title bar
+        columnIndexPosition: 1,
         // you can toggle these 2 properties to show the "select all" checkbox in different location
         hideInFilterHeaderRow: false,
         hideInColumnTitleRow: true
@@ -90,6 +92,7 @@ export class Example16 {
       },
       enableRowMoveManager: true,
       rowMoveManager: {
+        columnIndexPosition: 0,
         // when using Row Move + Row Selection, you want to move only a single row and we will enable the following flags so it doesn't cancel row selection
         singleRowMove: true,
         disableRowSelection: true,
