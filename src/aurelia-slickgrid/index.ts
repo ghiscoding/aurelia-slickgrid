@@ -33,7 +33,6 @@ export {
 // expose all public classes
 export {
   AureliaUtilService,
-  ResizerService,
   PubSubService,
   TranslaterService,
   disposeAllSubscriptions
