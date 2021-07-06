@@ -12,11 +12,7 @@
     <div class="navbar-collapse collapse" id="navbarContent">
       <ul class="navbar-nav mr-auto">
         <li>
-          <div class="github-button-container">
-            <a href="https://github.com/ghiscoding/aurelia-slickgrid">
-              <img src="https://img.shields.io/github/stars/ghiscoding/aurelia-slickgrid?style=social">
-            </a>
-          </div>
+          <div class="github-button-container"></div>
         </li>
         <li repeat.for="row of router.navigation" class="nav-item ${row.isActive ? 'active' : ''}">
           <a class="nav-link" href.bind="row.href">${row.title}</a>

@@ -53,7 +53,7 @@
                checked.bind="isGrid2WithPagination"
                data-test="toggle-pagination-grid2" />
       </label>
-      <span style="margin-left: 5px" *ngIf="isGrid2WithPagination">
+      <span style="margin-left: 5px" if.bind="isGrid2WithPagination">
         <button class="btn btn-outline-secondary btn-xs" data-test="goto-first-page"
                 click.delegate="goToGrid2FirstPage()">
           <i class="fa fa-caret-left fa-lg"></i>

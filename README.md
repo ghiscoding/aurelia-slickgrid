@@ -95,3 +95,7 @@ Screenshots from the demo app with the `Bootstrap` theme.
 #### Comes with OData & GraphQL support (you can implement custom too)
 
 ![Slickgrid Server Side](/screenshots/pagination.png)
+
+### Composite Editor Modal Windows
+![Composite Editor Modal](/screenshots/composite-editor.png)
+
