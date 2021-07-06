@@ -526,11 +526,8 @@ describe('Example 5 - OData Grid', { retries: 1 }, () => {
       cy.get('[data-test=page-count]')
         .contains('0');
 
-      cy.get('[data-test=item-from]')
-        .should('not.exist');
-
-      cy.get('[data-test=item-to]')
-        .should('not.exist');
+      cy.get('.page-info-from-to')
+        .should('not.be.visible');
 
       cy.get('[data-test=total-items]')
         .contains('0');

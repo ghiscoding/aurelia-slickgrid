@@ -75,6 +75,7 @@ import {
   emptyElement,
 } from '@slickgrid-universal/common';
 import { SlickEmptyWarningComponent } from '@slickgrid-universal/empty-warning-component';
+import { SlickPaginationComponent } from '@slickgrid-universal/pagination-component';
 
 import { bindable, BindingEngine, bindingMode, Container, Factory, inject, } from 'aurelia-framework';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
@@ -137,7 +138,10 @@ export class AureliaSlickgridCustomElement {
     gridOptions: GridOption;
     paginationService: PaginationService;
   };
-  slickEmptyWarning: SlickEmptyWarningComponent | undefined;
+
+  // components
+  slickEmptyWarning?: SlickEmptyWarningComponent;
+  slickPagination?: SlickPaginationComponent;
 
   // extensions
   extensionUtility: ExtensionUtility;
@@ -250,7 +254,7 @@ export class AureliaSlickgridCustomElement {
       this.translaterService,
     );
 
-    this.gridStateService = externalServices?.gridStateService ?? new GridStateService(this.extensionService, this.filterService, this.pubSubService, this.sharedService, this.sortService);
+    this.gridStateService = externalServices?.gridStateService ?? new GridStateService(this.extensionService, this.filterService, this.pubSubService, this.sharedService, this.sortService, this.treeDataService);
     this.gridService = externalServices?.gridService ?? new GridService(this.gridStateService, this.filterService, this.pubSubService, this.paginationService, this.sharedService, this.sortService, this.treeDataService);
     this.groupingService = externalServices?.groupingAndColspanService ?? new GroupingAndColspanService(this.extensionUtility, this.extensionService, this.pubSubService);
 
@@ -550,6 +554,10 @@ export class AureliaSlickgridCustomElement {
       this._registeredResources = [];
     }
 
+    // dispose the Components
+    this.slickEmptyWarning?.dispose();
+    this.slickPagination?.dispose();
+
     if (this.dataview) {
       if (this.dataview.setItems) {
         this.dataview.setItems([]);
@@ -719,8 +727,9 @@ export class AureliaSlickgridCustomElement {
 
     // on locale change, we have to manually translate the Headers, GridMenu
     this.subscriptions.push(
-      this.globalEa.subscribe('i18n:locale:changed', () => {
+      this.globalEa.subscribe('i18n:locale:changed', (changes: { newValue: string; oldValue: string; }) => {
         if (gridOptions.enableTranslate) {
+          this.pubSubService.publish('onLanguageChange', { language: changes.newValue });
           this.extensionService.translateCellMenu();
           this.extensionService.translateColumnHeaders();
           this.extensionService.translateColumnPicker();
@@ -1103,7 +1112,7 @@ export class AureliaSlickgridCustomElement {
    * if there are then load them in the paginationOptions object
    */
   setPaginationOptionsWhenPresetDefined(gridOptions: GridOption, paginationOptions: Pagination): Pagination {
-    if (gridOptions.presets && gridOptions.presets.pagination && gridOptions.pagination) {
+    if (gridOptions.presets?.pagination && paginationOptions && !this._isPaginationInitialized) {
       paginationOptions.pageSize = gridOptions.presets.pagination.pageSize;
       paginationOptions.pageNumber = gridOptions.presets.pagination.pageNumber;
     }
@@ -1187,9 +1196,33 @@ export class AureliaSlickgridCustomElement {
           if (this.gridOptions?.backendServiceApi) {
             this.backendUtilityService?.refreshBackendDataset(this.gridOptions);
           }
+          this.renderPagination(this.showPagination);
         })
       );
+
+      // also initialize (render) the pagination component
+      this.renderPagination();
+
       this._isPaginationInitialized = true;
+    }
+  }
+
+  /**
+   * Render (or dispose) the Pagination Component, user can optionally provide False (to not show it) which will in term dispose of the Pagination,
+   * also while disposing we can choose to omit the disposable of the Pagination Service (if we are simply toggling the Pagination, we want to keep the Service alive)
+   * @param {Boolean} showPagination - show (new render) or not (dispose) the Pagination
+   * @param {Boolean} shouldDisposePaginationService - when disposing the Pagination, do we also want to dispose of the Pagination Service? (defaults to True)
+   */
+  private renderPagination(showPagination = true) {
+    const gridContainerElm = this.elm.querySelector('div');
+    if (this.gridOptions.enablePagination && !this._isPaginationInitialized && showPagination && gridContainerElm) {
+      this.slickPagination = new SlickPaginationComponent(this.paginationService, this.pubSubService, this.sharedService, this.translaterService);
+      this.slickPagination.renderPagination(gridContainerElm);
+    } else {
+      if (this.slickPagination) {
+        this.slickPagination.dispose();
+      }
+      this._isPaginationInitialized = false;
     }
   }
 

@@ -314,12 +314,8 @@ describe('Example 10 - Multiple Grids with Row Selection', { retries: 1 }, () =>
         .contains('0');
 
       cy.get('@grid1')
-        .find('[data-test=item-from]')
-        .should('not.exist');
-
-      cy.get('@grid1')
-        .find('[data-test=item-to]')
-        .should('not.exist');
+        .find('.page-info-from-to')
+        .should('not.be.visible');
 
       cy.get('@grid1')
         .find('[data-test=total-items]')
@@ -609,12 +605,22 @@ describe('Example 10 - Multiple Grids with Row Selection', { retries: 1 }, () =>
   });
 
   describe('Remove Pagination', () => {
+    let gridUid = '';
+
     it('should remove Pagination and not expect any DOM elements of it', () => {
       cy.get('[data-test=toggle-pagination-grid2]')
         .click();
 
-      cy.get('#slickPagingContainer-grid2')
-        .should('not.exist');
+      cy.get('#grid2')
+        .should(($grid) => {
+          const classes = $grid.prop('className').split(' ');
+          gridUid = classes.find(className => /slickgrid_.*/.test(className));
+          expect(gridUid).to.not.be.null;
+        })
+        .then(() => {
+          cy.get(`.pager.${gridUid}`)
+            .should('not.exist');
+        })
 
       cy.window().then((win) => {
         expect(win.console.log).to.have.callCount(2);
@@ -694,14 +700,24 @@ describe('Example 10 - Multiple Grids with Row Selection', { retries: 1 }, () =>
   });
 
   describe('Re-enable Pagination', () => {
+    let gridUid = '';
+
     it('should re-enable the Pagination and expect to see it show it again below the grid at Page 1', () => {
       cy.get('#slickGridContainer-grid2').as('grid2');
 
       cy.get('[data-test=toggle-pagination-grid2]')
         .click();
 
-      cy.get('#slickPagingContainer-grid2')
-        .should('exist');
+      cy.get('#grid2')
+        .should(($grid) => {
+          const classes = $grid.prop('className').split(' ');
+          gridUid = classes.find(className => /slickgrid_.*/.test(className));
+          expect(gridUid).to.not.be.null;
+        })
+        .then(() => {
+          cy.get(`.pager.${gridUid}`)
+            .should('exist');
+        });
 
       cy.get('@grid2')
         .find('[data-test=page-number-input]')
