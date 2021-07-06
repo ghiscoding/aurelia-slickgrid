@@ -19,7 +19,6 @@ import {
   BackendServiceOption,
   Column,
   ColumnEditor,
-  CustomFooterOption,
   DataViewOption,
   EventSubscription,
   ExtensionList,
@@ -74,6 +73,7 @@ import {
   // utilities
   emptyElement,
 } from '@slickgrid-universal/common';
+import { SlickFooterComponent } from '@slickgrid-universal/custom-footer-component';
 import { SlickEmptyWarningComponent } from '@slickgrid-universal/empty-warning-component';
 
 import { bindable, BindingEngine, bindingMode, Container, Factory, inject, } from 'aurelia-framework';
@@ -118,18 +118,13 @@ export class AureliaSlickgridCustomElement {
   private _isDatasetInitialized = false;
   private _isDatasetHierarchicalInitialized = false;
   private _isPaginationInitialized = false;
-  private _isLeftFooterOriginallyEmpty = true;
-  private _isLeftFooterDisplayingSelectionRowCount = false;
   private _isLocalGrid = true;
   private _paginationOptions: Pagination | undefined;
   private _registeredResources: ExternalResource[] = [];
-  private _selectedRowCount = 0;
   groupItemMetadataProvider: any;
   backendServiceApi: BackendServiceApi | undefined;
-  customFooterOptions?: CustomFooterOption;
   locales!: Locale;
   metrics?: Metrics;
-  showCustomFooter = false;
   showPagination = false;
   serviceList: any[] = [];
   subscriptions: Array<EventSubscription | Subscription> = [];
@@ -137,7 +132,10 @@ export class AureliaSlickgridCustomElement {
     gridOptions: GridOption;
     paginationService: PaginationService;
   };
+
+  // components
   slickEmptyWarning: SlickEmptyWarningComponent | undefined;
+  slickFooter: SlickFooterComponent | undefined;
 
   // extensions
   extensionUtility: ExtensionUtility;
@@ -250,7 +248,7 @@ export class AureliaSlickgridCustomElement {
       this.translaterService,
     );
 
-    this.gridStateService = externalServices?.gridStateService ?? new GridStateService(this.extensionService, this.filterService, this.pubSubService, this.sharedService, this.sortService);
+    this.gridStateService = externalServices?.gridStateService ?? new GridStateService(this.extensionService, this.filterService, this.pubSubService, this.sharedService, this.sortService, this.treeDataService);
     this.gridService = externalServices?.gridService ?? new GridService(this.gridStateService, this.filterService, this.pubSubService, this.paginationService, this.sharedService, this.sortService, this.treeDataService);
     this.groupingService = externalServices?.groupingAndColspanService ?? new GroupingAndColspanService(this.extensionUtility, this.extensionService, this.pubSubService);
 
@@ -336,7 +334,6 @@ export class AureliaSlickgridCustomElement {
     this.locales = this.gridOptions?.locales ?? Constants.locales;
     this.backendServiceApi = this.gridOptions?.backendServiceApi;
     this._isLocalGrid = !this.backendServiceApi; // considered a local grid if it doesn't have a backend service set
-    this._isLeftFooterOriginallyEmpty = !(this.gridOptions.customFooterOptions?.leftFooterText);
 
     this.createBackendApiInternalPostProcessCallback(this.gridOptions);
 
@@ -408,6 +405,12 @@ export class AureliaSlickgridCustomElement {
     const gridContainerElm = this.elm.querySelector('div');
     if (gridContainerElm) {
       this.resizerService.init(this.grid, gridContainerElm);
+    }
+
+    // user could show a custom footer with the data metrics (dataset length and last updated timestamp)
+    if (!this.gridOptions.enablePagination && this.gridOptions.showCustomFooter && this.gridOptions.customFooterOptions && gridContainerElm) {
+      this.slickFooter = new SlickFooterComponent(this.grid, this.gridOptions.customFooterOptions, this.translaterService);
+      this.slickFooter.renderFooter(gridContainerElm as HTMLDivElement);
     }
 
     if (!this.customDataView && this.dataview) {
@@ -508,9 +511,6 @@ export class AureliaSlickgridCustomElement {
       }
     }
 
-    // user could show a custom footer with the data metrics (dataset length and last updated timestamp)
-    this.optionallyShowCustomFooterWithMetrics();
-
     // addons (SlickGrid extra plugins/controls)
     this.extensions = this.extensionService && this.extensionService.extensionList;
 
@@ -549,6 +549,9 @@ export class AureliaSlickgridCustomElement {
       }
       this._registeredResources = [];
     }
+
+    // dispose the Components
+    this.slickFooter?.dispose();
 
     if (this.dataview) {
       if (this.dataview.setItems) {
@@ -1164,6 +1167,10 @@ export class AureliaSlickgridCustomElement {
       itemCount: currentPageRowItemCount,
       totalItemCount
     };
+    // if custom footer is enabled, then we'll update its metrics
+    if (this.slickFooter) {
+      this.slickFooter.metrics = this.metrics;
+    }
 
     // when using local (in-memory) dataset, we'll display a warning message when filtered data is empty
     if (this._isLocalGrid && this.gridOptions?.enableEmptyDataWarningMessage) {
@@ -1312,33 +1319,6 @@ export class AureliaSlickgridCustomElement {
     }
   }
 
-  /**
-   * We could optionally display a custom footer below the grid to show some metrics (last update, item count with/without filters)
-   * It's an opt-in, user has to enable "showCustomFooter" and it cannot be used when there's already a Pagination since they display the same kind of info
-   */
-  private optionallyShowCustomFooterWithMetrics() {
-    if (this.gridOptions) {
-      const customFooterOptions = this.gridOptions.customFooterOptions;
-      this.registerOnSelectedRowsChangedWhenEnabled(customFooterOptions);
-
-      if (this.gridOptions.enableTranslate) {
-        this.translateCustomFooterTexts();
-      } else if (customFooterOptions) {
-        customFooterOptions.metricTexts = customFooterOptions.metricTexts || {};
-        customFooterOptions.metricTexts.lastUpdate = customFooterOptions.metricTexts.lastUpdate || this.locales && this.locales.TEXT_LAST_UPDATE || 'TEXT_LAST_UPDATE';
-        customFooterOptions.metricTexts.items = customFooterOptions.metricTexts.items || this.locales && this.locales.TEXT_ITEMS || 'TEXT_ITEMS';
-        customFooterOptions.metricTexts.itemsSelected = customFooterOptions.metricTexts.itemsSelected || this.locales && this.locales.TEXT_ITEMS_SELECTED || 'TEXT_ITEMS_SELECTED';
-        customFooterOptions.metricTexts.of = customFooterOptions.metricTexts.of || this.locales && this.locales.TEXT_OF || 'TEXT_OF';
-      }
-
-      // we will display the custom footer only when there's no Pagination
-      if (!this.gridOptions.enablePagination && !this._isPaginationInitialized) {
-        this.showCustomFooter = this.gridOptions.hasOwnProperty('showCustomFooter') ? (this.gridOptions.showCustomFooter as boolean) : false;
-        this.customFooterOptions = this.gridOptions.customFooterOptions || {};
-      }
-    }
-  }
-
   /** Pre-Register any Resource that don't require SlickGrid to be instantiated (for example RxJS Resource) */
   private preRegisterResources() {
     this._registeredResources = this.gridOptions.registerExternalResources || [];
@@ -1466,20 +1446,8 @@ export class AureliaSlickgridCustomElement {
 
   /** Translate all Custom Footer Texts (footer with metrics) */
   private translateCustomFooterTexts() {
-    if (this.translaterService?.translate) {
-      const customFooterOptions = this.gridOptions?.customFooterOptions ?? {};
-      customFooterOptions.metricTexts = customFooterOptions.metricTexts || {};
-      for (const propName of Object.keys(customFooterOptions.metricTexts)) {
-        if (propName.lastIndexOf('Key') > 0) {
-          const propNameWithoutKey = propName.substring(0, propName.lastIndexOf('Key'));
-          (customFooterOptions.metricTexts as any)[propNameWithoutKey] = this.translaterService.translate((customFooterOptions.metricTexts as any)[propName] || ' ');
-        }
-      }
-
-      // when we're display row selection count on left footer, we also need to translate that text with its count
-      if (this._isLeftFooterDisplayingSelectionRowCount) {
-        customFooterOptions.leftFooterText = `${this._selectedRowCount} ${customFooterOptions.metricTexts.itemsSelected}`;
-      }
+    if (this.slickFooter && this.translaterService?.translate) {
+      this.slickFooter?.translateCustomFooterTexts();
     }
   }
 
@@ -1491,26 +1459,6 @@ export class AureliaSlickgridCustomElement {
   /** translate all column groups (including hidden columns) */
   private translateColumnGroupKeys() {
     this.extensionUtility.translateItems(this.sharedService.allColumns, 'columnGroupKey', 'columnGroup');
-  }
-
-  /**
-   * When user has row selections enabled and does not have any custom text shown on the left side footer,
-   * we will show the row selection count on the bottom left side of the footer (by subscribing to the SlickGrid `onSelectedRowsChanged` event).
-   * @param customFooterOptions
-   */
-  private registerOnSelectedRowsChangedWhenEnabled(customFooterOptions?: CustomFooterOption) {
-    const isRowSelectionEnabled = this.gridOptions.enableCheckboxSelector || this.gridOptions.enableRowSelection;
-    if (isRowSelectionEnabled && customFooterOptions && (!customFooterOptions.hideRowSelectionCount && this._isLeftFooterOriginallyEmpty)) {
-      this._isLeftFooterDisplayingSelectionRowCount = true;
-      const selectedCountText = customFooterOptions.metricTexts?.itemsSelected ?? this.locales?.TEXT_ITEMS_SELECTED ?? 'TEXT_ITEMS_SELECTED';
-      customFooterOptions.leftFooterText = `0 ${selectedCountText}`;
-
-      this._eventHandler.subscribe(this.grid.onSelectedRowsChanged, (_e: any, args: { rows: number[]; previousSelectedRows: number[]; }) => {
-        this._selectedRowCount = args.rows.length;
-        const selectedCountText2 = customFooterOptions.metricTexts?.itemsSelected ?? this.locales?.TEXT_ITEMS_SELECTED ?? 'TEXT_ITEMS_SELECTED';
-        customFooterOptions.leftFooterText = `${this._selectedRowCount} ${selectedCountText2}`;
-      });
-    }
   }
 
   /**
