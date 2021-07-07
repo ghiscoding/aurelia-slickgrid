@@ -7,13 +7,13 @@ import {
   GridStateService,
   GroupingAndColspanService,
   PaginationService,
+  ResizerService,
   SlickDataView,
   SortService,
   TreeDataService
 } from '@slickgrid-universal/common';
 
 import { SlickGrid } from '../models/index';
-import { ResizerService } from '../services/index';
 
 export interface AureliaGridInstance {
   /** Slick DataView object */

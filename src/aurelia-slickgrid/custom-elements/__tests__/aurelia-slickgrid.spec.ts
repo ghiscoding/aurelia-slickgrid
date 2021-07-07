@@ -26,6 +26,7 @@ import {
   GroupingAndColspanService,
   Pagination,
   PaginationService,
+  ResizerService,
   ServicePagination,
   SharedService,
   SlickGrid,
@@ -43,7 +44,6 @@ import { MockSlickEvent, MockSlickEventHandler } from '../../../../test/mockSlic
 import { TranslaterServiceStub } from '../../../../test/translaterServiceStub';
 import { AureliaUtilService, ContainerService, TranslaterService } from '../../services';
 import { PubSubService } from '../../services/pubSub.service';
-import { ResizerService } from '../../services/resizer.service';
 import { AureliaSlickgridCustomElement } from '../aurelia-slickgrid';
 import * as aureliaSlickgridUtilities from '../aurelia-slickgrid-utilities';
 
@@ -338,7 +338,6 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
       container,
       divContainer,
       globalEa,
-      resizerServiceStub,
       containerService,
       pubSubService,
       translateService as unknown as TranslaterService,
@@ -352,6 +351,7 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         gridService: gridServiceStub,
         gridStateService: gridStateServiceStub,
         groupingAndColspanService: groupingAndColspanServiceStub,
+        resizerService: resizerServiceStub,
         paginationService: paginationServiceStub,
         sharedService,
         sortService: sortServiceStub,
