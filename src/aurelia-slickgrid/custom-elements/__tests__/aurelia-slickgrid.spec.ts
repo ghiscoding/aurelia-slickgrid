@@ -37,6 +37,7 @@ import {
 import { SlickEmptyWarningComponent } from '@slickgrid-universal/empty-warning-component';
 import { GraphqlPaginatedResult, GraphqlService, GraphqlServiceApi, GraphqlServiceOption } from '@slickgrid-universal/graphql';
 import { TextExportService } from '@slickgrid-universal/text-export';
+import * as formatterUtilities from '@slickgrid-universal/common/dist/commonjs/formatters/formatterUtilities';
 
 import { RxJsResourceStub } from '../../../../test/rxjsResourceStub';
 import { HttpStub } from '../../../../test/httpClientStub';
@@ -45,11 +46,10 @@ import { TranslaterServiceStub } from '../../../../test/translaterServiceStub';
 import { AureliaUtilService, ContainerService, TranslaterService } from '../../services';
 import { PubSubService } from '../../services/pubSub.service';
 import { AureliaSlickgridCustomElement } from '../aurelia-slickgrid';
-import * as aureliaSlickgridUtilities from '../aurelia-slickgrid-utilities';
 
 const mockAutoAddCustomEditorFormatter = jest.fn();
 
-(aureliaSlickgridUtilities.autoAddEditorFormatterToColumnsWithEditor as any) = mockAutoAddCustomEditorFormatter;
+(formatterUtilities.autoAddEditorFormatterToColumnsWithEditor as any) = mockAutoAddCustomEditorFormatter;
 
 declare const Slick: any;
 const slickEventHandler = new MockSlickEventHandler();
@@ -469,7 +469,7 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
 
     describe('autoAddCustomEditorFormatter grid option', () => {
       it('should initialize the grid and automatically add custom Editor Formatter when provided in the grid options', () => {
-        const autoAddFormatterSpy = jest.spyOn(aureliaSlickgridUtilities, 'autoAddEditorFormatterToColumnsWithEditor');
+        const autoAddFormatterSpy = jest.spyOn(formatterUtilities, 'autoAddEditorFormatterToColumnsWithEditor');
 
         customElement.gridOptions = { ...gridOptions, autoAddCustomEditorFormatter: customEditableInputFormatter };
         customElement.bind();
@@ -503,7 +503,7 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         const autosizeSpy = jest.spyOn(mockGrid, 'autosizeColumns');
         const updateSpy = jest.spyOn(customElement, 'updateColumnDefinitionsList');
         const renderSpy = jest.spyOn(extensionServiceStub, 'renderColumnHeaders');
-        const autoAddFormatterSpy = jest.spyOn(aureliaSlickgridUtilities, 'autoAddEditorFormatterToColumnsWithEditor');
+        const autoAddFormatterSpy = jest.spyOn(formatterUtilities, 'autoAddEditorFormatterToColumnsWithEditor');
         const mockColDefs = [{ id: 'name', field: 'name', editor: undefined, internalColumnEditor: {} }];
 
         customElement.columnDefinitions = mockColDefs;
