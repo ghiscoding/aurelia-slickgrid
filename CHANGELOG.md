@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.8.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v3.7.1...v3.8.0) (2021-07-07)
+
+
+### Features
+
+* **footer:** reuse Footer Component from Slickgrid-Universal ([#609](https://github.com/ghiscoding/aurelia-slickgrid/issues/609)) ([a9a6c21](https://github.com/ghiscoding/aurelia-slickgrid/commit/a9a6c21e15e9eb96d2dab1e8a14af53e32262b88))
+* **tree:** add Tree Data as Grid State/Presets ([#596](https://github.com/ghiscoding/aurelia-slickgrid/issues/596)) ([8670544](https://github.com/ghiscoding/aurelia-slickgrid/commit/86705443952b46cb74555310d9bf3566f77d31ae))
+
+
+### Bug Fixes
+
+* **demo:** we should be able to move row(s) and keep selections ([#587](https://github.com/ghiscoding/aurelia-slickgrid/issues/587)) ([ac36ed7](https://github.com/ghiscoding/aurelia-slickgrid/commit/ac36ed755d24f02ea3fedbe8a0302d859ea97f88))
+* **formatters:** shouldn't auto-add editor formatter multiple times ([#595](https://github.com/ghiscoding/aurelia-slickgrid/issues/595)) ([695eac8](https://github.com/ghiscoding/aurelia-slickgrid/commit/695eac8122d002e1f42420f122057c288aea96c7))
+* make sure dataset is array before getting his length ([6466671](https://github.com/ghiscoding/aurelia-slickgrid/commit/646667131c0d09ec1f6e6c2a45e560d085813272))
+* **styling:** upgrade dart-sass to latest ([#590](https://github.com/ghiscoding/aurelia-slickgrid/issues/590)) ([d2af93a](https://github.com/ghiscoding/aurelia-slickgrid/commit/d2af93a9c9ca5221c65ec636d7e89879c6e0409a))
+
 ### [3.7.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v3.7.0...v3.7.1) (2021-05-23)
 
 
