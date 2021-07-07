@@ -703,6 +703,13 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
+"@slickgrid-universal/binding@^0.15.0":
+  version "0.15.0"
+  resolved "https://registry.yarnpkg.com/@slickgrid-universal/binding/-/binding-0.15.0.tgz#6bbf66127026060324c246e171d96a1c9bee78df"
+  integrity sha512-kT3sny+cwoLWU9uauUBD/lzezFxKHWie+ccOVydfMgf5id/4OoKRmT+pBm+eAVdB0pehN3FSsoFXLEXmWY7a/w==
+  dependencies:
+    dompurify "^2.2.9"
+
 "@slickgrid-universal/common@^0.15.0":
   version "0.15.0"
   resolved "https://registry.yarnpkg.com/@slickgrid-universal/common/-/common-0.15.0.tgz#663e1354ab8463180c6153309afaf9bcc01c8503"
@@ -726,6 +733,14 @@
   dependencies:
     "@slickgrid-universal/common" "^0.15.0"
     assign-deep "^1.0.1"
+
+"@slickgrid-universal/custom-footer-component@^0.15.0":
+  version "0.15.0"
+  resolved "https://registry.yarnpkg.com/@slickgrid-universal/custom-footer-component/-/custom-footer-component-0.15.0.tgz#5c62d0af870a8cc93822aeca831cec1a88b51a76"
+  integrity sha512-OJbCnT3Mt1OUkL9SsdkpeP2RkknbMtm0QfyFDzyCcST8zLVWlFPft3oGMTOiPe0E8Bzy7brJWTAplZSiBrVMiQ==
+  dependencies:
+    "@slickgrid-universal/binding" "^0.15.0"
+    "@slickgrid-universal/common" "^0.15.0"
 
 "@slickgrid-universal/empty-warning-component@^0.15.0":
   version "0.15.0"

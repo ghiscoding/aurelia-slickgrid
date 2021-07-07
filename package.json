@@ -56,7 +56,7 @@
   },
   "dependencies": {
     "@slickgrid-universal/common": "^0.15.0",
-    "@slickgrid-universal/custom-footer-component": "^0.14.1",
+    "@slickgrid-universal/custom-footer-component": "^0.15.0",
     "@slickgrid-universal/empty-warning-component": "^0.15.0",
     "aurelia-event-aggregator": "^1.0.3",
     "aurelia-framework": "^1.3.1",
