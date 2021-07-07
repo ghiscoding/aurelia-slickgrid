@@ -238,7 +238,6 @@ export class Example2 {
   // IMPORTANT, the Pagination MUST BE CREATED on initial page load before you can start toggling it
   // Basically you cannot toggle a Pagination that doesn't exist (must created at the time as the grid)
   isGrid2WithPaginationChanged() {
-    // this.isGrid2WithPagination = !this.isGrid2WithPagination;
     this.aureliaGrid2.paginationService!.togglePaginationVisibility(this.isGrid2WithPagination);
   }
 
