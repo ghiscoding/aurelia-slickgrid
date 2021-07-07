@@ -48,6 +48,7 @@ import {
   GroupingAndColspanService,
   Observable,
   PaginationService,
+  ResizerService,
   RxJsFacade,
   SharedService,
   SlickgridConfig,
@@ -85,7 +86,6 @@ import { AureliaGridInstance, GridOption, } from '../models/index';
 import {
   AureliaUtilService,
   disposeAllSubscriptions,
-  ResizerService,
   ContainerService,
   PubSubService,
   TranslaterService,
@@ -103,7 +103,6 @@ declare const Slick: SlickNamespace;
   Container,
   Element,
   EventAggregator,
-  ResizerService,
   ContainerService,
   PubSubService,
   TranslaterService,
@@ -151,6 +150,7 @@ export class AureliaSlickgridCustomElement {
   gridStateService: GridStateService;
   groupingService: GroupingAndColspanService;
   paginationService: PaginationService;
+  resizerService!: ResizerService;
   rxjs?: RxJsFacade;
   sharedService: SharedService;
   sortService: SortService;
@@ -176,7 +176,6 @@ export class AureliaSlickgridCustomElement {
     private readonly container: Container,
     private readonly elm: Element,
     private readonly globalEa: EventAggregator,
-    private readonly resizerService: ResizerService,
     private readonly containerService: ContainerService,
     private readonly pubSubService: PubSubService,
     private readonly translaterService: TranslaterService,
@@ -191,6 +190,7 @@ export class AureliaSlickgridCustomElement {
       gridStateService?: GridStateService,
       groupingAndColspanService?: GroupingAndColspanService,
       paginationService?: PaginationService,
+      resizerService?: ResizerService,
       rxjs?: RxJsFacade,
       sharedService?: SharedService,
       sortService?: SortService,
@@ -209,6 +209,7 @@ export class AureliaSlickgridCustomElement {
     this.extensionUtility = externalServices?.extensionUtility ?? new ExtensionUtility(this.sharedService, this.translaterService);
     this.filterFactory = new FilterFactory(slickgridConfig, this.translaterService, this.collectionService);
     this.filterService = externalServices?.filterService ?? new FilterService(this.filterFactory as any, this.pubSubService, this.sharedService, this.backendUtilityService);
+    this.resizerService = externalServices?.resizerService ?? new ResizerService(this.pubSubService);
     this.sortService = externalServices?.sortService ?? new SortService(this.sharedService, this.pubSubService, this.backendUtilityService);
     this.treeDataService = externalServices?.treeDataService ?? new TreeDataService(this.pubSubService, this.sharedService, this.sortService);
     this.paginationService = externalServices?.paginationService ?? new PaginationService(this.pubSubService, this.sharedService, this.backendUtilityService);
@@ -587,7 +588,7 @@ export class AureliaSlickgridCustomElement {
 
   emptyGridContainerElm() {
     const gridContainerId = this.gridOptions?.gridContainerId ?? 'grid1';
-    const gridContainerElm = document.querySelector(gridContainerId) as HTMLDivElement;
+    const gridContainerElm = document.querySelector(`#${gridContainerId}`) as HTMLDivElement;
     emptyElement(gridContainerElm);
   }
 
@@ -953,43 +954,6 @@ export class AureliaSlickgridCustomElement {
     }
   }
 
-  mergeGridOptions(gridOptions: GridOption): GridOption {
-    gridOptions.gridId = this.gridId;
-    gridOptions.gridContainerId = `slickGridContainer-${this.gridId}`;
-
-    // if we have a backendServiceApi and the enablePagination is undefined, we'll assume that we do want to see it, else get that defined value
-    gridOptions.enablePagination = ((gridOptions.backendServiceApi && gridOptions.enablePagination === undefined) ? true : gridOptions.enablePagination) || false;
-
-    // use jquery extend to deep merge & copy to avoid immutable properties being changed in GlobalGridOptions after a route change
-    const options = $.extend(true, {}, GlobalGridOptions, gridOptions) as GridOption;
-
-    // using jQuery extend to do a deep clone has an unwanted side on objects and pageSizes but ES6 spread has other worst side effects
-    // so we will just overwrite the pageSizes when needed, this is the only one causing issues so far.
-    // jQuery wrote this on their docs:: On a deep extend, Object and Array are extended, but object wrappers on primitive types such as String, Boolean, and Number are not.
-    if (options?.pagination && (gridOptions.enablePagination || gridOptions.backendServiceApi) && gridOptions.pagination && Array.isArray(gridOptions.pagination.pageSizes)) {
-      options.pagination.pageSizes = gridOptions.pagination.pageSizes;
-    }
-
-    // also make sure to show the header row if user have enabled filtering
-    this._hideHeaderRowAfterPageLoad = (options.showHeaderRow === false);
-    if (options.enableFiltering && !options.showHeaderRow) {
-      options.showHeaderRow = options.enableFiltering;
-    }
-
-    // when we use Pagination on Local Grid, it doesn't seem to work without enableFiltering
-    // so we'll enable the filtering but we'll keep the header row hidden
-    if (options && !options.enableFiltering && options.enablePagination && this._isLocalGrid) {
-      options.enableFiltering = true;
-      options.showHeaderRow = false;
-      this._hideHeaderRowAfterPageLoad = true;
-      if (this.sharedService) {
-        this.sharedService.hideHeaderRowAfterPageLoad = true;
-      }
-    }
-
-    return options;
-  }
-
   /**
    * On a Pagination changed, we will trigger a Grid State changed with the new pagination info
    * Also if we use Row Selection or the Checkbox Selector, we need to reset any selection
@@ -1319,6 +1283,43 @@ export class AureliaSlickgridCustomElement {
     }
   }
 
+  private mergeGridOptions(gridOptions: GridOption): GridOption {
+    gridOptions.gridId = this.gridId;
+    gridOptions.gridContainerId = `slickGridContainer-${this.gridId}`;
+
+    // if we have a backendServiceApi and the enablePagination is undefined, we'll assume that we do want to see it, else get that defined value
+    gridOptions.enablePagination = ((gridOptions.backendServiceApi && gridOptions.enablePagination === undefined) ? true : gridOptions.enablePagination) || false;
+
+    // use jquery extend to deep merge & copy to avoid immutable properties being changed in GlobalGridOptions after a route change
+    const options = $.extend(true, {}, GlobalGridOptions, gridOptions) as GridOption;
+
+    // using jQuery extend to do a deep clone has an unwanted side on objects and pageSizes but ES6 spread has other worst side effects
+    // so we will just overwrite the pageSizes when needed, this is the only one causing issues so far.
+    // jQuery wrote this on their docs:: On a deep extend, Object and Array are extended, but object wrappers on primitive types such as String, Boolean, and Number are not.
+    if (options?.pagination && (gridOptions.enablePagination || gridOptions.backendServiceApi) && gridOptions.pagination && Array.isArray(gridOptions.pagination.pageSizes)) {
+      options.pagination.pageSizes = gridOptions.pagination.pageSizes;
+    }
+
+    // also make sure to show the header row if user have enabled filtering
+    this._hideHeaderRowAfterPageLoad = (options.showHeaderRow === false);
+    if (options.enableFiltering && !options.showHeaderRow) {
+      options.showHeaderRow = options.enableFiltering;
+    }
+
+    // when we use Pagination on Local Grid, it doesn't seem to work without enableFiltering
+    // so we'll enable the filtering but we'll keep the header row hidden
+    if (options && !options.enableFiltering && options.enablePagination && this._isLocalGrid) {
+      options.enableFiltering = true;
+      options.showHeaderRow = false;
+      this._hideHeaderRowAfterPageLoad = true;
+      if (this.sharedService) {
+        this.sharedService.hideHeaderRowAfterPageLoad = true;
+      }
+    }
+
+    return options;
+  }
+
   /** Pre-Register any Resource that don't require SlickGrid to be instantiated (for example RxJS Resource) */
   private preRegisterResources() {
     this._registeredResources = this.gridOptions.registerExternalResources || [];
@@ -1479,7 +1480,7 @@ export class AureliaSlickgridCustomElement {
       }
     }
 
-    // get current Editor, remove it from the DOm then re-enable it and re-render it with the new collection.
+    // get current Editor, remove it from the DOM then re-enable it and re-render it with the new collection.
     const currentEditor = this.grid.getCellEditor() as AutoCompleteEditor | SelectEditor;
     if (currentEditor?.disable && currentEditor?.renderDomElement) {
       currentEditor.destroy();
