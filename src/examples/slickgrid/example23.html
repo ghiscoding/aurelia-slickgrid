@@ -18,35 +18,35 @@
     ${metrics.endTime | dateFormat: 'DD MMM, h:mm:ss a'} | ${metrics.itemCount} of ${metrics.totalItemCount} items
   </span>
 
-  <form class="row row-cols-lg-auto g-3 align-items-center">
-    <div class="col-12">
+  <form class="row row-cols-lg-auto g-1 align-items-center">
+    <div class="col">
       <button class="btn btn-outline-secondary btn-sm" data-test="clear-filters"
               click.delegate="aureliaGrid.filterService.clearFilters()">
         Clear Filters
       </button>
     </div>
-    <div class="col-12">
+    <div class="col">
       <button class="btn btn-outline-secondary btn-sm" data-test="clear-sorting"
               click.delegate="aureliaGrid.sortService.clearSorting()">
         Clear Sorting
       </button>
     </div>
-    <div class="col-12">
+    <div class="col">
       <button class="btn btn-outline-secondary btn-sm" data-test="set-dynamic-filter"
               click.delegate="setFiltersDynamically()">
         Set Filters Dynamically
       </button>
     </div>
-    <div class="col-12">
+    <div class="col">
       <button class="btn btn-outline-secondary btn-sm" data-test="set-dynamic-sorting"
               click.delegate="setSortingDynamically()">
         Set Sorting Dynamically
       </button>
     </div>
-    <div class="col-12">
+    <div class="col">
       <label for="selectedFilter" style="margin-left: 10px">Predefined Filters</label>
     </div>
-    <div class="col-12">
+    <div class="col">
       <select name="selectedFilter" class="form-select" data-test="select-dynamic-filter"
               value.bind="selectedPredefinedFilter" change.delegate="predefinedFilterChanged(selectedPredefinedFilter)">
         <option model.bind="filter.value" repeat.for="filter of filterList">${filter.label}</option>
@@ -55,7 +55,7 @@
   </form>
 
   <div class="row mt-2">
-    <div class="col-12">
+    <div class="col">
       <button class="btn btn-outline-secondary btn-sm" data-test="language" click.delegate="switchLanguage()">
         <i class="fa fa-language"></i>
         Switch Language
