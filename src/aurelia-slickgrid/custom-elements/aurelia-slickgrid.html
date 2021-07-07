@@ -13,27 +13,6 @@
                       pagination-service.bind="paginationService">
     </slick-pagination>
 
-    <!-- Custom Footer section under the grid -->
-    <div if.bind="showCustomFooter && customFooterOptions" class="slick-custom-footer" style="width: 100%;"
-         css="height: ${customFooterOptions.footerHeight || 20}px">
-      <div class="left-footer ${customFooterOptions.leftContainerClass}">${customFooterOptions.leftFooterText}</div>
-
-      <div class="right-footer metrics ${customFooterOptions.rightContainerClass}"
-           if.bind="metrics && !customFooterOptions.hideMetrics">
-        <span if.bind="!customFooterOptions.hideLastUpdateTimestamp">
-          <span>${customFooterOptions.metricTexts.lastUpdate}</span>
-          ${metrics.endTime | asgDateFormat: customFooterOptions.dateFormat}
-          <span class="separator">${customFooterOptions.metricSeparator}</span>
-        </span>
-        ${metrics.itemCount}
-        <span if.bind="!customFooterOptions.hideTotalItemCount">
-          ${customFooterOptions.metricTexts.of}
-          ${metrics.totalItemCount}
-        </span>
-        ${customFooterOptions.metricTexts.items}
-      </div>
-    </div>
-
     <!-- Footer slot if you need to create a complex custom footer -->
     <slot name="slickgrid-footer"></slot>
   </div>

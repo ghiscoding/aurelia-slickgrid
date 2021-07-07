@@ -1410,8 +1410,9 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         const transGroupingColSpanSpy = jest.spyOn(groupingAndColspanServiceStub, 'translateGroupingAndColSpan');
         const setHeaderRowSpy = jest.spyOn(mockGrid, 'setHeaderRowVisibility');
 
-        customElement.gridOptions = { enableTranslate: true, createPreHeaderPanel: false, enableDraggableGrouping: false } as unknown as GridOption;
+        customElement.gridOptions = { enableTranslate: true, createPreHeaderPanel: false, enableDraggableGrouping: false, showCustomFooter: true } as unknown as GridOption;
         customElement.initialization(slickEventHandler);
+        const transCustomFooterSpy = jest.spyOn(customElement.slickFooter, 'translateCustomFooterTexts'); // footer gets created after init
 
         globalEa.publish('i18n:locale:changed', { language: 'fr' });
 
@@ -1424,6 +1425,7 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
           expect(transContextMenuSpy).toHaveBeenCalled();
           expect(transGridMenuSpy).toHaveBeenCalled();
           expect(transHeaderMenuSpy).toHaveBeenCalled();
+          expect(transCustomFooterSpy).toHaveBeenCalled();
           done();
         });
       });
@@ -1839,7 +1841,7 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
 
       it('should have a Custom Footer when "showCustomFooter" is enabled and there are no Pagination used', (done) => {
         const mockColDefs = [{ id: 'name', field: 'name', editor: undefined, internalColumnEditor: {} }];
-        const mockGridOptions = { enableTranslate: true, showCustomFooter: true, };
+        const mockGridOptions = { enableTranslate: true, showCustomFooter: true, customFooterOptions: { hideRowSelectionCount: false, } } as GridOption;
         jest.spyOn(mockGrid, 'getOptions').mockReturnValue(mockGridOptions);
 
         translateService.use('fr');
@@ -1926,13 +1928,14 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
 
         setTimeout(() => {
           expect(customElement.columnDefinitions).toEqual(mockColDefs);
-          expect(customElement.showCustomFooter).toBeFalsy();
+          expect(customElement.slickFooter).toBeFalsy();
           done();
         });
       });
 
       it('should have custom footer with metrics when the DataView "onRowCountChanged" event is triggered', () => {
         const mockData = [{ firstName: 'John', lastName: 'Doe' }, { firstName: 'Jane', lastName: 'Smith' }];
+        const invalidateSpy = jest.spyOn(mockGrid, 'invalidate');
         const expectation = {
           startTime: expect.toBeDate(),
           endTime: expect.toBeDate(),
@@ -1943,10 +1946,12 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
 
         customElement.gridOptions = { enablePagination: false, showCustomFooter: true };
         customElement.initialization(slickEventHandler);
-        customElement.datasetChanged(mockData, null);
+        const footerSpy = jest.spyOn(customElement.slickFooter, 'metrics', 'set');
         mockDataView.onRowCountChanged.notify({ current: 2, previous: 0, dataView: mockDataView, itemCount: 0, callingOnRowsChanged: false });
 
+        expect(invalidateSpy).toHaveBeenCalled();
         expect(customElement.metrics).toEqual(expectation);
+        expect(footerSpy).toHaveBeenCalledWith(expectation);
       });
 
       it('should have custom footer with metrics when the DataView "onSetItemsCalled" event is triggered', () => {
@@ -1963,35 +1968,6 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         mockDataView.onSetItemsCalled.notify({ idProperty: 'id', itemCount: 0 });
 
         expect(customElement.metrics).toEqual(expectation);
-      });
-
-      it('should display row selection count on the left side footer section after triggering "onSelectedRowsChanged" event', () => {
-        customElement.gridOptions = { enablePagination: false, showCustomFooter: true, enableCheckboxSelector: true };
-        customElement.initialization(slickEventHandler);
-        mockGrid.onSelectedRowsChanged.notify({ rows: [1] });
-        expect(customElement.customFooterOptions.leftFooterText).toEqual('1 items selected');
-
-        mockGrid.onSelectedRowsChanged.notify({ rows: [1, 2, 3, 4, 5] });
-        expect(customElement.customFooterOptions.leftFooterText).toEqual('5 items selected');
-      });
-
-      it('should display row selection count in French on the left side footer section after triggering "onSelectedRowsChanged" event when using "fr" as locale', () => {
-        translateService.use('fr');
-        customElement.gridOptions = { enableTranslate: true, enablePagination: false, showCustomFooter: true, enableCheckboxSelector: true };
-        customElement.initialization(slickEventHandler);
-
-        mockGrid.onSelectedRowsChanged.notify({ rows: [1] });
-        expect(customElement.customFooterOptions.leftFooterText).toEqual('1 éléments sélectionnés');
-
-        mockGrid.onSelectedRowsChanged.notify({ rows: [1, 2, 3, 4, 5] });
-        expect(customElement.customFooterOptions.leftFooterText).toEqual('5 éléments sélectionnés');
-      });
-
-      it('should not display row selection count after triggering "onSelectedRowsChanged" event if "hideRowSelectionCount" is set to True', () => {
-        customElement.gridOptions = { enablePagination: false, showCustomFooter: true, enableCheckboxSelector: true, customFooterOptions: { hideRowSelectionCount: true } };
-        customElement.initialization(slickEventHandler);
-        mockGrid.onSelectedRowsChanged.notify({ rows: [1] });
-        expect(customElement.customFooterOptions.leftFooterText).toBeFalsy();
       });
     });
 
