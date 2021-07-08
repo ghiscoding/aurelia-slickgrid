@@ -72,6 +72,7 @@ import {
   RowMoveManagerExtension,
 
   // utilities
+  autoAddEditorFormatterToColumnsWithEditor,
   emptyElement,
 } from '@slickgrid-universal/common';
 import { SlickFooterComponent } from '@slickgrid-universal/custom-footer-component';
@@ -91,7 +92,6 @@ import {
   TranslaterService,
 } from '../services/index';
 import { RowDetailViewExtension } from '../extensions';
-import { autoAddEditorFormatterToColumnsWithEditor } from './aurelia-slickgrid-utilities';
 
 // using external non-typed js libraries
 declare const Slick: SlickNamespace;
