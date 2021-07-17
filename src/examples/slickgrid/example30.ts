@@ -501,11 +501,11 @@ export class Example30 {
 
     if (column && item) {
       if (!checkItemIsEditable(item, column, grid)) {
-        // event.preventDefault();
         e.stopImmediatePropagation();
+        return false;
       }
     }
-    return false;
+    return true;
   }
 
   handleOnCellChange(_e: Event, args: any) {

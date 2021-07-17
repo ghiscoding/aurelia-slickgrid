@@ -318,7 +318,7 @@ describe('rowDetailViewExtension', () => {
 
       const instance = extension.create(columnsMock, gridOptionsMock);
       extension.register();
-      instance.onAfterRowDetailToggle.notify({ item: columnsMock[0], expandedRows: [columnsMock[0] as any], grid: gridStub }, new Slick.EventData(), gridStub);
+      instance.onAfterRowDetailToggle.notify({ item: columnsMock[0], expandedRows: [0], grid: gridStub }, new Slick.EventData(), gridStub);
 
       expect(handlerSpy).toHaveBeenCalledTimes(8); // there are an extra 2x on the grid itself
       expect(handlerSpy).toHaveBeenCalledWith(
@@ -327,7 +327,7 @@ describe('rowDetailViewExtension', () => {
       );
       expect(onAsyncRespSpy).not.toHaveBeenCalled();
       expect(onAsyncEndSpy).not.toHaveBeenCalled();
-      expect(onAfterRowSpy).toHaveBeenCalledWith(expect.anything(), { item: columnsMock[0], expandedRows: [columnsMock[0] as any], grid: gridStub });
+      expect(onAfterRowSpy).toHaveBeenCalledWith(expect.anything(), { item: columnsMock[0], expandedRows: [0], grid: gridStub });
       expect(onBeforeRowSpy).not.toHaveBeenCalled();
       expect(onRowOutViewSpy).not.toHaveBeenCalled();
       expect(onRowBackViewSpy).not.toHaveBeenCalled();
@@ -373,7 +373,7 @@ describe('rowDetailViewExtension', () => {
       const instance = extension.create(columnsMock, gridOptionsMock);
       extension.register();
       instance.onRowOutOfViewportRange.notify(
-        { item: columnsMock[0], rowId: 0, rowIndex: 0, expandedRows: [columnsMock[0] as any], rowIdsOutOfViewport: [], grid: gridStub },
+        { item: columnsMock[0], rowId: 0, rowIndex: 0, expandedRows: [0], rowIdsOutOfViewport: [], grid: gridStub },
         new Slick.EventData(),
         gridStub
       );
@@ -387,7 +387,7 @@ describe('rowDetailViewExtension', () => {
       expect(onAsyncEndSpy).not.toHaveBeenCalled();
       expect(onAfterRowSpy).not.toHaveBeenCalled();
       expect(onBeforeRowSpy).not.toHaveBeenCalled();
-      expect(onRowOutViewSpy).toHaveBeenCalledWith(expect.anything(), { item: columnsMock[0], rowId: 0, rowIndex: 0, expandedRows: [columnsMock[0] as any], rowIdsOutOfViewport: [], grid: gridStub });
+      expect(onRowOutViewSpy).toHaveBeenCalledWith(expect.anything(), { item: columnsMock[0], rowId: 0, rowIndex: 0, expandedRows: [0], rowIdsOutOfViewport: [], grid: gridStub });
       expect(onRowBackViewSpy).not.toHaveBeenCalled();
     });
 
@@ -431,7 +431,7 @@ describe('rowDetailViewExtension', () => {
       const instance = extension.create(columnsMock, gridOptionsMock);
       extension.register();
       eventHandler.subscribe(instance.onBeforeRowDetailToggle, () => {
-        gridStub.onColumnsReordered.notify({ impactedColumns: mockColumn } as any, new Slick.EventData(), gridStub);
+        gridStub.onColumnsReordered.notify({ impactedColumns: [mockColumn] } as any, new Slick.EventData(), gridStub);
         expect(appendSpy).toHaveBeenCalledWith(
           '',
           expect.objectContaining({ model: mockColumn, addon: expect.anything(), grid: gridStub, dataView: dataViewStub }),
@@ -628,7 +628,7 @@ describe('rowDetailViewExtension', () => {
       const instance = extension.create(columnsMock, gridOptionsMock);
       extension.register();
       eventHandler.subscribe(instance.onBeforeRowDetailToggle, () => {
-        gridStub.onSort.notify({ impactedColumns: mockColumn } as any, new Slick.EventData(), gridStub);
+        gridStub.onSort.notify({ impactedColumns: [mockColumn] } as any, new Slick.EventData(), gridStub);
         expect(disposeSpy).toHaveBeenCalled();
         done();
       });

@@ -78,7 +78,7 @@ export class RowDetailViewExtension implements UniversalRowDetailViewExtension {
     // unsubscribe all SlickGrid events
     this._eventHandler.unsubscribeAll();
 
-    if (this._addon && this._addon.destroy) {
+    if (this._addon?.destroy) {
       this._addon.destroy();
       this._addon = null;
     }
