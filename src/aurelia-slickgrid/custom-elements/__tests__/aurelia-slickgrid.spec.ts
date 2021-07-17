@@ -288,7 +288,6 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
   jest.mock('slickgrid/slick.grid', () => mockGridImplementation);
   jest.mock('slickgrid/plugins/slick.draggablegrouping', () => mockDraggableGroupingImplementation);
   Slick.Grid = mockGridImplementation;
-  // Slick.EventHandler = slickEventHandler;
   Slick.EventHandler = mockSlickEventHandlerImplementation;
   Slick.Data = { DataView: mockDataViewImplementation, GroupItemMetadataProvider: mockGroupItemMetaProviderImplementation };
   Slick.DraggableGrouping = mockDraggableGroupingImplementation;
@@ -302,7 +301,7 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
   let globalEa: EventAggregator;
   let pluginEa: EventAggregator;
   let pubSubService: PubSubService;
-  let translateService: TranslaterServiceStub;
+  let translaterService: TranslaterServiceStub;
   const container = new Container();
   const http = new HttpStub();
   const containerService = new ContainerService(container);
@@ -326,7 +325,7 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
       },
     } as unknown as GridOption;
     sharedService = new SharedService();
-    translateService = new TranslaterServiceStub();
+    translaterService = new TranslaterServiceStub();
     jest.spyOn(mockGrid, 'getOptions').mockReturnValue(gridOptions);
     globalEa = new EventAggregator();
     pluginEa = new EventAggregator();
@@ -340,7 +339,7 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
       globalEa,
       containerService,
       pubSubService,
-      translateService as unknown as TranslaterService,
+      translaterService as unknown as TranslaterService,
       {
         backendUtilityService: backendUtilityServiceStub,
         collectionService: collectionServiceStub,
@@ -435,17 +434,6 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
       expect(resizerSpy).toHaveBeenCalledWith(0, { height: fixedHeight, width: undefined });
     });
 
-    it('should initialize the grid with a fixed height when provided in the grid options', () => {
-      const fixedHeight = 100;
-      const resizerSpy = jest.spyOn(resizerServiceStub, 'resizeGrid');
-
-      customElement.gridOptions = { ...gridOptions, gridHeight: fixedHeight };
-      customElement.bind();
-      customElement.initialization(slickEventHandler);
-
-      expect(resizerSpy).toHaveBeenCalledWith(0, { height: fixedHeight, width: undefined });
-    });
-
     it('should initialize the grid with a fixed width when provided in the grid options', () => {
       const fixedWidth = 255;
       const resizerSpy = jest.spyOn(resizerServiceStub, 'resizeGrid');
@@ -492,7 +480,7 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         customElement.initialization(slickEventHandler);
         customElement.columnDefinitionsChanged();
 
-        expect(translateService).toBeTruthy();
+        expect(translaterService).toBeTruthy();
         expect(translateSpy).toHaveBeenCalled();
         expect(autosizeSpy).toHaveBeenCalled();
         expect(updateSpy).toHaveBeenCalledWith(mockColDefs);
@@ -1844,7 +1832,7 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         const mockGridOptions = { enableTranslate: true, showCustomFooter: true, customFooterOptions: { hideRowSelectionCount: false, } } as GridOption;
         jest.spyOn(mockGrid, 'getOptions').mockReturnValue(mockGridOptions);
 
-        translateService.use('fr');
+        translaterService.use('fr');
         customElement.gridOptions = mockGridOptions;
         customElement.initialization(slickEventHandler);
         customElement.columnDefinitions = mockColDefs;
@@ -2028,7 +2016,7 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         customElement.gridOptions = {
           enableRowSelection: true,
           enablePagination: true,
-          backendServiceApi: null,
+          backendServiceApi: undefined,
           presets: { rowSelection: { dataContextIds: selectedGridRows } }
         };
         customElement.datasetChanged(mockData, null);
@@ -2186,6 +2174,23 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         const refreshTreeSpy = jest.spyOn(filterServiceStub, 'refreshTreeDataFilters');
 
         customElement.dataset = [{ id: 0, file: 'documents' }];
+        customElement.gridOptions = { enableTreeData: true, treeDataOptions: { columnId: 'file', parentPropName: 'parentId', childrenPropName: 'files', initialSort: { columndId: 'file', direction: 'ASC' } } } as unknown as GridOption;
+        customElement.initialization(slickEventHandler);
+        customElement.dataset = mockFlatDataset;
+        customElement.datasetChanged(mockFlatDataset, []);
+
+        expect(hierarchicalSpy).toHaveBeenCalledWith(mockHierarchical);
+        expect(refreshTreeSpy).toHaveBeenCalled();
+      });
+
+      it('should also expect "refreshTreeDataFilters" method to be called even when the dataset length is the same but still has different properties (e.g. different filename)', () => {
+        const mockFlatDataset = [{ id: 0, file: 'documents' }, { id: 1, file: 'new-vacation.txt', parentId: 0 }];
+        const mockHierarchical = [{ id: 0, file: 'documents', files: [{ id: 1, file: 'vacation.txt' }] }];
+        const hierarchicalSpy = jest.spyOn(SharedService.prototype, 'hierarchicalDataset', 'set');
+        jest.spyOn(treeDataServiceStub, 'convertFlatParentChildToTreeDatasetAndSort').mockReturnValue({ hierarchical: mockHierarchical as any[], flat: mockFlatDataset as any[] });
+        const refreshTreeSpy = jest.spyOn(filterServiceStub, 'refreshTreeDataFilters');
+
+        customElement.dataset = [{ id: 0, file: 'documents' }, { id: 1, file: 'old-vacation.txt', parentId: 0 }];
         customElement.gridOptions = { enableTreeData: true, treeDataOptions: { columnId: 'file', parentPropName: 'parentId', childrenPropName: 'files', initialSort: { columndId: 'file', direction: 'ASC' } } } as unknown as GridOption;
         customElement.initialization(slickEventHandler);
         customElement.dataset = mockFlatDataset;
