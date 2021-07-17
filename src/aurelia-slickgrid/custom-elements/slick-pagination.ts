@@ -124,8 +124,6 @@ export class SlickPaginationCustomElement {
   }
 
   dispose() {
-    this.paginationService.dispose();
-
     // also dispose of all Subscriptions
     this._subscriptions = disposeAllSubscriptions(this._subscriptions);
   }
