@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.9.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v3.8.0...v3.9.0) (2021-07-17)
+
+
+### Bug Fixes
+
+* **pagination:** should be able to toggle Pagination ([#616](https://github.com/ghiscoding/aurelia-slickgrid/issues/616)) ([77cf111](https://github.com/ghiscoding/aurelia-slickgrid/commit/77cf11166056f9edce5c7330c82168ee42b6bb34))
+* **tree:** same dataset length but w/different prop should refresh Tree ([#612](https://github.com/ghiscoding/aurelia-slickgrid/issues/612)) ([425aa03](https://github.com/ghiscoding/aurelia-slickgrid/commit/425aa0310839e2f1106e4174dddc95e094751892))
+
 ## [3.8.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v3.7.1...v3.8.0) (2021-07-07)
 
 
