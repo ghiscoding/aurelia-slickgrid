@@ -1,6 +1,5 @@
 export * from './aureliaGridInstance.interface';
 export * from './aureliaViewOutput.interface';
-export * from './formatter.interface';
 export * from './gridOption.interface';
 export * from './rowDetailView.interface';
 export * from './slickGrid.interface';

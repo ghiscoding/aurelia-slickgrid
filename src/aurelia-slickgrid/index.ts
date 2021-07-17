@@ -10,7 +10,6 @@ import { SlickgridConfig } from './slickgrid-config';
 import {
   AureliaGridInstance,
   AureliaViewOutput,
-  Formatter,
   GridOption,
   RowDetailView,
   SlickGrid,
@@ -22,7 +21,6 @@ import {
 export {
   AureliaGridInstance,
   AureliaViewOutput,
-  Formatter,
   GridOption,
   RowDetailView,
   SlickGrid,
