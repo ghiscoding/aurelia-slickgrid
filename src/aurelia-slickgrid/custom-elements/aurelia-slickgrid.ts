@@ -77,7 +77,7 @@ import {
 import { SlickFooterComponent } from '@slickgrid-universal/custom-footer-component';
 import { SlickEmptyWarningComponent } from '@slickgrid-universal/empty-warning-component';
 
-import { bindable, BindingEngine, bindingMode, Container, Factory, inject, } from 'aurelia-framework';
+import { bindable, BindingEngine, bindingMode, Container, Factory, inject, useView, PLATFORM } from 'aurelia-framework';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
 import { dequal } from 'dequal/lite';
 
@@ -107,6 +107,7 @@ declare const Slick: SlickNamespace;
   PubSubService,
   TranslaterService,
 )
+@useView(PLATFORM.moduleName('./aurelia-slickgrid.html'))
 export class AureliaSlickgridCustomElement {
   private _columnDefinitions: Column[] = [];
   private _currentDatasetLength = 0;
