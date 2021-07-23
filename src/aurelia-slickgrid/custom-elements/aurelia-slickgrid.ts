@@ -77,7 +77,7 @@ import {
 import { SlickFooterComponent } from '@slickgrid-universal/custom-footer-component';
 import { SlickEmptyWarningComponent } from '@slickgrid-universal/empty-warning-component';
 
-import { bindable, BindingEngine, bindingMode, Container, Factory, inject, useView } from 'aurelia-framework';
+import { bindable, BindingEngine, bindingMode, Container, Factory, inject, useView, PLATFORM } from 'aurelia-framework';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
 import { dequal } from 'dequal/lite';
 
