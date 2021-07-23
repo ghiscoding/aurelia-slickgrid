@@ -1,4 +1,4 @@
-import { bindable, inject, Optional, useView } from 'aurelia-framework';
+import { bindable, inject, Optional, useView, PLATFORM } from 'aurelia-framework';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
 import { EventSubscription, getTranslationPrefix, Locale, PaginationService } from '@slickgrid-universal/common';
 
