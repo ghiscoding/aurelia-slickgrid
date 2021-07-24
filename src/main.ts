@@ -6,25 +6,15 @@ import 'font-awesome/css/font-awesome.css';
 import 'flatpickr/dist/flatpickr.min.css';
 import 'multiple-select-modified/src/multiple-select.css';
 import './styles.scss';
-import { PLATFORM } from 'aurelia-pal';
-import { Aurelia } from 'aurelia-framework';
+import { Aurelia, PLATFORM } from 'aurelia-framework';
 import environment from './environment';
 import { I18N, TCustomAttribute } from 'aurelia-i18n';
 import Backend from 'i18next-xhr-backend';
-import * as Bluebird from 'bluebird';
 import 'bootstrap';
 import { SlickgridConfig } from './aurelia-slickgrid';
 
-/** Disable long stack traces for IE11 */
-Bluebird.config({
-  warnings: {
-    wForgottenReturn: false
-  },
-  longStackTraces: false
-});
-
-export function configure(aurelia: Aurelia) {
-  aurelia.use.standardConfiguration();
+export async function configure(aurelia: Aurelia) {
+  aurelia.use.basicConfiguration();
 
   aurelia.use.feature(PLATFORM.moduleName('examples/resources/index'));
 
@@ -66,6 +56,7 @@ export function configure(aurelia: Aurelia) {
   if (environment.testing) {
     aurelia.use.plugin(PLATFORM.moduleName('aurelia-testing'));
   }
-
-  aurelia.start().then(() => aurelia.setRoot(PLATFORM.moduleName('app')));
+  // aurelia.use.plugin(PLATFORM.moduleName('aurelia-pal-browser'));
+  await aurelia.start();
+  await aurelia.setRoot(PLATFORM.moduleName('app'));
 }
