@@ -7,9 +7,6 @@ const { ProvidePlugin } = require('webpack');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
-// config helpers:
-const ensureArray = (config) => config && (Array.isArray(config) ? config : [config]) || [];
-
 // primary config:
 const title = 'Aurelia Navigation Skeleton';
 const outDevDir = path.resolve(__dirname, 'dist');
@@ -17,15 +14,8 @@ const outProdDir = path.resolve(__dirname, 'docs');
 const srcDir = path.resolve(__dirname, 'src');
 const nodeModulesDir = path.resolve(__dirname, 'node_modules');
 const baseUrl = '';
-const platform = {
-  hmr: false,
-  open: true,
-  port: 9000,
-  host: 'localhost',
-  output: 'dist-demo'
-};
 
-module.exports = ({ production } = {}, { server, hmr, port, host } = {}) => ({
+module.exports = ({ production } = {}, { server } = {}) => ({
   resolve: {
     extensions: ['.ts', '.js'],
     // mainFields: ['browser', 'module', 'main'],
@@ -38,19 +28,12 @@ module.exports = ({ production } = {}, { server, hmr, port, host } = {}) => ({
       moment$: 'moment/moment.js'
     },
     fallback: {
-      child_process: false,
-      crypto: false,
       http: false,
       https: false,
-      os: false,
-      path: false,
       stream: false,
       util: false,
       zlib: false,
-      fs: false,
-      tls: false,
-      net: false,
-    },
+    }
   },
   entry: {
     app: ['aurelia-bootstrapper'],
@@ -64,15 +47,21 @@ module.exports = ({ production } = {}, { server, hmr, port, host } = {}) => ({
     sourceMapFilename: '[name].[contenthash].bundle.js.map',
     chunkFilename: '[name].[contenthash].chunk.js',
   },
+  stats: {
+    warnings: false
+  },
+  target: 'web',
   performance: { hints: false },
   devServer: {
     contentBase: production ? outProdDir : outDevDir,
     // serve index.html for all 404 (required for push-state)
     historyApiFallback: true,
-    hot: hmr || platform.hmr,
-    port: port || platform.port,
-    host: host || platform.host,
-    open: platform.open,
+    compress: true,
+    hot: false,
+    liveReload: true,
+    port: 9000,
+    host: 'localhost',
+    open: true,
   },
   devtool: production ? false : 'eval-cheap-module-source-map',
   module: {
@@ -85,25 +74,14 @@ module.exports = ({ production } = {}, { server, hmr, port, host } = {}) => ({
       { test: /\.(sass|scss)$/, use: ['css-loader', 'sass-loader'], issuer: /\.html?$/i },
       { test: /\.html$/i, loader: 'html-loader' },
       { test: /\.ts?$/, use: 'ts-loader', exclude: nodeModulesDir, },
-      // exposes jQuery globally as $ and as jQuery:
-      // { test: require.resolve('jquery'), loader: 'expose-loader?$!expose-loader?jQuery' },
-      // embed small images and fonts as Data Urls and larger ones as files:
-      { test: /\.(png|gif|jpg|cur)$/i, loader: 'url-loader', type: 'asset/resource', options: { limit: 8192 } },
-      { test: /\.woff2(\?v=[0-9]\.[0-9]\.[0-9])?$/i, loader: 'url-loader', type: 'asset/resource', options: { limit: 10000, mimetype: 'application/font-woff2' } },
-      { test: /\.woff(\?v=[0-9]\.[0-9]\.[0-9])?$/i, loader: 'url-loader', type: 'asset/resource', options: { limit: 10000, mimetype: 'application/font-woff' } },
-      // load these fonts normally, as files:
-      { test: /\.(ttf|eot|svg|otf)(\?v=[0-9]\.[0-9]\.[0-9])?$/i, loader: 'file-loader', type: 'asset/resource', },
-      // {
-      //   test: /environment\.json$/i, use: [
-      //     { loader: "app-settings-loader", options: { env: production ? 'production' : 'development' } },
-      //   ]
-      // }
+      { test: /\.(woff|woff2|eot|ttf|otf)$/i, type: 'asset/resource', },
+      { test: /\.(ttf|eot|svg|otf)(\?v=[0-9]\.[0-9]\.[0-9])?$/i, type: 'asset/resource', },
     ]
   },
   plugins: [
     new AureliaPlugin({
-      dist: 'es2015',
-      aureliaApp: 'main',
+      // dist: 'es2015',
+      // aureliaApp: 'main',
       // aureliaConfig: ['basic'],
       // includeAll: 'src'
     }),
@@ -126,8 +104,8 @@ module.exports = ({ production } = {}, { server, hmr, port, host } = {}) => ({
     }),
     // ref: https://webpack.js.org/plugins/mini-css-extract-plugin/
     new MiniCssExtractPlugin({ // updated to match the naming conventions for the js files
-      filename: production ? '[name].[contenthash].bundle.css' : '[name].[hash].bundle.css',
-      chunkFilename: production ? '[name].[contenthash].chunk.css' : '[name].[hash].chunk.css'
+      filename: '[name].[contenthash].bundle.css',
+      chunkFilename: '[name].[contenthash].chunk.css'
     }),
     new CopyWebpackPlugin({
       patterns: [

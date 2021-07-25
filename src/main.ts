@@ -1,7 +1,7 @@
 /// <reference types="aurelia-loader-webpack/src/webpack-hot-interface"/>
 
 // we want font-awesome to load as soon as possible to show the fa-spinner
-import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import 'font-awesome/css/font-awesome.css';
 import 'flatpickr/dist/flatpickr.min.css';
 import 'multiple-select-modified/src/multiple-select.css';
@@ -14,7 +14,7 @@ import 'bootstrap';
 import { SlickgridConfig } from './aurelia-slickgrid';
 
 export async function configure(aurelia: Aurelia) {
-  aurelia.use.basicConfiguration();
+  aurelia.use.standardConfiguration();
 
   aurelia.use.feature(PLATFORM.moduleName('examples/resources/index'));
 
@@ -56,7 +56,7 @@ export async function configure(aurelia: Aurelia) {
   if (environment.testing) {
     aurelia.use.plugin(PLATFORM.moduleName('aurelia-testing'));
   }
-  // aurelia.use.plugin(PLATFORM.moduleName('aurelia-pal-browser'));
+
   await aurelia.start();
   await aurelia.setRoot(PLATFORM.moduleName('app'));
 }

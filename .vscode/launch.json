@@ -12,7 +12,8 @@
       "webRoot": "${workspaceRoot}/src",
       "userDataDir": "${workspaceRoot}/.chrome",
       "sourceMapPathOverrides": {
-        "webpack:///./src/*": "${webRoot}/*"
+        "webpack:///./src/*": "${webRoot}/*",
+        "webpack://aurelia-slickgrid/./src/*": "${webRoot}/*"
       }
     },
     {
@@ -24,7 +25,8 @@
       "webRoot": "${workspaceRoot}/src",
       "userDataDir": "${workspaceRoot}/.chrome",
       "sourceMapPathOverrides": {
-        "webpack:///./src/*": "${webRoot}/*"
+        "webpack:///./src/*": "${webRoot}/*",
+        "webpack://aurelia-slickgrid/./src/*": "${webRoot}/*"
       }
     },
     {
