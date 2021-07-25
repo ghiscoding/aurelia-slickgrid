@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.9.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v3.9.1...v3.9.2) (2021-07-24)
+
+
+### Bug Fixes
+
+* **aurelia-slickgrid:** reference html explicitly ([#617](https://github.com/ghiscoding/aurelia-slickgrid/issues/617)) ([25a7218](https://github.com/ghiscoding/aurelia-slickgrid/commit/25a7218f749a1e45fd268fb6c58511d7f263e0c1))
+
 ### [3.9.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v3.9.0...v3.9.1) (2021-07-17)
 
 ## [3.9.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v3.8.0...v3.9.0) (2021-07-17)

@@ -1,4 +1,4 @@
-import { bindable, inject, Optional } from 'aurelia-framework';
+import { bindable, inject, Optional, useView, PLATFORM } from 'aurelia-framework';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
 import { EventSubscription, getTranslationPrefix, Locale, PaginationService } from '@slickgrid-universal/common';
 
@@ -8,6 +8,7 @@ import { Constants } from '../constants';
 import { TranslaterService } from '../services/translater.service';
 
 @inject(EventAggregator, Optional.of(TranslaterService))
+@useView(PLATFORM.moduleName('./slick-pagination.html'))
 export class SlickPaginationCustomElement {
   // we need to pass this service as a binding because it's transient and it must be created (then passed through the binding) in the Aurelia-Slickgrid custom element
   @bindable() paginationService!: PaginationService;
