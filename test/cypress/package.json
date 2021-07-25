@@ -11,7 +11,7 @@
   "license": "MIT",
   "devDependencies": {
     "cypress": "^7.7.0",
-    "mocha": "^9.0.2",
+    "mocha": "^9.0.3",
     "mochawesome": "^6.2.2"
   }
 }

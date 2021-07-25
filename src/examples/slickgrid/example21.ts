@@ -158,7 +158,7 @@ export class Example21 {
   }
 
   updateFilter() {
-    this.aureliaGrid.filterService.updateSingleFilter({
+    this.aureliaGrid?.filterService.updateSingleFilter({
       columnId: `${this.selectedColumn.id || ''}`,
       operator: this.selectedOperator as OperatorString,
       searchTerms: [this.searchValue || '']
