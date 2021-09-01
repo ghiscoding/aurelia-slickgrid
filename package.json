@@ -151,7 +151,7 @@
     "ts-node": "^10.2.0",
     "typedoc": "^0.21.5",
     "vinyl-fs": "^3.0.3",
-    "webpack": "^5.49.0",
+    "webpack": "^5.51.1",
     "webpack-cli": "^4.7.2",
     "webpack-dev-server": "^3.11.2"
   },
