@@ -245,8 +245,8 @@ describe('Example 30  Composite Editor Modal', { retries: 1 }, () => {
     cy.get(`.flatpickr-day.today:visible`).click('bottom', { force: true });
     cy.get('.item-details-container.editor-finish .modified').should('have.length', 1);
 
-    cy.get('.item-details-container.editor-origin .autocomplete').type('c');
-    cy.get('.ui-menu.ui-autocomplete:visible').find('li.ui-menu-item:nth(1)').click();
+    cy.get('.item-details-container.editor-origin .autocomplete').type('antar');
+    cy.get('.ui-menu.ui-autocomplete:visible').find('li.ui-menu-item:nth(0)').click();
     cy.get('.item-details-container.editor-origin .autocomplete').invoke('val').then(text => expect(text).to.eq('Antarctica'));
     cy.get('.item-details-container.editor-origin .modified').should('have.length', 1);
 

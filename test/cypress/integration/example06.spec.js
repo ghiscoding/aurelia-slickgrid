@@ -171,7 +171,7 @@ describe('Example 6 - GraphQL Grid', { retries: 1 }, () => {
       .find('.slick-header-left .slick-header-column:nth(0)')
       .trigger('mouseover')
       .children('.slick-header-menubutton')
-      .should('be.hidden')
+      // .should('be.hidden')
       .invoke('show')
       .click();
 
