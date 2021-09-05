@@ -9,7 +9,16 @@
       </a>
     </span>
   </h2>
-  <div class="subtitle" innerhtml.bind="subTitle"></div>
+  <div class="row">
+    <div class="col-sm-9">
+      <div class="subtitle" innerhtml.bind="subTitle"></div>
+    </div>
+    <div class="col-sm-3">
+      <div class="alert alert-danger" show.bind="errorStatus" data-test="error-status">
+        <em><strong>Backend Error:</strong> <span innerhtml.bind="errorStatus"></span></em>
+      </div>
+    </div>
+  </div>
 
   <div class="row">
     <div class="col-sm-4">
@@ -54,6 +63,13 @@
                click.delegate="changeCountEnableFlag()">
         <span style="font-weight: bold">Enable Count</span> (add to OData query)
       </label>
+      <span class="float-end">
+        <button class="btn btn-outline-danger btn-sm " data-test="throw-page-error-btn"
+                click.delegate="throwPageChangeError()">
+          <span>Throw Error Going to Last Page... </span>
+          <i class="mdi mdi-page-last"></i>
+        </button>
+      </span>
     </div>
   </div>
   <div class="row">
@@ -74,6 +90,9 @@
                      dataset.bind="dataset"
                      pagination-options.bind="paginationOptions"
                      on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)"
-                     on-grid-state-changed.delegate="gridStateChanged($event.detail)">
+                     on-grid-state-changed.delegate="gridStateChanged($event.detail)"
+                     on-before-sort.delegate="handleOnBeforeSort($event)"
+                     on-before-search-change.delegate="handleOnBeforeSearchChange($event)"
+                     on-before-pagination-change.delegate="handleOnBeforePaginationChange($event)">
   </aurelia-slickgrid>
 </template>

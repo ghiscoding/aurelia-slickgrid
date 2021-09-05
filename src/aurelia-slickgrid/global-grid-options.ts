@@ -97,18 +97,19 @@ export const GlobalGridOptions: Partial<GridOption> = {
     syncGridSelectionWithBackendService: false, // but disable it when using backend services
   },
   datasetIdPropertyName: 'id',
-  defaultColumnSortFieldId: 'id',
   defaultAureliaEventPrefix: '',
-  defaultSlickgridEventPrefix: '',
   defaultFilter: Filters.input,
-  defaultFilterPlaceholder: '🔎︎', // magnifying glass icon
   defaultBackendServiceFilterTypingDebounce: 500,
-  enableFilterTrimWhiteSpace: false, // do we want to trim white spaces on all Filters?
+  defaultColumnSortFieldId: 'id',
+  defaultComponentEventPrefix: '',
+  defaultFilterPlaceholder: '🔎︎', // magnifying glass icon
   defaultFilterRangeOperator: OperatorType.rangeInclusive,
+  defaultSlickgridEventPrefix: '',
   editable: false,
   editorTypingDebounce: 450,
   filterTypingDebounce: 0,
   enableEmptyDataWarningMessage: true,
+  enableFilterTrimWhiteSpace: false, // do we want to trim white spaces on all Filters?
   emptyDataWarning: {
     className: 'slick-empty-data-warning',
     message: 'No data to display.',
@@ -239,6 +240,7 @@ export const GlobalGridOptions: Partial<GridOption> = {
   rowHeight: 35,
   topPanelHeight: 30,
   translationNamespaceSeparator: ':',
+  resetFilterSearchValueAfterOnBeforeCancellation: true,
   resizeByContentOnlyOnFirstLoad: true,
   resizeByContentOptions: {
     alwaysRecalculateColumnWidth: false,

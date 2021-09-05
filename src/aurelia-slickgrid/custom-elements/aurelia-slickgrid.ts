@@ -74,6 +74,7 @@ import {
   autoAddEditorFormatterToColumnsWithEditor,
   emptyElement,
 } from '@slickgrid-universal/common';
+import { EventPubSubService } from '@slickgrid-universal/event-pub-sub';
 import { SlickFooterComponent } from '@slickgrid-universal/custom-footer-component';
 import { SlickEmptyWarningComponent } from '@slickgrid-universal/empty-warning-component';
 
@@ -88,7 +89,6 @@ import {
   AureliaUtilService,
   disposeAllSubscriptions,
   ContainerService,
-  PubSubService,
   TranslaterService,
 } from '../services/index';
 import { RowDetailViewExtension } from '../extensions';
@@ -104,7 +104,6 @@ declare const Slick: SlickNamespace;
   Element,
   EventAggregator,
   ContainerService,
-  PubSubService,
   TranslaterService,
 )
 @useView(PLATFORM.moduleName('./aurelia-slickgrid.html'))
@@ -113,6 +112,7 @@ export class AureliaSlickgridCustomElement {
   private _currentDatasetLength = 0;
   private _dataset: any[] | null = null;
   private _eventHandler!: SlickEventHandler;
+  private _eventPubSubService!: EventPubSubService;
   private _hideHeaderRowAfterPageLoad = false;
   private _isGridInitialized = false;
   private _isDatasetInitialized = false;
@@ -178,11 +178,11 @@ export class AureliaSlickgridCustomElement {
     private readonly elm: Element,
     private readonly globalEa: EventAggregator,
     private readonly containerService: ContainerService,
-    private readonly pubSubService: PubSubService,
     private readonly translaterService: TranslaterService,
     externalServices: {
       backendUtilityService?: BackendUtilityService,
       collectionService?: CollectionService,
+      eventPubSubService: EventPubSubService,
       extensionService?: ExtensionService,
       extensionUtility?: ExtensionUtility,
       filterService?: FilterService,
@@ -201,7 +201,8 @@ export class AureliaSlickgridCustomElement {
     const slickgridConfig = new SlickgridConfig();
 
     // initialize and assign all Service Dependencies
-    this.pubSubService.eventNamingStyle = EventNamingStyle.kebabCase;
+    this._eventPubSubService = externalServices?.eventPubSubService ?? new EventPubSubService(this.elm);
+    this._eventPubSubService.eventNamingStyle = EventNamingStyle.camelCase;
 
     this.backendUtilityService = externalServices?.backendUtilityService ?? new BackendUtilityService();
     this.gridEventService = externalServices?.gridEventService ?? new GridEventService();
@@ -209,11 +210,11 @@ export class AureliaSlickgridCustomElement {
     this.collectionService = externalServices?.collectionService ?? new CollectionService(this.translaterService);
     this.extensionUtility = externalServices?.extensionUtility ?? new ExtensionUtility(this.sharedService, this.translaterService);
     this.filterFactory = new FilterFactory(slickgridConfig, this.translaterService, this.collectionService);
-    this.filterService = externalServices?.filterService ?? new FilterService(this.filterFactory as any, this.pubSubService, this.sharedService, this.backendUtilityService);
-    this.resizerService = externalServices?.resizerService ?? new ResizerService(this.pubSubService);
-    this.sortService = externalServices?.sortService ?? new SortService(this.sharedService, this.pubSubService, this.backendUtilityService);
-    this.treeDataService = externalServices?.treeDataService ?? new TreeDataService(this.pubSubService, this.sharedService, this.sortService);
-    this.paginationService = externalServices?.paginationService ?? new PaginationService(this.pubSubService, this.sharedService, this.backendUtilityService);
+    this.filterService = externalServices?.filterService ?? new FilterService(this.filterFactory as any, this._eventPubSubService, this.sharedService, this.backendUtilityService);
+    this.resizerService = externalServices?.resizerService ?? new ResizerService(this._eventPubSubService);
+    this.sortService = externalServices?.sortService ?? new SortService(this.sharedService, this._eventPubSubService, this.backendUtilityService);
+    this.treeDataService = externalServices?.treeDataService ?? new TreeDataService(this._eventPubSubService, this.sharedService, this.sortService);
+    this.paginationService = externalServices?.paginationService ?? new PaginationService(this._eventPubSubService, this.sharedService, this.backendUtilityService);
 
     // extensions
     const autoTooltipExtension = new AutoTooltipExtension(this.sharedService);
@@ -226,8 +227,8 @@ export class AureliaSlickgridCustomElement {
     const gridMenuExtension = new GridMenuExtension(this.extensionUtility, this.filterService, this.sharedService, this.sortService, this.backendUtilityService, this.translaterService);
     const groupItemMetaProviderExtension = new GroupItemMetaProviderExtension(this.sharedService);
     const headerButtonExtension = new HeaderButtonExtension(this.extensionUtility, this.sharedService);
-    const headerMenuExtension = new HeaderMenuExtension(this.extensionUtility, this.filterService, this.pubSubService, this.sharedService, this.sortService, this.translaterService);
-    const rowDetailViewExtension = new RowDetailViewExtension(this.aureliaUtilService, this.pubSubService, this.sharedService);
+    const headerMenuExtension = new HeaderMenuExtension(this.extensionUtility, this.filterService, this._eventPubSubService, this.sharedService, this.sortService, this.translaterService);
+    const rowDetailViewExtension = new RowDetailViewExtension(this.aureliaUtilService, this._eventPubSubService, this.sharedService);
     const rowMoveManagerExtension = new RowMoveManagerExtension(this.sharedService);
     const rowSelectionExtension = new RowSelectionExtension(this.sharedService);
 
@@ -250,9 +251,9 @@ export class AureliaSlickgridCustomElement {
       this.translaterService,
     );
 
-    this.gridStateService = externalServices?.gridStateService ?? new GridStateService(this.extensionService, this.filterService, this.pubSubService, this.sharedService, this.sortService, this.treeDataService);
-    this.gridService = externalServices?.gridService ?? new GridService(this.gridStateService, this.filterService, this.pubSubService, this.paginationService, this.sharedService, this.sortService, this.treeDataService);
-    this.groupingService = externalServices?.groupingAndColspanService ?? new GroupingAndColspanService(this.extensionUtility, this.extensionService, this.pubSubService);
+    this.gridStateService = externalServices?.gridStateService ?? new GridStateService(this.extensionService, this.filterService, this._eventPubSubService, this.sharedService, this.sortService, this.treeDataService);
+    this.gridService = externalServices?.gridService ?? new GridService(this.gridStateService, this.filterService, this._eventPubSubService, this.paginationService, this.sharedService, this.sortService, this.treeDataService);
+    this.groupingService = externalServices?.groupingAndColspanService ?? new GroupingAndColspanService(this.extensionUtility, this.extensionService, this._eventPubSubService);
 
     this.serviceList = [
       this.extensionService,
@@ -280,7 +281,7 @@ export class AureliaSlickgridCustomElement {
     this.containerService.registerInstance('ResizerService', this.resizerService);
     this.containerService.registerInstance('SharedService', this.sharedService);
     this.containerService.registerInstance('SortService', this.sortService);
-    this.containerService.registerInstance('PubSubService', this.pubSubService);
+    this.containerService.registerInstance('EventPubSubService', this._eventPubSubService);
     this.containerService.registerInstance('TranslaterService', this.translaterService);
     this.containerService.registerInstance('TreeDataService', this.treeDataService);
   }
@@ -324,9 +325,9 @@ export class AureliaSlickgridCustomElement {
       this.gridOptions.enableMouseWheelScrollHandler = true;
     }
 
-    this.pubSubService.eventNamingStyle = this.gridOptions?.eventNamingStyle ?? EventNamingStyle.camelCase;
     const aureliaEventPrefix = this.gridOptions?.defaultAureliaEventPrefix ?? '';
-    this.pubSubService.dispatchCustomEvent(this.elm, 'onBeforeGridCreate', true, aureliaEventPrefix);
+    this._eventPubSubService.eventNamingStyle = this.gridOptions?.eventNamingStyle ?? EventNamingStyle.camelCase;
+    this._eventPubSubService.publish(`${aureliaEventPrefix}onBeforeGridCreate`, true);
 
     // make sure the dataset is initialized (if not it will throw an error that it cannot getLength of null)
     this._dataset = this._dataset || this.dataset || [];
@@ -349,7 +350,7 @@ export class AureliaSlickgridCustomElement {
         dataViewOptions = { ...dataViewOptions, groupItemMetadataProvider: this.groupItemMetadataProvider };
       }
       this.dataview = new Slick.Data.DataView(dataViewOptions);
-      this.pubSubService.dispatchCustomEvent(this.elm, 'onDataviewCreated', this.dataview, aureliaEventPrefix);
+      this._eventPubSubService.publish(`${aureliaEventPrefix}onDataviewCreated`, this.dataview);
     }
 
     // get any possible Services that user want to register which don't require SlickGrid to be instantiated
@@ -462,7 +463,7 @@ export class AureliaSlickgridCustomElement {
     }
 
     // publish & dispatch certain events
-    this.pubSubService.dispatchCustomEvent(this.elm, 'onGridCreated', this.grid, aureliaEventPrefix);
+    this._eventPubSubService.publish(`${aureliaEventPrefix}onGridCreated`, this.grid);
 
     // after the DataView is created & updated execute some processes & dispatch some events
     if (!this.customDataView) {
@@ -501,29 +502,17 @@ export class AureliaSlickgridCustomElement {
       treeDataService: this.treeDataService,
     };
 
-    // expose all necessary Plugin Events through dispatch event to the custom element
-    // for example, expose the event "onGridStateChanged"
-    for (const eventName of Constants.exposedEvents) {
-      if (eventName) {
-        this.subscriptions.push(
-          this.pubSubService.subscribe(eventName, (data: any) => {
-            return this.pubSubService.dispatchCustomEvent(this.elm, eventName, data, aureliaEventPrefix);
-          })
-        );
-      }
-    }
-
     // addons (SlickGrid extra plugins/controls)
     this.extensions = this.extensionService && this.extensionService.extensionList;
 
     // all instances (SlickGrid, DataView & all Services)
     this.instances = aureliaElementInstance;
-    this.pubSubService.dispatchCustomEvent(this.elm, 'onAureliaGridCreated', aureliaElementInstance, aureliaEventPrefix);
+    this._eventPubSubService.publish(`${aureliaEventPrefix}onAureliaGridCreated`, aureliaElementInstance);
   }
 
   detached(shouldEmptyDomElementContainer = false) {
     const aureliaEventPrefix = this.gridOptions?.defaultAureliaEventPrefix ?? '';
-    this.pubSubService.dispatchCustomEvent(this.elm, 'onBeforeGridDestroy', this.grid, aureliaEventPrefix);
+    this._eventPubSubService.publish(`${aureliaEventPrefix}onBeforeGridDestroy`, this.grid);
     this._eventHandler?.unsubscribeAll();
 
     // we could optionally also empty the content of the grid container DOM element
@@ -531,7 +520,7 @@ export class AureliaSlickgridCustomElement {
       this.emptyGridContainerElm();
     }
 
-    this.pubSubService.dispatchCustomEvent(this.elm, 'onAfterGridDestroyed', true, aureliaEventPrefix);
+    this._eventPubSubService.publish(`${aureliaEventPrefix}onAfterGridDestroyed`, true);
 
     // dispose of all Services
     this.serviceList.forEach((service: any) => {
@@ -744,35 +733,6 @@ export class AureliaSlickgridCustomElement {
       })
     );
 
-    if (!this.customDataView) {
-      // bind external sorting (backend) when available or default onSort (dataView)
-      if (gridOptions.enableSorting) {
-        // bind external sorting (backend) unless specified to use the local one
-        if (gridOptions.backendServiceApi && !gridOptions.backendServiceApi.useLocalSorting) {
-          this.sortService.bindBackendOnSort(grid);
-        } else {
-          this.sortService.bindLocalOnSort(grid);
-        }
-      }
-
-      // bind external filter (backend) when available or default onFilter (dataView)
-      if (gridOptions.enableFiltering) {
-        this.filterService.init(grid);
-
-        // bind external filter (backend) unless specified to use the local one
-        if (gridOptions.backendServiceApi && !gridOptions.backendServiceApi.useLocalFiltering) {
-          this.filterService.bindBackendOnFilter(grid);
-        } else {
-          this.filterService.bindLocalOnFilter(grid);
-        }
-      }
-
-      // load any presets if any (after dataset is initialized)
-      this.loadColumnPresetsWhenDatasetInitialized();
-      this.loadFilterPresetsWhenDatasetInitialized();
-    }
-
-
     // if user set an onInit Backend, we'll run it right away (and if so, we also need to run preProcess, internalPostProcess & postProcess)
     if (gridOptions.backendServiceApi) {
       const backendApi = gridOptions.backendServiceApi;
@@ -789,8 +749,9 @@ export class AureliaSlickgridCustomElement {
       for (const prop in grid) {
         if (grid.hasOwnProperty(prop) && prop.startsWith('on')) {
           const gridEventHandler = (grid as any)[prop];
+          const gridEventName = this._eventPubSubService.getEventNameByNamingConvention(prop, slickgridEventPrefix);
           (this._eventHandler as SlickEventHandler<GetSlickEventType<typeof gridEventHandler>>).subscribe(gridEventHandler, (event, args) => {
-            return this.pubSubService.dispatchCustomEvent(this.elm, prop, { eventData: event, args }, slickgridEventPrefix);
+            return this._eventPubSubService.dispatchCustomEvent(gridEventName, { eventData: event, args });
           });
         }
       }
@@ -800,7 +761,8 @@ export class AureliaSlickgridCustomElement {
         if (dataView.hasOwnProperty(prop) && prop.startsWith('on')) {
           const dataViewEventHandler = (dataView as any)[prop];
           (this._eventHandler as SlickEventHandler<GetSlickEventType<typeof dataViewEventHandler>>).subscribe(dataViewEventHandler, (event, args) => {
-            return this.pubSubService.dispatchCustomEvent(this.elm, prop, { eventData: event, args }, slickgridEventPrefix);
+            const dataViewEventName = this._eventPubSubService.getEventNameByNamingConvention(prop, slickgridEventPrefix);
+            return this._eventPubSubService.dispatchCustomEvent(dataViewEventName, { eventData: event, args });
           });
         }
       }
@@ -811,6 +773,32 @@ export class AureliaSlickgridCustomElement {
       this.gridEventService.bindOnClick(grid);
 
       if (dataView && grid) {
+        // bind external sorting (backend) when available or default onSort (dataView)
+        if (gridOptions.enableSorting) {
+          // bind external sorting (backend) unless specified to use the local one
+          if (gridOptions.backendServiceApi && !gridOptions.backendServiceApi.useLocalSorting) {
+            this.sortService.bindBackendOnSort(grid);
+          } else {
+            this.sortService.bindLocalOnSort(grid);
+          }
+        }
+
+        // bind external filter (backend) when available or default onFilter (dataView)
+        if (gridOptions.enableFiltering) {
+          this.filterService.init(grid);
+
+          // bind external filter (backend) unless specified to use the local one
+          if (gridOptions.backendServiceApi && !gridOptions.backendServiceApi.useLocalFiltering) {
+            this.filterService.bindBackendOnFilter(grid);
+          } else {
+            this.filterService.bindLocalOnFilter(grid);
+          }
+        }
+
+        // load any presets if any (after dataset is initialized)
+        this.loadColumnPresetsWhenDatasetInitialized();
+        this.loadFilterPresetsWhenDatasetInitialized();
+
         // When data changes in the DataView, we need to refresh the metrics and/or display a warning if the dataset is empty
         const onRowCountChangedHandler = dataView.onRowCountChanged;
         (this._eventHandler as SlickEventHandler<GetSlickEventType<typeof onRowCountChangedHandler>>).subscribe(onRowCountChangedHandler, (_e, args) => {
@@ -842,7 +830,7 @@ export class AureliaSlickgridCustomElement {
       }
     }
 
-    // does the user have a colspan callback?
+    // did the user add a colspan callback? If so, hook it into the DataView getItemMetadata
     if (gridOptions?.colspanCallback && dataView?.getItem && dataView?.getItemMetadata) {
       dataView.getItemMetadata = (rowNumber: number) => {
         let callbackResult = null;
@@ -972,7 +960,7 @@ export class AureliaSlickgridCustomElement {
         this.sharedService.currentPagination = { pageNumber, pageSize };
       }
     }
-    this.pubSubService.publish('onGridStateChanged', {
+    this._eventPubSubService.publish('onGridStateChanged', {
       change: { newValues: { pageNumber, pageSize }, type: GridStateType.pagination },
       gridState: this.gridStateService.getCurrentGridState()
     });
@@ -1155,8 +1143,8 @@ export class AureliaSlickgridCustomElement {
       this.paginationService.totalItems = this.totalItems;
       this.paginationService.init(this.grid, paginationOptions, this.backendServiceApi);
       this.subscriptions.push(
-        this.pubSubService.subscribe('onPaginationChanged', (paginationChanges: ServicePagination) => this.paginationChanged(paginationChanges)),
-        this.pubSubService.subscribe('onPaginationVisibilityChanged', (visibility: { visible: boolean }) => {
+        this._eventPubSubService.subscribe('onPaginationChanged', (paginationChanges: ServicePagination) => this.paginationChanged(paginationChanges)),
+        this._eventPubSubService.subscribe('onPaginationVisibilityChanged', (visibility: { visible: boolean }) => {
           this.showPagination = visibility?.visible ?? false;
           if (this.gridOptions?.backendServiceApi) {
             this.backendUtilityService?.refreshBackendDataset(this.gridOptions);
