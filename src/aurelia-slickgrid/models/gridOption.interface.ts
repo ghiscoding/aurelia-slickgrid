@@ -3,10 +3,16 @@ import { I18N } from 'aurelia-i18n';
 import { RowDetailView } from './rowDetailView.interface';
 
 export interface GridOption extends UniversalGridOption {
-  /** Default prefix for Aurelia Event names */
+  /**
+   * @deprecated this will be removed in future release and event prefixes will be removed completely.
+   * Default prefix for Aurelia Event names
+   */
   defaultAureliaEventPrefix?: string;
 
-  /** Default prefix for SlickGrid Event names */
+  /**
+   * @deprecated this will be removed in future release and event prefixes will be removed completely.
+   * Default prefix for SlickGrid Event names
+   */
   defaultSlickgridEventPrefix?: string;
 
   /** I18N translation service instance */
