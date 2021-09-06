@@ -7,6 +7,10 @@ import {
   Filters,
   Formatters,
   GridOption,
+  GridStateChange,
+  GridStateType,
+  TreeToggledItem,
+  TreeToggleStateChange,
 } from '../../aurelia-slickgrid';
 import './example27.scss'; // provide custom CSS/SASS styling
 
@@ -33,8 +37,10 @@ export class Example27 {
   columnDefinitions: Column[] = [];
   dataset: any[] = [];
   datasetHierarchical: any[] = [];
-  isLargeDataset = false;
   loadingClass = '';
+  isLargeDataset = false;
+  hasNoExpandCollapseChanged = true;
+  treeToggleItems: TreeToggledItem[] = [];
 
   constructor() {
     // define the grid options & columns and then create the grid itself
@@ -51,15 +57,17 @@ export class Example27 {
     this.columnDefinitions = [
       {
         id: 'title', name: 'Title', field: 'title', width: 220, cssClass: 'cell-title',
-        filterable: true, sortable: true,
+        filterable: true, sortable: true, exportWithFormatter: false,
         queryFieldSorter: 'id', type: FieldType.string,
-        formatter: Formatters.tree,
+        formatter: Formatters.tree, exportCustomFormatter: Formatters.treeExport
+
       },
       { id: 'duration', name: 'Duration', field: 'duration', minWidth: 90, filterable: true },
       {
-        id: 'percentComplete', name: '% Complete', field: 'percentComplete', minWidth: 120, maxWidth: 200,
+        id: 'percentComplete', name: '% Complete', field: 'percentComplete',
+        minWidth: 120, maxWidth: 200, exportWithFormatter: false,
         sortable: true, filterable: true, filter: { model: Filters.compoundSlider, operator: '>=' },
-        formatter: Formatters.percentCompleteBar, type: FieldType.number, exportWithFormatter: false,
+        formatter: Formatters.percentCompleteBarWithText, type: FieldType.number,
       },
       {
         id: 'start', name: 'Start', field: 'start', minWidth: 60,
@@ -75,7 +83,8 @@ export class Example27 {
       },
       {
         id: 'effortDriven', name: 'Effort Driven', width: 80, minWidth: 20, maxWidth: 80, cssClass: 'cell-effort-driven', field: 'effortDriven',
-        formatter: Formatters.checkmark, cannotTriggerInsert: true, exportWithFormatter: false,
+        exportWithFormatter: false,
+        formatter: Formatters.checkmark, cannotTriggerInsert: true,
         filterable: true,
         filter: {
           collection: [{ value: '', label: '' }, { value: true, label: 'True' }, { value: false, label: 'False' }],
@@ -99,6 +108,7 @@ export class Example27 {
         // this is optional, you can define the tree level property name that will be used for the sorting/indentation, internally it will use "__treeLevel"
         levelPropName: 'treeLevel',
         indentMarginLeft: 15,
+        initiallyCollapsed: true,
 
         // you can optionally sort by a different column and/or sort direction
         // this is the recommend approach, unless you are 100% that your original array is already sorted (in most cases it's not)
@@ -121,7 +131,8 @@ export class Example27 {
       headerRowHeight: 45,
       rowHeight: 40,
       presets: {
-        filters: [{ columnId: 'percentComplete', searchTerms: [25], operator: '>=' }]
+        filters: [{ columnId: 'percentComplete', searchTerms: [25], operator: '>=' }],
+        // treeData: { toggledItems: [{ itemId: 1, isCollapsed: false }] },
       },
       enableExcelExport: true,
       excelExportOptions: { exportWithFormatter: true, sanitizeDataExport: true },
@@ -159,7 +170,7 @@ export class Example27 {
   }
 
   /**
-   * A simple method to add a new item inside the first group that we find.
+   * A simple method to add a new item inside the first group that we find (it's random and is only for demo purposes).
    * After adding the item, it will sort by parent/child recursively
    */
   addNewRow() {
@@ -167,7 +178,6 @@ export class Example27 {
     const parentPropName = 'parentId';
     const treeLevelPropName = 'treeLevel'; // if undefined in your options, the default prop name is "__treeLevel"
     const newTreeLevel = 1;
-
     // find first parent object and add the new item as a child
     const childItemFound = this.dataset.find((item) => item[treeLevelPropName] === newTreeLevel);
     const parentItemFound = this.aureliaGrid.dataView.getItemByIdx(childItemFound[parentPropName]);
@@ -192,6 +202,10 @@ export class Example27 {
 
   collapseAll() {
     this.aureliaGrid.treeDataService.toggleTreeDataCollapse(true);
+  }
+
+  collapseAllWithoutEvent() {
+    this.aureliaGrid.treeDataService.toggleTreeDataCollapse(true, false);
   }
 
   expandAll() {
@@ -219,6 +233,7 @@ export class Example27 {
       this.loadingClass = 'mdi mdi-load mdi-spin-1s mdi-24px color-alt-success';
     }
   }
+
   loadData(rowCount: number) {
     this.isLargeDataset = rowCount > 5000; // we'll show a spinner when it's large, else don't show show since it should be fast enough
     let indent = 0;
@@ -233,11 +248,25 @@ export class Example27 {
       const item: any = (data[i] = {});
       let parentId;
 
-      // for implementing filtering/sorting, don't go over indent of 2
-      if (Math.random() > 0.8 && i > 0 && indent < 3) {
+      /*
+        for demo & E2E testing purposes, let's make "Task 0" empty and then "Task 1" a parent that contains at least "Task 2" and "Task 3" which the latter will also contain "Task 4" (as shown below)
+        also for all other rows don't go over indent tree level depth of 2
+        Task 0
+        Task 1
+          Task 2
+          Task 3
+            Task 4
+        ...
+       */
+      if (i === 1 || i === 0) {
+        indent = 0;
+        parents.pop();
+      } if (i === 3) {
+        indent = 1;
+      } else if (i === 2 || i === 4 || (Math.random() > 0.8 && i > 0 && indent < 3 && i - 1 !== 0 && i - 1 !== 2)) { // also make sure Task 0, 2 remains empty
         indent++;
         parents.push(i - 1);
-      } else if (Math.random() < 0.3 && indent > 0) {
+      } else if ((Math.random() < 0.3 && indent > 0)) {
         indent--;
         parents.pop();
       }
@@ -257,9 +286,50 @@ export class Example27 {
       item['finish'] = new Date(randomYear, (randomMonth + 1), randomDay);
       item['effortDriven'] = (i % 5 === 0);
     }
-
     this.dataset = data;
-
     return data;
+  }
+
+  handleOnTreeFullToggleEnd(treeToggleExecution: TreeToggleStateChange) {
+    console.log('Tree Data changes', treeToggleExecution);
+    this.hideSpinner();
+  }
+
+  /** Whenever a parent is being toggled, we'll keep a reference of all of these changes so that we can reapply them whenever we want */
+  handleOnTreeItemToggled(treeToggleExecution: TreeToggleStateChange) {
+    this.hasNoExpandCollapseChanged = false;
+    this.treeToggleItems = treeToggleExecution.toggledItems as TreeToggledItem[];
+    console.log('Tree Data changes', treeToggleExecution);
+  }
+
+  handleOnGridStateChanged(gridStateChange: GridStateChange) {
+    this.hasNoExpandCollapseChanged = false;
+
+    if (gridStateChange?.change?.type === GridStateType.treeData) {
+      console.log('Tree Data gridStateChange', gridStateChange?.gridState?.treeData);
+      this.treeToggleItems = gridStateChange?.gridState?.treeData?.toggledItems as TreeToggledItem[];
+    }
+  }
+
+  logTreeDataToggledItems() {
+    console.log(this.aureliaGrid.treeDataService.getToggledItems());
+  }
+
+  dynamicallyToggledFirstParent() {
+    const parentPropName = 'parentId';
+    const treeLevelPropName = 'treeLevel'; // if undefined in your options, the default prop name is "__treeLevel"
+    const newTreeLevel = 1;
+
+    // find first parent object and toggle it
+    const childItemFound = this.dataset.find((item) => item[treeLevelPropName] === newTreeLevel);
+    const parentItemFound = this.aureliaGrid.dataView.getItemByIdx(childItemFound[parentPropName]);
+
+    if (childItemFound && parentItemFound) {
+      this.aureliaGrid.treeDataService.dynamicallyToggleItemState([{ itemId: parentItemFound.id, isCollapsed: !parentItemFound.__collapsed }]);
+    }
+  }
+
+  reapplyToggledItems() {
+    this.aureliaGrid.treeDataService.applyToggledItemStateChanges(this.treeToggleItems);
   }
 }
