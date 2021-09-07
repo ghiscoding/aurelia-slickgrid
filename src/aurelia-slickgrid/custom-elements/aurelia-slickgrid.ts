@@ -819,6 +819,7 @@ export class AureliaSlickgridCustomElement {
         });
         const onSetItemsCalledHandler = dataView.onSetItemsCalled;
         (this._eventHandler as SlickEventHandler<GetSlickEventType<typeof onSetItemsCalledHandler>>).subscribe(onSetItemsCalledHandler, (_e, args) => {
+          grid.invalidate();
           this.handleOnItemCountChanged(dataView.getFilteredItemCount() || 0, args.itemCount);
 
           // when user has resize by content enabled, we'll force a full width calculation since we change our entire dataset
