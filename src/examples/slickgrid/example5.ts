@@ -37,7 +37,7 @@ export class Example5 {
         error and its only purpose is to demo what would happen when you encounter a backend server error
         (the UI should rollback to previous state before you did the action).
         Also changing Page Size to 50,000 will also throw which again is for demo purposes.
-        </li>
+      </li>
     </ul>
   `;
   aureliaGrid!: AureliaGridInstance;
