@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.10.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v3.10.0...v3.10.1) (2021-09-09)
+
+
+### Bug Fixes
+
+* **export:** add missing PubSubService in DI ([32a724e](https://github.com/ghiscoding/aurelia-slickgrid/commit/32a724ed993ef03e7d30ce2fcfa5cd1448abedf8))
+
 ## [3.10.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v3.9.2...v3.10.0) (2021-09-09)
 
 
