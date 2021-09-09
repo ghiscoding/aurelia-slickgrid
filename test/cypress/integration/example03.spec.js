@@ -58,7 +58,7 @@ describe('Example 3 - Grid with Editors', { retries: 1 }, () => {
     //   .type('Venice');
 
     // change Effort Driven
-    cy.get(`[style="top:${GRID_ROW_HEIGHT * 2}px"] > .slick-cell:nth(11)`).click();
+    cy.get(`[style="top:${GRID_ROW_HEIGHT * 2}px"] > .slick-cell:nth(11)`).click({ force: true });
     cy.get(`[style="top:${GRID_ROW_HEIGHT * 2}px"] > .slick-cell:nth(11) > input.editor-checkbox.editor-effort-driven`).check();
 
     cy.get('.slick-viewport.slick-viewport-top.slick-viewport-left')

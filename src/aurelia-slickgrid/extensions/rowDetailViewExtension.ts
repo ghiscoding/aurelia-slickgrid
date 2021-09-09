@@ -4,7 +4,7 @@ import 'slickgrid/plugins/slick.rowselectionmodel';
 import {
   addToArrayWhenNotExists,
   Column,
-  ExtensionUtility,
+  EventSubscription,
   GetSlickEventType,
   RowDetailViewExtension as UniversalRowDetailViewExtension,
   SharedService,
@@ -12,15 +12,14 @@ import {
   SlickNamespace,
   SlickRowDetailView,
   SlickRowSelectionModel,
+  unsubscribeAll,
 } from '@slickgrid-universal/common';
+import { EventPubSubService } from '@slickgrid-universal/event-pub-sub';
 import { inject, singleton } from 'aurelia-framework';
-import { Subscription } from 'aurelia-event-aggregator';
 import * as DOMPurify from 'dompurify';
 
 import { AureliaViewOutput, GridOption, RowDetailView, SlickGrid, ViewModelBindableInputData } from '../models/index';
 import { AureliaUtilService } from '../services/aureliaUtil.service';
-import { disposeAllSubscriptions } from '../services/utilities';
-import { PubSubService } from '../services';
 
 // using external non-typed js libraries
 declare const Slick: SlickNamespace;
@@ -36,8 +35,7 @@ export interface CreatedView extends AureliaViewOutput {
 @singleton(true)
 @inject(
   AureliaUtilService,
-  PubSubService,
-  ExtensionUtility,
+  EventPubSubService,
   SharedService,
 )
 export class RowDetailViewExtension implements UniversalRowDetailViewExtension {
@@ -46,12 +44,12 @@ export class RowDetailViewExtension implements UniversalRowDetailViewExtension {
   private _preloadView = '';
   private _slots: CreatedView[] = [];
   private _viewModel = '';
-  private _subscriptions: Subscription[] = [];
+  private _subscriptions: EventSubscription[] = [];
   private _userProcessFn?: (item: any) => Promise<any>;
 
   constructor(
     private readonly aureliaUtilService: AureliaUtilService,
-    private readonly pubSubService: PubSubService,
+    private readonly eventPubSubService: EventPubSubService,
     private readonly sharedService: SharedService,
   ) {
     this._eventHandler = new Slick.EventHandler();
@@ -83,7 +81,7 @@ export class RowDetailViewExtension implements UniversalRowDetailViewExtension {
       this._addon = null;
     }
     this.disposeAllViewSlot();
-    disposeAllSubscriptions(this._subscriptions);
+    unsubscribeAll(this._subscriptions);
   }
 
   /** Dispose of all the opened Row Detail Panels Aurelia View Slots */
@@ -259,7 +257,7 @@ export class RowDetailViewExtension implements UniversalRowDetailViewExtension {
 
         // on filter changed, we need to re-render all Views
         this._subscriptions.push(
-          this.pubSubService.subscribe('onFilterChanged', this.redrawAllViewSlots.bind(this))
+          this.eventPubSubService.subscribe('onFilterChanged', this.redrawAllViewSlots.bind(this))
         );
       }
       return this._addon;
