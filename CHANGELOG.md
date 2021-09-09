@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.10.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v3.9.2...v3.10.0) (2021-09-09)
+
+
+### Features
+
+* **backend:** rollback on error & add cancellable events ([#647](https://github.com/ghiscoding/aurelia-slickgrid/issues/647)) ([4b28424](https://github.com/ghiscoding/aurelia-slickgrid/commit/4b2842408fefb8ddcb5aa1f71cd818b3decc3681))
+* **tree:** add `dynamicallyToggledItemState` method to toggle parent(s) ([#649](https://github.com/ghiscoding/aurelia-slickgrid/issues/649)) ([7a48d2a](https://github.com/ghiscoding/aurelia-slickgrid/commit/7a48d2a9cd6d4f5f1ffd66a6652ed708052f3049))
+
+
+### Bug Fixes
+
+* **composite:** calling Edit change shouldn't affect Mass-Update ([#648](https://github.com/ghiscoding/aurelia-slickgrid/issues/648)) ([c35415c](https://github.com/ghiscoding/aurelia-slickgrid/commit/c35415c79b70fab4823ca7232b35401c2cf6d787))
+* **footer:** use `getFilteredItemCount` to show correct item count ([#651](https://github.com/ghiscoding/aurelia-slickgrid/issues/651)) ([e93354c](https://github.com/ghiscoding/aurelia-slickgrid/commit/e93354c582ec4f50427159b058746851d58f2f2e))
+* **grid:** invalidate grid after setItems to re-render grid ([#650](https://github.com/ghiscoding/aurelia-slickgrid/issues/650)) ([de5a906](https://github.com/ghiscoding/aurelia-slickgrid/commit/de5a906932ed236b128823805d03d8d8e05d58d7))
+* **grouping:** Draggable Grouping should clear preheader when called ([#652](https://github.com/ghiscoding/aurelia-slickgrid/issues/652)) ([3b7a41a](https://github.com/ghiscoding/aurelia-slickgrid/commit/3b7a41a0b1cdebb090c19f909bef9ebe61c013c8))
+
 ### [3.9.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v3.9.1...v3.9.2) (2021-07-24)
 
 
