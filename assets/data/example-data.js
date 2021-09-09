@@ -1,16 +1,1 @@
-const data = [];
-
-for (let i = 0; i < 500; i++) {
-  const d = (data[i] = {});
-
-  d.id = i;
-  d['title'] = 'Task ' + i;
-  d['description'] = 'This is a sample task description.\n  It can be multiline';
-  d['duration'] = '5 days';
-  d['percentComplete'] = Math.round(Math.random() * 100);
-  d['start'] = '01/01/2009';
-  d['finish'] = '01/05/2009';
-  d['effortDriven'] = (i % 5 === 0);
-}
-
-export default data;
+const data=[];for(let t=0;t<500;t++){const a=data[t]={};a.id=t,a.title="Task "+t,a.description="This is a sample task description.\n  It can be multiline",a.duration="5 days",a.percentComplete=Math.round(100*Math.random()),a.start="01/01/2009",a.finish="01/05/2009",a.effortDriven=t%5==0}export default data;
