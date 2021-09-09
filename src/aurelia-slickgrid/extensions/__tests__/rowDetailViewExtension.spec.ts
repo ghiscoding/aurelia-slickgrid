@@ -1,8 +1,8 @@
 import { Column, SharedService, SlickDataView, SlickEventHandler, SlickGrid, SlickNamespace } from '@slickgrid-universal/common';
-import { EventAggregator } from 'aurelia-event-aggregator';
+import { EventPubSubService } from '@slickgrid-universal/event-pub-sub';
 import { GridOption } from '../../models/gridOption.interface';
 import { RowDetailViewExtension } from '../rowDetailViewExtension';
-import { AureliaUtilService, PubSubService } from '../../services';
+import { AureliaUtilService } from '../../services';
 import { RowDetailView } from '../../models';
 import { HttpStub } from '../../../../test/httpClientStub';
 
@@ -54,8 +54,7 @@ describe('rowDetailViewExtension', () => {
   jest.mock('slickgrid/plugins/slick.rowselectionmodel', () => mockSelectionModel);
 
   Slick.RowSelectionModel = mockSelectionModel;
-  let pluginEa: EventAggregator;
-  let pubSubService: PubSubService;
+  let eventPubSubService: EventPubSubService;
   let extension: RowDetailViewExtension;
   let sharedService: SharedService;
   let eventHandler: SlickEventHandler;
@@ -88,10 +87,9 @@ describe('rowDetailViewExtension', () => {
 
   beforeEach(() => {
     eventHandler = new Slick.EventHandler();
-    pluginEa = new EventAggregator();
-    pubSubService = new PubSubService(pluginEa);
+    eventPubSubService = new EventPubSubService(div);
     sharedService = new SharedService();
-    extension = new RowDetailViewExtension(aureliaUtilServiceStub, pubSubService, sharedService);
+    extension = new RowDetailViewExtension(aureliaUtilServiceStub, eventPubSubService, sharedService);
   });
 
   it('should return null after calling "create" method when either the column definitions or the grid options is missing', () => {
@@ -483,7 +481,7 @@ describe('rowDetailViewExtension', () => {
 
       extension.register();
       eventHandler.subscribe(instance.onBeforeRowDetailToggle, () => {
-        pubSubService.publish('onFilterChanged', { columnId: 'field1', operator: '=', searchTerms: [] });
+        eventPubSubService.publish('onFilterChanged', { columnId: 'field1', operator: '=', searchTerms: [] });
         expect(appendSpy).toHaveBeenCalledWith(
           '',
           expect.objectContaining({ model: mockColumn, addon: expect.anything(), grid: gridStub, dataView: dataViewStub }),
