@@ -282,6 +282,7 @@ export class AureliaSlickgridCustomElement {
     this.containerService.registerInstance('SharedService', this.sharedService);
     this.containerService.registerInstance('SortService', this.sortService);
     this.containerService.registerInstance('EventPubSubService', this._eventPubSubService);
+    this.containerService.registerInstance('PubSubService', this._eventPubSubService);
     this.containerService.registerInstance('TranslaterService', this.translaterService);
     this.containerService.registerInstance('TreeDataService', this.treeDataService);
   }
