@@ -24,6 +24,21 @@
         <span class="mdi mdi-filter-outline"></span>
         <span>Dynamically Change Filter (% complete &lt; 40)</span>
       </button>
+      <button click.delegate="collapseAllWithoutEvent()" class="btn btn-outline-secondary btn-sm"
+              data-test="collapse-all-noevent-btn">
+        <span class="mdi mdi-arrow-collapse"></span>
+        <span>Collapse All (without triggering event)</span>
+      </button>
+      <button click.delegate="dynamicallyToggledFirstParent()" class="btn btn-outline-secondary btn-sm"
+              data-test="dynamically-toggle-first-parent-btn">
+        <span>Dynamically Toggle First Parent</span>
+      </button>
+      <button click.delegate="reapplyToggledItems()" data-test="reapply-toggled-items-btn"
+              class="btn btn-outline-secondary btn-sm"
+              disabled.bind="hasNoExpandCollapseChanged">
+        <span class="mdi mdi-history"></span>
+        <span>Reapply Previous Toggled Items</span>
+      </button>
       <div class.bind="loadingClass"></div>
     </div>
   </div>
@@ -66,7 +81,10 @@
                        on-before-sort-change.delegate="showSpinner()"
                        on-sort-changed.delegate="hideSpinner()"
                        on-before-toggle-tree-collapse.delegate="showSpinner()"
-                       on-toggle-tree-collapsed.delegate="hideSpinner()">
+                       on-toggle-tree-collapsed.delegate="hideSpinner()"
+                       on-tree-full-toggle-start.delegate="showSpinner()"
+                       on-tree-full-toggle-end.delegate="handleOnTreeFullToggleEnd($event.detail)"
+                       on-tree-item-toggled.delegate="handleOnTreeItemToggled($event.detail)">
     </aurelia-slickgrid>
   </div>
 </template>
