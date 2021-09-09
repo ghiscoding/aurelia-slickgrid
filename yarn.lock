@@ -769,6 +769,13 @@
   dependencies:
     "@slickgrid-universal/common" "^0.17.0"
 
+"@slickgrid-universal/event-pub-sub@^0.17.0":
+  version "0.17.0"
+  resolved "https://registry.yarnpkg.com/@slickgrid-universal/event-pub-sub/-/event-pub-sub-0.17.0.tgz#08fbdd274f8ad0a0b50940c4a8ef0f97d1b8acc3"
+  integrity sha512-iqYMDGWADuUnjQujTWoeGAnFXwjM7hIlGA4YzoJJg1Bg/AYRxcKNZdsrGaLoxPZpPhTtxoXph/RYKTzSJEMJbA==
+  dependencies:
+    "@slickgrid-universal/common" "^0.17.0"
+
 "@slickgrid-universal/excel-export@^0.17.0":
   version "0.17.0"
   resolved "https://registry.yarnpkg.com/@slickgrid-universal/excel-export/-/excel-export-0.17.0.tgz#398f0ff85348f99059b6db5449fcc50aa2944f74"

@@ -33,6 +33,7 @@ import {
   SortService,
   TreeDataService
 } from '@slickgrid-universal/common';
+import { EventPubSubService } from '@slickgrid-universal/event-pub-sub';
 
 import { SlickEmptyWarningComponent } from '@slickgrid-universal/empty-warning-component';
 import { GraphqlPaginatedResult, GraphqlService, GraphqlServiceApi, GraphqlServiceOption } from '@slickgrid-universal/graphql';
@@ -44,7 +45,6 @@ import { HttpStub } from '../../../../test/httpClientStub';
 import { MockSlickEvent, MockSlickEventHandler } from '../../../../test/mockSlickEvent';
 import { TranslaterServiceStub } from '../../../../test/translaterServiceStub';
 import { AureliaUtilService, ContainerService, TranslaterService } from '../../services';
-import { PubSubService } from '../../services/pubSub.service';
 import { AureliaSlickgridCustomElement } from '../aurelia-slickgrid';
 
 const mockAutoAddCustomEditorFormatter = jest.fn();
@@ -297,11 +297,10 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
   let divContainer: HTMLDivElement;
   let cellDiv: HTMLDivElement;
   let columnDefinitions: Column[] = [];
+  let eventPubSubService: EventPubSubService;
   let gridOptions!: GridOption;
   let sharedService: SharedService;
   let globalEa: EventAggregator;
-  let pluginEa: EventAggregator;
-  let pubSubService: PubSubService;
   let translaterService: TranslaterServiceStub;
   const container = new Container();
   const http = new HttpStub();
@@ -325,12 +324,11 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         rightPadding: 0,
       },
     } as unknown as GridOption;
+    eventPubSubService = new EventPubSubService(divContainer);
     sharedService = new SharedService();
     translaterService = new TranslaterServiceStub();
     jest.spyOn(mockGrid, 'getOptions').mockReturnValue(gridOptions);
     globalEa = new EventAggregator();
-    pluginEa = new EventAggregator();
-    pubSubService = new PubSubService(pluginEa);
 
     customElement = new AureliaSlickgridCustomElement(
       aureliaUtilServiceStub,
@@ -339,11 +337,11 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
       divContainer,
       globalEa,
       containerService,
-      pubSubService,
       translaterService as unknown as TranslaterService,
       {
         backendUtilityService: backendUtilityServiceStub,
         collectionService: collectionServiceStub,
+        eventPubSubService,
         extensionService: extensionServiceStub,
         extensionUtility: mockExtensionUtility,
         filterService: filterServiceStub,
@@ -392,25 +390,21 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
     expect(sharedFrozenIndexSpy).toHaveBeenCalledWith('name');
   });
 
-  it('should create a grid and expect multiple Event Aggregator being called', () => {
-    const pubSubSpy = jest.spyOn(pubSubService, 'dispatchCustomEvent');
-    const dispatchSpy = jest.spyOn(divContainer, 'dispatchEvent');
+  it('should create a grid and expect multiple event published', () => {
+    const pubSubSpy = jest.spyOn(eventPubSubService, 'publish');
 
     customElement.bind();
     customElement.initialization(slickEventHandler);
 
-    expect(pubSubService).toBeTruthy();
-    expect(dispatchSpy).toHaveBeenCalled();
-    expect(dispatchSpy).toHaveBeenCalledWith(new CustomEvent('onBeforeGridCreate', { bubbles: true, detail: { target: true } }));
-    expect(pubSubSpy).toHaveBeenCalled();
-    expect(pubSubSpy).toHaveBeenNthCalledWith(1, divContainer, 'onBeforeGridCreate', true, '');
-    expect(pubSubSpy).toHaveBeenNthCalledWith(2, divContainer, 'onDataviewCreated', expect.any(Object), '');
-    expect(pubSubSpy).toHaveBeenNthCalledWith(3, divContainer, 'onGridCreated', expect.any(Object), '');
-    expect(pubSubSpy).toHaveBeenNthCalledWith(4, divContainer, 'onAureliaGridCreated', customElement.instances, '');
+    expect(eventPubSubService).toBeTruthy();
+    expect(pubSubSpy).toHaveBeenNthCalledWith(1, 'onBeforeGridCreate', true);
+    expect(pubSubSpy).toHaveBeenNthCalledWith(2, 'onDataviewCreated', expect.any(Object));
+    expect(pubSubSpy).toHaveBeenNthCalledWith(3, 'onGridCreated', expect.any(Object));
+    expect(pubSubSpy).toHaveBeenNthCalledWith(4, 'onAureliaGridCreated', expect.any(Object));
 
     customElement.dispose();
-    expect(pubSubSpy).toHaveBeenNthCalledWith(5, divContainer, 'onBeforeGridDestroy', expect.any(Object), '');
-    expect(pubSubSpy).toHaveBeenNthCalledWith(6, divContainer, 'onAfterGridDestroyed', true, '');
+    expect(pubSubSpy).toHaveBeenNthCalledWith(5, 'onBeforeGridDestroy', expect.any(Object));
+    expect(pubSubSpy).toHaveBeenNthCalledWith(6, 'onAfterGridDestroyed', true);
   });
 
   describe('initialization method', () => {
@@ -831,9 +825,9 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
       });
 
       it('should call the onDataviewCreated emitter', () => {
-        const pubSubSpy = jest.spyOn(pubSubService, 'dispatchCustomEvent');
+        const pubSubSpy = jest.spyOn(eventPubSubService, 'publish');
         customElement.initialization(slickEventHandler);
-        expect(pubSubSpy).toHaveBeenNthCalledWith(2, divContainer, 'onDataviewCreated', expect.any(Object), '');
+        expect(pubSubSpy).toHaveBeenNthCalledWith(2, 'onDataviewCreated', expect.any(Object));
       });
 
       it('should call the "executeAfterDataviewCreated" and "loadGridSorters" methods and Sorter Presets are provided in the Grid Options', () => {
@@ -1643,7 +1637,7 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
       });
 
       it('should call "dispatchCustomEvent" when event gets trigger', () => {
-        // const pubSubSpy = jest.spyOn(pubSubService, 'dispatchCustomEvent');
+        // const pubSubSpy = jest.spyOn(eventPubSubService, 'publish');
         const dispatchSpy = jest.spyOn(divContainer, 'dispatchEvent');
         const callback = jest.fn();
 
@@ -1697,20 +1691,20 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
 
       it('should call trigger a gridStage change event when pagination change is triggered', () => {
         const mockPagination = { pageNumber: 2, pageSize: 20 } as Pagination;
-        const pluginEaSpy = jest.spyOn(pubSubService, 'publish');
+        const pubSubSpy = jest.spyOn(eventPubSubService, 'publish');
         jest.spyOn(gridStateServiceStub, 'getCurrentGridState').mockReturnValue({ columns: [], pagination: mockPagination } as GridState);
 
         customElement.initialization(slickEventHandler);
         customElement.paginationChanged(mockPagination);
 
-        expect(pluginEaSpy).toHaveBeenCalledWith('onGridStateChanged', {
+        expect(pubSubSpy).toHaveBeenCalledWith('onGridStateChanged', {
           change: { newValues: mockPagination, type: GridStateType.pagination },
           gridState: { columns: [], pagination: mockPagination }
         });
       });
 
       it('should call trigger a gridStage change event when "onPaginationChanged" from the Pagination Service is triggered', () => {
-        const pubSubSpy = jest.spyOn(pubSubService, 'dispatchCustomEvent');
+        const pubSubSpy = jest.spyOn(eventPubSubService, 'publish');
         const mockPagination = { pageNumber: 2, pageSize: 20 } as CurrentPagination;
         const mockServicePagination = {
           ...mockPagination,
@@ -1724,17 +1718,17 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         customElement.gridOptions.enablePagination = true;
         customElement.initialization(slickEventHandler);
         customElement.refreshGridData([{ firstName: 'John', lastName: 'Doe' }]);
-        pubSubService.publish('onPaginationChanged', mockServicePagination);
+        eventPubSubService.publish('onPaginationChanged', mockServicePagination);
 
-        expect(pubSubSpy).toHaveBeenCalledWith(divContainer, 'onGridStateChanged', {
+        expect(pubSubSpy).toHaveBeenCalledWith('onGridStateChanged', {
           change: { newValues: mockPagination, type: GridStateType.pagination },
           gridState: { columns: [], pagination: mockPagination }
-        }, '');
+        });
       });
 
       it('should call trigger a gridStage change and reset selected rows when pagination change is triggered and "enableRowSelection" is set', () => {
         const mockPagination = { pageNumber: 2, pageSize: 20 } as Pagination;
-        const pluginEaSpy = jest.spyOn(pubSubService, 'publish');
+        const pubSubSpy = jest.spyOn(eventPubSubService, 'publish');
         const setRowSpy = jest.spyOn(mockGrid, 'setSelectedRows');
         jest.spyOn(gridStateServiceStub, 'getCurrentGridState').mockReturnValue({ columns: [], pagination: mockPagination } as GridState);
 
@@ -1743,7 +1737,7 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         customElement.paginationChanged(mockPagination);
 
         expect(setRowSpy).toHaveBeenCalledWith([]);
-        expect(pluginEaSpy).toHaveBeenCalledWith('onGridStateChanged', {
+        expect(pubSubSpy).toHaveBeenCalledWith('onGridStateChanged', {
           change: { newValues: mockPagination, type: GridStateType.pagination },
           gridState: { columns: [], pagination: mockPagination }
         });
@@ -1751,7 +1745,7 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
 
       it('should call trigger a gridStage change and reset selected rows when pagination change is triggered and "enableCheckboxSelector" is set', () => {
         const mockPagination = { pageNumber: 2, pageSize: 20 } as Pagination;
-        const pluginEaSpy = jest.spyOn(pubSubService, 'publish');
+        const pubSubSpy = jest.spyOn(eventPubSubService, 'publish');
         const setRowSpy = jest.spyOn(mockGrid, 'setSelectedRows');
         jest.spyOn(gridStateServiceStub, 'getCurrentGridState').mockReturnValue({ columns: [], pagination: mockPagination } as GridState);
 
@@ -1760,7 +1754,7 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         customElement.paginationChanged(mockPagination);
 
         expect(setRowSpy).toHaveBeenCalledWith([]);
-        expect(pluginEaSpy).toHaveBeenCalledWith('onGridStateChanged', {
+        expect(pubSubSpy).toHaveBeenCalledWith('onGridStateChanged', {
           change: { newValues: mockPagination, type: GridStateType.pagination },
           gridState: { columns: [], pagination: mockPagination }
         });
@@ -2048,7 +2042,7 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
 
         customElement.initialization(slickEventHandler);
         customElement.refreshGridData([{ firstName: 'John', lastName: 'Doe' }]);
-        pubSubService.publish('onPaginationVisibilityChanged', { visible: false });
+        eventPubSubService.publish('onPaginationVisibilityChanged', { visible: false });
 
         setTimeout(() => {
           expect(customElement.showPagination).toBeFalsy();
@@ -2066,7 +2060,7 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
 
         customElement.initialization(slickEventHandler);
         customElement.refreshGridData([{ firstName: 'John', lastName: 'Doe' }]);
-        pubSubService.publish('onPaginationVisibilityChanged', { visible: false });
+        eventPubSubService.publish('onPaginationVisibilityChanged', { visible: false });
 
         setTimeout(() => {
           expect(backendRefreshSpy).toHaveBeenCalled();

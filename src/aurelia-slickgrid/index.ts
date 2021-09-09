@@ -31,7 +31,6 @@ export {
 // expose all public classes
 export {
   AureliaUtilService,
-  PubSubService,
   TranslaterService,
   disposeAllSubscriptions
 } from './services/index';
