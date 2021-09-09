@@ -134,7 +134,6 @@ describe('Example 27 - Tree Data (from a flat dataset with parentId references)'
   it('should open the Grid Menu "Clear all Filters" command', () => {
     cy.get('#grid27')
       .find('button.slick-gridmenu-button')
-      .trigger('click')
       .click();
 
     cy.get(`.slick-gridmenu:visible`)

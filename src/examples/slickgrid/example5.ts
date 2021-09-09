@@ -33,6 +33,11 @@ export class Example5 {
       </ul>
       <li>OData Service could be replaced by other Service type in the future (GraphQL or whichever you provide)</li>
       <li>You can also preload a grid with certain "presets" like Filters / Sorters / Pagination <a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Grid-State-&-Preset" target="_blank">Wiki - Grid Preset</a>
+      <li><span class="text-danger">NOTE:</span> For demo purposes, the last column (filter & sort) will always throw an
+        error and its only purpose is to demo what would happen when you encounter a backend server error
+        (the UI should rollback to previous state before you did the action).
+        Also changing Page Size to 50,000 will also throw which again is for demo purposes.
+      </li>
     </ul>
   `;
   aureliaGrid!: AureliaGridInstance;
@@ -46,6 +51,8 @@ export class Example5 {
   odataVersion = 2;
   odataQuery = '';
   processing = false;
+  errorStatus = '';
+  isPageErrorTest = false;
   status = { text: '', class: '' };
 
   constructor(private http: HttpClient) {
@@ -74,7 +81,7 @@ export class Example5 {
           collection: [{ value: '', label: '' }, { value: 'male', label: 'male' }, { value: 'female', label: 'female' }]
         }
       },
-      { id: 'company', name: 'Company', field: 'company' },
+      { id: 'company', name: 'Company', field: 'company', filterable: true, sortable: true },
     ];
 
     this.gridOptions = {
@@ -94,7 +101,7 @@ export class Example5 {
       enableRowSelection: true,
       enablePagination: true, // you could optionally disable the Pagination
       pagination: {
-        pageSizes: [10, 20, 50, 100, 500],
+        pageSizes: [10, 20, 50, 100, 500, 50000],
         pageSize: defaultPageSize,
         totalItems: 0
       },
@@ -115,7 +122,14 @@ export class Example5 {
           enableCount: this.isCountEnabled, // add the count in the OData query, which will return a property named "odata.count" (v2) or "@odata.count" (v4)
           version: this.odataVersion        // defaults to 2, the query string is slightly different between OData 2 and 4
         },
-        preProcess: () => this.displaySpinner(true),
+        onError: (error: Error) => {
+          this.errorStatus = error.message;
+          this.displaySpinner(false, true);
+        },
+        preProcess: () => {
+          this.errorStatus = '';
+          this.displaySpinner(true);
+        },
         process: (query) => this.getCustomerApiCall(query),
         postProcess: (response) => {
           this.metrics = response.metrics;
@@ -126,11 +140,15 @@ export class Example5 {
     };
   }
 
-  displaySpinner(isProcessing: boolean) {
+  displaySpinner(isProcessing: boolean, isError?: boolean) {
     this.processing = isProcessing;
-    this.status = (isProcessing)
-      ? { text: 'processing...', class: 'alert alert-danger' }
-      : { text: 'done', class: 'alert alert-success' };
+    if (isError) {
+      this.status = { text: 'ERROR!!!', class: 'alert alert-danger' };
+    } else {
+      this.status = (isProcessing)
+        ? { text: 'loading...', class: 'alert alert-warning' }
+        : { text: 'finished', class: 'alert alert-success' };
+    }
   }
 
   getCustomerCallback(data: any) {
@@ -160,7 +178,7 @@ export class Example5 {
    * This function is only here to mock a WebAPI call (since we are using a JSON file for the demo)
    *  in your case the getCustomer() should be a WebAPI function returning a Promise
    */
-  getCustomerDataApiMock(query: string) {
+  getCustomerDataApiMock(query: string): Promise<any> {
     // the mock is returning a Promise, just like a WebAPI typically does
     return new Promise(resolve => {
       const queryParams = query.toLowerCase().split('&');
@@ -170,9 +188,17 @@ export class Example5 {
       let countTotalItems = 100;
       const columnFilters = {};
 
+      if (this.isPageErrorTest) {
+        this.isPageErrorTest = false;
+        throw new Error('Server timed out trying to retrieve data for the last page');
+      }
+
       for (const param of queryParams) {
         if (param.includes('$top=')) {
           top = +(param.substring('$top='.length));
+          if (top === 50000) {
+            throw new Error('Server timed out retrieving 50,000 rows');
+          }
         }
         if (param.includes('$skip=')) {
           skip = +(param.substring('$skip='.length));
@@ -209,7 +235,17 @@ export class Example5 {
             const fieldName = filterMatch![1].trim();
             (columnFilters as any)[fieldName] = { type: 'ends', term: filterMatch![2].trim() };
           }
+
+          // simular a backend error when trying to sort on the "Company" field
+          if (filterBy.includes('company')) {
+            throw new Error('Server could not filter using the field "Company"');
+          }
         }
+      }
+
+      // simular a backend error when trying to sort on the "Company" field
+      if (orderBy.includes('company')) {
+        throw new Error('Server could not sort using the field "Company"');
       }
 
       const sort = orderBy.includes('asc')
@@ -306,6 +342,31 @@ export class Example5 {
     this.aureliaGrid.sortService.updateSorting([
       { columnId: 'name', direction: 'DESC' },
     ]);
+  }
+
+  throwPageChangeError() {
+    this.isPageErrorTest = true;
+    this.aureliaGrid?.paginationService?.goToLastPage();
+  }
+
+  // YOU CAN CHOOSE TO PREVENT EVENT FROM BUBBLING IN THE FOLLOWING 3x EVENTS
+  // note however that internally the cancelling the search is more of a rollback
+  handleOnBeforeSort(e: Event) {
+    // e.preventDefault();
+    // return false;
+    return true;
+  }
+
+  handleOnBeforeSearchChange(e: Event) {
+    // e.preventDefault();
+    // return false;
+    return true;
+  }
+
+  handleOnBeforePaginationChange(e: Event) {
+    // e.preventDefault();
+    // return false;
+    return true;
   }
 
   // THE FOLLOWING METHODS ARE ONLY FOR DEMO PURPOSES DO NOT USE THIS CODE
