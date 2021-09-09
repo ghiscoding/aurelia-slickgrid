@@ -801,7 +801,7 @@ export class AureliaSlickgridCustomElement {
 
         // When data changes in the DataView, we need to refresh the metrics and/or display a warning if the dataset is empty
         const onRowCountChangedHandler = dataView.onRowCountChanged;
-        (this._eventHandler as SlickEventHandler<GetSlickEventType<typeof onRowCountChangedHandler>>).subscribe(onRowCountChangedHandler, (_e, args) => {
+        (this._eventHandler as SlickEventHandler<GetSlickEventType<typeof onRowCountChangedHandler>>).subscribe(onRowCountChangedHandler, () => {
           grid.invalidate();
           this.handleOnItemCountChanged(dataView.getFilteredItemCount() || 0, dataView.getItemCount());
         });
