@@ -205,6 +205,7 @@ const mockDataView = {
   destroy: jest.fn(),
   beginUpdate: jest.fn(),
   endUpdate: jest.fn(),
+  getFilteredItemCount: jest.fn(),
   getItem: jest.fn(),
   getItems: jest.fn(),
   getItemCount: jest.fn(),
@@ -1931,11 +1932,12 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
           totalItemCount: 2
         };
         jest.spyOn(mockDataView, 'getItemCount').mockReturnValue(mockData.length);
+        jest.spyOn(mockDataView, 'getFilteredItemCount').mockReturnValue(mockData.length);
 
         customElement.gridOptions = { enablePagination: false, showCustomFooter: true };
         customElement.initialization(slickEventHandler);
         const footerSpy = jest.spyOn(customElement.slickFooter, 'metrics', 'set');
-        mockDataView.onRowCountChanged.notify({ current: 2, previous: 0, dataView: mockDataView, itemCount: 0, callingOnRowsChanged: false });
+        mockDataView.onRowCountChanged.notify({ current: 2, previous: 0, dataView: mockDataView, itemCount: 2, callingOnRowsChanged: false });
 
         expect(invalidateSpy).toHaveBeenCalled();
         expect(customElement.metrics).toEqual(expectation);
@@ -1946,10 +1948,10 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         const expectation = {
           startTime: expect.toBeDate(),
           endTime: expect.toBeDate(),
-          itemCount: 2,
+          itemCount: 0,
           totalItemCount: 0
         };
-        jest.spyOn(mockDataView, 'getLength').mockReturnValue(2);
+        jest.spyOn(mockDataView, 'getFilteredItemCount').mockReturnValue(0);
 
         customElement.gridOptions = { enablePagination: false, showCustomFooter: true };
         customElement.initialization(slickEventHandler);
@@ -1972,10 +1974,12 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         const mockData = [{ firstName: 'John', lastName: 'Doe' }, { firstName: 'Jane', lastName: 'Smith' }];
         const dataviewSpy = jest.spyOn(mockDataView, 'mapIdsToRows').mockReturnValue(selectedGridRows);
         const selectRowSpy = jest.spyOn(mockGrid, 'setSelectedRows');
+        jest.spyOn(mockDataView, 'getLength').mockReturnValue(0);
         jest.spyOn(mockGrid, 'getSelectionModel').mockReturnValue(true);
 
         customElement.gridOptions.enableCheckboxSelector = true;
         customElement.gridOptions.presets = { rowSelection: { dataContextIds: selectedRowIds } };
+        customElement.isDatasetInitialized = false;
         customElement.initialization(slickEventHandler);
         customElement.datasetChanged(mockData, null);
 
