@@ -545,6 +545,7 @@ export class AureliaSlickgridCustomElement {
     }
 
     // dispose the Components
+    this.slickEmptyWarning?.dispose();
     this.slickFooter?.dispose();
     this.slickPagination?.dispose();
 

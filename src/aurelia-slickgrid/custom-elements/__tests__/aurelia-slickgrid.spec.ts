@@ -1395,7 +1395,6 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
 
         customElement.gridOptions = { enableTranslate: true, createPreHeaderPanel: false, enableDraggableGrouping: false, showCustomFooter: true } as unknown as GridOption;
         customElement.initialization(slickEventHandler);
-        const transCustomFooterSpy = jest.spyOn(customElement.slickFooter, 'translateCustomFooterTexts'); // footer gets created after init
 
         globalEa.publish('i18n:locale:changed', { language: 'fr' });
 
@@ -1408,7 +1407,6 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
           expect(transContextMenuSpy).toHaveBeenCalled();
           expect(transGridMenuSpy).toHaveBeenCalled();
           expect(transHeaderMenuSpy).toHaveBeenCalled();
-          expect(transCustomFooterSpy).toHaveBeenCalled();
           done();
         });
       });
