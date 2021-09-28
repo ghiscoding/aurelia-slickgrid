@@ -7,12 +7,6 @@
          focusout.delegate="commitEdit($event.target)">
     </div>
 
-    <!-- Pagination section under the grid -->
-    <slick-pagination id="slickPagingContainer-${gridId}" if.bind="showPagination"
-                      grid-options.bind="gridOptions"
-                      pagination-service.bind="paginationService">
-    </slick-pagination>
-
     <!-- Footer slot if you need to create a complex custom footer -->
     <slot name="slickgrid-footer"></slot>
   </div>

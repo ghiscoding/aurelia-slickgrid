@@ -4,7 +4,6 @@ import { FrameworkConfiguration, NewInstance } from 'aurelia-framework';
 import { PLATFORM } from 'aurelia-pal';
 
 import { AureliaSlickgridCustomElement } from './custom-elements/aurelia-slickgrid';
-import { SlickPaginationCustomElement } from './custom-elements/slick-pagination';
 import { SlickgridEventAggregator } from './custom-elements/slickgridEventAggregator';
 import { SlickgridConfig } from './slickgrid-config';
 import {
@@ -17,7 +16,7 @@ import {
   ViewModelBindableInputData
 } from './models/index';
 
-// re-export only the Aurelia interfaces (models), some of which were overriden
+// re-export only the Aurelia interfaces (models), some of which were overriden from Slickgrid-Universal
 export {
   AureliaGridInstance,
   AureliaViewOutput,
@@ -37,7 +36,6 @@ export {
 
 export function configure(aurelia: FrameworkConfiguration, callback: (instance: SlickgridConfig) => void) {
   aurelia.globalResources(PLATFORM.moduleName('./custom-elements/aurelia-slickgrid'));
-  aurelia.globalResources(PLATFORM.moduleName('./custom-elements/slick-pagination'));
   aurelia.globalResources(PLATFORM.moduleName('./value-converters/asgDateFormat'));
   aurelia.globalResources(PLATFORM.moduleName('./value-converters/asgNumber'));
 
@@ -53,6 +51,5 @@ export function configure(aurelia: FrameworkConfiguration, callback: (instance: 
 
 export {
   AureliaSlickgridCustomElement,
-  SlickPaginationCustomElement,
   SlickgridConfig
 };
