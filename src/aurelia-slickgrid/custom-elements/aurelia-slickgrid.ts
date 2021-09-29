@@ -299,6 +299,9 @@ export class AureliaSlickgridCustomElement {
   set isDatasetInitialized(isInitialized: boolean) {
     this._isDatasetInitialized = isInitialized;
   }
+  set isDatasetHierarchicalInitialized(isInitialized: boolean) {
+    this._isDatasetHierarchicalInitialized = isInitialized;
+  }
 
   get registeredResources(): ExternalResource[] {
     return this._registeredResources;
@@ -684,7 +687,6 @@ export class AureliaSlickgridCustomElement {
       });
       this._isDatasetHierarchicalInitialized = true;
     }
-    this.grid.invalidate();
   }
 
   /**

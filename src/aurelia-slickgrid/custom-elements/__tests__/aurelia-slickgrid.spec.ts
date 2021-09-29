@@ -2153,6 +2153,7 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         customElement.gridOptions = { enableTreeData: true, treeDataOptions: { columnId: 'file', initialSort: { columndId: 'file', direction: 'ASC' } } } as unknown as GridOption;
         customElement.datasetHierarchical = mockHierarchical;
         customElement.datasetHierarchicalChanged(mockHierarchical);
+        customElement.isDatasetHierarchicalInitialized = true;
         customElement.initialization(slickEventHandler);
 
         expect(hierarchicalSpy).toHaveBeenCalledWith(mockHierarchical);
