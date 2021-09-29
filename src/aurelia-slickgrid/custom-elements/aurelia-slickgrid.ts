@@ -299,6 +299,9 @@ export class AureliaSlickgridCustomElement {
   set isDatasetInitialized(isInitialized: boolean) {
     this._isDatasetInitialized = isInitialized;
   }
+  set isDatasetHierarchicalInitialized(isInitialized: boolean) {
+    this._isDatasetHierarchicalInitialized = isInitialized;
+  }
 
   get registeredResources(): ExternalResource[] {
     return this._registeredResources;
@@ -420,9 +423,10 @@ export class AureliaSlickgridCustomElement {
     }
 
     if (!this.customDataView && this.dataview) {
+      // load the data in the DataView (unless it's a hierarchical dataset, if so it will be loaded after the initial tree sort)
       const initialDataset = this.gridOptions?.enableTreeData ? this.sortTreeDataset(this.dataset) : this.dataset;
       if (Array.isArray(initialDataset)) {
-        this.dataview.setItems(initialDataset, this.gridOptions.datasetIdPropertyName);
+        this.dataview.setItems(initialDataset, this.gridOptions.datasetIdPropertyName ?? 'id');
       }
 
       // if you don't want the items that are not visible (due to being filtered out or being on a different page)
@@ -670,7 +674,7 @@ export class AureliaSlickgridCustomElement {
 
     // when a hierarchical dataset is set afterward, we can reset the flat dataset and call a tree data sort that will overwrite the flat dataset
     if (newHierarchicalDataset && this.grid && this.sortService?.processTreeDataInitialSort) {
-      this.dataview.setItems([], this.gridOptions.datasetIdPropertyName);
+      this.dataview.setItems([], this.gridOptions.datasetIdPropertyName ?? 'id');
       this.sortService.processTreeDataInitialSort();
 
       // we also need to reset/refresh the Tree Data filters because if we inserted new item(s) then it might not show up without doing this refresh
@@ -681,9 +685,8 @@ export class AureliaSlickgridCustomElement {
           this.filterService.refreshTreeDataFilters();
         }
       });
+      this._isDatasetHierarchicalInitialized = true;
     }
-
-    this._isDatasetHierarchicalInitialized = true;
   }
 
   /**
@@ -1002,7 +1005,7 @@ export class AureliaSlickgridCustomElement {
     }
 
     if (Array.isArray(dataset) && this.grid && this.dataview?.setItems) {
-      this.dataview.setItems(dataset, this.gridOptions.datasetIdPropertyName);
+      this.dataview.setItems(dataset, this.gridOptions.datasetIdPropertyName ?? 'id');
       if (!this.gridOptions.backendServiceApi && !this.gridOptions.enableTreeData) {
         this.dataview.reSort();
       }
@@ -1228,8 +1231,10 @@ export class AureliaSlickgridCustomElement {
   private loadFilterPresetsWhenDatasetInitialized() {
     if (this.gridOptions && !this.customDataView) {
       // if user entered some Filter "presets", we need to reflect them all in the DOM
-      if (this.gridOptions.presets && Array.isArray(this.gridOptions.presets.filters)) {
-        this.filterService.populateColumnFilterSearchTermPresets(this.gridOptions.presets.filters);
+      // also note that a presets of Tree Data Toggling will also call this method because Tree Data toggling does work with data filtering
+      // (collapsing a parent will basically use Filter for hidding (aka collapsing) away the child underneat it)
+      if (this.gridOptions.presets && (Array.isArray(this.gridOptions.presets.filters) || Array.isArray(this.gridOptions.presets?.treeData?.toggledItems))) {
+        this.filterService.populateColumnFilterSearchTermPresets(this.gridOptions.presets?.filters || []);
       }
     }
   }

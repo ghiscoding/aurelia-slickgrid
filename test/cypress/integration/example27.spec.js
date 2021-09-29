@@ -10,7 +10,8 @@ describe('Example 27 - Tree Data (from a flat dataset with parentId references)'
 
   it('should display Example title', () => {
     cy.visit(`${Cypress.config('baseExampleUrl')}/example27`);
-    cy.get('h2').should('contain', 'Example 27: Tree Data (from a flat dataset with parentId references)');
+    cy.get('h2').should('contain', 'Example 27: Tree Data');
+    cy.get('h2').should('contain', 'from a flat dataset with parentId references');
   });
 
   it('should have exact column titles in grid', () => {
