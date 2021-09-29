@@ -139,8 +139,7 @@ describe('Example 28 - Tree Data (from a Hierarchical Dataset)', { retries: 1 },
   it('should Clear all Filters and default list', () => {
     cy.get('#slickGridContainer-grid28')
       .find('button.slick-gridmenu-button')
-      .trigger('click')
-      .click();
+      .click({ force: true });
 
     cy.get(`.slick-gridmenu:visible`)
       .find('.slick-gridmenu-item')
