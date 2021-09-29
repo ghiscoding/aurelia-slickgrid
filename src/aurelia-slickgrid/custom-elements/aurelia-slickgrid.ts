@@ -77,6 +77,7 @@ import {
 import { EventPubSubService } from '@slickgrid-universal/event-pub-sub';
 import { SlickFooterComponent } from '@slickgrid-universal/custom-footer-component';
 import { SlickEmptyWarningComponent } from '@slickgrid-universal/empty-warning-component';
+import { SlickPaginationComponent } from '@slickgrid-universal/pagination-component';
 
 import { bindable, BindingEngine, bindingMode, Container, Factory, inject, useView, PLATFORM } from 'aurelia-framework';
 import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
@@ -136,6 +137,7 @@ export class AureliaSlickgridCustomElement {
   // components
   slickEmptyWarning: SlickEmptyWarningComponent | undefined;
   slickFooter: SlickFooterComponent | undefined;
+  slickPagination: SlickPaginationComponent | undefined;
 
   // extensions
   extensionUtility: ExtensionUtility;
@@ -544,7 +546,9 @@ export class AureliaSlickgridCustomElement {
     }
 
     // dispose the Components
+    this.slickEmptyWarning?.dispose();
     this.slickFooter?.dispose();
+    this.slickPagination?.dispose();
 
     if (this.dataview) {
       if (this.dataview.setItems) {
@@ -712,12 +716,14 @@ export class AureliaSlickgridCustomElement {
     if (gridOptions.enableTranslate) {
       this.translateColumnHeaderTitleKeys();
       this.translateColumnGroupKeys();
-      this.translateCustomFooterTexts();
     }
 
     // on locale change, we have to manually translate the Headers, GridMenu
     this.subscriptions.push(
       this.globalEa.subscribe('i18n:locale:changed', () => {
+        // publish event of the same name that Slickgrid-Universal uses on a language change event
+        this._eventPubSubService.publish('onLanguageChange');
+
         if (gridOptions.enableTranslate) {
           this.extensionService.translateCellMenu();
           this.extensionService.translateColumnHeaders();
@@ -725,7 +731,6 @@ export class AureliaSlickgridCustomElement {
           this.extensionService.translateContextMenu();
           this.extensionService.translateGridMenu();
           this.extensionService.translateHeaderMenu();
-          this.translateCustomFooterTexts();
           this.translateColumnHeaderTitleKeys();
           this.translateColumnGroupKeys();
           if (gridOptions.createPreHeaderPanel && !gridOptions.enableDraggableGrouping) {
@@ -1152,8 +1157,12 @@ export class AureliaSlickgridCustomElement {
           if (this.gridOptions?.backendServiceApi) {
             this.backendUtilityService?.refreshBackendDataset(this.gridOptions);
           }
+          this.renderPagination(this.showPagination);
         })
       );
+
+      // also initialize (render) the pagination component
+      this.renderPagination();
       this._isPaginationInitialized = true;
     }
   }
@@ -1382,6 +1391,25 @@ export class AureliaSlickgridCustomElement {
   }
 
   /**
+   * Render (or dispose) the Pagination Component, user can optionally provide False (to not show it) which will in term dispose of the Pagination,
+   * also while disposing we can choose to omit the disposable of the Pagination Service (if we are simply toggling the Pagination, we want to keep the Service alive)
+   * @param {Boolean} showPagination - show (new render) or not (dispose) the Pagination
+   * @param {Boolean} shouldDisposePaginationService - when disposing the Pagination, do we also want to dispose of the Pagination Service? (defaults to True)
+   */
+  private renderPagination(showPagination = true) {
+    if (this.gridOptions?.enablePagination && !this._isPaginationInitialized && showPagination) {
+      this.slickPagination = new SlickPaginationComponent(this.paginationService, this._eventPubSubService, this.sharedService, this.translaterService);
+      this.slickPagination.renderPagination(this.elm.querySelector('div') as HTMLDivElement);
+      this._isPaginationInitialized = true;
+    } else if (!showPagination) {
+      if (this.slickPagination) {
+        this.slickPagination.dispose();
+      }
+      this._isPaginationInitialized = false;
+    }
+  }
+
+  /**
    * Takes a flat dataset with parent/child relationship, sort it (via its tree structure) and return the sorted flat array
    * @param {Array<Object>} flatDatasetInput - flat dataset input
    * @param {Boolean} forceGridRefresh - optionally force a full grid refresh
@@ -1441,13 +1469,6 @@ export class AureliaSlickgridCustomElement {
         internalColumnEditor: { ...column.editor }
       };
     });
-  }
-
-  /** Translate all Custom Footer Texts (footer with metrics) */
-  private translateCustomFooterTexts() {
-    if (this.slickFooter && this.translaterService?.translate) {
-      this.slickFooter?.translateCustomFooterTexts();
-    }
   }
 
   /** translate all columns (including hidden columns) */
