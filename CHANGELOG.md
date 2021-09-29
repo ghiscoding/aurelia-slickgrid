@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.11.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v3.10.1...v3.11.0) (2021-09-29)
+
+
+### Features
+
+* **core:** use Slickgrid-Universal Pagination reusable component ([#656](https://github.com/ghiscoding/aurelia-slickgrid/issues/656)) ([4af5ac5](https://github.com/ghiscoding/aurelia-slickgrid/commit/4af5ac51152682023f0ba529c38a55977e463fcb))
+* **tree:** demo new `excludeChildrenWhenFilteringTree` ([#657](https://github.com/ghiscoding/aurelia-slickgrid/issues/657)) ([0a6c8f5](https://github.com/ghiscoding/aurelia-slickgrid/commit/0a6c8f55ef3ac7d0bdd69906ec402565cad44bc0))
+
 ### [3.10.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v3.10.0...v3.10.1) (2021-09-09)
 
 
