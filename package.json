@@ -77,7 +77,7 @@
     "i18next": ">= 14.1.1"
   },
   "devDependencies": {
-    "@popperjs/core": "^2.10.1",
+    "@popperjs/core": "^2.10.2",
     "@slickgrid-universal/composite-editor-component": "^0.18.0",
     "@slickgrid-universal/excel-export": "^0.18.0",
     "@slickgrid-universal/graphql": "^0.18.0",
