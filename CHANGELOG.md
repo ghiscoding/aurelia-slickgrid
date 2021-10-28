@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.12.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v3.11.0...v3.12.0) (2021-10-28)
+
+
+### Features
+
+* **plugin:** add example for new Custom Tooltip plugin ([#663](https://github.com/ghiscoding/aurelia-slickgrid/issues/663)) ([c61e3b0](https://github.com/ghiscoding/aurelia-slickgrid/commit/c61e3b0bf43895b6c284c2b9616730c6a579c789))
+* **plugin:** add row move shadow item while moving/dragging row ([#664](https://github.com/ghiscoding/aurelia-slickgrid/issues/664)) ([d4dfff7](https://github.com/ghiscoding/aurelia-slickgrid/commit/d4dfff75f145e1250c2f1a7aed814eb790cdf0d8))
+
 ## [3.11.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v3.10.1...v3.11.0) (2021-09-29)
 
 
