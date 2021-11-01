@@ -124,7 +124,7 @@
     "file-loader": "6.2.0",
     "font-awesome": "^4.7.0",
     "fork-ts-checker-webpack-plugin": "^6.4.0",
-    "html-loader": "2.1.2",
+    "html-loader": "3.0.0",
     "html-webpack-plugin": "5.5.0",
     "i18next-xhr-backend": "^3.2.2",
     "isomorphic-fetch": "^3.0.0",
