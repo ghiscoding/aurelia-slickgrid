@@ -39,6 +39,7 @@ export class Index {
       { route: 'example30', moduleId: PLATFORM.moduleName('./example30'), name: 'example30', nav: true, title: '30- Composite Editor Modal' },
       { route: 'example31', moduleId: PLATFORM.moduleName('./example31'), name: 'example31', nav: true, title: '31- Backend OData with RxJS' },
       { route: 'example32', moduleId: PLATFORM.moduleName('./example32'), name: 'example32', nav: true, title: '32- Columns Resize by Content' },
+      { route: 'example33', moduleId: PLATFORM.moduleName('./example33'), name: 'example33', nav: true, title: '33- Regular & Custom Tooltip' },
     ];
 
     config.map(mapping);
