@@ -83,11 +83,11 @@ describe('Example 12: Localization (i18n)', { retries: 1 }, () => {
   describe('French locale', () => {
     it('should reset filters and switch locale to French', () => {
       cy.get('#grid12')
-        .find('button.slick-gridmenu-button')
+        .find('button.slick-grid-menu-button')
         .click();
 
-      cy.get(`.slick-gridmenu:visible`)
-        .find('.slick-gridmenu-item')
+      cy.get(`.slick-grid-menu:visible`)
+        .find('.slick-grid-menu-item')
         .first()
         .find('span')
         .contains('Clear all Filters')
@@ -152,11 +152,11 @@ describe('Example 12: Localization (i18n)', { retries: 1 }, () => {
 
     it('should reset filters before filtering duration', () => {
       cy.get('#grid12')
-        .find('button.slick-gridmenu-button')
+        .find('button.slick-grid-menu-button')
         .click();
 
-      cy.get(`.slick-gridmenu:visible`)
-        .find('.slick-gridmenu-item')
+      cy.get(`.slick-grid-menu:visible`)
+        .find('.slick-grid-menu-item')
         .first()
         .find('span')
         .contains('Supprimer tous les filtres')
@@ -209,11 +209,11 @@ describe('Example 12: Localization (i18n)', { retries: 1 }, () => {
         .should('contain', 'en.json');
 
       cy.get('#grid12')
-        .find('button.slick-gridmenu-button')
+        .find('button.slick-grid-menu-button')
         .click();
 
-      cy.get(`.slick-gridmenu:visible`)
-        .find('.slick-gridmenu-item')
+      cy.get(`.slick-grid-menu:visible`)
+        .find('.slick-grid-menu-item')
         .first()
         .find('span')
         .contains('Clear all Filters')
@@ -224,15 +224,15 @@ describe('Example 12: Localization (i18n)', { retries: 1 }, () => {
       cy.get('#slickGridContainer-grid12')
         .find('.slick-header-column:nth(1)')
         .trigger('mouseover')
-        .children('.slick-header-menubutton')
+        .children('.slick-header-menu-button')
         .should('be.hidden')
         .invoke('show')
         .click();
 
       cy.get('.slick-header-menu')
         .should('be.visible')
-        .children('.slick-header-menuitem:nth-child(4)')
-        .children('.slick-header-menucontent')
+        .children('.slick-header-menu-item:nth-child(4)')
+        .children('.slick-header-menu-content')
         .should('contain', 'Sort Descending')
         .click();
 

@@ -182,7 +182,7 @@ export class Example18 {
         }
       },
       {
-        id: 'effortDriven', name: 'Effort Driven', field: 'effortDriven',
+        id: 'effortDriven', name: 'Effort-Driven', field: 'effortDriven',
         width: 80, minWidth: 20, maxWidth: 100,
         cssClass: 'cell-effort-driven',
         sortable: true,
@@ -212,6 +212,7 @@ export class Example18 {
       createPreHeaderPanel: true,
       showPreHeaderPanel: true,
       preHeaderPanelHeight: 40,
+      showCustomFooter: true,
       enableFiltering: true,
       // you could debounce/throttle the input text filter if you have lots of data
       // filterTypingDebounce: 250,

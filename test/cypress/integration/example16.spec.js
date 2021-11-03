@@ -157,12 +157,12 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', { retries
     const expectedFullHeaderMenuCommands = ['Clear all Filters', 'Clear all Sorting', 'Toggle Filter Row', 'Export to Excel'];
 
     cy.get('#grid16')
-      .find('button.slick-gridmenu-button')
+      .find('button.slick-grid-menu-button')
       .trigger('click')
       .click({ force: true });
 
-    cy.get('.slick-gridmenu-custom')
-      .find('.slick-gridmenu-item')
+    cy.get('.slick-grid-menu-command-list')
+      .find('.slick-grid-menu-item')
       .each(($child, index) => {
         const commandTitle = $child.text();
         expect(commandTitle).to.eq(expectedFullHeaderMenuCommands[index]);
@@ -206,7 +206,7 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', { retries
     cy.get('#grid16')
       .find('.slick-header-column:nth(5)')
       .trigger('mouseover')
-      .children('.slick-header-menubutton')
+      .children('.slick-header-menu-button')
       .should('be.hidden')
       .invoke('show')
       .click();
@@ -228,12 +228,12 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', { retries
     const expectedFullHeaderMenuCommands = ['Clear all Filters', 'Clear all Sorting', 'Toggle Filter Row', 'Export to Excel'];
 
     cy.get('#grid16')
-      .find('button.slick-gridmenu-button')
+      .find('button.slick-grid-menu-button')
       .trigger('click')
       .click();
 
-    cy.get('.slick-gridmenu-custom')
-      .find('.slick-gridmenu-item')
+    cy.get('.slick-grid-menu-command-list')
+      .find('.slick-grid-menu-item')
       .each(($child, index) => {
         const commandTitle = $child.text();
         expect(commandTitle).to.eq(expectedFullHeaderMenuCommands[index]);
@@ -255,7 +255,7 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', { retries
     cy.get('#grid16')
       .find('.slick-header-column:nth(5)')
       .trigger('mouseover')
-      .children('.slick-header-menubutton')
+      .children('.slick-header-menu-button')
       .should('be.hidden')
       .invoke('show')
       .click();
@@ -273,12 +273,12 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', { retries
     const expectedFullHeaderMenuCommands = ['Clear all Filters', 'Clear all Sorting', 'Toggle Filter Row', 'Export to Excel'];
 
     cy.get('#grid16')
-      .find('button.slick-gridmenu-button')
+      .find('button.slick-grid-menu-button')
       .trigger('click')
       .click();
 
-    cy.get('.slick-gridmenu-custom')
-      .find('.slick-gridmenu-item')
+    cy.get('.slick-grid-menu-command-list')
+      .find('.slick-grid-menu-item')
       .each(($child, index) => {
         const commandTitle = $child.text();
         expect(commandTitle).to.eq(expectedFullHeaderMenuCommands[index]);
@@ -300,7 +300,7 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', { retries
     cy.get('#grid16')
       .find('.slick-header-column:nth(5)')
       .trigger('mouseover')
-      .children('.slick-header-menubutton')
+      .children('.slick-header-menu-button')
       .should('be.hidden')
       .invoke('show')
       .click();
@@ -326,7 +326,7 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', { retries
     cy.get('#grid16')
       .find('.slick-header-column:nth(5)')
       .trigger('mouseover')
-      .children('.slick-header-menubutton')
+      .children('.slick-header-menu-button')
       .should('be.hidden')
       .invoke('show')
       .click();
@@ -348,12 +348,12 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', { retries
     const expectedFullHeaderMenuCommands = ['Clear all Filters', 'Clear all Sorting', 'Toggle Filter Row', 'Export to Excel'];
 
     cy.get('#grid16')
-      .find('button.slick-gridmenu-button')
+      .find('button.slick-grid-menu-button')
       .trigger('click')
       .click();
 
-    cy.get('.slick-gridmenu-custom')
-      .find('.slick-gridmenu-item')
+    cy.get('.slick-grid-menu-command-list')
+      .find('.slick-grid-menu-item')
       .each(($child, index) => {
         const commandTitle = $child.text();
         expect(commandTitle).to.eq(expectedFullHeaderMenuCommands[index]);

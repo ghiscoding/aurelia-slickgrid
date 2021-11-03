@@ -196,7 +196,6 @@ export const GlobalGridOptions: Partial<GridOption> = {
     iconTogglePreHeaderCommand: 'fa fa-random',
     menuWidth: 16,
     resizeOnShowHeaderRow: true,
-    useClickToRepositionMenu: false, // use icon location to reposition instead
     headerColumnValueExtractor: pickerHeaderColumnValueExtractor
   },
   headerMenu: {
