@@ -89,8 +89,6 @@ export class Example7 {
       // frozenColumn: 2,
       // frozenRow: 2,
       headerButton: {
-        // when floating to left, you might want to inverse the icon orders
-        inverseOrder: true,
         onCommand: (_e, args) => this.handleOnCommand(_e, args, 2)
       }
     };
@@ -196,6 +194,11 @@ export class Example7 {
         }
       ]
     };
+
+    // when floating to left, you might want to inverse the icon orders
+    if (gridNo === 2) {
+      this.columnDefinitions2[0].header?.buttons?.reverse();
+    }
 
     // Set a button on the second column to demonstrate hover.
     this[`columnDefinitions${gridNo}`][1].name = 'Hover me!';
