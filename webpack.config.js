@@ -68,10 +68,7 @@ module.exports = ({ production } = {}, { server } = {}) => ({
   devtool: production ? false : 'eval-cheap-module-source-map',
   module: {
     rules: [
-      {
-        test: /\.css$/i,
-        use: [{ loader: MiniCssExtractPlugin.loader }, 'css-loader']
-      },
+      { test: /\.css$/i, use: [{ loader: MiniCssExtractPlugin.loader }, 'css-loader'] },
       { test: /\.(sass|scss)$/, use: ['style-loader', 'css-loader', 'sass-loader'], issuer: /\.[tj]s$/i },
       { test: /\.(sass|scss)$/, use: ['css-loader', 'sass-loader'], issuer: /\.html?$/i },
       { test: /\.html$/i, loader: 'html-loader' },
