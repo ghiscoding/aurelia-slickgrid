@@ -162,6 +162,7 @@ export const GlobalGridOptions: Partial<GridOption> = {
   forceFitColumns: false,
   frozenHeaderWidthCalcDifferential: 1,
   gridMenu: {
+    dropSide: 'left',
     commandLabels: {
       clearAllFiltersCommandKey: 'CLEAR_ALL_FILTERS',
       clearAllSortingCommandKey: 'CLEAR_ALL_SORTING',
