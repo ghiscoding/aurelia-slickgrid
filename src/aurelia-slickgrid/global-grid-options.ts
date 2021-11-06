@@ -228,6 +228,7 @@ export const GlobalGridOptions: Partial<GridOption> = {
     totalItems: 0
   },
   rowDetailView: {
+    collapseAllOnSort: true,
     cssClass: 'detail-view-toggle',
     panelRows: 1,
     keyPrefix: '__',
