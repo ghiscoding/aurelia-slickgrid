@@ -1,7 +1,6 @@
 import {
   addToArrayWhenNotExists,
   EventSubscription,
-  GetSlickEventType,
   SlickEventHandler,
   SlickGrid,
   SlickNamespace,
@@ -129,18 +128,16 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
             this.rowDetailViewOptions.onExtensionRegistered(this);
           }
 
-          const onAsyncResponseHandler = this.onAsyncResponse;
-          if (onAsyncResponseHandler) {
-            (this._eventHandler as SlickEventHandler<GetSlickEventType<typeof onAsyncResponseHandler>>).subscribe(onAsyncResponseHandler, (event, args) => {
+          if (this.onAsyncResponse) {
+            this._eventHandler.subscribe(this.onAsyncResponse, (event, args) => {
               if (this.rowDetailViewOptions && typeof this.rowDetailViewOptions.onAsyncResponse === 'function') {
                 this.rowDetailViewOptions.onAsyncResponse(event, args);
               }
             });
           }
 
-          const onAsyncEndUpdateHandler = this.onAsyncEndUpdate;
-          if (onAsyncEndUpdateHandler) {
-            (this._eventHandler as SlickEventHandler<GetSlickEventType<typeof onAsyncEndUpdateHandler>>).subscribe(onAsyncEndUpdateHandler, (event, args) => {
+          if (this.onAsyncEndUpdate) {
+            this._eventHandler.subscribe(this.onAsyncEndUpdate, (event, args) => {
               // triggers after backend called "onAsyncResponse.notify()"
               this.renderViewModel(args?.item);
 
@@ -150,9 +147,8 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
             });
           }
 
-          const onAfterRowDetailToggleHandler = this.onAfterRowDetailToggle;
-          if (onAfterRowDetailToggleHandler) {
-            (this._eventHandler as SlickEventHandler<GetSlickEventType<typeof onAfterRowDetailToggleHandler>>).subscribe(onAfterRowDetailToggleHandler, (event, args) => {
+          if (this.onAfterRowDetailToggle) {
+            this._eventHandler.subscribe(this.onAfterRowDetailToggle, (event, args) => {
               // display preload template & re-render all the other Detail Views after toggling
               // the preload View will eventually go away once the data gets loaded after the "onAsyncEndUpdate" event
               this.renderPreloadView();
@@ -164,9 +160,8 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
             });
           }
 
-          const onBeforeRowDetailToggleHandler = this.onBeforeRowDetailToggle;
-          if (onBeforeRowDetailToggleHandler) {
-            (this._eventHandler as SlickEventHandler<GetSlickEventType<typeof onBeforeRowDetailToggleHandler>>).subscribe(onBeforeRowDetailToggleHandler, (event, args) => {
+          if (this.onBeforeRowDetailToggle) {
+            this._eventHandler.subscribe(this.onBeforeRowDetailToggle, (event, args) => {
               // before toggling row detail, we need to create View Slot if it doesn't exist
               this.handleOnBeforeRowDetailToggle(event, args);
 
@@ -176,9 +171,8 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
             });
           }
 
-          const onRowBackToViewportRangeHandler = this.onRowBackToViewportRange;
-          if (onRowBackToViewportRangeHandler) {
-            (this._eventHandler as SlickEventHandler<GetSlickEventType<typeof onRowBackToViewportRangeHandler>>).subscribe(onRowBackToViewportRangeHandler, (event, args) => {
+          if (this.onRowBackToViewportRange) {
+            this._eventHandler.subscribe(this.onRowBackToViewportRange, (event, args) => {
               // when row is back to viewport range, we will re-render the View Slot(s)
               this.handleOnRowBackToViewportRange(event, args);
 
@@ -188,9 +182,8 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
             });
           }
 
-          const onRowOutOfViewportRangeHandler = this.onRowOutOfViewportRange;
-          if (onRowOutOfViewportRangeHandler) {
-            (this._eventHandler as SlickEventHandler<GetSlickEventType<typeof onRowOutOfViewportRangeHandler>>).subscribe(onRowOutOfViewportRangeHandler, (event, args) => {
+          if (this.onRowOutOfViewportRange) {
+            this._eventHandler.subscribe(this.onRowOutOfViewportRange, (event, args) => {
               if (this.rowDetailViewOptions && typeof this.rowDetailViewOptions.onRowOutOfViewportRange === 'function') {
                 this.rowDetailViewOptions.onRowOutOfViewportRange(event, args);
               }

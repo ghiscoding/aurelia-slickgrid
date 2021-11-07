@@ -22,7 +22,6 @@ import {
   EventSubscription,
   ExtensionList,
   ExternalResource,
-  GetSlickEventType,
   GridStateType,
   Locale,
   Metrics,
@@ -712,9 +711,8 @@ export class AureliaSlickgridCustomElement {
       // expose all Slick Grid Events through dispatch
       for (const prop in grid) {
         if (grid.hasOwnProperty(prop) && prop.startsWith('on')) {
-          const gridEventHandler = (grid as any)[prop];
           const gridEventName = this._eventPubSubService.getEventNameByNamingConvention(prop, slickgridEventPrefix);
-          (this._eventHandler as SlickEventHandler<GetSlickEventType<typeof gridEventHandler>>).subscribe(gridEventHandler, (event, args) => {
+          this._eventHandler.subscribe((grid as any)[prop], (event, args) => {
             return this._eventPubSubService.dispatchCustomEvent(gridEventName, { eventData: event, args });
           });
         }
@@ -723,8 +721,7 @@ export class AureliaSlickgridCustomElement {
       // expose all Slick DataView Events through dispatch
       for (const prop in dataView) {
         if (dataView.hasOwnProperty(prop) && prop.startsWith('on')) {
-          const dataViewEventHandler = (dataView as any)[prop];
-          (this._eventHandler as SlickEventHandler<GetSlickEventType<typeof dataViewEventHandler>>).subscribe(dataViewEventHandler, (event, args) => {
+          this._eventHandler.subscribe((dataView as any)[prop], (event, args) => {
             const dataViewEventName = this._eventPubSubService.getEventNameByNamingConvention(prop, slickgridEventPrefix);
             return this._eventPubSubService.dispatchCustomEvent(dataViewEventName, { eventData: event, args });
           });
@@ -764,13 +761,11 @@ export class AureliaSlickgridCustomElement {
         this.loadFilterPresetsWhenDatasetInitialized();
 
         // When data changes in the DataView, we need to refresh the metrics and/or display a warning if the dataset is empty
-        const onRowCountChangedHandler = dataView.onRowCountChanged;
-        (this._eventHandler as SlickEventHandler<GetSlickEventType<typeof onRowCountChangedHandler>>).subscribe(onRowCountChangedHandler, () => {
+        this._eventHandler.subscribe(dataView.onRowCountChanged, () => {
           grid.invalidate();
           this.handleOnItemCountChanged(dataView.getFilteredItemCount() || 0, dataView.getItemCount());
         });
-        const onSetItemsCalledHandler = dataView.onSetItemsCalled;
-        (this._eventHandler as SlickEventHandler<GetSlickEventType<typeof onSetItemsCalledHandler>>).subscribe(onSetItemsCalledHandler, (_e, args) => {
+        this._eventHandler.subscribe(dataView.onSetItemsCalled, (_e, args) => {
           grid.invalidate();
           this.handleOnItemCountChanged(dataView.getFilteredItemCount() || 0, args.itemCount);
 
@@ -780,8 +775,7 @@ export class AureliaSlickgridCustomElement {
           }
         });
 
-        const onRowsChangedHandler = dataView.onRowsChanged;
-        (this._eventHandler as SlickEventHandler<GetSlickEventType<typeof onRowsChangedHandler>>).subscribe(onRowsChangedHandler, (_e, args) => {
+        this._eventHandler.subscribe(dataView.onRowsChanged, (_e, args) => {
           // filtering data with local dataset will not always show correctly unless we call this updateRow/render
           // also don't use "invalidateRows" since it destroys the entire row and as bad user experience when updating a row
           // see commit: https://github.com/ghiscoding/aurelia-slickgrid/commit/8c503a4d45fba11cbd8d8cc467fae8d177cc4f60
