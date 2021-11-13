@@ -44,7 +44,7 @@ export class Example19 {
     return this.extensions.rowDetailView.instance || {};
 
     // OR options 2
-    // return this.aureliaGrid && this.aureliaGrid.extensionService.getSlickgridAddonInstance(ExtensionName.rowDetailView) || {};
+    // return this.aureliaGrid && this.aureliaGrid.extensionService.getExtensionInstanceByName(ExtensionName.rowDetailView) || {};
   }
 
   attached() {

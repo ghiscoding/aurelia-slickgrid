@@ -32,8 +32,8 @@ export class Example16 {
     this.aureliaGrid = aureliaGrid;
   }
 
-  get rowMoveInstance(): any {
-    return this.aureliaGrid && this.aureliaGrid.extensionService.getSlickgridAddonInstance(ExtensionName.rowMoveManager) || {};
+  get rowMoveInstance() {
+    return this.aureliaGrid?.extensionService.getExtensionInstanceByName(ExtensionName.rowMoveManager) || {};
   }
 
   attached() {

@@ -103,12 +103,12 @@ export class Example24 {
     this.selectedLanguage = defaultLang;
   }
 
-  get cellMenuInstance(): any {
-    return this.aureliaGrid && this.aureliaGrid.extensionService.getSlickgridAddonInstance(ExtensionName.cellMenu) || {};
+  get cellMenuInstance() {
+    return this.aureliaGrid?.extensionService.getExtensionInstanceByName(ExtensionName.cellMenu) ?? {};
   }
 
-  get contextMenuInstance(): any {
-    return this.aureliaGrid && this.aureliaGrid.extensionService.getSlickgridAddonInstance(ExtensionName.contextMenu) || {};
+  get contextMenuInstance() {
+    return this.aureliaGrid?.extensionService.getExtensionInstanceByName(ExtensionName.contextMenu) || {};
   }
 
   attached() {

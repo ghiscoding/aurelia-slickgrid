@@ -9,7 +9,6 @@ import 'slickgrid/lib/jquery.mousewheel';
 import 'slickgrid/slick.core';
 import 'slickgrid/slick.dataview';
 import 'slickgrid/slick.grid';
-import 'slickgrid/slick.groupitemmetadataprovider';
 
 import {
   // interfaces/types
@@ -50,6 +49,7 @@ import {
   ResizerService,
   RxJsFacade,
   SharedService,
+  SlickGroupItemMetadataProvider,
   SlickgridConfig,
   SortService,
   TreeDataService,
@@ -72,8 +72,9 @@ import { Constants } from '../constants';
 import { GlobalGridOptions } from '../global-grid-options';
 import { AureliaGridInstance, GridOption, } from '../models/index';
 import {
-  disposeAllSubscriptions,
+  AureliaUtilService,
   ContainerService,
+  disposeAllSubscriptions,
   TranslaterService,
 } from '../services/index';
 import { SlickRowDetailView } from '../extensions/slickRowDetailView';
@@ -83,12 +84,12 @@ declare const Slick: SlickNamespace;
 
 // Aurelia doesn't support well TypeScript @autoinject in a Plugin so we'll do it the manual way
 @inject(
+  AureliaUtilService,
   BindingEngine,
   Container,
   Element,
   EventAggregator,
   ContainerService,
-  SlickRowDetailView,
   TranslaterService,
 )
 @useView(PLATFORM.moduleName('./aurelia-slickgrid.html'))
@@ -106,7 +107,7 @@ export class AureliaSlickgridCustomElement {
   private _isLocalGrid = true;
   private _paginationOptions: Pagination | undefined;
   private _registeredResources: ExternalResource[] = [];
-  groupItemMetadataProvider: any;
+  groupItemMetadataProvider?: SlickGroupItemMetadataProvider;
   backendServiceApi: BackendServiceApi | undefined;
   locales!: Locale;
   metrics?: Metrics;
@@ -118,10 +119,11 @@ export class AureliaSlickgridCustomElement {
     paginationService: PaginationService;
   };
 
-  // components
+  // components / plugins
   slickEmptyWarning: SlickEmptyWarningComponent | undefined;
   slickFooter: SlickFooterComponent | undefined;
   slickPagination: SlickPaginationComponent | undefined;
+  slickRowDetailView?: SlickRowDetailView;
 
   // services
   backendUtilityService!: BackendUtilityService;
@@ -156,12 +158,12 @@ export class AureliaSlickgridCustomElement {
   @bindable() gridOptions!: GridOption;
 
   constructor(
+    private readonly aureliaUtilService: AureliaUtilService,
     private readonly bindingEngine: BindingEngine,
     private readonly container: Container,
-    private readonly elm: Element,
+    private readonly elm: HTMLDivElement,
     private readonly globalEa: EventAggregator,
     private readonly containerService: ContainerService,
-    private readonly slickRowDetailView: SlickRowDetailView,
     private readonly translaterService: TranslaterService,
     externalServices: {
       backendUtilityService?: BackendUtilityService,
@@ -308,7 +310,7 @@ export class AureliaSlickgridCustomElement {
       let dataViewOptions: DataViewOption = { inlineFilters: dataviewInlineFilters };
 
       if (this.gridOptions.draggableGrouping || this.gridOptions.enableGrouping) {
-        this.groupItemMetadataProvider = new Slick.Data.GroupItemMetadataProvider();
+        this.groupItemMetadataProvider = new SlickGroupItemMetadataProvider();
         this.sharedService.groupItemMetadataProvider = this.groupItemMetadataProvider;
         dataViewOptions = { ...dataViewOptions, groupItemMetadataProvider: this.groupItemMetadataProvider };
       }
@@ -1316,6 +1318,7 @@ export class AureliaSlickgridCustomElement {
     }
 
     if (this.gridOptions.enableRowDetailView) {
+      this.slickRowDetailView = new SlickRowDetailView(this.aureliaUtilService, this._eventPubSubService, this.elm);
       this.slickRowDetailView.create(this.columnDefinitions, this.gridOptions);
       this._registeredResources.push(this.slickRowDetailView);
       this.extensionService.addExtensionToList(ExtensionName.rowDetailView, { name: ExtensionName.rowDetailView, class: this.slickRowDetailView, instance: this.slickRowDetailView });

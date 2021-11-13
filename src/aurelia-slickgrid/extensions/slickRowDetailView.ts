@@ -36,7 +36,7 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
   protected _subscriptions: EventSubscription[] = [];
   protected _userProcessFn?: (item: any) => Promise<any>;
 
-  constructor(protected readonly aureliaUtilService: AureliaUtilService, private readonly eventPubSubService: EventPubSubService) {
+  constructor(protected readonly aureliaUtilService: AureliaUtilService, private readonly eventPubSubService: EventPubSubService, private readonly gridContainerElement: HTMLDivElement) {
     super();
   }
 
@@ -206,7 +206,9 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
 
           // on filter changed, we need to re-render all Views
           this._subscriptions.push(
-            this.eventPubSubService?.subscribe('onFilterChanged', this.redrawAllViewSlots.bind(this))
+            this.eventPubSubService?.subscribe('onFilterChanged', this.redrawAllViewSlots.bind(this)),
+            this.eventPubSubService?.subscribe('onGridMenuClearAllFilters', () => setTimeout(() => this.redrawAllViewSlots())),
+            this.eventPubSubService?.subscribe('onGridMenuClearAllSorting', () => setTimeout(() => this.redrawAllViewSlots())),
           );
         }
       }
@@ -233,7 +235,7 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
 
   /** Redraw the necessary View Slot */
   redrawViewSlot(slot: CreatedView) {
-    const containerElement = document.getElementsByClassName(`${ROW_DETAIL_CONTAINER_PREFIX}${slot.id}`);
+    const containerElement = this.gridContainerElement.getElementsByClassName(`${ROW_DETAIL_CONTAINER_PREFIX}${slot.id}`);
     if (containerElement?.length >= 0) {
       this.renderViewModel(slot.dataContext);
     }
@@ -241,7 +243,7 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
 
   /** Render (or re-render) the View Slot (Row Detail) */
   renderPreloadView() {
-    const containerElements = document.getElementsByClassName(`${PRELOAD_CONTAINER_PREFIX}`);
+    const containerElements = this.gridContainerElement.getElementsByClassName(`${PRELOAD_CONTAINER_PREFIX}`);
     if (containerElements?.length >= 0) {
       this.aureliaUtilService.createAureliaViewAddToSlot(this._preloadView, containerElements[containerElements.length - 1], true);
     }
@@ -249,7 +251,7 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
 
   /** Render (or re-render) the View Slot (Row Detail) */
   renderViewModel(item: any) {
-    const containerElements = document.getElementsByClassName(`${ROW_DETAIL_CONTAINER_PREFIX}${item[this.datasetIdPropName]}`);
+    const containerElements = this.gridContainerElement.getElementsByClassName(`${ROW_DETAIL_CONTAINER_PREFIX}${item[this.datasetIdPropName]}`);
     if (containerElements?.length > 0) {
       const bindableData = {
         model: item,
@@ -274,7 +276,7 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
 
   protected disposeViewSlot(expandedView: CreatedView) {
     if (expandedView && expandedView.view && expandedView.viewSlot && expandedView.view.unbind && expandedView.viewSlot.remove) {
-      const container = document.getElementsByClassName(`${ROW_DETAIL_CONTAINER_PREFIX}${this._slots[0].id}`);
+      const container = this.gridContainerElement.getElementsByClassName(`${ROW_DETAIL_CONTAINER_PREFIX}${this._slots[0].id}`);
       if (container && container.length > 0) {
         expandedView.viewSlot.remove(expandedView.view);
         expandedView.view.unbind();
@@ -324,11 +326,7 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
     grid: SlickGrid;
   }) {
     if (args?.item) {
-      this._slots.forEach((slot) => {
-        if (slot.id === args.item[this.datasetIdPropName]) {
-          this.redrawViewSlot(slot);
-        }
-      });
+      this.redrawAllViewSlots();
     }
   }
 

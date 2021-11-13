@@ -30,6 +30,7 @@ import {
   ServicePagination,
   SharedService,
   SlickGrid,
+  SlickGroupItemMetadataProvider,
   SortService,
   TreeDataService
 } from '@slickgrid-universal/common';
@@ -43,7 +44,7 @@ import { RxJsResourceStub } from '../../../../test/rxjsResourceStub';
 import { HttpStub } from '../../../../test/httpClientStub';
 import { MockSlickEvent, MockSlickEventHandler } from '../../../../test/mockSlickEvent';
 import { TranslaterServiceStub } from '../../../../test/translaterServiceStub';
-import { ContainerService, TranslaterService } from '../../services';
+import { AureliaUtilService, ContainerService, TranslaterService } from '../../services';
 import { AureliaSlickgridCustomElement } from '../aurelia-slickgrid';
 import { SlickRowDetailView } from '../../extensions/slickRowDetailView';
 
@@ -53,6 +54,20 @@ const mockAutoAddCustomEditorFormatter = jest.fn();
 
 declare const Slick: any;
 const slickEventHandler = new MockSlickEventHandler();
+
+const mockSlickRowDetailView = {
+  create: jest.fn(),
+  init: jest.fn(),
+} as unknown as SlickRowDetailView;
+
+jest.mock('../../extensions/slickRowDetailView', () => ({
+  SlickRowDetailView: jest.fn().mockImplementation(() => mockSlickRowDetailView),
+}));
+
+const aureliaUtilServiceStub = {
+  createAureliaViewModelAddToSlot: jest.fn(),
+  createAureliaViewAddToSlot: jest.fn(),
+} as unknown as AureliaUtilService;
 
 const extensionServiceStub = {
   addExtensionToList: jest.fn(),
@@ -89,11 +104,6 @@ const mockGraphqlService = {
   updateSorters: jest.fn(),
   updatePagination: jest.fn(),
 } as unknown as GraphqlService;
-
-const mockSlickRowDetailView = {
-  create: jest.fn(),
-  init: jest.fn(),
-} as unknown as SlickRowDetailView;
 
 const backendUtilityServiceStub = {
   addRxJsResource: jest.fn(),
@@ -328,12 +338,12 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
     globalEa = new EventAggregator();
 
     customElement = new AureliaSlickgridCustomElement(
+      aureliaUtilServiceStub,
       bindingEngineStub,
       container,
       divContainer,
       globalEa,
       containerService,
-      mockSlickRowDetailView,
       translaterService as unknown as TranslaterService,
       {
         backendUtilityService: backendUtilityServiceStub,
@@ -778,33 +788,29 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
     describe('use grouping', () => {
       it('should load groupItemMetaProvider to the DataView when using "draggableGrouping" feature', () => {
         const dataviewSpy = jest.spyOn(mockDataViewImplementation.prototype, 'constructor');
-        const groupMetaSpy = jest.spyOn(mockGroupItemMetaProviderImplementation.prototype, 'constructor');
         const sharedMetaSpy = jest.spyOn(SharedService.prototype, 'groupItemMetadataProvider', 'set');
         jest.spyOn(extensionServiceStub, 'extensionList', 'get').mockReturnValue({ draggableGrouping: { pluginName: 'DraggableGrouping' } } as unknown as ExtensionList<any, any>);
 
         customElement.gridOptions = { draggableGrouping: {} };
         customElement.initialization(slickEventHandler);
-        const extensions = customElement.extensions;
 
-        expect(Object.keys(extensions).length).toBe(1);
         expect(dataviewSpy).toHaveBeenCalledWith({ inlineFilters: false, groupItemMetadataProvider: expect.anything() });
-        expect(groupMetaSpy).toHaveBeenCalledWith();
-        expect(sharedMetaSpy).toHaveBeenCalledWith(mockGroupItemMetaProvider);
+        expect(sharedService.groupItemMetadataProvider instanceof SlickGroupItemMetadataProvider).toBeTruthy();
+        expect(sharedMetaSpy).toHaveBeenCalledWith(expect.toBeObject());
 
         customElement.dispose();
       });
 
       it('should load groupItemMetaProvider to the DataView when using "enableGrouping" feature', () => {
         const dataviewSpy = jest.spyOn(mockDataViewImplementation.prototype, 'constructor');
-        const groupMetaSpy = jest.spyOn(mockGroupItemMetaProviderImplementation.prototype, 'constructor');
         const sharedMetaSpy = jest.spyOn(SharedService.prototype, 'groupItemMetadataProvider', 'set');
 
         customElement.gridOptions = { enableGrouping: true };
         customElement.initialization(slickEventHandler);
 
         expect(dataviewSpy).toHaveBeenCalledWith({ inlineFilters: false, groupItemMetadataProvider: expect.anything() });
-        expect(groupMetaSpy).toHaveBeenCalledWith();
-        expect(sharedMetaSpy).toHaveBeenCalledWith(mockGroupItemMetaProvider);
+        expect(sharedMetaSpy).toHaveBeenCalledWith(expect.toBeObject());
+        expect(sharedService.groupItemMetadataProvider instanceof SlickGroupItemMetadataProvider).toBeTruthy();
 
         customElement.dispose();
       });

@@ -215,9 +215,9 @@ export class Example9 {
     this.selectedLanguage = nextLanguage;
   }
 
-  toggleGridMenu(e: Event) {
-    if (this.aureliaGrid && this.aureliaGrid.extensionService) {
-      const gridMenuInstance = this.aureliaGrid.extensionService.getSlickgridAddonInstance(ExtensionName.gridMenu);
+  toggleGridMenu(e: MouseEvent) {
+    if (this.aureliaGrid?.extensionService) {
+      const gridMenuInstance = this.aureliaGrid.extensionService.getExtensionInstanceByName(ExtensionName.gridMenu);
       // open the external button Grid Menu, you can also optionally pass Grid Menu options as 2nd argument
       // for example we want to align our external button on the right without affecting the menu within the grid which will stay aligned on the left
       gridMenuInstance.showGridMenu(e, { dropSide: 'right' });
