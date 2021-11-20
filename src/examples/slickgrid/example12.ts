@@ -182,7 +182,32 @@ export class Example12 {
         exportWithFormatter: true,
         sanitizeDataExport: true
       },
-      excelExportOptions: { exportWithFormatter: true, sanitizeDataExport: true },
+      excelExportOptions: {
+        // optionally pass a custom header to the Excel Sheet
+        // a lot of the info can be found on Web Archive of Excel-Builder
+        // http://web.archive.org/web/20160907052007/http://excelbuilderjs.com/cookbook/fontsAndColors.html
+        customExcelHeader: (workbook, sheet) => {
+          const customTitle = this.i18n.getLocale() === 'fr' ? 'Titre qui est suffisament long pour être coupé' : 'My header that is long enough to wrap';
+          const stylesheet = workbook.getStyleSheet();
+          const aFormatDefn = {
+            'font': { 'size': 12, 'fontName': 'Calibri', 'bold': true, color: 'FF0000FF' }, // every color starts with FF, then regular HTML color
+            'alignment': { 'wrapText': true }
+          };
+          const formatterId = stylesheet.createFormat(aFormatDefn);
+          sheet.setRowInstructions(0, { height: 30 }); // change height of row 0
+
+          // excel cells start with A1 which is upper left corner
+          sheet.mergeCells('B1', 'D1');
+          const cols = [];
+          // push empty data on A1
+          cols.push({ value: '' });
+          // push data in B1 cell with metadata formatter
+          cols.push({ value: customTitle, metadata: { style: formatterId.id } });
+          sheet.data.push(cols);
+        },
+        exportWithFormatter: true,
+        sanitizeDataExport: true
+      },
       registerExternalResources: [this.excelExportService, this.textExportService],
     };
   }
