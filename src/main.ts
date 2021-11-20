@@ -47,14 +47,6 @@ export async function configure(aurelia: Aurelia) {
     });
   });
 
-  if (environment.debug) {
-    aurelia.use.developmentLogging();
-  }
-
-  if (environment.testing) {
-    aurelia.use.plugin(PLATFORM.moduleName('aurelia-testing'));
-  }
-
   await aurelia.start();
   await aurelia.setRoot(PLATFORM.moduleName('app'));
 }
