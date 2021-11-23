@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.12.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v3.12.0...v3.12.1) (2021-11-16)
+
+
+### Bug Fixes
+
+* **extensions:** add missing DI in Grid Menu ([#672](https://github.com/ghiscoding/aurelia-slickgrid/issues/672)) ([96c15bd](https://github.com/ghiscoding/aurelia-slickgrid/commit/96c15bda9f1b9dc42743a448bf1aca6eb2ecc826))
+
 ## [3.12.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v3.11.0...v3.12.0) (2021-10-28)
 
 
