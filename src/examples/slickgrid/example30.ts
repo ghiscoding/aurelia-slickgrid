@@ -314,7 +314,6 @@ export class Example30 {
         formatter: () => `<div class="button-style margin-auto" style="width: 35px;"><span class="fa fa-chevron-down text-primary"></span></div>`,
         cellMenu: {
           hideCloseButton: false,
-          width: 175,
           commandTitle: 'Commands',
           commandItems: [
             {
