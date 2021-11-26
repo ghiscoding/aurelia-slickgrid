@@ -342,7 +342,6 @@ export class Example24 {
   getContextMenuOptions(): ContextMenu {
     return {
       hideCloseButton: false,
-      width: 200,
       // optionally and conditionally define when the the menu is usable,
       // this should be used with a custom formatter to show/hide/disable the menu
       menuUsabilityOverride: (args) => {

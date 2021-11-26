@@ -28,7 +28,6 @@ export const GlobalGridOptions: Partial<GridOption> = {
     hideCloseButton: true,
     hideCommandSection: false,
     hideOptionSection: false,
-    minWidth: 140,
   },
   columnGroupSeparator: ' - ',
   columnPicker: {

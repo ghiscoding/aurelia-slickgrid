@@ -212,7 +212,7 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', { retries
       .click();
 
     cy.get('.slick-header-menu')
-      .children()
+      .children('.slick-header-menu-item')
       .each(($child, index) => {
         const commandTitle = $child.text();
         expect(commandTitle).to.eq(expectedFullHeaderMenuCommands[index]);
@@ -261,7 +261,7 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', { retries
       .click();
 
     cy.get('.slick-header-menu')
-      .children()
+      .children('.slick-header-menu-item')
       .each(($child, index) => {
         const commandTitle = $child.text();
         expect(commandTitle).to.eq(expectedFullHeaderMenuCommands[index]);
@@ -306,7 +306,7 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', { retries
       .click();
 
     cy.get('.slick-header-menu')
-      .children()
+      .children('.slick-header-menu-item')
       .each(($child, index) => {
         const commandTitle = $child.text();
         expect(commandTitle).to.eq(expectedFullHeaderMenuCommands[index]);
@@ -332,7 +332,7 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', { retries
       .click();
 
     cy.get('.slick-header-menu')
-      .children()
+      .children('.slick-header-menu-item')
       .each(($child, index) => {
         const commandTitle = $child.text();
         expect(commandTitle).to.eq(expectedFullHeaderMenuCommands[index]);
@@ -394,7 +394,7 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', { retries
 
     cy.get('#grid16')
       .get('.slick-columnpicker:visible')
-      .find('span.close')
+      .find('.close')
       .trigger('click')
       .click();
 

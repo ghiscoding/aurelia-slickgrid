@@ -40,7 +40,7 @@ describe('Example 9 - Grid Menu', { retries: 1 }, () => {
 
       cy.get('#grid9')
         .get('.slick-grid-menu:visible')
-        .find('span.close')
+        .find('.close')
         .trigger('click')
         .click({ force: true });
     });
@@ -59,7 +59,7 @@ describe('Example 9 - Grid Menu', { retries: 1 }, () => {
 
       cy.get('.slick-header-menu')
         .should('be.visible')
-        .children('.slick-header-menu-item:nth-child(4)')
+        .children('.slick-header-menu-item:nth-of-type(4)')
         .children('.slick-header-menu-content')
         .should('contain', 'Hide Column')
         .click({ force: true });
@@ -86,7 +86,7 @@ describe('Example 9 - Grid Menu', { retries: 1 }, () => {
 
       cy.get('#grid9')
         .get('.slick-grid-menu:visible')
-        .find('span.close')
+        .find('.close')
         .click({ force: true });
     });
 
@@ -151,7 +151,7 @@ describe('Example 9 - Grid Menu', { retries: 1 }, () => {
 
       cy.get('#grid9')
         .get('.slick-grid-menu:visible')
-        .find('span.close')
+        .find('.close')
         .trigger('click')
         .click({ force: true });
 
@@ -191,7 +191,7 @@ describe('Example 9 - Grid Menu', { retries: 1 }, () => {
 
       cy.get('.slick-header-menu')
         .should('be.visible')
-        .children('.slick-header-menu-item:nth-child(4)')
+        .children('.slick-header-menu-item:nth-of-type(4)')
         .children('.slick-header-menu-content')
         .should('contain', 'Hide Column')
         .click({ force: true });
@@ -217,7 +217,7 @@ describe('Example 9 - Grid Menu', { retries: 1 }, () => {
 
       cy.get('#grid9')
         .get('.slick-grid-menu:visible')
-        .find('span.close')
+        .find('.close')
         .trigger('click')
         .click({ force: true });
 
@@ -228,7 +228,7 @@ describe('Example 9 - Grid Menu', { retries: 1 }, () => {
 
       cy.get('#grid9')
         .get('.slick-grid-menu')
-        .find('span.close')
+        .find('.close')
         .trigger('click', { force: true })
         .click({ force: true });
     });
@@ -262,7 +262,7 @@ describe('Example 9 - Grid Menu', { retries: 1 }, () => {
 
       cy.get('.slick-header-menu')
         .should('be.visible')
-        .children('.slick-header-menu-item:nth-child(4)')
+        .children('.slick-header-menu-item:nth-of-type(4)')
         .children('.slick-header-menu-content')
         .should('contain', 'Cacher la colonne')
         .click({ force: true });
@@ -307,7 +307,7 @@ describe('Example 9 - Grid Menu', { retries: 1 }, () => {
 
       cy.get('.slick-header-menu')
         .should('be.visible')
-        .children('.slick-header-menu-item:nth-child(4)')
+        .children('.slick-header-menu-item:nth-of-type(4)')
         .children('.slick-header-menu-content')
         .should('contain', 'Cacher la colonne')
         .click({ force: true });
@@ -333,7 +333,7 @@ describe('Example 9 - Grid Menu', { retries: 1 }, () => {
 
       cy.get('#grid9')
         .get('.slick-grid-menu:visible')
-        .find('span.close')
+        .find('.close')
         .trigger('click')
         .click({ force: true });
 
@@ -344,7 +344,7 @@ describe('Example 9 - Grid Menu', { retries: 1 }, () => {
 
       cy.get('#grid9')
         .get('.slick-grid-menu')
-        .find('span.close')
+        .find('.close')
         .trigger('click', { force: true })
         .click({ force: true });
     });
