@@ -27,7 +27,7 @@ export class Example19 {
   gridOptions!: GridOption;
   columnDefinitions: Column[] = [];
   dataset: any[] = [];
-  extensions!: ExtensionList<any, any>;
+  extensions!: ExtensionList<any>;
   flashAlertType = 'info';
   message = '';
   subscriptions: Subscription[] = [];

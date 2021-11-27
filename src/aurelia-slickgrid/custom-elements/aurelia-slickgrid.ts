@@ -149,7 +149,7 @@ export class AureliaSlickgridCustomElement {
   @bindable({ defaultBindingMode: bindingMode.twoWay }) grid!: SlickGrid;
   @bindable({ defaultBindingMode: bindingMode.twoWay }) paginationOptions: Pagination | undefined;
   @bindable({ defaultBindingMode: bindingMode.twoWay }) totalItems = 0;
-  @bindable({ defaultBindingMode: bindingMode.fromView }) extensions!: ExtensionList<any, any>;
+  @bindable({ defaultBindingMode: bindingMode.fromView }) extensions!: ExtensionList<any>;
   @bindable({ defaultBindingMode: bindingMode.fromView }) instances: AureliaGridInstance | null = null;
   @bindable() customDataView?: SlickDataView;
   @bindable() dataset: any[] = [];
@@ -1321,7 +1321,7 @@ export class AureliaSlickgridCustomElement {
       this.slickRowDetailView = new SlickRowDetailView(this.aureliaUtilService, this._eventPubSubService, this.elm);
       this.slickRowDetailView.create(this.columnDefinitions, this.gridOptions);
       this._registeredResources.push(this.slickRowDetailView);
-      this.extensionService.addExtensionToList(ExtensionName.rowDetailView, { name: ExtensionName.rowDetailView, class: this.slickRowDetailView, instance: this.slickRowDetailView });
+      this.extensionService.addExtensionToList(ExtensionName.rowDetailView, { name: ExtensionName.rowDetailView, instance: this.slickRowDetailView });
     }
 
     // also initialize (render) the empty warning component
