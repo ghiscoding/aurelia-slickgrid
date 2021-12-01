@@ -145,7 +145,7 @@
     "promise-polyfill": "^8.2.1",
     "rimraf": "^3.0.2",
     "rxjs": "^7.4.0",
-    "sass": "^1.43.4",
+    "sass": "^1.44.0",
     "sass-loader": "^12.3.0",
     "standard-version": "^9.3.2",
     "style-loader": "3.3.1",
