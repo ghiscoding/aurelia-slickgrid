@@ -152,7 +152,7 @@
     "ts-jest": "^27.0.7",
     "ts-loader": "^9.2.6",
     "ts-node": "^10.4.0",
-    "typedoc": "^0.22.9",
+    "typedoc": "^0.22.10",
     "vinyl-fs": "^3.0.3",
     "webpack": "^5.64.1",
     "webpack-cli": "^4.9.1",
