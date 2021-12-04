@@ -201,8 +201,8 @@ describe('Example 19 - Row Detail View', { retries: 1 }, () => {
 
     cy.get('.slick-header-menu')
       .should('be.visible')
-      .children('.slick-header-menu-item:nth-of-type(4)')
-      .children('.slick-header-menu-content')
+      .children('.slick-menu-item:nth-of-type(4)')
+      .children('.slick-menu-content')
       .should('contain', 'Sort Descending')
       .click();
 
@@ -215,8 +215,8 @@ describe('Example 19 - Row Detail View', { retries: 1 }, () => {
 
     cy.get('.slick-header-menu')
       .should('be.visible')
-      .children('.slick-header-menu-item:nth-of-type(3)')
-      .children('.slick-header-menu-content')
+      .children('.slick-menu-item:nth-of-type(3)')
+      .children('.slick-menu-content')
       .should('contain', 'Sort Ascending')
       .click();
 
@@ -267,7 +267,7 @@ describe('Example 19 - Row Detail View', { retries: 1 }, () => {
       .click();
 
     cy.get(`.slick-grid-menu:visible`)
-      .find('.slick-grid-menu-item')
+      .find('.slick-menu-item')
       .first()
       .find('span')
       .contains('Clear all Filters')
@@ -289,7 +289,7 @@ describe('Example 19 - Row Detail View', { retries: 1 }, () => {
       .click();
 
     cy.get(`.slick-grid-menu:visible`)
-      .find('.slick-grid-menu-item')
+      .find('.slick-menu-item')
       .find('span')
       .contains('Clear all Sorting')
       .click();

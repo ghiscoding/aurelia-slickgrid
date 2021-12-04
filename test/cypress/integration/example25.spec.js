@@ -115,7 +115,7 @@ describe('Example 25 - GraphQL Basic API without Pagination', { retries: 1 }, ()
       .click();
 
     cy.get(`.slick-grid-menu:visible`)
-      .find('.slick-grid-menu-item')
+      .find('.slick-menu-item')
       .first()
       .find('span')
       .contains('Clear all Filters')
@@ -160,7 +160,7 @@ describe('Example 25 - GraphQL Basic API without Pagination', { retries: 1 }, ()
       .click();
 
     cy.get(`.slick-grid-menu:visible`)
-      .find('.slick-grid-menu-item')
+      .find('.slick-menu-item')
       .first()
       .find('span')
       .contains('Clear all Filters')
