@@ -104,11 +104,11 @@ export class Example24 {
   }
 
   get cellMenuInstance() {
-    return this.aureliaGrid?.extensionService.getExtensionInstanceByName(ExtensionName.cellMenu) ?? {};
+    return this.aureliaGrid?.extensionService.getExtensionInstanceByName(ExtensionName.cellMenu);
   }
 
   get contextMenuInstance() {
-    return this.aureliaGrid?.extensionService.getExtensionInstanceByName(ExtensionName.contextMenu) || {};
+    return this.aureliaGrid?.extensionService.getExtensionInstanceByName(ExtensionName.contextMenu);
   }
 
   attached() {
@@ -423,7 +423,7 @@ export class Example24 {
       onOptionSelected: ((_e, args) => {
         // change Priority
         const dataContext = args && args.dataContext;
-        if (dataContext && dataContext.hasOwnProperty('priority')) {
+        if (dataContext?.hasOwnProperty('priority')) {
           dataContext.priority = args.item.option;
           this.aureliaGrid.gridService.updateItem(dataContext);
         }
@@ -435,7 +435,7 @@ export class Example24 {
     // when showing both Commands/Options, we can just pass an empty array to show over all columns
     // else show on all columns except Priority
     const showOverColumnIds = showBothList ? [] : ['id', 'title', 'complete', 'start', 'finish', 'completed', 'action'];
-    this.contextMenuInstance.setOptions({
+    this.contextMenuInstance?.setOptions({
       commandShownOverColumnIds: showOverColumnIds,
       // hideCommandSection: !showBothList
     });
@@ -443,7 +443,7 @@ export class Example24 {
 
   showCellMenuCommandsAndOptions(showBothList: boolean) {
     // change via the plugin setOptions
-    this.cellMenuInstance.setOptions({
+    this.cellMenuInstance?.setOptions({
       hideOptionSection: !showBothList
     });
 

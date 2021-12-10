@@ -33,7 +33,7 @@ export class Example16 {
   }
 
   get rowMoveInstance() {
-    return this.aureliaGrid?.extensionService.getExtensionInstanceByName(ExtensionName.rowMoveManager) || {};
+    return this.aureliaGrid?.extensionService.getExtensionInstanceByName(ExtensionName.rowMoveManager);
   }
 
   attached() {
