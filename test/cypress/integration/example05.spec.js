@@ -200,8 +200,7 @@ describe('Example 5 - OData Grid', { retries: 1 }, () => {
     it('should Clear all Filters and expect to go back to first page', () => {
       cy.get('#grid5')
         .find('button.slick-grid-menu-button')
-        .trigger('click')
-        .click();
+        .click({ force: true });
 
       cy.get(`.slick-grid-menu:visible`)
         .find('.slick-menu-item')
@@ -245,8 +244,7 @@ describe('Example 5 - OData Grid', { retries: 1 }, () => {
     it('should Clear all Sorting', () => {
       cy.get('#grid5')
         .find('button.slick-grid-menu-button')
-        .trigger('click')
-        .click();
+        .click({ force: true });
 
       cy.get(`.slick-grid-menu:visible`)
         .find('.slick-menu-item:nth(1)')
@@ -337,8 +335,7 @@ describe('Example 5 - OData Grid', { retries: 1 }, () => {
     it('should Clear all Filters, set 20 items per page & uncheck "enableCount"', () => {
       cy.get('#grid5')
         .find('button.slick-grid-menu-button')
-        .trigger('click')
-        .click();
+        .click({ force: true });
 
       cy.get(`.slick-grid-menu:visible`)
         .find('.slick-menu-item')
@@ -419,8 +416,7 @@ describe('Example 5 - OData Grid', { retries: 1 }, () => {
     it('should Clear all Sorting', () => {
       cy.get('#grid5')
         .find('button.slick-grid-menu-button')
-        .trigger('click')
-        .click();
+        .click({ force: true });
 
       cy.get(`.slick-grid-menu:visible`)
         .find('.slick-menu-item:nth(1)')
