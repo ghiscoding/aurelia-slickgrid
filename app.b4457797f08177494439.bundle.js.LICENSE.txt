@@ -55,20 +55,6 @@ https://github.com/nodeca/pako/blob/master/LICENSE
  */
 
 /*!
- * assign-deep <https://github.com/jonschlinkert/assign-deep>
- *
- * Copyright (c) 2017-present, Jon Schlinkert.
- * Released under the MIT License.
- */
-
-/*!
- * assign-symbols <https://github.com/jonschlinkert/assign-symbols>
- *
- * Copyright (c) 2015-present, Jon Schlinkert.
- * Licensed under the MIT License.
- */
-
-/*!
  * jQuery JavaScript Library v3.5.1
  * https://jquery.com/
  *
@@ -237,7 +223,7 @@ See the Apache Version 2.0 License for specific language governing permissions
 and limitations under the License.
 ***************************************************************************** */
 
-/*! @license DOMPurify 2.3.3 | (c) Cure53 and other contributors | Released under the Apache license 2.0 and Mozilla Public License 2.0 | github.com/cure53/DOMPurify/blob/2.3.3/LICENSE */
+/*! @license DOMPurify 2.3.4 | (c) Cure53 and other contributors | Released under the Apache license 2.0 and Mozilla Public License 2.0 | github.com/cure53/DOMPurify/blob/2.3.4/LICENSE */
 
 /*! Copyright (c) 2011 Brandon Aaron (http://brandonaaron.net)
  * Licensed under the MIT License (LICENSE.txt).
