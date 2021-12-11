@@ -59,7 +59,7 @@ export class Example20 {
 
   highlightRow(event: Event, isMouseEnter: boolean) {
     const cell = this.gridObj.getCellFromEvent(event);
-    const rows = isMouseEnter ? [cell.row] : [];
+    const rows = isMouseEnter ? [cell?.row ?? 0] : [];
     this.gridObj.setSelectedRows(rows); // highlight current row
     event.preventDefault();
   }

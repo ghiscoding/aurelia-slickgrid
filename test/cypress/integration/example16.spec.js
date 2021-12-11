@@ -157,12 +157,12 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', { retries
     const expectedFullHeaderMenuCommands = ['Clear all Filters', 'Clear all Sorting', 'Toggle Filter Row', 'Export to Excel'];
 
     cy.get('#grid16')
-      .find('button.slick-gridmenu-button')
+      .find('button.slick-grid-menu-button')
       .trigger('click')
       .click({ force: true });
 
-    cy.get('.slick-gridmenu-custom')
-      .find('.slick-gridmenu-item')
+    cy.get('.slick-menu-command-list')
+      .find('.slick-menu-item')
       .each(($child, index) => {
         const commandTitle = $child.text();
         expect(commandTitle).to.eq(expectedFullHeaderMenuCommands[index]);
@@ -206,13 +206,13 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', { retries
     cy.get('#grid16')
       .find('.slick-header-column:nth(5)')
       .trigger('mouseover')
-      .children('.slick-header-menubutton')
+      .children('.slick-header-menu-button')
       .should('be.hidden')
       .invoke('show')
       .click();
 
     cy.get('.slick-header-menu')
-      .children()
+      .children('.slick-menu-item')
       .each(($child, index) => {
         const commandTitle = $child.text();
         expect(commandTitle).to.eq(expectedFullHeaderMenuCommands[index]);
@@ -228,12 +228,12 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', { retries
     const expectedFullHeaderMenuCommands = ['Clear all Filters', 'Clear all Sorting', 'Toggle Filter Row', 'Export to Excel'];
 
     cy.get('#grid16')
-      .find('button.slick-gridmenu-button')
+      .find('button.slick-grid-menu-button')
       .trigger('click')
       .click();
 
-    cy.get('.slick-gridmenu-custom')
-      .find('.slick-gridmenu-item')
+    cy.get('.slick-menu-command-list')
+      .find('.slick-menu-item')
       .each(($child, index) => {
         const commandTitle = $child.text();
         expect(commandTitle).to.eq(expectedFullHeaderMenuCommands[index]);
@@ -255,13 +255,13 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', { retries
     cy.get('#grid16')
       .find('.slick-header-column:nth(5)')
       .trigger('mouseover')
-      .children('.slick-header-menubutton')
+      .children('.slick-header-menu-button')
       .should('be.hidden')
       .invoke('show')
       .click();
 
     cy.get('.slick-header-menu')
-      .children()
+      .children('.slick-menu-item')
       .each(($child, index) => {
         const commandTitle = $child.text();
         expect(commandTitle).to.eq(expectedFullHeaderMenuCommands[index]);
@@ -273,12 +273,12 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', { retries
     const expectedFullHeaderMenuCommands = ['Clear all Filters', 'Clear all Sorting', 'Toggle Filter Row', 'Export to Excel'];
 
     cy.get('#grid16')
-      .find('button.slick-gridmenu-button')
+      .find('button.slick-grid-menu-button')
       .trigger('click')
       .click();
 
-    cy.get('.slick-gridmenu-custom')
-      .find('.slick-gridmenu-item')
+    cy.get('.slick-menu-command-list')
+      .find('.slick-menu-item')
       .each(($child, index) => {
         const commandTitle = $child.text();
         expect(commandTitle).to.eq(expectedFullHeaderMenuCommands[index]);
@@ -300,13 +300,13 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', { retries
     cy.get('#grid16')
       .find('.slick-header-column:nth(5)')
       .trigger('mouseover')
-      .children('.slick-header-menubutton')
+      .children('.slick-header-menu-button')
       .should('be.hidden')
       .invoke('show')
       .click();
 
     cy.get('.slick-header-menu')
-      .children()
+      .children('.slick-menu-item')
       .each(($child, index) => {
         const commandTitle = $child.text();
         expect(commandTitle).to.eq(expectedFullHeaderMenuCommands[index]);
@@ -326,13 +326,13 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', { retries
     cy.get('#grid16')
       .find('.slick-header-column:nth(5)')
       .trigger('mouseover')
-      .children('.slick-header-menubutton')
+      .children('.slick-header-menu-button')
       .should('be.hidden')
       .invoke('show')
       .click();
 
     cy.get('.slick-header-menu')
-      .children()
+      .children('.slick-menu-item')
       .each(($child, index) => {
         const commandTitle = $child.text();
         expect(commandTitle).to.eq(expectedFullHeaderMenuCommands[index]);
@@ -348,12 +348,12 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', { retries
     const expectedFullHeaderMenuCommands = ['Clear all Filters', 'Clear all Sorting', 'Toggle Filter Row', 'Export to Excel'];
 
     cy.get('#grid16')
-      .find('button.slick-gridmenu-button')
+      .find('button.slick-grid-menu-button')
       .trigger('click')
       .click();
 
-    cy.get('.slick-gridmenu-custom')
-      .find('.slick-gridmenu-item')
+    cy.get('.slick-menu-command-list')
+      .find('.slick-menu-item')
       .each(($child, index) => {
         const commandTitle = $child.text();
         expect(commandTitle).to.eq(expectedFullHeaderMenuCommands[index]);
@@ -376,8 +376,8 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', { retries
       .trigger('contextmenu')
       .invoke('show');
 
-    cy.get('.slick-columnpicker')
-      .find('.slick-columnpicker-list')
+    cy.get('.slick-column-picker')
+      .find('.slick-column-picker-list')
       .children()
       .each(($child, index) => {
         if (index < expectedFullPickerTitles.length) {
@@ -385,16 +385,16 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', { retries
         }
       });
 
-    cy.get('.slick-columnpicker')
-      .find('.slick-columnpicker-list')
+    cy.get('.slick-column-picker')
+      .find('.slick-column-picker-list')
       .children('li:nth-child(7)')
       .children('label')
       .should('contain', 'Duration')
       .click();
 
     cy.get('#grid16')
-      .get('.slick-columnpicker:visible')
-      .find('span.close')
+      .get('.slick-column-picker:visible')
+      .find('.close')
       .trigger('click')
       .click();
 

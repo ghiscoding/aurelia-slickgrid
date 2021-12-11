@@ -23,25 +23,9 @@ You like and use **Aurelia-Slickgrid**? Be sure to upvote :star: and feel free t
 ### Like my work?
 If you like my work, you can also support me with caffeine. I certainly drank many coffees to build and keep adding features for this great library.
 
-<a href='https://ko-fi.com/N4N679OT'
-     target='_blank'>
-    <img height='30'
-         style='border:0px;height:32px;'
-         src='https://az743702.vo.msecnd.net/cdn/kofi2.png?v=0'
-         border='0'
-         alt='Buy Me a Coffee at ko-fi.com' />
-  </a>
-
-### Latest News & Releases
-Check out the [Releases](https://github.com/ghiscoding/aurelia-slickgrid/releases) section for all latest News & Releases.
-
-## Fully Tested with [Jest](https://jestjs.io/) (Unit Tests) - [Cypress](https://www.cypress.io/) (E2E tests)
-Aurelia-Slickgrid reached **100%** Unit Test Coverage, we are talking of 10,000+ lines of code (3,000+ unit tests, now mostly all in Slickgrid-Universal) fully tested with [Jest](https://jestjs.io/). On the UI side, all Aurelia-Slickgrid Example are tested with [Cypress](https://www.cypress.io/), there are over 500+ Cypress E2E tests.
-
-## Installation
-Refer to the **[Wiki - HOWTO Step by Step](https://github.com/ghiscoding/aurelia-slickgrid/wiki/HOWTO--Step-by-Step)** and/or the [Aurelia-Slickgrid Demos](https://github.com/ghiscoding/aurelia-slickgrid-demos) repository. Please don't open any issue unless you have followed these steps (from the Wiki), and if any of the steps are incorrect or confusing, then please let me know.
-
-**NOTE:** if you have any question, please consider asking installation and/or general questions on [Stack Overflow](https://stackoverflow.com/search?tab=newest&q=slickgrid)
+<a href='https://ko-fi.com/N4N679OT' target='_blank'>
+  <img height='30' border='0' style='border:0px;height:32px;' alt='Buy Me a Coffee at ko-fi.com' src='https://az743702.vo.msecnd.net/cdn/kofi2.png?v=0' />
+</a>
 
 ### Demo page
 
@@ -56,6 +40,17 @@ For complete working local demos, you can clone the [Aurelia-Slickgrid Demos](ht
 
 ## Wiki / Documentation
 The Wiki is where all the documentation and instructions will go, so please consult the [Aurelia-Slickgrid - Wiki](https://github.com/ghiscoding/aurelia-slickgrid/wiki) before opening any issues. The [Wiki - HOWTO](https://github.com/ghiscoding/aurelia-slickgrid/wiki/HOWTO--Step-by-Step) is a great place to start with.
+
+### Latest News & Releases
+Check out the [Releases](https://github.com/ghiscoding/aurelia-slickgrid/releases) section for all latest News & Releases.
+
+## Fully Tested with [Jest](https://jestjs.io/) (Unit Tests) - [Cypress](https://www.cypress.io/) (E2E tests)
+Aurelia-Slickgrid reached **100%** Unit Test Coverage, we are talking of 15,000+ lines of code (3,750+ unit tests, now mostly all in Slickgrid-Universal) fully tested with [Jest](https://jestjs.io/). On the UI side, all Aurelia-Slickgrid Example are tested with [Cypress](https://www.cypress.io/), there are over 550+ Cypress E2E tests.
+
+## Installation
+Refer to the **[Wiki - HOWTO Step by Step](https://github.com/ghiscoding/aurelia-slickgrid/wiki/HOWTO--Step-by-Step)** and/or the [Aurelia-Slickgrid Demos](https://github.com/ghiscoding/aurelia-slickgrid-demos) repository. Please don't open any issue unless you have followed these steps (from the Wiki), and if any of the steps are incorrect or confusing, then please let me know.
+
+**NOTE:** if you have any question, please consider asking installation and/or general questions on [Stack Overflow](https://stackoverflow.com/search?tab=newest&q=slickgrid)
 
 ## Usage
 
@@ -98,4 +93,3 @@ Screenshots from the demo app with the `Bootstrap` theme.
 
 ### Composite Editor Modal Windows
 ![Composite Editor Modal](/screenshots/composite-editor.png)
-

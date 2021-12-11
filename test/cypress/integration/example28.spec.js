@@ -138,11 +138,11 @@ describe('Example 28 - Tree Data (from a Hierarchical Dataset)', { retries: 1 },
 
   it('should Clear all Filters and default list', () => {
     cy.get('#slickGridContainer-grid28')
-      .find('button.slick-gridmenu-button')
+      .find('button.slick-grid-menu-button')
       .click({ force: true });
 
-    cy.get(`.slick-gridmenu:visible`)
-      .find('.slick-gridmenu-item')
+    cy.get(`.slick-grid-menu:visible`)
+      .find('.slick-menu-item')
       .first()
       .find('span')
       .contains('Clear all Filters')
@@ -239,12 +239,11 @@ describe('Example 28 - Tree Data (from a Hierarchical Dataset)', { retries: 1 },
 
   it('should change filter to the word "music" and expect only 1 row (the music folder) to show up when still Excluding Children from the Tree', () => {
     cy.get('#slickGridContainer-grid28')
-      .find('button.slick-gridmenu-button')
-      .trigger('click')
+      .find('button.slick-grid-menu-button')
       .click();
 
-    cy.get(`.slick-gridmenu:visible`)
-      .find('.slick-gridmenu-item')
+    cy.get('.slick-grid-menu:visible')
+      .find('.slick-menu-item')
       .first()
       .find('span')
       .contains('Clear all Filters')

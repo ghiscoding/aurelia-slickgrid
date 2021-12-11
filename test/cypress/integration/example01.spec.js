@@ -41,15 +41,15 @@ describe('Example 1 - Basic Grids', { retries: 1 }, () => {
       .find('.slick-header-column')
       .first()
       .trigger('mouseover')
-      .children('.slick-header-menubutton')
+      .children('.slick-header-menu-button')
       .should('be.hidden')
       .invoke('show')
       .click();
 
     cy.get('.slick-header-menu')
       .should('be.visible')
-      .children('.slick-header-menuitem:nth-child(4)')
-      .children('.slick-header-menucontent')
+      .children('.slick-menu-item:nth-of-type(4)')
+      .children('.slick-menu-content')
       .should('contain', 'Sort Descending')
       .click();
 
@@ -67,14 +67,14 @@ describe('Example 1 - Basic Grids', { retries: 1 }, () => {
       .find('.slick-header-column')
       .first()
       .trigger('mouseover')
-      .children('.slick-header-menubutton')
+      .children('.slick-header-menu-button')
       .invoke('show')
       .click();
 
     cy.get('.slick-header-menu')
       .should('be.visible')
-      .children('.slick-header-menuitem:nth-child(3)')
-      .children('.slick-header-menucontent')
+      .children('.slick-menu-item:nth-of-type(3)')
+      .children('.slick-menu-content')
       .should('contain', 'Sort Ascending')
       .click();
 
@@ -94,14 +94,14 @@ describe('Example 1 - Basic Grids', { retries: 1 }, () => {
     cy.get('#grid2')
       .find('.slick-header-column:nth-child(2)')
       .trigger('mouseover')
-      .children('.slick-header-menubutton')
+      .children('.slick-header-menu-button')
       .invoke('show')
       .click();
 
     cy.get('#grid2')
       .find('.slick-header-menu')
       .should('be.visible')
-      .children('.slick-header-menuitem:nth-child(4)')
+      .children('.slick-menu-item:nth-of-type(4)')
       .click();
 
     cy.get('#grid2')
@@ -119,7 +119,7 @@ describe('Example 1 - Basic Grids', { retries: 1 }, () => {
 
   it('should clear sorting of grid2 using the Grid Menu "Clear all Sorting" command', () => {
     cy.get('#grid2')
-      .find('button.slick-gridmenu-button')
+      .find('button.slick-grid-menu-button')
       .trigger('click')
       .click();
   });
@@ -135,8 +135,8 @@ describe('Example 1 - Basic Grids', { retries: 1 }, () => {
         expect(gridUid).to.not.be.null;
       })
       .then(() => {
-        cy.get(`.slick-gridmenu.${gridUid}`)
-          .find('.slick-gridmenu-item')
+        cy.get(`.slick-grid-menu.${gridUid}`)
+          .find('.slick-menu-item')
           .first()
           .find('span')
           .contains('Clear all Sorting')
@@ -209,7 +209,7 @@ describe('Example 1 - Basic Grids', { retries: 1 }, () => {
   it('should open the Grid Menu on 1st Grid and expect all Columns to be checked', () => {
     let gridUid = '';
     cy.get('#grid1')
-      .find('button.slick-gridmenu-button')
+      .find('button.slick-grid-menu-button')
       .click({ force: true });
 
     cy.get('#grid1')
@@ -219,14 +219,14 @@ describe('Example 1 - Basic Grids', { retries: 1 }, () => {
         expect(gridUid).to.not.be.null;
       })
       .then(() => {
-        cy.get(`.slick-gridmenu.${gridUid}`)
-          .find('.slick-gridmenu-list')
+        cy.get(`.slick-grid-menu.${gridUid}`)
+          .find('.slick-column-picker-list')
           .children('li')
           .each(($child, index) => {
             if (index <= 5) {
               const $input = $child.children('input');
               const $label = $child.children('label');
-              expect($input.attr('checked')).to.eq('checked');
+              expect($input.prop('checked')).to.eq(true);
               expect($label.text()).to.eq(fullTitles[index]);
             }
           });
@@ -236,16 +236,16 @@ describe('Example 1 - Basic Grids', { retries: 1 }, () => {
   it('should then hide "Title" column from same 1st Grid and expect the column to be removed from 1st Grid', () => {
     const newColumnList = ['Duration (days)', '% Complete', 'Start', 'Finish', 'Effort Driven'];
     cy.get('#grid1')
-      .get('.slick-gridmenu:visible')
-      .find('.slick-gridmenu-list')
+      .get('.slick-grid-menu:visible')
+      .find('.slick-column-picker-list')
       .children('li:visible:nth(0)')
       .children('label')
       .should('contain', 'Title')
       .click({ force: true });
 
     cy.get('#grid1')
-      .get('.slick-gridmenu:visible')
-      .find('span.close')
+      .get('.slick-grid-menu:visible')
+      .find('.close')
       .click({ force: true });
 
     cy.get('#grid1')
@@ -257,7 +257,7 @@ describe('Example 1 - Basic Grids', { retries: 1 }, () => {
   it('should open the Grid Menu off 2nd Grid and expect all Columns to still be all checked', () => {
     let gridUid = '';
     cy.get('#grid2')
-      .find('button.slick-gridmenu-button')
+      .find('button.slick-grid-menu-button')
       .click({ force: true });
 
     cy.get('#grid2')
@@ -267,14 +267,14 @@ describe('Example 1 - Basic Grids', { retries: 1 }, () => {
         expect(gridUid).to.not.be.null;
       })
       .then(() => {
-        cy.get(`.slick-gridmenu.${gridUid}`)
-          .find('.slick-gridmenu-list')
+        cy.get(`.slick-grid-menu.${gridUid}`)
+          .find('.slick-column-picker-list')
           .children('li')
           .each(($child, index) => {
             if (index <= 5) {
               const $input = $child.children('input');
               const $label = $child.children('label');
-              expect($input.attr('checked')).to.eq('checked');
+              expect($input.prop('checked')).to.eq(true);
               expect($label.text()).to.eq(fullTitles[index]);
             }
           });
@@ -284,16 +284,16 @@ describe('Example 1 - Basic Grids', { retries: 1 }, () => {
   it('should then hide "% Complete" column from this same 2nd Grid and expect the column to be removed from 2nd Grid', () => {
     const newColumnList = ['Title', 'Duration (days)', 'Start', 'Finish', 'Effort Driven'];
     cy.get('#grid2')
-      .get('.slick-gridmenu:visible')
-      .find('.slick-gridmenu-list')
+      .get('.slick-grid-menu:visible')
+      .find('.slick-column-picker-list')
       .children('li:visible:nth(2)')
       .children('label')
       .should('contain', '% Complete')
       .click({ force: true });
 
     cy.get('#grid2')
-      .get('.slick-gridmenu:visible')
-      .find('span.close')
+      .get('.slick-grid-menu:visible')
+      .find('.close')
       .click({ force: true });
 
     cy.get('#grid2')
@@ -304,10 +304,10 @@ describe('Example 1 - Basic Grids', { retries: 1 }, () => {
 
   it('should go back to 1st Grid and open its Grid Menu and we expect this grid to stil have the "Title" column be hidden (unchecked)', () => {
     cy.get('#grid1')
-      .find('button.slick-gridmenu-button')
+      .find('button.slick-grid-menu-button')
       .click({ force: true });
 
-    cy.get('.slick-gridmenu-list')
+    cy.get('.slick-column-picker-list')
       .children('li')
       .each(($child, index) => {
         if (index <= 5) {
@@ -316,7 +316,7 @@ describe('Example 1 - Basic Grids', { retries: 1 }, () => {
           if ($label.text() === 'Title') {
             expect($input.attr('checked')).to.eq(undefined);
           } else {
-            expect($input.attr('checked')).to.eq('checked');
+            expect($input.prop('checked')).to.eq(true);
           }
           expect($label.text()).to.eq(fullTitles[index]);
         }
@@ -326,16 +326,16 @@ describe('Example 1 - Basic Grids', { retries: 1 }, () => {
   it('should hide "Start" column from 1st Grid and expect to have 2 hidden columns (Title, Start)', () => {
     const newColumnList = ['Duration (days)', '% Complete', 'Finish', 'Effort Driven'];
     cy.get('#grid1')
-      .get('.slick-gridmenu:visible')
-      .find('.slick-gridmenu-list')
+      .get('.slick-grid-menu:visible')
+      .find('.slick-column-picker-list')
       .children('li:visible:nth(3)')
       .children('label')
       .should('contain', 'Start')
       .click({ force: true });
 
     cy.get('#grid1')
-      .get('.slick-gridmenu:visible')
-      .find('span.close')
+      .get('.slick-grid-menu:visible')
+      .find('.close')
       .click({ force: true });
 
     cy.get('#grid1')
@@ -352,8 +352,8 @@ describe('Example 1 - Basic Grids', { retries: 1 }, () => {
       .trigger('contextmenu')
       .invoke('show');
 
-    cy.get('.slick-columnpicker')
-      .find('.slick-columnpicker-list')
+    cy.get('.slick-column-picker')
+      .find('.slick-column-picker-list')
       .children()
       .each(($child, index) => {
         if (index <= 5) {
@@ -361,8 +361,8 @@ describe('Example 1 - Basic Grids', { retries: 1 }, () => {
         }
       });
 
-    cy.get('.slick-columnpicker')
-      .find('.slick-columnpicker-list')
+    cy.get('.slick-column-picker')
+      .find('.slick-column-picker-list')
       .children('li:nth-child(3)')
       .children('label')
       .should('contain', '% Complete')
@@ -378,8 +378,8 @@ describe('Example 1 - Basic Grids', { retries: 1 }, () => {
       });
 
     cy.get('#grid2')
-      .get('.slick-columnpicker:visible')
-      .find('span.close')
+      .get('.slick-column-picker:visible')
+      .find('.close')
       .trigger('click')
       .click();
   });
@@ -387,7 +387,7 @@ describe('Example 1 - Basic Grids', { retries: 1 }, () => {
   it('should open the Grid Menu on 2nd Grid and expect all Columns to be checked', () => {
     let gridUid = '';
     cy.get('#grid2')
-      .find('button.slick-gridmenu-button')
+      .find('button.slick-grid-menu-button')
       .click({ force: true });
 
     cy.get('#grid2')
@@ -397,14 +397,14 @@ describe('Example 1 - Basic Grids', { retries: 1 }, () => {
         expect(gridUid).to.not.be.null;
       })
       .then(() => {
-        cy.get(`.slick-gridmenu.${gridUid}`)
-          .find('.slick-gridmenu-list')
+        cy.get(`.slick-grid-menu.${gridUid}`)
+          .find('.slick-column-picker-list')
           .children('li')
           .each(($child, index) => {
             if (index <= 5) {
               const $input = $child.children('input');
               const $label = $child.children('label');
-              expect($input.attr('checked')).to.eq('checked');
+              expect($input.prop('checked')).to.eq(true);
               expect($label.text()).to.eq(fullTitles[index]);
             }
           });
@@ -423,7 +423,7 @@ describe('Example 1 - Basic Grids', { retries: 1 }, () => {
   it('should open the Grid Menu on 1st Grid and also expect to only have 4 columns checked (visible)', () => {
     let gridUid = '';
     cy.get('#grid1')
-      .find('button.slick-gridmenu-button')
+      .find('button.slick-grid-menu-button')
       .click({ force: true });
 
     cy.get('#grid1')
@@ -433,8 +433,8 @@ describe('Example 1 - Basic Grids', { retries: 1 }, () => {
         expect(gridUid).to.not.be.null;
       })
       .then(() => {
-        cy.get(`.slick-gridmenu.${gridUid}`)
-          .find('.slick-gridmenu-list')
+        cy.get(`.slick-grid-menu.${gridUid}`)
+          .find('.slick-column-picker-list')
           .children('li')
           .each(($child, index) => {
             if (index <= 5) {
@@ -443,7 +443,7 @@ describe('Example 1 - Basic Grids', { retries: 1 }, () => {
               if ($label.text() === 'Title' || $label.text() === 'Start') {
                 expect($input.attr('checked')).to.eq(undefined);
               } else {
-                expect($input.attr('checked')).to.eq('checked');
+                expect($input.prop('checked')).to.eq(true);
               }
               expect($label.text()).to.eq(fullTitles[index]);
             }
@@ -451,8 +451,8 @@ describe('Example 1 - Basic Grids', { retries: 1 }, () => {
       });
 
     cy.get('#grid1')
-      .get('.slick-gridmenu:visible')
-      .find('span.close')
+      .get('.slick-grid-menu:visible')
+      .find('.close')
       .click({ force: true });
   });
 });
