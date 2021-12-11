@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.0.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v3.12.1...v4.0.0) (2021-12-11)
+
+
+### ⚠ BREAKING CHANGES
+
+* add slick prefix to all SASS variables `$slick-`
+
+* refactor(styling): use new cell menu minWidth default
+
+* fix(styling): better support of auto width on drop menu
+
+* feat(plugins): show bullet when command menu icon missing
+
+* refactor: remove/replace all deprecated code
+
+* fix: update with newer slick-menu common styling classes
+
+* refacor: tweak with latest universal code
+
+* chore(deps): upgrade to latest Slickgrid-Universal version
+
+* tests: fix failing Cypress E2E test
+
+* tests: comment failing Cypress E2E test
+
+* BREAKING CHANGE: upgrade to Slickgrid-Universal official 1.x major version (#689) ([1caea1a](https://github.com/ghiscoding/aurelia-slickgrid/commit/1caea1aac3375d47914f500eaf17d4eb144d528a)), closes [#689](https://github.com/ghiscoding/aurelia-slickgrid/issues/689)
+
 ### [3.12.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v3.12.0...v3.12.1) (2021-11-16)
 
 
