@@ -470,7 +470,7 @@ export class AureliaSlickgridCustomElement {
     };
 
     // addons (SlickGrid extra plugins/controls)
-    this.extensions = this.extensionService && this.extensionService.extensionList;
+    this.extensions = this.extensionService?.extensionList;
 
     // all instances (SlickGrid, DataView & all Services)
     this.instances = aureliaElementInstance;
@@ -491,7 +491,7 @@ export class AureliaSlickgridCustomElement {
 
     // dispose of all Services
     this.serviceList.forEach((service: any) => {
-      if (service && service.dispose) {
+      if (service?.dispose) {
         service.dispose();
       }
     });
@@ -594,7 +594,7 @@ export class AureliaSlickgridCustomElement {
       setTimeout(() => {
         // make sure the target is the active editor so we do not
         // commit prematurely
-        if (activeNode && activeNode.contains(target) && this.grid.getEditorLock().isActive() && !target?.classList?.contains('autocomplete')) {
+        if (activeNode?.contains(target) && this.grid.getEditorLock().isActive() && !target?.classList?.contains('autocomplete')) {
           this.grid.getEditorLock().commitCurrentEdit();
         }
       });
@@ -655,8 +655,8 @@ export class AureliaSlickgridCustomElement {
    * refresh the Dataset & Pagination without having the user to create his own PostProcess every time
    */
   createBackendApiInternalPostProcessCallback(gridOptions: GridOption) {
-    const backendApi = gridOptions && gridOptions.backendServiceApi;
-    if (backendApi && backendApi.service) {
+    const backendApi = gridOptions?.backendServiceApi;
+    if (backendApi?.service) {
       const backendApiService = backendApi.service;
 
       // internalPostProcess only works (for now) with a GraphQL Service, so make sure it is of that type
@@ -702,7 +702,7 @@ export class AureliaSlickgridCustomElement {
     if (gridOptions.backendServiceApi) {
       const backendApi = gridOptions.backendServiceApi;
 
-      if (backendApi && backendApi.service && backendApi.service.init) {
+      if (backendApi?.service?.init) {
         backendApi.service.init(backendApi.options, gridOptions.pagination, this.grid, this.sharedService);
       }
     }
@@ -781,7 +781,7 @@ export class AureliaSlickgridCustomElement {
           // filtering data with local dataset will not always show correctly unless we call this updateRow/render
           // also don't use "invalidateRows" since it destroys the entire row and as bad user experience when updating a row
           // see commit: https://github.com/ghiscoding/aurelia-slickgrid/commit/8c503a4d45fba11cbd8d8cc467fae8d177cc4f60
-          if (gridOptions && gridOptions.enableFiltering && !gridOptions.enableRowDetailView) {
+          if (gridOptions?.enableFiltering && !gridOptions.enableRowDetailView) {
             if (args?.rows && Array.isArray(args.rows)) {
               args.rows.forEach((row: number) => grid.updateRow(row));
               grid.render();
@@ -805,14 +805,14 @@ export class AureliaSlickgridCustomElement {
 
   bindBackendCallbackFunctions(gridOptions: GridOption) {
     const backendApi = gridOptions.backendServiceApi;
-    const backendApiService = backendApi && backendApi.service;
-    const serviceOptions: BackendServiceOption = backendApiService && backendApiService.options || {};
+    const backendApiService = backendApi?.service;
+    const serviceOptions: BackendServiceOption = backendApiService?.options || {};
     const isExecuteCommandOnInit = (!serviceOptions) ? false : ((serviceOptions && serviceOptions.hasOwnProperty('executeProcessCommandOnInit')) ? serviceOptions['executeProcessCommandOnInit'] : true);
 
     if (backendApiService) {
       // update backend filters (if need be) BEFORE the query runs (via the onInit command a few lines below)
       // if user entered some any "presets", we need to reflect them all in the grid
-      if (gridOptions && gridOptions.presets) {
+      if (gridOptions?.presets) {
         // Filters "presets"
         if (backendApiService.updateFilters && Array.isArray(gridOptions.presets.filters) && gridOptions.presets.filters.length > 0) {
           backendApiService.updateFilters(gridOptions.presets.filters, true);
@@ -1022,7 +1022,7 @@ export class AureliaSlickgridCustomElement {
    * if there are then load them in the paginationOptions object
    */
   setPaginationOptionsWhenPresetDefined(gridOptions: GridOption, paginationOptions: Pagination): Pagination {
-    if (gridOptions.presets && gridOptions.presets.pagination && gridOptions.pagination) {
+    if (gridOptions.presets?.pagination && gridOptions.pagination) {
       paginationOptions.pageSize = gridOptions.presets.pagination.pageSize;
       paginationOptions.pageNumber = gridOptions.presets.pagination.pageNumber;
     }
@@ -1419,7 +1419,7 @@ export class AureliaSlickgridCustomElement {
 
     return columnDefinitions.map((column: Column | any) => {
       // on every Editor which have a "collection" or a "collectionAsync"
-      if (column.editor && column.editor.collectionAsync) {
+      if (column.editor?.collectionAsync) {
         this.loadEditorCollectionAsync(column);
       }
 
