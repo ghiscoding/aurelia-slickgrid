@@ -211,7 +211,6 @@ export class Example34 {
       this.aureliaGrid.dataView.updateItem(itemTmp.id, itemTmp);
     }
 
-    // this.aureliaGrid.slickGrid.render();
     this.timer = setTimeout(this.startSimulation.bind(this), this.refreshRate || 0);
   }
 
