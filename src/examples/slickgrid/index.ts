@@ -7,7 +7,7 @@ export class Index {
 
   configureRouter(config: RouterConfiguration, router: Router) {
     const mapping: any = [
-      { route: ['', 'example1'], moduleId: PLATFORM.moduleName('./example1'), name: 'example1', nav: true, title: '1- Basic Grid / 2 Grids' },
+      { route: 'example1', moduleId: PLATFORM.moduleName('./example1'), name: 'example1', nav: true, title: '1- Basic Grid / 2 Grids' },
       { route: 'example2', moduleId: PLATFORM.moduleName('./example2'), name: 'example2', nav: true, title: '2- Formatters' },
       { route: 'example3', moduleId: PLATFORM.moduleName('./example3'), name: 'example3', nav: true, title: '3- Editors / Delete' },
       { route: 'example4', moduleId: PLATFORM.moduleName('./example4'), name: 'example4', nav: true, title: '4- Client Side Sort/Filter' },
@@ -40,10 +40,11 @@ export class Index {
       { route: 'example31', moduleId: PLATFORM.moduleName('./example31'), name: 'example31', nav: true, title: '31- Backend OData with RxJS' },
       { route: 'example32', moduleId: PLATFORM.moduleName('./example32'), name: 'example32', nav: true, title: '32- Columns Resize by Content' },
       { route: 'example33', moduleId: PLATFORM.moduleName('./example33'), name: 'example33', nav: true, title: '33- Regular & Custom Tooltip' },
+      { route: ['', 'example34'], moduleId: PLATFORM.moduleName('./example34'), name: 'example34', nav: true, title: '34- Real-Time Stock Trading' },
     ];
 
     config.map(mapping);
-    config.mapUnknownRoutes(PLATFORM.moduleName('./example1'));
+    config.mapUnknownRoutes(PLATFORM.moduleName('./example34'));
 
     this.router = router;
   }

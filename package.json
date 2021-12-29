@@ -50,7 +50,7 @@
     "bump-version": "npm --no-git-tag-version version",
     "prepare-release": "cross-env npm run changelog && npm run build && npm run doc",
     "release": "standard-version",
-    "start:dev": "webpack serve --env development",
+    "start:dev": "cross-env TSC_WATCHFILE=UseFsEventsWithFallbackDynamicPolling webpack serve --env development",
     "cypress": "cd test/cypress && node node_modules/cypress/bin/cypress open",
     "cypress:ci": "cd test/cypress && npm run cypress:ci",
     "test:ci": "npx jest --runInBand --coverage=true --ci --config ./test/jest.config.js",
@@ -78,6 +78,7 @@
     "i18next": ">= 14.1.1"
   },
   "devDependencies": {
+    "@fnando/sparkline": "^0.3.10",
     "@popperjs/core": "^2.11.0",
     "@slickgrid-universal/composite-editor-component": "^1.1.1",
     "@slickgrid-universal/custom-tooltip-plugin": "^1.1.1",
@@ -88,6 +89,8 @@
     "@slickgrid-universal/text-export": "^1.1.1",
     "@types/bluebird": "^3.5.36",
     "@types/dompurify": "^2.3.2",
+    "@types/faker": "^5.5.9",
+    "@types/fnando__sparkline": "^0.3.4",
     "@types/i18next-xhr-backend": "^1.4.2",
     "@types/jest": "^27.0.3",
     "@types/jquery": "^3.5.10",
@@ -122,6 +125,7 @@
     "eslint-plugin-import": "^2.25.3",
     "eslint-plugin-prefer-arrow": "^1.2.3",
     "extract-text-webpack-plugin": "3.0.2",
+    "faker": "^5.5.3",
     "file-loader": "6.2.0",
     "font-awesome": "^4.7.0",
     "fork-ts-checker-webpack-plugin": "^6.5.0",
