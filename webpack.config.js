@@ -77,6 +77,10 @@ module.exports = ({ production } = {}, { server } = {}) => ({
       { test: /\.(ttf|eot|svg|otf)(\?v=[0-9]\.[0-9]\.[0-9])?$/i, type: 'asset/resource', },
     ]
   },
+  watchOptions: {
+    ignored: '**/node_modules',
+    poll: 1000, // Check for changes every second
+  },
   plugins: [
     new AureliaPlugin({
       // dist: 'es2015',
