@@ -22,7 +22,7 @@ $sparkline-color: #00b78d;
 .simulation-form {
   input[type=number] {
     height: 32px;
-    width: 90px;
+    width: 50px;
     border: 1px solid #c0c0c0;
     border-radius: 3px;
   }
@@ -33,13 +33,12 @@ $sparkline-color: #00b78d;
       margin: 0;
     }
     input.form-range {
-      width: 180px;
+      width: 120px;
     }
   }
   .refresh-rate input {
     height: 30px;
-    width: 55px;
-    // margin-top: 5px;
+    width: 46px;
   }
 }
 .sparkline {
