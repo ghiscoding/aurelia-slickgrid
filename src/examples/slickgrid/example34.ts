@@ -38,7 +38,7 @@ const historicSparklineFormatter: Formatter = (row: number, cell: number, value:
 };
 
 export class Example34 {
-  title = 'Example 34: Real-Time Stock Trading';
+  title = 'Example 34: Real-Time Trading Platform';
   subTitle = `Simulate a stock trading platform with lot of price changes
   <ul>
     <li>you can start/stop the simulation</li>
