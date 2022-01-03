@@ -1,8 +1,8 @@
 import * as Faker from 'faker';
 import sparkline from '@fnando/sparkline';
 import {
+  Aggregators,
   AureliaGridInstance,
-  AureliaUtilService,
   Column,
   deepCopy,
   FieldType,
@@ -10,6 +10,7 @@ import {
   Formatter,
   Formatters,
   GridOption,
+  GroupTotalFormatters,
 } from '../../aurelia-slickgrid';
 import './example34.scss';
 
@@ -37,12 +38,14 @@ const historicSparklineFormatter: Formatter = (row: number, cell: number, value:
 };
 
 export class Example34 {
-  title = 'Example 34: Real-Time Stock Trading';
+  title = 'Example 34: Real-Time Trading Platform';
   subTitle = `Simulate a stock trading platform with lot of price changes
   <ul>
     <li>you can start/stop the simulation</li>
     <li>optionally change random numbers, between 0 and 10 symbols, per cycle (higher numbers means more changes)</li>
     <li>optionally change the simulation changes refresh rate in ms (lower number means more changes).</li>
+    <li>you can Group by 1 of these columns: Currency, Market or Type</li>
+    <li>to show SlickGrid HUGE PERF., do the following: (1) lower Changes Rate (2) increase both Changes per Cycle and (3) lower Highlight Duration
   </ul>`;
 
   aureliaGrid!: AureliaGridInstance;
@@ -50,14 +53,14 @@ export class Example34 {
   columnDefinitions: Column[] = [];
   dataset: any[] = [];
   isFullScreen = false;
-  highlightLength = 250;
+  highlightDuration = 150;
   itemCount = 200;
   minChangePerCycle = 0;
   maxChangePerCycle = 10;
   refreshRate = 75;
   timer: any;
 
-  constructor(private aureliaUtilService: AureliaUtilService) {
+  constructor() {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
   }
@@ -70,19 +73,44 @@ export class Example34 {
     }, this.refreshRate);
   }
 
+  detached() {
+    this.stopSimulation();
+  }
+
   /* Define grid Options and Columns */
   defineGrid() {
     // the columns field property is type-safe, try to add a different string not representing one of DataItems properties
     this.columnDefinitions = [
       {
         id: 'currency', name: 'Currency', field: 'currency', filterable: true, sortable: true, minWidth: 65, width: 65,
+        formatter: currencyFormatter,
         filter: {
           model: Filters.singleSelect,
           collection: [{ label: '', value: '' }, { label: 'CAD', value: 'CAD' }, { label: 'USD', value: 'USD' }]
         },
-        formatter: currencyFormatter
+        grouping: {
+          getter: 'currency',
+          formatter: (g) => `Currency: <span style="color: #003597; font-weight: bold;">${g.value}</span>  <span style="color: #659bff;">(${g.count} items)</span>`,
+          aggregators: [
+            new Aggregators.Sum('amount')
+          ],
+          aggregateCollapsed: true,
+          collapsed: false
+        }
       },
       { id: 'symbol', name: 'Symbol', field: 'symbol', filterable: true, sortable: true, minWidth: 65, width: 65 },
+      {
+        id: 'market', name: 'Market', field: 'market', filterable: true, sortable: true, minWidth: 75, width: 75,
+        grouping: {
+          getter: 'market',
+          formatter: (g) => `Market: <span style="color: #003597; font-weight: bold;">${g.value}</span>  <span style="color: #659bff;">(${g.count} items)</span>`,
+          aggregators: [
+            new Aggregators.Sum('amount')
+          ],
+          aggregateCollapsed: true,
+          collapsed: false
+        }
+      },
       { id: 'company', name: 'Company', field: 'company', filterable: true, sortable: true, minWidth: 80, width: 130 },
       {
         id: 'trsnType', name: 'Type', field: 'trsnType', filterable: true, sortable: true, minWidth: 60, width: 60,
@@ -91,6 +119,15 @@ export class Example34 {
           model: Filters.singleSelect,
           collection: [{ label: '', value: '' }, { label: 'Buy', value: 'Buy' }, { label: 'Sell', value: 'Sell' }]
         },
+        grouping: {
+          getter: 'trsnType',
+          formatter: (g) => `Type: <span style="color: #003597; font-weight: bold;">${g.value}</span>  <span style="color: #659bff;">(${g.count} items)</span>`,
+          aggregators: [
+            new Aggregators.Sum('amount')
+          ],
+          aggregateCollapsed: true,
+          collapsed: false
+        }
       },
       {
         id: 'priceChange', name: 'Change', field: 'priceChange', filterable: true, sortable: true, minWidth: 80, width: 80,
@@ -114,7 +151,8 @@ export class Example34 {
       {
         id: 'amount', name: 'Amount', field: 'amount', filterable: true, sortable: true, minWidth: 70, width: 60,
         filter: { model: Filters.compoundInputNumber }, type: FieldType.number,
-        formatter: Formatters.dollar, params: { maxDecimal: 2 }
+        formatter: Formatters.dollar, params: { maxDecimal: 2 },
+        groupTotalsFormatter: GroupTotalFormatters.sumTotalsDollarBold,
       },
       { id: 'historic', name: 'Price History', field: 'historic', minWidth: 100, width: 150, maxWidth: 150, formatter: historicSparklineFormatter },
       {
@@ -132,7 +170,16 @@ export class Example34 {
       },
       formatterOptions: {
         displayNegativeNumberWithParentheses: true,
+        thousandSeparator: ','
       },
+      draggableGrouping: {
+        dropPlaceHolderText: 'Drop a column header here to group by any of these available columns: Currency, Market or Type',
+        deleteIconCssClass: 'fa fa-times',
+      },
+      enableDraggableGrouping: true,
+      createPreHeaderPanel: true,
+      showPreHeaderPanel: true,
+      preHeaderPanelHeight: 40,
       enableCellNavigation: true,
       enableFiltering: true,
       cellHighlightCssClass: 'changed',
@@ -161,6 +208,7 @@ export class Example34 {
         trsnType: (Math.round(Math.random() * 100)) % 2 ? 'Buy' : 'Sell',
         company,
         symbol: currency === 'CAD' ? company.substr(0, 3).toUpperCase() + '.TO' : company.substr(0, 4).toUpperCase(),
+        market: currency === 'CAD' ? 'TSX' : price > 200 ? 'Nasdaq' : 'S&P 500',
         duration: (i % 33 === 0) ? null : Math.random() * 100 + '',
         percentCompleteNumber: randomPercent,
         priceChange,
@@ -209,6 +257,8 @@ export class Example34 {
 
       // update the data
       this.aureliaGrid.dataView.updateItem(itemTmp.id, itemTmp);
+      // NOTE: we should also invalidate/render the row after updating cell data to see the new data rendered in the UI
+      // but the cell highlight actually does that for us so we can skip it
     }
 
     this.timer = setTimeout(this.startSimulation.bind(this), this.refreshRate || 0);
@@ -230,7 +280,7 @@ export class Example34 {
         this.aureliaGrid.slickGrid.setCellCssStyles(`highlight_${[column.id]}${row}`, hash);
 
         // remove highlight after x amount of time
-        setTimeout(() => this.removeUnsavedStylingFromCell(item, column, row), this.highlightLength);
+        setTimeout(() => this.removeUnsavedStylingFromCell(item, column, row), this.highlightDuration);
       }
     }
   }
