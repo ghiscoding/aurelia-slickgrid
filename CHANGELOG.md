@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.1.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v4.0.0...v4.1.0) (2022-01-07)
+
+
+### Features
+
+* **demo:** add new Example 34 to demo Real-time Market Trading ([#690](https://github.com/ghiscoding/aurelia-slickgrid/issues/690)) ([6c76be9](https://github.com/ghiscoding/aurelia-slickgrid/commit/6c76be991345f2a85037dbc1dbc974fc02587a4f))
+* **demo:** add new Example 34 to demo Realtime Trading ([#698](https://github.com/ghiscoding/aurelia-slickgrid/issues/698)) ([7820e39](https://github.com/ghiscoding/aurelia-slickgrid/commit/7820e3983191afecc085fa1591e89a38dbab6815))
+* **OData:** add `$select` and `$expand` query options ([#697](https://github.com/ghiscoding/aurelia-slickgrid/issues/697)) ([5ced150](https://github.com/ghiscoding/aurelia-slickgrid/commit/5ced150998fa9e902fea8488e382d336204ce017)), closes [#588](https://github.com/ghiscoding/aurelia-slickgrid/issues/588)
+
 ## [4.0.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v3.12.1...v4.0.0) (2021-12-11)
 
 
