@@ -40,7 +40,7 @@ export class Index {
       { route: 'example31', moduleId: PLATFORM.moduleName('./example31'), name: 'example31', nav: true, title: '31- Backend OData with RxJS' },
       { route: 'example32', moduleId: PLATFORM.moduleName('./example32'), name: 'example32', nav: true, title: '32- Columns Resize by Content' },
       { route: 'example33', moduleId: PLATFORM.moduleName('./example33'), name: 'example33', nav: true, title: '33- Regular & Custom Tooltip' },
-      { route: ['', 'example34'], moduleId: PLATFORM.moduleName('./example34'), name: 'example34', nav: true, title: '34- Real-Time Stock Trading' },
+      { route: ['', 'example34'], moduleId: PLATFORM.moduleName('./example34'), name: 'example34', nav: true, title: '34- Real-Time Trading Platform' },
     ];
 
     config.map(mapping);

@@ -1,12 +1,12 @@
 /// <reference types="cypress" />
 
-describe('Example 34 - Real-Time Stock Trading', { retries: 1 }, () => {
+describe('Example 34 - Real-Time Trading Platform', { retries: 1 }, () => {
   const titles = ['Currency', 'Symbol', 'Market', 'Company', 'Type', 'Change', 'Price', 'Quantity', 'Amount', 'Price History', 'Execution Timestamp'];
   const GRID_ROW_HEIGHT = 35;
 
   it('should display Example title', () => {
     cy.visit(`${Cypress.config('baseExampleUrl')}/example34`);
-    cy.get('h2').should('contain', 'Example 34: Real-Time Stock Trading');
+    cy.get('h2').should('contain', 'Example 34: Real-Time Trading Platform');
   });
 
   it('should have exact column titles on 1st grid', () => {
@@ -46,5 +46,24 @@ describe('Example 34 - Real-Time Stock Trading', { retries: 1 }, () => {
     cy.get('.changed-loss').should('have.length', 0);
   });
 
+  it('should Group by 1st column "Currency" and expect 2 groups with Totals when collapsed', () => {
+    cy.get('.slick-column-name')
+      .first()
+      .trigger('mousedown', { button: 1, force: true })
 
+    cy.get('.slick-draggable-dropbox-toggle-placeholder')
+      .trigger('mousemove', 'center')
+      .trigger('mouseup', 'center', { force: true });
+
+    cy.get('.slick-group-toggle-all')
+      .click();
+
+    cy.get(`[style="top:${GRID_ROW_HEIGHT * 0}px"] > .slick-cell:nth(0) .slick-group-toggle.collapsed`).should('have.length', 1);
+    cy.get(`[style="top:${GRID_ROW_HEIGHT * 0}px"] > .slick-cell:nth(0) .slick-group-title`).should('contain', 'Currency: CAD');
+    cy.get(`[style="top:${GRID_ROW_HEIGHT * 1}px"] > .slick-cell:nth(8)`).contains(/\$[0-9\,\.]*/);
+
+    cy.get(`[style="top:${GRID_ROW_HEIGHT * 2}px"] > .slick-cell:nth(0) .slick-group-toggle.collapsed`).should('have.length', 1);
+    cy.get(`[style="top:${GRID_ROW_HEIGHT * 2}px"] > .slick-cell:nth(0) .slick-group-title`).should('contain', 'Currency: USD');
+    cy.get(`[style="top:${GRID_ROW_HEIGHT * 3}px"] > .slick-cell:nth(8)`).contains(/\$[0-9\,\.]*/);
+  });
 });
