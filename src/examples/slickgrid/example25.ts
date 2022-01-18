@@ -206,7 +206,7 @@ export class Example25 {
     this.processing = isProcessing;
     this.status = (isProcessing)
       ? { text: 'processing...', class: 'alert alert-danger' }
-      : { text: 'done', class: 'alert alert-success' };
+      : { text: 'finished', class: 'alert alert-success' };
   }
 
   // --
