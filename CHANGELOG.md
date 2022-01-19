@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.1.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v4.1.0...v4.1.1) (2022-01-19)
+
+
+### Bug Fixes
+
+* **graphql:** fix range filtering with ".." ([#701](https://github.com/ghiscoding/aurelia-slickgrid/issues/701)) ([fd37034](https://github.com/ghiscoding/aurelia-slickgrid/commit/fd37034b67ffb41dc7e8ddfe45a7ff37a78dfd60))
+* **odata:** fix range filtering with ".." ([#700](https://github.com/ghiscoding/aurelia-slickgrid/issues/700)) ([f9a6ac7](https://github.com/ghiscoding/aurelia-slickgrid/commit/f9a6ac715de9d7a8699aeb3e30ccd2298faf4e77))
+
 ## [4.1.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v4.0.0...v4.1.0) (2022-01-07)
 
 
