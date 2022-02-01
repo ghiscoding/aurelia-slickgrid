@@ -89,7 +89,7 @@
     "@slickgrid-universal/text-export": "^1.2.1",
     "@types/bluebird": "^3.5.36",
     "@types/dompurify": "^2.3.3",
-    "@types/faker": "^5.5.9",
+    "@types/faker": "^6.6.9",
     "@types/fnando__sparkline": "^0.3.4",
     "@types/i18next-xhr-backend": "^1.4.2",
     "@types/jest": "^27.4.0",
