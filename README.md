@@ -20,12 +20,10 @@ One of the best javascript datagrid [SlickGrid](https://github.com/mleibman/Slic
 ### Like it? :star: it
 You like and use **Aurelia-Slickgrid**? Be sure to upvote :star: and feel free to contribute. :construction_worker:
 
-### Like my work?
-If you like my work, you can also support me with caffeine. I certainly drank many coffees to build and keep adding features for this great library.
+### Like my work? 
+You could :star: the lib and maybe support me with cafeine :coffee:. Thanks.
 
-<a href='https://ko-fi.com/N4N679OT' target='_blank'>
-  <img height='30' border='0' style='border:0px;height:32px;' alt='Buy Me a Coffee at ko-fi.com' src='https://az743702.vo.msecnd.net/cdn/kofi2.png?v=0' />
-</a>
+<a href='https://ko-fi.com/N4N679OT' target='_blank'><img height='30' style='border:0px;height:30px;' src='https://az743702.vo.msecnd.net/cdn/kofi3.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' />
 
 ### Demo page
 
