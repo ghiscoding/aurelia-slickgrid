@@ -26,6 +26,10 @@
     "> 1%",
     "not dead"
   ],
+  "funding": {
+    "type": "ko_fi",
+    "url": "https://ko-fi.com/N4N679OT"
+  },
   "scripts": {
     "delete:dist": "cross-env rimraf dist",
     "lint": "eslint src/aurelia-slickgrid/** --ext .ts --quiet",
