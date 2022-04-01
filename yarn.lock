@@ -863,12 +863,12 @@
     slickgrid "^2.4.44"
     un-flatten-tree "^2.0.12"
 
-"@slickgrid-universal/composite-editor-component@^1.2.4":
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/@slickgrid-universal/composite-editor-component/-/composite-editor-component-1.2.4.tgz#58968e662e3f2a3f048eedaf7df38d814053a5f6"
-  integrity sha512-m2x6ITzqnC18I6Mqq1Mx3piWt9BFCldhDH/p6L9VI9BYIxqbr7Uj63Hyg2fiiyGsEB1wLj0yvU98+6ry3bDg9A==
+"@slickgrid-universal/composite-editor-component@^1.2.6":
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/@slickgrid-universal/composite-editor-component/-/composite-editor-component-1.2.6.tgz#7c5eef2361c83d5fa946dbdc5eb10cfc8b5d1a4a"
+  integrity sha512-SUKzjWDKHIOaXpRJzDvUGOtM1y//ou+3f6jRfrkgRsBTeuz1hXWw+FZ7ebL8TwEczWaEEzfuWTF63crKRj0UAQ==
   dependencies:
-    "@slickgrid-universal/common" "^1.2.4"
+    "@slickgrid-universal/common" "^1.2.6"
 
 "@slickgrid-universal/custom-footer-component@^1.2.4":
   version "1.2.4"
