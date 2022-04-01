@@ -905,12 +905,12 @@
   dependencies:
     "@slickgrid-universal/common" "^1.2.6"
 
-"@slickgrid-universal/odata@^1.2.4":
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/@slickgrid-universal/odata/-/odata-1.2.4.tgz#4fd588ec27ba03bd7902bb73bf6f06bd98be0292"
-  integrity sha512-QcIvmq8WNdFsfbgbYkhsETHKWC6TvZ1TQtH9gIyj7IkVxE9Apk6cBvfEZxSchVZnNVfXtGP0vhcnqYm5LEcFqA==
+"@slickgrid-universal/odata@^1.2.6":
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/@slickgrid-universal/odata/-/odata-1.2.6.tgz#e5ccf22bf0431ec3d718106685593d1972c6d3a8"
+  integrity sha512-Sy4f25UoYpumhqOM7B488x0tAq5x0OsfZMa3bJk5JYh7Bfg4F3c/Y6r5QTOPz2ZCPodJBr/GmG2Oqa94kTev3Q==
   dependencies:
-    "@slickgrid-universal/common" "^1.2.4"
+    "@slickgrid-universal/common" "^1.2.6"
 
 "@slickgrid-universal/pagination-component@^1.2.6":
   version "1.2.6"
