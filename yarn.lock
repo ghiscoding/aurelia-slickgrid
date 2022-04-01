@@ -882,12 +882,12 @@
   dependencies:
     "@slickgrid-universal/common" "^1.2.6"
 
-"@slickgrid-universal/event-pub-sub@^1.2.4":
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/@slickgrid-universal/event-pub-sub/-/event-pub-sub-1.2.4.tgz#ed27befe0ed6d27fcf5766656d5e06ee4dd1d06d"
-  integrity sha512-Ar+IhMxmQY0mseUenN8Xk70aR/blO+4l6hQiEyKPGyEnF2fy6jcmOVFhllHgIyNIZu0pqxoXIQm5Fa+bnurUQg==
+"@slickgrid-universal/event-pub-sub@^1.2.6":
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/@slickgrid-universal/event-pub-sub/-/event-pub-sub-1.2.6.tgz#dd1ed22746d688e24ff2abb10bb3843082e499e6"
+  integrity sha512-yCCmmQ/NkRft3AAzlBZ6+mcfZoavfxJOP1JmK53wCE5kuNrZ/Nk9csPrrneWq6MzdsP2bxgtb/L0AiaZQ5o4sg==
   dependencies:
-    "@slickgrid-universal/common" "^1.2.4"
+    "@slickgrid-universal/common" "^1.2.6"
 
 "@slickgrid-universal/excel-export@^1.2.4":
   version "1.2.4"
