@@ -85,7 +85,7 @@
     "@slickgrid-universal/excel-export": "^1.2.4",
     "@slickgrid-universal/graphql": "^1.2.6",
     "@slickgrid-universal/odata": "^1.2.4",
-    "@slickgrid-universal/rxjs-observable": "^1.2.4",
+    "@slickgrid-universal/rxjs-observable": "^1.2.6",
     "@slickgrid-universal/text-export": "^1.2.6",
     "@types/bluebird": "^3.5.36",
     "@types/dompurify": "^2.3.3",
