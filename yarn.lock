@@ -886,12 +886,12 @@
     "@slickgrid-universal/common" "^1.2.6"
     dompurify "^2.3.6"
 
-"@slickgrid-universal/empty-warning-component@^1.2.4":
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/@slickgrid-universal/empty-warning-component/-/empty-warning-component-1.2.4.tgz#c28c78ba50358add452f274ad78e9a9bce2317fd"
-  integrity sha512-Cnw626VUpNY3caybHbNDmBgeQuO0NH7f2RjTD9bDnjipZPxJfeoUzMWE4AKRT6TtL9Lezrql7qFaHbqBkP/tIw==
+"@slickgrid-universal/empty-warning-component@^1.2.6":
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/@slickgrid-universal/empty-warning-component/-/empty-warning-component-1.2.6.tgz#998d34b53bcc62a7b22e215efeaf800c7b6489f1"
+  integrity sha512-t/BCYBPv0RLZD/WrECzIWKq73asFZEhk4hByOQQ6hFx9SaGCza2v39/2QMOfxAnZZY2T15GlNHqPdF9A3VyufA==
   dependencies:
-    "@slickgrid-universal/common" "^1.2.4"
+    "@slickgrid-universal/common" "^1.2.6"
 
 "@slickgrid-universal/event-pub-sub@^1.2.4":
   version "1.2.4"
