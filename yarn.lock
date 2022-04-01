@@ -2283,10 +2283,10 @@ aurelia-templating-binding@^1.0.0:
     aurelia-logging "^1.0.0"
     aurelia-templating "^1.3.0"
 
-aurelia-templating-resources@^1.13.1, aurelia-templating-resources@^1.7.0, aurelia-templating-resources@^1.7.1:
-  version "1.13.1"
-  resolved "https://registry.yarnpkg.com/aurelia-templating-resources/-/aurelia-templating-resources-1.13.1.tgz#5b76338390557678a3d46f4992ae2a48b2d1eb87"
-  integrity sha512-Syr3mbHScw+ezwFBC6QGRFUy3V5JNUQfoXKxSVtnsdT/fNbUe9PQ5z8cr4slOWsX8tAN3S3+LzHqk6e5f6oqpw==
+aurelia-templating-resources@^1.14.1, aurelia-templating-resources@^1.7.0, aurelia-templating-resources@^1.7.1:
+  version "1.14.1"
+  resolved "https://registry.yarnpkg.com/aurelia-templating-resources/-/aurelia-templating-resources-1.14.1.tgz#483862e02d0716ec98c36f004d00a15eae20a365"
+  integrity sha512-pt1RJHKAY9U81XeuNk+PVXo492UZoMA7lebpq60yI+hQRhA2lCcKu/9xA+NmMVNaVnMXXZvv+WL/unH/2S58sQ==
   dependencies:
     aurelia-binding "^2.0.0"
     aurelia-dependency-injection "^1.0.0"
@@ -2294,9 +2294,9 @@ aurelia-templating-resources@^1.13.1, aurelia-templating-resources@^1.7.0, aurel
     aurelia-logging "^1.0.0"
     aurelia-metadata "^1.0.0"
     aurelia-pal "^1.3.0"
-    aurelia-path "^1.0.0"
+    aurelia-path "^1.1.7"
     aurelia-task-queue "^1.0.0"
-    aurelia-templating "^1.8.1"
+    aurelia-templating "^1.11.1"
 
 aurelia-templating-router@^1.0.0:
   version "1.4.0"
