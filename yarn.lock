@@ -886,12 +886,12 @@
     "@slickgrid-universal/common" "^1.2.6"
     dompurify "^2.3.6"
 
-"@slickgrid-universal/empty-warning-component@^1.2.4":
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/@slickgrid-universal/empty-warning-component/-/empty-warning-component-1.2.4.tgz#c28c78ba50358add452f274ad78e9a9bce2317fd"
-  integrity sha512-Cnw626VUpNY3caybHbNDmBgeQuO0NH7f2RjTD9bDnjipZPxJfeoUzMWE4AKRT6TtL9Lezrql7qFaHbqBkP/tIw==
+"@slickgrid-universal/empty-warning-component@^1.2.6":
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/@slickgrid-universal/empty-warning-component/-/empty-warning-component-1.2.6.tgz#998d34b53bcc62a7b22e215efeaf800c7b6489f1"
+  integrity sha512-t/BCYBPv0RLZD/WrECzIWKq73asFZEhk4hByOQQ6hFx9SaGCza2v39/2QMOfxAnZZY2T15GlNHqPdF9A3VyufA==
   dependencies:
-    "@slickgrid-universal/common" "^1.2.4"
+    "@slickgrid-universal/common" "^1.2.6"
 
 "@slickgrid-universal/event-pub-sub@^1.2.4":
   version "1.2.4"
@@ -909,12 +909,12 @@
     excel-builder-webpacker "^2.1.6"
     moment-mini "^2.24.0"
 
-"@slickgrid-universal/graphql@^1.2.4":
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/@slickgrid-universal/graphql/-/graphql-1.2.4.tgz#619eb40e724b985e656b8d0bf2cebb773330f12b"
-  integrity sha512-YI6RByzJZTyKf3Vfel/XA5ADmiKH9rdXYXW80DwQ1gHjjHdrb5EPL7IeNJIcwAP+JN2cwEnjt01+Qca9DSoXww==
+"@slickgrid-universal/graphql@^1.2.6":
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/@slickgrid-universal/graphql/-/graphql-1.2.6.tgz#94b21879987a91a0330fe3d392f0f22bba781e14"
+  integrity sha512-It3SIaG68pAoBh5zdUkiczw9b6BBy6uOGiPi43iM+m5rlB2uQrCoEJtMhvpt86lGfxsBGxLD0r8fROfihR//YA==
   dependencies:
-    "@slickgrid-universal/common" "^1.2.4"
+    "@slickgrid-universal/common" "^1.2.6"
 
 "@slickgrid-universal/odata@^1.2.4":
   version "1.2.4"
@@ -8897,10 +8897,10 @@ sass-loader@^12.6.0:
     klona "^2.0.4"
     neo-async "^2.6.2"
 
-sass@^1.49.9:
-  version "1.49.9"
-  resolved "https://registry.yarnpkg.com/sass/-/sass-1.49.9.tgz#b15a189ecb0ca9e24634bae5d1ebc191809712f9"
-  integrity sha512-YlYWkkHP9fbwaFRZQRXgDi3mXZShslVmmo+FVK3kHLUELHHEYrCmL1x6IUjC7wLS6VuJSAFXRQS/DxdsC4xL1A==
+sass@^1.49.10:
+  version "1.49.10"
+  resolved "https://registry.yarnpkg.com/sass/-/sass-1.49.10.tgz#7b83cee0f03bbba443111b3f94944fde2b0c7a6b"
+  integrity sha512-w37zfWJwKu4I78U4z63u1mmgoncq+v3iOB4yzQMPyAPVHHawaQSnu9C9ysGQnZEhW609jkcLioJcMCqm75JMdg==
   dependencies:
     chokidar ">=3.0.0 <4.0.0"
     immutable "^4.0.0"
