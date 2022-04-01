@@ -946,12 +946,12 @@
     "@slickgrid-universal/common" "^1.2.4"
     rxjs "^7.5.4"
 
-"@slickgrid-universal/text-export@^1.2.4":
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/@slickgrid-universal/text-export/-/text-export-1.2.4.tgz#7509aae4f06a124e99250c5c67e38ca4ead39138"
-  integrity sha512-lDhlCuzQc2ra64eCUkBCIW4WJr+JpCAFlHReYToWIhRQIVIJts0FDtpO8drExQNF1c1g+F8r9pxQtDv4X4/cWQ==
+"@slickgrid-universal/text-export@^1.2.6":
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/@slickgrid-universal/text-export/-/text-export-1.2.6.tgz#cfa6f571ff386dfb0e6babf911471b73469196d5"
+  integrity sha512-5hsSTn7Q6lJqgM0Egjz3ejWagEdGtKYTnt1PHebFFjKyXsOPXJNiY2yxSFOAjZsIckCBfvZsx4Bh9z5U0zu8yg==
   dependencies:
-    "@slickgrid-universal/common" "^1.2.4"
+    "@slickgrid-universal/common" "^1.2.6"
     text-encoding-utf-8 "^1.0.2"
 
 "@tootallnate/once@1":
