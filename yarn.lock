@@ -931,12 +931,12 @@
     "@slickgrid-universal/binding" "^1.2.4"
     "@slickgrid-universal/common" "^1.2.4"
 
-"@slickgrid-universal/row-detail-view-plugin@^1.2.4":
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/@slickgrid-universal/row-detail-view-plugin/-/row-detail-view-plugin-1.2.4.tgz#3ca75ba82e3208a044585ea025e8515c5501d3c3"
-  integrity sha512-GvBKR6K0MzsKq7o45iv0JNsSxVmb5pBAPAK+/XeMxaz4vgqDPa8Utn/E+o9lc7M7xLt3welRJK44jhflFugAbg==
+"@slickgrid-universal/row-detail-view-plugin@^1.2.6":
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/@slickgrid-universal/row-detail-view-plugin/-/row-detail-view-plugin-1.2.6.tgz#6e40d210e0bd5454de5cbfffd4331e74754423f1"
+  integrity sha512-5NgZMJ/uiF8LZCAjArfWvyTtoE2GJ6+J9Rztpz6CJnJIRgV3Rn5oWcOta4q76c1ezF2WCGW3ZJqjQwtO5+KdUA==
   dependencies:
-    "@slickgrid-universal/common" "^1.2.4"
+    "@slickgrid-universal/common" "^1.2.6"
 
 "@slickgrid-universal/rxjs-observable@^1.2.4":
   version "1.2.4"
