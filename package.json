@@ -60,7 +60,7 @@
   },
   "dependencies": {
     "@slickgrid-universal/common": "^1.2.4",
-    "@slickgrid-universal/custom-footer-component": "^1.2.4",
+    "@slickgrid-universal/custom-footer-component": "^1.2.6",
     "@slickgrid-universal/empty-warning-component": "^1.2.6",
     "@slickgrid-universal/event-pub-sub": "^1.2.4",
     "@slickgrid-universal/pagination-component": "^1.2.4",
@@ -72,7 +72,7 @@
     "aurelia-templating-resources": "^1.13.1",
     "dompurify": "^2.3.6",
     "jquery": "~3.5.1",
-    "typescript": ">=4.5.5"
+    "typescript": ">=4.6.3"
   },
   "peerDependencies": {
     "i18next": ">= 14.1.1"
