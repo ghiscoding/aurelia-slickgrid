@@ -938,13 +938,13 @@
   dependencies:
     "@slickgrid-universal/common" "^1.2.6"
 
-"@slickgrid-universal/rxjs-observable@^1.2.4":
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/@slickgrid-universal/rxjs-observable/-/rxjs-observable-1.2.4.tgz#0560747c1407b3ce5ddd7402b08daee42c8abb17"
-  integrity sha512-sCxQ7qD7lZvJLUO98bDqPoPMLVngu0nyJLosrHR5mLt+T47pnG/SMQiK6BwsZipUI5f02/FS5PngT8Pz7XYTVA==
+"@slickgrid-universal/rxjs-observable@^1.2.6":
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/@slickgrid-universal/rxjs-observable/-/rxjs-observable-1.2.6.tgz#927907477ca66b42d4a2b495192d4d25a8a96bb5"
+  integrity sha512-9o8yypUhVOgdbNh6bPoaSweKs02yWAgHDh7y4CuiPFHsax4crJIZ83WmkNi47KEeknQa7ikjcIEsc4axTh7oAg==
   dependencies:
-    "@slickgrid-universal/common" "^1.2.4"
-    rxjs "^7.5.4"
+    "@slickgrid-universal/common" "^1.2.6"
+    rxjs "^7.5.5"
 
 "@slickgrid-universal/text-export@^1.2.6":
   version "1.2.6"
@@ -8903,7 +8903,7 @@ rxjs@^6.6.3:
   dependencies:
     tslib "^1.9.0"
 
-rxjs@^7.5.4, rxjs@^7.5.5:
+rxjs@^7.5.5:
   version "7.5.5"
   resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-7.5.5.tgz#2ebad89af0f560f460ad5cc4213219e1f7dd4e9f"
   integrity sha512-sy+H0pQofO95VDmFLzyaw9xNJU4KTRSwQIGM6+iG3SypAtCiLDzpeG8sJrNCWn2Up9km+KhkvTdbkrdy+yzZdw==
