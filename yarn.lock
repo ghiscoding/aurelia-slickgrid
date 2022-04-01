@@ -837,7 +837,7 @@
   dependencies:
     dompurify "^2.3.6"
 
-"@slickgrid-universal/common@^1.2.4", "@slickgrid-universal/common@^1.2.6":
+"@slickgrid-universal/common@^1.2.6":
   version "1.2.6"
   resolved "https://registry.yarnpkg.com/@slickgrid-universal/common/-/common-1.2.6.tgz#df92aa60ab19ad379f8c2657935a1a0fc9641e88"
   integrity sha512-Hn9+/78Tk9eoj9O9GFYCry8Nc6ptK8FoFAUdf2PgMjYUJqhUlwuWgILAZWBtATDaDOQ9/Kws0SPYVq0xN7/LMQ==
