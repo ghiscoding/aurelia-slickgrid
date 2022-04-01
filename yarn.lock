@@ -830,7 +830,7 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
-"@slickgrid-universal/binding@^1.2.4", "@slickgrid-universal/binding@^1.2.6":
+"@slickgrid-universal/binding@^1.2.6":
   version "1.2.6"
   resolved "https://registry.yarnpkg.com/@slickgrid-universal/binding/-/binding-1.2.6.tgz#0c1f5b72d91fe72e64d70012e95894115909bd10"
   integrity sha512-jKtlGH+rEhnboS+il2OIAiTEgQp794A4XjBtVHJtzNRj00qHRITFRVadVSlcGc/Ub5Zw3V0agjsM3hJo4iD+/A==
@@ -912,13 +912,13 @@
   dependencies:
     "@slickgrid-universal/common" "^1.2.4"
 
-"@slickgrid-universal/pagination-component@^1.2.4":
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/@slickgrid-universal/pagination-component/-/pagination-component-1.2.4.tgz#414252a97a39acbc20ecaac2f24bc0642c0e69f4"
-  integrity sha512-SnwmMhLuj1Of2tJTkS+oKhSkssgI2WWc/VfaygDvZpjHzAFCwtSZiNvtzVak9/1BpcOls73nqBRsMXUriz3R2w==
+"@slickgrid-universal/pagination-component@^1.2.6":
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/@slickgrid-universal/pagination-component/-/pagination-component-1.2.6.tgz#16f02d4ce6d702ebf0995d5a73e3237a9cb62702"
+  integrity sha512-Z+zG0jTDP9ZxblC/zkPhVejz4BChz9cRMlPTZNZYKdXbjj5Itd4O+RoJCcPdFpMsY+URXUNVkgWXPHBam8yGpQ==
   dependencies:
-    "@slickgrid-universal/binding" "^1.2.4"
-    "@slickgrid-universal/common" "^1.2.4"
+    "@slickgrid-universal/binding" "^1.2.6"
+    "@slickgrid-universal/common" "^1.2.6"
 
 "@slickgrid-universal/row-detail-view-plugin@^1.2.6":
   version "1.2.6"
