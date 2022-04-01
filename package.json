@@ -81,7 +81,7 @@
     "@fnando/sparkline": "^0.3.10",
     "@popperjs/core": "^2.11.2",
     "@slickgrid-universal/composite-editor-component": "^1.2.4",
-    "@slickgrid-universal/custom-tooltip-plugin": "^1.2.4",
+    "@slickgrid-universal/custom-tooltip-plugin": "^1.2.6",
     "@slickgrid-universal/excel-export": "^1.2.4",
     "@slickgrid-universal/graphql": "^1.2.4",
     "@slickgrid-universal/odata": "^1.2.4",
