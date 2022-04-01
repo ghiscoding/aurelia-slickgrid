@@ -909,12 +909,12 @@
     excel-builder-webpacker "^2.1.6"
     moment-mini "^2.24.0"
 
-"@slickgrid-universal/graphql@^1.2.4":
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/@slickgrid-universal/graphql/-/graphql-1.2.4.tgz#619eb40e724b985e656b8d0bf2cebb773330f12b"
-  integrity sha512-YI6RByzJZTyKf3Vfel/XA5ADmiKH9rdXYXW80DwQ1gHjjHdrb5EPL7IeNJIcwAP+JN2cwEnjt01+Qca9DSoXww==
+"@slickgrid-universal/graphql@^1.2.6":
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/@slickgrid-universal/graphql/-/graphql-1.2.6.tgz#94b21879987a91a0330fe3d392f0f22bba781e14"
+  integrity sha512-It3SIaG68pAoBh5zdUkiczw9b6BBy6uOGiPi43iM+m5rlB2uQrCoEJtMhvpt86lGfxsBGxLD0r8fROfihR//YA==
   dependencies:
-    "@slickgrid-universal/common" "^1.2.4"
+    "@slickgrid-universal/common" "^1.2.6"
 
 "@slickgrid-universal/odata@^1.2.4":
   version "1.2.4"
