@@ -889,12 +889,12 @@
   dependencies:
     "@slickgrid-universal/common" "^1.2.6"
 
-"@slickgrid-universal/excel-export@^1.2.4":
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/@slickgrid-universal/excel-export/-/excel-export-1.2.4.tgz#d45d75525f1f7014a87476c3f9dad33d27cd7132"
-  integrity sha512-8trn+/VO8dp9W+AkWX/8cM1B1qYhWYM7Tm5WT8eVyWshHxqGA0x4dikQJwdmB5QK+S0tHHuvanuSJsgWGv5W2A==
+"@slickgrid-universal/excel-export@^1.2.6":
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/@slickgrid-universal/excel-export/-/excel-export-1.2.6.tgz#9a90ececf88fcca3fa1960cc771811226d4e2db6"
+  integrity sha512-cVHfUjJJtBnSpM3Ar8kvbqH+LyIgjKSqjJkxrZQLX6C3WsAgjLyx82WlVqQYaW3kI6MNKakzEvHNrwr31X663w==
   dependencies:
-    "@slickgrid-universal/common" "^1.2.4"
+    "@slickgrid-universal/common" "^1.2.6"
     excel-builder-webpacker "^2.1.6"
     moment-mini "^2.24.0"
 
