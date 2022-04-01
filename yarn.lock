@@ -841,12 +841,12 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
-"@slickgrid-universal/binding@^1.2.4":
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/@slickgrid-universal/binding/-/binding-1.2.4.tgz#d663c97577b54aae785ff2a85f7f0eaa341a8253"
-  integrity sha512-RGGyMPDjauDeyRcynjWKi0KEwUhd4z5wGleGz3wwrbKrYjdkWKlG/6D0YlP09UKjbl/El7IaPWCXewbPCrWM8A==
+"@slickgrid-universal/binding@^1.2.4", "@slickgrid-universal/binding@^1.2.6":
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/@slickgrid-universal/binding/-/binding-1.2.6.tgz#0c1f5b72d91fe72e64d70012e95894115909bd10"
+  integrity sha512-jKtlGH+rEhnboS+il2OIAiTEgQp794A4XjBtVHJtzNRj00qHRITFRVadVSlcGc/Ub5Zw3V0agjsM3hJo4iD+/A==
   dependencies:
-    dompurify "^2.3.5"
+    dompurify "^2.3.6"
 
 "@slickgrid-universal/common@^1.2.4", "@slickgrid-universal/common@^1.2.6":
   version "1.2.6"
@@ -870,13 +870,13 @@
   dependencies:
     "@slickgrid-universal/common" "^1.2.6"
 
-"@slickgrid-universal/custom-footer-component@^1.2.4":
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/@slickgrid-universal/custom-footer-component/-/custom-footer-component-1.2.4.tgz#49bc5beb42837cbd510dab5d104c468878c99981"
-  integrity sha512-JveC7V+S+xzjAQVhQ6Q/fwTsduztLDHCw1qwMnU8pwftIQcfORlzL3i78prfZcRNBwiCFySn+uBgYBmozEsSDQ==
+"@slickgrid-universal/custom-footer-component@^1.2.6":
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/@slickgrid-universal/custom-footer-component/-/custom-footer-component-1.2.6.tgz#e931e5a36532cb5308132f55b758fc70c356875a"
+  integrity sha512-snMhCw8BtCn0LCh5iElhK74NG5w9kRZ5xGJ3u2SauXgkQRvnY2PhfACYOhMdLIrMVHrUFAfWWM3kz64sxHqjNQ==
   dependencies:
-    "@slickgrid-universal/binding" "^1.2.4"
-    "@slickgrid-universal/common" "^1.2.4"
+    "@slickgrid-universal/binding" "^1.2.6"
+    "@slickgrid-universal/common" "^1.2.6"
 
 "@slickgrid-universal/custom-tooltip-plugin@^1.2.6":
   version "1.2.6"
@@ -3962,7 +3962,7 @@ domhandler@^4.0.0, domhandler@^4.2.0:
   dependencies:
     domelementtype "^2.2.0"
 
-dompurify@^2.3.5, dompurify@^2.3.6:
+dompurify@^2.3.6:
   version "2.3.6"
   resolved "https://registry.yarnpkg.com/dompurify/-/dompurify-2.3.6.tgz#2e019d7d7617aacac07cbbe3d88ae3ad354cf875"
   integrity sha512-OFP2u/3T1R5CEgWCEONuJ1a5+MFKnOYpkywpUSxv/dj1LeBT1erK+JwM7zK0ROy2BRhqVCf0LRw/kHqKuMkVGg==

@@ -60,7 +60,7 @@
   },
   "dependencies": {
     "@slickgrid-universal/common": "^1.2.4",
-    "@slickgrid-universal/custom-footer-component": "^1.2.4",
+    "@slickgrid-universal/custom-footer-component": "^1.2.6",
     "@slickgrid-universal/empty-warning-component": "^1.2.6",
     "@slickgrid-universal/event-pub-sub": "^1.2.4",
     "@slickgrid-universal/pagination-component": "^1.2.4",
