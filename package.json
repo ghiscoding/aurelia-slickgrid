@@ -59,6 +59,7 @@
     "build:demo": "webpack --env production"
   },
   "dependencies": {
+    "@faker-js/faker": "^6.2.0",
     "@slickgrid-universal/common": "^1.2.6",
     "@slickgrid-universal/custom-footer-component": "^1.2.6",
     "@slickgrid-universal/empty-warning-component": "^1.2.6",
@@ -89,7 +90,6 @@
     "@slickgrid-universal/text-export": "^1.2.6",
     "@types/bluebird": "^3.5.36",
     "@types/dompurify": "^2.3.3",
-    "@types/faker": "^5.5.9",
     "@types/fnando__sparkline": "^0.3.4",
     "@types/i18next-xhr-backend": "^1.4.2",
     "@types/jest": "^27.4.1",
@@ -123,7 +123,6 @@
     "eslint": "^8.14.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prefer-arrow": "^1.2.3",
-    "faker": "^5.5.3",
     "file-loader": "6.2.0",
     "font-awesome": "^4.7.0",
     "fork-ts-checker-webpack-plugin": "^7.2.7",

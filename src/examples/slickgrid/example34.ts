@@ -1,4 +1,4 @@
-import * as Faker from 'faker';
+import { faker } from '@faker-js/faker';
 import sparkline from '@fnando/sparkline';
 import {
   Aggregators,
@@ -200,7 +200,7 @@ export class Example34 {
       const now = new Date();
       now.setHours(9, 30, 0);
       const currency = (Math.floor(Math.random() * 10)) % 2 ? 'CAD' : 'USD';
-      const company = Faker.company.companyName();
+      const company = faker.company.companyName();
 
       this.dataset[i] = {
         id: i,
