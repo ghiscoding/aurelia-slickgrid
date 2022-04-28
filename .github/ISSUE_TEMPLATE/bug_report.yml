@@ -36,17 +36,6 @@ body:
         TypeScript (x.y)
     validations:
       required: true
-  - type: dropdown
-    id: package-manager
-    attributes:
-      label: Used Package Manager
-      description: Select the used package manager
-      options:
-        - npm
-        - yarn
-        - pnpm
-    validations:
-      required: true
   - type: checkboxes
     id: checkboxes
     attributes:
