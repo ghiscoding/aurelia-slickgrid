@@ -28,7 +28,11 @@ body:
       label: Environment Info
       description: versions number of each libs and systems
       render: shell
-      placeholder: System, Aurelia (x.y), Aurelia-Slickgrid (x.y), TypeScript (x.y), Browsers
+      placeholder: |
+        System, Browsers,
+        Aurelia (x.y),
+        Aurelia-Slickgrid (x.y),
+        TypeScript (x.y)
     validations:
       required: true
   - type: dropdown
