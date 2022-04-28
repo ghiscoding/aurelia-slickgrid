@@ -29,9 +29,10 @@ body:
       description: versions number of each libs and systems
       render: shell
       placeholder: |
-        System, Browsers,
-        Aurelia (x.y),
-        Aurelia-Slickgrid (x.y),
+        System
+        Browsers
+        Aurelia (x.y)
+        Aurelia-Slickgrid (x.y)
         TypeScript (x.y)
     validations:
       required: true
