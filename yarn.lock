@@ -758,7 +758,7 @@
     jest-util "^28.0.2"
     slash "^3.0.0"
 
-"@jest/core@^28.0.2", "@jest/core@^28.0.3":
+"@jest/core@^28.0.3":
   version "28.0.3"
   resolved "https://registry.yarnpkg.com/@jest/core/-/core-28.0.3.tgz#2b8223914ef6ae16ff740e65235ef8ef49c46d52"
   integrity sha512-cCQW06vEZ+5r50SB06pOnSWsOBs7F+lswPYnKKfBz1ncLlj1sMqmvjgam8q40KhlZ8Ut4eNAL2Hvfx4BKIO2FA==
@@ -6413,7 +6413,7 @@ jest-circus@^28.0.3:
     stack-utils "^2.0.3"
     throat "^6.0.1"
 
-jest-cli@^28.0.2, jest-cli@^28.0.3:
+jest-cli@^28.0.3:
   version "28.0.3"
   resolved "https://registry.yarnpkg.com/jest-cli/-/jest-cli-28.0.3.tgz#4a4e55078ec772e0ea2583dd4c4b38fb306dc556"
   integrity sha512-NCPTEONCnhYGo1qzPP4OOcGF04YasM5GZSwQLI1HtEluxa3ct4U65IbZs6DSRt8XN1Rq0jhXwv02m5lHB28Uyg==
@@ -6799,14 +6799,14 @@ jest-worker@^28.0.2:
     merge-stream "^2.0.0"
     supports-color "^8.0.0"
 
-jest@^28.0.2:
-  version "28.0.2"
-  resolved "https://registry.yarnpkg.com/jest/-/jest-28.0.2.tgz#41385ca21d009708bb9fc65e08663110e08e2cc0"
-  integrity sha512-COUtjybolW4koQvO7kCfq5kgbeeU5WbSJfVZprz4zbS8AL32+RAZZTUjBEyRRdpsXqss/pHIvSL7/P+LyMYHXg==
+jest@^28.0.3:
+  version "28.0.3"
+  resolved "https://registry.yarnpkg.com/jest/-/jest-28.0.3.tgz#92a7d6ee097b61de4ba2db7f3ab723e81a99b32d"
+  integrity sha512-uS+T5J3w5xyzd1KSJCGKhCo8WTJXbNl86f5SW11wgssbandJOVLRKKUxmhdFfmKxhPeksl1hHZ0HaA8VBzp7xA==
   dependencies:
-    "@jest/core" "^28.0.2"
+    "@jest/core" "^28.0.3"
     import-local "^3.0.2"
-    jest-cli "^28.0.2"
+    jest-cli "^28.0.3"
 
 jquery-ui-dist@^1.12.1:
   version "1.12.1"
