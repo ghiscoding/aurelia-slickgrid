@@ -130,7 +130,7 @@
     "i18next-xhr-backend": "^3.2.2",
     "isomorphic-fetch": "^3.0.0",
     "jest": "^28.0.2",
-    "jest-cli": "^28.0.2",
+    "jest-cli": "^28.0.3",
     "jest-environment-jsdom": "^28.0.2",
     "jest-extended": "^2.0.0",
     "jsdom-global": "^3.0.2",
