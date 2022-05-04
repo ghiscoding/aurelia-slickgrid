@@ -5,7 +5,6 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { AureliaPlugin, ModuleDependenciesPlugin } = require('aurelia-webpack-plugin');
 const { ProvidePlugin } = require('webpack');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 // primary config:
 const title = 'Aurelia Navigation Skeleton';
@@ -119,6 +118,5 @@ module.exports = ({ production } = {}, { server } = {}) => ({
 
     // Note that the usage of following plugin cleans the webpack output directory before build.
     new CleanWebpackPlugin(),
-    new ForkTsCheckerWebpackPlugin()
   ]
 });
