@@ -282,6 +282,10 @@ export class AureliaSlickgridCustomElement {
   }
 
   initialization(eventHandler: SlickEventHandler) {
+    if (!this.gridOptions || !this.columnDefinitions) {
+      throw new Error('Using `<aurelia-slickgrid>` requires `column-definitions.bind="columnDefinitions"` and `grid-options.bind="gridOptions"`, it seems that you might have forgot to provide them since at least of them is undefined.');
+    }
+
     this.gridOptions.translater = this.translaterService;
     this._eventHandler = eventHandler;
 
