@@ -384,6 +384,18 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
     expect(customElement.gridOptions.enableMouseWheelScrollHandler).toBeTrue();
   });
 
+  it('should throw an error when `gridOptions` and/or `columnDefinitions` is undefined', (done) => {
+    try {
+      customElement.gridOptions = undefined as any;
+      customElement.dataset = [];
+      customElement.initialization(mockSlickEventHandler);
+    } catch (e: any) {
+      expect(e.toString()).toContain('Using `<aurelia-slickgrid>` requires `column-definitions.bind="columnDefinitions"` and `grid-options.bind="gridOptions"`');
+      customElement.dispose();
+      done();
+    }
+  });
+
   it('should keep frozen column index reference (via frozenVisibleColumnId) when grid is a frozen grid', () => {
     const sharedFrozenIndexSpy = jest.spyOn(SharedService.prototype, 'frozenVisibleColumnId', 'set');
     customElement.columnDefinitions = columnDefinitions;
