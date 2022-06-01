@@ -96,7 +96,7 @@
     "@types/node": "^17.0.38",
     "@types/webpack": "^5.28.0",
     "@typescript-eslint/eslint-plugin": "^5.27.0",
-    "@typescript-eslint/parser": "^5.22.0",
+    "@typescript-eslint/parser": "^5.27.0",
     "@webpack-cli/serve": "^1.6.1",
     "aurelia-animator-css": "^1.0.4",
     "aurelia-bootstrapper": "^2.4.0",
