@@ -69,7 +69,7 @@
     "aurelia-framework": "^1.4.1",
     "aurelia-i18n": "^3.1.4",
     "aurelia-pal": "^1.8.2",
-    "dompurify": "^2.3.6",
+    "dompurify": "^2.3.8",
     "jquery": "^3.5.1",
     "typescript": ">=4.6.4"
   },
