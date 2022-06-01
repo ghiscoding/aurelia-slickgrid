@@ -2530,10 +2530,10 @@ aurelia-testing@^1.1.0:
     aurelia-pal "^1.0.0"
     aurelia-templating "^1.11.1"
 
-aurelia-webpack-plugin@^5.0.3:
-  version "5.0.3"
-  resolved "https://registry.yarnpkg.com/aurelia-webpack-plugin/-/aurelia-webpack-plugin-5.0.3.tgz#958a35a772d1e9a4c06db8536c2d11d6a0ff8b0b"
-  integrity sha512-SD00R0kVS5v+XsBSd1cfFAUkioBoBWfEXFOz3a8U1l0OnqiIkSMkIgf6s2ntPJYIfCwhY/Id8rOHn83YMRF18A==
+aurelia-webpack-plugin@^5.0.4:
+  version "5.0.4"
+  resolved "https://registry.yarnpkg.com/aurelia-webpack-plugin/-/aurelia-webpack-plugin-5.0.4.tgz#2bdb9d62232d3626a121b9f5b7a900cfbdb560fe"
+  integrity sha512-IH+a1VVmJ0KCuch0A3mP0aKH6OT68y/V/8CMaEjKlFaahenX5TxBQ7n/Yl6+Zv+2AvF8+hV3pbijfqt9Aax66Q==
   dependencies:
     aurelia-loader-webpack "^2.2.4"
     bundle-loader "^0.5.6"
