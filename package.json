@@ -69,7 +69,7 @@
     "aurelia-framework": "^1.4.1",
     "aurelia-i18n": "^3.1.4",
     "aurelia-pal": "^1.8.2",
-    "dompurify": "^2.3.6",
+    "dompurify": "^2.3.8",
     "jquery": "^3.5.1",
     "typescript": ">=4.6.4"
   },
@@ -77,7 +77,7 @@
     "i18next": ">= 14.1.1"
   },
   "devDependencies": {
-    "@faker-js/faker": "^6.3.1",
+    "@faker-js/faker": "^7.1.0",
     "@fnando/sparkline": "^0.3.10",
     "@popperjs/core": "^2.11.5",
     "@slickgrid-universal/composite-editor-component": "^1.2.6",
@@ -143,7 +143,7 @@
     "rxjs": "^7.5.5",
     "sass": "^1.51.0",
     "sass-loader": "^12.6.0",
-    "standard-version": "^9.3.2",
+    "standard-version": "^9.5.0",
     "style-loader": "3.3.1",
     "ts-jest": "^28.0.1",
     "ts-loader": "^9.3.0",
