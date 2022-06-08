@@ -6,7 +6,7 @@ module.exports = defineConfig({
   viewportWidth: 1200,
   viewportHeight: 950,
   fixturesFolder: 'fixtures',
-  projectId: 'hqnfoi',
+  projectId: 'gtbpy4',
   screenshotsFolder: 'screenshots',
   videosFolder: 'videos',
   retries: {
