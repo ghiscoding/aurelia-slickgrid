@@ -4,12 +4,12 @@
   "description": "The Cypress integration tests.",
   "main": "index.js",
   "scripts": {
-    "cypress:ci": "cypress run --config-file cypress.json --reporter mochawesome",
+    "cypress:ci": "cypress run",
     "cypress": "cypress open"
   },
   "author": "Ghislain B.",
   "license": "MIT",
   "devDependencies": {
-    "cypress": "^9.7.0"
+    "cypress": "^10.0.3"
   }
 }
