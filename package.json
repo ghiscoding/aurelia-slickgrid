@@ -154,8 +154,8 @@
     "webpack-dev-server": "^4.9.1"
   },
   "engines": {
-    "node": ">=14.15.0",
-    "npm": ">=6.14.8"
+    "node": ">=14.17.0",
+    "npm": ">=6.14.13"
   },
   "aurelia": {
     "build": {
