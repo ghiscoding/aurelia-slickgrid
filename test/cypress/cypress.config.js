@@ -17,11 +17,12 @@ module.exports = defineConfig({
     baseUrl: 'http://localhost:9000/#',
     specPattern: 'e2e/**/*.{js,ts}',
     supportFile: 'support/index.js',
+    ignoreSpecPattern: process.env.CI ? ['node_modules/**/*', '**run-all-specs.cy.js**'] : ['node_modules/**/*'],
     setupNodeEvents(on, config) {
       on("task", {
         updateListOfTests() {
-          const UPDATE_TESTS_LIST_CY_JS = "000 update tests list.spec.js";
-          const RUN_ALL_TESTS_CY_JS = "001 run all tests.spec.js";
+          const UPDATE_TESTS_LIST_CY_JS = "000-update-tests-list.cy.js";
+          const RUN_ALL_TESTS_CY_JS = "001-run-all-specs.cy.js";
           const PATHNAME_OF_RUN_ALL_TESTS_CY_JS =
             "./e2e/" + RUN_ALL_TESTS_CY_JS;
 
