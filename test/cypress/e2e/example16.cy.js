@@ -4,7 +4,7 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', { retries
   const fullTitles = ['', '', 'Title', 'Duration', '% Complete', 'Start', 'Finish', 'Completed'];
 
   it('should display Example title', () => {
-    cy.visit(`${Cypress.config('baseUrl')}/example16`);
+    cy.visit(`${Cypress.config('baseUrl')}/slickgrid/example16`);
     cy.get('h2').should('contain', 'Example 16: Row Move & Checkbox Selector');
   });
 

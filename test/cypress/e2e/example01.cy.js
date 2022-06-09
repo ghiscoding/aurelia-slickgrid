@@ -10,7 +10,7 @@ describe('Example 1 - Basic Grids', { retries: 1 }, () => {
   });
 
   it('should display Example title', () => {
-    cy.visit(`${Cypress.config('baseUrl')}/example1`, { timeout: 50000 });
+    cy.visit(`${Cypress.config('baseUrl')}/slickgrid/example1`, { timeout: 50000 });
     cy.get('h2').should('contain', 'Example 1: Basic Grids');
     cy.getCookie('serve-mode').its('value').should('eq', 'cypress');
   });

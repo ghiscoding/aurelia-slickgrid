@@ -4,7 +4,7 @@ describe('Example 11 - Add / Update / Highlight a Datagrid Item', { retries: 1 }
   const fullTitles = ['', 'Title', 'Duration (days)', '% Complete', 'Start', 'Finish', 'Effort Driven'];
 
   it('should display Example title', () => {
-    cy.visit(`${Cypress.config('baseUrl')}/example11`);
+    cy.visit(`${Cypress.config('baseUrl')}/slickgrid/example11`);
     cy.get('h2').should('contain', 'Example 11: Add / Update / Highlight a Datagrid Item');
   });
 

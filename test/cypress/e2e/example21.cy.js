@@ -9,7 +9,7 @@ describe('Example 21 - Grid AutoHeight', { retries: 1 }, () => {
   const GRID_ROW_HEIGHT = 35;
 
   it('should display Example title', () => {
-    cy.visit(`${Cypress.config('baseUrl')}/example21`);
+    cy.visit(`${Cypress.config('baseUrl')}/slickgrid/example21`);
     cy.get('h2').should('contain', 'Example 21: Grid AutoHeight');
   });
 

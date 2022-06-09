@@ -8,7 +8,7 @@ describe('Example 3 - Grid with Editors', { retries: 1 }, () => {
   ];
 
   it('should display Example title', () => {
-    cy.visit(`${Cypress.config('baseUrl')}/example3`);
+    cy.visit(`${Cypress.config('baseUrl')}/slickgrid/example3`);
     cy.get('h2').should('contain', 'Example 3: Editors / Delete');
   });
 

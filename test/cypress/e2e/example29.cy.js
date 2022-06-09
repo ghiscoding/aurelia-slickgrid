@@ -2,7 +2,7 @@
 
 describe('Example 29 - Header and Footer slots', { retries: 1 }, () => {
   it('should display a custom header as slot', () => {
-    cy.visit(`${Cypress.config('baseUrl')}/example29`);
+    cy.visit(`${Cypress.config('baseUrl')}/slickgrid/example29`);
     cy.get("div[slot='slickgrid-header']")
       .find('h3')
       .contains('Grid with header and footer slot');

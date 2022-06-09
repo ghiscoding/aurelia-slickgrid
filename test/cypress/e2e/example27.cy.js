@@ -9,7 +9,7 @@ describe('Example 27 - Tree Data (from a flat dataset with parentId references)'
   const titles = ['Title', 'Duration', '% Complete', 'Start', 'Finish', 'Effort Driven'];
 
   it('should display Example title', () => {
-    cy.visit(`${Cypress.config('baseUrl')}/example27`);
+    cy.visit(`${Cypress.config('baseUrl')}/slickgrid/example27`);
     cy.get('h2').should('contain', 'Example 27: Tree Data');
     cy.get('h2').should('contain', 'from a flat dataset with parentId references');
   });

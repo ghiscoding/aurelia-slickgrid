@@ -6,7 +6,7 @@ describe('Example 25 - GraphQL Basic API without Pagination', { retries: 1 }, ()
   const fullTitles = ['Code', 'Name', 'Native', 'Phone Area Code', 'Currency', 'Emoji', 'Names', 'Native', 'Codes', 'Name', 'Code'];
 
   it('should display Example title', () => {
-    cy.visit(`${Cypress.config('baseUrl')}/example25`);
+    cy.visit(`${Cypress.config('baseUrl')}/slickgrid/example25`);
     cy.get('h2').should('contain', 'Example 25: GraphQL Basic API without Pagination');
   });
 

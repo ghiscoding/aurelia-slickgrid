@@ -6,7 +6,7 @@ describe('Example 20 - Frozen Grid', { retries: 1 }, () => {
   const fullTitles = ['#', 'Title', '% Complete', 'Start', 'Finish', 'Cost | Duration', 'Effort Driven', 'Title 1', 'Title 2', 'Title 3', 'Title 4'];
 
   it('should display Example title', () => {
-    cy.visit(`${Cypress.config('baseUrl')}/example20`);
+    cy.visit(`${Cypress.config('baseUrl')}/slickgrid/example20`);
     cy.get('h2').should('contain', 'Example 20: Pinned (frozen) Columns/Rows');
   });
 

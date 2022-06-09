@@ -14,7 +14,7 @@ module.exports = defineConfig({
     openMode: 0,
   },
   e2e: {
-    baseUrl: 'http://localhost:9000/#/slickgrid',
+    baseUrl: 'http://localhost:9000/#',
     specPattern: 'e2e/**/*.{js,ts}',
     supportFile: 'support/index.js',
     setupNodeEvents(on, config) {
