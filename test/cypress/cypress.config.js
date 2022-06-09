@@ -17,7 +17,7 @@ module.exports = defineConfig({
     baseUrl: 'http://localhost:9000/#',
     specPattern: 'e2e/**/*.{js,ts}',
     supportFile: 'support/index.js',
-    ignoreSpecPattern: process.env.CI ? ['node_modules/**/*', '000-update-tests-list.cy.js', '001-run-all-specs.cy.js'] : ['node_modules/**/*'],
+    excludeSpecPattern: process.env.CI ? ['**/node_modules/**', '001-run-all-specs.cy.{js,ts}'] : ['**/node_modules/**'],
     setupNodeEvents(on, config) {
       on("task", {
         updateListOfTests() {
