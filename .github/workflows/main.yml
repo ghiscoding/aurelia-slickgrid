@@ -57,8 +57,6 @@ jobs:
           wait-on: 'http://localhost:9000'
           browser: chrome
           record: true
-          spec: |
-            e2e/**.cy.js
         env:
           # pass the Dashboard record key as an environment variable
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
