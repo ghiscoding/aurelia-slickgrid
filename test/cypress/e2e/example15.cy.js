@@ -69,7 +69,7 @@ describe('Example 15: Grid State & Presets using Local Storage', { retries: 1 },
       .children('.slick-header-column:nth(3)')
       .should('contain', 'Duration')
       .trigger('mousemove', 'bottomRight')
-      .trigger('mouseup', 'bottomRight', { force: true });
+      .trigger('mouseup', 'bottomRight', { which: 1, force: true });
 
     cy.get('#grid15')
       .find('.slick-header-columns')
@@ -87,7 +87,7 @@ describe('Example 15: Grid State & Presets using Local Storage', { retries: 1 },
     cy.get('.slick-header-columns')
       .children('.slick-header-column:nth(3)')
       .find('.slick-resizable-handle')
-      .trigger('mouseover', -2, 50, { force: true })
+      .trigger('mouseover', -2, 50, { which: 1, force: true })
       .should('be.visible')
       .invoke('show')
       .hover()
