@@ -1,5 +1,6 @@
 import { autoinject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
+import { TOptions as I18NOptions } from 'i18next';
 import * as moment from 'moment-mini';
 
 import { CustomInputFilter } from './custom-inputFilter';
@@ -31,7 +32,7 @@ const taskTranslateFormatter: Formatter = (_row, _cell, value, _columnDef, _data
   const gridOptions = (grid && typeof grid.getOptions === 'function') ? grid.getOptions() : {};
   const i18n = gridOptions.i18n;
 
-  return i18n?.tr('TASK_X', { x: value }) ?? '';
+  return i18n?.tr('TASK_X', { x: value } as I18NOptions) ?? '';
 };
 
 @autoinject()
