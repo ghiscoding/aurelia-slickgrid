@@ -36,7 +36,7 @@ const myCustomTitleValidator: EditorValidator = (value: any) => {
   // you can get the Editor Args which can be helpful, e.g. we can get the Translate Service from it
   // const grid = args && args.grid;
   // const gridOptions = (grid && grid.getOptions) ? grid.getOptions() : {};
-  // const i18n = gridOptions.i18n as I18N;
+  // const i18n = gridOptions.i18n;
 
   // to get the editor object, you'll need to use "internalColumnEditor"
   // don't use "editor" property since that one is what SlickGrid uses internally by it's editor factory

@@ -44,7 +44,7 @@ const priorityExportFormatter: Formatter = (_row, _cell, value, _columnDef, _dat
     return '';
   }
   const gridOptions: GridOption = (grid && typeof grid.getOptions === 'function') ? grid.getOptions() : {};
-  const i18n = gridOptions.i18n as I18N;
+  const i18n = gridOptions.i18n;
   const count = +(value >= 3 ? 3 : value);
   const key = count === 3 ? 'HIGH' : (count === 2 ? 'MEDIUM' : 'LOW');
 
@@ -54,7 +54,7 @@ const priorityExportFormatter: Formatter = (_row, _cell, value, _columnDef, _dat
 // create a custom translate Formatter (typically you would move that a separate file, for separation of concerns)
 const taskTranslateFormatter: Formatter = (_row, _cell, value, _columnDef, _dataContext, grid: SlickGrid) => {
   const gridOptions: GridOption = (grid && typeof grid.getOptions === 'function') ? grid.getOptions() : {};
-  const i18n = gridOptions.i18n as I18N;
+  const i18n = gridOptions.i18n;
 
   return i18n?.tr('TASK_X', { x: value } as I18NOptions) ?? '';
 };
