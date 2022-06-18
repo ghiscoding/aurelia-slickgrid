@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.2.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v4.1.3...v4.2.0) (2022-06-18)
+
+
+### Features
+
+* **core:** upgrade to jQuery 3.6 and jQuery-UI 1.13 ([#824](https://github.com/ghiscoding/aurelia-slickgrid/issues/824)) ([342ee33](https://github.com/ghiscoding/aurelia-slickgrid/commit/342ee339c5b329f98b067b68d4dbc177225399f5))
+
+
+### Bug Fixes
+
+* **core:** throw error when `gridOptions` missing in View ([#788](https://github.com/ghiscoding/aurelia-slickgrid/issues/788)) ([f57aa2b](https://github.com/ghiscoding/aurelia-slickgrid/commit/f57aa2b132e50453687b40aa46724c3466975819))
+
 ### [4.1.3](https://github.com/ghiscoding/aurelia-slickgrid/compare/v4.1.2...v4.1.3) (2022-04-28)
 
 
