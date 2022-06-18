@@ -67,13 +67,13 @@
     "@slickgrid-universal/row-detail-view-plugin": "^1.2.6",
     "aurelia-event-aggregator": "^1.0.3",
     "aurelia-framework": "^1.4.1",
+    "aurelia-i18n": ">=3.1.4",
     "aurelia-pal": "^1.8.2",
     "dompurify": "^2.3.8",
     "jquery": "^3.5.1",
     "typescript": ">=4.6.4"
   },
   "peerDependencies": {
-    "aurelia-i18n": ">=3.1.4",
     "i18next": ">= 14.1.1"
   },
   "devDependencies": {
@@ -127,6 +127,7 @@
     "font-awesome": "^4.7.0",
     "html-loader": "3.1.2",
     "html-webpack-plugin": "5.5.0",
+    "i18next": "^21.8.10",
     "i18next-xhr-backend": "^3.2.2",
     "isomorphic-fetch": "^3.0.0",
     "jest": "^28.1.1",
