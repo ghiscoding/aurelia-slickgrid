@@ -142,7 +142,7 @@
     "rimraf": "^3.0.2",
     "rxjs": "^7.5.5",
     "sass": "^1.53.0",
-    "sass-loader": "^13.0.0",
+    "sass-loader": "^13.0.1",
     "standard-version": "^9.5.0",
     "style-loader": "3.3.1",
     "ts-jest": "^28.0.5",
