@@ -395,8 +395,7 @@ export class AureliaSlickgridCustomElement {
 
       // if you don't want the items that are not visible (due to being filtered out or being on a different page)
       // to stay selected, pass 'false' to the second arg
-      const selectionModel = this.grid?.getSelectionModel();
-      if (selectionModel && this.gridOptions?.dataView && this.gridOptions.dataView.hasOwnProperty('syncGridSelection')) {
+      if (this.grid?.getSelectionModel() && this.gridOptions?.dataView && this.gridOptions.dataView.hasOwnProperty('syncGridSelection')) {
         // if we are using a Backend Service, we will do an extra flag check, the reason is because it might have some unintended behaviors
         // with the BackendServiceApi because technically the data in the page changes the DataView on every page change.
         let preservedRowSelectionWithBackend = false;
@@ -769,10 +768,9 @@ export class AureliaSlickgridCustomElement {
         // When data changes in the DataView, we need to refresh the metrics and/or display a warning if the dataset is empty
         this._eventHandler.subscribe(dataView.onRowCountChanged, () => {
           grid.invalidate();
-          this.handleOnItemCountChanged(dataView.getFilteredItemCount() || 0, dataView.getItemCount());
+          this.handleOnItemCountChanged(dataView.getFilteredItemCount() || 0, dataView.getItemCount() || 0);
         });
         this._eventHandler.subscribe(dataView.onSetItemsCalled, (_e, args) => {
-          grid.invalidate();
           this.handleOnItemCountChanged(dataView.getFilteredItemCount() || 0, args.itemCount);
 
           // when user has resize by content enabled, we'll force a full width calculation since we change our entire dataset
@@ -781,17 +779,17 @@ export class AureliaSlickgridCustomElement {
           }
         });
 
-        this._eventHandler.subscribe(dataView.onRowsChanged, (_e, args) => {
-          // filtering data with local dataset will not always show correctly unless we call this updateRow/render
-          // also don't use "invalidateRows" since it destroys the entire row and as bad user experience when updating a row
-          // see commit: https://github.com/ghiscoding/aurelia-slickgrid/commit/8c503a4d45fba11cbd8d8cc467fae8d177cc4f60
-          if (gridOptions?.enableFiltering && !gridOptions.enableRowDetailView) {
+        if (gridOptions?.enableFiltering && !gridOptions.enableRowDetailView) {
+          this._eventHandler.subscribe(dataView.onRowsChanged, (_e, args) => {
+            // filtering data with local dataset will not always show correctly unless we call this updateRow/render
+            // also don't use "invalidateRows" since it destroys the entire row and as bad user experience when updating a row
+            // see commit: https://github.com/ghiscoding/aurelia-slickgrid/commit/8c503a4d45fba11cbd8d8cc467fae8d177cc4f60
             if (args?.rows && Array.isArray(args.rows)) {
               args.rows.forEach((row: number) => grid.updateRow(row));
               grid.render();
             }
-          }
-        });
+          });
+        }
       }
     }
 
@@ -1218,9 +1216,8 @@ export class AureliaSlickgridCustomElement {
   private loadRowSelectionPresetWhenExists() {
     // if user entered some Row Selections "presets"
     const presets = this.gridOptions?.presets;
-    const selectionModel = this.grid?.getSelectionModel();
     const enableRowSelection = this.gridOptions && (this.gridOptions.enableCheckboxSelector || this.gridOptions.enableRowSelection);
-    if (enableRowSelection && selectionModel && presets && presets.rowSelection && (Array.isArray(presets.rowSelection.gridRowIndexes) || Array.isArray(presets.rowSelection.dataContextIds))) {
+    if (enableRowSelection && this.grid?.getSelectionModel() && presets?.rowSelection && (Array.isArray(presets.rowSelection.gridRowIndexes) || Array.isArray(presets.rowSelection.dataContextIds))) {
       let dataContextIds = presets.rowSelection.dataContextIds;
       let gridRowIndexes = presets.rowSelection.gridRowIndexes;
 
@@ -1290,7 +1287,7 @@ export class AureliaSlickgridCustomElement {
     // register all services by executing their init method and providing them with the Grid object
     if (Array.isArray(this._registeredResources)) {
       for (const resource of this._registeredResources) {
-        if (resource?.className === 'RxJsResource') {
+        if (this.grid && resource?.className === 'RxJsResource') {
           this.registerRxJsResource(resource as RxJsFacade);
         }
       }
