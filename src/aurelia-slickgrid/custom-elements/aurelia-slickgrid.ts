@@ -1282,7 +1282,7 @@ export class AureliaSlickgridCustomElement {
     return options;
   }
 
-  /** Pre-Register any Resource that don't require SlickGrid to be instantiated (for example RxJS Resource) */
+  /** Pre-Register any Resource that don't require SlickGrid to be instantiated (for example RxJS Resource & RowDetail) */
   private preRegisterResources() {
     this._registeredResources = this.gridOptions.registerExternalResources || [];
 
@@ -1294,6 +1294,13 @@ export class AureliaSlickgridCustomElement {
           this.registerRxJsResource(resource as RxJsFacade);
         }
       }
+    }
+
+    if (this.gridOptions.enableRowDetailView) {
+      this.slickRowDetailView = new SlickRowDetailView(this.aureliaUtilService, this._eventPubSubService, this.elm);
+      this.slickRowDetailView.create(this.columnDefinitions, this.gridOptions);
+      this._registeredResources.push(this.slickRowDetailView);
+      this.extensionService.addExtensionToList(ExtensionName.rowDetailView, { name: ExtensionName.rowDetailView, instance: this.slickRowDetailView });
     }
   }
 
@@ -1319,13 +1326,6 @@ export class AureliaSlickgridCustomElement {
     // when user enables translation, we need to translate Headers on first pass & subsequently in the bindDifferentHooks
     if (this.gridOptions.enableTranslate) {
       this.extensionService.translateColumnHeaders();
-    }
-
-    if (this.gridOptions.enableRowDetailView) {
-      this.slickRowDetailView = new SlickRowDetailView(this.aureliaUtilService, this._eventPubSubService, this.elm);
-      this.slickRowDetailView.create(this.columnDefinitions, this.gridOptions);
-      this._registeredResources.push(this.slickRowDetailView);
-      this.extensionService.addExtensionToList(ExtensionName.rowDetailView, { name: ExtensionName.rowDetailView, instance: this.slickRowDetailView });
     }
 
     // also initialize (render) the empty warning component
