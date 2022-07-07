@@ -1287,7 +1287,7 @@ export class AureliaSlickgridCustomElement {
     // register all services by executing their init method and providing them with the Grid object
     if (Array.isArray(this._registeredResources)) {
       for (const resource of this._registeredResources) {
-        if (this.grid && resource?.className === 'RxJsResource') {
+        if (resource?.className === 'RxJsResource') {
           this.registerRxJsResource(resource as RxJsFacade);
         }
       }
