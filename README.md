@@ -11,8 +11,12 @@
 
 One of the best javascript datagrid [SlickGrid](https://github.com/mleibman/SlickGrid) which was originally developed by @mleibman is now available to Aurelia. I have used a few datagrids and SlickGrid beats most of them in terms of functionalities and performance (it can easily deal with even a million row). We will be using the [6pac/SlickGrid](https://github.com/6pac/SlickGrid/) fork, this is the most active fork since the original @mleibman fork was closed some time ago by his author for personal reasons. Also worth to know, I also contributed a lot to the 6pac/SlickGrid fork for the benefit of Aurelia-Slickgrid.
 
-### NPM Package
-[Aurelia-Slickgrid on NPM](https://www.npmjs.com/package/aurelia-slickgrid)
+## Installation
+Refer to the **[Wiki - HOWTO Step by Step](https://github.com/ghiscoding/aurelia-slickgrid/wiki/HOWTO--Step-by-Step)** and/or clone the [Aurelia-Slickgrid Demos](https://github.com/ghiscoding/aurelia-slickgrid-demos) repository. Please consult all Wikis before opening new issues, also consider asking installation and/or general questions on [Stack Overflow](https://stackoverflow.com/search?tab=newest&q=slickgrid) unless you think there's a bug with the library.
+
+```sh
+npm install aurelia-slickgrid
+```
 
 ### License
 [MIT License](LICENSE)
@@ -45,11 +49,6 @@ Check out the [Releases](https://github.com/ghiscoding/aurelia-slickgrid/release
 ## Fully Tested with [Jest](https://jestjs.io/) (Unit Tests) - [Cypress](https://www.cypress.io/) (E2E tests)
 Aurelia-Slickgrid has **100%** Unit Test Coverage, we are talking of 15,000+ lines of code (3,750+ unit tests, most of these tests were moved into Slickgrid-Universal) fully tested with [Jest](https://jestjs.io/). On the UI side, all Aurelia-Slickgrid Example are tested with [Cypress](https://www.cypress.io/), there are over 550+ Cypress E2E tests.
 
-## Installation
-Refer to the **[Wiki - HOWTO Step by Step](https://github.com/ghiscoding/aurelia-slickgrid/wiki/HOWTO--Step-by-Step)** and/or the [Aurelia-Slickgrid Demos](https://github.com/ghiscoding/aurelia-slickgrid-demos) repository. Also make sure to follow these steps (from the Wiki) before opening any new issue, and if any of these steps are incorrect or confusing then please let me know.
-
-**NOTE:** if you have any installation and/or general questions, please consider asking them on [Stack Overflow](https://stackoverflow.com/search?tab=newest&q=slickgrid) unless you think there's a bug with the library.
-
 ## Usage
 
 #### How to load data with `Fetch-Client` or `Http-Client`?
@@ -57,6 +56,12 @@ You might have noticed that all demos are made with mocked dataset that are embe
 
 ## Main features
 You can see a few screenshots below to demo some of the lib features as well as instructions underneath them and if that is not enough to convince you then head over to the [Wiki - Main Features](https://github.com/ghiscoding/aurelia-slickgrid/wiki).
+
+## Missing features
+What if `Aurelia-Slickgrid` is missing feature(s) compare to the original core library [6pac/SlickGrid](https://github.com/6pac/SlickGrid/)?
+
+Fear not, you can simply reference the `SlickGrid` and `DataView` objects, just like in the core lib (they are exposed through Custom Events). For more info continue reading on [Wiki - SlickGrid & DataView objects](/ghiscoding/aurelia-slickgrid/wiki/SlickGrid-&-DataView-Objects) and [Wiki - Grid & DataView Events](https://github.com/ghiscoding/aurelia-slickgrid/wiki/Grid-&-DataView-Events)
+
 
 ## Screenshots
 
