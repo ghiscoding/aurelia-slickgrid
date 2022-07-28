@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### [4.2.3](https://github.com/ghiscoding/aurelia-slickgrid/compare/v4.2.2...v4.2.3) (2022-07-28)
 
+### Bug Fixes
+
+* **deps:** loosen up RxJS min version to avoid interface out of sync ([1637175](https://github.com/ghiscoding/aurelia-slickgrid/commit/163717561f682aaad874a60476a3d0afc9d85368))
+* **build:** use patch version when releasing from slickgrid-universal ([1637175](https://github.com/ghiscoding/aurelia-slickgrid/commit/163717561f682aaad874a60476a3d0afc9d85368))
+
+
 ### [4.2.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v4.2.1...v4.2.2) (2022-07-07)
 
 ### [4.2.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v4.2.0...v4.2.1) (2022-07-07)
