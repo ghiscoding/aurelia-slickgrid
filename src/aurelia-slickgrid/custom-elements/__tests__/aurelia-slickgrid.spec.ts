@@ -3,7 +3,7 @@ import { EventAggregator } from 'aurelia-event-aggregator';
 import { BindingEngine, Container } from 'aurelia-framework';
 import { of, throwError } from 'rxjs';
 import {
-  BackendService, BackendUtilityService, CollectionService,
+  BackendService, BackendServiceApi, BackendUtilityService, CollectionService,
   Column,
   ColumnFilters,
   CurrentFilter,
@@ -536,7 +536,7 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
 
         customElement.gridOptions = { autoFitColumnsOnFirstLoad: true };
         customElement.initialization(slickEventHandler);
-        customElement.datasetChanged(mockData, null);
+        customElement.datasetChanged(mockData, null as any);
 
         expect(autosizeSpy).toHaveBeenCalledTimes(3); // 1x by datasetChanged and 2x by bindResizeHook
         expect(refreshSpy).toHaveBeenCalledWith(mockData);
@@ -550,7 +550,7 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
 
         customElement.gridOptions = { autoFitColumnsOnFirstLoad: false };
         customElement.initialization(slickEventHandler);
-        customElement.datasetChanged(mockData, null);
+        customElement.datasetChanged(mockData, null as any);
 
         expect(autosizeSpy).not.toHaveBeenCalled();
         expect(refreshSpy).toHaveBeenCalledWith(mockData);
@@ -568,7 +568,7 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         customElement.attached();
         customElement.initialization(slickEventHandler);
         customElement.columnDefinitionsChanged();
-        customElement.datasetChanged(mockData, null);
+        customElement.datasetChanged(mockData, null as any);
         customElement.columnDefinitions = mockColDefs;
 
         expect(resizeContentSpy).toHaveBeenCalledTimes(1);
@@ -583,7 +583,7 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
 
         try {
           customElement.initialization(slickEventHandler);
-          customElement.datasetChanged(mockData, null);
+          customElement.datasetChanged(mockData, null as any);
         } catch (e) {
           expect(e.toString()).toContain('[Aurelia-Slickgrid] You cannot enable both autosize/fit viewport & resize by content, you must choose which resize technique to use.');
           customElement.dispose();
@@ -599,7 +599,7 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
 
         try {
           customElement.initialization(slickEventHandler);
-          customElement.datasetChanged(mockData, null);
+          customElement.datasetChanged(mockData, null as any);
         } catch (e) {
           expect(e.toString()).toContain('[Aurelia-Slickgrid] You cannot enable both autosize/fit viewport & resize by content, you must choose which resize technique to use.');
           customElement.dispose();
@@ -635,7 +635,7 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         const mockPagination = { pageSize: 2, pageSizes: [], totalItems: 1 };
         const paginationSrvSpy = jest.spyOn(paginationServiceStub, 'updateTotalItems');
 
-        customElement.paginationOptionsChanged(undefined);
+        customElement.paginationOptionsChanged(undefined as any);
         customElement.paginationOptionsChanged(mockPagination);
 
         // expect(customElement.paginationOptions).toEqual(mockPagination);
@@ -663,18 +663,16 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         const mockCollection = ['male', 'female'];
         const promise = new Promise(resolve => resolve(mockCollection));
         const mockColDefs = [{ id: 'gender', field: 'gender', editor: { model: Editors.text, collectionAsync: promise } }] as Column[];
-        const getColSpy = jest.spyOn(mockGrid, 'getColumns').mockReturnValue(mockColDefs);
 
         customElement.columnDefinitions = mockColDefs;
         customElement.columnDefinitionsChanged();
         customElement.initialization(slickEventHandler);
 
         setTimeout(() => {
-          expect(getColSpy).toHaveBeenCalled();
           expect(customElement.columnDefinitions[0].editor).toBeTruthy();
-          expect(customElement.columnDefinitions[0].editor.collection).toEqual(mockCollection);
-          expect(customElement.columnDefinitions[0].internalColumnEditor.collection).toEqual(mockCollection);
-          expect(customElement.columnDefinitions[0].internalColumnEditor.model).toEqual(Editors.text);
+          expect(customElement.columnDefinitions[0].editor!.collection).toEqual(mockCollection);
+          expect(customElement.columnDefinitions[0].internalColumnEditor!.collection).toEqual(mockCollection);
+          expect(customElement.columnDefinitions[0].internalColumnEditor!.model).toEqual(Editors.text);
           done();
         });
       });
@@ -688,7 +686,6 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
           renderDomElement: jest.fn(),
         };
         const mockColDefs = [{ id: 'gender', field: 'gender', editor: { model: Editors.text, collectionAsync: promise } }] as Column[];
-        const getColSpy = jest.spyOn(mockGrid, 'getColumns').mockReturnValue(mockColDefs);
         jest.spyOn(mockGrid, 'getCellEditor').mockReturnValue(mockEditor);
         const disableSpy = jest.spyOn(mockEditor, 'disable');
         const destroySpy = jest.spyOn(mockEditor, 'destroy');
@@ -699,11 +696,10 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         customElement.initialization(slickEventHandler);
 
         setTimeout(() => {
-          expect(getColSpy).toHaveBeenCalled();
           expect(customElement.columnDefinitions[0].editor).toBeTruthy();
-          expect(customElement.columnDefinitions[0].editor.collection).toEqual(mockCollection);
-          expect(customElement.columnDefinitions[0].internalColumnEditor.collection).toEqual(mockCollection);
-          expect(customElement.columnDefinitions[0].internalColumnEditor.model).toEqual(Editors.text);
+          expect(customElement.columnDefinitions[0].editor!.collection).toEqual(mockCollection);
+          expect(customElement.columnDefinitions[0].internalColumnEditor!.collection).toEqual(mockCollection);
+          expect(customElement.columnDefinitions[0].internalColumnEditor!.model).toEqual(Editors.text);
           expect(disableSpy).toHaveBeenCalledWith(false);
           expect(destroySpy).toHaveBeenCalled();
           expect(renderSpy).toHaveBeenCalledWith(mockCollection);
@@ -715,17 +711,15 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         const mockCollection = ['male', 'female'];
         const promise = new Promise(resolve => resolve({ content: mockCollection }));
         const mockColDefs = [{ id: 'gender', field: 'gender', editor: { model: Editors.text, collectionAsync: promise } }] as Column[];
-        const getColSpy = jest.spyOn(mockGrid, 'getColumns').mockReturnValue(mockColDefs);
 
         customElement.columnDefinitions = mockColDefs;
         customElement.columnDefinitionsChanged();
         customElement.initialization(slickEventHandler);
 
         setTimeout(() => {
-          expect(getColSpy).toHaveBeenCalled();
-          expect(customElement.columnDefinitions[0].editor.collection).toEqual(mockCollection);
-          expect(customElement.columnDefinitions[0].internalColumnEditor.collection).toEqual(mockCollection);
-          expect(customElement.columnDefinitions[0].internalColumnEditor.model).toEqual(Editors.text);
+          expect(customElement.columnDefinitions[0].editor!.collection).toEqual(mockCollection);
+          expect(customElement.columnDefinitions[0].internalColumnEditor!.collection).toEqual(mockCollection);
+          expect(customElement.columnDefinitions[0].internalColumnEditor!.model).toEqual(Editors.text);
           done();
         });
       });
@@ -739,17 +733,15 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         http.responseHeaders = { accept: 'json' };
         const collectionAsync = http.fetch('/api', { method: 'GET' });
         const mockColDefs = [{ id: 'gender', field: 'gender', editor: { model: Editors.text, collectionAsync } }] as Column[];
-        const getColSpy = jest.spyOn(mockGrid, 'getColumns').mockReturnValue(mockColDefs);
 
         customElement.columnDefinitions = mockColDefs;
         customElement.columnDefinitionsChanged();
         customElement.initialization(slickEventHandler);
 
         setTimeout(() => {
-          expect(getColSpy).toHaveBeenCalled();
-          expect(customElement.columnDefinitions[0].editor.collection).toEqual(mockCollection);
-          expect(customElement.columnDefinitions[0].internalColumnEditor.collection).toEqual(mockCollection);
-          expect(customElement.columnDefinitions[0].internalColumnEditor.model).toEqual(Editors.text);
+          expect(customElement.columnDefinitions[0].editor!.collection).toEqual(mockCollection);
+          expect(customElement.columnDefinitions[0].internalColumnEditor!.collection).toEqual(mockCollection);
+          expect(customElement.columnDefinitions[0].internalColumnEditor!.model).toEqual(Editors.text);
           done();
         });
       });
@@ -757,7 +749,6 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
       it('should be able to load async editors with an Observable', (done) => {
         const mockCollection = ['male', 'female'];
         const mockColDefs = [{ id: 'gender', field: 'gender', editor: { model: Editors.text, collectionAsync: of(mockCollection) } }] as Column[];
-        const getColSpy = jest.spyOn(mockGrid, 'getColumns').mockReturnValue(mockColDefs);
 
         const rxjsMock = new RxJsResourceStub();
         customElement.gridOptions = { registerExternalResources: [rxjsMock] } as unknown as GridOption;
@@ -766,7 +757,6 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         customElement.initialization(slickEventHandler);
 
         setTimeout(() => {
-          expect(getColSpy).toHaveBeenCalled();
           expect(customElement.columnDefinitions[0].editor!.collection).toEqual(mockCollection);
           expect(customElement.columnDefinitions[0].internalColumnEditor!.collection).toEqual(mockCollection);
           expect(customElement.columnDefinitions[0].internalColumnEditor!.model).toEqual(Editors.text);
@@ -1053,16 +1043,16 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
           enablePagination: true,
           presets: { pagination: { pageSize: 2, pageNumber: expectedPageNumber } }
         };
-        customElement.paginationOptionsChanged(undefined);
+        customElement.paginationOptionsChanged(undefined as any);
         customElement.paginationOptionsChanged({ pageSize: 2, pageNumber: 2, pageSizes: [2, 10, 25, 50], totalItems: 100 });
 
         customElement.initialization(slickEventHandler);
-        customElement.datasetChanged(mockData, null);
+        customElement.datasetChanged(mockData, null as any);
 
         setTimeout(() => {
-          expect(customElement.gridOptions.pagination.pageSize).toBe(2);
-          expect(customElement.gridOptions.pagination.pageNumber).toBe(expectedPageNumber);
-          expect(customElement.gridOptions.pagination.totalItems).toBe(expectedTotalItems);
+          expect(customElement.gridOptions.pagination!.pageSize).toBe(2);
+          expect(customElement.gridOptions.pagination!.pageNumber).toBe(expectedPageNumber);
+          expect(customElement.gridOptions.pagination!.totalItems).toBe(expectedTotalItems);
           expect(refreshSpy).toHaveBeenCalledWith(mockData);
           done();
         });
@@ -1084,13 +1074,13 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         customElement.initialization(slickEventHandler);
         customElement.paginationOptionsChanged({ pageSize: 10, pageNumber: 2, pageSizes: [10, 25, 50], totalItems: 100 });
 
-        customElement.datasetChanged(mockData, null);
+        customElement.datasetChanged(mockData, null as any);
 
         setTimeout(() => {
           expect(getPagingSpy).toHaveBeenCalled();
-          expect(customElement.gridOptions.pagination.pageSize).toBe(10);
-          expect(customElement.gridOptions.pagination.pageNumber).toBe(expectedPageNumber);
-          expect(customElement.gridOptions.pagination.totalItems).toBe(expectedTotalItems);
+          expect(customElement.gridOptions.pagination!.pageSize).toBe(10);
+          expect(customElement.gridOptions.pagination!.pageNumber).toBe(expectedPageNumber);
+          expect(customElement.gridOptions.pagination!.totalItems).toBe(expectedTotalItems);
           expect(refreshSpy).toHaveBeenCalledWith(mockData);
           expect(paginationSrvSpy).toHaveBeenCalledWith(100, true);
           done();
@@ -1121,55 +1111,55 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         customElement.initialization(slickEventHandler);
 
         expect(spy).toHaveBeenCalled();
-        expect(customElement.gridOptions.backendServiceApi.internalPostProcess).toEqual(expect.any(Function));
+        expect(customElement.gridOptions.backendServiceApi!.internalPostProcess).toEqual(expect.any(Function));
       });
 
       it('should execute the "internalPostProcess" callback method that was created by "createBackendApiInternalPostProcessCallback" with Pagination', () => {
-        jest.spyOn(customElement.gridOptions.backendServiceApi.service, 'getDatasetName').mockReturnValue('users');
+        jest.spyOn(customElement.gridOptions.backendServiceApi!.service, 'getDatasetName').mockReturnValue('users');
         const spy = jest.spyOn(customElement, 'refreshGridData');
 
         customElement.initialization(slickEventHandler);
-        customElement.gridOptions.backendServiceApi.internalPostProcess({ data: { users: { nodes: [{ firstName: 'John' }], totalCount: 2 } } } as GraphqlPaginatedResult);
+        customElement.gridOptions.backendServiceApi!.internalPostProcess!({ data: { users: { nodes: [{ firstName: 'John' }], totalCount: 2 } } } as GraphqlPaginatedResult);
 
         expect(spy).toHaveBeenCalled();
-        expect(customElement.gridOptions.backendServiceApi.internalPostProcess).toEqual(expect.any(Function));
+        expect(customElement.gridOptions.backendServiceApi!.internalPostProcess).toEqual(expect.any(Function));
       });
 
       it('should execute the "internalPostProcess" callback and expect totalItems to be updated in the PaginationService when "refreshGridData" is called on the 2nd time', () => {
-        jest.spyOn(customElement.gridOptions.backendServiceApi.service, 'getDatasetName').mockReturnValue('users');
+        jest.spyOn(customElement.gridOptions.backendServiceApi!.service, 'getDatasetName').mockReturnValue('users');
         const refreshSpy = jest.spyOn(customElement, 'refreshGridData');
         const paginationSpy = jest.spyOn(paginationServiceStub, 'totalItems', 'set');
         const mockDataset = [{ firstName: 'John' }, { firstName: 'Jane' }];
 
         customElement.initialization(slickEventHandler);
-        customElement.gridOptions.backendServiceApi.internalPostProcess({ data: { users: { nodes: mockDataset, totalCount: mockDataset.length } } } as GraphqlPaginatedResult);
+        customElement.gridOptions.backendServiceApi!.internalPostProcess!({ data: { users: { nodes: mockDataset, totalCount: mockDataset.length } } } as GraphqlPaginatedResult);
         customElement.refreshGridData(mockDataset, 1);
         customElement.refreshGridData(mockDataset, 1);
 
         expect(refreshSpy).toHaveBeenCalledTimes(3);
         expect(paginationSpy).toHaveBeenCalledWith(2);
-        expect(customElement.gridOptions.backendServiceApi.internalPostProcess).toEqual(expect.any(Function));
+        expect(customElement.gridOptions.backendServiceApi!.internalPostProcess).toEqual(expect.any(Function));
       });
 
       it('should execute the "internalPostProcess" callback method that was created by "createBackendApiInternalPostProcessCallback" without Pagination (when disabled)', () => {
         customElement.gridOptions.enablePagination = false;
-        jest.spyOn(customElement.gridOptions.backendServiceApi.service, 'getDatasetName').mockReturnValue('users');
+        jest.spyOn(customElement.gridOptions.backendServiceApi!.service, 'getDatasetName').mockReturnValue('users');
         const spy = jest.spyOn(customElement, 'refreshGridData');
 
         customElement.initialization(slickEventHandler);
-        customElement.gridOptions.backendServiceApi.internalPostProcess({ data: { users: [{ firstName: 'John' }] } } as unknown as GraphqlPaginatedResult);
+        customElement.gridOptions.backendServiceApi!.internalPostProcess!({ data: { users: [{ firstName: 'John' }] } } as unknown as GraphqlPaginatedResult);
 
         expect(spy).toHaveBeenCalled();
-        expect(customElement.gridOptions.backendServiceApi.internalPostProcess).toEqual(expect.any(Function));
+        expect(customElement.gridOptions.backendServiceApi!.internalPostProcess).toEqual(expect.any(Function));
       });
 
       it('should execute the "internalPostProcess" callback method but return an empty dataset when dataset name does not match "getDatasetName"', () => {
         customElement.gridOptions.enablePagination = true;
-        jest.spyOn(customElement.gridOptions.backendServiceApi.service, 'getDatasetName').mockReturnValue('users');
+        jest.spyOn(customElement.gridOptions.backendServiceApi!.service, 'getDatasetName').mockReturnValue('users');
         const spy = jest.spyOn(customElement, 'refreshGridData');
 
         customElement.initialization(slickEventHandler);
-        customElement.gridOptions.backendServiceApi.internalPostProcess({ data: { notUsers: { nodes: [{ firstName: 'John' }], totalCount: 2 } } } as GraphqlPaginatedResult);
+        customElement.gridOptions.backendServiceApi!.internalPostProcess!({ data: { notUsers: { nodes: [{ firstName: 'John' }], totalCount: 2 } } } as GraphqlPaginatedResult);
 
         expect(spy).not.toHaveBeenCalled();
         expect(customElement.dataset).toEqual([]);
@@ -1245,10 +1235,10 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         customElement.paginationOptionsChanged({ pageSize: 10, pageNumber: 1, pageSizes: [10, 25, 50], totalItems: 100 });
 
         customElement.initialization(slickEventHandler);
-        customElement.datasetChanged(mockData, null);
+        customElement.datasetChanged(mockData, null as any);
 
-        expect(customElement.gridOptions.pagination.pageSize).toBe(10);
-        expect(customElement.gridOptions.pagination.pageNumber).toBe(expectedPageNumber);
+        expect(customElement.gridOptions.pagination!.pageSize).toBe(10);
+        expect(customElement.gridOptions.pagination!.pageNumber).toBe(expectedPageNumber);
         expect(refreshSpy).toHaveBeenCalledWith(mockData);
       });
 
@@ -1260,11 +1250,11 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
           metrics: { startTime: now, endTime: now, executionTime: 0, totalItemCount: 0 }
         };
         const promise = new Promise(resolve => setTimeout(() => resolve(processResult), 1));
-        const processSpy = jest.spyOn(customElement.gridOptions.backendServiceApi, 'process').mockReturnValue(promise);
-        jest.spyOn(customElement.gridOptions.backendServiceApi.service, 'buildQuery').mockReturnValue(query);
+        const processSpy = jest.spyOn(customElement.gridOptions.backendServiceApi as BackendServiceApi, 'process').mockReturnValue(promise);
+        jest.spyOn(customElement.gridOptions.backendServiceApi!.service, 'buildQuery').mockReturnValue(query);
         const backendExecuteSpy = jest.spyOn(backendUtilityServiceStub, 'executeBackendProcessesCallback');
 
-        customElement.gridOptions.backendServiceApi.service.options = { executeProcessCommandOnInit: true };
+        customElement.gridOptions.backendServiceApi!.service.options = { executeProcessCommandOnInit: true };
         customElement.initialization(slickEventHandler);
 
         expect(processSpy).toHaveBeenCalled();
@@ -1283,12 +1273,12 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
           data: { users: { nodes: [] }, pageInfo: { hasNextPage: true }, totalCount: 0 },
           metrics: { startTime: now, endTime: now, executionTime: 0, totalItemCount: 0 }
         };
-        const processSpy = jest.spyOn((customElement.gridOptions as any).backendServiceApi, 'process').mockReturnValue(of(processResult));
+        const processSpy = jest.spyOn(customElement.gridOptions.backendServiceApi as BackendServiceApi, 'process').mockReturnValue(of(processResult));
         jest.spyOn((customElement.gridOptions as any).backendServiceApi.service, 'buildQuery').mockReturnValue(query);
         const backendExecuteSpy = jest.spyOn(backendUtilityServiceStub, 'executeBackendProcessesCallback');
 
         customElement.gridOptions.registerExternalResources = [rxjsMock];
-        customElement.gridOptions.backendServiceApi.service.options = { executeProcessCommandOnInit: true };
+        customElement.gridOptions.backendServiceApi!.service.options = { executeProcessCommandOnInit: true };
         customElement.initialization(slickEventHandler);
 
         expect(processSpy).toHaveBeenCalled();
@@ -1307,11 +1297,11 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
           metrics: { startTime: now, endTime: now, executionTime: 0, totalItemCount: 0 }
         };
         const promise = new Promise(resolve => setTimeout(() => resolve(processResult), 1));
-        const processSpy = jest.spyOn(customElement.gridOptions.backendServiceApi, 'process').mockReturnValue(promise);
-        jest.spyOn(customElement.gridOptions.backendServiceApi.service, 'buildQuery').mockReturnValue(query);
+        const processSpy = jest.spyOn(customElement.gridOptions.backendServiceApi as BackendServiceApi, 'process').mockReturnValue(promise);
+        jest.spyOn(customElement.gridOptions.backendServiceApi!.service, 'buildQuery').mockReturnValue(query);
         const backendExecuteSpy = jest.spyOn(backendUtilityServiceStub, 'executeBackendProcessesCallback');
 
-        customElement.gridOptions.backendServiceApi.service.options = { executeProcessCommandOnInit: true };
+        customElement.gridOptions.backendServiceApi!.service.options = { executeProcessCommandOnInit: true };
         customElement.initialization(slickEventHandler);
 
         expect(processSpy).toHaveBeenCalled();
@@ -1326,10 +1316,10 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         const mockError = { error: '404' };
         const query = `query { users (first:20,offset:0) { totalCount, nodes { id,name,gender,company } } }`;
         const promise = new Promise((_resolve, reject) => setTimeout(() => reject(mockError), 1));
-        const processSpy = jest.spyOn(customElement.gridOptions.backendServiceApi, 'process').mockReturnValue(promise);
-        jest.spyOn(customElement.gridOptions.backendServiceApi.service, 'buildQuery').mockReturnValue(query);
+        const processSpy = jest.spyOn(customElement.gridOptions.backendServiceApi as BackendServiceApi, 'process').mockReturnValue(promise);
+        jest.spyOn(customElement.gridOptions.backendServiceApi!.service, 'buildQuery').mockReturnValue(query);
 
-        customElement.gridOptions.backendServiceApi.service.options = { executeProcessCommandOnInit: true };
+        customElement.gridOptions.backendServiceApi!.service.options = { executeProcessCommandOnInit: true };
         customElement.initialization(slickEventHandler);
 
         expect(processSpy).toHaveBeenCalled();
@@ -1373,12 +1363,12 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         const mockError = { error: '404' };
         const rxjsMock = new RxJsResourceStub();
         const query = `query { users (first:20,offset:0) { totalCount, nodes { id,name,gender,company } } }`;
-        const processSpy = jest.spyOn(customElement.gridOptions.backendServiceApi, 'process').mockReturnValue(throwError(mockError));
-        jest.spyOn(customElement.gridOptions.backendServiceApi.service, 'buildQuery').mockReturnValue(query);
+        const processSpy = jest.spyOn(customElement.gridOptions.backendServiceApi as BackendServiceApi, 'process').mockReturnValue(throwError(mockError));
+        jest.spyOn(customElement.gridOptions.backendServiceApi!.service, 'buildQuery').mockReturnValue(query);
         const backendErrorSpy = jest.spyOn(backendUtilityServiceStub, 'onBackendError');
 
         customElement.gridOptions.registerExternalResources = [rxjsMock];
-        customElement.gridOptions.backendServiceApi.service.options = { executeProcessCommandOnInit: true };
+        customElement.gridOptions.backendServiceApi!.service.options = { executeProcessCommandOnInit: true };
         customElement.initialization(slickEventHandler);
 
         expect(processSpy).toHaveBeenCalled();
@@ -1924,7 +1914,7 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
 
         customElement.gridOptions = { enablePagination: false, showCustomFooter: true };
         customElement.initialization(slickEventHandler);
-        const footerSpy = jest.spyOn(customElement.slickFooter, 'metrics', 'set');
+        const footerSpy = jest.spyOn(customElement.slickFooter!, 'metrics', 'set');
         mockDataView.onRowCountChanged.notify({ current: 2, previous: 0, dataView: mockDataView, itemCount: 2, callingOnRowsChanged: false });
 
         expect(invalidateSpy).toHaveBeenCalled();
@@ -1969,7 +1959,7 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         customElement.gridOptions.presets = { rowSelection: { dataContextIds: selectedRowIds } };
         customElement.isDatasetInitialized = false;
         customElement.initialization(slickEventHandler);
-        customElement.datasetChanged(mockData, null);
+        customElement.datasetChanged(mockData, null as any);
 
         setTimeout(() => {
           expect(dataviewSpy).toHaveBeenCalled();
@@ -1987,7 +1977,7 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
 
         customElement.gridOptions.enableRowSelection = true;
         customElement.gridOptions.presets = { rowSelection: { gridRowIndexes: selectedGridRows } };
-        customElement.datasetChanged(mockData, null);
+        customElement.datasetChanged(mockData, null as any);
         customElement.isDatasetInitialized = false; // it won't call the preset unless we reset this flag
         customElement.initialization(slickEventHandler);
 
@@ -2011,7 +2001,7 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
           backendServiceApi: undefined,
           presets: { rowSelection: { dataContextIds: selectedGridRows } }
         };
-        customElement.datasetChanged(mockData, null);
+        customElement.datasetChanged(mockData, null as any);
         customElement.isDatasetInitialized = false; // it won't call the preset unless we reset this flag
         customElement.initialization(slickEventHandler);
 
@@ -2032,7 +2022,7 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
 
       it('should change "showPagination" flag when "onPaginationVisibilityChanged" from the Pagination Service is triggered', (done) => {
         customElement.gridOptions.enablePagination = true;
-        customElement.gridOptions.backendServiceApi = null;
+        customElement.gridOptions.backendServiceApi = null as any;
 
         customElement.initialization(slickEventHandler);
         customElement.refreshGridData([{ firstName: 'John', lastName: 'Doe' }]);
