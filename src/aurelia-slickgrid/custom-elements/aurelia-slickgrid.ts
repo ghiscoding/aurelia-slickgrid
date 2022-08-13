@@ -1452,8 +1452,8 @@ export class AureliaSlickgridCustomElement {
     (column.editor as ColumnEditor).disabled = false;
 
     // find the new column reference pointer & re-assign the new editor to the internalColumnEditor
-    if (Array.isArray(this.columnDefinitions)) {
-      const columnRef = this.columnDefinitions.find((col: Column) => col.id === column.id);
+    if (Array.isArray(this._columnDefinitions)) {
+      const columnRef = this._columnDefinitions.find((col: Column) => col.id === column.id);
       if (columnRef) {
         columnRef.internalColumnEditor = column.editor as ColumnEditor;
       }
