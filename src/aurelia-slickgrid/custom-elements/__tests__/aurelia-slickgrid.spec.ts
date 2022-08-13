@@ -667,6 +667,7 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         customElement.columnDefinitions = mockColDefs;
         customElement.columnDefinitionsChanged();
         customElement.initialization(slickEventHandler);
+        customElement.columnDefinitionsChanged();
 
         setTimeout(() => {
           expect(customElement.columnDefinitions[0].editor).toBeTruthy();
@@ -694,6 +695,7 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         customElement.columnDefinitions = mockColDefs;
         customElement.columnDefinitionsChanged();
         customElement.initialization(slickEventHandler);
+        customElement.columnDefinitionsChanged();
 
         setTimeout(() => {
           expect(customElement.columnDefinitions[0].editor).toBeTruthy();
@@ -715,6 +717,7 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         customElement.columnDefinitions = mockColDefs;
         customElement.columnDefinitionsChanged();
         customElement.initialization(slickEventHandler);
+        customElement.columnDefinitionsChanged();
 
         setTimeout(() => {
           expect(customElement.columnDefinitions[0].editor!.collection).toEqual(mockCollection);
@@ -737,6 +740,7 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         customElement.columnDefinitions = mockColDefs;
         customElement.columnDefinitionsChanged();
         customElement.initialization(slickEventHandler);
+        customElement.columnDefinitionsChanged();
 
         setTimeout(() => {
           expect(customElement.columnDefinitions[0].editor!.collection).toEqual(mockCollection);
@@ -755,6 +759,7 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         customElement.columnDefinitions = mockColDefs;
         customElement.columnDefinitionsChanged();
         customElement.initialization(slickEventHandler);
+        customElement.columnDefinitionsChanged();
 
         setTimeout(() => {
           expect(customElement.columnDefinitions[0].editor!.collection).toEqual(mockCollection);
