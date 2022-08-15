@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.3.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v4.2.4...v4.3.0) (2022-08-15)
+
+
+### Bug Fixes
+
+* **collectionAsync:** hidden column does not load edit field selection ([#855](https://github.com/ghiscoding/aurelia-slickgrid/issues/855)) ([d51b806](https://github.com/ghiscoding/aurelia-slickgrid/commit/d51b8069434286018fcf7b2a28d6cb44a4b58377))
+* **deps:** switch from jquery-ui-dist to the official jquery-ui ([#856](https://github.com/ghiscoding/aurelia-slickgrid/issues/856)) ([4eebd14](https://github.com/ghiscoding/aurelia-slickgrid/commit/4eebd14594b5ce4fdd16c16957f4e74366ccdb6c))
+
 ### [4.2.4](https://github.com/ghiscoding/aurelia-slickgrid/compare/v4.2.3...v4.2.4) (2022-08-03)
 
 
