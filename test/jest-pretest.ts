@@ -11,7 +11,8 @@ import * as jQuery from 'jquery';
 (window as any).$ = (window as any).jQuery = jQuery;
 (global as any).navigator = { userAgent: 'node.js' };
 (global as any).Slick = (window as any).Slick = {};
-require('jquery-ui-dist/jquery-ui');
+
+require('jquery-ui/dist/jquery-ui.js');
 require('slickgrid/lib/jquery.event.drag-2.3.0');
 require('slickgrid/slick.core');
 require('slickgrid/slick.dataview');
