@@ -72,7 +72,8 @@
                      on-composite-editor-change.delegate="handleOnCompositeEditorChange($event.detail.eventData, $event.detail.args)"
                      on-item-deleted.delegate="handleItemDeleted($event.detail.eventData, $event.detail.args)"
                      on-grid-state-changed.delegate="handleOnGridStateChanged($event.detail)"
-                     on-pagination-changed.delegate="handlePaginationChanged($event.detail.eventData, $event.detail.args)"
+                     on-filter-changed.delegate="handleReRenderUnsavedStyling()"
+                     on-pagination-changed.delegate="handleReRenderUnsavedStyling()"
                      on-validation-error.delegate="handleValidationError($event.detail.eventData, $event.detail.args)">
   </aurelia-slickgrid>
 </template>
