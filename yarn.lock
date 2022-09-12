@@ -321,9 +321,9 @@
   integrity sha512-JDkf04mqtN3y4iAbO1hv9U2ARpPyPL1zqyWs/2WG1pgSq9llHFjStX5jdxb84himgJm+8Ng+x0oiWF/nw/XQKA==
 
 "@babel/helper-plugin-utils@^7.18.6":
-  version "7.19.0"
-  resolved "https://registry.yarnpkg.com/@babel/helper-plugin-utils/-/helper-plugin-utils-7.19.0.tgz#4796bb14961521f0f8715990bee2fb6e51ce21bf"
-  integrity sha512-40Ryx7I8mT+0gaNxm8JGTZFUITNqdLAgdg0hXzeVZxVD6nFsdhQvip6v8dqkRHzsz1VFpFAaOCHNn0vKBL7Czw==
+  version "7.18.9"
+  resolved "https://registry.yarnpkg.com/@babel/helper-plugin-utils/-/helper-plugin-utils-7.18.9.tgz#4b8aea3b069d8cb8a72cdfe28ddf5ceca695ef2f"
+  integrity sha512-aBXPT3bmtLryXaoJLyYPXPlSD4p1ld9aYeR+sJNOZjJJGiOpb+fKfh3NkcCu7J54nUJwCERPBExCCpyCOHnu/w==
 
 "@babel/helper-replace-supers@^7.16.7", "@babel/helper-replace-supers@^7.18.2":
   version "7.18.2"
@@ -6609,7 +6609,17 @@ jest-config@^29.0.3:
     slash "^3.0.0"
     strip-json-comments "^3.1.1"
 
-jest-diff@^29.0.0, jest-diff@^29.0.3:
+jest-diff@^29.0.0:
+  version "29.0.0"
+  resolved "https://registry.yarnpkg.com/jest-diff/-/jest-diff-29.0.0.tgz#24a3dd5846ae0e48cba0194b1397178b06b123ad"
+  integrity sha512-erkuYf1dQBHow3XJmS+bH6t9TZ0GwrSdQGauN8sTqyZlFByOjRadmHgTTcAHINeeSwxzGHN2ob3PXVvZphD7XQ==
+  dependencies:
+    chalk "^4.0.0"
+    diff-sequences "^29.0.0"
+    jest-get-type "^29.0.0"
+    pretty-format "^29.0.0"
+
+jest-diff@^29.0.3:
   version "29.0.3"
   resolved "https://registry.yarnpkg.com/jest-diff/-/jest-diff-29.0.3.tgz#41cc02409ad1458ae1bf7684129a3da2856341ac"
   integrity sha512-+X/AIF5G/vX9fWK+Db9bi9BQas7M9oBME7egU7psbn4jlszLFCu0dW63UgeE6cs/GANq4fLaT+8sGHQQ0eCUfg==
@@ -8581,7 +8591,16 @@ pretty-error@^4.0.0:
     lodash "^4.17.20"
     renderkid "^3.0.0"
 
-pretty-format@^29.0.0, pretty-format@^29.0.3:
+pretty-format@^29.0.0:
+  version "29.0.0"
+  resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-29.0.0.tgz#a9a604ca71678f803f34f6563a25a638fce267ba"
+  integrity sha512-tMkFRn1vxRwZdiDETcveuNeonRKDg4doOvI+iyb1sOAtxYioGzRicqnsr+d3C/lLv9hBiM/2lDBi5ilR81h2bQ==
+  dependencies:
+    "@jest/schemas" "^29.0.0"
+    ansi-styles "^5.0.0"
+    react-is "^18.0.0"
+
+pretty-format@^29.0.3:
   version "29.0.3"
   resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-29.0.3.tgz#23d5f8cabc9cbf209a77d49409d093d61166a811"
   integrity sha512-cHudsvQr1K5vNVLbvYF/nv3Qy/F/BcEKxGuIeMiVMRHxPOO1RxXooP8g/ZrwAp7Dx+KdMZoOc7NxLHhMrP2f9Q==
