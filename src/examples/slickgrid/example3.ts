@@ -4,7 +4,7 @@ import { HttpClient } from 'aurelia-http-client';
 import { I18N } from 'aurelia-i18n';
 import {
   AureliaGridInstance,
-  AutocompleteOption,
+  AutocompleterOption,
   Column,
   EditCommand,
   Editors,
@@ -271,7 +271,7 @@ export class Example3 {
         sortable: true,
         minWidth: 100,
         editor: {
-          model: Editors.autoComplete,
+          model: Editors.autocompleter,
           placeholder: '🔎︎ search city',
 
           // We can use the autocomplete through 3 ways "collection", "collectionAsync" or with your own autocomplete options
@@ -279,8 +279,9 @@ export class Example3 {
           // here we use $.ajax just because I'm not sure how to configure Aurelia HttpClient with JSONP and CORS
           editorOptions: {
             minLength: 3,
+            emptyMsg: 'No elements found',
             forceUserInput: true,
-            source: (request, response) => {
+            fetch: (searchText: string, updateCallback: (items: false | any[]) => void) => {
               /** with FETCH, note this demo won't work because of CORS */
               // this.httpFetch.fetch(`http://gd.geobytes.com/AutoCompleteCity?q=${request.term}`)
               //   .then(response => response.json())
@@ -292,17 +293,18 @@ export class Example3 {
                 url: 'http://gd.geobytes.com/AutoCompleteCity',
                 dataType: 'jsonp',
                 data: {
-                  q: request.term
+                  q: searchText
                 },
                 success: (data) => {
-                  response(data);
+                  const finalData = (data.length === 1 && data[0] === '') ? [] : data; // invalid result should be [] instead of [''] to show empty msg
+                  updateCallback(finalData);
                 }
               });
             }
-          } as AutocompleteOption,
+          } as AutocompleterOption,
         },
         filter: {
-          model: Filters.autoComplete,
+          model: Filters.autocompleter,
           // placeholder: '🔎︎ search city',
 
           // We can use the autocomplete through 3 ways "collection", "collectionAsync" or with your own autocomplete options
@@ -312,19 +314,21 @@ export class Example3 {
           // here we use $.ajax just because I'm not sure how to configure Aurelia HttpClient with JSONP and CORS
           filterOptions: {
             minLength: 3,
-            source: (request, response) => {
+            emptyMsg: 'No elements found',
+            fetch: (searchText: string, updateCallback: (items: false | any[]) => void) => {
               $.ajax({
                 url: 'http://gd.geobytes.com/AutoCompleteCity',
                 dataType: 'jsonp',
                 data: {
-                  q: request.term
+                  q: searchText
                 },
                 success: (data) => {
-                  response(data);
+                  const finalData = (data.length === 1 && data[0] === '') ? [] : data; // invalid result should be [] instead of [''] to show empty msg
+                  updateCallback(finalData);
                 }
               });
             }
-          } as AutocompleteOption,
+          } as AutocompleterOption,
         }
       }, {
         id: 'countryOfOrigin', name: 'Country of Origin', field: 'countryOfOrigin',
@@ -337,12 +341,12 @@ export class Example3 {
         sortable: true,
         minWidth: 100,
         editor: {
-          model: Editors.autoComplete,
+          model: Editors.autocompleter,
           customStructure: { label: 'name', value: 'code' },
           collectionAsync: this.httpFetch.fetch(URL_COUNTRIES_COLLECTION),
         },
         filter: {
-          model: Filters.autoComplete,
+          model: Filters.autocompleter,
           customStructure: { label: 'name', value: 'code' },
           collectionAsync: this.httpFetch.fetch(URL_COUNTRIES_COLLECTION),
         }
@@ -352,11 +356,11 @@ export class Example3 {
         sortable: true,
         minWidth: 100,
         editor: {
-          model: Editors.autoComplete,
+          model: Editors.autocompleter,
           collectionAsync: this.httpFetch.fetch(URL_COUNTRY_NAMES),
         },
         filter: {
-          model: Filters.autoComplete,
+          model: Filters.autocompleter,
           collectionAsync: this.httpFetch.fetch(URL_COUNTRY_NAMES),
         }
       }, {

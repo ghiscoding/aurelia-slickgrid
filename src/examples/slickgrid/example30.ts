@@ -1,4 +1,3 @@
-import { EditCommand, SlickGrid } from '@slickgrid-universal/common';
 import { SlickCompositeEditorComponent } from '@slickgrid-universal/composite-editor-component';
 import { ExcelExportService } from '@slickgrid-universal/excel-export';
 import { HttpClient as FetchClient } from 'aurelia-fetch-client';
@@ -6,12 +5,14 @@ import { autoinject } from 'aurelia-framework';
 
 import {
   AureliaGridInstance,
-  AutocompleteOption,
+  AutocompleterOption,
   Column,
   CompositeEditorModalType,
+  EditCommand,
   Editors,
   FieldType,
   Filters,
+  FlatpickrOption,
   formatNumber,
   Formatter,
   Formatters,
@@ -19,6 +20,7 @@ import {
   GridStateChange,
   LongTextEditorOption,
   OnCompositeEditorChangeEventArgs,
+  SlickGrid,
   SlickNamespace,
   SortComparers,
 } from '../../aurelia-slickgrid';
@@ -235,7 +237,17 @@ export class Example30 {
         exportCustomFormatter: Formatters.dateUs,
         editor: {
           model: Editors.date,
-          editorOptions: { minDate: 'today' },
+          editorOptions: {
+            minDate: 'today',
+
+            // if we want to preload the date picker with a different date,
+            // we could toggle the `closeOnSelect: false`, set the date in the picker and re-toggle `closeOnSelect: true`
+            // closeOnSelect: false,
+            // onOpen: (selectedDates: Date[] | Date, dateStr: string, instance: FlatpickrInstance) => {
+            //   instance.setDate('2021-06-04', true);
+            //   instance.set('closeOnSelect', true);
+            // },
+          } as FlatpickrOption,
           massUpdate: true,
           validator: (value, args) => {
             const dataContext = args && args.item;
@@ -258,17 +270,16 @@ export class Example30 {
         type: FieldType.object,
         sortComparer: SortComparers.objectString,
         editor: {
-          model: Editors.autoComplete,
+          model: Editors.autocompleter,
           alwaysSaveOnEnterKey: true,
           massUpdate: true,
 
           // example with a Remote API call
           editorOptions: {
             minLength: 1,
-            source: (request, response) => {
-              // const items = require('c://TEMP/items.json');
+            fetch: (searchTerm: string, callback: (items: false | any[]) => void) => {
               const products = this.mockProducts();
-              response(products.filter(product => product.itemName.toLowerCase().includes(request.term.toLowerCase())));
+              callback(products.filter(product => product.itemName.toLowerCase().includes(searchTerm.toLowerCase())));
             },
             renderItem: {
               // layout: 'twoRows',
@@ -277,11 +288,11 @@ export class Example30 {
               layout: 'fourCorners',
               templateCallback: (item: any) => this.renderItemCallbackWith4Corners(item),
             },
-          } as AutocompleteOption,
+          } as AutocompleterOption,
         },
         filter: {
           model: Filters.inputText,
-          // placeholder: '🔎︎ search city',
+          // placeholder: '🔎︎ search product',
           type: FieldType.string,
           queryField: 'product.itemName',
         }
@@ -298,10 +309,11 @@ export class Example30 {
         sortable: true,
         minWidth: 100,
         editor: {
-          model: Editors.autoComplete,
+          model: Editors.autocompleter,
           massUpdate: true,
           customStructure: { label: 'name', value: 'code' },
           collectionAsync: this.httpFetch.fetch(URL_COUNTRIES_COLLECTION),
+          editorOptions: { minLength: 0 }
         },
         filter: {
           model: Filters.inputText,
@@ -404,7 +416,7 @@ export class Example30 {
           const prevSerializedValue = prevSerializedValues[index];
           const serializedValue = serializedValues[index];
 
-          if (prevSerializedValue !== serializedValue) {
+          if (prevSerializedValue !== serializedValue || serializedValue === '') {
             const finalColumn = Array.isArray(editCommand.prevSerializedValue) ? editorColumns[index] : column;
             this.editedItems[this.gridOptions.datasetIdPropertyName || 'id'] = item; // keep items by their row indexes, if the row got edited twice then we'll keep only the last change
             this.aureliaGrid.slickGrid.invalidate();
@@ -749,7 +761,7 @@ export class Example30 {
         listPrice: 2100.23,
         itemTypeName: 'I',
         image: 'http://i.stack.imgur.com/pC1Tv.jpg',
-        icon: `fa ${this.getRandomIcon(0)}`,
+        icon: this.getRandomIcon(0)
       },
       {
         id: 1,
@@ -758,7 +770,7 @@ export class Example30 {
         listPrice: 3200.12,
         itemTypeName: 'I',
         image: 'https://i.imgur.com/Fnm7j6h.jpg',
-        icon: `fa ${this.getRandomIcon(1)}`,
+        icon: this.getRandomIcon(1)
       },
       {
         id: 2,
@@ -767,7 +779,7 @@ export class Example30 {
         listPrice: 15.00,
         itemTypeName: 'I',
         image: 'https://i.imgur.com/RaVJuLr.jpg',
-        icon: `fa ${this.getRandomIcon(2)}`,
+        icon: this.getRandomIcon(2)
       },
       {
         id: 3,
@@ -776,7 +788,7 @@ export class Example30 {
         listPrice: 25.76,
         itemTypeName: 'I',
         image: 'http://i.stack.imgur.com/pC1Tv.jpg',
-        icon: `fa ${this.getRandomIcon(3)}`,
+        icon: this.getRandomIcon(3)
       },
       {
         id: 4,
@@ -785,7 +797,7 @@ export class Example30 {
         listPrice: 13.35,
         itemTypeName: 'I',
         image: 'https://i.imgur.com/Fnm7j6h.jpg',
-        icon: `fa ${this.getRandomIcon(4)}`,
+        icon: this.getRandomIcon(4)
       },
       {
         id: 5,
@@ -794,7 +806,7 @@ export class Example30 {
         listPrice: 23.33,
         itemTypeName: 'I',
         image: 'https://i.imgur.com/RaVJuLr.jpg',
-        icon: `fa ${this.getRandomIcon(5)}`,
+        icon: this.getRandomIcon(5)
       },
       {
         id: 6,
@@ -803,7 +815,7 @@ export class Example30 {
         listPrice: 71.21,
         itemTypeName: 'I',
         image: 'http://i.stack.imgur.com/pC1Tv.jpg',
-        icon: `fa ${this.getRandomIcon(6)}`,
+        icon: this.getRandomIcon(6)
       },
       {
         id: 7,
@@ -812,7 +824,7 @@ export class Example30 {
         listPrice: 2.43,
         itemTypeName: 'I',
         image: 'https://i.imgur.com/Fnm7j6h.jpg',
-        icon: `fa ${this.getRandomIcon(7)}`,
+        icon: this.getRandomIcon(7)
       },
       {
         id: 8,
@@ -821,7 +833,7 @@ export class Example30 {
         listPrice: 31288.39,
         itemTypeName: 'I',
         image: 'https://i.imgur.com/RaVJuLr.jpg',
-        icon: `fa ${this.getRandomIcon(8)}`,
+        icon: this.getRandomIcon(8)
       },
     ];
   }
@@ -917,13 +929,13 @@ export class Example30 {
       </div>
       <div>
         <span class="autocomplete-top-left">
-          <span class="mdfai ${item.itemTypeName === 'I' ? 'fa-info-circle' : 'fa-copy'}"></span>
+          <span class="fa ${item.itemTypeName === 'I' ? 'fa-info-circle' : 'fa-copy'} mdi-14px"></span>
           ${item.itemName}
         </span>
       <div>
-    </div>
+      </div>
     <div>
-      <div class="autocomplete-bottom-left">${item.itemNameTranslated}</div>
+    <div class="autocomplete-bottom-left">${item.itemNameTranslated}</div>
     </div>`;
   }
 

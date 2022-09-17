@@ -70,7 +70,8 @@
     "aurelia-i18n": "^3.1.4",
     "aurelia-pal": "^1.8.2",
     "dompurify": "^2.4.0",
-    "jquery": "^3.6.1"
+    "jquery": "^3.6.1",
+    "sortablejs": "^1.15.0"
   },
   "peerDependencies": {
     "i18next": ">= 14.1.1"
@@ -93,6 +94,7 @@
     "@types/jest": "^29.0.2",
     "@types/jquery": "^3.5.14",
     "@types/node": "^18.7.16",
+    "@types/sortablejs": "^1.13.0",
     "@types/webpack": "^5.28.0",
     "@typescript-eslint/eslint-plugin": "^5.37.0",
     "@typescript-eslint/parser": "^5.37.0",

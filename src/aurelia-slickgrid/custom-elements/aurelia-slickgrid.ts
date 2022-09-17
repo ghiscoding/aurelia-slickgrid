@@ -1,18 +1,15 @@
 // import 3rd party vendor libs
-// also only import jQueryUI necessary widget (note autocomplete & slider are imported in their respective editors/filters)
 import * as $ from 'jquery';
-import 'jquery-ui/ui/widgets/draggable';
-import 'jquery-ui/ui/widgets/droppable';
-import 'jquery-ui/ui/widgets/sortable';
-import 'slickgrid/lib/jquery.event.drag-2.3.0';
-import 'slickgrid/lib/jquery.mousewheel';
 import 'slickgrid/slick.core';
+import 'slickgrid/slick.interactions';
 import 'slickgrid/slick.dataview';
 import 'slickgrid/slick.grid';
+import * as Sortable_ from 'sortablejs';
+const Sortable = ((Sortable_ as any)?.['default'] ?? Sortable_); // patch for rollup
 
 import {
   // interfaces/types
-  AutoCompleteEditor,
+  AutocompleterEditor,
   BackendServiceApi,
   BackendServiceOption,
   Column,
@@ -81,6 +78,9 @@ import { SlickRowDetailView } from '../extensions/slickRowDetailView';
 
 // using external non-typed js libraries
 declare const Slick: SlickNamespace;
+
+// add Sortable to the window object so that SlickGrid lib can use globally
+(window as any).Sortable = Sortable;
 
 // Aurelia doesn't support well TypeScript @autoinject in a Plugin so we'll do it the manual way
 @inject(
@@ -1135,14 +1135,14 @@ export class AureliaSlickgridCustomElement {
           this.updateEditorCollection(column, response); // from Promise
         } else if (response instanceof Response && typeof response.json === 'function') {
           if (response.bodyUsed) {
-            console.warn(`[Aurelia-SlickGrid] The response body passed to collectionAsync was already read.`
+            console.warn(`[Aurelia-SlickGrid] The response body passed to collectionAsync was already read. `
               + `Either pass the dataset from the Response or clone the response first using response.clone()`);
           } else {
             // from Fetch
             (response as Response).json().then(data => this.updateEditorCollection(column, data));
           }
-        } else if (response && response['content']) {
-          this.updateEditorCollection(column, response['content']); // from http-client
+        } else if (response?.content) {
+          this.updateEditorCollection(column, response.content); // from http-client
         }
       });
     } else if (this.rxjs?.isObservable(collectionAsync)) {
@@ -1460,7 +1460,7 @@ export class AureliaSlickgridCustomElement {
     }
 
     // get current Editor, remove it from the DOM then re-enable it and re-render it with the new collection.
-    const currentEditor = this.grid.getCellEditor() as AutoCompleteEditor | SelectEditor;
+    const currentEditor = this.grid.getCellEditor() as AutocompleterEditor | SelectEditor;
     if (currentEditor?.disable && currentEditor?.renderDomElement) {
       currentEditor.destroy();
       currentEditor.disable(false);

@@ -13,7 +13,6 @@ import {
   Formatters,
   GridOption,
   GridStateChange,
-  JQueryUiSliderOption,
   Metrics,
   MultipleSelectOption,
   OperatorType,
@@ -31,7 +30,7 @@ const taskTranslateFormatter: Formatter = (_row, _cell, value, _columnDef, _data
   const gridOptions = (grid && typeof grid.getOptions === 'function') ? grid.getOptions() : {};
   const i18n = gridOptions.i18n;
 
-  return i18n?.tr('TASK_X', { x: value }) ?? '';
+  return i18n?.tr('TASK_X', { x: value } as any) ?? '';
 };
 
 @autoinject()
@@ -113,11 +112,12 @@ export class Example23 {
         type: FieldType.number,
         filterable: true,
         filter: {
-          model: Filters.sliderRange,
+          // model: Filters.sliderRange,
+          model: Filters.slider,
           maxValue: 100, // or you can use the filterOptions as well
           operator: OperatorType.rangeInclusive, // defaults to exclusive
           params: { hideSliderNumbers: false }, // you can hide/show the slider numbers on both side
-          filterOptions: { min: 0, step: 5 } as JQueryUiSliderOption // you can also optionally pass any option of the jQuery UI Slider
+          filterOptions: { min: 0, step: 5 }
         }
       },
       {
