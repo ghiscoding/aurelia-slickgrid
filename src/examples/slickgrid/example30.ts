@@ -929,7 +929,7 @@ export class Example30 {
       </div>
       <div>
         <span class="autocomplete-top-left">
-          <span class="fa ${item.itemTypeName === 'I' ? 'fa-info-circle' : 'fa-copy'} mdi-14px"></span>
+          <span class="fa ${item.itemTypeName === 'I' ? 'fa-info-circle' : 'fa-copy'}"></span>
           ${item.itemName}
         </span>
       <div>

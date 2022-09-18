@@ -279,7 +279,6 @@ export class Example3 {
           // here we use $.ajax just because I'm not sure how to configure Aurelia HttpClient with JSONP and CORS
           editorOptions: {
             minLength: 3,
-            emptyMsg: 'No elements found',
             forceUserInput: true,
             fetch: (searchText: string, updateCallback: (items: false | any[]) => void) => {
               /** with FETCH, note this demo won't work because of CORS */
@@ -314,7 +313,6 @@ export class Example3 {
           // here we use $.ajax just because I'm not sure how to configure Aurelia HttpClient with JSONP and CORS
           filterOptions: {
             minLength: 3,
-            emptyMsg: 'No elements found',
             fetch: (searchText: string, updateCallback: (items: false | any[]) => void) => {
               $.ajax({
                 url: 'http://gd.geobytes.com/AutoCompleteCity',
