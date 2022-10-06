@@ -131,7 +131,7 @@
     "rimraf": "^3.0.2",
     "rxjs": "^7.5.7",
     "sass": "^1.55.0",
-    "sass-loader": "^13.0.2",
+    "sass-loader": "^13.1.0",
     "standard-version": "^9.5.0",
     "style-loader": "3.3.1",
     "ts-jest": "^29.0.3",
