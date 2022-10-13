@@ -70,7 +70,7 @@
     "i18next": ">= 14.1.1"
   },
   "devDependencies": {
-    "@faker-js/faker": "^7.5.0",
+    "@faker-js/faker": "^7.6.0",
     "@fnando/sparkline": "^0.3.10",
     "@popperjs/core": "^2.11.6",
     "@slickgrid-universal/composite-editor-component": "~1.4.0",
@@ -88,8 +88,8 @@
     "@types/jquery": "^3.5.14",
     "@types/node": "^18.7.16",
     "@types/webpack": "^5.28.0",
-    "@typescript-eslint/eslint-plugin": "^5.39.0",
-    "@typescript-eslint/parser": "^5.39.0",
+    "@typescript-eslint/eslint-plugin": "^5.40.0",
+    "@typescript-eslint/parser": "^5.40.0",
     "@webpack-cli/serve": "^1.7.0",
     "aurelia-animator-css": "^1.0.4",
     "aurelia-bootstrapper": "^2.4.0",
@@ -110,7 +110,7 @@
     "cross-env": "^7.0.3",
     "css-loader": "6.7.1",
     "duplicate-package-checker-webpack-plugin": "^3.0.0",
-    "eslint": "^8.24.0",
+    "eslint": "^8.25.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prefer-arrow": "^1.2.3",
     "file-loader": "6.2.0",
