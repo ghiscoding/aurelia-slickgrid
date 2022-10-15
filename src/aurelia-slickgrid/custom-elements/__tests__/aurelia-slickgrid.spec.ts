@@ -734,7 +734,7 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         http.returnKey = 'date';
         http.returnValue = '6/24/1984';
         http.responseHeaders = { accept: 'json' };
-        const collectionAsync = http.fetch('/api', { method: 'GET' });
+        const collectionAsync = http.fetch('http://locahost/api', { method: 'GET' });
         const mockColDefs = [{ id: 'gender', field: 'gender', editor: { model: Editors.text, collectionAsync } }] as Column[];
 
         customElement.columnDefinitions = mockColDefs;
@@ -777,7 +777,7 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         http.returnKey = 'date';
         http.returnValue = '6/24/1984';
         http.responseHeaders = { accept: 'json' };
-        const collectionAsync = http.fetch('invalid-url', { method: 'GET' });
+        const collectionAsync = http.fetch('http://locahost/invalid-url', { method: 'GET' });
         const mockColDefs = [{ id: 'gender', field: 'gender', editor: { model: Editors.text, collectionAsync } }] as Column[];
         jest.spyOn(mockGrid, 'getColumns').mockReturnValue(mockColDefs);
 
