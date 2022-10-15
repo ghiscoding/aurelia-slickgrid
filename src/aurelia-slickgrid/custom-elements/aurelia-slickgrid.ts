@@ -395,8 +395,7 @@ export class AureliaSlickgridCustomElement {
 
       // if you don't want the items that are not visible (due to being filtered out or being on a different page)
       // to stay selected, pass 'false' to the second arg
-      const selectionModel = this.grid?.getSelectionModel();
-      if (selectionModel && this.gridOptions?.dataView && this.gridOptions.dataView.hasOwnProperty('syncGridSelection')) {
+      if (this.grid?.getSelectionModel() && this.gridOptions?.dataView && this.gridOptions.dataView.hasOwnProperty('syncGridSelection')) {
         // if we are using a Backend Service, we will do an extra flag check, the reason is because it might have some unintended behaviors
         // with the BackendServiceApi because technically the data in the page changes the DataView on every page change.
         let preservedRowSelectionWithBackend = false;
@@ -769,10 +768,9 @@ export class AureliaSlickgridCustomElement {
         // When data changes in the DataView, we need to refresh the metrics and/or display a warning if the dataset is empty
         this._eventHandler.subscribe(dataView.onRowCountChanged, () => {
           grid.invalidate();
-          this.handleOnItemCountChanged(dataView.getFilteredItemCount() || 0, dataView.getItemCount());
+          this.handleOnItemCountChanged(dataView.getFilteredItemCount() || 0, dataView.getItemCount() || 0);
         });
         this._eventHandler.subscribe(dataView.onSetItemsCalled, (_e, args) => {
-          grid.invalidate();
           this.handleOnItemCountChanged(dataView.getFilteredItemCount() || 0, args.itemCount);
 
           // when user has resize by content enabled, we'll force a full width calculation since we change our entire dataset
@@ -781,17 +779,17 @@ export class AureliaSlickgridCustomElement {
           }
         });
 
-        this._eventHandler.subscribe(dataView.onRowsChanged, (_e, args) => {
-          // filtering data with local dataset will not always show correctly unless we call this updateRow/render
-          // also don't use "invalidateRows" since it destroys the entire row and as bad user experience when updating a row
-          // see commit: https://github.com/ghiscoding/aurelia-slickgrid/commit/8c503a4d45fba11cbd8d8cc467fae8d177cc4f60
-          if (gridOptions?.enableFiltering && !gridOptions.enableRowDetailView) {
+        if (gridOptions?.enableFiltering && !gridOptions.enableRowDetailView) {
+          this._eventHandler.subscribe(dataView.onRowsChanged, (_e, args) => {
+            // filtering data with local dataset will not always show correctly unless we call this updateRow/render
+            // also don't use "invalidateRows" since it destroys the entire row and as bad user experience when updating a row
+            // see commit: https://github.com/ghiscoding/aurelia-slickgrid/commit/8c503a4d45fba11cbd8d8cc467fae8d177cc4f60
             if (args?.rows && Array.isArray(args.rows)) {
               args.rows.forEach((row: number) => grid.updateRow(row));
               grid.render();
             }
-          }
-        });
+          });
+        }
       }
     }
 
@@ -1218,9 +1216,8 @@ export class AureliaSlickgridCustomElement {
   private loadRowSelectionPresetWhenExists() {
     // if user entered some Row Selections "presets"
     const presets = this.gridOptions?.presets;
-    const selectionModel = this.grid?.getSelectionModel();
     const enableRowSelection = this.gridOptions && (this.gridOptions.enableCheckboxSelector || this.gridOptions.enableRowSelection);
-    if (enableRowSelection && selectionModel && presets && presets.rowSelection && (Array.isArray(presets.rowSelection.gridRowIndexes) || Array.isArray(presets.rowSelection.dataContextIds))) {
+    if (enableRowSelection && this.grid?.getSelectionModel() && presets?.rowSelection && (Array.isArray(presets.rowSelection.gridRowIndexes) || Array.isArray(presets.rowSelection.dataContextIds))) {
       let dataContextIds = presets.rowSelection.dataContextIds;
       let gridRowIndexes = presets.rowSelection.gridRowIndexes;
 
@@ -1282,7 +1279,7 @@ export class AureliaSlickgridCustomElement {
     return options;
   }
 
-  /** Pre-Register any Resource that don't require SlickGrid to be instantiated (for example RxJS Resource) */
+  /** Pre-Register any Resource that don't require SlickGrid to be instantiated (for example RxJS Resource & RowDetail) */
   private preRegisterResources() {
     this._registeredResources = this.gridOptions.registerExternalResources || [];
 
@@ -1294,6 +1291,13 @@ export class AureliaSlickgridCustomElement {
           this.registerRxJsResource(resource as RxJsFacade);
         }
       }
+    }
+
+    if (this.gridOptions.enableRowDetailView) {
+      this.slickRowDetailView = new SlickRowDetailView(this.aureliaUtilService, this._eventPubSubService, this.elm);
+      this.slickRowDetailView.create(this.columnDefinitions, this.gridOptions);
+      this._registeredResources.push(this.slickRowDetailView);
+      this.extensionService.addExtensionToList(ExtensionName.rowDetailView, { name: ExtensionName.rowDetailView, instance: this.slickRowDetailView });
     }
   }
 
@@ -1319,13 +1323,6 @@ export class AureliaSlickgridCustomElement {
     // when user enables translation, we need to translate Headers on first pass & subsequently in the bindDifferentHooks
     if (this.gridOptions.enableTranslate) {
       this.extensionService.translateColumnHeaders();
-    }
-
-    if (this.gridOptions.enableRowDetailView) {
-      this.slickRowDetailView = new SlickRowDetailView(this.aureliaUtilService, this._eventPubSubService, this.elm);
-      this.slickRowDetailView.create(this.columnDefinitions, this.gridOptions);
-      this._registeredResources.push(this.slickRowDetailView);
-      this.extensionService.addExtensionToList(ExtensionName.rowDetailView, { name: ExtensionName.rowDetailView, instance: this.slickRowDetailView });
     }
 
     // also initialize (render) the empty warning component
@@ -1455,9 +1452,8 @@ export class AureliaSlickgridCustomElement {
     (column.editor as ColumnEditor).disabled = false;
 
     // find the new column reference pointer & re-assign the new editor to the internalColumnEditor
-    const columns = this.grid.getColumns();
-    if (Array.isArray(columns)) {
-      const columnRef = columns.find((col: Column) => col.id === column.id);
+    if (Array.isArray(this._columnDefinitions)) {
+      const columnRef = this._columnDefinitions.find((col: Column) => col.id === column.id);
       if (columnRef) {
         columnRef.internalColumnEditor = column.editor as ColumnEditor;
       }

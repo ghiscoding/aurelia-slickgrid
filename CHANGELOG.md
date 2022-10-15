@@ -2,6 +2,45 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.3.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v4.2.4...v4.3.0) (2022-08-15)
+
+
+### Bug Fixes
+
+* **collectionAsync:** hidden column does not load edit field selection ([#855](https://github.com/ghiscoding/aurelia-slickgrid/issues/855)) ([d51b806](https://github.com/ghiscoding/aurelia-slickgrid/commit/d51b8069434286018fcf7b2a28d6cb44a4b58377))
+* **deps:** switch from jquery-ui-dist to the official jquery-ui ([#856](https://github.com/ghiscoding/aurelia-slickgrid/issues/856)) ([4eebd14](https://github.com/ghiscoding/aurelia-slickgrid/commit/4eebd14594b5ce4fdd16c16957f4e74366ccdb6c))
+
+### [4.2.4](https://github.com/ghiscoding/aurelia-slickgrid/compare/v4.2.3...v4.2.4) (2022-08-03)
+
+
+### Bug Fixes
+
+* **version:** update to latest Slickgrid-Universal versions ([#850](https://github.com/ghiscoding/aurelia-slickgrid/issues/850)) ([b9e2364](https://github.com/ghiscoding/aurelia-slickgrid/commit/b9e236473d5b403def40bb436096ded1692162df))
+
+### [4.2.3](https://github.com/ghiscoding/aurelia-slickgrid/compare/v4.2.2...v4.2.3) (2022-07-28)
+
+### Bug Fixes
+
+* **deps:** loosen up RxJS min version to avoid interface out of sync ([1637175](https://github.com/ghiscoding/aurelia-slickgrid/commit/163717561f682aaad874a60476a3d0afc9d85368))
+* **build:** use patch version when releasing from slickgrid-universal ([1637175](https://github.com/ghiscoding/aurelia-slickgrid/commit/163717561f682aaad874a60476a3d0afc9d85368))
+
+
+### [4.2.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v4.2.1...v4.2.2) (2022-07-07)
+
+### [4.2.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v4.2.0...v4.2.1) (2022-07-07)
+
+## [4.2.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v4.1.3...v4.2.0) (2022-06-18)
+
+
+### Features
+
+* **core:** upgrade to jQuery 3.6 and jQuery-UI 1.13 ([#824](https://github.com/ghiscoding/aurelia-slickgrid/issues/824)) ([342ee33](https://github.com/ghiscoding/aurelia-slickgrid/commit/342ee339c5b329f98b067b68d4dbc177225399f5))
+
+
+### Bug Fixes
+
+* **core:** throw error when `gridOptions` missing in View ([#788](https://github.com/ghiscoding/aurelia-slickgrid/issues/788)) ([f57aa2b](https://github.com/ghiscoding/aurelia-slickgrid/commit/f57aa2b132e50453687b40aa46724c3466975819))
+
 ### [4.1.3](https://github.com/ghiscoding/aurelia-slickgrid/compare/v4.1.2...v4.1.3) (2022-04-28)
 
 

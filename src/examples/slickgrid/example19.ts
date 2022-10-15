@@ -10,6 +10,8 @@ import {
   GridOption,
 } from '../../aurelia-slickgrid';
 
+const NB_ITEMS = 1000;
+
 @autoinject()
 export class Example19 {
   @bindable detailViewRowCount = 9;
@@ -126,7 +128,7 @@ export class Example19 {
   getData() {
     // mock a dataset
     this.dataset = [];
-    for (let i = 0; i < 1000; i++) {
+    for (let i = 0; i < NB_ITEMS; i++) {
       const randomYear = 2000 + Math.floor(Math.random() * 10);
       const randomMonth = Math.floor(Math.random() * 11);
       const randomDay = Math.floor((Math.random() * 29));

@@ -1,12 +1,5 @@
 module.exports = {
   rootDir: '../',
-  globals: {
-    'ts-jest': {
-      diagnostics: false,
-      isolatedModules: true,
-      tsconfig: '<rootDir>/test/tsconfig.spec.json'
-    },
-  },
   globalSetup: '<rootDir>/test/jest-global-setup.js',
   collectCoverage: false,
   collectCoverageFrom: [
@@ -43,7 +36,14 @@ module.exports = {
   setupFiles: ['<rootDir>/test/jest-pretest.ts'],
   setupFilesAfterEnv: ['jest-extended/all', '<rootDir>/test/jest-global-mocks.ts'],
   transform: {
-    '^.+\\.tsx?$': 'ts-jest/legacy'
+    '^.+\\.tsx?$': [
+      'ts-jest',
+      {
+        diagnostics: false,
+        isolatedModules: true,
+        tsconfig: '<rootDir>/test/tsconfig.spec.json'
+      }
+    ]
   },
   transformIgnorePatterns: [
     'node_modules/(?!@ngrx)',
