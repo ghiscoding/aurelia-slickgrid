@@ -26,7 +26,7 @@ export class HttpStub extends HttpClient {
     } else {
       request = new Request(input, init || {});
     }
-    if (request.body && request.body.type) {
+    if (request.body?.type) {
       request.headers.set('Content-Type', request.body.type);
     }
 

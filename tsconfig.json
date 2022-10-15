@@ -16,6 +16,7 @@
       "es2018",
       "dom"
     ],
+    "types": [ "i18next", "i18next-xhr-backend" ],
     "typeRoots": [
       "node_modules/@types",
       "src/typings"

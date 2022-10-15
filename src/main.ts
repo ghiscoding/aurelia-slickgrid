@@ -5,7 +5,6 @@ import 'flatpickr/dist/flatpickr.min.css';
 import 'multiple-select-modified/src/multiple-select.css';
 import './styles.scss';
 import { Aurelia, PLATFORM } from 'aurelia-framework';
-import environment from './environment';
 import { I18N, TCustomAttribute } from 'aurelia-i18n';
 import Backend from 'i18next-xhr-backend';
 import 'bootstrap';
@@ -43,7 +42,8 @@ export async function configure(aurelia: Aurelia) {
       defaultNS: 'aurelia-slickgrid',
       attributes: aliases,
       fallbackLng: 'en',
-      debug: false
+      debug: false,
+      interpolation: { skipOnVariables: false }
     });
   });
 

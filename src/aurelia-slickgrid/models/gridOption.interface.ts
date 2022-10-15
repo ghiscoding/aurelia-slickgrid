@@ -1,5 +1,6 @@
 import { GridOption as UniversalGridOption } from '@slickgrid-universal/common';
 import { I18N } from 'aurelia-i18n';
+
 import { RowDetailView } from './rowDetailView.interface';
 
 export interface GridOption extends UniversalGridOption {
