@@ -548,7 +548,7 @@ describe('SlickRowDetailView', () => {
       http.returnKey = 'date';
       http.returnValue = '6/24/1984';
       http.responseHeaders = { accept: 'json' };
-      gridOptionsMock.rowDetailView!.process = () => http.fetch('/api', { method: 'GET' });
+      gridOptionsMock.rowDetailView!.process = () => http.fetch('http://locahost/api', { method: 'GET' });
       plugin.init(gridStub);
       plugin.onAsyncResponse = new Slick.Event();
       plugin.onAsyncResponse.subscribe((_e, response) => {
