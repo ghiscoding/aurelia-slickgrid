@@ -22,3 +22,6 @@ yarn-error.log
 **/junit.xml
 **/test-report.xml
 **/testresult.xml
+
+# Environment variables
+.env
