@@ -14,10 +14,6 @@ All notable changes to this project will be documented in this file. See [Conven
 
 * **deps:** BREAKING CHANGE upgrade `aurelia-i18n` to major v4 ([#828](https://github.com/ghiscoding/aurelia-slickgrid/issues/828)) ([d992286](https://github.com/ghiscoding/aurelia-slickgrid/commit/d99228628ee037266265fd3f07a6462131057b16))
 
-# Changelog
-
-All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
-
 ## [4.3.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v4.2.4...v4.3.0) (2022-08-15)
 
 
