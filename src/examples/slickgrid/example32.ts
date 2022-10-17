@@ -1,5 +1,5 @@
 import {
-  AutocompleteOption,
+  AutocompleterOption,
   Column,
   EditCommand,
   Editors,
@@ -232,17 +232,17 @@ export class Example32 {
         type: FieldType.object,
         sortComparer: SortComparers.objectString,
         editor: {
-          model: Editors.autoComplete,
+          model: Editors.autocompleter,
           alwaysSaveOnEnterKey: true,
           massUpdate: true,
 
           // example with a Remote API call
           editorOptions: {
             minLength: 1,
-            source: (request, response) => {
+            fetch: (searchTerm: string, callback: (items: false | any[]) => void) => {
               // const items = require('c://TEMP/items.json');
               const products = this.mockProducts();
-              response(products.filter(product => product.itemName.toLowerCase().includes(request.term.toLowerCase())));
+              callback(products.filter(product => product.itemName.toLowerCase().includes(searchTerm.toLowerCase())));
             },
             renderItem: {
               // layout: 'twoRows',
@@ -251,7 +251,7 @@ export class Example32 {
               layout: 'fourCorners',
               templateCallback: (item: any) => this.renderItemCallbackWith4Corners(item),
             },
-          } as AutocompleteOption,
+          } as AutocompleterOption,
         },
         filter: {
           model: Filters.inputText,
@@ -272,7 +272,7 @@ export class Example32 {
         sortable: true,
         minWidth: 100,
         editor: {
-          model: Editors.autoComplete,
+          model: Editors.autocompleter,
           massUpdate: true,
           customStructure: { label: 'name', value: 'code' },
           collectionAsync: this.httpFetch.fetch(URL_COUNTRIES_COLLECTION),

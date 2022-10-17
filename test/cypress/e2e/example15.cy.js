@@ -62,14 +62,10 @@ describe('Example 15: Grid State & Presets using Local Storage', { retries: 1 },
 
     cy.get('.slick-header-columns')
       .children('.slick-header-column:nth(1)')
-      .should('contain', 'Title')
-      .trigger('mousedown', 'bottom', { which: 1 });
+      .contains('Title')
+      .drag('.slick-header-column:nth(3)');
 
-    cy.get('.slick-header-columns')
-      .children('.slick-header-column:nth(3)')
-      .should('contain', 'Duration')
-      .trigger('mousemove', 'bottomRight')
-      .trigger('mouseup', 'bottomRight', { which: 1, force: true });
+    cy.get('.slick-header-column:nth(3)').contains('Title');
 
     cy.get('#grid15')
       .find('.slick-header-columns')
@@ -80,6 +76,10 @@ describe('Example 15: Grid State & Presets using Local Storage', { retries: 1 },
   // --
   // Cypress does not yet implement the .hover() method and this test won't work until then
   xit('should resize "Title" column and make it wider', () => {
+    cy.get('#grid15 .slick-viewport-top.slick-viewport-left')
+      .scrollTo('left')
+      .wait(50);
+
     cy.get('.slick-header-columns')
       .children('.slick-header-column:nth(3)')
       .should('contain', 'Title');
