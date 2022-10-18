@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v4.3.0...v5.0.0) (2022-10-18)
+
+
+### Bug Fixes
+
+* **demo:** edit outline should follow on filter/pagination changed ([#857](https://github.com/ghiscoding/aurelia-slickgrid/issues/857)) ([7a484d6](https://github.com/ghiscoding/aurelia-slickgrid/commit/7a484d6f54fe5254f0a26e7d51e5d34f13c8b62f))
+
+
+### Features
+
+* **core:** BREAKING CHANGE replace jQueryUI by SortableJS ([3c2f8e3](https://github.com/ghiscoding/aurelia-slickgrid/commit/3c2f8e3080a248a8399ceb6c7c6791866284a7ec))
+* **deps:** BREAKING CHANGE upgrade `aurelia-i18n` to major v4 ([#828](https://github.com/ghiscoding/aurelia-slickgrid/issues/828)) ([d992286](https://github.com/ghiscoding/aurelia-slickgrid/commit/d99228628ee037266265fd3f07a6462131057b16))
+
+# Change Log 
+
+All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
 # [5.0.0-alpha.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v4.3.0...v5.0.0-alpha.0) (2022-10-16)
 
 
