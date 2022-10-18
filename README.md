@@ -18,6 +18,9 @@ Refer to the **[Wiki - HOWTO Step by Step](https://github.com/ghiscoding/aurelia
 npm install aurelia-slickgrid
 ```
 
+### Versions Compatibility 
+For a full compatibility table of Aurelia-Slickgrid with Slickgrid-Universal, you can consult the [Versions Compatibility Table - Wiki](https://github.com/ghiscoding/aurelia-slickgrid/wiki/Versions-Compatibility-Table)
+
 ### License
 [MIT License](LICENSE)
 
