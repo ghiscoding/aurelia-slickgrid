@@ -65,11 +65,9 @@
     "aurelia-i18n": "^4.0.3",
     "aurelia-pal": "^1.8.2",
     "dompurify": "^2.4.0",
+    "i18next": ">=21.0.0",
     "jquery": "^3.6.1",
     "sortablejs": "^1.15.0"
-  },
-  "peerDependencies": {
-    "i18next": ">=21.0.0"
   },
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",
