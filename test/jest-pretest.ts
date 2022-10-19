@@ -1,9 +1,7 @@
 import 'aurelia-polyfills';
 import 'isomorphic-fetch';
 import 'jsdom-global/register';
-import { globalize } from 'aurelia-pal-nodejs';
 import Sortable from 'sortablejs';
-globalize();
 
 // import jQuery AFTER globalize() is the only way to get the test working
 import * as jQuery from 'jquery';
