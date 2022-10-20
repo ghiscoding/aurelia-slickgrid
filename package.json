@@ -65,7 +65,7 @@
     "aurelia-i18n": "^4.0.3",
     "aurelia-pal": "^1.8.2",
     "dompurify": "^2.4.0",
-    "i18next": ">=21.0.0",
+    "i18next": ">=21.10.0",
     "jquery": "^3.6.1",
     "sortablejs": "^1.15.0"
   },
@@ -149,7 +149,7 @@
     "npm": ">=6.14.13"
   },
   "resolutions": {
-    "caniuse-lite": "1.0.30001419"
+    "caniuse-lite": "1.0.30001422"
   },
   "aurelia": {
     "build": {
