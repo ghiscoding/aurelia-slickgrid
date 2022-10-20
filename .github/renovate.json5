@@ -11,6 +11,10 @@
       depTypeList: ["peerDependencies"],
       enabled: false,
     },
+    {
+      packageNames: ["i18next"],
+      allowedVersions: ">=21.0.0"
+    },
     // allow Node14/npm8 until its EOL June 2023
     {
       packageNames: ["node"],
@@ -23,7 +27,7 @@
     {
       packageNames: ["rxjs"],
       allowedVersions: ">=7.5.0"
-    }
+    },
   ],
   schedule: ["on Thursday"],
   ignoreDeps: ["typescript"],
