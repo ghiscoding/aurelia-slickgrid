@@ -15,7 +15,7 @@ export class Example14 {
   </ul>
   `;
 
-  angularGrid2!: AureliaGridInstance;
+  aureliaGrid2!: AureliaGridInstance;
   gridObj2: any;
   columnDefinitions1: Column[] = [];
   columnDefinitions2: Column[] = [];
@@ -36,7 +36,7 @@ export class Example14 {
   }
 
   aureliaGridReady2(aureliaGrid: AureliaGridInstance) {
-    this.angularGrid2 = aureliaGrid;
+    this.aureliaGrid2 = aureliaGrid;
     this.gridObj2 = aureliaGrid.slickGrid;
   }
 
