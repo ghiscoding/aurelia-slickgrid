@@ -426,6 +426,24 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
     expect(pubSubSpy).toHaveBeenNthCalledWith(6, 'onAfterGridDestroyed', true);
   });
 
+  it('should update column definitions when onPluginColumnsChanged event is triggered with updated columns', () => {
+    const colsChangeSpy = jest.spyOn(customElement, 'columnDefinitionsChanged');
+    const columnsMock = [
+      { id: 'firstName', field: 'firstName', editor: undefined, internalColumnEditor: {} },
+      { id: 'lastName', field: 'lastName', editor: undefined, internalColumnEditor: {} }
+    ];
+
+    customElement.bind();
+    customElement.initialization(slickEventHandler);
+    eventPubSubService.publish('onPluginColumnsChanged', {
+      columns: columnsMock,
+      pluginName: 'RowMoveManager'
+    });
+
+    expect(customElement.columnDefinitions).toEqual(columnsMock);
+    expect(colsChangeSpy).toHaveBeenCalled();
+  });
+
   describe('initialization method', () => {
     const customEditableInputFormatter: Formatter = (_row, _cell, value, columnDef) => {
       const isEditableLine = !!columnDef.editor;
@@ -1171,7 +1189,7 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
       });
 
       it('should invoke "updateFilters" method with filters returned from "getColumnFilters" of the Filter Service when there is no Presets defined', () => {
-        const mockColumnFilter = { name: { columnId: 'name', columnDef: { id: 'name', field: 'name', filter: { model: Filters.autoComplete } }, operator: 'EQ', searchTerms: ['john'] } };
+        const mockColumnFilter = { name: { columnId: 'name', columnDef: { id: 'name', field: 'name', filter: { model: Filters.autocompleter } }, operator: 'EQ', searchTerms: ['john'] } };
         jest.spyOn(filterServiceStub, 'getColumnFilters').mockReturnValue(mockColumnFilter as unknown as ColumnFilters);
         const backendSpy = jest.spyOn(mockGraphqlService, 'updateFilters');
 

@@ -1,4 +1,4 @@
-import { AureliaGridInstance, Column, ExtensionName, Filters, Formatters, GridOption } from '../../aurelia-slickgrid';
+import { AureliaGridInstance, Column, ExtensionName, Filters, Formatters, GridOption, OnEventArgs } from '../../aurelia-slickgrid';
 
 export class Example16 {
   title = 'Example 16: Row Move & Checkbox Selector';
@@ -223,6 +223,43 @@ export class Example16 {
 
   disableSorting() {
     this.aureliaGrid.sortService.disableSortFunctionality(true);
+  }
+
+  addEditDeleteColumns() {
+    if (this.columnDefinitions[0].id !== 'change-symbol') {
+      const newCols = [
+        {
+          id: 'change-symbol',
+          field: 'id',
+          excludeFromColumnPicker: true,
+          excludeFromGridMenu: true,
+          excludeFromHeaderMenu: true,
+          formatter: Formatters.editIcon,
+          minWidth: 30,
+          maxWidth: 30,
+          onCellClick: (clickEvent: Event, args: OnEventArgs) => {
+            alert(`Technically we should Edit "Task ${args.dataContext.id}"`);
+          }
+        }, {
+          id: 'delete-symbol',
+          field: 'id',
+          excludeFromColumnPicker: true,
+          excludeFromGridMenu: true,
+          excludeFromHeaderMenu: true,
+          formatter: Formatters.deleteIcon,
+          minWidth: 30,
+          maxWidth: 30,
+          onCellClick: (e: Event, args: OnEventArgs) => {
+            if (confirm('Are you sure?')) {
+              this.aureliaGrid.gridService.deleteItemById(args.dataContext.id);
+            }
+          }
+        }
+      ];
+
+      this.columnDefinitions.splice(0, 0, newCols[0], newCols[1]);
+      this.columnDefinitions = this.columnDefinitions.slice(); // or use spread operator [...cols] to trigger change
+    }
   }
 
   // or Toggle Filtering/Sorting functionalities
