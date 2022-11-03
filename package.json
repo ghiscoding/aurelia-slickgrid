@@ -85,13 +85,13 @@
     "@types/dompurify": "^2.3.4",
     "@types/fnando__sparkline": "^0.3.4",
     "@types/i18next-xhr-backend": "^1.4.2",
-    "@types/jest": "^29.2.0",
+    "@types/jest": "^29.2.1",
     "@types/jquery": "^3.5.14",
-    "@types/node": "^18.11.7",
+    "@types/node": "^18.11.9",
     "@types/sortablejs": "^1.15.0",
     "@types/webpack": "^5.28.0",
-    "@typescript-eslint/eslint-plugin": "^5.41.0",
-    "@typescript-eslint/parser": "^5.41.0",
+    "@typescript-eslint/eslint-plugin": "^5.42.0",
+    "@typescript-eslint/parser": "^5.42.0",
     "@webpack-cli/serve": "^1.7.0",
     "aurelia-animator-css": "^1.0.4",
     "aurelia-bootstrapper": "^2.4.0",
@@ -148,7 +148,7 @@
     "npm": ">=6.14.13"
   },
   "resolutions": {
-    "caniuse-lite": "1.0.30001426"
+    "caniuse-lite": "1.0.30001429"
   },
   "aurelia": {
     "build": {
