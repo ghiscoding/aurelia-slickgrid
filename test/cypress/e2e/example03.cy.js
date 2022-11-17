@@ -35,7 +35,7 @@ describe('Example 3 - Grid with Editors', { retries: 1 }, () => {
 
     // change duration
     cy.get(`[style="top:${GRID_ROW_HEIGHT * 2}px"] > .slick-cell:nth(4)`).click();
-    cy.get('.slider-editor input[type=range]').as('range').invoke('val', 25).trigger('change');
+    cy.get('.slider-editor input[type=range]').as('range').invoke('val', 25).trigger('change', { force: true });
     cy.get(`[style="top:${GRID_ROW_HEIGHT * 2}px"] > .slick-cell:nth(4)`).should('contain', '25');
 
     // change % Complete
@@ -106,7 +106,7 @@ describe('Example 3 - Grid with Editors', { retries: 1 }, () => {
 
     // change duration
     cy.get(`[style="top:${GRID_ROW_HEIGHT * 0}px"] > .slick-cell:nth(4)`).click();
-    cy.get('.slider-editor input[type=range]').as('range').invoke('val', 50).trigger('change');
+    cy.get('.slider-editor input[type=range]').as('range').invoke('val', 50).trigger('change', { force: true });
     cy.get(`[style="top:${GRID_ROW_HEIGHT * 0}px"] > .slick-cell:nth(4)`).should('contain', '50');
 
     // change % Complete
@@ -180,7 +180,7 @@ describe('Example 3 - Grid with Editors', { retries: 1 }, () => {
 
     // change duration
     cy.get(`[style="top:${GRID_ROW_HEIGHT * 0}px"] > .slick-cell:nth(4)`).click();
-    cy.get('.slider-editor input[type=range]').as('range').invoke('val', 50).trigger('change');
+    cy.get('.slider-editor input[type=range]').as('range').invoke('val', 50).trigger('change', { force: true });
     cy.get(`[style="top:${GRID_ROW_HEIGHT * 0}px"] > .slick-cell:nth(4)`).should('contain', '50');
 
     // change % Complete

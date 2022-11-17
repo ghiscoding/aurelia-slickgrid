@@ -566,7 +566,7 @@ describe('Example 31 - OData Grid using RxJS', { retries: 1 }, () => {
 
       cy.window().then((win) => {
         expect(win.console.log).to.have.callCount(2);
-        expect(win.console.log).to.be.calledWith('Client sample, Grid State changed:: ', { newValues: [{ columnId: 'name', operator: 'Contains', searchTerms: ['x'] }], type: 'filter' });
+        expect(win.console.log).to.be.calledWith('Client sample, Grid State changed:: ', { newValues: [{ columnId: 'name', operator: 'Contains', searchTerms: ['x'], targetSelector: 'input.form-control.filter-name.compound-input' }], type: 'filter' });
         expect(win.console.log).to.be.calledWith('Client sample, Grid State changed:: ', { newValues: { pageNumber: 1, pageSize: 10 }, type: 'pagination' });
       });
     });
