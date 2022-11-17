@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.1.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v5.0.0...v5.1.0) (2022-11-17)
+
+
+### Bug Fixes
+
+* **deps:** move i18next as regular dependencies to avoid fulll install ([#875](https://github.com/ghiscoding/aurelia-slickgrid/issues/875)) ([b064d81](https://github.com/ghiscoding/aurelia-slickgrid/commit/b064d81454d238512c1ab21a3006647ce875c185))
+* **deps:** update dependency dompurify to ^2.4.1 ([#891](https://github.com/ghiscoding/aurelia-slickgrid/issues/891)) ([7833109](https://github.com/ghiscoding/aurelia-slickgrid/commit/7833109a9ebed8e23b1dba2f6d40966b1de5d025))
+
+
+### Features
+
+* **common:** add "targetSelector" to onFilterChanged & Grid State ([#892](https://github.com/ghiscoding/aurelia-slickgrid/issues/892)) ([306f247](https://github.com/ghiscoding/aurelia-slickgrid/commit/306f247c5f1e1ad529b32b0ccc58db93d705be09))
+* **core:** expose EventPubSub Service on AureliaGridInstance ([#879](https://github.com/ghiscoding/aurelia-slickgrid/issues/879)) ([015bc5b](https://github.com/ghiscoding/aurelia-slickgrid/commit/015bc5bb7cb03b57741bdcd7857218d886017e73))
+* **filters:** add back Slider Range filter in pure JS ([#886](https://github.com/ghiscoding/aurelia-slickgrid/issues/886)) ([d3bff2d](https://github.com/ghiscoding/aurelia-slickgrid/commit/d3bff2d1657ff119429ecfb9d7a27476b5f497d3))
+* **plugins:** sync column definitions to user after plugin adds column ([#881](https://github.com/ghiscoding/aurelia-slickgrid/issues/881)) ([e453905](https://github.com/ghiscoding/aurelia-slickgrid/commit/e453905a71e7589b20669e138a5c7a67128f71f3))
+
 # [5.0.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v4.3.0...v5.0.0) (2022-10-18)
 
 
