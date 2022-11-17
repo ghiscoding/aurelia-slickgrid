@@ -37,7 +37,7 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
   protected _userProcessFn?: (item: any) => Promise<any>;
 
   constructor(protected readonly aureliaUtilService: AureliaUtilService, private readonly eventPubSubService: EventPubSubService, private readonly gridContainerElement: HTMLDivElement) {
-    super();
+    super(eventPubSubService);
   }
 
   get addonOptions() {
