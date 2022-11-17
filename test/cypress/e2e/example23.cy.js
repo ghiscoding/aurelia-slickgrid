@@ -8,7 +8,7 @@ const presetMaxDuration = 88;
 const presetLowestDay = moment().add(-2, 'days').format('YYYY-MM-DD');
 const presetHighestDay = moment().add(20, 'days').format('YYYY-MM-DD');
 
-describe('Example 23 - Range Filters', { retries: 1 }, () => {
+describe('Example 23 - Range Filters', { retries: 0 }, () => {
   it('should display Example title', () => {
     cy.visit(`${Cypress.config('baseUrl')}/slickgrid/example23`);
     cy.get('h2').should('contain', 'Example 23: Filtering from Range of Search Values');
@@ -75,12 +75,13 @@ describe('Example 23 - Range Filters', { retries: 1 }, () => {
       });
   });
 
-  xit('should change "% Complete" filter range by using the slider left handle (min value) to make it a higher min value and expect all rows to be within new range', () => {
+  it('should change "% Complete" filter range by using the slider left handle (min value) to make it a higher min value and expect all rows to be within new range', () => {
     let newLowest = presetMinComplete;
     let newHighest = presetMaxComplete;
 
-    cy.get('.ui-slider-range')
-      .click('bottom', { force: true });
+    // first input is the lowest range
+    cy.get('.slider-filter-input:nth(0)')
+      .as('range').invoke('val', 10).trigger('change', { force: true });
 
     cy.get('.lowest-range-percentComplete')
       .then(($lowest) => {
@@ -94,7 +95,10 @@ describe('Example 23 - Range Filters', { retries: 1 }, () => {
 
     cy.get('#grid23')
       .find('.slick-row')
-      .each(($row) => {
+      .each(($row, idx) => {
+        if (idx > 8) {
+          return;
+        }
         cy.wrap($row)
           .children('.slick-cell:nth(2)')
           .each(($cell) => {
@@ -105,6 +109,17 @@ describe('Example 23 - Range Filters', { retries: 1 }, () => {
             }
           });
       });
+  });
+
+  it('should change the "Finish" date in the picker and expect all rows to be within new dates range', () => {
+    cy.get('.flatpickr.search-filter.filter-finish')
+      .click();
+
+    cy.get('.flatpickr-day.inRange')
+      .should('have.length.gt', 2);
+
+    // cy.get('.flatpickr-day.selected.endRange')
+    //   .should('contain', moment().add(25, 'days').day() - 1);
   });
 
   it('should change the "Duration" input filter and expect all rows to be within new range', () => {
@@ -120,45 +135,18 @@ describe('Example 23 - Range Filters', { retries: 1 }, () => {
 
     cy.get('#grid23')
       .find('.slick-row')
-      .each(($row) => {
+      .each(($row, idx) => {
         cy.wrap($row)
           .children('.slick-cell:nth(5)')
           .each(($cell) => {
+            if (idx > 8) {
+              return;
+            }
             const value = parseInt($cell.text().trim(), 10);
             if (!isNaN(value)) {
               expect(value >= newMin).to.eq(true);
               expect(value <= newMax).to.eq(true);
             }
-          });
-      });
-  });
-
-  xit('should change the "Finish" date in the picker and expect all rows to be within new dates range', () => {
-    cy.contains('Clear Filters')
-      .click({ force: true });
-
-    cy.get('.flatpickr.search-filter.filter-finish:nth(1)')
-      .click('bottom', { force: true });
-
-    cy.get('.flatpickr-days')
-      .find('[aria-label]')
-      .contains(moment().format('MMMM'));
-
-    cy.get('.flatpickr-day:nth(7)')
-      .click({ force: true });
-
-    cy.get('.flatpickr-day')
-      .should('contain', '28')
-      .click({ force: true });
-
-    cy.get('#grid23')
-      .find('.slick-row')
-      .each(($row) => {
-        cy.wrap($row)
-          .children('.slick-cell:nth(4)')
-          .each(($cell) => {
-            const isDateBetween = moment($cell.text()).isBetween(presetLowestDay, presetHighestDay, null, '[]'); // [] is inclusive, () is exclusive
-            expect(isDateBetween).to.eq(true);
           });
       });
   });
