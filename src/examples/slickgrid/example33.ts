@@ -31,8 +31,7 @@ export class Example33 {
     <li>create your own Custom Tooltip via a Custom Formatter</li>
     <li>create an Async Custom Tooltip (Promise/Observable) to allowing fetching data from an API</li>
     <li>optionally add Custom Tooltip on Column Header & Column Header-Row (filters)</li>
-  </ul>
-  `;
+  </ul>`;
 
   aureliaGrid!: AureliaGridInstance;
   columnDefinitions: Column[] = [];
