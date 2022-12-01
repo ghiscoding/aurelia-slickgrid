@@ -307,7 +307,7 @@ export class Example18 {
 
   groupByDuration() {
     this.clearGrouping();
-    if (this.draggableGroupingPlugin && this.draggableGroupingPlugin.setDroppedGroups) {
+    if (this.draggableGroupingPlugin?.setDroppedGroups) {
       this.showPreHeader();
       this.draggableGroupingPlugin.setDroppedGroups('duration');
       this.gridObj.invalidate(); // invalidate all rows and re-render
