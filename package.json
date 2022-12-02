@@ -81,7 +81,7 @@
     "@slickgrid-universal/odata": "~2.1.2",
     "@slickgrid-universal/rxjs-observable": "~2.1.2",
     "@slickgrid-universal/text-export": "~2.1.2",
-    "@types/bluebird": "^3.5.37",
+    "@types/bluebird": "^3.5.38",
     "@types/dompurify": "^2.4.0",
     "@types/fnando__sparkline": "^0.3.4",
     "@types/i18next-xhr-backend": "^1.4.2",
