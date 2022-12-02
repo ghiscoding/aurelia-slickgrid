@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.1.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v5.1.1...v5.1.2) (2022-12-02)
+
+
+### Bug Fixes
+
+* **addons:** onGroupChanged callback should be executed with Draggable ([#903](https://github.com/ghiscoding/aurelia-slickgrid/issues/903)) ([ff57b64](https://github.com/ghiscoding/aurelia-slickgrid/commit/ff57b6426b81fa44964da69cb22f5ab51c1bc707))
+* **core:** grid service `resetGrid` method wasn't always resetting ([#901](https://github.com/ghiscoding/aurelia-slickgrid/issues/901)) ([28de038](https://github.com/ghiscoding/aurelia-slickgrid/commit/28de0380fb3b80cb4ad8b81c1e9bf44aaa75bd31))
+
 ## [5.1.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v5.1.0...v5.1.1) (2022-11-19)
 
 # [5.1.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v5.0.0...v5.1.0) (2022-11-17)
