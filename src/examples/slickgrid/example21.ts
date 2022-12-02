@@ -140,7 +140,7 @@ export class Example21 {
   // -- if any of the Search form input changes, we'll call the updateFilter() method
   //
 
-  cleargridSearchInput() {
+  clearGridSearchInput() {
     this.searchValue = '';
     this.updateFilter();
   }

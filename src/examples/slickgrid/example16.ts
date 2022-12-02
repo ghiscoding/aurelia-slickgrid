@@ -157,7 +157,7 @@ export class Example16 {
     // which is not always the case so we will recalcualte them and we won't use these reference afterward
     const rows = args.rows as number[];
     const insertBefore = args.insertBefore;
-    const extractedRows = [];
+    const extractedRows: number[] = [];
 
     // when moving rows, we need to cancel any sorting that might happen
     // we can do this by providing an undefined sort comparer
