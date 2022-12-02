@@ -1,6 +1,6 @@
 <template>
   <span if.bind="collection">
-    <select class="form-control" value.bind="selectedItem" matcher.bind="itemMatcher">
+    <select class="form-control form-select" value.bind="selectedItem" matcher.bind="itemMatcher">
       <option repeat.for="item of collection" model.bind="item">
         ${item.name}
       </option>
