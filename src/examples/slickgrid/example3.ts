@@ -644,12 +644,6 @@ export class Example3 {
     return true;
   }
 
-  async switchLanguage() {
-    const nextLanguage = (this.selectedLanguage === 'en') ? 'fr' : 'en';
-    await this.i18n.setLocale(nextLanguage);
-    this.selectedLanguage = nextLanguage;
-  }
-
   undo() {
     const command = this._commandQueue.pop();
     if (command && Slick.GlobalEditorLock.cancelCurrentEdit()) {

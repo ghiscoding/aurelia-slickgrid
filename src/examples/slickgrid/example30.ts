@@ -504,8 +504,8 @@ export class Example30 {
     return false;
   }
 
-  handleItemDeleted(_e: Event, args: any) {
-    console.log('item deleted with id:', args.itemId);
+  handleItemDeleted(itemId: string) {
+    console.log('item deleted with id:', itemId);
   }
 
   handleOnBeforeEditCell(e: Event, args: any) {

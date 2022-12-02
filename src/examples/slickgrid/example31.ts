@@ -257,7 +257,6 @@ export class Example31 {
         }
       }
 
-
       // read the json and create a fresh copy of the data that we are free to modify
       this.http.createRequest(`${sampleDataRoot}/customers_100.json`)
         .asGet()

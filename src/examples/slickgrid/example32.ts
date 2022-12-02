@@ -484,11 +484,6 @@ export class Example32 {
     }
   }
 
-  handlePaginationChanged() {
-    this.removeAllUnsavedStylingFromCell();
-    this.renderUnsavedStylingOnAllVisibleCells();
-  }
-
   handleDefaultResizeColumns() {
     // just for demo purposes, set it back to its original width
     const columns = this.aureliaGrid.slickGrid.getColumns() as Column[];
