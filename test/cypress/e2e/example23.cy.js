@@ -97,14 +97,14 @@ describe('Example 23 - Range Filters', { retries: 0 }, () => {
     cy.get('#grid23')
       .find('.slick-row')
       .each(($row, idx) => {
-        if (idx > 8) {
+        if (idx > 6) {
           return;
         }
         cy.wrap($row)
           .children('.slick-cell:nth(2)')
           .each(($cell) => {
             const value = parseInt($cell.text().trim(), 10);
-            if (!isNaN(value)) {
+            if (!isNaN(value) && value !== '') {
               expect(value >= (newLowest - allowedBuffer)).to.eq(true);
               expect(value <= (newHighest + allowedBuffer)).to.eq(true);
             }
