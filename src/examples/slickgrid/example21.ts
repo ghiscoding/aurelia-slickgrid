@@ -7,7 +7,7 @@ import {
   GridOption,
   OperatorString,
 } from '../../aurelia-slickgrid';
-
+import './example21.scss';
 
 export class Example21 {
   @bindable() selectedColumn!: Column;
@@ -44,38 +44,36 @@ export class Example21 {
     this.columnDefinitions = [
       {
         id: 'title', name: 'Title', field: 'title',
-        width: 100,
-        sortable: true,
+        width: 100, sortable: true,
         type: FieldType.string
       },
       {
         id: 'duration', name: 'Duration (days)', field: 'duration',
-        width: 100,
-        sortable: true,
+        width: 100, sortable: true,
         type: FieldType.number
       },
       {
         id: 'complete', name: '% Complete', field: 'percentComplete',
-        width: 100,
+        width: 100, sortable: true,
         formatter: Formatters.percentCompleteBar,
         type: FieldType.number
       },
       {
         id: 'start', name: 'Start', field: 'start',
-        width: 100,
+        width: 100, sortable: true,
         formatter: Formatters.dateIso,
-        sortable: true,
+
         type: FieldType.date
       },
       {
         id: 'finish', name: 'Finish', field: 'finish',
-        width: 100,
-        formatter: Formatters.dateIso, sortable: true,
+        width: 100, sortable: true,
+        formatter: Formatters.dateIso,
         type: FieldType.date
       },
       {
         id: 'effort-driven', name: 'Effort Driven', field: 'effortDriven',
-        width: 100,
+        width: 100, sortable: true,
         formatter: Formatters.checkmark,
         type: FieldType.number
       }
@@ -97,7 +95,6 @@ export class Example21 {
       enableFiltering: true,
       showHeaderRow: false, // hide the filter row (header row)
 
-      enableGridMenu: false, // disable grid menu & remove vertical scroll
       alwaysShowVerticalScroll: false,
       enableColumnPicker: true,
       enableCellNavigation: true,
