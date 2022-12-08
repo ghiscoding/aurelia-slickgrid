@@ -50,8 +50,8 @@
     "test:ci": "npx jest --runInBand --coverage=true --ci --config ./test/jest.config.js",
     "test:jest": "npx jest --watch --detectOpenHandles --config test/jest.config.js",
     "test:jest:coverage": "npx jest --detectOpenHandles --runInBand --coverage --config test/jest.config.js",
-    "preview:release": "release-it --dry-run",
-    "release": "release-it"
+    "preview:release": "release-it --only-version --dry-run",
+    "release": "release-it --only-version"
   },
   "dependencies": {
     "@slickgrid-universal/common": "~2.1.2",
