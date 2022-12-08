@@ -355,12 +355,12 @@ export class Example18 {
   }
 
   onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
-    const caller = change && change.caller || [];
-    const groups = change && change.groupColumns || [];
+    const caller = change?.caller ?? [];
+    const groups = change?.groupColumns ?? [];
 
     if (Array.isArray(this.selectedGroupingFields) && Array.isArray(groups) && groups.length > 0) {
       // update all Group By select dropdown
-      this.selectedGroupingFields.forEach((_g, i) => this.selectedGroupingFields[i] = groups[i] && groups[i].getter || '');
+      this.selectedGroupingFields.forEach((_g, i) => this.selectedGroupingFields[i] = groups[i]?.getter ?? '');
       this.selectedGroupingFields = [...this.selectedGroupingFields]; // force dirty checking
     } else if (groups.length === 0 && caller === 'remove-group') {
       this.clearGroupingSelects();

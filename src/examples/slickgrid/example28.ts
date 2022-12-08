@@ -8,7 +8,7 @@ import {
   Formatters,
   GridOption,
   findItemInTreeStructure,
-  Formatter,
+  SlickGrid,
 } from '../../aurelia-slickgrid';
 import './example28.scss'; // provide custom CSS/SASS styling
 
@@ -47,7 +47,7 @@ export class Example28 {
     this.columnDefinitions = [
       {
         id: 'file', name: 'Files', field: 'file',
-        type: FieldType.string, width: 150, formatter: this.treeFormatter,
+        type: FieldType.string, width: 150, formatter: this.treeFormatter.bind(this),
         filterable: true, sortable: true,
       },
       {
@@ -167,7 +167,7 @@ export class Example28 {
     this.aureliaGrid.filterService.updateFilters([{ columnId: 'file', searchTerms: [this.searchString] }], true, false, true);
   }
 
-  treeFormatter: Formatter = (_row, _cell, value, _columnDef, dataContext, grid) => {
+  treeFormatter(_row: number, _cell: number, value: any, _columnDef: Column, dataContext: any, grid: SlickGrid) {
     const gridOptions = grid.getOptions() as GridOption;
     const treeLevelPropName = gridOptions.treeDataOptions && gridOptions.treeDataOptions.levelPropName || '__treeLevel';
     if (value === null || value === undefined || dataContext === undefined) {
