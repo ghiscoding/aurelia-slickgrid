@@ -9,6 +9,7 @@ module.exports = defineConfig({
   projectId: 'gtbpy4',
   screenshotsFolder: 'screenshots',
   videosFolder: 'videos',
+  numTestsKeptInMemory: 5,
   retries: {
     runMode: 2,
     openMode: 0,
