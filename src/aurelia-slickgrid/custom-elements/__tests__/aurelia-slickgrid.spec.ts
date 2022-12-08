@@ -279,6 +279,7 @@ const mockGrid = {
   setSelectedRows: jest.fn(),
   onClick: new MockSlickEvent(),
   onClicked: new MockSlickEvent(),
+  onColumnsReordered: new MockSlickEvent(),
   onRendered: jest.fn(),
   onScroll: jest.fn(),
   onSelectedRowsChanged: new MockSlickEvent(),
@@ -407,6 +408,22 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
 
     expect(customElement.eventHandler).toBe(slickEventHandler);
     expect(sharedFrozenIndexSpy).toHaveBeenCalledWith('name');
+  });
+
+  it('should update "visibleColumns" in the Shared Service when "onColumnsReordered" event is triggered', () => {
+    const sharedHasColumnsReorderedSpy = jest.spyOn(SharedService.prototype, 'hasColumnsReordered', 'set');
+    const sharedVisibleColumnsSpy = jest.spyOn(SharedService.prototype, 'visibleColumns', 'set');
+    const newVisibleColumns = [{ id: 'lastName', field: 'lastName' }, { id: 'fristName', field: 'fristName' }];
+    customElement.gridOptions = gridOptions;
+    customElement.gridOptions.enableFiltering = true;
+
+    customElement.bind();
+    customElement.initialization(slickEventHandler);
+    mockGrid.onColumnsReordered.notify({ impactedColumns: newVisibleColumns, grid: mockGrid });
+
+    expect(customElement.eventHandler).toEqual(slickEventHandler);
+    expect(sharedHasColumnsReorderedSpy).toHaveBeenCalledWith(true);
+    expect(sharedVisibleColumnsSpy).toHaveBeenCalledWith(newVisibleColumns);
   });
 
   it('should create a grid and expect multiple event published', () => {

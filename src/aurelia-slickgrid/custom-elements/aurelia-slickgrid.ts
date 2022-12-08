@@ -775,6 +775,12 @@ export class AureliaSlickgridCustomElement {
           }
         }
 
+        // when column are reordered, we need to update the visibleColumn array
+        this._eventHandler.subscribe(grid.onColumnsReordered, (_e, args) => {
+          this.sharedService.hasColumnsReordered = true;
+          this.sharedService.visibleColumns = args.impactedColumns;
+        });
+
         // load any presets if any (after dataset is initialized)
         this.loadColumnPresetsWhenDatasetInitialized();
         this.loadFilterPresetsWhenDatasetInitialized();
