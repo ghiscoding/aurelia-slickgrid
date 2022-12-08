@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.1.3](https://github.com/ghiscoding/aurelia-slickgrid/compare/v5.1.2...v5.1.3) (2022-12-08)
+
+
+### Bug Fixes
+
+* **pinning:** cols reorder & freezing shouldn't affect order ([#909](https://github.com/ghiscoding/aurelia-slickgrid/issues/909)) ([426725d](https://github.com/ghiscoding/aurelia-slickgrid/commit/426725d63279133ca389a391235112ba8cb5c0d7))
+* **sorting:** update Slickgrid-Universal, fixes date sort shuffling ([#914](https://github.com/ghiscoding/aurelia-slickgrid/issues/914)) ([e50c676](https://github.com/ghiscoding/aurelia-slickgrid/commit/e50c676ff512e6f8bafba2f78819bfccaafb4c2d))
+
 ## [5.1.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v5.1.1...v5.1.2) (2022-12-02)
 
 
