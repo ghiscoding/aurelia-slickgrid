@@ -111,7 +111,6 @@ module.exports = ({ production } = {}, { server } = {}) => ({
     }),
     new CopyWebpackPlugin({
       patterns: [
-        { from: `${srcDir}/favicon.ico`, to: 'favicon.ico' },
         { from: `${srcDir}/assets`, to: 'assets' }
       ]
     }),
