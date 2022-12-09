@@ -18,7 +18,7 @@ export class Example9 {
   title = 'Example 9: Grid Menu Control';
   subTitle = `
     This example demonstrates using the <b>Slick.Controls.GridMenu</b> plugin to easily add a Grid Menu (aka hamburger menu) on the top right corner of the grid.<br/>
-    (<a href="https://github.com/slickclub/aurelia-slickgrid/wiki/Grid-Menu" target="_blank">Wiki docs</a>)
+    (<a href="https://github.com/slickgrid-stellar/aurelia-slickgrid/wiki/Grid-Menu" target="_blank">Wiki docs</a>)
     <ul>
     <li>You can change the Grid Menu icon, for example "fa-ellipsis-v"&nbsp;&nbsp;<span class="fa fa-ellipsis-v"></span>&nbsp;&nbsp;(which is shown in this example)</li>
     <li>By default the Grid Menu shows all columns which you can show/hide them</li>
