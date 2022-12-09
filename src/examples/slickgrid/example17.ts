@@ -45,7 +45,7 @@ export class Example17 {
         for Sorting, Filtering, etc...
       </li>
       <li>
-        Soure code for this example is available <a href="https://github.com/ghiscoding/aurelia-slickgrid/blob/master/doc/github-demo/src/examples/slickgrid/example17.ts" target="_blank">here</a>
+        Soure code for this example is available <a href="https://github.com/slickclub/aurelia-slickgrid/blob/master/doc/github-demo/src/examples/slickgrid/example17.ts" target="_blank">here</a>
       </li>
     </ul>
   `;

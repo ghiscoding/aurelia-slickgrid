@@ -25,7 +25,7 @@ export class Example18 {
   title = 'Example 18: Draggable Grouping & Aggregators';
   subTitle = `
   <ul>
-  <li><a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Grouping-&-Aggregators" target="_blank">Wiki docs</a></li>
+  <li><a href="https://github.com/slickclub/aurelia-slickgrid/wiki/Grouping-&-Aggregators" target="_blank">Wiki docs</a></li>
   <li>This example shows 3 ways of grouping</li>
   <ol>
   <li>Drag any Column Header on the top placeholder to group by that column (support moti-columns grouping by adding more columns to the drop area).</li>

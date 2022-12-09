@@ -9,9 +9,9 @@
     "plugin",
     "slickgrid"
   ],
-  "homepage": "https://github.com/ghiscoding/aurelia-slickgrid",
+  "homepage": "https://github.com/slickclub/aurelia-slickgrid",
   "bugs": {
-    "url": "https://github.com/ghiscoding/aurelia-slickgrid/issues"
+    "url": "https://github.com/slickclub/aurelia-slickgrid/issues"
   },
   "license": "MIT",
   "author": "Ghislain B.",
@@ -19,7 +19,7 @@
   "typings": "dist/commonjs/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "http://github.com/ghiscoding/aurelia-slickgrid"
+    "url": "http://github.com/slickclub/aurelia-slickgrid"
   },
   "browserslist": [
     "last 2 version",
