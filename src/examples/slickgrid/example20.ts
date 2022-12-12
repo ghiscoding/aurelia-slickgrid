@@ -22,7 +22,7 @@ declare const Slick: SlickNamespace;
 export class Example20 {
   title = 'Example 20: Pinned (frozen) Columns/Rows';
   subTitle = `
-    This example demonstrates the use of Pinned (aka frozen) Columns and/or Rows (<a href="https://github.com/slickgrid-stellar/aurelia-slickgrid/wiki/Pinned-(aka-Frozen)-Columns-Rows" target="_blank">Wiki docs</a>)
+    This example demonstrates the use of Pinned (aka frozen) Columns and/or Rows (<a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Pinned-(aka-Frozen)-Columns-Rows" target="_blank">Wiki docs</a>)
     <ul>
       <li>Option to pin any number of columns (left only) or rows</li>
       <li>Option to pin the rows at the bottom instead of the top (default)</li>

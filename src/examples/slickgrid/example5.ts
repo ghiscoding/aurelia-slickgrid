@@ -22,7 +22,7 @@ export class Example5 {
   title = 'Example 5: Grid with Backend OData Service';
   subTitle = `
     Use it when you need to support Pagination with a OData endpoint (for simple JSON, use a regular grid)<br/>
-    Take a look at the (<a href="https://github.com/slickgrid-stellar/aurelia-slickgrid/wiki/OData" target="_blank">Wiki documentation</a>)
+    Take a look at the (<a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/OData" target="_blank">Wiki documentation</a>)
     <br/>
     <ul class="small">
       <li>Only "Name" field is sortable for the demo (because we use JSON files), however "multiColumnSort: true" is also supported</li>
@@ -33,7 +33,7 @@ export class Example5 {
         <li>The other operators can be used on column type number for example: ">=100" (greater than or equal to 100)</li>
       </ul>
       <li>OData Service could be replaced by other Service type in the future (GraphQL or whichever you provide)</li>
-      <li>You can also preload a grid with certain "presets" like Filters / Sorters / Pagination <a href="https://github.com/slickgrid-stellar/aurelia-slickgrid/wiki/Grid-State-&-Preset" target="_blank">Wiki - Grid Preset</a>
+      <li>You can also preload a grid with certain "presets" like Filters / Sorters / Pagination <a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Grid-State-&-Preset" target="_blank">Wiki - Grid Preset</a>
       <li><span class="text-danger">NOTE:</span> For demo purposes, the last column (filter & sort) will always throw an
         error and its only purpose is to demo what would happen when you encounter a backend server error
         (the UI should rollback to previous state before you did the action).

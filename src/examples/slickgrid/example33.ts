@@ -24,7 +24,7 @@ const NB_ITEMS = 500;
 export class Example33 {
   title = 'Example 33: Regular & Custom Tooltips';
   subTitle = `
-  This demo shows how to create Regular & Custom Tooltips (<a href="https://github.com/slickgrid-stellar/aurelia-slickgrid/wiki/Custom-Tooltip-(plugin)" target="_blank">Wiki docs</a>)
+  This demo shows how to create Regular & Custom Tooltips (<a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Custom-Tooltip-(plugin)" target="_blank">Wiki docs</a>)
   <br/>
   <ul class="small">
     <li>optionally parse regular [title] attributes and transform them into tooltips</li>

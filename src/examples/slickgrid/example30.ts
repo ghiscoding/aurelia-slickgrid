@@ -86,7 +86,7 @@ const myCustomTitleValidator = (value: any, args: any) => {
 export class Example30 {
   title = 'Example 30: Composite Editor Modal';
   subTitle = `Composite Editor allows you to Create, Clone, Edit, Mass Update & Mass Selection Changes inside a nice Modal Window.
-  <br>The modal is simply populated by looping through your column definition list and also uses a lot of the same logic as inline editing (see <a href="https://github.com/slickgrid-stellar/aurelia-slickgrid/wiki/Composite-Editor-Modal" target="_blank">Composite Editor - Wiki</a>.)`;
+  <br>The modal is simply populated by looping through your column definition list and also uses a lot of the same logic as inline editing (see <a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Composite-Editor-Modal" target="_blank">Composite Editor - Wiki</a>.)`;
 
   aureliaGrid!: AureliaGridInstance;
   compositeEditorInstance: SlickCompositeEditorComponent;
