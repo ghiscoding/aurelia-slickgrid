@@ -1,3 +1,14 @@
+# Change Log 
+
+All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+# [5.2.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v5.1.3...v5.2.0) (2022-12-22)
+
+
+### Features
+
+* **exports:** add auto-detect and Excel custom cell (column) styling ([#916](https://github.com/ghiscoding/aurelia-slickgrid/issues/916)) ([06d28d7](https://github.com/ghiscoding/aurelia-slickgrid/commit/06d28d7820b0ba9e534e9d9b544cc393b754c561))
+
 # Change Log
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
