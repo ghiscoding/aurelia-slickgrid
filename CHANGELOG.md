@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.2.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v5.2.0...v5.2.1) (2022-12-22)
+
+
+### Bug Fixes
+
+* **styling:** make Grid Menu item full width instead of max-content ([5da05fb](https://github.com/ghiscoding/aurelia-slickgrid/commit/5da05fb7721261e265ce21f17120c1c24b9c49ee))
+
 # [5.2.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v5.1.3...v5.2.0) (2022-12-22)
 
 
