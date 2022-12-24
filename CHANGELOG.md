@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.2.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v5.2.1...v5.2.2) (2022-12-24)
+
+
+### Bug Fixes
+
+* **common:** cell selection in Firefox not working ([#918](https://github.com/ghiscoding/aurelia-slickgrid/issues/918)) ([fcda15a](https://github.com/ghiscoding/aurelia-slickgrid/commit/fcda15aa0f509214b6a709b7e614ff19ad266f13))
+
 ## [5.2.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v5.2.0...v5.2.1) (2022-12-22)
 
 
