@@ -57,6 +57,7 @@ jobs:
           config-file: cypress.config.ts
           wait-on: 'http://localhost:9000'
           browser: chrome
+          headless: true
           record: true
         env:
           # pass the Dashboard record key as an environment variable

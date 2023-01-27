@@ -26,8 +26,7 @@ export default defineConfig({
         updateListOfTests() {
           const UPDATE_TESTS_LIST_CY_TS = '000-update-tests-list.cy.ts';
           const RUN_ALL_TESTS_CY_TS = '000-run-all-specs.cy.ts';
-          const PATHNAME_OF_RUN_ALL_TESTS_CY_TS =
-            './e2e/' + RUN_ALL_TESTS_CY_TS;
+          const PATHNAME_OF_RUN_ALL_TESTS_CY_TS = './e2e/' + RUN_ALL_TESTS_CY_TS;
 
           const testsOnDisk = fs
             .readdirSync('./e2e/')
