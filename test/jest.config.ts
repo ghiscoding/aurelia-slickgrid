@@ -1,6 +1,8 @@
-module.exports = {
+import type { Config } from '@jest/types';
+
+const config: Config.InitialOptions = {
   rootDir: '../',
-  globalSetup: '<rootDir>/test/jest-global-setup.js',
+  globalSetup: '<rootDir>/test/jest-global-setup.ts',
   collectCoverage: false,
   collectCoverageFrom: [
     'src/aurelia-slickgrid/**/*.ts',
@@ -59,3 +61,5 @@ module.exports = {
     '<rootDir>/node_modules/',
   ],
 };
+
+export default config;
