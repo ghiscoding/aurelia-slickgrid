@@ -47,9 +47,9 @@
     "start:dev": "webpack serve --env development",
     "cypress": "cd test/cypress && node node_modules/cypress/bin/cypress open",
     "cypress:ci": "cd test/cypress && npm run cypress:ci",
-    "test:ci": "npx jest --runInBand --coverage=true --ci --config ./test/jest.config.js",
-    "test:jest": "npx jest --watch --detectOpenHandles --config test/jest.config.js",
-    "test:jest:coverage": "npx jest --detectOpenHandles --runInBand --coverage --config test/jest.config.js",
+    "test:ci": "npx jest --runInBand --coverage=true --ci --config ./test/jest.config.ts",
+    "test:jest": "npx jest --watch --detectOpenHandles --config test/jest.config.ts",
+    "test:jest:coverage": "npx jest --detectOpenHandles --runInBand --coverage --config test/jest.config.ts",
     "preview:release": "release-it --only-version --dry-run",
     "release": "release-it --only-version"
   },
