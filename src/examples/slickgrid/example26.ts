@@ -1,5 +1,4 @@
 import { autoinject, PLATFORM } from 'aurelia-framework';
-import { I18N } from 'aurelia-i18n';
 import {
   AureliaGridInstance,
   AureliaUtilService,
@@ -52,7 +51,6 @@ export class Example26 {
   updatedObject: any;
   isAutoEdit = true;
   alertWarning: any;
-  selectedLanguage: string;
   assignees = [
     { id: '', name: '' },
     { id: '1', name: 'John' },
@@ -62,10 +60,9 @@ export class Example26 {
   selectedItem: any;
   selectedId = '';
 
-  constructor(private aureliaUtilService: AureliaUtilService, private i18n: I18N) {
+  constructor(private aureliaUtilService: AureliaUtilService) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
-    this.selectedLanguage = this.i18n.getLocale();
   }
 
   attached() {
@@ -264,7 +261,6 @@ export class Example26 {
         this._commandQueue.push(editCommand);
         editCommand.execute();
       },
-      i18n: this.i18n,
       params: {
         aureliaUtilService: this.aureliaUtilService // provide the service to all at once (Editor, Filter, AsyncPostRender)
       }
@@ -344,11 +340,6 @@ export class Example26 {
       autoEdit: isAutoEdit
     });
     return true;
-  }
-
-  switchLanguage() {
-    this.selectedLanguage = (this.selectedLanguage === 'en') ? 'fr' : 'en';
-    this.i18n.setLocale(this.selectedLanguage);
   }
 
   undo() {
