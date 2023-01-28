@@ -21,6 +21,7 @@ export default defineConfig({
     specPattern: 'e2e/*.cy.ts',
     supportFile: 'support/index.ts',
     excludeSpecPattern: process.env.CI ? ['**/node_modules/**', '**/000-*.cy.{js,ts}'] : ['**/node_modules/**'],
+    testIsolation: false,
     setupNodeEvents(on, config) {
       on('task', {
         updateListOfTests() {

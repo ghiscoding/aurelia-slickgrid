@@ -86,13 +86,11 @@ export class Example3 {
   updatedObject: any;
   isAutoEdit = true;
   alertWarning: any;
-  selectedLanguage: string;
   duplicateTitleHeaderCount = 1;
 
   constructor(private http: HttpClient, private httpFetch: FetchClient, private i18n: I18N) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
-    this.selectedLanguage = this.i18n.getLocale();
   }
 
   attached() {
