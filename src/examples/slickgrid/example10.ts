@@ -23,7 +23,7 @@ export class Example2 {
   gridOptions2!: GridOption;
   dataset1: any[] = [];
   dataset2: any[] = [];
-  selectedTitles: any[] = [];
+  selectedTitles = '';
   selectedTitle = '';
   selectedGrid2IDs: number[] = [];
 
@@ -146,7 +146,8 @@ export class Example2 {
 
         // you can toggle these 2 properties to show the "select all" checkbox in different location
         hideInFilterHeaderRow: false,
-        hideInColumnTitleRow: true
+        hideInColumnTitleRow: true,
+        applySelectOnAllPages: true, // when clicking "Select All", should we apply it to all pages (defaults to true)
       },
       rowSelectionOptions: {
         // True (Single Selection), False (Multiple Selections)
@@ -230,7 +231,10 @@ export class Example2 {
     if (gridStateChanges.gridState!.rowSelection) {
       this.selectedGrid2IDs = (gridStateChanges.gridState!.rowSelection.filteredDataContextIds || []) as number[];
       this.selectedGrid2IDs = this.selectedGrid2IDs.sort((a, b) => a - b); // sort by ID
-      this.selectedTitles = this.selectedGrid2IDs.map(dataContextId => `Task ${dataContextId}`);
+      this.selectedTitles = this.selectedGrid2IDs.map(dataContextId => `Task ${dataContextId}`).join(',');
+      if (this.selectedTitles.length > 293) {
+        this.selectedTitles = this.selectedTitles.substring(0, 293) + '...';
+      }
     }
   }
 

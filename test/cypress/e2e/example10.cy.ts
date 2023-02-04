@@ -19,14 +19,14 @@ describe('Example 10 - Multiple Grids with Row Selection', { retries: 1 }, () =>
 
     cy.get('@grid1')
       .find('.slickgrid-container')
-      .should('have.css', 'height', '225px');
+      .should($el => expect(parseInt(`${$el.height()}`, 10)).to.eq(225));
 
     cy.get('#slickGridContainer-grid2').as('grid2');
     cy.get('@grid2').should('have.css', 'width', '800px');
 
     cy.get('@grid2')
       .find('.slickgrid-container')
-      .should('have.css', 'height', '255px');
+      .should($el => expect(parseInt(`${$el.height()}`, 10)).to.eq(255));
   });
 
   it('should have exact Titles on 1st grid', () => {
@@ -450,7 +450,10 @@ describe('Example 10 - Multiple Grids with Row Selection', { retries: 1 }, () =>
 
       cy.window().then((win) => {
         expect(win.console.log).to.have.callCount(6);
-        expect(win.console.log).to.be.calledWith('Grid State changed:: ', { newValues: { gridRowIndexes: [1, 3], dataContextIds: [3, 12, 13, 522, 1], filteredDataContextIds: [3, 12, 13, 522, 1] }, type: 'rowSelection' });
+        // going to 1st page
+        expect(win.console.log).to.be.calledWith('Grid State changed:: ', { newValues: { gridRowIndexes: [3], dataContextIds: [12, 13, 3, 522], filteredDataContextIds: [3, 12, 13, 522] }, type: 'rowSelection' });
+        // after selecting 1st row
+        expect(win.console.log).to.be.calledWith('Grid State changed:: ', { newValues: { gridRowIndexes: [1, 3], dataContextIds: [1, 12, 13, 3, 522], filteredDataContextIds: [1, 3, 12, 13, 522] }, type: 'rowSelection' });
       });
     });
 
@@ -592,7 +595,7 @@ describe('Example 10 - Multiple Grids with Row Selection', { retries: 1 }, () =>
         .should('have.length', 2);
 
       cy.window().then((win) => {
-        expect(win.console.log).to.be.calledWith('Grid State changed:: ', { newValues: { gridRowIndexes: [0, 1], dataContextIds: [3, 12, 13, 522, 1], filteredDataContextIds: [3, 13] }, type: 'rowSelection' });
+        expect(win.console.log).to.be.calledWith('Grid State changed:: ', { newValues: { gridRowIndexes: [1, 0], dataContextIds: [1, 12, 13, 3, 522], filteredDataContextIds: [3, 13] }, type: 'rowSelection' });
         expect(win.console.log).to.be.calledWith('Grid State changed:: ', { newValues: [{ columnId: 'title', operator: 'Contains', searchTerms: ['3'], targetSelector: 'input.form-control.filter-title.search-filter.filled' }], type: 'filter' });
       });
     });
@@ -616,7 +619,7 @@ describe('Example 10 - Multiple Grids with Row Selection', { retries: 1 }, () =>
 
       cy.window().then((win) => {
         expect(win.console.log).to.have.callCount(2);
-        expect(win.console.log).to.be.calledWith('Grid State changed:: ', { newValues: { gridRowIndexes: [1, 12, 13, 3, 522], dataContextIds: [3, 12, 13, 522, 1], filteredDataContextIds: [3, 12, 13, 522, 1] }, type: 'rowSelection' });
+        expect(win.console.log).to.be.calledWith('Grid State changed:: ', { newValues: { gridRowIndexes: [1, 12, 13, 3, 522], dataContextIds: [1, 12, 13, 3, 522], filteredDataContextIds: [1, 3, 12, 13, 522] }, type: 'rowSelection' });
       });
     });
 
@@ -677,7 +680,7 @@ describe('Example 10 - Multiple Grids with Row Selection', { retries: 1 }, () =>
 
       cy.window().then((win) => {
         expect(win.console.log).to.have.callCount(4);
-        expect(win.console.log).to.be.calledWith('Grid State changed:: ', { newValues: { gridRowIndexes: [0, 1], dataContextIds: [3, 12, 13, 522, 1], filteredDataContextIds: [3, 13] }, type: 'rowSelection' });
+        expect(win.console.log).to.be.calledWith('Grid State changed:: ', { newValues: { gridRowIndexes: [1, 0], dataContextIds: [1, 12, 13, 3, 522], filteredDataContextIds: [3, 13] }, type: 'rowSelection' });
         expect(win.console.log).to.be.calledWith('Grid State changed:: ', { newValues: [{ columnId: 'title', operator: 'Contains', searchTerms: ['3'], targetSelector: 'input.form-control.filter-title.search-filter.filled' }], type: 'filter' });
       });
     });
@@ -728,7 +731,7 @@ describe('Example 10 - Multiple Grids with Row Selection', { retries: 1 }, () =>
 
       cy.window().then((win) => {
         expect(win.console.log).to.have.callCount(4);
-        expect(win.console.log).to.be.calledWith('Grid State changed:: ', { newValues: { gridRowIndexes: [1, 3], dataContextIds: [3, 12, 13, 522, 1], filteredDataContextIds: [3, 12, 13, 522, 1] }, type: 'rowSelection' });
+        expect(win.console.log).to.be.calledWith('Grid State changed:: ', { newValues: { gridRowIndexes: [1, 3], dataContextIds: [1, 12, 13, 3, 522], filteredDataContextIds: [1, 3, 12, 13, 522] }, type: 'rowSelection' });
         expect(win.console.log).to.be.calledWith('Grid State changed:: ', { newValues: { pageNumber: 1, pageSize: 5 }, type: 'pagination' });
       });
     });
@@ -754,7 +757,7 @@ describe('Example 10 - Multiple Grids with Row Selection', { retries: 1 }, () =>
 
       cy.window().then((win) => {
         expect(win.console.log).to.have.callCount(4);
-        expect(win.console.log).to.be.calledWith('Grid State changed:: ', { newValues: { gridRowIndexes: [0, 1], dataContextIds: [3, 12, 13, 522, 1], filteredDataContextIds: [3, 13] }, type: 'rowSelection' });
+        expect(win.console.log).to.be.calledWith('Grid State changed:: ', { newValues: { gridRowIndexes: [1, 0], dataContextIds: [1, 12, 13, 3, 522], filteredDataContextIds: [3, 13] }, type: 'rowSelection' });
         expect(win.console.log).to.be.calledWith('Grid State changed:: ', { newValues: [{ columnId: 'title', operator: 'Contains', searchTerms: ['3'], targetSelector: 'input.form-control.filter-title.search-filter.filled' }], type: 'filter' });
       });
 
