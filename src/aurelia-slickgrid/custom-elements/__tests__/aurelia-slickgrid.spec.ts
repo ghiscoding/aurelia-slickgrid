@@ -1,3 +1,4 @@
+jest.mock('@slickgrid-universal/common/dist/commonjs/formatters/formatterUtilities');
 import 'jest-extended';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { BindingEngine, Container } from 'aurelia-framework';
@@ -47,10 +48,6 @@ import { TranslaterServiceStub } from '../../../../test/translaterServiceStub';
 import { AureliaUtilService, ContainerService, TranslaterService } from '../../services';
 import { AureliaSlickgridCustomElement } from '../aurelia-slickgrid';
 import { SlickRowDetailView } from '../../extensions/slickRowDetailView';
-
-const mockAutoAddCustomEditorFormatter = jest.fn();
-
-(formatterUtilities.autoAddEditorFormatterToColumnsWithEditor as any) = mockAutoAddCustomEditorFormatter;
 
 declare const Slick: any;
 const slickEventHandler = new MockSlickEventHandler();
