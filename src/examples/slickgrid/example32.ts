@@ -21,7 +21,7 @@ import { autoinject } from 'aurelia-framework';
 import { AureliaGridInstance } from '../../aurelia-slickgrid';
 import './example32.scss'; // provide custom CSS/SASS styling
 
-const NB_ITEMS = 5000;
+const NB_ITEMS = 400;
 const URL_COUNTRIES_COLLECTION = 'assets/data/countries.json';
 
 // using external SlickGrid JS libraries
@@ -331,6 +331,11 @@ export class Example32 {
       },
       gridWidth: '100%',
       enableAutoResize: true,
+      enablePagination: true,
+      pagination: {
+        pageSize: 10,
+        pageSizes: [10, 200, 500, 5000]
+      },
 
       // resizing by cell content is opt-in
       // we first need to disable the 2 default flags to autoFit/autosize
@@ -498,6 +503,10 @@ export class Example32 {
     this.isUsingDefaultResize = false;
   }
 
+  handleOnSelectedRowIdsChanged(args: any) {
+    console.log('Selected Ids:', args.selectedRowIds);
+  }
+
   toggleGridEditReadonly() {
     // first need undo all edits
     this.undoAllEdits();
@@ -552,6 +561,18 @@ export class Example32 {
     }
   }
 
+  // change row selection dynamically and apply it to the DataView and the Grid UI
+  setSelectedRowIds() {
+    // change row selection even across multiple pages via DataView
+    this.aureliaGrid.dataView?.setSelectedIds([3, 4, 11]);
+
+    // you can also provide optional options (all defaults to true)
+    // this.sgb.dataView?.setSelectedIds([4, 5, 8, 10], {
+    //   isRowBeingAdded: true,
+    //   shouldTriggerEvent: true,
+    //   applyGridRowSelection: true
+    // });
+  }
 
   saveAll() {
     // Edit Queue (array increases every time a cell is changed, regardless of item object)

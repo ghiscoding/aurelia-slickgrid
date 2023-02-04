@@ -226,6 +226,7 @@ const mockDataView = {
   onSetItemsCalled: new MockSlickEvent(),
   reSort: jest.fn(),
   setItems: jest.fn(),
+  setSelectedIds: jest.fn(),
   syncGridSelection: jest.fn(),
 };
 
@@ -1732,13 +1733,16 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         });
       });
 
-      it('should call trigger a gridStage change and reset selected rows when pagination change is triggered and "enableRowSelection" is set', () => {
+      it('should trigger a gridStage change and reset selected rows when pagination change is triggered and "enableRowSelection" is set', () => {
         const mockPagination = { pageNumber: 2, pageSize: 20 } as Pagination;
         const pubSubSpy = jest.spyOn(eventPubSubService, 'publish');
         const setRowSpy = jest.spyOn(mockGrid, 'setSelectedRows');
         jest.spyOn(gridStateServiceStub, 'getCurrentGridState').mockReturnValue({ columns: [], pagination: mockPagination } as GridState);
 
-        customElement.gridOptions = { enableRowSelection: true } as unknown as GridOption;
+        customElement.gridOptions = {
+          enableRowSelection: true,
+          backendServiceApi: { service: mockGraphqlService as any }
+        } as unknown as GridOption;
         customElement.initialization(slickEventHandler);
         customElement.paginationChanged(mockPagination);
 
@@ -1755,7 +1759,10 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         const setRowSpy = jest.spyOn(mockGrid, 'setSelectedRows');
         jest.spyOn(gridStateServiceStub, 'getCurrentGridState').mockReturnValue({ columns: [], pagination: mockPagination } as GridState);
 
-        customElement.gridOptions = { enableCheckboxSelector: true } as unknown as GridOption;
+        customElement.gridOptions = {
+          enableCheckboxSelector: true,
+          backendServiceApi: { service: mockGraphqlService as any }
+        } as unknown as GridOption;
         customElement.initialization(slickEventHandler);
         customElement.paginationChanged(mockPagination);
 
@@ -2010,10 +2017,11 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         });
       });
 
-      it('should NOT call the "setSelectedRows" when the Grid has Local Pagination and there are row selection presets with "dataContextIds" array set', (done) => {
+      it('should call the "setSelectedRows" and "setSelectedIds" when the Grid has Local Pagination and there are row selection presets with "dataContextIds" array set', () => {
         const selectedGridRows = [22];
         const mockData = [{ firstName: 'John', lastName: 'Doe' }, { firstName: 'Jane', lastName: 'Smith' }];
-        const selectRowSpy = jest.spyOn(mockGrid, 'setSelectedRows');
+        const gridSelectedRowSpy = jest.spyOn(mockGrid, 'setSelectedRows');
+        const dvSetSelectedIdSpy = jest.spyOn(mockDataView, 'setSelectedIds');
         jest.spyOn(mockGrid, 'getSelectionModel').mockReturnValue(true);
         jest.spyOn(mockDataView, 'getLength').mockReturnValue(mockData.length);
 
@@ -2027,11 +2035,9 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         customElement.isDatasetInitialized = false; // it won't call the preset unless we reset this flag
         customElement.initialization(slickEventHandler);
 
-        setTimeout(() => {
-          expect(customElement.isDatasetInitialized).toBe(true);
-          expect(selectRowSpy).not.toHaveBeenCalled();
-          done();
-        }, 2);
+        expect(customElement.isDatasetInitialized).toBe(true);
+        expect(gridSelectedRowSpy).toHaveBeenCalledWith([2]);
+        expect(dvSetSelectedIdSpy).toHaveBeenCalledWith([22], { applyRowSelectionToGrid: true, isRowBeingAdded: true, shouldTriggerEvent: false });
       });
     });
 
