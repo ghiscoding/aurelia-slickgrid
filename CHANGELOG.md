@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.4.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v5.4.0...v5.4.1) (2023-02-04)
+
+
+### Bug Fixes
+
+* use DOMPurify correct namespace for dts file ([67d1f73](https://github.com/ghiscoding/aurelia-slickgrid/commit/67d1f73c600674bc27f8a218f2736001e00c4a8f))
+
 # [5.4.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v5.3.0...v5.4.0) (2023-02-04)
 
 
