@@ -67,7 +67,7 @@
     "aurelia-framework": "^1.4.1",
     "aurelia-i18n": "^4.0.3",
     "aurelia-pal": "^1.8.2",
-    "dompurify": "^2.4.4",
+    "dompurify": "^3.0.0",
     "i18next": ">=21.10.0",
     "jquery": "^3.6.3",
     "sortablejs": "^1.15.0"
