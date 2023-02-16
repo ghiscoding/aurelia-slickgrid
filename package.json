@@ -151,7 +151,7 @@
     "npm": ">=6.14.13"
   },
   "resolutions": {
-    "caniuse-lite": "1.0.30001452"
+    "caniuse-lite": "1.0.30001453"
   },
   "aurelia": {
     "build": {
