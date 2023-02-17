@@ -15,13 +15,13 @@
     <button class="btn btn-outline-secondary btn-xs" click.delegate="changeEditableGrid()" data-test="editable-grid-btn">
       Make Grid Editable
     </button>
-    <button class="btn btn-outline-secondary btn-xs" style="height: 22px; width: 40px" click.delegate="closeAllRowDetail()" data-test="close-all-btn">
+    <button class="btn btn-outline-secondary btn-xs" click.delegate="closeAllRowDetail()" data-test="close-all-btn">
       Close all Row Details
     </button>
     &nbsp;&nbsp;
 
     <label for="">Detail View Rows Shown: </label>
-    <input type="number" value.bind="detailViewRowCount" style="height: 26px;">
+    <input type="number" value.bind="detailViewRowCount" style="height: 22px; width: 40px">
     <button class="btn btn-outline-secondary btn-xs" style="height: 26px;"
             click.delegate="changeDetailViewRowCount()"
             data-test="set-count-btn">
