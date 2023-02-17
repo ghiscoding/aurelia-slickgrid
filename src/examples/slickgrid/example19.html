@@ -12,7 +12,10 @@
   <div class="subtitle" innerhtml.bind="subTitle"></div>
 
   <div class="col-sm-6">
-    <button class="btn btn-outline-secondary btn-sm" click.delegate="closeAllRowDetail()" data-test="close-all-btn">
+    <button class="btn btn-outline-secondary btn-xs" click.delegate="changeEditableGrid()" data-test="editable-grid-btn">
+      Make Grid Editable
+    </button>
+    <button class="btn btn-outline-secondary btn-xs" style="height: 22px; width: 40px" click.delegate="closeAllRowDetail()" data-test="close-all-btn">
       Close all Row Details
     </button>
     &nbsp;&nbsp;

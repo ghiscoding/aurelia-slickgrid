@@ -3,6 +3,7 @@ import { Subscription } from 'aurelia-event-aggregator';
 import {
   AureliaGridInstance,
   Column,
+  Editors,
   ExtensionName,
   FieldType,
   Filters,
@@ -57,9 +58,12 @@ export class Example19 {
   /* Define grid Options and Columns */
   defineGrid() {
     this.columnDefinitions = [
-      { id: 'title', name: 'Title', field: 'title', sortable: true, type: FieldType.string, width: 70, filterable: true },
+      { id: 'title', name: 'Title', field: 'title', sortable: true, type: FieldType.string, width: 70, filterable: true, editor: { model: Editors.text } },
       { id: 'duration', name: 'Duration (days)', field: 'duration', formatter: Formatters.decimal, params: { minDecimal: 1, maxDecimal: 2 }, sortable: true, type: FieldType.number, minWidth: 90, filterable: true },
-      { id: 'percent2', name: '% Complete', field: 'percentComplete2', formatter: Formatters.progressBar, type: FieldType.number, sortable: true, minWidth: 100, filterable: true, filter: { model: Filters.slider, operator: '>' } },
+      {
+        id: 'percent2', name: '% Complete', field: 'percentComplete2', editor: { model: Editors.slider },
+        formatter: Formatters.progressBar, type: FieldType.number, sortable: true, minWidth: 100, filterable: true, filter: { model: Filters.slider, operator: '>' }
+      },
       { id: 'start', name: 'Start', field: 'start', formatter: Formatters.dateIso, sortable: true, type: FieldType.date, minWidth: 90, exportWithFormatter: true, filterable: true, filter: { model: Filters.compoundDate } },
       { id: 'finish', name: 'Finish', field: 'finish', formatter: Formatters.dateIso, sortable: true, type: FieldType.date, minWidth: 90, exportWithFormatter: true, filterable: true, filter: { model: Filters.compoundDate } },
       {
@@ -154,6 +158,18 @@ export class Example19 {
       options.panelRows = this.detailViewRowCount; // change number of rows dynamically
       this.rowDetailInstance.setOptions(options);
     }
+  }
+
+  changeEditableGrid() {
+    // this.rowDetailInstance.setOptions({ useRowClick: false });
+    (this.rowDetailInstance as any).addonOptions.useRowClick = false;
+    this.gridOptions.autoCommitEdit = !this.gridOptions.autoCommitEdit;
+    this.aureliaGrid?.slickGrid.setOptions({
+      editable: true,
+      autoEdit: true,
+      enableCellNavigation: true,
+    });
+    return true;
   }
 
   closeAllRowDetail() {
