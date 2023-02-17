@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.5.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v5.4.0...v5.5.0) (2023-02-17)
+
+
+### Bug Fixes
+
+* **deps:** update dependency dompurify to v3 ([#935](https://github.com/ghiscoding/aurelia-slickgrid/issues/935)) ([0b3a8f5](https://github.com/ghiscoding/aurelia-slickgrid/commit/0b3a8f55ad865addc4940dc5fd9c185cf28ac05e))
+* **RowDetail:** Row Detail extension should work with editable grid ([#938](https://github.com/ghiscoding/aurelia-slickgrid/issues/938)) ([1786415](https://github.com/ghiscoding/aurelia-slickgrid/commit/1786415d63c8fb9011e47bb4559dffe333a599b0))
+* use DOMPurify correct namespace for dts file ([#931](https://github.com/ghiscoding/aurelia-slickgrid/issues/931)) ([06f008a](https://github.com/ghiscoding/aurelia-slickgrid/commit/06f008ac2749f8a7fb4422dba78ca6657ce4f630))
+
+# Change Log 
+
+All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
 # [5.4.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v5.3.0...v5.4.0) (2023-02-04)
 
 
