@@ -18,6 +18,26 @@ describe('Example 3 - Grid with Editors', { retries: 1 }, () => {
       .each(($child, index) => expect($child.text()).to.eq(fullTitles[index]));
   });
 
+  it('should be able to change Title with Custom Editor and expect to save when changing the value and then mouse clicking on a different cell', () => {
+    cy.get(`[style="top:${GRID_ROW_HEIGHT * 1}px"] > .slick-cell:nth(3)`).should('contain', 'Task 1').click();
+    cy.get('input.editor-text')
+      .type('Task 8888');
+
+    // mouse click on next cell on the right & expect a save
+    cy.get(`[style="top:${GRID_ROW_HEIGHT * 1}px"] > .slick-cell:nth(4)`).click();
+    cy.get(`[style="top:${GRID_ROW_HEIGHT * 1}px"] > .slick-cell:nth(3)`).should('contain', 'Task 8888');
+  });
+
+  it('should be able to undo the editor and expect it to be opened, then clicking on Escape should reveal the cell to have rolled back text of "Task 1"', () => {
+    cy.get('[data-test="undo-btn"]').click();
+
+    cy.get('input.editor-text')
+      .should('exist')
+      .type('{esc}');
+
+    cy.get(`[style="top:${GRID_ROW_HEIGHT * 1}px"] > .slick-cell:nth(3)`).should('contain', 'Task 1');
+  });
+
   it('should enable "Auto Commit Edit"', () => {
     cy.get('[data-test=auto-commit]')
       .click();
