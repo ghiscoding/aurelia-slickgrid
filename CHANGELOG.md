@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.6.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v5.5.0...v5.6.0) (2023-02-24)
+
+
+### Bug Fixes
+
+* regression Edit cell mouseout should save & excel copy should work ([#941](https://github.com/ghiscoding/aurelia-slickgrid/issues/941)) ([2fa2761](https://github.com/ghiscoding/aurelia-slickgrid/commit/2fa276161a939082c08da5f010476795660e2a39)), closes [#1103](https://github.com/ghiscoding/aurelia-slickgrid/issues/1103)
+
+# Change Log 
+
+All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
 # [5.5.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v5.4.0...v5.5.0) (2023-02-17)
 
 
