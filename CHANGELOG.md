@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.6.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v5.6.0...v5.6.1) (2023-02-24)
+
+
+### Bug Fixes
+
+* **common:** remove jQuery import to avoid duplicate jQuery load ([60bf262](https://github.com/ghiscoding/aurelia-slickgrid/commit/60bf262f5dfd0986d1ec165b9fe78d357a989ee0))
+
 # [5.6.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v5.5.0...v5.6.0) (2023-02-24)
 
 
