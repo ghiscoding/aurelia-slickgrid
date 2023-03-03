@@ -28,7 +28,7 @@
   ],
   "scripts": {
     "build:demo": "webpack --env production",
-    "delete:dist": "cross-env rimraf dist",
+    "delete:dist": "rimraf dist",
     "lint": "eslint src/aurelia-slickgrid --ext .ts",
     "build:amd": "cross-env tsc --project src/aurelia-slickgrid/tsconfig.build.json --outDir dist/amd --module amd",
     "postbuild:amd": "cross-env copyfiles --up 2 src/aurelia-slickgrid/**/*.html dist/amd",
@@ -133,7 +133,7 @@
     "npm-run-all": "^4.1.5",
     "promise-polyfill": "^8.3.0",
     "release-it": "^15.7.0",
-    "rimraf": "^3.0.2",
+    "rimraf": "^4.2.0",
     "rxjs": "^7.8.0",
     "sass": "^1.58.3",
     "sass-loader": "^13.2.0",
