@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.6.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v5.6.1...v5.6.2) (2023-03-03)
+
+
+### Bug Fixes
+
+* draggable grouping shouldn't throw when dynamically changing cols ([#945](https://github.com/ghiscoding/aurelia-slickgrid/issues/945)) ([025196c](https://github.com/ghiscoding/aurelia-slickgrid/commit/025196c7b624e751528a7652aebcc1e0bf338a98))
+
 ## [5.6.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v5.6.0...v5.6.1) (2023-02-24)
 
 
