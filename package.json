@@ -65,7 +65,7 @@
     "@slickgrid-universal/row-detail-view-plugin": "~2.6.2",
     "aurelia-event-aggregator": "^1.0.3",
     "aurelia-framework": "^1.4.1",
-    "aurelia-i18n": "^4.0.3",
+    "aurelia-i18n": "^4.0.4",
     "aurelia-pal": "^1.8.2",
     "dompurify": "^3.0.1",
     "i18next": ">=21.10.0",
@@ -88,13 +88,13 @@
     "@types/dompurify": "^2.4.0",
     "@types/fnando__sparkline": "^0.3.4",
     "@types/i18next-xhr-backend": "^1.4.2",
-    "@types/jest": "^29.4.0",
+    "@types/jest": "^29.4.4",
     "@types/jquery": "^3.5.16",
-    "@types/node": "^18.15.0",
-    "@types/sortablejs": "^1.15.0",
+    "@types/node": "^18.15.3",
+    "@types/sortablejs": "^1.15.1",
     "@types/webpack": "^5.28.0",
-    "@typescript-eslint/eslint-plugin": "^5.54.1",
-    "@typescript-eslint/parser": "^5.54.1",
+    "@typescript-eslint/eslint-plugin": "^5.55.0",
+    "@typescript-eslint/parser": "^5.55.0",
     "@webpack-cli/serve": "^2.0.1",
     "aurelia-animator-css": "^1.0.4",
     "aurelia-bootstrapper": "^2.4.0",
@@ -114,7 +114,7 @@
     "cross-env": "^7.0.3",
     "css-loader": "6.7.3",
     "duplicate-package-checker-webpack-plugin": "^3.0.0",
-    "eslint": "^8.35.0",
+    "eslint": "^8.36.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-prefer-arrow": "^1.2.3",
     "file-loader": "6.2.0",
@@ -135,23 +135,23 @@
     "release-it": "^15.8.0",
     "rimraf": "^4.4.0",
     "rxjs": "^7.8.0",
-    "sass": "^1.58.3",
+    "sass": "^1.59.3",
     "sass-loader": "^13.2.0",
-    "style-loader": "3.3.1",
+    "style-loader": "3.3.2",
     "ts-jest": "^29.0.5",
     "ts-loader": "^9.4.2",
     "ts-node": "^10.9.1",
     "typescript": "^4.9.5",
-    "webpack": "^5.76.0",
+    "webpack": "^5.76.2",
     "webpack-cli": "^5.0.1",
-    "webpack-dev-server": "^4.11.1"
+    "webpack-dev-server": "^4.12.0"
   },
   "engines": {
     "node": ">=14.17.0",
     "npm": ">=6.14.13"
   },
   "resolutions": {
-    "caniuse-lite": "1.0.30001464"
+    "caniuse-lite": "1.0.30001466"
   },
   "aurelia": {
     "build": {
