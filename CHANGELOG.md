@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.6.3](https://github.com/ghiscoding/aurelia-slickgrid/compare/v5.6.2...v5.6.3) (2023-03-23)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies to ~2.6.3 ([#954](https://github.com/ghiscoding/aurelia-slickgrid/issues/954)) ([3331db9](https://github.com/ghiscoding/aurelia-slickgrid/commit/3331db94fd03e10ebbc9f068e374478ab12b6b4e))
+* **presets:** dynamic columns should be auto-inserted with Grid Presets ([#955](https://github.com/ghiscoding/aurelia-slickgrid/issues/955)) ([ea47f46](https://github.com/ghiscoding/aurelia-slickgrid/commit/ea47f469027f6e75e2ec63d832caf15bf124c7a9))
+
 ## [5.6.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v5.6.1...v5.6.2) (2023-03-03)
 
 
