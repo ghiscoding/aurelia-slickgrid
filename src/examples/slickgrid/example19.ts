@@ -83,24 +83,12 @@ export class Example19 {
         container: '#demo-container',
         rightPadding: 10
       },
-      enableCheckboxSelector: true,
       enableFiltering: true,
       enableRowDetailView: true,
       rowSelectionOptions: {
         selectActiveRow: true
       },
-      // presets: {
-      //   columns: [
-      //     // { columnId: '_detail_selector' },
-      //     { columnId: 'title' },
-      //     { columnId: 'duration' },
-      //     { columnId: 'start' },
-      //     { columnId: 'finish' },
-      //     { columnId: 'percent2' },
-      //     { columnId: 'effort-driven' }
-      //   ]
-      // },
-      datasetIdPropertyName: 'rowId', // optionally use a different 'id"
+      datasetIdPropertyName: 'rowId', // optionally use a different "id"
       rowDetailView: {
         // optionally change the column index position of the icon (defaults to 0)
         // columnIndexPosition: 1,
@@ -118,7 +106,7 @@ export class Example19 {
         // false by default, clicking anywhere on the row will open the detail view
         // when set to false, only the "+" icon would open the row detail
         // if you use editor or cell navigation you would want this flag set to false (default)
-        useRowClick: false,
+        useRowClick: true,
 
         // how many grid rows do we want to use for the row detail panel (this is only set once and will be used for all row detail)
         // also note that the detail view adds an extra 1 row for padding purposes
