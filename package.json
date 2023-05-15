@@ -73,7 +73,7 @@
     "sortablejs": "^1.15.0"
   },
   "devDependencies": {
-    "@faker-js/faker": "^7.6.0",
+    "@faker-js/faker": "^8.0.0",
     "@fnando/sparkline": "^0.3.10",
     "@popperjs/core": "^2.11.7",
     "@release-it/conventional-changelog": "^5.1.1",
