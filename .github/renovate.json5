@@ -25,6 +25,6 @@
       allowedVersions: "6.14.13",
     },
   ],
-  schedule: ['on thursday and monday'],
+  schedule: ['on friday and tuesday'],
   ignoreDeps: ["typescript"],
 }
