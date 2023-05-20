@@ -169,6 +169,7 @@ export class Example18 {
         filterable: true,
         filter: { model: Filters.compoundInput },
         formatter: Formatters.dollar,
+        exportWithFormatter: true,
         groupTotalsFormatter: GroupTotalFormatters.sumTotalsDollar,
         type: FieldType.number,
         grouping: {
