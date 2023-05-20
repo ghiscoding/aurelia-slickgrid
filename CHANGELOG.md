@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.6.4](https://github.com/ghiscoding/aurelia-slickgrid/compare/v5.6.3...v5.6.4) (2023-05-20)
+
+
+### Bug Fixes
+
+* **export:** fix negative number exports to Excel ([#980](https://github.com/ghiscoding/aurelia-slickgrid/issues/980)) ([021b534](https://github.com/ghiscoding/aurelia-slickgrid/commit/021b534d076fb6e85c92c7aa455a8070aaa1d918))
+
 ## [5.6.3](https://github.com/ghiscoding/aurelia-slickgrid/compare/v5.6.2...v5.6.3) (2023-03-23)
 
 
