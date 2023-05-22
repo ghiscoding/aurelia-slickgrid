@@ -1,5 +1,5 @@
-import 'slickgrid/lib/jquery.jsonp-2.4.min';
-import 'slickgrid/slick.remotemodel'; // SlickGrid Remote Plugin
+import fetchJsonp from 'fetch-jsonp';
+// import 'slickgrid/slick.remotemodel'; // SlickGrid Remote Plugin
 import { bindable, bindingMode } from 'aurelia-framework';
 
 import {

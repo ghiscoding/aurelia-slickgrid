@@ -22,21 +22,21 @@ export class CustomInputEditor implements Editor {
 
   /** Get Column Definition object */
   get columnDef(): Column {
-    return this.args && this.args.column || {};
+    return this.args?.column ?? {};
   }
 
   /** Get Column Editor object */
   get columnEditor(): ColumnEditor {
-    return this.columnDef && this.columnDef.internalColumnEditor || {};
+    return this.columnDef?.internalColumnEditor ?? {};
   }
 
   /** Get the Validator function, can be passed in Editor property or Column Definition */
   get validator(): EditorValidator | undefined {
-    return (this.columnEditor && this.columnEditor.validator) || (this.columnDef && this.columnDef.validator);
+    return (this.columnEditor?.validator) || (this.columnDef?.validator);
   }
 
   init(): void {
-    const placeholder = this.columnEditor && this.columnEditor.placeholder || '';
+    const placeholder = this.columnEditor?.placeholder || '';
 
     this.inputElm = document.createElement('input');
     this.inputElm.className = 'editor-text';

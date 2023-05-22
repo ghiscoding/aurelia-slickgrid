@@ -66,7 +66,7 @@ export class Example9 {
         id: 'percentComplete', name: '% Complete', field: 'percentComplete', nameKey: 'PERCENT_COMPLETE', sortable: true, filterable: true,
         type: FieldType.number,
         formatter: Formatters.percentCompleteBar,
-        filter: { model: Filters.compoundSlider, params: { hideSliderNumber: false } }
+        filter: { model: Filters.compoundSlider, filterOptions: { hideSliderNumber: false } }
       },
       { id: 'start', name: 'Start', field: 'start', nameKey: 'START', filterable: true, type: FieldType.dateUs, filter: { model: Filters.compoundDate } },
       { id: 'finish', name: 'Finish', field: 'finish', nameKey: 'FINISH', filterable: true, type: FieldType.dateUs, filter: { model: Filters.compoundDate } },
