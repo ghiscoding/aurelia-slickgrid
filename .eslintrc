@@ -10,8 +10,6 @@
   },
   "globals": {
     "Slick": true,
-    "Slicker": true,
-    "$": true,
     "_": true
   },
   "parserOptions": {
