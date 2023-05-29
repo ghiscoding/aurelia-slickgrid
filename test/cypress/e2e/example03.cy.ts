@@ -59,7 +59,7 @@ describe('Example 3 - Grid with Editors', { retries: 1 }, () => {
 
     // change % Complete
     cy.get(`[style="top:${GRID_ROW_HEIGHT * 2}px"] > .slick-cell:nth(5)`).click();
-    cy.get('[name=editor-complete].ms-drop > ul > li > label:nth(5)').contains('95').click();
+    cy.get('[data-name=editor-complete].ms-drop > ul > li > label:nth(5)').contains('95').click();
     cy.get(`[style="top:${GRID_ROW_HEIGHT * 2}px"] > .slick-cell:nth(5)`)
       .find('.percent-complete-bar[style="background:green; width:95%"]');
 
@@ -130,7 +130,7 @@ describe('Example 3 - Grid with Editors', { retries: 1 }, () => {
 
     // change % Complete
     cy.get(`[style="top:${GRID_ROW_HEIGHT * 0}px"] > .slick-cell:nth(5)`).click();
-    cy.get('[name=editor-complete].ms-drop > ul > li > label:nth(5)').contains('95').click();
+    cy.get('[data-name=editor-complete].ms-drop > ul > li > label:nth(5)').contains('95').click();
     cy.get(`[style="top:${GRID_ROW_HEIGHT * 0}px"] > .slick-cell:nth(5)`)
       .find('.percent-complete-bar[style="background:green; width:95%"]');
 
@@ -204,7 +204,7 @@ describe('Example 3 - Grid with Editors', { retries: 1 }, () => {
 
     // change % Complete
     cy.get(`[style="top:${GRID_ROW_HEIGHT * 0}px"] > .slick-cell:nth(5)`).click();
-    cy.get('[name=editor-complete].ms-drop > ul > li > label:nth(3)').contains('97').click();
+    cy.get('[data-name=editor-complete].ms-drop > ul > li > label:nth(3)').contains('97').click();
     cy.get(`[style="top:${GRID_ROW_HEIGHT * 0}px"] > .slick-cell:nth(5)`)
       .find('.percent-complete-bar[style="background:green; width:97%"]');
 
@@ -258,7 +258,7 @@ describe('Example 3 - Grid with Editors', { retries: 1 }, () => {
       .find('span:nth(2)')
       .contains('Task 100');
 
-    cy.get('[name=editor-prerequisites].ms-drop ul > li:nth(0)')
+    cy.get('[data-name=editor-prerequisites].ms-drop ul > li:nth(0)')
       .click();
 
     cy.get('.ms-ok-button')

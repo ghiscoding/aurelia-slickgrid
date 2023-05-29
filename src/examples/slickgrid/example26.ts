@@ -147,7 +147,7 @@ export class Example26 {
 
         // to load an Aurelia Custom Element, you cannot use a Formatter since Aurelia needs at least 1 cycle to render everything
         // you can use a PostRenderer but you will visually see the data appearing,
-        // which is why it's still better to use regular Formatter (with jQuery if need be) instead of Aurelia Custom Element
+        // which is why it's still better to use regular Formatter instead of Aurelia Custom Element
         asyncPostRender: this.renderAureliaComponent.bind(this),
         params: {
           templateUrl: PLATFORM.moduleName('examples/slickgrid/custom-title-formatter'), // CustomTitleFormatterCustomElement,
@@ -162,12 +162,12 @@ export class Example26 {
         minWidth: 100,
         sortable: true,
         type: FieldType.number,
-        filter: { model: Filters.slider, params: { hideSliderNumber: false } },
+        filter: { model: Filters.slider, filterOptions: { hideSliderNumber: false } },
         editor: {
           model: Editors.slider,
           minValue: 0,
           maxValue: 100,
-          // params: { hideSliderNumber: true },
+          // editorOptions: { hideSliderNumber: true },
         },
         /*
         editor: {
@@ -328,9 +328,9 @@ export class Example26 {
     return true;
   }
 
-  renderAureliaComponent(cellNode: JQuery<HTMLElement>, _row: number, dataContext: any, colDef: Column) {
-    if (colDef.params.templateUrl && cellNode.length) {
-      this.aureliaUtilService.createAureliaViewModelAddToSlot(colDef.params.templateUrl, { model: dataContext }, cellNode[0], true);
+  renderAureliaComponent(cellNode: HTMLElement, _row: number, dataContext: any, colDef: Column) {
+    if (colDef.params.templateUrl && cellNode) {
+      this.aureliaUtilService.createAureliaViewModelAddToSlot(colDef.params.templateUrl, { model: dataContext }, cellNode, true);
     }
   }
 

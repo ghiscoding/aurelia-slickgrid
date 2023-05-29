@@ -372,7 +372,7 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
     expect(customElement).toBeTruthy();
   });
 
-  it('should load enable jquery mousewheel scrolling when using a frozen grid', () => {
+  it('should load enable mousewheel event scrolling when using a frozen grid', () => {
     customElement.gridOptions = gridOptions;
     customElement.gridOptions.enableMouseWheelScrollHandler = undefined;
     customElement.gridOptions.frozenRow = 3;

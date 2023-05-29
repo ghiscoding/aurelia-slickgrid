@@ -98,7 +98,7 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
       // we need to keep the user "process" method and replace it with our own execution method
       // we do this because when we get the item detail, we need to call "onAsyncResponse.notify" for the plugin to work
       this._userProcessFn = this.gridOptions.rowDetailView.process as (item: any) => Promise<any>;                // keep user's process method
-      this.gridOptions.rowDetailView.process = (item) => this.onProcessing(item);  // replace process method & run our internal one
+      this.addonOptions.process = (item) => this.onProcessing(item);  // replace process method & run our internal one
     } else {
       throw new Error('[Aurelia-Slickgrid] You need to provide a "process" function for the Row Detail Extension to work properly');
     }
@@ -107,12 +107,12 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
       // load the Preload & RowDetail Templates (could be straight HTML or Aurelia View/ViewModel)
       // when those are Aurelia View/ViewModel, we need to create View Slot & provide the html containers to the Plugin (preTemplate/postTemplate methods)
       if (!this.gridOptions.rowDetailView.preTemplate) {
-        this._preloadView = this.gridOptions && this.gridOptions.rowDetailView && this.gridOptions.rowDetailView.preloadView || '';
-        this.gridOptions.rowDetailView.preTemplate = () => DOMPurify.sanitize(`<div class="${PRELOAD_CONTAINER_PREFIX}"></div>`);
+        this._preloadView = this.gridOptions?.rowDetailView?.preloadView || '';
+        this.addonOptions.preTemplate = () => DOMPurify.sanitize(`<div class="${PRELOAD_CONTAINER_PREFIX}"></div>`);
       }
       if (!this.gridOptions.rowDetailView.postTemplate) {
-        this._viewModel = this.gridOptions && this.gridOptions.rowDetailView && this.gridOptions.rowDetailView.viewModel || '';
-        this.gridOptions.rowDetailView.postTemplate = (itemDetail: any) => DOMPurify.sanitize(`<div class="${ROW_DETAIL_CONTAINER_PREFIX}${itemDetail[this.datasetIdPropName]}"></div>`);
+        this._viewModel = this.gridOptions?.rowDetailView?.viewModel || '';
+        this.addonOptions.postTemplate = (itemDetail: any) => DOMPurify.sanitize(`<div class="${ROW_DETAIL_CONTAINER_PREFIX}${itemDetail[this.datasetIdPropName]}"></div>`);
       }
 
       if (this._grid && this.gridOptions) {

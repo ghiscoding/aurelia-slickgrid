@@ -2,7 +2,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'font-awesome/css/font-awesome.css';
 import 'flatpickr/dist/flatpickr.min.css';
-import 'multiple-select-modified/src/multiple-select.css';
 import './styles.scss';
 import { Aurelia, PLATFORM } from 'aurelia-framework';
 import { I18N, TCustomAttribute } from 'aurelia-i18n';

@@ -150,9 +150,6 @@ export class Example24 {
           collection: [{ value: '', label: '' }, { value: 1, labelKey: 'LOW' }, { value: 2, labelKey: 'MEDIUM' }, { value: 3, labelKey: 'HIGH' }],
           model: Filters.singleSelect,
           enableTranslateLabel: true,
-          filterOptions: {
-            autoDropWidth: true
-          }
         }
       },
       {
@@ -164,9 +161,6 @@ export class Example24 {
           collection: [{ value: '', label: '' }, { value: true, labelKey: 'TRUE' }, { value: false, labelKey: 'FALSE' }],
           model: Filters.singleSelect,
           enableTranslateLabel: true,
-          filterOptions: {
-            autoDropWidth: true
-          }
         }
       },
       {

@@ -673,5 +673,18 @@ describe('Example 24 - Cell Menu & Context Menu Plugins', () => {
           expect($row.text()).not.include('Tâche 6');
         });
     });
+
+    it('should switch back locale to English before leaving', () => {
+      cy.get('#grid24')
+        .find('button.slick-grid-menu-button')
+        .trigger('click')
+        .click();
+
+      cy.get('[data-test=language-button]')
+        .click();
+
+      cy.get('[data-test=selected-locale]')
+        .should('contain', 'en.json');
+    });
   });
 });

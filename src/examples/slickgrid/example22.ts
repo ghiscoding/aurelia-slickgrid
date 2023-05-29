@@ -119,7 +119,7 @@ export class Example22 {
    */
   resizeGrid2() {
     if (!this.isGrid2Resize) {
-      this.aureliaGrid2.resizerService.resizeGrid(150);
+      this.aureliaGrid2.resizerService.resizeGrid(10);
     }
   }
 }

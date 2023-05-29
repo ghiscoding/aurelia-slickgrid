@@ -24,12 +24,12 @@ export class CustomInputFilter implements Filter {
 
   /** Getter for the Filter Operator */
   get columnFilter(): ColumnFilter {
-    return this.columnDef && this.columnDef.filter || {};
+    return this.columnDef?.filter ?? {};
   }
 
   /** Getter for the Grid Options pulled through the Grid Object */
   get gridOptions(): GridOption {
-    return (this.grid && this.grid.getOptions) ? this.grid.getOptions() : {};
+    return this.grid?.getOptions() ?? {} as GridOption;
   }
 
   /**

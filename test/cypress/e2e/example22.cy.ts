@@ -34,16 +34,16 @@ describe('Example 22 - Grids in Bootstrap Tabs', { retries: 1 }, () => {
   });
 
   it('should expect first 3 rows to be an exact match of data provided by the external JSON file', () => {
-    cy.get(`.tab-pane#fetch [style="top:${GRID_ROW_HEIGHT * 0}px"] > .slick-cell:nth(0)`).should('contain', 'Ethel Price');
-    cy.get(`.tab-pane#fetch [style="top:${GRID_ROW_HEIGHT * 0}px"] > .slick-cell:nth(1)`).should('contain', 'female');
-    cy.get(`.tab-pane#fetch [style="top:${GRID_ROW_HEIGHT * 0}px"] > .slick-cell:nth(2)`).should('contain', 'Enersol');
+    cy.get(`.tab-pane#fetch [style="top:${GRID_ROW_HEIGHT * 0}px"] > .slick-cell.l0`).should('contain', 'Ethel Price');
+    cy.get(`.tab-pane#fetch [style="top:${GRID_ROW_HEIGHT * 0}px"] > .slick-cell.l1`).should('contain', 'female');
+    cy.get(`.tab-pane#fetch [style="top:${GRID_ROW_HEIGHT * 0}px"] > .slick-cell.l2`).should('contain', 'Enersol');
 
-    cy.get(`.tab-pane#fetch [style="top:${GRID_ROW_HEIGHT * 1}px"] > .slick-cell:nth(0)`).should('contain', 'Claudine Neal');
-    cy.get(`.tab-pane#fetch [style="top:${GRID_ROW_HEIGHT * 1}px"] > .slick-cell:nth(1)`).should('contain', 'female');
-    cy.get(`.tab-pane#fetch [style="top:${GRID_ROW_HEIGHT * 1}px"] > .slick-cell:nth(2)`).should('contain', 'Sealoud');
+    cy.get(`.tab-pane#fetch [style="top:${GRID_ROW_HEIGHT * 1}px"] > .slick-cell.l0`).should('contain', 'Claudine Neal');
+    cy.get(`.tab-pane#fetch [style="top:${GRID_ROW_HEIGHT * 1}px"] > .slick-cell.l1`).should('contain', 'female');
+    cy.get(`.tab-pane#fetch [style="top:${GRID_ROW_HEIGHT * 1}px"] > .slick-cell.l2`).should('contain', 'Sealoud');
 
-    cy.get(`.tab-pane#fetch [style="top:${GRID_ROW_HEIGHT * 2}px"] > .slick-cell:nth(0)`).should('contain', 'Beryl Rice');
-    cy.get(`.tab-pane#fetch [style="top:${GRID_ROW_HEIGHT * 2}px"] > .slick-cell:nth(1)`).should('contain', 'female');
-    cy.get(`.tab-pane#fetch [style="top:${GRID_ROW_HEIGHT * 2}px"] > .slick-cell:nth(2)`).should('contain', 'Velity');
+    cy.get(`.tab-pane#fetch [style="top:${GRID_ROW_HEIGHT * 2}px"] > .slick-cell.l0`).should('contain', 'Beryl Rice');
+    cy.get(`.tab-pane#fetch [style="top:${GRID_ROW_HEIGHT * 2}px"] > .slick-cell.l1`).should('contain', 'female');
+    cy.get(`.tab-pane#fetch [style="top:${GRID_ROW_HEIGHT * 2}px"] > .slick-cell.l2`).should('contain', 'Velity');
   });
 });

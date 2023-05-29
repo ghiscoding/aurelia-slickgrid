@@ -79,6 +79,7 @@ describe('SlickRowDetailView', () => {
     eventPubSubService = new EventPubSubService(div);
     plugin = new SlickRowDetailView(aureliaUtilServiceStub, eventPubSubService, document.body as HTMLDivElement);
     plugin.eventHandler = new Slick.EventHandler();
+    jest.spyOn(plugin, 'getOptions').mockReturnValue(gridOptionsMock.rowDetailView);
   });
 
   it('should create the RowDetailView plugin', () => {

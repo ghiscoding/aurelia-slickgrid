@@ -2,6 +2,8 @@ import { autoinject } from 'aurelia-framework';
 import { HttpClient as FetchClient } from 'aurelia-fetch-client';
 import { HttpClient } from 'aurelia-http-client';
 import { I18N } from 'aurelia-i18n';
+import fetchJsonp from 'fetch-jsonp';
+
 import {
   AureliaGridInstance,
   AutocompleterOption,
@@ -21,7 +23,6 @@ import {
 } from '../../aurelia-slickgrid';
 import { CustomInputEditor } from './custom-inputEditor';
 import { CustomInputFilter } from './custom-inputFilter';
-import * as $ from 'jquery';
 
 // using external non-typed js libraries
 declare const Slick: SlickNamespace;
@@ -176,12 +177,12 @@ export class Example3 {
         minWidth: 100,
         sortable: true,
         type: FieldType.number,
-        filter: { model: Filters.slider, params: { hideSliderNumber: false } },
+        filter: { model: Filters.slider, filterOptions: { hideSliderNumber: false } },
         editor: {
           model: Editors.slider,
           minValue: 0,
           maxValue: 100,
-          // params: { hideSliderNumber: true },
+          // editorOptions: { hideSliderNumber: true },
         },
         /*
         editor: {
@@ -273,31 +274,21 @@ export class Example3 {
           placeholder: '🔎︎ search city',
 
           // We can use the autocomplete through 3 ways "collection", "collectionAsync" or with your own autocomplete options
-          // use your own autocomplete options, instead of $.ajax, use Aurelia HttpClient or FetchClient
-          // here we use $.ajax just because I'm not sure how to configure Aurelia HttpClient with JSONP and CORS
+          // use your own autocomplete options, instead of fetch-jsonp, use Aurelia HttpClient or FetchClient
+          // here we use fetch-jsonp just because I'm not sure how to configure Aurelia HttpClient with JSONP and CORS
           editorOptions: {
             minLength: 3,
             forceUserInput: true,
             fetch: (searchText: string, updateCallback: (items: false | any[]) => void) => {
-              /** with FETCH, note this demo won't work because of CORS */
-              // this.httpFetch.fetch(`http://gd.geobytes.com/AutoCompleteCity?q=${searchText}`)
-              //   .then(response => updateCallback())
-              //   .then(data => response(data))
-              //   .catch(error => console.log('fetch error:', error));
+              /** with Angular Http, note this demo won't work because of CORS */
+              // this.http.get(`http://gd.geobytes.com/AutoCompleteCity?q=${searchText}`).subscribe(data => updateCallback(data));
 
-              /** with jQuery AJAX will work locally but not on the GitHub demo because of CORS */
-              $.ajax({
-                url: 'http://gd.geobytes.com/AutoCompleteCity',
-                dataType: 'jsonp',
-                data: {
-                  q: searchText
-                },
-                success: (data) => {
-                  const finalData = (data.length === 1 && data[0] === '') ? [] : data; // invalid result should be [] instead of [''] to show empty msg
-                  updateCallback(finalData);
-                }
-              });
-            }
+              /** with JSONP AJAX will work locally but not on the GitHub demo because of CORS */
+              fetchJsonp(`http://gd.geobytes.com/AutoCompleteCity?q=${searchText}`)
+                .then((response: { json: () => Promise<any[]>}) => response.json())
+                .then((json: any[]) => updateCallback(json))
+                .catch((ex) => console.log('invalid JSONP response', ex));
+            },
           } as AutocompleterOption,
         },
         filter: {
@@ -307,23 +298,16 @@ export class Example3 {
           // We can use the autocomplete through 3 ways "collection", "collectionAsync" or with your own autocomplete options
           // collectionAsync: this.httpFetch.fetch(URL_COUNTRIES_COLLECTION),
 
-          // OR use your own autocomplete options, instead of $.ajax, use Aurelia HttpClient or FetchClient
-          // here we use $.ajax just because I'm not sure how to configure Aurelia HttpClient with JSONP and CORS
+          // OR use the autocomplete through 3 ways "collection", "collectionAsync" or with your own autocomplete options
+          // use your own autocomplete options, instead of fetch-jsonp, use HttpClient or FetchClient
           filterOptions: {
             minLength: 3,
             fetch: (searchText: string, updateCallback: (items: false | any[]) => void) => {
-              $.ajax({
-                url: 'http://gd.geobytes.com/AutoCompleteCity',
-                dataType: 'jsonp',
-                data: {
-                  q: searchText
-                },
-                success: (data) => {
-                  const finalData = (data.length === 1 && data[0] === '') ? [] : data; // invalid result should be [] instead of [''] to show empty msg
-                  updateCallback(finalData);
-                }
-              });
-            }
+              fetchJsonp(`http://gd.geobytes.com/AutoCompleteCity?q=${searchText}`)
+                .then((response: { json: () => Promise<any[]>}) => response.json())
+                .then((json: any[]) => updateCallback(json))
+                .catch((ex: any) => console.log('invalid JSONP response', ex));
+            },
           } as AutocompleterOption,
         }
       }, {
