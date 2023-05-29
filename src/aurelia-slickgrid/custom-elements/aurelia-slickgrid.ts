@@ -1,5 +1,4 @@
 // import 3rd party vendor libs
-import * as $ from 'jquery';
 import 'slickgrid/slick.core';
 import 'slickgrid/slick.interactions';
 import 'slickgrid/slick.grid';
@@ -606,7 +605,7 @@ export class AureliaSlickgridCustomElement {
       // a timeout must be set or this could come into conflict when slickgrid
       // tries to commit the edit when going from one editor to another on the grid
       // through the click event. If the timeout was not here it would
-      // try to commit/destroy the twice, which would throw a jquery
+      // try to commit/destroy the twice, which would throw an
       // error about the element not being in the DOM
       setTimeout(() => {
         // make sure the target is the active editor so we do not
@@ -1287,12 +1286,12 @@ export class AureliaSlickgridCustomElement {
     // if we have a backendServiceApi and the enablePagination is undefined, we'll assume that we do want to see it, else get that defined value
     gridOptions.enablePagination = ((gridOptions.backendServiceApi && gridOptions.enablePagination === undefined) ? true : gridOptions.enablePagination) || false;
 
-    // use jquery extend to deep merge & copy to avoid immutable properties being changed in GlobalGridOptions after a route change
-    const options = $.extend(true, {}, GlobalGridOptions, gridOptions) as GridOption;
+    // use extend to deep merge & copy to avoid immutable properties being changed in GlobalGridOptions after a route change
+    const options = Slick.Utils.extend(true, {}, GlobalGridOptions, gridOptions) as GridOption;
 
-    // using jQuery extend to do a deep clone has an unwanted side on objects and pageSizes but ES6 spread has other worst side effects
+    // using copy extend to do a deep clone has an unwanted side on objects and pageSizes but ES6 spread has other worst side effects
     // so we will just overwrite the pageSizes when needed, this is the only one causing issues so far.
-    // jQuery wrote this on their docs:: On a deep extend, Object and Array are extended, but object wrappers on primitive types such as String, Boolean, and Number are not.
+    // On a deep extend, Object and Array are extended, but object wrappers on primitive types such as String, Boolean, and Number are not.
     if (options?.pagination && (gridOptions.enablePagination || gridOptions.backendServiceApi) && gridOptions.pagination && Array.isArray(gridOptions.pagination.pageSizes)) {
       options.pagination.pageSizes = gridOptions.pagination.pageSizes;
     }

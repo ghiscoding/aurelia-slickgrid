@@ -32,26 +32,26 @@ export class CustomAureliaViewModelFilter implements Filter {
 
   /** Aurelia Util Service (could be inside the Grid Options Params or the Filter Params ) */
   get aureliaUtilService(): AureliaUtilService {
-    let aureliaUtilService = this.gridOptions && this.gridOptions.params && this.gridOptions.params.aureliaUtilService;
+    let aureliaUtilService = this.gridOptions?.params?.aureliaUtilService;
     if (!aureliaUtilService || !(aureliaUtilService instanceof AureliaUtilService)) {
-      aureliaUtilService = this.columnFilter && this.columnFilter.params && this.columnFilter.params.aureliaUtilService;
+      aureliaUtilService = this.columnFilter?.params?.aureliaUtilService;
     }
     return aureliaUtilService;
   }
 
   /** Get the Collection */
   get collection(): any[] {
-    return this.columnFilter && this.columnFilter.collection || [];
+    return this.columnFilter?.collection ?? [];
   }
 
   /** Getter for the Column Filter */
   get columnFilter(): ColumnFilter {
-    return this.columnDef && this.columnDef.filter || {};
+    return this.columnDef?.filter ?? {};
   }
 
   /** Getter for the Grid Options pulled through the Grid Object */
   get gridOptions(): GridOption {
-    return (this.grid && this.grid.getOptions) ? this.grid.getOptions() : {};
+    return this.grid?.getOptions() ?? {} as GridOption;
   }
 
   /**

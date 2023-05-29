@@ -10,7 +10,7 @@
 [![codecov](https://codecov.io/gh/ghiscoding/aurelia-slickgrid/branch/master/graph/badge.svg)](https://codecov.io/gh/ghiscoding/aurelia-slickgrid)
 
 ### Description
-One of the best javascript datagrid [SlickGrid](https://github.com/mleibman/SlickGrid) which was originally developed by @mleibman is now available to React. I have used a few datagrids and SlickGrid beats most of them in terms of functionalities and performance (it can easily deal with even a million row). We will be using the [6pac/SlickGrid](https://github.com/6pac/SlickGrid/) fork, it is the most active fork since the original @mleibman was retired some time ago by the original author for personal reasons. Also worth to know, that I also contributed a lot to the 6pac/SlickGrid fork for the benefit of all the SlickGrid libraries that I maintain like this one here.
+One of the best JavasSript datagrid [SlickGrid](https://github.com/mleibman/SlickGrid) which was originally developed by @mleibman is now available to Aurelia. SlickGrid beats most other datagrids in terms of functionalities and performance (it can easily deal with even a million row). Aurelia-Slickgrid is a wrapper on top of SlickGrid and we are using the [6pac/SlickGrid](https://github.com/6pac/SlickGrid/) fork which is the most active fork since the original was put on pause by its original author for personal reasons. Also worth to know, that I also contributed a lot to the 6pac/SlickGrid fork for the benefit of all the SlickGrid libraries that I maintain like this one here....
 
 ## Installation
 Refer to the **[Wiki - HOWTO Step by Step](https://github.com/ghiscoding/aurelia-slickgrid/wiki/HOWTO--Step-by-Step)** and/or clone the [Aurelia-Slickgrid Demos](https://github.com/ghiscoding/aurelia-slickgrid-demos) repository. Please consult all Wikis before opening new issues, also consider asking installation and/or general questions on [Stack Overflow](https://stackoverflow.com/search?tab=newest&q=slickgrid) unless you think there's a bug with the library.
@@ -35,7 +35,7 @@ You could :star: the lib and maybe support me with cafeine :coffee:. Thanks.
 
 ### Demo page
 
-`Aurelia-Slickgrid` works with all `Bootstrap` versions, you can see a demo of each one below.
+`Aurelia-Slickgrid` works with all `Bootstrap` versions, you can see a demo of each one below. There are also extra styling themes for not just Bootstrap but also Material & Salesforce which are also available. You can also use different SVG icons, you may want to look at the [Wiki - SVG Icons](https://github.com/ghiscoding/aurelia-slickgrid/wiki/SVG--Icons)
 - [Bootstrap 4 demo](https://ghiscoding.github.io/aurelia-slickgrid-demos) / [examples repo](https://github.com/ghiscoding/aurelia-slickgrid-demos/tree/master/webpack-bs4-demo)
 - [Bootstrap 5 demo](https://ghiscoding.github.io/aurelia-slickgrid) / [examples repo](https://github.com/ghiscoding/aurelia-slickgrid-demos/tree/master/webpack-bs5-demo)
 

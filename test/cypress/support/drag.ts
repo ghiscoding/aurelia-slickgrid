@@ -5,10 +5,10 @@ declare global {
   namespace Cypress {
     interface Chainable {
       // triggerHover: (elements: NodeListOf<HTMLElement>) => void;
-      dragOutside(viewport?: string, ms?: number, px?: number, options?: { parentSelector?: string, scrollbarDimension?: number; }): Chainable<JQuery<HTMLElement>>;
-      dragStart(options?: { cellWidth?: number; cellHeight?: number; }): Chainable<JQuery<HTMLElement>>;
-      dragCell(addRow: number, addCell: number, options?: { cellWidth?: number; cellHeight?: number; }): Chainable<JQuery<HTMLElement>>;
-      dragEnd(gridSelector?: string): Chainable<JQuery<HTMLElement>>;
+      dragOutside(viewport?: string, ms?: number, px?: number, options?: { parentSelector?: string, scrollbarDimension?: number; }): Chainable<HTMLElement>;
+      dragStart(options?: { cellWidth?: number; cellHeight?: number; }): Chainable<HTMLElement>;
+      dragCell(addRow: number, addCell: number, options?: { cellWidth?: number; cellHeight?: number; }): Chainable<HTMLElement>;
+      dragEnd(gridSelector?: string): Chainable<HTMLElement>;
     }
   }
 }
