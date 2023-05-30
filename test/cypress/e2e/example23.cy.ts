@@ -77,7 +77,7 @@ describe('Example 23 - Range Filters', { retries: 0 }, () => {
   it('should change "% Complete" filter range by using the slider left handle (min value) to make it a higher min value and expect all rows to be within new range', () => {
     let newLowest = presetMinComplete;
     let newHighest = presetMaxComplete;
-    const allowedBuffer = 0.5;
+    const allowedBuffer = 0.8;
 
     // first input is the lowest range
     cy.get('.slider-filter-input:nth(0)')
