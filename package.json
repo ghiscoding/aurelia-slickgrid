@@ -87,7 +87,7 @@
     "@types/dompurify": "^3.0.2",
     "@types/fnando__sparkline": "^0.3.4",
     "@types/i18next-xhr-backend": "^1.4.2",
-    "@types/jest": "^29.5.1",
+    "@types/jest": "^29.5.2",
     "@types/node": "^18.16.16",
     "@types/sortablejs": "^1.15.1",
     "@types/webpack": "^5.28.1",
@@ -131,7 +131,7 @@
     "moment-mini": "^2.29.4",
     "npm-run-all": "^4.1.5",
     "promise-polyfill": "^8.3.0",
-    "release-it": "^15.10.3",
+    "release-it": "^15.10.5",
     "rimraf": "^5.0.1",
     "rxjs": "^7.8.1",
     "sass": "^1.62.1",
@@ -141,7 +141,7 @@
     "ts-loader": "^9.4.3",
     "ts-node": "^10.9.1",
     "typescript": "^4.9.5",
-    "webpack": "^5.84.1",
+    "webpack": "^5.85.0",
     "webpack-cli": "^5.1.1",
     "webpack-dev-server": "^4.15.0"
   },
@@ -150,7 +150,7 @@
     "npm": ">=8.5.0"
   },
   "resolutions": {
-    "caniuse-lite": "1.0.30001491"
+    "caniuse-lite": "1.0.30001492"
   },
   "aurelia": {
     "build": {
