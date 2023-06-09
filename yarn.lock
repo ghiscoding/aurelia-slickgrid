@@ -3237,10 +3237,10 @@ camelcase@^7.0.0:
   resolved "https://registry.yarnpkg.com/camelcase/-/camelcase-7.0.0.tgz#fd112621b212126741f998d614cbc2a8623fd174"
   integrity sha512-JToIvOmz6nhGsUhAYScbo2d6Py5wojjNfoxoc2mEVLUdJ70gJK2gnd+ABY1Tc3sVMyK7QDPtN0T/XdlCQWITyQ==
 
-caniuse-lite@1.0.30001495, caniuse-lite@^1.0.30001400:
-  version "1.0.30001495"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001495.tgz#64a0ccef1911a9dcff647115b4430f8eff1ef2d9"
-  integrity sha512-F6x5IEuigtUfU5ZMQK2jsy5JqUUlEFRVZq8bO2a+ysq5K7jD6PPc9YXZj78xDNS3uNchesp1Jw47YXEqr+Viyg==
+caniuse-lite@1.0.30001496, caniuse-lite@^1.0.30001400:
+  version "1.0.30001496"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001496.tgz#072ca5d878f91a0813eb951dfda6f87cc83abe87"
+  integrity sha512-s130TIk2iZK+NLA6dd1hyeOtUco9ZXkOqb/lSFoBQQYjsK5GSnHMwdYU0cDxERV+IVbQdtHi5uStCPR+FaC7Xw==
 
 chalk@5.2.0, chalk@^5.2.0:
   version "5.2.0"
