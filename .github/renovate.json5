@@ -26,5 +26,5 @@
     },
   ],
   schedule: ['on friday and tuesday'],
-  ignoreDeps: ["typescript"],
+  ignoreDeps: ["sass", "typescript"],
 }
