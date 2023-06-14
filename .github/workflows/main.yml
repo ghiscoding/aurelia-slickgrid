@@ -60,11 +60,14 @@ jobs:
           directory: test/jest-coverage
           verbose: true
 
-      - name: Start server in the background
-        run: yarn start:dev &
+      - name: Prod Build for GitHub demo website (required for Cypress)
+        run: yarn build:demo
+
+      - name: Start HTTP Server
+        run: yarn serve:demo &
 
       - name: Run Cypress E2E tests
-        uses: cypress-io/github-action@v5
+        uses: cypress-io/github-action@v5.8.1
         with:
           working-directory: test/cypress
           config-file: cypress.config.ts
@@ -76,9 +79,6 @@ jobs:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           # pass GitHub token to allow accurately detecting a build vs a re-run build
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Prod Build for GitHub demo website
-        run: |
-          yarn build:demo
 
       # deploy (re-publish) GitHub demo page with a Prod build but only when merging to "master" branch
       # and the commit message contains the text "chore: release"
