@@ -60,8 +60,8 @@ jobs:
           directory: test/jest-coverage
           verbose: true
 
-      - name: Start server in the background
-        run: yarn start:dev &
+      - name: Start HTTP Server
+        run: yarn serve:demo &
 
       - name: Run Cypress E2E tests
         uses: cypress-io/github-action@v5
