@@ -24,6 +24,10 @@
       packageNames: ["npm"],
       allowedVersions: "8.5.0",
     },
+    {
+      packageNames: ["cypress-io/github-action"],
+      allowedVersions: "5.8.1"
+    }
   ],
   schedule: ['on friday and tuesday'],
   ignoreDeps: ["typescript"],
