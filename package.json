@@ -46,7 +46,7 @@
     "copy-asset-lib": "cross-env copyfiles --up 2 src/assets/lib/** dist",
     "copy-i18n:dist": "cross-env copyfiles --up 3 src/assets/i18n/**/*.* dist/i18n",
     "start:dev": "webpack serve --env development",
-    "cypress": "cd test/cypress && node node_modules/cypress/bin/cypress open",
+    "cypress:open": "cd test/cypress && node node_modules/cypress/bin/cypress open",
     "cypress:ci": "cd test/cypress && npm run cypress:ci",
     "test:ci": "npx jest --runInBand --coverage=true --ci --config ./test/jest.config.ts",
     "test:jest": "npx jest --watch --detectOpenHandles --config test/jest.config.ts",
