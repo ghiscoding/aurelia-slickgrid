@@ -68,7 +68,7 @@
     "aurelia-framework": "^1.4.1",
     "aurelia-i18n": "^4.0.4",
     "aurelia-pal": "^1.8.2",
-    "dompurify": "^3.0.3",
+    "dompurify": "^3.0.4",
     "i18next": ">=22.5.0",
     "sortablejs": "^1.15.0"
   },
@@ -140,10 +140,10 @@
     "servor": "^4.0.2",
     "style-loader": "3.3.3",
     "ts-jest": "^29.1.0",
-    "ts-loader": "^9.4.3",
+    "ts-loader": "^9.4.4",
     "ts-node": "^10.9.1",
     "typescript": "^4.9.5",
-    "webpack": "^5.88.0",
+    "webpack": "^5.88.1",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^4.15.1"
   },
@@ -152,7 +152,7 @@
     "npm": ">=8.5.0"
   },
   "resolutions": {
-    "caniuse-lite": "1.0.30001508"
+    "caniuse-lite": "1.0.30001509"
   },
   "aurelia": {
     "build": {
