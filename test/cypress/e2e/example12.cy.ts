@@ -288,13 +288,13 @@ describe('Example 12: Localization (i18n)', { retries: 1 }, () => {
       cy.get('@grid12')
         .find('.slick-row')
         .children()
-        .filter('.slick-cell-checkboxsel.selected.true')
+        .filter('.slick-cell-checkboxsel.selected')
         .should('have.length', 1);
 
       cy.get('@grid12')
         .find('.slick-row')
         .children()
-        .filter('.slick-cell.selected.true:nth(1)')
+        .filter('.slick-cell.selected:nth(1)')
         .contains('Task 4');
     });
 
@@ -313,13 +313,13 @@ describe('Example 12: Localization (i18n)', { retries: 1 }, () => {
       cy.get('@grid12')
         .find('.slick-row')
         .children()
-        .filter('.slick-cell-checkboxsel.selected.true')
+        .filter('.slick-cell-checkboxsel.selected')
         .should('have.length', 1);
 
       cy.get('@grid12')
         .find('.slick-row')
         .children()
-        .filter('.slick-cell.selected.true:nth(1)')
+        .filter('.slick-cell.selected:nth(1)')
         .contains('Task 1497');
     });
 
