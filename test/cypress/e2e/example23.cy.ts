@@ -93,6 +93,8 @@ describe('Example 23 - Range Filters', { retries: 0 }, () => {
         newHighest = parseInt($highest.text(), 10);
       });
 
+    cy.wait(5);
+
     cy.get('#grid23')
       .find('.slick-row')
       .each(($row, idx) => {
