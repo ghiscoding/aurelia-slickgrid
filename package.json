@@ -152,7 +152,8 @@
     "npm": ">=8.5.0"
   },
   "resolutions": {
-    "caniuse-lite": "1.0.30001512"
+    "caniuse-lite": "1.0.30001509",
+    "semver": "^7.5.3"
   },
   "aurelia": {
     "build": {
