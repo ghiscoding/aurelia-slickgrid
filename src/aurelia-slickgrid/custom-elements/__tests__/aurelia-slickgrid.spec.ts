@@ -3,34 +3,40 @@ import 'jest-extended';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { BindingEngine, Container } from 'aurelia-framework';
 import { of, throwError } from 'rxjs';
-import {
-  BackendService, BackendServiceApi, BackendUtilityService, CollectionService,
+import type {
+  BackendServiceApi,
   Column,
-  ColumnFilters,
   CurrentFilter,
   CurrentPagination,
   CurrentPinning,
   CurrentSorter,
-  Editors,
   ExtensionList,
+  GridOption,
+  GridState,
+  Pagination,
+  ServicePagination,
+  SlickGrid,
+} from '@slickgrid-universal/common';
+
+import {
+  BackendService,
+  BackendUtilityService,
+  CollectionService,
+  ColumnFilters,
+  Editors,
   ExtensionService,
   ExtensionUtility,
   Filters,
   FilterService,
   Formatter,
   GridEventService,
-  GridOption,
   GridService,
-  GridState,
   GridStateService,
   GridStateType,
   GroupingAndColspanService,
-  Pagination,
   PaginationService,
   ResizerService,
-  ServicePagination,
   SharedService,
-  SlickGrid,
   SlickGroupItemMetadataProvider,
   SortService,
   TreeDataService

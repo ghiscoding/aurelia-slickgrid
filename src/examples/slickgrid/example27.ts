@@ -1,17 +1,8 @@
 import { ExcelExportService } from '@slickgrid-universal/excel-export';
 import { autoinject } from 'aurelia-framework';
-import {
-  AureliaGridInstance,
-  Column,
-  FieldType,
-  Filters,
-  Formatters,
-  GridOption,
-  GridStateChange,
-  GridStateType,
-  TreeToggledItem,
-  TreeToggleStateChange,
-} from '../../aurelia-slickgrid';
+
+import type { AureliaGridInstance, Column, GridOption, GridStateChange, TreeToggledItem, TreeToggleStateChange, } from '../../aurelia-slickgrid';
+import { FieldType, GridStateType, Filters, Formatters, } from '../../aurelia-slickgrid';
 import './example27.scss'; // provide custom CSS/SASS styling
 
 const NB_ITEMS = 500;
