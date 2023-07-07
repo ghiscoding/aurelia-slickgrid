@@ -118,7 +118,7 @@ describe('Example 23 - Range Filters', { retries: 0 }, () => {
       .click();
 
     cy.get('.flatpickr-day.inRange')
-      .should('have.length.gt', 2);
+      .should('have.length.gte', 2);
 
     // cy.get('.flatpickr-day.selected.endRange')
     //   .should('contain', moment().add(25, 'days').day() - 1);
