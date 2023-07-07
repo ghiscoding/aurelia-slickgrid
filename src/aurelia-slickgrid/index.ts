@@ -6,7 +6,7 @@ import { PLATFORM } from 'aurelia-pal';
 import { AureliaSlickgridCustomElement } from './custom-elements/aurelia-slickgrid';
 import { SlickgridEventAggregator } from './custom-elements/slickgridEventAggregator';
 import { SlickgridConfig } from './slickgrid-config';
-import {
+import type {
   AureliaGridInstance,
   AureliaViewOutput,
   GridOption,

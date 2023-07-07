@@ -112,7 +112,6 @@
     "no-console": "off",
     "no-debugger": "error",
     "no-duplicate-case": "error",
-    "no-duplicate-imports": "error",
     "no-empty": 1,
     "no-eval": "error",
     "no-extra-bind": "error",
