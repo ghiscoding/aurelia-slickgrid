@@ -88,12 +88,12 @@
     "@types/dompurify": "^3.0.2",
     "@types/fnando__sparkline": "^0.3.4",
     "@types/i18next-xhr-backend": "^1.4.2",
-    "@types/jest": "^29.5.2",
-    "@types/node": "^20.4.0",
+    "@types/jest": "^29.5.3",
+    "@types/node": "^20.4.1",
     "@types/sortablejs": "^1.15.1",
     "@types/webpack": "^5.28.1",
-    "@typescript-eslint/eslint-plugin": "^5.61.0",
-    "@typescript-eslint/parser": "^5.61.0",
+    "@typescript-eslint/eslint-plugin": "^5.62.0",
+    "@typescript-eslint/parser": "^5.62.0",
     "@webpack-cli/serve": "^2.0.5",
     "aurelia-animator-css": "^1.0.4",
     "aurelia-bootstrapper": "^2.4.0",
@@ -105,7 +105,7 @@
     "aurelia-polyfills": "latest",
     "aurelia-router": "^1.7.1",
     "aurelia-testing": "^1.1.0",
-    "aurelia-webpack-plugin": "^5.0.5",
+    "aurelia-webpack-plugin": "^5.0.6",
     "bootstrap": "^5.3.0",
     "clean-webpack-plugin": "^4.0.0",
     "copy-webpack-plugin": "^11.0.0",
@@ -130,7 +130,7 @@
     "moment-mini": "^2.29.4",
     "npm-run-all2": "^6.0.6",
     "promise-polyfill": "^8.3.0",
-    "release-it": "^16.0.0",
+    "release-it": "^16.1.0",
     "rimraf": "^5.0.1",
     "rxjs": "^7.8.1",
     "sass": "^1.63.6",
@@ -150,7 +150,7 @@
     "npm": ">=8.5.0"
   },
   "resolutions": {
-    "caniuse-lite": "1.0.30001513",
+    "caniuse-lite": "1.0.30001514",
     "semver": "^7.5.4"
   },
   "aurelia": {
