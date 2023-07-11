@@ -68,7 +68,7 @@
     "aurelia-framework": "^1.4.1",
     "aurelia-i18n": "^4.0.4",
     "aurelia-pal": "^1.8.2",
-    "dompurify": "^3.0.4",
+    "dompurify": "^3.0.5",
     "i18next": ">=22.5.0",
     "sortablejs": "^1.15.0"
   },
@@ -150,7 +150,7 @@
     "npm": ">=8.5.0"
   },
   "resolutions": {
-    "caniuse-lite": "1.0.30001514",
+    "caniuse-lite": "1.0.30001515",
     "semver": "^7.5.4"
   },
   "aurelia": {
