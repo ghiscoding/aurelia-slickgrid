@@ -76,7 +76,7 @@
     "@faker-js/faker": "^8.0.2",
     "@fnando/sparkline": "^0.3.10",
     "@popperjs/core": "^2.11.8",
-    "@release-it/conventional-changelog": "^6.0.0",
+    "@release-it/conventional-changelog": "^7.0.0",
     "@slickgrid-universal/composite-editor-component": "3.0.1",
     "@slickgrid-universal/custom-tooltip-plugin": "3.0.1",
     "@slickgrid-universal/excel-export": "3.0.1",
