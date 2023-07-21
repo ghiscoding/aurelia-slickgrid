@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.1.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v6.0.1...v6.1.0) (2023-07-21)
+
+
+### Features
+
+* **common:** add optional `scrollIntoView` to GridService `addItems` ([#1027](https://github.com/ghiscoding/aurelia-slickgrid/issues/1027)) ([7b426bd](https://github.com/ghiscoding/aurelia-slickgrid/commit/7b426bd43ee0230e12ea51fcf14ba2b862729717))
+
 ## [6.0.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v6.0.0...v6.0.1) (2023-07-01)
 
 
