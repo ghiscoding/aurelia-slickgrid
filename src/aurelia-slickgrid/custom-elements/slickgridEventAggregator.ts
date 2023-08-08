@@ -1,4 +1,4 @@
-import { Disposable } from 'aurelia-framework';
+import { IDisposable } from 'aurelia';
 
 /**
  * A class that will be used for internal communication of parent-child
@@ -8,5 +8,5 @@ import { Disposable } from 'aurelia-framework';
 export abstract class SlickgridEventAggregator {
   abstract publish(event: string, data: any): void;
 
-  abstract subscribe(event: string, callback: (data: any) => void): Disposable;
+  abstract subscribe(event: string, callback: (data: any) => void): IDisposable;
 }

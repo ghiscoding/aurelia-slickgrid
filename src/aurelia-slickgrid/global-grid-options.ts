@@ -238,7 +238,6 @@ export const GlobalGridOptions: Partial<GridOption> = {
     useRowClick: false,
     useSimpleViewportCalc: true,
     saveDetailViewOnScroll: false,
-    viewModel: '',
   } as RowDetailView,
   headerRowHeight: 35,
   rowHeight: 35,

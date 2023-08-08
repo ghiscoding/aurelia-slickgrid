@@ -1,5 +1,3 @@
-import { autoinject, bindable, PLATFORM } from 'aurelia-framework';
-import { Subscription } from 'aurelia-event-aggregator';
 import {
   AureliaGridInstance,
   Column,
@@ -10,10 +8,12 @@ import {
   Formatters,
   GridOption,
 } from '../../aurelia-slickgrid';
+import { bindable } from 'aurelia';
+import { Example19Preload } from './example19-preload';
+import { Example19DetailView } from './example19-detail-view';
 
 const NB_ITEMS = 1000;
 
-@autoinject()
 export class Example19 {
   @bindable detailViewRowCount = 9;
   title = 'Example 19: Row Detail View';
@@ -33,7 +33,7 @@ export class Example19 {
   // extensions!: ExtensionList<any>;
   flashAlertType = 'info';
   message = '';
-  subscriptions: Subscription[] = [];
+  // subscriptions: Subscription[] = [];
 
   constructor() {
     // define the grid options & columns and then create the grid itself
@@ -118,10 +118,10 @@ export class Example19 {
         // expandableOverride: (row: number, dataContext: any) => (dataContext.rowId % 2 === 1),
 
         // Preload View Template
-        preloadView: PLATFORM.moduleName('examples/slickgrid/example19-preload.html'),
+        preloadViewModel: Example19Preload,
 
         // ViewModel Template to load when row detail data is ready
-        viewModel: PLATFORM.moduleName('examples/slickgrid/example19-detail-view'),
+        viewModel: Example19DetailView,
 
         // Optionally pass your Parent Component reference to your Child Component (row detail component)
         parent: this
@@ -131,14 +131,14 @@ export class Example19 {
 
   getData() {
     // mock a dataset
-    this.dataset = [];
+    const dataset: any[] = [];
     for (let i = 0; i < NB_ITEMS; i++) {
       const randomYear = 2000 + Math.floor(Math.random() * 10);
       const randomMonth = Math.floor(Math.random() * 11);
       const randomDay = Math.floor((Math.random() * 29));
       const randomPercent = Math.round(Math.random() * 100);
 
-      this.dataset[i] = {
+      dataset[i] = {
         rowId: i,
         title: 'Task ' + i,
         duration: (i % 33 === 0) ? null : Math.random() * 100 + '',
@@ -150,6 +150,8 @@ export class Example19 {
         effortDriven: (i % 5 === 0)
       };
     }
+
+    this.dataset = dataset;
   }
 
   changeDetailViewRowCount() {

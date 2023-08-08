@@ -1,43 +1,20 @@
 {
-  "compileOnSave": false,
   "compilerOptions": {
-    "target": "es2018",
-    "module": "esnext",
-    "sourceMap": true,
-    "allowSyntheticDefaultImports": true,
-    "downlevelIteration": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "module": "esnext",
     "moduleResolution": "node",
-    "allowJs": true,
-    "baseUrl": "src",
     "skipLibCheck": true,
-    "strict": true,
-    "lib": [
-      "es2018",
-      "dom"
-    ],
-    "types": [ "i18next", "i18next-xhr-backend" ],
-    "typeRoots": [
-      "node_modules/@types",
-      "src/typings"
-    ]
+    "target": "ES2017",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "importHelpers": true,
+    "sourceMap": true
   },
-  "exclude": [
-    "aurelia_project",
-    "dist",
-    "jspm_packages",
-    "node_modules",
-    "**/*.spec.ts"
-  ],
-  "filesGlob": [
-    "./src/**/*.ts",
-    "./test/**/*.ts",
-    "./custom_typings/**/*.d.ts"
-  ],
   "include": [
-    "src/**/*.ts",
-    "src/typings/**/*.ts"
+    "src"
   ],
-  "typeAcquisition": { "include": ["jest"] }
+  "exclude": [
+    "src/**/*.spec.ts"
+  ]
 }

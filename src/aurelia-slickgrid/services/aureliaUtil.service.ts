@@ -1,73 +1,22 @@
-import {
-  inject,
-  Container,
-  createOverrideContext,
-  singleton,
-  ViewCompiler,
-  ViewResources,
-  ViewSlot,
-} from 'aurelia-framework';
-import { AureliaViewOutput } from '../models/index';
+import { AureliaViewOutput, ViewModelBindableInputData } from '../models/index';
+import { Constructable, CustomElement, IAurelia, singleton } from 'aurelia';
 
-@singleton(true)
-@inject(
-  Container,
-  ViewCompiler,
-  ViewResources
-)
+@singleton()
 export class AureliaUtilService {
   constructor(
-    private readonly container: Container,
-    private readonly viewCompiler: ViewCompiler,
-    private readonly viewResources: ViewResources,
+    @IAurelia private readonly au: IAurelia
   ) { }
 
-  createAureliaViewModelAddToSlot(templateUrl: string, bindableData: any, targetElement?: HTMLElement | Element, clearTargetContent = false): AureliaViewOutput | null {
-    const viewFactory = this.viewCompiler.compile('<template><compose view-model.bind="template" view-model.ref="viewModelRef"></compose></template>', this.viewResources);
-
+  async createAureliaViewModelAddToSlot(viewModel: Constructable, bindableData: ViewModelBindableInputData, targetElement?: HTMLElement | Element, clearTargetContent = false): Promise<AureliaViewOutput | null> {
     if (targetElement) {
+      // TODO: MB - is this needed?
       if (clearTargetContent && targetElement.innerHTML) {
         targetElement.innerHTML = '';
       }
 
-      // create some bindings including the template & other bindable data
-      const bindings: any = { template: (templateUrl || ''), ...bindableData, viewModelRef: {} };
-
-      // Creates a view
-      const view = viewFactory.create(this.container);
-      view.bind(bindings, createOverrideContext(bindings));
-
-      // Add the view to the slot
-      const viewSlot = new ViewSlot(targetElement, true);
-      if (viewSlot && viewSlot.add) {
-        viewSlot.add(view);
-      }
-      return { bindings, view, viewSlot };
-    }
-    return null;
-  }
-
-  createAureliaViewAddToSlot(templateUrl: string, targetElement?: HTMLElement | Element, clearTargetContent = false): AureliaViewOutput | null {
-    const viewFactory = this.viewCompiler.compile('<template><compose view.bind="template" view-model.ref="viewModelRef"></compose></template>', this.viewResources);
-
-    if (targetElement) {
-      if (clearTargetContent && targetElement.innerHTML) {
-        targetElement.innerHTML = '';
-      }
-
-      // create some bindings including the template & other bindable data
-      const bindings = { template: (templateUrl || ''), viewModelRef: {} };
-
-      // Creates a view
-      const view = viewFactory.create(this.container);
-      view.bind(bindings, createOverrideContext(bindings));
-
-      // Add the view to the slot
-      const viewSlot = new ViewSlot(targetElement, true);
-      if (viewSlot && viewSlot.add) {
-        viewSlot.add(view);
-      }
-      return { bindings, view, viewSlot };
+      const def = CustomElement.getDefinition(viewModel);
+      targetElement.innerHTML = `<${def.name} model.bind="bindableData.model" addon.bind="bindableData.addon" grid.bind="bindableData.grid" data-view.bind="bindableData.dataView" parent.bind="bindableData.parent"></${def.name}>`;
+      return { controller: await this.au.enhance({ host: targetElement, component: { bindableData } }) };
     }
     return null;
   }

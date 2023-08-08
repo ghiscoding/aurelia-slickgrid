@@ -1,0 +1,16 @@
+<div class="container-fluid">
+    <div class="panel-wm">
+        <section id="panel-left" class="panel-wm-left au-animate">
+            <ul class="well nav nav-pills nav-stacked">
+                <li repeat.for="r of routes" class="nav-item">
+                    <a load.bind="r.path" class="nav-link ${r.isActive ? 'active' : ''}">${r.title}</a>
+                </li>
+            </ul>
+        </section>
+        <section class="panel-wm-content">
+            <div id="demo-container">
+                <au-viewport></au-viewport>
+            </div>
+        </section>
+    </div>
+</div>

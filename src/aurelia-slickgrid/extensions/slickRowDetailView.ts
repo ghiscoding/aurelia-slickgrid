@@ -1,3 +1,4 @@
+/* eslint-disable no-prototype-builtins */
 import {
   addToArrayWhenNotExists,
   EventSubscription,
@@ -9,11 +10,11 @@ import {
 } from '@slickgrid-universal/common';
 import { EventPubSubService } from '@slickgrid-universal/event-pub-sub';
 import { SlickRowDetailView as UniversalSlickRowDetailView } from '@slickgrid-universal/row-detail-view-plugin';
-import { inject, singleton } from 'aurelia-framework';
 import * as DOMPurify from 'dompurify';
 
 import { AureliaViewOutput, GridOption, RowDetailView, ViewModelBindableInputData } from '../models/index';
 import { AureliaUtilService } from '../services/aureliaUtil.service';
+import { Constructable, singleton } from 'aurelia';
 
 // using external non-typed js libraries
 declare const Slick: SlickNamespace;
@@ -26,17 +27,16 @@ export interface CreatedView extends AureliaViewOutput {
   dataContext: any;
 }
 
-@singleton(true)
-@inject(AureliaUtilService, EventPubSubService)
+@singleton()
 export class SlickRowDetailView extends UniversalSlickRowDetailView {
   protected _eventHandler!: SlickEventHandler;
-  protected _preloadView = '';
+  protected _preloadViewModel: Constructable;
   protected _slots: CreatedView[] = [];
-  protected _viewModel = '';
+  protected _viewModel: Constructable;
   protected _subscriptions: EventSubscription[] = [];
   protected _userProcessFn?: (item: any) => Promise<any>;
 
-  constructor(protected readonly aureliaUtilService: AureliaUtilService, private readonly eventPubSubService: EventPubSubService, private readonly gridContainerElement: HTMLDivElement) {
+  constructor(protected readonly aureliaUtilService: AureliaUtilService, private readonly eventPubSubService: EventPubSubService, private readonly gridContainerElement: HTMLElement) {
     super(eventPubSubService);
   }
 
@@ -107,11 +107,11 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
       // load the Preload & RowDetail Templates (could be straight HTML or Aurelia View/ViewModel)
       // when those are Aurelia View/ViewModel, we need to create View Slot & provide the html containers to the Plugin (preTemplate/postTemplate methods)
       if (!this.gridOptions.rowDetailView.preTemplate) {
-        this._preloadView = this.gridOptions?.rowDetailView?.preloadView || '';
+        this._preloadViewModel = this.gridOptions?.rowDetailView?.preloadViewModel;
         this.addonOptions.preTemplate = () => DOMPurify.sanitize(`<div class="${PRELOAD_CONTAINER_PREFIX}"></div>`);
       }
       if (!this.gridOptions.rowDetailView.postTemplate) {
-        this._viewModel = this.gridOptions?.rowDetailView?.viewModel || '';
+        this._viewModel = this.gridOptions?.rowDetailView?.viewModel;
         this.addonOptions.postTemplate = (itemDetail: any) => DOMPurify.sanitize(`<div class="${ROW_DETAIL_CONTAINER_PREFIX}${itemDetail[this.datasetIdPropName]}"></div>`);
       }
 
@@ -137,9 +137,9 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
           }
 
           if (this.onAsyncEndUpdate) {
-            this._eventHandler.subscribe(this.onAsyncEndUpdate, (event, args) => {
+            this._eventHandler.subscribe(this.onAsyncEndUpdate, async (event, args) => {
               // triggers after backend called "onAsyncResponse.notify()"
-              this.renderViewModel(args?.item);
+              await this.renderViewModel(args?.item);
 
               if (this.rowDetailViewOptions && typeof this.rowDetailViewOptions.onAsyncEndUpdate === 'function') {
                 this.rowDetailViewOptions.onAsyncEndUpdate(event, args);
@@ -148,10 +148,10 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
           }
 
           if (this.onAfterRowDetailToggle) {
-            this._eventHandler.subscribe(this.onAfterRowDetailToggle, (event, args) => {
+            this._eventHandler.subscribe(this.onAfterRowDetailToggle, async (event, args) => {
               // display preload template & re-render all the other Detail Views after toggling
               // the preload View will eventually go away once the data gets loaded after the "onAsyncEndUpdate" event
-              this.renderPreloadView();
+              await this.renderPreloadView();
               this.renderAllViewModels();
 
               if (this.rowDetailViewOptions && typeof this.rowDetailViewOptions.onAfterRowDetailToggle === 'function') {
@@ -172,9 +172,9 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
           }
 
           if (this.onRowBackToViewportRange) {
-            this._eventHandler.subscribe(this.onRowBackToViewportRange, (event, args) => {
+            this._eventHandler.subscribe(this.onRowBackToViewportRange, async (event, args) => {
               // when row is back to viewport range, we will re-render the View Slot(s)
-              this.handleOnRowBackToViewportRange(event, args);
+              await this.handleOnRowBackToViewportRange(event, args);
 
               if (this.rowDetailViewOptions && typeof this.rowDetailViewOptions.onRowBackToViewportRange === 'function') {
                 this.rowDetailViewOptions.onRowBackToViewportRange(event, args);
@@ -218,39 +218,33 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
   }
 
   /** Redraw (re-render) all the expanded row detail View Slots */
-  redrawAllViewSlots() {
-    this._slots.forEach((slot) => {
-      this.redrawViewSlot(slot);
-    });
+  async redrawAllViewSlots() {
+    await Promise.all(this._slots.map(async x => await this.redrawViewSlot(x)));
   }
 
   /** Render all the expanded row detail View Slots */
-  renderAllViewModels() {
-    this._slots.forEach((slot) => {
-      if (slot?.dataContext) {
-        this.renderViewModel(slot.dataContext);
-      }
-    });
+  async renderAllViewModels() {
+    await Promise.all(this._slots.filter(x => x?.dataContext).map(async x => await this.renderViewModel(x.dataContext)));
   }
 
   /** Redraw the necessary View Slot */
-  redrawViewSlot(slot: CreatedView) {
+  async redrawViewSlot(slot: CreatedView) {
     const containerElement = this.gridContainerElement.getElementsByClassName(`${ROW_DETAIL_CONTAINER_PREFIX}${slot.id}`);
     if (containerElement?.length >= 0) {
-      this.renderViewModel(slot.dataContext);
+      await this.renderViewModel(slot.dataContext);
     }
   }
 
   /** Render (or re-render) the View Slot (Row Detail) */
-  renderPreloadView() {
+  async renderPreloadView() {
     const containerElements = this.gridContainerElement.getElementsByClassName(`${PRELOAD_CONTAINER_PREFIX}`);
     if (containerElements?.length >= 0) {
-      this.aureliaUtilService.createAureliaViewAddToSlot(this._preloadView, containerElements[containerElements.length - 1], true);
+      await this.aureliaUtilService.createAureliaViewModelAddToSlot(this._preloadViewModel, undefined, containerElements[containerElements.length - 1], true);
     }
   }
 
   /** Render (or re-render) the View Slot (Row Detail) */
-  renderViewModel(item: any) {
+  async renderViewModel(item: any) {
     const containerElements = this.gridContainerElement.getElementsByClassName(`${ROW_DETAIL_CONTAINER_PREFIX}${item[this.datasetIdPropName]}`);
     if (containerElements?.length > 0) {
       const bindableData = {
@@ -260,12 +254,11 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
         dataView: this.dataView,
         parent: this.rowDetailViewOptions?.parent,
       } as ViewModelBindableInputData;
-      const aureliaComp = this.aureliaUtilService.createAureliaViewModelAddToSlot(this._viewModel, bindableData, containerElements[containerElements.length - 1], true);
+      const aureliaComp = await this.aureliaUtilService.createAureliaViewModelAddToSlot(this._viewModel, bindableData, containerElements[containerElements.length - 1], true);
       const slotObj = this._slots.find(obj => obj.id === item[this.datasetIdPropName]);
 
       if (slotObj && aureliaComp) {
-        slotObj.view = aureliaComp.view;
-        slotObj.viewSlot = aureliaComp.viewSlot;
+        slotObj.controller = aureliaComp.controller;
       }
     }
   }
@@ -275,11 +268,10 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
   // ------------------
 
   protected disposeViewSlot(expandedView: CreatedView) {
-    if (expandedView && expandedView.view && expandedView.viewSlot && expandedView.view.unbind && expandedView.viewSlot.remove) {
+    if (expandedView && expandedView.controller) {
       const container = this.gridContainerElement.getElementsByClassName(`${ROW_DETAIL_CONTAINER_PREFIX}${this._slots[0].id}`);
       if (container && container.length > 0) {
-        expandedView.viewSlot.remove(expandedView.view);
-        expandedView.view.unbind();
+        expandedView.controller.deactivate(expandedView.controller, null);
         container[0].innerHTML = '';
         return expandedView;
       }
@@ -317,7 +309,7 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
   }
 
   /** When Row comes back to Viewport Range, we need to redraw the View */
-  protected handleOnRowBackToViewportRange(_e: Event, args: {
+  protected async handleOnRowBackToViewportRange(_e: Event, args: {
     item: any;
     rowId: string | number;
     rowIndex: number;
@@ -326,7 +318,7 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
     grid: SlickGrid;
   }) {
     if (args?.item) {
-      this.redrawAllViewSlots();
+      await this.redrawAllViewSlots();
     }
   }
 

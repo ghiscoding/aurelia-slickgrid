@@ -1,4 +1,4 @@
-import { Subscription } from 'aurelia-event-aggregator';
+import { IDisposable } from 'aurelia';
 import { EventSubscription } from '@slickgrid-universal/common';
 
 /**
@@ -6,14 +6,14 @@ import { EventSubscription } from '@slickgrid-universal/common';
  * @param subscriptions
  * @return empty array
  */
-export function disposeAllSubscriptions(subscriptions: Array<EventSubscription | Subscription>): Array<EventSubscription | Subscription> {
+export function disposeAllSubscriptions(subscriptions: Array<EventSubscription | IDisposable>): Array<EventSubscription | IDisposable> {
   if (Array.isArray(subscriptions)) {
     while (subscriptions.length > 0) {
-      const subscription = subscriptions.pop() as EventSubscription | Subscription;
-      if ((subscription as Subscription)?.dispose) {
-        (subscription as Subscription).dispose();
+      const subscription = subscriptions.pop();
+      if (subscription?.dispose) {
+        subscription.dispose();
       } else if ((subscription as EventSubscription)?.unsubscribe) {
-        (subscription as EventSubscription).unsubscribe!();
+        (subscription as EventSubscription).unsubscribe();
       }
     }
   }
