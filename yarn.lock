@@ -23,7 +23,7 @@
     "@aurelia/kernel" "2.0.0-beta.8"
     "@aurelia/metadata" "2.0.0-beta.8"
 
-"@aurelia/i18n@^2.0.0-beta.8":
+"@aurelia/i18n@latest":
   "integrity" "sha512-ZCWW6pE+Y+8lvizrdP1NSUNia35eusRdZXqiylNHuqnmcAndHujcsGDGp6hv8F0dUtYYYSgHxRDLjg7govWMJw=="
   "resolved" "https://registry.npmjs.org/@aurelia/i18n/-/i18n-2.0.0-beta.8.tgz"
   "version" "2.0.0-beta.8"
@@ -4428,9 +4428,9 @@
   "version" "1.0.1"
 
 "json5@^2.1.2", "json5@^2.2.1":
-  "integrity" "sha512-1hqLFMSrGHRHxav9q9gNjJ5EXznIxGVO09xQRrwplcS8qs28pZ8s8hupZAmqDwZUmVZ2Qb2jnyPOWcDH8m8dlA=="
-  "resolved" "https://registry.npmjs.org/json5/-/json5-2.2.1.tgz"
-  "version" "2.2.1"
+  "integrity" "sha512-XmOWe7eyHYH14cLdVPoyg+GOH3rYX++KpzrylJwSW98t3Nk+U8XOl8FWKOgwtzdb8lXGf6zYwDUzeHMWfxasyg=="
+  "resolved" "https://registry.npmjs.org/json5/-/json5-2.2.3.tgz"
+  "version" "2.2.3"
 
 "kind-of@^6.0.2":
   "integrity" "sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw=="
@@ -4482,9 +4482,9 @@
   "version" "4.3.0"
 
 "loader-utils@^2.0.0":
-  "integrity" "sha512-THWqIsn8QRnvLl0shHYVBN9syumU8pYWEHPTmkiVGd+7K5eFNVSY6AJhRvgGF70gg1Dz+l/k8WicvFCxdEs60A=="
-  "resolved" "https://registry.npmjs.org/loader-utils/-/loader-utils-2.0.3.tgz"
-  "version" "2.0.3"
+  "integrity" "sha512-xXqpXoINfFhgua9xiqD8fPFHgkoq1mmmpE92WlDbm9rNRd/EbRb+Gqf908T2DMfuHjjJlksiK2RbHVOdD/MqSw=="
+  "resolved" "https://registry.npmjs.org/loader-utils/-/loader-utils-2.0.4.tgz"
+  "version" "2.0.4"
   dependencies:
     "big.js" "^5.2.2"
     "emojis-list" "^3.0.0"
@@ -5384,7 +5384,17 @@
   dependencies:
     "node-forge" "^1"
 
-"semver@^6.0.0", "semver@^6.3.0", "semver@^7.3.4", "semver@^7.3.5", "semver@^7.3.7", "semver@^7.3.8", "semver@^7.5.3", "semver@7.x":
+"semver@^6.0.0":
+  "integrity" "sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA=="
+  "resolved" "https://registry.npmjs.org/semver/-/semver-6.3.1.tgz"
+  "version" "6.3.1"
+
+"semver@^6.3.0":
+  "integrity" "sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA=="
+  "resolved" "https://registry.npmjs.org/semver/-/semver-6.3.1.tgz"
+  "version" "6.3.1"
+
+"semver@^7.3.4", "semver@^7.3.5", "semver@^7.3.7", "semver@^7.3.8", "semver@^7.5.3", "semver@7.x":
   "integrity" "sha512-1bCSESV6Pv+i21Hvpxp3Dx+pSD8lIPt8uVjRrxAUt/nbswYc+tK6Y2btiULjd4+fnq15PX+nqQDC7Oft7WkwcA=="
   "resolved" "https://registry.npmjs.org/semver/-/semver-7.5.4.tgz"
   "version" "7.5.4"
