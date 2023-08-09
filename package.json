@@ -1,18 +1,33 @@
 {
   "name": "aurelia-slickgrid",
-  "description": "An Aurelia 2 plugin.",
-  "main": "dist/index.js",
-  "files": [
-    "dist"
+  "version": "6.1.0",
+  "description": "Slickgrid components made available in Aurelia",
+  "keywords": [
+    "aurelia",
+    "datagrid",
+    "datatable",
+    "plugin",
+    "slickgrid"
   ],
-  "version": "0.1.0",
+  "homepage": "https://github.com/ghiscoding/aurelia-slickgrid",
+  "bugs": {
+    "url": "https://github.com/ghiscoding/aurelia-slickgrid/issues"
+  },
+  "license": "MIT",
+  "author": "Ghislain B.",
+  "main": "dist/index.js",
+  "typings": "dist/types/aurelia-slickgrid/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "???"
+    "url": "http://github.com/ghiscoding/aurelia-slickgrid"
   },
-  "license": "UNLICENSED",
+  "browserslist": [
+    "last 2 version",
+    "> 1%",
+    "not dead"
+  ],
   "dependencies": {
-    "@aurelia/i18n": "^2.0.0-beta.8",
+    "@aurelia/i18n": "latest",
     "@aurelia/router": "latest",
     "@slickgrid-universal/common": "3.1.0",
     "@slickgrid-universal/custom-footer-component": "3.1.0",
@@ -56,41 +71,26 @@
     "webpack-node-externals": "^3.0.0"
   },
   "scripts": {
-    "lint:js": "eslint src test --ext .js,.ts",
-    "lint:html": "htmlhint -c .htmlhintrc src",
-    "lint": "npm run lint:js && npm run lint:html",
-    "pretest": "npm run lint",
-    "start": "webpack serve",
+    "build:demo": "webpack --env production",
+    "serve:demo": "servor ./docs index.html 9000",
+    "delete:dist": "rimraf dist",
+    "lint": "eslint src/aurelia-slickgrid --ext .ts",
     "build": "rimraf dist && webpack --env production",
     "analyze": "rimraf dist && webpack --env production --analyze",
-    "test": "jest",
-    "prepare": "npm run build"
+    "postbuild1": "npm-run-all copy-i18n:dist copy-asset-lib",
+    "build:with-e2e": "npm-run-all build cypress:ci",
+    "copy-asset-lib": "copyfiles --up 2 src/assets/lib/** dist",
+    "copy-i18n:dist": "copyfiles --up 3 src/assets/i18n/**/*.* dist/i18n",
+    "start": "webpack serve",
+    "cypress:open": "cd test/cypress && node node_modules/cypress/bin/cypress open",
+    "cypress:ci": "cd test/cypress && npm run cypress:ci",
+    "test:ci": "npx jest --runInBand --coverage=true --ci --config ./test/jest.config.ts",
+    "test:jest": "npx jest --watch --detectOpenHandles --config test/jest.config.ts",
+    "test:jest:coverage": "npx jest --detectOpenHandles --runInBand --coverage --config test/jest.config.ts",
+    "preview:release": "release-it --only-version --dry-run",
+    "release": "release-it --only-version"
   },
-  "jest": {
-    "testMatch": [
-      "<rootDir>/test/**/*.spec.ts"
-    ],
-    "testEnvironment": "jsdom",
-    "transform": {
-      "\\.(css|less|sass|scss|styl|jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "jest-transform-stub",
-      "\\.(ts|html)$": [
-        "@aurelia/ts-jest",
-        {
-          "defaultShadowOptions": {
-            "mode": "open"
-          }
-        }
-      ]
-    },
-    "collectCoverage": true,
-    "collectCoverageFrom": [
-      "src/**/*.ts",
-      "!src/**/*.d.ts"
-    ],
-    "globals": {
-      "ts-jest": {
-        "isolatedModules": true
-      }
-    }
+  "comments": {
+    "new-release": "npm run release, note that yarn is not supported with release-it and will throw an error"
   }
 }
