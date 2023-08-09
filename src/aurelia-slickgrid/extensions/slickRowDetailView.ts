@@ -219,12 +219,12 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
 
   /** Redraw (re-render) all the expanded row detail View Slots */
   async redrawAllViewSlots() {
-    await Promise.all(this._slots.map(async x => await this.redrawViewSlot(x)));
+    await Promise.all(this._slots.map(async x => this.redrawViewSlot(x)));
   }
 
   /** Render all the expanded row detail View Slots */
   async renderAllViewModels() {
-    await Promise.all(this._slots.filter(x => x?.dataContext).map(async x => await this.renderViewModel(x.dataContext)));
+    await Promise.all(this._slots.filter(x => x?.dataContext).map(async x => this.renderViewModel(x.dataContext)));
   }
 
   /** Redraw the necessary View Slot */
@@ -268,15 +268,15 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
   // ------------------
 
   protected disposeViewSlot(expandedView: CreatedView) {
-    if (expandedView && expandedView.controller) {
-      const container = this.gridContainerElement.getElementsByClassName(`${ROW_DETAIL_CONTAINER_PREFIX}${this._slots[0].id}`);
-      if (container && container.length > 0) {
-        expandedView.controller.deactivate(expandedView.controller, null);
-        container[0].innerHTML = '';
-        return expandedView;
-      }
+    if (!expandedView?.controller) {
+      return null;
     }
-    return null;
+    const container = this.gridContainerElement.getElementsByClassName(`${ROW_DETAIL_CONTAINER_PREFIX}${this._slots[0].id}`);
+    if (container?.length) {
+      expandedView.controller.deactivate(expandedView.controller, null);
+      container[0].innerHTML = '';
+      return expandedView;
+    }
   }
 
   /**

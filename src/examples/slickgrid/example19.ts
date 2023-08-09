@@ -33,7 +33,6 @@ export class Example19 {
   // extensions!: ExtensionList<any>;
   flashAlertType = 'info';
   message = '';
-  // subscriptions: Subscription[] = [];
 
   constructor() {
     // define the grid options & columns and then create the grid itself
