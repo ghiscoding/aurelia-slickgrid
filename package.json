@@ -60,6 +60,8 @@
     "postcss": "^8.4.24",
     "postcss-loader": "^7.3.3",
     "rimraf": "^5.0.1",
+    "sass": "^1.65.1",
+    "sass-loader": "^13.3.2",
     "style-loader": "^3.3.3",
     "ts-loader": "^9.4.4",
     "tslib": "^2.6.0",

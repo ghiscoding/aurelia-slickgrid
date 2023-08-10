@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const {BundleAnalyzerPlugin} = require('webpack-bundle-analyzer');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const Dotenv = require('dotenv-webpack');
 const nodeExternals = require('webpack-node-externals');
 
@@ -17,7 +17,7 @@ const postcssLoader = {
   }
 };
 
-module.exports = function(env, { analyze }) {
+module.exports = function (env, { analyze }) {
   const production = env.production || process.env.NODE_ENV === 'production';
   return {
     target: production ? 'node' : 'web',
@@ -26,7 +26,7 @@ module.exports = function(env, { analyze }) {
     entry: {
       // Build only plugin in production mode,
       // build dev-app in non-production mode
-      entry:  production? './src/aurelia-slickgrid/index.ts' : './src/main.ts'
+      entry: production ? './src/aurelia-slickgrid/index.ts' : './src/main.ts'
     },
     output: {
       path: path.resolve(__dirname, 'dist'),
@@ -51,27 +51,29 @@ module.exports = function(env, { analyze }) {
     module: {
       rules: [
         { test: /\.(png|svg|jpg|jpeg|gif)$/i, type: 'asset' },
-        { test: /\.(woff|woff2|ttf|eot|svg|otf)(\?v=[0-9]\.[0-9]\.[0-9])?$/i,  type: 'asset' },
+        { test: /\.(woff|woff2|ttf|eot|svg|otf)(\?v=[0-9]\.[0-9]\.[0-9])?$/i, type: 'asset' },
         {
           test: /\.css$/i,
           // For style loaded in src/main.js, it's not loaded by style-loader.
           // It's for shared styles for shadow-dom only.
           issuer: /[/\\]src[/\\]main\.(js|ts)$/,
-          use: [ cssLoader, postcssLoader ]
+          use: [cssLoader, postcssLoader]
         },
         {
           test: /\.css$/i,
           // For style loaded in other js/ts files, it's loaded by style-loader.
           // They are directly injected to HTML head.
           issuer: /(?<![/\\]src[/\\]main)\.(js|ts)$/,
-          use: [ 'style-loader', cssLoader, postcssLoader ]
+          use: ['style-loader', cssLoader, postcssLoader]
         },
         {
           test: /\.css$/i,
           // For style loaded in html files, Aurelia will handle it.
           issuer: /\.html$/,
-          use: [ cssLoader, postcssLoader ]
+          use: [cssLoader, postcssLoader]
         },
+        { test: /\.(sass|scss)$/, use: ['style-loader', 'css-loader', 'sass-loader'], issuer: /\.[tj]s$/i },
+        { test: /\.(sass|scss)$/, use: ['css-loader', 'sass-loader'], issuer: /\.html?$/i },
         { test: /\.ts$/i, use: ['ts-loader', '@aurelia/webpack-loader'], exclude: /node_modules/ },
         {
           test: /[/\\](?:src|dev-app)[/\\].+\.html$/i,
@@ -97,7 +99,7 @@ module.exports = function(env, { analyze }) {
     plugins: [
       !production && new HtmlWebpackPlugin({ template: 'index.html', favicon: 'favicon.ico' }),
       new Dotenv({
-        path: `./.env${production ? '' :  '.' + (process.env.NODE_ENV || 'development')}`,
+        path: `./.env${production ? '' : '.' + (process.env.NODE_ENV || 'development')}`,
       }),
       analyze && new BundleAnalyzerPlugin()
     ].filter(p => p)
@@ -125,7 +127,7 @@ function getAureliaDevAliases() {
     try {
       const packageLocation = require.resolve(name);
       map[name] = path.resolve(packageLocation, `../../esm/index.dev.mjs`);
-    } catch {/**/}
+    } catch {/**/ }
     return map;
   });
 }
