@@ -651,15 +651,21 @@ export class AureliaSlickgridCustomElement {
     }
 
     // when a hierarchical dataset is set afterward, we can reset the flat dataset and call a tree data sort that will overwrite the flat dataset
-    if (newHierarchicalDataset && this.grid && this.sortService?.processTreeDataInitialSort) {
-      this.dataview.setItems([], this.gridOptions.datasetIdPropertyName ?? 'id');
+    if (
+      newHierarchicalDataset &&
+      this.grid &&
+      this.sortService?.processTreeDataInitialSort
+    ) {
       this.sortService.processTreeDataInitialSort();
 
       // we also need to reset/refresh the Tree Data filters because if we inserted new item(s) then it might not show up without doing this refresh
       // however we need 1 cpu cycle before having the DataView refreshed, so we need to wrap this check in a setTimeout
       setTimeout(() => {
         const flatDatasetLn = this.dataview.getItemCount();
-        if (flatDatasetLn > 0 && (flatDatasetLn !== prevFlatDatasetLn || !isDatasetEqual)) {
+        if (
+          flatDatasetLn > 0 &&
+          (flatDatasetLn !== prevFlatDatasetLn || !isDatasetEqual)
+        ) {
           this.filterService.refreshTreeDataFilters();
         }
       });
