@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.2.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v6.1.0...v6.2.0) (2023-08-21)
+
+
+### Bug Fixes
+
+* adding dataset hierarchical item shouldn't cause scroll flickering ([#1044](https://github.com/ghiscoding/aurelia-slickgrid/issues/1044)) ([ddcfb35](https://github.com/ghiscoding/aurelia-slickgrid/commit/ddcfb352082fdab8ebad84a701945ab82617dcb5))
+
+
+### Features
+
+* **TreeData:** add optional Aggregators for Tree Data totals calc ([#1048](https://github.com/ghiscoding/aurelia-slickgrid/issues/1048)) ([3abea9e](https://github.com/ghiscoding/aurelia-slickgrid/commit/3abea9ee4650a49e38bf216526642b282f1ee840))
+
 # [6.1.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v6.0.1...v6.1.0) (2023-07-21)
 
 
