@@ -67,7 +67,7 @@ jobs:
         run: yarn serve:demo &
 
       - name: Run Cypress E2E tests
-        uses: cypress-io/github-action@v6.0.0
+        uses: cypress-io/github-action@7215fc1624803790752b15000c55f71354592d84 # v6.4.0
         with:
           working-directory: test/cypress
           config-file: cypress.config.ts
