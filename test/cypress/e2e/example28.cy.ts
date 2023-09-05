@@ -13,7 +13,7 @@ describe('Example 28 - Tree Data (from a Hierarchical Dataset)', { retries: 1 },
   describe('without Auto-Recalc feature', () => {
     it('should display Example title', () => {
       cy.visit(`${Cypress.config('baseUrl')}/slickgrid/example28`);
-      cy.get('h2').should('contain', 'Example 28: Tree Data');
+      cy.get('h2').should('contain', 'Example 28: Tree Data with Aggregators');
       cy.get('h2').should('contain', 'from a Hierarchical Dataset');
     });
 
