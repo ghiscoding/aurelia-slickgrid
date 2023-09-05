@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.2.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v6.2.0...v6.2.1) (2023-09-05)
+
+
+### Bug Fixes
+
+* **common:** Select Filter/Editor enableRenderHtml invalid displays ([#1060](https://github.com/ghiscoding/aurelia-slickgrid/issues/1060)) ([42b5f78](https://github.com/ghiscoding/aurelia-slickgrid/commit/42b5f787ef7ad10a04b4da275a11ccf05a09ac29))
+
 # [6.2.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v6.1.0...v6.2.0) (2023-08-21)
 
 
