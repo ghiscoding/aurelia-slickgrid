@@ -18,6 +18,10 @@ Refer to the **[Wiki - HOWTO Step by Step](https://github.com/ghiscoding/aurelia
 ```sh
 npm install aurelia-slickgrid
 ```
+Install any optional Slickgrid-Universal dependencies, for example Excel Export
+```sh
+npm install @slickgrid-universal/excel-export
+```
 
 ### Versions Compatibility
 For a full compatibility table of Aurelia-Slickgrid with Slickgrid-Universal, you can consult the [Versions Compatibility Table - Wiki](https://github.com/ghiscoding/aurelia-slickgrid/wiki/Versions-Compatibility-Table)
