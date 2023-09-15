@@ -1,7 +1,6 @@
+import { IHttpClient } from '@aurelia/fetch-client';
+import { newInstanceOf } from '@aurelia/kernel';
 import { ExcelExportService } from '@slickgrid-universal/excel-export';
-import { HttpClient as FetchClient } from 'aurelia-fetch-client';
-import { HttpClient } from 'aurelia-http-client';
-import { autoinject } from 'aurelia-framework';
 import { CustomInputFilter } from './custom-inputFilter';
 import {
   AureliaGridInstance,
@@ -23,7 +22,6 @@ function randomBetween(min: number, max: number) {
 const NB_ITEMS = 1500;
 const URL_SAMPLE_COLLECTION_DATA = 'assets/data/collection_500_numbers.json';
 
-@autoinject()
 export class Example4 {
   title = 'Example 4: Client Side Sort/Filter';
   subTitle = `
@@ -54,7 +52,7 @@ export class Example4 {
   dataset: any[] = [];
   metrics!: Metrics;
 
-  constructor(private http: HttpClient, private httpFetch: FetchClient) {
+  constructor(@newInstanceOf(IHttpClient) readonly http: IHttpClient) {
     this.defineGrid();
   }
 
@@ -107,7 +105,7 @@ export class Example4 {
           // collectionAsync: this.http.createRequest(URL_SAMPLE_COLLECTION_DATA).asGet().send(),
 
           // OR 2- use "aurelia-fetch-client", they are both supported
-          collectionAsync: this.httpFetch.fetch(URL_SAMPLE_COLLECTION_DATA),
+          collectionAsync: this.http.fetch(URL_SAMPLE_COLLECTION_DATA),
 
           // collectionFilterBy & collectionSortBy accept a single or multiple options
           // we can exclude certains values 365 & 360 from the dropdown filter

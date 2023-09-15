@@ -4,7 +4,7 @@ describe('Example 14 - Column Span & Header Grouping', { retries: 1 }, () => {
   const fullTitles = ['#', 'Title', 'Duration', 'Start', 'Finish', '% Complete', 'Effort Driven'];
 
   it('should display Example title', () => {
-    cy.visit(`${Cypress.config('baseUrl')}/slickgrid/example14`);
+    cy.visit(`${Cypress.config('baseUrl')}/example14`);
     cy.get('h2').should('contain', 'Example 14: Column Span & Header Grouping');
   });
 

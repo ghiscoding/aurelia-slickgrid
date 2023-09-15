@@ -1,5 +1,5 @@
 import { autoinject } from 'aurelia-framework';
-import { I18N } from 'aurelia-i18n';
+import { I18N } from '@aurelia/i18n';
 import { TOptions as I18NOptions } from 'i18next';
 import * as moment from 'moment-mini';
 import { SlickCustomTooltip } from '@slickgrid-universal/custom-tooltip-plugin';
@@ -72,7 +72,7 @@ export class Example23 {
   ];
   selectedPredefinedFilter = '';
 
-  constructor(private i18n: I18N) {
+  constructor(@I18N private readonly i18n: I18N) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
 

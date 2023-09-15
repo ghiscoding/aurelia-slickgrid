@@ -3,7 +3,7 @@ describe('Example 24 - Cell Menu & Context Menu Plugins', () => {
   const fullFrenchTitles = ['#', 'Titre', '% Achevée', 'Début', 'Fin', 'Priorité', 'Terminé', 'Action'];
 
   it('should display Example title', { retries: 1 }, () => {
-    cy.visit(`${Cypress.config('baseUrl')}/slickgrid/example24`);
+    cy.visit(`${Cypress.config('baseUrl')}/example24`);
     cy.get('h2').should('contain', 'Example 24: Cell Menu & Context Menu Plugins');
   });
 

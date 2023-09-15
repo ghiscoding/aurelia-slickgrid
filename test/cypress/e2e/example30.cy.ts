@@ -16,7 +16,7 @@ describe('Example 30  Composite Editor Modal', { retries: 1 }, () => {
   });
 
   it('should display Example title', () => {
-    cy.visit(`${Cypress.config('baseUrl')}/slickgrid/example30`);
+    cy.visit(`${Cypress.config('baseUrl')}/example30`);
     cy.get('h2').should('contain', 'Example 30: Composite Editor Modal');
   });
 

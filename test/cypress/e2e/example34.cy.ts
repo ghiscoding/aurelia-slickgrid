@@ -3,7 +3,7 @@ describe('Example 34 - Real-Time Trading Platform', { retries: 1 }, () => {
   const GRID_ROW_HEIGHT = 35;
 
   it('should display Example title', () => {
-    cy.visit(`${Cypress.config('baseUrl')}/slickgrid/example34`);
+    cy.visit(`${Cypress.config('baseUrl')}/example34`);
     cy.get('h2').should('contain', 'Example 34: Real-Time Trading Platform');
   });
 

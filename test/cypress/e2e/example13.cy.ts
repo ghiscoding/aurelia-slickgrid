@@ -3,7 +3,7 @@ describe('Example 13 - Grouping & Aggregators', { retries: 1 }, () => {
   const GRID_ROW_HEIGHT = 35;
 
   it('should display Example title', () => {
-    cy.visit(`${Cypress.config('baseUrl')}/slickgrid/example13`);
+    cy.visit(`${Cypress.config('baseUrl')}/example13`);
     cy.get('h2').should('contain', 'Example 13: Grouping & Aggregators');
   });
 

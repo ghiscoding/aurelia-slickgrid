@@ -1,5 +1,5 @@
 import 'jest-extended';
-import { I18N } from 'aurelia-i18n';
+import { I18N } from '@aurelia/i18n';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { BindingSignaler } from 'aurelia-templating-resources';
 

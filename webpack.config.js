@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const Dotenv = require('dotenv-webpack');
 const nodeExternals = require('webpack-node-externals');
 
+const srcDir = path.resolve(__dirname, 'src');
 const cssLoader = 'css-loader';
-
-
 const postcssLoader = {
   loader: 'postcss-loader',
   options: {
@@ -100,6 +100,11 @@ module.exports = function (env, { analyze }) {
       !production && new HtmlWebpackPlugin({ template: 'index.html', favicon: 'favicon.ico' }),
       new Dotenv({
         path: `./.env${production ? '' : '.' + (process.env.NODE_ENV || 'development')}`,
+      }),
+      new CopyWebpackPlugin({
+        patterns: [
+          { from: `${srcDir}/assets`, to: 'assets' }
+        ]
       }),
       analyze && new BundleAnalyzerPlugin()
     ].filter(p => p)

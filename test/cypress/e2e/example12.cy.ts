@@ -20,7 +20,7 @@ describe('Example 12: Localization (i18n)', { retries: 1 }, () => {
   });
 
   it('should display Example title', () => {
-    cy.visit(`${Cypress.config('baseUrl')}/slickgrid/example12`);
+    cy.visit(`${Cypress.config('baseUrl')}/example12`);
     cy.get('h2')
       .should('contain', 'Example 12: Localization (i18n)');
   });

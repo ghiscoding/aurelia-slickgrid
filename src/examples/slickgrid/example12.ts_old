@@ -1,7 +1,7 @@
 import { ExcelExportService } from '@slickgrid-universal/excel-export';
 import { TextExportService } from '@slickgrid-universal/text-export';
 import { autoinject } from 'aurelia-framework';
-import { I18N } from 'aurelia-i18n';
+import { I18N } from '@aurelia/i18n';
 import { TOptions as I18NOptions } from 'i18next';
 
 import {
@@ -68,7 +68,7 @@ export class Example12 {
   excelExportService = new ExcelExportService();
   textExportService = new TextExportService();
 
-  constructor(private i18n: I18N) {
+  constructor(@I18N private readonly i18n: I18N) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
 

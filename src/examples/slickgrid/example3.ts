@@ -1,7 +1,6 @@
-import { autoinject } from 'aurelia-framework';
-import { HttpClient as FetchClient } from 'aurelia-fetch-client';
-import { HttpClient } from 'aurelia-http-client';
-import { I18N } from 'aurelia-i18n';
+import { IHttpClient } from '@aurelia/fetch-client';
+import { newInstanceOf } from '@aurelia/kernel';
+import { I18N } from '@aurelia/i18n';
 import fetchJsonp from 'fetch-jsonp';
 
 import {
@@ -63,7 +62,6 @@ const taskFormatter = (_row: number, _cell: number, value: any) => {
   return '';
 };
 
-@autoinject()
 export class Example3 {
   title = 'Example 3: Editors / Delete';
   subTitle = `
@@ -89,12 +87,12 @@ export class Example3 {
   alertWarning: any;
   duplicateTitleHeaderCount = 1;
 
-  constructor(private http: HttpClient, private httpFetch: FetchClient, private i18n: I18N) {
+  constructor(@newInstanceOf(IHttpClient) readonly http: IHttpClient, @I18N private readonly i18n: I18N) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
   }
 
-  attached() {
+  async attached() {
     // populate the dataset once the grid is ready
     this.dataset = this.mockData(NB_ITEMS);
   }
@@ -296,7 +294,7 @@ export class Example3 {
           // placeholder: '🔎︎ search city',
 
           // We can use the autocomplete through 3 ways "collection", "collectionAsync" or with your own autocomplete options
-          // collectionAsync: this.httpFetch.fetch(URL_COUNTRIES_COLLECTION),
+          // collectionAsync: this.http.fetch(URL_COUNTRIES_COLLECTION),
 
           // OR use the autocomplete through 3 ways "collection", "collectionAsync" or with your own autocomplete options
           // use your own autocomplete options, instead of fetch-jsonp, use HttpClient or FetchClient
@@ -323,12 +321,12 @@ export class Example3 {
         editor: {
           model: Editors.autocompleter,
           customStructure: { label: 'name', value: 'code' },
-          collectionAsync: this.httpFetch.fetch(URL_COUNTRIES_COLLECTION),
+          collectionAsync: this.http.fetch(URL_COUNTRIES_COLLECTION),
         },
         filter: {
           model: Filters.autocompleter,
           customStructure: { label: 'name', value: 'code' },
-          collectionAsync: this.httpFetch.fetch(URL_COUNTRIES_COLLECTION),
+          collectionAsync: this.http.fetch(URL_COUNTRIES_COLLECTION),
         }
       }, {
         id: 'countryOfOriginName', name: 'Country of Origin Name', field: 'countryOfOriginName',
@@ -337,11 +335,11 @@ export class Example3 {
         minWidth: 100,
         editor: {
           model: Editors.autocompleter,
-          collectionAsync: this.httpFetch.fetch(URL_COUNTRY_NAMES),
+          collectionAsync: this.http.fetch(URL_COUNTRY_NAMES),
         },
         filter: {
           model: Filters.autocompleter,
-          collectionAsync: this.httpFetch.fetch(URL_COUNTRY_NAMES),
+          collectionAsync: this.http.fetch(URL_COUNTRY_NAMES),
         }
       }, {
         id: 'effort-driven',
@@ -377,7 +375,7 @@ export class Example3 {
           // collectionAsync: this.http.createRequest(URL_SAMPLE_COLLECTION_DATA).asGet().send(),
 
           // OR 2- use "aurelia-fetch-client", they are both supported
-          collectionAsync: this.httpFetch.fetch(URL_SAMPLE_COLLECTION_DATA),
+          collectionAsync: this.http.fetch(URL_SAMPLE_COLLECTION_DATA),
 
           // OR 3- use a Promise
           // collectionAsync: new Promise<any>((resolve) => {
@@ -404,7 +402,7 @@ export class Example3 {
           model: Editors.multipleSelect,
         },
         filter: {
-          collectionAsync: this.httpFetch.fetch(URL_SAMPLE_COLLECTION_DATA),
+          collectionAsync: this.http.fetch(URL_SAMPLE_COLLECTION_DATA),
           // collectionAsync: new Promise((resolve) => {
           //   setTimeout(() => {
           //     resolve(Array.from(Array(this.dataset.length).keys()).map(k => ({ value: k, label: `Task ${k}` })));

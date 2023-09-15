@@ -11,7 +11,7 @@ describe('Example 15: Grid State & Presets using Local Storage', { retries: 1 },
   });
 
   it('should display Example title', () => {
-    cy.visit(`${Cypress.config('baseUrl')}/slickgrid/example15`);
+    cy.visit(`${Cypress.config('baseUrl')}/example15`);
     cy.get('h2').should('contain', 'Example 15: Grid State & Presets using Local Storage');
 
     cy.clearLocalStorage();

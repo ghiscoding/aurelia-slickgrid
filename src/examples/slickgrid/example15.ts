@@ -1,6 +1,6 @@
-// import { I18N } from 'aurelia-i18n';
-// import { autoinject } from 'aurelia-framework';
+import { I18N } from '@aurelia/i18n';
 import {
+  AureliaGridInstance,
   Column,
   FieldType,
   Filters,
@@ -9,8 +9,7 @@ import {
   GridState,
   GridStateChange,
   MultipleSelectOption
-} from '@slickgrid-universal/common';
-import { AureliaGridInstance } from '../../aurelia-slickgrid';;
+} from '../../aurelia-slickgrid';
 
 function randomBetween(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -19,7 +18,6 @@ const DEFAULT_PAGE_SIZE = 25;
 const LOCAL_STORAGE_KEY = 'gridState';
 const NB_ITEMS = 500;
 
-// @autoinject()
 export class Example15 {
   title = 'Example 15: Grid State & Presets using Local Storage';
   subTitle = `
@@ -40,7 +38,7 @@ export class Example15 {
   dataset: any[] = [];
   selectedLanguage: string;
 
-  constructor(/*private i18n: I18N*/) {
+  constructor(@I18N private readonly i18n: I18N) {
     const presets = JSON.parse(localStorage[LOCAL_STORAGE_KEY] || null);
 
     // use some Grid State preset defaults if you wish or just restore from Locale Storage
@@ -48,9 +46,9 @@ export class Example15 {
     this.defineGrid(presets);
 
     // always start with English for Cypress E2E tests to be consistent
-    // const defaultLang = 'en';
-    // this.i18n.setLocale(defaultLang);
-    // this.selectedLanguage = defaultLang;
+    const defaultLang = 'en';
+    this.i18n.setLocale(defaultLang);
+    this.selectedLanguage = defaultLang;
   }
 
   attached() {
@@ -145,7 +143,7 @@ export class Example15 {
       enableCheckboxSelector: true,
       enableFiltering: true,
       enableTranslate: true,
-      // i18n: this.i18n,
+      i18n: this.i18n,
       columnPicker: {
         hideForceFitButton: true
       },
@@ -213,11 +211,11 @@ export class Example15 {
     localStorage[LOCAL_STORAGE_KEY] = JSON.stringify(gridState);
   }
 
-  // async switchLanguage() {
-  //   const nextLanguage = (this.selectedLanguage === 'en') ? 'fr' : 'en';
-  //   await this.i18n.setLocale(nextLanguage);
-  //   this.selectedLanguage = nextLanguage;
-  // }
+  async switchLanguage() {
+    const nextLanguage = (this.selectedLanguage === 'en') ? 'fr' : 'en';
+    await this.i18n.setLocale(nextLanguage);
+    this.selectedLanguage = nextLanguage;
+  }
 
   useDefaultPresets() {
     // use columnDef searchTerms OR use presets as shown below

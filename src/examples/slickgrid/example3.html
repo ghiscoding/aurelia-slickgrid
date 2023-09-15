@@ -26,7 +26,7 @@
                    id="radioTrue"
                    checked
                    value.bind="isAutoEdit"
-                   click.delegate="setAutoEdit(true)"> ON
+                   click.trigger="setAutoEdit(true)"> ON
             (single-click)
           </label>
           <label class="radio-inline control-label"
@@ -35,13 +35,13 @@
                    name="inlineRadioOptions"
                    id="radioFalse"
                    value.bind="isAutoEdit"
-                   click.delegate="setAutoEdit(false)"> OFF
+                   click.trigger="setAutoEdit(false)"> OFF
             (double-click)
           </label>
         </div>
         <div class="row col-sm-12">
           <span>
-            <button class="btn btn-outline-secondary btn-sm" click.delegate="undo()" data-test="undo-btn">
+            <button class="btn btn-outline-secondary btn-sm" click.trigger="undo()" data-test="undo-btn">
               <i class="fa fa-undo"></i>
               Undo last edit(s)
             </button>
@@ -51,7 +51,7 @@
                      id="autoCommitEdit"
                      data-test="auto-commit"
                      value.bind="gridOptions.autoCommitEdit"
-                     click.delegate="changeAutoCommit()">
+                     click.trigger="changeAutoCommit()">
               Auto Commit Edit
             </label>
           </span>
@@ -59,27 +59,27 @@
       </span>
       <div class="row" style="margin-top: 5px">
         <div class="col-sm-12">
-          <button class="btn btn-outline-secondary btn-sm" click.delegate="aureliaGrid.filterService.clearFilters()">Clear
+          <button class="btn btn-outline-secondary btn-sm" click.trigger="aureliaGrid.filterService.clearFilters()">Clear
             Filters</button>
-          <button class="btn btn-outline-secondary btn-sm" click.delegate="aureliaGrid.sortService.clearSorting()">Clear
+          <button class="btn btn-outline-secondary btn-sm" click.trigger="aureliaGrid.sortService.clearSorting()">Clear
             Sorting</button>
-          <button class="btn btn-outline-primary btn-sm" data-test="add-item-btn" click.delegate="addItem()"
+          <button class="btn btn-outline-primary btn-sm" data-test="add-item-btn" click.trigger="addItem()"
                   title="Clear Filters &amp; Sorting to see it better">
             Add item
           </button>
-          <button class="btn btn-outline-danger btn-sm" data-test="delete-item-btn" click.delegate="deleteItem()">Delete
+          <button class="btn btn-outline-danger btn-sm" data-test="delete-item-btn" click.trigger="deleteItem()">Delete
             item</button>
         </div>
       </div>
       <div class="row" style="margin-top: 5px">
         <div class="col-sm-12">
           <button class="btn btn-outline-secondary btn-sm" data-test="add-title-column"
-                  click.delegate="dynamicallyAddTitleHeader()">
+                  click.trigger="dynamicallyAddTitleHeader()">
             <i class="fa fa-plus"></i>
             Dynamically Duplicate Title Column
           </button>
           <button class="btn btn-outline-secondary btn-sm" data-test="remove-title-column"
-                  click.delegate="dynamicallyRemoveLastColumn()">
+                  click.trigger="dynamicallyRemoveLastColumn()">
             <i class="fa fa-minus"></i>
             Dynamically Remove Last Column
           </button>
@@ -99,16 +99,15 @@
     </div>
   </div>
 
-  <div id="grid-container"
-       class="col-sm-12">
+  <div id="grid-container" class="col-sm-12">
     <aurelia-slickgrid grid-id="grid3"
                        column-definitions.bind="columnDefinitions"
                        grid-options.bind="gridOptions"
                        dataset.bind="dataset"
                        instances.bind="aureliaGrid"
-                       on-cell-change.delegate="onCellChanged($event.detail.eventData, $event.detail.args)"
-                       on-click.delegate="onCellClicked($event.detail.eventData, $event.detail.args)"
-                       on-validation-error.delegate="onCellValidationError($event.detail.eventData, $event.detail.args)">
+                       on-cell-change.trigger="onCellChanged($event.detail.eventData, $event.detail.args)"
+                       on-click.trigger="onCellClicked($event.detail.eventData, $event.detail.args)"
+                       on-validation-error.trigger="onCellValidationError($event.detail.eventData, $event.detail.args)">
     </aurelia-slickgrid>
   </div>
 </template>

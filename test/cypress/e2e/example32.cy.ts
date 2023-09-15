@@ -11,7 +11,7 @@ describe('Example 32 - Columns Resize by Content', { retries: 1 }, () => {
   });
 
   it('should display Example title', () => {
-    cy.visit(`${Cypress.config('baseUrl')}/slickgrid/example32`);
+    cy.visit(`${Cypress.config('baseUrl')}/example32`);
     cy.get('h2').should('contain', 'Example 32: Columns Resize by Content');
   });
 
