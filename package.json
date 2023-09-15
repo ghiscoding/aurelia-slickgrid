@@ -89,7 +89,7 @@
     "@types/fnando__sparkline": "^0.3.5",
     "@types/i18next-xhr-backend": "^1.4.2",
     "@types/jest": "^29.5.4",
-    "@types/node": "^20.6.0",
+    "@types/node": "^20.6.1",
     "@types/sortablejs": "^1.15.2",
     "@types/webpack": "^5.28.2",
     "@typescript-eslint/eslint-plugin": "^6.7.0",
