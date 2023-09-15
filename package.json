@@ -86,7 +86,7 @@
     "@slickgrid-universal/text-export": "~3.2.1",
     "@types/bluebird": "^3.5.38",
     "@types/dompurify": "^3.0.2",
-    "@types/fnando__sparkline": "^0.3.4",
+    "@types/fnando__sparkline": "^0.3.5",
     "@types/i18next-xhr-backend": "^1.4.2",
     "@types/jest": "^29.5.4",
     "@types/node": "^20.6.0",
@@ -106,7 +106,7 @@
     "aurelia-router": "^1.7.1",
     "aurelia-testing": "^1.1.0",
     "aurelia-webpack-plugin": "^5.0.6",
-    "bootstrap": "^5.3.1",
+    "bootstrap": "^5.3.2",
     "clean-webpack-plugin": "^4.0.0",
     "copy-webpack-plugin": "^11.0.0",
     "copyfiles": "^2.4.1",
@@ -133,7 +133,7 @@
     "release-it": "^16.1.5",
     "rimraf": "^5.0.1",
     "rxjs": "^7.8.1",
-    "sass": "^1.66.1",
+    "sass": "^1.67.0",
     "sass-loader": "^13.3.2",
     "servor": "^4.0.2",
     "style-loader": "~3.3.3",
@@ -150,7 +150,7 @@
     "npm": ">=8.5.0"
   },
   "resolutions": {
-    "caniuse-lite": "1.0.30001533",
+    "caniuse-lite": "1.0.30001534",
     "semver": "^7.5.4"
   },
   "aurelia": {
