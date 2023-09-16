@@ -15,7 +15,7 @@
     "@jridgewell/gen-mapping" "^0.1.0"
     "@jridgewell/trace-mapping" "^0.3.9"
 
-"@aurelia/fetch-client@2.0.0-beta.8", "@aurelia/fetch-client@^2.0.0-beta.8":
+"@aurelia/fetch-client@2.0.0-beta.8":
   version "2.0.0-beta.8"
   resolved "https://registry.npmjs.org/@aurelia/fetch-client/-/fetch-client-2.0.0-beta.8.tgz"
   integrity sha512-2KWm+ODQPRp7MChFKJaCkfbc2pshrf62voH6Sku0Z1RPwryusEQcctUI9I6ceBpKWP6rdA6nJfII1qxKk72sfQ==
@@ -23,7 +23,15 @@
     "@aurelia/kernel" "2.0.0-beta.8"
     "@aurelia/metadata" "2.0.0-beta.8"
 
-"@aurelia/i18n@^2.0.0-beta.8":
+"@aurelia/fetch-client@latest":
+  version "2.0.0-beta.8"
+  resolved "https://registry.yarnpkg.com/@aurelia/fetch-client/-/fetch-client-2.0.0-beta.8.tgz#b7530e257b3281bcb253b5444918aa060f4fb767"
+  integrity sha512-2KWm+ODQPRp7MChFKJaCkfbc2pshrf62voH6Sku0Z1RPwryusEQcctUI9I6ceBpKWP6rdA6nJfII1qxKk72sfQ==
+  dependencies:
+    "@aurelia/kernel" "2.0.0-beta.8"
+    "@aurelia/metadata" "2.0.0-beta.8"
+
+"@aurelia/i18n@latest":
   version "2.0.0-beta.8"
   resolved "https://registry.yarnpkg.com/@aurelia/i18n/-/i18n-2.0.0-beta.8.tgz#4062bb84b01e83ee85288251df6ce44d1dfa8148"
   integrity sha512-ZCWW6pE+Y+8lvizrdP1NSUNia35eusRdZXqiylNHuqnmcAndHujcsGDGp6hv8F0dUtYYYSgHxRDLjg7govWMJw==
@@ -969,6 +977,15 @@
   dependencies:
     "@slickgrid-universal/common" "~3.2.1"
     "@slickgrid-universal/utils" "~3.1.0"
+
+"@slickgrid-universal/text-export@^3.2.1":
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/@slickgrid-universal/text-export/-/text-export-3.2.1.tgz#e5cba1893667d3b2bab1d7fc190c3d530069c00d"
+  integrity sha512-AbX+1kKODMr1f4W7WdANx87ApXpzerDfVE0rdYmsVO+NLqGVoOJtsi1HfibclHj+tVRSFHGwObALPuDqZl2vJA==
+  dependencies:
+    "@slickgrid-universal/common" "~3.2.1"
+    "@slickgrid-universal/utils" "~3.1.0"
+    text-encoding-utf-8 "^1.0.2"
 
 "@slickgrid-universal/utils@~3.1.0":
   version "3.1.0"
@@ -5403,6 +5420,11 @@ test-exclude@^6.0.0:
     "@istanbuljs/schema" "^0.1.2"
     glob "^7.1.4"
     minimatch "^3.0.4"
+
+text-encoding-utf-8@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/text-encoding-utf-8/-/text-encoding-utf-8-1.0.2.tgz#585b62197b0ae437e3c7b5d0af27ac1021e10d13"
+  integrity sha512-8bw4MY9WjdsD2aMtO0OzOCY3pXGYNx2d2FfHRVUKkiCPDWjKuOlhLVASS+pD7VkLTVjW268LYJHwsnPFlBpbAg==
 
 text-table@^0.2.0:
   version "0.2.0"

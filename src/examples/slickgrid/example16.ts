@@ -36,7 +36,7 @@ export class Example16 {
     return this.aureliaGrid?.extensionService.getExtensionInstanceByName(ExtensionName.rowMoveManager);
   }
 
-  attached() {
+  attaching() {
     // populate the dataset once the grid is ready
     this.getData();
   }

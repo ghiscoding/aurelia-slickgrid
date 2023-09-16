@@ -27,7 +27,7 @@
     "not dead"
   ],
   "dependencies": {
-    "@aurelia/i18n": "^2.0.0-beta.8",
+    "@aurelia/i18n": "latest",
     "@aurelia/router": "latest",
     "@slickgrid-universal/common": "^3.2.1",
     "@slickgrid-universal/custom-footer-component": "^3.2.1",
@@ -40,13 +40,14 @@
     "sortablejs": "^1.15.0"
   },
   "devDependencies": {
-    "@aurelia/fetch-client": "^2.0.0-beta.8",
+    "@aurelia/fetch-client": "latest",
     "@aurelia/testing": "latest",
     "@aurelia/ts-jest": "latest",
     "@aurelia/webpack-loader": "latest",
     "@slickgrid-universal/excel-export": "^3.2.1",
     "@slickgrid-universal/graphql": "^3.2.1",
     "@slickgrid-universal/odata": "^3.2.1",
+    "@slickgrid-universal/text-export": "^3.2.1",
     "@types/jest": "^29.5.2",
     "@types/node": "^18.11.18",
     "@typescript-eslint/eslint-plugin": "^5.60.1",

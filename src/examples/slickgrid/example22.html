@@ -33,7 +33,7 @@
            role="tab"
            aria-controls="fetch"
            aria-selected="false"
-           click.delegate="resizeGrid2()">Fetch-Client</a>
+           click.trigger="resizeGrid2()">Fetch-Client</a>
       </li>
     </ul>
 
@@ -59,7 +59,7 @@
                            column-definitions.bind="columnDefinitions2"
                            grid-options.bind="gridOptions2"
                            dataset.bind="dataset2"
-                           on-aurelia-grid-created.delegate="aureliaGrid2Ready($event.detail)">
+                           on-aurelia-grid-created.trigger="aureliaGrid2Ready($event.detail)">
         </aurelia-slickgrid>
       </div>
     </div>

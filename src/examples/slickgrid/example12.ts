@@ -1,6 +1,5 @@
 import { ExcelExportService } from '@slickgrid-universal/excel-export';
 import { TextExportService } from '@slickgrid-universal/text-export';
-import { autoinject } from 'aurelia-framework';
 import { I18N } from '@aurelia/i18n';
 import { TOptions as I18NOptions } from 'i18next';
 
@@ -28,7 +27,6 @@ const taskTranslateFormatter: Formatter = (_row, _cell, value, _columnDef, _data
   return i18n?.tr('TASK_X', { x: value } as I18NOptions) ?? '';
 };
 
-@autoinject()
 export class Example12 {
   title = 'Example 12: Localization (i18n)';
   subTitle = `Support multiple locales with the i18next plugin, following these steps.
@@ -78,7 +76,7 @@ export class Example12 {
     this.selectedLanguage = defaultLang;
   }
 
-  attached() {
+  attaching() {
     // populate the dataset once the grid is ready
     this.getData(NB_ITEMS);
   }

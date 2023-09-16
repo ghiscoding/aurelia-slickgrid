@@ -29,7 +29,7 @@ export class Example14 {
     this.definedGrid2();
   }
 
-  attached() {
+  attaching() {
     // populate the dataset once the grid is ready
     this.dataset1 = this.getData(500);
     this.dataset2 = this.getData(500);

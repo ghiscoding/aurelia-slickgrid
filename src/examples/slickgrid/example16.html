@@ -15,29 +15,29 @@
   <div class="row">
     <div class="col-sm-12">
       <button class="btn btn-outline-secondary btn-sm" data-test="hide-duration-btn"
-              click.delegate="hideDurationColumnDynamically()">
+              click.trigger="hideDurationColumnDynamically()">
         <i class="fa fa-eye-slash"></i>
         Dynamically Hide "Duration"
       </button>
       <button class="btn btn-outline-secondary btn-sm" data-test="disable-filters-btn"
-              click.delegate="disableFilters()">
+              click.trigger="disableFilters()">
         <i class="fa fa-times"></i>
         Disable Filters
       </button>
       <button class="btn btn-outline-secondary btn-sm" data-test="disable-sorting-btn"
-              click.delegate="disableSorting()">
+              click.trigger="disableSorting()">
         <i class="fa fa-times"></i>
         Disable Sorting
       </button>
-      <button class="btn btn-outline-secondary btn-sm" data-test="toggle-filtering-btn" click.delegate="toggleFilter()">
+      <button class="btn btn-outline-secondary btn-sm" data-test="toggle-filtering-btn" click.trigger="toggleFilter()">
         <i class="fa fa-random"></i>
         Toggle Filtering
       </button>
-      <button class="btn btn-outline-secondary btn-sm" data-test="toggle-sorting-btn" click.delegate="toggleSorting()">
+      <button class="btn btn-outline-secondary btn-sm" data-test="toggle-sorting-btn" click.trigger="toggleSorting()">
         <i class="fa fa-random"></i>
         Toggle Sorting
       </button>
-      <button class="btn btn-outline-secondary btn-sm" data-test="add-crud-columns-btn" click.delegate="addEditDeleteColumns()">
+      <button class="btn btn-outline-secondary btn-sm" data-test="add-crud-columns-btn" click.trigger="addEditDeleteColumns()">
         <i class="fa fa-plus"></i>
         Add Edit/Delete Columns
       </button>
@@ -50,6 +50,6 @@
                      column-definitions.bind="columnDefinitions"
                      grid-options.bind="gridOptions"
                      dataset.bind="dataset"
-                     on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
+                     on-aurelia-grid-created.trigger="aureliaGridReady($event.detail)">
   </aurelia-slickgrid>
 </template>

@@ -15,27 +15,27 @@
     <span>
       <label>Scroll: </label>
       <div class="btn-group" role="group" aria-label="...">
-        <button class="btn btn-sm btn-outline-secondary" data-test="scroll-top-btn" click.delegate="scrollGridTop()">
+        <button class="btn btn-sm btn-outline-secondary" data-test="scroll-top-btn" click.trigger="scrollGridTop()">
           <i class="fa fa-arrow-up"></i>
         </button>
         <button class="btn btn-sm btn-outline-secondary" data-test="scroll-bottom-btn"
-                click.delegate="scrollGridBottom()">
+                click.trigger="scrollGridBottom()">
           <i class="fa fa-arrow-down"></i>
         </button>
       </div>
       <button class="btn btn-sm btn-outline-secondary" data-test="add-new-item-top-btn"
-              click.delegate="addNewItem()">Add New Mocked Item (top)</button>
+              click.trigger="addNewItem()">Add New Mocked Item (top)</button>
       <button class="btn btn-sm btn-outline-secondary" data-test="add-new-item-bottom-btn"
-              click.delegate="addNewItem('bottom')">Add New Mocked Item
+              click.trigger="addNewItem('bottom')">Add New Mocked Item
         (bottom)</button>
       <button class="btn btn-sm btn-outline-secondary" data-test="update-second-item-btn"
-              click.delegate="updateSecondItem()">
+              click.trigger="updateSecondItem()">
         Update 2nd Row Item with Random Duration
       </button>
       <button class="btn btn-sm btn-outline-secondary" data-test="highlight-row5-btn"
-              click.delegate="highlighFifthRow()">Highlight 5th Row</button>
+              click.trigger="highlighFifthRow()">Highlight 5th Row</button>
       <button class="btn btn-sm btn-outline-secondary" data-test="highlight-duration40-btn"
-              click.delegate="changeDurationBackgroundColor()">
+              click.trigger="changeDurationBackgroundColor()">
         Highlight Rows with Duration over 50
       </button>
     </span>
@@ -46,6 +46,6 @@
                      column-definitions.bind="columnDefinitions"
                      grid-options.bind="gridOptions"
                      dataset.bind="dataset"
-                     on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
+                     on-aurelia-grid-created.trigger="aureliaGridReady($event.detail)">
   </aurelia-slickgrid>
 </template>
