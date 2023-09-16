@@ -3,9 +3,7 @@ import { Constructable, CustomElement, IAurelia, singleton } from 'aurelia';
 
 @singleton()
 export class AureliaUtilService {
-  constructor(
-    @IAurelia private readonly au: IAurelia
-  ) { }
+  constructor(@IAurelia private readonly au: IAurelia) { }
 
   async createAureliaViewModelAddToSlot(viewModel: Constructable, bindableData: ViewModelBindableInputData, targetElement?: HTMLElement | Element): Promise<AureliaViewOutput | null> {
     if (!targetElement) {

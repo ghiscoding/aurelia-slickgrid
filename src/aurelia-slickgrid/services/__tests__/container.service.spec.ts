@@ -1,9 +1,9 @@
-import { Container } from 'aurelia-framework';
+import { DI } from 'aurelia';
 import { SharedService } from '@slickgrid-universal/common';
 import { ContainerService } from '../container.service';
 
 describe('Container Service', () => {
-  const container = new Container();
+  const container = DI.createContainer();
   let service: ContainerService;
   let sharedService: SharedService;
 
@@ -17,9 +17,10 @@ describe('Container Service', () => {
     expect(service.get('SharedService')).toEqual(sharedService);
   });
 
-  it('should register an instance and expect to null when calling the get method with an invalid name', () => {
+  it('should register an instance and expect to return null when calling the get method with an invalid name', () => {
     service.registerInstance('SharedService', sharedService);
     const output = service.get('DifferentName');
     expect(output).toBeNull();
+    // expect(() => service.get('DifferentName')).toThrow();
   });
 });

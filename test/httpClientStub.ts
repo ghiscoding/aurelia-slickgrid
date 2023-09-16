@@ -1,4 +1,4 @@
-import { HttpClient } from 'aurelia-fetch-client';
+import { HttpClient } from '@aurelia/fetch-client';
 
 export class HttpStub extends HttpClient {
   status: number;

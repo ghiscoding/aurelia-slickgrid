@@ -1,32 +1,36 @@
 import 'jest-extended';
-import { I18N } from '@aurelia/i18n';
-import { EventAggregator } from 'aurelia-event-aggregator';
-import { BindingSignaler } from 'aurelia-templating-resources';
+import { EventAggregator } from 'aurelia';
+import { MockSignaler } from '@aurelia/testing';
+import { I18N, I18nInitOptions, I18nService } from '@aurelia/i18n';
+import i18next from 'i18next';
 
 import { TranslaterService } from '../translater.service';
 
 describe('Translater Service', () => {
-  let ea: EventAggregator;
   let i18n: I18N;
   let service: TranslaterService;
+  const defaultLng = 'en';
 
-  beforeEach(() => {
-    ea = new EventAggregator();
-    i18n = new I18N(ea, new BindingSignaler());
-    service = new TranslaterService(i18n);
-
-    i18n.setup({
-      lng: 'en',
-      fallbackLng: 'en',
+  beforeEach(async () => {
+    const options: I18nInitOptions = {
+      lng: defaultLng,
+      fallbackLng: defaultLng,
+      debug: false,
+      plugins: [],
+      skipTranslationOnMissingKey: false,
       resources: {
         en: { translation: { ITEMS: 'items', OF: 'of', } },
         fr: { translation: { ITEMS: 'éléments', OF: 'de', } }
-      },
-    });
+      }
+    };
+    i18n = new I18nService({ i18next }, options, new EventAggregator(), new MockSignaler());
+    await i18n.initPromise;
+    service = new TranslaterService(i18n);
   });
 
-  it('should create the service', () => {
+  it('should create the service with default language', () => {
     expect(service).toBeTruthy();
+    expect(service.getCurrentLanguage()).toBe(defaultLng);
   });
 
   it('should call "use" method and expect "getCurrentLanguage" to be equal', async () => {

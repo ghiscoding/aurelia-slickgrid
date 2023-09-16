@@ -130,7 +130,7 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
 
           if (this.onAsyncResponse) {
             this._eventHandler.subscribe(this.onAsyncResponse, (event, args) => {
-              if (this.rowDetailViewOptions && typeof this.rowDetailViewOptions.onAsyncResponse === 'function') {
+              if (typeof this.rowDetailViewOptions?.onAsyncResponse === 'function') {
                 this.rowDetailViewOptions.onAsyncResponse(event, args);
               }
             });
@@ -141,7 +141,7 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
               // triggers after backend called "onAsyncResponse.notify()"
               await this.renderViewModel(args?.item);
 
-              if (this.rowDetailViewOptions && typeof this.rowDetailViewOptions.onAsyncEndUpdate === 'function') {
+              if (typeof this.rowDetailViewOptions?.onAsyncEndUpdate === 'function') {
                 this.rowDetailViewOptions.onAsyncEndUpdate(event, args);
               }
             });
@@ -154,7 +154,7 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
               await this.renderPreloadView();
               this.renderAllViewModels();
 
-              if (this.rowDetailViewOptions && typeof this.rowDetailViewOptions.onAfterRowDetailToggle === 'function') {
+              if (typeof this.rowDetailViewOptions?.onAfterRowDetailToggle === 'function') {
                 this.rowDetailViewOptions.onAfterRowDetailToggle(event, args);
               }
             });
@@ -165,7 +165,7 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
               // before toggling row detail, we need to create View Slot if it doesn't exist
               this.handleOnBeforeRowDetailToggle(event, args);
 
-              if (this.rowDetailViewOptions && typeof this.rowDetailViewOptions.onBeforeRowDetailToggle === 'function') {
+              if (typeof this.rowDetailViewOptions?.onBeforeRowDetailToggle === 'function') {
                 this.rowDetailViewOptions.onBeforeRowDetailToggle(event, args);
               }
             });
@@ -176,7 +176,7 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
               // when row is back to viewport range, we will re-render the View Slot(s)
               await this.handleOnRowBackToViewportRange(event, args);
 
-              if (this.rowDetailViewOptions && typeof this.rowDetailViewOptions.onRowBackToViewportRange === 'function') {
+              if (typeof this.rowDetailViewOptions?.onRowBackToViewportRange === 'function') {
                 this.rowDetailViewOptions.onRowBackToViewportRange(event, args);
               }
             });
@@ -184,7 +184,7 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
 
           if (this.onRowOutOfViewportRange) {
             this._eventHandler.subscribe(this.onRowOutOfViewportRange, (event, args) => {
-              if (this.rowDetailViewOptions && typeof this.rowDetailViewOptions.onRowOutOfViewportRange === 'function') {
+              if (typeof this.rowDetailViewOptions?.onRowOutOfViewportRange === 'function') {
                 this.rowDetailViewOptions.onRowOutOfViewportRange(event, args);
               }
             });

@@ -6,11 +6,11 @@ export class ContainerService implements UniversalContainerService {
   constructor(@IContainer private readonly container: IContainer) { }
 
   get<T = any>(key: string): T | null {
-    const dependency = this.container.get(key) as T;
-    if (typeof key === 'string' && dependency === key) {
+    try {
+      return this.container.get(key) as T;
+    } catch (_) {
       return null;
     }
-    return dependency;
   }
 
   registerInstance(key: string, instance: any) {

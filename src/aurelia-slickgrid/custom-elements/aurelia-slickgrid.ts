@@ -4,7 +4,7 @@ import 'slickgrid/slick.core';
 import 'slickgrid/slick.interactions';
 import 'slickgrid/slick.grid';
 import 'slickgrid/slick.dataview';
-import * as Sortable_ from 'sortablejs';
+import Sortable_ from 'sortablejs';
 const Sortable = ((Sortable_ as any)?.['default'] ?? Sortable_); // patch for rollup
 
 import type {
@@ -63,7 +63,7 @@ import { SlickFooterComponent } from '@slickgrid-universal/custom-footer-compone
 import { SlickEmptyWarningComponent } from '@slickgrid-universal/empty-warning-component';
 import { SlickPaginationComponent } from '@slickgrid-universal/pagination-component';
 
-import { bindable, IContainer, IEventAggregator, IDisposable, BindingMode, IObserverLocator, CollectionKind, customElement } from 'aurelia';
+import { bindable, BindingMode, customElement, IContainer, IEventAggregator, IDisposable, IObserverLocator } from 'aurelia';
 import { ICollectionSubscriber, ICollectionObserver } from '@aurelia/runtime';
 import { dequal } from 'dequal/lite';
 
@@ -99,10 +99,10 @@ export class AureliaSlickgridCustomElement {
   private _isLocalGrid = true;
   private _paginationOptions: Pagination | undefined;
   private _registeredResources: ExternalResource[] = [];
-  private _columnDefinitionObserver: ICollectionObserver<CollectionKind.array>;
-  private _columnDefinitionsSubscriber: ICollectionSubscriber = {
-    handleCollectionChange: this.columnDefinitionsHandler.bind(this)
-  };
+  // private _columnDefinitionObserver: ICollectionObserver<any>;
+  // private _columnDefinitionsSubscriber: ICollectionSubscriber = {
+  //   handleCollectionChange: this.columnDefinitionsHandler.bind(this)
+  // };
 
   groupItemMetadataProvider?: SlickGroupItemMetadataProvider;
   backendServiceApi: BackendServiceApi | undefined;
@@ -548,7 +548,7 @@ export class AureliaSlickgridCustomElement {
 
     // also dispose of all Subscriptions
     this.subscriptions = disposeAllSubscriptions(this.subscriptions);
-    this._columnDefinitionObserver.unsubscribe(this._columnDefinitionsSubscriber);
+    // this._columnDefinitionObserver.unsubscribe(this._columnDefinitionsSubscriber);
 
     if (this.backendServiceApi) {
       for (const prop of Object.keys(this.backendServiceApi)) {
@@ -587,13 +587,13 @@ export class AureliaSlickgridCustomElement {
     this.columnDefinitionsChanged();
 
     // subscribe to column definitions assignment changes
-    this.observeColumnDefinitions();
+    // this.observeColumnDefinitions();
   }
 
   /** on columnDefinitions assignment and/or .slice() call */
   columnDefinitionsChanged() {
     this.columnDefinitionsHandler();
-    this.observeColumnDefinitions();
+    // this.observeColumnDefinitions();
   }
 
   /**
@@ -1100,11 +1100,11 @@ export class AureliaSlickgridCustomElement {
    * we can use array observer for these other changes done via (push, pop, ...)
    * see docs https://docs.aurelia.io/components/bindable-properties#calling-a-change-function-when-bindable-is-modified
    */
-  private observeColumnDefinitions() {
-    this._columnDefinitionObserver?.unsubscribe(this._columnDefinitionsSubscriber);
-    this._columnDefinitionObserver = this.observerLocator.getArrayObserver(this.columnDefinitions);
-    this._columnDefinitionObserver.subscribe(this._columnDefinitionsSubscriber);
-  }
+  // private observeColumnDefinitions() {
+  //   this._columnDefinitionObserver?.unsubscribe(this._columnDefinitionsSubscriber);
+  //   this._columnDefinitionObserver = this.observerLocator.getArrayObserver(this.columnDefinitions);
+  //   this._columnDefinitionObserver.subscribe(this._columnDefinitionsSubscriber);
+  // }
 
   /**
    * Loop through all column definitions and copy the original optional `width` properties optionally provided by the user.
