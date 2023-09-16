@@ -101,15 +101,7 @@ export class AureliaSlickgridCustomElement {
   private _registeredResources: ExternalResource[] = [];
   private _columnDefinitionObserver: ICollectionObserver<CollectionKind.array>;
   private _columnDefinitionsSubscriber: ICollectionSubscriber = {
-    handleCollectionChange: () => {
-      this._columnDefinitions = this.columnDefinitions;
-      if (this._isGridInitialized) {
-        this.updateColumnDefinitionsList(this.columnDefinitions);
-      }
-      if (this._columnDefinitions.length > 0) {
-        this.copyColumnWidthsReference(this._columnDefinitions);
-      }
-    }
+    handleCollectionChange: this.columnDefinitionsHandler.bind(this)
   };
 
   groupItemMetadataProvider?: SlickGroupItemMetadataProvider;
@@ -589,13 +581,19 @@ export class AureliaSlickgridCustomElement {
   bound() {
     // get the grid options (order of precedence is Global Options first, then user option which could overwrite the Global options)
     this.gridOptions = { ...GlobalGridOptions, ...this.gridOptions };
-    this._columnDefinitions = this.columnDefinitions;
+
+    // in Au2, the xChanged is not fired upon initial component initialization which differs from Au1
+    // we do however need this to happen, so we will call it manually
+    this.columnDefinitionsChanged();
 
     // subscribe to column definitions assignment changes
-    // assignment changes are not triggering a "changed" event https://stackoverflow.com/a/30286225/1212166
-    // also binding docs https://github.com/aurelia/binding/blob/master/doc/article/en-US/binding-observables.md#observing-collections
-    this._columnDefinitionObserver = this.observerLocator.getArrayObserver(this.columnDefinitions);
-    this._columnDefinitionObserver.subscribe(this._columnDefinitionsSubscriber);
+    this.observeColumnDefinitions();
+  }
+
+  /** on columnDefinitions assignment and/or .slice() call */
+  columnDefinitionsChanged() {
+    this.columnDefinitionsHandler();
+    this.observeColumnDefinitions();
   }
 
   /**
@@ -1086,6 +1084,28 @@ export class AureliaSlickgridCustomElement {
   // private functions
   // ------------------
 
+  /** handler for when column definitions changes */
+  private columnDefinitionsHandler() {
+    this._columnDefinitions = this.columnDefinitions;
+    if (this._isGridInitialized) {
+      this.updateColumnDefinitionsList(this.columnDefinitions);
+    }
+    if (this._columnDefinitions.length > 0) {
+      this.copyColumnWidthsReference(this._columnDefinitions);
+    }
+  }
+
+  /**
+   * assignment changes are not triggering a "columnDefinitionsChanged" event https://stackoverflow.com/a/30286225/1212166
+   * we can use array observer for these other changes done via (push, pop, ...)
+   * see docs https://docs.aurelia.io/components/bindable-properties#calling-a-change-function-when-bindable-is-modified
+   */
+  private observeColumnDefinitions() {
+    this._columnDefinitionObserver?.unsubscribe(this._columnDefinitionsSubscriber);
+    this._columnDefinitionObserver = this.observerLocator.getArrayObserver(this.columnDefinitions);
+    this._columnDefinitionObserver.subscribe(this._columnDefinitionsSubscriber);
+  }
+
   /**
    * Loop through all column definitions and copy the original optional `width` properties optionally provided by the user.
    * We will use this when doing a resize by cell content, if user provided a `width` it won't override it.
@@ -1177,7 +1197,7 @@ export class AureliaSlickgridCustomElement {
     }
   }
 
-  protected insertDynamicPresetColumns(columnId: string, gridPresetColumns: Column[]) {
+  private insertDynamicPresetColumns(columnId: string, gridPresetColumns: Column[]) {
     if (this._columnDefinitions) {
       const columnPosition = this._columnDefinitions.findIndex(c => c.id === columnId);
       if (columnPosition >= 0) {

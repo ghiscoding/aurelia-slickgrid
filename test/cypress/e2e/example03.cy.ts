@@ -114,7 +114,7 @@ describe('Example 3 - Grid with Editors', { retries: 1 }, () => {
     cy.get(`[style="top:${GRID_ROW_HEIGHT * 0}px"] > .slick-cell:nth(14)`).should('contain', 'Task 0');
   });
 
-  it.skip('should be able to change value of 1st row "Title" column and expect same value set in all 3 "Title" columns', () => {
+  it('should be able to change value of 1st row "Title" column and expect same value set in all 3 "Title" columns', () => {
     cy.get(`[style="top:${GRID_ROW_HEIGHT * 0}px"] > .slick-cell:nth(2)`).should('contain', 'Task 0').click();
 
     // change Title & Custom Title
@@ -151,7 +151,7 @@ describe('Example 3 - Grid with Editors', { retries: 1 }, () => {
       .scrollTo('top');
   });
 
-  it.skip('should be able to filter and search "Task 2222" in the new column and expect only 1 row showing in the grid', () => {
+  it('should be able to filter and search "Task 2222" in the new column and expect only 1 row showing in the grid', () => {
     cy.get('input.search-filter.filter-title1')
       .type('Task 2222', { force: true })
       .should('have.value', 'Task 2222');
@@ -160,7 +160,7 @@ describe('Example 3 - Grid with Editors', { retries: 1 }, () => {
     cy.get(`[style="top:${GRID_ROW_HEIGHT * 0}px"] > .slick-cell:nth(2)`).should('contain', 'Task 2222');
   });
 
-  it.skip('should hover over the last "Title" column and click on "Clear Filter" and expect grid to have all rows shown', () => {
+  it('should hover over the last "Title" column and click on "Clear Filter" and expect grid to have all rows shown', () => {
     cy.get('.slick-header-column:nth-child(14)')
       .first()
       .trigger('mouseover')
@@ -178,7 +178,7 @@ describe('Example 3 - Grid with Editors', { retries: 1 }, () => {
     cy.get('.slick-row').should('have.length.greaterThan', 1);
   });
 
-  it.skip('should be able to dynamically remove last 2 added Title columns', () => {
+  it('should be able to dynamically remove last 2 added Title columns', () => {
     cy.get('[data-test=remove-title-column]')
       .click()
       .click();
@@ -188,7 +188,7 @@ describe('Example 3 - Grid with Editors', { retries: 1 }, () => {
     cy.get(`[style="top:${GRID_ROW_HEIGHT * 0}px"] > .slick-cell:nth(14)`).should('not.exist');
   });
 
-  it.skip('should be able to change values again of 1st row "Title" column and expect same value set in all 3 "Title" columns', () => {
+  it('should be able to change values again of 1st row "Title" column and expect same value set in all 3 "Title" columns', () => {
     cy.get(`[style="top:${GRID_ROW_HEIGHT * 0}px"] > .slick-cell:nth(2)`).should('contain', 'Task 0').click();
 
     // change Title & Custom Title
@@ -218,7 +218,7 @@ describe('Example 3 - Grid with Editors', { retries: 1 }, () => {
     cy.get(`[style="top:${GRID_ROW_HEIGHT * 0}px"] > .slick-cell:nth(11) > input.editor-checkbox.editor-effort-driven`).uncheck();
   });
 
-  it.skip('should click Add Item button 2x times and expect "Task 100" and "Task 101" to be created', () => {
+  it('should click Add Item button 2x times and expect "Task 100" and "Task 101" to be created', () => {
     cy.get('[data-test="add-item-btn"]').click();
     cy.wait(200);
     cy.get('[data-test="add-item-btn"]').click();
@@ -229,7 +229,7 @@ describe('Example 3 - Grid with Editors', { retries: 1 }, () => {
     // cy.get('[data-test="toggle-filtering-btn"]').click(); // show it back
   });
 
-  it.skip('should open the "Prerequisites" Filter and expect to have Task 500 & 101 in the Filter', () => {
+  it('should open the "Prerequisites" Filter and expect to have Task 500 & 101 in the Filter', () => {
     cy.get('div.ms-filter.filter-prerequisites')
       .trigger('click');
 
@@ -245,7 +245,7 @@ describe('Example 3 - Grid with Editors', { retries: 1 }, () => {
       .trigger('click');
   });
 
-  it.skip('should open the "Prerequisites" Editor and expect to have Task 100 & 101 in the Editor', () => {
+  it('should open the "Prerequisites" Editor and expect to have Task 100 & 101 in the Editor', () => {
     cy.get(`[style="top:${GRID_ROW_HEIGHT * 0}px"] > .slick-cell:nth(12)`)
       .should('contain', '')
       .click();
@@ -268,7 +268,7 @@ describe('Example 3 - Grid with Editors', { retries: 1 }, () => {
     cy.get(`[style="top:${GRID_ROW_HEIGHT * 0}px"] > .slick-cell:nth(12)`).should('contain', 'Task 101');
   });
 
-  it.skip('should delete the last item "Task 101" and expect it to be removed from the Filter', () => {
+  it('should delete the last item "Task 101" and expect it to be removed from the Filter', () => {
     cy.get('[data-test="delete-item-btn"]').click();
 
     cy.get(`[style="top:${GRID_ROW_HEIGHT * 0}px"] > .slick-cell:nth(2)`).should('contain', 'Task 100');
@@ -284,7 +284,7 @@ describe('Example 3 - Grid with Editors', { retries: 1 }, () => {
       .trigger('click');
   });
 
-  it.skip('should open the "Prerequisites" Filter then choose "Task 3", "Task 4" and "Task 8" from the list and expect to see 2 rows of data in the grid', () => {
+  it('should open the "Prerequisites" Filter then choose "Task 3", "Task 4" and "Task 8" from the list and expect to see 2 rows of data in the grid', () => {
     cy.get('div.ms-filter.filter-prerequisites')
       .trigger('click');
 
