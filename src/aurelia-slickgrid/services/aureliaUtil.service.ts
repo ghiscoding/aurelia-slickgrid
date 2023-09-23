@@ -5,13 +5,23 @@ import { Constructable, CustomElement, IAurelia, singleton } from 'aurelia';
 export class AureliaUtilService {
   constructor(@IAurelia private readonly au: IAurelia) { }
 
+  get aurelia() {
+    return this.au;
+  }
+
   async createAureliaViewModelAddToSlot(viewModel: Constructable, bindableData: ViewModelBindableInputData, targetElement?: HTMLElement | Element): Promise<AureliaViewOutput | null> {
     if (!targetElement) {
       return null;
     }
 
     const def = CustomElement.getDefinition(viewModel);
-    targetElement.innerHTML = `<${def.name} model.bind="bindableData.model" addon.bind="bindableData.addon" grid.bind="bindableData.grid" data-view.bind="bindableData.dataView" parent.bind="bindableData.parent"></${def.name}>`;
+    const addonBindable = bindableData?.addon ? 'addon.bind="bindableData.addon"' : '';
+    const gridBindable = bindableData?.grid ? 'grid.bind="bindableData.grid"' : '';
+    const dataViewBindable = bindableData?.dataView ? 'data-view.bind="bindableData.dataView"' : '';
+    const parentBindable = bindableData?.parent ? 'parent.bind="bindableData.parent"' : '';
+
+    targetElement.innerHTML = `<${def.name} model.bind="bindableData.model" ${addonBindable} ${gridBindable} ${dataViewBindable} ${parentBindable}></${def.name}>`.trim();
+
     return { controller: await this.au.enhance({ host: targetElement, component: { bindableData } }) };
   }
 }

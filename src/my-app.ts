@@ -2,56 +2,49 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'font-awesome/css/font-awesome.css';
 import 'flatpickr/dist/flatpickr.min.css';
 import './styles.scss';
-import { Example1 } from './examples/slickgrid/example1';
-import { Example2 } from './examples/slickgrid/example2';
-import { Example3 } from './examples/slickgrid/example3';
-import { Example4 } from './examples/slickgrid/example4';
-import { Example5 } from './examples/slickgrid/example5';
-import { Example6 } from './examples/slickgrid/example6';
-import { Example7 } from './examples/slickgrid/example7';
-import { Example8 } from './examples/slickgrid/example8';
-import { Example9 } from './examples/slickgrid/example9';
-import { Example10 } from './examples/slickgrid/example10';
-import { Example11 } from './examples/slickgrid/example11';
-import { Example12 } from './examples/slickgrid/example12';
-import { Example13 } from './examples/slickgrid/example13';
-import { Example14 } from './examples/slickgrid/example14';
-import { Example15 } from './examples/slickgrid/example15';
-import { Example16 } from './examples/slickgrid/example16';
-import { Example17 } from './examples/slickgrid/example17';
-import { Example18 } from './examples/slickgrid/example18';
-import { Example19 } from './examples/slickgrid/example19';
-import { Example20 } from './examples/slickgrid/example20';
-import { HomePage } from './home-page';
 
 export class MyApp {
   static routes = [
-    { path: '', component: HomePage, /* () => import('./home-page') */ title: 'Home' },
-    { path: 'example1', component: Example1 /* () => import('./examples/slickgrid/example1') */, title: 'Example 1' },
-    { path: 'example2', component: Example2 /* () => import('./examples/slickgrid/example2') */, title: 'Example 2' },
-    { path: 'example3', component: Example3 /* () => import('./examples/slickgrid/example3') */, title: 'Example 3' },
-    { path: 'example4', component: Example4 /* () => import('./examples/slickgrid/example4') */, title: 'Example 4' },
-    { path: 'example5', component: Example5 /* () => import('./examples/slickgrid/example5') */, title: 'Example 5' },
-    { path: 'example6', component: Example6 /* () => import('./examples/slickgrid/example6') */, title: 'Example 6' },
-    { path: 'example7', component: Example7 /* () => import('./examples/slickgrid/example7') */, title: 'Example 7' },
-    { path: 'example8', component: Example8 /* () => import('./examples/slickgrid/example8') */, title: 'Example 8' },
-    { path: 'example9', component: Example9 /* () => import('./examples/slickgrid/example9') */, title: 'Example 9' },
-    { path: 'example10', component: Example10 /* () => import('./examples/slickgrid/example10') */, title: 'Example 10' },
-    { path: 'example11', component: Example11 /* () => import('./examples/slickgrid/example11') */, title: 'Example 11' },
-    { path: 'example12', component: Example12 /* () => import('./examples/slickgrid/example12') */, title: 'Example 12' },
-    { path: 'example13', component: Example13 /* () => import('./examples/slickgrid/example13') */, title: 'Example 13' },
-    { path: 'example14', component: Example14 /* () => import('./examples/slickgrid/example14') */, title: 'Example 14' },
-    { path: 'example15', component: Example15 /* () => import('./examples/slickgrid/example15') */, title: 'Example 15' },
-    { path: 'example16', component: Example16 /* () => import('./examples/slickgrid/example16') */, title: 'Example 16' },
-    { path: 'example17', component: Example17 /* () => import('./examples/slickgrid/example17') */, title: 'Example 17' },
-    { path: 'example18', component: Example18 /* () => import('./examples/slickgrid/example18') */, title: 'Example 18' },
-    { path: 'example19', component: Example19 /* () => import('./examples/slickgrid/example19') */, title: 'Example 19' },
-    { path: 'example20', component: Example20 /* () => import('./examples/slickgrid/example20') */, title: 'Example 20' },
+    { path: 'example1', component: () => import('./examples/slickgrid/example1'), title: '1- Basic Grid / 2 Grids' },
+    { path: 'example2', component: () => import('./examples/slickgrid/example2'), title: '2- Formatters' },
+    { path: 'example3', component: () => import('./examples/slickgrid/example3'), title: '3- Editors / Delete' },
+    { path: 'example4', component: () => import('./examples/slickgrid/example4'), title: '4- Client Side Sort/Filter' },
+    { path: 'example5', component: () => import('./examples/slickgrid/example5'), title: '5- Backend OData Service' },
+    { path: 'example6', component: () => import('./examples/slickgrid/example6'), title: '6- Backend GraphQL Service' },
+    { path: 'example7', component: () => import('./examples/slickgrid/example7'), title: '7- Header Button Plugin' },
+    { path: 'example8', component: () => import('./examples/slickgrid/example8'), title: '8- Header Menu Plugin' },
+    { path: 'example9', component: () => import('./examples/slickgrid/example9'), title: '9- Grid Menu Control' },
+    { path: 'example10', component: () => import('./examples/slickgrid/example10'), title: '10- Row Selection / 2 Grids' },
+    { path: 'example11', component: () => import('./examples/slickgrid/example11'), title: '11- Add/Update Grid Item' },
+    { path: 'example12', component: () => import('./examples/slickgrid/example12'), title: '12- Localization (i18n)' },
+    { path: 'example13', component: () => import('./examples/slickgrid/example13'), title: '13- Grouping & Aggregators' },
+    { path: 'example14', component: () => import('./examples/slickgrid/example14'), title: '14- Column Span & Header Grouping' },
+    { path: 'example15', component: () => import('./examples/slickgrid/example15'), title: '15- Grid State & Local Storage' },
+    { path: 'example16', component: () => import('./examples/slickgrid/example16'), title: '16- Row Move Plugin' },
+    { path: 'example17', component: () => import('./examples/slickgrid/example17'), title: '17- Remote Model' },
+    { path: 'example18', component: () => import('./examples/slickgrid/example18'), title: '18- Draggable Grouping' },
+    { path: 'example19', component: () => import('./examples/slickgrid/example19'), title: '19- Row Detail View' },
+    { path: 'example20', component: () => import('./examples/slickgrid/example20'), title: '20- Pinned Columns/Rows' },
+    { path: 'example21', component: () => import('./examples/slickgrid/example21'), title: '21- Grid AutoHeight (full height)' },
+    { path: 'example22', component: () => import('./examples/slickgrid/example22'), title: '22- with Bootstrap Tabs' },
+    { path: 'example23', component: () => import('./examples/slickgrid/example23'), title: '23- Filter by Range of Values' },
+    { path: 'example24', component: () => import('./examples/slickgrid/example24'), title: '24- Cell & Context Menu' },
+    { path: 'example25', component: () => import('./examples/slickgrid/example25'), title: '25- GraphQL without Pagination' },
+    { path: 'example26', component: () => import('./examples/slickgrid/example26'), title: '26- Use of Aurelia Components' },
+    { path: 'example27', component: () => import('./examples/slickgrid/example27'), title: '27- Tree Data (Parent/Child)' },
+    { path: 'example28', component: () => import('./examples/slickgrid/example28'), title: '28- Tree Data (Hierarchical set)' },
+    { path: 'example29', component: () => import('./examples/slickgrid/example29'), title: '29- Grid with header and footer slots' },
+    { path: 'example30', component: () => import('./examples/slickgrid/example30'), title: '30- Composite Editor Modal' },
+    { path: 'example31', component: () => import('./examples/slickgrid/example31'), title: '31- Backend OData with RxJS' },
+    { path: 'example32', component: () => import('./examples/slickgrid/example32'), title: '32- Columns Resize by Content' },
+    { path: 'example33', component: () => import('./examples/slickgrid/example33'), title: '33- Regular & Custom Tooltip' },
+    { path: ['', 'example34'], component: () => import('./examples/slickgrid/example34'), title: '34- Real-Time Trading Platform' },
+    { path: 'home', component: () => import('./home-page'), title: 'Home' },
   ];
 
   routes = MyApp.routes;
 
-  attaching() {
+  attached() {
     this.addGitHubStarsLogo();
   }
 

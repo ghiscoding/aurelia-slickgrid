@@ -492,13 +492,8 @@ export class AureliaSlickgridCustomElement {
     this._eventPubSubService.publish(`${aureliaEventPrefix}onAureliaGridCreated`, aureliaElementInstance);
   }
 
-  /** This is an Aurlia lifecycle hook */
-  detaching() {
-    this.detached();
-  }
-
   /** Do not confuse with the Aurelia hook - it's been renamed */
-  detached(shouldEmptyDomElementContainer = false) {
+  detaching(shouldEmptyDomElementContainer = false) {
     const aureliaEventPrefix = this.gridOptions?.defaultAureliaEventPrefix ?? '';
     this._eventPubSubService.publish(`${aureliaEventPrefix}onBeforeGridDestroy`, this.grid);
     this._eventHandler?.unsubscribeAll();
@@ -575,7 +570,7 @@ export class AureliaSlickgridCustomElement {
 
   /** Do not rename to `dispose` as it's an Aurelia hook */
   disposeInstance(shouldEmptyDomElementContainer = false) {
-    this.detached(shouldEmptyDomElementContainer);
+    this.detaching(shouldEmptyDomElementContainer);
   }
 
   bound() {

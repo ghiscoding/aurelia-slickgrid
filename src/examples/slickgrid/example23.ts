@@ -1,7 +1,6 @@
-import { autoinject } from 'aurelia-framework';
 import { I18N } from '@aurelia/i18n';
 import { TOptions as I18NOptions } from 'i18next';
-import * as moment from 'moment-mini';
+import moment from 'moment-mini';
 import { SlickCustomTooltip } from '@slickgrid-universal/custom-tooltip-plugin';
 import { ExcelExportService } from '@slickgrid-universal/excel-export';
 
@@ -37,7 +36,6 @@ const taskTranslateFormatter: Formatter = (_row, _cell, value, _columnDef, _data
   return i18n?.tr('TASK_X', { x: value } as I18NOptions) ?? '';
 };
 
-@autoinject()
 export class Example23 {
   title = 'Example 23: Filtering from Range of Search Values';
   subTitle = `
@@ -87,7 +85,7 @@ export class Example23 {
     this.dataset = this.mockData(NB_ITEMS);
   }
 
-  detached() {
+  detaching() {
     this.saveCurrentGridState();
   }
 

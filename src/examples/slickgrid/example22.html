@@ -13,36 +13,35 @@
        innerhtml.bind="subTitle"></div>
 
   <div>
-    <ul class="nav nav-tabs"
-        id="myTab"
-        role="tablist">
-      <li class="nav-item">
-        <a class="nav-link active"
-           id="javascript-tab"
-           data-bs-toggle="tab"
-           href="#javascript"
-           role="tab"
-           aria-controls="javascript"
-           aria-selected="true">Javascript</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link"
-           id="fetch-tab"
-           data-bs-toggle="tab"
-           href="#fetch"
-           role="tab"
-           aria-controls="fetch"
-           aria-selected="false"
-           click.trigger="resizeGrid2()">Fetch-Client</a>
-      </li>
-    </ul>
-
-    <div class="tab-content"
-         id="myTabContent">
-      <div class="tab-pane fade show active"
-           id="javascript"
-           role="tabpanel"
-           aria-labelledby="javascript-tab">
+    <nav>
+      <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <button
+            class="nav-link active"
+            id="javascript-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#javascript"
+            type="button"
+            role="tab"
+            aria-controls="javascript"
+            aria-selected="true">
+          JavaScript
+        </button>
+        <button
+            class="nav-link"
+            id="fetch-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#fetch"
+            type="button"
+            role="tab"
+            aria-controls="fetch"
+            aria-selected="false"
+            click.trigger="resizeGrid2()">
+          Fetch-Client
+        </button>
+      </div>
+    </nav>
+    <div class="tab-content" id="nav-tabContent">
+      <div class="tab-pane fade show active" id="javascript" role="tabpanel" aria-labelledby="javascript-tab" tabindex="0">
         <h4>Grid 1 - Load Local Data</h4>
         <aurelia-slickgrid grid-id="grid1"
                            column-definitions.bind="columnDefinitions1"
@@ -50,10 +49,7 @@
                            dataset.bind="dataset1">
         </aurelia-slickgrid>
       </div>
-      <div class="tab-pane fade"
-           id="fetch"
-           role="tabpanel"
-           aria-labelledby="fetch-tab">
+      <div class="tab-pane fade" id="fetch" role="tabpanel" aria-labelledby="fetch-tab" tabindex="0">
         <h4>Grid 2 - Load a JSON dataset through Fetch-Client</h4>
         <aurelia-slickgrid grid-id="grid2"
                            column-definitions.bind="columnDefinitions2"

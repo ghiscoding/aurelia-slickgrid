@@ -1,5 +1,6 @@
 import { bindable } from 'aurelia';
 import { SlickDataView, SlickGrid } from '../../aurelia-slickgrid';
+import { SlickRowDetailView } from '@slickgrid-universal/row-detail-view-plugin';
 
 export class Example19DetailView {
   @bindable() model!: {
@@ -14,7 +15,7 @@ export class Example19DetailView {
   };
 
   // you also have access to the following objects (it must match the exact property names shown below)
-  @bindable() addon: any; // row detail addon instance
+  @bindable() addon: SlickRowDetailView; // row detail addon instance
   @bindable() grid!: SlickGrid;
   @bindable() dataView!: SlickDataView;
 

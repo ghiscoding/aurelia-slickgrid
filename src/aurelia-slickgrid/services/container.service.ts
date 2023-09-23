@@ -1,7 +1,7 @@
 import { ContainerService as UniversalContainerService } from '@slickgrid-universal/common';
-import { IContainer, Registration, singleton } from 'aurelia';
+import { IContainer, Registration, transient } from 'aurelia';
 
-@singleton()
+@transient()
 export class ContainerService implements UniversalContainerService {
   constructor(@IContainer private readonly container: IContainer) { }
 

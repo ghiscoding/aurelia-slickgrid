@@ -61,7 +61,7 @@ export class Example4 {
     this.dataset = this.mockData(NB_ITEMS);
   }
 
-  detached() {
+  detaching() {
     this.saveCurrentGridState();
   }
 

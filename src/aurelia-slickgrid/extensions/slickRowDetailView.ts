@@ -14,7 +14,7 @@ import * as DOMPurify from 'dompurify';
 
 import { AureliaViewOutput, GridOption, RowDetailView, ViewModelBindableInputData } from '../models/index';
 import { AureliaUtilService } from '../services/aureliaUtil.service';
-import { Constructable, singleton } from 'aurelia';
+import { Constructable, transient } from 'aurelia';
 
 // using external non-typed js libraries
 declare const Slick: SlickNamespace;
@@ -27,7 +27,7 @@ export interface CreatedView extends AureliaViewOutput {
   dataContext: any;
 }
 
-@singleton()
+@transient()
 export class SlickRowDetailView extends UniversalSlickRowDetailView {
   protected _eventHandler!: SlickEventHandler;
   protected _preloadViewModel: Constructable;

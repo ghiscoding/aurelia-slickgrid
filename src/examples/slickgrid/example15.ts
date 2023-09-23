@@ -56,7 +56,7 @@ export class Example15 {
     this.dataset = this.getData(NB_ITEMS);
   }
 
-  detached() {
+  detaching() {
     this.saveCurrentGridState();
   }
 

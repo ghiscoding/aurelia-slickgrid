@@ -6,7 +6,12 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const Dotenv = require('dotenv-webpack');
 const nodeExternals = require('webpack-node-externals');
 
+const baseUrl = '';
+const outDevDir = path.resolve(__dirname, 'dist');
+const outProdDir = path.resolve(__dirname, 'docs');
 const srcDir = path.resolve(__dirname, 'src');
+const title = 'Aurelia-Slickgrid Skeleton';
+
 const cssLoader = 'css-loader';
 const postcssLoader = {
   loader: 'postcss-loader',
@@ -17,8 +22,9 @@ const postcssLoader = {
   }
 };
 
-module.exports = function (env, { analyze }) {
-  const production = env.production || process.env.NODE_ENV === 'production';
+module.exports = ({ production } = {}, { server } = {}, { analyze } = {}) => {
+  // const production = server.production || false;
+  // const production = env.production || process.env.NODE_ENV === 'production';
   return {
     target: production ? 'node' : 'web',
     mode: production ? 'production' : 'development',
@@ -29,9 +35,13 @@ module.exports = function (env, { analyze }) {
       entry: production ? './src/aurelia-slickgrid/index.ts' : './src/main.ts'
     },
     output: {
-      path: path.resolve(__dirname, 'dist'),
-      filename: production ? 'index.js' : '[name].bundle.js',
-      library: production ? { type: 'commonjs' } : undefined
+      path: production ? outProdDir : outDevDir,
+      // filename: production ? 'index.js' : '[name].bundle.js',
+      // library: production ? { type: 'commonjs' } : undefined
+      publicPath: baseUrl,
+      filename: '[name].[contenthash].bundle.js',
+      sourceMapFilename: '[name].[contenthash].bundle.js.map',
+      chunkFilename: '[name].[contenthash].chunk.js',
     },
     resolve: {
       extensions: ['.ts', '.js'],
@@ -97,7 +107,15 @@ module.exports = function (env, { analyze }) {
       production && nodeExternals()
     ].filter(p => p),
     plugins: [
-      !production && new HtmlWebpackPlugin({ template: 'index.html', favicon: 'favicon.ico' }),
+      new HtmlWebpackPlugin({
+        template: 'index.html',
+        favicon: `${srcDir}/favicon.ico`,
+        metadata: {
+          // available in index.ejs //
+          title, server, baseUrl
+        }
+      }),
+      // !production && new HtmlWebpackPlugin({ template: 'index.html', favicon: 'favicon.ico' }),
       new Dotenv({
         path: `./.env${production ? '' : '.' + (process.env.NODE_ENV || 'development')}`,
       }),
@@ -109,7 +127,7 @@ module.exports = function (env, { analyze }) {
       analyze && new BundleAnalyzerPlugin()
     ].filter(p => p)
   }
-}
+};
 
 function getAureliaDevAliases() {
   return [

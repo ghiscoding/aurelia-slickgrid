@@ -64,7 +64,7 @@ export class Example17 {
     // this.customDataView = this.loaderDataView && this.loaderDataView.data;
   }
 
-  attaching() {
+  attached() {
     this.hookAllLoaderEvents();
 
     // set default search
@@ -72,7 +72,7 @@ export class Example17 {
     // this.loaderDataView.setSearch(this.search);
   }
 
-  detached() {
+  detaching() {
     // unsubscribe all SlickGrid events
     this._eventHandler.unsubscribeAll();
   }

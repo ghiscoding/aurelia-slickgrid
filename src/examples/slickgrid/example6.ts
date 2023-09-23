@@ -58,7 +58,7 @@ export class Example6 {
     this.selectedLanguage = defaultLang;
   }
 
-  detached() {
+  detaching() {
     this.saveCurrentGridState();
   }
 

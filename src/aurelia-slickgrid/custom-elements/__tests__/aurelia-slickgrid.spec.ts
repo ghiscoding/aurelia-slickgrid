@@ -514,7 +514,7 @@ it('should have a test', () => {
 
 //   //       customElement.columnDefinitions = mockColDefs;
 //   //       customElement.gridOptions = { ...gridOptions, enableTranslate: true };
-//   //       customElement.attached();
+//   //       customElement.attaching();
 //   //       customElement.initialization(slickEventHandler);
 //   //       customElement.columnDefinitionsChanged();
 
@@ -534,7 +534,7 @@ it('should have a test', () => {
 
 //   //       customElement.columnDefinitions = mockColDefs;
 //   //       customElement.gridOptions = { ...gridOptions, enableTranslate: false, autoAddCustomEditorFormatter: customEditableInputFormatter };
-//   //       customElement.attached();
+//   //       customElement.attaching();
 //   //       customElement.initialization(slickEventHandler);
 //   //       customElement.columnDefinitionsChanged();
 
@@ -589,7 +589,7 @@ it('should have a test', () => {
 
 //   //       customElement.gridOptions = { autoFitColumnsOnFirstLoad: false, enableAutoSizeColumns: false, autosizeColumnsByCellContentOnFirstLoad: true, enableAutoResizeColumnsByCellContent: true };
 //   //       customElement.columnDefinitions = mockColDefs;
-//   //       customElement.attached();
+//   //       customElement.attaching();
 //   //       customElement.initialization(slickEventHandler);
 //   //       customElement.columnDefinitionsChanged();
 //   //       customElement.datasetChanged(mockData, null as any);
@@ -1379,7 +1379,7 @@ it('should have a test', () => {
 //   //       const spy = jest.spyOn(mockGrid, 'getEditorLock');
 
 //   //       customElement.bound();
-//   //       customElement.attached();
+//   //       customElement.attaching();
 //   //       customElement.commitEdit(cellDiv);
 
 //   //       setTimeout(() => {
@@ -1728,7 +1728,7 @@ it('should have a test', () => {
 //   //       const setHeaderRowSpy = jest.spyOn(mockGrid, 'setHeaderRowVisibility');
 //   //       const setColumnSpy = jest.spyOn(mockGrid, 'setColumns');
 
-//   //       customElement.attached();
+//   //       customElement.attaching();
 //   //       customElement.initialization(slickEventHandler);
 //   //       customElement.showHeaderRow(true);
 
@@ -1740,7 +1740,7 @@ it('should have a test', () => {
 //   //       const setHeaderRowSpy = jest.spyOn(mockGrid, 'setHeaderRowVisibility');
 //   //       const setColumnSpy = jest.spyOn(mockGrid, 'setColumns');
 
-//   //       customElement.attached();
+//   //       customElement.attaching();
 //   //       customElement.initialization(slickEventHandler);
 //   //       customElement.showHeaderRow(false);
 

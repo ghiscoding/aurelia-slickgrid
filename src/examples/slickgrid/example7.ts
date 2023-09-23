@@ -38,7 +38,7 @@ export class Example7 {
     columns2WithHighlightingById = {};
   }
 
-  attaching() {
+  attached() {
     // populate the dataset once the grid is ready
     this.dataset1 = this.loadData(200, 1);
     this.dataset2 = this.loadData(200, 2);

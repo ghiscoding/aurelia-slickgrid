@@ -14,8 +14,8 @@
         <li>
           <div class="github-button-container"></div>
         </li>
-        <li repeat.for="row of router.navigation" class="nav-item ${row.isActive ? 'active' : ''}">
-          <a class="nav-link" href.bind="row.href">${row.title}</a>
+        <li class="nav-item">
+          <a class="nav-link" href="/#home">Home</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="https://ghiscoding.github.io/Aurelia-Bootstrap-Plugins/"
@@ -34,7 +34,7 @@
     <section id="panel-left" class="panel-wm-left au-animate">
       <ul class="well nav nav-pills nav-stacked">
         <li repeat.for="r of routes" class="nav-item">
-          <a load.bind="r.path" class="nav-link ${r.isActive ? 'active' : ''}">${r.title}</a>
+          <a if.bind="r.path !== 'home'" load.bind="r.path" class="nav-link ${r.isActive ? 'active' : ''}">${r.title}</a>
         </li>
       </ul>
     </section>

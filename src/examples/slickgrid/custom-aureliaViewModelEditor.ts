@@ -1,4 +1,5 @@
-import { View, ViewSlot } from 'aurelia-framework';
+import { ICustomElementController } from '@aurelia/runtime-html';
+import { IBindingContext } from '@aurelia/runtime';
 
 import {
   AureliaUtilService,
@@ -8,17 +9,16 @@ import {
   EditorValidationResult,
   GridOption,
   SlickGrid,
+  ViewModelBindableInputData,
 } from '../../aurelia-slickgrid';
 
 /*
- * An example of a 'detached' editor.
+ * An example of a 'detaching' editor.
  * KeyDown events are also handled to provide handling for Tab, Shift-Tab, Esc and Ctrl-Enter.
  */
 export class CustomAureliaViewModelEditor implements Editor {
   /** Aurelia ViewModel Reference */
   aureliaViewModel: any;
-
-  aureliaCustomElementInstance: any;
 
   /** default item Id */
   defaultId?: string;
@@ -30,6 +30,8 @@ export class CustomAureliaViewModelEditor implements Editor {
 
   /** SlickGrid grid object */
   grid: SlickGrid;
+  vm?: { controller?: ICustomElementController };
+  elmBindingContext?: IBindingContext;
 
   constructor(private args: any) {
     this.grid = args && args.grid;
@@ -74,27 +76,22 @@ export class CustomAureliaViewModelEditor implements Editor {
     return this.columnEditor.validator || this.columnDef.validator;
   }
 
-  init() {
-    if (!this.columnEditor || !this.columnEditor.params || !this.columnEditor.params.templateUrl) {
+  async init() {
+    if (!this.columnEditor?.params?.viewModel) {
       throw new Error(`[Aurelia-Slickgrid] For the Editors.aureliaComponent to work properly, you need to fill in the "templateUrl" property of your Custom Element Editor.
-      Example: this.columnDefs = [{ id: 'title', field: 'title', editor: { templateUrl: PLATFORM.moduleName('my-viewmodel'), collection: [...] },`);
+      Example: this.columnDefs = [{ id: 'title', field: 'title', editor: { model: new CustomAureliaViewModelFilter(), collection: [...], param: { viewModel: MyVM } },`);
     }
-    if (this.columnEditor && this.columnEditor.params && this.columnEditor.params.templateUrl) {
-      this.aureliaViewModel = (this.columnEditor.params.aureliaUtilService as AureliaUtilService).createAureliaViewModelAddToSlot(this.columnEditor.params.templateUrl, { collection: this.collection }, this.args.container, true);
+    if (this.columnEditor?.params?.viewModel) {
+      const bindableData = {
+        grid: this.grid,
+        model: {
+          collection: this.collection,
+        },
+      } as ViewModelBindableInputData;
+      const viewModel = this.columnEditor.params.viewModel;
+      this.vm = await this.aureliaUtilService.createAureliaViewModelAddToSlot(viewModel, bindableData, this.args.container);
+      this.elmBindingContext = this.vm.controller?.children?.[0].scope.bindingContext;
     }
-  }
-
-  disposeViewSlot(createdView: { view?: View; viewSlot?: ViewSlot; }) {
-    if (createdView && createdView.view && createdView.viewSlot && createdView.view.unbind && createdView.viewSlot.remove) {
-      const container = this.args.container;
-      if (container && container.length > 0) {
-        createdView.viewSlot.remove(createdView.view);
-        createdView.view.unbind();
-        container[0].innerHTML = '';
-        return createdView;
-      }
-    }
-    return null;
   }
 
   save() {
@@ -109,40 +106,32 @@ export class CustomAureliaViewModelEditor implements Editor {
   }
 
   cancel() {
-    this.aureliaCustomElementInstance.selectedId = this.defaultId;
-    this.aureliaCustomElementInstance.selectedItem = this.defaultItem;
-    if (this.args && this.args.cancelChanges) {
+    if (this.elmBindingContext) {
+      this.elmBindingContext.selectedItem = this.defaultItem;
+    }
+    if (this.args?.cancelChanges) {
       this.args.cancelChanges();
     }
   }
 
   /** destroy the Aurelia ViewModel & Subscription */
   destroy() {
-    if (this.aureliaViewModel && this.aureliaViewModel.dispose) {
-      this.aureliaViewModel.dispose();
-      this.disposeViewSlot(this.aureliaViewModel.viewSlot);
-    }
+    this.vm?.controller?.deactivate(this.vm.controller, null);
   }
 
   /** optional, implement a hide method on your Aurelia ViewModel */
   hide() {
-    if (this.aureliaViewModel && this.aureliaViewModel.bindings.viewModelRef.currentViewModel && typeof this.aureliaViewModel.bindings.viewModelRef.currentViewModel.hide === 'function') {
-      this.aureliaViewModel.bindings.viewModelRef.currentViewModel.hide();
-    }
+    this.elmBindingContext?.hide();
   }
 
   /** optional, implement a show method on your Aurelia ViewModel */
   show() {
-    if (typeof this.aureliaViewModel?.bindings.viewModelRef.currentViewModel?.show === 'function') {
-      this.aureliaViewModel.bindings.viewModelRef.currentViewModel.show();
-    }
+    this.elmBindingContext?.focus();
   }
 
   /** optional, implement a focus method on your Aurelia ViewModel */
   focus() {
-    if (typeof this.aureliaViewModel?.bindings.viewModelRef.currentViewModel?.focus === 'function') {
-      this.aureliaViewModel.bindings.viewModelRef.currentViewModel.focus();
-    }
+    this.elmBindingContext?.focus();
   }
 
   applyValue(item: any, state: any) {
@@ -150,22 +139,27 @@ export class CustomAureliaViewModelEditor implements Editor {
   }
 
   getValue() {
-    return this.aureliaCustomElementInstance.selectedId;
+    return this.elmBindingContext?.selectedItem.id;
   }
 
   loadValue(item: any) {
-    const itemObject = item && item[this.columnDef.field];
+    const itemObject = item?.[this.columnDef.field];
     this.selectedItem = itemObject;
+    this.defaultItem = itemObject;
+
+    // add a delay so that the editor has time to be enhanced (created) prior to changing the value
     setTimeout(() => {
-      this.aureliaCustomElementInstance = this.aureliaViewModel.bindings.viewModelRef.currentViewModel;
-      this.aureliaCustomElementInstance.selectedItem = itemObject;
-      this.aureliaCustomElementInstance.selectedItemChanged = ((newItem: any) => {
+      this.focus();
+      this.elmBindingContext.selectedItem = itemObject;
+
+      // whenever the selected item changed (from the @bindable() selectedItem), we'll save the new value
+      this.elmBindingContext.selectedItemChanged = ((newItem: any) => {
         this.selectedItem = newItem;
         if (newItem !== itemObject) {
           this.save();
         }
       });
-    });
+    }, 0);
   }
 
   serializeValue(): any {

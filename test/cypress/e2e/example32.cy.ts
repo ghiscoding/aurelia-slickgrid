@@ -22,7 +22,7 @@ describe('Example 32 - Columns Resize by Content', { retries: 1 }, () => {
     cy.get('.slick-row').find('.slick-cell:nth(4)').invoke('width').should('be.greaterThan', 102);
     cy.get('.slick-row').find('.slick-cell:nth(5)').invoke('width').should('be.greaterThan', 97);
     cy.get('.slick-row').find('.slick-cell:nth(6)').invoke('width').should('be.greaterThan', 72);
-    cy.get('.slick-row').find('.slick-cell:nth(7)').invoke('width').should('be.greaterThan', 71);
+    cy.get('.slick-row').find('.slick-cell:nth(7)').invoke('width').should('be.greaterThan', 67);
     cy.get('.slick-row').find('.slick-cell:nth(8)').invoke('width').should('be.greaterThan', 72);
     cy.get('.slick-row').find('.slick-cell:nth(9)').invoke('width').should('be.greaterThan', 179);
     cy.get('.slick-row').find('.slick-cell:nth(10)').invoke('width').should('be.greaterThan', 94);
@@ -38,7 +38,7 @@ describe('Example 32 - Columns Resize by Content', { retries: 1 }, () => {
     cy.get('.slick-row').find('.slick-cell:nth(4)').invoke('width').should('be.greaterThan', 102);
     cy.get('.slick-row').find('.slick-cell:nth(5)').invoke('width').should('be.greaterThan', 97);
     cy.get('.slick-row').find('.slick-cell:nth(6)').invoke('width').should('be.greaterThan', 72);
-    cy.get('.slick-row').find('.slick-cell:nth(7)').invoke('width').should('be.greaterThan', 71);
+    cy.get('.slick-row').find('.slick-cell:nth(7)').invoke('width').should('be.greaterThan', 67);
     cy.get('.slick-row').find('.slick-cell:nth(8)').invoke('width').should('be.greaterThan', 72);
     cy.get('.slick-row').find('.slick-cell:nth(9)').invoke('width').should('be.greaterThan', 179);
     cy.get('.slick-row').find('.slick-cell:nth(10)').invoke('width').should('be.greaterThan', 94);

@@ -66,7 +66,7 @@ export class Example20 {
     this.getData();
   }
 
-  detached() {
+  detaching() {
     // unsubscribe every SlickGrid subscribed event (or use the Slick.EventHandler)
     this.slickEventHandler.unsubscribeAll();
   }

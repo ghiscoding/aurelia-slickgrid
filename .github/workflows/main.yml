@@ -8,7 +8,7 @@ on:
       - next
   pull_request:
     branches:
-      - '**'
+      - "**"
 
 jobs:
   run:
@@ -64,14 +64,15 @@ jobs:
         run: yarn build:demo
 
       - name: Start HTTP Server
-        run: yarn serve:demo &
+        # run: yarn serve:demo &
+        run: yarn start &
 
       - name: Run Cypress E2E tests
         uses: cypress-io/github-action@v5.8.3
         with:
           working-directory: test/cypress
           config-file: cypress.config.ts
-          wait-on: 'http://localhost:9000'
+          wait-on: "http://localhost:9000"
           browser: chrome
           record: true
         env:

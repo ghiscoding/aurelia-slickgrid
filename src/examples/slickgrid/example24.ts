@@ -1,5 +1,4 @@
 import { ExcelExportService } from '@slickgrid-universal/excel-export';
-import { autoinject } from 'aurelia-framework';
 import { I18N } from '@aurelia/i18n';
 import { TOptions as I18NOptions } from 'i18next';
 
@@ -59,7 +58,6 @@ const taskTranslateFormatter: Formatter = (_row, _cell, value, _columnDef, _data
   return i18n?.tr('TASK_X', { x: value } as I18NOptions) ?? '';
 };
 
-@autoinject()
 export class Example24 {
   title = 'Example 24: Cell Menu & Context Menu Plugins';
   subTitle = `Add Cell Menu and Context Menu
