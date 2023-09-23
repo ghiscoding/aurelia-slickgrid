@@ -40,12 +40,24 @@ describe('aureliaUtilService', () => {
       expect(output).toBeNull();
     });
 
-    it('should create an Aurelia ViewModel and add it to a View Slot', async () => {
+    it('should create an Aurelia ViewModel and add it to a View Slot with only model attribute when nothing else is provided', async () => {
       const controllerMock = { viewModel: {} };
       const domElm = document.getElementById(DOM_ELEMENT_ID) as HTMLElement;
       const enhanceSpy = jest.spyOn(au, 'enhance').mockResolvedValue(controllerMock as any);
 
       const output = await service.createAureliaViewModelAddToSlot(ExampleLoader, { model: { firstName: 'John' } } as ViewModelBindableInputData, domElm);
+
+      expect(enhanceSpy).toHaveBeenCalled();
+      expect(domElm.innerHTML).toBe('<example-loader model.bind=\"bindableData.model\"></example-loader>');
+      expect(output).toEqual({ controller: controllerMock});
+    });
+
+    it('should create an Aurelia ViewModel and add it to a View Slot with all bindable attributes when all are provided', async () => {
+      const controllerMock = { viewModel: {} };
+      const domElm = document.getElementById(DOM_ELEMENT_ID) as HTMLElement;
+      const enhanceSpy = jest.spyOn(au, 'enhance').mockResolvedValue(controllerMock as any);
+
+      const output = await service.createAureliaViewModelAddToSlot(ExampleLoader, { model: { firstName: 'John', }, addon: {}, grid: {}, dataView: {}, parent: {} } as ViewModelBindableInputData, domElm);
 
       expect(enhanceSpy).toHaveBeenCalled();
       expect(domElm.innerHTML).toBe('<example-loader model.bind="bindableData.model" addon.bind="bindableData.addon" grid.bind="bindableData.grid" data-view.bind="bindableData.dataView" parent.bind="bindableData.parent"></example-loader>');
