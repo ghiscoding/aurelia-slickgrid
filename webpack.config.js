@@ -22,17 +22,19 @@ const postcssLoader = {
   }
 };
 
-module.exports = ({ production } = {}, { server } = {}, { analyze } = {}) => {
+module.exports = ({ production, node } = {}, { server } = {}, { analyze } = {}) => {
+  // console.log('webpack', analyze, production, server, node);
   // const production = server.production || false;
   // const production = env.production || process.env.NODE_ENV === 'production';
   return {
-    target: production ? 'node' : 'web',
+    target: node ? 'node' : 'web',
     mode: production ? 'production' : 'development',
-    devtool: production ? 'source-map' : 'inline-source-map',
+    // devtool: production ? 'source-map' : 'inline-source-map',
+    devtool: production ? false : 'eval-cheap-module-source-map',
     entry: {
       // Build only plugin in production mode,
       // build dev-app in non-production mode
-      entry: production ? './src/aurelia-slickgrid/index.ts' : './src/main.ts'
+      entry: node ? './src/aurelia-slickgrid/index.ts' : './src/main.ts'
     },
     output: {
       path: production ? outProdDir : outDevDir,
@@ -101,21 +103,16 @@ module.exports = ({ production } = {}, { server } = {}, { analyze } = {}) => {
         }
       ]
     },
-    externalsPresets: { node: production },
+    externalsPresets: node && { node: production },
     externals: [
       // Skip npm dependencies in plugin build.
-      production && nodeExternals()
+      node && nodeExternals()
     ].filter(p => p),
     plugins: [
       new HtmlWebpackPlugin({
         template: 'index.html',
         favicon: `${srcDir}/favicon.ico`,
-        metadata: {
-          // available in index.ejs //
-          title, server, baseUrl
-        }
       }),
-      // !production && new HtmlWebpackPlugin({ template: 'index.html', favicon: 'favicon.ico' }),
       new Dotenv({
         path: `./.env${production ? '' : '.' + (process.env.NODE_ENV || 'development')}`,
       }),
