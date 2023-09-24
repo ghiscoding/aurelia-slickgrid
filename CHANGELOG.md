@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.2.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v6.2.1...v6.2.2) (2023-09-24)
+
+
+### Bug Fixes
+
+* bump Slickgrid-Universal w/auto-resize w/o container ([#1079](https://github.com/ghiscoding/aurelia-slickgrid/issues/1079)) ([1141ede](https://github.com/ghiscoding/aurelia-slickgrid/commit/1141edef7c63bb6680382d6e3c3397737c19b8a8))
+
+
+### Reverts
+
+* Revert "chore(deps): update codecov/codecov-action action to v4 (#1069)" (#1071) ([0f90a1d](https://github.com/ghiscoding/aurelia-slickgrid/commit/0f90a1de5dbb41633245a80849d1ced2f84122ce)), closes [#1069](https://github.com/ghiscoding/aurelia-slickgrid/issues/1069) [#1071](https://github.com/ghiscoding/aurelia-slickgrid/issues/1071)
+
 ## [6.2.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v6.2.0...v6.2.1) (2023-09-05)
 
 
