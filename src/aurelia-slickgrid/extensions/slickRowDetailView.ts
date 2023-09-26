@@ -30,9 +30,9 @@ export interface CreatedView extends AureliaViewOutput {
 @transient()
 export class SlickRowDetailView extends UniversalSlickRowDetailView {
   protected _eventHandler!: SlickEventHandler;
-  protected _preloadViewModel: Constructable;
+  protected _preloadViewModel?: Constructable;
   protected _slots: CreatedView[] = [];
-  protected _viewModel: Constructable;
+  protected _viewModel?: Constructable;
   protected _subscriptions: EventSubscription[] = [];
   protected _userProcessFn?: (item: any) => Promise<any>;
 
@@ -238,7 +238,7 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
   /** Render (or re-render) the View Slot (Row Detail) */
   async renderPreloadView() {
     const containerElements = this.gridContainerElement.getElementsByClassName(`${PRELOAD_CONTAINER_PREFIX}`);
-    if (containerElements?.length >= 0) {
+    if (this._preloadViewModel && containerElements?.length >= 0) {
       await this.aureliaUtilService.createAureliaViewModelAddToSlot(this._preloadViewModel, undefined, containerElements[containerElements.length - 1]);
     }
   }
@@ -246,7 +246,7 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
   /** Render (or re-render) the View Slot (Row Detail) */
   async renderViewModel(item: any) {
     const containerElements = this.gridContainerElement.getElementsByClassName(`${ROW_DETAIL_CONTAINER_PREFIX}${item[this.datasetIdPropName]}`);
-    if (containerElements?.length > 0) {
+    if (this._viewModel && containerElements?.length > 0) {
       const bindableData = {
         model: item,
         addon: this,

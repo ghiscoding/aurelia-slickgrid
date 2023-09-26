@@ -1,381 +1,421 @@
-it('should have a test', () => {
-  expect(true).toBeTruthy();
+jest.mock('@slickgrid-universal/common/dist/commonjs/formatters/formatterUtilities');
+import 'jest-extended';
+import { DI, EventAggregator, IObserverLocator } from 'aurelia';
+import { of, throwError } from 'rxjs';
+import type {
+  BackendServiceApi,
+  Column,
+  CurrentFilter,
+  CurrentPagination,
+  CurrentPinning,
+  CurrentSorter,
+  ExtensionList,
+  GridOption,
+  GridState,
+  Pagination,
+  ServicePagination,
+  SlickGrid,
+} from '@slickgrid-universal/common';
+
+import {
+  BackendService,
+  BackendUtilityService,
+  CollectionService,
+  ColumnFilters,
+  Editors,
+  ExtensionService,
+  ExtensionUtility,
+  Filters,
+  FilterService,
+  Formatter,
+  GridEventService,
+  GridService,
+  GridStateService,
+  GridStateType,
+  GroupingAndColspanService,
+  PaginationService,
+  ResizerService,
+  SharedService,
+  SlickGroupItemMetadataProvider,
+  SortService,
+  TreeDataService
+} from '@slickgrid-universal/common';
+import { EventPubSubService } from '@slickgrid-universal/event-pub-sub';
+
+// import { SlickEmptyWarningComponent } from '@slickgrid-universal/empty-warning-component';
+import { GraphqlPaginatedResult, GraphqlService, GraphqlServiceApi, GraphqlServiceOption } from '@slickgrid-universal/graphql';
+// import * as formatterUtilities from '@slickgrid-universal/common/dist/commonjs/formatters/formatterUtilities';
+
+// import { RxJsResourceStub } from '../../../../test/rxjsResourceStub';
+// import { HttpStub } from '../../../../test/httpClientStub';
+import { MockSlickEvent, MockSlickEventHandler } from '../../../../test/mockSlickEvent';
+import { TranslaterServiceStub } from '../../../../test/translaterServiceStub';
+import { AureliaUtilService, ContainerService, TranslaterService } from '../../services';
+import { AureliaSlickgridCustomElement } from '../aurelia-slickgrid';
+// import { SlickRowDetailView } from '../../extensions/slickRowDetailView';
+
+import { BrowserPlatform } from '@aurelia/platform-browser';
+import { assert, createFixture, setPlatform } from '@aurelia/testing';
+
+
+const platform = new BrowserPlatform(window);
+setPlatform(platform);
+BrowserPlatform.set(globalThis, platform);
+
+declare const Slick: any;
+const slickEventHandler = new MockSlickEventHandler();
+
+// const mockSlickRowDetailView = {
+//   create: jest.fn(),
+//   init: jest.fn(),
+// } as unknown as SlickRowDetailView;
+
+// jest.mock('../../extensions/slickRowDetailView', () => ({
+//   SlickRowDetailView: jest.fn().mockImplementation(() => mockSlickRowDetailView),
+// }));
+
+const aureliaUtilServiceStub = {
+  createAureliaViewModelAddToSlot: jest.fn(),
+} as unknown as AureliaUtilService;
+
+const extensionServiceStub = {
+  addExtensionToList: jest.fn(),
+  boundDifferentExtensions: jest.fn(),
+  createExtensionsBeforeGridCreation: jest.fn(),
+  dispose: jest.fn(),
+  renderColumnHeaders: jest.fn(),
+  translateAllExtensions: jest.fn(),
+  translateColumnHeaders: jest.fn(),
+} as unknown as ExtensionService;
+Object.defineProperty(extensionServiceStub, 'extensionList', { get: jest.fn(() => { }), set: jest.fn(), configurable: true });
+
+const observerLocatorStub = {
+  getArrayObserver: () => ({
+    subscribe: jest.fn(),
+    unsubscribe: jest.fn(),
+  })
+} as unknown as IObserverLocator;
+
+const mockExtensionUtility = {
+  translateItems: jest.fn(),
+} as unknown as ExtensionUtility;
+
+const groupingAndColspanServiceStub = {
+  init: jest.fn(),
+  dispose: jest.fn(),
+  translateGroupingAndColSpan: jest.fn(),
+} as unknown as GroupingAndColspanService;
+
+const mockGraphqlService = {
+  getDatasetName: jest.fn(),
+  buildQuery: jest.fn(),
+  init: jest.fn(),
+  updateFilters: jest.fn(),
+  updateSorters: jest.fn(),
+  updatePagination: jest.fn(),
+} as unknown as GraphqlService;
+
+const backendUtilityServiceStub = {
+  addRxJsResource: jest.fn(),
+  executeBackendProcessesCallback: jest.fn(),
+  executeBackendCallback: jest.fn(),
+  onBackendError: jest.fn(),
+  refreshBackendDataset: jest.fn(),
+} as unknown as BackendUtilityService;
+
+const collectionServiceStub = {
+  filterCollection: jest.fn(),
+  singleFilterCollection: jest.fn(),
+  sortCollection: jest.fn(),
+} as unknown as CollectionService;
+
+const filterServiceStub = {
+  addRxJsResource: jest.fn(),
+  clearFilters: jest.fn(),
+  dispose: jest.fn(),
+  init: jest.fn(),
+  boundBackendOnFilter: jest.fn(),
+  boundLocalOnFilter: jest.fn(),
+  boundLocalOnSort: jest.fn(),
+  boundBackendOnSort: jest.fn(),
+  populateColumnFilterSearchTermPresets: jest.fn(),
+  refreshTreeDataFilters: jest.fn(),
+  getColumnFilters: jest.fn(),
+} as unknown as FilterService;
+
+const gridEventServiceStub = {
+  init: jest.fn(),
+  dispose: jest.fn(),
+  boundOnBeforeEditCell: jest.fn(),
+  boundOnCellChange: jest.fn(),
+  boundOnClick: jest.fn(),
+} as unknown as GridEventService;
+
+const gridServiceStub = {
+  init: jest.fn(),
+  dispose: jest.fn(),
+} as unknown as GridService;
+
+const gridStateServiceStub = {
+  init: jest.fn(),
+  dispose: jest.fn(),
+  getAssociatedGridColumns: jest.fn(),
+  getCurrentGridState: jest.fn(),
+  needToPreserveRowSelection: jest.fn(),
+} as unknown as GridStateService;
+
+const paginationServiceStub = {
+  totalItems: 0,
+  addRxJsResource: jest.fn(),
+  init: jest.fn(),
+  dispose: jest.fn(),
+  getFullPagination: jest.fn(),
+  updateTotalItems: jest.fn(),
+} as unknown as PaginationService;
+
+const resizerServiceStub = {
+  dispose: jest.fn(),
+  init: jest.fn(),
+  resizeGrid: jest.fn(),
+  resizeColumnsByCellContent: jest.fn(),
+} as unknown as ResizerService;
+
+Object.defineProperty(paginationServiceStub, 'totalItems', {
+  get: jest.fn(() => 0),
+  set: jest.fn()
 });
 
-// jest.mock('@slickgrid-universal/common/dist/commonjs/formatters/formatterUtilities');
-// import 'jest-extended';
-// import { DI, EventAggregator, IObserverLocator } from 'aurelia';
-// import { of, throwError } from 'rxjs';
-// import type {
-//   BackendServiceApi,
-//   Column,
-//   CurrentFilter,
-//   CurrentPagination,
-//   CurrentPinning,
-//   CurrentSorter,
-//   ExtensionList,
-//   GridOption,
-//   GridState,
-//   Pagination,
-//   ServicePagination,
-//   SlickGrid,
-// } from '@slickgrid-universal/common';
+const sortServiceStub = {
+  addRxJsResource: jest.fn(),
+  boundBackendOnSort: jest.fn(),
+  boundLocalOnSort: jest.fn(),
+  dispose: jest.fn(),
+  loadGridSorters: jest.fn(),
+  processTreeDataInitialSort: jest.fn(),
+  sortHierarchicalDataset: jest.fn(),
+} as unknown as SortService;
 
-// import {
-//   BackendService,
-//   BackendUtilityService,
-//   CollectionService,
-//   ColumnFilters,
-//   Editors,
-//   ExtensionService,
-//   ExtensionUtility,
-//   Filters,
-//   FilterService,
-//   Formatter,
-//   GridEventService,
-//   GridService,
-//   GridStateService,
-//   GridStateType,
-//   GroupingAndColspanService,
-//   PaginationService,
-//   ResizerService,
-//   SharedService,
-//   SlickGroupItemMetadataProvider,
-//   SortService,
-//   TreeDataService
-// } from '@slickgrid-universal/common';
-// import { EventPubSubService } from '@slickgrid-universal/event-pub-sub';
+const treeDataServiceStub = {
+  init: jest.fn(),
+  convertFlatParentChildToTreeDataset: jest.fn(),
+  convertFlatParentChildToTreeDatasetAndSort: jest.fn(),
+  dispose: jest.fn(),
+  handleOnCellClick: jest.fn(),
+  sortHierarchicalDataset: jest.fn(),
+  toggleTreeDataCollapse: jest.fn(),
+} as unknown as TreeDataService;
 
-// // import { SlickEmptyWarningComponent } from '@slickgrid-universal/empty-warning-component';
-// import { GraphqlPaginatedResult, GraphqlService, GraphqlServiceApi, GraphqlServiceOption } from '@slickgrid-universal/graphql';
-// // import * as formatterUtilities from '@slickgrid-universal/common/dist/commonjs/formatters/formatterUtilities';
+const mockGroupItemMetaProvider = {
+  init: jest.fn(),
+  destroy: jest.fn(),
+  defaultGroupCellFormatter: jest.fn(),
+  defaultTotalsCellFormatter: jest.fn(),
+  handleGridClick: jest.fn(),
+  handleGridKeyDown: jest.fn(),
+  getGroupRowMetadata: jest.fn(),
+  getTotalsRowMetadata: jest.fn(),
+};
 
-// // import { RxJsResourceStub } from '../../../../test/rxjsResourceStub';
-// // import { HttpStub } from '../../../../test/httpClientStub';
-// import { MockSlickEvent, MockSlickEventHandler } from '../../../../test/mockSlickEvent';
-// import { TranslaterServiceStub } from '../../../../test/translaterServiceStub';
-// import { AureliaUtilService, ContainerService, TranslaterService } from '../../services';
-// import { AureliaSlickgridCustomElement } from '../aurelia-slickgrid';
-// // import { SlickRowDetailView } from '../../extensions/slickRowDetailView';
+const mockDataView = {
+  constructor: jest.fn(),
+  init: jest.fn(),
+  destroy: jest.fn(),
+  beginUpdate: jest.fn(),
+  endUpdate: jest.fn(),
+  getFilteredItemCount: jest.fn(),
+  getItem: jest.fn(),
+  getItems: jest.fn(),
+  getItemCount: jest.fn(),
+  getItemMetadata: jest.fn(),
+  getLength: jest.fn(),
+  getPagingInfo: jest.fn(),
+  mapIdsToRows: jest.fn(),
+  mapRowsToIds: jest.fn(),
+  onRowsChanged: new MockSlickEvent(),
+  onRowCountChanged: new MockSlickEvent(),
+  onSetItemsCalled: new MockSlickEvent(),
+  reSort: jest.fn(),
+  setItems: jest.fn(),
+  setSelectedIds: jest.fn(),
+  syncGridSelection: jest.fn(),
+};
 
-// declare const Slick: any;
-// const slickEventHandler = new MockSlickEventHandler();
+const mockDraggableGroupingExtension = {
+  constructor: jest.fn(),
+  init: jest.fn(),
+  destroy: jest.fn(),
+};
 
-// // const mockSlickRowDetailView = {
-// //   create: jest.fn(),
-// //   init: jest.fn(),
-// // } as unknown as SlickRowDetailView;
+const mockEventPubSub = {
+  notify: jest.fn(),
+  subscribe: jest.fn(),
+  unsubscribe: jest.fn(),
+};
 
-// // jest.mock('../../extensions/slickRowDetailView', () => ({
-// //   SlickRowDetailView: jest.fn().mockImplementation(() => mockSlickRowDetailView),
-// // }));
+const mockSlickEventHandler = {
+  handlers: [],
+  notify: jest.fn(),
+  subscribe: jest.fn(),
+  unsubscribe: jest.fn(),
+  unsubscribeAll: jest.fn(),
+};
 
-// const aureliaUtilServiceStub = {
-//   createAureliaViewModelAddToSlot: jest.fn(),
-// } as unknown as AureliaUtilService;
+const mockGetEditorLock = {
+  isActive: () => true,
+  commitCurrentEdit: jest.fn(),
+};
 
-// const extensionServiceStub = {
-//   addExtensionToList: jest.fn(),
-//   boundDifferentExtensions: jest.fn(),
-//   createExtensionsBeforeGridCreation: jest.fn(),
-//   dispose: jest.fn(),
-//   renderColumnHeaders: jest.fn(),
-//   translateAllExtensions: jest.fn(),
-//   translateColumnHeaders: jest.fn(),
-// } as unknown as ExtensionService;
-// Object.defineProperty(extensionServiceStub, 'extensionList', { get: jest.fn(() => { }), set: jest.fn(), configurable: true });
+const mockGrid = {
+  autosizeColumns: jest.fn(),
+  destroy: jest.fn(),
+  init: jest.fn(),
+  invalidate: jest.fn(),
+  getActiveCellNode: jest.fn(),
+  getColumns: jest.fn(),
+  getCellEditor: jest.fn(),
+  getEditorLock: () => mockGetEditorLock,
+  getUID: () => 'slickgrid_12345',
+  getContainerNode: jest.fn(),
+  getGridPosition: jest.fn(),
+  getOptions: jest.fn(),
+  getSelectionModel: jest.fn(),
+  getScrollbarDimensions: jest.fn(),
+  updateRow: jest.fn(),
+  render: jest.fn(),
+  registerPlugin: jest.fn(),
+  resizeCanvas: jest.fn(),
+  setColumns: jest.fn(),
+  setHeaderRowVisibility: jest.fn(),
+  setOptions: jest.fn(),
+  setSelectedRows: jest.fn(),
+  onClick: new MockSlickEvent(),
+  onClicked: new MockSlickEvent(),
+  onColumnsReordered: new MockSlickEvent(),
+  onRendered: jest.fn(),
+  onScroll: jest.fn(),
+  onSelectedRowsChanged: new MockSlickEvent(),
+  onDataviewCreated: new MockSlickEvent(),
+};
 
-// const observerLocatorStub = {
-//   getArrayObserver: () => ({
-//     subscribe: jest.fn(),
-//     unsubscribe: jest.fn(),
-//   })
-// } as unknown as IObserverLocator;
+const mockSlickEventHandlerImplementation = jest.fn().mockImplementation(() => mockSlickEventHandler);
+const mockDataViewImplementation = jest.fn().mockImplementation(() => mockDataView);
+const mockGroupItemMetaProviderImplementation = jest.fn().mockImplementation(() => mockGroupItemMetaProvider);
+const mockGridImplementation = jest.fn().mockImplementation(() => mockGrid);
+const mockDraggableGroupingImplementation = jest.fn().mockImplementation(() => mockDraggableGroupingExtension);
+const template = `<div class="demo-container"><div class="grid1"></div></div>`;
 
-// const mockExtensionUtility = {
-//   translateItems: jest.fn(),
-// } as unknown as ExtensionUtility;
+describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
+  jest.mock('slickgrid/slick.grid', () => mockGridImplementation);
+  jest.mock('slickgrid/plugins/slick.draggablegrouping', () => mockDraggableGroupingImplementation);
+  Slick.Grid = mockGridImplementation;
+  Slick.EventHandler = mockSlickEventHandlerImplementation;
+  Slick.Data = { DataView: mockDataViewImplementation, GroupItemMetadataProvider: mockGroupItemMetaProviderImplementation };
+  Slick.DraggableGrouping = mockDraggableGroupingImplementation;
 
-// const groupingAndColspanServiceStub = {
-//   init: jest.fn(),
-//   dispose: jest.fn(),
-//   translateGroupingAndColSpan: jest.fn(),
-// } as unknown as GroupingAndColspanService;
+  let customElement: AureliaSlickgridCustomElement;
+  let divContainer: HTMLDivElement;
+  let cellDiv: HTMLDivElement;
+  let columnDefinitions: Column[] = [];
+  let eventPubSubService: EventPubSubService;
+  let gridOptions!: GridOption;
+  let sharedService: SharedService;
+  let globalEa: EventAggregator;
+  let translaterService: TranslaterServiceStub;
+  const container = DI.createContainer();
+  // const http = new HttpStub();
+  const containerService = new ContainerService(container);
 
-// const mockGraphqlService = {
-//   getDatasetName: jest.fn(),
-//   buildQuery: jest.fn(),
-//   init: jest.fn(),
-//   updateFilters: jest.fn(),
-//   updateSorters: jest.fn(),
-//   updatePagination: jest.fn(),
-// } as unknown as GraphqlService;
+  beforeEach(() => {
+    // bootstrapTestEnvironment();
+    divContainer = document.createElement('div');
+    cellDiv = document.createElement('div');
+    divContainer.innerHTML = template;
+    divContainer.appendChild(cellDiv);
+    document.body.appendChild(divContainer);
+    columnDefinitions = [{ id: 'name', field: 'name' }];
+    gridOptions = {
+      enableExcelExport: false,
+      dataView: null,
+      autoResize: {
+        bottomPadding: 45,
+        calculateAvailableSizeBy: 'window',
+        minHeight: 180,
+        minWidth: 300,
+        rightPadding: 0,
+      },
+    } as unknown as GridOption;
+    eventPubSubService = new EventPubSubService(divContainer);
+    sharedService = new SharedService();
+    translaterService = new TranslaterServiceStub();
+    jest.spyOn(mockGrid, 'getOptions').mockReturnValue(gridOptions);
+    globalEa = new EventAggregator();
 
-// const backendUtilityServiceStub = {
-//   addRxJsResource: jest.fn(),
-//   executeBackendProcessesCallback: jest.fn(),
-//   executeBackendCallback: jest.fn(),
-//   onBackendError: jest.fn(),
-//   refreshBackendDataset: jest.fn(),
-// } as unknown as BackendUtilityService;
+    // customElement = new AureliaSlickgridCustomElement(
+    //   aureliaUtilServiceStub,
+    //   observerLocatorStub,
+    //   container,
+    //   divContainer,
+    //   globalEa,
+    //   containerService,
+    //   translaterService as unknown as TranslaterService
+    //   // {
+    //   //   backendUtilityService: backendUtilityServiceStub,
+    //   //   collectionService: collectionServiceStub,
+    //   //   eventPubSubService,
+    //   //   extensionService: extensionServiceStub,
+    //   //   extensionUtility: mockExtensionUtility,
+    //   //   filterService: filterServiceStub,
+    //   //   gridEventService: gridEventServiceStub,
+    //   //   gridService: gridServiceStub,
+    //   //   gridStateService: gridStateServiceStub,
+    //   //   groupingAndColspanService: groupingAndColspanServiceStub,
+    //   //   resizerService: resizerServiceStub,
+    //   //   paginationService: paginationServiceStub,
+    //   //   sharedService,
+    //   //   sortService: sortServiceStub,
+    //   //   treeDataService: treeDataServiceStub,
+    //   // }
+    // );
+  });
 
-// const collectionServiceStub = {
-//   filterCollection: jest.fn(),
-//   singleFilterCollection: jest.fn(),
-//   sortCollection: jest.fn(),
-// } as unknown as CollectionService;
+  afterEach(() => {
+    customElement?.detached();
+  });
 
-// const filterServiceStub = {
-//   addRxJsResource: jest.fn(),
-//   clearFilters: jest.fn(),
-//   dispose: jest.fn(),
-//   init: jest.fn(),
-//   boundBackendOnFilter: jest.fn(),
-//   boundLocalOnFilter: jest.fn(),
-//   boundLocalOnSort: jest.fn(),
-//   boundBackendOnSort: jest.fn(),
-//   populateColumnFilterSearchTermPresets: jest.fn(),
-//   refreshTreeDataFilters: jest.fn(),
-//   getColumnFilters: jest.fn(),
-// } as unknown as FilterService;
+  it('should have a test', () => {
+    expect(true).toBeTruthy();
+  });
 
-// const gridEventServiceStub = {
-//   init: jest.fn(),
-//   dispose: jest.fn(),
-//   boundOnBeforeEditCell: jest.fn(),
-//   boundOnCellChange: jest.fn(),
-//   boundOnClick: jest.fn(),
-// } as unknown as GridEventService;
+  it.skip('should mock dependencies', async () => {
+    // AureliaSlickgridCustomElement();
+    // const { startPromise, appHost, tearDown, component, ctx, container } = createFixture(
+    //   `<aurelia-slickgrid></aurelia-slickgrid>`,
+    //   AureliaSlickgridCustomElement
+    //   // [
+    //   //   aureliaUtilServiceStub,
+    //   //   observerLocatorStub,
+    //   //   container,
+    //   //   divContainer,
+    //   //   globalEa,
+    //   //   containerService,
+    //   //   translaterService as unknown as TranslaterService
+    //   // ]
+    // );
 
-// const gridServiceStub = {
-//   init: jest.fn(),
-//   dispose: jest.fn(),
-// } as unknown as GridService;
+    // await startPromise;
 
-// const gridStateServiceStub = {
-//   init: jest.fn(),
-//   dispose: jest.fn(),
-//   getAssociatedGridColumns: jest.fn(),
-//   getCurrentGridState: jest.fn(),
-//   needToPreserveRowSelection: jest.fn(),
-// } as unknown as GridStateService;
+    // // The router property is private, so get the router instance
+    // // from the container
+    // const router = container.get(IRouter);
 
-// const paginationServiceStub = {
-//   totalItems: 0,
-//   addRxJsResource: jest.fn(),
-//   init: jest.fn(),
-//   dispose: jest.fn(),
-//   getFullPagination: jest.fn(),
-//   updateTotalItems: jest.fn(),
-// } as unknown as PaginationService;
+    // // Stub load and return first argument
+    // sinon.stub(router, 'load').returnsArg(0);
 
-// const resizerServiceStub = {
-//   dispose: jest.fn(),
-//   init: jest.fn(),
-//   resizeGrid: jest.fn(),
-//   resizeColumnsByCellContent: jest.fn(),
-// } as unknown as ResizerService;
+    // assert.strictEqual(component.navigate('nowhere'), 'nowhere');
 
-// Object.defineProperty(paginationServiceStub, 'totalItems', {
-//   get: jest.fn(() => 0),
-//   set: jest.fn()
-// });
+    // await tearDown();
+  });
 
-// const sortServiceStub = {
-//   addRxJsResource: jest.fn(),
-//   boundBackendOnSort: jest.fn(),
-//   boundLocalOnSort: jest.fn(),
-//   dispose: jest.fn(),
-//   loadGridSorters: jest.fn(),
-//   processTreeDataInitialSort: jest.fn(),
-//   sortHierarchicalDataset: jest.fn(),
-// } as unknown as SortService;
-
-// const treeDataServiceStub = {
-//   init: jest.fn(),
-//   convertFlatParentChildToTreeDataset: jest.fn(),
-//   convertFlatParentChildToTreeDatasetAndSort: jest.fn(),
-//   dispose: jest.fn(),
-//   handleOnCellClick: jest.fn(),
-//   sortHierarchicalDataset: jest.fn(),
-//   toggleTreeDataCollapse: jest.fn(),
-// } as unknown as TreeDataService;
-
-// const mockGroupItemMetaProvider = {
-//   init: jest.fn(),
-//   destroy: jest.fn(),
-//   defaultGroupCellFormatter: jest.fn(),
-//   defaultTotalsCellFormatter: jest.fn(),
-//   handleGridClick: jest.fn(),
-//   handleGridKeyDown: jest.fn(),
-//   getGroupRowMetadata: jest.fn(),
-//   getTotalsRowMetadata: jest.fn(),
-// };
-
-// const mockDataView = {
-//   constructor: jest.fn(),
-//   init: jest.fn(),
-//   destroy: jest.fn(),
-//   beginUpdate: jest.fn(),
-//   endUpdate: jest.fn(),
-//   getFilteredItemCount: jest.fn(),
-//   getItem: jest.fn(),
-//   getItems: jest.fn(),
-//   getItemCount: jest.fn(),
-//   getItemMetadata: jest.fn(),
-//   getLength: jest.fn(),
-//   getPagingInfo: jest.fn(),
-//   mapIdsToRows: jest.fn(),
-//   mapRowsToIds: jest.fn(),
-//   onRowsChanged: new MockSlickEvent(),
-//   onRowCountChanged: new MockSlickEvent(),
-//   onSetItemsCalled: new MockSlickEvent(),
-//   reSort: jest.fn(),
-//   setItems: jest.fn(),
-//   setSelectedIds: jest.fn(),
-//   syncGridSelection: jest.fn(),
-// };
-
-// const mockDraggableGroupingExtension = {
-//   constructor: jest.fn(),
-//   init: jest.fn(),
-//   destroy: jest.fn(),
-// };
-
-// const mockEventPubSub = {
-//   notify: jest.fn(),
-//   subscribe: jest.fn(),
-//   unsubscribe: jest.fn(),
-// };
-
-// const mockSlickEventHandler = {
-//   handlers: [],
-//   notify: jest.fn(),
-//   subscribe: jest.fn(),
-//   unsubscribe: jest.fn(),
-//   unsubscribeAll: jest.fn(),
-// };
-
-// const mockGetEditorLock = {
-//   isActive: () => true,
-//   commitCurrentEdit: jest.fn(),
-// };
-
-// const mockGrid = {
-//   autosizeColumns: jest.fn(),
-//   destroy: jest.fn(),
-//   init: jest.fn(),
-//   invalidate: jest.fn(),
-//   getActiveCellNode: jest.fn(),
-//   getColumns: jest.fn(),
-//   getCellEditor: jest.fn(),
-//   getEditorLock: () => mockGetEditorLock,
-//   getUID: () => 'slickgrid_12345',
-//   getContainerNode: jest.fn(),
-//   getGridPosition: jest.fn(),
-//   getOptions: jest.fn(),
-//   getSelectionModel: jest.fn(),
-//   getScrollbarDimensions: jest.fn(),
-//   updateRow: jest.fn(),
-//   render: jest.fn(),
-//   registerPlugin: jest.fn(),
-//   resizeCanvas: jest.fn(),
-//   setColumns: jest.fn(),
-//   setHeaderRowVisibility: jest.fn(),
-//   setOptions: jest.fn(),
-//   setSelectedRows: jest.fn(),
-//   onClick: new MockSlickEvent(),
-//   onClicked: new MockSlickEvent(),
-//   onColumnsReordered: new MockSlickEvent(),
-//   onRendered: jest.fn(),
-//   onScroll: jest.fn(),
-//   onSelectedRowsChanged: new MockSlickEvent(),
-//   onDataviewCreated: new MockSlickEvent(),
-// };
-
-// const mockSlickEventHandlerImplementation = jest.fn().mockImplementation(() => mockSlickEventHandler);
-// const mockDataViewImplementation = jest.fn().mockImplementation(() => mockDataView);
-// const mockGroupItemMetaProviderImplementation = jest.fn().mockImplementation(() => mockGroupItemMetaProvider);
-// const mockGridImplementation = jest.fn().mockImplementation(() => mockGrid);
-// const mockDraggableGroupingImplementation = jest.fn().mockImplementation(() => mockDraggableGroupingExtension);
-// const template = `<div class="demo-container"><div class="grid1"></div></div>`;
-
-// describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
-//   jest.mock('slickgrid/slick.grid', () => mockGridImplementation);
-//   jest.mock('slickgrid/plugins/slick.draggablegrouping', () => mockDraggableGroupingImplementation);
-//   Slick.Grid = mockGridImplementation;
-//   Slick.EventHandler = mockSlickEventHandlerImplementation;
-//   Slick.Data = { DataView: mockDataViewImplementation, GroupItemMetadataProvider: mockGroupItemMetaProviderImplementation };
-//   Slick.DraggableGrouping = mockDraggableGroupingImplementation;
-
-//   let customElement: AureliaSlickgridCustomElement;
-//   let divContainer: HTMLDivElement;
-//   let cellDiv: HTMLDivElement;
-//   let columnDefinitions: Column[] = [];
-//   let eventPubSubService: EventPubSubService;
-//   let gridOptions!: GridOption;
-//   let sharedService: SharedService;
-//   let globalEa: EventAggregator;
-//   let translaterService: TranslaterServiceStub;
-//   const container = DI.createContainer();
-//   // const http = new HttpStub();
-//   const containerService = new ContainerService(container);
-
-//   beforeEach(() => {
-//     divContainer = document.createElement('div');
-//     cellDiv = document.createElement('div');
-//     divContainer.innerHTML = template;
-//     divContainer.appendChild(cellDiv);
-//     document.body.appendChild(divContainer);
-//     columnDefinitions = [{ id: 'name', field: 'name' }];
-//     gridOptions = {
-//       enableExcelExport: false,
-//       dataView: null,
-//       autoResize: {
-//         bottomPadding: 45,
-//         calculateAvailableSizeBy: 'window',
-//         minHeight: 180,
-//         minWidth: 300,
-//         rightPadding: 0,
-//       },
-//     } as unknown as GridOption;
-//     eventPubSubService = new EventPubSubService(divContainer);
-//     sharedService = new SharedService();
-//     translaterService = new TranslaterServiceStub();
-//     jest.spyOn(mockGrid, 'getOptions').mockReturnValue(gridOptions);
-//     globalEa = new EventAggregator();
-
-//     customElement = new AureliaSlickgridCustomElement(
-//       aureliaUtilServiceStub,
-//       observerLocatorStub,
-//       container,
-//       divContainer,
-//       globalEa,
-//       containerService,
-//       translaterService as unknown as TranslaterService
-//       // {
-//       //   backendUtilityService: backendUtilityServiceStub,
-//       //   collectionService: collectionServiceStub,
-//       //   eventPubSubService,
-//       //   extensionService: extensionServiceStub,
-//       //   extensionUtility: mockExtensionUtility,
-//       //   filterService: filterServiceStub,
-//       //   gridEventService: gridEventServiceStub,
-//       //   gridService: gridServiceStub,
-//       //   gridStateService: gridStateServiceStub,
-//       //   groupingAndColspanService: groupingAndColspanServiceStub,
-//       //   resizerService: resizerServiceStub,
-//       //   paginationService: paginationServiceStub,
-//       //   sharedService,
-//       //   sortService: sortServiceStub,
-//       //   treeDataService: treeDataServiceStub,
-//       // }
-//     );
-//   });
-
-//   afterEach(() => {
-//     customElement?.detached();
-//   });
 
 //   it('should make sure AureliaSlickgridCustomElement is defined', () => {
 //     expect(customElement).toBeTruthy();
@@ -2271,4 +2311,4 @@ it('should have a test', () => {
 //   //     });
 //   //   });
 //   // });
-// });
+});

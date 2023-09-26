@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.json",
+  "exclude": [
+    ".vscode",
+    "src/aurelia_project",
+    "src/examples",
+    "src/resources",
+    "src/test",
+    "**/*.spec.ts",
+    "**/*.scss"
+  ],
+  "include": ["../typings", "**/*"]
+}

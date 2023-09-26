@@ -125,7 +125,7 @@ describe('SlickRowDetailView', () => {
     });
 
     it('should provide a sanitized "preTemplate" when only a "preloadComponent" is provided (meaning no "preTemplate" is originally provided)', async () => {
-      gridOptionsMock.rowDetailView!.preloadViewModel = ExampleLoader;
+      gridOptionsMock.rowDetailView!.preloadViewModel = ExamplePreload;
       jest.spyOn(gridStub, 'getOptions').mockReturnValue(gridOptionsMock);
 
       plugin.init(gridStub);
@@ -156,6 +156,8 @@ describe('SlickRowDetailView', () => {
 
     beforeEach(() => {
       gridOptionsMock.datasetIdPropertyName = 'id';
+      gridOptionsMock.rowDetailView!.preTemplate = null as any;
+      gridOptionsMock.rowDetailView!.postTemplate = null as any;
       gridOptionsMock.rowDetailView!.preloadViewModel = ExamplePreload;
       gridOptionsMock.rowDetailView!.viewModel = ExampleLoader;
       columnsMock = [{ id: 'field1', field: 'field1', width: 100, cssClass: 'red' }];
@@ -395,7 +397,7 @@ describe('SlickRowDetailView', () => {
       plugin.eventHandler.subscribe(plugin.onBeforeRowDetailToggle, () => {
         gridStub.onColumnsReordered.notify({ impactedColumns: [mockColumn] } as any, new Slick.EventData(), gridStub);
         expect(appendSpy).toHaveBeenCalledWith(
-          undefined,
+          ExampleLoader,
           expect.objectContaining({ model: mockColumn, addon: expect.anything(), grid: gridStub }),
           expect.objectContaining({ className: 'container_field1' })
         );
@@ -421,7 +423,7 @@ describe('SlickRowDetailView', () => {
       plugin.eventHandler.subscribe(plugin.onBeforeRowDetailToggle, () => {
         gridStub.onSelectedRowsChanged.notify({ rows: [0], previousSelectedRows: [], grid: gridStub } as any, new Slick.EventData(), gridStub);
         expect(appendSpy).toHaveBeenCalledWith(
-          undefined,
+          ExampleLoader,
           expect.objectContaining({ model: mockColumn, addon: expect.anything(), grid: gridStub, }),
           expect.objectContaining({ className: 'container_field1' })
         );
@@ -447,7 +449,7 @@ describe('SlickRowDetailView', () => {
       plugin.eventHandler.subscribe(plugin.onBeforeRowDetailToggle, () => {
         eventPubSubService.publish('onFilterChanged', { columnId: 'field1', operator: '=', searchTerms: [] });
         expect(appendSpy).toHaveBeenCalledWith(
-          undefined,
+          ExampleLoader,
           expect.objectContaining({ model: mockColumn, addon: expect.anything(), grid: gridStub, }),
           expect.objectContaining({ className: 'container_field1' })
         );
@@ -474,7 +476,7 @@ describe('SlickRowDetailView', () => {
       plugin.eventHandler.subscribe(plugin.onBeforeRowDetailToggle, () => {
         eventPubSubService.publish('onFilterChanged', { columnId: 'field1', operator: '=', searchTerms: [] });
         expect(appendSpy).toHaveBeenCalledWith(
-          undefined,
+          ExampleLoader,
           expect.objectContaining({ model: mockColumn, addon: expect.anything(), grid: gridStub, }),
           expect.objectContaining({ className: 'container_field1' })
         );
@@ -547,7 +549,7 @@ describe('SlickRowDetailView', () => {
       plugin.register();
       plugin.onAfterRowDetailToggle.subscribe(() => {
         expect(getElementSpy).toHaveBeenCalledWith('container_loading');
-        expect(appendSpy).toHaveBeenCalledWith(undefined, undefined, loadingElm);
+        expect(appendSpy).toHaveBeenCalledWith(ExamplePreload, undefined, loadingElm);
       });
       plugin.onBeforeRowDetailToggle.notify({ item: mockColumn, grid: gridStub } as any, new Slick.EventData(), gridStub);
       plugin.onAfterRowDetailToggle.notify({ item: mockColumn, grid: gridStub } as any, new Slick.EventData(), gridStub);
@@ -568,7 +570,7 @@ describe('SlickRowDetailView', () => {
       plugin.register();
       plugin.onRowBackToViewportRange.subscribe(() => {
         expect(appendSpy).toHaveBeenCalledWith(
-          undefined,
+          ExampleLoader,
           expect.objectContaining({ model: mockColumn, addon: expect.anything(), grid: gridStub, }),
           expect.objectContaining({ className: 'container_field1' })
         );

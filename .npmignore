@@ -13,6 +13,7 @@ doc
 src
 ISSUE_TEMPLATE.md
 index.ejs
+index.html
 jest.conf.js
 npm-debug.log
 package-scripts.js

@@ -4,7 +4,7 @@
     {
       "label": "Build Library",
       "type": "shell",
-      "command": "yarn run build",
+      "command": "yarn run build:plugin",
       "problemMatcher": []
     },
     {

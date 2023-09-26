@@ -13,7 +13,7 @@ export class EditorSelect {
   constructor(private elm: HTMLElement) {}
 
   focus() {
-    this.elm.querySelector('select').focus();
+    this.elm.querySelector('select')?.focus();
   }
 
   hide() {

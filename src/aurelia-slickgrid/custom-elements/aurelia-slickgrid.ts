@@ -99,7 +99,7 @@ export class AureliaSlickgridCustomElement {
   private _isLocalGrid = true;
   private _paginationOptions: Pagination | undefined;
   private _registeredResources: ExternalResource[] = [];
-  private _columnDefinitionObserver: ICollectionObserver<CollectionKind.array>;
+  private _columnDefinitionObserver?: ICollectionObserver<CollectionKind.array>;
   private _columnDefinitionsSubscriber: ICollectionSubscriber = {
     handleCollectionChange: this.columnDefinitionsHandler.bind(this)
   };
@@ -161,7 +161,7 @@ export class AureliaSlickgridCustomElement {
     private readonly elm: Element,
     @IEventAggregator private readonly globalEa: IEventAggregator,
     private readonly containerService: ContainerService,
-    private readonly translaterService: TranslaterService,
+    private readonly translaterService: TranslaterService
     // TODO: MB - not sure what this is for
     // externalServices: {
     //   backendUtilityService?: BackendUtilityService,
@@ -543,7 +543,7 @@ export class AureliaSlickgridCustomElement {
 
     // also dispose of all Subscriptions
     this.subscriptions = disposeAllSubscriptions(this.subscriptions);
-    this._columnDefinitionObserver.unsubscribe(this._columnDefinitionsSubscriber);
+    this._columnDefinitionObserver?.unsubscribe(this._columnDefinitionsSubscriber);
 
     if (this.backendServiceApi) {
       for (const prop of Object.keys(this.backendServiceApi)) {

@@ -30,7 +30,7 @@ export class CustomAureliaViewModelEditor implements Editor {
 
   /** SlickGrid grid object */
   grid: SlickGrid;
-  vm?: { controller?: ICustomElementController };
+  vm?: { controller?: ICustomElementController } | null;
   elmBindingContext?: IBindingContext;
 
   constructor(private args: any) {
@@ -90,7 +90,7 @@ export class CustomAureliaViewModelEditor implements Editor {
       } as ViewModelBindableInputData;
       const viewModel = this.columnEditor.params.viewModel;
       this.vm = await this.aureliaUtilService.createAureliaViewModelAddToSlot(viewModel, bindableData, this.args.container);
-      this.elmBindingContext = this.vm.controller?.children?.[0].scope.bindingContext;
+      this.elmBindingContext = this.vm?.controller?.children?.[0].scope.bindingContext;
     }
   }
 
@@ -150,15 +150,17 @@ export class CustomAureliaViewModelEditor implements Editor {
     // add a delay so that the editor has time to be enhanced (created) prior to changing the value
     setTimeout(() => {
       this.focus();
-      this.elmBindingContext.selectedItem = itemObject;
+      if (this.elmBindingContext) {
+        this.elmBindingContext.selectedItem = itemObject;
 
-      // whenever the selected item changed (from the @bindable() selectedItem), we'll save the new value
-      this.elmBindingContext.selectedItemChanged = ((newItem: any) => {
-        this.selectedItem = newItem;
-        if (newItem !== itemObject) {
-          this.save();
-        }
-      });
+        // whenever the selected item changed (from the @bindable() selectedItem), we'll save the new value
+        this.elmBindingContext.selectedItemChanged = ((newItem: any) => {
+          this.selectedItem = newItem;
+          if (newItem !== itemObject) {
+            this.save();
+          }
+        });
+      }
     }, 0);
   }
 

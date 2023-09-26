@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const Dotenv = require('dotenv-webpack');
@@ -103,6 +104,9 @@ module.exports = ({ production, node } = {}, { server } = {}, { analyze } = {}) 
         }
       ]
     },
+    performance: {
+      hints: false
+    },
     externalsPresets: node && { node: production },
     externals: [
       // Skip npm dependencies in plugin build.
@@ -118,10 +122,15 @@ module.exports = ({ production, node } = {}, { server } = {}, { analyze } = {}) 
       }),
       new CopyWebpackPlugin({
         patterns: [
-          { from: `${srcDir}/assets`, to: 'assets' }
+          {
+            from: node ? `${srcDir}/assets/i18n` : `${srcDir}/assets`,
+            to: node ? 'i18n' : 'assets'
+          }
         ]
       }),
-      analyze && new BundleAnalyzerPlugin()
+      analyze && new BundleAnalyzerPlugin(),
+      // Note that the usage of following plugin cleans the webpack output directory before build.
+      new CleanWebpackPlugin(),
     ].filter(p => p)
   }
 };

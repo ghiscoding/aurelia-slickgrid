@@ -13,7 +13,7 @@ export class FilterSelect {
   constructor(private elm: HTMLElement) {}
 
   focus() {
-    this.elm.querySelector('select').focus();
+    this.elm.querySelector('select')?.focus();
   }
 
   // we need to define the method, it can be empty so that we can override it

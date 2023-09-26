@@ -5,7 +5,7 @@ import { Constructable, CustomElement, IAurelia, singleton } from 'aurelia';
 export class AureliaUtilService {
   constructor(@IAurelia private readonly au: IAurelia) { }
 
-  async createAureliaViewModelAddToSlot(viewModel: Constructable, bindableData: ViewModelBindableInputData, targetElement?: HTMLElement | Element): Promise<AureliaViewOutput | null> {
+  async createAureliaViewModelAddToSlot(viewModel: Constructable, bindableData?: ViewModelBindableInputData, targetElement?: HTMLElement | Element): Promise<AureliaViewOutput | null> {
     if (!targetElement) {
       return null;
     }

@@ -27,7 +27,7 @@ export class CustomAureliaViewModelFilter implements Filter {
   operator: OperatorType | OperatorString = OperatorType.equal;
 
   /** Aurelia ViewModel Reference */
-  vm?: { controller?: ICustomElementController };
+  vm?: { controller?: ICustomElementController } | null;
   elmBindingContext?: IBindingContext;
 
   /** Aurelia Util Service (could be inside the Grid Options Params or the Filter Params ) */
@@ -84,14 +84,16 @@ export class CustomAureliaViewModelFilter implements Filter {
       } as ViewModelBindableInputData;
       const viewModel = this.columnFilter.params.viewModel;
       this.vm = await this.aureliaUtilService.createAureliaViewModelAddToSlot(viewModel, bindableData, this.container);
-      this.elmBindingContext = this.vm.controller?.children?.[0].scope.bindingContext;
+      this.elmBindingContext = this.vm?.controller?.children?.[0].scope.bindingContext;
 
       // override the FilterSelect selectedItemChanged method (from the @bindable() selectedItem), we'll trigger the filter callback
-      this.elmBindingContext.selectedItemChanged = ((item: any) => {
-        this.callback(undefined, { columnDef: this.columnDef, operator: this.operator, searchTerms: [item.id], shouldTriggerQuery: this._shouldTriggerQuery });
-        // reset flag for next use
-        this._shouldTriggerQuery = true;
-      });
+      if (this.elmBindingContext) {
+        this.elmBindingContext.selectedItemChanged = ((item: any) => {
+          this.callback(undefined, { columnDef: this.columnDef, operator: this.operator, searchTerms: [item.id], shouldTriggerQuery: this._shouldTriggerQuery });
+          // reset flag for next use
+          this._shouldTriggerQuery = true;
+        });
+      }
     }
   }
 

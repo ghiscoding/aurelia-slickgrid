@@ -15,7 +15,7 @@ export class Example19DetailView {
   };
 
   // you also have access to the following objects (it must match the exact property names shown below)
-  @bindable() addon: SlickRowDetailView; // row detail addon instance
+  @bindable() addon!: SlickRowDetailView; // row detail addon instance
   @bindable() grid!: SlickGrid;
   @bindable() dataView!: SlickDataView;
 

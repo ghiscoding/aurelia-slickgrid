@@ -12,8 +12,8 @@ export function disposeAllSubscriptions(subscriptions: Array<EventSubscription |
       const subscription = subscriptions.pop();
       if (subscription?.dispose) {
         subscription.dispose();
-      } else if ((subscription as EventSubscription)?.unsubscribe) {
-        (subscription as EventSubscription).unsubscribe();
+      } else if (typeof (subscription as EventSubscription)?.unsubscribe === 'function') {
+        (subscription as EventSubscription).unsubscribe!();
       }
     }
   }

@@ -259,7 +259,7 @@ export class Example5 {
       // read the json and create a fresh copy of the data that we are free to modify
       this.http.fetch(`${sampleDataRoot}/customers_100.json`)
         .then(e => e.json())
-        .then(data => {
+        .then((data: any) => {
           // Sort the data
           if (orderBy?.length > 0) {
             const orderByClauses = orderBy.split(',');
@@ -278,10 +278,10 @@ export class Example5 {
               const sort = orderByParts[1] ?? 'asc';
               switch (sort.toLocaleLowerCase()) {
                 case 'asc':
-                  data = data.sort((a, b) => selector(a).localeCompare(selector(b)));
+                  data = data.sort((a: any, b: any) => selector(a).localeCompare(selector(b)));
                   break;
                 case 'desc':
-                  data = data.sort((a, b) => selector(b).localeCompare(selector(a)));
+                  data = data.sort((a: any, b: any) => selector(b).localeCompare(selector(a)));
                   break;
               }
             }
@@ -293,7 +293,7 @@ export class Example5 {
           if (columnFilters) {
             for (const columnId in columnFilters) {
               if (columnFilters.hasOwnProperty(columnId)) {
-                filteredData = filteredData.filter(column => {
+                filteredData = filteredData.filter((column: Column) => {
                   const filterType = (columnFilters as any)[columnId].type;
                   const searchTerm = (columnFilters as any)[columnId].term;
                   let colId = columnId;
