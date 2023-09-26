@@ -4,7 +4,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-const Dotenv = require('dotenv-webpack');
 const nodeExternals = require('webpack-node-externals');
 
 const baseUrl = '';
@@ -116,9 +115,6 @@ module.exports = ({ production, node } = {}, { server } = {}, { analyze } = {}) 
       new HtmlWebpackPlugin({
         template: 'index.html',
         favicon: `${srcDir}/favicon.ico`,
-      }),
-      new Dotenv({
-        path: `./.env${production ? '' : '.' + (process.env.NODE_ENV || 'development')}`,
       }),
       new CopyWebpackPlugin({
         patterns: [

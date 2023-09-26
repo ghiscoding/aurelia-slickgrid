@@ -267,15 +267,14 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
   // protected functions
   // ------------------
 
-  protected disposeViewSlot(expandedView: CreatedView) {
-    if (!expandedView?.controller) {
-      return null;
-    }
-    const container = this.gridContainerElement.getElementsByClassName(`${ROW_DETAIL_CONTAINER_PREFIX}${this._slots[0].id}`);
-    if (container?.length) {
-      expandedView.controller.deactivate(expandedView.controller, null);
-      container[0].innerHTML = '';
-      return expandedView;
+  protected disposeViewSlot(expandedView: CreatedView): CreatedView | void {
+    if (expandedView?.controller) {
+      const container = this.gridContainerElement.getElementsByClassName(`${ROW_DETAIL_CONTAINER_PREFIX}${this._slots[0].id}`);
+      if (container?.length) {
+        expandedView.controller.deactivate(expandedView.controller, null);
+        container[0].innerHTML = '';
+        return expandedView;
+      }
     }
   }
 
