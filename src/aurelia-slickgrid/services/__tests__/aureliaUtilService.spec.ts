@@ -1,14 +1,18 @@
-import { BindingLanguage, Container, ViewCompiler, ViewResources } from 'aurelia-framework';
+import { customElement, Aurelia } from 'aurelia';
+import { IAurelia } from 'aurelia';
 import { AureliaUtilService } from '../aureliaUtil.service';
+import { ViewModelBindableInputData } from '../../models';
 
-jest.mock('flatpickr', () => { });
 const DOM_ELEMENT_ID = 'row-detail123';
+
+// @ts-ignore
+@customElement({ name: 'example-loader', template: '<p>Some Paragraph</p>' })
+export class ExampleLoader {}
+
 
 describe('aureliaUtilService', () => {
   let service: AureliaUtilService;
-  let container: Container;
-  let viewCompiler: ViewCompiler;
-  let viewResources: ViewResources;
+  let au: IAurelia;
 
   beforeEach(() => {
     // define a <div> container to simulate a row detail DOM element
@@ -16,10 +20,8 @@ describe('aureliaUtilService', () => {
     div.innerHTML = `<div id="${DOM_ELEMENT_ID}">some text</div>`;
     document.body.appendChild(div);
 
-    container = new Container();
-    viewResources = new ViewResources();
-    viewCompiler = new ViewCompiler(new BindingLanguage(), viewResources);
-    service = new AureliaUtilService(container, viewCompiler, viewResources);
+    au = new Aurelia();
+    service = new AureliaUtilService(au);
   });
 
   afterEach(() => {
@@ -32,80 +34,34 @@ describe('aureliaUtilService', () => {
   });
 
   describe('createAureliaViewModelAddToSlot method', () => {
-    it('should return null when html dom element is not provided', () => {
-      const mockCompilerCreate = { bind: jest.fn(), appendNodesTo: jest.fn() };
-      jest.spyOn(viewCompiler, 'compile').mockReturnValue({ create: () => mockCompilerCreate as any } as any);
-
-      const output = service.createAureliaViewModelAddToSlot('./template/path', { firstName: 'John' }, undefined);
+    it('should return null when html dom element is not provided', async () => {
+      const output = await service.createAureliaViewModelAddToSlot(ExampleLoader, { model: { firstName: 'John' } } as ViewModelBindableInputData, undefined);
 
       expect(output).toBeNull();
     });
 
-    it('should create an Aurelia ViewModel and add it to a View Slot', () => {
+    it('should create an Aurelia ViewModel and add it to a View Slot with only model attribute when nothing else is provided', async () => {
+      const controllerMock = { viewModel: {} };
       const domElm = document.getElementById(DOM_ELEMENT_ID) as HTMLElement;
-      const mockCompilerCreate = { bind: jest.fn(), appendNodesTo: jest.fn() };
-      const spyCompiler = jest.spyOn(viewCompiler, 'compile').mockReturnValue({ create: () => mockCompilerCreate as any } as any);
-      const spyView = jest.spyOn(mockCompilerCreate, 'bind').mockReturnValue({ create: jest.fn() });
+      const enhanceSpy = jest.spyOn(au, 'enhance').mockResolvedValue(controllerMock as any);
 
-      const output = service.createAureliaViewModelAddToSlot('./template/path', { firstName: 'John' }, domElm, true);
+      const output = await service.createAureliaViewModelAddToSlot(ExampleLoader, { model: { firstName: 'John' } } as ViewModelBindableInputData, domElm);
 
-      expect(spyCompiler).toHaveBeenCalled();
-      expect(spyView).toHaveBeenCalled();
-      expect(domElm.innerHTML).toBe('');
-      expect(output).toEqual({ bindings: { template: './template/path', firstName: 'John', viewModelRef: {} }, view: mockCompilerCreate, viewSlot: expect.anything() });
+      expect(enhanceSpy).toHaveBeenCalled();
+      expect(domElm.innerHTML).toBe('<example-loader model.bind=\"bindableData.model\"></example-loader>');
+      expect(output).toEqual({ controller: controllerMock});
     });
 
-    it('should create an Aurelia ViewModel and add it to a View Slot even when template is not provided', () => {
+    it('should create an Aurelia ViewModel and add it to a View Slot with all bindable attributes when all are provided', async () => {
+      const controllerMock = { viewModel: {} };
       const domElm = document.getElementById(DOM_ELEMENT_ID) as HTMLElement;
-      const mockCompilerCreate = { bind: jest.fn(), appendNodesTo: jest.fn() };
-      const spyCompiler = jest.spyOn(viewCompiler, 'compile').mockReturnValue({ create: () => mockCompilerCreate as any } as any);
-      const spyView = jest.spyOn(mockCompilerCreate, 'bind').mockReturnValue({ create: jest.fn() });
+      const enhanceSpy = jest.spyOn(au, 'enhance').mockResolvedValue(controllerMock as any);
 
-      const output = service.createAureliaViewModelAddToSlot(undefined as any, { firstName: 'John' }, domElm, true);
+      const output = await service.createAureliaViewModelAddToSlot(ExampleLoader, { model: { firstName: 'John', }, addon: {}, grid: {}, dataView: {}, parent: {} } as ViewModelBindableInputData, domElm);
 
-      expect(spyCompiler).toHaveBeenCalled();
-      expect(spyView).toHaveBeenCalled();
-      expect(domElm.innerHTML).toBe('');
-      expect(output).toEqual({ bindings: { template: '', firstName: 'John', viewModelRef: {} }, view: mockCompilerCreate, viewSlot: expect.anything() });
-    });
-  });
-
-  describe('createAureliaViewAddToSlot method', () => {
-    it('should return null when html dom element is not provided', () => {
-      const mockCompilerCreate = { bind: jest.fn(), appendNodesTo: jest.fn() };
-      jest.spyOn(viewCompiler, 'compile').mockReturnValue({ create: () => mockCompilerCreate as any } as any);
-
-      const output = service.createAureliaViewAddToSlot('./template/path', undefined);
-
-      expect(output).toBeNull();
-    });
-
-    it('should create an Aurelia ViewModel and add it to a View Slot', () => {
-      const domElm = document.getElementById(DOM_ELEMENT_ID) as HTMLElement;
-      const mockCompilerCreate = { bind: jest.fn(), appendNodesTo: jest.fn() };
-      const spyCompiler = jest.spyOn(viewCompiler, 'compile').mockReturnValue({ create: () => mockCompilerCreate as any } as any);
-      const spyView = jest.spyOn(mockCompilerCreate, 'bind').mockReturnValue({ create: jest.fn() });
-
-      const output = service.createAureliaViewAddToSlot('./template/path', domElm, true);
-
-      expect(spyCompiler).toHaveBeenCalled();
-      expect(spyView).toHaveBeenCalled();
-      expect(domElm.innerHTML).toBe('');
-      expect(output).toEqual({ bindings: { template: './template/path', viewModelRef: {} }, view: mockCompilerCreate, viewSlot: expect.anything() });
-    });
-
-    it('should create an Aurelia ViewModel and add it to a View Slot even when template is not provided', () => {
-      const domElm = document.getElementById(DOM_ELEMENT_ID) as HTMLElement;
-      const mockCompilerCreate = { bind: jest.fn(), appendNodesTo: jest.fn() };
-      const spyCompiler = jest.spyOn(viewCompiler, 'compile').mockReturnValue({ create: () => mockCompilerCreate as any } as any);
-      const spyView = jest.spyOn(mockCompilerCreate, 'bind').mockReturnValue({ create: jest.fn() });
-
-      const output = service.createAureliaViewAddToSlot(undefined as any, domElm, true);
-
-      expect(spyCompiler).toHaveBeenCalled();
-      expect(spyView).toHaveBeenCalled();
-      expect(domElm.innerHTML).toBe('');
-      expect(output).toEqual({ bindings: { template: '', viewModelRef: {} }, view: mockCompilerCreate, viewSlot: expect.anything() });
+      expect(enhanceSpy).toHaveBeenCalled();
+      expect(domElm.innerHTML).toBe('<example-loader model.bind="bindableData.model" addon.bind="bindableData.addon" grid.bind="bindableData.grid" data-view.bind="bindableData.dataView" parent.bind="bindableData.parent"></example-loader>');
+      expect(output).toEqual({ controller: controllerMock});
     });
   });
 });

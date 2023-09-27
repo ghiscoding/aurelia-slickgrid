@@ -14,11 +14,11 @@
   <div class="row">
     <span class="context-menu">
       <strong>Context Menu:</strong>
-      <button class="btn btn-outline-secondary btn-xs" click.delegate="showContextCommandsAndOptions(false)"
+      <button class="btn btn-outline-secondary btn-xs" click.trigger="showContextCommandsAndOptions(false)"
               data-test="context-menu-priority-only-button">
         Show Priority Options Only
       </button>
-      <button class="btn btn-outline-secondary btn-xs" click.delegate="showContextCommandsAndOptions(true)"
+      <button class="btn btn-outline-secondary btn-xs" click.trigger="showContextCommandsAndOptions(true)"
               data-test="context-menu-commands-and-priority-button">
         Show Commands & Priority Options
       </button>
@@ -26,11 +26,11 @@
 
     <span class="cell-menu">
       <strong>Cell Menu:</strong>
-      <button class="btn btn-outline-secondary btn-xs" click.delegate="showCellMenuCommandsAndOptions(false)"
+      <button class="btn btn-outline-secondary btn-xs" click.trigger="showCellMenuCommandsAndOptions(false)"
               data-test="cell-menu-commands-and-options-false-button">
         Show Action Commands Only
       </button>
-      <button class="btn btn-outline-secondary btn-xs" click.delegate="showCellMenuCommandsAndOptions(true)"
+      <button class="btn btn-outline-secondary btn-xs" click.trigger="showCellMenuCommandsAndOptions(true)"
               data-test="cell-menu-commands-and-options-true-button">
         Show Actions Commands & Completed Options
       </button>
@@ -39,7 +39,7 @@
 
   <div class="row locale">
     <div class="col-12">
-      <button class="btn btn-outline-secondary btn-xs" click.delegate="switchLanguage()" data-test="language-button">
+      <button class="btn btn-outline-secondary btn-xs" click.trigger="switchLanguage()" data-test="language-button">
         <i class="fa fa-language"></i>
         Switch Language
       </button>

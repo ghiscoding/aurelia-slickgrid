@@ -73,7 +73,7 @@ export class Example34 {
     }, this.refreshRate);
   }
 
-  detached() {
+  detaching() {
     this.stopSimulation();
   }
 
@@ -188,7 +188,7 @@ export class Example34 {
 
   getData() {
     // mock a dataset
-    this.dataset = [];
+    const tmpData = [];
     for (let i = 0; i < NB_ROWS; i++) {
       const randomPercent = Math.round(Math.random() * 100);
       const randomLowQty = this.randomNumber(1, 50);
@@ -202,7 +202,7 @@ export class Example34 {
       const currency = (Math.floor(Math.random() * 10)) % 2 ? 'CAD' : 'USD';
       const company = faker.company.name();
 
-      this.dataset[i] = {
+      tmpData[i] = {
         id: i,
         currency,
         trsnType: (Math.round(Math.random() * 100)) % 2 ? 'Buy' : 'Sell',
@@ -219,6 +219,7 @@ export class Example34 {
         historic: [price]
       };
     }
+    this.dataset = tmpData;
   }
 
   startSimulation() {

@@ -10,7 +10,7 @@ describe('Example 9 - Grid Menu', { retries: 1 }, () => {
   });
 
   it('should display Example title', () => {
-    cy.visit(`${Cypress.config('baseUrl')}/slickgrid/example9`);
+    cy.visit(`${Cypress.config('baseUrl')}/example9`);
     cy.get('h2').should('contain', 'Example 9: Grid Menu Control');
   });
 

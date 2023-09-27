@@ -11,7 +11,7 @@
   </h2>
   <div class="subtitle" innerhtml.bind="subTitle"></div>
 
-  <button class="btn btn-outline-secondary btn-sm" click.delegate="switchLanguage()">
+  <button class="btn btn-outline-secondary btn-sm" click.trigger="switchLanguage()">
     <i class="fa fa-language"></i>
     Switch Language
   </button>
@@ -21,6 +21,6 @@
                      column-definitions.bind="columnDefinitions"
                      grid-options.bind="gridOptions"
                      dataset.bind="dataset"
-                     on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
+                     on-aurelia-grid-created.trigger="aureliaGridReady($event.detail)">
   </aurelia-slickgrid>
 </template>

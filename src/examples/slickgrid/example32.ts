@@ -1,3 +1,5 @@
+import { IHttpClient } from '@aurelia/fetch-client';
+import { newInstanceOf } from '@aurelia/kernel';
 import {
   AutocompleterOption,
   Column,
@@ -15,8 +17,6 @@ import {
   SortComparers,
 } from '@slickgrid-universal/common';
 import { ExcelExportService } from '@slickgrid-universal/excel-export';
-import { HttpClient as FetchClient } from 'aurelia-fetch-client';
-import { autoinject } from 'aurelia-framework';
 
 import { AureliaGridInstance } from '../../aurelia-slickgrid';
 import './example32.scss'; // provide custom CSS/SASS styling
@@ -76,7 +76,6 @@ const myCustomTitleValidator = (value: any, args: any) => {
   return { valid: true, msg: '' };
 };
 
-@autoinject()
 export class Example32 {
   title = 'Example 32: Columns Resize by Content';
   subTitle = `The grid below uses the optional resize by cell content (with a fixed 950px for demo purposes), you can click on the 2 buttons to see the difference. The "autosizeColumns" is really the default option used by SlickGrid-Universal, the resize by cell content is optional because it requires to read the first thousand rows and do extra width calculation.`;
@@ -99,7 +98,7 @@ export class Example32 {
     { value: 4, label: 'Very Complex' },
   ];
 
-  constructor(private httpFetch: FetchClient) {
+  constructor(@newInstanceOf(IHttpClient) readonly http: IHttpClient) {
     this.initializeGrid();
   }
 
@@ -275,7 +274,7 @@ export class Example32 {
           model: Editors.autocompleter,
           massUpdate: true,
           customStructure: { label: 'name', value: 'code' },
-          collectionAsync: this.httpFetch.fetch(URL_COUNTRIES_COLLECTION),
+          collectionAsync: this.http.fetch(URL_COUNTRIES_COLLECTION),
         },
         filter: {
           model: Filters.inputText,

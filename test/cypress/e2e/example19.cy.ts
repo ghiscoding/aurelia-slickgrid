@@ -2,7 +2,7 @@ describe('Example 19 - Row Detail View', { retries: 1 }, () => {
   const titles = ['', 'Title', 'Duration (days)', '% Complete', 'Start', 'Finish', 'Effort Driven'];
 
   it('should display Example title', () => {
-    cy.visit(`${Cypress.config('baseUrl')}/slickgrid/example19`);
+    cy.visit(`${Cypress.config('baseUrl')}/example19`);
     cy.get('h2').should('contain', 'Example 19: Row Detail View');
   });
 

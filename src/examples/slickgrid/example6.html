@@ -23,16 +23,16 @@
       <div class="row">
         <div class="col-md-12">
           <button class="btn btn-outline-secondary btn-sm" data-test="clear-filters-sorting"
-                  click.delegate="clearAllFiltersAndSorts()" title="Clear all Filters & Sorts">
+                  click.trigger="clearAllFiltersAndSorts()" title="Clear all Filters & Sorts">
             <i class="fa fa-filter text-danger"></i>
             Clear all Filter & Sorts
           </button>
           <button class="btn btn-outline-secondary btn-sm" data-test="set-dynamic-filter"
-                  click.delegate="setFiltersDynamically()">
+                  click.trigger="setFiltersDynamically()">
             Set Filters Dynamically
           </button>
           <button class="btn btn-outline-secondary btn-sm" data-test="set-dynamic-sorting"
-                  click.delegate="setSortingDynamically()">
+                  click.trigger="setSortingDynamically()">
             Set Sorting Dynamically
           </button>
         </div>
@@ -42,7 +42,7 @@
 
       <div class="row">
         <div class="col-md-12">
-          <button class="btn btn-outline-secondary btn-sm" click.delegate="switchLanguage()"
+          <button class="btn btn-outline-secondary btn-sm" click.trigger="switchLanguage()"
                   data-test="language-button">
             <i class="fa fa-language"></i>
             Switch Language
@@ -62,10 +62,10 @@
       <div class="row" style="margin-bottom: 5px">
         <div class="col-md-12">
           <label>Programmatically go to first/last page:</label>
-          <button class="btn btn-outline-secondary btn-xs px-2" data-test="goto-first-page" click.delegate="goToFirstPage()">
+          <button class="btn btn-outline-secondary btn-xs px-2" data-test="goto-first-page" click.trigger="goToFirstPage()">
             <i class="fa fa-caret-left fa-lg"></i>
           </button>
-          <button class="btn btn-outline-secondary btn-xs px-2" data-test="goto-last-page" click.delegate="goToLastPage()">
+          <button class="btn btn-outline-secondary btn-xs px-2" data-test="goto-last-page" click.trigger="goToLastPage()">
             <i class="fa fa-caret-right fa-lg"></i>
           </button>
         </div>
@@ -84,7 +84,7 @@
                      column-definitions.bind="columnDefinitions"
                      grid-options.bind="gridOptions"
                      dataset.bind="dataset"
-                     on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)"
-                     on-grid-state-changed.delegate="gridStateChanged($event.detail)">
+                     on-aurelia-grid-created.trigger="aureliaGridReady($event.detail)"
+                     on-grid-state-changed.trigger="gridStateChanged($event.detail)">
   </aurelia-slickgrid>
 </template>

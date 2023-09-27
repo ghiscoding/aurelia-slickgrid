@@ -9,12 +9,16 @@ const config: Config.InitialOptions = {
     '!dist/**',
     '!src/assets/**',
     '!**/node_modules/**',
+    '!**/models/**',
     '!**/test/**',
     '!src/examples/**',
   ],
   coverageDirectory: '<rootDir>/test/jest-coverage',
   coveragePathIgnorePatterns: [
     'example-data.js',
+    'constants.ts',
+    'index.ts',
+    'slickgrid-config.ts',
     'global-grid-options.ts',
     '\\.d\\.ts$',
     '<rootDir>/node_modules/'

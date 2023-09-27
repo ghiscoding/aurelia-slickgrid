@@ -1,51 +1,63 @@
-// we want font-awesome to load as soon as possible to show the fa-spinner
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'font-awesome/css/font-awesome.css';
-import 'flatpickr/dist/flatpickr.min.css';
-import './styles.scss';
-import { Aurelia, PLATFORM } from 'aurelia-framework';
-import { I18N, TCustomAttribute } from 'aurelia-i18n';
-import Backend from 'i18next-xhr-backend';
+import Aurelia/* , { StyleConfiguration }*/ from 'aurelia';
+import { MyApp } from './my-app';
+// Css files imported in this main file are NOT processed by style-loader
+// They are for sharedStyles in shadowDOM.
+// However, css files imported in other js/ts files are processed by style-loader.
+// import shared from './shared.css';
+import { AureliaSlickGridConfiguration } from './aurelia-slickgrid/index';
+import { I18nConfiguration } from '@aurelia/i18n';
+import Fetch from 'i18next-fetch-backend';
+import { RouterConfiguration } from '@aurelia/router';
+import { DecimalValueConverter } from './examples/resources/value-converters/decimal';
+import { StringifyValueConverter } from './examples/resources/value-converters/stringify';
+import { DateFormatValueConverter } from './examples/resources/value-converters/date-format';
 import 'bootstrap';
-import { SlickgridConfig } from './aurelia-slickgrid';
 
-export async function configure(aurelia: Aurelia) {
-  aurelia.use.standardConfiguration();
+// dynamic components that can be enhanced in Example 19, 26
+import { CustomTitleFormatter } from './examples/slickgrid/custom-title-formatter';
+import { EditorSelect } from './examples/slickgrid/editor-select';
+import { FilterSelect } from './examples/slickgrid/filter-select';
+import { Example19DetailView } from './examples/slickgrid/example19-detail-view';
+import { Example19Preload } from './examples/slickgrid/example19-preload';
 
-  aurelia.use.feature(PLATFORM.moduleName('examples/resources/index'));
+Aurelia
+  /*
+  .register(StyleConfiguration.shadowDOM({
+    // optionally add the shared styles for all components
+    sharedStyles: [shared]
+  }))
+  */
+  // Register all exports of the plugin
+  .register(
+    RouterConfiguration.customize({ useHref: false }),
 
-  // local aurelia-slickgrid
-  aurelia.use.feature(PLATFORM.moduleName('aurelia-slickgrid/index'), (config: SlickgridConfig) => {
-    // load necessary Flatpickr Locale(s), but make sure it's imported AFTER loading Aurelia-Slickgrid plugin
-    import('flatpickr/dist/l10n/fr');
-
-    // change any of the default global options
-    config.options.gridMenu!.iconCssClass = 'fa fa-bars';
-  });
-
-  // aurelia i18n to handle multiple locales
-  aurelia.use.plugin(PLATFORM.moduleName('aurelia-i18n'), (instance: I18N) => {
-    const aliases = ['t', 'i18n'];
-    // add aliases for 't' attribute
-    TCustomAttribute.configureAliases(aliases);
-
-    // register backend plugin
-    instance.i18next.use(Backend);
-
-    return instance.setup({
+    // dynamic components to enhance
+    CustomTitleFormatter,
+    Example19DetailView,
+    Example19Preload,
+    EditorSelect,
+    FilterSelect,
+  )
+  .register(I18nConfiguration.customize((options) => {
+    options.translationAttributeAliases = ['i18n', 'tr'];
+    options.initOptions = {
       backend: {
-        loadPath: 'assets/i18n/{{lng}}/{{ns}}.json',
+        loadPath: './assets/i18n/{{lng}}/{{ns}}.json',
       },
       lng: 'en',
       ns: ['aurelia-slickgrid'],
       defaultNS: 'aurelia-slickgrid',
-      attributes: aliases,
       fallbackLng: 'en',
       debug: false,
-      interpolation: { skipOnVariables: false }
-    });
-  });
+      plugins: [Fetch],
+    };
+  }))
+  .register(AureliaSlickGridConfiguration.customize(config => {
+    import('flatpickr/dist/l10n/fr');
 
-  await aurelia.start();
-  await aurelia.setRoot(PLATFORM.moduleName('app'));
-}
+    // change any of the default global options
+    config.options.gridMenu!.iconCssClass = 'fa fa-bars';
+  }))
+  .register(DecimalValueConverter, StringifyValueConverter, DateFormatValueConverter)
+  .app(MyApp)
+  .start();

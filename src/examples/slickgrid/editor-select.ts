@@ -1,25 +1,30 @@
-import { EventAggregator } from 'aurelia-event-aggregator';
-import { autoinject, bindable, DOM } from 'aurelia-framework';
+import { bindable } from 'aurelia';
+import { SlickGrid } from '../../aurelia-slickgrid';
 
-@autoinject()
 export class EditorSelect {
+  @bindable() model!: {
+    collection: any[]; // this will be filled by the collection of your column definition
+  };
+  @bindable() grid!: SlickGrid;
   @bindable selectedItem: any;
-  selectedId = '';
-  collection: any; // this will be filled by the collection of your column definition
+
   itemMatcher = (a: any, b: any) => a && b && a.id === b.id;
 
-  constructor(private elm: Element, private ea: EventAggregator) {
-    console.log(ea);
+  constructor(private elm: HTMLElement) {}
+
+  focus() {
+    this.elm.querySelector('select')?.focus();
   }
 
-  bind(bindingContext: any, overrideContext: any) {
-    console.log(bindingContext, overrideContext);
+  hide() {
+    this.elm.style.display = 'none';
   }
 
-  selectedItemChanged(newItem: any) {
-    console.log(newItem);
-    if (newItem) {
-      this.elm.dispatchEvent(DOM.createCustomEvent('on-select-changed', { detail: newItem }));
-    }
+  show() {
+    this.elm.style.display = 'block';
   }
+
+  // we need to define the method, it can be empty so that we can override it
+  // inside the `custom-aureliaViewModelFilter()` method
+  selectedItemChanged() {}
 }

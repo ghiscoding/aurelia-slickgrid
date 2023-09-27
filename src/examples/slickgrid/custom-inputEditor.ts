@@ -8,7 +8,7 @@ import {
 } from '../../aurelia-slickgrid';
 
 /*
- * An example of a 'detached' editor.
+ * An example of a 'detaching' editor.
  * KeyDown events are also handled to provide handling for Tab, Shift-Tab, Esc and Ctrl-Enter.
  */
 export class CustomInputEditor implements Editor {

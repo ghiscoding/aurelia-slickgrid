@@ -1,6 +1,5 @@
 import { ExcelExportService } from '@slickgrid-universal/excel-export';
-import { autoinject } from 'aurelia-framework';
-import { I18N } from 'aurelia-i18n';
+import { I18N } from '@aurelia/i18n';
 import { TOptions as I18NOptions } from 'i18next';
 
 import {
@@ -59,7 +58,6 @@ const taskTranslateFormatter: Formatter = (_row, _cell, value, _columnDef, _data
   return i18n?.tr('TASK_X', { x: value } as I18NOptions) ?? '';
 };
 
-@autoinject()
 export class Example24 {
   title = 'Example 24: Cell Menu & Context Menu Plugins';
   subTitle = `Add Cell Menu and Context Menu
@@ -94,7 +92,7 @@ export class Example24 {
   dataset: any[] = [];
   selectedLanguage: string;
 
-  constructor(private i18n: I18N) {
+  constructor(@I18N private readonly i18n: I18N) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
 

@@ -1,3 +1,6 @@
+import { ICustomElementController } from '@aurelia/runtime-html';
+import { IBindingContext } from '@aurelia/runtime';
+
 import {
   AureliaUtilService,
   Column,
@@ -11,13 +14,12 @@ import {
   OperatorString,
   SearchTerm,
   SlickGrid,
+  ViewModelBindableInputData,
 } from '../../aurelia-slickgrid';
-
-import { View, ViewSlot } from 'aurelia-framework';
 
 export class CustomAureliaViewModelFilter implements Filter {
   private _shouldTriggerQuery = true;
-  container!: any;
+  container!: HTMLDivElement;
   grid!: SlickGrid;
   searchTerms: SearchTerm[] = [];
   columnDef!: Column;
@@ -25,10 +27,8 @@ export class CustomAureliaViewModelFilter implements Filter {
   operator: OperatorType | OperatorString = OperatorType.equal;
 
   /** Aurelia ViewModel Reference */
-  aureliaViewModel: any;
-  aureliaCustomElementInstance: any;
-
-  constructor() { }
+  vm?: { controller?: ICustomElementController } | null;
+  elmBindingContext?: IBindingContext;
 
   /** Aurelia Util Service (could be inside the Grid Options Params or the Filter Params ) */
   get aureliaUtilService(): AureliaUtilService {
@@ -57,74 +57,65 @@ export class CustomAureliaViewModelFilter implements Filter {
   /**
    * Initialize the Filter
    */
-  init(args: FilterArguments) {
+  async init(args: FilterArguments) {
     this.grid = args.grid;
     this.callback = args.callback;
     this.columnDef = args.columnDef;
     this.searchTerms = (args.hasOwnProperty('searchTerms') ? args.searchTerms : []) || [];
 
-    if (!this.columnFilter || !this.columnFilter.params || !this.columnFilter.params.templateUrl) {
-      throw new Error(`[Aurelia-Slickgrid] For the Filters.aureliaComponent to work properly, you need to fill in the "templateUrl" property of your Custom Element Filter.
-      Example: this.columnDefs = [{ id: 'title', field: 'title', filter: { templateUrl: PLATFORM.moduleName('my-viewmodel'), collection: [...] },`);
+    if (!this.columnFilter?.params?.viewModel) {
+      throw new Error(`[Aurelia-Slickgrid] For the Filters.aureliaComponent to work properly, you need to fill in the "viewModel" property of your Custom Element Filter.
+      Example: this.columnDefs = [{ id: 'title', field: 'title', filter: { model: new CustomAureliaViewModelFilter(), collection: [...], param: { viewModel: MyVM } },`);
     }
 
-    if (this.columnFilter && this.columnFilter.params && this.columnFilter.params.templateUrl) {
-      // use a delay to make sure AngAurelia ran at least a full cycle and it finished rendering the Component before hooking onto it
-      // else we get the infamous error "ExpressionChangedAfterItHasBeenCheckedError"
-      setTimeout(() => {
-        this.container = this.grid.getHeaderRowColumn(this.columnDef.id);
-        emptyElement(this.container);
+    if (this.columnFilter.params.viewModel) {
+      this.container = this.grid.getHeaderRowColumn(this.columnDef.id);
+      emptyElement(this.container);
+
+      // provide model binding including collection and selectedItem callback, we can use this binding in createAureliaViewModelAddToSlot()
+      const bindableData = {
+        grid: this.grid,
 
         // here we override the collection object of the Aurelia Custom Element
         // but technically you can pass any values you wish as bindings
-        this.aureliaViewModel = (this.columnFilter.params.aureliaUtilService as AureliaUtilService).createAureliaViewModelAddToSlot(this.columnFilter.params.templateUrl, { collection: this.collection }, this.container, true);
+        model: {
+          collection: this.collection,
+        },
+      } as ViewModelBindableInputData;
+      const viewModel = this.columnFilter.params.viewModel;
+      this.vm = await this.aureliaUtilService.createAureliaViewModelAddToSlot(viewModel, bindableData, this.container);
+      this.elmBindingContext = this.vm?.controller?.children?.[0].scope.bindingContext;
 
-        setTimeout(() => {
-          this.aureliaCustomElementInstance = this.aureliaViewModel.bindings.viewModelRef.currentViewModel;
-          this.aureliaCustomElementInstance.selectedItemChanged = ((item: any) => {
-            this.callback(undefined, { columnDef: this.columnDef, operator: this.operator, searchTerms: [item.id], shouldTriggerQuery: this._shouldTriggerQuery });
-            // reset flag for next use
-            this._shouldTriggerQuery = true;
-          });
+      // override the FilterSelect selectedItemChanged method (from the @bindable() selectedItem), we'll trigger the filter callback
+      if (this.elmBindingContext) {
+        this.elmBindingContext.selectedItemChanged = ((item: any) => {
+          this.callback(undefined, { columnDef: this.columnDef, operator: this.operator, searchTerms: [item.id], shouldTriggerQuery: this._shouldTriggerQuery });
+          // reset flag for next use
+          this._shouldTriggerQuery = true;
         });
-      });
+      }
     }
   }
 
-  /**
-   * Clear the filter value
-   */
+  /** Clear the filter value */
   clear(shouldTriggerQuery = true) {
     this._shouldTriggerQuery = shouldTriggerQuery;
-    if (this.aureliaCustomElementInstance && this.aureliaCustomElementInstance.hasOwnProperty('selectedId')) {
-      this.aureliaCustomElementInstance.selectedId = 0;
+    if (this.elmBindingContext?.selectedItem) {
+      this.elmBindingContext.selectedItem = { id: '', name: '' };
     }
   }
 
   /** destroy the Aurelia Custom Element & Subscription */
   destroy() {
-    if (this.aureliaViewModel && this.aureliaViewModel.dispose) {
-      this.aureliaViewModel.dispose();
-      this.disposeViewSlot(this.aureliaViewModel.viewSlot);
-    }
+    this.vm?.controller?.deactivate(this.vm.controller, null);
+    this.container = this.grid.getHeaderRowColumn(this.columnDef.id);
+    emptyElement(this.container);
   }
 
   /** Set value(s) on the DOM element */
   setValues(values: any) {
-    if (this.aureliaCustomElementInstance && this.aureliaCustomElementInstance.hasOwnProperty('selectedId')) {
-      this.aureliaCustomElementInstance.selectedId = values;
+    if (this.elmBindingContext?.selectedItem) {
+      this.elmBindingContext.selectedItem = values;
     }
-  }
-
-  disposeViewSlot(createdView: { view?: View; viewSlot?: ViewSlot; }) {
-    if (createdView && createdView.view && createdView.viewSlot && createdView.view.unbind && createdView.viewSlot.remove) {
-      if (this.container?.length > 0) {
-        createdView.viewSlot.remove(createdView.view);
-        createdView.view.unbind();
-        this.container[0].innerHTML = '';
-        return createdView;
-      }
-    }
-    return null;
   }
 }

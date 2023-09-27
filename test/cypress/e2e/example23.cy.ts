@@ -7,9 +7,9 @@ const presetMaxDuration = 88;
 const presetLowestDay = moment().add(-2, 'days').format('YYYY-MM-DD');
 const presetHighestDay = moment().add(28, 'days').format('YYYY-MM-DD');
 
-describe('Example 23 - Range Filters', { retries: 0 }, () => {
+describe('Example 23 - Range Filters', { retries: 1 }, () => {
   it('should display Example title', () => {
-    cy.visit(`${Cypress.config('baseUrl')}/slickgrid/example23`);
+    cy.visit(`${Cypress.config('baseUrl')}/example23`);
     cy.get('h2').should('contain', 'Example 23: Filtering from Range of Search Values');
   });
 

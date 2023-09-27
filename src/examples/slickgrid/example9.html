@@ -12,11 +12,11 @@
   <div class="subtitle" innerhtml.bind="subTitle"></div>
 
   <button class="btn btn-outline-secondary btn-sm" data-test="external-gridmenu"
-          click.delegate="toggleGridMenu($event)">
+          click.trigger="toggleGridMenu($event)">
     <i class="fa fa-bars"></i>
     Grid Menu
   </button>
-  <button class="btn btn-outline-secondary btn-sm" data-test="language" click.delegate="switchLanguage()">
+  <button class="btn btn-outline-secondary btn-sm" data-test="language" click.trigger="switchLanguage()">
     <i class="fa fa-language"></i>
     Switch Language
   </button>
@@ -26,6 +26,6 @@
                      column-definitions.bind="columnDefinitions"
                      dataset.bind="dataset"
                      grid-options.bind="gridOptions"
-                     on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
+                     on-aurelia-grid-created.trigger="aureliaGridReady($event.detail)">
   </aurelia-slickgrid>
 </template>

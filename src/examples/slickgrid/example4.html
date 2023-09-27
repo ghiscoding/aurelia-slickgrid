@@ -19,28 +19,28 @@
   </span>
 
   <div class="btn-group" role="group" aria-label="...">
-    <button class="btn btn-sm btn-outline-secondary" data-test="scroll-top-btn" click.delegate="scrollGridTop()">
+    <button class="btn btn-sm btn-outline-secondary" data-test="scroll-top-btn" click.trigger="scrollGridTop()">
       <i class="fa fa-arrow-up"></i>
     </button>
-    <button class="btn btn-sm btn-outline-secondary" data-test="scroll-bottom-btn" click.delegate="scrollGridBottom()">
+    <button class="btn btn-sm btn-outline-secondary" data-test="scroll-bottom-btn" click.trigger="scrollGridBottom()">
       <i class="fa fa-arrow-down"></i>
     </button>
   </div>
 
   <button class="btn btn-outline-secondary btn-sm" data-test="clear-filters"
-          click.delegate="aureliaGrid.filterService.clearFilters()">
+          click.trigger="aureliaGrid.filterService.clearFilters()">
     Clear Filters
   </button>
   <button class="btn btn-outline-secondary btn-sm" data-test="clear-sorting"
-          click.delegate="aureliaGrid.sortService.clearSorting()">
+          click.trigger="aureliaGrid.sortService.clearSorting()">
     Clear Sorting
   </button>
   <button class="btn btn-outline-secondary btn-sm" data-test="set-dynamic-filter"
-          click.delegate="setFiltersDynamically()">
+          click.trigger="setFiltersDynamically()">
     Set Filters Dynamically
   </button>
   <button class="btn btn-outline-secondary btn-sm" data-test="set-dynamic-sorting"
-          click.delegate="setSortingDynamically()">
+          click.trigger="setSortingDynamically()">
     Set Sorting Dynamically
   </button>
 
@@ -48,8 +48,8 @@
                      column-definitions.bind="columnDefinitions"
                      grid-options.bind="gridOptions"
                      dataset.bind="dataset"
-                     on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)"
-                     on-grid-state-changed.delegate="gridStateChanged($event.detail)"
-                     on-row-count-changed.delegate="refreshMetrics($event.detail.eventData, $event.detail.args)">
+                     on-aurelia-grid-created.trigger="aureliaGridReady($event.detail)"
+                     on-grid-state-changed.trigger="gridStateChanged($event.detail)"
+                     on-row-count-changed.trigger="refreshMetrics($event.detail.eventData, $event.detail.args)">
   </aurelia-slickgrid>
 </template>

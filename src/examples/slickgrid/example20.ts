@@ -1,6 +1,4 @@
 
-import { autoinject } from 'aurelia-framework';
-
 import {
   AureliaGridInstance,
   Column,
@@ -18,7 +16,6 @@ import './example20.scss'; // provide custom CSS/SASS styling
 
 declare const Slick: SlickNamespace;
 
-@autoinject()
 export class Example20 {
   title = 'Example 20: Pinned (frozen) Columns/Rows';
   subTitle = `
@@ -69,7 +66,7 @@ export class Example20 {
     this.getData();
   }
 
-  detached() {
+  detaching() {
     // unsubscribe every SlickGrid subscribed event (or use the Slick.EventHandler)
     this.slickEventHandler.unsubscribeAll();
   }

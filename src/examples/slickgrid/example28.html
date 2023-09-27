@@ -13,23 +13,23 @@
 
   <div class="row">
     <div class="col-md-7">
-      <button click.delegate="addNewFile()" data-test="add-item-btn" class="btn btn-sm btn-primary">
+      <button click.trigger="addNewFile()" data-test="add-item-btn" class="btn btn-sm btn-primary">
         <span class="mdi mdi-plus color-white"></span>
         <span>Add New Pop Song</span>
       </button>
-      <button click.delegate="collapseAll()" data-test="collapse-all-btn" class="btn btn-outline-secondary btn-sm">
+      <button click.trigger="collapseAll()" data-test="collapse-all-btn" class="btn btn-outline-secondary btn-sm">
         <span class="mdi mdi-arrow-collapse"></span>
         <span>Collapse All</span>
       </button>
-      <button click.delegate="expandAll()" data-test="expand-all-btn" class="btn btn-outline-secondary btn-sm">
+      <button click.trigger="expandAll()" data-test="expand-all-btn" class="btn btn-outline-secondary btn-sm">
         <span class="mdi mdi-arrow-expand"></span>
         <span>Expand All</span>
       </button>
-      <button click.delegate="logFlatStructure()" class="btn btn-outline-secondary btn-sm"
+      <button click.trigger="logFlatStructure()" class="btn btn-outline-secondary btn-sm"
               title="console.log of the Flat dataset">
         <span>Log Flat Structure</span>
       </button>
-      <button click.delegate="logHierarchicalStructure()" class="btn btn-outline-secondary btn-sm"
+      <button click.trigger="logHierarchicalStructure()" class="btn btn-outline-secondary btn-sm"
               title="console.log of the Hierarchical Tree dataset">
         <span>Log Hierarchical Structure</span>
       </button>
@@ -40,7 +40,7 @@
         <input type="text" class="form-control search-string" placeholder="search value" autocomplete="off"
                data-test="search-string" value.bind="searchString">
         <button class="btn btn-sm btn-outline-secondary d-flex align-items-center" data-test="clear-search-string"
-                click.delegate="clearSearch()">
+                click.trigger="clearSearch()">
           <span class="icon mdi mdi-close-thick"></span>
         </button>
       </div>
@@ -51,7 +51,7 @@
     <label class="checkbox-inline control-label" for="excludeChildWhenFiltering" style="margin-left: 20px">
       <input type="checkbox" id="excludeChildWhenFiltering" data-test="exclude-child-when-filtering"
              checked.bind="isExcludingChildWhenFiltering"
-             click.delegate="changeExcludeChildWhenFiltering()">
+             click.trigger="changeExcludeChildWhenFiltering()">
       <span
             title="for example if we filter the word 'pop' and we exclude children, then only the folder 'pop' will show up without any content unless we uncheck this flag">
         Exclude Children when Filtering Tree
@@ -60,7 +60,7 @@
     <label class="checkbox-inline control-label" for="autoApproveParentItem" style="margin-left: 20px">
       <input type="checkbox" id="autoApproveParentItem" data-test="auto-approve-parent-item"
              checked.bind="isAutoApproveParentItemWhenTreeColumnIsValid"
-             click.delegate="changeAutoApproveParentItem()">
+             click.trigger="changeAutoApproveParentItem()">
       <span
             title="for example in this demo if we filter with 'music' and size '> 70' nothing will show up unless we have this flag enabled
             because none of the files have both criteria at the same time, however the column with the tree 'file' does pass the filter criteria 'music'

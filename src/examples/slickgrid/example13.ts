@@ -1,6 +1,5 @@
 import { ExcelExportService } from '@slickgrid-universal/excel-export';
 import { TextExportService } from '@slickgrid-universal/text-export';
-import { autoinject } from 'aurelia-framework';
 import {
   Aggregators,
   AureliaGridInstance,
@@ -19,7 +18,6 @@ import {
   SlickGrid,
 } from '../../aurelia-slickgrid';
 
-@autoinject()
 export class Example13 {
   title = 'Example 13: Grouping & Aggregators';
   subTitle = `
@@ -185,7 +183,7 @@ export class Example13 {
 
   loadData(rowCount: number) {
     // mock a dataset
-    this.dataset = [];
+    const tmpData = [];
     for (let i = 0; i < rowCount; i++) {
       const randomYear = 2000 + Math.floor(Math.random() * 10);
       const randomMonth = Math.floor(Math.random() * 11);
@@ -193,7 +191,7 @@ export class Example13 {
       const randomPercent = Math.round(Math.random() * 100);
       const randomCost = (i % 33 === 0) ? null : Math.round(Math.random() * 10000) / 100;
 
-      this.dataset[i] = {
+      tmpData[i] = {
         id: 'id_' + i,
         num: i,
         title: 'Task ' + i,
@@ -206,6 +204,7 @@ export class Example13 {
         effortDriven: (i % 5 === 0)
       };
     }
+    this.dataset = tmpData;
   }
 
   clearGrouping() {

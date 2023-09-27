@@ -1,3 +1,4 @@
+import { customElement } from 'aurelia';
 import { Column, SharedService, SlickGrid, SlickNamespace, } from '@slickgrid-universal/common';
 import { SlickRowSelectionModel } from '@slickgrid-universal/common/dist/commonjs/extensions/slickRowSelectionModel';
 import { EventPubSubService } from '@slickgrid-universal/event-pub-sub';
@@ -9,6 +10,17 @@ import { HttpStub } from '../../../../test/httpClientStub';
 import { SlickRowDetailView } from '../slickRowDetailView';
 jest.mock('@slickgrid-universal/row-detail-view-plugin');
 
+// @ts-ignore
+@customElement({ name: 'example-preload', template: '<h3>Loading</h3>' })
+export class ExamplePreload {}
+
+// @ts-ignore
+@customElement({ name: 'example-loader', template: '<p>Some Paragraph</p>' })
+export class ExampleLoader {}
+
+class MyClass {
+  constructor() {}
+}
 declare const Slick: SlickNamespace;
 const ROW_DETAIL_CONTAINER_PREFIX = 'container_';
 const PRELOAD_CONTAINER_PREFIX = 'container_loading';
@@ -18,7 +30,7 @@ const aureliaUtilServiceStub = {
   createAureliaViewAddToSlot: jest.fn(),
 } as unknown as AureliaUtilService;
 
-const gridOptionsMock = {
+const gridOptionsMock: Partial<GridOption> = {
   enableRowDetailView: true,
   rowDetailView: {
     cssClass: 'detail-view-toggle',
@@ -28,8 +40,9 @@ const gridOptionsMock = {
     useSimpleViewportCalc: true,
     saveDetailViewOnScroll: false,
     process: () => new Promise((resolve) => resolve('process resolving')),
+    // @ts-ignore
     viewComponent: null,
-    viewModel: '',
+    viewModel: MyClass,
     onExtensionRegistered: jest.fn(),
     onAsyncResponse: () => { },
     onAsyncEndUpdate: () => { },
@@ -38,7 +51,7 @@ const gridOptionsMock = {
     onRowOutOfViewportRange: () => { },
     onRowBackToViewportRange: () => { },
   }
-} as GridOption;
+};
 
 const gridStub = {
   getUID: jest.fn(),
@@ -79,7 +92,7 @@ describe('SlickRowDetailView', () => {
     eventPubSubService = new EventPubSubService(div);
     plugin = new SlickRowDetailView(aureliaUtilServiceStub, eventPubSubService, document.body as HTMLDivElement);
     plugin.eventHandler = new Slick.EventHandler();
-    jest.spyOn(plugin, 'getOptions').mockReturnValue(gridOptionsMock.rowDetailView);
+    jest.spyOn(plugin, 'getOptions').mockReturnValue(gridOptionsMock.rowDetailView as RowDetailView);
   });
 
   it('should create the RowDetailView plugin', () => {
@@ -112,7 +125,7 @@ describe('SlickRowDetailView', () => {
     });
 
     it('should provide a sanitized "preTemplate" when only a "preloadComponent" is provided (meaning no "preTemplate" is originally provided)', async () => {
-      gridOptionsMock.rowDetailView!.preloadView = 'some-preload-view';
+      gridOptionsMock.rowDetailView!.preloadViewModel = ExamplePreload;
       jest.spyOn(gridStub, 'getOptions').mockReturnValue(gridOptionsMock);
 
       plugin.init(gridStub);
@@ -122,7 +135,7 @@ describe('SlickRowDetailView', () => {
     });
 
     it('should provide a sanitized "postTemplate" when only a "viewComponent" is provided (meaning no "postTemplate" is originally provided)', async () => {
-      gridOptionsMock.rowDetailView!.viewModel = 'some-view-model';
+      gridOptionsMock.rowDetailView!.viewModel = ExampleLoader;
       jest.spyOn(gridStub, 'getOptions').mockReturnValue(gridOptionsMock);
 
       const output = await gridOptionsMock.rowDetailView!.postTemplate!({ id: 'field1', field: 'field1' });
@@ -130,7 +143,7 @@ describe('SlickRowDetailView', () => {
     });
 
     it('should define "datasetIdPropertyName" with different "id" and provide a sanitized "postTemplate" when only a "viewComponent" is provided (meaning no "postTemplate" is originally provided)', async () => {
-      gridOptionsMock.rowDetailView!.viewModel = 'some-view-model';
+      gridOptionsMock.rowDetailView!.viewModel = ExampleLoader;
       gridOptionsMock.datasetIdPropertyName = 'rowId';
       const output = await gridOptionsMock.rowDetailView!.postTemplate!({ rowId: 'field1', field: 'field1' });
       expect(output).toEqual(`<div class="${ROW_DETAIL_CONTAINER_PREFIX}field1"></div>`);
@@ -143,8 +156,10 @@ describe('SlickRowDetailView', () => {
 
     beforeEach(() => {
       gridOptionsMock.datasetIdPropertyName = 'id';
-      gridOptionsMock.rowDetailView!.preloadView = 'some-preload-view';
-      gridOptionsMock.rowDetailView!.viewModel = 'some-view';
+      gridOptionsMock.rowDetailView!.preTemplate = null as any;
+      gridOptionsMock.rowDetailView!.postTemplate = null as any;
+      gridOptionsMock.rowDetailView!.preloadViewModel = ExamplePreload;
+      gridOptionsMock.rowDetailView!.viewModel = ExampleLoader;
       columnsMock = [{ id: 'field1', field: 'field1', width: 100, cssClass: 'red' }];
       jest.spyOn(SharedService.prototype, 'slickGrid', 'get').mockReturnValue(gridStub);
       jest.spyOn(gridStub, 'getOptions').mockReturnValue(gridOptionsMock);
@@ -157,19 +172,19 @@ describe('SlickRowDetailView', () => {
       plugin?.eventHandler?.unsubscribeAll();
       plugin?.dispose();
       jest.clearAllMocks();
-      plugin.onAsyncResponse = null;
-      plugin.onAsyncEndUpdate = null;
-      plugin.onAfterRowDetailToggle = null;
-      plugin.onBeforeRowDetailToggle = null;
-      plugin.onRowBackToViewportRange = null;
-      plugin.onRowOutOfViewportRange = null;
+      plugin.onAsyncResponse = null as any;
+      plugin.onAsyncEndUpdate = null as any;
+      plugin.onAfterRowDetailToggle = null as any;
+      plugin.onBeforeRowDetailToggle = null as any;
+      plugin.onRowBackToViewportRange = null as any;
+      plugin.onRowOutOfViewportRange = null as any;
     });
 
     it('should register the addon', () => {
       const copyGridOptionsMock = { ...gridOptionsMock };
-      gridOptionsMock.rowDetailView.onExtensionRegistered = jest.fn();
+      gridOptionsMock.rowDetailView!.onExtensionRegistered = jest.fn();
       jest.spyOn(gridStub, 'getOptions').mockReturnValue(copyGridOptionsMock);
-      const onRegisteredSpy = jest.spyOn(copyGridOptionsMock.rowDetailView, 'onExtensionRegistered');
+      const onRegisteredSpy = jest.spyOn(copyGridOptionsMock.rowDetailView!, 'onExtensionRegistered');
 
       plugin.init(gridStub);
       const instance = plugin.register();
@@ -209,7 +224,7 @@ describe('SlickRowDetailView', () => {
       expect(onRowBackViewSpy).not.toHaveBeenCalled();
     });
 
-    it('should call internal event handler subscribe and expect the "onAsyncEndUpdate" option to be called when addon notify is called', () => {
+    it('should call internal event handler subscribe and expect the "onAsyncEndUpdate" option to be called when addon notify is called', (done) => {
       // const handlerSpy = jest.spyOn(plugin.eventHandler, 'subscribe');
       const renderSpy = jest.spyOn(plugin, 'renderViewModel');
 
@@ -225,21 +240,24 @@ describe('SlickRowDetailView', () => {
       plugin.register();
       plugin.onAsyncEndUpdate.notify({ item: columnsMock[0], grid: gridStub }, new Slick.EventData(), gridStub);
 
-      // expect(handlerSpy).toHaveBeenCalledTimes(8); // there are an extra 2x on the grid itself
-      // expect(handlerSpy).toHaveBeenCalledWith(
-      //   { notify: expect.anything(), subscribe: expect.anything(), unsubscribe: expect.anything(), },
-      //   expect.anything()
-      // );
-      expect(onAsyncRespSpy).not.toHaveBeenCalled();
-      expect(onAsyncEndSpy).toHaveBeenCalledWith(expect.anything(), { item: columnsMock[0], grid: gridStub });
-      expect(renderSpy).toHaveBeenCalledWith({ cssClass: 'red', field: 'field1', id: 'field1', width: 100, });
-      expect(onAfterRowSpy).not.toHaveBeenCalled();
-      expect(onBeforeRowSpy).not.toHaveBeenCalled();
-      expect(onRowOutViewSpy).not.toHaveBeenCalled();
-      expect(onRowBackViewSpy).not.toHaveBeenCalled();
+      setTimeout(() => {
+        // expect(handlerSpy).toHaveBeenCalledTimes(8); // there are an extra 2x on the grid itself
+        // expect(handlerSpy).toHaveBeenCalledWith(
+        //   { notify: expect.anything(), subscribe: expect.anything(), unsubscribe: expect.anything(), },
+        //   expect.anything()
+        // );
+        expect(onAsyncRespSpy).not.toHaveBeenCalled();
+        expect(onAsyncEndSpy).toHaveBeenCalledWith(expect.anything(), { item: columnsMock[0], grid: gridStub });
+        expect(renderSpy).toHaveBeenCalledWith({ cssClass: 'red', field: 'field1', id: 'field1', width: 100, });
+        expect(onAfterRowSpy).not.toHaveBeenCalled();
+        expect(onBeforeRowSpy).not.toHaveBeenCalled();
+        expect(onRowOutViewSpy).not.toHaveBeenCalled();
+        expect(onRowBackViewSpy).not.toHaveBeenCalled();
+        done();
+      });
     });
 
-    it('should call internal event handler subscribe and expect the "onAfterRowDetailToggle" option to be called when addon notify is called', () => {
+    it('should call internal event handler subscribe and expect the "onAfterRowDetailToggle" option to be called when addon notify is called', (done) => {
       // const handlerSpy = jest.spyOn(plugin.eventHandler, 'subscribe');
       const onAsyncRespSpy = jest.spyOn(gridOptionsMock.rowDetailView as RowDetailView, 'onAsyncResponse');
       const onAsyncEndSpy = jest.spyOn(gridOptionsMock.rowDetailView as RowDetailView, 'onAsyncEndUpdate');
@@ -253,20 +271,23 @@ describe('SlickRowDetailView', () => {
       plugin.register();
       plugin.onAfterRowDetailToggle.notify({ item: columnsMock[0], expandedRows: [0], grid: gridStub }, new Slick.EventData(), gridStub);
 
-      // expect(handlerSpy).toHaveBeenCalledTimes(8); // there are an extra 2x on the grid itself
-      // expect(handlerSpy).toHaveBeenCalledWith(
-      //   { notify: expect.anything(), subscribe: expect.anything(), unsubscribe: expect.anything(), },
-      //   expect.anything()
-      // );
-      expect(onAsyncRespSpy).not.toHaveBeenCalled();
-      expect(onAsyncEndSpy).not.toHaveBeenCalled();
-      expect(onAfterRowSpy).toHaveBeenCalledWith(expect.anything(), { item: columnsMock[0], expandedRows: [0], grid: gridStub });
-      expect(onBeforeRowSpy).not.toHaveBeenCalled();
-      expect(onRowOutViewSpy).not.toHaveBeenCalled();
-      expect(onRowBackViewSpy).not.toHaveBeenCalled();
+      setTimeout(() => {
+        // expect(handlerSpy).toHaveBeenCalledTimes(8); // there are an extra 2x on the grid itself
+        // expect(handlerSpy).toHaveBeenCalledWith(
+        //   { notify: expect.anything(), subscribe: expect.anything(), unsubscribe: expect.anything(), },
+        //   expect.anything()
+        // );
+        expect(onAsyncRespSpy).not.toHaveBeenCalled();
+        expect(onAsyncEndSpy).not.toHaveBeenCalled();
+        expect(onAfterRowSpy).toHaveBeenCalledWith(expect.anything(), { item: columnsMock[0], expandedRows: [0], grid: gridStub });
+        expect(onBeforeRowSpy).not.toHaveBeenCalled();
+        expect(onRowOutViewSpy).not.toHaveBeenCalled();
+        expect(onRowBackViewSpy).not.toHaveBeenCalled();
+        done();
+      });
     });
 
-    it('should call internal event handler subscribe and expect the "onBeforeRowDetailToggle" option to be called when addon notify is called', () => {
+    it('should call internal event handler subscribe and expect the "onBeforeRowDetailToggle" option to be called when addon notify is called', (done) => {
       // const handlerSpy = jest.spyOn(plugin.eventHandler, 'subscribe');
       const onAsyncRespSpy = jest.spyOn(gridOptionsMock.rowDetailView as RowDetailView, 'onAsyncResponse');
       const onAsyncEndSpy = jest.spyOn(gridOptionsMock.rowDetailView as RowDetailView, 'onAsyncEndUpdate');
@@ -280,20 +301,23 @@ describe('SlickRowDetailView', () => {
       plugin.register();
       plugin.onBeforeRowDetailToggle.notify({ item: columnsMock[0], grid: gridStub }, new Slick.EventData(), gridStub);
 
-      // expect(handlerSpy).toHaveBeenCalledTimes(8); // there are an extra 2x on the grid itself
-      // expect(handlerSpy).toHaveBeenCalledWith(
-      //   { notify: expect.anything(), subscribe: expect.anything(), unsubscribe: expect.anything(), },
-      //   expect.anything()
-      // );
-      expect(onAsyncRespSpy).not.toHaveBeenCalled();
-      expect(onAsyncEndSpy).not.toHaveBeenCalled();
-      expect(onAfterRowSpy).not.toHaveBeenCalled();
-      expect(onBeforeRowSpy).toHaveBeenCalledWith(expect.anything(), { item: columnsMock[0], grid: gridStub });
-      expect(onRowOutViewSpy).not.toHaveBeenCalled();
-      expect(onRowBackViewSpy).not.toHaveBeenCalled();
+      setTimeout(() => {
+        // expect(handlerSpy).toHaveBeenCalledTimes(8); // there are an extra 2x on the grid itself
+        // expect(handlerSpy).toHaveBeenCalledWith(
+        //   { notify: expect.anything(), subscribe: expect.anything(), unsubscribe: expect.anything(), },
+        //   expect.anything()
+        // );
+        expect(onAsyncRespSpy).not.toHaveBeenCalled();
+        expect(onAsyncEndSpy).not.toHaveBeenCalled();
+        expect(onAfterRowSpy).not.toHaveBeenCalled();
+        expect(onBeforeRowSpy).toHaveBeenCalledWith(expect.anything(), { item: columnsMock[0], grid: gridStub });
+        expect(onRowOutViewSpy).not.toHaveBeenCalled();
+        expect(onRowBackViewSpy).not.toHaveBeenCalled();
+        done();
+      });
     });
 
-    it('should call internal event handler subscribe and expect the "onRowOutOfViewportRange" option to be called when addon notify is called', () => {
+    it('should call internal event handler subscribe and expect the "onRowOutOfViewportRange" option to be called when addon notify is called', (done) => {
       // const handlerSpy = jest.spyOn(plugin.eventHandler, 'subscribe');
       const onAsyncRespSpy = jest.spyOn(gridOptionsMock.rowDetailView as RowDetailView, 'onAsyncResponse');
       const onAsyncEndSpy = jest.spyOn(gridOptionsMock.rowDetailView as RowDetailView, 'onAsyncEndUpdate');
@@ -311,20 +335,23 @@ describe('SlickRowDetailView', () => {
         gridStub
       );
 
-      // expect(handlerSpy).toHaveBeenCalledTimes(8); // there are an extra 2x on the grid itself
-      // expect(handlerSpy).toHaveBeenCalledWith(
-      //   { notify: expect.anything(), subscribe: expect.anything(), unsubscribe: expect.anything(), },
-      //   expect.anything()
-      // );
-      expect(onAsyncRespSpy).not.toHaveBeenCalled();
-      expect(onAsyncEndSpy).not.toHaveBeenCalled();
-      expect(onAfterRowSpy).not.toHaveBeenCalled();
-      expect(onBeforeRowSpy).not.toHaveBeenCalled();
-      expect(onRowOutViewSpy).toHaveBeenCalledWith(expect.anything(), { item: columnsMock[0], rowId: 0, rowIndex: 0, expandedRows: [0], rowIdsOutOfViewport: [], grid: gridStub });
-      expect(onRowBackViewSpy).not.toHaveBeenCalled();
+      setTimeout(() => {
+        // expect(handlerSpy).toHaveBeenCalledTimes(8); // there are an extra 2x on the grid itself
+        // expect(handlerSpy).toHaveBeenCalledWith(
+        //   { notify: expect.anything(), subscribe: expect.anything(), unsubscribe: expect.anything(), },
+        //   expect.anything()
+        // );
+        expect(onAsyncRespSpy).not.toHaveBeenCalled();
+        expect(onAsyncEndSpy).not.toHaveBeenCalled();
+        expect(onAfterRowSpy).not.toHaveBeenCalled();
+        expect(onBeforeRowSpy).not.toHaveBeenCalled();
+        expect(onRowOutViewSpy).toHaveBeenCalledWith(expect.anything(), { item: columnsMock[0], rowId: 0, rowIndex: 0, expandedRows: [0], rowIdsOutOfViewport: [], grid: gridStub });
+        expect(onRowBackViewSpy).not.toHaveBeenCalled();
+        done();
+      });
     });
 
-    it('should call internal event handler subscribe and expect the "onRowBackToViewportRange" option to be called when addon notify is called', () => {
+    it('should call internal event handler subscribe and expect the "onRowBackToViewportRange" option to be called when addon notify is called', (done) => {
       // const handlerSpy = jest.spyOn(plugin.eventHandler, 'subscribe');
       const onAsyncRespSpy = jest.spyOn(gridOptionsMock.rowDetailView as RowDetailView, 'onAsyncResponse');
       const onAsyncEndSpy = jest.spyOn(gridOptionsMock.rowDetailView as RowDetailView, 'onAsyncEndUpdate');
@@ -342,24 +369,27 @@ describe('SlickRowDetailView', () => {
         gridStub
       );
 
-      // expect(handlerSpy).toHaveBeenCalledTimes(8); // there are an extra 2x on the grid itself
-      // expect(handlerSpy).toHaveBeenCalledWith(
-      //   { notify: expect.anything(), subscribe: expect.anything(), unsubscribe: expect.anything(), },
-      //   expect.anything()
-      // );
-      expect(onAsyncRespSpy).not.toHaveBeenCalled();
-      expect(onAsyncEndSpy).not.toHaveBeenCalled();
-      expect(onAfterRowSpy).not.toHaveBeenCalled();
-      expect(onBeforeRowSpy).not.toHaveBeenCalled();
-      expect(onRowOutViewSpy).not.toHaveBeenCalled();
-      expect(onRowBackViewSpy).toHaveBeenCalledWith(expect.anything(), { item: columnsMock[0], rowId: 0, rowIndex: 0, expandedRows: [columnsMock[0] as any], rowIdsOutOfViewport: [], grid: gridStub });
+      setTimeout(() => {
+        // expect(handlerSpy).toHaveBeenCalledTimes(8); // there are an extra 2x on the grid itself
+        // expect(handlerSpy).toHaveBeenCalledWith(
+        //   { notify: expect.anything(), subscribe: expect.anything(), unsubscribe: expect.anything(), },
+        //   expect.anything()
+        // );
+        expect(onAsyncRespSpy).not.toHaveBeenCalled();
+        expect(onAsyncEndSpy).not.toHaveBeenCalled();
+        expect(onAfterRowSpy).not.toHaveBeenCalled();
+        expect(onBeforeRowSpy).not.toHaveBeenCalled();
+        expect(onRowOutViewSpy).not.toHaveBeenCalled();
+        expect(onRowBackViewSpy).toHaveBeenCalledWith(expect.anything(), { item: columnsMock[0], rowId: 0, rowIndex: 0, expandedRows: [columnsMock[0] as any], rowIdsOutOfViewport: [], grid: gridStub });
+        done();
+      });
     });
 
     it('should call Aurelia Util "createAureliaViewModelAddToSlot" when grid "onColumnsReordered" is triggered', (done) => {
       const mockColumn = { id: 'field1', field: 'field1', width: 100, cssClass: 'red', __collapsed: true };
       const handlerSpy = jest.spyOn(plugin.eventHandler, 'subscribe');
       // @ts-ignore:2345
-      const appendSpy = jest.spyOn(aureliaUtilServiceStub, 'createAureliaViewModelAddToSlot').mockReturnValue({ view: {}, viewSlot: {} });
+      const appendSpy = jest.spyOn(aureliaUtilServiceStub, 'createAureliaViewModelAddToSlot').mockReturnValue({ controller: { deactivate: jest.fn() } });
 
       plugin.init(gridStub);
       plugin.onBeforeRowDetailToggle = new Slick.Event();
@@ -367,10 +397,9 @@ describe('SlickRowDetailView', () => {
       plugin.eventHandler.subscribe(plugin.onBeforeRowDetailToggle, () => {
         gridStub.onColumnsReordered.notify({ impactedColumns: [mockColumn] } as any, new Slick.EventData(), gridStub);
         expect(appendSpy).toHaveBeenCalledWith(
-          '',
-          expect.objectContaining({ model: mockColumn, addon: expect.anything(), grid: gridStub, }),
-          expect.objectContaining({ className: 'container_field1' }),
-          true
+          ExampleLoader,
+          expect.objectContaining({ model: mockColumn, addon: expect.anything(), grid: gridStub }),
+          expect.objectContaining({ className: 'container_field1' })
         );
         done();
       });
@@ -384,19 +413,19 @@ describe('SlickRowDetailView', () => {
       gridOptionsMock.enableCheckboxSelector = true;
       const handlerSpy = jest.spyOn(plugin.eventHandler, 'subscribe');
       // @ts-ignore:2345
-      const appendSpy = jest.spyOn(aureliaUtilServiceStub, 'createAureliaViewModelAddToSlot').mockReturnValue({ view: { unbind: jest.fn() }, viewSlot: { remove: jest.fn() } });
+      const appendSpy = jest.spyOn(aureliaUtilServiceStub, 'createAureliaViewModelAddToSlot').mockReturnValue({ controller: { deactivate: jest.fn() } });
 
       plugin.init(gridStub);
       const redrawSpy = jest.spyOn(plugin, 'redrawAllViewSlots');
       plugin.onBeforeRowDetailToggle = new Slick.Event();
       plugin.register();
+
       plugin.eventHandler.subscribe(plugin.onBeforeRowDetailToggle, () => {
-        gridStub.onSelectedRowsChanged.notify({ rows: [0], previousSelectedRows: [], grid: gridStub }, new Slick.EventData(), gridStub);
+        gridStub.onSelectedRowsChanged.notify({ rows: [0], previousSelectedRows: [], grid: gridStub } as any, new Slick.EventData(), gridStub);
         expect(appendSpy).toHaveBeenCalledWith(
-          '',
+          ExampleLoader,
           expect.objectContaining({ model: mockColumn, addon: expect.anything(), grid: gridStub, }),
-          expect.objectContaining({ className: 'container_field1' }),
-          true
+          expect.objectContaining({ className: 'container_field1' })
         );
       });
       plugin.onBeforeRowDetailToggle.notify({ item: mockColumn, grid: gridStub }, new Slick.EventData(), gridStub);
@@ -410,7 +439,7 @@ describe('SlickRowDetailView', () => {
       const mockColumn = { id: 'field1', field: 'field1', width: 100, cssClass: 'red', __collapsed: true };
       const handlerSpy = jest.spyOn(plugin.eventHandler, 'subscribe');
       // @ts-ignore:2345
-      const appendSpy = jest.spyOn(aureliaUtilServiceStub, 'createAureliaViewModelAddToSlot').mockReturnValue({ view: { unbind: jest.fn() }, viewSlot: { remove: jest.fn() } });
+      const appendSpy = jest.spyOn(aureliaUtilServiceStub, 'createAureliaViewModelAddToSlot').mockReturnValue({ controller: { deactivate: jest.fn() } });
 
       plugin.init(gridStub);
       const redrawSpy = jest.spyOn(plugin, 'redrawAllViewSlots');
@@ -420,17 +449,45 @@ describe('SlickRowDetailView', () => {
       plugin.eventHandler.subscribe(plugin.onBeforeRowDetailToggle, () => {
         eventPubSubService.publish('onFilterChanged', { columnId: 'field1', operator: '=', searchTerms: [] });
         expect(appendSpy).toHaveBeenCalledWith(
-          '',
+          ExampleLoader,
           expect.objectContaining({ model: mockColumn, addon: expect.anything(), grid: gridStub, }),
-          expect.objectContaining({ className: 'container_field1' }),
-          true
+          expect.objectContaining({ className: 'container_field1' })
         );
       });
+
       plugin.onBeforeRowDetailToggle.notify({ item: mockColumn, grid: gridStub }, new Slick.EventData(), gridStub);
       plugin.onBeforeRowDetailToggle.notify({ item: { ...mockColumn, __collapsed: false }, grid: gridStub }, new Slick.EventData(), gridStub);
 
       expect(handlerSpy).toHaveBeenCalled();
       expect(redrawSpy).toHaveBeenCalledTimes(2);
+    });
+
+    it('should expect remove slot when disposing the view slot for a redraw when trigger onBeforeRowDetailToggle before and after calling "redrawAllViewSlots()"', async () => {
+      const mockColumn = { id: 'field1', field: 'field1', width: 100, cssClass: 'red', __collapsed: true };
+      const handlerSpy = jest.spyOn(plugin.eventHandler, 'subscribe');
+      // @ts-ignore:2345
+      const appendSpy = jest.spyOn(aureliaUtilServiceStub, 'createAureliaViewModelAddToSlot').mockResolvedValue({ controller: { deactivate: jest.fn() } });
+
+      plugin.init(gridStub);
+      const redrawSpy = jest.spyOn(plugin, 'redrawAllViewSlots');
+      plugin.onBeforeRowDetailToggle = new Slick.Event();
+      plugin.register();
+
+      plugin.eventHandler.subscribe(plugin.onBeforeRowDetailToggle, () => {
+        eventPubSubService.publish('onFilterChanged', { columnId: 'field1', operator: '=', searchTerms: [] });
+        expect(appendSpy).toHaveBeenCalledWith(
+          ExampleLoader,
+          expect.objectContaining({ model: mockColumn, addon: expect.anything(), grid: gridStub, }),
+          expect.objectContaining({ className: 'container_field1' })
+        );
+      });
+
+      plugin.onBeforeRowDetailToggle.notify({ item: mockColumn, grid: gridStub }, new Slick.EventData(), gridStub);
+      await plugin.redrawAllViewSlots();
+      plugin.onBeforeRowDetailToggle.notify({ item: { ...mockColumn, __collapsed: false }, grid: gridStub }, new Slick.EventData(), gridStub);
+
+      expect(handlerSpy).toHaveBeenCalled();
+      expect(redrawSpy).toHaveBeenCalledTimes(3);
     });
 
     it('should call "redrawAllViewSlots" when event "onGridMenuClearAllFilters" is triggered', (done) => {
@@ -478,24 +535,21 @@ describe('SlickRowDetailView', () => {
     });
 
     it('should call "renderAllViewModels" when grid event "onAfterRowDetailToggle" is triggered', () => {
+      const loadingElm = document.createElement('div');
+      loadingElm.className = 'container_loading';
       const mockColumn = { id: 'field1', field: 'field1', width: 100, cssClass: 'red', __collapsed: true };
       const handlerSpy = jest.spyOn(plugin.eventHandler, 'subscribe');
       const getElementSpy = jest.spyOn(document.body, 'getElementsByClassName');
       // @ts-ignore:2345
-      const appendSpy = jest.spyOn(aureliaUtilServiceStub, 'createAureliaViewModelAddToSlot').mockReturnValue({ view: { unbind: jest.fn() }, viewSlot: { remove: jest.fn() } });
+      const appendSpy = jest.spyOn(aureliaUtilServiceStub, 'createAureliaViewModelAddToSlot').mockReturnValue({ controller: { deactivate: jest.fn() } });
 
       plugin.init(gridStub);
       plugin.onAfterRowDetailToggle = new Slick.Event();
       plugin.onBeforeRowDetailToggle = new Slick.Event();
       plugin.register();
       plugin.onAfterRowDetailToggle.subscribe(() => {
-        expect(getElementSpy).toHaveBeenCalledWith('container_field1');
-        expect(appendSpy).toHaveBeenCalledWith(
-          '',
-          expect.objectContaining({ model: mockColumn, addon: expect.anything(), grid: gridStub, }),
-          expect.objectContaining({ className: 'container_field1' }),
-          true
-        );
+        expect(getElementSpy).toHaveBeenCalledWith('container_loading');
+        expect(appendSpy).toHaveBeenCalledWith(ExamplePreload, undefined, loadingElm);
       });
       plugin.onBeforeRowDetailToggle.notify({ item: mockColumn, grid: gridStub } as any, new Slick.EventData(), gridStub);
       plugin.onAfterRowDetailToggle.notify({ item: mockColumn, grid: gridStub } as any, new Slick.EventData(), gridStub);
@@ -507,7 +561,7 @@ describe('SlickRowDetailView', () => {
       const mockColumn = { id: 'field1', field: 'field1', width: 100, cssClass: 'red', __collapsed: true };
       const handlerSpy = jest.spyOn(plugin.eventHandler, 'subscribe');
       // @ts-ignore:2345
-      const appendSpy = jest.spyOn(aureliaUtilServiceStub, 'createAureliaViewModelAddToSlot').mockReturnValue({ view: { unbind: jest.fn() }, viewSlot: { remove: jest.fn() } });
+      const appendSpy = jest.spyOn(aureliaUtilServiceStub, 'createAureliaViewModelAddToSlot').mockReturnValue({ controller: { deactivate: jest.fn() } });
       const redrawSpy = jest.spyOn(plugin, 'redrawAllViewSlots');
 
       plugin.init(gridStub);
@@ -516,10 +570,9 @@ describe('SlickRowDetailView', () => {
       plugin.register();
       plugin.onRowBackToViewportRange.subscribe(() => {
         expect(appendSpy).toHaveBeenCalledWith(
-          '',
+          ExampleLoader,
           expect.objectContaining({ model: mockColumn, addon: expect.anything(), grid: gridStub, }),
-          expect.objectContaining({ className: 'container_field1' }),
-          true
+          expect.objectContaining({ className: 'container_field1' })
         );
         expect(redrawSpy).toHaveBeenCalled();
       });
@@ -622,7 +675,7 @@ describe('SlickRowDetailView', () => {
   describe('possible error thrown', () => {
     it('should throw an error when creating with "init" and the row detail is without a "process" method defined', () => {
       const copyGridOptionsMock = { ...gridOptionsMock };
-      copyGridOptionsMock.rowDetailView.process = undefined;
+      copyGridOptionsMock.rowDetailView!.process = undefined as any;
       jest.spyOn(gridStub, 'getOptions').mockReturnValue(gridOptionsMock);
 
       expect(() => plugin.init(gridStub)).toThrowError(`[Aurelia-Slickgrid] You need to provide a "process" function for the Row Detail Extension to work properly`);
@@ -630,7 +683,7 @@ describe('SlickRowDetailView', () => {
 
     it('should throw an error when creating with "register" and the row detail is without a "process" method defined', () => {
       const copyGridOptionsMock = { ...gridOptionsMock };
-      copyGridOptionsMock.rowDetailView.process = undefined;
+      copyGridOptionsMock.rowDetailView!.process = undefined as any;
       jest.spyOn(gridStub, 'getOptions').mockReturnValue(gridOptionsMock);
 
       expect(() => plugin.register()).toThrowError(`[Aurelia-Slickgrid] You need to provide a "process" function for the Row Detail Extension to work properly`);

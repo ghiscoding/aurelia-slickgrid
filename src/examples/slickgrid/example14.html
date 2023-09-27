@@ -23,11 +23,11 @@
   <h3>Grid 2 <small>(with Header Grouping &amp; Frozen/Pinned Columns)</small></h3>
 
   <div class="col-sm 12">
-    <button class="btn btn-outline-secondary btn-sm" click.delegate="setFrozenColumns2(-1)"
+    <button class="btn btn-outline-secondary btn-sm" click.trigger="setFrozenColumns2(-1)"
             data-test="remove-frozen-column-button">
       <i class="fa fa-times fa-lg"></i> Remove Frozen Columns
     </button>
-    <button class="btn btn-outline-secondary btn-sm" click.delegate="setFrozenColumns2(2)"
+    <button class="btn btn-outline-secondary btn-sm" click.trigger="setFrozenColumns2(2)"
             data-test="set-3frozen-columns">
       <i class="fa fa-thumb-tack fa-lg"></i> Set 3 Frozen Columns
     </button>
@@ -37,6 +37,6 @@
                      column-definitions.bind="columnDefinitions2"
                      grid-options.bind="gridOptions2"
                      dataset.bind="dataset2"
-                     on-aurelia-grid-created.delegate="aureliaGridReady2($event.detail)">
+                     on-aurelia-grid-created.trigger="aureliaGridReady2($event.detail)">
   </aurelia-slickgrid>
 </template>

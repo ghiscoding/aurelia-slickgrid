@@ -1,6 +1,5 @@
-import fetchJsonp from 'fetch-jsonp';
 // import 'slickgrid/slick.remotemodel'; // SlickGrid Remote Plugin
-import { bindable, bindingMode } from 'aurelia-framework';
+import { bindable, BindingMode } from 'aurelia';
 
 import {
   AureliaGridInstance,
@@ -26,7 +25,7 @@ const mpnFormatter: Formatter = (_row, _cell, _value, _columnDef, dataContext) =
 };
 
 export class Example17 {
-  @bindable({ defaultBindingMode: bindingMode.twoWay }) search = '';
+  @bindable({ mode: BindingMode.twoWay }) search = '';
   private _eventHandler: any = new Slick.EventHandler();
 
   title = 'Example 17: Octopart Catalog Search - Remote Model Plugin';
@@ -61,8 +60,8 @@ export class Example17 {
   constructor() {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
-    this.loaderDataView = new Slick.Data.RemoteModel!();
-    this.customDataView = this.loaderDataView && this.loaderDataView.data;
+    // this.loaderDataView = new Slick.Data.RemoteModel!();
+    // this.customDataView = this.loaderDataView && this.loaderDataView.data;
   }
 
   attached() {
@@ -73,7 +72,7 @@ export class Example17 {
     // this.loaderDataView.setSearch(this.search);
   }
 
-  detached() {
+  detaching() {
     // unsubscribe all SlickGrid events
     this._eventHandler.unsubscribeAll();
   }
@@ -81,8 +80,8 @@ export class Example17 {
   aureliaGridReady(aureliaGrid: AureliaGridInstance) {
     this.aureliaGrid = aureliaGrid;
     this.gridObj = aureliaGrid.slickGrid; // grid object
-    this.loaderDataView.setSort('score', -1);
-    this.gridObj.setSortColumn('score', false);
+    // this.loaderDataView.setSort('score', -1);
+    // this.gridObj.setSortColumn('score', false);
 
     // simulate a delayed search to preload the first page
     setTimeout(() => this.searchChanged(this.search), 100);

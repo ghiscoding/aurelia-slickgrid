@@ -12,12 +12,12 @@
   <div class="subtitle" innerhtml.bind="subTitle"></div>
 
   <button class="btn btn-outline-secondary btn-sm" data-test="reset-button"
-          click.delegate="clearGridStateFromLocalStorage()">
+          click.trigger="clearGridStateFromLocalStorage()">
     <i class="fa fa-times"></i>
     Clear Grid State from Local Storage &amp; Reset Grid
   </button>
 
-  <button class="btn btn-outline-secondary btn-sm" data-test="language-button" click.delegate="switchLanguage()">
+  <button class="btn btn-outline-secondary btn-sm" data-test="language-button" click.trigger="switchLanguage()">
     <i class="fa fa-language"></i>
     Switch Language
   </button>
@@ -30,7 +30,8 @@
                      column-definitions.bind="columnDefinitions"
                      grid-options.bind="gridOptions"
                      dataset.bind="dataset"
-                     on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)"
-                     on-grid-state-changed.delegate="gridStateChanged($event.detail)">
+                     on-aurelia-grid-created.trigger="aureliaGridReady($event.detail)"
+                     on-grid-state-changed.trigger="gridStateChanged($event.detail)"
+                     >
   </aurelia-slickgrid>
 </template>

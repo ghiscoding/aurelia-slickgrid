@@ -8,7 +8,7 @@ on:
       - next
   pull_request:
     branches:
-      - '**'
+      - "**"
 
 jobs:
   run:
@@ -71,7 +71,7 @@ jobs:
         with:
           working-directory: test/cypress
           config-file: cypress.config.ts
-          wait-on: 'http://localhost:9000'
+          wait-on: "http://localhost:9000"
           browser: chrome
           record: true
         env:

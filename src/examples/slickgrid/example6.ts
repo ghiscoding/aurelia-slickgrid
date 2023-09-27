@@ -1,7 +1,6 @@
+import { I18N } from '@aurelia/i18n';
 import { GraphqlService, GraphqlPaginatedResult, GraphqlServiceApi, } from '@slickgrid-universal/graphql';
-import { autoinject } from 'aurelia-framework';
-import { I18N } from 'aurelia-i18n';
-import * as moment from 'moment-mini';
+import moment from 'moment-mini';
 import {
   AureliaGridInstance,
   Column,
@@ -19,7 +18,6 @@ import {
 const defaultPageSize = 20;
 const GRAPHQL_QUERY_DATASET_NAME = 'users';
 
-@autoinject()
 export class Example6 {
   title = 'Example 6: Grid with Backend GraphQL Service';
   subTitle = `
@@ -50,7 +48,7 @@ export class Example6 {
   selectedLanguage: string;
   status = { text: '', class: '' };
 
-  constructor(private i18n: I18N) {
+  constructor(@I18N private readonly i18n: I18N) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
 
@@ -60,7 +58,7 @@ export class Example6 {
     this.selectedLanguage = defaultLang;
   }
 
-  detached() {
+  detaching() {
     this.saveCurrentGridState();
   }
 

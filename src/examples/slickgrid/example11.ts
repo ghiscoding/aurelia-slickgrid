@@ -1,4 +1,3 @@
-import { autoinject } from 'aurelia-framework';
 import {
   AureliaGridInstance,
   Column,
@@ -13,7 +12,6 @@ import {
 } from '../../aurelia-slickgrid';
 import './example11.scss';
 
-@autoinject()
 export class Example11 {
   title = 'Example 11: Add / Update / Highlight a Datagrid Item';
   subTitle = `

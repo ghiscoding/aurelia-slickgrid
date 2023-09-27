@@ -1,11 +1,25 @@
 export * from '@slickgrid-universal/common';
-import { EventAggregator } from 'aurelia-event-aggregator';
-import { FrameworkConfiguration, NewInstance } from 'aurelia-framework';
-import { PLATFORM } from 'aurelia-pal';
-
+import { IContainer } from 'aurelia';
 import { AureliaSlickgridCustomElement } from './custom-elements/aurelia-slickgrid';
-import { SlickgridEventAggregator } from './custom-elements/slickgridEventAggregator';
 import { SlickgridConfig } from './slickgrid-config';
+
+export const AureliaSlickGridConfiguration = {
+  register(container: IContainer): IContainer {
+    return container.register(AureliaSlickgridCustomElement);
+  },
+
+  customize(optionsProvider: (config: SlickgridConfig) => void) {
+    return {
+      register(container: IContainer): IContainer {
+        const options = container.get(SlickgridConfig);
+        optionsProvider(options);
+        return AureliaSlickGridConfiguration.register(container);
+      },
+    };
+  }
+};
+
+export { AureliaSlickgridCustomElement } from './custom-elements/aurelia-slickgrid';
 import type {
   AureliaGridInstance,
   AureliaViewOutput,
@@ -24,7 +38,8 @@ export {
   RowDetailView,
   SlickGrid,
   ViewModelBindableData,
-  ViewModelBindableInputData
+  ViewModelBindableInputData,
+  SlickgridConfig
 };
 
 // expose all public classes
@@ -33,23 +48,3 @@ export {
   TranslaterService,
   disposeAllSubscriptions
 } from './services/index';
-
-export function configure(aurelia: FrameworkConfiguration, callback: (instance: SlickgridConfig) => void) {
-  aurelia.globalResources(PLATFORM.moduleName('./custom-elements/aurelia-slickgrid'));
-  aurelia.globalResources(PLATFORM.moduleName('./value-converters/asgDateFormat'));
-  aurelia.globalResources(PLATFORM.moduleName('./value-converters/asgNumber'));
-
-  // register a local (internal) event aggregator
-  aurelia.container.registerResolver(SlickgridEventAggregator, NewInstance.of(EventAggregator).as(SlickgridEventAggregator));
-
-  const config = new SlickgridConfig();
-  aurelia.container.registerInstance(SlickgridConfig, config);
-  if (typeof callback === 'function') {
-    callback(config);
-  }
-}
-
-export {
-  AureliaSlickgridCustomElement,
-  SlickgridConfig
-};
