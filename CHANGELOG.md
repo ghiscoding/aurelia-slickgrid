@@ -2,6 +2,37 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.2.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v6.2.1...v6.2.2) (2023-09-24)
+
+
+### Bug Fixes
+
+* bump Slickgrid-Universal w/auto-resize w/o container ([#1079](https://github.com/ghiscoding/aurelia-slickgrid/issues/1079)) ([1141ede](https://github.com/ghiscoding/aurelia-slickgrid/commit/1141edef7c63bb6680382d6e3c3397737c19b8a8))
+
+
+### Reverts
+
+* Revert "chore(deps): update codecov/codecov-action action to v4 (#1069)" (#1071) ([0f90a1d](https://github.com/ghiscoding/aurelia-slickgrid/commit/0f90a1de5dbb41633245a80849d1ced2f84122ce)), closes [#1069](https://github.com/ghiscoding/aurelia-slickgrid/issues/1069) [#1071](https://github.com/ghiscoding/aurelia-slickgrid/issues/1071)
+
+## [6.2.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v6.2.0...v6.2.1) (2023-09-05)
+
+
+### Bug Fixes
+
+* **common:** Select Filter/Editor enableRenderHtml invalid displays ([#1060](https://github.com/ghiscoding/aurelia-slickgrid/issues/1060)) ([42b5f78](https://github.com/ghiscoding/aurelia-slickgrid/commit/42b5f787ef7ad10a04b4da275a11ccf05a09ac29))
+
+# [6.2.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v6.1.0...v6.2.0) (2023-08-21)
+
+
+### Bug Fixes
+
+* adding dataset hierarchical item shouldn't cause scroll flickering ([#1044](https://github.com/ghiscoding/aurelia-slickgrid/issues/1044)) ([ddcfb35](https://github.com/ghiscoding/aurelia-slickgrid/commit/ddcfb352082fdab8ebad84a701945ab82617dcb5))
+
+
+### Features
+
+* **TreeData:** add optional Aggregators for Tree Data totals calc ([#1048](https://github.com/ghiscoding/aurelia-slickgrid/issues/1048)) ([3abea9e](https://github.com/ghiscoding/aurelia-slickgrid/commit/3abea9ee4650a49e38bf216526642b282f1ee840))
+
 # [6.1.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v6.0.1...v6.1.0) (2023-07-21)
 
 

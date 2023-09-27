@@ -8,6 +8,7 @@ const config: Config.InitialOptions = {
     'src/aurelia-slickgrid/**/*.ts',
     '!dist/**',
     '!src/assets/**',
+    '!src/**/models/**',
     '!**/node_modules/**',
     '!**/models/**',
     '!**/test/**',
