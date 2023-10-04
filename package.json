@@ -128,7 +128,7 @@
     "jsdom-global": "^3.0.2",
     "mini-css-extract-plugin": "^2.7.6",
     "moment-mini": "^2.29.4",
-    "npm-run-all2": "^6.0.6",
+    "npm-run-all2": "^6.1.0",
     "promise-polyfill": "^8.3.0",
     "release-it": "^16.2.1",
     "rimraf": "^5.0.5",
@@ -150,7 +150,7 @@
     "npm": ">=8.5.0"
   },
   "resolutions": {
-    "caniuse-lite": "1.0.30001542",
+    "caniuse-lite": "1.0.30001543",
     "semver": "^7.5.4"
   },
   "aurelia": {

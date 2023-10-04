@@ -3322,10 +3322,10 @@ camelcase@^7.0.0:
   resolved "https://registry.yarnpkg.com/camelcase/-/camelcase-7.0.0.tgz#fd112621b212126741f998d614cbc2a8623fd174"
   integrity sha512-JToIvOmz6nhGsUhAYScbo2d6Py5wojjNfoxoc2mEVLUdJ70gJK2gnd+ABY1Tc3sVMyK7QDPtN0T/XdlCQWITyQ==
 
-caniuse-lite@1.0.30001542, caniuse-lite@^1.0.30001400:
-  version "1.0.30001542"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001542.tgz#823ddb5aed0a70d5e2bfb49126478e84e9514b85"
-  integrity sha512-UrtAXVcj1mvPBFQ4sKd38daP8dEcXXr5sQe6QNNinaPd0iA/cxg9/l3VrSdL73jgw5sKyuQ6jNgiKO12W3SsVA==
+caniuse-lite@1.0.30001543, caniuse-lite@^1.0.30001400:
+  version "1.0.30001543"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001543.tgz#478a3e9dddbb353c5ab214b0ecb0dbed529ed1d8"
+  integrity sha512-qxdO8KPWPQ+Zk6bvNpPeQIOH47qZSYdFZd6dXQzb2KzhnSXju4Kd7H1PkSJx6NICSMgo/IhRZRhhfPTHYpJUCA==
 
 chalk@5.3.0, chalk@^5.3.0:
   version "5.3.0"
@@ -8683,10 +8683,10 @@ npm-path@^2.0.2:
   dependencies:
     which "^1.2.10"
 
-npm-run-all2@^6.0.6:
-  version "6.0.6"
-  resolved "https://registry.yarnpkg.com/npm-run-all2/-/npm-run-all2-6.0.6.tgz#39abbeb59e622c6072957a2911e11b1f67f8e01f"
-  integrity sha512-Ba31DnJj3aqJ5freRdVIoBuRdGjHDt0Sfc7tduR2wYDbtcxsFlga6Sw2pE5Tn3+kdVttVwqzFlmozcT540wDxw==
+npm-run-all2@^6.1.0:
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/npm-run-all2/-/npm-run-all2-6.1.0.tgz#a61a849cab1c37c0fb0611766621c6302d3baef5"
+  integrity sha512-D7Agah/DfoeuxA5ZcgKPq+N1vOIAqfMruI4Nd2pKgGnToJzKmFY/gdDgUXcoCjc1HAqTX2H7qy+7m5T2iMOaGQ==
   dependencies:
     ansi-styles "^6.2.1"
     cross-spawn "^7.0.3"
