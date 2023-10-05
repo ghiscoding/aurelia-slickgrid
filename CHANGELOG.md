@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.3.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v6.2.2...v6.3.0) (2023-10-05)
+
+
+### Features
+
+* add pageUp/pageDown/home/end to SlickCellSelection ([#1088](https://github.com/ghiscoding/aurelia-slickgrid/issues/1088)) ([411ccb6](https://github.com/ghiscoding/aurelia-slickgrid/commit/411ccb64d52d6dbb7506f764911a29226e86bbc9))
+
 ## [6.2.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v6.2.1...v6.2.2) (2023-09-24)
 
 
