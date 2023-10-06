@@ -128,12 +128,12 @@
     "jsdom-global": "^3.0.2",
     "mini-css-extract-plugin": "^2.7.6",
     "moment-mini": "^2.29.4",
-    "npm-run-all2": "^6.1.0",
+    "npm-run-all2": "^6.1.1",
     "promise-polyfill": "^8.3.0",
     "release-it": "^16.2.1",
     "rimraf": "^5.0.5",
     "rxjs": "^7.8.1",
-    "sass": "^1.68.0",
+    "sass": "^1.69.0",
     "sass-loader": "^13.3.2",
     "servor": "^4.0.2",
     "style-loader": "~3.3.3",
@@ -150,7 +150,7 @@
     "npm": ">=8.5.0"
   },
   "resolutions": {
-    "caniuse-lite": "1.0.30001543",
+    "caniuse-lite": "1.0.30001546",
     "semver": "^7.5.4"
   },
   "aurelia": {
