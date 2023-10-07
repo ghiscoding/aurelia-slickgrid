@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.3.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v6.3.0...v6.3.1) (2023-10-07)
+
+
+### Bug Fixes
+
+* **graphql:** column with complex object could throw null pointer exception ([#1091](https://github.com/ghiscoding/aurelia-slickgrid/issues/1091)) ([f26ee4b](https://github.com/ghiscoding/aurelia-slickgrid/commit/f26ee4b32d5d6072cfdf7593274b5b24499d64d1))
+
 # [6.3.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v6.2.2...v6.3.0) (2023-10-05)
 
 
