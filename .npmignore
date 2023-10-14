@@ -1,5 +1,6 @@
 .chrome
 .circleci
+.env
 .github
 .idea
 .vscode
