@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.4.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v6.3.1...v6.4.0) (2023-11-02)
+
+
+### Bug Fixes
+
+* remove unused code editor files from npm publish ([1379f60](https://github.com/ghiscoding/aurelia-slickgrid/commit/1379f60967c1ba7293778b4be5a50c5a1f9ebeec))
+
+
+### Features
+
+* add sub-menus to all Menu extensions/plugins ([#1103](https://github.com/ghiscoding/aurelia-slickgrid/issues/1103)) ([e55fa67](https://github.com/ghiscoding/aurelia-slickgrid/commit/e55fa6733f88e91dcb5320bd2448075093ffd0cd))
+* update GraphQL demo with cursor pagination ([#1104](https://github.com/ghiscoding/aurelia-slickgrid/issues/1104)) ([c735465](https://github.com/ghiscoding/aurelia-slickgrid/commit/c735465ae35ddbfcf7b37fb893b42869ee723202))
+
 ## [6.3.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v6.3.0...v6.3.1) (2023-10-07)
 
 
