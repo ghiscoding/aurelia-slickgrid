@@ -88,12 +88,12 @@
     "@types/dompurify": "^3.0.4",
     "@types/fnando__sparkline": "^0.3.6",
     "@types/i18next-xhr-backend": "^1.4.2",
-    "@types/jest": "^29.5.6",
-    "@types/node": "^20.8.8",
+    "@types/jest": "^29.5.7",
+    "@types/node": "^20.8.10",
     "@types/sortablejs": "^1.15.4",
     "@types/webpack": "^5.28.4",
-    "@typescript-eslint/eslint-plugin": "^6.9.0",
-    "@typescript-eslint/parser": "^6.9.0",
+    "@typescript-eslint/eslint-plugin": "^6.9.1",
+    "@typescript-eslint/parser": "^6.9.1",
     "@webpack-cli/serve": "^2.0.5",
     "aurelia-animator-css": "^1.0.4",
     "aurelia-bootstrapper": "^2.4.0",
@@ -133,7 +133,7 @@
     "release-it": "^16.2.1",
     "rimraf": "^5.0.5",
     "rxjs": "^7.8.1",
-    "sass": "^1.69.4",
+    "sass": "^1.69.5",
     "sass-loader": "^13.3.2",
     "servor": "^4.0.2",
     "style-loader": "~3.3.3",
@@ -150,7 +150,7 @@
     "npm": ">=8.5.0"
   },
   "resolutions": {
-    "caniuse-lite": "1.0.30001554",
+    "caniuse-lite": "1.0.30001559",
     "semver": "^7.5.4"
   },
   "aurelia": {
