@@ -174,7 +174,7 @@ describe('Example 15: Grid State & Presets using Local Storage', { retries: 1 },
       .invoke('show')
       .click();
 
-    cy.get('.slick-header-menu')
+    cy.get('.slick-header-menu .slick-menu-command-list')
       .should('be.visible')
       .children('.slick-menu-item:nth-of-type(5)')
       .children('.slick-menu-content')
@@ -401,7 +401,7 @@ describe('Example 15: Grid State & Presets using Local Storage', { retries: 1 },
       .invoke('show')
       .click();
 
-    cy.get('.slick-header-menu')
+    cy.get('.slick-header-menu .slick-menu-command-list')
       .should('be.visible')
       .children('.slick-menu-item:nth-of-type(9)')
       .children('.slick-menu-content')
@@ -423,7 +423,7 @@ describe('Example 15: Grid State & Presets using Local Storage', { retries: 1 },
       .invoke('show')
       .click();
 
-    cy.get('.slick-header-menu')
+    cy.get('.slick-header-menu .slick-menu-command-list')
       .should('be.visible')
       .children('.slick-menu-item:nth-of-type(1)')
       .children('.slick-menu-content')
@@ -533,7 +533,7 @@ describe('Example 15: Grid State & Presets using Local Storage', { retries: 1 },
       .invoke('show')
       .click();
 
-    cy.get('.slick-header-menu')
+    cy.get('.slick-header-menu .slick-menu-command-list')
       .should('be.visible')
       .children('.slick-menu-item:nth-of-type(1)')
       .children('.slick-menu-content')
@@ -564,7 +564,7 @@ describe('Example 15: Grid State & Presets using Local Storage', { retries: 1 },
       .invoke('show')
       .click();
 
-    cy.get('.slick-header-menu')
+    cy.get('.slick-header-menu .slick-menu-command-list')
       .should('be.visible')
       .children('.slick-menu-item:nth-of-type(1)')
       .children('.slick-menu-content')

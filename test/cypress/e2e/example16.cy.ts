@@ -205,7 +205,7 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', { retries
       .invoke('show')
       .click();
 
-    cy.get('.slick-header-menu')
+    cy.get('.slick-header-menu .slick-menu-command-list')
       .children('.slick-menu-item')
       .each(($child, index) => {
         const commandTitle = $child.text();
@@ -254,7 +254,7 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', { retries
       .invoke('show')
       .click();
 
-    cy.get('.slick-header-menu')
+    cy.get('.slick-header-menu .slick-menu-command-list')
       .children('.slick-menu-item')
       .each(($child, index) => {
         const commandTitle = $child.text();
@@ -299,7 +299,7 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', { retries
       .invoke('show')
       .click();
 
-    cy.get('.slick-header-menu')
+    cy.get('.slick-header-menu .slick-menu-command-list')
       .children('.slick-menu-item')
       .each(($child, index) => {
         const commandTitle = $child.text();
@@ -325,7 +325,7 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', { retries
       .invoke('show')
       .click();
 
-    cy.get('.slick-header-menu')
+    cy.get('.slick-header-menu .slick-menu-command-list')
       .children('.slick-menu-item')
       .each(($child, index) => {
         const commandTitle = $child.text();

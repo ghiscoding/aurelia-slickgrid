@@ -112,6 +112,7 @@ export class Example9 {
         hideToggleFilterCommand: false, // show/hide internal custom commands
         menuWidth: 17,
         resizeOnShowHeaderRow: true,
+        subItemChevronClass: 'fa fa-chevron-right',
         commandItems: [
           // add Custom Items Commands which will be appended to the existing internal custom items
           // you cannot override an internal items but you can hide them and create your own
@@ -166,12 +167,48 @@ export class Example9 {
             disabled: true,
             command: 'disabled-command',
             positionOrder: 98
+          },
+          { command: '', divider: true, positionOrder: 98 },
+          {
+            // we can also have multiple nested sub-menus
+            command: 'export', title: 'Exports', positionOrder: 99,
+            commandItems: [
+              { command: 'exports-txt', title: 'Text (tab delimited)' },
+              {
+                command: 'sub-menu', title: 'Excel', cssClass: 'green', subMenuTitle: 'available formats', subMenuTitleCssClass: 'text-italic orange',
+                commandItems: [
+                  { command: 'exports-csv', title: 'Excel (csv)' },
+                  { command: 'exports-xlsx', title: 'Excel (xlsx)' },
+                ]
+              }
+            ]
+          },
+          {
+            command: 'feedback', title: 'Feedback', positionOrder: 100,
+            commandItems: [
+              { command: 'request-update', title: 'Request update from supplier', iconCssClass: 'mdi mdi-star', tooltip: 'this will automatically send an alert to the shipping team to contact the user for an update' },
+              'divider',
+              {
+                command: 'sub-menu', title: 'Contact Us', iconCssClass: 'mdi mdi-account', subMenuTitle: 'contact us...', subMenuTitleCssClass: 'italic',
+                commandItems: [
+                  { command: 'contact-email', title: 'Email us', iconCssClass: 'mdi mdi-pencil-outline' },
+                  { command: 'contact-chat', title: 'Chat with us', iconCssClass: 'mdi mdi-message-text-outline' },
+                  { command: 'contact-meeting', title: 'Book an appointment', iconCssClass: 'mdi mdi-coffee' },
+                ]
+              }
+            ]
           }
         ],
         // you can use the "action" callback and/or use "onCallback" callback from the grid options, they both have the same arguments
-        onCommand: (_e, args) => {
-          if (args.command === 'help') {
+        onCommand: (_e: Event, args: any) => {
+          // e.preventDefault(); // preventing default event would keep the menu open after the execution
+          const command = args.item?.command;
+          if (command.includes('exports-')) {
+            alert('Exporting as ' + args?.item.title);
+          } else if (command.includes('contact-') || command === 'help') {
             alert('Command: ' + args.command);
+          } else {
+            console.log('onGridMenuCommand', args.command);
           }
         },
         onColumnsChanged: (_e, args) => {
