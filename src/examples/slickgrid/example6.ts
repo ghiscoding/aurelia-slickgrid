@@ -313,7 +313,7 @@ export class Example6 {
     ]);
   }
 
-  resetToOriginalPreset() {
+  resetToOriginalPresets() {
     const presetLowestDay = moment().add(-2, 'days').format('YYYY-MM-DD');
     const presetHighestDay = moment().add(20, 'days').format('YYYY-MM-DD');
 
@@ -331,7 +331,10 @@ export class Example6 {
       { columnId: 'name', direction: 'asc' },
       { columnId: 'company', direction: SortDirection.DESC }
     ]);
-    setTimeout(() => this.aureliaGrid.paginationService?.goToPageNumber(2));
+    setTimeout(() => {
+      this.aureliaGrid.paginationService?.changeItemPerPage(20);
+      this.aureliaGrid.paginationService?.goToPageNumber(2);
+    });
   }
 
   setIsWithCursor(isWithCursor: boolean) {

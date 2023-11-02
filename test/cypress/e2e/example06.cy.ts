@@ -666,8 +666,7 @@ describe('Example 6 - GraphQL Grid', { retries: 0 }, () => {
 
   describe('Cursor Pagination', () => {
     it('should re-initialize grid for cursor pagination', () => {
-      cy.reload().wait(250);
-      // cy.get('[data-test="reset-presets"]').click();
+      cy.get('[data-test="reset-presets"]').click(); // reset to same original presets
       cy.get('[data-test=cursor]').click();
 
       // the page number input should be a label now
