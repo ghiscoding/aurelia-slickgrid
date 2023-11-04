@@ -19,6 +19,7 @@ import {
 
 const defaultPageSize = 20;
 const GRAPHQL_QUERY_DATASET_NAME = 'users';
+const FAKE_SERVER_DELAY = 250;
 
 @autoinject()
 export class Example6 {
@@ -49,6 +50,7 @@ export class Example6 {
   processing = false;
   selectedLanguage: string;
   status = { text: '', class: '' };
+  serverWaitDelay = FAKE_SERVER_DELAY; // server simulation with default of 250ms but 50ms for Cypress tests
 
   constructor(private i18n: I18N) {
     // define the grid options & columns and then create the grid itself
@@ -270,7 +272,7 @@ export class Example6 {
           this.aureliaGrid?.paginationService?.setCursorPageInfo(mockedResult.data[GRAPHQL_QUERY_DATASET_NAME].pageInfo);
         }
         resolve(mockedResult);
-      }, 150);
+      }, this.serverWaitDelay);
     });
   }
 
@@ -343,17 +345,17 @@ export class Example6 {
     return true;
   }
 
+  async switchLanguage() {
+    const nextLanguage = (this.selectedLanguage === 'en') ? 'fr' : 'en';
+    await this.i18n.setLocale(nextLanguage);
+    this.selectedLanguage = nextLanguage;
+  }
+
   private resetOptions(options: Partial<GraphqlServiceOption>) {
     const graphqlService = this.gridOptions.backendServiceApi!.service as GraphqlService;
     this.aureliaGrid.paginationService!.setCursorBased(options.isWithCursor!);
     this.aureliaGrid.paginationService?.goToFirstPage();
     graphqlService.updateOptions(options);
     this.gridOptions = { ...this.gridOptions };
-  }
-
-  async switchLanguage() {
-    const nextLanguage = (this.selectedLanguage === 'en') ? 'fr' : 'en';
-    await this.i18n.setLocale(nextLanguage);
-    this.selectedLanguage = nextLanguage;
   }
 }
