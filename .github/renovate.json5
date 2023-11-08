@@ -24,6 +24,6 @@
       allowedVersions: "8.5.0",
     }
   ],
-  schedule: ['every 2 weeks on friday'],
+  schedule: ['every 2 weeks on thursday'],
   ignoreDeps: ["typescript"],
 }
