@@ -4,7 +4,7 @@ import { removeWhitespaces } from '../plugins/utilities';
 const presetLowestDay = moment().add(-2, 'days').format('YYYY-MM-DD');
 const presetHighestDay = moment().add(20, 'days').format('YYYY-MM-DD');
 
-describe('Example 6 - GraphQL Grid', { retries: 1 }, () => {
+describe('Example 6 - GraphQL Grid', () => {
   it('should display Example title', () => {
     cy.visit(`${Cypress.config('baseUrl')}/slickgrid/example6`);
     cy.get('h2').should('contain', 'Example 6: Grid with Backend GraphQL Service');
