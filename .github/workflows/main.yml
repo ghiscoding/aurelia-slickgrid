@@ -64,7 +64,7 @@ jobs:
           directory: test/jest-coverage
           verbose: true
 
-      - name: Prod Build for GitHub demo website (required for Cypress)
+      - name: Website Dev Build (served for Cypress)
         run: yarn build:demo
 
       - name: Run Cypress E2E tests

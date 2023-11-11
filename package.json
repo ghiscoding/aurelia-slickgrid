@@ -15,8 +15,26 @@
   },
   "license": "MIT",
   "author": "Ghislain B.",
-  "main": "dist/commonjs/index.js",
-  "typings": "dist/commonjs/index.d.ts",
+  "main": "./dist/commonjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "index.d.ts",
+  "typesVersions": {
+    ">=4.2": {
+      "*": [
+        "dist/types/*"
+      ]
+    }
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "node": "./dist/commonjs/index.js",
+      "require": "./dist/commonjs/index.js",
+      "default": "./dist/esm/index.js"
+    },
+    "./package.json": "./package.json",
+    "./index": "./index"
+  },
   "repository": {
     "type": "git",
     "url": "http://github.com/ghiscoding/aurelia-slickgrid"
@@ -31,16 +49,17 @@
     "serve:demo": "servor ./docs index.html 9000",
     "delete:dist": "rimraf dist",
     "lint": "eslint src/aurelia-slickgrid --ext .ts",
-    "build:amd": "tsc --project src/aurelia-slickgrid/tsconfig.build.json --outDir dist/amd --module amd",
+    "build:amd": "tsc --project src/aurelia-slickgrid/tsconfig.build.json --outDir dist/amd --module amd --declaration false",
     "postbuild:amd": "copyfiles --up 2 src/aurelia-slickgrid/**/*.html dist/amd",
-    "build:commonjs": "tsc --project src/aurelia-slickgrid/tsconfig.build.json --outDir dist/commonjs --module commonjs",
-    "postbuild:commonjs": "copyfiles --up 2 src/aurelia-slickgrid/**/*.html dist/commonjs",
-    "build:esm": "tsc --project src/aurelia-slickgrid/tsconfig.build.json --outDir dist/esm --module esnext --target es2018",
+    "build:cjs": "tsc --project src/aurelia-slickgrid/tsconfig.build.json --outDir dist/commonjs --module commonjs --declaration false",
+    "postbuild:cjs": "copyfiles --up 2 src/aurelia-slickgrid/**/*.html dist/commonjs",
+    "build:esm": "tsc --project src/aurelia-slickgrid/tsconfig.build.json --outDir dist/esm --module esnext --target es2018 --declaration false",
     "postbuild:esm": "copyfiles --up 2 src/aurelia-slickgrid/**/*.html dist/esm",
-    "build:native-modules": "tsc --project src/aurelia-slickgrid/tsconfig.build.json --outDir dist/native-modules --module es2015",
+    "build:native-modules": "tsc --project src/aurelia-slickgrid/tsconfig.build.json --outDir dist/native-modules --module es2015 --declaration false",
     "postbuild:native-modules": "copyfiles --up 2 src/aurelia-slickgrid/**/*.html dist/native-modules",
+    "build:types": "tsc --project src/aurelia-slickgrid/tsconfig.build.json --emitDeclarationOnly --declarationMap --outDir dist/types",
     "prebuild": "run-p delete:dist lint",
-    "build": "run-p build:amd build:commonjs build:esm build:native-modules",
+    "build": "run-p build:amd build:cjs build:esm build:native-modules build:types",
     "postbuild": "npm-run-all copy-i18n:dist copy-asset-lib",
     "build:with-e2e": "npm-run-all build cypress:ci",
     "copy-asset-lib": "copyfiles --up 2 src/assets/lib/** dist",

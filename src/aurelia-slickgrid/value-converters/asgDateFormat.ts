@@ -1,4 +1,4 @@
-import * as moment from 'moment-mini';
+import moment from 'moment-mini';
 
 export class AsgDateFormatValueConverter {
   toView(value: any, format: string): string {
