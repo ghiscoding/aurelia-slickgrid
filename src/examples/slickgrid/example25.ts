@@ -52,7 +52,6 @@ export class Example25 {
   dataset = [];
   metrics!: Metrics;
 
-  isWithCursor = false;
   graphqlQuery = '';
   processing = false;
   selectedLanguage = '';
