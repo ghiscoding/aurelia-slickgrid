@@ -1,7 +1,7 @@
 import { GraphqlService, GraphqlPaginatedResult, GraphqlServiceApi, GraphqlServiceOption, } from '@slickgrid-universal/graphql';
 import { autoinject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
-import * as moment from 'moment-mini';
+import moment from 'moment-mini';
 import {
   AureliaGridInstance,
   Column,
