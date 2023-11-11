@@ -33,7 +33,7 @@
       "default": "./dist/esm/index.js"
     },
     "./package.json": "./package.json",
-    "./*": "./*"
+    "./index": "./index"
   },
   "repository": {
     "type": "git",
