@@ -73,6 +73,7 @@
     "sortablejs": "^1.15.0"
   },
   "devDependencies": {
+    "@4tw/cypress-drag-drop": "^2.2.5",
     "@faker-js/faker": "^8.2.0",
     "@fnando/sparkline": "^0.3.10",
     "@popperjs/core": "^2.11.8",
