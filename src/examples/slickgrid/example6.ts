@@ -181,7 +181,7 @@ export class Example6 {
             field: 'userId',
             value: 123
           }],
-          isWithCursor: this.isWithCursor, // sets pagination strategy, if true requires a call to setPageInfo() when graphql call returns
+          useCursor: this.isWithCursor, // sets pagination strategy, if true requires a call to setPageInfo() when graphql call returns
           // when dealing with complex objects, we want to keep our field name with double quotes
           // example with gender: query { users (orderBy:[{field:"gender",direction:ASC}]) {}
           keepArgumentFieldDoubleQuotes: true
@@ -341,7 +341,7 @@ export class Example6 {
 
   setIsWithCursor(isWithCursor: boolean) {
     this.isWithCursor = isWithCursor;
-    this.resetOptions({ isWithCursor: this.isWithCursor });
+    this.resetOptions({ useCursor: this.isWithCursor });
     return true;
   }
 
