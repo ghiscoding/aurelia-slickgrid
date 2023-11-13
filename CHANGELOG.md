@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.5.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v6.5.0...v6.5.1) (2023-11-13)
+
+
+### Bug Fixes
+
+* add ms-select-vanilla missing type & improve pkg exports ([#1114](https://github.com/ghiscoding/aurelia-slickgrid/issues/1114)) ([ea02c54](https://github.com/ghiscoding/aurelia-slickgrid/commit/ea02c54b14c5a4cd658a947f7447d5fb163dc3a0)), closes [#1313](https://github.com/ghiscoding/aurelia-slickgrid/issues/1313)
+* improve build & types exports for all targets, Node, CJS/ESM ([#1113](https://github.com/ghiscoding/aurelia-slickgrid/issues/1113)) ([2cbfc68](https://github.com/ghiscoding/aurelia-slickgrid/commit/2cbfc68a00a39b16240a6dc8977a7fdb03433b03))
+
 # [6.5.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v6.4.0...v6.5.0) (2023-11-11)
 
 
