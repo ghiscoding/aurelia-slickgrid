@@ -1,4 +1,3 @@
-jest.mock('@slickgrid-universal/common/dist/commonjs/formatters/formatterUtilities');
 import 'jest-extended';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { BindingEngine, Container } from 'aurelia-framework';
@@ -19,6 +18,7 @@ import type {
 } from '@slickgrid-universal/common';
 
 import {
+  autoAddEditorFormatterToColumnsWithEditor,
   BackendService,
   BackendUtilityService,
   CollectionService,
@@ -45,7 +45,6 @@ import { EventPubSubService } from '@slickgrid-universal/event-pub-sub';
 
 import { SlickEmptyWarningComponent } from '@slickgrid-universal/empty-warning-component';
 import { GraphqlPaginatedResult, GraphqlService, GraphqlServiceApi, GraphqlServiceOption } from '@slickgrid-universal/graphql';
-import * as formatterUtilities from '@slickgrid-universal/common/dist/commonjs/formatters/formatterUtilities';
 
 import { RxJsResourceStub } from '../../../../test/rxjsResourceStub';
 import { HttpStub } from '../../../../test/httpClientStub';
@@ -54,6 +53,11 @@ import { TranslaterServiceStub } from '../../../../test/translaterServiceStub';
 import { AureliaUtilService, ContainerService, TranslaterService } from '../../services';
 import { AureliaSlickgridCustomElement } from '../aurelia-slickgrid';
 import { SlickRowDetailView } from '../../extensions/slickRowDetailView';
+
+jest.mock('@slickgrid-universal/common', () => ({
+  ...(jest.requireActual('@slickgrid-universal/common') as any),
+  autoAddEditorFormatterToColumnsWithEditor: jest.fn(),
+}));
 
 declare const Slick: any;
 const slickEventHandler = new MockSlickEventHandler();
@@ -492,13 +496,11 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
 
     describe('autoAddCustomEditorFormatter grid option', () => {
       it('should initialize the grid and automatically add custom Editor Formatter when provided in the grid options', () => {
-        const autoAddFormatterSpy = jest.spyOn(formatterUtilities, 'autoAddEditorFormatterToColumnsWithEditor');
-
         customElement.gridOptions = { ...gridOptions, autoAddCustomEditorFormatter: customEditableInputFormatter };
         customElement.bind();
         customElement.initialization(slickEventHandler);
 
-        expect(autoAddFormatterSpy).toHaveBeenCalledWith([], customEditableInputFormatter);
+        expect(autoAddEditorFormatterToColumnsWithEditor).toHaveBeenCalledWith([], customEditableInputFormatter);
       });
     });
 
@@ -526,7 +528,6 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         const autosizeSpy = jest.spyOn(mockGrid, 'autosizeColumns');
         const updateSpy = jest.spyOn(customElement, 'updateColumnDefinitionsList');
         const renderSpy = jest.spyOn(extensionServiceStub, 'renderColumnHeaders');
-        const autoAddFormatterSpy = jest.spyOn(formatterUtilities, 'autoAddEditorFormatterToColumnsWithEditor');
         const mockColDefs = [{ id: 'name', field: 'name', editor: undefined, internalColumnEditor: {} }];
 
         customElement.columnDefinitions = mockColDefs;
@@ -539,7 +540,7 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         expect(autosizeSpy).toHaveBeenCalled();
         expect(updateSpy).toHaveBeenCalledWith(mockColDefs);
         expect(renderSpy).toHaveBeenCalledWith(mockColDefs, true);
-        expect(autoAddFormatterSpy).toHaveBeenCalledWith([{ id: 'name', field: 'name', editor: undefined, internalColumnEditor: {} }], customEditableInputFormatter);
+        expect(autoAddEditorFormatterToColumnsWithEditor).toHaveBeenCalledWith([{ id: 'name', field: 'name', editor: undefined, internalColumnEditor: {} }], customEditableInputFormatter);
       });
     });
 
