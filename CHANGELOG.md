@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.6.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v6.5.1...v6.6.0) (2023-11-26)
+
+
+### Features
+
+* **GraphQL:** .excludeFieldFromQuery, exclude field but keep fields ([#1117](https://github.com/ghiscoding/aurelia-slickgrid/issues/1117)) ([6865408](https://github.com/ghiscoding/aurelia-slickgrid/commit/6865408763766d798943cadc8d8d0b35859094ab))
+
 ## [6.5.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v6.5.0...v6.5.1) (2023-11-13)
 
 
