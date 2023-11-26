@@ -70,7 +70,7 @@ jobs:
               name: 'OTP to publish package'
               description: 'OTP from authenticator app'
 
-      - name: "[dry-run] 🧪 NPM Release 🏷️"
+      - name: "[dry-run] 🧪 NPM Release"
         if: ${{ inputs.dryrun == true }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -82,7 +82,7 @@ jobs:
           npm whoami
           npx release-it --ci --dry-run
 
-      - name: execute NPM Release 🏷️
+      - name: Execute GitHub/NPM Release 🏷️📦
         if: ${{ inputs.dryrun != true }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
