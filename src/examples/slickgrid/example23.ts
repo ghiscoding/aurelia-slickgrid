@@ -192,7 +192,7 @@ export class Example23 {
           { columnId: 'duration', direction: 'ASC' },
         ],
       },
-      registerExternalResources: [new SlickCustomTooltip(), new ExcelExportService()],
+      externalResources: [new SlickCustomTooltip(), new ExcelExportService()],
     };
   }
 

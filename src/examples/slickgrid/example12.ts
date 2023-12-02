@@ -209,7 +209,7 @@ export class Example12 {
         exportWithFormatter: true,
         sanitizeDataExport: true
       },
-      registerExternalResources: [this.excelExportService, this.textExportService],
+      externalResources: [this.excelExportService, this.textExportService],
     };
   }
 

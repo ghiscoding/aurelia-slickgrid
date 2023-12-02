@@ -777,7 +777,8 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         const mockColDefs = [{ id: 'gender', field: 'gender', editor: { model: Editors.text, collectionAsync: of(mockCollection) } }] as Column[];
 
         const rxjsMock = new RxJsResourceStub();
-        customElement.gridOptions = { registerExternalResources: [rxjsMock] } as unknown as GridOption;
+        customElement.gridOptions = { externalResources: [rxjsMock] } as unknown as GridOption;
+        customElement.registerExternalResources([rxjsMock], true);
         customElement.columnDefinitions = mockColDefs;
         customElement.columnDefinitionsChanged();
         customElement.initialization(slickEventHandler);
@@ -1022,7 +1023,8 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         const sortServiceSpy = jest.spyOn(sortServiceStub, 'addRxJsResource');
         const paginationServiceSpy = jest.spyOn(paginationServiceStub, 'addRxJsResource');
 
-        customElement.gridOptions = { registerExternalResources: [rxjsMock] } as unknown as GridOption;
+        customElement.gridOptions = { externalResources: [rxjsMock] } as unknown as GridOption;
+        customElement.registerExternalResources([rxjsMock], true);
         customElement.initialization(slickEventHandler);
 
         expect(backendUtilitySpy).toHaveBeenCalled();
@@ -1304,7 +1306,8 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         jest.spyOn((customElement.gridOptions as any).backendServiceApi.service, 'buildQuery').mockReturnValue(query);
         const backendExecuteSpy = jest.spyOn(backendUtilityServiceStub, 'executeBackendProcessesCallback');
 
-        customElement.gridOptions.registerExternalResources = [rxjsMock];
+        customElement.gridOptions.externalResources = [rxjsMock];
+        customElement.registerExternalResources([rxjsMock], true);
         customElement.gridOptions.backendServiceApi!.service.options = { executeProcessCommandOnInit: true };
         customElement.initialization(slickEventHandler);
 
@@ -1394,7 +1397,9 @@ describe('Aurelia-Slickgrid Component instantiated via Constructor', () => {
         jest.spyOn(customElement.gridOptions.backendServiceApi!.service, 'buildQuery').mockReturnValue(query);
         const backendErrorSpy = jest.spyOn(backendUtilityServiceStub, 'onBackendError');
 
-        customElement.gridOptions.registerExternalResources = [rxjsMock];
+        customElement.gridOptions.externalResources = [rxjsMock];
+        customElement.resetExternalResources();
+        customElement.registerExternalResources([rxjsMock], true);
         customElement.gridOptions.backendServiceApi!.service.options = { executeProcessCommandOnInit: true };
         customElement.initialization(slickEventHandler);
 

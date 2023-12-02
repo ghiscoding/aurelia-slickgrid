@@ -266,7 +266,7 @@ export class Example6 {
         this.graphqlQuery = this.graphqlService.buildQuery();
         // this.graphqlQuery = this.gridOptions.backendServiceApi!.service.buildQuery();
         if (this.isWithCursor) {
-          // When using cursor pagination, the pagination service needs to updated with the PageInfo data from the latest request
+          // When using cursor pagination, the pagination service needs to be updated with the PageInfo data from the latest request
           // This might be done automatically if using a framework specific slickgrid library
           // Note because of this timeout, this may cause race conditions with rapid clicks!
           this.aureliaGrid?.paginationService?.setCursorPageInfo(mockedResult.data[GRAPHQL_QUERY_DATASET_NAME].pageInfo);
