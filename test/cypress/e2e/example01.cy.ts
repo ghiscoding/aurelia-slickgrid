@@ -1,4 +1,4 @@
-describe('Example 1 - Basic Grids', { retries: 1 }, () => {
+describe('Example 1 - Basic Grids', () => {
   const fullTitles = ['Title', 'Duration (days)', '% Complete', 'Start', 'Finish', 'Effort Driven'];
 
   beforeEach(() => {
@@ -44,7 +44,7 @@ describe('Example 1 - Basic Grids', { retries: 1 }, () => {
       .invoke('show')
       .click();
 
-    cy.get('.slick-header-menu')
+    cy.get('.slick-header-menu .slick-menu-command-list')
       .should('be.visible')
       .children('.slick-menu-item:nth-of-type(4)')
       .children('.slick-menu-content')
@@ -69,7 +69,7 @@ describe('Example 1 - Basic Grids', { retries: 1 }, () => {
       .invoke('show')
       .click();
 
-    cy.get('.slick-header-menu')
+    cy.get('.slick-header-menu .slick-menu-command-list')
       .should('be.visible')
       .children('.slick-menu-item:nth-of-type(3)')
       .children('.slick-menu-content')
@@ -97,7 +97,7 @@ describe('Example 1 - Basic Grids', { retries: 1 }, () => {
       .click();
 
     cy.get('#grid1-2')
-      .find('.slick-header-menu')
+      .find('.slick-header-menu .slick-menu-command-list')
       .should('be.visible')
       .children('.slick-menu-item:nth-of-type(4)')
       .click();

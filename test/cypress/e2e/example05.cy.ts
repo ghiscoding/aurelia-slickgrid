@@ -1,4 +1,4 @@
-describe('Example 5 - OData Grid', { retries: 1 }, () => {
+describe('Example 5 - OData Grid', () => {
   const GRID_ROW_HEIGHT = 35;
 
   beforeEach(() => {
@@ -727,7 +727,7 @@ describe('Example 5 - OData Grid', { retries: 1 }, () => {
         .invoke('show')
         .click();
 
-      cy.get('.slick-header-menu')
+      cy.get('.slick-header-menu .slick-menu-command-list')
         .should('be.visible')
         .children('.slick-menu-item:nth-of-type(6)')
         .children('.slick-menu-content')

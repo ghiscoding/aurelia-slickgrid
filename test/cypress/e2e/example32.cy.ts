@@ -1,6 +1,6 @@
 
 
-describe('Example 32 - Columns Resize by Content', { retries: 1 }, () => {
+describe('Example 32 - Columns Resize by Content', () => {
   const GRID_ROW_HEIGHT = 33;
 
   beforeEach(() => {
@@ -80,7 +80,7 @@ describe('Example 32 - Columns Resize by Content', { retries: 1 }, () => {
       .invoke('show')
       .click();
 
-    cy.get('.slick-header-menu')
+    cy.get('.slick-header-menu .slick-menu-command-list')
       .should('be.visible')
       .children('.slick-menu-item:nth-of-type(1)')
       .children('.slick-menu-content')
