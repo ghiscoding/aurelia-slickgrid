@@ -10,6 +10,10 @@ on:
     branches:
       - "**"
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   run:
     name: Node ${{ matrix.node }}
@@ -18,7 +22,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node: [18]
+        node: [20]
 
     steps:
       - name: Clone repository
@@ -27,7 +31,7 @@ jobs:
           fetch-depth: 3
 
       - name: Set Node.js version
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
 
@@ -60,20 +64,19 @@ jobs:
           directory: test/jest-coverage
           verbose: true
 
-      - name: Prod Build for GitHub demo website (required for Cypress)
+      - name: Website Dev Build (served for Cypress)
         run: yarn build:demo
 
-      - name: Start HTTP Server
-        run: yarn serve:demo &
-
       - name: Run Cypress E2E tests
-        uses: cypress-io/github-action@59810ebfa5a5ac6fcfdcfdf036d1cd4d083a88f2 # v6.5.0
+        uses: cypress-io/github-action@v6
         with:
-          working-directory: test/cypress
-          config-file: cypress.config.ts
+          install: false
+          # working-directory: packages/dnd
+          start: yarn serve:demo
           wait-on: "http://localhost:9000"
+          config-file: test/cypress.config.ts
           browser: chrome
-          record: true
+          record: false
         env:
           # pass the Dashboard record key as an environment variable
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}

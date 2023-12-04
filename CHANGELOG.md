@@ -1,6 +1,61 @@
-# Change Log 
+# Change Log
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+## [6.6.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v6.6.1...v6.6.2) (2023-11-26)
+
+# Change Log
+
+All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+# [6.6.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v6.5.1...v6.6.0) (2023-11-26)
+
+
+### Features
+
+* **GraphQL:** .excludeFieldFromQuery, exclude field but keep fields ([#1117](https://github.com/ghiscoding/aurelia-slickgrid/issues/1117)) ([6865408](https://github.com/ghiscoding/aurelia-slickgrid/commit/6865408763766d798943cadc8d8d0b35859094ab))
+
+## [6.5.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v6.5.0...v6.5.1) (2023-11-13)
+
+
+### Bug Fixes
+
+* add ms-select-vanilla missing type & improve pkg exports ([#1114](https://github.com/ghiscoding/aurelia-slickgrid/issues/1114)) ([ea02c54](https://github.com/ghiscoding/aurelia-slickgrid/commit/ea02c54b14c5a4cd658a947f7447d5fb163dc3a0)), closes [#1313](https://github.com/ghiscoding/aurelia-slickgrid/issues/1313)
+* improve build & types exports for all targets, Node, CJS/ESM ([#1113](https://github.com/ghiscoding/aurelia-slickgrid/issues/1113)) ([2cbfc68](https://github.com/ghiscoding/aurelia-slickgrid/commit/2cbfc68a00a39b16240a6dc8977a7fdb03433b03))
+
+# [6.5.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v6.4.0...v6.5.0) (2023-11-11)
+
+
+### Bug Fixes
+
+* SlickCellRangeSelector stopped event bubbling in editor ([#1110](https://github.com/ghiscoding/aurelia-slickgrid/issues/1110)) ([17a6ee0](https://github.com/ghiscoding/aurelia-slickgrid/commit/17a6ee016e8c93bbb122e05017be87d78e0940b7))
+
+# [6.4.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v6.3.1...v6.4.0) (2023-11-02)
+
+
+### Bug Fixes
+
+* remove unused code editor files from npm publish ([1379f60](https://github.com/ghiscoding/aurelia-slickgrid/commit/1379f60967c1ba7293778b4be5a50c5a1f9ebeec))
+
+
+### Features
+
+* add sub-menus to all Menu extensions/plugins ([#1103](https://github.com/ghiscoding/aurelia-slickgrid/issues/1103)) ([e55fa67](https://github.com/ghiscoding/aurelia-slickgrid/commit/e55fa6733f88e91dcb5320bd2448075093ffd0cd))
+* update GraphQL demo with cursor pagination ([#1104](https://github.com/ghiscoding/aurelia-slickgrid/issues/1104)) ([c735465](https://github.com/ghiscoding/aurelia-slickgrid/commit/c735465ae35ddbfcf7b37fb893b42869ee723202))
+
+## [6.3.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v6.3.0...v6.3.1) (2023-10-07)
+
+
+### Bug Fixes
+
+* **graphql:** column with complex object could throw null pointer exception ([#1091](https://github.com/ghiscoding/aurelia-slickgrid/issues/1091)) ([f26ee4b](https://github.com/ghiscoding/aurelia-slickgrid/commit/f26ee4b32d5d6072cfdf7593274b5b24499d64d1))
+
+# [6.3.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v6.2.2...v6.3.0) (2023-10-05)
+
+
+### Features
+
+* add pageUp/pageDown/home/end to SlickCellSelection ([#1088](https://github.com/ghiscoding/aurelia-slickgrid/issues/1088)) ([411ccb6](https://github.com/ghiscoding/aurelia-slickgrid/commit/411ccb64d52d6dbb7506f764911a29226e86bbc9))
 
 ## [6.2.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v6.2.1...v6.2.2) (2023-09-24)
 
@@ -91,7 +146,7 @@ All notable changes to this project will be documented in this file. See [Conven
 
 * regression Edit cell mouseout should save & excel copy should work ([#941](https://github.com/ghiscoding/aurelia-slickgrid/issues/941)) ([2fa2761](https://github.com/ghiscoding/aurelia-slickgrid/commit/2fa276161a939082c08da5f010476795660e2a39)), closes [#1103](https://github.com/ghiscoding/aurelia-slickgrid/issues/1103)
 
-# Change Log 
+# Change Log
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
@@ -104,7 +159,7 @@ All notable changes to this project will be documented in this file. See [Conven
 * **RowDetail:** Row Detail extension should work with editable grid ([#938](https://github.com/ghiscoding/aurelia-slickgrid/issues/938)) ([1786415](https://github.com/ghiscoding/aurelia-slickgrid/commit/1786415d63c8fb9011e47bb4559dffe333a599b0))
 * use DOMPurify correct namespace for dts file ([#931](https://github.com/ghiscoding/aurelia-slickgrid/issues/931)) ([06f008a](https://github.com/ghiscoding/aurelia-slickgrid/commit/06f008ac2749f8a7fb4422dba78ca6657ce4f630))
 
-# Change Log 
+# Change Log
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 

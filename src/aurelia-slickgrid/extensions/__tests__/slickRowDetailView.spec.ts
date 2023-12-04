@@ -1,6 +1,5 @@
 import { customElement } from 'aurelia';
-import { Column, SharedService, SlickGrid, SlickNamespace, } from '@slickgrid-universal/common';
-import { SlickRowSelectionModel } from '@slickgrid-universal/common/dist/commonjs/extensions/slickRowSelectionModel';
+import { Column, RowDetailViewOption, SharedService, SlickGrid, SlickNamespace, SlickRowSelectionModel } from '@slickgrid-universal/common';
 import { EventPubSubService } from '@slickgrid-universal/event-pub-sub';
 
 import { GridOption } from '../../models/gridOption.interface';
@@ -8,18 +7,33 @@ import { AureliaUtilService } from '../../services';
 import { RowDetailView } from '../../models';
 import { HttpStub } from '../../../../test/httpClientStub';
 import { SlickRowDetailView } from '../slickRowDetailView';
+
 jest.mock('@slickgrid-universal/row-detail-view-plugin');
+jest.mock('@slickgrid-universal/common', () => ({
+  ...(jest.requireActual('@slickgrid-universal/common') as any),
+  SlickRowSelectionModel: jest.fn().mockImplementation(() => ({
+    constructor: jest.fn(),
+    init: jest.fn(),
+    destroy: jest.fn(),
+    dispose: jest.fn(),
+    getSelectedRows: jest.fn(),
+    setSelectedRows: jest.fn(),
+    getSelectedRanges: jest.fn(),
+    setSelectedRanges: jest.fn(),
+    onSelectedRangesChanged: new Slick.Event(),
+  })),
+}));
 
 // @ts-ignore
 @customElement({ name: 'example-preload', template: '<h3>Loading</h3>' })
-export class ExamplePreload {}
+export class ExamplePreload { }
 
 // @ts-ignore
 @customElement({ name: 'example-loader', template: '<p>Some Paragraph</p>' })
-export class ExampleLoader {}
+export class ExampleLoader { }
 
 class MyClass {
-  constructor() {}
+  constructor() { }
 }
 declare const Slick: SlickNamespace;
 const ROW_DETAIL_CONTAINER_PREFIX = 'container_';
@@ -64,22 +78,6 @@ const gridStub = {
   onSort: new Slick.Event(),
 } as unknown as SlickGrid;
 
-const mockRowSelectionModel = {
-  constructor: jest.fn(),
-  init: jest.fn(),
-  destroy: jest.fn(),
-  dispose: jest.fn(),
-  getSelectedRows: jest.fn(),
-  setSelectedRows: jest.fn(),
-  getSelectedRanges: jest.fn(),
-  setSelectedRanges: jest.fn(),
-  onSelectedRangesChanged: new Slick.Event(),
-} as unknown as SlickRowSelectionModel;
-
-jest.mock('@slickgrid-universal/common/dist/commonjs/extensions/slickRowSelectionModel', () => ({
-  SlickRowSelectionModel: jest.fn().mockImplementation(() => mockRowSelectionModel),
-}));
-
 describe('SlickRowDetailView', () => {
   let eventPubSubService: EventPubSubService;
   let plugin: SlickRowDetailView;
@@ -92,7 +90,7 @@ describe('SlickRowDetailView', () => {
     eventPubSubService = new EventPubSubService(div);
     plugin = new SlickRowDetailView(aureliaUtilServiceStub, eventPubSubService, document.body as HTMLDivElement);
     plugin.eventHandler = new Slick.EventHandler();
-    jest.spyOn(plugin, 'getOptions').mockReturnValue(gridOptionsMock.rowDetailView as RowDetailView);
+    jest.spyOn(plugin, 'getOptions').mockReturnValue(gridOptionsMock.rowDetailView as RowDetailViewOption);
   });
 
   it('should create the RowDetailView plugin', () => {
@@ -184,7 +182,7 @@ describe('SlickRowDetailView', () => {
       const copyGridOptionsMock = { ...gridOptionsMock };
       gridOptionsMock.rowDetailView!.onExtensionRegistered = jest.fn();
       jest.spyOn(gridStub, 'getOptions').mockReturnValue(copyGridOptionsMock);
-      const onRegisteredSpy = jest.spyOn(copyGridOptionsMock.rowDetailView!, 'onExtensionRegistered');
+      const onRegisteredSpy = jest.spyOn(copyGridOptionsMock.rowDetailView as RowDetailView, 'onExtensionRegistered');
 
       plugin.init(gridStub);
       const instance = plugin.register();

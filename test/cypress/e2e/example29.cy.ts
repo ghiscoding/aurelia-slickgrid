@@ -1,6 +1,6 @@
 
 
-describe('Example 29 - Header and Footer slots', { retries: 1 }, () => {
+describe('Example 29 - Header and Footer slots', () => {
   it('should display a custom header as slot', () => {
     cy.visit(`${Cypress.config('baseUrl')}/example29`);
     cy.get('div.custom-header-slot')

@@ -1,4 +1,4 @@
-describe('Example 26 - Use of Aurelia Custom Elements', { retries: 1 }, () => {
+describe('Example 26 - Use of Aurelia Custom Elements', () => {
   const fullTitles = ['Title', 'Assignee', 'Assignee with Aurelia Component', 'Duration (days)', '% Complete', 'Start', 'Finish'];
 
   it('should display Example title', () => {

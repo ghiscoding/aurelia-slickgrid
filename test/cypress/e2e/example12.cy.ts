@@ -2,7 +2,7 @@
 import moment from 'moment-mini';
 import { removeExtraSpaces } from '../plugins/utilities';
 
-describe('Example 12: Localization (i18n)', { retries: 1 }, () => {
+describe('Example 12: Localization (i18n)', () => {
   const fullEnglishTitles = ['', 'Title', 'Description', 'Duration', 'Start', 'Finish', 'Completed', 'Completed'];
   const fullFrenchTitles = ['', 'Titre', 'Description', 'Durée', 'Début', 'Fin', 'Terminé', 'Terminé'];
 
@@ -225,7 +225,7 @@ describe('Example 12: Localization (i18n)', { retries: 1 }, () => {
         .invoke('show')
         .click();
 
-      cy.get('.slick-header-menu')
+      cy.get('.slick-header-menu .slick-menu-command-list')
         .should('be.visible')
         .children('.slick-menu-item:nth-of-type(4)')
         .children('.slick-menu-content')
