@@ -122,7 +122,7 @@ export class Example32 {
         resizeCalcWidthRatio: 1, // default ratio is ~0.9 for string but since our text is all uppercase then a higher ratio is needed
         resizeMaxWidthThreshold: 200,
         columnGroup: 'Common Factor',
-        cssClass: 'text-uppercase font-weight-bold',
+        cssClass: 'text-uppercase fw-bold',
         filterable: true, filter: { model: Filters.compoundInputText },
         editor: {
           model: Editors.longText, required: true, alwaysSaveOnEnterKey: true,
