@@ -137,7 +137,7 @@ export class Example31 {
           this.getCustomerCallback(response);
         }
       } as OdataServiceApi,
-      registerExternalResources: [new RxJsResource()]
+      externalResources: [new RxJsResource()]
     };
   }
 

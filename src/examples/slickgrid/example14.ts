@@ -64,7 +64,7 @@ export class Example14 {
       excelExportOptions: {
         exportWithFormatter: false
       },
-      registerExternalResources: [new ExcelExportService()],
+      externalResources: [new ExcelExportService()],
       explicitInitialization: true,
       colspanCallback: this.renderDifferentColspan
     };
@@ -95,7 +95,7 @@ export class Example14 {
       excelExportOptions: {
         exportWithFormatter: false
       },
-      registerExternalResources: [new ExcelExportService()],
+      externalResources: [new ExcelExportService()],
       gridMenu: { hideClearFrozenColumnsCommand: false },
       headerMenu: { hideFreezeColumnsCommand: false }
     };
