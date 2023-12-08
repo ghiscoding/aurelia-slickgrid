@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.6.3](https://github.com/ghiscoding/aurelia-slickgrid/compare/v6.6.2...v6.6.3) (2023-12-08)
+
+
+### Bug Fixes
+
+* registered external resouces should keep singleton ref ([#1118](https://github.com/ghiscoding/aurelia-slickgrid/issues/1118)) ([fc3bdd6](https://github.com/ghiscoding/aurelia-slickgrid/commit/fc3bdd69762c51476d9582e836b9fadc2eee0d76))
+
 ## [6.6.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v6.6.1...v6.6.2) (2023-11-26)
 
 # Change Log 
