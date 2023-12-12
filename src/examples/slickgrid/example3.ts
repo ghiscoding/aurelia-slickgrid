@@ -17,14 +17,11 @@ import {
   GridOption,
   OnEventArgs,
   OperatorType,
-  SlickNamespace,
+  SlickGlobalEditorLock,
   SortComparers,
 } from '../../aurelia-slickgrid';
 import { CustomInputEditor } from './custom-inputEditor';
 import { CustomInputFilter } from './custom-inputFilter';
-
-// using external non-typed js libraries
-declare const Slick: SlickNamespace;
 
 const NB_ITEMS = 100;
 const URL_SAMPLE_COLLECTION_DATA = 'assets/data/collection_100_numbers.json';
@@ -106,7 +103,8 @@ export class Example3 {
         excludeFromColumnPicker: true,
         excludeFromGridMenu: true,
         excludeFromHeaderMenu: true,
-        formatter: Formatters.editIcon,
+        formatter: Formatters.icon,
+        params: { iconCssClass: 'fa fa-pencil pointer' },
         minWidth: 30,
         maxWidth: 30,
         // use onCellClick OR grid.onClick.subscribe which you can see down below
@@ -122,7 +120,8 @@ export class Example3 {
         excludeFromColumnPicker: true,
         excludeFromGridMenu: true,
         excludeFromHeaderMenu: true,
-        formatter: Formatters.deleteIcon,
+        formatter: Formatters.icon,
+        params: { iconCssClass: 'fa fa-trash pointer' },
         minWidth: 30,
         maxWidth: 30,
         // use onCellClick OR grid.onClick.subscribe which you can see down below
@@ -283,7 +282,7 @@ export class Example3 {
 
               /** with JSONP AJAX will work locally but not on the GitHub demo because of CORS */
               fetchJsonp(`http://gd.geobytes.com/AutoCompleteCity?q=${searchText}`)
-                .then((response: { json: () => Promise<any[]>}) => response.json())
+                .then((response: { json: () => Promise<any[]> }) => response.json())
                 .then((json: any[]) => updateCallback(json))
                 .catch((ex) => console.log('invalid JSONP response', ex));
             },
@@ -302,7 +301,7 @@ export class Example3 {
             minLength: 3,
             fetch: (searchText: string, updateCallback: (items: false | any[]) => void) => {
               fetchJsonp(`http://gd.geobytes.com/AutoCompleteCity?q=${searchText}`)
-                .then((response: { json: () => Promise<any[]>}) => response.json())
+                .then((response: { json: () => Promise<any[]> }) => response.json())
                 .then((json: any[]) => updateCallback(json))
                 .catch((ex: any) => console.log('invalid JSONP response', ex));
             },
@@ -623,7 +622,7 @@ export class Example3 {
 
   undo() {
     const command = this._commandQueue.pop();
-    if (command && Slick.GlobalEditorLock.cancelCurrentEdit()) {
+    if (command && SlickGlobalEditorLock.cancelCurrentEdit()) {
       command.undo();
       this.aureliaGrid.slickGrid.gotoCell(command.row, command.cell, false);
     }

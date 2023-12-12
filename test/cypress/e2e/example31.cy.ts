@@ -661,10 +661,10 @@ describe('Example 31 - OData Grid using RxJS', () => {
     it('should be able to open "Gender" on the first row and expect to find 2 options the editor list (male, female) and expect male to be selected', () => {
       const expectedOptions = ['male', 'female'];
 
-      cy.get(`[style="top:${GRID_ROW_HEIGHT * 0}px"] > .slick-cell:nth(0)`)
+      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 0}px;"] > .slick-cell:nth(0)`)
         .click();
 
-      cy.get(`[style="top:${GRID_ROW_HEIGHT * 0}px"] > .slick-cell:nth(2)`)
+      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 0}px;"] > .slick-cell:nth(2)`)
         .should('contain', 'male')
         .dblclick(); // use double-click since the 1st click will be catch by the row selection because we changed row
 
@@ -691,7 +691,7 @@ describe('Example 31 - OData Grid using RxJS', () => {
     it('should open the "Gender" editor on the first row and expect to find 1 more option the editor list (male, female, other)', () => {
       const expectedOptions = ['male', 'female', 'other'];
 
-      cy.get(`[style="top:${GRID_ROW_HEIGHT * 0}px"] > .slick-cell:nth(2)`)
+      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 0}px;"] > .slick-cell:nth(2)`)
         .should('contain', 'male')
         .click();
 

@@ -287,7 +287,7 @@ export class Example24 {
         // you can customize how the header titles will be styled (defaults to Bold)
         columnHeaderStyle: { font: { bold: true, italic: true } }
       },
-      registerExternalResources: [new ExcelExportService()],
+      externalResources: [new ExcelExportService()],
       i18n: this.i18n,
 
       enableContextMenu: true,

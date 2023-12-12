@@ -75,7 +75,7 @@ export class Example7 {
       gridHeight: 275,
       headerButton: {
         // you can use the "onCommand" (in Grid Options) and/or the "action" callback (in Column Definition)
-        onCommand: (_e, args) => this.handleOnCommand(_e, args, 1)
+        onCommand: (_e: any, args) => this.handleOnCommand(_e, args, 1)
       }
     };
 
@@ -87,7 +87,7 @@ export class Example7 {
       // frozenColumn: 2,
       // frozenRow: 2,
       headerButton: {
-        onCommand: (_e, args) => this.handleOnCommand(_e, args, 2)
+        onCommand: (_e: any, args) => this.handleOnCommand(_e, args, 2)
       }
     };
   }

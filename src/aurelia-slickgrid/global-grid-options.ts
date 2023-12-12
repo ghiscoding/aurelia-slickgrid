@@ -1,4 +1,4 @@
-import { Column, DelimiterType, EventNamingStyle, FileType, Filters, GridAutosizeColsMode, OperatorType, TreeDataOption } from '@slickgrid-universal/common';
+import { Column, DelimiterType, EventNamingStyle, FileType, Filters, OperatorType, TreeDataOption } from '@slickgrid-universal/common';
 import { GridOption, RowDetailView } from './models/index';
 
 /**
@@ -31,7 +31,6 @@ export const GlobalGridOptions: Partial<GridOption> = {
   },
   columnGroupSeparator: ' - ',
   columnPicker: {
-    fadeSpeed: 0,
     hideForceFitButton: false,
     hideSyncResizeButton: true,
     headerColumnValueExtractor: pickerHeaderColumnValueExtractor
@@ -104,7 +103,6 @@ export const GlobalGridOptions: Partial<GridOption> = {
   defaultFilter: Filters.input,
   defaultBackendServiceFilterTypingDebounce: 500,
   defaultColumnSortFieldId: 'id',
-  defaultComponentEventPrefix: '',
   defaultFilterPlaceholder: '🔎︎', // magnifying glass icon
   defaultFilterRangeOperator: OperatorType.rangeInclusive,
   defaultSlickgridEventPrefix: '',
@@ -161,7 +159,6 @@ export const GlobalGridOptions: Partial<GridOption> = {
     sanitizeDataExport: false,
     useUtf8WithBom: true
   },
-  gridAutosizeColsMode: GridAutosizeColsMode.none,
   forceFitColumns: false,
   frozenHeaderWidthCalcDifferential: 1,
   gridMenu: {

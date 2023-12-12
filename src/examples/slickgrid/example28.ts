@@ -12,6 +12,7 @@ import {
   Formatters,
   GridOption,
   isNumber,
+  SlickDataView,
   // GroupTotalFormatters,
   // italicFormatter,
 } from '../../aurelia-slickgrid';
@@ -123,7 +124,7 @@ export class Example28 {
         exportWithFormatter: true,
         sanitizeDataExport: true
       },
-      registerExternalResources: [new ExcelExportService()],
+      externalResources: [new ExcelExportService()],
       enableFiltering: true,
       enableTreeData: true, // you must enable this flag for the filtering & sorting to work as expected
       multiColumnSort: false, // multi-column sorting is not supported with Tree Data, so you need to disable it
@@ -241,7 +242,7 @@ export class Example28 {
     if (value === null || value === undefined || dataContext === undefined) {
       return '';
     }
-    const dataView = grid.getData();
+    const dataView = grid.getData<SlickDataView>();
     const data = dataView.getItems();
     const identifierPropName = dataView.getIdPropertyName() || 'id';
     const idx = dataView.getIdxById(dataContext[identifierPropName]) as number;

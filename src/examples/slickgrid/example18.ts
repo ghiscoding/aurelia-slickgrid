@@ -236,7 +236,7 @@ export class Example18 {
       enableExcelExport: true,
       excelExportOptions: { sanitizeDataExport: true },
       textExportOptions: { sanitizeDataExport: true },
-      registerExternalResources: [this.excelExportService, this.textExportService],
+      externalResources: [this.excelExportService, this.textExportService],
     };
   }
 

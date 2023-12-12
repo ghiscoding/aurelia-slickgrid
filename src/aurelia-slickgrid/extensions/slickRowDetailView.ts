@@ -2,9 +2,9 @@
 import {
   addToArrayWhenNotExists,
   EventSubscription,
+  SlickEventData,
   SlickEventHandler,
   SlickGrid,
-  SlickNamespace,
   SlickRowSelectionModel,
   unsubscribeAll,
 } from '@slickgrid-universal/common';
@@ -15,9 +15,6 @@ import * as DOMPurify from 'dompurify';
 import { AureliaViewOutput, GridOption, RowDetailView, ViewModelBindableInputData } from '../models/index';
 import { AureliaUtilService } from '../services/aureliaUtil.service';
 import { Constructable, transient } from 'aurelia';
-
-// using external non-typed js libraries
-declare const Slick: SlickNamespace;
 
 const ROW_DETAIL_CONTAINER_PREFIX = 'container_';
 const PRELOAD_CONTAINER_PREFIX = 'container_loading';
@@ -86,7 +83,7 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
   init(grid: SlickGrid) {
     this._grid = grid;
     super.init(this._grid);
-    this.register(grid?.getSelectionModel());
+    this.register(grid?.getSelectionModel() as SlickRowSelectionModel);
   }
 
   /**
@@ -328,7 +325,7 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
    */
   protected notifyTemplate(item: any) {
     if (this.onAsyncResponse) {
-      this.onAsyncResponse.notify({ item }, new Slick.EventData(), this);
+      this.onAsyncResponse.notify({ item, itemDetail: item }, new SlickEventData(), this);
     }
   }
 

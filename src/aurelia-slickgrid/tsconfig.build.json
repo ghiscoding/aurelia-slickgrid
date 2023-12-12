@@ -1,13 +1,41 @@
 {
-  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+      "module": "esnext",
+      "moduleResolution": "node",
+      "target": "es2018",
+      "lib": [
+          "es2018",
+          "dom"
+      ],
+      "typeRoots": [
+          "../typings",
+          "../../node_modules/@types"
+      ],
+      "outDir": "dist/amd",
+      "noImplicitAny": true,
+      "noUnusedLocals": false,
+      "noUnusedParameters": false,
+      "noImplicitReturns": true,
+      "skipLibCheck": true,
+      "strictNullChecks": true,
+      "declaration": true,
+      "forceConsistentCasingInFileNames": true,
+      "esModuleInterop": true,
+      "experimentalDecorators": true,
+      "noEmitHelpers": false,
+      "strict": true,
+      "stripInternal": true,
+      "sourceMap": true
+  },
   "exclude": [
-    ".vscode",
-    "src/aurelia_project",
-    "src/examples",
-    "src/resources",
-    "src/test",
-    "**/*.spec.ts",
-    "**/*.scss"
+      ".vscode",
+      "src/aurelia_project",
+      "src/examples",
+      "**/*.spec.ts",
+      "**/*.scss"
   ],
-  "include": ["../typings", "**/*"]
+  "include": [
+      "../typings",
+      "**/*"
+  ]
 }

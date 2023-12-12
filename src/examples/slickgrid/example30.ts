@@ -1,7 +1,7 @@
 import { IHttpClient } from '@aurelia/fetch-client';
 import { newInstanceOf } from '@aurelia/kernel';
-import { SlickCompositeEditorComponent } from '@slickgrid-universal/composite-editor-component';
 import { ExcelExportService } from '@slickgrid-universal/excel-export';
+import { SlickCompositeEditor, SlickCompositeEditorComponent } from '@slickgrid-universal/composite-editor-component';
 
 import {
   AureliaGridInstance,
@@ -20,17 +20,14 @@ import {
   GridStateChange,
   LongTextEditorOption,
   OnCompositeEditorChangeEventArgs,
+  SlickGlobalEditorLock,
   SlickGrid,
-  SlickNamespace,
   SortComparers,
 } from '../../aurelia-slickgrid';
 import './example30.scss'; // provide custom CSS/SASS styling
 
 const NB_ITEMS = 500;
 const URL_COUNTRIES_COLLECTION = 'assets/data/countries.json';
-
-// using external SlickGrid JS libraries
-declare const Slick: SlickNamespace;
 
 /**
  * Check if the current item (cell) is editable or not
@@ -40,12 +37,12 @@ declare const Slick: SlickNamespace;
  * @returns {boolean} isEditable
  */
 function checkItemIsEditable(dataContext: any, columnDef: Column, grid: SlickGrid) {
-  const gridOptions = grid && grid.getOptions && grid.getOptions();
+  const gridOptions = grid?.getOptions();
   const hasEditor = columnDef.editor;
   const isGridEditable = gridOptions.editable;
   let isEditable = !!(isGridEditable && hasEditor);
 
-  if (dataContext && columnDef && gridOptions && gridOptions.editable) {
+  if (dataContext && columnDef && gridOptions?.editable) {
     switch (columnDef.id) {
       case 'finish':
         // case 'percentComplete':
@@ -62,7 +59,6 @@ function checkItemIsEditable(dataContext: any, columnDef: Column, grid: SlickGri
   }
   return isEditable;
 }
-
 
 const customEditableInputFormatter: Formatter = (_row, _cell, value, columnDef, _dataContext, grid) => {
   const gridOptions = grid && grid.getOptions && grid.getOptions();
@@ -125,9 +121,8 @@ export class Example30 {
     this.columnDefinitions = [
       {
         id: 'title', name: 'Title', field: 'title', sortable: true, type: FieldType.string, minWidth: 75,
-        filterable: true, columnGroup: 'Common Factor',
-        filter: { model: Filters.compoundInputText },
-        formatter: Formatters.multiple, params: { formatters: [Formatters.uppercase, Formatters.bold] },
+        cssClass: 'text-uppercase fw-bold', columnGroup: 'Common Factor',
+        filterable: true, filter: { model: Filters.compoundInputText },
         editor: {
           model: Editors.longText, massUpdate: false, required: true, alwaysSaveOnEnterKey: true,
           maxLength: 12,
@@ -221,8 +216,7 @@ export class Example30 {
       {
         id: 'completed', name: 'Completed', field: 'completed', width: 80, minWidth: 75, maxWidth: 100,
         sortable: true, filterable: true, columnGroup: 'Period',
-        formatter: Formatters.multiple,
-        params: { formatters: [Formatters.checkmark, Formatters.center] },
+        cssClass: 'text-center', formatter: Formatters.checkmark,
         exportWithFormatter: false,
         filter: {
           collection: [{ value: '', label: '' }, { value: true, label: 'True' }, { value: false, label: 'False' }],
@@ -252,7 +246,7 @@ export class Example30 {
           } as FlatpickrOption,
           massUpdate: true,
           validator: (value, args) => {
-            const dataContext = args && args.item;
+            const dataContext = args?.item;
             if (dataContext && (dataContext.completed && !value)) {
               return { valid: false, msg: 'You must provide a "Finish" date when "Completed" is checked.' };
             }
@@ -390,7 +384,7 @@ export class Example30 {
       excelExportOptions: {
         exportWithFormatter: false
       },
-      registerExternalResources: [new ExcelExportService(), this.compositeEditorInstance],
+      externalResources: [new ExcelExportService(), this.compositeEditorInstance],
       enableFiltering: true,
       rowSelectionOptions: {
         // True (Single Selection), False (Multiple Selections)
@@ -490,7 +484,7 @@ export class Example30 {
   handleValidationError(_e: Event, args: any) {
     if (args.validationResults) {
       let errorMsg = args.validationResults.msg || '';
-      if (args.editor && (args.editor instanceof Slick.CompositeEditor)) {
+      if (args.editor && (args.editor instanceof SlickCompositeEditor)) {
         if (args.validationResults.errors) {
           errorMsg += '\n';
           for (const error of args.validationResults.errors) {
@@ -721,7 +715,7 @@ export class Example30 {
   undoLastEdit(showLastEditor = false) {
     const lastEdit = this.editQueue.pop();
     const lastEditCommand = lastEdit?.editCommand;
-    if (lastEdit && lastEditCommand && Slick.GlobalEditorLock.cancelCurrentEdit()) {
+    if (lastEdit && lastEditCommand && SlickGlobalEditorLock.cancelCurrentEdit()) {
       lastEditCommand.undo();
 
       // remove unsaved css class from that cell
@@ -741,7 +735,7 @@ export class Example30 {
   undoAllEdits() {
     for (const lastEdit of this.editQueue) {
       const lastEditCommand = lastEdit?.editCommand;
-      if (lastEditCommand && Slick.GlobalEditorLock.cancelCurrentEdit()) {
+      if (lastEditCommand && SlickGlobalEditorLock.cancelCurrentEdit()) {
         lastEditCommand.undo();
 
         // remove unsaved css class from that cell

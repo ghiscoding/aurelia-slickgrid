@@ -4,7 +4,6 @@ import {
   Editor,
   EditorValidator,
   EditorValidationResult,
-  KeyCode
 } from '../../aurelia-slickgrid';
 
 /*
@@ -53,7 +52,7 @@ export class CustomInputEditor implements Editor {
 
   handleKeydown(event: KeyboardEvent) {
     this._lastInputEvent = event;
-    if (event.keyCode === KeyCode.LEFT || event.keyCode === KeyCode.RIGHT) {
+    if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
       event.stopImmediatePropagation();
     }
   }
@@ -92,8 +91,8 @@ export class CustomInputEditor implements Editor {
   }
 
   isValueChanged(): boolean {
-    const lastEvent = this._lastInputEvent?.keyCode;
-    if (this.columnEditor?.alwaysSaveOnEnterKey && lastEvent === KeyCode.ENTER) {
+    const lastKeyEvent = this._lastInputEvent?.key;
+    if (this.columnEditor?.alwaysSaveOnEnterKey && lastKeyEvent === 'Enter') {
       return true;
     }
     return (!(this.inputElm.value === '' && this.defaultValue === null)) && (this.inputElm.value !== this.defaultValue);

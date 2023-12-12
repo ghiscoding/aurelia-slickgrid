@@ -9,12 +9,10 @@ import {
   formatNumber,
   Formatters,
   GridOption,
+  SlickEventHandler,
   SlickGrid,
-  SlickNamespace
 } from '../../aurelia-slickgrid';
 import './example20.scss'; // provide custom CSS/SASS styling
-
-declare const Slick: SlickNamespace;
 
 export class Example20 {
   title = 'Example 20: Pinned (frozen) Columns/Rows';
@@ -40,7 +38,7 @@ export class Example20 {
 
   constructor() {
     this.defineGrid();
-    this.slickEventHandler = new Slick.EventHandler();
+    this.slickEventHandler = new SlickEventHandler();
   }
 
   aureliaGridReady(aureliaGrid: AureliaGridInstance) {

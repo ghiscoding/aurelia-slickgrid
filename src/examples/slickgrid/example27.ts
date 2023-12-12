@@ -125,7 +125,7 @@ export class Example27 {
       },
       enableExcelExport: true,
       excelExportOptions: { exportWithFormatter: true, sanitizeDataExport: true },
-      registerExternalResources: [new ExcelExportService()],
+      externalResources: [new ExcelExportService()],
 
       // use Material Design SVG icons
       contextMenu: {
