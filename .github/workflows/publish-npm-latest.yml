@@ -1,6 +1,11 @@
 name: 🏷️ Publish NPM Latest
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      dryrun:
+        type: boolean
+        description: Dry-Run
 
 permissions:
   contents: write
@@ -55,6 +60,7 @@ jobs:
         run: yarn run build
 
       - name: OTP
+        if: ${{ inputs.dryrun != true }}
         uses: step-security/wait-for-secrets@v1
         id: wait-for-secrets
         with:
@@ -63,7 +69,20 @@ jobs:
               name: 'OTP to publish package'
               description: 'OTP from authenticator app'
 
+      - name: "[dry-run] 🧪 GitHub Release / NPM Publish"
+        if: ${{ inputs.dryrun == true }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_CONFIG_PROVENANCE: true
+        run: |
+          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+          npm whoami
+          npx release-it --ci --dry-run
+
       - name: GitHub Release 🏷️ / NPM Publish 📦
+        if: ${{ inputs.dryrun != true }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -74,12 +93,14 @@ jobs:
           npm whoami
           npx release-it --ci --npm.otp=${{ steps.wait-for-secrets.outputs.OTP }}
 
-      - name: Website Dev Build
+      - name: Website Dev Build (served for Cypress)
+        if: ${{ inputs.dryrun != true }}
         run: yarn build:demo
 
         # deploy (re-publish) GitHub demo page with a Prod build but only when merging to "master" branch
         # and the commit message contains the text "chore: release"
       - name: Deploy to gh-pages
+        if: ${{ inputs.dryrun != true }}
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
