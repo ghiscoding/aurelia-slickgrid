@@ -94,11 +94,13 @@ jobs:
           npx release-it --ci --npm.otp=${{ steps.wait-for-secrets.outputs.OTP }}
 
       - name: Website Dev Build (served for Cypress)
+        if: ${{ inputs.dryrun != true }}
         run: yarn build:demo
 
         # deploy (re-publish) GitHub demo page with a Prod build but only when merging to "master" branch
         # and the commit message contains the text "chore: release"
       - name: Deploy to gh-pages
+        if: ${{ inputs.dryrun != true }}
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
