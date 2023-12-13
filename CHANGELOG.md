@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.6.5](https://github.com/ghiscoding/aurelia-slickgrid/compare/v6.6.4...v6.6.5) (2023-12-13)
+
+
+### Bug Fixes
+
+* `devMode` can be false/object & use `!important` on text CSS utils ([#1125](https://github.com/ghiscoding/aurelia-slickgrid/issues/1125)) ([70ecf30](https://github.com/ghiscoding/aurelia-slickgrid/commit/70ecf303b99c45e84aac7e7a8dedf92b0ae37a2e))
+
 ## [6.6.4](https://github.com/ghiscoding/aurelia-slickgrid/compare/v6.6.3...v6.6.4) (2023-12-08)
 
 
