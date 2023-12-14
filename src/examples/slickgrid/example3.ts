@@ -280,12 +280,12 @@ export class Example3 {
             minLength: 3,
             forceUserInput: true,
             fetch: (searchText: string, updateCallback: (items: false | any[]) => void) => {
-              /** with Angular Http, note this demo won't work because of CORS */
+              /** with Aurelia Http, note this demo won't work because of CORS */
               // this.http.get(`http://gd.geobytes.com/AutoCompleteCity?q=${searchText}`).subscribe(data => updateCallback(data));
 
               /** with JSONP AJAX will work locally but not on the GitHub demo because of CORS */
               fetchJsonp(`http://gd.geobytes.com/AutoCompleteCity?q=${searchText}`)
-                .then((response: { json: () => Promise<any[]>}) => response.json())
+                .then((response: { json: () => Promise<any[]> }) => response.json())
                 .then((json: any[]) => updateCallback(json))
                 .catch((ex) => console.log('invalid JSONP response', ex));
             },
@@ -304,7 +304,7 @@ export class Example3 {
             minLength: 3,
             fetch: (searchText: string, updateCallback: (items: false | any[]) => void) => {
               fetchJsonp(`http://gd.geobytes.com/AutoCompleteCity?q=${searchText}`)
-                .then((response: { json: () => Promise<any[]>}) => response.json())
+                .then((response: { json: () => Promise<any[]> }) => response.json())
                 .then((json: any[]) => updateCallback(json))
                 .catch((ex: any) => console.log('invalid JSONP response', ex));
             },
