@@ -147,4 +147,4 @@ The final step is of course the actual translations. There's multiple ways to co
 If you want to manually re-create the translation in your own files, the list of translations that you will need are displayed in the [asset i18n](https://github.com/ghiscoding/aurelia-slickgrid/tree/master/aurelia-slickgrid/assets/i18n) translation folder (from that file, you need all translations shown before the 'BILLING', the next few ones are for the demo page only).
 
 ### Date Picker - Flatpickr Localization
-If you use multiple locale, you will also need to import necessary Flatpickr Locale, for more info see this [Flatpickr Localization Wiki](https://github.com/ghiscoding/aurelia-slickgrid/wiki/Compound-Filters#date-picker---flatpickr-localization)
+If you use multiple locale, you will also need to import necessary Flatpickr Locale, for more info see this [Flatpickr Localization Wiki](../column-functionalities/filters/compound-filters.md#date-picker---flatpickr-localization)

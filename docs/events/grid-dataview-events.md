@@ -103,7 +103,7 @@ export class GridEditorComponent {
 ```
 
 #### How to use Grid/Dataview Events
-Once the `Grid` and `DataView` are ready (via `changed` bindable events), you can subscribe to any [SlickGrid Events (click to see the full list)](https://github.com/6pac/SlickGrid/wiki/Grid-Events). See below for the `gridChanged(grid)` and `dataviewChanged(dataview)` functions.
+Once the `Grid` and `DataView` are ready, see all [Available Events](../events/available-events.md). See below for the `gridChanged(grid)` and `dataviewChanged(dataview)` functions.
 - The `GridExtraUtils` is to bring easy access to common functionality like getting a `column` from it's `row` and `cell` index.
 - The example shown below is subscribing to `onClick` and ask the user to confirm a delete, then will delete it from the `DataView`.
 - Technically, the `Grid` and `DataView` are created at the same time by `Aurelia-Slickgrid`, so it's ok to call the `dataViewObj` within some code of the `gridObjChanged()` function since `DataView` object will already be available at that time.

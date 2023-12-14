@@ -9,7 +9,7 @@ const NB_ITEMS = 500;
 
 @autoinject()
 export class Example27 {
-  title = 'Example 27: Tree Data <small> <span class="mdi mdi-file-tree mdi-27px"></span> (from a flat dataset with <code>parentId</code> references - <a href="https://github.com/ghiscoding/aurelia-slickgrid/wiki/Tree-Data-Grid" target="_blank">Wiki</a>)</small>';
+  title = 'Example 27: Tree Data <small> <span class="mdi mdi-file-tree mdi-27px"></span> (from a flat dataset with <code>parentId</code> references - <a href="https://ghiscoding.gitbook.io/aurelia-slickgrid/grid-functionalities/tree-data-grid" target="_blank">Wiki</a>)</small>';
   subTitle = `<ul>
     <li>It is assumed that your dataset will have Parent/Child references AND also Tree Level (indent) property.</li>
     <ul>

@@ -61,7 +61,7 @@ export class MyGrid {
 ```
 
 #### 3. Use the lib (without I18N)
-There's nothing else to do, just use the library without defining or providing I18N and you're good to go. Read through the Wiki of the [HOWTO](https://github.com/ghiscoding/aurelia-slickgrid/wiki/HOWTO--Step-by-Step) for basic grid samples.
+There's nothing else to do, just use the library without defining or providing I18N and you're good to go. Read through the Wiki of the [HOWTO](../getting-started/quick-start.md) for basic grid samples.
 
 ### Date Picker - Flatpickr Localization
-If you use multiple locale, you will also need to import necessary Flatpickr Locale, for more info see this [Flatpickr Localization Wiki](https://github.com/ghiscoding/aurelia-slickgrid/wiki/Compound-Filters#date-picker---flatpickr-localization)
+If you use multiple locale, you will also need to import necessary Flatpickr Locale, for more info see this [Flatpickr Localization Wiki](../column-functionalities/filters/compound-filters.md#date-picker---flatpickr-localization)

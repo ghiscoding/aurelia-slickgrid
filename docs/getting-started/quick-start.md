@@ -59,11 +59,11 @@ export function configure(aurelia) {
 ### 4. Install/Setup `I18N` for Localization (optional)
 #### If you don't want to use any Translate Service and use only 1 Locale then take a look at this [demo](https://github.com/ghiscoding/aurelia-slickgrid-demos/tree/master/webpack-bs3-demo-with-locales)
 To provide locales other than English (default locale), you have 2 options that you can go with. If you only use English, there is nothing to do (you can still change some of the texts in the grid via option 1.)
-1. Using [Custom Locale](/ghiscoding/aurelia-slickgrid/wiki/Localization-with-Custom-Locales), that is when you use **only 1** locale (other thank English)... this is a new feature starting from version `2.10.0` and up.
-2. Using [Localization with I18N](https://github.com/ghiscoding/aurelia-slickgrid/wiki/Localization), that is when you want to use multiple locales dynamically.
+1. Using [Custom Locale](../localization/localization-with-custom-locales.md), that is when you use **only 1** locale (other thank English)... this is a new feature starting from version `2.10.0` and up.
+2. Using [Localization with I18N](../localization/localization.md), that is when you want to use multiple locales dynamically.
 
 #### Date Picker - Flatpickr Localization
-If you use multiple locale, you will also need to import necessary Flatpickr Locale, for more info see this [Flatpickr Localization Wiki](https://github.com/ghiscoding/aurelia-slickgrid/wiki/Compound-Filters#date-picker---flatpickr-localization)
+If you use multiple locale, you will also need to import necessary Flatpickr Locale, for more info see this [Flatpickr Localization Wiki](../column-functionalities/filters/compound-filters.md)
 
 ### 5. Create a basic grid
 #### View
@@ -140,10 +140,10 @@ There are multiple demos (WebPack, RequireJS, CLI, ...) that you can clone and r
 The last step is really to explore all the pages that are available in this Wiki, all the documentation will be place in here and so you should visit it often. For example a good starter is to look at the following
 
 - for all the `Grid Options`, take a look at [Wiki - Grid Options](https://github.com/ghiscoding/slickgrid-universal/blob/master/packages/common/src/interfaces/gridOption.interface.ts)
-- [Formatters](/ghiscoding/aurelia-slickgrid/wiki/Formatters)
-- [Editors](/ghiscoding/aurelia-slickgrid/wiki/Editors)
-- [Filters](/ghiscoding/aurelia-slickgrid/wiki/Select-Filter)
-- [Grid Menu](/ghiscoding/aurelia-slickgrid/wiki/Grid-Menu)
+- [Formatters](../column-functionalities/formatters.md)
+- [Editors](../column-functionalities/editors.md)
+- [Filters](../column-functionalities/filters/select-filter.md)
+- [Grid Menu](../grid-functionalities/grid-menu.md)
 - ... and much more, just explorer the Wikis through the sidebar index (on your right)
   - it gets updated very frequently, we usually mention any new/updated wikis in any new version release
 
@@ -160,7 +160,7 @@ The best way to get started is to clone the [Aurelia-Slickgrid-demos](https://gi
 Like to see the code to a particular Example? Just click on the "see code" that is available in every live examples.
 
 ### 10. Add Optional Feature like Excel Export
-Starting with version 3.0.0, the Excel Export is now an optional package and if you want to use it then you'll need to install it via npm from the monorepo library with `npm install @slickgrid-universal/excel-export`. Refer to the [Excel Export - Wiki](https://github.com/ghiscoding/aurelia-slickgrid/wiki/Export-to-Excel) for more info.
+Starting with version 3.0.0, the Excel Export is now an optional package and if you want to use it then you'll need to install it via npm from the monorepo library with `npm install @slickgrid-universal/excel-export`. Refer to the [Excel Export - Wiki](../grid-functionalities/export-to-excel.md) for more info.
 
 Here's a quick list of some of these optional packages
 - [@slickgrid-universal/excel-export](https://github.com/ghiscoding/slickgrid-universal/tree/master/packages/excel-export)
@@ -169,7 +169,7 @@ Here's a quick list of some of these optional packages
 - [@slickgrid-universal/odata](https://github.com/ghiscoding/slickgrid-universal/tree/master/packages/odata)
 
 ### 11. Missing Features? (fear not)
-What if `Aurelia-Slickgrid` is missing feature(s) versus the original `SlickGrid`? Fear not and directly use the `SlickGrid` and `DataView` objects that are expose from the start through Event Emitters. For more info continue reading on [Wiki - SlickGrid & DataView objects](/ghiscoding/aurelia-Slickgrid/wiki/SlickGrid-&-DataView-Objects) and [Wiki - Grid & DataView Events](https://github.com/ghiscoding/aurelia-Slickgrid/wiki/Grid-&-DataView-Events)
+What if `Aurelia-Slickgrid` is missing feature(s) versus the original `SlickGrid`? Fear not and directly use the `SlickGrid` and `DataView` objects that are expose from the start through Event Emitters. For more info continue reading on [Wiki - SlickGrid & DataView objects](../slick-grid-dataview-objects/slickgrid-dataview-objects.md) and [Docs - Grid & DataView Events](../events/grid-dataview-events.md)
 
 ### 12. Having some issues?
 After reading all this HOW TO, what if you have an issue with the grid?

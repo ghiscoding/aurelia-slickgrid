@@ -19,7 +19,7 @@
   * [Date Picker (flatpickr)](column-functionalities/editors/date-editor-flatpickr.md)
   * [LongText (textarea)](column-functionalities/editors/longtext-editor-textarea.md)
   * [Select Dropdown Editor (single/multiple)](column-functionalities/editors/select-dropdown-editor.md)
-  ### Filters
+* [Filters](column-functionalities/filters/README.md)
   * [Input Filter (default)](column-functionalities/filters/input-filter.md)
   * [Select Filter (dropdown)](column-functionalities/filters/select-filter.md)
   * [Compound Filters](column-functionalities/filters/compound-filters.md)
@@ -34,6 +34,9 @@
 
 * [Available events](events/available-events.md)
 * [On Events](events/grid-dataview-events.md)
+
+## Slick Grid/DataView Objects
+* [slickgrid-dataview-objects.md](slick-grid-dataview-objects/slickgrid-dataview-objects.md)
 
 ## Localization
 

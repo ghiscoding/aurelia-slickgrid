@@ -99,7 +99,7 @@ export class MyApp {
 ```
 
 ### SlickGrid Events (original SlickGrid)
-You have access to all original SlickGrid events which you can subscribe, for more info refer to the [Wiki - Grid & DataView Events](/ghiscoding/aurelia-slickgrid/wiki/Grid-&-DataView-Events)
+You have access to all original SlickGrid events which you can subscribe, for more info refer to the [Wiki - Grid & DataView Events](../events/grid-dataview-events.md)
 
 ### Usage
-There's already all the necessary information on how to use this on the [Wiki - Grid & DataView Events](/ghiscoding/aurelia-slickgrid/wiki/Grid-&-DataView-Events#1-example-with-delegate-event-dispatch-asgonx) page, so I suggest you to head over to that Wiki page on how to use the `SlickGrid` and `DataView` objects
+There's already all the necessary information on how to use this on the [Wiki - Grid & DataView Events](../events/grid-dataview-events.md) page, so I suggest you to head over to that Wiki page on how to use the `SlickGrid` and `DataView` objects
