@@ -10,7 +10,7 @@ const baseUrl = '';
 const outDevDir = path.resolve(__dirname, 'dist');
 const outProdDir = path.resolve(__dirname, 'website');
 const srcDir = path.resolve(__dirname, 'src');
-const title = 'Aurelia-Slickgrid Skeleton';
+const title = 'Aurelia-Slickgrid';
 
 const cssLoader = 'css-loader';
 const postcssLoader = {
@@ -113,8 +113,12 @@ module.exports = ({ production, node } = {}, { server } = {}, { analyze } = {}) 
     ].filter(p => p),
     plugins: [
       new HtmlWebpackPlugin({
-        template: 'index.html',
+        template: 'index.ejs',
         favicon: `${srcDir}/favicon.ico`,
+        metadata: {
+          // available in index.ejs //
+          title, server, baseUrl
+        }
       }),
       new CopyWebpackPlugin({
         patterns: [

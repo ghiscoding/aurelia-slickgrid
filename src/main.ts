@@ -29,7 +29,7 @@ Aurelia
   */
   // Register all exports of the plugin
   .register(
-    RouterConfiguration.customize({ useHref: false, basePath: '' }),
+    RouterConfiguration.customize({ useHref: false, basePath: '/aurelia-slickgrid' }),
 
     // dynamic components to enhance
     CustomTitleFormatter,
