@@ -272,14 +272,6 @@ export class AureliaSlickgridCustomElement {
       throw new Error('Using `<aurelia-slickgrid>` requires `grid-options.bind` and `column-definitions.bind`, it seems that you might have forgot to provide them since at least of them is undefined.');
     }
 
-    // save resource refs to register before the grid options are merged and possibly deep copied
-    // since a deep copy of grid options would lose original resource refs but we want to keep them as singleton
-    this._registeredResources = this.gridOptions?.externalResources || this.gridOptions?.registerExternalResources || [];
-    /* istanbul ignore if */
-    if (this.gridOptions?.registerExternalResources) {
-      console.warn('[Aurelia-Slickgrid] Please note that the grid option `registerExternalResources` was deprecated and will be removed in next major, please use `externalResources` instead.');
-    }
-
     this._eventHandler = new Slick.EventHandler();
     this.initialization(this._eventHandler);
     this._isGridInitialized = true;
@@ -1365,6 +1357,12 @@ export class AureliaSlickgridCustomElement {
 
   /** Pre-Register any Resource that don't require SlickGrid to be instantiated (for example RxJS Resource & RowDetail) */
   protected preRegisterResources() {
+    this._registeredResources = this.gridOptions?.externalResources || this.gridOptions?.registerExternalResources || [];
+    /* istanbul ignore if */
+    if (this.gridOptions?.registerExternalResources) {
+      console.warn('[Aurelia-Slickgrid] Please note that the grid option `registerExternalResources` was deprecated and will be removed in next major, please use `externalResources` instead.');
+    }
+
     // bind & initialize all Components/Services that were tagged as enabled
     // register all services by executing their init method and providing them with the Grid object
     if (Array.isArray(this._registeredResources)) {
@@ -1375,7 +1373,7 @@ export class AureliaSlickgridCustomElement {
       }
     }
 
-    if (this.gridOptions.enableRowDetailView) {
+    if (this.gridOptions.enableRowDetailView && !this._registeredResources.some(r => r instanceof SlickRowDetailView)) {
       this.slickRowDetailView = new SlickRowDetailView(this.aureliaUtilService, this._eventPubSubService, this.elm);
       this.slickRowDetailView.create(this.columnDefinitions, this.gridOptions);
       this._registeredResources.push(this.slickRowDetailView);
@@ -1390,15 +1388,20 @@ export class AureliaSlickgridCustomElement {
     }
 
     // push all other Services that we want to be registered
-    this._registeredResources.push(this.gridService, this.gridStateService);
+    if (!this._registeredResources.some(r => r instanceof GridService)) {
+      this._registeredResources.push(this.gridService);
+    }
+    if (!this._registeredResources.some(r => r instanceof GridStateService)) {
+      this._registeredResources.push(this.gridStateService);
+    }
 
     // when using Grouping/DraggableGrouping/Colspan register its Service
-    if (this.gridOptions.createPreHeaderPanel && !this.gridOptions.enableDraggableGrouping) {
+    if (this.gridOptions.createPreHeaderPanel && !this.gridOptions.enableDraggableGrouping && !this._registeredResources.some(r => r instanceof GroupingAndColspanService)) {
       this._registeredResources.push(this.groupingService);
     }
 
     // when using Tree Data View, register its Service
-    if (this.gridOptions.enableTreeData) {
+    if (this.gridOptions.enableTreeData && !this._registeredResources.some(r => r instanceof TreeDataService)) {
       this._registeredResources.push(this.treeDataService);
     }
 
@@ -1408,12 +1411,15 @@ export class AureliaSlickgridCustomElement {
     }
 
     // also initialize (render) the empty warning component
-    this.slickEmptyWarning = new SlickEmptyWarningComponent();
-    this._registeredResources.push(this.slickEmptyWarning);
+    if (!this._registeredResources.some(r => r instanceof SlickEmptyWarningComponent)) {
+      this.slickEmptyWarning = new SlickEmptyWarningComponent();
+      this._registeredResources.push(this.slickEmptyWarning);
+    }
 
     // bind & initialize all Components/Services that were tagged as enabled
     // register all services by executing their init method and providing them with the Grid object
     this.initializeExternalResources(this._registeredResources);
+    console.log('_registeredResources', this._registeredResources);
   }
 
   /** Register the RxJS Resource in all necessary services which uses */
