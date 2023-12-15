@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.0.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v7.0.0...v7.0.1) (2023-12-15)
+
+
+### Bug Fixes
+
+* spreading 2 grids options causes duplicate ext resources ([#1126](https://github.com/ghiscoding/aurelia-slickgrid/issues/1126)) ([00a0be2](https://github.com/ghiscoding/aurelia-slickgrid/commit/00a0be22ea0cd95a759bd02592b19ad52f2049b5))
+
 # [7.0.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v6.6.5...v7.0.0) (2023-12-15)
 
 
