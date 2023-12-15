@@ -18,6 +18,7 @@ webpack.config.js
 
 **/dist-demo
 docs
+website
 aurelia_project
 favicon.ico
 tsconfig.spec.json

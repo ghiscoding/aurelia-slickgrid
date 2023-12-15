@@ -52,7 +52,7 @@
     "postbuild:cjs": "copyfiles --up 2 src/aurelia-slickgrid/**/*.html dist/cjs",
     "build:esm": "tsc --project src/aurelia-slickgrid/tsconfig.build.json --outDir dist/esm --module esnext --target es2021",
     "postbuild:esm": "copyfiles --up 2 src/aurelia-slickgrid/**/*.html dist/esm",
-    "serve:demo": "servor ./docs index.html 9000",
+    "serve:demo": "servor ./website index.html 9000",
     "delete:dist": "rimraf dist",
     "lint": "eslint src/aurelia-slickgrid -c .eslintrc.json --no-eslintrc --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint",
     "build:webpack": "rimraf dist && webpack --env production",

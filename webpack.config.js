@@ -8,7 +8,7 @@ const nodeExternals = require('webpack-node-externals');
 
 const baseUrl = '';
 const outDevDir = path.resolve(__dirname, 'dist');
-const outProdDir = path.resolve(__dirname, 'docs');
+const outProdDir = path.resolve(__dirname, 'website');
 const srcDir = path.resolve(__dirname, 'src');
 const title = 'Aurelia-Slickgrid Skeleton';
 
