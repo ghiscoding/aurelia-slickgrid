@@ -29,7 +29,7 @@ Aurelia
   */
   // Register all exports of the plugin
   .register(
-    RouterConfiguration.customize({ useHref: false }),
+    RouterConfiguration.customize({ useHref: false, basePath: '' }),
 
     // dynamic components to enhance
     CustomTitleFormatter,
