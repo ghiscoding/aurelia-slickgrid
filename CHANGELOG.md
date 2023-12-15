@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.6.6](https://github.com/ghiscoding/aurelia-slickgrid/compare/v6.6.5...v6.6.6) (2023-12-15)
+
+
+### Bug Fixes
+
+* spreading 2 grids options causes duplicate ext resources ([#1127](https://github.com/ghiscoding/aurelia-slickgrid/issues/1127)) ([33ad688](https://github.com/ghiscoding/aurelia-slickgrid/commit/33ad6880debffcc7305d74bbec8be4cc243cf365))
+
+# Change Log 
+
+All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
 ## [6.6.5](https://github.com/ghiscoding/aurelia-slickgrid/compare/v6.6.4...v6.6.5) (2023-12-13)
 
 
@@ -25,9 +36,7 @@ All notable changes to this project will be documented in this file. See [Conven
 
 ## [6.6.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v6.6.1...v6.6.2) (2023-11-26)
 
-# Change Log 
 
-All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
 # [6.6.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v6.5.1...v6.6.0) (2023-11-26)
 
