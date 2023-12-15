@@ -1,3 +1,17 @@
+# Change Log 
+
+All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+# [7.0.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v6.6.5...v7.0.0) (2023-12-15)
+
+
+* BREAKING CHANGE: migrate to Slickgrid-Universal v4.0 and Aurelia 2, fixes #709 (#1124) ([8d0aa70](https://github.com/ghiscoding/aurelia-slickgrid/commit/8d0aa70f582f7f1dadaded0b2042e2a80d8759ea)), closes [#709](https://github.com/ghiscoding/aurelia-slickgrid/issues/709) [#1124](https://github.com/ghiscoding/aurelia-slickgrid/issues/1124)
+
+
+### BREAKING CHANGES
+
+* migrate to Slickgrid-Universal v4.0 and Aurelia 2, fixes #709
+
 # Change Log
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
@@ -2005,4 +2019,3 @@ All notable changes to this project will be documented in this file. See [Conven
 * **query:** add `excludeFromQuery` prop and use it for Row Selection ([cda0e39](https://github.com/ghiscoding/aurelia-slickgrid/commit/cda0e39))
 * **queryFilter:** add new "queryFieldFilter" and "queryFieldSorter" ([9d2aae1](https://github.com/ghiscoding/aurelia-slickgrid/commit/9d2aae1))
 * **selectEditors:** add select grid editors ([#22](https://github.com/ghiscoding/aurelia-slickgrid/issues/22)) ([5bd7215](https://github.com/ghiscoding/aurelia-slickgrid/commit/5bd7215))
-
