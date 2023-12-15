@@ -52,7 +52,7 @@ jobs:
         run: yarn --frozen-lockfile
 
       - name: Run Project Build
-        run: yarn run build
+        run: yarn run build:plugin
 
       - name: "[dry-run] 🧪 NPM Release"
         env:
