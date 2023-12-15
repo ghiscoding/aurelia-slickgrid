@@ -7,7 +7,7 @@
 [![Actions Status](https://github.com/ghiscoding/aurelia-slickgrid/workflows/CI%20Build/badge.svg)](https://github.com/ghiscoding/aurelia-slickgrid/actions)
 [![Cypress.io](https://img.shields.io/badge/tested%20with-Cypress-04C38E.svg?logo=cypress)](https://www.cypress.io/)
 [![jest](https://jestjs.io/img/jest-badge.svg)](https://github.com/facebook/jest)
-[![codecov](https://codecov.io/gh/ghiscoding/aurelia-slickgrid/branch/master/graph/badge.svg)](https://codecov.io/gh/ghiscoding/aurelia-slickgrid)
+<!-- [![codecov](https://codecov.io/gh/ghiscoding/aurelia-slickgrid/branch/master/graph/badge.svg)](https://codecov.io/gh/ghiscoding/aurelia-slickgrid) -->
 
 ### Brief introduction
 One of the best JavasSript datagrid [SlickGrid](https://github.com/mleibman/SlickGrid), which was originally developed by @mleibman, is now available to Aurelia. SlickGrid beats most other datagrids in terms of features, customizability and performance (it can easily deal with even a million row). Aurelia-Slickgrid is a wrapper on top of SlickGrid and it requires [Slickgrid-Universal](https://github.com/ghiscoding/slickgrid-universal/) dependency since the original one was put on pause by its original author for personal reasons and originally we used the `6pac/SlickGrid` fork but that was dropped in v7.0, so we no longer need external SlickGrid dependencies anymore apart from Slickgrid-Universal since [v7.0](https://github.com/ghiscoding/aurelia-slickgrid/releases/tag/v7.0.1). Also, SlickGrid was recently refactored to be browser native, which means that jQuery is no longer required in Aurelia-Slickgrid v6.0 and higher.
