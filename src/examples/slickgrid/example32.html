@@ -20,14 +20,14 @@
                data-test="autosize-columns-btn">
           <input type="radio" class="btn-check" name="options"
                  checked.bind="isUsingDefaultResize"
-                 click.delegate="handleDefaultResizeColumns()">
+                 click.trigger="handleDefaultResizeColumns()">
           <i class="fa fa-expand"></i> (default resize) by "autosizeColumns"
         </label>
         <label class="btn btn-sm btn-outline-secondary" class.bind="isUsingDefaultResize ? '' : 'active'"
                data-test="resize-by-content-btn">
           <input type="radio" class="btn-check" name="options"
                  checked.bind="!isUsingDefaultResize"
-                 click.delegate="handleNewResizeColumns()">
+                 click.trigger="handleNewResizeColumns()">
           <i class="fa fa-expand"></i> Resize by Cell Content
         </label>
       </div>
@@ -35,21 +35,21 @@
 
     <div class="mb-2">
       <div class="btn-group btn-group-sm" role="group" aria-label="Basic Editing Commands">
-        <button type="button" class="btn btn-outline-secondary" click.delegate="setSelectedRowIds()"
+        <button type="button" class="btn btn-outline-secondary" click.trigger="setSelectedRowIds()"
                 data-test="set-dynamic-rows-btn"
                 title="Change Row Selection across multiple pages">
           <span>Change Row Selection</span>
         </button>
         <button type="button" class="btn btn-outline-secondary" data-test="toggle-readonly-btn"
-                click.delegate="toggleGridEditReadonly()">
+                click.trigger="toggleGridEditReadonly()">
           <i class="fa fa-table"></i> Toggle Readonly
         </button>
         <button type="button" class="btn btn-outline-secondary" data-test="undo-last-edit-btn"
-                click.delegate="undoLastEdit()">
+                click.trigger="undoLastEdit()">
           <i class="fa fa-undo"></i> Undo Last Edit
         </button>
         <button type="button" class="btn btn-outline-secondary" data-test="save-all-btn"
-                click.delegate="saveAll()">
+                click.trigger="saveAll()">
           <i class="fa fa-save"></i> Save All
         </button>
       </div>
@@ -61,8 +61,8 @@
                        column-definitions.bind="columnDefinitions"
                        grid-options.bind="gridOptions"
                        dataset.bind="dataset"
-                       on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)"
-                       on-selected-row-ids-changed.delegate="handleOnSelectedRowIdsChanged($event.detail.args)">
+                       on-aurelia-grid-created.trigger="aureliaGridReady($event.detail)"
+                       on-selected-row-ids-changed.trigger="handleOnSelectedRowIdsChanged($event.detail.args)">
     </aurelia-slickgrid>
   </div>
 </template>

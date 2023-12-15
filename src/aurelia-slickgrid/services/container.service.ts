@@ -1,20 +1,19 @@
 import { ContainerService as UniversalContainerService } from '@slickgrid-universal/common';
-import { Container, inject, singleton } from 'aurelia-framework';
+import { IContainer, Registration, transient } from 'aurelia';
 
-@inject(Container)
-@singleton(true)
+@transient()
 export class ContainerService implements UniversalContainerService {
-  constructor(private readonly container: Container) { }
+  constructor(@IContainer private readonly container: IContainer) { }
 
   get<T = any>(key: string): T | null {
-    const dependency = this.container.get(key);
-    if (typeof key === 'string' && dependency === key) {
+    try {
+      return this.container.get(key) as T;
+    } catch (_) {
       return null;
     }
-    return dependency;
   }
 
   registerInstance(key: string, instance: any) {
-    this.container.registerInstance(key, instance);
+    this.container.register(Registration.instance(key, instance));
   }
 }

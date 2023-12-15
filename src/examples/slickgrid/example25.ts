@@ -1,6 +1,6 @@
+import { IHttpClient, json } from '@aurelia/fetch-client';
+import { newInstanceOf } from '@aurelia/kernel';
 import { GraphqlService, GraphqlResult, GraphqlServiceApi, } from '@slickgrid-universal/graphql';
-import { autoinject } from 'aurelia-framework';
-import { HttpClient, json } from 'aurelia-fetch-client';
 import {
   AureliaGridInstance,
   Column,
@@ -29,7 +29,6 @@ export interface Country {
   languageNative: string;
 }
 
-@autoinject()
 export class Example25 {
   title = 'Example 25: GraphQL Basic API without Pagination';
   subTitle = `
@@ -57,7 +56,7 @@ export class Example25 {
   selectedLanguage = '';
   status = { text: '', class: '' };
 
-  constructor(private http: HttpClient) {
+  constructor(@newInstanceOf(IHttpClient) readonly http: IHttpClient) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
   }

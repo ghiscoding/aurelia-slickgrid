@@ -1,5 +1,5 @@
 import { ExcelExportService } from '@slickgrid-universal/excel-export';
-import { autoinject, bindable } from 'aurelia-framework';
+import { bindable } from 'aurelia';
 import {
   Aggregators,
   AureliaGridInstance,
@@ -12,12 +12,12 @@ import {
   Formatters,
   GridOption,
   isNumber,
+  SlickDataView,
   // GroupTotalFormatters,
   // italicFormatter,
 } from '../../aurelia-slickgrid';
 import './example28.scss'; // provide custom CSS/SASS styling
 
-@autoinject()
 export class Example28 {
   title = 'Example 28: Tree Data with Aggregators <small> <span class="mdi mdi-file-tree mdi-27px"></span> (from a Hierarchical Dataset - <a href="https://ghiscoding.gitbook.io/aurelia-slickgrid/grid-functionalities/tree-data-grid" target="_blank">Wiki</a>)</small>';
   subTitle = `<ul>
@@ -242,7 +242,7 @@ export class Example28 {
     if (value === null || value === undefined || dataContext === undefined) {
       return '';
     }
-    const dataView = grid.getData();
+    const dataView = grid.getData<SlickDataView>();
     const data = dataView.getItems();
     const identifierPropName = dataView.getIdPropertyName() || 'id';
     const idx = dataView.getIdxById(dataContext[identifierPropName]) as number;

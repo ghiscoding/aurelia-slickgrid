@@ -1,7 +1,6 @@
 import { ExcelExportService } from '@slickgrid-universal/excel-export';
 import { TextExportService } from '@slickgrid-universal/text-export';
-import { autoinject } from 'aurelia-framework';
-import { I18N } from 'aurelia-i18n';
+import { I18N } from '@aurelia/i18n';
 import { TOptions as I18NOptions } from 'i18next';
 
 import {
@@ -28,7 +27,6 @@ const taskTranslateFormatter: Formatter = (_row, _cell, value, _columnDef, _data
   return i18n?.tr('TASK_X', { x: value } as I18NOptions) ?? '';
 };
 
-@autoinject()
 export class Example12 {
   title = 'Example 12: Localization (i18n)';
   subTitle = `Support multiple locales with the i18next plugin, following these steps.
@@ -68,7 +66,7 @@ export class Example12 {
   excelExportService = new ExcelExportService();
   textExportService = new TextExportService();
 
-  constructor(private i18n: I18N) {
+  constructor(@I18N private readonly i18n: I18N) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
 
@@ -215,13 +213,13 @@ export class Example12 {
 
   getData(count: number) {
     // mock a dataset
-    this.dataset = [];
+    const tmpData = [];
     for (let i = 0; i < count; i++) {
       const randomYear = 2000 + Math.floor(Math.random() * 10);
       const randomMonth = Math.floor(Math.random() * 11);
       const randomDay = Math.floor((Math.random() * 29));
 
-      this.dataset[i] = {
+      tmpData[i] = {
         id: i,
         description: (i % 5) ? 'desc ' + i : '🚀🦄 español', // also add some random to test NULL field
         duration: Math.round(Math.random() * 100) + '',
@@ -231,6 +229,7 @@ export class Example12 {
         completed: (i % 5 === 0) ? 'TRUE' : 'FALSE'
       };
     }
+    this.dataset = tmpData;
   }
 
   dynamicallyAddTitleHeader() {

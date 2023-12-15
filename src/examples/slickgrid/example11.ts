@@ -1,4 +1,3 @@
-import { autoinject } from 'aurelia-framework';
 import {
   AureliaGridInstance,
   Column,
@@ -13,7 +12,6 @@ import {
 } from '../../aurelia-slickgrid';
 import './example11.scss';
 
-@autoinject()
 export class Example11 {
   title = 'Example 11: Add / Update / Highlight a Datagrid Item';
   subTitle = `
@@ -71,7 +69,8 @@ export class Example11 {
         id: 'delete',
         field: 'id',
         excludeFromHeaderMenu: true,
-        formatter: Formatters.deleteIcon,
+        formatter: Formatters.icon,
+        params: { iconCssClass: 'fa fa-pencil pointer' },
         minWidth: 30,
         maxWidth: 30,
         // use onCellClick OR grid.onClick.subscribe which you can see down below

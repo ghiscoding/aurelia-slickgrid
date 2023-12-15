@@ -1,4 +1,5 @@
 import { RowDetailView as UniversalRowDetailView } from '@slickgrid-universal/common';
+import { Constructable } from 'aurelia';
 
 export interface RowDetailView extends UniversalRowDetailView {
   /**
@@ -8,10 +9,10 @@ export interface RowDetailView extends UniversalRowDetailView {
   parent?: any;
 
   /** View Model of the preload template which shows after opening row detail & before row detail data shows up */
-  preloadView?: string;
+  preloadViewModel?: Constructable;
 
   /** View Model template that will be loaded once the async function finishes */
-  viewModel?: string;
+  viewModel?: Constructable;
 
   // --
   // Callback Methods

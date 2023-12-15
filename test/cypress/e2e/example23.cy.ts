@@ -10,7 +10,7 @@ const presetHighestDay = moment().add(today.getDate() < 14 ? 30 : 25, 'days').fo
 
 describe('Example 23 - Range Filters', () => {
   it('should display Example title', () => {
-    cy.visit(`${Cypress.config('baseUrl')}/slickgrid/example23`);
+    cy.visit(`${Cypress.config('baseUrl')}/example23`);
     cy.get('h2').should('contain', 'Example 23: Filtering from Range of Search Values');
   });
 

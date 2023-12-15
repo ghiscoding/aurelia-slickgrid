@@ -1,6 +1,5 @@
 import { SlickCustomTooltip } from '@slickgrid-universal/custom-tooltip-plugin';
 import { ExcelExportService } from '@slickgrid-universal/excel-export';
-import { autoinject } from 'aurelia-framework';
 
 import {
   AureliaGridInstance,
@@ -20,7 +19,6 @@ import './example33.scss';
 
 const NB_ITEMS = 500;
 
-@autoinject()
 export class Example33 {
   title = 'Example 33: Regular & Custom Tooltips';
   subTitle = `

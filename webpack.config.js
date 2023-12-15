@@ -1,112 +1,158 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const { AureliaPlugin, ModuleDependenciesPlugin } = require('aurelia-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const nodeExternals = require('webpack-node-externals');
 
-// primary config:
-const title = 'Aurelia Navigation Skeleton';
+const baseUrl = '';
 const outDevDir = path.resolve(__dirname, 'dist');
 const outProdDir = path.resolve(__dirname, 'docs');
 const srcDir = path.resolve(__dirname, 'src');
-const nodeModulesDir = path.resolve(__dirname, 'node_modules');
-const baseUrl = '';
+const title = 'Aurelia-Slickgrid Skeleton';
 
-module.exports = ({ production } = {}, { server } = {}) => ({
-  resolve: {
-    extensions: ['.ts', '.js'],
-    // mainFields: ['browser', 'module', 'main'],
-    modules: [srcDir, 'node_modules'],
-    // Enforce single aurelia-binding, to avoid v1/v2 duplication due to
-    // out-of-date dependencies on 3rd party aurelia plugins
-    alias: {
-      'aurelia-binding': path.resolve(__dirname, 'node_modules/aurelia-binding'),
-      moment$: 'moment/moment.js'
-    },
-    fallback: {
-      http: false,
-      https: false,
-      stream: false,
-      util: false,
-      zlib: false,
+const cssLoader = 'css-loader';
+const postcssLoader = {
+  loader: 'postcss-loader',
+  options: {
+    postcssOptions: {
+      plugins: ['autoprefixer']
     }
-  },
-  entry: {
-    app: ['aurelia-bootstrapper'],
-  },
-  mode: production ? 'production' : 'development',
-  output: {
-    path: production ? outProdDir : outDevDir,
-    publicPath: baseUrl,
-    filename: '[name].[contenthash].bundle.js',
-    sourceMapFilename: '[name].[contenthash].bundle.js.map',
-    chunkFilename: '[name].[contenthash].chunk.js',
-  },
-  stats: {
-    warnings: false
-  },
-  target: 'web',
-  performance: { hints: false },
-  devServer: {
-    static: {
-      directory: production ? outProdDir : outDevDir,
-    },
-    // serve index.html for all 404 (required for push-state)
-    historyApiFallback: true,
-    compress: true,
-    hot: false,
-    liveReload: true,
-    port: 9000,
-    host: 'localhost',
-    open: true,
-  },
-  devtool: production ? false : 'eval-cheap-module-source-map',
-  module: {
-    rules: [
-      { test: /\.css$/i, use: [{ loader: MiniCssExtractPlugin.loader }, 'css-loader'] },
-      { test: /\.(sass|scss)$/, use: ['style-loader', 'css-loader', 'sass-loader'], issuer: /\.[tj]s$/i },
-      { test: /\.(sass|scss)$/, use: ['css-loader', 'sass-loader'], issuer: /\.html?$/i },
-      { test: /\.html$/i, loader: 'html-loader' },
-      { test: /\.ts?$/, use: 'ts-loader', exclude: nodeModulesDir, },
-      { test: /\.(woff|woff2|eot|ttf|otf)$/i, type: 'asset/resource', },
-      { test: /\.(ttf|eot|svg|otf)(\?v=[0-9]\.[0-9]\.[0-9])?$/i, type: 'asset/resource', },
-    ]
-  },
-  watchOptions: {
-    ignored: '**/node_modules',
-    poll: 1000, // Check for changes every second
-  },
-  plugins: [
-    new AureliaPlugin({
-      // dist: 'es2015',
-      // aureliaApp: 'main',
-      // aureliaConfig: ['basic'],
-      // includeAll: 'src'
-    }),
-    new ModuleDependenciesPlugin({
-      'aurelia-testing': ['./compile-spy', './view-spy']
-    }),
-    new HtmlWebpackPlugin({
-      template: 'index.ejs',
-      favicon: `${srcDir}/favicon.ico`,
-      metadata: {
-        // available in index.ejs //
-        title, server, baseUrl
-      }
-    }),
-    // ref: https://webpack.js.org/plugins/mini-css-extract-plugin/
-    new MiniCssExtractPlugin({ // updated to match the naming conventions for the js files
-      filename: '[name].[contenthash].bundle.css',
-      chunkFilename: '[name].[contenthash].chunk.css'
-    }),
-    new CopyWebpackPlugin({
-      patterns: [
-        { from: `${srcDir}/assets`, to: 'assets' }
-      ]
-    }),
+  }
+};
 
-    // Note that the usage of following plugin cleans the webpack output directory before build.
-    new CleanWebpackPlugin(),
-  ]
-});
+module.exports = ({ production, node } = {}, { server } = {}, { analyze } = {}) => {
+  // console.log('webpack', analyze, production, server, node);
+  // const production = server.production || false;
+  // const production = env.production || process.env.NODE_ENV === 'production';
+  return {
+    target: node ? 'node' : 'web',
+    mode: production ? 'production' : 'development',
+    // devtool: production ? 'source-map' : 'inline-source-map',
+    devtool: production ? false : 'eval-cheap-module-source-map',
+    entry: {
+      // Build only plugin in production mode,
+      // build dev-app in non-production mode
+      entry: node ? './src/aurelia-slickgrid/index.ts' : './src/main.ts'
+    },
+    output: {
+      path: production ? outProdDir : outDevDir,
+      // filename: production ? 'index.js' : '[name].bundle.js',
+      // library: production ? { type: 'commonjs' } : undefined
+      publicPath: baseUrl,
+      filename: '[name].[contenthash].bundle.js',
+      sourceMapFilename: '[name].[contenthash].bundle.js.map',
+      chunkFilename: '[name].[contenthash].chunk.js',
+    },
+    resolve: {
+      extensions: ['.ts', '.js'],
+      modules: [path.resolve(__dirname, 'src'), 'node_modules'],
+      alias: production ? {
+        // add your production aliases here
+      } : {
+        ...getAureliaDevAliases()
+        // add your development aliases here
+      }
+    },
+    devServer: {
+      historyApiFallback: true,
+      open: !process.env.CI,
+      port: 9000
+    },
+    module: {
+      rules: [
+        { test: /\.(png|svg|jpg|jpeg|gif)$/i, type: 'asset' },
+        { test: /\.(woff|woff2|ttf|eot|svg|otf)(\?v=[0-9]\.[0-9]\.[0-9])?$/i, type: 'asset' },
+        {
+          test: /\.css$/i,
+          // For style loaded in src/main.js, it's not loaded by style-loader.
+          // It's for shared styles for shadow-dom only.
+          issuer: /[/\\]src[/\\]main\.(js|ts)$/,
+          use: [cssLoader, postcssLoader]
+        },
+        {
+          test: /\.css$/i,
+          // For style loaded in other js/ts files, it's loaded by style-loader.
+          // They are directly injected to HTML head.
+          issuer: /(?<![/\\]src[/\\]main)\.(js|ts)$/,
+          use: ['style-loader', cssLoader, postcssLoader]
+        },
+        {
+          test: /\.css$/i,
+          // For style loaded in html files, Aurelia will handle it.
+          issuer: /\.html$/,
+          use: [cssLoader, postcssLoader]
+        },
+        { test: /\.(sass|scss)$/, use: ['style-loader', 'css-loader', 'sass-loader'], issuer: /\.[tj]s$/i },
+        { test: /\.(sass|scss)$/, use: ['css-loader', 'sass-loader'], issuer: /\.html?$/i },
+        { test: /\.ts$/i, use: ['ts-loader', '@aurelia/webpack-loader'], exclude: /node_modules/ },
+        {
+          test: /[/\\](?:src|dev-app)[/\\].+\.html$/i,
+          use: {
+            loader: '@aurelia/webpack-loader',
+            options: {
+              // The other possible Shadow DOM mode is 'closed'.
+              // If you turn on "closed" mode, there will be difficulty to perform e2e
+              // tests (such as Playwright). Because shadowRoot is not accessible through
+              // standard DOM APIs in "closed" mode.
+              // defaultShadowOptions: { mode: 'open' }
+            }
+          },
+          exclude: /node_modules/
+        }
+      ]
+    },
+    performance: {
+      hints: false
+    },
+    externalsPresets: node && { node: production },
+    externals: [
+      // Skip npm dependencies in plugin build.
+      node && nodeExternals()
+    ].filter(p => p),
+    plugins: [
+      new HtmlWebpackPlugin({
+        template: 'index.html',
+        favicon: `${srcDir}/favicon.ico`,
+      }),
+      new CopyWebpackPlugin({
+        patterns: [
+          {
+            from: node ? `${srcDir}/assets/i18n` : `${srcDir}/assets`,
+            to: node ? 'i18n' : 'assets'
+          }
+        ]
+      }),
+      analyze && new BundleAnalyzerPlugin(),
+      // Note that the usage of following plugin cleans the webpack output directory before build.
+      new CleanWebpackPlugin(),
+    ].filter(p => p)
+  }
+};
+
+function getAureliaDevAliases() {
+  return [
+    'aurelia',
+    'fetch-client',
+    'kernel',
+    'metadata',
+    'platform',
+    'platform-browser',
+    'route-recognizer',
+    'router',
+    'router-lite',
+    'runtime',
+    'runtime-html',
+    'testing',
+    'state',
+    'ui-virtualization'
+  ].reduce((map, pkg) => {
+    const name = pkg === 'aurelia' ? pkg : `@aurelia/${pkg}`;
+    try {
+      const packageLocation = require.resolve(name);
+      map[name] = path.resolve(packageLocation, `../../esm/index.dev.mjs`);
+    } catch {/**/ }
+    return map;
+  });
+}

@@ -1,11 +1,3 @@
-// import 3rd party vendor libs
-import 'slickgrid/slick.core';
-import 'slickgrid/slick.interactions';
-import 'slickgrid/slick.grid';
-import 'slickgrid/slick.dataview';
-import * as Sortable_ from 'sortablejs';
-const Sortable = ((Sortable_ as any)?.['default'] ?? Sortable_); // patch for rollup
-
 import type {
   // interfaces/types
   AutocompleterEditor,
@@ -22,10 +14,6 @@ import type {
   Pagination,
   SelectEditor,
   ServicePagination,
-  SlickDataView,
-  SlickEventHandler,
-  SlickGrid,
-  SlickNamespace,
 } from '@slickgrid-universal/common';
 
 import {
@@ -46,6 +34,9 @@ import {
   ResizerService,
   RxJsFacade,
   SharedService,
+  SlickDataView,
+  SlickEventHandler,
+  SlickGrid,
   SlickGroupItemMetadataProvider,
   SlickgridConfig,
   SortService,
@@ -56,14 +47,15 @@ import {
   emptyElement,
   ExtensionName,
   GridStateType,
+  Utils as SlickUtils,
 } from '@slickgrid-universal/common';
 import { EventPubSubService } from '@slickgrid-universal/event-pub-sub';
 import { SlickFooterComponent } from '@slickgrid-universal/custom-footer-component';
 import { SlickEmptyWarningComponent } from '@slickgrid-universal/empty-warning-component';
 import { SlickPaginationComponent } from '@slickgrid-universal/pagination-component';
 
-import { bindable, BindingEngine, bindingMode, Container, Factory, inject, useView, PLATFORM } from 'aurelia-framework';
-import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
+import { bindable, BindingMode, CollectionKind, customElement, IContainer, IEventAggregator, IDisposable, IObserverLocator } from 'aurelia';
+import { ICollectionSubscriber, ICollectionObserver } from '@aurelia/runtime';
 import { dequal } from 'dequal/lite';
 
 import { Constants } from '../constants';
@@ -77,23 +69,7 @@ import {
 } from '../services/index';
 import { SlickRowDetailView } from '../extensions/slickRowDetailView';
 
-// using external non-typed js libraries
-declare const Slick: SlickNamespace;
-
-// add Sortable to the window object so that SlickGrid lib can use globally
-(window as any).Sortable = Sortable;
-
-// Aurelia doesn't support well TypeScript @autoinject in a Plugin so we'll do it the manual way
-@inject(
-  AureliaUtilService,
-  BindingEngine,
-  Container,
-  Element,
-  EventAggregator,
-  ContainerService,
-  TranslaterService,
-)
-@useView(PLATFORM.moduleName('./aurelia-slickgrid.html'))
+@customElement('aurelia-slickgrid')
 export class AureliaSlickgridCustomElement {
   protected _columnDefinitions: Column[] = [];
   protected _currentDatasetLength = 0;
@@ -108,13 +84,18 @@ export class AureliaSlickgridCustomElement {
   protected _isLocalGrid = true;
   protected _paginationOptions: Pagination | undefined;
   protected _registeredResources: ExternalResource[] = [];
+  protected _columnDefinitionObserver?: ICollectionObserver<CollectionKind.array>;
+  protected _columnDefinitionsSubscriber: ICollectionSubscriber = {
+    handleCollectionChange: this.columnDefinitionsHandler.bind(this)
+  };
+
   groupItemMetadataProvider?: SlickGroupItemMetadataProvider;
   backendServiceApi: BackendServiceApi | undefined;
   locales!: Locale;
   metrics?: Metrics;
   showPagination = false;
   serviceList: any[] = [];
-  subscriptions: Array<EventSubscription | Subscription> = [];
+  subscriptions: Array<EventSubscription | IDisposable> = [];
   paginationData?: {
     gridOptions: GridOption;
     paginationService: PaginationService;
@@ -144,14 +125,14 @@ export class AureliaSlickgridCustomElement {
   sortService: SortService;
   treeDataService: TreeDataService;
 
-  @bindable({ defaultBindingMode: bindingMode.twoWay }) columnDefinitions: Column[] = [];
-  @bindable({ defaultBindingMode: bindingMode.twoWay }) element!: Element;
-  @bindable({ defaultBindingMode: bindingMode.twoWay }) dataview!: SlickDataView;
-  @bindable({ defaultBindingMode: bindingMode.twoWay }) grid!: SlickGrid;
-  @bindable({ defaultBindingMode: bindingMode.twoWay }) paginationOptions: Pagination | undefined;
-  @bindable({ defaultBindingMode: bindingMode.twoWay }) totalItems = 0;
-  @bindable({ defaultBindingMode: bindingMode.fromView }) extensions!: ExtensionList<any>;
-  @bindable({ defaultBindingMode: bindingMode.fromView }) instances: AureliaGridInstance | null = null;
+  @bindable({ mode: BindingMode.twoWay }) columnDefinitions: Column[] = [];
+  @bindable({ mode: BindingMode.twoWay }) element!: Element;
+  @bindable({ mode: BindingMode.twoWay }) dataview!: SlickDataView;
+  @bindable({ mode: BindingMode.twoWay }) grid!: SlickGrid;
+  @bindable({ mode: BindingMode.twoWay }) paginationOptions: Pagination | undefined;
+  @bindable({ mode: BindingMode.twoWay }) totalItems = 0;
+  @bindable({ mode: BindingMode.fromView }) extensions!: ExtensionList<any>;
+  @bindable({ mode: BindingMode.fromView }) instances: AureliaGridInstance | null = null;
   @bindable() customDataView?: SlickDataView;
   @bindable() dataset: any[] = [];
   @bindable() datasetHierarchical?: any[] | null;
@@ -160,50 +141,51 @@ export class AureliaSlickgridCustomElement {
 
   constructor(
     protected readonly aureliaUtilService: AureliaUtilService,
-    protected readonly bindingEngine: BindingEngine,
-    protected readonly container: Container,
-    protected readonly elm: HTMLDivElement,
-    protected readonly globalEa: EventAggregator,
+    @IObserverLocator protected readonly observerLocator: IObserverLocator,
+    @IContainer protected readonly container: IContainer,
+    protected readonly elm: Element,
+    @IEventAggregator protected readonly globalEa: IEventAggregator,
     protected readonly containerService: ContainerService,
-    protected readonly translaterService: TranslaterService,
-    externalServices: {
-      backendUtilityService?: BackendUtilityService,
-      collectionService?: CollectionService,
-      eventPubSubService: EventPubSubService,
-      extensionService?: ExtensionService,
-      extensionUtility?: ExtensionUtility,
-      filterService?: FilterService,
-      gridEventService?: GridEventService,
-      gridService?: GridService,
-      gridStateService?: GridStateService,
-      groupingAndColspanService?: GroupingAndColspanService,
-      paginationService?: PaginationService,
-      resizerService?: ResizerService,
-      rxjs?: RxJsFacade,
-      sharedService?: SharedService,
-      sortService?: SortService,
-      treeDataService?: TreeDataService,
-    }
+    protected readonly translaterService: TranslaterService
+    // TODO: MB - not sure what this is for
+    // externalServices: {
+    //   backendUtilityService?: BackendUtilityService,
+    //   collectionService?: CollectionService,
+    //   eventPubSubService: EventPubSubService,
+    //   extensionService?: ExtensionService,
+    //   extensionUtility?: ExtensionUtility,
+    //   filterService?: FilterService,
+    //   gridEventService?: GridEventService,
+    //   gridService?: GridService,
+    //   gridStateService?: GridStateService,
+    //   groupingAndColspanService?: GroupingAndColspanService,
+    //   paginationService?: PaginationService,
+    //   resizerService?: ResizerService,
+    //   rxjs?: RxJsFacade,
+    //   sharedService?: SharedService,
+    //   sortService?: SortService,
+    //   treeDataService?: TreeDataService,
+    // }
   ) {
     const slickgridConfig = new SlickgridConfig();
 
     // initialize and assign all Service Dependencies
-    this._eventPubSubService = externalServices?.eventPubSubService ?? new EventPubSubService(this.elm);
+    this._eventPubSubService = new EventPubSubService(this.elm);
     this._eventPubSubService.eventNamingStyle = EventNamingStyle.camelCase;
 
-    this.backendUtilityService = externalServices?.backendUtilityService ?? new BackendUtilityService();
-    this.gridEventService = externalServices?.gridEventService ?? new GridEventService();
-    this.sharedService = externalServices?.sharedService ?? new SharedService();
-    this.collectionService = externalServices?.collectionService ?? new CollectionService(this.translaterService);
-    this.extensionUtility = externalServices?.extensionUtility ?? new ExtensionUtility(this.sharedService, this.backendUtilityService, this.translaterService);
+    this.backendUtilityService = new BackendUtilityService();
+    this.gridEventService = new GridEventService();
+    this.sharedService = new SharedService();
+    this.collectionService = new CollectionService(this.translaterService);
+    this.extensionUtility = new ExtensionUtility(this.sharedService, this.backendUtilityService, this.translaterService);
     this.filterFactory = new FilterFactory(slickgridConfig, this.translaterService, this.collectionService);
-    this.filterService = externalServices?.filterService ?? new FilterService(this.filterFactory as any, this._eventPubSubService, this.sharedService, this.backendUtilityService);
-    this.resizerService = externalServices?.resizerService ?? new ResizerService(this._eventPubSubService);
-    this.sortService = externalServices?.sortService ?? new SortService(this.sharedService, this._eventPubSubService, this.backendUtilityService);
-    this.treeDataService = externalServices?.treeDataService ?? new TreeDataService(this._eventPubSubService, this.sharedService, this.sortService);
-    this.paginationService = externalServices?.paginationService ?? new PaginationService(this._eventPubSubService, this.sharedService, this.backendUtilityService);
+    this.filterService = new FilterService(this.filterFactory as any, this._eventPubSubService, this.sharedService, this.backendUtilityService);
+    this.resizerService = new ResizerService(this._eventPubSubService);
+    this.sortService = new SortService(this.sharedService, this._eventPubSubService, this.backendUtilityService);
+    this.treeDataService = new TreeDataService(this._eventPubSubService, this.sharedService, this.sortService);
+    this.paginationService = new PaginationService(this._eventPubSubService, this.sharedService, this.backendUtilityService);
 
-    this.extensionService = externalServices?.extensionService ?? new ExtensionService(
+    this.extensionService = new ExtensionService(
       this.extensionUtility,
       this.filterService,
       this._eventPubSubService,
@@ -213,9 +195,9 @@ export class AureliaSlickgridCustomElement {
       this.translaterService,
     );
 
-    this.gridStateService = externalServices?.gridStateService ?? new GridStateService(this.extensionService, this.filterService, this._eventPubSubService, this.sharedService, this.sortService, this.treeDataService);
-    this.gridService = externalServices?.gridService ?? new GridService(this.gridStateService, this.filterService, this._eventPubSubService, this.paginationService, this.sharedService, this.sortService, this.treeDataService);
-    this.groupingService = externalServices?.groupingAndColspanService ?? new GroupingAndColspanService(this.extensionUtility, this._eventPubSubService);
+    this.gridStateService = new GridStateService(this.extensionService, this.filterService, this._eventPubSubService, this.sharedService, this.sortService, this.treeDataService);
+    this.gridService = new GridService(this.gridStateService, this.filterService, this._eventPubSubService, this.paginationService, this.sharedService, this.sortService, this.treeDataService);
+    this.groupingService = new GroupingAndColspanService(this.extensionUtility, this._eventPubSubService);
 
     this.serviceList = [
       this.extensionService,
@@ -274,13 +256,9 @@ export class AureliaSlickgridCustomElement {
 
     // save resource refs to register before the grid options are merged and possibly deep copied
     // since a deep copy of grid options would lose original resource refs but we want to keep them as singleton
-    this._registeredResources = this.gridOptions?.externalResources || this.gridOptions?.registerExternalResources || [];
-    /* istanbul ignore if */
-    if (this.gridOptions?.registerExternalResources) {
-      console.warn('[Aurelia-Slickgrid] Please note that the grid option `registerExternalResources` was deprecated and will be removed in next major, please use `externalResources` instead.');
-    }
+    this._registeredResources = this.gridOptions?.externalResources || [];
 
-    this._eventHandler = new Slick.EventHandler();
+    this._eventHandler = new SlickEventHandler();
     this.initialization(this._eventHandler);
     this._isGridInitialized = true;
 
@@ -307,9 +285,8 @@ export class AureliaSlickgridCustomElement {
       this.gridOptions.enableMouseWheelScrollHandler = true;
     }
 
-    const aureliaEventPrefix = this.gridOptions?.defaultAureliaEventPrefix ?? '';
     this._eventPubSubService.eventNamingStyle = this.gridOptions?.eventNamingStyle ?? EventNamingStyle.camelCase;
-    this._eventPubSubService.publish(`${aureliaEventPrefix}onBeforeGridCreate`, true);
+    this._eventPubSubService.publish('onBeforeGridCreate', true);
 
     // make sure the dataset is initialized (if not it will throw an error that it cannot getLength of null)
     this._dataset = this._dataset || this.dataset || [];
@@ -324,15 +301,15 @@ export class AureliaSlickgridCustomElement {
 
     if (!this.customDataView) {
       const dataviewInlineFilters = this.gridOptions.dataView && this.gridOptions.dataView.inlineFilters || false;
-      let dataViewOptions: DataViewOption = { inlineFilters: dataviewInlineFilters };
+      let dataViewOptions: Partial<DataViewOption> = { inlineFilters: dataviewInlineFilters };
 
       if (this.gridOptions.draggableGrouping || this.gridOptions.enableGrouping) {
         this.groupItemMetadataProvider = new SlickGroupItemMetadataProvider();
         this.sharedService.groupItemMetadataProvider = this.groupItemMetadataProvider;
         dataViewOptions = { ...dataViewOptions, groupItemMetadataProvider: this.groupItemMetadataProvider };
       }
-      this.dataview = new Slick.Data.DataView(dataViewOptions);
-      this._eventPubSubService.publish(`${aureliaEventPrefix}onDataviewCreated`, this.dataview);
+      this.dataview = new SlickDataView(dataViewOptions, this._eventPubSubService);
+      this._eventPubSubService.publish('onDataviewCreated', this.dataview);
     }
 
     // get any possible Services that user want to register which don't require SlickGrid to be instantiated
@@ -379,10 +356,13 @@ export class AureliaSlickgridCustomElement {
     }
 
     // build SlickGrid Grid, also user might optionally pass a custom dataview (e.g. remote model)
-    this.grid = new Slick.Grid(`#${this.gridId}`, this.customDataView || this.dataview, this._columnDefinitions, this.gridOptions);
+    this.grid = new SlickGrid(`#${this.gridId}`, this.customDataView || this.dataview, this._columnDefinitions, this.gridOptions, this._eventPubSubService);
     this.sharedService.dataView = this.dataview;
     this.sharedService.slickGrid = this.grid;
     this.sharedService.gridContainerElement = this.elm as HTMLDivElement;
+    if (this.groupItemMetadataProvider) {
+      this.grid.registerPlugin(this.groupItemMetadataProvider); // register GroupItemMetadataProvider when Grouping is enabled
+    }
 
     this.extensionService.bindDifferentExtensions();
     this.bindDifferentHooks(this.grid, this.gridOptions, this.dataview);
@@ -459,7 +439,7 @@ export class AureliaSlickgridCustomElement {
     }
 
     // publish & dispatch certain events
-    this._eventPubSubService.publish(`${aureliaEventPrefix}onGridCreated`, this.grid);
+    this._eventPubSubService.publish('onGridCreated', this.grid);
 
     // after the DataView is created & updated execute some processes & dispatch some events
     if (!this.customDataView) {
@@ -482,7 +462,7 @@ export class AureliaSlickgridCustomElement {
       slickGrid: this.grid,
 
       // public methods
-      dispose: this.dispose.bind(this),
+      dispose: this.disposeInstance.bind(this),
 
       // return all available Services (non-singleton)
       backendService: this.gridOptions?.backendServiceApi?.service,
@@ -504,12 +484,12 @@ export class AureliaSlickgridCustomElement {
 
     // all instances (SlickGrid, DataView & all Services)
     this.instances = aureliaElementInstance;
-    this._eventPubSubService.publish(`${aureliaEventPrefix}onAureliaGridCreated`, aureliaElementInstance);
+    this._eventPubSubService.publish('onAureliaGridCreated', aureliaElementInstance);
   }
 
-  detached(shouldEmptyDomElementContainer = false) {
-    const aureliaEventPrefix = this.gridOptions?.defaultAureliaEventPrefix ?? '';
-    this._eventPubSubService.publish(`${aureliaEventPrefix}onBeforeGridDestroy`, this.grid);
+  /** Do not confuse with the Aurelia hook - it's been renamed */
+  detaching(shouldEmptyDomElementContainer = false) {
+    this._eventPubSubService.publish('onBeforeGridDestroy', this.grid);
     this._eventHandler?.unsubscribeAll();
 
     // we could optionally also empty the content of the grid container DOM element
@@ -517,7 +497,7 @@ export class AureliaSlickgridCustomElement {
       this.emptyGridContainerElm();
     }
 
-    this._eventPubSubService.publish(`${aureliaEventPrefix}onAfterGridDestroyed`, true);
+    this._eventPubSubService.publish('onAfterGridDestroyed', true);
 
     // dispose of all Services
     this.serviceList.forEach((service: any) => {
@@ -549,6 +529,7 @@ export class AureliaSlickgridCustomElement {
 
     // also dispose of all Subscriptions
     this.subscriptions = disposeAllSubscriptions(this.subscriptions);
+    this._columnDefinitionObserver?.unsubscribe(this._columnDefinitionsSubscriber);
 
     if (this.backendServiceApi) {
       for (const prop of Object.keys(this.backendServiceApi)) {
@@ -573,8 +554,9 @@ export class AureliaSlickgridCustomElement {
     emptyElement(gridContainerElm);
   }
 
-  dispose(shouldEmptyDomElementContainer = false) {
-    this.detached(shouldEmptyDomElementContainer);
+  /** Do not rename to `dispose` as it's an Aurelia hook */
+  disposeInstance(shouldEmptyDomElementContainer = false) {
+    this.detaching(shouldEmptyDomElementContainer);
   }
 
   disposeExternalResources() {
@@ -589,28 +571,22 @@ export class AureliaSlickgridCustomElement {
     this._registeredResources = [];
   }
 
-  bind() {
+  bound() {
     // get the grid options (order of precedence is Global Options first, then user option which could overwrite the Global options)
     this.gridOptions = { ...GlobalGridOptions, ...this.gridOptions };
-    this._columnDefinitions = this.columnDefinitions;
 
-    // subscribe to column definitions assignment changes with BindingEngine
-    // assignment changes are not triggering a "changed" event https://stackoverflow.com/a/30286225/1212166
-    // also binding docs https://github.com/aurelia/binding/blob/master/doc/article/en-US/binding-observables.md#observing-collections
-    this.subscriptions.push(
-      this.bindingEngine.collectionObserver(this.columnDefinitions)
-        .subscribe(this.columnDefinitionsChanged.bind(this))
-    );
+    // in Au2, the xChanged is not fired upon initial component initialization which differs from Au1
+    // we do however need this to happen, so we will call it manually
+    this.columnDefinitionsChanged();
+
+    // subscribe to column definitions assignment changes
+    this.observeColumnDefinitions();
   }
 
+  /** on columnDefinitions assignment and/or .slice() call */
   columnDefinitionsChanged() {
-    this._columnDefinitions = this.columnDefinitions;
-    if (this._isGridInitialized) {
-      this.updateColumnDefinitionsList(this.columnDefinitions);
-    }
-    if (this._columnDefinitions.length > 0) {
-      this.copyColumnWidthsReference(this._columnDefinitions);
-    }
+    this.columnDefinitionsHandler();
+    this.observeColumnDefinitions();
   }
 
   /**
@@ -748,28 +724,6 @@ export class AureliaSlickgridCustomElement {
     }
 
     if (dataView && grid) {
-      const slickgridEventPrefix = this.gridOptions?.defaultSlickgridEventPrefix ?? '';
-
-      // expose all Slick Grid Events through dispatch
-      for (const prop in grid) {
-        if (grid.hasOwnProperty(prop) && prop.startsWith('on')) {
-          const gridEventName = this._eventPubSubService.getEventNameByNamingConvention(prop, slickgridEventPrefix);
-          this._eventHandler.subscribe((grid as any)[prop], (event, args) => {
-            return this._eventPubSubService.dispatchCustomEvent(gridEventName, { eventData: event, args });
-          });
-        }
-      }
-
-      // expose all Slick DataView Events through dispatch
-      for (const prop in dataView) {
-        if (dataView.hasOwnProperty(prop) && prop.startsWith('on')) {
-          this._eventHandler.subscribe((dataView as any)[prop], (event, args) => {
-            const dataViewEventName = this._eventPubSubService.getEventNameByNamingConvention(prop, slickgridEventPrefix);
-            return this._eventPubSubService.dispatchCustomEvent(dataViewEventName, { eventData: event, args });
-          });
-        }
-      }
-
       // on cell click, mainly used with the columnDef.action callback
       this.gridEventService.bindOnBeforeEditCell(grid);
       this.gridEventService.bindOnCellChange(grid);
@@ -1055,7 +1009,7 @@ export class AureliaSlickgridCustomElement {
    * @param showing
    */
   showHeaderRow(showing = true) {
-    this.grid.setHeaderRowVisibility(showing, false);
+    this.grid.setHeaderRowVisibility(showing);
     if (showing === true && this._isGridInitialized) {
       this.grid.setColumns(this.columnDefinitions);
     }
@@ -1106,6 +1060,28 @@ export class AureliaSlickgridCustomElement {
   //
   // protected functions
   // ------------------
+
+  /** handler for when column definitions changes */
+  protected columnDefinitionsHandler() {
+    this._columnDefinitions = this.columnDefinitions;
+    if (this._isGridInitialized) {
+      this.updateColumnDefinitionsList(this.columnDefinitions);
+    }
+    if (this._columnDefinitions.length > 0) {
+      this.copyColumnWidthsReference(this._columnDefinitions);
+    }
+  }
+
+  /**
+   * assignment changes are not triggering a "columnDefinitionsChanged" event https://stackoverflow.com/a/30286225/1212166
+   * we can use array observer for these other changes done via (push, pop, ...)
+   * see docs https://docs.aurelia.io/components/bindable-properties#calling-a-change-function-when-bindable-is-modified
+   */
+  protected observeColumnDefinitions() {
+    this._columnDefinitionObserver?.unsubscribe(this._columnDefinitionsSubscriber);
+    this._columnDefinitionObserver = this.observerLocator.getArrayObserver(this.columnDefinitions);
+    this._columnDefinitionObserver.subscribe(this._columnDefinitionsSubscriber);
+  }
 
   /**
    * Loop through all column definitions and copy the original optional `width` properties optionally provided by the user.
@@ -1311,7 +1287,7 @@ export class AureliaSlickgridCustomElement {
     gridOptions.enablePagination = ((gridOptions.backendServiceApi && gridOptions.enablePagination === undefined) ? true : gridOptions.enablePagination) || false;
 
     // use extend to deep merge & copy to avoid immutable properties being changed in GlobalGridOptions after a route change
-    const options = Slick.Utils.extend(true, {}, GlobalGridOptions, gridOptions) as GridOption;
+    const options = SlickUtils.extend(true, {}, GlobalGridOptions, gridOptions) as GridOption;
 
     // using copy extend to do a deep clone has an unwanted side on objects and pageSizes but ES6 spread has other worst side effects
     // so we will just overwrite the pageSizes when needed, this is the only one causing issues so far.
@@ -1376,7 +1352,7 @@ export class AureliaSlickgridCustomElement {
     }
 
     if (this.gridOptions.enableRowDetailView) {
-      this.slickRowDetailView = new SlickRowDetailView(this.aureliaUtilService, this._eventPubSubService, this.elm);
+      this.slickRowDetailView = new SlickRowDetailView(this.aureliaUtilService, this._eventPubSubService, this.elm as HTMLElement);
       this.slickRowDetailView.create(this.columnDefinitions, this.gridOptions);
       this._registeredResources.push(this.slickRowDetailView);
       this.extensionService.addExtensionToList(ExtensionName.rowDetailView, { name: ExtensionName.rowDetailView, instance: this.slickRowDetailView });
@@ -1502,7 +1478,7 @@ export class AureliaSlickgridCustomElement {
 
       return {
         ...column,
-        editor: column.editor && Factory.of(column.editor.model).get(this.container),
+        editor: column.editor && this.container.getFactory(column.editor.model).Type,
         internalColumnEditor: { ...column.editor }
       };
     });

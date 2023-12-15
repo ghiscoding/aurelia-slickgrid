@@ -9,7 +9,7 @@ describe('Example 5 - OData Grid', () => {
   });
 
   it('should display Example title', () => {
-    cy.visit(`${Cypress.config('baseUrl')}/slickgrid/example5`);
+    cy.visit(`${Cypress.config('baseUrl')}/example5`);
     cy.get('h2').should('contain', 'Example 5: Grid with Backend OData Service');
   });
 
@@ -692,7 +692,7 @@ describe('Example 5 - OData Grid', () => {
         .find('.slick-row')
         .should('have.length', 1);
 
-      cy.get(`[style="top:${GRID_ROW_HEIGHT * 0}px"] > .slick-cell:nth(1)`).should('contain', 'Alisha Myers');
+      cy.get(`[style="top: ${GRID_ROW_HEIGHT * 0}px;"] > .slick-cell:nth(1)`).should('contain', 'Alisha Myers');
 
       // query should still contain previous sort by + new gender filter
       cy.get('[data-test=odata-query-result]')

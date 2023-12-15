@@ -1,8 +1,8 @@
-<template bindable="router">
+<div class="container-fluid">
   <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
     <a class="navbar-brand ms-2" href="https://github.com/ghiscoding/aurelia-slickgrid">
       <i class="fa fa-github"></i>
-      <span>${router.title}</span>
+      <span>Aurelia-Slickgrid</span>
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-target="#navbarContent"
             aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -14,8 +14,8 @@
         <li>
           <div class="github-button-container"></div>
         </li>
-        <li repeat.for="row of router.navigation" class="nav-item ${row.isActive ? 'active' : ''}">
-          <a class="nav-link" href.bind="row.href">${row.title}</a>
+        <li class="nav-item">
+          <a class="nav-link" href="/#home">Home</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="https://ghiscoding.github.io/Aurelia-Bootstrap-Plugins/"
@@ -29,4 +29,19 @@
       </ul>
     </div>
   </nav>
-</template>
+
+  <div class="panel-wm">
+    <section id="panel-left" class="panel-wm-left au-animate">
+      <ul class="well nav nav-pills nav-stacked">
+        <li repeat.for="r of routes" class="nav-item">
+          <a if.bind="r.path !== 'home'" load.bind="r.path" class="nav-link ${r.isActive ? 'active' : ''}">${r.title}</a>
+        </li>
+      </ul>
+    </section>
+    <section class="panel-wm-content">
+      <div id="demo-container">
+        <au-viewport></au-viewport>
+      </div>
+    </section>
+  </div>
+</div>

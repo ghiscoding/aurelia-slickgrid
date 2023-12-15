@@ -1,6 +1,5 @@
-import { GraphqlService, GraphqlPaginatedResult, GraphqlServiceApi, GraphqlServiceOption, } from '@slickgrid-universal/graphql';
-import { autoinject } from 'aurelia-framework';
-import { I18N } from 'aurelia-i18n';
+import { I18N } from '@aurelia/i18n';
+import { GraphqlService, GraphqlPaginatedResult, GraphqlServiceApi, GraphqlServiceOption } from '@slickgrid-universal/graphql';
 import moment from 'moment-mini';
 import {
   AureliaGridInstance,
@@ -21,7 +20,6 @@ const defaultPageSize = 20;
 const GRAPHQL_QUERY_DATASET_NAME = 'users';
 const FAKE_SERVER_DELAY = 250;
 
-@autoinject()
 export class Example6 {
   title = 'Example 6: Grid with Backend GraphQL Service';
   subTitle = `
@@ -52,7 +50,7 @@ export class Example6 {
   status = { text: '', class: '' };
   serverWaitDelay = FAKE_SERVER_DELAY; // server simulation with default of 250ms but 50ms for Cypress tests
 
-  constructor(private i18n: I18N) {
+  constructor(@I18N private readonly i18n: I18N) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
 
@@ -62,7 +60,7 @@ export class Example6 {
     this.selectedLanguage = defaultLang;
   }
 
-  detached() {
+  detaching() {
     this.saveCurrentGridState();
   }
 

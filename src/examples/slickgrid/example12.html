@@ -15,7 +15,7 @@
 
   <div class="row">
     <div class="col-sm-12">
-      <button class="btn btn-outline-secondary btn-sm" data-test="language-button" click.delegate="switchLanguage()">
+      <button class="btn btn-outline-secondary btn-sm" data-test="language-button" click.trigger="switchLanguage()">
         <i class="fa fa-language"></i>
         Switch Language
       </button>
@@ -25,21 +25,21 @@
       </span>
 
       <span style="margin-left: 20px">
-        <button class="btn btn-outline-secondary btn-sm" click.delegate="exportToFile('csv')">
+        <button class="btn btn-outline-secondary btn-sm" click.trigger="exportToFile('csv')">
           <i class="fa fa-download"></i>
           Download to CSV
         </button>
-        <button class="btn btn-outline-secondary btn-sm" click.delegate="exportToFile('txt')">
+        <button class="btn btn-outline-secondary btn-sm" click.trigger="exportToFile('txt')">
           <i class="fa fa-download"></i>
           Download to Text
         </button>
-        <button class="btn btn-outline-secondary btn-sm" click.delegate="exportToExcel()">
+        <button class="btn btn-outline-secondary btn-sm" click.trigger="exportToExcel()">
           <i class="fa fa-file-excel-o text-success"></i>
           Download to Excel
         </button>
       </span>
       <span style="margin-left: 10px">
-        <button class="btn btn-outline-secondary btn-sm" click.delegate="dynamicallyAddTitleHeader()">
+        <button class="btn btn-outline-secondary btn-sm" click.trigger="dynamicallyAddTitleHeader()">
           <i class="fa fa-plus"></i>
           Dynamically Duplicate Title Column
         </button>
@@ -50,7 +50,7 @@
                      column-definitions.bind="columnDefinitions"
                      grid-options.bind="gridOptions"
                      dataset.bind="dataset"
-                     on-grid-state-changed.delegate="gridStateChanged($event.detail)"
-                     on-aurelia-grid-created.delegate="aureliaGridReady($event.detail)">
+                     on-grid-state-changed.trigger="gridStateChanged($event.detail)"
+                     on-aurelia-grid-created.trigger="aureliaGridReady($event.detail)">
   </aurelia-slickgrid>
 </template>

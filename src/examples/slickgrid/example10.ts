@@ -1,9 +1,8 @@
-import { autoinject, bindable } from 'aurelia-framework';
+import { bindable } from 'aurelia';
 import { AureliaGridInstance, Column, FieldType, Filters, Formatters, GridOption, GridStateChange } from '../../aurelia-slickgrid';
 import './example10.scss'; // provide custom CSS/SASS styling
 
-@autoinject()
-export class Example2 {
+export class Example10 {
   title = 'Example 10: Multiple Grids with Row Selection';
   subTitle = `
     Row selection, single or multi-select (<a href="https://ghiscoding.gitbook.io/aurelia-slickgrid/grid-functionalities/row-selection" target="_blank">Wiki docs</a>).

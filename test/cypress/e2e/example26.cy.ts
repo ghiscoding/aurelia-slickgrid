@@ -2,7 +2,7 @@ describe('Example 26 - Use of Aurelia Custom Elements', () => {
   const fullTitles = ['Title', 'Assignee', 'Assignee with Aurelia Component', 'Duration (days)', '% Complete', 'Start', 'Finish'];
 
   it('should display Example title', () => {
-    cy.visit(`${Cypress.config('baseUrl')}/slickgrid/example26`);
+    cy.visit(`${Cypress.config('baseUrl')}/example26`);
     cy.get('h2').should('contain', 'Example 26: Use of Aurelia Custom Elements');
   });
 

@@ -1,7 +1,7 @@
-import { SlickCompositeEditorComponent } from '@slickgrid-universal/composite-editor-component';
+import { IHttpClient } from '@aurelia/fetch-client';
+import { newInstanceOf } from '@aurelia/kernel';
 import { ExcelExportService } from '@slickgrid-universal/excel-export';
-import { HttpClient as FetchClient } from 'aurelia-fetch-client';
-import { autoinject } from 'aurelia-framework';
+import { SlickCompositeEditor, SlickCompositeEditorComponent } from '@slickgrid-universal/composite-editor-component';
 
 import {
   AureliaGridInstance,
@@ -20,17 +20,14 @@ import {
   GridStateChange,
   LongTextEditorOption,
   OnCompositeEditorChangeEventArgs,
+  SlickGlobalEditorLock,
   SlickGrid,
-  SlickNamespace,
   SortComparers,
 } from '../../aurelia-slickgrid';
 import './example30.scss'; // provide custom CSS/SASS styling
 
 const NB_ITEMS = 500;
 const URL_COUNTRIES_COLLECTION = 'assets/data/countries.json';
-
-// using external SlickGrid JS libraries
-declare const Slick: SlickNamespace;
 
 /**
  * Check if the current item (cell) is editable or not
@@ -40,12 +37,12 @@ declare const Slick: SlickNamespace;
  * @returns {boolean} isEditable
  */
 function checkItemIsEditable(dataContext: any, columnDef: Column, grid: SlickGrid) {
-  const gridOptions = grid && grid.getOptions && grid.getOptions();
+  const gridOptions = grid?.getOptions();
   const hasEditor = columnDef.editor;
   const isGridEditable = gridOptions.editable;
   let isEditable = !!(isGridEditable && hasEditor);
 
-  if (dataContext && columnDef && gridOptions && gridOptions.editable) {
+  if (dataContext && columnDef && gridOptions?.editable) {
     switch (columnDef.id) {
       case 'finish':
         // case 'percentComplete':
@@ -62,7 +59,6 @@ function checkItemIsEditable(dataContext: any, columnDef: Column, grid: SlickGri
   }
   return isEditable;
 }
-
 
 const customEditableInputFormatter: Formatter = (_row, _cell, value, columnDef, _dataContext, grid) => {
   const gridOptions = grid && grid.getOptions && grid.getOptions();
@@ -82,7 +78,6 @@ const myCustomTitleValidator = (value: any, args: any) => {
   return { valid: true, msg: '' };
 };
 
-@autoinject()
 export class Example30 {
   title = 'Example 30: Composite Editor Modal';
   subTitle = `Composite Editor allows you to Create, Clone, Edit, Mass Update & Mass Selection Changes inside a nice Modal Window.
@@ -107,8 +102,11 @@ export class Example30 {
     { value: 4, label: 'Very Complex' },
   ];
 
-  constructor(private httpFetch: FetchClient) {
+  constructor(@newInstanceOf(IHttpClient) readonly http: IHttpClient) {
     this.compositeEditorInstance = new SlickCompositeEditorComponent();
+  }
+
+  created() {
     // define the grid options & columns and then create the grid itself
     this.defineGrids();
   }
@@ -248,7 +246,7 @@ export class Example30 {
           } as FlatpickrOption,
           massUpdate: true,
           validator: (value, args) => {
-            const dataContext = args && args.item;
+            const dataContext = args?.item;
             if (dataContext && (dataContext.completed && !value)) {
               return { valid: false, msg: 'You must provide a "Finish" date when "Completed" is checked.' };
             }
@@ -310,7 +308,7 @@ export class Example30 {
           model: Editors.autocompleter,
           massUpdate: true,
           customStructure: { label: 'name', value: 'code' },
-          collectionAsync: this.httpFetch.fetch(URL_COUNTRIES_COLLECTION),
+          collectionAsync: this.http.fetch(URL_COUNTRIES_COLLECTION),
           editorOptions: { minLength: 0 }
         },
         filter: {
@@ -486,7 +484,7 @@ export class Example30 {
   handleValidationError(_e: Event, args: any) {
     if (args.validationResults) {
       let errorMsg = args.validationResults.msg || '';
-      if (args.editor && (args.editor instanceof Slick.CompositeEditor)) {
+      if (args.editor && (args.editor instanceof SlickCompositeEditor)) {
         if (args.validationResults.errors) {
           errorMsg += '\n';
           for (const error of args.validationResults.errors) {
@@ -717,7 +715,7 @@ export class Example30 {
   undoLastEdit(showLastEditor = false) {
     const lastEdit = this.editQueue.pop();
     const lastEditCommand = lastEdit?.editCommand;
-    if (lastEdit && lastEditCommand && Slick.GlobalEditorLock.cancelCurrentEdit()) {
+    if (lastEdit && lastEditCommand && SlickGlobalEditorLock.cancelCurrentEdit()) {
       lastEditCommand.undo();
 
       // remove unsaved css class from that cell
@@ -737,7 +735,7 @@ export class Example30 {
   undoAllEdits() {
     for (const lastEdit of this.editQueue) {
       const lastEditCommand = lastEdit?.editCommand;
-      if (lastEditCommand && Slick.GlobalEditorLock.cancelCurrentEdit()) {
+      if (lastEditCommand && SlickGlobalEditorLock.cancelCurrentEdit()) {
         lastEditCommand.undo();
 
         // remove unsaved css class from that cell

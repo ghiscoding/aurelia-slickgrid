@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { GridOdataService, OdataServiceApi, OdataOption } from '@slickgrid-universal/odata';
 import { RxJsResource } from '@slickgrid-universal/rxjs-observable';
-import { autoinject } from 'aurelia-framework';
-import { HttpClient } from 'aurelia-http-client';
+import { IHttpClient } from '@aurelia/fetch-client';
+import { newInstanceOf } from '@aurelia/kernel';
 import { Observable, of, Subject } from 'rxjs';
 import {
   AureliaGridInstance,
@@ -21,7 +21,6 @@ import './example31.scss'; // provide custom CSS/SASS styling
 const defaultPageSize = 20;
 const sampleDataRoot = 'assets/data';
 
-@autoinject()
 export class Example31 {
   title = 'Example 31: Grid with OData Backend Service using RxJS Observables';
   subTitle = `
@@ -47,7 +46,7 @@ export class Example31 {
   isOtherGenderAdded = false;
   genderCollection = [{ value: 'male', label: 'male' }, { value: 'female', label: 'female' }];
 
-  constructor(private http: HttpClient) {
+  constructor(@newInstanceOf(IHttpClient) readonly http: IHttpClient) {
     this.initializeGrid();
   }
 
@@ -258,12 +257,9 @@ export class Example31 {
       }
 
       // read the json and create a fresh copy of the data that we are free to modify
-      this.http.createRequest(`${sampleDataRoot}/customers_100.json`)
-        .asGet()
-        .send()
-        .then(response => {
-          let data = response.content as any[];
-
+      this.http.fetch(`${sampleDataRoot}/customers_100.json`)
+        .then(e => e.json())
+        .then(data => {
           // Sort the data
           if (orderBy?.length > 0) {
             const orderByClauses = orderBy.split(',');
@@ -282,10 +278,10 @@ export class Example31 {
               const sort = orderByParts[1] ?? 'asc';
               switch (sort.toLocaleLowerCase()) {
                 case 'asc':
-                  data = data.sort((a, b) => selector(a).localeCompare(selector(b)));
+                  data = data.sort((a: any, b: any) => selector(a).localeCompare(selector(b)));
                   break;
                 case 'desc':
-                  data = data.sort((a, b) => selector(b).localeCompare(selector(a)));
+                  data = data.sort((a: any, b: any) => selector(b).localeCompare(selector(a)));
                   break;
               }
             }
@@ -297,7 +293,7 @@ export class Example31 {
           if (columnFilters) {
             for (const columnId in columnFilters) {
               if (columnFilters.hasOwnProperty(columnId)) {
-                filteredData = filteredData.filter(column => {
+                filteredData = filteredData.filter((column: Column) => {
                   const filterType = (columnFilters as any)[columnId].type;
                   const searchTerm = (columnFilters as any)[columnId].term;
                   let colId = columnId;

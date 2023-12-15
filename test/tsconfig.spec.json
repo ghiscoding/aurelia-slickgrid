@@ -6,19 +6,8 @@
     "esModuleInterop": true,
     "target": "es2018",
     "module": "commonjs",
-    "lib": [
-      "es2018"
-    ],
-    "types": [
-      "cypress",
-      "jest",
-      "jest-extended",
-      "node"
-    ]
+    "lib": ["es2018"],
+    "types": ["cypress", "jest", "jest-extended", "node"]
   },
-  "include": [
-    "**/*.spec.ts",
-    "src/typings/**/*.ts",
-    "**/*.d.ts"
-  ]
+  "include": ["**/*.spec.ts", "src/typings/**/*.ts", "**/*.d.ts"]
 }

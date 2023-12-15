@@ -19,9 +19,16 @@ const NB_ROWS = 200;
 const currencyFormatter: Formatter = (cell: number, row: number, value: string) =>
   `<img src="https://flags.fmcdn.net/data/flags/mini/${value.substr(0, 2).toLowerCase()}.png" width="20"/> ${value}`;
 
-const priceFormatter: Formatter = (cell: number, row: number, value: number, col: Column, dataContext: any) => {
+const priceFormatter: Formatter = (_cell, _row, value, _col, dataContext) => {
   const direction = dataContext.priceChange >= 0 ? 'up' : 'down';
-  return `<span class="fa fa-arrow-${direction} text-${direction === 'up' ? 'success' : 'danger'}"></span> ${value}`;
+  const fragment = new DocumentFragment();
+  const spanElm = document.createElement('span');
+  spanElm.className = `fa fa-arrow-${direction} text-${direction === 'up' ? 'success' : 'danger'}`;
+  fragment.appendChild(spanElm);
+  if (value instanceof HTMLElement) {
+    fragment.appendChild(value);
+  }
+  return fragment;
 };
 
 const transactionTypeFormatter: Formatter = (row: number, cell: number, value: string) =>
@@ -73,7 +80,7 @@ export class Example34 {
     }, this.refreshRate);
   }
 
-  detached() {
+  detaching() {
     this.stopSimulation();
   }
 
@@ -188,7 +195,7 @@ export class Example34 {
 
   getData() {
     // mock a dataset
-    this.dataset = [];
+    const tmpData = [];
     for (let i = 0; i < NB_ROWS; i++) {
       const randomPercent = Math.round(Math.random() * 100);
       const randomLowQty = this.randomNumber(1, 50);
@@ -202,7 +209,7 @@ export class Example34 {
       const currency = (Math.floor(Math.random() * 10)) % 2 ? 'CAD' : 'USD';
       const company = faker.company.name();
 
-      this.dataset[i] = {
+      tmpData[i] = {
         id: i,
         currency,
         trsnType: (Math.round(Math.random() * 100)) % 2 ? 'Buy' : 'Sell',
@@ -219,6 +226,7 @@ export class Example34 {
         historic: [price]
       };
     }
+    this.dataset = tmpData;
   }
 
   startSimulation() {

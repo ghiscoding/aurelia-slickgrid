@@ -1,44 +1,29 @@
 {
-  "compileOnSave": false,
   "compilerOptions": {
-    "target": "es2018",
-    "module": "esnext",
-    "sourceMap": true,
-    "allowSyntheticDefaultImports": true,
-    "downlevelIteration": true,
     "emitDecoratorMetadata": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
+    "module": "esnext",
     "moduleResolution": "node",
-    "allowJs": true,
-    "baseUrl": "src",
+    "target": "ES2021",
+    "lib": ["ES2021", "DOM"],
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "importHelpers": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noImplicitReturns": true,
     "skipLibCheck": true,
+    "strictNullChecks": true,
+    "declaration": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmitHelpers": false,
     "strict": true,
-    "lib": [
-      "es2018",
-      "dom"
-    ],
-    "types": [ "i18next", "i18next-xhr-backend" ],
-    "typeRoots": [
-      "node_modules/@types",
-      "src/typings"
-    ]
+    "stripInternal": true,
+    "sourceMap": true,
+    "declarationDir": "dist/types"
   },
-  "exclude": [
-    "aurelia_project",
-    "dist",
-    "jspm_packages",
-    "node_modules",
-    "**/*.spec.ts"
-  ],
-  "filesGlob": [
-    "./src/**/*.ts",
-    "./test/**/*.ts",
-    "./custom_typings/**/*.d.ts"
-  ],
-  "include": [
-    "src/**/*.ts",
-    "src/typings/**/*.ts"
-  ],
-  "typeAcquisition": { "include": ["jest"] }
+  "include": ["src"],
+  "exclude": ["src/**/*.spec.ts"]
 }

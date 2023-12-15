@@ -1,13 +1,6 @@
-# Change Log 
+# Change Log
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
-
-## [6.6.5](https://github.com/ghiscoding/aurelia-slickgrid/compare/v6.6.4...v6.6.5) (2023-12-13)
-
-
-### Bug Fixes
-
-* `devMode` can be false/object & use `!important` on text CSS utils ([#1125](https://github.com/ghiscoding/aurelia-slickgrid/issues/1125)) ([70ecf30](https://github.com/ghiscoding/aurelia-slickgrid/commit/70ecf303b99c45e84aac7e7a8dedf92b0ae37a2e))
 
 ## [6.6.4](https://github.com/ghiscoding/aurelia-slickgrid/compare/v6.6.3...v6.6.4) (2023-12-08)
 
@@ -25,7 +18,7 @@ All notable changes to this project will be documented in this file. See [Conven
 
 ## [6.6.2](https://github.com/ghiscoding/aurelia-slickgrid/compare/v6.6.1...v6.6.2) (2023-11-26)
 
-# Change Log 
+# Change Log
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
@@ -167,7 +160,7 @@ All notable changes to this project will be documented in this file. See [Conven
 
 * regression Edit cell mouseout should save & excel copy should work ([#941](https://github.com/ghiscoding/aurelia-slickgrid/issues/941)) ([2fa2761](https://github.com/ghiscoding/aurelia-slickgrid/commit/2fa276161a939082c08da5f010476795660e2a39)), closes [#1103](https://github.com/ghiscoding/aurelia-slickgrid/issues/1103)
 
-# Change Log 
+# Change Log
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
@@ -180,7 +173,7 @@ All notable changes to this project will be documented in this file. See [Conven
 * **RowDetail:** Row Detail extension should work with editable grid ([#938](https://github.com/ghiscoding/aurelia-slickgrid/issues/938)) ([1786415](https://github.com/ghiscoding/aurelia-slickgrid/commit/1786415d63c8fb9011e47bb4559dffe333a599b0))
 * use DOMPurify correct namespace for dts file ([#931](https://github.com/ghiscoding/aurelia-slickgrid/issues/931)) ([06f008a](https://github.com/ghiscoding/aurelia-slickgrid/commit/06f008ac2749f8a7fb4422dba78ca6657ce4f630))
 
-# Change Log 
+# Change Log
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
@@ -2012,3 +2005,4 @@ All notable changes to this project will be documented in this file. See [Conven
 * **query:** add `excludeFromQuery` prop and use it for Row Selection ([cda0e39](https://github.com/ghiscoding/aurelia-slickgrid/commit/cda0e39))
 * **queryFilter:** add new "queryFieldFilter" and "queryFieldSorter" ([9d2aae1](https://github.com/ghiscoding/aurelia-slickgrid/commit/9d2aae1))
 * **selectEditors:** add select grid editors ([#22](https://github.com/ghiscoding/aurelia-slickgrid/issues/22)) ([5bd7215](https://github.com/ghiscoding/aurelia-slickgrid/commit/5bd7215))
+

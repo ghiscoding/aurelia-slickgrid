@@ -1,11 +1,9 @@
-import { autoinject } from 'aurelia-framework';
 import { AureliaGridInstance, Column, GridOption, } from '../../aurelia-slickgrid';
 import './example7.scss';
 
 let columns1WithHighlightingById: any = {};
 let columns2WithHighlightingById: any = {};
 
-@autoinject()
 export class Example7 {
   title = 'Example 7: Header Button Plugin';
   subTitle = `
@@ -77,7 +75,7 @@ export class Example7 {
       gridHeight: 275,
       headerButton: {
         // you can use the "onCommand" (in Grid Options) and/or the "action" callback (in Column Definition)
-        onCommand: (_e, args) => this.handleOnCommand(_e, args, 1)
+        onCommand: (_e: any, args) => this.handleOnCommand(_e, args, 1)
       }
     };
 
@@ -89,7 +87,7 @@ export class Example7 {
       // frozenColumn: 2,
       // frozenRow: 2,
       headerButton: {
-        onCommand: (_e, args) => this.handleOnCommand(_e, args, 2)
+        onCommand: (_e: any, args) => this.handleOnCommand(_e, args, 2)
       }
     };
   }
@@ -122,9 +120,11 @@ export class Example7 {
   }
 
   loadData(count: number, gridNo: 1 | 2) {
+    const cols: Column[] = [];
+
     // Set up some test columns.
     for (let i = 0; i < 10; i++) {
-      this[`columnDefinitions${gridNo}`].push({
+      cols.push({
         id: i,
         name: 'Column ' + String.fromCharCode('A'.charCodeAt(0) + i),
         field: i + '',
@@ -165,8 +165,8 @@ export class Example7 {
     }
 
     // Set multiple buttons on the first column to demonstrate overflow.
-    this[`columnDefinitions${gridNo}`][0].name = 'Resize me!';
-    this[`columnDefinitions${gridNo}`][0].header = {
+    cols[0].name = 'Resize me!';
+    cols[0].header = {
       buttons: [
         {
           cssClass: 'fa fa-tag',
@@ -197,12 +197,12 @@ export class Example7 {
 
     // when floating to left, you might want to inverse the icon orders
     if (gridNo === 2) {
-      this.columnDefinitions2[0].header?.buttons?.reverse();
+      cols[0].header?.buttons?.reverse();
     }
 
     // Set a button on the second column to demonstrate hover.
-    this[`columnDefinitions${gridNo}`][1].name = 'Hover me!';
-    this[`columnDefinitions${gridNo}`][1].header = {
+    cols[1].name = 'Hover me!';
+    cols[1].header = {
       buttons: [
         {
           cssClass: 'fa fa-question-circle',
@@ -220,10 +220,14 @@ export class Example7 {
     for (let i = 0; i < count; i++) {
       const d: any = (mockDataset[i] = {});
       d['id'] = i;
-      for (let j = 0; j < this[`columnDefinitions${gridNo}`].length; j++) {
+      for (let j = 0; j < cols.length; j++) {
         d[j] = Math.round(Math.random() * 10) - 5;
       }
     }
+
+    // assign column definitions only once
+    this[`columnDefinitions${gridNo}`] = cols;
+
     return mockDataset;
   }
 }

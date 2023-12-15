@@ -17,7 +17,7 @@
                      column-definitions.bind="columnDefinitions1"
                      grid-options.bind="gridOptions1"
                      dataset.bind="dataset1"
-                     on-aurelia-grid-created.delegate="aureliaGrid1Ready($event.detail)">
+                     on-aurelia-grid-created.trigger="aureliaGrid1Ready($event.detail)">
   </aurelia-slickgrid>
   <br />
   <h5>Grid 2 - <span class="subtitle">with both Header Buttons & Menus</span></h5>
@@ -26,6 +26,6 @@
                      column-definitions.bind="columnDefinitions2"
                      grid-options.bind="gridOptions2"
                      dataset.bind="dataset2"
-                     on-aurelia-grid-created.delegate="aureliaGrid2Ready($event.detail)">
+                     on-aurelia-grid-created.trigger="aureliaGrid2Ready($event.detail)">
   </aurelia-slickgrid>
 </template>

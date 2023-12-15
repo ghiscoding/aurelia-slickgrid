@@ -1,11 +1,11 @@
-import { autoinject } from 'aurelia-framework';
-import { HttpClient } from 'aurelia-fetch-client';
+import { IHttpClient } from '@aurelia/fetch-client';
+import { newInstanceOf } from '@aurelia/kernel';
+
 import { AureliaGridInstance, Column, Filters, GridOption } from '../../aurelia-slickgrid';
 import './example22.scss';
 
 const URL_CUSTOMERS = 'assets/data/customers_100.json';
 
-@autoinject()
 export class Example22 {
   title = 'Example 22: Grids in Bootstrap Tabs';
   subTitle = `This example demonstrate the creation of multiple grids in Bootstrap Tabs
@@ -21,9 +21,8 @@ export class Example22 {
   columnDefinitions2: Column[] = [];
   dataset1: any[] = [];
   dataset2: any[] = [];
-  isGrid2Resize = false;
 
-  constructor(private http: HttpClient) {
+  constructor(@newInstanceOf(IHttpClient) readonly http: IHttpClient) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid1();
     this.defineGrid2();
@@ -118,8 +117,6 @@ export class Example22 {
    * and if it's not (like our use case) we need to resize the grid ourselve and we just need to do that once.
    */
   resizeGrid2() {
-    if (!this.isGrid2Resize) {
-      this.aureliaGrid2.resizerService.resizeGrid(10);
-    }
+    this.aureliaGrid2.resizerService.resizeGrid(10);
   }
 }
