@@ -68,6 +68,34 @@ The `CompositeEditor` class got renamed to `SlickCompositeEditor`, so if you wer
 }
 ```
 
+### Row Detail
+The way to create dynamic components changed a bit from Aurelia 1 and 2, so instead of passing a simple View path as a string, like we did previously, we'll pass a ViewModel directly so that we can use Aurelia 2 [Enhance](https://docs.aurelia.io/getting-to-know-aurelia/enhance) inside the Row Detail Service of Aurelia-Slickgrid.
+
+```diff
+this.gridOptions = {
+  rowDetailView: {
+-   preloadView: PLATFORM.moduleName('examples/slickgrid/example19-preload.html'),
++   preloadViewModel: Example19Preload,
+
+-   viewModel: PLATFORM.moduleName('examples/slickgrid/example19-detail-view'),
++   viewModel: Example19DetailView,
+  }
+}
+```
+
+However please note that since we're using a ViewModel, we also need to register them in our App.
+
+```ts
+import { Example19DetailView } from './examples/slickgrid/example19-detail-view';
+import { Example19Preload } from './examples/slickgrid/example19-preload';
+
+Aurelia.register(
+  // dynamic components to enhance
+  Example19DetailView,
+  Example19Preload,
+);
+```
+
 ### Deprecated code removed/renamed
 ##### Column
 - `exportColumnWidth` was removed, just use `excelExportOptions` instead
