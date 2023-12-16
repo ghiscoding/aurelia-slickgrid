@@ -7,7 +7,6 @@
     "moduleResolution": "node",
     "target": "ES2021",
     "lib": ["ES2021", "DOM"],
-    "esModuleInterop": true,
     "resolveJsonModule": true,
     "importHelpers": true,
     "noImplicitAny": true,

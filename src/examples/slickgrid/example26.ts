@@ -13,7 +13,6 @@ import {
   ViewModelBindableInputData,
 } from '../../aurelia-slickgrid';
 import { CustomAureliaViewModelEditor } from './custom-aureliaViewModelEditor';
-// import { CustomAureliaViewModelEditor } from './custom-aureliaViewModelEditor';
 import { CustomAureliaViewModelFilter } from './custom-aureliaViewModelFilter';
 import { CustomTitleFormatter } from './custom-title-formatter';
 import { EditorSelect } from './editor-select';

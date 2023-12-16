@@ -70,7 +70,7 @@ export class Example11 {
         field: 'id',
         excludeFromHeaderMenu: true,
         formatter: Formatters.icon,
-        params: { iconCssClass: 'fa fa-pencil pointer' },
+        params: { iconCssClass: 'fa fa-trash pointer' },
         minWidth: 30,
         maxWidth: 30,
         // use onCellClick OR grid.onClick.subscribe which you can see down below
