@@ -1,4 +1,4 @@
-import Aurelia/* , { StyleConfiguration }*/ from 'aurelia';
+import Aurelia from 'aurelia';
 import { MyApp } from './my-app';
 // Css files imported in this main file are NOT processed by style-loader
 // They are for sharedStyles in shadowDOM.
@@ -29,7 +29,7 @@ Aurelia
   */
   // Register all exports of the plugin
   .register(
-    RouterConfiguration.customize({ useHref: false, basePath: '/aurelia-slickgrid' }),
+    RouterConfiguration.customize({ useHref: false }),
 
     // dynamic components to enhance
     CustomTitleFormatter,
