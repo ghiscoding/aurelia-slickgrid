@@ -41,6 +41,9 @@ jobs:
       - name: Run npm install dependencies
         run: npm i
 
+      - name: Log
+        run: ls node_modules/aurelia-slickgrid
+
       # - name: Run Jest unit tests
       #   run: npm run test:ci
 
