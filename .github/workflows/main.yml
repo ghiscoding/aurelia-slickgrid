@@ -39,18 +39,18 @@ jobs:
       - run: npm --version
 
       - name: Run npm install dependencies
-        run: npm ci
+        run: npm i
 
       # - name: Run Jest unit tests
       #   run: npm run test:ci
 
-      - name: Upload Jest coverage to Codecov
-        if: ${{ !contains(github.event.head_commit.message, format('chore{0} release', ':')) }}
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          directory: test/jest-coverage
-          verbose: true
+      # - name: Upload Jest coverage to Codecov
+      #   if: ${{ !contains(github.event.head_commit.message, format('chore{0} release', ':')) }}
+      #   uses: codecov/codecov-action@v3
+      #   with:
+      #     token: ${{ secrets.CODECOV_TOKEN }}
+      #     directory: test/jest-coverage
+      #     verbose: true
 
       - name: Website Dev Build (served for Cypress)
         run: npm run build:demo
