@@ -38,23 +38,11 @@ jobs:
       - run: node --version
       - run: npm --version
 
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
-
-      - uses: actions/cache@v3
-        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-
-      - name: Run yarn install dependencies
-        run: yarn --frozen-lockfile
+      - name: Run npm install dependencies
+        run: npm ci
 
       - name: Run Jest unit tests
-        run: yarn test:ci
+        run: npm test:ci
 
       - name: Upload Jest coverage to Codecov
         if: ${{ !contains(github.event.head_commit.message, format('chore{0} release', ':')) }}
@@ -65,14 +53,14 @@ jobs:
           verbose: true
 
       - name: Website Dev Build (served for Cypress)
-        run: yarn build:demo
+        run: npm build:demo
 
       - name: Run Cypress E2E tests
         uses: cypress-io/github-action@v6
         with:
           install: false
           # working-directory: packages/dnd
-          start: yarn serve:demo
+          start: npm start
           wait-on: "http://localhost:9000"
           config-file: test/cypress.config.ts
           browser: chrome

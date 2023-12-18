@@ -37,7 +37,9 @@
   },
   "scripts": {
     "start": "webpack serve --env development",
-    "analyze": "webpack --env production --analyze"
+    "analyze": "webpack --env production --analyze",
+    "prebuild": "rimraf website",
+    "build": "webpack --env production"
   },
   "dependencies": {
     "@aurelia/i18n": "latest",
