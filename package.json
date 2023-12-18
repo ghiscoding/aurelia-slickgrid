@@ -38,8 +38,8 @@
     "new-release": "npm run release, note that yarn is not supported with release-it and will throw an error"
   },
   "devDependencies": {
-    "@aurelia/platform-browser": "latest",
     "@aurelia/platform": "latest",
+    "@aurelia/platform-browser": "latest",
     "@lerna-lite/cli": "^3.1.0",
     "@lerna-lite/publish": "^3.1.0",
     "@lerna-lite/watch": "^3.1.0",
@@ -54,6 +54,8 @@
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prefer-arrow": "^1.2.3",
+    "jest-extended": "^4.0.2",
+    "jsdom-global": "^3.0.2",
     "npm-run-all2": "^6.1.1",
     "pnpm": "^8.12.1",
     "rimraf": "^5.0.5",

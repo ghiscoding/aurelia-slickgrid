@@ -9,7 +9,6 @@ yarn-error.log
 
 # Distribution folder
 **/dist
-**/website
 **/dist-demo
 
 # Tests Report & Coverage

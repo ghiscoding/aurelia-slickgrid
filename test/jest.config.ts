@@ -5,7 +5,7 @@ const config: Config.InitialOptions = {
   globalSetup: '<rootDir>/test/jest-global-setup.ts',
   collectCoverage: false,
   collectCoverageFrom: [
-    'src/aurelia-slickgrid/**/*.ts',
+    'packages/aurelia-slickgrid/src/**/*.ts',
     '!dist/**',
     '!src/assets/**',
     '!src/**/models/**',
