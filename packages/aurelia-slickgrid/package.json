@@ -1,15 +1,7 @@
 {
   "name": "aurelia-slickgrid",
   "version": "7.0.2",
-  "description": "Slickgrid components made available in Aurelia",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "exports": {
-    "types": "./dist/types/index.d.ts",
-    "require": "./dist/index.js",
-    "import": "./dist/index.mjs",
-    "development": "./dist/index.dev.mjs"
-  },
+  "module": "dist/esm/index.js",
   "files": [
     "dist"
   ],
@@ -33,22 +25,15 @@
   },
   "scripts": {
     "prebuild": "rimraf dist",
-    "build1": "webpack --env production",
-    "build": "tsc && vite build",
-    "analyze": "webpack --env production --analyze"
+    "build": "tsc"
   },
   "comments": {
     "new-release": "npm run release, note that yarn is not supported with release-it and will throw an error"
   },
   "peerDependencies": {
     "@aurelia/i18n": "latest",
-    "@aurelia/kernel": "latest",
-    "@aurelia/platform": "latest",
-    "@aurelia/platform-browser": "latest",
-    "@aurelia/router-lite": "latest",
     "@aurelia/runtime": "latest",
     "@aurelia/runtime-html": "latest",
-    "@aurelia/validation-html": "latest",
     "@slickgrid-universal/common": "~4.0.3",
     "@slickgrid-universal/custom-footer-component": "~4.0.3",
     "@slickgrid-universal/empty-warning-component": "~4.0.3",

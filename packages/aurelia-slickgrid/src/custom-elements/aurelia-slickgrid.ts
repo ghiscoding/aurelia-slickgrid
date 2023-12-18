@@ -68,9 +68,23 @@ import {
   TranslaterService,
 } from '../services/index';
 import { SlickRowDetailView } from '../extensions/slickRowDetailView';
-import template from './aurelia-slickgrid.html?raw';
+// import template from './aurelia-slickgrid.html?raw';
 
-@customElement({ name: 'aurelia-slickgrid', template })
+@customElement({
+  name: 'aurelia-slickgrid',
+  template: `
+<div id="slickGridContainer-$\{gridId\}" class="grid-pane">
+  <!-- Header slot if you need to create a complex custom header -->
+  <au-slot name="slickgrid-header"></au-slot>
+
+  <div id.bind="gridId" class="slickgrid-container" style="width: 100%" focusout.trigger="commitEdit($event.target)"
+    ref="gridContainer">
+  </div>
+
+  <!-- Footer slot if you need to create a complex custom footer -->
+  <au-slot name="slickgrid-footer"></au-slot>
+</div>
+` })
 export class AureliaSlickgridCustomElement {
   protected _columnDefinitions: Column[] = [];
   protected _currentDatasetLength = 0;

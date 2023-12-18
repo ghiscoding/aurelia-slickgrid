@@ -14,7 +14,7 @@ import {
 } from '@slickgrid-universal/common';
 import { EventPubSubService } from '@slickgrid-universal/event-pub-sub';
 
-import { SlickGrid } from '../models/index';
+import { SlickGrid } from './index';
 
 export interface AureliaGridInstance {
   /** Slick DataView object */

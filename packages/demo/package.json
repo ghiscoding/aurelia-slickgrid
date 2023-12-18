@@ -16,25 +16,12 @@
   },
   "license": "MIT",
   "author": "Ghislain B.",
-  "main": "./dist/cjs/index.js",
-  "module": "./dist/esm/index.js",
-  "types": "index.d.ts",
   "typesVersions": {
     ">=4.2": {
       "*": [
         "dist/types/*"
       ]
     }
-  },
-  "exports": {
-    ".": {
-      "types": "./dist/types/index.d.ts",
-      "node": "./dist/cjs/index.js",
-      "require": "./dist/cjs/index.js",
-      "default": "./dist/esm/index.js"
-    },
-    "./package.json": "./package.json",
-    "./index": "./index"
   },
   "repository": {
     "type": "git",
@@ -49,25 +36,6 @@
     "access": "public"
   },
   "scripts": {
-    "build:demo": "webpack --env production",
-    "serve:demo": "servor ./website index.html 9000",
-    "delete:dist": "rimraf dist",
-    "lint": "eslint src/aurelia-slickgrid --ext .ts",
-    "build:cjs": "tsc --project src/aurelia-slickgrid/tsconfig.build.json --outDir dist/cjs --module commonjs --declaration false",
-    "postbuild:cjs": "copyfiles --up 2 src/aurelia-slickgrid/**/*.html dist/cjs",
-    "build:esm": "tsc --project src/aurelia-slickgrid/tsconfig.build.json --outDir dist/esm --module esnext --target es2021 --declaration false",
-    "postbuild:esm": "copyfiles --up 2 src/aurelia-slickgrid/**/*.html dist/esm",
-    "build:types": "tsc --project src/aurelia-slickgrid/tsconfig.build.json --emitDeclarationOnly --declarationMap --outDir dist/types",
-    "prebuild": "rimraf dist",
-    "build": " webpack --env production",
-    "esbuild:all": "rimraf dist && pnpm esbuild:cjs && pnpm esbuild:esm && pnpm build:types",
-    "esbuild:cjs": "esbuild src/aurelia-slickgrid/index.ts --bundle --minify --format=cjs --target=es2018 --outfile=dist/cjs/index.js",
-    "esbuild:esm": "esbuild src/aurelia-slickgrid/index.ts --bundle --minify --format=esm --target=es2021 --outfile=dist/esm/index.js",
-    "build:plugin": "run-p build:cjs build:esm build:types",
-    "postbuild:plugin": "npm-run-all copy-i18n:dist copy-asset-lib",
-    "build:with-e2e": "npm-run-all build cypress:ci",
-    "copy-asset-lib": "copyfiles --up 2 src/assets/lib/** dist",
-    "copy-i18n:dist": "copyfiles --up 3 src/assets/i18n/**/*.* dist/i18n",
     "start": "webpack serve --env development",
     "analyze": "webpack --env production --analyze"
   },

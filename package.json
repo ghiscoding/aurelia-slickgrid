@@ -25,10 +25,8 @@
   "scripts": {
     "delete:dist": "rimraf dist",
     "lint": "eslint --ext .ts",
-    "prebuild": "run-p delete:dist lint",
-    "build:webpack": "pnpm -r --stream --filter=\"{lib/**}\" build:webpack",
-    "esbuild:all": "pnpm -r --stream --filter=\"{lib/**}\" esbuild:all",
-    "start:dev": "pnpm -r --stream start:dev",
+    "build": "cd packages/aurelia-slickgrid && npm run build",
+    "start": "cd packages/demo && npm run start",
     "cypress:open": "cypress open --config-file test/cypress.config.ts",
     "cypress:ci": "cypress run --config-file test/cypress.config.ts",
     "test:ci": "npx jest --runInBand --coverage=true --ci --config ./test/jest.config.ts",
@@ -39,13 +37,11 @@
     "new-release": "npm run release, note that yarn is not supported with release-it and will throw an error"
   },
   "devDependencies": {
-    "@aurelia/vite-plugin": "^2.0.0-beta.9",
+    "@aurelia/platform-browser": "latest",
+    "@aurelia/platform": "latest",
     "@lerna-lite/cli": "^3.1.0",
     "@lerna-lite/publish": "^3.1.0",
     "@lerna-lite/watch": "^3.1.0",
-    "@rollup/plugin-commonjs": "^24.1.0",
-    "@rollup/plugin-node-resolve": "^15.2.3",
-    "@rollup/plugin-typescript": "^11.1.5",
     "@types/node": "^20.10.4",
     "@typescript-eslint/eslint-plugin": "^6.14.0",
     "@typescript-eslint/parser": "^6.14.0",
@@ -60,11 +56,7 @@
     "npm-run-all2": "^6.1.1",
     "pnpm": "^8.12.1",
     "rimraf": "^5.0.5",
-    "rollup-plugin-typescript-paths": "^1.4.0",
-    "typescript": "^5.3.3",
-    "unplugin-swc": "^1.4.4",
-    "vite": "^4.5.1",
-    "vite-plugin-commonjs": "^0.10.1"
+    "typescript": "^5.3.3"
   },
   "dependencies": {
     "webpack": "^5.89.0"

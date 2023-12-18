@@ -26,6 +26,7 @@
     "downlevelIteration": true,
     "outDir": "dist/esm"
   },
+  "include": ["src"],
   "exclude": [
     ".vscode",
     "dist",
