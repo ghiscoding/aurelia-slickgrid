@@ -42,7 +42,7 @@ jobs:
         run: npm ci
 
       - name: Run Jest unit tests
-        run: npm test:ci
+        run: npm run test:ci
 
       - name: Upload Jest coverage to Codecov
         if: ${{ !contains(github.event.head_commit.message, format('chore{0} release', ':')) }}
@@ -53,7 +53,7 @@ jobs:
           verbose: true
 
       - name: Website Dev Build (served for Cypress)
-        run: npm build:demo
+        run: npm run build:demo
 
       - name: Run Cypress E2E tests
         uses: cypress-io/github-action@v6
