@@ -24,18 +24,15 @@
   },
   "scripts": {
     "delete:dist": "rimraf dist",
-    "lint": "eslint --ext .ts",
-    "build": "cd packages/aurelia-slickgrid && npm run build",
-    "build:demo": "cd packages/demo && npm run build",
-    "start": "cd packages/demo && npm start",
+    "build": "npm run build -ws --if-present",
+    "build:demo": "npm run build:demo -ws --if-present",
+    "start": "npm run start -ws --if-present",
     "cypress:open": "cypress open --config-file test/cypress.config.ts",
     "cypress:ci": "cypress run --config-file test/cypress.config.ts",
+    "release": "npm run release -ws --if-present",
     "test:ci": "npx jest --runInBand --coverage=true --ci --config ./test/jest.config.ts",
     "test:jest": "npx jest --watch --detectOpenHandles --config test/jest.config.ts",
     "test:jest:coverage": "npx jest --detectOpenHandles --runInBand --coverage --config test/jest.config.ts"
-  },
-  "comments": {
-    "new-release": "npm run release, note that yarn is not supported with release-it and will throw an error"
   },
   "devDependencies": {
     "@4tw/cypress-drag-drop": "^2.2.5",
