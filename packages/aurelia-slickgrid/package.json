@@ -1,0 +1,65 @@
+{
+  "name": "aurelia-slickgrid",
+  "version": "7.0.2",
+  "keywords": [
+    "aurelia",
+    "datagrid",
+    "datatable",
+    "plugin",
+    "slickgrid"
+  ],
+  "homepage": "https://github.com/ghiscoding/aurelia-slickgrid",
+  "bugs": {
+    "url": "https://github.com/ghiscoding/aurelia-slickgrid/issues"
+  },
+  "license": "MIT",
+  "author": "Ghislain B.",
+  "files": [
+    "/dist",
+    "/src"
+  ],
+  "module": "./dist/esm/index.js",
+  "types": "./dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "default": "./dist/esm/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/ghiscoding/aurelia-slickgrid.git"
+  },
+  "scripts": {
+    "lint": "eslint src --ext .ts",
+    "prebuild": "rimraf dist",
+    "build": "tsc",
+    "postbuild": "npm run copy-i18n:dist && npm run copy-asset-lib",
+    "copy-asset-lib": "copyfiles --up 2 src/assets/lib/** dist",
+    "copy-i18n:dist": "copyfiles --up 3 src/assets/i18n/**/*.* dist/i18n",
+    "pack": "npm pack"
+  },
+  "comments": {
+    "new-release": "npm run release, note that yarn is not supported with release-it and will throw an error"
+  },
+  "peerDependencies": {
+    "aurelia": "latest"
+  },
+  "dependencies": {
+    "@aurelia/i18n": "latest",
+    "@aurelia/runtime": "latest",
+    "@aurelia/runtime-html": "latest",
+    "@slickgrid-universal/common": "~4.0.3",
+    "@slickgrid-universal/custom-footer-component": "~4.0.3",
+    "@slickgrid-universal/empty-warning-component": "~4.0.3",
+    "@slickgrid-universal/event-pub-sub": "~4.0.2",
+    "@slickgrid-universal/pagination-component": "~4.0.3",
+    "@slickgrid-universal/row-detail-view-plugin": "~4.0.3",
+    "dompurify": "^3.0.6",
+    "sortablejs": "^1.15.1"
+  },
+  "devDependencies": {
+    "copyfiles": "^2.4.1"
+  }
+}

@@ -5,14 +5,14 @@ const config: Config.InitialOptions = {
   globalSetup: '<rootDir>/test/jest-global-setup.ts',
   collectCoverage: false,
   collectCoverageFrom: [
-    'src/aurelia-slickgrid/**/*.ts',
+    'packages/aurelia-slickgrid/src/**/*.ts',
+    '!packages/aurelia-slickgrid/src/assets/**',
+    '!packages/aurelia-slickgrid/src/**/models/**',
     '!dist/**',
-    '!src/assets/**',
-    '!src/**/models/**',
     '!**/node_modules/**',
     '!**/models/**',
     '!**/test/**',
-    '!src/examples/**',
+    '!packages/demo/**',
   ],
   coverageDirectory: '<rootDir>/test/jest-coverage',
   coveragePathIgnorePatterns: [
@@ -36,7 +36,7 @@ const config: Config.InitialOptions = {
     'ts'
   ],
   modulePaths: [
-    '<rootDir>/src',
+    '<rootDir>/packages/aurelia-slickgrid/src',
     '<rootDir>/node_modules'
   ],
   preset: 'ts-jest',
