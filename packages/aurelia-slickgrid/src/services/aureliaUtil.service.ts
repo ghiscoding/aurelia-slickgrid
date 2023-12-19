@@ -1,7 +1,6 @@
 import { AureliaViewOutput, ViewModelBindableInputData } from '../models/index';
 import { Constructable, CustomElement, IAurelia, singleton } from 'aurelia';
 
-
 (IAurelia as any).test = 'import 1';
 
 @singleton()
