@@ -1,1 +1,0 @@
-const data=[];for(let t=0;t<500;t++){const a=data[t]={};a.id=t,a.title="Task "+t,a.description="This is a sample task description.\n  It can be multiline",a.duration="5 days",a.percentComplete=Math.round(100*Math.random()),a.start="01/01/2009",a.finish="01/05/2009",a.effortDriven=t%5==0}export default data;
