@@ -1,112 +1,110 @@
-<template>
-  <h2>
-    ${title}
-    <span class="float-end">
-      <a style="font-size: 18px"
-         target="_blank"
-         href="https://github.com/ghiscoding/aurelia-slickgrid/blob/master/src/examples/slickgrid/example6.ts">
-        <span class="fa fa-link"></span> code
-      </a>
-    </span>
-  </h2>
-  <div class="subtitle" innerhtml.bind="subTitle"></div>
+<h2>
+  ${title}
+  <span class="float-end">
+    <a style="font-size: 18px"
+        target="_blank"
+        href="https://github.com/ghiscoding/aurelia-slickgrid/blob/master/src/examples/slickgrid/example6.ts">
+      <span class="fa fa-link"></span> code
+    </a>
+  </span>
+</h2>
+<div class="subtitle" innerhtml.bind="subTitle"></div>
 
-  <div class="row">
-    <div class="col-sm-5">
-      <div class.bind="status.class" role="alert" data-test="status">
-        <strong>Status: </strong> ${status.text}
-        <span hidden.bind="!processing">
-          <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
-        </span>
-      </div>
+<div class="row">
+  <div class="col-sm-5">
+    <div class.bind="status.class" role="alert" data-test="status">
+      <strong>Status: </strong> ${status.text}
+      <span hidden.bind="!processing">
+        <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
+      </span>
+    </div>
 
-      <div class="row">
-        <div class="col-md-12">
-          <button class="btn btn-outline-secondary btn-sm" data-test="clear-filters-sorting"
-                  click.trigger="clearAllFiltersAndSorts()" title="Clear all Filters & Sorts">
-            <i class="fa fa-filter text-danger"></i>
-            Clear all Filter & Sorts
-          </button>
-          <button class="btn btn-outline-secondary btn-sm" data-test="set-dynamic-filter"
-                  click.trigger="setFiltersDynamically()">
-            Set Filters Dynamically
-          </button>
-          <button class="btn btn-outline-secondary btn-sm" data-test="set-dynamic-sorting"
-                  click.trigger="setSortingDynamically()">
-            Set Sorting Dynamically
-          </button>
-          <button class="btn btn-outline-secondary btn-sm" data-test="reset-presets"
-                  click.trigger="resetToOriginalPresets()">
-            Reset Original Presets
-          </button>
-          <label for="serverdelay" class="ml-4">Server Delay: </label>
-          <input id="serverdelay" type="number" data-test="server-delay" style="width: 55px"
-                value.bind="serverWaitDelay"
-                title="input a fake timer delay to simulate slow server response" />
-        </div>
-      </div>
-
-      <hr>
-
-      <div class="row">
-        <div class="col-md-12">
-          <button class="btn btn-outline-secondary btn-sm" click.trigger="switchLanguage()"
-                  data-test="language-button">
-            <i class="fa fa-language"></i>
-            Switch Language
-          </button>
-          <b>Locale:</b>
-          <span style="font-style: italic" data-test="selected-locale">
-            ${selectedLanguage + '.json'}
-          </span>
-        </div>
-
-        <span style="margin-left: 10px">
-          <label>Pagination strategy: </label>
-          <span data-test="radioStrategy">
-            <label class="radio-inline control-label" for="radioOffset">
-              <input type="radio" name="inlineRadioOptions" data-test="offset" id="radioOffset" checked value.bind="false"
-              click.trigger="setIsWithCursor(false)"> Offset
-            </label>
-            <label class="radio-inline control-label" for="radioCursor">
-              <input type="radio" name="inlineRadioOptions" data-test="cursor" id="radioCursor" value.bind="true"
-              click.trigger="setIsWithCursor(true)"> Cursor
-            </label>
-          </span>
-        </span>
-      </div>
-      <br />
-      <div if.bind="metrics" style="margin: 10px 0px">
-        <b>Metrics:</b> ${metrics.endTime | dateFormat: 'DD MMM, h:mm:ss a'} | ${metrics.executionTime}ms |
-        ${metrics.totalItemCount}
-        items
-      </div>
-      <div class="row" style="margin-bottom: 5px">
-        <div class="col-md-12">
-          <label>Programmatically go to first/last page:</label>
-          <button class="btn btn-outline-secondary btn-xs px-2" data-test="goto-first-page" click.trigger="goToFirstPage()">
-            <i class="fa fa-caret-left fa-lg"></i>
-          </button>
-          <button class="btn btn-outline-secondary btn-xs px-2" data-test="goto-last-page" click.trigger="goToLastPage()">
-            <i class="fa fa-caret-right fa-lg"></i>
-          </button>
-        </div>
+    <div class="row">
+      <div class="col-md-12">
+        <button class="btn btn-outline-secondary btn-sm" data-test="clear-filters-sorting"
+                click.trigger="clearAllFiltersAndSorts()" title="Clear all Filters & Sorts">
+          <i class="fa fa-filter text-danger"></i>
+          Clear all Filter & Sorts
+        </button>
+        <button class="btn btn-outline-secondary btn-sm" data-test="set-dynamic-filter"
+                click.trigger="setFiltersDynamically()">
+          Set Filters Dynamically
+        </button>
+        <button class="btn btn-outline-secondary btn-sm" data-test="set-dynamic-sorting"
+                click.trigger="setSortingDynamically()">
+          Set Sorting Dynamically
+        </button>
+        <button class="btn btn-outline-secondary btn-sm" data-test="reset-presets"
+                click.trigger="resetToOriginalPresets()">
+          Reset Original Presets
+        </button>
+        <label for="serverdelay" class="ml-4">Server Delay: </label>
+        <input id="serverdelay" type="number" data-test="server-delay" style="width: 55px"
+              value.bind="serverWaitDelay"
+              title="input a fake timer delay to simulate slow server response" />
       </div>
     </div>
-    <div class="col-sm-7">
-      <div class="alert alert-info" data-test="alert-graphql-query">
-        <strong>GraphQL Query:</strong> <span data-test="graphql-query-result">${graphqlQuery}</span>
+
+    <hr>
+
+    <div class="row">
+      <div class="col-md-12">
+        <button class="btn btn-outline-secondary btn-sm" click.trigger="switchLanguage()"
+                data-test="language-button">
+          <i class="fa fa-language"></i>
+          Switch Language
+        </button>
+        <b>Locale:</b>
+        <span style="font-style: italic" data-test="selected-locale">
+          ${selectedLanguage + '.json'}
+        </span>
+      </div>
+
+      <span style="margin-left: 10px">
+        <label>Pagination strategy: </label>
+        <span data-test="radioStrategy">
+          <label class="radio-inline control-label" for="radioOffset">
+            <input type="radio" name="inlineRadioOptions" data-test="offset" id="radioOffset" checked value.bind="false"
+            click.trigger="setIsWithCursor(false)"> Offset
+          </label>
+          <label class="radio-inline control-label" for="radioCursor">
+            <input type="radio" name="inlineRadioOptions" data-test="cursor" id="radioCursor" value.bind="true"
+            click.trigger="setIsWithCursor(true)"> Cursor
+          </label>
+        </span>
+      </span>
+    </div>
+    <br />
+    <div if.bind="metrics" style="margin: 10px 0px">
+      <b>Metrics:</b> ${metrics.endTime | dateFormat: 'DD MMM, h:mm:ss a'} | ${metrics.executionTime}ms |
+      ${metrics.totalItemCount}
+      items
+    </div>
+    <div class="row" style="margin-bottom: 5px">
+      <div class="col-md-12">
+        <label>Programmatically go to first/last page:</label>
+        <button class="btn btn-outline-secondary btn-xs px-2" data-test="goto-first-page" click.trigger="goToFirstPage()">
+          <i class="fa fa-caret-left fa-lg"></i>
+        </button>
+        <button class="btn btn-outline-secondary btn-xs px-2" data-test="goto-last-page" click.trigger="goToLastPage()">
+          <i class="fa fa-caret-right fa-lg"></i>
+        </button>
       </div>
     </div>
   </div>
+  <div class="col-sm-7">
+    <div class="alert alert-info" data-test="alert-graphql-query">
+      <strong>GraphQL Query:</strong> <span data-test="graphql-query-result">${graphqlQuery}</span>
+    </div>
+  </div>
+</div>
 
-  <hr />
+<hr />
 
-  <aurelia-slickgrid grid-id="grid6"
-                     column-definitions.bind="columnDefinitions"
-                     grid-options.bind="gridOptions"
-                     dataset.bind="dataset"
-                     on-aurelia-grid-created.trigger="aureliaGridReady($event.detail)"
-                     on-grid-state-changed.trigger="gridStateChanged($event.detail)">
-  </aurelia-slickgrid>
-</template>
+<aurelia-slickgrid grid-id="grid6"
+                    column-definitions.bind="columnDefinitions"
+                    grid-options.bind="gridOptions"
+                    dataset.bind="dataset"
+                    on-aurelia-grid-created.trigger="aureliaGridReady($event.detail)"
+                    on-grid-state-changed.trigger="gridStateChanged($event.detail)">
+</aurelia-slickgrid>
