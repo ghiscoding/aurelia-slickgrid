@@ -5,7 +5,7 @@ import { EventPubSubService } from '@slickgrid-universal/event-pub-sub';
 import { GridOption } from '../../models/gridOption.interface';
 import { AureliaUtilService } from '../../services';
 import { RowDetailView } from '../../models';
-import { HttpStub } from '../../../../test/httpClientStub';
+import { HttpStub } from '../../../../../test/httpClientStub';
 import { SlickRowDetailView } from '../slickRowDetailView';
 
 jest.mock('@slickgrid-universal/row-detail-view-plugin');

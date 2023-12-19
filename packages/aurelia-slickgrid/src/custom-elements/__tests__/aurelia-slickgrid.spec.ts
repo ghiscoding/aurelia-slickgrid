@@ -51,8 +51,8 @@ import { GraphqlPaginatedResult, GraphqlService, GraphqlServiceApi, GraphqlServi
 
 // import { RxJsResourceStub } from '../../../../test/rxjsResourceStub';
 // import { HttpStub } from '../../../../test/httpClientStub';
-import { MockSlickEvent, MockSlickEventHandler } from '../../../../test/mockSlickEvent';
-import { TranslaterServiceStub } from '../../../../test/translaterServiceStub';
+import { MockSlickEvent, MockSlickEventHandler } from '../../../../../test/mockSlickEvent';
+import { TranslaterServiceStub } from '../../../../../test/translaterServiceStub';
 import { AureliaUtilService, ContainerService, TranslaterService } from '../../services';
 import { AureliaSlickgridCustomElement } from '../aurelia-slickgrid';
 // import { SlickRowDetailView } from '../../extensions/slickRowDetailView';
