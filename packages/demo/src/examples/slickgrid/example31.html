@@ -1,97 +1,95 @@
-<template>
-  <h2>
-    ${title}
-    <span class="float-end">
-      <a style="font-size: 18px"
-         target="_blank"
-         href="https://github.com/ghiscoding/aurelia-slickgrid/blob/master/src/examples/slickgrid/example31.ts">
-        <span class="fa fa-link"></span> code
-      </a>
+<h2>
+  ${title}
+  <span class="float-end">
+    <a style="font-size: 18px"
+        target="_blank"
+        href="https://github.com/ghiscoding/aurelia-slickgrid/blob/master/src/examples/slickgrid/example31.ts">
+      <span class="fa fa-link"></span> code
+    </a>
+  </span>
+</h2>
+<div class="subtitle" innerhtml.bind="subTitle"></div>
+
+<div class="row">
+  <div class="col-md-12" aria-label="Basic Editing Commands">
+    <button class="btn btn-outline-secondary btn-sm" data-test="clear-filters-sorting"
+            click.trigger="clearAllFiltersAndSorts()" title="Clear all Filters & Sorts">
+      <span class="mdi mdi-close"></span>
+      <span>Clear all Filter & Sorts</span>
+    </button>
+    <button class="btn btn-outline-secondary btn-sm" data-test="set-dynamic-filter"
+            click.trigger="setFiltersDynamically()">
+      Set Filters Dynamically
+    </button>
+    <button class="btn btn-outline-secondary btn-sm" data-test="set-dynamic-sorting"
+            click.trigger="setSortingDynamically()">
+      Set Sorting Dynamically
+    </button>
+    <button class="btn btn-outline-secondary btn-sm" style="margin-left: 10px" data-test="add-gender-button"
+            click.trigger="addOtherGender()" disabled.bind="isOtherGenderAdded">
+      Add Other Gender via RxJS
+    </button>
+  </div>
+</div>
+
+<br />
+
+<div>
+  <span>
+    <label>Programmatically go to first/last page:</label>
+    <button class="btn btn-outline-secondary btn-xs px-2" data-test="goto-first-page" click.trigger="goToFirstPage()">
+      <i class="fa fa-caret-left fa-lg"></i>
+    </button>
+    <button class="btn btn-outline-secondary btn-xs px-2" data-test="goto-last-page" click.trigger="goToLastPage()">
+      <i class="fa fa-caret-right fa-lg"></i>
+    </button>
+  </span>
+
+  <span style="margin-left: 10px">
+    <label>OData Version: </label>
+    <span data-test="radioVersion">
+      <label class="radio-inline control-label" for="radio2">
+        <input type="radio" name="inlineRadioOptions" data-test="version2" id="radio2" checked value.bind="2"
+                click.trigger="setOdataVersion(2)"> 2
+      </label>
+      <label class="radio-inline control-label" for="radio4">
+        <input type="radio" name="inlineRadioOptions" data-test="version4" id="radio4" value.bind="4"
+                click.trigger="setOdataVersion(4)"> 4
+      </label>
     </span>
-  </h2>
-  <div class="subtitle" innerhtml.bind="subTitle"></div>
+    <label class="checkbox-inline control-label" for="enableCount" style="margin-left: 20px">
+      <input type="checkbox" id="enableCount" data-test="enable-count" checked.bind="isCountEnabled"
+              click.trigger="changeCountEnableFlag()">
+      <span style="font-weight: bold">Enable Count</span> (add to OData query)
+    </label>
+    <label class="checkbox-inline control-label" for="enableSelect" style="margin-left: 20px">
+      <input type="checkbox" id="enableSelect" data-test="enable-select" checked.bind="isSelectEnabled"
+              click.trigger="changeEnableSelectFlag()">
+      <span style="font-weight: bold">Enable Select</span> (add to OData query)
+    </label>
+    <label class="checkbox-inline control-label" for="enableExpand" style="margin-left: 20px">
+      <input type="checkbox" id="enableExpand" data-test="enable-expand" checked.bind="isExpandEnabled"
+              click.trigger="changeEnableExpandFlag()">
+      <span style="font-weight: bold">Enable Expand</span> (add to OData query)
+    </label>
+</div>
 
-  <div class="row">
-    <div class="col-md-12" aria-label="Basic Editing Commands">
-      <button class="btn btn-outline-secondary btn-sm" data-test="clear-filters-sorting"
-              click.trigger="clearAllFiltersAndSorts()" title="Clear all Filters & Sorts">
-        <span class="mdi mdi-close"></span>
-        <span>Clear all Filter & Sorts</span>
-      </button>
-      <button class="btn btn-outline-secondary btn-sm" data-test="set-dynamic-filter"
-              click.trigger="setFiltersDynamically()">
-        Set Filters Dynamically
-      </button>
-      <button class="btn btn-outline-secondary btn-sm" data-test="set-dynamic-sorting"
-              click.trigger="setSortingDynamically()">
-        Set Sorting Dynamically
-      </button>
-      <button class="btn btn-outline-secondary btn-sm" style="margin-left: 10px" data-test="add-gender-button"
-              click.trigger="addOtherGender()" disabled.bind="isOtherGenderAdded">
-        Add Other Gender via RxJS
-      </button>
+<div class="row" style="margin-top: 5px">
+  <div class="col-md-10">
+    <div class="alert alert-info" data-test="alert-odata-query">
+      <strong>OData Query:</strong> <span data-test="odata-query-result">${odataQuery}</span>
     </div>
   </div>
-
-  <br />
-
-  <div>
-    <span>
-      <label>Programmatically go to first/last page:</label>
-      <button class="btn btn-outline-secondary btn-xs px-2" data-test="goto-first-page" click.trigger="goToFirstPage()">
-        <i class="fa fa-caret-left fa-lg"></i>
-      </button>
-      <button class="btn btn-outline-secondary btn-xs px-2" data-test="goto-last-page" click.trigger="goToLastPage()">
-        <i class="fa fa-caret-right fa-lg"></i>
-      </button>
-    </span>
-
-    <span style="margin-left: 10px">
-      <label>OData Version: </label>
-      <span data-test="radioVersion">
-        <label class="radio-inline control-label" for="radio2">
-          <input type="radio" name="inlineRadioOptions" data-test="version2" id="radio2" checked value.bind="2"
-                 click.trigger="setOdataVersion(2)"> 2
-        </label>
-        <label class="radio-inline control-label" for="radio4">
-          <input type="radio" name="inlineRadioOptions" data-test="version4" id="radio4" value.bind="4"
-                 click.trigger="setOdataVersion(4)"> 4
-        </label>
-      </span>
-      <label class="checkbox-inline control-label" for="enableCount" style="margin-left: 20px">
-        <input type="checkbox" id="enableCount" data-test="enable-count" checked.bind="isCountEnabled"
-               click.trigger="changeCountEnableFlag()">
-        <span style="font-weight: bold">Enable Count</span> (add to OData query)
-      </label>
-      <label class="checkbox-inline control-label" for="enableSelect" style="margin-left: 20px">
-        <input type="checkbox" id="enableSelect" data-test="enable-select" checked.bind="isSelectEnabled"
-               click.trigger="changeEnableSelectFlag()">
-        <span style="font-weight: bold">Enable Select</span> (add to OData query)
-      </label>
-      <label class="checkbox-inline control-label" for="enableExpand" style="margin-left: 20px">
-        <input type="checkbox" id="enableExpand" data-test="enable-expand" checked.bind="isExpandEnabled"
-               click.trigger="changeEnableExpandFlag()">
-        <span style="font-weight: bold">Enable Expand</span> (add to OData query)
-      </label>
+  <div class.bind="status.class" role="alert" data-test="status">
+    <strong>Status: </strong> ${status.text}
   </div>
+</div>
 
-  <div class="row" style="margin-top: 5px">
-    <div class="col-md-10">
-      <div class="alert alert-info" data-test="alert-odata-query">
-        <strong>OData Query:</strong> <span data-test="odata-query-result">${odataQuery}</span>
-      </div>
-    </div>
-    <div class.bind="status.class" role="alert" data-test="status">
-      <strong>Status: </strong> ${status.text}
-    </div>
-  </div>
-
-  <aurelia-slickgrid grid-id="grid31"
-                     column-definitions.bind="columnDefinitions"
-                     grid-options.bind="gridOptions"
-                     dataset.bind="dataset"
-                     pagination-options.bind="paginationOptions"
-                     on-aurelia-grid-created.trigger="aureliaGridReady($event.detail)"
-                     on-grid-state-changed.trigger="gridStateChanged($event.detail)">
-  </aurelia-slickgrid>
-</template>
+<aurelia-slickgrid grid-id="grid31"
+                    column-definitions.bind="columnDefinitions"
+                    grid-options.bind="gridOptions"
+                    dataset.bind="dataset"
+                    pagination-options.bind="paginationOptions"
+                    on-aurelia-grid-created.trigger="aureliaGridReady($event.detail)"
+                    on-grid-state-changed.trigger="gridStateChanged($event.detail)">
+</aurelia-slickgrid>

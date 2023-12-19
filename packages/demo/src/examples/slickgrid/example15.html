@@ -1,37 +1,35 @@
-<template>
-  <h2>
-    ${title}
-    <span class="float-end">
-      <a style="font-size: 18px"
-         target="_blank"
-         href="https://github.com/ghiscoding/aurelia-slickgrid/blob/master/src/examples/slickgrid/example15.ts">
-        <span class="fa fa-link"></span> code
-      </a>
-    </span>
-  </h2>
-  <div class="subtitle" innerhtml.bind="subTitle"></div>
-
-  <button class="btn btn-outline-secondary btn-sm" data-test="reset-button"
-          click.trigger="clearGridStateFromLocalStorage()">
-    <i class="fa fa-times"></i>
-    Clear Grid State from Local Storage &amp; Reset Grid
-  </button>
-
-  <button class="btn btn-outline-secondary btn-sm" data-test="language-button" click.trigger="switchLanguage()">
-    <i class="fa fa-language"></i>
-    Switch Language
-  </button>
-  <strong>Locale:</strong>
-  <span style="font-style: italic" data-test="selected-locale">
-    ${selectedLanguage + '.json'}
+<h2>
+  ${title}
+  <span class="float-end">
+    <a style="font-size: 18px"
+        target="_blank"
+        href="https://github.com/ghiscoding/aurelia-slickgrid/blob/master/src/examples/slickgrid/example15.ts">
+      <span class="fa fa-link"></span> code
+    </a>
   </span>
+</h2>
+<div class="subtitle" innerhtml.bind="subTitle"></div>
 
-  <aurelia-slickgrid grid-id="grid15"
-                     column-definitions.bind="columnDefinitions"
-                     grid-options.bind="gridOptions"
-                     dataset.bind="dataset"
-                     on-aurelia-grid-created.trigger="aureliaGridReady($event.detail)"
-                     on-grid-state-changed.trigger="gridStateChanged($event.detail)"
-                     >
-  </aurelia-slickgrid>
-</template>
+<button class="btn btn-outline-secondary btn-sm" data-test="reset-button"
+        click.trigger="clearGridStateFromLocalStorage()">
+  <i class="fa fa-times"></i>
+  Clear Grid State from Local Storage &amp; Reset Grid
+</button>
+
+<button class="btn btn-outline-secondary btn-sm" data-test="language-button" click.trigger="switchLanguage()">
+  <i class="fa fa-language"></i>
+  Switch Language
+</button>
+<strong>Locale:</strong>
+<span style="font-style: italic" data-test="selected-locale">
+  ${selectedLanguage + '.json'}
+</span>
+
+<aurelia-slickgrid grid-id="grid15"
+                    column-definitions.bind="columnDefinitions"
+                    grid-options.bind="gridOptions"
+                    dataset.bind="dataset"
+                    on-aurelia-grid-created.trigger="aureliaGridReady($event.detail)"
+                    on-grid-state-changed.trigger="gridStateChanged($event.detail)"
+                    >
+</aurelia-slickgrid>
