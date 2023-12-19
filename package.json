@@ -29,8 +29,8 @@
     "start": "npm run start -ws --if-present",
     "cypress:open": "cypress open --config-file test/cypress.config.ts",
     "cypress:ci": "cypress run --config-file test/cypress.config.ts",
-    "preview:release": "cd packages/demo && npm run preview:release",
-    "release": "cd packages/demo && npm run release",
+    "preview:release": "npm run preview:release -ws --if-present",
+    "release": "npm run release -ws --if-present",
     "test:ci": "npx jest --runInBand --coverage=true --ci --config ./test/jest.config.ts",
     "test:jest": "npx jest --watch --detectOpenHandles --config test/jest.config.ts",
     "test:jest:coverage": "npx jest --detectOpenHandles --runInBand --coverage --config test/jest.config.ts"

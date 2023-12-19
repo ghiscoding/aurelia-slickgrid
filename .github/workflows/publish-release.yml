@@ -67,6 +67,7 @@ jobs:
           git config --global user.name "${{ github.actor }}"
           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
           npm whoami
+          cd packages/aurelia-slickgrid
           npx release-it --ci --dry-run
 
       - name: OTP
@@ -89,6 +90,7 @@ jobs:
           git config --global user.name "${{ github.actor }}"
           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
           npm whoami
+          cd packages/aurelia-slickgrid
           npx release-it --ci --npm.otp=${{ steps.wait-for-secrets.outputs.OTP }}
 
       - name: Website Dev Build (served for Cypress)
