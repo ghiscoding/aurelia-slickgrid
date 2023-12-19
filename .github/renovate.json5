@@ -7,10 +7,6 @@
   rangeStrategy: "bump",
   packageRules: [
     {
-      depTypeList: ["peerDependencies"],
-      enabled: false,
-    },
-    {
       packageNames: ["i18next"],
       allowedVersions: "22.5.0"
     },

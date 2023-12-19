@@ -44,6 +44,9 @@
     "new-release": "npm run release, note that yarn is not supported with release-it and will throw an error"
   },
   "peerDependencies": {
+    "aurelia": "latest"
+  },
+  "dependencies": {
     "@aurelia/i18n": "latest",
     "@aurelia/runtime": "latest",
     "@aurelia/runtime-html": "latest",
@@ -53,9 +56,10 @@
     "@slickgrid-universal/event-pub-sub": "~4.0.2",
     "@slickgrid-universal/pagination-component": "~4.0.3",
     "@slickgrid-universal/row-detail-view-plugin": "~4.0.3",
-    "aurelia": "latest",
-    "copyfiles": "^2.4.1",
     "dompurify": "^3.0.6",
     "sortablejs": "^1.15.1"
+  },
+  "devDependencies": {
+    "copyfiles": "^2.4.1"
   }
 }
