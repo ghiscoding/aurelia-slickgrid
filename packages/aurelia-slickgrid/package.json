@@ -1,11 +1,6 @@
 {
   "name": "aurelia-slickgrid",
   "version": "7.0.2",
-  "module": "dist/esm/index.js",
-  "files": [
-    "dist"
-  ],
-  "types": "dist/types/index.d.ts",
   "keywords": [
     "aurelia",
     "datagrid",
@@ -19,13 +14,31 @@
   },
   "license": "MIT",
   "author": "Ghislain B.",
+  "files": [
+    "/dist",
+    "/src"
+  ],
+  "module": "./dist/esm/index.js",
+  "types": "./dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "default": "./dist/esm/index.js"
+    },
+    "./package.json": "./package.json"
+  },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/ghiscoding/aurelia-slickgrid.git"
   },
   "scripts": {
+    "lint": "eslint src --ext .ts",
     "prebuild": "rimraf dist",
-    "build": "tsc"
+    "build": "tsc",
+    "postbuild": "npm run copy-i18n:dist && npm run copy-asset-lib",
+    "copy-asset-lib": "copyfiles --up 2 src/assets/lib/** dist",
+    "copy-i18n:dist": "copyfiles --up 3 src/assets/i18n/**/*.* dist/i18n",
+    "pack": "npm pack"
   },
   "comments": {
     "new-release": "npm run release, note that yarn is not supported with release-it and will throw an error"
@@ -41,9 +54,8 @@
     "@slickgrid-universal/pagination-component": "~4.0.3",
     "@slickgrid-universal/row-detail-view-plugin": "~4.0.3",
     "aurelia": "latest",
+    "copyfiles": "^2.4.1",
     "dompurify": "^3.0.6",
     "sortablejs": "^1.15.1"
-  },
-  "dependencies": {
   }
 }
