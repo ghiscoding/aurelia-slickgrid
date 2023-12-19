@@ -42,9 +42,6 @@
     "release": "release-it --only-version",
     "pack": "npm pack"
   },
-  "comments": {
-    "new-release": "npm run release, note that yarn is not supported with release-it and will throw an error"
-  },
   "peerDependencies": {
     "aurelia": "latest"
   },
