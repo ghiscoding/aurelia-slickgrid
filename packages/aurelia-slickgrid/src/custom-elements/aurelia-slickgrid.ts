@@ -139,7 +139,7 @@ export class AureliaSlickgridCustomElement {
   sharedService: SharedService;
   sortService: SortService;
   treeDataService: TreeDataService;
-  gridContainer: HTMLDivElement;
+  gridContainer!: HTMLDivElement;
 
   @bindable({ mode: BindingMode.twoWay }) columnDefinitions: Column[] = [];
   @bindable({ mode: BindingMode.twoWay }) element!: Element;
