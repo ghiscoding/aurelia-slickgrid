@@ -105,3 +105,8 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./packages/demo/website
+
+      - name: Update NPM lock file
+        run: |
+          npm i
+          git commit -a -m "chore: release update npm lock file"
