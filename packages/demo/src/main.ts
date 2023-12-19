@@ -31,10 +31,10 @@ Aurelia
 
     // dynamic components to enhance
     CustomTitleFormatter,
-    // Example19DetailView,
-    // Example19Preload,
-    // EditorSelect,
-    // FilterSelect,
+    Example19DetailView,
+    Example19Preload,
+    EditorSelect,
+    FilterSelect,
   )
   .register(I18nConfiguration.customize((options) => {
     options.translationAttributeAliases = ['i18n', 'tr'];

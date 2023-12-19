@@ -10,6 +10,7 @@ import {
   GridOption,
   OnEventArgs,
   OperatorType,
+  SlickGlobalEditorLock,
   ViewModelBindableInputData,
 } from 'aurelia-slickgrid';
 import { CustomAureliaViewModelEditor } from './custom-aureliaViewModelEditor';
@@ -17,9 +18,6 @@ import { CustomAureliaViewModelFilter } from './custom-aureliaViewModelFilter';
 import { CustomTitleFormatter } from './custom-title-formatter';
 import { EditorSelect } from './editor-select';
 import { FilterSelect } from './filter-select';
-
-// using external non-typed js libraries
-declare const Slick: any;
 
 const NB_ITEMS = 100;
 
@@ -352,7 +350,7 @@ export class Example26 {
 
   undo() {
     const command = this._commandQueue.pop();
-    if (command && Slick.GlobalEditorLock.cancelCurrentEdit()) {
+    if (command && SlickGlobalEditorLock.cancelCurrentEdit()) {
       command.undo();
       this.aureliaGrid.slickGrid.gotoCell(command.row, command.cell, false);
     }
