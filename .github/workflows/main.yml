@@ -39,10 +39,7 @@ jobs:
       - run: npm --version
 
       - name: Run npm install dependencies
-        run: npm i
-
-      - name: Log
-        run: ls node_modules/aurelia-slickgrid
+        run: npm ci
 
       # - name: Run Jest unit tests
       #   run: npm run test:ci
@@ -54,6 +51,9 @@ jobs:
       #     token: ${{ secrets.CODECOV_TOKEN }}
       #     directory: test/jest-coverage
       #     verbose: true
+
+      - name: Build
+        run: npm run build
 
       - name: Website Dev Build (served for Cypress)
         run: npm run build:demo
