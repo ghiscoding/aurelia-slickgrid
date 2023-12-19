@@ -31,6 +31,9 @@
     "type": "git",
     "url": "git+ssh://git@github.com/ghiscoding/aurelia-slickgrid.git"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "lint": "eslint src --ext .ts",
     "prebuild": "rimraf dist",
