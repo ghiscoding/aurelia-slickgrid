@@ -30,32 +30,42 @@ jobs:
         with:
           fetch-depth: 3
 
-      - name: Set Node.js version
+      - name: Set NodeJS
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
 
-      - run: node --version
-      - run: npm --version
-
-      - name: Get npm cache directory
-        id: npm-cache-dir
-        shell: bash
-        run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
-
-      - uses: actions/cache@v3
-        id: npm-cache # use this to check for `cache-hit` ==> if: steps.npm-cache.outputs.cache-hit != 'true'
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
         with:
-          path: ${{ steps.npm-cache-dir.outputs.dir }}
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+          version: 8
+          run_install: false
 
-      - name: Run npm install dependencies
-        run: npm ci
+      - run: node --version
+      - run: pnpm --version
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Run pnpm install dependencies
+        run: pnpm install
+
+      - name: Build Plugin
+        run: pnpm build
 
       - name: Run Jest unit tests
-        run: npm run test:ci
+        if: ${{ !contains(github.event.head_commit.message, 'chore(release)') }}
+        run: pnpm test:ci
 
       - name: Upload Jest coverage to Codecov
         if: ${{ !contains(github.event.head_commit.message, format('chore{0} release', ':')) }}
@@ -65,18 +75,15 @@ jobs:
           directory: test/jest-coverage
           verbose: true
 
-      - name: Build
-        run: npm run build
-
       - name: Website Dev Build (served for Cypress)
-        run: npm run build:demo
+        run: pnpm build:demo
 
       - name: Run Cypress E2E tests
         uses: cypress-io/github-action@v6
         with:
           install: false
           # working-directory: packages/dnd
-          start: npm start
+          start: pnpm start
           wait-on: "http://localhost:9000"
           config-file: test/cypress.config.ts
           browser: chrome

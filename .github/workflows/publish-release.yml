@@ -41,21 +41,28 @@ jobs:
           registry-url: 'https://registry.npmjs.org/'
           node-version: 20
 
-      - name: Get npm cache directory
-        id: npm-cache-dir
-        shell: bash
-        run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
-
-      - uses: actions/cache@v3
-        id: npm-cache # use this to check for `cache-hit` ==> if: steps.npm-cache.outputs.cache-hit != 'true'
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
         with:
-          path: ${{ steps.npm-cache-dir.outputs.dir }}
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+          version: 8
+          run_install: false
 
-      - name: Run npm install dependencies
-        run: npm ci
+      - name: Get pnpm store directory
+        run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Run pnpm install dependencies
+        run: pnpm install
+
+      - name: Build Library
+        run: pnpm build
 
       - name: 🧪 Dry-Run - GitHub Release
         if: ${{ inputs.dryrun == true }}
@@ -66,9 +73,9 @@ jobs:
         run: |
           git config --global user.name "${{ github.actor }}"
           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
-          npm whoami
+          pnpm whoami
           cd packages/aurelia-slickgrid
-          npx release-it --ci --dry-run
+          pnpm exec release-it --ci --dry-run
 
       - name: OTP
         if: ${{ inputs.dryrun != true }}
@@ -89,13 +96,13 @@ jobs:
         run: |
           git config --global user.name "${{ github.actor }}"
           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
-          npm whoami
+          pnpm whoami
           cd packages/aurelia-slickgrid
-          npx release-it --ci --npm.otp=${{ steps.wait-for-secrets.outputs.OTP }}
+          pnpm exec release-it --ci --npm.otp=${{ steps.wait-for-secrets.outputs.OTP }}
 
       - name: Website Dev Build (served for Cypress)
         if: ${{ inputs.dryrun != true }}
-        run: npm run build:demo
+        run: pnpm build:demo
 
         # deploy (re-publish) GitHub demo page with a Prod build but only when merging to "master" branch
         # and the commit message contains the text "chore: release"
@@ -105,8 +112,3 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./packages/demo/website
-
-      - name: Update NPM lock file
-        run: |
-          npm i
-          git commit -a -m "chore: release update npm lock file"
