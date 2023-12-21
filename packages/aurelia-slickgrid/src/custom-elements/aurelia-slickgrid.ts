@@ -47,9 +47,9 @@ import {
   emptyElement,
   ExtensionName,
   GridStateType,
-  Utils as SlickUtils,
 } from '@slickgrid-universal/common';
 import { EventPubSubService } from '@slickgrid-universal/event-pub-sub';
+import { extend } from '@slickgrid-universal/utils';
 import { SlickFooterComponent } from '@slickgrid-universal/custom-footer-component';
 import { SlickEmptyWarningComponent } from '@slickgrid-universal/empty-warning-component';
 import { SlickPaginationComponent } from '@slickgrid-universal/pagination-component';
@@ -1299,7 +1299,7 @@ export class AureliaSlickgridCustomElement {
     gridOptions.enablePagination = ((gridOptions.backendServiceApi && gridOptions.enablePagination === undefined) ? true : gridOptions.enablePagination) || false;
 
     // use extend to deep merge & copy to avoid immutable properties being changed in GlobalGridOptions after a route change
-    const options = SlickUtils.extend(true, {}, GlobalGridOptions, gridOptions) as GridOption;
+    const options = extend(true, {}, GlobalGridOptions, gridOptions) as GridOption;
 
     // using copy extend to do a deep clone has an unwanted side on objects and pageSizes but ES6 spread has other worst side effects
     // so we will just overwrite the pageSizes when needed, this is the only one causing issues so far.
