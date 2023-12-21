@@ -217,7 +217,7 @@ importers:
         specifier: latest
         version: 2.0.0-beta.9
       aurelia-slickgrid:
-        specifier: workspace:*
+        specifier: latest
         version: link:../aurelia-slickgrid
       bootstrap:
         specifier: ^5.3.2
