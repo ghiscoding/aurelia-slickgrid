@@ -149,25 +149,25 @@ importers:
   packages/demo:
     dependencies:
       '@aurelia/fetch-client':
-        specifier: 2.0.0-beta.9
+        specifier: latest
         version: 2.0.0-beta.9
       '@aurelia/i18n':
-        specifier: 2.0.0-beta.9
+        specifier: latest
         version: 2.0.0-beta.9
       '@aurelia/kernel':
-        specifier: 2.0.0-beta.9
+        specifier: latest
         version: 2.0.0-beta.9
       '@aurelia/metadata':
-        specifier: 2.0.0-beta.9
+        specifier: latest
         version: 2.0.0-beta.9
       '@aurelia/router':
-        specifier: 2.0.0-beta.9
+        specifier: latest
         version: 2.0.0-beta.9
       '@aurelia/runtime':
-        specifier: 2.0.0-beta.9
+        specifier: latest
         version: 2.0.0-beta.9
       '@aurelia/runtime-html':
-        specifier: 2.0.0-beta.9
+        specifier: latest
         version: 2.0.0-beta.9
       '@faker-js/faker':
         specifier: ^8.3.1
@@ -206,7 +206,7 @@ importers:
         specifier: ~4.0.3
         version: 4.0.3
       aurelia:
-        specifier: 2.0.0-beta.9
+        specifier: latest
         version: 2.0.0-beta.9
       aurelia-slickgrid:
         specifier: workspace:*
@@ -234,13 +234,13 @@ importers:
         version: 7.8.1
     devDependencies:
       '@aurelia/testing':
-        specifier: 2.0.0-beta.9
+        specifier: latest
         version: 2.0.0-beta.9
       '@aurelia/ts-jest':
-        specifier: 2.0.0-beta.9
+        specifier: latest
         version: 2.0.0-beta.9(@babel/core@7.23.6)(jest@28.1.3)(typescript@5.3.3)
       '@aurelia/webpack-loader':
-        specifier: 2.0.0-beta.9
+        specifier: latest
         version: 2.0.0-beta.9
       '@types/dompurify':
         specifier: ^3.0.5
@@ -257,12 +257,6 @@ importers:
       '@types/sortablejs':
         specifier: ^1.15.7
         version: 1.15.7
-      '@typescript-eslint/eslint-plugin':
-        specifier: ^6.15.0
-        version: 6.15.0(@typescript-eslint/parser@6.15.0)(eslint@8.56.0)(typescript@5.3.3)
-      '@typescript-eslint/parser':
-        specifier: ^6.15.0
-        version: 6.15.0(eslint@8.56.0)(typescript@5.3.3)
       aurelia-polyfills:
         specifier: ^1.3.4
         version: 1.3.4
@@ -281,9 +275,6 @@ importers:
       css-loader:
         specifier: ^6.8.1
         version: 6.8.1(webpack@5.89.0)
-      cypress:
-        specifier: ^13.6.1
-        version: 13.6.1
       dotenv-webpack:
         specifier: ^8.0.1
         version: 8.0.1(webpack@5.89.0)
@@ -320,9 +311,6 @@ importers:
       sass-loader:
         specifier: ^13.3.2
         version: 13.3.2(sass@1.69.5)(webpack@5.89.0)
-      servor:
-        specifier: ^4.0.2
-        version: 4.0.2
       source-map-loader:
         specifier: ^4.0.1
         version: 4.0.1(webpack@5.89.0)
@@ -8930,11 +8918,6 @@ packages:
       send: 0.18.0
     transitivePeerDependencies:
       - supports-color
-
-  /servor@4.0.2:
-    resolution: {integrity: sha512-MlmQ5Ntv4jDYUN060x/KEmN7emvIqKMZ9OkM+nY8Bf2+KkyLmGsTqWLyAN2cZr5oESAcH00UanUyyrlS1LRjFw==}
-    hasBin: true
-    dev: true
 
   /set-function-length@1.1.1:
     resolution: {integrity: sha512-VoaqjbBJKiWtg4yRcKBQ7g7wnGnLV3M8oLvVWwOk2PdYY6PEFegR1vezXR0tw6fZGF9csVakIRjrJiy2veSBFQ==}
