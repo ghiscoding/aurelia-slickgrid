@@ -40,6 +40,8 @@
     "@4tw/cypress-drag-drop": "^2.2.5",
     "@aurelia/platform": "latest",
     "@aurelia/platform-browser": "latest",
+    "@jest/types": "^29.6.3",
+    "@types/jest": "^29.5.11",
     "@types/node": "^20.10.5",
     "@typescript-eslint/eslint-plugin": "^6.15.0",
     "@typescript-eslint/parser": "^6.15.0",
@@ -54,16 +56,12 @@
     "jest-extended": "^4.0.2",
     "jest-transform-stub": "^2.0.0",
     "jsdom-global": "^3.0.2",
+    "moment-mini": "^2.29.4",
     "npm-run-all2": "^6.1.1",
     "pnpm": "^8.12.1",
     "rimraf": "^5.0.5",
     "ts-jest": "^29.1.1",
     "typescript": "^5.3.3"
-  },
-  "dependencies": {
-    "@jest/types": "^29.6.3",
-    "@types/jest": "^29.5.11",
-    "webpack": "^5.89.0"
   },
   "packageManager": "pnpm@8.12.1"
 }
