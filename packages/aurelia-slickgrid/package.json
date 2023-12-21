@@ -57,6 +57,7 @@
     "@slickgrid-universal/event-pub-sub": "~4.1.0",
     "@slickgrid-universal/pagination-component": "~4.1.0",
     "@slickgrid-universal/row-detail-view-plugin": "~4.1.0",
+    "@slickgrid-universal/utils": "^4.1.0",
     "dequal": "^2.0.3",
     "dompurify": "^3.0.6",
     "moment-mini": "^2.29.4",

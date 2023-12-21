@@ -113,6 +113,9 @@ importers:
       '@slickgrid-universal/row-detail-view-plugin':
         specifier: ~4.1.0
         version: 4.1.0
+      '@slickgrid-universal/utils':
+        specifier: ^4.1.0
+        version: 4.1.0
       aurelia:
         specifier: latest
         version: 2.0.0-beta.9
