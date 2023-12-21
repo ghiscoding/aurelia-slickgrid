@@ -41,9 +41,6 @@ jobs:
           version: 8
           run_install: false
 
-      - run: node --version
-      - run: pnpm --version
-
       - name: Get pnpm store directory
         shell: bash
         run: |
@@ -57,8 +54,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
 
-      - name: Run pnpm install dependencies
-        run: pnpm install
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+          run_install: true
+
+      - run: pnpm --version
 
       - name: Build Plugin
         run: pnpm build
@@ -93,6 +94,7 @@ jobs:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           # pass GitHub token to allow accurately detecting a build vs a re-run build
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          Cypress_extended: true
 
       # deploy (re-publish) GitHub demo page with a Prod build but only when merging to "master" branch
       # and the commit message contains the text "chore: release"
