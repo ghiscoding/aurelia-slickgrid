@@ -35,7 +35,6 @@
     "access": "public"
   },
   "scripts": {
-    "lint": "eslint src --ext .ts",
     "prebuild": "rimraf dist",
     "build": "tsc",
     "postbuild": "npm run copy-i18n:dist && npm run copy-asset-lib",
@@ -58,12 +57,18 @@
     "@slickgrid-universal/event-pub-sub": "~4.0.2",
     "@slickgrid-universal/pagination-component": "~4.0.3",
     "@slickgrid-universal/row-detail-view-plugin": "~4.0.3",
+    "dequal": "^2.0.3",
     "dompurify": "^3.0.6",
+    "moment-mini": "^2.29.4",
     "sortablejs": "^1.15.1"
   },
   "devDependencies": {
     "@release-it/conventional-changelog": "^8.0.1",
+    "@types/dompurify": "^3.0.5",
     "copyfiles": "^2.4.1",
-    "release-it": "^17.0.1"
+    "release-it": "^17.0.1",
+    "rimraf": "^5.0.5",
+    "tslib": "^2.6.2",
+    "typescript": "^5.3.3"
   }
 }

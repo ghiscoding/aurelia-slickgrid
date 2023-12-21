@@ -45,7 +45,7 @@ module.exports = ({ production, node } = {}, { server } = {}, { analyze } = {}) 
     },
     resolve: {
       extensions: ['.ts', '.js'],
-      modules: [path.resolve(__dirname, 'src'), '../../node_modules'],
+      modules: [path.resolve(__dirname, 'src'), './node_modules'],
       alias: production ? {
         // add your production aliases here
       } : {
@@ -154,7 +154,7 @@ function getAureliaDevAliases() {
     const name = pkg === 'aurelia' ? pkg : `@aurelia/${pkg}`;
     try {
       const packageLocation = require.resolve(name);
-      map[name] = path.resolve(packageLocation, `../../esm/index.dev.mjs`);
+      map[name] = path.resolve(packageLocation, `./esm/index.dev.mjs`);
     } catch {/**/ }
     return map;
   });

@@ -7,7 +7,10 @@
     "target": "es2018",
     "module": "commonjs",
     "lib": ["es2018"],
-    "types": ["cypress", "jest", "jest-extended", "node"]
+    "types": ["cypress", "jest", "jest-extended", "node"],
+    "typeRoots": [
+      "../node_modules/@types"
+    ]
   },
   "include": ["**/*.spec.ts", "src/typings/**/*.ts", "**/*.d.ts"]
 }
