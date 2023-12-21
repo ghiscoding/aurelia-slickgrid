@@ -59,7 +59,7 @@
     "@slickgrid-universal/rxjs-observable": "~4.1.0",
     "@slickgrid-universal/text-export": "~4.1.0",
     "aurelia": "latest",
-    "aurelia-slickgrid": "workspace:*",
+    "aurelia-slickgrid": "latest",
     "bootstrap": "^5.3.2",
     "dompurify": "^3.0.6",
     "flatpickr": "^4.6.13",
