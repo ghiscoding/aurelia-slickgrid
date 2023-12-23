@@ -53,6 +53,11 @@ handleOnHeaderMenuCommand(e) {
 
 ---
 
+#### SlickCellExternalCopyManager (extension)
+  - `onCopyCells`
+  - `onCopyCancelled`
+  - `onPasteCells`
+
 #### SlickContextMenu (extension)
   - `onContextMenuClearGrouping`
   - `onContextMenuCollapseAllGroups`
@@ -112,13 +117,13 @@ handleOnHeaderMenuCommand(e) {
   - `onTreeFullToggleEnd`
   - `onTreeItemToggled`
 
-#### SlickVanillaGridBundle
+#### Aurelia-Slickgrid Component
   - `onBeforeGridDestroy`
   - `onAfterGridDestroyed`
   - `onBeforeGridCreate`
   - `onDataviewCreated`
   - `onGridCreated`
-  - `onSlickerGridCreated`
+  - `onAureliaGridCreated`
   - `onGridStateChanged`
 
 #### SlickGrid
