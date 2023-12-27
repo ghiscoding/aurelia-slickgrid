@@ -53,7 +53,7 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
   }
   /** Getter for the Grid Options pulled through the Grid Object */
   get gridOptions(): GridOption {
-    return this._grid?.getOptions() || {};
+    return (this._grid?.getOptions() || {}) as GridOption;
   }
 
   get rowDetailViewOptions(): RowDetailView | undefined {
@@ -163,8 +163,9 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
               this.handleOnBeforeRowDetailToggle(event, args);
 
               if (typeof this.rowDetailViewOptions?.onBeforeRowDetailToggle === 'function') {
-                this.rowDetailViewOptions.onBeforeRowDetailToggle(event, args);
+                return this.rowDetailViewOptions.onBeforeRowDetailToggle(event, args);
               }
+              return true;
             });
           }
 
