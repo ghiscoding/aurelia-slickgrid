@@ -9,12 +9,11 @@ import {
   PaginationService,
   ResizerService,
   SlickDataView,
+  SlickGrid,
   SortService,
   TreeDataService
 } from '@slickgrid-universal/common';
 import { EventPubSubService } from '@slickgrid-universal/event-pub-sub';
-
-import { SlickGrid } from './index';
 
 export interface AureliaGridInstance {
   /** Slick DataView object */

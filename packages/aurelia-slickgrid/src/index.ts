@@ -25,7 +25,6 @@ import type {
   AureliaViewOutput,
   GridOption,
   RowDetailView,
-  SlickGrid,
   ViewModelBindableData,
   ViewModelBindableInputData
 } from './models/index';
@@ -36,7 +35,6 @@ export {
   AureliaViewOutput,
   GridOption,
   RowDetailView,
-  SlickGrid,
   ViewModelBindableData,
   ViewModelBindableInputData,
   SlickgridConfig

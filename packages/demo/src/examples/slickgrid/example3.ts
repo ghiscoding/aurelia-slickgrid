@@ -32,7 +32,7 @@ const URL_COUNTRY_NAMES = 'assets/data/country_names.json';
 const myCustomTitleValidator: EditorValidator = (value: any) => {
   // you can get the Editor Args which can be helpful, e.g. we can get the Translate Service from it
   // const grid = args && args.grid;
-  // const gridOptions = (grid && grid.getOptions) ? grid.getOptions() : {};
+  // const gridOptions = grid.getOptions() as GridOption;
   // const i18n = gridOptions.i18n;
 
   // to get the editor object, you'll need to use "internalColumnEditor"
