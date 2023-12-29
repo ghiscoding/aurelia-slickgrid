@@ -1,5 +1,3 @@
-##### updated for version `3.x`
-
 ##### index
 - [Grid, DataView objects through AureliaGridCreated](#grid--dataview-objects-through-aureliagridcreated)
 - [Grid, DataView objects & Services via `instances` bindable](#grid--dataview-objects--services-through-instances-bindable)
