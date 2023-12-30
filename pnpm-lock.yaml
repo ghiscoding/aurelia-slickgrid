@@ -319,6 +319,9 @@ importers:
       sass-loader:
         specifier: ^13.3.2
         version: 13.3.2(sass@1.69.5)(webpack@5.89.0)
+      servor:
+        specifier: ^4.0.2
+        version: 4.0.2
       source-map-loader:
         specifier: ^4.0.1
         version: 4.0.1(webpack@5.89.0)
@@ -9360,6 +9363,11 @@ packages:
       send: 0.18.0
     transitivePeerDependencies:
       - supports-color
+    dev: true
+
+  /servor@4.0.2:
+    resolution: {integrity: sha512-MlmQ5Ntv4jDYUN060x/KEmN7emvIqKMZ9OkM+nY8Bf2+KkyLmGsTqWLyAN2cZr5oESAcH00UanUyyrlS1LRjFw==}
+    hasBin: true
     dev: true
 
   /set-blocking@2.0.0:

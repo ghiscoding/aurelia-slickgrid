@@ -36,7 +36,8 @@
     "dev": "webpack serve --env development",
     "analyze": "webpack --env production --analyze",
     "prebuild": "rimraf website",
-    "build:demo": "webpack --env production"
+    "build:demo": "webpack --env production",
+    "serve:demo": "servor ./website index.html 9000"
   },
   "dependencies": {
     "@aurelia/fetch-client": "latest",
@@ -95,6 +96,7 @@
     "rimraf": "^5.0.5",
     "sass": "^1.69.5",
     "sass-loader": "^13.3.2",
+    "servor": "^4.0.2",
     "source-map-loader": "^4.0.1",
     "style-loader": "^3.3.3",
     "ts-loader": "^9.5.1",
