@@ -45,11 +45,11 @@
     "@lerna-lite/cli": "^3.1.0",
     "@lerna-lite/publish": "^3.1.0",
     "@types/jest": "^29.5.11",
-    "@types/node": "^20.10.5",
-    "@typescript-eslint/eslint-plugin": "^6.15.0",
-    "@typescript-eslint/parser": "^6.15.0",
+    "@types/node": "^20.10.6",
+    "@typescript-eslint/eslint-plugin": "^6.16.0",
+    "@typescript-eslint/parser": "^6.16.0",
     "cross-env": "^7.0.3",
-    "cypress": "^13.6.1",
+    "cypress": "^13.6.2",
     "eslint": "^8.56.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-prefer-arrow": "^1.2.3",
@@ -61,10 +61,10 @@
     "jsdom-global": "^3.0.2",
     "moment-mini": "^2.29.4",
     "npm-run-all2": "^6.1.1",
-    "pnpm": "^8.12.1",
+    "pnpm": "^8.13.1",
     "rimraf": "^5.0.5",
     "ts-jest": "^29.1.1",
     "typescript": "^5.3.3"
   },
-  "packageManager": "pnpm@8.12.1"
+  "packageManager": "pnpm@8.13.1"
 }
