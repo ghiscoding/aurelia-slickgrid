@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.2.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v7.1.0...v7.2.0) (2023-12-30)
+
+### Features
+
+* (re)add option to cancel Row Detail opening ([#1136](https://github.com/ghiscoding/aurelia-slickgrid/issues/1136)) ([b4980ec](https://github.com/ghiscoding/aurelia-slickgrid/commit/b4980ecf93493c791c244f39ea3e88f9ab5470a1)) - by @ghiscoding
+
 # [7.1.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v7.0.3...v7.1.0) (2023-12-21)
 
 ### Bug Fixes
