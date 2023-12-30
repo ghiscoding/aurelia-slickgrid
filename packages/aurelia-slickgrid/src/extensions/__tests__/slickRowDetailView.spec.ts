@@ -677,6 +677,28 @@ describe('SlickRowDetailView', () => {
 
       expect(handlerSpy).toHaveBeenCalled();
     });
+
+    it('should call internal event handler subscribe and expect the "onBeforeRowDetailToggle" option to be called and return true when addon notify is called', () => {
+      gridOptionsMock.rowDetailView!.onBeforeRowDetailToggle = undefined;
+      const onAsyncRespSpy = jest.spyOn(gridOptionsMock.rowDetailView as RowDetailView, 'onAsyncResponse');
+      const onAsyncEndSpy = jest.spyOn(gridOptionsMock.rowDetailView as RowDetailView, 'onAsyncEndUpdate');
+      const onAfterRowSpy = jest.spyOn(gridOptionsMock.rowDetailView as RowDetailView, 'onAfterRowDetailToggle');
+      // const onBeforeRowSpy = jest.spyOn(gridOptionsMock.rowDetailView as RowDetailView, 'onBeforeRowDetailToggle');
+      const onRowOutViewSpy = jest.spyOn(gridOptionsMock.rowDetailView as RowDetailView, 'onRowOutOfViewportRange');
+      const onRowBackViewSpy = jest.spyOn(gridOptionsMock.rowDetailView as RowDetailView, 'onRowBackToViewportRange');
+
+      plugin.init(gridStub);
+      plugin.onBeforeRowDetailToggle = new SlickEvent();
+      plugin.register();
+      const result = plugin.onBeforeRowDetailToggle.notify({ item: columnsMock[0], grid: gridStub }, new SlickEventData(), gridStub);
+
+      expect(result.getReturnValue()).toEqual(true);
+      expect(onAsyncRespSpy).not.toHaveBeenCalled();
+      expect(onAsyncEndSpy).not.toHaveBeenCalled();
+      expect(onAfterRowSpy).not.toHaveBeenCalled();
+      expect(onRowOutViewSpy).not.toHaveBeenCalled();
+      expect(onRowBackViewSpy).not.toHaveBeenCalled();
+    });
   });
 
   describe('possible error thrown', () => {

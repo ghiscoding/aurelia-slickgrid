@@ -163,8 +163,9 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
               this.handleOnBeforeRowDetailToggle(event, args);
 
               if (typeof this.rowDetailViewOptions?.onBeforeRowDetailToggle === 'function') {
-                this.rowDetailViewOptions.onBeforeRowDetailToggle(event, args);
+                return this.rowDetailViewOptions.onBeforeRowDetailToggle(event, args);
               }
+              return true;
             });
           }
 

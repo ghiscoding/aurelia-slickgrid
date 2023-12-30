@@ -123,7 +123,17 @@ export class Example19 {
         viewModel: Example19DetailView,
 
         // Optionally pass your Parent Component reference to your Child Component (row detail component)
-        parent: this
+        parent: this,
+
+        onBeforeRowDetailToggle: (e, args) => {
+          // you coud cancel opening certain rows
+          // if (args.item.rowId === 1) {
+          //   e.preventDefault();
+          //   return false;
+          // }
+          console.log('before toggling row detail', args.item);
+          return true;
+        },
       }
     };
   }
@@ -163,6 +173,7 @@ export class Example19 {
 
   changeEditableGrid() {
     // this.rowDetailInstance.setOptions({ useRowClick: false });
+    this.rowDetailInstance.collapseAll();
     (this.rowDetailInstance as any).addonOptions.useRowClick = false;
     this.gridOptions.autoCommitEdit = !this.gridOptions.autoCommitEdit;
     this.aureliaGrid?.slickGrid.setOptions({
