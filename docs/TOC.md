@@ -81,6 +81,10 @@
   * [Pagination Schema](backend-services/graphql/GraphQL-Pagination.md)
   * [Sorting Schema](backend-services/graphql/GraphQL-Sorting.md)
 
+## Developer Guides
+
+* [CSP Compliance](developer-guides/csp-compliance.md)
+
 ## Migrations
 
 * [Migration Guide to 2.x](migrations/migration-to-2.x.md)

@@ -29,7 +29,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/ghiscoding/aurelia-slickgrid.git"
+    "url": "https://github.com/ghiscoding/aurelia-slickgrid.git",
+    "directory": "packages/aurelia-slickgrid"
   },
   "publishConfig": {
     "access": "public"
@@ -37,6 +38,7 @@
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "tsc",
+    "dev": "tsc --watch",
     "postbuild": "npm run copy-i18n:dist && npm run copy-asset-lib",
     "copy-asset-lib": "copyfiles --up 2 src/assets/lib/** dist",
     "copy-i18n:dist": "copyfiles --up 3 src/assets/i18n/**/*.* dist/i18n",

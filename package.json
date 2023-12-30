@@ -20,13 +20,14 @@
   "author": "Ghislain B.",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/ghiscoding/aurelia-slickgrid.git"
+    "url": "https://github.com/ghiscoding/aurelia-slickgrid.git"
   },
   "scripts": {
     "delete:dist": "rimraf dist",
     "build": "pnpm -r --stream build",
     "build:demo": "pnpm -r --stream build:demo",
-    "start": "pnpm -r --stream start",
+    "serve:demo": "pnpm -r serve:demo",
+    "dev": "pnpm -r --stream --parallel dev",
     "cypress:open": "cypress open --config-file test/cypress.config.ts",
     "cypress:ci": "cypress run --config-file test/cypress.config.ts",
     "lint": "eslint packages --ext .ts",
