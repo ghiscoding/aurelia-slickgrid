@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.2.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v7.2.0...v7.2.1) (2023-12-30)
+
+### Bug Fixes
+
+* sync row defatil grid option to fix build ([#1138](https://github.com/ghiscoding/aurelia-slickgrid/issues/1138)) ([f51220f](https://github.com/ghiscoding/aurelia-slickgrid/commit/f51220fd66d5426bafca7765d13be2bd203a255d)) - by @ghiscoding
+
 # [7.2.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v7.1.0...v7.2.0) (2023-12-30)
 
 ### Features
