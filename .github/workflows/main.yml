@@ -84,7 +84,7 @@ jobs:
         with:
           install: false
           # working-directory: packages/dnd
-          start: pnpm start
+          start: pnpm serve:demo
           wait-on: "http://localhost:9000"
           config-file: test/cypress.config.ts
           browser: chrome
