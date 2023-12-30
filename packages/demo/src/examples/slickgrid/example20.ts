@@ -295,7 +295,7 @@ export class Example20 {
 
   setFrozenColumns(frozenCols: number) {
     this.gridObj.setOptions({ frozenColumn: frozenCols });
-    this.gridOptions = this.gridObj.getOptions() as GridOption;
+    this.gridOptions = this.gridObj.getOptions();
   }
 
   /** toggle dynamically, through slickgrid "setOptions()" the top/bottom pinned location */

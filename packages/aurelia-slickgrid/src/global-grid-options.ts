@@ -99,13 +99,11 @@ export const GlobalGridOptions: Partial<GridOption> = {
     syncGridSelectionWithBackendService: false, // but disable it when using backend services
   },
   datasetIdPropertyName: 'id',
-  defaultAureliaEventPrefix: '',
   defaultFilter: Filters.input,
   defaultBackendServiceFilterTypingDebounce: 500,
   defaultColumnSortFieldId: 'id',
   defaultFilterPlaceholder: '🔎︎', // magnifying glass icon
   defaultFilterRangeOperator: OperatorType.rangeInclusive,
-  defaultSlickgridEventPrefix: '',
   editable: false,
   editorTypingDebounce: 450,
   filterTypingDebounce: 0,
