@@ -29,7 +29,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/ghiscoding/aurelia-slickgrid.git"
+    "url": "https://github.com/ghiscoding/aurelia-slickgrid.git",
+    "directory": "packages/aurelia-slickgrid"
   },
   "publishConfig": {
     "access": "public"
