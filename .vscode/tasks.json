@@ -4,43 +4,43 @@
     {
       "label": "Build Library",
       "type": "shell",
-      "command": "yarn run build:plugin",
+      "command": "pnpm run build:plugin",
       "problemMatcher": []
     },
     {
       "label": "Build GitHub Demo (prod build)",
       "type": "shell",
-      "command": "yarn run build:demo",
+      "command": "pnpm build:demo",
       "problemMatcher": []
     },
     {
       "label": "Cypress Open GUI",
       "type": "shell",
-      "command": "yarn run cypress:open",
+      "command": "pnpm cypress:open",
       "problemMatcher": []
     },
     {
       "label": "Cypress CI (mochawesome)",
       "type": "shell",
-      "command": "yarn run cypress:ci",
+      "command": "pnpm cypress:ci",
       "problemMatcher": []
     },
     {
       "label": "Run Jest Tests with Coverage",
       "type": "shell",
-      "command": "yarn test:jest:coverage",
+      "command": "pnpm test:jest:coverage",
       "problemMatcher": []
     },
     {
       "label": "Run Jest Watch",
       "type": "shell",
-      "command": "yarn test:jest",
+      "command": "pnpm test:jest",
       "problemMatcher": []
     },
     {
       "label": "Start Library Development",
       "type": "shell",
-      "command": "yarn start",
+      "command": "pnpm dev",
       "problemMatcher": []
     },
     {

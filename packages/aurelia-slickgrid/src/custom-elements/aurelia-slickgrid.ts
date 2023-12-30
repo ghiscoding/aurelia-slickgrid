@@ -655,21 +655,14 @@ export class AureliaSlickgridCustomElement {
     }
 
     // when a hierarchical dataset is set afterward, we can reset the flat dataset and call a tree data sort that will overwrite the flat dataset
-    if (
-      newHierarchicalDataset &&
-      this.grid &&
-      this.sortService?.processTreeDataInitialSort
-    ) {
+    if (newHierarchicalDataset && this.grid && this.sortService?.processTreeDataInitialSort) {
       this.sortService.processTreeDataInitialSort();
 
       // we also need to reset/refresh the Tree Data filters because if we inserted new item(s) then it might not show up without doing this refresh
       // however we need 1 cpu cycle before having the DataView refreshed, so we need to wrap this check in a setTimeout
       setTimeout(() => {
         const flatDatasetLn = this.dataview.getItemCount();
-        if (
-          flatDatasetLn > 0 &&
-          (flatDatasetLn !== prevFlatDatasetLn || !isDatasetEqual)
-        ) {
+        if (flatDatasetLn > 0 && (flatDatasetLn !== prevFlatDatasetLn || !isDatasetEqual)) {
           this.filterService.refreshTreeDataFilters();
         }
       });
@@ -793,7 +786,7 @@ export class AureliaSlickgridCustomElement {
             // filtering data with local dataset will not always show correctly unless we call this updateRow/render
             // also don't use "invalidateRows" since it destroys the entire row and as bad user experience when updating a row
             // see commit: https://github.com/ghiscoding/aurelia-slickgrid/commit/8c503a4d45fba11cbd8d8cc467fae8d177cc4f60
-            if (args?.rows && Array.isArray(args.rows)) {
+            if (Array.isArray(args?.rows)) {
               args.rows.forEach((row: number) => grid.updateRow(row));
               grid.render();
             }
