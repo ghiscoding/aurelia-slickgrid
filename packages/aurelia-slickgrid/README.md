@@ -54,11 +54,11 @@ For a complete working set of demos, you can clone the [Aurelia-Slickgrid Demos]
 ## License
 [MIT License](LICENSE)
 
-### Like it? :star: it
-You like and use **Aurelia-Slickgrid**? Be sure to upvote :star: and feel free to contribute. :construction_worker:
+### Like it? ⭐ it
+You like and use **Aurelia-Slickgrid**? Be sure to upvote ⭐ and feel free to contribute. :construction_worker:
 
 #### Like my work?
-You could :star: the lib and maybe support me with cafeine :coffee:. Thanks.
+You could ⭐ the lib and maybe support me with cafeine ☕. Thanks.
 
 <a href='https://ko-fi.com/ghiscoding' target='_blank'><img height='32' style='border:0px;height:32px;' src='https://az743702.vo.msecnd.net/cdn/kofi3.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' />
 
