@@ -92,7 +92,7 @@
     "isomorphic-fetch": "^3.0.0",
     "npm-run-all2": "^6.1.1",
     "postcss": "^8.4.33",
-    "postcss-loader": "^7.3.4",
+    "postcss-loader": "^8.0.0",
     "rimraf": "^5.0.5",
     "sass": "^1.69.7",
     "sass-loader": "^14.0.0",
