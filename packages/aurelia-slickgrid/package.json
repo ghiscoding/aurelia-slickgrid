@@ -61,7 +61,7 @@
     "dequal": "^2.0.3",
     "dompurify": "^3.0.8",
     "moment-mini": "^2.29.4",
-    "sortablejs": "^1.15.1"
+    "sortablejs": "^1.15.2"
   },
   "devDependencies": {
     "@types/dompurify": "^3.0.5",
