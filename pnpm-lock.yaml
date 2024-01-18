@@ -314,11 +314,11 @@ importers:
         specifier: ^5.0.5
         version: 5.0.5
       sass:
-        specifier: ^1.69.7
-        version: 1.69.7
+        specifier: ^1.70.0
+        version: 1.70.0
       sass-loader:
         specifier: ^14.0.0
-        version: 14.0.0(sass@1.69.7)(webpack@5.89.0)
+        version: 14.0.0(sass@1.70.0)(webpack@5.89.0)
       servor:
         specifier: ^4.0.2
         version: 4.0.2
@@ -9210,7 +9210,7 @@ packages:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
     dev: true
 
-  /sass-loader@14.0.0(sass@1.69.7)(webpack@5.89.0):
+  /sass-loader@14.0.0(sass@1.70.0)(webpack@5.89.0):
     resolution: {integrity: sha512-oceP9wWbep/yRJ2+sMbCzk0UsXsDzdNis+N8nu9i5GwPXjy6v3DNB6TqfJLSpPO9k4+B8x8p/CEgjA9ZLkoLug==}
     engines: {node: '>= 18.12.0'}
     peerDependencies:
@@ -9227,12 +9227,12 @@ packages:
         optional: true
     dependencies:
       neo-async: 2.6.2
-      sass: 1.69.7
+      sass: 1.70.0
       webpack: 5.89.0(webpack-cli@5.1.4)
     dev: true
 
-  /sass@1.69.7:
-    resolution: {integrity: sha512-rzj2soDeZ8wtE2egyLXgOOHQvaC2iosZrkF6v3EUG+tBwEvhqUCzm0VP3k9gHF9LXbSrRhT5SksoI56Iw8NPnQ==}
+  /sass@1.70.0:
+    resolution: {integrity: sha512-uUxNQ3zAHeAx5nRFskBnrWzDUJrrvpCPD5FNAoRvTi0WwremlheES3tg+56PaVtCs5QDRX5CBLxxKMDJMEa1WQ==}
     engines: {node: '>=14.0.0'}
     hasBin: true
     dependencies:
