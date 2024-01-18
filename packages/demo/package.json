@@ -94,7 +94,7 @@
     "postcss": "^8.4.33",
     "postcss-loader": "^8.0.0",
     "rimraf": "^5.0.5",
-    "sass": "^1.69.7",
+    "sass": "^1.70.0",
     "sass-loader": "^14.0.0",
     "servor": "^4.0.2",
     "source-map-loader": "^5.0.0",
