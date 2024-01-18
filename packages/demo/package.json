@@ -97,7 +97,7 @@
     "sass": "^1.69.7",
     "sass-loader": "^13.3.3",
     "servor": "^4.0.2",
-    "source-map-loader": "^4.0.2",
+    "source-map-loader": "^5.0.0",
     "style-loader": "^3.3.4",
     "ts-loader": "^9.5.1",
     "ts-node": "^10.9.2",
