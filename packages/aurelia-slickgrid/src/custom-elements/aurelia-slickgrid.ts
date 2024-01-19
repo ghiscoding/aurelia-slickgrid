@@ -92,6 +92,7 @@ export class AureliaSlickgridCustomElement {
   protected _eventHandler!: SlickEventHandler;
   protected _eventPubSubService!: EventPubSubService;
   protected _hideHeaderRowAfterPageLoad = false;
+  protected _isAutosizeColsCalled = false;
   protected _isGridInitialized = false;
   protected _isDatasetInitialized = false;
   protected _isDatasetHierarchicalInitialized = false;
@@ -291,6 +292,7 @@ export class AureliaSlickgridCustomElement {
 
     this.gridOptions.translater = this.translaterService;
     this._eventHandler = eventHandler;
+    this._isAutosizeColsCalled = false;
 
     // when detecting a frozen grid, we'll automatically enable the mousewheel scroll handler so that we can scroll from both left/right frozen containers
     if (this.gridOptions && ((this.gridOptions.frozenRow !== undefined && this.gridOptions.frozenRow >= 0) || this.gridOptions.frozenColumn !== undefined && this.gridOptions.frozenColumn >= 0) && this.gridOptions.enableMouseWheelScrollHandler === undefined) {
@@ -640,8 +642,9 @@ export class AureliaSlickgridCustomElement {
 
     // expand/autofit columns on first page load
     // we can assume that if the oldValue was empty then we are on first load
-    if (this.gridOptions.autoFitColumnsOnFirstLoad && (!oldValue || oldValue.length < 1)) {
+    if (this.grid && this.gridOptions.autoFitColumnsOnFirstLoad && (!oldValue || oldValue.length < 1) && !this._isAutosizeColsCalled) {
       this.grid.autosizeColumns();
+      this._isAutosizeColsCalled = true;
     }
   }
 
@@ -880,11 +883,6 @@ export class AureliaSlickgridCustomElement {
       throw new Error(`[Aurelia-Slickgrid] You cannot enable both autosize/fit viewport & resize by content, you must choose which resize technique to use. You can enable these 2 options ("autoFitColumnsOnFirstLoad" and "enableAutoSizeColumns") OR these other 2 options ("autosizeColumnsByCellContentOnFirstLoad" and "enableAutoResizeColumnsByCellContent").`);
     }
 
-    // expand/autofit columns on first page load
-    if (grid && options.autoFitColumnsOnFirstLoad && options.enableAutoSizeColumns && typeof grid.autosizeColumns === 'function') {
-      this.grid.autosizeColumns();
-    }
-
     // auto-resize grid on browser resize
     if (options.gridHeight || options.gridWidth) {
       this.resizerService.resizeGrid(0, { height: options.gridHeight, width: options.gridWidth });
@@ -892,10 +890,10 @@ export class AureliaSlickgridCustomElement {
       this.resizerService.resizeGrid();
     }
 
-    if (grid && options?.enableAutoResize) {
-      if (options.autoFitColumnsOnFirstLoad && options.enableAutoSizeColumns && typeof grid.autosizeColumns === 'function') {
-        grid.autosizeColumns();
-      }
+    // expand/autofit columns on first page load
+    if (grid && options?.enableAutoResize && options.autoFitColumnsOnFirstLoad && options.enableAutoSizeColumns && !this._isAutosizeColsCalled) {
+      grid.autosizeColumns();
+      this._isAutosizeColsCalled = true;
     }
   }
 
@@ -1019,6 +1017,14 @@ export class AureliaSlickgridCustomElement {
       this.grid.setColumns(this.columnDefinitions);
     }
     return showing;
+  }
+
+  setData(data: any[], shouldAutosizeColumns = false) {
+    if (shouldAutosizeColumns) {
+      this._isAutosizeColsCalled = false;
+      this._currentDatasetLength = 0;
+    }
+    this.dataset = data || [];
   }
 
   /**
