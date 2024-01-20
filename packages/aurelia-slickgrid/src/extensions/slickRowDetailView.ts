@@ -2,6 +2,8 @@
 import {
   addToArrayWhenNotExists,
   EventSubscription,
+  OnBeforeRowDetailToggleArgs,
+  OnRowBackToViewportRangeArgs,
   SlickEventData,
   SlickEventHandler,
   SlickGrid,
@@ -282,7 +284,7 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
    * if it's expanding we will add it to our View Slots reference array if we don't already have it
    * or if it's collapsing we will remove it from our View Slots reference array
    */
-  protected handleOnBeforeRowDetailToggle(_e: Event, args: { grid: SlickGrid; item: any; }) {
+  protected handleOnBeforeRowDetailToggle(_e: SlickEventData<OnBeforeRowDetailToggleArgs>, args: { grid: SlickGrid; item: any; }) {
     // expanding
     if (args?.item?.__collapsed) {
       // expanding row detail
@@ -306,7 +308,7 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
   }
 
   /** When Row comes back to Viewport Range, we need to redraw the View */
-  protected async handleOnRowBackToViewportRange(_e: Event, args: {
+  protected async handleOnRowBackToViewportRange(_e: SlickEventData<OnRowBackToViewportRangeArgs>, args: {
     item: any;
     rowId: string | number;
     rowIndex: number;

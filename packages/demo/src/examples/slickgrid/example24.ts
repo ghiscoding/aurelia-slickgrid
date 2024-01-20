@@ -300,8 +300,8 @@ export class Example24 {
         onCommand: (_e, args) => this.executeCommand(_e, args),
         onOptionSelected: (_e, args) => {
           // change "Completed" property with new option selected from the Cell Menu
-          const dataContext = args && args.dataContext;
-          if (dataContext && dataContext.hasOwnProperty('completed')) {
+          const dataContext = args?.dataContext;
+          if (dataContext?.hasOwnProperty('completed')) {
             dataContext.completed = args.item.option;
             this.aureliaGrid.gridService.updateItem(dataContext);
           }
@@ -319,7 +319,7 @@ export class Example24 {
     };
   }
 
-  executeCommand(_e: Event, args: any) {
+  executeCommand(_e: any, args: any) {
     const command = args.command;
     const dataContext = args.dataContext;
 
@@ -491,7 +491,7 @@ export class Example24 {
       onCommand: ((_e, args) => this.executeCommand(_e, args)),
 
       // subscribe to Context Menu onOptionSelected event (or use the action callback on each option)
-      onOptionSelected: ((_e, args) => {
+      onOptionSelected: ((_e: any, args: any) => {
         // change Priority
         const dataContext = args && args.dataContext;
         if (dataContext?.hasOwnProperty('priority')) {
