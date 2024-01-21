@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.3.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v7.2.1...v7.3.0) (2024-01-21)
+
+### Features
+
+* **plugin:** new Row Based Editing ([#1150](https://github.com/ghiscoding/aurelia-slickgrid/issues/1150)) ([9baf115](https://github.com/ghiscoding/aurelia-slickgrid/commit/9baf115cf6b5ba15014e5a2d9b99282dbbca349a)) - by @ghiscoding
+
+### Performance Improvements
+
+* **resizer:** `autosizeColumns` is called too many times on page load ([#1148](https://github.com/ghiscoding/aurelia-slickgrid/issues/1148)) ([f4f64b3](https://github.com/ghiscoding/aurelia-slickgrid/commit/f4f64b37127054d32326d9c2c497752462e2a1a0)) - by @ghiscoding
+
 ## [7.2.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v7.2.0...v7.2.1) (2023-12-30)
 
 ### Bug Fixes
