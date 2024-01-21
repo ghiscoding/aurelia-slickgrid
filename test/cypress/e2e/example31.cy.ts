@@ -693,7 +693,7 @@ describe('Example 31 - OData Grid using RxJS', () => {
 
       cy.get(`[style="top: ${GRID_ROW_HEIGHT * 0}px;"] > .slick-cell:nth(2)`)
         .should('contain', 'male')
-        .click();
+        .type('{enter}');
 
       cy.get('[data-name="editor-gender"].ms-drop')
         .find('li:visible')
