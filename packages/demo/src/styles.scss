@@ -1,4 +1,5 @@
 $slick-input-focus-box-shadow: 0 0 0 0.25rem #0d6efd40;
+$slick-button-border-color: #ababab !default;
 
 /* make sure to add the @import the SlickGrid Bootstrap Theme AFTER the variables changes */
 @import '@slickgrid-universal/common/dist/styles/sass/slickgrid-theme-bootstrap.scss';
@@ -117,4 +118,16 @@ outline: 0 none;
 .homepage-container {
   width: calc(100% - 250px);
   margin-left: 250px;
+}
+
+.button-style {
+  cursor: pointer;
+  background-color: white;
+  border: 1px solid #{$slick-button-border-color};
+  border-radius: 2px;
+  justify-content: center;
+  text-align: center;
+  &:hover {
+    border-color: darken($slick-button-border-color, 10%);
+  }
 }

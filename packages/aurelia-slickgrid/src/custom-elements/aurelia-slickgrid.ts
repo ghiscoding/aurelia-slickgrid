@@ -164,25 +164,6 @@ export class AureliaSlickgridCustomElement {
     @IEventAggregator protected readonly globalEa: IEventAggregator,
     protected readonly containerService: ContainerService,
     protected readonly translaterService: TranslaterService
-    // TODO: MB - not sure what this is for
-    // externalServices: {
-    //   backendUtilityService?: BackendUtilityService,
-    //   collectionService?: CollectionService,
-    //   eventPubSubService: EventPubSubService,
-    //   extensionService?: ExtensionService,
-    //   extensionUtility?: ExtensionUtility,
-    //   filterService?: FilterService,
-    //   gridEventService?: GridEventService,
-    //   gridService?: GridService,
-    //   gridStateService?: GridStateService,
-    //   groupingAndColspanService?: GroupingAndColspanService,
-    //   paginationService?: PaginationService,
-    //   resizerService?: ResizerService,
-    //   rxjs?: RxJsFacade,
-    //   sharedService?: SharedService,
-    //   sortService?: SortService,
-    //   treeDataService?: TreeDataService,
-    // }
   ) {
     const slickgridConfig = new SlickgridConfig();
 
@@ -210,6 +191,7 @@ export class AureliaSlickgridCustomElement {
       this.sortService,
       this.treeDataService,
       this.translaterService,
+      () => this.gridService
     );
 
     this.gridStateService = new GridStateService(this.extensionService, this.filterService, this._eventPubSubService, this.sharedService, this.sortService, this.treeDataService);

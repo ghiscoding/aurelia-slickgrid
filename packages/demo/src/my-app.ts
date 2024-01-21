@@ -39,6 +39,7 @@ export class MyApp {
     { path: 'example32', component: () => import('./examples/slickgrid/example32'), title: '32- Columns Resize by Content' },
     { path: 'example33', component: () => import('./examples/slickgrid/example33'), title: '33- Regular & Custom Tooltip' },
     { path: ['', 'example34'], component: () => import('./examples/slickgrid/example34'), title: '34- Real-Time Trading Platform' },
+    { path: 'example35', component: () => import('./examples/slickgrid/example35'), title: '35- Row Based Editing' },
     { path: 'home', component: () => import('./home-page'), title: 'Home' },
   ];
 
