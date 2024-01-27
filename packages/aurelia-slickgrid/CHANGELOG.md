@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.3.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v7.3.0...v7.3.1) (2024-01-27)
+
+### Performance Improvements
+
+* decrease number of calls to translate all extensions only once ([#1151](https://github.com/ghiscoding/aurelia-slickgrid/issues/1151)) ([97966a1](https://github.com/ghiscoding/aurelia-slickgrid/commit/97966a1c2cd406f6826d0283d23e620ac7c2bdc4)) - by @ghiscoding
+
 # [7.3.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v7.2.1...v7.3.0) (2024-01-21)
 
 ### Features
