@@ -683,20 +683,16 @@ export class AureliaSlickgridCustomElement {
     // translate some of them on first load, then on each language change
     if (gridOptions.enableTranslate) {
       this.extensionService.translateAllExtensions();
-      this.translateColumnHeaderTitleKeys();
-      this.translateColumnGroupKeys();
     }
 
     // on locale change, we have to manually translate the Headers, GridMenu
     this.subscriptions.push(
-      this.globalEa.subscribe('i18n:locale:changed', () => {
+      this.globalEa.subscribe('i18n:locale:changed', (args: { oldLocale: string; newLocale: string; }) => {
         // publish event of the same name that Slickgrid-Universal uses on a language change event
         this._eventPubSubService.publish('onLanguageChange');
 
         if (gridOptions.enableTranslate) {
-          this.extensionService.translateAllExtensions();
-          this.translateColumnHeaderTitleKeys();
-          this.translateColumnGroupKeys();
+          this.extensionService.translateAllExtensions(args.newLocale);
           if (gridOptions.createPreHeaderPanel && !gridOptions.enableDraggableGrouping) {
             this.groupingService.translateGroupingAndColSpan();
           }
@@ -956,10 +952,6 @@ export class AureliaSlickgridCustomElement {
         this._isDatasetInitialized = true;
       }
 
-      if (dataset) {
-        this.grid.invalidate();
-      }
-
       // display the Pagination component only after calling this refresh data first, we call it here so that if we preset pagination page number it will be shown correctly
       this.showPagination = (this.gridOptions && (this.gridOptions.enablePagination || (this.gridOptions.backendServiceApi && this.gridOptions.enablePagination === undefined))) ? true : false;
 
@@ -1037,7 +1029,7 @@ export class AureliaSlickgridCustomElement {
       }
 
       if (this.gridOptions.enableTranslate) {
-        this.extensionService.translateColumnHeaders(false, newColumnDefinitions);
+        this.extensionService.translateColumnHeaders(undefined, newColumnDefinitions);
       } else {
         this.extensionService.renderColumnHeaders(newColumnDefinitions, true);
       }
@@ -1484,16 +1476,6 @@ export class AureliaSlickgridCustomElement {
         internalColumnEditor: { ...column.editor }
       };
     });
-  }
-
-  /** translate all columns (including hidden columns) */
-  protected translateColumnHeaderTitleKeys() {
-    this.extensionUtility.translateItems(this.sharedService.allColumns, 'nameKey', 'name');
-  }
-
-  /** translate all column groups (including hidden columns) */
-  protected translateColumnGroupKeys() {
-    this.extensionUtility.translateItems(this.sharedService.allColumns, 'columnGroupKey', 'columnGroup');
   }
 
   /**
