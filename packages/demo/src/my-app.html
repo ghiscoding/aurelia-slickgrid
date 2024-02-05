@@ -8,21 +8,26 @@
             aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+    <div class="github-button-container">
+      <a href="https://github.com/ghiscoding/aurelia-slickgrid">
+        <img src="https://img.shields.io/github/stars/ghiscoding/aurelia-slickgrid?style=social">
+      </a>
+    </div>
 
-    <div class="navbar-collapse collapse" id="navbarContent">
+    <div class="navbar-collapse collapse justify-content-end me-2" id="navbarContent">
       <ul class="navbar-nav mr-auto">
-        <li>
-          <div class="github-button-container"></div>
-        </li>
         <li class="nav-item">
           <a class="nav-link" href="/#home">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://ghiscoding.gitbook.io/aurelia-slickgrid/" target="_blank">
+            Documentation
+          </a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="https://ghiscoding.github.io/Aurelia-Bootstrap-Plugins/"
              target="_blank">Aurelia-Bootstrap-Plugins</a>
         </li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
         <li class="loader" if.bind="router.isNavigating">
           <i class="fa fa-spinner fa-spin fa-2x"></i>
         </li>
@@ -33,6 +38,11 @@
   <div class="panel-wm">
     <section id="panel-left" class="panel-wm-left au-animate">
       <ul class="well nav nav-pills nav-stacked">
+        <li class="nav-item fw-bold nav-docs">
+          <a class="nav-link" href="https://ghiscoding.gitbook.io/aurelia-slickgrid/" target="_blank">
+           <i class="fa fa-book"></i> Documentation
+          </a>
+        </li>
         <li repeat.for="r of routes" class="nav-item">
           <a if.bind="r.path !== 'home'" load.bind="r.path" class="nav-link ${r.isActive ? 'active' : ''}">${r.title}</a>
         </li>
