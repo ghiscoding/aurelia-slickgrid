@@ -6,7 +6,7 @@
 - [How to Load Grid with Certain Columns Hidden](#how-to-load-grid-with-certain-columns-preset-example-hide-certain-columns-on-load)
 
 ### Demo
-[Demo Page](https://ghiscoding.github.io/aurelia-slickgrid/#/slickgrid/example9) / [Demo ViewModel](https://github.com/ghiscoding/aurelia-slickgrid/blob/master/src/examples/slickgrid/example9.ts)
+[Demo Page](https://ghiscoding.github.io/aurelia-slickgrid/#/slickgrid/example9) / [Demo ViewModel](https://github.com/ghiscoding/aurelia-slickgrid/blob/master/packages/demo/src/examples/slickgrid/example9.ts)
 
 ## Customization
 ### Column Picker

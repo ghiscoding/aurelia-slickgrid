@@ -10,6 +10,7 @@ yarn-error.log
 # Distribution folder
 **/dist
 **/dist-demo
+**/website
 
 # Tests Report & Coverage
 **/node_modules
