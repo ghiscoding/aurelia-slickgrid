@@ -62,59 +62,8 @@ You could ⭐ the lib and maybe support me with cafeine [☕](https://ko-fi.com/
 
 <a href='https://ko-fi.com/ghiscoding' target='_blank'><img height='32' style='border:0px;height:32px;' src='https://az743702.vo.msecnd.net/cdn/kofi3.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' />
 
-## Documentation
-The [Documentation](https://ghiscoding.gitbook.io/aurelia-slickgrid/) is powered by GitBook and is where you'll find all the documentation and instructions for the lib, so please consult the documentation before opening any new issue. The [Docs - Quick Start](https://ghiscoding.gitbook.io/aurelia-slickgrid/getting-started/quick-start) is a great place to start with.
-
 ### Latest News & Releases
 Check out the [Releases](https://github.com/ghiscoding/aurelia-slickgrid/releases) section for all latest News & Releases.
 
-## Fully Tested with [Jest](https://jestjs.io/) (Unit Tests) - [Cypress](https://www.cypress.io/) (E2E tests)
-Aurelia-Slickgrid has **100%** Unit Test Coverage, we are talking of 15,000+ lines of code (3,750+ unit tests, most of these tests were moved into Slickgrid-Universal) fully tested with [Jest](https://jestjs.io/). On the UI side, all Aurelia-Slickgrid Example are tested with [Cypress](https://www.cypress.io/), there are over 550+ Cypress E2E tests.
-
-## Usage
-
-#### How to load data with `Fetch-Client` or `Http-Client`?
-You might have noticed that all demos are made with mocked dataset that are embedded in each examples, that is mainly for demo purposes, but you might be wondering how to connect this with a `FetchClient` or `Http-Client`? Easy... just replace the mocked data, assigned to the `dataset` property, by your `FetchClient` call and that's it. The `dataset` property can be changed at any time, which is why you can use local data and/or connect it to a `Promise` or an async call with `FetchClient` (internally it's just a SETTER that refreshes the grid). See [Example 22](https://ghiscoding.github.io/aurelia-slickgrid/#/slickgrid/example22) for a demo showing how to load a JSON file with `FetchClient`.
-
-## Main features
-You can see some screenshots below and visit the [Documentation](https://ghiscoding.gitbook.io/aurelia-slickgrid/getting-started/quick-start) website.
-
-## Missing features
-What if `Aurelia-Slickgrid` is missing feature(s) compare to the original core library [6pac/SlickGrid](https://github.com/6pac/SlickGrid/)?
-
-Fear not, you can simply reference the `SlickGrid` and `DataView` objects, just like in the core lib (they are exposed through Custom Events). For more info continue reading on [Docs - SlickGrid & DataView objects](https://ghiscoding.gitbook.io/aurelia-slickgrid/slick-grid-dataview-objects/slickgrid-dataview-objects) and [Docs - Grid & DataView Events](https://ghiscoding.gitbook.io/aurelia-slickgrid/events/grid-dataview-events)
-
-
-## Screenshots
-
-Screenshots from the demo app with the `Bootstrap` theme.
-
-### Slickgrid example with Formatters (last column shown is a custom Formatter)
-
-#### You can also see the Grid Menu opened (aka hambuger menu)
-
-![Default Slickgrid Example](/screenshots/formatters.png)
-
-### Filter and Sort (clientside with DataView)
-
-![Filter and Sort](/screenshots/filter_and_sort.png)
-
-### Editors and/or onCellClick
-
-![Editors](/screenshots/editors.png)
-
-### Pinned (aka frozen) Columns/Rows
-
-![Pinned Columns/Rows](/screenshots/frozen.png)
-
-### Draggable Grouping & Aggregators
-
-![Draggable Grouping](/screenshots/draggable-grouping.png)
-
-### Slickgrid Example with Server Side (Filter/Sort/Pagination)
-#### Comes with OData & GraphQL support (you can implement custom too)
-
-![Slickgrid Server Side](/screenshots/pagination.png)
-
-### Composite Editor Modal Windows
-![Composite Editor Modal](/screenshots/composite-editor.png)
+### Tested with [Jest](https://jestjs.io/) (Unit Tests) - [Cypress](https://www.cypress.io/) (E2E Tests)
+Slickgrid-Universal has **100%** Unit Test Coverage and all Slickgrid-React Examples are tested with [Cypress](https://www.cypress.io/) as E2E tests.
