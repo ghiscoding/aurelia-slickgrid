@@ -61,7 +61,7 @@
     "jsdom-global": "^3.0.2",
     "moment-mini": "^2.29.4",
     "npm-run-all2": "^6.1.2",
-    "pnpm": "^8.15.1",
+    "pnpm": "^8.15.2",
     "rimraf": "^5.0.5",
     "ts-jest": "^29.1.2",
     "typescript": "^5.3.3"
