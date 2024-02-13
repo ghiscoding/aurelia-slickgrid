@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.4.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v7.4.0...v7.4.1) (2024-02-13)
+
+### Bug Fixes
+
+* update to latest Slickgrid-Universal v4.4.1 ([44f933e](https://github.com/ghiscoding/aurelia-slickgrid/commit/44f933ec6dc3b2306f5139b63eeb68777aacfdcb)) - by @ghiscoding
+
 # [7.4.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v7.3.1...v7.4.0) (2024-02-13)
 
 ### Bug Fixes
