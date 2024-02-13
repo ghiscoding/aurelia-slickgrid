@@ -183,8 +183,8 @@ export class Example12 {
       },
       excelExportOptions: {
         // optionally pass a custom header to the Excel Sheet
-        // a lot of the info can be found on Web Archive of Excel-Builder
-        // http://web.archive.org/web/20160907052007/http://excelbuilderjs.com/cookbook/fontsAndColors.html
+        // a lot of the info can be found on Excel-Builder-Vanilla
+        // https://ghiscoding.gitbook.io/excel-builder-vanilla/cookbook/fonts-and-colors
         customExcelHeader: (workbook, sheet) => {
           const customTitle = this.i18n.getLocale() === 'fr' ? 'Titre qui est suffisament long pour être coupé' : 'My header that is long enough to wrap';
           const stylesheet = workbook.getStyleSheet();
