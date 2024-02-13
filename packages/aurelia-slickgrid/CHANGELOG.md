@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.4.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v7.3.1...v7.4.0) (2024-02-13)
+
+### Features
+
+* **ExcelExport:** migrate to Excel-Builder-Vanilla (ESM) ([#1157](https://github.com/ghiscoding/aurelia-slickgrid/issues/1157)) ([92e24a4](https://github.com/ghiscoding/aurelia-slickgrid/commit/92e24a49a72b21e0c9d9fed22e6606c82112f64b)) - by @ghiscoding
+
 ## [7.3.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v7.3.0...v7.3.1) (2024-01-27)
 
 ### Performance Improvements
