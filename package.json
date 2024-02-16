@@ -45,7 +45,7 @@
     "@lerna-lite/cli": "^3.3.0",
     "@lerna-lite/publish": "^3.3.0",
     "@types/jest": "^29.5.12",
-    "@types/node": "^20.11.17",
+    "@types/node": "^20.11.19",
     "@typescript-eslint/eslint-plugin": "^7.0.1",
     "@typescript-eslint/parser": "^7.0.1",
     "cross-env": "^7.0.3",
@@ -61,10 +61,10 @@
     "jsdom-global": "^3.0.2",
     "moment-mini": "^2.29.4",
     "npm-run-all2": "^6.1.2",
-    "pnpm": "^8.15.2",
+    "pnpm": "^8.15.3",
     "rimraf": "^5.0.5",
     "ts-jest": "^29.1.2",
     "typescript": "^5.3.3"
   },
-  "packageManager": "pnpm@8.15.1"
+  "packageManager": "pnpm@8.15.3"
 }
