@@ -42,6 +42,7 @@ module.exports = ({ production, node } = {}, { server } = {}, { analyze } = {}) 
       filename: '[name].[contenthash].bundle.js',
       sourceMapFilename: '[name].[contenthash].bundle.js.map',
       chunkFilename: '[name].[contenthash].chunk.js',
+      uniqueName: 'au-slickgrid-demo'
     },
     resolve: {
       extensions: ['.ts', '.js'],
