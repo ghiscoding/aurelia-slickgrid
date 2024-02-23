@@ -1,7 +1,6 @@
 {
   "name": "aurelia-slickgrid-demo",
   "private": true,
-  "version": "0.0.0",
   "description": "Slickgrid components made available in Aurelia",
   "keywords": [
     "aurelia",
@@ -16,13 +15,6 @@
   },
   "license": "MIT",
   "author": "Ghislain B.",
-  "typesVersions": {
-    ">=4.2": {
-      "*": [
-        "dist/types/*"
-      ]
-    }
-  },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/ghiscoding/aurelia-slickgrid.git"
