@@ -277,7 +277,7 @@ export class Example34 {
   }
 
   findColumnById(columnName: string): Column {
-    return this.columnDefinitions.find(col => col.field === columnName) as Column;
+    return this.columnDefinitions.find(col => col?.field === columnName) as Column;
   }
 
   renderCellHighlighting(item: any, column: Column, priceChange: number) {
