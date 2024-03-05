@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.5.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v7.4.1...v7.5.0) (2024-03-05)
+
+### Bug Fixes
+
+* remove width style on grid container for CSP safe ([03acd4a](https://github.com/ghiscoding/aurelia-slickgrid/commit/03acd4a7c3874734f7f6de72b27c2f5c39034a0c)) - by @ghiscoding
+* switch to `isomorphic-dompurify` for SSR support ([#1164](https://github.com/ghiscoding/aurelia-slickgrid/issues/1164)) ([8ebeed2](https://github.com/ghiscoding/aurelia-slickgrid/commit/8ebeed25252d49b50bbe0ef512d486d33f253028)), closes [/github.com/ghiscoding/Angular-Slickgrid/discussions/838#discussioncomment-8574215](https://github.com//github.com/ghiscoding/Angular-Slickgrid/discussions/838/issues/discussioncomment-8574215) - by @ghiscoding
+
+### Features
+
+* add Dark Mode grid option ([#1163](https://github.com/ghiscoding/aurelia-slickgrid/issues/1163)) ([2dc9e1d](https://github.com/ghiscoding/aurelia-slickgrid/commit/2dc9e1d5ed160cab5d4f67318e866ed0fc551e9f)) - by @ghiscoding
+
 ## [7.4.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v7.4.0...v7.4.1) (2024-02-13)
 
 ### Bug Fixes
