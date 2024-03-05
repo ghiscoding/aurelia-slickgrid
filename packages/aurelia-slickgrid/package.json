@@ -60,7 +60,7 @@
     "@slickgrid-universal/row-detail-view-plugin": "~4.5.0",
     "@slickgrid-universal/utils": "~4.5.0",
     "dequal": "^2.0.3",
-    "dompurify": "^3.0.9",
+    "isomorphic-dompurify": "^2.4.0",
     "moment-mini": "^2.29.4",
     "sortablejs": "^1.15.2"
   },
