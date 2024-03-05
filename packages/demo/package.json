@@ -55,7 +55,7 @@
     "aurelia-slickgrid": "workspace:*",
     "bootstrap": "^5.3.3",
     "flatpickr": "^4.6.13",
-    "i18next": "^23.8.2",
+    "i18next": "^23.10.0",
     "isomorphic-dompurify": "^2.4.0",
     "i18next-fetch-backend": "^5.0.2",
     "moment-mini": "^2.29.4",
