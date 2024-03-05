@@ -59,6 +59,7 @@ const taskTranslateFormatter: Formatter = (_row, _cell, value, _columnDef, _data
 };
 
 export class Example24 {
+  private _darkModeGrid = false;
   title = 'Example 24: Cell Menu & Context Menu Plugins';
   subTitle = `Add Cell Menu and Context Menu
     <ul>
@@ -113,6 +114,11 @@ export class Example24 {
   attached() {
     // populate the dataset once the grid is ready
     this.dataset = this.getData(1000);
+  }
+
+  detaching() {
+    document.querySelector('.panel-wm-content')!.classList.remove('dark-mode');
+    document.querySelector<HTMLDivElement>('#demo-container')!.dataset.bsTheme = 'light';
   }
 
   /* Define grid Options and Columns */
@@ -275,6 +281,7 @@ export class Example24 {
         container: '#demo-container',
         rightPadding: 10
       },
+      darkMode: this._darkModeGrid,
       enableCellNavigation: true,
       enableFiltering: true,
       enableSorting: true,
@@ -527,5 +534,17 @@ export class Example24 {
     const nextLanguage = (this.selectedLanguage === 'en') ? 'fr' : 'en';
     await this.i18n.setLocale(nextLanguage);
     this.selectedLanguage = nextLanguage;
+  }
+
+  toggleDarkMode() {
+    this._darkModeGrid = !this._darkModeGrid;
+    if (this._darkModeGrid) {
+      document.querySelector<HTMLDivElement>('.panel-wm-content')!.classList.add('dark-mode');
+      document.querySelector<HTMLDivElement>('#demo-container')!.dataset.bsTheme = 'dark';
+    } else {
+      document.querySelector('.panel-wm-content')!.classList.remove('dark-mode');
+      document.querySelector<HTMLDivElement>('#demo-container')!.dataset.bsTheme = 'light';
+    }
+    this.aureliaGrid.slickGrid?.setOptions({ darkMode: this._darkModeGrid });
   }
 }

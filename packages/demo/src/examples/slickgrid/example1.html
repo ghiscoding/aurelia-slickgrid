@@ -9,14 +9,27 @@
 </h2>
 <div class="subtitle" innerhtml.bind="subTitle"></div>
 
-<h3>Grid 1</h3>
-<aurelia-slickgrid grid-id="grid1-1" column-definitions.bind="columnDefinitions1" grid-options.bind="gridOptions1"
-  dataset.bind="dataset1">
-</aurelia-slickgrid>
+<h3>
+  <div class="column">
+    <span class="mr-3">Grid 1</span>
+    <button class="btn btn-outline-secondary btn-sm ms-2" click.trigger="toggleDarkModeGrid1()" data-test="toggle-dark-mode">
+      <span>Toggle Dark Mode</span>
+    </button>
+  </div>
+</h3>
+
+<div class="grid-container1">
+  <aurelia-slickgrid grid-id="grid1-1" column-definitions.bind="columnDefinitions1" grid-options.bind="gridOptions1"
+    dataset.bind="dataset1"
+    on-aurelia-grid-created.trigger="aureliaGridReady($event.detail)">
+  </aurelia-slickgrid>
+  </div>
 
 <hr />
 
 <h3>Grid 2 <small>(with local Pagination)</small></h3>
-<aurelia-slickgrid grid-id="grid1-2" column-definitions.bind="columnDefinitions2" grid-options.bind="gridOptions2"
+<aurelia-slickgrid grid-id="grid1-2"
+  column-definitions.bind="columnDefinitions2"
+  grid-options.bind="gridOptions2"
   dataset.bind="dataset2">
 </aurelia-slickgrid>

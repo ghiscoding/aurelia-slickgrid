@@ -88,6 +88,7 @@ import { SlickRowDetailView } from '../extensions/slickRowDetailView';
 export class AureliaSlickgridCustomElement {
   protected _columnDefinitions: Column[] = [];
   protected _currentDatasetLength = 0;
+  protected _darkMode = false;
   protected _dataset: any[] | null = null;
   protected _eventHandler!: SlickEventHandler;
   protected _eventPubSubService!: EventPubSubService;
@@ -264,6 +265,11 @@ export class AureliaSlickgridCustomElement {
         const finalTotalCount = dataset.length;
         this.displayEmptyDataWarning(finalTotalCount < 1);
       }
+    }
+
+    // add dark mode CSS class when enabled
+    if (this.gridOptions.darkMode) {
+      this.setDarkMode(true);
     }
   }
 
@@ -744,6 +750,13 @@ export class AureliaSlickgridCustomElement {
           this.sharedService.visibleColumns = args.impactedColumns;
         });
 
+        this._eventHandler.subscribe(grid.onSetOptions, (_e, args) => {
+          // add/remove dark mode CSS class when enabled
+          if (args.optionsBefore.darkMode !== args.optionsAfter.darkMode && this.sharedService.gridContainerElement) {
+            this.setDarkMode(args.optionsAfter.darkMode);
+          }
+        });
+
         // load any presets if any (after dataset is initialized)
         this.loadColumnPresetsWhenDatasetInitialized();
         this.loadFilterPresetsWhenDatasetInitialized();
@@ -1011,6 +1024,14 @@ export class AureliaSlickgridCustomElement {
       paginationOptions.pageNumber = gridOptions.presets.pagination.pageNumber;
     }
     return paginationOptions;
+  }
+
+  setDarkMode(dark = false) {
+    if (dark) {
+      this.sharedService.gridContainerElement?.classList.add('slick-dark-mode');
+    } else {
+      this.sharedService.gridContainerElement?.classList.remove('slick-dark-mode');
+    }
   }
 
   /**

@@ -79,6 +79,7 @@ const myCustomTitleValidator = (value: any, args: any) => {
 };
 
 export class Example30 {
+  private _darkModeGrid = false;
   title = 'Example 30: Composite Editor Modal';
   subTitle = `Composite Editor allows you to Create, Clone, Edit, Mass Update & Mass Selection Changes inside a nice Modal Window.
   <br>The modal is simply populated by looping through your column definition list and also uses a lot of the same logic as inline editing (see <a href="https://ghiscoding.gitbook.io/aurelia-slickgrid/grid-functionalities/composite-editor-modal" target="_blank">Composite Editor - Wiki</a>.)`;
@@ -114,6 +115,11 @@ export class Example30 {
   attached() {
     // mock some data (different in each dataset)
     this.dataset = this.loadData(NB_ITEMS);
+  }
+
+  detaching() {
+    document.querySelector('.panel-wm-content')!.classList.remove('dark-mode');
+    document.querySelector<HTMLDivElement>('#demo-container')!.dataset.bsTheme = 'light';
   }
 
   /* Define grid Options and Columns */
@@ -372,6 +378,7 @@ export class Example30 {
         container: '#demo-container',
         rightPadding: 10
       },
+      darkMode: this._darkModeGrid,
       enableAutoSizeColumns: true,
       enableAutoResize: true,
       showCustomFooter: true,
@@ -613,6 +620,11 @@ export class Example30 {
       resetFormButtonIconCssClass: 'fa fa-undo',
       onClose: () => Promise.resolve(confirm('You have unsaved changes, are you sure you want to close this window?')),
       onError: (error) => alert(error.message),
+      onRendered: (modalElm) => {
+        // Bootstrap requires extra attribute when toggling Dark Mode (data-bs-theme="dark")
+        // we need to manually add this attribute  ourselve before opening the Composite Editor Modal
+        modalElm.dataset.bsTheme = this._darkModeGrid ? 'dark' : 'light';
+      },
       onSave: (formValues, _selection, dataContext) => {
         const serverResponseDelay = 50;
 
@@ -651,6 +663,18 @@ export class Example30 {
     }
     // dynamically change SlickGrid editable grid option
     this.aureliaGrid.slickGrid.setOptions({ editable: this.isGridEditable });
+  }
+
+  toggleDarkMode() {
+    this._darkModeGrid = !this._darkModeGrid;
+    if (this._darkModeGrid) {
+      document.querySelector<HTMLDivElement>('.panel-wm-content')!.classList.add('dark-mode');
+      document.querySelector<HTMLDivElement>('#demo-container')!.dataset.bsTheme = 'dark';
+    } else {
+      document.querySelector('.panel-wm-content')!.classList.remove('dark-mode');
+      document.querySelector<HTMLDivElement>('#demo-container')!.dataset.bsTheme = 'light';
+    }
+    this.aureliaGrid.slickGrid?.setOptions({ darkMode: this._darkModeGrid });
   }
 
   removeUnsavedStylingFromCell(_item: any, column: Column, row: number) {
