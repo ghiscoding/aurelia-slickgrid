@@ -54,9 +54,9 @@
     "aurelia": "latest",
     "aurelia-slickgrid": "workspace:*",
     "bootstrap": "^5.3.3",
-    "dompurify": "^3.0.9",
     "flatpickr": "^4.6.13",
     "i18next": "^23.8.2",
+    "isomorphic-dompurify": "^2.4.0",
     "i18next-fetch-backend": "^5.0.2",
     "moment-mini": "^2.29.4",
     "rxjs": "^7.8.1"
