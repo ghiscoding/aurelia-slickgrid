@@ -77,7 +77,7 @@ import { SlickRowDetailView } from '../extensions/slickRowDetailView';
   <!-- Header slot if you need to create a complex custom header -->
   <au-slot name="slickgrid-header"></au-slot>
 
-  <div id.bind="gridId" class="slickgrid-container" style="width: 100%" focusout.trigger="commitEdit($event.target)"
+  <div id.bind="gridId" class="slickgrid-container" focusout.trigger="commitEdit($event.target)"
     ref="gridContainer">
   </div>
 
