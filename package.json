@@ -39,6 +39,7 @@
   },
   "devDependencies": {
     "@4tw/cypress-drag-drop": "^2.2.5",
+    "@aurelia/fetch-client": "2.0.0-beta.12",
     "@aurelia/platform": "latest",
     "@aurelia/platform-browser": "latest",
     "@jest/types": "^29.6.3",

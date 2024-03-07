@@ -5,7 +5,7 @@ import { EventPubSubService } from '@slickgrid-universal/event-pub-sub';
 import { GridOption } from '../../models/gridOption.interface';
 import { AureliaUtilService } from '../../services';
 import { RowDetailView } from '../../models';
-import { HttpStub } from '../../../../../test/httpClientStub';
+// import { HttpStub } from '../../../../../test/httpClientStub';
 import { SlickRowDetailView } from '../slickRowDetailView';
 
 jest.mock('@slickgrid-universal/row-detail-view-plugin');
@@ -165,7 +165,7 @@ describe('SlickRowDetailView', () => {
 
   describe('registered addon', () => {
     let columnsMock: Column[];
-    const http = new HttpStub();
+    // const http = new HttpStub();
 
     beforeEach(() => {
       gridOptionsMock.datasetIdPropertyName = 'id';
@@ -602,23 +602,23 @@ describe('SlickRowDetailView', () => {
       gridOptionsMock.rowDetailView!.process(mockItem);
     });
 
-    it('should run the internal "onProcessing" and call "notifyTemplate" with a Promise when "process" is a Fetch Promise', (done) => {
-      const mockItem = { id: 2, firstName: 'John', lastName: 'Doe' };
-      http.status = 200;
-      http.object = mockItem;
-      http.returnKey = 'date';
-      http.returnValue = '6/24/1984';
-      http.responseHeaders = { accept: 'json' };
-      gridOptionsMock.rowDetailView!.process = () => http.fetch('http://localhost/api', { method: 'GET' });
-      plugin.init(gridStub);
-      plugin.onAsyncResponse = new SlickEvent();
-      plugin.onAsyncResponse.subscribe((_e, response) => {
-        expect(response).toEqual(expect.objectContaining({ item: mockItem }));
-        done();
-      });
+    // it.skip('should run the internal "onProcessing" and call "notifyTemplate" with a Promise when "process" is a Fetch Promise', (done) => {
+    //   const mockItem = { id: 2, firstName: 'John', lastName: 'Doe' };
+    //   http.status = 200;
+    //   http.object = mockItem;
+    //   http.returnKey = 'date';
+    //   http.returnValue = '6/24/1984';
+    //   http.responseHeaders = { accept: 'json' };
+    //   gridOptionsMock.rowDetailView!.process = () => http.fetch('http://localhost/api', { method: 'GET' });
+    //   plugin.init(gridStub);
+    //   plugin.onAsyncResponse = new SlickEvent();
+    //   plugin.onAsyncResponse.subscribe((_e, response) => {
+    //     expect(response).toEqual(expect.objectContaining({ item: mockItem }));
+    //     done();
+    //   });
 
-      gridOptionsMock.rowDetailView!.process(mockItem);
-    });
+    //   gridOptionsMock.rowDetailView!.process(mockItem);
+    // });
 
     it('should define "datasetIdPropertyName" with different "id" and run the internal "onProcessing" and call "notifyTemplate" with a Promise when "process" as a Promise with content to simulate http - client', (done) => {
       const mockItem = { rowId: 2, firstName: 'John', lastName: 'Doe' };

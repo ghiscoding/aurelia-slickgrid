@@ -11,6 +11,9 @@ importers:
       '@4tw/cypress-drag-drop':
         specifier: ^2.2.5
         version: 2.2.5(cypress@13.6.6)
+      '@aurelia/fetch-client':
+        specifier: 2.0.0-beta.12
+        version: 2.0.0-beta.12
       '@aurelia/platform':
         specifier: latest
         version: 2.0.0-beta.12
@@ -385,7 +388,6 @@ packages:
     dependencies:
       '@aurelia/kernel': 2.0.0-beta.12
       '@aurelia/metadata': 2.0.0-beta.12
-    dev: false
 
   /@aurelia/i18n@2.0.0-beta.12:
     resolution: {integrity: sha512-Z5tfKK9/EZZP7jpdpTzCd96UAHNaGPV8bTiIaY8kpl5Lx/8+/hUFlZViHZ+lzUG2GSwWpTqzhAPxckKrvx/1xg==}
