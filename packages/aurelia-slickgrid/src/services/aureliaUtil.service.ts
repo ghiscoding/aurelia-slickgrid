@@ -20,6 +20,6 @@ export class AureliaUtilService {
 
     targetElement.innerHTML = `<${def.name} model.bind="bindableData.model" ${addonBindable} ${gridBindable} ${dataViewBindable} ${parentBindable}></${def.name}>`.trim();
 
-    return { controller: await this.au.enhance({ host: targetElement, component: { bindableData } }) };
+    return { controller: await this.au.enhance({ host: targetElement, component: { bindableData } }) as any };
   }
 }
