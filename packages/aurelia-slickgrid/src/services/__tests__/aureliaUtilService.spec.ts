@@ -7,7 +7,7 @@ const DOM_ELEMENT_ID = 'row-detail123';
 
 // @ts-ignore
 @customElement({ name: 'example-loader', template: '<p>Some Paragraph</p>' })
-export class ExampleLoader {}
+export class ExampleLoader { }
 
 
 describe('aureliaUtilService', () => {
@@ -49,7 +49,7 @@ describe('aureliaUtilService', () => {
 
       expect(enhanceSpy).toHaveBeenCalled();
       expect(domElm.innerHTML).toBe('<example-loader model.bind=\"bindableData.model\"></example-loader>');
-      expect(output).toEqual({ controller: controllerMock});
+      expect(output).toEqual(controllerMock);
     });
 
     it('should create an Aurelia ViewModel and add it to a View Slot with all bindable attributes when all are provided', async () => {
@@ -61,7 +61,7 @@ describe('aureliaUtilService', () => {
 
       expect(enhanceSpy).toHaveBeenCalled();
       expect(domElm.innerHTML).toBe('<example-loader model.bind="bindableData.model" addon.bind="bindableData.addon" grid.bind="bindableData.grid" data-view.bind="bindableData.dataView" parent.bind="bindableData.parent"></example-loader>');
-      expect(output).toEqual({ controller: controllerMock});
+      expect(output).toEqual(controllerMock);
     });
   });
 });
