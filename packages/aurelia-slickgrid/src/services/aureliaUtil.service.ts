@@ -1,5 +1,5 @@
 import { AureliaViewOutput, ViewModelBindableInputData } from '../models/index';
-import { Constructable, CustomElement, IAurelia, singleton } from 'aurelia';
+import { AppTask, Constructable, CustomElement, IAurelia, singleton } from 'aurelia';
 
 (IAurelia as any).test = 'import 1';
 
@@ -23,7 +23,7 @@ export class AureliaUtilService {
     return await this.au.enhance({
       host: targetElement,
       component: { bindableData },
-      container: this.au.container.createChild().register(AppTask.creating(() => {}))
+      container: this.au.container.createChild().register(AppTask.creating(() => { }))
     });
   }
 }
