@@ -54,7 +54,7 @@ import { SlickEmptyWarningComponent } from '@slickgrid-universal/empty-warning-c
 import { SlickPaginationComponent } from '@slickgrid-universal/pagination-component';
 import { extend } from '@slickgrid-universal/utils';
 
-import { bindable, BindingMode, CollectionKind, customElement, IContainer, IEventAggregator, IDisposable, IObserverLocator } from 'aurelia';
+import { bindable, BindingMode, customElement, IContainer, IEventAggregator, IDisposable, IObserverLocator } from 'aurelia';
 import { ICollectionSubscriber, ICollectionObserver } from '@aurelia/runtime';
 import { dequal } from 'dequal/lite';
 
@@ -101,7 +101,7 @@ export class AureliaSlickgridCustomElement {
   protected _isLocalGrid = true;
   protected _paginationOptions: Pagination | undefined;
   protected _registeredResources: ExternalResource[] = [];
-  protected _columnDefinitionObserver?: ICollectionObserver<CollectionKind.array>;
+  protected _columnDefinitionObserver?: ICollectionObserver<'array'>;
   protected _columnDefinitionsSubscriber: ICollectionSubscriber = {
     handleCollectionChange: this.columnDefinitionsHandler.bind(this)
   };
