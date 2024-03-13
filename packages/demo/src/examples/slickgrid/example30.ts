@@ -438,7 +438,7 @@ export class Example30 {
       // when using the cellMenu, you can change some of the default options and all use some of the callback methods
       enableCellMenu: true,
       gridMenu: {
-        hideToggleDarkModeCommand: false, // disabled command by default
+        hideToggleDarkModeCommand: false, // hidden by default
         onCommand: (_, args) => {
           if (args.command === 'toggle-dark-mode') {
             this._darkMode = !this._darkMode; // keep local toggle var in sync
