@@ -79,7 +79,7 @@ export class CustomAureliaViewModelEditor implements Editor {
   async init() {
     if (!this.columnEditor?.params?.viewModel) {
       throw new Error(`[Aurelia-Slickgrid] For the Editors.aureliaComponent to work properly, you need to fill in the "templateUrl" property of your Custom Element Editor.
-      Example: this.columnDefs = [{ id: 'title', field: 'title', editor: { model: new CustomAureliaViewModelFilter(), collection: [...], param: { viewModel: MyVM } },`);
+      Example: this.columnDefs = [{ id: 'title', field: 'title', editor: { model: CustomEditor, collection: [...], param: { viewModel: MyVM } },`);
     }
     if (this.columnEditor?.params?.viewModel) {
       const bindableData = {
