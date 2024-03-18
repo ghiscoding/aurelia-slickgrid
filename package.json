@@ -39,18 +39,18 @@
   },
   "devDependencies": {
     "@4tw/cypress-drag-drop": "^2.2.5",
-    "@aurelia/fetch-client": "2.0.0-beta.12",
+    "@aurelia/fetch-client": "2.0.0-beta.13",
     "@aurelia/platform": "latest",
     "@aurelia/platform-browser": "latest",
     "@jest/types": "^29.6.3",
     "@lerna-lite/cli": "^3.3.1",
     "@lerna-lite/publish": "^3.3.1",
     "@types/jest": "^29.5.12",
-    "@types/node": "^20.11.24",
-    "@typescript-eslint/eslint-plugin": "^7.1.1",
-    "@typescript-eslint/parser": "^7.1.1",
+    "@types/node": "^20.11.28",
+    "@typescript-eslint/eslint-plugin": "^7.3.0",
+    "@typescript-eslint/parser": "^7.3.0",
     "cross-env": "^7.0.3",
-    "cypress": "^13.6.6",
+    "cypress": "^13.7.0",
     "eslint": "^8.57.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-prefer-arrow": "^1.2.3",
@@ -62,10 +62,10 @@
     "jsdom-global": "^3.0.2",
     "moment-mini": "^2.29.4",
     "npm-run-all2": "^6.1.2",
-    "pnpm": "^8.15.4",
+    "pnpm": "^8.15.5",
     "rimraf": "^5.0.5",
     "ts-jest": "^29.1.2",
     "typescript": "^5.3.3"
   },
-  "packageManager": "pnpm@8.15.4"
+  "packageManager": "pnpm@8.15.5"
 }
