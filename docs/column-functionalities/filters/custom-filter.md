@@ -27,7 +27,7 @@ You can also create your own Custom Filter with any html/css you want and/or jQu
      { id: 'description', name: 'Description', field: 'description', type: FieldType.string,
        filterable: true,
        filter: {
-          model: new CustomInputFilter() // create a new instance to make each Filter independent from each other
+          model: CustomInputFilter // create a new instance to make each Filter independent from each other
        }
      }
    ];

@@ -96,7 +96,7 @@ export class Example26 {
         filterable: true,
         sortable: true,
         filter: {
-          model: new CustomAureliaViewModelFilter(),
+          model: CustomAureliaViewModelFilter,
           collection: this.assignees,
           params: {
             viewModel: FilterSelect
@@ -132,7 +132,7 @@ export class Example26 {
         filterable: true,
         sortable: true,
         filter: {
-          model: new CustomAureliaViewModelFilter(),
+          model: CustomAureliaViewModelFilter,
           collection: this.assignees,
           params: {
             viewModel: FilterSelect
