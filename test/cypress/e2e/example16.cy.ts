@@ -148,7 +148,7 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', () => {
     cy.get('[data-test="toggle-filtering-btn"]').click(); // show it back
   });
 
-  it.skip('should expect "Clear all Filters" command to be hidden in the Grid Menu', () => {
+  it('should expect "Clear all Filters" command to be hidden in the Grid Menu', () => {
     const expectedFullHeaderMenuCommands = ['Clear all Filters', 'Clear all Sorting', 'Toggle Filter Row', 'Export to Excel'];
 
     cy.get('#grid16')
@@ -169,7 +169,7 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', () => {
       });
   });
 
-  it.skip('should be able to toggle Filters functionality', () => {
+  it('should be able to toggle Filters functionality', () => {
     const expectedTitles = ['', '', 'Title', '% Complete', 'Start', 'Finish', 'Completed', 'Title'];
 
     cy.get('[data-test="toggle-filtering-btn"]').click(); // hide it
@@ -191,7 +191,7 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', () => {
       .each(($child, index) => expect($child.text()).to.eq(expectedTitles[index]));
   });
 
-  it.skip('should be able to toggle Sorting functionality (disable) and expect all header menu Sorting commands to be hidden and also not show Sort hint while hovering a column', () => {
+  it('should be able to toggle Sorting functionality (disable) and expect all header menu Sorting commands to be hidden and also not show Sort hint while hovering a column', () => {
     const expectedFullHeaderMenuCommands = ['Resize by Content', '', 'Sort Ascending', 'Sort Descending', '', 'Remove Filter', 'Remove Sort', 'Hide Column'];
 
     cy.get('.slick-sort-indicator').should('have.length.greaterThan', 0); // sort icon hints
@@ -219,7 +219,7 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', () => {
       });
   });
 
-  it.skip('should expect "Clear Sorting" command to be hidden in the Grid Menu', () => {
+  it('should expect "Clear Sorting" command to be hidden in the Grid Menu', () => {
     const expectedFullHeaderMenuCommands = ['Clear all Filters', 'Clear all Sorting', 'Toggle Filter Row', 'Export to Excel'];
 
     cy.get('#grid16')
@@ -240,7 +240,7 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', () => {
       });
   });
 
-  it.skip('should be able to toggle Sorting functionality (re-enable) and expect all Sorting header menu commands to be hidden and also not show Sort hint while hovering a column', () => {
+  it('should be able to toggle Sorting functionality (re-enable) and expect all Sorting header menu commands to be hidden and also not show Sort hint while hovering a column', () => {
     const expectedFullHeaderMenuCommands = ['Resize by Content', '', 'Sort Ascending', 'Sort Descending', '', 'Remove Filter', 'Remove Sort', 'Hide Column'];
 
     cy.get('.slick-sort-indicator').should('have.length', 0); // sort icon hints
@@ -264,7 +264,7 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', () => {
       });
   });
 
-  it.skip('should expect "Clear Sorting" command to be hidden in the Grid Menu', () => {
+  it('should expect "Clear Sorting" command to be hidden in the Grid Menu', () => {
     const expectedFullHeaderMenuCommands = ['Clear all Filters', 'Clear all Sorting', 'Toggle Filter Row', 'Export to Excel'];
 
     cy.get('#grid16')
@@ -285,7 +285,7 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', () => {
       });
   });
 
-  it.skip('should be able to click disable Sorting functionality button and expect all Sorting commands to be hidden and also not show Sort hint while hovering a column', () => {
+  it('should be able to click disable Sorting functionality button and expect all Sorting commands to be hidden and also not show Sort hint while hovering a column', () => {
     const expectedFullHeaderMenuCommands = ['Resize by Content', '', 'Sort Ascending', 'Sort Descending', '', 'Remove Filter', 'Remove Sort', 'Hide Column'];
 
     cy.get('.slick-sort-indicator').should('have.length.greaterThan', 0); // sort icon hints
@@ -313,7 +313,7 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', () => {
       });
   });
 
-  it.skip('should be able to click disable Filter functionality button and expect all Filter commands to be hidden and also not show Sort hint while hovering a column', () => {
+  it('should be able to click disable Filter functionality button and expect all Filter commands to be hidden and also not show Sort hint while hovering a column', () => {
     const expectedFullHeaderMenuCommands = ['Resize by Content', '', 'Sort Ascending', 'Sort Descending', '', 'Remove Filter', 'Remove Sort', 'Hide Column'];
 
     cy.get('[data-test="disable-filters-btn"]').click().click(); // even clicking twice should have same result
@@ -339,7 +339,7 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', () => {
       });
   });
 
-  it.skip('should expect "Clear all Filters" command to be hidden in the Grid Menu', () => {
+  it('should expect "Clear all Filters" command to be hidden in the Grid Menu', () => {
     const expectedFullHeaderMenuCommands = ['Clear all Filters', 'Clear all Sorting', 'Toggle Filter Row', 'Export to Excel'];
 
     cy.get('#grid16')
@@ -360,7 +360,7 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', () => {
       });
   });
 
-  it.skip('should open Column Picker and show the "Duration" column back to visible and expect it to have kept its position after toggling filter/sorting', () => {
+  it('should open Column Picker and show the "Duration" column back to visible and expect it to have kept its position after toggling filter/sorting', () => {
     // first 2 cols are hidden but they do count as li item
     const expectedFullPickerTitles = ['', '', 'Title', '% Complete', 'Start', 'Finish', 'Duration', 'Completed'];
 
@@ -403,7 +403,7 @@ describe('Example 16 - Row Move & Checkbox Selector Selector Plugins', () => {
       });
   });
 
-  it.skip('should add Edit/Delete columns and expect 2 new columns added at the beginning of the grid', () => {
+  it('should add Edit/Delete columns and expect 2 new columns added at the beginning of the grid', () => {
     const newExpectedColumns = ['', '', ...fullTitles];
     cy.get('[data-test="add-crud-columns-btn"]').click();
 
