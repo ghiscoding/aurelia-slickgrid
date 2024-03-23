@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.6.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v7.5.0...v7.6.0) (2024-03-23)
+
+### Bug Fixes
+
+* hide Toggle Dark Mode from Grid Menu by default ([#1167](https://github.com/ghiscoding/aurelia-slickgrid/issues/1167)) ([f9be216](https://github.com/ghiscoding/aurelia-slickgrid/commit/f9be2165ba3bf83cc348f3c8930b38b285b181fa)) - by @ghiscoding
+
+### Features
+
+* rename SG `editorClass` & deprecate `internalColumnEditor` ([#1168](https://github.com/ghiscoding/aurelia-slickgrid/issues/1168)) ([bb958ff](https://github.com/ghiscoding/aurelia-slickgrid/commit/bb958ff42f69aa12fafdef37d173d2b34ef01a2c)) - by @ghiscoding
+
 # [7.5.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v7.4.1...v7.5.0) (2024-03-05)
 
 ### Bug Fixes
