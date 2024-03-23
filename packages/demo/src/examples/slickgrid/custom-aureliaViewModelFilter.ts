@@ -65,7 +65,7 @@ export class CustomAureliaViewModelFilter implements Filter {
 
     if (!this.columnFilter?.params?.viewModel) {
       throw new Error(`[Aurelia-Slickgrid] For the Filters.aureliaComponent to work properly, you need to fill in the "viewModel" property of your Custom Element Filter.
-      Example: this.columnDefs = [{ id: 'title', field: 'title', filter: { model: new CustomAureliaViewModelFilter(), collection: [...], param: { viewModel: MyVM } },`);
+      Example: this.columnDefs = [{ id: 'title', field: 'title', filter: { model: CustomFilter, collection: [...], param: { viewModel: MyVM } },`);
     }
 
     if (this.columnFilter.params.viewModel) {
