@@ -678,7 +678,7 @@ describe('Example 31 - OData Grid using RxJS', () => {
         .each(($li, index) => expect($li.text()).to.eq(expectedOptions[index]));
 
       cy.get('[data-name="editor-gender"]')
-        .find('li.hide-radio.selected')
+        .find('li.selected')
         .find('input[data-name=selectItemeditor-gender][value=male]')
         .should('exist');
     });
@@ -705,7 +705,7 @@ describe('Example 31 - OData Grid using RxJS', () => {
         .each(($li, index) => expect($li.text()).to.eq(expectedOptions[index]));
 
       cy.get('[data-name="editor-gender"]')
-        .find('li.hide-radio.selected')
+        .find('li.selected')
         .find('input[data-name=selectItemeditor-gender][value=male]')
         .should('exist');
     });
