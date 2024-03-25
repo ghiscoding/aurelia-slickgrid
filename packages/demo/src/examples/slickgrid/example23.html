@@ -17,7 +17,7 @@
   ${metrics.endTime | dateFormat: 'DD MMM, h:mm:ss a'} | ${metrics.itemCount} of ${metrics.totalItemCount} items
 </span>
 
-<form class="row row-cols-lg-auto g-1 align-items-center">
+<div class="row row-cols-lg-auto g-1 align-items-center">
   <div class="col">
     <button class="btn btn-outline-secondary btn-sm" data-test="clear-filters"
             click.trigger="aureliaGrid.filterService.clearFilters()">
@@ -51,7 +51,7 @@
       <option model.bind="filter.value" repeat.for="filter of filterList">${filter.label}</option>
     </select>
   </div>
-</form>
+</div>
 
 <div class="row mt-2">
   <div class="col">
