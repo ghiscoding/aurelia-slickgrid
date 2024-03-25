@@ -437,7 +437,7 @@ export class Example32 {
     return tmpArray;
   }
 
-  handleValidationError(_e: Event, args: any) {
+  handleValidationError(e: Event, args: any) {
     if (args.validationResults) {
       let errorMsg = args.validationResults.msg || '';
       if (args.editor && args.validationResults.errors) {
@@ -451,6 +451,7 @@ export class Example32 {
     } else {
       alert(args.validationResults.msg);
     }
+    e.returnValue = false; // patch for Au2.Beta.13 regression
     return false;
   }
 
@@ -467,6 +468,7 @@ export class Example32 {
         e.stopImmediatePropagation();
       }
     }
+    e.returnValue = false; // patch for Au2.Beta.13 regression
     return false;
   }
 

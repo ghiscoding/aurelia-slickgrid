@@ -145,6 +145,7 @@ export class Example16 {
       // no point in moving before or after itself
       if (rowIdx === data.insertBefore || (rowIdx === data.insertBefore - 1 && ((data.insertBefore - 1) !== this.aureliaGrid.dataView.getItemCount()))) {
         e.stopPropagation();
+        e.returnValue = false; // patch for Au2.Beta.13 regression
         return false;
       }
     }
