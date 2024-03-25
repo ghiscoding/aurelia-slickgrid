@@ -497,7 +497,7 @@ export class Example30 {
     this.aureliaGrid = aureliaGrid;
   }
 
-  handleValidationError(_e: Event, args: any) {
+  handleValidationError(e: Event, args: any) {
     if (args.validationResults) {
       let errorMsg = args.validationResults.msg || '';
       if (args.editor && (args.editor instanceof SlickCompositeEditor)) {
@@ -513,6 +513,7 @@ export class Example30 {
     } else {
       alert(args.validationResults.msg);
     }
+    e.returnValue = false; // patch for Au2.Beta.13 regression
     return false;
   }
 
@@ -525,7 +526,8 @@ export class Example30 {
 
     if (column && item) {
       if (!checkItemIsEditable(item, column, grid)) {
-        e.stopImmediatePropagation();
+        e.preventDefault();
+        e.returnValue = false; // patch for Au2.Beta.13 regression
         return false;
       }
     }
