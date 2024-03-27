@@ -27,6 +27,7 @@
     "build": "pnpm -r --stream build",
     "build:demo": "pnpm -r --stream build:demo",
     "serve:demo": "pnpm -r serve:demo",
+    "predev": "pnpm -r --filter=./packages/aurelia-slickgrid build",
     "dev": "pnpm -r --stream --parallel dev",
     "cypress:open": "cypress open --config-file test/cypress.config.ts",
     "cypress:ci": "cypress run --config-file test/cypress.config.ts",
