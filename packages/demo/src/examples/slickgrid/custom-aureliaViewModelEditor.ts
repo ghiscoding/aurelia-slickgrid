@@ -49,7 +49,7 @@ export class CustomAureliaViewModelEditor implements Editor {
 
   /** Get the Collection */
   get collection(): any[] {
-    return this.columnDef?.internalColumnEditor?.collection ?? [];
+    return this.columnDef?.editor?.collection ?? [];
   }
 
   /** Get Column Definition object */
@@ -59,7 +59,7 @@ export class CustomAureliaViewModelEditor implements Editor {
 
   /** Get Column Editor object */
   get columnEditor(): any {
-    return this.columnDef?.internalColumnEditor ?? {};
+    return this.columnDef?.editor ?? {};
   }
 
   /** Getter for the Grid Options pulled through the Grid Object */

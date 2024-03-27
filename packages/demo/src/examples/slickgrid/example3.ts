@@ -35,10 +35,6 @@ const myCustomTitleValidator: EditorValidator = (value: any) => {
   // const gridOptions = grid.getOptions() as GridOption;
   // const i18n = gridOptions.i18n;
 
-  // to get the editor object, you'll need to use "internalColumnEditor"
-  // don't use "editor" property since that one is what SlickGrid uses internally by it's editor factory
-  // const columnEditor = args && args.column && args.column.internalColumnEditor;
-
   if (value === null || value === undefined || !value.length) {
     return { valid: false, msg: 'This is a required field' };
   } else if (!/^Task\s\d+$/.test(value)) {
@@ -597,15 +593,7 @@ export class Example3 {
   dynamicallyRemoveLastColumn() {
     this.columnDefinitions.pop();
 
-    // NOTE if you use an Extensions (Checkbox Selector, Row Detail, ...) that modifies the column definitions in any way
-    // you MUST use the code below, first you must reassign the Editor facade (from the internalColumnEditor back to the editor)
-    // in other words, SlickGrid is not using the same as Aurelia-Slickgrid uses (editor with a "model" and other properties are a facade, SlickGrid only uses what is inside the model)
     /*
-    const allColumns = this.aureliaGrid.gridService.getAllColumnDefinitions();
-    const allOriginalColumns = allColumns.map((column) => {
-      column.editor = column.internalColumnEditor;
-      return column;
-    });
     // remove your column the full set of columns
     // and use slice or spread [...] to trigger an Aurelia dirty change
     allOriginalColumns.pop();
