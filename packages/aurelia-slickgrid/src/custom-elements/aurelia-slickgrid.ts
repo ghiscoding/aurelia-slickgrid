@@ -1495,6 +1495,7 @@ export class AureliaSlickgridCustomElement {
       return {
         ...column,
         editorClass: column.editor && this.container.getFactory(column.editor.model).Type,
+        // @deprecated `internalColumnEditor`, this will no longer be useful in the next major
         internalColumnEditor: { ...column.editor }
       };
     });
