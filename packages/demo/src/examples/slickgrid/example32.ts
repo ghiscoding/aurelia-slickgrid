@@ -464,8 +464,8 @@ export class Example32 {
 
     if (column && item) {
       if (!checkItemIsEditable(item, column, grid)) {
-        // event.preventDefault();
-        e.stopImmediatePropagation();
+        event.preventDefault(); // OR eventData.preventDefault();
+        return false;
       }
     }
     e.returnValue = false; // patch for Au2.Beta.13 regression

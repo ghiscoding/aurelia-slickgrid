@@ -526,7 +526,7 @@ export class Example30 {
 
     if (column && item) {
       if (!checkItemIsEditable(item, column, grid)) {
-        e.preventDefault();
+        e.preventDefault(); // OR eventData.preventDefault();
         e.returnValue = false; // patch for Au2.Beta.13 regression
         return false;
       }
