@@ -464,7 +464,7 @@ export class Example32 {
 
     if (column && item) {
       if (!checkItemIsEditable(item, column, grid)) {
-        event.preventDefault(); // OR eventData.preventDefault();
+        e.preventDefault(); // OR eventData.preventDefault();
         return false;
       }
     }
