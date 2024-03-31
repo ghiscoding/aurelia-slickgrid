@@ -451,7 +451,7 @@ export class Example32 {
     } else {
       alert(args.validationResults.msg);
     }
-    e.returnValue = false; // patch for Au2.Beta.13 regression
+    e.preventDefault(); // OR eventData.preventDefault();
     return false;
   }
 
@@ -468,7 +468,7 @@ export class Example32 {
         return false;
       }
     }
-    e.returnValue = false; // patch for Au2.Beta.13 regression
+    e.preventDefault(); // OR eventData.preventDefault();
     return false;
   }
 

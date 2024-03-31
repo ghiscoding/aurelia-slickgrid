@@ -1,6 +1,7 @@
 import { IHttpClient } from '@aurelia/fetch-client';
 import { newInstanceOf } from '@aurelia/kernel';
 import { ExcelExportService } from '@slickgrid-universal/excel-export';
+import { SlickCustomTooltip } from '@slickgrid-universal/custom-tooltip-plugin';
 import { SlickCompositeEditor, SlickCompositeEditorComponent } from '@slickgrid-universal/composite-editor-component';
 
 import {
@@ -126,7 +127,8 @@ export class Example30 {
   defineGrids() {
     this.columnDefinitions = [
       {
-        id: 'title', name: 'Title', field: 'title', sortable: true, type: FieldType.string, minWidth: 75,
+        id: 'title', name: '<span title="Task must always be followed by a number" class="color-warning-dark fa fa-exclamation-triangle"></span> Title <span title="Title is always rendered as UPPERCASE" class="fa fa-info-circle"></span>',
+        field: 'title', sortable: true, type: FieldType.string, minWidth: 75,
         cssClass: 'text-uppercase fw-bold', columnGroup: 'Common Factor',
         filterable: true, filter: { model: Filters.compoundInputText },
         editor: {
@@ -391,7 +393,7 @@ export class Example30 {
       excelExportOptions: {
         exportWithFormatter: false
       },
-      externalResources: [new ExcelExportService(), this.compositeEditorInstance],
+      externalResources: [new ExcelExportService(), new SlickCustomTooltip(), this.compositeEditorInstance],
       enableFiltering: true,
       rowSelectionOptions: {
         // True (Single Selection), False (Multiple Selections)
@@ -513,7 +515,7 @@ export class Example30 {
     } else {
       alert(args.validationResults.msg);
     }
-    e.returnValue = false; // patch for Au2.Beta.13 regression
+    e.preventDefault(); // OR eventData.preventDefault();
     return false;
   }
 
@@ -527,7 +529,6 @@ export class Example30 {
     if (column && item) {
       if (!checkItemIsEditable(item, column, grid)) {
         e.preventDefault(); // OR eventData.preventDefault();
-        e.returnValue = false; // patch for Au2.Beta.13 regression
         return false;
       }
     }
