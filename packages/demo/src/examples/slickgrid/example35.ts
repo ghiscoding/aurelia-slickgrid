@@ -7,6 +7,7 @@ import {
   GridOption,
 } from 'aurelia-slickgrid';
 import { I18N } from '@aurelia/i18n';
+import { SlickCustomTooltip } from '@slickgrid-universal/custom-tooltip-plugin';
 // import { TOptions as I18NOptions } from 'i18next';
 
 import './example35.scss';
@@ -194,6 +195,7 @@ export class Example35 {
           deleteButtonPrompt: 'Are you sure you want to delete this row?',
         },
       },
+      externalResources: [new SlickCustomTooltip()],
     };
   }
 
