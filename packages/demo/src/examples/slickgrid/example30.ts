@@ -169,6 +169,7 @@ export class Example30 {
           model: Editors.slider,
           massUpdate: true, minValue: 0, maxValue: 100,
         },
+        customTooltip: { position: 'center' }
       },
       // {
       //   id: 'percentComplete2', name: '% Complete', field: 'analysis.percentComplete', minWidth: 100,
