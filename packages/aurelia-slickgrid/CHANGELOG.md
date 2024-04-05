@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.6.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v7.6.0...v7.6.1) (2024-04-01)
+
+### Bug Fixes
+
+* allow multiple tooltips per grid cell ([#1176](https://github.com/ghiscoding/aurelia-slickgrid/issues/1176)) ([8fbf543](https://github.com/ghiscoding/aurelia-slickgrid/commit/8fbf5438c2a4672a13f843460e201f3d21053152)) - by @ghiscoding
+
 # [7.6.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v7.5.0...v7.6.0) (2024-03-23)
 
 ### Bug Fixes
