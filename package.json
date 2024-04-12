@@ -44,14 +44,14 @@
     "@aurelia/platform": "^2.0.0-beta.14",
     "@aurelia/platform-browser": "^2.0.0-beta.14",
     "@jest/types": "^29.6.3",
-    "@lerna-lite/cli": "^3.3.1",
-    "@lerna-lite/publish": "^3.3.1",
+    "@lerna-lite/cli": "^3.3.2",
+    "@lerna-lite/publish": "^3.3.2",
     "@types/jest": "^29.5.12",
-    "@types/node": "^20.12.2",
-    "@typescript-eslint/eslint-plugin": "^7.4.0",
-    "@typescript-eslint/parser": "^7.4.0",
+    "@types/node": "^20.12.7",
+    "@typescript-eslint/eslint-plugin": "^7.6.0",
+    "@typescript-eslint/parser": "^7.6.0",
     "cross-env": "^7.0.3",
-    "cypress": "^13.7.1",
+    "cypress": "^13.7.3",
     "eslint": "^8.57.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-prefer-arrow": "^1.2.3",
@@ -63,10 +63,10 @@
     "jsdom-global": "^3.0.2",
     "moment-mini": "^2.29.4",
     "npm-run-all2": "^6.1.2",
-    "pnpm": "^8.15.5",
+    "pnpm": "^8.15.6",
     "rimraf": "^5.0.5",
     "ts-jest": "^29.1.2",
     "typescript": "^5.4.3"
   },
-  "packageManager": "pnpm@8.15.5"
+  "packageManager": "pnpm@8.15.6"
 }
