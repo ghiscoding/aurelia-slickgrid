@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.7.0](https://github.com/ghiscoding/aurelia-slickgrid/compare/v7.6.1...v7.7.0) (2024-04-20)
+
+### Features
+
+* add global `defaultEditorOptions` & `defaultFilterOptions` ([#1183](https://github.com/ghiscoding/aurelia-slickgrid/issues/1183)) ([eefca81](https://github.com/ghiscoding/aurelia-slickgrid/commit/eefca818d6819046572fe969778ab8b7f659435c)) - by @ghiscoding
+
 ## [7.6.1](https://github.com/ghiscoding/aurelia-slickgrid/compare/v7.6.0...v7.6.1) (2024-04-01)
 
 ### Bug Fixes
