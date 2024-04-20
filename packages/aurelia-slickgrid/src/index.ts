@@ -1,4 +1,4 @@
-export type * from '@slickgrid-universal/common';
+export * from '@slickgrid-universal/common';
 import type { IContainer } from 'aurelia';
 import { AureliaSlickgridCustomElement } from './custom-elements/aurelia-slickgrid';
 import { SlickgridConfig } from './slickgrid-config';
