@@ -1,10 +1,10 @@
 import {
-  AureliaGridInstance,
-  Column,
+  type AureliaGridInstance,
+  type Column,
   Editors,
   FieldType,
   Formatters,
-  GridOption,
+  type GridOption,
 } from 'aurelia-slickgrid';
 import { I18N } from '@aurelia/i18n';
 import { SlickCustomTooltip } from '@slickgrid-universal/custom-tooltip-plugin';

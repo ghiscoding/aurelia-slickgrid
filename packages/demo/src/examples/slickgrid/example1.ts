@@ -1,4 +1,4 @@
-import { Column, GridOption, Formatters, AureliaGridInstance } from 'aurelia-slickgrid';
+import { type AureliaGridInstance, type Column, type GridOption, Formatters } from 'aurelia-slickgrid';
 
 const NB_ITEMS = 995;
 

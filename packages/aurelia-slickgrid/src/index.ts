@@ -1,5 +1,5 @@
 export * from '@slickgrid-universal/common';
-import { IContainer } from 'aurelia';
+import type { IContainer } from 'aurelia';
 import { AureliaSlickgridCustomElement } from './custom-elements/aurelia-slickgrid';
 import { SlickgridConfig } from './slickgrid-config';
 
@@ -31,12 +31,12 @@ import type {
 
 // re-export only the Aurelia interfaces (models), some of which were overriden from Slickgrid-Universal
 export {
-  AureliaGridInstance,
-  AureliaViewOutput,
-  GridOption,
-  RowDetailView,
-  ViewModelBindableData,
-  ViewModelBindableInputData,
+  type AureliaGridInstance,
+  type AureliaViewOutput,
+  type GridOption,
+  type RowDetailView,
+  type ViewModelBindableData,
+  type ViewModelBindableInputData,
   SlickgridConfig
 };
 

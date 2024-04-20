@@ -3,19 +3,19 @@ import { newInstanceOf, resolve } from '@aurelia/kernel';
 import { ExcelExportService } from '@slickgrid-universal/excel-export';
 
 import {
-  AureliaGridInstance,
-  AutocompleterOption,
-  Column,
-  EditCommand,
+  type AureliaGridInstance,
+  type AutocompleterOption,
+  type Column,
+  type EditCommand,
   Editors,
   FieldType,
   Filters,
   formatNumber,
-  Formatter,
+  type Formatter,
   Formatters,
-  GridOption,
-  LongTextEditorOption,
-  SlickGrid,
+  type GridOption,
+  type LongTextEditorOption,
+  type SlickGrid,
   SortComparers,
   SlickGlobalEditorLock,
 } from 'aurelia-slickgrid';

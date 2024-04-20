@@ -1,4 +1,4 @@
-import { Column, GridOption, Formatters } from 'aurelia-slickgrid';
+import { type Column, type GridOption, Formatters } from 'aurelia-slickgrid';
 
 const NB_ITEMS = 995;
 

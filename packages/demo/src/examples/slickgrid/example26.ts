@@ -1,18 +1,18 @@
 import { resolve } from 'aurelia';
 import {
-  AureliaGridInstance,
+  type AureliaGridInstance,
   AureliaUtilService,
-  Column,
-  EditCommand,
+  type Column,
+  type EditCommand,
   Editors,
   FieldType,
   Filters,
   Formatters,
-  GridOption,
-  OnEventArgs,
+  type GridOption,
+  type OnEventArgs,
   OperatorType,
   SlickGlobalEditorLock,
-  ViewModelBindableInputData,
+  type ViewModelBindableInputData,
 } from 'aurelia-slickgrid';
 import { CustomAureliaViewModelEditor } from './custom-aureliaViewModelEditor';
 import { CustomAureliaViewModelFilter } from './custom-aureliaViewModelFilter';

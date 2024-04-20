@@ -3,20 +3,17 @@ import { bindable } from 'aurelia';
 import {
   addWhiteSpaces,
   Aggregators,
-  AureliaGridInstance,
-  Column,
+  type AureliaGridInstance,
+  type Column,
   decimalFormatted,
   FieldType,
   Filters,
   findItemInTreeStructure,
-  Formatter,
+  type Formatter,
   Formatters,
-  GridOption,
+  type GridOption,
   isNumber,
-  SlickDataView,
-  SlickGrid,
-  // GroupTotalFormatters,
-  // italicFormatter,
+  type SlickDataView,
 } from 'aurelia-slickgrid';
 import './example28.scss'; // provide custom CSS/SASS styling
 

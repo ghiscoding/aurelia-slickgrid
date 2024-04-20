@@ -1,4 +1,4 @@
-import { TranslaterService as UniversalTranslateService } from '@slickgrid-universal/common';
+import type { TranslaterService as UniversalTranslateService } from '@slickgrid-universal/common';
 import { I18N } from '@aurelia/i18n';
 import { optional, resolve } from 'aurelia';
 

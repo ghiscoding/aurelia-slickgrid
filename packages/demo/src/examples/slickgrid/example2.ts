@@ -1,10 +1,10 @@
 import {
-  AureliaGridInstance,
-  Column,
+  type AureliaGridInstance,
+  type Column,
   FieldType,
-  Formatter,
+  type Formatter,
   Formatters,
-  GridOption,
+  type GridOption,
 } from 'aurelia-slickgrid';
 
 interface DataItem {

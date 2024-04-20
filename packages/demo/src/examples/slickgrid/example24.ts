@@ -3,16 +3,16 @@ import { I18N } from '@aurelia/i18n';
 // import { TOptions as I18NOptions } from 'i18next';
 
 import {
-  AureliaGridInstance,
-  Column,
-  ContextMenu,
+  type AureliaGridInstance,
+  type Column,
+  type ContextMenu,
   ExtensionName,
   FieldType,
   Filters,
-  Formatter,
+  type Formatter,
   Formatters,
-  GridOption,
-  SlickGrid,
+  type GridOption,
+  type SlickGrid,
 } from 'aurelia-slickgrid';
 import './example24.scss'; // provide custom CSS/SASS styling
 import { resolve } from 'aurelia';

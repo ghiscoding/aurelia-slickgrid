@@ -1,7 +1,7 @@
 import { IHttpClient } from '@aurelia/fetch-client';
 import { newInstanceOf, resolve } from '@aurelia/kernel';
 
-import { AureliaGridInstance, Column, Filters, GridOption } from 'aurelia-slickgrid';
+import { type AureliaGridInstance, type Column, Filters, type GridOption } from 'aurelia-slickgrid';
 import './example22.scss';
 
 const URL_CUSTOMERS = 'assets/data/customers_100.json';

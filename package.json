@@ -31,7 +31,7 @@
     "dev": "pnpm -r --stream --parallel dev",
     "cypress:open": "cypress open --config-file test/cypress.config.ts",
     "cypress:ci": "cypress run --config-file test/cypress.config.ts",
-    "lint": "eslint packages --ext .ts",
+    "lint": "eslint packages",
     "preview:release": "pnpm -r --stream preview:release",
     "release": "pnpm -r --stream release",
     "test:ci": "jest --runInBand --coverage=true --ci --config ./test/jest.config.ts",
@@ -48,12 +48,12 @@
     "@lerna-lite/publish": "^3.3.3",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.12.7",
-    "@typescript-eslint/eslint-plugin": "^7.7.0",
-    "@typescript-eslint/parser": "^7.7.0",
     "cross-env": "^7.0.3",
     "cypress": "^13.8.0",
-    "eslint": "^8.57.0",
+    "eslint": "^9.1.0",
+    "eslint-plugin-cypress": "^2.15.2",
     "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-n": "^17.2.1",
     "eslint-plugin-prefer-arrow": "^1.2.3",
     "jest": "^29.7.0",
     "jest-cli": "^29.7.0",
@@ -66,7 +66,8 @@
     "pnpm": "^8.15.7",
     "rimraf": "^5.0.5",
     "ts-jest": "^29.1.2",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "typescript-eslint": "^7.7.0"
   },
   "packageManager": "pnpm@8.15.6"
 }

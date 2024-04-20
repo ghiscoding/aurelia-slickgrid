@@ -1,4 +1,4 @@
-import { AureliaGridInstance, Column, ExtensionName, Filters, Formatters, GridOption, OnEventArgs } from 'aurelia-slickgrid';
+import { type AureliaGridInstance, type Column, ExtensionName, Filters, Formatters, type GridOption, type OnEventArgs } from 'aurelia-slickgrid';
 
 export class Example16 {
   title = 'Example 16: Row Move & Checkbox Selector';

@@ -1,16 +1,16 @@
 
 import {
-  AureliaGridInstance,
-  Column,
-  ColumnEditorDualInput,
+  type AureliaGridInstance,
+  type Column,
+  type ColumnEditorDualInput,
   Editors,
   FieldType,
   Filters,
   formatNumber,
   Formatters,
-  GridOption,
+  type GridOption,
   SlickEventHandler,
-  SlickGrid,
+  type SlickGrid,
 } from 'aurelia-slickgrid';
 import './example20.scss'; // provide custom CSS/SASS styling
 

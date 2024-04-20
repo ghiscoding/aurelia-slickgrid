@@ -1,17 +1,17 @@
 import { I18N } from '@aurelia/i18n';
-import { GraphqlService, GraphqlPaginatedResult, GraphqlServiceApi, GraphqlServiceOption } from '@slickgrid-universal/graphql';
+import { GraphqlService, type GraphqlPaginatedResult, type GraphqlServiceApi, type GraphqlServiceOption } from '@slickgrid-universal/graphql';
 import moment from 'moment-mini';
 import {
-  AureliaGridInstance,
-  Column,
-  CursorPageInfo,
+  type AureliaGridInstance,
+  type Column,
+  type CursorPageInfo,
   FieldType,
   Filters,
   Formatters,
-  GridOption,
-  GridStateChange,
-  Metrics,
-  MultipleSelectOption,
+  type GridOption,
+  type GridStateChange,
+  type Metrics,
+  type MultipleSelectOption,
   OperatorType,
   SortDirection,
 } from 'aurelia-slickgrid';
@@ -41,7 +41,7 @@ export class Example6 {
   aureliaGrid!: AureliaGridInstance;
   columnDefinitions: Column[] = [];
   gridOptions!: GridOption;
-  dataset = [] = [];
+  dataset: any[] = [];
   metrics!: Metrics;
   graphqlService = new GraphqlService();
 
@@ -215,7 +215,6 @@ export class Example6 {
    * @param query
    * @return Promise<GraphqlPaginatedResult>
    */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getCustomerApiCall(_query: string): Promise<GraphqlPaginatedResult> {
     let pageInfo: CursorPageInfo;
     if (this.aureliaGrid?.paginationService) {
