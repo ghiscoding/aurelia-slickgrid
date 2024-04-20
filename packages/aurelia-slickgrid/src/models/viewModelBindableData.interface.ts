@@ -1,4 +1,4 @@
-import { SlickDataView, SlickGrid } from '@slickgrid-universal/common';
+import type { SlickDataView, SlickGrid } from '@slickgrid-universal/common';
 
 export interface ViewModelBindableData {
   template: string;

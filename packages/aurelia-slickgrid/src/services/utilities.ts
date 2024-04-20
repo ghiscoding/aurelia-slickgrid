@@ -1,5 +1,5 @@
-import { IDisposable } from 'aurelia';
-import { EventSubscription } from '@slickgrid-universal/common';
+import type { IDisposable } from 'aurelia';
+import type { EventSubscription } from '@slickgrid-universal/common';
 
 /**
  * Loop through and dispose of all subscriptions when they are disposable

@@ -3,16 +3,16 @@ import { newInstanceOf, resolve } from '@aurelia/kernel';
 import { ExcelExportService } from '@slickgrid-universal/excel-export';
 import { CustomInputFilter } from './custom-inputFilter';
 import {
-  AureliaGridInstance,
-  Column,
+  type AureliaGridInstance,
+  type Column,
   FieldType,
   Filters,
-  FlatpickrOption,
+  type FlatpickrOption,
   Formatters,
-  GridOption,
-  GridStateChange,
-  Metrics,
-  MultipleSelectOption,
+  type GridOption,
+  type GridStateChange,
+  type Metrics,
+  type MultipleSelectOption,
   OperatorType,
 } from 'aurelia-slickgrid';
 

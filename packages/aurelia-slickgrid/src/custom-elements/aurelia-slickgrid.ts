@@ -71,6 +71,7 @@ import { SlickRowDetailView } from '../extensions/slickRowDetailView';
 
 @customElement({
   name: 'aurelia-slickgrid',
+  /* eslint-disable */
   template: `
 <div id="slickGridContainer-$\{gridId\}" class="grid-pane">
   <!-- Header slot if you need to create a complex custom header -->
@@ -84,6 +85,7 @@ import { SlickRowDetailView } from '../extensions/slickRowDetailView';
   <au-slot name="slickgrid-footer"></au-slot>
 </div>
 ` })
+/* eslint-enable */
 export class AureliaSlickgridCustomElement {
   protected _columnDefinitions: Column[] = [];
   protected _currentDatasetLength = 0;

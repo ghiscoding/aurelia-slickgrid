@@ -1,15 +1,15 @@
-import { ICustomElementController } from '@aurelia/runtime-html';
-import { IBindingContext } from '@aurelia/runtime';
+import type { ICustomElementController } from '@aurelia/runtime-html';
+import type { IBindingContext } from '@aurelia/runtime';
 
 import {
   AureliaUtilService,
-  Column,
-  Editor,
-  EditorValidator,
-  EditorValidationResult,
-  GridOption,
-  SlickGrid,
-  ViewModelBindableInputData,
+  type Column,
+  type Editor,
+  type EditorValidator,
+  type EditorValidationResult,
+  type GridOption,
+  type SlickGrid,
+  type ViewModelBindableInputData,
 } from 'aurelia-slickgrid';
 
 /*

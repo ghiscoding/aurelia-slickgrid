@@ -1,20 +1,20 @@
-import { ICustomElementController } from '@aurelia/runtime-html';
-import { IBindingContext } from '@aurelia/runtime';
+import type { ICustomElementController } from '@aurelia/runtime-html';
+import type { IBindingContext } from '@aurelia/runtime';
 
 import {
   AureliaUtilService,
-  Column,
-  ColumnFilter,
+  type Column,
+  type ColumnFilter,
   emptyElement,
-  Filter,
-  FilterArguments,
-  FilterCallback,
-  GridOption,
+  type Filter,
+  type FilterArguments,
+  type FilterCallback,
+  type GridOption,
   OperatorType,
-  OperatorString,
-  SearchTerm,
-  SlickGrid,
-  ViewModelBindableInputData,
+  type OperatorString,
+  type SearchTerm,
+  type SlickGrid,
+  type ViewModelBindableInputData,
 } from 'aurelia-slickgrid';
 
 export class CustomAureliaViewModelFilter implements Filter {

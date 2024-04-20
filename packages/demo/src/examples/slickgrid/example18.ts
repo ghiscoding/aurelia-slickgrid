@@ -2,21 +2,21 @@ import { ExcelExportService } from '@slickgrid-universal/excel-export';
 import { TextExportService } from '@slickgrid-universal/text-export';
 import {
   Aggregators,
-  AureliaGridInstance,
-  Column,
+  type AureliaGridInstance,
+  type Column,
   DelimiterType,
   FieldType,
   FileType,
   Filters,
   Formatters,
-  GridOption,
-  GroupingGetterFunction,
+  type GridOption,
+  type GroupingGetterFunction,
+  type Grouping,
   GroupTotalFormatters,
   SortComparers,
   SortDirectionNumber,
-  Grouping,
-  SlickDataView,
-  SlickGrid,
+  type SlickDataView,
+  type SlickGrid,
 } from 'aurelia-slickgrid';
 
 export class Example18 {

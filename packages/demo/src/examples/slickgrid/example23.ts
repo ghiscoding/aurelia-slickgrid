@@ -6,20 +6,20 @@ import { ExcelExportService } from '@slickgrid-universal/excel-export';
 
 import { CustomInputFilter } from './custom-inputFilter';
 import {
-  AureliaGridInstance,
-  Column,
-  CurrentFilter,
+  type AureliaGridInstance,
+  type Column,
+  type CurrentFilter,
   FieldType,
   Filters,
-  Formatter,
+  type Formatter,
   Formatters,
-  GridOption,
-  GridStateChange,
-  Metrics,
-  MultipleSelectOption,
+  type GridOption,
+  type GridStateChange,
+  type Metrics,
+  type MultipleSelectOption,
   OperatorType,
-  SlickGrid,
-  SliderRangeOption,
+  type SlickGrid,
+  type SliderRangeOption,
 } from 'aurelia-slickgrid';
 import { resolve } from 'aurelia';
 

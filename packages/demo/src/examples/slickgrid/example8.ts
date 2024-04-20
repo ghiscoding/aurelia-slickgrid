@@ -1,5 +1,5 @@
 import { I18N } from '@aurelia/i18n';
-import { AureliaGridInstance, Column, Formatters, GridOption, SlickDataView, SlickGrid } from 'aurelia-slickgrid';
+import type { AureliaGridInstance, Column, Formatters, GridOption, SlickDataView, SlickGrid } from 'aurelia-slickgrid';
 import './example8.scss'; // provide custom CSS/SASS styling
 import { resolve } from 'aurelia';
 

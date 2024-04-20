@@ -1,5 +1,5 @@
-import { RowDetailView as UniversalRowDetailView } from '@slickgrid-universal/common';
-import { Constructable } from 'aurelia';
+import type { RowDetailView as UniversalRowDetailView } from '@slickgrid-universal/common';
+import type { Constructable } from 'aurelia';
 
 export interface RowDetailView extends UniversalRowDetailView {
   /**

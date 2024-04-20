@@ -4,17 +4,17 @@ import { I18N } from '@aurelia/i18n';
 // import { TOptions as I18NOptions } from 'i18next';
 
 import {
-  AureliaGridInstance,
-  Column,
+  type AureliaGridInstance,
+  type Column,
   DelimiterType,
   FieldType,
   FileType,
   Filters,
-  Formatter,
+  type Formatter,
   Formatters,
-  GridOption,
-  GridStateChange,
-  SlickGrid,
+  type GridOption,
+  type GridStateChange,
+  type SlickGrid,
 } from 'aurelia-slickgrid';
 import { resolve } from 'aurelia';
 

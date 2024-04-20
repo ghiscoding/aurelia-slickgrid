@@ -2,14 +2,14 @@ import { faker } from '@faker-js/faker';
 import sparkline from '@fnando/sparkline';
 import {
   Aggregators,
-  AureliaGridInstance,
-  Column,
+  type AureliaGridInstance,
+  type Column,
   deepCopy,
   FieldType,
   Filters,
-  Formatter,
+  type Formatter,
   Formatters,
-  GridOption,
+  type GridOption,
   GroupTotalFormatters,
 } from 'aurelia-slickgrid';
 import './example34.scss';

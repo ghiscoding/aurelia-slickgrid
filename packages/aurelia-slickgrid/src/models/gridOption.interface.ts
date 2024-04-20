@@ -1,7 +1,7 @@
-import { I18N } from '@aurelia/i18n';
-import { GridOption as UniversalGridOption } from '@slickgrid-universal/common';
+import type { I18N } from '@aurelia/i18n';
+import type { GridOption as UniversalGridOption } from '@slickgrid-universal/common';
 
-import { RowDetailView } from './rowDetailView.interface';
+import type { RowDetailView } from './rowDetailView.interface';
 
 export interface GridOption extends UniversalGridOption {
   /** I18N translation service instance */

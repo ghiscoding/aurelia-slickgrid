@@ -1,16 +1,16 @@
 import { IHttpClient } from '@aurelia/fetch-client';
 import { newInstanceOf, resolve } from '@aurelia/kernel';
-import { GridOdataService, OdataServiceApi, OdataOption } from '@slickgrid-universal/odata';
+import { GridOdataService, type OdataServiceApi, type OdataOption } from '@slickgrid-universal/odata';
 import {
-  AureliaGridInstance,
-  Column,
+  type AureliaGridInstance,
+  type Column,
   FieldType,
   Filters,
-  GridOption,
-  GridStateChange,
-  Metrics,
+  type GridOption,
+  type GridStateChange,
+  type Metrics,
   OperatorType,
-  Pagination,
+  type Pagination,
 } from 'aurelia-slickgrid';
 
 const defaultPageSize = 20;
@@ -42,7 +42,7 @@ export class Example5 {
   aureliaGrid!: AureliaGridInstance;
   columnDefinitions: Column[] = [];
   gridOptions!: GridOption;
-  dataset = [] = [];
+  dataset: any[] = [];
   metrics!: Metrics;
   paginationOptions!: Pagination;
 
@@ -214,18 +214,18 @@ export class Example5 {
         if (param.includes('$filter=')) {
           const filterBy = param.substring('$filter='.length).replace('%20', ' ');
           if (filterBy.includes('contains')) {
-            const filterMatch = filterBy.match(/contains\(([a-zA-Z\/]+),\s?'(.*?)'/);
+            const filterMatch = filterBy.match(/contains\(([a-zA-Z/]+),\s?'(.*?)'/);
             const fieldName = filterMatch![1].trim();
             (columnFilters as any)[fieldName] = { type: 'substring', term: filterMatch![2].trim() };
           }
           if (filterBy.includes('substringof')) {
-            const filterMatch = filterBy.match(/substringof\('(.*?)',\s([a-zA-Z\/]+)/);
+            const filterMatch = filterBy.match(/substringof\('(.*?)',\s([a-zA-Z/]+)/);
             const fieldName = filterMatch![2].trim();
             (columnFilters as any)[fieldName] = { type: 'substring', term: filterMatch![1].trim() };
           }
           for (const operator of ['eq', 'ne', 'le', 'lt', 'gt', 'ge']) {
             if (filterBy.includes(operator)) {
-              const re = new RegExp(`([a-zA-Z ]*) ${operator} \'(.*?)\'`);
+              const re = new RegExp(`([a-zA-Z ]*) ${operator} '(.*?)'`);
               const filterMatch = re.exec(filterBy);
               if (Array.isArray(filterMatch)) {
                 const fieldName = filterMatch[1].trim();
