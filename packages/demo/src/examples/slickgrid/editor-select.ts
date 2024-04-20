@@ -1,4 +1,4 @@
-import { bindable } from 'aurelia';
+import { bindable, resolve } from 'aurelia';
 import { SlickGrid } from 'aurelia-slickgrid';
 
 export class EditorSelect {
@@ -10,7 +10,7 @@ export class EditorSelect {
 
   itemMatcher = (a: any, b: any) => a && b && a.id === b.id;
 
-  constructor(private elm: HTMLElement) { }
+  constructor(private elm: HTMLElement = resolve(HTMLElement)) { }
 
   focus() {
     this.elm.querySelector('select')?.focus();
