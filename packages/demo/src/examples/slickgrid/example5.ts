@@ -1,5 +1,5 @@
 import { IHttpClient } from '@aurelia/fetch-client';
-import { newInstanceOf } from '@aurelia/kernel';
+import { newInstanceOf, resolve } from '@aurelia/kernel';
 import { GridOdataService, OdataServiceApi, OdataOption } from '@slickgrid-universal/odata';
 import {
   AureliaGridInstance,
@@ -56,7 +56,7 @@ export class Example5 {
   isPageErrorTest = false;
   status = { text: '', class: '' };
 
-  constructor(@newInstanceOf(IHttpClient) readonly http: IHttpClient) {
+  constructor(readonly http: IHttpClient = resolve(newInstanceOf(IHttpClient))) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
   }

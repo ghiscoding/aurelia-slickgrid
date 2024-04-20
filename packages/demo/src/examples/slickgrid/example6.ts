@@ -15,6 +15,7 @@ import {
   OperatorType,
   SortDirection,
 } from 'aurelia-slickgrid';
+import { resolve } from 'aurelia';
 
 const defaultPageSize = 20;
 const GRAPHQL_QUERY_DATASET_NAME = 'users';
@@ -50,7 +51,7 @@ export class Example6 {
   status = { text: '', class: '' };
   serverWaitDelay = FAKE_SERVER_DELAY; // server simulation with default of 250ms but 50ms for Cypress tests
 
-  constructor(@I18N private readonly i18n: I18N) {
+  constructor(private readonly i18n: I18N = resolve(I18N)) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
 

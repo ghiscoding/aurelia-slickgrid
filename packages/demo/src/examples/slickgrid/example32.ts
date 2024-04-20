@@ -1,5 +1,5 @@
 import { IHttpClient } from '@aurelia/fetch-client';
-import { newInstanceOf } from '@aurelia/kernel';
+import { newInstanceOf, resolve } from '@aurelia/kernel';
 import { ExcelExportService } from '@slickgrid-universal/excel-export';
 
 import {
@@ -94,7 +94,7 @@ export class Example32 {
     { value: 4, label: 'Very Complex' },
   ];
 
-  constructor(@newInstanceOf(IHttpClient) readonly http: IHttpClient) {
+  constructor(readonly http: IHttpClient = resolve(newInstanceOf(IHttpClient))) {
     this.initializeGrid();
   }
 

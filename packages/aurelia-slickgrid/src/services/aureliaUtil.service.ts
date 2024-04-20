@@ -1,11 +1,11 @@
 import { AureliaViewOutput, ViewModelBindableInputData } from '../models/index';
-import { AppTask, Constructable, CustomElement, IAurelia, singleton } from 'aurelia';
+import { AppTask, Constructable, CustomElement, IAurelia, resolve, singleton } from 'aurelia';
 
 (IAurelia as any).test = 'import 1';
 
 @singleton()
 export class AureliaUtilService {
-  constructor(@IAurelia private readonly au: IAurelia) { }
+  constructor(private readonly au: IAurelia = resolve(IAurelia)) { }
 
   async createAureliaViewModelAddToSlot(viewModel: Constructable, bindableData?: ViewModelBindableInputData, targetElement?: HTMLElement | Element): Promise<AureliaViewOutput | null> {
     if (!targetElement) {

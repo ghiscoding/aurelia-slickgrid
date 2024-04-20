@@ -1,5 +1,5 @@
 import { IHttpClient } from '@aurelia/fetch-client';
-import { newInstanceOf } from '@aurelia/kernel';
+import { newInstanceOf, resolve } from '@aurelia/kernel';
 
 import { AureliaGridInstance, Column, Filters, GridOption } from 'aurelia-slickgrid';
 import './example22.scss';
@@ -22,7 +22,7 @@ export class Example22 {
   dataset1: any[] = [];
   dataset2: any[] = [];
 
-  constructor(@newInstanceOf(IHttpClient) readonly http: IHttpClient) {
+  constructor(readonly http: IHttpClient = resolve(newInstanceOf(IHttpClient))) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid1();
     this.defineGrid2();

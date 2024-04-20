@@ -2,7 +2,7 @@
 import { GridOdataService, OdataServiceApi, OdataOption } from '@slickgrid-universal/odata';
 import { RxJsResource } from '@slickgrid-universal/rxjs-observable';
 import { IHttpClient } from '@aurelia/fetch-client';
-import { newInstanceOf } from '@aurelia/kernel';
+import { newInstanceOf, resolve } from '@aurelia/kernel';
 import { Observable, of, Subject } from 'rxjs';
 import {
   AureliaGridInstance,
@@ -46,7 +46,7 @@ export class Example31 {
   isOtherGenderAdded = false;
   genderCollection = [{ value: 'male', label: 'male' }, { value: 'female', label: 'female' }];
 
-  constructor(@newInstanceOf(IHttpClient) readonly http: IHttpClient) {
+  constructor(readonly http: IHttpClient = resolve(newInstanceOf(IHttpClient))) {
     this.initializeGrid();
   }
 

@@ -20,8 +20,6 @@
     "noImplicitReturns": true,
     "strictNullChecks": true,
     "forceConsistentCasingInFileNames": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
     "noEmitHelpers": true,
     "importHelpers": true,
     "skipLibCheck": true,
