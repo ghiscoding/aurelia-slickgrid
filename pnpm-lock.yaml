@@ -25,10 +25,10 @@ importers:
         version: 29.6.3
       '@lerna-lite/cli':
         specifier: ^3.3.2
-        version: 3.3.2(@lerna-lite/publish@3.3.2)(@lerna-lite/version@3.3.2)(typescript@5.4.3)
+        version: 3.3.2(@lerna-lite/publish@3.3.2)(@lerna-lite/version@3.3.2)(typescript@5.4.5)
       '@lerna-lite/publish':
         specifier: ^3.3.2
-        version: 3.3.2(typescript@5.4.3)
+        version: 3.3.2(typescript@5.4.5)
       '@types/jest':
         specifier: ^29.5.12
         version: 29.5.12
@@ -37,10 +37,10 @@ importers:
         version: 20.12.7
       '@typescript-eslint/eslint-plugin':
         specifier: ^7.6.0
-        version: 7.6.0(@typescript-eslint/parser@7.6.0)(eslint@8.57.0)(typescript@5.4.3)
+        version: 7.6.0(@typescript-eslint/parser@7.6.0)(eslint@8.57.0)(typescript@5.4.5)
       '@typescript-eslint/parser':
         specifier: ^7.6.0
-        version: 7.6.0(eslint@8.57.0)(typescript@5.4.3)
+        version: 7.6.0(eslint@8.57.0)(typescript@5.4.5)
       cross-env:
         specifier: ^7.0.3
         version: 7.0.3
@@ -88,10 +88,10 @@ importers:
         version: 5.0.5
       ts-jest:
         specifier: ^29.1.2
-        version: 29.1.2(@babel/core@7.24.3)(@jest/types@29.6.3)(jest@29.7.0)(typescript@5.4.3)
+        version: 29.1.2(@babel/core@7.24.3)(@jest/types@29.6.3)(jest@29.7.0)(typescript@5.4.5)
       typescript:
-        specifier: ^5.4.3
-        version: 5.4.3
+        specifier: ^5.4.5
+        version: 5.4.5
 
   packages/aurelia-slickgrid:
     dependencies:
@@ -105,26 +105,26 @@ importers:
         specifier: ^2.0.0-beta.14
         version: 2.0.0-beta.14
       '@slickgrid-universal/common':
-        specifier: ~4.6.1
-        version: 4.6.1
+        specifier: ~4.7.0
+        version: 4.7.0
       '@slickgrid-universal/custom-footer-component':
-        specifier: ~4.6.1
-        version: 4.6.1
+        specifier: ~4.7.0
+        version: 4.7.0
       '@slickgrid-universal/empty-warning-component':
-        specifier: ~4.6.1
-        version: 4.6.1
+        specifier: ~4.7.0
+        version: 4.7.0
       '@slickgrid-universal/event-pub-sub':
-        specifier: ~4.6.1
-        version: 4.6.1
+        specifier: ~4.7.0
+        version: 4.7.0
       '@slickgrid-universal/pagination-component':
-        specifier: ~4.6.1
-        version: 4.6.1
+        specifier: ~4.7.0
+        version: 4.7.0
       '@slickgrid-universal/row-detail-view-plugin':
-        specifier: ~4.6.1
-        version: 4.6.1
+        specifier: ~4.7.0
+        version: 4.7.0
       '@slickgrid-universal/utils':
-        specifier: ~4.6.1
-        version: 4.6.1
+        specifier: ~4.7.0
+        version: 4.7.0
       aurelia:
         specifier: ^2.0.0-beta.14
         version: 2.0.0-beta.14
@@ -154,8 +154,8 @@ importers:
         specifier: ^2.6.2
         version: 2.6.2
       typescript:
-        specifier: ^5.4.3
-        version: 5.4.3
+        specifier: ^5.4.5
+        version: 5.4.5
 
   packages/demo:
     dependencies:
@@ -190,32 +190,32 @@ importers:
         specifier: ^2.11.8
         version: 2.11.8
       '@slickgrid-universal/common':
-        specifier: ^4.6.1
-        version: 4.6.1
+        specifier: ^4.7.0
+        version: 4.7.0
       '@slickgrid-universal/composite-editor-component':
-        specifier: ^4.6.1
-        version: 4.6.1
+        specifier: ^4.7.0
+        version: 4.7.0
       '@slickgrid-universal/custom-tooltip-plugin':
-        specifier: ^4.6.1
-        version: 4.6.1
+        specifier: ^4.7.0
+        version: 4.7.0
       '@slickgrid-universal/excel-export':
-        specifier: ^4.6.1
-        version: 4.6.1
+        specifier: ^4.7.0
+        version: 4.7.0
       '@slickgrid-universal/graphql':
-        specifier: ^4.6.3
-        version: 4.6.3
+        specifier: ^4.7.0
+        version: 4.7.0
       '@slickgrid-universal/odata':
-        specifier: ^4.6.1
-        version: 4.6.1
+        specifier: ^4.7.0
+        version: 4.7.0
       '@slickgrid-universal/row-detail-view-plugin':
-        specifier: ^4.6.1
-        version: 4.6.1
+        specifier: ^4.7.0
+        version: 4.7.0
       '@slickgrid-universal/rxjs-observable':
-        specifier: ^4.6.1
-        version: 4.6.1
+        specifier: ^4.7.0
+        version: 4.7.0
       '@slickgrid-universal/text-export':
-        specifier: ^4.6.1
-        version: 4.6.1
+        specifier: ^4.7.0
+        version: 4.7.0
       aurelia:
         specifier: ^2.0.0-beta.14
         version: 2.0.0-beta.14
@@ -249,7 +249,7 @@ importers:
         version: 2.0.0-beta.14
       '@aurelia/ts-jest':
         specifier: ^2.0.0-beta.14
-        version: 2.0.0-beta.14(@babel/core@7.24.3)(@jest/types@29.6.3)(jest@29.7.0)(typescript@5.4.3)
+        version: 2.0.0-beta.14(@babel/core@7.24.3)(@jest/types@29.6.3)(jest@29.7.0)(typescript@5.4.5)
       '@aurelia/webpack-loader':
         specifier: ^2.0.0-beta.14
         version: 2.0.0-beta.14
@@ -312,7 +312,7 @@ importers:
         version: 8.4.38
       postcss-loader:
         specifier: ^8.1.1
-        version: 8.1.1(postcss@8.4.38)(typescript@5.4.3)(webpack@5.91.0)
+        version: 8.1.1(postcss@8.4.38)(typescript@5.4.5)(webpack@5.91.0)
       rimraf:
         specifier: ^5.0.5
         version: 5.0.5
@@ -333,16 +333,16 @@ importers:
         version: 4.0.0(webpack@5.91.0)
       ts-loader:
         specifier: ^9.5.1
-        version: 9.5.1(typescript@5.4.3)(webpack@5.91.0)
+        version: 9.5.1(typescript@5.4.5)(webpack@5.91.0)
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@types/node@20.12.7)(typescript@5.4.3)
+        version: 10.9.2(@types/node@20.12.7)(typescript@5.4.5)
       tslib:
         specifier: ^2.6.2
         version: 2.6.2
       typescript:
-        specifier: ^5.4.3
-        version: 5.4.3
+        specifier: ^5.4.5
+        version: 5.4.5
       webpack:
         specifier: ^5.91.0
         version: 5.91.0(webpack-cli@5.1.4)
@@ -484,7 +484,7 @@ packages:
       '@aurelia/runtime-html': 2.0.0-beta.14
     dev: true
 
-  /@aurelia/ts-jest@2.0.0-beta.14(@babel/core@7.24.3)(@jest/types@29.6.3)(jest@29.7.0)(typescript@5.4.3):
+  /@aurelia/ts-jest@2.0.0-beta.14(@babel/core@7.24.3)(@jest/types@29.6.3)(jest@29.7.0)(typescript@5.4.5):
     resolution: {integrity: sha512-WFlkcs9a4nbi2kisqGpLGu3ltfUXEPsNolDEMNaE42kUdRqYz9F0u1nyxUcEGxF0bEH6UOcKmVm5KEHD5PJ0gA==}
     engines: {node: '>=14.17.0'}
     dependencies:
@@ -493,7 +493,7 @@ packages:
       '@aurelia/platform': 2.0.0-beta.14
       '@aurelia/plugin-conventions': 2.0.0-beta.14
       '@aurelia/runtime': 2.0.0-beta.14
-      ts-jest: 29.1.2(@babel/core@7.24.3)(@jest/types@29.6.3)(jest@29.7.0)(typescript@5.4.3)
+      ts-jest: 29.1.2(@babel/core@7.24.3)(@jest/types@29.6.3)(jest@29.7.0)(typescript@5.4.5)
     transitivePeerDependencies:
       - '@babel/core'
       - '@jest/types'
@@ -1269,7 +1269,7 @@ packages:
     resolution: {integrity: sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==}
     dev: true
 
-  /@lerna-lite/cli@3.3.2(@lerna-lite/publish@3.3.2)(@lerna-lite/version@3.3.2)(typescript@5.4.3):
+  /@lerna-lite/cli@3.3.2(@lerna-lite/publish@3.3.2)(@lerna-lite/version@3.3.2)(typescript@5.4.5):
     resolution: {integrity: sha512-EC4/9NitwbVDbPXMficHjOIU+vyFAQ6NwLOxvLScw6dMrrKdBwyZXCrnP3DAfajEubG9fuPsj6w2N7G1stw9pQ==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
@@ -1294,10 +1294,10 @@ packages:
       '@lerna-lite/watch':
         optional: true
     dependencies:
-      '@lerna-lite/core': 3.3.2(typescript@5.4.3)
-      '@lerna-lite/init': 3.3.2(typescript@5.4.3)
-      '@lerna-lite/publish': 3.3.2(typescript@5.4.3)
-      '@lerna-lite/version': 3.3.2(@lerna-lite/publish@3.3.2)(typescript@5.4.3)
+      '@lerna-lite/core': 3.3.2(typescript@5.4.5)
+      '@lerna-lite/init': 3.3.2(typescript@5.4.5)
+      '@lerna-lite/publish': 3.3.2(typescript@5.4.5)
+      '@lerna-lite/version': 3.3.2(@lerna-lite/publish@3.3.2)(typescript@5.4.5)
       dedent: 1.5.1
       dotenv: 16.4.5
       import-local: 3.1.0
@@ -1311,7 +1311,7 @@ packages:
       - typescript
     dev: true
 
-  /@lerna-lite/core@3.3.2(typescript@5.4.3):
+  /@lerna-lite/core@3.3.2(typescript@5.4.5):
     resolution: {integrity: sha512-lqBAnD/RHdtNT+45AGO4kPUWops/MqiH6NHS4dllB2D5np/dfwZf94gbVDej8kqQu5c5pLRSIqbbIaFUcXqlyg==}
     engines: {node: ^18.0.0 || >=20.0.0}
     dependencies:
@@ -1319,7 +1319,7 @@ packages:
       chalk: 5.3.0
       clone-deep: 4.0.1
       config-chain: 1.1.13
-      cosmiconfig: 9.0.0(typescript@5.4.3)
+      cosmiconfig: 9.0.0(typescript@5.4.5)
       dedent: 1.5.1
       execa: 8.0.1
       fs-extra: 11.2.0
@@ -1348,11 +1348,11 @@ packages:
       - typescript
     dev: true
 
-  /@lerna-lite/init@3.3.2(typescript@5.4.3):
+  /@lerna-lite/init@3.3.2(typescript@5.4.5):
     resolution: {integrity: sha512-VauK97s/v9wbWZsUd/hdlmeoIx8hCH/8Zeti7q5qQWVTbVzsF7sDh0TmiaJ75emW1pTJiAo7eYgLQ2rY5mv3Qg==}
     engines: {node: ^18.0.0 || >=20.0.0}
     dependencies:
-      '@lerna-lite/core': 3.3.2(typescript@5.4.3)
+      '@lerna-lite/core': 3.3.2(typescript@5.4.5)
       fs-extra: 11.2.0
       p-map: 7.0.1
       write-json-file: 5.0.0
@@ -1363,13 +1363,13 @@ packages:
       - typescript
     dev: true
 
-  /@lerna-lite/publish@3.3.2(typescript@5.4.3):
+  /@lerna-lite/publish@3.3.2(typescript@5.4.5):
     resolution: {integrity: sha512-e/if/7u7xq76EzUj3UUhJLd3gy9MlnKNIpWmD44d+MyFzOHDVhoCCXyCwA2HQxARfQ7wXK+3ZESjwn8WGKZdxw==}
     engines: {node: ^18.0.0 || >=20.0.0}
     dependencies:
-      '@lerna-lite/cli': 3.3.2(@lerna-lite/publish@3.3.2)(@lerna-lite/version@3.3.2)(typescript@5.4.3)
-      '@lerna-lite/core': 3.3.2(typescript@5.4.3)
-      '@lerna-lite/version': 3.3.2(@lerna-lite/publish@3.3.2)(typescript@5.4.3)
+      '@lerna-lite/cli': 3.3.2(@lerna-lite/publish@3.3.2)(@lerna-lite/version@3.3.2)(typescript@5.4.5)
+      '@lerna-lite/core': 3.3.2(typescript@5.4.5)
+      '@lerna-lite/version': 3.3.2(@lerna-lite/publish@3.3.2)(typescript@5.4.5)
       '@npmcli/arborist': 7.4.0
       byte-size: 8.1.1
       chalk: 5.3.0
@@ -1404,12 +1404,12 @@ packages:
       - typescript
     dev: true
 
-  /@lerna-lite/version@3.3.2(@lerna-lite/publish@3.3.2)(typescript@5.4.3):
+  /@lerna-lite/version@3.3.2(@lerna-lite/publish@3.3.2)(typescript@5.4.5):
     resolution: {integrity: sha512-wF1IAHYHrwyZFf/Ca2sPDvwfsiLtV7SWWGK0dS5h5t6INuCFXhDWb/Vhcn42NJMMbw6QdvTiGdyBBYnczauGmQ==}
     engines: {node: ^18.0.0 || >=20.0.0}
     dependencies:
-      '@lerna-lite/cli': 3.3.2(@lerna-lite/publish@3.3.2)(@lerna-lite/version@3.3.2)(typescript@5.4.3)
-      '@lerna-lite/core': 3.3.2(typescript@5.4.3)
+      '@lerna-lite/cli': 3.3.2(@lerna-lite/publish@3.3.2)(@lerna-lite/version@3.3.2)(typescript@5.4.5)
+      '@lerna-lite/core': 3.3.2(typescript@5.4.5)
       '@octokit/plugin-enterprise-rest': 6.0.1
       '@octokit/rest': 20.0.2
       chalk: 5.3.0
@@ -1839,20 +1839,20 @@ packages:
       '@sinonjs/commons': 3.0.1
     dev: true
 
-  /@slickgrid-universal/binding@4.6.1:
-    resolution: {integrity: sha512-AiLs+F86RjXFz/BjaguME4P6BCxgJGkde29ZHyrgue+jfFxiWc3HPjcqx8LISaerekP96uVbx6arxFQpqphFjw==}
+  /@slickgrid-universal/binding@4.7.0:
+    resolution: {integrity: sha512-d2M8DHOzB8NzQr2d7ehiWYUF/BDmOXKzi7wa7MBwFaGD/nXz9Z59rISpQOL/12is0ahu1j3v1KFs/Gx4ktuI2w==}
     dev: false
 
-  /@slickgrid-universal/common@4.6.1:
-    resolution: {integrity: sha512-KdrPervCRu4J8NZj4ypCW+pv2JbMrPpG+6Xo4D3+e8Q+Zf7nGZwYbxdyc5j/hnQwqZukMcvpzj0VjIZgw+AiMg==}
+  /@slickgrid-universal/common@4.7.0:
+    resolution: {integrity: sha512-YB1FhMUWJtK07FIx1gWw+JIYG58BXtWOdaKFzFP6AAy7Il/AeHFM6cpxSqb8rF8IUEraAre4bYz0WbebYjtkXQ==}
     engines: {node: ^18.0.0 || >=20.0.0}
     dependencies:
-      '@slickgrid-universal/binding': 4.6.1
-      '@slickgrid-universal/event-pub-sub': 4.6.1
-      '@slickgrid-universal/utils': 4.6.1
+      '@slickgrid-universal/binding': 4.7.0
+      '@slickgrid-universal/event-pub-sub': 4.7.0
+      '@slickgrid-universal/utils': 4.7.0
       '@types/dompurify': 3.0.5
       '@types/sortablejs': 1.15.8
-      autocompleter-es: 9.1.4
+      autocompleter: 9.2.1
       dequal: 2.0.3
       excel-builder-vanilla: 3.0.1
       flatpickr: 4.6.13
@@ -1868,12 +1868,12 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@slickgrid-universal/composite-editor-component@4.6.1:
-    resolution: {integrity: sha512-MJJcdPxAtZRB27FQVdkIIn6HVROa/ZaRyDMWkI9BkQfkG8khVL/8a1vn6Ca2Z9wesDSNkJ1QRzfemb+fq7Xcyw==}
+  /@slickgrid-universal/composite-editor-component@4.7.0:
+    resolution: {integrity: sha512-knqWkb05oAW6b8kZrRaLle3Cu9MAsCZm3orsHuuNtrrZ+Ti69VodlwzPw+kIbSsNmfG+YqSnZMJVuzWt9fA07g==}
     dependencies:
-      '@slickgrid-universal/binding': 4.6.1
-      '@slickgrid-universal/common': 4.6.1
-      '@slickgrid-universal/utils': 4.6.1
+      '@slickgrid-universal/binding': 4.7.0
+      '@slickgrid-universal/common': 4.7.0
+      '@slickgrid-universal/utils': 4.7.0
     transitivePeerDependencies:
       - bufferutil
       - canvas
@@ -1881,11 +1881,11 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@slickgrid-universal/custom-footer-component@4.6.1:
-    resolution: {integrity: sha512-D9TWC4MrVQSipuYflDsd+VEMiuu3gePXxf8PpYDyKplbMj5P41+FDRAxy+3Nay48tLqEK+RhYmfTyFzyQXU9qQ==}
+  /@slickgrid-universal/custom-footer-component@4.7.0:
+    resolution: {integrity: sha512-/af+tQb+gpkYRenDRequkOEL6uY7swoPtjWLc1WnMUzVvNpr9iOt1L21pnqJXKYZdrQwDkV82h2LOOyKI3NLRg==}
     dependencies:
-      '@slickgrid-universal/binding': 4.6.1
-      '@slickgrid-universal/common': 4.6.1
+      '@slickgrid-universal/binding': 4.7.0
+      '@slickgrid-universal/common': 4.7.0
       moment-mini: 2.29.4
     transitivePeerDependencies:
       - bufferutil
@@ -1894,11 +1894,11 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@slickgrid-universal/custom-tooltip-plugin@4.6.1:
-    resolution: {integrity: sha512-W6L67e5Qg2a/1/5FwbHED73eRNJcel1fxVI60sccgsoMgxriGMar4pcEplnVgwgL0Y2Kr0GYWkOnybNFnSwSCQ==}
+  /@slickgrid-universal/custom-tooltip-plugin@4.7.0:
+    resolution: {integrity: sha512-aIGrMd+mavwzd+0LXbg/PNUtFmHnzhFIWup1eV7eLkFNrpxaY2/Me/fsO3CAbda9HKNvJP/b+KErekoykJlwsA==}
     dependencies:
-      '@slickgrid-universal/common': 4.6.1
-      '@slickgrid-universal/utils': 4.6.1
+      '@slickgrid-universal/common': 4.7.0
+      '@slickgrid-universal/utils': 4.7.0
       isomorphic-dompurify: 2.7.0
     transitivePeerDependencies:
       - bufferutil
@@ -1907,10 +1907,10 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@slickgrid-universal/empty-warning-component@4.6.1:
-    resolution: {integrity: sha512-uJOY2WoxY8uERHrZPV4QrWfUtzdqvqcAgUUhUTUhZPAv8Fdu5ZoZz00jJGGnZsBY9xDlmYUYd/RArZboodomtA==}
+  /@slickgrid-universal/empty-warning-component@4.7.0:
+    resolution: {integrity: sha512-C4KbYIgRtKqGAq1hNSqXJBVMBn2MMRbvtoLdZQ1lr2bOov98sxHfQBgExPt9/u6l34b/oU0wVy7IUrXAyhUurw==}
     dependencies:
-      '@slickgrid-universal/common': 4.6.1
+      '@slickgrid-universal/common': 4.7.0
     transitivePeerDependencies:
       - bufferutil
       - canvas
@@ -1918,17 +1918,17 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@slickgrid-universal/event-pub-sub@4.6.1:
-    resolution: {integrity: sha512-bXT0r++KFtAnf2Gm1DeZAX3QD3We106OuaEFWi8tlmWsOGKW3+5PjvEaV2wrCJcRGwTsLgFr73KJMRCbiwRv3Q==}
+  /@slickgrid-universal/event-pub-sub@4.7.0:
+    resolution: {integrity: sha512-6o7+6lJykAKG9rEiixWxpa+SvZz/sjr1owDcaIAM3Qa/daYrOuFJ+reC9T8MK/RGx7jLerVaJdHeQsfStI5V9w==}
     dependencies:
-      '@slickgrid-universal/utils': 4.6.1
+      '@slickgrid-universal/utils': 4.7.0
     dev: false
 
-  /@slickgrid-universal/excel-export@4.6.1:
-    resolution: {integrity: sha512-5JM35oFGdeFCR0fY2YbojD8Kv/1ED1diUcSqpPTgZqGjBRfYiSDcUD8OYgp64CglRllXc/qTDS2A8FiwxE8rNA==}
+  /@slickgrid-universal/excel-export@4.7.0:
+    resolution: {integrity: sha512-FeSZihooXGZvZRk6FSjgi5lVPvaG2FsectEYoepvJXLvI98kqvuBdG9dvyuSn8oGvybhENVQpiiGnIq2V6bvEQ==}
     dependencies:
-      '@slickgrid-universal/common': 4.6.1
-      '@slickgrid-universal/utils': 4.6.1
+      '@slickgrid-universal/common': 4.7.0
+      '@slickgrid-universal/utils': 4.7.0
       excel-builder-vanilla: 3.0.1
       moment-mini: 2.29.4
     transitivePeerDependencies:
@@ -1938,11 +1938,11 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@slickgrid-universal/graphql@4.6.3:
-    resolution: {integrity: sha512-h4RtQ6mHl/0WvcVxwBoxKz/PaEX37m389ZIzpbNhSXfSB1EbReKcDXJdjbUCLsvoo6XRaJN4dcDUfoIliIaI+w==}
+  /@slickgrid-universal/graphql@4.7.0:
+    resolution: {integrity: sha512-xkdxHjGmVHB5PYC35oiHupTxHB206SlU16UMd7dqAzBoWnN6GIojBb+cp/OV0fIhAY+TwmROAF8y7slsInXhFA==}
     dependencies:
-      '@slickgrid-universal/common': 4.6.1
-      '@slickgrid-universal/utils': 4.6.1
+      '@slickgrid-universal/common': 4.7.0
+      '@slickgrid-universal/utils': 4.7.0
     transitivePeerDependencies:
       - bufferutil
       - canvas
@@ -1950,11 +1950,11 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@slickgrid-universal/odata@4.6.1:
-    resolution: {integrity: sha512-DaoW3CVn34R9At8DyqT6tMnhlalk2lDXskutWRk6L7iYqwvQHt88E/qz936z9hHFm5GyjWB0cqPA6onCE4mZ0w==}
+  /@slickgrid-universal/odata@4.7.0:
+    resolution: {integrity: sha512-AB+r+q/IHaVLrFznaZry7kJDA2e6mPnTb+q8+8et/YVpaFWgqJWaIOS1PKPEYVUbLILwWHpqPjiHnXLdnls4/A==}
     dependencies:
-      '@slickgrid-universal/common': 4.6.1
-      '@slickgrid-universal/utils': 4.6.1
+      '@slickgrid-universal/common': 4.7.0
+      '@slickgrid-universal/utils': 4.7.0
     transitivePeerDependencies:
       - bufferutil
       - canvas
@@ -1962,11 +1962,11 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@slickgrid-universal/pagination-component@4.6.1:
-    resolution: {integrity: sha512-SV9Y8+1yLDLXzdcTspRmswoh5u7bXlDkt8Bzwi9lNtuNLoE2TURUVtwMop9sv+Yn0g7ETSIkCnLTANUdMDtQ6Q==}
+  /@slickgrid-universal/pagination-component@4.7.0:
+    resolution: {integrity: sha512-yA9POJmBMh0eZuf/c8GpgGFNd2s3QLvahSCL+Rdg03oIkGnMWjvTSv6ptbsqLCC10gECPJtKRbwzvVMTjnUkhA==}
     dependencies:
-      '@slickgrid-universal/binding': 4.6.1
-      '@slickgrid-universal/common': 4.6.1
+      '@slickgrid-universal/binding': 4.7.0
+      '@slickgrid-universal/common': 4.7.0
     transitivePeerDependencies:
       - bufferutil
       - canvas
@@ -1974,11 +1974,11 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@slickgrid-universal/row-detail-view-plugin@4.6.1:
-    resolution: {integrity: sha512-nnpL0RwEHbN40QwTN4koS/rEwfY06OPNWNE33Xer1t8N1wYzdW95yI63RXiEbzilqg6wCoD/J5SsMlqoz2w03w==}
+  /@slickgrid-universal/row-detail-view-plugin@4.7.0:
+    resolution: {integrity: sha512-QhC1GAfL4DySdFiGz6N1Jx+DRU3ezUak8zbi9SUHP4iS0lcZBzb1sX0Itc5/ZLOatKozDJTEt57Ew3VcJ1gsOA==}
     dependencies:
-      '@slickgrid-universal/common': 4.6.1
-      '@slickgrid-universal/utils': 4.6.1
+      '@slickgrid-universal/common': 4.7.0
+      '@slickgrid-universal/utils': 4.7.0
     transitivePeerDependencies:
       - bufferutil
       - canvas
@@ -1986,10 +1986,10 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@slickgrid-universal/rxjs-observable@4.6.1:
-    resolution: {integrity: sha512-XNuqY4p5f46eKJI3Wp+Sa2ut/x5nxd3hjvEmFWgY63ss+zXw/xnhLzkRybRAn4eT+IqwKOkISpLKbNPQ50lBmA==}
+  /@slickgrid-universal/rxjs-observable@4.7.0:
+    resolution: {integrity: sha512-qCUd7dp4xq/znd4hcTfoVEhwYVRoiMHN1o0XHI1jFpEm77mYodpAtKSaa+o/4b/gZH6vNUHIYqIOtHm0BZ3Gdg==}
     dependencies:
-      '@slickgrid-universal/common': 4.6.1
+      '@slickgrid-universal/common': 4.7.0
       rxjs: 7.8.1
     transitivePeerDependencies:
       - bufferutil
@@ -1998,11 +1998,11 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@slickgrid-universal/text-export@4.6.1:
-    resolution: {integrity: sha512-WOQFkpHckdwaU4i4uaT/NcHxiBcAIhfnbOqarkqUrB2Q03ESa3YcuD5xkvYU++pSd8wNzjFgyS0UZI+SfMrBTg==}
+  /@slickgrid-universal/text-export@4.7.0:
+    resolution: {integrity: sha512-3b+PPl50O+2zaOq8GutnOr2K2NJuIW02At/GKbX6hypFYO8mAPd7yIcfw0uGM6BDYk1MBPvmh6qaPWSLzN/M4w==}
     dependencies:
-      '@slickgrid-universal/common': 4.6.1
-      '@slickgrid-universal/utils': 4.6.1
+      '@slickgrid-universal/common': 4.7.0
+      '@slickgrid-universal/utils': 4.7.0
       text-encoding-utf-8: 1.0.2
     transitivePeerDependencies:
       - bufferutil
@@ -2011,8 +2011,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@slickgrid-universal/utils@4.6.1:
-    resolution: {integrity: sha512-wWv6SCu4ZP4PImzE3BQpjc291IhxGEu/azzHDa5DWMBnJbY2Vs0sHGK0ycAAZlZ3uti1+AQgQcUOMgB1P9e1zA==}
+  /@slickgrid-universal/utils@4.7.0:
+    resolution: {integrity: sha512-2KBYuA3yI82HXIELbkrxW6Zts0roypqDiRFbiARN2ldhhjT6roWo8d+hI6c6WKauffeQ0aZCCYDkI7SWVai7SQ==}
     dev: false
 
   /@tootallnate/once@2.0.0:
@@ -2332,7 +2332,7 @@ packages:
     dev: true
     optional: true
 
-  /@typescript-eslint/eslint-plugin@7.6.0(@typescript-eslint/parser@7.6.0)(eslint@8.57.0)(typescript@5.4.3):
+  /@typescript-eslint/eslint-plugin@7.6.0(@typescript-eslint/parser@7.6.0)(eslint@8.57.0)(typescript@5.4.5):
     resolution: {integrity: sha512-gKmTNwZnblUdnTIJu3e9kmeRRzV2j1a/LUO27KNNAnIC5zjy1aSvXSRp4rVNlmAoHlQ7HzX42NbKpcSr4jF80A==}
     engines: {node: ^18.18.0 || >=20.0.0}
     peerDependencies:
@@ -2344,10 +2344,10 @@ packages:
         optional: true
     dependencies:
       '@eslint-community/regexpp': 4.10.0
-      '@typescript-eslint/parser': 7.6.0(eslint@8.57.0)(typescript@5.4.3)
+      '@typescript-eslint/parser': 7.6.0(eslint@8.57.0)(typescript@5.4.5)
       '@typescript-eslint/scope-manager': 7.6.0
-      '@typescript-eslint/type-utils': 7.6.0(eslint@8.57.0)(typescript@5.4.3)
-      '@typescript-eslint/utils': 7.6.0(eslint@8.57.0)(typescript@5.4.3)
+      '@typescript-eslint/type-utils': 7.6.0(eslint@8.57.0)(typescript@5.4.5)
+      '@typescript-eslint/utils': 7.6.0(eslint@8.57.0)(typescript@5.4.5)
       '@typescript-eslint/visitor-keys': 7.6.0
       debug: 4.3.4(supports-color@8.1.1)
       eslint: 8.57.0
@@ -2355,13 +2355,13 @@ packages:
       ignore: 5.3.1
       natural-compare: 1.4.0
       semver: 7.6.0
-      ts-api-utils: 1.3.0(typescript@5.4.3)
-      typescript: 5.4.3
+      ts-api-utils: 1.3.0(typescript@5.4.5)
+      typescript: 5.4.5
     transitivePeerDependencies:
       - supports-color
     dev: true
 
-  /@typescript-eslint/parser@7.6.0(eslint@8.57.0)(typescript@5.4.3):
+  /@typescript-eslint/parser@7.6.0(eslint@8.57.0)(typescript@5.4.5):
     resolution: {integrity: sha512-usPMPHcwX3ZoPWnBnhhorc14NJw9J4HpSXQX4urF2TPKG0au0XhJoZyX62fmvdHONUkmyUe74Hzm1//XA+BoYg==}
     engines: {node: ^18.18.0 || >=20.0.0}
     peerDependencies:
@@ -2373,11 +2373,11 @@ packages:
     dependencies:
       '@typescript-eslint/scope-manager': 7.6.0
       '@typescript-eslint/types': 7.6.0
-      '@typescript-eslint/typescript-estree': 7.6.0(typescript@5.4.3)
+      '@typescript-eslint/typescript-estree': 7.6.0(typescript@5.4.5)
       '@typescript-eslint/visitor-keys': 7.6.0
       debug: 4.3.4(supports-color@8.1.1)
       eslint: 8.57.0
-      typescript: 5.4.3
+      typescript: 5.4.5
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -2390,7 +2390,7 @@ packages:
       '@typescript-eslint/visitor-keys': 7.6.0
     dev: true
 
-  /@typescript-eslint/type-utils@7.6.0(eslint@8.57.0)(typescript@5.4.3):
+  /@typescript-eslint/type-utils@7.6.0(eslint@8.57.0)(typescript@5.4.5):
     resolution: {integrity: sha512-NxAfqAPNLG6LTmy7uZgpK8KcuiS2NZD/HlThPXQRGwz6u7MDBWRVliEEl1Gj6U7++kVJTpehkhZzCJLMK66Scw==}
     engines: {node: ^18.18.0 || >=20.0.0}
     peerDependencies:
@@ -2400,12 +2400,12 @@ packages:
       typescript:
         optional: true
     dependencies:
-      '@typescript-eslint/typescript-estree': 7.6.0(typescript@5.4.3)
-      '@typescript-eslint/utils': 7.6.0(eslint@8.57.0)(typescript@5.4.3)
+      '@typescript-eslint/typescript-estree': 7.6.0(typescript@5.4.5)
+      '@typescript-eslint/utils': 7.6.0(eslint@8.57.0)(typescript@5.4.5)
       debug: 4.3.4(supports-color@8.1.1)
       eslint: 8.57.0
-      ts-api-utils: 1.3.0(typescript@5.4.3)
-      typescript: 5.4.3
+      ts-api-utils: 1.3.0(typescript@5.4.5)
+      typescript: 5.4.5
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -2415,7 +2415,7 @@ packages:
     engines: {node: ^18.18.0 || >=20.0.0}
     dev: true
 
-  /@typescript-eslint/typescript-estree@7.6.0(typescript@5.4.3):
+  /@typescript-eslint/typescript-estree@7.6.0(typescript@5.4.5):
     resolution: {integrity: sha512-+7Y/GP9VuYibecrCQWSKgl3GvUM5cILRttpWtnAu8GNL9j11e4tbuGZmZjJ8ejnKYyBRb2ddGQ3rEFCq3QjMJw==}
     engines: {node: ^18.18.0 || >=20.0.0}
     peerDependencies:
@@ -2431,13 +2431,13 @@ packages:
       is-glob: 4.0.3
       minimatch: 9.0.4
       semver: 7.6.0
-      ts-api-utils: 1.3.0(typescript@5.4.3)
-      typescript: 5.4.3
+      ts-api-utils: 1.3.0(typescript@5.4.5)
+      typescript: 5.4.5
     transitivePeerDependencies:
       - supports-color
     dev: true
 
-  /@typescript-eslint/utils@7.6.0(eslint@8.57.0)(typescript@5.4.3):
+  /@typescript-eslint/utils@7.6.0(eslint@8.57.0)(typescript@5.4.5):
     resolution: {integrity: sha512-x54gaSsRRI+Nwz59TXpCsr6harB98qjXYzsRxGqvA5Ue3kQH+FxS7FYU81g/omn22ML2pZJkisy6Q+ElK8pBCA==}
     engines: {node: ^18.18.0 || >=20.0.0}
     peerDependencies:
@@ -2448,7 +2448,7 @@ packages:
       '@types/semver': 7.5.8
       '@typescript-eslint/scope-manager': 7.6.0
       '@typescript-eslint/types': 7.6.0
-      '@typescript-eslint/typescript-estree': 7.6.0(typescript@5.4.3)
+      '@typescript-eslint/typescript-estree': 7.6.0(typescript@5.4.5)
       eslint: 8.57.0
       semver: 7.6.0
     transitivePeerDependencies:
@@ -2988,8 +2988,8 @@ packages:
       '@aurelia/runtime-html': 2.0.0-beta.14
     dev: false
 
-  /autocompleter-es@9.1.4:
-    resolution: {integrity: sha512-rC/EGS0lFLqDzpN1iOlwlNYSNjzPoK3E7Yq41ffaKuWHU3Dv4wtkxuxQMFMrV2JWrDCfu6l4zYZZkTPIjPSJrg==}
+  /autocompleter@9.2.1:
+    resolution: {integrity: sha512-lZVD5JZxxg3o6hnh7oB3M4kVAJPp/xFKmrO9RYeMGpFIH1XokmwevMLzSYz0BHSAbXMX6H3hEMsDxAd2dMebag==}
     dev: false
 
   /autoprefixer@10.4.19(postcss@8.4.38):
@@ -3780,7 +3780,7 @@ packages:
     resolution: {integrity: sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ==}
     dev: true
 
-  /cosmiconfig@9.0.0(typescript@5.4.3):
+  /cosmiconfig@9.0.0(typescript@5.4.5):
     resolution: {integrity: sha512-itvL5h8RETACmOTFc4UfIyB2RfEHi71Ax6E/PivVxq9NseKbOWpeyHEOIbmAw1rs8Ak0VursQNww7lf7YtUwzg==}
     engines: {node: '>=14'}
     peerDependencies:
@@ -3793,7 +3793,7 @@ packages:
       import-fresh: 3.3.0
       js-yaml: 4.1.0
       parse-json: 5.2.0
-      typescript: 5.4.3
+      typescript: 5.4.5
     dev: true
 
   /create-jest@29.7.0(@types/node@20.12.7)(ts-node@10.9.2):
@@ -4578,7 +4578,7 @@ packages:
       eslint-import-resolver-webpack:
         optional: true
     dependencies:
-      '@typescript-eslint/parser': 7.6.0(eslint@8.57.0)(typescript@5.4.3)
+      '@typescript-eslint/parser': 7.6.0(eslint@8.57.0)(typescript@5.4.5)
       debug: 3.2.7(supports-color@8.1.1)
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
@@ -4596,7 +4596,7 @@ packages:
       '@typescript-eslint/parser':
         optional: true
     dependencies:
-      '@typescript-eslint/parser': 7.6.0(eslint@8.57.0)(typescript@5.4.3)
+      '@typescript-eslint/parser': 7.6.0(eslint@8.57.0)(typescript@5.4.5)
       array-includes: 3.1.8
       array.prototype.findlastindex: 1.2.5
       array.prototype.flat: 1.3.2
@@ -6400,7 +6400,7 @@ packages:
       pretty-format: 29.7.0
       slash: 3.0.0
       strip-json-comments: 3.1.1
-      ts-node: 10.9.2(@types/node@20.12.7)(typescript@5.4.3)
+      ts-node: 10.9.2(@types/node@20.12.7)(typescript@5.4.5)
     transitivePeerDependencies:
       - babel-plugin-macros
       - supports-color
@@ -8135,7 +8135,7 @@ packages:
     engines: {node: '>= 0.4'}
     dev: true
 
-  /postcss-loader@8.1.1(postcss@8.4.38)(typescript@5.4.3)(webpack@5.91.0):
+  /postcss-loader@8.1.1(postcss@8.4.38)(typescript@5.4.5)(webpack@5.91.0):
     resolution: {integrity: sha512-0IeqyAsG6tYiDRCYKQJLAmgQr47DX6N7sFSWvQxt6AcupX8DIdmykuk/o/tx0Lze3ErGHJEp5OSRxrelC6+NdQ==}
     engines: {node: '>= 18.12.0'}
     peerDependencies:
@@ -8148,7 +8148,7 @@ packages:
       webpack:
         optional: true
     dependencies:
-      cosmiconfig: 9.0.0(typescript@5.4.3)
+      cosmiconfig: 9.0.0(typescript@5.4.5)
       jiti: 1.21.0
       postcss: 8.4.38
       semver: 7.6.0
@@ -9442,16 +9442,16 @@ packages:
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
     dev: true
 
-  /ts-api-utils@1.3.0(typescript@5.4.3):
+  /ts-api-utils@1.3.0(typescript@5.4.5):
     resolution: {integrity: sha512-UQMIo7pb8WRomKR1/+MFVLTroIvDVtMX3K6OUir8ynLyzB8Jeriont2bTAtmNPa1ekAgN7YPDyf6V+ygrdU+eQ==}
     engines: {node: '>=16'}
     peerDependencies:
       typescript: '>=4.2.0'
     dependencies:
-      typescript: 5.4.3
+      typescript: 5.4.5
     dev: true
 
-  /ts-jest@29.1.2(@babel/core@7.24.3)(@jest/types@29.6.3)(jest@29.7.0)(typescript@5.4.3):
+  /ts-jest@29.1.2(@babel/core@7.24.3)(@jest/types@29.6.3)(jest@29.7.0)(typescript@5.4.5):
     resolution: {integrity: sha512-br6GJoH/WUX4pu7FbZXuWGKGNDuU7b8Uj77g/Sp7puZV6EXzuByl6JrECvm0MzVzSTkSHWTihsXt+5XYER5b+g==}
     engines: {node: ^16.10.0 || ^18.0.0 || >=20.0.0}
     hasBin: true
@@ -9482,11 +9482,11 @@ packages:
       lodash.memoize: 4.1.2
       make-error: 1.3.6
       semver: 7.6.0
-      typescript: 5.4.3
+      typescript: 5.4.5
       yargs-parser: 21.1.1
     dev: true
 
-  /ts-loader@9.5.1(typescript@5.4.3)(webpack@5.91.0):
+  /ts-loader@9.5.1(typescript@5.4.5)(webpack@5.91.0):
     resolution: {integrity: sha512-rNH3sK9kGZcH9dYzC7CewQm4NtxJTjSEVRJ2DyBZR7f8/wcta+iV44UPCXc5+nzDzivKtlzV6c9P4e+oFhDLYg==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
@@ -9498,11 +9498,11 @@ packages:
       micromatch: 4.0.5
       semver: 7.6.0
       source-map: 0.7.4
-      typescript: 5.4.3
+      typescript: 5.4.5
       webpack: 5.91.0(webpack-cli@5.1.4)
     dev: true
 
-  /ts-node@10.9.2(@types/node@20.12.7)(typescript@5.4.3):
+  /ts-node@10.9.2(@types/node@20.12.7)(typescript@5.4.5):
     resolution: {integrity: sha512-f0FFpIdcHgn8zcPSbf1dRevwt047YMnaiJM3u2w2RewrB+fob/zePZcrOyQoLMMO7aBIddLcQIEK5dYjkLnGrQ==}
     hasBin: true
     peerDependencies:
@@ -9528,7 +9528,7 @@ packages:
       create-require: 1.1.1
       diff: 4.0.2
       make-error: 1.3.6
-      typescript: 5.4.3
+      typescript: 5.4.5
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
     dev: true
@@ -9667,8 +9667,8 @@ packages:
     hasBin: true
     dev: true
 
-  /typescript@5.4.3:
-    resolution: {integrity: sha512-KrPd3PKaCLr78MalgiwJnA25Nm8HAmdwN3mYUYZgG/wizIo9EainNVQI9/yDavtVFRN2h3k8uf3GLHuhDMgEHg==}
+  /typescript@5.4.5:
+    resolution: {integrity: sha512-vcI4UpRgg81oIRUFwR0WSIHKt11nJ7SAVlYNIu+QpqeyXP+gpQJy/Z4+F0aGxSE4MqwjyXvW/TzgkLAx2AGHwQ==}
     engines: {node: '>=14.17'}
     hasBin: true
     dev: true

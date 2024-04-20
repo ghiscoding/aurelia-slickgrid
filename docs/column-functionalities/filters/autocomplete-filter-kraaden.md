@@ -65,7 +65,7 @@ export class GridBasicComponent {
 ```
 
 ### Filter Options (`AutocompleterOption` interface)
-All the available options that can be provided as `filterOptions` to your column definitions can be found under this [AutocompleterOption interface](https://github.com/ghiscoding/slickgrid-universal/blob/master/packages/common/src/interfaces/autocompleterOption.interface.ts) and you should cast your `filterOptions` to that interface to make sure that you use only valid options of the jQueryUI autocomplete library.
+All the available options that can be provided as `filterOptions` to your column definitions can be found under this [AutocompleterOption interface](https://github.com/ghiscoding/slickgrid-universal/blob/master/packages/common/src/interfaces/autocompleterOption.interface.ts) and you should cast your `filterOptions` to that interface to make sure that you use only valid options of the autocomplete library.
 
 ```ts
 filter: {
@@ -78,9 +78,6 @@ filter: {
 
 ## Using External Remote API
 You could also use external 3rd party Web API (can be JSONP query or regular JSON). This will make a much shorter result since it will only return a small subset of what will be displayed in the AutoComplete Editor or Filter. For example, we could use GeoBytes which provide a JSONP Query API for the cities of the world, you can imagine the entire list of cities would be way too big to download locally, so this is why we use such API.
-
-#### Note
-I don't have time to invest in finding how to use JSONP + CORS in Aurelia, if someone wants to submit a PR (Pull Request) with the proper Aurelia code, I would be happy to merge the code and update the Wiki. For now, I'll simply make a quick and easy example with the jQuery `$.ajax` call just for you to get the idea of how it works.
 
 ##### View
 ```html
@@ -110,28 +107,19 @@ export class GridBasicComponent {
           model: Editors.autocompleter,
           placeholder: 'search city', //  you can provide an optional placeholder to help your users
 
-          // use your own autocomplete options, instead of $.ajax, use http
-          // here we use $.ajax just because I'm not sure how to configure http with JSONP and CORS
           editorOptions: {
             minLength: 3, // minimum count of character that the user needs to type before it queries to the remote
             fetch: (searchText, updateCallback) => {
-              $.ajax({
-                url: 'http://gd.geobytes.com/AutoCompleteCity',
-                dataType: 'jsonp',
-                data: {
-                  q: searchText // geobytes requires a query with "q" queryParam representing the chars typed (e.g.:  gd.geobytes.com/AutoCompleteCity?q=van
-                },
-                success: (data) => updateCallback(data)
-              });
-            }
+              // assuming your API call returns a label/value pair
+              yourAsyncApiCall(searchText) // typically you'll want to return no more than 10 results
+                 .then(result => updateCallback((results.length > 0) ? results : [{ label: 'No match found.', value: '' }]); })
+                 .catch(error => console.log('Error:', error);
           },
         },
         filter: {
           model: Filters.autocompleter,
           // placeholder: '&#128269; search city', // &#128269; is a search icon, this provide an option placeholder
 
-          // use your own autocomplete options, instead of $.ajax, use http
-          // here we use $.ajax just because I'm not sure how to configure http with JSONP and CORS
           filterOptions: {
             minLength: 3, // minimum count of character that the user needs to type before it queries to the remote
             fetch: (searchText, updateCallback) => {
