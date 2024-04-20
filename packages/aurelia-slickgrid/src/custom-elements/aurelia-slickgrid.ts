@@ -53,7 +53,7 @@ import { SlickEmptyWarningComponent } from '@slickgrid-universal/empty-warning-c
 import { SlickPaginationComponent } from '@slickgrid-universal/pagination-component';
 import { extend } from '@slickgrid-universal/utils';
 
-import { bindable, BindingMode, customElement, IContainer, IEventAggregator, IDisposable, IObserverLocator } from 'aurelia';
+import { bindable, BindingMode, customElement, IContainer, IEventAggregator, IDisposable, IObserverLocator, resolve } from 'aurelia';
 import { ICollectionSubscriber, ICollectionObserver } from '@aurelia/runtime';
 import { dequal } from 'dequal/lite';
 
@@ -157,13 +157,13 @@ export class AureliaSlickgridCustomElement {
   @bindable() gridOptions!: GridOption;
 
   constructor(
-    protected readonly aureliaUtilService: AureliaUtilService,
-    @IObserverLocator protected readonly observerLocator: IObserverLocator,
-    @IContainer protected readonly container: IContainer,
-    protected readonly elm: HTMLElement,
-    @IEventAggregator protected readonly globalEa: IEventAggregator,
-    protected readonly containerService: ContainerService,
-    protected readonly translaterService: TranslaterService
+    protected readonly aureliaUtilService: AureliaUtilService = resolve(AureliaUtilService),
+    protected readonly observerLocator: IObserverLocator = resolve(IObserverLocator),
+    protected readonly container: IContainer = resolve(IContainer),
+    protected readonly elm: HTMLElement = resolve(HTMLElement),
+    protected readonly globalEa: IEventAggregator = resolve(IEventAggregator),
+    protected readonly containerService: ContainerService = resolve(ContainerService),
+    protected readonly translaterService: TranslaterService = resolve(TranslaterService)
   ) {
     const slickgridConfig = new SlickgridConfig();
 

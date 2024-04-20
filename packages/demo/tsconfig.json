@@ -6,8 +6,6 @@
     "module": "esnext",
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
     "esModuleInterop": true,
     "importHelpers": true,
     "noImplicitAny": false,

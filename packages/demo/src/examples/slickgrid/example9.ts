@@ -11,6 +11,7 @@ import {
   SlickGrid,
 } from 'aurelia-slickgrid';
 import './example9.scss'; // provide custom CSS/SASS styling
+import { resolve } from 'aurelia';
 
 export class Example9 {
   title = 'Example 9: Grid Menu Control';
@@ -35,7 +36,7 @@ export class Example9 {
   gridObj!: SlickGrid;
   selectedLanguage: string;
 
-  constructor(@I18N private readonly i18n: I18N) {
+  constructor(private readonly i18n: I18N = resolve(I18N)) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
 

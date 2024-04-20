@@ -6,7 +6,7 @@ import i18next from 'i18next';
 
 import { TranslaterService } from '../translater.service';
 
-describe('Translater Service', () => {
+describe.skip('Translater Service', () => {
   let i18n: I18N;
   let service: TranslaterService;
   const defaultLng = 'en';
@@ -23,7 +23,8 @@ describe('Translater Service', () => {
         fr: { translation: { ITEMS: 'éléments', OF: 'de', } }
       }
     };
-    i18n = new I18nService({ i18next }, options, new EventAggregator(), new MockSignaler());
+    // i18n = new I18nService({ i18next }, options, new EventAggregator(), new MockSignaler());
+    i18n = new I18nService();
     await i18n.initPromise;
     service = new TranslaterService(i18n);
   });

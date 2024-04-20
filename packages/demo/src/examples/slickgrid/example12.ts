@@ -16,6 +16,7 @@ import {
   GridStateChange,
   SlickGrid,
 } from 'aurelia-slickgrid';
+import { resolve } from 'aurelia';
 
 const NB_ITEMS = 1500;
 
@@ -66,7 +67,7 @@ export class Example12 {
   excelExportService = new ExcelExportService();
   textExportService = new TextExportService();
 
-  constructor(@I18N private readonly i18n: I18N) {
+  constructor(private readonly i18n: I18N = resolve(I18N)) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
 

@@ -12,7 +12,7 @@ import {
 } from '@slickgrid-universal/common';
 import { EventPubSubService } from '@slickgrid-universal/event-pub-sub';
 import { SlickRowDetailView as UniversalSlickRowDetailView } from '@slickgrid-universal/row-detail-view-plugin';
-import { Constructable, transient } from 'aurelia';
+import { Constructable, resolve, transient } from 'aurelia';
 import DOMPurify from 'isomorphic-dompurify';
 
 import { AureliaViewOutput, GridOption, RowDetailView, ViewModelBindableInputData } from '../models/index';
@@ -35,7 +35,10 @@ export class SlickRowDetailView extends UniversalSlickRowDetailView {
   protected _subscriptions: EventSubscription[] = [];
   protected _userProcessFn?: (item: any) => Promise<any>;
 
-  constructor(protected readonly aureliaUtilService: AureliaUtilService, private readonly eventPubSubService: EventPubSubService, private readonly gridContainerElement: HTMLElement) {
+  constructor(
+    protected readonly aureliaUtilService: AureliaUtilService = resolve(AureliaUtilService),
+    private readonly eventPubSubService: EventPubSubService = resolve(EventPubSubService),
+    private readonly gridContainerElement: HTMLElement = resolve(HTMLElement)) {
     super(eventPubSubService);
   }
 

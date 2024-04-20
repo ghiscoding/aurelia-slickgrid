@@ -1,3 +1,4 @@
+import { resolve } from 'aurelia';
 import {
   AureliaGridInstance,
   AureliaUtilService,
@@ -58,7 +59,7 @@ export class Example26 {
     { id: '3', name: 'Paul' },
   ];
 
-  constructor(private aureliaUtilService: AureliaUtilService) {
+  constructor(private aureliaUtilService: AureliaUtilService = resolve(AureliaUtilService)) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
   }

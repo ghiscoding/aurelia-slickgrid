@@ -11,6 +11,7 @@ import { SlickCustomTooltip } from '@slickgrid-universal/custom-tooltip-plugin';
 // import { TOptions as I18NOptions } from 'i18next';
 
 import './example35.scss';
+import { resolve } from 'aurelia';
 
 const NB_ITEMS = 20;
 
@@ -25,7 +26,7 @@ export class Example35 {
   statusClass = 'alert alert-light';
   statusStyle = 'display: none';
 
-  constructor(@I18N private readonly i18n: I18N) {
+  constructor(private readonly i18n: I18N = resolve(I18N)) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
 

@@ -15,6 +15,7 @@ import {
   SlickGrid,
 } from 'aurelia-slickgrid';
 import './example24.scss'; // provide custom CSS/SASS styling
+import { resolve } from 'aurelia';
 
 const actionFormatter: Formatter = (_row, _cell, _value, _columnDef, dataContext) => {
   if (dataContext.priority === 3) { // option 3 is High
@@ -93,7 +94,7 @@ export class Example24 {
   dataset: any[] = [];
   selectedLanguage: string;
 
-  constructor(@I18N private readonly i18n: I18N) {
+  constructor(private readonly i18n: I18N = resolve(I18N)) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
 

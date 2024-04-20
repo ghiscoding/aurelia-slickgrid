@@ -1,4 +1,5 @@
 import { I18N } from '@aurelia/i18n';
+import { resolve } from 'aurelia';
 import {
   AureliaGridInstance,
   Column,
@@ -38,7 +39,7 @@ export class Example15 {
   dataset: any[] = [];
   selectedLanguage: string;
 
-  constructor(@I18N private readonly i18n: I18N) {
+  constructor(private readonly i18n: I18N = resolve(I18N)) {
     const presets = JSON.parse(localStorage[LOCAL_STORAGE_KEY] || null);
 
     // use some Grid State preset defaults if you wish or just restore from Locale Storage

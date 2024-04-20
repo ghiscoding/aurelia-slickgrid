@@ -1,6 +1,7 @@
 import { I18N } from '@aurelia/i18n';
 import { AureliaGridInstance, Column, Formatters, GridOption, SlickDataView, SlickGrid } from 'aurelia-slickgrid';
 import './example8.scss'; // provide custom CSS/SASS styling
+import { resolve } from 'aurelia';
 
 export class Example8 {
   title = 'Example 8: Header Menu Plugin';
@@ -33,7 +34,7 @@ export class Example8 {
   selectedLanguage: string;
   visibleColumns: Column[] = [];
 
-  constructor(@I18N private readonly i18n: I18N) {
+  constructor(private readonly i18n: I18N = resolve(I18N)) {
     // define the grid options & columns and then create the grid itself
     this.defineGrid();
 
