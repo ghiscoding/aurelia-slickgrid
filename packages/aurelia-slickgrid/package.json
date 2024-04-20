@@ -52,13 +52,13 @@
     "@aurelia/i18n": "^2.0.0-beta.14",
     "@aurelia/runtime": "^2.0.0-beta.14",
     "@aurelia/runtime-html": "^2.0.0-beta.14",
-    "@slickgrid-universal/common": "~4.6.1",
-    "@slickgrid-universal/custom-footer-component": "~4.6.1",
-    "@slickgrid-universal/empty-warning-component": "~4.6.1",
-    "@slickgrid-universal/event-pub-sub": "~4.6.1",
-    "@slickgrid-universal/pagination-component": "~4.6.1",
-    "@slickgrid-universal/row-detail-view-plugin": "~4.6.1",
-    "@slickgrid-universal/utils": "~4.6.1",
+    "@slickgrid-universal/common": "~4.7.0",
+    "@slickgrid-universal/custom-footer-component": "~4.7.0",
+    "@slickgrid-universal/empty-warning-component": "~4.7.0",
+    "@slickgrid-universal/event-pub-sub": "~4.7.0",
+    "@slickgrid-universal/pagination-component": "~4.7.0",
+    "@slickgrid-universal/row-detail-view-plugin": "~4.7.0",
+    "@slickgrid-universal/utils": "~4.7.0",
     "dequal": "^2.0.3",
     "isomorphic-dompurify": "^2.7.0",
     "moment-mini": "^2.29.4",
@@ -69,6 +69,6 @@
     "copyfiles": "^2.4.1",
     "rimraf": "^5.0.5",
     "tslib": "^2.6.2",
-    "typescript": "^5.4.3"
+    "typescript": "^5.4.5"
   }
 }
