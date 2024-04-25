@@ -63,11 +63,11 @@
     "jsdom-global": "^3.0.2",
     "moment-mini": "^2.29.4",
     "npm-run-all2": "^6.1.2",
-    "pnpm": "^8.15.7",
+    "pnpm": "^9.0.6",
     "rimraf": "^5.0.5",
     "ts-jest": "^29.1.2",
     "typescript": "^5.4.5",
     "typescript-eslint": "^7.7.0"
   },
-  "packageManager": "pnpm@8.15.6"
+  "packageManager": "pnpm@9.0.6"
 }
