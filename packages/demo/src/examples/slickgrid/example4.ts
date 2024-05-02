@@ -1,19 +1,20 @@
 import { IHttpClient } from '@aurelia/fetch-client';
 import { newInstanceOf, resolve } from '@aurelia/kernel';
 import { ExcelExportService } from '@slickgrid-universal/excel-export';
+import { type MultipleSelectOption } from 'multiple-select-vanilla';
+
 import { CustomInputFilter } from './custom-inputFilter';
 import {
   type AureliaGridInstance,
   type Column,
   FieldType,
   Filters,
-  type FlatpickrOption,
   Formatters,
   type GridOption,
   type GridStateChange,
   type Metrics,
-  type MultipleSelectOption,
   OperatorType,
+  type VanillaCalendarOption,
 } from 'aurelia-slickgrid';
 
 function randomBetween(min: number, max: number) {
@@ -164,9 +165,9 @@ export class Example4 {
         filterable: true,
         filter: {
           model: Filters.compoundDate,
-          // override any of the Flatpickr options through "filterOptions"
+          // override any of the options through "filterOptions"
           // please note that there's no TSlint on this property since it's generic for any filter, so make sure you entered the correct filter option(s)
-          filterOptions: { minDate: 'today' } as FlatpickrOption
+          filterOptions: { range: { date: 'today' } } as VanillaCalendarOption
         }
       },
       {
@@ -177,14 +178,14 @@ export class Example4 {
         // to pass multiple formatters, use the params property
         // also these formatters are executed in sequence, so if you want the checkmark to work correctly, it has to be the last formatter defined
         formatter: Formatters.multiple,
-        params: { formatters: [Formatters.complexObject, Formatters.checkmark] },
+        params: { formatters: [Formatters.complexObject, Formatters.checkmarkMaterial] },
 
         // when the "field" string includes the dot "." notation, the library will consider this to be a complex object and Filter accordingly
         filterable: true,
         filter: {
           // We can also add HTML text to be rendered (any bad script will be sanitized) but we have to opt-in, else it will be sanitized
           // enableRenderHtml: true,
-          // collection: [{ value: '', label: '' }, { value: true, label: 'True', labelPrefix: `<i class="fa fa-check"></i> ` }, { value: false, label: 'False' }],
+          // collection: [{ value: '', label: '' }, { value: true, label: 'True', labelPrefix: `<i class="mdi mdi-check"></i> ` }, { value: false, label: 'False' }],
 
           collection: ['', 'True', 'False'],
           model: Filters.singleSelect,

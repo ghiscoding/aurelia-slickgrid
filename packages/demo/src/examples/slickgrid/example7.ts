@@ -98,13 +98,13 @@ export class Example7 {
     const command = args.command;
 
     if (command === 'toggle-highlight') {
-      if (button.cssClass === 'fa fa-circle red') {
+      if (button.cssClass === 'mdi mdi-lightbulb-on text-danger') {
         if (gridNo === 1) {
           delete columns1WithHighlightingById[column.id];
         } else {
           delete columns2WithHighlightingById[column.id];
         }
-        button.cssClass = 'fa fa-circle-o red faded';
+        button.cssClass = 'mdi mdi-lightbulb-outline text-warning faded';
         button.tooltip = 'Highlight negative numbers.';
       } else {
         if (gridNo === 1) {
@@ -112,7 +112,7 @@ export class Example7 {
         } else {
           columns2WithHighlightingById[column.id] = true;
         }
-        button.cssClass = 'fa fa-circle red';
+        button.cssClass = 'mdi mdi-lightbulb-on text-danger';
         button.tooltip = 'Remove highlight.';
       }
       this[`aureliaGrid${gridNo}`].slickGrid.invalidate();
@@ -142,7 +142,7 @@ export class Example7 {
         header: {
           buttons: [
             {
-              cssClass: 'fa fa-circle-o red faded',
+              cssClass: 'mdi mdi-lightbulb-outline text-warning faded',
               command: 'toggle-highlight',
               tooltip: 'Highlight negative numbers.',
               itemVisibilityOverride: (args) => {
@@ -169,25 +169,25 @@ export class Example7 {
     cols[0].header = {
       buttons: [
         {
-          cssClass: 'fa fa-tag',
+          cssClass: 'mdi mdi-message-text',
           handler: () => {
             alert('Tag');
           }
         },
         {
-          cssClass: 'fa fa-comment',
+          cssClass: 'mdi mdi-forum-outline',
           handler: () => {
             alert('Comment');
           }
         },
         {
-          cssClass: 'fa fa-info-circle',
+          cssClass: 'mdi mdi-information',
           handler: () => {
             alert('Info');
           }
         },
         {
-          cssClass: 'fa fa-question-circle',
+          cssClass: 'mdi mdi-help-circle',
           handler: () => {
             alert('Help');
           }
@@ -205,7 +205,7 @@ export class Example7 {
     cols[1].header = {
       buttons: [
         {
-          cssClass: 'fa fa-question-circle',
+          cssClass: 'mdi mdi-help-circle',
           showOnHover: true,
           tooltip: 'This button only appears on hover.',
           handler: () => {

@@ -4,14 +4,10 @@
 - [Using a Slider Range](#using-a-slider-range-filter)
   - [Filter Options](#filter-options)
 - [Using a Date Range](#using-a-date-range-filter)
-   - [Filter Options (`FlatpickrOption` interface)](#filter-options-flatpickroption-interface)
 - [Update Filters Dynamically](Input-Filter.md#update-filters-dynamically)
 
-### Demo
-[Demo Page](https://ghiscoding.github.io/aurelia-slickgrid/#/slickgrid/example23) | [Demo Component](https://github.com/ghiscoding/aurelia-slickgrid/blob/master/packages/demo/src/examples/slickgrid/example23.ts)
-
 ### Introduction
-Range filters allows you to search for a value between 2 min/max values, the 2 most common use case would be to filter between 2 numbers or dates, you can do that with the new Slider & Date Range Filters. The range can also be defined as inclusive (`>= 0 and <= 10`) or exclusive (`> 0 and < 10`), the default is exclusive but you can change that, see below for more info.
+Range filters allows you to search for a value between 2 min/max values, the 2 most common use case would be to filter between 2 numbers or dates, you can do that with the Slider & Date Range Filters. The range can also be defined as inclusive (`>= 0 and <= 10`) or exclusive (`> 0 and < 10`), the default is exclusive but you can change that, see below for more info.
 
 ### Using an Inclusive Range (default is Exclusive)
 By default all the range filters are with exclusive range, which mean between value `x` and `y` but without including them. If you wish to include the `x` and `y` values, you can change that through the `operator` property.
@@ -38,8 +34,8 @@ this.columnDefinitions = [
 You can use a regular input filter with the 2 dots (..) notation to represent a range, for example `5..90` would search between the value 5 and 90 (exclusive search unless specified).
 
 ##### Component
-```typescript
-import { Filters, Formatters, GridOption, OperatorType } from 'aurelia-slickgrid';
+```ts
+import { Filters, Formatters, GridOption, OperatorType } from '@slickgrid-universal/common';
 
 export class GridBasicComponent {
   columnDefinitions: Column[];
@@ -51,12 +47,12 @@ export class GridBasicComponent {
     this.columnDefinitions = [
       {
         id: 'duration', field: 'duration', name: 'Duration',
-        type: FieldType.number, // you can optionally specify that the data are numbers
+        type: 'number', // you can optionally specify that the data are numbers
         filterable: true,
 
         // input filter is the default, so you can skip this unless you want to specify the `operator`
         filter: {
-          model: Filters.input,
+          model: 'input',
           operator: OperatorType.rangeInclusive // defaults to exclusive
         }
       },
@@ -73,8 +69,8 @@ export class GridBasicComponent {
 The slider range filter is very useful if you can just want to use the mouse to drag/slide a cursor, you can also optionally show/hide the slider values on screen (hiding them would giving you more room without but without the precision).
 
 ##### Component
-```typescript
-import { Filters, Formatters, GridOption, SliderRangeOption, OperatorType } from 'aurelia-slickgrid';
+```ts
+import { Filters, Formatters, GridOption, SliderRangeOption, OperatorType } from '@slickgrid-universal/commomn';
 
 export class GridBasicComponent {
   columnDefinitions: Column[];
@@ -88,7 +84,7 @@ export class GridBasicComponent {
         id: 'complete', name: '% Complete', field: 'percentComplete', headerKey: 'PERCENT_COMPLETE', minWidth: 120,
         sortable: true,
         formatter: Formatters.progressBar,
-        type: FieldType.number,
+        type: 'number',
         filterable: true,
         filter: {
           model: Filters.sliderRange,
@@ -96,7 +92,7 @@ export class GridBasicComponent {
           operator: OperatorType.rangeInclusive, // optional, defaults to exclusive
           params: { hideSliderNumbers: false }, // you can hide/show the slider numbers on both side
 
-           // you can also optionally pass any option of the Slider filter
+          // you can also optionally pass any option of the Slider filter
           filterOptions: { sliderStartValue: 5 } as SliderRangeOption
         }
       },
@@ -109,7 +105,7 @@ export class GridBasicComponent {
 }
 ```
 
-##### Filter Options (`JQueryUiSliderOption` interface)
+##### Filter Options
 All the available options that can be provided as `filterOptions` to your column definitions and you should try to cast your `filterOptions` to the specific interface as much as possible to make sure that you use only valid options of allowed by the targeted filter
 
 ```ts
@@ -128,7 +124,7 @@ You could also define certain options as a global level (for the entire grid or 
 this.gridOptions = {
   defaultFilterOptions: {
     // Note: that `date`, `select` and `slider` are combining both compound & range filters together
-    date: { minDate: 'today' },
+    date: { range: { min: 'today' } },
     select: { minHeight: 350 }, // typed as MultipleSelectOption
     slider: { sliderStartValue: 10 }
   }
@@ -136,29 +132,31 @@ this.gridOptions = {
 ```
 
 ### Using a Date Range Filter
-The date range filter allows you to search data between 2 dates (it uses [Flatpickr Range](https://flatpickr.js.org/examples/#range-calendar) feature).
+The date range filter allows you to search data between 2 dates (it uses [Vanilla-Calendar Range](https://vanilla-calendar.pro/) feature).
 
 ##### Component
-import { Filters, FlatpickrOption, Formatters, GridOption, OperatorType } from '@slickgrid-universal/common';
+import { Filters, Formatters, GridOption, OperatorType, VanillaCalendarOption } from '@slickgrid-universal/common';
 
 ```typescript
-export class GridBasicComponent implement OnInit {
+export class GridBasicComponent {
   columnDefinitions: Column[];
   gridOptions: GridOption;
   dataset: any[];
 
-  ngOnInit(): void {
+  attached(): void {
     // your columns definition
     this.columnDefinitions = [
       {
-        id: 'finish', name: 'Finish', field: 'finish', nameKey: 'FINISH', formatter: Formatters.dateIso, sortable: true, minWidth: 75, width: 120, exportWithFormatter: true,
+        id: 'finish', name: 'Finish', field: 'finish', headerKey: 'FINISH',
+        minWidth: 75, width: 120, exportWithFormatter: true,
+        formatter: Formatters.dateIso, sortable: true,
         type: FieldType.date,
         filterable: true,
         filter: {
           model: Filters.dateRange,
 
-          // override any of the Flatpickr options through "filterOptions"
-          editorOptions: { minDate: 'today' } as FlatpickrOption
+          // override any of the Vanilla-Calendar options through "filterOptions"
+          editorOptions: { range: { min: 'today' } } as VanillaCalendarOption
         }
       },
     ];
@@ -170,14 +168,14 @@ export class GridBasicComponent implement OnInit {
 }
 ```
 
-##### Filter Options (`FlatpickrOption` interface)
-All the available options that can be provided as `filterOptions` to your column definitions can be found under this [FlatpickrOption interface](https://github.com/ghiscoding/slickgrid-universal/blob/master/packages/common/src/interfaces/flatpickrOption.interface.ts) and you should cast your `filterOptions` to that interface to make sure that you use only valid options of the [Flatpickr](https://flatpickr.js.org/) library.
+#### Filter Options (`VanillaCalendarOption` interface)
+All the available options that can be provided as `filterOptions` to your column definitions can be found under this [VanillaCalendarOption interface](https://github.com/ghiscoding/slickgrid-universal/blob/master/packages/common/src/interfaces/vanillaCalendarOption.interface.ts) and you should cast your `filterOptions` with the expected interface to make sure that you use only valid settings of the [Vanilla-Calendar](https://vanilla-calendar.pro/docs/reference/additionally/settings) library.
 
 ```ts
 filter: {
-  model: Filters.dateRange,
+  model: Filters.compoundDate,
   filterOptions: {
-    minDate: 'today'
-  } as FlatpickrOption
+    range: { min: 'today' }
+  } as VanillaCalendarOption
 }
 ```

@@ -1,6 +1,7 @@
 import { I18N } from '@aurelia/i18n';
 // import { TOptions as I18NOptions } from 'i18next';
 import moment from 'moment-mini';
+import { type MultipleSelectOption } from 'multiple-select-vanilla';
 import { SlickCustomTooltip } from '@slickgrid-universal/custom-tooltip-plugin';
 import { ExcelExportService } from '@slickgrid-universal/excel-export';
 
@@ -16,7 +17,6 @@ import {
   type GridOption,
   type GridStateChange,
   type Metrics,
-  type MultipleSelectOption,
   OperatorType,
   type SlickGrid,
   type SliderRangeOption,
@@ -49,12 +49,6 @@ export class Example23 {
         <li>For a numeric range defined in an input filter (must be of type text), you can use 2 dots (..) to represent a range</li>
         <li>example: typing "10..90" will filter values between 10 and 90 (but excluding the number 10 and 90)</li>
       </ul>
-      <ul>
-        <li>note that the examples shown below for the operator, are case sensitive</li>
-        <li>by default the range are not inclusive which would be the same as defining the filter options to "operator: 'RangeExclusive'" or "operator: OperatoryType.rangeExclusive"</li>
-        <li>you can also set the inverse (inclusive) by defining the filter options to "operator: 'RangeInclusive'" or "operator: OperatoryType.rangeIncluside"</li>
-      </ul>
-      <li>Date Range with Flatpickr Date Picker, they will also use the locale, choose a start date then drag or click on the end date</li>
     </ul>
   `;
 
@@ -148,7 +142,7 @@ export class Example23 {
       },
       {
         id: 'completed', name: 'Completed', field: 'completed', nameKey: 'COMPLETED', minWidth: 85, maxWidth: 90,
-        formatter: Formatters.checkmark,
+        formatter: Formatters.checkmarkMaterial,
         exportWithFormatter: true, // you can set this property in the column definition OR in the grid options, column def has priority over grid options
         filterable: true,
         filter: {

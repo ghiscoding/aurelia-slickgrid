@@ -1,6 +1,7 @@
 import { I18N } from '@aurelia/i18n';
 import { GraphqlService, type GraphqlPaginatedResult, type GraphqlServiceApi, type GraphqlServiceOption } from '@slickgrid-universal/graphql';
 import moment from 'moment-mini';
+import { type MultipleSelectOption } from 'multiple-select-vanilla';
 import {
   type AureliaGridInstance,
   type Column,
@@ -11,7 +12,6 @@ import {
   type GridOption,
   type GridStateChange,
   type Metrics,
-  type MultipleSelectOption,
   OperatorType,
   SortDirection,
 } from 'aurelia-slickgrid';

@@ -4,7 +4,7 @@ import { customElement } from 'aurelia';
   name: 'example19-preload',
   template: `<div class="container" style="margin-top: 10px">
     <h4>
-      <i class="fa fa-refresh fa-spin fa-2x fa-fw"></i>
+      <i class="mdi mdi-sync mdi-spin mdi-50px"></i>
       Loading...
     </h4>
   </div>`

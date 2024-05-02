@@ -39,8 +39,6 @@ export default tseslint.config(
     languageOptions: {
       globals: {
         // ...globals,
-        flatpickr: true,
-        Slick: true,
         Sortable: true,
       },
       parser: tsParser,

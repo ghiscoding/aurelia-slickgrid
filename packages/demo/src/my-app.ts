@@ -1,6 +1,4 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import 'font-awesome/css/font-awesome.css';
-import 'flatpickr/dist/flatpickr.min.css';
 import './styles.scss';
 
 export class MyApp {

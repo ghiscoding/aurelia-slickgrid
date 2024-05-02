@@ -3,24 +3,24 @@
   <span class="float-end">
     <a style="font-size: 18px" target="_blank"
       href="https://github.com/ghiscoding/aurelia-slickgrid/blob/master/packages/demo/src/examples/slickgrid/example19.ts">
-      <span class="fa fa-link"></span> code
+      <span class="mdi mdi-link-variant"></span> code
     </a>
   </span>
 </h2>
 <div class="subtitle" innerhtml.bind="subTitle"></div>
 
 <div class="col-sm-6">
-  <button class="btn btn-outline-secondary btn-xs" click.trigger="changeEditableGrid()" data-test="editable-grid-btn">
+  <button class="btn btn-outline-secondary btn-xs btn-icon" click.trigger="changeEditableGrid()" data-test="editable-grid-btn">
     Make Grid Editable
   </button>
-  <button class="btn btn-outline-secondary btn-xs" click.trigger="closeAllRowDetail()" data-test="collapse-all-btn">
+  <button class="btn btn-outline-secondary btn-xs btn-icon" click.trigger="closeAllRowDetail()" data-test="collapse-all-btn">
     Close all Row Details
   </button>
   &nbsp;&nbsp;
 
   <label for="">Detail View Rows Shown: </label>
   <input type="number" value.bind="detailViewRowCount" style="height: 22px; width: 40px">
-  <button class="btn btn-outline-secondary btn-xs" style="height: 26px;" click.trigger="changeDetailViewRowCount()"
+  <button class="btn btn-outline-secondary btn-xs btn-icon" style="height: 26px;" click.trigger="changeDetailViewRowCount()"
     data-test="set-count-btn">
     Set
   </button>
