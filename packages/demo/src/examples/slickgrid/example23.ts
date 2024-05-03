@@ -49,12 +49,6 @@ export class Example23 {
         <li>For a numeric range defined in an input filter (must be of type text), you can use 2 dots (..) to represent a range</li>
         <li>example: typing "10..90" will filter values between 10 and 90 (but excluding the number 10 and 90)</li>
       </ul>
-      <ul>
-        <li>note that the examples shown below for the operator, are case sensitive</li>
-        <li>by default the range are not inclusive which would be the same as defining the filter options to "operator: 'RangeExclusive'" or "operator: OperatoryType.rangeExclusive"</li>
-        <li>you can also set the inverse (inclusive) by defining the filter options to "operator: 'RangeInclusive'" or "operator: OperatoryType.rangeIncluside"</li>
-      </ul>
-      <li>Date Range with Flatpickr Date Picker, they will also use the locale, choose a start date then drag or click on the end date</li>
     </ul>
   `;
 

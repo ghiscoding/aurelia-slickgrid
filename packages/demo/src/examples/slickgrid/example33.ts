@@ -14,6 +14,7 @@ import {
   type MenuCommandItemCallbackArgs,
   OperatorType,
   type SlickGrid,
+  type VanillaCalendarOption,
 } from 'aurelia-slickgrid';
 import './example33.scss';
 
@@ -188,7 +189,10 @@ export class Example33 {
       },
       {
         id: 'finish', name: 'Finish', field: 'finish', sortable: true,
-        editor: { model: Editors.date, editorOptions: { minDate: 'today' }, },
+        editor: {
+          model: Editors.date,
+          editorOptions: { range: { min: 'today' } } as VanillaCalendarOption,
+        },
         // formatter: Formatters.dateIso,
         type: FieldType.date, outputType: FieldType.dateIso,
         formatter: Formatters.dateIso,
