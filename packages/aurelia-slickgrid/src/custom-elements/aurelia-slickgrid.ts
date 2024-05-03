@@ -71,13 +71,12 @@ import { SlickRowDetailView } from '../extensions/slickRowDetailView';
 
 @customElement({
   name: 'aurelia-slickgrid',
-  /* eslint-disable */
   template: `
 <div id="slickGridContainer-$\{gridId\}" class="grid-pane">
   <!-- Header slot if you need to create a complex custom header -->
   <au-slot name="slickgrid-header"></au-slot>
 
-  <div id.bind="gridId" class="slickgrid-container" focusout.trigger="commitEdit($event.target)"
+  <div id.bind="gridId" class="slickgrid-container"
     ref="gridContainer">
   </div>
 
@@ -85,7 +84,6 @@ import { SlickRowDetailView } from '../extensions/slickRowDetailView';
   <au-slot name="slickgrid-footer"></au-slot>
 </div>
 ` })
-/* eslint-enable */
 export class AureliaSlickgridCustomElement {
   protected _columnDefinitions: Column[] = [];
   protected _currentDatasetLength = 0;
@@ -590,28 +588,6 @@ export class AureliaSlickgridCustomElement {
   columnDefinitionsChanged() {
     this.columnDefinitionsHandler();
     this.observeColumnDefinitions();
-  }
-
-  /**
-   * Commits the current edit to the grid
-   */
-  commitEdit(target: Element) {
-    if (this.grid.getOptions().autoCommitEdit) {
-      const activeNode = this.grid.getActiveCellNode();
-
-      // a timeout must be set or this could come into conflict when slickgrid
-      // tries to commit the edit when going from one editor to another on the grid
-      // through the click event. If the timeout was not here it would
-      // try to commit/destroy the twice, which would throw an
-      // error about the element not being in the DOM
-      setTimeout(() => {
-        // make sure the target is the active editor so we do not
-        // commit prematurely
-        if (activeNode?.contains(target) && this.grid.getEditorLock().isActive() && !target?.classList?.contains('autocomplete')) {
-          this.grid.getEditorLock().commitCurrentEdit();
-        }
-      });
-    }
   }
 
   datasetChanged(newDataset: any[], oldValue: any[]) {
